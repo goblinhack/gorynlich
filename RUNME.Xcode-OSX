@@ -1,0 +1,176 @@
+#!/bin/sh
+#
+# Copyright (C) 2011-2020 Neil McGill
+#
+# This game is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This game is distributed in the hope that it will be fun,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this game; if not, write to the Free
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+. scripts/common.sh
+
+cat <<%%
+
+ .d8888b.                                     888 d8b          888      
+d88P  Y88b                                    888 Y8P          888      
+888    888                                    888              888      
+888         .d88b.  888d888 888  888 88888b.  888 888  .d8888b 88888b.  
+888  88888 d88""88b 888P"   888  888 888 "88b 888 888 d88P"    888 "88b 
+888    888 888  888 888     888  888 888  888 888 888 888      888  888 
+Y88b  d88P Y88..88P 888     Y88b 888 888  888 888 888 Y88b.    888  888 
+ "Y8888P88  "Y88P"  888      "Y88888 888  888 888 888  "Y8888P 888  888 
+                                 888                                    
+                            Y8b d88P                                    
+                             "Y88P"                                     
+
+%%
+
+NAME="Gorynlich"
+APP="GorynlichOSX.app"
+DMG="GorynlichOSX.dmg"
+SCHEME="$NAME-MacOS"
+DMG_TMP=".GorynlichOSX.dmg"
+APP_DIR="/Users/$LOGNAME/Library/Developer/Xcode"
+
+log_info "Cleaning"
+
+xcodebuild -project $NAME.xcodeproj -scheme $SCHEME clean
+if [ $? -ne 0 ]
+then
+    log_die "Clean failed"
+fi
+
+LOG=.xcode-log
+
+log_info "Compiling"
+xcodebuild -project $NAME.xcodeproj -scheme $SCHEME build > $LOG
+ERR=$?
+
+cat $LOG
+cat $LOG | egrep "warning:|error:"
+echo Logfile: $LOG
+
+if [ $ERR -ne 0 ]
+then
+    log_die "Build failed"
+fi
+
+/bin/rm -f $DMG
+
+CANDIDATES=`find $APP_DIR -name $APP`
+echo $CANDIDATES
+
+/bin/ls -tr $CANDIDATES
+XCODE_APP=`/bin/ls -tr $CANDIDATES | grep ":" | sed 's/://g' | tail -1`
+
+if [ ! -d $XCODE_APP ]
+then
+    log_err "Did not find $APP dir in $APP_DIR"
+    exit 1
+fi
+
+#
+# Create the DMG
+#
+log_info "Package $APP"
+
+/bin/rm -f $DMG_TMP
+
+hdiutil create -srcfolder "$XCODE_APP" -volname "$NAME" -fs HFS+ -fsargs '-c c=64,a=16,e=16' -format UDRW -size 300m $DMG_TMP
+if [ $? -ne 0 ]
+then
+    log_err "Failed to create $DMG_TMP"
+    exit 1
+fi
+
+#
+# Mount the DMG
+#
+log_info "Mounting $DMG_TMP"
+
+hdiutil attach -readwrite -noverify -noautoopen $DMG_TMP > .tmp 2>&1
+if [ $? -ne 0 ]
+then
+    cat .tmp
+
+    log_err "Failed to mount $DMG_TMP"
+    exit 1
+fi
+
+DEVICE=`cat .tmp | egrep '^/dev/' | sed 1q | awk '{print $1}'`
+
+log_info "Mounted $DMG_TMP as $DEVICE"
+
+ls /Volumes/$NAME
+if [ $? -ne 0 ]
+then
+    log_err "Did /Volumes/$NAME mount ?"
+    exit 1
+fi
+
+echo '
+   tell application "Finder"
+     tell disk "'$NAME'"
+           open
+           set current view of container window to icon view
+           set toolbar visible of container window to false
+           set statusbar visible of container window to false
+           set the bounds of container window to {400, 100, 885, 430}
+           set theViewOptions to the icon view options of container window
+           set arrangement of theViewOptions to not arranged
+           set icon size of theViewOptions to 100
+           make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
+           set position of item "'${APP}'" of container window to {100, 100}
+           set position of item "Applications" of container window to {375, 100}
+           close
+           open
+           update without registering applications
+     end tell
+   end tell
+' | osascript
+
+sync
+sync
+
+#
+# Unmount the DMG
+#
+log_info "Unmounting $DEVICE"
+
+hdiutil detach $DEVICE > .tmp 2>&1
+if [ $? -ne 0 ]
+then
+    cat .tmp
+
+    log_err "Failed to unmount $DEVICE"
+    exit 1
+fi
+
+#
+# Compress the DMG
+#
+log_info "Compressing $DEVICE"
+
+hdiutil convert "$DMG_TMP" -format UDZO -imagekey zlib-level=9 -o "$DMG" > .tmp 2>&1
+if [ $? -ne 0 ]
+then
+    cat .tmp
+
+    log_err "Failed to compress $DMG_TMP"
+    exit 1
+fi
+
+/bin/rm -rf $DMG_TMP
+
+echo
+log_info "Launch $DMG to start"

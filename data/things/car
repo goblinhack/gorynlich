@@ -1,0 +1,19 @@
+{
+ shortname="car"
+ tooltip="Vrrooom!"
+ z_depth=1
+ speed=300
+ score_on_death=1000
+ z_order=4
+ is_monst
+ is_animated
+ is_car
+ is_thing
+ is_effect_rotate_2way
+ is_effect_rotate_4way
+ tiles={
+  tile={
+   tile="car"
+  }
+ }
+}

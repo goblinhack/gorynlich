@@ -1,0 +1,642 @@
+/*
+ * Copyright (C) 2011 Neil McGill
+ *
+ * See the README file for license.
+ */
+
+#include <SDL.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "glapi.h"
+#include "stb_image.h"
+
+#include "main.h"
+#include "gl.h"
+#include "tex.h"
+#include "ramdisk.h"
+#include "tree.h"
+#include "pixel.h"
+
+typedef struct tex_ {
+    tree_key_string tree;
+    uint32_t width;
+    uint32_t height;
+    int32_t gl_surface_binding;
+    int32_t gl_mask_binding;
+    SDL_Surface *surface;
+    SDL_Surface *mask;
+} tex;
+
+tree_root *textures;
+
+static boolean tex_init_done;
+
+boolean tex_init (void)
+{
+    tex_init_done = true;
+
+    return (true);
+}
+
+static void tex_destroy (tex *t)
+{
+    SDL_FreeSurface(t->surface);
+
+    if (t->mask) {
+        SDL_FreeSurface(t->mask);
+    }
+
+    GLuint gl_surface_binding;
+    gl_surface_binding = t->gl_surface_binding;
+    glDeleteTextures(1, &gl_surface_binding);
+    oldptr(t->surface);
+
+    GLuint gl_mask_binding;
+    gl_mask_binding = t->gl_mask_binding;
+    if (gl_mask_binding) {
+        glDeleteTextures(1, &gl_mask_binding);
+        oldptr(t->mask);
+    }
+}
+
+void tex_fini (void)
+{
+    FINI_LOG("%s", __FUNCTION__);
+
+    if (tex_init_done) {
+        tex_init_done = false;
+
+        tree_destroy(&textures, (tree_destroy_func)tex_destroy);
+    }
+}
+
+static unsigned char *load_raw_image (const char *filename,
+                                      int32_t *x,
+                                      int32_t *y,
+                                      int32_t *comp)
+{
+    unsigned char *ramdisk_data;
+    unsigned char *image_data;
+    int32_t len;
+
+    ramdisk_data = ramdisk_load(filename, &len);
+
+    if (strstr(filename, ".tga")) {
+        image_data = stbi_tga_load_from_memory(ramdisk_data,
+                                               len, x, y, comp, 0);
+    } else if (strstr(filename, ".jpg")) {
+        image_data = stbi_jpeg_load_from_memory(ramdisk_data,
+                                                len, x, y, comp, 0);
+    } else if (strstr(filename, ".bmp")) {
+        image_data = stbi_bmp_load_from_memory(ramdisk_data,
+                                               len, x, y, comp, 0);
+    } else if (strstr(filename, ".png")) {
+        image_data = stbi_png_load_from_memory(ramdisk_data,
+                                               len, x, y, comp, 0);
+    } else {
+        DIE("unknown suffix for image, %s", filename);
+        image_data = 0;
+    }
+
+    myfree(ramdisk_data);
+
+    if (!image_data) {
+        DIE("could not read memory for file, %s", filename);
+    }
+
+    LOG("Load  %s, %ux%u", filename, *x, *y);
+
+    return (image_data);
+}
+
+static void free_raw_image (unsigned char *image_data)
+{
+    stbi_image_free(image_data);
+}
+
+static SDL_Surface *load_image (const char *filename)
+{
+    uint32_t rmask, gmask, bmask, amask;
+    unsigned char *image_data;
+    SDL_Surface *rv;
+    int32_t x, y, comp;
+
+    image_data = load_raw_image(filename, &x, &y, &comp);
+    if (!image_data) {
+        DIE("could not read memory for file, %s", filename);
+    }
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+    if (comp == 4) {
+        rv = SDL_CreateRGBSurface(0, x, y, 32, rmask, gmask, bmask, amask);
+        newptr(rv, "SDL_CreateRGBSurface");
+    } else if (comp == 3) {
+        rv = SDL_CreateRGBSurface(0, x, y, 24, rmask, gmask, bmask, 0);
+        newptr(rv, "SDL_CreateRGBSurface");
+    } else {
+        free_raw_image(image_data);
+        return (0);
+    }
+
+    memcpy(rv->pixels, image_data, comp * x * y);
+
+    free_raw_image(image_data);
+
+    return (rv);
+}
+
+static SDL_Surface *load_image_mask (const char *filename,
+                                     SDL_Surface **mask)
+{
+    uint32_t rmask, gmask, bmask, amask;
+    unsigned char *image_data;
+    SDL_Surface *rv;
+    int32_t x, y, comp;
+
+    image_data = load_raw_image(filename, &x, &y, &comp);
+    if (!image_data) {
+        DIE("could not read memory for file, %s", filename);
+    }
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+    if (comp == 4) {
+        rv = SDL_CreateRGBSurface(0, x, y, 32, rmask, gmask, bmask, amask);
+        newptr(rv, "SDL_CreateRGBSurface");
+    } else if (comp == 3) {
+        rv = SDL_CreateRGBSurface(0, x, y, 24, rmask, gmask, bmask, 0);
+        newptr(rv, "SDL_CreateRGBSurface");
+    } else {
+        free_raw_image(image_data);
+        return (0);
+    }
+
+    memcpy(rv->pixels, image_data, comp * x * y);
+
+    if (comp == 4) {
+        *mask = SDL_CreateRGBSurface(0, x, y, 32, rmask, gmask, bmask, amask);
+        newptr(*mask, "SDL_CreateRGBSurface mask");
+    } else if (comp == 3) {
+        *mask = SDL_CreateRGBSurface(0, x, y, 24, rmask, gmask, bmask, 0);
+        newptr(*mask, "SDL_CreateRGBSurface mask");
+    } else {
+        free_raw_image(image_data);
+        return (0);
+    }
+
+    memcpy((*mask)->pixels, image_data, comp * x * y);
+
+    free_raw_image(image_data);
+
+    return (rv);
+}
+
+/*
+ * Load a tex in and put it into a hash map for later lookup
+ */
+texp tex_load (const char *file, const char *name, boolean mask_needed)
+{
+    texp t = tex_find(name);
+
+    if (t) {
+        return (t);
+    }
+
+    if (!file) {
+        if (!name) {
+            DIE("no file for tex");
+        } else {
+            DIE("no file for tex loading %s", name);
+        }
+    }
+
+    SDL_Surface *surface = 0;
+    SDL_Surface *mask = 0;
+
+    if (mask_needed) {
+        surface = load_image_mask(file, &mask);
+
+        if (!surface) {
+            DIE("could not make surface from file, %s", file);
+        }
+    } else {
+        surface = load_image(file);
+
+        if (!surface) {
+            DIE("could not make surface from file, %s", file);
+        }
+    }
+
+    t = tex_from_surface(surface, mask, file, name);
+
+    return (t);
+}
+
+/*
+ * Find an existing tex.
+ */
+texp tex_find (const char *file)
+{
+    tex target;
+    tex *result;
+
+    if (!file) {
+        DIE("no filename given for tex find");
+    }
+
+    memset(&target, 0, sizeof(target));
+    target.tree.key = (char*) file;
+
+    result = (typeof(result)) tree_find(textures, &target.tree.node);
+    if (!result) {
+        return (0);
+    }
+
+    verify(result->surface);
+
+    return (result);
+}
+
+/*
+ * Load a tex in and put it into a hash map for later lookup
+ */
+texp tex_from_surface (SDL_Surface *surface,
+                       SDL_Surface *mask,
+                       const char *file,
+                       const char *name)
+{
+    GLuint gl_mask_binding = 0;
+    tex *t;
+
+    if (!surface) {
+        DIE("could not make surface from file, %s", file);
+    }
+
+    /*
+     * Check that the sdl_surface's width is a power of 2
+     */
+    if ((surface->w & (surface->w - 1)) != 0) {
+        DIE("%s has a width %u that is not a power of 2", file, surface->w)
+    }
+
+    /*
+     * Also check if the height is a power of 2
+     */
+    if ((surface->h & (surface->h - 1)) != 0) {
+        DIE("%s has a height %u that is not a power of 2", file, surface->h);
+    }
+
+    DBG("Texture: %s, %dx%d", file, surface->w, surface->h);
+
+    /*
+     * Get the number of channels in the SDL surface
+     */
+    int32_t channels = surface->format->BytesPerPixel;
+    int32_t textureFormat = 0;
+
+    if (channels == 4) {
+        /*
+         * Contains alpha channel
+         */
+        if (surface->format->Rmask == 0x000000ff) {
+            textureFormat = GL_RGBA;
+        } else {
+            textureFormat = GL_BGRA;
+        }
+    } else if (channels == 3) {
+        /*
+         * Contains no alpha channel
+         */
+        if (surface->format->Rmask == 0x000000ff) {
+            textureFormat = GL_RGB;
+        } else {
+#ifdef GL_BGR
+            textureFormat = GL_BGR;
+#else
+            DIE("%s Need support for GL_BGR", file);
+#endif
+        }
+    } else {
+        DIE("%s is not truecolor, need %d bytes per pixel", file,
+            channels);
+    }
+
+    /*
+     * Create the tex
+     */
+    GLuint gl_surface_binding;
+    glGenTextures(1, &gl_surface_binding);
+
+    /*
+     * Typical tex generation using data from the bitmap
+     */
+    glBindTexture(GL_TEXTURE_2D, gl_surface_binding);
+
+#ifdef ENABLE_INVERTED_DISPLAY
+    //
+    // If a bitmap is all black or white then it is a mask and is meant to
+    // stay that way so that we can blit it with different colors - e.g. a
+    // font.
+    //
+    // If it has colors, it needs to have those inverted.
+    //
+    {
+        boolean image_is_all_black_or_white;
+        unsigned char *p;
+        int32_t cnt;
+
+        p = (unsigned char*)surface->pixels;
+        cnt = surface->w * surface->h;
+
+        image_is_all_black_or_white = true;
+        while (cnt--) {
+            if ((*p != 255) && (*p != 0)) {
+                image_is_all_black_or_white = false;
+                break;
+            }
+            p++;
+
+            if ((*p != 255) && (*p != 0)) {
+                image_is_all_black_or_white = false;
+                break;
+            }
+            p++;
+
+            if ((*p != 255) && (*p != 0)) {
+                image_is_all_black_or_white = false;
+                break;
+            }
+            p++;
+            p++;
+        }
+
+        if (!image_is_all_black_or_white) {
+            p = (unsigned char*)surface->pixels;
+
+            cnt = surface->w * surface->h;
+
+            while (cnt--) {
+                *p = 255-*p;
+                p++;
+                *p = 255-*p;
+                p++;
+                *p = 255-*p;
+                p++;
+                p++;
+            }
+        }
+    }
+#endif
+
+    /*
+     * Generate the tex
+     */
+    glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        GL_RGBA,
+        surface->w,
+        surface->h,
+        0,
+        textureFormat,
+        GL_UNSIGNED_BYTE,
+        surface->pixels
+    );
+
+    /*
+     * linear filtering. Nearest is meant to be quicker but I didn't see
+     * that in reality.
+     */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    if (mask) {
+        /*
+         * Create the tex
+         */
+        glGenTextures(1, &gl_mask_binding);
+
+        /*
+         * Typical tex generation using data from the bitmap
+         */
+        glBindTexture(GL_TEXTURE_2D, gl_mask_binding);
+
+        //
+        // If a bitmap is all black or white then it is a mask and is meant to
+        // stay that way so that we can blit it with different colors - e.g. a
+        // font.
+        //
+        // If it has colors, it needs to have a mask made.
+        //
+        {
+            boolean image_is_all_black_or_white;
+            unsigned char *p;
+            int32_t cnt;
+
+            p = (unsigned char*)mask->pixels;
+            cnt = mask->w * mask->h;
+
+            image_is_all_black_or_white = true;
+            while (cnt--) {
+                if ((*p != 255) && (*p != 0)) {
+                    image_is_all_black_or_white = false;
+                    break;
+                }
+                p++;
+
+                if ((*p != 255) && (*p != 0)) {
+                    image_is_all_black_or_white = false;
+                    break;
+                }
+                p++;
+
+                if ((*p != 255) && (*p != 0)) {
+                    image_is_all_black_or_white = false;
+                    break;
+                }
+                p++;
+                p++;
+            }
+
+            /*
+            * Leave alpha alone.
+            */
+            if (!image_is_all_black_or_white) {
+                p = (unsigned char*)mask->pixels;
+
+                cnt = mask->w * mask->h;
+
+                while (cnt--) {
+                    *p = 255;
+                    p++;
+                    *p = 255;
+                    p++;
+                    *p = 255;
+                    p++;
+                    p++;
+                }
+            }
+        }
+
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGBA,
+            mask->w,
+            mask->h,
+            0,
+            textureFormat,
+            GL_UNSIGNED_BYTE,
+            mask->pixels
+        );
+    }
+
+    /*
+     * linear filtering. Nearest is meant to be quicker but I didn't see
+     * that in reality.
+     */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    if (!textures) {
+        textures = tree_alloc(TREE_KEY_STRING, "TREE ROOT: tex");
+    }
+
+    t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: tex");
+    t->tree.key = dupstr(name, "TREE KEY: tex");
+
+    if (!tree_insert(textures, &t->tree.node)) {
+        DIE("tex insert name [%s] failed", name);
+    }
+
+    t->width = surface->w;
+    t->height = surface->h;
+    t->gl_surface_binding = gl_surface_binding;
+    t->gl_mask_binding = gl_mask_binding;
+    t->surface = surface;
+    t->mask = mask;
+
+    return (t);
+}
+
+int32_t tex_get_gl_binding (tex *tex)
+{
+    return (tex->gl_surface_binding);
+}
+
+int32_t tex_get_gl_mask_binding (tex *tex)
+{
+    return (tex->gl_mask_binding);
+}
+
+uint32_t tex_get_width (tex *tex)
+{
+    return (tex->width);
+}
+
+uint32_t tex_get_height (tex *tex)
+{
+    return (tex->height);
+}
+
+SDL_Surface *tex_get_surface (tex *tex)
+{
+    return (tex->surface);
+}
+
+SDL_Surface *tex_get_mask (tex *tex)
+{
+    return (tex->mask);
+}
+
+/*
+ * Blits a whole tex.
+ */
+void tex_blit (tex *tex, point at)
+{
+    static point tl, br;
+
+    tl.x = at.x - tex->width/2;
+    br.y = at.y - tex->height/2;
+    br.x = at.x + tex->width/2;
+    tl.y = at.y + tex->height/2;
+
+    glBindTexture(GL_TEXTURE_2D, tex->gl_surface_binding);
+
+    blit(0.0f, 1.0f, 1.0f, 0.0f, tl.x, tl.y, br.x, br.y);
+}
+
+/*
+ * Blits a whole tex.
+ */
+void mask_blit (tex *tex, point at)
+{
+    static point tl, br;
+
+    tl.x = at.x - tex->width/2;
+    br.y = at.y - tex->height/2;
+    br.x = at.x + tex->width/2;
+    tl.y = at.y + tex->height/2;
+
+    glBindTexture(GL_TEXTURE_2D, tex->gl_mask_binding);
+
+    blit(0.0f, 1.0f, 1.0f, 0.0f, tl.x, tl.y, br.x, br.y);
+}
+
+texp string2tex (const char **s)
+{
+    static char tmp[MAXSTR];
+    static const char *eo_tmp = tmp + MAXSTR;
+    const char *c = *s;
+    char *t = tmp;
+
+    while (t < eo_tmp) {
+        if ((*c == '\0') || (*c == '$')) {
+            break;
+        }
+
+        *t++ = *c++;
+    }
+
+    if (c == eo_tmp) {
+        return (0);
+    }
+
+    *t++ = '\0';
+    *s += (t - tmp);
+
+    tex find;
+    tex *target;
+
+    memset(&find, 0, sizeof(find));
+    find.tree.key = tmp;
+
+    target = (typeof(target)) tree_find(textures, &find.tree.node);
+    if (!target) {
+        DIE("unknown tex [%s]", tmp);
+    }
+
+    return (target);
+}

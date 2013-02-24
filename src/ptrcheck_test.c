@@ -1,0 +1,28 @@
+/*
+ * Copyright (C) 2011 Neil McGill
+ *
+ * See the README file for license.
+ *
+ * A useful hack to help debug stale/free/bad pointers.
+ */
+
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "main.h"
+
+boolean ptrcheck_test (int32_t argc, char *argv[])
+{
+    void *p;
+
+    ptrcheck_leak_snapshot();
+
+    p = myzalloc(10, "ptrcheck_test a");
+    verify(p);
+    myfree(p);
+
+    p = mymalloc(10, "ptrcheck_test b");
+    verify(p);
+
+    return (0);
+}
