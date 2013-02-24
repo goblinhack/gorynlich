@@ -1,0 +1,725 @@
+COMPILER_FLAGS=-g -O2 -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE # AUTOGEN
+    
+CLANG_COMPILER_WARNINGS=-Wall -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-sign-conversion # AUTOGEN
+GCC_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN
+GXX_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN
+COMPILER_WARNINGS=$(GCC_COMPILER_WARNINGS) # AUTOGEN
+COMPILER_WARNINGS=$(GXX_COMPILER_WARNINGS) # AUTOGEN
+COMPILER_WARNINGS=$(CLANG_COMPILER_WARNINGS) # AUTOGEN
+CC=clang # AUTOGEN
+# CC=gcc # AUTOGEN
+# CC=cc # AUTOGEN
+# CC=g++ # AUTOGEN
+    
+EXE= # AUTOGEN
+LDLIBS=-L/usr/local/lib /usr/local/lib/libSDLmain.a /usr/local/lib/libSDL.a -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit -lSDL_mixer # AUTOGEN
+CFLAGS=$(COMPILER_FLAGS) $(COMPILER_WARNINGS) # AUTOGEN
+
+
+NAME=Gorynlich
+OBJDIR=.o
+
+GAME_OBJECTS=				\
+    $(OBJDIR)/backtrace.o 		\
+    $(OBJDIR)/color.o			\
+    $(OBJDIR)/command.o 		\
+    $(OBJDIR)/config.o			\
+    $(OBJDIR)/demarshal.o 		\
+    $(OBJDIR)/dir.o 			\
+    $(OBJDIR)/dir_test.o 		\
+    $(OBJDIR)/enum_test.o 		\
+    $(OBJDIR)/file.o 			\
+    $(OBJDIR)/font.o 			\
+    $(OBJDIR)/gl.o 			\
+    $(OBJDIR)/glshapes.o 		\
+    $(OBJDIR)/item.o 			\
+    $(OBJDIR)/level.o 			\
+    $(OBJDIR)/log.o 			\
+    $(OBJDIR)/main.o 			\
+    $(OBJDIR)/map.o 			\
+    $(OBJDIR)/marshal.o 		\
+    $(OBJDIR)/marshal_test.o 		\
+    $(OBJDIR)/math.o 			\
+    $(OBJDIR)/music.o 			\
+    $(OBJDIR)/sound.o 			\
+    $(OBJDIR)/miniz.o 			\
+    $(OBJDIR)/miniz_test.o 		\
+    $(OBJDIR)/mzip_file.o 		\
+    $(OBJDIR)/mzip_file_test.o 		\
+    $(OBJDIR)/mzip_lib.o 		\
+    $(OBJDIR)/pixel.o 			\
+    $(OBJDIR)/player.o 			\
+    $(OBJDIR)/point.o 			\
+    $(OBJDIR)/ptrcheck.o 		\
+    $(OBJDIR)/ptrcheck_test.o 		\
+    $(OBJDIR)/ramdisk_read.o 		\
+    $(OBJDIR)/resource.o 		\
+    $(OBJDIR)/sdl.o 			\
+    $(OBJDIR)/slre.o 			\
+    $(OBJDIR)/stb_image.o 		\
+    $(OBJDIR)/string.o 			\
+    $(OBJDIR)/string_ext.o 		\
+    $(OBJDIR)/string_test.o 		\
+    $(OBJDIR)/tex.o 			\
+    $(OBJDIR)/thing.o 			\
+    $(OBJDIR)/thing_ai.o 		\
+    $(OBJDIR)/thing_item.o 		\
+    $(OBJDIR)/thing_tick.o 		\
+    $(OBJDIR)/thing_timer.o 		\
+    $(OBJDIR)/thing_anim.o 		\
+    $(OBJDIR)/thing_collision.o 	\
+    $(OBJDIR)/thing_template.o 		\
+    $(OBJDIR)/thing_tile.o 		\
+    $(OBJDIR)/tile.o 			\
+    $(OBJDIR)/timer.o 			\
+    $(OBJDIR)/init_fn.o 		\
+    $(OBJDIR)/time.o 			\
+    $(OBJDIR)/token.o 			\
+    $(OBJDIR)/tree.o 			\
+    $(OBJDIR)/tree_test.o 		\
+    $(OBJDIR)/ttf.o 			\
+    $(OBJDIR)/util.o 			\
+    $(OBJDIR)/wid.o 			\
+    $(OBJDIR)/wid_console.o 		\
+    $(OBJDIR)/wid_dirlist.o 		\
+    $(OBJDIR)/wid_text_input.o 		\
+    $(OBJDIR)/wid_editor.o 		\
+    $(OBJDIR)/wid_editor_buttons.o 	\
+    $(OBJDIR)/wid_editor_map.o 		\
+    $(OBJDIR)/wid_game_map.o 		\
+    $(OBJDIR)/wid_splash.o 		\
+    $(OBJDIR)/wid_intro.o 		\
+    $(OBJDIR)/wid_intro_about.o 	\
+    $(OBJDIR)/wid_intro_settings.o 	\
+    $(OBJDIR)/wid_hiscore.o 		\
+    $(OBJDIR)/wid_intro_help.o 		\
+    $(OBJDIR)/wid_intro_guide.o 	\
+    $(OBJDIR)/wid_game_over.o 		\
+    $(OBJDIR)/wid_popup.o 		\
+    $(OBJDIR)/wid_test.o 		\
+    $(OBJDIR)/wid_textbox.o 		\
+    $(OBJDIR)/wid_tooltip.o 		\
+    $(OBJDIR)/wid_button.o 		\
+
+RAMDISK_WRITE_OBJECTS=			\
+    $(OBJDIR)/ramdisk_write.o 		\
+
+RAMDISK_DATA_OBJECTS=			\
+    $(OBJDIR)/ramdisk_data.o 		\
+
+MZIP_OBJECTS=				\
+    $(OBJDIR)/util_basic.o 		\
+    $(OBJDIR)/string.o 			\
+    $(OBJDIR)/file.o 			\
+    $(OBJDIR)/miniz.o 			\
+    $(OBJDIR)/mzip_lib.o 		\
+    $(OBJDIR)/mzip_file.o 		\
+    $(OBJDIR)/mzip.o 			\
+
+MUNZIP_OBJECTS=				\
+    $(OBJDIR)/util_basic.o 		\
+    $(OBJDIR)/file.o 			\
+    $(OBJDIR)/string.o 			\
+    $(OBJDIR)/miniz.o 			\
+    $(OBJDIR)/mzip_lib.o 		\
+    $(OBJDIR)/mzip_file.o 		\
+    $(OBJDIR)/munzip.o 			\
+
+#
+# compile
+#
+$(OBJDIR)/%.o: %.c
+	@echo $(CC) $(CFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
+
+#
+# link
+#
+ALL_GAME_OBJECTS=$(GAME_OBJECTS) $(RAMDISK_DATA_OBJECTS)
+
+TARGET_GAME=$(NAME)$(EXE)
+
+$(TARGET_GAME): $(ALL_GAME_OBJECTS)
+	$(CC) $(ALL_GAME_OBJECTS) $(LDLIBS) -o ../$(TARGET_GAME)
+
+#
+# make_ramdisk
+#
+TARGET_RAMDISK=make_ramdisk$(EXE)
+
+$(TARGET_RAMDISK): $(RAMDISK_WRITE_OBJECTS)
+	@echo $(CC) $(CFLAGS) $(RAMDISK_WRITE_OBJECTS) -lz -o $(TARGET_RAMDISK)
+	@$(CC) $(CFLAGS) $(RAMDISK_WRITE_OBJECTS) -lz -o $(TARGET_RAMDISK)
+
+#
+# mzip
+#
+TARGET_MZIP=mzip$(EXE)
+
+$(TARGET_MZIP): $(MZIP_OBJECTS)
+	@echo $(CC) $(CFLAGS) $(MZIP_OBJECTS) -lz -o $(TARGET_MZIP)
+	@$(CC) $(CFLAGS) $(MZIP_OBJECTS) -lz -o $(TARGET_MZIP)
+
+#
+# munzip
+#
+TARGET_MUNZIP=munzip$(EXE)
+
+$(TARGET_MUNZIP): $(MUNZIP_OBJECTS)
+	@echo $(CC) $(CFLAGS) $(MUNZIP_OBJECTS) -lz -o $(TARGET_MUNZIP)
+	@$(CC) $(CFLAGS) $(MUNZIP_OBJECTS) -lz -o $(TARGET_MUNZIP)
+
+#
+# To force clean and avoid "up to date" warning.
+#
+.PHONY: clean
+.PHONY: clobber
+
+clean:
+	rm -rf ../$(TARGET_GAME) ../stdout.txt ../stderr.txt
+	rm -rf $(GAME_OBJECTS) $(TARGET_GAME) stdout.txt stderr.txt
+	rm -rf $(TARGET_MZIP)
+	rm -rf $(TARGET_MUNZIP)
+	rm -rf $(TARGET_RAMDISK)
+
+clobber: clean
+	rm -rf $(OBJDIR)
+	mkdir -p $(OBJDIR)
+
+other: $(TARGET_RAMDISK) $(TARGET_MZIP) $(TARGET_MUNZIP)
+
+valgrind:
+	valgrind --gen-suppressions=all --leak-check=full --suppressions=valgrind.suppress --error-limit=no ../$(NAME)
+
+all: $(TARGET_GAME)
+# DO NOT DELETE
+
+.o/backtrace.o: /usr/include/execinfo.h /usr/include/sys/cdefs.h
+.o/backtrace.o: /usr/include/stdio.h /usr/include/_types.h
+.o/backtrace.o: /usr/include/sys/_types.h /usr/include/machine/_types.h
+.o/backtrace.o: /usr/include/i386/_types.h /usr/include/secure/_stdio.h
+.o/backtrace.o: /usr/include/secure/_common.h /usr/include/stdlib.h
+.o/backtrace.o: /usr/include/Availability.h
+.o/backtrace.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/backtrace.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/backtrace.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/backtrace.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/backtrace.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/backtrace.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/backtrace.o: /usr/include/sys/_endian.h
+.o/backtrace.o: /usr/include/libkern/_OSByteOrder.h
+.o/backtrace.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/backtrace.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/backtrace.o: /usr/include/i386/types.h /usr/include/string.h
+.o/backtrace.o: /usr/include/secure/_string.h main.h /usr/include/stdint.h
+.o/backtrace.o: ptrcheck.h backtrace.h
+.o/color.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/color.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/color.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/color.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/color.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/color.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/color.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/color.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/color.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/color.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/color.o: /usr/include/libkern/_OSByteOrder.h
+.o/color.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/color.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/color.o: /usr/include/stdio.h /usr/include/secure/_stdio.h
+.o/color.o: /usr/include/secure/_common.h /usr/include/string.h
+.o/color.o: /usr/include/secure/_string.h glapi.h main.h
+.o/color.o: /usr/include/stdint.h ptrcheck.h color.h gl.h tree.h
+.o/command.o: /usr/include/string.h /usr/include/_types.h
+.o/command.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/command.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/command.o: /usr/include/secure/_string.h /usr/include/secure/_common.h
+.o/command.o: /usr/include/stdio.h /usr/include/secure/_stdio.h
+.o/command.o: /usr/include/stdarg.h /usr/include/stdlib.h
+.o/command.o: /usr/include/Availability.h /usr/include/AvailabilityInternal.h
+.o/command.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/command.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/command.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/command.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/command.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/command.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/command.o: /usr/include/libkern/_OSByteOrder.h
+.o/command.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/command.o: /usr/include/machine/types.h /usr/include/i386/types.h slre.h
+.o/command.o: main.h /usr/include/stdint.h ptrcheck.h command.h token.h
+.o/command.o: tree.h
+.o/config.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/config.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/config.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/config.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/config.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/config.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/config.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/config.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/config.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/config.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/config.o: /usr/include/libkern/_OSByteOrder.h
+.o/config.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/config.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/config.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/config.o: /usr/include/secure/_common.h main.h /usr/include/stdint.h
+.o/config.o: ptrcheck.h marshal.h tree.h config.h gl.h
+.o/demarshal.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/demarshal.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/demarshal.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/demarshal.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/demarshal.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/demarshal.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/demarshal.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/demarshal.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/demarshal.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/demarshal.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/demarshal.o: /usr/include/libkern/_OSByteOrder.h
+.o/demarshal.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/demarshal.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/demarshal.o: /usr/include/i386/types.h /usr/include/ctype.h
+.o/demarshal.o: /usr/include/runetype.h /usr/include/stdio.h
+.o/demarshal.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/demarshal.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/demarshal.o: /usr/include/stdarg.h main.h /usr/include/stdint.h ptrcheck.h
+.o/demarshal.o: tree.h file.h marshal.h ramdisk.h
+.o/dir.o: /usr/include/dirent.h /usr/include/_types.h
+.o/dir.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/dir.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/dir.o: /usr/include/sys/dirent.h /usr/include/Availability.h
+.o/dir.o: /usr/include/AvailabilityInternal.h /usr/include/errno.h
+.o/dir.o: /usr/include/sys/errno.h /usr/include/libgen.h
+.o/dir.o: /usr/include/limits.h /usr/include/machine/limits.h
+.o/dir.o: /usr/include/i386/limits.h /usr/include/i386/_limits.h
+.o/dir.o: /usr/include/sys/syslimits.h /usr/include/stdio.h
+.o/dir.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/dir.o: /usr/include/stdlib.h /usr/include/sys/wait.h
+.o/dir.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/dir.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/dir.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/dir.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/dir.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/dir.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/dir.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/dir.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/dir.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/dir.o: /usr/include/sys/param.h /usr/include/sys/types.h
+.o/dir.o: /usr/include/machine/param.h /usr/include/i386/param.h
+.o/dir.o: /usr/include/i386/_param.h /usr/include/sys/stat.h
+.o/dir.o: /usr/include/stdarg.h /usr/include/unistd.h
+.o/dir.o: /usr/include/sys/unistd.h /usr/include/sys/select.h
+.o/dir.o: /usr/include/sys/_select.h main.h /usr/include/stdint.h ptrcheck.h
+.o/dir.o: dir.h tree.h ramdisk.h
+.o/dir_test.o: /usr/include/stdio.h /usr/include/_types.h
+.o/dir_test.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/dir_test.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/dir_test.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/dir_test.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/dir_test.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/dir_test.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/dir_test.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/dir_test.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/dir_test.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/dir_test.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/dir_test.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/dir_test.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/dir_test.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/dir_test.o: /usr/include/string.h /usr/include/secure/_string.h main.h
+.o/dir_test.o: /usr/include/stdint.h ptrcheck.h dir.h tree.h
+.o/enum_test.o: /usr/include/stdio.h /usr/include/_types.h
+.o/enum_test.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/enum_test.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/enum_test.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/enum_test.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/enum_test.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/enum_test.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/enum_test.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/enum_test.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/enum_test.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/enum_test.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/enum_test.o: /usr/include/sys/_endian.h
+.o/enum_test.o: /usr/include/libkern/_OSByteOrder.h
+.o/enum_test.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/enum_test.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/enum_test.o: /usr/include/i386/types.h /usr/include/string.h
+.o/enum_test.o: /usr/include/secure/_string.h main.h /usr/include/stdint.h
+.o/enum_test.o: ptrcheck.h marshal.h tree.h enum.h
+.o/file.o: /usr/include/stdio.h /usr/include/_types.h
+.o/file.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/file.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/file.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/file.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/file.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/file.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/file.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/file.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/file.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/file.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/file.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/file.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/file.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/file.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/file.o: /usr/include/errno.h /usr/include/sys/errno.h
+.o/file.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+.o/file.o: /usr/include/sys/select.h /usr/include/sys/_select.h
+.o/file.o: /usr/include/sys/stat.h /usr/include/time.h
+.o/file.o: /usr/include/_structs.h main.h /usr/include/stdint.h ptrcheck.h
+.o/file.o: mzip_file.h file.h
+.o/font.o: /usr/include/string.h /usr/include/_types.h
+.o/font.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/font.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/font.o: /usr/include/secure/_string.h /usr/include/secure/_common.h main.h
+.o/font.o: /usr/include/stdint.h ptrcheck.h ttf.h enum.h tree.h font.h
+.o/gl.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/gl.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/gl.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/gl.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/gl.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/gl.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/gl.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/gl.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/gl.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/gl.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/gl.o: /usr/include/libkern/_OSByteOrder.h
+.o/gl.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/gl.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/gl.o: /usr/include/stdio.h /usr/include/secure/_stdio.h
+.o/gl.o: /usr/include/secure/_common.h /usr/include/string.h
+.o/gl.o: /usr/include/secure/_string.h glapi.h main.h /usr/include/stdint.h
+.o/gl.o: ptrcheck.h config.h gl.h
+.o/glshapes.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/glshapes.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/glshapes.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/glshapes.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/glshapes.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/glshapes.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/glshapes.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/glshapes.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/glshapes.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/glshapes.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/glshapes.o: /usr/include/libkern/_OSByteOrder.h
+.o/glshapes.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/glshapes.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/glshapes.o: /usr/include/stdio.h /usr/include/secure/_stdio.h
+.o/glshapes.o: /usr/include/secure/_common.h /usr/include/string.h
+.o/glshapes.o: /usr/include/secure/_string.h /usr/include/math.h
+.o/glshapes.o: /usr/include/architecture/i386/math.h glapi.h main.h
+.o/glshapes.o: /usr/include/stdint.h ptrcheck.h gl.h color.h
+.o/init_fn.o: main.h /usr/include/stdint.h ptrcheck.h tree.h init_fn.h
+.o/init_fn.o: init_fn_private.h /usr/include/string.h /usr/include/_types.h
+.o/init_fn.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/init_fn.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/init_fn.o: /usr/include/secure/_string.h /usr/include/secure/_common.h
+.o/init_fn.o: /usr/include/time.h /usr/include/_structs.h
+.o/init_fn.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/init_fn.o: /usr/include/i386/_structs.h /usr/include/sys/appleapiopts.h
+.o/item.o: main.h /usr/include/stdint.h ptrcheck.h tree.h thing.h
+.o/item.o: item_private.h item.h thing_template.h /usr/include/string.h
+.o/item.o: /usr/include/_types.h /usr/include/sys/_types.h
+.o/item.o: /usr/include/sys/cdefs.h /usr/include/machine/_types.h
+.o/item.o: /usr/include/i386/_types.h /usr/include/secure/_string.h
+.o/item.o: /usr/include/secure/_common.h
+.o/level.o: /usr/include/errno.h /usr/include/sys/errno.h
+.o/level.o: /usr/include/sys/cdefs.h /usr/include/time.h
+.o/level.o: /usr/include/_types.h /usr/include/sys/_types.h
+.o/level.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/level.o: /usr/include/_structs.h /usr/include/sys/_structs.h
+.o/level.o: /usr/include/machine/_structs.h /usr/include/i386/_structs.h
+.o/level.o: /usr/include/sys/appleapiopts.h slre.h main.h
+.o/level.o: /usr/include/stdint.h ptrcheck.h /usr/include/string.h
+.o/level.o: /usr/include/secure/_string.h /usr/include/secure/_common.h
+.o/level.o: marshal.h tree.h wid.h wid_popup.h wid_textbox.h gl.h color.h
+.o/level.o: item.h level.h level_private.h tile.h player.h thing.h
+.o/level.o: thing_template.h thing_tile.h command.h token.h wid_button.h
+.o/level.o: wid_game_map.h wid_editor_map.h sdl.h map.h timer.h wid_hiscore.h
+.o/level.o: music.h sound.h wid_console.h
+.o/log.o: /usr/include/stdio.h /usr/include/_types.h
+.o/log.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/log.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/log.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/log.o: /usr/include/stdarg.h /usr/include/string.h
+.o/log.o: /usr/include/secure/_string.h slre.h main.h /usr/include/stdint.h
+.o/log.o: ptrcheck.h backtrace.h wid_console.h gl.h /usr/include/time.h
+.o/log.o: /usr/include/_structs.h /usr/include/sys/_structs.h
+.o/log.o: /usr/include/machine/_structs.h /usr/include/i386/_structs.h
+.o/log.o: /usr/include/sys/appleapiopts.h command.h token.h thing.h level.h
+.o/log.o: item.h tree.h timer.h init_fn.h wid.h
+.o/main.o: /usr/include/stdio.h /usr/include/_types.h
+.o/main.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/main.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/main.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/main.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/main.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/main.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/main.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/main.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/main.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/main.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/main.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/main.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/main.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/main.o: /usr/include/libgen.h /usr/include/limits.h
+.o/main.o: /usr/include/machine/limits.h /usr/include/i386/limits.h
+.o/main.o: /usr/include/i386/_limits.h /usr/include/sys/syslimits.h
+.o/main.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+.o/main.o: /usr/include/sys/select.h /usr/include/sys/_select.h
+.o/main.o: /usr/include/string.h /usr/include/secure/_string.h slre.h main.h
+.o/main.o: /usr/include/stdint.h ptrcheck.h gl.h config.h wid_console.h
+.o/main.o: command.h token.h color.h ttf.h enum.h tree.h font.h
+.o/main.o: /usr/include/math.h /usr/include/architecture/i386/math.h tex.h
+.o/main.o: music.h sound.h tile.h thing.h thing_template.h wid.h sdl.h
+.o/main.o: wid_editor.h wid_game_map.h wid_intro_about.h wid_intro_help.h
+.o/main.o: wid_intro_guide.h wid_game_over.h wid_intro_settings.h
+.o/main.o: wid_hiscore.h wid_intro.h dir.h file.h player.h level.h resource.h
+.o/main.o: init_fn.h
+.o/map.o: main.h /usr/include/stdint.h ptrcheck.h map.h tree.h wid.h
+.o/map.o: wid_game_map.h thing.h thing_template.h thing_tile.h level.h
+.o/map.o: level_private.h
+.o/marshal.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/marshal.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/marshal.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/marshal.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/marshal.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/marshal.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/marshal.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/marshal.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/marshal.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/marshal.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/marshal.o: /usr/include/libkern/_OSByteOrder.h
+.o/marshal.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/marshal.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/marshal.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/marshal.o: /usr/include/secure/_common.h /usr/include/math.h
+.o/marshal.o: /usr/include/architecture/i386/math.h /usr/include/stdio.h
+.o/marshal.o: /usr/include/secure/_stdio.h main.h /usr/include/stdint.h
+.o/marshal.o: ptrcheck.h file.h mzip_file.h marshal.h tree.h string_ext.h
+.o/marshal.o: enum.h
+.o/marshal_test.o: /usr/include/stdio.h /usr/include/_types.h
+.o/marshal_test.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/marshal_test.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/marshal_test.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/marshal_test.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/marshal_test.o: /usr/include/AvailabilityInternal.h
+.o/marshal_test.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/marshal_test.o: /usr/include/sys/appleapiopts.h
+.o/marshal_test.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/marshal_test.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/marshal_test.o: /usr/include/machine/_structs.h
+.o/marshal_test.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/marshal_test.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/marshal_test.o: /usr/include/libkern/_OSByteOrder.h
+.o/marshal_test.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/marshal_test.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/marshal_test.o: /usr/include/i386/types.h /usr/include/string.h
+.o/marshal_test.o: /usr/include/secure/_string.h main.h /usr/include/stdint.h
+.o/marshal_test.o: ptrcheck.h marshal.h tree.h enum.h
+.o/math.o: /usr/include/math.h /usr/include/architecture/i386/math.h
+.o/math.o: /usr/include/sys/cdefs.h main.h /usr/include/stdint.h ptrcheck.h
+.o/mazegen.o: /usr/include/stdio.h /usr/include/_types.h
+.o/mazegen.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/mazegen.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/mazegen.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/mazegen.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/mazegen.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/mazegen.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/mazegen.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/mazegen.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/mazegen.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/mazegen.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/mazegen.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/mazegen.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/mazegen.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/mazegen.o: /usr/include/unistd.h /usr/include/sys/unistd.h
+.o/mazegen.o: /usr/include/sys/select.h /usr/include/sys/_select.h
+.o/mazegen.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/mazegen.o: /usr/include/time.h /usr/include/_structs.h
+.o/miniz.o: /usr/include/stdio.h /usr/include/_types.h
+.o/miniz.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/miniz.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/miniz.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/miniz.o: /usr/include/assert.h /usr/include/stdlib.h
+.o/miniz.o: /usr/include/Availability.h /usr/include/AvailabilityInternal.h
+.o/miniz.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/miniz.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/miniz.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/miniz.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/miniz.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/miniz.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/miniz.o: /usr/include/libkern/_OSByteOrder.h
+.o/miniz.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/miniz.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/miniz.o: /usr/include/time.h /usr/include/_structs.h /usr/include/string.h
+.o/miniz.o: /usr/include/secure/_string.h /usr/include/sys/stat.h
+.o/miniz.o: /usr/include/utime.h
+.o/miniz_test.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/miniz_test.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/miniz_test.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/miniz_test.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/miniz_test.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/miniz_test.o: /usr/include/sys/appleapiopts.h
+.o/miniz_test.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/miniz_test.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/miniz_test.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/miniz_test.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/miniz_test.o: /usr/include/sys/_endian.h
+.o/miniz_test.o: /usr/include/libkern/_OSByteOrder.h
+.o/miniz_test.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/miniz_test.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/miniz_test.o: /usr/include/i386/types.h /usr/include/string.h
+.o/miniz_test.o: /usr/include/secure/_string.h /usr/include/secure/_common.h
+.o/miniz_test.o: miniz.h /usr/include/stdio.h /usr/include/secure/_stdio.h
+.o/miniz_test.o: /usr/include/time.h /usr/include/_structs.h main.h
+.o/miniz_test.o: /usr/include/stdint.h ptrcheck.h
+.o/munzip.o: /usr/include/stdio.h /usr/include/_types.h
+.o/munzip.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/munzip.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/munzip.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/munzip.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/munzip.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/munzip.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/munzip.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/munzip.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/munzip.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/munzip.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/munzip.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/munzip.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/munzip.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/munzip.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/munzip.o: /usr/include/errno.h /usr/include/sys/errno.h main.h
+.o/munzip.o: /usr/include/stdint.h ptrcheck.h file.h mzip_lib.h mzip_file.h
+.o/music.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/music.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/music.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/music.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/music.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/music.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/music.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/music.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/music.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/music.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/music.o: /usr/include/libkern/_OSByteOrder.h
+.o/music.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/music.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/music.o: /usr/include/stdio.h /usr/include/secure/_stdio.h
+.o/music.o: /usr/include/secure/_common.h /usr/include/string.h
+.o/music.o: /usr/include/secure/_string.h glapi.h main.h
+.o/music.o: /usr/include/stdint.h ptrcheck.h music.h ramdisk.h tree.h
+.o/music.o: config.h
+.o/mzip.o: /usr/include/stdio.h /usr/include/_types.h
+.o/mzip.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/mzip.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/mzip.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/mzip.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/mzip.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/mzip.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/mzip.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/mzip.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/mzip.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/mzip.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/mzip.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/mzip.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/mzip.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/mzip.o: /usr/include/string.h /usr/include/secure/_string.h main.h
+.o/mzip.o: /usr/include/stdint.h ptrcheck.h file.h mzip_file.h
+.o/mzip_file.o: /usr/include/stdio.h /usr/include/_types.h
+.o/mzip_file.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/mzip_file.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/mzip_file.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/mzip_file.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/mzip_file.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/mzip_file.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/mzip_file.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/mzip_file.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/mzip_file.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/mzip_file.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/mzip_file.o: /usr/include/sys/_endian.h
+.o/mzip_file.o: /usr/include/libkern/_OSByteOrder.h
+.o/mzip_file.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/mzip_file.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/mzip_file.o: /usr/include/i386/types.h /usr/include/string.h
+.o/mzip_file.o: /usr/include/secure/_string.h /usr/include/errno.h
+.o/mzip_file.o: /usr/include/sys/errno.h main.h /usr/include/stdint.h
+.o/mzip_file.o: ptrcheck.h file.h mzip_file.h mzip_lib.h
+.o/mzip_file_test.o: /usr/include/stdio.h /usr/include/_types.h
+.o/mzip_file_test.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/mzip_file_test.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/mzip_file_test.o: /usr/include/secure/_stdio.h
+.o/mzip_file_test.o: /usr/include/secure/_common.h /usr/include/stdlib.h
+.o/mzip_file_test.o: /usr/include/Availability.h
+.o/mzip_file_test.o: /usr/include/AvailabilityInternal.h
+.o/mzip_file_test.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/mzip_file_test.o: /usr/include/sys/appleapiopts.h
+.o/mzip_file_test.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/mzip_file_test.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/mzip_file_test.o: /usr/include/machine/_structs.h
+.o/mzip_file_test.o: /usr/include/sys/resource.h
+.o/mzip_file_test.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/mzip_file_test.o: /usr/include/sys/_endian.h
+.o/mzip_file_test.o: /usr/include/libkern/_OSByteOrder.h
+.o/mzip_file_test.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/mzip_file_test.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/mzip_file_test.o: /usr/include/i386/types.h /usr/include/string.h
+.o/mzip_file_test.o: /usr/include/secure/_string.h /usr/include/errno.h
+.o/mzip_file_test.o: /usr/include/sys/errno.h main.h /usr/include/stdint.h
+.o/mzip_file_test.o: ptrcheck.h file.h mzip_file.h
+.o/mzip_lib.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/mzip_lib.o: /usr/include/AvailabilityInternal.h /usr/include/_types.h
+.o/mzip_lib.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/mzip_lib.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/mzip_lib.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/mzip_lib.o: /usr/include/sys/appleapiopts.h /usr/include/machine/signal.h
+.o/mzip_lib.o: /usr/include/i386/signal.h /usr/include/i386/_structs.h
+.o/mzip_lib.o: /usr/include/sys/_structs.h /usr/include/machine/_structs.h
+.o/mzip_lib.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/mzip_lib.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/mzip_lib.o: /usr/include/libkern/_OSByteOrder.h
+.o/mzip_lib.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/mzip_lib.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/mzip_lib.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/mzip_lib.o: /usr/include/secure/_common.h miniz.h /usr/include/stdio.h
+.o/mzip_lib.o: /usr/include/secure/_stdio.h /usr/include/time.h
+.o/mzip_lib.o: /usr/include/_structs.h main.h /usr/include/stdint.h
+.o/mzip_lib.o: ptrcheck.h mzip_lib.h
+.o/pixel.o: main.h /usr/include/stdint.h ptrcheck.h gl.h pixel.h
+.o/player.o: main.h /usr/include/stdint.h ptrcheck.h thing.h tree.h player.h
+.o/player.o: marshal.h level.h
+.o/point.o: /usr/include/math.h /usr/include/architecture/i386/math.h
+.o/point.o: /usr/include/sys/cdefs.h main.h /usr/include/stdint.h ptrcheck.h
+.o/point.o: gl.h
+.o/ptrcheck.o: /usr/include/stdio.h /usr/include/_types.h
+.o/ptrcheck.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/ptrcheck.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/ptrcheck.o: /usr/include/secure/_stdio.h /usr/include/secure/_common.h
+.o/ptrcheck.o: /usr/include/stdint.h /usr/include/stdlib.h
+.o/ptrcheck.o: /usr/include/Availability.h
+.o/ptrcheck.o: /usr/include/AvailabilityInternal.h /usr/include/sys/wait.h
+.o/ptrcheck.o: /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h
+.o/ptrcheck.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/ptrcheck.o: /usr/include/i386/_structs.h /usr/include/sys/_structs.h
+.o/ptrcheck.o: /usr/include/machine/_structs.h /usr/include/sys/resource.h
+.o/ptrcheck.o: /usr/include/machine/endian.h /usr/include/i386/endian.h
+.o/ptrcheck.o: /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h
+.o/ptrcheck.o: /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h
+.o/ptrcheck.o: /usr/include/machine/types.h /usr/include/i386/types.h
+.o/ptrcheck.o: /usr/include/string.h /usr/include/secure/_string.h
+.o/ptrcheck.o: /usr/include/time.h /usr/include/_structs.h slre.h main.h
+.o/ptrcheck.o: ptrcheck.h backtrace.h tree.h command.h token.h
+.o/ptrcheck_test.o: /usr/include/unistd.h /usr/include/_types.h
+.o/ptrcheck_test.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
+.o/ptrcheck_test.o: /usr/include/machine/_types.h /usr/include/i386/_types.h
+.o/ptrcheck_test.o: /usr/include/sys/unistd.h /usr/include/sys/select.h
+.o/ptrcheck_test.o: /usr/include/sys/appleapiopts.h
+.o/ptrcheck_test.o: /usr/include/sys/_structs.h
+.o/ptrcheck_test.o: /usr/include/machine/_structs.h
+.o/ptrcheck_test.o: /usr/include/i386/_structs.h /usr/include/sys/_select.h
+.o/ptrcheck_test.o: /usr/include/stdlib.h /usr/include/Availability.h
+.o/ptrcheck_test.o: /usr/include/AvailabilityInternal.h
+.o/ptrcheck_test.o: /usr/include/sys/wait.h /usr/include/sys/signal.h
+.o/ptrcheck_test.o: /usr/include/machine/signal.h /usr/include/i386/signal.h
+.o/ptrcheck_test.o: /usr/include/sys/resource.h /usr/include/machine/endian.h
+.o/ptrcheck_test.o: /usr/include/i386/endian.h /usr/include/sys/_endian.h
+.o/ptrcheck_test.o: /usr/include/libkern/_OSByteOrder.h
+.o/ptrcheck_test.o: /usr/include/libkern/i386/_OSByteOrder.h
+.o/ptrcheck_test.o: /usr/include/alloca.h /usr/include/machine/types.h
+.o/ptrcheck_test.o: /usr/include/i386/types.h main.h /usr/include/stdint.h
+.o/ptrcheck_test.o: ptrcheck.h
