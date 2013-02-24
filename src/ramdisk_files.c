@@ -1,12 +1,6 @@
 
 ramdisk_t ramdisk_files[] = {
     {
-        "data/.DS_Store",
-        0,
-        0,
-        0,
-    },
-    {
         "data/gfx/background_grass.png",
         0,
         0,
@@ -37,6 +31,12 @@ ramdisk_t ramdisk_files[] = {
         0,
     },
     {
+        "data/gfx/gorynlich.png",
+        0,
+        0,
+        0,
+    },
+    {
         "data/gfx/help1.png",
         0,
         0,
@@ -50,12 +50,6 @@ ramdisk_t ramdisk_files[] = {
     },
     {
         "data/gfx/help3.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/gorynlich.png",
         0,
         0,
         0,
@@ -494,30 +488,6 @@ ramdisk_t ramdisk_files[] = {
     },
     {
         "data/things/wall",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/ttf/Captains.ttf_pointsize40.data",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/ttf/Captains.ttf_pointsize40.tga",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/ttf/Captains.ttf_pointsize81.data",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/ttf/Captains.ttf_pointsize81.tga",
         0,
         0,
         0,
