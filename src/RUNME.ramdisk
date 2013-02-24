@@ -7,7 +7,7 @@ RAMDISK_FILES=.ramdisk_files
 log_info "Creating ramdisk filelist"
 
 cd ..
-find data -type f | grep -v "\.svn" | grep -v "\.ttf$" > $RAMDISK_FILES
+find data -type f | grep -v Resources | grep -v "\.svn" | grep -v "\.ttf$" > $RAMDISK_FILES
 if [ ! -s $ramdisk_files ]
 then
     cd src
