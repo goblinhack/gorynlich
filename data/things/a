@@ -1,0 +1,16 @@
+{
+ shortname="a"
+ tooltip="Bonus letter"
+ z_depth=1
+ z_order=2
+ is_bonus_letter
+ is_item_perma
+ is_thing
+ is_item_hidden
+ score_on_collect=500
+ tiles={
+  tile={
+   tile="a"
+  }
+ }
+}

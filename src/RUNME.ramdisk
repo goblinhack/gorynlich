@@ -1,0 +1,53 @@
+#!/bin/sh
+
+. ../scripts/common.sh
+
+RAMDISK_FILES=.ramdisk_files
+
+log_info "Creating ramdisk filelist"
+
+cd ..
+find data -type f | grep -v "\.svn" | grep -v "\.ttf$" > $RAMDISK_FILES
+if [ ! -s $ramdisk_files ]
+then
+    cd src
+    log_die "Failed to build list of ramdisk files"
+fi
+
+/bin/rm src/ramdisk_files.c
+scripts/RUNME.ramdisk.pl $RAMDISK_FILES
+if [ ! -s src/ramdisk_files.c ]
+then
+    cd src
+    log_die "Failed to build ramdisk_files.c"
+fi
+
+/bin/rm -f RAMDISK_FILES
+
+cd src
+log_info "Building"
+
+make clobber
+make other
+
+cd ..
+src/make_ramdisk > src/ramdisk_data.c
+if [ $? != 0 ]
+then
+    cd src
+    log_die "Failed to build ramdisk_data.c"
+fi
+
+/bin/rm src/make_ramdisk
+
+if [ ! -s src/ramdisk_data.c ]
+then
+    cd src
+    log_die "Failed to build ramdisk_data.c"
+fi
+
+log_info "Success"
+
+./RUNME
+
+cd src

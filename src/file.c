@@ -1,0 +1,253 @@
+/*
+ * Copyright (C) 2011 Neil McGill
+ *
+ * See the README file for license.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <time.h>
+
+#include "main.h"
+#include "mzip_file.h"
+#include "string.h"
+#include "file.h"
+#include "time.h"
+
+unsigned char *file_read (const char *filename, int32_t *out_len)
+{
+    unsigned char *buffer;
+    FILE *file;
+    int32_t len;
+
+    file = fopen(filename, "rb");
+    if (!file) {
+        fprintf(stderr, "Failed to open file \"%s\" for reading: %s\n",
+                filename, strerror(errno));
+        return (0);
+    }
+
+    /*
+     * Get the file size.
+     */
+    if (fseek(file, 0, SEEK_END)) {
+        fprintf(stderr, "Failed to seek end of file \"%s\": %s\n",
+                filename, strerror(errno));
+        fclose(file);
+        return (0);
+    }
+
+    len = (uint32_t)ftell(file);
+    if (len == -1) {
+        fprintf(stderr, "Failed to get size of file \"%s\": %s\n",
+                filename, strerror(errno));
+        fclose(file);
+        return (0);
+    }
+
+    if (fseek(file, 0, SEEK_SET)) {
+        fprintf(stderr, "Failed to seek begin of file \"%s\": %s\n",
+                filename, strerror(errno));
+        fclose(file);
+        return (0);
+    }
+
+    buffer = (unsigned char *)mymalloc(len + sizeof((char)'\0'),
+                                       "file read");
+    if (!buffer) {
+        fprintf(stderr, "Failed to alloc mem for file \"%s\": %s\n",
+                filename, strerror(errno));
+        fclose(file);
+        return (0);
+    }
+
+    if (!fread(buffer, len, 1, file)) {
+        fprintf(stderr, "Failed to read file \"%s\": %s\n",
+                filename, strerror(errno));
+        fclose(file);
+        return (0);
+    }
+
+    if (out_len) {
+        *out_len = len;
+    }
+
+    fclose(file);
+
+    return (buffer);
+}
+
+int32_t file_write (const char *filename, unsigned char *buffer, int32_t len)
+{
+    FILE *file;
+    boolean rc;
+
+    file = fopen(filename, "w");
+    if (!file) {
+        fprintf(stderr, "Failed to open file \"%s\" for writing: %s\n",
+                filename, strerror(errno));
+        return (-1);
+    }
+
+    rc = fwrite(buffer, len, 1, file);
+
+    LOG("Saved %s, %d bytes", filename, len);
+
+    /*
+     * Check written one object.
+     */
+    if (!rc) {
+        fprintf(stderr, "Failed to write file \"%s\": %s\n",
+                filename, strerror(errno));
+        fclose(file);
+        return (-1);
+    }
+
+    if (ferror(file)) {
+        fprintf(stderr, "Error writing to write file \"%s\": %s\n",
+                filename, strerror(errno));
+        fclose(file);
+        return (-1);
+    }
+
+    fclose(file);
+    return (0);
+}
+
+/*
+ * Does the requested file exist?
+ */
+boolean file_exists (const char *filename)
+{
+    struct stat buf;
+
+    if (stat(filename, &buf) >= 0) {
+        if (S_ISDIR(buf. st_mode)) {
+            return (0);
+        }
+
+        return (1);
+    }
+    return (0);
+}
+
+unsigned char *file_read_if_exists (const char *filename, int32_t *out_len)
+{
+    unsigned char *ret;
+    char *mz_filename;
+
+    if (!filename) {
+        return (0);
+    }
+
+    if (strstr(filename, ".mz")) {
+        ret = mzip_file_read(filename, out_len);
+        return (ret);
+    }
+
+    mz_filename = strappend(filename, ".mz");
+    if (!mz_filename) {
+        return (0);
+    }
+
+    if (file_exists(mz_filename)) {
+        ret = mzip_file_read(mz_filename, out_len);
+        myfree(mz_filename);
+        return (ret);
+    }
+
+    myfree(mz_filename);
+
+    if (file_exists(filename)) {
+        return (file_read(filename, out_len));
+    }
+
+    return (0);
+}
+
+/*
+ * How large is the file?
+ */
+int32_t file_size (const char *filename)
+{
+    struct stat buf;
+
+    if (stat(filename, &buf) >= 0) {
+        return (int32_t)(buf.st_size);
+    }
+
+    return (-1);
+}
+
+/*
+ * Does the requested file exist?
+ */
+boolean file_non_zero_size_exists (const char *filename)
+{
+    if (!file_exists(filename)) {
+        return (0);
+    }
+
+    if (!file_size(filename)) {
+        return (0);
+    }
+
+    return (1);
+}
+
+/*
+ * Remove the file if it exists.
+ */
+boolean file_unlink (const char *filename)
+{
+    if (!file_exists(filename)) {
+        return (0);
+    }
+
+    unlink(filename);
+
+    return (1);
+}
+
+/*
+ * Modification time.
+ */
+double file_age (const char *filename)
+{
+    struct stat buf;
+
+    if (stat(filename, &buf) < 0) {
+        return (-1);
+    }
+
+    time_t now = time(0);
+
+    return (difftime(now, buf.st_mtime));
+}
+
+/*
+ * If the first filename newer than the second ?
+ */
+boolean file_exists_and_is_newer_than (const char *filename1,
+                                       const char *filename2)
+{
+    struct stat buf1;
+    struct stat buf2;
+    double delta;
+
+    if (stat(filename1, &buf1) < 0) {
+        return (false);
+    }
+
+    if (stat(filename2, &buf2) < 0) {
+        return (false);
+    }
+
+    delta = difftime(buf1.st_mtime, buf2.st_mtime);
+
+    return (delta > 0);
+}

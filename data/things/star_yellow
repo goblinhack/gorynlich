@@ -1,0 +1,17 @@
+{
+ shortname="yellow star"
+ tooltip="Snailpack"
+ z_depth=1
+ z_order=3
+ is_star
+ is_star_yellow
+ is_thing
+ is_item_perma
+ is_effect_pulse
+ score_on_collect=50
+ tiles={
+  tile={
+   tile="star_yellow"
+  }
+ }
+}

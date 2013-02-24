@@ -1,0 +1,17 @@
+{
+ shortname="blue star"
+ tooltip="Invisibility"
+ z_depth=1
+ z_order=3
+ is_staf
+ is_star_blue
+ is_thing
+ is_item_perma
+ is_effect_pulse
+ score_on_collect=50
+ tiles={
+  tile={
+   tile="star_blue"
+  }
+ }
+}
