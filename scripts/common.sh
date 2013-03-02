@@ -71,23 +71,23 @@ log() {
 }
 
 log_info() {
-    echo "Gorynlich: ${GREEN}$*${RESET}"
+    echo "gorynlich: ${GREEN}$*${RESET}"
 }
 
 log_echo() {
-    echo "Gorynlich: $*"
+    echo "gorynlich: $*"
 }
 
 log_err() {
-    echo "Gorynlich: ${RED}ERROR: $*${RESET}"
+    echo "gorynlich: ${RED}ERROR: $*${RESET}"
 }
 
 log_warn() {
-    echo "Gorynlich: ${CYAN}WARN: $*${RESET}"
+    echo "gorynlich: ${CYAN}WARN: $*${RESET}"
 }
 
 log_die() {
-    echo "Gorynlich: ${RED}FATAL ERROR: $*${RESET}"
+    echo "gorynlich: ${RED}FATAL ERROR: $*${RESET}"
     echo "Mail goblinhack@gmail.com for help"
     exit 1
 }

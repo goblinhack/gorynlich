@@ -12,3 +12,5 @@ typedef struct ramdisk_t_ {
     int32_t orig_len;
     int32_t len;
 } ramdisk_t;
+
+void ramdisk_init(void);

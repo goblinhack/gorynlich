@@ -160,9 +160,24 @@ int main (int32_t argc, char *argv[])
     unsigned int i;
     FILE *f;
     int ret;
+    FILE *fp;
+    uint32_t frag;
+    char tmp[200];
+    uint32_t size;
 
-    printf("#include <stdint.h>\n");
-    printf("#include \"ramdisk.h\"\n\n");
+    size = 0;
+    frag = 0;
+    snprintf(tmp, sizeof(tmp), "src/ramdisk_data_fragment_%u.c", frag);
+    frag++;
+
+    fp = fopen(tmp, "w");
+    if (!fp) {
+        fprintf(stderr, "could not write to %s\n", tmp);
+        exit(1);
+    }
+
+    fprintf(fp, "#include <stdint.h>\n");
+    fprintf(fp, "#include \"ramdisk.h\"\n\n");
 
     ramfile = ramdisk_files;
     while (ramfile->filename) {
@@ -184,7 +199,7 @@ int main (int32_t argc, char *argv[])
 
         fclose(f);
 
-        printf("/* Compressed %s from %lu to %lu bytes */\n",
+        fprintf(fp, "/* Compressed %s from %lu to %lu bytes */\n",
                ramfile->filename, insz, outsz);
 
         c_array_name = strdup(ramfile->filename);
@@ -194,11 +209,11 @@ int main (int32_t argc, char *argv[])
          */
         strrepc(c_array_name, "/.", '_');
 
-        printf("unsigned char %s[] = {\n", c_array_name);
+        fprintf(fp, "unsigned char %s[] = {\n", c_array_name);
 
         free(c_array_name);
 
-        printf("    ");
+        fprintf(fp, "    ");
 
         unsigned char *buf = (typeof(buf)) malloc(insz);
         if (!buf) {
@@ -219,15 +234,42 @@ int main (int32_t argc, char *argv[])
         free(buf);
 
         for (i = 0; i < outsz; i++) {
-            printf("%u,", out[i]);
+            size++;
+            fprintf(fp, "%u,", out[i]);
         }
 
-        printf("\n};\n\n");
+        fprintf(fp, "\n};\n\n");
 
         ramfile++;
+
+        if (size > 1 * 1024 * 1024) {
+            size = 0;
+
+            fclose(fp);
+
+            snprintf(tmp, sizeof(tmp), "src/ramdisk_data_fragment_%u.c", frag);
+            frag++;
+
+            fp = fopen(tmp, "w");
+            if (!fp) {
+                fprintf(stderr, "could not write to %s\n", tmp);
+                exit(1);
+            }
+        }
     }
 
-    printf("ramdisk_t ramdisk_data[] = {\n");
+    fclose(fp);
+
+    snprintf(tmp, sizeof(tmp), "src/ramdisk_data_fragment_final.c");
+
+    fp = fopen(tmp, "w");
+    if (!fp) {
+        fprintf(stderr, "could not write to %s\n", tmp);
+        exit(1);
+    }
+
+    fprintf(fp, "#include <stdint.h>\n");
+    fprintf(fp, "#include \"ramdisk.h\"\n\n");
 
     ramfile = ramdisk_files;
     while (ramfile->filename) {
@@ -258,18 +300,69 @@ int main (int32_t argc, char *argv[])
 
         free(c_array_name);
 
-        printf("    {\n");
-        printf("        /* filename */ \"%s\",\n", ramfile->filename);
-        printf("        /* data     */ %s,\n", c_array_name);
-        printf("        /* orig_len */ %lu,\n", insz);
-        printf("        /* len      */ %lu,\n", outsz);
-        printf("    },\n");
+        fprintf(fp, "extern const unsigned char *%s;\n", c_array_name);
 
         ramfile++;
     }
 
-    printf("    {0},\n");
-    printf("};\n");
+    fprintf(fp, "\nramdisk_t ramdisk_data[] = {\n");
+
+    ramfile = ramdisk_files;
+    while (ramfile->filename) {
+
+        f = fopen(ramfile->filename, "r");
+        if (!f) {
+            fprintf(stderr, "could not open %s\n", ramfile->filename);
+            exit(1);
+        }
+
+        /* avoid end-of-line conversions */
+        SET_BINARY_MODE(f);
+
+        ret = docompress(f, Z_BEST_COMPRESSION);
+        if (ret != Z_OK) {
+            fprintf(stderr, "could not compress %s\n", ramfile->filename);
+            exit(1);
+        }
+
+        fclose(f);
+
+        fprintf(fp, "    {\n");
+        fprintf(fp, "        /* filename */ \"%s\",\n", ramfile->filename);
+        fprintf(fp, "        /* data     */ 0,\n");
+        fprintf(fp, "        /* orig_len */ %lu,\n", insz);
+        fprintf(fp, "        /* len      */ %lu,\n", outsz);
+        fprintf(fp, "    },\n");
+
+        ramfile++;
+    }
+
+    fprintf(fp, "    {0},\n");
+    fprintf(fp, "};\n");
+
+    fprintf(fp, "\n\nvoid ramdisk_init (void)\n{\n");
+
+    int cnt = 0;
+
+    ramfile = ramdisk_files;
+    while (ramfile->filename) {
+
+        c_array_name = strdup(ramfile->filename);
+
+        /*
+         * Turn the filename into a safe C var name.
+         */
+        strrepc(c_array_name, "/.", '_');
+
+        free(c_array_name);
+
+        fprintf(fp, "    ramdisk_data[%u].data = %s;\n", cnt, c_array_name);
+        cnt++;
+
+        ramfile++;
+    }
+
+    fprintf(fp, "}\n");
 
     exit(0);
 }

@@ -31,7 +31,7 @@ make clobber
 make other
 
 cd ..
-src/make_ramdisk > src/ramdisk_data.c
+src/make_ramdisk 
 if [ $? != 0 ]
 then
     cd src
@@ -40,7 +40,7 @@ fi
 
 /bin/rm src/make_ramdisk
 
-if [ ! -s src/ramdisk_data.c ]
+if [ ! -s src/ramdisk_data_fragment_0.c ]
 then
     cd src
     log_die "Failed to build ramdisk_data.c"
