@@ -23,6 +23,7 @@
 #include "ramdisk.h"
 #include "time.h"
 #include "string_ext.h"
+#include "string.h"
 
 #define TTF_FIXED_WIDTH_CHAR '0'
 #define TTF_GLYPH_MIN ' '
@@ -114,7 +115,7 @@ font *ttf_new (const char *name, int32_t pointSize, int32_t style)
     uint8_t c;
     font *f;
 
-    f = (fontp)myzalloc(sizeof(*f));
+    f = (fontp)myzalloc(sizeof(*f), __FUNCTION__);
 
     DBG("Load TTF: %s", name);
 
@@ -806,7 +807,7 @@ ttf_write_tga (char *name, int32_t pointsize)
     SDL_UnlockSurface(dst);
 
     texp tex;
-    tex = tex_from_surface(dst, filename);
+    tex = tex_from_surface(dst, 0, filename, filename);
     if (!tex) {
         DIE("could not convert %s to tex", filename);
     }
@@ -862,11 +863,14 @@ ttf_write_tga (char *name, int32_t pointsize)
 void ttf2tga (void)
 {
 #ifdef ENABLE_GENERATE_TTF
-    small_font  = ttf_write_tga((char*)strprepend(SMALL_FONT, EXEC_PATH),
+    small_font  = ttf_write_tga((char*)strprepend(SMALL_FONT,
+                                                  EXEC_FULL_PATH_AND_NAME),
                                 SMALL_FONT_SIZE);
-    med_font    = ttf_write_tga((char*)strprepend(MED_FONT, EXEC_PATH),
+    med_font    = ttf_write_tga((char*)strprepend(MED_FONT,
+                                                  EXEC_FULL_PATH_AND_NAME),
                                 MED_FONT_SIZE);
-    large_font  = ttf_write_tga((char*)strprepend(LARGE_FONT, EXEC_PATH),
+    large_font  = ttf_write_tga((char*)strprepend(LARGE_FONT,
+                                                  EXEC_FULL_PATH_AND_NAME),
                                 LARGE_FONT_SIZE);
 #endif
 }

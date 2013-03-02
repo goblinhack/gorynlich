@@ -104,8 +104,8 @@ log_info "  ($SDL_CONFIG)"
 # -funwind-tables and -rdynamic for backtrace info on linux.
 # But it seemed to help little.
 #
-LDLIBS="$SDL_LIBS -lSDL_ttf"
 LDLIBS="$SDL_LIBS -lSDL_mixer"
+LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
 
 case `uname` in
     *MINGW*)
@@ -220,7 +220,7 @@ make $CORES $* all
 if [ $? -eq 0 ]
 then
     echo
-    log_info "Run Gorynlich to start"
+    log_info "Run gorynlich to start"
 
     rm -f Makefile.bak
 else
