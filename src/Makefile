@@ -12,11 +12,11 @@ CC=clang # AUTOGEN
 # CC=g++ # AUTOGEN
     
 EXE= # AUTOGEN
-LDLIBS=-L/usr/local/lib /usr/local/lib/libSDLmain.a /usr/local/lib/libSDL.a -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit -lSDL_mixer # AUTOGEN
+LDLIBS=-L/usr/local/lib /usr/local/lib/libSDLmain.a /usr/local/lib/libSDL.a -Wl,-framework,OpenGL -Wl,-framework,Cocoa -Wl,-framework,ApplicationServices -Wl,-framework,Carbon -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit -Wl,-framework,IOKit -lSDL_ttf -lSDL_mixer # AUTOGEN
 CFLAGS=$(COMPILER_FLAGS) $(COMPILER_WARNINGS) # AUTOGEN
 
 
-NAME=Gorynlich
+NAME=gorynlich
 OBJDIR=.o
 
 GAME_OBJECTS=				\
@@ -105,7 +105,11 @@ RAMDISK_WRITE_OBJECTS=			\
     $(OBJDIR)/ramdisk_write.o 		\
 
 RAMDISK_DATA_OBJECTS=			\
-    $(OBJDIR)/ramdisk_data.o 		\
+    $(OBJDIR)/ramdisk_data_fragment_0.o \
+    $(OBJDIR)/ramdisk_data_fragment_1.o \
+    $(OBJDIR)/ramdisk_data_fragment_2.o \
+    $(OBJDIR)/ramdisk_data_fragment_3.o \
+    $(OBJDIR)/ramdisk_data_fragment_final.o \
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\
@@ -726,6 +730,8 @@ all: $(TARGET_GAME)
 .o/ptrcheck_test.o: /usr/include/i386/types.h main.h /usr/include/stdint.h
 .o/ptrcheck_test.o: ptrcheck.h
 .o/ramdisk_data.o: /usr/include/stdint.h ramdisk.h
+.o/ramdisk_data_fragment_0.o: /usr/include/stdint.h ramdisk.h
+.o/ramdisk_data_fragment_final.o: /usr/include/stdint.h ramdisk.h
 .o/ramdisk_read.o: /usr/include/libgen.h /usr/include/sys/cdefs.h
 .o/ramdisk_read.o: /usr/include/string.h /usr/include/_types.h
 .o/ramdisk_read.o: /usr/include/sys/_types.h /usr/include/machine/_types.h

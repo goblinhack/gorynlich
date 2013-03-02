@@ -322,7 +322,7 @@ boolean sdl_init (void)
             video_flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
 #       endif /* } */
 
-        window = SDL_CreateWindow("Gorynlich",
+        window = SDL_CreateWindow("gorynlich",
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
                                 VIDEO_WIDTH, VIDEO_HEIGHT,

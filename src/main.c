@@ -48,6 +48,7 @@
 #include "level.h"
 #include "resource.h"
 #include "init_fn.h"
+#include "ramdisk.h"
 
 static char **ARGV;
 char *EXEC_FULL_PATH_AND_NAME;
@@ -377,6 +378,8 @@ static void find_file_locations (void)
 
 int32_t main (int32_t argc, char *argv[])
 {
+    ramdisk_init();
+
     ARGV = argv;
 
     dospath2unix(ARGV[0]);

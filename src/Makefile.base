@@ -16,7 +16,7 @@ LDLIBS=-L/usr/local/lib /usr/local/lib/libSDLmain.a /usr/local/lib/libSDL.a -Wl,
 CFLAGS=$(COMPILER_FLAGS) $(COMPILER_WARNINGS) # AUTOGEN
 
 
-NAME=Gorynlich
+NAME=gorynlich
 OBJDIR=.o
 
 GAME_OBJECTS=				\
@@ -105,7 +105,11 @@ RAMDISK_WRITE_OBJECTS=			\
     $(OBJDIR)/ramdisk_write.o 		\
 
 RAMDISK_DATA_OBJECTS=			\
-    $(OBJDIR)/ramdisk_data.o 		\
+    $(OBJDIR)/ramdisk_data_fragment_0.o \
+    $(OBJDIR)/ramdisk_data_fragment_1.o \
+    $(OBJDIR)/ramdisk_data_fragment_2.o \
+    $(OBJDIR)/ramdisk_data_fragment_3.o \
+    $(OBJDIR)/ramdisk_data_fragment_final.o \
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\
