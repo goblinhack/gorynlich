@@ -13,7 +13,6 @@
 #include "wid_intro.h"
 #include "wid_popup.h"
 #include "wid_editor.h"
-#include "wid_editor_map.h"
 #include "wid_game_map.h"
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"

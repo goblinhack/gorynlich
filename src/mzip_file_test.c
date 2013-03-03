@@ -5,12 +5,9 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
 #include "main.h"
-#include "file.h"
 #include "mzip_file.h"
 
 boolean mzip_file_test (int32_t argc, char *argv[])

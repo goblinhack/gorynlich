@@ -159,7 +159,6 @@
 //     stbi_is_hdr(char *filename);
 
 #ifndef STBI_NO_STDIO
-#include <stdio.h>
 #endif
 
 #define STBI_VERSION 1
@@ -358,7 +357,6 @@ extern void stbi_install_YCbCr_to_RGB(stbi_YCbCr_to_RGB_run func);
 
 #ifndef STBI_NO_HDR
 #include <math.h>  // ldexp
-#include <string.h> // strcmp
 #endif
 
 #ifndef STBI_NO_STDIO
@@ -366,7 +364,6 @@ extern void stbi_install_YCbCr_to_RGB(stbi_YCbCr_to_RGB_run func);
 #endif
 #include <stdlib.h>
 #include <memory.h>
-#include <assert.h>
 #include <stdarg.h>
 #include "main.h"
 

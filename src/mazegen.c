@@ -16,11 +16,6 @@
  * goblinhack@gmail.com
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <time.h>
 
 #define MAZE_NO_ROONEXT_TO_OTHER_ROOMS
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS   90

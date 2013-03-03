@@ -7,7 +7,6 @@
 #include <math.h>
 
 #include "main.h"
-#include "gl.h"
 
 fpoint fadd (fpoint a, fpoint b)
 {

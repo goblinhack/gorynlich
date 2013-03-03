@@ -4,16 +4,11 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
 #include <SDL.h>
 #include "slre.h"
 
 #include "main.h"
-#include "wid_popup.h"
-#include "gl.h"
-#include "command.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "string_ext.h"
 #include "ttf.h"

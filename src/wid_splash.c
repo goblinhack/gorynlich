@@ -5,21 +5,11 @@
  */
 
 #include <SDL.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include "glapi.h"
 
 #include "main.h"
-#include "gl.h"
 #include "wid.h"
-#include "wid_console.h"
 #include "color.h"
 #include "tex.h"
-#include "tile.h"
-#include "time.h"
-#include "thing.h"
-#include "sdl.h"
 #include "init_fn.h"
 #include "tree.h"
 #include "wid_splash.h"

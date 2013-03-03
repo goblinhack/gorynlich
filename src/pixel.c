@@ -24,7 +24,6 @@
 #include <SDL.h>
 
 #include "main.h"
-#include "gl.h"
 #include "pixel.h"
 
 /*

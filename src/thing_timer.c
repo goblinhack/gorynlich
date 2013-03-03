@@ -11,7 +11,6 @@
 #include "thing_private.h"
 #include "thing.h"
 #include "thing_timer.h"
-#include "level.h"
 #include "timer.h"
 #include "wid.h"
 #include "color.h"

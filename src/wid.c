@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-#include <string.h>
 #include <SDL.h>
 #include "glapi.h"
 #include "slre.h"
@@ -20,14 +19,10 @@
 #include "thing_template.h"
 #include "thing_tile.h"
 #include "command.h"
-#include "tree.h"
 #include "time.h"
 #include "wid_console.h"
 #include "wid_tooltip.h"
-#include "string_ext.h"
-#include "backtrace.h"
 #include "marshal.h"
-#include "math.h"
 #include "string.h"
 #include "config.h"
 #include "sound.h"

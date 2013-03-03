@@ -13,17 +13,12 @@
 #include "thing_template.h"
 #include "thing_timer.h"
 #include "timer.h"
-#include "item.h"
 #include "wid.h"
 #include "wid_game_map.h"
-#include "marshal.h"
-#include "map.h"
 #include "level.h"
 #include "wid_console.h"
 #include "time.h"
-#include "string.h"
 #include "color.h"
-#include "sound.h"
 
 /*
  * If the map is swiping, we cannot move things. Or if the main menu is up, 

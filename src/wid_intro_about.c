@@ -8,13 +8,8 @@
 
 #include "main.h"
 #include "wid.h"
-#include "tex.h"
-#include "color.h"
-#include "wid_intro_about.h"
 #include "wid_popup.h"
 #include "wid_intro_about.h"
-#include "sdl.h"
-#include "wid_hiscore.h"
 
 static widp wid_intro_about;
 static boolean wid_intro_about_init_done;

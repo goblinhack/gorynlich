@@ -24,11 +24,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdarg.h>
 
 #include "main.h"
-#include "tree.h"
-#include "file.h"
 #include "string.h"
 #include "marshal.h"
 #include "ramdisk.h"

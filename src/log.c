@@ -4,16 +4,12 @@
  * See the README file for license.
  */
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
 #include "slre.h"
 #include <SDL.h>
 
 #include "main.h"
 #include "backtrace.h"
 #include "wid_console.h"
-#include "gl.h"
 #include "time.h"
 #include "command.h"
 #include "thing.h"

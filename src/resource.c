@@ -10,8 +10,6 @@
 #include "resource.h"
 #include "tex.h"
 #include "tile.h"
-#include "wid.h"
-#include "color.h"
 #include "thing_template.h"
 #include "init_fn.h"
 
