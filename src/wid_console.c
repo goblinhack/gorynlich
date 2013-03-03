@@ -4,19 +4,14 @@
  * See the README file for license.
  */
 
-#include <string.h>
-#include <stdlib.h>
 #include <SDL.h>
 #include "slre.h"
 
 #include "main.h"
 #include "wid_console.h"
-#include "gl.h"
 #include "command.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
-#include "tree.h"
 #include "ttf.h"
 
 static int32_t wid_console_inited;

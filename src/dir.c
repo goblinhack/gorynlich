@@ -5,15 +5,11 @@
  */
 
 #include <dirent.h>
-#include <errno.h>
 #include <libgen.h>
-#include <limits.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
 #include <sys/stat.h>
-#include <stdarg.h>
 #include <unistd.h>
 
 #include "main.h"

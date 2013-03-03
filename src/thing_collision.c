@@ -7,13 +7,10 @@
 #include <SDL.h>
 
 #include "main.h"
-#include "tree.h"
 #include "thing.h"
 #include "thing_template.h"
-#include "item.h"
 #include "wid.h"
 #include "level.h"
-#include "map.h"
 #include "wid_tooltip.h"
 #include "wid_game_map.h"
 #include "sound.h"

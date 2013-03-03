@@ -7,10 +7,8 @@
  */
 
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include "slre.h"
 
 #include "main.h"

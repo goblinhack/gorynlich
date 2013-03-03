@@ -4,17 +4,13 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
 #include <errno.h>
 #include <SDL.h>
 #include "slre.h"
 
 #include "main.h"
 #include "wid_dirlist.h"
-#include "gl.h"
-#include "command.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "ttf.h"
 #include "dir.h"

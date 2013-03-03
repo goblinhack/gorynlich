@@ -11,14 +11,9 @@
 #include "color.h"
 #include "wid_editor.h"
 #include "wid_editor_buttons.h"
-#include "wid_editor_map.h"
-#include "wid_intro.h"
 #include "tree.h"
-#include "tile.h"
-#include "tile_private.h"
 #include "thing_template.h"
 #include "thing_template_private.h"
-#include "wid_popup.h"
 
 widp wid_editor_buttons_window;
 widp wid_editor_buttons_container1;

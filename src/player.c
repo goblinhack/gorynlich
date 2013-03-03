@@ -4,13 +4,10 @@
  * See the README file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
-#include "tree.h"
 #include "player.h"
-#include "marshal.h"
 #include "level.h"
 
 thingp player;

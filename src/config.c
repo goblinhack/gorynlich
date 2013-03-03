@@ -4,14 +4,10 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
-#include <string.h>
-#include <SDL.h>
 
 #include "main.h"
 #include "marshal.h"
 #include "config.h"
-#include "gl.h"
 #include "string.h"
 
 struct config global_config;

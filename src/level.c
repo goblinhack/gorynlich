@@ -6,25 +6,16 @@
 
 #include <SDL.h>
 #include <errno.h>
-#include <time.h>
 #include "slre.h"
 
 #include "main.h"
 #include "string.h"
-#include "marshal.h"
 #include "wid.h"
 #include "wid_popup.h"
-#include "wid_textbox.h"
-#include "gl.h"
-#include "color.h"
-#include "item.h"
 #include "level.h"
 #include "level_private.h"
-#include "tile.h"
-#include "player.h"
 #include "thing.h"
 #include "thing_template.h"
-#include "thing_tile.h"
 #include "command.h"
 #include "wid_button.h"
 #include "time.h"

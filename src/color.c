@@ -5,13 +5,11 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include "glapi.h"
 
 #include "main.h"
 #include "color.h"
-#include "gl.h"
 #include "tree.h"
 
 color ALICE_BLUE;

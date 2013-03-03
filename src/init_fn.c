@@ -11,7 +11,6 @@
 #include "init_fn.h"
 #include "init_fn_private.h"
 #include "string.h"
-#include "time.h"
 
 tree_rootp init_fns;
 

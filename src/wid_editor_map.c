@@ -8,21 +8,16 @@
 
 #include "main.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
-#include "tree.h"
 #include "wid_editor.h"
 #include "wid_editor_map.h"
 #include "wid_editor_buttons.h"
 #include "thing_template.h"
-#include "wid_intro.h"
-#include "gl.h"
 #include "map.h"
 #include "level.h"
 #include "config.h"
-#include "thing.h"
 
 widp wid_editor_map_window;
 widp wid_editor_map_grid_container;

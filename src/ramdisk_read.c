@@ -6,15 +6,12 @@
 
 #include <libgen.h>
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 #define nUSE_ZLIB
 #define USE_MINIZ
 #define nUSE_STB_IMAGE
 
 #ifdef USE_ZLIB
-#include <zlib.h>
 #endif
 
 #ifdef USE_MINIZ
@@ -22,11 +19,9 @@
 #endif
 
 #ifdef USE_STB_IMAGE
-#include "stb_image.h"
 #endif
 
 #include "main.h"
-#include "wid_popup.h"
 #include "file.h"
 #include "string.h"
 

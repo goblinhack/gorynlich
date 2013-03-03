@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include "miniz.h"
 

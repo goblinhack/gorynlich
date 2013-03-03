@@ -1,6 +1,5 @@
 // example2.c - Simple demonstration of miniz.c's ZIP archive API's.
 // Public domain, May 15 2011, Rich Geldreich, richgel99@gmail.com
-#include <stdlib.h>
 #include <string.h>
 
 #include "miniz.h"

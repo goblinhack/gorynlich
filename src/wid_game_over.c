@@ -8,10 +8,8 @@
 
 #include "main.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "wid_intro.h"
-#include "wid_game_over.h"
 #include "sdl.h"
 #include "thing_template.h"
 #include "wid_popup.h"
