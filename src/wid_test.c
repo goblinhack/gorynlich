@@ -4,19 +4,12 @@
  * See the README file for license.
  */
 
-#include <string.h>
-#include <stdlib.h>
 #include <SDL.h>
 #include "slre.h"
 
 #include "main.h"
-#include "wid_test.h"
-#include "gl.h"
-#include "command.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
-#include "tree.h"
 
 void wid_test_wid_create(void);
 

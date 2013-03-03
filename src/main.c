@@ -4,13 +4,8 @@
  * See the LICENSE file for license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <libgen.h>
-#include <sys/param.h>
-#include <limits.h>
 #include <unistd.h>
-#include <string.h>
 #include <SDL.h>
 #include "slre.h"
 
@@ -40,7 +35,6 @@
 #include "wid_intro_settings.h"
 #include "wid_hiscore.h"
 #include "wid_intro.h"
-#include "enum.h"
 #include "string.h"
 #include "dir.h"
 #include "file.h"

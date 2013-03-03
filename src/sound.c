@@ -4,12 +4,7 @@
  * See the README file for license.
  */
 
-#include <SDL.h>
 #include <SDL_mixer.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include "glapi.h"
 
 #include "main.h"
 #include "sound.h"

@@ -4,9 +4,6 @@
  * See the README file for license.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "main.h"
 #include "string.h"

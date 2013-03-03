@@ -11,14 +11,10 @@
 #include "tree.h"
 #include "thing.h"
 #include "thing_private.h"
-#include "thing_template.h"
 #include "level_private.h"
 #include "map.h"
-#include "wid.h"
 #include "level.h"
-#include "wid_game_map.h"
 #include "item.h"
-#include "math.h"
 
 static char walls[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
 

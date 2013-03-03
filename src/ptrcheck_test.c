@@ -6,8 +6,6 @@
  * A useful hack to help debug stale/free/bad pointers.
  */
 
-#include <unistd.h>
-#include <stdlib.h>
 
 #include "main.h"
 

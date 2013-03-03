@@ -11,7 +11,6 @@
 #include "thing_tile_private.h"
 #include "thing_template_private.h"
 #include "thing_tile.h"
-#include "thing.h"
 #include "marshal.h"
 
 void thing_tile_free (thing_tile *t)

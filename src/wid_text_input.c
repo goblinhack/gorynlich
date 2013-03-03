@@ -4,21 +4,14 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
-#include <errno.h>
 #include <SDL.h>
 #include "slre.h"
 
 #include "main.h"
 #include "wid_text_input.h"
-#include "gl.h"
-#include "command.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "ttf.h"
-#include "string.h"
-#include "wid_popup.h"
 #include "config.h"
 
 static const int32_t LINE_WIDTH = 25;

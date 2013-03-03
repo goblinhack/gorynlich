@@ -5,26 +5,19 @@
  */
 
 #include <SDL.h>
-#include <errno.h>
 
 #include "main.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
 #include "thing_template.h"
-#include "tree.h"
 #include "string.h"
-#include "marshal.h"
 #include "wid_popup.h"
 #include "wid_textbox.h"
 #include "wid_game_map.h"
 #include "wid_tooltip.h"
 #include "wid_intro.h"
-#include "wid_editor_map.h"
-#include "gl.h"
-#include "level.h"
 #include "player.h"
 #include "thing.h"
 #include "item.h"

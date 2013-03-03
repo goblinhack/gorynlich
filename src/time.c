@@ -5,11 +5,9 @@
  */
 
 #include <SDL.h>
-#include <sys/time.h>
 
 #include "main.h"
 #include "time.h"
-#include "gl.h"
 #include "sdl.h"
 
 static uint32_t time_now;
