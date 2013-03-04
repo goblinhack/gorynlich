@@ -1,30 +1,6 @@
 
 ramdisk_t ramdisk_files[] = {
     {
-        "data/gfx/background_grass.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/esnail.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/esnail_happy.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/esnail_sad.png",
-        0,
-        0,
-        0,
-    },
-    {
         "data/gfx/explosion.png",
         0,
         0,
@@ -80,30 +56,6 @@ ramdisk_t ramdisk_files[] = {
     },
     {
         "data/gfx/shell.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/snailly.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/snailly_happy.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/snailly_sad.png",
-        0,
-        0,
-        0,
-    },
-    {
-        "data/gfx/snails.png",
         0,
         0,
         0,
