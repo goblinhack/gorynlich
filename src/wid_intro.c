@@ -26,9 +26,6 @@
 
 static widp wid_intro;
 static widp wid_intro_bg_gorynlich;
-static widp wid_intro_bg_background_grass;
-static widp wid_intro_bg_snailly;
-static widp wid_intro_bg_esnail;
 
 static boolean wid_intro_quit_selected(void);
 static void wid_intro_editor_selected(void);
@@ -63,9 +60,6 @@ void wid_intro_fini (void)
         if (wid_intro) {
             wid_destroy(&wid_intro);
             wid_destroy_in(wid_intro_bg_gorynlich, wid_hide_delay * 2);
-            wid_destroy_in(wid_intro_bg_background_grass, wid_hide_delay * 2);
-            wid_destroy_in(wid_intro_bg_snailly, wid_hide_delay * 2);
-            wid_destroy_in(wid_intro_bg_esnail, wid_hide_delay * 2);
         }
     }
 }
@@ -89,22 +83,13 @@ void wid_intro_hide (void)
     }
 
     wid_move_end(wid_intro);
-    wid_move_end(wid_intro_bg_background_grass);
     wid_move_end(wid_intro_bg_gorynlich);
-    wid_move_end(wid_intro_bg_esnail);
-    wid_move_end(wid_intro_bg_snailly);
 
     wid_move_delta_pct_in(wid_intro, -1.0f, 0.0f, wid_swipe_delay);
     wid_move_delta_pct_in(wid_intro_bg_gorynlich, -1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_bg_background_grass, -1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_bg_snailly, -1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_bg_esnail, -1.0, 0.0, wid_swipe_delay);
 
     wid_hide(wid_intro, wid_swipe_delay);
     wid_hide(wid_intro_bg_gorynlich, wid_swipe_delay);
-    wid_hide(wid_intro_bg_background_grass, wid_swipe_delay);
-    wid_hide(wid_intro_bg_snailly, wid_swipe_delay);
-    wid_hide(wid_intro_bg_esnail, wid_swipe_delay);
 }
 
 void wid_intro_visible (void)
@@ -129,22 +114,13 @@ void wid_intro_visible (void)
     }
 
     wid_visible(wid_intro, 0);
-    wid_visible(wid_intro_bg_background_grass, 0);
     wid_visible(wid_intro_bg_gorynlich, 0);
-    wid_visible(wid_intro_bg_esnail, 0);
-    wid_visible(wid_intro_bg_snailly, 0);
 
     wid_move_end(wid_intro);
-    wid_move_end(wid_intro_bg_background_grass);
     wid_move_end(wid_intro_bg_gorynlich);
-    wid_move_end(wid_intro_bg_esnail);
-    wid_move_end(wid_intro_bg_snailly);
 
     wid_move_delta_pct_in(wid_intro, 1.0f, 0.0f, wid_swipe_delay);
     wid_move_delta_pct_in(wid_intro_bg_gorynlich, 1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_bg_background_grass, 1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_bg_snailly, 1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_bg_esnail, 1.0, 0.0, wid_swipe_delay);
 
     wid_raise(wid_intro);
     wid_update(wid_intro);
@@ -157,18 +133,6 @@ static boolean wid_intro_ignore_events (widp w)
     }
 
     if (wid_ignore_for_events(wid_intro_bg_gorynlich)) {
-        return (true);
-    }
-
-    if (wid_ignore_for_events(wid_intro_bg_background_grass)) {
-        return (true);
-    }
-
-    if (wid_ignore_for_events(wid_intro_bg_snailly)) {
-        return (true);
-    }
-
-    if (wid_ignore_for_events(wid_intro_bg_esnail)) {
         return (true);
     }
 
@@ -492,29 +456,6 @@ static void wid_intro_bg_create (void)
     }
 
     {
-        wid = wid_intro_bg_background_grass = wid_new_window("bg grass");
-
-        tex = tex_find("background_grass");
-        tw = tex_get_width(tex);
-        th = tex_get_height(tex);
-
-        fpoint tl = { 0, 0 };
-        fpoint br = { (float) tw, (float) th };
-
-        wid_set_tl_br(wid, tl, br);
-
-        wid_set_tex(wid, 0, "background_grass");
-
-        wid_lower(wid);
-        wid_set_do_not_raise(wid, true);
-
-        wid_set_mode(wid, WID_MODE_NORMAL);
-        wid_set_color(wid, WID_COLOR_TL, WHITE);
-        wid_set_color(wid, WID_COLOR_BR, WHITE);
-        wid_set_color(wid, WID_COLOR_BG, WHITE);
-    }
-
-    {
         wid = wid_intro_bg_gorynlich = wid_new_window("bg gorynlich");
 
         tex = tex_find("gorynlich");
@@ -530,50 +471,6 @@ static void wid_intro_bg_create (void)
 
         wid_raise(wid);
         wid_set_do_not_raise(wid, true);
-
-        wid_set_mode(wid, WID_MODE_NORMAL);
-        wid_set_color(wid, WID_COLOR_TL, WHITE);
-        wid_set_color(wid, WID_COLOR_BR, WHITE);
-        wid_set_color(wid, WID_COLOR_BG, WHITE);
-    }
-
-    {
-        wid = wid_intro_bg_snailly = wid_new_window("bg snailly");
-
-        tex = tex_find("snailly");
-        tw = tex_get_width(tex);
-        th = tex_get_height(tex);
-
-        fpoint tl = { 0, 0 };
-        fpoint br = { (float) tw, (float) th };
-
-        wid_set_tl_br(wid, tl, br);
-
-        wid_set_tex(wid, 0, "snailly");
-
-        wid_raise(wid);
-
-        wid_set_mode(wid, WID_MODE_NORMAL);
-        wid_set_color(wid, WID_COLOR_TL, WHITE);
-        wid_set_color(wid, WID_COLOR_BR, WHITE);
-        wid_set_color(wid, WID_COLOR_BG, WHITE);
-    }
-
-    {
-        wid = wid_intro_bg_esnail = wid_new_window("bg esnail");
-
-        tex = tex_find("esnail");
-        tw = tex_get_width(tex);
-        th = tex_get_height(tex);
-
-        fpoint tl = { 0, 0 };
-        fpoint br = { (float) tw, (float) th };
-
-        wid_set_tl_br(wid, tl, br);
-
-        wid_set_tex(wid, 0, "esnail");
-
-        wid_raise(wid);
 
         wid_set_mode(wid, WID_MODE_NORMAL);
         wid_set_color(wid, WID_COLOR_TL, WHITE);
@@ -845,14 +742,8 @@ static void wid_intro_create (void)
     wid_update(wid_intro);
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
-    wid_move_to_pct_centered(wid_intro_bg_background_grass, 0.5f, 0.5f);
     wid_move_to_pct_centered(wid_intro_bg_gorynlich, 3.55f, 0.55f);
-    wid_move_to_pct_centered(wid_intro_bg_esnail, -2.55f, 0.15f);
-    wid_move_to_pct_centered(wid_intro_bg_snailly, 2.55f, 0.7f);
 
     wid_move_to_pct_centered_in(wid_intro, 0.5f, 0.5f, wid_swipe_delay);
-    wid_move_to_pct_centered_in(wid_intro_bg_background_grass, 0.5f, 0.5f, wid_swipe_delay);
     wid_move_to_pct_centered_in(wid_intro_bg_gorynlich, 0.5f, 0.55f, wid_swipe_delay);
-    wid_move_to_pct_centered_in(wid_intro_bg_esnail, 0.12f, 0.15f, wid_swipe_delay * 2);
-    wid_move_to_pct_centered_in(wid_intro_bg_snailly, 0.9f, 0.7f, wid_swipe_delay * 2);
 }
