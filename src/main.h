@@ -5,21 +5,7 @@
  */
 
 #include <stdint.h>
-
-#define  ENABLE_PTRCHECK            // Pointer sanity
-#define nENABLE_ASSERT              // DIE on errors
-#define nENABLE_TREE_SANITY         // Slow tree sanity
-#define nENABLE_DEBUG               // More debugs
-#define nENABLE_VIDEO_SYNC          // Vertical sync
-#define nENABLE_INVERTED_DISPLAY    // For running on a Mac with inverted gfx
-#define  ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
-#define nENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
-#define nENABLE_MAP_DEBUG           // Debug AI by printing the map
-#define nENABLE_WID_DEBUG           // Widget debug
-
-#ifdef ENABLE_GENERATE_TTF
-#define DISABLE_SDL_WINDOW          // SDL_ttf is incompatible with window mode
-#endif
+#include "config.h"
 
 /*
  * Console
@@ -31,11 +17,11 @@
 /*
  * Fonts
  */
-#define SMALL_FONT                      "data/ttf/FreeMonoBold.ttf"
+#define SMALL_FONT                      "data/ttf/small.ttf"
 #define SMALL_FONT_SIZE                 20
-#define MED_FONT                        "data/ttf/Captains.ttf"
+#define MED_FONT                        "data/ttf/med.ttf"
 #define MED_FONT_SIZE                   40
-#define LARGE_FONT                      "data/ttf/Captains.ttf"
+#define LARGE_FONT                      "data/ttf/large.ttf"
 #define LARGE_FONT_SIZE                 81
 
 /*
@@ -347,6 +333,30 @@ boolean string_test(int32_t argc, char *argv[]);
 boolean marshal_test(int32_t argc, char *argv[]);
 boolean enum_test(int32_t argc, char *argv[]);
 boolean ptrcheck_test(int32_t argc, char *argv[]);
+
+/*
+ * config.c
+ */
+void config_fini(void);
+boolean config_init(void);
+boolean config_save(void);
+boolean config_load(void);
+
+struct config {
+    int32_t video_pix_width;
+    int32_t video_pix_height;
+    int32_t video_gl_width;
+    int32_t video_gl_height;
+    float xscale;
+    float yscale;
+    int32_t sound_volume;
+    int32_t music_volume;
+};
+
+extern struct config global_config;
+
+#define SOUND_MIN 0
+#define SOUND_MAX 3
 
 /*
  * color.c

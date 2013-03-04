@@ -4,23 +4,18 @@
  * See the README file.
  */
 
-void config_fini(void);
-boolean config_init(void);
-boolean config_save(void);
-boolean config_load(void);
+#define  ENABLE_PTRCHECK            // Pointer sanity
+#define nENABLE_ASSERT              // DIE on errors
+#define nENABLE_TREE_SANITY         // Slow tree sanity
+#define nENABLE_DEBUG               // More debugs
+#define nENABLE_VIDEO_SYNC          // Vertical sync
+#define nENABLE_INVERTED_DISPLAY    // For running on a Mac with inverted gfx
+#define  ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
+#define nENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
+#define nENABLE_MAP_DEBUG           // Debug AI by printing the map
+#define nENABLE_WID_DEBUG           // Widget debug
 
-struct config {
-    int32_t video_pix_width;
-    int32_t video_pix_height;
-    int32_t video_gl_width;
-    int32_t video_gl_height;
-    float xscale;
-    float yscale;
-    int32_t sound_volume;
-    int32_t music_volume;
-};
+#ifdef ENABLE_GENERATE_TTF
+#define DISABLE_SDL_WINDOW          // SDL_ttf is incompatible with window mode
+#endif
 
-extern struct config global_config;
-
-#define SOUND_MIN 0
-#define SOUND_MAX 3
