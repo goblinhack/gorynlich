@@ -65,11 +65,11 @@ void sdl_splashscreen_update (void)
     wid_raise(wid_splash);
     wid_update(wid_splash);
 
-    texp tex = tex_find("snailly");
+    texp tex = tex_find("gorynlich");
     if (tex) {
         wid_icon = wid_new_window("splash icon");
 
-        tex = tex_find("snailly");
+        tex = tex_find("gorynlich");
         uint32_t tw = tex_get_width(tex);
         uint32_t th = tex_get_height(tex);
 
@@ -78,7 +78,7 @@ void sdl_splashscreen_update (void)
 
         wid_set_tl_br(wid_icon, tl, br);
 
-        wid_set_tex(wid_icon, 0, "snailly");
+        wid_set_tex(wid_icon, 0, "gorynlich");
 
         wid_raise(wid_icon);
         wid_set_do_not_raise(wid_icon, true);

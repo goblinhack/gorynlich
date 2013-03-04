@@ -15,8 +15,8 @@
 
 static boolean resource_init_1 (void *context)
 {
-    return (tex_load("data/gfx/snailly.png",
-                     "snailly",
+    return (tex_load("data/gfx/gorynlich.png",
+                     "gorynlich",
                      false /* mask needed */) != 0);
 }
 
@@ -29,9 +29,7 @@ static boolean resource_init_2 (void *context)
 
 static boolean resource_init_3 (void *context)
 {
-    return (tex_load("data/gfx/gorynlich.png",
-                     "gorynlich",
-                     false /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_4 (void *context)
@@ -57,44 +55,32 @@ static boolean resource_init_6 (void *context)
 
 static boolean resource_init_7 (void *context)
 {
-    return (tex_load("data/gfx/background_grass.png",
-                     "background_grass",
-                     false /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_8 (void *context)
 {
-    return (tex_load("data/gfx/snailly_happy.png",
-                     "snailly_happy",
-                     false /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_9 (void *context)
 {
-    return (tex_load("data/gfx/snailly_sad.png",
-                     "snailly_sad",
-                     false /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_10 (void *context)
 {
-    return (tex_load("data/gfx/esnail.png",
-                     "esnail",
-                     false /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_11 (void *context)
 {
-    return (tex_load("data/gfx/esnail_happy.png",
-                     "esnail_happy",
-                     false /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_12 (void *context)
 {
-    return (tex_load("data/gfx/esnail_sad.png",
-                     "esnail_sad",
-                     false /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_13 (void *context)
@@ -127,9 +113,7 @@ static boolean resource_init_16 (void *context)
 
 static boolean resource_init_17 (void *context)
 {
-    return (tex_load("data/gfx/snails.png",
-                     "snails",
-                     true /* mask needed */) != 0);
+    return (true);
 }
 
 static boolean resource_init_18 (void *context)
@@ -346,37 +330,6 @@ static boolean resource_init_23 (void *context)
               "plant10",
               "plant11",
               "plant12",
-              (char*)0,
-              (char*)0,
-              (char*)0,
-              (char*)0
-            );
-
-    tile_load("snails", 64, 76,
-              24,
-              /* row 1 */
-              "esnail1",
-              "esnail2",
-              "esnail3",
-              "esnail4",
-              "esnail5",
-              "esnail6",
-              "esnail7",
-              "esnail8",
-              /* row 2 */
-              "esnail9",
-              "snail1",
-              "snail2",
-              "snail3",
-              "snail4",
-              "snail5",
-              "snail6",
-              "snail7",
-              /* row 3 */
-              "snail8",
-              "esnaildead",
-              "snaildead",
-              (char*)0,
               (char*)0,
               (char*)0,
               (char*)0,
