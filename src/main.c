@@ -159,7 +159,7 @@ static void find_executable (void)
     char *path = 0;
     char *tmp;
 
-    exec_name = dupstr(basename(ARGV[0]), __FUNCTION__);
+    exec_name = mybasename(ARGV[0], __FUNCTION__);
 
     /*
      * Get the current directory, ending in a single /

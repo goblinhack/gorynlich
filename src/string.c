@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <libgen.h>
 
 #include "main.h"
 #include "string.h"
@@ -363,4 +364,18 @@ char *dynvprintf (const char *fmt, va_list args)
     vsnprintf(buf, sizeof(buf), fmt, args);
 
     return (dupstr(buf, __FUNCTION__));
+}
+
+/*
+ * mybasename
+ *
+ * A safe wrapper for basename to avoid modifications to the input string.
+ */
+char *mybasename (const char *in, const char *who)
+{
+    char *tmp = dupstr(in, who);
+    char *tmp2 = dupstr(basename(tmp), who);
+    myfree(tmp);
+
+    return (tmp2);
 }

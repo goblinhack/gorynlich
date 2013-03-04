@@ -75,7 +75,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 
         if (file_exists(alt_filename)) {
             if (file_exists_and_is_newer_than(alt_filename,
-                                            EXEC_FULL_PATH_AND_NAME)) {
+                                              EXEC_FULL_PATH_AND_NAME)) {
                 out = file_read_if_exists(alt_filename, outlen);
                 if (out) {
                     DBG("Locdisk %s", filename);
@@ -207,9 +207,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
         return (out);
     }
 
-    char *tmp = dupstr(filename, "strip dir");
-    alt_filename = dupstr(basename(tmp), "strip dir");
-    myfree(tmp);
+    alt_filename = mybasename(filename, "strip dir");
 
     out = file_read_if_exists(alt_filename, outlen);
     if (out) {

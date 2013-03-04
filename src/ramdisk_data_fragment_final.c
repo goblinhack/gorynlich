@@ -1,90 +1,94 @@
 #include <stdint.h>
 #include "ramdisk.h"
 
-extern const unsigned char *data_gfx_background_grass_png;
-extern const unsigned char *data_gfx_esnail_png;
-extern const unsigned char *data_gfx_esnail_happy_png;
-extern const unsigned char *data_gfx_esnail_sad_png;
-extern const unsigned char *data_gfx_explosion_png;
-extern const unsigned char *data_gfx_gorynlich_png;
-extern const unsigned char *data_gfx_help1_png;
-extern const unsigned char *data_gfx_help2_png;
-extern const unsigned char *data_gfx_help3_png;
-extern const unsigned char *data_gfx_pipes_png;
-extern const unsigned char *data_gfx_plant_png;
-extern const unsigned char *data_gfx_road_png;
-extern const unsigned char *data_gfx_rocket_png;
-extern const unsigned char *data_gfx_shell_png;
-extern const unsigned char *data_gfx_snailly_png;
-extern const unsigned char *data_gfx_snailly_happy_png;
-extern const unsigned char *data_gfx_snailly_sad_png;
-extern const unsigned char *data_gfx_snails_png;
-extern const unsigned char *data_gfx_sprites_large_png;
-extern const unsigned char *data_gfx_sprites_med_png;
-extern const unsigned char *data_gfx_sprites_med2_png;
-extern const unsigned char *data_gfx_sprites_small_png;
-extern const unsigned char *data_gfx_stars_png;
-extern const unsigned char *data_levels_1_map;
-extern const unsigned char *data_levels_10_map;
-extern const unsigned char *data_levels_2_map;
-extern const unsigned char *data_levels_3_map;
-extern const unsigned char *data_levels_4_map;
-extern const unsigned char *data_levels_5_map;
-extern const unsigned char *data_levels_6_map;
-extern const unsigned char *data_levels_7_map;
-extern const unsigned char *data_levels_8_map;
-extern const unsigned char *data_levels_9_map;
-extern const unsigned char *data_music_hiscore_wav;
-extern const unsigned char *data_music_intro_wav;
-extern const unsigned char *data_music_music_wav;
-extern const unsigned char *data_sound_chomp_wav;
-extern const unsigned char *data_sound_chomp2_wav;
-extern const unsigned char *data_sound_click_wav;
-extern const unsigned char *data_sound_doorbell_wav;
-extern const unsigned char *data_sound_explosion_wav;
-extern const unsigned char *data_sound_letter_wav;
-extern const unsigned char *data_sound_level_end_wav;
-extern const unsigned char *data_sound_paper_wav;
-extern const unsigned char *data_sound_powerup_wav;
-extern const unsigned char *data_sound_ratdeath_wav;
-extern const unsigned char *data_sound_rocket_wav;
-extern const unsigned char *data_sound_slime_wav;
-extern const unsigned char *data_sound_spam_wav;
-extern const unsigned char *data_sound_thief_wav;
-extern const unsigned char *data_things_a;
-extern const unsigned char *data_things_bomb;
-extern const unsigned char *data_things_car;
-extern const unsigned char *data_things_esnail;
-extern const unsigned char *data_things_explosion;
-extern const unsigned char *data_things_floor;
-extern const unsigned char *data_things_food;
-extern const unsigned char *data_things_house;
-extern const unsigned char *data_things_i;
-extern const unsigned char *data_things_l;
-extern const unsigned char *data_things_letter;
-extern const unsigned char *data_things_m;
-extern const unsigned char *data_things_n;
-extern const unsigned char *data_things_noentry;
-extern const unsigned char *data_things_pipe;
-extern const unsigned char *data_things_plant;
-extern const unsigned char *data_things_player;
-extern const unsigned char *data_things_powerup_rocket;
-extern const unsigned char *data_things_powerup_spam;
-extern const unsigned char *data_things_road;
-extern const unsigned char *data_things_s;
-extern const unsigned char *data_things_seedpod;
-extern const unsigned char *data_things_spam;
-extern const unsigned char *data_things_star_black;
-extern const unsigned char *data_things_star_blue;
-extern const unsigned char *data_things_star_cyan;
-extern const unsigned char *data_things_star_green;
-extern const unsigned char *data_things_star_pink;
-extern const unsigned char *data_things_star_purple;
-extern const unsigned char *data_things_star_red;
-extern const unsigned char *data_things_star_yellow;
-extern const unsigned char *data_things_wall;
-extern const unsigned char *data_ttf_FreeMonoBold_ttf_pointsize20_data;
-extern const unsigned char *data_ttf_FreeMonoBold_ttf_pointsize20_tga;
+extern const unsigned char data_gfx_background_grass_png[];
+extern const unsigned char data_gfx_esnail_png[];
+extern const unsigned char data_gfx_esnail_happy_png[];
+extern const unsigned char data_gfx_esnail_sad_png[];
+extern const unsigned char data_gfx_explosion_png[];
+extern const unsigned char data_gfx_gorynlich_png[];
+extern const unsigned char data_gfx_help1_png[];
+extern const unsigned char data_gfx_help2_png[];
+extern const unsigned char data_gfx_help3_png[];
+extern const unsigned char data_gfx_pipes_png[];
+extern const unsigned char data_gfx_plant_png[];
+extern const unsigned char data_gfx_road_png[];
+extern const unsigned char data_gfx_rocket_png[];
+extern const unsigned char data_gfx_shell_png[];
+extern const unsigned char data_gfx_snailly_png[];
+extern const unsigned char data_gfx_snailly_happy_png[];
+extern const unsigned char data_gfx_snailly_sad_png[];
+extern const unsigned char data_gfx_snails_png[];
+extern const unsigned char data_gfx_sprites_large_png[];
+extern const unsigned char data_gfx_sprites_med_png[];
+extern const unsigned char data_gfx_sprites_med2_png[];
+extern const unsigned char data_gfx_sprites_small_png[];
+extern const unsigned char data_gfx_stars_png[];
+extern const unsigned char data_levels_1_map[];
+extern const unsigned char data_levels_10_map[];
+extern const unsigned char data_levels_2_map[];
+extern const unsigned char data_levels_3_map[];
+extern const unsigned char data_levels_4_map[];
+extern const unsigned char data_levels_5_map[];
+extern const unsigned char data_levels_6_map[];
+extern const unsigned char data_levels_7_map[];
+extern const unsigned char data_levels_8_map[];
+extern const unsigned char data_levels_9_map[];
+extern const unsigned char data_music_hiscore_wav[];
+extern const unsigned char data_music_intro_wav[];
+extern const unsigned char data_music_music_wav[];
+extern const unsigned char data_sound_chomp_wav[];
+extern const unsigned char data_sound_chomp2_wav[];
+extern const unsigned char data_sound_click_wav[];
+extern const unsigned char data_sound_doorbell_wav[];
+extern const unsigned char data_sound_explosion_wav[];
+extern const unsigned char data_sound_letter_wav[];
+extern const unsigned char data_sound_level_end_wav[];
+extern const unsigned char data_sound_paper_wav[];
+extern const unsigned char data_sound_powerup_wav[];
+extern const unsigned char data_sound_ratdeath_wav[];
+extern const unsigned char data_sound_rocket_wav[];
+extern const unsigned char data_sound_slime_wav[];
+extern const unsigned char data_sound_spam_wav[];
+extern const unsigned char data_sound_thief_wav[];
+extern const unsigned char data_things_a[];
+extern const unsigned char data_things_bomb[];
+extern const unsigned char data_things_car[];
+extern const unsigned char data_things_esnail[];
+extern const unsigned char data_things_explosion[];
+extern const unsigned char data_things_floor[];
+extern const unsigned char data_things_food[];
+extern const unsigned char data_things_house[];
+extern const unsigned char data_things_i[];
+extern const unsigned char data_things_l[];
+extern const unsigned char data_things_letter[];
+extern const unsigned char data_things_m[];
+extern const unsigned char data_things_n[];
+extern const unsigned char data_things_noentry[];
+extern const unsigned char data_things_pipe[];
+extern const unsigned char data_things_plant[];
+extern const unsigned char data_things_player[];
+extern const unsigned char data_things_powerup_rocket[];
+extern const unsigned char data_things_powerup_spam[];
+extern const unsigned char data_things_road[];
+extern const unsigned char data_things_s[];
+extern const unsigned char data_things_seedpod[];
+extern const unsigned char data_things_spam[];
+extern const unsigned char data_things_star_black[];
+extern const unsigned char data_things_star_blue[];
+extern const unsigned char data_things_star_cyan[];
+extern const unsigned char data_things_star_green[];
+extern const unsigned char data_things_star_pink[];
+extern const unsigned char data_things_star_purple[];
+extern const unsigned char data_things_star_red[];
+extern const unsigned char data_things_star_yellow[];
+extern const unsigned char data_things_wall[];
+extern const unsigned char data_ttf_large_ttf_pointsize40_data[];
+extern const unsigned char data_ttf_large_ttf_pointsize40_tga[];
+extern const unsigned char data_ttf_med_ttf_pointsize30_data[];
+extern const unsigned char data_ttf_med_ttf_pointsize30_tga[];
+extern const unsigned char data_ttf_small_ttf_pointsize20_data[];
+extern const unsigned char data_ttf_small_ttf_pointsize20_tga[];
 
 ramdisk_t ramdisk_data[] = {
     {
@@ -580,16 +584,40 @@ ramdisk_t ramdisk_data[] = {
         /* len      */ 352,
     },
     {
-        /* filename */ "data/ttf/FreeMonoBold.ttf_pointsize20.data",
+        /* filename */ "data/ttf/large.ttf_pointsize40.data",
         /* data     */ 0,
-        /* orig_len */ 5589,
-        /* len      */ 708,
+        /* orig_len */ 5588,
+        /* len      */ 555,
     },
     {
-        /* filename */ "data/ttf/FreeMonoBold.ttf_pointsize20.tga",
+        /* filename */ "data/ttf/large.ttf_pointsize40.tga",
         /* data     */ 0,
-        /* orig_len */ 262163,
-        /* len      */ 11243,
+        /* orig_len */ 1048594,
+        /* len      */ 7417,
+    },
+    {
+        /* filename */ "data/ttf/med.ttf_pointsize30.data",
+        /* data     */ 0,
+        /* orig_len */ 5588,
+        /* len      */ 542,
+    },
+    {
+        /* filename */ "data/ttf/med.ttf_pointsize30.tga",
+        /* data     */ 0,
+        /* orig_len */ 524306,
+        /* len      */ 6523,
+    },
+    {
+        /* filename */ "data/ttf/small.ttf_pointsize20.data",
+        /* data     */ 0,
+        /* orig_len */ 5588,
+        /* len      */ 550,
+    },
+    {
+        /* filename */ "data/ttf/small.ttf_pointsize20.tga",
+        /* data     */ 0,
+        /* orig_len */ 524306,
+        /* len      */ 5346,
     },
     {0},
 };
@@ -679,6 +707,10 @@ void ramdisk_init (void)
     ramdisk_data[79].data = data_things_star_red;
     ramdisk_data[80].data = data_things_star_yellow;
     ramdisk_data[81].data = data_things_wall;
-    ramdisk_data[82].data = data_ttf_FreeMonoBold_ttf_pointsize20_data;
-    ramdisk_data[83].data = data_ttf_FreeMonoBold_ttf_pointsize20_tga;
+    ramdisk_data[82].data = data_ttf_large_ttf_pointsize40_data;
+    ramdisk_data[83].data = data_ttf_large_ttf_pointsize40_tga;
+    ramdisk_data[84].data = data_ttf_med_ttf_pointsize30_data;
+    ramdisk_data[85].data = data_ttf_med_ttf_pointsize30_tga;
+    ramdisk_data[86].data = data_ttf_small_ttf_pointsize20_data;
+    ramdisk_data[87].data = data_ttf_small_ttf_pointsize20_tga;
 }
