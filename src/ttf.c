@@ -581,7 +581,6 @@ ttf_create_tex_from_char (TTF_Font *ttf, const char *name, font *f, uint8_t c)
     }
 
     SDL_FreeSurface(g0);
-    oldptr(g0);
 
     GLfloat texcoord [4];
 
@@ -648,7 +647,7 @@ ttf_write_tga (char *name, int32_t pointsize)
 {
     uint32_t rmask, gmask, bmask, amask;
     uint32_t glyph_per_row;
-    char filename[80];
+    char filename[200];
     SDL_Surface *dst;
     uint32_t height;
     uint32_t width;
@@ -703,6 +702,8 @@ ttf_write_tga (char *name, int32_t pointsize)
     if (MULTIPLE_BITS(width)) {
         width = nextpoweroftwo(width);
     }
+
+    height += 40;
 
     if (MULTIPLE_BITS(height)) {
         height = nextpoweroftwo(height);
@@ -772,14 +773,14 @@ ttf_write_tga (char *name, int32_t pointsize)
                     (c.g == 255) &&
                     (c.b == 255)) {
                     /*
-                     * Do noting.
+                     * Do nothing.
                      */
                 } else if ((c.a == 0) &&
                     (c.r == 0) &&
                     (c.g == 0) &&
                     (c.b == 0)) {
                     /*
-                     * Do noting.
+                     * Do nothing.
                      */
                 } else {
                     /*
@@ -860,14 +861,22 @@ ttf_write_tga (char *name, int32_t pointsize)
 void ttf2tga (void)
 {
 #ifdef ENABLE_GENERATE_TTF
-    small_font  = ttf_write_tga((char*)strprepend(SMALL_FONT,
-                                                  EXEC_FULL_PATH_AND_NAME),
+    /*
+     * Generate bitmaps from TTF.
+     */
+    small_font  = ttf_write_tga((char*)
+                                strprepend(mybasename(SMALL_FONT, __FUNCTION__),
+                                                  TTF_PATH),
                                 SMALL_FONT_SIZE);
-    med_font    = ttf_write_tga((char*)strprepend(MED_FONT,
-                                                  EXEC_FULL_PATH_AND_NAME),
+
+    med_font    = ttf_write_tga((char*)
+                                strprepend(mybasename(MED_FONT, __FUNCTION__),
+                                                  TTF_PATH),
                                 MED_FONT_SIZE);
-    large_font  = ttf_write_tga((char*)strprepend(LARGE_FONT,
-                                                  EXEC_FULL_PATH_AND_NAME),
+
+    large_font  = ttf_write_tga((char*)
+                                strprepend(mybasename(LARGE_FONT, __FUNCTION__),
+                                                  TTF_PATH),
                                 LARGE_FONT_SIZE);
 #endif
 }

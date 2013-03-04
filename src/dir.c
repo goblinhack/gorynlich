@@ -123,10 +123,7 @@ tree_root *dirlist (const char *dir,
         /*
          * Static key so tree removals are easy.
          */
-        char *tmp = dupstr(dir_and_file, "strip dir");
-        node->tree.key = dupstr(basename(tmp),
-                                "TREE KEY: dirlist2");
-        myfree(tmp);
+        node->tree.key = mybasename(dir_and_file, "TREE KEY: dirlist2");
 
         if (!tree_insert(root, &node->tree.node)) {
             DIE("insert dir %s", dir_and_file);
@@ -155,10 +152,7 @@ tree_root *dirlist (const char *dir,
         /*
          * Static key so tree removals are easy.
          */
-        char *tmp = dupstr(dir_and_file, "strip dir");
-        node->tree.key = dupstr(basename(tmp),
-                                "TREE KEY: dirlist2");
-        myfree(tmp);
+        node->tree.key = mybasename(dir_and_file, "TREE KEY: dirlist2");
 
         tree_insert(root, &node->tree.node);
         ramfile++;
