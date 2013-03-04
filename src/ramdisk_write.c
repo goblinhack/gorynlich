@@ -300,7 +300,7 @@ int main (int32_t argc, char *argv[])
 
         free(c_array_name);
 
-        fprintf(fp, "extern const unsigned char *%s;\n", c_array_name);
+        fprintf(fp, "extern const unsigned char %s[];\n", c_array_name);
 
         ramfile++;
     }

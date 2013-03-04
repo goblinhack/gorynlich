@@ -18,3 +18,4 @@ int32_t strisregexp(const char *in);
 void strnoescape(char *uncompressed);
 char *dynprintf(const char *fmt, ...);
 char *dynvprintf(const char *fmt, va_list args);
+char *mybasename(const char *in, const char *who);

@@ -20,9 +20,9 @@
 #define SMALL_FONT                      "data/ttf/small.ttf"
 #define SMALL_FONT_SIZE                 20
 #define MED_FONT                        "data/ttf/med.ttf"
-#define MED_FONT_SIZE                   40
+#define MED_FONT_SIZE                   30
 #define LARGE_FONT                      "data/ttf/large.ttf"
-#define LARGE_FONT_SIZE                 81
+#define LARGE_FONT_SIZE                 40
 
 /*
  * Tiles

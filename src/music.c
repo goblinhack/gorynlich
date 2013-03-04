@@ -89,7 +89,7 @@ musicp music_load (const char *file, const char *name_alias)
 
     m->music = Mix_LoadMUS_RW(rw);
     if (!m->music) {
-        DIE("cannot make music %s: %s %s", file, Mix_GetError(),
+        ERR("cannot make music %s: %s %s", file, Mix_GetError(),
             SDL_GetError());
     }
 

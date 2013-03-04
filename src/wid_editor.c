@@ -216,14 +216,12 @@ static void wid_editor_load_ok (widp w)
     dir_and_file = dupstr(wid_get_text(wid_editor_load_popup), __FUNCTION__);
 
     if (!file_exists(dir_and_file)) {
-        char *tmp = dupstr(dir_and_file, "strip dir");
-        char *tmp2 = dupstr(basename(tmp), "strip dir");
+        char *tmp2 = dupstr(dir_and_file, "strip dir");
         myfree(dir_and_file);
         dir_and_file = tmp2;
-        myfree(tmp);
 
         if (!file_exists(dir_and_file)) {
-            tmp = dynprintf("data/levels/%s", dir_and_file);
+            char *tmp = dynprintf("data/levels/%s", dir_and_file);
             myfree(dir_and_file);
             dir_and_file = tmp;
         }
@@ -279,7 +277,8 @@ static void wid_editor_load_ok (widp w)
     verify(level_ed);
 
     char *title = dynprintf("%s: %s",
-            basename(dir_and_file), level_get_title(level_ed));
+            mybasename(dir_and_file, __FUNCTION__),
+            level_get_title(level_ed));
 
     wid_destroy(&wid_editor_filename_and_title);
 
