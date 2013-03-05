@@ -79,6 +79,7 @@ extern const unsigned char data_ttf_large_ttf_pointsize40_data[];
 extern const unsigned char data_ttf_large_ttf_pointsize40_tga[];
 extern const unsigned char data_ttf_med_ttf_pointsize30_data[];
 extern const unsigned char data_ttf_med_ttf_pointsize30_tga[];
+extern const unsigned char data_ttf_pizzadudedotdk_txt[];
 extern const unsigned char data_ttf_small_ttf_pointsize20_data[];
 extern const unsigned char data_ttf_small_ttf_pointsize20_tga[];
 
@@ -552,16 +553,22 @@ ramdisk_t ramdisk_data[] = {
         /* len      */ 6523,
     },
     {
+        /* filename */ "data/ttf/pizzadudedotdk.txt",
+        /* data     */ 0,
+        /* orig_len */ 434,
+        /* len      */ 262,
+    },
+    {
         /* filename */ "data/ttf/small.ttf_pointsize20.data",
         /* data     */ 0,
         /* orig_len */ 5588,
-        /* len      */ 550,
+        /* len      */ 639,
     },
     {
         /* filename */ "data/ttf/small.ttf_pointsize20.tga",
         /* data     */ 0,
-        /* orig_len */ 524306,
-        /* len      */ 5346,
+        /* orig_len */ 262162,
+        /* len      */ 8811,
     },
     {0},
 };
@@ -647,6 +654,7 @@ void ramdisk_init (void)
     ramdisk_data[75].data = data_ttf_large_ttf_pointsize40_tga;
     ramdisk_data[76].data = data_ttf_med_ttf_pointsize30_data;
     ramdisk_data[77].data = data_ttf_med_ttf_pointsize30_tga;
-    ramdisk_data[78].data = data_ttf_small_ttf_pointsize20_data;
-    ramdisk_data[79].data = data_ttf_small_ttf_pointsize20_tga;
+    ramdisk_data[78].data = data_ttf_pizzadudedotdk_txt;
+    ramdisk_data[79].data = data_ttf_small_ttf_pointsize20_data;
+    ramdisk_data[80].data = data_ttf_small_ttf_pointsize20_tga;
 }
