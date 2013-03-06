@@ -646,6 +646,169 @@ void sdl_exit (void)
 }
 
 /*
+ * gl_push_tex2f
+ *
+ * Push elements onto the array buffer.
+ */
+static inline gl_push_tex2f (GLfloat ** p, GLfloat x, GLfloat y)
+{
+    *(*p)++ = x;
+    *(*p)++ = y;
+}
+
+/*
+ * gl_push_vertex2f
+ *
+ * Push elements onto the array buffer.
+ */
+static inline gl_push_vertex2f (GLfloat ** p, GLfloat x, GLfloat y)
+{
+    *(*p)++ = x;
+    *(*p)++ = y;
+}
+
+/*
+ * gl_render_game
+ *
+ * Our main rendering loop.
+ */
+static void demo (void)
+{
+    /*
+     * This is the size of a GL array buffer we use to draw each layer of
+     * the game. This is big enough for an entire screen of bitmaps.
+     */
+
+    /*
+     * QUAD per array element.
+     */
+    static const uint32_t NUMBER_VERTICES_PER_TILE = 4;
+    /*
+     * x and y per element.
+     */
+    static const uint32_t NUMBER_COORDS_PER_VERTEX = 2;
+    /*
+     * Two arrays, xy and uv.
+     */
+    static const uint32_t NUMBER_CONTIGUOUS_VERTICE_ARRAYS = 2;
+
+    /*
+     * This is the huge buffer that contains all arrays.
+     */
+    static GLfloat *buf;
+
+    /*
+     * Pointers to single arrays within this buffer.
+     */
+    static GLfloat *xy;
+    static GLfloat *uv;
+
+    /*
+     * Where we are currently up to in writing to these buffers.
+     */
+    GLfloat *xyp;
+    GLfloat *uvp;
+
+    /*
+     * Our array size requirements.
+     */
+    static uint32_t gl_array_size;
+    uint32_t gl_array_size_required;
+    uint32_t gl_elements_per_array;
+    uint32_t nvertices;
+
+    /*
+     * Individual co-ordinates for each tile.
+     */
+    GLfloat left;
+    GLfloat right;
+    GLfloat top;
+    GLfloat bottom;
+
+    GLfloat tex_left;
+    GLfloat tex_right;
+    GLfloat tex_top;
+    GLfloat tex_bottom;
+
+    /*
+     * Screen size.
+     */
+    uint32_t width = global_config.video_pix_width;
+    uint32_t height = global_config.video_pix_height;
+
+    /*
+     * If the screen size has changed or this is the first run, allocate our
+     * buffer if our size requirements have changed.
+     */
+    gl_elements_per_array = 
+                    width *
+                    height *
+                    NUMBER_VERTICES_PER_TILE *
+                    NUMBER_COORDS_PER_VERTEX;
+
+    gl_array_size_required =
+                    sizeof(GLfloat) *
+                    gl_elements_per_array *
+                    NUMBER_CONTIGUOUS_VERTICE_ARRAYS;
+
+    /*
+     * Requirements have changed for buffer space?
+     */
+    if (gl_array_size != gl_array_size_required) {
+        if (buf) {
+            free(buf);
+        }
+
+        buf = myzalloc(gl_array_size_required, "GL xy buffer");
+
+        /*
+         * Set up our base pointers within the contiguous array space.
+         */
+        xy = buf;
+        uv = xv + gl_elements_per_array;
+    }
+
+    /*
+     * Populate the buffer arrays.
+     */
+    xyp = xy;
+    uvp = uv;
+
+    for (y = 0; y < height; y++) {
+        top = 0;
+        top += TILE_HEIGHT;
+
+        for (x = 0; x < width; x++) {
+
+            gl_push_tex2f(tex_left,  tex_top);
+            gl_push_tex2f(tex_right, tex_top);
+            gl_push_tex2f(tex_left,  tex_bottom);
+            gl_push_tex2f(tex_right, tex_bottom);
+
+            gl_push_vertex2f(left,  top);
+            gl_push_vertex2f(right, top);
+            gl_push_vertex2f(left,  bottom);
+            gl_push_vertex2f(right, bottom);
+        }
+    }
+
+    /*
+     * Display all the tiles selected above in one blast.
+     */
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    nvertices = xyp - xy;
+
+    glVertexPointer(NUMBER_COORDS_PER_VERTEX, GL_FLOAT, 0, xy);
+    glTexCoordPointer(NUMBER_COORDS_PER_VERTEX, GL_FLOAT, 0, uv);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, nvertices);
+
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+/*
  * Main loop
  */
 void sdl_loop (void)
