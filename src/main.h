@@ -261,6 +261,10 @@ extern boolean debug_enabled;
 boolean debug_enable(tokensp, void *context);
 boolean debug_disable(tokensp, void *context);
 
+extern boolean fps_enabled;
+boolean fps_enable(tokensp, void *context);
+boolean fps_disable(tokensp, void *context);
+
 /*
  * util.c
  */

@@ -68,6 +68,8 @@ boolean wid_console_init (void)
 
     command_add(debug_enable, "debug on", "");
     command_add(debug_disable, "debug off", "");
+    command_add(fps_enable, "fps on", "");
+    command_add(fps_disable, "fps off", "");
 
     wid_console_wid_create();
 

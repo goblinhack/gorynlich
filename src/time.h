@@ -6,7 +6,6 @@
 
 #include <sys/time.h>
 
-uint32_t time_get_time_milli(void);
 uint32_t time_get_time_cached(void);
 boolean time_have_x_tenths_passed_since(uint32_t tenths, uint32_t since);
 boolean time_have_x_secs_passed_since(uint32_t tenths, uint32_t since);
@@ -17,3 +16,13 @@ long long
 timeval_diff(struct timeval *difference,
              struct timeval *end_time,
              struct timeval *start_time);
+
+static inline uint32_t time_get_time_milli (void)
+{
+    extern uint32_t time_now;
+    extern uint32_t SDL_GetTicks(void);
+
+    time_now = SDL_GetTicks();
+
+    return (time_now);
+}
