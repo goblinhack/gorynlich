@@ -674,94 +674,52 @@ gl_push_vertex2f (GLfloat **p, GLfloat x, GLfloat y)
 }
 
 /*
- * gl_render_game
- *
- * Our main rendering loop.
+ * QUAD per array element.
  */
-static void demo (void)
+static const uint32_t NUMBER_VERTICES_PER_TILE = 4;
+
+/*
+ * x and y per element.
+ */
+static const uint32_t NUMBER_COORDS_PER_VERTEX = 2;
+
+/*
+ * Two arrays, xy and uv.
+ */
+static const uint32_t NUMBER_CONTIGUOUS_VERTICE_ARRAYS = 2;
+
+/*
+ * This is the huge buffer that contains all arrays.
+ */
+static GLfloat *buf;
+
+/*
+ * Pointers to single arrays within this buffer.
+ */
+static GLfloat *xy;
+static GLfloat *uv;
+
+static uint32_t gl_array_size;
+
+static texp tex;
+static int bind;
+
+/*
+ * demo_init
+ */
+static void demo_init (void)
 {
-    static texp tex;
-    int bind;
-
-    if (!tex) {
-        tex = tex_find("sprites_small");
-        if (!tex) {
-            return;
-        }
-
-        bind = tex_get_gl_binding(tex);
-    }
-    
-    glBindTexture(GL_TEXTURE_2D, bind);
-    glcolor(WHITE);
-
-    /*
-     * This is the size of a GL array buffer we use to draw each layer of
-     * the game. This is big enough for an entire screen of bitmaps.
-     */
-
-    /*
-     * QUAD per array element.
-     */
-    static const uint32_t NUMBER_VERTICES_PER_TILE = 4;
-    /*
-     * x and y per element.
-     */
-    static const uint32_t NUMBER_COORDS_PER_VERTEX = 2;
-    /*
-     * Two arrays, xy and uv.
-     */
-    static const uint32_t NUMBER_CONTIGUOUS_VERTICE_ARRAYS = 2;
-
-    /*
-     * This is the huge buffer that contains all arrays.
-     */
-    static GLfloat *buf;
-
-    /*
-     * Pointers to single arrays within this buffer.
-     */
-    static GLfloat *xy;
-    static GLfloat *uv;
-
-    /*
-     * Where we are currently up to in writing to these buffers.
-     */
-    GLfloat *xyp;
-    GLfloat *uvp;
-
     /*
      * Our array size requirements.
      */
-    static uint32_t gl_array_size;
     uint32_t gl_array_size_required;
     uint32_t gl_elements_per_array;
-    uint32_t nvertices;
-
-    /*
-     * Individual co-ordinates for each tile.
-     */
-    GLfloat left;
-    GLfloat right;
-    GLfloat top;
-    GLfloat bottom;
-
-    GLfloat tex_left;
-    GLfloat tex_right;
-    GLfloat tex_top;
-    GLfloat tex_bottom;
 
     /*
      * Screen size.
      */
     uint16_t width = global_config.video_pix_width;
     uint16_t height = global_config.video_pix_height;
-
-    /*
-     * Temps
-     */
-    uint16_t x;
-    uint16_t y;
 
     /*
      * If the screen size has changed or this is the first run, allocate our
@@ -796,6 +754,62 @@ static void demo (void)
         xy = buf;
         uv = xy + gl_elements_per_array;
     }
+
+    if (!tex) {
+        tex = tex_find("sprites_small");
+        if (!tex) {
+            return;
+        }
+
+        bind = tex_get_gl_binding(tex);
+    }
+}
+
+/*
+ * demo
+ *
+ * Our main rendering loop.
+ */
+static void demo (void)
+{
+    glBindTexture(GL_TEXTURE_2D, bind);
+    glcolor(WHITE);
+
+    /*
+     * Where we are currently up to in writing to these buffers.
+     */
+    GLfloat *xyp;
+    GLfloat *uvp;
+
+    /*
+     * Our array size requirements.
+     */
+    uint32_t nvertices;
+
+    /*
+     * Individual co-ordinates for each tile.
+     */
+    GLfloat left;
+    GLfloat right;
+    GLfloat top;
+    GLfloat bottom;
+
+    GLfloat tex_left;
+    GLfloat tex_right;
+    GLfloat tex_top;
+    GLfloat tex_bottom;
+
+    /*
+     * Screen size.
+     */
+    uint16_t width = global_config.video_pix_width;
+    uint16_t height = global_config.video_pix_height;
+
+    /*
+     * Temps
+     */
+    uint16_t x;
+    uint16_t y;
 
     /*
      * Populate the buffer arrays.
@@ -950,6 +964,8 @@ void sdl_loop (void)
 #endif /* } */
     }
 
+    demo_init();
+
     for (;;) {
 
         /*
@@ -962,7 +978,13 @@ void sdl_loop (void)
          * the game processing below to allow it to be drained before we swap 
          * the buffers.
          */
-        demo();
+        LOG("begin");
+        int32_t xxx = time_get_time_milli();
+        for(i=0;i<1000;i++) {
+            demo();
+        }
+        LOG("%u ms",time_get_time_milli()-xxx);
+        LOG("done");
 
         frames++;
 
