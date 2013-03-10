@@ -6672,9 +6672,6 @@ static void wid_tick (widp w)
         }
     }
 
-    /*
-     * If this is a grid wid, draw the elements in y sorted order.
-     */
     TREE2_WALK(w->children_unsorted, child) {
         wid_tick(child);
     }
@@ -7116,15 +7113,23 @@ static void wid_display (widp w,
 }
 
 /*
- * Display all widgets
+ * Do stuff for all widgets.
  */
-void wid_display_all (void)
+void wid_tick_all (void)
 {
     widp w;
 
     { TREE2_WALK(wid_top_level2, w) {
         wid_tick(w);
     } }
+}
+
+/*
+ * Display all widgets
+ */
+void wid_display_all (void)
+{
+    widp w;
 
     glEnable(GL_SCISSOR_TEST);
 

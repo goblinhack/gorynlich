@@ -10,7 +10,7 @@
 #include "time.h"
 #include "sdl.h"
 
-static uint32_t time_now;
+uint32_t time_now;
 
 const char *time2str (uint32_t ms, char *buf, int32_t len)
 {
@@ -68,17 +68,6 @@ const char *timestamp (char *buf, int32_t len)
     }
 
     return (buf_);
-}
-
-uint32_t time_get_time_milli (void)
-{
-    if (!sdl_init_video) {
-        return (0);
-    }
-
-    time_now = SDL_GetTicks();
-
-    return (time_now);
 }
 
 uint32_t time_get_time_cached (void)

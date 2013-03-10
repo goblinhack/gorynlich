@@ -18,6 +18,10 @@
 #include "init_fn.h"
 #include "wid_splash.h"
 #include "config.h"
+#include "tex.h"
+#include "ttf.h"
+#include "slre.h"
+#include "token.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -650,7 +654,8 @@ void sdl_exit (void)
  *
  * Push elements onto the array buffer.
  */
-static inline gl_push_tex2f (GLfloat ** p, GLfloat x, GLfloat y)
+static inline void 
+gl_push_tex2f (GLfloat **p, GLfloat x, GLfloat y)
 {
     *(*p)++ = x;
     *(*p)++ = y;
@@ -661,7 +666,8 @@ static inline gl_push_tex2f (GLfloat ** p, GLfloat x, GLfloat y)
  *
  * Push elements onto the array buffer.
  */
-static inline gl_push_vertex2f (GLfloat ** p, GLfloat x, GLfloat y)
+static inline void 
+gl_push_vertex2f (GLfloat **p, GLfloat x, GLfloat y)
 {
     *(*p)++ = x;
     *(*p)++ = y;
@@ -674,6 +680,21 @@ static inline gl_push_vertex2f (GLfloat ** p, GLfloat x, GLfloat y)
  */
 static void demo (void)
 {
+    static texp tex;
+    int bind;
+
+    if (!tex) {
+        tex = tex_find("sprites_small");
+        if (!tex) {
+            return;
+        }
+
+        bind = tex_get_gl_binding(tex);
+    }
+    
+    glBindTexture(GL_TEXTURE_2D, bind);
+    glcolor(WHITE);
+
     /*
      * This is the size of a GL array buffer we use to draw each layer of
      * the game. This is big enough for an entire screen of bitmaps.
@@ -733,8 +754,14 @@ static void demo (void)
     /*
      * Screen size.
      */
-    uint32_t width = global_config.video_pix_width;
-    uint32_t height = global_config.video_pix_height;
+    uint16_t width = global_config.video_pix_width;
+    uint16_t height = global_config.video_pix_height;
+
+    /*
+     * Temps
+     */
+    uint16_t x;
+    uint16_t y;
 
     /*
      * If the screen size has changed or this is the first run, allocate our
@@ -755,8 +782,10 @@ static void demo (void)
      * Requirements have changed for buffer space?
      */
     if (gl_array_size != gl_array_size_required) {
+        gl_array_size = gl_array_size_required;
+
         if (buf) {
-            free(buf);
+            myfree(buf);
         }
 
         buf = myzalloc(gl_array_size_required, "GL xy buffer");
@@ -765,7 +794,7 @@ static void demo (void)
          * Set up our base pointers within the contiguous array space.
          */
         xy = buf;
-        uv = xv + gl_elements_per_array;
+        uv = xy + gl_elements_per_array;
     }
 
     /*
@@ -774,22 +803,46 @@ static void demo (void)
     xyp = xy;
     uvp = uv;
 
-    for (y = 0; y < height; y++) {
-        top = 0;
-        top += TILE_HEIGHT;
+    tex_left   = 0.0;
+    tex_right  = 1.0;
+    tex_top    = 0.0;
+    tex_bottom = 1.0;
 
-        for (x = 0; x < width; x++) {
+    top = 0;
+    bottom = (float)TILE_WIDTH / (float)width;
 
-            gl_push_tex2f(tex_left,  tex_top);
-            gl_push_tex2f(tex_right, tex_top);
-            gl_push_tex2f(tex_left,  tex_bottom);
-            gl_push_tex2f(tex_right, tex_bottom);
+    for (y = TILE_HEIGHT * 3; y <= height - TILE_HEIGHT; y += TILE_HEIGHT) {
 
-            gl_push_vertex2f(left,  top);
-            gl_push_vertex2f(right, top);
-            gl_push_vertex2f(left,  bottom);
-            gl_push_vertex2f(right, bottom);
+        left = 0;
+        right = TILE_WIDTH;
+
+        for (x = 0; x <= width - TILE_WIDTH; x += TILE_WIDTH) {
+
+            top    = y;
+            bottom = y+TILE_HEIGHT;
+            left   = x;
+            right  = x+TILE_WIDTH;
+
+            tex_left = 0.0;
+            tex_right = 0.05;
+            tex_top = 0.0;
+            tex_bottom = 0.05;
+
+            gl_push_tex2f(&uvp, tex_left,  tex_top);
+            gl_push_tex2f(&uvp, tex_right, tex_top);
+            gl_push_tex2f(&uvp, tex_left,  tex_bottom);
+            gl_push_tex2f(&uvp, tex_right, tex_bottom);
+
+            gl_push_vertex2f(&xyp, left,  top);
+            gl_push_vertex2f(&xyp, right, top);
+            gl_push_vertex2f(&xyp, left,  bottom);
+            gl_push_vertex2f(&xyp, right, bottom);
+
+            left += TILE_WIDTH;
+            right += TILE_WIDTH;
         }
+
+        top += TILE_HEIGHT;
     }
 
     /*
@@ -798,14 +851,41 @@ static void demo (void)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    nvertices = xyp - xy;
+    nvertices = (xyp - xy) / NUMBER_COORDS_PER_VERTEX;
 
     glVertexPointer(NUMBER_COORDS_PER_VERTEX, GL_FLOAT, 0, xy);
     glTexCoordPointer(NUMBER_COORDS_PER_VERTEX, GL_FLOAT, 0, uv);
+
+    glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(tex));
+
     glDrawArrays(GL_TRIANGLE_STRIP, 0, nvertices);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+boolean fps_enabled = 1;
+
+/*
+ * User has entered a command, run it
+ */
+boolean fps_enable (tokens_t *tokens, void *context)
+{
+    fps_enabled = true;
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean fps_disable (tokens_t *tokens, void *context)
+{
+    fps_enabled = false;
+
+    return (true);
 }
 
 /*
@@ -817,6 +897,8 @@ void sdl_loop (void)
     boolean init_done = false;
     int32_t found;
     int32_t i;
+    char fps_text[10] = {0};
+    uint16_t frames = 0;
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
     SDL_SetEventFilter(sdl_filter_events, 0);
@@ -830,28 +912,95 @@ void sdl_loop (void)
      * Wait for events
      */
     int32_t timestamp_then = time_get_time_milli();
+    int32_t timestamp_then2 = timestamp_then;
 
     sdl_main_loop_running = true;
 
-    for (;;) {
+#ifdef ENABLE_INVERTED_DISPLAY
+    glClearColor(WHITE.r, WHITE.g, WHITE.b, 1.0f);
+#else
+    glClearColor(BLACK.r, BLACK.g, BLACK.b, 1.0f);
+#endif
+
+    while (!init_done) {
+        /*
+         * Clear the screen
+         */
+        glClear(GL_COLOR_BUFFER_BIT);
 
         /*
          * Splash screen loading bar for init functions.
          */
-        if (!init_done) {
-            init_done = !action_init_fns_tick(&init_fns);
+        init_done = !action_init_fns_tick(&init_fns);
 
-            sdl_splashscreen_update();
-        }
+        sdl_splashscreen_update();
 
         /*
-         * Read events
+         * Display windows.
+         */
+        wid_display_all();
+
+        /*
+         * Flip
+         */
+#ifdef ENABLE_SDL_WINDOW /* { */
+        SDL_GL_SwapWindow(window);
+#else /* } { */
+        SDL_GL_SwapBuffers();
+#endif /* } */
+    }
+
+    for (;;) {
+
+        /*
+         * Clear the screen
+         */
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        /*
+         * Do the main GL work early on to fill up the pipeline and then do
+         * the game processing below to allow it to be drained before we swap 
+         * the buffers.
+         */
+        demo();
+
+        frames++;
+
+        /*
+         * Do processing of some things, like reading the keyboard or doing
+         * stuff with widgets only occasionally if we do not need to.
          */
         int32_t timestamp_now = time_get_time_milli();
 
-        if (timestamp_now - timestamp_then > 10) {
+        if (timestamp_now - timestamp_then2 >= 1000) {
+
+            timestamp_then2 = timestamp_now;
+
+            /*
+             * Update FSP counter.
+             */
+            snprintf(fps_text, sizeof(fps_text), "%u", frames);
+
+            frames = 0;
+        }
+
+        if (timestamp_now - timestamp_then > 50) {
+            /*
+             * Give up some CPU to allow events to arrive and time for the GPU 
+             * to process the above.
+             */
+            SDL_Delay(5);
+
             timestamp_then = timestamp_now;
 
+            /*
+             * Let widgets move.
+             */
+            wid_tick_all();
+
+            /*
+             * Read events
+             */
             SDL_PumpEvents();
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
@@ -880,23 +1029,30 @@ void sdl_loop (void)
             for (i = 0; i < found; ++i) {
                 sdl_event(&events[i]);
             }
+
+            if (!sdl_main_loop_running) {
+                break;
+            }
         }
 
+#if 0
         /*
-         * Clear the screen
+         * Let things move.
          */
-#ifdef ENABLE_INVERTED_DISPLAY
-        glClearColor(WHITE.r, WHITE.g, WHITE.b, 1.0f);
-#else
-        glClearColor(BLACK.r, BLACK.g, BLACK.b, 1.0f);
-#endif
-        glClear(GL_COLOR_BUFFER_BIT);
-
         thing_tick_all();
+#endif
+
+        /*
+         * Display windows.
+         */
         wid_display_all();
 
-        if (!sdl_main_loop_running) {
-            break;
+        /*
+         * FPS counter.
+         */
+        if (fps_enabled) {
+            glcolor(RED);
+            ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
         }
 
         /*
@@ -907,11 +1063,6 @@ void sdl_loop (void)
 #else /* } { */
         SDL_GL_SwapBuffers();
 #endif /* } */
-
-        /*
-         * Give up some CPU to allow events to arrive
-         */
-        SDL_Delay(5);
     }
 }
 
