@@ -816,12 +816,12 @@ static void demo (void)
     bufp = buf;
 
 uint32_t cnt = 0;
-    for (y = 0; y <= height - TILE_HEIGHT*4; y += TILE_HEIGHT) {
+    for (y = 0; y <= height - TILE_HEIGHT; y += TILE_HEIGHT) {
 
         top = y;
         left = 0;
 
-        for (x = 0; x <= width - TILE_WIDTH*4; x += TILE_WIDTH) {
+        for (x = 0; x <= width - TILE_WIDTH; x += TILE_WIDTH) {
 
             right = left + TILE_WIDTH;
             bottom = top + TILE_HEIGHT;

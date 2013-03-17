@@ -42,8 +42,8 @@
 /*
  * The base tile size which we use to scale other tiles to.
  */
-#define TILE_WIDTH                      64
-#define TILE_HEIGHT                     64
+#define TILE_WIDTH                      16
+#define TILE_HEIGHT                     16
 
 /*
  * Misc
