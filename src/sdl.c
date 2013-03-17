@@ -650,24 +650,24 @@ void sdl_exit (void)
 }
 
 /*
- * gl_push_tex2f
+ * gl_push_texcoord
  *
  * Push elements onto the array buffer.
  */
 static inline void 
-gl_push_tex2f (GLfloat **p, GLfloat x, GLfloat y)
+gl_push_texcoord (GLfloat **p, GLfloat x, GLfloat y)
 {
     *(*p)++ = x;
     *(*p)++ = y;
 }
 
 /*
- * gl_push_vertex2f
+ * gl_push_vertex
  *
  * Push elements onto the array buffer.
  */
 static inline void 
-gl_push_vertex2f (GLfloat **p, GLfloat x, GLfloat y)
+gl_push_vertex (GLfloat **p, GLfloat x, GLfloat y)
 {
     *(*p)++ = x;
     *(*p)++ = y;
@@ -676,32 +676,38 @@ gl_push_vertex2f (GLfloat **p, GLfloat x, GLfloat y)
 /*
  * QUAD per array element.
  */
-static const uint32_t NUMBER_VERTICES_PER_TILE = 4;
+static const uint32_t NUMBER_COORDS_PER_VERTEX = 4;
 
 /*
  * x and y per element.
  */
-static const uint32_t NUMBER_COORDS_PER_VERTEX = 2;
+static const uint32_t NUMBER_DIMENSIONS_PER_COORD = 2;
 
+static const uint32_t NUMBER_BYTES_PER_VERTICE =
+                                            sizeof(GLfloat) *
+                                            NUMBER_DIMENSIONS_PER_COORD;
+
+static const uint32_t NUMBER_BYTES_PER_ARRAY_ELEM =
+                                            sizeof(GLfloat) *
+                                            NUMBER_COORDS_PER_VERTEX *
+                                            NUMBER_DIMENSIONS_PER_COORD;
 /*
  * Two arrays, xy and uv.
  */
-static const uint32_t NUMBER_CONTIGUOUS_VERTICE_ARRAYS = 2;
+static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
 
 /*
  * This is the huge buffer that contains all arrays.
  */
 static GLfloat *buf;
 
-/*
- * Pointers to single arrays within this buffer.
- */
-static GLfloat *xy;
-static GLfloat *uv;
-
 static uint32_t gl_array_size;
 
 static texp tex;
+static uint32_t tex_width;
+static uint32_t tex_height;
+static float tex_float_width;
+static float tex_float_height;
 static int bind;
 
 /*
@@ -713,7 +719,6 @@ static void demo_init (void)
      * Our array size requirements.
      */
     uint32_t gl_array_size_required;
-    uint32_t gl_elements_per_array;
 
     /*
      * Screen size.
@@ -725,16 +730,11 @@ static void demo_init (void)
      * If the screen size has changed or this is the first run, allocate our
      * buffer if our size requirements have changed.
      */
-    gl_elements_per_array = 
+    gl_array_size_required =
                     width *
                     height *
-                    NUMBER_VERTICES_PER_TILE *
-                    NUMBER_COORDS_PER_VERTEX;
-
-    gl_array_size_required =
-                    sizeof(GLfloat) *
-                    gl_elements_per_array *
-                    NUMBER_CONTIGUOUS_VERTICE_ARRAYS;
+                    NUMBER_BYTES_PER_ARRAY_ELEM *
+                    NUMBER_ARRAY_ELEM_ARRAYS * 2; // for degenerate triangles
 
     /*
      * Requirements have changed for buffer space?
@@ -747,12 +747,6 @@ static void demo_init (void)
         }
 
         buf = myzalloc(gl_array_size_required, "GL xy buffer");
-
-        /*
-         * Set up our base pointers within the contiguous array space.
-         */
-        xy = buf;
-        uv = xy + gl_elements_per_array;
     }
 
     if (!tex) {
@@ -762,6 +756,10 @@ static void demo_init (void)
         }
 
         bind = tex_get_gl_binding(tex);
+        tex_width = tex_get_width(tex);
+        tex_height = tex_get_height(tex);
+        tex_float_width  = (1.0 / (float)tex_width) * TILE_WIDTH;
+        tex_float_height = (1.0 / (float)tex_height) * TILE_HEIGHT;
     }
 }
 
@@ -778,8 +776,7 @@ static void demo (void)
     /*
      * Where we are currently up to in writing to these buffers.
      */
-    GLfloat *xyp;
-    GLfloat *uvp;
+    GLfloat *bufp;
 
     /*
      * Our array size requirements.
@@ -811,50 +808,61 @@ static void demo (void)
     uint16_t x;
     uint16_t y;
 
-    /*
-     * Populate the buffer arrays.
-     */
-    xyp = xy;
-    uvp = uv;
+    tex_left   = 0;
+    tex_right  = tex_float_width;
+    tex_top    = 0;
+    tex_bottom = tex_float_height;
 
-    tex_left   = 0.0;
-    tex_right  = 1.0;
-    tex_top    = 0.0;
-    tex_bottom = 1.0;
+    bufp = buf;
 
-    top = 0;
-    bottom = (float)TILE_WIDTH / (float)width;
+uint32_t cnt = 0;
+    for (y = 0; y <= height - TILE_HEIGHT*4; y += TILE_HEIGHT) {
 
-    for (y = TILE_HEIGHT * 3; y <= height - TILE_HEIGHT; y += TILE_HEIGHT) {
-
+        top = y;
         left = 0;
-        right = TILE_WIDTH;
 
-        for (x = 0; x <= width - TILE_WIDTH; x += TILE_WIDTH) {
+        for (x = 0; x <= width - TILE_WIDTH*4; x += TILE_WIDTH) {
 
-            top    = y;
-            bottom = y+TILE_HEIGHT;
-            left   = x;
-            right  = x+TILE_WIDTH;
+            right = left + TILE_WIDTH;
+            bottom = top + TILE_HEIGHT;
+uint32_t tx = cnt % 10;
+uint32_t ty = 0;
+cnt++;
 
-            tex_left = 0.0;
-            tex_right = 0.05;
-            tex_top = 0.0;
-            tex_bottom = 0.05;
+            tex_left   = tex_float_width * tx;
+            tex_right  = tex_left + tex_float_width;
+            tex_top    = tex_float_height * ty;
+            tex_bottom = tex_top + tex_float_height;
 
-            gl_push_tex2f(&uvp, tex_left,  tex_top);
-            gl_push_tex2f(&uvp, tex_right, tex_top);
-            gl_push_tex2f(&uvp, tex_left,  tex_bottom);
-            gl_push_tex2f(&uvp, tex_right, tex_bottom);
 
-            gl_push_vertex2f(&xyp, left,  top);
-            gl_push_vertex2f(&xyp, right, top);
-            gl_push_vertex2f(&xyp, left,  bottom);
-            gl_push_vertex2f(&xyp, right, bottom);
+            /*
+             * Repeat the first vertex so we create a degenerate triangle.
+             */
+            if ((y != 0) && (x == 0)) {
+                gl_push_texcoord(&bufp, tex_left,  tex_top);
+                gl_push_vertex(&bufp, left,  top);
+            }
+
+            gl_push_texcoord(&bufp, tex_left,  tex_top);
+            gl_push_vertex(&bufp, left,  top);
+
+            gl_push_texcoord(&bufp, tex_left,  tex_bottom);
+            gl_push_vertex(&bufp, left,  bottom);
+
+            gl_push_texcoord(&bufp, tex_right, tex_top);
+            gl_push_vertex(&bufp, right, top);
+
+            gl_push_texcoord(&bufp, tex_right, tex_bottom);
+            gl_push_vertex(&bufp, right, bottom);
 
             left += TILE_WIDTH;
-            right += TILE_WIDTH;
         }
+
+        /*
+         * Repeat the last vertex so we create a degenerate triangle.
+         */
+        gl_push_texcoord(&bufp, tex_right, tex_bottom);
+        gl_push_vertex(&bufp, right, bottom);
 
         top += TILE_HEIGHT;
     }
@@ -865,10 +873,20 @@ static void demo (void)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    nvertices = (xyp - xy) / NUMBER_COORDS_PER_VERTEX;
+    nvertices = (bufp - buf) /
+                    (NUMBER_DIMENSIONS_PER_COORD * NUMBER_ARRAY_ELEM_ARRAYS);
 
-    glVertexPointer(NUMBER_COORDS_PER_VERTEX, GL_FLOAT, 0, xy);
-    glTexCoordPointer(NUMBER_COORDS_PER_VERTEX, GL_FLOAT, 0, uv);
+    glTexCoordPointer(
+        NUMBER_DIMENSIONS_PER_COORD, // (x,y)
+        GL_FLOAT,
+        NUMBER_BYTES_PER_VERTICE * 2,
+        buf);
+
+    glVertexPointer(
+        NUMBER_DIMENSIONS_PER_COORD, // (x,y)
+        GL_FLOAT,
+        NUMBER_BYTES_PER_VERTICE * 2,
+        ((char*)buf) + NUMBER_BYTES_PER_VERTICE);
 
     glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(tex));
 
@@ -978,13 +996,17 @@ void sdl_loop (void)
          * the game processing below to allow it to be drained before we swap 
          * the buffers.
          */
+#if 0
         LOG("begin");
         int32_t xxx = time_get_time_milli();
         for(i=0;i<1000;i++) {
+#endif
             demo();
+#if 0
         }
         LOG("%u ms",time_get_time_milli()-xxx);
         LOG("done");
+#endif
 
         frames++;
 
