@@ -2041,7 +2041,7 @@ void wid_set_tex (widp w, const char *tex, const char *name)
         return;
     }
 
-    texp t = tex_load(tex, name, false /* mask_needed */);
+    texp t = tex_load(tex, name);
     if (!t) {
         DIE("failed to set wid tex %s", tex);
     }
@@ -6947,33 +6947,6 @@ static void wid_display (widp w,
     }
 
     if (tile) {
-        /*
-         * Blit a border around the tile.
-         */
-        if (wid_get_blit_outline(w)) {
-            glcolor(col_blit_outline);
-
-            fpoint otl;
-            fpoint obr;
-            int32_t dx;
-            int32_t dy;
-            float scale = 2;
-
-            for (dx = -scale; dx <= scale; dx += scale) {
-                for (dy = -scale*2; dy <= scale*2; dy += scale) {
-
-                    otl.x = tl.x + dx * scale;
-                    otl.y = tl.y + dx * scale;
-                    obr.x = br.x + dy * scale;
-                    obr.y = br.y + dy * scale;
-
-                    tile_blit_mask_fat(tile, 0, otl, obr);
-                }
-            }
-
-            glcolor(WHITE);
-        }
-
         glcolor(col_tile);
         tile_blit_fat(tile, 0, tl, br);
         glBindTexture(GL_TEXTURE_2D, 0);

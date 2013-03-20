@@ -16,15 +16,13 @@
 static boolean resource_init_1 (void *context)
 {
     return (tex_load("data/gfx/gorynlich.png",
-                     "gorynlich",
-                     false /* mask needed */) != 0);
+                     "gorynlich") != 0);
 }
 
 static boolean resource_init_2 (void *context)
 {
     return (tex_load("data/gfx/explosion.png",
-                     "explosion",
-                     false /* mask needed */) != 0);
+                     "explosion") != 0);
 }
 
 static boolean resource_init_3 (void *context)
@@ -35,22 +33,19 @@ static boolean resource_init_3 (void *context)
 static boolean resource_init_4 (void *context)
 {
     return (tex_load("data/gfx/help1.png",
-                     "help1",
-                     false /* mask needed */) != 0);
+                     "help1") != 0);
 }
 
 static boolean resource_init_5 (void *context)
 {
     return (tex_load("data/gfx/help2.png",
-                     "help2",
-                     false /* mask needed */) != 0);
+                     "help2") != 0);
 }
 
 static boolean resource_init_6 (void *context)
 {
     return (tex_load("data/gfx/help3.png",
-                     "help3",
-                     false /* mask needed */) != 0);
+                     "help3") != 0);
 }
 
 static boolean resource_init_7 (void *context)
@@ -86,29 +81,25 @@ static boolean resource_init_12 (void *context)
 static boolean resource_init_13 (void *context)
 {
     return (tex_load("data/gfx/pipes.png",
-                     "pipes",
-                     false /* mask needed */) != 0);
+                     "pipes") != 0);
 }
 
 static boolean resource_init_14 (void *context)
 {
     return (tex_load("data/gfx/plant.png",
-                     "plant",
-                     true /* mask needed */) != 0);
+                     "plant") != 0);
 }
 
 static boolean resource_init_15 (void *context)
 {
     return (tex_load("data/gfx/road.png",
-                     "road",
-                     false /* mask needed */) != 0);
+                     "road") != 0);
 }
 
 static boolean resource_init_16 (void *context)
 {
     return (tex_load("data/gfx/rocket.png",
-                     "rocket",
-                     false /* mask needed */) != 0);
+                     "rocket") != 0);
 }
 
 static boolean resource_init_17 (void *context)
@@ -119,42 +110,38 @@ static boolean resource_init_17 (void *context)
 static boolean resource_init_18 (void *context)
 {
     return (tex_load("data/gfx/sprites_large.png",
-                     "sprites_large",
-                     false /* mask needed */) != 0);
+                     "sprites_large") != 0);
 }
 
 static boolean resource_init_19 (void *context)
 {
     return (tex_load("data/gfx/sprites_med.png",
-                     "sprites_med",
-                     false /* mask needed */) != 0);
+                     "sprites_med") != 0);
 }
 
 static boolean resource_init_20 (void *context)
 {
     return (tex_load("data/gfx/sprites_med2.png",
-                     "sprites_med2",
-                     false /* mask needed */) != 0);
+                     "sprites_med2") != 0);
 }
 
 static boolean resource_init_21 (void *context)
 {
-    return (tex_load("data/gfx/sprites_small.png",
-                     "sprites_small",
-                     false /* mask needed */) != 0);
+    return (tex_load_tiled("data/gfx/sprites_small.png",
+                           "sprites_small",
+                           8, 8) != 0);
 }
 
 static boolean resource_init_22 (void *context)
 {
     return (tex_load("data/gfx/stars.png",
-                     "stars",
-                     false /* mask needed */) != 0);
+                     "stars") != 0);
 }
 
 
 static boolean resource_init_23 (void *context)
 {
-    tile_load("sprites_small", 64, 64,
+    tile_load("sprites_small", 8, 8,
               13,
               "m",
               "a",
