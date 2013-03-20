@@ -469,12 +469,6 @@ ramdisk_t ramdisk_files[] = {
         0,
     },
     {
-        "data/ttf/pizzadudedotdk.txt",
-        0,
-        0,
-        0,
-    },
-    {
         "data/ttf/small.ttf_pointsize20.data",
         0,
         0,
