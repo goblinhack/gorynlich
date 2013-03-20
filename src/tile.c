@@ -45,7 +45,7 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
 {
     va_list args;
 
-    texp tex = tex_load(0, tex_name, false /* mask_needed */);
+    texp tex = tex_load(0, tex_name);
     float fw = 1.0 / (((float)tex_get_width(tex)) / ((float)width));
     float fh = 1.0 / (((float)tex_get_height(tex)) / ((float)height));
     uint32_t x = 0;
@@ -79,7 +79,6 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
             t->height = height;
             t->tex = tex;
             t->gl_surface_binding = tex_get_gl_binding(tex);
-            t->gl_mask_binding = tex_get_gl_mask_binding(tex);
 
             t->x1 = fw * (float)(x);
             t->y1 = fh * (float)(y);
@@ -172,24 +171,6 @@ void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
     }
 
     glBindTexture(GL_TEXTURE_2D, tile->gl_surface_binding);
-
-    blit(tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
-}
-
-/*
- * Blits a whole tile. Y co-ords are inverted.
- */
-void tile_blit_mask_fat (tile *tile, char *name, fpoint tl, fpoint br)
-{
-    if (!tile) {
-        if (!name) {
-            DIE("no name for tile blit");
-        }
-
-        tile = tile_find(name);
-    }
-
-    glBindTexture(GL_TEXTURE_2D, tile->gl_mask_binding);
 
     blit(tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
 }

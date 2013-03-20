@@ -13,6 +13,7 @@
 #include "tex.h"
 #include "ramdisk.h"
 #include "tree.h"
+#include "pixel.h"
 
 typedef struct tex_ {
     tree_key_string tree;
@@ -153,66 +154,10 @@ static SDL_Surface *load_image (const char *filename)
     return (rv);
 }
 
-static SDL_Surface *load_image_mask (const char *filename,
-                                     SDL_Surface **mask)
-{
-    uint32_t rmask, gmask, bmask, amask;
-    unsigned char *image_data;
-    SDL_Surface *rv;
-    int32_t x, y, comp;
-
-    image_data = load_raw_image(filename, &x, &y, &comp);
-    if (!image_data) {
-        DIE("could not read memory for file, %s", filename);
-    }
-
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xff000000;
-    gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-    amask = 0x000000ff;
-#else
-    rmask = 0x000000ff;
-    gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
-    amask = 0xff000000;
-#endif
-
-    if (comp == 4) {
-        rv = SDL_CreateRGBSurface(0, x, y, 32, rmask, gmask, bmask, amask);
-        newptr(rv, "SDL_CreateRGBSurface");
-    } else if (comp == 3) {
-        rv = SDL_CreateRGBSurface(0, x, y, 24, rmask, gmask, bmask, 0);
-        newptr(rv, "SDL_CreateRGBSurface");
-    } else {
-        free_raw_image(image_data);
-        return (0);
-    }
-
-    memcpy(rv->pixels, image_data, comp * x * y);
-
-    if (comp == 4) {
-        *mask = SDL_CreateRGBSurface(0, x, y, 32, rmask, gmask, bmask, amask);
-        newptr(*mask, "SDL_CreateRGBSurface mask");
-    } else if (comp == 3) {
-        *mask = SDL_CreateRGBSurface(0, x, y, 24, rmask, gmask, bmask, 0);
-        newptr(*mask, "SDL_CreateRGBSurface mask");
-    } else {
-        free_raw_image(image_data);
-        return (0);
-    }
-
-    memcpy((*mask)->pixels, image_data, comp * x * y);
-
-    free_raw_image(image_data);
-
-    return (rv);
-}
-
 /*
- * Load a tex in and put it into a hash map for later lookup
+ * Load a texture
  */
-texp tex_load (const char *file, const char *name, boolean mask_needed)
+texp tex_load (const char *file, const char *name)
 {
     texp t = tex_find(name);
 
@@ -229,23 +174,48 @@ texp tex_load (const char *file, const char *name, boolean mask_needed)
     }
 
     SDL_Surface *surface = 0;
-    SDL_Surface *mask = 0;
+    surface = load_image(file);
 
-    if (mask_needed) {
-        surface = load_image_mask(file, &mask);
+    if (!surface) {
+        DIE("could not make surface from file, %s", file);
+    }
 
-        if (!surface) {
-            DIE("could not make surface from file, %s", file);
-        }
-    } else {
-        surface = load_image(file);
+    t = tex_from_surface(surface, file, name);
 
-        if (!surface) {
-            DIE("could not make surface from file, %s", file);
+    return (t);
+}
+
+/*
+ * Load a texture which has regular tiles with single pixel gaps between
+ * each tile
+ */
+texp tex_load_tiled (const char *file, const char *name,
+                     uint32_t x,
+                     uint32_t y)
+{
+    texp t = tex_find(name);
+
+    if (t) {
+        return (t);
+    }
+
+    if (!file) {
+        if (!name) {
+            DIE("no file for tex");
+        } else {
+            DIE("no file for tex loading %s", name);
         }
     }
 
-    t = tex_from_surface(surface, mask, file, name);
+    SDL_Surface *surface = 0;
+
+    surface = load_image(file);
+
+    if (!surface) {
+        DIE("could not make surface from file, %s", file);
+    }
+
+    t = tex_from_tiled_surface(surface, x, y, file, name);
 
     return (t);
 }
@@ -276,14 +246,12 @@ texp tex_find (const char *file)
 }
 
 /*
- * Load a tex in and put it into a hash map for later lookup
+ * Creae a texture from a surface
  */
 texp tex_from_surface (SDL_Surface *surface,
-                       SDL_Surface *mask,
                        const char *file,
                        const char *name)
 {
-    GLuint gl_mask_binding = 0;
     tex *t;
 
     if (!surface) {
@@ -428,87 +396,6 @@ texp tex_from_surface (SDL_Surface *surface,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    if (mask) {
-        /*
-         * Create the tex
-         */
-        glGenTextures(1, &gl_mask_binding);
-
-        /*
-         * Typical tex generation using data from the bitmap
-         */
-        glBindTexture(GL_TEXTURE_2D, gl_mask_binding);
-
-        //
-        // If a bitmap is all black or white then it is a mask and is meant to
-        // stay that way so that we can blit it with different colors - e.g. a
-        // font.
-        //
-        // If it has colors, it needs to have a mask made.
-        //
-        {
-            boolean image_is_all_black_or_white;
-            unsigned char *p;
-            int32_t cnt;
-
-            p = (unsigned char*)mask->pixels;
-            cnt = mask->w * mask->h;
-
-            image_is_all_black_or_white = true;
-            while (cnt--) {
-                if ((*p != 255) && (*p != 0)) {
-                    image_is_all_black_or_white = false;
-                    break;
-                }
-                p++;
-
-                if ((*p != 255) && (*p != 0)) {
-                    image_is_all_black_or_white = false;
-                    break;
-                }
-                p++;
-
-                if ((*p != 255) && (*p != 0)) {
-                    image_is_all_black_or_white = false;
-                    break;
-                }
-                p++;
-                p++;
-            }
-
-            /*
-            * Leave alpha alone.
-            */
-            if (!image_is_all_black_or_white) {
-                p = (unsigned char*)mask->pixels;
-
-                cnt = mask->w * mask->h;
-
-                while (cnt--) {
-                    *p = 255;
-                    p++;
-                    *p = 255;
-                    p++;
-                    *p = 255;
-                    p++;
-                    p++;
-                }
-            }
-        }
-
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RGBA,
-            mask->w,
-            mask->h,
-            0,
-            textureFormat,
-            GL_UNSIGNED_BYTE,
-            mask->pixels
-        );
-    }
-
     /*
      * linear filtering. Nearest is meant to be quicker but I didn't see
      * that in reality.
@@ -530,9 +417,94 @@ texp tex_from_surface (SDL_Surface *surface,
     t->width = surface->w;
     t->height = surface->h;
     t->gl_surface_binding = gl_surface_binding;
-    t->gl_mask_binding = gl_mask_binding;
     t->surface = surface;
-    t->mask = mask;
+
+    return (t);
+}
+
+/*
+ * Creae a texture from a tiled surface
+ */
+texp tex_from_tiled_surface (SDL_Surface *in,
+                             uint32_t tile_width,
+                             uint32_t tile_height,
+                             const char *file,
+                             const char *name)
+{
+    tex *t;
+
+    if (!in) {
+        DIE("could not make surface from file, %s", file);
+    }
+
+    uint32_t rmask, gmask, bmask, amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+    uint32_t iwidth  = in->w;
+    uint32_t iheight = in->h;
+    /*
+     * Subtract space for the single pixel padding and make a surface to
+     * copy pixels to.
+     */
+    uint32_t owidth  = (in->w / (tile_width  + 1)) * tile_width;
+    uint32_t oheight = (in->h / (tile_height + 1)) * tile_height;
+    uint32_t ix;
+    uint32_t iy;
+    uint32_t ox;
+    uint32_t oy;
+
+    LOG("owidth %u %u", owidth,oheight);
+    SDL_Surface *out = SDL_CreateRGBSurface(0, owidth, oheight, 32,
+                                            rmask, gmask, bmask, amask);
+
+    /*
+     * Omit every grid pixel between tiles.
+     */
+    ox = 0;
+    oy = 0;
+    for (ix = 0; ix < iwidth; ix++) {
+
+        if (ix && !(ix % tile_width)) {
+            continue;
+        }
+
+        oy = 0;
+
+        for (iy = 0; iy < iheight; iy++) {
+
+            if (iy&& !(iy % tile_height)) {
+                continue;
+            }
+
+            color c;
+
+            c = getPixel(in, ix, iy);
+
+    LOG("  %u %u %u %u", ix,iy,ox,oy);
+            putPixel(out, ox, oy, c);
+
+            oy++;
+        }
+
+        ox++;
+    }
+
+    SDL_LockSurface(out);
+    stbi_write_tga("neil.tga", out->w, out->h, STBI_rgb_alpha, out->pixels);
+    SDL_UnlockSurface(out);
+
+    exit(0);
 
     return (t);
 }
@@ -540,11 +512,6 @@ texp tex_from_surface (SDL_Surface *surface,
 int32_t tex_get_gl_binding (tex *tex)
 {
     return (tex->gl_surface_binding);
-}
-
-int32_t tex_get_gl_mask_binding (tex *tex)
-{
-    return (tex->gl_mask_binding);
 }
 
 uint32_t tex_get_width (tex *tex)
@@ -562,11 +529,6 @@ SDL_Surface *tex_get_surface (tex *tex)
     return (tex->surface);
 }
 
-SDL_Surface *tex_get_mask (tex *tex)
-{
-    return (tex->mask);
-}
-
 /*
  * Blits a whole tex.
  */
@@ -580,23 +542,6 @@ void tex_blit (tex *tex, point at)
     tl.y = at.y + tex->height/2;
 
     glBindTexture(GL_TEXTURE_2D, tex->gl_surface_binding);
-
-    blit(0.0f, 1.0f, 1.0f, 0.0f, tl.x, tl.y, br.x, br.y);
-}
-
-/*
- * Blits a whole tex.
- */
-void mask_blit (tex *tex, point at)
-{
-    static point tl, br;
-
-    tl.x = at.x - tex->width/2;
-    br.y = at.y - tex->height/2;
-    br.x = at.x + tex->width/2;
-    tl.y = at.y + tex->height/2;
-
-    glBindTexture(GL_TEXTURE_2D, tex->gl_mask_binding);
 
     blit(0.0f, 1.0f, 1.0f, 0.0f, tl.x, tl.y, br.x, br.y);
 }

@@ -627,8 +627,7 @@ ttf_read_tga (char *name, int32_t pointsize)
              name, pointsize);
 
     tex = tex_load(filename,
-                   filename /* to make unique for same point size */,
-                   false /* mask_needed */);
+                   filename /* to make unique for same point size */);
     if (!tex) {
         DIE("could not load font %s tex", filename);
     }
@@ -805,7 +804,7 @@ ttf_write_tga (char *name, int32_t pointsize)
     SDL_UnlockSurface(dst);
 
     texp tex;
-    tex = tex_from_surface(dst, 0, filename, filename);
+    tex = tex_from_surface(dst, filename, filename);
     if (!tex) {
         DIE("could not convert %s to tex", filename);
     }
