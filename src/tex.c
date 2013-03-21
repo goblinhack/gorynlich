@@ -468,6 +468,7 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     SDL_Surface *out = SDL_CreateRGBSurface(0, owidth, oheight, 32,
                                             rmask, gmask, bmask, amask);
 
+
     /*
      * Omit every grid pixel between tiles.
      */
@@ -475,23 +476,23 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     oy = 0;
     for (ix = 0; ix < iwidth; ix++) {
 
-        if (ix && !(ix % tile_width)) {
+        oy = 0;
+
+        if (ix && !((ix+1) % (tile_width+1))) {
             continue;
         }
 
-        oy = 0;
-
         for (iy = 0; iy < iheight; iy++) {
 
-            if (iy&& !(iy % tile_height)) {
+            if (iy&& !((iy+1) % (tile_height+1))) {
                 continue;
             }
+
 
             color c;
 
             c = getPixel(in, ix, iy);
 
-    LOG("  %u %u %u %u", ix,iy,ox,oy);
             putPixel(out, ox, oy, c);
 
             oy++;
