@@ -24,5 +24,7 @@ void blit_quad(point tl, point br);
 int32_t tex_get_gl_binding(texp);
 uint32_t tex_get_width(texp);
 uint32_t tex_get_height(texp);
+uint32_t tex_get_tile_width(texp);
+uint32_t tex_get_tile_height(texp);
 SDL_Surface *tex_get_surface(texp);
 texp string2tex(const char **s);
