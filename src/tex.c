@@ -20,9 +20,7 @@ typedef struct tex_ {
     uint32_t width;
     uint32_t height;
     int32_t gl_surface_binding;
-    int32_t gl_mask_binding;
     SDL_Surface *surface;
-    SDL_Surface *mask;
 } tex;
 
 tree_root *textures;
@@ -40,21 +38,10 @@ static void tex_destroy (tex *t)
 {
     SDL_FreeSurface(t->surface);
 
-    if (t->mask) {
-        SDL_FreeSurface(t->mask);
-    }
-
     GLuint gl_surface_binding;
     gl_surface_binding = t->gl_surface_binding;
     glDeleteTextures(1, &gl_surface_binding);
     oldptr(t->surface);
-
-    GLuint gl_mask_binding;
-    gl_mask_binding = t->gl_mask_binding;
-    if (gl_mask_binding) {
-        glDeleteTextures(1, &gl_mask_binding);
-        oldptr(t->mask);
-    }
 }
 
 void tex_fini (void)
@@ -189,7 +176,8 @@ texp tex_load (const char *file, const char *name)
  * Load a texture which has regular tiles with single pixel gaps between
  * each tile
  */
-texp tex_load_tiled (const char *file, const char *name,
+texp tex_load_tiled (const char *file,
+                     const char *name,
                      uint32_t x,
                      uint32_t y)
 {
@@ -464,10 +452,9 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     uint32_t ox;
     uint32_t oy;
 
-    LOG("owidth %u %u", owidth,oheight);
     SDL_Surface *out = SDL_CreateRGBSurface(0, owidth, oheight, 32,
                                             rmask, gmask, bmask, amask);
-
+    newptr(out, "SDL_CreateRGBSurface");
 
     /*
      * Omit every grid pixel between tiles.
@@ -501,11 +488,47 @@ texp tex_from_tiled_surface (SDL_Surface *in,
         ox++;
     }
 
+    /*
+     * The first 8 columns of tiles (bricks and the like) we merge with the
+     * remaining columns of tiles (edges) to make a combination of the two.
+     */
+    uint32_t tile_block = (tile_width * 8);
+    uint32_t x, y;
+
+    for (x = 0; x < out->w; x++) {
+        for (y = 0; y < out->h; y++) {
+            color c, d;
+
+            if (x > tile_width) {
+                d = getPixel(out, x, y);
+
+                if (d.a == 0) {
+                    continue;
+                }
+
+                if (d.r || d.g || d.b) {
+                    continue;
+                }
+
+                uint32_t tx = x % tile_block;
+
+                c = getPixel(out, tx, y);
+
+                putPixel(out, x, y, c);
+            }
+        }
+    }
+
+#ifdef DEBUG_SURFACE
     SDL_LockSurface(out);
     stbi_write_tga("neil.tga", out->w, out->h, STBI_rgb_alpha, out->pixels);
     SDL_UnlockSurface(out);
+#endif
 
-    exit(0);
+    SDL_FreeSurface(in);
+    oldptr(in);
+
+    t = tex_from_surface(out, file, name);
 
     return (t);
 }
