@@ -758,8 +758,8 @@ static void demo_init (void)
         bind = tex_get_gl_binding(tex);
         tex_width = tex_get_width(tex);
         tex_height = tex_get_height(tex);
-        tex_float_width  = (1.0 / (float)tex_width) * TILE_WIDTH;
-        tex_float_height = (1.0 / (float)tex_height) * TILE_HEIGHT;
+        tex_float_width  = (1.0 / (float)tex_width) * tex_get_tile_width(tex);
+        tex_float_height = (1.0 / (float)tex_height) * tex_get_tile_height(tex);
     }
 }
 

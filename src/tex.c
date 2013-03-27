@@ -19,6 +19,8 @@ typedef struct tex_ {
     tree_key_string tree;
     uint32_t width;
     uint32_t height;
+    uint32_t tile_width;
+    uint32_t tile_height;
     int32_t gl_surface_binding;
     SDL_Surface *surface;
 } tex;
@@ -178,8 +180,8 @@ texp tex_load (const char *file, const char *name)
  */
 texp tex_load_tiled (const char *file,
                      const char *name,
-                     uint32_t x,
-                     uint32_t y)
+                     uint32_t tile_width,
+                     uint32_t tile_height)
 {
     texp t = tex_find(name);
 
@@ -203,7 +205,10 @@ texp tex_load_tiled (const char *file,
         DIE("could not make surface from file, %s", file);
     }
 
-    t = tex_from_tiled_surface(surface, x, y, file, name);
+    t = tex_from_tiled_surface(surface, tile_width, tile_height, file, name);
+
+    t->tile_width = tile_width;
+    t->tile_height = tile_height;
 
     return (t);
 }
@@ -381,15 +386,8 @@ texp tex_from_surface (SDL_Surface *surface,
      * linear filtering. Nearest is meant to be quicker but I didn't see
      * that in reality.
      */
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    /*
-     * linear filtering. Nearest is meant to be quicker but I didn't see
-     * that in reality.
-     */
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     if (!textures) {
         textures = tree_alloc(TREE_KEY_STRING, "TREE ROOT: tex");
@@ -546,6 +544,16 @@ uint32_t tex_get_width (tex *tex)
 uint32_t tex_get_height (tex *tex)
 {
     return (tex->height);
+}
+
+uint32_t tex_get_tile_width (tex *tex)
+{
+    return (tex->tile_width);
+}
+
+uint32_t tex_get_tile_height (tex *tex)
+{
+    return (tex->tile_height);
 }
 
 SDL_Surface *tex_get_surface (tex *tex)
