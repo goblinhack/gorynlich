@@ -13,7 +13,6 @@ typedef struct tile_ {
     float x2;
     float y2;
     int32_t gl_surface_binding;
-    int32_t gl_mask_binding;
     texp tex;
 } tile;
 
