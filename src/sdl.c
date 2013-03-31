@@ -689,8 +689,8 @@ tile_to_tex_coords (const uint16_t tile,
                     const float tex_float_width,
                     const float tex_float_height)
 {
-    uint16_t tx = tile % tex_tiles_width; 
-    uint16_t ty = tile / tex_tiles_height; 
+    const uint16_t tx = tile % tex_tiles_width; 
+    const uint16_t ty = tile / tex_tiles_height; 
 
     *tex_left   = tex_float_width * tx;
     *tex_right  = *tex_left + tex_float_width;
@@ -701,12 +701,12 @@ tile_to_tex_coords (const uint16_t tile,
 /*
  * QUAD per array element.
  */
-static const uint32_t NUMBER_COORDS_PER_VERTEX = 4;
+#define NUMBER_COORDS_PER_VERTEX 4
 
 /*
  * x and y per element.
  */
-static const uint32_t NUMBER_DIMENSIONS_PER_COORD = 2;
+#define NUMBER_DIMENSIONS_PER_COORD 2
 
 static const uint32_t NUMBER_BYTES_PER_VERTICE =
                                             sizeof(GLfloat) *
@@ -725,11 +725,11 @@ typedef struct map_cell_ {
     uint16_t tile;
 } map_cell_t;
 
-const uint32_t map_chunk_width = 1024;
-const uint32_t map_chunk_height = 4096;
-const uint32_t map_chunks_width = 3;
+#define map_chunk_width 1024
+#define map_chunk_height 4096
+#define map_chunks_width 3
 
-map_cell_t cells[map_chunk_width * map_chunks_width][map_chunk_height];
+static map_cell_t cells[map_chunk_width * map_chunks_width][map_chunk_height];
 
 /*
  * This is the huge buffer that contains all arrays.
