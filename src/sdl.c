@@ -650,55 +650,6 @@ void sdl_exit (void)
 }
 
 /*
- * gl_push_texcoord
- *
- * Push elements onto the array buffer.
- */
-static inline void 
-gl_push_texcoord (GLfloat **p, GLfloat x, GLfloat y)
-{
-    *(*p)++ = x;
-    *(*p)++ = y;
-}
-
-/*
- * gl_push_vertex
- *
- * Push elements onto the array buffer.
- */
-static inline void 
-gl_push_vertex (GLfloat **p, GLfloat x, GLfloat y)
-{
-    *(*p)++ = x;
-    *(*p)++ = y;
-}
-
-/*
- * tile_to_tex_coords
- *
- * Given a tile in a tile array, return the tex co-ords.
- */
-static inline void
-tile_to_tex_coords (const uint16_t tile,
-                    GLfloat *tex_left,
-                    GLfloat *tex_right,
-                    GLfloat *tex_top,
-                    GLfloat *tex_bottom,
-                    const uint16_t tex_tiles_width,
-                    const uint16_t tex_tiles_height,
-                    const float tex_float_width,
-                    const float tex_float_height)
-{
-    const uint16_t tx = tile % tex_tiles_width; 
-    const uint16_t ty = tile / tex_tiles_height; 
-
-    *tex_left   = tex_float_width * tx;
-    *tex_right  = *tex_left + tex_float_width;
-    *tex_top    = tex_float_height * ty;
-    *tex_bottom = *tex_top + tex_float_height;
-}
-
-/*
  * QUAD per array element.
  */
 #define NUMBER_COORDS_PER_VERTEX 4
@@ -721,49 +672,101 @@ static const uint32_t NUMBER_BYTES_PER_ARRAY_ELEM =
  */
 static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
 
-typedef struct map_cell_ {
+typedef struct {
     uint16_t tile;
-} map_cell_t;
+} map_tile_t;
 
-#define map_chunk_width 1024
-#define map_chunk_height 4096
-#define map_chunks_width 3
-
-static map_cell_t cells[map_chunk_width * map_chunks_width][map_chunk_height];
+#define MAP_CHUNK_WIDTH 1024
+#define MAP_CHUNK_HEIGHT 4096
+#define MAP_CHUNKS_WIDTH 3
 
 /*
- * This is the huge buffer that contains all arrays.
+ * All the rendering info for one parallax frame of tiles.
  */
-static GLfloat *gl_array_buf;
-static uint32_t gl_array_size;
+typedef struct {
+    /*
+     * All the tiles in this frame.
+     */
+    map_tile_t tiles[MAP_CHUNK_WIDTH * MAP_CHUNKS_WIDTH][MAP_CHUNK_HEIGHT];
 
-static texp tex;
-static uint32_t tex_width;
-static uint32_t tex_height;
-static uint32_t tex_tile_width;
-static uint32_t tex_tile_height;
-static uint32_t tex_tiles_width;
-static uint32_t tex_tiles_height;
-static float tex_float_width;
-static float tex_float_height;
-static int bind;
+    /*
+     * This is the huge buffer that contains all arrays.
+     */
+    float *gl_array_buf;
+    uint32_t gl_array_size;
+
+    /*
+     * Texture for this frame. One texture for all tiles here.
+     */
+    texp tex;
+    int bind;
+
+    /*
+     * Size of the texture in pixels.
+     */
+    uint32_t tex_width;
+    uint32_t tex_height;
+
+    /*
+     * Single tile size.
+     */
+    uint32_t tex_tile_width;
+    uint32_t tex_tile_height;
+
+    /*
+     * How many tiles across and down.
+     */
+    uint32_t tex_tiles_width;
+    uint32_t tex_tiles_height;
+
+    /*
+     * And the float size of that tile in the parent tex.
+     */
+    float tex_float_width;
+    float tex_float_height;
+
+} map_frame_ctx_t;
+
+map_frame_ctx_t map;
 
 /*
- * demo_map_init_chunk
+ * map_tile_to_tex_coords
+ *
+ * Given a tile in a tile array, return the tex co-ords.
  */
-static void demo_map_init_chunk (uint32_t chunk)
+static inline void
+map_tile_to_tex_coords (map_frame_ctx_t *map,
+                        const uint16_t tile,
+                        GLfloat *tex_left,
+                        GLfloat *tex_right,
+                        GLfloat *tex_top,
+                        GLfloat *tex_bottom)
 {
-    const uint32_t sx = chunk * map_chunk_width;
-    const uint32_t ex = (chunk+1) * map_chunk_width;
+    const uint16_t tx = tile % map->tex_tiles_width; 
+    const uint16_t ty = tile / map->tex_tiles_height; 
+
+    *tex_left   = map->tex_float_width * tx;
+    *tex_right  = *tex_left + map->tex_float_width;
+    *tex_top    = map->tex_float_height * ty;
+    *tex_bottom = *tex_top + map->tex_float_height;
+}
+
+/*
+ * map_chunk_init
+ */
+static void map_chunk_init (map_frame_ctx_t *map, uint32_t chunk)
+{
+    const uint32_t sx = chunk * MAP_CHUNK_WIDTH;
+    const uint32_t ex = (chunk+1) * MAP_CHUNK_WIDTH;
     const uint32_t sy = 0;
-    const uint32_t ey = map_chunk_height;
+    const uint32_t ey = MAP_CHUNK_HEIGHT;
     uint32_t x;
     uint32_t y;
     uint32_t cnt = 0;
 
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
-            cells[x][y].tile = cnt++;
+            map->tiles[x][y].tile = cnt++;
             if (cnt > 64*28) {
                 cnt = 0;
             }
@@ -772,21 +775,21 @@ static void demo_map_init_chunk (uint32_t chunk)
 }
 
 /*
- * demo_map_init
+ * map_chunks_init
  */
-static void demo_map_init (void)
+static void map_chunks_init (map_frame_ctx_t *map)
 {
     uint32_t chunk;
 
-    for (chunk = 0; chunk < map_chunks_width; chunk++) {
-        demo_map_init_chunk(chunk);
+    for (chunk = 0; chunk < MAP_CHUNKS_WIDTH; chunk++) {
+        map_chunk_init(map, chunk);
     }
 }
 
 /*
- * demo_gfx_init
+ * map_gl_init
  */
-static void demo_gfx_init (void)
+static void map_gl_init (map_frame_ctx_t *map)
 {
     /*
      * Our array size requirements.
@@ -812,55 +815,59 @@ static void demo_gfx_init (void)
     /*
      * Requirements have changed for buffer space?
      */
-    if (gl_array_size != gl_array_size_required) {
-        gl_array_size = gl_array_size_required;
+    if (map->gl_array_size != gl_array_size_required) {
+        map->gl_array_size = gl_array_size_required;
 
-        if (gl_array_buf) {
-            myfree(gl_array_buf);
+        if (map->gl_array_buf) {
+            myfree(map->gl_array_buf);
         }
 
-        gl_array_buf = myzalloc(gl_array_size_required, "GL xy buffer");
+        map->gl_array_buf = myzalloc(gl_array_size_required, "GL xy buffer");
     }
 
-    if (!tex) {
-        tex = tex_find("sprites_small");
-        if (!tex) {
+    if (!map->tex) {
+        map->tex = tex_find("sprites_small");
+        if (!map->tex) {
             return;
         }
 
-        bind = tex_get_gl_binding(tex);
+        map->bind = tex_get_gl_binding(map->tex);
 
-        tex_width = tex_get_width(tex);
-        tex_height = tex_get_height(tex);
+        map->tex_width = tex_get_width(map->tex);
+        map->tex_height = tex_get_height(map->tex);
 
-        tex_tile_width = tex_get_tile_width(tex);
-        tex_tile_height = tex_get_tile_height(tex);
+        map->tex_tile_width = tex_get_tile_width(map->tex);
+        map->tex_tile_height = tex_get_tile_height(map->tex);
 
-        tex_tiles_width = tex_get_tiles_width(tex);
-        tex_tiles_height = tex_get_tiles_height(tex);
+        map->tex_tiles_width = tex_get_tiles_width(map->tex);
+        map->tex_tiles_height = tex_get_tiles_height(map->tex);
 
-        tex_float_width  = (1.0 / (float)tex_width) * tex_tile_width;
-        tex_float_height = (1.0 / (float)tex_height) * tex_tile_height;
+        map->tex_float_width  =
+                        (1.0 / (float)map->tex_width) * map->tex_tile_width;
+        map->tex_float_height =
+                        (1.0 / (float)map->tex_height) * map->tex_tile_height;
     }
 }
 
 /*
- * demo_init
+ * map_init
  */
-static void demo_init (void)
+static void map_init (map_frame_ctx_t *map)
 {
-    demo_gfx_init();
-    demo_map_init();
+    map_gl_init(map);
+
+    map_chunks_init(map);
 }
 
 /*
- * demo
+ * map_display
  *
  * Our main rendering loop.
  */
-static void demo (const uint32_t mx, const uint32_t my)
+static void map_display (map_frame_ctx_t *map,
+                         const uint32_t mx, const uint32_t my)
 {
-    glBindTexture(GL_TEXTURE_2D, bind);
+    glBindTexture(GL_TEXTURE_2D, map->bind);
     glcolor(WHITE);
 
     /*
@@ -897,14 +904,14 @@ static void demo (const uint32_t mx, const uint32_t my)
      */
     uint16_t x;
     uint16_t y;
-    map_cell_t *cell;
+    map_tile_t *map_tile;
 
     tex_left   = 0;
-    tex_right  = tex_float_width;
+    tex_right  = map->tex_float_width;
     tex_top    = 0;
-    tex_bottom = tex_float_height;
+    tex_bottom = map->tex_float_height;
 
-    bufp = gl_array_buf;
+    bufp = map->gl_array_buf;
 
     uint32_t cx = mx;
     uint32_t cy = my;
@@ -918,19 +925,15 @@ static void demo (const uint32_t mx, const uint32_t my)
         cy = my;
         y = 0;
 
-        cell = &cells[cx][cy];
+        map_tile = &map->tiles[cx][cy];
 
-        uint32_t tile = cell->tile;
+        uint32_t tile = map_tile->tile;
 
-        tile_to_tex_coords(tile,
-                           &tex_left,
-                           &tex_right,
-                           &tex_top,
-                           &tex_bottom,
-                           tex_tiles_width,
-                           tex_tiles_height,
-                           tex_float_width,
-                           tex_float_height);
+        map_tile_to_tex_coords(map, tile,
+                               &tex_left,
+                               &tex_right,
+                               &tex_top,
+                               &tex_bottom);
 
         /*
          * Repeat the first vertex so we create a degenerate triangle.
@@ -940,21 +943,19 @@ static void demo (const uint32_t mx, const uint32_t my)
             gl_push_vertex(&bufp, left,  top);
         }
 
-        for (y = 0; y <= height - TILE_HEIGHT; y += TILE_HEIGHT, cy++, cell++) {
+        for (y = 0;
+             y <= height - TILE_HEIGHT;
+             y += TILE_HEIGHT, cy++, map_tile++) {
 
             bottom = top + TILE_HEIGHT;
 
-            tile = cell->tile;
+            tile = map_tile->tile;
 
-            tile_to_tex_coords(tile,
-                               &tex_left,
-                               &tex_right,
-                               &tex_top,
-                               &tex_bottom,
-                               tex_tiles_width,
-                               tex_tiles_height,
-                               tex_float_width,
-                               tex_float_height);
+            map_tile_to_tex_coords(map, tile,
+                                   &tex_left,
+                                   &tex_right,
+                                   &tex_top,
+                                   &tex_bottom);
 
             /*
              * Repeat the first vertex so we create a degenerate triangle.
@@ -989,22 +990,22 @@ static void demo (const uint32_t mx, const uint32_t my)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    nvertices = (bufp - gl_array_buf) /
+    nvertices = (bufp - map->gl_array_buf) /
                     (NUMBER_DIMENSIONS_PER_COORD * NUMBER_ARRAY_ELEM_ARRAYS);
 
     glTexCoordPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (x,y)
         GL_FLOAT,
         NUMBER_BYTES_PER_VERTICE * 2,
-        gl_array_buf);
+        map->gl_array_buf);
 
     glVertexPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (x,y)
         GL_FLOAT,
         NUMBER_BYTES_PER_VERTICE * 2,
-        ((char*)gl_array_buf) + NUMBER_BYTES_PER_VERTICE);
+        ((char*)map->gl_array_buf) + NUMBER_BYTES_PER_VERTICE);
 
-    glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(tex));
+    glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(map->tex));
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, nvertices);
 
@@ -1098,10 +1099,11 @@ void sdl_loop (void)
 #endif /* } */
     }
 
-    demo_init();
+    memset(&map, 0, sizeof(map));
+
+    map_init(&map);
 
     for (;;) {
-
         /*
          * Clear the screen
          */
@@ -1112,17 +1114,7 @@ void sdl_loop (void)
          * the game processing below to allow it to be drained before we swap 
          * the buffers.
          */
-#if 0
-        LOG("begin");
-        int32_t xxx = time_get_time_milli();
-        for(i=0;i<1000;i++) {
-#endif
-            demo(100, 0);
-#if 0
-        }
-        LOG("%u ms",time_get_time_milli()-xxx);
-        LOG("done");
-#endif
+        map_display(&map, 100, 0);
 
         frames++;
 

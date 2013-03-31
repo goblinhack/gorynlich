@@ -90,3 +90,27 @@ void gl_list_square_outline_bevelled_plain(fpoint tl, fpoint br,
                                            fsize bevel);
 
 void gl_ortho_set(int32_t width, int32_t height);
+
+/*
+ * gl_push_texcoord
+ *
+ * Push elements onto the array buffer.
+ */
+static inline void 
+gl_push_texcoord (float **p, float x, float y)
+{
+    *(*p)++ = x;
+    *(*p)++ = y;
+}
+
+/*
+ * gl_push_vertex
+ *
+ * Push elements onto the array buffer.
+ */
+static inline void 
+gl_push_vertex (float **p, float x, float y)
+{
+    *(*p)++ = x;
+    *(*p)++ = y;
+}
