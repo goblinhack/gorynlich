@@ -674,6 +674,31 @@ gl_push_vertex (GLfloat **p, GLfloat x, GLfloat y)
 }
 
 /*
+ * tile_to_tex_coords
+ *
+ * Given a tile in a tile array, return the tex co-ords.
+ */
+static inline void
+tile_to_tex_coords (const uint16_t tile,
+                    GLfloat *tex_left,
+                    GLfloat *tex_right,
+                    GLfloat *tex_top,
+                    GLfloat *tex_bottom,
+                    const uint16_t tex_tiles_width,
+                    const uint16_t tex_tiles_height,
+                    const float tex_float_width,
+                    const float tex_float_height)
+{
+    uint16_t tx = tile % tex_tiles_width; 
+    uint16_t ty = tile / tex_tiles_height; 
+
+    *tex_left   = tex_float_width * tx;
+    *tex_right  = *tex_left + tex_float_width;
+    *tex_top    = tex_float_height * ty;
+    *tex_bottom = *tex_top + tex_float_height;
+}
+
+/*
  * QUAD per array element.
  */
 static const uint32_t NUMBER_COORDS_PER_VERTEX = 4;
@@ -696,24 +721,72 @@ static const uint32_t NUMBER_BYTES_PER_ARRAY_ELEM =
  */
 static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
 
+typedef struct map_cell_ {
+    uint16_t tile;
+} map_cell_t;
+
+const uint32_t map_chunk_width = 1024;
+const uint32_t map_chunk_height = 4096;
+const uint32_t map_chunks_width = 3;
+
+map_cell_t cells[map_chunk_width * map_chunks_width][map_chunk_height];
+
 /*
  * This is the huge buffer that contains all arrays.
  */
-static GLfloat *buf;
-
+static GLfloat *gl_array_buf;
 static uint32_t gl_array_size;
 
 static texp tex;
 static uint32_t tex_width;
 static uint32_t tex_height;
+static uint32_t tex_tile_width;
+static uint32_t tex_tile_height;
+static uint32_t tex_tiles_width;
+static uint32_t tex_tiles_height;
 static float tex_float_width;
 static float tex_float_height;
 static int bind;
 
 /*
- * demo_init
+ * demo_map_init_chunk
  */
-static void demo_init (void)
+static void demo_map_init_chunk (uint32_t chunk)
+{
+    const uint32_t sx = chunk * map_chunk_width;
+    const uint32_t ex = (chunk+1) * map_chunk_width;
+    const uint32_t sy = 0;
+    const uint32_t ey = map_chunk_height;
+    uint32_t x;
+    uint32_t y;
+    uint32_t cnt = 0;
+
+    for (x = sx; x < ex; x++) {
+        for (y = sy; y < ey; y++) {
+            cells[x][y].tile = cnt++;
+            if (cnt > 64*28) {
+                cnt = 0;
+            }
+        }
+    }
+}
+
+/*
+ * demo_map_init
+ */
+static void demo_map_init (void)
+{
+    uint32_t chunk;
+
+    for (chunk = 0; chunk < map_chunks_width; chunk++) {
+        demo_map_init_chunk(chunk);
+    }
+}
+
+/*
+ * demo_gfx_init
+ */
+static void demo_gfx_init (void)
 {
     /*
      * Our array size requirements.
@@ -742,11 +815,11 @@ static void demo_init (void)
     if (gl_array_size != gl_array_size_required) {
         gl_array_size = gl_array_size_required;
 
-        if (buf) {
-            myfree(buf);
+        if (gl_array_buf) {
+            myfree(gl_array_buf);
         }
 
-        buf = myzalloc(gl_array_size_required, "GL xy buffer");
+        gl_array_buf = myzalloc(gl_array_size_required, "GL xy buffer");
     }
 
     if (!tex) {
@@ -756,11 +829,28 @@ static void demo_init (void)
         }
 
         bind = tex_get_gl_binding(tex);
+
         tex_width = tex_get_width(tex);
         tex_height = tex_get_height(tex);
-        tex_float_width  = (1.0 / (float)tex_width) * tex_get_tile_width(tex);
-        tex_float_height = (1.0 / (float)tex_height) * tex_get_tile_height(tex);
+
+        tex_tile_width = tex_get_tile_width(tex);
+        tex_tile_height = tex_get_tile_height(tex);
+
+        tex_tiles_width = tex_get_tiles_width(tex);
+        tex_tiles_height = tex_get_tiles_height(tex);
+
+        tex_float_width  = (1.0 / (float)tex_width) * tex_tile_width;
+        tex_float_height = (1.0 / (float)tex_height) * tex_tile_height;
     }
+}
+
+/*
+ * demo_init
+ */
+static void demo_init (void)
+{
+    demo_gfx_init();
+    demo_map_init();
 }
 
 /*
@@ -768,7 +858,7 @@ static void demo_init (void)
  *
  * Our main rendering loop.
  */
-static void demo (void)
+static void demo (const uint32_t mx, const uint32_t my)
 {
     glBindTexture(GL_TEXTURE_2D, bind);
     glcolor(WHITE);
@@ -807,55 +897,81 @@ static void demo (void)
      */
     uint16_t x;
     uint16_t y;
+    map_cell_t *cell;
 
     tex_left   = 0;
     tex_right  = tex_float_width;
     tex_top    = 0;
     tex_bottom = tex_float_height;
 
-    bufp = buf;
+    bufp = gl_array_buf;
 
-uint32_t cnt = 0;
-    for (y = 0; y <= height - TILE_HEIGHT; y += TILE_HEIGHT) {
+    uint32_t cx = mx;
+    uint32_t cy = my;
 
-        top = y;
-        left = 0;
+    left = 0;
 
-        for (x = 0; x <= width - TILE_WIDTH; x += TILE_WIDTH) {
+    for (x = 0; x <= width - TILE_WIDTH; x += TILE_WIDTH, cx++) {
 
-            right = left + TILE_WIDTH;
+        right = left + TILE_WIDTH;
+        top = 0;
+        cy = my;
+        y = 0;
+
+        cell = &cells[cx][cy];
+
+        uint32_t tile = cell->tile;
+
+        tile_to_tex_coords(tile,
+                           &tex_left,
+                           &tex_right,
+                           &tex_top,
+                           &tex_bottom,
+                           tex_tiles_width,
+                           tex_tiles_height,
+                           tex_float_width,
+                           tex_float_height);
+
+        /*
+         * Repeat the first vertex so we create a degenerate triangle.
+         */
+        if (cx != mx) {
+            gl_push_texcoord(&bufp, tex_left,  tex_top);
+            gl_push_vertex(&bufp, left,  top);
+        }
+
+        for (y = 0; y <= height - TILE_HEIGHT; y += TILE_HEIGHT, cy++, cell++) {
+
             bottom = top + TILE_HEIGHT;
-uint32_t tx = cnt % 10;
-uint32_t ty = 0;
-cnt++;
 
-            tex_left   = tex_float_width * tx;
-            tex_right  = tex_left + tex_float_width;
-            tex_top    = tex_float_height * ty;
-            tex_bottom = tex_top + tex_float_height;
+            tile = cell->tile;
 
+            tile_to_tex_coords(tile,
+                               &tex_left,
+                               &tex_right,
+                               &tex_top,
+                               &tex_bottom,
+                               tex_tiles_width,
+                               tex_tiles_height,
+                               tex_float_width,
+                               tex_float_height);
 
             /*
              * Repeat the first vertex so we create a degenerate triangle.
              */
-            if ((y != 0) && (x == 0)) {
-                gl_push_texcoord(&bufp, tex_left,  tex_top);
-                gl_push_vertex(&bufp, left,  top);
-            }
-
             gl_push_texcoord(&bufp, tex_left,  tex_top);
             gl_push_vertex(&bufp, left,  top);
-
-            gl_push_texcoord(&bufp, tex_left,  tex_bottom);
-            gl_push_vertex(&bufp, left,  bottom);
 
             gl_push_texcoord(&bufp, tex_right, tex_top);
             gl_push_vertex(&bufp, right, top);
 
+            gl_push_texcoord(&bufp, tex_left,  tex_bottom);
+            gl_push_vertex(&bufp, left,  bottom);
+
             gl_push_texcoord(&bufp, tex_right, tex_bottom);
             gl_push_vertex(&bufp, right, bottom);
 
-            left += TILE_WIDTH;
+            top += TILE_HEIGHT;
         }
 
         /*
@@ -864,7 +980,7 @@ cnt++;
         gl_push_texcoord(&bufp, tex_right, tex_bottom);
         gl_push_vertex(&bufp, right, bottom);
 
-        top += TILE_HEIGHT;
+        left += TILE_WIDTH;
     }
 
     /*
@@ -873,20 +989,20 @@ cnt++;
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    nvertices = (bufp - buf) /
+    nvertices = (bufp - gl_array_buf) /
                     (NUMBER_DIMENSIONS_PER_COORD * NUMBER_ARRAY_ELEM_ARRAYS);
 
     glTexCoordPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (x,y)
         GL_FLOAT,
         NUMBER_BYTES_PER_VERTICE * 2,
-        buf);
+        gl_array_buf);
 
     glVertexPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (x,y)
         GL_FLOAT,
         NUMBER_BYTES_PER_VERTICE * 2,
-        ((char*)buf) + NUMBER_BYTES_PER_VERTICE);
+        ((char*)gl_array_buf) + NUMBER_BYTES_PER_VERTICE);
 
     glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(tex));
 
@@ -1001,7 +1117,7 @@ void sdl_loop (void)
         int32_t xxx = time_get_time_milli();
         for(i=0;i<1000;i++) {
 #endif
-            demo();
+            demo(100, 0);
 #if 0
         }
         LOG("%u ms",time_get_time_milli()-xxx);
