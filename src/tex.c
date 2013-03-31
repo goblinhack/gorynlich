@@ -19,8 +19,16 @@ typedef struct tex_ {
     tree_key_string tree;
     uint32_t width;
     uint32_t height;
+    /*
+     * Size of each tile.
+     */
     uint32_t tile_width;
     uint32_t tile_height;
+    /*
+     * How many tiles across and down.
+     */
+    uint32_t tiles_width;
+    uint32_t tiles_height;
     int32_t gl_surface_binding;
     SDL_Surface *surface;
 } tex;
@@ -209,6 +217,9 @@ texp tex_load_tiled (const char *file,
 
     t->tile_width = tile_width;
     t->tile_height = tile_height;
+
+    t->tiles_width = tex_get_width(t) / tile_width;
+    t->tiles_height = tex_get_height(t) / tile_height;
 
     return (t);
 }
@@ -554,6 +565,16 @@ uint32_t tex_get_tile_width (tex *tex)
 uint32_t tex_get_tile_height (tex *tex)
 {
     return (tex->tile_height);
+}
+
+uint32_t tex_get_tiles_width (tex *tex)
+{
+    return (tex->tiles_width);
+}
+
+uint32_t tex_get_tiles_height (tex *tex)
+{
+    return (tex->tiles_height);
 }
 
 SDL_Surface *tex_get_surface (tex *tex)
