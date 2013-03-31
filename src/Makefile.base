@@ -37,6 +37,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/log.o 			\
     $(OBJDIR)/main.o 			\
     $(OBJDIR)/map.o 			\
+    $(OBJDIR)/map_display.o 		\
     $(OBJDIR)/marshal.o 		\
     $(OBJDIR)/marshal_test.o 		\
     $(OBJDIR)/math.o 			\
