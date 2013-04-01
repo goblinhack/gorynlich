@@ -43,6 +43,7 @@
 #include "resource.h"
 #include "init_fn.h"
 #include "ramdisk.h"
+#include "map_display.h"
 
 static char **ARGV;
 char *EXEC_FULL_PATH_AND_NAME;
@@ -66,6 +67,7 @@ void quit (void)
 
     sdl_exit();
 
+    map_fini();
     wid_editor_fini();
     wid_game_fini();
 
@@ -575,6 +577,10 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_help_init");
 #endif
 #endif
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)map_init,
+                          0, "map_init");
 
     gl_enter_2d_mode();
     sdl_loop();
