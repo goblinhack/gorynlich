@@ -734,7 +734,31 @@ void sdl_loop (void)
 #endif /* } */
     }
 
-    map_init(&map);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+    /*
+     * Don't use this. It seemed to mess up graphics on FireGL.
+     *
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+     */
+
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+
+#    ifdef ENABLE_VIDEO_SYNC /* { */
+        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+#    else
+        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
+#    endif /* } */
+
+#else /* } { */
+
+#    ifdef ENABLE_VIDEO_SYNC /* { */
+        SDL_GL_SetSwapInterval(1);
+#    else
+        SDL_GL_SetSwapInterval(0);
+#    endif /* } */
+
+#endif /* } */
 
     for (;;) {
         /*
@@ -747,7 +771,7 @@ void sdl_loop (void)
          * the game processing below to allow it to be drained before we swap 
          * the buffers.
          */
-        map_display(map, 100, 0);
+        map_display();
 
         frames++;
 
@@ -769,12 +793,11 @@ void sdl_loop (void)
             frames = 0;
         }
 
-        if (timestamp_now - timestamp_then > 50) {
+        if (timestamp_now - timestamp_then > 10) {
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
              * to process the above.
              */
-            SDL_Delay(5);
 
             timestamp_then = timestamp_now;
 
