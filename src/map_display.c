@@ -9,22 +9,93 @@
 
 #include "main.h"
 #include "gl.h"
-#include "wid.h"
-#include "wid_console.h"
 #include "color.h"
-#include "time.h"
-#include "thing.h"
-#include "sdl.h"
-#include "init_fn.h"
-#include "wid_splash.h"
-#include "config.h"
 #include "tex.h"
-#include "ttf.h"
-#include "slre.h"
-#include "token.h"
 #include "map_display.h"
+#include "wid.h"
 
-map_frame_ctx_t *map;
+/*
+ * QUAD per array element.
+ */
+#define NUMBER_COORDS_PER_VERTEX 4
+
+/*
+ * x and y per element.
+ */
+#define NUMBER_DIMENSIONS_PER_COORD 2
+
+static const uint32_t NUMBER_BYTES_PER_VERTICE =
+                                            sizeof(GLfloat) *
+                                            NUMBER_DIMENSIONS_PER_COORD;
+
+static const uint32_t NUMBER_BYTES_PER_ARRAY_ELEM =
+                                            sizeof(GLfloat) *
+                                            NUMBER_COORDS_PER_VERTEX *
+                                            NUMBER_DIMENSIONS_PER_COORD;
+/*
+ * Two arrays, xy and uv.
+ */
+static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
+
+typedef struct {
+    uint16_t tile;
+} map_tile_t;
+
+#define MAP_CHUNK_WIDTH 1024
+#define MAP_CHUNK_HEIGHT 4096
+#define MAP_CHUNKS_WIDTH 3
+
+/*
+ * All the rendering info for one parallax frame of tiles.
+ */
+typedef struct {
+    /*
+     * All the tiles in this frame.
+     */
+    map_tile_t tiles[MAP_CHUNK_WIDTH * MAP_CHUNKS_WIDTH][MAP_CHUNK_HEIGHT];
+
+    /*
+     * This is the huge buffer that contains all arrays.
+     */
+    GLfloat *gl_array_buf;
+    uint32_t gl_array_size;
+
+    /*
+     * Texture for this frame. One texture for all tiles here.
+     */
+    texp tex;
+    int bind;
+
+    /*
+     * Size of the texture in pixels.
+     */
+    uint32_t tex_width;
+    uint32_t tex_height;
+
+    /*
+     * Single tile size.
+     */
+    uint32_t tex_tile_width;
+    uint32_t tex_tile_height;
+
+    /*
+     * How many tiles across and down.
+     */
+    uint32_t tex_tiles_width;
+    uint32_t tex_tiles_height;
+
+    /*
+     * And the float size of that tile in the parent tex.
+     */
+    GLfloat tex_float_width;
+    GLfloat tex_float_height;
+
+} map_frame_ctx_t;
+
+static map_frame_ctx_t *map;
+static widp wid_map;
+static uint16_t mx;
+static uint16_t my;
 
 /*
  * map_tile_to_tex_coords
@@ -147,23 +218,74 @@ static void map_gl_init (map_frame_ctx_t *map)
 }
 
 /*
- * map_init
+ * wid_map_key_event
  */
-void map_init (map_frame_ctx_t **map)
+static boolean wid_map_key_event (widp w, const SDL_keysym *key)
 {
-    *map = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+    switch (key->sym) {
+        case SDLK_LEFT:
+            mx--;
+            return (true);
 
-    map_gl_init(*map);
+        case SDLK_RIGHT:
+            mx++;
+            return (true);
 
-    map_chunks_init(*map);
+        case SDLK_UP:
+            my--;
+            return (true);
+
+        case SDLK_DOWN:
+            my++;
+            return (true);
+
+        default:
+            break;
+    }
+
+    return (false);
+}
+
+/*
+ * map_wid_create
+ *
+ * Event widget for all in game events.
+ */
+static void map_wid_create (void)
+{
+    if (wid_map) {
+        return;
+    }
+
+    wid_map = wid_new_window("wid map");
+
+    wid_set_no_shape(wid_map);
+
+    fpoint tl = {0.0f, 0.0f};
+    fpoint br = {1.0f, 1.0f};
+    wid_set_tl_br_pct(wid_map, tl, br);
+    wid_set_on_key_down(wid_map, wid_map_key_event);
+
+    color col = BLACK;
+    col.a = 0;
+    glcolor(col);
+
+    wid_set_mode(wid_map, WID_MODE_NORMAL);
+    wid_set_color(wid_map, WID_COLOR_TL, col);
+    wid_set_color(wid_map, WID_COLOR_BR, col);
+    wid_set_color(wid_map, WID_COLOR_BG, col);
+
+    wid_set_on_key_down(wid_map, wid_map_key_event);
+
+    wid_update(wid_map);
 }
 
 /*
  * map_display
  *
- * Our main rendering loop.
+ * Render one frame of the map.
  */
-void map_display (map_frame_ctx_t *map, const uint32_t mx, const uint32_t my)
+static void map_display_ (map_frame_ctx_t *map, uint16_t mx, uint16_t my)
 {
     glBindTexture(GL_TEXTURE_2D, map->bind);
     glcolor(WHITE);
@@ -211,8 +333,8 @@ void map_display (map_frame_ctx_t *map, const uint32_t mx, const uint32_t my)
 
     bufp = map->gl_array_buf;
 
-    uint32_t cx = mx;
-    uint32_t cy = my;
+    uint16_t cx = mx;
+    uint16_t cy = my;
 
     left = 0;
 
@@ -225,7 +347,7 @@ void map_display (map_frame_ctx_t *map, const uint32_t mx, const uint32_t my)
 
         map_tile = &map->tiles[cx][cy];
 
-        uint32_t tile = map_tile->tile;
+        uint16_t tile = map_tile->tile;
 
         map_tile_to_tex_coords(map, tile,
                                &tex_left,
@@ -312,3 +434,43 @@ void map_display (map_frame_ctx_t *map, const uint32_t mx, const uint32_t my)
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
+
+/*
+ * map_display
+ *
+ * Render one frame of the map.
+ */
+void map_display (void)
+{
+    if (!map) {
+        return;
+    }
+
+    map_display_(map, mx, my);
+}
+
+/*
+ * map_init
+ */
+boolean map_init (void)
+{
+    map = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+
+    map_gl_init(map);
+
+    map_chunks_init(map);
+
+    map_wid_create();
+
+    return (true);
+}
+
+void map_fini (void)
+{
+    myfree(map);
+
+    if (wid_map) {
+        wid_destroy(&wid_map);
+    }
+}
+
