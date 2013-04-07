@@ -43,8 +43,8 @@ typedef struct {
     uint16_t tile;
 } map_tile_t;
 
-#define MAP_WIDTH 1000
-#define MAP_HEIGHT 1000
+#define MAP_WIDTH 256
+#define MAP_HEIGHT 256
 
 /*
  * All the rendering info for one parallax frame of tiles.
@@ -114,8 +114,8 @@ typedef struct {
     uint16_t tiles_per_screen_y;
 } map_frame_ctx_t;
 
-static map_frame_ctx_t *map1;
-static map_frame_ctx_t *map2;
+static map_frame_ctx_t *map_fg;
+static map_frame_ctx_t *map_bg;
 static widp wid_map;
 
 /*
@@ -279,28 +279,42 @@ static void map_gl_init (map_frame_ctx_t *map)
  */
 static void map_move_delta (int32_t dx, int32_t dy)
 {
-    map1->px += dx;
+    map_fg->px += dx;
 
-    if (map1->px < map1->min_px) {
-        map1->px = map1->min_px;
+    if (map_fg->px < map_fg->min_px) {
+        map_fg->px = map_fg->min_px;
     }
 
-    if (map1->px > map1->max_px) {
-        map1->px = map1->max_px;
+    if (map_fg->px > map_fg->max_px) {
+        map_fg->px = map_fg->max_px;
     }
 
-    map1->py += dy;
+    map_fg->py += dy;
 
-    if (map1->py < map1->min_py) {
-        map1->py = map1->min_py;
+    if (map_fg->py < map_fg->min_py) {
+        map_fg->py = map_fg->min_py;
     }
 
-    if (map1->py > map1->max_py) {
-        map1->py = map1->max_py;
+    if (map_fg->py > map_fg->max_py) {
+        map_fg->py = map_fg->max_py;
     }
 
-    map2->px = map1->px / 2;
-    map2->py = map1->py / 2;
+    float px = (float) map_fg->px /
+        (float) ((map_fg->map_width - map_fg->tiles_per_screen_x) *
+            TILE_WIDTH);
+
+    float py = (float) map_fg->py /
+        (float) ((map_fg->map_height - map_fg->tiles_per_screen_y) *
+            TILE_HEIGHT);
+
+LOG("%f",px);
+
+    map_bg->px =
+        ((float)(map_bg->map_width - map_bg->tiles_per_screen_x) *
+            TILE_WIDTH) * px;
+    map_bg->py =
+        ((float)(map_bg->map_height - map_bg->tiles_per_screen_y) *
+            TILE_WIDTH) * py;
 }
 
 /*
@@ -313,31 +327,42 @@ static boolean wid_map_key_event (widp w, const SDL_keysym *key)
 
     if (time_have_x_tenths_passed_since(1, last)) {
         accel = 1;
-    } else {
-        accel++;
     }
 
     last = time_get_time_cached();
 
-    switch (key->sym) {
-        case SDLK_LEFT:
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+    uint8_t *state = SDL_GetKeyState(0);
+
+    boolean right = state[SDLK_RIGHT];
+    boolean left  = state[SDLK_LEFT];
+    boolean up    = state[SDLK_UP];
+    boolean down  = state[SDLK_DOWN];
+#else /* } { */
+    uint8_t *state = SDL_GetKeyboardState(0);
+
+    boolean right = state[SDL_SCANCODE_RIGHT];
+    boolean left  = state[SDL_SCANCODE_LEFT];
+    boolean up    = state[SDL_SCANCODE_UP];
+    boolean down  = state[SDL_SCANCODE_DOWN];
+#endif /* } */
+
+    if (!left && !right && !up && !down) {
+        accel = 1;
+    } else {
+        if (left) {
             map_move_delta(-accel, 0);
-            return (true);
-
-        case SDLK_RIGHT:
+        } else if (right) {
             map_move_delta(accel, 0);
-            return (true);
+        }
 
-        case SDLK_UP:
+        if (up) {
             map_move_delta(0, -accel);
-            return (true);
-
-        case SDLK_DOWN:
+        } else if (down) {
             map_move_delta(0, accel);
-            return (true);
+        }
 
-        default:
-            break;
+        accel++;
     }
 
     return (false);
@@ -542,37 +567,36 @@ static void map_display_ (map_frame_ctx_t *map)
  *
  * Render one frame of the map.
  */
-static void map_display_debug (map_frame_ctx_t *map)
+static void 
+map_display_debug (map_frame_ctx_t *map, uint32_t x, uint32_t y)
 {
     if (!map) {
         return;
     }
 
-    uint32_t width = global_config.video_pix_width;
+    static char text[40] = {0};
 
-    static char text[20] = {0};
-
-    snprintf(text, sizeof(text), "(%d,%d)",
-             map->px / TILE_WIDTH, map->py / TILE_WIDTH);
+    snprintf(text, sizeof(text), "(%d,%d) .. (%d,%d)",
+             map->px / TILE_WIDTH,
+             map->py / TILE_HEIGHT,
+             (map->px / TILE_WIDTH) + map->tiles_per_screen_x,
+             (map->py / TILE_HEIGHT) + map->tiles_per_screen_y);
 
     glcolor(RED);
 
-    ttf_puts(small_font, text, width / 2, 0, 1.0, 1.0, true);
+    ttf_puts(small_font, text, x, y, 1.0, 1.0, true);
 
     float map_scale = 4;
-
-    float dx = 0;
-    float dy = 100;
 
     float x1 = 0;
     float x2 = ((float)map->map_width) / map_scale;
     float y1 = 0;
     float y2 = ((float)map->map_height) / map_scale;
 
-    x1 += dx;
-    x2 += dx;
-    y1 += dy;
-    y2 += dy;
+    x1 += x;
+    x2 += x;
+    y1 += y + 20;
+    y2 += y + 20;
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -592,10 +616,10 @@ static void map_display_debug (map_frame_ctx_t *map)
     y1 /= map_scale;
     y2 /= map_scale;
 
-    x1 += dx;
-    x2 += dx;
-    y1 += dy;
-    y2 += dy;
+    x1 += x;
+    x2 += x;
+    y1 += y + 20;
+    y2 += y + 20;
 
     c = GREEN;
     c.a = 200;
@@ -610,7 +634,7 @@ static void map_display_debug (map_frame_ctx_t *map)
  */
 void map_display (void)
 {
-    if (!map1) {
+    if (!map_fg) {
         return;
     }
 
@@ -618,14 +642,15 @@ void map_display (void)
 
     c.a = 150;
     glcolor(c);
-    map_display_(map2);
+    map_display_(map_bg);
 
     c.a = 255;
     glcolor(c);
-    map_display_(map1);
+    map_display_(map_fg);
 
     if (fps_enabled) {
-        map_display_debug(map1);
+        map_display_debug(map_fg, 100, 0);
+        map_display_debug(map_bg, 400, 0);
     }
 }
 
@@ -634,17 +659,17 @@ void map_display (void)
  */
 boolean map_init (void)
 {
-    map1 = myzalloc(sizeof(map_frame_ctx_t), "map frame");
-    map2 = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+    map_fg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+    map_bg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
 
-    map_tiles_bounds_init(map1, MAP_WIDTH, MAP_HEIGHT);
-    map_tiles_bounds_init(map2, MAP_WIDTH / 2, MAP_HEIGHT / 2);
+    map_tiles_bounds_init(map_fg, MAP_WIDTH, MAP_HEIGHT);
+    map_tiles_bounds_init(map_bg, MAP_WIDTH / 2, MAP_HEIGHT / 2);
 
-    map_gl_init(map1);
-    map_gl_init(map2);
+    map_gl_init(map_fg);
+    map_gl_init(map_bg);
 
-    map_tiles_init(map1);
-    map_tiles_init(map2);
+    map_tiles_init(map_fg);
+    map_tiles_init(map_bg);
 
     map_move_delta(0, 0);
 
@@ -655,7 +680,7 @@ boolean map_init (void)
 
 void map_fini (void)
 {
-    myfree(map1);
+    myfree(map_fg);
 
     if (wid_map) {
         wid_destroy(&wid_map);
