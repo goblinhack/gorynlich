@@ -14,6 +14,7 @@
 #include "map_display.h"
 #include "wid.h"
 #include "ttf.h"
+#include "time.h"
 
 /*
  * QUAD per array element.
@@ -42,26 +43,26 @@ typedef struct {
     uint16_t tile;
 } map_tile_t;
 
-#define MAP_WIDTH 256
-#define MAP_HEIGHT 256
+#define MAP_WIDTH 1000
+#define MAP_HEIGHT 1000
 
 /*
  * All the rendering info for one parallax frame of tiles.
  */
 typedef struct {
     /*
-     * The top left corner tile we are drawing on screen.
+     * The top left corner pixel of the map.
      */
-    uint32_t mx;
-    uint32_t my;
+    int32_t px;
+    int32_t py;
 
     /*
      * The tile extents of the map.
      */
-    uint32_t min_x;
-    uint32_t max_x;
-    uint32_t min_y;
-    uint32_t max_y;
+    int32_t min_px;
+    int32_t max_px;
+    int32_t min_py;
+    int32_t max_py;
 
     /*
      * All the tiles in this frame.
@@ -173,19 +174,26 @@ static void map_tiles_bounds_init (map_frame_ctx_t *map)
     /*
      * Absolute map bounds.
      */
-    map->min_x = 0;
-    map->max_x = MAP_WIDTH - map->tiles_per_screen_x;
-    map->min_y = 0;
-    map->max_y = MAP_HEIGHT - map->tiles_per_screen_y;
+    map->min_px = 0;
+    map->max_px = MAP_WIDTH - map->tiles_per_screen_x;
+    map->min_py = 0;
+    map->max_py = MAP_HEIGHT - map->tiles_per_screen_y;
+
+    map->min_px *= TILE_WIDTH;
+    map->max_px *= TILE_WIDTH;
+    map->min_py *= TILE_HEIGHT;
+    map->max_py *= TILE_HEIGHT;
 
     /*
      * Where we start off on the map.
      */
-    map->mx = MAP_WIDTH / 2;
-    map->mx -= map->tiles_per_screen_x / 2;
+    map->px = MAP_WIDTH / 2;
+    map->px -= map->tiles_per_screen_x / 2;
+    map->px *= TILE_WIDTH;
 
-    map->my = MAP_HEIGHT / 2;
-    map->my -= map->tiles_per_screen_y / 2;
+    map->py = MAP_HEIGHT / 2;
+    map->py -= map->tiles_per_screen_y / 2;
+    map->py *= TILE_HEIGHT;
 }
 
 /*
@@ -256,52 +264,63 @@ static void map_gl_init (map_frame_ctx_t *map)
  */
 static boolean wid_map_key_event (widp w, const SDL_keysym *key)
 {
+    static uint32_t accel = 1;
+    static uint32_t last;
+
+    if (time_have_x_tenths_passed_since(1, last)) {
+        accel = 1;
+    } else {
+        accel++;
+    }
+
+    last = time_get_time_cached();
+
     switch (key->sym) {
         case SDLK_LEFT:
-            if (map->mx == map->min_x) {
+            if (map->px == map->min_px) {
                 return (true);
             }
 
-            map->mx--;
+            map->px -= accel;
 
-            if (map->mx < map->min_x) {
-                map->mx = map->min_x;
+            if (map->px < map->min_px) {
+                map->px = map->min_px;
             }
             return (true);
 
         case SDLK_RIGHT:
-            if (map->mx == map->max_x) {
+            if (map->px == map->max_px) {
                 return (true);
             }
 
-            map->mx++;
+            map->px += accel;
 
-            if (map->mx > map->max_x) {
-                map->mx = map->max_x;
+            if (map->px > map->max_px) {
+                map->px = map->max_px;
             }
             return (true);
 
         case SDLK_UP:
-            if (map->my == map->min_y) {
+            if (map->py == map->min_py) {
                 return (true);
             }
 
-            map->my--;
+            map->py -= accel;
 
-            if (map->my < map->min_y) {
-                map->my = map->min_y;
+            if (map->py < map->min_py) {
+                map->py = map->min_py;
             }
             return (true);
 
         case SDLK_DOWN:
-            if (map->my == map->max_y) {
+            if (map->py == map->max_py) {
                 return (true);
             }
 
-            map->my++;
+            map->py += accel;
 
-            if (map->my > map->max_y) {
-                map->my = map->max_y;
+            if (map->py > map->max_py) {
+                map->py = map->max_py;
             }
             return (true);
 
@@ -399,28 +418,33 @@ static void map_display_ (map_frame_ctx_t *map)
 
     bufp = map->gl_array_buf;
 
-    uint16_t cx = map->mx;
-    uint16_t cy = map->my;
+    uint16_t cx = map->px / TILE_WIDTH;
+    uint16_t cy_start = map->py / TILE_HEIGHT;
+    uint16_t cy;
+    uint16_t tile;
     boolean first = true;
 
-    left = 0;
+    left = TILE_WIDTH - (map->px % TILE_WIDTH);
+    left -= TILE_WIDTH;
 
-    for (x = 0; x <= width - TILE_WIDTH; x += TILE_WIDTH, cx++) {
+    for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
+
+        cy = cy_start;
 
         right = left + TILE_WIDTH;
-        top = 0;
-        cy = map->my;
-        y = 0;
 
         map_tile = &map->tiles[cx][cy];
 
-        uint16_t tile = map_tile->tile;
+        tile = map_tile->tile;
 
         map_tile_to_tex_coords(map, tile,
                                &tex_left,
                                &tex_right,
                                &tex_top,
                                &tex_bottom);
+
+        top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
+        top -= TILE_HEIGHT;
 
         /*
          * Repeat the first vertex so we create a degenerate triangle.
@@ -432,9 +456,7 @@ static void map_display_ (map_frame_ctx_t *map)
             first = false;
         }
 
-        for (y = 0;
-             y <= height - TILE_HEIGHT;
-             y += TILE_HEIGHT, cy++, map_tile++) {
+        for (y = 0; y <= height; y += TILE_HEIGHT, cy++, map_tile++) {
 
             bottom = top + TILE_HEIGHT;
 
@@ -519,13 +541,14 @@ static void map_display_debug (map_frame_ctx_t *map)
 
     static char text[20] = {0};
 
-    snprintf(text, sizeof(text), "(%d,%d)", map->mx, map->my);
+    snprintf(text, sizeof(text), "(%d,%d)",
+             map->px / TILE_WIDTH, map->py / TILE_WIDTH);
 
     glcolor(RED);
 
     ttf_puts(small_font, text, width / 2, 0, 1.0, 1.0, true);
 
-    float map_scale = 10;
+    float map_scale = 2;
 
     float dx = 0;
     float dy = 100;
@@ -542,15 +565,15 @@ static void map_display_debug (map_frame_ctx_t *map)
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    color c = BLUE;
-    c.a = 100;
+    color c = CYAN;
+    c.a = 200;
     glcolor(c);
     gl_blitquad(x1,y1,x2,y2);
 
-    x1 = map->mx;
+    x1 = map->px / TILE_WIDTH;
     x2 = x1 + map->tiles_per_screen_x;
 
-    y1 = map->my;
+    y1 = map->py / TILE_HEIGHT;
     y2 = y1 + map->tiles_per_screen_y;
 
     x1 /= map_scale;
@@ -601,9 +624,6 @@ boolean map_init (void)
     map_tiles_init(map);
 
     map_wid_create();
-
-    map->mx = MAP_WIDTH / 2;
-    map->my = MAP_HEIGHT / 2;
 
     return (true);
 }
