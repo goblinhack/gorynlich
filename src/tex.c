@@ -14,6 +14,7 @@
 #include "ramdisk.h"
 #include "tree.h"
 #include "pixel.h"
+#include "color.h"
 
 typedef struct tex_ {
     tree_key_string tree;
@@ -525,6 +526,17 @@ texp tex_from_tiled_surface (SDL_Surface *in,
 
                 putPixel(out, x, y, c);
             }
+        }
+    }
+
+    /*
+     * Tile 0 is always transparent black.
+     */
+    for (x = 0; x < TILE_WIDTH; x++) {
+        for (y = 0; y < TILE_HEIGHT; y++) {
+            color c = BLACK;
+            c.a = 0;
+            putPixel(out, x, y, c);
         }
     }
 

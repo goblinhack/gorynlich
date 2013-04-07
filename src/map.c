@@ -17,6 +17,152 @@
 
 typedef boolean (*map_is_at_callback)(thing_templatep);
 
+map_frame_ctx_t *map_fg;
+map_frame_ctx_t *map_bg;
+
+/*
+ * map_tiles_init
+ */
+void map_tiles_init (map_frame_ctx_t *map)
+{
+    const uint32_t sx = 0;
+    const uint32_t ex = map->map_width;
+    const uint32_t sy = 0;
+    const uint32_t ey = map->map_height;
+    uint32_t x;
+    uint32_t y;
+    uint32_t cnt = 0;
+
+    for (x = sx; x < ex; x++) {
+        for (y = sy; y < ey; y++) {
+            map->tiles[x * map->map_width + y].tile = cnt++;
+            if (cnt > 64*28) {
+                cnt = 0;
+            }
+        }
+    }
+}
+
+/*
+ * map_tiles_bounds_init
+ */
+void map_tiles_bounds_init (map_frame_ctx_t *map,
+                            uint32_t map_width,
+                            uint32_t map_height)
+{
+    uint32_t width = global_config.video_pix_width;
+    uint32_t height = global_config.video_pix_height;
+
+    /*
+     * Allocate space for the tiles.
+     */
+    map->map_width = map_width;
+    map->map_height = map_height;
+    map->tiles = myzalloc(sizeof(map_tile_t) * map_width * map_height,
+                          "map tiles");
+
+    map->tiles_per_screen_x = width / TILE_WIDTH;
+    map->tiles_per_screen_y = height / TILE_WIDTH;
+
+    /*
+     * Absolute map bounds.
+     */
+    map->min_px = 0;
+    map->max_px = map->map_width - map->tiles_per_screen_x;
+    map->min_py = 0;
+    map->max_py = map->map_height - map->tiles_per_screen_y;
+
+    map->min_px *= TILE_WIDTH;
+    map->max_px *= TILE_WIDTH;
+    map->min_py *= TILE_HEIGHT;
+    map->max_py *= TILE_HEIGHT;
+
+    /*
+     * Where we start off on the map.
+     */
+    map->px = map->map_width / 2;
+    map->px -= map->tiles_per_screen_x / 2;
+    map->px *= TILE_WIDTH;
+
+    map->py = map->map_height / 2;
+    map->py -= map->tiles_per_screen_y / 2;
+    map->py *= TILE_HEIGHT;
+}
+
+/*
+ * map_move_delta_pixels
+ *
+ * Shift the map by some pixels.
+ */
+void map_move_delta_pixels (int32_t dx, int32_t dy)
+{
+    map_fg->px += dx;
+
+    if (map_fg->px < map_fg->min_px) {
+        map_fg->px = map_fg->min_px;
+    }
+
+    if (map_fg->px > map_fg->max_px) {
+        map_fg->px = map_fg->max_px;
+    }
+
+    map_fg->py += dy;
+
+    if (map_fg->py < map_fg->min_py) {
+        map_fg->py = map_fg->min_py;
+    }
+
+    if (map_fg->py > map_fg->max_py) {
+        map_fg->py = map_fg->max_py;
+    }
+
+    float px = (float) map_fg->px /
+        (float) ((map_fg->map_width - map_fg->tiles_per_screen_x) *
+            TILE_WIDTH);
+
+    float py = (float) map_fg->py /
+        (float) ((map_fg->map_height - map_fg->tiles_per_screen_y) *
+            TILE_HEIGHT);
+
+    map_bg->px =
+        ((float)(map_bg->map_width - map_bg->tiles_per_screen_x) *
+            TILE_WIDTH) * px;
+    map_bg->py =
+        ((float)(map_bg->map_height - map_bg->tiles_per_screen_y) *
+            TILE_WIDTH) * py;
+}
+
+/*
+ * map_init
+ */
+boolean map_init (void)
+{
+    map_fg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+    map_bg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+
+    map_tiles_bounds_init(map_fg, MAP_WIDTH, MAP_HEIGHT);
+    map_tiles_bounds_init(map_bg, MAP_WIDTH / 2, MAP_HEIGHT / 2);
+
+    map_display_init(map_fg);
+    map_display_init(map_bg);
+
+    map_tiles_init(map_fg);
+    map_tiles_init(map_bg);
+
+    map_move_delta_pixels(0, 0);
+
+    map_display_wid_init();
+
+    return (true);
+}
+
+void map_fini (void)
+{
+    myfree(map_fg);
+
+    map_display_wid_fini();
+}
+
 static boolean map_is_x_at (levelp level,
                             int32_t x, int32_t y, map_is_at_callback callback)
 {
