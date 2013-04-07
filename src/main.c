@@ -43,7 +43,7 @@
 #include "resource.h"
 #include "init_fn.h"
 #include "ramdisk.h"
-#include "map_display.h"
+#include "map.h"
 
 static char **ARGV;
 char *EXEC_FULL_PATH_AND_NAME;

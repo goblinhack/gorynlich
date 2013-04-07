@@ -11,10 +11,10 @@
 #include "gl.h"
 #include "color.h"
 #include "tex.h"
-#include "map_display.h"
 #include "wid.h"
 #include "ttf.h"
 #include "time.h"
+#include "map.h"
 
 /*
  * QUAD per array element.
@@ -39,85 +39,6 @@ static const uint32_t NUMBER_BYTES_PER_ARRAY_ELEM =
  */
 static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
 
-typedef struct {
-    uint16_t tile;
-} map_tile_t;
-
-#define MAP_WIDTH 256
-#define MAP_HEIGHT 256
-
-/*
- * All the rendering info for one parallax frame of tiles.
- */
-typedef struct {
-    /*
-     * The top left corner pixel of the map.
-     */
-    int32_t px;
-    int32_t py;
-
-    /*
-     * The tile extents of the map.
-     */
-    int32_t min_px;
-    int32_t max_px;
-    int32_t min_py;
-    int32_t max_py;
-
-    /*
-     * All the tiles in this frame.
-     */
-    uint32_t map_width;
-    uint32_t map_height;
-    map_tile_t *tiles;
-
-    /*
-     * This is the huge buffer that contains the vertex and tex arrays.
-     */
-    GLfloat *gl_array_buf;
-    uint32_t gl_array_size;
-
-    /*
-     * Texture for this frame. One texture for all tiles here.
-     */
-    texp tex;
-    int bind;
-
-    /*
-     * Size of the texture in pixels.
-     */
-    uint32_t tex_width;
-    uint32_t tex_height;
-
-    /*
-     * Single tile size.
-     */
-    uint32_t tex_tile_width;
-    uint32_t tex_tile_height;
-
-    /*
-     * How many tiles across and down.
-     */
-    uint32_t tex_tiles_width;
-    uint32_t tex_tiles_height;
-
-    /*
-     * And the float size of that tile in the parent tex.
-     */
-    GLfloat tex_float_width;
-    GLfloat tex_float_height;
-
-    /*
-     * How many tiles on screen at a time?
-     */
-    uint16_t tiles_per_screen_x;
-    uint16_t tiles_per_screen_y;
-} map_frame_ctx_t;
-
-static map_frame_ctx_t *map_fg;
-static map_frame_ctx_t *map_bg;
-static widp wid_map;
-
 /*
  * map_tile_to_tex_coords
  *
@@ -141,78 +62,9 @@ map_tile_to_tex_coords (map_frame_ctx_t *map,
 }
 
 /*
- * map_tiles_init
+ * map_display_init
  */
-static void map_tiles_init (map_frame_ctx_t *map)
-{
-    const uint32_t sx = 0;
-    const uint32_t ex = map->map_width;
-    const uint32_t sy = 0;
-    const uint32_t ey = map->map_height;
-    uint32_t x;
-    uint32_t y;
-    uint32_t cnt = 0;
-
-    for (x = sx; x < ex; x++) {
-        for (y = sy; y < ey; y++) {
-            map->tiles[x * map->map_width + y].tile = cnt++;
-            if (cnt > 64*28) {
-                cnt = 0;
-            }
-        }
-    }
-}
-
-/*
- * map_tiles_bounds_init
- */
-static void map_tiles_bounds_init (map_frame_ctx_t *map,
-                                   uint32_t map_width,
-                                   uint32_t map_height)
-{
-    uint32_t width = global_config.video_pix_width;
-    uint32_t height = global_config.video_pix_height;
-
-    /*
-     * Allocate space for the tiles.
-     */
-    map->map_width = map_width;
-    map->map_height = map_height;
-    map->tiles = myzalloc(sizeof(map_tile_t) * map_width * map_height,
-                          "map tiles");
-
-    map->tiles_per_screen_x = width / TILE_WIDTH;
-    map->tiles_per_screen_y = height / TILE_WIDTH;
-
-    /*
-     * Absolute map bounds.
-     */
-    map->min_px = 0;
-    map->max_px = map->map_width - map->tiles_per_screen_x;
-    map->min_py = 0;
-    map->max_py = map->map_height - map->tiles_per_screen_y;
-
-    map->min_px *= TILE_WIDTH;
-    map->max_px *= TILE_WIDTH;
-    map->min_py *= TILE_HEIGHT;
-    map->max_py *= TILE_HEIGHT;
-
-    /*
-     * Where we start off on the map.
-     */
-    map->px = map->map_width / 2;
-    map->px -= map->tiles_per_screen_x / 2;
-    map->px *= TILE_WIDTH;
-
-    map->py = map->map_height / 2;
-    map->py -= map->tiles_per_screen_y / 2;
-    map->py *= TILE_HEIGHT;
-}
-
-/*
- * map_gl_init
- */
-static void map_gl_init (map_frame_ctx_t *map)
+void map_display_init (map_frame_ctx_t *map)
 {
     /*
      * Our array size requirements.
@@ -270,136 +122,6 @@ static void map_gl_init (map_frame_ctx_t *map)
         map->tex_float_height =
                         (1.0 / (float)map->tex_height) * map->tex_tile_height;
     }
-}
-
-/*
- * map_move_delta
- *
- * Shift the map by some pixels.
- */
-static void map_move_delta (int32_t dx, int32_t dy)
-{
-    map_fg->px += dx;
-
-    if (map_fg->px < map_fg->min_px) {
-        map_fg->px = map_fg->min_px;
-    }
-
-    if (map_fg->px > map_fg->max_px) {
-        map_fg->px = map_fg->max_px;
-    }
-
-    map_fg->py += dy;
-
-    if (map_fg->py < map_fg->min_py) {
-        map_fg->py = map_fg->min_py;
-    }
-
-    if (map_fg->py > map_fg->max_py) {
-        map_fg->py = map_fg->max_py;
-    }
-
-    float px = (float) map_fg->px /
-        (float) ((map_fg->map_width - map_fg->tiles_per_screen_x) *
-            TILE_WIDTH);
-
-    float py = (float) map_fg->py /
-        (float) ((map_fg->map_height - map_fg->tiles_per_screen_y) *
-            TILE_HEIGHT);
-
-LOG("%f",px);
-
-    map_bg->px =
-        ((float)(map_bg->map_width - map_bg->tiles_per_screen_x) *
-            TILE_WIDTH) * px;
-    map_bg->py =
-        ((float)(map_bg->map_height - map_bg->tiles_per_screen_y) *
-            TILE_WIDTH) * py;
-}
-
-/*
- * wid_map_key_event
- */
-static boolean wid_map_key_event (widp w, const SDL_keysym *key)
-{
-    static uint32_t accel = 1;
-    static uint32_t last;
-
-    if (time_have_x_tenths_passed_since(1, last)) {
-        accel = 1;
-    }
-
-    last = time_get_time_cached();
-
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-    uint8_t *state = SDL_GetKeyState(0);
-
-    boolean right = state[SDLK_RIGHT];
-    boolean left  = state[SDLK_LEFT];
-    boolean up    = state[SDLK_UP];
-    boolean down  = state[SDLK_DOWN];
-#else /* } { */
-    uint8_t *state = SDL_GetKeyboardState(0);
-
-    boolean right = state[SDL_SCANCODE_RIGHT];
-    boolean left  = state[SDL_SCANCODE_LEFT];
-    boolean up    = state[SDL_SCANCODE_UP];
-    boolean down  = state[SDL_SCANCODE_DOWN];
-#endif /* } */
-
-    if (!left && !right && !up && !down) {
-        accel = 1;
-    } else {
-        if (left) {
-            map_move_delta(-accel, 0);
-        } else if (right) {
-            map_move_delta(accel, 0);
-        }
-
-        if (up) {
-            map_move_delta(0, -accel);
-        } else if (down) {
-            map_move_delta(0, accel);
-        }
-
-        accel++;
-    }
-
-    return (false);
-}
-
-/*
- * map_wid_create
- *
- * Event widget for all in game events.
- */
-static void map_wid_create (void)
-{
-    if (wid_map) {
-        return;
-    }
-
-    wid_map = wid_new_window("wid map");
-
-    wid_set_no_shape(wid_map);
-
-    fpoint tl = {0.0f, 0.0f};
-    fpoint br = {1.0f, 1.0f};
-    wid_set_tl_br_pct(wid_map, tl, br);
-    wid_set_on_key_down(wid_map, wid_map_key_event);
-
-    color col = BLACK;
-    col.a = 0;
-    glcolor(col);
-
-    wid_set_mode(wid_map, WID_MODE_NORMAL);
-    wid_set_color(wid_map, WID_COLOR_TL, col);
-    wid_set_color(wid_map, WID_COLOR_BR, col);
-    wid_set_color(wid_map, WID_COLOR_BG, col);
-
-    wid_set_on_key_down(wid_map, wid_map_key_event);
-
-    wid_update(wid_map);
 }
 
 /*
@@ -653,37 +375,3 @@ void map_display (void)
         map_display_debug(map_bg, 400, 0);
     }
 }
-
-/*
- * map_init
- */
-boolean map_init (void)
-{
-    map_fg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
-    map_bg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
-
-    map_tiles_bounds_init(map_fg, MAP_WIDTH, MAP_HEIGHT);
-    map_tiles_bounds_init(map_bg, MAP_WIDTH / 2, MAP_HEIGHT / 2);
-
-    map_gl_init(map_fg);
-    map_gl_init(map_bg);
-
-    map_tiles_init(map_fg);
-    map_tiles_init(map_bg);
-
-    map_move_delta(0, 0);
-
-    map_wid_create();
-
-    return (true);
-}
-
-void map_fini (void)
-{
-    myfree(map_fg);
-
-    if (wid_map) {
-        wid_destroy(&wid_map);
-    }
-}
-
