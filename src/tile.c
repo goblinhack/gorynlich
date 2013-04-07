@@ -107,6 +107,68 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
     va_end(args);
 }
 
+void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
+                    uint32_t nargs, const char *arr[])
+{
+    texp tex = tex_load(0, tex_name);
+    float fw = 1.0 / (((float)tex_get_width(tex)) / ((float)width));
+    float fh = 1.0 / (((float)tex_get_height(tex)) / ((float)height));
+    uint32_t x = 0;
+    uint32_t y = 0;
+    uint32_t idx = 0;
+
+    while (nargs--) {
+
+        const char *name = arr[idx++];
+
+        if (name) {
+            tile *t;
+
+            if (tile_find(name)) {
+                DIE("tile name [%s] already used", name);
+            }
+
+            if (!tiles) {
+                tiles = tree_alloc(TREE_KEY_STRING, "TREE ROOT: tile");
+            }
+
+            t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: tile");
+            t->tree.key = dupstr(name, "TREE KEY: tile");
+
+            if (!tree_insert(tiles, &t->tree.node)) {
+                DIE("tile insert name [%s] failed", name);
+            }
+
+            t->width = width;
+            t->height = height;
+            t->tex = tex;
+            t->gl_surface_binding = tex_get_gl_binding(tex);
+
+            t->x1 = fw * (float)(x);
+            t->y1 = fh * (float)(y);
+            t->x2 = t->x1 + fw;
+            t->y2 = t->y1 + fh;
+
+            DBG("Tile: -%10s %ux%u (%u, %u)", name, width, height, x, y);
+        }
+
+        x++;
+
+        if (x * width >= tex_get_width(tex)) {
+            x = 0;
+            y++;
+        }
+
+        if (y * height > tex_get_height(tex)) {
+            if (name) {
+                DIE("overflow reading tile [%s]", name);
+            } else {
+                DIE("overflow reading tile");
+            }
+        }
+    }
+}
+
 /*
  * Find an existing tile.
  */

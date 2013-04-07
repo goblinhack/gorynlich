@@ -8,6 +8,8 @@ boolean tile_init(void);
 void tile_fini(void);
 void tile_load(const char *file, uint32_t width, uint32_t height,
                uint32_t nargs, ...);
+void tile_load_arr(const char *file, uint32_t width, uint32_t height,
+                   uint32_t nargs, const char *arr[]);
 tilep tile_find(const char *name);
 tilep tile_from_surface(SDL_Surface *surface,
                       const char *optional_file,
