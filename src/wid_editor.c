@@ -77,7 +77,7 @@ void wid_editor_hide (void)
 
 void wid_editor_visible (void)
 {
-    wid_editor_map_wid_create();
+    wid_editor_map_display_wid_init();
     wid_editor_buttons_wid_create();
 
     wid_editor_draw();

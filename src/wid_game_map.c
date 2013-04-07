@@ -144,7 +144,7 @@ void wid_game_visible (void)
 
         wid_visible(wid_game_map_window, 0);
     } else {
-        wid_game_map_wid_create();
+        wid_game_map_display_wid_init();
     }
 
     wid_move_end(wid_game_map_window);
@@ -545,7 +545,7 @@ static boolean wid_game_map_button_receive_mouse_down (widp w,
 /*
  * Create the wid_game_map
  */
-void wid_game_map_wid_create (void)
+void wid_game_map_display_wid_init (void)
 {
     wid_game_selected_item_name = 0;
 

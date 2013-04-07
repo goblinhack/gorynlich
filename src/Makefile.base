@@ -22,6 +22,7 @@ OBJDIR=.o
 GAME_OBJECTS=				\
     $(OBJDIR)/backtrace.o 		\
     $(OBJDIR)/color.o			\
+    $(OBJDIR)/cave.o			\
     $(OBJDIR)/command.o 		\
     $(OBJDIR)/config.o			\
     $(OBJDIR)/demarshal.o 		\
@@ -38,6 +39,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/main.o 			\
     $(OBJDIR)/map.o 			\
     $(OBJDIR)/map_display.o 		\
+    $(OBJDIR)/map_display_wid.o 	\
     $(OBJDIR)/marshal.o 		\
     $(OBJDIR)/marshal_test.o 		\
     $(OBJDIR)/math.o 			\

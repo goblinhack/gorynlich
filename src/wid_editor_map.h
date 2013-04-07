@@ -4,7 +4,7 @@
  * See the README file for license.
  */
 
-void wid_editor_map_wid_create(void);
+void wid_editor_map_display_wid_init(void);
 void wid_editor_map_wid_destroy (void);
 
 extern widp wid_editor_map_window;

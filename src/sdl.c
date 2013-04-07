@@ -22,7 +22,7 @@
 #include "ttf.h"
 #include "slre.h"
 #include "token.h"
-#include "map_display.h"
+#include "map.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6

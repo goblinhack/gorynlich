@@ -309,3 +309,104 @@ typedef struct tree_thing_node_ {
 } tree_thing_node;
 
 void map_fixup(levelp);
+
+typedef struct {
+    uint16_t tile;
+} map_tile_t;
+
+#define MAP_WIDTH 256
+#define MAP_HEIGHT 256
+
+/*
+ * All the rendering info for one parallax frame of tiles.
+ */
+typedef struct {
+    /*
+     * The top left corner pixel of the map.
+     */
+    int32_t px;
+    int32_t py;
+
+    /*
+     * The tile extents of the map.
+     */
+    int32_t min_px;
+    int32_t max_px;
+    int32_t min_py;
+    int32_t max_py;
+
+    /*
+     * All the tiles in this frame.
+     */
+    uint32_t map_width;
+    uint32_t map_height;
+    map_tile_t *tiles;
+
+    /*
+     * This is the huge buffer that contains the vertex and tex arrays.
+     */
+    float *gl_array_buf;
+    uint32_t gl_array_size;
+
+    /*
+     * Texture for this frame. One texture for all tiles here.
+     */
+    texp tex;
+    int bind;
+
+    /*
+     * Size of the texture in pixels.
+     */
+    uint32_t tex_width;
+    uint32_t tex_height;
+
+    /*
+     * Single tile size.
+     */
+    uint32_t tex_tile_width;
+    uint32_t tex_tile_height;
+
+    /*
+     * How many tiles across and down.
+     */
+    uint32_t tex_tiles_width;
+    uint32_t tex_tiles_height;
+
+    /*
+     * And the float size of that tile in the parent tex.
+     */
+    float tex_float_width;
+    float tex_float_height;
+
+    /*
+     * How many tiles on screen at a time?
+     */
+    uint16_t tiles_per_screen_x;
+    uint16_t tiles_per_screen_y;
+} map_frame_ctx_t;
+
+extern map_frame_ctx_t *map_fg;
+extern map_frame_ctx_t *map_bg;
+
+/*
+ * map.c
+ */
+void map_tiles_init(map_frame_ctx_t *map);
+void map_tiles_bounds_init(map_frame_ctx_t *map,
+                           uint32_t map_width,
+                           uint32_t map_height);
+void map_move_delta_pixels(int32_t dx, int32_t dy);
+boolean map_init(void);
+void map_fini(void);
+
+/*
+ * map_display.c
+ */
+void map_display(void);
+void map_display_init(map_frame_ctx_t *map);
+
+/*
+ * map_display_wid.c
+ */
+void map_display_wid_init(void);
+void map_display_wid_fini(void);
