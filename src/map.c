@@ -20,10 +20,49 @@ typedef boolean (*map_is_at_callback)(thing_templatep);
 map_frame_ctx_t *map_fg;
 map_frame_ctx_t *map_bg;
 
+static void map_init_tiles(map_frame_ctx_t *map);
+static void map_init_bounds(map_frame_ctx_t *map,
+                            uint32_t map_width,
+                            uint32_t map_height);
+
 /*
- * map_tiles_init
+ * map_init
  */
-void map_tiles_init (map_frame_ctx_t *map)
+boolean map_init (void)
+{
+    map_fg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+    map_bg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+
+    map_init_bounds(map_fg, MAP_WIDTH, MAP_HEIGHT);
+    map_init_bounds(map_bg, MAP_WIDTH / 2, MAP_HEIGHT / 2);
+
+    map_display_init(map_fg);
+    map_display_init(map_bg);
+
+    map_init_tiles(map_fg);
+    map_init_tiles(map_bg);
+
+    map_move_delta_pixels(0, 0);
+
+    map_display_wid_init();
+
+    return (true);
+}
+
+/*
+ * map_fini
+ */
+void map_fini (void)
+{
+    myfree(map_fg);
+
+    map_display_wid_fini();
+}
+
+/*
+ * map_init_tiles
+ */
+static void map_init_tiles (map_frame_ctx_t *map)
 {
     const uint32_t sx = 0;
     const uint32_t ex = map->map_width;
@@ -44,11 +83,11 @@ void map_tiles_init (map_frame_ctx_t *map)
 }
 
 /*
- * map_tiles_bounds_init
+ * map_init_bounds
  */
-void map_tiles_bounds_init (map_frame_ctx_t *map,
-                            uint32_t map_width,
-                            uint32_t map_height)
+static void map_init_bounds (map_frame_ctx_t *map,
+                             uint32_t map_width,
+                             uint32_t map_height)
 {
     uint32_t width = global_config.video_pix_width;
     uint32_t height = global_config.video_pix_height;
@@ -130,37 +169,6 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
     map_bg->py =
         ((float)(map_bg->map_height - map_bg->tiles_per_screen_y) *
             TILE_WIDTH) * py;
-}
-
-/*
- * map_init
- */
-boolean map_init (void)
-{
-    map_fg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
-    map_bg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
-
-    map_tiles_bounds_init(map_fg, MAP_WIDTH, MAP_HEIGHT);
-    map_tiles_bounds_init(map_bg, MAP_WIDTH / 2, MAP_HEIGHT / 2);
-
-    map_display_init(map_fg);
-    map_display_init(map_bg);
-
-    map_tiles_init(map_fg);
-    map_tiles_init(map_bg);
-
-    map_move_delta_pixels(0, 0);
-
-    map_display_wid_init();
-
-    return (true);
-}
-
-void map_fini (void)
-{
-    myfree(map_fg);
-
-    map_display_wid_fini();
 }
 
 static boolean map_is_x_at (levelp level,

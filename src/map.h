@@ -391,10 +391,6 @@ extern map_frame_ctx_t *map_bg;
 /*
  * map.c
  */
-void map_tiles_init(map_frame_ctx_t *map);
-void map_tiles_bounds_init(map_frame_ctx_t *map,
-                           uint32_t map_width,
-                           uint32_t map_height);
 void map_move_delta_pixels(int32_t dx, int32_t dy);
 boolean map_init(void);
 void map_fini(void);
