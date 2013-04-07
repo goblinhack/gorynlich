@@ -8,7 +8,7 @@
 #define nENABLE_ASSERT              // DIE on errors
 #define nENABLE_TREE_SANITY         // Slow tree sanity
 #define nENABLE_DEBUG               // More debugs
-#define  ENABLE_VIDEO_SYNC          // Vertical sync
+#define nENABLE_VIDEO_SYNC          // Vertical sync
 #define nENABLE_INVERTED_DISPLAY    // For running on a Mac with inverted gfx
 #define nENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #define nENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures

@@ -681,7 +681,6 @@ void sdl_loop (void)
     boolean init_done = false;
     int32_t found;
     int32_t i;
-    char fps_text[10] = {0};
     uint16_t frames = 0;
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
@@ -781,18 +780,6 @@ void sdl_loop (void)
          */
         int32_t timestamp_now = time_get_time_milli();
 
-        if (timestamp_now - timestamp_then2 >= 1000) {
-
-            timestamp_then2 = timestamp_now;
-
-            /*
-             * Update FSP counter.
-             */
-            snprintf(fps_text, sizeof(fps_text), "%u", frames);
-
-            frames = 0;
-        }
-
         if (timestamp_now - timestamp_then > 10) {
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
@@ -859,7 +846,23 @@ void sdl_loop (void)
          * FPS counter.
          */
         if (fps_enabled) {
+
+            static char fps_text[10] = {0};
+
+            if (timestamp_now - timestamp_then2 >= 1000) {
+
+                timestamp_then2 = timestamp_now;
+
+                /*
+                 * Update FPS counter.
+                 */
+                snprintf(fps_text, sizeof(fps_text), "%u", frames);
+
+                frames = 0;
+            }
+
             glcolor(RED);
+
             ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
         }
 
