@@ -54,7 +54,9 @@ boolean map_init (void)
  */
 void map_fini (void)
 {
-    myfree(map_fg);
+    if (map_fg) {
+        myfree(map_fg);
+    }
 
     map_display_wid_fini();
 }

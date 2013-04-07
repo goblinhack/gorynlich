@@ -21,8 +21,7 @@ static boolean resource_init_1 (void *context)
 
 static boolean resource_init_2 (void *context)
 {
-    return (tex_load("data/gfx/explosion.png",
-                     "explosion") != 0);
+    return (true);
 }
 
 static boolean resource_init_3 (void *context)
@@ -32,20 +31,17 @@ static boolean resource_init_3 (void *context)
 
 static boolean resource_init_4 (void *context)
 {
-    return (tex_load("data/gfx/help1.png",
-                     "help1") != 0);
+    return (true);
 }
 
 static boolean resource_init_5 (void *context)
 {
-    return (tex_load("data/gfx/help2.png",
-                     "help2") != 0);
+    return (true);
 }
 
 static boolean resource_init_6 (void *context)
 {
-    return (tex_load("data/gfx/help3.png",
-                     "help3") != 0);
+    return (true);
 }
 
 static boolean resource_init_7 (void *context)
@@ -80,26 +76,22 @@ static boolean resource_init_12 (void *context)
 
 static boolean resource_init_13 (void *context)
 {
-    return (tex_load("data/gfx/pipes.png",
-                     "pipes") != 0);
+    return (true);
 }
 
 static boolean resource_init_14 (void *context)
 {
-    return (tex_load("data/gfx/plant.png",
-                     "plant") != 0);
+    return (true);
 }
 
 static boolean resource_init_15 (void *context)
 {
-    return (tex_load("data/gfx/road.png",
-                     "road") != 0);
+    return (true);
 }
 
 static boolean resource_init_16 (void *context)
 {
-    return (tex_load("data/gfx/rocket.png",
-                     "rocket") != 0);
+    return (true);
 }
 
 static boolean resource_init_17 (void *context)
@@ -109,20 +101,17 @@ static boolean resource_init_17 (void *context)
 
 static boolean resource_init_18 (void *context)
 {
-    return (tex_load("data/gfx/sprites_large.png",
-                     "sprites_large") != 0);
+    return (true);
 }
 
 static boolean resource_init_19 (void *context)
 {
-    return (tex_load("data/gfx/sprites_med.png",
-                     "sprites_med") != 0);
+    return (true);
 }
 
 static boolean resource_init_20 (void *context)
 {
-    return (tex_load("data/gfx/sprites_med2.png",
-                     "sprites_med2") != 0);
+    return (true);
 }
 
 static boolean resource_init_21 (void *context)
@@ -134,28 +123,146 @@ static boolean resource_init_21 (void *context)
 
 static boolean resource_init_22 (void *context)
 {
-    return (tex_load("data/gfx/stars.png",
-                     "stars") != 0);
+    return (true);
 }
 
 static boolean resource_init_23 (void *context)
 {
-    tile_load("sprites_small", 8, 8,
-              13,
-              "m",
-              "a",
-              "i",
-              "l",
-              "s",
-              "n",
-              "unused1",
-              "food1",
-              "noentry",
-              "floor1",
-              "floor2",
-              "floor3",
-              "floor4"
-              );
+    static const char *small_tiles[] = {
+        "space",
+        "rock1",
+        "rock2",
+        "rock3",
+        "rock4",
+        "rock5",
+        "rock6",
+        "rock7",
+        "rock-tl1",
+        "rock-tl2",
+        "rock-tl3",
+        "rock-tr1",
+        "rock-tr2",
+        "rock-tr3",
+        "rock-bl1",
+        "rock-bl2",
+        "rock-bl3",
+        "rock-br1",
+        "rock-br2",
+        "rock-br3",
+        "rock-left1",
+        "rock-left2",
+        "rock-left3",
+        "rock-right1",
+        "rock-right2",
+        "rock-right3",
+        "rock-top1",
+        "rock-top2",
+        "rock-top3",
+        "rock-bot1",
+        "rock-bot2",
+        "rock-bot3",
+        "rock-updown1",
+        "rock-updown2",
+        "rock-updown3",
+        "rock-leftright1",
+        "rock-leftright2",
+        "rock-leftright3",
+        "rock-node1",
+        "rock-node2",
+        "rock-node3",
+        "rock-node4",
+        "rock-node5",
+        "rock-node6",
+        "rock-x",
+        "rock-x-tl",
+        "rock-x-tr",
+        "rock-x-br",
+        "rock-x-bl",
+        "rock-t-x-180",
+        "rock-t-x-270",
+        "rock-t-x",
+        "rock-t-x-90",
+        "rock-dot-tl",
+        "rock-dot-tr",
+        "rock-dot-br",
+        "rock-dot-bl",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        // ----------------------------------------------------------------
+        "rock8",
+        "rock9",
+        "rock10",
+        "rock11",
+        "rock12",
+        "rock13",
+        "rock14",
+        "rock15",
+        "rock-tl2-1",
+        "rock-tl2-2",
+        "rock-tl2-3",
+        "rock-tr2-1",
+        "rock-tr2-2",
+        "rock-tr2-3",
+        "rock-bl2-1",
+        "rock-bl2-2",
+        "rock-bl2-3",
+        "rock-br2-1",
+        "rock-br2-2",
+        "rock-br2-3",
+        "rock-left2-1",
+        "rock-left2-2",
+        "rock-left2-3",
+        "rock-right2-1",
+        "rock-right2-2",
+        "rock-right2-3",
+        "rock-top2-1",
+        "rock-top2-2",
+        "rock-top2-3",
+        "rock-bot2-1",
+        "rock-bot2-2",
+        "rock-bot2-3",
+        "rock-left3-1",
+        "rock-left3-2",
+        "rock-left3-3",
+        "rock-right3-1",
+        "rock-right3-2",
+        "rock-right3-3",
+        "rock-top3-1",
+        "rock-top3-2",
+        "rock-top3-3",
+        "rock-bot3-1",
+        "rock-bot3-2",
+        "rock-bot3-3",
+        "rock-left4-1",
+        "rock-left4-2",
+        "rock-left4-3",
+        "rock-right4-1",
+        "rock-right4-2",
+        "rock-right4-3",
+        "rock-top4-1",
+        "rock-top4-2",
+        "rock-top4-3",
+        "rock-bot4-1",
+        "rock-bot4-2",
+        "rock-bot4-3",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        // ----------------------------------------------------------------
+    };
+
+    tile_load_arr("sprites_small", 8, 8,
+                  ARRAY_SIZE(small_tiles), small_tiles);
 
     thing_template_load("data/things/wall");
 
