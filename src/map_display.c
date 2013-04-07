@@ -13,6 +13,7 @@
 #include "tex.h"
 #include "map_display.h"
 #include "wid.h"
+#include "ttf.h"
 
 /*
  * QUAD per array element.
@@ -41,18 +42,31 @@ typedef struct {
     uint16_t tile;
 } map_tile_t;
 
-#define MAP_CHUNK_WIDTH 1024
-#define MAP_CHUNK_HEIGHT 4096
-#define MAP_CHUNKS_WIDTH 3
+#define MAP_WIDTH 256
+#define MAP_HEIGHT 256
 
 /*
  * All the rendering info for one parallax frame of tiles.
  */
 typedef struct {
     /*
+     * The top left corner tile we are drawing on screen.
+     */
+    uint32_t mx;
+    uint32_t my;
+
+    /*
+     * The tile extents of the map.
+     */
+    uint32_t min_x;
+    uint32_t max_x;
+    uint32_t min_y;
+    uint32_t max_y;
+
+    /*
      * All the tiles in this frame.
      */
-    map_tile_t tiles[MAP_CHUNK_WIDTH * MAP_CHUNKS_WIDTH][MAP_CHUNK_HEIGHT];
+    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT];
 
     /*
      * This is the huge buffer that contains all arrays.
@@ -90,12 +104,15 @@ typedef struct {
     GLfloat tex_float_width;
     GLfloat tex_float_height;
 
+    /*
+     * How many tiles on screen at a time?
+     */
+    uint16_t tiles_per_screen_x;
+    uint16_t tiles_per_screen_y;
 } map_frame_ctx_t;
 
 static map_frame_ctx_t *map;
 static widp wid_map;
-static uint16_t mx;
-static uint16_t my;
 
 /*
  * map_tile_to_tex_coords
@@ -120,14 +137,14 @@ map_tile_to_tex_coords (map_frame_ctx_t *map,
 }
 
 /*
- * map_chunk_init
+ * map_tiles_init
  */
-static void map_chunk_init (map_frame_ctx_t *map, uint32_t chunk)
+static void map_tiles_init (map_frame_ctx_t *map)
 {
-    const uint32_t sx = chunk * MAP_CHUNK_WIDTH;
-    const uint32_t ex = (chunk+1) * MAP_CHUNK_WIDTH;
+    const uint32_t sx = 0;
+    const uint32_t ex = MAP_WIDTH;
     const uint32_t sy = 0;
-    const uint32_t ey = MAP_CHUNK_HEIGHT;
+    const uint32_t ey = MAP_HEIGHT;
     uint32_t x;
     uint32_t y;
     uint32_t cnt = 0;
@@ -143,15 +160,32 @@ static void map_chunk_init (map_frame_ctx_t *map, uint32_t chunk)
 }
 
 /*
- * map_chunks_init
+ * map_tiles_bounds_init
  */
-static void map_chunks_init (map_frame_ctx_t *map)
+static void map_tiles_bounds_init (map_frame_ctx_t *map)
 {
-    uint32_t chunk;
+    uint32_t width = global_config.video_pix_width;
+    uint32_t height = global_config.video_pix_height;
 
-    for (chunk = 0; chunk < MAP_CHUNKS_WIDTH; chunk++) {
-        map_chunk_init(map, chunk);
-    }
+    map->tiles_per_screen_x = width / TILE_WIDTH;
+    map->tiles_per_screen_y = height / TILE_WIDTH;
+
+    /*
+     * Absolute map bounds.
+     */
+    map->min_x = 0;
+    map->max_x = MAP_WIDTH - map->tiles_per_screen_x;
+    map->min_y = 0;
+    map->max_y = MAP_HEIGHT - map->tiles_per_screen_y;
+
+    /*
+     * Where we start off on the map.
+     */
+    map->mx = MAP_WIDTH / 2;
+    map->mx -= map->tiles_per_screen_x / 2;
+
+    map->my = MAP_HEIGHT / 2;
+    map->my -= map->tiles_per_screen_y / 2;
 }
 
 /*
@@ -167,8 +201,8 @@ static void map_gl_init (map_frame_ctx_t *map)
     /*
      * Screen size.
      */
-    uint16_t width = global_config.video_pix_width;
-    uint16_t height = global_config.video_pix_height;
+    uint32_t width = global_config.video_pix_width;
+    uint32_t height = global_config.video_pix_height;
 
     /*
      * If the screen size has changed or this is the first run, allocate our
@@ -224,19 +258,51 @@ static boolean wid_map_key_event (widp w, const SDL_keysym *key)
 {
     switch (key->sym) {
         case SDLK_LEFT:
-            mx--;
+            if (map->mx == map->min_x) {
+                return (true);
+            }
+
+            map->mx--;
+
+            if (map->mx < map->min_x) {
+                map->mx = map->min_x;
+            }
             return (true);
 
         case SDLK_RIGHT:
-            mx++;
+            if (map->mx == map->max_x) {
+                return (true);
+            }
+
+            map->mx++;
+
+            if (map->mx > map->max_x) {
+                map->mx = map->max_x;
+            }
             return (true);
 
         case SDLK_UP:
-            my--;
+            if (map->my == map->min_y) {
+                return (true);
+            }
+
+            map->my--;
+
+            if (map->my < map->min_y) {
+                map->my = map->min_y;
+            }
             return (true);
 
         case SDLK_DOWN:
-            my++;
+            if (map->my == map->max_y) {
+                return (true);
+            }
+
+            map->my++;
+
+            if (map->my > map->max_y) {
+                map->my = map->max_y;
+            }
             return (true);
 
         default:
@@ -285,7 +351,7 @@ static void map_wid_create (void)
  *
  * Render one frame of the map.
  */
-static void map_display_ (map_frame_ctx_t *map, uint16_t mx, uint16_t my)
+static void map_display_ (map_frame_ctx_t *map)
 {
     glBindTexture(GL_TEXTURE_2D, map->bind);
     glcolor(WHITE);
@@ -333,8 +399,9 @@ static void map_display_ (map_frame_ctx_t *map, uint16_t mx, uint16_t my)
 
     bufp = map->gl_array_buf;
 
-    uint16_t cx = mx;
-    uint16_t cy = my;
+    uint16_t cx = map->mx;
+    uint16_t cy = map->my;
+    boolean first = true;
 
     left = 0;
 
@@ -342,7 +409,7 @@ static void map_display_ (map_frame_ctx_t *map, uint16_t mx, uint16_t my)
 
         right = left + TILE_WIDTH;
         top = 0;
-        cy = my;
+        cy = map->my;
         y = 0;
 
         map_tile = &map->tiles[cx][cy];
@@ -358,9 +425,11 @@ static void map_display_ (map_frame_ctx_t *map, uint16_t mx, uint16_t my)
         /*
          * Repeat the first vertex so we create a degenerate triangle.
          */
-        if (cx != mx) {
+        if (!first) {
             gl_push_texcoord(&bufp, tex_left,  tex_top);
             gl_push_vertex(&bufp, left,  top);
+        } else {
+            first = false;
         }
 
         for (y = 0;
@@ -414,7 +483,7 @@ static void map_display_ (map_frame_ctx_t *map, uint16_t mx, uint16_t my)
                     (NUMBER_DIMENSIONS_PER_COORD * NUMBER_ARRAY_ELEM_ARRAYS);
 
     glTexCoordPointer(
-        NUMBER_DIMENSIONS_PER_COORD, // (x,y)
+        NUMBER_DIMENSIONS_PER_COORD, // (u,v)
         GL_FLOAT,
         NUMBER_BYTES_PER_VERTICE * 2,
         map->gl_array_buf);
@@ -436,6 +505,71 @@ static void map_display_ (map_frame_ctx_t *map, uint16_t mx, uint16_t my)
 }
 
 /*
+ * map_display_debug
+ *
+ * Render one frame of the map.
+ */
+static void map_display_debug (map_frame_ctx_t *map)
+{
+    if (!map) {
+        return;
+    }
+
+    uint32_t width = global_config.video_pix_width;
+
+    static char text[20] = {0};
+
+    snprintf(text, sizeof(text), "(%d,%d)", map->mx, map->my);
+
+    glcolor(RED);
+
+    ttf_puts(small_font, text, width / 2, 0, 1.0, 1.0, true);
+
+    float map_scale = 10;
+
+    float dx = 0;
+    float dy = 100;
+
+    float x1 = 0;
+    float x2 = ((float)MAP_WIDTH) / map_scale;
+    float y1 = 0;
+    float y2 = ((float)MAP_HEIGHT) / map_scale;
+
+    x1 += dx;
+    x2 += dx;
+    y1 += dy;
+    y2 += dy;
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    color c = BLUE;
+    c.a = 100;
+    glcolor(c);
+    gl_blitquad(x1,y1,x2,y2);
+
+    x1 = map->mx;
+    x2 = x1 + map->tiles_per_screen_x;
+
+    y1 = map->my;
+    y2 = y1 + map->tiles_per_screen_y;
+
+    x1 /= map_scale;
+    x2 /= map_scale;
+    y1 /= map_scale;
+    y2 /= map_scale;
+
+    x1 += dx;
+    x2 += dx;
+    y1 += dy;
+    y2 += dy;
+
+    c = GREEN;
+    c.a = 200;
+    glcolor(c);
+    gl_blitquad(x1,y1,x2,y2);
+}
+
+/*
  * map_display
  *
  * Render one frame of the map.
@@ -446,7 +580,11 @@ void map_display (void)
         return;
     }
 
-    map_display_(map, mx, my);
+    map_display_(map);
+
+    if (fps_enabled) {
+        map_display_debug(map);
+    }
 }
 
 /*
@@ -456,11 +594,16 @@ boolean map_init (void)
 {
     map = myzalloc(sizeof(map_frame_ctx_t), "map frame");
 
+    map_tiles_bounds_init(map);
+
     map_gl_init(map);
 
-    map_chunks_init(map);
+    map_tiles_init(map);
 
     map_wid_create();
+
+    map->mx = MAP_WIDTH / 2;
+    map->my = MAP_HEIGHT / 2;
 
     return (true);
 }
