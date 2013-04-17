@@ -46,6 +46,21 @@ boolean thing_tile_is_join_t180_3(thing_tilep);
 boolean thing_tile_is_join_t270_1(thing_tilep);
 boolean thing_tile_is_join_t270_2(thing_tilep);
 boolean thing_tile_is_join_t270_3(thing_tilep);
+boolean thing_tile_is_join_x(thing_tilep);
+boolean thing_tile_is_join_x1(thing_tilep);
+boolean thing_tile_is_join_x1_270(thing_tilep);
+boolean thing_tile_is_join_x1_180(thing_tilep);
+boolean thing_tile_is_join_x1_90(thing_tilep);
+boolean thing_tile_is_join_x2(thing_tilep);
+boolean thing_tile_is_join_x2_270(thing_tilep);
+boolean thing_tile_is_join_x2_180(thing_tilep);
+boolean thing_tile_is_join_x2_90(thing_tilep);
+boolean thing_tile_is_join_x3(thing_tilep);
+boolean thing_tile_is_join_x3_180(thing_tilep);
+boolean thing_tile_is_join_x4(thing_tilep);
+boolean thing_tile_is_join_x4_270(thing_tilep);
+boolean thing_tile_is_join_x4_180(thing_tilep);
+boolean thing_tile_is_join_x4_90(thing_tilep);
 boolean thing_tile_is_yyy1(thing_tilep);
 boolean thing_tile_is_yyy2(thing_tilep);
 boolean thing_tile_is_yyy3(thing_tilep);
@@ -100,7 +115,21 @@ thing_tilep thing_tile_find(thing_templatep,
             boolean is_join_t180_3,
             boolean is_join_t270_1,
             boolean is_join_t270_2,
-            boolean is_join_t270_3);
+            boolean is_join_t270_3,
+            boolean is_join_x1,
+            boolean is_join_x1_270,
+            boolean is_join_x1_180,
+            boolean is_join_x1_90,
+            boolean is_join_x2,
+            boolean is_join_x2_270,
+            boolean is_join_x2_180,
+            boolean is_join_x2_90,
+            boolean is_join_x3,
+            boolean is_join_x3_180,
+            boolean is_join_x4,
+            boolean is_join_x4_270,
+            boolean is_join_x4_180,
+            boolean is_join_x4_90);
 
 thing_tilep thing_tile_first(tree_rootp root);
 thing_tilep thing_tile_next(tree_rootp root, thing_tilep in);

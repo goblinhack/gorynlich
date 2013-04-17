@@ -65,6 +65,20 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_t270_1", t->is_join_t270_1);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_t270_2", t->is_join_t270_2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_t270_3", t->is_join_t270_3);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x1", t->is_join_x1);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x1_270", t->is_join_x1_270);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x1_180", t->is_join_x1_180);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x1_90", t->is_join_x1_90);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x2", t->is_join_x2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x2_270", t->is_join_x2_270);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x2_180", t->is_join_x2_180);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x2_90", t->is_join_x2_90);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x3", t->is_join_x3);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x3_180", t->is_join_x3_180);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4", t->is_join_x4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_270", t->is_join_x4_270);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_180", t->is_join_x4_180);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_90", t->is_join_x4_90);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy1", t->is_yyy1);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy2", t->is_yyy2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy3", t->is_yyy3);
@@ -428,6 +442,7 @@ boolean thing_tile_is_join_t180_3 (thing_tilep t)
 {
     return (t->is_join_t180_3);
 }
+
 boolean thing_tile_is_join_t270_1 (thing_tilep t)
 {
     return (t->is_join_t270_1);
@@ -441,6 +456,76 @@ boolean thing_tile_is_join_t270_2 (thing_tilep t)
 boolean thing_tile_is_join_t270_3 (thing_tilep t)
 {
     return (t->is_join_t270_3);
+}
+
+boolean thing_tile_is_join_x1 (thing_tilep t)
+{
+    return (t->is_join_x1);
+}
+
+boolean thing_tile_is_join_x1_270 (thing_tilep t)
+{
+    return (t->is_join_x1_270);
+}
+
+boolean thing_tile_is_join_x1_180 (thing_tilep t)
+{
+    return (t->is_join_x1_180);
+}
+
+boolean thing_tile_is_join_x1_90 (thing_tilep t)
+{
+    return (t->is_join_x1_90);
+}
+
+boolean thing_tile_is_join_x2 (thing_tilep t)
+{
+    return (t->is_join_x2);
+}
+
+boolean thing_tile_is_join_x2_270 (thing_tilep t)
+{
+    return (t->is_join_x2_270);
+}
+
+boolean thing_tile_is_join_x2_180 (thing_tilep t)
+{
+    return (t->is_join_x2_180);
+}
+
+boolean thing_tile_is_join_x2_90 (thing_tilep t)
+{
+    return (t->is_join_x2_90);
+}
+
+boolean thing_tile_is_join_x3 (thing_tilep t)
+{
+    return (t->is_join_x3);
+}
+
+boolean thing_tile_is_join_x3_180 (thing_tilep t)
+{
+    return (t->is_join_x3_180);
+}
+
+boolean thing_tile_is_join_x4 (thing_tilep t)
+{
+    return (t->is_join_x4);
+}
+
+boolean thing_tile_is_join_x4_270 (thing_tilep t)
+{
+    return (t->is_join_x4_270);
+}
+
+boolean thing_tile_is_join_x4_180 (thing_tilep t)
+{
+    return (t->is_join_x4_180);
+}
+
+boolean thing_tile_is_join_x4_90 (thing_tilep t)
+{
+    return (t->is_join_x4_90);
 }
 
 boolean thing_tile_is_yyy1 (thing_tilep t)
@@ -576,7 +661,21 @@ thing_tilep thing_tile_find (thing_templatep t,
             boolean is_join_t180_3,
             boolean is_join_t270_1,
             boolean is_join_t270_2,
-            boolean is_join_t270_3)
+            boolean is_join_t270_3,
+            boolean is_join_x1,
+            boolean is_join_x1_270,
+            boolean is_join_x1_180,
+            boolean is_join_x1_90,
+            boolean is_join_x2,
+            boolean is_join_x2_270,
+            boolean is_join_x2_180,
+            boolean is_join_x2_90,
+            boolean is_join_x3,
+            boolean is_join_x3_180,
+            boolean is_join_x4,
+            boolean is_join_x4_270,
+            boolean is_join_x4_180,
+            boolean is_join_x4_90)
 {
     static const uint32_t max_candidates = 10;
     thing_tilep candidates[max_candidates];
@@ -724,6 +823,66 @@ thing_tilep thing_tile_find (thing_templatep t,
             }
         } else if (is_join_br2) {
             if (tile->is_join_br2) {
+                possible = tile;
+            }
+        } else if (is_join_x) {
+            if (tile->is_join_x) {
+                possible = tile;
+            }
+        } else if (is_join_x1) {
+            if (tile->is_join_x1) {
+                possible = tile;
+            }
+        } else if (is_join_x1_270) {
+            if (tile->is_join_x1_270) {
+                possible = tile;
+            }
+        } else if (is_join_x1_180) {
+            if (tile->is_join_x1_180) {
+                possible = tile;
+            }
+        } else if (is_join_x1_90) {
+            if (tile->is_join_x1_90) {
+                possible = tile;
+            }
+        } else if (is_join_x2) {
+            if (tile->is_join_x2) {
+                possible = tile;
+            }
+        } else if (is_join_x2_270) {
+            if (tile->is_join_x2_270) {
+                possible = tile;
+            }
+        } else if (is_join_x2_180) {
+            if (tile->is_join_x2_180) {
+                possible = tile;
+            }
+        } else if (is_join_x2_90) {
+            if (tile->is_join_x2_90) {
+                possible = tile;
+            }
+        } else if (is_join_x3) {
+            if (tile->is_join_x3) {
+                possible = tile;
+            }
+        } else if (is_join_x3_180) {
+            if (tile->is_join_x3_180) {
+                possible = tile;
+            }
+        } else if (is_join_x4) {
+            if (tile->is_join_x4) {
+                possible = tile;
+            }
+        } else if (is_join_x4_270) {
+            if (tile->is_join_x4_270) {
+                possible = tile;
+            }
+        } else if (is_join_x4_180) {
+            if (tile->is_join_x4_180) {
+                possible = tile;
+            }
+        } else if (is_join_x4_90) {
+            if (tile->is_join_x4_90) {
                 possible = tile;
             }
         }

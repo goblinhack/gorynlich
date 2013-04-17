@@ -6,204 +6,452 @@
  is_wall
  tiles={
   tile={
-   tile="grass-block"
+   tile="rock1"
    is_join_block
   }
   tile={
-   tile="grass-horiz"
-   is_join_horiz
+   tile="rock2"
+   is_join_block
   }
   tile={
-   tile="grass-vert"
-   is_join_vert
+   tile="rock3"
+   is_join_block
   }
   tile={
-   tile="grass-node"
-   is_join_node
+   tile="rock4"
+   is_join_block
   }
   tile={
-   tile="grass-left"
-   is_join_left
+   tile="rock5"
+   is_join_block
   }
   tile={
-   tile="grass-right"
-   is_join_right
+   tile="rock6"
+   is_join_block
   }
   tile={
-   tile="grass-top"
-   is_join_top
+   tile="rock7"
+   is_join_block
   }
   tile={
-   tile="grass-bot"
-   is_join_bot
-  }
-  tile={
-   tile="grass-tl"
+   tile="rock-tl1"
    is_join_tl
   }
   tile={
-   tile="grass-tr"
+   tile="rock-tl2"
+   is_join_tl
+  }
+  tile={
+   tile="rock-tl3
+   is_join_tl
+  }
+  tile={
+   tile="rock-tr1"
    is_join_tr
   }
   tile={
-   tile="grass-bl"
+   tile="rock-tr2"
+   is_join_tr
+  }
+  tile={
+   tile="rock-tr3"
+   is_join_tr
+  }
+  tile={
+   tile="rock-bl1"
    is_join_bl
   }
   tile={
-   tile="grass-br"
+   tile="rock-bl2"
+   is_join_bl
+  }
+  tile={
+   tile="rock-bl3"
+   is_join_bl
+  }
+  tile={
+   tile="rock-br1"
    is_join_br
   }
   tile={
-   tile="grass-t"
-   is_join_t
+   tile="rock-br2"
+   is_join_br
   }
   tile={
-   tile="grass-t90"
-   is_join_t90
+   tile="rock-br3"
+   is_join_br
   }
   tile={
-   tile="grass-t180"
-   is_join_t180
+   tile="rock-left1"
+   is_join_left
   }
   tile={
-   tile="grass-t270"
-   is_join_t270
+   tile="rock-left2"
+   is_join_left
   }
   tile={
-   tile="grass-x"
+   tile="rock-left3"
+   is_join_left
+  }
+  tile={
+   tile="rock-right1"
+   is_join_right
+  }
+  tile={
+   tile="rock-right2"
+   is_join_right
+  }
+  tile={
+   tile="rock-right3"
+   is_join_right
+  }
+  tile={
+   tile="rock-top1"
+   is_join_top
+  }
+  tile={
+   tile="rock-top2"
+   is_join_top
+  }
+  tile={
+   tile="rock-top3"
+   is_join_top
+  }
+  tile={
+   tile="rock-bot1"
+   is_join_bot
+  }
+  tile={
+   tile="rock-bot2"
+   is_join_bot
+  }
+  tile={
+   tile="rock-bot3"
+   is_join_bot
+  }
+  tile={
+   tile="rock-vert1"
+   is_join_vert
+  }
+  tile={
+   tile="rock-vert2"
+   is_join_vert
+  }
+  tile={
+   tile="rock-vert3"
+   is_join_vert
+  }
+  tile={
+   tile="rock-horiz1"
+   is_join_horiz
+  }
+  tile={
+   tile="rock-horiz2"
+   is_join_horiz
+  }
+  tile={
+   tile="rock-horiz3"
+   is_join_horiz
+  }
+  tile={
+   tile="rock-node1"
    is_join_x
   }
   tile={
-   tile="grass-tl2"
-   is_join_tl2
+   tile="rock-node2"
+   is_join_x
   }
   tile={
-   tile="grass-tr2"
-   is_join_tr2
+   tile="rock-node3"
+   is_join_x
   }
   tile={
-   tile="grass-bl2"
-   is_join_bl2
+   tile="rock-node4"
+   is_join_x
   }
   tile={
-   tile="grass-br2"
-   is_join_br2
+   tile="rock-node5"
+   is_join_x
   }
   tile={
-   tile="grass-t270-1"
-   is_join_t270_1
+   tile="rock-node6"
+   is_join_x
   }
   tile={
-   tile="grass-t270-2"
-   is_join_t270_2
+   tile="rock-x"
+   is_join_x
   }
   tile={
-   tile="grass-t270-3"
-   is_join_t270_3
+   tile="rock-x-tl"
+   is_join_x_tl
   }
   tile={
-   tile="grass-t90-1"
-   is_join_t90_1
+   tile="rock-x-tr"
+   is_join_x_tr
   }
   tile={
-   tile="grass-t90-2"
-   is_join_t90_2
+   tile="rock-x-br"
+   is_join_x_br
   }
   tile={
-   tile="grass-t90-3"
-   is_join_t90_3
+   tile="rock-x-bl"
+   is_join_x_bl
   }
   tile={
-   tile="grass-t-1"
-   is_join_t_1
+   tile="rock-t-x-180"
+   is_join_t_x_180
   }
   tile={
-   tile="grass-t-2"
-   is_join_t_2
+   tile="rock-t-x-270"
+   is_join_t_x_270
   }
   tile={
-   tile="grass-t-3"
-   is_join_t_3
+   tile="rock-t-x"
+   is_join_t_x
   }
   tile={
-   tile="grass-t180-1"
-   is_join_t180_1
+   tile="rock-t-x-90"
+   is_join_t_x_90
   }
   tile={
-   tile="grass-t180-2"
-   is_join_t180_2
+   tile="rock-dot-tl"
+   is_join_dot_tl
   }
   tile={
-   tile="grass-t180-3"
-   is_join_t180_3
-  }
- }
- tiles2={
-  tile={
-   tile="space"
+   tile="rock-dot-tr"
+   is_join_dot_tr
   }
   tile={
-   tile="space"
+   tile="rock-dot-br"
+   is_join_dot_br
   }
   tile={
-   tile="space"
+   tile="rock-dot-bl"
+   is_join_dot_bl
   }
   tile={
-   tile="space"
+   tile="rock8"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock9"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock10"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock11"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock12"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock13"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock14"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock15"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock-tl2-1"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock-tl2-2"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock-tl2-3"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock-tr2-1"
+   is_join_xxx
   }
   tile={
-   tile="space"
+   tile="rock-tr2-2"
+   is_join_xxx
   }
   tile={
-   tile="flower1"
+   tile="rock-tr2-3"
+   is_join_xxx
   }
   tile={
-   tile="flower2"
+   tile="rock-bl2-1"
+   is_join_xxx
   }
   tile={
-   tile="flower3"
+   tile="rock-bl2-2"
+   is_join_xxx
   }
   tile={
-   tile="flower4"
+   tile="rock-bl2-3"
+   is_join_xxx
   }
   tile={
-   tile="flower5"
+   tile="rock-br2-1"
+   is_join_xxx
   }
   tile={
-   tile="flower6"
+   tile="rock-br2-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-br2-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left2-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left2-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left2-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right2-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right2-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right2-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top2-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top2-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top2-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot2-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot2-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot2-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left3-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left3-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left3-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right3-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right3-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right3-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top3-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top3-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top3-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot3-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot3-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot3-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left4-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left4-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-left4-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right4-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right4-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-right4-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top4-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top4-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-top4-3"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot4-1"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot4-2"
+   is_join_xxx
+  }
+  tile={
+   tile="rock-bot4-3"
+   is_join_xxx
   }
  }
 }
