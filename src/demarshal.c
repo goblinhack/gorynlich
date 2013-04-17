@@ -1693,7 +1693,7 @@ boolean demarshal_named_uint16 (tree_demarshal *ctx, const char *name,
 }
 
 boolean demarshal_opt_named_uint16 (tree_demarshal *ctx, const char *name,
-                                uint16_t *out)
+                                    uint16_t *out)
 {
     ctx->peek = 1;
 
@@ -1705,7 +1705,7 @@ boolean demarshal_opt_named_uint16 (tree_demarshal *ctx, const char *name,
 }
 
 boolean demarshal_opt_def_named_uint16 (tree_demarshal *ctx, const char *name,
-                                    uint16_t *out, uint16_t def)
+                                        uint16_t *out, uint16_t def)
 {
     if (!demarshal_opt_named_uint16(ctx, name, out)) {
         *out = def;
@@ -1727,7 +1727,7 @@ boolean demarshal_uint8 (tree_demarshal *ctx, uint8_t *out)
 }
 
 boolean demarshal_named_uint8 (tree_demarshal *ctx, const char *name,
-                           uint8_t *out)
+                               uint8_t *out)
 {
     int64_t tmp;
     uint32_t rc;
@@ -1745,7 +1745,7 @@ boolean demarshal_named_uint8 (tree_demarshal *ctx, const char *name,
 }
 
 boolean demarshal_opt_named_uint8 (tree_demarshal *ctx, const char *name,
-                               uint8_t *out)
+                                   uint8_t *out)
 {
     ctx->peek = 1;
 
