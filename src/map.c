@@ -1443,6 +1443,20 @@ void map_fixup (levelp level)
     boolean is_join_t270_1;
     boolean is_join_t270_2;
     boolean is_join_t270_3;
+    boolean is_join_x1;
+    boolean is_join_x1_270;
+    boolean is_join_x1_180;
+    boolean is_join_x1_90;
+    boolean is_join_x2;
+    boolean is_join_x2_270;
+    boolean is_join_x2_180;
+    boolean is_join_x2_90;
+    boolean is_join_x3;
+    boolean is_join_x3_180;
+    boolean is_join_x4;
+    boolean is_join_x4_270;
+    boolean is_join_x4_180;
+    boolean is_join_x4_90;
     widp w;
 
     for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
@@ -1520,6 +1534,21 @@ void map_fixup (levelp level)
             is_join_t270_1 = false;
             is_join_t270_2 = false;
             is_join_t270_3 = false;
+            is_join_x = false;
+            is_join_x1 = false;
+            is_join_x1_270 = false;
+            is_join_x1_180 = false;
+            is_join_x1_90 = false;
+            is_join_x2 = false;
+            is_join_x2_270 = false;
+            is_join_x2_180 = false;
+            is_join_x2_90 = false;
+            is_join_x3 = false;
+            is_join_x3_180 = false;
+            is_join_x4 = false;
+            is_join_x4_270 = false;
+            is_join_x4_180 = false;
+            is_join_x4_90 = false;
 
             /*
              * a b c
@@ -1531,6 +1560,8 @@ void map_fixup (levelp level)
             } else if (b && d && f && h) {
                 if (!a && !c && !g && !i) {
                     is_join_x = true;
+                } else if (i) {
+                    is_join_tl = true;
                 } else {
                     is_join_block = true;
                 }
@@ -1544,6 +1575,11 @@ void map_fixup (levelp level)
                 } else {
                     is_join_t180 = true;
                 }
+            /*
+             * a b c
+             * d e f
+             * g h i
+             */
             } else if (d && f && h) {
                 if (g && h && i) {
                     is_join_t_3 = true;
@@ -1579,6 +1615,11 @@ void map_fixup (levelp level)
                 } else {
                     is_join_t90 = true;
                 }
+            /*
+             * a b c
+             * d e f
+             * g h i
+             */
             } else if (b && d && a) {
                 is_join_br2 = true;
             } else if (b && f && c) {
@@ -1587,6 +1628,11 @@ void map_fixup (levelp level)
                 is_join_tl2 = true;
             } else if (d && h && g) {
                 is_join_tr2 = true;
+            /*
+             * a b c
+             * d e f
+             * g h i
+             */
             } else if (b && d) {
                 is_join_br = true;
             } else if (b && f) {
@@ -1644,7 +1690,21 @@ void map_fixup (levelp level)
                         is_join_t180_3,
                         is_join_t270_1,
                         is_join_t270_2,
-                        is_join_t270_3);
+                        is_join_t270_3,
+                        is_join_x1,
+                        is_join_x1_270,
+                        is_join_x1_180,
+                        is_join_x1_90,
+                        is_join_x2,
+                        is_join_x2_270,
+                        is_join_x2_180,
+                        is_join_x2_90,
+                        is_join_x3,
+                        is_join_x3_180,
+                        is_join_x4,
+                        is_join_x4_270,
+                        is_join_x4_180,
+                        is_join_x4_90);
 
             if (!tile) {
 
@@ -1681,6 +1741,21 @@ void map_fixup (levelp level)
                 is_join_t270_1 = false;
                 is_join_t270_2 = false;
                 is_join_t270_3 = false;
+                is_join_x = false;
+                is_join_x1 = false;
+                is_join_x1_270 = false;
+                is_join_x1_180 = false;
+                is_join_x1_90 = false;
+                is_join_x2 = false;
+                is_join_x2_270 = false;
+                is_join_x2_180 = false;
+                is_join_x2_90 = false;
+                is_join_x3 = false;
+                is_join_x3_180 = false;
+                is_join_x4 = false;
+                is_join_x4_270 = false;
+                is_join_x4_180 = false;
+                is_join_x4_90 = false;
 
                 tile = thing_tile_find(e,
                             is_join_block,
@@ -1715,7 +1790,21 @@ void map_fixup (levelp level)
                             is_join_t180_3,
                             is_join_t270_1,
                             is_join_t270_2,
-                            is_join_t270_3);
+                            is_join_t270_3,
+                            is_join_x1,
+                            is_join_x1_270,
+                            is_join_x1_180,
+                            is_join_x1_90,
+                            is_join_x2,
+                            is_join_x2_270,
+                            is_join_x2_180,
+                            is_join_x2_90,
+                            is_join_x3,
+                            is_join_x3_180,
+                            is_join_x4,
+                            is_join_x4_270,
+                            is_join_x4_180,
+                            is_join_x4_90);
 
                 if (!tile) {
                     DIE("no joinable tile for %s", thing_template_name(e));
