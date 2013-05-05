@@ -16,7 +16,7 @@
 /*
  * Using static memory as these things never change once made.
  */
-#define THING_TEMPLATES_CHUNK_COUNT_MAX 256
+#define THING_TEMPLATES_CHUNK_COUNT_MAX 1024
 static thing_template thing_templates_chunk[THING_TEMPLATES_CHUNK_COUNT_MAX];
 static uint32_t thing_templates_chunk_count;
 

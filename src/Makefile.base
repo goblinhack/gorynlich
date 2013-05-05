@@ -1,4 +1,4 @@
-COMPILER_FLAGS=-Werror -g -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE # AUTOGEN
+COMPILER_FLAGS=-Werror -g -ggdb3 -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE # AUTOGEN
     
 CLANG_COMPILER_WARNINGS=-Wall -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-sign-conversion # AUTOGEN
 GCC_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN
