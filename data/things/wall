@@ -1,6 +1,6 @@
 {
  shortname="wall"
- tooltip="Garden wall"
+ tooltip="wall"
  z_depth=1
  z_order=0
  is_wall
@@ -34,424 +34,188 @@
    is_join_block
   }
   tile={
-   tile="rock-tl1"
-   is_join_tl
+   tile="rock1_is_join_node"
+   is_join_node
   }
   tile={
-   tile="rock-tl2"
-   is_join_tl
-  }
-  tile={
-   tile="rock-tl3
-   is_join_tl
-  }
-  tile={
-   tile="rock-tr1"
-   is_join_tr
-  }
-  tile={
-   tile="rock-tr2"
-   is_join_tr
-  }
-  tile={
-   tile="rock-tr3"
-   is_join_tr
-  }
-  tile={
-   tile="rock-bl1"
-   is_join_bl
-  }
-  tile={
-   tile="rock-bl2"
-   is_join_bl
-  }
-  tile={
-   tile="rock-bl3"
-   is_join_bl
-  }
-  tile={
-   tile="rock-br1"
-   is_join_br
-  }
-  tile={
-   tile="rock-br2"
-   is_join_br
-  }
-  tile={
-   tile="rock-br3"
-   is_join_br
-  }
-  tile={
-   tile="rock-left1"
+   tile="rock1_is_join_left"
    is_join_left
   }
   tile={
-   tile="rock-left2"
-   is_join_left
-  }
-  tile={
-   tile="rock-left3"
-   is_join_left
-  }
-  tile={
-   tile="rock-right1"
-   is_join_right
-  }
-  tile={
-   tile="rock-right2"
-   is_join_right
-  }
-  tile={
-   tile="rock-right3"
-   is_join_right
-  }
-  tile={
-   tile="rock-top1"
-   is_join_top
-  }
-  tile={
-   tile="rock-top2"
-   is_join_top
-  }
-  tile={
-   tile="rock-top3"
-   is_join_top
-  }
-  tile={
-   tile="rock-bot1"
+   tile="rock1_is_join_bot"
    is_join_bot
   }
   tile={
-   tile="rock-bot2"
-   is_join_bot
+   tile="rock1_is_join_right"
+   is_join_right
   }
   tile={
-   tile="rock-bot3"
-   is_join_bot
+   tile="rock1_is_join_top"
+   is_join_top
   }
   tile={
-   tile="rock-vert1"
-   is_join_vert
-  }
-  tile={
-   tile="rock-vert2"
-   is_join_vert
-  }
-  tile={
-   tile="rock-vert3"
-   is_join_vert
-  }
-  tile={
-   tile="rock-horiz1"
+   tile="rock1_is_join_horiz"
    is_join_horiz
   }
   tile={
-   tile="rock-horiz2"
-   is_join_horiz
+   tile="rock1_is_join_vert"
+   is_join_vert
   }
   tile={
-   tile="rock-horiz3"
-   is_join_horiz
+   tile="rock1_is_join_tl2"
+   is_join_tl2
   }
   tile={
-   tile="rock-node1"
+   tile="rock1_is_join_bl2"
+   is_join_bl2
+  }
+  tile={
+   tile="rock1_is_join_br2"
+   is_join_br2
+  }
+  tile={
+   tile="rock1_is_join_tr2"
+   is_join_tr2
+  }
+  tile={
+   tile="rock1_is_join_tl"
+   is_join_tl
+  }
+  tile={
+   tile="rock1_is_join_bl"
+   is_join_bl
+  }
+  tile={
+   tile="rock1_is_join_br"
+   is_join_br
+  }
+  tile={
+   tile="rock1_is_join_tr"
+   is_join_tr
+  }
+  tile={
+   tile="rock1_is_join_t270_3"
+   is_join_t270_3
+  }
+  tile={
+   tile="rock1_is_join_t180_3"
+   is_join_t180_3
+  }
+  tile={
+   tile="rock1_is_join_t90_3"
+   is_join_t90_3
+  }
+  tile={
+   tile="rock1_is_join_t_3"
+   is_join_t_3
+  }
+  tile={
+   tile="rock1_is_join_t270"
+   is_join_t270
+  }
+  tile={
+   tile="rock1_is_join_t180"
+   is_join_t180
+  }
+  tile={
+   tile="rock1_is_join_t90"
+   is_join_t90
+  }
+  tile={
+   tile="rock1_is_join_t"
+   is_join_t
+  }
+  tile={
+   tile="rock1_is_join_t270_2"
+   is_join_t270_2
+  }
+  tile={
+   tile="rock1_is_join_t180_2"
+   is_join_t180_2
+  }
+  tile={
+   tile="rock1_is_join_t90_2"
+   is_join_t90_2
+  }
+  tile={
+   tile="rock1_is_join_t_2"
+   is_join_t_2
+  }
+  tile={
+   tile="rock1_is_join_t270_1"
+   is_join_t270_1
+  }
+  tile={
+   tile="rock1_is_join_t180_1"
+   is_join_t180_1
+  }
+  tile={
+   tile="rock1_is_join_t90_1"
+   is_join_t90_1
+  }
+  tile={
+   tile="rock1_is_join_t_1"
+   is_join_t_1
+  }
+  tile={
+   tile="rock1_is_join_x"
    is_join_x
   }
   tile={
-   tile="rock-node2"
-   is_join_x
+   tile="rock1_is_join_x1"
+   is_join_x1
   }
   tile={
-   tile="rock-node3"
-   is_join_x
+   tile="rock1_is_join_x1_270"
+   is_join_x1_270
   }
   tile={
-   tile="rock-node4"
-   is_join_x
+   tile="rock1_is_join_x1_180"
+   is_join_x1_180
   }
   tile={
-   tile="rock-node5"
-   is_join_x
+   tile="rock1_is_join_x1_90"
+   is_join_x1_90
   }
   tile={
-   tile="rock-node6"
-   is_join_x
+   tile="rock1_is_join_x2"
+   is_join_x2
   }
   tile={
-   tile="rock-x"
-   is_join_x
+   tile="rock1_is_join_x2_270"
+   is_join_x2_270
   }
   tile={
-   tile="rock-x-tl"
-   is_join_x_tl
+   tile="rock1_is_join_x2_180"
+   is_join_x2_180
   }
   tile={
-   tile="rock-x-tr"
-   is_join_x_tr
+   tile="rock1_is_join_x2_90"
+   is_join_x2_90
   }
   tile={
-   tile="rock-x-br"
-   is_join_x_br
+   tile="rock1_is_join_x3"
+   is_join_x3
   }
   tile={
-   tile="rock-x-bl"
-   is_join_x_bl
+   tile="rock1_is_join_x3_180"
+   is_join_x3_180
   }
   tile={
-   tile="rock-t-x-180"
-   is_join_t_x_180
+   tile="rock1_is_join_x4"
+   is_join_x4
   }
   tile={
-   tile="rock-t-x-270"
-   is_join_t_x_270
+   tile="rock1_is_join_x4_270"
+   is_join_x4_270
   }
   tile={
-   tile="rock-t-x"
-   is_join_t_x
+   tile="rock1_is_join_x4_180"
+   is_join_x4_180
   }
   tile={
-   tile="rock-t-x-90"
-   is_join_t_x_90
-  }
-  tile={
-   tile="rock-dot-tl"
-   is_join_dot_tl
-  }
-  tile={
-   tile="rock-dot-tr"
-   is_join_dot_tr
-  }
-  tile={
-   tile="rock-dot-br"
-   is_join_dot_br
-  }
-  tile={
-   tile="rock-dot-bl"
-   is_join_dot_bl
-  }
-  tile={
-   tile="rock8"
-   is_join_xxx
-  }
-  tile={
-   tile="rock9"
-   is_join_xxx
-  }
-  tile={
-   tile="rock10"
-   is_join_xxx
-  }
-  tile={
-   tile="rock11"
-   is_join_xxx
-  }
-  tile={
-   tile="rock12"
-   is_join_xxx
-  }
-  tile={
-   tile="rock13"
-   is_join_xxx
-  }
-  tile={
-   tile="rock14"
-   is_join_xxx
-  }
-  tile={
-   tile="rock15"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-tl2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-tl2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-tl2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-tr2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-tr2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-tr2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bl2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bl2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bl2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-br2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-br2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-br2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot2-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot2-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot2-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left3-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left3-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left3-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right3-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right3-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right3-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top3-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top3-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top3-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot3-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot3-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot3-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left4-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left4-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-left4-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right4-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right4-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-right4-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top4-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top4-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-top4-3"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot4-1"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot4-2"
-   is_join_xxx
-  }
-  tile={
-   tile="rock-bot4-3"
-   is_join_xxx
+   tile="rock1_is_join_x4_90"
+   is_join_x4_90
   }
  }
 }

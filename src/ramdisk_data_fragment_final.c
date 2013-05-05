@@ -134,8 +134,8 @@ ramdisk_t ramdisk_data[] = {
     {
         /* filename */ "data/gfx/sprites_small.png",
         /* data     */ 0,
-        /* orig_len */ 40204,
-        /* len      */ 37031,
+        /* orig_len */ 19677,
+        /* len      */ 16479,
     },
     {
         /* filename */ "data/gfx/stars.png",
@@ -314,8 +314,8 @@ ramdisk_t ramdisk_data[] = {
     {
         /* filename */ "data/things/wall",
         /* data     */ 0,
-        /* orig_len */ 5577,
-        /* len      */ 521,
+        /* orig_len */ 3075,
+        /* len      */ 383,
     },
     {
         /* filename */ "data/ttf/large.ttf_pointsize40.data",

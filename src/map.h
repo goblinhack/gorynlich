@@ -340,13 +340,6 @@ typedef struct {
      */
     uint32_t map_width;
     uint32_t map_height;
-    map_tile_t *tiles;
-
-    /*
-     * This is the huge buffer that contains the vertex and tex arrays.
-     */
-    float *gl_array_buf;
-    uint32_t gl_array_size;
 
     /*
      * Texture for this frame. One texture for all tiles here.
@@ -383,6 +376,18 @@ typedef struct {
      */
     uint16_t tiles_per_screen_x;
     uint16_t tiles_per_screen_y;
+
+    /*
+     * The map.
+     */
+    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT];
+
+    /*
+     * This is the huge buffer that contains the vertex and tex arrays.
+     */
+    float *gl_array_buf;
+    uint32_t gl_array_size;
+
 } map_frame_ctx_t;
 
 extern map_frame_ctx_t *map_fg;

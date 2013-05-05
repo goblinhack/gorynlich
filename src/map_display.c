@@ -82,8 +82,8 @@ void map_display_init (map_frame_ctx_t *map)
      * buffer if our size requirements have changed.
      */
     gl_array_size_required =
-                    width *
-                    height *
+                    (width / TILE_WIDTH) *
+                    (height / TILE_HEIGHT) *
                     NUMBER_BYTES_PER_ARRAY_ELEM *
                     NUMBER_ARRAY_ELEM_ARRAYS * 2; // for degenerate triangles
 
@@ -176,49 +176,62 @@ static void map_display_ (map_frame_ctx_t *map)
 
     bufp = map->gl_array_buf;
 
-    uint16_t cx = map->px / TILE_WIDTH;
-    uint16_t cy_start = map->py / TILE_HEIGHT;
-    uint16_t cy;
+    uint16_t cx_start = map->px / TILE_WIDTH;
+    uint16_t cx;
+    uint16_t cy = map->py / TILE_HEIGHT;
     uint16_t tile;
     boolean first = true;
 
-    left = TILE_WIDTH - (map->px % TILE_WIDTH);
-    left -= TILE_WIDTH;
+    /*
+     * Smooth horiz scroll offset.
+     */
+    top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
+    top -= TILE_HEIGHT;
 
-    for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
+    for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
 
-        cy = cy_start;
-
-        right = left + TILE_WIDTH;
-
-        map_tile = &map->tiles[cx * map->map_width + cy];
-
+        cx = cx_start;
+        map_tile = &map->tiles[cx][cy];
         tile = map_tile->tile;
 
-        map_tile_to_tex_coords(map, tile,
-                               &tex_left,
-                               &tex_right,
-                               &tex_top,
-                               &tex_bottom);
-
-        top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
-        top -= TILE_HEIGHT;
-
         /*
-         * Repeat the first vertex so we create a degenerate triangle.
+         * Smooth vert scroll offset.
          */
+        left = TILE_WIDTH - (map->px % TILE_WIDTH);
+        left -= TILE_WIDTH;
+
         if (!first) {
+            /*
+             * Repeat the last vertex of the previous loop so we create a 
+             * degenerate triangle.
+             */
+            gl_push_texcoord(&bufp, tex_right, tex_bottom);
+            gl_push_vertex(&bufp, right, bottom);
+
+            map_tile_to_tex_coords(map, tile,
+                                   &tex_left,
+                                   &tex_right,
+                                   &tex_top,
+                                   &tex_bottom);
+
+            top += TILE_HEIGHT;
+
+            /*
+             * Repeat the first vertex for the next loop so we create a 
+             * degenerate triangle.
+             */
             gl_push_texcoord(&bufp, tex_left,  tex_top);
             gl_push_vertex(&bufp, left,  top);
         } else {
             first = false;
         }
 
-        for (y = 0; y <= height; y += TILE_HEIGHT, cy++, map_tile++) {
+        bottom = top + TILE_HEIGHT;
 
-            bottom = top + TILE_HEIGHT;
+        for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
 
             tile = map_tile->tile;
+            right = left + TILE_WIDTH;
 
             map_tile_to_tex_coords(map, tile,
                                    &tex_left,
@@ -232,25 +245,19 @@ static void map_display_ (map_frame_ctx_t *map)
             gl_push_texcoord(&bufp, tex_left,  tex_top);
             gl_push_vertex(&bufp, left,  top);
 
-            gl_push_texcoord(&bufp, tex_right, tex_top);
-            gl_push_vertex(&bufp, right, top);
-
             gl_push_texcoord(&bufp, tex_left,  tex_bottom);
             gl_push_vertex(&bufp, left,  bottom);
+
+            gl_push_texcoord(&bufp, tex_right, tex_top);
+            gl_push_vertex(&bufp, right, top);
 
             gl_push_texcoord(&bufp, tex_right, tex_bottom);
             gl_push_vertex(&bufp, right, bottom);
 
-            top += TILE_HEIGHT;
+            left += TILE_WIDTH;
+
+            map_tile += MAP_HEIGHT;
         }
-
-        /*
-         * Repeat the last vertex so we create a degenerate triangle.
-         */
-        gl_push_texcoord(&bufp, tex_right, tex_bottom);
-        gl_push_vertex(&bufp, right, bottom);
-
-        left += TILE_WIDTH;
     }
 
     /*
