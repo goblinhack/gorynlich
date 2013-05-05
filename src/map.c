@@ -58,6 +58,10 @@ void map_fini (void)
         myfree(map_fg);
     }
 
+    if (map_bg) {
+        myfree(map_bg);
+    }
+
     map_display_wid_fini();
 }
 
@@ -76,7 +80,7 @@ static void map_init_tiles (map_frame_ctx_t *map)
 
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
-            map->tiles[x * map->map_width + y].tile = cnt++;
+            map->tiles[x][y].tile = cnt++;
             if (cnt > 64*28) {
                 cnt = 0;
             }
@@ -99,8 +103,6 @@ static void map_init_bounds (map_frame_ctx_t *map,
      */
     map->map_width = map_width;
     map->map_height = map_height;
-    map->tiles = myzalloc(sizeof(map_tile_t) * map_width * map_height,
-                          "map tiles");
 
     map->tiles_per_screen_x = width / TILE_WIDTH;
     map->tiles_per_screen_y = height / TILE_WIDTH;
@@ -1557,6 +1559,54 @@ void map_fixup (levelp level)
              */
             if (a && b && c && d && e && f && g && h && i) {
                 is_join_block = true;
+            } else if (d && e && h && b && f) {
+                is_join_x3_180 = true;
+            } else if (b && e && f && d && h && g) {
+                is_join_x1_90 = false;
+            } else if (b && e && f && d && h && a) {
+                is_join_x1 = false;
+            } else if (b && e && f && d && h && c) {
+                is_join_x1_180 = false;
+            } else if (b && e && f && d && h && i) {
+                is_join_x1_270 = false;
+
+            /*
+             * a b c
+             * d e f
+             * g h i
+             */
+            } else if (d && e && b && f && h) {
+                is_join_x2 = true;
+            } else if (d && e && f && b) {
+                is_join_x2 = true;
+            } else if (d && e && h && b) {
+                is_join_x2_270 = true;
+            } else if (d && e && h && f) {
+                is_join_x2_180 = true;
+            } else if (h && e && b && f) {
+                is_join_x2_90 = true;
+
+            /*
+             * a b c
+             * d e f
+             * g h i
+             */
+            } else if (b && e && f) {
+                is_join_x4_90 = true;
+            } else if (e && f && h) {
+                is_join_x4_180 = true;
+            } else if (e && f && h) {
+                is_join_x4_180 = true;
+            } else if (d && e && h) {
+                is_join_x4_270 = true;
+            } else if (d && e && b) {
+                is_join_x4 = true;
+
+            /*
+             * a b c
+             * d e f
+             * g h i
+             */
             } else if (b && d && f && h) {
                 if (!a && !c && !g && !i) {
                     is_join_x = true;
