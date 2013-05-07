@@ -24,5 +24,6 @@ int32_t tile_get_width(tilep);
 int32_t tile_get_height(tilep);
 const char *tile_name(tilep);
 texp tile_get_tex(tilep);
+uint32_t tile_get_index(tilep);
 tilep string2tile(const char **s);
 void tile_get_coords(tilep, float *x1, float *y1, float *x2, float *y2);

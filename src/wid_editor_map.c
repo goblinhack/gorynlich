@@ -197,8 +197,6 @@ widp wid_editor_map_thing_replace_template (widp w,
             if (!count) {
                 wid_destroy(&child);
 
-                map_fixup(level);
-
                 wid_raise(wid_editor_filename_and_title);
 
                 return (0);
@@ -210,8 +208,6 @@ widp wid_editor_map_thing_replace_template (widp w,
         }
 
         wid_set_thing_template(child, thing_template);
-
-        map_fixup(level);
 
         wid_update(child);
 
@@ -247,8 +243,6 @@ widp wid_editor_map_thing_replace_template (widp w,
      * Add a bevel if we are loading this wid with an initial count.
      */
     wid_editor_set_tile_count(child, count);
-
-    map_fixup(level);
 
     /*
      * This adds it to the grid wid.
@@ -371,8 +365,6 @@ static boolean wid_editor_map_thing_remove_template (
         wid_destroy(&existing);
     }
 
-    map_fixup(level_ed);
-
     return (true);
 }
 
@@ -408,7 +400,6 @@ static boolean wid_editor_map_thing_inc_template (int32_t x, int32_t y)
 
     wid_editor_set_tile_count(existing, count);
     wid_update(existing);
-    map_fixup(level_ed);
 
     return (true);
 }
@@ -445,7 +436,6 @@ static boolean wid_editor_map_thing_dec_template (int32_t x, int32_t y)
     if (!count) {
         wid_destroy(&existing);
 
-        map_fixup(level_ed);
         return (true);
     }
 
@@ -453,7 +443,6 @@ static boolean wid_editor_map_thing_dec_template (int32_t x, int32_t y)
 
     wid_editor_set_tile_count(existing, count);
     wid_update(existing);
-    map_fixup(level_ed);
 
     return (true);
 }
