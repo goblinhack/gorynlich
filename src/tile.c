@@ -139,6 +139,7 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
                 DIE("tile insert name [%s] failed", name);
             }
 
+            t->index = idx - 1;
             t->width = width;
             t->height = height;
             t->tex = tex;
@@ -212,6 +213,11 @@ int32_t tile_get_height (tile *tile)
 texp tile_get_tex (tile *tile)
 {
     return (tile->tex);
+}
+
+uint32_t tile_get_index (tile *tile)
+{
+    return (tile->index);
 }
 
 const char *tile_name (tile *tile)

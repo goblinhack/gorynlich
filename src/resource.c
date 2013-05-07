@@ -13,6 +13,8 @@
 #include "thing_template.h"
 #include "init_fn.h"
 
+thing_templatep WALL;
+
 static boolean resource_init_1 (void *context)
 {
     return (tex_load("data/gfx/gorynlich.png",
@@ -264,7 +266,7 @@ static boolean resource_init_23 (void *context)
     tile_load_arr("sprites_small", 8, 8,
                   ARRAY_SIZE(small_tiles), small_tiles);
 
-    thing_template_load("data/things/wall");
+    WALL = thing_template_load("data/things/wall");
 
     return (true);
 }

@@ -6,6 +6,10 @@
 
 typedef struct tile_ {
     tree_key_string tree;
+    /*
+     * Index within the overall texture, left to right, top to bottom.
+     */
+    uint32_t index;
     uint32_t width;
     uint32_t height;
     float x1;

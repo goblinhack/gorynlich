@@ -941,8 +941,6 @@ wid_game_map_replace_tile (widp w,
                                 thing_template_name(thing_template)));
     }
 
-    map_fixup(level);
-
     /*
      * This adds it to the grid wid.
      */

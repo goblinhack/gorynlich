@@ -368,3 +368,8 @@ extern struct config global_config;
 typedef struct {
     uint8_t r, g, b, a;
 } color;
+
+/*
+ * resource.c
+ */
+extern thing_templatep WALL;
