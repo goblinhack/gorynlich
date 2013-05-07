@@ -14,6 +14,7 @@
 #include "thing_tile.h"
 #include "level.h"
 #include "level_private.h"
+#include "tile.h"
 
 typedef boolean (*map_is_at_callback)(thing_templatep);
 
@@ -24,6 +25,7 @@ static void map_init_tiles(map_frame_ctx_t *map);
 static void map_init_bounds(map_frame_ctx_t *map,
                             uint32_t map_width,
                             uint32_t map_height);
+static void map_fixup(map_frame_ctx_t *map);
 
 /*
  * map_init
@@ -41,6 +43,9 @@ boolean map_init (void)
 
     map_init_tiles(map_fg);
     map_init_tiles(map_bg);
+
+    map_fixup(map_fg);
+    map_fixup(map_bg);
 
     map_move_delta_pixels(0, 0);
 
@@ -76,13 +81,42 @@ static void map_init_tiles (map_frame_ctx_t *map)
     const uint32_t ey = map->map_height;
     uint32_t x;
     uint32_t y;
-    uint32_t cnt = 0;
 
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
-            map->tiles[x][y].tile = cnt++;
-            if (cnt > 64*28) {
-                cnt = 0;
+
+            if (!(rand() % 10)) {
+                thing_templatep thing_template = WALL;
+
+                tree_rootp thing_tiles =
+                    thing_template_get_tiles(thing_template);
+                if (!thing_tiles) {
+                    continue;
+                }
+
+                thing_tilep thing_tile =
+                    (typeof(thing_tile)) tree_root_first(thing_tiles);
+                if (!thing_tile) {
+                    continue;
+                }
+
+                const char *tilename = thing_tile_name(thing_tile);
+                if (!tilename) {
+                    DIE("tile null name from thing %s not found",
+                        thing_template_shortname(thing_template));
+                }
+
+                tilep tile = tile_find(tilename);
+                if (!tile) {
+                    DIE("tile name %s from thing %s not found",
+                        tilename,
+                        thing_template_shortname(thing_template));
+                }
+
+                uint32_t index = tile_get_index(tile);
+
+                map->tiles[x][y].tile = index;
+                map->tiles[x][y].thing_template = thing_template;
             }
         }
     }
@@ -1405,7 +1439,8 @@ thing_templatep map_find_letter_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_letter, w));
 }
 
-void map_fixup (levelp level)
+static void 
+map_fixup (map_frame_ctx_t *map)
 {
     int32_t x;
     int32_t y;
@@ -1459,37 +1494,45 @@ void map_fixup (levelp level)
     boolean is_join_x4_270;
     boolean is_join_x4_180;
     boolean is_join_x4_90;
-    widp w;
 
-    for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
 
-            if (!map_find_wall_at(level, x, y, &w) &&
-                !map_find_pipe_at(level, x, y, &w) &&
-                !map_find_road_at(level, x, y, &w)) {
+            thing_templatep thing_template = 
+                map->tiles[x][y].thing_template;
+
+            if (thing_template != WALL) {
                 continue;
             }
 
             for (dx = -1; dx <= 1; dx++) {
                 for (dy = -1; dy <= 1; dy++) {
 
-                    if (map_find_wall_at(level, x, y, &w)) {
-                        nbrs[dx + 1][dy + 1] = map_find_wall_at(level,
-                                                                x + dx, y + dy,
-                                                                0 /* wid */);
+                    if (x + dx < 0) {
+                        continue;
                     }
 
-                    if (map_find_pipe_at(level, x, y, &w)) {
-                        nbrs[dx + 1][dy + 1] = map_find_pipe_at(level,
-                                                                x + dx, y + dy,
-                                                                0 /* wid */);
+                    if (y + dy < 0) {
+                        continue;
                     }
 
-                    if (map_find_road_at(level, x, y, &w)) {
-                        nbrs[dx + 1][dy + 1] = map_find_road_at(level,
-                                                                x + dx, y + dy,
-                                                                0 /* wid */);
+                    if (x + dx > MAP_WIDTH) {
+                        continue;
                     }
+
+                    if (y + dy > MAP_HEIGHT) {
+                        continue;
+                    }
+
+                    thing_templatep a_thing_template = 
+                        map->tiles[x + dx][y + dy].thing_template;
+
+                    if (a_thing_template != WALL) {
+                        nbrs[dx + 1][dy + 1] = NULL;
+                        continue;
+                    }
+
+                    nbrs[dx + 1][dy + 1] = a_thing_template;
                 }
             }
 
@@ -1707,7 +1750,7 @@ void map_fixup (levelp level)
                 is_join_node = true;
             }
 
-            thing_tilep tile = thing_tile_find(e,
+            thing_tilep thing_tile = thing_tile_find(e,
                         is_join_block,
                         is_join_horiz,
                         is_join_vert,
@@ -1756,7 +1799,7 @@ void map_fixup (levelp level)
                         is_join_x4_180,
                         is_join_x4_90);
 
-            if (!tile) {
+            if (!thing_tile) {
 
                 is_join_block = false;
                 is_join_horiz = false;
@@ -1807,7 +1850,7 @@ void map_fixup (levelp level)
                 is_join_x4_180 = false;
                 is_join_x4_90 = false;
 
-                tile = thing_tile_find(e,
+                thing_tile = thing_tile_find(e,
                             is_join_block,
                             is_join_horiz,
                             is_join_vert,
@@ -1856,19 +1899,25 @@ void map_fixup (levelp level)
                             is_join_x4_180,
                             is_join_x4_90);
 
-                if (!tile) {
+                if (!thing_tile) {
                     DIE("no joinable tile for %s", thing_template_name(e));
                 }
             }
 
-            const char *tilename = thing_tile_name(tile);
-
+            const char *tilename = thing_tile_name(thing_tile);
             if (!tilename) {
                 DIE("no tilename for %s", thing_template_name(e));
             }
 
-            wid_set_tilename(w, tilename);
-            wid_set_font(w, small_font);
+            tilep tile = tile_find(tilename);
+            if (!tile) {
+                DIE("no tile for %s", thing_template_name(e));
+            }
+
+            uint32_t index = tile_get_index(tile);
+
+            map->tiles[x][y].tile = index;
+            map->tiles[x][y].thing_template = thing_template;
         }
     }
 }

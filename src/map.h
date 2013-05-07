@@ -308,10 +308,10 @@ typedef struct tree_thing_node_ {
     tree_key_pointer tree;
 } tree_thing_node;
 
-void map_fixup(levelp);
-
 typedef struct {
     uint16_t tile;
+    thing_tilep thing_tile;
+    thing_templatep thing_template;
 } map_tile_t;
 
 #define MAP_WIDTH 256

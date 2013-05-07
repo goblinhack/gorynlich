@@ -532,8 +532,8 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     /*
      * Tile 0 is always transparent black.
      */
-    for (x = 0; x < TILE_WIDTH; x++) {
-        for (y = 0; y < TILE_HEIGHT; y++) {
+    for (x = 0; x < tile_width; x++) {
+        for (y = 0; y < tile_height; y++) {
             color c = BLACK;
             c.a = 0;
             putPixel(out, x, y, c);
