@@ -85,7 +85,7 @@ static void map_init_tiles (map_frame_ctx_t *map)
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
 
-            if (!(rand() % 10)) {
+            if (!(rand() % 3)) {
                 thing_templatep thing_template = WALL;
 
                 tree_rootp thing_tiles =
@@ -1536,16 +1536,6 @@ map_fixup (map_frame_ctx_t *map)
                 }
             }
 
-            thing_templatep a = nbrs[0][0];
-            thing_templatep b = nbrs[1][0];
-            thing_templatep c = nbrs[2][0];
-            thing_templatep d = nbrs[0][1];
-            thing_templatep e = nbrs[1][1];
-            thing_templatep f = nbrs[2][1];
-            thing_templatep g = nbrs[0][2];
-            thing_templatep h = nbrs[1][2];
-            thing_templatep i = nbrs[2][2];
-
             is_join_block = false;
             is_join_horiz = false;
             is_join_vert = false;
@@ -1595,159 +1585,246 @@ map_fixup (map_frame_ctx_t *map)
             is_join_x4_180 = false;
             is_join_x4_90 = false;
 
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            if (a && b && c && d && e && f && g && h && i) {
-                is_join_block = true;
-            } else if (d && e && h && b && f) {
-                is_join_x3_180 = true;
-            } else if (b && e && f && d && h && g) {
-                is_join_x1_90 = false;
-            } else if (b && e && f && d && h && a) {
-                is_join_x1 = false;
-            } else if (b && e && f && d && h && c) {
-                is_join_x1_180 = false;
-            } else if (b && e && f && d && h && i) {
-                is_join_x1_270 = false;
+            thing_templatep a = nbrs[0][0];
+            thing_templatep b = nbrs[1][0];
+            thing_templatep c = nbrs[2][0];
+            thing_templatep d = nbrs[0][1];
+            thing_templatep e = nbrs[1][1];
+            thing_templatep f = nbrs[2][1];
+            thing_templatep g = nbrs[0][2];
+            thing_templatep h = nbrs[1][2];
+            thing_templatep i = nbrs[2][2];
+
+#define BLOCK(a, d) \
+    } else if (block_type == \
+         ((uint64_t) (a[0] != ' ' ? 1 : 0)) * 100000000LLU + \
+         ((uint64_t) (a[1] != ' ' ? 1 : 0)) * 10000000LLU  + \
+         ((uint64_t) (a[2] != ' ' ? 1 : 0)) * 1000000LLU   + \
+         ((uint64_t) (a[3] != ' ' ? 1 : 0)) * 100000LLU    + \
+         ((uint64_t) (a[4] != ' ' ? 1 : 0)) * 10000LLU     + \
+         ((uint64_t) (a[5] != ' ' ? 1 : 0)) * 1000LLU      + \
+         ((uint64_t) (a[6] != ' ' ? 1 : 0)) * 100LLU       + \
+         ((uint64_t) (a[7] != ' ' ? 1 : 0)) * 10LLU        + \
+         ((uint64_t) (a[8] != ' ' ? 1 : 0))) {               \
+         d = true;                                           \
 
             /*
              * a b c
              * d e f
              * g h i
              */
-            } else if (d && e && b && f && h) {
-                is_join_x2 = true;
-            } else if (d && e && f && b) {
-                is_join_x2 = true;
-            } else if (d && e && h && b) {
-                is_join_x2_270 = true;
-            } else if (d && e && h && f) {
-                is_join_x2_180 = true;
-            } else if (h && e && b && f) {
-                is_join_x2_90 = true;
+            uint64_t block_type = 
+                ((uint64_t) (a ? 1 : 0)) * 100000000LLU + 
+                ((uint64_t) (b ? 1 : 0)) * 10000000LLU  +
+                ((uint64_t) (c ? 1 : 0)) * 1000000LLU   +
+                ((uint64_t) (d ? 1 : 0)) * 100000LLU    +
+                ((uint64_t) (e ? 1 : 0)) * 10000LLU     +
+                ((uint64_t) (f ? 1 : 0)) * 1000LLU      +
+                ((uint64_t) (g ? 1 : 0)) * 100LLU       +
+                ((uint64_t) (h ? 1 : 0)) * 10LLU        +
+                ((uint64_t) (i ? 1 : 0));
 
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            } else if (b && e && f) {
-                is_join_x4_90 = true;
-            } else if (e && f && h) {
-                is_join_x4_180 = true;
-            } else if (e && f && h) {
-                is_join_x4_180 = true;
-            } else if (d && e && h) {
-                is_join_x4_270 = true;
-            } else if (d && e && b) {
-                is_join_x4 = true;
+            if (0) {
 
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            } else if (b && d && f && h) {
-                if (!a && !c && !g && !i) {
-                    is_join_x = true;
-                } else if (i) {
-                    is_join_tl = true;
-                } else {
-                    is_join_block = true;
-                }
-            } else if (b && d && f) {
-                if (a && b && c) {
-                    is_join_t180_3 = true;
-                } else if (a) {
-                    is_join_t180_1 = true;
-                } else if (c) {
-                    is_join_t180_2 = true;
-                } else {
-                    is_join_t180 = true;
-                }
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            } else if (d && f && h) {
-                if (g && h && i) {
-                    is_join_t_3 = true;
-                } else if (g) {
-                    is_join_t_1 = true;
-                } else if (i) {
-                    is_join_t_2 = true;
-                } else {
-                    is_join_t = true;
-                }
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            } else if (b && f && h) {
-                if (i && f && c) {
-                    is_join_t270_3 = true;
-                } else if (i) {
-                    is_join_t270_1 = true;
-                } else if (c) {
-                    is_join_t270_2 = true;
-                } else {
-                    is_join_t270 = true;
-                }
-            } else if (b && d && h) {
-                if (a && d && g) {
-                    is_join_t90_3 = true;
-                } else if (g) {
-                    is_join_t90_1 = true;
-                } else if (a) {
-                    is_join_t90_2 = true;
-                } else {
-                    is_join_t90 = true;
-                }
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            } else if (b && d && a) {
-                is_join_br2 = true;
-            } else if (b && f && c) {
-                is_join_bl2 = true;
-            } else if (f && h && i) {
-                is_join_tl2 = true;
-            } else if (d && h && g) {
-                is_join_tr2 = true;
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            } else if (b && d) {
-                is_join_br = true;
-            } else if (b && f) {
-                is_join_bl = true;
-            } else if (f && h) {
-                is_join_tl = true;
-            } else if (d && h) {
-                is_join_tr = true;
-            } else if (b && h) {
-                is_join_vert = true;
-            } else if (d && f) {
-                is_join_horiz = true;
-            } else if (d && e) {
-                is_join_right = true;
-            } else if (e && f) {
-                is_join_left = true;
-            } else if (b && e) {
-                is_join_bot = true;
-            } else if (e && h) {
-                is_join_top = true;
-            } else if (e) {
-                is_join_node = true;
+            BLOCK("111"
+                  "111"
+                  "111", is_join_block)
+
+            BLOCK("   "
+                  " 1 "
+                  "   ", is_join_node)
+
+            BLOCK("   "
+                  " 11"
+                  "   ", is_join_left)
+
+            BLOCK("   "
+                  " 1 "
+                  " 1 ", is_join_bot)
+
+            BLOCK("   "
+                  "11 "
+                  "   ", is_join_right)
+
+            BLOCK(" 1 "
+                  " 1 "
+                  "   ", is_join_top)
+
+            BLOCK("   "
+                  "111"
+                  "   ", is_join_horiz)
+
+            BLOCK(" 1 "
+                  " 1 "
+                  " 1 ", is_join_vert)
+
+            BLOCK("   "
+                  " 11"
+                  " 11", is_join_tl2)
+
+            BLOCK(" 11"
+                  " 11"
+                  "   ", is_join_bl2)
+
+            BLOCK("11 "
+                  "11 "
+                  "   ", is_join_br2)
+
+            BLOCK("   "
+                  "11 "
+                  "11 ", is_join_tr2)
+
+            BLOCK("   "
+                  " 11"
+                  " 1 ", is_join_tl)
+
+            BLOCK(" 1 "
+                  " 11"
+                  "   ", is_join_bl)
+
+            BLOCK(" 1 "
+                  "11 "
+                  "   ", is_join_br)
+
+            BLOCK("   "
+                  "11 "
+                  " 1 ", is_join_tr)
+
+            BLOCK("11 "
+                  "11 "
+                  "11 ", is_join_t270_3)
+
+            BLOCK("111"
+                  "111"
+                  "   ", is_join_t180_3)
+
+            BLOCK(" 11"
+                  " 11"
+                  " 11", is_join_t90_3)
+
+            BLOCK("   "
+                  "111"
+                  "111", is_join_t_3)
+
+            BLOCK(" 1 "
+                  " 11"
+                  " 1 ", is_join_t270)
+
+            BLOCK(" 1 "
+                  "111"
+                  "   ", is_join_t180)
+
+            BLOCK(" 1 "
+                  "11 "
+                  " 1 ", is_join_t90)
+
+            BLOCK("   "
+                  "111"
+                  " 1 ", is_join_t)
+
+            BLOCK(" 11"
+                  " 11"
+                  " 1 ", is_join_t270_2)
+
+            BLOCK("11 "
+                  "111"
+                  "   ", is_join_t180_2)
+
+            BLOCK(" 1 "
+                  "11 "
+                  "11 ", is_join_t90_2)
+
+            BLOCK("   "
+                  "111"
+                  " 11", is_join_t_2)
+
+            BLOCK(" 1 "
+                  " 11"
+                  " 11", is_join_t270_1)
+
+            BLOCK(" 11"
+                  "111"
+                  "   ", is_join_t180_1)
+
+            BLOCK("11 "
+                  "11 "
+                  " 1 ", is_join_t90_1)
+
+            BLOCK("   "
+                  "111"
+                  "11 ", is_join_t_1)
+
+            BLOCK(" 1 "
+                  "111"
+                  " 1 ", is_join_x)
+
+            BLOCK(" 1 "
+                  "111"
+                  " 11", is_join_x1)
+
+            BLOCK(" 11"
+                  "111"
+                  " 1 ", is_join_x1_270)
+
+            BLOCK("11 "
+                  "111"
+                  " 1 ", is_join_x1_180)
+
+            BLOCK(" 1 "
+                  "111"
+                  "11 ", is_join_x1_90)
+
+            BLOCK(" 1 "
+                  "111"
+                  "111", is_join_x2)
+
+            BLOCK(" 11"
+                  "111"
+                  " 11", is_join_x2_270)
+
+            BLOCK("111"
+                  "111"
+                  " 1 ", is_join_x2_180)
+
+            BLOCK("11 "
+                  "111"
+                  "11 ", is_join_x2_90)
+
+            BLOCK(" 11"
+                  "111"
+                  "11 ", is_join_x3)
+
+            BLOCK("11 "
+                  "111"
+                  " 11", is_join_x3_180)
+
+            BLOCK(" 11"
+                  "111"
+                  "111", is_join_x4)
+
+            BLOCK("111"
+                  "111"
+                  " 11", is_join_x4_270)
+
+            BLOCK("111"
+                  "11 "
+                  "11 ", is_join_x4_180)
+
+            BLOCK("11 "
+                  "111"
+                  "111", is_join_x4_90)
+
+            } else {
+                ERR("%u%u%u %u%u%u %u%u%u not handled",
+                    a ? 1 : 0,
+                    b ? 1 : 0,
+                    c ? 1 : 0,
+                    d ? 1 : 0,
+                    e ? 1 : 0,
+                    f ? 1 : 0,
+                    g ? 1 : 0,
+                    h ? 1 : 0,
+                    i ? 1 : 0);
             }
 
             thing_tilep thing_tile = thing_tile_find(e,
