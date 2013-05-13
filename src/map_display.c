@@ -369,7 +369,7 @@ void map_display (void)
 
     color c = WHITE;
 
-    c.a = 150;
+    c.a = 50;
     glcolor(c);
     map_display_(map_bg);
 
