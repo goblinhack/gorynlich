@@ -85,7 +85,7 @@ static void map_init_tiles (map_frame_ctx_t *map)
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
 
-            if (!(rand() % 3)) {
+            if ((rand() % 100) > 14) {
                 thing_templatep thing_template = WALL;
 
                 tree_rootp thing_tiles =
@@ -1595,36 +1595,49 @@ map_fixup (map_frame_ctx_t *map)
             thing_templatep h = nbrs[1][2];
             thing_templatep i = nbrs[2][2];
 
-#define BLOCK(a, d) \
-    } else if (block_type == \
-         ((uint64_t) (a[0] != ' ' ? 1 : 0)) * 100000000LLU + \
-         ((uint64_t) (a[1] != ' ' ? 1 : 0)) * 10000000LLU  + \
-         ((uint64_t) (a[2] != ' ' ? 1 : 0)) * 1000000LLU   + \
-         ((uint64_t) (a[3] != ' ' ? 1 : 0)) * 100000LLU    + \
-         ((uint64_t) (a[4] != ' ' ? 1 : 0)) * 10000LLU     + \
-         ((uint64_t) (a[5] != ' ' ? 1 : 0)) * 1000LLU      + \
-         ((uint64_t) (a[6] != ' ' ? 1 : 0)) * 100LLU       + \
-         ((uint64_t) (a[7] != ' ' ? 1 : 0)) * 10LLU        + \
-         ((uint64_t) (a[8] != ' ' ? 1 : 0))) {               \
-         d = true;                                           \
+            char A = (a != NULL) ? '1' : ' ';
+            char B = (b != NULL) ? '1' : ' ';
+            char C = (c != NULL) ? '1' : ' ';
+            char D = (d != NULL) ? '1' : ' ';
+            char E = (e != NULL) ? '1' : ' ';
+            char F = (f != NULL) ? '1' : ' ';
+            char G = (g != NULL) ? '1' : ' ';
+            char H = (h != NULL) ? '1' : ' ';
+            char I = (i != NULL) ? '1' : ' ';
 
-            /*
-             * a b c
-             * d e f
-             * g h i
-             */
-            uint64_t block_type = 
-                ((uint64_t) (a ? 1 : 0)) * 100000000LLU + 
-                ((uint64_t) (b ? 1 : 0)) * 10000000LLU  +
-                ((uint64_t) (c ? 1 : 0)) * 1000000LLU   +
-                ((uint64_t) (d ? 1 : 0)) * 100000LLU    +
-                ((uint64_t) (e ? 1 : 0)) * 10000LLU     +
-                ((uint64_t) (f ? 1 : 0)) * 1000LLU      +
-                ((uint64_t) (g ? 1 : 0)) * 100LLU       +
-                ((uint64_t) (h ? 1 : 0)) * 10LLU        +
-                ((uint64_t) (i ? 1 : 0));
+            uint64_t score;
+            uint64_t best = 0;
+            boolean *best_block = 0;
 
-            if (0) {
+
+#define BLOCK(arr, block_type)                                      \
+        if ((arr[0] == '1') && (A == ' ') ||                     \
+            (arr[1] == '1') && (B == ' ') ||                     \
+            (arr[2] == '1') && (C == ' ') ||                     \
+            (arr[3] == '1') && (D == ' ') ||                     \
+            (arr[4] == '1') && (E == ' ') ||                     \
+            (arr[5] == '1') && (F == ' ') ||                     \
+            (arr[6] == '1') && (G == ' ') ||                     \
+            (arr[7] == '1') && (H == ' ') ||                     \
+            (arr[8] == '1') && (I == ' ')) {                     \
+        } else { \
+                                                                    \
+            score =                                                 \
+                ((uint64_t) (arr[0] == A) ? 1 : 0) * 100000000LLU + \
+                ((uint64_t) (arr[1] == B) ? 1 : 0) * 10000000LLU  + \
+                ((uint64_t) (arr[2] == C) ? 1 : 0) * 1000000LLU   + \
+                ((uint64_t) (arr[3] == D) ? 1 : 0) * 100000LLU    + \
+                ((uint64_t) (arr[4] == E) ? 1 : 0) * 10000LLU     + \
+                ((uint64_t) (arr[5] == F) ? 1 : 0) * 1000LLU      + \
+                ((uint64_t) (arr[6] == G) ? 1 : 0) * 100LLU       + \
+                ((uint64_t) (arr[7] == H) ? 1 : 0) * 10LLU        + \
+                ((uint64_t) (arr[8] == I) ? 1 : 0);                 \
+                                                                    \
+            if (score > best) {                                     \
+                best = score;                                       \
+                best_block = &block_type;                           \
+            }                                                       \
+        }                                                           \
 
             BLOCK("111"
                   "111"
@@ -1640,7 +1653,7 @@ map_fixup (map_frame_ctx_t *map)
 
             BLOCK("   "
                   " 1 "
-                  " 1 ", is_join_bot)
+                  " 1 ", is_join_top)
 
             BLOCK("   "
                   "11 "
@@ -1648,7 +1661,7 @@ map_fixup (map_frame_ctx_t *map)
 
             BLOCK(" 1 "
                   " 1 "
-                  "   ", is_join_top)
+                  "   ", is_join_bot)
 
             BLOCK("   "
                   "111"
@@ -1692,7 +1705,7 @@ map_fixup (map_frame_ctx_t *map)
 
             BLOCK("11 "
                   "11 "
-                  "11 ", is_join_t270_3)
+                  "11 ", is_join_t90_3)
 
             BLOCK("111"
                   "111"
@@ -1700,7 +1713,7 @@ map_fixup (map_frame_ctx_t *map)
 
             BLOCK(" 11"
                   " 11"
-                  " 11", is_join_t90_3)
+                  " 11", is_join_t270_3)
 
             BLOCK("   "
                   "111"
@@ -1807,15 +1820,15 @@ map_fixup (map_frame_ctx_t *map)
                   " 11", is_join_x4_270)
 
             BLOCK("111"
-                  "11 "
+                  "111"
                   "11 ", is_join_x4_180)
 
             BLOCK("11 "
                   "111"
                   "111", is_join_x4_90)
 
-            } else {
-                ERR("%u%u%u %u%u%u %u%u%u not handled",
+            if (best_block == NULL) {
+                DIE("%u%u%u %u%u%u %u%u%u not handled",
                     a ? 1 : 0,
                     b ? 1 : 0,
                     c ? 1 : 0,
@@ -1826,6 +1839,8 @@ map_fixup (map_frame_ctx_t *map)
                     h ? 1 : 0,
                     i ? 1 : 0);
             }
+
+            *best_block = true;
 
             thing_tilep thing_tile = thing_tile_find(e,
                         is_join_block,
