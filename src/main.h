@@ -372,4 +372,5 @@ typedef struct {
 /*
  * resource.c
  */
-extern thing_templatep WALL;
+extern thing_templatep WALL_1;
+extern thing_templatep ROCK;

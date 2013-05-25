@@ -18,8 +18,7 @@
 
 typedef boolean (*map_is_at_callback)(thing_templatep);
 
-map_frame_ctx_t *map_fg;
-map_frame_ctx_t *map_bg;
+map_frame_ctx_t *map_ctx;
 
 static void map_init_tiles(map_frame_ctx_t *map);
 static void map_init_bounds(map_frame_ctx_t *map,
@@ -32,20 +31,15 @@ static void map_fixup(map_frame_ctx_t *map);
  */
 boolean map_init (void)
 {
-    map_fg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
-    map_bg = myzalloc(sizeof(map_frame_ctx_t), "map frame");
+    map_ctx = myzalloc(sizeof(map_frame_ctx_t), "map frame");
 
-    map_init_bounds(map_fg, MAP_WIDTH, MAP_HEIGHT);
-    map_init_bounds(map_bg, MAP_WIDTH / 2, MAP_HEIGHT / 2);
+    map_init_bounds(map_ctx, MAP_WIDTH, MAP_HEIGHT);
 
-    map_display_init(map_fg);
-    map_display_init(map_bg);
+    map_display_init(map_ctx);
 
-    map_init_tiles(map_fg);
-    map_init_tiles(map_bg);
+    map_init_tiles(map_ctx);
 
-    map_fixup(map_fg);
-    map_fixup(map_bg);
+    map_fixup(map_ctx);
 
     map_move_delta_pixels(0, 0);
 
@@ -59,12 +53,8 @@ boolean map_init (void)
  */
 void map_fini (void)
 {
-    if (map_fg) {
-        myfree(map_fg);
-    }
-
-    if (map_bg) {
-        myfree(map_bg);
+    if (map_ctx) {
+        myfree(map_ctx);
     }
 
     map_display_wid_fini();
@@ -85,8 +75,8 @@ static void map_init_tiles (map_frame_ctx_t *map)
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
 
-            if ((rand() % 100) > 14) {
-                thing_templatep thing_template = WALL;
+            if ((rand() % 100) > 85) {
+                thing_templatep thing_template = ROCK;
 
                 tree_rootp thing_tiles =
                     thing_template_get_tiles(thing_template);
@@ -173,40 +163,25 @@ static void map_init_bounds (map_frame_ctx_t *map,
  */
 void map_move_delta_pixels (int32_t dx, int32_t dy)
 {
-    map_fg->px += dx;
+    map_ctx->px += dx;
 
-    if (map_fg->px < map_fg->min_px) {
-        map_fg->px = map_fg->min_px;
+    if (map_ctx->px < map_ctx->min_px) {
+        map_ctx->px = map_ctx->min_px;
     }
 
-    if (map_fg->px > map_fg->max_px) {
-        map_fg->px = map_fg->max_px;
+    if (map_ctx->px > map_ctx->max_px) {
+        map_ctx->px = map_ctx->max_px;
     }
 
-    map_fg->py += dy;
+    map_ctx->py += dy;
 
-    if (map_fg->py < map_fg->min_py) {
-        map_fg->py = map_fg->min_py;
+    if (map_ctx->py < map_ctx->min_py) {
+        map_ctx->py = map_ctx->min_py;
     }
 
-    if (map_fg->py > map_fg->max_py) {
-        map_fg->py = map_fg->max_py;
+    if (map_ctx->py > map_ctx->max_py) {
+        map_ctx->py = map_ctx->max_py;
     }
-
-    float px = (float) map_fg->px /
-        (float) ((map_fg->map_width - map_fg->tiles_per_screen_x) *
-            TILE_WIDTH);
-
-    float py = (float) map_fg->py /
-        (float) ((map_fg->map_height - map_fg->tiles_per_screen_y) *
-            TILE_HEIGHT);
-
-    map_bg->px =
-        ((float)(map_bg->map_width - map_bg->tiles_per_screen_x) *
-            TILE_WIDTH) * px;
-    map_bg->py =
-        ((float)(map_bg->map_height - map_bg->tiles_per_screen_y) *
-            TILE_WIDTH) * py;
 }
 
 static boolean map_is_x_at (levelp level,
@@ -324,9 +299,9 @@ boolean map_is_star_yellow_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
-boolean map_is_xxx1_at (levelp level, int32_t x, int32_t y)
+boolean map_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx1));
+    return (map_is_x_at(level, x, y, thing_template_is_rock));
 }
 
 boolean map_is_xxx2_at (levelp level, int32_t x, int32_t y)
@@ -374,9 +349,9 @@ boolean map_is_powerup_spam_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_powerup_spam));
 }
 
-boolean map_is_xxx11_at (levelp level, int32_t x, int32_t y)
+boolean map_is_rock1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx11));
+    return (map_is_x_at(level, x, y, thing_template_is_rock1));
 }
 
 boolean map_is_car_at (levelp level, int32_t x, int32_t y)
@@ -617,9 +592,9 @@ thingp map_thing_is_star_yellow_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
-thingp map_thing_is_xxx1_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx1));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_rock));
 }
 
 thingp map_thing_is_xxx2_at (levelp level, int32_t x, int32_t y)
@@ -667,9 +642,9 @@ thingp map_thing_is_powerup_spam_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_powerup_spam));
 }
 
-thingp map_thing_is_xxx11_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_rock1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx11));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_rock1));
 }
 
 thingp map_thing_is_car_at (levelp level, int32_t x, int32_t y)
@@ -921,9 +896,9 @@ tree_rootp map_all_things_is_star_yellow_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
-tree_rootp map_all_things_is_xxx1_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx1));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_rock));
 }
 
 tree_rootp map_all_things_is_xxx2_at (levelp level, int32_t x, int32_t y)
@@ -971,9 +946,9 @@ tree_rootp map_all_things_is_powerup_spam_at (levelp level, int32_t x, int32_t y
     return (map_all_things_is_x_at(level, x, y, thing_template_is_powerup_spam));
 }
 
-tree_rootp map_all_things_is_xxx11_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_rock1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx11));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_rock1));
 }
 
 tree_rootp map_all_things_is_car_at (levelp level, int32_t x, int32_t y)
@@ -1199,10 +1174,10 @@ thing_templatep map_find_star_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_star_yellow, w));
 }
 
-thing_templatep map_find_xxx1_at (levelp level,
+thing_templatep map_find_rock_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx1, w));
+    return (map_find_x_at(level, x, y, thing_template_is_rock, w));
 }
 
 thing_templatep map_find_xxx2_at (levelp level,
@@ -1259,10 +1234,10 @@ thing_templatep map_find_powerup_spam_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_powerup_spam, w));
 }
 
-thing_templatep map_find_xxx11_at (levelp level,
+thing_templatep map_find_rock1_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx11, w));
+    return (map_find_x_at(level, x, y, thing_template_is_rock1, w));
 }
 
 thing_templatep map_find_car_at (levelp level,
@@ -1501,7 +1476,8 @@ map_fixup (map_frame_ctx_t *map)
             thing_templatep thing_template = 
                 map->tiles[x][y].thing_template;
 
-            if (thing_template != WALL) {
+            if ((thing_template != ROCK) &&
+                (thing_template != WALL_1)) {
                 continue;
             }
 
@@ -1527,7 +1503,8 @@ map_fixup (map_frame_ctx_t *map)
                     thing_templatep a_thing_template = 
                         map->tiles[x + dx][y + dy].thing_template;
 
-                    if (a_thing_template != WALL) {
+                    if ((a_thing_template != ROCK) &&
+                        (a_thing_template != WALL_1)) {
                         nbrs[dx + 1][dy + 1] = NULL;
                         continue;
                     }
@@ -1610,7 +1587,7 @@ map_fixup (map_frame_ctx_t *map)
             boolean *best_block = 0;
 
 
-#define BLOCK(arr, block_type)                                      \
+#define BLOCK(arr, block_type)                                   \
         if ((arr[0] == '1') && (A == ' ') ||                     \
             (arr[1] == '1') && (B == ' ') ||                     \
             (arr[2] == '1') && (C == ' ') ||                     \
@@ -2124,9 +2101,9 @@ uint32_t level_count_is_star_yellow (levelp level)
     return (level_count_is_x(level, thing_template_is_star_yellow));
 }
 
-uint32_t level_count_is_xxx1 (levelp level)
+uint32_t level_count_is_rock (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx1));
+    return (level_count_is_x(level, thing_template_is_rock));
 }
 
 uint32_t level_count_is_xxx2 (levelp level)
@@ -2174,9 +2151,9 @@ uint32_t level_count_is_powerup_spam (levelp level)
     return (level_count_is_x(level, thing_template_is_powerup_spam));
 }
 
-uint32_t level_count_is_xxx11 (levelp level)
+uint32_t level_count_is_rock1 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx11));
+    return (level_count_is_x(level, thing_template_is_rock1));
 }
 
 uint32_t level_count_is_car (levelp level)
@@ -2430,9 +2407,9 @@ tree_rootp map_all_things_is_star_yellow (levelp level)
     return (map_all_things_is_x(level, thing_template_is_star_yellow));
 }
 
-tree_rootp map_all_things_is_xxx1 (levelp level)
+tree_rootp map_all_things_is_rock (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx1));
+    return (map_all_things_is_x(level, thing_template_is_rock));
 }
 
 tree_rootp map_all_things_is_xxx2 (levelp level)
@@ -2480,9 +2457,9 @@ tree_rootp map_all_things_is_powerup_spam (levelp level)
     return (map_all_things_is_x(level, thing_template_is_powerup_spam));
 }
 
-tree_rootp map_all_things_is_xxx11 (levelp level)
+tree_rootp map_all_things_is_rock1 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx11));
+    return (map_all_things_is_x(level, thing_template_is_rock1));
 }
 
 tree_rootp map_all_things_is_car (levelp level)
