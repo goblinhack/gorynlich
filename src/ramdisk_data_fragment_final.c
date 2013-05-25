@@ -43,7 +43,7 @@ extern const unsigned char data_sound_rocket_wav[];
 extern const unsigned char data_sound_slime_wav[];
 extern const unsigned char data_sound_spam_wav[];
 extern const unsigned char data_sound_thief_wav[];
-extern const unsigned char data_things__wall_swp[];
+extern const unsigned char data_things_rock[];
 extern const unsigned char data_things_wall[];
 extern const unsigned char data_ttf_large_ttf_pointsize40_data[];
 extern const unsigned char data_ttf_large_ttf_pointsize40_tga[];
@@ -134,8 +134,8 @@ ramdisk_t ramdisk_data[] = {
     {
         /* filename */ "data/gfx/sprites_small.png",
         /* data     */ 0,
-        /* orig_len */ 19677,
-        /* len      */ 16479,
+        /* orig_len */ 20181,
+        /* len      */ 17604,
     },
     {
         /* filename */ "data/gfx/stars.png",
@@ -306,16 +306,16 @@ ramdisk_t ramdisk_data[] = {
         /* len      */ 38961,
     },
     {
-        /* filename */ "data/things/.wall.swp",
+        /* filename */ "data/things/rock",
         /* data     */ 0,
-        /* orig_len */ 20480,
-        /* len      */ 1937,
+        /* orig_len */ 3075,
+        /* len      */ 379,
     },
     {
         /* filename */ "data/things/wall",
         /* data     */ 0,
-        /* orig_len */ 3075,
-        /* len      */ 383,
+        /* orig_len */ 3289,
+        /* len      */ 388,
     },
     {
         /* filename */ "data/ttf/large.ttf_pointsize40.data",
@@ -401,7 +401,7 @@ void ramdisk_init (void)
     ramdisk_data[39].data = data_sound_slime_wav;
     ramdisk_data[40].data = data_sound_spam_wav;
     ramdisk_data[41].data = data_sound_thief_wav;
-    ramdisk_data[42].data = data_things__wall_swp;
+    ramdisk_data[42].data = data_things_rock;
     ramdisk_data[43].data = data_things_wall;
     ramdisk_data[44].data = data_ttf_large_ttf_pointsize40_data;
     ramdisk_data[45].data = data_ttf_large_ttf_pointsize40_tga;

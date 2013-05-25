@@ -119,7 +119,7 @@ void map_display_init (map_frame_ctx_t *map)
 
         map->tex_float_width  =
                         (1.0 / (float)map->tex_width) * map->tex_tile_width;
-        map->tex_float_height =
+        map->tex_float_height = 2 *
                         (1.0 / (float)map->tex_height) * map->tex_tile_height;
     }
 }
@@ -226,7 +226,7 @@ static void map_display_ (map_frame_ctx_t *map)
             first = false;
         }
 
-        bottom = top + TILE_HEIGHT;
+        bottom = top + TILE_HEIGHT * 2;
 
         for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
 
@@ -363,22 +363,16 @@ map_display_debug (map_frame_ctx_t *map, uint32_t x, uint32_t y)
  */
 void map_display (void)
 {
-    if (!map_fg) {
+    if (!map_ctx) {
         return;
     }
 
     color c = WHITE;
-
-    c.a = 50;
     glcolor(c);
-    map_display_(map_bg);
 
-    c.a = 255;
-    glcolor(c);
-    map_display_(map_fg);
+    map_display_(map_ctx);
 
     if (fps_enabled) {
-        map_display_debug(map_fg, 100, 0);
-        map_display_debug(map_bg, 400, 0);
+        map_display_debug(map_ctx, 100, 0);
     }
 }

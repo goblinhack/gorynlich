@@ -253,7 +253,7 @@ ramdisk_t ramdisk_files[] = {
         0,
     },
     {
-        "data/things/.wall.swp",
+        "data/things/rock",
         0,
         0,
         0,
