@@ -76,7 +76,7 @@ typedef struct thing_template_ {
     uint8_t is_player:1;
     uint8_t is_snail:1;
     uint8_t is_star_yellow:1;
-    uint8_t is_xxx1:1;
+    uint8_t is_rock:1;
     uint8_t is_xxx2:1;
     uint8_t is_xxx3:1;
     uint8_t is_xxx4:1;
@@ -86,7 +86,7 @@ typedef struct thing_template_ {
     uint8_t is_xxx8:1;
     uint8_t is_star:1;
     uint8_t is_powerup_spam:1;
-    uint8_t is_xxx11:1;
+    uint8_t is_rock1:1;
     uint8_t is_car:1;
     uint8_t is_star_green:1;
     uint8_t is_star_cyan:1;

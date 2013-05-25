@@ -1385,11 +1385,11 @@ boolean thing_is_star_yellow (thingp t)
     return (thing_template_is_star_yellow(thing_get_template(t)));
 }
 
-boolean thing_is_xxx1 (thingp t)
+boolean thing_is_rock (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx1(thing_get_template(t)));
+    return (thing_template_is_rock(thing_get_template(t)));
 }
 
 boolean thing_is_xxx2 (thingp t)
@@ -1455,11 +1455,11 @@ boolean thing_is_powerup_spam (thingp t)
     return (thing_template_is_powerup_spam(thing_get_template(t)));
 }
 
-boolean thing_is_xxx11 (thingp t)
+boolean thing_is_rock1 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx11(thing_get_template(t)));
+    return (thing_template_is_rock1(thing_get_template(t)));
 }
 
 boolean thing_is_car (thingp t)
