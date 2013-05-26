@@ -26,14 +26,22 @@
  */
 #define NUMBER_DIMENSIONS_PER_COORD 2
 
+/*
+ * r,g,b,a per element
+ */
+#define NUMBER_COMPONENTS_PER_COLOR 4
+
 static const uint32_t NUMBER_BYTES_PER_VERTICE =
                                             sizeof(GLfloat) *
-                                            NUMBER_DIMENSIONS_PER_COORD;
+                                            NUMBER_DIMENSIONS_PER_COORD +
+                                            sizeof(GLfloat) *
+                                            NUMBER_DIMENSIONS_PER_COORD +
+                                            sizeof(GLfloat) *
+                                            NUMBER_COMPONENTS_PER_COLOR;
 
 static const uint32_t NUMBER_BYTES_PER_ARRAY_ELEM =
-                                            sizeof(GLfloat) *
-                                            NUMBER_COORDS_PER_VERTEX *
-                                            NUMBER_DIMENSIONS_PER_COORD;
+                                            NUMBER_BYTES_PER_VERTICE * 
+                                            NUMBER_COORDS_PER_VERTEX;
 /*
  * Two arrays, xy and uv.
  */
@@ -72,18 +80,13 @@ void map_display_init (map_frame_ctx_t *map)
     uint32_t gl_array_size_required;
 
     /*
-     * Screen size.
-     */
-    uint32_t width = global_config.video_pix_width;
-    uint32_t height = global_config.video_pix_height;
-
-    /*
      * If the screen size has changed or this is the first run, allocate our
      * buffer if our size requirements have changed.
      */
     gl_array_size_required =
-                    (width / TILE_WIDTH) *
-                    (height / TILE_HEIGHT) *
+                    MAP_WIDTH * 
+                    MAP_HEIGHT * 
+                    MAP_DEPTH * 
                     NUMBER_BYTES_PER_ARRAY_ELEM *
                     NUMBER_ARRAY_ELEM_ARRAYS * 2; // for degenerate triangles
 
@@ -98,6 +101,9 @@ void map_display_init (map_frame_ctx_t *map)
         }
 
         map->gl_array_buf = myzalloc(gl_array_size_required, "GL xy buffer");
+        map->gl_array_buf_end =
+                (typeof(map->gl_array_buf_end))
+                    ((char *)map->gl_array_buf) + gl_array_size_required;
     }
 
     if (!map->tex) {
@@ -124,6 +130,76 @@ void map_display_init (map_frame_ctx_t *map)
     }
 }
 
+
+/*
+ * gl_push
+ */
+static void
+gl_push (float **p,
+         float *p_end,
+         boolean *first,
+         float tex_left,
+         float tex_top,
+         float tex_right,
+         float tex_bottom,
+         float left,
+         float top,
+         float right,
+         float bottom,
+         float r,
+         float g,
+         float b,
+         float a)
+{
+    static float last_tex_right;
+    static float last_tex_bottom;
+    static float last_right;
+    static float last_bottom;
+
+    if (*p + 24 >= p_end) {
+        DIE("overflow on gl bug");
+    }
+
+    if (!*first) {
+        /*
+         * If there is a break in the triangle strip then make a degenerate
+         * triangle.
+         */
+        if ((last_right != left) || (last_bottom != bottom)) {
+            gl_push_texcoord(p, last_tex_right, last_tex_bottom);
+            gl_push_vertex(p, last_right, last_bottom);
+            gl_push_rgba(p, r, b, g, a);
+
+            gl_push_texcoord(p, tex_left,  tex_top);
+            gl_push_vertex(p, left,  top);
+            gl_push_rgba(p, r, b, g, a);
+        }
+    } else {
+        *first = false;
+    }
+
+    gl_push_texcoord(p, tex_left,  tex_top);
+    gl_push_vertex(p, left,  top);
+    gl_push_rgba(p, r, b, g, a);
+
+    gl_push_texcoord(p, tex_left,  tex_bottom);
+    gl_push_vertex(p, left,  bottom);
+    gl_push_rgba(p, r, b, g, a);
+
+    gl_push_texcoord(p, tex_right, tex_top);
+    gl_push_vertex(p, right, top);
+    gl_push_rgba(p, r, b, g, a);
+
+    gl_push_texcoord(p, tex_right, tex_bottom);
+    gl_push_vertex(p, right, bottom);
+    gl_push_rgba(p, r, b, g, a);
+
+    last_tex_right = tex_right;
+    last_tex_bottom = tex_bottom;
+    last_right = right;
+    last_bottom = bottom;
+}
+
 /*
  * map_display
  *
@@ -137,11 +213,12 @@ static void map_display_ (map_frame_ctx_t *map)
      * Where we are currently up to in writing to these buffers.
      */
     GLfloat *bufp;
+    GLfloat *bufp_end;
 
     /*
      * Our array size requirements.
      */
-    uint32_t nvertices;
+    uint32_t nvertices = 0;
 
     /*
      * Individual co-ordinates for each tile.
@@ -160,7 +237,8 @@ static void map_display_ (map_frame_ctx_t *map)
      * Screen size.
      */
     uint16_t width = global_config.video_pix_width;
-    uint16_t height = global_config.video_pix_height;
+    uint16_t height = global_config.video_pix_height + 
+                    MAP_DEPTH * TILE_HEIGHT;
 
     /*
      * Temps
@@ -175,88 +253,75 @@ static void map_display_ (map_frame_ctx_t *map)
     tex_bottom = map->tex_float_height;
 
     bufp = map->gl_array_buf;
+    bufp_end = map->gl_array_buf_end;
 
     uint16_t cx_start = map->px / TILE_WIDTH;
     uint16_t cx;
+    int16_t z;
     uint16_t cy = map->py / TILE_HEIGHT;
+    uint16_t scy = cy;
     uint16_t tile;
     boolean first = true;
-
-    /*
-     * Smooth horiz scroll offset.
-     */
-    top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
-    top -= TILE_HEIGHT;
+    float r = 1.0;
+    float g = 1.0;
+    float b = 1.0;
+    float a = 1.0;
 
     for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
 
-        cx = cx_start;
-        map_tile = &map->tiles[cx][cy];
-        tile = map_tile->tile;
-
-        /*
-         * Smooth vert scroll offset.
-         */
-        left = TILE_WIDTH - (map->px % TILE_WIDTH);
-        left -= TILE_WIDTH;
-
-        if (!first) {
-            /*
-             * Repeat the last vertex of the previous loop so we create a 
-             * degenerate triangle.
-             */
-            gl_push_texcoord(&bufp, tex_right, tex_bottom);
-            gl_push_vertex(&bufp, right, bottom);
-
-            map_tile_to_tex_coords(map, tile,
-                                   &tex_left,
-                                   &tex_right,
-                                   &tex_top,
-                                   &tex_bottom);
-
-            top += TILE_HEIGHT;
+        for (z = MAP_DEPTH - 1; z >= 0; z--) {
 
             /*
-             * Repeat the first vertex for the next loop so we create a 
-             * degenerate triangle.
+             * Smooth horiz scroll offset.
              */
-            gl_push_texcoord(&bufp, tex_left,  tex_top);
-            gl_push_vertex(&bufp, left,  top);
-        } else {
-            first = false;
-        }
+            top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
+            top -= TILE_HEIGHT;
+            top += TILE_HEIGHT * (cy - scy);
+            top -= TILE_HEIGHT * z;
+            bottom = top + TILE_HEIGHT * 2;
 
-        bottom = top + TILE_HEIGHT * 2;
-
-        for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
-
+            cx = cx_start;
+            map_tile = &map->tiles[cx][cy][z];
             tile = map_tile->tile;
-            right = left + TILE_WIDTH;
-
-            map_tile_to_tex_coords(map, tile,
-                                   &tex_left,
-                                   &tex_right,
-                                   &tex_top,
-                                   &tex_bottom);
 
             /*
-             * Repeat the first vertex so we create a degenerate triangle.
+             * Smooth vert scroll offset.
              */
-            gl_push_texcoord(&bufp, tex_left,  tex_top);
-            gl_push_vertex(&bufp, left,  top);
+            left = TILE_WIDTH - (map->px % TILE_WIDTH);
+            left -= TILE_WIDTH;
 
-            gl_push_texcoord(&bufp, tex_left,  tex_bottom);
-            gl_push_vertex(&bufp, left,  bottom);
+            for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
 
-            gl_push_texcoord(&bufp, tex_right, tex_top);
-            gl_push_vertex(&bufp, right, top);
+                map_tile = &map->tiles[cx][cy][z];
+                tile = map_tile->tile;
+                if (tile) {
+                    right = left + TILE_WIDTH;
 
-            gl_push_texcoord(&bufp, tex_right, tex_bottom);
-            gl_push_vertex(&bufp, right, bottom);
+                    map_tile_to_tex_coords(map, tile,
+                                        &tex_left,
+                                        &tex_right,
+                                        &tex_top,
+                                        &tex_bottom);
 
-            left += TILE_WIDTH;
+                    gl_push(&bufp, 
+                            bufp_end,
+                            &first,
+                            tex_left,
+                            tex_top,
+                            tex_right,
+                            tex_bottom,
+                            left,
+                            top,
+                            right,
+                            bottom,
+                            0.3 + (0.1*z),
+                            0.3 + (0.1*z),
+                            0.3 + (0.1*z),
+                            a);
+                }
 
-            map_tile += MAP_HEIGHT;
+                left += TILE_WIDTH;
+            }
         }
     }
 
@@ -265,21 +330,34 @@ static void map_display_ (map_frame_ctx_t *map)
      */
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
 
-    nvertices = (bufp - map->gl_array_buf) /
-                    (NUMBER_DIMENSIONS_PER_COORD * NUMBER_ARRAY_ELEM_ARRAYS);
+    nvertices = ((char*)bufp - (char*)map->gl_array_buf) /
+                    NUMBER_BYTES_PER_VERTICE;
 
     glTexCoordPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (u,v)
         GL_FLOAT,
-        NUMBER_BYTES_PER_VERTICE * 2,
+        NUMBER_BYTES_PER_VERTICE,
         map->gl_array_buf);
 
     glVertexPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (x,y)
         GL_FLOAT,
-        NUMBER_BYTES_PER_VERTICE * 2,
-        ((char*)map->gl_array_buf) + NUMBER_BYTES_PER_VERTICE);
+        NUMBER_BYTES_PER_VERTICE,
+        ((char*)map->gl_array_buf) +
+            sizeof(GLfloat) *        // skip (x,y)
+            NUMBER_DIMENSIONS_PER_COORD);
+
+    glColorPointer(
+        NUMBER_COMPONENTS_PER_COLOR, // (r,g,b,a)
+        GL_FLOAT,
+        NUMBER_BYTES_PER_VERTICE,
+        ((char*)map->gl_array_buf) +
+            sizeof(GLfloat) *        // skip (x,y)
+            NUMBER_DIMENSIONS_PER_COORD +
+            sizeof(GLfloat) *        // skip (u,v)
+            NUMBER_DIMENSIONS_PER_COORD);
 
     glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(map->tex));
 
@@ -289,6 +367,7 @@ static void map_display_ (map_frame_ctx_t *map)
 
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
 }
 
 /*
