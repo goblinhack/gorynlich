@@ -114,3 +114,17 @@ gl_push_vertex (float **p, float x, float y)
     *(*p)++ = x;
     *(*p)++ = y;
 }
+
+/*
+ * gl_push_rgba
+ *
+ * Push elements onto the array buffer.
+ */
+static inline void 
+gl_push_rgba (float **p, float r, float g, float b, float a)
+{
+    *(*p)++ = r;
+    *(*p)++ = g;
+    *(*p)++ = b;
+    *(*p)++ = a;
+}

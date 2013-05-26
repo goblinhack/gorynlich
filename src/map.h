@@ -316,6 +316,7 @@ typedef struct {
 
 #define MAP_WIDTH 256
 #define MAP_HEIGHT 256
+#define MAP_DEPTH 8
 
 /*
  * All the rendering info for one parallax frame of tiles.
@@ -380,12 +381,13 @@ typedef struct {
     /*
      * The map.
      */
-    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT];
+    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
 
     /*
      * This is the huge buffer that contains the vertex and tex arrays.
      */
     float *gl_array_buf;
+    float *gl_array_buf_end;
     uint32_t gl_array_size;
 
 } map_frame_ctx_t;
