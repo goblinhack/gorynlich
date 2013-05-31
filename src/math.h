@@ -58,3 +58,35 @@ static inline float fcos (float rad)
     sqrt((float)(SQUARED((xb)-(xa))+\
                  SQUARED((yb)-(ya))+\
                  SQUARED((zb)-(za))))
+
+static inline float anglerot (point p)
+{
+    float theta = asin(p.y / length(p));
+
+    if (p.x > 0) {
+        if (p.y > 0) {
+            return (theta);
+        } else {
+            return (RAD_360 + theta);
+        }
+    } else {
+        return (RAD_180 - theta);
+    }
+}
+
+static inline void unit (fpoint *p)
+{
+    const float length = sqrt(p->x*p->x + p->y*p->y);
+
+    p->x = p->x / length;
+    p->y = p->y / length;
+}
+
+static inline void unit3d (fpoint3d *p)
+{
+    const float length = sqrt(p->x*p->x + p->y*p->y + p->z*p->z);
+
+    p->x = p->x / length;
+    p->y = p->y / length;
+    p->z = p->z / length;
+}

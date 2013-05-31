@@ -15,6 +15,7 @@
 #include "level.h"
 #include "level_private.h"
 #include "tile.h"
+#include "math.h"
 
 typedef boolean (*map_is_at_callback)(thing_templatep);
 
@@ -40,6 +41,17 @@ boolean map_init (void)
     map_init_tiles(map_ctx);
 
     map_fixup(map_ctx);
+
+    map_ctx->lx = MAP_WIDTH / 2;
+    map_ctx->ly = MAP_HEIGHT / 2;
+    map_ctx->lz = MAP_DEPTH - 1;
+
+    map_lightmap(map_ctx,
+                 map_ctx->lx,
+                 map_ctx->ly,
+                 map_ctx->lz,
+                 20,
+                 true);
 
     map_move_delta_pixels(0, 0);
 
@@ -75,7 +87,8 @@ static void map_init_tiles (map_frame_ctx_t *map)
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
 
-            if ((rand() % 100) > 5) {
+            if (1) {
+                //(rand() % 100) > 5) {
                 thing_templatep thing_template = ROCK;
 
                 tree_rootp thing_tiles =
@@ -108,8 +121,9 @@ static void map_init_tiles (map_frame_ctx_t *map)
 
                 uint32_t height;
 
-                if ((rand() % 100) > 96) {
+                if ((rand() % 100) > 98) {
                     height = 1 + ((rand() % MAP_DEPTH - 1));
+                    height = MAP_DEPTH - 1;
                 } else {
                     height = 1;
                 }
@@ -193,6 +207,15 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
     if (map_ctx->py > map_ctx->max_py) {
         map_ctx->py = map_ctx->max_py;
     }
+
+                 map_ctx->lx += dx;
+                 map_ctx->ly += dy;
+    map_lightmap(map_ctx,
+                 map_ctx->lx,
+                 map_ctx->ly,
+                 map_ctx->lz,
+                 20,
+                 true);
 }
 
 static boolean map_is_x_at (levelp level,
@@ -1425,6 +1448,9 @@ thing_templatep map_find_letter_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_letter, w));
 }
 
+/*
+ * Join up adjactent blocks.
+ */
 static void 
 map_fixup (map_frame_ctx_t *map)
 {
@@ -2008,6 +2034,299 @@ map_fixup (map_frame_ctx_t *map)
                 map->tiles[x][y][z].tile = index;
                 map->tiles[x][y][z].thing_template = thing_template;
             }
+        }
+    }
+}
+
+typedef struct {
+    float dist;
+    int8_t x, y, z;
+} map_light_cell;
+
+static map_light_cell 
+    map_light_cells[(MAX_LIGHT_SIZE*2) * (MAX_LIGHT_SIZE*2) * (MAP_DEPTH*2)];
+static map_light_cell *map_light_cells_max =
+    map_light_cells + ARRAY_SIZE(map_light_cells);
+
+typedef struct {
+    float dist;
+    float shadow;
+    int8_t x, y, z;
+    uint8_t is_a_cell;
+} map_light_shadow;
+
+static map_light_shadow 
+    map_light_shadows[(MAX_LIGHT_SIZE*2) * (MAX_LIGHT_SIZE*2) * (MAP_DEPTH*2) * 100];
+static map_light_shadow *map_light_shadows_end;
+static map_light_shadow *map_light_shadows_max =
+    map_light_shadows + ARRAY_SIZE(map_light_shadows);
+
+/*
+ * Calculate shadow volumes for tiles at ever increasing distances from the
+ * light source.
+ */
+void 
+map_lightgen (map_frame_ctx_t *map, int32_t strength)
+{
+    float root2 = sqrt(2.0);
+    map_light_cell *c;
+    map_light_cell *d;
+    map_light_cell *e;
+    boolean unsorted;
+    int32_t dx;
+    int32_t dy;
+    int32_t dz;
+
+    LOG("%lu",sizeof(map_light_shadows));
+    if (strength >= MAX_LIGHT_SIZE) {
+        DIE("light is too strong!");
+    }
+
+    /*
+     * Generate all possible cells that are in the light sphere.
+     */
+    c = map_light_cells;
+    for (dz = -strength; dz <= strength; dz++) {
+        if (dz < -(MAP_DEPTH - 1)) {
+            continue;
+        }
+
+        if (dz > MAP_DEPTH - 1) {
+            continue;
+        }
+
+        for (dy = -strength; dy <= strength; dy++) {
+            for (dx = -strength; dx <= strength; dx++) {
+
+                c->dist = DISTANCE3f(0.5,0.5,0.5,dx,dy,dz);
+                if (c->dist > strength) {
+                    continue;
+                }
+
+                c->x = dx;
+                c->y = dy;
+                c->z = dz;
+
+                c++;
+
+                if (c >= map_light_cells_max) {
+                    DIE("ran out of cell space");
+                }
+            }
+        }
+    }
+
+    /*
+     * Now sort them by distance.
+     */
+    e = c;
+    unsorted = true;
+
+    while (unsorted) {
+        unsorted = false;
+
+        c = map_light_cells;
+        for (c = map_light_cells; c < e - 1; c++) {
+            d = c + 1;
+
+            if (c->dist > d->dist) {
+
+                map_light_cell e = *d;
+                *d = *c;
+                *c = e; 
+
+                unsorted = true;
+            }
+        }
+    }
+
+    /*
+     * Now for each cell find out which cells shadow it.
+     */
+    map_light_shadow *o;
+    map_light_cell *i;
+
+    o = map_light_shadows;
+    c = map_light_cells;
+
+    while (c < e) {
+        o->shadow = 0.0;
+        o->is_a_cell = true;
+        o->dist = c->dist;
+        o->x = c->x;
+        o->y = c->y;
+        o->z = c->z;
+
+        o++;
+
+//printf("cell %d %d %d has ",c->x,c->y,c->z);
+        if (o >= map_light_shadows_max) {
+            DIE("ran out of shadow space");
+        }
+
+        /*
+         * For all cells that are closer to the light source.
+         */
+        i = map_light_cells;
+        while (i < c) {
+//printf("%d %d %d  ",i->x,i->y,i->z);
+            /*
+             * How far from the light source is this obstacle?
+             */
+            fpoint3d pi = {i->x+0.5, i->y+0.5, i->z+0.5};
+            float distance = DISTANCE3f(pi.x, pi.y, pi.z, 0, 0, 0);
+
+            /*
+             * Convert the start point to a unit vector and then the same
+             * len as the obstacle.
+             */
+            fpoint3d pc = {c->x, c->y, c->z};
+            unit3d(&pc);
+            pc.x *= distance;
+            pc.y *= distance;
+            pc.z *= distance;
+
+            /*
+             * If too far apart, ignore.
+             */
+            float sdistance = DISTANCE3f(pi.x, pi.y, pi.z, pc.x, pc.y, pc.z);
+            if (sdistance > root2) {
+//printf("no %f (%f,%f,%f) (%f,%f,%f)",sdistance, pi.x, pi.y, pi.z, pc.x, 
+//pc.y, pc.z);
+                i++;
+                continue;
+            }
+
+            /*
+             * Make the shadow stronger if closer to the obstacle.
+             */
+            float shadow = root2 - sdistance;
+            shadow = (shadow / root2);
+
+            o->shadow = shadow;
+            o->is_a_cell = false;
+            o->dist = distance;
+            o->x = i->x;
+            o->y = i->y;
+            o->z = i->z;
+
+//printf("shadow %f",shadow);
+            o++;
+            i++;
+
+            if (o >= map_light_shadows_max) {
+                DIE("ran out of shadow space");
+            }
+        }
+
+        c++;
+//printf("\n");
+    }
+
+    map_light_shadows_end = o;
+}
+
+/*
+ * Calculate shadow volumes for tiles at ever increasing distances from the
+ * light source.
+ */
+void 
+map_lightmap (map_frame_ctx_t *map,
+              int32_t lx,
+              int32_t ly,
+              int32_t lz,
+              int32_t strength,
+              boolean first_light)
+{
+    int32_t x;
+    int32_t y;
+    int32_t z;
+    static boolean done;
+
+    if (!done) {
+        done = true;
+        map_lightgen(map_ctx, MAX_LIGHT_SIZE - 1);
+    }
+
+    /*
+     * Clear out the light map. Assume all cells are in darkness. Only do this 
+     * if this is the first light source in the render scene.
+     */
+    if (first_light) {
+        for (z = 0; z < MAP_DEPTH; z++) {
+            for (x = 0; x < MAP_WIDTH; x++) {
+                for (y = 0; y < MAP_HEIGHT; y++) {
+                    map->tiles[x][y][z].lit = 0.0;
+                }
+            }
+        }
+    }
+
+    /*
+     * The light cell is always lit.
+     */
+    map->tiles[lx][ly][lz].lit = 1;
+
+    map_light_shadow *s = map_light_shadows;
+
+    while (s < map_light_shadows_end) {
+        /*
+         * Never go beyond the edge of the light.
+         */
+        if (s->dist > strength) {
+            break;
+        }
+
+        x = lx + s->x;
+        y = ly + s->y;
+        z = lz + s->z;
+
+        s++;
+
+        /*
+         * If this cell is oob then jump to the next one.
+         */
+        if (map_out_of_bounds(x, y, z)) {
+            while (s < map_light_shadows_end) {
+                if (s->is_a_cell) {
+                    break;
+                }
+
+                s++;
+            }
+
+            continue;
+        }
+
+        /*
+         * Add up the shadows from all obstacles.
+         */
+        float total_shadow = 0.0;
+
+        while (s < map_light_shadows_end) {
+            if (s->is_a_cell) {
+                break;
+            }
+
+            int32_t cx = lx + s->x;
+            int32_t cy = ly + s->y;
+            int32_t cz = lz + s->z;
+
+            if (!map->tiles[cx][cy][cz].tile) {
+                s++;
+                continue;
+            }
+
+            total_shadow += s->shadow;
+            s++;
+        }
+
+        float max_shadow = 5.0;
+
+        if (total_shadow > max_shadow) {
+            map->tiles[x][y][z].lit = 0.0;
+        } else {
+            map->tiles[x][y][z].lit = (max_shadow - total_shadow) / max_shadow;
         }
     }
 }

@@ -300,6 +300,18 @@ typedef struct {
 } point;
 
 typedef struct {
+    float x;
+    float y;
+    float z;
+} fpoint3d;
+
+typedef struct {
+    int32_t x;
+    int32_t y;
+    int32_t z;
+} point3d;
+
+typedef struct {
     int32_t width;
     int32_t height;
 } size;
