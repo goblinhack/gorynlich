@@ -310,6 +310,7 @@ typedef struct tree_thing_node_ {
 
 typedef struct {
     uint16_t tile;
+    float lit;
     thing_tilep thing_tile;
     thing_templatep thing_template;
 } map_tile_t;
@@ -322,6 +323,13 @@ typedef struct {
  * All the rendering info for one parallax frame of tiles.
  */
 typedef struct {
+    /*
+     * Main light.
+     */
+    int32_t lx;
+    int32_t ly;
+    int32_t lz;
+
     /*
      * The top left corner pixel of the map.
      */
@@ -397,9 +405,20 @@ extern map_frame_ctx_t *map_ctx;
 /*
  * map.c
  */
+#define MAX_LIGHT_SIZE 20
+
 void map_move_delta_pixels(int32_t dx, int32_t dy);
 boolean map_init(void);
 void map_fini(void);
+void 
+map_lightmap(map_frame_ctx_t *map,
+             int32_t lx,
+             int32_t ly,
+             int32_t lz,
+             int32_t strength,
+             boolean first_light);
+void 
+map_lightgen(map_frame_ctx_t *map, int32_t strength);
 
 /*
  * map_display.c
@@ -412,3 +431,32 @@ void map_display_init(map_frame_ctx_t *map);
  */
 void map_display_wid_init(void);
 void map_display_wid_fini(void);
+
+static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
+{
+    if (z < 0) {
+        return (true);
+    }
+
+    if (z >= MAP_DEPTH) {
+        return (true);
+    }
+
+    if (x < 0) {
+        return (true);
+    }
+
+    if (y < 0) {
+        return (true);
+    }
+
+    if (x >= MAP_WIDTH) {
+        return (true);
+    }
+
+    if (y >= MAP_HEIGHT) {
+        return (true);
+    }
+
+    return (false);
+}
