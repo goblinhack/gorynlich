@@ -303,6 +303,10 @@ static void map_display_ (map_frame_ctx_t *map)
                                         &tex_top,
                                         &tex_bottom);
 
+                    r = map_tile->lit;
+                    g = map_tile->lit;
+                    b = map_tile->lit;
+
                     gl_push(&bufp, 
                             bufp_end,
                             &first,
@@ -314,9 +318,9 @@ static void map_display_ (map_frame_ctx_t *map)
                             top,
                             right,
                             bottom,
-                            0.3 + (0.1*z),
-                            0.3 + (0.1*z),
-                            0.3 + (0.1*z),
+                            r,
+                            g,
+                            b,
                             a);
                 }
 
