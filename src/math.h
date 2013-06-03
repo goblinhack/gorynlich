@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#include <math.h>
+
 uint32_t nextpoweroftwo(uint32_t val);
 
 #define RAD_45  0.78539816339744830962f /* pi/4 */
@@ -46,19 +48,6 @@ static inline float fcos (float rad)
     return (FCOS[index & (RAD_MAX-1)]);
 }
 
-#undef SQUARED
-#define SQUARED(x) ((x) * (x))
-
-#undef DISTANCE
-#define DISTANCE(xa,ya,xb,yb) \
-    sqrt((float)(SQUARED((xb)-(xa))+SQUARED((yb)-(ya))))
-
-#undef DISTANCE3f
-#define DISTANCE3f(xa,ya,za,xb,yb,zb) \
-    sqrt((float)(SQUARED((xb)-(xa))+\
-                 SQUARED((yb)-(ya))+\
-                 SQUARED((zb)-(za))))
-
 static inline float anglerot (point p)
 {
     float theta = asin(p.y / length(p));
@@ -72,21 +61,4 @@ static inline float anglerot (point p)
     } else {
         return (RAD_180 - theta);
     }
-}
-
-static inline void unit (fpoint *p)
-{
-    const float length = sqrt(p->x*p->x + p->y*p->y);
-
-    p->x = p->x / length;
-    p->y = p->y / length;
-}
-
-static inline void unit3d (fpoint3d *p)
-{
-    const float length = sqrt(p->x*p->x + p->y*p->y + p->z*p->z);
-
-    p->x = p->x / length;
-    p->y = p->y / length;
-    p->z = p->z / length;
 }

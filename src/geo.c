@@ -1,0 +1,235 @@
+/*
+ * Copyright (C) 2011 Neil McGill
+ *
+ * See the README file for license.
+ */
+
+#include "main.h"
+#include "geo.h"
+
+/*
+ * triangle_line_intersect(): find the 3D intersection of a line with a 
+ * triangle
+ * -1 = triangle is degenerate (a segment or point)
+ *  0 =  disjoint (no intersect)
+ *  1 =  intersect in unique point I1
+ *  2 =  are in the same plane
+ */
+int
+triangle_line_intersect (const line ray,
+                         const triangle triangle,
+                         fpoint3d *intersection)
+{
+    /*
+     * A triangle is describe by a point and then two vectors. Any point in
+     * the triangle can be reached by walking some way along u and then some
+     * way along v.
+     *
+     * Notice now that if u or v < 0 then we've walked in the wrong direction 
+     * and must be outside the triangle. Also if u or v > 1 then we've walked 
+     * too far in a direction and are outside the triangle. Finally if u + v > 
+     * 1 then we've crossed the far edge again leaving the triangle. 
+     */
+    fpoint3d u = fpoint3d_sub(triangle.V1, triangle.V0);
+    fpoint3d v = fpoint3d_sub(triangle.V2, triangle.V0);
+
+    /*
+     * Cross product for the plane of this triangle.
+     */
+    fpoint3d n = fpoint3d_cross(u, v);
+
+    /*
+     * Degenerate triangle. Triangle is either a point or a line.
+     */
+    static const fpoint3d null = {0,0,0};
+
+    if (fpoint3d_cmp(n, null)) {
+        return (-1);
+    }
+
+    /*
+     * p0 - a point on the plane
+     * l0 - a point on the line
+     * l  - the line fpoint3d
+     * n  - the plane normal
+     *
+     * A plane can be expressed as all points p where the dot product is
+     * 90 degrees between the plane normal and the plane points
+     *
+     *     (p - p0) . n = 0
+     *
+     * A line can be expressed as all points p where
+     *
+     *     p = dl + l0
+     *
+     * Substitute the line equation into the plane
+     *
+     *     (dl + l0 - p0) . n = 0
+     *
+     *     (dl . n) + (l0 - p0) . n = 0
+     *
+     *     (l0 - p0) . n = - (dl . n)
+     *
+     *     (l0 - p0) . n / (l . n) = - d
+     *
+     *     d = (p0 - l0) . n / (l . n)
+     */
+    fpoint3d p0 = triangle.V0;
+    fpoint3d l0 = ray.P0;
+    fpoint3d l = fpoint3d_sub(ray.P1, l0);
+
+    float numerator = fpoint3d_dot(fpoint3d_sub(p0, l0), n);
+    float denominator = fpoint3d_dot(l, n);
+
+    /*
+     * If the line starts outside the plane and is parallel to the plane, 
+     * there is no intersection. In this case, the above denominator will be 
+     * zero and the numerator will be non-zero. 
+     * 
+     * If the line starts inside the plane and is parallel to the plane, the 
+     * line intersects the plane everywhere. In this case, both the numerator 
+     * and denominator above will be zero. 
+     * 
+     * In all other cases, the line intersects the plane once and d represents 
+     * the intersection as the distance along the line from l0 i.e. dl + l0.
+     */
+    if (fabs(denominator) < 0.00000001) { // avoid division overflow
+        if (numerator == 0) {
+            /*
+             * Line is inside plane.
+             */
+            return (2);
+        }
+
+        /*
+         * Else it is parallel and disjoint from the plane.
+         */
+        return (0);
+    }
+
+    /*
+     * Else this line goes through the plane.
+     */
+    float d = numerator / denominator;
+
+    if ((d < 0.0) || (d > 1.0)) {
+        /*
+         * Interection point is beyond the length of the line segment.
+         */
+        return (0);
+    }
+    
+    /*
+     * Intersection point on the plane dl + l0.
+     */
+    *intersection = fpoint3d_add(fpoint3d_mul(d, l), l0);
+
+    /*
+     * We hit the plane but are we in the triangle? This is a bit complex
+     * but involves two vectors u and v that describe the triangle. All
+     * points where u and v total < 1.0 are in the triangle. We solve s
+     * and t that are fractions along u and v.
+     */
+    float uu = fpoint3d_dot(u,u);
+    float uv = fpoint3d_dot(u,v);
+    float vv = fpoint3d_dot(v,v);
+
+    fpoint3d w = fpoint3d_sub(*intersection, triangle.V0);
+
+    float wu = fpoint3d_dot(w,u);
+    float wv = fpoint3d_dot(w,v);
+
+    float D = uv * uv - uu * vv;
+
+    float s, t;
+
+    s = (uv * wv - vv * wu) / D;
+    if ((s < 0.0) || (s > 1.0)) {
+        /*
+         * Intersection outside triangle
+         */
+        return (0);
+    }
+
+    t = (uv * wu - uu * wv) / D;
+    if ((t < 0.0) || ((s + t) > 1.0)) {
+        /*
+         * Intersection outside triangle
+         */
+        return (0);
+    }
+
+    /*
+     * intersection is in triangle
+     */
+    return (1);
+}
+ 
+/*
+ * Returns the distance to the closest intersection point of the light
+ * with this cube.
+ */
+boolean
+cube_line_intersect (const line ray, 
+                     const fpoint3d p0,
+                     const fpoint3d p1,
+                     const fpoint3d p2,
+                     const fpoint3d p3,
+                     const fpoint3d p4,
+                     const fpoint3d p5,
+                     const fpoint3d p6,
+                     const fpoint3d p7,
+                     fpoint3d *best_intersection,
+                     float *best_distance)
+{
+    boolean gotone = false;
+
+    const fpoint3d VA = {p0.x, p0.y, p0.z};
+    const fpoint3d VB = {p1.x, p1.y, p1.z};
+    const fpoint3d VC = {p2.x, p2.y, p2.z};
+    const fpoint3d VD = {p3.x, p3.y, p3.z};
+    const fpoint3d VE = {p4.x, p4.y, p4.z};
+    const fpoint3d VF = {p5.x, p5.y, p5.z};
+    const fpoint3d VG = {p6.x, p6.y, p6.z};
+    const fpoint3d VH = {p7.x, p7.y, p7.z};
+
+    const triangle T[] = {
+        {VA, VC, VD},
+        {VC, VB, VD},
+        {VG, VH, VE},
+        {VH, VF, VG},
+        {VD, VE, VA},
+        {VD, VH, VE},
+        {VB, VG, VC},
+        {VB, VF, VG},
+        {VB, VH, VD},
+        {VH, VF, VB},
+        {VC, VE, VA},
+        {VE, VG, VC},
+    };
+
+    FOR_ALL_IN_ARRAY(t, T) {
+
+        fpoint3d intersection;
+
+        if (triangle_line_intersect(ray, *t, &intersection) != 1) {
+            continue;
+        }
+
+        float distance = fpoint3d_dist(ray.P1, intersection);
+
+        if (!gotone) {
+            *best_intersection = intersection;
+            *best_distance = distance;
+            gotone = true;
+            continue;
+        }
+
+        if (distance < *best_distance) {
+            *best_intersection = intersection;
+            *best_distance = distance;
+        }
+    }
+
+    return (gotone);
+}
