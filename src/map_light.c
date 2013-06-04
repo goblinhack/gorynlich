@@ -69,8 +69,8 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
         for (dy = -strength; dy <= strength; dy++) {
             for (dx = -strength; dx <= strength; dx++) {
 
-                c->dist = DISTANCE3f(0.5,0.5,0.5,dx,dy,dz);
-                if (c->dist > strength) {
+                c->dist = DISTANCE3f(0.0,0.0,0.0,dx,dy,dz);
+                if (c->dist > strength + 1) {
                     continue;
                 }
 
@@ -180,12 +180,39 @@ fflush(stdout);
                 continue;
             }
 
-printf("%f ",distance);
-fflush(stdout);
+#if 0
+            if (distance > strength + 2) {
+                printf("ray %f,%f,%f to %f,%f,%f\n",
+                       ray.P0.x,
+                       ray.P0.y,
+                       ray.P0.z,
+                       ray.P1.x,
+                       ray.P1.y,
+                       ray.P1.z);
+                printf("intersects at %f,%f,%f with cube at %d,%d,%d\n",
+                       intersection.x, intersection.y, intersection.z,
+                       i->x,i->y,i->z);
+
+                LOG("light map broken, distance %f strength %d",
+                    distance, strength);
+                i++;
+                continue;
+            }
+#endif
+
             /*
              * Shadow fades with distance from the obstacle.
              */
-            float shadow = shadow / (pow(2, shadow - 1));
+            float shadow;
+            
+            float s = ((float)strength * 2) - distance;
+            if (distance <= 1) {
+                shadow = 1.0;
+            } else {
+                shadow = 1.0 - (1.0 / (s * s));
+            }
+printf("%f(%f) ",shadow,s);
+fflush(stdout);
 
             o->shadow = shadow;
             o->is_a_cell = false;
@@ -254,13 +281,6 @@ map_lightmap (map_frame_ctx_t *map,
     map_light_shadow *s = map_light_shadows;
 
     while (s < map_light_shadows_end) {
-        /*
-         * Never go beyond the edge of the light.
-         */
-        if (s->dist > strength) {
-            break;
-        }
-
         x = lx + s->x;
         y = ly + s->y;
         z = lz + s->z;
@@ -283,6 +303,15 @@ map_lightmap (map_frame_ctx_t *map,
         }
 
         /*
+         * Never go beyond the edge of the light.
+         */
+        boolean skip = false;
+        if (s->dist > strength + 1) {
+            skip = true;
+            continue;
+        }
+
+        /*
          * Add up the shadows from all obstacles.
          */
         float total_shadow = 0.0;
@@ -290,6 +319,11 @@ map_lightmap (map_frame_ctx_t *map,
         while (s < map_light_shadows_end) {
             if (s->is_a_cell) {
                 break;
+            }
+
+            if (skip) {
+                s++;
+                continue;
             }
 
             int32_t cx = lx + s->x;
@@ -308,7 +342,7 @@ map_lightmap (map_frame_ctx_t *map,
         float max_shadow = 5.0;
 
         if (total_shadow > max_shadow) {
-            map->tiles[x][y][z].lit = 0.0;
+            map->tiles[x][y][z].lit = 0.1;
         } else {
             map->tiles[x][y][z].lit = (max_shadow - total_shadow) / max_shadow;
         }
