@@ -405,7 +405,7 @@ extern map_frame_ctx_t *map_ctx;
 /*
  * map.c
  */
-#define MAX_LIGHT_SIZE 20
+#define MAX_LIGHT_SIZE 15
 
 void map_move_delta_pixels(int32_t dx, int32_t dy);
 boolean map_init(void);
