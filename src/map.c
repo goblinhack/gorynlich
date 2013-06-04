@@ -49,7 +49,7 @@ boolean map_init (void)
                  map_ctx->lx,
                  map_ctx->ly,
                  map_ctx->lz,
-                 20,
+                 MAX_LIGHT_SIZE,
                  true);
 
     map_move_delta_pixels(0, 0);
@@ -213,7 +213,7 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
                  map_ctx->lx,
                  map_ctx->ly,
                  map_ctx->lz,
-                 20,
+                 10,
                  true);
 }
 
