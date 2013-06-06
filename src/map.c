@@ -48,7 +48,7 @@ boolean map_init (void)
     map_lightmap(map_ctx,
                  map_ctx->lx,
                  map_ctx->ly,
-                 map_ctx->lz,
+                 1,
                  MAX_LIGHT_SIZE,
                  true);
 
@@ -128,6 +128,9 @@ static void map_init_tiles (map_frame_ctx_t *map)
                 }
 
                 for (z=0; z<height; z++) {
+                    if (height > 1) {
+                thing_template = WALL_1;
+                    }
                     map->tiles[x][y][z].tile = index;
                     map->tiles[x][y][z].thing_template = thing_template;
                 }
@@ -212,8 +215,8 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
     map_lightmap(map_ctx,
                  map_ctx->lx,
                  map_ctx->ly,
-                 map_ctx->lz,
-                 10,
+                 1,
+                 MAX_LIGHT_SIZE,
                  true);
 }
 

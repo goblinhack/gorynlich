@@ -120,9 +120,10 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
     o = map_light_shadows;
     c = map_light_cells;
 
+    int xxx;
     while (c < e) {
-printf("\n%ld ",e -c);
-fflush(stdout);
+//printf("\n%ld ",e -c);
+//fflush(stdout);
         o->shadow = 0.0;
         o->is_a_cell = true;
         o->dist = c->dist;
@@ -130,6 +131,11 @@ fflush(stdout);
         o->y = c->y;
         o->z = c->z;
 
+xxx = 0;
+if ((o->x == 3) && (o->y == 3) && (o->z == -2)) {
+    xxx = 1;
+printf("%d,%d,%d  ", o->x,o->y,o->z);
+}
         o++;
 
         if (o >= map_light_shadows_max) {
@@ -139,7 +145,7 @@ fflush(stdout);
         line ray;
 
         fpoint3d light_source = {0.5, 0.5, 0.5};
-        fpoint3d ray_end = {c->x, c->y, c->z};
+        fpoint3d ray_end = {c->x+0.5, c->y+0.5, c->z+0.5};
 
         ray.P0 = light_source;
         ray.P1 = ray_end;
@@ -155,10 +161,10 @@ fflush(stdout);
             fpoint3d p2 = { i->x+1, i->y  , i->z   };
             fpoint3d p3 = { i->x  , i->y+1, i->z   };
 
-            fpoint3d p4 = { i->x  , i->y  , i->z+1 };
-            fpoint3d p5 = { i->x+1, i->y+1, i->z+1 };
-            fpoint3d p6 = { i->x+1, i->y  , i->z+1 };
-            fpoint3d p7 = { i->x  , i->y+1, i->z+1 };
+            fpoint3d p4 = { i->x  , i->y  , i->z-1 };
+            fpoint3d p5 = { i->x+1, i->y+1, i->z-1 };
+            fpoint3d p6 = { i->x+1, i->y  , i->z-1 };
+            fpoint3d p7 = { i->x  , i->y+1, i->z-1 };
 
             fpoint3d intersection;
             float distance;
@@ -180,8 +186,8 @@ fflush(stdout);
                 continue;
             }
 
-#if 0
-            if (distance > strength + 2) {
+//            if (distance > strength + 2) {
+        if (xxx) {
                 printf("ray %f,%f,%f to %f,%f,%f\n",
                        ray.P0.x,
                        ray.P0.y,
@@ -195,10 +201,7 @@ fflush(stdout);
 
                 LOG("light map broken, distance %f strength %d",
                     distance, strength);
-                i++;
-                continue;
             }
-#endif
 
             /*
              * Shadow fades with distance from the obstacle.
@@ -209,10 +212,11 @@ fflush(stdout);
             if (distance <= 1) {
                 shadow = 1.0;
             } else {
-                shadow = 1.0 - (1.0 / (s * s));
+                shadow = 1.0 - (1.0 / (s));
+                shadow = 1;
             }
-printf("%f(%f) ",shadow,s);
-fflush(stdout);
+//printf("%f(%f) ",shadow,s);
+//fflush(stdout);
 
             o->shadow = shadow;
             o->is_a_cell = false;
@@ -285,6 +289,22 @@ map_lightmap (map_frame_ctx_t *map,
         y = ly + s->y;
         z = lz + s->z;
 
+#if 0
+        if (!map->tiles[x][y][z].tile) {
+            s++;
+
+            while (s < map_light_shadows_end) {
+                if (s->is_a_cell) {
+                    break;
+                }
+
+                s++;
+            }
+
+            continue;
+        }
+#endif
+
         s++;
 
         /*
@@ -339,10 +359,10 @@ map_lightmap (map_frame_ctx_t *map,
             s++;
         }
 
-        float max_shadow = 5.0;
+        float max_shadow = 3.0;
 
         if (total_shadow > max_shadow) {
-            map->tiles[x][y][z].lit = 0.1;
+            map->tiles[x][y][z].lit = 0.0;
         } else {
             map->tiles[x][y][z].lit = (max_shadow - total_shadow) / max_shadow;
         }
