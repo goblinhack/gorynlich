@@ -146,10 +146,10 @@ gl_push (float **p,
          float top,
          float right,
          float bottom,
-         float r,
-         float g,
-         float b,
-         float a)
+         float r1, float g1, float b1, float a1,
+         float r2, float g2, float b2, float a2,
+         float r3, float g3, float b3, float a3,
+         float r4, float g4, float b4, float a4)
 {
     static float last_tex_right;
     static float last_tex_bottom;
@@ -168,11 +168,11 @@ gl_push (float **p,
         if ((last_right != left) || (last_bottom != bottom)) {
             gl_push_texcoord(p, last_tex_right, last_tex_bottom);
             gl_push_vertex(p, last_right, last_bottom);
-            gl_push_rgba(p, r, b, g, a);
+            gl_push_rgba(p, r4, g4, b4, a4);
 
             gl_push_texcoord(p, tex_left,  tex_top);
             gl_push_vertex(p, left,  top);
-            gl_push_rgba(p, r, b, g, a);
+            gl_push_rgba(p, r1, g1, b1, a1);
         }
     } else {
         *first = false;
@@ -180,24 +180,54 @@ gl_push (float **p,
 
     gl_push_texcoord(p, tex_left,  tex_top);
     gl_push_vertex(p, left,  top);
-    gl_push_rgba(p, r, b, g, a);
+    gl_push_rgba(p, r1, g1, b1, a1);
 
     gl_push_texcoord(p, tex_left,  tex_bottom);
     gl_push_vertex(p, left,  bottom);
-    gl_push_rgba(p, r, b, g, a);
+    gl_push_rgba(p, r2, g2, b2, a2);
 
     gl_push_texcoord(p, tex_right, tex_top);
     gl_push_vertex(p, right, top);
-    gl_push_rgba(p, r, b, g, a);
+    gl_push_rgba(p, r3, g3, b3, a3);
 
     gl_push_texcoord(p, tex_right, tex_bottom);
     gl_push_vertex(p, right, bottom);
-    gl_push_rgba(p, r, b, g, a);
+    gl_push_rgba(p, r4, g4, b4, a4);
 
     last_tex_right = tex_right;
     last_tex_bottom = tex_bottom;
     last_right = right;
     last_bottom = bottom;
+}
+
+static void
+map_tile_color (map_frame_ctx_t *map,
+                int32_t x, int32_t y, int32_t z,
+                float *r, float *g, float *b, float *a)
+{
+    map_tile_t *map_tile;
+
+    if (map_out_of_bounds(x, y, z)) {
+        *r = 0.0;
+        *g = 0.0;
+        *b = 0.0;
+        *a = 0.0;
+        return;
+    }
+
+    map_tile = &map->tiles[x][y][z];
+
+    *r = map_tile->lit;
+    *g = map_tile->lit;
+    *b = map_tile->lit;
+    *a = 1.0;
+
+    if (map_tile->lit < 0.1) {
+        *r = 0.0;
+        *g = 0.0;
+        *b = 0.0;
+        *a = 1.0;
+    }
 }
 
 /*
@@ -258,73 +288,119 @@ static void map_display_ (map_frame_ctx_t *map)
     uint16_t cx_start = map->px / TILE_WIDTH;
     uint16_t cx;
     int16_t z;
+    uint8_t pass;
     uint16_t cy = map->py / TILE_HEIGHT;
     uint16_t scy = cy;
     uint16_t tile;
     boolean first = true;
-    float r = 1.0;
-    float g = 1.0;
-    float b = 1.0;
-    float a = 1.0;
+    float r1, g1, b1, a1;
+    float r2, g2, b2, a2;
+    float r3, g3, b3, a3;
+    float r4, g4, b4, a4;
 
     for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
-
-        for (z = MAP_DEPTH - 1; z >= 0; z--) {
-
+        /*
+         * From bottom to top.
+         */
+        for (z = 0; z < MAP_DEPTH; z++) {
             /*
-             * Smooth horiz scroll offset.
+             * First pass, bottom half of tile, i.e. fake vertical tile
+             * Second pass, top half of tile, top flat file
              */
-            top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
-            top -= TILE_HEIGHT;
-            top += TILE_HEIGHT * (cy - scy);
-            top -= TILE_HEIGHT * z;
-            bottom = top + TILE_HEIGHT * 2;
+            for (pass = 0; pass < 2; pass++) {
+                /*
+                 * Smooth horiz scroll offset.
+                 */
+                top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
+                top -= TILE_HEIGHT;
+                top += TILE_HEIGHT * (cy - scy);
+                top -= TILE_HEIGHT * z;
 
-            cx = cx_start;
-            map_tile = &map->tiles[cx][cy][z];
-            tile = map_tile->tile;
-
-            /*
-             * Smooth vert scroll offset.
-             */
-            left = TILE_WIDTH - (map->px % TILE_WIDTH);
-            left -= TILE_WIDTH;
-
-            for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
-
-                map_tile = &map->tiles[cx][cy][z];
-                tile = map_tile->tile;
-                if (tile) {
-                    right = left + TILE_WIDTH;
-
-                    map_tile_to_tex_coords(map, tile,
-                                        &tex_left,
-                                        &tex_right,
-                                        &tex_top,
-                                        &tex_bottom);
-
-                    r = map_tile->lit;
-                    g = map_tile->lit;
-                    b = map_tile->lit;
-
-                    gl_push(&bufp, 
-                            bufp_end,
-                            &first,
-                            tex_left,
-                            tex_top,
-                            tex_right,
-                            tex_bottom,
-                            left,
-                            top,
-                            right,
-                            bottom,
-                            r,
-                            g,
-                            b,
-                            a);
+                if (pass == 0) {
+                    top += TILE_HEIGHT;
+                } else {
                 }
 
-                left += TILE_WIDTH;
+                bottom = top + TILE_HEIGHT;
+
+                cx = cx_start;
+                map_tile = &map->tiles[cx][cy][z];
+                tile = map_tile->tile;
+
+                /*
+                 * Smooth vert scroll offset.
+                 */
+                left = TILE_WIDTH - (map->px % TILE_WIDTH);
+                left -= TILE_WIDTH;
+
+                /*
+                 * Draw entire row.
+                 */
+                for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
+
+                    map_tile = &map->tiles[cx][cy][z];
+                    tile = map_tile->tile;
+                    if (tile) {
+                        right = left + TILE_WIDTH;
+
+                        map_tile_to_tex_coords(map, tile,
+                                               &tex_left,
+                                               &tex_right,
+                                               &tex_top,
+                                               &tex_bottom);
+
+
+                        float tex_height = tex_bottom - tex_top;
+
+                        if (pass == 0) {
+                            /*
+                             * bottom half of tile, i.e. fake vertical tile
+                             */
+                            tex_top = tex_top + (tex_height / 2.0);
+
+                            /* top left */
+                            map_tile_color(map, cx,   cy+1,z,  &r1,&g1,&b1,&a1);
+                            /* bottom left */
+                            map_tile_color(map, cx,   cy+1,z-1,&r2,&g2,&b2,&a2);
+                            /* top right */
+                            map_tile_color(map, cx+1, cy+1,z,  &r3,&g3,&b3,&a3);
+                            /* bottom right */
+                            map_tile_color(map, cx+1, cy+1,z-1,&r4,&g4,&b4,&a4);
+                        } else {
+                            /*
+                             * top half of tile, top flat file
+                             */
+                            tex_bottom = tex_top+(tex_height / 2.0);
+
+                            /* top left */
+                            map_tile_color(map, cx,   cy,   z, &r1,&g1,&b1,&a1);
+                            /* bottom left */
+                            map_tile_color(map, cx,   cy+1, z, &r2,&g2,&b2,&a2);
+                            /* top right */
+                            map_tile_color(map, cx+1, cy,   z, &r3,&g3,&b3,&a3);
+                            /* bottom right */
+                            map_tile_color(map, cx+1, cy+1, z, &r4,&g4,&b4,&a4);
+                        }
+
+                        gl_push(&bufp, 
+                                bufp_end,
+                                &first,
+                                tex_left,
+                                tex_top,
+                                tex_right,
+                                tex_bottom,
+                                left,
+                                top,
+                                right,
+                                bottom,
+                                r1, g1, b1, a1,  /* top left */
+                                r2, g2, b2, a2,  /* bottom left */
+                                r3, g3, b3, a3,  /* top right */
+                                r4, g4, b4, a4); /* bottom right */
+                    }
+
+                    left += TILE_WIDTH;
+                }
             }
         }
     }

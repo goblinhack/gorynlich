@@ -43,12 +43,12 @@ boolean map_init (void)
 
     map_ctx->lx = MAP_WIDTH / 2;
     map_ctx->ly = MAP_HEIGHT / 2;
-    map_ctx->lz = MAP_DEPTH - 1;
+    map_ctx->lz = 1;
 
     map_lightmap(map_ctx,
                  map_ctx->lx,
                  map_ctx->ly,
-                 1,
+                 map_ctx->lz,
                  MAX_LIGHT_SIZE,
                  true);
 
@@ -210,12 +210,25 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
         map_ctx->py = map_ctx->max_py;
     }
 
-                 map_ctx->lx += dx;
-                 map_ctx->ly += dy;
+    if (dx > 0) {
+        dx = 1;
+    } else if (dx < 0) {
+        dx = -1;
+    }
+
+    if (dy > 0) {
+        dy = 1;
+    } else if (dy < 0) {
+        dy = -1;
+    }
+
+    map_ctx->lx += dx;
+    map_ctx->ly += dy;
+
     map_lightmap(map_ctx,
                  map_ctx->lx,
                  map_ctx->ly,
-                 1,
+                 map_ctx->lz,
                  MAX_LIGHT_SIZE,
                  true);
 }
