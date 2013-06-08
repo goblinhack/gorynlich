@@ -57,7 +57,7 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
      * Generate all possible cells that are in the light sphere.
      */
     c = map_light_cells;
-    for (dz = -strength; dz <= strength; dz++) {
+    for (dz = -strength; dz < strength; dz++) {
         if (dz < -(MAP_DEPTH - 1)) {
             continue;
         }
@@ -66,11 +66,11 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
             continue;
         }
 
-        for (dy = -strength; dy <= strength; dy++) {
-            for (dx = -strength; dx <= strength; dx++) {
+        for (dy = -strength; dy < strength; dy++) {
+            for (dx = -strength; dx < strength; dx++) {
 
-                c->dist = DISTANCE3f(0.0,0.0,0.0,dx,dy,dz);
-                if (c->dist > strength + 1) {
+                c->dist = DISTANCE3f(-0.5,-0.5,0.5,dx,dy,dz);
+                if (c->dist > strength) {
                     continue;
                 }
 
@@ -144,8 +144,11 @@ printf("%d,%d,%d  ", o->x,o->y,o->z);
 
         line ray;
 
-        fpoint3d light_source = {0.5, 0.5, 0.5};
-        fpoint3d ray_end = {c->x+0.5, c->y+0.5, c->z+0.5};
+        fpoint3d light_source = {-0.5, -0.5, 0.5};
+        fpoint3d ray_end = {
+            ((float)c->x)-0.25,
+            ((float)c->y)-0.25,
+            ((float)c->z)+0.5};
 
         ray.P0 = light_source;
         ray.P1 = ray_end;
@@ -186,23 +189,6 @@ printf("%d,%d,%d  ", o->x,o->y,o->z);
                 continue;
             }
 
-//            if (distance > strength + 2) {
-        if (xxx) {
-                printf("ray %f,%f,%f to %f,%f,%f\n",
-                       ray.P0.x,
-                       ray.P0.y,
-                       ray.P0.z,
-                       ray.P1.x,
-                       ray.P1.y,
-                       ray.P1.z);
-                printf("intersects at %f,%f,%f with cube at %d,%d,%d\n",
-                       intersection.x, intersection.y, intersection.z,
-                       i->x,i->y,i->z);
-
-                LOG("light map broken, distance %f strength %d",
-                    distance, strength);
-            }
-
             /*
              * Shadow fades with distance from the obstacle.
              */
@@ -213,7 +199,7 @@ printf("%d,%d,%d  ", o->x,o->y,o->z);
                 shadow = 1.0;
             } else {
                 shadow = 1.0 - (1.0 / (s));
-                shadow = 1;
+                shadow = 1.0;
             }
 //printf("%f(%f) ",shadow,s);
 //fflush(stdout);
@@ -335,6 +321,7 @@ map_lightmap (map_frame_ctx_t *map,
          * Add up the shadows from all obstacles.
          */
         float total_shadow = 0.0;
+        float max_shadow = 1.55;
 
         while (s < map_light_shadows_end) {
             if (s->is_a_cell) {
@@ -356,15 +343,31 @@ map_lightmap (map_frame_ctx_t *map,
             }
 
             total_shadow += s->shadow;
+            if (total_shadow > max_shadow) {
+                skip = true;
+            }
+
             s++;
         }
 
-        float max_shadow = 2.5;
+        float lit;
 
         if (total_shadow > max_shadow) {
-            map->tiles[x][y][z].lit = 0.0;
+            lit = 0.0;
         } else {
-            map->tiles[x][y][z].lit = (max_shadow - total_shadow) / max_shadow;
+            lit = (max_shadow - total_shadow) / max_shadow;
         }
+
+        float f = s->dist / ((float)strength + 1);
+        if (f > 0.5) {
+            f = f - 0.5;
+            f = f * 2;
+            lit -= f;
+            if (lit < 0.0) {
+                lit = 0.0;
+            }
+        }
+
+        map->tiles[x][y][z].lit = lit;
     }
 }
