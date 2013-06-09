@@ -13,6 +13,7 @@
 #include "string.h"
 #include "mzip_file.h"
 #include "mzip_lib.h"
+#include "ramdisk.h"
 
 unsigned char *mzip_file_read (const char *filename, int32_t *out_len)
 {
@@ -20,7 +21,7 @@ unsigned char *mzip_file_read (const char *filename, int32_t *out_len)
     unsigned char *buf;
     int32_t len;
 
-    buf_compressed = file_read(filename, &len);
+    buf_compressed = ramdisk_load(filename, &len);
     if (!buf_compressed) {
         fprintf(stderr,
                 "Failed to read compressed file \"%s\" for reading: %s\n",
