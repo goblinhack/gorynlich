@@ -40,6 +40,7 @@ static map_light_shadow *map_light_shadows_max =
 void 
 map_lightgen (map_frame_ctx_t *map, int32_t strength)
 {
+    float root2 = sqrt(2.0)/2.0 + 0.5;
     map_light_cell *c;
     map_light_cell *d;
     map_light_cell *e;
@@ -120,7 +121,6 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
     o = map_light_shadows;
     c = map_light_cells;
 
-    int xxx;
     while (c < e) {
 //printf("\n%ld ",e -c);
 //fflush(stdout);
@@ -131,11 +131,6 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
         o->y = c->y;
         o->z = c->z;
 
-xxx = 0;
-if ((o->x == 3) && (o->y == 3) && (o->z == -2)) {
-    xxx = 1;
-printf("%d,%d,%d  ", o->x,o->y,o->z);
-}
         o++;
 
         if (o >= map_light_shadows_max) {
@@ -158,6 +153,34 @@ printf("%d,%d,%d  ", o->x,o->y,o->z);
          */
         i = map_light_cells;
         while (i < c) {
+
+#if 1
+            fpoint3d p = { i->x + 0.5, i->y + 0.5, i->z - 0.5 };
+            float dist;
+
+            if (!dist_point_line(p, ray.P0, ray.P1, &dist)) {
+                i++;
+                continue;
+            }
+
+            if (dist > root2) {
+                i++;
+#if 0
+printf("%f %f %f to %f %f %f dist to %f %f %f is %f\n",
+ray.P0.x,
+ray.P0.y,
+ray.P0.z,
+ray.P1.x,
+ray.P1.y,
+ray.P1.z,
+p.x,
+p.y,
+p.z,
+dist);
+#endif
+                continue;
+            }
+#endif
 
             fpoint3d p0 = { i->x  , i->y  , i->z   };
             fpoint3d p1 = { i->x+1, i->y+1, i->z   };
@@ -225,6 +248,14 @@ printf("%d,%d,%d  ", o->x,o->y,o->z);
     }
 
     map_light_shadows_end = o;
+
+    map_light_shadow *s = map_light_shadows;
+
+    while (s < map_light_shadows_end) {
+
+        s++;
+    }
+    printf("%ld\n",s-map_light_shadows);
 }
 
 /*
@@ -321,7 +352,7 @@ map_lightmap (map_frame_ctx_t *map,
          * Add up the shadows from all obstacles.
          */
         float total_shadow = 0.0;
-        float max_shadow = 1.55;
+        float max_shadow = 1.05;
 
         while (s < map_light_shadows_end) {
             if (s->is_a_cell) {
