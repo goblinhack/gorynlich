@@ -86,8 +86,7 @@ static void map_init_tiles (map_frame_ctx_t *map)
     for (x = sx; x < ex; x++) {
         for (y = sy; y < ey; y++) {
 
-            if (1) {
-                //(rand() % 100) > 5) {
+            if ((rand() % 100) > 25) {
                 thing_templatep thing_template = ROCK;
 
                 tree_rootp thing_tiles =
@@ -122,7 +121,6 @@ static void map_init_tiles (map_frame_ctx_t *map)
 
                 if ((rand() % 100) > 98) {
                     height = 1 + ((rand() % MAP_DEPTH - 1));
-                    height = MAP_DEPTH - 1;
                 } else {
                     height = 1;
                 }
