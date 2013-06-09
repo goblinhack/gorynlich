@@ -26,6 +26,7 @@ extern const unsigned char data_levels_6_map[];
 extern const unsigned char data_levels_7_map[];
 extern const unsigned char data_levels_8_map[];
 extern const unsigned char data_levels_9_map[];
+extern const unsigned char data_map_map_light_data[];
 extern const unsigned char data_music_hiscore_wav[];
 extern const unsigned char data_music_intro_wav[];
 extern const unsigned char data_music_music_wav[];
@@ -202,6 +203,12 @@ ramdisk_t ramdisk_data[] = {
         /* data     */ 0,
         /* orig_len */ 19277,
         /* len      */ 1196,
+    },
+    {
+        /* filename */ "data/map/map_light.data",
+        /* data     */ 0,
+        /* orig_len */ 3178557,
+        /* len      */ 3054621,
     },
     {
         /* filename */ "data/music/hiscore.wav",
@@ -384,29 +391,30 @@ void ramdisk_init (void)
     ramdisk_data[22].data = data_levels_7_map;
     ramdisk_data[23].data = data_levels_8_map;
     ramdisk_data[24].data = data_levels_9_map;
-    ramdisk_data[25].data = data_music_hiscore_wav;
-    ramdisk_data[26].data = data_music_intro_wav;
-    ramdisk_data[27].data = data_music_music_wav;
-    ramdisk_data[28].data = data_sound_chomp_wav;
-    ramdisk_data[29].data = data_sound_chomp2_wav;
-    ramdisk_data[30].data = data_sound_click_wav;
-    ramdisk_data[31].data = data_sound_doorbell_wav;
-    ramdisk_data[32].data = data_sound_explosion_wav;
-    ramdisk_data[33].data = data_sound_letter_wav;
-    ramdisk_data[34].data = data_sound_level_end_wav;
-    ramdisk_data[35].data = data_sound_paper_wav;
-    ramdisk_data[36].data = data_sound_powerup_wav;
-    ramdisk_data[37].data = data_sound_ratdeath_wav;
-    ramdisk_data[38].data = data_sound_rocket_wav;
-    ramdisk_data[39].data = data_sound_slime_wav;
-    ramdisk_data[40].data = data_sound_spam_wav;
-    ramdisk_data[41].data = data_sound_thief_wav;
-    ramdisk_data[42].data = data_things_rock;
-    ramdisk_data[43].data = data_things_wall;
-    ramdisk_data[44].data = data_ttf_large_ttf_pointsize40_data;
-    ramdisk_data[45].data = data_ttf_large_ttf_pointsize40_tga;
-    ramdisk_data[46].data = data_ttf_med_ttf_pointsize30_data;
-    ramdisk_data[47].data = data_ttf_med_ttf_pointsize30_tga;
-    ramdisk_data[48].data = data_ttf_small_ttf_pointsize20_data;
-    ramdisk_data[49].data = data_ttf_small_ttf_pointsize20_tga;
+    ramdisk_data[25].data = data_map_map_light_data;
+    ramdisk_data[26].data = data_music_hiscore_wav;
+    ramdisk_data[27].data = data_music_intro_wav;
+    ramdisk_data[28].data = data_music_music_wav;
+    ramdisk_data[29].data = data_sound_chomp_wav;
+    ramdisk_data[30].data = data_sound_chomp2_wav;
+    ramdisk_data[31].data = data_sound_click_wav;
+    ramdisk_data[32].data = data_sound_doorbell_wav;
+    ramdisk_data[33].data = data_sound_explosion_wav;
+    ramdisk_data[34].data = data_sound_letter_wav;
+    ramdisk_data[35].data = data_sound_level_end_wav;
+    ramdisk_data[36].data = data_sound_paper_wav;
+    ramdisk_data[37].data = data_sound_powerup_wav;
+    ramdisk_data[38].data = data_sound_ratdeath_wav;
+    ramdisk_data[39].data = data_sound_rocket_wav;
+    ramdisk_data[40].data = data_sound_slime_wav;
+    ramdisk_data[41].data = data_sound_spam_wav;
+    ramdisk_data[42].data = data_sound_thief_wav;
+    ramdisk_data[43].data = data_things_rock;
+    ramdisk_data[44].data = data_things_wall;
+    ramdisk_data[45].data = data_ttf_large_ttf_pointsize40_data;
+    ramdisk_data[46].data = data_ttf_large_ttf_pointsize40_tga;
+    ramdisk_data[47].data = data_ttf_med_ttf_pointsize30_data;
+    ramdisk_data[48].data = data_ttf_med_ttf_pointsize30_tga;
+    ramdisk_data[49].data = data_ttf_small_ttf_pointsize20_data;
+    ramdisk_data[50].data = data_ttf_small_ttf_pointsize20_tga;
 }
