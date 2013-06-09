@@ -233,3 +233,36 @@ cube_line_intersect (const line ray,
 
     return (gotone);
 }
+
+/*
+ * true if perpendicular line from point is in line segment.
+ */
+boolean 
+dist_point_line (fpoint3d P0, fpoint3d L0, fpoint3d L1, float *dist)
+{
+    fpoint3d intersect;
+    float mag;
+    float U;
+ 
+    mag = fpoint3d_dist(L1, L0);
+ 
+    U = (((P0.x - L0.x) * (L1.x - L0.x)) +
+         ((P0.y - L0.y) * (L1.y - L0.y)) +
+         ((P0.z - L0.z) * (L1.z - L0.z))) /
+         (mag * mag);
+ 
+    if ((U < 0.0f) || (U > 1.0f)) {
+        return (0);   // closest P0 does not fall within the line segment
+    }
+ 
+    intersect.x = L0.x + U * (L1.x - L0.x);
+    intersect.y = L0.y + U * (L1.y - L0.y);
+    intersect.z = L0.z + U * (L1.z - L0.z);
+ 
+    *dist = fpoint3d_dist(P0, intersect);
+ 
+    return (1);
+}
+
+
+

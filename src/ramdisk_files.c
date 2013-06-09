@@ -151,6 +151,12 @@ ramdisk_t ramdisk_files[] = {
         0,
     },
     {
+        "data/map/map_light.data",
+        0,
+        0,
+        0,
+    },
+    {
         "data/music/hiscore.wav",
         0,
         0,

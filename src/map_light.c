@@ -9,38 +9,44 @@
 #include "main.h"
 #include "map.h"
 #include "geo.h"
+#include "mzip_file.h"
 
 typedef struct {
     float dist;
     int8_t x, y, z;
 } map_light_cell;
 
-static map_light_cell 
-    map_light_cells[(MAX_LIGHT_SIZE*2) * (MAX_LIGHT_SIZE*2) * (MAP_DEPTH*2)];
-static map_light_cell *map_light_cells_max =
-    map_light_cells + ARRAY_SIZE(map_light_cells);
-
 typedef struct {
-    float dist;
-    float shadow;
     int8_t x, y, z;
-    uint8_t is_a_cell;
+    uint8_t dist:6;
+    uint8_t shadow:1;
+    uint8_t is_a_cell:1;
 } map_light_shadow;
 
-static map_light_shadow 
-    map_light_shadows[(MAX_LIGHT_SIZE*2) * (MAX_LIGHT_SIZE*2) * (MAP_DEPTH*2) * 100];
+static map_light_shadow *map_light_shadows_start;
 static map_light_shadow *map_light_shadows_end;
-static map_light_shadow *map_light_shadows_max =
-    map_light_shadows + ARRAY_SIZE(map_light_shadows);
 
 /*
  * Calculate shadow volumes for tiles at ever increasing distances from the
  * light source.
  */
-void 
+static inline void 
 map_lightgen (map_frame_ctx_t *map, int32_t strength)
 {
-    float root2 = sqrt(2.0)/2.0 + 0.5;
+    static map_light_shadow 
+        map_light_shadows[(MAX_LIGHT_SIZE*2) *
+        (MAX_LIGHT_SIZE*2) * (MAP_DEPTH*2) * 100];
+
+    static map_light_shadow *map_light_shadows_max =
+        map_light_shadows + ARRAY_SIZE(map_light_shadows);
+
+    static map_light_cell 
+        map_light_cells[(MAX_LIGHT_SIZE*2) * (MAX_LIGHT_SIZE*2) * (MAP_DEPTH*2)];
+
+    static map_light_cell *map_light_cells_max =
+        map_light_cells + ARRAY_SIZE(map_light_cells);
+
+    float cutoff = sqrt(2.0)/2.0 + 0.5;
     map_light_cell *c;
     map_light_cell *d;
     map_light_cell *e;
@@ -154,7 +160,6 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
         i = map_light_cells;
         while (i < c) {
 
-#if 1
             fpoint3d p = { i->x + 0.5, i->y + 0.5, i->z - 0.5 };
             float dist;
 
@@ -163,24 +168,10 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
                 continue;
             }
 
-            if (dist > root2) {
+            if (dist > cutoff) {
                 i++;
-#if 0
-printf("%f %f %f to %f %f %f dist to %f %f %f is %f\n",
-ray.P0.x,
-ray.P0.y,
-ray.P0.z,
-ray.P1.x,
-ray.P1.y,
-ray.P1.z,
-p.x,
-p.y,
-p.z,
-dist);
-#endif
                 continue;
             }
-#endif
 
             fpoint3d p0 = { i->x  , i->y  , i->z   };
             fpoint3d p1 = { i->x+1, i->y+1, i->z   };
@@ -215,26 +206,13 @@ dist);
             /*
              * Shadow fades with distance from the obstacle.
              */
-            float shadow;
-            
-            float s = ((float)strength * 2) - distance;
-            if (distance <= 1) {
-                shadow = 1.0;
-            } else {
-                shadow = 1.0 - (1.0 / (s));
-                shadow = 1.0;
-            }
-//printf("%f(%f) ",shadow,s);
-//fflush(stdout);
-
-            o->shadow = shadow;
+            o->shadow = 1;
             o->is_a_cell = false;
             o->dist = distance;
             o->x = i->x;
             o->y = i->y;
             o->z = i->z;
 
-//printf("shadow %f",shadow);
             o++;
             i++;
 
@@ -244,18 +222,22 @@ dist);
         }
 
         c++;
-//printf("\n");
     }
 
     map_light_shadows_end = o;
 
-    map_light_shadow *s = map_light_shadows;
+    int32_t len;
+    uint8_t *buf;
 
-    while (s < map_light_shadows_end) {
+    buf = (uint8_t *) map_light_shadows;
+    len = (map_light_shadows_end - map_light_shadows) *
+                    sizeof(map_light_shadow);
 
-        s++;
-    }
-    printf("%ld\n",s-map_light_shadows);
+    LOG("writing light map, %d bytes", len);
+
+    mzip_file_write("../data/map/map_light.data", buf, &len);
+
+    LOG("wrote light map, %d bytes", len);
 }
 
 /*
@@ -273,11 +255,25 @@ map_lightmap (map_frame_ctx_t *map,
     int32_t x;
     int32_t y;
     int32_t z;
-    static boolean done;
+
+    static bool done;
 
     if (!done) {
         done = true;
+
+#ifdef ENABLE_GEN_LIGHT_MAP_FILE
         map_lightgen(map_ctx, MAX_LIGHT_SIZE - 1);
+#endif
+
+        int32_t len;
+
+        map_light_shadows_start = (typeof(map_light_shadows_start))
+            mzip_file_read("data/map/map_light.data", &len);
+
+        LOG("read light map %d bytes\n",len);
+
+        map_light_shadows_end = (typeof(map_light_shadows_end))
+            (((uint8_t *) map_light_shadows_start) + len);
     }
 
     /*
@@ -299,7 +295,7 @@ map_lightmap (map_frame_ctx_t *map,
      */
     map->tiles[lx][ly][lz].lit = 1;
 
-    map_light_shadow *s = map_light_shadows;
+    map_light_shadow *s = map_light_shadows_start;
 
     while (s < map_light_shadows_end) {
         x = lx + s->x;
