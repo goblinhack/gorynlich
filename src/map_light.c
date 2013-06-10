@@ -12,8 +12,8 @@
 #include "mzip_file.h"
 
 typedef struct {
-    float dist;
     int8_t x, y, z;
+    float dist;
 } map_light_cell;
 
 typedef struct {
@@ -128,8 +128,6 @@ map_lightgen (map_frame_ctx_t *map, int32_t strength)
     c = map_light_cells;
 
     while (c < e) {
-//printf("\n%ld ",e -c);
-//fflush(stdout);
         o->shadow = 0.0;
         o->is_a_cell = true;
         o->dist = c->dist;
@@ -270,7 +268,7 @@ map_lightmap (map_frame_ctx_t *map,
         map_light_shadows_start = (typeof(map_light_shadows_start))
             mzip_file_read("data/map/map_light.data", &len);
 
-        LOG("read light map %d bytes\n",len);
+        LOG("Load  light map %d bytes\n",len);
 
         map_light_shadows_end = (typeof(map_light_shadows_end))
             (((uint8_t *) map_light_shadows_start) + len);
