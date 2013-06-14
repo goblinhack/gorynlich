@@ -207,8 +207,8 @@ ramdisk_t ramdisk_data[] = {
     {
         /* filename */ "data/map/map_light.data",
         /* data     */ 0,
-        /* orig_len */ 3178557,
-        /* len      */ 3054621,
+        /* orig_len */ 3492139,
+        /* len      */ 3352353,
     },
     {
         /* filename */ "data/music/hiscore.wav",
