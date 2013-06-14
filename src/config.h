@@ -14,8 +14,20 @@
 #define nENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #define nENABLE_MAP_DEBUG           // Debug AI by printing the map
 #define nENABLE_WID_DEBUG           // Widget debug
+
+/*
+ * Screen sizes.
+ */
+#define DEFAULT_VIDEO_WIDTH         1024 // See gl.h for more
+#define DEFAULT_VIDEO_HEIGHT        800
+
+/*
+ * If you change the below you need to re-enable ENABLE_GEN_LIGHT_MAP_FILE,
+ * rebuild and rerun. Then disable the flag and run RUNME.ramdisk so the 
+ * updated light map file is built into the image.
+ */
 #define nENABLE_GEN_LIGHT_MAP_FILE  // Recreate the ray-traced light map file
-#define MAX_LIGHT_SIZE              35
+#define DEFAULT_LIGHT_RAY_LENGTH    35  // how far we can cast light
 
 #ifdef ENABLE_GENERATE_TTF
 #define DISABLE_SDL_WINDOW          // SDL_ttf is incompatible with window mode
