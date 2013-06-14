@@ -41,8 +41,6 @@
 #define MEDIUM_VIDEO_HEIGHT              (768)
 #define IPAD_VIDEO_WIDTH                 (768)
 #define IPAD_VIDEO_HEIGHT                (1024)
-#define DEFAULT_VIDEO_WIDTH              (1024)
-#define DEFAULT_VIDEO_HEIGHT             (800)
 
 /*
  * gl.c
