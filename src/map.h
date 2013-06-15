@@ -406,15 +406,27 @@ extern map_frame_ctx_t *map_ctx;
  * map.c
  */
 void map_move_delta_pixels(int32_t dx, int32_t dy);
+
 boolean map_init(void);
+
 void map_fini(void);
-void 
-map_lightmap(map_frame_ctx_t *map,
-             int32_t lx,
-             int32_t ly,
-             int32_t lz,
-             int32_t strength,
-             boolean first_light);
+
+void map_lightmap(map_frame_ctx_t *map,
+                  int32_t lx, int32_t ly, int32_t lz,
+                  int32_t strength,
+                  boolean first_light);
+
+thing_templatep map_set(map_frame_ctx_t *map,
+                        int32_t x, int32_t y, int32_t z,
+                        thing_templatep thing_template);
+
+thing_templatep map_get(map_frame_ctx_t *map,
+                        int32_t x, int32_t y, int32_t z);
+
+/*
+ * cave.c
+ */
+void cave_gen(map_frame_ctx_t *map, thing_templatep rock, int32_t z);
 
 /*
  * map_display.c
