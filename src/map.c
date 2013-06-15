@@ -76,65 +76,7 @@ void map_fini (void)
  */
 static void map_init_tiles (map_frame_ctx_t *map)
 {
-    const uint32_t sx = 0;
-    const uint32_t ex = map->map_width;
-    const uint32_t sy = 0;
-    const uint32_t ey = map->map_height;
-    uint32_t x;
-    uint32_t y;
-
-    for (x = sx; x < ex; x++) {
-        for (y = sy; y < ey; y++) {
-
-            if ((rand() % 100) > 25) {
-                thing_templatep thing_template = ROCK;
-
-                tree_rootp thing_tiles =
-                    thing_template_get_tiles(thing_template);
-                if (!thing_tiles) {
-                    continue;
-                }
-
-                thing_tilep thing_tile =
-                    (typeof(thing_tile)) tree_root_first(thing_tiles);
-                if (!thing_tile) {
-                    continue;
-                }
-
-                const char *tilename = thing_tile_name(thing_tile);
-                if (!tilename) {
-                    DIE("tile null name from thing %s not found",
-                        thing_template_shortname(thing_template));
-                }
-
-                tilep tile = tile_find(tilename);
-                if (!tile) {
-                    DIE("tile name %s from thing %s not found",
-                        tilename,
-                        thing_template_shortname(thing_template));
-                }
-
-                uint32_t index = tile_get_index(tile);
-                uint32_t z;
-
-                uint32_t height;
-
-                if ((rand() % 100) > 98) {
-                    height = 1 + ((rand() % MAP_DEPTH - 1));
-                } else {
-                    height = 1;
-                }
-
-                for (z=0; z<height; z++) {
-                    if (height > 1) {
-                thing_template = WALL_1;
-                    }
-                    map->tiles[x][y][z].tile = index;
-                    map->tiles[x][y][z].thing_template = thing_template;
-                }
-            }
-        }
-    }
+    cave_gen(map, ROCK, 0);
 }
 
 /*
@@ -179,6 +121,73 @@ static void map_init_bounds (map_frame_ctx_t *map,
     map->py = map->map_height / 2;
     map->py -= map->tiles_per_screen_y / 2;
     map->py *= TILE_HEIGHT;
+}
+
+/*
+ * map_set
+ */
+thing_templatep map_set (map_frame_ctx_t *map,
+                         int32_t x, int32_t y, int32_t z,
+                         thing_templatep thing_template)
+{
+    if (map_out_of_bounds(x, y, z)) {
+        ERR("out of bounds on set map at %d,%d,%d for %s", x, y, z,
+            thing_template_shortname(thing_template));
+        return (thing_template);
+    }
+
+    map->tiles[x][y][z].thing_template = thing_template;
+
+    /*
+     * Allow clearing.
+     */
+    if (!thing_template) {
+        map->tiles[x][y][z].tile = 0;
+        return (thing_template);
+    }
+
+    tree_rootp thing_tiles = thing_template_get_tiles(thing_template);
+    if (!thing_tiles) {
+        return (thing_template);
+    }
+
+    thing_tilep thing_tile = (typeof(thing_tile)) tree_root_first(thing_tiles);
+    if (!thing_tile) {
+        return (thing_template);
+    }
+
+    const char *tilename = thing_tile_name(thing_tile);
+    if (!tilename) {
+        DIE("tile null name from thing %s not found",
+            thing_template_shortname(thing_template));
+    }
+
+    tilep tile = tile_find(tilename);
+    if (!tile) {
+        DIE("tile name %s from thing %s not found",
+            tilename,
+            thing_template_shortname(thing_template));
+    }
+
+    uint32_t index = tile_get_index(tile);
+
+    map->tiles[x][y][z].tile = index;
+
+    return (thing_template);
+}
+
+/*
+ * map_get
+ */
+thing_templatep map_get (map_frame_ctx_t *map,
+                         int32_t x, int32_t y, int32_t z)
+{
+    if (map_out_of_bounds(x, y, z)) {
+        ERR("out of bounds on get map at %d,%d,%d", x, y, z);
+        return (0);
+    }
+
+    return (map->tiles[x][y][z].thing_template);
 }
 
 /*
