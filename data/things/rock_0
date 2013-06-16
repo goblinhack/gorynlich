@@ -6,31 +6,35 @@
  is_rock
  tiles={
   tile={
-   tile="rock_0"
+   tile="space"
    is_join_block
   }
   tile={
-   tile="rock2"
+   tile="rock_0_0"
    is_join_block
   }
   tile={
-   tile="rock3"
+   tile="rock_0_1"
    is_join_block
   }
   tile={
-   tile="rock4"
+   tile="rock_0_2"
    is_join_block
   }
   tile={
-   tile="rock5"
+   tile="rock_0_3"
    is_join_block
   }
   tile={
-   tile="rock6"
+   tile="rock_0_4"
    is_join_block
   }
   tile={
-   tile="rock7"
+   tile="rock_0_5"
+   is_join_block
+  }
+  tile={
+   tile="rock_0_6"
    is_join_block
   }
   tile={
@@ -97,7 +101,7 @@
    tile="rock_0_is_join_t270_3"
    is_join_t270_3
   }
-  oile={
+  tile={
    tile="rock_0_is_join_t180_3"
    is_join_t180_3
   }

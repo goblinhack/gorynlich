@@ -302,14 +302,14 @@ boolean items_has_rock (tree_rootp root)
     return (items_has_x(root, thing_template_is_rock));
 }
 
-boolean items_has_xxx2 (tree_rootp root)
+boolean items_has_water (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_xxx2));
+    return (items_has_x(root, thing_template_is_water));
 }
 
-boolean items_has_xxx3 (tree_rootp root)
+boolean items_has_lava (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_xxx3));
+    return (items_has_x(root, thing_template_is_lava));
 }
 
 boolean items_has_xxx4 (tree_rootp root)
@@ -427,12 +427,12 @@ boolean items_has_pipe (tree_rootp root)
     return (items_has_x(root, thing_template_is_pipe));
 }
 
-boolean items_has_xxx27 (tree_rootp root)
+boolean items_has_water7 (tree_rootp root)
 {
     return (items_has_x(root, thing_template_is_item_removed_at_level_end));
 }
 
-boolean items_has_xxx28 (tree_rootp root)
+boolean items_has_water8 (tree_rootp root)
 {
     return (items_has_x(root, thing_template_is_scarable));
 }
@@ -581,14 +581,14 @@ uint32_t items_count_is_rock (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_rock));
 }
 
-uint32_t items_count_is_xxx2 (tree_rootp root)
+uint32_t items_count_is_water (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_xxx2));
+    return (items_count_is_x(root, thing_template_is_water));
 }
 
-uint32_t items_count_is_xxx3 (tree_rootp root)
+uint32_t items_count_is_lava (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_xxx3));
+    return (items_count_is_x(root, thing_template_is_lava));
 }
 
 uint32_t items_count_is_xxx4 (tree_rootp root)
@@ -836,14 +836,14 @@ itemp items_first_is_rock (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_rock));
 }
 
-itemp items_first_is_xxx2 (tree_rootp root)
+itemp items_first_is_water (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_xxx2));
+    return (items_first_is_x(root, thing_template_is_water));
 }
 
-itemp items_first_is_xxx3 (tree_rootp root)
+itemp items_first_is_lava (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_xxx3));
+    return (items_first_is_x(root, thing_template_is_lava));
 }
 
 itemp items_first_is_xxx4 (tree_rootp root)
@@ -1106,14 +1106,14 @@ tree_rootp items_find_all_is_rock (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_rock));
 }
 
-tree_rootp items_find_all_is_xxx2 (tree_rootp root)
+tree_rootp items_find_all_is_water (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_xxx2));
+    return (items_find_all_is_x(root, thing_template_is_water));
 }
 
-tree_rootp items_find_all_is_xxx3 (tree_rootp root)
+tree_rootp items_find_all_is_lava (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_xxx3));
+    return (items_find_all_is_x(root, thing_template_is_lava));
 }
 
 tree_rootp items_find_all_is_xxx4 (tree_rootp root)
