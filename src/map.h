@@ -391,6 +391,7 @@ typedef struct {
      * The map.
      */
     map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    map_tile_t tiles_copy[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
 
     /*
      * This is the huge buffer that contains the vertex and tex arrays.
@@ -435,7 +436,8 @@ void cave_gen(map_frame_ctx_t *map, thing_templatep rock, int32_t z);
 void fractal_gen(map_frame_ctx_t *map,
                  float stdev,
                  float stdev_shrink_factor,
-                 thing_templatep rock);
+                 thing_templatep rock,
+                 thing_templatep rock2);
 
 /*
  * map_display.c
@@ -448,6 +450,11 @@ void map_display_init(map_frame_ctx_t *map);
  */
 void map_display_wid_init(void);
 void map_display_wid_fini(void);
+
+/*
+ * map_tiles.
+ */
+void map_init_tiles(map_frame_ctx_t *map);
 
 static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
 {

@@ -24,6 +24,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/main.o 			\
     $(OBJDIR)/map.o 			\
     $(OBJDIR)/map_light.o 		\
+    $(OBJDIR)/map_tiles.o 		\
     $(OBJDIR)/map_display.o 		\
     $(OBJDIR)/map_display_wid.o 	\
     $(OBJDIR)/marshal.o 		\
