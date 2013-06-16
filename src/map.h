@@ -315,9 +315,10 @@ typedef struct {
     thing_templatep thing_template;
 } map_tile_t;
 
-#define MAP_WIDTH 256
-#define MAP_HEIGHT 256
-#define MAP_DEPTH 8
+#define MAP_WIDTH_LOG           8
+#define MAP_WIDTH               (1 << MAP_WIDTH_LOG)
+#define MAP_HEIGHT              MAP_WIDTH
+#define MAP_DEPTH               8
 
 /*
  * All the rendering info for one parallax frame of tiles.
@@ -427,6 +428,14 @@ thing_templatep map_get(map_frame_ctx_t *map,
  * cave.c
  */
 void cave_gen(map_frame_ctx_t *map, thing_templatep rock, int32_t z);
+
+/*
+ * fractal.c
+ */
+void fractal_gen(map_frame_ctx_t *map,
+                 float stdev,
+                 float stdev_shrink_factor,
+                 thing_templatep rock);
 
 /*
  * map_display.c

@@ -62,3 +62,5 @@ static inline float anglerot (point p)
         return (RAD_180 - theta);
     }
 }
+
+float gauss(const float m, const float s);
