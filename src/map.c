@@ -41,13 +41,13 @@ boolean map_init (void)
 
     map_fixup(map_ctx);
 
-    map_ctx->lx = MAP_WIDTH / 2;
-    map_ctx->ly = MAP_HEIGHT / 2;
+    map_ctx->lx = (MAP_WIDTH / 2) * TILE_WIDTH;
+    map_ctx->ly = (MAP_HEIGHT / 2) * TILE_HEIGHT;
     map_ctx->lz = 1;
 
     map_lightmap(map_ctx,
-                 map_ctx->lx,
-                 map_ctx->ly,
+                 map_ctx->lx / TILE_WIDTH,
+                 map_ctx->ly / TILE_HEIGHT,
                  map_ctx->lz,
                  DEFAULT_LIGHT_RAY_LENGTH,
                  true);
@@ -77,6 +77,7 @@ void map_fini (void)
 static void map_init_tiles (map_frame_ctx_t *map)
 {
     cave_gen(map, ROCK, 0);
+    fractal_gen(map, 150.5, 0.55, ROCK);
 }
 
 /*
@@ -131,7 +132,7 @@ thing_templatep map_set (map_frame_ctx_t *map,
                          thing_templatep thing_template)
 {
     if (map_out_of_bounds(x, y, z)) {
-        ERR("out of bounds on set map at %d,%d,%d for %s", x, y, z,
+        DIE("out of bounds on set map at %d,%d,%d for %s", x, y, z,
             thing_template_shortname(thing_template));
         return (thing_template);
     }
@@ -197,45 +198,31 @@ thing_templatep map_get (map_frame_ctx_t *map,
  */
 void map_move_delta_pixels (int32_t dx, int32_t dy)
 {
+    if (map_ctx->px + dx < map_ctx->min_px) {
+        dx = 0;
+    }
+
+    if (map_ctx->px + dx > map_ctx->max_px) {
+        dx = 0;
+    }
+
+    if (map_ctx->py + dy < map_ctx->min_py) {
+        dy = 0;
+    }
+
+    if (map_ctx->py + dy > map_ctx->max_py) {
+        dy = 0;
+    }
+
     map_ctx->px += dx;
-
-    if (map_ctx->px < map_ctx->min_px) {
-        map_ctx->px = map_ctx->min_px;
-    }
-
-    if (map_ctx->px > map_ctx->max_px) {
-        map_ctx->px = map_ctx->max_px;
-    }
-
     map_ctx->py += dy;
-
-    if (map_ctx->py < map_ctx->min_py) {
-        map_ctx->py = map_ctx->min_py;
-    }
-
-    if (map_ctx->py > map_ctx->max_py) {
-        map_ctx->py = map_ctx->max_py;
-    }
-
-    if (dx > 0) {
-        dx = 1;
-    } else if (dx < 0) {
-        dx = -1;
-    }
-
-    if (dy > 0) {
-        dy = 1;
-    } else if (dy < 0) {
-        dy = -1;
-    }
-
     map_ctx->lx += dx;
     map_ctx->ly += dy;
 
     map_lightmap(map_ctx,
-                 map_ctx->lx,
-                 map_ctx->ly,
-                 map_ctx->lz,
+                 map_ctx->lx / TILE_WIDTH,
+                 map_ctx->ly / TILE_HEIGHT,
+                 5,
                  25,
                  true);
 }
