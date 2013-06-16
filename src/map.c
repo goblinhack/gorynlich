@@ -20,7 +20,6 @@ typedef boolean (*map_is_at_callback)(thing_templatep);
 
 map_frame_ctx_t *map_ctx;
 
-static void map_init_tiles(map_frame_ctx_t *map);
 static void map_init_bounds(map_frame_ctx_t *map,
                             uint32_t map_width,
                             uint32_t map_height);
@@ -45,13 +44,6 @@ boolean map_init (void)
     map_ctx->ly = (MAP_HEIGHT / 2) * TILE_HEIGHT;
     map_ctx->lz = 1;
 
-    map_lightmap(map_ctx,
-                 map_ctx->lx / TILE_WIDTH,
-                 map_ctx->ly / TILE_HEIGHT,
-                 map_ctx->lz,
-                 DEFAULT_LIGHT_RAY_LENGTH,
-                 true);
-
     map_move_delta_pixels(0, 0);
 
     map_display_wid_init();
@@ -69,15 +61,6 @@ void map_fini (void)
     }
 
     map_display_wid_fini();
-}
-
-/*
- * map_init_tiles
- */
-static void map_init_tiles (map_frame_ctx_t *map)
-{
-    cave_gen(map, ROCK, 0);
-    fractal_gen(map, 150.5, 0.55, ROCK);
 }
 
 /*
@@ -125,73 +108,6 @@ static void map_init_bounds (map_frame_ctx_t *map,
 }
 
 /*
- * map_set
- */
-thing_templatep map_set (map_frame_ctx_t *map,
-                         int32_t x, int32_t y, int32_t z,
-                         thing_templatep thing_template)
-{
-    if (map_out_of_bounds(x, y, z)) {
-        DIE("out of bounds on set map at %d,%d,%d for %s", x, y, z,
-            thing_template_shortname(thing_template));
-        return (thing_template);
-    }
-
-    map->tiles[x][y][z].thing_template = thing_template;
-
-    /*
-     * Allow clearing.
-     */
-    if (!thing_template) {
-        map->tiles[x][y][z].tile = 0;
-        return (thing_template);
-    }
-
-    tree_rootp thing_tiles = thing_template_get_tiles(thing_template);
-    if (!thing_tiles) {
-        return (thing_template);
-    }
-
-    thing_tilep thing_tile = (typeof(thing_tile)) tree_root_first(thing_tiles);
-    if (!thing_tile) {
-        return (thing_template);
-    }
-
-    const char *tilename = thing_tile_name(thing_tile);
-    if (!tilename) {
-        DIE("tile null name from thing %s not found",
-            thing_template_shortname(thing_template));
-    }
-
-    tilep tile = tile_find(tilename);
-    if (!tile) {
-        DIE("tile name %s from thing %s not found",
-            tilename,
-            thing_template_shortname(thing_template));
-    }
-
-    uint32_t index = tile_get_index(tile);
-
-    map->tiles[x][y][z].tile = index;
-
-    return (thing_template);
-}
-
-/*
- * map_get
- */
-thing_templatep map_get (map_frame_ctx_t *map,
-                         int32_t x, int32_t y, int32_t z)
-{
-    if (map_out_of_bounds(x, y, z)) {
-        ERR("out of bounds on get map at %d,%d,%d", x, y, z);
-        return (0);
-    }
-
-    return (map->tiles[x][y][z].thing_template);
-}
-
-/*
  * map_move_delta_pixels
  *
  * Shift the map by some pixels.
@@ -222,8 +138,8 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
     map_lightmap(map_ctx,
                  map_ctx->lx / TILE_WIDTH,
                  map_ctx->ly / TILE_HEIGHT,
-                 5,
-                 25,
+                 6,
+                 DEFAULT_LIGHT_RAY_LENGTH,
                  true);
 }
 
