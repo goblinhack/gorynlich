@@ -86,7 +86,7 @@ typedef struct thing_template_ {
     uint8_t is_xxx8:1;
     uint8_t is_star:1;
     uint8_t is_powerup_spam:1;
-    uint8_t is_rock1:1;
+    uint8_t is_rock_0:1;
     uint8_t is_car:1;
     uint8_t is_star_green:1;
     uint8_t is_star_cyan:1;
