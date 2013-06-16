@@ -77,8 +77,8 @@ typedef struct thing_template_ {
     uint8_t is_snail:1;
     uint8_t is_star_yellow:1;
     uint8_t is_rock:1;
-    uint8_t is_xxx2:1;
-    uint8_t is_xxx3:1;
+    uint8_t is_water:1;
+    uint8_t is_lava:1;
     uint8_t is_xxx4:1;
     uint8_t is_xxx5:1;
     uint8_t is_xxx6:1;

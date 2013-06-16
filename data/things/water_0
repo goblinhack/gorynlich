@@ -6,31 +6,35 @@
  is_water
  tiles={
   tile={
-   tile="water_0"
+   tile="water_0_0"
    is_join_block
   }
   tile={
-   tile="water2"
+   tile="water_0_1"
    is_join_block
   }
   tile={
-   tile="water3"
+   tile="water_0_2"
    is_join_block
   }
   tile={
-   tile="water4"
+   tile="water_0_3"
    is_join_block
   }
   tile={
-   tile="water5"
+   tile="water_0_4"
    is_join_block
   }
   tile={
-   tile="water6"
+   tile="water_0_5"
    is_join_block
   }
   tile={
-   tile="water7"
+   tile="water_0_6"
+   is_join_block
+  }
+  tile={
+   tile="water_0_7"
    is_join_block
   }
   tile={
@@ -97,7 +101,7 @@
    tile="water_0_is_join_t270_3"
    is_join_t270_3
   }
-  oile={
+  tile={
    tile="water_0_is_join_t180_3"
    is_join_t180_3
   }

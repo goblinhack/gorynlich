@@ -44,7 +44,6 @@ extern const unsigned char data_sound_rocket_wav[];
 extern const unsigned char data_sound_slime_wav[];
 extern const unsigned char data_sound_spam_wav[];
 extern const unsigned char data_sound_thief_wav[];
-extern const unsigned char data_things_1[];
 extern const unsigned char data_things_lava_0[];
 extern const unsigned char data_things_rock_0[];
 extern const unsigned char data_things_wall_0[];
@@ -146,8 +145,8 @@ ramdisk_t ramdisk_data[] = {
     {
         /* filename */ "data/gfx/sprites_small.png",
         /* data     */ 0,
-        /* orig_len */ 23800,
-        /* len      */ 21213,
+        /* orig_len */ 27729,
+        /* len      */ 24587,
     },
     {
         /* filename */ "data/gfx/stars.png",
@@ -324,22 +323,16 @@ ramdisk_t ramdisk_data[] = {
         /* len      */ 38961,
     },
     {
-        /* filename */ "data/things/1",
-        /* data     */ 0,
-        /* orig_len */ 540,
-        /* len      */ 101,
-    },
-    {
         /* filename */ "data/things/lava_0",
         /* data     */ 0,
-        /* orig_len */ 3126,
-        /* len      */ 387,
+        /* orig_len */ 3195,
+        /* len      */ 383,
     },
     {
         /* filename */ "data/things/rock_0",
         /* data     */ 0,
-        /* orig_len */ 3126,
-        /* len      */ 386,
+        /* orig_len */ 3192,
+        /* len      */ 385,
     },
     {
         /* filename */ "data/things/wall_0",
@@ -398,8 +391,8 @@ ramdisk_t ramdisk_data[] = {
     {
         /* filename */ "data/things/water_0",
         /* data     */ 0,
-        /* orig_len */ 3182,
-        /* len      */ 390,
+        /* orig_len */ 3252,
+        /* len      */ 383,
     },
     {
         /* filename */ "data/ttf/large.ttf_pointsize40.data",
@@ -486,23 +479,22 @@ void ramdisk_init (void)
     ramdisk_data[40].data = data_sound_slime_wav;
     ramdisk_data[41].data = data_sound_spam_wav;
     ramdisk_data[42].data = data_sound_thief_wav;
-    ramdisk_data[43].data = data_things_1;
-    ramdisk_data[44].data = data_things_lava_0;
-    ramdisk_data[45].data = data_things_rock_0;
-    ramdisk_data[46].data = data_things_wall_0;
-    ramdisk_data[47].data = data_things_wall_1;
-    ramdisk_data[48].data = data_things_wall_2;
-    ramdisk_data[49].data = data_things_wall_3;
-    ramdisk_data[50].data = data_things_wall_4;
-    ramdisk_data[51].data = data_things_wall_5;
-    ramdisk_data[52].data = data_things_wall_6;
-    ramdisk_data[53].data = data_things_wall_7;
-    ramdisk_data[54].data = data_things_wall_8;
-    ramdisk_data[55].data = data_things_water_0;
-    ramdisk_data[56].data = data_ttf_large_ttf_pointsize40_data;
-    ramdisk_data[57].data = data_ttf_large_ttf_pointsize40_tga;
-    ramdisk_data[58].data = data_ttf_med_ttf_pointsize30_data;
-    ramdisk_data[59].data = data_ttf_med_ttf_pointsize30_tga;
-    ramdisk_data[60].data = data_ttf_small_ttf_pointsize20_data;
-    ramdisk_data[61].data = data_ttf_small_ttf_pointsize20_tga;
+    ramdisk_data[43].data = data_things_lava_0;
+    ramdisk_data[44].data = data_things_rock_0;
+    ramdisk_data[45].data = data_things_wall_0;
+    ramdisk_data[46].data = data_things_wall_1;
+    ramdisk_data[47].data = data_things_wall_2;
+    ramdisk_data[48].data = data_things_wall_3;
+    ramdisk_data[49].data = data_things_wall_4;
+    ramdisk_data[50].data = data_things_wall_5;
+    ramdisk_data[51].data = data_things_wall_6;
+    ramdisk_data[52].data = data_things_wall_7;
+    ramdisk_data[53].data = data_things_wall_8;
+    ramdisk_data[54].data = data_things_water_0;
+    ramdisk_data[55].data = data_ttf_large_ttf_pointsize40_data;
+    ramdisk_data[56].data = data_ttf_large_ttf_pointsize40_tga;
+    ramdisk_data[57].data = data_ttf_med_ttf_pointsize30_data;
+    ramdisk_data[58].data = data_ttf_med_ttf_pointsize30_tga;
+    ramdisk_data[59].data = data_ttf_small_ttf_pointsize20_data;
+    ramdisk_data[60].data = data_ttf_small_ttf_pointsize20_tga;
 }

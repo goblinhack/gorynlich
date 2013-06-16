@@ -263,14 +263,14 @@ boolean map_is_rock_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_rock));
 }
 
-boolean map_is_xxx2_at (levelp level, int32_t x, int32_t y)
+boolean map_is_water_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx2));
+    return (map_is_x_at(level, x, y, thing_template_is_water));
 }
 
-boolean map_is_xxx3_at (levelp level, int32_t x, int32_t y)
+boolean map_is_lava_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx3));
+    return (map_is_x_at(level, x, y, thing_template_is_lava));
 }
 
 boolean map_is_xxx4_at (levelp level, int32_t x, int32_t y)
@@ -556,14 +556,14 @@ thingp map_thing_is_rock_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_rock));
 }
 
-thingp map_thing_is_xxx2_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_water_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx2));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_water));
 }
 
-thingp map_thing_is_xxx3_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_lava_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx3));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_lava));
 }
 
 thingp map_thing_is_xxx4_at (levelp level, int32_t x, int32_t y)
@@ -860,14 +860,14 @@ tree_rootp map_all_things_is_rock_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_rock));
 }
 
-tree_rootp map_all_things_is_xxx2_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_water_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx2));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_water));
 }
 
-tree_rootp map_all_things_is_xxx3_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_lava_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx3));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_lava));
 }
 
 tree_rootp map_all_things_is_xxx4_at (levelp level, int32_t x, int32_t y)
@@ -1139,16 +1139,16 @@ thing_templatep map_find_rock_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_rock, w));
 }
 
-thing_templatep map_find_xxx2_at (levelp level,
+thing_templatep map_find_water_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx2, w));
+    return (map_find_x_at(level, x, y, thing_template_is_water, w));
 }
 
-thing_templatep map_find_xxx3_at (levelp level,
+thing_templatep map_find_lava_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx3, w));
+    return (map_find_x_at(level, x, y, thing_template_is_lava, w));
 }
 
 thing_templatep map_find_xxx4_at (levelp level,
@@ -1283,13 +1283,13 @@ thing_templatep map_find_pipe_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_pipe, w));
 }
 
-thing_templatep map_find_xxx27_at (levelp level,
+thing_templatep map_find_water7_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_item_removed_at_level_end, w));
 }
 
-thing_templatep map_find_xxx28_at (levelp level,
+thing_templatep map_find_water8_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_scarable, w));
@@ -1441,6 +1441,8 @@ map_fixup (map_frame_ctx_t *map)
                     map->tiles[x][y][z].thing_template;
 
                 if ((thing_template != ROCK_0) &&
+                    (thing_template != LAVA_0) &&
+                    (thing_template != WATER_0) &&
                     (thing_template != WALL_0) &&
                     (thing_template != WALL_1) &&
                     (thing_template != WALL_2) &&
@@ -1476,6 +1478,8 @@ map_fixup (map_frame_ctx_t *map)
                             map->tiles[x + dx][y + dy][z].thing_template;
 
                         if ((a_thing_template != ROCK_0) &&
+                            (a_thing_template != LAVA_0) &&
+                            (a_thing_template != WATER_0) &&
                             (a_thing_template != WALL_0) &&
                             (a_thing_template != WALL_1) &&
                             (a_thing_template != WALL_2) &&
@@ -2094,14 +2098,14 @@ uint32_t level_count_is_rock (levelp level)
     return (level_count_is_x(level, thing_template_is_rock));
 }
 
-uint32_t level_count_is_xxx2 (levelp level)
+uint32_t level_count_is_water (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx2));
+    return (level_count_is_x(level, thing_template_is_water));
 }
 
-uint32_t level_count_is_xxx3 (levelp level)
+uint32_t level_count_is_lava (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx3));
+    return (level_count_is_x(level, thing_template_is_lava));
 }
 
 uint32_t level_count_is_xxx4 (levelp level)
@@ -2400,14 +2404,14 @@ tree_rootp map_all_things_is_rock (levelp level)
     return (map_all_things_is_x(level, thing_template_is_rock));
 }
 
-tree_rootp map_all_things_is_xxx2 (levelp level)
+tree_rootp map_all_things_is_water (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx2));
+    return (map_all_things_is_x(level, thing_template_is_water));
 }
 
-tree_rootp map_all_things_is_xxx3 (levelp level)
+tree_rootp map_all_things_is_lava (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx3));
+    return (map_all_things_is_x(level, thing_template_is_lava));
 }
 
 tree_rootp map_all_things_is_xxx4 (levelp level)
