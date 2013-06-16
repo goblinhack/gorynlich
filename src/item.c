@@ -347,9 +347,9 @@ boolean items_has_powerup_spam (tree_rootp root)
     return (items_has_x(root, thing_template_is_powerup_spam));
 }
 
-boolean items_has_rock1 (tree_rootp root)
+boolean items_has_rock_0 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_rock1));
+    return (items_has_x(root, thing_template_is_rock_0));
 }
 
 boolean items_has_car (tree_rootp root)
@@ -626,9 +626,9 @@ uint32_t items_count_is_powerup_spam (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_powerup_spam));
 }
 
-uint32_t items_count_is_rock1 (tree_rootp root)
+uint32_t items_count_is_rock_0 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_rock1));
+    return (items_count_is_x(root, thing_template_is_rock_0));
 }
 
 uint32_t items_count_is_car (tree_rootp root)
@@ -881,9 +881,9 @@ itemp items_first_is_powerup_spam (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_powerup_spam));
 }
 
-itemp items_first_is_rock1 (tree_rootp root)
+itemp items_first_is_rock_0 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_rock1));
+    return (items_first_is_x(root, thing_template_is_rock_0));
 }
 
 itemp items_first_is_car (tree_rootp root)
@@ -1151,9 +1151,9 @@ tree_rootp items_find_all_is_powerup_spam (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_powerup_spam));
 }
 
-tree_rootp items_find_all_is_rock1 (tree_rootp root)
+tree_rootp items_find_all_is_rock_0 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_rock1));
+    return (items_find_all_is_x(root, thing_template_is_rock_0));
 }
 
 tree_rootp items_find_all_is_car (tree_rootp root)

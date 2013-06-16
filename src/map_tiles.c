@@ -26,7 +26,7 @@ static void map_combine (map_frame_ctx_t *map)
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
             if (map->tiles_copy[x][y][0].thing_template) {
-                map_set(map, x, y, 0, ROCK);
+                map_set(map, x, y, 0, LAVA_0);
                 continue;
             }
 
@@ -42,12 +42,12 @@ static void map_combine (map_frame_ctx_t *map)
  */
 void map_init_tiles (map_frame_ctx_t *map)
 {
-    cave_gen(map, ROCK, 0);
+    cave_gen(map, ROCK_0, 0);
 
     memcpy(map->tiles_copy, map->tiles, sizeof(map->tiles));
     memset(map->tiles, 0, sizeof(map->tiles));
 
-    fractal_gen(map, 100.5, 0.55, ROCK, WALL_1);
+    fractal_gen(map, 100.5, 0.55, ROCK_0, WALL_0);
 
     map_combine(map);
 }

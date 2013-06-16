@@ -248,7 +248,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rock1", t->is_rock1);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_rock_0", t->is_rock_0);
         GET_OPT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
@@ -351,7 +351,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
-    PUT_NAMED_BITFIELD(ctx, "is_rock1", t->is_rock1);
+    PUT_NAMED_BITFIELD(ctx, "is_rock_0", t->is_rock_0);
     PUT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
     PUT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
     PUT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
@@ -646,9 +646,9 @@ boolean thing_template_is_powerup_spam (thing_templatep t)
     return (t->is_powerup_spam);
 }
 
-boolean thing_template_is_rock1 (thing_templatep t)
+boolean thing_template_is_rock_0 (thing_templatep t)
 {
-    return (t->is_rock1);
+    return (t->is_rock_0);
 }
 
 boolean thing_template_is_car (thing_templatep t)

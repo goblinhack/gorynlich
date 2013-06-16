@@ -384,5 +384,15 @@ typedef struct {
 /*
  * resource.c
  */
+extern thing_templatep WALL_0;
 extern thing_templatep WALL_1;
-extern thing_templatep ROCK;
+extern thing_templatep WALL_2;
+extern thing_templatep WALL_3;
+extern thing_templatep WALL_4;
+extern thing_templatep WALL_5;
+extern thing_templatep WALL_6;
+extern thing_templatep WALL_7;
+extern thing_templatep WALL_8;
+extern thing_templatep ROCK_0;
+extern thing_templatep LAVA_0;
+extern thing_templatep WATER_0;
