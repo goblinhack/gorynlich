@@ -6,6 +6,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/backtrace.o 		\
     $(OBJDIR)/color.o			\
     $(OBJDIR)/cave.o			\
+    $(OBJDIR)/fractal.o			\
     $(OBJDIR)/command.o 		\
     $(OBJDIR)/config.o			\
     $(OBJDIR)/demarshal.o 		\
