@@ -1,0 +1,30 @@
+
+cp wall_0 wall_1
+splat "wall_0" "wall_1" "wall_1" do
+
+cp wall_0 wall_2
+splat "wall_0" "wall_2" "wall_2" do
+
+cp wall_0 wall_3
+splat "wall_0" "wall_3" "wall_3" do
+
+cp wall_0 wall_4
+splat "wall_0" "wall_4" "wall_4" do
+
+cp wall_0 wall_5
+splat "wall_0" "wall_5" "wall_5" do
+
+cp wall_0 wall_6
+splat "wall_0" "wall_6" "wall_6" do
+
+cp wall_0 wall_7
+splat "wall_0" "wall_7" "wall_7" do
+
+cp wall_0 wall_8
+splat "wall_0" "wall_8" "wall_8" do
+
+cp wall_0 wall_9
+splat "wall_0" "wall_9" "wall_9" do
+
+cp wall_0 wall_9
+splat "wall_0" "wall_9" "wall_9" do

@@ -1455,11 +1455,11 @@ boolean thing_is_powerup_spam (thingp t)
     return (thing_template_is_powerup_spam(thing_get_template(t)));
 }
 
-boolean thing_is_rock1 (thingp t)
+boolean thing_is_rock_0 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rock1(thing_get_template(t)));
+    return (thing_template_is_rock_0(thing_get_template(t)));
 }
 
 boolean thing_is_car (thingp t)
