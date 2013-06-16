@@ -1392,18 +1392,18 @@ boolean thing_is_rock (thingp t)
     return (thing_template_is_rock(thing_get_template(t)));
 }
 
-boolean thing_is_xxx2 (thingp t)
+boolean thing_is_water (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx2(thing_get_template(t)));
+    return (thing_template_is_water(thing_get_template(t)));
 }
 
-boolean thing_is_xxx3 (thingp t)
+boolean thing_is_lava (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx3(thing_get_template(t)));
+    return (thing_template_is_lava(thing_get_template(t)));
 }
 
 boolean thing_is_xxx4 (thingp t)

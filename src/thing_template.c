@@ -239,8 +239,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
@@ -342,8 +342,8 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
     PUT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
     PUT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
+    PUT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
+    PUT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
     PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
     PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
     PUT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
@@ -601,14 +601,14 @@ boolean thing_template_is_rock (thing_templatep t)
     return (t->is_rock);
 }
 
-boolean thing_template_is_xxx2 (thing_templatep t)
+boolean thing_template_is_water (thing_templatep t)
 {
-    return (t->is_xxx2);
+    return (t->is_water);
 }
 
-boolean thing_template_is_xxx3 (thing_templatep t)
+boolean thing_template_is_lava (thing_templatep t)
 {
-    return (t->is_xxx3);
+    return (t->is_lava);
 }
 
 boolean thing_template_is_xxx4 (thing_templatep t)

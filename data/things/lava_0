@@ -6,31 +6,35 @@
  is_lava
  tiles={
   tile={
-   tile="lava_0"
+   tile="lava_0_0"
    is_join_block
   }
   tile={
-   tile="lava2"
+   tile="lava_0_1"
    is_join_block
   }
   tile={
-   tile="lava3"
+   tile="lava_0_2"
    is_join_block
   }
   tile={
-   tile="lava4"
+   tile="lava_0_3"
    is_join_block
   }
   tile={
-   tile="lava5"
+   tile="lava_0_4"
    is_join_block
   }
   tile={
-   tile="lava6"
+   tile="lava_0_5"
    is_join_block
   }
   tile={
-   tile="lava7"
+   tile="lava_0_6"
+   is_join_block
+  }
+  tile={
+   tile="lava_0_7"
    is_join_block
   }
   tile={
@@ -97,7 +101,7 @@
    tile="lava_0_is_join_t270_3"
    is_join_t270_3
   }
-  oile={
+  tile={
    tile="lava_0_is_join_t180_3"
    is_join_t180_3
   }

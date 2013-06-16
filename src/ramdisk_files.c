@@ -259,12 +259,6 @@ ramdisk_t ramdisk_files[] = {
         0,
     },
     {
-        "data/things/1",
-        0,
-        0,
-        0,
-    },
-    {
         "data/things/lava_0",
         0,
         0,
