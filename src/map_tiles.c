@@ -58,10 +58,10 @@ void map_init_tiles (map_frame_ctx_t *map)
     memcpy(map->tiles_copy, map->tiles, sizeof(map->tiles));
     memset(map->tiles, 0, sizeof(map->tiles));
 
-    fractal_gen(map, 200.5, 0.3, ROCK_0, WALL_0);
+    fractal_gen(map, 200.5, 0.3, ROCK_0, BRICK_0);
 
     map_combine(map);
-//    fractal_gen(map, 20.5, 0.85, ROCK_0, WALL_0);
+//    fractal_gen(map, 20.5, 0.85, ROCK_0, BRICK_0);
 #endif
 
     int32_t z;
@@ -71,15 +71,15 @@ void map_init_tiles (map_frame_ctx_t *map)
     for (z = 0; z < 10; z++) {
 
         switch (z) {
-        case 0: gen = 5; t = WALL_0; break;
-        case 1: gen = 4; t = WALL_0; break;
-        case 2: gen = 3; t = WALL_0; break;
-        case 3: gen = 2; t = WALL_0; break;
-        case 4: gen = 1; t = WALL_0; break;
-        case 5: gen = 1; t = WALL_0; break;
-        case 6: gen = 1; t = WALL_0; break;
-        case 7: gen = 1; t = WALL_0; break;
-        case 8: gen = 1; t = WALL_0; break;
+        case 0: gen = 5; t = BRICK_0; break;
+        case 1: gen = 4; t = BRICK_0; break;
+        case 2: gen = 3; t = BRICK_0; break;
+        case 3: gen = 2; t = BRICK_0; break;
+        case 4: gen = 1; t = BRICK_0; break;
+        case 5: gen = 1; t = BRICK_0; break;
+        case 6: gen = 1; t = BRICK_0; break;
+        case 7: gen = 1; t = BRICK_0; break;
+        case 8: gen = 1; t = BRICK_0; break;
         case 9: gen = 0; t = ROCK_0; break;
         default: DIE("bug");
         }
@@ -98,7 +98,7 @@ void map_init_tiles (map_frame_ctx_t *map)
     memset(map->tiles, 0, sizeof(map->tiles));
 
     cave_gen(map, 
-             WALL_0,
+             BRICK_0,
              0, /* z */
              100, /* fill prob */
              5,  /* R1 */
