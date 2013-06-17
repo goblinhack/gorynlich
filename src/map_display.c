@@ -293,6 +293,8 @@ static void map_display_ (map_frame_ctx_t *map)
     float r3, g3, b3, a3;
     float r4, g4, b4, a4;
 
+    cy = map->py / TILE_HEIGHT;
+
     for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
         /*
          * From bottom to top.
@@ -313,7 +315,6 @@ static void map_display_ (map_frame_ctx_t *map)
 
                 if (pass == 0) {
                     top += TILE_HEIGHT;
-                } else {
                 }
 
                 bottom = top + TILE_HEIGHT;
@@ -397,25 +398,6 @@ static void map_display_ (map_frame_ctx_t *map)
                     left += TILE_WIDTH;
                 }
             }
-        }
-    }
-
-    cy = map->py / TILE_HEIGHT;
-
-    for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
-        /*
-         * From bottom to top.
-         */
-        for (z = 0; z < MAP_DEPTH; z++) {
-                /*
-                 * Draw entire row.
-                 */
-                cx = cx_start;
-
-                for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
-
-                    map->tiles[cx][cy][z].lit = 0;
-                }
         }
     }
 
