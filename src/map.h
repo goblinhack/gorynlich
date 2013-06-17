@@ -315,11 +315,6 @@ typedef struct {
     thing_templatep thing_template;
 } map_tile_t;
 
-#define MAP_WIDTH_LOG           8
-#define MAP_WIDTH               (1 << MAP_WIDTH_LOG)
-#define MAP_HEIGHT              MAP_WIDTH
-#define MAP_DEPTH               8
-
 /*
  * All the rendering info for one parallax frame of tiles.
  */
@@ -428,7 +423,11 @@ thing_templatep map_get(map_frame_ctx_t *map,
 /*
  * cave.c
  */
-void cave_gen(map_frame_ctx_t *map, thing_templatep rock, int32_t z);
+void cave_gen(map_frame_ctx_t *map, thing_templatep rock, int32_t z,
+              int32_t map_fill_prob,
+              int32_t map_r1,
+              int32_t map_r2,
+              int32_t map_generations);
 
 /*
  * fractal.c
@@ -455,6 +454,7 @@ void map_display_wid_fini(void);
  * map_tiles.
  */
 void map_init_tiles(map_frame_ctx_t *map);
+void map_combine(map_frame_ctx_t *map);
 
 static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
 {

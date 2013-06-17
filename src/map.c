@@ -138,7 +138,7 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
     map_lightmap(map_ctx,
                  map_ctx->lx / TILE_WIDTH,
                  map_ctx->ly / TILE_HEIGHT,
-                 6,
+                 MAP_DEPTH - 2,
                  DEFAULT_LIGHT_RAY_LENGTH,
                  true);
 }

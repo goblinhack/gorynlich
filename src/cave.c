@@ -518,10 +518,34 @@ static void cave_generation (map_frame_ctx_t *map,
 //
 // Generate a cave!
 //
-void cave_gen (map_frame_ctx_t *map, thing_templatep rock, int32_t z)
+void cave_gen (map_frame_ctx_t *map, thing_templatep rock, 
+               int32_t z,
+               int32_t map_fill_prob,
+               int32_t map_r1,
+               int32_t map_r2,
+               int32_t map_generations)
+
 {
     const int32_t maze_w = map->map_width;
     const int32_t maze_h = map->map_height;
+
+    memset(map_save, 0, sizeof(map_save));
+
+    if (map_fill_prob) {
+        MAP_FILL_PROB             = map_fill_prob;
+    }
+
+    if (map_r1) {
+        MAP_R1                    = map_r1;
+    }
+
+    if (map_r2) {
+        MAP_R2                    = map_r2;
+    }
+
+    if (map_generations) {
+        MAP_GENERATIONS           = map_generations;
+    }
 
     int32_t x, y, i;
 
@@ -590,8 +614,6 @@ void cave_gen (map_frame_ctx_t *map, thing_templatep rock, int32_t z)
         map_set(map, x, 0, z, rock);
         map_set(map, x, 4, z, rock);
     }
-
-    MAP_GENERATIONS = 3 + (rand() % 10);
 
     for (i=0; i < MAP_GENERATIONS; i++) {
         cave_generation(map, rock, 0);
