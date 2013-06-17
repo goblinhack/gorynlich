@@ -25,17 +25,13 @@ void map_combine (map_frame_ctx_t *map)
 
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map->tiles_copy[x][y][0].thing_template) {
-                map_set(map, x, y, 0, ROCK_0);
-                map_set(map, x, y, 1, ROCK_0);
-                continue;
-            }
-
             for (z = 0; z < MAP_DEPTH; z++) {
-                map_set(map, x, y, z, 0);
+                if (map->tiles_copy[x][y][z].thing_template) {
+                    map_set(map, x, y, z, 
+                            map->tiles_copy[x][y][z].thing_template);
+                    continue;
+                }
             }
-
-            map_set(map, x, y, 0, LAVA_0);
         }
     }
 }
@@ -45,7 +41,7 @@ void map_combine (map_frame_ctx_t *map)
  */
 void map_init_tiles (map_frame_ctx_t *map)
 {
-#if 1
+#if 0
     int32_t z;
 
     for (z = 0; z < 1; z++) {
@@ -67,6 +63,49 @@ void map_init_tiles (map_frame_ctx_t *map)
     map_combine(map);
 //    fractal_gen(map, 20.5, 0.85, ROCK_0, WALL_0);
 #endif
+
+    int32_t z;
+    int32_t gen;
+    thing_templatep t;
+
+    for (z = 0; z < 10; z++) {
+
+        switch (z) {
+        case 0: gen = 5; t = WALL_0; break;
+        case 1: gen = 4; t = WALL_0; break;
+        case 2: gen = 3; t = WALL_0; break;
+        case 3: gen = 2; t = WALL_0; break;
+        case 4: gen = 1; t = WALL_0; break;
+        case 5: gen = 1; t = WALL_0; break;
+        case 6: gen = 1; t = WALL_0; break;
+        case 7: gen = 1; t = WALL_0; break;
+        case 8: gen = 1; t = WALL_0; break;
+        case 9: gen = 0; t = ROCK_0; break;
+        default: DIE("bug");
+        }
+
+        srand(10);
+        cave_gen(map, t,
+                 z, /* z */
+                 30, /* fill prob */
+                 5,  /* R1 */
+                 2,  /* R2 */
+                 gen  /* generations */);
+    }
+
+    memcpy(map->tiles_copy, map->tiles, sizeof(map->tiles));
+
+    memset(map->tiles, 0, sizeof(map->tiles));
+
+    cave_gen(map, 
+             WALL_0,
+             0, /* z */
+             100, /* fill prob */
+             5,  /* R1 */
+             2,  /* R2 */
+             3  /* generations */);
+
+    map_combine(map);
 }
 
 /*

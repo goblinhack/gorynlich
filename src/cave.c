@@ -501,9 +501,9 @@ static void cave_generation (map_frame_ctx_t *map,
             //
             if ((adjcount_r1 >= MAP_R1) ||
                 (adjcount_r2 <= MAP_R2)) {
-                map_save[x][y] = rock;
-            } else {
                 map_save[x][y] = 0;
+            } else {
+                map_save[x][y] = rock;
             }
         }
     }
@@ -553,7 +553,7 @@ void cave_gen (map_frame_ctx_t *map, thing_templatep rock,
         for (x=1; x < maze_w-1; x++) {
             thing_templatep t;
 
-            if ((rand() % 100) < MAP_FILL_PROB) {
+            if ((rand() % 1000) < MAP_FILL_PROB) {
                 t = rock;
             } else {
                 t = 0;
@@ -616,6 +616,6 @@ void cave_gen (map_frame_ctx_t *map, thing_templatep rock,
     }
 
     for (i=0; i < MAP_GENERATIONS; i++) {
-        cave_generation(map, rock, 0);
+        cave_generation(map, rock, z);
     }
 }
