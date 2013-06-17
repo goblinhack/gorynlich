@@ -77,18 +77,13 @@ void map_display_init (map_frame_ctx_t *map)
     /*
      * Our array size requirements.
      */
-    uint32_t gl_array_size_required;
+    uint64_t gl_array_size_required;
 
     /*
      * If the screen size has changed or this is the first run, allocate our
      * buffer if our size requirements have changed.
      */
-    gl_array_size_required =
-                    MAP_WIDTH * 
-                    MAP_HEIGHT * 
-                    MAP_DEPTH * 
-                    NUMBER_BYTES_PER_ARRAY_ELEM *
-                    NUMBER_ARRAY_ELEM_ARRAYS * 2; // for degenerate triangles
+    gl_array_size_required = 10 * 1024 * 1024;
 
     /*
      * Requirements have changed for buffer space?
@@ -402,6 +397,25 @@ static void map_display_ (map_frame_ctx_t *map)
                     left += TILE_WIDTH;
                 }
             }
+        }
+    }
+
+    cy = map->py / TILE_HEIGHT;
+
+    for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
+        /*
+         * From bottom to top.
+         */
+        for (z = 0; z < MAP_DEPTH; z++) {
+                /*
+                 * Draw entire row.
+                 */
+                cx = cx_start;
+
+                for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
+
+                    map->tiles[cx][cy][z].lit = 0;
+                }
         }
     }
 

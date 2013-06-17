@@ -29,6 +29,11 @@
 #define nENABLE_GEN_LIGHT_MAP_FILE  // Recreate the ray-traced light map file
 #define DEFAULT_LIGHT_RAY_LENGTH    35  // how far we can cast light
 
+#define MAP_WIDTH_LOG               8
+#define MAP_WIDTH                   (1 << MAP_WIDTH_LOG)
+#define MAP_HEIGHT                  MAP_WIDTH
+#define MAP_DEPTH                   16 
+
 #ifdef ENABLE_GENERATE_TTF
 #define DISABLE_SDL_WINDOW          // SDL_ttf is incompatible with window mode
 #endif

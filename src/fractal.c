@@ -190,13 +190,13 @@ void fractal_gen (map_frame_ctx_t *map,
                 height = MAP_DEPTH - 1;
             }
 
-            char debug[] = " .,_:;!x*oO^";
+            char debug[] = " .,_:;!x*oO%&X#@%";
 
             printf("%c", debug[height]);
 
 //            height = height % MAP_DEPTH;
             for (z = 0; z < height; z++) {
-                if (height > 4) {
+                if (height > MAP_DEPTH / 2) {
                     map_set(map, x, y, z, rock2);
                 } else {
                     map_set(map, x, y, z, rock);

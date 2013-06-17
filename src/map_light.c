@@ -359,6 +359,7 @@ map_lightmap (map_frame_ctx_t *map,
      * Clear out the light map. Assume all cells are in darkness. Only do this 
      * if this is the first light source in the render scene.
      */
+#if 0
     if (first_light) {
         for (z = 0; z < MAP_DEPTH; z++) {
             for (x = 0; x < MAP_WIDTH; x++) {
@@ -368,6 +369,7 @@ map_lightmap (map_frame_ctx_t *map,
             }
         }
     }
+#endif
 
     /*
      * The light cell is always lit.
@@ -425,7 +427,7 @@ map_lightmap (map_frame_ctx_t *map,
          * Add up the shadows from all obstacles.
          */
         float total_shadow = 0.0;
-        float max_shadow = 5.00;
+        float max_shadow = 3.00;
 
         while (s < map_light_shadows_end) {
             /*
