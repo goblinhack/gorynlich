@@ -1443,15 +1443,15 @@ map_fixup (map_frame_ctx_t *map)
                 if ((thing_template != ROCK_0) &&
                     (thing_template != LAVA_0) &&
                     (thing_template != WATER_0) &&
-                    (thing_template != WALL_0) &&
-                    (thing_template != WALL_1) &&
-                    (thing_template != WALL_2) &&
-                    (thing_template != WALL_3) &&
-                    (thing_template != WALL_4) &&
-                    (thing_template != WALL_5) &&
-                    (thing_template != WALL_6) &&
-                    (thing_template != WALL_7) &&
-                    (thing_template != WALL_8)) {
+                    (thing_template != BRICK_0) &&
+                    (thing_template != BRICK_1) &&
+                    (thing_template != BRICK_2) &&
+                    (thing_template != BRICK_3) &&
+                    (thing_template != BRICK_4) &&
+                    (thing_template != BRICK_5) &&
+                    (thing_template != BRICK_6) &&
+                    (thing_template != BRICK_7) &&
+                    (thing_template != BRICK_8)) {
                     continue;
                 }
 
@@ -1480,15 +1480,15 @@ map_fixup (map_frame_ctx_t *map)
                         if ((a_thing_template != ROCK_0) &&
                             (a_thing_template != LAVA_0) &&
                             (a_thing_template != WATER_0) &&
-                            (a_thing_template != WALL_0) &&
-                            (a_thing_template != WALL_1) &&
-                            (a_thing_template != WALL_2) &&
-                            (a_thing_template != WALL_3) &&
-                            (a_thing_template != WALL_4) &&
-                            (a_thing_template != WALL_5) &&
-                            (a_thing_template != WALL_6) &&
-                            (a_thing_template != WALL_7) &&
-                            (a_thing_template != WALL_8)) {
+                            (a_thing_template != BRICK_0) &&
+                            (a_thing_template != BRICK_1) &&
+                            (a_thing_template != BRICK_2) &&
+                            (a_thing_template != BRICK_3) &&
+                            (a_thing_template != BRICK_4) &&
+                            (a_thing_template != BRICK_5) &&
+                            (a_thing_template != BRICK_6) &&
+                            (a_thing_template != BRICK_7) &&
+                            (a_thing_template != BRICK_8)) {
                             nbrs[dx + 1][dy + 1] = NULL;
                             continue;
                         }
