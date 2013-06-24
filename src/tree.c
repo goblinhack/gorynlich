@@ -257,6 +257,18 @@ tree_node *tree_first (tree_node *top)
 }
 
 /*
+ * Get the least node in the subtree.
+ */
+static inline tree_node *tree_first_fast (tree_node *top)
+{
+    while (top->left) {
+        top = top->left;
+    }
+
+    return (top);
+}
+
+/*
  * Get the highest node in the subtree.
  */
 tree_node *tree_last (tree_node *top)
@@ -304,7 +316,7 @@ tree_node *tree_get_next (tree_root *root,
             return (0);
         }
 
-	return (tree_first(top->right));
+	return (tree_first_fast(top->right));
     }
 
     if (compare < 0) {
@@ -489,7 +501,7 @@ int tree_walk (tree_root *root, tree_walker_func walker_func, void *arg)
         return (1);
     }
 
-    node = tree_first(top);
+    node = tree_first_fast(top);
 
     while (node) {
         next = tree_get_next(root, top, node);
@@ -518,7 +530,7 @@ tree_node *tree_next (tree_root *root, tree_node *node)
     }
 
     if (node->right) {
-        next = tree_first(node->right);
+        next = tree_first_fast(node->right);
     } else if (node->parent) {
         next = node;
         do {
@@ -625,7 +637,7 @@ tree_node *tree_root_get_nth (tree_root *root, uint32_t n)
         return (0);
     }
 
-    node = tree_first(top);
+    node = tree_first_fast(top);
     count = 0;
 
     while (node) {
@@ -634,7 +646,7 @@ tree_node *tree_root_get_nth (tree_root *root, uint32_t n)
         }
 
         if (node->right) {
-            next = tree_first(node->right);
+            next = tree_first_fast(node->right);
         } else if (node->parent) {
             next = node;
             do {

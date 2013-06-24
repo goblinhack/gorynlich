@@ -8,9 +8,11 @@
 
 #include "main.h"
 #include "tree.h"
-#include "thing_template_private.h"
+#include "thing_tile_private.h"
 #include "thing_template.h"
+#include "thing_template_private.h"
 #include "thing_tile.h"
+#include "tile.h"
 #include "marshal.h"
 
 /*
@@ -45,6 +47,290 @@ void thing_template_fini (void)
 
         tree_destroy(&thing_templates_create_order,
             (tree_destroy_func)0);
+    }
+}
+
+/*
+ * Convert a join type into an index
+ */
+uint8_t thing_template_join_type_to_index (
+            boolean is_join_block,
+            boolean is_join_horiz,
+            boolean is_join_vert,
+            boolean is_join_node,
+            boolean is_join_left,
+            boolean is_join_right,
+            boolean is_join_top,
+            boolean is_join_bot,
+            boolean is_join_tl,
+            boolean is_join_tr,
+            boolean is_join_bl,
+            boolean is_join_br,
+            boolean is_join_t,
+            boolean is_join_t90,
+            boolean is_join_t180,
+            boolean is_join_t270,
+            boolean is_join_x,
+            boolean is_join_tl2,
+            boolean is_join_tr2,
+            boolean is_join_bl2,
+            boolean is_join_br2,
+            boolean is_join_t_1,
+            boolean is_join_t_2,
+            boolean is_join_t_3,
+            boolean is_join_t90_1,
+            boolean is_join_t90_2,
+            boolean is_join_t90_3,
+            boolean is_join_t180_1,
+            boolean is_join_t180_2,
+            boolean is_join_t180_3,
+            boolean is_join_t270_1,
+            boolean is_join_t270_2,
+            boolean is_join_t270_3,
+            boolean is_join_x1,
+            boolean is_join_x1_270,
+            boolean is_join_x1_180,
+            boolean is_join_x1_90,
+            boolean is_join_x2,
+            boolean is_join_x2_270,
+            boolean is_join_x2_180,
+            boolean is_join_x2_90,
+            boolean is_join_x3,
+            boolean is_join_x3_180,
+            boolean is_join_x4,
+            boolean is_join_x4_270,
+            boolean is_join_x4_180,
+            boolean is_join_x4_90)
+{
+    if (is_join_block) {
+        return (IS_JOIN_BLOCK);
+    } else if (is_join_t_1) {
+        return (IS_JOIN_T_1);
+    } else if (is_join_t_2) {
+        return (IS_JOIN_T_2);
+    } else if (is_join_t_3) {
+        return (IS_JOIN_T_3);
+    } else if (is_join_t90_1) {
+        return (IS_JOIN_T90_1);
+    } else if (is_join_t90_2) {
+        return (IS_JOIN_T90_2);
+    } else if (is_join_t90_3) {
+        return (IS_JOIN_T90_3);
+    } else if (is_join_t180_1) {
+        return (IS_JOIN_T180_1);
+    } else if (is_join_t180_2) {
+        return (IS_JOIN_T180_2);
+    } else if (is_join_t180_3) {
+        return (IS_JOIN_T180_3);
+    } else if (is_join_t270_1) {
+        return (IS_JOIN_T270_1);
+    } else if (is_join_t270_2) {
+        return (IS_JOIN_T270_2);
+    } else if (is_join_t270_3) {
+        return (IS_JOIN_T270_3);
+    } else if (is_join_block) {
+        return (IS_JOIN_BLOCK);
+    } else if (is_join_horiz) {
+        return (IS_JOIN_HORIZ);
+    } else if (is_join_vert) {
+        return (IS_JOIN_VERT);
+    } else if (is_join_node) {
+        return (IS_JOIN_NODE);
+    } else if (is_join_left) {
+        return (IS_JOIN_LEFT);
+    } else if (is_join_right) {
+        return (IS_JOIN_RIGHT);
+    } else if (is_join_top) {
+        return (IS_JOIN_TOP);
+    } else if (is_join_bot) {
+        return (IS_JOIN_BOT);
+    } else if (is_join_tl) {
+        return (IS_JOIN_TL);
+    } else if (is_join_tr) {
+        return (IS_JOIN_TR);
+    } else if (is_join_bl) {
+        return (IS_JOIN_BL);
+    } else if (is_join_br) {
+        return (IS_JOIN_BR);
+    } else if (is_join_t) {
+        return (IS_JOIN_T);
+    } else if (is_join_t90) {
+        return (IS_JOIN_T90);
+    } else if (is_join_t180) {
+        return (IS_JOIN_T180);
+    } else if (is_join_t270) {
+        return (IS_JOIN_T270);
+    } else if (is_join_x) {
+        return (IS_JOIN_X);
+    } else if (is_join_tl2) {
+        return (IS_JOIN_TL2);
+    } else if (is_join_tr2) {
+        return (IS_JOIN_TR2);
+    } else if (is_join_bl2) {
+        return (IS_JOIN_BL2);
+    } else if (is_join_br2) {
+        return (IS_JOIN_BR2);
+    } else if (is_join_x) {
+        return (IS_JOIN_X);
+    } else if (is_join_x1) {
+        return (IS_JOIN_X1);
+    } else if (is_join_x1_270) {
+        return (IS_JOIN_X1_270);
+    } else if (is_join_x1_180) {
+        return (IS_JOIN_X1_180);
+    } else if (is_join_x1_90) {
+        return (IS_JOIN_X1_90);
+    } else if (is_join_x2) {
+        return (IS_JOIN_X2);
+    } else if (is_join_x2_270) {
+        return (IS_JOIN_X2_270);
+    } else if (is_join_x2_180) {
+        return (IS_JOIN_X2_180);
+    } else if (is_join_x2_90) {
+        return (IS_JOIN_X2_90);
+    } else if (is_join_x3) {
+        return (IS_JOIN_X3);
+    } else if (is_join_x3_180) {
+        return (IS_JOIN_X3_180);
+    } else if (is_join_x4) {
+        return (IS_JOIN_X4);
+    } else if (is_join_x4_270) {
+        return (IS_JOIN_X4_270);
+    } else if (is_join_x4_180) {
+        return (IS_JOIN_X4_180);
+    } else if (is_join_x4_90) {
+        return (IS_JOIN_X4_90);
+    } else {
+        return (0);
+    }
+}
+
+/*
+ * Fill up the tile cache for future fast finds of tile types.
+ */
+static void thing_template_fill_cache (thing_templatep t)
+{
+    thing_tilep thing_tile;
+    uint32_t index;
+    tilep tile;
+
+    TREE_WALK_UNSAFE(t->tiles, thing_tile) {
+
+        if (thing_tile->is_join_block) {
+            index = IS_JOIN_BLOCK;
+        } else if (thing_tile->is_join_t_1) {
+            index = IS_JOIN_T_1;
+        } else if (thing_tile->is_join_t_2) {
+            index = IS_JOIN_T_2;
+        } else if (thing_tile->is_join_t_3) {
+            index = IS_JOIN_T_3;
+        } else if (thing_tile->is_join_t90_1) {
+            index = IS_JOIN_T90_1;
+        } else if (thing_tile->is_join_t90_2) {
+            index = IS_JOIN_T90_2;
+        } else if (thing_tile->is_join_t90_3) {
+            index = IS_JOIN_T90_3;
+        } else if (thing_tile->is_join_t180_1) {
+            index = IS_JOIN_T180_1;
+        } else if (thing_tile->is_join_t180_2) {
+            index = IS_JOIN_T180_2;
+        } else if (thing_tile->is_join_t180_3) {
+            index = IS_JOIN_T180_3;
+        } else if (thing_tile->is_join_t270_1) {
+            index = IS_JOIN_T270_1;
+        } else if (thing_tile->is_join_t270_2) {
+            index = IS_JOIN_T270_2;
+        } else if (thing_tile->is_join_t270_3) {
+            index = IS_JOIN_T270_3;
+        } else if (thing_tile->is_join_block) {
+            index = IS_JOIN_BLOCK;
+        } else if (thing_tile->is_join_horiz) {
+            index = IS_JOIN_HORIZ;
+        } else if (thing_tile->is_join_vert) {
+            index = IS_JOIN_VERT;
+        } else if (thing_tile->is_join_node) {
+            index = IS_JOIN_NODE;
+        } else if (thing_tile->is_join_left) {
+            index = IS_JOIN_LEFT;
+        } else if (thing_tile->is_join_right) {
+            index = IS_JOIN_RIGHT;
+        } else if (thing_tile->is_join_top) {
+            index = IS_JOIN_TOP;
+        } else if (thing_tile->is_join_bot) {
+            index = IS_JOIN_BOT;
+        } else if (thing_tile->is_join_tl) {
+            index = IS_JOIN_TL;
+        } else if (thing_tile->is_join_tr) {
+            index = IS_JOIN_TR;
+        } else if (thing_tile->is_join_bl) {
+            index = IS_JOIN_BL;
+        } else if (thing_tile->is_join_br) {
+            index = IS_JOIN_BR;
+        } else if (thing_tile->is_join_t) {
+            index = IS_JOIN_T;
+        } else if (thing_tile->is_join_t90) {
+            index = IS_JOIN_T90;
+        } else if (thing_tile->is_join_t180) {
+            index = IS_JOIN_T180;
+        } else if (thing_tile->is_join_t270) {
+            index = IS_JOIN_T270;
+        } else if (thing_tile->is_join_x) {
+            index = IS_JOIN_X;
+        } else if (thing_tile->is_join_tl2) {
+            index = IS_JOIN_TL2;
+        } else if (thing_tile->is_join_tr2) {
+            index = IS_JOIN_TR2;
+        } else if (thing_tile->is_join_bl2) {
+            index = IS_JOIN_BL2;
+        } else if (thing_tile->is_join_br2) {
+            index = IS_JOIN_BR2;
+        } else if (thing_tile->is_join_x) {
+            index = IS_JOIN_X;
+        } else if (thing_tile->is_join_x1) {
+            index = IS_JOIN_X1;
+        } else if (thing_tile->is_join_x1_270) {
+            index = IS_JOIN_X1_270;
+        } else if (thing_tile->is_join_x1_180) {
+            index = IS_JOIN_X1_180;
+        } else if (thing_tile->is_join_x1_90) {
+            index = IS_JOIN_X1_90;
+        } else if (thing_tile->is_join_x2) {
+            index = IS_JOIN_X2;
+        } else if (thing_tile->is_join_x2_270) {
+            index = IS_JOIN_X2_270;
+        } else if (thing_tile->is_join_x2_180) {
+            index = IS_JOIN_X2_180;
+        } else if (thing_tile->is_join_x2_90) {
+            index = IS_JOIN_X2_90;
+        } else if (thing_tile->is_join_x3) {
+            index = IS_JOIN_X3;
+        } else if (thing_tile->is_join_x3_180) {
+            index = IS_JOIN_X3_180;
+        } else if (thing_tile->is_join_x4) {
+            index = IS_JOIN_X4;
+        } else if (thing_tile->is_join_x4_270) {
+            index = IS_JOIN_X4_270;
+        } else if (thing_tile->is_join_x4_180) {
+            index = IS_JOIN_X4_180;
+        } else if (thing_tile->is_join_x4_90) {
+            index = IS_JOIN_X4_90;
+        } else {
+            continue;
+        }
+
+        t->tilep_join[index][ t->tilep_join_count[index] ] = thing_tile;
+
+        tile = tile_find(thing_tile_name(thing_tile));
+        if (!tile) {
+            DIE("no tile for join index %d for %s, tile name %s",
+                index, t->shortname, thing_tile_name(thing_tile));
+        }
+
+        t->tilep_join_tile[index][ t->tilep_join_count[index] ] = tile;
+
+        if (t->tilep_join_count[index]++ >= IS_JOIN_ALT_MAX) {
+            DIE("too many tile join alternatives for %s", t->shortname);
+        }
     }
 }
 
@@ -92,6 +378,8 @@ thing_templatep thing_template_load (const char *name)
     if (!tree_insert_static(thing_templates_create_order, &t->tree2.node)) {
         DIE("thing template insert create order [%s] failed", name);
     }
+
+    thing_template_fill_cache(t);
 
     DBG("thing template: %s", name);
 

@@ -484,3 +484,12 @@ static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
 
     return (false);
 }
+
+/*
+ * map_get_unsafe
+ */
+static inline thing_templatep map_get_unsafe (map_frame_ctx_t *map,
+                                              int32_t x, int32_t y, int32_t z)
+{
+    return (map->tiles[x][y][z].thing_template);
+}

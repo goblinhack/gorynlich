@@ -121,23 +121,30 @@ thing_templatep map_set (map_frame_ctx_t *map,
         return (thing_template);
     }
 
-    map->tiles[x][y][z].thing_template = thing_template;
+    map_tile_t *map_tile = &map->tiles[x][y][z];
+    if (thing_template == map_tile->thing_template) {
+        return (thing_template);
+    }
+
+    map_tile->thing_template = thing_template;
 
     /*
      * Allow clearing.
      */
     if (!thing_template) {
-        map->tiles[x][y][z].tile = 0;
+        map_tile->tile = 0;
         return (thing_template);
     }
 
     tree_rootp thing_tiles = thing_template_get_tiles(thing_template);
     if (!thing_tiles) {
+        map_tile->tile = 0;
         return (thing_template);
     }
 
     thing_tilep thing_tile = (typeof(thing_tile)) tree_root_first(thing_tiles);
     if (!thing_tile) {
+        map_tile->tile = 0;
         return (thing_template);
     }
 
@@ -156,7 +163,7 @@ thing_templatep map_set (map_frame_ctx_t *map,
 
     uint32_t index = tile_get_index(tile);
 
-    map->tiles[x][y][z].tile = index;
+    map_tile->tile = index;
 
     return (thing_template);
 }

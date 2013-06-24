@@ -14,6 +14,7 @@
 #include "main.h"
 #include "map.h"
 #include "geo.h"
+#include "file.h"
 #include "mzip_file.h"
 
 typedef struct {
@@ -309,7 +310,12 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
 
     LOG("writing light map, %d bytes", len);
 
+#define WRITE_COMPRESSED
+#ifdef WRITE_COMPRESSED
     mzip_file_write("../data/map/map_light.data", buf, &len);
+#else
+    file_write("../data/map/map_light.data", buf, len);
+#endif
 
     LOG("wrote light map, %d bytes", len);
 }
@@ -346,8 +352,15 @@ map_lightmap (map_frame_ctx_t *map,
          */
         int32_t len;
 
+        LOG("Loading light map\n");
+
+#ifdef WRITE_COMPRESSED
         map_light_shadows_start = (typeof(map_light_shadows_start))
             mzip_file_read("data/map/map_light.data", &len);
+#else
+        map_light_shadows_start = (typeof(map_light_shadows_start))
+            file_read("data/map/map_light.data", &len);
+#endif
 
         LOG("Load  light map %d bytes\n",len);
 
