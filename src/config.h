@@ -4,7 +4,7 @@
  * See the README file.
  */
 
-#define  ENABLE_PTRCHECK            // Pointer sanity
+#define nENABLE_PTRCHECK            // Pointer sanity
 #define nENABLE_ASSERT              // DIE on errors
 #define nENABLE_TREE_SANITY         // Slow tree sanity
 #define nENABLE_DEBUG               // More debugs
@@ -29,7 +29,10 @@
 #define nENABLE_GEN_LIGHT_MAP_FILE  // Recreate the ray-traced light map file
 #define DEFAULT_LIGHT_RAY_LENGTH    35  // how far we can cast light
 
-#define MAP_WIDTH_LOG               8
+/*
+ * Map size is 2^MAP_WIDTH_LOG. So MAP_WIDTH_LOG 8 is 256, 10 is 1024
+ */
+#define MAP_WIDTH_LOG               10
 #define MAP_WIDTH                   (1 << MAP_WIDTH_LOG)
 #define MAP_HEIGHT                  MAP_WIDTH
 #define MAP_DEPTH                   16 
