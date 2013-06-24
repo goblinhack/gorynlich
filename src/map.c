@@ -34,19 +34,26 @@ boolean map_init (void)
 
     map_init_bounds(map_ctx, MAP_WIDTH, MAP_HEIGHT);
 
+LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_display_init(map_ctx);
 
+LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_init_tiles(map_ctx);
 
+LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_fixup(map_ctx);
+LOG("XXX %s %d ",__FUNCTION__,__LINE__);
 
     map_ctx->lx = (MAP_WIDTH / 2) * TILE_WIDTH;
     map_ctx->ly = (MAP_HEIGHT / 2) * TILE_HEIGHT;
     map_ctx->lz = 1;
 
+LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_move_delta_pixels(0, 0);
+LOG("XXX %s %d ",__FUNCTION__,__LINE__);
 
     map_display_wid_init();
+LOG("XXX %s %d ",__FUNCTION__,__LINE__);
 
     return (true);
 }
@@ -1379,6 +1386,8 @@ thing_templatep map_find_letter_at (levelp level,
 static void 
 map_fixup (map_frame_ctx_t *map)
 {
+    uint32_t index;
+    tilep tile;
     int32_t x;
     int32_t y;
     uint32_t z;
@@ -1433,12 +1442,16 @@ map_fixup (map_frame_ctx_t *map)
     boolean is_join_x4_180;
     boolean is_join_x4_90;
 
-    for (z = 0; z < MAP_DEPTH; z++) {
-        for (x = 0; x < MAP_WIDTH; x++) {
-            for (y = 0; y < MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
 
                 thing_templatep thing_template = 
                     map->tiles[x][y][z].thing_template;
+
+                if (!thing_template) {
+                    continue;
+                }
 
                 if ((thing_template != ROCK_0) &&
                     (thing_template != LAVA_0) &&
@@ -1810,7 +1823,7 @@ map_fixup (map_frame_ctx_t *map)
 
                 *best_block = true;
 
-                thing_tilep thing_tile = thing_tile_find(e,
+                index = thing_template_join_type_to_index(
                             is_join_block,
                             is_join_horiz,
                             is_join_vert,
@@ -1858,6 +1871,8 @@ map_fixup (map_frame_ctx_t *map)
                             is_join_x4_270,
                             is_join_x4_180,
                             is_join_x4_90);
+
+                thing_tilep thing_tile = thing_tile_find(e, index, &tile);
 
                 if (!thing_tile) {
 
@@ -1910,7 +1925,7 @@ map_fixup (map_frame_ctx_t *map)
                     is_join_x4_180 = false;
                     is_join_x4_90 = false;
 
-                    thing_tile = thing_tile_find(e,
+                    index = thing_template_join_type_to_index(
                                 is_join_block,
                                 is_join_horiz,
                                 is_join_vert,
@@ -1959,17 +1974,12 @@ map_fixup (map_frame_ctx_t *map)
                                 is_join_x4_180,
                                 is_join_x4_90);
 
-                    if (!thing_tile) {
+                    thing_tile_find(e, index, &tile);
+                    if (!tile) {
                         DIE("no joinable tile for %s", thing_template_name(e));
                     }
                 }
 
-                const char *tilename = thing_tile_name(thing_tile);
-                if (!tilename) {
-                    DIE("no tilename for %s", thing_template_name(e));
-                }
-
-                tilep tile = tile_find(tilename);
                 if (!tile) {
                     DIE("no tile for %s", thing_template_name(e));
                 }

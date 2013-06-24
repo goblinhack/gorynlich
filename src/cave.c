@@ -443,7 +443,8 @@ static int32_t MAP_GENERATIONS           = 5;
 /*
  * Used temporarily during level generation.
  */
-static thing_templatep map_save[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_curr[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_save[MAP_WIDTH][MAP_HEIGHT];
 
 //
 // Grow our cells
@@ -454,63 +455,65 @@ static void cave_generation (map_frame_ctx_t *map,
 {
     const int32_t maze_w = map->map_width;
     const int32_t maze_h = map->map_height;
-    int32_t x, y, i, j;
+    int32_t x, y;
 
-    for (y=1; y < maze_h-1; y++) {
-        for (x=1; x < maze_w-1; x++) {
+    for (x=2; x < maze_w-2; x++) {
+        for (y=2; y < maze_h-2; y++) {
 
-            int32_t adjcount_r1 = 0,
-            adjcount_r2 = 0;
+            uint8_t adjcount_r1 = 0;
+            uint8_t adjcount_r2 = 0;
 
-            //
-            // Count adjacent room tiles.
-            //
-            for (i=-1; i <= 1; i++) {
-                for (j=-1; j <= 1; j++) {
-                    if (map_get(map, x+j, y+i, z) != 0) {
-                        adjcount_r1++;
-                    }
-                }
+#define ADJ2(i,j)                               \
+            if (map_curr[x+i][y+j] != 0) {      \
+                adjcount_r2++;                  \
+                adjcount_r1++;                  \
             }
 
-            for (i=y-2; i <= y+2; i++) {
-                for (j=x-2; j <= x+2; j++) {
-
-                    if ((abs(i-y) == 2) && (abs(j-x)==2)) {
-                        //
-                        // Too close to the edge.
-                        //
-                        continue;
-                    }
-
-                    if (i < 0 || j < 0 || i>=maze_h || j>=maze_w) {
-                        //
-                        // Out of bounds.
-                        //
-                        continue;
-                    }
-
-                    if (map_get(map, j, i, z) != 0) {
-                        adjcount_r2++;
-                    }
-                }
+#define ADJ(i,j)                                \
+            if (map_curr[x+i][y+j] != 0) {      \
+                adjcount_r2++;                  \
             }
+
+            ADJ2(-1,-1);
+            ADJ2( 0,-1);
+            ADJ2( 1,-1);
+
+            ADJ2(-1, 0);
+            ADJ2( 0, 0);
+            ADJ2( 1, 0);
+
+            ADJ2(-1, 1);
+            ADJ2( 0, 1);
+            ADJ2( 1, 1);
+
+            ADJ(-1,-2);
+            ADJ( 0,-2);
+            ADJ( 1,-2);
+
+            ADJ( 2,-1);
+            ADJ(-2,-1);
+
+            ADJ(-2, 0);
+            ADJ( 2, 0);
+
+            ADJ(-2, 1);
+            ADJ( 2, 1);
+
+            ADJ(-1, 2);
+            ADJ( 0, 2);
+            ADJ( 1, 2);
 
             //
             // Adjust for the grow threshold for rock or flow.
             //
             if ((adjcount_r1 >= MAP_R1) ||
                 (adjcount_r2 <= MAP_R2)) {
-                map_save[x][y] = 0;
+                /*
+                 * map_save set to 0 already.
+                 */
             } else {
-                map_save[x][y] = rock;
+                map_save[x][y] = 1;
             }
-        }
-    }
-
-    for (y=1; y < maze_h-1; y++) {
-        for (x=1; x < maze_w-1; x++) {
-            map_set(map, x, y, z, map_save[x][y]);
         }
     }
 }
@@ -528,8 +531,6 @@ void cave_gen (map_frame_ctx_t *map, thing_templatep rock,
 {
     const int32_t maze_w = map->map_width;
     const int32_t maze_h = map->map_height;
-
-    memset(map_save, 0, sizeof(map_save));
 
     if (map_fill_prob) {
         MAP_FILL_PROB             = map_fill_prob;
@@ -549,73 +550,32 @@ void cave_gen (map_frame_ctx_t *map, thing_templatep rock,
 
     int32_t x, y, i;
 
-    for (y=1; y < maze_h-1; y++) {
-        for (x=1; x < maze_w-1; x++) {
-            thing_templatep t;
+    memset(map_curr, 0, sizeof(map_curr));
+    memset(map_save, 0, sizeof(map_save));
 
+    for (x=2; x < maze_w-2; x++) {
+        for (y=2; y < maze_h-2; y++) {
             if ((rand() % 1000) < MAP_FILL_PROB) {
-                t = rock;
-            } else {
-                t = 0;
+                map_curr[x][y] = 1;
             }
-
-            map_set(map, x, y, z, t);
         }
-    }
-
-    for (y=0; y < maze_h; y++) {
-        for (x=0; x < maze_w; x++) {
-            map_save[x][y] = rock;
-        }
-    }
-
-    for (y=0; y < maze_h; y++) {
-        map_set(map, 0, y, z, rock);
-        map_set(map, maze_w-1, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, maze_w-2, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, maze_w-3, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, maze_w-4, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, maze_w-5, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, 1, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, 2, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, 3, y, z, rock);
-        map_set(map, 0, y, z, rock);
-        map_set(map, 4, y, z, rock);
-    }
-
-    for (x=0; x < maze_w; x++) {
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, maze_h-1, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, maze_h-2, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, maze_h-3, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, maze_h-4, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, maze_h-5, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, 1, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, 2, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, 3, z, rock);
-        map_set(map, x, 0, z, rock);
-        map_set(map, x, 4, z, rock);
     }
 
     for (i=0; i < MAP_GENERATIONS; i++) {
+        LOG("generation %d",i);
         cave_generation(map, rock, z);
+        LOG("generation %d done",i);
+
+        memcpy(map_curr, map_save, sizeof(map_curr));
+    }
+
+    for (x=2; x < maze_w-2; x++) {
+        for (y=2; y < maze_h-2; y++) {
+            if (map_curr[x][y]) {
+                map_set(map, x, y, z, rock);
+            } else {
+                map_set(map, x, y, z, 0);
+            }
+        }
     }
 }
