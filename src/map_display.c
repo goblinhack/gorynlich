@@ -212,12 +212,12 @@ map_tile_color (map_frame_ctx_t *map,
 
     map_tile = &map->tiles[x][y][z];
 
-    *r = map_tile->lit;
-    *g = map_tile->lit;
-    *b = map_tile->lit;
+    *r = ((float)map_tile->lit) / 100.0;
+    *g = ((float)map_tile->lit) / 100.0;
+    *b = ((float)map_tile->lit) / 100.0;
     *a = 1.0;
 
-    if (map_tile->lit < 0.1) {
+    if (map_tile->lit < 10) {
         *r = 0.0;
         *g = 0.0;
         *b = 0.0;

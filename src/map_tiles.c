@@ -26,9 +26,9 @@ void map_combine (map_frame_ctx_t *map)
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
             for (z = 0; z < MAP_DEPTH; z++) {
-                if (map->tiles_copy[x][y][z].thing_template) {
+                if (map->tiles_copy[x][y][z].template_id) {
                     map_set(map, x, y, z, 
-                            map->tiles_copy[x][y][z].thing_template);
+                            map->tiles_copy[x][y][z].template_id);
                     continue;
                 }
             }
@@ -66,21 +66,21 @@ void map_init_tiles (map_frame_ctx_t *map)
 
     int32_t z;
     int32_t gen;
-    thing_templatep t;
+    uint16_t t;
 
     for (z = 0; z < 10; z++) {
 
         switch (z) {
-        case 0: gen = 5; t = BRICK_0; break;
-        case 1: gen = 4; t = BRICK_0; break;
-        case 2: gen = 3; t = BRICK_0; break;
-        case 3: gen = 2; t = BRICK_0; break;
-        case 4: gen = 1; t = BRICK_0; break;
-        case 5: gen = 1; t = BRICK_0; break;
-        case 6: gen = 1; t = BRICK_0; break;
-        case 7: gen = 1; t = BRICK_0; break;
-        case 8: gen = 1; t = BRICK_0; break;
-        case 9: gen = 0; t = ROCK_0; break;
+        case 0: gen = 5; t = BRICK_0_ID; break;
+        case 1: gen = 4; t = BRICK_0_ID; break;
+        case 2: gen = 3; t = BRICK_0_ID; break;
+        case 3: gen = 2; t = BRICK_0_ID; break;
+        case 4: gen = 1; t = BRICK_0_ID; break;
+        case 5: gen = 1; t = BRICK_0_ID; break;
+        case 6: gen = 1; t = BRICK_0_ID; break;
+        case 7: gen = 1; t = BRICK_0_ID; break;
+        case 8: gen = 1; t = BRICK_0_ID; break;
+        case 9: gen = 0; t = ROCK_0_ID; break;
         default: DIE("bug");
         }
 
@@ -98,7 +98,7 @@ void map_init_tiles (map_frame_ctx_t *map)
     memset(map->tiles, 0, sizeof(map->tiles));
 
     cave_gen(map, 
-             BRICK_0,
+             BRICK_0_ID,
              0, /* z */
              100, /* fill prob */
              5,  /* R1 */
@@ -111,41 +111,43 @@ void map_init_tiles (map_frame_ctx_t *map)
 /*
  * map_set
  */
-thing_templatep map_set (map_frame_ctx_t *map,
-                         int32_t x, int32_t y, int32_t z,
-                         thing_templatep thing_template)
+uint16_t map_set (map_frame_ctx_t *map,
+                  int32_t x, int32_t y, int32_t z,
+                  uint16_t template_id)
 {
+    thing_templatep thing_template = id_to_thing_template(template_id);
+
     if (map_out_of_bounds(x, y, z)) {
         DIE("out of bounds on set map at %d,%d,%d for %s", x, y, z,
             thing_template_shortname(thing_template));
-        return (thing_template);
+        return (template_id);
     }
 
     map_tile_t *map_tile = &map->tiles[x][y][z];
-    if (thing_template == map_tile->thing_template) {
-        return (thing_template);
+    if (template_id == map_tile->template_id) {
+        return (template_id);
     }
 
-    map_tile->thing_template = thing_template;
+    map_tile->template_id = template_id;
 
     /*
      * Allow clearing.
      */
-    if (!thing_template) {
+    if (!template_id) {
         map_tile->tile = 0;
-        return (thing_template);
+        return (template_id);
     }
 
     tree_rootp thing_tiles = thing_template_get_tiles(thing_template);
     if (!thing_tiles) {
         map_tile->tile = 0;
-        return (thing_template);
+        return (template_id);
     }
 
     thing_tilep thing_tile = (typeof(thing_tile)) tree_root_first(thing_tiles);
     if (!thing_tile) {
         map_tile->tile = 0;
-        return (thing_template);
+        return (template_id);
     }
 
     const char *tilename = thing_tile_name(thing_tile);
@@ -165,19 +167,18 @@ thing_templatep map_set (map_frame_ctx_t *map,
 
     map_tile->tile = index;
 
-    return (thing_template);
+    return (template_id);
 }
 
 /*
  * map_get
  */
-thing_templatep map_get (map_frame_ctx_t *map,
-                         int32_t x, int32_t y, int32_t z)
+uint16_t map_get (map_frame_ctx_t *map, int32_t x, int32_t y, int32_t z)
 {
     if (map_out_of_bounds(x, y, z)) {
         ERR("out of bounds on get map at %d,%d,%d", x, y, z);
         return (0);
     }
 
-    return (map->tiles[x][y][z].thing_template);
+    return (map->tiles[x][y][z].template_id);
 }

@@ -146,8 +146,8 @@ static void make_map (float stdev, float stdev_shrink_factor)
 void fractal_gen (map_frame_ctx_t *map,
                   float stdev,
                   float stdev_shrink_factor,
-                  thing_templatep rock,
-                  thing_templatep rock2)
+                  uint16_t rock,
+                  uint16_t rock2)
 {
     const int32_t maze_w = map->map_width;
     const int32_t maze_h = map->map_height;

@@ -449,9 +449,7 @@ static uint8_t map_save[MAP_WIDTH][MAP_HEIGHT];
 //
 // Grow our cells
 //
-static void cave_generation (map_frame_ctx_t *map,
-                             thing_templatep rock,
-                             int32_t z)
+static void cave_generation (map_frame_ctx_t *map, uint16_t rock, int32_t z)
 {
     const int32_t maze_w = map->map_width;
     const int32_t maze_h = map->map_height;
@@ -464,15 +462,11 @@ static void cave_generation (map_frame_ctx_t *map,
             uint8_t adjcount_r2 = 0;
 
 #define ADJ2(i,j)                               \
-            if (map_curr[x+i][y+j] != 0) {      \
-                adjcount_r2++;                  \
-                adjcount_r1++;                  \
-            }
+            adjcount_r2 += map_curr[x+i][y+j]; \
+            adjcount_r1 += map_curr[x+i][y+j];
 
 #define ADJ(i,j)                                \
-            if (map_curr[x+i][y+j] != 0) {      \
-                adjcount_r2++;                  \
-            }
+            adjcount_r2 += map_curr[x+i][y+j];
 
             ADJ2(-1,-1);
             ADJ2( 0,-1);
@@ -521,7 +515,7 @@ static void cave_generation (map_frame_ctx_t *map,
 //
 // Generate a cave!
 //
-void cave_gen (map_frame_ctx_t *map, thing_templatep rock, 
+void cave_gen (map_frame_ctx_t *map, uint16_t rock, 
                int32_t z,
                int32_t map_fill_prob,
                int32_t map_r1,
