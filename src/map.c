@@ -15,6 +15,7 @@
 #include "level.h"
 #include "level_private.h"
 #include "tile.h"
+#include "bits.h"
 
 typedef boolean (*map_is_at_callback)(thing_templatep);
 
@@ -1386,430 +1387,313 @@ thing_templatep map_find_letter_at (levelp level,
 static void 
 map_fixup (map_frame_ctx_t *map)
 {
-    uint32_t index;
+    int32_t index;
     tilep tile;
     int32_t x;
     int32_t y;
     uint32_t z;
     int32_t dx;
     int32_t dy;
-    thing_templatep nbrs[3][3];
-    boolean is_join_block;
-    boolean is_join_horiz;
-    boolean is_join_vert;
-    boolean is_join_node;
-    boolean is_join_left;
-    boolean is_join_right;
-    boolean is_join_top;
-    boolean is_join_bot;
-    boolean is_join_tl;
-    boolean is_join_tr;
-    boolean is_join_bl;
-    boolean is_join_br;
-    boolean is_join_t;
-    boolean is_join_t90;
-    boolean is_join_t180;
-    boolean is_join_t270;
-    boolean is_join_x;
-    boolean is_join_tl2;
-    boolean is_join_tr2;
-    boolean is_join_bl2;
-    boolean is_join_br2;
-    boolean is_join_t_1;
-    boolean is_join_t_2;
-    boolean is_join_t_3;
-    boolean is_join_t90_1;
-    boolean is_join_t90_2;
-    boolean is_join_t90_3;
-    boolean is_join_t180_1;
-    boolean is_join_t180_2;
-    boolean is_join_t180_3;
-    boolean is_join_t270_1;
-    boolean is_join_t270_2;
-    boolean is_join_t270_3;
-    boolean is_join_x1;
-    boolean is_join_x1_270;
-    boolean is_join_x1_180;
-    boolean is_join_x1_90;
-    boolean is_join_x2;
-    boolean is_join_x2_270;
-    boolean is_join_x2_180;
-    boolean is_join_x2_90;
-    boolean is_join_x3;
-    boolean is_join_x3_180;
-    boolean is_join_x4;
-    boolean is_join_x4_270;
-    boolean is_join_x4_180;
-    boolean is_join_x4_90;
+    uint16_t nbrs[3][3];
 
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
+    for (x = 1; x < MAP_WIDTH-1; x++) {
+        for (y = 1; y < MAP_HEIGHT-1; y++) {
             for (z = 0; z < MAP_DEPTH; z++) {
 
-                thing_templatep thing_template = 
-                    map->tiles[x][y][z].thing_template;
+                uint16_t template_id = map->tiles[x][y][z].template_id;
 
-                if (!thing_template) {
+                if (!template_id) {
                     continue;
                 }
 
-                if ((thing_template != ROCK_0) &&
-                    (thing_template != LAVA_0) &&
-                    (thing_template != WATER_0) &&
-                    (thing_template != BRICK_0) &&
-                    (thing_template != BRICK_1) &&
-                    (thing_template != BRICK_2) &&
-                    (thing_template != BRICK_3) &&
-                    (thing_template != BRICK_4) &&
-                    (thing_template != BRICK_5) &&
-                    (thing_template != BRICK_6) &&
-                    (thing_template != BRICK_7) &&
-                    (thing_template != BRICK_8)) {
+                if ((template_id != ROCK_0_ID) &&
+                    (template_id != LAVA_0_ID) &&
+                    (template_id != WATER_0_ID) &&
+                    (template_id != BRICK_0_ID) &&
+                    (template_id != BRICK_1_ID) &&
+                    (template_id != BRICK_2_ID) &&
+                    (template_id != BRICK_3_ID) &&
+                    (template_id != BRICK_4_ID) &&
+                    (template_id != BRICK_5_ID) &&
+                    (template_id != BRICK_6_ID) &&
+                    (template_id != BRICK_7_ID) &&
+                    (template_id != BRICK_8_ID)) {
                     continue;
                 }
 
                 for (dx = -1; dx <= 1; dx++) {
                     for (dy = -1; dy <= 1; dy++) {
 
-                        if (x + dx < 0) {
+                        uint16_t a_thing_template_id = 
+                            map->tiles[x + dx][y + dy][z].template_id;
+
+                        if ((a_thing_template_id != ROCK_0_ID) &&
+                            (a_thing_template_id != LAVA_0_ID) &&
+                            (a_thing_template_id != WATER_0_ID) &&
+                            (a_thing_template_id != BRICK_0_ID) &&
+                            (a_thing_template_id != BRICK_1_ID) &&
+                            (a_thing_template_id != BRICK_2_ID) &&
+                            (a_thing_template_id != BRICK_3_ID) &&
+                            (a_thing_template_id != BRICK_4_ID) &&
+                            (a_thing_template_id != BRICK_5_ID) &&
+                            (a_thing_template_id != BRICK_6_ID) &&
+                            (a_thing_template_id != BRICK_7_ID) &&
+                            (a_thing_template_id != BRICK_8_ID)) {
+                            nbrs[dx + 1][dy + 1] = 0;
                             continue;
                         }
 
-                        if (y + dy < 0) {
-                            continue;
-                        }
-
-                        if (x + dx >= MAP_WIDTH) {
-                            continue;
-                        }
-
-                        if (y + dy >= MAP_HEIGHT) {
-                            continue;
-                        }
-
-                        thing_templatep a_thing_template = 
-                            map->tiles[x + dx][y + dy][z].thing_template;
-
-                        if ((a_thing_template != ROCK_0) &&
-                            (a_thing_template != LAVA_0) &&
-                            (a_thing_template != WATER_0) &&
-                            (a_thing_template != BRICK_0) &&
-                            (a_thing_template != BRICK_1) &&
-                            (a_thing_template != BRICK_2) &&
-                            (a_thing_template != BRICK_3) &&
-                            (a_thing_template != BRICK_4) &&
-                            (a_thing_template != BRICK_5) &&
-                            (a_thing_template != BRICK_6) &&
-                            (a_thing_template != BRICK_7) &&
-                            (a_thing_template != BRICK_8)) {
-                            nbrs[dx + 1][dy + 1] = NULL;
-                            continue;
-                        }
-
-                        nbrs[dx + 1][dy + 1] = a_thing_template;
+                        nbrs[dx + 1][dy + 1] = a_thing_template_id;
                     }
                 }
 
-                is_join_block = false;
-                is_join_horiz = false;
-                is_join_vert = false;
-                is_join_node = false;
-                is_join_left = false;
-                is_join_right = false;
-                is_join_top = false;
-                is_join_bot = false;
-                is_join_tl = false;
-                is_join_tr = false;
-                is_join_bl = false;
-                is_join_br = false;
-                is_join_t = false;
-                is_join_t90 = false;
-                is_join_t180 = false;
-                is_join_t270 = false;
-                is_join_x = false;
-                is_join_tl2 = false;
-                is_join_tr2 = false;
-                is_join_bl2 = false;
-                is_join_br2 = false;
-                is_join_t_1 = false;
-                is_join_t_2 = false;
-                is_join_t_3 = false;
-                is_join_t90_1 = false;
-                is_join_t90_2 = false;
-                is_join_t90_3 = false;
-                is_join_t180_1 = false;
-                is_join_t180_2 = false;
-                is_join_t180_3 = false;
-                is_join_t270_1 = false;
-                is_join_t270_2 = false;
-                is_join_t270_3 = false;
-                is_join_x = false;
-                is_join_x1 = false;
-                is_join_x1_270 = false;
-                is_join_x1_180 = false;
-                is_join_x1_90 = false;
-                is_join_x2 = false;
-                is_join_x2_270 = false;
-                is_join_x2_180 = false;
-                is_join_x2_90 = false;
-                is_join_x3 = false;
-                is_join_x3_180 = false;
-                is_join_x4 = false;
-                is_join_x4_270 = false;
-                is_join_x4_180 = false;
-                is_join_x4_90 = false;
+                uint16_t a = nbrs[0][0];
+                uint16_t b = nbrs[1][0];
+                uint16_t c = nbrs[2][0];
+                uint16_t d = nbrs[0][1];
+                uint16_t e = nbrs[1][1];
+                uint16_t f = nbrs[2][1];
+                uint16_t g = nbrs[0][2];
+                uint16_t h = nbrs[1][2];
+                uint16_t i = nbrs[2][2];
 
-                thing_templatep a = nbrs[0][0];
-                thing_templatep b = nbrs[1][0];
-                thing_templatep c = nbrs[2][0];
-                thing_templatep d = nbrs[0][1];
-                thing_templatep e = nbrs[1][1];
-                thing_templatep f = nbrs[2][1];
-                thing_templatep g = nbrs[0][2];
-                thing_templatep h = nbrs[1][2];
-                thing_templatep i = nbrs[2][2];
+                uint8_t A = (a != 0) ? 1 : 0;
+                uint8_t B = (b != 0) ? 1 : 0;
+                uint8_t C = (c != 0) ? 1 : 0;
+                uint8_t D = (d != 0) ? 1 : 0;
+                uint8_t E = (e != 0) ? 1 : 0;
+                uint8_t F = (f != 0) ? 1 : 0;
+                uint8_t G = (g != 0) ? 1 : 0;
+                uint8_t H = (h != 0) ? 1 : 0;
+                uint8_t I = (i != 0) ? 1 : 0;
 
-                char A = (a != NULL) ? '1' : ' ';
-                char B = (b != NULL) ? '1' : ' ';
-                char C = (c != NULL) ? '1' : ' ';
-                char D = (d != NULL) ? '1' : ' ';
-                char E = (e != NULL) ? '1' : ' ';
-                char F = (f != NULL) ? '1' : ' ';
-                char G = (g != NULL) ? '1' : ' ';
-                char H = (h != NULL) ? '1' : ' ';
-                char I = (i != NULL) ? '1' : ' ';
+                const uint16_t omask =
+                    (I << 8) | (H << 7) | (G << 6) | (F << 5) |
+                    (E << 4) | (D << 3) | (C << 2) | (B << 1) |
+                    (A << 0);
 
-                uint64_t score;
-                uint64_t best = 0;
-                boolean *best_block = 0;
+                uint8_t score;
+                uint8_t best = 0;
 
-#define BLOCK(arr, block_type)                                              \
-                if ((arr[0] == '1') && (A == ' ') ||                        \
-                    (arr[1] == '1') && (B == ' ') ||                        \
-                    (arr[2] == '1') && (C == ' ') ||                        \
-                    (arr[3] == '1') && (D == ' ') ||                        \
-                    (arr[4] == '1') && (E == ' ') ||                        \
-                    (arr[5] == '1') && (F == ' ') ||                        \
-                    (arr[6] == '1') && (G == ' ') ||                        \
-                    (arr[7] == '1') && (H == ' ') ||                        \
-                    (arr[8] == '1') && (I == ' ')) {                        \
-                } else {                                                    \
-                    score =                                                 \
-                        ((uint64_t) (arr[0] == A) ? 1 : 0) * 100000000LLU + \
-                        ((uint64_t) (arr[1] == B) ? 1 : 0) * 10000000LLU  + \
-                        ((uint64_t) (arr[2] == C) ? 1 : 0) * 1000000LLU   + \
-                        ((uint64_t) (arr[3] == D) ? 1 : 0) * 100000LLU    + \
-                        ((uint64_t) (arr[4] == E) ? 1 : 0) * 10000LLU     + \
-                        ((uint64_t) (arr[5] == F) ? 1 : 0) * 1000LLU      + \
-                        ((uint64_t) (arr[6] == G) ? 1 : 0) * 100LLU       + \
-                        ((uint64_t) (arr[7] == H) ? 1 : 0) * 10LLU        + \
-                        ((uint64_t) (arr[8] == I) ? 1 : 0);                 \
+                index = -1;
+
+                uint16_t mask;
+
+#define BLOCK(a,b,c,d,e,f,g,h,i, _index_)                                   \
+                mask =                                                      \
+                    (i << 8) | (h << 7) | (g << 6) | (f << 5) |             \
+                    (e << 4) | (d << 3) | (c << 2) | (b << 1) |             \
+                    (a << 0);                                               \
                                                                             \
+                if ((mask & omask) == mask) {                               \
+                    uint32_t difference = mask ^ omask;                     \
+                    BITCOUNT(difference);                                   \
+                    score = 32 - difference;                                \
                     if (score > best) {                                     \
                         best = score;                                       \
-                        best_block = &block_type;                           \
+                        index = _index_;                                    \
                     }                                                       \
                 }                                                           \
 
-                BLOCK("111"
-                      "111"
-                      "111", is_join_block)
-
-                BLOCK("   "
-                      " 1 "
-                      "   ", is_join_node)
-
-                BLOCK("   "
-                      " 11"
-                      "   ", is_join_left)
-
-                BLOCK("   "
-                      " 1 "
-                      " 1 ", is_join_top)
-
-                BLOCK("   "
-                      "11 "
-                      "   ", is_join_right)
-
-                BLOCK(" 1 "
-                      " 1 "
-                      "   ", is_join_bot)
-
-                BLOCK("   "
-                      "111"
-                      "   ", is_join_horiz)
-
-                BLOCK(" 1 "
-                      " 1 "
-                      " 1 ", is_join_vert)
-
-                BLOCK("   "
-                      " 11"
-                      " 11", is_join_tl2)
-
-                BLOCK(" 11"
-                      " 11"
-                      "   ", is_join_bl2)
-
-                BLOCK("11 "
-                      "11 "
-                      "   ", is_join_br2)
-
-                BLOCK("   "
-                      "11 "
-                      "11 ", is_join_tr2)
-
-                BLOCK("   "
-                      " 11"
-                      " 1 ", is_join_tl)
-
-                BLOCK(" 1 "
-                      " 11"
-                      "   ", is_join_bl)
-
-                BLOCK(" 1 "
-                      "11 "
-                      "   ", is_join_br)
-
-                BLOCK("   "
-                      "11 "
-                      " 1 ", is_join_tr)
-
-                BLOCK("11 "
-                      "11 "
-                      "11 ", is_join_t90_3)
-
-                BLOCK("111"
-                      "111"
-                      "   ", is_join_t180_3)
-
-                BLOCK(" 11"
-                      " 11"
-                      " 11", is_join_t270_3)
-
-                BLOCK("   "
-                      "111"
-                      "111", is_join_t_3)
-
-                BLOCK(" 1 "
-                      " 11"
-                      " 1 ", is_join_t270)
-
-                BLOCK(" 1 "
-                      "111"
-                      "   ", is_join_t180)
-
-                BLOCK(" 1 "
-                      "11 "
-                      " 1 ", is_join_t90)
-
-                BLOCK("   "
-                      "111"
-                      " 1 ", is_join_t)
-
-                BLOCK(" 11"
-                      " 11"
-                      " 1 ", is_join_t270_2)
-
-                BLOCK("11 "
-                      "111"
-                      "   ", is_join_t180_2)
-
-                BLOCK(" 1 "
-                      "11 "
-                      "11 ", is_join_t90_2)
-
-                BLOCK("   "
-                      "111"
-                      " 11", is_join_t_2)
-
-                BLOCK(" 1 "
-                      " 11"
-                      " 11", is_join_t270_1)
-
-                BLOCK(" 11"
-                      "111"
-                      "   ", is_join_t180_1)
-
-                BLOCK("11 "
-                      "11 "
-                      " 1 ", is_join_t90_1)
-
-                BLOCK("   "
-                      "111"
-                      "11 ", is_join_t_1)
-
-                BLOCK(" 1 "
-                      "111"
-                      " 1 ", is_join_x)
-
-                BLOCK(" 1 "
-                      "111"
-                      " 11", is_join_x1)
-
-                BLOCK(" 11"
-                      "111"
-                      " 1 ", is_join_x1_270)
-
-                BLOCK("11 "
-                      "111"
-                      " 1 ", is_join_x1_180)
-
-                BLOCK(" 1 "
-                      "111"
-                      "11 ", is_join_x1_90)
-
-                BLOCK(" 1 "
-                      "111"
-                      "111", is_join_x2)
-
-                BLOCK(" 11"
-                      "111"
-                      " 11", is_join_x2_270)
-
-                BLOCK("111"
-                      "111"
-                      " 1 ", is_join_x2_180)
-
-                BLOCK("11 "
-                      "111"
-                      "11 ", is_join_x2_90)
-
-                BLOCK(" 11"
-                      "111"
-                      "11 ", is_join_x3)
-
-                BLOCK("11 "
-                      "111"
-                      " 11", is_join_x3_180)
-
-                BLOCK(" 11"
-                      "111"
-                      "111", is_join_x4)
-
-                BLOCK("111"
-                      "111"
-                      " 11", is_join_x4_270)
-
-                BLOCK("111"
-                      "111"
-                      "11 ", is_join_x4_180)
-
-                BLOCK("11 "
-                      "111"
-                      "111", is_join_x4_90)
-
                 if (z < MAP_DEPTH - 2) {
-                    if (map->tiles[x][y][z + 1].thing_template ==
-                        thing_template) {
+                    if (map->tiles[x][y][z + 1].template_id == template_id) {
 
-                        is_join_block = false;
-                        best_block = &is_join_block;
+                        index = IS_JOIN_BLOCK;
+                        goto gotone;
                     }
                 }
 
-                if (best_block == NULL) {
-                    DIE("%u%u%u %u%u%u %u%u%u not handled",
+                BLOCK(1, 1, 1,
+                      1, 1, 1,
+                      1, 1, 1, IS_JOIN_BLOCK)
+
+                BLOCK(0, 0, 0,
+                      0, 1, 0,
+                      0, 0, 0, IS_JOIN_NODE)
+
+                BLOCK(0, 0, 0,
+                      0, 1, 1,
+                      0, 0, 0, IS_JOIN_LEFT)
+
+                BLOCK(0, 0, 0,
+                      0, 1, 0,
+                      0, 1, 0, IS_JOIN_TOP)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 0,
+                      0, 0, 0, IS_JOIN_RIGHT)
+
+                BLOCK(0, 1, 0,
+                      0, 1, 0,
+                      0, 0, 0, IS_JOIN_BOT)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 1,
+                      0, 0, 0, IS_JOIN_HORIZ)
+
+                BLOCK(0, 1, 0,
+                      0, 1, 0,
+                      0, 1, 0, IS_JOIN_VERT)
+
+                BLOCK(0, 0, 0,
+                      0, 1, 1,
+                      0, 1, 1, IS_JOIN_TL2)
+
+                BLOCK(0, 1, 1,
+                      0, 1, 1,
+                      0, 0, 0, IS_JOIN_BL2)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 0,
+                      0, 0, 0, IS_JOIN_BR2)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 0,
+                      1, 1, 0, IS_JOIN_TR2)
+
+                BLOCK(0, 0, 0,
+                      0, 1, 1,
+                      0, 1, 0, IS_JOIN_TL)
+
+                BLOCK(0, 1, 0,
+                      0, 1, 1,
+                      0, 0, 0, IS_JOIN_BL)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 0,
+                      0, 0, 0, IS_JOIN_BR)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 0,
+                      0, 1, 0, IS_JOIN_TR)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 0,
+                      1, 1, 0, IS_JOIN_T90_3)
+
+                BLOCK(1, 1, 1,
+                      1, 1, 1,
+                      0, 0, 0, IS_JOIN_T180_3)
+
+                BLOCK(0, 1, 1,
+                      0, 1, 1,
+                      0, 1, 1, IS_JOIN_T270_3)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 1,
+                      1, 1, 1, IS_JOIN_T_3)
+
+                BLOCK(0, 1, 0,
+                      0, 1, 1,
+                      0, 1, 0, IS_JOIN_T270)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 1,
+                      0, 0, 0, IS_JOIN_T180)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 0,
+                      0, 1, 0, IS_JOIN_T90)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 1,
+                      0, 1, 0, IS_JOIN_T)
+
+                BLOCK(0, 1, 1,
+                      0, 1, 1,
+                      0, 1, 0, IS_JOIN_T270_2)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 1,
+                      0, 0, 0, IS_JOIN_T180_2)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 0,
+                      1, 1, 0, IS_JOIN_T90_2)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 1,
+                      0, 1, 1, IS_JOIN_T_2)
+
+                BLOCK(0, 1, 0,
+                      0, 1, 1,
+                      0, 1, 1, IS_JOIN_T270_1)
+
+                BLOCK(0, 1, 1,
+                      1, 1, 1,
+                      0, 0, 0, IS_JOIN_T180_1)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 0,
+                      0, 1, 0, IS_JOIN_T90_1)
+
+                BLOCK(0, 0, 0,
+                      1, 1, 1,
+                      1, 1, 0, IS_JOIN_T_1)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 1,
+                      0, 1, 0, IS_JOIN_X)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 1,
+                      0, 1, 1, IS_JOIN_X1)
+
+                BLOCK(0, 1, 1,
+                      1, 1, 1,
+                      0, 1, 0, IS_JOIN_X1_270)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 1,
+                      0, 1, 0, IS_JOIN_X1_180)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 1,
+                      1, 1, 0, IS_JOIN_X1_90)
+
+                BLOCK(0, 1, 0,
+                      1, 1, 1,
+                      1, 1, 1, IS_JOIN_X2)
+
+                BLOCK(0, 1, 1,
+                      1, 1, 1,
+                      0, 1, 1, IS_JOIN_X2_270)
+
+                BLOCK(1, 1, 1,
+                      1, 1, 1,
+                      0, 1, 0, IS_JOIN_X2_180)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 1,
+                      1, 1, 0, IS_JOIN_X2_90)
+
+                BLOCK(0, 1, 1,
+                      1, 1, 1,
+                      1, 1, 0, IS_JOIN_X3)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 1,
+                      0, 1, 1, IS_JOIN_X3_180)
+
+                BLOCK(0, 1, 1,
+                      1, 1, 1,
+                      1, 1, 1, IS_JOIN_X4)
+
+                BLOCK(1, 1, 1,
+                      1, 1, 1,
+                      0, 1, 1, IS_JOIN_X4_270)
+
+                BLOCK(1, 1, 1,
+                      1, 1, 1,
+                      1, 1, 0, IS_JOIN_X4_180)
+
+                BLOCK(1, 1, 0,
+                      1, 1, 1,
+                      1, 1, 1, IS_JOIN_X4_90)
+
+gotone:
+              if (index == -1) {
+                  DIE("%u%u%u %u%u%u %u%u%u not handled",
                         a ? 1 : 0,
                         b ? 1 : 0,
                         c ? 1 : 0,
@@ -1821,173 +1705,26 @@ map_fixup (map_frame_ctx_t *map)
                         i ? 1 : 0);
                 }
 
-                *best_block = true;
+                thing_templatep t = id_to_thing_template(e);
 
-                index = thing_template_join_type_to_index(
-                            is_join_block,
-                            is_join_horiz,
-                            is_join_vert,
-                            is_join_node,
-                            is_join_left,
-                            is_join_right,
-                            is_join_top,
-                            is_join_bot,
-                            is_join_tl,
-                            is_join_tr,
-                            is_join_bl,
-                            is_join_br,
-                            is_join_t,
-                            is_join_t90,
-                            is_join_t180,
-                            is_join_t270,
-                            is_join_x,
-                            is_join_tl2,
-                            is_join_tr2,
-                            is_join_bl2,
-                            is_join_br2,
-                            is_join_t_1,
-                            is_join_t_2,
-                            is_join_t_3,
-                            is_join_t90_1,
-                            is_join_t90_2,
-                            is_join_t90_3,
-                            is_join_t180_1,
-                            is_join_t180_2,
-                            is_join_t180_3,
-                            is_join_t270_1,
-                            is_join_t270_2,
-                            is_join_t270_3,
-                            is_join_x1,
-                            is_join_x1_270,
-                            is_join_x1_180,
-                            is_join_x1_90,
-                            is_join_x2,
-                            is_join_x2_270,
-                            is_join_x2_180,
-                            is_join_x2_90,
-                            is_join_x3,
-                            is_join_x3_180,
-                            is_join_x4,
-                            is_join_x4_270,
-                            is_join_x4_180,
-                            is_join_x4_90);
-
-                thing_tilep thing_tile = thing_tile_find(e, index, &tile);
-
+                thing_tilep thing_tile = thing_tile_find(t, index, &tile);
                 if (!thing_tile) {
+                    index = IS_JOIN_BLOCK;
 
-                    is_join_block = false;
-                    is_join_horiz = false;
-                    is_join_vert = false;
-                    is_join_node = true;
-                    is_join_left = false;
-                    is_join_right = false;
-                    is_join_top = false;
-                    is_join_bot = false;
-                    is_join_tl = false;
-                    is_join_tr = false;
-                    is_join_bl = false;
-                    is_join_br = false;
-                    is_join_t = false;
-                    is_join_t90 = false;
-                    is_join_t180 = false;
-                    is_join_t270 = false;
-                    is_join_x = false;
-                    is_join_tl2 = false;
-                    is_join_tr2 = false;
-                    is_join_bl2 = false;
-                    is_join_br2 = false;
-                    is_join_t_1 = false;
-                    is_join_t_2 = false;
-                    is_join_t_3 = false;
-                    is_join_t90_1 = false;
-                    is_join_t90_2 = false;
-                    is_join_t90_3 = false;
-                    is_join_t180_1 = false;
-                    is_join_t180_2 = false;
-                    is_join_t180_3 = false;
-                    is_join_t270_1 = false;
-                    is_join_t270_2 = false;
-                    is_join_t270_3 = false;
-                    is_join_x = false;
-                    is_join_x1 = false;
-                    is_join_x1_270 = false;
-                    is_join_x1_180 = false;
-                    is_join_x1_90 = false;
-                    is_join_x2 = false;
-                    is_join_x2_270 = false;
-                    is_join_x2_180 = false;
-                    is_join_x2_90 = false;
-                    is_join_x3 = false;
-                    is_join_x3_180 = false;
-                    is_join_x4 = false;
-                    is_join_x4_270 = false;
-                    is_join_x4_180 = false;
-                    is_join_x4_90 = false;
-
-                    index = thing_template_join_type_to_index(
-                                is_join_block,
-                                is_join_horiz,
-                                is_join_vert,
-                                is_join_node,
-                                is_join_left,
-                                is_join_right,
-                                is_join_top,
-                                is_join_bot,
-                                is_join_tl,
-                                is_join_tr,
-                                is_join_bl,
-                                is_join_br,
-                                is_join_t,
-                                is_join_t90,
-                                is_join_t180,
-                                is_join_t270,
-                                is_join_x,
-                                is_join_tl2,
-                                is_join_tr2,
-                                is_join_bl2,
-                                is_join_br2,
-                                is_join_t_1,
-                                is_join_t_2,
-                                is_join_t_3,
-                                is_join_t90_1,
-                                is_join_t90_2,
-                                is_join_t90_3,
-                                is_join_t180_1,
-                                is_join_t180_2,
-                                is_join_t180_3,
-                                is_join_t270_1,
-                                is_join_t270_2,
-                                is_join_t270_3,
-                                is_join_x1,
-                                is_join_x1_270,
-                                is_join_x1_180,
-                                is_join_x1_90,
-                                is_join_x2,
-                                is_join_x2_270,
-                                is_join_x2_180,
-                                is_join_x2_90,
-                                is_join_x3,
-                                is_join_x3_180,
-                                is_join_x4,
-                                is_join_x4_270,
-                                is_join_x4_180,
-                                is_join_x4_90);
-
-                    thing_tile_find(e, index, &tile);
+                    thing_tile_find(t, index, &tile);
                     if (!tile) {
-                        DIE("no joinable tile for %s", thing_template_name(e));
+                        DIE("no joinable tile for %s", thing_template_name(t));
                     }
                 }
 
                 if (!tile) {
-                    DIE("no tile for %s", thing_template_name(e));
+                    DIE("no tile for %s", thing_template_name(t));
                 }
 
-                uint32_t index = tile_get_index(tile);
+                uint32_t tile_index = tile_get_index(tile);
 
-                map->tiles[x][y][z].tile = index;
-                map->tiles[x][y][z].thing_template = thing_template;
+                map->tiles[x][y][z].tile = tile_index;
+                map->tiles[x][y][z].template_id = e;
             }
         }
     }

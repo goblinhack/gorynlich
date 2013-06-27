@@ -13,7 +13,6 @@
 #include "wid_editor_buttons.h"
 #include "tree.h"
 #include "thing_template.h"
-#include "thing_template_private.h"
 
 widp wid_editor_buttons_window;
 widp wid_editor_buttons_container1;

@@ -10,7 +10,6 @@
 #include "tree.h"
 #include "thing_tile_private.h"
 #include "thing_template.h"
-#include "thing_template_private.h"
 #include "thing_tile.h"
 #include "tile.h"
 #include "marshal.h"
@@ -18,8 +17,7 @@
 /*
  * Using static memory as these things never change once made.
  */
-#define THING_TEMPLATES_CHUNK_COUNT_MAX 1024
-static thing_template thing_templates_chunk[THING_TEMPLATES_CHUNK_COUNT_MAX];
+thing_template thing_templates_chunk[THING_TEMPLATES_CHUNK_COUNT_MAX];
 static uint32_t thing_templates_chunk_count;
 
 tree_root *thing_templates;
@@ -357,7 +355,8 @@ thing_templatep thing_template_load (const char *name)
         DIE("too many thing templates");
     }
 
-    t = &thing_templates_chunk[thing_templates_chunk_count++];
+    t = &thing_templates_chunk[++thing_templates_chunk_count];
+    t->id = thing_templates_chunk_count;
     t->tree.key = dupstr(name, "TREE KEY: thing");
 
     if (!tree_insert_static(thing_templates, &t->tree.node)) {

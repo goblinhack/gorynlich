@@ -32,7 +32,7 @@
 /*
  * Map size is 2^MAP_WIDTH_LOG. So MAP_WIDTH_LOG 8 is 256, 10 is 1024
  */
-#define MAP_WIDTH_LOG               10
+#define MAP_WIDTH_LOG               8
 #define MAP_WIDTH                   (1 << MAP_WIDTH_LOG)
 #define MAP_HEIGHT                  MAP_WIDTH
 #define MAP_DEPTH                   16 
