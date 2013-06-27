@@ -479,6 +479,8 @@ map_lightmap (map_frame_ctx_t *map,
 
         if (total_shadow > max_shadow) {
             lit = 0.0;
+
+            map->tiles[x][y][z].lit = 0;
         } else {
             lit = (max_shadow - total_shadow) / max_shadow;
 
@@ -495,7 +497,7 @@ map_lightmap (map_frame_ctx_t *map,
                 }
             }
 
-            map->tiles[x][y][z].lit = lit;
+            map->tiles[x][y][z].lit = (100.0 * lit);
         }
     }
 }

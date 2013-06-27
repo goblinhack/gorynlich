@@ -4,7 +4,6 @@
  * See the README file.
  */
 
-
 boolean map_is_item_hidden_at(levelp, int32_t x, int32_t y);
 boolean map_is_thing_at(levelp, int32_t x, int32_t y);
 boolean map_is_bonus_letter_at(levelp, int32_t x, int32_t y);
@@ -309,10 +308,9 @@ typedef struct tree_thing_node_ {
 } tree_thing_node;
 
 typedef struct {
+    uint16_t template_id;
     uint16_t tile;
-    float lit;
-    thing_tilep thing_tile;
-    thing_templatep thing_template;
+    uint8_t lit;
 } map_tile_t;
 
 /*
@@ -413,17 +411,17 @@ void map_lightmap(map_frame_ctx_t *map,
                   int32_t strength,
                   boolean first_light);
 
-thing_templatep map_set(map_frame_ctx_t *map,
-                        int32_t x, int32_t y, int32_t z,
-                        thing_templatep thing_template);
+uint16_t map_set(map_frame_ctx_t *map,
+                 int32_t x, int32_t y, int32_t z,
+                 uint16_t thing_template);
 
-thing_templatep map_get(map_frame_ctx_t *map,
-                        int32_t x, int32_t y, int32_t z);
+uint16_t map_get(map_frame_ctx_t *map,
+                 int32_t x, int32_t y, int32_t z);
 
 /*
  * cave.c
  */
-void cave_gen(map_frame_ctx_t *map, thing_templatep rock, int32_t z,
+void cave_gen(map_frame_ctx_t *map, uint16_t rock, int32_t z,
               int32_t map_fill_prob,
               int32_t map_r1,
               int32_t map_r2,
@@ -435,8 +433,8 @@ void cave_gen(map_frame_ctx_t *map, thing_templatep rock, int32_t z,
 void fractal_gen(map_frame_ctx_t *map,
                  float stdev,
                  float stdev_shrink_factor,
-                 thing_templatep rock,
-                 thing_templatep rock2);
+                 uint16_t rock,
+                 uint16_t rock2);
 
 /*
  * map_display.c
@@ -488,8 +486,8 @@ static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
 /*
  * map_get_unsafe
  */
-static inline thing_templatep map_get_unsafe (map_frame_ctx_t *map,
-                                              int32_t x, int32_t y, int32_t z)
+static inline uint16_t map_get_unsafe (map_frame_ctx_t *map,
+                                       int32_t x, int32_t y, int32_t z)
 {
-    return (map->tiles[x][y][z].thing_template);
+    return (map->tiles[x][y][z].template_id);
 }

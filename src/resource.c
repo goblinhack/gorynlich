@@ -14,17 +14,40 @@
 #include "init_fn.h"
 
 thing_templatep BRICK_0;
+uint16_t BRICK_0_ID;
+
 thing_templatep BRICK_1;
+uint16_t BRICK_1_ID;
+
 thing_templatep BRICK_2;
+uint16_t BRICK_2_ID;
+
 thing_templatep BRICK_3;
+uint16_t BRICK_3_ID;
+
 thing_templatep BRICK_4;
+uint16_t BRICK_4_ID;
+
 thing_templatep BRICK_5;
+uint16_t BRICK_5_ID;
+
 thing_templatep BRICK_6;
+uint16_t BRICK_6_ID;
+
 thing_templatep BRICK_7;
+uint16_t BRICK_7_ID;
+
 thing_templatep BRICK_8;
+uint16_t BRICK_8_ID;
+
 thing_templatep ROCK_0;
+uint16_t ROCK_0_ID;
+
 thing_templatep LAVA_0;
+uint16_t LAVA_0_ID;
+
 thing_templatep WATER_0;
+uint16_t WATER_0_ID;
 
 static boolean resource_init_1 (void *context)
 {
@@ -928,17 +951,40 @@ static boolean resource_init_23 (void *context)
                   ARRAY_SIZE(small_tiles), small_tiles);
 
     BRICK_0 = thing_template_load("data/things/brick_0");
+    BRICK_0_ID = thing_template_to_id(BRICK_0);
+
     BRICK_1 = thing_template_load("data/things/brick_1");
+    BRICK_1_ID = thing_template_to_id(BRICK_1);
+
     BRICK_2 = thing_template_load("data/things/brick_2");
+    BRICK_2_ID = thing_template_to_id(BRICK_2);
+
     BRICK_3 = thing_template_load("data/things/brick_3");
+    BRICK_3_ID = thing_template_to_id(BRICK_3);
+
     BRICK_4 = thing_template_load("data/things/brick_4");
+    BRICK_4_ID = thing_template_to_id(BRICK_4);
+
     BRICK_5 = thing_template_load("data/things/brick_5");
+    BRICK_5_ID = thing_template_to_id(BRICK_5);
+
     BRICK_6 = thing_template_load("data/things/brick_6");
+    BRICK_6_ID = thing_template_to_id(BRICK_6);
+
     BRICK_7 = thing_template_load("data/things/brick_7");
+    BRICK_7_ID = thing_template_to_id(BRICK_7);
+
     BRICK_8 = thing_template_load("data/things/brick_8");
+    BRICK_8_ID = thing_template_to_id(BRICK_8);
+
     ROCK_0 = thing_template_load("data/things/rock_0");
+    ROCK_0_ID = thing_template_to_id(ROCK_0);
+
     LAVA_0 = thing_template_load("data/things/lava_0");
+    LAVA_0_ID = thing_template_to_id(LAVA_0);
+
     WATER_0 = thing_template_load("data/things/water_0");
+    WATER_0_ID = thing_template_to_id(WATER_0);
 
     return (true);
 }

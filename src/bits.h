@@ -73,3 +73,34 @@
 #define FIRST_FREEBIT_IN_64BIT(_bitarr_)                                    \
     FIRST_BIT_IN_64BIT(~(_bitarr_))                                         \
 
+/*
+ * bitcount
+ */
+#define BITCOUNT(w)                                                         \
+   w = (0x55555555LU & w) + (0x55555555LU & (w>> 1));                       \
+   w = (0x33333333LU & w) + (0x33333333LU & (w>> 2));                       \
+   w = (0x0f0f0f0fLU & w) + (0x0f0f0f0fLU & (w>> 4));                       \
+   w = (0x00ff00ffLU & w) + (0x00ff00ffLU & (w>> 8));                       \
+   w = (0x0000ffffLU & w) + (0x0000ffffLU & (w>>16));                       \
+
+static inline int32_t bitcount (int32_t w)
+{
+#if 1
+   w = (0x55555555LU & w) + (0x55555555LU & (w>> 1));
+   w = (0x33333333LU & w) + (0x33333333LU & (w>> 2));
+   w = (0x0f0f0f0fLU & w) + (0x0f0f0f0fLU & (w>> 4));
+   w = (0x00ff00ffLU & w) + (0x00ff00ffLU & (w>> 8));
+   w = (0x0000ffffLU & w) + (0x0000ffffLU & (w>>16));
+
+   return (w);
+
+#else
+    w = w - ((w >> 1) & 0x5555555555555555UL);
+    w = (w & 0x3333333333333333UL) + ((w >> 2) & 0x3333333333333333UL);
+    return (int)(unchecked(((w + 
+                             (w >> 4)) & 0xF0F0F0F0F0F0F0FUL) * 
+                           0x101010101010101UL) >> 56);
+
+    return (__builtin_popcount(w));
+#endif
+}

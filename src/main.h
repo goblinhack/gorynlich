@@ -385,14 +385,38 @@ typedef struct {
  * resource.c
  */
 extern thing_templatep BRICK_0;
+extern uint16_t BRICK_0_ID;
+
 extern thing_templatep BRICK_1;
+extern uint16_t BRICK_1_ID;
+
 extern thing_templatep BRICK_2;
+extern uint16_t BRICK_2_ID;
+
 extern thing_templatep BRICK_3;
+extern uint16_t BRICK_3_ID;
+
 extern thing_templatep BRICK_4;
+extern uint16_t BRICK_4_ID;
+
 extern thing_templatep BRICK_5;
+extern uint16_t BRICK_5_ID;
+
 extern thing_templatep BRICK_6;
+extern uint16_t BRICK_6_ID;
+
 extern thing_templatep BRICK_7;
+extern uint16_t BRICK_7_ID;
+
 extern thing_templatep BRICK_8;
+extern uint16_t BRICK_8_ID;
+
 extern thing_templatep ROCK_0;
+extern uint16_t ROCK_0_ID;
+
 extern thing_templatep LAVA_0;
+extern uint16_t LAVA_0_ID;
+
 extern thing_templatep WATER_0;
+extern uint16_t WATER_0_ID;
+
