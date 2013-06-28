@@ -191,7 +191,7 @@ int main (int32_t argc, char *argv[])
         /* avoid end-of-line conversions */
         SET_BINARY_MODE(f);
 
-        ret = docompress(f, Z_BEST_COMPRESSION);
+        ret = docompress(f, 1);
         if (ret != Z_OK) {
             fprintf(stderr, "could not compress %s\n", ramfile->filename);
             exit(1);

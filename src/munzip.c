@@ -53,7 +53,7 @@ int32_t main (int32_t argc, char *argv[])
             exit(1);
         }
 
-        printf("Uncompressed %s to %s\n", filename, new_filename);
+        printf("\nUncompressed %s to %s len %d\n", filename, new_filename, len);
     }
 
     exit(0);
