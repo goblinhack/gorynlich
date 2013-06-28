@@ -12,6 +12,8 @@
 #define nUSE_STB_IMAGE
 
 #ifdef USE_ZLIB
+#include <stdlib.h>
+#include <zlib.h>
 #endif
 
 #ifdef USE_MINIZ
@@ -118,7 +120,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 #ifdef USE_ZLIB
         int32_t err;
 
-        out = mymalloc(ramfile->orig_len);
+        out = mymalloc(ramfile->orig_len, "RAMDISK scratchpad");
         if (!out) {
             DIE("no memory for ramdisk, %s", filename);
         }

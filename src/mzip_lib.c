@@ -32,6 +32,29 @@ unsigned char *miniz_compress (unsigned char *buf, int32_t *uncompressed_len)
     return (buf_compressed);
 }
 
+unsigned char *miniz_compress2 (unsigned char *buf, int32_t *uncompressed_len,
+                                int level)
+{
+    unsigned long compressed_len = mz_compressBound(*uncompressed_len);
+    unsigned char *buf_compressed;
+
+    buf_compressed = (typeof(buf_compressed))
+                    mymalloc((uint32_t)compressed_len, __FUNCTION__);
+    if (!buf_compressed) {
+        return (0);
+    }
+
+    if (mz_compress2(buf_compressed, &compressed_len, buf,
+                     *uncompressed_len, level) != MZ_OK) {
+        myfree(buf_compressed);
+        return (0);
+    }
+
+    *uncompressed_len = (uint32_t)compressed_len;
+
+    return (buf_compressed);
+}
+
 unsigned char *miniz_uncompress (unsigned char *buf, int32_t *compressed_len)
 {
     static unsigned long scratch_pad_size = 16 * 1024;

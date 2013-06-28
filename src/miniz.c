@@ -116,9 +116,6 @@
      below header, or create miniz.h, #define MINIZ_HEADER_FILE_ONLY, and then include miniz.c from it.
 
    * Important: For best perf. be sure to customize the below macros for your target platform:
-     #define MINIZ_USE_UNALIGNED_LOADS_AND_STORES 1
-     #define MINIZ_LITTLE_ENDIAN 1
-     #define MINIZ_HAS_64BIT_REGISTERS 1
 */
 
 #ifndef MINIZ_HEADER_INCLUDED

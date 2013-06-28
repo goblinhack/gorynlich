@@ -19,8 +19,25 @@ int32_t main (int32_t argc, char *argv[])
     unsigned char *buf;
     char *filename;
     int32_t len;
+    int level = 1;
+    int i;
+
+    for (i = 1; i < argc; i++) {
+        int val = strtol(argv[i], NULL, 10);
+        if (val != 0) {
+            level = val;
+            if (level < 0) {
+                level = -level;
+            }
+        }
+    }
 
     while (argc-- > 1) {
+
+        int val = strtol(argv[argc], NULL, 10);
+        if (val != 0) {
+            continue;
+        }
 
         filename = argv[argc];
 
@@ -41,12 +58,15 @@ int32_t main (int32_t argc, char *argv[])
             exit(1);
         }
 
-        if (mzip_file_write(new_filename, (unsigned char*)buf, &len)) {
+        printf("\nUncompressed %s len %d\n", filename, len);
+
+        if (mzip_file_write2(new_filename, (unsigned char*)buf, &len,
+                             level)) {
             fprintf(stderr, "failed to write to file %s\n", new_filename);
             exit(1);
         }
 
-        printf("Compressed %s to %s\n", filename, new_filename);
+        printf("\nCompressed %s to %s len %d\n", filename, new_filename, len);
     }
 
     exit(0);

@@ -126,8 +126,8 @@ MUNZIP_OBJECTS=				\
 # compile
 #
 $(OBJDIR)/%.o: %.c
-	@echo $(CC) $(CFLAGS) -c -o $@ $<
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo $(CC) $(EXTRA_CFLAGS) $(CFLAGS) -c -o $@ $<
+	@$(CC) $(EXTRA_CFLAGS) $(CFLAGS) -c -o $@ $<
 
 #
 # link
@@ -152,19 +152,19 @@ $(TARGET_RAMDISK): $(RAMDISK_WRITE_OBJECTS)
 # mzip
 #
 TARGET_MZIP=mzip$(EXE)
-
+$(TARGET_MZIP): EXTRA_CFLAGS += -DMINIMAL
 $(TARGET_MZIP): $(MZIP_OBJECTS)
-	@echo $(CC) $(CFLAGS) $(MZIP_OBJECTS) -lz -o $(TARGET_MZIP)
-	@$(CC) $(CFLAGS) $(MZIP_OBJECTS) -lz -o $(TARGET_MZIP)
+	@echo $(CC) $(EXTRA_CFLAGS) $(MZIP_OBJECTS) -lz -o $(TARGET_MZIP)
+	@$(CC) $(EXTRA_CFLAGS) $(MZIP_OBJECTS) -lz -o $(TARGET_MZIP)
 
 #
 # munzip
 #
 TARGET_MUNZIP=munzip$(EXE)
-
+$(TARGET_MUNZIP): EXTRA_CFLAGS += -DMINIMAL
 $(TARGET_MUNZIP): $(MUNZIP_OBJECTS)
-	@echo $(CC) $(CFLAGS) $(MUNZIP_OBJECTS) -lz -o $(TARGET_MUNZIP)
-	@$(CC) $(CFLAGS) $(MUNZIP_OBJECTS) -lz -o $(TARGET_MUNZIP)
+	@echo $(CC) $(EXTRA_CFLAGS) $(MUNZIP_OBJECTS) -lz -o $(TARGET_MUNZIP)
+	@$(CC) $(EXTRA_CFLAGS) $(MUNZIP_OBJECTS) -lz -o $(TARGET_MUNZIP)
 
 #
 # To force clean and avoid "up to date" warning.
