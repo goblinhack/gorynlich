@@ -310,7 +310,7 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
 
     LOG("writing light map, %d bytes", len);
 
-#define WRITE_COMPRESSED
+#define nWRITE_COMPRESSED
 #ifdef WRITE_COMPRESSED
     mzip_file_write("../data/map/map_light.data", buf, &len);
 #else

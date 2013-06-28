@@ -27,7 +27,7 @@
  * updated light map file is built into the image.
  */
 #define nENABLE_GEN_LIGHT_MAP_FILE  // Recreate the ray-traced light map file
-#define DEFAULT_LIGHT_RAY_LENGTH    35  // how far we can cast light
+#define DEFAULT_LIGHT_RAY_LENGTH    15  // how far we can cast light
 
 /*
  * Map size is 2^MAP_WIDTH_LOG. So MAP_WIDTH_LOG 8 is 256, 10 is 1024
