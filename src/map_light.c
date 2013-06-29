@@ -16,12 +16,14 @@
 #include "geo.h"
 #include "file.h"
 #include "mzip_file.h"
+#include "ramdisk.h"
 
 typedef struct {
-    int8_t x, y, z;
-    uint8_t dist:6;
-    uint8_t shadow:1;
     uint8_t is_a_cell:1;
+    int8_t x:7;
+    uint8_t shadow:1;
+    int8_t y:7;
+    int8_t z:8;
 } map_light_shadow;
 
 /*
@@ -184,12 +186,14 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
     while (c < e) {
         o->shadow = 0;
         o->is_a_cell = true;
-        o->dist = c->dist;
         o->x = c->x;
         o->y = c->y;
         o->z = c->z;
+        o = (typeof(o)) (((char*)o) + sizeof(map_light_shadow));
 
-        o++;
+        o->is_a_cell = true;
+        o->x = c->dist;
+        o = (typeof(o)) (((char*)o) + sizeof(map_light_shadow));
 
         /*
          * Sanity.
@@ -280,11 +284,10 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
              */
             o->shadow = 1;
             o->is_a_cell = false;
-            o->dist = distance;
             o->x = i->x;
             o->y = i->y;
             o->z = i->z;
-            o++;
+            o = (typeof(o)) (((char*)o) + sizeof(map_light_shadow));
 
             if (o >= map_light_shadows_max) {
                 DIE("ran out of shadow space");
@@ -310,12 +313,7 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
 
     LOG("writing light map, %d bytes", len);
 
-#define nWRITE_COMPRESSED
-#ifdef WRITE_COMPRESSED
-    mzip_file_write("../data/map/map_light.data", buf, &len);
-#else
     file_write("../data/map/map_light.data", buf, len);
-#endif
 
     LOG("wrote light map, %d bytes", len);
 }
@@ -354,13 +352,8 @@ map_lightmap (map_frame_ctx_t *map,
 
         LOG("Loading light map\n");
 
-#ifdef WRITE_COMPRESSED
         map_light_shadows_start = (typeof(map_light_shadows_start))
-            mzip_file_read("data/map/map_light.data", &len);
-#else
-        map_light_shadows_start = (typeof(map_light_shadows_start))
-            file_read("data/map/map_light.data", &len);
-#endif
+            ramdisk_load("data/map/map_light.data", &len);
 
         LOG("Load  light map %d bytes\n",len);
 
@@ -371,13 +364,17 @@ map_lightmap (map_frame_ctx_t *map,
     /*
      * Clear out the light map. Assume all cells are in darkness. Only do this 
      * if this is the first light source in the render scene.
+     *
+     * Don't need to do this if the light is big enough.
      */
 #if 0
     if (first_light) {
-        for (z = 0; z < MAP_DEPTH; z++) {
-            for (x = 0; x < MAP_WIDTH; x++) {
-                for (y = 0; y < MAP_HEIGHT; y++) {
-                    map->tiles[x][y][z].lit = 0.0;
+        if (strength < LIGHT_RAY_LENGTH_FULLSCREEN) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+                for (x = 0; x < MAP_WIDTH; x++) {
+                    for (y = 0; y < MAP_HEIGHT; y++) {
+                        map->tiles[x][y][z].lit = 0.0;
+                    }
                 }
             }
         }
@@ -395,7 +392,10 @@ map_lightmap (map_frame_ctx_t *map,
         x = lx + s->x;
         y = ly + s->y;
         z = lz + s->z;
-        s++;
+        s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
+
+        uint8_t dist = s->x;
+        s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
 
         /*
          * Do we want to skip this chain of shadow cells?
@@ -407,7 +407,7 @@ map_lightmap (map_frame_ctx_t *map,
          */
         if (map_out_of_bounds(x, y, z)) {
             skip = true;
-        } else if (s->dist > strength + 1) {
+        } else if (dist > strength + 1) {
             /*
              * Never go beyond the edge of the light.
              */
@@ -430,7 +430,7 @@ map_lightmap (map_frame_ctx_t *map,
                     break;
                 }
 
-                s++;
+                s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
             }
 
             continue;
@@ -451,7 +451,7 @@ map_lightmap (map_frame_ctx_t *map,
             }
 
             if (skip) {
-                s++;
+                s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
                 continue;
             }
 
@@ -460,7 +460,7 @@ map_lightmap (map_frame_ctx_t *map,
             int32_t cz = lz + s->z;
 
             if (!map->tiles[cx][cy][cz].tile) {
-                s++;
+                s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
                 continue;
             }
 
@@ -472,7 +472,7 @@ map_lightmap (map_frame_ctx_t *map,
                 skip = true;
             }
 
-            s++;
+            s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
         }
 
         float lit;
@@ -487,7 +487,7 @@ map_lightmap (map_frame_ctx_t *map,
             /*
              * Make the light fade away at the edges.
              */
-            float f = s->dist / ((float)strength + 1);
+            float f = dist / ((float)strength + 1);
             if (f > 0.5) {
                 f = f - 0.5;
                 f = f * 2;

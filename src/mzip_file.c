@@ -54,6 +54,8 @@ unsigned char *mzip_file_read (const char *filename, int32_t *out_len)
         *out_len = len;
     }
 
+    LOG("Uncompressed %s, %d bytes", filename, len);
+
     myfree(buf_compressed);
 
     return (buf);
@@ -64,7 +66,7 @@ int32_t mzip_file_write (const char *filename, unsigned char *buf,
 {
     unsigned char *buf_compressed;
 
-    buf_compressed = miniz_compress2(buf, len, 1);
+    buf_compressed = miniz_compress(buf, len);
     if (!buf_compressed) {
         fprintf(stderr,
                 "Failed to compress file \"%s\" len %d for writing: %s\n",

@@ -74,6 +74,8 @@ unsigned char *file_read (const char *filename, int32_t *out_len)
         *out_len = len;
     }
 
+    LOG("Read %s, %d bytes", filename, len);
+
     fclose(file);
 
     return (buffer);
