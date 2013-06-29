@@ -784,7 +784,9 @@ tree_demarshal *demarshal (const char *filename)
 
     ctx->node = (typeof(ctx->node)) tree_root_first(ctx->root);
 
+#ifdef ENABLE_COMPRESSED_RAMDISK
     myfree(buf);
+#endif
 
     demarshal_print(ctx);
 
