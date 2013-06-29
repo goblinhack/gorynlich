@@ -94,7 +94,9 @@ static unsigned char *load_raw_image (const char *filename,
         image_data = 0;
     }
 
+#ifdef ENABLE_COMPRESSED_RAMDISK
     myfree(ramdisk_data);
+#endif
 
     if (!image_data) {
         DIE("could not read memory for file, %s", filename);

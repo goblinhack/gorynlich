@@ -11,6 +11,7 @@ typedef struct ramdisk_t_ {
     const unsigned char *data;
     int32_t orig_len;
     int32_t len;
+    uint8_t uncompressed:1;
 } ramdisk_t;
 
 void ramdisk_init(void);

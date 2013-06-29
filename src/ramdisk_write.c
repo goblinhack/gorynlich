@@ -10,23 +10,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-
-#if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
-#  include <fcntl.h>
-#  include <io.h>
-#  define SET_BINARY_MODE(file) setmode(fileno(file), O_BINARY)
-#else
-#  define SET_BINARY_MODE(file)
-#endif
-
 #include "zlib.h"
 
 #define CHUNK 16384
 
 #include "ramdisk.h"
 #include "ramdisk_files.c"
+#include "main.h"
+#include "mzip_file.h"
+#include "file.h"
 
-static unsigned char out[1024 * 1024 * 16];
+static unsigned char out[1024 * 1024 * 64];
 static unsigned long outsz;
 static unsigned long insz;
 
@@ -34,8 +28,9 @@ static unsigned long insz;
  * Compress a file, writes to "out"
  */
 static int
-docompress (FILE *f, int level)
+docompress (const char *name, FILE *f, int level)
 {
+#ifdef USE_ZLIB
     int ret, flush;
     unsigned have;
     z_stream strm;
@@ -92,6 +87,55 @@ docompress (FILE *f, int level)
 
     /* clean up and return */
     (void)deflateEnd(&strm);
+#else
+    char tmp[MAXSTR];
+    uint8_t *data;
+    int32_t len;
+
+    /*
+     * Read uncompressed.
+     */
+    data = file_read(name, &len);
+    if (!data) {
+        return (!Z_OK);
+    }
+
+    insz = len;
+
+    snprintf(tmp, sizeof(tmp), "%s.mzip", name);
+
+    /*
+     * Write compressed.
+     */
+#ifdef ENABLE_COMPRESSED_RAMDISK
+    mzip_file_write2(tmp, data, &len, level);
+    outsz = len;
+
+    /*
+     * Read compressed.
+     */
+    uint8_t *data2 = file_read(tmp, &len);
+    memcpy(out, data2, len);
+
+    /*
+     * Read compressed and decompress and check.
+     */
+    uint8_t *data3;
+    data3 = mzip_file_read(tmp, &len);
+    if (memcmp(data3, data, len)) {
+        printf("file differs\n");
+        exit(1);
+    }
+
+    file_unlink(tmp);
+
+    printf("\n");
+#else
+    memcpy(out, data, len);
+    outsz = len;
+#endif
+
+#endif
     return (Z_OK);
 }
 
@@ -102,6 +146,7 @@ static int
 douncompress (unsigned char *in, unsigned long in_len,
               unsigned char *out, unsigned long out_len)
 {
+#ifdef ENABLE_COMPRESSED_RAMDISK
     int ret;
     z_stream strm;
 
@@ -136,6 +181,11 @@ douncompress (unsigned char *in, unsigned long in_len,
     (void)inflateEnd(&strm);
 
     return (ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR);
+#else
+    memcpy(out, in, in_len);
+
+    return (Z_OK);
+#endif
 }
 
 /*
@@ -191,7 +241,7 @@ int main (int32_t argc, char *argv[])
         /* avoid end-of-line conversions */
         SET_BINARY_MODE(f);
 
-        ret = docompress(f, 1);
+        ret = docompress(ramfile->filename, f, 1);
         if (ret != Z_OK) {
             fprintf(stderr, "could not compress %s\n", ramfile->filename);
             exit(1);
@@ -226,10 +276,12 @@ int main (int32_t argc, char *argv[])
             exit(1);
         }
 
+#ifdef ENABLE_COMPRESSED_RAMDISK
         if (uncompress(buf, &insz, out, outsz)) {
             fprintf(stderr, "zlib uncompress sanity fail\n");
             exit(1);
         }
+#endif
 
         free(buf);
 
@@ -283,7 +335,7 @@ int main (int32_t argc, char *argv[])
         /* avoid end-of-line conversions */
         SET_BINARY_MODE(f);
 
-        ret = docompress(f, Z_BEST_COMPRESSION);
+        ret = docompress(ramfile->filename, f, Z_BEST_COMPRESSION);
         if (ret != Z_OK) {
             fprintf(stderr, "could not compress %s\n", ramfile->filename);
             exit(1);
@@ -319,7 +371,7 @@ int main (int32_t argc, char *argv[])
         /* avoid end-of-line conversions */
         SET_BINARY_MODE(f);
 
-        ret = docompress(f, Z_BEST_COMPRESSION);
+        ret = docompress(ramfile->filename, f, Z_BEST_COMPRESSION);
         if (ret != Z_OK) {
             fprintf(stderr, "could not compress %s\n", ramfile->filename);
             exit(1);
@@ -332,6 +384,11 @@ int main (int32_t argc, char *argv[])
         fprintf(fp, "        /* data     */ 0,\n");
         fprintf(fp, "        /* orig_len */ %lu,\n", insz);
         fprintf(fp, "        /* len      */ %lu,\n", outsz);
+#ifdef ENABLE_COMPRESSED_RAMDISK
+        fprintf(fp, "        /* uncomprs */ 0,\n");
+#else
+        fprintf(fp, "        /* uncomprs */ 1,\n");
+#endif
         fprintf(fp, "    },\n");
 
         ramfile++;

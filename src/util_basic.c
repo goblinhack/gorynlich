@@ -100,4 +100,6 @@ void LOG (const char *fmt, ...)
     va_start(args, fmt);
     log_(fmt, args);
     va_end(args);
+
+    printf("\n");
 }

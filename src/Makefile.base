@@ -93,6 +93,12 @@ GAME_OBJECTS=				\
 
 RAMDISK_WRITE_OBJECTS=			\
     $(OBJDIR)/ramdisk_write.o 		\
+    $(OBJDIR)/util_basic.o 		\
+    $(OBJDIR)/file.o 			\
+    $(OBJDIR)/string.o 			\
+    $(OBJDIR)/miniz.o 			\
+    $(OBJDIR)/mzip_lib.o 		\
+    $(OBJDIR)/mzip_file.o 		\
 
 RAMDISK_DATA_OBJECTS=			\
     $(OBJDIR)/ramdisk_data_fragment_0.o \
@@ -143,7 +149,7 @@ $(TARGET_GAME): $(ALL_GAME_OBJECTS)
 # make_ramdisk
 #
 TARGET_RAMDISK=make_ramdisk$(EXE)
-
+$(TARGET_RAMDISK): EXTRA_CFLAGS += -DMINIMAL
 $(TARGET_RAMDISK): $(RAMDISK_WRITE_OBJECTS)
 	@echo $(CC) $(CFLAGS) $(RAMDISK_WRITE_OBJECTS) -lz -o $(TARGET_RAMDISK)
 	@$(CC) $(CFLAGS) $(RAMDISK_WRITE_OBJECTS) -lz -o $(TARGET_RAMDISK)

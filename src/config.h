@@ -14,6 +14,7 @@
 #define nENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #define nENABLE_MAP_DEBUG           // Debug AI by printing the map
 #define nENABLE_WID_DEBUG           // Widget debug
+#define nENABLE_COMPRESSED_RAMDISK  // Compress files during RUNME.ramdisk
 
 /*
  * Screen sizes.
@@ -26,13 +27,14 @@
  * rebuild and rerun. Then disable the flag and run RUNME.ramdisk so the 
  * updated light map file is built into the image.
  */
-#define nENABLE_GEN_LIGHT_MAP_FILE  // Recreate the ray-traced light map file
-#define DEFAULT_LIGHT_RAY_LENGTH    15  // how far we can cast light
+#define nENABLE_GEN_LIGHT_MAP_FILE      // Recreate the raytrace light map file
+#define DEFAULT_LIGHT_RAY_LENGTH    35  // how far we can cast light
+#define LIGHT_RAY_LENGTH_FULLSCREEN 35  // how big you need to fill the screen
 
 /*
  * Map size is 2^MAP_WIDTH_LOG. So MAP_WIDTH_LOG 8 is 256, 10 is 1024
  */
-#define MAP_WIDTH_LOG               8
+#define MAP_WIDTH_LOG               9
 #define MAP_WIDTH                   (1 << MAP_WIDTH_LOG)
 #define MAP_HEIGHT                  MAP_WIDTH
 #define MAP_DEPTH                   16 
