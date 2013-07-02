@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include "ramdisk.h"
+
 
 ramdisk_t ramdisk_files[] = {
     {

@@ -27,12 +27,11 @@
 #include "file.h"
 #include "string.h"
 
-#include "ramdisk.h"
 #include "ramdisk_files.c"
 
 extern ramdisk_t ramdisk_data[];
 
-unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
+const unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 {
     ramdisk_t *ramfile = ramdisk_data;
     unsigned long outlenl;
@@ -250,4 +249,23 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
     }
 
     return (0);
+}
+
+unsigned char *ramdisk_load_copy (const char *filename, int32_t *outlen)
+{
+    unsigned char *data = (unsigned char *)ramdisk_load(filename, outlen);
+    unsigned char *copy;
+
+    if (!data) {
+        return (data);
+    }
+
+    copy = mymalloc(*outlen, "ramdisk load");
+    if (!copy) {
+        return (copy);
+    }
+
+    memcpy(copy, data, *outlen);
+
+    return (copy);
 }

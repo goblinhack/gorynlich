@@ -29,29 +29,29 @@ fi
 
 /bin/rm -f RAMDISK_FILES
 
-cd src
-log_info "Building"
+#cd src
+#log_info "Building"
 
-make clobber
-make other
+#make clobber
+#make other
 
-cd ..
-src/make_ramdisk 
-if [ $? != 0 ]
-then
-    cd src
-    log_die "Failed to build ramdisk_data.c"
-fi
+#cd ..
+#src/make_ramdisk 
+#if [ $? != 0 ]
+#then
+#    cd src
+#    log_die "Failed to build ramdisk_data.c"
+#fi
+#
+#/bin/rm src/make_ramdisk
+#
+#if [ ! -s src/ramdisk_data_fragment_0.c ]
+#then
+#    cd src
+#    log_die "Failed to build ramdisk_data.c"
+#fi
 
-/bin/rm src/make_ramdisk
-
-if [ ! -s src/ramdisk_data_fragment_0.c ]
-then
-    cd src
-    log_die "Failed to build ramdisk_data.c"
-fi
-
-log_info "Success"
+#log_info "Success"
 
 ./RUNME
 

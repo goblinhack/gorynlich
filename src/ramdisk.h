@@ -4,7 +4,8 @@
  * See the README file for license.
  */
 
-unsigned char *ramdisk_load(const char *filename, int32_t *outlen);
+const unsigned char *ramdisk_load(const char *filename, int32_t *outlen);
+unsigned char *ramdisk_load_copy(const char *filename, int32_t *outlen);
 
 typedef struct ramdisk_t_ {
     const char *filename;
