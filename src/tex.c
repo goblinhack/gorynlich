@@ -75,7 +75,7 @@ static unsigned char *load_raw_image (const char *filename,
     unsigned char *image_data;
     int32_t len;
 
-    ramdisk_data = ramdisk_load(filename, &len);
+    ramdisk_data = ramdisk_load_copy(filename, &len);
 
     if (strstr(filename, ".tga")) {
         image_data = stbi_tga_load_from_memory(ramdisk_data,
@@ -93,10 +93,6 @@ static unsigned char *load_raw_image (const char *filename,
         DIE("unknown suffix for image, %s", filename);
         image_data = 0;
     }
-
-#ifdef ENABLE_COMPRESSED_RAMDISK
-    myfree(ramdisk_data);
-#endif
 
     if (!image_data) {
         DIE("could not read memory for file, %s", filename);

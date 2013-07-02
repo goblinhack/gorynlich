@@ -2,7 +2,10 @@
 NAME=gorynlich
 OBJDIR=.o
 
+include Makefile.ramdisk.deps
+
 GAME_OBJECTS=				\
+    $(RAMDISK_OBJ)			\
     $(OBJDIR)/backtrace.o 		\
     $(OBJDIR)/color.o			\
     $(OBJDIR)/cave.o			\
@@ -43,6 +46,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/ptrcheck.o 		\
     $(OBJDIR)/ptrcheck_test.o 		\
     $(OBJDIR)/ramdisk_read.o 		\
+    $(OBJDIR)/ramdisk_data.o 		\
     $(OBJDIR)/resource.o 		\
     $(OBJDIR)/sdl.o 			\
     $(OBJDIR)/slre.o 			\
@@ -91,25 +95,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_tooltip.o 		\
     $(OBJDIR)/wid_button.o 		\
 
-RAMDISK_WRITE_OBJECTS=			\
-    $(OBJDIR)/ramdisk_write.o 		\
-    $(OBJDIR)/util_basic.o 		\
-    $(OBJDIR)/file.o 			\
-    $(OBJDIR)/string.o 			\
-    $(OBJDIR)/miniz.o 			\
-    $(OBJDIR)/mzip_lib.o 		\
-    $(OBJDIR)/mzip_file.o 		\
-
-RAMDISK_DATA_OBJECTS=			\
-    $(OBJDIR)/ramdisk_data_fragment_0.o \
-    $(OBJDIR)/ramdisk_data_fragment_1.o \
-    $(OBJDIR)/ramdisk_data_fragment_2.o \
-    $(OBJDIR)/ramdisk_data_fragment_3.o \
-    $(OBJDIR)/ramdisk_data_fragment_4.o \
-    $(OBJDIR)/ramdisk_data_fragment_5.o \
-    $(OBJDIR)/ramdisk_data_fragment_6.o \
-    $(OBJDIR)/ramdisk_data_fragment_final.o \
-
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\
     $(OBJDIR)/string.o 			\
@@ -138,21 +123,12 @@ $(OBJDIR)/%.o: %.c
 #
 # link
 #
-ALL_GAME_OBJECTS=$(GAME_OBJECTS) $(RAMDISK_DATA_OBJECTS)
+ALL_GAME_OBJECTS=$(GAME_OBJECTS) 
 
 TARGET_GAME=$(NAME)$(EXE)
 
 $(TARGET_GAME): $(ALL_GAME_OBJECTS)
 	$(CC) $(ALL_GAME_OBJECTS) $(LDLIBS) -o ../$(TARGET_GAME)
-
-#
-# make_ramdisk
-#
-TARGET_RAMDISK=make_ramdisk$(EXE)
-$(TARGET_RAMDISK): EXTRA_CFLAGS += -DMINIMAL
-$(TARGET_RAMDISK): $(RAMDISK_WRITE_OBJECTS)
-	@echo $(CC) $(CFLAGS) $(RAMDISK_WRITE_OBJECTS) -lz -o $(TARGET_RAMDISK)
-	@$(CC) $(CFLAGS) $(RAMDISK_WRITE_OBJECTS) -lz -o $(TARGET_RAMDISK)
 
 #
 # mzip
@@ -196,6 +172,9 @@ valgrind:
 	valgrind --gen-suppressions=all --leak-check=full --suppressions=valgrind.suppress --error-limit=no ../$(NAME)
 
 all: $(TARGET_GAME)
+
+include Makefile.ramdisk
+
 # DO NOT DELETE
 
 .o/backtrace.o: /usr/include/execinfo.h /usr/include/sys/cdefs.h

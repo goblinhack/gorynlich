@@ -616,7 +616,7 @@ ttf_read_tga (char *name, int32_t pointsize)
     snprintf(filename, sizeof(filename), "%s_pointsize%u.data",
              name, pointsize);
 
-    unsigned char *glyph_data = ramdisk_load(filename, 0);
+    const unsigned char *glyph_data = ramdisk_load(filename, 0);
     if (!glyph_data) {
         DIE("could not load font %s data", filename);
     }

@@ -24,7 +24,7 @@ unsigned char *mzip_file_read (const char *filename, int32_t *out_len)
     int32_t len;
 
 #ifndef MINIMAL
-    buf_compressed = ramdisk_load(filename, &len);
+    buf_compressed = ramdisk_load_copy(filename, &len);
     if (!buf_compressed) {
         fprintf(stderr,
                 "Failed to read compressed file \"%s\" for reading: %s\n",

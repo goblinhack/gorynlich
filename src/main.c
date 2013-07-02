@@ -11,7 +11,6 @@
 
 #include "main.h"
 #include "gl.h"
-// REMOVED #include "config.h"
 #include "wid_console.h"
 #include "command.h"
 #include "color.h"
