@@ -488,7 +488,7 @@ tree_demarshal *demarshal (const char *filename)
         DIE("no filename");
     }
 
-    buf = (char*)ramdisk_load(filename, &size);
+    buf = (char*)ramdisk_load_copy(filename, &size);
     if (!buf) {
         return (0);
     }
@@ -784,9 +784,7 @@ tree_demarshal *demarshal (const char *filename)
 
     ctx->node = (typeof(ctx->node)) tree_root_first(ctx->root);
 
-#ifdef ENABLE_COMPRESSED_RAMDISK
     myfree(buf);
-#endif
 
     demarshal_print(ctx);
 

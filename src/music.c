@@ -77,7 +77,7 @@ musicp music_load (const char *file, const char *name_alias)
         DIE("music insert name_alias [%s] failed", name_alias);
     }
 
-    m->data = ramdisk_load(file, &m->len);
+    m->data = ramdisk_load_copy(file, &m->len);
     if (!m->data) {
         DIE("cannot load music %s", file);
     }

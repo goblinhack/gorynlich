@@ -14,7 +14,6 @@
 #define nENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #define nENABLE_MAP_DEBUG           // Debug AI by printing the map
 #define nENABLE_WID_DEBUG           // Widget debug
-#define nENABLE_COMPRESSED_RAMDISK  // Compress files during RUNME.ramdisk
 
 /*
  * Screen sizes.
