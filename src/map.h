@@ -421,11 +421,12 @@ uint16_t map_get(map_frame_ctx_t *map,
 /*
  * cave.c
  */
-void cave_gen(map_frame_ctx_t *map, uint16_t rock, int32_t z,
-              int32_t map_fill_prob,
-              int32_t map_r1,
-              int32_t map_r2,
-              int32_t map_generations);
+void cave_gen(map_frame_ctx_t *map, uint16_t rock,
+              int8_t z,
+              uint8_t map_fill_prob,
+              uint8_t map_r1,
+              uint8_t map_r2,
+              uint8_t map_generations);
 
 /*
  * fractal.c
