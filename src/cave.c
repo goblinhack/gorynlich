@@ -435,73 +435,71 @@ regions is needed.
 
 */
 
-static int32_t MAP_FILL_PROB             = 40;
-static int32_t MAP_R1                    = 5;
-static int32_t MAP_R2                    = 2;
-static int32_t MAP_GENERATIONS           = 5;
+static uint8_t MAP_FILL_PROB             = 10;
+static uint8_t MAP_R1                    = 5;
+static uint8_t MAP_R2                    = 2;
+static uint8_t MAP_GENERATIONS           = 5;
 
 /*
  * Used temporarily during level generation.
  */
-static uint8_t map_curr[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_save[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_curr[MAP_WIDTH][MAP_HEIGHT];
 
 //
 // Grow our cells
 //
-static void cave_generation (map_frame_ctx_t *map, uint16_t rock, int32_t z)
+static void cave_generation (map_frame_ctx_t *map)
 {
-    const int32_t maze_w = map->map_width;
-    const int32_t maze_h = map->map_height;
-    int32_t x, y;
+    const int16_t maze_w = map->map_width - 2;
+    const int16_t maze_h = map->map_height - 2;
+    int16_t x, y;
 
-    for (x=2; x < maze_w-2; x++) {
-        for (y=2; y < maze_h-2; y++) {
+    for (x=2; x < maze_w; x++) {
+        for (y=2; y < maze_h; y++) {
 
-            uint8_t adjcount_r1 = 0;
-            uint8_t adjcount_r2 = 0;
-
-#define ADJ2(i,j)                               \
-            adjcount_r2 += map_curr[x+i][y+j]; \
-            adjcount_r1 += map_curr[x+i][y+j];
+            uint8_t adjcount = 0;
 
 #define ADJ(i,j)                                \
-            adjcount_r2 += map_curr[x+i][y+j];
+            adjcount += map_curr[x+i][y+j];
 
-            ADJ2(-1,-1);
-            ADJ2( 0,-1);
-            ADJ2( 1,-1);
+            ADJ(-1,-1);
+            ADJ(-1, 0);
+            ADJ(-1, 1);
 
-            ADJ2(-1, 0);
-            ADJ2( 0, 0);
-            ADJ2( 1, 0);
+            ADJ( 0,-1);
+            ADJ( 0, 0);
+            ADJ( 0, 1);
 
-            ADJ2(-1, 1);
-            ADJ2( 0, 1);
-            ADJ2( 1, 1);
+            ADJ( 1,-1);
+            ADJ( 1, 0);
+            ADJ( 1, 1);
 
-            ADJ(-1,-2);
-            ADJ( 0,-2);
-            ADJ( 1,-2);
+            if (adjcount >= MAP_R1) {
+                continue;
+            }
 
-            ADJ( 2,-1);
-            ADJ(-2,-1);
+            ADJ( -2,-1);
+            ADJ( -2, 0);
+            ADJ( -2, 1);
 
-            ADJ(-2, 0);
-            ADJ( 2, 0);
+            ADJ( -1,-2);
+            ADJ( -1, 2);
 
-            ADJ(-2, 1);
-            ADJ( 2, 1);
+            ADJ(  0,-2);
+            ADJ(  0, 2);
 
-            ADJ(-1, 2);
-            ADJ( 0, 2);
-            ADJ( 1, 2);
+            ADJ(  1,-2);
+            ADJ(  1, 2);
+
+            ADJ(  2,-1);
+            ADJ(  2, 0);
+            ADJ(  2, 1);
 
             //
             // Adjust for the grow threshold for rock or flow.
             //
-            if ((adjcount_r1 >= MAP_R1) ||
-                (adjcount_r2 <= MAP_R2)) {
+            if (adjcount <= MAP_R2) {
                 /*
                  * map_save set to 0 already.
                  */
@@ -516,15 +514,15 @@ static void cave_generation (map_frame_ctx_t *map, uint16_t rock, int32_t z)
 // Generate a cave!
 //
 void cave_gen (map_frame_ctx_t *map, uint16_t rock, 
-               int32_t z,
-               int32_t map_fill_prob,
-               int32_t map_r1,
-               int32_t map_r2,
-               int32_t map_generations)
+               int8_t z,
+               uint8_t map_fill_prob,
+               uint8_t map_r1,
+               uint8_t map_r2,
+               uint8_t map_generations)
 
 {
-    const int32_t maze_w = map->map_width;
-    const int32_t maze_h = map->map_height;
+    const int16_t maze_w = map->map_width;
+    const int16_t maze_h = map->map_height;
 
     if (map_fill_prob) {
         MAP_FILL_PROB             = map_fill_prob;
@@ -542,10 +540,9 @@ void cave_gen (map_frame_ctx_t *map, uint16_t rock,
         MAP_GENERATIONS           = map_generations;
     }
 
-    int32_t x, y, i;
+    int16_t x, y, i;
 
     memset(map_curr, 0, sizeof(map_curr));
-    memset(map_save, 0, sizeof(map_save));
 
     for (x=2; x < maze_w-2; x++) {
         for (y=2; y < maze_h-2; y++) {
@@ -556,11 +553,9 @@ void cave_gen (map_frame_ctx_t *map, uint16_t rock,
     }
 
     for (i=0; i < MAP_GENERATIONS; i++) {
-        LOG("generation %d",i);
-        cave_generation(map, rock, z);
-        LOG("generation %d done",i);
-
+        cave_generation(map);
         memcpy(map_curr, map_save, sizeof(map_curr));
+        memset(map_save, 0, sizeof(map_save));
     }
 
     for (x=2; x < maze_w-2; x++) {
