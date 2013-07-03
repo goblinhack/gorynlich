@@ -27,7 +27,7 @@
 #include "file.h"
 #include "string.h"
 
-#include "ramdisk_files.c"
+#include "ramdisk_data.c"
 
 extern ramdisk_t ramdisk_data[];
 
