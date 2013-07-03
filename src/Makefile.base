@@ -46,7 +46,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/ptrcheck.o 		\
     $(OBJDIR)/ptrcheck_test.o 		\
     $(OBJDIR)/ramdisk_read.o 		\
-    $(OBJDIR)/ramdisk_data.o 		\
     $(OBJDIR)/resource.o 		\
     $(OBJDIR)/sdl.o 			\
     $(OBJDIR)/slre.o 			\
@@ -159,14 +158,10 @@ clean:
 	rm -rf $(GAME_OBJECTS) $(TARGET_GAME) stdout.txt stderr.txt
 	rm -rf $(TARGET_MZIP)
 	rm -rf $(TARGET_MUNZIP)
-	rm -rf $(TARGET_RAMDISK)
 
 clobber: clean
 	rm -rf $(OBJDIR)
 	mkdir -p $(OBJDIR)
-
-#other: $(TARGET_RAMDISK) $(TARGET_MZIP) $(TARGET_MUNZIP)
-other: $(TARGET_RAMDISK) 
 
 valgrind:
 	valgrind --gen-suppressions=all --leak-check=full --suppressions=valgrind.suppress --error-limit=no ../$(NAME)

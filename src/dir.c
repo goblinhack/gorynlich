@@ -132,11 +132,11 @@ tree_root *dirlist (const char *dir,
         myfree(dir_and_file);
     }
 
-    extern ramdisk_t ramdisk_files[];
+    extern ramdisk_t ramdisk_data[];
 
     ramdisk_t *ramfile;
 
-    ramfile = ramdisk_files;
+    ramfile = ramdisk_data;
 
     while (ramfile->filename) {
         char *dir_and_file = dupstr(ramfile->filename, "ramdisk name");
