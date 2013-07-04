@@ -17,13 +17,17 @@
 #include "file.h"
 #include "mzip_file.h"
 #include "ramdisk.h"
+#include "string.h"
 
 typedef struct {
-    uint8_t is_a_cell:1;
-    int8_t x:7;
-    uint8_t shadow:1;
-    int8_t y:7;
-    int8_t z:8;
+    int8_t x;
+    int8_t y;
+    int8_t z;
+    uint8_t is_a_cell;
+    uint8_t shadow;
+    uint8_t dist;
+    uint8_t pad1;
+    uint8_t pad2;
 } map_light_shadow;
 
 /*
@@ -79,6 +83,8 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
 
     static map_light_shadow *map_light_shadows_max =
         map_light_shadows + ARRAY_SIZE(map_light_shadows);
+
+    map_light_shadows_start = map_light_shadows;
 
     /*
      * To cut down the number of cells we consider as shadows, we do a quick
@@ -189,11 +195,8 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
         o->x = c->x;
         o->y = c->y;
         o->z = c->z;
-        o = (typeof(o)) (((char*)o) + sizeof(map_light_shadow));
-
-        o->is_a_cell = true;
-        o->x = c->dist;
-        o = (typeof(o)) (((char*)o) + sizeof(map_light_shadow));
+        o->dist = c->dist;
+        o++;
 
         /*
          * Sanity.
@@ -287,7 +290,7 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
             o->x = i->x;
             o->y = i->y;
             o->z = i->z;
-            o = (typeof(o)) (((char*)o) + sizeof(map_light_shadow));
+            o++;
 
             if (o >= map_light_shadows_max) {
                 DIE("ran out of shadow space");
@@ -308,8 +311,7 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
      * Now dump the shadow array to disk. Compress the file.
      */
     uint8_t *buf = (uint8_t *) map_light_shadows;
-    int32_t len = (map_light_shadows_end - map_light_shadows) *
-                    sizeof(map_light_shadow);
+    int32_t len = ((char*)map_light_shadows_end) - (char*)buf;
 
     LOG("writing light map, %d bytes", len);
 
@@ -343,8 +345,7 @@ map_lightmap (map_frame_ctx_t *map,
 
 #ifdef ENABLE_GEN_LIGHT_MAP_FILE
         map_light_generate_raytrace_map(map_ctx, DEFAULT_LIGHT_RAY_LENGTH);
-#endif
-
+#else
         /*
          * Now read in the pre-gen map file and uncompress it.
          */
@@ -359,6 +360,7 @@ map_lightmap (map_frame_ctx_t *map,
 
         map_light_shadows_end = (typeof(map_light_shadows_end))
             (((uint8_t *) map_light_shadows_start) + len);
+#endif
     }
 
     /*
@@ -367,35 +369,22 @@ map_lightmap (map_frame_ctx_t *map,
      *
      * Don't need to do this if the light is big enough.
      */
-#if 0
     if (first_light) {
-        if (strength < LIGHT_RAY_LENGTH_FULLSCREEN) {
-            for (z = 0; z < MAP_DEPTH; z++) {
-                for (x = 0; x < MAP_WIDTH; x++) {
-                    for (y = 0; y < MAP_HEIGHT; y++) {
-                        map->tiles[x][y][z].lit = 0.0;
-                    }
-                }
-            }
-        }
+        memset(map->lit, 0, sizeof(map->lit));
     }
-#endif
 
     /*
      * The light cell is always lit.
      */
-    map->tiles[lx][ly][lz].lit = 1;
-
     map_light_shadow *s = map_light_shadows_start;
 
     while (s < map_light_shadows_end) {
         x = lx + s->x;
         y = ly + s->y;
         z = lz + s->z;
-        s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
+        uint8_t dist = s->dist;
 
-        uint8_t dist = s->x;
-        s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
+        s++;
 
         /*
          * Do we want to skip this chain of shadow cells?
@@ -430,7 +419,7 @@ map_lightmap (map_frame_ctx_t *map,
                     break;
                 }
 
-                s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
+                s++;
             }
 
             continue;
@@ -440,7 +429,7 @@ map_lightmap (map_frame_ctx_t *map,
          * Add up the shadows from all obstacles.
          */
         float total_shadow = 0.0;
-        float max_shadow = 3.00;
+        float max_shadow = 5.00;
 
         while (s < map_light_shadows_end) {
             /*
@@ -451,7 +440,7 @@ map_lightmap (map_frame_ctx_t *map,
             }
 
             if (skip) {
-                s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
+                s++;
                 continue;
             }
 
@@ -460,7 +449,7 @@ map_lightmap (map_frame_ctx_t *map,
             int32_t cz = lz + s->z;
 
             if (!map->tiles[cx][cy][cz].tile) {
-                s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
+                s++;
                 continue;
             }
 
@@ -472,7 +461,7 @@ map_lightmap (map_frame_ctx_t *map,
                 skip = true;
             }
 
-            s = (typeof(s)) (((char*)s) + sizeof(map_light_shadow));
+            s++;
         }
 
         float lit;
@@ -480,7 +469,7 @@ map_lightmap (map_frame_ctx_t *map,
         if (total_shadow > max_shadow) {
             lit = 0.0;
 
-            map->tiles[x][y][z].lit = 0;
+            map->lit[x][y][z] = 0;
         } else {
             lit = (max_shadow - total_shadow) / max_shadow;
 
@@ -497,7 +486,7 @@ map_lightmap (map_frame_ctx_t *map,
                 }
             }
 
-            map->tiles[x][y][z].lit = (100.0 * lit);
+            map->lit[x][y][z] = (100.0 * lit);
         }
     }
 }

@@ -379,3 +379,85 @@ char *mybasename (const char *in, const char *who)
 
     return (tmp2);
 }
+
+/*
+ * hex_dump
+ *
+ * Returns false if we finished with an empty block.
+ */
+boolean hex_dump (void *addr, uint64_t offset, uint64_t len)
+{
+#define HEX_DUMP_WIDTH 16
+    boolean skipping_blanks = false;
+    uint8_t empty[HEX_DUMP_WIDTH] = {0};
+    uint8_t buf[HEX_DUMP_WIDTH + 1];
+    uint8_t *pc = (typeof(pc)) addr;
+    uint64_t i;
+    uint32_t x;
+
+    if (!len) {
+        return (false);
+    }
+
+    for (i = 0, x = 0; i < len; i++, x++) {
+        if ((i % HEX_DUMP_WIDTH) == 0) {
+            if (!skipping_blanks) {
+                if (i != 0) {
+                    printf(" |%*s|\n", HEX_DUMP_WIDTH, buf);
+                }
+            }
+
+            /*
+             * Skip blank blocks.
+             */
+            if (!memcmp(pc + i, empty, sizeof(empty))) {
+                i += HEX_DUMP_WIDTH - 1;
+                skipping_blanks = true;
+                buf[0] = '\0';
+                continue;
+            }
+
+            printf("  %08X ", (uint32_t)(i + offset));
+
+            x = 0;
+        }
+
+        if (x && (((i % (HEX_DUMP_WIDTH/2))) == 0)) {
+            printf(" ");
+        }
+
+        skipping_blanks = false;
+
+        printf(" %02X", pc[i]);
+
+        if ((pc[i] < ' ') || (pc[i] > '~')) {
+            buf[i % HEX_DUMP_WIDTH] = '.';
+        } else {
+            buf[i % HEX_DUMP_WIDTH] = pc[i];
+        }
+
+        buf[(i % HEX_DUMP_WIDTH) + 1] = '\0';
+    }
+
+    if (!buf[0]) {
+        if (skipping_blanks) {
+            printf("  *\n");
+        }
+
+        return (false);
+    }
+
+    while ((i % HEX_DUMP_WIDTH) != 0) {
+        printf ("   ");
+
+        if (i && (((i % (HEX_DUMP_WIDTH/2))) == 0)) {
+            printf (" ");
+        }
+
+        i++;
+    }
+
+    printf(" |%*s|\n", -HEX_DUMP_WIDTH, buf);
+
+    return (true);
+}

@@ -149,10 +149,6 @@ foreach $f (@files) {
 
     printf OUT "{\n";
         printf OUT "    \/* filename *\/ \"$file\",\n";
-        printf OUT "    \/* data     *\/ 0,\n";
-        printf OUT "    \/* orig_len *\/ $filesize,\n";
-        printf OUT "    \/* len      *\/ $filesize,\n";
-        printf OUT "    \/* uncomprs *\/ 1,\n";
     printf OUT "},\n";
 }
 
@@ -172,6 +168,7 @@ foreach $f (@files) {
     $struct =~ s/\./_/g;
 
     printf OUT "    ramdisk_data[%d].data = ${struct}_start;\n", $cnt;
+    printf OUT "    ramdisk_data[%d].len = ${struct}_end - ${struct}_start;\n", $cnt;
     $cnt++;
 }
 

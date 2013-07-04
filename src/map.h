@@ -310,7 +310,6 @@ typedef struct tree_thing_node_ {
 typedef struct {
     uint16_t template_id;
     uint16_t tile;
-    uint8_t lit;
 } map_tile_t;
 
 /*
@@ -385,6 +384,7 @@ typedef struct {
      */
     map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
     map_tile_t tiles_copy[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    uint8_t lit[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
 
     /*
      * This is the huge buffer that contains the vertex and tex arrays.

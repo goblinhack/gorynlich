@@ -35,26 +35,19 @@ boolean map_init (void)
 
     map_init_bounds(map_ctx, MAP_WIDTH, MAP_HEIGHT);
 
-LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_display_init(map_ctx);
 
-LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_init_tiles(map_ctx);
 
-LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_fixup(map_ctx);
-LOG("XXX %s %d ",__FUNCTION__,__LINE__);
 
     map_ctx->lx = (MAP_WIDTH / 2) * TILE_WIDTH;
     map_ctx->ly = (MAP_HEIGHT / 2) * TILE_HEIGHT;
     map_ctx->lz = 1;
 
-LOG("XXX %s %d ",__FUNCTION__,__LINE__);
     map_move_delta_pixels(0, 0);
-LOG("XXX %s %d ",__FUNCTION__,__LINE__);
 
     map_display_wid_init();
-LOG("XXX %s %d ",__FUNCTION__,__LINE__);
 
     return (true);
 }

@@ -200,8 +200,6 @@ map_tile_color (map_frame_ctx_t *map,
                 int32_t x, int32_t y, int32_t z,
                 float *r, float *g, float *b, float *a)
 {
-    map_tile_t *map_tile;
-
     if (map_out_of_bounds(x, y, z)) {
         *r = 0.0;
         *g = 0.0;
@@ -210,17 +208,19 @@ map_tile_color (map_frame_ctx_t *map,
         return;
     }
 
-    map_tile = &map->tiles[x][y][z];
+    uint8_t lit = map->lit[x][y][z];
 
-    *r = ((float)map_tile->lit) / 100.0;
-    *g = ((float)map_tile->lit) / 100.0;
-    *b = ((float)map_tile->lit) / 100.0;
-    *a = 1.0;
-
-    if (map_tile->lit < 10) {
+    if (lit < 10) {
         *r = 0.0;
         *g = 0.0;
         *b = 0.0;
+        *a = 1.0;
+    } else {
+        float flit = ((float)lit) / 100.0;
+
+        *r = flit;
+        *g = flit;
+        *b = flit;
         *a = 1.0;
     }
 }
