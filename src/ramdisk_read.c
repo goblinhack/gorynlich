@@ -8,7 +8,7 @@
 #include <string.h>
 
 #define nUSE_ZLIB
-#define USE_MINIZ
+#define nUSE_MINIZ
 #define nUSE_STB_IMAGE
 
 #ifdef USE_ZLIB
@@ -116,16 +116,14 @@ const unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
             continue;
         }
 
-        if (ramfile->uncompressed) {
-            if (outlen) {
-                *outlen = (int)ramfile->len;
-            }
-
-            LOG("Ramdisk %s, %d bytes (was not compressed)",
-                filename, ramfile->len);
-
-            return ((unsigned char*)ramfile->data);
+        if (outlen) {
+            *outlen = (int)ramfile->len;
         }
+
+        LOG("Ramdisk %s, %d bytes (was not compressed)",
+            filename, ramfile->len);
+
+        return ((unsigned char*)ramfile->data);
 
 #ifdef USE_ZLIB
         int32_t err;

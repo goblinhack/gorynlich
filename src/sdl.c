@@ -874,6 +874,13 @@ void sdl_loop (void)
 #else /* } { */
         SDL_GL_SwapBuffers();
 #endif /* } */
+#if 0
+        int x ;
+        for (x=0;x<100;x++) {
+    map_move_delta_pixels(0, 0);
+        }
+    DIE("x");
+#endif
     }
 }
 
