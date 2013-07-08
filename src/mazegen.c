@@ -15,17 +15,21 @@
  *
  * goblinhack@gmail.com
  */
+#include <libgen.h>
+#include <unistd.h>
+#include <SDL.h>
+#include <time.h>
 
+#include "main.h"
+#include "ramdisk.h"
 
 #define MAZE_NO_ROONEXT_TO_OTHER_ROOMS
-#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS   90
-
-#undef MAZE_DBGUG_SHOW_AS_GENERATING
-#undef MSZE_DBGUG_PRINT_EXITS
+#define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 1000
+#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           55
+#undef MAZE_DEBUG_SHOW_AS_GENERATING
+#undef MSZE_DEBUG_PRINT_EXITS
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
-#define int32_t                 int32_t
-#define uint8_t             unsigned char
 
 /*
  * A single jigpiece used to build the level.
@@ -56,8 +60,8 @@
  * | * |       |
  * +---+---+---+
  */
-#define MAZE_WIDTH                      6
-#define MAZE_HEIGHT                     4
+#define MAZE_WIDTH                      9
+#define MAZE_HEIGHT                     5
 
 /*
  *
@@ -93,16 +97,14 @@
 #define MAP_TERM_BUFFER_WIDTH       (((MAZE_WIDTH) * JIGPIECE_WIDTH) + 1)
 #define MAP_TERM_BUFFER_HEIGHT      (((MAZE_HEIGHT) * JIGPIECE_HEIGHT) + 1)
 
-char map_term_buffer[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
-uint8_t map_term_buffer_fg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
-uint8_t map_term_buffer_bg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
-int32_t map_term_buffer_at_x;
-int32_t map_term_buffer_at_y;
+static char map_term_buffer[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
+static uint8_t map_term_buffer_fg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
+static uint8_t map_term_buffer_bg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
+static int32_t map_term_buffer_at_x;
+static int32_t map_term_buffer_at_y;
 
 enum {
     MAP_EMPTY           = ' ',
-    MAP_ROCK            = ';',
-    MAP_LAVA            = 'L',
     MAP_WATER           = 'W',
     MAP_SPACE           = 's',
     MAP_FLOOR           = '.',
@@ -125,7 +127,7 @@ enum {
     MAP_EXIT_EAST       = '>',
     MAP_EXIT_SOUTH      = 'v',
     MAP_EXIT_NORTH      = '^',
-    MAP_PADDING         = '?',
+    MAP_PADDING         = 'Z',
     MAP_MAX             = 255,
 };
 
@@ -141,14 +143,12 @@ enum {
 };
 
 uint8_t map_fg[] = {
-    [MAP_EMPTY]          = TERM_COLOR_WHITE,
+    [MAP_EMPTY]          = TERM_COLOR_BLACK,
     [MAP_SPACE]          = TERM_COLOR_WHITE,
-    [MAP_ROCK]           = TERM_COLOR_RED,
-    [MAP_LAVA]           = TERM_COLOR_BLACK,
     [MAP_WATER]          = TERM_COLOR_BLACK,
     [MAP_FLOOR]          = TERM_COLOR_WHITE,
-    [MAP_WALL]           = TERM_COLOR_BLACK,
-    [MAP_CORRIDOR]       = TERM_COLOR_WHITE,
+    [MAP_WALL]           = TERM_COLOR_WHITE,
+    [MAP_CORRIDOR]       = TERM_COLOR_YELLOW,
     [MAP_CORRIDOR_WALL]  = TERM_COLOR_BLUE,
     [MAP_CORRIDOR_DEAD]  = TERM_COLOR_RED,
     [MAP_CORRIDOR_POSS]  = TERM_COLOR_CYAN,
@@ -172,12 +172,10 @@ uint8_t map_fg[] = {
 uint8_t map_bg[] = {
     [MAP_EMPTY]          = TERM_COLOR_BLACK,
     [MAP_SPACE]          = TERM_COLOR_BLACK,
-    [MAP_ROCK]           = TERM_COLOR_BLACK,
-    [MAP_LAVA]           = TERM_COLOR_RED,
     [MAP_WATER]          = TERM_COLOR_CYAN,
     [MAP_FLOOR]          = TERM_COLOR_BLACK,
     [MAP_WALL]           = TERM_COLOR_BLUE,
-    [MAP_CORRIDOR]       = TERM_COLOR_YELLOW,
+    [MAP_CORRIDOR]       = TERM_COLOR_BLACK,
     [MAP_CORRIDOR_WALL]  = TERM_COLOR_BLACK,
     [MAP_CORRIDOR_DEAD]  = TERM_COLOR_BLACK,
     [MAP_CORRIDOR_POSS]  = TERM_COLOR_BLACK,
@@ -226,6 +224,7 @@ enum {
  */
 typedef struct {
     char c[JIGPIECE_WIDTH][JIGPIECE_HEIGHT];
+
     /*
      * A bitmap of exit directions.
      */
@@ -263,8 +262,8 @@ typedef struct {
  */
 typedef struct maze_cell_t_ {
     struct maze_cell_t_ *exit[4];
-    int32_t possible_cells[JIGPIECE_MAX];
-    int32_t possible_cells_size;
+    int32_t possible_jigpieces[JIGPIECE_MAX];
+    int32_t possible_jigpieces_size;
     int32_t jigpiece;
     int32_t x;
     int32_t y;
@@ -302,22 +301,9 @@ typedef struct {
  */
 static int32_t opt_seed;
 
-/*
- * die
- */
-static char *die (const char *why)
-{
-    perror(why);
-    exit(1);
-}
-
-/*
- * dieat
- */
 static char *dieat (int32_t line, int32_t col, char *why)
 {
-    fprintf(stderr, "Died at line %u, col %i: %s\n", line, col, why);
-    exit(1);
+    DIE("Died at line %u, col %i: %s", line, col, why);
 }
 
 /*
@@ -327,68 +313,18 @@ static char *dieat (int32_t line, int32_t col, char *why)
  */
 static char *filetobuf (const char *file)
 {
-    FILE *fp;
     int32_t len;
     char *buf;
 
-    fp = fopen(file, "rb");
-    if (!fp) {
-        die(file);
-    }
-
-    /*
-     * Go to end.
-     */
-    if (fseek(fp, 0, SEEK_END)) {
-        die("failed to read file");
-    }
-
-    /*
-     * Get position at end (length)
-     */
-    len = ftell(fp);
-    if (!len) {
-        die("empty file");
-    }
-
-    /*
-     * Go to beginning
-     */
-    if (fseek(fp,0,SEEK_SET)) {
-        die("failed to rewind file");
-    }
-
-    buf = (char *)malloc(len+1);
-    if (!buf) {
-        die("no mem");
-    }
-
-    fread(buf, len, 1, fp);
-    buf[len] = 0;
-
-    fclose(fp);
+    buf = (typeof(buf)) ramdisk_load_copy(file, &len);
 
     return (buf);
 }
 
 /*
- * bitcount
- */
-int32_t bitcount (int32_t w)
-{
-   w = (0x55555555 & w) + (0x55555555 & (w>> 1));
-   w = (0x33333333 & w) + (0x33333333 & (w>> 2));
-   w = (0x0f0f0f0f & w) + (0x0f0f0f0f & (w>> 4));
-   w = (0x00ff00ff & w) + (0x00ff00ff & (w>> 8));
-   w = (0x0000ffff & w) + (0x0000ffff & (w>>16));
-
-   return (w);
-}
-
-/*
  * map_term_buffer_goto
  */
-void map_term_buffer_goto (int32_t x, int32_t y)
+static void map_term_buffer_goto (int32_t x, int32_t y)
 {
     map_term_buffer_at_x = x;
     map_term_buffer_at_y = y;
@@ -397,7 +333,7 @@ void map_term_buffer_goto (int32_t x, int32_t y)
 /*
  * map_term_buffer_putchar
  */
-void map_term_buffer_putchar (int32_t m)
+static void map_term_buffer_putchar (int32_t m)
 {
     if (map_term_buffer_at_x < 0) {
         return;
@@ -423,7 +359,7 @@ void map_term_buffer_putchar (int32_t m)
 /*
  * map_term_buffer_getchar
  */
-uint8_t map_term_buffer_getchar (int32_t x, int32_t y)
+static uint8_t map_term_buffer_getchar (int32_t x, int32_t y)
 {
     if (x < 0) {
         return (MAP_EMPTY);
@@ -447,7 +383,7 @@ uint8_t map_term_buffer_getchar (int32_t x, int32_t y)
 /*
  * map_term_buffer_set_fgbg
  */
-void map_term_buffer_set_fgbg (uint8_t fg, uint8_t bg)
+static void map_term_buffer_set_fgbg (uint8_t fg, uint8_t bg)
 {
     static const char *data[] = {
             "[40;30m", "[40;31m", "[40;32m", "[40;33m",
@@ -474,7 +410,7 @@ void map_term_buffer_set_fgbg (uint8_t fg, uint8_t bg)
 /*
  * map_term_buffer_print
  */
-void map_term_buffer_print (void)
+static void map_term_buffer_print (void)
 {
     int32_t need_nl;
     int32_t x;
@@ -516,7 +452,7 @@ void map_term_buffer_print (void)
 /*
  * map_term_buffer_print_file
  */
-void map_term_buffer_print_file (void)
+static void map_term_buffer_print_file (void)
 {
     char tmp[20];
     FILE *fp;
@@ -524,11 +460,12 @@ void map_term_buffer_print_file (void)
     int32_t x;
     int32_t y;
 
-    snprintf(tmp, sizeof(tmp) - 1, "maps/%u", opt_seed);
+    snprintf(tmp, sizeof(tmp) - 1, "maps.%u", opt_seed);
 
     fp = fopen(tmp, "w");
     if (!fp) {
-        die("can't write map file");
+        ERR("can't write map file");
+        return;
     }
 
     need_nl = 0;
@@ -716,7 +653,7 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
                     } else if (reading_frag_alt) {
                         dg->frag_alt[0][dg->frag_alt_cnt + n].c[x][y] = *c;
                     } else {
-                        die("bug");
+                        DIE("bug");
                     }
 
                     c++;
@@ -890,7 +827,7 @@ static void jigpiece_create_exits (dungeon_t *dg)
 /*
  * jigpiece_print
  */
-void jigpiece_print (dungeon_t *dg, int32_t which)
+static inline void jigpiece_print (dungeon_t *dg, int32_t which)
 {
     int32_t x;
     int32_t y;
@@ -898,7 +835,7 @@ void jigpiece_print (dungeon_t *dg, int32_t which)
     for (y = 0; y < JIGPIECE_HEIGHT; y++) {
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
 
-#ifdef MSZE_DBGUG_PRINT_EXITS
+#ifdef MSZE_DEBUG_PRINT_EXITS
             if (which) {
                 if (x == 0) {
                     if (dg->jigpiece[which].exits[DIR_WEST] & (1 << y)) {
@@ -935,7 +872,7 @@ void jigpiece_print (dungeon_t *dg, int32_t which)
 /*
  * fragment_print
  */
-void fragment_print (dungeon_t *dg, int32_t dir, int32_t which)
+static inline void fragment_print (dungeon_t *dg, int32_t dir, int32_t which)
 {
     int32_t x;
     int32_t y;
@@ -952,7 +889,8 @@ void fragment_print (dungeon_t *dg, int32_t dir, int32_t which)
 /*
  * jigpiece_printat
  */
-void jigpiece_printat (dungeon_t *dg, int32_t atx, int32_t aty, int32_t which)
+static void jigpiece_printat (dungeon_t *dg, 
+                              int32_t atx, int32_t aty, int32_t which)
 {
     int32_t x;
     int32_t y;
@@ -962,7 +900,7 @@ void jigpiece_printat (dungeon_t *dg, int32_t atx, int32_t aty, int32_t which)
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
 
-#ifdef MSZE_DBGUG_PRINT_EXITS
+#ifdef MSZE_DEBUG_PRINT_EXITS
             if (which) {
                 if (x == 0) {
                     if (dg->jigpiece[which].exits[DIR_WEST] & (1 << y)) {
@@ -1022,7 +960,7 @@ static inline void jigpiece_printat_with_border (dungeon_t *dg, int32_t atx, int
                 continue;
             }
 
-#ifdef MSZE_DBGUG_PRINT_EXITS
+#ifdef MSZE_DEBUG_PRINT_EXITS
             if (x == 0) {
                 if (dg->jigpiece[which].exits[DIR_WEST] & (1 << y)) {
                     map_term_buffer_putchar(MAP_EXIT_WEST);
@@ -1166,7 +1104,7 @@ static void maze_print_cells (dungeon_t *dg)
  *
  * Replace fragments of the maze to make it more interesting.
  */
-void jigpiece_add_fragments (dungeon_t *dg)
+static void jigpiece_add_fragments (dungeon_t *dg)
 {
     int32_t f;
     int32_t i;
@@ -1195,7 +1133,7 @@ void jigpiece_add_fragments (dungeon_t *dg)
              * For each orientation of a fragment.
              */
             for (c = 0; c < dg->fragments_cnt_alts[f]; c++) {
-#ifdef MAZE_DBGUG_SHOW_AS_GENERATING
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
                 maze_print_cells(dg);
                 map_term_buffer_print();
 #endif
@@ -1303,7 +1241,7 @@ next:
  *
  * Make random copies of room jigpieces and replace the doors with floors
  */
-void jigpiece_create_room_door_varieties (dungeon_t *dg)
+static void jigpiece_create_room_door_varieties (dungeon_t *dg)
 {
     int32_t c;
     int32_t x;
@@ -1343,7 +1281,7 @@ void jigpiece_create_room_door_varieties (dungeon_t *dg)
             dg->jigpieces_cnt++;
 
             if (dg->jigpieces_cnt >= JIGPIECE_MAX) {
-                die("Too many jigpiece to mirror for doors");
+                DIE("Too many jigpiece to mirror for doors");
             }
         }
     }
@@ -1354,7 +1292,7 @@ void jigpiece_create_room_door_varieties (dungeon_t *dg)
  *
  * Make random copies of room jigpieces and replace the doors with floors
  */
-void jigpiece_create_room_door_corridors (dungeon_t *dg)
+static void jigpiece_create_room_door_corridors (dungeon_t *dg)
 {
     int32_t c;
     int32_t x;
@@ -1412,7 +1350,7 @@ void jigpiece_create_room_door_corridors (dungeon_t *dg)
 /*
  * jigpiece_create_mirrored_pieces
  */
-void jigpiece_create_mirrored_pieces (dungeon_t *dg)
+static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
 {
     int32_t c;
     int32_t x;
@@ -1440,7 +1378,7 @@ void jigpiece_create_mirrored_pieces (dungeon_t *dg)
              * Rotate 90 degrees
              */
             if (dg->jigpieces_cnt >= JIGPIECE_MAX) {
-                die("Too many jigpiece to mirror");
+                DIE("Too many jigpiece to mirror");
             }
 
             for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1459,7 +1397,7 @@ void jigpiece_create_mirrored_pieces (dungeon_t *dg)
          * Mirror horizontally
          */
         if (dg->jigpieces_cnt >= JIGPIECE_MAX) {
-            die("Too many jigpiece to mirror");
+            DIE("Too many jigpiece to mirror");
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1477,7 +1415,7 @@ void jigpiece_create_mirrored_pieces (dungeon_t *dg)
          * Mirror vertically
          */
         if (dg->jigpieces_cnt >= JIGPIECE_MAX) {
-            die("Too many jigpiece to mirror");
+            DIE("Too many jigpiece to mirror");
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1495,7 +1433,7 @@ void jigpiece_create_mirrored_pieces (dungeon_t *dg)
          * Mirror horizontally and vertically
          */
         if (dg->jigpieces_cnt >= JIGPIECE_MAX - 1) {
-            die("Too many jigpiece to mirror");
+            DIE("Too many jigpiece to mirror");
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1527,7 +1465,7 @@ void jigpiece_create_mirrored_pieces (dungeon_t *dg)
 /*
  * jigpiece_create_mirrored_fragments
  */
-void jigpiece_create_mirrored_fragments (dungeon_t *dg)
+static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
 {
     int32_t c;
     int32_t x;
@@ -1608,7 +1546,7 @@ void jigpiece_create_mirrored_fragments (dungeon_t *dg)
 /*
  * jigpiece_create_mirrored_frag_alt
  */
-void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
+static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
 {
     int32_t c;
     int32_t x;
@@ -1697,9 +1635,9 @@ static int32_t jigpiece_intersect_score (dungeon_t *dg, int32_t a, int32_t dir, 
 }
 
 /*
- * maze_walk_create
+ * maze_generate_all_random_directions
  */
-static void maze_walk_create (dungeon_t *dg, maze_cell_t * c)
+static void maze_generate_all_random_directions (dungeon_t *dg, maze_cell_t * c)
 {
     int32_t dir;
     int32_t any_dir;
@@ -1741,11 +1679,11 @@ static void maze_walk_create (dungeon_t *dg, maze_cell_t * c)
             c->exit[new_dir]->exits |= (1 << (3 - new_dir));
         }
 
-        maze_walk_create(dg, c->exit[new_dir]);
+        maze_generate_all_random_directions(dg, c->exit[new_dir]);
     }
 }
 
-void maze_corridor_change_poss_to_dead (void)
+static void maze_corridor_change_poss_to_dead (void)
 {
     int32_t x;
     int32_t y;
@@ -1760,7 +1698,7 @@ void maze_corridor_change_poss_to_dead (void)
     }
 }
 
-void maze_corridor_change_poss_to_ok (void)
+static void maze_corridor_change_poss_to_ok (void)
 {
     int32_t x;
     int32_t y;
@@ -1775,7 +1713,7 @@ void maze_corridor_change_poss_to_ok (void)
     }
 }
 
-void maze_corridor_change_ok_to_corridor (void)
+static void maze_corridor_change_ok_to_corridor (void)
 {
     int32_t x;
     int32_t y;
@@ -1810,9 +1748,9 @@ void maze_corridor_change_ok_to_corridor (void)
 /*
  * Flood fill from a corridor junction
  */
-void maze_corridor_flood_fill (int32_t x, int32_t y,
-                               int32_t sx, int32_t sy,
-                               int32_t depth)
+static void maze_corridor_flood_fill (int32_t x, int32_t y,
+                                      int32_t sx, int32_t sy,
+                                      int32_t depth)
 {
     int32_t dx;
     int32_t dy;
@@ -1913,7 +1851,7 @@ void maze_corridor_flood_fill (int32_t x, int32_t y,
  * Make sure all corridors lead somewhere useful. This catches the harder
  * deadend cases.
  */
-void maze_verify_corridor_endpoints (void)
+static void maze_verify_corridor_endpoints (void)
 {
     int32_t x;
     int32_t y;
@@ -1935,7 +1873,7 @@ void maze_verify_corridor_endpoints (void)
 /*
  * Trim all doors that go nowhere
  */
-void maze_remove_deadend_doors (void)
+static void maze_remove_deadend_doors (void)
 {
     int32_t got;
     int32_t x;
@@ -1948,7 +1886,8 @@ void maze_remove_deadend_doors (void)
             for (y = 1; y < MAZE_CHAR_HEIGHT - 1; y++) {
                 /* ...
                  * ..#
-                 */ ...
+                 * ...
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_DOOR) &&
                     (map_term_buffer_getchar(x-1, y) == MAP_EMPTY)) {
                     map_term_buffer_goto(x, y);
@@ -1958,7 +1897,8 @@ void maze_remove_deadend_doors (void)
 
                 /* ...
                  * #..
-                 */ ...
+                 * ...
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_DOOR) &&
                     (map_term_buffer_getchar(x+1, y) == MAP_EMPTY)) {
                     map_term_buffer_goto(x, y);
@@ -1968,7 +1908,8 @@ void maze_remove_deadend_doors (void)
 
                 /* .#.
                  * ...
-                 */ ...
+                 * ...
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_DOOR) &&
                     (map_term_buffer_getchar(x, y-1) == MAP_EMPTY)) {
                     map_term_buffer_goto(x, y);
@@ -1978,7 +1919,8 @@ void maze_remove_deadend_doors (void)
 
                 /* ...
                  * ...
-                 */ .#.
+                 * .#.
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_DOOR) &&
                     (map_term_buffer_getchar(x, y+1) == MAP_EMPTY)) {
                     map_term_buffer_goto(x, y);
@@ -1993,7 +1935,7 @@ void maze_remove_deadend_doors (void)
 /*
  * Add doors where corridors adjoin walls
  */
-void maze_add_secret_doors (void)
+static void maze_add_secret_doors (void)
 {
     int32_t got;
     int32_t x;
@@ -2006,7 +1948,8 @@ void maze_add_secret_doors (void)
             for (y = 1; y < MAZE_CHAR_HEIGHT - 1; y++) {
                 /* ...
                  * ..#
-                 */ ...
+                 * ...
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_WALL) &&
                     (map_term_buffer_getchar(x, y+1) == MAP_WALL) &&
                     (map_term_buffer_getchar(x, y-1) == MAP_WALL) &&
@@ -2019,7 +1962,8 @@ void maze_add_secret_doors (void)
 
                 /* ...
                  * #..
-                 */ ...
+                 * ...
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_WALL) &&
                     (map_term_buffer_getchar(x, y+1) == MAP_WALL) &&
                     (map_term_buffer_getchar(x, y-1) == MAP_WALL) &&
@@ -2032,7 +1976,8 @@ void maze_add_secret_doors (void)
 
                 /* .#.
                  * ...
-                 */ ...
+                 * ...
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_WALL) &&
                     (map_term_buffer_getchar(x-1, y) == MAP_WALL) &&
                     (map_term_buffer_getchar(x+1, y) == MAP_WALL) &&
@@ -2045,7 +1990,8 @@ void maze_add_secret_doors (void)
 
                 /* ...
                  * ...
-                 */ .#.
+                 * .#.
+                 */
                 if ((map_term_buffer_getchar(x, y) == MAP_WALL) &&
                     (map_term_buffer_getchar(x-1, y) == MAP_WALL) &&
                     (map_term_buffer_getchar(x+1, y) == MAP_WALL) &&
@@ -2063,7 +2009,7 @@ void maze_add_secret_doors (void)
 /*
  * Wrap all corridors in walls
  */
-void maze_add_corridor_walls (void)
+static void maze_add_corridor_walls (void)
 {
     int32_t x;
     int32_t y;
@@ -2129,13 +2075,7 @@ static void maze_print (dungeon_t *dg, uint8_t last)
         maze_add_corridor_walls();
     }
 
-#ifndef MAZE_DBGUG_SHOW_AS_GENERATING
     if (last) {
-#endif
-        putchar('\n');
-        maze_print_cells(dg);
-        putchar('\n');
-
         map_term_buffer_print();
         map_term_buffer_print_file();
 
@@ -2143,18 +2083,19 @@ static void maze_print (dungeon_t *dg, uint8_t last)
         putchar('\n');
         map_term_buffer_set_fgbg(TERM_COLOR_WHITE, TERM_COLOR_BLACK);
 
-#ifndef MAZE_DBGUG_SHOW_AS_GENERATING
+        putchar('\n');
+        maze_print_cells(dg);
+        putchar('\n');
     }
-#endif
 }
 
 /*
- * maze_generate_possible_connections
+ * maze_jigsaw_generate_all_possible_pieces
  *
  * Make a list of all the jigpiece that satisfy the connection needs of this
  * maze cell.
  */
-static void maze_generate_possible_connections (dungeon_t *dg)
+static boolean maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
 {
     int32_t w = MAZE_WIDTH;
     int32_t h = MAZE_HEIGHT;
@@ -2170,7 +2111,7 @@ static void maze_generate_possible_connections (dungeon_t *dg)
         for (x = 0; x < w; x++) {
 
             mcell = MAZE_CELL(dg->maze, x, y);
-            mcell->possible_cells_size = 0;
+            mcell->possible_jigpieces_size = 0;
             mcell->x = x;
             mcell->y = y;
 
@@ -2189,26 +2130,29 @@ static void maze_generate_possible_connections (dungeon_t *dg)
                 }
 
                 if (dir == DIR_MAX) {
-                    mcell->possible_cells[mcell->possible_cells_size++] = c;
+                    mcell->possible_jigpieces[mcell->possible_jigpieces_size++] = c;
                 }
             }
 
-            if (!mcell->possible_cells_size) {
-                maze_print(dg, 0);
-                printf("no possible jigpiece at (%d,%d)\n", x, y);
-                exit(0);
+            if (!mcell->possible_jigpieces_size) {
+                return (false);
             }
         }
     }
+
+    return (true);
 }
 
 /*
  * maze_generate_jigpiece_find
+ *
+ * Returns 0 on failure. 1 on being able to fill the maze with jigsaw pieces.
  */
 static int32_t
-maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell)
+maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
+                             uint32_t *count)
 {
-    int32_t intersect_list[mcell->possible_cells_size];
+    int32_t intersect_list[mcell->possible_jigpieces_size];
     int32_t intersect_list_size;
     maze_cell_t *ocell;
     int32_t dir;
@@ -2218,13 +2162,21 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell)
     int32_t i;
     int32_t ok;
 
+    (*count)++;
+
+    /*
+     * Tried to long to solve this maze? Try another.
+     */
+    if (*count > MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE) {
+        return (0);
+    }
+
+    /*
+     * Already solved this cell?
+     */
     if (mcell->jigpiece) {
         return (1);
     }
-
-#ifdef MAZE_DBGUG_SHOW_AS_GENERATING
-    maze_print(dg, 0);
-#endif
 
     c = 0;
     intersect_list_size = 0;
@@ -2241,9 +2193,9 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell)
      * mcell == M
      * ocell == O
      */
-    for (p = 0; p < mcell->possible_cells_size; p++) {
+    for (p = 0; p < mcell->possible_jigpieces_size; p++) {
 
-        c = mcell->possible_cells[p];
+        c = mcell->possible_jigpieces[p];
 
         /*
          * Filter to only cells that satisfy all direction exits.
@@ -2301,12 +2253,18 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell)
         return (0);
     }
 
+    /*
+     * Choose a random jigsaw piece. 
+     */
     for (i=0; i < 1 + (rand() % 3); i++) {
         mcell->jigpiece = intersect_list[rand() % intersect_list_size];
 
         exits = 0;
         ok = 1;
 
+        /*
+         * And now make sure it fits all adjoining exits.
+         */
         for (dir = 0; dir < DIR_MAX; dir++) {
             if (!(mcell->exits & (1 << dir))) {
                 continue;
@@ -2323,25 +2281,33 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell)
 
             exits = 1;
 
-            if (maze_generate_jigpiece_find(dg, ocell)) {
-                continue;
+            /*
+             * If it does not fit any one direction, abort.
+             */
+            if (!maze_generate_jigpiece_find(dg, ocell, count)) {
+                ok = 0;
+                break;
             }
-
-            ok = 0;
-            break;
         }
 
+        /*
+         * If there were no adjoining pieces, then we pass automatically.
+         */
         if (!exits) {
             return (1);
         }
 
         if (!ok) {
+            /*
+             * This piece does not fit. Try another.
+             */
             continue;
         }
 
-        if (ok) {
-            return (1);
-        }
+        /*
+         * This piece fits
+         */
+        return (1);
     }
 
     mcell->jigpiece = 0;
@@ -2350,9 +2316,9 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell)
 }
 
 /*
- * maze_generate
+ * maze_jigsaw_solve
  */
-static int32_t maze_generate (dungeon_t *dg)
+static int32_t maze_jigsaw_solve (dungeon_t *dg)
 {
     int32_t w = MAZE_WIDTH;
     int32_t h = MAZE_HEIGHT;
@@ -2366,7 +2332,7 @@ static int32_t maze_generate (dungeon_t *dg)
     y = 0;
     mcell = MAZE_CELL(dg->maze, x, y);
 
-    for (c = 1; c < mcell->possible_cells_size; c++) {
+    for (c = 1; c < mcell->possible_jigpieces_size; c++) {
         /*
          * Reset the maze.
          */
@@ -2380,7 +2346,7 @@ static int32_t maze_generate (dungeon_t *dg)
         x = 0;
         y = 0;
         mcell->jigpiece =
-                mcell->possible_cells[rand() % mcell->possible_cells_size];
+            mcell->possible_jigpieces[rand() % mcell->possible_jigpieces_size];
 
         for (dir = 0; dir < DIR_MAX; dir++) {
             if (!(mcell->exits & (1 << dir))) {
@@ -2392,7 +2358,12 @@ static int32_t maze_generate (dungeon_t *dg)
                 continue;
             }
 
-            if (!maze_generate_jigpiece_find(dg, ocell)) {
+            /*
+             * Recursively try to solve the maze jigsaw.
+             */
+            uint32_t count = 0;
+
+            if (!maze_generate_jigpiece_find(dg, ocell, &count)) {
                 break;
             }
         }
@@ -2404,8 +2375,6 @@ static int32_t maze_generate (dungeon_t *dg)
             return (1);
         }
     }
-
-    die("failed to generate a solvable maze");
 
     return (0);
 }
@@ -2494,9 +2463,9 @@ static int32_t maze_solve (dungeon_t *dg, int32_t w, int32_t h)
 }
 
 /*
- * maze_create
+ * maze_generate_and_solve
  */
-static void maze_create (dungeon_t *dg)
+static boolean maze_generate_and_solve (dungeon_t *dg)
 {
     int32_t y;
     int32_t x;
@@ -2519,45 +2488,53 @@ static void maze_create (dungeon_t *dg)
         }
     }
 
-    maze_walk_create(dg, MAZE_CELL(dg->maze, 0, 0));
+    maze_generate_all_random_directions(dg, MAZE_CELL(dg->maze, 0, 0));
 
     if (!maze_solve(dg, w, h)) {
-#ifdef MAZE_DBGUG_SHOW_AS_GENERATING
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
         maze_print(dg, 0);
 #endif
-        printf("failed\n");
-        exit(0);
+        return (false);
     }
+
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
+    maze_print(dg, 0);
+#endif
+    return (true);
 }
 
 /*
  * generate_level
  */
 static int32_t generate_level (const char *jigpiece_file,
-                           const char *frag_file,
-                           int32_t opt_seed)
+                               const char *frag_file,
+                               int32_t opt_seed)
 {
     dungeon_t *dg;
     int32_t c;
 
     char *buf;
 
-    dg = malloc(sizeof(*dg));
+    dg = mymalloc(sizeof(*dg), __FUNCTION__);
     if (!dg) {
-        die("no memory");
+        DIE("no memory");
     }
 
     memset(dg, 0, sizeof(*dg));
 
+    int seed;
+
     if (opt_seed) {
-        srand(opt_seed);
+        seed = opt_seed;
     } else {
-        srand(time(0));
+        seed = time(0);
     }
+
+    srand(seed);
 
     buf = filetobuf(jigpiece_file);
     if (!buf) {
-        die("no buf");
+        DIE("no buf");
     }
 
     jigpieces_read(dg, buf);
@@ -2572,11 +2549,29 @@ static int32_t generate_level (const char *jigpiece_file,
     jigpiece_create_mirrored_pieces(dg);
     jigpiece_create_exits(dg);
 
-    maze_create(dg);
-    maze_generate_possible_connections(dg);
+    for (;;) {
+        if (!maze_generate_and_solve(dg)) {
+            printf("seed %u, maze create failed", seed);
+            goto reseed;
+        }
 
-    if (!maze_generate(dg)) {
-        return (0);
+        if (!maze_jigsaw_generate_all_possible_pieces(dg)) {
+            printf("seed %u, maze connections failed", seed);
+            goto reseed;
+        }
+
+        if (!maze_jigsaw_solve(dg)) {
+            printf("seed %u, maze generate failed", seed);
+            goto reseed;
+        }
+
+        break;
+reseed:
+        fflush(stdout);
+        seed = time(0);
+        srand(seed);
+        printf("try seed %u", seed);
+        memset(dg->maze, 0, sizeof(dg->maze));
     }
 
     maze_print(dg, 1);
@@ -2588,14 +2583,14 @@ static int32_t generate_level (const char *jigpiece_file,
 /*
  * main
  */
-int32_t main (int32_t argc, char **argv)
+int32_t map_test (int32_t argc, char **argv)
 {
     char *jigpiece_file;
     char *frag_file;
     int32_t rc;
     char c;
 
-    jigpiece_file = "basic.map";
+    jigpiece_file = "data/map/jigsaw.map";
     frag_file = "fragments.map";
     opt_seed = 0;
 
@@ -2606,13 +2601,16 @@ int32_t main (int32_t argc, char **argv)
             break;
 
         default:
-            die("-f <input file file>, -s <seed>");
+            DIE("-f <input file file>, -s <seed>");
             break;
         }
     }
 
     rc = generate_level(jigpiece_file, frag_file, opt_seed);
+    if (!rc) {
+        DIE("failed to generate a maze!");
+    }
 
-    exit(rc);
+    return (rc);
 }
 

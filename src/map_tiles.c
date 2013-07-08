@@ -71,10 +71,10 @@ void map_init_tiles (map_frame_ctx_t *map)
     for (z = 0; z < 10; z++) {
 
         switch (z) {
-        case 0: gen = 5; t = BRICK_0_ID; break;
-        case 1: gen = 4; t = BRICK_0_ID; break;
-        case 2: gen = 3; t = BRICK_0_ID; break;
-        case 3: gen = 2; t = BRICK_0_ID; break;
+        case 0: gen = 5; t = LAVA_0_ID; break;
+        case 1: gen = 1; t = BRICK_0_ID; break;
+        case 2: gen = 1; t = BRICK_0_ID; break;
+        case 3: gen = 1; t = BRICK_0_ID; break;
         case 4: gen = 1; t = BRICK_0_ID; break;
         case 5: gen = 1; t = BRICK_0_ID; break;
         case 6: gen = 1; t = BRICK_0_ID; break;
