@@ -420,3 +420,7 @@ extern uint16_t LAVA_0_ID;
 extern thing_templatep WATER_0;
 extern uint16_t WATER_0_ID;
 
+/*
+ * mazegen.c
+ */
+int32_t map_test(int32_t argc, char **argv);

@@ -102,6 +102,9 @@ else
     fi
 fi
     
+#
+# Gives warings at runtime on MACOS
+#
 SDL_LIBS=`$SDL_CONFIG --static-libs`
 
 if [ $? -ne 0 ]
