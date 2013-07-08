@@ -93,6 +93,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\
     $(OBJDIR)/wid_button.o 		\
+    $(OBJDIR)/mazegen.o
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\
@@ -122,12 +123,9 @@ $(OBJDIR)/%.o: %.c
 #
 # link
 #
-ALL_GAME_OBJECTS=$(GAME_OBJECTS) 
-
 TARGET_GAME=$(NAME)$(EXE)
-
-$(TARGET_GAME): $(ALL_GAME_OBJECTS)
-	$(CC) $(ALL_GAME_OBJECTS) $(LDLIBS) -o ../$(TARGET_GAME)
+$(TARGET_GAME): $(GAME_OBJECTS)
+	$(CC) $(GAME_OBJECTS) $(LDLIBS) -o ../$(TARGET_GAME)
 
 #
 # mzip
@@ -166,7 +164,7 @@ clobber: clean
 valgrind:
 	valgrind --gen-suppressions=all --leak-check=full --suppressions=valgrind.suppress --error-limit=no ../$(NAME)
 
-all: $(TARGET_GAME)
+all: $(TARGET_GAME) 
 
 include Makefile.ramdisk
 

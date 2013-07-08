@@ -391,10 +391,10 @@ map_lightmap (map_frame_ctx_t *map,
          */
         boolean skip;
 
-        /*
-         * If this cell is oob then jump to the next one.
-         */
         if (map_out_of_bounds(x, y, z)) {
+            /*
+             * If this cell is oob then jump to the next one.
+             */
             skip = true;
         } else if (dist > strength + 1) {
             /*
@@ -433,7 +433,7 @@ map_lightmap (map_frame_ctx_t *map,
 
         while (s < map_light_shadows_end) {
             /*
-             * Start of the next cell shadow datadequqnce?
+             * Start of the next cell shadow?
              */
             if (s->is_a_cell) {
                 break;

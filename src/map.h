@@ -382,8 +382,8 @@ typedef struct {
     /*
      * The map.
      */
-    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
     map_tile_t tiles_copy[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
     uint8_t lit[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
 
     /*
@@ -478,6 +478,27 @@ static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
     }
 
     if (y >= MAP_HEIGHT) {
+        return (true);
+    }
+
+    return (false);
+}
+
+static inline boolean map_almost_out_of_xy_bounds (int32_t x, int32_t y, int32_t z)
+{
+    if (x < 1) {
+        return (true);
+    }
+
+    if (y < 1) {
+        return (true);
+    }
+
+    if (x >= MAP_WIDTH-1) {
+        return (true);
+    }
+
+    if (y >= MAP_HEIGHT-1) {
         return (true);
     }
 
