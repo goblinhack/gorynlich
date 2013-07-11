@@ -120,8 +120,7 @@ const unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
             *outlen = (int)ramfile->len;
         }
 
-        LOG("Ramdisk %s, %d bytes (was not compressed)",
-            filename, ramfile->len);
+        LOG("Ramdisk %s, %d bytes", filename, ramfile->len);
 
         return ((unsigned char*)ramfile->data);
 
