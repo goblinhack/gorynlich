@@ -26,7 +26,7 @@
 #define MAZE_NO_ROONEXT_TO_OTHER_ROOMS
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 1000
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           55
-#undef MAZE_DEBUG_SHOW_AS_GENERATING
+#define MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MSZE_DEBUG_PRINT_EXITS
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
@@ -97,6 +97,7 @@
 #define MAP_TERM_BUFFER_WIDTH       (((MAZE_WIDTH) * JIGPIECE_WIDTH) + 1)
 #define MAP_TERM_BUFFER_HEIGHT      (((MAZE_HEIGHT) * JIGPIECE_HEIGHT) + 1)
 
+static int maze_seed;
 static char map_term_buffer[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
 static uint8_t map_term_buffer_fg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
 static uint8_t map_term_buffer_bg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
@@ -116,7 +117,7 @@ enum {
     MAP_CORRIDOR_DEAD   = '0',
     MAP_CORRIDOR_FORK   = '/',
     MAP_DOOR            = 'D',
-    MAP_SECRET_DOOR     = 'S',
+    MAP_SECRET_DOOR     = '|',
     MAP_MONST           = 'm',
     MAP_MAJ_MONST       = 'M',
     MAP_TRAP            = '!',
@@ -127,6 +128,8 @@ enum {
     MAP_EXIT_EAST       = '>',
     MAP_EXIT_SOUTH      = 'v',
     MAP_EXIT_NORTH      = '^',
+    MAP_END             = 'E',
+    MAP_START           = 'S',
     MAP_PADDING         = 'Z',
     MAP_MAX             = 255,
 };
@@ -166,6 +169,8 @@ uint8_t map_fg[] = {
     [MAP_EXIT_EAST]      = TERM_COLOR_RED,
     [MAP_EXIT_SOUTH]     = TERM_COLOR_RED,
     [MAP_EXIT_NORTH]     = TERM_COLOR_RED,
+    [MAP_END]            = TERM_COLOR_RED,
+    [MAP_START]          = TERM_COLOR_RED,
     [MAP_PADDING]        = TERM_COLOR_WHITE,
 };
 
@@ -193,6 +198,8 @@ uint8_t map_bg[] = {
     [MAP_EXIT_EAST]      = TERM_COLOR_BLACK,
     [MAP_EXIT_SOUTH]     = TERM_COLOR_BLACK,
     [MAP_EXIT_NORTH]     = TERM_COLOR_BLACK,
+    [MAP_END]            = TERM_COLOR_BLACK,
+    [MAP_START]          = TERM_COLOR_BLACK,
     [MAP_PADDING]        = TERM_COLOR_BLACK,
 };
 
@@ -294,6 +301,14 @@ typedef struct {
     jigpiece_t frag_alt[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
 
     maze_cell_t maze[MAZE_WIDTH * MAZE_HEIGHT];
+
+    /*
+     * Co-ords here are in terms of rooms, not characters.
+     */
+    uint32_t sx;
+    uint32_t sy;
+    uint32_t ex;
+    uint32_t ey;
 } dungeon_t;
 
 /*
@@ -460,7 +475,7 @@ static void map_term_buffer_print_file (void)
     int32_t x;
     int32_t y;
 
-    snprintf(tmp, sizeof(tmp) - 1, "maps.%u", opt_seed);
+    snprintf(tmp, sizeof(tmp) - 1, "maps.%u", maze_seed);
 
     fp = fopen(tmp, "w");
     if (!fp) {
@@ -1055,6 +1070,8 @@ static void maze_print_cells (dungeon_t *dg)
     char which;
     int32_t y;
     int32_t x;
+
+    printf("\n\n");
 
     for (x = 0; x < w; x++) {
         printf("+---");
@@ -2036,9 +2053,9 @@ static void maze_add_corridor_walls (void)
 }
 
 /*
- * maze_print
+ * maze_dump_jigpieces_to_map
  */
-static void maze_print (dungeon_t *dg, uint8_t last)
+static void dump_jigpieces_to_map (dungeon_t *dg)
 {
     int32_t w = MAZE_WIDTH;
     int32_t h = MAZE_HEIGHT;
@@ -2062,31 +2079,43 @@ static void maze_print (dungeon_t *dg, uint8_t last)
                              (JIGPIECE_HEIGHT) * y+1, c->jigpiece);
         }
     }
+}
 
-    if (last) {
-        maze_verify_corridor_endpoints();
-        maze_verify_corridor_endpoints();
-        maze_verify_corridor_endpoints();
-        maze_remove_deadend_doors();
-        maze_add_secret_doors();
-        jigpiece_create_mirrored_fragments(dg);
-        jigpiece_create_mirrored_frag_alt(dg);
-        jigpiece_add_fragments(dg);
-        maze_add_corridor_walls();
-    }
+/*
+ * maze_debug
+ */
+static inline void maze_debug (dungeon_t *dg)
+{
+    dump_jigpieces_to_map(dg);
 
-    if (last) {
-        map_term_buffer_print();
-        map_term_buffer_print_file();
+    map_term_buffer_print();
+    map_term_buffer_print_file();
 
-        memset(map_term_buffer, 0, sizeof(map_term_buffer));
-        putchar('\n');
-        map_term_buffer_set_fgbg(TERM_COLOR_WHITE, TERM_COLOR_BLACK);
+    memset(map_term_buffer, 0, sizeof(map_term_buffer));
+    putchar('\n');
+    map_term_buffer_set_fgbg(TERM_COLOR_WHITE, TERM_COLOR_BLACK);
 
-        putchar('\n');
-        maze_print_cells(dg);
-        putchar('\n');
-    }
+    putchar('\n');
+    maze_print_cells(dg);
+    putchar('\n');
+}
+
+/*
+ * maze_convert_to_map
+ */
+static void maze_convert_to_map (dungeon_t *dg)
+{
+    dump_jigpieces_to_map(dg);
+
+    maze_verify_corridor_endpoints();
+    maze_verify_corridor_endpoints();
+    maze_verify_corridor_endpoints();
+    maze_remove_deadend_doors();
+    maze_add_secret_doors();
+    jigpiece_create_mirrored_fragments(dg);
+    jigpiece_create_mirrored_frag_alt(dg);
+    jigpiece_add_fragments(dg);
+    maze_add_corridor_walls();
 }
 
 /*
@@ -2410,6 +2439,32 @@ static int32_t maze_solve_search (dungeon_t *dg, maze_cell_t *c)
 }
 
 /*
+ * Find "old" in a room and replace with "new"
+ */
+static boolean 
+maze_replace_room_char (uint32_t rx, uint32_t ry, char old, char new)
+{
+    uint32_t tries = JIGPIECE_WIDTH * JIGPIECE_HEIGHT * 100;
+
+    while (tries--) {
+        uint32_t cx = rx * JIGPIECE_WIDTH;
+        uint32_t cy = ry * JIGPIECE_HEIGHT;
+
+        cx += rand() % JIGPIECE_WIDTH;
+        cy += rand() % JIGPIECE_HEIGHT;
+        
+        if (map_term_buffer_getchar(cx, cy) == old) {
+            map_term_buffer_goto(cx, cy);
+            map_term_buffer_putchar(new);
+
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+/*
  * maze_solve
  */
 static int32_t maze_solve (dungeon_t *dg, int32_t w, int32_t h)
@@ -2441,11 +2496,15 @@ static int32_t maze_solve (dungeon_t *dg, int32_t w, int32_t h)
 
         if (!s) {
             s = c;
+            dg->sx = x;
+            dg->sy = y;
             continue;
         }
 
         if (!e) {
             e = c;
+            dg->ex = x;
+            dg->ey = y;
 
             s->start = 1;
             e->end = 1;
@@ -2491,15 +2550,9 @@ static boolean maze_generate_and_solve (dungeon_t *dg)
     maze_generate_all_random_directions(dg, MAZE_CELL(dg->maze, 0, 0));
 
     if (!maze_solve(dg, w, h)) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-        maze_print(dg, 0);
-#endif
         return (false);
     }
 
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-    maze_print(dg, 0);
-#endif
     return (true);
 }
 
@@ -2515,22 +2568,15 @@ static int32_t generate_level (const char *jigpiece_file,
 
     char *buf;
 
-    dg = mymalloc(sizeof(*dg), __FUNCTION__);
-    if (!dg) {
-        DIE("no memory");
-    }
-
-    memset(dg, 0, sizeof(*dg));
-
-    int seed;
+    dg = myzalloc(sizeof(*dg), __FUNCTION__);
 
     if (opt_seed) {
-        seed = opt_seed;
+        maze_seed = opt_seed;
     } else {
-        seed = time(0);
+        maze_seed = time(0);
     }
 
-    srand(seed);
+    srand(maze_seed);
 
     buf = filetobuf(jigpiece_file);
     if (!buf) {
@@ -2551,30 +2597,52 @@ static int32_t generate_level (const char *jigpiece_file,
 
     for (;;) {
         if (!maze_generate_and_solve(dg)) {
-            printf("seed %u, maze create failed", seed);
+            printf("seed %u, maze create failed\n", maze_seed);
             goto reseed;
         }
 
         if (!maze_jigsaw_generate_all_possible_pieces(dg)) {
-            printf("seed %u, maze connections failed", seed);
+            printf("seed %u, maze connections failed\n", maze_seed);
             goto reseed;
         }
 
         if (!maze_jigsaw_solve(dg)) {
-            printf("seed %u, maze generate failed", seed);
+            printf("seed %u, maze generate failed\n", maze_seed);
+            goto reseed;
+        }
+
+        maze_convert_to_map(dg);
+
+        if (!maze_replace_room_char(dg->sx, dg->sy, MAP_FLOOR, MAP_START)) {
+map_term_buffer_print();
+maze_print_cells(dg);
+map_term_buffer_print_file();
+            printf("seed %u, maze failed to place start\n", maze_seed);
+exit(1);
+            goto reseed;
+        }
+
+        if (!maze_replace_room_char(dg->ex, dg->ey, MAP_FLOOR, MAP_END)) {
+map_term_buffer_print();
+maze_print_cells(dg);
+map_term_buffer_print_file();
+            printf("seed %u, maze failed to place end\n", maze_seed);
+exit(1);
             goto reseed;
         }
 
         break;
 reseed:
         fflush(stdout);
-        seed = time(0);
-        srand(seed);
-        printf("try seed %u", seed);
+        maze_seed = rand();
+        srand(maze_seed);
+        printf(", try seed %u\n", maze_seed);
         memset(dg->maze, 0, sizeof(dg->maze));
     }
 
-    maze_print(dg, 1);
+map_term_buffer_print();
+maze_print_cells(dg);
+map_term_buffer_print_file();
     myfree(dg);
 
     return (1);
@@ -2613,4 +2681,3 @@ int32_t map_test (int32_t argc, char **argv)
 
     return (rc);
 }
-
