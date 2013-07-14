@@ -23,10 +23,10 @@
 #include "main.h"
 #include "ramdisk.h"
 
-#define MAZE_NO_ROONEXT_TO_OTHER_ROOMS
+#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 1000
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           55
-#define MAZE_DEBUG_SHOW_AS_GENERATING
+#undef MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MSZE_DEBUG_PRINT_EXITS
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
@@ -46,7 +46,7 @@
  * |xxxxxxxxx|
  * +---------+
  */
-#define JIGPIECE_MAX                    2000
+#define JIGPIECE_MAX                    20000
 #define JIGPIECE_WIDTH                  13
 #define JIGPIECE_HEIGHT                 13
 
@@ -60,7 +60,7 @@
  * | * |       |
  * +---+---+---+
  */
-#define MAZE_WIDTH                      9
+#define MAZE_WIDTH                      14
 #define MAZE_HEIGHT                     5
 
 /*
@@ -103,6 +103,9 @@ static uint8_t map_term_buffer_fg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT]
 static uint8_t map_term_buffer_bg[MAP_TERM_BUFFER_WIDTH][MAP_TERM_BUFFER_HEIGHT];
 static int32_t map_term_buffer_at_x;
 static int32_t map_term_buffer_at_y;
+static boolean jigpiece_horiz_flip;
+static boolean jigpiece_vert_flip;
+static boolean jigpiece_rotatable;
 
 enum {
     MAP_EMPTY           = ' ',
@@ -118,12 +121,14 @@ enum {
     MAP_CORRIDOR_FORK   = '/',
     MAP_DOOR            = 'D',
     MAP_SECRET_DOOR     = '|',
+    MAP_LADDER          = 'H',
     MAP_MONST           = 'm',
     MAP_MAJ_MONST       = 'M',
     MAP_TRAP            = '!',
     MAP_TRAPDOOR        = 'T',
     MAP_TREASURE        = '$',
     MAP_FOOD            = 'f',
+    MAP_LAVA            = 'L',
     MAP_EXIT_WEST       = '<',
     MAP_EXIT_EAST       = '>',
     MAP_EXIT_SOUTH      = 'v',
@@ -159,12 +164,14 @@ uint8_t map_fg[] = {
     [MAP_CORRIDOR_FORK]  = TERM_COLOR_CYAN,
     [MAP_DOOR]           = TERM_COLOR_WHITE,
     [MAP_SECRET_DOOR]    = TERM_COLOR_WHITE,
-    [MAP_MONST]          = TERM_COLOR_GREEN,
+    [MAP_LADDER]         = TERM_COLOR_GREEN,
+    [MAP_MONST]          = TERM_COLOR_RED,
     [MAP_MAJ_MONST]      = TERM_COLOR_RED,
     [MAP_TRAP]           = TERM_COLOR_RED,
     [MAP_TRAPDOOR]       = TERM_COLOR_RED,
     [MAP_TREASURE]       = TERM_COLOR_YELLOW,
     [MAP_FOOD]           = TERM_COLOR_GREEN,
+    [MAP_LAVA]           = TERM_COLOR_YELLOW,
     [MAP_EXIT_WEST]      = TERM_COLOR_RED,
     [MAP_EXIT_EAST]      = TERM_COLOR_RED,
     [MAP_EXIT_SOUTH]     = TERM_COLOR_RED,
@@ -188,12 +195,14 @@ uint8_t map_bg[] = {
     [MAP_CORRIDOR_FORK]  = TERM_COLOR_BLACK,
     [MAP_DOOR]           = TERM_COLOR_BLACK,
     [MAP_SECRET_DOOR]    = TERM_COLOR_RED,
+    [MAP_LADDER]         = TERM_COLOR_BLACK,
     [MAP_MONST]          = TERM_COLOR_BLACK,
     [MAP_MAJ_MONST]      = TERM_COLOR_BLACK,
     [MAP_TRAP]           = TERM_COLOR_BLACK,
     [MAP_TRAPDOOR]       = TERM_COLOR_BLACK,
     [MAP_TREASURE]       = TERM_COLOR_BLACK,
     [MAP_FOOD]           = TERM_COLOR_BLACK,
+    [MAP_LAVA]           = TERM_COLOR_RED,
     [MAP_EXIT_WEST]      = TERM_COLOR_BLACK,
     [MAP_EXIT_EAST]      = TERM_COLOR_BLACK,
     [MAP_EXIT_SOUTH]     = TERM_COLOR_BLACK,
@@ -241,6 +250,10 @@ typedef struct {
      * What map types are in this piece?
      */
     int32_t has[MAP_MAX];
+
+    uint8_t rotatable:1;
+    uint8_t horiz_flip:1;
+    uint8_t vert_flip:1;
 } jigpiece_t;
 
 /*
@@ -563,18 +576,30 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
                 *s++ = *c++;
             }
 
-            reading_jigpieces = 0;
-            reading_fragments = 0;
-            reading_frag_alt = 0;
-
-            if (!strcmp(command, "jigpieces")) {
-                reading_jigpieces = 1;
-            } else if (!strcmp(command, "fragment")) {
-                reading_fragments = 1;
-            } else if (!strcmp(command, "alternative")) {
-                reading_frag_alt = 1;
+            if (!strcmp(command, "horiz-flip")) {
+                jigpiece_horiz_flip =  true;
+            } else if (!strcmp(command, "vert-flip")) {
+                jigpiece_vert_flip = true;
+            } else if (!strcmp(command, "rotatable")) {
+                jigpiece_rotatable =  true;
+            } else if (!strcmp(command, "reset")) {
+                jigpiece_horiz_flip = false;
+                jigpiece_vert_flip = false;
+                jigpiece_rotatable = false;
             } else {
-                dieat(line, col, "unknown command");
+                reading_jigpieces = 0;
+                reading_fragments = 0;
+                reading_frag_alt = 0;
+
+                if (!strcmp(command, "jigpieces")) {
+                    reading_jigpieces = 1;
+                } else if (!strcmp(command, "fragment")) {
+                    reading_fragments = 1;
+                } else if (!strcmp(command, "alternative")) {
+                    reading_frag_alt = 1;
+                } else {
+                    dieat(line, col, "unknown command");
+                }
             }
 
             c++;
@@ -645,6 +670,7 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
         col = 0;
         y = 0;
 
+
         for (y = 0; y < JIGPIECE_HEIGHT; y++) {
             for (n = 0; n < cnt_cells_per_line; n++) {
 
@@ -663,10 +689,31 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
 
                     if (reading_jigpieces) {
                         dg->jigpiece[dg->jigpieces_cnt + n].c[x][y] = *c;
+                        dg->jigpiece[dg->jigpieces_cnt + n].rotatable = 
+                                        jigpiece_rotatable;
+                        dg->jigpiece[dg->jigpieces_cnt + n].horiz_flip = 
+                                        jigpiece_horiz_flip;
+                        dg->jigpiece[dg->jigpieces_cnt + n].vert_flip = 
+                                        jigpiece_vert_flip;
+
                     } else if (reading_fragments) {
                         dg->fragments[0][dg->fragments_cnt + n].c[x][y] = *c;
+                        dg->fragments[0][dg->fragments_cnt + n].rotatable = 
+                                        jigpiece_rotatable;
+                        dg->fragments[0][dg->fragments_cnt + n].horiz_flip = 
+                                        jigpiece_horiz_flip;
+                        dg->fragments[0][dg->fragments_cnt + n].vert_flip = 
+                                        jigpiece_vert_flip;
+
                     } else if (reading_frag_alt) {
                         dg->frag_alt[0][dg->frag_alt_cnt + n].c[x][y] = *c;
+                        dg->frag_alt[0][dg->frag_alt_cnt + n].rotatable = 
+                                        jigpiece_rotatable;
+                        dg->frag_alt[0][dg->frag_alt_cnt + n].horiz_flip = 
+                                        jigpiece_horiz_flip;
+                        dg->frag_alt[0][dg->frag_alt_cnt + n].vert_flip = 
+                                        jigpiece_vert_flip;
+
                     } else {
                         DIE("bug");
                     }
@@ -724,11 +771,39 @@ static int32_t jigpiece_char_is_occupiable (char c)
 {
     return (c == MAP_FLOOR) ||
            (c == MAP_CORRIDOR) ||
+           (c == MAP_LADDER) ||
            (c == MAP_MONST) ||
            (c == MAP_MAJ_MONST) ||
            (c == MAP_TREASURE) ||
            (c == MAP_SECRET_DOOR) ||
            (c == MAP_DOOR);
+}
+
+/*
+ * jigpiece_char_is_ground
+ */
+static int32_t jigpiece_char_is_ground (char c)
+{
+    return ((c == MAP_WALL) ||
+            (c == MAP_CORRIDOR_WALL));
+}
+
+/*
+ * jigpiece_char_is_monst
+ */
+static int32_t jigpiece_char_is_monst (char c)
+{
+    return ((c == MAP_MONST) ||
+            (c == MAP_MAJ_MONST));
+}
+
+/*
+ * jigpiece_char_is_floor_or_corridor
+ */
+static int32_t jigpiece_char_is_floor_or_corridor (char c)
+{
+    return (c == MAP_FLOOR) ||
+           (c == MAP_CORRIDOR);
 }
 
 /*
@@ -1401,8 +1476,13 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
             for (x = 0; x < JIGPIECE_WIDTH; x++) {
                 for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                    dg->jigpiece[dg->jigpieces_cnt].c[JIGPIECE_WIDTH - 1 - y][x] =
-                            dg->jigpiece[prev].c[x][y];
+                    if (dg->jigpiece[c].rotatable) {
+                        dg->jigpiece[dg->jigpieces_cnt].c[JIGPIECE_WIDTH - 1 - y][x] =
+                                dg->jigpiece[prev].c[x][y];
+                    } else {
+                        dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
+                                dg->jigpiece[prev].c[x][y];
+                    }
                 }
             }
 
@@ -1420,8 +1500,13 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->jigpiece[dg->jigpieces_cnt].c[JIGPIECE_WIDTH - 1 - x][y] =
-                        dg->jigpiece[c].c[x][y];
+                if (dg->jigpiece[c].horiz_flip) {
+                    dg->jigpiece[dg->jigpieces_cnt].c[JIGPIECE_WIDTH - 1 - x][y] =
+                            dg->jigpiece[c].c[x][y];
+                } else {
+                    dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
+                            dg->jigpiece[c].c[x][y];
+                }
             }
         }
 
@@ -1438,8 +1523,13 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->jigpiece[dg->jigpieces_cnt].c[x][JIGPIECE_HEIGHT - 1 - y] =
-                        dg->jigpiece[c].c[x][y];
+                if (dg->jigpiece[c].vert_flip) {
+                    dg->jigpiece[dg->jigpieces_cnt].c[x][JIGPIECE_HEIGHT - 1 - y] =
+                            dg->jigpiece[c].c[x][y];
+                } else {
+                    dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
+                            dg->jigpiece[c].c[x][y];
+                }
             }
         }
 
@@ -1461,16 +1551,30 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
                  * we end up overwriting what we are mirroring vertically
                  * below.
                  */
-                dg->jigpiece[dg->jigpieces_cnt+1].c[JIGPIECE_WIDTH - 1 - x][y] =
-                        dg->jigpiece[c].c[x][y];
+                if (dg->jigpiece[c].vert_flip && 
+                    dg->jigpiece[c].horiz_flip) {
+
+                    dg->jigpiece[dg->jigpieces_cnt+1].c[JIGPIECE_WIDTH - 1 - x][y] =
+                            dg->jigpiece[c].c[x][y];
+                } else {
+                    dg->jigpiece[dg->jigpieces_cnt+1].c[x][y] =
+                            dg->jigpiece[c].c[x][y];
+                }
             }
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->jigpiece[dg->jigpieces_cnt].c[x][JIGPIECE_HEIGHT - 1 - y] =
-                        dg->jigpiece[dg->jigpieces_cnt+1].c[x][y];
+                if (dg->jigpiece[c].vert_flip && 
+                    dg->jigpiece[c].horiz_flip) {
+
+                    dg->jigpiece[dg->jigpieces_cnt].c[x][JIGPIECE_HEIGHT - 1 - y] =
+                            dg->jigpiece[dg->jigpieces_cnt+1].c[x][y];
+                } else {
+                    dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
+                            dg->jigpiece[dg->jigpieces_cnt+1].c[x][y];
+                }
             }
         }
 
@@ -1502,8 +1606,13 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
             for (x = 0; x < JIGPIECE_WIDTH; x++) {
                 for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                    dg->fragments[dir][c].c[JIGPIECE_WIDTH - 1 - y][x] =
-                                    dg->fragments[dir-1][c].c[x][y];
+                    if (dg->fragments[0][c].rotatable) {
+                        dg->fragments[dir][c].c[JIGPIECE_WIDTH - 1 - y][x] =
+                                        dg->fragments[dir-1][c].c[x][y];
+                    } else {
+                        dg->fragments[dir][c].c[x][y] =
+                                        dg->fragments[dir-1][c].c[x][y];
+                    }
                 }
             }
         }
@@ -1514,8 +1623,13 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->fragments[dir][c].c[JIGPIECE_WIDTH - 1 - x][y] =
-                                dg->fragments[0][c].c[x][y];
+                if (dg->fragments[0][c].horiz_flip) {
+                    dg->fragments[dir][c].c[JIGPIECE_WIDTH - 1 - x][y] =
+                                    dg->fragments[0][c].c[x][y];
+                } else {
+                    dg->fragments[dir][c].c[x][y] =
+                                    dg->fragments[0][c].c[x][y];
+                }
             }
         }
 
@@ -1527,8 +1641,14 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->fragments[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
-                            dg->fragments[0][c].c[x][y];
+                if (dg->fragments[0][c].vert_flip) {
+
+                    dg->fragments[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
+                                dg->fragments[0][c].c[x][y];
+                } else {
+                    dg->fragments[dir][c].c[x][y] =
+                                dg->fragments[0][c].c[x][y];
+                }
             }
         }
 
@@ -1545,16 +1665,30 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
                  * we end up overwriting what we are mirroring vertically
                  * below.
                  */
-                dg->fragments[dir][c+1].c[JIGPIECE_WIDTH - 1 - x][y] =
-                                    dg->fragments[0][c].c[x][y];
+                if (dg->fragments[0][c].vert_flip &&
+                    dg->fragments[0][c].horiz_flip) {
+
+                    dg->fragments[dir][c+1].c[JIGPIECE_WIDTH - 1 - x][y] =
+                                        dg->fragments[0][c].c[x][y];
+                } else {
+                    dg->fragments[dir][c+1].c[x][y] =
+                                        dg->fragments[0][c].c[x][y];
+                }
             }
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->fragments[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
-                                    dg->fragments[dir][c+1].c[x][y];
+                if (dg->fragments[0][c].vert_flip &&
+                    dg->fragments[0][c].horiz_flip) {
+
+                    dg->fragments[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
+                                        dg->fragments[dir][c+1].c[x][y];
+                } else {
+                    dg->fragments[dir][c].c[x][y] =
+                                        dg->fragments[dir][c+1].c[x][y];
+                }
             }
         }
     }
@@ -1583,8 +1717,13 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
             for (x = 0; x < JIGPIECE_WIDTH; x++) {
                 for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                    dg->frag_alt[dir][c].c[JIGPIECE_WIDTH - 1 - y][x] =
-                                    dg->frag_alt[dir-1][c].c[x][y];
+                    if (dg->frag_alt[0][c].rotatable) {
+                        dg->frag_alt[dir][c].c[JIGPIECE_WIDTH - 1 - y][x] =
+                                        dg->frag_alt[dir-1][c].c[x][y];
+                    } else {
+                        dg->frag_alt[dir][c].c[x][y] =
+                                        dg->frag_alt[dir-1][c].c[x][y];
+                    }
                 }
             }
         }
@@ -1595,8 +1734,14 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->frag_alt[dir][c].c[JIGPIECE_WIDTH - 1 - x][y] =
-                                dg->frag_alt[0][c].c[x][y];
+                if (dg->frag_alt[0][c].horiz_flip) {
+
+                    dg->frag_alt[dir][c].c[JIGPIECE_WIDTH - 1 - x][y] =
+                                    dg->frag_alt[0][c].c[x][y];
+                } else {
+                    dg->frag_alt[dir][c].c[x][y] =
+                                    dg->frag_alt[0][c].c[x][y];
+                }
             }
         }
 
@@ -1608,8 +1753,14 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->frag_alt[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
-                            dg->frag_alt[0][c].c[x][y];
+                if (dg->frag_alt[0][c].vert_flip) {
+
+                    dg->frag_alt[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
+                                dg->frag_alt[0][c].c[x][y];
+                } else {
+                    dg->frag_alt[dir][c].c[x][y] =
+                                dg->frag_alt[0][c].c[x][y];
+                }
             }
         }
 
@@ -1626,16 +1777,30 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
                  * we end up overwriting what we are mirroring vertically
                  * below.
                  */
-                dg->frag_alt[dir][c+1].c[JIGPIECE_WIDTH - 1 - x][y] =
-                                    dg->frag_alt[0][c].c[x][y];
+                if (dg->frag_alt[0][c].vert_flip &&
+                    dg->frag_alt[0][c].horiz_flip) {
+
+                    dg->frag_alt[dir][c+1].c[JIGPIECE_WIDTH - 1 - x][y] =
+                                        dg->frag_alt[0][c].c[x][y];
+                } else {
+                    dg->frag_alt[dir][c+1].c[x][y] =
+                                        dg->frag_alt[0][c].c[x][y];
+                }
             }
         }
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
             for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
-                dg->frag_alt[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
-                                    dg->frag_alt[dir][c+1].c[x][y];
+                if (dg->frag_alt[0][c].vert_flip &&
+                    dg->frag_alt[0][c].horiz_flip) {
+
+                    dg->frag_alt[dir][c].c[x][JIGPIECE_HEIGHT - 1 - y] =
+                                        dg->frag_alt[dir][c+1].c[x][y];
+                } else {
+                    dg->frag_alt[dir][c].c[x][y] =
+                                        dg->frag_alt[dir][c+1].c[x][y];
+                }
             }
         }
     }
@@ -2252,17 +2417,17 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
                 continue;
             }
 
-#ifdef MAZE_NO_ROONEXT_TO_OTHER_ROOMS
             /*
              * No rooms next to other rooms just to cut the number of rooms in
              * half.
              */
             if (dg->jigpiece[c].has[MAP_FLOOR]) {
                 if (dg->jigpiece[ocell->jigpiece].has[MAP_FLOOR]) {
-                    break;
+                    if ((rand() % 100) > MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE) {
+                        break;
+                    }
                 }
             }
-#endif
 
             /*
              * If the cells join exactly then this is a possibility.
@@ -2442,7 +2607,7 @@ static int32_t maze_solve_search (dungeon_t *dg, maze_cell_t *c)
  * Find "old" in a room and replace with "new"
  */
 static boolean 
-maze_replace_room_char (uint32_t rx, uint32_t ry, char old, char new)
+maze_replace_room_char (uint32_t rx, uint32_t ry, char new)
 {
     uint32_t tries = JIGPIECE_WIDTH * JIGPIECE_HEIGHT * 100;
 
@@ -2453,7 +2618,13 @@ maze_replace_room_char (uint32_t rx, uint32_t ry, char old, char new)
         cx += rand() % JIGPIECE_WIDTH;
         cy += rand() % JIGPIECE_HEIGHT;
         
-        if (map_term_buffer_getchar(cx, cy) == old) {
+        if (jigpiece_char_is_floor_or_corridor(map_term_buffer_getchar(cx, cy)) &&
+            jigpiece_char_is_ground((map_term_buffer_getchar(cx, cy+1))) &&
+            !jigpiece_char_is_monst((map_term_buffer_getchar(cx-1, cy))) &&
+            !jigpiece_char_is_monst((map_term_buffer_getchar(cx-2, cy))) &&
+            !jigpiece_char_is_monst((map_term_buffer_getchar(cx+1, cy))) &&
+            !jigpiece_char_is_monst((map_term_buffer_getchar(cx+2, cy)))) {
+
             map_term_buffer_goto(cx, cy);
             map_term_buffer_putchar(new);
 
@@ -2613,21 +2784,13 @@ static int32_t generate_level (const char *jigpiece_file,
 
         maze_convert_to_map(dg);
 
-        if (!maze_replace_room_char(dg->sx, dg->sy, MAP_FLOOR, MAP_START)) {
-map_term_buffer_print();
-maze_print_cells(dg);
-map_term_buffer_print_file();
+        if (!maze_replace_room_char(dg->sx, dg->sy, MAP_START)) {
             printf("seed %u, maze failed to place start\n", maze_seed);
-exit(1);
             goto reseed;
         }
 
-        if (!maze_replace_room_char(dg->ex, dg->ey, MAP_FLOOR, MAP_END)) {
-map_term_buffer_print();
-maze_print_cells(dg);
-map_term_buffer_print_file();
+        if (!maze_replace_room_char(dg->ex, dg->ey, MAP_END)) {
             printf("seed %u, maze failed to place end\n", maze_seed);
-exit(1);
             goto reseed;
         }
 
@@ -2643,6 +2806,7 @@ reseed:
 map_term_buffer_print();
 maze_print_cells(dg);
 map_term_buffer_print_file();
+exit(0);
     myfree(dg);
 
     return (1);
