@@ -23,10 +23,10 @@
 #include "main.h"
 #include "ramdisk.h"
 
-#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
+#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        80
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 1000
-#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           55
-#undef MAZE_DEBUG_SHOW_AS_GENERATING
+#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           95
+#define MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MSZE_DEBUG_PRINT_EXITS
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
@@ -804,6 +804,7 @@ static int32_t jigpiece_char_is_monst (char c)
 static int32_t jigpiece_char_is_floor_or_corridor (char c)
 {
     return (c == MAP_FLOOR) ||
+           (c == MAP_LADDER) ||
            (c == MAP_CORRIDOR);
 }
 
