@@ -26,7 +26,7 @@
 #define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 1000
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           55
-#define MAZE_DEBUG_SHOW_AS_GENERATING
+#undef MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MSZE_DEBUG_PRINT_EXITS
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
@@ -254,6 +254,7 @@ typedef struct {
     uint8_t rotatable:1;
     uint8_t horiz_flip:1;
     uint8_t vert_flip:1;
+    uint8_t empty:1;
 } jigpiece_t;
 
 /*
@@ -840,6 +841,10 @@ static void jigpiece_create_exits (dungeon_t *dg)
     int32_t y;
 
     for (which = 0; which < dg->jigpieces_cnt; which++) {
+        if (dg->jigpiece[which].empty) {
+            continue;
+        }
+
         /*
          * ?.......
          * ?.......
@@ -1098,6 +1103,10 @@ static void jigpiece_count_char_types (dungeon_t *dg, int32_t which)
     int32_t x;
     int32_t y;
 
+    if (dg->jigpiece[which].empty) {
+        return;
+    }
+
     for (y = 0; y < JIGPIECE_HEIGHT; y++) {
 
         for (x = 0; x < JIGPIECE_WIDTH; x++) {
@@ -1221,6 +1230,11 @@ static void jigpiece_add_fragments (dungeon_t *dg)
          * For each orientation of a fragment.
          */
         for (dir = 0; dir < MAZE_FRAG_DIRECTIONS; dir++) {
+
+            if (dg->fragments[dir][f].empty) {
+                continue;
+            }
+
             /*
              * For each orientation of a fragment.
              */
@@ -1283,8 +1297,11 @@ static void jigpiece_add_fragments (dungeon_t *dg)
                     /*
                      * Choose something to replace the fragment.
                      */
-                    i = rand() % dg->fragments_cnt_alts[f];
-                    i += dg->fragment_to_alt_base[f];
+                    do {
+                        i = rand() % dg->fragments_cnt_alts[f];
+                        i += dg->fragment_to_alt_base[f];
+
+                    } while (dg->frag_alt[dir][i].empty);
 
                     /*
                      * Place the fragment.
@@ -1319,6 +1336,7 @@ static void jigpiece_add_fragments (dungeon_t *dg)
                             map_term_buffer_putchar(alt);
                         }
                     }
+
                     break;
 next:
                     continue;
@@ -1482,6 +1500,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
                     } else {
                         dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
                                 dg->jigpiece[prev].c[x][y];
+                        dg->jigpiece[dg->jigpieces_cnt].empty = true;
                     }
                 }
             }
@@ -1506,6 +1525,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
                 } else {
                     dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
                             dg->jigpiece[c].c[x][y];
+                    dg->jigpiece[dg->jigpieces_cnt].empty = true;
                 }
             }
         }
@@ -1529,6 +1549,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
                 } else {
                     dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
                             dg->jigpiece[c].c[x][y];
+                    dg->jigpiece[dg->jigpieces_cnt].empty = true;
                 }
             }
         }
@@ -1559,6 +1580,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
                 } else {
                     dg->jigpiece[dg->jigpieces_cnt+1].c[x][y] =
                             dg->jigpiece[c].c[x][y];
+                    dg->jigpiece[dg->jigpieces_cnt+1].empty = true;
                 }
             }
         }
@@ -1574,6 +1596,7 @@ static void jigpiece_create_mirrored_pieces (dungeon_t *dg)
                 } else {
                     dg->jigpiece[dg->jigpieces_cnt].c[x][y] =
                             dg->jigpiece[dg->jigpieces_cnt+1].c[x][y];
+                    dg->jigpiece[dg->jigpieces_cnt].empty = true;
                 }
             }
         }
@@ -1612,6 +1635,7 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
                     } else {
                         dg->fragments[dir][c].c[x][y] =
                                         dg->fragments[dir-1][c].c[x][y];
+                        dg->fragments[dir][c].empty = true;
                     }
                 }
             }
@@ -1629,6 +1653,7 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
                 } else {
                     dg->fragments[dir][c].c[x][y] =
                                     dg->fragments[0][c].c[x][y];
+                    dg->fragments[dir][c].empty = true;
                 }
             }
         }
@@ -1648,6 +1673,7 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
                 } else {
                     dg->fragments[dir][c].c[x][y] =
                                 dg->fragments[0][c].c[x][y];
+                    dg->fragments[dir][c].empty = true;
                 }
             }
         }
@@ -1673,6 +1699,7 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
                 } else {
                     dg->fragments[dir][c+1].c[x][y] =
                                         dg->fragments[0][c].c[x][y];
+                    dg->fragments[dir][c+1].empty = true;
                 }
             }
         }
@@ -1688,6 +1715,7 @@ static void jigpiece_create_mirrored_fragments (dungeon_t *dg)
                 } else {
                     dg->fragments[dir][c].c[x][y] =
                                         dg->fragments[dir][c+1].c[x][y];
+                    dg->fragments[dir][c].empty = true;
                 }
             }
         }
@@ -1723,6 +1751,7 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
                     } else {
                         dg->frag_alt[dir][c].c[x][y] =
                                         dg->frag_alt[dir-1][c].c[x][y];
+                        dg->frag_alt[dir][c].empty = true;
                     }
                 }
             }
@@ -1741,6 +1770,7 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
                 } else {
                     dg->frag_alt[dir][c].c[x][y] =
                                     dg->frag_alt[0][c].c[x][y];
+                    dg->frag_alt[dir][c].empty = true;
                 }
             }
         }
@@ -1760,6 +1790,7 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
                 } else {
                     dg->frag_alt[dir][c].c[x][y] =
                                 dg->frag_alt[0][c].c[x][y];
+                    dg->frag_alt[dir][c].empty = true;
                 }
             }
         }
@@ -1785,6 +1816,7 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
                 } else {
                     dg->frag_alt[dir][c+1].c[x][y] =
                                         dg->frag_alt[0][c].c[x][y];
+                    dg->frag_alt[dir][c+1].empty = true;
                 }
             }
         }
@@ -1800,6 +1832,7 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
                 } else {
                     dg->frag_alt[dir][c].c[x][y] =
                                         dg->frag_alt[dir][c+1].c[x][y];
+                    dg->frag_alt[dir][c].empty = true;
                 }
             }
         }
