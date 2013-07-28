@@ -93,7 +93,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\
     $(OBJDIR)/wid_button.o 		\
-    $(OBJDIR)/mazegen.o
+    $(OBJDIR)/map_jigsaw.o		\
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\

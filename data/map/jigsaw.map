@@ -1076,7 +1076,7 @@
 | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... | ........... |
 | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x |
 | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x | x.........x |
-| sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx | sxxxxxxxxxx |
+| xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx | xxxxxxxxxxx |
 |             |             |             |             |             |             |             |             |             |             |             |             |             |             |             |             |
 |             |             |             |             |             |             |             |             |             |             |             |             |             |             |             |             |
 |             |             |             |             |             |             |             |             |             |             |             |             |             |             |             |             |
@@ -1292,7 +1292,7 @@
 |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |
 |   .xx.      |   ....      |   .xx.      |   .xx.      |   .xx.      |   ....      |   .xx.      |   .xx.      |
 |   ....      |   ....      |   .xx.      |   .xx.      |   ....      |   ....      |   .xx.      |   .xx.      |
-|   .xx.      |   ....      |   .d..      |   .d..      |   .xx.      |   ....      |   .d..      |   .d..      |
+|   .xx.      |   ....      |   .DD.      |   .DD.      |   .xx.      |   ....      |   .DD.      |   .DD.      |
 |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |   .xx.      |
 |             |             |             |             |             |             |             |             |
 |             |             |             |             |             |             |             |             |
