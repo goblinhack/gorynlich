@@ -436,8 +436,8 @@ int32_t main (int32_t argc, char *argv[])
 
 #define MAP_TEST
 #ifdef MAP_TEST
-    extern int32_t map_test(int32_t argc, char **argv);
-    map_test(argc, argv);
+    extern int32_t map_jigsaw_test(int32_t argc, char **argv);
+    map_jigsaw_test(argc, argv);
 #endif
 
 #if 0
