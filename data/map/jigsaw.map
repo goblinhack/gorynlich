@@ -57,7 +57,7 @@
 |xx.........xx|x.....H.....x|xxxxxxHx...Hx|xx.........xx|x.....x.....x|
 |.....H..H....|........m....|......HxH..H.|......H......|...xx...x..H.|
 |xxxxxH..Hxxxx|xTTTTx.xxxxxx|xxxxxxxxHxxxx|xxxxxxHxxxxxx|xx........xHx|
-|x....H..H...x|x....x.x....x|xxxxxxx.H...x|xxxxxxHxxxxxx|xx.......LxHx|
+|x....H..H...x|x....x.x....x|xxxxxxx.H...x|xxxxxxHxxxxxx|xx........xHx|
 |x....xxxH...x|x....x.x....x|xxxxx...H...x|x.....H.....x|xxLLLLLLLLxHx|
 |x...........x|x....x.x....x|xxx.....H...x|x.....H.....x|xxxxxxxxxxxHx|
 |x..m..H..m..x|xLLLLx.xWWWWx|x..m....H.m.x|x...m.H.m...x|x..........Hx|
@@ -92,31 +92,31 @@
 |xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|
 +-------------+-------------+-------------+-------------+-------------+
 |xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|.............|.............|.............|.............|.............|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
+|x...........x|x$..........x|x...........x|x...........x|x...........x|
+|x..H.....H..x|xxx.........x|x.....x.....x|x...H......$x|x....H...H..x|
+|x..HxxTxxH..x|x........x..x|x........x..x|xxx.H...xxTxx|x....HxxxH..x|
+|x..Hx...xH..x|x....x......x|x..x........x|x...H.x.....x|x....H...H..x|
+|x..H.....H..x|x.x.....x...x|x.......x...x|x...H.xx....x|x....H...H..x|
+|...H.....H...|.............|.............|....H.xxx....|.....H...H...|
+|xTxxx...xxxTx|xxxxxxxxxxx.x|xTxxxxx.....x|xxT..xx.xxTxx|x...xxTTTxxxx|
+|x.x..m....x.x|x.......x$..x|x.....xxxxxxx|xx...x.$....x|xxTxx.......x|
+|x.xxxxxxxxx.x|x.......xxTxx|x...........x|x....xxx....x|x...x.......x|
+|x...........x|x...........x|x...........x|x...........x|x...x.......x|
+|x...m.......x|x..m........x|x......m....x|x..m....m...x|x.m.xLLLLLLLx|
 |xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|
 +-------------+-------------+-------------+-------------+-------------+
 |xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|............x|............x|............x|............x|............x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
-|x...........x|x...........x|x...........x|x...........x|x...........x|
+|x...........x|xx.xxxxxxx.xx|xx.........$x|x...........x|xxxxxxxxxxxxx|
+|x.$.x.......x|x...xxxxx...x|x........xTxx|x...........x|x....xxxxxxxx|
+|xxxxx......xx|x....xxx....x|x.....xxx...x|x.......xxxxx|x.......xxxxx|
+|xxxxx...x...x|x.....x.....x|xxx.........x|x.......x...x|x.........xxx|
+|x...........x|x...........x|x..xxxx....xx|xxxxxxxxx...x|x...........x|
+|...........$x|...........$x|.........xTxx|............x|....xxxxxx..x|
+|x..TxxT...xxx|x..xTTx..Txxx|x.......xx.xx|xxxxxxxxx...x|xxHxxxxxxx..x|
+|x....x......x|x...........x|x.......xx..x|xxxxxxxx....x|x.H.........x|
+|x....xTTx...x|x.....x...xxx|xxx....xx...x|xxxxxxx....xx|x.H........xx|
+|x.......x...x|x.....x...xxx|xxx...xxx...x|x...........x|x...........x|
+|x.....m.xLxLx|x....mxLLLxxx|x....xxxxLLLx|x$....m.....x|x..m...m....x|
 |xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|xxxxxxxxxxxxx|
 +-------------+-------------+-------------+-------------+-------------+
 |xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|
@@ -148,553 +148,74 @@
 |xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|xxxxxx.xxxxxx|
 #-------------+-------------+-------------+-------------+-------------+
 :reset
+:horiz-flip
 :vert-flip
-:horiz-flip
-:rotatable
-+-------------+
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|,,,,,,,      |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-+-------------+
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|,,,,,,,,,,,,,|
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-+-------------+
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|,,,,,,,,,,,,,|
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-+-------------+
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-|      ,      |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|    ,,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-#-------------+
-:alternative
-+-------------+
-|    ,H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|    ,,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|    ,H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|    ,,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|    ,H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|    ,,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|    ,H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,,      |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-#-------------+
-:alternative
-+-------------+
-|     H,      |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,,      |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|    ,H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,,      |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|     H,      |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,,      |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|    ,,       |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|     H,      |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|    ,H       |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|     ,       |
-#-------------+
-:alternative
-+-------------+
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|     ,       |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|     ,       |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|     H       |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     ,       |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|  sss,sss    |
-|     ,       |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+
-|     H       |
-|     H       |
-|    xHx      |
-|    x x      |
-|    xHx      |
-|     H       |
-|     H       |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:fragment
-:reset
-:horiz-flip
-+-------------+
-|     H       |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|     H       |
-|             |
-|             |
-#-------------+
-:alternative
 +-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
-|     H       |     H       |     H       |     H       |     H       |     H       |     H       |     H       |
-|     H       |     H       |     H       |  xxxHxxx    |     H       |     H       |     H       |  xxxHxxx    |
-|     H       |  xxxHxxx    |  xxxHxxx    |  x..H..x    |    xHxxx    |  xxxHxxx    |  xxxHxxx    |  x..H..x    |
-|    xHx      |  x..H..x    |  x.....x    |  x.....x    |    x...x    |  x.....x    |  x.....x    |  x.....x    |
-|    xHx      |  x.....x    |  xxxHxxx    |  xx...xx    |    xxxHx    |  xx....x    |  xx.H.xx    |  xx....x    |
-|    xHx      |  x..H..x    |     H       |  x.....x    |    x...x    |  x..H..x    |   x.H.x     |  x.....x    |
-|    xHx      |  xxxHxxx    |     H       |  xx....x    |    xHxxx    |  x..Hx.x    |   x.H.x     |  x..x..x    |
-|    xHx      |     H       |     H       |  x....xx    |    xHx      |  x..Hx.x    |   xxHxx     |  x....xx    |
-|     H       |     H       |     H       |  x.... x    |     H       |  x..Hx.x    |     H       |  x.... x    |
-|     H       |     H       |     H       |  xxxHxxx    |     H       |  xxxHxxx    |     H       |  xxxHxxx    |
-|     H       |     H       |     H       |     H       |     H       |     H       |     H       |     H       |
-|             |             |             |             |             |             |             |             |
-|             |             |             |             |             |             |             |             |
+|      H      |      H      |      H      |      H      |      H      |      H      |      H      |      H      |
+|      H      |      H      |      H      |  H,,,,,     |      H      |      H   ,  |      H      | ,,,H,H,,,,, |
+|  H,,,,      |  ,,,,H      |  ,,,,H,     |  H          |      H      |      H   ,  |      H      |   ,H ,      |
+|  H   ,      |  ,   H      |  ,   H      |  H,,,,,,,   | ,,,,,H,,,,H |     ,H,,,H, |      H      | H,,H ,      |
+|  H   ,      |  ,   H      |  H,,,H,,    |  H   ,      | ,    H    H |   ,      H  |      H      | H    ,,,,   |
+|  H   ,      |  ,   H      |  H   ,      |  H   ,      |      H    H |   ,      H  |      H      | H    ,      |
+|,,H,,,,,,    |,,,,,,H,,,   |,,H,,,,,,,,  |,,H   ,      |,,,,,,H,,,,H |,,,H,,,,,,H  |,,,,,,H,,,,  |,H  ,,,,,,,  |
+|             |         ,   |        ,    |      ,      |             |   H      H  |             | ,           |
+|             |             |             |      ,      |             |   H      H  |             | ,           |
+|             |             |             |      ,      |             |   H,,,,,,H  |             |             |
+|             |             |             |   ,,,,,,,   |             |             |             |             |
+|             |             |             |  ,,,,,,,,,  |             |             |             |             |
+|             |             |             | ,,,,,,,,,,, |             |             |             |             |
++-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|      H      |      H      |      H      |      H      |      H      |      H      |      H      |      H      |
+|      H      |  H,,,H,,,H  |      H      |      H      |   H,,H      |   ,,,H,,,,H |  H   H      |      H,,.H  |
+|      H      |  H       H  |      H      |    ,,H,,    |   H  ,      |      ,    H |  H,,,H,,    |          H  |
+|   H,,H,,H   |  H       H  |  H,,,H,,    |   ,, H ,,   |   H  ,      |      ,    H |  H          |      ,,,,H  |
+|   H     H   |  H       H  |  H     ,,   |  ,,  ,  ,,  |   H,,H      |      H,,,,H |  H          |      H      |
+|   H     H   |  H       H  |  H      ,,  | ,,  ,,,  ,, |      H      |      H      |  H          |      H      |
+|,,,H,, ,,H,,,|,,H,,, ,,,H,,|,,H,,,,,  ,,,|,,,, ,,, ,,,,|,,,,,,H,,,,,,|,,,,,,H,,,,,,|,,H,,,,,,,,,,|,,,,,,H,,,,,,|
+|             |             |      ,      |             |             |             |             |             |
+|             |             |      ,  $m, |             |             |             |             |             |
+|             |             |      ,    , |             |             |             |             |             |
+|             |             |  ,,,,,,   , |             |             |             |             |             |
+|             |             |,,,        , |             |             |             |             |             |
+|             |             |  ,,,,,,,,,, |             |             |             |             |             |
++-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|      H      |      H      |      H      |      H      |      H      |      H      |      H      |      H      |
+|      H      |      H      |      H      |xxxxxxHxxxxx |      H      |   xxxH      |      H      |   xxxHxxx   |
+|      H      | xxxxxHxxxxx |   xxxHxxx   |x.....H...Hx |      H      |   x..Hx     |   xxxHxxxxxx|   x..H..x   |
+|     xHx     | xH........x | xxx....Hx   |x.xxxx.xx.Hx |    xxHxx    |   xHxxx     |   x..H.H...x|   x.H..xx   |
+|     xHx     | xHx.x.xxxxx |xx...xx.Hx   |x.........Hx |    x.H.xxxxx|   xH..x     |   xxx.xHx..x|   xxHx..x   |
+|     xHx     | xH....x     |x.......Hx   |x.xx.xxxx.Hx |    x.H..H..x|   x...x     |     x..Hx..x|   x.H...x   |
+|     xHx     | xxxxxHx     |x...xxHxxx   |x.........Hx |    xxHxxHxxx|   xxxHx     |     xHxxx..x|   x.H...x   |
+|      H      |      H      |x...x H      |xx...xHx..xx |      Hx.H..x|      H      |      H x...x|   xxxHxxx   |
+|      H      |      H      |x..xx H      | xx.xxHxx.x  |      Hx....x|      H      |      H x...x|      H      |
+|      H      |      H      |x..x  H      |  x.x H x.x  |      Hx....x|      H      |      H x...x|      H      |
+|      H      |      H      |xxxx  H      |  xxx H xxx  |      Hx....x|      H      |      H x...x|      H      |
+|      H      |      H      |      H      |      H      |      Hx....x|      H      |      H xxxxx|      H      |
+|      H      |      H      |      H      |      H      |      Hxxxxxx|      H      |      H      |      H      |
++-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
+|      H      |      H      |      H      |      H      |      H      |      H      |      H      |      H      |
+|      H      |      H      |      H      |   xxxHxxxxx |      H      |   xxxH      |      H      |   xxxHxxx   |
+|      H      |   xxxHxxxxx |   xxxHxxx   |   x..H...Hx |      H      |   x..Hx     |xxxxxxHxxx   |   x..H..x   |
+|     xHx     |   x.....H.x |   x.....x   |   x...xxxHx |    xxHxx    |   xHxxx     |x........x   |   x...H.x   |
+|     xHx     |   x.x.x.H.x |   xxxH..x   |   xx..x..Hx |    x.H.x    |   xH..x     |xxxxxx.xHx   |   xxxxH.x   |
+|     xHx     |   x.....H.x |     xH..x   |   x...xxxHx |    x.H.x    |   x...x     |     x..Hx   |   x.H.H.x   |
+|,,,,,,H,,,,,,|,,,...H..H..,|,,,,,,H..,,,,|,,,,..H...H,,|,,,,,.H.,,,,,|,,,,,,H,,,,,,|,,,,,,H,H,,,,|,,,,,H,,,,,,,|
+|     xHx     |   xxxHxxxxx |     xHxxx   |   x..Hx..Hx |    x.H.xxxxx|   xxxHx     |     xHxxx   |   x.H...x   |
+|      H      |      H      |      H      |   xxxHxxxxx |   xx.H.....x|      H      |      H      |   xxxHxxx   |
+|      H      |      H      |      H      |      H      |   x..H.....x|      H      |      H      |      H      |
+|      H      |      H      |      H      |      H      |   xxxH.....x|      H      |      H      |      H      |
+|      H      |      H      |      H      |      H      |      Hxxx..x|      H      |      H      |      H      |
+|      H      |      H      |      H      |      H      |      H  xxxx|      H      |      H      |      H      |
 #-------------+-------------+-------------+-------------#-------------+-------------+-------------+-------------+
 :fragment
 :reset
 :horiz-flip
 +-------------+
-|     H       |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|  sssHsss    |
-|     H       |
-|             |
-|             |
-|             |
-|             |
-#-------------+
-:alternative
-+-------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
-|     H       |     H       |     H       |     H       |     H       |     H       |     H       |     H       |
-|     H       |     H       |     H       |  xxxHx      |     H       |  xxxH       |     H       |  xxxHxxx    |
-|     H       |  xxxHx      |  xxxHxxx    |  x..Hx      |     H       |  x..Hx      |  xxxHxxx    |  x..H..x    |
-|    xHx      |  x...x      |  x.....x    |  x...x      |   xxHxx     |  xHxxx      |  x.....x    |  x.....x    |
-|    xHx      |  x.x.x      |  xxxH..x    |  xx..x      |   x H x     |  xH..x      |  xxx.xHx    |  xxHx..x    |
-|    xHx      |  x...x      |    xH..x    |  x...x      |   x H x     |  x...x      |    x..Hx    |  x.H...x    |
-|    xHx      |  xxxHx      |    xHxxx    |  x...x      |   xxHxx     |  xxxHx      |    xHxxx    |  x.H...x    |
-|     H       |     H       |     H       |  xxxHx      |     H       |     H       |     H       |  xxxHxxx    |
-|     H       |     H       |     H       |     H       |     H       |     H       |     H       |     H       |
-|             |             |             |             |             |             |             |             |
-|             |             |             |             |             |             |             |             |
-|             |             |             |             |             |             |             |             |
-|             |             |             |             |             |             |             |             |
-#-------------+-------------+-------------+-------------#-------------+-------------+-------------+-------------+
-:fragment
-:reset
-:vert-flip
-:horiz-flip
-:rotatable
-+-------------+
-|     ,s      |
-|     ,s      |
-|     ,s      |
-|  ,,,,s      |
-|  sssss      |
+|     xx      |
+|     xx      |
+|     ..      |
+|     xx      |
+|     xx      |
 |             |
 |             |
 |             |
@@ -705,18 +226,18 @@
 |             |
 #-------------+
 :alternative
-+-------------+
-|     ,       |
-|    ,,       |
-|   ,,        |
-|  ,,         |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-|             |
-#-------------+
++-------------+-------------+
+|     xx      |     ..      |
+|     ..      |     ..      |
+|     ..      |     ..      |
+|     xx      |     xx      |
+|     xx      |     xx      |
+|             |             |
+|             |             |
+|             |             |
+|             |             |
+|             |             |
+|             |             |
+|             |             |
+|             |             |
+#-------------+-------------+
