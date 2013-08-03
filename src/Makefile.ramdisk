@@ -43,9 +43,6 @@
 .o/ramdisk_data_gfx_stars_png.o: asm/ramdisk_data_gfx_stars_png.S ../data/gfx/stars.png
 	gcc -c asm/ramdisk_data_gfx_stars_png.S -o .o/ramdisk_data_gfx_stars_png.o
 
-.o/ramdisk_data_map__jigsaw_map_swo.o: asm/ramdisk_data_map__jigsaw_map_swo.S ../data/map/.jigsaw.map.swo
-	gcc -c asm/ramdisk_data_map__jigsaw_map_swo.S -o .o/ramdisk_data_map__jigsaw_map_swo.o
-
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
 
