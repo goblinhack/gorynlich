@@ -43,38 +43,8 @@
 .o/ramdisk_data_gfx_stars_png.o: asm/ramdisk_data_gfx_stars_png.S ../data/gfx/stars.png
 	gcc -c asm/ramdisk_data_gfx_stars_png.S -o .o/ramdisk_data_gfx_stars_png.o
 
-.o/ramdisk_data_levels_1_map.o: asm/ramdisk_data_levels_1_map.S ../data/levels/1.map
-	gcc -c asm/ramdisk_data_levels_1_map.S -o .o/ramdisk_data_levels_1_map.o
-
-.o/ramdisk_data_levels_10_map.o: asm/ramdisk_data_levels_10_map.S ../data/levels/10.map
-	gcc -c asm/ramdisk_data_levels_10_map.S -o .o/ramdisk_data_levels_10_map.o
-
-.o/ramdisk_data_levels_2_map.o: asm/ramdisk_data_levels_2_map.S ../data/levels/2.map
-	gcc -c asm/ramdisk_data_levels_2_map.S -o .o/ramdisk_data_levels_2_map.o
-
-.o/ramdisk_data_levels_3_map.o: asm/ramdisk_data_levels_3_map.S ../data/levels/3.map
-	gcc -c asm/ramdisk_data_levels_3_map.S -o .o/ramdisk_data_levels_3_map.o
-
-.o/ramdisk_data_levels_4_map.o: asm/ramdisk_data_levels_4_map.S ../data/levels/4.map
-	gcc -c asm/ramdisk_data_levels_4_map.S -o .o/ramdisk_data_levels_4_map.o
-
-.o/ramdisk_data_levels_5_map.o: asm/ramdisk_data_levels_5_map.S ../data/levels/5.map
-	gcc -c asm/ramdisk_data_levels_5_map.S -o .o/ramdisk_data_levels_5_map.o
-
-.o/ramdisk_data_levels_6_map.o: asm/ramdisk_data_levels_6_map.S ../data/levels/6.map
-	gcc -c asm/ramdisk_data_levels_6_map.S -o .o/ramdisk_data_levels_6_map.o
-
-.o/ramdisk_data_levels_7_map.o: asm/ramdisk_data_levels_7_map.S ../data/levels/7.map
-	gcc -c asm/ramdisk_data_levels_7_map.S -o .o/ramdisk_data_levels_7_map.o
-
-.o/ramdisk_data_levels_8_map.o: asm/ramdisk_data_levels_8_map.S ../data/levels/8.map
-	gcc -c asm/ramdisk_data_levels_8_map.S -o .o/ramdisk_data_levels_8_map.o
-
-.o/ramdisk_data_levels_9_map.o: asm/ramdisk_data_levels_9_map.S ../data/levels/9.map
-	gcc -c asm/ramdisk_data_levels_9_map.S -o .o/ramdisk_data_levels_9_map.o
-
-.o/ramdisk_data_map__jigsaw_map_swp.o: asm/ramdisk_data_map__jigsaw_map_swp.S ../data/map/.jigsaw.map.swp
-	gcc -c asm/ramdisk_data_map__jigsaw_map_swp.S -o .o/ramdisk_data_map__jigsaw_map_swp.o
+.o/ramdisk_data_map__jigsaw_map_swo.o: asm/ramdisk_data_map__jigsaw_map_swo.S ../data/map/.jigsaw.map.swo
+	gcc -c asm/ramdisk_data_map__jigsaw_map_swo.S -o .o/ramdisk_data_map__jigsaw_map_swo.o
 
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
