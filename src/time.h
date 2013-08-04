@@ -5,6 +5,7 @@
  */
 
 #include <sys/time.h>
+#include "sdl.h"
 
 uint32_t time_get_time_cached(void);
 boolean time_have_x_tenths_passed_since(uint32_t tenths, uint32_t since);
@@ -21,6 +22,10 @@ static inline uint32_t time_get_time_milli (void)
 {
     extern uint32_t time_now;
     extern uint32_t SDL_GetTicks(void);
+
+    if (!sdl_init_video) {
+        return (0);
+    }
 
     time_now = SDL_GetTicks();
 

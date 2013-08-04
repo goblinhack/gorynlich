@@ -8,7 +8,7 @@
 #define nENABLE_ASSERT              // DIE on errors
 #define nENABLE_TREE_SANITY         // Slow tree sanity
 #define nENABLE_DEBUG               // More debugs
-#define  ENABLE_VIDEO_SYNC          // Vertical sync
+#define nENABLE_VIDEO_SYNC          // Vertical sync
 #define nENABLE_INVERTED_DISPLAY    // For running on a Mac with inverted gfx
 #define nENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #define nENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
@@ -33,10 +33,16 @@
 /*
  * Map size is 2^MAP_WIDTH_LOG. So MAP_WIDTH_LOG 8 is 256, 10 is 1024
  */
-#define MAP_WIDTH_LOG               9
+#define MAP_WIDTH_LOG               10
 #define MAP_WIDTH                   (1 << MAP_WIDTH_LOG)
 #define MAP_HEIGHT                  MAP_WIDTH
-#define MAP_DEPTH                   16 
+#define MAP_DEPTH                   1 
+
+/*
+ * This is multiplied by jigsaw piece size.
+ */
+#define MAP_JIGSAW_PIECE_WIDTH                  13
+#define MAP_JIGSAW_PIECE_HEIGHT                 5
 
 #ifdef ENABLE_GENERATE_TTF
 #define DISABLE_SDL_WINDOW          // SDL_ttf is incompatible with window mode
