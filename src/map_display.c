@@ -213,10 +213,10 @@ map_tile_color (map_frame_ctx_t *map,
 
     uint8_t lit = map->lit[x][y][0];
 
-    if (lit < 5) {
-        *r = 0.0;
-        *g = 0.0;
-        *b = 0.0;
+    if (lit < 1) {
+        *r = 1.0;
+        *g = 1.0;
+        *b = 1.0;
         *a = 1.0;
     } else {
         float flit = ((float)lit) / 100.0;

@@ -414,6 +414,9 @@ extern uint16_t BRICK_8_ID;
 extern thing_templatep ROCK_0;
 extern uint16_t ROCK_0_ID;
 
+extern thing_templatep ROCK_1;
+extern uint16_t ROCK_1_ID;
+
 extern thing_templatep LAVA_0;
 extern uint16_t LAVA_0_ID;
 
