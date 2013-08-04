@@ -43,6 +43,9 @@
 .o/ramdisk_data_gfx_stars_png.o: asm/ramdisk_data_gfx_stars_png.S ../data/gfx/stars.png
 	gcc -c asm/ramdisk_data_gfx_stars_png.S -o .o/ramdisk_data_gfx_stars_png.o
 
+.o/ramdisk_data_map__tile_map_swp.o: asm/ramdisk_data_map__tile_map_swp.S ../data/map/.tile.map.swp
+	gcc -c asm/ramdisk_data_map__tile_map_swp.S -o .o/ramdisk_data_map__tile_map_swp.o
+
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
 
@@ -135,6 +138,9 @@
 
 .o/ramdisk_data_things_rock_0.o: asm/ramdisk_data_things_rock_0.S ../data/things/rock_0
 	gcc -c asm/ramdisk_data_things_rock_0.S -o .o/ramdisk_data_things_rock_0.o
+
+.o/ramdisk_data_things_rock_1.o: asm/ramdisk_data_things_rock_1.S ../data/things/rock_1
+	gcc -c asm/ramdisk_data_things_rock_1.S -o .o/ramdisk_data_things_rock_1.o
 
 .o/ramdisk_data_things_water_0.o: asm/ramdisk_data_things_water_0.S ../data/things/water_0
 	gcc -c asm/ramdisk_data_things_water_0.S -o .o/ramdisk_data_things_water_0.o

@@ -1400,6 +1400,7 @@ map_fixup (map_frame_ctx_t *map)
                 }
 
                 if ((template_id != ROCK_0_ID) &&
+                    (template_id != ROCK_1_ID) &&
                     (template_id != LAVA_0_ID) &&
                     (template_id != WATER_0_ID) &&
                     (template_id != WATER_0_ID) &&
@@ -1422,6 +1423,7 @@ map_fixup (map_frame_ctx_t *map)
                             map->tiles[x + dx][y + dy][z].template_id;
 
                         if ((a_thing_template_id != ROCK_0_ID) &&
+                            (a_thing_template_id != ROCK_1_ID) &&
                             (a_thing_template_id != LAVA_0_ID) &&
                             (a_thing_template_id != WATER_0_ID) &&
                             (a_thing_template_id != BRICK_0_ID) &&

@@ -43,6 +43,9 @@ uint16_t BRICK_8_ID;
 thing_templatep ROCK_0;
 uint16_t ROCK_0_ID;
 
+thing_templatep ROCK_1;
+uint16_t ROCK_1_ID;
+
 thing_templatep LAVA_0;
 uint16_t LAVA_0_ID;
 
@@ -219,6 +222,72 @@ static boolean resource_init_23 (void *context)
         "rock_0_is_join_x4_270",
         "rock_0_is_join_x4_180",
         "rock_0_is_join_x4_90",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        // rock darker bricks 
+        // ----------------------------------------------------
+        "rock_1_0",
+        "rock_1_1",
+        "rock_1_2",
+        "rock_1_3",
+        "rock_1_4",
+        "rock_1_5",
+        "rock_1_6",
+        "rock_1_7",
+        "rock_1_is_join_node",
+        "rock_1_is_join_left",
+        "rock_1_is_join_bot",
+        "rock_1_is_join_right",
+        "rock_1_is_join_top",
+        "rock_1_is_join_horiz",
+        "rock_1_is_join_vert",
+        "rock_1_is_join_tl2",
+        "rock_1_is_join_bl2",
+        "rock_1_is_join_br2",
+        "rock_1_is_join_tr2",
+        "rock_1_is_join_tl",
+        "rock_1_is_join_bl",
+        "rock_1_is_join_br",
+        "rock_1_is_join_tr",
+        "rock_1_is_join_t270_3",
+        "rock_1_is_join_t180_3",
+        "rock_1_is_join_t90_3",
+        "rock_1_is_join_t_3",
+        "rock_1_is_join_t270",
+        "rock_1_is_join_t180",
+        "rock_1_is_join_t90",
+        "rock_1_is_join_t",
+        "rock_1_is_join_t270_2",
+        "rock_1_is_join_t180_2",
+        "rock_1_is_join_t90_2",
+        "rock_1_is_join_t_2",
+        "rock_1_is_join_t270_1",
+        "rock_1_is_join_t180_1",
+        "rock_1_is_join_t90_1",
+        "rock_1_is_join_t_1",
+        "rock_1_is_join_x",
+        "rock_1_is_join_x1",
+        "rock_1_is_join_x1_270",
+        "rock_1_is_join_x1_180",
+        "rock_1_is_join_x1_90",
+        "rock_1_is_join_x2",
+        "rock_1_is_join_x2_270",
+        "rock_1_is_join_x2_180",
+        "rock_1_is_join_x2_90",
+        "rock_1_is_join_x3",
+        "rock_1_is_join_x3_180",
+        "rock_1_is_join_x4",
+        "rock_1_is_join_x4_270",
+        "rock_1_is_join_x4_180",
+        "rock_1_is_join_x4_90",
         0,
         0,
         0,
@@ -979,6 +1048,9 @@ static boolean resource_init_23 (void *context)
 
     ROCK_0 = thing_template_load("data/things/rock_0");
     ROCK_0_ID = thing_template_to_id(ROCK_0);
+
+    ROCK_1 = thing_template_load("data/things/rock_1");
+    ROCK_1_ID = thing_template_to_id(ROCK_1);
 
     LAVA_0 = thing_template_load("data/things/lava_0");
     LAVA_0_ID = thing_template_to_id(LAVA_0);
