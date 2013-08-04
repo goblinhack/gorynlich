@@ -106,6 +106,13 @@ static const unsigned char *const data_gfx_stars_png_start =
 static const unsigned char *const data_gfx_stars_png_end   =
     (const unsigned char *const) (char*)&data_gfx_stars_png_end_;
 
+extern unsigned char *data_map__tile_map_swp_start_ asm("data_map__tile_map_swp_start_");
+extern unsigned char *data_map__tile_map_swp_end_ asm("data_map__tile_map_swp_end_");
+static const unsigned char *const data_map__tile_map_swp_start =
+    (const unsigned char *const) (char*)&data_map__tile_map_swp_start_;
+static const unsigned char *const data_map__tile_map_swp_end   =
+    (const unsigned char *const) (char*)&data_map__tile_map_swp_end_;
+
 extern unsigned char *data_map_jigsaw_map_start_ asm("data_map_jigsaw_map_start_");
 extern unsigned char *data_map_jigsaw_map_end_ asm("data_map_jigsaw_map_end_");
 static const unsigned char *const data_map_jigsaw_map_start =
@@ -323,6 +330,13 @@ static const unsigned char *const data_things_rock_0_start =
 static const unsigned char *const data_things_rock_0_end   =
     (const unsigned char *const) (char*)&data_things_rock_0_end_;
 
+extern unsigned char *data_things_rock_1_start_ asm("data_things_rock_1_start_");
+extern unsigned char *data_things_rock_1_end_ asm("data_things_rock_1_end_");
+static const unsigned char *const data_things_rock_1_start =
+    (const unsigned char *const) (char*)&data_things_rock_1_start_;
+static const unsigned char *const data_things_rock_1_end   =
+    (const unsigned char *const) (char*)&data_things_rock_1_end_;
+
 extern unsigned char *data_things_water_0_start_ asm("data_things_water_0_start_");
 extern unsigned char *data_things_water_0_end_ asm("data_things_water_0_end_");
 static const unsigned char *const data_things_water_0_start =
@@ -419,6 +433,9 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/gfx/stars.png",
 },
 {
+    /* filename */ "data/map/.tile.map.swp",
+},
+{
     /* filename */ "data/map/jigsaw.map",
 },
 {
@@ -512,6 +529,9 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/things/rock_0",
 },
 {
+    /* filename */ "data/things/rock_1",
+},
+{
     /* filename */ "data/things/water_0",
 },
 {
@@ -567,80 +587,84 @@ void ramdisk_init (void)
     ramdisk_data[13].len = data_gfx_sprites_small_png_end - data_gfx_sprites_small_png_start;
     ramdisk_data[14].data = data_gfx_stars_png_start;
     ramdisk_data[14].len = data_gfx_stars_png_end - data_gfx_stars_png_start;
-    ramdisk_data[15].data = data_map_jigsaw_map_start;
-    ramdisk_data[15].len = data_map_jigsaw_map_end - data_map_jigsaw_map_start;
-    ramdisk_data[16].data = data_map_map_light_data_start;
-    ramdisk_data[16].len = data_map_map_light_data_end - data_map_map_light_data_start;
-    ramdisk_data[17].data = data_map_tile_map_start;
-    ramdisk_data[17].len = data_map_tile_map_end - data_map_tile_map_start;
-    ramdisk_data[18].data = data_music_hiscore_wav_start;
-    ramdisk_data[18].len = data_music_hiscore_wav_end - data_music_hiscore_wav_start;
-    ramdisk_data[19].data = data_music_intro_wav_start;
-    ramdisk_data[19].len = data_music_intro_wav_end - data_music_intro_wav_start;
-    ramdisk_data[20].data = data_music_music_wav_start;
-    ramdisk_data[20].len = data_music_music_wav_end - data_music_music_wav_start;
-    ramdisk_data[21].data = data_sound_chomp_wav_start;
-    ramdisk_data[21].len = data_sound_chomp_wav_end - data_sound_chomp_wav_start;
-    ramdisk_data[22].data = data_sound_chomp2_wav_start;
-    ramdisk_data[22].len = data_sound_chomp2_wav_end - data_sound_chomp2_wav_start;
-    ramdisk_data[23].data = data_sound_click_wav_start;
-    ramdisk_data[23].len = data_sound_click_wav_end - data_sound_click_wav_start;
-    ramdisk_data[24].data = data_sound_doorbell_wav_start;
-    ramdisk_data[24].len = data_sound_doorbell_wav_end - data_sound_doorbell_wav_start;
-    ramdisk_data[25].data = data_sound_explosion_wav_start;
-    ramdisk_data[25].len = data_sound_explosion_wav_end - data_sound_explosion_wav_start;
-    ramdisk_data[26].data = data_sound_letter_wav_start;
-    ramdisk_data[26].len = data_sound_letter_wav_end - data_sound_letter_wav_start;
-    ramdisk_data[27].data = data_sound_level_end_wav_start;
-    ramdisk_data[27].len = data_sound_level_end_wav_end - data_sound_level_end_wav_start;
-    ramdisk_data[28].data = data_sound_paper_wav_start;
-    ramdisk_data[28].len = data_sound_paper_wav_end - data_sound_paper_wav_start;
-    ramdisk_data[29].data = data_sound_powerup_wav_start;
-    ramdisk_data[29].len = data_sound_powerup_wav_end - data_sound_powerup_wav_start;
-    ramdisk_data[30].data = data_sound_ratdeath_wav_start;
-    ramdisk_data[30].len = data_sound_ratdeath_wav_end - data_sound_ratdeath_wav_start;
-    ramdisk_data[31].data = data_sound_rocket_wav_start;
-    ramdisk_data[31].len = data_sound_rocket_wav_end - data_sound_rocket_wav_start;
-    ramdisk_data[32].data = data_sound_slime_wav_start;
-    ramdisk_data[32].len = data_sound_slime_wav_end - data_sound_slime_wav_start;
-    ramdisk_data[33].data = data_sound_spam_wav_start;
-    ramdisk_data[33].len = data_sound_spam_wav_end - data_sound_spam_wav_start;
-    ramdisk_data[34].data = data_sound_thief_wav_start;
-    ramdisk_data[34].len = data_sound_thief_wav_end - data_sound_thief_wav_start;
-    ramdisk_data[35].data = data_things_brick_0_start;
-    ramdisk_data[35].len = data_things_brick_0_end - data_things_brick_0_start;
-    ramdisk_data[36].data = data_things_brick_1_start;
-    ramdisk_data[36].len = data_things_brick_1_end - data_things_brick_1_start;
-    ramdisk_data[37].data = data_things_brick_2_start;
-    ramdisk_data[37].len = data_things_brick_2_end - data_things_brick_2_start;
-    ramdisk_data[38].data = data_things_brick_3_start;
-    ramdisk_data[38].len = data_things_brick_3_end - data_things_brick_3_start;
-    ramdisk_data[39].data = data_things_brick_4_start;
-    ramdisk_data[39].len = data_things_brick_4_end - data_things_brick_4_start;
-    ramdisk_data[40].data = data_things_brick_5_start;
-    ramdisk_data[40].len = data_things_brick_5_end - data_things_brick_5_start;
-    ramdisk_data[41].data = data_things_brick_6_start;
-    ramdisk_data[41].len = data_things_brick_6_end - data_things_brick_6_start;
-    ramdisk_data[42].data = data_things_brick_7_start;
-    ramdisk_data[42].len = data_things_brick_7_end - data_things_brick_7_start;
-    ramdisk_data[43].data = data_things_brick_8_start;
-    ramdisk_data[43].len = data_things_brick_8_end - data_things_brick_8_start;
-    ramdisk_data[44].data = data_things_lava_0_start;
-    ramdisk_data[44].len = data_things_lava_0_end - data_things_lava_0_start;
-    ramdisk_data[45].data = data_things_rock_0_start;
-    ramdisk_data[45].len = data_things_rock_0_end - data_things_rock_0_start;
-    ramdisk_data[46].data = data_things_water_0_start;
-    ramdisk_data[46].len = data_things_water_0_end - data_things_water_0_start;
-    ramdisk_data[47].data = data_ttf_large_ttf_pointsize40_data_start;
-    ramdisk_data[47].len = data_ttf_large_ttf_pointsize40_data_end - data_ttf_large_ttf_pointsize40_data_start;
-    ramdisk_data[48].data = data_ttf_large_ttf_pointsize40_tga_start;
-    ramdisk_data[48].len = data_ttf_large_ttf_pointsize40_tga_end - data_ttf_large_ttf_pointsize40_tga_start;
-    ramdisk_data[49].data = data_ttf_med_ttf_pointsize30_data_start;
-    ramdisk_data[49].len = data_ttf_med_ttf_pointsize30_data_end - data_ttf_med_ttf_pointsize30_data_start;
-    ramdisk_data[50].data = data_ttf_med_ttf_pointsize30_tga_start;
-    ramdisk_data[50].len = data_ttf_med_ttf_pointsize30_tga_end - data_ttf_med_ttf_pointsize30_tga_start;
-    ramdisk_data[51].data = data_ttf_small_ttf_pointsize20_data_start;
-    ramdisk_data[51].len = data_ttf_small_ttf_pointsize20_data_end - data_ttf_small_ttf_pointsize20_data_start;
-    ramdisk_data[52].data = data_ttf_small_ttf_pointsize20_tga_start;
-    ramdisk_data[52].len = data_ttf_small_ttf_pointsize20_tga_end - data_ttf_small_ttf_pointsize20_tga_start;
+    ramdisk_data[15].data = data_map__tile_map_swp_start;
+    ramdisk_data[15].len = data_map__tile_map_swp_end - data_map__tile_map_swp_start;
+    ramdisk_data[16].data = data_map_jigsaw_map_start;
+    ramdisk_data[16].len = data_map_jigsaw_map_end - data_map_jigsaw_map_start;
+    ramdisk_data[17].data = data_map_map_light_data_start;
+    ramdisk_data[17].len = data_map_map_light_data_end - data_map_map_light_data_start;
+    ramdisk_data[18].data = data_map_tile_map_start;
+    ramdisk_data[18].len = data_map_tile_map_end - data_map_tile_map_start;
+    ramdisk_data[19].data = data_music_hiscore_wav_start;
+    ramdisk_data[19].len = data_music_hiscore_wav_end - data_music_hiscore_wav_start;
+    ramdisk_data[20].data = data_music_intro_wav_start;
+    ramdisk_data[20].len = data_music_intro_wav_end - data_music_intro_wav_start;
+    ramdisk_data[21].data = data_music_music_wav_start;
+    ramdisk_data[21].len = data_music_music_wav_end - data_music_music_wav_start;
+    ramdisk_data[22].data = data_sound_chomp_wav_start;
+    ramdisk_data[22].len = data_sound_chomp_wav_end - data_sound_chomp_wav_start;
+    ramdisk_data[23].data = data_sound_chomp2_wav_start;
+    ramdisk_data[23].len = data_sound_chomp2_wav_end - data_sound_chomp2_wav_start;
+    ramdisk_data[24].data = data_sound_click_wav_start;
+    ramdisk_data[24].len = data_sound_click_wav_end - data_sound_click_wav_start;
+    ramdisk_data[25].data = data_sound_doorbell_wav_start;
+    ramdisk_data[25].len = data_sound_doorbell_wav_end - data_sound_doorbell_wav_start;
+    ramdisk_data[26].data = data_sound_explosion_wav_start;
+    ramdisk_data[26].len = data_sound_explosion_wav_end - data_sound_explosion_wav_start;
+    ramdisk_data[27].data = data_sound_letter_wav_start;
+    ramdisk_data[27].len = data_sound_letter_wav_end - data_sound_letter_wav_start;
+    ramdisk_data[28].data = data_sound_level_end_wav_start;
+    ramdisk_data[28].len = data_sound_level_end_wav_end - data_sound_level_end_wav_start;
+    ramdisk_data[29].data = data_sound_paper_wav_start;
+    ramdisk_data[29].len = data_sound_paper_wav_end - data_sound_paper_wav_start;
+    ramdisk_data[30].data = data_sound_powerup_wav_start;
+    ramdisk_data[30].len = data_sound_powerup_wav_end - data_sound_powerup_wav_start;
+    ramdisk_data[31].data = data_sound_ratdeath_wav_start;
+    ramdisk_data[31].len = data_sound_ratdeath_wav_end - data_sound_ratdeath_wav_start;
+    ramdisk_data[32].data = data_sound_rocket_wav_start;
+    ramdisk_data[32].len = data_sound_rocket_wav_end - data_sound_rocket_wav_start;
+    ramdisk_data[33].data = data_sound_slime_wav_start;
+    ramdisk_data[33].len = data_sound_slime_wav_end - data_sound_slime_wav_start;
+    ramdisk_data[34].data = data_sound_spam_wav_start;
+    ramdisk_data[34].len = data_sound_spam_wav_end - data_sound_spam_wav_start;
+    ramdisk_data[35].data = data_sound_thief_wav_start;
+    ramdisk_data[35].len = data_sound_thief_wav_end - data_sound_thief_wav_start;
+    ramdisk_data[36].data = data_things_brick_0_start;
+    ramdisk_data[36].len = data_things_brick_0_end - data_things_brick_0_start;
+    ramdisk_data[37].data = data_things_brick_1_start;
+    ramdisk_data[37].len = data_things_brick_1_end - data_things_brick_1_start;
+    ramdisk_data[38].data = data_things_brick_2_start;
+    ramdisk_data[38].len = data_things_brick_2_end - data_things_brick_2_start;
+    ramdisk_data[39].data = data_things_brick_3_start;
+    ramdisk_data[39].len = data_things_brick_3_end - data_things_brick_3_start;
+    ramdisk_data[40].data = data_things_brick_4_start;
+    ramdisk_data[40].len = data_things_brick_4_end - data_things_brick_4_start;
+    ramdisk_data[41].data = data_things_brick_5_start;
+    ramdisk_data[41].len = data_things_brick_5_end - data_things_brick_5_start;
+    ramdisk_data[42].data = data_things_brick_6_start;
+    ramdisk_data[42].len = data_things_brick_6_end - data_things_brick_6_start;
+    ramdisk_data[43].data = data_things_brick_7_start;
+    ramdisk_data[43].len = data_things_brick_7_end - data_things_brick_7_start;
+    ramdisk_data[44].data = data_things_brick_8_start;
+    ramdisk_data[44].len = data_things_brick_8_end - data_things_brick_8_start;
+    ramdisk_data[45].data = data_things_lava_0_start;
+    ramdisk_data[45].len = data_things_lava_0_end - data_things_lava_0_start;
+    ramdisk_data[46].data = data_things_rock_0_start;
+    ramdisk_data[46].len = data_things_rock_0_end - data_things_rock_0_start;
+    ramdisk_data[47].data = data_things_rock_1_start;
+    ramdisk_data[47].len = data_things_rock_1_end - data_things_rock_1_start;
+    ramdisk_data[48].data = data_things_water_0_start;
+    ramdisk_data[48].len = data_things_water_0_end - data_things_water_0_start;
+    ramdisk_data[49].data = data_ttf_large_ttf_pointsize40_data_start;
+    ramdisk_data[49].len = data_ttf_large_ttf_pointsize40_data_end - data_ttf_large_ttf_pointsize40_data_start;
+    ramdisk_data[50].data = data_ttf_large_ttf_pointsize40_tga_start;
+    ramdisk_data[50].len = data_ttf_large_ttf_pointsize40_tga_end - data_ttf_large_ttf_pointsize40_tga_start;
+    ramdisk_data[51].data = data_ttf_med_ttf_pointsize30_data_start;
+    ramdisk_data[51].len = data_ttf_med_ttf_pointsize30_data_end - data_ttf_med_ttf_pointsize30_data_start;
+    ramdisk_data[52].data = data_ttf_med_ttf_pointsize30_tga_start;
+    ramdisk_data[52].len = data_ttf_med_ttf_pointsize30_tga_end - data_ttf_med_ttf_pointsize30_tga_start;
+    ramdisk_data[53].data = data_ttf_small_ttf_pointsize20_data_start;
+    ramdisk_data[53].len = data_ttf_small_ttf_pointsize20_data_end - data_ttf_small_ttf_pointsize20_data_start;
+    ramdisk_data[54].data = data_ttf_small_ttf_pointsize20_tga_start;
+    ramdisk_data[54].len = data_ttf_small_ttf_pointsize20_tga_end - data_ttf_small_ttf_pointsize20_tga_start;
 }

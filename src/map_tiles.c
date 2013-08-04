@@ -121,10 +121,10 @@ void map_init_tiles (map_frame_ctx_t *map)
             c = map_jigsaw_buffer2_getchar(x, y);
             switch (c) {
             case MAP_GRASS:
-                t = BRICK_0_ID;
+                t = ROCK_0_ID;
                 break;
             case MAP_WALL:
-                t = BRICK_1_ID;
+                t = ROCK_1_ID;
                 break;
             case MAP_ROCK:
                 t = BRICK_0_ID;

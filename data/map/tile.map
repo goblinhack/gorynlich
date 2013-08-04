@@ -37,7 +37,7 @@
 # _ X _
 :is_join_top
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
-|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|
+|ggggg|ggggg|gggxg|ggggg|gg gg|ggggg|ggg g|ggggg|ggg g|ggggg|ggggg|gxggg|ggggg|gggg |ggggg|gg  g|
 |xxxxx|gxxxg|gxxxg|gxxgg|gxxgx|ggxgx|xxxgg|gxggg|xgxxg|xxgxx|xgggg|ggxxg|ggxxg|gxgxx|xxgxx|xxgxx|
 |xxxxx|xxxxx|gxxxx|gxxgx|gxxgx|gxxgx|xxxxg|gxxgg|xggxx|xxgxx|xgggx|ggxgg|xgxxx|xgxgx|xxgxx|xgggx|
 |xxxxx|xxxxx|xxxxx|gxxxx|gxxxx|gxxxx|xxxxg|gxxxg|xxgxx|xggxx|xxggx|gxxxg|xggxg|xxxgx|xxxgx|xgxgx|
