@@ -139,7 +139,7 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
     map_lightmap(map_ctx,
                  map_ctx->lx / TILE_WIDTH,
                  map_ctx->ly / TILE_HEIGHT,
-                 MAP_DEPTH - 2,
+                 0,
                  DEFAULT_LIGHT_RAY_LENGTH,
                  true);
 }
@@ -1402,6 +1402,7 @@ map_fixup (map_frame_ctx_t *map)
                 if ((template_id != ROCK_0_ID) &&
                     (template_id != LAVA_0_ID) &&
                     (template_id != WATER_0_ID) &&
+                    (template_id != WATER_0_ID) &&
                     (template_id != BRICK_0_ID) &&
                     (template_id != BRICK_1_ID) &&
                     (template_id != BRICK_2_ID) &&
@@ -1487,14 +1488,6 @@ map_fixup (map_frame_ctx_t *map)
                         index = _index_;                                    \
                     }                                                       \
                 }                                                           \
-
-                if (z < MAP_DEPTH - 2) {
-                    if (map->tiles[x][y][z + 1].template_id == template_id) {
-
-                        index = IS_JOIN_BLOCK;
-                        goto gotone;
-                    }
-                }
 
                 BLOCK(1, 1, 1,
                       1, 1, 1,
@@ -1684,7 +1677,6 @@ map_fixup (map_frame_ctx_t *map)
                       1, 1, 1,
                       1, 1, 1, IS_JOIN_X4_90)
 
-gotone:
               if (index == -1) {
                   DIE("%u%u%u %u%u%u %u%u%u not handled",
                         a ? 1 : 0,

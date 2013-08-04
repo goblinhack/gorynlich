@@ -122,11 +122,11 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
          * Trim the sphere vertically. We do not need to look to high as
          * we only render so many cubes.
          */
-        if (dz <= -(MAP_DEPTH - 1)) {
+        if (dz <= -MAP_DEPTH) {
             continue;
         }
 
-        if (dz > MAP_DEPTH - 1) {
+        if (dz >= MAP_DEPTH) {
             continue;
         }
 

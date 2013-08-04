@@ -15,6 +15,7 @@
 #include "level.h"
 #include "level_private.h"
 #include "tile.h"
+#include "map_jigsaw.h"
 
 /*
  * map_combine
@@ -64,6 +65,7 @@ void map_init_tiles (map_frame_ctx_t *map)
 //    fractal_gen(map, 20.5, 0.85, ROCK_0, BRICK_0);
 #endif
 
+#if 0
     int32_t z;
     int32_t gen;
     uint16_t t;
@@ -106,6 +108,52 @@ void map_init_tiles (map_frame_ctx_t *map)
              3  /* generations */);
 
     map_combine(map);
+#endif
+
+    int32_t x;
+    int32_t y;
+    int32_t z;
+    uint8_t c;
+    uint16_t t;
+
+    for (x = 0; x < MAP_JIGSAW_BUFFER2_WIDTH; x++) {
+        for (y = 0; y < MAP_JIGSAW_BUFFER2_HEIGHT; y++) {
+            c = map_jigsaw_buffer2_getchar(x, y);
+            switch (c) {
+            case MAP_GRASS:
+                t = BRICK_0_ID;
+                break;
+            case MAP_WALL:
+                t = BRICK_1_ID;
+                break;
+            case MAP_ROCK:
+                t = BRICK_0_ID;
+                break;
+            case MAP_LAVA:
+                t = LAVA_0_ID;
+                break;
+            case MAP_CORRIDOR_WALL:
+                t = BRICK_3_ID;
+                break;
+            case MAP_WATER:
+                t = WATER_0_ID;
+                break;
+            default:
+                t = 0;
+                break;
+            }
+
+            uint32_t mx = ((MAP_WIDTH - MAP_JIGSAW_BUFFER2_WIDTH) / 2) + x;
+            uint32_t my = ((MAP_HEIGHT - MAP_JIGSAW_BUFFER2_HEIGHT) / 2) + y;
+
+            if (t) {
+                for (z = 0; z < MAP_DEPTH; z++) {
+                    map_set(map, mx, my, z, t);
+                }
+            }
+        }
+    }
+    
 }
 
 /*
