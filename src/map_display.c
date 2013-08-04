@@ -200,17 +200,20 @@ map_tile_color (map_frame_ctx_t *map,
                 int32_t x, int32_t y, int32_t z,
                 float *r, float *g, float *b, float *a)
 {
-    if (map_out_of_bounds(x, y, z)) {
+    //
+    // z = 0 here, faking the depth
+    //
+    if (map_out_of_bounds(x, y, 0)) {
         *r = 0.0;
         *g = 0.0;
         *b = 0.0;
-        *a = 0.0;
+        *a = 1.0;
         return;
     }
 
-    uint8_t lit = map->lit[x][y][z];
+    uint8_t lit = map->lit[x][y][0];
 
-    if (lit < 10) {
+    if (lit < 5) {
         *r = 0.0;
         *g = 0.0;
         *b = 0.0;
@@ -258,12 +261,13 @@ static void map_display_ (map_frame_ctx_t *map)
     GLfloat tex_top;
     GLfloat tex_bottom;
 
+    int16_t depth = 1;
+
     /*
      * Screen size.
      */
     uint16_t width = global_config.video_pix_width;
-    uint16_t height = global_config.video_pix_height + 
-                    MAP_DEPTH * TILE_HEIGHT;
+    uint16_t height = global_config.video_pix_height + depth * TILE_HEIGHT;
 
     /*
      * Temps
@@ -299,7 +303,7 @@ static void map_display_ (map_frame_ctx_t *map)
         /*
          * From bottom to top.
          */
-        for (z = 0; z < MAP_DEPTH; z++) {
+        for (z = 0; z < depth; z++) {
             /*
              * First pass, bottom half of tile, i.e. fake vertical tile
              * Second pass, top half of tile, top flat file
@@ -311,7 +315,7 @@ static void map_display_ (map_frame_ctx_t *map)
                 top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
                 top -= TILE_HEIGHT;
                 top += TILE_HEIGHT * (cy - scy);
-                top -= TILE_HEIGHT * z;
+                top -= (TILE_HEIGHT * z);
 
                 if (pass == 0) {
                     top += TILE_HEIGHT;
@@ -320,7 +324,11 @@ static void map_display_ (map_frame_ctx_t *map)
                 bottom = top + TILE_HEIGHT;
 
                 cx = cx_start;
-                map_tile = &map->tiles[cx][cy][z];
+
+                //
+                // z = 0 here, faking the depth
+                //
+                map_tile = &map->tiles[cx][cy][0];
                 tile = map_tile->tile;
 
                 /*
@@ -334,7 +342,10 @@ static void map_display_ (map_frame_ctx_t *map)
                  */
                 for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
 
-                    map_tile = &map->tiles[cx][cy][z];
+                    //
+                    // z = 0 here, faking the depth
+                    //
+                    map_tile = &map->tiles[cx][cy][0];
                     tile = map_tile->tile;
                     if (tile) {
                         right = left + TILE_WIDTH;
@@ -470,7 +481,7 @@ map_display_debug (map_frame_ctx_t *map, uint32_t x, uint32_t y)
 
     ttf_puts(small_font, text, x, y, 1.0, 1.0, true);
 
-    float map_scale = 4;
+    float map_scale = 10;
 
     float x1 = 0;
     float x2 = ((float)map->map_width) / map_scale;
