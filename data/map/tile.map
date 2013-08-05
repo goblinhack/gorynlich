@@ -15,7 +15,7 @@
 # _ _ _
 :is_join_node
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
-|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|
+|ggggg|ggggg|g ggg|ggggg|ggggg|ggg g|ggggg|ggggg|ggggg|ggggg|ggggg|ggg g|ggggg|ggg g|ggggg|ggggg|
 |xgxgg|ggxxg|xgggx|xgxgx|gxxxg|ggxgg|xgggx|xgggx|xgxgg|ggxxg|xgggx|ggxgx|gxxxg|ggxgg|xgggx|xgggx|
 |xxxxg|gxxxx|xggxx|xxxxx|xxxxx|gxxxx|xgxgx|xggx |xx xg|g xxx| gg  |gxxg |gxxgg|gxxgx|xg g | ggg |
 |xxxxx|gxx x|xxgx | xxxx| xxxx|xxxxx|xxxg |  g  | x x |g    |  g  |g xg |g x g| xxg | g g |  g  |
@@ -70,8 +70,8 @@
 # _ _ _
 :is_join_horiz
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
-|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggx|ggxgx|gxgxg|xxgxx|gxxxx|xgxgx|xxxxx|
-|xxxxx|xxxxg|xxgxg|xggxg|xgxxx|xxgxx|xxgxg|xgxgx|xgxgg|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|
+|ggggg|gg gg|g ggg|ggggg|ggggg|ggggg|gg  g|ggg g|ggggg|ggggx|ggxgx|g gxg|xxgxx| xxxx|xgxgx|xxxxx|
+|xxxxx|xxxxg|xxgxg|xggxg|xgxxx|xxgxx|xxg g|xgxgx|xgxgg|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|
 |xx xx|xx xx|xxxxx|xgxxg|xg xx|xxgxx|xxgxx|xgxgx|xgxgg|xxxxx|xxxxx|xx  x|xx xx|xx xx|xxxx |xx xx|
 |x   x|x   x|x   x|x   x|x  xx|x g x|xx xx|xgxgx|xgxxg|x xxx|x x x|x   x|x  x |x   x|x x  |x  x |
 |     |     |     |     |     |     |   x |   g |    g|   x |  x x|    x|   x |    x|  x  |   x |
@@ -92,9 +92,9 @@
 # _ X X
 :is_join_tl2
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
-|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggx|ggxgx|gxgxg|xxgxx|gxgxx|xgxgx|ggxgx|
-|ggxxx|ggxxg|gggxg|gggxg|gggxx|gxgxx|gxgxg|ggxgx|ggxgg|gxxxx|gxxgx|gggxx|xxgxx|xxxxx|xgxgx|xxxgx|
-|gxxxx|gxxxx|gxxxg|ggxxg|ggxxx|gxgxx|gxgxx|ggxgx|ggxgg|gxxxx|gxxgx|gxgxx|ggxgx|gggxx|ggxgx|gxxgx|
+|gg gg| gggg|ggggg|ggggg|ggggg|gg g |ggggg|ggggg|  ggg|ggggx|  xgx|gxgxg|xxgxx|gxgxx|xgxgx|ggxgx|
+|ggxxx|ggxxg|gggxg|gggxg|gggxx|gxgxx|gxgxg|ggxgx| gxgg|gxxxx| xxgx| ggxx| xgxx| xxxx|xgxgx|xxxgx|
+|gxxxx|gxxxx|gxxxg|ggxxg|ggxxx|gxgxx|gxgxx|ggxgx|ggxgg|gxxxx|gxxgx|  gxx|ggxgx|gggxx|ggxgx|gxxgx|
 |gxxxx|gxxxx|gxxxx|gxxxx|gxxxx|gxgxx|gxxxx|xgxgx|xgxxg|gxxxx|xgxxx|xxgxx|xxxgx|xxxxx|xxxxx|gxxgx|
 |xxxxx|xxxxx|xxxxx|xxxxx|gxxxx|xxxxx|xxxxx|xxxgx|xxxxg|xxxxx|xxxxx|gxxxx|xxxxx|xxxxx|xxxxx|xxxxx|
 #-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
@@ -125,8 +125,8 @@
 # X X _
 :is_join_tr2
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
-|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|gxggg|xgggg|ggggg|xgxgg|ggggg|
-|xxgxg|xxggg|xxgxg|xggxg|xgxgg|xxgxg|xxggg|xgxgx|xgxgg|xxxxg|xxgxg|xxgxg|xxgxx|xxxgg|xxxgg|xgxgg|
+|ggggg|gggg |ggg g|ggggg|ggggg|ggg  |ggggg|ggggg|ggggg|gg gg|ggggg|gxggg|xgggg|ggggg|xgxgg|ggggg|
+|xxgx |xxggg|xxgxg|xggx |xgxgg|xxgx |xxgg |xgxgx|xgxgg|xxxxg|xxgxg|xxgxg|xxgxx|xxxgg|xxxgg|xgxgg|
 |xxgxg|xxxgg|xgxxg|xgxxg|xgxxg|xxgxg|x gxg|xg gx|xgxgg|x  xg|xxxxg|xxggg|xxggg|xxxgg|xxxxg|xgxxg|
 |xxxxg|xxxgg|x  xg|xg  g|x  xg|xxgxg|x  xg|xg gx| gxxg|x  xx|xx xx|xxxxg|xxxxx|xxxxg|xxxxg|xxxxg|
 |xxxxx|xxxxg|xxxxg|x   x|x  xx|xxxxx|xxxxg|x  gx|  xxg|xxxxx|xxxxx|xxxxx|xxxxg|xxxxx|xxxxx|xxxxx|
@@ -136,9 +136,9 @@
 # _ X _
 :is_join_tl
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
-|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggg|ggggx|ggxgx|gxgxg|xxgxx|gxgxx|xgxgx|ggxgx|
-|ggxxx|ggxxg|gggxg|gggxg|gggxx|gxgxx|gxgxg|ggxgx|ggxgg|gxxxx|gxxgx|gggxx|xxgxx|xxxxx|xgxgx|xxxgx|
-|gxxxx|gxxxx|gxxxg|ggxxg|ggxxx|gxgxx|gxgxx|ggxgx|ggxgg|gxxxx|gxxgx|gxgxx|ggxgx|gggxx|ggxgx|gxxgx|
+|ggggg|ggggg| gg g|ggggg|ggggg|ggggg|ggggg|ggggg| gggg|g ggx|gg gx|gxgxg|xxgxx|gxgxx|xgxgx|ggxgx|
+|ggxxx|ggxxg|gggxg| ggxg|gggxx|  gxx|gxgxg|ggxgx|ggxgg|gxxxx|gxxgx|gggxx|xxgxx|xxxxx|xgxgx|xxxgx|
+|gxxxx|gxxxx|gxxxg|ggxxg|ggxxx| xgxx|gxgxx|ggxgx|ggxgg|gxxxx|gxxgx|gxgxx|ggxgx|gggxx|ggxgx|gxxgx|
 |gxxxx|gxxxx|gxxx |gxxxx|gxxxx|gxgxx|gxxx |xgxg |xgxxg|gxxxx|xgxxx|xxgxx|xxxgx|xxxx |xxxx |gxxgx|
 |xxxx |xxx  |xxxx |xxx x|gxxx |xxx  |xxxx |xx g |xxxx |xxx  |xxxx |gxxx |xxxx |xxxx |xxxx |xxxx |
 #-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
@@ -600,39 +600,6 @@
 | xxx |
 |xxxxx|
 #-----+
-:mapchar D
-# X X X
-# X X X
-# X X X
-:is_join_block
-+-----+
-|xxxxx|
-|xxxxx|
-|xxxxx|
-|xxxxx|
-|xxxxx|
-#-----+
-# _ _ _
-# X X X
-# _ _ _
-:is_join_horiz
-+-----+
-|x   x|
-|x   x|
-|xDDDx|
-|x   x|
-|x   x|
-#-----+
-# _ X _
-# _ X _
-# _ X _
-:is_join_vert
-+-----+
-|xxxxx|
-|  D  |
-|  D  |
-|  D  |
-|xxxxx|
 :mapchar $
 # X X X
 # X X X

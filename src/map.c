@@ -319,14 +319,14 @@ boolean map_is_car_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_car));
 }
 
-boolean map_is_star_green_at (levelp level, int32_t x, int32_t y)
+boolean map_is_transparent_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star_green));
+    return (map_is_x_at(level, x, y, thing_template_is_transparent));
 }
 
-boolean map_is_star_cyan_at (levelp level, int32_t x, int32_t y)
+boolean map_is_radiant_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star_cyan));
+    return (map_is_x_at(level, x, y, thing_template_is_radiant));
 }
 
 boolean map_is_star_black_at (levelp level, int32_t x, int32_t y)
@@ -612,14 +612,14 @@ thingp map_thing_is_car_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_car));
 }
 
-thingp map_thing_is_star_green_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_transparent_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_green));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_transparent));
 }
 
-thingp map_thing_is_star_cyan_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_radiant_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_cyan));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_radiant));
 }
 
 thingp map_thing_is_star_black_at (levelp level, int32_t x, int32_t y)
@@ -916,14 +916,14 @@ tree_rootp map_all_things_is_car_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_car));
 }
 
-tree_rootp map_all_things_is_star_green_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_transparent_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_green));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_transparent));
 }
 
-tree_rootp map_all_things_is_star_cyan_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_radiant_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_cyan));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_radiant));
 }
 
 tree_rootp map_all_things_is_star_black_at (levelp level, int32_t x, int32_t y)
@@ -1209,13 +1209,13 @@ thing_templatep map_find_car_at (levelp level,
 thing_templatep map_find_star_green_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_star_green, w));
+    return (map_find_x_at(level, x, y, thing_template_is_transparent, w));
 }
 
 thing_templatep map_find_star_cyan_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_star_cyan, w));
+    return (map_find_x_at(level, x, y, thing_template_is_radiant, w));
 }
 
 thing_templatep map_find_star_black_at (levelp level,
@@ -1887,14 +1887,14 @@ uint32_t level_count_is_car (levelp level)
     return (level_count_is_x(level, thing_template_is_car));
 }
 
-uint32_t level_count_is_star_green (levelp level)
+uint32_t level_count_is_transparent (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star_green));
+    return (level_count_is_x(level, thing_template_is_transparent));
 }
 
-uint32_t level_count_is_star_cyan (levelp level)
+uint32_t level_count_is_radiant (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star_cyan));
+    return (level_count_is_x(level, thing_template_is_radiant));
 }
 
 uint32_t level_count_is_star_black (levelp level)
@@ -2193,14 +2193,14 @@ tree_rootp map_all_things_is_car (levelp level)
     return (map_all_things_is_x(level, thing_template_is_car));
 }
 
-tree_rootp map_all_things_is_star_green (levelp level)
+tree_rootp map_all_things_is_transparent (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_star_green));
+    return (map_all_things_is_x(level, thing_template_is_transparent));
 }
 
-tree_rootp map_all_things_is_star_cyan (levelp level)
+tree_rootp map_all_things_is_radiant (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_star_cyan));
+    return (map_all_things_is_x(level, thing_template_is_radiant));
 }
 
 tree_rootp map_all_things_is_star_black (levelp level)
