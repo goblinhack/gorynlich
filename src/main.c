@@ -373,6 +373,7 @@ static void find_file_locations (void)
 
 int32_t main (int32_t argc, char *argv[])
 {
+#ifdef ENABLE_DEV_HACKS
 #ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
     if (!freopen("stdout.txt", "w", stdout)) {
 	ERR("Failed to open stdout.txt");
@@ -381,6 +382,7 @@ int32_t main (int32_t argc, char *argv[])
     if (!freopen("stderr.txt", "w", stderr)) {
 	ERR("Failed to open stderr.txt");
     }
+#endif
 #endif
 
     ramdisk_init();
