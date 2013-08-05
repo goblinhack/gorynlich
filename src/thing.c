@@ -1469,18 +1469,18 @@ boolean thing_is_car (thingp t)
     return (thing_template_is_car(thing_get_template(t)));
 }
 
-boolean thing_is_star_green (thingp t)
+boolean thing_is_transparent (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_green(thing_get_template(t)));
+    return (thing_template_is_transparent(thing_get_template(t)));
 }
 
-boolean thing_is_star_cyan (thingp t)
+boolean thing_is_radiant (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_cyan(thing_get_template(t)));
+    return (thing_template_is_radiant(thing_get_template(t)));
 }
 
 boolean thing_is_star_black (thingp t)

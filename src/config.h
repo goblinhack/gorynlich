@@ -4,6 +4,7 @@
  * See the README file.
  */
 
+#define nENABLE_DEV_HACKS           // Remove for final build
 #define nENABLE_PTRCHECK            // Pointer sanity
 #define nENABLE_ASSERT              // DIE on errors
 #define nENABLE_TREE_SANITY         // Slow tree sanity

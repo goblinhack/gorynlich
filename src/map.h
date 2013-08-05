@@ -35,8 +35,8 @@ boolean map_is_star_at(levelp, int32_t x, int32_t y);
 boolean map_is_powerup_spam_at(levelp, int32_t x, int32_t y);
 boolean map_is_rock_0_at(levelp, int32_t x, int32_t y);
 boolean map_is_car_at(levelp, int32_t x, int32_t y);
-boolean map_is_star_green_at(levelp, int32_t x, int32_t y);
-boolean map_is_star_cyan_at(levelp, int32_t x, int32_t y);
+boolean map_is_transparent_at(levelp, int32_t x, int32_t y);
+boolean map_is_radiant_at(levelp, int32_t x, int32_t y);
 boolean map_is_star_black_at(levelp, int32_t x, int32_t y);
 boolean map_is_star_purple_at(levelp, int32_t x, int32_t y);
 boolean map_is_explosion_at(levelp, int32_t x, int32_t y);
@@ -134,8 +134,8 @@ thingp map_thing_is_star_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_powerup_spam_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_rock_0_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_car_at(levelp, int32_t x, int32_t y);
-thingp map_thing_is_star_green_at(levelp, int32_t x, int32_t y);
-thingp map_thing_is_star_cyan_at(levelp, int32_t x, int32_t y);
+thingp map_thing_is_transparent_at(levelp, int32_t x, int32_t y);
+thingp map_thing_is_radiant_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_star_black_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_star_purple_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_explosion_at(levelp, int32_t x, int32_t y);
@@ -213,10 +213,10 @@ tree_rootp map_all_things_is_rock_0(levelp);
 tree_rootp map_all_things_is_rock_0_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_car(levelp);
 tree_rootp map_all_things_is_car_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_green(levelp);
-tree_rootp map_all_things_is_star_green_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_cyan(levelp);
-tree_rootp map_all_things_is_star_cyan_at(levelp, int32_t x, int32_t y);
+tree_rootp map_all_things_is_transparent(levelp);
+tree_rootp map_all_things_is_transparent_at(levelp, int32_t x, int32_t y);
+tree_rootp map_all_things_is_radiant(levelp);
+tree_rootp map_all_things_is_radiant_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_star_black(levelp);
 tree_rootp map_all_things_is_star_black_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_star_purple(levelp);
@@ -281,8 +281,8 @@ uint32_t level_count_is_star(levelp);
 uint32_t level_count_is_powerup_spam(levelp);
 uint32_t level_count_is_rock_0(levelp);
 uint32_t level_count_is_car(levelp);
-uint32_t level_count_is_star_green(levelp);
-uint32_t level_count_is_star_cyan(levelp);
+uint32_t level_count_is_transparent(levelp);
+uint32_t level_count_is_radiant(levelp);
 uint32_t level_count_is_star_black(levelp);
 uint32_t level_count_is_star_purple(levelp);
 uint32_t level_count_is_explosion(levelp);
@@ -512,4 +512,32 @@ static inline uint16_t map_get_unsafe (map_frame_ctx_t *map,
                                        int32_t x, int32_t y, int32_t z)
 {
     return (map->tiles[x][y][z].template_id);
+}
+
+/*
+ * map_get_light
+ */
+static inline uint8_t 
+map_get_light (map_frame_ctx_t *map, int32_t x, int32_t y, int32_t z)
+{
+    if (map_out_of_bounds(x, y, z)) {
+        ERR("out of bounds on get map at %d,%d,%d", x, y, z);
+        return (0);
+    }
+
+    return (map->lit[x][y][z]);
+}
+
+/*
+ * map_get_light
+ */
+static inline void 
+map_set_light (map_frame_ctx_t *map, int32_t x, int32_t y, int32_t z, uint8_t lit)
+{
+    if (map_out_of_bounds(x, y, z)) {
+        ERR("out of bounds on get map at %d,%d,%d", x, y, z);
+        return;
+    }
+
+    map->lit[x][y][z] = lit;
 }

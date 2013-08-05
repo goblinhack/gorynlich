@@ -359,12 +359,12 @@ boolean items_has_car (tree_rootp root)
 
 boolean items_has_star_green (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_green));
+    return (items_has_x(root, thing_template_is_transparent));
 }
 
 boolean items_has_star_cyan (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_cyan));
+    return (items_has_x(root, thing_template_is_radiant));
 }
 
 boolean items_has_star_black (tree_rootp root)
@@ -636,14 +636,14 @@ uint32_t items_count_is_car (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_car));
 }
 
-uint32_t items_count_is_star_green (tree_rootp root)
+uint32_t items_count_is_transparent (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_green));
+    return (items_count_is_x(root, thing_template_is_transparent));
 }
 
-uint32_t items_count_is_star_cyan (tree_rootp root)
+uint32_t items_count_is_radiant (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_cyan));
+    return (items_count_is_x(root, thing_template_is_radiant));
 }
 
 uint32_t items_count_is_star_black (tree_rootp root)
@@ -891,14 +891,14 @@ itemp items_first_is_car (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_car));
 }
 
-itemp items_first_is_star_green (tree_rootp root)
+itemp items_first_is_transparent (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_green));
+    return (items_first_is_x(root, thing_template_is_transparent));
 }
 
-itemp items_first_is_star_cyan (tree_rootp root)
+itemp items_first_is_radiant (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_cyan));
+    return (items_first_is_x(root, thing_template_is_radiant));
 }
 
 itemp items_first_is_star_black (tree_rootp root)
@@ -1161,14 +1161,14 @@ tree_rootp items_find_all_is_car (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_car));
 }
 
-tree_rootp items_find_all_is_star_green (tree_rootp root)
+tree_rootp items_find_all_is_transparent (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_green));
+    return (items_find_all_is_x(root, thing_template_is_transparent));
 }
 
-tree_rootp items_find_all_is_star_cyan (tree_rootp root)
+tree_rootp items_find_all_is_radiant (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_cyan));
+    return (items_find_all_is_x(root, thing_template_is_radiant));
 }
 
 tree_rootp items_find_all_is_star_black (tree_rootp root)

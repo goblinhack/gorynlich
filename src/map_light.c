@@ -18,6 +18,7 @@
 #include "mzip_file.h"
 #include "ramdisk.h"
 #include "string.h"
+#include "thing_template.h"
 
 typedef struct {
     int8_t x;
@@ -253,10 +254,10 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
             fpoint3d p2 = { i->x+1, i->y  , i->z   };
             fpoint3d p3 = { i->x  , i->y+1, i->z   };
 
-            fpoint3d p4 = { i->x  , i->y  , i->z-1 };
-            fpoint3d p5 = { i->x+1, i->y+1, i->z-1 };
-            fpoint3d p6 = { i->x+1, i->y  , i->z-1 };
-            fpoint3d p7 = { i->x  , i->y+1, i->z-1 };
+            fpoint3d p4 = { i->x  , i->y  , i->z+1 };
+            fpoint3d p5 = { i->x+1, i->y+1, i->z+1 };
+            fpoint3d p6 = { i->x+1, i->y  , i->z+1 };
+            fpoint3d p7 = { i->x  , i->y+1, i->z+1 };
 
             fpoint3d intersection;
             float distance;
@@ -451,6 +452,20 @@ map_lightmap (map_frame_ctx_t *map,
             if (!map->tiles[cx][cy][cz].tile) {
                 s++;
                 continue;
+            }
+
+            /*
+             * If this is water or similar let the light pass through.
+             */
+            uint16_t template_id = map_get(map, cx, cy, cz);
+            if (template_id) {
+                thing_templatep t = id_to_thing_template(template_id);
+                if (t) {
+                    if (t->is_transparent) {
+                        s++;
+                        continue;
+                    }
+                }
             }
 
             /*

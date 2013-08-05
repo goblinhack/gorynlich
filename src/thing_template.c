@@ -537,8 +537,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rock_0", t->is_rock_0);
         GET_OPT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_transparent", t->is_transparent);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_radiant", t->is_radiant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
         GET_OPT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
@@ -640,8 +640,8 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
     PUT_NAMED_BITFIELD(ctx, "is_rock_0", t->is_rock_0);
     PUT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
-    PUT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
-    PUT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
+    PUT_NAMED_BITFIELD(ctx, "is_transparent", t->is_transparent);
+    PUT_NAMED_BITFIELD(ctx, "is_radiant", t->is_radiant);
     PUT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
     PUT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
     PUT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
@@ -943,14 +943,14 @@ boolean thing_template_is_car (thing_templatep t)
     return (t->is_car);
 }
 
-boolean thing_template_is_star_green (thing_templatep t)
+boolean thing_template_is_transparent (thing_templatep t)
 {
-    return (t->is_star_green);
+    return (t->is_transparent);
 }
 
-boolean thing_template_is_star_cyan (thing_templatep t)
+boolean thing_template_is_radiant (thing_templatep t)
 {
-    return (t->is_star_cyan);
+    return (t->is_radiant);
 }
 
 boolean thing_template_is_star_black (thing_templatep t)

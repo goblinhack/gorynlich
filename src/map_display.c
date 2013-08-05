@@ -15,6 +15,7 @@
 #include "ttf.h"
 #include "time.h"
 #include "map.h"
+#include "thing_template.h"
 
 /*
  * QUAD per array element.
@@ -211,12 +212,12 @@ map_tile_color (map_frame_ctx_t *map,
         return;
     }
 
-    uint8_t lit = map->lit[x][y][0];
+    uint8_t lit = map_get_light(map, x, y, 0);
 
-    if (lit < 1) {
-        *r = 1.0;
-        *g = 1.0;
-        *b = 1.0;
+    if (lit < 10) {
+        *r = 0.0;
+        *g = 0.0;
+        *b = 0.0;
         *a = 1.0;
     } else {
         float flit = ((float)lit) / 100.0;
@@ -225,6 +226,25 @@ map_tile_color (map_frame_ctx_t *map,
         *g = flit;
         *b = flit;
         *a = 1.0;
+    }
+
+    if (lit > 50) {
+        uint16_t template_id = map_get_unsafe(map, x, y, z);
+        if (template_id) {
+            thing_templatep t = id_to_thing_template(template_id);
+            if (t) {
+                if (t->is_radiant) {
+                    int dx;
+                    int dy;
+
+                    for (dx = -1; dx <= 1; dx++) {
+                        for (dy = -1; dy <= 1; dy++) {
+                            map_set_light(map, x + dx, y + dy, 0, 100);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
