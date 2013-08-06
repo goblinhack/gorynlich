@@ -191,10 +191,10 @@
 # _ _ _
 :is_join_t180_3
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
-|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxx x|x  xx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|
-|xxx x|xx xx|xxxxx|x xxx|xx xx|xxxxx|xxx x|x xxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|
-|x xxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx| xxxx|xxxxx|xx xx|x xxx| xx x|xxxx | xxxx|xxxxx|xx xx| xxxx|
-|xxxxx|xxxxx|xx xx| xxx | xxxx| xxxx| xxx |  x x| x xx|x  xx|  xx |x xx |  x x| xxx | x xx|  x  |
+|xxx x|xx xx|xxxxx|x xxx|xx xx|xxxxx|xxx x|x xxx|xxx x|x  xx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|
+|xx  x|xx xx|xxxxx|x xxx|xx xx|xxxxx|xxx x|x xxx|xxxxx|x xxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|xxxxx|
+|x  xx|xx xx|xxxxx|xxxxx|xxxxx|xxxxx| xx  |x xxx|xx xx|x xxx| xx x|xxxx | xxxx|xxxxx|xx xx| xxxx|
+|x xxx|xx xx|xx xx| xxx | xxxx| xxxx| xxx |  x x| x xx|x  xx|  xx |x xx |  x x| xxx | x xx|  x  |
 | xxx | x x | x x |  x  | xx  |  xx |   x |  x  |    x|    x|     |  x  |  x  |  x  |   x |  x  |
 #-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
 # _ X X
@@ -547,10 +547,10 @@
 :is_join_block
 +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
 |ggggg|ggggg|ggggg|gg gg|ggggg|ggggg|g ggg|ggggg|ggggg|ggggg|gg  g|ggggg|ggggg|g g g|ggggg|ggggg|
-|     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |
-|     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |
-|     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |
-|     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |
+|ggggg|ggggg|ggggg|gg gg|ggggg|ggggg|g ggg|ggggg|ggggg|ggggg|gg  g|ggggg|ggggg|g g g|ggggg|ggggg|
+|ggggg|ggggg|ggggg|gg gg|ggggg|ggggg|g ggg|ggggg|ggggg|ggggg|gg  g|ggggg|ggggg|g g g|ggggg|ggggg|
+|ggggg|ggggg|ggggg|gg gg|ggggg|ggggg|g ggg|ggggg|ggggg|ggggg|gg  g|ggggg|ggggg|g g g|ggggg|ggggg|
+|g   g|gggg |ggg g|gg gg| gg g|gg g |g ggg|ggggg| g  g|gg  g|gg  g| g g |g ggg|g g g|ggg  | g gg|
 #-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
 :mapchar m
 # X X X
