@@ -196,6 +196,9 @@ gl_push (float **p,
     last_bottom = bottom;
 }
 
+/*
+ * Color a tile for lighting.
+ */
 static void
 map_tile_color (map_frame_ctx_t *map,
                 int32_t x, int32_t y, int32_t z,
@@ -226,25 +229,6 @@ map_tile_color (map_frame_ctx_t *map,
         *g = flit;
         *b = flit;
         *a = 1.0;
-    }
-
-    if (lit > 50) {
-        uint16_t template_id = map_get_unsafe(map, x, y, z);
-        if (template_id) {
-            thing_templatep t = id_to_thing_template(template_id);
-            if (t) {
-                if (t->is_radiant) {
-                    int dx;
-                    int dy;
-
-                    for (dx = -1; dx <= 1; dx++) {
-                        for (dy = -1; dy <= 1; dy++) {
-                            map_set_light(map, x + dx, y + dy, 0, 100);
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -281,13 +265,11 @@ static void map_display_ (map_frame_ctx_t *map)
     GLfloat tex_top;
     GLfloat tex_bottom;
 
-    int16_t depth = 1;
-
     /*
      * Screen size.
      */
     uint16_t width = global_config.video_pix_width;
-    uint16_t height = global_config.video_pix_height + depth * TILE_HEIGHT;
+    uint16_t height = global_config.video_pix_height + MAP_DEPTH * TILE_HEIGHT;
 
     /*
      * Temps
@@ -323,7 +305,7 @@ static void map_display_ (map_frame_ctx_t *map)
         /*
          * From bottom to top.
          */
-        for (z = 0; z < depth; z++) {
+        for (z = 0; z < MAP_DEPTH; z++) {
             /*
              * First pass, bottom half of tile, i.e. fake vertical tile
              * Second pass, top half of tile, top flat file

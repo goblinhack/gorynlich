@@ -430,7 +430,7 @@ map_lightmap (map_frame_ctx_t *map,
          * Add up the shadows from all obstacles.
          */
         float total_shadow = 0.0;
-        float max_shadow = 5.00;
+        float max_shadow = LIGHT_RAY_LENGTH_PERMEATE;
 
         while (s < map_light_shadows_end) {
             /*
@@ -484,10 +484,11 @@ map_lightmap (map_frame_ctx_t *map,
         if (total_shadow > max_shadow) {
             lit = 0.0;
 
-            map->lit[x][y][z] = 0;
+//            map->lit[x][y][z] = 0;
         } else {
             lit = (max_shadow - total_shadow) / max_shadow;
 
+#if 0
             /*
              * Make the light fade away at the edges.
              */
@@ -500,8 +501,88 @@ map_lightmap (map_frame_ctx_t *map,
                     lit = 0.0;
                 }
             }
+#endif
 
-            map->lit[x][y][z] = (100.0 * lit);
+            map->lit[x][y][z] = min(100.0, (100.0 * lit) + map->lit[x][y][z]);
+        }
+    }
+}
+
+/*
+ * map_light_radiant_color
+ */
+static void
+map_light_radiant_color (map_frame_ctx_t *map,
+                         int32_t x, int32_t y, int32_t z)
+{
+    if (map_out_of_bounds(x, y, z)) {
+        return;
+    }
+
+    uint8_t lit = map_get_light(map, x, y, z);
+
+    /*
+     * Only light up radiant light if some other light source touches it.
+     * Else we can see lava from a distance and be fore warned.
+     */
+    if (lit < 50) {
+        return;
+    }
+
+    uint16_t template_id = map_get_unsafe(map, x, y, z);
+    if (!template_id) {
+        return;
+    }
+
+    thing_templatep t = id_to_thing_template(template_id);
+    if (!t) {
+        return;
+    }
+
+    if (!t->is_radiant) {
+        return;
+    }
+
+    /*
+     * Only light up the surface of a radiant object. Else it is too
+     * many light sources.
+     */
+    if (map_get(map, x, y-1, z)) {
+        return;
+    }
+
+    map_lightmap(map_ctx, x, y, z, 5, false);
+}
+
+/*
+ * Handle tiles that glow.
+ */
+void 
+map_light_radiant (map_frame_ctx_t *map,
+                   int32_t lx,
+                   int32_t ly,
+                   int32_t lz)
+{
+    /*
+     * Screen size.
+     */
+    uint16_t width = global_config.video_pix_width;
+    uint16_t height = global_config.video_pix_height + MAP_DEPTH * TILE_HEIGHT;
+
+    uint16_t x;
+    uint16_t y;
+    uint16_t cx_start = map->px / TILE_WIDTH;
+    uint16_t cx;
+    uint16_t cy = map->py / TILE_HEIGHT;
+
+    cy = map->py / TILE_HEIGHT;
+
+    for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
+        cx = cx_start;
+
+        for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
+
+            map_light_radiant_color(map, cx, cy, 0);
         }
     }
 }
