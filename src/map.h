@@ -411,6 +411,11 @@ void map_lightmap(map_frame_ctx_t *map,
                   int32_t strength,
                   boolean first_light);
 
+void map_light_radiant(map_frame_ctx_t *map,
+                       int32_t lx,
+                       int32_t ly,
+                       int32_t lz);
+
 uint16_t map_set(map_frame_ctx_t *map,
                  int32_t x, int32_t y, int32_t z,
                  uint16_t thing_template);

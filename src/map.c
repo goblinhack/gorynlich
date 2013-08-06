@@ -142,6 +142,11 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
                  0,
                  DEFAULT_LIGHT_RAY_LENGTH,
                  true);
+
+    map_light_radiant(map_ctx,
+                      map_ctx->lx / TILE_WIDTH,
+                      map_ctx->ly / TILE_HEIGHT,
+                      0);
 }
 
 static boolean map_is_x_at (levelp level,
