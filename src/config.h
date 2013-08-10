@@ -30,7 +30,7 @@
 #define nENABLE_GEN_LIGHT_MAP_FILE      // Recreate the raytrace light map file
 #define DEFAULT_LIGHT_RAY_LENGTH    35  // how far we can cast light
 #define LIGHT_RAY_LENGTH_FULLSCREEN 35  // how big you need to fill the screen
-#define LIGHT_RAY_LENGTH_PERMEATE   4   // how much rock, light can radiate through
+#define LIGHT_RAY_LENGTH_PERMEATE   3   // how much rock, light can radiate through
 
 /*
  * Map size is 2^MAP_WIDTH_LOG. So MAP_WIDTH_LOG 8 is 256, 10 is 1024
