@@ -364,8 +364,8 @@ typedef struct {
     /*
      * How many tiles across and down.
      */
-    uint32_t tex_tiles_width;
-    uint32_t tex_tiles_height;
+    uint32_t tex_tiles_across;
+    uint32_t tex_tiles_down;
 
     /*
      * And the float size of that tile in the parent tex.
