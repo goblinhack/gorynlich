@@ -42,79 +42,51 @@ void map_combine (map_frame_ctx_t *map)
  */
 void map_init_tiles (map_frame_ctx_t *map)
 {
-#if 0
+    uint16_t t;
+
     int32_t z;
 
-    for (z = 0; z < 1; z++) {
-        srand(10);
-
-        cave_gen(map, ROCK_0,
-                 z, /* z */
+#if 0
+        cave_gen(map, ROCK_0_ID,
+                 0, /* z */
                  40, /* fill prob */
                  5,  /* R1 */
                  2,  /* R2 */
-                 10 + z   /* generations */);
-    }
+                 10   /* generations */);
+#endif
 
+#if 0
     memcpy(map->tiles_copy, map->tiles, sizeof(map->tiles));
     memset(map->tiles, 0, sizeof(map->tiles));
 
-    fractal_gen(map, 200.5, 0.3, ROCK_0, BRICK_0);
+    fractal_gen(map, 200.5, 0.3, ROCK_0_ID, BRICK_0_ID);
 
     map_combine(map);
-//    fractal_gen(map, 20.5, 0.85, ROCK_0, BRICK_0);
+    fractal_gen(map, 20.5, 0.85, ROCK_0_ID, BRICK_0_ID);
 #endif
 
 #if 0
     int32_t z;
-    int32_t gen;
-    uint16_t t;
 
-    for (z = 0; z < 10; z++) {
+t = ROCK_1_ID;
 
-        switch (z) {
-        case 0: gen = 5; t = LAVA_0_ID; break;
-        case 1: gen = 1; t = BRICK_0_ID; break;
-        case 2: gen = 1; t = BRICK_0_ID; break;
-        case 3: gen = 1; t = BRICK_0_ID; break;
-        case 4: gen = 1; t = BRICK_0_ID; break;
-        case 5: gen = 1; t = BRICK_0_ID; break;
-        case 6: gen = 1; t = BRICK_0_ID; break;
-        case 7: gen = 1; t = BRICK_0_ID; break;
-        case 8: gen = 1; t = BRICK_0_ID; break;
-        case 9: gen = 0; t = ROCK_0_ID; break;
-        default: DIE("bug");
-        }
-
-        srand(10);
         cave_gen(map, t,
-                 z, /* z */
+                 0, /* z */
                  30, /* fill prob */
                  5,  /* R1 */
                  2,  /* R2 */
-                 gen  /* generations */);
-    }
+                 10  /* generations */);
 
     memcpy(map->tiles_copy, map->tiles, sizeof(map->tiles));
 
     memset(map->tiles, 0, sizeof(map->tiles));
-
-    cave_gen(map, 
-             BRICK_0_ID,
-             0, /* z */
-             100, /* fill prob */
-             5,  /* R1 */
-             2,  /* R2 */
-             3  /* generations */);
 
     map_combine(map);
 #endif
 
     int32_t x;
     int32_t y;
-    int32_t z;
     uint8_t c;
-    uint16_t t;
 
     for (x = 0; x < MAP_JIGSAW_BUFFER2_WIDTH; x++) {
         for (y = 0; y < MAP_JIGSAW_BUFFER2_HEIGHT; y++) {
@@ -151,6 +123,19 @@ void map_init_tiles (map_frame_ctx_t *map)
                     map_set(map, mx, my, z, t);
                 }
             }
+        }
+    }
+
+    int d;
+    for (d = 0; d < 10; d++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            map_set(map, x, d, 0, ROCK_1_ID);
+            map_set(map, x, MAP_HEIGHT - d - 1, 0, ROCK_1_ID);
+        }
+
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            map_set(map, d, y, 0, ROCK_1_ID);
+            map_set(map, MAP_WIDTH - d - 1, y, 0, ROCK_1_ID);
         }
     }
     

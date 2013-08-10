@@ -81,7 +81,7 @@ static void map_init_bounds (map_frame_ctx_t *map,
     map->map_height = map_height;
 
     map->tiles_per_screen_x = width / TILE_SCREEN_WIDTH;
-    map->tiles_per_screen_y = height / TILE_SCREEN_HEIGHT;
+    map->tiles_per_screen_y = height / (TILE_SCREEN_HEIGHT / 2);
 
     /*
      * Absolute map bounds.
@@ -115,11 +115,14 @@ static void map_init_bounds (map_frame_ctx_t *map,
  */
 void map_move_delta_pixels (int32_t dx, int32_t dy)
 {
+    uint32_t lx;
+    uint32_t ly;
+
     if (map_ctx->px + dx < map_ctx->min_px) {
         dx = 0;
     }
 
-    if (map_ctx->px + dx > map_ctx->max_px) {
+    if (map_ctx->px + dx >= map_ctx->max_px - 1) {
         dx = 0;
     }
 
@@ -127,26 +130,32 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
         dy = 0;
     }
 
-    if (map_ctx->py + dy > map_ctx->max_py) {
+    if (map_ctx->py + dy >= map_ctx->max_py - 1) {
         dy = 0;
     }
 
     map_ctx->px += dx;
     map_ctx->py += dy;
+
+    lx = map_ctx->lx / TILE_SCREEN_WIDTH;
+    ly = map_ctx->ly / TILE_SCREEN_HEIGHT;
+
+map_set(map_ctx, lx, ly, 0, 0);
+
     map_ctx->lx += dx;
     map_ctx->ly += dy;
 
-    map_lightmap(map_ctx,
-                 map_ctx->lx / TILE_SCREEN_WIDTH,
-                 map_ctx->ly / TILE_SCREEN_HEIGHT,
-                 0,
+    lx = map_ctx->lx / TILE_SCREEN_WIDTH;
+    ly = map_ctx->ly / TILE_SCREEN_HEIGHT;
+
+map_set(map_ctx, lx, ly, 0, 0);
+
+    map_lightmap(map_ctx, lx, ly, 0,
                  DEFAULT_LIGHT_RAY_LENGTH,
                  true);
 
-    map_light_radiant(map_ctx,
-                      map_ctx->lx / TILE_SCREEN_WIDTH,
-                      map_ctx->ly / TILE_SCREEN_HEIGHT,
-                      0);
+    map_light_radiant(map_ctx, lx, ly, 0);
+map_set(map_ctx, lx, ly, 0, WATER_0_ID);
 }
 
 static boolean map_is_x_at (levelp level,
