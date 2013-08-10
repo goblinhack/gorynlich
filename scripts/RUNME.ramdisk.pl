@@ -49,6 +49,8 @@ foreach $f (@files) {
     my $size = $sizes{$f};
     my $orig_size = $orig_sizes{$f};
 
+    print "Generating src/asm/ramdisk_" . $struct . ".S\n";
+
     open(OUT, ">", "src/asm/ramdisk_" . $struct . ".S");
     print OUT ".globl ${struct}_start_\n";
     print OUT "${struct}_start_:\n";
