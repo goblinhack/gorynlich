@@ -41,8 +41,8 @@ boolean map_init (void)
 
     map_fixup(map_ctx);
 
-    map_ctx->lx = (MAP_WIDTH / 2) * TILE_WIDTH;
-    map_ctx->ly = (MAP_HEIGHT / 2) * TILE_HEIGHT;
+    map_ctx->lx = (MAP_WIDTH / 2) * TILE_SCREEN_WIDTH;
+    map_ctx->ly = (MAP_HEIGHT / 2) * TILE_SCREEN_HEIGHT;
     map_ctx->lz = 1;
 
     map_move_delta_pixels(0, 0);
@@ -80,8 +80,8 @@ static void map_init_bounds (map_frame_ctx_t *map,
     map->map_width = map_width;
     map->map_height = map_height;
 
-    map->tiles_per_screen_x = width / TILE_WIDTH;
-    map->tiles_per_screen_y = height / TILE_WIDTH;
+    map->tiles_per_screen_x = width / TILE_SCREEN_WIDTH;
+    map->tiles_per_screen_y = height / TILE_SCREEN_HEIGHT;
 
     /*
      * Absolute map bounds.
@@ -91,21 +91,21 @@ static void map_init_bounds (map_frame_ctx_t *map,
     map->min_py = 0;
     map->max_py = map->map_height - map->tiles_per_screen_y;
 
-    map->min_px *= TILE_WIDTH;
-    map->max_px *= TILE_WIDTH;
-    map->min_py *= TILE_HEIGHT;
-    map->max_py *= TILE_HEIGHT;
+    map->min_px *= TILE_SCREEN_WIDTH;
+    map->max_px *= TILE_SCREEN_WIDTH;
+    map->min_py *= TILE_SCREEN_HEIGHT;
+    map->max_py *= TILE_SCREEN_HEIGHT;
 
     /*
      * Where we start off on the map.
      */
     map->px = map->map_width / 2;
     map->px -= map->tiles_per_screen_x / 2;
-    map->px *= TILE_WIDTH;
+    map->px *= TILE_SCREEN_WIDTH;
 
     map->py = map->map_height / 2;
     map->py -= map->tiles_per_screen_y / 2;
-    map->py *= TILE_HEIGHT;
+    map->py *= TILE_SCREEN_HEIGHT;
 }
 
 /*
@@ -137,15 +137,15 @@ void map_move_delta_pixels (int32_t dx, int32_t dy)
     map_ctx->ly += dy;
 
     map_lightmap(map_ctx,
-                 map_ctx->lx / TILE_WIDTH,
-                 map_ctx->ly / TILE_HEIGHT,
+                 map_ctx->lx / TILE_SCREEN_WIDTH,
+                 map_ctx->ly / TILE_SCREEN_HEIGHT,
                  0,
                  DEFAULT_LIGHT_RAY_LENGTH,
                  true);
 
     map_light_radiant(map_ctx,
-                      map_ctx->lx / TILE_WIDTH,
-                      map_ctx->ly / TILE_HEIGHT,
+                      map_ctx->lx / TILE_SCREEN_WIDTH,
+                      map_ctx->ly / TILE_SCREEN_HEIGHT,
                       0);
 }
 

@@ -157,7 +157,7 @@ static boolean resource_init_21 (void *context)
 {
     return (tex_load_tiled("data/gfx/sprites_small.png",
                            "sprites_small",
-                           8, 8) != 0);
+                           TILE_WIDTH, TILE_HEIGHT) != 0);
 }
 
 static boolean resource_init_22 (void *context)
@@ -1016,7 +1016,7 @@ static boolean resource_init_23 (void *context)
         // ----------------------------------------------------------------
     };
 
-    tile_load_arr("sprites_small", 8, 16,
+    tile_load_arr("sprites_small", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(small_tiles), small_tiles);
 
     BRICK_0 = thing_template_load("data/things/brick_0");

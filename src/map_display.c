@@ -61,8 +61,8 @@ map_tile_to_tex_coords (map_frame_ctx_t *map,
                         GLfloat *tex_top,
                         GLfloat *tex_bottom)
 {
-    const uint16_t tx = tile % map->tex_tiles_width; 
-    const uint16_t ty = tile / map->tex_tiles_height; 
+    const uint16_t tx = tile % map->tex_tiles_across; 
+    const uint16_t ty = tile / map->tex_tiles_across;
 
     *tex_left   = map->tex_float_width * tx;
     *tex_right  = *tex_left + map->tex_float_width;
@@ -116,12 +116,12 @@ void map_display_init (map_frame_ctx_t *map)
         map->tex_tile_width = tex_get_tile_width(map->tex);
         map->tex_tile_height = tex_get_tile_height(map->tex);
 
-        map->tex_tiles_width = tex_get_tiles_width(map->tex);
-        map->tex_tiles_height = tex_get_tiles_height(map->tex);
+        map->tex_tiles_across = tex_get_tiles_width(map->tex);
+        map->tex_tiles_down = tex_get_tiles_height(map->tex);
 
         map->tex_float_width  =
                         (1.0 / (float)map->tex_width) * map->tex_tile_width;
-        map->tex_float_height = 2 *
+        map->tex_float_height =
                         (1.0 / (float)map->tex_height) * map->tex_tile_height;
     }
 }
@@ -269,7 +269,7 @@ static void map_display_ (map_frame_ctx_t *map)
      * Screen size.
      */
     uint16_t width = global_config.video_pix_width;
-    uint16_t height = global_config.video_pix_height + MAP_DEPTH * TILE_HEIGHT;
+    uint16_t height = global_config.video_pix_height + TILE_SCREEN_HEIGHT;
 
     /*
      * Temps
@@ -286,11 +286,10 @@ static void map_display_ (map_frame_ctx_t *map)
     bufp = map->gl_array_buf;
     bufp_end = map->gl_array_buf_end;
 
-    uint16_t cx_start = map->px / TILE_WIDTH;
+    uint16_t cx_start = map->px / TILE_SCREEN_WIDTH;
     uint16_t cx;
     int16_t z;
-    uint8_t pass;
-    uint16_t cy = map->py / TILE_HEIGHT;
+    uint16_t cy = map->py / TILE_SCREEN_HEIGHT;
     uint16_t scy = cy;
     uint16_t tile;
     boolean first = true;
@@ -299,118 +298,83 @@ static void map_display_ (map_frame_ctx_t *map)
     float r3, g3, b3, a3;
     float r4, g4, b4, a4;
 
-    cy = map->py / TILE_HEIGHT;
+    cy = map->py / TILE_SCREEN_HEIGHT;
 
-    for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
+    for (y = 0; y <= height; y += (TILE_SCREEN_HEIGHT / 2), cy++) {
         /*
          * From bottom to top.
          */
-        for (z = 0; z < MAP_DEPTH; z++) {
-            /*
-             * First pass, bottom half of tile, i.e. fake vertical tile
-             * Second pass, top half of tile, top flat file
-             */
-            for (pass = 0; pass < 2; pass++) {
-                /*
-                 * Smooth horiz scroll offset.
-                 */
-                top = TILE_HEIGHT - (map->py % TILE_HEIGHT);
-                top -= TILE_HEIGHT;
-                top += TILE_HEIGHT * (cy - scy);
-                top -= (TILE_HEIGHT * z);
 
-                if (pass == 0) {
-                    top += TILE_HEIGHT;
-                }
+        /*
+         * Smooth horiz scroll offset.
+         */
+        top = TILE_SCREEN_HEIGHT - (map->py % TILE_SCREEN_HEIGHT / 2);
+        top -= TILE_SCREEN_HEIGHT;
+        top += (TILE_SCREEN_HEIGHT / 2) * (cy - scy);
+        top -= (TILE_SCREEN_HEIGHT * z);
 
-                bottom = top + TILE_HEIGHT;
+        bottom = top + TILE_SCREEN_HEIGHT;
 
-                cx = cx_start;
+        cx = cx_start;
 
-                //
-                // z = 0 here, faking the depth
-                //
-                map_tile = &map->tiles[cx][cy][0];
-                tile = map_tile->tile;
+        //
+        // z = 0 here, faking the depth
+        //
+        map_tile = &map->tiles[cx][cy][0];
+        tile = map_tile->tile;
 
-                /*
-                 * Smooth vert scroll offset.
-                 */
-                left = TILE_WIDTH - (map->px % TILE_WIDTH);
-                left -= TILE_WIDTH;
+        /*
+         * Smooth vert scroll offset.
+         */
+        left = TILE_SCREEN_WIDTH - (map->px % TILE_SCREEN_WIDTH);
+        left -= TILE_SCREEN_WIDTH;
 
-                /*
-                 * Draw entire row.
-                 */
-                for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
+        /*
+         * Draw entire row.
+         */
+        for (x = 0; x <= width; x += TILE_SCREEN_WIDTH, cx++) {
 
-                    //
-                    // z = 0 here, faking the depth
-                    //
-                    map_tile = &map->tiles[cx][cy][0];
-                    tile = map_tile->tile;
-                    if (tile) {
-                        right = left + TILE_WIDTH;
+            //
+            // z = 0 here, faking the depth
+            //
+            map_tile = &map->tiles[cx][cy][0];
+            tile = map_tile->tile;
+            if (tile) {
+                right = left + TILE_SCREEN_WIDTH;
 
-                        map_tile_to_tex_coords(map, tile,
-                                               &tex_left,
-                                               &tex_right,
-                                               &tex_top,
-                                               &tex_bottom);
+                map_tile_to_tex_coords(map, tile,
+                                        &tex_left,
+                                        &tex_right,
+                                        &tex_top,
+                                        &tex_bottom);
 
+                /* top left */
+                map_tile_color(map, cx,   cy,   z, &r1,&g1,&b1,&a1);
+                /* bottom left */
+                map_tile_color(map, cx,   cy+1, z, &r2,&g2,&b2,&a2);
+                /* top right */
+                map_tile_color(map, cx+1, cy,   z, &r3,&g3,&b3,&a3);
+                /* bottom right */
+                map_tile_color(map, cx+1, cy+1, z, &r4,&g4,&b4,&a4);
 
-                        float tex_height = tex_bottom - tex_top;
-
-                        if (pass == 0) {
-                            /*
-                             * bottom half of tile, i.e. fake vertical tile
-                             */
-                            tex_top = tex_top + (tex_height / 2.0);
-
-                            /* top left */
-                            map_tile_color(map, cx,   cy+1,z,  &r1,&g1,&b1,&a1);
-                            /* bottom left */
-                            map_tile_color(map, cx,   cy+1,z-1,&r2,&g2,&b2,&a2);
-                            /* top right */
-                            map_tile_color(map, cx+1, cy+1,z,  &r3,&g3,&b3,&a3);
-                            /* bottom right */
-                            map_tile_color(map, cx+1, cy+1,z-1,&r4,&g4,&b4,&a4);
-                        } else {
-                            /*
-                             * top half of tile, top flat file
-                             */
-                            tex_bottom = tex_top+(tex_height / 2.0);
-
-                            /* top left */
-                            map_tile_color(map, cx,   cy,   z, &r1,&g1,&b1,&a1);
-                            /* bottom left */
-                            map_tile_color(map, cx,   cy+1, z, &r2,&g2,&b2,&a2);
-                            /* top right */
-                            map_tile_color(map, cx+1, cy,   z, &r3,&g3,&b3,&a3);
-                            /* bottom right */
-                            map_tile_color(map, cx+1, cy+1, z, &r4,&g4,&b4,&a4);
-                        }
-
-                        gl_push(&bufp, 
-                                bufp_end,
-                                &first,
-                                tex_left,
-                                tex_top,
-                                tex_right,
-                                tex_bottom,
-                                left,
-                                top,
-                                right,
-                                bottom,
-                                r1, g1, b1, a1,  /* top left */
-                                r2, g2, b2, a2,  /* bottom left */
-                                r3, g3, b3, a3,  /* top right */
-                                r4, g4, b4, a4); /* bottom right */
-                    }
-
-                    left += TILE_WIDTH;
-                }
+                gl_push(&bufp, 
+                        bufp_end,
+                        &first,
+                        tex_left,
+                        tex_top,
+                        tex_right,
+                        tex_bottom,
+                        left,
+                        top,
+                        right,
+                        bottom,
+                        r1, g1, b1, a1,  /* top left */
+                        r2, g2, b2, a2,  /* bottom left */
+                        r3, g3, b3, a3,  /* top right */
+                        r4, g4, b4, a4); /* bottom right */
             }
+
+            left += TILE_SCREEN_WIDTH;
         }
     }
 
@@ -474,10 +438,10 @@ map_display_debug (map_frame_ctx_t *map, uint32_t x, uint32_t y)
     static char text[40] = {0};
 
     snprintf(text, sizeof(text), "(%d,%d) .. (%d,%d)",
-             map->px / TILE_WIDTH,
-             map->py / TILE_HEIGHT,
-             (map->px / TILE_WIDTH) + map->tiles_per_screen_x,
-             (map->py / TILE_HEIGHT) + map->tiles_per_screen_y);
+             map->px / TILE_SCREEN_WIDTH,
+             map->py / TILE_SCREEN_HEIGHT,
+             (map->px / TILE_SCREEN_WIDTH) + map->tiles_per_screen_x,
+             (map->py / TILE_SCREEN_HEIGHT) + map->tiles_per_screen_y);
 
     glcolor(RED);
 
@@ -502,10 +466,10 @@ map_display_debug (map_frame_ctx_t *map, uint32_t x, uint32_t y)
     glcolor(c);
     gl_blitquad(x1,y1,x2,y2);
 
-    x1 = map->px / TILE_WIDTH;
+    x1 = map->px / TILE_SCREEN_WIDTH;
     x2 = x1 + map->tiles_per_screen_x;
 
-    y1 = map->py / TILE_HEIGHT;
+    y1 = map->py / TILE_SCREEN_HEIGHT;
     y2 = y1 + map->tiles_per_screen_y;
 
     x1 /= map_scale;

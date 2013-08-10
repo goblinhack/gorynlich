@@ -567,20 +567,21 @@ map_light_radiant (map_frame_ctx_t *map,
      * Screen size.
      */
     uint16_t width = global_config.video_pix_width;
-    uint16_t height = global_config.video_pix_height + MAP_DEPTH * TILE_HEIGHT;
+    uint16_t height = global_config.video_pix_height +
+        MAP_DEPTH * TILE_SCREEN_HEIGHT;
 
     uint16_t x;
     uint16_t y;
-    uint16_t cx_start = map->px / TILE_WIDTH;
+    uint16_t cx_start = map->px / TILE_SCREEN_WIDTH;
     uint16_t cx;
-    uint16_t cy = map->py / TILE_HEIGHT;
+    uint16_t cy = map->py / TILE_SCREEN_HEIGHT;
 
-    cy = map->py / TILE_HEIGHT;
+    cy = map->py / TILE_SCREEN_HEIGHT;
 
-    for (y = 0; y <= height; y += TILE_HEIGHT, cy++) {
+    for (y = 0; y <= height; y += TILE_SCREEN_HEIGHT, cy++) {
         cx = cx_start;
 
-        for (x = 0; x <= width; x += TILE_WIDTH, cx++) {
+        for (x = 0; x <= width; x += TILE_SCREEN_WIDTH, cx++) {
 
             map_light_radiant_color(map, cx, cy, 0);
         }
