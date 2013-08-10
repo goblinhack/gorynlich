@@ -51,6 +51,7 @@ then
     log_die "Failed to build list of ramdisk files"
 fi
 
+mkdir src/asm
 scripts/RUNME.ramdisk.pl $RAMDISK_FILES
 
 /bin/rm -f $RAMDISK_FILES
