@@ -44,9 +44,8 @@
  */
 #define TILE_WIDTH                      8
 #define TILE_HEIGHT                     16
-#define TILE_SCALE                      4
-#define TILE_SCREEN_WIDTH               (TILE_SCALE * TILE_WIDTH)
-#define TILE_SCREEN_HEIGHT              (TILE_SCALE * TILE_HEIGHT)
+#define TILE_SCREEN_WIDTH               (DEFAULT_TILE_ZOOM * TILE_WIDTH)
+#define TILE_SCREEN_HEIGHT              (DEFAULT_TILE_ZOOM * TILE_HEIGHT)
 
 /*
  * Misc
