@@ -13,6 +13,9 @@
 #include "thing_template.h"
 #include "init_fn.h"
 
+thing_templatep PLAYER_0;
+uint16_t PLAYER_0_ID;
+
 thing_templatep BRICK_0;
 uint16_t BRICK_0_ID;
 
@@ -2187,6 +2190,9 @@ static boolean resource_init_23 (void *context)
 
     tile_load_arr("sprites_small", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(small_tiles), small_tiles);
+
+    PLAYER_0 = thing_template_load("data/things/player_0");
+    PLAYER_0_ID = thing_template_to_id(PLAYER_0);
 
     BRICK_0 = thing_template_load("data/things/brick_0");
     BRICK_0_ID = thing_template_to_id(BRICK_0);
