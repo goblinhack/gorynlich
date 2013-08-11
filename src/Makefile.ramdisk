@@ -133,6 +133,9 @@
 .o/ramdisk_data_things_lava_0.o: asm/ramdisk_data_things_lava_0.S ../data/things/lava_0
 	gcc -c asm/ramdisk_data_things_lava_0.S -o .o/ramdisk_data_things_lava_0.o
 
+.o/ramdisk_data_things_player.o: asm/ramdisk_data_things_player.S ../data/things/player
+	gcc -c asm/ramdisk_data_things_player.S -o .o/ramdisk_data_things_player.o
+
 .o/ramdisk_data_things_rock_0.o: asm/ramdisk_data_things_rock_0.S ../data/things/rock_0
 	gcc -c asm/ramdisk_data_things_rock_0.S -o .o/ramdisk_data_things_rock_0.o
 

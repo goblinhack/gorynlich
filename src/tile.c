@@ -150,7 +150,7 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
             t->x2 = t->x1 + fw;
             t->y2 = t->y1 + fh;
 
-            LOG("Tile: %-10s %ux%u (%u, %u)", name, width, height, x, y);
+            DBG("Tile: %-10s %ux%u (%u, %u)", name, width, height, x, y);
         }
 
         x++;
