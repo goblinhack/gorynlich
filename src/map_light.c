@@ -430,7 +430,7 @@ map_lightmap (map_frame_ctx_t *map,
          * Add up the shadows from all obstacles.
          */
         float total_shadow = 0.0;
-        float max_shadow = LIGHT_RAY_LENGTH_PERMEATE;
+        float max_shadow = DEFAULT_LIGHT_PENETRATE;
 
         while (s < map_light_shadows_end) {
             /*
