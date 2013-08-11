@@ -386,6 +386,9 @@ typedef struct {
 /*
  * resource.c
  */
+extern thing_templatep PLAYER_0;
+extern uint16_t PLAYER_0_ID;
+
 extern thing_templatep BRICK_0;
 extern uint16_t BRICK_0_ID;
 

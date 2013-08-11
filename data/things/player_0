@@ -1,5 +1,5 @@
 {
- shortname="player"
+ shortname="player_0"
  tooltip="Our hero!"
  speed=500
  is_player

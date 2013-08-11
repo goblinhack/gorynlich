@@ -155,7 +155,7 @@ map_set(map_ctx, lx, ly, 0, 0);
                  true);
 
     map_light_radiant(map_ctx, lx, ly, 0);
-map_set(map_ctx, lx, ly, 0, WATER_0_ID);
+map_set(map_ctx, lx, ly, 0, PLAYER_0_ID);
 }
 
 static boolean map_is_x_at (levelp level,
