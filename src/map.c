@@ -148,8 +148,6 @@ map_set(map_ctx, lx, ly, 0, 0);
     lx = map_ctx->lx / TILE_SCREEN_WIDTH;
     ly = map_ctx->ly / TILE_SCREEN_HEIGHT;
 
-map_set(map_ctx, lx, ly, 0, 0);
-
     map_lightmap(map_ctx, lx, ly, 0,
                  DEFAULT_LIGHT_RAY_LENGTH,
                  true);

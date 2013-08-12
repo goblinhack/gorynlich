@@ -83,9 +83,6 @@ boolean ttf_init (void)
     ttf2tga();
 
     ttf_init_done = true;
-#ifdef ENABLE_GENERATE_TTF
-    exit(0);
-#endif
 
     return (true);
 }
@@ -865,17 +862,17 @@ void ttf2tga (void)
      */
     small_font  = ttf_write_tga((char*)
                                 strprepend(mybasename(SMALL_FONT, __FUNCTION__),
-                                                  TTF_PATH),
+                                           TTF_PATH),
                                 SMALL_FONT_SIZE);
 
     med_font    = ttf_write_tga((char*)
                                 strprepend(mybasename(MED_FONT, __FUNCTION__),
-                                                  TTF_PATH),
+                                           TTF_PATH),
                                 MED_FONT_SIZE);
 
     large_font  = ttf_write_tga((char*)
                                 strprepend(mybasename(LARGE_FONT, __FUNCTION__),
-                                                  TTF_PATH),
+                                           TTF_PATH),
                                 LARGE_FONT_SIZE);
 #endif
 }
