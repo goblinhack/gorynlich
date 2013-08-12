@@ -8,23 +8,6 @@
 #include "config.h"
 
 /*
- * Console
- */
-#define CONSOLE_CURSOR_COLOR            ORANGE
-#define CONSOLE_TEXT_COLOR              GREEN
-#define CONSOLE_HEIGHT                  100
-
-/*
- * Fonts
- */
-#define SMALL_FONT                      "data/ttf/small.ttf"
-#define SMALL_FONT_SIZE                 20
-#define MED_FONT                        "data/ttf/med.ttf"
-#define MED_FONT_SIZE                   30
-#define LARGE_FONT                      "data/ttf/large.ttf"
-#define LARGE_FONT_SIZE                 40
-
-/*
  * Tiles
  */
 #define TILES_MAP_WIDTH                 32
