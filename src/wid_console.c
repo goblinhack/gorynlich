@@ -180,6 +180,8 @@ static boolean wid_console_receive_input (widp w, const SDL_keysym *key)
  */
 static void wid_console_wid_create (void)
 {
+    fontp font = small_font;
+
     {
         fpoint tl = {0.0f, 0.0f};
         fpoint br = {1.0f, 0.5f};
@@ -201,7 +203,7 @@ static void wid_console_wid_create (void)
         wid_set_color(wid_console_window, WID_COLOR_BR, c);
         wid_set_color(wid_console_window, WID_COLOR_TEXT,
                          CONSOLE_CURSOR_COLOR);
-        wid_set_font(wid_console_window, small_font);
+        wid_set_font(wid_console_window, font);
         wid_set_name(wid_console_window, "wid_console window");
 
         wid_set_text_bot(wid_console_window, true);
@@ -233,7 +235,7 @@ static void wid_console_wid_create (void)
         uint32_t w;
         uint32_t h;
 
-        ttf_text_size(small_font,
+        ttf_text_size(font,
                       "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                       &w, &h, 0, 1.0f, 1.0f,
                       true /* fixed width */);
@@ -274,6 +276,7 @@ static void wid_console_wid_create (void)
             wid_set_text_lhs(child, true);
             wid_set_text_bot(child, true);
             wid_set_text_fixed_width(child, true);
+            wid_set_font(child, font);
 
             wid_set_prev(child, prev);
             prev = child;
