@@ -12,7 +12,6 @@
 #include "color.h"
 #include "wid_intro.h"
 #include "wid_popup.h"
-#include "wid_editor.h"
 #include "wid_game_map.h"
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
@@ -28,7 +27,6 @@ static widp wid_intro;
 static widp wid_intro_bg_gorynlich;
 
 static boolean wid_intro_quit_selected(void);
-static void wid_intro_editor_selected(void);
 static void wid_intro_play_selected(void);
 static void wid_intro_about_selected(void);
 static void wid_intro_settings_selected(void);
@@ -166,10 +164,6 @@ static boolean wid_intro_key_event (widp w, const SDL_keysym *key)
 
         case 'c':
             wid_intro_hiscore_selected();
-            return (true);
-
-        case 'e':
-            wid_intro_editor_selected();
             return (true);
 
         case 'h':
@@ -349,43 +343,6 @@ static boolean wid_intro_hiscore_key_event (widp w, const SDL_keysym *key)
     return (false);
 }
 
-static void wid_intro_editor_selected (void)
-{
-    wid_editor_visible();
-
-    wid_intro_hide();
-}
-
-static boolean wid_intro_editor_mouse_event (widp w, int32_t x, int32_t y,
-                                             uint32_t button)
-{
-    if (wid_intro_ignore_events(w)) {
-        return (false);
-    }
-
-    wid_intro_editor_selected();
-
-    return (true);
-}
-
-static boolean wid_intro_editor_key_event (widp w, const SDL_keysym *key)
-{
-    if (wid_intro_ignore_events(w)) {
-        return (false);
-    }
-
-    switch (key->sym) {
-        case SDLK_RETURN:
-            wid_intro_editor_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static widp wid_intro_quit_popup;
 
 static void wid_intro_quit_callback_yes (widp wid)
@@ -534,8 +491,6 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_editor_mouse_event);
-        wid_set_on_key_down(child, wid_intro_editor_key_event);
     }
 
     {

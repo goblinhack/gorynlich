@@ -7,21 +7,21 @@
 boolean level_init(void);
 void level_fini(void);
 
-levelp level_new(widp, uint32_t);
+levelp level_new(mapp, uint32_t);
 void level_destroy(levelp);
 void level_restart(levelp);
 void level_completed(levelp);
 void level_destroy_immediate(levelp *);
 void level_tick(levelp);
-levelp level_load(uint32_t level, widp);
+levelp level_load(uint32_t level, mapp map);
 void marshal_level(marshal_p ctx, levelp level);
 boolean demarshal_level(demarshal_p ctx, levelp l);
 const char *level_get_title(levelp level);
 void level_set_title(levelp level, const char *val);
 const char *level_get_destroy_reason(levelp level);
 void level_set_destroy_reason(levelp level, const char *val);
-widp level_get_map(levelp level);
-void level_set_map(levelp level, widp val);
+mapp level_get_map(levelp level);
+void level_set_map(levelp level, mapp val);
 void level_set_walls(levelp level);
 void level_set_monst_walls(levelp level);
 void level_set_roads(levelp level);

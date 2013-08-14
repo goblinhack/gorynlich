@@ -8,6 +8,12 @@ typedef struct thing_ {
     tree_key_int tree;
 
     /*
+     * For map linkeage.
+     */
+    thingp mnext;
+    thingp mprev;
+
+    /*
      * Pointer to common settings for this thing.
      */
     thing_templatep thing_template;

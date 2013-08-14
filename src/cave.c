@@ -449,7 +449,7 @@ static uint8_t map_curr[MAP_WIDTH][MAP_HEIGHT];
 //
 // Grow our cells
 //
-static void cave_generation (map_frame_ctx_t *map)
+static void cave_generation (map_t *map)
 {
     const int16_t maze_w = map->map_width - 2;
     const int16_t maze_h = map->map_height - 2;
@@ -513,7 +513,7 @@ static void cave_generation (map_frame_ctx_t *map)
 //
 // Generate a cave!
 //
-void cave_gen (map_frame_ctx_t *map, uint16_t rock, 
+void cave_gen (map_t *map, uint16_t rock, 
                int8_t z,
                uint8_t map_fill_prob,
                uint8_t map_r1,
@@ -561,9 +561,9 @@ void cave_gen (map_frame_ctx_t *map, uint16_t rock,
     for (x=2; x < maze_w-2; x++) {
         for (y=2; y < maze_h-2; y++) {
             if (map_curr[x][y]) {
-                map_set(map, x, y, z, rock);
+                map_set_thing_template(map, x, y, rock);
             } else {
-                map_set(map, x, y, z, 0);
+                map_set_thing_template(map, x, y, 0);
             }
         }
     }

@@ -39,7 +39,7 @@ typedef struct level_t_ {
     /*
      * Grid widget
      */
-    widp map;
+    mapp map;
 
     /*
      * When the level began being played.

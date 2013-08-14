@@ -52,7 +52,7 @@ static map_light_shadow *map_light_shadows_end;
  * for length x also generates for rays length 1 .. x
  */
 static inline void 
-map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
+map_light_generate_raytrace_map (map_t *map, int32_t strength)
 {
     /*
      * Generate a sphere of cubes around the light source and work out
@@ -69,7 +69,7 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
      */
     static map_light_cell 
         map_light_cells[(DEFAULT_LIGHT_RAY_LENGTH*2) *
-        (DEFAULT_LIGHT_RAY_LENGTH*2) * (MAP_DEPTH*2)];
+        (DEFAULT_LIGHT_RAY_LENGTH*2)];
 
     static map_light_cell *map_light_cells_max =
         map_light_cells + ARRAY_SIZE(map_light_cells);
@@ -80,7 +80,7 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
      */
     static map_light_shadow 
         map_light_shadows[(DEFAULT_LIGHT_RAY_LENGTH*2) *
-        (DEFAULT_LIGHT_RAY_LENGTH*2) * (MAP_DEPTH*2) * 100];
+        (DEFAULT_LIGHT_RAY_LENGTH*2) * 100];
 
     static map_light_shadow *map_light_shadows_max =
         map_light_shadows + ARRAY_SIZE(map_light_shadows);
@@ -118,38 +118,25 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
      * Generate all possible cells that are in the light sphere.
      */
     c = map_light_cells;
-    for (dz = -strength; dz < strength; dz++) {
-        /*
-         * Trim the sphere vertically. We do not need to look to high as
-         * we only render so many cubes.
-         */
-        if (dz <= -MAP_DEPTH) {
-            continue;
-        }
 
-        if (dz >= MAP_DEPTH) {
-            continue;
-        }
+    for (dy = -strength; dy < strength; dy++) {
+        for (dx = -strength; dx < strength; dx++) {
 
-        for (dy = -strength; dy < strength; dy++) {
-            for (dx = -strength; dx < strength; dx++) {
+            /*
+                * Ignore cells outside of the light sphere.
+                */
+            c->dist = DISTANCE3f(light.x, light.y, light.z, dx, dy, dz);
+            if (c->dist > strength) {
+                continue;
+            }
 
-                /*
-                 * Ignore cells outside of the light sphere.
-                 */
-                c->dist = DISTANCE3f(light.x, light.y, light.z, dx, dy, dz);
-                if (c->dist > strength) {
-                    continue;
-                }
+            c->x = dx;
+            c->y = dy;
+            c->z = dz;
+            c++;
 
-                c->x = dx;
-                c->y = dy;
-                c->z = dz;
-                c++;
-
-                if (c >= map_light_cells_max) {
-                    DIE("ran out of cell space");
-                }
+            if (c >= map_light_cells_max) {
+                DIE("ran out of cell space");
             }
         }
     }
@@ -325,16 +312,14 @@ map_light_generate_raytrace_map (map_frame_ctx_t *map, int32_t strength)
  * Either generate a light map, or use the pre-calculated one.
  */
 void 
-map_lightmap (map_frame_ctx_t *map,
+map_lightmap (map_t *map,
               int32_t lx,
               int32_t ly,
-              int32_t lz,
               int32_t strength,
               boolean first_light)
 {
     int32_t x;
     int32_t y;
-    int32_t z;
 
     /*
      * First time either load the pre-gen map or make it from scratch.
@@ -345,7 +330,7 @@ map_lightmap (map_frame_ctx_t *map,
         done = true;
 
 #ifdef ENABLE_GEN_LIGHT_MAP_FILE
-        map_light_generate_raytrace_map(map_ctx, DEFAULT_LIGHT_RAY_LENGTH);
+        map_light_generate_raytrace_map(MAP, DEFAULT_LIGHT_RAY_LENGTH);
 #else
         /*
          * Now read in the pre-gen map file and uncompress it.
@@ -382,7 +367,6 @@ map_lightmap (map_frame_ctx_t *map,
     while (s < map_light_shadows_end) {
         x = lx + s->x;
         y = ly + s->y;
-        z = lz + s->z;
         uint8_t dist = s->dist;
 
         s++;
@@ -392,7 +376,7 @@ map_lightmap (map_frame_ctx_t *map,
          */
         boolean skip;
 
-        if (map_out_of_bounds(x, y, z)) {
+        if (map_out_of_bounds(x, y)) {
             /*
              * If this cell is oob then jump to the next one.
              */
@@ -447,9 +431,8 @@ map_lightmap (map_frame_ctx_t *map,
 
             int32_t cx = lx + s->x;
             int32_t cy = ly + s->y;
-            int32_t cz = lz + s->z;
 
-            if (!map->tiles[cx][cy][cz].tile) {
+            if (!map->tiles[cx][cy].tile) {
                 s++;
                 continue;
             }
@@ -457,7 +440,7 @@ map_lightmap (map_frame_ctx_t *map,
             /*
              * If this is water or similar let the light pass through.
              */
-            uint16_t template_id = map_get(map, cx, cy, cz);
+            uint16_t template_id = map_get(map, cx, cy);
             if (template_id) {
                 thing_templatep t = id_to_thing_template(template_id);
                 if (t) {
@@ -503,7 +486,7 @@ map_lightmap (map_frame_ctx_t *map,
             }
 #endif
 
-            map->lit[x][y][z] = min(100.0, (100.0 * lit) + map->lit[x][y][z]);
+            map->lit[x][y] = min(100.0, (100.0 * lit) + map->lit[x][y]);
         }
     }
 }
@@ -512,14 +495,14 @@ map_lightmap (map_frame_ctx_t *map,
  * map_light_radiant_color
  */
 static void
-map_light_radiant_color (map_frame_ctx_t *map,
+map_light_radiant_color (map_t *map,
                          int32_t x, int32_t y, int32_t z)
 {
-    if (map_out_of_bounds(x, y, z)) {
+    if (map_out_of_bounds(x, y)) {
         return;
     }
 
-    uint8_t lit = map_get_light(map, x, y, z);
+    uint8_t lit = map_get_light(map, x, y);
 
     /*
      * Only light up radiant light if some other light source touches it.
@@ -529,7 +512,7 @@ map_light_radiant_color (map_frame_ctx_t *map,
         return;
     }
 
-    uint16_t template_id = map_get_unsafe(map, x, y, z);
+    uint16_t template_id = map_get_unsafe(map, x, y);
     if (!template_id) {
         return;
     }
@@ -547,28 +530,24 @@ map_light_radiant_color (map_frame_ctx_t *map,
      * Only light up the surface of a radiant object. Else it is too
      * many light sources.
      */
-    if (map_get(map, x, y-1, z)) {
+    if (map_get(map, x, y-1)) {
         return;
     }
 
-    map_lightmap(map_ctx, x, y, z, 5, false);
+    map_lightmap(MAP, x, y, 5, false);
 }
 
 /*
  * Handle tiles that glow.
  */
 void 
-map_light_radiant (map_frame_ctx_t *map,
-                   int32_t lx,
-                   int32_t ly,
-                   int32_t lz)
+map_light_radiant (map_t *map, int32_t lx, int32_t ly)
 {
     /*
      * Screen size.
      */
     uint16_t width = global_config.video_pix_width;
-    uint16_t height = global_config.video_pix_height +
-        MAP_DEPTH * TILE_SCREEN_HEIGHT;
+    uint16_t height = global_config.video_pix_height + TILE_SCREEN_HEIGHT;
 
     uint16_t x;
     uint16_t y;

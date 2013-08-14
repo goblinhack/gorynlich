@@ -55,54 +55,6 @@ boolean map_is_shrunk_when_carried_at(levelp, int32_t x, int32_t y);
 boolean map_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
 boolean map_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y);
 
-thing_templatep map_find_bonus_letter_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_rock_0_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_item_hidden_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_esnail_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_exit_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_floor_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_food_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_letter_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_monst_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_item_perma_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_plant_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_player_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_snail_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_spawns_thing_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_star_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_wall_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_rock_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_water_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_lava_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_xxx4_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_xxx5_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_xxx6_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_xxx7_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_xxx8_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_star_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_powerup_spam_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_rock_0_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_car_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_star_green_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_star_cyan_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_star_black_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_star_purple_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_explosion_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_spikes_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_star_red_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_star_red_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_star_blue_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_seedpod_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_bomb_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_spam_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_road_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_pipe_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_water7_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_water8_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_shrunk_when_carried_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_hidden_from_editor_at(levelp, int32_t x, int32_t y, widp *);
-
 thingp map_thing_is_item_hidden_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_thing_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_bonus_letter_at(levelp, int32_t x, int32_t y);
@@ -152,105 +104,6 @@ thingp map_thing_is_item_removed_at_level_end_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_scarable_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_shrunk_when_carried_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
-
-tree_rootp map_all_things_is_item_hidden(levelp);
-tree_rootp map_all_things_is_item_hidden_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_thing(levelp);
-tree_rootp map_all_things_is_thing_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_bonus_letter(levelp);
-tree_rootp map_all_things_is_bonus_letter_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_esnail(levelp);
-tree_rootp map_all_things_is_esnail_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_exit(levelp);
-tree_rootp map_all_things_is_exit_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_floor(levelp);
-tree_rootp map_all_things_is_floor_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_food(levelp);
-tree_rootp map_all_things_is_food_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_letter(levelp);
-tree_rootp map_all_things_is_letter_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_monst(levelp);
-tree_rootp map_all_things_is_monst_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_item_perma(levelp);
-tree_rootp map_all_things_is_item_perma_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_plant(levelp);
-tree_rootp map_all_things_is_plant_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_player(levelp);
-tree_rootp map_all_things_is_player_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_snail(levelp);
-tree_rootp map_all_things_is_snail_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_yellow(levelp);
-tree_rootp map_all_things_is_star_yellow_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_wall(levelp);
-tree_rootp map_all_things_is_wall_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_rock(levelp);
-tree_rootp map_all_things_is_animated(levelp);
-tree_rootp map_all_things_is_animated_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_follows_owner(levelp);
-tree_rootp map_all_things_is_follows_owner_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_powerup_rocket(levelp);
-tree_rootp map_all_things_is_powerup_rocket_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_rock_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_water(levelp);
-tree_rootp map_all_things_is_water_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_lava(levelp);
-tree_rootp map_all_things_is_lava_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_xxx4(levelp);
-tree_rootp map_all_things_is_xxx4_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_xxx5(levelp);
-tree_rootp map_all_things_is_xxx5_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_xxx6(levelp);
-tree_rootp map_all_things_is_xxx6_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_xxx7(levelp);
-tree_rootp map_all_things_is_xxx7_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_xxx8(levelp);
-tree_rootp map_all_things_is_xxx8_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star(levelp);
-tree_rootp map_all_things_is_star_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_powerup_spam(levelp);
-tree_rootp map_all_things_is_powerup_spam_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_rock_0(levelp);
-tree_rootp map_all_things_is_rock_0_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_car(levelp);
-tree_rootp map_all_things_is_car_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_transparent(levelp);
-tree_rootp map_all_things_is_transparent_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_radiant(levelp);
-tree_rootp map_all_things_is_radiant_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_black(levelp);
-tree_rootp map_all_things_is_star_black_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_purple(levelp);
-tree_rootp map_all_things_is_star_purple_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_explosion(levelp);
-tree_rootp map_all_things_is_explosion_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_spikes(levelp);
-tree_rootp map_all_things_is_spikes_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_red(levelp);
-tree_rootp map_all_things_is_star_red_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_red(levelp);
-tree_rootp map_all_things_is_star_red_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_star_blue(levelp);
-tree_rootp map_all_things_is_star_blue_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_seedpod(levelp);
-tree_rootp map_all_things_is_seedpod_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_bomb(levelp);
-tree_rootp map_all_things_is_bomb_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_spam(levelp);
-tree_rootp map_all_things_is_spam_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_road(levelp);
-tree_rootp map_all_things_is_road_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_pipe(levelp);
-tree_rootp map_all_things_is_pipe_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_item_removed_at_level_end(levelp);
-tree_rootp map_all_things_is_item_removed_at_level_end_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_scarable(levelp);
-tree_rootp map_all_things_is_scarable_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_shrunk_when_carried(levelp);
-tree_rootp map_all_things_is_shrunk_when_carried_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_hidden_from_editor(levelp);
-tree_rootp map_all_things_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_left_as_corpse_on_death(levelp);
-tree_rootp map_all_things_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y);
 
 uint32_t level_count_is_item_is_hidden(levelp);
 uint32_t level_count_is_thing(levelp);
@@ -315,13 +168,12 @@ typedef struct {
 /*
  * All the rendering info for one parallax frame of tiles.
  */
-typedef struct {
+typedef struct map_t_ {
     /*
      * Main light.
      */
     int32_t lx;
     int32_t ly;
-    int32_t lz;
 
     /*
      * The top left corner pixel of the map.
@@ -382,9 +234,10 @@ typedef struct {
     /*
      * The map.
      */
-    map_tile_t tiles_copy[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
-    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
-    uint8_t lit[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    map_tile_t tiles_copy[MAP_WIDTH][MAP_HEIGHT];
+    map_tile_t tiles[MAP_WIDTH][MAP_HEIGHT];
+    thingp things[MAP_WIDTH][MAP_HEIGHT];
+    uint8_t lit[MAP_WIDTH][MAP_HEIGHT];
 
     /*
      * This is the huge buffer that contains the vertex and tex arrays.
@@ -393,9 +246,9 @@ typedef struct {
     float *gl_array_buf_end;
     uint32_t gl_array_size;
 
-} map_frame_ctx_t;
+} map_t;
 
-extern map_frame_ctx_t *map_ctx;
+extern map_t *MAP;
 
 /*
  * map.c
@@ -406,27 +259,17 @@ boolean map_init(void);
 
 void map_fini(void);
 
-void map_lightmap(map_frame_ctx_t *map,
-                  int32_t lx, int32_t ly, int32_t lz,
-                  int32_t strength,
-                  boolean first_light);
+void map_lightmap(map_t *map, int32_t lx, int32_t ly,
+                  int32_t strength, boolean first_light);
 
-void map_light_radiant(map_frame_ctx_t *map,
-                       int32_t lx,
-                       int32_t ly,
-                       int32_t lz);
+void map_light_radiant(map_t *map, int32_t lx, int32_t ly);
 
-uint16_t map_set(map_frame_ctx_t *map,
-                 int32_t x, int32_t y, int32_t z,
-                 uint16_t thing_template);
-
-uint16_t map_get(map_frame_ctx_t *map,
-                 int32_t x, int32_t y, int32_t z);
-
+uint16_t map_set_thing_template(map_t *map, int32_t x, int32_t y, 
+                                uint16_t thing_template);
 /*
  * cave.c
  */
-void cave_gen(map_frame_ctx_t *map, uint16_t rock,
+void cave_gen(map_t *map, uint16_t rock,
               int8_t z,
               uint8_t map_fill_prob,
               uint8_t map_r1,
@@ -436,7 +279,7 @@ void cave_gen(map_frame_ctx_t *map, uint16_t rock,
 /*
  * fractal.c
  */
-void fractal_gen(map_frame_ctx_t *map,
+void fractal_gen(map_t *map,
                  float stdev,
                  float stdev_shrink_factor,
                  uint16_t rock,
@@ -446,7 +289,7 @@ void fractal_gen(map_frame_ctx_t *map,
  * map_display.c
  */
 void map_display(void);
-void map_display_init(map_frame_ctx_t *map);
+void map_display_init(map_t *map);
 
 /*
  * map_display_wid.c
@@ -457,19 +300,11 @@ void map_display_wid_fini(void);
 /*
  * map_tiles.
  */
-void map_init_tiles(map_frame_ctx_t *map);
-void map_combine(map_frame_ctx_t *map);
+void map_init_tiles(map_t *map);
+void map_combine(map_t *map);
 
-static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
+static inline boolean map_out_of_bounds (int32_t x, int32_t y)
 {
-    if (z < 0) {
-        return (true);
-    }
-
-    if (z >= MAP_DEPTH) {
-        return (true);
-    }
-
     if (x < 0) {
         return (true);
     }
@@ -489,7 +324,7 @@ static inline boolean map_out_of_bounds (int32_t x, int32_t y, int32_t z)
     return (false);
 }
 
-static inline boolean map_almost_out_of_xy_bounds (int32_t x, int32_t y, int32_t z)
+static inline boolean map_almost_out_of_xy_bounds (int32_t x, int32_t y)
 {
     if (x < 1) {
         return (true);
@@ -513,36 +348,37 @@ static inline boolean map_almost_out_of_xy_bounds (int32_t x, int32_t y, int32_t
 /*
  * map_get_unsafe
  */
-static inline uint16_t map_get_unsafe (map_frame_ctx_t *map,
-                                       int32_t x, int32_t y, int32_t z)
+static inline uint16_t map_get_unsafe (map_t *map, int32_t x, int32_t y)
 {
-    return (map->tiles[x][y][z].template_id);
+    return (map->tiles[x][y].template_id);
 }
 
 /*
  * map_get_light
  */
-static inline uint8_t 
-map_get_light (map_frame_ctx_t *map, int32_t x, int32_t y, int32_t z)
+static inline uint8_t map_get_light (map_t *map, int32_t x, int32_t y)
 {
-    if (map_out_of_bounds(x, y, z)) {
-        ERR("out of bounds on get map at %d,%d,%d", x, y, z);
+    if (map_out_of_bounds(x, y)) {
+        DIE("out of bounds on get map at %d,%d", x, y);
         return (0);
     }
 
-    return (map->lit[x][y][z]);
+    return (map->lit[x][y]);
 }
 
 /*
  * map_get_light
  */
 static inline void 
-map_set_light (map_frame_ctx_t *map, int32_t x, int32_t y, int32_t z, uint8_t lit)
+map_set_light (map_t *map, int32_t x, int32_t y, uint8_t lit)
 {
-    if (map_out_of_bounds(x, y, z)) {
-        ERR("out of bounds on get map at %d,%d,%d", x, y, z);
+    if (map_out_of_bounds(x, y)) {
+        DIE("out of bounds on set map at %d,%d", x, y);
         return;
     }
 
-    map->lit[x][y][z] = lit;
+    map->lit[x][y] = lit;
 }
+
+uint16_t map_get(map_t *map, int32_t x, int32_t y);
+thing_templatep map_get_thing_template(map_t *map, int32_t x, int32_t y);

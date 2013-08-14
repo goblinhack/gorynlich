@@ -143,7 +143,7 @@ static void make_map (float stdev, float stdev_shrink_factor)
     }
 }
 
-void fractal_gen (map_frame_ctx_t *map,
+void fractal_gen (map_t *map,
                   float stdev,
                   float stdev_shrink_factor,
                   uint16_t rock,
@@ -152,7 +152,7 @@ void fractal_gen (map_frame_ctx_t *map,
     const int32_t maze_w = map->map_width;
     const int32_t maze_h = map->map_height;
     int32_t max_vertical_height = 100;
-    int32_t x, y, z, height;
+    int32_t x, y, height;
 
     memset(fmap, 0, sizeof(fmap));
     memset(boxes, 0, sizeof(boxes));
@@ -178,35 +178,22 @@ void fractal_gen (map_frame_ctx_t *map,
         for (y = 0; y < maze_h; y++) {
             height = (int32_t)
                             (
-                             ((fmap[x][y] / max_vertical_height)) * 
-                             ((float)(MAP_DEPTH))
+                             ((fmap[x][y] / max_vertical_height))
                             );
                             
-            if (height < 0) {
-                height = 0;
-            }
-
-            if (height > MAP_DEPTH - 1) {
-                height = MAP_DEPTH - 1;
-            }
-
             char debug[] = " .,_:;!x*oO%&X#@%";
 
             printf("%c", debug[height]);
 
-//            height = height % MAP_DEPTH;
-            for (z = 0; z < height; z++) {
-                if (height > MAP_DEPTH / 2) {
-                    map_set(map, x, y, z, rock2);
-                } else {
-                    map_set(map, x, y, z, rock);
-                }
+            if (height > max_vertical_height / 2) {
+                map_set_thing_template(map, x, y, rock2);
+            } else {
+                map_set_thing_template(map, x, y, rock);
             }
         }
         printf("\n");
     }
 
-#define nDEBUG
 #ifdef DEBUG
     for (y = 0; y < maze_h; y++) {
         for (x = 0; x < maze_w; x++) {
