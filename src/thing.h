@@ -271,3 +271,6 @@ typedef struct {
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);
+boolean thing_move(mapp, thingp, int32_t x, int32_t y);
+thingp thing_get_map_first(mapp, int32_t x, int32_t y);
+thingp thing_get_map_next(mapp, thingp t);

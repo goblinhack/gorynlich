@@ -54,7 +54,7 @@ static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
  * Given a tile in a tile array, return the tex co-ords.
  */
 static inline void
-map_tile_to_tex_coords (map_frame_ctx_t *map,
+map_tile_to_tex_coords (map_t *map,
                         const uint16_t tile,
                         GLfloat *tex_left,
                         GLfloat *tex_right,
@@ -73,7 +73,7 @@ map_tile_to_tex_coords (map_frame_ctx_t *map,
 /*
  * map_display_init
  */
-void map_display_init (map_frame_ctx_t *map)
+void map_display_init (map_t *map)
 {
     /*
      * Our array size requirements.
@@ -200,14 +200,14 @@ gl_push (float **p,
  * Color a tile for lighting.
  */
 static void
-map_tile_color (map_frame_ctx_t *map,
+map_tile_color (map_t *map,
                 int32_t x, int32_t y, int32_t z,
                 float *r, float *g, float *b, float *a)
 {
     //
     // z = 0 here, faking the depth
     //
-    if (map_out_of_bounds(x, y, 0)) {
+    if (map_out_of_bounds(x, y)) {
         *r = 0.0;
         *g = 0.0;
         *b = 0.0;
@@ -215,7 +215,7 @@ map_tile_color (map_frame_ctx_t *map,
         return;
     }
 
-    uint8_t lit = map_get_light(map, x, y, 0);
+    uint8_t lit = map_get_light(map, x, y);
 
     if (lit < 10) {
         *r = 0.0;
@@ -237,7 +237,7 @@ map_tile_color (map_frame_ctx_t *map,
  *
  * Render one frame of the map.
  */
-static void map_display_ (map_frame_ctx_t *map)
+static void map_display_ (map_t *map)
 {
     glBindTexture(GL_TEXTURE_2D, map->bind);
 
@@ -320,7 +320,7 @@ static void map_display_ (map_frame_ctx_t *map)
         //
         // z = 0 here, faking the depth
         //
-        map_tile = &map->tiles[cx][cy][0];
+        map_tile = &map->tiles[cx][cy];
         tile = map_tile->tile;
 
         /*
@@ -337,7 +337,7 @@ static void map_display_ (map_frame_ctx_t *map)
             //
             // z = 0 here, faking the depth
             //
-            map_tile = &map->tiles[cx][cy][0];
+            map_tile = &map->tiles[cx][cy];
             tile = map_tile->tile;
             if (tile) {
                 right = left + TILE_SCREEN_WIDTH;
@@ -429,7 +429,7 @@ static void map_display_ (map_frame_ctx_t *map)
  * Render one frame of the map.
  */
 static void 
-map_display_debug (map_frame_ctx_t *map, uint32_t x, uint32_t y)
+map_display_debug (map_t *map, uint32_t x, uint32_t y)
 {
     if (!map) {
         return;
@@ -495,16 +495,16 @@ map_display_debug (map_frame_ctx_t *map, uint32_t x, uint32_t y)
  */
 void map_display (void)
 {
-    if (!map_ctx) {
+    if (!MAP) {
         return;
     }
 
     color c = WHITE;
     glcolor(c);
 
-    map_display_(map_ctx);
+    map_display_(MAP);
 
     if (fps_enabled) {
-        map_display_debug(map_ctx, 100, 0);
+        map_display_debug(MAP, 100, 0);
     }
 }

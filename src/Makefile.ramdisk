@@ -163,6 +163,9 @@
 .o/ramdisk_data_ttf_large_ttf_pointsize40_tga.o: asm/ramdisk_data_ttf_large_ttf_pointsize40_tga.S ../data/ttf/large.ttf_pointsize40.tga
 	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize40_tga.S -o .o/ramdisk_data_ttf_large_ttf_pointsize40_tga.o
 
+.o/ramdisk_data_ttf_LICENSE_txt.o: asm/ramdisk_data_ttf_LICENSE_txt.S ../data/ttf/LICENSE.txt
+	gcc -c asm/ramdisk_data_ttf_LICENSE_txt.S -o .o/ramdisk_data_ttf_LICENSE_txt.o
+
 .o/ramdisk_data_ttf_med_ttf_pointsize12_data.o: asm/ramdisk_data_ttf_med_ttf_pointsize12_data.S ../data/ttf/med.ttf_pointsize12.data
 	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize12_data.S -o .o/ramdisk_data_ttf_med_ttf_pointsize12_data.o
 

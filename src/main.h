@@ -180,6 +180,7 @@ typedef struct tree_demarshal_ *demarshal_p;
 typedef struct tree_marshal_ *marshal_p;
 typedef struct tokens_t_ *tokensp;
 typedef struct level_t_ *levelp;
+typedef struct map_t_ *mapp;
 
 extern thingp player;
 extern fontp small_font;

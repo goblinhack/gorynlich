@@ -830,10 +830,10 @@ void sdl_loop (void)
             }
         }
 
-#if 0
         /*
          * Let things move.
          */
+#if 0
         thing_tick_all();
 #endif
 

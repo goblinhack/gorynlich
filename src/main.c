@@ -25,7 +25,6 @@
 #include "thing_template.h"
 #include "wid.h"
 #include "sdl.h"
-#include "wid_editor.h"
 #include "wid_game_map.h"
 #include "wid_intro_about.h"
 #include "wid_intro_help.h"
@@ -67,7 +66,6 @@ void quit (void)
     sdl_exit();
 
     map_fini();
-    wid_editor_fini();
     wid_game_fini();
 
     level_fini();
@@ -518,6 +516,14 @@ int32_t main (int32_t argc, char *argv[])
 	DIE("ptrcheck init");
     }
 
+    if (!resource_init()) {
+	DIE("resource init");
+    }
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)map_init,
+                          0, "map_init");
+
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)level_init,
                           0, "level_init");
@@ -533,14 +539,6 @@ int32_t main (int32_t argc, char *argv[])
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)thing_init,
                           0, "thing_init");
-
-    if (!resource_init()) {
-	DIE("resource init");
-    }
-
-    action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_editor_init,
-                          0, "wid_editor_init");
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_game_init,
@@ -582,10 +580,6 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_help_init");
 #endif
 #endif
-
-    action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)map_init,
-                          0, "map_init");
 
     gl_enter_2d_mode();
     sdl_loop();
