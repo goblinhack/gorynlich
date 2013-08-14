@@ -22,6 +22,7 @@
 #include "color.h"
 #include "config.h"
 #include "sound.h"
+#include "map.h"
 
 tree_root *things;
 static uint32_t thing_id;
@@ -1760,4 +1761,96 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
     wid_move_to_abs_centered_in(w, next_floor_x, next_floor_y, 0);
 
     sound_play_level_end();
+}
+
+/*
+ * thing_move
+ */
+boolean 
+thing_move (map_t *map, thingp t, int32_t x, int32_t y)
+{
+    uint32_t tx;
+    uint32_t ty;
+
+    verify(t);
+
+    tx = t->x / TILE_SCREEN_WIDTH;
+    ty = t->y / TILE_SCREEN_WIDTH;
+
+    if (map_out_of_bounds(tx, ty)) {
+        THING_LOG(t, "place of thing failed");
+        DIE("out of bounds on old location for map at %d,%d", x, y);
+    }
+
+    /*
+     * Remove from the old location.
+     */
+    if (t->mprev) {
+        t->mprev->mnext = t->mnext;
+    }
+
+    if (t->mnext) {
+        t->mnext->mprev = t->mprev;
+    }
+
+    if (map->things[tx][ty] == t) {
+        map->things[tx][ty] = t->mnext;
+    }
+
+    t->mprev = 0;
+    t->mnext = 0;
+
+    /*
+     * Move to the new location.
+     */
+    t->x = x;
+    t->y = y;
+
+    tx = t->x / TILE_SCREEN_WIDTH;
+    ty = t->y / TILE_SCREEN_WIDTH;
+
+    if (map_out_of_bounds(tx, ty)) {
+        THING_LOG(t, "place of thing failed");
+        DIE("out of bounds on new location for map at %d,%d", x, y);
+    }
+
+    if (!map->things[tx][ty]) {
+        map->things[tx][ty] = t;
+    } else {
+        t->mnext = map->things[tx][ty]->mnext;
+        t->mprev = map->things[tx][ty];
+
+        t->mnext->mprev = t;
+        t->mprev->mnext = t;
+    }
+
+    return (true);
+}
+
+/*
+ * thing_get_map_first
+ */
+thingp
+thing_get_map_first (map_t *map, int32_t x, int32_t y)
+{
+    if (map_out_of_bounds(x, y)) {
+        DIE("out of bounds on get map %d,%d", x, y);
+    }
+
+    return (map->things[x][y]);
+}
+
+/*
+ * thing_get_map_next
+ */
+thingp
+thing_get_map_next (map_t *map, thingp t)
+{
+    if (!t) {
+        return (0);
+    }
+
+    verify(t);
+
+    return (t->mnext);
 }

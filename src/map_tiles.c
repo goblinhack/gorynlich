@@ -20,18 +20,16 @@
 /*
  * map_combine
  */
-void map_combine (map_frame_ctx_t *map)
+void map_combine (map_t *map)
 {
-    int32_t x, y, z;
+    int32_t x, y;
 
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
-            for (z = 0; z < MAP_DEPTH; z++) {
-                if (map->tiles_copy[x][y][z].template_id) {
-                    map_set(map, x, y, z, 
-                            map->tiles_copy[x][y][z].template_id);
-                    continue;
-                }
+            if (map->tiles_copy[x][y].template_id) {
+                map_set_thing_template(map, x, y,
+                                       map->tiles_copy[x][y].template_id);
+                continue;
             }
         }
     }
@@ -40,11 +38,9 @@ void map_combine (map_frame_ctx_t *map)
 /*
  * map_init_tiles
  */
-void map_init_tiles (map_frame_ctx_t *map)
+void map_init_tiles (map_t *map)
 {
     uint16_t t;
-
-    int32_t z;
 
 #if 0
         cave_gen(map, ROCK_0_ID,
@@ -119,9 +115,7 @@ t = ROCK_1_ID;
             uint32_t my = ((MAP_HEIGHT - MAP_JIGSAW_BUFFER2_HEIGHT) / 2) + y;
 
             if (t) {
-                for (z = 0; z < MAP_DEPTH; z++) {
-                    map_set(map, mx, my, z, t);
-                }
+                map_set_thing_template(map, mx, my, t);
             }
         }
     }
@@ -129,34 +123,33 @@ t = ROCK_1_ID;
     int d;
     for (d = 0; d < 10; d++) {
         for (x = 0; x < MAP_WIDTH; x++) {
-            map_set(map, x, d, 0, ROCK_1_ID);
-            map_set(map, x, MAP_HEIGHT - d - 1, 0, ROCK_1_ID);
+            map_set_thing_template(map, x, d, ROCK_1_ID);
+            map_set_thing_template(map, x, MAP_HEIGHT - d - 1, ROCK_1_ID);
         }
 
         for (y = 0; y < MAP_HEIGHT; y++) {
-            map_set(map, d, y, 0, ROCK_1_ID);
-            map_set(map, MAP_WIDTH - d - 1, y, 0, ROCK_1_ID);
+            map_set_thing_template(map, d, y, ROCK_1_ID);
+            map_set_thing_template(map, MAP_WIDTH - d - 1, y, ROCK_1_ID);
         }
     }
     
 }
 
 /*
- * map_set
+ * map_set_thing_template
  */
-uint16_t map_set (map_frame_ctx_t *map,
-                  int32_t x, int32_t y, int32_t z,
-                  uint16_t template_id)
+uint16_t map_set_thing_template (map_t *map, int32_t x, int32_t y,
+                                 uint16_t template_id)
 {
     thing_templatep thing_template = id_to_thing_template(template_id);
 
-    if (map_out_of_bounds(x, y, z)) {
-        DIE("out of bounds on set map at %d,%d,%d for %s", x, y, z,
+    if (map_out_of_bounds(x, y)) {
+        DIE("out of bounds on set map at %d,%d for %s", x, y,
             thing_template_shortname(thing_template));
         return (template_id);
     }
 
-    map_tile_t *map_tile = &map->tiles[x][y][z];
+    map_tile_t *map_tile = &map->tiles[x][y];
     if (template_id == map_tile->template_id) {
         return (template_id);
     }
@@ -206,12 +199,30 @@ uint16_t map_set (map_frame_ctx_t *map,
 /*
  * map_get
  */
-uint16_t map_get (map_frame_ctx_t *map, int32_t x, int32_t y, int32_t z)
+uint16_t map_get (map_t *map, int32_t x, int32_t y)
 {
-    if (map_out_of_bounds(x, y, z)) {
-        ERR("out of bounds on get map at %d,%d,%d", x, y, z);
+    if (map_out_of_bounds(x, y)) {
+        ERR("out of bounds on get map at %d,%d", x, y);
         return (0);
     }
 
-    return (map->tiles[x][y][z].template_id);
+    return (map->tiles[x][y].template_id);
+}
+
+/*
+ * map_get_thing_template
+ */
+thing_templatep map_get_thing_template (map_t *map, int32_t x, int32_t y)
+{
+    thing_templatep thing_template;
+    uint16_t template_id;
+
+    template_id = map_get(map, x, y);
+    if (!template_id) {
+        return (0);
+    }
+
+    thing_template = id_to_thing_template(template_id);
+
+    return (thing_template);
 }

@@ -76,9 +76,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_console.o 		\
     $(OBJDIR)/wid_dirlist.o 		\
     $(OBJDIR)/wid_text_input.o 		\
-    $(OBJDIR)/wid_editor.o 		\
-    $(OBJDIR)/wid_editor_buttons.o 	\
-    $(OBJDIR)/wid_editor_map.o 		\
     $(OBJDIR)/wid_game_map.o 		\
     $(OBJDIR)/wid_splash.o 		\
     $(OBJDIR)/wid_intro.o 		\

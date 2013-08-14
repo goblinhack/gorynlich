@@ -702,13 +702,6 @@ void wid_game_map_display_wid_init (void)
         player_new(0 /* level */, "data/things/player");
     }
 
-    level_game = level_load(thing_level_no(player),
-                            wid_game_map_grid_container);
-    if (!level_game) {
-        WARN("failed to load level");
-        return;
-    }
-
     things_level_start(level_game);
 
     wid_move_to_pct_centered(wid_game_map_window, 1.5f, 0.5f);

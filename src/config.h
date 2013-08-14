@@ -45,7 +45,6 @@
 #define MAP_WIDTH_LOG               10
 #define MAP_WIDTH                   (1 << MAP_WIDTH_LOG)
 #define MAP_HEIGHT                  MAP_WIDTH
-#define MAP_DEPTH                   1 
 
 /*
  * This is multiplied by jigsaw piece size.
@@ -56,19 +55,19 @@
 /*
  * Console
  */
-#define CONSOLE_CURSOR_COLOR            ORANGE
-#define CONSOLE_TEXT_COLOR              GREEN
-#define CONSOLE_HEIGHT                  100
+#define CONSOLE_CURSOR_COLOR        ORANGE
+#define CONSOLE_TEXT_COLOR          GREEN
+#define CONSOLE_HEIGHT              100
 
 /*
  * Fonts
  */
-#define SMALL_FONT                      "data/ttf/small.ttf"
-#define SMALL_FONT_SIZE                 14
-#define MED_FONT                        "data/ttf/med.ttf"
-#define MED_FONT_SIZE                   20
-#define LARGE_FONT                      "data/ttf/large.ttf"
-#define LARGE_FONT_SIZE                 30
+#define SMALL_FONT                  "data/ttf/small.ttf"
+#define SMALL_FONT_SIZE             14
+#define MED_FONT                    "data/ttf/med.ttf"
+#define MED_FONT_SIZE               20
+#define LARGE_FONT                  "data/ttf/large.ttf"
+#define LARGE_FONT_SIZE             30
 
 #ifdef ENABLE_GENERATE_TTF
 #define DISABLE_SDL_WINDOW          // SDL_ttf is incompatible with window mode

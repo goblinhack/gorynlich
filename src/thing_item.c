@@ -23,7 +23,6 @@ thing_item_collect_internal (thingp owner, thingp thing_item,
                              boolean auto_use_allowed)
 {
     tree_rootp *items;
-    levelp level;
 
     verify(owner);
     verify(thing_item);
@@ -50,86 +49,6 @@ thing_item_collect_internal (thingp owner, thingp thing_item,
 
     if (score) {
         thing_inc_score_pump(owner, score);
-    }
-
-    boolean need_update = true;
-
-    level = thing_level(owner);
-    if (level) {
-        /*
-         * If the last letter, open the exit.
-         */
-        if (thing_is_letter(thing_item)) {
-            if (level_count_is_letter(level) == 0) {
-                tree_thing_node *node;
-                tree_rootp root = map_all_things_is_exit(level);
-
-                /*
-                 * Record this thing opened the exit.
-                 */
-                thing_set_opened_exit(owner, true);
-
-                if (root) {
-                    TREE_WALK_UNSAFE(root, node) {
-                        thingp t = (typeof(t)) node->tree.key;
-
-                        thing_set_is_open(t, true);
-                    }
-
-                    tree_destroy(&root, 0 /* func */);
-                }
-
-                level_set_is_exit_open(level, true);
-
-                sound_play_letter();
-            }
-        }
-
-        /*
-         * Use items immediately?
-         */
-        if (thing_is_star(thing_item)) {
-            if (thing_is_esnail(owner)) {
-                THING_LOG(owner, "auto use: %s", thing_logname(thing_item));
-
-                if (auto_use_allowed) {
-                    thing_item_use(owner, thing_item);
-                    need_update = false;
-                }
-            }
-        }
-
-        /*
-         * Go faster, collected a rocket.
-         */
-        if (thing_is_powerup_rocket(thing_item)) {
-            thing_inc_powerup_rocket_count(owner, 1);
-        }
-
-        /*
-         * Go slower, collected spam powerup.
-         */
-        if (thing_is_powerup_spam(thing_item)) {
-            thing_inc_powerup_spam_count(owner, 1);
-        }
-
-        /*
-         * Go slower, collected spam.
-         */
-        if (thing_is_spam(thing_item)) {
-            THING_LOG(owner, "auto use: %s", thing_logname(thing_item));
-
-            if (auto_use_allowed) {
-                thing_item_use(owner, thing_item);
-                need_update = false;
-            }
-        }
-    }
-
-    if (owner == player) {
-        if (need_update) {
-            wid_game_map_item_update(level_game);
-        }
     }
 
     return (item);
