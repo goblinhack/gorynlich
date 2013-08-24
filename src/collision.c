@@ -57,10 +57,13 @@ static const uint32_t OBJ_MAX = 100;
 static uint32_t obj_max;
 static object objects[OBJ_MAX];
 
+/*
+ * OpenGLES workarounds for missing glBegin glEnd
+ */
 #define GL_MAX_BUFFER_SIZE 16000
-
 static GLfloat xy[GL_MAX_BUFFER_SIZE];
 static GLfloat *xyp = xy;
+static GLfloat *end_of_xyp = xy + GL_MAX_BUFFER_SIZE;
 static GLsizei gl_state;
 
 static boolean collision_resolve_obj(object *);
@@ -76,8 +79,11 @@ static void End (void)
     glVertexPointer(2, GL_FLOAT, 0, xy);
     glDrawArrays(gl_state, 0, (int32_t)((xyp - xy) / 2));
     glDisableClientState(GL_VERTEX_ARRAY);
-
     xyp = xy;
+
+    if (xyp >= end_of_xyp) {
+        DIE("overflow");
+    }
 }
 
 static void collision_init (void)
@@ -131,12 +137,18 @@ static void collision_init (void)
             obj_max--;
         }
 
+        /*
+         * Make some stationary objects.
+         */
         if (!(rand() % 3)) {
             obj->is_stationary = true;
             obj->is_debug = true;
         }
     }
 
+    /*
+     * Walls.
+     */
     obj++;
     obj->box = true;
     obj->shape.b.tl.x = 0;
