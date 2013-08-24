@@ -16,6 +16,15 @@
 #include "geo.h"
 #include "time.h"
 
+/*
+ * Settings.
+ */
+static float GRAVITY                = 0.5;
+static float LOSS_OF_ENERGY         = 1.1;
+static float MAX_VELOCITY           = 2.0;
+static const uint32_t OBJ_RADIUS    = 20;
+static const uint32_t OBJ_MAX       = 100;
+
 typedef struct {
     fpoint br;
     fpoint tl;
@@ -41,20 +50,13 @@ typedef struct {
     boolean is_debug:1;
 } object;
 
-typedef struct {
-    object *A;
-    object *B;
-    fpoint normal;
-    fpoint velocity;
-} collision_t;
-
-static float GRAVITY            = 0.5;
-static float FRICTION           = 1.1;
-static float MAX_VELOCITY       = 2.0;
-static const uint32_t OBJ_RADIUS = 20;
-static const uint32_t OBJ_MAX = 100;
 static uint32_t obj_max;
 static object objects[OBJ_MAX];
+
+/*
+ * Prototypes.
+ */
+static boolean collision_resolve_obj(object *);
 
 /*
  * OpenGLES workarounds for missing glBegin glEnd
@@ -65,13 +67,17 @@ static GLfloat *xyp = xy;
 static GLfloat *end_of_xyp = xy + GL_MAX_BUFFER_SIZE;
 static GLsizei gl_state;
 
-static boolean collision_resolve_obj(object *);
-
+/*
+ * OpenGLES workarounds for missing glBegin 
+ */
 static void Begin (GLsizei gl_enum)
 {
     gl_state = gl_enum;
 }
 
+/*
+ * OpenGLES workarounds for missing glEnd 
+ */
 static void End (void)
 {
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -206,9 +212,9 @@ static void collision_init (void)
     obj->is_stationary = true;
 }
 
-//
-// Draw all objects
-//
+/*
+ * Draw all objects
+ */
 static void collision_draw (void)
 {
     uint32_t o;
@@ -257,11 +263,11 @@ static void collision_draw (void)
     }
 }
 
-//
-// If two circles collide, the resultant direction is along the normal between
-// the two center of masses of the circles.
-//
-static boolean circle_circle_collision (object *A, object *B, collision_t *m)
+/*
+ * If two circles collide, the resultant direction is along the normal between
+ * the two center of masses of the circles.
+ */
+static boolean circle_circle_collision (object *A, object *B, fpoint *normal)
 {
     circle *CA = &A->shape.c;
     circle *CB = &B->shape.c;
@@ -271,24 +277,27 @@ static boolean circle_circle_collision (object *A, object *B, collision_t *m)
     float touching_dist = CA->radius + CB->radius;
     float dist = flength(n);
 
-    //
-    // Circles are not touching
-    //
+    /*
+     * Circles are not touching
+     */
     if (dist > touching_dist) {
         return (false);
     }
  
-    //
-    // Circles are centered on each other
-    //
+    /*
+     * Circles are centered on each other
+     */
     if (dist == 0.0) {
-        m->normal.x = 0;
-        m->normal.y = -1;
+        /*
+         * Velocity should be limited to prevent this.
+         */
+        normal->x = 0;
+        normal->y = -1;
 
         return (true);
     }
 
-    m->normal = fdiv(touching_dist, n);
+    *normal = fdiv(touching_dist, n);
 
     return (true);
 }
@@ -303,17 +312,17 @@ static boolean collision_resolve_obj (object *A)
     collision = false;
 
     if (A->at.y > H - OBJ_RADIUS * 2) {
-        A->velocity.y += -(A->velocity.y * FRICTION);
+        A->velocity.y += -(A->velocity.y * LOSS_OF_ENERGY);
         collision = true;
     }
 
     if (A->at.x > W - OBJ_RADIUS * 2) {
-        A->velocity.x += -(A->velocity.x * FRICTION);
+        A->velocity.x += -(A->velocity.x * LOSS_OF_ENERGY);
         collision = true;
     }
 
     if (A->at.x < OBJ_RADIUS * 2) {
-        A->velocity.x += -(A->velocity.x * FRICTION);
+        A->velocity.x += -(A->velocity.x * LOSS_OF_ENERGY);
         collision = true;
     }
 
@@ -326,10 +335,10 @@ static boolean collision_resolve_obj (object *A)
             continue;
         }
 
-        if (!A->box && !B->box) {
-            collision_t m;
+        fpoint normal;
 
-            if (circle_circle_collision(A, B, &m)) {
+        if (!A->box && !B->box) {
+            if (circle_circle_collision(A, B, &normal)) {
 
                 collision = true;
 
@@ -346,7 +355,7 @@ static boolean collision_resolve_obj (object *A)
 
                 fpoint relative_velocity = fsub(B->at, A->at);
 
-                float cross = fcross(relative_velocity, m.normal);
+                float cross = fcross(relative_velocity, normal);
                 if (cross > 0.0) {
                     /*
                      * Heading apart.
@@ -356,8 +365,8 @@ static boolean collision_resolve_obj (object *A)
 
                 float vA = flength(A->velocity);
 
-                A->velocity.x += -m.normal.x * vA * FRICTION;
-                A->velocity.y += -m.normal.y * vA * FRICTION;
+                A->velocity.x += -normal.x * vA * LOSS_OF_ENERGY;
+                A->velocity.y += -normal.y * vA * LOSS_OF_ENERGY;
             }
         }
     }
