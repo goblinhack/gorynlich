@@ -88,50 +88,47 @@ static void collision_init (void)
     int32_t h = H - OBJ_RADIUS * 4;
     uint32_t o;
 
-    static boolean first;
     object *obj;
     fpoint velocity;
     fpoint at;
 
-    if (first) {
-        return;
-    }
-
-    first = true;
-
     for (o = 0; o < OBJ_MAX - 4; o++) {
+        /*
+         * Repeat placing objects until there are no collisions.
+         */
+        for (;;) {
+            obj = &objects[o];
 
-redo:
-        obj = &objects[o];
+            at.x = rand() % w;
+            at.y = rand() % h;
+            at.x += OBJ_RADIUS * 2;
+            at.y += OBJ_RADIUS * 2;
 
-        at.x = rand() % w;
-        at.y = rand() % h;
-        at.x += OBJ_RADIUS * 2;
-        at.y += OBJ_RADIUS * 2;
+            velocity.x = ((float)((rand() % w) - (w / 2))) / (float)w;
+            velocity.y = ((float)((rand() % h) - (h / 2))) / (float)h;
 
-        velocity.x = ((float)((rand() % w) - (w / 2))) / (float)w;
-        velocity.y = ((float)((rand() % h) - (h / 2))) / (float)h;
+            obj->box = o & 1;
+            obj->box = 0;
 
-        obj->box = o & 1;
-        obj->box = 0;
+            if (obj->box) {
+                obj->shape.b.tl.x = at.x - OBJ_RADIUS;
+                obj->shape.b.tl.y = at.y - OBJ_RADIUS;
+                obj->shape.b.br.x = at.x + OBJ_RADIUS;
+                obj->shape.b.br.y = at.y + OBJ_RADIUS;
+            } else {
+                obj->shape.c.radius = OBJ_RADIUS;
+            }
 
-        if (obj->box) {
-            obj->shape.b.tl.x = at.x - OBJ_RADIUS;
-            obj->shape.b.tl.y = at.y - OBJ_RADIUS;
-            obj->shape.b.br.x = at.x + OBJ_RADIUS;
-            obj->shape.b.br.y = at.y + OBJ_RADIUS;
-        } else {
-            obj->shape.c.radius = OBJ_RADIUS;
-        }
+            obj->at = at;
+            obj->velocity = velocity;
 
-        obj->at = at;
-        obj->velocity = velocity;
+            obj_max++;
 
-        obj_max++;
+            if (!collision_resolve_obj(obj)) {
+                break;
+            }
 
-        if (collision_resolve_obj(obj)) {
             obj_max--;
-            goto redo;
         }
 
         if (!(rand() % 3)) {
@@ -188,6 +185,8 @@ static void collision_draw (void)
 {
     uint32_t o;
 
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glLineWidth(2.0);
     glcolor(WHITE);
 
     for (o = 0; o < OBJ_MAX; o++) {
@@ -415,10 +414,13 @@ static void collision_resolve (void)
 
 void collision_test (void)
 {
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glLineWidth(2.0);
+    static boolean first = true;
 
-    collision_init();
+    if (first) {
+        first = false;
+        collision_init();
+        return;
+    }
 
     collision_resolve();
     collision_draw();
