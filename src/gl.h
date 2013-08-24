@@ -126,3 +126,8 @@ gl_push_rgba (float **p, float r, float g, float b, float a)
     *(*p)++ = b;
     *(*p)++ = a;
 }
+
+#define Vertex2f(x, y)                          \
+    *xyp++ = x;                                 \
+    *xyp++ = y;
+

@@ -23,6 +23,7 @@
 #include "slre.h"
 #include "token.h"
 #include "map.h"
+#include "collision.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -770,7 +771,12 @@ void sdl_loop (void)
          * the game processing below to allow it to be drained before we swap 
          * the buffers.
          */
+#define COLLISION_TEST
+#ifdef COLLISION_TEST
+        collision_test();
+#else
         map_display();
+#endif
 
         frames++;
 
@@ -874,13 +880,6 @@ void sdl_loop (void)
 #else /* } { */
         SDL_GL_SwapBuffers();
 #endif /* } */
-#if 0
-        int x ;
-        for (x=0;x<100;x++) {
-    map_move_delta_pixels(0, 0);
-        }
-    DIE("x");
-#endif
     }
 }
 

@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "geo.h"
+#include "math.h"
 
 /*
  * triangle_line_intersect(): find the 3D intersection of a line with a 
@@ -30,8 +31,8 @@ triangle_line_intersect (const line ray,
      * too far in a direction and are outside the triangle. Finally if u + v > 
      * 1 then we've crossed the far edge again leaving the triangle. 
      */
-    fpoint3d u = fpoint3d_sub(triangle.V1, triangle.V0);
-    fpoint3d v = fpoint3d_sub(triangle.V2, triangle.V0);
+    fpoint3d u = fsub3d(triangle.V1, triangle.V0);
+    fpoint3d v = fsub3d(triangle.V2, triangle.V0);
 
     /*
      * Cross product for the plane of this triangle.
@@ -43,7 +44,7 @@ triangle_line_intersect (const line ray,
      */
     static const fpoint3d null = {0,0,0};
 
-    if (fpoint3d_cmp(n, null)) {
+    if (fcmp3d(n, null)) {
         return (-1);
     }
 
@@ -76,10 +77,10 @@ triangle_line_intersect (const line ray,
      */
     fpoint3d p0 = triangle.V0;
     fpoint3d l0 = ray.P0;
-    fpoint3d l = fpoint3d_sub(ray.P1, l0);
+    fpoint3d l = fsub3d(ray.P1, l0);
 
-    float numerator = fpoint3d_dot(fpoint3d_sub(p0, l0), n);
-    float denominator = fpoint3d_dot(l, n);
+    float numerator = fdot3d(fsub3d(p0, l0), n);
+    float denominator = fdot3d(l, n);
 
     /*
      * If the line starts outside the plane and is parallel to the plane, 
@@ -122,7 +123,7 @@ triangle_line_intersect (const line ray,
     /*
      * Intersection point on the plane dl + l0.
      */
-    *intersection = fpoint3d_add(fpoint3d_mul(d, l), l0);
+    *intersection = fadd3d(fmul3d(d, l), l0);
 
     /*
      * We hit the plane but are we in the triangle? This is a bit complex
@@ -130,14 +131,14 @@ triangle_line_intersect (const line ray,
      * points where u and v total < 1.0 are in the triangle. We solve s
      * and t that are fractions along u and v.
      */
-    float uu = fpoint3d_dot(u,u);
-    float uv = fpoint3d_dot(u,v);
-    float vv = fpoint3d_dot(v,v);
+    float uu = fdot3d(u,u);
+    float uv = fdot3d(u,v);
+    float vv = fdot3d(v,v);
 
-    fpoint3d w = fpoint3d_sub(*intersection, triangle.V0);
+    fpoint3d w = fsub3d(*intersection, triangle.V0);
 
-    float wu = fpoint3d_dot(w,u);
-    float wv = fpoint3d_dot(w,v);
+    float wu = fdot3d(w,u);
+    float wv = fdot3d(w,v);
 
     float D = uv * uv - uu * vv;
 
@@ -216,7 +217,7 @@ cube_line_intersect (const line ray,
             continue;
         }
 
-        float distance = fpoint3d_dist(ray.P1, intersection);
+        float distance = flength3d(ray.P1, intersection);
 
         if (!gotone) {
             *best_intersection = intersection;
@@ -244,7 +245,7 @@ dist_point_line (fpoint3d P0, fpoint3d L0, fpoint3d L1, float *dist)
     float mag;
     float U;
  
-    mag = fpoint3d_dist(L1, L0);
+    mag = flength3d(L1, L0);
  
     U = (((P0.x - L0.x) * (L1.x - L0.x)) +
          ((P0.y - L0.y) * (L1.y - L0.y)) +
@@ -259,7 +260,7 @@ dist_point_line (fpoint3d P0, fpoint3d L0, fpoint3d L1, float *dist)
     intersect.y = L0.y + U * (L1.y - L0.y);
     intersect.z = L0.z + U * (L1.z - L0.z);
  
-    *dist = fpoint3d_dist(P0, intersect);
+    *dist = flength3d(P0, intersect);
  
     return (1);
 }
