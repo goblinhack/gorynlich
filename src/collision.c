@@ -469,7 +469,7 @@ static void collision_all_check (void)
                  */
                 if (collision_check_single_object(A)) {
                     A->at = A->old_at;
-                    if (tries++ > 10) {
+                    if (tries++ > 4) {
                         break;
                     }
 
@@ -477,10 +477,6 @@ static void collision_all_check (void)
                 } else {
                     break;
                 }
-            }
-
-            if (tries > 8) {
-                LOG("tries %d",tries);
             }
         }
 
