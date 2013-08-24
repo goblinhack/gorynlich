@@ -19,6 +19,7 @@
 #include "ramdisk.h"
 #include "string.h"
 #include "thing_template.h"
+#include "math.h"
 
 typedef struct {
     int8_t x;
