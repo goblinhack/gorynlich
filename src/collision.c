@@ -86,17 +86,21 @@ static void End (void)
     }
 }
 
+/*
+ * Place lots of test objects.
+ */
 static void collision_init (void)
 {
+    /*
+     * Level bounds.
+     */
     int32_t W = global_config.video_gl_width;
     int32_t H = global_config.video_gl_height;
     int32_t w = W - OBJ_RADIUS * 4;
     int32_t h = H - OBJ_RADIUS * 4;
-    uint32_t o;
 
     object *obj;
-    fpoint velocity;
-    fpoint at;
+    uint32_t o;
 
     for (o = 0; o < OBJ_MAX - 4; o++) {
         /*
@@ -105,14 +109,27 @@ static void collision_init (void)
         for (;;) {
             obj = &objects[o];
 
+            /*
+             * Random placement.
+             */
+            fpoint at;
+
             at.x = rand() % w;
             at.y = rand() % h;
             at.x += OBJ_RADIUS * 2;
             at.y += OBJ_RADIUS * 2;
 
+            /*
+             * Random velocity.
+             */
+            fpoint velocity;
+
             velocity.x = ((float)((rand() % w) - (w / 2))) / (float)w;
             velocity.y = ((float)((rand() % h) - (h / 2))) / (float)h;
 
+            /*
+             * Random box or circle.
+             */
             obj->box = o & 1;
             obj->box = 0;
 
