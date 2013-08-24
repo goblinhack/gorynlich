@@ -307,13 +307,6 @@ typedef struct {
     float height;
 } fsize;
 
-fpoint fadd(fpoint a, fpoint b);
-fpoint fsub(fpoint a, fpoint b);
-float flength(fpoint a);
-point add(point a, point b);
-point sub(point a, point b);
-float length(point a);
-
 /*
  * main.c
  */
