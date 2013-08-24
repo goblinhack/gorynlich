@@ -44,7 +44,6 @@ typedef struct {
 typedef struct {
     object *A;
     object *B;
-    float penetration;
     fpoint normal;
     fpoint velocity;
 } collision_t;
@@ -155,7 +154,7 @@ static void collision_init (void)
         }
 
         /*
-         * Make some stationary objects.
+         * Make some of the objects stationary.
          */
         if (!(rand() % 3)) {
             obj->is_stationary = true;
@@ -232,11 +231,17 @@ static void collision_draw (void)
         Begin(GL_LINE_LOOP);
             
         if (obj->box) {
+            /*
+             * Box.
+             */
             Vertex2f(obj->shape.b.tl.x, obj->shape.b.tl.y);
             Vertex2f(obj->shape.b.br.x, obj->shape.b.tl.y);
             Vertex2f(obj->shape.b.br.x, obj->shape.b.br.y);
             Vertex2f(obj->shape.b.tl.x, obj->shape.b.br.y);
         } else {
+            /*
+             * Circle.
+             */
             const float rad_step = RAD_360 / 360.0;
  
             for (int i = 0; i < 360; i++) {
@@ -277,14 +282,12 @@ static boolean circle_circle_collision (object *A, object *B, collision_t *m)
     // Circles are centered on each other
     //
     if (dist == 0.0) {
-        m->penetration = CA->radius;
         m->normal.x = 0;
         m->normal.y = -1;
 
         return (true);
     }
 
-    m->penetration = touching_dist - dist;
     m->normal = fdiv(touching_dist, n);
 
     return (true);
