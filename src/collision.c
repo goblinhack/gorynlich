@@ -20,7 +20,7 @@
  * Settings.
  */
 static double GRAVITY                = 0.01;
-static double LOSS_OF_ENERGY         = 0.80;
+static double LOSS_OF_ENERGY         = 1.5;
 static double MAX_VELOCITY           = 1.0;
 static double MAX_TIMESTEP           = 2.0;
 static const uint32_t OBJ_MIN_RADIUS = 5;
@@ -440,9 +440,13 @@ LOG("heading apart");
                             (mA + mB);
 #endif
 
-                vA = (mB / (mA + mB)) * uA;
-                vA *= LOSS_OF_ENERGY;
-                vA = fabs(vA);
+                if (B->is_stationary) {
+                    vA = uA * LOSS_OF_ENERGY;
+                } else {
+                    vA = (mB / (mA + mB)) * uA;
+                    vA *= LOSS_OF_ENERGY;
+                    vA = fabs(vA);
+                }
 
                 A->impulse.x += -normal.x * vA;
                 A->impulse.y += -normal.y * vA;
@@ -559,8 +563,8 @@ static void collision_all_check (void)
 
             A->at = A->old_at;
 
-            A->velocity.x += 2*A->impulse.x;
-            A->velocity.y += 2*A->impulse.y;
+            A->velocity.x += A->impulse.x;
+            A->velocity.y += A->impulse.y;
         }
     }
 }
