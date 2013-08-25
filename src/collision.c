@@ -19,13 +19,13 @@
 /*
  * Settings.
  */
-static double GRAVITY                = 0.5;
-static double LOSS_OF_ENERGY         = 0.8;
-static double MAX_VELOCITY           = 2.0;
+static double GRAVITY                = 0.01;
+static double LOSS_OF_ENERGY         = 0.80;
+static double MAX_VELOCITY           = 1.0;
 static double MAX_TIMESTEP           = 2.0;
 static const uint32_t OBJ_MIN_RADIUS = 5;
 static const uint32_t OBJ_MAX_RADIUS = 100;
-static const uint32_t OBJ_MAX        = 200;
+static const uint32_t OBJ_MAX        = 100;
 
 typedef struct {
     fpoint br;
@@ -42,6 +42,7 @@ typedef struct {
     fpoint velocity;
     fpoint impulse;
     fpoint accel;
+    double mass;
     union {
         box b;
         circle c;
@@ -49,6 +50,7 @@ typedef struct {
     boolean box:1;
     boolean is_stationary:1;
     boolean is_debug:1;
+    boolean collided:1;
 } object;
 
 static uint32_t obj_max;
@@ -57,7 +59,7 @@ static object objects[OBJ_MAX];
 /*
  * Prototypes.
  */
-static boolean collision_check_single_object(object *, boolean *overlap);
+static boolean collision_check_single_object(object *);
 
 /*
  * OpenGLES workarounds for missing glBegin glEnd
@@ -144,10 +146,13 @@ static void collision_init (void)
                 obj->shape.b.tl.y = at.y - OBJ_MAX_RADIUS / 2;
                 obj->shape.b.br.x = at.x + OBJ_MAX_RADIUS / 2;
                 obj->shape.b.br.y = at.y + OBJ_MAX_RADIUS / 2;
+                obj->mass = OBJ_MAX_RADIUS * OBJ_MAX_RADIUS;
             } else {
                 obj->shape.c.radius =
                     (rand() % (OBJ_MAX_RADIUS - OBJ_MIN_RADIUS)) +
                     OBJ_MIN_RADIUS;
+
+                obj->mass = PI * obj->shape.c.radius * obj->shape.c.radius;
             }
 
             obj->at = at;
@@ -155,9 +160,7 @@ static void collision_init (void)
 
             obj_max++;
 
-            boolean overlap;
-
-            if (!collision_check_single_object(obj, &overlap) && !overlap) {
+            if (!collision_check_single_object(obj)) {
                 break;
             }
 
@@ -169,6 +172,8 @@ static void collision_init (void)
          */
         if (!(rand() % 3)) {
             obj->is_stationary = true;
+            obj->velocity.x = 0;
+            obj->velocity.y = 0;
             obj->is_debug = true;
         }
     }
@@ -184,6 +189,8 @@ static void collision_init (void)
     obj->shape.b.br.y = H;
     obj->at.x = (obj->shape.b.tl.x + obj->shape.b.br.x) / 2.0;
     obj->at.y = (obj->shape.b.tl.y + obj->shape.b.br.y) / 2.0;
+    obj->velocity.x = 0;
+    obj->velocity.y = 0;
     obj->is_stationary = true;
 
     obj++;
@@ -194,6 +201,8 @@ static void collision_init (void)
     obj->shape.b.br.y = H;
     obj->at.x = (obj->shape.b.tl.x + obj->shape.b.br.x) / 2.0;
     obj->at.y = (obj->shape.b.tl.y + obj->shape.b.br.y) / 2.0;
+    obj->velocity.x = 0;
+    obj->velocity.y = 0;
     obj->is_stationary = true;
 
     obj++;
@@ -204,6 +213,8 @@ static void collision_init (void)
     obj->shape.b.br.y = H;
     obj->at.x = (obj->shape.b.tl.x + obj->shape.b.br.x) / 2.0;
     obj->at.y = (obj->shape.b.tl.y + obj->shape.b.br.y) / 2.0;
+    obj->velocity.x = 0;
+    obj->velocity.y = 0;
     obj->is_stationary = true;
 
     obj++;
@@ -214,6 +225,8 @@ static void collision_init (void)
     obj->shape.b.br.y = OBJ_MIN_RADIUS;
     obj->at.x = (obj->shape.b.tl.x + obj->shape.b.br.x) / 2.0;
     obj->at.y = (obj->shape.b.tl.y + obj->shape.b.br.y) / 2.0;
+    obj->velocity.x = 0;
+    obj->velocity.y = 0;
     obj->is_stationary = true;
 }
 
@@ -310,20 +323,23 @@ static boolean circle_circle_collision (object *A, object *B, fpoint *normal)
 /*
  * See if this object collides with anything.
  */
-static boolean collision_check_single_object (object *A, boolean *overlap)
+static boolean collision_check_single_object (object *A)
 {
     int32_t W = global_config.video_gl_width;
     int32_t H = global_config.video_gl_height;
     double radius = A->shape.c.radius;
-    double vA = flength(A->velocity);
+    double uA = flength(A->velocity);
     boolean collision;
     uint32_t b;
+    uint32_t impacts;
 
     collision = false;
 
-    if (overlap) {
-        *overlap = false;
+    if (A->is_stationary) {
+        return (false);
     }
+
+    impacts = 0;
 
     A->impulse.x = 0;
     A->impulse.y = 0;
@@ -331,19 +347,28 @@ static boolean collision_check_single_object (object *A, boolean *overlap)
     /*
      * Edge hits ?
      */
+    if (A->at.y - radius < OBJ_MIN_RADIUS) {
+        A->impulse.y += -A->velocity.y * LOSS_OF_ENERGY;
+        collision = true;
+        impacts++;
+    }
+
     if (A->at.y + radius > H - OBJ_MIN_RADIUS) {
         A->impulse.y += -A->velocity.y * LOSS_OF_ENERGY;
         collision = true;
+        impacts++;
     }
 
     if (A->at.x + radius > W - OBJ_MIN_RADIUS) {
         A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
         collision = true;
+        impacts++;
     }
 
     if (A->at.x - radius < OBJ_MIN_RADIUS) {
         A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
         collision = true;
+        impacts++;
     }
 
     for (b = 0; b < obj_max; b++) {
@@ -371,10 +396,6 @@ static boolean collision_check_single_object (object *A, boolean *overlap)
              */
         } else if (!A->box && !B->box) {
             if (circle_circle_collision(A, B, &normal)) {
-                if (overlap) {
-                    *overlap = true;
-                }
-
 #if 0
                 glcolor(RED);
 
@@ -390,18 +411,44 @@ static boolean collision_check_single_object (object *A, boolean *overlap)
                              A->at.y + A->velocity.y * (double)OBJ_RADIUS*10);
                 End();
 #endif
-                fpoint relative_velocity = fsub(B->at, A->at);
 
+#if 0
+                fpoint relative_velocity = fsub(A->velocity, B->velocity);
                 double cross = fcross(relative_velocity, normal);
                 if (cross > 0.0) {
                     /*
                      * Heading apart.
                      */
+LOG("heading apart");
                     continue;
                 }
+#endif
 
-                A->impulse.x += -normal.x * vA * LOSS_OF_ENERGY;
-                A->impulse.y += -normal.y * vA * LOSS_OF_ENERGY;
+                double mA = A->mass;
+                double mB = B->mass;
+                double vA;
+
+#if 0
+                double uB = flength(B->velocity);
+                vA = (uA * (mA - mB) + (2 * mB * uB)) / (mA + mB);
+
+                double CR = LOSS_OF_ENERGY;
+
+
+                vA = ((mA * uA) + (mB * uB) + (mB * CR * (uB - uA)))
+                                /
+                            (mA + mB);
+#endif
+
+                vA = (mB / (mA + mB)) * uA;
+                vA *= LOSS_OF_ENERGY;
+                vA = fabs(vA);
+
+                A->impulse.x += -normal.x * vA;
+                A->impulse.y += -normal.y * vA;
+//LOG("mass %f uA %f vA %f",mA,uA,vA);
+
+                impacts++;
 
                 collision = true;
             }
@@ -409,11 +456,8 @@ static boolean collision_check_single_object (object *A, boolean *overlap)
     }
 
     if (collision) {
-        if (flength(A->impulse) > 0.0) {
-            A->impulse = funit(A->impulse);
 
-            A->impulse = fmul(vA * LOSS_OF_ENERGY, A->impulse);
-        }
+            A->impulse = fdiv((double)impacts, A->impulse);
     }
 
     return (collision);
@@ -483,6 +527,8 @@ static void collision_all_check (void)
              */
             A->at.x += dV.x;
             A->at.y += dV.y;
+
+            A->collided = false;
         }
 
         for (a = 0; a < obj_max; a++) {
@@ -497,17 +543,24 @@ static void collision_all_check (void)
             /*
              * If we impact at the new location, move back to where we were.
              */
-            boolean overlap;
+            if (collision_check_single_object(A)) {
+                A->collided = true;
+            }
+        }
 
-            if (collision_check_single_object(A, &overlap)) {
-                A->at = A->old_at;
+        for (a = 0; a < obj_max; a++) {
+            object *A;
 
-                A->velocity = A->impulse;
+            A = &objects[a];
+
+            if (!A->collided) {
+                continue;
             }
 
-            if (overlap ) {
-                A->at = A->old_at;
-            }
+            A->at = A->old_at;
+
+            A->velocity.x += 2*A->impulse.x;
+            A->velocity.y += 2*A->impulse.y;
         }
     }
 }
