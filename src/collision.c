@@ -19,10 +19,10 @@
 /*
  * Settings.
  */
-static float GRAVITY                = 0.5;
-static float LOSS_OF_ENERGY         = 0.5;
-static float MAX_VELOCITY           = 2.0;
-static float MAX_TIMESTEP           = 5.0;
+static double GRAVITY               = 0.5;
+static double LOSS_OF_ENERGY        = 0.8;
+static double MAX_VELOCITY          = 2.0;
+static double MAX_TIMESTEP          = 2.0;
 static const uint32_t OBJ_RADIUS    = 20;
 static const uint32_t OBJ_MAX       = 100;
 
@@ -32,21 +32,20 @@ typedef struct {
 } box;
 
 typedef struct {
-    float radius;
+    double radius;
 } circle;
 
 typedef struct {
-    boolean box;
     fpoint at;
     fpoint old_at;
     fpoint velocity;
-    fpoint impact_velocity;
+    fpoint impulse;
     fpoint accel;
-    uint32_t last_tick;
     union {
         box b;
         circle c;
     } shape;
+    boolean box:1;
     boolean is_stationary:1;
     boolean is_debug:1;
 } object;
@@ -57,7 +56,7 @@ static object objects[OBJ_MAX];
 /*
  * Prototypes.
  */
-static boolean collision_check_single_object(object *);
+static boolean collision_check_single_object(object *, boolean *overlap);
 
 /*
  * OpenGLES workarounds for missing glBegin glEnd
@@ -130,8 +129,8 @@ static void collision_init (void)
              */
             fpoint velocity;
 
-            velocity.x = ((float)((rand() % w) - (w / 2))) / (float)w;
-            velocity.y = ((float)((rand() % h) - (h / 2))) / (float)h;
+            velocity.x = ((double)((rand() % w) - (w / 2))) / (double)w;
+            velocity.y = ((double)((rand() % h) - (h / 2))) / (double)h;
 
             /*
              * Random box or circle.
@@ -153,7 +152,9 @@ static void collision_init (void)
 
             obj_max++;
 
-            if (!collision_check_single_object(obj)) {
+            boolean overlap;
+
+            if (!collision_check_single_object(obj, &overlap) && !overlap) {
                 break;
             }
 
@@ -249,11 +250,11 @@ static void collision_draw (void)
             /*
              * Circle.
              */
-            const float rad_step = RAD_360 / 360.0;
+            const double rad_step = RAD_360 / 360.0;
  
             for (int i = 0; i < 360; i++) {
-                float rad = ((float) i) * rad_step;
-                float radius = obj->shape.c.radius;
+                double rad = ((double) i) * rad_step;
+                double radius = obj->shape.c.radius;
 
                 Vertex2f(obj->at.x + (cos(rad) * radius),
                          obj->at.y + (sin(rad) * radius));
@@ -275,8 +276,8 @@ static boolean circle_circle_collision (object *A, object *B, fpoint *normal)
 
     fpoint n = fsub(B->at, A->at);
  
-    float touching_dist = CA->radius + CB->radius;
-    float dist = flength(n);
+    double touching_dist = CA->radius + CB->radius;
+    double dist = flength(n);
 
     /*
      * Circles are not touching
@@ -306,34 +307,39 @@ static boolean circle_circle_collision (object *A, object *B, fpoint *normal)
 /*
  * See if this object collides with anything.
  */
-static boolean collision_check_single_object (object *A)
+static boolean collision_check_single_object (object *A, boolean *overlap)
 {
     int32_t W = global_config.video_gl_width;
     int32_t H = global_config.video_gl_height;
+    double vA = flength(A->velocity);
     boolean collision;
     uint32_t b;
 
     collision = false;
 
+    if (overlap) {
+        *overlap = false;
+    }
+
+    A->impulse.x = 0;
+    A->impulse.y = 0;
+
     /*
      * Edge hits ?
      */
     if (A->at.y > H - OBJ_RADIUS * 2) {
-        A->velocity.y = -(A->velocity.y * LOSS_OF_ENERGY);
+        A->impulse.y += -A->velocity.y * LOSS_OF_ENERGY;
         collision = true;
-        return (collision);
     }
 
     if (A->at.x > W - OBJ_RADIUS * 2) {
-        A->velocity.x = -(A->velocity.x * LOSS_OF_ENERGY);
+        A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
         collision = true;
-        return (collision);
     }
 
     if (A->at.x < OBJ_RADIUS * 2) {
-        A->velocity.x = -(A->velocity.x * LOSS_OF_ENERGY);
+        A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
         collision = true;
-        return (collision);
     }
 
     for (b = 0; b < obj_max; b++) {
@@ -349,32 +355,40 @@ static boolean collision_check_single_object (object *A)
 
         if (A->box && B->box) {
             /*
-             * Box box.
+             * Box v box.
              */
         } else if (!A->box && B->box) {
             /*
-             * Circl box.
+             * Circle v box.
              */
         } else if (A->box && !B->box) {
             /*
-             * Box circle.
+             * Box v circle.
              */
         } else if (!A->box && !B->box) {
             if (circle_circle_collision(A, B, &normal)) {
-                collision = true;
+                if (overlap) {
+                    *overlap = true;
+                }
+
 #if 0
                 glcolor(RED);
 
                 Begin(GL_LINES);
                     Vertex2f(A->at.x, A->at.y);
 
-                    Vertex2f(A->at.x + m.normal.x * (float)OBJ_RADIUS,
-                                A->at.y + m.normal.y * (float)OBJ_RADIUS);
+                    Vertex2f(A->at.x + normal.x * (double)OBJ_RADIUS*10,
+                             A->at.y + normal.y * (double)OBJ_RADIUS*10);
+
+                    Vertex2f(A->at.x, A->at.y);
+
+                    Vertex2f(A->at.x + A->velocity.x * (double)OBJ_RADIUS*10,
+                             A->at.y + A->velocity.y * (double)OBJ_RADIUS*10);
                 End();
 #endif
                 fpoint relative_velocity = fsub(B->at, A->at);
 
-                float cross = fcross(relative_velocity, normal);
+                double cross = fcross(relative_velocity, normal);
                 if (cross > 0.0) {
                     /*
                      * Heading apart.
@@ -382,13 +396,19 @@ static boolean collision_check_single_object (object *A)
                     continue;
                 }
 
-                float vA = flength(A->velocity);
+                A->impulse.x += -normal.x * vA * LOSS_OF_ENERGY;
+                A->impulse.y += -normal.y * vA * LOSS_OF_ENERGY;
 
-                A->velocity.x = -normal.x * vA * LOSS_OF_ENERGY;
-                A->velocity.y = -normal.y * vA * LOSS_OF_ENERGY;
-
-                return (collision);
+                collision = true;
             }
+        }
+    }
+
+    if (collision) {
+        if (flength(A->impulse) > 0.0) {
+            A->impulse = funit(A->impulse);
+
+            A->impulse = fmul(vA * LOSS_OF_ENERGY, A->impulse);
         }
     }
 
@@ -404,10 +424,10 @@ static void collision_all_check (void)
     /*
      * How many small steps we will take for this object.
      */
-    uint32_t timestep = MAX_TIMESTEP;
+    uint32_t timestep;
     uint32_t a;
 
-    for (;;) {
+    for (timestep = 0; timestep < MAX_TIMESTEP; timestep++) {
 
         for (a = 0; a < obj_max; a++) {
             object *A;
@@ -428,7 +448,7 @@ static void collision_all_check (void)
              * Gravity in small steps.
              */
             fpoint dA = A->accel;
-            fdiv((float)MAX_TIMESTEP, dA);
+            fdiv(MAX_TIMESTEP, dA);
 
             A->velocity.x += dA.x;
             A->velocity.y += dA.y;
@@ -436,55 +456,54 @@ static void collision_all_check (void)
             /*
              * Check for maxium air speed.
              */
-            float len_velocity = flength(A->velocity);
+            double len_velocity = flength(A->velocity);
             if (len_velocity > MAX_VELOCITY) {
                 fpoint unit_velocity = funit(A->velocity);
 
                 A->velocity = fmul(MAX_VELOCITY, unit_velocity);
             }
 
-            int tries = 0;
+            /*
+             * Velocity in small steps.
+             */
+            fpoint dV = A->velocity;
+            fdiv(MAX_TIMESTEP, dV);
 
-            for (;;) {
-                /*
-                 * Velocity in small steps.
-                 */
-                fpoint dV = A->velocity;
-                fdiv((float)MAX_TIMESTEP, dV);
+            /*
+             * Save the old location.
+             */
+            A->old_at = A->at;
 
-                /*
-                 * Save the old location.
-                 */
-                A->old_at = A->at;
-
-                /*
-                 * Creep forward.
-                 */
-                A->at.x += dV.x;
-                A->at.y += dV.y;
-
-                /*
-                 * If we impact at the new location, move back to where we 
-                 * were.
-                 */
-                if (collision_check_single_object(A)) {
-                    A->at = A->old_at;
-                    if (tries++ > 4) {
-                        break;
-                    }
-
-                    A->velocity = fmul(LOSS_OF_ENERGY,A->velocity);
-                } else {
-                    break;
-                }
-            }
+            /*
+             * Creep forward.
+             */
+            A->at.x += dV.x;
+            A->at.y += dV.y;
         }
 
-        /*
-         * Step forward in time.
-         */
-        if (!--timestep) {
-            break;
+        for (a = 0; a < obj_max; a++) {
+            object *A;
+
+            A = &objects[a];
+
+            if (A->is_stationary) {
+                continue;
+            }
+
+            /*
+             * If we impact at the new location, move back to where we were.
+             */
+            boolean overlap;
+
+            if (collision_check_single_object(A, &overlap)) {
+                A->at = A->old_at;
+
+                A->velocity = A->impulse;
+            }
+
+            if (overlap ) {
+                A->at = A->old_at;
+            }
         }
     }
 }
@@ -501,5 +520,6 @@ void collision_test (void)
 
     collision_all_check();
     collision_draw();
+
     SDL_Delay(5);
 }

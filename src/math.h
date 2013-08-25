@@ -11,11 +11,11 @@
 
 #undef DISTANCE
 #define DISTANCE(xa,ya,xb,yb) \
-    sqrt((float)(SQUARED((xb)-(xa))+SQUARED((yb)-(ya))))
+    sqrt((double)(SQUARED((xb)-(xa))+SQUARED((yb)-(ya))))
 
 #undef DISTANCE3f
 #define DISTANCE3f(xa,ya,za,xb,yb,zb) \
-    sqrt((float)(SQUARED((xb)-(xa))+\
+    sqrt((double)(SQUARED((xb)-(xa))+\
                  SQUARED((yb)-(ya))+\
                  SQUARED((zb)-(za))))
 
@@ -45,28 +45,28 @@ static inline fpoint3d fsub3d (const fpoint3d a, const fpoint3d b)
     return (r);
 }
 
-static inline fpoint fmul (float m, const fpoint b)
+static inline fpoint fmul (double m, const fpoint b)
 {
     fpoint r = {m * b.x, m * b.y};
 
     return (r);
 }
 
-static inline fpoint3d fmul3d (float m, const fpoint3d b)
+static inline fpoint3d fmul3d (double m, const fpoint3d b)
 {
     fpoint3d r = {m * b.x, m * b.y, m * b.z};
 
     return (r);
 }
 
-static inline fpoint fdiv (float m, const fpoint b)
+static inline fpoint fdiv (double m, const fpoint b)
 {
     fpoint r = {b.x / m, b.y / m};
 
     return (r);
 }
 
-static inline fpoint3d fdiv3d (const float m, const fpoint3d b)
+static inline fpoint3d fdiv3d (const double m, const fpoint3d b)
 {
     fpoint3d r = {b.x / m, b.y / m, b.z / m};
 
@@ -83,14 +83,14 @@ static inline int fcmp3d (const fpoint3d a, const fpoint3d b)
     return ((a.x == b.x) && (a.y == b.y) && (a.z == b.z));
 }
 
-static inline float fdot3d (const fpoint3d a, const fpoint3d b)
+static inline double fdot3d (const fpoint3d a, const fpoint3d b)
 {
     return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
  
-static inline float fcross (const fpoint a, const fpoint b)
+static inline double fcross (const fpoint a, const fpoint b)
 {
-    float c = a.x*b.y - a.y*b.x;
+    double c = a.x*b.y - a.y*b.x;
 
     return (c);
 }
@@ -106,7 +106,7 @@ static inline fpoint fnormal (const fpoint v)
 {
     fpoint n = v;
 
-    float length = sqrt((v.x * v.x) + (v.y * v.y));
+    double length = sqrt((v.x * v.x) + (v.y * v.y));
 
     n.x = v.x / length;
     n.y = v.y / length;
@@ -118,7 +118,7 @@ static inline fpoint3d fnormal3d (fpoint3d v)
 {
     fpoint3d n = v;
 
-    float length = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
+    double length = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 
     n.x = v.x / length;
     n.y = v.y / length;
@@ -127,19 +127,19 @@ static inline fpoint3d fnormal3d (fpoint3d v)
     return (n);
 }
 
-static inline float flength (const fpoint a)
+static inline double flength (const fpoint a)
 {
-    return ((float)sqrt(a.x*a.x + a.y*a.y));
+    return ((double)sqrt(a.x*a.x + a.y*a.y));
 }
 
-static inline float flength3d (const fpoint3d a, const fpoint3d b)
+static inline double flength3d (const fpoint3d a, const fpoint3d b)
 {
     return (DISTANCE3f(a.x, a.y, a.z, b.x, b.y, b.z));
 }
 
 static inline fpoint funit (const fpoint p)
 {
-    const float length = sqrt(p.x*p.x + p.y*p.y);
+    const double length = sqrt(p.x*p.x + p.y*p.y);
     fpoint o;
 
     o.x = p.x / length;
@@ -150,7 +150,7 @@ static inline fpoint funit (const fpoint p)
 
 static inline void unit (fpoint *p)
 {
-    const float length = sqrt(p->x*p->x + p->y*p->y);
+    const double length = sqrt(p->x*p->x + p->y*p->y);
 
     p->x = p->x / length;
     p->y = p->y / length;
@@ -158,7 +158,7 @@ static inline void unit (fpoint *p)
 
 static inline void unit3d (fpoint3d *p)
 {
-    const float length = sqrt(p->x*p->x + p->y*p->y + p->z*p->z);
+    const double length = sqrt(p->x*p->x + p->y*p->y + p->z*p->z);
 
     p->x = p->x / length;
     p->y = p->y / length;
@@ -173,12 +173,12 @@ uint32_t nextpoweroftwo(uint32_t val);
 #define RAD_360 (2.0f * 3.14159265358979323846f) /* 2pi */
 #define RAD_270 (RAD_180 + RAD_90)
 
-static inline float angle2radians (const float angle)
+static inline double angle2radians (const double angle)
 {
     return (angle * (RAD_360 / 360.0));
 }
 
-static inline float radians2angle (const float rad)
+static inline double radians2angle (const double rad)
 {
     return ((360.0 * rad) / RAD_360);
 }
@@ -189,27 +189,27 @@ void math_init(void);
  * Fast cached sin/cos routines.
  */
 #define RAD_MAX 0xFFF
-#define RAD_STEP (RAD_360 / (float)RAD_MAX)
+#define RAD_STEP (RAD_360 / (double)RAD_MAX)
 
-static inline float fsin (float rad)
+static inline double fsin (double rad)
 {
     const uint16_t index = (uint16_t)(rad / RAD_STEP);
-    extern float FSIN[RAD_MAX];
+    extern double FSIN[RAD_MAX];
 
     return (FSIN[index & (RAD_MAX-1)]);
 }
 
-static inline float fcos (float rad)
+static inline double fcos (double rad)
 {
     const uint16_t index = (uint16_t)(rad / RAD_STEP);
-    extern float FCOS[RAD_MAX];
+    extern double FCOS[RAD_MAX];
 
     return (FCOS[index & (RAD_MAX-1)]);
 }
 
-static inline float anglerot (fpoint p)
+static inline double anglerot (fpoint p)
 {
-    float theta = asin(p.y / flength(p));
+    double theta = asin(p.y / flength(p));
 
     if (p.x > 0) {
         if (p.y > 0) {
@@ -222,4 +222,4 @@ static inline float anglerot (fpoint p)
     }
 }
 
-float gauss(const float m, const float s);
+double gauss(const double m, const double s);

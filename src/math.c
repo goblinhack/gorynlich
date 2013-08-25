@@ -23,15 +23,15 @@ uint32_t nextpoweroftwo (uint32_t val)
     return (val);
 }
 
-float FSIN[RAD_MAX];
-float FCOS[RAD_MAX];
+double FSIN[RAD_MAX];
+double FCOS[RAD_MAX];
 
 static void fsin_init (void)
 {
     uint16_t i;
 
     for (i = 0; i < RAD_MAX; i++) {
-        FSIN[i] = (float)sin(RAD_STEP * (float) i);
+        FSIN[i] = (double)sin(RAD_STEP * (double) i);
     }
 }
 
@@ -40,7 +40,7 @@ static void fcos_init (void)
     uint16_t i;
 
     for (i = 0; i < RAD_MAX; i++) {
-        FCOS[i] = (float)cos(RAD_STEP * (float) i);
+        FCOS[i] = (double)cos(RAD_STEP * (double) i);
     }
 }
 
@@ -50,18 +50,18 @@ void math_init (void)
     fcos_init();
 }
 
-float gauss (const float m, const float s)
+double gauss (const double m, const double s)
 {
     static int use_last = 0;
-    static float y2;
-    float x1, x2, w, y1;
+    static double y2;
+    double x1, x2, w, y1;
 
     if (use_last) {
         y1 = y2;
     } else {
         do { // ming don't have random
-            x1 = 2.0 * ((float)rand() / (float)RAND_MAX) - 1.0;
-            x2 = 2.0 * ((float)rand() / (float)RAND_MAX) - 1.0;
+            x1 = 2.0 * ((double)rand() / (double)RAND_MAX) - 1.0;
+            x2 = 2.0 * ((double)rand() / (double)RAND_MAX) - 1.0;
             w = x1 * x1 + x2 * x2;
         } while (w >= 1.0);
 
