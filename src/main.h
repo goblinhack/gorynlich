@@ -276,8 +276,8 @@ char *dupstr_(const char *in, const char *what, const char *func,
  * point.c
  */
 typedef struct {
-    float x;
-    float y;
+    double x;
+    double y;
 } fpoint;
 
 typedef struct {
@@ -286,9 +286,9 @@ typedef struct {
 } point;
 
 typedef struct {
-    float x;
-    float y;
-    float z;
+    double x;
+    double y;
+    double z;
 } fpoint3d;
 
 typedef struct {
@@ -303,8 +303,8 @@ typedef struct {
 } size;
 
 typedef struct {
-    float width;
-    float height;
+    double width;
+    double height;
 } fsize;
 
 /*
