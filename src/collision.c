@@ -19,12 +19,13 @@
 /*
  * Settings.
  */
-static double GRAVITY               = 0.5;
-static double LOSS_OF_ENERGY        = 0.8;
-static double MAX_VELOCITY          = 2.0;
-static double MAX_TIMESTEP          = 2.0;
-static const uint32_t OBJ_RADIUS    = 20;
-static const uint32_t OBJ_MAX       = 100;
+static double GRAVITY                = 0.5;
+static double LOSS_OF_ENERGY         = 0.8;
+static double MAX_VELOCITY           = 2.0;
+static double MAX_TIMESTEP           = 2.0;
+static const uint32_t OBJ_MIN_RADIUS = 5;
+static const uint32_t OBJ_MAX_RADIUS = 100;
+static const uint32_t OBJ_MAX        = 200;
 
 typedef struct {
     fpoint br;
@@ -101,8 +102,8 @@ static void collision_init (void)
      */
     int32_t W = global_config.video_gl_width;
     int32_t H = global_config.video_gl_height;
-    int32_t w = W - OBJ_RADIUS * 4;
-    int32_t h = H - OBJ_RADIUS * 4;
+    int32_t w = W - OBJ_MAX_RADIUS * 4;
+    int32_t h = H - OBJ_MAX_RADIUS * 4;
 
     object *obj;
     uint32_t o;
@@ -121,8 +122,8 @@ static void collision_init (void)
 
             at.x = rand() % w;
             at.y = rand() % h;
-            at.x += OBJ_RADIUS * 2;
-            at.y += OBJ_RADIUS * 2;
+            at.x += OBJ_MAX_RADIUS * 2;
+            at.y += OBJ_MAX_RADIUS * 2;
 
             /*
              * Random velocity.
@@ -139,12 +140,14 @@ static void collision_init (void)
             obj->box = 0;
 
             if (obj->box) {
-                obj->shape.b.tl.x = at.x - OBJ_RADIUS;
-                obj->shape.b.tl.y = at.y - OBJ_RADIUS;
-                obj->shape.b.br.x = at.x + OBJ_RADIUS;
-                obj->shape.b.br.y = at.y + OBJ_RADIUS;
+                obj->shape.b.tl.x = at.x - OBJ_MAX_RADIUS / 2;
+                obj->shape.b.tl.y = at.y - OBJ_MAX_RADIUS / 2;
+                obj->shape.b.br.x = at.x + OBJ_MAX_RADIUS / 2;
+                obj->shape.b.br.y = at.y + OBJ_MAX_RADIUS / 2;
             } else {
-                obj->shape.c.radius = OBJ_RADIUS;
+                obj->shape.c.radius =
+                    (rand() % (OBJ_MAX_RADIUS - OBJ_MIN_RADIUS)) +
+                    OBJ_MIN_RADIUS;
             }
 
             obj->at = at;
@@ -176,7 +179,7 @@ static void collision_init (void)
     obj++;
     obj->box = true;
     obj->shape.b.tl.x = 0;
-    obj->shape.b.tl.y = H - OBJ_RADIUS;
+    obj->shape.b.tl.y = H - OBJ_MIN_RADIUS;
     obj->shape.b.br.x = W;
     obj->shape.b.br.y = H;
     obj->at.x = (obj->shape.b.tl.x + obj->shape.b.br.x) / 2.0;
@@ -187,7 +190,7 @@ static void collision_init (void)
     obj->box = true;
     obj->shape.b.tl.x = 0;
     obj->shape.b.tl.y = 0;
-    obj->shape.b.br.x = OBJ_RADIUS;
+    obj->shape.b.br.x = OBJ_MIN_RADIUS;
     obj->shape.b.br.y = H;
     obj->at.x = (obj->shape.b.tl.x + obj->shape.b.br.x) / 2.0;
     obj->at.y = (obj->shape.b.tl.y + obj->shape.b.br.y) / 2.0;
@@ -195,7 +198,7 @@ static void collision_init (void)
 
     obj++;
     obj->box = true;
-    obj->shape.b.tl.x = W - OBJ_RADIUS;
+    obj->shape.b.tl.x = W - OBJ_MIN_RADIUS;
     obj->shape.b.tl.y = 0;
     obj->shape.b.br.x = W;
     obj->shape.b.br.y = H;
@@ -208,7 +211,7 @@ static void collision_init (void)
     obj->shape.b.tl.x = 0;
     obj->shape.b.tl.y = 0;
     obj->shape.b.br.x = W;
-    obj->shape.b.br.y = OBJ_RADIUS;
+    obj->shape.b.br.y = OBJ_MIN_RADIUS;
     obj->at.x = (obj->shape.b.tl.x + obj->shape.b.br.x) / 2.0;
     obj->at.y = (obj->shape.b.tl.y + obj->shape.b.br.y) / 2.0;
     obj->is_stationary = true;
@@ -311,6 +314,7 @@ static boolean collision_check_single_object (object *A, boolean *overlap)
 {
     int32_t W = global_config.video_gl_width;
     int32_t H = global_config.video_gl_height;
+    double radius = A->shape.c.radius;
     double vA = flength(A->velocity);
     boolean collision;
     uint32_t b;
@@ -327,17 +331,17 @@ static boolean collision_check_single_object (object *A, boolean *overlap)
     /*
      * Edge hits ?
      */
-    if (A->at.y > H - OBJ_RADIUS * 2) {
+    if (A->at.y + radius > H - OBJ_MIN_RADIUS) {
         A->impulse.y += -A->velocity.y * LOSS_OF_ENERGY;
         collision = true;
     }
 
-    if (A->at.x > W - OBJ_RADIUS * 2) {
+    if (A->at.x + radius > W - OBJ_MIN_RADIUS) {
         A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
         collision = true;
     }
 
-    if (A->at.x < OBJ_RADIUS * 2) {
+    if (A->at.x - radius < OBJ_MIN_RADIUS) {
         A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
         collision = true;
     }
