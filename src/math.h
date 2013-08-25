@@ -167,6 +167,7 @@ static inline void unit3d (fpoint3d *p)
 
 uint32_t nextpoweroftwo(uint32_t val);
 
+#define PI      3.14159265358979323846f /* pi */
 #define RAD_45  0.78539816339744830962f /* pi/4 */
 #define RAD_90  1.57079632679489661923f /* pi/2 */
 #define RAD_180 3.14159265358979323846f /* pi */
