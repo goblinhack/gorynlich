@@ -26,7 +26,7 @@ static double MAX_VELOCITY              = 2.0;
 static double MAX_TIMESTEP              = 2.0;
 static const uint32_t OBJ_MIN_RADIUS    = 5;
 static const uint32_t OBJ_MAX_RADIUS    = 100;
-static const uint32_t OBJ_MAX           = 30;
+static const uint32_t OBJ_MAX           = 8;
 
 typedef struct {
     fpoint br;
