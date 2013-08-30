@@ -15,17 +15,18 @@
 #include "color.h"
 #include "geo.h"
 #include "time.h"
+#include "ttf.h"
 
 /*
  * Settings.
  */
-static double GRAVITY                = 0.01;
-static double LOSS_OF_ENERGY         = 1.5;
-static double MAX_VELOCITY           = 1.0;
-static double MAX_TIMESTEP           = 2.0;
-static const uint32_t OBJ_MIN_RADIUS = 5;
-static const uint32_t OBJ_MAX_RADIUS = 100;
-static const uint32_t OBJ_MAX        = 100;
+static double GRAVITY                   = 0.01;
+static double COLLISION_ELASTICITY      = 0.4;
+static double MAX_VELOCITY              = 2.0;
+static double MAX_TIMESTEP              = 2.0;
+static const uint32_t OBJ_MIN_RADIUS    = 5;
+static const uint32_t OBJ_MAX_RADIUS    = 100;
+static const uint32_t OBJ_MAX           = 20;
 
 typedef struct {
     fpoint br;
@@ -36,11 +37,15 @@ typedef struct {
     double radius;
 } circle;
 
-typedef struct {
+typedef struct collision_object_ {
+    struct collision_object_ *next;
+    struct object_ *hit;
+} collision_object;
+
+typedef struct object_ {
     fpoint at;
     fpoint old_at;
     fpoint velocity;
-    fpoint impulse;
     fpoint accel;
     double mass;
     union {
@@ -51,6 +56,7 @@ typedef struct {
     boolean is_stationary:1;
     boolean is_debug:1;
     boolean collided:1;
+    collision_object *collision;
 } object;
 
 static uint32_t obj_max;
@@ -59,7 +65,7 @@ static object objects[OBJ_MAX];
 /*
  * Prototypes.
  */
-static boolean collision_check_single_object(object *);
+static boolean collision_check_single_object(int a, object *);
 
 /*
  * OpenGLES workarounds for missing glBegin glEnd
@@ -153,6 +159,7 @@ static void collision_init (void)
                     OBJ_MIN_RADIUS;
 
                 obj->mass = PI * obj->shape.c.radius * obj->shape.c.radius;
+                obj->mass *= obj->mass;
             }
 
             obj->at = at;
@@ -160,7 +167,7 @@ static void collision_init (void)
 
             obj_max++;
 
-            if (!collision_check_single_object(obj)) {
+            if (!collision_check_single_object(0, obj)) {
                 break;
             }
 
@@ -228,6 +235,27 @@ static void collision_init (void)
     obj->velocity.x = 0;
     obj->velocity.y = 0;
     obj->is_stationary = true;
+
+#if 0
+    memset(&objects[0], 0, sizeof(obj[0]));
+    memset(&objects[1], 0, sizeof(obj[1]));
+
+    objects[0].at.x = W / 2 - W / 4;
+    objects[0].at.y = H / 2;
+    objects[0].velocity.x = -3;
+    objects[0].velocity.x = 0;
+    objects[0].velocity.y = 0;
+    objects[0].mass = OBJ_MAX_RADIUS/2;
+    objects[0].shape.c.radius = OBJ_MAX_RADIUS/2;
+    objects[0].is_stationary = true;
+
+    objects[1].at.x = W / 2 + W / 4;
+    objects[1].at.y = H / 2;
+    objects[1].velocity.x = -3;
+    objects[1].velocity.y = 0;
+    objects[1].mass = OBJ_MAX_RADIUS;
+    objects[1].shape.c.radius = OBJ_MAX_RADIUS;
+#endif
 }
 
 /*
@@ -237,8 +265,7 @@ static void collision_draw (void)
 {
     uint32_t o;
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glLineWidth(2.0);
+    glLineWidth(0.1);
     glcolor(WHITE);
 
     for (o = 0; o < OBJ_MAX; o++) {
@@ -251,6 +278,8 @@ static void collision_draw (void)
         } else {
             glcolor(WHITE);
         }
+
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         Begin(GL_LINE_LOOP);
             
@@ -278,6 +307,11 @@ static void collision_draw (void)
         }
 
         End();
+
+        char tmp[10];
+        sprintf(tmp, "%d", o);
+
+        ttf_puts(small_font, tmp, obj->at.x, obj->at.y, 1.0, 1.0, true);
     }
 }
 
@@ -285,7 +319,7 @@ static void collision_draw (void)
  * If two circles collide, the resultant direction is along the normal between
  * the two center of masses of the circles.
  */
-static boolean circle_circle_collision (object *A, object *B, fpoint *normal)
+static boolean circle_circle_collision (object *A, object *B)
 {
     circle *CA = &A->shape.c;
     circle *CB = &B->shape.c;
@@ -306,16 +340,8 @@ static boolean circle_circle_collision (object *A, object *B, fpoint *normal)
      * Circles are centered on each other
      */
     if (dist == 0.0) {
-        /*
-         * Velocity should be limited to prevent this.
-         */
-        normal->x = 0;
-        normal->y = -1;
-
         return (true);
     }
-
-    *normal = fdiv(touching_dist, n);
 
     return (true);
 }
@@ -323,52 +349,41 @@ static boolean circle_circle_collision (object *A, object *B, fpoint *normal)
 /*
  * See if this object collides with anything.
  */
-static boolean collision_check_single_object (object *A)
+static boolean collision_check_single_object (int a, object *A)
 {
     int32_t W = global_config.video_gl_width;
     int32_t H = global_config.video_gl_height;
     double radius = A->shape.c.radius;
-    double uA = flength(A->velocity);
-    boolean collision;
+    uint32_t hit;
     uint32_t b;
-    uint32_t impacts;
-
-    collision = false;
 
     if (A->is_stationary) {
         return (false);
     }
 
-    impacts = 0;
-
-    A->impulse.x = 0;
-    A->impulse.y = 0;
+    hit = 0;
 
     /*
      * Edge hits ?
      */
     if (A->at.y - radius < OBJ_MIN_RADIUS) {
-        A->impulse.y += -A->velocity.y * LOSS_OF_ENERGY;
-        collision = true;
-        impacts++;
+        A->velocity.y = -A->velocity.y * COLLISION_ELASTICITY;
+        hit++;
     }
 
     if (A->at.y + radius > H - OBJ_MIN_RADIUS) {
-        A->impulse.y += -A->velocity.y * LOSS_OF_ENERGY;
-        collision = true;
-        impacts++;
+        A->velocity.y = -A->velocity.y * COLLISION_ELASTICITY;
+        hit++;
     }
 
     if (A->at.x + radius > W - OBJ_MIN_RADIUS) {
-        A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
-        collision = true;
-        impacts++;
+        A->velocity.x = -A->velocity.x * COLLISION_ELASTICITY;
+        hit++;
     }
 
     if (A->at.x - radius < OBJ_MIN_RADIUS) {
-        A->impulse.x += -A->velocity.x * LOSS_OF_ENERGY;
-        collision = true;
-        impacts++;
+        A->velocity.x = -A->velocity.x * COLLISION_ELASTICITY;
+        hit++;
     }
 
     for (b = 0; b < obj_max; b++) {
@@ -380,91 +395,144 @@ static boolean collision_check_single_object (object *A)
             continue;
         }
 
-        fpoint normal;
+        /*
+         * Check if we've collided between this pair before.
+         */
+        collision_object *collision;
+
+        collision = A->collision;
+        while (collision) {
+            if (collision->hit == B) {
+                break;
+            }
+
+            collision = collision->next;
+        }
+
+        if (collision) {
+            continue;
+        }
+
+        boolean collided = false;
 
         if (A->box && B->box) {
             /*
              * Box v box.
              */
+            hit++;
+            collided = true;
         } else if (!A->box && B->box) {
             /*
              * Circle v box.
              */
+            hit++;
+            collided = true;
         } else if (A->box && !B->box) {
             /*
              * Box v circle.
              */
+            hit++;
+            collided = true;
         } else if (!A->box && !B->box) {
-            if (circle_circle_collision(A, B, &normal)) {
-#if 0
-                glcolor(RED);
 
-                Begin(GL_LINES);
-                    Vertex2f(A->at.x, A->at.y);
-
-                    Vertex2f(A->at.x + normal.x * (double)OBJ_RADIUS*10,
-                             A->at.y + normal.y * (double)OBJ_RADIUS*10);
-
-                    Vertex2f(A->at.x, A->at.y);
-
-                    Vertex2f(A->at.x + A->velocity.x * (double)OBJ_RADIUS*10,
-                             A->at.y + A->velocity.y * (double)OBJ_RADIUS*10);
-                End();
-#endif
-
-#if 0
-                fpoint relative_velocity = fsub(A->velocity, B->velocity);
-                double cross = fcross(relative_velocity, normal);
-                if (cross > 0.0) {
-                    /*
-                     * Heading apart.
-                     */
-LOG("heading apart");
-                    continue;
-                }
-#endif
-
-                double mA = A->mass;
-                double mB = B->mass;
-                double vA;
-
-#if 0
-                double uB = flength(B->velocity);
-                vA = (uA * (mA - mB) + (2 * mB * uB)) / (mA + mB);
-
-                double CR = LOSS_OF_ENERGY;
-
-
-                vA = ((mA * uA) + (mB * uB) + (mB * CR * (uB - uA)))
-                                /
-                            (mA + mB);
-#endif
-
-                if (B->is_stationary) {
-                    vA = uA * LOSS_OF_ENERGY;
-                } else {
-                    vA = (mB / (mA + mB)) * uA;
-                    vA *= LOSS_OF_ENERGY;
-                    vA = fabs(vA);
-                }
-
-                A->impulse.x += -normal.x * vA;
-                A->impulse.y += -normal.y * vA;
-//LOG("mass %f uA %f vA %f",mA,uA,vA);
-
-                impacts++;
-
-                collision = true;
+            if (circle_circle_collision(A, B)) {
+                hit++;
+                collided = true;
             }
+        }
+
+        if (collided) {
+            /*
+             * Normal vector is a line between the two center of masses.
+             * Tangent vector is at 90 degrees to this.
+             */
+            fpoint normal = fsub(B->at, A->at);
+            fpoint normal_unit = funit(normal);
+            fpoint tangent_unit = { -normal_unit.y, normal_unit.x };
+
+            double mA = A->mass;
+            double mB = A->mass;
+
+            fpoint vA = A->velocity;
+            fpoint vB = B->velocity;
+
+            if (B->is_stationary) {
+                mB = mA;
+                vB = fmul(-1, vA);
+            }
+
+            /*
+             * Project the velocity onto the normal vectors.
+             */
+            double normal_A_len = fdot(normal_unit, vA);
+            double normal_B_len = fdot(normal_unit, vB);
+
+            double tangent_A_len = fdot(tangent_unit, vA);
+            double tangent_B_len = fdot(tangent_unit, vB);
+            
+            /*
+             * Tangent velocity doesn't change.after collision.
+             */
+            double tangent_A_velocity = tangent_A_len;
+            double tangent_B_velocity = tangent_B_len;
+            
+            /*
+             * Do one dimensional elastic collision.
+             */
+            double normal_A_velocity =
+                (normal_A_len*(mA - mB) + 2.0 * mB*normal_B_len) / (mA + mB);
+
+            double normal_B_velocity =
+                (normal_B_len*(mB - mA) + 2.0 * mA*normal_A_len) / (mA + mB);
+
+            fpoint normal_velocity_A  = fmul(normal_A_velocity, normal_unit);
+            fpoint tangent_velocity_A = fmul(tangent_A_velocity, tangent_unit);
+
+            fpoint normal_velocity_B  = fmul(normal_B_velocity, normal_unit);
+            fpoint tangent_velocity_B = fmul(tangent_B_velocity, tangent_unit);
+
+            if (!A->is_stationary) {
+                A->velocity.x = normal_velocity_A.x + tangent_velocity_A.x;
+                A->velocity.y = normal_velocity_A.y + tangent_velocity_A.y;
+            }
+
+            if (!B->is_stationary) {
+                B->velocity.x = normal_velocity_B.x + tangent_velocity_B.x;
+                B->velocity.y = normal_velocity_B.y + tangent_velocity_B.y;
+            }
+
+            fmul(COLLISION_ELASTICITY, A->velocity);
+            fmul(COLLISION_ELASTICITY, B->velocity);
+
+            glcolor(RED);
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            Begin(GL_LINES);
+                Vertex2f(A->at.x, A->at.y);
+
+                Vertex2f(A->at.x + normal_unit.x * (double)OBJ_MAX_RADIUS,
+                         A->at.y + normal_unit.y * (double)OBJ_MAX_RADIUS);
+            End();
+
+            Begin(GL_LINES);
+                Vertex2f(A->at.x, A->at.y);
+
+                Vertex2f(A->at.x + tangent_unit.x * (double)OBJ_MAX_RADIUS,
+                         A->at.y + tangent_unit.y * (double)OBJ_MAX_RADIUS);
+            End();
+
+            /*
+             * Record this collision so the other object will not hit us
+             * again.
+             */
+            collision = mymalloc(sizeof(*collision), "collision");
+            collision->next = B->collision;
+            collision->hit = A;
+            B->collision = collision;
         }
     }
 
-    if (collision) {
-
-            A->impulse = fdiv((double)impacts, A->impulse);
-    }
-
-    return (collision);
+    return (hit > 0);
 }
 
 /*
@@ -547,7 +615,7 @@ static void collision_all_check (void)
             /*
              * If we impact at the new location, move back to where we were.
              */
-            if (collision_check_single_object(A)) {
+            if (collision_check_single_object(a, A)) {
                 A->collided = true;
             }
         }
@@ -557,14 +625,32 @@ static void collision_all_check (void)
 
             A = &objects[a];
 
-            if (!A->collided) {
+            if (A->is_stationary) {
                 continue;
             }
 
-            A->at = A->old_at;
+            collision_object *collision;
+            collision_object *next;
 
-            A->velocity.x += A->impulse.x;
-            A->velocity.y += A->impulse.y;
+            collision = A->collision;
+            if (collision) {
+                A->at = A->old_at;
+
+                while (collision) {
+                    collision->hit->at = collision->hit->old_at;
+
+                    next = collision->next;
+                    myfree(collision);
+                    collision = next;
+                }
+
+                A->collision = 0;
+            } else if (A->collided) {
+                /*
+                 * For wall collisions where there is no object.
+                 */
+                A->at = A->old_at;
+            }
         }
     }
 }

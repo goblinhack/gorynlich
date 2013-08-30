@@ -83,6 +83,11 @@ static inline int fcmp3d (const fpoint3d a, const fpoint3d b)
     return ((a.x == b.x) && (a.y == b.y) && (a.z == b.z));
 }
 
+static inline double fdot (const fpoint a, const fpoint b)
+{
+    return (a.x * b.x + a.y * b.y);
+}
+
 static inline double fdot3d (const fpoint3d a, const fpoint3d b)
 {
     return (a.x * b.x + a.y * b.y + a.z * b.z);
