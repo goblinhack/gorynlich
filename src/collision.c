@@ -21,8 +21,8 @@
  * Settings.
  */
 static double GRAVITY                   = 0.04;
-static double COLLISION_ELASTICITY      = 0.6;
-static double FRICTION                  = 0.6;
+static double COLLISION_ELASTICITY      = 0.5;
+static double FRICTION                  = 0.5;
 static double TANGENT_ELASTICITY        = 0.95;
 static double MAX_VELOCITY              = 5.0;
 static double MAX_TIMESTEP              = 5.0;
@@ -565,11 +565,13 @@ static boolean collision_check_single_object (object *A,
             vB = fmul(-1, vA);
         }
 
-        vB.y += 1;
+        B->at.y += 1;
         if (collision_check_single_object(B, 0, true)) {
+            mB = mA;
             vB.y += -vA.y;
+
         }
-        vB.y -= 1;
+        B->at.y -= 1;
 
         /*
          * Project the velocity onto the normal vectors.
