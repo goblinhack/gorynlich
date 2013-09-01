@@ -20,13 +20,15 @@
 /*
  * Settings.
  */
-static double GRAVITY                   = 0.01;
-static double COLLISION_ELASTICITY      = 0.8;
-static double MAX_VELOCITY              = 2.0;
-static double MAX_TIMESTEP              = 2.0;
-static const uint32_t OBJ_MIN_RADIUS    = 5;
-static const uint32_t OBJ_MAX_RADIUS    = 100;
-static const uint32_t OBJ_MAX           = 8;
+static double GRAVITY                   = 0.04;
+static double COLLISION_ELASTICITY      = 0.6;
+static double FRICTION                  = 0.6;
+static double TANGENT_ELASTICITY        = 0.95;
+static double MAX_VELOCITY              = 5.0;
+static double MAX_TIMESTEP              = 5.0;
+static const uint32_t OBJ_MIN_RADIUS    = 10;
+static const uint32_t OBJ_MAX_RADIUS    = 30;
+static const uint32_t OBJ_MAX           = 200;
 
 typedef struct {
     fpoint br;
@@ -48,6 +50,7 @@ typedef struct object_ {
         circle c;
     } shape;
     boolean box:1;
+    boolean moved:1;
     boolean is_stationary:1;
     boolean is_debug:1;
     boolean collided:1;
@@ -59,8 +62,7 @@ static object objects[OBJ_MAX];
 /*
  * Prototypes.
  */
-static boolean collision_check_single_object(int a, object *,
-                                             boolean);
+static boolean collision_check_single_object(object *, object *, boolean);
 
 /*
  * OpenGLES workarounds for missing glBegin glEnd
@@ -70,6 +72,9 @@ static GLfloat xy[GL_MAX_BUFFER_SIZE];
 static GLfloat *xyp = xy;
 static GLfloat *end_of_xyp = xy + GL_MAX_BUFFER_SIZE;
 static GLsizei gl_state;
+
+static int x, y;
+float scale = 1;
 
 /*
  * OpenGLES workarounds for missing glBegin 
@@ -162,7 +167,7 @@ static void collision_init (void)
 
             obj_max++;
 
-            if (!collision_check_single_object(0, obj, true)) {
+            if (!collision_check_single_object(obj, 0, true)) {
                 break;
             }
 
@@ -234,22 +239,39 @@ static void collision_init (void)
 #if 0
     memset(&objects[0], 0, sizeof(obj[0]));
     memset(&objects[1], 0, sizeof(obj[1]));
+    memset(&objects[2], 0, sizeof(obj[2]));
+    memset(&objects[3], 0, sizeof(obj[3]));
 
-    objects[0].at.x = W / 2 - W / 4;
-    objects[0].at.y = H / 2;
-    objects[0].velocity.x = -3;
+    objects[0].at.x = W / 2 - 100;
+    objects[0].at.y = H - 100;
     objects[0].velocity.x = 0;
     objects[0].velocity.y = 0;
-    objects[0].mass = OBJ_MAX_RADIUS/2;
-    objects[0].shape.c.radius = OBJ_MAX_RADIUS/2;
+    objects[0].mass = OBJ_MAX_RADIUS /2- 10;
+    objects[0].shape.c.radius = OBJ_MAX_RADIUS /2- 10;
     objects[0].is_stationary = true;
 
-    objects[1].at.x = W / 2 + W / 4;
-    objects[1].at.y = H / 2;
-    objects[1].velocity.x = -3;
+    objects[1].at.x = W / 2 + 0;
+    objects[1].at.y = H - 70;
+    objects[1].velocity.x = 0;
     objects[1].velocity.y = 0;
-    objects[1].mass = OBJ_MAX_RADIUS;
-    objects[1].shape.c.radius = OBJ_MAX_RADIUS;
+    objects[1].mass = OBJ_MAX_RADIUS /3;
+    objects[1].shape.c.radius = OBJ_MAX_RADIUS /3;
+    objects[1].is_stationary = true;
+
+    objects[2].at.x = W / 2 + 130;
+    objects[2].at.y = H - 160;
+    objects[2].velocity.x = 0;
+    objects[2].velocity.y = 0;
+    objects[2].mass = OBJ_MAX_RADIUS;
+    objects[2].shape.c.radius = OBJ_MAX_RADIUS;
+    objects[2].is_stationary = true;
+
+    objects[3].at.x = W / 2;
+    objects[3].at.y = 300;
+    objects[3].velocity.x = 0;
+    objects[3].velocity.y = 0;
+    objects[3].mass = OBJ_MAX_RADIUS / 2;
+    objects[3].shape.c.radius = OBJ_MAX_RADIUS / 2;
 #endif
 }
 
@@ -260,15 +282,21 @@ static void collision_draw (void)
 {
     uint32_t o;
 
-    glLineWidth(0.1);
+    glLineWidth(0.01);
     glcolor(WHITE);
+
+    SDL_GetMouseState(&x, &y);
+
+    glPushMatrix();
+//    glTranslatef((float) -x*scale, (float) -y*scale, 0);
+//    glScalef(scale, scale, 0);
 
     for (o = 0; o < OBJ_MAX; o++) {
         object *obj;
 
         obj = &objects[o];
 
-        if (obj->is_debug) {
+        if (obj->is_debug || obj->is_stationary) {
             glcolor(RED);
         } else {
             glcolor(WHITE);
@@ -303,11 +331,15 @@ static void collision_draw (void)
 
         End();
 
+#if 0
         char tmp[10];
         sprintf(tmp, "%d", o);
 
         ttf_puts(small_font, tmp, obj->at.x, obj->at.y, 1.0, 1.0, true);
+#endif
     }
+
+    glPopMatrix();
 }
 
 /*
@@ -320,31 +352,84 @@ static boolean circle_circle_collision (object *A, object *B)
     circle *CB = &B->shape.c;
 
     fpoint n = fsub(B->at, A->at);
- 
     double touching_dist = CA->radius + CB->radius;
-    double dist = flength(n);
+    double dist_squared = n.x*n.x + n.y*n.y;
 
-    /*
-     * Circles are not touching
-     */
-    if (dist > touching_dist) {
+    if (dist_squared - touching_dist * touching_dist > 0) {
+        /*
+         * Circles are not touching
+         */
         return (false);
     }
  
     /*
      * Circles are centered on each other
      */
-    if (dist == 0.0) {
+    if (dist_squared == 0.0) {
         return (true);
     }
 
     return (true);
 }
 
+static void collision_objects_try_to_move (object *A, fpoint dVa,
+                                           object *B, fpoint dVb)
+{
+    if (!A->moved) {
+        if (!A->is_stationary) {
+            dVa = fdiv(MAX_TIMESTEP, dVa);
+
+            A->at.x += dVa.x;
+            A->at.y += dVa.y;
+        }
+    }
+
+    if (!B->moved) {
+        if (!B->is_stationary) {
+            /*
+             * Try B out in the new position.
+             */
+            dVb = fdiv(MAX_TIMESTEP, dVb);
+
+            B->at.x += dVb.x;
+            B->at.y += dVb.y;
+        }
+    }
+
+    if (!A->moved) {
+        if (!A->is_stationary) {
+            if (collision_check_single_object(A, B, true)) {
+                /*
+                 * Hit another object. Move back.
+                 */
+                A->at = A->old_at;
+            } else {
+                A->old_at = A->at;
+                A->moved = true;
+            }
+        }
+    }
+
+    if (!B->moved) {
+        if (!B->is_stationary) {
+            if (collision_check_single_object(B, A, true)) {
+                /*
+                 * Hit another object. Move back.
+                 */
+                B->at = B->old_at;
+            } else {
+                B->old_at = B->at;
+                B->moved = true;
+            }
+        }
+    }
+}
+
 /*
  * See if this object collides with anything.
  */
-static boolean collision_check_single_object (int a, object *A,
+static boolean collision_check_single_object (object *A,
+                                              object *ignore,
                                               boolean check_only)
 {
     int32_t W = global_config.video_gl_width;
@@ -369,7 +454,8 @@ static boolean collision_check_single_object (int a, object *A,
 
         A->at.y = A->old_at.y;
         A->velocity.y = -A->velocity.y;
-        A->velocity = fmul(COLLISION_ELASTICITY, A->velocity);
+        A->velocity.y *= COLLISION_ELASTICITY;
+        A->velocity.x *= TANGENT_ELASTICITY;
         hit++;
     }
 
@@ -380,7 +466,8 @@ static boolean collision_check_single_object (int a, object *A,
 
         A->at.y = A->old_at.y;
         A->velocity.y = -A->velocity.y;
-        A->velocity = fmul(COLLISION_ELASTICITY, A->velocity);
+        A->velocity.y *= COLLISION_ELASTICITY;
+        A->velocity.x *= TANGENT_ELASTICITY;
         hit++;
     }
 
@@ -391,7 +478,8 @@ static boolean collision_check_single_object (int a, object *A,
 
         A->at.x = A->old_at.x;
         A->velocity.x = -A->velocity.x;
-        A->velocity = fmul(COLLISION_ELASTICITY, A->velocity);
+        A->velocity.x *= COLLISION_ELASTICITY;
+        A->velocity.y *= TANGENT_ELASTICITY;
         hit++;
     }
 
@@ -402,7 +490,8 @@ static boolean collision_check_single_object (int a, object *A,
 
         A->at.x = A->old_at.x;
         A->velocity.x = -A->velocity.x;
-        A->velocity = fmul(COLLISION_ELASTICITY, A->velocity);
+        A->velocity.x *= COLLISION_ELASTICITY;
+        A->velocity.y *= TANGENT_ELASTICITY;
         hit++;
     }
 
@@ -412,6 +501,10 @@ static boolean collision_check_single_object (int a, object *A,
         B = &objects[b];
 
         if (A == B) {
+            continue;
+        }
+
+        if (A == ignore) {
             continue;
         }
 
@@ -451,6 +544,8 @@ static boolean collision_check_single_object (int a, object *A,
             return (true);
         }
 
+        A->at = A->old_at;
+
         /*
          * Normal vector is a line between the two center of masses.
          * Tangent vector is at 90 degrees to this.
@@ -469,6 +564,12 @@ static boolean collision_check_single_object (int a, object *A,
             mB = mA;
             vB = fmul(-1, vA);
         }
+
+        vB.y += 1;
+        if (collision_check_single_object(B, 0, true)) {
+            vB.y += -vA.y;
+        }
+        vB.y -= 1;
 
         /*
          * Project the velocity onto the normal vectors.
@@ -500,6 +601,11 @@ static boolean collision_check_single_object (int a, object *A,
         fpoint normal_velocity_B  = fmul(normal_B_velocity, normal_unit);
         fpoint tangent_velocity_B = fmul(tangent_B_velocity, tangent_unit);
 
+        normal_velocity_A = fmul(COLLISION_ELASTICITY, normal_velocity_A);
+        normal_velocity_B = fmul(COLLISION_ELASTICITY, normal_velocity_B);
+        tangent_velocity_A = fmul(TANGENT_ELASTICITY, tangent_velocity_A);
+        tangent_velocity_B = fmul(TANGENT_ELASTICITY, tangent_velocity_B);
+
         if (!A->is_stationary) {
             A->velocity.x = normal_velocity_A.x + tangent_velocity_A.x;
             A->velocity.y = normal_velocity_A.y + tangent_velocity_A.y;
@@ -510,61 +616,104 @@ static boolean collision_check_single_object (int a, object *A,
             B->velocity.y = normal_velocity_B.y + tangent_velocity_B.y;
         }
 
-        A->velocity = fmul(COLLISION_ELASTICITY, A->velocity);
-        B->velocity = fmul(COLLISION_ELASTICITY, B->velocity);
+        A->moved = false;
+        B->moved = false;
 
-        /*
-         * Try A out in the new position.
-         */
-        fpoint dVa = A->velocity;
-        dVa = fdiv(MAX_TIMESTEP, dVa);
+        collision_objects_try_to_move(A, A->velocity,
+                                      B, B->velocity);
+#if 1
+        collision_objects_try_to_move(A, tangent_velocity_A,
+                                      B, tangent_velocity_B);
+        collision_objects_try_to_move(A, normal_velocity_A,
+                                      B, normal_velocity_B);
+#endif
 
-        A->at = A->old_at;
-        A->at.x += dVa.x;
-        A->at.y += dVa.y;
-
-        if (collision_check_single_object(a, A, true)) {
-            /*
-             * Hit another object. Move back.
-             */
-            A->at = A->old_at;
+        if (!A->moved) {
+            A->velocity.x *= FRICTION;
+            A->velocity.y *= FRICTION;
         }
 
-        if (!B->is_stationary) {
-            /*
-             * Try B out in the new position.
-             */
-            fpoint dVb = B->velocity;
-            dVb = fdiv(MAX_TIMESTEP, dVb);
-
-            B->at = B->old_at;
-            B->at.x += dVb.x;
-            B->at.y += dVb.y;
-
-            if (collision_check_single_object(b, B, true)) {
-                /*
-                * Hit another object. Move back.
-                */
-                B->at = B->old_at;
-            }
+        if (!B->moved) {
+            B->velocity.x *= FRICTION;
+            B->velocity.y *= FRICTION;
         }
+#if 0
 
-        glcolor(RED);
+        if (A->velocity.x < 0.0001) {
+            A->velocity.x *= FRICTION;
+        }
+        if (A->velocity.y < 0.0001) {
+            A->velocity.y *= FRICTION;
+        }
+#endif
+#if 0
+        fpoint dA = A->velocity;
+        fpoint dB = B->velocity;
+
+        dA.y = 0;
+        dB.y = 0;
+        collision_objects_try_to_move(A, dA, B, dB);
+
+        dA = A->velocity;
+        dB = B->velocity;
+
+        dA.x = 0;
+        dB.x = 0;
+        collision_objects_try_to_move(A, dA, B, dB);
+
+#endif
+#if 0
+        glPushMatrix();
+//        glTranslatef((float) -x*scale, (float) -y*scale, 0);
+//        glScalef(scale, scale, 0);
+
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        Begin(GL_LINES);
-            Vertex2f(A->at.x, A->at.y);
+        glLineWidth(1.1);
 
-            Vertex2f(A->at.x + normal_unit.x * (double)OBJ_MAX_RADIUS,
-                        A->at.y + normal_unit.y * (double)OBJ_MAX_RADIUS);
-        End();
+#if 0
+        glcolor(RED);
 
         Begin(GL_LINES);
             Vertex2f(A->at.x, A->at.y);
 
             Vertex2f(A->at.x + tangent_unit.x * (double)OBJ_MAX_RADIUS,
-                        A->at.y + tangent_unit.y * (double)OBJ_MAX_RADIUS);
+                     A->at.y + tangent_unit.y * (double)OBJ_MAX_RADIUS);
         End();
+#endif
+
+        glcolor(GREEN);
+
+        Begin(GL_LINES);
+            Vertex2f(A->at.x, A->at.y);
+
+            Vertex2f(A->at.x + A->velocity.x * (double)OBJ_MAX_RADIUS,
+                     A->at.y + A->velocity.y * (double)OBJ_MAX_RADIUS);
+        End();
+
+#if 0
+        glcolor(RED);
+
+        Begin(GL_LINES);
+            Vertex2f(B->at.x, B->at.y);
+
+            Vertex2f(B->at.x + tangent_unit.x * (double)OBJ_MAX_RADIUS,
+                     B->at.y + tangent_unit.y * (double)OBJ_MAX_RADIUS);
+        End();
+#endif
+
+        glcolor(BLUE);
+
+        Begin(GL_LINES);
+            Vertex2f(B->at.x, B->at.y);
+
+            Vertex2f(B->at.x + B->velocity.x * (double)OBJ_MAX_RADIUS,
+                     B->at.y + B->velocity.y * (double)OBJ_MAX_RADIUS);
+        End();
+
+#endif
+        glPopMatrix();
+
     }
 
     return (hit > 0);
@@ -603,7 +752,6 @@ static void collision_all_check (void)
              * Gravity in small steps.
              */
             fpoint dA = A->accel;
-            dA = fdiv(MAX_TIMESTEP, dA);
 
             A->velocity.x += dA.x;
             A->velocity.y += dA.y;
@@ -640,7 +788,7 @@ static void collision_all_check (void)
             /*
              * If we impact at the new location, move back to where we were.
              */
-            if (collision_check_single_object(a, A, false)) {
+            if (collision_check_single_object(A, 0, false)) {
             }
         }
     }
