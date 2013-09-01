@@ -496,6 +496,8 @@ static void sdl_event (SDL_Event * event)
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
+extern float scale;
+scale += ((float)mouse_y/500.0);
         wid_mouse_motion(mouse_x, mouse_y,
                          0, 0,
                          event->wheel.x, event->wheel.y);
@@ -526,9 +528,13 @@ static void sdl_event (SDL_Event * event)
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
         if (event->button.button == SDL_BUTTON_WHEELUP) {
             DBG("  wheel up");
+extern float scale;
+scale += 10.0;
             wid_mouse_motion(mouse_x, mouse_y, 0, 0, 0, 10);
             break;
         } else if (event->button.button == SDL_BUTTON_WHEELDOWN) {
+extern float scale;
+scale -= 10.0;
             DBG("  wheel down");
             wid_mouse_motion(mouse_x, mouse_y, 0, 0, 0, -10);
             break;
