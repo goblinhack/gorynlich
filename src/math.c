@@ -74,3 +74,68 @@ double gauss (const double m, const double s)
 
     return (m + y1 * s);
 }
+
+/*
+ * true if perpendicular line from point is in line segment.
+ */
+boolean get_line_intersection (fpoint p0,
+                               fpoint p1,
+                               fpoint p2,
+                               fpoint p3,
+                               fpoint *intersect)
+{
+    fpoint s1, s2;
+
+    s1.x = p1.x - p0.x;
+    s1.y = p1.y - p0.y;
+    s2.x = p3.x - p2.x;
+    s2.y = p3.y - p2.y;
+
+    double s, t;
+
+    s = (-s1.y * (p0.x - p2.x) + s1.x * (p0.y - p2.y)) /
+            (-s2.x * s1.y + s1.x * s2.y);
+
+    t = ( s2.x * (p0.y - p2.y) - s2.y * (p0.x - p2.x)) /
+            (-s2.x * s1.y + s1.x * s2.y);
+
+    if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
+        // Collision detected
+        intersect->x = p0.x + (t * s1.x);
+        intersect->y = p0.y + (t * s1.y);
+        return (true);
+    }
+
+    return (false); // No collision
+}
+
+boolean 
+fpoint_dist_line (fpoint P0, fpoint L0, fpoint L1, double *dist)
+{
+    fpoint intersect;
+    float mag;
+    float U;
+ 
+    /*
+     * Can get the squared distance to avoid this.
+     */
+    mag = fdist(L1, L0);
+ 
+    /*
+     * Project point P onto the line and then calc the dot product.
+     */
+    U = (((P0.x - L0.x) * (L1.x - L0.x)) +
+         ((P0.y - L0.y) * (L1.y - L0.y))) /
+         (mag * mag);
+ 
+    if ((U < 0.0f) || (U > 1.0f)) {
+        return (0);   // closest P0 does not fall within the line segment
+    }
+ 
+    intersect.x = L0.x + U * (L1.x - L0.x);
+    intersect.y = L0.y + U * (L1.y - L0.y);
+ 
+    *dist = fdist(P0, intersect);
+ 
+    return (1);
+}

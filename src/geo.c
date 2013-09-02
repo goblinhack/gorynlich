@@ -217,7 +217,7 @@ cube_line_intersect (const line ray,
             continue;
         }
 
-        float distance = flength3d(ray.P1, intersection);
+        float distance = fdist3d(ray.P1, intersection);
 
         if (!gotone) {
             *best_intersection = intersection;
@@ -245,7 +245,7 @@ dist_point_line (fpoint3d P0, fpoint3d L0, fpoint3d L1, float *dist)
     float mag;
     float U;
  
-    mag = flength3d(L1, L0);
+    mag = fdist3d(L1, L0);
  
     U = (((P0.x - L0.x) * (L1.x - L0.x)) +
          ((P0.y - L0.y) * (L1.y - L0.y)) +
@@ -260,10 +260,7 @@ dist_point_line (fpoint3d P0, fpoint3d L0, fpoint3d L1, float *dist)
     intersect.y = L0.y + U * (L1.y - L0.y);
     intersect.z = L0.z + U * (L1.z - L0.z);
  
-    *dist = flength3d(P0, intersect);
+    *dist = fdist3d(P0, intersect);
  
     return (1);
 }
-
-
-
