@@ -137,7 +137,12 @@ static inline double flength (const fpoint a)
     return ((double)sqrt(a.x*a.x + a.y*a.y));
 }
 
-static inline double flength3d (const fpoint3d a, const fpoint3d b)
+static inline double fdist (const fpoint a, const fpoint b)
+{
+    return (DISTANCE(a.x, a.y, b.x, b.y));
+}
+
+static inline double fdist3d (const fpoint3d a, const fpoint3d b)
 {
     return (DISTANCE3f(a.x, a.y, a.z, b.x, b.y, b.z));
 }
@@ -227,5 +232,31 @@ static inline double anglerot (fpoint p)
         return (RAD_180 - theta);
     }
 }
+
+static inline
+fpoint fpoint_rotate (fpoint p, double theta)
+{
+    fpoint r;
+
+    r.x = p.x * cos(theta) - p.y * sin(theta);
+    r.y = p.x * sin(theta) + p.y * cos(theta);
+
+    return (r);
+}
+
+/*
+ * true if perpendicular line from point is in line segment.
+ */
+boolean 
+fpoint_dist_line(fpoint P0, fpoint L0, fpoint L1, double *dist);
+
+/*
+ * true if lines intersect
+ */
+boolean get_line_intersection(fpoint p0,
+                              fpoint p1,
+                              fpoint p2,
+                              fpoint p3,
+                              fpoint *intersect);
 
 double gauss(const double m, const double s);
