@@ -245,6 +245,11 @@ fpoint fpoint_rotate (fpoint p, double theta)
 }
 
 /*
+ * Yields an angle between 0 and 180 deg radians
+ */
+double fpoint_angle(const fpoint A, const fpoint B);
+
+/*
  * true if perpendicular line from point is in line segment.
  */
 boolean 
@@ -260,3 +265,5 @@ boolean get_line_intersection(fpoint p0,
                               fpoint *intersect);
 
 double gauss(const double m, const double s);
+
+double fpoint_project_onto_line(fpoint P0, fpoint L0, fpoint L1);

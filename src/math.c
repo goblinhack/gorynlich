@@ -128,14 +128,46 @@ fpoint_dist_line (fpoint P0, fpoint L0, fpoint L1, double *dist)
          ((P0.y - L0.y) * (L1.y - L0.y))) /
          (mag * mag);
  
-    if ((U < 0.0f) || (U > 1.0f)) {
-        return (0);   // closest P0 does not fall within the line segment
-    }
- 
     intersect.x = L0.x + U * (L1.x - L0.x);
     intersect.y = L0.y + U * (L1.y - L0.y);
  
     *dist = fdist(P0, intersect);
  
+    if ((U < 0.0f) || (U > 1.0f)) {
+        return (0);   // closest P0 does not fall within the line segment
+    }
+ 
     return (1);
+}
+
+double 
+fpoint_project_onto_line (fpoint P0, fpoint L0, fpoint L1)
+{
+    float mag;
+    float U;
+ 
+    /*
+     * Can get the squared distance to avoid this.
+     */
+    mag = fdist(L1, L0);
+ 
+    /*
+     * Project point P onto the line and then calc the dot product.
+     */
+    U = (((P0.x - L0.x) * (L1.x - L0.x)) +
+         ((P0.y - L0.y) * (L1.y - L0.y))) /
+         (mag * mag);
+ 
+    return (U);
+}
+
+/*
+ * Yields an angle between 0 and 180 deg radians
+ */
+double fpoint_angle (const fpoint A, const fpoint B)
+{
+    const double a = sqrt(A.x*A.x + A.y*A.y);
+    const double b = sqrt(B.x*B.x + B.y*B.y);
+
+    return (acos((A.x*B.x + A.y*B.y) / (a * b)));
 }
