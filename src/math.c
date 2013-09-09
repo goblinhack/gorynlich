@@ -128,8 +128,14 @@ fpoint_dist_line (fpoint P0, fpoint L0, fpoint L1, double *dist)
          ((P0.y - L0.y) * (L1.y - L0.y))) /
          (mag * mag);
  
-    intersect.x = L0.x + U * (L1.x - L0.x);
-    intersect.y = L0.y + U * (L1.y - L0.y);
+    if (U < 0.0f) {
+        intersect = L0;
+    } else if (U > 1.0f) {
+        intersect = L1;
+    } else {
+        intersect.x = L0.x + U * (L1.x - L0.x);
+        intersect.y = L0.y + U * (L1.y - L0.y);
+    }
  
     *dist = fdist(P0, intersect);
  
@@ -170,4 +176,12 @@ double fpoint_angle (const fpoint A, const fpoint B)
     const double b = sqrt(B.x*B.x + B.y*B.y);
 
     return (acos((A.x*B.x + A.y*B.y) / (a * b)));
+}
+
+/*
+ * Yields an angle between -180 and 180 deg radians
+ */
+double fpoint_angle_clockwise (const fpoint A, const fpoint B)
+{
+    return (atan2(A.x*B.y - A.y*B.x, A.x*B.x+A.y*B.y));
 }

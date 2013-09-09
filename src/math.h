@@ -249,6 +249,8 @@ fpoint fpoint_rotate (fpoint p, double theta)
  */
 double fpoint_angle(const fpoint A, const fpoint B);
 
+double fpoint_angle_clockwise(const fpoint A, const fpoint B);
+
 /*
  * true if perpendicular line from point is in line segment.
  */
