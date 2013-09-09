@@ -547,7 +547,7 @@ int j;
             *normal2 = *normal;
             *normal = tmp;
 
-#if 1
+#if 0
                 glBindTexture(GL_TEXTURE_2D, 0);
                 glcolor(GREEN);
 
@@ -694,11 +694,30 @@ static uint32_t circle_box_collision (object *C, object *B,
             if (hit) {
                 normal2->x = B_norm[j].x;
                 normal2->y = B_norm[j].y;
+
+#if 1
+                glBindTexture(GL_TEXTURE_2D, 0);
+                glcolor(ORANGE);
+
+                Begin(GL_LINES);
+                    Vertex2f(B->at.x,B->at.y);
+                    Vertex2f(B->at.x+B_norm[j].x*OBJ_MIN_RADIUS,B->at.y+B_norm[j].y*OBJ_MIN_RADIUS);
+                End();
+#endif
             } else {
                 normal->x = B_norm[j].x;
                 normal->y = B_norm[j].y;
-            }
 
+#if 1
+                glBindTexture(GL_TEXTURE_2D, 0);
+                glcolor(GREEN);
+
+                Begin(GL_LINES);
+                    Vertex2f(B->at.x,B->at.y);
+                    Vertex2f(B->at.x+B_norm[j].x*OBJ_MIN_RADIUS,B->at.y+B_norm[j].y*OBJ_MIN_RADIUS);
+                End();
+#endif
+            }
             hit++;
         }
     }
