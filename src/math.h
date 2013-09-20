@@ -255,7 +255,8 @@ double fpoint_angle_clockwise(const fpoint A, const fpoint B);
  * true if perpendicular line from point is in line segment.
  */
 boolean 
-fpoint_dist_line(fpoint P0, fpoint L0, fpoint L1, double *dist);
+fpoint_dist_line(fpoint P0, fpoint L0, fpoint L1, double *dist,
+                 fpoint *intersect);
 
 /*
  * true if lines intersect
