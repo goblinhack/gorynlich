@@ -392,7 +392,6 @@ static boolean box_box_collision (object *A, object *B,
                                   fpoint *normal,
                                   fpoint *normal_2,
                                   fpoint *intersect,
-                                  fpoint *intersect_2,
                                   boolean check_only)
 {
     fpoint A_norm[4];
@@ -559,13 +558,24 @@ int j;
 
             if (hit) {
                 *normal_2 = B_norm[j];
-                *intersect_2 = B_intersect[j];
             } else {
                 *normal = B_norm[j];
-                *intersect = B_intersect[j];
             }
 
+            *intersect = B_intersect[j];
+
             hit++;
+        }
+    }
+
+    if (hit == 2) {
+        for (j = 0; j < 4; j++) {
+            if (B_hit[j]) {
+                if (B_hit[(j + 1) % 4]) {
+                    *intersect = BP[(j + 1) % 4];
+                    break;
+                }
+            }
         }
     }
 
@@ -585,11 +595,6 @@ int j;
             tmp = *normal_2;
             *normal_2 = *normal;
             *normal = tmp;
-
-            tmp = *intersect_2;
-            *intersect_2 = *intersect;
-            *intersect = tmp;
-
 #if 0
                 glBindTexture(GL_TEXTURE_2D, 0);
                 glcolor(GREEN);
@@ -609,7 +614,6 @@ static uint32_t circle_box_collision (object *A, object *B,
                                       fpoint *normal,
                                       fpoint *normal_2,
                                       fpoint *intersect,
-                                      fpoint *intersect_2,
                                       boolean check_only)
 {
     circle *circle = &A->shape.c;
@@ -733,14 +737,24 @@ static uint32_t circle_box_collision (object *A, object *B,
 
             if (hit) {
                 *normal_2 = B_norm[j];
-                *intersect_2 = B_intersect[j];
             } else {
                 *normal = B_norm[j];
-                *intersect = B_intersect[j];
             }
 
+            *intersect = B_intersect[j];
 
             hit++;
+        }
+    }
+
+    if (hit == 2) {
+        for (j = 0; j < 4; j++) {
+            if (B_hit[j]) {
+                if (B_hit[(j + 1) % 4]) {
+                    *intersect = BP[(j + 1) % 4];
+                    break;
+                }
+            }
         }
     }
 
@@ -756,10 +770,6 @@ static uint32_t circle_box_collision (object *A, object *B,
             tmp = *normal_2;
             *normal_2 = *normal;
             *normal = tmp;
-
-            tmp = *intersect_2;
-            *intersect_2 = *intersect;
-            *intersect = tmp;
         }
     }
 
@@ -856,7 +866,6 @@ static int dbgat;
         fpoint normal = {0,0};
         fpoint normal_2 = {0,0};
         fpoint intersect = {0,0};
-        fpoint intersect_2 = {0,0};
         boolean normal_2_valid = false;
         double B_rot;
         double A_rot;
@@ -873,12 +882,10 @@ static int dbgat;
                                          &normal,
                                          &normal_2,
                                          &intersect, 
-                                         &intersect_2, 
                                          check_only))) {
                 fpoint normal = {0,0};
                 fpoint normal_2 = {0,0};
                 fpoint intersect = {0,0};
-                fpoint intersect_2 = {0,0};
 
                 collided = true;
 
@@ -886,7 +893,6 @@ static int dbgat;
                                   &normal,
                                   &normal_2,
                                   &intersect, 
-                                  &intersect_2, 
                                   check_only);
             }
         } else if (!A->box && B->box) {
@@ -898,7 +904,6 @@ static int dbgat;
                                             &normal,
                                             &normal_2,
                                             &intersect, 
-                                            &intersect_2, 
                                             check_only))) {
                 collided = true;
             }
@@ -911,7 +916,6 @@ static int dbgat;
                                             &normal,
                                             &normal_2,
                                             &intersect, 
-                                            &intersect_2, 
                                             check_only))) {
                 normal = fmul(-1, normal);
                 collided = true;
