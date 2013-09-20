@@ -21,21 +21,23 @@
  * Settings.
  */
 #if 1
-static double GRAVITY                   = 0.03;
+static double GRAVITY                   = 1.0;
 static double COLLISION_ELASTICITY      = 0.5;
-static double FRICTION                  = 0.995;
-static double TANGENT_ELASTICITY        = 1.0;
+static double TANGENT_ELASTICITY        = 0.95;
 #else
 static double GRAVITY                   = 0.00;
 static double COLLISION_ELASTICITY      = 1.0;
-static double FRICTION                  = 1.0;
 static double TANGENT_ELASTICITY        = 1.0;
 #endif
-static double MAX_VELOCITY              = 5.0;
-static double MAX_TIMESTEP              = 5.0;
-static const uint32_t OBJ_MIN_RADIUS    = 10;
-static const uint32_t OBJ_MAX_RADIUS    = 80;
-static const uint32_t OBJ_MAX           = 32;
+static double SPIN_LOSS                 = 1.0;
+static double MAX_VELOCITY              = 200.0;
+static uint32_t MAX_TIMESTEP            = 8;
+static const uint32_t OBJ_MIN_RADIUS    = 20;
+static const uint32_t OBJ_MAX_RADIUS    = 160;
+static const uint32_t OBJ_MAX           = 8;
+
+static uint32_t PERCENTAGE_STATIONARY   = 0;
+static uint32_t PERCENTAGE_BOXES        = 50;
 
 int pause = 0;
 typedef struct {
@@ -50,11 +52,12 @@ typedef struct {
 typedef struct object_ {
     fpoint at;
     fpoint old_at;
+    double old_rot;
+    fpoint old_velocity;
     fpoint velocity;
     fpoint accel;
     double mass;
     double rot;
-    double old_rot;
     double spin;
     union {
         box b;
@@ -73,7 +76,7 @@ static object objects[OBJ_MAX];
 /*
  * Prototypes.
  */
-static boolean collision_check_single_object(object *, object *, boolean);
+static boolean collision_check_single_object(object *, boolean);
 
 /*
  * OpenGLES workarounds for missing glBegin glEnd
@@ -144,6 +147,24 @@ box_to_coords (object *obj, fpoint *P0, fpoint *P1, fpoint *P2, fpoint *P3)
     P3->y = p3.y + obj->at.y;
 }
 
+static void
+rotate_about (object *obj, fpoint P0, double theta)
+{
+    obj->rot += theta;
+
+    fpoint at = obj->at;
+
+    at.x -= P0.x;
+    at.y -= P0.y;
+
+    at = fpoint_rotate(at, theta);
+
+    at.x += P0.x;
+    at.y += P0.y;
+
+    obj->at = at;
+}
+
 /*
  * Place lots of test objects.
  */
@@ -184,17 +205,20 @@ static void collision_init (void)
 
             velocity.x = ((double)((rand() % w) - (w / 2))) / (double)w;
             velocity.y = ((double)((rand() % h) - (h / 2))) / (double)h;
+            velocity.x *= 50;
+            velocity.y *= 50;
 
             /*
              * Random box or circle.
              */
             obj->rot = (RAD_360 / 360.0) * ((rand() % 360));
 
-            if ((rand() % 100) < 70) {
+            if ((rand() % 100) < PERCENTAGE_BOXES) {
                 obj->box = 1;
             } else {
                 obj->box = 0;
             }
+                obj->box = 1;
 
             if (obj->box) {
                 double w = 
@@ -224,7 +248,7 @@ static void collision_init (void)
 
             obj_max++;
 
-            if (!collision_check_single_object(obj, 0, true)) {
+            if (!collision_check_single_object(obj, true)) {
                 break;
             }
 
@@ -234,7 +258,7 @@ static void collision_init (void)
         /*
          * Make some of the objects stationary.
          */
-        if ((rand() % 100) < 30) {
+        if ((rand() % 100) < PERCENTAGE_STATIONARY) {
             obj->is_stationary = true;
             obj->velocity.x = 0;
             obj->velocity.y = 0;
@@ -366,8 +390,9 @@ static void collision_draw (void)
 
 static boolean box_box_collision (object *A, object *B,
                                   fpoint *normal,
-                                  fpoint *normal2,
-                                  double *spin,
+                                  fpoint *normal_2,
+                                  fpoint *intersect,
+                                  fpoint *intersect_2,
                                   boolean check_only)
 {
     fpoint A_norm[4];
@@ -377,6 +402,7 @@ static boolean box_box_collision (object *A, object *B,
     fpoint A_mid[4];
     fpoint B_mid[4];
     boolean B_hit[4];
+    fpoint B_intersect[4];
 
     fpoint AP[4];
     fpoint BP[4];
@@ -500,7 +526,20 @@ int j;
             if (get_line_intersection(AP[i], AP[(i + 1) % 4],
                                       BP[j], BP[(j + 1) % 4],
                                       &intersect)) {
-                B_hit[j] = true;
+                if (B_hit[j] > 1) {
+                    DIE("bug");
+                }
+
+                if (B_hit[j]) {
+                    B_intersect[j].x += intersect.x;
+                    B_intersect[j].y += intersect.y;
+                    B_intersect[j].x /= 2.0;
+                    B_intersect[j].y /= 2.0;
+                } else {
+                    B_intersect[j] = intersect;
+                }
+
+                B_hit[j]++;
             }
         }
     }
@@ -509,21 +548,21 @@ int j;
     normal->x = 0;
     normal->y = 0;
 
-//LOG("%d hit %d",(int)(A-objects),(int)(B-objects));
     for (j = 0; j < 4; j++) {
         if (B_hit[j]) {
-//LOG("  side %d",j);
             if (B_hit[(j + 2) % 4]) {
                 *normal = fmul(-1, A->velocity);
+                intersect->x = BP[j].x + BP[(j + 3) % 4].x;
+                intersect->y = BP[j].y + BP[(j + 3) % 4].y;
                 return (true);
             }
 
             if (hit) {
-                normal2->x = B_norm[j].x;
-                normal2->y = B_norm[j].y;
+                *normal_2 = B_norm[j];
+                *intersect_2 = B_intersect[j];
             } else {
-                normal->x = B_norm[j].x;
-                normal->y = B_norm[j].y;
+                *normal = B_norm[j];
+                *intersect = B_intersect[j];
             }
 
             hit++;
@@ -538,14 +577,18 @@ int j;
         DIE("bug");
     }
 
-//LOG("hit %d %d hit %d",hit, (int)(A-objects),(int)(B-objects));
     if (hit == 2) {
         if (fpoint_angle(A->velocity, *normal) < 
-            fpoint_angle(A->velocity, *normal2)) {
+            fpoint_angle(A->velocity, *normal_2)) {
             fpoint tmp;
-            tmp = *normal2;
-            *normal2 = *normal;
+
+            tmp = *normal_2;
+            *normal_2 = *normal;
             *normal = tmp;
+
+            tmp = *intersect_2;
+            *intersect_2 = *intersect;
+            *intersect = tmp;
 
 #if 0
                 glBindTexture(GL_TEXTURE_2D, 0);
@@ -559,90 +602,85 @@ int j;
         }
     }
 
-#if 0
-fpoint com = A->velocity;
-    double ang = fpoint_angle_clockwise(com, *normal);
-
-    *spin = -ang / 1000.0;
-#endif
-
     return (hit);
 }
 
-static uint32_t circle_box_collision (object *C, object *B,
+static uint32_t circle_box_collision (object *A, object *B,
                                       fpoint *normal,
-                                      fpoint *normal2,
+                                      fpoint *normal_2,
                                       fpoint *intersect,
+                                      fpoint *intersect_2,
                                       boolean check_only)
 {
-    circle *circle = &C->shape.c;
-    fpoint P = { C->at.x, C->at.y };
+    circle *circle = &A->shape.c;
+    fpoint P = { A->at.x, A->at.y };
     box *box = &B->shape.b;
-    fpoint P0, P1, P2, P3;
     double dist;
     boolean B_hit[4];
+    fpoint B_intersect[4];
     fpoint B_norm[4];
+    fpoint BP[4];
     uint32_t j;
     uint32_t hit;
     fpoint delta;
 
-    box_to_coords(B, &P0, &P1, &P2, &P3);
+    box_to_coords(B, &BP[0], &BP[1], &BP[2], &BP[3]);
 
     hit = 0;
     for (j = 0; j < 4; j++) {
         B_hit[j] = false;
     }
 
-    fpoint_dist_line(P, P0, P1, &dist);
+    fpoint_dist_line(P, BP[0], BP[1], &dist, &B_intersect[0]);
     if (dist < circle->radius) {
         if (check_only) {
             return (true);
         }
 
-        delta.x = P0.x - P1.x;
-        delta.y = P0.y - P1.y;
+        delta.x = BP[0].x - BP[1].x;
+        delta.y = BP[0].y - BP[1].y;
         B_hit[0] = true;
         B_norm[0].x = -delta.y;
         B_norm[0].y = delta.x;
         hit++;
     }
 
-    fpoint_dist_line(P, P1, P2, &dist);
+    fpoint_dist_line(P, BP[1], BP[2], &dist, &B_intersect[1]);
     if (dist < circle->radius) {
         if (check_only) {
             return (true);
         }
 
-        delta.x = P1.x - P2.x;
-        delta.y = P1.y - P2.y;
+        delta.x = BP[1].x - BP[2].x;
+        delta.y = BP[1].y - BP[2].y;
         B_hit[1] = true;
         B_norm[1].x = -delta.y;
         B_norm[1].y = delta.x;
         hit++;
     }
 
-    fpoint_dist_line(P, P2, P3, &dist);
+    fpoint_dist_line(P, BP[2], BP[3], &dist, &B_intersect[2]);
     if (dist < circle->radius) {
         if (check_only) {
             return (true);
         }
 
-        delta.x = P2.x - P3.x;
-        delta.y = P2.y - P3.y;
+        delta.x = BP[2].x - BP[3].x;
+        delta.y = BP[2].y - BP[3].y;
         B_hit[2] = true;
         B_norm[2].x = -delta.y;
         B_norm[2].y = delta.x;
         hit++;
     }
 
-    fpoint_dist_line(P, P3, P0, &dist);
+    fpoint_dist_line(P, BP[3], BP[0], &dist, &B_intersect[3]);
     if (dist < circle->radius) {
         if (check_only) {
             return (true);
         }
 
-        delta.x = P3.x - P0.x;
-        delta.y = P3.y - P0.y;
+        delta.x = BP[3].x - BP[0].x;
+        delta.y = BP[3].y - BP[0].y;
         B_hit[3] = true;
         B_norm[3].x = -delta.y;
         B_norm[3].y = delta.x;
@@ -687,43 +725,42 @@ static uint32_t circle_box_collision (object *C, object *B,
     for (j = 0; j < 4; j++) {
         if (B_hit[j]) {
             if (B_hit[(j + 2) % 4]) {
-                *normal = fmul(-1, C->velocity);
+                *normal = fmul(-1, A->velocity);
+                intersect->x = BP[j].x + BP[(j + 3) % 4].x;
+                intersect->y = BP[j].y + BP[(j + 3) % 4].y;
                 return (true);
             }
 
             if (hit) {
-                normal2->x = B_norm[j].x;
-                normal2->y = B_norm[j].y;
-
-#if 1
-                glBindTexture(GL_TEXTURE_2D, 0);
-                glcolor(ORANGE);
-
-                Begin(GL_LINES);
-                    Vertex2f(B->at.x,B->at.y);
-                    Vertex2f(B->at.x+B_norm[j].x*OBJ_MIN_RADIUS,B->at.y+B_norm[j].y*OBJ_MIN_RADIUS);
-                End();
-#endif
+                *normal_2 = B_norm[j];
+                *intersect_2 = B_intersect[j];
             } else {
-                normal->x = B_norm[j].x;
-                normal->y = B_norm[j].y;
-
-#if 1
-                glBindTexture(GL_TEXTURE_2D, 0);
-                glcolor(GREEN);
-
-                Begin(GL_LINES);
-                    Vertex2f(B->at.x,B->at.y);
-                    Vertex2f(B->at.x+B_norm[j].x*OBJ_MIN_RADIUS,B->at.y+B_norm[j].y*OBJ_MIN_RADIUS);
-                End();
-#endif
+                *normal = B_norm[j];
+                *intersect = B_intersect[j];
             }
+
+
             hit++;
         }
     }
 
     if (hit > 2) {
         DIE("bug");
+    }
+
+    if (hit == 2) {
+        if (fpoint_angle(A->velocity, *normal) < 
+            fpoint_angle(A->velocity, *normal_2)) {
+            fpoint tmp;
+
+            tmp = *normal_2;
+            *normal_2 = *normal;
+            *normal = tmp;
+
+            tmp = *intersect_2;
+            *intersect_2 = *intersect;
+            *intersect = tmp;
+        }
     }
 
     return (hit);
@@ -733,7 +770,8 @@ static uint32_t circle_box_collision (object *C, object *B,
  * If two circles collide, the resultant direction is along the normal between
  * the two center of masses of the circles.
  */
-static boolean circle_circle_collision (object *A, object *B)
+static boolean circle_circle_collision (object *A, object *B,
+                                        fpoint *intersect)
 {
     circle *CA = &A->shape.c;
     circle *CB = &B->shape.c;
@@ -742,52 +780,41 @@ static boolean circle_circle_collision (object *A, object *B)
     double touching_dist = CA->radius + CB->radius;
     double dist_squared = n.x*n.x + n.y*n.y;
 
-    if (dist_squared - touching_dist * touching_dist > 0.01) {
+    double diff = dist_squared - touching_dist * touching_dist;
+    if (diff >= 0.0) {
         /*
          * Circles are not touching
          */
         return (false);
     }
+
+    diff = sqrt(fabs(diff));
+    diff /= 2.0;
  
+    n = funit(n);
+    n = fmul(CA->radius - diff, n);
+    n = fadd(A->at, n);
+    *intersect = n;
+
     return (true);
 }
 
-static boolean collision_objects_try_to_move (object *A, fpoint dVa,
-                                              object *B, fpoint dVb)
+static boolean collision_objects_try_to_move (object *A, fpoint dVa)
 {
-    if (!A->is_stationary) {
-        dVa = fdiv(MAX_TIMESTEP, dVa);
-
-        A->at.x += dVa.x;
-        A->at.y += dVa.y;
+    if (A->is_stationary) {
+        return (true);
     }
 
-    if (!B->is_stationary) {
-        /*
-         * Try B out in the new position.
-         */
-        dVb = fdiv(MAX_TIMESTEP, dVb);
+    dVa = fdiv(MAX_VELOCITY, dVa);
 
-        B->at.x += dVb.x;
-        B->at.y += dVb.y;
-    }
+    fpoint old_at = A->at;
 
-    if (!A->is_stationary) {
-        if (collision_check_single_object(A, B, true)) {
-            /*
-             * Hit another object. Move back.
-             */
-            return (false);
-        }
-    }
+    A->at.x += dVa.x;
+    A->at.y += dVa.y;
 
-    if (!B->is_stationary) {
-        if (collision_check_single_object(B, A, true)) {
-            /*
-             * Hit another object. Move back.
-             */
-            return (false);
-        }
+    if (collision_check_single_object(A, true)) {
+        A->at = old_at;
+        return (false);
     }
 
     return (true);
@@ -797,9 +824,10 @@ static boolean collision_objects_try_to_move (object *A, fpoint dVa,
  * See if this object collides with anything.
  */
 static boolean collision_check_single_object (object *A,
-                                              object *ignore,
                                               boolean check_only)
 {
+static fpoint dbg[1000];
+static int dbgat;
     uint32_t hit;
     uint32_t b;
 
@@ -808,6 +836,12 @@ static boolean collision_check_single_object (object *A,
     }
 
     hit = 0;
+
+    fpoint old_at;
+
+    if (check_only) {
+        old_at = A->at;
+    }
 
     for (b = 0; b < obj_max; b++) {
         object *B;
@@ -818,25 +852,42 @@ static boolean collision_check_single_object (object *A,
             continue;
         }
 
-        if (A == ignore) {
-            continue;
-        }
-
         boolean collided = false;
-        fpoint intersect = {0,0};
         fpoint normal = {0,0};
         fpoint normal_2 = {0,0};
-        double spin = 0;
+        fpoint intersect = {0,0};
+        fpoint intersect_2 = {0,0};
         boolean normal_2_valid = false;
+        double B_rot;
+        double A_rot;
         uint32_t hit;
+
+        A_rot = 0;
+        B_rot = 0;
 
         if (A->box && B->box) {
             /*
              * Box v box.
              */
-            if ((hit = box_box_collision(A, B, &normal, &normal_2, &spin,
+            if ((hit = box_box_collision(A, B,
+                                         &normal,
+                                         &normal_2,
+                                         &intersect, 
+                                         &intersect_2, 
                                          check_only))) {
+                fpoint normal = {0,0};
+                fpoint normal_2 = {0,0};
+                fpoint intersect = {0,0};
+                fpoint intersect_2 = {0,0};
+
                 collided = true;
+
+                box_box_collision(B, A,
+                                  &normal,
+                                  &normal_2,
+                                  &intersect, 
+                                  &intersect_2, 
+                                  check_only);
             }
         } else if (!A->box && B->box) {
             /*
@@ -846,7 +897,9 @@ static boolean collision_check_single_object (object *A,
                                             B, /* box */
                                             &normal,
                                             &normal_2,
-                                            &intersect, check_only))) {
+                                            &intersect, 
+                                            &intersect_2, 
+                                            check_only))) {
                 collided = true;
             }
         } else if (A->box && !B->box) {
@@ -857,13 +910,15 @@ static boolean collision_check_single_object (object *A,
                                             A, /* box */
                                             &normal,
                                             &normal_2,
-                                            &intersect, check_only))) {
-                normal = fsub(intersect, B->at);
+                                            &intersect, 
+                                            &intersect_2, 
+                                            check_only))) {
+                normal = fmul(-1, normal);
                 collided = true;
             }
         } else if (!A->box && !B->box) {
 
-            if (circle_circle_collision(A, B)) {
+            if (circle_circle_collision(A, B, &intersect)) {
                 normal = fsub(B->at, A->at);
                 hit = 1;
                 collided = true;
@@ -876,14 +931,25 @@ static boolean collision_check_single_object (object *A,
             continue;
         }
 
+        A->at = A->old_at;
+        A->rot = A->old_rot;
+        A->velocity = A->old_velocity;
+
         if (check_only) {
             return (true);
         }
 
+#if 1
+        dbgat++;
+        if (dbgat >= ARRAY_SIZE(dbg)) {
+            dbgat = 0;
+        }
+
+        dbg[dbgat].x = intersect.x;
+        dbg[dbgat].y = intersect.y;
+#endif
+
         normal_2_valid = (hit > 1);
-retry:
-        A->at = A->old_at;
-        A->rot = A->old_rot;
 
         /*
          * Normal vector is a line between the two center of masses.
@@ -899,20 +965,19 @@ retry:
         fpoint vB = B->velocity;
 
         if (B->is_stationary) {
-            mB = mA;
-            vB = fmul(-1, vA);
-        }
-
-#if 1
-        B->at.y += 0.1;
-        if (collision_check_single_object(B, 0, true)) {
-            mB = mA;
-            vB.y = max(vA.y, vB.y);
-            vB.y = -vB.y;
-
-        }
-        B->at.y -= 0.1;
+            mB = 9999999999;
+            vB.x = 0;
+            vB.y = 0;
+        } else {
+#if 0
+            B->at.y += 0.1;
+            if (collision_check_single_object(B, true)) {
+                mB = mA;
+                vB.y += -GRAVITY;
+            }
+            B->at.y -= 0.1;
 #endif
+        }
 
         /*
          * Project the velocity onto the normal vectors.
@@ -947,36 +1012,33 @@ retry:
 #if 0
 glBindTexture(GL_TEXTURE_2D, 0);
 
+#if 1
 glcolor(RED);
 Begin(GL_LINES);
     Vertex2f(A->at.x, A->at.y);
-    Vertex2f(A->at.x + normal_velocity_A.x*OBJ_MAX_RADIUS*100, A->at.y + normal_velocity_A.y*OBJ_MAX_RADIUS*100);
+    Vertex2f(A->at.x + normal_velocity_A.x*OBJ_MAX_RADIUS, A->at.y + normal_velocity_A.y*OBJ_MAX_RADIUS);
 End();
+#endif
 
-glcolor(CYAN);
+glcolor(GREEN);
 Begin(GL_LINES);
     Vertex2f(A->at.x, A->at.y);
-    Vertex2f(A->at.x + tangent_velocity_A.x*OBJ_MAX_RADIUS*100, A->at.y + tangent_velocity_A.y*OBJ_MAX_RADIUS*100);
+    Vertex2f(A->at.x + tangent_velocity_A.x*OBJ_MAX_RADIUS, A->at.y + tangent_velocity_A.y*OBJ_MAX_RADIUS);
 End();
 
-#if 0
+#if 1
 glcolor(WHITE);
 Begin(GL_LINES);
     Vertex2f(A->at.x, A->at.y);
-    Vertex2f(A->at.x + A->velocity.x*OBJ_MAX_RADIUS*10, A->at.y + A->velocity.y*OBJ_MAX_RADIUS*10);
+    Vertex2f(A->at.x + A->velocity.x*OBJ_MAX_RADIUS, A->at.y + A->velocity.y*OBJ_MAX_RADIUS);
 End();
 #endif
 #endif
-        normal_velocity_A = fmul(COLLISION_ELASTICITY, normal_velocity_A);
-        normal_velocity_B = fmul(COLLISION_ELASTICITY, normal_velocity_B);
-        tangent_velocity_A = fmul(TANGENT_ELASTICITY, tangent_velocity_A);
-        tangent_velocity_B = fmul(TANGENT_ELASTICITY, tangent_velocity_B);
+        A->velocity.x = normal_velocity_A.x + tangent_velocity_A.x;
+        A->velocity.y = normal_velocity_A.y + tangent_velocity_A.y;
 
-        A->old_at = A->at;
-        B->old_at = B->at;
-
-        A->old_rot = A->rot;
-        B->old_rot = B->rot;
+        B->velocity.x = normal_velocity_B.x + tangent_velocity_B.x;
+        B->velocity.y = normal_velocity_B.y + tangent_velocity_B.y;
 
 #if 0
         A->spin += spin;
@@ -984,129 +1046,180 @@ End();
             B->spin -= spin;
         }
 #endif
+        fpoint P = { intersect.x + tangent_unit.x,
+                     intersect.y + tangent_unit.y };
 
-        for (;;) {
-            A->velocity.x = normal_velocity_A.x + tangent_velocity_A.x;
-            A->velocity.y = normal_velocity_A.y + tangent_velocity_A.y;
-#if 0
-            A->rot += A->spin / MAX_TIMESTEP;
-            if (!B->is_stationary) {
-                B->rot += B->spin / MAX_TIMESTEP;
-            }
-#endif
+        double a_mag = fpoint_project_onto_line(A->at, intersect, P);
+        double b_mag = fpoint_project_onto_line(B->at, intersect, P);
+        double rot = RAD_360 / 360.0;
 
-            if (!B->is_stationary) {
-                B->velocity.x = normal_velocity_B.x + tangent_velocity_B.x;
-                B->velocity.y = normal_velocity_B.y + tangent_velocity_B.y;
-            }
-
-            if (collision_objects_try_to_move(A, A->velocity, B, B->velocity)) {
-                break;
-            }
-
-            A->at = A->old_at;
-            B->at = B->old_at;
-            A->rot = A->old_rot;
-            B->rot = B->old_rot;
-
-            if (normal_2_valid) {
-                normal_2_valid = false;
-                normal = normal_2;
-                goto retry;
-            }
-
-#if 0
-            A->at = A->old_at;
-            B->at = B->old_at;
-            A->velocity.x = -(normal_velocity_A.x + tangent_velocity_A.x);
-            A->velocity.y = -(normal_velocity_A.y + tangent_velocity_A.y);
-            if (!B->is_stationary) {
-                B->velocity.x = normal_velocity_B.x + tangent_velocity_B.x;
-                B->velocity.y = normal_velocity_B.y + tangent_velocity_B.y;
-            }
-
-            if (collision_objects_try_to_move(A, A->velocity, B, B->velocity)) {
-                break;
-            }
-
-            A->at = A->old_at;
-            B->at = B->old_at;
-            A->velocity.x = (normal_velocity_A.x + tangent_velocity_A.x);
-            A->velocity.y = (normal_velocity_A.y + tangent_velocity_A.y);
-            if (!B->is_stationary) {
-                B->velocity.x = -(normal_velocity_B.x + tangent_velocity_B.x);
-                B->velocity.y = -(normal_velocity_B.y + tangent_velocity_B.y);
-            }
-
-            if (collision_objects_try_to_move(A, A->velocity, B, B->velocity)) {
-                break;
-            }
-
-            A->at = A->old_at;
-            B->at = B->old_at;
-            A->velocity.x = -(normal_velocity_A.x + tangent_velocity_A.x);
-            A->velocity.y = -(normal_velocity_A.y + tangent_velocity_A.y);
-            if (!B->is_stationary) {
-                B->velocity.x = -(normal_velocity_B.x + tangent_velocity_B.x);
-                B->velocity.y = -(normal_velocity_B.y + tangent_velocity_B.y);
-            }
-
-            if (collision_objects_try_to_move(A, A->velocity, B, B->velocity)) {
-                break;
-            }
-#endif
-
-#if 0
-            fpoint z = {0,0};
-            A->at = A->old_at;
-            B->at = B->old_at;
-            A->rot = A->old_rot;
-            B->rot = B->old_rot;
-
-            A->rot += A->spin / MAX_TIMESTEP;
-            if (!B->is_stationary) {
-                B->rot += B->spin / MAX_TIMESTEP;
-            }
-if (A-objects == 1) {
-    LOG("rot %f",A->rot);
-}
-            if (collision_objects_try_to_move(A, z, B, z)) {
-                break;
-            }
-#endif
-
-            A->at = A->old_at;
-            B->at = B->old_at;
-            A->rot = A->old_rot;
-            B->rot = B->old_rot;
-            break;
+        if (a_mag < 0) {
+            A_rot = -rot;
+        } else {
+            A_rot = rot;
         }
 
-        if ((A->at.x != A->old_at.x) || (A->at.y != A->old_at.y)) {
-            A->velocity.x *= FRICTION;
-            A->velocity.y *= FRICTION;
-            A->spin *= FRICTION;
+        if (b_mag < 0) {
+            B_rot = -rot;
+        } else {
+            B_rot = rot;
         }
 
-        if ((B->at.x != B->old_at.x) || (B->at.y != B->old_at.y)) {
-            B->velocity.x *= FRICTION;
-            B->velocity.y *= FRICTION;
-            B->spin *= FRICTION;
+//        A_rot /= 10.0;
+//        B_rot /= 10.0;
+//        A_rot *= flength(A->velocity);;
+//        B_rot *= flength(B->velocity);;
+//        A_rot += (a_mag / 1000.0);
+//        B_rot += (b_mag / 1000.0);
+
+        boolean A_moved;
+        boolean B_moved;
+
+        A_moved = false;
+        B_moved = false;
+
+        fpoint dV;
+
+        dV.x = A->velocity.x;
+        dV.y = A->velocity.y;
+        if (collision_objects_try_to_move(A, dV)) {
+            A_moved = true;
         }
+
+        dV.x = B->velocity.x;
+        dV.y = B->velocity.y;
+        if (collision_objects_try_to_move(B, dV)) {
+            B_moved = true;
+        }
+
+        if (!A_moved) {
+            dV.x = tangent_velocity_A.x;
+            dV.y = tangent_velocity_A.y;
+            if (collision_objects_try_to_move(A, dV)) {
+                A_moved = true;
+            }
+        }
+
+        if (!B_moved) {
+            dV.x = tangent_velocity_B.x;
+            dV.y = tangent_velocity_B.y;
+            if (collision_objects_try_to_move(B, dV)) {
+                B_moved = true;
+            }
+        }
+
+#if 0
+        if (!A_moved) {
+            dV.x = tangent_velocity_A.x;
+            dV.y = 0;
+            if (collision_objects_try_to_move(A, dV)) {
+                A_moved = true;
+            }
+        }
+
+        if (!B_moved) {
+            dV.x = tangent_velocity_B.x;
+            dV.y = 0;
+            if (collision_objects_try_to_move(B, dV)) {
+                B_moved = true;
+            }
+        }
+
+        if (!A_moved) {
+            dV.x = 0;
+            dV.y = tangent_velocity_A.y;
+            if (collision_objects_try_to_move(A, dV)) {
+                A_moved = true;
+            }
+        }
+
+        if (!B_moved) {
+            dV.x = 0;
+            dV.y = tangent_velocity_B.y;
+            if (collision_objects_try_to_move(B, dV)) {
+                B_moved = true;
+            }
+        }
+#endif
+
+#if 0
+        if (!A_moved) {
+            dV.x = normal_velocity_A.x;
+            dV.y = normal_velocity_A.y;
+            if (collision_objects_try_to_move(A, dV)) {
+                A_moved = true;
+            }
+        }
+
+        if (!B_moved) {
+            dV.x = normal_velocity_B.x;
+            dV.y = normal_velocity_B.y;
+            if (collision_objects_try_to_move(B, dV)) {
+                B_moved = true;
+            }
+        }
+#endif
+        while (fabs(A_rot) > 0.0001) {
+            fpoint old_at = A->at;
+            double old_rot = A->rot;
+
+            rotate_about(A, intersect, A_rot);
+
+            if (collision_check_single_object(A, true)) {
+                A->at = old_at;
+                A->rot = old_rot;
+                A_rot /= 2.0;
+            } else {
+                A_moved = true;
+                A->spin += A_rot;
+                break;
+            }
+        }
+
+        if (!B->is_stationary) {
+            while (fabs(B_rot) > 0.0001) {
+                fpoint old_at = B->at;
+                double old_rot = B->rot;
+
+                rotate_about(B, intersect, B_rot);
+
+                if (collision_check_single_object(B, true)) {
+                    B->at = old_at;
+                    B->rot = old_rot;
+                    B_rot /= 2.0;
+                } else {
+                    A_moved = true;
+                    B->spin += B_rot;
+                    break;
+                }
+            }
+        }
+
+        normal_velocity_A = fmul(COLLISION_ELASTICITY, normal_velocity_A);
+        normal_velocity_B = fmul(COLLISION_ELASTICITY, normal_velocity_B);
+        tangent_velocity_A = fmul(TANGENT_ELASTICITY, tangent_velocity_A);
+        tangent_velocity_B = fmul(TANGENT_ELASTICITY, tangent_velocity_B);
+
+        A->velocity.x = normal_velocity_A.x + tangent_velocity_A.x;
+        A->velocity.y = normal_velocity_A.y + tangent_velocity_A.y;
+
+        B->velocity.x = normal_velocity_B.x + tangent_velocity_B.x;
+        B->velocity.y = normal_velocity_B.y + tangent_velocity_B.y;
     }
 
-    glPushMatrix();
-//    glTranslatef((float) -x*scale, (float) -y*scale, 0);
-    glScalef(scale, scale, 0);
-#if 0
+    A->old_at = A->at;
+    A->old_rot = A->rot;
+    A->old_velocity = A->velocity;
+
+glPointSize(10.0);
+int i;
 glBindTexture(GL_TEXTURE_2D, 0);
 glcolor(ORANGE);
-Begin(GL_LINES);
-    Vertex2f(A->at.x, A->at.y);
-    Vertex2f(A->at.x + A->velocity.x*OBJ_MAX_RADIUS, A->at.y + A->velocity.y*OBJ_MAX_RADIUS);
+Begin(GL_POINTS);
+for (i=0;i<ARRAY_SIZE(dbg);i++) {
+    Vertex2f(dbg[i].x,dbg[i].y);
+}
 End();
-#endif
-    glPopMatrix();
 
     return (hit > 0);
 }
@@ -1133,9 +1246,10 @@ static void collision_all_check (void)
             if (A->is_stationary) {
                 continue;
             }
-if (A-objects != 2)  {
-//continue;
-}
+
+            A->old_at = A->at;
+            A->old_rot = A->rot;
+            A->old_velocity = A->velocity;
 
             /*
              * Gravity.
@@ -1165,10 +1279,7 @@ if (A-objects != 2)  {
              * Velocity in small steps.
              */
             fpoint dV = A->velocity;
-            dV = fdiv(MAX_TIMESTEP, dV);
-if (A-objects == 1) {
-//LOG("at.y %f vel %f dV.y %f",A->at.y,A->velocity.y, dV.y);
-}
+            dV = fdiv(MAX_VELOCITY, dV);
 
             /*
              * Save the old location.
@@ -1182,8 +1293,9 @@ if (A-objects == 1) {
             A->at.x += dV.x;
             A->at.y += dV.y;
 
-            if (A->spin > 0) {
-                A->rot += A->spin / MAX_TIMESTEP;
+            if (fabs(A->spin) > 0) {
+                A->rot += A->spin / MAX_VELOCITY;
+                A->spin *= SPIN_LOSS;
             }
 
             A->collided = false;
@@ -1191,7 +1303,7 @@ if (A-objects == 1) {
             /*
              * If we impact at the new location, move back to where we were.
              */
-            if (collision_check_single_object(A, 0, false)) {
+            if (collision_check_single_object(A, false)) {
             }
         }
     }
@@ -1209,7 +1321,7 @@ pause = 0;
     collision_all_check();
     collision_draw();
 if (pause) {
-    SDL_Delay(5000);
+    SDL_Delay(50);
 }
 
     SDL_Delay(20);

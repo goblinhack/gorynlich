@@ -110,7 +110,8 @@ boolean get_line_intersection (fpoint p0,
 }
 
 boolean 
-fpoint_dist_line (fpoint P0, fpoint L0, fpoint L1, double *dist)
+fpoint_dist_line (fpoint P0, fpoint L0, fpoint L1, double *dist,
+                  fpoint *intersect_out)
 {
     fpoint intersect;
     float mag;
@@ -138,6 +139,10 @@ fpoint_dist_line (fpoint P0, fpoint L0, fpoint L1, double *dist)
     }
  
     *dist = fdist(P0, intersect);
+
+    if (intersect_out) {
+        *intersect_out = intersect;
+    }
  
     if ((U < 0.0f) || (U > 1.0f)) {
         return (0);   // closest P0 does not fall within the line segment
@@ -174,6 +179,10 @@ double fpoint_angle (const fpoint A, const fpoint B)
 {
     const double a = sqrt(A.x*A.x + A.y*A.y);
     const double b = sqrt(B.x*B.x + B.y*B.y);
+
+    if (!(a * b)) {
+        return (0);
+    }
 
     return (acos((A.x*B.x + A.y*B.y) / (a * b)));
 }
