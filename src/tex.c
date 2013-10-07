@@ -469,41 +469,6 @@ texp tex_from_tiled_surface (SDL_Surface *in,
                                             rmask, gmask, bmask, amask);
     newptr(out, "SDL_CreateRGBSurface");
 
-#ifdef REMOVE_EVERY_OTHER_16TH_LINE
-    /*
-     * Omit every grid pixel between tiles.
-     */
-    ox = 0;
-    oy = 0;
-    for (ix = 0; ix < iwidth; ix++) {
-
-        oy = 0;
-
-        for (iy = 0; iy < iheight; iy++) {
-
-            if (!((iy - 8) % 18)) {
-                LOG("skip %d",iy);
-                continue;
-            }
-
-
-            color c;
-
-            c = getPixel(in, ix, iy);
-
-            putPixel(out, ox, oy, c);
-
-            oy++;
-        }
-
-        ox++;
-    }
-
-    SDL_LockSurface(out);
-    stbi_write_tga("neil.tga", out->w, out->h, STBI_rgb_alpha, out->pixels);
-    SDL_UnlockSurface(out);
-#endif
-
     /*
      * Omit every grid pixel between tiles.
      */

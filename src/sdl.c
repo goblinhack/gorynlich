@@ -23,7 +23,6 @@
 #include "slre.h"
 #include "token.h"
 #include "map.h"
-#include "collision.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -226,6 +225,9 @@ boolean sdl_init (void)
     /*
      * Else guess.
      */
+    } else if (default_size) {
+        VIDEO_WIDTH = DEFAULT_VIDEO_WIDTH;
+        VIDEO_HEIGHT = DEFAULT_VIDEO_HEIGHT;
     } else if (medium_size) {
         VIDEO_WIDTH = MEDIUM_VIDEO_WIDTH;
         VIDEO_HEIGHT = MEDIUM_VIDEO_HEIGHT;
@@ -235,9 +237,6 @@ boolean sdl_init (void)
     } else if (ipad_size) {
         VIDEO_WIDTH = IPAD_VIDEO_WIDTH;
         VIDEO_HEIGHT = IPAD_VIDEO_HEIGHT;
-    } else if (default_size) {
-        VIDEO_WIDTH = DEFAULT_VIDEO_WIDTH;
-        VIDEO_HEIGHT = DEFAULT_VIDEO_HEIGHT;
     } else {
         VIDEO_WIDTH = DEFAULT_VIDEO_WIDTH;
         VIDEO_HEIGHT = DEFAULT_VIDEO_HEIGHT;
@@ -496,8 +495,6 @@ static void sdl_event (SDL_Event * event)
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
-extern float scale;
-scale += ((float)mouse_y/500.0);
         wid_mouse_motion(mouse_x, mouse_y,
                          0, 0,
                          event->wheel.x, event->wheel.y);
@@ -528,13 +525,9 @@ scale += ((float)mouse_y/500.0);
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
         if (event->button.button == SDL_BUTTON_WHEELUP) {
             DBG("  wheel up");
-extern float scale;
-scale += 10.0;
             wid_mouse_motion(mouse_x, mouse_y, 0, 0, 0, 10);
             break;
         } else if (event->button.button == SDL_BUTTON_WHEELDOWN) {
-extern float scale;
-scale -= 10.0;
             DBG("  wheel down");
             wid_mouse_motion(mouse_x, mouse_y, 0, 0, 0, -10);
             break;
@@ -777,12 +770,7 @@ void sdl_loop (void)
          * the game processing below to allow it to be drained before we swap 
          * the buffers.
          */
-#define COLLISION_TEST
-#ifdef COLLISION_TEST
-        collision_test();
-#else
         map_display();
-#endif
 
         frames++;
 

@@ -325,7 +325,7 @@ map_lightmap (map_t *map,
     /*
      * First time either load the pre-gen map or make it from scratch.
      */
-    static bool done;
+    static boolean done;
 
     if (!done) {
         done = true;

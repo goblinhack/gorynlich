@@ -10,7 +10,7 @@
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
 #undef ENABLE_VIDEO_SYNC          // Vertical sync
-#define ENABLE_INVERTED_DISPLAY    // For running on a Mac with inverted gfx
+#undef ENABLE_INVERTED_DISPLAY    // For running on a Mac with inverted gfx
 #undef ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #undef ENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
@@ -49,8 +49,14 @@
 /*
  * This is multiplied by jigsaw piece size.
  */
-#define MAP_JIGSAW_PIECE_WIDTH      13
-#define MAP_JIGSAW_PIECE_HEIGHT     5
+#define MAP_JIGSAW_PIECE_WIDTH      5
+#define MAP_JIGSAW_PIECE_HEIGHT     3
+
+#define JIGPIECE_WIDTH              13
+#define JIGPIECE_HEIGHT             13
+
+#define TILE_WIDTH                  16
+#define TILE_HEIGHT                 16
 
 /*
  * Console
