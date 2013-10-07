@@ -24,7 +24,7 @@
 #include "ramdisk.h"
 #include "thing_template.h"
 #include "bits.h"
-#include "map_jigsaw.h"
+#include "map_tiles.h"
 
 /*
  * Creates a map somewhat like this
@@ -73,21 +73,11 @@
 #define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        95
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 1000
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           5
-#undef MAZE_DEBUG_SHOW
-#undef MAZE_DEBUG_SHOW_AS_GENERATING
-#undef MAZE_DEBUG_PRINT_EXITS
+#define MAZE_DEBUG_SHOW
+#define MAZE_DEBUG_SHOW_AS_GENERATING
+#define MAZE_DEBUG_PRINT_EXITS
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
-
-/*
- * This is the range of ascii chars we use for the mapchar: command.
- */
-#define JIGTILE_MAPCHAR_MAX     128
-
-/*
- * And the number of exploded jigsaw pieces per mapchar typr.
- */
-#define JIGTILE_ALT_MAX         100
 
 static int maze_seed;
 
@@ -99,15 +89,6 @@ static uint8_t map_jigsaw_buffer_fg[MAP_JIGSAW_BUFFER_WIDTH][MAP_JIGSAW_BUFFER_H
 static uint8_t map_jigsaw_buffer_bg[MAP_JIGSAW_BUFFER_WIDTH][MAP_JIGSAW_BUFFER_HEIGHT];
 static int32_t map_jigsaw_buffer_at_x;
 static int32_t map_jigsaw_buffer_at_y;
-
-/*
- * And this is the much large buffer we explode the jigsaw too.
- */
-char map_jigsaw_buffer2[MAP_JIGSAW_BUFFER2_WIDTH][MAP_JIGSAW_BUFFER2_HEIGHT];
-static uint8_t map_jigsaw_buffer2_fg[MAP_JIGSAW_BUFFER2_WIDTH][MAP_JIGSAW_BUFFER2_HEIGHT];
-static uint8_t map_jigsaw_buffer2_bg[MAP_JIGSAW_BUFFER2_WIDTH][MAP_JIGSAW_BUFFER2_HEIGHT];
-static int32_t map_jigsaw_buffer2_at_x;
-static int32_t map_jigsaw_buffer2_at_y;
 
 /*
  * Global modes.
@@ -351,13 +332,6 @@ typedef struct {
 
     maze_cell_t maze[MAP_JIGSAW_PIECE_WIDTH * MAP_JIGSAW_PIECE_HEIGHT];
 
-    char jigtiles[JIGTILE_MAPCHAR_MAX]
-                 [IS_JOIN_MAX]
-                 [JIGTILE_ALT_MAX]
-                 [JIGTILE_WIDTH][JIGTILE_HEIGHT];
-
-    char jigtiles_cnt[JIGTILE_MAPCHAR_MAX][IS_JOIN_MAX];
-
     /*
      * Co-ords here are in terms of rooms, not characters.
      */
@@ -452,65 +426,6 @@ uint8_t map_jigsaw_buffer_getchar (int32_t x, int32_t y)
     }
 
     return (map_jigsaw_buffer[x][y]);
-}
-
-/*
- * map_jigsaw_buffer2_getchar
- */
-uint8_t map_jigsaw_buffer2_getchar (int32_t x, int32_t y)
-{
-    if (x < 0) {
-        return (MAP_EMPTY);
-    }
-
-    if (y < 0) {
-        return (MAP_EMPTY);
-    }
-
-    if (x >= MAP_JIGSAW_BUFFER2_WIDTH) {
-        return (MAP_EMPTY);
-    }
-
-    if (y >= MAP_JIGSAW_BUFFER2_HEIGHT) {
-        return (MAP_EMPTY);
-    }
-
-    return (map_jigsaw_buffer2[x][y]);
-}
-
-/*
- * map_jigsaw_buffer2_goto
- */
-static void map_jigsaw_buffer2_goto (int32_t x, int32_t y)
-{
-    map_jigsaw_buffer2_at_x = x;
-    map_jigsaw_buffer2_at_y = y;
-}
-
-/*
- * map_jigsaw_buffer2_putchar
- */
-static void map_jigsaw_buffer2_putchar (int32_t m)
-{
-    if (map_jigsaw_buffer2_at_x < 0) {
-        return;
-    }
-
-    if (map_jigsaw_buffer2_at_y < 0) {
-        return;
-    }
-
-    if (map_jigsaw_buffer2_at_x >= MAP_JIGSAW_BUFFER2_WIDTH) {
-        return;
-    }
-
-    if (map_jigsaw_buffer2_at_y >= MAP_JIGSAW_BUFFER2_HEIGHT) {
-        return;
-    }
-
-    map_jigsaw_buffer2_fg[map_jigsaw_buffer2_at_x][map_jigsaw_buffer2_at_y] = map_fg[m];
-    map_jigsaw_buffer2_bg[map_jigsaw_buffer2_at_x][map_jigsaw_buffer2_at_y] = map_bg[m];
-    map_jigsaw_buffer2[map_jigsaw_buffer2_at_x++][map_jigsaw_buffer2_at_y] = m;
 }
 
 /*
@@ -632,411 +547,6 @@ static void map_jigsaw_buffer_print_file (FILE *fpin)
 
     if (!fpin) {
         fclose(fp);
-    }
-}
-
-/*
- * map_jigsaw_buffer2_print
- */
-static void map_jigsaw_buffer2_print (void)
-{
-    int32_t need_nl;
-    int32_t x;
-    int32_t y;
-    int32_t fg;
-    int32_t bg;
-
-    need_nl = 0;
-
-    tcup(0,0);
-
-    for (y = 0; y < MAP_JIGSAW_BUFFER2_HEIGHT; y++) {
-        for (x = 0; x < MAP_JIGSAW_BUFFER2_WIDTH; x++) {
-            char c;
-
-            c = map_jigsaw_buffer2[x][y];
-            fg = map_jigsaw_buffer2_fg[x][y];
-            bg = map_jigsaw_buffer2_bg[x][y];
-
-            if (!c) {
-                fg = TERM_COLOR_WHITE;
-                bg = TERM_COLOR_BLACK;
-                c = ' ';
-            }
-
-            if (x == 0) {
-                if (need_nl) {
-                    putchar('\n');
-                }
-                need_nl = 1;
-            }
-
-            map_jigsaw_buffer_set_fgbg(fg, bg);
-            putchar(c);
-        }
-    }
-}
-
-/*
- * map_jigsaw_buffer2_print_file
- */
-static void map_jigsaw_buffer2_print_file (FILE *fpin)
-{
-    char tmp[MAXSTR];
-    FILE *fp;
-    int32_t need_nl;
-    int32_t x;
-    int32_t y;
-
-    snprintf(tmp, sizeof(tmp) - 1, "maps.large.%u", maze_seed);
-
-    if (!fpin) {
-        fp = fopen(tmp, "w");
-        if (!fp) {
-            ERR("can't write map file");
-            return;
-        }
-    } else {
-        fp = fpin;
-    }
-
-
-    need_nl = 0;
-
-    for (y = 0; y < MAP_JIGSAW_BUFFER2_HEIGHT; y++) {
-        for (x = 0; x < MAP_JIGSAW_BUFFER2_WIDTH; x++) {
-            char c;
-
-            c = map_jigsaw_buffer2[x][y];
-            if (!c) {
-                c = '?';
-            }
-
-            if (x == 0) {
-                if (need_nl) {
-                    fputc('\n', fp);
-                }
-                need_nl = 1;
-            }
-
-            fputc(c, fp);
-        }
-    }
-
-    fputc('\n', fp);
-
-    if (!fpin) {
-        fclose(fp);
-    }
-}
-
-/*
- * map_jigsaw_buffer_expand
- */
-static void map_jigsaw_buffer_expand (dungeon_t *dg)
-{
-    int32_t x;
-    int32_t y;
-    int32_t dx;
-    int32_t dy;
-    uint16_t nbrs[3][3];
-    uint32_t nbrchar;
-    uint32_t tiledir;
-    uint32_t mapchar;
-    uint32_t outchar;
-    uint32_t tilecnt;
-    uint32_t tile;
-
-    for (y = 0; y < MAP_JIGSAW_BUFFER_HEIGHT; y++) {
-        for (x = 0; x < MAP_JIGSAW_BUFFER_WIDTH; x++) {
-            mapchar = map_jigsaw_buffer_getchar(x, y);
-            if (!mapchar) {
-                mapchar = MAP_ROCK;
-                continue;
-            }
-
-            for (dx = -1; dx <= 1; dx++) {
-                for (dy = -1; dy <= 1; dy++) {
-                    nbrchar = map_jigsaw_buffer_getchar(x + dx, y + dy);
-
-                    if (nbrchar == MAP_FLOOR) {
-                        nbrs[dx + 1][dy + 1] = 0;
-                    } else {
-                        nbrs[dx + 1][dy + 1] = nbrchar;
-                    }
-                }
-            }
-
-            tiledir = 0;
-
-            uint16_t a = nbrs[0][0];
-            uint16_t b = nbrs[1][0];
-            uint16_t c = nbrs[2][0];
-            uint16_t d = nbrs[0][1];
-            uint16_t e = nbrs[1][1];
-            uint16_t f = nbrs[2][1];
-            uint16_t g = nbrs[0][2];
-            uint16_t h = nbrs[1][2];
-            uint16_t i = nbrs[2][2];
-
-            uint8_t A = (a != 0) ? 1 : 0;
-            uint8_t B = (b != 0) ? 1 : 0;
-            uint8_t C = (c != 0) ? 1 : 0;
-            uint8_t D = (d != 0) ? 1 : 0;
-            uint8_t E = (e != 0) ? 1 : 0;
-            uint8_t F = (f != 0) ? 1 : 0;
-            uint8_t G = (g != 0) ? 1 : 0;
-            uint8_t H = (h != 0) ? 1 : 0;
-            uint8_t I = (i != 0) ? 1 : 0;
-
-            const uint16_t omask =
-                (I << 8) | (H << 7) | (G << 6) | (F << 5) |
-                (E << 4) | (D << 3) | (C << 2) | (B << 1) |
-                (A << 0);
-
-            uint8_t score;
-            uint8_t best = 0;
-
-            tiledir = -1;
-
-            uint16_t mask;
-
-#define BLOCK(a,b,c,d,e,f,g,h,i, _index_)                               \
-            mask =                                                      \
-                (i << 8) | (h << 7) | (g << 6) | (f << 5) |             \
-                (e << 4) | (d << 3) | (c << 2) | (b << 1) |             \
-                (a << 0);                                               \
-                                                                        \
-            if ((mask & omask) == mask) {                               \
-                uint32_t difference = mask ^ omask;                     \
-                BITCOUNT(difference);                                   \
-                score = 32 - difference;                                \
-                if (score > best) {                                     \
-                    best = score;                                       \
-                    tiledir = _index_;                                  \
-                }                                                       \
-            }                                                           \
-
-            BLOCK(1, 1, 1,
-                  1, 1, 1,
-                  1, 1, 1, IS_JOIN_BLOCK)
-
-            BLOCK(0, 0, 0,
-                  0, 1, 0,
-                  0, 0, 0, IS_JOIN_NODE)
-
-            BLOCK(0, 0, 0,
-                  0, 1, 1,
-                  0, 0, 0, IS_JOIN_LEFT)
-
-            BLOCK(0, 0, 0,
-                  0, 1, 0,
-                  0, 1, 0, IS_JOIN_TOP)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 0,
-                  0, 0, 0, IS_JOIN_RIGHT)
-
-            BLOCK(0, 1, 0,
-                  0, 1, 0,
-                  0, 0, 0, IS_JOIN_BOT)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 1,
-                  0, 0, 0, IS_JOIN_HORIZ)
-
-            BLOCK(0, 1, 0,
-                  0, 1, 0,
-                  0, 1, 0, IS_JOIN_VERT)
-
-            BLOCK(0, 0, 0,
-                  0, 1, 1,
-                  0, 1, 1, IS_JOIN_TL2)
-
-            BLOCK(0, 1, 1,
-                  0, 1, 1,
-                  0, 0, 0, IS_JOIN_BL2)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 0,
-                  0, 0, 0, IS_JOIN_BR2)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 0,
-                  1, 1, 0, IS_JOIN_TR2)
-
-            BLOCK(0, 0, 0,
-                  0, 1, 1,
-                  0, 1, 0, IS_JOIN_TL)
-
-            BLOCK(0, 1, 0,
-                  0, 1, 1,
-                  0, 0, 0, IS_JOIN_BL)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 0,
-                  0, 0, 0, IS_JOIN_BR)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 0,
-                  0, 1, 0, IS_JOIN_TR)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 0,
-                  1, 1, 0, IS_JOIN_T90_3)
-
-            BLOCK(1, 1, 1,
-                  1, 1, 1,
-                  0, 0, 0, IS_JOIN_T180_3)
-
-            BLOCK(0, 1, 1,
-                  0, 1, 1,
-                  0, 1, 1, IS_JOIN_T270_3)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 1,
-                  1, 1, 1, IS_JOIN_T_3)
-
-            BLOCK(0, 1, 0,
-                  0, 1, 1,
-                  0, 1, 0, IS_JOIN_T270)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 1,
-                  0, 0, 0, IS_JOIN_T180)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 0,
-                  0, 1, 0, IS_JOIN_T90)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 1,
-                  0, 1, 0, IS_JOIN_T)
-
-            BLOCK(0, 1, 1,
-                  0, 1, 1,
-                  0, 1, 0, IS_JOIN_T270_2)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 1,
-                  0, 0, 0, IS_JOIN_T180_2)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 0,
-                  1, 1, 0, IS_JOIN_T90_2)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 1,
-                  0, 1, 1, IS_JOIN_T_2)
-
-            BLOCK(0, 1, 0,
-                  0, 1, 1,
-                  0, 1, 1, IS_JOIN_T270_1)
-
-            BLOCK(0, 1, 1,
-                  1, 1, 1,
-                  0, 0, 0, IS_JOIN_T180_1)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 0,
-                  0, 1, 0, IS_JOIN_T90_1)
-
-            BLOCK(0, 0, 0,
-                  1, 1, 1,
-                  1, 1, 0, IS_JOIN_T_1)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 1,
-                  0, 1, 0, IS_JOIN_X)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 1,
-                  0, 1, 1, IS_JOIN_X1)
-
-            BLOCK(0, 1, 1,
-                  1, 1, 1,
-                  0, 1, 0, IS_JOIN_X1_270)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 1,
-                  0, 1, 0, IS_JOIN_X1_180)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 1,
-                  1, 1, 0, IS_JOIN_X1_90)
-
-            BLOCK(0, 1, 0,
-                  1, 1, 1,
-                  1, 1, 1, IS_JOIN_X2)
-
-            BLOCK(0, 1, 1,
-                  1, 1, 1,
-                  0, 1, 1, IS_JOIN_X2_270)
-
-            BLOCK(1, 1, 1,
-                  1, 1, 1,
-                  0, 1, 0, IS_JOIN_X2_180)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 1,
-                  1, 1, 0, IS_JOIN_X2_90)
-
-            BLOCK(0, 1, 1,
-                  1, 1, 1,
-                  1, 1, 0, IS_JOIN_X3)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 1,
-                  0, 1, 1, IS_JOIN_X3_180)
-
-            BLOCK(0, 1, 1,
-                  1, 1, 1,
-                  1, 1, 1, IS_JOIN_X4)
-
-            BLOCK(1, 1, 1,
-                  1, 1, 1,
-                  0, 1, 1, IS_JOIN_X4_270)
-
-            BLOCK(1, 1, 1,
-                  1, 1, 1,
-                  1, 1, 0, IS_JOIN_X4_180)
-
-            BLOCK(1, 1, 0,
-                  1, 1, 1,
-                  1, 1, 1, IS_JOIN_X4_90)
-
-            if (tiledir == -1) {
-                tiledir = IS_JOIN_BLOCK;
-            }
-
-            tilecnt = dg->jigtiles_cnt[mapchar][tiledir];
-            if (!tilecnt) {
-                tiledir = IS_JOIN_BLOCK;
-
-                tilecnt = dg->jigtiles_cnt[mapchar][tiledir];
-                if (!tilecnt) {
-                    map_jigsaw_buffer_print();
-                    DIE("mapchar '%c' not handled\n", mapchar);
-                    continue;
-                }
-            }
-
-            tile = rand() % tilecnt;
-
-            for (dy = 0; dy < JIGTILE_HEIGHT; dy++) {
-                for (dx = 0; dx < JIGTILE_WIDTH; dx++) {
-
-                    int32_t cx = x * JIGTILE_WIDTH + dx;
-                    int32_t cy = y * JIGTILE_HEIGHT + dy;
-
-                    map_jigsaw_buffer2_goto(cx, cy);
-
-                    outchar = dg->jigtiles[mapchar][tiledir][tile][dx][dy];
-
-                    map_jigsaw_buffer2_putchar(outchar);
-                }
-            }
-        }
     }
 }
 
@@ -1277,265 +787,6 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
             dg->frag_cnt_alts[dg->frag_cnt-1] +=
                             cnt_cells_per_line;
         }
-    }
-}
-
-/*
- * Read tiles that we expand jigsaw pieces to.
- */
-static void jigtiles_read (dungeon_t *dg, char *buf)
-{
-    char *c = buf;
-    int32_t cnt_cells_per_line;
-    int32_t x;
-    int32_t n;
-    int32_t y;
-    int32_t col;
-    int32_t line;
-    char command[80];
-    char *s;
-    uint32_t mapchar = 0;
-    uint32_t tiledir = IS_JOIN_BLOCK;
-
-    col = 1;
-    line = 1;
-
-    while (*c) {
-        /*
-         * Skip comments
-         */
-        if (*c == '#') {
-            while (*c != '\n') {
-                c++;
-            }
-            c++;
-            col = 0;
-            line++;
-            continue;
-        }
-
-        /*
-         * : begins commands.
-         */
-        if (*c == ':') {
-            c++;
-            s = command;
-
-            memset(command, 0, sizeof(command));
-
-            while ((*c != '\n') && (s < command + sizeof(command))) {
-                *s++ = *c++;
-            }
-
-            if (!strncmp(command, "mapchar", strlen("mapchar"))) {
-                mapchar = command[strlen("mapchar") + 1];
-            } else if (!strcasecmp(command, "IS_JOIN_BLOCK")) {
-                tiledir = IS_JOIN_BLOCK;
-            } else if (!strcasecmp(command, "IS_JOIN_HORIZ")) {
-                tiledir = IS_JOIN_HORIZ;
-            } else if (!strcasecmp(command, "IS_JOIN_VERT")) {
-                tiledir = IS_JOIN_VERT;
-            } else if (!strcasecmp(command, "IS_JOIN_NODE")) {
-                tiledir = IS_JOIN_NODE;
-            } else if (!strcasecmp(command, "IS_JOIN_LEFT")) {
-                tiledir = IS_JOIN_LEFT;
-            } else if (!strcasecmp(command, "IS_JOIN_RIGHT")) {
-                tiledir = IS_JOIN_RIGHT;
-            } else if (!strcasecmp(command, "IS_JOIN_TOP")) {
-                tiledir = IS_JOIN_TOP;
-            } else if (!strcasecmp(command, "IS_JOIN_BOT")) {
-                tiledir = IS_JOIN_BOT;
-            } else if (!strcasecmp(command, "IS_JOIN_TL")) {
-                tiledir = IS_JOIN_TL;
-            } else if (!strcasecmp(command, "IS_JOIN_TR")) {
-                tiledir = IS_JOIN_TR;
-            } else if (!strcasecmp(command, "IS_JOIN_BL")) {
-                tiledir = IS_JOIN_BL;
-            } else if (!strcasecmp(command, "IS_JOIN_BR")) {
-                tiledir = IS_JOIN_BR;
-            } else if (!strcasecmp(command, "IS_JOIN_T")) {
-                tiledir = IS_JOIN_T;
-            } else if (!strcasecmp(command, "IS_JOIN_T90")) {
-                tiledir = IS_JOIN_T90;
-            } else if (!strcasecmp(command, "IS_JOIN_T180")) {
-                tiledir = IS_JOIN_T180;
-            } else if (!strcasecmp(command, "IS_JOIN_T270")) {
-                tiledir = IS_JOIN_T270;
-            } else if (!strcasecmp(command, "IS_JOIN_X")) {
-                tiledir = IS_JOIN_X;
-            } else if (!strcasecmp(command, "IS_JOIN_TL2")) {
-                tiledir = IS_JOIN_TL2;
-            } else if (!strcasecmp(command, "IS_JOIN_TR2")) {
-                tiledir = IS_JOIN_TR2;
-            } else if (!strcasecmp(command, "IS_JOIN_BL2")) {
-                tiledir = IS_JOIN_BL2;
-            } else if (!strcasecmp(command, "IS_JOIN_BR2")) {
-                tiledir = IS_JOIN_BR2;
-            } else if (!strcasecmp(command, "IS_JOIN_T_1")) {
-                tiledir = IS_JOIN_T_1;
-            } else if (!strcasecmp(command, "IS_JOIN_T_2")) {
-                tiledir = IS_JOIN_T_2;
-            } else if (!strcasecmp(command, "IS_JOIN_T_3")) {
-                tiledir = IS_JOIN_T_3;
-            } else if (!strcasecmp(command, "IS_JOIN_T90_1")) {
-                tiledir = IS_JOIN_T90_1;
-            } else if (!strcasecmp(command, "IS_JOIN_T90_2")) {
-                tiledir = IS_JOIN_T90_2;
-            } else if (!strcasecmp(command, "IS_JOIN_T90_3")) {
-                tiledir = IS_JOIN_T90_3;
-            } else if (!strcasecmp(command, "IS_JOIN_T180_1")) {
-                tiledir = IS_JOIN_T180_1;
-            } else if (!strcasecmp(command, "IS_JOIN_T180_2")) {
-                tiledir = IS_JOIN_T180_2;
-            } else if (!strcasecmp(command, "IS_JOIN_T180_3")) {
-                tiledir = IS_JOIN_T180_3;
-            } else if (!strcasecmp(command, "IS_JOIN_T270_1")) {
-                tiledir = IS_JOIN_T270_1;
-            } else if (!strcasecmp(command, "IS_JOIN_T270_2")) {
-                tiledir = IS_JOIN_T270_2;
-            } else if (!strcasecmp(command, "IS_JOIN_T270_3")) {
-                tiledir = IS_JOIN_T270_3;
-            } else if (!strcasecmp(command, "IS_JOIN_X1")) {
-                tiledir = IS_JOIN_X1;
-            } else if (!strcasecmp(command, "IS_JOIN_X1_270")) {
-                tiledir = IS_JOIN_X1_270;
-            } else if (!strcasecmp(command, "IS_JOIN_X1_180")) {
-                tiledir = IS_JOIN_X1_180;
-            } else if (!strcasecmp(command, "IS_JOIN_X1_90")) {
-                tiledir = IS_JOIN_X1_90;
-            } else if (!strcasecmp(command, "IS_JOIN_X2")) {
-                tiledir = IS_JOIN_X2;
-            } else if (!strcasecmp(command, "IS_JOIN_X2_270")) {
-                tiledir = IS_JOIN_X2_270;
-            } else if (!strcasecmp(command, "IS_JOIN_X2_180")) {
-                tiledir = IS_JOIN_X2_180;
-            } else if (!strcasecmp(command, "IS_JOIN_X2_90")) {
-                tiledir = IS_JOIN_X2_90;
-            } else if (!strcasecmp(command, "IS_JOIN_X3")) {
-                tiledir = IS_JOIN_X3;
-            } else if (!strcasecmp(command, "IS_JOIN_X3_180")) {
-                tiledir = IS_JOIN_X3_180;
-            } else if (!strcasecmp(command, "IS_JOIN_X4")) {
-                tiledir = IS_JOIN_X4;
-            } else if (!strcasecmp(command, "IS_JOIN_X4_270")) {
-                tiledir = IS_JOIN_X4_270;
-            } else if (!strcasecmp(command, "IS_JOIN_X4_180")) {
-                tiledir = IS_JOIN_X4_180;
-            } else if (!strcasecmp(command, "IS_JOIN_X4_90")) {
-                tiledir = IS_JOIN_X4_90;
-            } else {
-                printf("command [%s]\n",command);
-
-                dieat(line, col, "unknown command");
-            }
-
-            c++;
-            col = 0;
-            line++;
-            continue;
-        }
-
-        /*
-         * Read jigpiece header
-         *
-         * +--------+--------+...
-         */
-        if (*c != '+') {
-            dieat(line, col, "expecting start of tile line");
-        }
-
-        c++;
-        col++;
-
-        /*
-         * Count the number of jigpiece across per line.
-         */
-        cnt_cells_per_line = 0;
-
-        while (*c != '\n') {
-            if (*c == '+') {
-                cnt_cells_per_line++;
-            }
-            c++;
-            col++;
-        }
-
-        if (*c != '\n') {
-            dieat(line, col, "expecing end of line");
-        }
-
-        /*
-         * Move onto the next line.
-         */
-        c++;
-        col = 0;
-        line++;
-
-        if (*c == EOF) {
-            return;
-        }
-
-        if (dg->jigtiles_cnt[mapchar][tiledir] + cnt_cells_per_line >= JIGTILE_ALT_MAX) {
-            dieat(line, col, "too many jigtiles");
-        }
-
-        if (!*c) {
-            return;
-        }
-
-        /*
-         * Read one line of data
-         * |........|........|...
-         */
-        col = 0;
-        y = 0;
-
-        for (y = 0; y < JIGTILE_HEIGHT; y++) {
-            for (n = 0; n < cnt_cells_per_line; n++) {
-
-                if (*c != '|') {
-                    dieat(line, col, "expecting start of jigpiece data");
-                }
-
-                c++;
-                col++;
-
-                for (x = 0; x < JIGTILE_WIDTH; x++) {
-
-                    if (*c == '\n') {
-                        dieat(line, col, "premature end of jigpiece data");
-                    }
-
-                    dg->jigtiles[mapchar][tiledir][dg->jigtiles_cnt[mapchar][tiledir] + n][x][y] = *c;
-
-                    c++;
-                    col++;
-                }
-            }
-
-            /*
-             * Should be at the end of the line
-             */
-            if (*c != '|') {
-                dieat(line, col, "premature end of file");
-            }
-
-            c++;
-            col++;
-
-            if (*c != '\n') {
-                dieat(line, col, "expecting end of line");
-            }
-
-            /*
-             * Move onto the next line.
-             */
-            c++;
-            col = 0;
-            line++;
-        }
-
-        dg->jigtiles_cnt[mapchar][tiledir] += cnt_cells_per_line;
     }
 }
 
@@ -3143,7 +2394,6 @@ static boolean maze_generate_and_solve (dungeon_t *dg)
  * generate_level
  */
 static int32_t generate_level (const char *jigsaw_map,
-                               const char *jigtile_map,
                                int32_t opt_seed)
 {
     dungeon_t *dg;
@@ -3170,17 +2420,6 @@ static int32_t generate_level (const char *jigsaw_map,
     }
 
     jigpieces_read(dg, buf);
-    myfree(buf);
-
-    /*
-     * Read in the tiles that we will expand the jigsaw to.
-     */
-    buf = filetobuf(jigtile_map);
-    if (!buf) {
-        DIE("no buf");
-    }
-
-    jigtiles_read(dg, buf);
     myfree(buf);
 
     for (c = 0; c < dg->jigpieces_cnt; c++) {
@@ -3230,18 +2469,8 @@ reseed:
 #ifdef MAZE_DEBUG_SHOW
     map_jigsaw_buffer_print();
 #endif
-    map_jigsaw_buffer_expand(dg);
-
-    if (0) {
-        map_jigsaw_buffer2_print();
-    }
 
     map_jigsaw_buffer_print_file(stdout);
-
-    /*
-     * Print the larger maze too.
-     */
-    map_jigsaw_buffer2_print_file(stdout);
 
     myfree(dg);
 
@@ -3254,12 +2483,10 @@ reseed:
 int32_t map_jigsaw_test (int32_t argc, char **argv)
 {
     char *jigsaw_map;
-    char *jigtile_map;
     int32_t rc;
     char c;
 
     jigsaw_map = "data/map/jigsaw.map";
-    jigtile_map = "data/map/tile.map";
     opt_seed = 0;
 
     while ((c = getopt(argc, argv, "f:s:")) != -1) {
@@ -3274,7 +2501,7 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
         }
     }
 
-    rc = generate_level(jigsaw_map, jigtile_map, opt_seed);
+    rc = generate_level(jigsaw_map, opt_seed);
     if (!rc) {
         DIE("failed to generate a maze!");
     }

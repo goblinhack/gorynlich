@@ -15,7 +15,7 @@
 #include "level.h"
 #include "level_private.h"
 #include "tile.h"
-#include "map_jigsaw.h"
+#include "map_tiles.h"
 
 /*
  * map_combine
@@ -84,9 +84,9 @@ t = ROCK_1_ID;
     int32_t y;
     uint8_t c;
 
-    for (x = 0; x < MAP_JIGSAW_BUFFER2_WIDTH; x++) {
-        for (y = 0; y < MAP_JIGSAW_BUFFER2_HEIGHT; y++) {
-            c = map_jigsaw_buffer2_getchar(x, y);
+    for (x = 0; x < MAP_JIGSAW_BUFFER_WIDTH; x++) {
+        for (y = 0; y < MAP_JIGSAW_BUFFER_HEIGHT; y++) {
+            c = map_jigsaw_buffer_getchar(x, y);
             switch (c) {
             case MAP_GRASS:
                 t = ROCK_0_ID;
@@ -111,8 +111,8 @@ t = ROCK_1_ID;
                 break;
             }
 
-            uint32_t mx = ((MAP_WIDTH - MAP_JIGSAW_BUFFER2_WIDTH) / 2) + x;
-            uint32_t my = ((MAP_HEIGHT - MAP_JIGSAW_BUFFER2_HEIGHT) / 2) + y;
+            uint32_t mx = ((MAP_WIDTH - MAP_JIGSAW_BUFFER_WIDTH) / 2) + x;
+            uint32_t my = ((MAP_HEIGHT - MAP_JIGSAW_BUFFER_HEIGHT) / 2) + y;
 
             if (t) {
                 map_set_thing_template(map, mx, my, t);

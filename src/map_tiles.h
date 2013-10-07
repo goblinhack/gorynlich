@@ -32,10 +32,6 @@
  * +---------+
  */
 #define JIGPIECE_MAX                    20000
-#define JIGPIECE_WIDTH                  13
-#define JIGPIECE_HEIGHT                 13
-#define JIGTILE_WIDTH                   5
-#define JIGTILE_HEIGHT                  5
 
 /*
  * A solvable maze, e.g.:
@@ -79,11 +75,8 @@
 
 #define MAP_JIGSAW_BUFFER_WIDTH       ((MAP_JIGSAW_PIECE_WIDTH  * JIGPIECE_WIDTH) + 1)
 #define MAP_JIGSAW_BUFFER_HEIGHT      ((MAP_JIGSAW_PIECE_HEIGHT * JIGPIECE_HEIGHT) + 1)
-#define MAP_JIGSAW_BUFFER2_WIDTH      (MAP_JIGSAW_BUFFER_WIDTH  * JIGTILE_WIDTH)
-#define MAP_JIGSAW_BUFFER2_HEIGHT     (MAP_JIGSAW_BUFFER_HEIGHT * JIGTILE_HEIGHT)
 
 extern char map_jigsaw_buffer[MAP_JIGSAW_BUFFER_WIDTH][MAP_JIGSAW_BUFFER_HEIGHT];
-extern char map_jigsaw_buffer2[MAP_JIGSAW_BUFFER2_WIDTH][MAP_JIGSAW_BUFFER2_HEIGHT];
 
 enum {
     MAP_EMPTY           = ' ',
