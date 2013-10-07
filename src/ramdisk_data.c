@@ -106,6 +106,13 @@ static const unsigned char *const data_gfx_stars_png_start =
 static const unsigned char *const data_gfx_stars_png_end   =
     (const unsigned char *const) (char*)&data_gfx_stars_png_end_;
 
+extern unsigned char *data_map__jigsaw_map_swp_start_ asm("data_map__jigsaw_map_swp_start_");
+extern unsigned char *data_map__jigsaw_map_swp_end_ asm("data_map__jigsaw_map_swp_end_");
+static const unsigned char *const data_map__jigsaw_map_swp_start =
+    (const unsigned char *const) (char*)&data_map__jigsaw_map_swp_start_;
+static const unsigned char *const data_map__jigsaw_map_swp_end   =
+    (const unsigned char *const) (char*)&data_map__jigsaw_map_swp_end_;
+
 extern unsigned char *data_map_jigsaw_map_start_ asm("data_map_jigsaw_map_start_");
 extern unsigned char *data_map_jigsaw_map_end_ asm("data_map_jigsaw_map_end_");
 static const unsigned char *const data_map_jigsaw_map_start =
@@ -119,13 +126,6 @@ static const unsigned char *const data_map_map_light_data_start =
     (const unsigned char *const) (char*)&data_map_map_light_data_start_;
 static const unsigned char *const data_map_map_light_data_end   =
     (const unsigned char *const) (char*)&data_map_map_light_data_end_;
-
-extern unsigned char *data_map_tile_map_start_ asm("data_map_tile_map_start_");
-extern unsigned char *data_map_tile_map_end_ asm("data_map_tile_map_end_");
-static const unsigned char *const data_map_tile_map_start =
-    (const unsigned char *const) (char*)&data_map_tile_map_start_;
-static const unsigned char *const data_map_tile_map_end   =
-    (const unsigned char *const) (char*)&data_map_tile_map_end_;
 
 extern unsigned char *data_music_hiscore_wav_start_ asm("data_music_hiscore_wav_start_");
 extern unsigned char *data_music_hiscore_wav_end_ asm("data_music_hiscore_wav_end_");
@@ -552,13 +552,13 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/gfx/stars.png",
 },
 {
+    /* filename */ "data/map/.jigsaw.map.swp",
+},
+{
     /* filename */ "data/map/jigsaw.map",
 },
 {
     /* filename */ "data/map/map_light.data",
-},
-{
-    /* filename */ "data/map/tile.map",
 },
 {
     /* filename */ "data/music/hiscore.wav",
@@ -757,12 +757,12 @@ void ramdisk_init (void)
     ramdisk_data[13].len = data_gfx_sprites_small_png_end - data_gfx_sprites_small_png_start;
     ramdisk_data[14].data = data_gfx_stars_png_start;
     ramdisk_data[14].len = data_gfx_stars_png_end - data_gfx_stars_png_start;
-    ramdisk_data[15].data = data_map_jigsaw_map_start;
-    ramdisk_data[15].len = data_map_jigsaw_map_end - data_map_jigsaw_map_start;
-    ramdisk_data[16].data = data_map_map_light_data_start;
-    ramdisk_data[16].len = data_map_map_light_data_end - data_map_map_light_data_start;
-    ramdisk_data[17].data = data_map_tile_map_start;
-    ramdisk_data[17].len = data_map_tile_map_end - data_map_tile_map_start;
+    ramdisk_data[15].data = data_map__jigsaw_map_swp_start;
+    ramdisk_data[15].len = data_map__jigsaw_map_swp_end - data_map__jigsaw_map_swp_start;
+    ramdisk_data[16].data = data_map_jigsaw_map_start;
+    ramdisk_data[16].len = data_map_jigsaw_map_end - data_map_jigsaw_map_start;
+    ramdisk_data[17].data = data_map_map_light_data_start;
+    ramdisk_data[17].len = data_map_map_light_data_end - data_map_map_light_data_start;
     ramdisk_data[18].data = data_music_hiscore_wav_start;
     ramdisk_data[18].len = data_music_hiscore_wav_end - data_music_hiscore_wav_start;
     ramdisk_data[19].data = data_music_intro_wav_start;

@@ -78,6 +78,7 @@ double gauss (const double m, const double s)
 /*
  * true if perpendicular line from point is in line segment.
  */
+#if 0
 boolean get_line_intersection (fpoint p0,
                                fpoint p1,
                                fpoint p2,
@@ -107,6 +108,42 @@ boolean get_line_intersection (fpoint p0,
     }
 
     return (false); // No collision
+}
+#endif
+
+boolean get_line_intersection (fpoint p0,
+                               fpoint p1,
+                               fpoint p2,
+                               fpoint p3,
+                               fpoint *intersect)
+{
+    double denominator = 
+        ((p3.y - p2.y) * (p1.x - p0.x)) - ((p3.x - p2.x) * (p1.y - p0.y));
+
+    if (denominator == 0) {
+        return (false);
+    }
+
+    double a = p0.y - p2.y;
+    double b = p0.x - p2.x;
+
+    double numerator1 = ((p3.x - p2.x) * a) - ((p3.y - p2.y) * b);
+    double numerator2 = ((p1.x - p0.x) * a) - ((p1.y - p0.y) * b);
+
+    a = numerator1 / denominator;
+    b = numerator2 / denominator;
+
+    // if we cast these lines infinitely in both directions, they intersect 
+    // here:
+    intersect->x = p0.x + (a * (p1.x - p0.x));
+    intersect->y = p0.y + (a * (p1.y - p0.y));
+
+    // if line1 is a segment and line2 is infinite, they intersect if:
+    if ((a > 0) && (a < 1) && (b > 0) && (b < 1)) {
+        return (true);
+    }
+
+    return (false);
 }
 
 boolean 
