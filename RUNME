@@ -96,7 +96,7 @@ do
     fi
 done
 
-if [ "$SDL_CONFIG" -eq "" ]
+if [ "$SDL_CONFIG" = "" ]
 then
     log_warn "Is SDL 1.2 or 1.3 installed? If not:"
     log_warn "  For ubuntu do: "
@@ -141,13 +141,13 @@ log_info "  ($SDL_CONFIG)"
 # -funwind-tables and -rdynamic for backtrace info on linux.
 # But it seemed to help little.
 #
-if [ "$SDL_CONFIG" -eq "" ]
+if [ "$SDL2_CONFIG" != "" ]
 then
-    LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
-    LDLIBS="$SDL_LIBS -lSDL_mixer"
-else
     LDLIBS="$SDL_LIBS -lSDL2_ttf -lSDL2_mixer"
     LDLIBS="$SDL_LIBS -lSDL2_mixer"
+else
+    LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
+    LDLIBS="$SDL_LIBS -lSDL_mixer"
 fi
 
 case `uname` in
