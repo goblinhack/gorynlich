@@ -1344,11 +1344,11 @@ boolean thing_is_food (thingp t)
     return (thing_template_is_food(thing_get_template(t)));
 }
 
-boolean thing_is_letter (thingp t)
+boolean thing_is_ladder (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_letter(thing_get_template(t)));
+    return (thing_template_is_ladder(thing_get_template(t)));
 }
 
 boolean thing_is_monst (thingp t)
@@ -1379,11 +1379,11 @@ boolean thing_is_snail (thingp t)
     return (thing_template_is_snail(thing_get_template(t)));
 }
 
-boolean thing_is_star_yellow (thingp t)
+boolean thing_is_gem_0 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_yellow(thing_get_template(t)));
+    return (thing_template_is_gem_0(thing_get_template(t)));
 }
 
 boolean thing_is_rock (thingp t)
@@ -1407,25 +1407,25 @@ boolean thing_is_lava (thingp t)
     return (thing_template_is_lava(thing_get_template(t)));
 }
 
-boolean thing_is_xxx4 (thingp t)
+boolean thing_is_gem_6 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx4(thing_get_template(t)));
+    return (thing_template_is_gem_6(thing_get_template(t)));
 }
 
-boolean thing_is_xxx5 (thingp t)
+boolean thing_is_gem_7 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx5(thing_get_template(t)));
+    return (thing_template_is_gem_7(thing_get_template(t)));
 }
 
-boolean thing_is_xxx6 (thingp t)
+boolean thing_is_boulder (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx6(thing_get_template(t)));
+    return (thing_template_is_boulder(thing_get_template(t)));
 }
 
 boolean thing_is_xxx7 (thingp t)
@@ -1484,18 +1484,18 @@ boolean thing_is_radiant (thingp t)
     return (thing_template_is_radiant(thing_get_template(t)));
 }
 
-boolean thing_is_star_black (thingp t)
+boolean thing_is_gem_1 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_black(thing_get_template(t)));
+    return (thing_template_is_gem_1(thing_get_template(t)));
 }
 
-boolean thing_is_star_purple (thingp t)
+boolean thing_is_gem_2 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_purple(thing_get_template(t)));
+    return (thing_template_is_gem_2(thing_get_template(t)));
 }
 
 boolean thing_is_explosion (thingp t)
@@ -1512,18 +1512,18 @@ boolean thing_is_spikes (thingp t)
     return (thing_template_is_spikes(thing_get_template(t)));
 }
 
-boolean thing_is_star_red (thingp t)
+boolean thing_is_gem_4 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_red(thing_get_template(t)));
+    return (thing_template_is_gem_4(thing_get_template(t)));
 }
 
-boolean thing_is_star_blue (thingp t)
+boolean thing_is_gem_5 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_blue(thing_get_template(t)));
+    return (thing_template_is_gem_5(thing_get_template(t)));
 }
 
 boolean thing_is_seedpod (thingp t)

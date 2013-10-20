@@ -213,7 +213,7 @@ static boolean wid_level_count_down_common (widp w)
 }
 
 static boolean wid_level_count_down_key_down (widp w,
-                                             const SDL_keysym *key)
+                                             const SDL_Keysym *key)
 {
     return (wid_level_count_down_common(w));
 }
@@ -366,7 +366,7 @@ static boolean wid_level_game_over_mouse_down (widp w,
 }
 
 static boolean wid_level_game_over_key_down_event (widp w,
-                                                   const SDL_keysym *key)
+                                                   const SDL_Keysym *key)
 {
     wid_level_game_over_common(w);
 

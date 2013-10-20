@@ -1,0 +1,18 @@
+{
+ shortname="exit"
+ tooltip="exit"
+ z_depth=1
+ z_order=0
+ is_exit
+ tiles={
+  tile={
+   tile="mask_0"
+  }
+  tile={
+   tile="mask_1"
+  }
+  tile={
+   tile="mask_2"
+  }
+ }
+}

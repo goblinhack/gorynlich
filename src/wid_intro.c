@@ -137,7 +137,7 @@ static boolean wid_intro_ignore_events (widp w)
     return (false);
 }
 
-static boolean wid_intro_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
     if (wid_intro_ignore_events(w)) {
         return (false);
@@ -209,7 +209,7 @@ static boolean wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_play_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     if (wid_intro_ignore_events(w)) {
         return (false);
@@ -263,7 +263,7 @@ static boolean wid_intro_help_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_help_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_help_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case SDLK_RETURN:
@@ -285,7 +285,7 @@ static boolean wid_intro_about_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_about_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_about_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case SDLK_RETURN:
@@ -307,7 +307,7 @@ static boolean wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_settings_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case SDLK_RETURN:
@@ -329,7 +329,7 @@ static boolean wid_intro_hiscore_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_hiscore_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_hiscore_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case SDLK_RETURN:
@@ -388,7 +388,7 @@ static boolean wid_intro_quit_receive_mouse_up (widp w,
     return (wid_intro_quit_selected());
 }
 
-static boolean wid_intro_quit_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_quit_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case SDLK_RETURN:

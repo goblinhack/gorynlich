@@ -259,8 +259,6 @@ boolean sdl_init (void)
     INIT_LOG("X/Y scale   : %f, %f",
              global_config.xscale, global_config.yscale);
 
-    SDL_WM_SetCaption("gorynlich", "gorynlich");
-
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     /*
@@ -340,6 +338,12 @@ boolean sdl_init (void)
 
 #endif /* } */
 
+#if SDL_MAJOR_VERSION == 1 /* { */
+    SDL_WM_SetCaption("gorynlich", "gorynlich");
+#else
+    SDL_SetWindowTitle(window, "gorynlich");
+#endif /* } */
+
     INIT_LOG("GL Vendor   : %s", glGetString(GL_VENDOR));
     INIT_LOG("GL Renderer : %s", glGetString(GL_RENDERER));
     INIT_LOG("GL Version  : %s", glGetString(GL_VERSION));
@@ -367,7 +371,9 @@ boolean sdl_init (void)
     DBG("Vsync       : %d", SDL_GL_GetSwapInterval());
 #endif /* } */
 
+#if SDL_MAJOR_VERSION == 1 /* { */
     SDL_EnableKeyRepeat(150, 50);
+#endif /* } */
 
     return (true);
 }
@@ -401,7 +407,7 @@ static void sdl_event (SDL_Event * event)
     static int32_t mouse_x;
     static int32_t mouse_y;
 
-    SDL_keysym *key;
+    SDL_KEYSYM *key;
 
     switch (event->type) {
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
@@ -798,7 +804,13 @@ void sdl_loop (void)
              */
             SDL_PumpEvents();
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if SDL_MAJOR_VERSION == 2
+            found = SDL_PeepEvents(events,
+                                   ARRAY_SIZE(events),
+                                   SDL_GETEVENT,
+                                   SDL_KEYDOWN,
+                                   SDL_MOUSEWHEEL);
+#elif SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
             found = SDL_PeepEvents(events,
                                    ARRAY_SIZE(events),
                                    SDL_GETEVENT,

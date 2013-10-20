@@ -87,7 +87,11 @@ musicp music_load (const char *file, const char *name_alias)
         DIE("cannot make RW music %s", file);
     }
 
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
     m->music = Mix_LoadMUS_RW(rw);
+#else
+    m->music = Mix_LoadMUS_RW(rw, false);
+#endif /* } */
     if (!m->music) {
         ERR("cannot make music %s: %s %s", file, Mix_GetError(),
             SDL_GetError());

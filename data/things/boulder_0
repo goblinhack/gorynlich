@@ -1,0 +1,12 @@
+{
+ shortname="boulder_0"
+ tooltip="boulder_0"
+ z_depth=1
+ z_order=0
+ is_boulder
+ tiles={
+  tile={
+   tile="is_boulder_0"
+  }
+ }
+}

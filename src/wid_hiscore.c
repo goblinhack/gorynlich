@@ -13,6 +13,7 @@
 #include "string.h"
 #include "wid_text_input.h"
 #include "marshal.h"
+#include "sdl.h"
 
 static const char *hiscore_dir_and_file = "gorynlich-hiscore.txt";
 static const uint32_t MAX_HISCORES = 10;
@@ -99,7 +100,7 @@ static boolean wid_hiscore_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_hiscore_key_event (widp w, const SDL_keysym *key)
+static boolean wid_hiscore_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':

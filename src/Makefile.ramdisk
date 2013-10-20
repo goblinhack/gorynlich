@@ -43,14 +43,14 @@
 .o/ramdisk_data_gfx_stars_png.o: asm/ramdisk_data_gfx_stars_png.S ../data/gfx/stars.png
 	gcc -c asm/ramdisk_data_gfx_stars_png.S -o .o/ramdisk_data_gfx_stars_png.o
 
-.o/ramdisk_data_map__jigsaw_map_swp.o: asm/ramdisk_data_map__jigsaw_map_swp.S ../data/map/.jigsaw.map.swp
-	gcc -c asm/ramdisk_data_map__jigsaw_map_swp.S -o .o/ramdisk_data_map__jigsaw_map_swp.o
-
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
 
 .o/ramdisk_data_map_map_light_data.o: asm/ramdisk_data_map_map_light_data.S ../data/map/map_light.data
 	gcc -c asm/ramdisk_data_map_map_light_data.S -o .o/ramdisk_data_map_map_light_data.o
+
+.o/ramdisk_data_map_tile_map.o: asm/ramdisk_data_map_tile_map.S ../data/map/tile.map
+	gcc -c asm/ramdisk_data_map_tile_map.S -o .o/ramdisk_data_map_tile_map.o
 
 .o/ramdisk_data_music_hiscore_wav.o: asm/ramdisk_data_music_hiscore_wav.S ../data/music/hiscore.wav
 	gcc -c asm/ramdisk_data_music_hiscore_wav.S -o .o/ramdisk_data_music_hiscore_wav.o
@@ -103,6 +103,9 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things_boulder_0.o: asm/ramdisk_data_things_boulder_0.S ../data/things/boulder_0
+	gcc -c asm/ramdisk_data_things_boulder_0.S -o .o/ramdisk_data_things_boulder_0.o
+
 .o/ramdisk_data_things_brick_0.o: asm/ramdisk_data_things_brick_0.S ../data/things/brick_0
 	gcc -c asm/ramdisk_data_things_brick_0.S -o .o/ramdisk_data_things_brick_0.o
 
@@ -130,6 +133,36 @@
 .o/ramdisk_data_things_brick_8.o: asm/ramdisk_data_things_brick_8.S ../data/things/brick_8
 	gcc -c asm/ramdisk_data_things_brick_8.S -o .o/ramdisk_data_things_brick_8.o
 
+.o/ramdisk_data_things_exit.o: asm/ramdisk_data_things_exit.S ../data/things/exit
+	gcc -c asm/ramdisk_data_things_exit.S -o .o/ramdisk_data_things_exit.o
+
+.o/ramdisk_data_things_gem_0.o: asm/ramdisk_data_things_gem_0.S ../data/things/gem_0
+	gcc -c asm/ramdisk_data_things_gem_0.S -o .o/ramdisk_data_things_gem_0.o
+
+.o/ramdisk_data_things_gem_1.o: asm/ramdisk_data_things_gem_1.S ../data/things/gem_1
+	gcc -c asm/ramdisk_data_things_gem_1.S -o .o/ramdisk_data_things_gem_1.o
+
+.o/ramdisk_data_things_gem_2.o: asm/ramdisk_data_things_gem_2.S ../data/things/gem_2
+	gcc -c asm/ramdisk_data_things_gem_2.S -o .o/ramdisk_data_things_gem_2.o
+
+.o/ramdisk_data_things_gem_3.o: asm/ramdisk_data_things_gem_3.S ../data/things/gem_3
+	gcc -c asm/ramdisk_data_things_gem_3.S -o .o/ramdisk_data_things_gem_3.o
+
+.o/ramdisk_data_things_gem_4.o: asm/ramdisk_data_things_gem_4.S ../data/things/gem_4
+	gcc -c asm/ramdisk_data_things_gem_4.S -o .o/ramdisk_data_things_gem_4.o
+
+.o/ramdisk_data_things_gem_5.o: asm/ramdisk_data_things_gem_5.S ../data/things/gem_5
+	gcc -c asm/ramdisk_data_things_gem_5.S -o .o/ramdisk_data_things_gem_5.o
+
+.o/ramdisk_data_things_gem_6.o: asm/ramdisk_data_things_gem_6.S ../data/things/gem_6
+	gcc -c asm/ramdisk_data_things_gem_6.S -o .o/ramdisk_data_things_gem_6.o
+
+.o/ramdisk_data_things_gem_7.o: asm/ramdisk_data_things_gem_7.S ../data/things/gem_7
+	gcc -c asm/ramdisk_data_things_gem_7.S -o .o/ramdisk_data_things_gem_7.o
+
+.o/ramdisk_data_things_ladder.o: asm/ramdisk_data_things_ladder.S ../data/things/ladder
+	gcc -c asm/ramdisk_data_things_ladder.S -o .o/ramdisk_data_things_ladder.o
+
 .o/ramdisk_data_things_lava_0.o: asm/ramdisk_data_things_lava_0.S ../data/things/lava_0
 	gcc -c asm/ramdisk_data_things_lava_0.S -o .o/ramdisk_data_things_lava_0.o
 
@@ -141,6 +174,9 @@
 
 .o/ramdisk_data_things_rock_1.o: asm/ramdisk_data_things_rock_1.S ../data/things/rock_1
 	gcc -c asm/ramdisk_data_things_rock_1.S -o .o/ramdisk_data_things_rock_1.o
+
+.o/ramdisk_data_things_skeleton.o: asm/ramdisk_data_things_skeleton.S ../data/things/skeleton
+	gcc -c asm/ramdisk_data_things_skeleton.S -o .o/ramdisk_data_things_skeleton.o
 
 .o/ramdisk_data_things_water_0.o: asm/ramdisk_data_things_water_0.S ../data/things/water_0
 	gcc -c asm/ramdisk_data_things_water_0.S -o .o/ramdisk_data_things_water_0.o

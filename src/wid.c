@@ -1132,7 +1132,7 @@ static boolean wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
 /*
  * Map an SDL key event to the char the user typed
  */
-static char wid_event_to_char (const struct SDL_keysym *evt)
+static char wid_event_to_char (const struct SDL_KEYSYM *evt)
 {
     switch (evt->mod) {
         case KMOD_LSHIFT:
@@ -1278,6 +1278,7 @@ static char wid_event_to_char (const struct SDL_keysym *evt)
         case SDLK_y: return ('y');
         case SDLK_z: return ('z');
         case SDLK_DELETE: return ('');
+#if SDL_MAJOR_VERSION == 1 /* { */
         case SDLK_KP0: return ('0');
         case SDLK_KP1: return ('1');
         case SDLK_KP2: return ('2');
@@ -1288,6 +1289,18 @@ static char wid_event_to_char (const struct SDL_keysym *evt)
         case SDLK_KP7: return ('7');
         case SDLK_KP8: return ('8');
         case SDLK_KP9: return ('9');
+#else
+        case SDLK_KP_0: return ('0');
+        case SDLK_KP_1: return ('1');
+        case SDLK_KP_2: return ('2');
+        case SDLK_KP_3: return ('3');
+        case SDLK_KP_4: return ('4');
+        case SDLK_KP_5: return ('5');
+        case SDLK_KP_6: return ('6');
+        case SDLK_KP_7: return ('7');
+        case SDLK_KP_8: return ('8');
+        case SDLK_KP_9: return ('9');
+#endif /* } */
         case SDLK_KP_PERIOD: return ('.');
         case SDLK_KP_DIVIDE: return ('/');
         case SDLK_KP_MULTIPLY: return ('*');
@@ -1319,23 +1332,16 @@ static char wid_event_to_char (const struct SDL_keysym *evt)
         case SDLK_F13: return ('\0');
         case SDLK_F14: return ('\0');
         case SDLK_F15: return ('\0');
-        case SDLK_NUMLOCK: return ('\0');
         case SDLK_CAPSLOCK: return ('\0');
-        case SDLK_SCROLLOCK: return ('\0');
         case SDLK_RSHIFT: return ('\0');
         case SDLK_LSHIFT: return ('\0');
         case SDLK_RCTRL: return ('\0');
         case SDLK_LCTRL: return ('\0');
         case SDLK_RALT: return ('\0');
         case SDLK_LALT: return ('\0');
-        case SDLK_RMETA: return ('\0');
-        case SDLK_LMETA: return ('\0');
         case SDLK_MODE: return ('\0');
-        case SDLK_COMPOSE: return ('\0');
         case SDLK_HELP: return ('!');
-        case SDLK_PRINT: return ('\0');
         case SDLK_SYSREQ: return ('\0');
-        case SDLK_BREAK: return ('\0');
         case SDLK_MENU: return ('\0');
         case SDLK_POWER: return ('\0');
         case SDLK_UNDO: return ('\0');
@@ -5065,7 +5071,7 @@ void wid_scroll_with_input (widp w, const char *str)
     }
 }
 
-boolean wid_receive_input (widp w, const SDL_keysym *key)
+boolean wid_receive_input (widp w, const SDL_KEYSYM *key)
 {
     char beforecursor[MAXSTR];
     char updatedtext[MAXSTR];
@@ -5323,7 +5329,7 @@ boolean wid_receive_input (widp w, const SDL_keysym *key)
 /*
  * Handle keys no one grabbed.
  */
-static boolean wid_receive_unhandled_input (const SDL_keysym *key)
+static boolean wid_receive_unhandled_input (const SDL_KEYSYM *key)
 {
     widp w;
 
@@ -6390,7 +6396,7 @@ static widp wid_key_up_handler (int32_t x, int32_t y)
     return (0);
 }
 
-void wid_key_down (const struct SDL_keysym *key, int32_t x, int32_t y)
+void wid_key_down (const struct SDL_KEYSYM *key, int32_t x, int32_t y)
 {
     widp w;
 
@@ -6470,7 +6476,7 @@ try_parent:
     wid_receive_unhandled_input(key);
 }
 
-void wid_key_up (const struct SDL_keysym *key, int32_t x, int32_t y)
+void wid_key_up (const struct SDL_KEYSYM *key, int32_t x, int32_t y)
 {
     widp w;
 

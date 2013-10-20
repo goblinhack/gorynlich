@@ -13,6 +13,7 @@
 #include "wid.h"
 #include "color.h"
 #include "ttf.h"
+#include "sdl.h"
 
 static int32_t wid_console_inited;
 static int32_t wid_console_exiting;
@@ -156,7 +157,7 @@ void wid_console_log (const char *s)
 /*
  * Key down etc...
  */
-static boolean wid_console_receive_input (widp w, const SDL_keysym *key)
+static boolean wid_console_receive_input (widp w, const SDL_KEYSYM *key)
 {
     wid_console_reset_scroll();
 
