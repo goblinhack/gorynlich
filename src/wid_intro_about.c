@@ -10,6 +10,7 @@
 #include "wid.h"
 #include "wid_popup.h"
 #include "wid_intro_about.h"
+#include "sdl.h"
 
 static widp wid_intro_about;
 static boolean wid_intro_about_init_done;
@@ -47,7 +48,7 @@ void wid_intro_about_visible (void)
     wid_intro_about_create();
 }
 
-static boolean wid_intro_about_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_about_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':

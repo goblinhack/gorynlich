@@ -336,7 +336,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     c = 'E';
                 } else if (map_is_food_at(level, x, y)) {
                     c = 'F';
-                } else if (map_is_letter_at(level, x, y)) {
+                } else if (map_is_ladder_at(level, x, y)) {
                     c = 'L';
                 } else if (map_is_star_at(level, x, y)) {
                     c = 'o';
@@ -1006,7 +1006,7 @@ void dmap_goals_find (dmap *map, thingp t)
                         /*
                          * Chase letter.
                          */
-                        if (thing_is_letter(thing_it)) {
+                        if (thing_is_ladder(thing_it)) {
                             dmap_goal_flood(map, 1, x, y);
                         }
 

@@ -519,18 +519,18 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
         GET_OPT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_letter", t->is_letter);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_ladder", t->is_ladder);
         GET_OPT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_0", t->is_gem_0);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
         GET_OPT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
         GET_OPT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_6", t->is_gem_6);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_7", t->is_gem_7);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_boulder", t->is_boulder);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
@@ -539,13 +539,13 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
         GET_OPT_NAMED_BITFIELD(ctx, "is_transparent", t->is_transparent);
         GET_OPT_NAMED_BITFIELD(ctx, "is_radiant", t->is_radiant);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_1", t->is_gem_1);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_2", t->is_gem_2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spikes", t->is_spikes);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_pink", t->is_star_pink);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_red", t->is_star_red);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_blue", t->is_star_blue);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_3", t->is_gem_3);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_4", t->is_gem_4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_5", t->is_gem_5);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
@@ -622,18 +622,18 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
     PUT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
     PUT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
-    PUT_NAMED_BITFIELD(ctx, "is_letter", t->is_letter);
+    PUT_NAMED_BITFIELD(ctx, "is_ladder", t->is_ladder);
     PUT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
-    PUT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_0", t->is_gem_0);
     PUT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
     PUT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
     PUT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_6", t->is_gem_6);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_7", t->is_gem_7);
+    PUT_NAMED_BITFIELD(ctx, "is_boulder", t->is_boulder);
     PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
     PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
@@ -642,13 +642,13 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
     PUT_NAMED_BITFIELD(ctx, "is_transparent", t->is_transparent);
     PUT_NAMED_BITFIELD(ctx, "is_radiant", t->is_radiant);
-    PUT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
-    PUT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_1", t->is_gem_1);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_2", t->is_gem_2);
     PUT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
     PUT_NAMED_BITFIELD(ctx, "is_spikes", t->is_spikes);
-    PUT_NAMED_BITFIELD(ctx, "is_star_pink", t->is_star_pink);
-    PUT_NAMED_BITFIELD(ctx, "is_star_red", t->is_star_red);
-    PUT_NAMED_BITFIELD(ctx, "is_star_blue", t->is_star_blue);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_3", t->is_gem_3);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_4", t->is_gem_4);
+    PUT_NAMED_BITFIELD(ctx, "is_gem_5", t->is_gem_5);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
@@ -853,9 +853,9 @@ boolean thing_template_is_food (thing_templatep t)
     return (t->is_food);
 }
 
-boolean thing_template_is_letter (thing_templatep t)
+boolean thing_template_is_ladder (thing_templatep t)
 {
-    return (t->is_letter);
+    return (t->is_ladder);
 }
 
 boolean thing_template_is_monst (thing_templatep t)
@@ -878,9 +878,9 @@ boolean thing_template_is_snail (thing_templatep t)
     return (t->is_snail);
 }
 
-boolean thing_template_is_star_yellow (thing_templatep t)
+boolean thing_template_is_gem_0 (thing_templatep t)
 {
-    return (t->is_star_yellow);
+    return (t->is_gem_0);
 }
 
 boolean thing_template_is_rock (thing_templatep t)
@@ -898,19 +898,19 @@ boolean thing_template_is_lava (thing_templatep t)
     return (t->is_lava);
 }
 
-boolean thing_template_is_xxx4 (thing_templatep t)
+boolean thing_template_is_gem_6 (thing_templatep t)
 {
-    return (t->is_xxx4);
+    return (t->is_gem_6);
 }
 
-boolean thing_template_is_xxx5 (thing_templatep t)
+boolean thing_template_is_gem_7 (thing_templatep t)
 {
-    return (t->is_xxx5);
+    return (t->is_gem_7);
 }
 
-boolean thing_template_is_xxx6 (thing_templatep t)
+boolean thing_template_is_boulder (thing_templatep t)
 {
-    return (t->is_xxx6);
+    return (t->is_boulder);
 }
 
 boolean thing_template_is_xxx7 (thing_templatep t)
@@ -953,14 +953,14 @@ boolean thing_template_is_radiant (thing_templatep t)
     return (t->is_radiant);
 }
 
-boolean thing_template_is_star_black (thing_templatep t)
+boolean thing_template_is_gem_1 (thing_templatep t)
 {
-    return (t->is_star_black);
+    return (t->is_gem_1);
 }
 
-boolean thing_template_is_star_purple (thing_templatep t)
+boolean thing_template_is_gem_2 (thing_templatep t)
 {
-    return (t->is_star_purple);
+    return (t->is_gem_2);
 }
 
 boolean thing_template_is_explosion (thing_templatep t)
@@ -973,19 +973,19 @@ boolean thing_template_is_spikes (thing_templatep t)
     return (t->is_spikes);
 }
 
-boolean thing_template_is_star_red (thing_templatep t)
+boolean thing_template_is_gem_4 (thing_templatep t)
 {
-    return (t->is_star_red);
+    return (t->is_gem_4);
 }
 
-boolean thing_template_is_star_pink (thing_templatep t)
+boolean thing_template_is_gem_3 (thing_templatep t)
 {
-    return (t->is_star_pink);
+    return (t->is_gem_3);
 }
 
-boolean thing_template_is_star_blue (thing_templatep t)
+boolean thing_template_is_gem_5 (thing_templatep t)
 {
-    return (t->is_star_blue);
+    return (t->is_gem_5);
 }
 
 boolean thing_template_is_seedpod (thing_templatep t)

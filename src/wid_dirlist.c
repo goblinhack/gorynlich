@@ -17,6 +17,7 @@
 #include "string.h"
 #include "wid_popup.h"
 #include "config.h"
+#include "sdl.h"
 
 static const int32_t LINE_WIDTH = 25;
 static const uint32_t MAX_ROWS = 6;
@@ -250,7 +251,7 @@ static boolean wid_dirlist_button_event (widp w, int32_t x, int32_t y,
 /*
  * Key down etc...
  */
-static boolean wid_dirlist_receive_input (widp w, const SDL_keysym *key)
+static boolean wid_dirlist_receive_input (widp w, const SDL_KEYSYM *key)
 {
     widp button;
 
@@ -433,7 +434,7 @@ static boolean wid_dirlist_receive_input (widp w, const SDL_keysym *key)
     return (ret);
 }
 
-static boolean wid_dirlist_ignore_input (widp w, const SDL_keysym *key)
+static boolean wid_dirlist_ignore_input (widp w, const SDL_KEYSYM *key)
 {
     return (true);
 }

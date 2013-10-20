@@ -78,7 +78,7 @@ boolean thing_item_use (thingp owner, thingp thing_item)
 
     THING_LOG(owner, "use: %s", thing_logname(thing_item));
 
-    if (thing_is_star_yellow(thing_item)) {
+    if (thing_is_gem_0(thing_item)) {
         thing_item_drop(owner, thing_item, true /* destroy */, "used");
 
         /*

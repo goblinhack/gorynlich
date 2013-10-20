@@ -13,6 +13,7 @@
 #include "string_ext.h"
 #include "ttf.h"
 #include "wid_popup.h"
+#include "sdl.h"
 
 static const int32_t PAD_X = 80;
 static const int32_t PAD_Y = 25;
@@ -50,7 +51,7 @@ static boolean wid_popup_wid_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_popup_wid_key_event (widp w, const SDL_keysym *key)
+static boolean wid_popup_wid_key_event (widp w, const SDL_KEYSYM *key)
 {
     widp button;
     widp focus;
@@ -504,7 +505,7 @@ static void wid_popup_ok_close (widp wid)
     wid_destroy(&wid);
 }
 
-static boolean wid_popup_ok_key_event (widp w, const SDL_keysym *key)
+static boolean wid_popup_ok_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
@@ -544,7 +545,7 @@ static void wid_popup_error_close (widp wid)
     wid_destroy(&wid);
 }
 
-static boolean wid_popup_error_key_event (widp w, const SDL_keysym *key)
+static boolean wid_popup_error_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':

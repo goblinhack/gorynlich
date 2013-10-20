@@ -21,7 +21,7 @@ widp wid_map;
 /*
  * wid_map_key_event
  */
-static boolean wid_map_key_event (widp w, const SDL_keysym *key)
+static boolean wid_map_key_event (widp w, const SDL_Keysym *key)
 {
     static uint32_t accel = 1;
     static uint32_t last;
@@ -40,7 +40,7 @@ static boolean wid_map_key_event (widp w, const SDL_keysym *key)
     boolean up    = state[SDLK_UP];
     boolean down  = state[SDLK_DOWN];
 #else /* } { */
-    uint8_t *state = SDL_GetKeyboardState(0);
+    const uint8_t *state = SDL_GetKeyboardState(0);
 
     boolean right = state[SDL_SCANCODE_RIGHT];
     boolean left  = state[SDL_SCANCODE_LEFT];

@@ -294,7 +294,7 @@ boolean items_has_wall (tree_rootp root)
 
 boolean items_has_star (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_yellow));
+    return (items_has_x(root, thing_template_is_gem_0));
 }
 
 boolean items_has_rock (tree_rootp root)
@@ -312,19 +312,19 @@ boolean items_has_lava (tree_rootp root)
     return (items_has_x(root, thing_template_is_lava));
 }
 
-boolean items_has_xxx4 (tree_rootp root)
+boolean items_has_gem_6 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_xxx4));
+    return (items_has_x(root, thing_template_is_gem_6));
 }
 
-boolean items_has_xxx5 (tree_rootp root)
+boolean items_has_gem_7 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_xxx5));
+    return (items_has_x(root, thing_template_is_gem_7));
 }
 
-boolean items_has_xxx6 (tree_rootp root)
+boolean items_has_boulder (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_xxx6));
+    return (items_has_x(root, thing_template_is_boulder));
 }
 
 boolean items_has_xxx7 (tree_rootp root)
@@ -367,14 +367,14 @@ boolean items_has_star_cyan (tree_rootp root)
     return (items_has_x(root, thing_template_is_radiant));
 }
 
-boolean items_has_star_black (tree_rootp root)
+boolean items_has_is_gem_1 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_black));
+    return (items_has_x(root, thing_template_is_gem_1));
 }
 
-boolean items_has_star_purple (tree_rootp root)
+boolean items_has_is_gem_2 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_purple));
+    return (items_has_x(root, thing_template_is_gem_2));
 }
 
 boolean items_has_explosion (tree_rootp root)
@@ -387,19 +387,19 @@ boolean items_has_spikes (tree_rootp root)
     return (items_has_x(root, thing_template_is_spikes));
 }
 
-boolean items_has_is_star_red (tree_rootp root)
+boolean items_has_is_gem_4 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_red));
+    return (items_has_x(root, thing_template_is_gem_4));
 }
 
-boolean items_has_is_star_pink (tree_rootp root)
+boolean items_has_is_gem_3 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_pink));
+    return (items_has_x(root, thing_template_is_gem_3));
 }
 
-boolean items_has_is_star_blue (tree_rootp root)
+boolean items_has_is_gem_5 (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_star_blue));
+    return (items_has_x(root, thing_template_is_gem_5));
 }
 
 boolean items_has_seedpod (tree_rootp root)
@@ -504,7 +504,7 @@ boolean items_has_exit (tree_rootp root)
 
 boolean items_has_letter (tree_rootp root)
 {
-    return (items_has_x(root, thing_template_is_letter));
+    return (items_has_x(root, thing_template_is_ladder));
 }
 
 uint32_t items_count_is_thing_template (tree_rootp tree, thing_templatep in)
@@ -571,9 +571,9 @@ uint32_t items_count_is_wall (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_wall));
 }
 
-uint32_t items_count_is_star_yellow (tree_rootp root)
+uint32_t items_count_is_gem_0 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_yellow));
+    return (items_count_is_x(root, thing_template_is_gem_0));
 }
 
 uint32_t items_count_is_rock (tree_rootp root)
@@ -591,19 +591,19 @@ uint32_t items_count_is_lava (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_lava));
 }
 
-uint32_t items_count_is_xxx4 (tree_rootp root)
+uint32_t items_count_is_gem_6 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_xxx4));
+    return (items_count_is_x(root, thing_template_is_gem_6));
 }
 
-uint32_t items_count_is_xxx5 (tree_rootp root)
+uint32_t items_count_is_gem_7 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_xxx5));
+    return (items_count_is_x(root, thing_template_is_gem_7));
 }
 
-uint32_t items_count_is_xxx6 (tree_rootp root)
+uint32_t items_count_is_boulder (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_xxx6));
+    return (items_count_is_x(root, thing_template_is_boulder));
 }
 
 uint32_t items_count_is_xxx7 (tree_rootp root)
@@ -646,14 +646,14 @@ uint32_t items_count_is_radiant (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_radiant));
 }
 
-uint32_t items_count_is_star_black (tree_rootp root)
+uint32_t items_count_is_gem_1 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_black));
+    return (items_count_is_x(root, thing_template_is_gem_1));
 }
 
-uint32_t items_count_is_star_purple (tree_rootp root)
+uint32_t items_count_is_gem_2 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_purple));
+    return (items_count_is_x(root, thing_template_is_gem_2));
 }
 
 uint32_t items_count_is_explosion (tree_rootp root)
@@ -666,19 +666,19 @@ uint32_t items_count_is_spikes (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_spikes));
 }
 
-uint32_t items_count_is_star_red (tree_rootp root)
+uint32_t items_count_is_gem_4 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_red));
+    return (items_count_is_x(root, thing_template_is_gem_4));
 }
 
-uint32_t items_count_is_star_pink (tree_rootp root)
+uint32_t items_count_is_gem_3 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_pink));
+    return (items_count_is_x(root, thing_template_is_gem_3));
 }
 
-uint32_t items_count_is_star_blue (tree_rootp root)
+uint32_t items_count_is_gem_5 (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_star_blue));
+    return (items_count_is_x(root, thing_template_is_gem_5));
 }
 
 uint32_t items_count_is_seedpod (tree_rootp root)
@@ -781,9 +781,9 @@ uint32_t items_count_is_exit (tree_rootp root)
     return (items_count_is_x(root, thing_template_is_exit));
 }
 
-uint32_t items_count_is_letter (tree_rootp root)
+uint32_t items_count_is_ladder (tree_rootp root)
 {
-    return (items_count_is_x(root, thing_template_is_letter));
+    return (items_count_is_x(root, thing_template_is_ladder));
 }
 
 static itemp items_first_is_x (tree_rootp tree, item_is_callback func)
@@ -826,9 +826,9 @@ itemp items_first_is_wall (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_wall));
 }
 
-itemp items_first_is_star_yellow (tree_rootp root)
+itemp items_first_is_gem_0 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_yellow));
+    return (items_first_is_x(root, thing_template_is_gem_0));
 }
 
 itemp items_first_is_rock (tree_rootp root)
@@ -846,19 +846,19 @@ itemp items_first_is_lava (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_lava));
 }
 
-itemp items_first_is_xxx4 (tree_rootp root)
+itemp items_first_is_gem_6 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_xxx4));
+    return (items_first_is_x(root, thing_template_is_gem_6));
 }
 
-itemp items_first_is_xxx5 (tree_rootp root)
+itemp items_first_is_gem_7 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_xxx5));
+    return (items_first_is_x(root, thing_template_is_gem_7));
 }
 
-itemp items_first_is_xxx6 (tree_rootp root)
+itemp items_first_is_boulder (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_xxx6));
+    return (items_first_is_x(root, thing_template_is_boulder));
 }
 
 itemp items_first_is_xxx7 (tree_rootp root)
@@ -901,14 +901,14 @@ itemp items_first_is_radiant (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_radiant));
 }
 
-itemp items_first_is_star_black (tree_rootp root)
+itemp items_first_is_gem_1 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_black));
+    return (items_first_is_x(root, thing_template_is_gem_1));
 }
 
-itemp items_first_is_star_purple (tree_rootp root)
+itemp items_first_is_gem_2 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_purple));
+    return (items_first_is_x(root, thing_template_is_gem_2));
 }
 
 itemp items_first_is_explosion (tree_rootp root)
@@ -921,19 +921,19 @@ itemp items_first_is_spikes (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_spikes));
 }
 
-itemp items_first_is_star_red (tree_rootp root)
+itemp items_first_is_gem_4 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_red));
+    return (items_first_is_x(root, thing_template_is_gem_4));
 }
 
-itemp items_first_is_star_pink (tree_rootp root)
+itemp items_first_is_gem_3 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_pink));
+    return (items_first_is_x(root, thing_template_is_gem_3));
 }
 
-itemp items_first_is_star_blue (tree_rootp root)
+itemp items_first_is_gem_5 (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_star_blue));
+    return (items_first_is_x(root, thing_template_is_gem_5));
 }
 
 itemp items_first_is_seedpod (tree_rootp root)
@@ -1036,9 +1036,9 @@ itemp items_first_is_exit (tree_rootp root)
     return (items_first_is_x(root, thing_template_is_exit));
 }
 
-itemp items_first_is_letter (tree_rootp root)
+itemp items_first_is_ladder (tree_rootp root)
 {
-    return (items_first_is_x(root, thing_template_is_letter));
+    return (items_first_is_x(root, thing_template_is_ladder));
 }
 
 static tree_rootp items_find_all_is_x (tree_rootp tree, item_is_callback func)
@@ -1096,9 +1096,9 @@ tree_rootp items_find_all_is_wall (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_wall));
 }
 
-tree_rootp items_find_all_is_star_yellow (tree_rootp root)
+tree_rootp items_find_all_is_gem_0 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_yellow));
+    return (items_find_all_is_x(root, thing_template_is_gem_0));
 }
 
 tree_rootp items_find_all_is_rock (tree_rootp root)
@@ -1116,19 +1116,19 @@ tree_rootp items_find_all_is_lava (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_lava));
 }
 
-tree_rootp items_find_all_is_xxx4 (tree_rootp root)
+tree_rootp items_find_all_is_gem_6 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_xxx4));
+    return (items_find_all_is_x(root, thing_template_is_gem_6));
 }
 
-tree_rootp items_find_all_is_xxx5 (tree_rootp root)
+tree_rootp items_find_all_is_gem_7 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_xxx5));
+    return (items_find_all_is_x(root, thing_template_is_gem_7));
 }
 
-tree_rootp items_find_all_is_xxx6 (tree_rootp root)
+tree_rootp items_find_all_is_boulder (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_xxx6));
+    return (items_find_all_is_x(root, thing_template_is_boulder));
 }
 
 tree_rootp items_find_all_is_xxx7 (tree_rootp root)
@@ -1171,14 +1171,14 @@ tree_rootp items_find_all_is_radiant (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_radiant));
 }
 
-tree_rootp items_find_all_is_star_black (tree_rootp root)
+tree_rootp items_find_all_is_gem_1 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_black));
+    return (items_find_all_is_x(root, thing_template_is_gem_1));
 }
 
-tree_rootp items_find_all_is_star_purple (tree_rootp root)
+tree_rootp items_find_all_is_gem_2 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_purple));
+    return (items_find_all_is_x(root, thing_template_is_gem_2));
 }
 
 tree_rootp items_find_all_is_explosion (tree_rootp root)
@@ -1191,19 +1191,19 @@ tree_rootp items_find_all_is_spikes (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_spikes));
 }
 
-tree_rootp items_find_all_is_star_red (tree_rootp root)
+tree_rootp items_find_all_is_gem_4 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_red));
+    return (items_find_all_is_x(root, thing_template_is_gem_4));
 }
 
-tree_rootp items_find_all_is_star_pink (tree_rootp root)
+tree_rootp items_find_all_is_gem_3 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_pink));
+    return (items_find_all_is_x(root, thing_template_is_gem_3));
 }
 
-tree_rootp items_find_all_is_star_blue (tree_rootp root)
+tree_rootp items_find_all_is_gem_5 (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_star_blue));
+    return (items_find_all_is_x(root, thing_template_is_gem_5));
 }
 
 tree_rootp items_find_all_is_seedpod (tree_rootp root)
@@ -1306,7 +1306,7 @@ tree_rootp items_find_all_is_exit (tree_rootp root)
     return (items_find_all_is_x(root, thing_template_is_exit));
 }
 
-tree_rootp items_find_all_is_letter (tree_rootp root)
+tree_rootp items_find_all_is_ladder (tree_rootp root)
 {
-    return (items_find_all_is_x(root, thing_template_is_letter));
+    return (items_find_all_is_x(root, thing_template_is_ladder));
 }

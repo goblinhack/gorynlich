@@ -194,14 +194,14 @@ void thing_collision (thingp t, int32_t x, int32_t y)
                     /*
                      * I steal back letters and nuke the enemy.
                      */
-                    thing_item_steal(thing_it, t, thing_template_is_letter);
+                    thing_item_steal(thing_it, t, thing_template_is_ladder);
 
                     thing_item_steal(thing_it, t, thing_template_is_bomb);
                 } else {
                     /*
                      * No rocket. Enemy steals letters.
                      */
-                    thing_item_steal(t, thing_it, thing_template_is_letter);
+                    thing_item_steal(t, thing_it, thing_template_is_ladder);
 
                     thing_item_steal(t, thing_it, thing_template_is_bomb);
                 }
@@ -339,7 +339,7 @@ void thing_collision (thingp t, int32_t x, int32_t y)
             /*
              * Collect but leave on game.
              */
-            if (thing_template_is_letter(it)) {
+            if (thing_template_is_ladder(it)) {
                 sound_play_paper();
 
                 thing_item_collect(t, thing_it);
