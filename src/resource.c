@@ -173,12 +173,6 @@ static boolean resource_init_23 (void *context)
     static const char *small_tiles[] = {
         "space",
         "rock_0_0",
-        "rock_0_1",
-        "rock_0_2",
-        "rock_0_3",
-        "rock_0_4",
-        "rock_0_5",
-        "rock_0_6",
         "rock_0_is_join_node",
         "rock_0_is_join_left",
         "rock_0_is_join_bot",
@@ -235,16 +229,15 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         // rock darker bricks 
         // ----------------------------------------------------
         "rock_1_0",
-        "rock_1_1",
-        "rock_1_2",
-        "rock_1_3",
-        "rock_1_4",
-        "rock_1_5",
-        "rock_1_6",
-        "rock_1_7",
         "rock_1_is_join_node",
         "rock_1_is_join_left",
         "rock_1_is_join_bot",
@@ -301,584 +294,6 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         0,
-        // gray bricks ----------------------------------------------------
-        "brick_0_0",
-        "brick_0_1",
-        "brick_0_2",
-        "brick_0_3",
-        "brick_0_4",
-        "brick_0_5",
-        "brick_0_6",
-        "brick_0_7",
-        "brick_0_is_join_node",
-        "brick_0_is_join_left",
-        "brick_0_is_join_bot",
-        "brick_0_is_join_right",
-        "brick_0_is_join_top",
-        "brick_0_is_join_horiz",
-        "brick_0_is_join_vert",
-        "brick_0_is_join_tl2",
-        "brick_0_is_join_bl2",
-        "brick_0_is_join_br2",
-        "brick_0_is_join_tr2",
-        "brick_0_is_join_tl",
-        "brick_0_is_join_bl",
-        "brick_0_is_join_br",
-        "brick_0_is_join_tr",
-        "brick_0_is_join_t270_3",
-        "brick_0_is_join_t180_3",
-        "brick_0_is_join_t90_3",
-        "brick_0_is_join_t_3",
-        "brick_0_is_join_t270",
-        "brick_0_is_join_t180",
-        "brick_0_is_join_t90",
-        "brick_0_is_join_t",
-        "brick_0_is_join_t270_2",
-        "brick_0_is_join_t180_2",
-        "brick_0_is_join_t90_2",
-        "brick_0_is_join_t_2",
-        "brick_0_is_join_t270_1",
-        "brick_0_is_join_t180_1",
-        "brick_0_is_join_t90_1",
-        "brick_0_is_join_t_1",
-        "brick_0_is_join_x",
-        "brick_0_is_join_x1",
-        "brick_0_is_join_x1_270",
-        "brick_0_is_join_x1_180",
-        "brick_0_is_join_x1_90",
-        "brick_0_is_join_x2",
-        "brick_0_is_join_x2_270",
-        "brick_0_is_join_x2_180",
-        "brick_0_is_join_x2_90",
-        "brick_0_is_join_x3",
-        "brick_0_is_join_x3_180",
-        "brick_0_is_join_x4",
-        "brick_0_is_join_x4_270",
-        "brick_0_is_join_x4_180",
-        "brick_0_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // cyan bricks ----------------------------------------------------
-        "brick_1_0",
-        "brick_1_1",
-        "brick_1_2",
-        "brick_1_3",
-        "brick_1_4",
-        "brick_1_5",
-        "brick_1_6",
-        "brick_1_7",
-        "brick_1_is_join_node",
-        "brick_1_is_join_left",
-        "brick_1_is_join_bot",
-        "brick_1_is_join_right",
-        "brick_1_is_join_top",
-        "brick_1_is_join_horiz",
-        "brick_1_is_join_vert",
-        "brick_1_is_join_tl2",
-        "brick_1_is_join_bl2",
-        "brick_1_is_join_br2",
-        "brick_1_is_join_tr2",
-        "brick_1_is_join_tl",
-        "brick_1_is_join_bl",
-        "brick_1_is_join_br",
-        "brick_1_is_join_tr",
-        "brick_1_is_join_t270_3",
-        "brick_1_is_join_t180_3",
-        "brick_1_is_join_t90_3",
-        "brick_1_is_join_t_3",
-        "brick_1_is_join_t270",
-        "brick_1_is_join_t180",
-        "brick_1_is_join_t90",
-        "brick_1_is_join_t",
-        "brick_1_is_join_t270_2",
-        "brick_1_is_join_t180_2",
-        "brick_1_is_join_t90_2",
-        "brick_1_is_join_t_2",
-        "brick_1_is_join_t270_1",
-        "brick_1_is_join_t180_1",
-        "brick_1_is_join_t90_1",
-        "brick_1_is_join_t_1",
-        "brick_1_is_join_x",
-        "brick_1_is_join_x1",
-        "brick_1_is_join_x1_270",
-        "brick_1_is_join_x1_180",
-        "brick_1_is_join_x1_90",
-        "brick_1_is_join_x2",
-        "brick_1_is_join_x2_270",
-        "brick_1_is_join_x2_180",
-        "brick_1_is_join_x2_90",
-        "brick_1_is_join_x3",
-        "brick_1_is_join_x3_180",
-        "brick_1_is_join_x4",
-        "brick_1_is_join_x4_270",
-        "brick_1_is_join_x4_180",
-        "brick_1_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // blue bricks ----------------------------------------------------
-        "brick_2_0",
-        "brick_2_1",
-        "brick_2_2",
-        "brick_2_3",
-        "brick_2_4",
-        "brick_2_5",
-        "brick_2_6",
-        "brick_2_7",
-        "brick_2_is_join_node",
-        "brick_2_is_join_left",
-        "brick_2_is_join_bot",
-        "brick_2_is_join_right",
-        "brick_2_is_join_top",
-        "brick_2_is_join_horiz",
-        "brick_2_is_join_vert",
-        "brick_2_is_join_tl2",
-        "brick_2_is_join_bl2",
-        "brick_2_is_join_br2",
-        "brick_2_is_join_tr2",
-        "brick_2_is_join_tl",
-        "brick_2_is_join_bl",
-        "brick_2_is_join_br",
-        "brick_2_is_join_tr",
-        "brick_2_is_join_t270_3",
-        "brick_2_is_join_t180_3",
-        "brick_2_is_join_t90_3",
-        "brick_2_is_join_t_3",
-        "brick_2_is_join_t270",
-        "brick_2_is_join_t180",
-        "brick_2_is_join_t90",
-        "brick_2_is_join_t",
-        "brick_2_is_join_t270_2",
-        "brick_2_is_join_t180_2",
-        "brick_2_is_join_t90_2",
-        "brick_2_is_join_t_2",
-        "brick_2_is_join_t270_1",
-        "brick_2_is_join_t180_1",
-        "brick_2_is_join_t90_1",
-        "brick_2_is_join_t_1",
-        "brick_2_is_join_x",
-        "brick_2_is_join_x1",
-        "brick_2_is_join_x1_270",
-        "brick_2_is_join_x1_180",
-        "brick_2_is_join_x1_90",
-        "brick_2_is_join_x2",
-        "brick_2_is_join_x2_270",
-        "brick_2_is_join_x2_180",
-        "brick_2_is_join_x2_90",
-        "brick_2_is_join_x3",
-        "brick_2_is_join_x3_180",
-        "brick_2_is_join_x4",
-        "brick_2_is_join_x4_270",
-        "brick_2_is_join_x4_180",
-        "brick_2_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // green bricks ----------------------------------------------------
-        "brick_3_0",
-        "brick_3_1",
-        "brick_3_2",
-        "brick_3_3",
-        "brick_3_4",
-        "brick_3_5",
-        "brick_3_6",
-        "brick_3_7",
-        "brick_3_is_join_node",
-        "brick_3_is_join_left",
-        "brick_3_is_join_bot",
-        "brick_3_is_join_right",
-        "brick_3_is_join_top",
-        "brick_3_is_join_horiz",
-        "brick_3_is_join_vert",
-        "brick_3_is_join_tl2",
-        "brick_3_is_join_bl2",
-        "brick_3_is_join_br2",
-        "brick_3_is_join_tr2",
-        "brick_3_is_join_tl",
-        "brick_3_is_join_bl",
-        "brick_3_is_join_br",
-        "brick_3_is_join_tr",
-        "brick_3_is_join_t270_3",
-        "brick_3_is_join_t180_3",
-        "brick_3_is_join_t90_3",
-        "brick_3_is_join_t_3",
-        "brick_3_is_join_t270",
-        "brick_3_is_join_t180",
-        "brick_3_is_join_t90",
-        "brick_3_is_join_t",
-        "brick_3_is_join_t270_2",
-        "brick_3_is_join_t180_2",
-        "brick_3_is_join_t90_2",
-        "brick_3_is_join_t_2",
-        "brick_3_is_join_t270_1",
-        "brick_3_is_join_t180_1",
-        "brick_3_is_join_t90_1",
-        "brick_3_is_join_t_1",
-        "brick_3_is_join_x",
-        "brick_3_is_join_x1",
-        "brick_3_is_join_x1_270",
-        "brick_3_is_join_x1_180",
-        "brick_3_is_join_x1_90",
-        "brick_3_is_join_x2",
-        "brick_3_is_join_x2_270",
-        "brick_3_is_join_x2_180",
-        "brick_3_is_join_x2_90",
-        "brick_3_is_join_x3",
-        "brick_3_is_join_x3_180",
-        "brick_3_is_join_x4",
-        "brick_3_is_join_x4_270",
-        "brick_3_is_join_x4_180",
-        "brick_3_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // orange bricks ----------------------------------------------------
-        "brick_4_0",
-        "brick_4_1",
-        "brick_4_2",
-        "brick_4_3",
-        "brick_4_4",
-        "brick_4_5",
-        "brick_4_6",
-        "brick_4_7",
-        "brick_4_is_join_node",
-        "brick_4_is_join_left",
-        "brick_4_is_join_bot",
-        "brick_4_is_join_right",
-        "brick_4_is_join_top",
-        "brick_4_is_join_horiz",
-        "brick_4_is_join_vert",
-        "brick_4_is_join_tl2",
-        "brick_4_is_join_bl2",
-        "brick_4_is_join_br2",
-        "brick_4_is_join_tr2",
-        "brick_4_is_join_tl",
-        "brick_4_is_join_bl",
-        "brick_4_is_join_br",
-        "brick_4_is_join_tr",
-        "brick_4_is_join_t270_3",
-        "brick_4_is_join_t180_3",
-        "brick_4_is_join_t90_3",
-        "brick_4_is_join_t_3",
-        "brick_4_is_join_t270",
-        "brick_4_is_join_t180",
-        "brick_4_is_join_t90",
-        "brick_4_is_join_t",
-        "brick_4_is_join_t270_2",
-        "brick_4_is_join_t180_2",
-        "brick_4_is_join_t90_2",
-        "brick_4_is_join_t_2",
-        "brick_4_is_join_t270_1",
-        "brick_4_is_join_t180_1",
-        "brick_4_is_join_t90_1",
-        "brick_4_is_join_t_1",
-        "brick_4_is_join_x",
-        "brick_4_is_join_x1",
-        "brick_4_is_join_x1_270",
-        "brick_4_is_join_x1_180",
-        "brick_4_is_join_x1_90",
-        "brick_4_is_join_x2",
-        "brick_4_is_join_x2_270",
-        "brick_4_is_join_x2_180",
-        "brick_4_is_join_x2_90",
-        "brick_4_is_join_x3",
-        "brick_4_is_join_x3_180",
-        "brick_4_is_join_x4",
-        "brick_4_is_join_x4_270",
-        "brick_4_is_join_x4_180",
-        "brick_4_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // purple bricks ----------------------------------------------------
-        "brick_5_0",
-        "brick_5_1",
-        "brick_5_2",
-        "brick_5_3",
-        "brick_5_4",
-        "brick_5_5",
-        "brick_5_6",
-        "brick_5_7",
-        "brick_5_is_join_node",
-        "brick_5_is_join_left",
-        "brick_5_is_join_bot",
-        "brick_5_is_join_right",
-        "brick_5_is_join_top",
-        "brick_5_is_join_horiz",
-        "brick_5_is_join_vert",
-        "brick_5_is_join_tl2",
-        "brick_5_is_join_bl2",
-        "brick_5_is_join_br2",
-        "brick_5_is_join_tr2",
-        "brick_5_is_join_tl",
-        "brick_5_is_join_bl",
-        "brick_5_is_join_br",
-        "brick_5_is_join_tr",
-        "brick_5_is_join_t270_3",
-        "brick_5_is_join_t180_3",
-        "brick_5_is_join_t90_3",
-        "brick_5_is_join_t_3",
-        "brick_5_is_join_t270",
-        "brick_5_is_join_t180",
-        "brick_5_is_join_t90",
-        "brick_5_is_join_t",
-        "brick_5_is_join_t270_2",
-        "brick_5_is_join_t180_2",
-        "brick_5_is_join_t90_2",
-        "brick_5_is_join_t_2",
-        "brick_5_is_join_t270_1",
-        "brick_5_is_join_t180_1",
-        "brick_5_is_join_t90_1",
-        "brick_5_is_join_t_1",
-        "brick_5_is_join_x",
-        "brick_5_is_join_x1",
-        "brick_5_is_join_x1_270",
-        "brick_5_is_join_x1_180",
-        "brick_5_is_join_x1_90",
-        "brick_5_is_join_x2",
-        "brick_5_is_join_x2_270",
-        "brick_5_is_join_x2_180",
-        "brick_5_is_join_x2_90",
-        "brick_5_is_join_x3",
-        "brick_5_is_join_x3_180",
-        "brick_5_is_join_x4",
-        "brick_5_is_join_x4_270",
-        "brick_5_is_join_x4_180",
-        "brick_5_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // yellow bricks ----------------------------------------------------
-        "brick_6_0",
-        "brick_6_1",
-        "brick_6_2",
-        "brick_6_3",
-        "brick_6_4",
-        "brick_6_5",
-        "brick_6_6",
-        "brick_6_7",
-        "brick_6_is_join_node",
-        "brick_6_is_join_left",
-        "brick_6_is_join_bot",
-        "brick_6_is_join_right",
-        "brick_6_is_join_top",
-        "brick_6_is_join_horiz",
-        "brick_6_is_join_vert",
-        "brick_6_is_join_tl2",
-        "brick_6_is_join_bl2",
-        "brick_6_is_join_br2",
-        "brick_6_is_join_tr2",
-        "brick_6_is_join_tl",
-        "brick_6_is_join_bl",
-        "brick_6_is_join_br",
-        "brick_6_is_join_tr",
-        "brick_6_is_join_t270_3",
-        "brick_6_is_join_t180_3",
-        "brick_6_is_join_t90_3",
-        "brick_6_is_join_t_3",
-        "brick_6_is_join_t270",
-        "brick_6_is_join_t180",
-        "brick_6_is_join_t90",
-        "brick_6_is_join_t",
-        "brick_6_is_join_t270_2",
-        "brick_6_is_join_t180_2",
-        "brick_6_is_join_t90_2",
-        "brick_6_is_join_t_2",
-        "brick_6_is_join_t270_1",
-        "brick_6_is_join_t180_1",
-        "brick_6_is_join_t90_1",
-        "brick_6_is_join_t_1",
-        "brick_6_is_join_x",
-        "brick_6_is_join_x1",
-        "brick_6_is_join_x1_270",
-        "brick_6_is_join_x1_180",
-        "brick_6_is_join_x1_90",
-        "brick_6_is_join_x2",
-        "brick_6_is_join_x2_270",
-        "brick_6_is_join_x2_180",
-        "brick_6_is_join_x2_90",
-        "brick_6_is_join_x3",
-        "brick_6_is_join_x3_180",
-        "brick_6_is_join_x4",
-        "brick_6_is_join_x4_270",
-        "brick_6_is_join_x4_180",
-        "brick_6_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // pink bricks ----------------------------------------------------
-        "brick_7_0",
-        "brick_7_1",
-        "brick_7_2",
-        "brick_7_3",
-        "brick_7_4",
-        "brick_7_5",
-        "brick_7_6",
-        "brick_7_7",
-        "brick_7_is_join_node",
-        "brick_7_is_join_left",
-        "brick_7_is_join_bot",
-        "brick_7_is_join_right",
-        "brick_7_is_join_top",
-        "brick_7_is_join_horiz",
-        "brick_7_is_join_vert",
-        "brick_7_is_join_tl2",
-        "brick_7_is_join_bl2",
-        "brick_7_is_join_br2",
-        "brick_7_is_join_tr2",
-        "brick_7_is_join_tl",
-        "brick_7_is_join_bl",
-        "brick_7_is_join_br",
-        "brick_7_is_join_tr",
-        "brick_7_is_join_t270_3",
-        "brick_7_is_join_t180_3",
-        "brick_7_is_join_t90_3",
-        "brick_7_is_join_t_3",
-        "brick_7_is_join_t270",
-        "brick_7_is_join_t180",
-        "brick_7_is_join_t90",
-        "brick_7_is_join_t",
-        "brick_7_is_join_t270_2",
-        "brick_7_is_join_t180_2",
-        "brick_7_is_join_t90_2",
-        "brick_7_is_join_t_2",
-        "brick_7_is_join_t270_1",
-        "brick_7_is_join_t180_1",
-        "brick_7_is_join_t90_1",
-        "brick_7_is_join_t_1",
-        "brick_7_is_join_x",
-        "brick_7_is_join_x1",
-        "brick_7_is_join_x1_270",
-        "brick_7_is_join_x1_180",
-        "brick_7_is_join_x1_90",
-        "brick_7_is_join_x2",
-        "brick_7_is_join_x2_270",
-        "brick_7_is_join_x2_180",
-        "brick_7_is_join_x2_90",
-        "brick_7_is_join_x3",
-        "brick_7_is_join_x3_180",
-        "brick_7_is_join_x4",
-        "brick_7_is_join_x4_270",
-        "brick_7_is_join_x4_180",
-        "brick_7_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // orange bricks ----------------------------------------------------
-        "brick_8_0",
-        "brick_8_1",
-        "brick_8_2",
-        "brick_8_3",
-        "brick_8_4",
-        "brick_8_5",
-        "brick_8_6",
-        "brick_8_7",
-        "brick_8_is_join_node",
-        "brick_8_is_join_left",
-        "brick_8_is_join_bot",
-        "brick_8_is_join_right",
-        "brick_8_is_join_top",
-        "brick_8_is_join_horiz",
-        "brick_8_is_join_vert",
-        "brick_8_is_join_tl2",
-        "brick_8_is_join_bl2",
-        "brick_8_is_join_br2",
-        "brick_8_is_join_tr2",
-        "brick_8_is_join_tl",
-        "brick_8_is_join_bl",
-        "brick_8_is_join_br",
-        "brick_8_is_join_tr",
-        "brick_8_is_join_t270_3",
-        "brick_8_is_join_t180_3",
-        "brick_8_is_join_t90_3",
-        "brick_8_is_join_t_3",
-        "brick_8_is_join_t270",
-        "brick_8_is_join_t180",
-        "brick_8_is_join_t90",
-        "brick_8_is_join_t",
-        "brick_8_is_join_t270_2",
-        "brick_8_is_join_t180_2",
-        "brick_8_is_join_t90_2",
-        "brick_8_is_join_t_2",
-        "brick_8_is_join_t270_1",
-        "brick_8_is_join_t180_1",
-        "brick_8_is_join_t90_1",
-        "brick_8_is_join_t_1",
-        "brick_8_is_join_x",
-        "brick_8_is_join_x1",
-        "brick_8_is_join_x1_270",
-        "brick_8_is_join_x1_180",
-        "brick_8_is_join_x1_90",
-        "brick_8_is_join_x2",
-        "brick_8_is_join_x2_270",
-        "brick_8_is_join_x2_180",
-        "brick_8_is_join_x2_90",
-        "brick_8_is_join_x3",
-        "brick_8_is_join_x3_180",
-        "brick_8_is_join_x4",
-        "brick_8_is_join_x4_270",
-        "brick_8_is_join_x4_180",
-        "brick_8_is_join_x4_90",
-        0,
-        0,
-        0,
         0,
         0,
         0,
@@ -888,13 +303,6 @@ static boolean resource_init_23 (void *context)
         0,
         // lava -----------------------------------------------------------
         "lava_0_0",
-        "lava_0_1",
-        "lava_0_2",
-        "lava_0_3",
-        "lava_0_4",
-        "lava_0_5",
-        "lava_0_6",
-        "lava_0_7",
         "lava_0_is_join_node",
         "lava_0_is_join_left",
         "lava_0_is_join_bot",
@@ -951,15 +359,15 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         // water -----------------------------------------------------------
         "water_0_0",
-        "water_0_1",
-        "water_0_2",
-        "water_0_3",
-        "water_0_4",
-        "water_0_5",
-        "water_0_6",
-        "water_0_7",
         "water_0_is_join_node",
         "water_0_is_join_left",
         "water_0_is_join_bot",
@@ -1016,64 +424,6 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         0,
         0,
         0,
@@ -1082,985 +432,10 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // ----------------------------------------------------------------
-        0,
-        0,
-        0,
-        0,
+        "rock_bg_0",
+        "rock_bg_1",
+        "rock_bg_2",
+        "rock_bg_3",
         0,
         0,
         0,
@@ -2137,6 +512,56 @@ static boolean resource_init_23 (void *context)
         "man_idle_4",
         "man_idle_5",
         "man_idle_7",
+        0, // 15
+        0, // 16
+        0, // 17
+        0, // 18
+        0, // 19
+        0, // 20
+        0, // 21
+        0, // 22
+        0, // 23
+        0, // 24
+        0, // 25
+        0, // 26
+        0, // 27
+        0, // 28
+        0, // 29
+        0, // 30
+        0, // 31
+        0, // 32
+        0, // 33
+        0, // 34
+        0, // 35
+        0, // 36
+        0, // 37
+        0, // 38
+        0, // 39
+        0, // 40
+        0, // 41
+        0, // 42
+        0, // 43
+        0, // 44
+        0, // 45
+        0, // 46
+        0, // 47
+        0, // 48
+        0, // 49
+        0, // 50
+        0, // 51
+        0, // 52
+        0, // 53
+        0, // 54
+        0, // 55
+        0, // 56
+        0, // 57
+        0, // 58
+        0, // 59
+        0, // 60
+        0, // 61
+        0, // 62
+        0, // 63
+        // ----------------------------------------------------------------
         "man_dead_1",
         "man_dead_2",
         "man_dead_3",
@@ -2145,6 +570,63 @@ static boolean resource_init_23 (void *context)
         "man_dead_6",
         "man_dead_7",
         "man_dead_8",
+        0, // 8
+        0, // 9
+        0, // 10
+        0, // 11
+        0, // 12
+        0, // 13
+        0, // 14
+        0, // 15
+        0, // 16
+        0, // 17
+        0, // 18
+        0, // 19
+        0, // 20
+        0, // 21
+        0, // 22
+        0, // 23
+        0, // 24
+        0, // 25
+        0, // 26
+        0, // 27
+        0, // 28
+        0, // 29
+        0, // 30
+        0, // 31
+        0, // 32
+        0, // 33
+        0, // 34
+        0, // 35
+        0, // 36
+        0, // 37
+        0, // 38
+        0, // 39
+        0, // 40
+        0, // 41
+        0, // 42
+        0, // 43
+        0, // 44
+        0, // 45
+        0, // 46
+        0, // 47
+        0, // 48
+        0, // 49
+        0, // 50
+        0, // 51
+        0, // 52
+        0, // 53
+        0, // 54
+        0, // 55
+        0, // 56
+        0, // 57
+        0, // 58
+        0, // 59
+        0, // 60
+        0, // 61
+        0, // 62
+        0, // 63
+        // ----------------------------------------------------------------
         "man_climb_1",
         "man_climb_2",
         "man_climb_3",
@@ -2157,35 +639,318 @@ static boolean resource_init_23 (void *context)
         "man_climb_10",
         "man_victory_1",
         "man_victory_2",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        0, // 12
+        0, // 13
+        0, // 14
+        0, // 15
+        0, // 16
+        0, // 17
+        0, // 18
+        0, // 19
+        0, // 20
+        0, // 21
+        0, // 22
+        0, // 23
+        0, // 24
+        0, // 25
+        0, // 26
+        0, // 27
+        0, // 28
+        0, // 29
+        0, // 30
+        0, // 31
+        0, // 32
+        0, // 33
+        0, // 34
+        0, // 35
+        0, // 36
+        0, // 37
+        0, // 38
+        0, // 39
+        0, // 40
+        0, // 41
+        0, // 42
+        0, // 43
+        0, // 44
+        0, // 45
+        0, // 46
+        0, // 47
+        0, // 48
+        0, // 49
+        0, // 50
+        0, // 51
+        0, // 52
+        0, // 53
+        0, // 54
+        0, // 55
+        0, // 56
+        0, // 57
+        0, // 58
+        0, // 59
+        0, // 60
+        0, // 61
+        0, // 62
+        0, // 63
+        // ----------------------------------------------------------------
+        "mask_0",       // 0
+        "gem_0",        // 1
+        "boulder_0",    // 2
+        "ladder_0",     // 3
+        "ladder_1",     // 4
+        "ladder_2",     // 5
+        0, // 6
+        0, // 7
+        0, // 8
+        0, // 9
+        0, // 10
+        0, // 11
+        0, // 12
+        0, // 13
+        0, // 14
+        0, // 15
+        0, // 16
+        0, // 17
+        0, // 18
+        0, // 19
+        0, // 20
+        0, // 21
+        0, // 22
+        0, // 23
+        0, // 24
+        0, // 25
+        0, // 26
+        0, // 27
+        0, // 28
+        0, // 29
+        0, // 30
+        0, // 31
+        0, // 32
+        0, // 33
+        0, // 34
+        0, // 35
+        0, // 36
+        0, // 37
+        0, // 38
+        0, // 39
+        0, // 40
+        0, // 41
+        0, // 42
+        0, // 43
+        0, // 44
+        0, // 45
+        0, // 46
+        0, // 47
+        0, // 48
+        0, // 49
+        0, // 50
+        0, // 51
+        0, // 52
+        0, // 53
+        0, // 54
+        0, // 55
+        0, // 56
+        0, // 57
+        0, // 58
+        0, // 59
+        0, // 60
+        0, // 61
+        0, // 62
+        0, // 63
+        // ----------------------------------------------------------------
+        "skeleton_0",   // 0
+        "mask_1",       // 1
+        "mask_2",       // 2
+        "gem_1",        // 3
+        "gem_2",        // 4
+        "gem_3",        // 5
+        "gem_4",        // 6
+        0, // 7
+        0, // 8
+        0, // 9
+        0, // 10
+        0, // 11
+        0, // 12
+        0, // 13
+        0, // 14
+        0, // 15
+        0, // 16
+        0, // 17
+        0, // 18
+        0, // 19
+        0, // 20
+        0, // 21
+        0, // 22
+        0, // 23
+        0, // 24
+        0, // 25
+        0, // 26
+        0, // 27
+        0, // 28
+        0, // 29
+        0, // 30
+        0, // 31
+        0, // 32
+        0, // 33
+        0, // 34
+        0, // 35
+        0, // 36
+        0, // 37
+        0, // 38
+        0, // 39
+        0, // 40
+        0, // 41
+        0, // 42
+        0, // 43
+        0, // 44
+        0, // 45
+        0, // 46
+        0, // 47
+        0, // 48
+        0, // 49
+        0, // 50
+        0, // 51
+        0, // 52
+        0, // 53
+        0, // 54
+        0, // 55
+        0, // 56
+        0, // 57
+        0, // 58
+        0, // 59
+        0, // 60
+        0, // 61
+        0, // 62
+        0, // 63
+        // ----------------------------------------------------------------
+        0, // 0
+        0, // 1
+        0, // 2
+        0, // 3
+        "gem_5",        // 4
+        "gem_6",        // 5
+        "gem_7",        // 6
+        0, // 7
+        0, // 8
+        0, // 9
+        0, // 10
+        0, // 11
+        0, // 12
+        0, // 13
+        0, // 14
+        0, // 15
+        0, // 16
+        0, // 17
+        0, // 18
+        0, // 19
+        0, // 20
+        0, // 21
+        0, // 22
+        0, // 23
+        0, // 24
+        0, // 25
+        0, // 26
+        0, // 27
+        0, // 28
+        0, // 29
+        0, // 30
+        0, // 31
+        0, // 32
+        0, // 33
+        0, // 34
+        0, // 35
+        0, // 36
+        0, // 37
+        0, // 38
+        0, // 39
+        0, // 40
+        0, // 41
+        0, // 42
+        0, // 43
+        0, // 44
+        0, // 45
+        0, // 46
+        0, // 47
+        0, // 48
+        0, // 49
+        0, // 50
+        0, // 51
+        0, // 52
+        0, // 53
+        0, // 54
+        0, // 55
+        0, // 56
+        0, // 57
+        0, // 58
+        0, // 59
+        0, // 60
+        0, // 61
+        0, // 62
+        0, // 63
+        // ----------------------------------------------------------------
+        0, // 0
+        0, // 1
+        0, // 2
+        0, // 3
+        0, // 4
+        0, // 5
+        0, // 6
+        0, // 7
+        0, // 8
+        0, // 9
+        0, // 10
+        0, // 11
+        0, // 12
+        0, // 13
+        0, // 14
+        0, // 15
+        0, // 16
+        0, // 17
+        0, // 18
+        0, // 19
+        0, // 20
+        0, // 21
+        0, // 22
+        0, // 23
+        0, // 24
+        0, // 25
+        0, // 26
+        0, // 27
+        0, // 28
+        0, // 29
+        0, // 30
+        0, // 31
+        0, // 32
+        0, // 33
+        0, // 34
+        0, // 35
+        0, // 36
+        0, // 37
+        0, // 38
+        0, // 39
+        0, // 40
+        0, // 41
+        0, // 42
+        0, // 43
+        0, // 44
+        0, // 45
+        0, // 46
+        0, // 47
+        0, // 48
+        0, // 49
+        0, // 50
+        0, // 51
+        0, // 52
+        0, // 53
+        0, // 54
+        0, // 55
+        0, // 56
+        0, // 57
+        0, // 58
+        0, // 59
+        0, // 60
+        0, // 61
+        0, // 62
+        0, // 63
     };
 
     tile_load_arr("sprites_small", TILE_WIDTH, TILE_HEIGHT,

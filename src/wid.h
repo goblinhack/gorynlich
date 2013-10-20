@@ -98,7 +98,7 @@ void wid_get_abs_coords(widp w,
  */
 void wid_scroll_text(widp);
 void wid_scroll_with_input(widp, const char *str);
-boolean wid_receive_input(widp, const SDL_keysym *key);
+boolean wid_receive_input(widp, const SDL_Keysym *key);
 
 /*
  * Events
@@ -108,8 +108,8 @@ void wid_mouse_motion(int32_t x, int32_t y,
                       int32_t wheelx, int32_t wheely);
 void wid_mouse_down(uint32_t button, int32_t x, int32_t y);
 void wid_mouse_up(uint32_t button, int32_t x, int32_t y);
-void wid_key_down(const struct SDL_keysym *, int32_t x, int32_t y);
-void wid_key_up(const struct SDL_keysym *, int32_t x, int32_t y);
+void wid_key_down(const struct SDL_Keysym *, int32_t x, int32_t y);
+void wid_key_up(const struct SDL_Keysym *, int32_t x, int32_t y);
 
 typedef void(*on_mouse_focus_begin_t)(widp);
 typedef void(*on_mouse_focus_end_t)(widp);
@@ -121,8 +121,8 @@ typedef boolean(*on_mouse_motion_t)(widp,
                                     int32_t x, int32_t y,
                                     int32_t relx, int32_t rely,
                                     int32_t wheelx, int32_t wheely);
-typedef boolean(*on_key_down_t)(widp, const struct SDL_keysym *);
-typedef boolean(*on_key_up_t)(widp, const struct SDL_keysym *);
+typedef boolean(*on_key_down_t)(widp, const struct SDL_Keysym *);
+typedef boolean(*on_key_up_t)(widp, const struct SDL_Keysym *);
 typedef void(*on_destroy_t)(widp);
 
 typedef widp (*grid_wid_replace_t)(widp,

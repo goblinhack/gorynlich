@@ -439,7 +439,7 @@ wid_game_map_tile_receive_on_mouse_over_end (widp w)
 }
 
 static boolean wid_game_map_tile_key_down_event (widp w,
-                                                 const SDL_keysym *key)
+                                                 const SDL_KEYSYM *key)
 {
     if (wid_game_map_ignore_events()) {
         return (false);
@@ -469,7 +469,7 @@ static boolean wid_game_map_tile_key_down_event (widp w,
 }
 
 static boolean wid_game_map_tile_key_up_event (widp w,
-                                               const SDL_keysym *key)
+                                               const SDL_KEYSYM *key)
 {
     if (wid_game_map_ignore_events()) {
         return (false);

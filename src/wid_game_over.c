@@ -124,7 +124,7 @@ void wid_game_over_create (void)
         thing_templatep thing_template;
         
         if ((rand() % 10) < 8) {
-            thing_template = thing_template_find("data/things/star_yellow");
+            thing_template = thing_template_find("data/things/is_gem_0");
         } else {
             thing_template = thing_template_find("data/things/player");
         }

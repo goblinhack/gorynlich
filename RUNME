@@ -75,34 +75,45 @@ fi
 
 cd ..
 
-if [ -x /usr/local/bin/sdl-config ]
-then
-    SDL_CONFIG=/usr/local/bin/sdl-config
-else
-    if [ -x /usr/local/bin/sdl-config ]
+for i in \
+    /opt/local/bin/sdl2-config 
+do
+    if [ -x $i ]
     then
-        SDL_CONFIG=/opt/local/bin/sdl-config
-    else
-        SDL_CONFIG=sdl-config
-
-        which $SDL_CONFIG
-
-        if [ $? -eq 1 ]
-        then
-            log_warn "Is SDL 1.2 or 1.3 installed? If not:"
-            log_warn "  For ubuntu do: "
-            log_warn "   sudo apt-get install libsdl1.2-dev"
-            log_warn "   sudo apt-get install libsdl-mixer1.2-dev"
-            log_warn "  Or:"
-            log_warn "   Grab SDL from:"
-            log_warn "   svn co https://svn.sourceforge.net/svnroot/goblinhack/trunk goblinhack"
-            log_warn "  Or last resort:"
-            log_warn "   A copy of SDL-1.2.14.tar.gz can be found in support/"
-            exit 1
-        fi
+        SDL2_CONFIG=$i
+        break
     fi
+done
+
+for i in \
+    /opt/local/bin/sdl2-config \
+    /usr/local/bin/sdl-config
+do
+    if [ -x $i ]
+    then
+        SDL_CONFIG=$i
+        break
+    fi
+done
+
+if [ "$SDL_CONFIG" -eq "" ]
+then
+    log_warn "Is SDL 1.2 or 1.3 installed? If not:"
+    log_warn "  For ubuntu do: "
+    log_warn "   sudo apt-get install libsdl1.2-dev"
+    log_warn "   sudo apt-get install libsdl-mixer1.2-dev"
+    log_warn "  For macos, install Mac ports and then do: "
+    log_warn "   sudo port install libsdl2"
+    log_warn "   sudo port install libsdl2_image"
+    log_warn "   sudo port install libsdl2_mixer"
+    log_warn "  Or:"
+    log_warn "   Grab SDL from:"
+    log_warn "   svn co https://svn.sourceforge.net/svnroot/goblinhack/trunk goblinhack"
+    log_warn "  Or last resort:"
+    log_warn "   A copy of SDL-1.2.14.tar.gz can be found in support/"
+    exit 1
 fi
-    
+
 #
 # Gives warings at runtime on MACOS
 #
@@ -130,8 +141,14 @@ log_info "  ($SDL_CONFIG)"
 # -funwind-tables and -rdynamic for backtrace info on linux.
 # But it seemed to help little.
 #
-LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
-LDLIBS="$SDL_LIBS -lSDL_mixer"
+if [ "$SDL_CONFIG" -eq "" ]
+then
+    LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
+    LDLIBS="$SDL_LIBS -lSDL_mixer"
+else
+    LDLIBS="$SDL_LIBS -lSDL2_ttf -lSDL2_mixer"
+    LDLIBS="$SDL_LIBS -lSDL2_mixer"
+fi
 
 case `uname` in
     *MINGW*)

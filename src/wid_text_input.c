@@ -13,6 +13,7 @@
 #include "color.h"
 #include "ttf.h"
 #include "config.h"
+#include "sdl.h"
 
 static const int32_t LINE_WIDTH = 25;
 static const uint32_t MAX_ROWS = 6;
@@ -68,7 +69,7 @@ static boolean wid_text_input_button_event (widp w, int32_t x, int32_t y,
 /*
  * Key down etc...
  */
-static boolean wid_text_input_receive_input (widp w, const SDL_keysym *key)
+static boolean wid_text_input_receive_input (widp w, const SDL_KEYSYM *key)
 {
     widp button;
 

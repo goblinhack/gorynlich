@@ -66,7 +66,7 @@ static boolean wid_intro_guide_common (widp w)
 }
 
 static boolean wid_intro_guide_key_down (widp w,
-                                        const SDL_keysym *key)
+                                        const SDL_KEYSYM *key)
 {
     return (wid_intro_guide_common(w));
 }

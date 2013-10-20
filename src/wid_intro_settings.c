@@ -14,6 +14,7 @@
 #include "config.h"
 #include "string.h"
 #include "music.h"
+#include "sdl.h"
 
 static widp wid_intro_settings;
 static widp wid_intro_settings_container;
@@ -166,7 +167,7 @@ static boolean wid_intro_settings_col4_mouse_event (widp w,
     return (true);
 }
 
-static boolean wid_intro_settings_key_event (widp w, const SDL_keysym *key)
+static boolean wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':

@@ -259,9 +259,9 @@ boolean map_is_wall_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_wall));
 }
 
-boolean map_is_star_yellow_at (levelp level, int32_t x, int32_t y)
+boolean map_is_gem_0_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star_yellow));
+    return (map_is_x_at(level, x, y, thing_template_is_gem_0));
 }
 
 boolean map_is_rock_at (levelp level, int32_t x, int32_t y)
@@ -279,19 +279,19 @@ boolean map_is_lava_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_lava));
 }
 
-boolean map_is_xxx4_at (levelp level, int32_t x, int32_t y)
+boolean map_is_gem_6_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx4));
+    return (map_is_x_at(level, x, y, thing_template_is_gem_6));
 }
 
-boolean map_is_xxx5_at (levelp level, int32_t x, int32_t y)
+boolean map_is_gem_7_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx5));
+    return (map_is_x_at(level, x, y, thing_template_is_gem_7));
 }
 
-boolean map_is_xxx6_at (levelp level, int32_t x, int32_t y)
+boolean map_is_boulder_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx6));
+    return (map_is_x_at(level, x, y, thing_template_is_boulder));
 }
 
 boolean map_is_xxx7_at (levelp level, int32_t x, int32_t y)
@@ -334,14 +334,14 @@ boolean map_is_radiant_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_radiant));
 }
 
-boolean map_is_star_black_at (levelp level, int32_t x, int32_t y)
+boolean map_is_gem_1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star_black));
+    return (map_is_x_at(level, x, y, thing_template_is_gem_1));
 }
 
-boolean map_is_star_purple_at (levelp level, int32_t x, int32_t y)
+boolean map_is_gem_2_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star_purple));
+    return (map_is_x_at(level, x, y, thing_template_is_gem_2));
 }
 
 boolean map_is_explosion_at (levelp level, int32_t x, int32_t y)
@@ -354,14 +354,14 @@ boolean map_is_spikes_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_spikes));
 }
 
-boolean map_is_star_red_at (levelp level, int32_t x, int32_t y)
+boolean map_is_gem_4_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star_red));
+    return (map_is_x_at(level, x, y, thing_template_is_gem_4));
 }
 
-boolean map_is_star_blue_at (levelp level, int32_t x, int32_t y)
+boolean map_is_gem_5_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star_blue));
+    return (map_is_x_at(level, x, y, thing_template_is_gem_5));
 }
 
 boolean map_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -474,9 +474,9 @@ boolean map_is_exit_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_exit));
 }
 
-boolean map_is_letter_at (levelp level, int32_t x, int32_t y)
+boolean map_is_ladder_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_letter));
+    return (map_is_x_at(level, x, y, thing_template_is_ladder));
 }
 
 static thingp map_thing_is_x_at (levelp level,
@@ -540,9 +540,9 @@ thingp map_thing_is_wall_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_wall));
 }
 
-thingp map_thing_is_star_yellow_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gem_0_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_yellow));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_0));
 }
 
 thingp map_thing_is_rock_at (levelp level, int32_t x, int32_t y)
@@ -560,19 +560,19 @@ thingp map_thing_is_lava_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_lava));
 }
 
-thingp map_thing_is_xxx4_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gem_6_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx4));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_6));
 }
 
-thingp map_thing_is_xxx5_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gem_7_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx5));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_7));
 }
 
-thingp map_thing_is_xxx6_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_boulder_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx6));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_boulder));
 }
 
 thingp map_thing_is_xxx7_at (levelp level, int32_t x, int32_t y)
@@ -615,14 +615,14 @@ thingp map_thing_is_radiant_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_radiant));
 }
 
-thingp map_thing_is_star_black_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gem_1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_black));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_1));
 }
 
-thingp map_thing_is_star_purple_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gem_2_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_purple));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_2));
 }
 
 thingp map_thing_is_explosion_at (levelp level, int32_t x, int32_t y)
@@ -635,14 +635,14 @@ thingp map_thing_is_spikes_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_spikes));
 }
 
-thingp map_thing_is_star_red_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gem_4_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_red));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_4));
 }
 
-thingp map_thing_is_star_blue_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_gem_5_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_blue));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_5));
 }
 
 thingp map_thing_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -755,9 +755,9 @@ thingp map_thing_is_exit_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_exit));
 }
 
-thingp map_thing_is_letter_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_ladder_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_letter));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_ladder));
 }
 
 /*
@@ -1205,9 +1205,9 @@ uint32_t level_count_is_wall (levelp level)
     return (level_count_is_x(level, thing_template_is_wall));
 }
 
-uint32_t level_count_is_star_yellow (levelp level)
+uint32_t level_count_is_gem_0 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star_yellow));
+    return (level_count_is_x(level, thing_template_is_gem_0));
 }
 
 uint32_t level_count_is_rock (levelp level)
@@ -1225,19 +1225,19 @@ uint32_t level_count_is_lava (levelp level)
     return (level_count_is_x(level, thing_template_is_lava));
 }
 
-uint32_t level_count_is_xxx4 (levelp level)
+uint32_t level_count_is_gem_6 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx4));
+    return (level_count_is_x(level, thing_template_is_gem_6));
 }
 
-uint32_t level_count_is_xxx5 (levelp level)
+uint32_t level_count_is_gem_7 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx5));
+    return (level_count_is_x(level, thing_template_is_gem_7));
 }
 
-uint32_t level_count_is_xxx6 (levelp level)
+uint32_t level_count_is_boulder (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx6));
+    return (level_count_is_x(level, thing_template_is_boulder));
 }
 
 uint32_t level_count_is_xxx7 (levelp level)
@@ -1280,14 +1280,14 @@ uint32_t level_count_is_radiant (levelp level)
     return (level_count_is_x(level, thing_template_is_radiant));
 }
 
-uint32_t level_count_is_star_black (levelp level)
+uint32_t level_count_is_gem_1 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star_black));
+    return (level_count_is_x(level, thing_template_is_gem_1));
 }
 
-uint32_t level_count_is_star_purple (levelp level)
+uint32_t level_count_is_gem_2 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star_purple));
+    return (level_count_is_x(level, thing_template_is_gem_2));
 }
 
 uint32_t level_count_is_explosion (levelp level)
@@ -1300,14 +1300,14 @@ uint32_t level_count_is_spikes (levelp level)
     return (level_count_is_x(level, thing_template_is_spikes));
 }
 
-uint32_t level_count_is_star_red (levelp level)
+uint32_t level_count_is_gem_4 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star_red));
+    return (level_count_is_x(level, thing_template_is_gem_4));
 }
 
-uint32_t level_count_is_star_blue (levelp level)
+uint32_t level_count_is_gem_5 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star_blue));
+    return (level_count_is_x(level, thing_template_is_gem_5));
 }
 
 uint32_t level_count_is_seedpod (levelp level)
@@ -1415,7 +1415,7 @@ uint32_t level_count_is_exit (levelp level)
     return (level_count_is_x(level, thing_template_is_exit));
 }
 
-uint32_t level_count_is_letter (levelp level)
+uint32_t level_count_is_ladder (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_letter));
+    return (level_count_is_x(level, thing_template_is_ladder));
 }
