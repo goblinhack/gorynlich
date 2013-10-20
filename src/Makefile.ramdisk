@@ -49,9 +49,6 @@
 .o/ramdisk_data_map_map_light_data.o: asm/ramdisk_data_map_map_light_data.S ../data/map/map_light.data
 	gcc -c asm/ramdisk_data_map_map_light_data.S -o .o/ramdisk_data_map_map_light_data.o
 
-.o/ramdisk_data_map_tile_map.o: asm/ramdisk_data_map_tile_map.S ../data/map/tile.map
-	gcc -c asm/ramdisk_data_map_tile_map.S -o .o/ramdisk_data_map_tile_map.o
-
 .o/ramdisk_data_music_hiscore_wav.o: asm/ramdisk_data_music_hiscore_wav.S ../data/music/hiscore.wav
 	gcc -c asm/ramdisk_data_music_hiscore_wav.S -o .o/ramdisk_data_music_hiscore_wav.o
 
@@ -105,33 +102,6 @@
 
 .o/ramdisk_data_things_boulder_0.o: asm/ramdisk_data_things_boulder_0.S ../data/things/boulder_0
 	gcc -c asm/ramdisk_data_things_boulder_0.S -o .o/ramdisk_data_things_boulder_0.o
-
-.o/ramdisk_data_things_brick_0.o: asm/ramdisk_data_things_brick_0.S ../data/things/brick_0
-	gcc -c asm/ramdisk_data_things_brick_0.S -o .o/ramdisk_data_things_brick_0.o
-
-.o/ramdisk_data_things_brick_1.o: asm/ramdisk_data_things_brick_1.S ../data/things/brick_1
-	gcc -c asm/ramdisk_data_things_brick_1.S -o .o/ramdisk_data_things_brick_1.o
-
-.o/ramdisk_data_things_brick_2.o: asm/ramdisk_data_things_brick_2.S ../data/things/brick_2
-	gcc -c asm/ramdisk_data_things_brick_2.S -o .o/ramdisk_data_things_brick_2.o
-
-.o/ramdisk_data_things_brick_3.o: asm/ramdisk_data_things_brick_3.S ../data/things/brick_3
-	gcc -c asm/ramdisk_data_things_brick_3.S -o .o/ramdisk_data_things_brick_3.o
-
-.o/ramdisk_data_things_brick_4.o: asm/ramdisk_data_things_brick_4.S ../data/things/brick_4
-	gcc -c asm/ramdisk_data_things_brick_4.S -o .o/ramdisk_data_things_brick_4.o
-
-.o/ramdisk_data_things_brick_5.o: asm/ramdisk_data_things_brick_5.S ../data/things/brick_5
-	gcc -c asm/ramdisk_data_things_brick_5.S -o .o/ramdisk_data_things_brick_5.o
-
-.o/ramdisk_data_things_brick_6.o: asm/ramdisk_data_things_brick_6.S ../data/things/brick_6
-	gcc -c asm/ramdisk_data_things_brick_6.S -o .o/ramdisk_data_things_brick_6.o
-
-.o/ramdisk_data_things_brick_7.o: asm/ramdisk_data_things_brick_7.S ../data/things/brick_7
-	gcc -c asm/ramdisk_data_things_brick_7.S -o .o/ramdisk_data_things_brick_7.o
-
-.o/ramdisk_data_things_brick_8.o: asm/ramdisk_data_things_brick_8.S ../data/things/brick_8
-	gcc -c asm/ramdisk_data_things_brick_8.S -o .o/ramdisk_data_things_brick_8.o
 
 .o/ramdisk_data_things_exit.o: asm/ramdisk_data_things_exit.S ../data/things/exit
 	gcc -c asm/ramdisk_data_things_exit.S -o .o/ramdisk_data_things_exit.o
