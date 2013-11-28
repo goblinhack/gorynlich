@@ -474,7 +474,7 @@ texp tex_from_tiled_surface (SDL_Surface *in,
      */
     ox = 0;
     oy = 0;
-    for (ix = 0; ix < iwidth; ix++) {
+    for (ix = 0; ix < (int32_t) iwidth; ix++) {
 
         oy = 0;
 
@@ -482,7 +482,7 @@ texp tex_from_tiled_surface (SDL_Surface *in,
             continue;
         }
 
-        for (iy = 0; iy < iheight; iy++) {
+        for (iy = 0; iy < (int32_t) iheight; iy++) {
 
             if (iy&& !((iy+1) % (tile_height+1))) {
                 continue;
@@ -514,8 +514,8 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     uint32_t tile_block = (tile_width * 8);
     uint32_t x, y;
 
-    for (x = 0; x < out->w; x++) {
-        for (y = 0; y < out->h; y++) {
+    for (x = 0; x < (uint32_t) out->w; x++) {
+        for (y = 0; y < (uint32_t) out->h; y++) {
             color c, d;
 
             if (x > tile_width) {
@@ -570,31 +570,55 @@ int32_t tex_get_gl_binding (tex *tex)
 
 uint32_t tex_get_width (tex *tex)
 {
+    if (!tex) {
+        DIE("no texture");
+    }
+
     return (tex->width);
 }
 
 uint32_t tex_get_height (tex *tex)
 {
+    if (!tex) {
+        DIE("no texture");
+    }
+
     return (tex->height);
 }
 
 uint32_t tex_get_tile_width (tex *tex)
 {
+    if (!tex) {
+        DIE("no texture");
+    }
+
     return (tex->tile_width);
 }
 
 uint32_t tex_get_tile_height (tex *tex)
 {
+    if (!tex) {
+        DIE("no texture");
+    }
+
     return (tex->tile_height);
 }
 
 uint32_t tex_get_tiles_width (tex *tex)
 {
+    if (!tex) {
+        DIE("no texture");
+    }
+
     return (tex->tiles_width);
 }
 
 uint32_t tex_get_tiles_height (tex *tex)
 {
+    if (!tex) {
+        DIE("no texture");
+    }
+
     return (tex->tiles_height);
 }
 

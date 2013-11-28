@@ -97,9 +97,9 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
 
         if (y * height > tex_get_height(tex)) {
             if (name) {
-                DIE("overflow reading tile [%s]", name);
+                DIE("overflow reading tiles [%s]", name);
             } else {
-                DIE("overflow reading tile");
+                DIE("overflow reading tiles");
             }
         }
     }
@@ -162,9 +162,9 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
 
         if (y * height > tex_get_height(tex)) {
             if (name) {
-                DIE("overflow reading tile [%s]", name);
+                DIE("overflow reading tile arr[%s]", name);
             } else {
-                DIE("overflow reading tile");
+                DIE("overflow reading tile arr at x %d y %d", x, y);
             }
         }
     }

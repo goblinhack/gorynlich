@@ -65,7 +65,6 @@ void quit (void)
 
     sdl_exit();
 
-    map_fini();
     wid_game_fini();
 
     level_fini();
@@ -444,7 +443,6 @@ int32_t main (int32_t argc, char *argv[])
     exit(0);
 #endif
 
-#define MAP_TEST
 #ifdef MAP_TEST
     extern int32_t map_jigsaw_test(int32_t argc, char **argv);
     map_jigsaw_test(argc, argv);
@@ -521,10 +519,6 @@ int32_t main (int32_t argc, char *argv[])
     }
 
     action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)map_init,
-                          0, "map_init");
-
-    action_init_fn_create(&init_fns,
                           (action_init_fn_callback)level_init,
                           0, "level_init");
 
@@ -554,7 +548,6 @@ int32_t main (int32_t argc, char *argv[])
     extern void wid_test_wid_create(void);
     wid_test_wid_create();
 #else
-#if 0
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_intro_about_init,
                           0, "wid_intro_about_init");
@@ -578,7 +571,6 @@ int32_t main (int32_t argc, char *argv[])
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_intro_help_init,
                           0, "wid_intro_help_init");
-#endif
 #endif
 
     gl_enter_2d_mode();

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #define __STDC_LIMIT_MACROS
@@ -11,10 +11,14 @@
 #include "tree.h"
 #include "thing.h"
 #include "thing_private.h"
+#include "thing_template.h"
 #include "level_private.h"
 #include "map.h"
+#include "wid.h"
 #include "level.h"
+#include "wid_game_map.h"
 #include "item.h"
+#include "math.h"
 
 static char walls[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
 
@@ -297,7 +301,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
             if (map_is_wall_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
 
-                if (map_is_road_at(level, x, y)) {
+                if (map_is_door_at(level, x, y)) {
                     c = ' ';
                 } else {
                     c = '+';
@@ -328,7 +332,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     } else {
                         c = 'p';
                     }
-                } else if (map_is_road_at(level, x, y)) {
+                } else if (map_is_door_at(level, x, y)) {
                     c = '#';
                 } else if (map_is_monst_at(level, x, y)) {
                     c = 'm';
@@ -336,7 +340,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     c = 'E';
                 } else if (map_is_food_at(level, x, y)) {
                     c = 'F';
-                } else if (map_is_ladder_at(level, x, y)) {
+                } else if (map_is_letter_at(level, x, y)) {
                     c = 'L';
                 } else if (map_is_star_at(level, x, y)) {
                     c = 'o';
@@ -1006,7 +1010,7 @@ void dmap_goals_find (dmap *map, thingp t)
                         /*
                          * Chase letter.
                          */
-                        if (thing_is_ladder(thing_it)) {
+                        if (thing_is_letter(thing_it)) {
                             dmap_goal_flood(map, 1, x, y);
                         }
 
@@ -1297,7 +1301,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
     return (moved);
 }
 
-static boolean dmap_move_in_same_road_dir (dmap *map, levelp level, thingp t,
+static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
                                            int32_t *nexthop_x, int32_t *nexthop_y)
 {
     boolean moved = false;
@@ -1534,7 +1538,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
          * If no goal was found, try and keep moving the same way.
          */
         if (thing_is_car(t)) {
-            found_goal = dmap_move_in_same_road_dir(map, level, t, nexthop_x, nexthop_y);
+            found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
         } else {
             found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);
         }
@@ -1628,7 +1632,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
          * If no goal was found, try and keep moving the same way.
          */
         if (thing_is_car(t)) {
-            found_goal = dmap_move_in_same_road_dir(map, level, t, nexthop_x, nexthop_y);
+            found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
         } else {
             found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);
         }

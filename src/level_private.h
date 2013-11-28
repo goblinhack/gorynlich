@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file.
+ * See the LICENSE file.
  */
 
 typedef struct level_t_ {
@@ -39,7 +39,7 @@ typedef struct level_t_ {
     /*
      * Grid widget
      */
-    mapp map;
+    widp map;
 
     /*
      * When the level began being played.

@@ -1,195 +1,64 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
 
 #include "main.h"
 #include "map.h"
+#include "tree.h"
 #include "wid.h"
+#include "wid_game_map.h"
 #include "thing.h"
 #include "thing_template.h"
 #include "thing_tile.h"
 #include "level.h"
 #include "level_private.h"
-#include "tile.h"
 #include "bits.h"
 
 typedef boolean (*map_is_at_callback)(thing_templatep);
-
-map_t *MAP;
-
-static void map_init_bounds(map_t *map,
-                            uint32_t map_width,
-                            uint32_t map_height);
-static void map_fixup(map_t *map);
-
-/*
- * map_init
- */
-boolean map_init (void)
-{
-    MAP = myzalloc(sizeof(map_t), "map frame");
-
-    map_init_bounds(MAP, MAP_WIDTH, MAP_HEIGHT);
-
-    map_display_init(MAP);
-
-    map_init_tiles(MAP);
-
-    map_fixup(MAP);
-
-    MAP->lx = (MAP_WIDTH / 2) * TILE_SCREEN_WIDTH;
-    MAP->ly = (MAP_HEIGHT / 2) * TILE_SCREEN_HEIGHT;
-
-    map_move_delta_pixels(0, 0);
-
-    map_display_wid_init();
-
-    return (true);
-}
-
-/*
- * map_fini
- */
-void map_fini (void)
-{
-    if (MAP) {
-        myfree(MAP);
-    }
-
-    map_display_wid_fini();
-}
-
-/*
- * map_init_bounds
- */
-static void map_init_bounds (map_t *map,
-                             uint32_t map_width,
-                             uint32_t map_height)
-{
-    uint32_t width = global_config.video_pix_width;
-    uint32_t height = global_config.video_pix_height;
-
-    /*
-     * Allocate space for the tiles.
-     */
-    map->map_width = map_width;
-    map->map_height = map_height;
-
-    map->tiles_per_screen_x = width / TILE_SCREEN_WIDTH;
-    map->tiles_per_screen_y = height / (TILE_SCREEN_HEIGHT / 2);
-
-    /*
-     * Absolute map bounds.
-     */
-    map->min_px = 0;
-    map->max_px = map->map_width - map->tiles_per_screen_x;
-    map->min_py = 0;
-    map->max_py = map->map_height - map->tiles_per_screen_y;
-
-    map->min_px *= TILE_SCREEN_WIDTH;
-    map->max_px *= TILE_SCREEN_WIDTH;
-    map->min_py *= TILE_SCREEN_HEIGHT;
-    map->max_py *= TILE_SCREEN_HEIGHT;
-
-    /*
-     * Where we start off on the map.
-     */
-    map->px = map->map_width / 2;
-    map->px -= map->tiles_per_screen_x / 2;
-    map->px *= TILE_SCREEN_WIDTH;
-
-    map->py = map->map_height / 2;
-    map->py -= map->tiles_per_screen_y / 2;
-    map->py *= TILE_SCREEN_HEIGHT;
-}
-
-/*
- * map_move_delta_pixels
- *
- * Shift the map by some pixels.
- */
-void map_move_delta_pixels (int32_t dx, int32_t dy)
-{
-    uint32_t lx;
-    uint32_t ly;
-
-    if (MAP->px + dx < MAP->min_px) {
-        dx = 0;
-    }
-
-    if (MAP->px + dx >= MAP->max_px - 1) {
-        dx = 0;
-    }
-
-    if (MAP->py + dy < MAP->min_py) {
-        dy = 0;
-    }
-
-    if (MAP->py + dy >= MAP->max_py - 1) {
-        dy = 0;
-    }
-
-    MAP->px += dx;
-    MAP->py += dy;
-
-    lx = MAP->lx / TILE_SCREEN_WIDTH;
-    ly = MAP->ly / TILE_SCREEN_HEIGHT;
-
-map_set_thing_template(MAP, lx, ly, 0);
-
-    MAP->lx += dx;
-    MAP->ly += dy;
-
-    lx = MAP->lx / TILE_SCREEN_WIDTH;
-    ly = MAP->ly / TILE_SCREEN_HEIGHT;
-
-    map_lightmap(MAP, lx, ly,
-                 DEFAULT_LIGHT_RAY_LENGTH,
-                 true);
-
-    map_light_radiant(MAP, lx, ly);
-map_set_thing_template(MAP, lx, ly, PLAYER_0_ID);
-}
 
 static boolean map_is_x_at (levelp level,
                             int32_t x, int32_t y, map_is_at_callback callback)
 {
     thing_templatep thing_template;
-    mapp map;
+    widp grid_wid;
+    widp w;
 
-    map = level->map;
-
-    thing_template = map_get_thing_template(map, x, y);
-    if (thing_template) {
-        if ((*callback)(thing_template)) {
-            return (true);
-        }
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
     }
-    
-    thingp thing_it = thing_get_map_first(map, x, y);
-    while (thing_it) {
-        if (thing_item_owner(thing_it)) {
-            thing_it = thing_get_map_next(map, thing_it);
-            continue;
+
+    /*
+     * Look for a floor tile where we can place stuff.
+     */
+    w = wid_grid_find_first(grid_wid, x, y);
+    while (w) {
+        thingp thing_it = wid_get_thing(w);
+
+        if (thing_it) {
+            if (thing_item_owner(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y);
+                continue;
+            }
+
+            if (thing_is_dead(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y);
+                continue;
+            }
         }
 
-        if (thing_is_dead(thing_it)) {
-            thing_it = thing_get_map_next(map, thing_it);
-            continue;
-        }
-
-        thing_template = thing_get_template(thing_it);
+        thing_template = wid_get_thing_template(w);
         if (thing_template) {
             if ((*callback)(thing_template)) {
                 return (true);
             }
         }
 
-        thing_it = thing_get_map_next(map, thing_it);
+        w = wid_grid_find_next(grid_wid, w, x, y);
     }
 
     return (false);
@@ -200,40 +69,42 @@ static boolean map_count_x_at (levelp level,
                                map_is_at_callback callback)
 {
     thing_templatep thing_template;
+    widp grid_wid;
+    widp w;
     uint32_t count;
-    mapp map;
 
     count = 0;
 
-    map = level->map;
-
-    thing_template = map_get_thing_template(map, x, y);
-    if (thing_template) {
-        if ((*callback)(thing_template)) {
-            count++;
-        }
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
     }
-    
-    thingp thing_it = thing_get_map_first(map, x, y);
-    while (thing_it) {
-        if (thing_item_owner(thing_it)) {
-            thing_it = thing_get_map_next(map, thing_it);
-            continue;
+
+    /*
+     * Look for a floor tile where we can place stuff.
+     */
+    w = wid_grid_find_first(grid_wid, x, y);
+    while (w) {
+        /*
+         * If an item is being carried but is seen on the map then it is not 
+         * really on the map.
+         */
+        thingp t = wid_get_thing(w);
+        if (t) {
+            if (thing_item_owner(t)) {
+                w = wid_grid_find_next(grid_wid, w, x, y);
+                continue;
+            }
         }
 
-        if (thing_is_dead(thing_it)) {
-            thing_it = thing_get_map_next(map, thing_it);
-            continue;
-        }
-
-        thing_template = thing_get_template(thing_it);
+        thing_template = wid_get_thing_template(w);
         if (thing_template) {
             if ((*callback)(thing_template)) {
                 count++;
             }
         }
 
-        thing_it = thing_get_map_next(map, thing_it);
+        w = wid_grid_find_next(grid_wid, w, x, y);
     }
 
     return (count);
@@ -259,39 +130,39 @@ boolean map_is_wall_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_wall));
 }
 
-boolean map_is_gem_0_at (levelp level, int32_t x, int32_t y)
+boolean map_is_star_yellow_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_gem_0));
+    return (map_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
-boolean map_is_rock_at (levelp level, int32_t x, int32_t y)
+boolean map_is_xxx1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rock));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx1));
 }
 
-boolean map_is_water_at (levelp level, int32_t x, int32_t y)
+boolean map_is_xxx2_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_water));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx2));
 }
 
-boolean map_is_lava_at (levelp level, int32_t x, int32_t y)
+boolean map_is_xxx3_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_lava));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx3));
 }
 
-boolean map_is_gem_6_at (levelp level, int32_t x, int32_t y)
+boolean map_is_xxx4_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_gem_6));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx4));
 }
 
-boolean map_is_gem_7_at (levelp level, int32_t x, int32_t y)
+boolean map_is_xxx5_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_gem_7));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx5));
 }
 
-boolean map_is_boulder_at (levelp level, int32_t x, int32_t y)
+boolean map_is_xxx6_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_boulder));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx6));
 }
 
 boolean map_is_xxx7_at (levelp level, int32_t x, int32_t y)
@@ -314,9 +185,9 @@ boolean map_is_powerup_spam_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_powerup_spam));
 }
 
-boolean map_is_rock_0_at (levelp level, int32_t x, int32_t y)
+boolean map_is_xxx11_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rock_0));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx11));
 }
 
 boolean map_is_car_at (levelp level, int32_t x, int32_t y)
@@ -324,24 +195,24 @@ boolean map_is_car_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_car));
 }
 
-boolean map_is_transparent_at (levelp level, int32_t x, int32_t y)
+boolean map_is_star_green_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_transparent));
+    return (map_is_x_at(level, x, y, thing_template_is_star_green));
 }
 
-boolean map_is_radiant_at (levelp level, int32_t x, int32_t y)
+boolean map_is_star_cyan_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_radiant));
+    return (map_is_x_at(level, x, y, thing_template_is_star_cyan));
 }
 
-boolean map_is_gem_1_at (levelp level, int32_t x, int32_t y)
+boolean map_is_star_black_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_gem_1));
+    return (map_is_x_at(level, x, y, thing_template_is_star_black));
 }
 
-boolean map_is_gem_2_at (levelp level, int32_t x, int32_t y)
+boolean map_is_star_purple_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_gem_2));
+    return (map_is_x_at(level, x, y, thing_template_is_star_purple));
 }
 
 boolean map_is_explosion_at (levelp level, int32_t x, int32_t y)
@@ -354,14 +225,14 @@ boolean map_is_spikes_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_spikes));
 }
 
-boolean map_is_gem_4_at (levelp level, int32_t x, int32_t y)
+boolean map_is_star_red_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_gem_4));
+    return (map_is_x_at(level, x, y, thing_template_is_star_red));
 }
 
-boolean map_is_gem_5_at (levelp level, int32_t x, int32_t y)
+boolean map_is_star_blue_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_gem_5));
+    return (map_is_x_at(level, x, y, thing_template_is_star_blue));
 }
 
 boolean map_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -379,9 +250,9 @@ boolean map_is_spam_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_spam));
 }
 
-boolean map_is_road_at (levelp level, int32_t x, int32_t y)
+boolean map_is_door_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_road));
+    return (map_is_x_at(level, x, y, thing_template_is_door));
 }
 
 boolean map_is_pipe_at (levelp level, int32_t x, int32_t y)
@@ -474,9 +345,9 @@ boolean map_is_exit_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_exit));
 }
 
-boolean map_is_ladder_at (levelp level, int32_t x, int32_t y)
+boolean map_is_letter_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_ladder));
+    return (map_is_x_at(level, x, y, thing_template_is_letter));
 }
 
 static thingp map_thing_is_x_at (levelp level,
@@ -484,37 +355,49 @@ static thingp map_thing_is_x_at (levelp level,
                                  map_is_at_callback callback)
 {
     thing_templatep thing_template;
-    mapp map;
+    widp grid_wid;
+    widp w;
 
-    map = level->map;
-
-    thing_template = map_get_thing_template(map, x, y);
-    if (thing_template) {
-        if ((*callback)(thing_template)) {
-            return (0);
-        }
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
     }
-    
-    thingp thing_it = thing_get_map_first(map, x, y);
-    while (thing_it) {
+
+    /*
+     * Look for a floor tile where we can place stuff.
+     */
+    w = wid_grid_find_first(grid_wid, x, y);
+    while (w) {
+        thingp thing_it = wid_get_thing(w);
+
+        if (!thing_it) {
+            w = wid_grid_find_next(grid_wid, w, x, y);
+            continue;
+        }
+
         if (thing_item_owner(thing_it)) {
-            thing_it = thing_get_map_next(map, thing_it);
+            w = wid_grid_find_next(grid_wid, w, x, y);
+            continue;
+        }
+
+        if (thing_item_owner(thing_it)) {
+            w = wid_grid_find_next(grid_wid, w, x, y);
             continue;
         }
 
         if (thing_is_dead(thing_it)) {
-            thing_it = thing_get_map_next(map, thing_it);
+            w = wid_grid_find_next(grid_wid, w, x, y);
             continue;
         }
 
-        thing_template = thing_get_template(thing_it);
+        thing_template = wid_get_thing_template(w);
         if (thing_template) {
             if ((*callback)(thing_template)) {
                 return (thing_it);
             }
         }
 
-        thing_it = thing_get_map_next(map, thing_it);
+        w = wid_grid_find_next(grid_wid, w, x, y);
     }
 
     return (0);
@@ -540,39 +423,39 @@ thingp map_thing_is_wall_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_wall));
 }
 
-thingp map_thing_is_gem_0_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_star_yellow_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_0));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
-thingp map_thing_is_rock_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rock));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx1));
 }
 
-thingp map_thing_is_water_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx2_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_water));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx2));
 }
 
-thingp map_thing_is_lava_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx3_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_lava));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx3));
 }
 
-thingp map_thing_is_gem_6_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx4_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_6));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx4));
 }
 
-thingp map_thing_is_gem_7_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx5_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_7));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx5));
 }
 
-thingp map_thing_is_boulder_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx6_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_boulder));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx6));
 }
 
 thingp map_thing_is_xxx7_at (levelp level, int32_t x, int32_t y)
@@ -595,9 +478,9 @@ thingp map_thing_is_powerup_spam_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_powerup_spam));
 }
 
-thingp map_thing_is_rock_0_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx11_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rock_0));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx11));
 }
 
 thingp map_thing_is_car_at (levelp level, int32_t x, int32_t y)
@@ -605,24 +488,24 @@ thingp map_thing_is_car_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_car));
 }
 
-thingp map_thing_is_transparent_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_star_green_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_transparent));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_star_green));
 }
 
-thingp map_thing_is_radiant_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_star_cyan_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_radiant));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_star_cyan));
 }
 
-thingp map_thing_is_gem_1_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_star_black_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_1));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_star_black));
 }
 
-thingp map_thing_is_gem_2_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_star_purple_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_2));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_star_purple));
 }
 
 thingp map_thing_is_explosion_at (levelp level, int32_t x, int32_t y)
@@ -635,14 +518,14 @@ thingp map_thing_is_spikes_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_spikes));
 }
 
-thingp map_thing_is_gem_4_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_star_red_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_4));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_star_red));
 }
 
-thingp map_thing_is_gem_5_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_star_blue_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_gem_5));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_star_blue));
 }
 
 thingp map_thing_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -660,9 +543,9 @@ thingp map_thing_is_spam_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_spam));
 }
 
-thingp map_thing_is_road_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_door_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_road));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_door));
 }
 
 thingp map_thing_is_pipe_at (levelp level, int32_t x, int32_t y)
@@ -755,16 +638,619 @@ thingp map_thing_is_exit_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_exit));
 }
 
-thingp map_thing_is_ladder_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_letter_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_ladder));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_letter));
 }
 
-/*
- * Join up adjactent blocks.
- */
-static void 
-map_fixup (map_t *map)
+static tree_rootp map_all_things_is_x_at (levelp level,
+                                          int32_t x, int32_t y,
+                                          map_is_at_callback callback)
+{
+    thing_templatep thing_template;
+    tree_thing_node *node;
+    tree_rootp root;
+    widp grid_wid;
+    widp w;
+
+    root = 0;
+
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
+    }
+
+    /*
+     * Look for a floor tile where we can place stuff.
+     */
+    w = wid_grid_find_first(grid_wid, x, y);
+    while (w) {
+        thingp thing_it = wid_get_thing(w);
+
+        if (!thing_it) {
+            w = wid_grid_find_next(grid_wid, w, x, y);
+            continue;
+        }
+
+        if (thing_item_owner(thing_it)) {
+            w = wid_grid_find_next(grid_wid, w, x, y);
+            continue;
+        }
+
+        if (thing_is_dead(thing_it)) {
+            w = wid_grid_find_next(grid_wid, w, x, y);
+            continue;
+        }
+
+        thing_template = wid_get_thing_template(w);
+        if (thing_template) {
+            if ((*callback)(thing_template)) {
+                if (!root) {
+                    root = tree_alloc(TREE_KEY_POINTER,
+                                      "TREE ROOT: map find things");
+                }
+
+                node = (typeof(node))
+                    myzalloc(sizeof(*node), "TREE NODE: map find thing");
+
+                node->tree.key = (void*)thing_it;
+
+                if (!tree_insert(root, &node->tree.node)) {
+                    DIE("insert thingp %p", thing_it);
+                }
+            }
+        }
+
+        w = wid_grid_find_next(grid_wid, w, x, y);
+    }
+
+    return (root);
+}
+
+tree_rootp map_all_things_is_player_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_player));
+}
+
+tree_rootp map_all_things_is_monst_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_monst));
+}
+
+tree_rootp map_all_things_is_snail_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_snail));
+}
+
+tree_rootp map_all_things_is_wall_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_wall));
+}
+
+tree_rootp map_all_things_is_star_yellow_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_yellow));
+}
+
+tree_rootp map_all_things_is_xxx1_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx1));
+}
+
+tree_rootp map_all_things_is_xxx2_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx2));
+}
+
+tree_rootp map_all_things_is_xxx3_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx3));
+}
+
+tree_rootp map_all_things_is_xxx4_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx4));
+}
+
+tree_rootp map_all_things_is_xxx5_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx5));
+}
+
+tree_rootp map_all_things_is_xxx6_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx6));
+}
+
+tree_rootp map_all_things_is_xxx7_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx7));
+}
+
+tree_rootp map_all_things_is_xxx8_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx8));
+}
+
+tree_rootp map_all_things_is_star_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star));
+}
+
+tree_rootp map_all_things_is_powerup_spam_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_powerup_spam));
+}
+
+tree_rootp map_all_things_is_xxx11_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx11));
+}
+
+tree_rootp map_all_things_is_car_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_car));
+}
+
+tree_rootp map_all_things_is_star_green_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_green));
+}
+
+tree_rootp map_all_things_is_star_cyan_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_cyan));
+}
+
+tree_rootp map_all_things_is_star_black_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_black));
+}
+
+tree_rootp map_all_things_is_star_purple_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_purple));
+}
+
+tree_rootp map_all_things_is_explosion_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_explosion));
+}
+
+tree_rootp map_all_things_is_spikes_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_spikes));
+}
+
+tree_rootp map_all_things_is_star_red_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_red));
+}
+
+tree_rootp map_all_things_is_star_blue_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_blue));
+}
+
+tree_rootp map_all_things_is_seedpod_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_seedpod));
+}
+
+tree_rootp map_all_things_is_bomb_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_bomb));
+}
+
+tree_rootp map_all_things_is_spam_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_spam));
+}
+
+tree_rootp map_all_things_is_door_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_door));
+}
+
+tree_rootp map_all_things_is_pipe_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_pipe));
+}
+
+tree_rootp map_all_things_is_item_removed_at_level_end_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_removed_at_level_end));
+}
+
+tree_rootp map_all_things_is_scarable_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_scarable));
+}
+
+tree_rootp map_all_things_is_shrunk_when_carried_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_shrunk_when_carried));
+}
+
+tree_rootp map_all_things_is_hidden_from_editor_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_hidden_from_editor));
+}
+
+tree_rootp map_all_things_is_animated_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_animated));
+}
+
+tree_rootp map_all_things_is_follows_owner_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_follows_owner));
+}
+
+tree_rootp map_all_things_is_powerup_rocket_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_powerup_rocket));
+}
+
+tree_rootp map_all_things_is_left_as_corpse_on_death_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_left_as_corpse_on_death));
+}
+
+tree_rootp map_all_things_is_item_perma_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_perma));
+}
+
+tree_rootp map_all_things_is_esnail_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_esnail));
+}
+
+tree_rootp map_all_things_is_item_hidden_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_hidden));
+}
+
+tree_rootp map_all_things_is_bonus_letter_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_bonus_letter));
+}
+
+tree_rootp map_all_things_is_thing_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_thing));
+}
+
+tree_rootp map_all_things_is_plant_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_plant));
+}
+
+tree_rootp map_all_things_is_food_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_food));
+}
+
+tree_rootp map_all_things_is_floor_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_floor));
+}
+
+tree_rootp map_all_things_is_exit_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_exit));
+}
+
+tree_rootp map_all_things_is_letter_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_letter));
+}
+
+static thing_templatep map_find_x_at (levelp level,
+                                      int32_t x, int32_t y,
+                                      map_is_at_callback callback,
+                                      widp *wout)
+{
+    thing_templatep thing_template;
+    widp grid_wid;
+    widp w;
+
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
+    }
+
+    w = wid_grid_find_first(grid_wid, x, y);
+    while (w) {
+        thing_template = wid_get_thing_template(w);
+        if (thing_template) {
+            if ((*callback)(thing_template)) {
+                if (wout) {
+                    *wout = w;
+                }
+
+                return (thing_template);
+            }
+        }
+
+        w = wid_grid_find_next(grid_wid, w, x, y);
+    }
+
+    return (0);
+}
+
+thing_templatep map_find_player_at (levelp level,
+                                    int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_player, w));
+}
+
+thing_templatep map_find_monst_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_monst, w));
+}
+
+thing_templatep map_find_snail_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_snail, w));
+}
+
+thing_templatep map_find_wall_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_wall, w));
+}
+
+thing_templatep map_find_star_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star_yellow, w));
+}
+
+thing_templatep map_find_xxx1_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx1, w));
+}
+
+thing_templatep map_find_xxx2_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx2, w));
+}
+
+thing_templatep map_find_xxx3_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx3, w));
+}
+
+thing_templatep map_find_xxx4_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx4, w));
+}
+
+thing_templatep map_find_xxx5_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx5, w));
+}
+
+thing_templatep map_find_xxx6_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx6, w));
+}
+
+thing_templatep map_find_xxx7_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx7, w));
+}
+
+thing_templatep map_find_xxx8_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx8, w));
+}
+
+thing_templatep map_find_is_star_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star, w));
+}
+
+thing_templatep map_find_powerup_spam_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_powerup_spam, w));
+}
+
+thing_templatep map_find_xxx11_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_xxx11, w));
+}
+
+thing_templatep map_find_car_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_car, w));
+}
+
+thing_templatep map_find_star_green_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star_green, w));
+}
+
+thing_templatep map_find_star_cyan_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star_cyan, w));
+}
+
+thing_templatep map_find_star_black_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star_black, w));
+}
+
+thing_templatep map_find_star_purple_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star_purple, w));
+}
+
+thing_templatep map_find_explosion_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_explosion, w));
+}
+
+thing_templatep map_find_spikes_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_spikes, w));
+}
+
+thing_templatep map_find_is_star_red_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star_red, w));
+}
+
+thing_templatep map_find_is_star_blue_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_star_blue, w));
+}
+
+thing_templatep map_find_seedpod_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_seedpod, w));
+}
+
+thing_templatep map_find_bomb_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_bomb, w));
+}
+
+thing_templatep map_find_spam_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_spam, w));
+}
+
+thing_templatep map_find_door_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_door, w));
+}
+
+thing_templatep map_find_pipe_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_pipe, w));
+}
+
+thing_templatep map_find_xxx27_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_item_removed_at_level_end, w));
+}
+
+thing_templatep map_find_xxx28_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_scarable, w));
+}
+
+thing_templatep map_find_is_shrunk_when_carried_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_shrunk_when_carried, w));
+}
+
+thing_templatep map_find_hidden_from_editor_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_hidden_from_editor, w));
+}
+
+thing_templatep map_find_is_left_as_corpse_on_death_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_left_as_corpse_on_death, w));
+}
+
+thing_templatep map_find_item_perma_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_item_perma, w));
+}
+
+thing_templatep map_find_esnail_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_esnail, w));
+}
+
+thing_templatep map_find_is_item_hidden_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_item_hidden, w));
+}
+
+thing_templatep map_find_bonus_letter_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_bonus_letter, w));
+}
+
+thing_templatep map_find_spawns_thing_at (levelp level,
+                                          int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_thing, w));
+}
+
+thing_templatep map_find_plant_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_plant, w));
+}
+
+thing_templatep map_find_food_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_food, w));
+}
+
+thing_templatep map_find_floor_at (levelp level,
+                                   int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_floor, w));
+}
+
+thing_templatep map_find_exit_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_exit, w));
+}
+
+thing_templatep map_find_letter_at (levelp level,
+                                    int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_letter, w));
+}
+
+void map_fixup (levelp level)
 {
     int32_t index;
     tilep tile;
@@ -772,70 +1258,50 @@ map_fixup (map_t *map)
     int32_t y;
     int32_t dx;
     int32_t dy;
-    uint16_t nbrs[3][3];
+    thing_templatep nbrs[3][3];
+    widp w;
 
-    for (x = 1; x < MAP_WIDTH-1; x++) {
-        for (y = 1; y < MAP_HEIGHT-1; y++) {
+    for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
+        for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
 
-            uint16_t template_id = map->tiles[x][y].template_id;
-
-            if (!template_id) {
-                continue;
-            }
-
-            if ((template_id != ROCK_0_ID) &&
-                (template_id != ROCK_1_ID) &&
-                (template_id != LAVA_0_ID) &&
-                (template_id != WATER_0_ID) &&
-                (template_id != WATER_0_ID) &&
-                (template_id != BRICK_0_ID) &&
-                (template_id != BRICK_1_ID) &&
-                (template_id != BRICK_2_ID) &&
-                (template_id != BRICK_3_ID) &&
-                (template_id != BRICK_4_ID) &&
-                (template_id != BRICK_5_ID) &&
-                (template_id != BRICK_6_ID) &&
-                (template_id != BRICK_7_ID) &&
-                (template_id != BRICK_8_ID)) {
+            if (!map_find_wall_at(level, x, y, &w) &&
+                !map_find_pipe_at(level, x, y, &w) &&
+                !map_find_door_at(level, x, y, &w)) {
                 continue;
             }
 
             for (dx = -1; dx <= 1; dx++) {
                 for (dy = -1; dy <= 1; dy++) {
 
-                    uint16_t a_thing_template_id = 
-                        map->tiles[x + dx][y + dy].template_id;
-
-                    if ((a_thing_template_id != ROCK_0_ID) &&
-                        (a_thing_template_id != ROCK_1_ID) &&
-                        (a_thing_template_id != LAVA_0_ID) &&
-                        (a_thing_template_id != WATER_0_ID) &&
-                        (a_thing_template_id != BRICK_0_ID) &&
-                        (a_thing_template_id != BRICK_1_ID) &&
-                        (a_thing_template_id != BRICK_2_ID) &&
-                        (a_thing_template_id != BRICK_3_ID) &&
-                        (a_thing_template_id != BRICK_4_ID) &&
-                        (a_thing_template_id != BRICK_5_ID) &&
-                        (a_thing_template_id != BRICK_6_ID) &&
-                        (a_thing_template_id != BRICK_7_ID) &&
-                        (a_thing_template_id != BRICK_8_ID)) {
-                        nbrs[dx + 1][dy + 1] = 0;
-                        continue;
+                    if (map_find_wall_at(level, x, y, &w)) {
+                        nbrs[dx + 1][dy + 1] = map_find_wall_at(level,
+                                                                x + dx, y + dy,
+                                                                0 /* wid */);
                     }
 
-                    nbrs[dx + 1][dy + 1] = a_thing_template_id;
+                    if (map_find_pipe_at(level, x, y, &w)) {
+                        nbrs[dx + 1][dy + 1] = map_find_pipe_at(level,
+                                                                x + dx, y + dy,
+                                                                0 /* wid */);
+                    }
+
+                    if (map_find_door_at(level, x, y, &w)) {
+                        nbrs[dx + 1][dy + 1] = map_find_door_at(level,
+                                                                x + dx, y + dy,
+                                                                0 /* wid */);
+                    }
                 }
             }
 
-            uint16_t a = nbrs[0][0];
-            uint16_t b = nbrs[1][0];
-            uint16_t c = nbrs[2][0];
-            uint16_t d = nbrs[0][1];
-            uint16_t e = nbrs[1][1];
-            uint16_t f = nbrs[2][1];
-            uint16_t g = nbrs[0][2];
-            uint16_t h = nbrs[1][2];
-            uint16_t i = nbrs[2][2];
+            thing_templatep a = nbrs[0][0];
+            thing_templatep b = nbrs[1][0];
+            thing_templatep c = nbrs[2][0];
+            thing_templatep d = nbrs[0][1];
+            thing_templatep e = nbrs[1][1];
+            thing_templatep f = nbrs[2][1];
+            thing_templatep g = nbrs[0][2];
+            thing_templatep h = nbrs[1][2];
+            thing_templatep i = nbrs[2][2];
 
             uint8_t A = (a != 0) ? 1 : 0;
             uint8_t B = (b != 0) ? 1 : 0;
@@ -1076,7 +1542,7 @@ map_fixup (map_t *map)
                     i ? 1 : 0);
             }
 
-            thing_templatep t = id_to_thing_template(e);
+            thing_templatep t = e;
 
             thing_tilep thing_tile = thing_tile_find(t, index, &tile);
             if (!thing_tile) {
@@ -1092,10 +1558,14 @@ map_fixup (map_t *map)
                 DIE("no tile for %s", thing_template_name(t));
             }
 
-            uint32_t tile_index = tile_get_index(tile);
+            const char *tilename = thing_tile_name(thing_tile);
 
-            map->tiles[x][y].tile = tile_index;
-            map->tiles[x][y].template_id = e;
+            if (!tilename) {
+                DIE("no tilename for %s", thing_template_name(e));
+            }
+
+            wid_set_tilename(w, tilename);
+            wid_set_font(w, small_font);
         }
     }
 }
@@ -1205,39 +1675,39 @@ uint32_t level_count_is_wall (levelp level)
     return (level_count_is_x(level, thing_template_is_wall));
 }
 
-uint32_t level_count_is_gem_0 (levelp level)
+uint32_t level_count_is_star_yellow (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_gem_0));
+    return (level_count_is_x(level, thing_template_is_star_yellow));
 }
 
-uint32_t level_count_is_rock (levelp level)
+uint32_t level_count_is_xxx1 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rock));
+    return (level_count_is_x(level, thing_template_is_xxx1));
 }
 
-uint32_t level_count_is_water (levelp level)
+uint32_t level_count_is_xxx2 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_water));
+    return (level_count_is_x(level, thing_template_is_xxx2));
 }
 
-uint32_t level_count_is_lava (levelp level)
+uint32_t level_count_is_xxx3 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_lava));
+    return (level_count_is_x(level, thing_template_is_xxx3));
 }
 
-uint32_t level_count_is_gem_6 (levelp level)
+uint32_t level_count_is_xxx4 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_gem_6));
+    return (level_count_is_x(level, thing_template_is_xxx4));
 }
 
-uint32_t level_count_is_gem_7 (levelp level)
+uint32_t level_count_is_xxx5 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_gem_7));
+    return (level_count_is_x(level, thing_template_is_xxx5));
 }
 
-uint32_t level_count_is_boulder (levelp level)
+uint32_t level_count_is_xxx6 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_boulder));
+    return (level_count_is_x(level, thing_template_is_xxx6));
 }
 
 uint32_t level_count_is_xxx7 (levelp level)
@@ -1260,9 +1730,9 @@ uint32_t level_count_is_powerup_spam (levelp level)
     return (level_count_is_x(level, thing_template_is_powerup_spam));
 }
 
-uint32_t level_count_is_rock_0 (levelp level)
+uint32_t level_count_is_xxx11 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rock_0));
+    return (level_count_is_x(level, thing_template_is_xxx11));
 }
 
 uint32_t level_count_is_car (levelp level)
@@ -1270,24 +1740,24 @@ uint32_t level_count_is_car (levelp level)
     return (level_count_is_x(level, thing_template_is_car));
 }
 
-uint32_t level_count_is_transparent (levelp level)
+uint32_t level_count_is_star_green (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_transparent));
+    return (level_count_is_x(level, thing_template_is_star_green));
 }
 
-uint32_t level_count_is_radiant (levelp level)
+uint32_t level_count_is_star_cyan (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_radiant));
+    return (level_count_is_x(level, thing_template_is_star_cyan));
 }
 
-uint32_t level_count_is_gem_1 (levelp level)
+uint32_t level_count_is_star_black (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_gem_1));
+    return (level_count_is_x(level, thing_template_is_star_black));
 }
 
-uint32_t level_count_is_gem_2 (levelp level)
+uint32_t level_count_is_star_purple (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_gem_2));
+    return (level_count_is_x(level, thing_template_is_star_purple));
 }
 
 uint32_t level_count_is_explosion (levelp level)
@@ -1300,14 +1770,14 @@ uint32_t level_count_is_spikes (levelp level)
     return (level_count_is_x(level, thing_template_is_spikes));
 }
 
-uint32_t level_count_is_gem_4 (levelp level)
+uint32_t level_count_is_star_red (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_gem_4));
+    return (level_count_is_x(level, thing_template_is_star_red));
 }
 
-uint32_t level_count_is_gem_5 (levelp level)
+uint32_t level_count_is_star_blue (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_gem_5));
+    return (level_count_is_x(level, thing_template_is_star_blue));
 }
 
 uint32_t level_count_is_seedpod (levelp level)
@@ -1325,9 +1795,9 @@ uint32_t level_count_is_spam (levelp level)
     return (level_count_is_x(level, thing_template_is_spam));
 }
 
-uint32_t level_count_is_road (levelp level)
+uint32_t level_count_is_door (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_road));
+    return (level_count_is_x(level, thing_template_is_door));
 }
 
 uint32_t level_count_is_pipe (levelp level)
@@ -1415,7 +1885,318 @@ uint32_t level_count_is_exit (levelp level)
     return (level_count_is_x(level, thing_template_is_exit));
 }
 
-uint32_t level_count_is_ladder (levelp level)
+uint32_t level_count_is_letter (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_ladder));
+    return (level_count_is_x(level, thing_template_is_letter));
+}
+
+static tree_rootp map_all_things_is_x (levelp level,
+                                       map_is_at_callback callback)
+{
+    thing_templatep thing_template;
+    tree_thing_node *node;
+    tree_rootp root;
+    widp grid_wid;
+    widp w;
+    int32_t x;
+    int32_t y;
+
+    root = 0;
+
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
+    }
+
+    for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
+
+            /*
+             * Look for a floor tile where we can place stuff.
+             */
+            w = wid_grid_find_first(grid_wid, x, y);
+            while (w) {
+                thingp thing_it = wid_get_thing(w);
+
+                if (!thing_it) {
+                    w = wid_grid_find_next(grid_wid, w, x, y);
+                    continue;
+                }
+
+                if (thing_item_owner(thing_it)) {
+                    w = wid_grid_find_next(grid_wid, w, x, y);
+                    continue;
+                }
+
+                if (thing_is_dead(thing_it)) {
+                    w = wid_grid_find_next(grid_wid, w, x, y);
+                    continue;
+                }
+
+                thing_template = wid_get_thing_template(w);
+                if (thing_template) {
+                    if ((*callback)(thing_template)) {
+                        if (!root) {
+                            root = tree_alloc(TREE_KEY_POINTER,
+                                            "TREE ROOT: map find things");
+                        }
+
+                        node = (typeof(node))
+                            myzalloc(sizeof(*node), "TREE NODE: map find thing");
+
+                        node->tree.key = (void*)thing_it;
+
+                        if (!tree_insert(root, &node->tree.node)) {
+                            DIE("insert thingp %p", thing_it);
+                        }
+                    }
+                }
+
+                w = wid_grid_find_next(grid_wid, w, x, y);
+            }
+
+        }
+    }
+
+    return (root);
+}
+
+tree_rootp map_all_things_is_player (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_player));
+}
+
+tree_rootp map_all_things_is_monst (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_monst));
+}
+
+tree_rootp map_all_things_is_snail (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_snail));
+}
+
+tree_rootp map_all_things_is_wall (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_wall));
+}
+
+tree_rootp map_all_things_is_star_yellow (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star_yellow));
+}
+
+tree_rootp map_all_things_is_xxx1 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx1));
+}
+
+tree_rootp map_all_things_is_xxx2 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx2));
+}
+
+tree_rootp map_all_things_is_xxx3 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx3));
+}
+
+tree_rootp map_all_things_is_xxx4 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx4));
+}
+
+tree_rootp map_all_things_is_xxx5 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx5));
+}
+
+tree_rootp map_all_things_is_xxx6 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx6));
+}
+
+tree_rootp map_all_things_is_xxx7 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx7));
+}
+
+tree_rootp map_all_things_is_xxx8 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx8));
+}
+
+tree_rootp map_all_things_is_star (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star));
+}
+
+tree_rootp map_all_things_is_powerup_spam (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_powerup_spam));
+}
+
+tree_rootp map_all_things_is_xxx11 (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_xxx11));
+}
+
+tree_rootp map_all_things_is_car (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_car));
+}
+
+tree_rootp map_all_things_is_star_green (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star_green));
+}
+
+tree_rootp map_all_things_is_star_cyan (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star_cyan));
+}
+
+tree_rootp map_all_things_is_star_black (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star_black));
+}
+
+tree_rootp map_all_things_is_star_purple (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star_purple));
+}
+
+tree_rootp map_all_things_is_explosion (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_explosion));
+}
+
+tree_rootp map_all_things_is_spikes (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_spikes));
+}
+
+tree_rootp map_all_things_is_star_red (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star_red));
+}
+
+tree_rootp map_all_things_is_star_blue (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_star_blue));
+}
+
+tree_rootp map_all_things_is_seedpod (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_seedpod));
+}
+
+tree_rootp map_all_things_is_bomb (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_bomb));
+}
+
+tree_rootp map_all_things_is_spam (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_spam));
+}
+
+tree_rootp map_all_things_is_door (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_door));
+}
+
+tree_rootp map_all_things_is_pipe (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_pipe));
+}
+
+tree_rootp map_all_things_is_item_removed_at_level_end (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_item_removed_at_level_end));
+}
+
+tree_rootp map_all_things_is_scarable (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_scarable));
+}
+
+tree_rootp map_all_things_is_shrunk_when_carried (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_shrunk_when_carried));
+}
+
+tree_rootp map_all_things_is_hidden_from_editor (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_hidden_from_editor));
+}
+
+tree_rootp map_all_things_is_animated (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_animated));
+}
+
+tree_rootp map_all_things_is_follows_owner (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_follows_owner));
+}
+
+tree_rootp map_all_things_is_powerup_rocket (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_powerup_rocket));
+}
+
+tree_rootp map_all_things_is_left_as_corpse_on_death (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_left_as_corpse_on_death));
+}
+
+tree_rootp map_all_things_is_item_perma (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_item_perma));
+}
+
+tree_rootp map_all_things_is_esnail (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_esnail));
+}
+
+tree_rootp map_all_things_is_item_hidden (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_item_hidden));
+}
+
+tree_rootp map_all_things_is_bonus_letter (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_bonus_letter));
+}
+
+tree_rootp map_all_things_is_thing (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_thing));
+}
+
+tree_rootp map_all_things_is_plant (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_plant));
+}
+
+tree_rootp map_all_things_is_food (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_food));
+}
+
+tree_rootp map_all_things_is_floor (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_floor));
+}
+
+tree_rootp map_all_things_is_exit (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_exit));
+}
+
+tree_rootp map_all_things_is_letter (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_letter));
 }

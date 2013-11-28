@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file.
+ * See the LICENSE file.
  */
 
 void demarshal_thing_tiles(demarshal_p, thing_templatep);

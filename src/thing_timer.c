@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
@@ -11,6 +11,7 @@
 #include "thing_private.h"
 #include "thing.h"
 #include "thing_timer.h"
+#include "level.h"
 #include "timer.h"
 #include "wid.h"
 #include "color.h"

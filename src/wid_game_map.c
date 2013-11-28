@@ -1,23 +1,30 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
+#include <errno.h>
 
 #include "main.h"
 #include "wid.h"
+#include "tex.h"
 #include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
 #include "thing_template.h"
+#include "tree.h"
 #include "string.h"
+#include "marshal.h"
 #include "wid_popup.h"
 #include "wid_textbox.h"
 #include "wid_game_map.h"
 #include "wid_tooltip.h"
 #include "wid_intro.h"
+#include "wid_editor_map.h"
+#include "gl.h"
+#include "level.h"
 #include "player.h"
 #include "thing.h"
 #include "item.h"
@@ -144,7 +151,7 @@ void wid_game_visible (void)
 
         wid_visible(wid_game_map_window, 0);
     } else {
-        wid_game_map_display_wid_init();
+        wid_game_map_wid_create();
     }
 
     wid_move_end(wid_game_map_window);
@@ -545,7 +552,7 @@ static boolean wid_game_map_button_receive_mouse_down (widp w,
 /*
  * Create the wid_game_map
  */
-void wid_game_map_display_wid_init (void)
+void wid_game_map_wid_create (void)
 {
     wid_game_selected_item_name = 0;
 
@@ -700,6 +707,13 @@ void wid_game_map_display_wid_init (void)
 
     if (!player) {
         player_new(0 /* level */, "data/things/player");
+    }
+
+    level_game = level_load(thing_level_no(player),
+                            wid_game_map_grid_container);
+    if (!level_game) {
+        WARN("failed to load level");
+        return;
     }
 
     things_level_start(level_game);
@@ -934,6 +948,8 @@ wid_game_map_replace_tile (widp w,
                                 thing_template_name(thing_template)));
     }
 
+    map_fixup(level);
+
     /*
      * This adds it to the grid wid.
      */
@@ -1029,7 +1045,7 @@ void wid_game_map_score_update (levelp level)
      * Check if we have collected all bonus letters.
      */
     {
-        const char str[] = "gorynlich";
+        const char str[] = "mailsnail";
         uint32_t got_total = 0;
         boolean got_all;
 	uint32_t i;
@@ -1105,7 +1121,7 @@ void wid_game_map_score_update (levelp level)
     {
         float bonus_width = 0.039;
         float bonus_at = 0.0;
-        const char str[] = "gorynlich";
+        const char str[] = "mailsnail";
 	uint32_t i;
 
         for (i = 0; i < strlen(str); i++) {

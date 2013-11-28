@@ -1,17 +1,11 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file.
+ * See the LICENSE file.
  */
 
 typedef struct thing_ {
     tree_key_int tree;
-
-    /*
-     * For map linkeage.
-     */
-    thingp mnext;
-    thingp mprev;
 
     /*
      * Pointer to common settings for this thing.

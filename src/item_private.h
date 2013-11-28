@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file.
+ * See the LICENSE file.
  */
 
 typedef struct tree_item_key_ {
