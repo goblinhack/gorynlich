@@ -367,7 +367,8 @@ boolean sdl_init (void)
     SDL_GL_GetAttribute(SDL_GL_ACCELERATED_VISUAL, &value);
     DBG("Hw Accel    : %d", value);
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
     DBG("Vsync       : %d", SDL_GL_GetSwapInterval());
 #endif /* } */
 
@@ -378,7 +379,8 @@ boolean sdl_init (void)
     return (true);
 }
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
 static int32_t sdl_filter_events (void *userdata, SDL_Event *event)
 {
     switch (event->type) {
@@ -484,14 +486,16 @@ static void sdl_event (SDL_Event * event)
             wid_key_up(key, mouse_x, mouse_y);
         break;
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
     case SDL_TEXTINPUT:
         DBG("Keyboard: text input \"%s\" in window %d",
             event->text.text, event->text.windowID);
         break;
 #endif /* } */
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
     case SDL_MOUSEWHEEL:
         DBG("Mouse: wheel scrolled %d in x and %d in y in window %d",
             event->wheel.x, event->wheel.y, event->wheel.windowID);
@@ -620,7 +624,8 @@ static void sdl_event (SDL_Event * event)
             event->jbutton.which, event->jbutton.button);
         break;
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
     case SDL_CLIPBOARDUPDATE:
         DBG("Clipboard updated");
         break;
@@ -689,7 +694,8 @@ void sdl_loop (void)
     int32_t i;
     uint16_t frames = 0;
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
     SDL_SetEventFilter(sdl_filter_events, 0);
 #endif /* } */
 
@@ -797,13 +803,8 @@ void sdl_loop (void)
              */
             SDL_PumpEvents();
 
-#if SDL_MAJOR_VERSION == 2
-            found = SDL_PeepEvents(events,
-                                   ARRAY_SIZE(events),
-                                   SDL_GETEVENT,
-                                   SDL_KEYDOWN,
-                                   SDL_MOUSEWHEEL);
-#elif SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2 /* { */
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
             found = SDL_PeepEvents(events,
                                    ARRAY_SIZE(events),
                                    SDL_GETEVENT,

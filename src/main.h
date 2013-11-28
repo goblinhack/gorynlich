@@ -13,14 +13,14 @@
 #define TILES_MAP_WIDTH                 32
 #define TILES_MAP_HEIGHT                32
 
-#define TILES_MAP_EDITABLE_WIDTH        16
-#define TILES_MAP_EDITABLE_HEIGHT       16
+#define TILES_MAP_EDITABLE_WIDTH        32
+#define TILES_MAP_EDITABLE_HEIGHT       32
 
 /*
  * The number of tiles per screen.
  */
-#define TILES_SCREEN_WIDTH              16
-#define TILES_SCREEN_HEIGHT             16
+#define TILES_SCREEN_WIDTH              14
+#define TILES_SCREEN_HEIGHT             14
 
 /*
  * Misc
