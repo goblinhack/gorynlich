@@ -1,22 +1,25 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
 
 #include "main.h"
 #include "tree.h"
-#include "thing_tile_private.h"
+#include "thing_template_private.h"
 #include "thing_template.h"
+#include "thing_tile_private.h"
 #include "thing_tile.h"
 #include "tile.h"
+#include "thing.h"
 #include "marshal.h"
 
 /*
  * Using static memory as these things never change once made.
  */
+#define THING_TEMPLATElS_CHUNK_COUNT_MAX 256
 thing_template thing_templates_chunk[THING_TEMPLATES_CHUNK_COUNT_MAX];
 static uint32_t thing_templates_chunk_count;
 
@@ -45,161 +48,6 @@ void thing_template_fini (void)
 
         tree_destroy(&thing_templates_create_order,
             (tree_destroy_func)0);
-    }
-}
-
-/*
- * Convert a join type into an index
- */
-uint8_t thing_template_join_type_to_index (
-            boolean is_join_block,
-            boolean is_join_horiz,
-            boolean is_join_vert,
-            boolean is_join_node,
-            boolean is_join_left,
-            boolean is_join_right,
-            boolean is_join_top,
-            boolean is_join_bot,
-            boolean is_join_tl,
-            boolean is_join_tr,
-            boolean is_join_bl,
-            boolean is_join_br,
-            boolean is_join_t,
-            boolean is_join_t90,
-            boolean is_join_t180,
-            boolean is_join_t270,
-            boolean is_join_x,
-            boolean is_join_tl2,
-            boolean is_join_tr2,
-            boolean is_join_bl2,
-            boolean is_join_br2,
-            boolean is_join_t_1,
-            boolean is_join_t_2,
-            boolean is_join_t_3,
-            boolean is_join_t90_1,
-            boolean is_join_t90_2,
-            boolean is_join_t90_3,
-            boolean is_join_t180_1,
-            boolean is_join_t180_2,
-            boolean is_join_t180_3,
-            boolean is_join_t270_1,
-            boolean is_join_t270_2,
-            boolean is_join_t270_3,
-            boolean is_join_x1,
-            boolean is_join_x1_270,
-            boolean is_join_x1_180,
-            boolean is_join_x1_90,
-            boolean is_join_x2,
-            boolean is_join_x2_270,
-            boolean is_join_x2_180,
-            boolean is_join_x2_90,
-            boolean is_join_x3,
-            boolean is_join_x3_180,
-            boolean is_join_x4,
-            boolean is_join_x4_270,
-            boolean is_join_x4_180,
-            boolean is_join_x4_90)
-{
-    if (is_join_block) {
-        return (IS_JOIN_BLOCK);
-    } else if (is_join_t_1) {
-        return (IS_JOIN_T_1);
-    } else if (is_join_t_2) {
-        return (IS_JOIN_T_2);
-    } else if (is_join_t_3) {
-        return (IS_JOIN_T_3);
-    } else if (is_join_t90_1) {
-        return (IS_JOIN_T90_1);
-    } else if (is_join_t90_2) {
-        return (IS_JOIN_T90_2);
-    } else if (is_join_t90_3) {
-        return (IS_JOIN_T90_3);
-    } else if (is_join_t180_1) {
-        return (IS_JOIN_T180_1);
-    } else if (is_join_t180_2) {
-        return (IS_JOIN_T180_2);
-    } else if (is_join_t180_3) {
-        return (IS_JOIN_T180_3);
-    } else if (is_join_t270_1) {
-        return (IS_JOIN_T270_1);
-    } else if (is_join_t270_2) {
-        return (IS_JOIN_T270_2);
-    } else if (is_join_t270_3) {
-        return (IS_JOIN_T270_3);
-    } else if (is_join_block) {
-        return (IS_JOIN_BLOCK);
-    } else if (is_join_horiz) {
-        return (IS_JOIN_HORIZ);
-    } else if (is_join_vert) {
-        return (IS_JOIN_VERT);
-    } else if (is_join_node) {
-        return (IS_JOIN_NODE);
-    } else if (is_join_left) {
-        return (IS_JOIN_LEFT);
-    } else if (is_join_right) {
-        return (IS_JOIN_RIGHT);
-    } else if (is_join_top) {
-        return (IS_JOIN_TOP);
-    } else if (is_join_bot) {
-        return (IS_JOIN_BOT);
-    } else if (is_join_tl) {
-        return (IS_JOIN_TL);
-    } else if (is_join_tr) {
-        return (IS_JOIN_TR);
-    } else if (is_join_bl) {
-        return (IS_JOIN_BL);
-    } else if (is_join_br) {
-        return (IS_JOIN_BR);
-    } else if (is_join_t) {
-        return (IS_JOIN_T);
-    } else if (is_join_t90) {
-        return (IS_JOIN_T90);
-    } else if (is_join_t180) {
-        return (IS_JOIN_T180);
-    } else if (is_join_t270) {
-        return (IS_JOIN_T270);
-    } else if (is_join_x) {
-        return (IS_JOIN_X);
-    } else if (is_join_tl2) {
-        return (IS_JOIN_TL2);
-    } else if (is_join_tr2) {
-        return (IS_JOIN_TR2);
-    } else if (is_join_bl2) {
-        return (IS_JOIN_BL2);
-    } else if (is_join_br2) {
-        return (IS_JOIN_BR2);
-    } else if (is_join_x) {
-        return (IS_JOIN_X);
-    } else if (is_join_x1) {
-        return (IS_JOIN_X1);
-    } else if (is_join_x1_270) {
-        return (IS_JOIN_X1_270);
-    } else if (is_join_x1_180) {
-        return (IS_JOIN_X1_180);
-    } else if (is_join_x1_90) {
-        return (IS_JOIN_X1_90);
-    } else if (is_join_x2) {
-        return (IS_JOIN_X2);
-    } else if (is_join_x2_270) {
-        return (IS_JOIN_X2_270);
-    } else if (is_join_x2_180) {
-        return (IS_JOIN_X2_180);
-    } else if (is_join_x2_90) {
-        return (IS_JOIN_X2_90);
-    } else if (is_join_x3) {
-        return (IS_JOIN_X3);
-    } else if (is_join_x3_180) {
-        return (IS_JOIN_X3_180);
-    } else if (is_join_x4) {
-        return (IS_JOIN_X4);
-    } else if (is_join_x4_270) {
-        return (IS_JOIN_X4_270);
-    } else if (is_join_x4_180) {
-        return (IS_JOIN_X4_180);
-    } else if (is_join_x4_90) {
-        return (IS_JOIN_X4_90);
-    } else {
-        return (0);
     }
 }
 
@@ -355,8 +203,7 @@ thing_templatep thing_template_load (const char *name)
         DIE("too many thing templates");
     }
 
-    t = &thing_templates_chunk[++thing_templates_chunk_count];
-    t->id = thing_templates_chunk_count;
+    t = &thing_templates_chunk[thing_templates_chunk_count++];
     t->tree.key = dupstr(name, "TREE KEY: thing");
 
     if (!tree_insert_static(thing_templates, &t->tree.node)) {
@@ -519,37 +366,37 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
         GET_OPT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_ladder", t->is_ladder);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_letter", t->is_letter);
         GET_OPT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_0", t->is_gem_0);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_6", t->is_gem_6);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_7", t->is_gem_7);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_boulder", t->is_boulder);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx1", t->is_xxx1);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rock_0", t->is_rock_0);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx11", t->is_xxx11);
         GET_OPT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_transparent", t->is_transparent);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_radiant", t->is_radiant);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_1", t->is_gem_1);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_2", t->is_gem_2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
         GET_OPT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spikes", t->is_spikes);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_3", t->is_gem_3);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_4", t->is_gem_4);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_gem_5", t->is_gem_5);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_pink", t->is_star_pink);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_red", t->is_star_red);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_star_blue", t->is_star_blue);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_road", t->is_road);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
         GET_OPT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_removed_at_level_end", t->is_item_removed_at_level_end);
         GET_OPT_NAMED_BITFIELD(ctx, "is_scarable", t->is_scarable);
@@ -622,37 +469,37 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
     PUT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
     PUT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
-    PUT_NAMED_BITFIELD(ctx, "is_ladder", t->is_ladder);
+    PUT_NAMED_BITFIELD(ctx, "is_letter", t->is_letter);
     PUT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_0", t->is_gem_0);
-    PUT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
-    PUT_NAMED_BITFIELD(ctx, "is_water", t->is_water);
-    PUT_NAMED_BITFIELD(ctx, "is_lava", t->is_lava);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_6", t->is_gem_6);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_7", t->is_gem_7);
-    PUT_NAMED_BITFIELD(ctx, "is_boulder", t->is_boulder);
+    PUT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx1", t->is_xxx1);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
     PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
     PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
-    PUT_NAMED_BITFIELD(ctx, "is_rock_0", t->is_rock_0);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx11", t->is_xxx11);
     PUT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
-    PUT_NAMED_BITFIELD(ctx, "is_transparent", t->is_transparent);
-    PUT_NAMED_BITFIELD(ctx, "is_radiant", t->is_radiant);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_1", t->is_gem_1);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_2", t->is_gem_2);
+    PUT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
+    PUT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
+    PUT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
+    PUT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
     PUT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
     PUT_NAMED_BITFIELD(ctx, "is_spikes", t->is_spikes);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_3", t->is_gem_3);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_4", t->is_gem_4);
-    PUT_NAMED_BITFIELD(ctx, "is_gem_5", t->is_gem_5);
+    PUT_NAMED_BITFIELD(ctx, "is_star_pink", t->is_star_pink);
+    PUT_NAMED_BITFIELD(ctx, "is_star_red", t->is_star_red);
+    PUT_NAMED_BITFIELD(ctx, "is_star_blue", t->is_star_blue);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
-    PUT_NAMED_BITFIELD(ctx, "is_road", t->is_road);
+    PUT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
     PUT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
     PUT_NAMED_BITFIELD(ctx, "is_item_removed_at_level_end", t->is_item_removed_at_level_end);
     PUT_NAMED_BITFIELD(ctx, "is_scarable", t->is_scarable);
@@ -853,9 +700,9 @@ boolean thing_template_is_food (thing_templatep t)
     return (t->is_food);
 }
 
-boolean thing_template_is_ladder (thing_templatep t)
+boolean thing_template_is_letter (thing_templatep t)
 {
-    return (t->is_ladder);
+    return (t->is_letter);
 }
 
 boolean thing_template_is_monst (thing_templatep t)
@@ -878,39 +725,39 @@ boolean thing_template_is_snail (thing_templatep t)
     return (t->is_snail);
 }
 
-boolean thing_template_is_gem_0 (thing_templatep t)
+boolean thing_template_is_star_yellow (thing_templatep t)
 {
-    return (t->is_gem_0);
+    return (t->is_star_yellow);
 }
 
-boolean thing_template_is_rock (thing_templatep t)
+boolean thing_template_is_xxx1 (thing_templatep t)
 {
-    return (t->is_rock);
+    return (t->is_xxx1);
 }
 
-boolean thing_template_is_water (thing_templatep t)
+boolean thing_template_is_xxx2 (thing_templatep t)
 {
-    return (t->is_water);
+    return (t->is_xxx2);
 }
 
-boolean thing_template_is_lava (thing_templatep t)
+boolean thing_template_is_xxx3 (thing_templatep t)
 {
-    return (t->is_lava);
+    return (t->is_xxx3);
 }
 
-boolean thing_template_is_gem_6 (thing_templatep t)
+boolean thing_template_is_xxx4 (thing_templatep t)
 {
-    return (t->is_gem_6);
+    return (t->is_xxx4);
 }
 
-boolean thing_template_is_gem_7 (thing_templatep t)
+boolean thing_template_is_xxx5 (thing_templatep t)
 {
-    return (t->is_gem_7);
+    return (t->is_xxx5);
 }
 
-boolean thing_template_is_boulder (thing_templatep t)
+boolean thing_template_is_xxx6 (thing_templatep t)
 {
-    return (t->is_boulder);
+    return (t->is_xxx6);
 }
 
 boolean thing_template_is_xxx7 (thing_templatep t)
@@ -933,9 +780,9 @@ boolean thing_template_is_powerup_spam (thing_templatep t)
     return (t->is_powerup_spam);
 }
 
-boolean thing_template_is_rock_0 (thing_templatep t)
+boolean thing_template_is_xxx11 (thing_templatep t)
 {
-    return (t->is_rock_0);
+    return (t->is_xxx11);
 }
 
 boolean thing_template_is_car (thing_templatep t)
@@ -943,24 +790,24 @@ boolean thing_template_is_car (thing_templatep t)
     return (t->is_car);
 }
 
-boolean thing_template_is_transparent (thing_templatep t)
+boolean thing_template_is_star_green (thing_templatep t)
 {
-    return (t->is_transparent);
+    return (t->is_star_green);
 }
 
-boolean thing_template_is_radiant (thing_templatep t)
+boolean thing_template_is_star_cyan (thing_templatep t)
 {
-    return (t->is_radiant);
+    return (t->is_star_cyan);
 }
 
-boolean thing_template_is_gem_1 (thing_templatep t)
+boolean thing_template_is_star_black (thing_templatep t)
 {
-    return (t->is_gem_1);
+    return (t->is_star_black);
 }
 
-boolean thing_template_is_gem_2 (thing_templatep t)
+boolean thing_template_is_star_purple (thing_templatep t)
 {
-    return (t->is_gem_2);
+    return (t->is_star_purple);
 }
 
 boolean thing_template_is_explosion (thing_templatep t)
@@ -973,19 +820,19 @@ boolean thing_template_is_spikes (thing_templatep t)
     return (t->is_spikes);
 }
 
-boolean thing_template_is_gem_4 (thing_templatep t)
+boolean thing_template_is_star_red (thing_templatep t)
 {
-    return (t->is_gem_4);
+    return (t->is_star_red);
 }
 
-boolean thing_template_is_gem_3 (thing_templatep t)
+boolean thing_template_is_star_pink (thing_templatep t)
 {
-    return (t->is_gem_3);
+    return (t->is_star_pink);
 }
 
-boolean thing_template_is_gem_5 (thing_templatep t)
+boolean thing_template_is_star_blue (thing_templatep t)
 {
-    return (t->is_gem_5);
+    return (t->is_star_blue);
 }
 
 boolean thing_template_is_seedpod (thing_templatep t)
@@ -1003,9 +850,9 @@ boolean thing_template_is_spam (thing_templatep t)
     return (t->is_spam);
 }
 
-boolean thing_template_is_road (thing_templatep t)
+boolean thing_template_is_door (thing_templatep t)
 {
-    return (t->is_road);
+    return (t->is_door);
 }
 
 boolean thing_template_is_pipe (thing_templatep t)

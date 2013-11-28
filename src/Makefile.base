@@ -8,8 +8,6 @@ GAME_OBJECTS=				\
     $(RAMDISK_OBJ)			\
     $(OBJDIR)/backtrace.o 		\
     $(OBJDIR)/color.o			\
-    $(OBJDIR)/cave.o			\
-    $(OBJDIR)/fractal.o			\
     $(OBJDIR)/command.o 		\
     $(OBJDIR)/config.o			\
     $(OBJDIR)/demarshal.o 		\
@@ -26,10 +24,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/log.o 			\
     $(OBJDIR)/main.o 			\
     $(OBJDIR)/map.o 			\
-    $(OBJDIR)/map_light.o 		\
-    $(OBJDIR)/map_tiles.o 		\
-    $(OBJDIR)/map_display.o 		\
-    $(OBJDIR)/map_display_wid.o 	\
     $(OBJDIR)/marshal.o 		\
     $(OBJDIR)/marshal_test.o 		\
     $(OBJDIR)/math.o 			\
@@ -90,7 +84,11 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\
     $(OBJDIR)/wid_button.o 		\
-    $(OBJDIR)/map_jigsaw.o 		\
+    $(OBJDIR)/wid_editor.o 		\
+    $(OBJDIR)/wid_editor_buttons.o 	\
+    $(OBJDIR)/wid_editor_map.o 		\
+
+#    $(OBJDIR)/map_jigsaw.o 		\
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\

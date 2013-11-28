@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
@@ -9,8 +9,10 @@
 #include "main.h"
 #include "tree.h"
 #include "thing_tile_private.h"
+#include "thing_template_private.h"
 #include "thing_template.h"
 #include "thing_tile.h"
+#include "thing.h"
 #include "marshal.h"
 
 void thing_tile_free (thing_tile *t)

@@ -55,8 +55,8 @@
 #define JIGPIECE_WIDTH              13
 #define JIGPIECE_HEIGHT             13
 
-#define TILE_WIDTH                  16
-#define TILE_HEIGHT                 16
+#define TILE_WIDTH                  32
+#define TILE_HEIGHT                 32
 
 /*
  * Console

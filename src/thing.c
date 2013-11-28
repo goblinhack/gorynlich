@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
@@ -12,17 +12,21 @@
 #include "thing.h"
 #include "thing_template.h"
 #include "thing_timer.h"
+#include "item.h"
 #include "wid.h"
+#include "wid_game_map.h"
 #include "marshal.h"
+#include "map.h"
 #include "level.h"
+#include "wid_console.h"
 #include "time.h"
 #include "string.h"
 #include "wid_textbox.h"
 #include "wid_game_map.h"
 #include "color.h"
 #include "config.h"
+#include "gl.h"
 #include "sound.h"
-#include "map.h"
 
 tree_root *things;
 static uint32_t thing_id;
@@ -1344,11 +1348,11 @@ boolean thing_is_food (thingp t)
     return (thing_template_is_food(thing_get_template(t)));
 }
 
-boolean thing_is_ladder (thingp t)
+boolean thing_is_letter (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_ladder(thing_get_template(t)));
+    return (thing_template_is_letter(thing_get_template(t)));
 }
 
 boolean thing_is_monst (thingp t)
@@ -1379,53 +1383,53 @@ boolean thing_is_snail (thingp t)
     return (thing_template_is_snail(thing_get_template(t)));
 }
 
-boolean thing_is_gem_0 (thingp t)
+boolean thing_is_star_yellow (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_gem_0(thing_get_template(t)));
+    return (thing_template_is_star_yellow(thing_get_template(t)));
 }
 
-boolean thing_is_rock (thingp t)
+boolean thing_is_xxx1 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rock(thing_get_template(t)));
+    return (thing_template_is_xxx1(thing_get_template(t)));
 }
 
-boolean thing_is_water (thingp t)
+boolean thing_is_xxx2 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_water(thing_get_template(t)));
+    return (thing_template_is_xxx2(thing_get_template(t)));
 }
 
-boolean thing_is_lava (thingp t)
+boolean thing_is_xxx3 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_lava(thing_get_template(t)));
+    return (thing_template_is_xxx3(thing_get_template(t)));
 }
 
-boolean thing_is_gem_6 (thingp t)
+boolean thing_is_xxx4 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_gem_6(thing_get_template(t)));
+    return (thing_template_is_xxx4(thing_get_template(t)));
 }
 
-boolean thing_is_gem_7 (thingp t)
+boolean thing_is_xxx5 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_gem_7(thing_get_template(t)));
+    return (thing_template_is_xxx5(thing_get_template(t)));
 }
 
-boolean thing_is_boulder (thingp t)
+boolean thing_is_xxx6 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_boulder(thing_get_template(t)));
+    return (thing_template_is_xxx6(thing_get_template(t)));
 }
 
 boolean thing_is_xxx7 (thingp t)
@@ -1456,11 +1460,11 @@ boolean thing_is_powerup_spam (thingp t)
     return (thing_template_is_powerup_spam(thing_get_template(t)));
 }
 
-boolean thing_is_rock_0 (thingp t)
+boolean thing_is_xxx11 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rock_0(thing_get_template(t)));
+    return (thing_template_is_xxx11(thing_get_template(t)));
 }
 
 boolean thing_is_car (thingp t)
@@ -1470,32 +1474,32 @@ boolean thing_is_car (thingp t)
     return (thing_template_is_car(thing_get_template(t)));
 }
 
-boolean thing_is_transparent (thingp t)
+boolean thing_is_star_green (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_transparent(thing_get_template(t)));
+    return (thing_template_is_star_green(thing_get_template(t)));
 }
 
-boolean thing_is_radiant (thingp t)
+boolean thing_is_star_cyan (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_radiant(thing_get_template(t)));
+    return (thing_template_is_star_cyan(thing_get_template(t)));
 }
 
-boolean thing_is_gem_1 (thingp t)
+boolean thing_is_star_black (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_gem_1(thing_get_template(t)));
+    return (thing_template_is_star_black(thing_get_template(t)));
 }
 
-boolean thing_is_gem_2 (thingp t)
+boolean thing_is_star_purple (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_gem_2(thing_get_template(t)));
+    return (thing_template_is_star_purple(thing_get_template(t)));
 }
 
 boolean thing_is_explosion (thingp t)
@@ -1512,18 +1516,18 @@ boolean thing_is_spikes (thingp t)
     return (thing_template_is_spikes(thing_get_template(t)));
 }
 
-boolean thing_is_gem_4 (thingp t)
+boolean thing_is_star_red (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_gem_4(thing_get_template(t)));
+    return (thing_template_is_star_red(thing_get_template(t)));
 }
 
-boolean thing_is_gem_5 (thingp t)
+boolean thing_is_star_blue (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_gem_5(thing_get_template(t)));
+    return (thing_template_is_star_blue(thing_get_template(t)));
 }
 
 boolean thing_is_seedpod (thingp t)
@@ -1547,11 +1551,11 @@ boolean thing_is_spam (thingp t)
     return (thing_template_is_spam(thing_get_template(t)));
 }
 
-boolean thing_is_road (thingp t)
+boolean thing_is_door (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_road(thing_get_template(t)));
+    return (thing_template_is_door(thing_get_template(t)));
 }
 
 boolean thing_is_pipe (thingp t)
@@ -1761,96 +1765,4 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
     wid_move_to_abs_centered_in(w, next_floor_x, next_floor_y, 0);
 
     sound_play_level_end();
-}
-
-/*
- * thing_move
- */
-boolean 
-thing_move (map_t *map, thingp t, int32_t x, int32_t y)
-{
-    uint32_t tx;
-    uint32_t ty;
-
-    verify(t);
-
-    tx = t->x / TILE_SCREEN_WIDTH;
-    ty = t->y / TILE_SCREEN_WIDTH;
-
-    if (map_out_of_bounds(tx, ty)) {
-        THING_LOG(t, "place of thing failed");
-        DIE("out of bounds on old location for map at %d,%d", x, y);
-    }
-
-    /*
-     * Remove from the old location.
-     */
-    if (t->mprev) {
-        t->mprev->mnext = t->mnext;
-    }
-
-    if (t->mnext) {
-        t->mnext->mprev = t->mprev;
-    }
-
-    if (map->things[tx][ty] == t) {
-        map->things[tx][ty] = t->mnext;
-    }
-
-    t->mprev = 0;
-    t->mnext = 0;
-
-    /*
-     * Move to the new location.
-     */
-    t->x = x;
-    t->y = y;
-
-    tx = t->x / TILE_SCREEN_WIDTH;
-    ty = t->y / TILE_SCREEN_WIDTH;
-
-    if (map_out_of_bounds(tx, ty)) {
-        THING_LOG(t, "place of thing failed");
-        DIE("out of bounds on new location for map at %d,%d", x, y);
-    }
-
-    if (!map->things[tx][ty]) {
-        map->things[tx][ty] = t;
-    } else {
-        t->mnext = map->things[tx][ty]->mnext;
-        t->mprev = map->things[tx][ty];
-
-        t->mnext->mprev = t;
-        t->mprev->mnext = t;
-    }
-
-    return (true);
-}
-
-/*
- * thing_get_map_first
- */
-thingp
-thing_get_map_first (map_t *map, int32_t x, int32_t y)
-{
-    if (map_out_of_bounds(x, y)) {
-        DIE("out of bounds on get map %d,%d", x, y);
-    }
-
-    return (map->things[x][y]);
-}
-
-/*
- * thing_get_map_next
- */
-thingp
-thing_get_map_next (map_t *map, thingp t)
-{
-    if (!t) {
-        return (0);
-    }
-
-    verify(t);
-
-    return (t->mnext);
 }

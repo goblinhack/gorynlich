@@ -23,12 +23,6 @@
 #define TILES_SCREEN_HEIGHT             16
 
 /*
- * The base tile size which we use to scale other tiles to.
- */
-#define TILE_SCREEN_WIDTH               (DEFAULT_TILE_ZOOM * TILE_WIDTH)
-#define TILE_SCREEN_HEIGHT              (DEFAULT_TILE_ZOOM * TILE_HEIGHT)
-
-/*
  * Misc
  */
 #undef ONESEC

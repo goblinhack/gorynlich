@@ -1,20 +1,23 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
 
 #include "main.h"
 #include "wid.h"
+#include "tex.h"
 #include "color.h"
+#include "wid_intro_settings.h"
 #include "wid_popup.h"
 #include "wid_intro_settings.h"
+#include "sdl.h"
 #include "config.h"
 #include "string.h"
+#include "gl.h"
 #include "music.h"
-#include "sdl.h"
 
 static widp wid_intro_settings;
 static widp wid_intro_settings_container;

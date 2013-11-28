@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 void thing_timers_destroy(thingp);
