@@ -20,8 +20,8 @@
 /*
  * Screen sizes.
  */
-#define DEFAULT_VIDEO_WIDTH         1024 // See gl.h for more
-#define DEFAULT_VIDEO_HEIGHT        800
+#define DEFAULT_VIDEO_WIDTH         1080 // See gl.h for more
+#define DEFAULT_VIDEO_HEIGHT        720
 
 /*
  * We zoom the tiles in, by default 8x16 so they look more blocky and retro.
@@ -57,6 +57,21 @@
 
 #define TILE_WIDTH                  32
 #define TILE_HEIGHT                 32
+
+/*
+ * Tiles
+ */
+#define TILES_MAP_WIDTH                 32
+#define TILES_MAP_HEIGHT                32
+
+#define TILES_MAP_EDITABLE_WIDTH        32
+#define TILES_MAP_EDITABLE_HEIGHT       32
+
+/*
+ * The number of tiles per screen.
+ */
+#define TILES_SCREEN_WIDTH              21
+#define TILES_SCREEN_HEIGHT             14
 
 /*
  * Console
