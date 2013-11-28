@@ -2608,6 +2608,7 @@ static int32_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
         return (1);
     }
 
+#if 0
     int32_t Ax = (A->tree.tl.x + A->tree.br.x) / 2;
     int32_t Ay = (A->tree.tl.y + A->tree.br.y) / 2;
 
@@ -2624,6 +2625,7 @@ static int32_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
     if (Aval < Bval) {
         return (1);
     }
+#endif
 
     if (A->tree.z_order > B->tree.z_order) {
         return (-1);

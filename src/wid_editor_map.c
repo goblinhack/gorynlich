@@ -153,9 +153,6 @@ widp wid_editor_map_thing_replace_template (widp w,
             thing_template_shortname(thing_template));
     }
 
-    float tw = tile_get_width(tile);
-    float th = tile_get_height(tile);
-
     float base_tile_width =
             ((1.0f / (float)TILES_SCREEN_WIDTH) *
                 (float)global_config.video_gl_width);
@@ -164,19 +161,12 @@ widp wid_editor_map_thing_replace_template (widp w,
             ((1.0f / (float)TILES_SCREEN_HEIGHT) *
                 (float)global_config.video_gl_height);
 
-    tw = (tw * base_tile_width) / TILE_WIDTH;
-    th = (th * base_tile_height) / TILE_HEIGHT;
-
-    tl.x -= tw / 2.0;
-    tl.y -= th / 2.0;
-
-    br.x += tw / 2.0;
-    br.y += th / 2.0;
-
-    /*
-     * For rounding errors.
-     */
-    br.y += 1;
+    br.x += base_tile_width;
+    br.y += base_tile_height;
+    br.x += base_tile_width / 4.0;
+    br.y += base_tile_height / 4.0;
+    br.x += 4;
+    br.y += 4;
 
     z_depth = thing_template_get_z_depth(thing_template);
     z_order = thing_template_get_z_order(thing_template);
