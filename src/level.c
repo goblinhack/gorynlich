@@ -1,26 +1,36 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
 #include <errno.h>
+#include <time.h>
 #include "slre.h"
 
 #include "main.h"
 #include "string.h"
+#include "marshal.h"
 #include "wid.h"
 #include "wid_popup.h"
+#include "wid_textbox.h"
+#include "gl.h"
+#include "color.h"
+#include "item.h"
 #include "level.h"
 #include "level_private.h"
+#include "tile.h"
+#include "player.h"
 #include "thing.h"
 #include "thing_template.h"
+#include "thing_tile.h"
 #include "command.h"
 #include "wid_button.h"
 #include "time.h"
 #include "marshal.h"
 #include "wid_game_map.h"
+#include "wid_editor_map.h"
 #include "sdl.h"
 #include "map.h"
 #include "timer.h"
@@ -213,7 +223,7 @@ static boolean wid_level_count_down_common (widp w)
 }
 
 static boolean wid_level_count_down_key_down (widp w,
-                                             const SDL_Keysym *key)
+                                             const SDL_KEYSYM *key)
 {
     return (wid_level_count_down_common(w));
 }
@@ -366,7 +376,7 @@ static boolean wid_level_game_over_mouse_down (widp w,
 }
 
 static boolean wid_level_game_over_key_down_event (widp w,
-                                                   const SDL_Keysym *key)
+                                                   const SDL_KEYSYM *key)
 {
     wid_level_game_over_common(w);
 
@@ -411,7 +421,7 @@ static void level_count_down_begin_fast (levelp level)
     wid_focus_lock(w);
 }
 
-levelp level_new (mapp map, uint32_t level_no)
+levelp level_new (widp map, uint32_t level_no)
 {
     levelp level;
 
@@ -648,13 +658,13 @@ void level_completed (levelp level)
     wid_game_map_item_update(level);
 }
 
-levelp level_load (uint32_t level_no, mapp map)
+levelp level_load (uint32_t level_no, widp wid)
 {
     levelp level;
 
     srand(level_no);
 
-    level = level_new(map, level_no);
+    level = level_new(wid, level_no);
 
     level_set_is_paused(level, true);
     level_set_is_editor(level, false);
@@ -709,7 +719,7 @@ levelp level_load (uint32_t level_no, mapp map)
 
     level_set_walls(level);
     level_set_monst_walls(level);
-    level_set_roads(level);
+    level_set_doors(level);
     level_set_pipes(level);
     level_pipe_find_ends(level);
 
@@ -764,18 +774,20 @@ void level_set_destroy_reason (levelp level, const char *val)
     level->destroy_reason = dupstr(val, "level destroy_reason");
 }
 
-mapp level_get_map (levelp level)
+widp level_get_map (levelp level)
 {
     verify(level);
 
     return (level->map);
 }
 
-void level_set_map (levelp level, mapp wid)
+void level_set_map (levelp level, widp wid)
 {
     verify(level);
 
     level->map = wid;
+
+    wid_set_client_context(wid, level);
 }
 
 /*
@@ -824,14 +836,14 @@ void level_set_monst_walls (levelp level)
 /*
  * Or other things we collide with.
  */
-void level_set_roads (levelp level)
+void level_set_doors (levelp level)
 {
     int32_t x;
     int32_t y;
 
     for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
-            if (map_is_road_at(level, x, y)) {
+            if (map_is_door_at(level, x, y)) {
                 level->roads[x][y] = '+';
             } else {
                 level->roads[x][y] = ' ';
@@ -1573,11 +1585,16 @@ void marshal_level (marshal_p ctx, levelp level)
     PUT_NAMED_BITFIELD(ctx, "warned_exit_not_open", level->warned_exit_not_open);
     PUT_NAMED_BITFIELD(ctx, "is_exit_open", level->exit_reached_when_open);
 
+    marshal_wid_grid(ctx, level->map);
+
     PUT_KET(ctx);
 }
 
 boolean demarshal_level (demarshal_p ctx, levelp level)
 {
+    boolean rc;
+    widp wid;
+
     if (!level) {
         return (false);
     }
@@ -1588,6 +1605,11 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
     GET_OPT_NAMED_STRING(ctx, "title", tmp);
     level_set_title(level, tmp);
     myfree(tmp);
+
+    wid = level_get_map(level);
+    if (!wid) {
+        DIE("no map for level");
+    }
 
     do {
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz1", level->is_zzz1);
@@ -1612,7 +1634,15 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit_open", level->exit_reached_when_open);
     } while (demarshal_gotone(ctx));
 
+    if (level_is_editor(level)) {
+        rc = demarshal_wid_grid(ctx, wid,
+                                wid_editor_map_thing_replace_template);
+    } else {
+        rc = demarshal_wid_grid(ctx, wid,
+                                wid_game_map_replace_tile);
+    }
+
     GET_KET(ctx);
 
-    return (true);
+    return (rc);
 }

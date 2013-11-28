@@ -1,15 +1,17 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
 
 #include "main.h"
 #include "wid.h"
+#include "tex.h"
 #include "color.h"
 #include "wid_intro.h"
+#include "wid_game_over.h"
 #include "sdl.h"
 #include "thing_template.h"
 #include "wid_popup.h"
@@ -124,7 +126,7 @@ void wid_game_over_create (void)
         thing_templatep thing_template;
         
         if ((rand() % 10) < 8) {
-            thing_template = thing_template_find("data/things/is_gem_0");
+            thing_template = thing_template_find("data/things/star_yellow");
         } else {
             thing_template = thing_template_find("data/things/player");
         }

@@ -1,0 +1,21 @@
+{
+ shortname="floor"
+ tooltip="Floor"
+ z_depth=0
+ z_order=0
+ is_floor
+ tiles={
+  tile={
+   tile="floor3a"
+  }
+  tile={
+   tile="floor3b"
+  }
+  tile={
+   tile="floor3c"
+  }
+  tile={
+   tile="floor3d"
+  }
+ }
+}

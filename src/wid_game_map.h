@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 boolean wid_game_init(void);
@@ -11,7 +11,7 @@ void wid_game_visible(void);
 void wid_game_save(void);
 void wid_game_load(void);
 
-void wid_game_map_display_wid_init(void);
+void wid_game_map_wid_create(void);
 void wid_game_map_wid_destroy(void);
 void wid_game_map_score_update(levelp);
 void wid_game_map_item_update(levelp);

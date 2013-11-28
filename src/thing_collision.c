@@ -1,16 +1,19 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file for license.
+ * See the LICENSE file for license.
  */
 
 #include <SDL.h>
 
 #include "main.h"
+#include "tree.h"
 #include "thing.h"
 #include "thing_template.h"
+#include "item.h"
 #include "wid.h"
 #include "level.h"
+#include "map.h"
 #include "wid_tooltip.h"
 #include "wid_game_map.h"
 #include "sound.h"
@@ -194,14 +197,14 @@ void thing_collision (thingp t, int32_t x, int32_t y)
                     /*
                      * I steal back letters and nuke the enemy.
                      */
-                    thing_item_steal(thing_it, t, thing_template_is_ladder);
+                    thing_item_steal(thing_it, t, thing_template_is_letter);
 
                     thing_item_steal(thing_it, t, thing_template_is_bomb);
                 } else {
                     /*
                      * No rocket. Enemy steals letters.
                      */
-                    thing_item_steal(t, thing_it, thing_template_is_ladder);
+                    thing_item_steal(t, thing_it, thing_template_is_letter);
 
                     thing_item_steal(t, thing_it, thing_template_is_bomb);
                 }
@@ -339,7 +342,7 @@ void thing_collision (thingp t, int32_t x, int32_t y)
             /*
              * Collect but leave on game.
              */
-            if (thing_template_is_ladder(it)) {
+            if (thing_template_is_letter(it)) {
                 sound_play_paper();
 
                 thing_item_collect(t, thing_it);

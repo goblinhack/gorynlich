@@ -257,7 +257,7 @@ unsigned char *ramdisk_load_copy (const char *filename, int32_t *outlen)
         return (data);
     }
 
-    copy = mymalloc(*outlen + 1, "ramdisk load");
+    copy = (typeof(copy)) mymalloc(*outlen + 1, "ramdisk load");
     if (!copy) {
         return (copy);
     }

@@ -771,13 +771,6 @@ void sdl_loop (void)
          */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /*
-         * Do the main GL work early on to fill up the pipeline and then do
-         * the game processing below to allow it to be drained before we swap 
-         * the buffers.
-         */
-        map_display();
-
         frames++;
 
         /*
@@ -845,9 +838,7 @@ void sdl_loop (void)
         /*
          * Let things move.
          */
-#if 0
         thing_tick_all();
-#endif
 
         /*
          * Display windows.
@@ -892,13 +883,13 @@ void sdl_loop (void)
 void sdl_show_keyboard (void)
 {
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
-            SDL_iPhoneKeyboardShow(window);
+    SDL_iPhoneKeyboardShow(window);
 #endif /* } */
 }
 
 void sdl_hide_keyboard (void)
 {
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED /* { */
-            SDL_iPhoneKeyboardHide(window);
+    SDL_iPhoneKeyboardHide(window);
 #endif /* } */
 }

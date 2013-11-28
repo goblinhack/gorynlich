@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the README file.
+ * See the LICENSE file.
  */
 
 #include "tree.h"
@@ -128,37 +128,37 @@ typedef struct thing_template_ {
     uint8_t is_exit:1;
     uint8_t is_floor:1;
     uint8_t is_food:1;
-    uint8_t is_ladder:1;
+    uint8_t is_letter:1;
     uint8_t is_monst:1;
     uint8_t is_plant:1;
     uint8_t is_player:1;
     uint8_t is_snail:1;
-    uint8_t is_gem_0:1;
-    uint8_t is_rock:1;
-    uint8_t is_water:1;
-    uint8_t is_lava:1;
-    uint8_t is_gem_6:1;
-    uint8_t is_gem_7:1;
-    uint8_t is_boulder:1;
+    uint8_t is_star_yellow:1;
+    uint8_t is_xxx1:1;
+    uint8_t is_xxx2:1;
+    uint8_t is_xxx3:1;
+    uint8_t is_xxx4:1;
+    uint8_t is_xxx5:1;
+    uint8_t is_xxx6:1;
     uint8_t is_xxx7:1;
     uint8_t is_xxx8:1;
     uint8_t is_star:1;
     uint8_t is_powerup_spam:1;
-    uint8_t is_rock_0:1;
+    uint8_t is_xxx11:1;
     uint8_t is_car:1;
-    uint8_t is_transparent:1;
-    uint8_t is_radiant:1;
-    uint8_t is_gem_1:1;
-    uint8_t is_gem_2:1;
+    uint8_t is_star_green:1;
+    uint8_t is_star_cyan:1;
+    uint8_t is_star_black:1;
+    uint8_t is_star_purple:1;
     uint8_t is_explosion:1;
     uint8_t is_spikes:1;
-    uint8_t is_gem_3:1;
-    uint8_t is_gem_4:1;
-    uint8_t is_gem_5:1;
+    uint8_t is_star_pink:1;
+    uint8_t is_star_red:1;
+    uint8_t is_star_blue:1;
     uint8_t is_seedpod:1;
     uint8_t is_bomb:1;
     uint8_t is_spam:1;
-    uint8_t is_road:1;
+    uint8_t is_door:1;
     uint8_t is_pipe:1;
     uint8_t is_item_removed_at_level_end:1;
     uint8_t is_scarable:1;
@@ -232,32 +232,32 @@ boolean thing_template_is_wall(thing_templatep);
 boolean thing_template_is_food(thing_templatep);
 boolean thing_template_is_floor(thing_templatep);
 boolean thing_template_is_exit(thing_templatep);
-boolean thing_template_is_gem_0(thing_templatep);
-boolean thing_template_is_rock(thing_templatep);
-boolean thing_template_is_water(thing_templatep);
-boolean thing_template_is_lava(thing_templatep);
-boolean thing_template_is_gem_6(thing_templatep);
-boolean thing_template_is_gem_7(thing_templatep);
-boolean thing_template_is_boulder(thing_templatep);
+boolean thing_template_is_star_yellow(thing_templatep);
+boolean thing_template_is_xxx1(thing_templatep);
+boolean thing_template_is_xxx2(thing_templatep);
+boolean thing_template_is_xxx3(thing_templatep);
+boolean thing_template_is_xxx4(thing_templatep);
+boolean thing_template_is_xxx5(thing_templatep);
+boolean thing_template_is_xxx6(thing_templatep);
 boolean thing_template_is_xxx7(thing_templatep);
 boolean thing_template_is_xxx8(thing_templatep);
 boolean thing_template_is_star(thing_templatep);
 boolean thing_template_is_powerup_spam(thing_templatep);
-boolean thing_template_is_rock_0(thing_templatep);
+boolean thing_template_is_xxx11(thing_templatep);
 boolean thing_template_is_car(thing_templatep);
-boolean thing_template_is_transparent(thing_templatep);
-boolean thing_template_is_radiant(thing_templatep);
-boolean thing_template_is_gem_1(thing_templatep);
-boolean thing_template_is_gem_2(thing_templatep);
+boolean thing_template_is_star_green(thing_templatep);
+boolean thing_template_is_star_cyan(thing_templatep);
+boolean thing_template_is_star_black(thing_templatep);
+boolean thing_template_is_star_purple(thing_templatep);
 boolean thing_template_is_explosion(thing_templatep);
 boolean thing_template_is_spikes(thing_templatep);
-boolean thing_template_is_gem_4(thing_templatep);
-boolean thing_template_is_gem_3(thing_templatep);
-boolean thing_template_is_gem_5(thing_templatep);
+boolean thing_template_is_star_red(thing_templatep);
+boolean thing_template_is_star_pink(thing_templatep);
+boolean thing_template_is_star_blue(thing_templatep);
 boolean thing_template_is_seedpod(thing_templatep);
 boolean thing_template_is_bomb(thing_templatep);
 boolean thing_template_is_spam(thing_templatep);
-boolean thing_template_is_road(thing_templatep);
+boolean thing_template_is_door(thing_templatep);
 boolean thing_template_is_pipe(thing_templatep);
 boolean thing_template_is_item_removed_at_level_end(thing_templatep);
 boolean thing_template_is_scarable(thing_templatep);
@@ -273,7 +273,7 @@ boolean thing_template_is_item_hidden(thing_templatep);
 boolean thing_template_is_bonus_letter(thing_templatep);
 boolean thing_template_is_thing(thing_templatep);
 boolean thing_template_is_plant(thing_templatep);
-boolean thing_template_is_ladder(thing_templatep);
+boolean thing_template_is_letter(thing_templatep);
 boolean thing_template_is_joinable(thing_templatep);
 boolean thing_template_is_effect_sway(thing_templatep);
 boolean thing_template_is_effect_pulse(thing_templatep);
@@ -283,37 +283,37 @@ boolean thing_template_is_effect_rotate_2way(thing_templatep);
 int16_t thing_template_path_cost_is_exit(thing_templatep);
 int16_t thing_template_path_cost_is_floor(thing_templatep);
 int16_t thing_template_path_cost_is_food(thing_templatep);
-int16_t thing_template_path_cost_is_ladder(thing_templatep);
+int16_t thing_template_path_cost_is_letter(thing_templatep);
 int16_t thing_template_path_cost_is_monst(thing_templatep);
 int16_t thing_template_path_cost_is_plant(thing_templatep);
 int16_t thing_template_path_cost_is_player(thing_templatep);
 int16_t thing_template_path_cost_is_snail(thing_templatep);
-int16_t thing_template_path_cost_is_gem_0(thing_templatep);
-int16_t thing_template_path_cost_is_rock(thing_templatep);
-int16_t thing_template_path_cost_is_water(thing_templatep);
-int16_t thing_template_path_cost_is_lava(thing_templatep);
-int16_t thing_template_path_cost_is_gem_6(thing_templatep);
-int16_t thing_template_path_cost_is_gem_7(thing_templatep);
-int16_t thing_template_path_cost_is_boulder(thing_templatep);
+int16_t thing_template_path_cost_is_star_yellow(thing_templatep);
+int16_t thing_template_path_cost_is_xxx1(thing_templatep);
+int16_t thing_template_path_cost_is_xxx2(thing_templatep);
+int16_t thing_template_path_cost_is_xxx3(thing_templatep);
+int16_t thing_template_path_cost_is_xxx4(thing_templatep);
+int16_t thing_template_path_cost_is_xxx5(thing_templatep);
+int16_t thing_template_path_cost_is_xxx6(thing_templatep);
 int16_t thing_template_path_cost_is_xxx7(thing_templatep);
 int16_t thing_template_path_cost_is_xxx8(thing_templatep);
 int16_t thing_template_path_cost_is_star(thing_templatep);
 int16_t thing_template_path_cost_is_powerup_spam(thing_templatep);
-int16_t thing_template_path_cost_is_rock_0(thing_templatep);
+int16_t thing_template_path_cost_is_xxx11(thing_templatep);
 int16_t thing_template_path_cost_is_car(thing_templatep);
-int16_t thing_template_path_cost_is_transparent(thing_templatep);
-int16_t thing_template_path_cost_is_radiant(thing_templatep);
-int16_t thing_template_path_cost_is_gem_1(thing_templatep);
-int16_t thing_template_path_cost_is_gem_2(thing_templatep);
+int16_t thing_template_path_cost_is_star_green(thing_templatep);
+int16_t thing_template_path_cost_is_star_cyan(thing_templatep);
+int16_t thing_template_path_cost_is_star_black(thing_templatep);
+int16_t thing_template_path_cost_is_star_purple(thing_templatep);
 int16_t thing_template_path_cost_is_explosion(thing_templatep);
 int16_t thing_template_path_cost_is_spikes(thing_templatep);
-int16_t thing_template_path_cost_is_gem_4(thing_templatep);
-int16_t thing_template_path_cost_is_gem_3(thing_templatep);
-int16_t thing_template_path_cost_is_gem_5(thing_templatep);
+int16_t thing_template_path_cost_is_star_red(thing_templatep);
+int16_t thing_template_path_cost_is_star_pink(thing_templatep);
+int16_t thing_template_path_cost_is_star_blue(thing_templatep);
 int16_t thing_template_path_cost_is_seedpod(thing_templatep);
 int16_t thing_template_path_cost_is_bomb(thing_templatep);
 int16_t thing_template_path_cost_is_spam(thing_templatep);
-int16_t thing_template_path_cost_is_road(thing_templatep);
+int16_t thing_template_path_cost_is_door(thing_templatep);
 int16_t thing_template_path_cost_is_pipe(thing_templatep);
 int16_t thing_template_path_cost_is_item_removed_at_level_end(thing_templatep);
 int16_t thing_template_path_cost_is_scarable(thing_templatep);
@@ -337,58 +337,6 @@ int16_t thing_template_path_cost_is_effect_rotate_2way(thing_templatep);
 
 tree_rootp thing_template_get_tiles(thing_templatep);
 tree_rootp thing_template_get_tiles2(thing_templatep);
-
-/*
- * Convert a join type into an index
- */
-uint8_t thing_template_join_type_to_index(
-            boolean is_join_block,
-            boolean is_join_horiz,
-            boolean is_join_vert,
-            boolean is_join_node,
-            boolean is_join_left,
-            boolean is_join_right,
-            boolean is_join_top,
-            boolean is_join_bot,
-            boolean is_join_tl,
-            boolean is_join_tr,
-            boolean is_join_bl,
-            boolean is_join_br,
-            boolean is_join_t,
-            boolean is_join_t90,
-            boolean is_join_t180,
-            boolean is_join_t270,
-            boolean is_join_x,
-            boolean is_join_tl2,
-            boolean is_join_tr2,
-            boolean is_join_bl2,
-            boolean is_join_br2,
-            boolean is_join_t_1,
-            boolean is_join_t_2,
-            boolean is_join_t_3,
-            boolean is_join_t90_1,
-            boolean is_join_t90_2,
-            boolean is_join_t90_3,
-            boolean is_join_t180_1,
-            boolean is_join_t180_2,
-            boolean is_join_t180_3,
-            boolean is_join_t270_1,
-            boolean is_join_t270_2,
-            boolean is_join_t270_3,
-            boolean is_join_x1,
-            boolean is_join_x1_270,
-            boolean is_join_x1_180,
-            boolean is_join_x1_90,
-            boolean is_join_x2,
-            boolean is_join_x2_270,
-            boolean is_join_x2_180,
-            boolean is_join_x2_90,
-            boolean is_join_x3,
-            boolean is_join_x3_180,
-            boolean is_join_x4,
-            boolean is_join_x4_270,
-            boolean is_join_x4_180,
-            boolean is_join_x4_90);
 
 extern tree_rootp thing_templates;
 extern tree_rootp thing_templates_create_order;
