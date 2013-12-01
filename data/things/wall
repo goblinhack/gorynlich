@@ -6,10 +6,6 @@
  is_wall
  tiles={
   tile={
-   tile="space"
-   is_join_block
-  }
-  tile={
    tile="wall_0_0"
    is_join_block
   }

@@ -163,10 +163,24 @@ widp wid_editor_map_thing_replace_template (widp w,
 
     br.x += base_tile_width;
     br.y += base_tile_height;
+
     br.x += base_tile_width / 4.0;
     br.y += base_tile_height / 4.0;
+
     br.x += 4;
     br.y += 4;
+
+    tl.x -= base_tile_height / 2.0;
+    br.x -= base_tile_width / 2.0;
+
+    tl.x += base_tile_height / 8.0;
+    br.x += base_tile_width / 8.0;
+
+    tl.y -= base_tile_height / 2.0;
+    br.y -= base_tile_width / 2.0;
+
+    tl.y -= base_tile_height / 4.0;
+    br.y -= base_tile_width / 4.0;
 
     z_depth = thing_template_get_z_depth(thing_template);
     z_order = thing_template_get_z_order(thing_template);
