@@ -6,10 +6,6 @@
  is_door
  tiles={
   tile={
-   tile="space"
-   is_join_block
-  }
-  tile={
    tile="door_0_0"
    is_join_block
   }
