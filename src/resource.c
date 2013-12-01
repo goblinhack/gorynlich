@@ -159,9 +159,9 @@ static boolean resource_init_23 (void *context)
         "floor3b",
         "floor3c",
         "floor3d",
-        0,
-        0,
-        0,
+        "floor4a",
+        "floor4b",
+        "floor4c",
         0,
         0,
         0,
@@ -1217,6 +1217,7 @@ static boolean resource_init_23 (void *context)
     thing_template_load("data/things/floor");
     thing_template_load("data/things/floor2");
     thing_template_load("data/things/floor3");
+    thing_template_load("data/things/floor4");
     thing_template_load("data/things/player");
     thing_template_load("data/things/plant");
     thing_template_load("data/things/seedpod");

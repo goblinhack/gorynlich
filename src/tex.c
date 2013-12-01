@@ -507,6 +507,7 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     SDL_UnlockSurface(out);
 #endif
 
+#ifdef GENERATE_TILES_FROM_TEMPLATE
     /*
      * The first 8 columns of tiles (bricks and the like) we merge with the
      * remaining columns of tiles (edges) to make a combination of the two.
@@ -548,6 +549,7 @@ texp tex_from_tiled_surface (SDL_Surface *in,
             putPixel(out, x, y, c);
         }
     }
+#endif
 
 #ifdef DEBUG_SURFACE2
     SDL_LockSurface(out);

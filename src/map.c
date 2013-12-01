@@ -1270,6 +1270,8 @@ void map_fixup (levelp level)
                 continue;
             }
 
+            memset(nbrs, 0, sizeof(nbrs));
+
             for (dx = -1; dx <= 1; dx++) {
                 for (dy = -1; dy <= 1; dy++) {
 
@@ -1325,7 +1327,7 @@ void map_fixup (levelp level)
 
             uint16_t mask;
 
-#define BLOCK(a,b,c,d,e,f,g,h,i, _index_)                                   \
+#define BLOCK(a,b,c,d,e,f,g,h,i, _index_)                               \
             mask =                                                      \
                 (i << 8) | (h << 7) | (g << 6) | (f << 5) |             \
                 (e << 4) | (d << 3) | (c << 2) | (b << 1) |             \
@@ -1341,193 +1343,53 @@ void map_fixup (levelp level)
                 }                                                       \
             }                                                           \
 
-            BLOCK(1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1, IS_JOIN_BLOCK)
-
-            BLOCK(0, 0, 0,
-                    0, 1, 0,
-                    0, 0, 0, IS_JOIN_NODE)
-
-            BLOCK(0, 0, 0,
-                    0, 1, 1,
-                    0, 0, 0, IS_JOIN_LEFT)
-
-            BLOCK(0, 0, 0,
-                    0, 1, 0,
-                    0, 1, 0, IS_JOIN_TOP)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 0,
-                    0, 0, 0, IS_JOIN_RIGHT)
-
-            BLOCK(0, 1, 0,
-                    0, 1, 0,
-                    0, 0, 0, IS_JOIN_BOT)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 1,
-                    0, 0, 0, IS_JOIN_HORIZ)
-
-            BLOCK(0, 1, 0,
-                    0, 1, 0,
-                    0, 1, 0, IS_JOIN_VERT)
-
-            BLOCK(0, 0, 0,
-                    0, 1, 1,
-                    0, 1, 1, IS_JOIN_TL2)
-
-            BLOCK(0, 1, 1,
-                    0, 1, 1,
-                    0, 0, 0, IS_JOIN_BL2)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 0,
-                    0, 0, 0, IS_JOIN_BR2)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 0,
-                    1, 1, 0, IS_JOIN_TR2)
-
-            BLOCK(0, 0, 0,
-                    0, 1, 1,
-                    0, 1, 0, IS_JOIN_TL)
-
-            BLOCK(0, 1, 0,
-                    0, 1, 1,
-                    0, 0, 0, IS_JOIN_BL)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 0,
-                    0, 0, 0, IS_JOIN_BR)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 0,
-                    0, 1, 0, IS_JOIN_TR)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 0,
-                    1, 1, 0, IS_JOIN_T90_3)
-
-            BLOCK(1, 1, 1,
-                    1, 1, 1,
-                    0, 0, 0, IS_JOIN_T180_3)
-
-            BLOCK(0, 1, 1,
-                    0, 1, 1,
-                    0, 1, 1, IS_JOIN_T270_3)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 1,
-                    1, 1, 1, IS_JOIN_T_3)
-
-            BLOCK(0, 1, 0,
-                    0, 1, 1,
-                    0, 1, 0, IS_JOIN_T270)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0, IS_JOIN_T180)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 0,
-                    0, 1, 0, IS_JOIN_T90)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 1,
-                    0, 1, 0, IS_JOIN_T)
-
-            BLOCK(0, 1, 1,
-                    0, 1, 1,
-                    0, 1, 0, IS_JOIN_T270_2)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0, IS_JOIN_T180_2)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 0,
-                    1, 1, 0, IS_JOIN_T90_2)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 1,
-                    0, 1, 1, IS_JOIN_T_2)
-
-            BLOCK(0, 1, 0,
-                    0, 1, 1,
-                    0, 1, 1, IS_JOIN_T270_1)
-
-            BLOCK(0, 1, 1,
-                    1, 1, 1,
-                    0, 0, 0, IS_JOIN_T180_1)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 0,
-                    0, 1, 0, IS_JOIN_T90_1)
-
-            BLOCK(0, 0, 0,
-                    1, 1, 1,
-                    1, 1, 0, IS_JOIN_T_1)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 1,
-                    0, 1, 0, IS_JOIN_X)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 1,
-                    0, 1, 1, IS_JOIN_X1)
-
-            BLOCK(0, 1, 1,
-                    1, 1, 1,
-                    0, 1, 0, IS_JOIN_X1_270)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 1,
-                    0, 1, 0, IS_JOIN_X1_180)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 1,
-                    1, 1, 0, IS_JOIN_X1_90)
-
-            BLOCK(0, 1, 0,
-                    1, 1, 1,
-                    1, 1, 1, IS_JOIN_X2)
-
-            BLOCK(0, 1, 1,
-                    1, 1, 1,
-                    0, 1, 1, IS_JOIN_X2_270)
-
-            BLOCK(1, 1, 1,
-                    1, 1, 1,
-                    0, 1, 0, IS_JOIN_X2_180)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 1,
-                    1, 1, 0, IS_JOIN_X2_90)
-
-            BLOCK(0, 1, 1,
-                    1, 1, 1,
-                    1, 1, 0, IS_JOIN_X3)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 1,
-                    0, 1, 1, IS_JOIN_X3_180)
-
-            BLOCK(0, 1, 1,
-                    1, 1, 1,
-                    1, 1, 1, IS_JOIN_X4)
-
-            BLOCK(1, 1, 1,
-                    1, 1, 1,
-                    0, 1, 1, IS_JOIN_X4_270)
-
-            BLOCK(1, 1, 1,
-                    1, 1, 1,
-                    1, 1, 0, IS_JOIN_X4_180)
-
-            BLOCK(1, 1, 0,
-                    1, 1, 1,
-                    1, 1, 1, IS_JOIN_X4_90)
+            BLOCK(1,1,1,1,1,1,1,1,1,IS_JOIN_BLOCK)
+            BLOCK(0,0,0,0,1,0,0,0,0,IS_JOIN_NODE)
+            BLOCK(0,0,0,0,1,1,0,0,0,IS_JOIN_LEFT)
+            BLOCK(0,0,0,0,1,0,0,1,0,IS_JOIN_TOP)
+            BLOCK(0,0,0,1,1,0,0,0,0,IS_JOIN_RIGHT)
+            BLOCK(0,1,0,0,1,0,0,0,0,IS_JOIN_BOT)
+            BLOCK(0,0,0,1,1,1,0,0,0,IS_JOIN_HORIZ)
+            BLOCK(0,1,0,0,1,0,0,1,0,IS_JOIN_VERT)
+            BLOCK(0,0,0,0,1,1,0,1,1,IS_JOIN_TL2)
+            BLOCK(0,1,1,0,1,1,0,0,0,IS_JOIN_BL2)
+            BLOCK(1,1,0,1,1,0,0,0,0,IS_JOIN_BR2)
+            BLOCK(0,0,0,1,1,0,1,1,0,IS_JOIN_TR2)
+            BLOCK(0,0,0,0,1,1,0,1,0,IS_JOIN_TL)
+            BLOCK(0,1,0,0,1,1,0,0,0,IS_JOIN_BL)
+            BLOCK(0,1,0,1,1,0,0,0,0,IS_JOIN_BR)
+            BLOCK(0,0,0,1,1,0,0,1,0,IS_JOIN_TR)
+            BLOCK(1,1,0,1,1,0,1,1,0,IS_JOIN_T90_3)
+            BLOCK(1,1,1,1,1,1,0,0,0,IS_JOIN_T180_3)
+            BLOCK(0,1,1,0,1,1,0,1,1,IS_JOIN_T270_3)
+            BLOCK(0,0,0,1,1,1,1,1,1,IS_JOIN_T_3)
+            BLOCK(0,1,0,0,1,1,0,1,0,IS_JOIN_T270)
+            BLOCK(0,1,0,1,1,1,0,0,0,IS_JOIN_T180)
+            BLOCK(0,1,0,1,1,0,0,1,0,IS_JOIN_T90)
+            BLOCK(0,0,0,1,1,1,0,1,0,IS_JOIN_T)
+            BLOCK(0,1,1,0,1,1,0,1,0,IS_JOIN_T270_2)
+            BLOCK(1,1,0,1,1,1,0,0,0,IS_JOIN_T180_2)
+            BLOCK(0,1,0,1,1,0,1,1,0,IS_JOIN_T90_2)
+            BLOCK(0,0,0,1,1,1,0,1,1,IS_JOIN_T_2)
+            BLOCK(0,1,0,0,1,1,0,1,1,IS_JOIN_T270_1)
+            BLOCK(0,1,1,1,1,1,0,0,0,IS_JOIN_T180_1)
+            BLOCK(1,1,0,1,1,0,0,1,0,IS_JOIN_T90_1)
+            BLOCK(0,0,0,1,1,1,1,1,0,IS_JOIN_T_1)
+            BLOCK(0,1,0,1,1,1,0,1,0,IS_JOIN_X)
+            BLOCK(0,1,0,1,1,1,0,1,1,IS_JOIN_X1)
+            BLOCK(0,1,1,1,1,1,0,1,0,IS_JOIN_X1_270)
+            BLOCK(1,1,0,1,1,1,0,1,0,IS_JOIN_X1_180)
+            BLOCK(0,1,0,1,1,1,1,1,0,IS_JOIN_X1_90)
+            BLOCK(0,1,0,1,1,1,1,1,1,IS_JOIN_X2)
+            BLOCK(0,1,1,1,1,1,0,1,1,IS_JOIN_X2_270)
+            BLOCK(1,1,1,1,1,1,0,1,0,IS_JOIN_X2_180)
+            BLOCK(1,1,0,1,1,1,1,1,0,IS_JOIN_X2_90)
+            BLOCK(0,1,1,1,1,1,1,1,0,IS_JOIN_X3)
+            BLOCK(1,1,0,1,1,1,0,1,1,IS_JOIN_X3_180)
+            BLOCK(0,1,1,1,1,1,1,1,1,IS_JOIN_X4)
+            BLOCK(1,1,1,1,1,1,0,1,1,IS_JOIN_X4_270)
+            BLOCK(1,1,1,1,1,1,1,1,0,IS_JOIN_X4_180)
+            BLOCK(1,1,0,1,1,1,1,1,1,IS_JOIN_X4_90)
 
             if (index == -1) {
                 DIE("%u%u%u %u%u%u %u%u%u not handled",
@@ -1548,9 +1410,14 @@ void map_fixup (levelp level)
             if (!thing_tile) {
                 index = IS_JOIN_BLOCK;
 
-                thing_tile_find(t, index, &tile);
-                if (!tile) {
-                    DIE("no joinable tile for %s", thing_template_name(t));
+                thing_tile = thing_tile_find(t, index, &tile);
+                if (!thing_tile) {
+                    index = IS_JOIN_NODE;
+
+                    thing_tile = thing_tile_find(t, index, &tile);
+                    if (!thing_tile) {
+                        DIE("no joinable tile for %s", thing_template_name(t));
+                    }
                 }
             }
 
@@ -1560,6 +1427,7 @@ void map_fixup (levelp level)
 
             const char *tilename = thing_tile_name(thing_tile);
 
+            LOG("%d %d %s",x,y,tilename);
             if (!tilename) {
                 DIE("no tilename for %s", thing_template_name(e));
             }
@@ -1568,6 +1436,7 @@ void map_fixup (levelp level)
             wid_set_font(w, small_font);
         }
     }
+    LOG( " ");
 }
 
 static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)
