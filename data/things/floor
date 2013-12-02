@@ -8,5 +8,11 @@
   tile={
    tile="floor1a"
   }
+  tile={
+   tile="floor1b"
+  }
+  tile={
+   tile="floor1c"
+  }
  }
 }
