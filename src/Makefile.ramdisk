@@ -1,23 +1,8 @@
 .o/ramdisk_data__player_session.o: asm/ramdisk_data__player_session.S ../data/.player.session
 	gcc -c asm/ramdisk_data__player_session.S -o .o/ramdisk_data__player_session.o
 
-.o/ramdisk_data_gfx_background_grass_png.o: asm/ramdisk_data_gfx_background_grass_png.S ../data/gfx/background_grass.png
-	gcc -c asm/ramdisk_data_gfx_background_grass_png.S -o .o/ramdisk_data_gfx_background_grass_png.o
-
 .o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
 	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
-
-.o/ramdisk_data_gfx_esnail_png.o: asm/ramdisk_data_gfx_esnail_png.S ../data/gfx/esnail.png
-	gcc -c asm/ramdisk_data_gfx_esnail_png.S -o .o/ramdisk_data_gfx_esnail_png.o
-
-.o/ramdisk_data_gfx_esnail_happy_png.o: asm/ramdisk_data_gfx_esnail_happy_png.S ../data/gfx/esnail_happy.png
-	gcc -c asm/ramdisk_data_gfx_esnail_happy_png.S -o .o/ramdisk_data_gfx_esnail_happy_png.o
-
-.o/ramdisk_data_gfx_esnail_sad_png.o: asm/ramdisk_data_gfx_esnail_sad_png.S ../data/gfx/esnail_sad.png
-	gcc -c asm/ramdisk_data_gfx_esnail_sad_png.S -o .o/ramdisk_data_gfx_esnail_sad_png.o
-
-.o/ramdisk_data_gfx_explosion_png.o: asm/ramdisk_data_gfx_explosion_png.S ../data/gfx/explosion.png
-	gcc -c asm/ramdisk_data_gfx_explosion_png.S -o .o/ramdisk_data_gfx_explosion_png.o
 
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
@@ -31,47 +16,11 @@
 .o/ramdisk_data_gfx_help3_png.o: asm/ramdisk_data_gfx_help3_png.S ../data/gfx/help3.png
 	gcc -c asm/ramdisk_data_gfx_help3_png.S -o .o/ramdisk_data_gfx_help3_png.o
 
-.o/ramdisk_data_gfx_mailsnail_png.o: asm/ramdisk_data_gfx_mailsnail_png.S ../data/gfx/mailsnail.png
-	gcc -c asm/ramdisk_data_gfx_mailsnail_png.S -o .o/ramdisk_data_gfx_mailsnail_png.o
-
-.o/ramdisk_data_gfx_pipes_png.o: asm/ramdisk_data_gfx_pipes_png.S ../data/gfx/pipes.png
-	gcc -c asm/ramdisk_data_gfx_pipes_png.S -o .o/ramdisk_data_gfx_pipes_png.o
-
-.o/ramdisk_data_gfx_plant_png.o: asm/ramdisk_data_gfx_plant_png.S ../data/gfx/plant.png
-	gcc -c asm/ramdisk_data_gfx_plant_png.S -o .o/ramdisk_data_gfx_plant_png.o
-
 .o/ramdisk_data_gfx_rat_png.o: asm/ramdisk_data_gfx_rat_png.S ../data/gfx/rat.png
 	gcc -c asm/ramdisk_data_gfx_rat_png.S -o .o/ramdisk_data_gfx_rat_png.o
 
-.o/ramdisk_data_gfx_road_png.o: asm/ramdisk_data_gfx_road_png.S ../data/gfx/road.png
-	gcc -c asm/ramdisk_data_gfx_road_png.S -o .o/ramdisk_data_gfx_road_png.o
-
-.o/ramdisk_data_gfx_rocket_png.o: asm/ramdisk_data_gfx_rocket_png.S ../data/gfx/rocket.png
-	gcc -c asm/ramdisk_data_gfx_rocket_png.S -o .o/ramdisk_data_gfx_rocket_png.o
-
 .o/ramdisk_data_gfx_shell_png.o: asm/ramdisk_data_gfx_shell_png.S ../data/gfx/shell.png
 	gcc -c asm/ramdisk_data_gfx_shell_png.S -o .o/ramdisk_data_gfx_shell_png.o
-
-.o/ramdisk_data_gfx_snailly_png.o: asm/ramdisk_data_gfx_snailly_png.S ../data/gfx/snailly.png
-	gcc -c asm/ramdisk_data_gfx_snailly_png.S -o .o/ramdisk_data_gfx_snailly_png.o
-
-.o/ramdisk_data_gfx_snailly_happy_png.o: asm/ramdisk_data_gfx_snailly_happy_png.S ../data/gfx/snailly_happy.png
-	gcc -c asm/ramdisk_data_gfx_snailly_happy_png.S -o .o/ramdisk_data_gfx_snailly_happy_png.o
-
-.o/ramdisk_data_gfx_snailly_sad_png.o: asm/ramdisk_data_gfx_snailly_sad_png.S ../data/gfx/snailly_sad.png
-	gcc -c asm/ramdisk_data_gfx_snailly_sad_png.S -o .o/ramdisk_data_gfx_snailly_sad_png.o
-
-.o/ramdisk_data_gfx_snails_png.o: asm/ramdisk_data_gfx_snails_png.S ../data/gfx/snails.png
-	gcc -c asm/ramdisk_data_gfx_snails_png.S -o .o/ramdisk_data_gfx_snails_png.o
-
-.o/ramdisk_data_gfx_sprites_large_png.o: asm/ramdisk_data_gfx_sprites_large_png.S ../data/gfx/sprites_large.png
-	gcc -c asm/ramdisk_data_gfx_sprites_large_png.S -o .o/ramdisk_data_gfx_sprites_large_png.o
-
-.o/ramdisk_data_gfx_sprites_med_png.o: asm/ramdisk_data_gfx_sprites_med_png.S ../data/gfx/sprites_med.png
-	gcc -c asm/ramdisk_data_gfx_sprites_med_png.S -o .o/ramdisk_data_gfx_sprites_med_png.o
-
-.o/ramdisk_data_gfx_sprites_med2_png.o: asm/ramdisk_data_gfx_sprites_med2_png.S ../data/gfx/sprites_med2.png
-	gcc -c asm/ramdisk_data_gfx_sprites_med2_png.S -o .o/ramdisk_data_gfx_sprites_med2_png.o
 
 .o/ramdisk_data_gfx_sprites_small_png.o: asm/ramdisk_data_gfx_sprites_small_png.S ../data/gfx/sprites_small.png
 	gcc -c asm/ramdisk_data_gfx_sprites_small_png.S -o .o/ramdisk_data_gfx_sprites_small_png.o
@@ -244,6 +193,12 @@
 .o/ramdisk_data_ttf_large_ttf_pointsize40_tga.o: asm/ramdisk_data_ttf_large_ttf_pointsize40_tga.S ../data/ttf/large.ttf_pointsize40.tga
 	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize40_tga.S -o .o/ramdisk_data_ttf_large_ttf_pointsize40_tga.o
 
+.o/ramdisk_data_ttf_large_ttf_pointsize50_data.o: asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S ../data/ttf/large.ttf_pointsize50.data
+	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S -o .o/ramdisk_data_ttf_large_ttf_pointsize50_data.o
+
+.o/ramdisk_data_ttf_large_ttf_pointsize50_tga.o: asm/ramdisk_data_ttf_large_ttf_pointsize50_tga.S ../data/ttf/large.ttf_pointsize50.tga
+	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize50_tga.S -o .o/ramdisk_data_ttf_large_ttf_pointsize50_tga.o
+
 .o/ramdisk_data_ttf_LICENSE_txt.o: asm/ramdisk_data_ttf_LICENSE_txt.S ../data/ttf/LICENSE.txt
 	gcc -c asm/ramdisk_data_ttf_LICENSE_txt.S -o .o/ramdisk_data_ttf_LICENSE_txt.o
 
@@ -264,6 +219,15 @@
 
 .o/ramdisk_data_ttf_med_ttf_pointsize30_tga.o: asm/ramdisk_data_ttf_med_ttf_pointsize30_tga.S ../data/ttf/med.ttf_pointsize30.tga
 	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize30_tga.S -o .o/ramdisk_data_ttf_med_ttf_pointsize30_tga.o
+
+.o/ramdisk_data_ttf_med_ttf_pointsize40_data.o: asm/ramdisk_data_ttf_med_ttf_pointsize40_data.S ../data/ttf/med.ttf_pointsize40.data
+	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize40_data.S -o .o/ramdisk_data_ttf_med_ttf_pointsize40_data.o
+
+.o/ramdisk_data_ttf_med_ttf_pointsize40_tga.o: asm/ramdisk_data_ttf_med_ttf_pointsize40_tga.S ../data/ttf/med.ttf_pointsize40.tga
+	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize40_tga.S -o .o/ramdisk_data_ttf_med_ttf_pointsize40_tga.o
+
+.o/ramdisk_data_ttf_Readme_txt.o: asm/ramdisk_data_ttf_Readme_txt.S ../data/ttf/Readme.txt
+	gcc -c asm/ramdisk_data_ttf_Readme_txt.S -o .o/ramdisk_data_ttf_Readme_txt.o
 
 .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S ../data/ttf/small.ttf_pointsize20.data
 	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o

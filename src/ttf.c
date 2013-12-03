@@ -532,7 +532,11 @@ ttf_set_color_key (SDL_Surface *glyph_surface,
     SDL_FillRect(tmp, 0, colorkey);
 
     colorkey = SDL_MapRGBA(glyph_surface->format, ckr, ckg, ckb, 0);
+#if (SDL_MAJOR_VERSION == 2)
+    SDL_SetColorKey(glyph_surface, SDL_TRUE, colorkey);
+#else
     SDL_SetColorKey(glyph_surface, SDL_SRCCOLORKEY, colorkey);
+#endif
 
     SDL_FreeSurface(tmp);
     oldptr(tmp);
@@ -571,7 +575,8 @@ ttf_create_tex_from_char (TTF_Font *ttf, const char *name, font *f, uint8_t c)
         return;
     }
 
-    SDL_Surface *g1 = SDL_DisplayFormat(g0);
+    SDL_Surface *g1 = 
+            TTF_RenderText_Shaded(ttf, text, f->foreground, f->background);
     if (!g1) {
         ERR("error getting display format for font glyph %u %s", c, name);
         return;
@@ -850,6 +855,7 @@ ttf_write_tga (char *name, int32_t pointsize)
 
     fclose(out);
 
+    printf("wrote %s\n",filename);
     return (f);
 }
 #endif
