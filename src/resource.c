@@ -21,14 +21,13 @@ static boolean resource_init_1 (void *context)
 
 static boolean resource_init_2 (void *context)
 {
-    return (tex_load("data/gfx/explosion.png",
-                     "explosion") != 0);
+    return (true);
 }
 
 static boolean resource_init_3 (void *context)
 {
-    return (tex_load("data/gfx/mailsnail.png",
-                     "mailsnail") != 0);
+    return (tex_load("data/gfx/title.png",
+                     "title") != 0);
 }
 
 static boolean resource_init_4 (void *context)
@@ -51,86 +50,72 @@ static boolean resource_init_6 (void *context)
 
 static boolean resource_init_7 (void *context)
 {
-    return (tex_load("data/gfx/background_grass.png",
-                     "background_grass") != 0);
+    return (true);
 }
 
 static boolean resource_init_8 (void *context)
 {
-    return (tex_load("data/gfx/snailly_happy.png",
-                     "snailly_happy") != 0);
+    return (true);
 }
 
 static boolean resource_init_9 (void *context)
 {
-    return (tex_load("data/gfx/snailly_sad.png",
-                     "snailly_sad") != 0);
+    return (true);
 }
 
 static boolean resource_init_10 (void *context)
 {
-    return (tex_load("data/gfx/esnail.png",
-                     "esnail") != 0);
+    return (true);
 }
 
 static boolean resource_init_11 (void *context)
 {
-    return (tex_load("data/gfx/esnail_happy.png",
-                     "esnail_happy") != 0);
+    return (true);
 }
 
 static boolean resource_init_12 (void *context)
 {
-    return (tex_load("data/gfx/esnail_sad.png",
-                     "esnail_sad") != 0);
+    return (true);
 }
 
 static boolean resource_init_13 (void *context)
 {
-    return (tex_load("data/gfx/pipes.png",
-                     "pipes") != 0);
+    return (true);
 }
 
 static boolean resource_init_14 (void *context)
 {
-    return (tex_load("data/gfx/plant.png",
-                     "plant") != 0);
+    return (true);
 }
 
 static boolean resource_init_15 (void *context)
 {
-    return (tex_load("data/gfx/road.png",
-                     "road") != 0);
+    return (true);
 }
 
 static boolean resource_init_16 (void *context)
 {
-    return (tex_load("data/gfx/rocket.png",
-                     "rocket") != 0);
+    return (true);
 }
 
 static boolean resource_init_17 (void *context)
 {
-    return (tex_load("data/gfx/snails.png",
-                     "snails") != 0);
+    return (true);
 }
 
 static boolean resource_init_18 (void *context)
 {
-    return (tex_load("data/gfx/sprites_large.png",
-                     "sprites_large") != 0);
+    return (true);
 }
 
 static boolean resource_init_19 (void *context)
 {
-    return (tex_load("data/gfx/sprites_med.png",
-                     "sprites_med") != 0);
+    return (true);
 }
 
 static boolean resource_init_20 (void *context)
 {
-    return (tex_load("data/gfx/sprites_med2.png",
-                     "sprites_med2") != 0);
+    return (true);
 }
 
 static boolean resource_init_21 (void *context)
