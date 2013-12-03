@@ -32,14 +32,14 @@ widp wid_editor_wid_dec;
 
 static widp wid_editor_buttons_vert_scroll;
 
-static float wid_tile_height = 0.15;
+static float wid_tile_height = 0.05;
 
 static float wid_button_width = 1.0f / 4.0f;
 static float wid_button_height = 1.0f / 3.0f;
 
 static const int32_t ICONS_ACROSS = 4;
 static const int32_t TILES_ACROSS = 6;
-static const int32_t TILES_DOWN = 4;
+static const int32_t TILES_DOWN = 16;
 
 /*
  * Mouse up etc...
@@ -305,20 +305,21 @@ void wid_editor_buttons_wid_create (void)
     }
 
     {
-        fpoint tl = {1.0f, 0.6f};
-        fpoint br = {1.4f, 1.0f};
+        fpoint tl = {1.7f, 0.0f};
+        fpoint br = {2.0f, 1.0f};
 
         wid_editor_buttons_window =
                         wid_new_square_window("wid_editor_buttons");
 
         wid_set_mode(wid_editor_buttons_window, WID_MODE_NORMAL);
 
-        wid_set_color(wid_editor_buttons_window, WID_COLOR_BG, DARKBLUE);
-        wid_set_color(wid_editor_buttons_window, WID_COLOR_TL, DARKBLUE);
+        wid_set_color(wid_editor_buttons_window, WID_COLOR_BG, BLACK);
+        wid_set_color(wid_editor_buttons_window, WID_COLOR_TL, BLACK);
         wid_set_color(wid_editor_buttons_window, WID_COLOR_BR, BLACK);
+        wid_set_movable(wid_editor_buttons_window, false);
 
         wid_set_text_advance(wid_editor_buttons_window, 0.9f);
-        wid_set_text_scaling(wid_editor_buttons_window, 2.0f);
+        wid_set_text_scaling(wid_editor_buttons_window, 1.0f);
         wid_set_text_pos(wid_editor_buttons_window, true, 0.5f, 0.10f);
         wid_set_text_outline(wid_editor_buttons_window, true);
 

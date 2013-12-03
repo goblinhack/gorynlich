@@ -1427,7 +1427,6 @@ void map_fixup (levelp level)
 
             const char *tilename = thing_tile_name(thing_tile);
 
-            LOG("%d %d %s",x,y,tilename);
             if (!tilename) {
                 DIE("no tilename for %s", thing_template_name(e));
             }
@@ -1436,7 +1435,6 @@ void map_fixup (levelp level)
             wid_set_font(w, small_font);
         }
     }
-    LOG( " ");
 }
 
 static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)

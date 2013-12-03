@@ -148,8 +148,17 @@
 .o/ramdisk_data_things__floor_session.o: asm/ramdisk_data_things__floor_session.S ../data/things/.floor.session
 	gcc -c asm/ramdisk_data_things__floor_session.S -o .o/ramdisk_data_things__floor_session.o
 
+.o/ramdisk_data_things__floor1_session.o: asm/ramdisk_data_things__floor1_session.S ../data/things/.floor1.session
+	gcc -c asm/ramdisk_data_things__floor1_session.S -o .o/ramdisk_data_things__floor1_session.o
+
+.o/ramdisk_data_things__floor2_session.o: asm/ramdisk_data_things__floor2_session.S ../data/things/.floor2.session
+	gcc -c asm/ramdisk_data_things__floor2_session.S -o .o/ramdisk_data_things__floor2_session.o
+
 .o/ramdisk_data_things__floor3_session.o: asm/ramdisk_data_things__floor3_session.S ../data/things/.floor3.session
 	gcc -c asm/ramdisk_data_things__floor3_session.S -o .o/ramdisk_data_things__floor3_session.o
+
+.o/ramdisk_data_things__floor4_session.o: asm/ramdisk_data_things__floor4_session.S ../data/things/.floor4.session
+	gcc -c asm/ramdisk_data_things__floor4_session.S -o .o/ramdisk_data_things__floor4_session.o
 
 .o/ramdisk_data_things__food_session.o: asm/ramdisk_data_things__food_session.S ../data/things/.food.session
 	gcc -c asm/ramdisk_data_things__food_session.S -o .o/ramdisk_data_things__food_session.o
@@ -162,6 +171,9 @@
 
 .o/ramdisk_data_things__wall_session.o: asm/ramdisk_data_things__wall_session.S ../data/things/.wall.session
 	gcc -c asm/ramdisk_data_things__wall_session.S -o .o/ramdisk_data_things__wall_session.o
+
+.o/ramdisk_data_things__wall2_session.o: asm/ramdisk_data_things__wall2_session.S ../data/things/.wall2.session
+	gcc -c asm/ramdisk_data_things__wall2_session.S -o .o/ramdisk_data_things__wall2_session.o
 
 .o/ramdisk_data_things_bomb.o: asm/ramdisk_data_things_bomb.S ../data/things/bomb
 	gcc -c asm/ramdisk_data_things_bomb.S -o .o/ramdisk_data_things_bomb.o
@@ -183,6 +195,9 @@
 
 .o/ramdisk_data_things_floor3.o: asm/ramdisk_data_things_floor3.S ../data/things/floor3
 	gcc -c asm/ramdisk_data_things_floor3.S -o .o/ramdisk_data_things_floor3.o
+
+.o/ramdisk_data_things_floor4.o: asm/ramdisk_data_things_floor4.S ../data/things/floor4
+	gcc -c asm/ramdisk_data_things_floor4.S -o .o/ramdisk_data_things_floor4.o
 
 .o/ramdisk_data_things_food.o: asm/ramdisk_data_things_food.S ../data/things/food
 	gcc -c asm/ramdisk_data_things_food.S -o .o/ramdisk_data_things_food.o
@@ -207,6 +222,9 @@
 
 .o/ramdisk_data_things_wall.o: asm/ramdisk_data_things_wall.S ../data/things/wall
 	gcc -c asm/ramdisk_data_things_wall.S -o .o/ramdisk_data_things_wall.o
+
+.o/ramdisk_data_things_wall2.o: asm/ramdisk_data_things_wall2.S ../data/things/wall2
+	gcc -c asm/ramdisk_data_things_wall2.S -o .o/ramdisk_data_things_wall2.o
 
 .o/ramdisk_data_ttf_large_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_large_ttf_pointsize20_data.S ../data/ttf/large.ttf_pointsize20.data
 	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_large_ttf_pointsize20_data.o
@@ -247,33 +265,9 @@
 .o/ramdisk_data_ttf_med_ttf_pointsize30_tga.o: asm/ramdisk_data_ttf_med_ttf_pointsize30_tga.S ../data/ttf/med.ttf_pointsize30.tga
 	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize30_tga.S -o .o/ramdisk_data_ttf_med_ttf_pointsize30_tga.o
 
-.o/ramdisk_data_ttf_small_ttf_pointsize14_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize14_data.S ../data/ttf/small.ttf_pointsize14.data
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize14_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize14_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize14_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize14_tga.S ../data/ttf/small.ttf_pointsize14.tga
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize14_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize14_tga.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize16_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize16_data.S ../data/ttf/small.ttf_pointsize16.data
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize16_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize16_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize16_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize16_tga.S ../data/ttf/small.ttf_pointsize16.tga
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize16_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize16_tga.o
-
 .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S ../data/ttf/small.ttf_pointsize20.data
 	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o
 
 .o/ramdisk_data_ttf_small_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_tga.S ../data/ttf/small.ttf_pointsize20.tga
 	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_tga.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize30_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize30_data.S ../data/ttf/small.ttf_pointsize30.data
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize30_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize30_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize30_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize30_tga.S ../data/ttf/small.ttf_pointsize30.tga
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize30_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize30_tga.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize8_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize8_data.S ../data/ttf/small.ttf_pointsize8.data
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize8_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize8_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize8_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize8_tga.S ../data/ttf/small.ttf_pointsize8.tga
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize8_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize8_tga.o
 
