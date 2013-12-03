@@ -414,48 +414,6 @@ static const unsigned char *const data_things_wall2_start =
 static const unsigned char *const data_things_wall2_end   =
     (const unsigned char *const) (char*)&data_things_wall2_end_;
 
-extern unsigned char *data_ttf_large_ttf_pointsize20_data_start_ asm("data_ttf_large_ttf_pointsize20_data_start_");
-extern unsigned char *data_ttf_large_ttf_pointsize20_data_end_ asm("data_ttf_large_ttf_pointsize20_data_end_");
-static const unsigned char *const data_ttf_large_ttf_pointsize20_data_start =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize20_data_start_;
-static const unsigned char *const data_ttf_large_ttf_pointsize20_data_end   =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize20_data_end_;
-
-extern unsigned char *data_ttf_large_ttf_pointsize20_tga_start_ asm("data_ttf_large_ttf_pointsize20_tga_start_");
-extern unsigned char *data_ttf_large_ttf_pointsize20_tga_end_ asm("data_ttf_large_ttf_pointsize20_tga_end_");
-static const unsigned char *const data_ttf_large_ttf_pointsize20_tga_start =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize20_tga_start_;
-static const unsigned char *const data_ttf_large_ttf_pointsize20_tga_end   =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize20_tga_end_;
-
-extern unsigned char *data_ttf_large_ttf_pointsize30_data_start_ asm("data_ttf_large_ttf_pointsize30_data_start_");
-extern unsigned char *data_ttf_large_ttf_pointsize30_data_end_ asm("data_ttf_large_ttf_pointsize30_data_end_");
-static const unsigned char *const data_ttf_large_ttf_pointsize30_data_start =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize30_data_start_;
-static const unsigned char *const data_ttf_large_ttf_pointsize30_data_end   =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize30_data_end_;
-
-extern unsigned char *data_ttf_large_ttf_pointsize30_tga_start_ asm("data_ttf_large_ttf_pointsize30_tga_start_");
-extern unsigned char *data_ttf_large_ttf_pointsize30_tga_end_ asm("data_ttf_large_ttf_pointsize30_tga_end_");
-static const unsigned char *const data_ttf_large_ttf_pointsize30_tga_start =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize30_tga_start_;
-static const unsigned char *const data_ttf_large_ttf_pointsize30_tga_end   =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize30_tga_end_;
-
-extern unsigned char *data_ttf_large_ttf_pointsize40_data_start_ asm("data_ttf_large_ttf_pointsize40_data_start_");
-extern unsigned char *data_ttf_large_ttf_pointsize40_data_end_ asm("data_ttf_large_ttf_pointsize40_data_end_");
-static const unsigned char *const data_ttf_large_ttf_pointsize40_data_start =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize40_data_start_;
-static const unsigned char *const data_ttf_large_ttf_pointsize40_data_end   =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize40_data_end_;
-
-extern unsigned char *data_ttf_large_ttf_pointsize40_tga_start_ asm("data_ttf_large_ttf_pointsize40_tga_start_");
-extern unsigned char *data_ttf_large_ttf_pointsize40_tga_end_ asm("data_ttf_large_ttf_pointsize40_tga_end_");
-static const unsigned char *const data_ttf_large_ttf_pointsize40_tga_start =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize40_tga_start_;
-static const unsigned char *const data_ttf_large_ttf_pointsize40_tga_end   =
-    (const unsigned char *const) (char*)&data_ttf_large_ttf_pointsize40_tga_end_;
-
 extern unsigned char *data_ttf_large_ttf_pointsize50_data_start_ asm("data_ttf_large_ttf_pointsize50_data_start_");
 extern unsigned char *data_ttf_large_ttf_pointsize50_data_end_ asm("data_ttf_large_ttf_pointsize50_data_end_");
 static const unsigned char *const data_ttf_large_ttf_pointsize50_data_start =
@@ -476,48 +434,6 @@ static const unsigned char *const data_ttf_LICENSE_txt_start =
     (const unsigned char *const) (char*)&data_ttf_LICENSE_txt_start_;
 static const unsigned char *const data_ttf_LICENSE_txt_end   =
     (const unsigned char *const) (char*)&data_ttf_LICENSE_txt_end_;
-
-extern unsigned char *data_ttf_med_ttf_pointsize12_data_start_ asm("data_ttf_med_ttf_pointsize12_data_start_");
-extern unsigned char *data_ttf_med_ttf_pointsize12_data_end_ asm("data_ttf_med_ttf_pointsize12_data_end_");
-static const unsigned char *const data_ttf_med_ttf_pointsize12_data_start =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize12_data_start_;
-static const unsigned char *const data_ttf_med_ttf_pointsize12_data_end   =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize12_data_end_;
-
-extern unsigned char *data_ttf_med_ttf_pointsize12_tga_start_ asm("data_ttf_med_ttf_pointsize12_tga_start_");
-extern unsigned char *data_ttf_med_ttf_pointsize12_tga_end_ asm("data_ttf_med_ttf_pointsize12_tga_end_");
-static const unsigned char *const data_ttf_med_ttf_pointsize12_tga_start =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize12_tga_start_;
-static const unsigned char *const data_ttf_med_ttf_pointsize12_tga_end   =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize12_tga_end_;
-
-extern unsigned char *data_ttf_med_ttf_pointsize20_data_start_ asm("data_ttf_med_ttf_pointsize20_data_start_");
-extern unsigned char *data_ttf_med_ttf_pointsize20_data_end_ asm("data_ttf_med_ttf_pointsize20_data_end_");
-static const unsigned char *const data_ttf_med_ttf_pointsize20_data_start =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize20_data_start_;
-static const unsigned char *const data_ttf_med_ttf_pointsize20_data_end   =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize20_data_end_;
-
-extern unsigned char *data_ttf_med_ttf_pointsize20_tga_start_ asm("data_ttf_med_ttf_pointsize20_tga_start_");
-extern unsigned char *data_ttf_med_ttf_pointsize20_tga_end_ asm("data_ttf_med_ttf_pointsize20_tga_end_");
-static const unsigned char *const data_ttf_med_ttf_pointsize20_tga_start =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize20_tga_start_;
-static const unsigned char *const data_ttf_med_ttf_pointsize20_tga_end   =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize20_tga_end_;
-
-extern unsigned char *data_ttf_med_ttf_pointsize30_data_start_ asm("data_ttf_med_ttf_pointsize30_data_start_");
-extern unsigned char *data_ttf_med_ttf_pointsize30_data_end_ asm("data_ttf_med_ttf_pointsize30_data_end_");
-static const unsigned char *const data_ttf_med_ttf_pointsize30_data_start =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize30_data_start_;
-static const unsigned char *const data_ttf_med_ttf_pointsize30_data_end   =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize30_data_end_;
-
-extern unsigned char *data_ttf_med_ttf_pointsize30_tga_start_ asm("data_ttf_med_ttf_pointsize30_tga_start_");
-extern unsigned char *data_ttf_med_ttf_pointsize30_tga_end_ asm("data_ttf_med_ttf_pointsize30_tga_end_");
-static const unsigned char *const data_ttf_med_ttf_pointsize30_tga_start =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize30_tga_start_;
-static const unsigned char *const data_ttf_med_ttf_pointsize30_tga_end   =
-    (const unsigned char *const) (char*)&data_ttf_med_ttf_pointsize30_tga_end_;
 
 extern unsigned char *data_ttf_med_ttf_pointsize40_data_start_ asm("data_ttf_med_ttf_pointsize40_data_start_");
 extern unsigned char *data_ttf_med_ttf_pointsize40_data_end_ asm("data_ttf_med_ttf_pointsize40_data_end_");
@@ -733,24 +649,6 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/things/wall2",
 },
 {
-    /* filename */ "data/ttf/large.ttf_pointsize20.data",
-},
-{
-    /* filename */ "data/ttf/large.ttf_pointsize20.tga",
-},
-{
-    /* filename */ "data/ttf/large.ttf_pointsize30.data",
-},
-{
-    /* filename */ "data/ttf/large.ttf_pointsize30.tga",
-},
-{
-    /* filename */ "data/ttf/large.ttf_pointsize40.data",
-},
-{
-    /* filename */ "data/ttf/large.ttf_pointsize40.tga",
-},
-{
     /* filename */ "data/ttf/large.ttf_pointsize50.data",
 },
 {
@@ -758,24 +656,6 @@ ramdisk_t ramdisk_data[] = {
 },
 {
     /* filename */ "data/ttf/LICENSE.txt",
-},
-{
-    /* filename */ "data/ttf/med.ttf_pointsize12.data",
-},
-{
-    /* filename */ "data/ttf/med.ttf_pointsize12.tga",
-},
-{
-    /* filename */ "data/ttf/med.ttf_pointsize20.data",
-},
-{
-    /* filename */ "data/ttf/med.ttf_pointsize20.tga",
-},
-{
-    /* filename */ "data/ttf/med.ttf_pointsize30.data",
-},
-{
-    /* filename */ "data/ttf/med.ttf_pointsize30.tga",
 },
 {
     /* filename */ "data/ttf/med.ttf_pointsize40.data",
@@ -915,44 +795,20 @@ void ramdisk_init (void)
     ramdisk_data[57].len = data_things_wall_end - data_things_wall_start;
     ramdisk_data[58].data = data_things_wall2_start;
     ramdisk_data[58].len = data_things_wall2_end - data_things_wall2_start;
-    ramdisk_data[59].data = data_ttf_large_ttf_pointsize20_data_start;
-    ramdisk_data[59].len = data_ttf_large_ttf_pointsize20_data_end - data_ttf_large_ttf_pointsize20_data_start;
-    ramdisk_data[60].data = data_ttf_large_ttf_pointsize20_tga_start;
-    ramdisk_data[60].len = data_ttf_large_ttf_pointsize20_tga_end - data_ttf_large_ttf_pointsize20_tga_start;
-    ramdisk_data[61].data = data_ttf_large_ttf_pointsize30_data_start;
-    ramdisk_data[61].len = data_ttf_large_ttf_pointsize30_data_end - data_ttf_large_ttf_pointsize30_data_start;
-    ramdisk_data[62].data = data_ttf_large_ttf_pointsize30_tga_start;
-    ramdisk_data[62].len = data_ttf_large_ttf_pointsize30_tga_end - data_ttf_large_ttf_pointsize30_tga_start;
-    ramdisk_data[63].data = data_ttf_large_ttf_pointsize40_data_start;
-    ramdisk_data[63].len = data_ttf_large_ttf_pointsize40_data_end - data_ttf_large_ttf_pointsize40_data_start;
-    ramdisk_data[64].data = data_ttf_large_ttf_pointsize40_tga_start;
-    ramdisk_data[64].len = data_ttf_large_ttf_pointsize40_tga_end - data_ttf_large_ttf_pointsize40_tga_start;
-    ramdisk_data[65].data = data_ttf_large_ttf_pointsize50_data_start;
-    ramdisk_data[65].len = data_ttf_large_ttf_pointsize50_data_end - data_ttf_large_ttf_pointsize50_data_start;
-    ramdisk_data[66].data = data_ttf_large_ttf_pointsize50_tga_start;
-    ramdisk_data[66].len = data_ttf_large_ttf_pointsize50_tga_end - data_ttf_large_ttf_pointsize50_tga_start;
-    ramdisk_data[67].data = data_ttf_LICENSE_txt_start;
-    ramdisk_data[67].len = data_ttf_LICENSE_txt_end - data_ttf_LICENSE_txt_start;
-    ramdisk_data[68].data = data_ttf_med_ttf_pointsize12_data_start;
-    ramdisk_data[68].len = data_ttf_med_ttf_pointsize12_data_end - data_ttf_med_ttf_pointsize12_data_start;
-    ramdisk_data[69].data = data_ttf_med_ttf_pointsize12_tga_start;
-    ramdisk_data[69].len = data_ttf_med_ttf_pointsize12_tga_end - data_ttf_med_ttf_pointsize12_tga_start;
-    ramdisk_data[70].data = data_ttf_med_ttf_pointsize20_data_start;
-    ramdisk_data[70].len = data_ttf_med_ttf_pointsize20_data_end - data_ttf_med_ttf_pointsize20_data_start;
-    ramdisk_data[71].data = data_ttf_med_ttf_pointsize20_tga_start;
-    ramdisk_data[71].len = data_ttf_med_ttf_pointsize20_tga_end - data_ttf_med_ttf_pointsize20_tga_start;
-    ramdisk_data[72].data = data_ttf_med_ttf_pointsize30_data_start;
-    ramdisk_data[72].len = data_ttf_med_ttf_pointsize30_data_end - data_ttf_med_ttf_pointsize30_data_start;
-    ramdisk_data[73].data = data_ttf_med_ttf_pointsize30_tga_start;
-    ramdisk_data[73].len = data_ttf_med_ttf_pointsize30_tga_end - data_ttf_med_ttf_pointsize30_tga_start;
-    ramdisk_data[74].data = data_ttf_med_ttf_pointsize40_data_start;
-    ramdisk_data[74].len = data_ttf_med_ttf_pointsize40_data_end - data_ttf_med_ttf_pointsize40_data_start;
-    ramdisk_data[75].data = data_ttf_med_ttf_pointsize40_tga_start;
-    ramdisk_data[75].len = data_ttf_med_ttf_pointsize40_tga_end - data_ttf_med_ttf_pointsize40_tga_start;
-    ramdisk_data[76].data = data_ttf_Readme_txt_start;
-    ramdisk_data[76].len = data_ttf_Readme_txt_end - data_ttf_Readme_txt_start;
-    ramdisk_data[77].data = data_ttf_small_ttf_pointsize20_data_start;
-    ramdisk_data[77].len = data_ttf_small_ttf_pointsize20_data_end - data_ttf_small_ttf_pointsize20_data_start;
-    ramdisk_data[78].data = data_ttf_small_ttf_pointsize20_tga_start;
-    ramdisk_data[78].len = data_ttf_small_ttf_pointsize20_tga_end - data_ttf_small_ttf_pointsize20_tga_start;
+    ramdisk_data[59].data = data_ttf_large_ttf_pointsize50_data_start;
+    ramdisk_data[59].len = data_ttf_large_ttf_pointsize50_data_end - data_ttf_large_ttf_pointsize50_data_start;
+    ramdisk_data[60].data = data_ttf_large_ttf_pointsize50_tga_start;
+    ramdisk_data[60].len = data_ttf_large_ttf_pointsize50_tga_end - data_ttf_large_ttf_pointsize50_tga_start;
+    ramdisk_data[61].data = data_ttf_LICENSE_txt_start;
+    ramdisk_data[61].len = data_ttf_LICENSE_txt_end - data_ttf_LICENSE_txt_start;
+    ramdisk_data[62].data = data_ttf_med_ttf_pointsize40_data_start;
+    ramdisk_data[62].len = data_ttf_med_ttf_pointsize40_data_end - data_ttf_med_ttf_pointsize40_data_start;
+    ramdisk_data[63].data = data_ttf_med_ttf_pointsize40_tga_start;
+    ramdisk_data[63].len = data_ttf_med_ttf_pointsize40_tga_end - data_ttf_med_ttf_pointsize40_tga_start;
+    ramdisk_data[64].data = data_ttf_Readme_txt_start;
+    ramdisk_data[64].len = data_ttf_Readme_txt_end - data_ttf_Readme_txt_start;
+    ramdisk_data[65].data = data_ttf_small_ttf_pointsize20_data_start;
+    ramdisk_data[65].len = data_ttf_small_ttf_pointsize20_data_end - data_ttf_small_ttf_pointsize20_data_start;
+    ramdisk_data[66].data = data_ttf_small_ttf_pointsize20_tga_start;
+    ramdisk_data[66].len = data_ttf_small_ttf_pointsize20_tga_end - data_ttf_small_ttf_pointsize20_tga_start;
 }
