@@ -121,13 +121,21 @@ boolean level_init (void)
 {
     level_init_done = true;
 
-    command_add(level_command_level_end, "level end", "");
-    command_add(level_command_dead, "dead", "");
+    command_add(level_command_level_end, 
+                "level end", "internal command to end the level");
 
-    command_add(level_command_god_mode_on, "godmode 1", "");
-    command_add(level_command_god_mode_off, "godmode 0", "");
-    command_add(level_command_play, "play [123456789]+", "");
-    command_add(level_command_lives, "lives [123456789]+", "");
+    command_add(level_command_dead, 
+                "dead", "internal command for thing suicide");
+
+    command_add(level_command_god_mode_on, 
+                "godmode 1", "enable god-mode");
+    command_add(level_command_god_mode_off, 
+                "godmode 0", "disable god-mode");
+
+    command_add(level_command_play, 
+                "play [123456789]+", "play level x");
+    command_add(level_command_lives, 
+                "lives [123456789]+", "set player number of lives");
 
     return (true);
 }
@@ -171,6 +179,10 @@ static boolean level_command_dead (tokens_t *tokens, void *context)
 {
     thingp t;
     levelp level;
+
+    if (!context) {
+        return (false);
+    }
 
     t = (typeof(t)) context;
     verify(t);

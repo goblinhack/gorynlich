@@ -87,6 +87,7 @@ typedef struct command_t_ {
     tree_key_string tree;
     tokens_t tokens;
     tokens_t readable_tokens;
+    tokens_t input_tokens;
     command_fn_t callback;
 } command_t;
 
@@ -129,11 +130,8 @@ void command_add (command_fn_t callback,
      */
     tokens_tostring(input, &command->tokens);
 
-    if (readable[0] == '\0') {
-        tokens_tostring(input, &command->readable_tokens);
-    } else {
-        tokens_tostring(readable, &command->readable_tokens);
-    }
+    tokens_tostring(input, &command->input_tokens);
+    tokens_tostring(readable, &command->readable_tokens);
 
     if (!tree_insert(commands, &command->tree.node)) {
         DIE("insert of command %s fail", input);
@@ -153,6 +151,7 @@ static int32_t command_matches (const char *input,
     char expands_to[MAXSTR];
     tokens_t input_tokens;
     char match[MAXSTR];
+    char match2[MAXSTR];
     int32_t longest_match;
     int32_t common_len;
     command_t *command;
@@ -253,10 +252,12 @@ static int32_t command_matches (const char *input,
                 }
             }
 
-            tokens_print_to(&command->readable_tokens, match, sizeof(match));
+            tokens_print_to(&command->input_tokens, match, sizeof(match));
+
+            tokens_print_to(&command->readable_tokens, match2, sizeof(match2));
 
             if (show_ambiguous) {
-                CON("  \"%s\"", match);
+                CON("  %-40s -- %s", match, match2);
             }
         } else {
 // CON("  NO MATCH \"%s\" [%d] longest %d", match,t,longest_match);

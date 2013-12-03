@@ -84,7 +84,7 @@
  * Fonts
  */
 #define SMALL_FONT                  "data/ttf/small.ttf"
-#define SMALL_FONT_SIZE             14
+#define SMALL_FONT_SIZE             20
 #define MED_FONT                    "data/ttf/med.ttf"
 #define MED_FONT_SIZE               20
 #define LARGE_FONT                  "data/ttf/large.ttf"
