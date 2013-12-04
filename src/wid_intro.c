@@ -546,6 +546,7 @@ static void wid_intro_create (void)
 
         child = wid_new_square_button(wid_intro, "Editor");
         wid_set_font(child, med_font);
+        wid_set_no_shape(child);
 
         fpoint tl = {0.1f, 0.0f};
         fpoint br = {0.3f, 0.05};
@@ -555,17 +556,16 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_BG, c);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
         c.a = 200;
-        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 0;
-        wid_set_color(child, WID_COLOR_TL, c);
-        wid_set_color(child, WID_COLOR_BR, c);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
@@ -579,6 +579,7 @@ static void wid_intro_create (void)
 
         child = wid_new_square_button(wid_intro, "About");
         wid_set_font(child, med_font);
+        wid_set_no_shape(child);
 
         fpoint tl = {0.3f, 0.0f};
         fpoint br = {0.5f, 0.05};
@@ -587,18 +588,17 @@ static void wid_intro_create (void)
         wid_set_text(child, "About");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = YELLOW;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_BG, c);
+        color c = ORANGE;
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
         c.a = 200;
-        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 0;
-        wid_set_color(child, WID_COLOR_TL, c);
-        wid_set_color(child, WID_COLOR_BR, c);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
@@ -612,6 +612,7 @@ static void wid_intro_create (void)
 
         child = wid_new_square_button(wid_intro, "Settings");
         wid_set_font(child, med_font);
+        wid_set_no_shape(child);
 
         fpoint tl = {0.5f, 0.0f};
         fpoint br = {0.7f, 0.05};
@@ -620,18 +621,17 @@ static void wid_intro_create (void)
         wid_set_text(child, "Settings");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = CYAN;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_BG, c);
+        color c = ORANGE;
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
         c.a = 200;
-        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 0;
-        wid_set_color(child, WID_COLOR_TL, c);
-        wid_set_color(child, WID_COLOR_BR, c);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
@@ -645,6 +645,7 @@ static void wid_intro_create (void)
 
         child = wid_new_square_button(wid_intro, "Hiscore");
         wid_set_font(child, med_font);
+        wid_set_no_shape(child);
 
         fpoint tl = {0.7f, 0.0f};
         fpoint br = {0.9f, 0.05};
@@ -653,18 +654,17 @@ static void wid_intro_create (void)
         wid_set_text(child, "Hiscore");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = RED;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_BG, c);
+        color c = ORANGE;
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
         c.a = 200;
-        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 0;
-        wid_set_color(child, WID_COLOR_TL, c);
-        wid_set_color(child, WID_COLOR_BR, c);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
@@ -686,18 +686,17 @@ static void wid_intro_create (void)
         wid_set_text(child, "Help");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = BLUE;
-        c.a = 150;
-        wid_set_color(child, WID_COLOR_BG, c);
+        color c = ORANGE;
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
         c.a = 200;
-        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 0;
-        wid_set_color(child, WID_COLOR_TL, c);
-        wid_set_color(child, WID_COLOR_BR, c);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
@@ -751,6 +750,7 @@ static void wid_intro_create (void)
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "Play!");
+        wid_scaling_to_pct_in(child, 1.0, 1.1, 500, 1000);
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = SEAGREEN;
