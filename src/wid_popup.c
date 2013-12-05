@@ -16,8 +16,8 @@
 #include "sdl.h"
 
 static const int32_t PAD_X = 80;
-static const int32_t PAD_Y = 25;
-static const int32_t BUTTON_PAD_X = 20;
+static const int32_t PAD_Y = 45;
+static const int32_t BUTTON_PAD_X = 30;
 static const int32_t BUTTON_PAD_Y = 10;
 
 typedef void (*wid_popup_callback)(widp);
@@ -330,9 +330,9 @@ widp wid_popup (const char *text, const char *title,
         }
 
         tl.x += PAD_X/2;
-        tl.y += PAD_Y/2;
+        tl.y += PAD_Y/4;
         br.x += PAD_X/2;
-        br.y += PAD_Y/2;
+        br.y += PAD_Y/4;
 
         if (title) {
             /*
@@ -409,6 +409,8 @@ widp wid_popup (const char *text, const char *title,
             fpoint br;
 
             tl.y = button_y;
+            tl.y += PAD_Y/4;
+
             br.y = tl.y + maxbuttonh;
             br.x = x;
             tl.x = br.x - maxbuttonw;
@@ -422,11 +424,11 @@ widp wid_popup (const char *text, const char *title,
 
             color c;
             if (focus_order == 1) {
-                c = GREEN;
+                c = DARKGREEN;
             } else if (focus_order == 2) {
-                c = RED2;
+                c = DARKRED;
             } else if (focus_order == 3) {
-                c = CYAN;
+                c = RED;
             } else {
                 c = GRAY;
             }
