@@ -121,7 +121,7 @@ typedef struct wid_ {
     /*
      * The wid shape
      */
-    float bevel;
+    double bevel;
     fsize radius;
     uint8_t sides;
 
@@ -219,8 +219,8 @@ typedef struct wid_ {
     /*
      * Text placement.
      */
-    float text_scaling;
-    float text_advance;
+    double text_scaling;
+    double text_advance;
     fpoint text_pos;
 
     /*
@@ -253,18 +253,20 @@ typedef struct wid_ {
     uint32_t destroy_when;
     fpoint moving_start;
     fpoint moving_end;
-    float scale_w_base;
-    float scaling_w_start;
-    float scaling_w_end;
-    float scale_h_base;
-    float scaling_h_start;
-    float scaling_h_end;
-    float rotate_base;
-    float rotate_start;
-    float rotate_end;
+    double scale_w_base;
+    double scaling_w_start;
+    double scaling_w_end;
+    double scale_h_base;
+    double scaling_h_start;
+    double scaling_h_end;
+    double rotate_base;
+    double rotate_start;
+    double rotate_end;
     uint32_t scaling_w_bounce_count;
     uint32_t scaling_h_bounce_count;
     uint32_t rotate_sways_count;
+    uint32_t fade_count;
+    uint32_t fade_delay;
 
     /*
      * Order of this wid amongst other focusable widgets.
@@ -377,7 +379,7 @@ static boolean wid_scroll_trough_mouse_motion(widp w,
                                               int32_t x, int32_t y,
                                               int32_t relx, int32_t rely,
                                               int32_t wheelx, int32_t wheely);
-static float wid_get_fade_amount(widp w);
+static double wid_get_fade_amount(widp w);
 static void wid_find_first_focus(void);
 static void wid_find_top_focus(void);
 static void wid_destroy_immediate(widp w);
@@ -600,30 +602,30 @@ void wid_get_grid_dim (widp w, uint32_t *x, uint32_t *y)
     *y = w->parent->grid->pixheight;
 }
 
-float wid_get_tl_x (widp w)
+double wid_get_tl_x (widp w)
 {
-    float cx = (w->tree.tl.x + w->tree.br.x) / 2.0;
+    double cx = (w->tree.tl.x + w->tree.br.x) / 2.0;
 
     return (cx - ((cx - w->tree.tl.x) * wid_get_scaling_w(w)));
 }
 
-float wid_get_tl_y (widp w)
+double wid_get_tl_y (widp w)
 {
-    float cy = (w->tree.tl.y + w->tree.br.y) / 2.0;
+    double cy = (w->tree.tl.y + w->tree.br.y) / 2.0;
 
     return (cy - ((cy - w->tree.tl.y) * wid_get_scaling_h(w)));
 }
 
-float wid_get_br_x (widp w)
+double wid_get_br_x (widp w)
 {
-    float cx = (w->tree.tl.x + w->tree.br.x) / 2.0;
+    double cx = (w->tree.tl.x + w->tree.br.x) / 2.0;
 
     return (cx + ((w->tree.br.x - cx) * wid_get_scaling_w(w)));
 }
 
-float wid_get_br_y (widp w)
+double wid_get_br_y (widp w)
 {
-    float cy = (w->tree.tl.y + w->tree.br.y) / 2.0;
+    double cy = (w->tree.tl.y + w->tree.br.y) / 2.0;
 
     return (cy + ((w->tree.br.y - cy) * wid_get_scaling_h(w)));
 }
@@ -668,10 +670,10 @@ void wid_set_tl_br_pct (widp w, fpoint tl, fpoint br)
     wid_tree_detach(w);
 
     if (!w->parent) {
-        tl.x *= (float)global_config.video_gl_width;
-        tl.y *= (float)global_config.video_gl_height;
-        br.x *= (float)global_config.video_gl_width;
-        br.y *= (float)global_config.video_gl_height;
+        tl.x *= (double)global_config.video_gl_width;
+        tl.y *= (double)global_config.video_gl_height;
+        br.x *= (double)global_config.video_gl_width;
+        br.y *= (double)global_config.video_gl_height;
     } else {
         tl.x *= wid_get_width(w->parent);
         tl.y *= wid_get_height(w->parent);
@@ -708,8 +710,8 @@ void wid_setx_tl_br_pct (widp w, fpoint tl, fpoint br)
     wid_tree_detach(w);
 
     if (!w->parent) {
-        tl.x *= (float)global_config.video_gl_width;
-        br.x *= (float)global_config.video_gl_width;
+        tl.x *= (double)global_config.video_gl_width;
+        br.x *= (double)global_config.video_gl_width;
     } else {
         tl.x *= wid_get_width(w->parent);
         br.x *= wid_get_width(w->parent);
@@ -742,8 +744,8 @@ void wid_sety_tl_br_pct (widp w, fpoint tl, fpoint br)
     wid_tree_detach(w);
 
     if (!w->parent) {
-        tl.y *= (float)global_config.video_gl_height;
-        br.y *= (float)global_config.video_gl_height;
+        tl.y *= (double)global_config.video_gl_height;
+        br.y *= (double)global_config.video_gl_height;
     } else {
         tl.y *= wid_get_height(w->parent);
         br.y *= wid_get_height(w->parent);
@@ -1520,17 +1522,17 @@ void wid_set_cursor (widp w, uint32_t val)
     w->cursor = val;
 }
 
-float wid_get_width (widp w)
+double wid_get_width (widp w)
 {
     return (wid_get_br_x(w) - wid_get_tl_x(w));
 }
 
-float wid_get_height (widp w)
+double wid_get_height (widp w)
 {
     return (wid_get_br_y(w) - wid_get_tl_y(w));
 }
 
-void wid_get_mxy (widp w, float *x, float *y)
+void wid_get_mxy (widp w, double *x, double *y)
 {
     *x = (wid_get_br_x(w) + wid_get_tl_x(w)) / 2.0;
     *y = (wid_get_br_y(w) + wid_get_tl_y(w)) / 2.0;
@@ -1864,7 +1866,7 @@ void wid_set_text_centery (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_pos (widp w, float *x, float *y)
+boolean wid_get_text_pos (widp w, double *x, double *y)
 {
     if (w->text_pos_set) {
         *x = w->text_pos.x;
@@ -1879,7 +1881,7 @@ boolean wid_get_text_pos (widp w, float *x, float *y)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_pos (widp w, boolean val, float x, float y)
+void wid_set_text_pos (widp w, boolean val, double x, double y)
 {
     fast_verify(w);
 
@@ -1927,7 +1929,7 @@ void wid_set_blit_outline (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-float wid_get_bevel (widp w)
+double wid_get_bevel (widp w)
 {
     return (w->bevel);
 }
@@ -1935,7 +1937,7 @@ float wid_get_bevel (widp w)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-float wid_get_mode_bevel (widp w)
+double wid_get_mode_bevel (widp w)
 {
     return (w->bevel);
 }
@@ -1943,7 +1945,7 @@ float wid_get_mode_bevel (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_bevel (widp w, float val)
+void wid_set_bevel (widp w, double val)
 {
     fast_verify(w);
 
@@ -1953,7 +1955,7 @@ void wid_set_bevel (widp w, float val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-float wid_get_text_scaling (widp w)
+double wid_get_text_scaling (widp w)
 {
     return (w->text_scaling + wid_get_scaling_w(w));
 }
@@ -1961,7 +1963,7 @@ float wid_get_text_scaling (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_scaling (widp w, float val)
+void wid_set_text_scaling (widp w, double val)
 {
     fast_verify(w);
 
@@ -1971,7 +1973,7 @@ void wid_set_text_scaling (widp w, float val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-float wid_get_text_advance (widp w)
+double wid_get_text_advance (widp w)
 {
     if (w->text_advance != 0) {
         return (w->text_advance);
@@ -1983,7 +1985,7 @@ float wid_get_text_advance (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_advance (widp w, float val)
+void wid_set_text_advance (widp w, double val)
 {
     fast_verify(w);
 
@@ -2055,8 +2057,8 @@ void wid_set_tex (widp w, const char *tex, const char *name)
     w->tex = t;
 
     fsize sz = {
-        (float) tex_get_width(t),
-        (float) tex_get_height(t)
+        (double) tex_get_width(t),
+        (double) tex_get_height(t)
     };
 
     wid_set_tex_sz(w, sz);
@@ -2977,8 +2979,8 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
          */
 #if 0
         wid_move_to_pct_centered_in(w, 2.5f,
-                                    (((float)(tly + bry)) / 2.0) /
-                                    (float) global_config.height, wid_swipe_delay);
+                                    (((double)(tly + bry)) / 2.0) /
+                                    (double) global_config.height, wid_swipe_delay);
 #endif
     }
 
@@ -4735,19 +4737,19 @@ static boolean wid_scroll_trough_mouse_motion (widp w,
 
 static void wid_adjust_scrollbar (widp scrollbar, widp owner)
 {
-    float height = wid_get_height(owner);
-    float width = wid_get_width(owner);
-    float child_height = 0;
-    float child_width = 0;
-    float scrollbar_width;
-    float scrollbar_height;
-    float trough_height;
-    float trough_width;
-    float miny = 0;
-    float maxy = 0;
-    float minx = 0;
-    float maxx = 0;
-    float pct;
+    double height = wid_get_height(owner);
+    double width = wid_get_width(owner);
+    double child_height = 0;
+    double child_width = 0;
+    double scrollbar_width;
+    double scrollbar_height;
+    double trough_height;
+    double trough_width;
+    double miny = 0;
+    double maxy = 0;
+    double minx = 0;
+    double maxx = 0;
+    double pct;
     boolean first = true;
     widp child;
 
@@ -4758,10 +4760,10 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
     TREE2_WALK_UNSAFE(owner->children_unsorted, child) {
         fast_verify(child);
 
-        float tminx = wid_get_tl_x(child) - wid_get_tl_x(child->parent);
-        float tminy = wid_get_tl_y(child) - wid_get_tl_y(child->parent);
-        float tmaxx = wid_get_br_x(child) - wid_get_tl_x(child->parent);
-        float tmaxy = wid_get_br_y(child) - wid_get_tl_y(child->parent);
+        double tminx = wid_get_tl_x(child) - wid_get_tl_x(child->parent);
+        double tminy = wid_get_tl_y(child) - wid_get_tl_y(child->parent);
+        double tmaxx = wid_get_br_x(child) - wid_get_tl_x(child->parent);
+        double tmaxy = wid_get_br_y(child) - wid_get_tl_y(child->parent);
 
         if (first) {
             minx = tminx;
@@ -4857,16 +4859,16 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
     }
 }
 
-void wid_get_children_size (widp owner, float *w, float *h)
+void wid_get_children_size (widp owner, double *w, double *h)
 {
-    float height = wid_get_height(owner);
-    float width = wid_get_width(owner);
-    float child_height = 0;
-    float child_width = 0;
-    float miny = 0;
-    float maxy = 0;
-    float minx = 0;
-    float maxx = 0;
+    double height = wid_get_height(owner);
+    double width = wid_get_width(owner);
+    double child_height = 0;
+    double child_width = 0;
+    double miny = 0;
+    double maxy = 0;
+    double minx = 0;
+    double maxx = 0;
     boolean first = true;
     widp child;
 
@@ -4877,10 +4879,10 @@ void wid_get_children_size (widp owner, float *w, float *h)
     TREE_WALK(owner->children_display_sorted, child) {
         fast_verify(child);
 
-        float tminx = wid_get_tl_x(child) - wid_get_tl_x(child->parent);
-        float tminy = wid_get_tl_y(child) - wid_get_tl_y(child->parent);
-        float tmaxx = wid_get_br_x(child) - wid_get_tl_x(child->parent);
-        float tmaxy = wid_get_br_y(child) - wid_get_tl_y(child->parent);
+        double tminx = wid_get_tl_x(child) - wid_get_tl_x(child->parent);
+        double tminy = wid_get_tl_y(child) - wid_get_tl_y(child->parent);
+        double tmaxx = wid_get_br_x(child) - wid_get_tl_x(child->parent);
+        double tmaxy = wid_get_br_y(child) - wid_get_tl_y(child->parent);
 
         if (first) {
             minx = tminx;
@@ -5784,7 +5786,7 @@ static widp wid_mouse_motion_handler_at (widp w, int32_t x, int32_t y,
     return (0);
 }
 
-static void wid_children_move_delta_internal (widp w, float dx, float dy)
+static void wid_children_move_delta_internal (widp w, double dx, double dy)
 {
     /*
      * Make sure you can't move a wid outside the parents box.
@@ -5822,7 +5824,7 @@ static void wid_children_move_delta_internal (widp w, float dx, float dy)
     } }
 }
 
-static void wid_move_delta_internal (widp w, float dx, float dy)
+static void wid_move_delta_internal (widp w, double dx, double dy)
 {
     wid_tree_detach(w);
 
@@ -5864,7 +5866,7 @@ static void wid_move_delta_internal (widp w, float dx, float dy)
     wid_tree_attach(w);
 }
 
-void wid_move_delta (widp w, float dx, float dy)
+void wid_move_delta (widp w, double dx, double dy)
 {
     if ((dx == 0.0) && (dy == 0.0)) {
         return;
@@ -6643,13 +6645,13 @@ static void wid_tick (widp w)
 
             w->moving = false;
         } else {
-            float time_step =
-                (float)(time_get_time_cached() - w->timestamp_moving_begin) /
-                (float)(w->timestamp_moving_end - w->timestamp_moving_begin);
+            double time_step =
+                (double)(time_get_time_cached() - w->timestamp_moving_begin) /
+                (double)(w->timestamp_moving_end - w->timestamp_moving_begin);
 
-            x = (time_step * (float)(w->moving_end.x - w->moving_start.x)) +
+            x = (time_step * (double)(w->moving_end.x - w->moving_start.x)) +
                 w->moving_start.x;
-            y = (time_step * (float)(w->moving_end.y - w->moving_start.y)) +
+            y = (time_step * (double)(w->moving_end.y - w->moving_start.y)) +
                 w->moving_start.y;
         }
 
@@ -6662,7 +6664,7 @@ static void wid_tick (widp w)
          * level widgets. The childen inherit the fading from the parent.
          */
         if (wid_is_fading(w)) {
-            float fade = wid_get_fade_amount(w);
+            double fade = wid_get_fade_amount(w);
 
             if (fade == 0.0) {
                 if (!w->parent) {
@@ -6797,7 +6799,7 @@ static void wid_display (widp w,
 
     if (wid_focus_locked) {
         if (wid_get_top_parent(w) != wid_focus_locked) {
-            float fade = 0.6;
+            double fade = 0.6;
 
             if (col.r && col.g && col.b) {
                 col_tl.a *= fade;
@@ -6815,7 +6817,7 @@ static void wid_display (widp w,
      * Apply fade in/out effects.
      */
     if (fading) {
-        float fade = wid_get_fade_amount(w);
+        double fade = wid_get_fade_amount(w);
 
         /*
          * So hidden scrolbars stay hidden in a fading parent. I'm drunk.
@@ -6980,12 +6982,12 @@ static void wid_display (widp w,
 
     if (text && text[0]) {
         fontp font = wid_get_font(w);
-        float scaling = wid_get_text_scaling(w);
-        float advance = wid_get_text_advance(w);
+        double scaling = wid_get_text_scaling(w);
+        double advance = wid_get_text_advance(w);
         boolean fixed_width = wid_get_text_fixed_width(w);
 
         int32_t x, y;
-        float xpc, ypc;
+        double xpc, ypc;
         uint32_t width, height;
         enum_fmt fmt;
 
@@ -7020,7 +7022,7 @@ static void wid_display (widp w,
                  */
                 x = ((owidth - (int32_t)width) / 2) + otlx;
 
-                uint32_t c_width = (width / (float)strlen(text));
+                uint32_t c_width = (width / (double)strlen(text));
 
                 x -= (w->cursor - (strlen(text) / 2)) * c_width;
             } else if ((fmt == ENUM_FMT_LEFT) || wid_get_text_lhs(w)) {
@@ -7145,6 +7147,25 @@ void wid_fade_out (widp w, uint32_t delay)
     w->fade_in = false;
 }
 
+void wid_fade_in_out (widp w, uint32_t delay, uint32_t repeat, boolean in)
+{
+    fast_verify(w);
+
+    w->timestamp_fading_begin = time_get_time_cached();
+    w->timestamp_fading_end = w->timestamp_fading_begin + delay;
+
+    if (in) {
+        w->fade_out = false;
+        w->fade_in = true;
+    } else {
+        w->fade_out = true;
+        w->fade_in = false;
+    }
+
+    w->fade_count = repeat;
+    w->fade_delay = delay;
+}
+
 boolean wid_is_hidden (widp w)
 {
     fast_verify(w);
@@ -7194,9 +7215,9 @@ boolean wid_is_fading (widp w)
 /*
  * How much are we fading from 0.0 to 1.0 (solid)
  */
-static float wid_get_fade_amount (widp w)
+static double wid_get_fade_amount (widp w)
 {
-    float fade;
+    double fade;
 
     fast_verify(w);
 
@@ -7238,6 +7259,10 @@ static float wid_get_fade_amount (widp w)
                 wid_find_top_focus();
             }
 
+            if (w->fade_count) {
+                wid_fade_in_out(w, w->fade_delay, w->fade_count - 1, false);
+            }
+
             return (1.0f);
         }
 
@@ -7250,6 +7275,10 @@ static float wid_get_fade_amount (widp w)
                 wid_find_top_focus();
             }
 
+            if (w->fade_count) {
+                wid_fade_in_out(w, w->fade_delay, w->fade_count - 1, true);
+            }
+
             return (0.0f);
         }
 
@@ -7260,16 +7289,16 @@ static float wid_get_fade_amount (widp w)
                     w->timestamp_fading_begin;
 
     if (w->fade_in) {
-        fade = (float)(time_get_time_cached() - w->timestamp_fading_begin) /
-               (float)effect_duration;
+        fade = (double)(time_get_time_cached() - w->timestamp_fading_begin) /
+               (double)effect_duration;
 
         return (fade);
     }
 
     if (w->fade_out) {
         fade = 1.0f -
-                ((float)(time_get_time_cached() - w->timestamp_fading_begin) /
-                 (float)effect_duration);
+                ((double)(time_get_time_cached() - w->timestamp_fading_begin) /
+                 (double)effect_duration);
 
         return (fade);
     }
@@ -7292,12 +7321,12 @@ boolean wid_is_moving (widp w)
     return (false);
 }
 
-void wid_move_to_pct (widp w, float x, float y)
+void wid_move_to_pct (widp w, double x, double y)
 {
     fast_verify(w);
 
-    x *= (float)global_config.video_gl_width;
-    y *= (float)global_config.video_gl_height;
+    x *= (double)global_config.video_gl_width;
+    y *= (double)global_config.video_gl_height;
 
     int32_t dx = x - wid_get_tl_x(w);
     int32_t dy = y - wid_get_tl_y(w);
@@ -7305,7 +7334,7 @@ void wid_move_to_pct (widp w, float x, float y)
     wid_move_delta(w, dx, dy);
 }
 
-void wid_move_to_abs (widp w, float x, float y)
+void wid_move_to_abs (widp w, double x, double y)
 {
     fast_verify(w);
 
@@ -7315,25 +7344,12 @@ void wid_move_to_abs (widp w, float x, float y)
     wid_move_delta(w, dx, dy);
 }
 
-void wid_move_to_pct_centered (widp w, float x, float y)
+void wid_move_to_pct_centered (widp w, double x, double y)
 {
     fast_verify(w);
 
-    x *= (float)global_config.video_gl_width;
-    y *= (float)global_config.video_gl_height;
-
-    int32_t dx = x - wid_get_tl_x(w);
-    int32_t dy = y - wid_get_tl_y(w);
-
-    dx -= (wid_get_br_x(w) - wid_get_tl_x(w))/2;
-    dy -= (wid_get_br_y(w) - wid_get_tl_y(w))/2;
-
-    wid_move_delta(w, dx, dy);
-}
-
-void wid_move_to_abs_centered (widp w, float x, float y)
-{
-    fast_verify(w);
+    x *= (double)global_config.video_gl_width;
+    y *= (double)global_config.video_gl_height;
 
     int32_t dx = x - wid_get_tl_x(w);
     int32_t dy = y - wid_get_tl_y(w);
@@ -7344,15 +7360,28 @@ void wid_move_to_abs_centered (widp w, float x, float y)
     wid_move_delta(w, dx, dy);
 }
 
-void wid_move_to_pct_in (widp w, float x, float y, uint32_t ms)
+void wid_move_to_abs_centered (widp w, double x, double y)
+{
+    fast_verify(w);
+
+    int32_t dx = x - wid_get_tl_x(w);
+    int32_t dy = y - wid_get_tl_y(w);
+
+    dx -= (wid_get_br_x(w) - wid_get_tl_x(w))/2;
+    dy -= (wid_get_br_y(w) - wid_get_tl_y(w))/2;
+
+    wid_move_delta(w, dx, dy);
+}
+
+void wid_move_to_pct_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
     w->timestamp_moving_begin = time_get_time_cached();
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
-    x *= (float)global_config.video_gl_width;
-    y *= (float)global_config.video_gl_height;
+    x *= (double)global_config.video_gl_width;
+    y *= (double)global_config.video_gl_height;
 
     w->moving_start.x = wid_get_tl_x(w);
     w->moving_start.y = wid_get_tl_y(w);
@@ -7385,7 +7414,7 @@ void wid_move_resume (widp w)
     w->paused = false;
 }
 
-void wid_move_to_abs_in (widp w, float x, float y, uint32_t ms)
+void wid_move_to_abs_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
@@ -7399,15 +7428,15 @@ void wid_move_to_abs_in (widp w, float x, float y, uint32_t ms)
     w->moving = true;
 }
 
-void wid_move_to_pct_centered_in (widp w, float x, float y, uint32_t ms)
+void wid_move_to_pct_centered_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
     w->timestamp_moving_begin = time_get_time_cached();
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
-    x *= (float)global_config.video_gl_width;
-    y *= (float)global_config.video_gl_height;
+    x *= (double)global_config.video_gl_width;
+    y *= (double)global_config.video_gl_height;
 
     x -= (wid_get_br_x(w) - wid_get_tl_x(w))/2;
     y -= (wid_get_br_y(w) - wid_get_tl_y(w))/2;
@@ -7419,15 +7448,15 @@ void wid_move_to_pct_centered_in (widp w, float x, float y, uint32_t ms)
     w->moving = true;
 }
 
-void wid_move_delta_pct_in (widp w, float x, float y, uint32_t ms)
+void wid_move_delta_pct_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
     w->timestamp_moving_begin = time_get_time_cached();
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
-    x *= (float)global_config.video_gl_width;
-    y *= (float)global_config.video_gl_height;
+    x *= (double)global_config.video_gl_width;
+    y *= (double)global_config.video_gl_height;
 
     w->moving_start.x = wid_get_tl_x(w);
     w->moving_start.y = wid_get_tl_y(w);
@@ -7436,7 +7465,7 @@ void wid_move_delta_pct_in (widp w, float x, float y, uint32_t ms)
     w->moving = true;
 }
 
-void wid_move_to_abs_centered_in (widp w, float x, float y, uint32_t ms)
+void wid_move_to_abs_centered_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
@@ -7454,8 +7483,8 @@ void wid_move_to_abs_centered_in (widp w, float x, float y, uint32_t ms)
 }
 
 void wid_scaling_to_pct_in (widp w,
-                            float scaling_start,
-                            float scaling_end,
+                            double scaling_start,
+                            double scaling_end,
                             uint32_t ms,
                             uint32_t scaling_bounce_count)
 {
@@ -7480,7 +7509,7 @@ void wid_scaling_to_pct_in (widp w,
     w->scaling_h = true;
 }
 
-void wid_scale_immediate (widp w, float val)
+void wid_scale_immediate (widp w, double val)
 {
     fast_verify(w);
 
@@ -7495,7 +7524,7 @@ void wid_scale_immediate (widp w, float val)
     }
 }
 
-void wid_scale_w_immediate (widp w, float val)
+void wid_scale_w_immediate (widp w, double val)
 {
     fast_verify(w);
 
@@ -7507,7 +7536,7 @@ void wid_scale_w_immediate (widp w, float val)
     }
 }
 
-void wid_scale_h_immediate (widp w, float val)
+void wid_scale_h_immediate (widp w, double val)
 {
     fast_verify(w);
 
@@ -7530,9 +7559,9 @@ void wid_effect_pulses (widp w)
     }
 }
 
-float wid_get_scaling_w (widp w)
+double wid_get_scaling_w (widp w)
 {
-    float scaling;
+    double scaling;
 
     if (!w->scaling_w && !w->scaled_w) {
         return (1.0);
@@ -7557,19 +7586,19 @@ float wid_get_scaling_w (widp w)
         return (scaling + w->scale_w_base);
     }
 
-    float time_step =
-        (float)(time_get_time_cached() - w->timestamp_scaling_w_begin) /
-        (float)(w->timestamp_scaling_w_end - w->timestamp_scaling_w_begin);
+    double time_step =
+        (double)(time_get_time_cached() - w->timestamp_scaling_w_begin) /
+        (double)(w->timestamp_scaling_w_end - w->timestamp_scaling_w_begin);
 
-    scaling = (time_step * (float)(w->scaling_w_end - w->scaling_w_start)) +
+    scaling = (time_step * (double)(w->scaling_w_end - w->scaling_w_start)) +
                     w->scaling_w_start;
 
     return (scaling + w->scale_w_base);
 }
 
-float wid_get_scaling_h (widp w)
+double wid_get_scaling_h (widp w)
 {
-    float scaling;
+    double scaling;
 
     if (!w->scaling_h && !w->scaled_h) {
         return (1.0);
@@ -7594,19 +7623,19 @@ float wid_get_scaling_h (widp w)
         return (scaling + w->scale_h_base);
     }
 
-    float time_step =
-        (float)(time_get_time_cached() - w->timestamp_scaling_h_begin) /
-        (float)(w->timestamp_scaling_h_end - w->timestamp_scaling_h_begin);
+    double time_step =
+        (double)(time_get_time_cached() - w->timestamp_scaling_h_begin) /
+        (double)(w->timestamp_scaling_h_end - w->timestamp_scaling_h_begin);
 
-    scaling = (time_step * (float)(w->scaling_h_end - w->scaling_h_start)) +
+    scaling = (time_step * (double)(w->scaling_h_end - w->scaling_h_start)) +
                     w->scaling_h_start;
 
     return (scaling + w->scale_h_base);
 }
 
 void wid_rotate_to_pct_in (widp w,
-                            float rotate_start,
-                            float rotate_end,
+                            double rotate_start,
+                            double rotate_end,
                             uint32_t ms,
                             uint32_t rotate_sways_count)
 {
@@ -7621,7 +7650,7 @@ void wid_rotate_to_pct_in (widp w,
     w->rotating = true;
 }
 
-void wid_rotate_immediate (widp w, float rotate_base)
+void wid_rotate_immediate (widp w, double rotate_base)
 {
     fast_verify(w);
 
@@ -7673,9 +7702,9 @@ void wid_effect_sways (widp w)
     wid_rotate_to_pct_in(w, -5, 5, ONESEC, 5);
 }
 
-float wid_get_rotate (widp w)
+double wid_get_rotate (widp w)
 {
-    float rotating;
+    double rotating;
 
     if (!w->rotating && !w->rotated) {
         return (0.0);
@@ -7700,11 +7729,11 @@ float wid_get_rotate (widp w)
         return (w->rotate_base + rotating);
     }
 
-    float time_step =
-        (float)(time_get_time_cached() - w->timestamp_rotate_begin) /
-        (float)(w->timestamp_rotate_end - w->timestamp_rotate_begin);
+    double time_step =
+        (double)(time_get_time_cached() - w->timestamp_rotate_begin) /
+        (double)(w->timestamp_rotate_end - w->timestamp_rotate_begin);
 
-    rotating = (time_step * (float)(w->rotate_end - w->rotate_start)) +
+    rotating = (time_step * (double)(w->rotate_end - w->rotate_start)) +
                     w->rotate_start;
 
     return (w->rotate_base + rotating);
@@ -7712,10 +7741,10 @@ float wid_get_rotate (widp w)
 
 boolean wids_overlap (widp A, widp B)
 {
-    float Ax = (A->tree.tl.x + A->tree.br.x) / 2.0;
-    float Ay = (A->tree.tl.y + A->tree.br.y) / 2.0;
-    float Bx = (B->tree.tl.x + B->tree.br.x) / 2.0;
-    float By = (B->tree.tl.y + B->tree.br.y) / 2.0;
+    double Ax = (A->tree.tl.x + A->tree.br.x) / 2.0;
+    double Ay = (A->tree.tl.y + A->tree.br.y) / 2.0;
+    double Bx = (B->tree.tl.x + B->tree.br.x) / 2.0;
+    double By = (B->tree.tl.y + B->tree.br.y) / 2.0;
 
     if ((Ax >= B->tree.tl.x) && (Ax <= B->tree.br.x) &&
         (Ay >= B->tree.tl.y) && (Ay <= B->tree.br.y)) {

@@ -148,7 +148,7 @@ static boolean wid_text_input_receive_input (widp w, const SDL_KEYSYM *key)
         fpoint container_br;
         fpoint trough_tl;
         fpoint trough_br;
-        float child_height;
+        double child_height;
         widp child;
         fpoint tl;
         fpoint br;
@@ -181,7 +181,7 @@ static boolean wid_text_input_receive_input (widp w, const SDL_KEYSYM *key)
         /*
          * What percentage of the way down.
          */
-        float pct = (float)(tl.y - container_tl.y) / (float)child_height;
+        double pct = (double)(tl.y - container_tl.y) / (double)child_height;
 
         /*
          * Now adjust the scrollbar.
@@ -193,7 +193,7 @@ static boolean wid_text_input_receive_input (widp w, const SDL_KEYSYM *key)
          */
         wid_get_tl_br(wid_get_parent(scrollbar), &trough_tl, &trough_br);
 
-        float trough_height =
+        double trough_height =
                 wid_get_height(wid_get_parent(scrollbar));
 
         /*
@@ -211,7 +211,7 @@ static boolean wid_text_input_receive_input (widp w, const SDL_KEYSYM *key)
 /*
  * Create the wid_text_input
  */
-widp wid_text_input (const char *title, float x, float y, int32_t args, ...)
+widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
 {
     widp wid_text_input_container;
     widp wid_text_input_title;
@@ -491,7 +491,7 @@ widp wid_text_input (const char *title, float x, float y, int32_t args, ...)
 /*
  * Create the wid_text_input
  */
-widp wid_large_text_input (const char *title, float x, float y, int32_t args, ...)
+widp wid_large_text_input (const char *title, double x, double y, int32_t args, ...)
 {
     widp wid_text_input_container;
     widp wid_text_input_title;
