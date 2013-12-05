@@ -366,7 +366,7 @@ static void wid_intro_settings_create (void)
         c.a = 200;
         wid_set_color(w, WID_COLOR_BG, c);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 150;
         wid_set_color(w, WID_COLOR_TL, c);
         wid_set_color(w, WID_COLOR_BR, c);
@@ -395,7 +395,7 @@ static void wid_intro_settings_create (void)
 
         wid_set_text(w, "Settings");
         wid_set_font(w, large_font);
-        wid_set_color(w, WID_COLOR_TEXT, RED);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
 
         wid_set_text_outline(w, true);
     }
@@ -503,7 +503,7 @@ static void wid_intro_settings_create (void)
             wid_set_text(w, wid_intro_button_col3[i]);
             wid_set_font(w, med_font);
 
-            color c = RED;
+            color c = STEELBLUE;
 
             c.a = 150;
             wid_set_mode(w, WID_MODE_NORMAL);
@@ -579,7 +579,7 @@ static void wid_intro_settings_create (void)
         wid_set_text(w, button_name);
         wid_set_font(w, med_font);
 
-        color c = RED;
+        color c = STEELBLUE;
 
         c.a = 100;
         wid_set_mode(w, WID_MODE_NORMAL);

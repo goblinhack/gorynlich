@@ -57,7 +57,7 @@ wid_button_internal (const char *text, float x, float y, fontp font,
 
         wid_set_color(wid_button_window, WID_COLOR_TEXT, WHITE);
 
-        color c = DARKRED;
+        color c = STEELBLUE2;
         c.a = 200;
         wid_set_color(wid_button_window, WID_COLOR_BG, c);
 

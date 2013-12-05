@@ -196,7 +196,7 @@ mz_ulong mz_adler32(mz_ulong adler, const unsigned char *ptr, size_t buf_len);
 mz_ulong mz_crc32(mz_ulong crc, const unsigned char *ptr, size_t buf_len);
 
 // Compression strategies.
-enum { MZ_DEFAULT_STRATEGY = 0, MZ_FILTERED = 1, MZ_HUFFMAN_ONLY = 2, MZ_RLE = 3, MZ_FIXED = 4 };
+enum { MZ_DEFAULT_STRATEGY = 0, MZ_FILTESTEELBLUE = 1, MZ_HUFFMAN_ONLY = 2, MZ_RLE = 3, MZ_FIXED = 4 };
 
 // Method
 #define MZ_DEFLATED 8
@@ -373,7 +373,7 @@ const char *mz_error(int err);
   #define Z_BEST_COMPRESSION    MZ_BEST_COMPRESSION
   #define Z_DEFAULT_COMPRESSION MZ_DEFAULT_COMPRESSION
   #define Z_DEFAULT_STRATEGY    MZ_DEFAULT_STRATEGY
-  #define Z_FILTERED            MZ_FILTERED
+  #define Z_FILTESTEELBLUE            MZ_FILTESTEELBLUE
   #define Z_HUFFMAN_ONLY        MZ_HUFFMAN_ONLY
   #define Z_RLE                 MZ_RLE
   #define Z_FIXED               MZ_FIXED
@@ -836,7 +836,7 @@ mz_uint tdefl_get_adler32(tdefl_compressor *d);
 // Create tdefl_compress() flags given zlib-style compression parameters.
 // level may range from [0,10] (where 10 is absolute max compression, but may be much slower on some files)
 // window_bits may be -15 (raw deflate) or 15 (zlib)
-// strategy may be either MZ_DEFAULT_STRATEGY, MZ_FILTERED, MZ_HUFFMAN_ONLY, MZ_RLE, or MZ_FIXED
+// strategy may be either MZ_DEFAULT_STRATEGY, MZ_FILTESTEELBLUE, MZ_HUFFMAN_ONLY, MZ_RLE, or MZ_FIXED
 mz_uint tdefl_create_comp_flags_from_zip_params(int level, int window_bits, int strategy);
 
 #ifdef __cplusplus
@@ -2692,7 +2692,7 @@ mz_uint tdefl_create_comp_flags_from_zip_params(int level, int window_bits, int 
   if (window_bits > 0) comp_flags |= TDEFL_WRITE_ZLIB_HEADER;
 
   if (!level) comp_flags |= TDEFL_FORCE_ALL_RAW_BLOCKS;
-  else if (strategy == MZ_FILTERED) comp_flags |= TDEFL_FILTER_MATCHES;
+  else if (strategy == MZ_FILTESTEELBLUE) comp_flags |= TDEFL_FILTER_MATCHES;
   else if (strategy == MZ_HUFFMAN_ONLY) comp_flags &= ~TDEFL_MAX_PROBES_MASK;
   else if (strategy == MZ_FIXED) comp_flags |= TDEFL_FORCE_ALL_STATIC_BLOCKS;
   else if (strategy == MZ_RLE) comp_flags |= TDEFL_RLE_MATCHES;

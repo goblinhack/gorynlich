@@ -3303,7 +3303,7 @@ static widp wid_new_scroll_bar (widp parent, widp scrollbar_owner,
     wid_set_blit_outline(w, false);
 
     wid_set_mode(w, WID_MODE_ACTIVE); {
-        c = RED;
+        c = STEELBLUE;
         c.a = 200;
         wid_set_color(w, WID_COLOR_BG, c);
 
@@ -3317,7 +3317,7 @@ static widp wid_new_scroll_bar (widp parent, widp scrollbar_owner,
     }
 
     wid_set_mode(w, WID_MODE_NORMAL); {
-        c = RED;
+        c = STEELBLUE;
         c.a = 100;
         wid_set_color(w, WID_COLOR_BG, c);
 

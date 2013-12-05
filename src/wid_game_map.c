@@ -675,12 +675,12 @@ void wid_game_map_wid_create (void)
                             wid_game_map_tile_receive_on_mouse_over_end);
 
                     wid_set_mode(child, WID_MODE_OVER);
-                    wid_set_color(child, WID_COLOR_TL, RED);
-                    wid_set_color(child, WID_COLOR_BR, RED);
+                    wid_set_color(child, WID_COLOR_TL, STEELBLUE);
+                    wid_set_color(child, WID_COLOR_BR, STEELBLUE);
 
                     wid_set_mode(child, WID_MODE_NORMAL);
-                    wid_set_color(child, WID_COLOR_TL, RED);
-                    wid_set_color(child, WID_COLOR_BR, RED);
+                    wid_set_color(child, WID_COLOR_TL, STEELBLUE);
+                    wid_set_color(child, WID_COLOR_BR, STEELBLUE);
 
                     wid_set_z_depth(child, 100);
                     wid_set_z_order(child, 0);
@@ -768,7 +768,7 @@ static void wid_game_map_set_tile_count (widp w, uint32_t count)
     wid_set_text(w, 0);
     wid_set_bevel(w, 0);
     wid_set_mode(w, WID_MODE_NORMAL);
-    wid_set_color(w, WID_COLOR_TEXT, RED);
+    wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
     wid_set_color(w, WID_COLOR_TL, BLACK);
     wid_set_color(w, WID_COLOR_BG, BLACK);
     wid_set_color(w, WID_COLOR_BR, BLACK);
@@ -920,7 +920,7 @@ wid_game_map_replace_tile (widp w,
     wid_set_text_lhs(child, true);
     wid_set_text_top(child, true);
     wid_set_mode(child, WID_MODE_NORMAL);
-    wid_set_color(child, WID_COLOR_TEXT, RED);
+    wid_set_color(child, WID_COLOR_TEXT, STEELBLUE);
     wid_set_color(child, WID_COLOR_TL, BLACK);
     wid_set_color(child, WID_COLOR_BG, BLACK);
     wid_set_color(child, WID_COLOR_BR, BLACK);
@@ -1003,7 +1003,7 @@ void wid_game_map_score_update (levelp level)
         myfree(tmp);
 
         wid_set_no_shape(wid_score_container);
-        wid_set_color(wid_score, WID_COLOR_TEXT, RED);
+        wid_set_color(wid_score, WID_COLOR_TEXT, STEELBLUE);
     }
 
     /*
@@ -1022,7 +1022,7 @@ void wid_game_map_score_update (levelp level)
         wid_set_no_shape(wid_title_container);
         wid_raise(wid_title_container);
         wid_set_do_not_lower(wid_title_container, true);
-        wid_set_color(wid_title, WID_COLOR_TEXT, RED);
+        wid_set_color(wid_title, WID_COLOR_TEXT, STEELBLUE);
     }
 
     /*
@@ -1038,7 +1038,7 @@ void wid_game_map_score_update (levelp level)
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);
-        wid_set_color(wid_level, WID_COLOR_TEXT, RED);
+        wid_set_color(wid_level, WID_COLOR_TEXT, STEELBLUE);
     }
 
     /*
@@ -1164,7 +1164,7 @@ void wid_game_map_score_update (levelp level)
 
             switch (i) {
             case 0: c = BLUE; break;
-            case 1: c = RED; break;
+            case 1: c = STEELBLUE; break;
             case 2: c = GREEN; break;
             case 3: c = LIGHTBLUE; break;
             case 4: c = PURPLE; break;
@@ -1375,8 +1375,8 @@ void wid_game_map_item_update (levelp level)
             }
 
             if (highlight) {
-                wid_set_color(wid_item_box, WID_COLOR_TL, RED);
-                wid_set_color(wid_item_box, WID_COLOR_BR, RED);
+                wid_set_color(wid_item_box, WID_COLOR_TL, STEELBLUE);
+                wid_set_color(wid_item_box, WID_COLOR_BR, STEELBLUE);
             }
 
             wid_set_color(wid_item_box, WID_COLOR_BG, c);
@@ -1432,7 +1432,7 @@ void wid_game_map_item_update (levelp level)
             wid_set_text(wid_items_count, tmp);
             myfree(tmp);
 
-            wid_set_color(wid_items_count, WID_COLOR_TEXT, RED);
+            wid_set_color(wid_items_count, WID_COLOR_TEXT, STEELBLUE);
             wid_set_font(wid_items_count, med_font);
             wid_set_text_bot(wid_items_count, true);
 

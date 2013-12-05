@@ -276,7 +276,7 @@ static boolean wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_color(child, WID_COLOR_BG, BLACK);
 
     wid_set_mode(child, WID_MODE_OVER);
-    wid_set_color(child, WID_COLOR_BG, RED);
+    wid_set_color(child, WID_COLOR_BG, STEELBLUE);
 
     wid_set_mode(child, WID_MODE_NORMAL);
 
@@ -586,7 +586,7 @@ void wid_editor_buttons_wid_create (void)
             wid_set_mode(child, WID_MODE_OVER);
             wid_set_color(child, WID_COLOR_BG, c);
 
-            c = RED;
+            c = STEELBLUE;
             c.a = 250;
             wid_set_mode(child, WID_MODE_ACTIVE);
             wid_set_color(child, WID_COLOR_BG, c);

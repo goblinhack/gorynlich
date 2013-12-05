@@ -154,7 +154,7 @@ static void wid_hiscore_create (void)
     c.a = 200;
     wid_set_color(w, WID_COLOR_BG, c);
 
-    c = RED;
+    c = STEELBLUE;
     c.a = 200;
     wid_set_color(w, WID_COLOR_TL, c);
     wid_set_color(w, WID_COLOR_BR, c);
@@ -184,7 +184,7 @@ static void wid_hiscore_create (void)
 
         wid_set_text(w, "High Scores");
         wid_set_font(w, large_font);
-        wid_set_color(w, WID_COLOR_TEXT, RED);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
 
         wid_set_text_outline(w, true);
     }

@@ -249,7 +249,7 @@ void thing_tick_all (void)
 
             color c;
 
-            c = RED;
+            c = STEELBLUE;
             c.g = pulsate;
             c.b = pulsate;
             c.a = 255;
