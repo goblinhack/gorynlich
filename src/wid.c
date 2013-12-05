@@ -3113,7 +3113,7 @@ widp wid_new_rounded_window (const char *name)
     wid_set_color(w, WID_COLOR_TL, tl);
     wid_set_color(w, WID_COLOR_BR, br);
     wid_set_color(w, WID_COLOR_BG, c);
-    wid_set_color(w, WID_COLOR_TEXT, BLUE);
+    wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
     wid_set_movable(w, true);
 
     wid_raise(w);
@@ -3149,7 +3149,7 @@ widp wid_new_square_window (const char *name)
     wid_set_color(w, WID_COLOR_TL, tl);
     wid_set_color(w, WID_COLOR_BR, br);
     wid_set_color(w, WID_COLOR_BG, c);
-    wid_set_color(w, WID_COLOR_TEXT, BLUE);
+    wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
     wid_set_movable(w, true);
     wid_set_name(w, name);
 
@@ -3196,17 +3196,17 @@ widp wid_new_square_button (widp parent, const char *name)
     wid_set_mode(w, WID_MODE_FOCUS); {
         color c;
 
-        c = RED;
+        c = STEELBLUE2;
         c.a = 200;
         wid_set_color(w, WID_COLOR_TL, c);
 
-        c = RED;
+        c = STEELBLUE3;
         c.a = 200;
         wid_set_color(w, WID_COLOR_BR, c);
     }
 
     wid_set_mode(w, WID_MODE_ACTIVE); {
-        wid_set_color(w, WID_COLOR_BG, RED);
+        wid_set_color(w, WID_COLOR_BG, STEELBLUE4);
     }
 
     wid_set_mode(w, WID_MODE_NORMAL); {
