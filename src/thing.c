@@ -684,7 +684,7 @@ widp thing_message (thingp t, const char *message)
     /*
      * Move the text over the thing.
      */
-    float mx, my;
+    double mx, my;
     wid_get_mxy(t->wid, &mx, &my);
 
     uint32_t lifespan = ONESEC * 3;
@@ -1755,7 +1755,7 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
         DIE("no floor tile to hpp to");
     }
 
-    float next_floor_x, next_floor_y;
+    double next_floor_x, next_floor_y;
 
     wid_get_mxy(wid_next_floor, &next_floor_x, &next_floor_y);
 

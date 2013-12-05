@@ -158,8 +158,8 @@ void ttf_free (font *f)
 void ttf_text_size (font *f, const char *text,
                     uint32_t *w, uint32_t *h,
                     enum_fmt *fmt,
-                    float scaling,
-                    float advance,
+                    double scaling,
+                    double advance,
                     boolean fixed_width)
 {
     boolean found_format_string = false;
@@ -237,12 +237,12 @@ void ttf_text_size (font *f, const char *text,
 /*
  * Blit the font to the screen
  */
-void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, float scaling)
+void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
 {
-    float texMinX = f->glyphs[c].texMinX;
-    float texMaxX = f->glyphs[c].texMaxX;
-    float texMinY = f->glyphs[c].texMinY;
-    float texMaxY = f->glyphs[c].texMaxY;
+    double texMinX = f->glyphs[c].texMinX;
+    double texMaxX = f->glyphs[c].texMaxX;
+    double texMinY = f->glyphs[c].texMinY;
+    double texMaxY = f->glyphs[c].texMaxY;
 
     if (c == TTF_CURSOR_CHAR) {
         static boolean first = true;
@@ -314,7 +314,7 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, float scaling)
  */
 static void ttf_puts_internal (font *f, const char *text,
                                int32_t x, int32_t y,
-                               float scaling, float advance,
+                               double scaling, double advance,
                                boolean include_formatting,
                                boolean draw_cursor,
                                boolean fixed_width)
@@ -417,9 +417,9 @@ static void ttf_puts_internal (font *f, const char *text,
             x = ((((x-x_start) / TTF_TABSTOP) + 1) * TTF_TABSTOP);
             x = x + x_start;
         } else {
-            float maxc = f->glyphs[TTF_FIXED_WIDTH_CHAR].width;
-            float thisc = f->glyphs[c].width;
-            float pad = ((maxc - thisc) * scaling * advance) / 2.0;
+            double maxc = f->glyphs[TTF_FIXED_WIDTH_CHAR].width;
+            double thisc = f->glyphs[c].width;
+            double pad = ((maxc - thisc) * scaling * advance) / 2.0;
 
             if (fixed_width) {
                 x += pad;
@@ -452,7 +452,7 @@ static void ttf_puts_internal (font *f, const char *text,
 }
 
 void ttf_puts (font *f, const char *text, int32_t x, int32_t y,
-               float scaling, float advance,
+               double scaling, double advance,
                boolean fixed_width)
 {
     ttf_puts_internal(f, text, x, y, scaling, advance,
@@ -462,7 +462,7 @@ void ttf_puts (font *f, const char *text, int32_t x, int32_t y,
 }
 
 void ttf_puts_no_fmt (font *f, const char *text, int32_t x, int32_t y,
-                      float scaling, float advance,
+                      double scaling, double advance,
                       boolean fixed_width)
 {
     ttf_puts_internal(f, text, x, y, scaling, advance,
@@ -498,9 +498,9 @@ ttf_set_color_key (SDL_Surface *glyph_surface,
     texcoord[0] = 0; // Min X
     texcoord[1] = 0; // Min Y
     texcoord[2] =
-        (GLfloat)(((float)glyph_surface->w) / ((float)*width));  // Max X
+        (GLfloat)(((double)glyph_surface->w) / ((double)*width));  // Max X
     texcoord[3] =
-        (GLfloat)(((float)glyph_surface->h) / ((float)*height)); // Max Y
+        (GLfloat)(((double)glyph_surface->h) / ((double)*height)); // Max Y
 
     tmp = SDL_CreateRGBSurface(glyph_surface->flags,
                                *width, *height,
@@ -824,17 +824,17 @@ ttf_write_tga (char *name, int32_t pointsize)
         f->tex[c].tex = tex_get_gl_binding(tex);
 
         f->glyphs[c].texMinX =
-                        (float)(x * maxx) /
-                        (float)dst->w;
+                        (double)(x * maxx) /
+                        (double)dst->w;
         f->glyphs[c].texMaxX =
-                        (float)((x * maxx) + f->glyphs[c].width) /
-                        (float)dst->w;
+                        (double)((x * maxx) + f->glyphs[c].width) /
+                        (double)dst->w;
         f->glyphs[c].texMinY =
-                        (float)(h) /
-                        (float)dst->h;
+                        (double)(h) /
+                        (double)dst->h;
         f->glyphs[c].texMaxY =
-                        (float)(h + f->glyphs[c].height) /
-                        (float)dst->h;
+                        (double)(h + f->glyphs[c].height) /
+                        (double)dst->h;
 
         if (++x >= glyph_per_row) {
             x = 0;

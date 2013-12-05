@@ -382,10 +382,10 @@ void thing_tick_all (void)
                     DIE("no floor tile to hpp to");
                 }
  
-                float this_floor_x, this_floor_y;
+                double this_floor_x, this_floor_y;
                 wid_get_mxy(wid_curr_floor, &this_floor_x, &this_floor_y);
 
-                float next_floor_x, next_floor_y;
+                double next_floor_x, next_floor_y;
                 wid_get_mxy(wid_next_floor, &next_floor_x, &next_floor_y);
 
                 if (!aligned_x) {

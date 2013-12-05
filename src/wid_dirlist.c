@@ -374,7 +374,7 @@ static boolean wid_dirlist_receive_input (widp w, const SDL_KEYSYM *key)
         fpoint container_br;
         fpoint trough_tl;
         fpoint trough_br;
-        float child_height;
+        double child_height;
         widp child;
         fpoint tl;
         fpoint br;
