@@ -100,7 +100,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
 
         wid_set_color(wid_tooltip_window, WID_COLOR_BG, c);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 250;
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, c);
@@ -174,7 +174,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, n->line);
             wid_set_font(child, font);
-            wid_set_color(child, WID_COLOR_TEXT, RED);
+            wid_set_color(child, WID_COLOR_TEXT, STEELBLUE);
             wid_set_text_outline(child, true);
         }
 

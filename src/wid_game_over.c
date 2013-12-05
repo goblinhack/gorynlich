@@ -113,7 +113,7 @@ void wid_game_over_create (void)
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_mode(child, WID_MODE_NORMAL);
-        wid_set_color(child, WID_COLOR_TEXT, RED);
+        wid_set_color(child, WID_COLOR_TEXT, STEELBLUE);
         wid_set_color(child, WID_COLOR_TL, BLACK);
         wid_set_color(child, WID_COLOR_BG, BLACK);
         wid_set_color(child, WID_COLOR_BR, BLACK);

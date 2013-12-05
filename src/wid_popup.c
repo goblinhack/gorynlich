@@ -267,7 +267,7 @@ widp wid_popup (const char *text, const char *title,
         c.a = 200;
         wid_set_color(wid_popup_window, WID_COLOR_BG, c);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 150;
         wid_set_color(wid_popup_window, WID_COLOR_TL, c);
         wid_set_color(wid_popup_window, WID_COLOR_BR, c);
@@ -426,9 +426,9 @@ widp wid_popup (const char *text, const char *title,
             if (focus_order == 1) {
                 c = DARKGREEN;
             } else if (focus_order == 2) {
-                c = DARKRED;
+                c = STEELBLUE2;
             } else if (focus_order == 3) {
-                c = RED;
+                c = STEELBLUE;
             } else {
                 c = GRAY;
             }

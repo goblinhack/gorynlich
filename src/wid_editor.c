@@ -414,7 +414,7 @@ void wid_editor_inc (void)
     wid_editor_reset_buttons();
     wid_editor_mode_inc = true;
     wid_set_mode(wid_editor_wid_inc, WID_MODE_NORMAL);
-    wid_set_color(wid_editor_wid_inc, WID_COLOR_BG, RED);
+    wid_set_color(wid_editor_wid_inc, WID_COLOR_BG, STEELBLUE);
 }
 
 void wid_editor_dec (void)
@@ -422,7 +422,7 @@ void wid_editor_dec (void)
     wid_editor_reset_buttons();
     wid_editor_mode_dec = true;
     wid_set_mode(wid_editor_wid_dec, WID_MODE_NORMAL);
-    wid_set_color(wid_editor_wid_dec, WID_COLOR_BG, RED);
+    wid_set_color(wid_editor_wid_dec, WID_COLOR_BG, STEELBLUE);
 }
 
 void wid_editor_draw (void)
@@ -430,7 +430,7 @@ void wid_editor_draw (void)
     wid_editor_reset_buttons();
     wid_editor_mode_draw = true;
     wid_set_mode(wid_editor_wid_draw, WID_MODE_NORMAL);
-    wid_set_color(wid_editor_wid_draw, WID_COLOR_BG, RED);
+    wid_set_color(wid_editor_wid_draw, WID_COLOR_BG, STEELBLUE);
 }
 
 void wid_editor_erase (void)
@@ -438,7 +438,7 @@ void wid_editor_erase (void)
     wid_editor_reset_buttons();
     wid_editor_mode_eraser = true;
     wid_set_mode(wid_editor_wid_eraser, WID_MODE_NORMAL);
-    wid_set_color(wid_editor_wid_eraser, WID_COLOR_BG, RED);
+    wid_set_color(wid_editor_wid_eraser, WID_COLOR_BG, STEELBLUE);
 }
 
 void wid_editor_fill (void)
@@ -446,5 +446,5 @@ void wid_editor_fill (void)
     wid_editor_reset_buttons();
     wid_editor_mode_fill = true;
     wid_set_mode(wid_editor_wid_fill, WID_MODE_NORMAL);
-    wid_set_color(wid_editor_wid_fill, WID_COLOR_BG, RED);
+    wid_set_color(wid_editor_wid_fill, WID_COLOR_BG, STEELBLUE);
 }

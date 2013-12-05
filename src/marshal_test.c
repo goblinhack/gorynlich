@@ -12,7 +12,7 @@
 #include "enum.h"
 
 #define ENUM_EXAMPLE(list_macro)                                \
-    list_macro(ENUM_EXAMPLE_RED = 0,    "red"),                 \
+    list_macro(ENUM_EXAMPLE_STEELBLUE = 0,    "red"),                 \
     list_macro(ENUM_EXAMPLE_GREEN,      "green"),               \
     list_macro(ENUM_EXAMPLE_BLUE,       "blue"),                \
 
