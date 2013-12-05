@@ -102,7 +102,7 @@ static void wid_intro_guide_begin_3 (widp wid)
     uint32_t th = tex_get_height(tex);
 
     fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    fpoint br = { (double) tw, (double) th };
 
     wid_set_tl_br(w, tl, br);
 
@@ -136,7 +136,7 @@ static void wid_intro_guide_begin_2 (widp wid)
     uint32_t th = tex_get_height(tex);
 
     fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    fpoint br = { (double) tw, (double) th };
 
     wid_set_tl_br(w, tl, br);
 
@@ -170,7 +170,7 @@ void wid_intro_guide_create (void)
     uint32_t th = tex_get_height(tex);
 
     fpoint tl = { 0, 0 };
-    fpoint br = { (float) tw, (float) th };
+    fpoint br = { (double) tw, (double) th };
 
     wid_set_tl_br(w, tl, br);
 
