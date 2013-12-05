@@ -62,7 +62,7 @@ void wid_test_wid_create (void)
         wid_set_text_lhs(wid_test_container, true);
         wid_set_text_bot(wid_test_container, true);
         color c;
-        c = RED;
+        c = STEELBLUE;
         c.a = 50;
 
         wid_set_mode(wid_test_container, WID_MODE_NORMAL);
@@ -80,7 +80,7 @@ void wid_test_wid_create (void)
         widp child = wid_new_rounded_button(wid_test_container, "button 1");
         wid_set_tl_br_pct(child, tl, br);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 50;
 
         wid_set_mode(child, WID_MODE_NORMAL);

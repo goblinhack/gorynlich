@@ -297,11 +297,11 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
 
         wid_set_color(wid_text_input_window, WID_COLOR_TEXT, WHITE);
 
-        color c = DARKRED;
+        color c = STEELBLUE2;
         c.a = 200;
         wid_set_color(wid_text_input_window, WID_COLOR_BG, c);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 150;
         wid_set_color(wid_text_input_window, WID_COLOR_TL, c);
         wid_set_color(wid_text_input_window, WID_COLOR_BR, c);
@@ -451,7 +451,7 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
             if (focus_order == 1) {
                 c = GREEN;
             } else if (focus_order == 2) {
-                c = RED2;
+                c = STEELBLUE2;
             } else if (focus_order == 3) {
                 c = CYAN;
             } else {
@@ -577,11 +577,11 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
 
         wid_set_color(wid_text_input_window, WID_COLOR_TEXT, WHITE);
 
-        color c = DARKRED;
+        color c = STEELBLUE2;
         c.a = 200;
         wid_set_color(wid_text_input_window, WID_COLOR_BG, c);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 150;
         wid_set_color(wid_text_input_window, WID_COLOR_TL, c);
         wid_set_color(wid_text_input_window, WID_COLOR_BR, c);
@@ -664,11 +664,11 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
                                       wid_text_input_filename_input_str);
 
         wid_set_color(child, WID_COLOR_BG, BLACK);
-        wid_set_color(child, WID_COLOR_TL, RED);
-        wid_set_color(child, WID_COLOR_BR, RED);
+        wid_set_color(child, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(child, WID_COLOR_BR, STEELBLUE);
 
         color c;
-        c = DARKRED;
+        c = STEELBLUE2;
 
         wid_set_mode(child, WID_MODE_NORMAL);
         c.a = 100;
@@ -736,7 +736,7 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
             if (focus_order == 1) {
                 c = GREEN;
             } else if (focus_order == 2) {
-                c = RED2;
+                c = STEELBLUE2;
             } else if (focus_order == 3) {
                 c = CYAN;
             } else {

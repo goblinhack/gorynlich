@@ -476,14 +476,14 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
         wid_set_color(child, WID_COLOR_BR, c);
 
         wid_set_mode(child, WID_MODE_OVER);
-        c = RED;
+        c = STEELBLUE;
         c.a = 50;
         wid_set_color(child, WID_COLOR_BG, c);
         wid_set_color(child, WID_COLOR_TL, c);
         wid_set_color(child, WID_COLOR_BR, c);
 
         wid_set_mode(child, WID_MODE_ACTIVE);
-        c = RED;
+        c = STEELBLUE;
         c.a = 60;
         wid_set_color(child, WID_COLOR_BG, c);
         wid_set_color(child, WID_COLOR_TL, c);
@@ -693,7 +693,7 @@ widp wid_dirlist (const char *dir,
         c.a = 200;
         wid_set_color(wid_dirlist_window, WID_COLOR_BG, c);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 150;
         wid_set_color(wid_dirlist_window, WID_COLOR_TL, c);
         wid_set_color(wid_dirlist_window, WID_COLOR_BR, c);
@@ -870,7 +870,7 @@ widp wid_dirlist (const char *dir,
             if (focus_order == 1) {
                 c = GREEN;
             } else if (focus_order == 2) {
-                c = RED2;
+                c = STEELBLUE2;
             } else if (focus_order == 3) {
                 c = CYAN;
             } else {

@@ -84,11 +84,11 @@ static widp wid_textbox_internal (widp parent,
 
         wid_set_color(wid_textbox_window, WID_COLOR_TEXT, WHITE);
 
-        color c = DARKRED;
+        color c = STEELBLUE2;
         c.a = 200;
         wid_set_color(wid_textbox_window, WID_COLOR_BG, c);
 
-        c = RED;
+        c = STEELBLUE;
         c.a = 150;
         wid_set_color(wid_textbox_window, WID_COLOR_TL, c);
         wid_set_color(wid_textbox_window, WID_COLOR_BR, c);
