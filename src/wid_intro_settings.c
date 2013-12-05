@@ -411,10 +411,10 @@ static void wid_intro_settings_create (void)
             fpoint tl = {0.05, 0.2};
             fpoint br = {0.48, 0.3};
 
-            float height = 0.12;
+            double height = 0.12;
 
-            br.y += (float)i * height;
-            tl.y += (float)i * height;
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col1[i]);
@@ -452,10 +452,10 @@ static void wid_intro_settings_create (void)
             fpoint tl = {0.49, 0.2};
             fpoint br = {0.595, 0.3};
 
-            float height = 0.12;
+            double height = 0.12;
 
-            br.y += (float)i * height;
-            tl.y += (float)i * height;
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col2[i]);
@@ -494,10 +494,10 @@ static void wid_intro_settings_create (void)
             fpoint tl = {0.605, 0.2};
             fpoint br = {0.71, 0.3};
 
-            float height = 0.12;
+            double height = 0.12;
 
-            br.y += (float)i * height;
-            tl.y += (float)i * height;
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col3[i]);
@@ -536,10 +536,10 @@ static void wid_intro_settings_create (void)
             fpoint tl = {0.72, 0.2};
             fpoint br = {0.95, 0.3};
 
-            float height = 0.12;
+            double height = 0.12;
 
-            br.y += (float)i * height;
-            tl.y += (float)i * height;
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w,

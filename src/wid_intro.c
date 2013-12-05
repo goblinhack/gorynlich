@@ -476,7 +476,7 @@ static void wid_intro_bg_create (void)
         th = tex_get_height(tex);
 
         fpoint tl = { 0, 0 };
-        fpoint br = { (float) tw, (float) th };
+        fpoint br = { (double) tw, (double) th };
 
         wid_set_tl_br(wid, tl, br);
 
@@ -499,7 +499,7 @@ static void wid_intro_bg_create (void)
         th = tex_get_height(tex);
 
         fpoint tl = { 0, 0 };
-        fpoint br = { (float) tw, (float) th };
+        fpoint br = { (double) tw, (double) th };
 
         wid_set_tl_br(wid, tl, br);
 
@@ -678,6 +678,7 @@ static void wid_intro_create (void)
 
         child = wid_new_square_button(wid_intro, "help");
         wid_set_font(child, large_font);
+        wid_set_no_shape(child);
 
         fpoint tl = {0.00f, 0.87f};
         fpoint br = {0.33f, 1.00f};
@@ -698,8 +699,6 @@ static void wid_intro_create (void)
         c.a = 100;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
-        wid_set_mode(child, WID_MODE_NORMAL);
-
         wid_set_on_mouse_down(child, wid_intro_wid_noop);
         wid_set_on_mouse_up(child, wid_intro_help_mouse_event);
         wid_set_on_key_down(child, wid_intro_help_key_event);
@@ -710,6 +709,7 @@ static void wid_intro_create (void)
 
         child = wid_new_square_button(wid_intro, "quit");
         wid_set_font(child, large_font);
+        wid_set_no_shape(child);
 
         fpoint tl = {0.66f, 0.87f};
         fpoint br = {1.00f, 1.00f};
@@ -718,21 +718,17 @@ static void wid_intro_create (void)
         wid_set_text(child, "Quit");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = DARKRED;
-        c.a = 150;
-        wid_set_color(child, WID_COLOR_BG, c);
+        color c = ORANGE;
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
-        c = DARKRED;
         c.a = 200;
-        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 0;
-        wid_set_color(child, WID_COLOR_TL, c);
-        wid_set_color(child, WID_COLOR_BR, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_on_mouse_down(child, wid_intro_wid_noop);
         wid_set_on_mouse_up(child, wid_intro_quit_receive_mouse_up);
@@ -744,30 +740,27 @@ static void wid_intro_create (void)
 
         child = wid_new_square_button(wid_intro, "play");
         wid_set_font(child, large_font);
+        wid_set_no_shape(child);
 
-        fpoint tl = {0.33f, 0.87f};
-        fpoint br = {0.66f, 1.00f};
+        fpoint tl = {0.2f, 0.70f};
+        fpoint br = {0.8f, 0.90f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Play!");
-        wid_scaling_to_pct_in(child, 1.0, 1.1, 500, 1000);
+        wid_set_text(child, "Press SPACE or click to play");
+        wid_scaling_to_pct_in(child, 1.0, 1.2, 1000, 1000);
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = SEAGREEN;
-        c.a = 150;
-        wid_set_color(child, WID_COLOR_BG, c);
+        color c = WHITE;
+        c.a = 200;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
-        c = GREEN;
         c.a = 200;
-        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 0;
-        wid_set_color(child, WID_COLOR_TL, c);
-        wid_set_color(child, WID_COLOR_BR, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_on_mouse_down(child, wid_intro_wid_noop);
         wid_set_on_mouse_up(child, wid_intro_play_mouse_event);
