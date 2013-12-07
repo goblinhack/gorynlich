@@ -477,9 +477,8 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
         }
     }
 
-    wid_move_to_pct_centered(wid_text_input_window, -2.5, y);
     wid_fade_in(wid_text_input_window, wid_fade_delay);
-    wid_move_to_pct_centered_in(wid_text_input_window, x, y, wid_swipe_delay);
+    wid_move_to_pct_centered(wid_text_input_window, x, y);
     wid_raise(wid_text_input_window);
     wid_focus_lock(wid_text_input_window);
 

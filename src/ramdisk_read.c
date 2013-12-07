@@ -31,7 +31,7 @@
 
 extern ramdisk_t ramdisk_data[];
 
-const unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
+unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 {
     ramdisk_t *ramfile = ramdisk_data;
     unsigned long outlenl;
@@ -122,7 +122,21 @@ const unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
 
         LOG("Ramdisk %s, %d bytes", filename, ramfile->len);
 
-        return ((unsigned char*)ramfile->data);
+        if (alt_filename) {
+            myfree(alt_filename);
+        }
+
+        uint8_t *copy = (typeof(copy)) 
+                        mymalloc((int)ramfile->len + 1, "ramdisk load");
+        if (!copy) {
+            DBG("no memory for loading ramdisk copy, %s", filename);
+            return (0);
+        }
+
+        memcpy(copy, (unsigned char*)ramfile->data, (int)ramfile->len);
+        *(copy + (int)ramfile->len) = 0;
+
+        return (copy);
 
 #ifdef USE_ZLIB
         int32_t err;
@@ -216,6 +230,10 @@ const unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
         return (out);
     }
 
+    if (alt_filename) {
+        myfree(alt_filename);
+    }
+
     alt_filename = mybasename(filename, "strip dir");
 
     out = file_read_if_exists(alt_filename, outlen);
@@ -246,24 +264,4 @@ const unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
     }
 
     return (0);
-}
-
-unsigned char *ramdisk_load_copy (const char *filename, int32_t *outlen)
-{
-    unsigned char *data = (unsigned char *)ramdisk_load(filename, outlen);
-    unsigned char *copy;
-
-    if (!data) {
-        return (data);
-    }
-
-    copy = (typeof(copy)) mymalloc(*outlen + 1, "ramdisk load");
-    if (!copy) {
-        return (copy);
-    }
-
-    memcpy(copy, data, *outlen);
-    *(copy + *outlen) = 0;
-
-    return (copy);
 }

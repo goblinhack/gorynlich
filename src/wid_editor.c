@@ -70,8 +70,8 @@ void wid_editor_hide (void)
     wid_move_end(wid_editor_buttons_window);
     wid_move_end(wid_editor_map_window);
 
-    wid_move_delta_pct_in(wid_editor_buttons_window, 1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_editor_map_window, 1.0, 0.0, wid_swipe_delay);
+    wid_hide(wid_editor_map_window, wid_fade_delay);
+    wid_hide(wid_editor_buttons_window, wid_fade_delay);
 
     wid_intro_visible();
 }
@@ -86,8 +86,10 @@ void wid_editor_visible (void)
     wid_move_end(wid_editor_buttons_window);
     wid_move_end(wid_editor_map_window);
 
-    wid_move_delta_pct_in(wid_editor_buttons_window, -1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_editor_map_window, -1.0, 0.0, wid_swipe_delay);
+    wid_move_to_pct_in(wid_editor_buttons_window, 0.70, 0.0, 0);
+
+    wid_visible(wid_editor_map_window, wid_fade_delay);
+    wid_visible(wid_editor_buttons_window, wid_fade_delay);
 }
 
 static boolean wid_editor_any_popup (void)

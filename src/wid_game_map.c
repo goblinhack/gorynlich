@@ -123,10 +123,6 @@ void wid_game_hide (void)
     }
 
     if (wid_game_map_window) {
-        wid_move_end(wid_game_map_window);
-
-        wid_move_delta_pct_in(wid_game_map_window, 1.0, 0.0, wid_swipe_delay);
-
         wid_hide(wid_game_map_window, wid_swipe_delay);
 
         wid_detach_from_grid(wid_game_map_grid_container);
@@ -154,9 +150,6 @@ void wid_game_visible (void)
         wid_game_map_wid_create();
     }
 
-    wid_move_end(wid_game_map_window);
-
-    wid_move_delta_pct_in(wid_game_map_window, -1.0, 0.0, wid_swipe_delay);
     wid_raise(wid_game_map_window);
 }
 

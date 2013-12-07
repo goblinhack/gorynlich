@@ -89,13 +89,14 @@ void wid_intro_hide (void)
     wid_move_end(wid_intro_background);
     wid_move_end(wid_intro_title);
 
-    wid_move_delta_pct_in(wid_intro, -1.0f, 0.0f, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_title, -1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_background, -1.0, 0.0, wid_swipe_delay);
-
     wid_hide(wid_intro, wid_swipe_delay);
     wid_hide(wid_intro_title, wid_swipe_delay);
     wid_hide(wid_intro_background, wid_swipe_delay);
+
+    wid_lower(wid_intro_title);
+    wid_lower(wid_intro_background);
+    wid_raise(wid_intro);
+    wid_update(wid_intro);
 }
 
 void wid_intro_visible (void)
@@ -127,10 +128,8 @@ void wid_intro_visible (void)
     wid_move_end(wid_intro_background);
     wid_move_end(wid_intro_title);
 
-    wid_move_delta_pct_in(wid_intro, 1.0f, 0.0f, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_title, 1.0, 0.0, wid_swipe_delay);
-    wid_move_delta_pct_in(wid_intro_background, 1.0, 0.0, wid_swipe_delay);
-
+    wid_lower(wid_intro_title);
+    wid_lower(wid_intro_background);
     wid_raise(wid_intro);
     wid_update(wid_intro);
 }
@@ -483,7 +482,6 @@ static void wid_intro_bg_create (void)
         wid_set_tex(wid, 0, "gorynlich");
 
         wid_lower(wid);
-        wid_set_do_not_raise(wid, true);
 
         wid_set_mode(wid, WID_MODE_NORMAL);
         wid_set_color(wid, WID_COLOR_TL, WHITE);
@@ -506,7 +504,6 @@ static void wid_intro_bg_create (void)
         wid_set_tex(wid, 0, "title");
 
         wid_raise(wid);
-        wid_set_do_not_raise(wid, true);
 
         wid_set_mode(wid, WID_MODE_NORMAL);
         wid_set_color(wid, WID_COLOR_TL, WHITE);
@@ -772,9 +769,5 @@ static void wid_intro_create (void)
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
     wid_move_to_pct_centered(wid_intro_background, 0.5f, 0.5f);
-    wid_move_to_pct_centered(wid_intro_title, 3.55f, 0.55f);
-
-    wid_move_to_pct_centered_in(wid_intro, 0.5f, 0.5f, wid_swipe_delay);
-    wid_move_to_pct_centered_in(wid_intro_background, 0.5f, 0.5f, wid_swipe_delay);
-    wid_move_to_pct_centered_in(wid_intro_title, 0.5f, 0.55f, wid_swipe_delay);
+    wid_move_to_pct_centered(wid_intro_title, 0.5f, 0.55f);
 }

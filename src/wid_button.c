@@ -85,7 +85,7 @@ wid_button_internal (const char *text, float x, float y, fontp font,
 
     wid_move_to_pct_centered(wid_button_window, -0.5, y);
     wid_fade_in(wid_button_window, wid_fade_delay);
-    wid_move_to_pct_centered_in(wid_button_window, x, y, wid_swipe_delay);
+    wid_move_to_pct_centered(wid_button_window, x, y);
     wid_raise(wid_button_window);
 
     wid_update(wid_button_window);
