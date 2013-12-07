@@ -1,0 +1,13 @@
+{
+ shortname="exit"
+ tooltip="mob spawner"
+ z_depth=1
+ z_order=2
+ is_food
+ is_thing
+ tiles={
+  tile={
+   tile="exit4"
+  }
+ }
+}
