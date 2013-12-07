@@ -1211,6 +1211,8 @@ static boolean resource_init_23 (void *context)
     thing_template_load("data/things/explosion");
     thing_template_load("data/things/bomb");
     thing_template_load("data/things/spam");
+    thing_template_load("data/things/water1");
+    thing_template_load("data/things/water2");
 
     return (true);
 }
