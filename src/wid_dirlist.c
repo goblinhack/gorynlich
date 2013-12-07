@@ -919,9 +919,8 @@ widp wid_dirlist (const char *dir,
     wid_move_to_right(context->wid_dirlist_horiz_scroll);
     wid_move_to_top(context->wid_dirlist_vert_scroll);
 
-    wid_move_to_pct_centered(wid_dirlist_window, -2.5, y);
     wid_fade_in(wid_dirlist_window, wid_fade_delay);
-    wid_move_to_pct_centered_in(wid_dirlist_window, x, y, wid_swipe_delay);
+    wid_move_to_pct_centered(wid_dirlist_window, x, y);
     wid_raise(wid_dirlist_window);
 
     wid_update(wid_dirlist_window);

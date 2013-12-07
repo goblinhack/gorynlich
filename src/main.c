@@ -12,6 +12,7 @@
 #include "main.h"
 #include "gl.h"
 #include "wid_console.h"
+#include "wid_editor.h"
 #include "command.h"
 #include "color.h"
 #include "ttf.h"
@@ -65,6 +66,7 @@ void quit (void)
 
     sdl_exit();
 
+    wid_editor_fini();
     wid_game_fini();
 
     level_fini();

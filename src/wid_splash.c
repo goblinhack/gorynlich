@@ -22,7 +22,7 @@ void sdl_splashscreen_update (void)
     static uint32_t size;
 
     if (wid_splash) {
-        wid_destroy(&wid_splash);
+        wid_destroy_nodelay(&wid_splash);
     }
 
     if (wid_icon) {
@@ -86,12 +86,15 @@ void sdl_splashscreen_update (void)
         wid_raise(wid_icon);
         wid_set_do_not_raise(wid_icon, true);
 
-        wid_move_to_pct_centered(wid_icon, 0.5f, 0.4f);
+        wid_move_to_pct_centered(wid_icon, 0.5f, 0.5f);
 
         wid_set_mode(wid_icon, WID_MODE_NORMAL);
-        wid_set_color(wid_icon, WID_COLOR_TL, WHITE);
-        wid_set_color(wid_icon, WID_COLOR_BR, WHITE);
-        wid_set_color(wid_icon, WID_COLOR_BG, WHITE);
+        color c = WHITE;
+        c.a = ((255.0 / (float)maxsize) * (float)(maxsize - size));
+
+        wid_set_color(wid_icon, WID_COLOR_TL, c);
+        wid_set_color(wid_icon, WID_COLOR_BR, c);
+        wid_set_color(wid_icon, WID_COLOR_BG, c);
 
         wid_raise(wid_icon);
         wid_update(wid_icon);

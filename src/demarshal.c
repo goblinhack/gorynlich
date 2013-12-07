@@ -488,7 +488,7 @@ tree_demarshal *demarshal (const char *filename)
         DIE("no filename");
     }
 
-    buf = (char*)ramdisk_load_copy(filename, &size);
+    buf = (char*)ramdisk_load(filename, &size);
     if (!buf) {
         return (0);
     }

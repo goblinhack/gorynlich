@@ -142,6 +142,7 @@ tree_root *dirlist (const char *dir,
         char *dir_and_file = dupstr(ramfile->filename, "ramdisk name");
 
         if (!strstr(dir_and_file, include_suffix)) {
+            myfree(dir_and_file);
             ramfile++;
             continue;
         }
