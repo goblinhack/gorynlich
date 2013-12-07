@@ -540,6 +540,10 @@ int32_t main (int32_t argc, char *argv[])
                           (action_init_fn_callback)wid_game_init,
                           0, "wid_game_init");
 
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)wid_editor_init,
+                          0, "wid_editor_init");
+
 #ifdef THING_TEST
     extern int thing_test(int32_t argc, char *argv[]);
     thing_test(argc, argv);
