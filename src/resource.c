@@ -225,13 +225,13 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        "exit1",
+        "exit2",
+        "exit3",
+        "exit4",
+        "exit5",
+        "exit6",
+        "exit7",
         0,
         // row 3
         "bomb1",
@@ -1228,6 +1228,26 @@ static boolean resource_init_23 (void *context)
     thing_template_load("data/things/gem5");
     thing_template_load("data/things/gem6");
     thing_template_load("data/things/gem7");
+    thing_template_load("data/things/exit1");
+    thing_template_load("data/things/exit2");
+    thing_template_load("data/things/exit3");
+    thing_template_load("data/things/exit4");
+    thing_template_load("data/things/exit5");
+    thing_template_load("data/things/exit6");
+    thing_template_load("data/things/exit7");
+    thing_template_load("data/things/generator1");
+    thing_template_load("data/things/generator2");
+    thing_template_load("data/things/generator3");
+    thing_template_load("data/things/generator4");
+    thing_template_load("data/things/generator5");
+    thing_template_load("data/things/generator6");
+    thing_template_load("data/things/generator7");
+    thing_template_load("data/things/keys1");
+    thing_template_load("data/things/keys2");
+    thing_template_load("data/things/keys3");
+    thing_template_load("data/things/coins1");
+    thing_template_load("data/things/amulet1");
+    thing_template_load("data/things/chest1");
 
     return (true);
 }
