@@ -1211,8 +1211,23 @@ static boolean resource_init_23 (void *context)
     thing_template_load("data/things/explosion");
     thing_template_load("data/things/bomb");
     thing_template_load("data/things/spam");
+    thing_template_load("data/things/potion1");
+    thing_template_load("data/things/potion2");
+    thing_template_load("data/things/potion3");
+    thing_template_load("data/things/potion4");
+    thing_template_load("data/things/potion5");
     thing_template_load("data/things/water1");
     thing_template_load("data/things/water2");
+    thing_template_load("data/things/mask1");
+    thing_template_load("data/things/mask2");
+    thing_template_load("data/things/mask3");
+    thing_template_load("data/things/gem1");
+    thing_template_load("data/things/gem2");
+    thing_template_load("data/things/gem3");
+    thing_template_load("data/things/gem4");
+    thing_template_load("data/things/gem5");
+    thing_template_load("data/things/gem6");
+    thing_template_load("data/things/gem7");
 
     return (true);
 }
