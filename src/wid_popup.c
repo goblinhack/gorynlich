@@ -402,9 +402,6 @@ widp wid_popup (const char *text, const char *title,
             child = wid_new_rounded_small_button(wid_popup_window,
                                                  button_name);
 
-            wid_set_on_mouse_focus_begin(child, wid_effect_pulses);
-            wid_set_on_mouse_over_begin(child, wid_effect_pulses);
-
             fpoint tl;
             fpoint br;
 
@@ -474,8 +471,7 @@ widp wid_popup (const char *text, const char *title,
     wid_hide(wid_get_parent(wid_popup_horiz_scroll), 0);
     wid_hide(wid_popup_horiz_scroll, 0);
 
-    wid_move_to_pct_centered(wid_popup_window, -0.7, y);
-    wid_move_to_pct_centered_in(wid_popup_window, x, y, wid_swipe_delay);
+    wid_move_to_pct_centered(wid_popup_window, x, y);
 
     wid_raise(wid_popup_window);
 

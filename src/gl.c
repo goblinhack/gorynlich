@@ -146,8 +146,13 @@ void gl_blitsquare (float left, float top, float right, float bottom)
 
 void gl_ortho_set (int32_t width, int32_t height)
 {
+#ifdef SCALE_GRAPHICS
     global_config.video_gl_width = DEFAULT_VIDEO_WIDTH;
     global_config.video_gl_height = DEFAULT_VIDEO_HEIGHT;
+#else
+    global_config.video_gl_width = width;
+    global_config.video_gl_height = height;
+#endif
 
     global_config.xscale = (float)global_config.video_gl_width / (float)width;
     global_config.yscale = (float)global_config.video_gl_height / (float)height;

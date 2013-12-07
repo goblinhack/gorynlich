@@ -22,6 +22,7 @@
 static widp wid_intro_settings;
 static widp wid_intro_settings_container;
 static boolean wid_intro_settings_init_done;
+static boolean wid_intro_settings_restart_needed;
 static struct config old_global_config;
 
 static void wid_intro_settings_create(void);
@@ -30,7 +31,7 @@ static void wid_intro_settings_save(void);
 static boolean wid_intro_restart_selected(void);
 
 #define WID_INTRO_MAX_SETTINGS  3
-#define WID_INTRO_MAX_VAL       5
+#define WID_INTRO_MAX_VAL      10 
 
 enum {
     WID_INTRO_SETTINGS_ROW_WINDOW,
@@ -58,7 +59,15 @@ static const char *wid_intro_button_col3[WID_INTRO_MAX_SETTINGS] = {
 
 static const char *wid_intro_button_col4
                         [WID_INTRO_MAX_SETTINGS][WID_INTRO_MAX_VAL] = {
-    { "320x480", "576x768", "768x1024", 0 },
+    { 
+        "640x480", 
+        "800x600",
+        "1080x720",
+        "1440x852",
+        "1680x1050",
+        "1920x1080", 
+        0 
+    },
     { "Off", "Min", "Normal", "Max", 0 },
     { "Off", "Min", "Normal", "Max", 0 },
 };
@@ -290,6 +299,10 @@ static boolean wid_intro_restart_selected (void)
         return (false);
     }
 
+    if (!wid_intro_settings_restart_needed) {
+        return (false);
+    }
+
     wid_intro_restart_popup =
         wid_popup("%%fg=red$Restart game?",
                   0                 /* title */,
@@ -306,6 +319,8 @@ static boolean wid_intro_restart_selected (void)
 
 static void wid_intro_settings_save (void)
 {
+    wid_intro_settings_restart_needed = false;
+
     /*
      * window.
      */
@@ -344,11 +359,15 @@ static void wid_intro_settings_save (void)
         global_config.video_pix_height = old_global_config.video_pix_height;
 
         LOG("Restart needed");
+
+        wid_intro_settings_restart_needed = true;
     }
 }
 
 static void wid_intro_settings_create (void)
 {
+    wid_intro_settings_restart_needed = false;
+
     if (!wid_intro_settings) {
         wid_intro_settings_read();
 
@@ -569,10 +588,7 @@ static void wid_intro_settings_create (void)
         widp w = wid_new_rounded_small_button(wid_intro_settings_container,
                                               button_name);
 
-        wid_set_on_mouse_focus_begin(w, wid_effect_pulses);
-        wid_set_on_mouse_over_begin(w, wid_effect_pulses);
-
-        fpoint tl = {0.7, 0.9};
+        fpoint tl = {0.7, 0.85};
         fpoint br = {0.95, 0.98};
 
         wid_set_tl_br_pct(w, tl, br);

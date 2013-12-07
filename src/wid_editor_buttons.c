@@ -305,8 +305,8 @@ void wid_editor_buttons_wid_create (void)
     }
 
     {
-        fpoint tl = {1.7f, 0.0f};
-        fpoint br = {2.0f, 1.0f};
+        fpoint tl = {0.0f, 0.0f};
+        fpoint br = {0.3f, 1.0f};
 
         wid_editor_buttons_window =
                         wid_new_square_window("wid_editor_buttons");

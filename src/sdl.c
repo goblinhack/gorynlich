@@ -661,7 +661,7 @@ void sdl_exit (void)
     sdl_main_loop_running = false;
 }
 
-boolean fps_enabled = 1;
+boolean fps_enabled = 0;
 
 /*
  * User has entered a command, run it

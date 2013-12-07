@@ -361,7 +361,7 @@ static char *filetobuf (const char *file)
     int32_t len;
     char *buf;
 
-    buf = (typeof(buf)) ramdisk_load_copy(file, &len);
+    buf = (typeof(buf)) ramdisk_load(file, &len);
 
     return (buf);
 }

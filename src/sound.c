@@ -82,7 +82,7 @@ soundp sound_load (const char *filename, const char *name_alias)
         DIE("sound insert name_alias [%s] failed", name_alias);
     }
 
-    m->data = ramdisk_load_copy(filename, &m->len);
+    m->data = ramdisk_load(filename, &m->len);
     if (!m->data) {
         DIE("cannot load sound %s", filename);
     }

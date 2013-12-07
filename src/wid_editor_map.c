@@ -167,8 +167,8 @@ widp wid_editor_map_thing_replace_template (widp w,
     br.x += base_tile_width / 4.0;
     br.y += base_tile_height / 4.0;
 
-    br.x += 4;
-    br.y += 4;
+    br.x += base_tile_width / 6.0;
+    br.y += base_tile_height / 4.0;
 
     tl.x -= base_tile_height / 2.0;
     br.x -= base_tile_width / 2.0;
@@ -923,8 +923,8 @@ void wid_editor_map_wid_create (void)
     }
 
     {
-        fpoint tl = {1.0f, 0.0f};
-        fpoint br = {2.0f, 1.0f};
+        fpoint tl = {0.0f, 0.0f};
+        fpoint br = {1.0f, 1.0f};
 
         wid_editor_map_window = wid_new_square_window("wid_editor_map");
         wid_set_movable(wid_editor_map_window, false);
