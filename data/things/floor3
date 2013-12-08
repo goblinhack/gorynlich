@@ -17,5 +17,11 @@
   tile={
    tile="floor3d"
   }
+  tile={
+   tile="floor3e"
+  }
+  tile={
+   tile="floor3f"
+  }
  }
 }

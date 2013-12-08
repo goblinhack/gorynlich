@@ -6,22 +6,22 @@
  is_floor
  tiles={
   tile={
-   tile="floor2a"
+   tile="floor6a"
   }
   tile={
-   tile="floor2b"
+   tile="floor6b"
   }
   tile={
-   tile="floor2c"
+   tile="floor6c"
   }
   tile={
-   tile="floor2d"
+   tile="floor6d"
   }
   tile={
-   tile="floor2e"
+   tile="floor6e"
   }
   tile={
-   tile="floor2f"
+   tile="floor6f"
   }
  }
 }
