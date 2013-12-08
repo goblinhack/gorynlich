@@ -14,5 +14,14 @@
   tile={
    tile="floor1c"
   }
+  tile={
+   tile="floor1d"
+  }
+  tile={
+   tile="floor1e"
+  }
+  tile={
+   tile="floor1f"
+  }
  }
 }
