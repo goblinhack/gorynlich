@@ -160,6 +160,7 @@ typedef struct level_t_ *levelp;
 typedef struct map_t_ *mapp;
 
 extern thingp player;
+extern fontp vsmall_font;
 extern fontp small_font;
 extern fontp med_font;
 extern fontp large_font;

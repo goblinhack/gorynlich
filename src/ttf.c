@@ -866,6 +866,11 @@ void ttf2tga (void)
     /*
      * Generate bitmaps from TTF.
      */
+    vsmall_font  = ttf_write_tga((char*)
+                                strprepend(mybasename(VSMALL_FONT, __FUNCTION__),
+                                           TTF_PATH),
+                                VSMALL_FONT_SIZE);
+
     small_font  = ttf_write_tga((char*)
                                 strprepend(mybasename(SMALL_FONT, __FUNCTION__),
                                            TTF_PATH),

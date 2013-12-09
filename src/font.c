@@ -18,6 +18,11 @@ void font_fini (void)
     if (font_inited) {
         font_inited = false;
 
+        if (vsmall_font) {
+            ttf_free(vsmall_font);
+            vsmall_font = 0;
+        }
+
         if (small_font) {
             ttf_free(small_font);
             small_font = 0;
@@ -39,6 +44,7 @@ boolean font_init (void)
 {
     font_inited = true;
 
+    vsmall_font = ttf_read_tga((char*)VSMALL_FONT, VSMALL_FONT_SIZE);
     small_font  = ttf_read_tga((char*)SMALL_FONT, SMALL_FONT_SIZE);
     med_font    = ttf_read_tga((char*)MED_FONT, MED_FONT_SIZE);
     large_font  = ttf_read_tga((char*)LARGE_FONT, LARGE_FONT_SIZE);
