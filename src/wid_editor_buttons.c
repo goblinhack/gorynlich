@@ -32,14 +32,14 @@ widp wid_editor_wid_dec;
 
 static widp wid_editor_buttons_vert_scroll;
 
-static float wid_tile_height = 0.05;
+static float wid_tile_height = 0.07;
 
 static float wid_button_width = 1.0f / 4.0f;
 static float wid_button_height = 1.0f / 3.0f;
 
 static const int32_t ICONS_ACROSS = 4;
 static const int32_t TILES_ACROSS = 6;
-static const int32_t TILES_DOWN = 16;
+static const int32_t TILES_DOWN = 10;
 
 /*
  * Mouse up etc...

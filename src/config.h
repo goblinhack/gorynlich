@@ -62,11 +62,11 @@
 /*
  * Tiles
  */
-#define TILES_MAP_WIDTH                 32
-#define TILES_MAP_HEIGHT                32
+#define TILES_MAP_WIDTH                 38
+#define TILES_MAP_HEIGHT                38
 
-#define TILES_MAP_EDITABLE_WIDTH        32
-#define TILES_MAP_EDITABLE_HEIGHT       32
+#define TILES_MAP_EDITABLE_WIDTH        64
+#define TILES_MAP_EDITABLE_HEIGHT       64
 
 /*
  * The number of tiles per screen.
@@ -84,6 +84,8 @@
 /*
  * Fonts
  */
+#define VSMALL_FONT                 "data/ttf/small.ttf"
+#define VSMALL_FONT_SIZE            15
 #define SMALL_FONT                  "data/ttf/small.ttf"
 #define SMALL_FONT_SIZE             20
 #define MED_FONT                    "data/ttf/med.ttf"
