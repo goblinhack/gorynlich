@@ -874,6 +874,7 @@ void wid_editor_add_grid (void)
                 c.a = 100;
 
                 wid_set_color(child, WID_COLOR_TEXT, c);
+                wid_set_font(child, vsmall_font);
 
                 if (!(x % 10) || !(y % 10)) {
                     char tmp[20];
