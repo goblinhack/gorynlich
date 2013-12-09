@@ -62,8 +62,8 @@
 /*
  * Tiles
  */
-#define TILES_MAP_WIDTH                 38
-#define TILES_MAP_HEIGHT                38
+#define TILES_MAP_WIDTH                 64
+#define TILES_MAP_HEIGHT                64
 
 #define TILES_MAP_EDITABLE_WIDTH        64
 #define TILES_MAP_EDITABLE_HEIGHT       64

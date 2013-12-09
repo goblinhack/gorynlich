@@ -373,6 +373,18 @@
 .o/ramdisk_data_ttf_Readme_txt.o: asm/ramdisk_data_ttf_Readme_txt.S ../data/ttf/Readme.txt
 	gcc -c asm/ramdisk_data_ttf_Readme_txt.S -o .o/ramdisk_data_ttf_Readme_txt.o
 
+.o/ramdisk_data_ttf_small_ttf_pointsize10_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize10_data.S ../data/ttf/small.ttf_pointsize10.data
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize10_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize10_data.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize10_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize10_tga.S ../data/ttf/small.ttf_pointsize10.tga
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize10_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize10_tga.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize15_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize15_data.S ../data/ttf/small.ttf_pointsize15.data
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize15_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize15_data.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize15_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize15_tga.S ../data/ttf/small.ttf_pointsize15.tga
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize15_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize15_tga.o
+
 .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S ../data/ttf/small.ttf_pointsize20.data
 	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o
 
