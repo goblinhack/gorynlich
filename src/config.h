@@ -5,7 +5,8 @@
  */
 
 #undef ENABLE_DEV_HACKS           // Remove for final build
-#undef ENABLE_PTRCHECK            // Pointer sanity
+#define ENABLE_LEAKCHECK          // Memory leak check
+#undef ENABLE_PTRCHECK           // Check validity of pointers too
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
@@ -65,8 +66,8 @@
 #define TILES_MAP_WIDTH                 64
 #define TILES_MAP_HEIGHT                64
 
-#define TILES_MAP_EDITABLE_WIDTH        64
-#define TILES_MAP_EDITABLE_HEIGHT       64
+#define TILES_MAP_EDITABLE_WIDTH        10*64
+#define TILES_MAP_EDITABLE_HEIGHT       10*64
 
 /*
  * The number of tiles per screen.

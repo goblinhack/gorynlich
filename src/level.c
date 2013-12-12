@@ -38,6 +38,7 @@
 #include "music.h"
 #include "sound.h"
 #include "wid_console.h"
+#include "wid_editor.h"
 
 static boolean level_command_level_end(tokens_t *tokens, void *context);
 static boolean level_command_dead(tokens_t *tokens, void *context);
@@ -1646,6 +1647,8 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit_open", level->exit_reached_when_open);
     } while (demarshal_gotone(ctx));
 
+    wid_editor_map_loading = true;
+
     if (level_is_editor(level)) {
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_editor_map_thing_replace_template);
@@ -1653,6 +1656,14 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_game_map_replace_tile);
     }
+
+    wid_editor_map_loading = false;
+
+    map_fixup(level);
+
+    wid_update(wid_editor_map_window);
+
+    wid_raise(wid_editor_filename_and_title);
 
     GET_KET(ctx);
 
