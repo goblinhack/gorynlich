@@ -1,7 +1,7 @@
 {
  shortname="snaily"
  tooltip="Our hero!"
- z_depth=2
+ z_depth=3
  z_order=10
  speed=500
  is_player

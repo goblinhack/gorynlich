@@ -1,7 +1,7 @@
 {
  shortname="plant"
  tooltip="Seedpod"
- z_depth=1
+ z_depth=2
  z_order=4
  is_animated
  is_seedpod

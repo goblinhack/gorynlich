@@ -1,7 +1,7 @@
 {
  shortname="plant"
  tooltip="Feed me!"
- z_depth=1
+ z_depth=2
  speed=3000
  score_on_death=250
  z_order=4
