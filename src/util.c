@@ -21,7 +21,9 @@ void *myzalloc_ (uint32_t size,
         DIE("No memory, %s:%s():%u", file, func, line);
     }
 
+#ifdef ENABLE_LEAKCHECK
     ptrcheck_alloc(ptr, what, size, file, func, line);
+#endif
 
     return (ptr);
 }
@@ -38,7 +40,9 @@ void *mymalloc_ (uint32_t size,
         DIE("No memory, %s:%s():%u", file, func, line);
     }
 
+#ifdef ENABLE_LEAKCHECK
     ptrcheck_alloc(ptr, what, size, file, func, line);
+#endif
 
     return (ptr);
 }
@@ -50,14 +54,18 @@ void *myrealloc_ (void *ptr,
                   const char *func,
                   const uint32_t line)
 {
+#ifdef ENABLE_LEAKCHECK
     ptrcheck_free(ptr, file, func, line);
+#endif
 
     ptr = realloc(ptr, size);
     if (!ptr) {
         DIE("No memory, %s:%s():%u", file, func, line);
     }
 
+#ifdef ENABLE_LEAKCHECK
     ptrcheck_alloc(ptr, what, size, file, func, line);
+#endif
 
     return (ptr);
 }
@@ -67,7 +75,9 @@ void myfree_ (void *ptr,
               const char *func,
               const uint32_t line)
 {
+#ifdef ENABLE_LEAKCHECK
     ptrcheck_free(ptr, file, func, line);
+#endif
 
     free(ptr);
 }
@@ -85,7 +95,9 @@ char *dupstr_ (const char *in,
         DIE("No memory, %s:%s():%u", file, func, line);
     }
 
+#ifdef ENABLE_LEAKCHECK
     ptrcheck_alloc(ptr, what, size, file, func, line);
+#endif
 
     return (ptr);
 }

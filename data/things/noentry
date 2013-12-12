@@ -1,7 +1,7 @@
 {
  shortname="noentry"
  tooltip="No stuff here"
- z_depth=1
+ z_depth=2
  z_order=5
  is_hidden_from_editor
  tiles={

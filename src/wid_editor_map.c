@@ -36,6 +36,7 @@ static float tile_height_pct = 1.0f / TILES_SCREEN_HEIGHT;
 static uint32_t tile_width;
 static uint32_t tile_height;
 levelp level_ed;
+boolean wid_editor_map_loading;
 
 static boolean wid_editor_ignore_events (widp w)
 {
@@ -221,6 +222,13 @@ widp wid_editor_map_thing_replace_template (widp w,
 
         wid_set_thing_template(child, thing_template);
 
+        /*
+         * Do the fixup at the end as it is slow.
+         */
+        if (wid_editor_map_loading) {
+            return (child);
+        }
+
         map_fixup(level);
 
         wid_update(child);
@@ -257,6 +265,13 @@ widp wid_editor_map_thing_replace_template (widp w,
      * Add a bevel if we are loading this wid with an initial count.
      */
     wid_editor_set_tile_count(child, count);
+
+    /*
+     * Do the fixup at the end as it is slow.
+     */
+    if (wid_editor_map_loading) {
+        return (child);
+    }
 
     map_fixup(level);
 
@@ -903,7 +918,6 @@ void wid_editor_add_grid (void)
 
                 wid_set_z_depth(child, 0);
                 wid_set_z_order(child, 0);
-                wid_lower(child);
 
                 wid_set_tl_br_pct(child, tl, br);
 

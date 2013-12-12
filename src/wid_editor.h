@@ -41,3 +41,4 @@ extern widp wid_editor_title_popup;
 extern widp wid_editor_load_popup;
 extern widp wid_editor_filename_and_title;
 
+extern boolean wid_editor_map_loading;

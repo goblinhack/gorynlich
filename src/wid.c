@@ -4270,6 +4270,29 @@ void wid_toggle_hidden (widp w, uint32_t delay)
 
 static void wid_find_first_child_focus (widp w, widp *best)
 {
+    int32_t tlx;
+    int32_t tly;
+    int32_t brx;
+    int32_t bry;
+
+    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
+
+    if (tlx > global_config.video_gl_width) {
+        return;
+    }
+
+    if (tly > global_config.video_gl_height) {
+        return;
+    }
+
+    if (brx > 0) {
+        return;
+    }
+
+    if (bry < 0) {
+        return;
+    }
+
     if (w->focus_order) {
         if (!*best) {
             *best = w;
@@ -4311,6 +4334,29 @@ static void wid_find_first_focus (void)
 static void wid_find_specific_child_focus (widp w, widp *best,
                                            uint8_t focus_order)
 {
+    int32_t tlx;
+    int32_t tly;
+    int32_t brx;
+    int32_t bry;
+
+    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
+
+    if (tlx > global_config.video_gl_width) {
+        return;
+    }
+
+    if (tly > global_config.video_gl_height) {
+        return;
+    }
+
+    if (brx > 0) {
+        return;
+    }
+
+    if (bry < 0) {
+        return;
+    }
+
     if (w->focus_order) {
         if (w->focus_order == focus_order) {
             *best = w;
@@ -6682,8 +6728,36 @@ static void wid_tick (widp w)
         }
     }
 
-    TREE2_WALK(w->children_unsorted, child) {
-        wid_tick(child);
+    int32_t tlx;
+    int32_t tly;
+    int32_t brx;
+    int32_t bry;
+    boolean clipped;
+
+    clipped = false;
+
+    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
+
+    if (tlx > global_config.video_gl_width) {
+        clipped = true;
+    }
+
+    if (tly > global_config.video_gl_height) {
+        clipped = true;
+    }
+
+    if (brx > 0) {
+        clipped = true;
+    }
+
+    if (bry < 0) {
+        clipped = true;
+    }
+
+    if (!clipped) {
+        TREE2_WALK(w->children_unsorted, child) {
+            wid_tick(child);
+        }
     }
 
     /*

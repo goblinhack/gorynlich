@@ -121,9 +121,11 @@ void quit (void)
         GFX_PATH = 0;
     }
 
+#ifdef ENABLE_LEAKCHECK
     if (!croaked) {
         ptrcheck_fini();
     }
+#endif
 }
 
 void restart (void)
@@ -500,7 +502,9 @@ int32_t main (int32_t argc, char *argv[])
 	DIE("hiscore init");
     }
 
+#ifdef ENABLE_LEAKCHECK
     ptrcheck_leak_snapshot();
+#endif
 
 #ifndef WID_TEST
     if (!wid_console_init()) {
@@ -512,9 +516,11 @@ int32_t main (int32_t argc, char *argv[])
     }
 #endif
 
+#ifdef ENABLE_LEAKCHECK
     if (!ptrcheck_init()) {
 	DIE("ptrcheck init");
     }
+#endif
 
     if (!resource_init()) {
 	DIE("resource init");
