@@ -336,7 +336,7 @@ void wid_editor_save (void)
 
     wid_editor_save_popup = wid_dirlist(
           LEVELS_PATH,              /* dir */
-          ".map",                   /* include */
+          0,                        /* include */
           0,                        /* exclude */
           "%%fg=red$Save level",    /* title */
           0.5, 0.5,                 /* position */
@@ -370,7 +370,7 @@ void wid_editor_load (void)
      */
     wid_editor_load_popup = wid_dirlist(
           LEVELS_PATH,              /* dir */
-          ".map",                   /* include */
+          0,                        /* include */
           0,                        /* exclude */
           "%%fg=red$Load level",    /* title */
           0.5, 0.5,                 /* position */
