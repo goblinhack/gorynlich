@@ -16,7 +16,7 @@ boolean dir_test (int32_t argc, char *argv[])
     tree_root *d;
     tree_file_node *n;
 
-    d = dirlist(".", 0, 0, true /* include dirs */);
+    d = dirlist(".", 0, 0, true /* include dirs */, false /* include_ramdisk */);
     if (!d) {
         exit(1);
     }

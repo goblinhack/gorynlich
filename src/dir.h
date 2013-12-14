@@ -16,7 +16,8 @@ boolean dir_exists(const char *filename);
 tree_root *dirlist(const char *dir,
                    const char *include_suffix,
                    const char *exclude_suffix,
-                   boolean include_dirs);
+                   boolean include_dirs,
+                   boolean include_ramdisk);
 
 void dirlist_free(tree_root **root);
 char *dir_dot(void);
