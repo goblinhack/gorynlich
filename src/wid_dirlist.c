@@ -214,7 +214,8 @@ static boolean wid_dirlist_dir_event (widp w, int32_t x, int32_t y,
     d = dirlist(context->dir,
                 context->include_suffix,
                 context->exclude_suffix,
-                context->include_dirs);
+                context->include_dirs,
+                false /* include_ramdisk */);
     if (!d) {
         /*
          * Fail
@@ -569,7 +570,8 @@ widp wid_dirlist (const char *dir,
     d = dirlist(context->dir,
                 context->include_suffix,
                 context->exclude_suffix,
-                context->include_dirs);
+                context->include_dirs,
+                false /* include_ramdisk */);
     if (!d) {
         /*
          * Fail

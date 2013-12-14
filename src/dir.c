@@ -46,7 +46,8 @@ boolean dir_exists (const char *indir)
 tree_root *dirlist (const char *dir,
                     const char *include_suffix,
                     const char *exclude_suffix,
-                    boolean include_dirs)
+                    boolean include_dirs,
+                    boolean include_ramdisk)
 {
     tree_file_node *node;
     struct dirent * e;
@@ -132,35 +133,37 @@ tree_root *dirlist (const char *dir,
         myfree(dir_and_file);
     }
 
-    extern ramdisk_t ramdisk_data[];
+    if (include_ramdisk) {
+        extern ramdisk_t ramdisk_data[];
 
-    ramdisk_t *ramfile;
+        ramdisk_t *ramfile;
 
-    ramfile = ramdisk_data;
+        ramfile = ramdisk_data;
 
-    while (ramfile->filename) {
-        char *dir_and_file = dupstr(ramfile->filename, "ramdisk name");
+        while (ramfile->filename) {
+            char *dir_and_file = dupstr(ramfile->filename, "ramdisk name");
 
-        if (include_suffix) {
-            if (!strstr(dir_and_file, include_suffix)) {
-                myfree(dir_and_file);
-                ramfile++;
-                continue;
+            if (include_suffix) {
+                if (!strstr(dir_and_file, include_suffix)) {
+                    myfree(dir_and_file);
+                    ramfile++;
+                    continue;
+                }
             }
+
+            node = (typeof(node)) myzalloc(sizeof(*node), "TREE NODE: dirlist");
+            node->is_file = true;
+
+            /*
+            * Static key so tree removals are easy.
+            */
+            node->tree.key = mybasename(dir_and_file, "TREE KEY: dirlist2");
+
+            tree_insert(root, &node->tree.node);
+            ramfile++;
+
+            myfree(dir_and_file);
         }
-
-        node = (typeof(node)) myzalloc(sizeof(*node), "TREE NODE: dirlist");
-        node->is_file = true;
-
-        /*
-         * Static key so tree removals are easy.
-         */
-        node->tree.key = mybasename(dir_and_file, "TREE KEY: dirlist2");
-
-        tree_insert(root, &node->tree.node);
-        ramfile++;
-
-        myfree(dir_and_file);
     }
 
     closedir(d);
