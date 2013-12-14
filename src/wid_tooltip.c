@@ -173,9 +173,14 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         split_free(&d);
     }
 
+#ifdef SLIDING_TOOLTIP
     wid_move_to_pct_centered(wid_tooltip_window, -2.5, y);
     wid_fade_in(wid_tooltip_window, wid_fade_delay);
     wid_move_to_pct_centered_in(wid_tooltip_window, x, y, wid_swipe_delay);
+#else
+    wid_fade_in(wid_tooltip_window, wid_fade_delay);
+    wid_move_to_pct_centered(wid_tooltip_window, x, y);
+#endif
     wid_raise(wid_tooltip_window);
 
     wid_update(wid_tooltip_window);
