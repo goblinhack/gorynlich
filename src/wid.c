@@ -1118,14 +1118,7 @@ static boolean wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
     }
 
     if (w->tooltip) {
-        /*
-         * If likely to be too big, then use a smaller font.
-         */
-        if (strlen(w->tooltip) > 20) {
-            wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.5, med_font);
-        } else {
-            wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.5, large_font);
-        }
+        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.5, small_font);
     }
 
     return (true);
@@ -2973,15 +2966,6 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
         wid_fade_out(w, delay);
 
         wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
-
-        /*
-         * Move off to the right quickly.
-         */
-#if 0
-        wid_move_to_pct_centered_in(w, 2.5f,
-                                    (((double)(tly + bry)) / 2.0) /
-                                    (double) global_config.height, wid_swipe_delay);
-#endif
     }
 
     wid_grid_tree_detach(w);
@@ -4270,29 +4254,6 @@ void wid_toggle_hidden (widp w, uint32_t delay)
 
 static void wid_find_first_child_focus (widp w, widp *best)
 {
-    int32_t tlx;
-    int32_t tly;
-    int32_t brx;
-    int32_t bry;
-
-    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
-
-    if (tlx > global_config.video_gl_width) {
-        return;
-    }
-
-    if (tly > global_config.video_gl_height) {
-        return;
-    }
-
-    if (brx > 0) {
-        return;
-    }
-
-    if (bry < 0) {
-        return;
-    }
-
     if (w->focus_order) {
         if (!*best) {
             *best = w;
@@ -4334,29 +4295,6 @@ static void wid_find_first_focus (void)
 static void wid_find_specific_child_focus (widp w, widp *best,
                                            uint8_t focus_order)
 {
-    int32_t tlx;
-    int32_t tly;
-    int32_t brx;
-    int32_t bry;
-
-    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
-
-    if (tlx > global_config.video_gl_width) {
-        return;
-    }
-
-    if (tly > global_config.video_gl_height) {
-        return;
-    }
-
-    if (brx > 0) {
-        return;
-    }
-
-    if (bry < 0) {
-        return;
-    }
-
     if (w->focus_order) {
         if (w->focus_order == focus_order) {
             *best = w;
@@ -6728,36 +6666,8 @@ static void wid_tick (widp w)
         }
     }
 
-    int32_t tlx;
-    int32_t tly;
-    int32_t brx;
-    int32_t bry;
-    boolean clipped;
-
-    clipped = false;
-
-    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
-
-    if (tlx > global_config.video_gl_width) {
-        clipped = true;
-    }
-
-    if (tly > global_config.video_gl_height) {
-        clipped = true;
-    }
-
-    if (brx > 0) {
-        clipped = true;
-    }
-
-    if (bry < 0) {
-        clipped = true;
-    }
-
-    if (!clipped) {
-        TREE2_WALK(w->children_unsorted, child) {
-            wid_tick(child);
-        }
+    TREE2_WALK(w->children_unsorted, child) {
+        wid_tick(child);
     }
 
     /*

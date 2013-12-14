@@ -81,7 +81,7 @@ static void wid_intro_about_create (void)
     wid_intro_about = wid_popup(
           "\n"
           "\n"
-          "Version 1.0.1\n"
+          "Version 0.0.0\n"
           "\n"
           "\n"
           "%%fg=green$Copyright Neil McGill\n"
@@ -91,7 +91,7 @@ static void wid_intro_about_create (void)
           "\n"
           "\n"
           "\n"
-          "For Charlotte, Ben and Stuart\n"
+          "For my little minions.\n"
           "\n"
           "Game Music: Charlotte McGill\n"
           "\n"
@@ -116,10 +116,10 @@ static void wid_intro_about_create (void)
           "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA "
           "\n"
           ,
-          "%%fg=red$Licenses and stuff",   /* title */
+          "%%fg=red$Licenses and stuffs. Srsly.",   /* title */
           0.5, 0.5,                 /* x,y postition in percent */
-          large_font,               /* title font */
-          small_font,               /* body font */
+          med_font,               /* title font */
+          vsmall_font,               /* body font */
           med_font,                 /* button font */
           1,                        /* number buttons */
           "Close", wid_intro_about_callback_close);

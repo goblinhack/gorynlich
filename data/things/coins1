@@ -1,6 +1,6 @@
 {
  shortname="coins"
- tooltip="coins"
+ tooltip="Loot"
  z_depth=2
  z_order=2
  is_food

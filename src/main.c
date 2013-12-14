@@ -374,7 +374,7 @@ static void find_file_locations (void)
 
 int32_t main (int32_t argc, char *argv[])
 {
-#ifdef ENABLE_DEV_HACKS
+#ifdef ENABLE_LOGFILE
 #ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
     if (!freopen("stdout.txt", "w", stdout)) {
 	ERR("Failed to open stdout.txt");

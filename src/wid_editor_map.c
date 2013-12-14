@@ -16,6 +16,7 @@
 #include "wid_editor.h"
 #include "wid_editor_map.h"
 #include "wid_editor_buttons.h"
+#include "wid_textbox.h"
 #include "thing_template.h"
 #include "wid_intro.h"
 #include "gl.h"
@@ -24,6 +25,7 @@
 #include "config.h"
 #include "thing.h"
 #include "sdl.h"
+#include "string.h"
 
 widp wid_editor_map_window;
 widp wid_editor_map_grid_container;
@@ -928,6 +930,39 @@ void wid_editor_add_grid (void)
     }
 }
 
+static void wid_editor_title_set (const char *title)
+{
+    level_set_title(level_ed, title);
+
+    wid_destroy(&wid_editor_filename_and_title);
+
+    if (level_get_title(level_ed) &&
+        strcmp(level_get_title(level_ed), "(null)")) {
+
+        LOG("Level titled as: %s", title);
+
+        char *name = dynprintf("%s", level_get_title(level_ed));
+
+        wid_editor_filename_and_title = wid_textbox(
+                    wid_editor_map_window,
+                    0,
+                    name,
+                    0.5, 0.07, med_font);
+
+        myfree(name);
+    } else {
+        wid_editor_filename_and_title = wid_textbox(
+                    wid_editor_map_window,
+                    0,
+                    "Level is unnamed",
+                    0.5, 0.07, med_font);
+    }
+
+    wid_set_no_shape(wid_editor_filename_and_title);
+    wid_raise(wid_editor_filename_and_title);
+    wid_set_do_not_lower(wid_editor_filename_and_title, true);
+}
+
 /*
  * Create the wid_editor_map
  */
@@ -1019,6 +1054,10 @@ void wid_editor_map_wid_create (void)
     wid_visible(wid_editor_map_horiz_scroll, 1);
 
     wid_move_to_top(wid_editor_map_vert_scroll);
+
+    if (!wid_editor_filename_and_title) {
+        wid_editor_title_set("Unnamed level");
+    }
 }
 
 void wid_editor_map_wid_destroy (void)

@@ -1,6 +1,6 @@
 {
- shortname="snaily"
- tooltip="Our hero!"
+ shortname="warrior"
+ tooltip="Warrior"
  z_depth=3
  z_order=10
  speed=500
