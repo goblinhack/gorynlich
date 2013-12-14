@@ -141,10 +141,12 @@ tree_root *dirlist (const char *dir,
     while (ramfile->filename) {
         char *dir_and_file = dupstr(ramfile->filename, "ramdisk name");
 
-        if (!strstr(dir_and_file, include_suffix)) {
-            myfree(dir_and_file);
-            ramfile++;
-            continue;
+        if (include_suffix) {
+            if (!strstr(dir_and_file, include_suffix)) {
+                myfree(dir_and_file);
+                ramfile++;
+                continue;
+            }
         }
 
         node = (typeof(node)) myzalloc(sizeof(*node), "TREE NODE: dirlist");
