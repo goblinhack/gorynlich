@@ -179,7 +179,9 @@ static widp wid_textbox_internal (widp parent,
 
     wid_update(wid_textbox_window);
 
-    *textbox = firstchild;
+    if (textbox) {
+        *textbox = firstchild;
+    }
 
     return (wid_textbox_window);
 }

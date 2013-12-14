@@ -180,23 +180,33 @@ static void wid_editor_title_ok (widp w)
     wid_destroy(&top);
     wid_editor_title_popup = 0;
 
-    LOG("Level titled as: %s", title);
-
-    char *name = dynprintf("%s", level_get_title(level_ed));
-
     wid_destroy(&wid_editor_filename_and_title);
 
-    wid_editor_filename_and_title = wid_textbox(
-                wid_editor_map_window,
-                &wid_editor_filename_and_title,
-                name,
-                0.5, 0.07, med_font);
+   if (level_get_title(level_ed) &&
+        strcmp(level_get_title(level_ed), "(null)")) {
+
+        LOG("Level titled as: %s", title);
+
+        char *name = dynprintf("%s", level_get_title(level_ed));
+
+        wid_editor_filename_and_title = wid_textbox(
+                    wid_editor_map_window,
+                    0, /* textbox */
+                    name,
+                    0.5, 0.07, med_font);
+
+        myfree(name);
+    } else {
+        wid_editor_filename_and_title = wid_textbox(
+                    wid_editor_map_window,
+                    0, /* textbox */
+                    "Level is unnamed",
+                    0.5, 0.07, med_font);
+    }
 
     wid_set_no_shape(wid_editor_filename_and_title);
     wid_raise(wid_editor_filename_and_title);
     wid_set_do_not_lower(wid_editor_filename_and_title, true);
-
-    myfree(name);
 }
 
 static void wid_editor_title_cancel (widp w)
@@ -281,22 +291,31 @@ static void wid_editor_load_ok (widp w)
      */
     verify(level_ed);
 
-    char *title = dynprintf("%s: %s",
-            basename(dir_and_file), level_get_title(level_ed));
-
     wid_destroy(&wid_editor_filename_and_title);
 
-    wid_editor_filename_and_title = wid_textbox(
-                wid_editor_map_window,
-                &wid_editor_filename_and_title,
-                title,
-                0.5, 0.07, med_font);
+    if (level_get_title(level_ed) &&
+            strcmp(level_get_title(level_ed), "(null)")) {
+
+        char *title = dynprintf("%s", level_get_title(level_ed));
+
+        wid_editor_filename_and_title = wid_textbox(
+                    wid_editor_map_window,
+                    0,
+                    title,
+                    0.5, 0.07, med_font);
+        myfree(title);
+    } else {
+        wid_editor_filename_and_title = wid_textbox(
+                    wid_editor_map_window,
+                    0,
+                    basename(dir_and_file),
+                    0.5, 0.07, med_font);
+    }
 
     wid_set_no_shape(wid_editor_filename_and_title);
     wid_raise(wid_editor_filename_and_title);
     wid_set_do_not_lower(wid_editor_filename_and_title, true);
 
-    myfree(title);
     myfree(dir_and_file);
 }
 

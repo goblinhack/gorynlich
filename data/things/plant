@@ -1,6 +1,6 @@
 {
  shortname="plant"
- tooltip="Feed me!"
+ tooltip="Hungry plant!"
  z_depth=2
  speed=3000
  score_on_death=250
