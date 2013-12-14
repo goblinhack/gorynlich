@@ -1,6 +1,6 @@
 {
  shortname="amulet"
- tooltip="amulet"
+ tooltip="Special powers granted"
  z_depth=2
  z_order=2
  is_food

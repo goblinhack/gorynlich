@@ -28,9 +28,6 @@
 .o/ramdisk_data_gfx_sprites_small_xcf.o: asm/ramdisk_data_gfx_sprites_small_xcf.S ../data/gfx/sprites_small.xcf
 	gcc -c asm/ramdisk_data_gfx_sprites_small_xcf.S -o .o/ramdisk_data_gfx_sprites_small_xcf.o
 
-.o/ramdisk_data_gfx_stars_png.o: asm/ramdisk_data_gfx_stars_png.S ../data/gfx/stars.png
-	gcc -c asm/ramdisk_data_gfx_stars_png.S -o .o/ramdisk_data_gfx_stars_png.o
-
 .o/ramdisk_data_gfx_title_png.o: asm/ramdisk_data_gfx_title_png.S ../data/gfx/title.png
 	gcc -c asm/ramdisk_data_gfx_title_png.S -o .o/ramdisk_data_gfx_title_png.o
 
@@ -136,6 +133,9 @@
 .o/ramdisk_data_things__generator1_session.o: asm/ramdisk_data_things__generator1_session.S ../data/things/.generator1.session
 	gcc -c asm/ramdisk_data_things__generator1_session.S -o .o/ramdisk_data_things__generator1_session.o
 
+.o/ramdisk_data_things__generator3_session.o: asm/ramdisk_data_things__generator3_session.S ../data/things/.generator3.session
+	gcc -c asm/ramdisk_data_things__generator3_session.S -o .o/ramdisk_data_things__generator3_session.o
+
 .o/ramdisk_data_things__generator7_session.o: asm/ramdisk_data_things__generator7_session.S ../data/things/.generator7.session
 	gcc -c asm/ramdisk_data_things__generator7_session.S -o .o/ramdisk_data_things__generator7_session.o
 
@@ -154,6 +154,12 @@
 .o/ramdisk_data_things__mask3_session.o: asm/ramdisk_data_things__mask3_session.S ../data/things/.mask3.session
 	gcc -c asm/ramdisk_data_things__mask3_session.S -o .o/ramdisk_data_things__mask3_session.o
 
+.o/ramdisk_data_things__plant_session.o: asm/ramdisk_data_things__plant_session.S ../data/things/.plant.session
+	gcc -c asm/ramdisk_data_things__plant_session.S -o .o/ramdisk_data_things__plant_session.o
+
+.o/ramdisk_data_things__player_session.o: asm/ramdisk_data_things__player_session.S ../data/things/.player.session
+	gcc -c asm/ramdisk_data_things__player_session.S -o .o/ramdisk_data_things__player_session.o
+
 .o/ramdisk_data_things__potion1_session.o: asm/ramdisk_data_things__potion1_session.S ../data/things/.potion1.session
 	gcc -c asm/ramdisk_data_things__potion1_session.S -o .o/ramdisk_data_things__potion1_session.o
 
@@ -166,6 +172,9 @@
 .o/ramdisk_data_things__rock_1_session.o: asm/ramdisk_data_things__rock_1_session.S ../data/things/.rock_1.session
 	gcc -c asm/ramdisk_data_things__rock_1_session.S -o .o/ramdisk_data_things__rock_1_session.o
 
+.o/ramdisk_data_things__spam_session.o: asm/ramdisk_data_things__spam_session.S ../data/things/.spam.session
+	gcc -c asm/ramdisk_data_things__spam_session.S -o .o/ramdisk_data_things__spam_session.o
+
 .o/ramdisk_data_things__treasure_session.o: asm/ramdisk_data_things__treasure_session.S ../data/things/.treasure.session
 	gcc -c asm/ramdisk_data_things__treasure_session.S -o .o/ramdisk_data_things__treasure_session.o
 
@@ -175,8 +184,14 @@
 .o/ramdisk_data_things__wall2_session.o: asm/ramdisk_data_things__wall2_session.S ../data/things/.wall2.session
 	gcc -c asm/ramdisk_data_things__wall2_session.S -o .o/ramdisk_data_things__wall2_session.o
 
+.o/ramdisk_data_things__water_session.o: asm/ramdisk_data_things__water_session.S ../data/things/.water.session
+	gcc -c asm/ramdisk_data_things__water_session.S -o .o/ramdisk_data_things__water_session.o
+
 .o/ramdisk_data_things__water1_session.o: asm/ramdisk_data_things__water1_session.S ../data/things/.water1.session
 	gcc -c asm/ramdisk_data_things__water1_session.S -o .o/ramdisk_data_things__water1_session.o
+
+.o/ramdisk_data_things__water2_session.o: asm/ramdisk_data_things__water2_session.S ../data/things/.water2.session
+	gcc -c asm/ramdisk_data_things__water2_session.S -o .o/ramdisk_data_things__water2_session.o
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o

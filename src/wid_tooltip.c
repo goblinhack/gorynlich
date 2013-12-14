@@ -94,17 +94,10 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
     {
         wid_tooltip_window = wid_new_window("wid_tooltip");
 
-        wid_set_tex(wid_tooltip_window, 0, "stars");
-        color c = WHITE;
-        c.a = 150;
-
+        color c = BLACK;
         wid_set_color(wid_tooltip_window, WID_COLOR_BG, c);
-
-        c = STEELBLUE;
-        c.a = 250;
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, c);
-        wid_set_bevel(wid_tooltip_window, 4);
 
         fpoint tl = {0, 0};
         fpoint br = {0, 0};
@@ -174,8 +167,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, n->line);
             wid_set_font(child, font);
-            wid_set_color(child, WID_COLOR_TEXT, STEELBLUE);
-            wid_set_text_outline(child, true);
+            wid_set_color(child, WID_COLOR_TEXT, WHITE);
         }
 
         split_free(&d);
