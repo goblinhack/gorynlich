@@ -911,7 +911,7 @@ void dmap_goals_find (dmap *map, thingp t)
     } else if (thing_is_plant(t)) {
         maxpass = 2;
     } else {
-        DIE("need number of passes");
+        THING_LOG(t, "need to specify a number of map passes for searching");
     }
 
     boolean running_away = false;

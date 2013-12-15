@@ -44,7 +44,6 @@ static boolean level_command_level_end(tokens_t *tokens, void *context);
 static boolean level_command_dead(tokens_t *tokens, void *context);
 static boolean level_init_done;
 static void level_destroy_callback(widp wid);
-static void level_count_down_finished(widp wid);
 static void level_start_timers(levelp level);
 static void level_action_timer_bonus_fired(void *context);
 static void level_place_bonus(levelp level);
@@ -221,148 +220,6 @@ static boolean level_command_dead (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean wid_level_count_down_common (widp w)
-{
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(w);
-    verify(level);
-
-    widp top = wid_get_top_parent(w);
-    wid_destroy_in(top, 500);
-    wid_set_on_destroy(top, level_count_down_finished);
-
-    return (true);
-}
-
-static boolean wid_level_count_down_key_down (widp w,
-                                             const SDL_KEYSYM *key)
-{
-    return (wid_level_count_down_common(w));
-}
-
-static boolean wid_level_count_down_mouse_down (widp w,
-                                               int32_t x,
-                                               int32_t y,
-                                               uint32_t button)
-{
-    return (wid_level_count_down_common(w));
-}
-
-static void level_count_down_finished (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    level_set_is_paused(level, false);
-}
-
-static void level_count_down_begin_go (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    if (!level_is_paused(level)) {
-        return;
-    }
-
-    widp w = wid_button_large("%%fg=red$Go!");
-    wid_destroy_in(w, 800);
-    wid_set_no_shape(w);
-    wid_set_client_context(w, (void*)level);
-    wid_set_on_destroy(w, level_count_down_finished);
-    wid_set_on_mouse_down(w, wid_level_count_down_mouse_down);
-    wid_set_on_key_down(w, wid_level_count_down_key_down);
-    wid_focus_lock(w);
-}
-
-static void level_count_down_begin_1 (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    if (!level_is_paused(level)) {
-        return;
-    }
-
-    widp w = wid_button_large("%%fg=red$1...");
-    wid_destroy_in(w, 800);
-    wid_set_no_shape(w);
-    wid_set_client_context(w, (void*)level);
-    wid_set_on_destroy(w, level_count_down_begin_go);
-    wid_set_on_mouse_down(w, wid_level_count_down_mouse_down);
-    wid_set_on_key_down(w, wid_level_count_down_key_down);
-    wid_focus_lock(w);
-}
-
-static void level_count_down_begin_2 (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    if (!level_is_paused(level)) {
-        return;
-    }
-
-    widp w = wid_button_large("%%fg=red$2...");
-    wid_destroy_in(w, 800);
-    wid_set_no_shape(w);
-    wid_set_client_context(w, (void*)level);
-    wid_set_on_destroy(w, level_count_down_begin_1);
-    wid_set_on_mouse_down(w, wid_level_count_down_mouse_down);
-    wid_set_on_key_down(w, wid_level_count_down_key_down);
-    wid_focus_lock(w);
-}
-
-static void level_count_down_begin_3 (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    if (!level_is_paused(level)) {
-        return;
-    }
-
-    widp w = wid_button_large("%%fg=red$3...");
-    wid_destroy_in(w, 1500);
-    wid_set_no_shape(w);
-    wid_set_client_context(w, (void*)level);
-    wid_set_on_destroy(w, level_count_down_begin_2);
-    wid_set_on_mouse_down(w, wid_level_count_down_mouse_down);
-    wid_set_on_key_down(w, wid_level_count_down_key_down);
-    wid_focus_lock(w);
-}
-
 static boolean wid_level_game_over_common (widp w)
 {
     if (sdl_is_exiting()) {
@@ -394,44 +251,6 @@ static boolean wid_level_game_over_key_down_event (widp w,
     wid_level_game_over_common(w);
 
     return (true);
-}
-
-static void level_count_down_begin (levelp level)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    widp w;
-
-    w = wid_button_large("%%fg=red$Ready?");
-    wid_destroy_in(w, 1000);
-    wid_set_no_shape(w);
-    wid_set_client_context(w, (void*)level);
-    wid_set_on_destroy(w, level_count_down_begin_3);
-    wid_set_on_mouse_down(w, wid_level_count_down_mouse_down);
-    wid_set_on_key_down(w, wid_level_count_down_key_down);
-    wid_focus_lock(w);
-
-    music_play_game();
-}
-
-static void level_count_down_begin_fast (levelp level)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    widp w;
-
-    w = wid_button_large("%%fg=red$Go!");
-    wid_destroy_in(w, 800);
-    wid_set_no_shape(w);
-    wid_set_client_context(w, (void*)level);
-    wid_set_on_destroy(w, level_count_down_finished);
-    wid_set_on_mouse_down(w, wid_level_count_down_mouse_down);
-    wid_set_on_key_down(w, wid_level_count_down_key_down);
-    wid_focus_lock(w);
 }
 
 levelp level_new (widp map, uint32_t level_no)
@@ -685,7 +504,7 @@ levelp level_load (uint32_t level_no, widp wid)
 
     char *dir_and_file;
 
-    dir_and_file = dynprintf("data/levels/%u.map", level_no);
+    dir_and_file = dynprintf("data/levels/%u", level_no);
 
     demarshal_p in;
 
@@ -736,17 +555,8 @@ levelp level_load (uint32_t level_no, widp wid)
     level_set_pipes(level);
     level_pipe_find_ends(level);
 
+    level_set_is_paused(level, false);
     level_start_timers(level);
-
-    /*
-     * Used so we only do the slow countdown first time on each level.
-     */
-    if (level_no_first_time != level_no) {
-        level_no_first_time = level_no;
-        level_count_down_begin(level);
-    } else {
-        level_count_down_begin_fast(level);
-    }
 
     return (level);
 }
@@ -989,31 +799,31 @@ void level_place_bonus (levelp level)
 
         switch (rand() % 9) {
         case 0: // m
-            thing_template = thing_template_find("data/things/m");
+            thing_template = thing_template_find("data/things/gem1");
             break;
         case 1: // a
-            thing_template = thing_template_find("data/things/a");
+            thing_template = thing_template_find("data/things/gem2");
             break;
         case 2: // i
-            thing_template = thing_template_find("data/things/i");
+            thing_template = thing_template_find("data/things/potion1");
             break;
         case 3: // l
-            thing_template = thing_template_find("data/things/l");
+            thing_template = thing_template_find("data/things/potion2");
             break;
         case 4: // s
-            thing_template = thing_template_find("data/things/s");
+            thing_template = thing_template_find("data/things/keys1");
             break;
         case 5: // n
-            thing_template = thing_template_find("data/things/n");
+            thing_template = thing_template_find("data/things/water1");
             break;
         case 6: // a
-            thing_template = thing_template_find("data/things/a");
+            thing_template = thing_template_find("data/things/water2");
             break;
         case 7: // i
-            thing_template = thing_template_find("data/things/i");
+            thing_template = thing_template_find("data/things/generator1");
             break;
         case 8: // l
-            thing_template = thing_template_find("data/things/l");
+            thing_template = thing_template_find("data/things/generator2");
             break;
         }
 
@@ -1660,10 +1470,6 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
     wid_editor_map_loading = false;
 
     map_fixup(level);
-
-    wid_update(wid_editor_map_window);
-
-    wid_raise(wid_editor_filename_and_title);
 
     GET_KET(ctx);
 

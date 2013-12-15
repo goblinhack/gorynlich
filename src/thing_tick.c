@@ -352,11 +352,15 @@ void thing_tick_all (void)
              * Need to look for a nexthop? Or keep walking on?
              */
             boolean have_nexthop;
+#if TODO
             if (look_for_nexthop) {
                 have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
             } else {
                 have_nexthop = true;
             }
+#endif
+
+            have_nexthop = false;
 
             if (have_nexthop) {
                 t->is_dir_up = false;
