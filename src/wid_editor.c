@@ -42,6 +42,8 @@ boolean wid_editor_mode_draw;
 boolean wid_editor_mode_line;
 boolean wid_editor_mode_fill;
 
+static void wid_editor_clear_callback_yes(widp wid);
+
 boolean wid_editor_init (void)
 {
     wid_editor_init_done = true;
@@ -104,6 +106,76 @@ static boolean wid_editor_any_popup (void)
     }
 
     return (false);
+}
+
+static unsigned int undo;
+
+void wid_editor_save_point (void)
+{
+    char *dir_and_file = dynprintf(".undo.%u", undo++);
+
+    undo = undo % 100;
+
+    /*
+     * Write the file.
+     */
+    marshal_p ctx;
+    ctx = marshal(dir_and_file);
+    wid_editor_marshal(ctx);
+    marshal_fini(ctx);
+
+    myfree(dir_and_file);
+}
+
+void wid_editor_undo_save_point (void)
+{
+    --undo;
+
+    undo = undo % 100;
+
+    char *dir_and_file = dynprintf(".undo.%u", undo);
+    demarshal_p ctx;
+
+    if (!(ctx = demarshal(dir_and_file))) {
+        (void) wid_popup_error("Undo fail");
+    } else {
+        wid_empty_grid(wid_editor_map_grid_container);
+
+        wid_editor_add_grid();
+
+        if (!wid_editor_demarshal(ctx)) {
+            (void) wid_popup_error("Undo fail");
+        }
+
+        demarshal_fini(ctx);
+    }
+
+    myfree(dir_and_file);
+}
+
+void wid_editor_redo_save_point (void)
+{
+    char *dir_and_file = dynprintf(".undo.%u", ++undo);
+
+    undo = undo % 100;
+
+    demarshal_p ctx;
+
+    if (!(ctx = demarshal(dir_and_file))) {
+        (void) wid_popup_error("Undo fail");
+    } else {
+        wid_empty_grid(wid_editor_map_grid_container);
+
+        wid_editor_add_grid();
+
+        if (!wid_editor_demarshal(ctx)) {
+            (void) wid_popup_error("Undo fail");
+        }
+
+        demarshal_fini(ctx);
+    }
+
+    myfree(dir_and_file);
 }
 
 static void wid_editor_save_ok (widp w)

@@ -17,6 +17,9 @@ void wid_editor_erase(void);
 void wid_editor_fill(void);
 void wid_editor_clear(void);
 void wid_editor_reset_buttons(void);
+void wid_editor_save_point(void);
+void wid_editor_undo_save_point(void);
+void wid_editor_redo_save_point(void);
 
 extern boolean wid_editor_mode_draw;
 extern boolean wid_editor_mode_line;

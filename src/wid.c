@@ -2936,7 +2936,9 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
     *wp = 0;
 
     if (w->being_destroyed) {
-        return;
+        if (delay) {
+            return;
+        }
     }
 
     w->being_destroyed = true;
@@ -3487,7 +3489,7 @@ void wid_empty_grid (widp w)
         TREE_WALK(grid->trees[i], node) {
             child = node->wid;
 
-            wid_destroy(&child);
+            wid_destroy_nodelay(&child);
         }
     }
 
@@ -3495,7 +3497,7 @@ void wid_empty_grid (widp w)
         TREE_WALK(grid->trees[i], node) {
             child = node->wid;
 
-            DIE("%s exists after empty grid",child->name);
+            ERR("%s exists after empty grid",child->name);
         }
     }
 }
