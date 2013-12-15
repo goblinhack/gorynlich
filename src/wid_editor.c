@@ -282,6 +282,8 @@ static void wid_editor_title_ok (widp w)
     wid_set_no_shape(wid_editor_filename_and_title);
     wid_raise(wid_editor_filename_and_title);
     wid_set_do_not_lower(wid_editor_filename_and_title, true);
+    wid_destroy_in(wid_editor_filename_and_title, 3000);
+    wid_editor_filename_and_title = 0;
 }
 
 static void wid_editor_title_cancel (widp w)
@@ -390,6 +392,9 @@ static void wid_editor_load_ok (widp w)
     wid_set_no_shape(wid_editor_filename_and_title);
     wid_raise(wid_editor_filename_and_title);
     wid_set_do_not_lower(wid_editor_filename_and_title, true);
+
+    wid_destroy_in(wid_editor_filename_and_title, 3000);
+    wid_editor_filename_and_title = 0;
 
     myfree(dir_and_file);
 }
@@ -519,6 +524,7 @@ void wid_editor_line (void)
     wid_editor_mode_line = true;
     wid_set_mode(wid_editor_wid_line, WID_MODE_NORMAL);
     wid_set_color(wid_editor_wid_line, WID_COLOR_BG, STEELBLUE);
+    wid_editor_got_line_start = false;
 }
 
 void wid_editor_erase (void)

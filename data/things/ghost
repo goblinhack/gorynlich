@@ -1,0 +1,18 @@
+{
+ shortname="ghost"
+ tooltip="Ghost!"
+ z_depth=2
+ speed=3000
+ score_on_death=250
+ z_order=4
+ is_monst
+ is_animated
+ is_thing
+ is_scarable
+ tiles={
+  tile={
+   tile="ghost1-right"
+   delay=100
+  }
+ }
+}
