@@ -6692,8 +6692,8 @@ static void wid_display (widp w,
     int32_t clip_width;
     boolean fading;
     boolean hidden;
-    uint32_t owidth;
-    uint32_t oheight;
+    int32_t owidth;
+    int32_t oheight;
     int32_t otlx;
     int32_t otly;
     int32_t obrx;
@@ -6854,11 +6854,22 @@ static void wid_display (widp w,
     }
 
     /*
+     * If inputting text, show a cursor.
+     */
+    const char *text;
+
+    if (wid_get_show_cursor(w)) {
+        text = wid_get_text_with_cursor(w);
+    } else {
+        text = wid_get_text(w);
+    }
+
+    /*
      * Should be no need for scissors if you do not have any children
      * or are not the top level wid.
      */
     if (!disable_scissor) {
-        if (w->children_display_sorted || !w->parent) {
+        if (w->children_display_sorted || !w->parent || text) {
             /*
              * Tell the parent we are doing scissors so they can re-do
              * their own scissors.
@@ -6953,17 +6964,6 @@ static void wid_display (widp w,
             tile_blit_fat(tile2, 0, tl, br);
             glBindTexture(GL_TEXTURE_2D, 0);
         }
-    }
-
-    /*
-     * If inputting text, show a cursor.
-     */
-    const char *text;
-
-    if (wid_get_show_cursor(w)) {
-        text = wid_get_text_with_cursor(w);
-    } else {
-        text = wid_get_text(w);
     }
 
     if (text && text[0]) {

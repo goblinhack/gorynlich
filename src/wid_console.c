@@ -192,10 +192,10 @@ static void wid_console_wid_create (void)
 
 #ifdef ENABLE_INVERTED_DISPLAY
         c = WHITE;
-        c.a = 250;
+        c.a = 50;
 #else
-        c = GRAY50;
-        c.a = 250;
+        c = BLACK;
+        c.a = 50;
 #endif
 
         wid_set_mode(wid_console_window, WID_MODE_NORMAL);
@@ -210,8 +210,6 @@ static void wid_console_wid_create (void)
         wid_set_text_bot(wid_console_window, true);
         wid_set_text_lhs(wid_console_window, true);
         wid_set_tl_br_pct(wid_console_window, tl, br);
-
-        wid_set_tex(wid_console_window, "data/gfx/shell.png", "shell");
 
         fsize sz = {0.0f, 0.0f};
         wid_set_tex_tl(wid_console_window, sz);

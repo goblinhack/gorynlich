@@ -162,6 +162,9 @@ widp wid_editor_map_thing_replace_template (widp w,
 
         wid_set_thing_template(child, thing_template);
 
+        wid_update(child);
+
+
         /*
          * Do the fixup at the end as it is slow.
          */
@@ -170,10 +173,8 @@ widp wid_editor_map_thing_replace_template (widp w,
         }
 
         map_fixup(level);
-
-        wid_update(child);
-
         wid_raise(wid_editor_filename_and_title);
+        wid_update(wid_editor_map_window);
 
         return (child);
     }
@@ -202,6 +203,11 @@ widp wid_editor_map_thing_replace_template (widp w,
     wid_set_thing_template(child, thing_template);
 
     /*
+     * This adds it to the grid wid.
+     */
+    wid_update(child);
+
+    /*
      * Do the fixup at the end as it is slow.
      */
     if (wid_editor_map_loading) {
@@ -209,12 +215,6 @@ widp wid_editor_map_thing_replace_template (widp w,
     }
 
     map_fixup(level);
-
-    /*
-     * This adds it to the grid wid.
-     */
-    wid_update(child);
-
     wid_raise(wid_editor_filename_and_title);
     wid_update(wid_editor_map_window);
 
@@ -563,6 +563,7 @@ static boolean wid_editor_map_thing_replace_wrap (widp w,
 
         map_fixup(level_ed);
         wid_raise(wid_editor_filename_and_title);
+        wid_update(wid_editor_map_window);
         return (true);
     }
 
@@ -582,6 +583,7 @@ static boolean wid_editor_map_thing_replace_wrap (widp w,
         
         map_fixup(level_ed);
         wid_raise(wid_editor_filename_and_title);
+        wid_update(wid_editor_map_window);
 
         return (true);
     }
@@ -649,6 +651,7 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
 {
     int32_t x;
     int32_t y;
+    boolean rc;
 
     if (wid_editor_ignore_events(w)) {
         return (false);
@@ -668,13 +671,15 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
         case ' ':
         case SDLK_RETURN:
             wid_editor_save_point();
-
             (void) SDL_GetMouseState(&x, &y);
 
             x *= global_config.xscale;
             y *= global_config.yscale;
 
-            return (wid_editor_map_thing_replace_wrap(wid_editor_map_grid_container, x, y));
+            rc = wid_editor_map_thing_replace_wrap(wid_editor_map_grid_container, x, y);
+
+            return (rc);
+
 
         case SDLK_BACKSPACE:
         case SDLK_DELETE:
@@ -685,8 +690,9 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
             x *= global_config.xscale;
             y *= global_config.yscale;
 
-            wid_editor_map_thing_remove(wid_editor_map_grid_container, x, y);
-            return (true);
+            rc = wid_editor_map_thing_remove(wid_editor_map_grid_container, x, y);
+
+            return (rc);
 
         case 'q':
         case 'b':
@@ -711,6 +717,8 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
             return (true);
 
         case 'u':
+            wid_editor_save_point();
+            wid_editor_undo_save_point();
             wid_editor_undo_save_point();
             return (true);
 
