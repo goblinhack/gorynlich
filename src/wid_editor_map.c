@@ -667,6 +667,8 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
 
         case ' ':
         case SDLK_RETURN:
+            wid_editor_save_point();
+
             (void) SDL_GetMouseState(&x, &y);
 
             x *= global_config.xscale;
@@ -676,6 +678,8 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
 
         case SDLK_BACKSPACE:
         case SDLK_DELETE:
+            wid_editor_save_point();
+
             (void) SDL_GetMouseState(&x, &y);
 
             x *= global_config.xscale;
@@ -704,6 +708,14 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
 
         case 'n':
             wid_editor_line();
+            return (true);
+
+        case 'u':
+            wid_editor_undo_save_point();
+            return (true);
+
+        case 'r':
+            wid_editor_redo_save_point();
             return (true);
 
         case 'l':
