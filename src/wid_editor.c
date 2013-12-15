@@ -93,6 +93,8 @@ void wid_editor_visible (void)
 
     wid_visible(wid_editor_map_window, wid_fade_delay);
     wid_visible(wid_editor_buttons_window, wid_fade_delay);
+
+    wid_editor_save_point();
 }
 
 static boolean wid_editor_any_popup (void)
@@ -496,6 +498,8 @@ void wid_editor_reset_buttons (void)
     wid_editor_mode_fill = false;
 
     wid_set_color(wid_editor_wid_eraser, WID_COLOR_BG, BLACK);
+    wid_set_color(wid_editor_wid_redo, WID_COLOR_BG, BLACK);
+    wid_set_color(wid_editor_wid_undo, WID_COLOR_BG, BLACK);
     wid_set_color(wid_editor_wid_draw, WID_COLOR_BG, BLACK);
     wid_set_color(wid_editor_wid_line, WID_COLOR_BG, BLACK);
     wid_set_color(wid_editor_wid_fill, WID_COLOR_BG, BLACK);
@@ -531,4 +535,14 @@ void wid_editor_fill (void)
     wid_editor_mode_fill = true;
     wid_set_mode(wid_editor_wid_fill, WID_MODE_NORMAL);
     wid_set_color(wid_editor_wid_fill, WID_COLOR_BG, STEELBLUE);
+}
+
+void wid_editor_undo (void)
+{
+    wid_editor_undo_save_point();
+}
+
+void wid_editor_redo (void)
+{
+    wid_editor_redo_save_point();
 }

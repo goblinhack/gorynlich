@@ -314,6 +314,7 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
         br.y += toth;
 
         br.x += PAD_X;
+        br.y += PAD_Y;
 
         /*
          * Space for input box.
@@ -332,6 +333,9 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
 
         br.x += maxw + PAD_X;
         br.y += title_h;
+
+        tl.y += BUTTON_PAD_Y/2;
+        br.y += BUTTON_PAD_Y/2;
 
         wid_text_input_title = wid_new_container(wid_text_input_window,
                                               "wid text_input container1");
@@ -442,6 +446,9 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
 
             x = tl.x;
             x -= BUTTON_PAD_X;
+
+            tl.y -= BUTTON_PAD_Y/2;
+            br.y -= BUTTON_PAD_Y/2;
 
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, button_name);

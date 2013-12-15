@@ -28,6 +28,8 @@ widp wid_editor_wid_draw;
 widp wid_editor_wid_line;
 widp wid_editor_wid_fill;
 widp wid_editor_wid_eraser;
+widp wid_editor_wid_undo;
+widp wid_editor_wid_redo;
 
 static widp wid_editor_buttons_vert_scroll;
 
@@ -214,6 +216,35 @@ wid_editor_buttons_icon_erase_receive_mouse_up (widp w,
                                                 uint32_t button)
 {
     wid_editor_erase();
+
+    return (true);
+}
+
+/*
+ * Mouse up etc...
+ */
+static boolean
+wid_editor_buttons_icon_undo_receive_mouse_up (widp w,
+                                                int32_t x,
+                                                int32_t y,
+                                                uint32_t button)
+{
+    wid_editor_undo();
+
+    return (true);
+}
+
+
+/*
+ * Mouse up etc...
+ */
+static boolean
+wid_editor_buttons_icon_redo_receive_mouse_up (widp w,
+                                                int32_t x,
+                                                int32_t y,
+                                                uint32_t button)
+{
+    wid_editor_redo();
 
     return (true);
 }
@@ -469,7 +500,7 @@ void wid_editor_buttons_wid_create (void)
 
             case 3:
                 wid_set_text(child, "Eraser");
-                wid_editor_wid_eraser = child;
+                wid_editor_wid_undo = child;
 
                 wid_set_tooltip(child, "Erase selected tiles");
 
@@ -479,11 +510,25 @@ void wid_editor_buttons_wid_create (void)
                 break;
 
             case 4:
-                wid_set_text(child, "...");
+                wid_set_text(child, "Undo");
+                wid_editor_wid_redo = child;
+
+                wid_set_tooltip(child, "Undo last change");
+
+                wid_set_on_mouse_up(
+                            child,
+                            wid_editor_buttons_icon_undo_receive_mouse_up);
                 break;
 
             case 5:
-                wid_set_text(child, "...");
+                wid_set_text(child, "Redo");
+                wid_editor_wid_eraser = child;
+
+                wid_set_tooltip(child, "Undo an undo");
+
+                wid_set_on_mouse_up(
+                            child,
+                            wid_editor_buttons_icon_redo_receive_mouse_up);
                 break;
 
             case 6:
