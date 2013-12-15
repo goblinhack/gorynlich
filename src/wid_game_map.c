@@ -22,6 +22,7 @@
 #include "wid_game_map.h"
 #include "wid_tooltip.h"
 #include "wid_intro.h"
+#include "wid_editor.h"
 #include "wid_editor_map.h"
 #include "gl.h"
 #include "level.h"
@@ -677,7 +678,6 @@ void wid_game_map_wid_create (void)
 
                     wid_set_z_depth(child, 100);
                     wid_set_z_order(child, 0);
-                    wid_raise(child);
                 }
 
                 wid_set_no_shape(child);
@@ -699,8 +699,10 @@ void wid_game_map_wid_create (void)
     wid_game_selected_item_name = 0;
 
     if (!player) {
-        player_new(0 /* level */, "data/things/player");
+        player_new(0 /* level */, "data/things/warrior");
     }
+
+    wid_editor_map_loading = true;
 
     level_game = level_load(thing_level_no(player),
                             wid_game_map_grid_container);
@@ -709,9 +711,11 @@ void wid_game_map_wid_create (void)
         return;
     }
 
+    wid_editor_map_loading = false;
+
     things_level_start(level_game);
 
-    wid_move_to_pct_centered(wid_game_map_window, 1.5f, 0.5f);
+    wid_move_to_pct_centered(wid_game_map_window, 0.5f, 0.5f);
 }
 
 void wid_game_map_wid_destroy (void)
@@ -912,12 +916,16 @@ wid_game_map_replace_tile (widp w,
                                 thing_template_name(thing_template)));
     }
 
-    map_fixup(level);
-
     /*
      * This adds it to the grid wid.
      */
     wid_update(child);
+
+    if (wid_editor_map_loading) {
+        return (child);
+    }
+
+    map_fixup(level);
 
     return (child);
 }
@@ -1171,7 +1179,7 @@ void wid_game_map_score_update (levelp level)
             br.x = players_at + players_width * i + players_width;
 
             wid_set_tl_br_pct(wid_player, tl, br);
-            wid_set_tilename(wid_player, "snail1");
+            wid_set_tilename(wid_player, "warrior1-right");
             wid_set_no_shape(wid_player);
         }
     }
