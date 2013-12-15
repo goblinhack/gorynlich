@@ -740,33 +740,6 @@ void wid_game_map_wid_destroy (void)
     }
 }
 
-static void wid_game_map_set_tile_count (widp w, uint32_t count)
-{
-    char tmp[80];
-
-    wid_set_client_context(w, (void*)(uintptr_t)count);
-
-    if (count) {
-        wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_color(w, WID_COLOR_TL, WHITE);
-        wid_set_color(w, WID_COLOR_BG, GRAY20);
-        wid_set_color(w, WID_COLOR_BR, BLACK);
-
-        snprintf(tmp, sizeof(tmp), "%u", count);
-        wid_set_text(w, tmp);
-
-        return;
-    }
-
-    wid_set_text(w, 0);
-    wid_set_bevel(w, 0);
-    wid_set_mode(w, WID_MODE_NORMAL);
-    wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
-    wid_set_color(w, WID_COLOR_TL, BLACK);
-    wid_set_color(w, WID_COLOR_BG, BLACK);
-    wid_set_color(w, WID_COLOR_BR, BLACK);
-}
-
 /*
  * Replace or place a tile.
  */
@@ -876,8 +849,6 @@ wid_game_map_replace_tile (widp w,
         count = (typeof(count)) (uintptr_t)
                         wid_get_client_context(child);
         count++;
-
-        wid_game_map_set_tile_count(child, count);
 
         wid_game_map_set_thing_template(child, thing_template);
 

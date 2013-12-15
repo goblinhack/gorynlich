@@ -28,8 +28,6 @@ widp wid_editor_wid_draw;
 widp wid_editor_wid_line;
 widp wid_editor_wid_fill;
 widp wid_editor_wid_eraser;
-widp wid_editor_wid_inc;
-widp wid_editor_wid_dec;
 
 static widp wid_editor_buttons_vert_scroll;
 
@@ -216,34 +214,6 @@ wid_editor_buttons_icon_erase_receive_mouse_up (widp w,
                                                 uint32_t button)
 {
     wid_editor_erase();
-
-    return (true);
-}
-
-/*
- * Mouse up etc...
- */
-static boolean
-wid_editor_buttons_icon_inc_receive_mouse_up (widp w,
-                                              int32_t x,
-                                              int32_t y,
-                                              uint32_t button)
-{
-    wid_editor_inc();
-
-    return (true);
-}
-
-/*
- * Mouse up etc...
- */
-static boolean
-wid_editor_buttons_icon_dec_receive_mouse_up (widp w,
-                                              int32_t x,
-                                              int32_t y,
-                                              uint32_t button)
-{
-    wid_editor_dec();
 
     return (true);
 }
@@ -509,25 +479,11 @@ void wid_editor_buttons_wid_create (void)
                 break;
 
             case 4:
-                wid_set_text(child, "+");
-                wid_editor_wid_inc = child;
-
-                wid_set_tooltip(child, "Add more tiles of same type");
-
-                wid_set_on_mouse_up(
-                            child,
-                            wid_editor_buttons_icon_inc_receive_mouse_up);
+                wid_set_text(child, "...");
                 break;
 
             case 5:
-                wid_set_text(child, "-");
-                wid_editor_wid_dec = child;
-
-                wid_set_tooltip(child, "Undo more tiles of same type");
-
-                wid_set_on_mouse_up(
-                            child,
-                            wid_editor_buttons_icon_dec_receive_mouse_up);
+                wid_set_text(child, "...");
                 break;
 
             case 6:
@@ -590,12 +546,10 @@ void wid_editor_buttons_wid_create (void)
                   "%%fmt=left$%%fg=white$d\t\t\t\t%%fg=green$Draw mode\n"
                   "%%fmt=left$%%fg=white$e\t\t\t\t%%fg=green$Eraser mode\n"
                   "%%fmt=left$%%fg=white$f\t\t\t\t%%fg=green$Fill mode\n"
+                  "%%fmt=left$%%fg=white$n\t\t\t\t%%fg=green$Line mode\n"
                   "%%fmt=left$%%fg=white$c\t\t\t\t%%fg=green$Clear level\n"
                   "%%fmt=left$%%fg=white$s\t\t\t\t%%fg=green$Save level\n"
                   "%%fmt=left$%%fg=white$l\t\t\t\t%%fg=green$Load level\n"
-                  "%%fmt=left$%%fg=white$-\t\t\t\t%%fg=green$Duplicate tile\n"
-                  "%%fmt=left$%%fg=white$+\t\t\t\t%%fg=green$Remove dup tile\n"
-                  "%%fmt=left$%%fg=white$+\t\t\t\t%%fg=green$Hide buttons\n"
                   "%%fmt=left$%%fg=white$b,ESC\t\t\t\t%%fg=green$Main menu");
 
                 break;
