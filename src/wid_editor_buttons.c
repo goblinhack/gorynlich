@@ -25,6 +25,7 @@ widp wid_editor_buttons_container1;
 widp wid_editor_buttons_container2;
 widp wid_editor_buttons_container3;
 widp wid_editor_wid_draw;
+widp wid_editor_wid_line;
 widp wid_editor_wid_fill;
 widp wid_editor_wid_eraser;
 widp wid_editor_wid_inc;
@@ -159,6 +160,20 @@ wid_editor_buttons_icon_draw_receive_mouse_up (widp w,
                                                uint32_t button)
 {
     wid_editor_draw();
+
+    return (true);
+}
+
+/*
+ * Mouse up etc...
+ */
+static boolean
+wid_editor_buttons_icon_line_receive_mouse_up (widp w,
+                                               int32_t x,
+                                               int32_t y,
+                                               uint32_t button)
+{
+    wid_editor_line();
 
     return (true);
 }
@@ -516,7 +531,14 @@ void wid_editor_buttons_wid_create (void)
                 break;
 
             case 6:
-                wid_set_text(child, "...");
+                wid_set_text(child, "Line");
+                wid_editor_wid_line = child;
+
+                wid_set_tooltip(child, "Click on the start and then end of a line");
+
+                wid_set_on_mouse_up(
+                                child,
+                                wid_editor_buttons_icon_line_receive_mouse_up);
                 break;
 
             case 7:

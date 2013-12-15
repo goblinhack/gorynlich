@@ -66,8 +66,8 @@
 #define TILES_MAP_WIDTH                 64
 #define TILES_MAP_HEIGHT                64
 
-#define TILES_MAP_EDITABLE_WIDTH        10*64
-#define TILES_MAP_EDITABLE_HEIGHT       10*64
+#define TILES_MAP_EDITABLE_WIDTH        64
+#define TILES_MAP_EDITABLE_HEIGHT       64
 
 /*
  * The number of tiles per screen.
