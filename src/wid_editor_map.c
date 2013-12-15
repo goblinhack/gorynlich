@@ -52,40 +52,6 @@ static boolean wid_editor_ignore_events (widp w)
 /*
  * Replace or place a tile.
  */
-static void wid_editor_set_tile_count (widp w, uint32_t count)
-{
-    const uint32_t bevel = 5;
-    char tmp[80];
-
-    wid_set_client_context(w, (void*)(uintptr_t)count);
-
-    if (count) {
-        wid_set_square(w);
-        wid_set_bevel(w, bevel);
-
-        wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_color(w, WID_COLOR_TL, WHITE);
-        wid_set_color(w, WID_COLOR_BG, GRAY20);
-        wid_set_color(w, WID_COLOR_BR, BLACK);
-
-        snprintf(tmp, sizeof(tmp), "%u", count);
-        wid_set_text(w, tmp);
-
-        return;
-    }
-
-    wid_set_text(w, 0);
-    wid_set_bevel(w, 0);
-    wid_set_mode(w, WID_MODE_NORMAL);
-    wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
-    wid_set_color(w, WID_COLOR_TL, BLACK);
-    wid_set_color(w, WID_COLOR_BG, BLACK);
-    wid_set_color(w, WID_COLOR_BR, BLACK);
-}
-
-/*
- * Replace or place a tile.
- */
 widp wid_editor_map_thing_replace_template (widp w,
                                            int32_t x,
                                            int32_t y,
@@ -194,35 +160,6 @@ widp wid_editor_map_thing_replace_template (widp w,
     if (existing)  {
         child = existing;
 
-        if (count) {
-            wid_editor_set_tile_count(child, count);
-        } else if (wid_editor_mode_inc) {
-
-            count = (typeof(count)) (uintptr_t)
-                            wid_get_client_context(child);
-            count++;
-
-            wid_editor_set_tile_count(child, count);
-
-        } else if (wid_editor_mode_dec) {
-
-            count = (typeof(count)) (uintptr_t)
-                            wid_get_client_context(child);
-            if (!count) {
-                wid_destroy(&child);
-
-                map_fixup(level);
-
-                wid_raise(wid_editor_filename_and_title);
-
-                return (0);
-            }
-
-            count--;
-
-            wid_editor_set_tile_count(child, count);
-        }
-
         wid_set_thing_template(child, thing_template);
 
         /*
@@ -263,11 +200,6 @@ widp wid_editor_map_thing_replace_template (widp w,
      * "paint" the thing.
      */
     wid_set_thing_template(child, thing_template);
-
-    /*
-     * Add a bevel if we are loading this wid with an initial count.
-     */
-    wid_editor_set_tile_count(child, count);
 
     /*
      * Do the fixup at the end as it is slow.
@@ -404,88 +336,6 @@ static boolean wid_editor_map_thing_remove_template (
     return (true);
 }
 
-static boolean wid_editor_map_thing_inc_template (int32_t x, int32_t y)
-{
-    widp existing;
-
-    /*
-     * Find the midpoint of the tile.
-     */
-    x *= tile_width;
-    y *= tile_height;
-
-    x += tile_width / 2;
-    y += tile_height / 2;
-
-    fpoint tl = {
-        (float) x, (float) y
-    };
-
-    fpoint br = {
-        (float) x, (float) y
-    };
-
-    existing = wid_find_matching_top(wid_editor_map_grid_container, tl, br);
-    if (!existing)  {
-        return (false);
-    }
-
-    uint32_t count = (typeof(count)) (uintptr_t)
-                    wid_get_client_context(existing);
-    count++;
-
-    wid_editor_set_tile_count(existing, count);
-    wid_update(existing);
-    map_fixup(level_ed);
-
-    return (true);
-}
-
-static boolean wid_editor_map_thing_dec_template (int32_t x, int32_t y)
-{
-    widp existing;
-
-    /*
-     * Find the midpoint of the tile.
-     */
-    x *= tile_width;
-    y *= tile_height;
-
-    x += tile_width / 2;
-    y += tile_height / 2;
-
-    fpoint tl = {
-        (float) x, (float) y
-    };
-
-    fpoint br = {
-        (float) x, (float) y
-    };
-
-    existing = wid_find_matching_top(wid_editor_map_grid_container, tl, br);
-    if (!existing)  {
-        return (false);
-    }
-
-    uint32_t count = (typeof(count)) (uintptr_t)
-                    wid_get_client_context(existing);
-
-    if (!count) {
-        wid_destroy(&existing);
-
-        map_fixup(level_ed);
-        return (true);
-    }
-
-    count--;
-
-    wid_editor_set_tile_count(existing, count);
-    wid_update(existing);
-    map_fixup(level_ed);
-
-    return (true);
-}
-
 /*
  * Mouse down etc...
  */
@@ -587,50 +437,6 @@ static boolean wid_editor_map_thing_remove (widp w,
     y /= tile_height;
 
     wid_editor_map_thing_remove_template(x, y);
-
-    return (true);
-}
-
-/*
- * Increment thing count
- */
-static boolean wid_editor_map_thing_inc (widp w,
-                                         int32_t x,
-                                         int32_t y)
-{
-    fpoint offset;
-
-    wid_get_offset(wid_editor_map_grid_container, &offset);
-
-    x += -offset.x;
-    y += -offset.y;
-
-    x /= tile_width;
-    y /= tile_height;
-
-    wid_editor_map_thing_inc_template(x, y);
-
-    return (true);
-}
-
-/*
- * Decrement thing count
- */
-static boolean wid_editor_map_thing_dec (widp w,
-                                         int32_t x,
-                                         int32_t y)
-{
-    fpoint offset;
-
-    wid_get_offset(wid_editor_map_grid_container, &offset);
-
-    x += -offset.x;
-    y += -offset.y;
-
-    x /= tile_width;
-    y /= tile_height;
-
-    wid_editor_map_thing_dec_template(x, y);
 
     return (true);
 }
@@ -896,7 +702,7 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
             wid_editor_save();
             return (true);
 
-        case 'L':
+        case 'n':
             wid_editor_line();
             return (true);
 
@@ -913,45 +719,11 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
             return (true);
 
         case 'f':
-            (void) SDL_GetMouseState(&x, &y);
-
-            x *= global_config.xscale;
-            y *= global_config.yscale;
-
-            wid_editor_map_loading = true;
-            wid_editor_map_thing_flood_fill(wid_editor_map_grid_container, x, y);
-            wid_editor_map_loading = false;
-
-            map_fixup(level_ed);
-            wid_raise(wid_editor_filename_and_title);
-
+            wid_editor_fill();
             return (true);
 
         case 'c':
             wid_editor_clear();
-            return (true);
-
-        case '+':
-        case '=':
-            (void) SDL_GetMouseState(&x, &y);
-
-            x *= global_config.xscale;
-            y *= global_config.yscale;
-
-            wid_editor_inc();
-            wid_editor_map_thing_inc(wid_editor_map_grid_container, x, y);
-            wid_editor_mode_inc = false;
-            return (true);
-
-        case '-':
-            (void) SDL_GetMouseState(&x, &y);
-
-            x *= global_config.xscale;
-            y *= global_config.yscale;
-
-            wid_editor_dec();
-            wid_editor_map_thing_dec(wid_editor_map_grid_container, x, y);
-            wid_editor_mode_dec = false;
             return (true);
 
         default:
