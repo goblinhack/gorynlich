@@ -101,6 +101,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     widp child;
     levelp level;
 
+
     level = (typeof(level)) wid_get_client_context(w);
     verify(level);
 
@@ -490,19 +491,23 @@ static boolean wid_editor_map_thing_dec_template (int32_t x, int32_t y)
  */
 static boolean wid_editor_map_thing_replace (widp w,
                                              int32_t x,
-                                             int32_t y)
+                                             int32_t y,
+                                             boolean scaled)
 {
     thing_templatep thing_template;
-    fpoint offset;
     widp focus;
 
-    wid_get_offset(wid_editor_map_grid_container, &offset);
+    if (!scaled) {
+        fpoint offset;
 
-    x += -offset.x;
-    y += -offset.y;
+        wid_get_offset(wid_editor_map_grid_container, &offset);
 
-    x /= tile_width;
-    y /= tile_height;
+        x += -offset.x;
+        y += -offset.y;
+
+        x /= tile_width;
+        y /= tile_height;
+    }
 
     if (wid_editor_mode_eraser) {
         wid_editor_map_thing_remove_template(x, y);
@@ -630,6 +635,154 @@ static boolean wid_editor_map_thing_dec (widp w,
     return (true);
 }
 
+static void do_wid_editor_line (widp w, 
+                                int32_t x0_in, 
+                                int32_t y0_in, 
+                                int32_t x1_in, 
+                                int32_t y1_in, 
+                                int32_t flag)
+{
+    double temp;
+    double dx;
+    double dy;
+    double tdy;
+    double dydx;
+    double p;
+    double x;
+    double y;
+    double i;
+
+    double x0 = x0_in;
+    double y0 = y0_in;
+    double x1 = x1_in;
+    double y1 = y1_in;
+
+    if (x0 > x1) {
+        temp = x0;
+        x0 = x1;
+        x1 = temp;
+
+        temp = y0;
+        y0 = y1;
+        y1 = temp;
+    }
+
+    dx = x1 - x0;
+    dy = y1 - y0;
+
+    tdy = 2.0 * dy;
+    dydx = tdy - (2.0 * dx);
+
+    p = tdy - dx;
+    x = x0;
+    y = y0;
+
+    if (flag == 0) {
+        wid_editor_map_thing_replace(w, (int32_t)x, (int32_t)y, true /* scaled */);
+    } else if (flag == 1) {
+        wid_editor_map_thing_replace(w, (int32_t)y, (int32_t)x, true /* scaled */);
+    } else if (flag == 2) {
+        wid_editor_map_thing_replace(w, (int32_t)y, (int32_t)-x, true /* scaled */);
+    } else if (flag == 3) {
+        wid_editor_map_thing_replace(w, (int32_t)x, (int32_t)-y, true /* scaled */);
+    }
+
+    for (i = 1; i <= dx; i++){
+        x++;
+
+        if (p < 0) {
+            p += tdy;
+        } else {
+            p += dydx;
+            y++;
+        }
+
+        if (flag == 0) {
+            wid_editor_map_thing_replace(w, (int32_t)x, (int32_t)y, true /* scaled */);
+        } else if (flag == 1) {
+            wid_editor_map_thing_replace(w, (int32_t)y, (int32_t)x, true /* scaled */);
+        } else if (flag == 2) {
+            wid_editor_map_thing_replace(w, (int32_t)y, (int32_t)-x, true /* scaled */);
+        } else if (flag == 3) {
+            wid_editor_map_thing_replace(w, (int32_t)x, (int32_t)-y, true /* scaled */);
+        }
+    }
+}
+
+static void wid_editor_draw_line (widp w, int32_t x0, int32_t y0, int32_t x1, int32_t y1)
+{
+    double slope = 100.0;
+
+    fpoint offset;
+
+    wid_get_offset(wid_editor_map_grid_container, &offset);
+
+    x0 += -offset.x;
+    y0 += -offset.y;
+    x1 += -offset.x;
+    y1 += -offset.y;
+
+    x0 /= tile_width;
+    y0 /= tile_height;
+    x1 /= tile_width;
+    y1 /= tile_height;
+
+    if (x0 != x1) {
+        slope = (y1 - y0) * (1.0 / (x1 - x0));
+    }
+
+    if ((0 <= slope) && (slope <= 1)) {
+        do_wid_editor_line(w, x0, y0, x1, y1, 0);
+    } else if ((-1 <= slope) && (slope <= 0)) {
+        do_wid_editor_line(w, x0, -y0, x1, -y1, 3);
+    } else if (slope > 1) {
+        do_wid_editor_line(w, y0, x0, y1, x1, 1);
+    } else {
+        do_wid_editor_line(w, -y0, x0, -y1, x1, 2);
+    }
+}
+
+static boolean wid_editor_map_thing_replace_wrap (widp w,
+                                                  int32_t x,
+                                                  int32_t y)
+{
+    static boolean line_start;
+    static int32_t line_start_x;
+    static int32_t line_start_y;
+
+    if (wid_editor_mode_fill) {
+        wid_editor_map_loading = true;
+        wid_editor_map_thing_flood_fill(w, x, y);
+        wid_editor_map_loading = false;
+
+        map_fixup(level_ed);
+        wid_raise(wid_editor_filename_and_title);
+        return (true);
+    }
+
+    if (wid_editor_mode_line) {
+        if (!line_start) {
+            line_start = true;
+            line_start_x = x;
+            line_start_y = y;
+            return (true);
+        }
+
+        line_start = false;
+
+        wid_editor_map_loading = true;
+        wid_editor_draw_line(w, line_start_x, line_start_y, x, y);
+        wid_editor_map_loading = false;
+        
+        map_fixup(level_ed);
+        wid_raise(wid_editor_filename_and_title);
+
+        return (true);
+    }
+
+    return (wid_editor_map_thing_replace(w, x, y, false /* scaled */));
+}
+
 /*
  * Mouse down etc...
  */
@@ -639,11 +792,7 @@ static boolean wid_editor_map_receive_mouse_down (widp w,
                                                   uint32_t button)
 {
     if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
-        if (wid_editor_mode_fill) {
-            return (wid_editor_map_thing_flood_fill(w, x, y));
-        }
-
-        return (wid_editor_map_thing_replace(w, x, y));
+        return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
 
     if (SDL_BUTTON(SDL_BUTTON_RIGHT) & SDL_GetMouseState(0, 0)) {
@@ -667,7 +816,7 @@ static boolean wid_editor_map_receive_mouse_motion (
     }
 
     if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
-        return (wid_editor_map_thing_replace(w, x, y));
+        return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
 
     if (SDL_BUTTON(SDL_BUTTON_RIGHT) & SDL_GetMouseState(0, 0)) {
@@ -692,8 +841,8 @@ static boolean wid_editor_map_receive_mouse_up (widp w, int32_t x, int32_t y,
 static boolean wid_editor_map_tile_key_down_event (widp w,
                                                    const SDL_KEYSYM *key)
 {
-    int x;
-    int y;
+    int32_t x;
+    int32_t y;
 
     if (wid_editor_ignore_events(w)) {
         return (false);
@@ -717,8 +866,7 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
             x *= global_config.xscale;
             y *= global_config.yscale;
 
-            wid_editor_map_thing_replace(wid_editor_map_grid_container, x, y);
-            return (true);
+            return (wid_editor_map_thing_replace_wrap(wid_editor_map_grid_container, x, y));
 
         case SDLK_BACKSPACE:
         case SDLK_DELETE:
@@ -748,6 +896,10 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
             wid_editor_save();
             return (true);
 
+        case 'L':
+            wid_editor_line();
+            return (true);
+
         case 'l':
             wid_editor_load();
             return (true);
@@ -766,8 +918,13 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
             x *= global_config.xscale;
             y *= global_config.yscale;
 
-            wid_editor_map_thing_flood_fill(wid_editor_map_grid_container,
-                                            x, y);
+            wid_editor_map_loading = true;
+            wid_editor_map_thing_flood_fill(wid_editor_map_grid_container, x, y);
+            wid_editor_map_loading = false;
+
+            map_fixup(level_ed);
+            wid_raise(wid_editor_filename_and_title);
+
             return (true);
 
         case 'c':
@@ -817,7 +974,7 @@ static boolean wid_editor_map_tile_mouse_motion (widp w,
     }
 
     if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
-        return (wid_editor_map_thing_replace(w, x, y));
+        return (wid_editor_map_thing_replace(w, x, y, false /* scaled */));
     }
 
     if (SDL_BUTTON(SDL_BUTTON_RIGHT) & SDL_GetMouseState(0, 0)) {

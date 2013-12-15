@@ -12,6 +12,7 @@ void wid_editor_save(void);
 void wid_editor_title(void);
 void wid_editor_load(void);
 void wid_editor_draw(void);
+void wid_editor_line(void);
 void wid_editor_erase(void);
 void wid_editor_fill(void);
 void wid_editor_clear(void);
@@ -20,12 +21,14 @@ void wid_editor_dec(void);
 void wid_editor_reset_buttons(void);
 
 extern boolean wid_editor_mode_draw;
+extern boolean wid_editor_mode_line;
 extern boolean wid_editor_mode_fill;
 extern boolean wid_editor_mode_eraser;
 extern boolean wid_editor_mode_inc;
 extern boolean wid_editor_mode_dec;
 
 extern widp wid_editor_wid_draw;
+extern widp wid_editor_wid_line;
 extern widp wid_editor_wid_fill;
 extern widp wid_editor_wid_eraser;
 extern widp wid_editor_wid_inc;
