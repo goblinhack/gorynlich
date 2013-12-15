@@ -1035,5 +1035,13 @@ void wid_editor_marshal (marshal_p ctx)
 
 boolean wid_editor_demarshal (demarshal_p ctx)
 {
-    return (demarshal_level(ctx, level_ed));
+    boolean rc;
+
+    rc = demarshal_level(ctx, level_ed);
+
+    wid_update(wid_editor_map_window);
+
+    wid_raise(wid_editor_filename_and_title);
+
+    return (rc);
 }
