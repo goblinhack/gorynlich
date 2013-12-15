@@ -547,6 +547,8 @@ void wid_editor_buttons_wid_create (void)
                   "%%fmt=left$%%fg=white$e\t\t\t\t%%fg=green$Eraser mode\n"
                   "%%fmt=left$%%fg=white$f\t\t\t\t%%fg=green$Fill mode\n"
                   "%%fmt=left$%%fg=white$n\t\t\t\t%%fg=green$Line mode\n"
+                  "%%fmt=left$%%fg=white$u\t\t\t\t%%fg=green$Undo\n"
+                  "%%fmt=left$%%fg=white$r\t\t\t\t%%fg=green$Redo\n"
                   "%%fmt=left$%%fg=white$c\t\t\t\t%%fg=green$Clear level\n"
                   "%%fmt=left$%%fg=white$s\t\t\t\t%%fg=green$Save level\n"
                   "%%fmt=left$%%fg=white$l\t\t\t\t%%fg=green$Load level\n"
