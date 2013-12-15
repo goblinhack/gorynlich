@@ -1208,7 +1208,16 @@ static boolean resource_init_23 (void *context)
     thing_template_load("data/things/floor4");
     thing_template_load("data/things/floor5");
     thing_template_load("data/things/floor6");
-    thing_template_load("data/things/player");
+    thing_template_load("data/things/warrior");
+    thing_template_load("data/things/valkyrie");
+    thing_template_load("data/things/wizard");
+    thing_template_load("data/things/elve");
+    thing_template_load("data/things/dwarve");
+    thing_template_load("data/things/ghost");
+    thing_template_load("data/things/demon");
+    thing_template_load("data/things/monk");
+    thing_template_load("data/things/lizard");
+    thing_template_load("data/things/death");
     thing_template_load("data/things/plant");
     thing_template_load("data/things/seedpod");
     thing_template_load("data/things/pipe");

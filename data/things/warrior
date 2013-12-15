@@ -1,0 +1,17 @@
+{
+ shortname="warrior"
+ tooltip="Warrior"
+ z_depth=3
+ z_order=10
+ speed=500
+ is_player
+ is_animated
+ is_thing
+ is_left_as_corpse_on_death
+ tiles={
+  tile={
+   delay=200
+   tile="warrior1-right"
+  }
+ }
+}

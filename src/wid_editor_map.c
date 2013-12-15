@@ -39,6 +39,7 @@ static uint32_t tile_width;
 static uint32_t tile_height;
 levelp level_ed;
 boolean wid_editor_map_loading;
+boolean wid_editor_got_line_start;
 
 static boolean wid_editor_ignore_events (widp w)
 {
@@ -428,6 +429,8 @@ static boolean wid_editor_map_thing_remove (widp w,
 {
     fpoint offset;
 
+    wid_editor_save_point();
+
     wid_get_offset(wid_editor_map_grid_container, &offset);
 
     x += -offset.x;
@@ -519,20 +522,6 @@ static void wid_editor_draw_line (widp w, int32_t x0, int32_t y0, int32_t x1, in
 {
     double slope = 100.0;
 
-    fpoint offset;
-
-    wid_get_offset(wid_editor_map_grid_container, &offset);
-
-    x0 += -offset.x;
-    y0 += -offset.y;
-    x1 += -offset.x;
-    y1 += -offset.y;
-
-    x0 /= tile_width;
-    y0 /= tile_height;
-    x1 /= tile_width;
-    y1 /= tile_height;
-
     if (x0 != x1) {
         slope = (y1 - y0) * (1.0 / (x1 - x0));
     }
@@ -552,11 +541,12 @@ static boolean wid_editor_map_thing_replace_wrap (widp w,
                                                   int32_t x,
                                                   int32_t y)
 {
-    static boolean line_start;
     static int32_t line_start_x;
     static int32_t line_start_y;
 
     if (wid_editor_mode_fill) {
+        wid_editor_save_point();
+
         wid_editor_map_loading = true;
         wid_editor_map_thing_flood_fill(w, x, y);
         wid_editor_map_loading = false;
@@ -568,14 +558,30 @@ static boolean wid_editor_map_thing_replace_wrap (widp w,
     }
 
     if (wid_editor_mode_line) {
-        if (!line_start) {
-            line_start = true;
+        fpoint offset;
+        wid_get_offset(wid_editor_map_grid_container, &offset);
+
+        if (!wid_editor_got_line_start) {
+            wid_editor_got_line_start = true;
+
+            x += -offset.x;
+            y += -offset.y;
+            x /= tile_width;
+            y /= tile_height;
+
             line_start_x = x;
             line_start_y = y;
             return (true);
         }
 
-        line_start = false;
+        wid_editor_save_point();
+
+        wid_editor_got_line_start = false;
+
+        x += -offset.x;
+        y += -offset.y;
+        x /= tile_width;
+        y /= tile_height;
 
         wid_editor_map_loading = true;
         wid_editor_draw_line(w, line_start_x, line_start_y, x, y);
@@ -587,6 +593,8 @@ static boolean wid_editor_map_thing_replace_wrap (widp w,
 
         return (true);
     }
+
+    wid_editor_save_point();
 
     return (wid_editor_map_thing_replace(w, x, y, false /* scaled */));
 }
@@ -670,7 +678,6 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
 
         case ' ':
         case SDLK_RETURN:
-            wid_editor_save_point();
             (void) SDL_GetMouseState(&x, &y);
 
             x *= global_config.xscale;
@@ -683,8 +690,6 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
 
         case SDLK_BACKSPACE:
         case SDLK_DELETE:
-            wid_editor_save_point();
-
             (void) SDL_GetMouseState(&x, &y);
 
             x *= global_config.xscale;
@@ -910,6 +915,9 @@ static void wid_editor_title_set (const char *title)
     wid_set_no_shape(wid_editor_filename_and_title);
     wid_raise(wid_editor_filename_and_title);
     wid_set_do_not_lower(wid_editor_filename_and_title, true);
+
+    wid_destroy_in(wid_editor_filename_and_title, 3000);
+    wid_editor_filename_and_title = 0;
 }
 
 /*

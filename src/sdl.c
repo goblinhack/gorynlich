@@ -878,6 +878,8 @@ void sdl_loop (void)
 #else /* } { */
         SDL_GL_SwapBuffers();
 #endif /* } */
+
+        SDL_Delay(50);
     }
 }
 
