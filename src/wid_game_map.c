@@ -299,7 +299,6 @@ static boolean wid_game_map_tile_receive_mouse_down (widp w,
         /*
          * Place on map.
          */
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         widp w = wid_game_map_replace_tile(wid_game_map_grid_container,
                                   x, y, 0, thing_template);
 
@@ -577,7 +576,6 @@ void wid_game_map_wid_create (void)
                     (tile_height_pct * (float)(y+1))
                 };
 
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
                 child = wid_new_square_button(wid_game_map_grid_container,
                                               "map base tile");
 
@@ -819,7 +817,6 @@ wid_game_map_replace_tile (widp w,
     /*
      * Make a new thing.
      */
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
     child = wid_new_square_button(wid_game_map_grid_container,
                                   "map tile");
 
@@ -893,29 +890,13 @@ void wid_game_map_score_update (levelp level)
         br.x = 1.0;
         br.y = 1.0;
 
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         wid_scoreline_container_top =
             wid_new_square_button(wid_game_map_window, "scoreline top");
 
         wid_set_tl_br_pct(wid_scoreline_container_top, tl, br);
-        wid_set_color(wid_scoreline_container_top, WID_COLOR_TL, RED);
+        wid_set_color(wid_scoreline_container_top, WID_COLOR_TL, BLACK);
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BG, BLACK);
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
-    }
-
-    /*
-     * Print the title.
-     */
-    {
-        widp wid_title_container;
-
-        wid_title_container = wid_textbox_fixed_width(
-                                    wid_scoreline_container_top,
-                                    &wid_score,
-                                    "Gorynlich", 0.85, 0.35, large_font);
-
-        wid_set_no_shape(wid_title_container);
-        wid_set_tex(wid_title_container, 0, "title");
     }
 
     /*
@@ -1078,7 +1059,6 @@ fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
                 }
             }
 
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
             wid_bonus =
                 wid_new_square_button(wid_scoreline_container_top, "bonus");
 
@@ -1127,7 +1107,6 @@ fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         for (i = 0; i < thing_lives(player); i++) {
             widp wid_player;
 
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
             wid_player =
                 wid_new_square_button(wid_scoreline_container_top, "player");
 
@@ -1145,6 +1124,30 @@ fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
 
     wid_raise(wid_scoreline_container_top);
     wid_update(wid_scoreline_container_top);
+
+    {
+        widp wid = wid_new_container(wid_scoreline_container_top, "title");
+
+        fpoint tl = { 0, 0.0 };
+        fpoint br = { 1.0, 0.12 };
+
+        wid_set_tl_br_pct(wid, tl, br);
+
+        wid_set_tex(wid, 0, "title");
+
+        fsize sz = {4.0,3.0};
+
+        wid_set_tex_br(wid, sz);
+
+        wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_color(wid, WID_COLOR_TL, WHITE);
+        wid_set_color(wid, WID_COLOR_BR, WHITE);
+        wid_set_color(wid, WID_COLOR_BG, WHITE);
+
+        wid_update(wid);
+        wid_raise(wid);
+    }
+
 
     wid_update_mouse();
 }
@@ -1263,7 +1266,6 @@ void wid_game_map_item_update (levelp level)
             /*
              * Item container box.
              */
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
             wid_item_box =
                 wid_new_square_button(wid_scoreline_container_bot, 
                                       item_name(item));

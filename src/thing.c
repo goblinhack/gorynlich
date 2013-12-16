@@ -1725,7 +1725,6 @@ void thing_place (void *context)
 
     place = (typeof(place)) context;
 
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
     wid_game_map_replace_tile(wid_game_map_grid_container,
                               place->x,
                               place->y,
