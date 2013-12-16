@@ -56,29 +56,6 @@ uint32_t tile_height;
 
 static void wid_game_selected_item_name_reset(void);
 
-static boolean wid_game_map_ignore_events (void)
-{
-    if (level_game) {
-        if (level_is_frozen(level_game)) {
-            return (true);
-        }
-    }
-
-    if (wid_game_map_grid_container) {
-        if (!wid_has_grid(wid_game_map_grid_container)) {
-            return (true);
-        }
-    }
-
-    if (wid_game_map_window) {
-        if (wid_ignore_for_events(wid_game_map_window)) {
-            return (true);
-        }
-    }
-
-    return (false);
-}
-
 static void wid_game_map_set_thing_template (widp w, thing_templatep t)
 {
     wid_set_thing_template(w, t);
@@ -119,10 +96,6 @@ void wid_game_fini (void)
 
 void wid_game_hide (void)
 {
-    if (level_game) {
-        level_set_is_frozen(level_game, true);
-    }
-
     if (wid_game_map_window) {
         wid_hide(wid_game_map_window, wid_swipe_delay);
 
@@ -142,10 +115,6 @@ void wid_game_hide (void)
 void wid_game_visible (void)
 {
     if (wid_game_map_window) {
-        if (level_game) {
-            level_set_is_frozen(level_game, false);
-        }
-
         wid_visible(wid_game_map_window, 0);
     } else {
         wid_game_map_wid_create();
@@ -162,10 +131,6 @@ static boolean wid_game_map_receive_mouse_down (widp w,
                                                 int32_t y,
                                                 uint32_t button)
 {
-    if (wid_game_map_ignore_events()) {
-        return (false);
-    }
-
     if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
     }
 
@@ -179,10 +144,6 @@ static boolean wid_game_map_receive_mouse_up (widp w,
                                               int32_t x, int32_t y,
                                               uint32_t button)
 {
-    if (wid_game_map_ignore_events()) {
-        return (false);
-    }
-
     return (false);
 }
 
@@ -190,10 +151,6 @@ static boolean wid_game_map_tile_receive_mouse_up (widp w,
                                                    int32_t x, int32_t y,
                                                    uint32_t button)
 {
-    if (wid_game_map_ignore_events()) {
-        return (false);
-    }
-
     return (false);
 }
 
@@ -271,10 +228,6 @@ static boolean wid_game_map_tile_receive_mouse_down (widp w,
     thingp thing;
     itemp item;
 
-    if (wid_game_map_ignore_events()) {
-        return (false);
-    }
-
     if (!wid_game_selected_item_name) {
         wid_tooltip_transient("Nothing left to place", 0);
         return (true);
@@ -346,6 +299,7 @@ static boolean wid_game_map_tile_receive_mouse_down (widp w,
         /*
          * Place on map.
          */
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         widp w = wid_game_map_replace_tile(wid_game_map_grid_container,
                                   x, y, 0, thing_template);
 
@@ -373,10 +327,6 @@ wid_game_map_tile_receive_on_mouse_over_begin (widp w)
     fpoint offset;
     int32_t x;
     int32_t y;
-
-    if (wid_game_map_ignore_events()) {
-        return;
-    }
 
     /*
      * Map the mouse to tile coordinate.
@@ -431,10 +381,6 @@ wid_game_selected_item_name_reset (void)
 static void
 wid_game_map_tile_receive_on_mouse_over_end (widp w)
 {
-    if (wid_game_map_ignore_events()) {
-        return;
-    }
-
     wid_set_no_shape(w);
     wid_set_tile(w, 0);
 }
@@ -442,10 +388,6 @@ wid_game_map_tile_receive_on_mouse_over_end (widp w)
 static boolean wid_game_map_tile_key_down_event (widp w,
                                                  const SDL_KEYSYM *key)
 {
-    if (wid_game_map_ignore_events()) {
-        return (false);
-    }
-
     /*
      * Console.
      */
@@ -472,10 +414,6 @@ static boolean wid_game_map_tile_key_down_event (widp w,
 static boolean wid_game_map_tile_key_up_event (widp w,
                                                const SDL_KEYSYM *key)
 {
-    if (wid_game_map_ignore_events()) {
-        return (false);
-    }
-
     switch (key->sym) {
         default:
             return (true);
@@ -496,10 +434,6 @@ static boolean wid_game_map_button_receive_mouse_down (widp w,
     thingp thing;
     itemp item;
     
-    if (wid_game_map_ignore_events()) {
-        return (false);
-    }
-
     wid_game_selected_item_name = (typeof(wid_game_selected_item_name))
                     wid_get_client_context(w);
 
@@ -643,6 +577,7 @@ void wid_game_map_wid_create (void)
                     (tile_height_pct * (float)(y+1))
                 };
 
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
                 child = wid_new_square_button(wid_game_map_grid_container,
                                               "map base tile");
 
@@ -714,8 +649,6 @@ void wid_game_map_wid_create (void)
     wid_editor_map_loading = false;
 
     things_level_start(level_game);
-
-    wid_move_to_pct_centered(wid_game_map_window, 0.5f, 0.5f);
 }
 
 void wid_game_map_wid_destroy (void)
@@ -820,29 +753,34 @@ wid_game_map_replace_tile (widp w,
             thing_template_shortname(thing_template));
     }
 
-    float tw = tile_get_width(tile);
-    float th = tile_get_height(tile);
-
     float base_tile_width =
             ((1.0f / (float)TILES_SCREEN_WIDTH) *
-            (float)global_config.video_gl_width);
+                (float)global_config.video_gl_width);
+
     float base_tile_height =
             ((1.0f / (float)TILES_SCREEN_HEIGHT) *
                 (float)global_config.video_gl_height);
 
-    tw = (tw * base_tile_width) / TILE_WIDTH;
-    th = (th * base_tile_height) / TILE_HEIGHT;
+    br.x += base_tile_width;
+    br.y += base_tile_height;
 
-    tl.x -= tw / 2.0;
-    tl.y -= th / 2.0;
+    br.x += base_tile_width / 4.0;
+    br.y += base_tile_height / 4.0;
 
-    br.x += tw / 2.0;
-    br.y += th / 2.0;
+    br.x += base_tile_width / 6.0;
+    br.y += base_tile_height / 4.0;
 
-    /*
-     * For rounding errors.
-     */
-    br.y += 1;
+    tl.x -= base_tile_height / 2.0;
+    br.x -= base_tile_width / 2.0;
+
+    tl.x += base_tile_height / 8.0;
+    br.x += base_tile_width / 8.0;
+
+    tl.y -= base_tile_height / 2.0;
+    br.y -= base_tile_width / 2.0;
+
+    tl.y -= base_tile_height / 4.0;
+    br.y -= base_tile_width / 4.0;
 
     existing = wid_grid_find_thing_template_is(wid_game_map_grid_container,
                                                x, y,
@@ -881,6 +819,7 @@ wid_game_map_replace_tile (widp w,
     /*
      * Make a new thing.
      */
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
     child = wid_new_square_button(wid_game_map_grid_container,
                                   "map tile");
 
@@ -949,16 +888,34 @@ void wid_game_map_score_update (levelp level)
         fpoint tl;
         fpoint br;
 
-        tl.x = 0;
-        tl.y = 0;
+        tl.x = 0.75;
+        tl.y = 0.0;
         br.x = 1.0;
-        br.y = 0.2;
+        br.y = 1.0;
 
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         wid_scoreline_container_top =
-            wid_new_plain(wid_game_map_window, "scoreline top");
+            wid_new_square_button(wid_game_map_window, "scoreline top");
 
         wid_set_tl_br_pct(wid_scoreline_container_top, tl, br);
-        wid_set_no_shape(wid_scoreline_container_top);
+        wid_set_color(wid_scoreline_container_top, WID_COLOR_TL, RED);
+        wid_set_color(wid_scoreline_container_top, WID_COLOR_BG, BLACK);
+        wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
+    }
+
+    /*
+     * Print the title.
+     */
+    {
+        widp wid_title_container;
+
+        wid_title_container = wid_textbox_fixed_width(
+                                    wid_scoreline_container_top,
+                                    &wid_score,
+                                    "Gorynlich", 0.85, 0.35, large_font);
+
+        wid_set_no_shape(wid_title_container);
+        wid_set_tex(wid_title_container, 0, "title");
     }
 
     /*
@@ -971,11 +928,11 @@ void wid_game_map_score_update (levelp level)
         wid_score_container = wid_textbox_fixed_width(
                                     wid_scoreline_container_top,
                                     &wid_score,
-                                    tmp, 0.5, 0.03, large_font);
+                                    tmp, 0.85, 0.05, small_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_score_container);
-        wid_set_color(wid_score, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(wid_score, WID_COLOR_TEXT, GREEN);
     }
 
     /*
@@ -1121,6 +1078,7 @@ void wid_game_map_score_update (levelp level)
                 }
             }
 
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
             wid_bonus =
                 wid_new_square_button(wid_scoreline_container_top, "bonus");
 
@@ -1169,6 +1127,7 @@ void wid_game_map_score_update (levelp level)
         for (i = 0; i < thing_lives(player); i++) {
             widp wid_player;
 
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
             wid_player =
                 wid_new_square_button(wid_scoreline_container_top, "player");
 
@@ -1304,6 +1263,7 @@ void wid_game_map_item_update (levelp level)
             /*
              * Item container box.
              */
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
             wid_item_box =
                 wid_new_square_button(wid_scoreline_container_bot, 
                                       item_name(item));

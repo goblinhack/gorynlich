@@ -6869,7 +6869,10 @@ static void wid_display (widp w,
      * or are not the top level wid.
      */
     if (!disable_scissor) {
-        if (w->children_display_sorted || !w->parent || text) {
+        /*
+         * Text box needs clipping when the text gets too wide.
+         */
+       if (w->children_display_sorted || !w->parent || w->show_cursor) {
             /*
              * Tell the parent we are doing scissors so they can re-do
              * their own scissors.

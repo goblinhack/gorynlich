@@ -205,6 +205,7 @@ static boolean level_command_dead (tokens_t *tokens, void *context)
     if (thing_is_seedpod(t)) {
         thing_templatep thing_template = thing_template_find("data/things/plant");
 
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         wid_game_map_replace_tile(wid_game_map_grid_container,
                                   thing_grid_x(t),
                                   thing_grid_y(t),
@@ -827,6 +828,7 @@ void level_place_bonus (levelp level)
             break;
         }
 
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         wid_game_map_replace_tile(wid_game_map_grid_container,
                                   x,
                                   y,
@@ -877,6 +879,7 @@ void level_place_plant_pod (levelp level)
 
         thing_template = thing_template_find("data/things/seedpod");
 
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         wid_game_map_replace_tile(wid_game_map_grid_container,
                                   x,
                                   y,
@@ -1463,6 +1466,7 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_editor_map_thing_replace_template);
     } else {
+fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_game_map_replace_tile);
     }
