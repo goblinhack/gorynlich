@@ -165,7 +165,6 @@ boolean thing_item_use (thingp owner, thingp thing_item)
         /*
          * Place a rocket over the thing.
          */
-fprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);
         widp w = wid_game_map_replace_tile(
                         wid_game_map_grid_container,
                         thing_grid_x(owner),
