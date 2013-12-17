@@ -143,11 +143,11 @@ log_info "  ($SDL_CONFIG)"
 #
 if [ "$SDL2_CONFIG" != "" ]
 then
-    LDLIBS="$SDL_LIBS -lSDL2_ttf -lSDL2_mixer"
     LDLIBS="$SDL_LIBS -lSDL2_mixer"
+    LDLIBS="$SDL_LIBS -lSDL2_ttf -lSDL2_mixer"
 else
-    LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
     LDLIBS="$SDL_LIBS -lSDL_mixer"
+    LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
 fi
 
 case `uname` in

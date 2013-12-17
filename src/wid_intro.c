@@ -699,7 +699,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "play");
-        wid_set_font(child, large_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.2f, 0.70f};
