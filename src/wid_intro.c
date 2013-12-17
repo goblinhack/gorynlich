@@ -26,7 +26,6 @@
 #include "level.h"
 
 static widp wid_intro;
-static widp wid_intro_title;
 static widp wid_intro_background;
 
 static boolean wid_intro_quit_selected(void);
@@ -61,7 +60,6 @@ void wid_intro_fini (void)
 
         if (wid_intro) {
             wid_destroy(&wid_intro);
-            wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
         }
     }
@@ -87,13 +85,10 @@ void wid_intro_hide (void)
 
     wid_move_end(wid_intro);
     wid_move_end(wid_intro_background);
-    wid_move_end(wid_intro_title);
 
     wid_hide(wid_intro, wid_swipe_delay);
-    wid_hide(wid_intro_title, wid_swipe_delay);
     wid_hide(wid_intro_background, wid_swipe_delay);
 
-    wid_lower(wid_intro_title);
     wid_lower(wid_intro_background);
     wid_raise(wid_intro);
     wid_update(wid_intro);
@@ -122,13 +117,10 @@ void wid_intro_visible (void)
 
     wid_visible(wid_intro, 0);
     wid_visible(wid_intro_background, 0);
-    wid_visible(wid_intro_title, 0);
 
     wid_move_end(wid_intro);
     wid_move_end(wid_intro_background);
-    wid_move_end(wid_intro_title);
 
-    wid_lower(wid_intro_title);
     wid_lower(wid_intro_background);
     wid_raise(wid_intro);
     wid_update(wid_intro);
@@ -426,7 +418,7 @@ static void wid_intro_bg_create (void)
     uint32_t tw;
     uint32_t th;
 
-    if (wid_intro_title) {
+    if (wid_intro_background) {
         return;
     }
 
@@ -445,28 +437,6 @@ static void wid_intro_bg_create (void)
         wid_set_tex(wid, 0, "gorynlich");
 
         wid_lower(wid);
-
-        wid_set_mode(wid, WID_MODE_NORMAL);
-        wid_set_color(wid, WID_COLOR_TL, WHITE);
-        wid_set_color(wid, WID_COLOR_BR, WHITE);
-        wid_set_color(wid, WID_COLOR_BG, WHITE);
-    }
-
-    {
-        wid = wid_intro_title = wid_new_window("title");
-
-        tex = tex_find("title");
-        tw = tex_get_width(tex);
-        th = tex_get_height(tex);
-
-        fpoint tl = { 0, 0 };
-        fpoint br = { (double) tw, (double) th };
-
-        wid_set_tl_br(wid, tl, br);
-
-        wid_set_tex(wid, 0, "title");
-
-        wid_raise(wid);
 
         wid_set_mode(wid, WID_MODE_NORMAL);
         wid_set_color(wid, WID_COLOR_TL, WHITE);
@@ -699,6 +669,37 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "play");
+        wid_set_font(child, large_font);
+        wid_set_no_shape(child);
+
+        fpoint tl = {0.2f, 0.30f};
+        fpoint br = {0.8f, 0.60f};
+
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_text(child, "Gorynlich");
+
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        color c = WHITE;
+        c.a = 200;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 200;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_FOCUS);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_on_mouse_down(child, wid_intro_wid_noop);
+        wid_set_on_mouse_up(child, wid_intro_play_mouse_event);
+        wid_set_on_key_down(child, wid_intro_play_key_event);
+    }
+
+    {
+        widp child;
+
+        child = wid_new_square_button(wid_intro, "play");
         wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
@@ -732,5 +733,4 @@ static void wid_intro_create (void)
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
     wid_move_to_pct_centered(wid_intro_background, 0.5f, 0.5f);
-    wid_move_to_pct_centered(wid_intro_title, 0.5f, 0.55f);
 }

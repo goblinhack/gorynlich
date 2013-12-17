@@ -92,4 +92,4 @@
 #define MED_FONT                    "data/ttf/emulogic.ttf"
 #define MED_FONT_SIZE               24
 #define LARGE_FONT                  "data/ttf/emulogic.ttf"
-#define LARGE_FONT_SIZE             28
+#define LARGE_FONT_SIZE             36
