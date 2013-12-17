@@ -42,6 +42,10 @@ widp wid_game_map_grid_container;
 widp wid_scoreline_container_top;
 widp wid_scoreline_container_bot;
 widp wid_score;
+widp wid_health;
+widp wid_score_title;
+widp wid_health_title;
+widp wid_name_title;
 widp wid_title;
 widp wid_level;
 
@@ -885,7 +889,7 @@ void wid_game_map_score_update (levelp level)
         fpoint tl;
         fpoint br;
 
-        tl.x = 0.75;
+        tl.x = 0.67;
         tl.y = 0.0;
         br.x = 1.0;
         br.y = 1.0;
@@ -899,21 +903,147 @@ void wid_game_map_score_update (levelp level)
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
     }
 
+    float atx1 = 0.75;
+    float atx2 = 0.90;
+    float aty1 = 0.35;
+    float dy = 0.15;
+
     /*
      * Print the score.
      */
+    int y;
+    for (y = 0; y < 4; y++) 
     {
+        color c;
+        char *name_title;
+
+        switch (y) {
+        case 0:
+            c = RED;
+            name_title = "WARRIOR";
+            break;
+        case 1:
+            c = SKYBLUE;
+            name_title = "VALKYRIE";
+            break;
+        case 2:
+            c = YELLOW;
+            name_title = "WIZARD";
+            break;
+        case 3:
+            c = GREEN;
+            name_title = "ELF";
+            break;
+        }
+
+        /*
+         * Score
+         */
         char *tmp = dynprintf("%06u", thing_score(player));
+
         widp wid_score_container;
 
         wid_score_container = wid_textbox_fixed_width(
                                     wid_scoreline_container_top,
                                     &wid_score,
-                                    tmp, 0.85, 0.05, small_font);
+                                    tmp, 
+                                    atx1, aty1 + dy*(float)y, 
+                                    small_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_score_container);
-        wid_set_color(wid_score, WID_COLOR_TEXT, GREEN);
+
+        /*
+         * Health
+         */
+        tmp = dynprintf("%06u", thing_score(player));
+
+        widp wid_health_container;
+
+        wid_health_container = wid_textbox_fixed_width(
+                                    wid_scoreline_container_top,
+                                    &wid_health,
+                                    tmp,  
+                                    atx2, aty1 + dy*(float)y, 
+                                    small_font);
+        myfree(tmp);
+
+        wid_set_no_shape(wid_health_container);
+
+        /*
+         * Score title
+         */
+        widp wid_score_title_container;
+
+        wid_score_title_container = wid_textbox_fixed_width(
+                                    wid_scoreline_container_top,
+                                    &wid_score_title,
+                                    "SCORE", 
+                                    atx1, aty1 + dy*(float)y - ((float)dy/4),
+                                    small_font);
+
+        wid_set_no_shape(wid_score_title_container);
+
+        /*
+         * Health title
+         */
+        widp wid_health_title_container;
+
+        wid_health_title_container = wid_textbox_fixed_width(
+                                    wid_scoreline_container_top,
+                                    &wid_health_title,
+                                    "HEALTH",  
+                                    atx2, aty1 + dy*(float)y - ((float)dy/4),
+                                    small_font);
+
+        wid_set_no_shape(wid_health_title_container);
+
+        /*
+         * Score title
+         */
+        widp wid_name_title_container;
+
+        wid_name_title_container = wid_textbox_fixed_width(
+                                    wid_scoreline_container_top,
+                                    &wid_name_title,
+                                    name_title,
+                                    (atx1 + atx2) / 2, aty1 + dy*(float)y - ((float)dy/2),
+                                    small_font);
+
+        wid_set_no_shape(wid_name_title_container);
+
+        switch (y) {
+        case 0:
+            wid_set_color(wid_score, WID_COLOR_TEXT, RED);
+            wid_set_color(wid_health, WID_COLOR_TEXT, RED);
+            wid_set_color(wid_score_title, WID_COLOR_TEXT, RED);
+            wid_set_color(wid_health_title, WID_COLOR_TEXT, RED);
+            break;
+        case 1:
+            wid_set_color(wid_score, WID_COLOR_TEXT, SKYBLUE);
+            wid_set_color(wid_health, WID_COLOR_TEXT, SKYBLUE);
+            wid_set_color(wid_score_title, WID_COLOR_TEXT, SKYBLUE);
+            wid_set_color(wid_health_title, WID_COLOR_TEXT, SKYBLUE);
+            break;
+        case 2:
+            wid_set_color(wid_score, WID_COLOR_TEXT, YELLOW);
+            wid_set_color(wid_health, WID_COLOR_TEXT, YELLOW);
+            wid_set_color(wid_score_title, WID_COLOR_TEXT, YELLOW);
+            wid_set_color(wid_health_title, WID_COLOR_TEXT, YELLOW);
+            break;
+        case 3:
+            wid_set_color(wid_score, WID_COLOR_TEXT, GREEN);
+            wid_set_color(wid_health, WID_COLOR_TEXT, GREEN);
+            wid_set_color(wid_score_title, WID_COLOR_TEXT, GREEN);
+            wid_set_color(wid_health_title, WID_COLOR_TEXT, GREEN);
+            break;
+        }
+
+        wid_set_color(wid_score, WID_COLOR_TEXT, c);
+        wid_set_color(wid_health, WID_COLOR_TEXT, c);
+        wid_set_color(wid_score_title, WID_COLOR_TEXT, c);
+        wid_set_color(wid_health_title, WID_COLOR_TEXT, c);
+        wid_set_color(wid_name_title, WID_COLOR_TEXT, c);
     }
 
     /*
@@ -939,187 +1069,16 @@ void wid_game_map_score_update (levelp level)
      * Print the level.
      */
     {
-        char *tmp = dynprintf("L%u", thing_level_no(player));
+        char *tmp = dynprintf("Level %u", thing_level_no(player));
         widp wid_level_container;
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,
                                             &wid_level,
-                                            tmp, 0.75, 0.03, med_font);
+                                            tmp, atx1, 0.2, small_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);
-        wid_set_color(wid_level, WID_COLOR_TEXT, STEELBLUE);
-    }
-
-    /*
-     * Check if we have collected all bonus letters.
-     */
-    {
-        const char str[] = "mailsnail";
-        uint32_t got_total = 0;
-        boolean got_all;
-	uint32_t i;
-
-        got_all = true;
-
-        for (i = 0; i < strlen(str); i++) {
-            char thing_template_name[] = "data/things/x";
-            thing_templatep thing_template;
-            uint32_t count;
-            char c = str[i];
-
-            thing_template_name[strlen(thing_template_name)-1] = c;
-            thing_template = thing_template_find(thing_template_name);
-
-            count = items_count_is_thing_template(
-                                    thing_carried_items(player),
-                                    thing_template);
-            if (!count) {
-                got_all = false;
-                continue;
-            }
-
-            if (i >= sizeof("mail")) {
-                if (((c == 'a') || (c == 'i') || (c == 'l')) && (count == 1)) {
-                    got_all = false;
-                    continue;
-                }
-            }
-
-            got_total++;
-        }
-
-        if (got_all) {
-            tree_rootp items = items_find_all_is_bonus_letter(
-                thing_carried_items(player));
-            tree_item_node *node;
-
-            TREE_WALK(items, node) {
-                itemp i = (typeof(i)) node->tree.key;
-                thing_destroy(item_thing(i), "remvoe bonus letter");
-            }
-            tree_destroy(&items, 0 /* func */);
-
-            thing_set_lives(player, thing_lives(player) + 1);
-
-            {
-                widp w =
-                    wid_button_large_transient(
-                                "%%fg=red$B"
-                                "%%fg=green$o"
-                                "%%fg=yellow$n"
-                                "%%fg=thistle$u"
-                                "%%fg=orange$s "
-                                "%%fg=red$L"
-                                "%%fg=green$i"
-                                "%%fg=yellow$f"
-                                "%%fg=thistle$e"
-                                "%%fg=orange$!", 500);
-
-                wid_set_no_shape(w);
-                wid_set_text_outline(w, true);
-
-                thing_set_score_pump(player,
-                        thing_score_pump(player) + 10 * ONESEC);
-            }
-        }
-    }
-
-    /*
-     * Print all bonus letters.
-     */
-    {
-        float bonus_width = 0.039;
-        float bonus_at = 0.0;
-        const char str[] = "mailsnail";
-	uint32_t i;
-
-        for (i = 0; i < strlen(str); i++) {
-            char thing_template_name[] = "data/things/x";
-            thing_templatep thing_template;
-            widp wid_bonus;
-            char ch = str[i];
-
-            thing_template_name[strlen(thing_template_name)-1] = ch;
-            thing_template = thing_template_find(thing_template_name);
-
-            uint32_t count;
-
-            count = items_count_is_thing_template(
-                                    thing_carried_items(player),
-                                    thing_template);
-            if (!count) {
-                continue;
-            }
-
-            if (i >= sizeof("mail")) {
-                if (((ch == 'a') || (ch == 'i') ||
-                     (ch == 'l')) && (count == 1)) {
-                    continue;
-                }
-            }
-
-            wid_bonus =
-                wid_new_square_button(wid_scoreline_container_top, "bonus");
-
-            fpoint tl = { 0.0, 0.1 };
-            fpoint br = { 0.0, 0.25 };
-
-            tl.x = bonus_at + bonus_width * i;
-            br.x = bonus_at + bonus_width * i + bonus_width;
-
-            wid_set_tl_br_pct(wid_bonus, tl, br);
-
-            color c;
-
-            switch (i) {
-            case 0: c = BLUE; break;
-            case 1: c = STEELBLUE; break;
-            case 2: c = GREEN; break;
-            case 3: c = LIGHTBLUE; break;
-            case 4: c = PURPLE; break;
-            case 5: c = YELLOW; break;
-            case 6: c = ORANGE; break;
-            case 7: c = PINK; break;
-            case 8: c = GREY; break;
-            }
-
-            wid_set_color(wid_bonus, WID_COLOR_BG, c);
-
-            c = BLACK;
-            wid_set_color(wid_bonus, WID_COLOR_TL, c);
-            wid_set_color(wid_bonus, WID_COLOR_BR, c);
-            wid_set_color(wid_bonus, WID_COLOR_TEXT, c);
-
-            wid_set_thing_template(wid_bonus, thing_template);
-        }
-    }
-
-    /*
-     * Print all lives.
-     */
-    {
-        uint32_t players = thing_lives(player);
-        float players_width = 0.042;
-        float players_at = 1.0 - players * players_width - 0.002;
-	uint32_t i;
-
-        for (i = 0; i < thing_lives(player); i++) {
-            widp wid_player;
-
-            wid_player =
-                wid_new_square_button(wid_scoreline_container_top, "player");
-
-            fpoint tl = { 0.0, 0.05 };
-            fpoint br = { 0.0, 0.25 };
-
-            tl.x = players_at + players_width * i;
-            br.x = players_at + players_width * i + players_width;
-
-            wid_set_tl_br_pct(wid_player, tl, br);
-            wid_set_tilename(wid_player, "warrior1-right");
-            wid_set_no_shape(wid_player);
-        }
+        wid_set_color(wid_level, WID_COLOR_TEXT, WHITE);
     }
 
     wid_raise(wid_scoreline_container_top);
@@ -1135,7 +1094,7 @@ void wid_game_map_score_update (levelp level)
 
         wid_set_tex(wid, 0, "title");
 
-        fsize sz = {4.0,3.0};
+        fsize sz = {3.0,3.0};
 
         wid_set_tex_br(wid, sz);
 
@@ -1178,7 +1137,7 @@ void wid_game_map_item_update (levelp level)
         fpoint br;
 
         tl.x = 0;
-        tl.y = 0.9;
+        tl.y = 0.8;
         br.x = 1.0;
         br.y = 1.0;
 
