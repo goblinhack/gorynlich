@@ -907,6 +907,8 @@ void wid_game_map_score_update (levelp level)
     float atx2 = 0.90;
     float aty1 = 0.35;
     float dy = 0.15;
+    float dy2 = 0.03;
+    float dy3 = 0.05;
 
     /*
      * Print the score.
@@ -979,8 +981,8 @@ void wid_game_map_score_update (levelp level)
                                     wid_scoreline_container_top,
                                     &wid_score_title,
                                     "SCORE", 
-                                    atx1, aty1 + dy*(float)y - ((float)dy/4),
-                                    small_font);
+                                    atx1, aty1 + dy*(float)y - dy2,
+                                    vsmall_font);
 
         wid_set_no_shape(wid_score_title_container);
 
@@ -993,8 +995,8 @@ void wid_game_map_score_update (levelp level)
                                     wid_scoreline_container_top,
                                     &wid_health_title,
                                     "HEALTH",  
-                                    atx2, aty1 + dy*(float)y - ((float)dy/4),
-                                    small_font);
+                                    atx2, aty1 + dy*(float)y - dy2,
+                                    vsmall_font);
 
         wid_set_no_shape(wid_health_title_container);
 
@@ -1007,8 +1009,9 @@ void wid_game_map_score_update (levelp level)
                                     wid_scoreline_container_top,
                                     &wid_name_title,
                                     name_title,
-                                    (atx1 + atx2) / 2, aty1 + dy*(float)y - ((float)dy/2),
-                                    small_font);
+                                    (atx1 + atx2) / 2,
+                                    aty1 + dy*(float)y - dy3,
+                                    vsmall_font);
 
         wid_set_no_shape(wid_name_title_container);
 

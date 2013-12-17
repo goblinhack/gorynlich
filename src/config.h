@@ -17,7 +17,7 @@
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
-#undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
+#define ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
 /*
  * Screen sizes.
@@ -85,11 +85,11 @@
 /*
  * Fonts
  */
-#define VSMALL_FONT                 "data/ttf/small.ttf"
-#define VSMALL_FONT_SIZE            15
-#define SMALL_FONT                  "data/ttf/small.ttf"
+#define VSMALL_FONT                 "data/ttf/emulogic.ttf"
+#define VSMALL_FONT_SIZE            12
+#define SMALL_FONT                  "data/ttf/emulogic.ttf"
 #define SMALL_FONT_SIZE             20
-#define MED_FONT                    "data/ttf/med.ttf"
-#define MED_FONT_SIZE               40
-#define LARGE_FONT                  "data/ttf/large.ttf"
-#define LARGE_FONT_SIZE             50
+#define MED_FONT                    "data/ttf/emulogic.ttf"
+#define MED_FONT_SIZE               24
+#define LARGE_FONT                  "data/ttf/emulogic.ttf"
+#define LARGE_FONT_SIZE             28
