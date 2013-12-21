@@ -22,9 +22,6 @@
 .o/ramdisk_data_gfx_sprites_small_xcf.o: asm/ramdisk_data_gfx_sprites_small_xcf.S ../data/gfx/sprites_small.xcf
 	gcc -c asm/ramdisk_data_gfx_sprites_small_xcf.S -o .o/ramdisk_data_gfx_sprites_small_xcf.o
 
-.o/ramdisk_data_gfx_title_png.o: asm/ramdisk_data_gfx_title_png.S ../data/gfx/title.png
-	gcc -c asm/ramdisk_data_gfx_title_png.S -o .o/ramdisk_data_gfx_title_png.o
-
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o
 
@@ -324,6 +321,42 @@
 
 .o/ramdisk_data_ttf_emulogic_gif.o: asm/ramdisk_data_ttf_emulogic_gif.S ../data/ttf/emulogic.gif
 	gcc -c asm/ramdisk_data_ttf_emulogic_gif.S -o .o/ramdisk_data_ttf_emulogic_gif.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.S ../data/ttf/emulogic.ttf_pointsize12.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.S ../data/ttf/emulogic.ttf_pointsize12.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.S ../data/ttf/emulogic.ttf_pointsize18.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.S ../data/ttf/emulogic.ttf_pointsize18.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.S ../data/ttf/emulogic.ttf_pointsize20.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.S ../data/ttf/emulogic.ttf_pointsize20.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.S ../data/ttf/emulogic.ttf_pointsize24.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.S ../data/ttf/emulogic.ttf_pointsize24.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.S ../data/ttf/emulogic.ttf_pointsize28.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.S ../data/ttf/emulogic.ttf_pointsize28.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.S ../data/ttf/emulogic.ttf_pointsize36.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.S ../data/ttf/emulogic.ttf_pointsize36.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.o
 
 .o/ramdisk_data_ttf_large_ttf_pointsize50_data.o: asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S ../data/ttf/large.ttf_pointsize50.data
 	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S -o .o/ramdisk_data_ttf_large_ttf_pointsize50_data.o
