@@ -1097,7 +1097,7 @@ void wid_game_map_score_update (levelp level)
 
         wid_set_tex(wid, 0, "title");
 
-        fsize sz = {3.0,3.0};
+        fsize sz = {2.8,1.9};
 
         wid_set_tex_br(wid, sz);
 
