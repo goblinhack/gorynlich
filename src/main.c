@@ -43,6 +43,9 @@
 #include "init_fn.h"
 #include "ramdisk.h"
 #include "map.h"
+#include "net.h"
+#include "client.h"
+#include "server.h"
 
 static char **ARGV;
 char *EXEC_FULL_PATH_AND_NAME;
@@ -85,6 +88,9 @@ void quit (void)
 
     command_fini();
 
+    net_init();
+    server_init();
+    client_init();
     wid_fini();
     ttf_fini();
     font_fini();
@@ -92,6 +98,9 @@ void quit (void)
     music_fini();
     sound_fini();
     tile_fini();
+    client_fini();
+    server_fini();
+    net_fini();
     sdl_fini();
     config_fini();
     enum_fmt_destroy();
@@ -450,6 +459,13 @@ int32_t main (int32_t argc, char *argv[])
 #ifdef MAP_TEST
     extern int32_t map_jigsaw_test(int32_t argc, char **argv);
     map_jigsaw_test(argc, argv);
+#endif
+
+#ifdef NET_TEST
+    extern int net_test(int32_t argc, char *argv[]);
+    net_test(argc, argv);
+    quit();
+    exit(0);
 #endif
 
     math_init();

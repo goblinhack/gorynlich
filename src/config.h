@@ -17,7 +17,7 @@
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
-#define ENABLE_GENERATE_TTF        // Remake TTF TGA files
+#undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
 /*
  * Screen sizes.
