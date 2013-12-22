@@ -6926,6 +6926,12 @@ static void wid_display (widp w,
     br.y = obry;
 
     if (tex) {
+        /*
+         * Fit texture to the window size.
+         */
+        texuv.width *= ((float)(br.x - tl.x)) / ((float)tex_get_width(tex));
+        texuv.height *= ((float)(br.y - tl.y)) / ((float)tex_get_height(tex));
+
         glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(tex));
     } else {
         glBindTexture(GL_TEXTURE_2D, 0);

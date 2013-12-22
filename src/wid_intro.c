@@ -423,8 +423,6 @@ static void wid_intro_bg_create (void)
 {
     widp wid;
     texp tex;
-    uint32_t tw;
-    uint32_t th;
 
     if (wid_intro_title) {
         return;
@@ -434,13 +432,11 @@ static void wid_intro_bg_create (void)
         wid = wid_intro_background = wid_new_window("bg");
 
         tex = tex_find("gorynlich");
-        tw = tex_get_width(tex);
-        th = tex_get_height(tex);
 
-        fpoint tl = { 0, 0 };
-        fpoint br = { (double) tw, (double) th };
+        fpoint tl = { 0.2, 0.1 };
+        fpoint br = { 0.8, 0.9 };
 
-        wid_set_tl_br(wid, tl, br);
+        wid_set_tl_br_pct(wid, tl, br);
 
         wid_set_tex(wid, 0, "gorynlich");
 
@@ -454,23 +450,24 @@ static void wid_intro_bg_create (void)
         wid_set_color(wid, WID_COLOR_TL, c);
         wid_set_color(wid, WID_COLOR_BR, c);
         wid_set_color(wid, WID_COLOR_BG, c);
+
+        wid_move_to_pct_centered(wid, 0.5f, 0.45f);
     }
 
     {
         wid = wid_intro_title = wid_new_window("title");
 
         tex = tex_find("title");
-        tw = tex_get_width(tex);
-        th = tex_get_height(tex);
 
-        fpoint tl = { 0, 0 };
-        fpoint br = { (double) tw, (double) th };
+        fpoint tl = { 0.1, 0.3 };
+        fpoint br = { 0.9, 0.6 };
 
-        wid_set_tl_br(wid, tl, br);
+        wid_set_tl_br_pct(wid, tl, br);
 
         wid_set_tex(wid, 0, "title");
 
         wid_raise(wid);
+        wid_update(wid);
 
         wid_set_mode(wid, WID_MODE_NORMAL);
         wid_set_color(wid, WID_COLOR_TL, WHITE);
@@ -736,5 +733,5 @@ static void wid_intro_create (void)
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
     wid_move_to_pct_centered(wid_intro_background, 0.5f, 0.5f);
-    wid_move_to_pct_centered(wid_intro_title, 0.5f, 0.4f);
+    wid_move_to_pct_centered(wid_intro_title, 0.5f, 0.45f);
 }

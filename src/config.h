@@ -86,10 +86,7 @@
  * Fonts
  */
 #define VSMALL_FONT                 "data/ttf/emulogic.ttf"
-#define VSMALL_FONT_SIZE            12
 #define SMALL_FONT                  "data/ttf/emulogic.ttf"
-#define SMALL_FONT_SIZE             14
 #define MED_FONT                    "data/ttf/emulogic.ttf"
-#define MED_FONT_SIZE               20
 #define LARGE_FONT                  "data/ttf/emulogic.ttf"
-#define LARGE_FONT_SIZE             24
+#define VLARGE_FONT                 "data/ttf/emulogic.ttf"

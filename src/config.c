@@ -12,11 +12,6 @@
 
 struct config global_config;
 
-fontp vsmall_font;
-fontp small_font;
-fontp med_font;
-fontp large_font;
-
 static const char *config_dir_and_file = "gorynlich-config.txt";
 static int32_t config_inited;
 
