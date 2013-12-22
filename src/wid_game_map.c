@@ -950,7 +950,7 @@ void wid_game_map_score_update (levelp level)
                                     &wid_score,
                                     tmp, 
                                     atx1, aty1 + dy*(float)y, 
-                                    small_font);
+                                    med_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_score_container);
@@ -967,7 +967,7 @@ void wid_game_map_score_update (levelp level)
                                     &wid_health,
                                     tmp,  
                                     atx2, aty1 + dy*(float)y, 
-                                    small_font);
+                                    med_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_health_container);
@@ -1077,7 +1077,7 @@ void wid_game_map_score_update (levelp level)
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,
                                             &wid_level,
-                                            tmp, atx1, 0.2, small_font);
+                                            tmp, atx1, 0.2, med_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);
@@ -1088,18 +1088,14 @@ void wid_game_map_score_update (levelp level)
     wid_update(wid_scoreline_container_top);
 
     {
-        widp wid = wid_new_container(wid_scoreline_container_top, "title");
+        widp wid = wid_new_square_button(wid_scoreline_container_top, "title");
 
-        fpoint tl = { 0, 0.0 };
-        fpoint br = { 1.0, 0.12 };
+        fpoint tl = { 0.1, 0.0 };
+        fpoint br = { 0.9, 0.09 };
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        wid_set_tex(wid, 0, "title");
-
-        fsize sz = {2.8,1.9};
-
-        wid_set_tex_br(wid, sz);
+        wid_set_tex(wid, 0, "title2");
 
         wid_set_mode(wid, WID_MODE_NORMAL);
         wid_set_color(wid, WID_COLOR_TL, WHITE);
@@ -1109,7 +1105,6 @@ void wid_game_map_score_update (levelp level)
         wid_update(wid);
         wid_raise(wid);
     }
-
 
     wid_update_mouse();
 }
