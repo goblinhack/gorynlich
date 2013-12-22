@@ -141,13 +141,17 @@ log_info "  ($SDL_CONFIG)"
 # -funwind-tables and -rdynamic for backtrace info on linux.
 # But it seemed to help little.
 #
+LDLIBS="$SDL_LIBS"
+
 if [ "$SDL2_CONFIG" != "" ]
 then
-    LDLIBS="$SDL_LIBS -lSDL2_mixer"
-    LDLIBS="$SDL_LIBS -lSDL2_ttf -lSDL2_mixer"
+#    LDLIBS="$LDLIBS -lSDL2_ttf"
+    LDLIBS="$LDLIBS -lSDL2_mixer"
+    LDLIBS="$LDLIBS -lSDL2_net"
 else
-    LDLIBS="$SDL_LIBS -lSDL_mixer"
-    LDLIBS="$SDL_LIBS -lSDL_ttf -lSDL_mixer"
+#    LDLIBS="$LDLIBS -lSDL_ttf"
+    LDLIBS="$LDLIBS -lSDL_mixer"
+    LDLIBS="$LDLIBS -lSDL_net"
 fi
 
 case `uname` in

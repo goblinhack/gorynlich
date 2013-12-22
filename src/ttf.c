@@ -637,6 +637,7 @@ ttf_read_tga (char *name, int32_t pointsize)
     return (f);
 }
 
+#ifdef ENABLE_GENERATE_TTF
 font *
 ttf_write_tga (char *name, int32_t pointsize)
 {
@@ -852,4 +853,5 @@ ttf_write_tga (char *name, int32_t pointsize)
     printf("wrote %s\n",filename);
     return (f);
 }
+#endif
 

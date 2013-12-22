@@ -6,6 +6,9 @@ include Makefile.ramdisk.deps
 
 GAME_OBJECTS=				\
     $(RAMDISK_OBJ)			\
+    $(OBJDIR)/client.o 			\
+    $(OBJDIR)/server.o 			\
+    $(OBJDIR)/net.o 			\
     $(OBJDIR)/backtrace.o 		\
     $(OBJDIR)/color.o			\
     $(OBJDIR)/command.o 		\
