@@ -31,7 +31,7 @@ static void wid_intro_settings_save(void);
 static boolean wid_intro_restart_selected(void);
 
 #define WID_INTRO_MAX_SETTINGS  3
-#define WID_INTRO_MAX_VAL      10 
+#define WID_INTRO_MAX_VAL      30 
 
 enum {
     WID_INTRO_SETTINGS_ROW_WINDOW,
@@ -60,10 +60,30 @@ static const char *wid_intro_button_col3[WID_INTRO_MAX_SETTINGS] = {
 static const char *wid_intro_button_col4
                         [WID_INTRO_MAX_SETTINGS][WID_INTRO_MAX_VAL] = {
     { 
+        "640x480",
+        "800x600",
         "1080x720",
-        "1440x852",
+        "1024x600",
+        "1024x768",
+        "1093x614",
+        "1152x864",
+        "1280x1024",
+        "1280x720",
+        "1280x768",
+        "1280x800",
+        "1280x960",
+        "1360x768",
+        "1366x768",
+        "1400x1050",
+        "1440x900",
+        "1600x1200",
+        "1600x900",
         "1680x1050",
-        "1920x1080", 
+        "1920x1080",
+        "1920x1200",
+        "2048x1152",
+        "2560x1440",
+        "2560x1600",
         0 
     },
     { "Off", "Min", "Normal", "Max", 0 },

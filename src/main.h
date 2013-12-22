@@ -164,6 +164,7 @@ extern fontp vsmall_font;
 extern fontp small_font;
 extern fontp med_font;
 extern fontp large_font;
+extern fontp vlarge_font;
 extern wid_consolep wid_console;
 extern configp config;
 

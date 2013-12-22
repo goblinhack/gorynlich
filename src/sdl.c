@@ -179,7 +179,7 @@ static inline boolean sdl_find_video_size (int32_t w, int32_t h)
     }
 #endif /* } */
 
-    INIT_LOG("SDL video   : %dx%d not available", w, h);
+    DBG("SDL video   : %dx%d not available", w, h);
 
     first = false;
 
