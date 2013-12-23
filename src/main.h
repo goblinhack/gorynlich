@@ -147,6 +147,7 @@ typedef struct music_ *musicp;
 typedef struct sound_ *soundp;
 typedef struct tile_ *tilep;
 typedef struct thing_ *thingp;
+typedef struct host_ *hostp;
 typedef struct action_timer_ *timerp;
 typedef struct action_init_fn_ *init_fnp;
 typedef struct item_ *itemp;
@@ -198,6 +199,8 @@ void FINI_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void CON(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+void HOST_LOG(hostp, const char *fmt, ...) \
+                     __attribute__ ((format (printf, 2, 3)));
 void THING_LOG(thingp, const char *fmt, ...) \
                      __attribute__ ((format (printf, 2, 3)));
 void THING_DBG(thingp, const char *fmt, ...) \

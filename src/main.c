@@ -7,6 +7,7 @@
 #include <libgen.h>
 #include <unistd.h>
 #include <SDL.h>
+#include <SDL_net.h>
 #include "slre.h"
 
 #include "main.h"
@@ -381,6 +382,120 @@ static void find_file_locations (void)
     INIT_LOG("Font path   : \"%s\"", TTF_PATH);
 }
 
+static void usage (void)
+{
+    fprintf(stderr, "Gorynlich, options:\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "        --server <hostname or ip> <port-number>\n");
+    fprintf(stderr, "        -server          :\n");
+    fprintf(stderr, "        -s               :\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "        --client <hostname or ip> <port-number>\n");
+    fprintf(stderr, "        -client          :\n");
+    fprintf(stderr, "        -c               :\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Written by Neil McGill, goblinhack@gmail.com\n");
+}
+
+static void parse_args (int32_t argc, char *argv[])
+{
+    boolean server_address_set;
+    IPaddress server_address = {0};
+    boolean client_address_set;
+    IPaddress client_address = {0};
+    int32_t i;
+
+    server_address_set = false;
+    client_address_set = false;
+
+    /*
+     * Parse format args
+     */
+    for (i = 1; i < argc; i++) {
+        /*
+         * -server
+         */
+        if (!strcmp(argv[i], "--server") ||
+            !strcmp(argv[i], "-server") ||
+            !strcmp(argv[i], "s")) {
+
+            if (i + 2 >= argc) {
+                DIE("need server host and port");
+            }
+
+            if (SDLNet_ResolveHost(&server_address, 
+                                   argv[i + 1], 
+                                   atoi(argv[i + 2])) == -1) {
+                DIE("cannot resolve host %s port %s",
+                    argv[i + 1], argv[i + 2]);
+            }
+
+            server_address_set = true;
+
+            i += 2;
+
+            continue;
+        }
+
+        /*
+         * -client
+         */
+        if (!strcmp(argv[i], "--client") ||
+            !strcmp(argv[i], "-client") ||
+            !strcmp(argv[i], "s")) {
+
+            if (i + 2 >= argc) {
+                DIE("need client host and port");
+            }
+
+            if (SDLNet_ResolveHost(&client_address, 
+                                   argv[i + 1], 
+                                   atoi(argv[i + 2])) == -1) {
+                DIE("cannot resolve host %s port %s",
+                    argv[i + 1], argv[i + 2]);
+            }
+
+            client_address_set = true;
+
+            i += 2;
+
+            continue;
+        }
+
+        /*
+         * Bad argument.
+         */
+        if (argv[i][0] == '-') {
+            usage();
+            DIE("unknown format argument, %s", argv[i]);
+        }
+
+        usage();
+        DIE("unknown format argument, %s", argv[i]);
+    }
+
+    if (server_address_set) {
+        char *tmp = iptodynstr(server_address);
+
+        LOG("Server: %s", tmp);
+
+        myfree(tmp);
+    }
+
+    if (client_address_set) {
+        char *tmp = iptodynstr(client_address);
+
+        LOG("Client: %s", tmp);
+
+        myfree(tmp);
+    }
+
+host_add(server_address, "server");
+host_add(server_address, "server");
+host_add(client_address, "neil");
+host_dump();
+}
+
 int32_t main (int32_t argc, char *argv[])
 {
 #ifdef ENABLE_LOGFILE
@@ -400,6 +515,8 @@ int32_t main (int32_t argc, char *argv[])
     ARGV = argv;
 
     dospath2unix(ARGV[0]);
+
+    parse_args(argc, argv);
 
 #ifdef PTRCHECK_TEST
     extern int ptrcheck_test(int32_t argc, char *argv[]);
@@ -461,6 +578,7 @@ int32_t main (int32_t argc, char *argv[])
     map_jigsaw_test(argc, argv);
 #endif
 
+#define NET_TEST
 #ifdef NET_TEST
     extern int net_test(int32_t argc, char *argv[]);
     net_test(argc, argv);
