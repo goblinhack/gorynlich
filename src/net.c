@@ -13,6 +13,11 @@
 #include "net.h"
 #include "string.h"
 
+boolean is_server;
+boolean is_client;
+IPaddress server_address = {0};
+IPaddress client_address = {0};
+
 static boolean net_init_done;
 static host hosts[NET_MAX_HOSTS];
 static void host_fini(void);
@@ -42,6 +47,11 @@ void net_fini (void)
 
 int net_test (int32_t argc, char *argv[])
 {
+    host_add(server_address, "server");
+    host_add(server_address, "server");
+    host_add(client_address, "neil");
+    host_dump();
+
     return (0);
 }
 

@@ -26,3 +26,8 @@ typedef struct host_ {
 const char *host_logname(hostp);
 hostp host_add(IPaddress ip, const char *name);
 void host_dump(void);
+
+extern boolean is_server;
+extern boolean is_client;
+extern IPaddress server_address;
+extern IPaddress client_address;
