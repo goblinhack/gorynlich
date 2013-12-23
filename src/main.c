@@ -399,14 +399,10 @@ static void usage (void)
 
 static void parse_args (int32_t argc, char *argv[])
 {
-    boolean server_address_set;
-    IPaddress server_address = {0};
-    boolean client_address_set;
-    IPaddress client_address = {0};
     int32_t i;
 
-    server_address_set = false;
-    client_address_set = false;
+    is_server = false;
+    is_client = false;
 
     /*
      * Parse format args
@@ -430,7 +426,7 @@ static void parse_args (int32_t argc, char *argv[])
                     argv[i + 1], argv[i + 2]);
             }
 
-            server_address_set = true;
+            is_server = true;
 
             i += 2;
 
@@ -455,7 +451,7 @@ static void parse_args (int32_t argc, char *argv[])
                     argv[i + 1], argv[i + 2]);
             }
 
-            client_address_set = true;
+            is_client = true;
 
             i += 2;
 
@@ -474,7 +470,7 @@ static void parse_args (int32_t argc, char *argv[])
         DIE("unknown format argument, %s", argv[i]);
     }
 
-    if (server_address_set) {
+    if (is_server) {
         char *tmp = iptodynstr(server_address);
 
         LOG("Server: %s", tmp);
@@ -482,18 +478,13 @@ static void parse_args (int32_t argc, char *argv[])
         myfree(tmp);
     }
 
-    if (client_address_set) {
+    if (is_client) {
         char *tmp = iptodynstr(client_address);
 
         LOG("Client: %s", tmp);
 
         myfree(tmp);
     }
-
-host_add(server_address, "server");
-host_add(server_address, "server");
-host_add(client_address, "neil");
-host_dump();
 }
 
 int32_t main (int32_t argc, char *argv[])
