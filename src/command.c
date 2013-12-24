@@ -12,6 +12,7 @@
 #include "command.h"
 #include "tree.h"
 #include "string.h"
+#include "linenoise.h"
 
 /*
  * Simple wid_console expanding code, takes a comand input and expands it as
@@ -143,7 +144,8 @@ static int32_t command_matches (const char *input,
                                 boolean show_ambiguous,
                                 boolean show_complete,
                                 boolean execute_command,
-                                void *context)
+                                void *context,
+                                linenoiseCompletions *lc)
 {
     char cand_expand_to[MAXSTR];
     command_t *matched_command;
@@ -258,6 +260,10 @@ static int32_t command_matches (const char *input,
 
             if (show_ambiguous) {
                 CON("  %-40s -- %s", match, match2);
+
+                if (lc) {
+                    linenoiseAddCompletion(lc, match);
+                }
             }
         } else {
 // CON("  NO MATCH \"%s\" [%d] longest %d", match,t,longest_match);
@@ -356,7 +362,8 @@ boolean command_handle (const char *input,
      * Check for ambiguous commands.
      */
     matches = command_matches(input, expandedtext, false, false,
-                              execute_command, context);
+                              execute_command, context,
+                              0 /* lc */);
     if (matches == 0) {
         CON("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
         return (false);
@@ -369,7 +376,8 @@ boolean command_handle (const char *input,
         }
 
         command_matches(input, expandedtext, show_ambiguous, show_complete,
-                        execute_command, context);
+                        execute_command, context,
+                        0 /* lc */);
 
         if (!show_ambiguous) {
             if (expandedtext) {
@@ -378,11 +386,13 @@ boolean command_handle (const char *input,
                         "\"%s\"%%%%fg=reset$. Try:", input);
 
                     command_matches(input, expandedtext, true, show_complete,
-                                    execute_command, context);
+                                    execute_command, context,
+                                    0 /* lc */);
                 }
             } else {
                 command_matches(input, expandedtext, true, show_complete,
-                                execute_command, context);
+                                execute_command, context,
+                                0 /* lc */);
             }
         }
 
@@ -394,8 +404,109 @@ boolean command_handle (const char *input,
             "\"%s\"%%%%fg=reset$. Try:", input);
 
         command_matches(input, expandedtext, true, show_complete,
-                        execute_command, context);
+                        execute_command, context,
+                        0 /* lc */);
     }
 
     return (true);
+}
+
+void completion (const char *input, linenoiseCompletions *lc) 
+{
+    boolean show_ambiguous = true;
+    boolean show_complete = true;
+    boolean execute_command = false;
+    char *expandedtext = 0;
+    void *context = 0;
+    int32_t matches;
+
+    /*
+     * Check for ambiguous commands.
+     */
+    matches = command_matches(input, expandedtext, false, false,
+                              execute_command, context, lc);
+    if (matches == 0) {
+        CON("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
+        return;
+    }
+
+    if (matches > 1) {
+        if (show_ambiguous) {
+            CON("> %%%%fg=red$Incomplete command, "
+                "\"%s\"%%%%fg=reset$. Try:", input);
+        }
+
+        command_matches(input, expandedtext, show_ambiguous, show_complete,
+                        execute_command, context, lc);
+
+        if (!show_ambiguous) {
+            if (expandedtext) {
+                if (!strcmp(input, expandedtext)) {
+                    CON("> %%%%fg=red$Incomplete command, "
+                        "\"%s\"%%%%fg=reset$. Try:", input);
+
+                    command_matches(input, expandedtext, true, show_complete,
+                                    execute_command, context, lc);
+                }
+            } else {
+                command_matches(input, expandedtext, true, show_complete,
+                                execute_command, context, lc);
+            }
+        }
+
+        return;
+    }
+
+    if (!execute_command && (matches == 1)) {
+        CON("> %%%%fg=red$Incomplete command, "
+            "\"%s\"%%%%fg=reset$. Try:", input);
+
+        command_matches(input, expandedtext, true, show_complete,
+                        execute_command, context, lc);
+    }
+}
+
+static void linenoise_init (void)
+{
+    /* Set the completion callback. This will be called every time the
+     * user uses the <tab> key. */
+    linenoiseSetCompletionCallback(completion);
+
+    /* Load history from file. The history file is just a plain text file
+     * where entries are separated by newlines. */
+    linenoiseHistoryLoad("history.txt"); /* Load the history at startup */
+}
+
+void linenoise_tick (void)
+{
+    static int first = true;
+    char *line;
+
+    if (first) {
+        linenoise_init();
+        first = false;
+    }
+
+    while ((line = linenoise("gorynlich> ")) != NULL) {
+        /* Do something with the string. */
+        if (line[0] != '\0' && line[0] != '/') {
+
+            command_handle(line, 0, /* expandedtext */
+                           true /* boolean show_ambiguous */,
+                           true /* boolean show_complete */,
+                           true /* execute_command */,
+                           0 /* context */);
+
+            linenoiseHistoryAdd(line); /* Add to the history. */
+            linenoiseHistorySave("history.txt"); /* Save the history on disk. */
+
+        } else if (!strncmp(line,"/historylen",11)) {
+            /* The "/historylen" command will change the history len. */
+            int len = atoi(line+11);
+            linenoiseHistorySetMaxLen(len);
+        } else if (line[0] == '/') {
+            CON("Unreconized command: %s\n", line);
+        }
+        free(line);
+    }
 }

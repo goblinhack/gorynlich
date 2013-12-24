@@ -99,6 +99,8 @@ static void wid_intro_about_create (void)
           "\n"
           "Sound effects: Psychentist\n"
           "\n"
+          "Server console: https://github.com/antirez/linenoise\n"
+          "\n"
           "\n"
           "\n"
           "This game is free software; you can redistribute it and/or "

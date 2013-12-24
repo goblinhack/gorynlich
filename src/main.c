@@ -476,6 +476,8 @@ static void parse_args (int32_t argc, char *argv[])
         LOG("Server: %s", tmp);
 
         myfree(tmp);
+
+        host_add(server_address, "server", true);
     }
 
     if (is_client) {
@@ -484,6 +486,8 @@ static void parse_args (int32_t argc, char *argv[])
         LOG("Client: %s", tmp);
 
         myfree(tmp);
+
+        host_add(client_address, "client", true);
     }
 }
 
@@ -569,7 +573,6 @@ int32_t main (int32_t argc, char *argv[])
     map_jigsaw_test(argc, argv);
 #endif
 
-#define NET_TEST
 #ifdef NET_TEST
     extern int net_test(int32_t argc, char *argv[]);
     net_test(argc, argv);

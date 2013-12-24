@@ -21,8 +21,8 @@
 #include "tex.h"
 #include "ttf.h"
 #include "slre.h"
-#include "token.h"
 #include "map.h"
+#include "command.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -69,6 +69,10 @@ SDL_GLContext context; /* Our opengl context handle */
 
 void sdl_fini (void)
 {
+    if (HEADLESS) {
+        return;
+    }
+
     FINI_LOG("%s", __FUNCTION__);
 
     if (sdl_init_video) {
@@ -188,6 +192,10 @@ static inline boolean sdl_find_video_size (int32_t w, int32_t h)
 
 boolean sdl_init (void)
 {
+    if (HEADLESS) {
+        return (true);
+    }
+
     int32_t VIDEO_WIDTH;
     int32_t VIDEO_HEIGHT;
     int32_t value;
@@ -699,7 +707,9 @@ void sdl_loop (void)
     SDL_SetEventFilter(sdl_filter_events, 0);
 #endif /* } */
 
-    glEnable(GL_TEXTURE_2D);
+    if (!HEADLESS) {
+        glEnable(GL_TEXTURE_2D);
+    }
 
     wid_console_hello();
 
@@ -711,17 +721,21 @@ void sdl_loop (void)
 
     sdl_main_loop_running = true;
 
+    if (!HEADLESS) {
 #ifdef ENABLE_INVERTED_DISPLAY
-    glClearColor(WHITE.r, WHITE.g, WHITE.b, 1.0f);
+        glClearColor(WHITE.r, WHITE.g, WHITE.b, 1.0f);
 #else
-    glClearColor(BLACK.r, BLACK.g, BLACK.b, 1.0f);
+        glClearColor(BLACK.r, BLACK.g, BLACK.b, 1.0f);
 #endif
+    }
 
     while (!init_done) {
         /*
          * Clear the screen
          */
-        glClear(GL_COLOR_BUFFER_BIT);
+        if (!HEADLESS) {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
 
         /*
          * Splash screen loading bar for init functions.
@@ -738,20 +752,26 @@ void sdl_loop (void)
         /*
          * Flip
          */
+        if (!HEADLESS) {
 #ifdef ENABLE_SDL_WINDOW /* { */
-        SDL_GL_SwapWindow(window);
+            SDL_GL_SwapWindow(window);
 #else /* } { */
-        SDL_GL_SwapBuffers();
+            SDL_GL_SwapBuffers();
 #endif /* } */
+        }
     }
 
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    if (!HEADLESS) {
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    }
 
     /*
      * Don't use this. It seemed to mess up graphics on FireGL.
      *
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
      */
+
+    if (!HEADLESS) {
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
 
@@ -771,11 +791,15 @@ void sdl_loop (void)
 
 #endif /* } */
 
+    }
+
     for (;;) {
         /*
          * Clear the screen
          */
-        glClear(GL_COLOR_BUFFER_BIT);
+        if (!HEADLESS) {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
 
         frames++;
 
@@ -798,37 +822,39 @@ void sdl_loop (void)
              */
             wid_tick_all();
 
-            /*
-             * Read events
-             */
-            SDL_PumpEvents();
+            if (!HEADLESS) {
+                /*
+                 * Read events
+                 */
+                SDL_PumpEvents();
 
 #if (SDL_MAJOR_VERSION == 2) || \
-        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
-            found = SDL_PeepEvents(events,
-                                   ARRAY_SIZE(events),
-                                   SDL_GETEVENT,
-                                   SDL_QUIT,
-                                   SDL_LASTEVENT);
+            (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
+                found = SDL_PeepEvents(events,
+                                    ARRAY_SIZE(events),
+                                    SDL_GETEVENT,
+                                    SDL_QUIT,
+                                    SDL_LASTEVENT);
 #else /* } { */
-            found = SDL_PeepEvents(events,
-                                   ARRAY_SIZE(events),
-                                   SDL_GETEVENT,
-                                   SDL_QUITMASK|
-                                   SDL_MOUSEEVENTMASK|
-                                   /*
-                                    * Seems not to be in SDL 1.2.14
-                                   SDL_MOUSEWHEELMASK|
-                                    */
-                                   SDL_MOUSEMOTIONMASK|
-                                   SDL_MOUSEBUTTONDOWNMASK|
-                                   SDL_MOUSEBUTTONUPMASK|
-                                   SDL_KEYDOWNMASK|
-                                   SDL_KEYUPMASK);
+                found = SDL_PeepEvents(events,
+                                    ARRAY_SIZE(events),
+                                    SDL_GETEVENT,
+                                    SDL_QUITMASK|
+                                    SDL_MOUSEEVENTMASK|
+                                    /*
+                                        * Seems not to be in SDL 1.2.14
+                                    SDL_MOUSEWHEELMASK|
+                                        */
+                                    SDL_MOUSEMOTIONMASK|
+                                    SDL_MOUSEBUTTONDOWNMASK|
+                                    SDL_MOUSEBUTTONUPMASK|
+                                    SDL_KEYDOWNMASK|
+                                    SDL_KEYUPMASK);
 #endif /* } */
 
-            for (i = 0; i < found; ++i) {
-                sdl_event(&events[i]);
+                for (i = 0; i < found; ++i) {
+                    sdl_event(&events[i]);
+                }
             }
 
             if (!sdl_main_loop_running) {
@@ -870,16 +896,22 @@ void sdl_loop (void)
             ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
         }
 
+        if (HEADLESS) {
+            linenoise_tick();
+        }
+
         /*
          * Flip
          */
+        if (!HEADLESS) {
 #ifdef ENABLE_SDL_WINDOW /* { */
-        SDL_GL_SwapWindow(window);
+            SDL_GL_SwapWindow(window);
 #else /* } { */
-        SDL_GL_SwapBuffers();
+            SDL_GL_SwapBuffers();
 #endif /* } */
 
-        SDL_Delay(10);
+            SDL_Delay(10);
+        }
     }
 }
 

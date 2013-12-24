@@ -128,6 +128,10 @@ soundp sound_find (const char *name_alias)
 
 void sound_play (const char *name_alias)
 {
+    if (HEADLESS) {
+        return;
+    }
+
     if (!music_init_done) {
         return;
     }
@@ -147,6 +151,10 @@ void sound_play (const char *name_alias)
 
 void sound_play_n (const char *name_alias, int32_t n)
 {
+    if (HEADLESS) {
+        return;
+    }
+
     if (!music_init_done) {
         return;
     }

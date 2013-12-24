@@ -1563,6 +1563,10 @@ void gltexcolor (texp tex, color s)
     if (tex) {
         gl_last_color = s;
 
+        if (HEADLESS) {
+            return;
+        }
+
         glColor4ub(s.r, s.g, s.b, s.a);
     } else {
         glcolor(s);
@@ -1583,6 +1587,10 @@ void glcolor (color s)
     {
         gl_last_color = s;
 
+        if (HEADLESS) {
+            return;
+        }
+
         glColor4ub(s.r, s.g, s.b, s.a);
     }
 }
@@ -1600,6 +1608,10 @@ void glcolor_save (void)
 void glcolor_restore (void)
 {
     color s = gl_last_color = gl_save_color;
+
+    if (HEADLESS) {
+        return;
+    }
 
     glColor4ub(s.r, s.g, s.b, s.a);
 }
