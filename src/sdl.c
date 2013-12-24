@@ -711,8 +711,6 @@ void sdl_loop (void)
         glEnable(GL_TEXTURE_2D);
     }
 
-    wid_console_hello();
-
     /*
      * Wait for events
      */
@@ -792,6 +790,8 @@ void sdl_loop (void)
 #endif /* } */
 
     }
+
+    wid_console_hello();
 
     for (;;) {
         /*
@@ -897,6 +897,9 @@ void sdl_loop (void)
         }
 
         if (HEADLESS) {
+            /*
+             * Server input.
+             */
             linenoise_tick();
         }
 
