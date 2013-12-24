@@ -71,6 +71,7 @@ boolean wid_console_init (void)
     command_add(debug_disable, "debug off", "disable debug mode");
     command_add(fps_enable, "fps on", "enable frames per sec counter");
     command_add(fps_disable, "fps off", "disable frames per sec counter");
+    command_add(sdl_user_exit, "quit", "exit the server or gam");
 
     wid_console_wid_create();
 

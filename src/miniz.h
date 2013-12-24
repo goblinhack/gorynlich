@@ -385,7 +385,7 @@ const char *mz_error(int err);
   #define free_func             mz_free_func
   #define internal_state        mz_internal_state
   #define z_stream              mz_stream
-  #define deflateInit           mz_deflateInit
+  #define deflateInit          mz_deflateInit
   #define deflateInit2          mz_deflateInit2
   #define deflateReset          mz_deflateReset
   #define deflate               mz_deflate
@@ -394,7 +394,7 @@ const char *mz_error(int err);
   #define compress              mz_compress
   #define compress2             mz_compress2
   #define compressBound         mz_compressBound
-  #define inflateInit           mz_inflateInit
+  #define inflateInit          mz_inflateInit
   #define inflateInit2          mz_inflateInit2
   #define inflate               mz_inflate
   #define inflateEnd            mz_inflateEnd

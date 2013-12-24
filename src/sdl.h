@@ -19,3 +19,6 @@ extern int32_t sdl_init_video;
 #else
 #define SDL_KEYSYM SDL_Keysym
 #endif /* } */
+
+struct tokens_t_;
+boolean sdl_user_exit(struct tokens_t_ *tokens, void *context);

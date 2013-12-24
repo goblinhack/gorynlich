@@ -160,7 +160,7 @@ static int isUnsupportedTerm(void) {
 }
 
 /* Raw mode: 1960 magic shit. */
-static int enableRawMode(int fd) {
+int enableRawMode(int fd) {
     struct termios raw;
 
     if (!isatty(STDIN_FILENO)) goto fatal;
@@ -195,7 +195,7 @@ fatal:
     return -1;
 }
 
-static void disableRawMode(int fd) {
+void disableRawMode(int fd) {
     /* Don't even check the return value as it's too late. */
     if (rawmode && tcsetattr(fd,TCSAFLUSH,&orig_termios) != -1)
         rawmode = 0;
@@ -246,7 +246,10 @@ static int completeLine(struct linenoiseState *ls) {
     int nread, nwritten;
     char c = 0;
 
+    disableRawMode(ls->fd);
     completionCallback(ls->buf,&lc);
+    enableRawMode(ls->fd);
+
     if (lc.len == 0) {
         linenoiseBeep();
     } else {
