@@ -120,7 +120,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
             *outlen = (int)ramfile->len;
         }
 
-        LOG("Ramdisk %s, %d bytes", filename, ramfile->len);
+        DBG("Ramdisk %s, %d bytes", filename, ramfile->len);
 
         if (alt_filename) {
             myfree(alt_filename);

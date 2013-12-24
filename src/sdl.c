@@ -692,6 +692,16 @@ boolean fps_disable (tokens_t *tokens, void *context)
 }
 
 /*
+ * User has entered a command, run it
+ */
+boolean sdl_user_exit (tokens_t *tokens, void *context)
+{
+    sdl_exit();
+
+    return (true);
+}
+
+/*
  * Main loop
  */
 void sdl_loop (void)

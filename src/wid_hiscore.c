@@ -363,7 +363,7 @@ boolean hiscore_load (void)
         tree_destroy(&hiscores, 0);
     }
 
-    LOG("Load  %s", file);
+    LOG("Load %s", file);
 
     uint32_t count = 0;
     hiscore h;

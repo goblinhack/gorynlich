@@ -259,7 +259,7 @@ static int32_t command_matches (const char *input,
             tokens_print_to(&command->readable_tokens, match2, sizeof(match2));
 
             if (show_ambiguous) {
-                CON("  %-40s -- %s", match, match2);
+                RAW("  %-40s -- %s", match, match2);
 
                 if (lc) {
                     linenoiseAddCompletion(lc, match);
@@ -365,13 +365,13 @@ boolean command_handle (const char *input,
                               execute_command, context,
                               0 /* lc */);
     if (matches == 0) {
-        CON("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
+        RAW("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
         return (false);
     }
 
     if (matches > 1) {
         if (show_ambiguous) {
-            CON("> %%%%fg=red$Incomplete command, "
+            RAW("> %%%%fg=red$Incomplete command, "
                 "\"%s\"%%%%fg=reset$. Try:", input);
         }
 
@@ -382,7 +382,7 @@ boolean command_handle (const char *input,
         if (!show_ambiguous) {
             if (expandedtext) {
                 if (!strcmp(input, expandedtext)) {
-                    CON("> %%%%fg=red$Incomplete command, "
+                    RAW("> %%%%fg=red$Incomplete command, "
                         "\"%s\"%%%%fg=reset$. Try:", input);
 
                     command_matches(input, expandedtext, true, show_complete,
@@ -400,7 +400,7 @@ boolean command_handle (const char *input,
     }
 
     if (!execute_command && (matches == 1)) {
-        CON("> %%%%fg=red$Incomplete command, "
+        RAW("> %%%%fg=red$Incomplete command, "
             "\"%s\"%%%%fg=reset$. Try:", input);
 
         command_matches(input, expandedtext, true, show_complete,
@@ -426,13 +426,13 @@ void completion (const char *input, linenoiseCompletions *lc)
     matches = command_matches(input, expandedtext, false, false,
                               execute_command, context, lc);
     if (matches == 0) {
-        CON("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
+        RAW("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
         return;
     }
 
     if (matches > 1) {
         if (show_ambiguous) {
-            CON("> %%%%fg=red$Incomplete command, "
+            RAW("> %%%%fg=red$Incomplete command, "
                 "\"%s\"%%%%fg=reset$. Try:", input);
         }
 
@@ -442,7 +442,7 @@ void completion (const char *input, linenoiseCompletions *lc)
         if (!show_ambiguous) {
             if (expandedtext) {
                 if (!strcmp(input, expandedtext)) {
-                    CON("> %%%%fg=red$Incomplete command, "
+                    RAW("> %%%%fg=red$Incomplete command, "
                         "\"%s\"%%%%fg=reset$. Try:", input);
 
                     command_matches(input, expandedtext, true, show_complete,
@@ -458,7 +458,7 @@ void completion (const char *input, linenoiseCompletions *lc)
     }
 
     if (!execute_command && (matches == 1)) {
-        CON("> %%%%fg=red$Incomplete command, "
+        RAW("> %%%%fg=red$Incomplete command, "
             "\"%s\"%%%%fg=reset$. Try:", input);
 
         command_matches(input, expandedtext, true, show_complete,
@@ -487,7 +487,7 @@ void linenoise_tick (void)
         first = false;
     }
 
-    while ((line = linenoise("gorynlich> ")) != NULL) {
+    if ((line = linenoise("gorynlich> ")) != NULL) {
         /* Do something with the string. */
         if (line[0] != '\0' && line[0] != '/') {
 
@@ -505,8 +505,9 @@ void linenoise_tick (void)
             int len = atoi(line+11);
             linenoiseHistorySetMaxLen(len);
         } else if (line[0] == '/') {
-            CON("Unreconized command: %s\n", line);
+            RAW("Unreconized command: %s\n", line);
         }
+
         free(line);
     }
 }

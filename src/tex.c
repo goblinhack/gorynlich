@@ -99,7 +99,7 @@ static unsigned char *load_raw_image (const char *filename,
         DIE("could not read memory for file, %s", filename);
     }
 
-    LOG("Load  %s, %ux%u", filename, *x, *y);
+    DBG("Load %s, %ux%u", filename, *x, *y);
 
     myfree(ramdisk_data);
 

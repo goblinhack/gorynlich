@@ -98,7 +98,7 @@ soundp sound_load (const char *filename, const char *name_alias)
             SDL_GetError());
     }
 
-    LOG("Load  %s", filename);
+    DBG("Load %s", filename);
 
     return (m);
 }

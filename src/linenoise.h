@@ -53,5 +53,7 @@ int linenoiseHistorySave(char *filename);
 int linenoiseHistoryLoad(char *filename);
 void linenoiseClearScreen(void);
 void linenoiseSetMultiLine(int ml);
+void disableRawMode(int fd);
+int enableRawMode(int fd);
 
 #endif /* __LINENOISE_H */

@@ -606,6 +606,14 @@ ttf_read_tga (char *name, int32_t pointsize)
     texp tex;
     font *f;
 
+    if (pointsize < 0) {
+        DIE("nutso font size %d", pointsize);
+    }
+
+    if (pointsize > 100) {
+        DIE("nutso font size %d", pointsize);
+    }
+
     f = (typeof(f)) myzalloc(sizeof(*f), "TTF font");
     if (!f) {
         DIE("could not alloc font %s", name);
@@ -614,7 +622,7 @@ ttf_read_tga (char *name, int32_t pointsize)
     /*
      * Read the glyph data.
      */
-    snprintf(filename, sizeof(filename), "%s_pointsize%u.data",
+    snprintf(filename, sizeof(filename), "%s_pointsize%d.data",
              name, pointsize);
 
     const unsigned char *glyph_data = ramdisk_load(filename, 0);

@@ -97,7 +97,7 @@ musicp music_load (const char *file, const char *name_alias)
             SDL_GetError());
     }
 
-    LOG("Load  %s", file);
+    DBG("Load %s", file);
 
     return (m);
 }
