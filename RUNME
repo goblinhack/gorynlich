@@ -154,6 +154,11 @@ else
     LDLIBS="$LDLIBS -lSDL_net"
 fi
 
+#
+# for backtraces, but it doesn't help much
+#
+LDLIBS="$LDLIBS -funwind-tables -rdynamic"
+
 case `uname` in
     *MINGW*)
 	EXE=".exe"

@@ -54,11 +54,11 @@ void font_fini (void)
 
 boolean font_init (void)
 {
-    uint32_t VSMALL_FONT_SIZE;
-    uint32_t SMALL_FONT_SIZE;
-    uint32_t MED_FONT_SIZE;
-    uint32_t VLARGE_FONT_SIZE;
-    uint32_t LARGE_FONT_SIZE;
+    int32_t VSMALL_FONT_SIZE = 0;
+    int32_t SMALL_FONT_SIZE = 0;
+    int32_t MED_FONT_SIZE = 0;
+    int32_t VLARGE_FONT_SIZE = 0;
+    int32_t LARGE_FONT_SIZE = 0;
     int32_t delta;
 
     font_inited = true;
@@ -69,6 +69,7 @@ boolean font_init (void)
     VLARGE_FONT_SIZE = 24;
     LARGE_FONT_SIZE  = 28;
 
+    delta = 0;
     if (global_config.video_pix_width <= 640) {
         delta = -7;
     } else if (global_config.video_pix_width <= 800) {

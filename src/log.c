@@ -224,7 +224,7 @@ static void init_log_ (const char *fmt, va_list args)
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
 
-    snprintf(buf + len, sizeof(buf) - len, "Init  ");
+    snprintf(buf + len, sizeof(buf) - len, "Init ");
 
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
@@ -276,6 +276,22 @@ static void con_ (const char *fmt, va_list args)
 
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(stdout, buf);
+    fflush(stdout);
+
+    wid_console_log(buf + len);
+}
+
+static void raw_ (const char *fmt, va_list args)
+{
+    uint32_t len;
+
+    buf[0] = '\0';
     len = (uint32_t)strlen(buf);
 
     len = (uint32_t)strlen(buf);
@@ -363,6 +379,15 @@ void CON (const char *fmt, ...)
 
     va_start(args, fmt);
     con_(fmt, args);
+    va_end(args);
+}
+
+void RAW (const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    raw_(fmt, args);
     va_end(args);
 }
 

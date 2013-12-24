@@ -264,10 +264,10 @@ static void find_executable (void)
     EXEC_DIR = dupstr(dirname(exec_expanded_name), "exec dir");
 
 cleanup:
-    INIT_LOG("Exec name   : \"%s\"", exec_name);
-    INIT_LOG("Parent dir  : \"%s\"", parent_dir);
-    INIT_LOG("Curr dir    : \"%s\"", curr_dir);
-    INIT_LOG("Full name   : \"%s\"", exec_expanded_name);
+    DBG("Exec name   : \"%s\"", exec_name);
+    DBG("Parent dir  : \"%s\"", parent_dir);
+    DBG("Curr dir    : \"%s\"", curr_dir);
+    DBG("Full name   : \"%s\"", exec_expanded_name);
 
     if (path) {
         myfree(path);
@@ -377,9 +377,9 @@ static void find_file_locations (void)
     INIT_LOG("Exec dir    : \"%s\"", EXEC_DIR);
     INIT_LOG("Executable  : \"%s\"", EXEC_FULL_PATH_AND_NAME);
     INIT_LOG("Data path   : \"%s\"", DATA_PATH);
-    INIT_LOG("Level path  : \"%s\"", LEVELS_PATH);
-    INIT_LOG("Gfx path    : \"%s\"", GFX_PATH);
-    INIT_LOG("Font path   : \"%s\"", TTF_PATH);
+    DBG("Level path  : \"%s\"", LEVELS_PATH);
+    DBG("Gfx path    : \"%s\"", GFX_PATH);
+    DBG("Font path   : \"%s\"", TTF_PATH);
 }
 
 static void usage (void)
@@ -413,7 +413,7 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (!strcmp(argv[i], "--server") ||
             !strcmp(argv[i], "-server") ||
-            !strcmp(argv[i], "s")) {
+            !strcmp(argv[i], "-s")) {
 
             if (i + 2 >= argc) {
                 DIE("need server host and port");
@@ -438,7 +438,7 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (!strcmp(argv[i], "--client") ||
             !strcmp(argv[i], "-client") ||
-            !strcmp(argv[i], "s")) {
+            !strcmp(argv[i], "-c")) {
 
             if (i + 2 >= argc) {
                 DIE("need client host and port");
