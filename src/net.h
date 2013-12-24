@@ -21,13 +21,12 @@ typedef struct host_ {
     char *name;
     uint32_t delay_ms;
     boolean inuse;
+    boolean server;
 } host;
 
 const char *host_logname(hostp);
-hostp host_add(IPaddress ip, const char *name);
+hostp host_add(IPaddress ip, const char *name, boolean server);
 void host_dump(void);
 
-extern boolean is_server;
-extern boolean is_client;
 extern IPaddress server_address;
 extern IPaddress client_address;

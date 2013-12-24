@@ -317,12 +317,17 @@ texp tex_from_surface (SDL_Surface *surface,
      * Create the tex
      */
     GLuint gl_surface_binding;
-    glGenTextures(1, &gl_surface_binding);
+
+    if (!HEADLESS) {
+        glGenTextures(1, &gl_surface_binding);
+    }
 
     /*
      * Typical tex generation using data from the bitmap
      */
-    glBindTexture(GL_TEXTURE_2D, gl_surface_binding);
+    if (!HEADLESS) {
+        glBindTexture(GL_TEXTURE_2D, gl_surface_binding);
+    }
 
 #ifdef ENABLE_INVERTED_DISPLAY
     //
@@ -383,24 +388,26 @@ texp tex_from_surface (SDL_Surface *surface,
     /*
      * Generate the tex
      */
-    glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGBA,
-        surface->w,
-        surface->h,
-        0,
-        textureFormat,
-        GL_UNSIGNED_BYTE,
-        surface->pixels
-    );
+    if (!HEADLESS) {
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGBA,
+            surface->w,
+            surface->h,
+            0,
+            textureFormat,
+            GL_UNSIGNED_BYTE,
+            surface->pixels
+        );
 
-    /*
-     * linear filtering. Nearest is meant to be quicker but I didn't see
-     * that in reality.
-     */
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        /*
+         * linear filtering. Nearest is meant to be quicker but I didn't see
+         * that in reality.
+         */
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
 
     if (!textures) {
         textures = tree_alloc(TREE_KEY_STRING, "TREE ROOT: tex");

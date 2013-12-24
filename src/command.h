@@ -19,3 +19,7 @@ boolean command_handle(const char *input, char *expandedtext,
                        boolean execute_command,
                        void *context);
 void commands_test(void);
+
+#include "linenoise.h"
+void completion(const char *input, linenoiseCompletions *lc);
+void linenoise_tick(void);

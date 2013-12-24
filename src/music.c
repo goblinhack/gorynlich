@@ -127,6 +127,10 @@ musicp music_find (const char *name_alias)
 
 void music_update_volume (void)
 {
+    if (HEADLESS) {
+        return;
+    }
+
     Mix_VolumeMusic((int)
                     (float) global_config.music_volume *
                     ((float) MIX_MAX_VOLUME / (float) SOUND_MAX));
@@ -139,6 +143,10 @@ void music_play (const char *file,
     int audio_format = MIX_DEFAULT_FORMAT;
     int audio_channels = 2;
     int audio_buffers = 1024;
+
+    if (HEADLESS) {
+        return;
+    }
 
     Mix_CloseAudio();
 

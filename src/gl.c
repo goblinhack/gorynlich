@@ -12,6 +12,10 @@
 
 void gl_enter_2d_mode (void)
 {
+    if (HEADLESS) {
+        return;
+    }
+
     /*
      * Enable Texture Mapping
      */
@@ -63,6 +67,10 @@ void gl_enter_2d_mode (void)
 void
 gl_leave_2d_mode (void)
 {
+    if (HEADLESS) {
+        return;
+    }
+
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 

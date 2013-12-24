@@ -47,10 +47,13 @@ void net_fini (void)
 
 int net_test (int32_t argc, char *argv[])
 {
-    host_add(server_address, "server");
-    host_add(server_address, "server");
-    host_add(client_address, "neil");
+    host_add(server_address, "server", true);
+    host_add(server_address, "server", true);
+    host_add(client_address, "neil", false);
     host_dump();
+
+    if (is_server) {
+    }
 
     return (0);
 }
@@ -67,10 +70,10 @@ char *iptodynstr (IPaddress ip)
     uint16_t port = SDLNet_Read16(&ip.port);
 
     if (!(hostname = SDLNet_ResolveIP(&ip))) {
-        return (dynprintf("IPv4 %u.%u.%u.%, port %u",
+        return (dynprintf("IPv4 %u.%u.%u.%u:%u",
                           hostname, ip1, ip2, ip3, ip4, port));
     } else {
-        return (dynprintf("[%s] IP %u.%u.%u.%u, port %u",
+        return (dynprintf("[%s] %u.%u.%u.%u:%u",
                             hostname, ip1, ip2, ip3, ip4, port));
     }
 }
@@ -80,7 +83,7 @@ const char *host_logname (hostp h)
     return (h->logname);
 }
 
-hostp host_add (IPaddress ip, const char *name)
+hostp host_add (IPaddress ip, const char *name, boolean server)
 {
     hostp found = 0;
 
@@ -113,6 +116,7 @@ hostp host_add (IPaddress ip, const char *name)
 
     found->inuse = true;
     found->ip = ip;
+    found->server = server;
 
     if (found->name) {
         myfree(found->name);
@@ -133,8 +137,17 @@ void host_dump (void)
 
     i = 0;
 
-    LOG("  %-40s %-10s %s", "Host", "Name", "Delay(ms)");
-    LOG("  %-40s %-10s %s", "----", "----", "---------");
+    LOG("  %-40s %-6s %-10s %s", 
+        "Host", 
+        "Type",
+        "Name", 
+        "Delay(ms)");
+
+    LOG("  %-40s %-6s %-10s %s", 
+        "----", 
+        "----", 
+        "----",
+        "---------");
 
     FOR_ALL_IN_ARRAY(h, hosts) {
         if (!h->inuse) {
@@ -143,7 +156,11 @@ void host_dump (void)
 
         i++;
 
-        LOG("%u %-40s %-10s %u", i, h->logname, h->name, h->delay_ms);
+        LOG("%u %-40s %-6s %-10s %u", i, 
+            h->logname, 
+            h->server ? "server" : "client", 
+            h->name, 
+            h->delay_ms);
     }
 }
 

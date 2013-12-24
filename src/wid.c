@@ -7109,6 +7109,10 @@ void wid_display_all (void)
 {
     widp w;
 
+    if (HEADLESS) {
+        return;
+    }
+
     glEnable(GL_SCISSOR_TEST);
 
     glBindTexture(GL_TEXTURE_2D, 0);

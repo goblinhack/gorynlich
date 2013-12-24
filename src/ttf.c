@@ -165,6 +165,10 @@ void ttf_text_size (font *f, const char *text,
     int32_t x;
     enum_fmt _fmt;
 
+    if (HEADLESS) {
+        return;
+    }
+
     x = 0;
     *w = 0;
     *h = f->glyphs[(uint32_t)TTF_FIXED_WIDTH_CHAR].height * scaling;
