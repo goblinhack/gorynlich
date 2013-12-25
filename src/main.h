@@ -214,10 +214,17 @@ void INIT_FN_LOG(init_fnp, const char *fmt, ...) \
                      __attribute__ ((format (printf, 2, 3)));
 void LEVEL_LOG(levelp, const char *fmt, ...) \
                      __attribute__ ((format (printf, 2, 3)));
+
+#ifdef ENABLE_WID_DEBUG
 void WID_LOG(widp, const char *fmt, ...) \
                      __attribute__ ((format (printf, 2, 3)));
+
 void WID_DBG(widp, const char *fmt, ...) \
                      __attribute__ ((format (printf, 2, 3)));
+#else
+#define WID_DBG(...)
+#define WID_LOG(...)
+#endif
 
 #define ERR_POPUP(...)                                                      \
 {                                                                           \

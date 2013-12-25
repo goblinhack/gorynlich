@@ -307,8 +307,10 @@ static void raw_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    if (HEADLESS) {
+        putf(stdout, buf);
+        fflush(stdout);
+    }
 
     wid_console_log(buf + len);
 }
@@ -661,6 +663,7 @@ void INIT_FN_LOG (init_fnp t, const char *fmt, ...)
     va_end(args);
 }
 
+#ifdef ENABLE_WID_DEBUG
 static void wid_log_ (widp t, const char *fmt, va_list args)
 {
     static char buf[200];
@@ -694,13 +697,12 @@ void WID_DBG (widp t, const char *fmt, ...)
 
     verify(t);
 
-#ifndef ENABLE_WID_DEBUG
     if (!debug_enabled) {
         return;
     }
-#endif
 
     va_start(args, fmt);
     wid_log_(t, fmt, args);
     va_end(args);
 }
+#endif
