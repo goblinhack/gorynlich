@@ -93,8 +93,6 @@ boolean config_load (void)
     global_config.sound_volume = SOUND_MAX;
     global_config.music_volume = SOUND_MAX;
 
-    CON("Loading config from: %s", file);
-
     if (!(ctx = demarshal(file))) {
         ERR("Failed to read config: %s", file);
 
