@@ -69,8 +69,12 @@ boolean wid_console_init (void)
 
     command_add(debug_enable, "debug on", "enable debug mode");
     command_add(debug_disable, "debug off", "disable debug mode");
-    command_add(fps_enable, "fps on", "enable frames per sec counter");
-    command_add(fps_disable, "fps off", "disable frames per sec counter");
+
+    if (is_client) {
+        command_add(fps_enable, "fps on", "enable frames per sec counter");
+        command_add(fps_disable, "fps off", "disable frames per sec counter");
+    }
+
     command_add(sdl_user_exit, "quit", "exit the server or gam");
 
     wid_console_wid_create();
@@ -83,11 +87,14 @@ boolean wid_console_init (void)
  */
 void wid_console_hello (void)
 {
-    CON(" ");
-    CON("%%%%fg=white$          Welcome to the gorynlich Console!%%%%fg=reset$");
-    CON(" ");
-    CON("Press %%%%fg=red$<tab>%%%%fg=reset$ to complete commands.");
-    CON("Press %%%%fg=red$?%%%%fg=reset$ to show command options.");
+    RAW(" ");
+    RAW("%%%%fg=white$          Welcome to the gorynlich Console!%%%%fg=reset$");
+    RAW(" ");
+    RAW("Press %%%%fg=red$<tab>%%%%fg=reset$ to complete commands.");
+
+    if (!HEADLESS) {
+        RAW("Press %%%%fg=red$?%%%%fg=reset$ to show command options.");
+    }
 }
 
 /*

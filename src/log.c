@@ -239,6 +239,10 @@ void INIT_LOG (const char *fmt, ...)
 {
     va_list args;
 
+    if (!debug_enabled) {
+        return;
+    }
+
     va_start(args, fmt);
     init_log_(fmt, args);
     va_end(args);
@@ -265,6 +269,10 @@ void FINI_LOG (const char *fmt, ...)
 {
     va_list args;
 
+    if (!debug_enabled) {
+        return;
+    }
+
     va_start(args, fmt);
     fini_log_(fmt, args);
     va_end(args);
@@ -281,8 +289,10 @@ static void con_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    if (HEADLESS) {
+        putf(stdout, buf);
+        fflush(stdout);
+    }
 
     wid_console_log(buf + len);
 }
