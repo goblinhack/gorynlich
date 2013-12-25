@@ -256,8 +256,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
     (void) wid_popup_error(popup_str, 0.5f, 0.5f);
     myfree(popup_str);
      */
-    ERR("Filename was not found on ramdisk or "
-        "on the local disk, %s", filename);
+    WARN("File not found \"%s\"", filename);
 
     if (alt_filename) {
         myfree(alt_filename);

@@ -52,7 +52,11 @@ static void tex_destroy (tex *t)
 
     GLuint gl_surface_binding;
     gl_surface_binding = t->gl_surface_binding;
-    glDeleteTextures(1, &gl_surface_binding);
+
+    if (!HEADLESS) {
+        glDeleteTextures(1, &gl_surface_binding);
+    }
+
     oldptr(t->surface);
 }
 
