@@ -13,6 +13,7 @@ void sdl_exit(void);
 boolean sdl_is_exiting(void);
 
 extern int32_t sdl_init_video;
+extern boolean sdl_exiting;
 
 #if SDL_MAJOR_VERSION == 1 /* { */
 #define SDL_KEYSYM SDL_keysym

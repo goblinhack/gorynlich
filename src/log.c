@@ -19,6 +19,7 @@
 #include "init_fn.h"
 #include "wid.h"
 #include "net.h"
+#include "term.h"
 
 static char buf[200];
 boolean debug_enabled;
@@ -181,8 +182,8 @@ static void log_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void LOG (const char *fmt, ...)
@@ -203,8 +204,8 @@ static void warn_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void WARN (const char *fmt, ...)
@@ -229,10 +230,11 @@ static void init_log_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 
     wid_console_log(buf + len);
+    term_log(buf + len);
 }
 
 void INIT_LOG (const char *fmt, ...)
@@ -261,8 +263,8 @@ static void fini_log_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void FINI_LOG (const char *fmt, ...)
@@ -290,11 +292,12 @@ static void con_ (const char *fmt, va_list args)
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
     if (HEADLESS) {
-        putf(stdout, buf);
-        fflush(stdout);
+        putf(MY_STDOUT, buf);
+        fflush(MY_STDOUT);
     }
 
     wid_console_log(buf + len);
+    term_log(buf + len);
 }
 
 static void raw_ (const char *fmt, va_list args)
@@ -308,11 +311,12 @@ static void raw_ (const char *fmt, va_list args)
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
     if (HEADLESS) {
-        putf(stdout, buf);
-        fflush(stdout);
+        putf(MY_STDOUT, buf);
+        fflush(MY_STDOUT);
     }
 
     wid_console_log(buf + len);
+    term_log(buf + len);
 }
 
 static void dying_ (const char *fmt, va_list args)
@@ -328,8 +332,8 @@ static void dying_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 static void err_ (const char *fmt, va_list args)
@@ -348,13 +352,14 @@ static void err_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     snprintf(buf + len, sizeof(buf) - len, "%%%%fg=reset$");
 
-    putf(stderr, buf);
-    fflush(stderr);
+    putf(MY_STDERR, buf);
+    fflush(MY_STDERR);
 
     backtrace_print();
-    fflush(stdout);
+    fflush(MY_STDOUT);
 
     wid_console_log(buf);
+    term_log(buf + len);
 }
 
 static void croak_ (const char *fmt, va_list args)
@@ -370,11 +375,11 @@ static void croak_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 
     backtrace_print();
-    fflush(stdout);
+    fflush(MY_STDOUT);
 
     if (croaked) {
         return;
@@ -457,8 +462,8 @@ static void thing_log_ (thingp t, const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void THING_LOG (thingp t, const char *fmt, ...)
@@ -488,8 +493,8 @@ static void host_log_ (hostp t, const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void HOST_LOG (hostp t, const char *fmt, ...)
@@ -534,8 +539,8 @@ static void level_log_ (levelp l, const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void LEVEL_LOG (levelp t, const char *fmt, ...)
@@ -581,8 +586,8 @@ static void item_log_ (itemp t, const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void ITEM_LOG (itemp t, const char *fmt, ...)
@@ -612,8 +617,8 @@ static void action_timer_log_ (timerp t, const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void TIMER_LOG (timerp t, const char *fmt, ...)
@@ -644,8 +649,8 @@ static void action_init_fn_log_ (init_fnp t, const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void INIT_FN_LOG (init_fnp t, const char *fmt, ...)
@@ -676,8 +681,8 @@ static void wid_log_ (widp t, const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(stdout, buf);
-    fflush(stdout);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 }
 
 void WID_LOG (widp t, const char *fmt, ...)

@@ -172,7 +172,7 @@ boolean marshal_test (int32_t argc, char *argv[])
     marshal_a(out, &a);
     marshal_fini(out);
 
-    out = marshal(0); /* stdout */
+    out = marshal(0); /* MY_STDOUT */
     marshal_a(out, &a);
     marshal_fini(out);
     myfree(a.ptr);

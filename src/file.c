@@ -24,7 +24,7 @@ unsigned char *file_read (const char *filename, int32_t *out_len)
 
     file = fopen(filename, "rb");
     if (!file) {
-        fprintf(stderr, "Failed to open file \"%s\" for reading: %s\n",
+        fprintf(MY_STDERR, "Failed to open file \"%s\" for reading: %s\n",
                 filename, strerror(errno));
         return (0);
     }
@@ -33,7 +33,7 @@ unsigned char *file_read (const char *filename, int32_t *out_len)
      * Get the file size.
      */
     if (fseek(file, 0, SEEK_END)) {
-        fprintf(stderr, "Failed to seek end of file \"%s\": %s\n",
+        fprintf(MY_STDERR, "Failed to seek end of file \"%s\": %s\n",
                 filename, strerror(errno));
         fclose(file);
         return (0);
@@ -41,14 +41,14 @@ unsigned char *file_read (const char *filename, int32_t *out_len)
 
     len = (uint32_t)ftell(file);
     if (len == -1) {
-        fprintf(stderr, "Failed to get size of file \"%s\": %s\n",
+        fprintf(MY_STDERR, "Failed to get size of file \"%s\": %s\n",
                 filename, strerror(errno));
         fclose(file);
         return (0);
     }
 
     if (fseek(file, 0, SEEK_SET)) {
-        fprintf(stderr, "Failed to seek begin of file \"%s\": %s\n",
+        fprintf(MY_STDERR, "Failed to seek begin of file \"%s\": %s\n",
                 filename, strerror(errno));
         fclose(file);
         return (0);
@@ -57,14 +57,14 @@ unsigned char *file_read (const char *filename, int32_t *out_len)
     buffer = (unsigned char *)mymalloc(len + sizeof((char)'\0'),
                                        "file read");
     if (!buffer) {
-        fprintf(stderr, "Failed to alloc mem for file \"%s\": %s\n",
+        fprintf(MY_STDERR, "Failed to alloc mem for file \"%s\": %s\n",
                 filename, strerror(errno));
         fclose(file);
         return (0);
     }
 
     if (!fread(buffer, len, 1, file)) {
-        fprintf(stderr, "Failed to read file \"%s\": %s\n",
+        fprintf(MY_STDERR, "Failed to read file \"%s\": %s\n",
                 filename, strerror(errno));
         fclose(file);
         return (0);
@@ -88,7 +88,7 @@ int32_t file_write (const char *filename, unsigned char *buffer, int32_t len)
 
     file = fopen(filename, "w");
     if (!file) {
-        fprintf(stderr, "Failed to open file \"%s\" for writing: %s\n",
+        fprintf(MY_STDERR, "Failed to open file \"%s\" for writing: %s\n",
                 filename, strerror(errno));
         return (-1);
     }
@@ -101,14 +101,14 @@ int32_t file_write (const char *filename, unsigned char *buffer, int32_t len)
      * Check written one object.
      */
     if (!rc) {
-        fprintf(stderr, "Failed to write file \"%s\": %s\n",
+        fprintf(MY_STDERR, "Failed to write file \"%s\": %s\n",
                 filename, strerror(errno));
         fclose(file);
         return (-1);
     }
 
     if (ferror(file)) {
-        fprintf(stderr, "Error writing to write file \"%s\": %s\n",
+        fprintf(MY_STDERR, "Error writing to write file \"%s\": %s\n",
                 filename, strerror(errno));
         fclose(file);
         return (-1);

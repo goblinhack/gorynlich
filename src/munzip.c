@@ -28,12 +28,12 @@ int32_t main (int32_t argc, char *argv[])
 
         buf = mzip_file_read(filename, &len);
         if (!buf) {
-            fprintf(stderr, "failed to uncompress file %s\n", filename);
+            fprintf(MY_STDERR, "failed to uncompress file %s\n", filename);
             exit(1);
         }
 
         if (!strstr(filename, ".mz")) {
-            fprintf(stderr, "expecting .mz suffix for file %s\n", filename);
+            fprintf(MY_STDERR, "expecting .mz suffix for file %s\n", filename);
             exit(1);
         }
 
@@ -43,13 +43,13 @@ int32_t main (int32_t argc, char *argv[])
         }
 
         if (!strcmp(new_filename, filename)) {
-            fprintf(stderr, "old \"%s\" and new \"%s\" names the same\n",
+            fprintf(MY_STDERR, "old \"%s\" and new \"%s\" names the same\n",
                     filename, new_filename);
             exit(1);
         }
 
         if (file_write(new_filename, (unsigned char*)buf, len)) {
-            fprintf(stderr, "failed to write to file %s\n", new_filename);
+            fprintf(MY_STDERR, "failed to write to file %s\n", new_filename);
             exit(1);
         }
 

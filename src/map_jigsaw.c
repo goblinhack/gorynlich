@@ -1922,7 +1922,7 @@ static inline void maze_debug (dungeon_t *dg)
     dump_jigpieces_to_map(dg);
 
     map_jigsaw_buffer_print();
-    map_jigsaw_buffer_print_file(stdout);
+    map_jigsaw_buffer_print_file(MY_STDOUT);
 
     memset(map_jigsaw_buffer, 0, sizeof(map_jigsaw_buffer));
     putchar('\n');
@@ -2459,7 +2459,7 @@ static int32_t generate_level (const char *jigsaw_map,
 
         break;
 reseed:
-        fflush(stdout);
+        fflush(MY_STDOUT);
         maze_seed = rand();
         srand(maze_seed);
         printf(", try seed %u\n", maze_seed);
@@ -2470,7 +2470,7 @@ reseed:
     map_jigsaw_buffer_print();
 #endif
 
-    map_jigsaw_buffer_print_file(stdout);
+    map_jigsaw_buffer_print_file(MY_STDOUT);
 
     myfree(dg);
 

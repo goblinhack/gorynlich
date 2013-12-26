@@ -42,13 +42,13 @@ int32_t main (int32_t argc, char *argv[])
         filename = argv[argc];
 
         if (strstr(filename, ".mz")) {
-            fprintf(stderr, "file %s is already compressed\n", filename);
+            fprintf(MY_STDERR, "file %s is already compressed\n", filename);
             exit(1);
         }
 
         buf = file_read(filename, &len);
         if (!buf) {
-            fprintf(stderr, "failed to read file %s\n", filename);
+            fprintf(MY_STDERR, "failed to read file %s\n", filename);
             exit(1);
             exit(1);
         }
@@ -62,7 +62,7 @@ int32_t main (int32_t argc, char *argv[])
 
         if (mzip_file_write2(new_filename, (unsigned char*)buf, &len,
                              level)) {
-            fprintf(stderr, "failed to write to file %s\n", new_filename);
+            fprintf(MY_STDERR, "failed to write to file %s\n", new_filename);
             exit(1);
         }
 
