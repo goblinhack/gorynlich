@@ -4,6 +4,7 @@
  * See the README file.
  */
 
+#include <stdio.h>
 #include <stdint.h>
 #include "config.h"
 
@@ -300,12 +301,19 @@ typedef struct {
 /*
  * main.c
  */
+extern FILE *LOG_STDOUT;
+extern FILE *LOG_STDERR;
+
+#define MY_STDOUT (LOG_STDOUT ? LOG_STDOUT : stdout)
+#define MY_STDERR (LOG_STDERR ? LOG_STDERR : stderr)
+
 extern char *EXEC_FULL_PATH_AND_NAME;
 extern char *EXEC_DIR;
 extern char *DATA_PATH;
 extern char *LEVELS_PATH;
 extern char *GFX_PATH;
 extern char *TTF_PATH;
+extern boolean quitting;
 
 void quit(void);
 void restart(void);

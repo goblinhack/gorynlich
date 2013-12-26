@@ -6,6 +6,7 @@ include Makefile.ramdisk.deps
 
 GAME_OBJECTS=				\
     $(RAMDISK_OBJ)			\
+    $(OBJDIR)/term.o 			\
     $(OBJDIR)/client.o 			\
     $(OBJDIR)/linenoise.o 		\
     $(OBJDIR)/server.o 			\

@@ -68,7 +68,7 @@ unsigned char *miniz_uncompress (unsigned char *buf, int32_t *compressed_len)
                             mymalloc((uint32_t)scratch_pad_size,
                                      "miniz scratchpad");
             if (scratch_pad == 0) {
-                fprintf(stderr, "Failed to alloc scratch pad size %lu\n",
+                fprintf(MY_STDERR, "Failed to alloc scratch pad size %lu\n",
                         scratch_pad_size);
                 return (0);
             }
@@ -81,7 +81,7 @@ unsigned char *miniz_uncompress (unsigned char *buf, int32_t *compressed_len)
         }
 
         if (scratch_pad_size > 100 * 1024 * 1024) {
-            fprintf(stderr, "Failed to uncompress buf in-len %d out-len %lu\n",
+            fprintf(MY_STDERR, "Failed to uncompress buf in-len %d out-len %lu\n",
                     *compressed_len, uncompressed_len);
             return (0);
         }

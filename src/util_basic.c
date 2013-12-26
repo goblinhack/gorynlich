@@ -90,7 +90,7 @@ static void log_ (const char *fmt, va_list args)
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
     printf("%s", buf);
-    fflush(stdout);
+    fflush(MY_STDOUT);
 }
 
 void LOG (const char *fmt, ...)

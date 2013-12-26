@@ -46,6 +46,7 @@
 #include "map.h"
 #include "net.h"
 #include "client.h"
+#include "term.h"
 #include "server.h"
 
 static char **ARGV;
@@ -56,10 +57,13 @@ char *LEVELS_PATH;
 char *TTF_PATH;
 char *GFX_PATH;
 
+FILE *LOG_STDOUT;
+FILE *LOG_STDERR;
+
+boolean quitting;
+
 void quit (void)
 {
-    static boolean quitting;
-
     if (quitting) {
         return;
     }
@@ -89,9 +93,9 @@ void quit (void)
 
     command_fini();
 
-    net_init();
-    server_init();
-    client_init();
+    net_fini();
+    server_fini();
+    client_fini();
     wid_fini();
     ttf_fini();
     font_fini();
@@ -99,12 +103,10 @@ void quit (void)
     music_fini();
     sound_fini();
     tile_fini();
-    client_fini();
-    server_fini();
-    net_fini();
     sdl_fini();
     config_fini();
     enum_fmt_destroy();
+    term_fini();
 
     if (EXEC_FULL_PATH_AND_NAME) {
         myfree(EXEC_FULL_PATH_AND_NAME);
@@ -154,7 +156,7 @@ void die (void)
 {
     quit();
 
-    fprintf(stderr, "exit(1) error\n");
+    fprintf(MY_STDERR, "exit(1) error\n");
 
     exit(1);
 }
@@ -384,17 +386,17 @@ static void find_file_locations (void)
 
 static void usage (void)
 {
-    fprintf(stderr, "Gorynlich, options:\n");
-    fprintf(stderr, "\n");
-    fprintf(stderr, "        --server <hostname or ip> <port-number>\n");
-    fprintf(stderr, "        -server          :\n");
-    fprintf(stderr, "        -s               :\n");
-    fprintf(stderr, "\n");
-    fprintf(stderr, "        --client <hostname or ip> <port-number>\n");
-    fprintf(stderr, "        -client          :\n");
-    fprintf(stderr, "        -c               :\n");
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Written by Neil McGill, goblinhack@gmail.com\n");
+    fprintf(MY_STDERR, "Gorynlich, options:\n");
+    fprintf(MY_STDERR, "\n");
+    fprintf(MY_STDERR, "        --server <hostname or ip> <port-number>\n");
+    fprintf(MY_STDERR, "        -server          :\n");
+    fprintf(MY_STDERR, "        -s               :\n");
+    fprintf(MY_STDERR, "\n");
+    fprintf(MY_STDERR, "        --client <hostname or ip> <port-number>\n");
+    fprintf(MY_STDERR, "        -client          :\n");
+    fprintf(MY_STDERR, "        -c               :\n");
+    fprintf(MY_STDERR, "\n");
+    fprintf(MY_STDERR, "Written by Neil McGill, goblinhack@gmail.com\n");
 }
 
 static void parse_args (int32_t argc, char *argv[])
@@ -493,14 +495,17 @@ static void parse_args (int32_t argc, char *argv[])
 
 int32_t main (int32_t argc, char *argv[])
 {
+    LOG_STDOUT = fopen("stdout.txt", "w+");
+    LOG_STDERR = fopen("stderr.txt", "w+");
+
 #ifdef ENABLE_LOGFILE
 #ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
-    if (!freopen("stdout.txt", "w", stdout)) {
-	ERR("Failed to open stdout.txt");
+    if (!freopen("stdout.txt", "w", MY_STDOUT)) {
+	ERR("Failed to open MY_STDOUT.txt");
     }
 
-    if (!freopen("stderr.txt", "w", stderr)) {
-	ERR("Failed to open stderr.txt");
+    if (!freopen("stderr.txt", "w", MY_STDERR)) {
+	ERR("Failed to open MY_STDERR.txt");
     }
 #endif
 #endif
@@ -576,6 +581,15 @@ int32_t main (int32_t argc, char *argv[])
 #ifdef NET_TEST
     extern int net_test(int32_t argc, char *argv[]);
     net_test(argc, argv);
+    quit();
+    exit(0);
+#endif
+
+    term_init();
+
+#ifdef TERM_TEST
+    extern int term_test(int32_t argc, char *argv[]);
+    term_test(argc, argv);
     quit();
     exit(0);
 #endif
@@ -713,13 +727,17 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_help_init");
 #endif
 
+    net_init();
+    server_init();
+    client_init();
+
     gl_enter_2d_mode();
     sdl_loop();
     gl_leave_2d_mode();
 
     quit();
 
-    fprintf(stderr, "exit(0) ok\n");
+    fprintf(MY_STDOUT, "Exited");
 
     return (0);
 }

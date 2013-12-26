@@ -518,7 +518,7 @@ void things_marshal (marshal_p out)
 
         {
             marshal_p tmp;
-            tmp = marshal(0); /* stdout */
+            tmp = marshal(0); /* MY_STDOUT */
             marshal_thing(tmp, t);
             marshal_fini(tmp);
         }
