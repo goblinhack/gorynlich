@@ -390,7 +390,8 @@ static ptrcheck *ptrcheck_verify_pointer (void *ptr,
          * Found a match?
          */
         if (context->ptr == ptr) {
-            fprintf(stderr, "Allocated \"%s\" (%u bytes) at %s:%s():%u at %s\n",
+            fprintf(MY_STDERR,
+                    "Allocated \"%s\" (%u bytes) at %s:%s():%u at %s\n",
                     context->what,
                     context->size,
                     context->allocated_by.file,
@@ -400,7 +401,7 @@ static ptrcheck *ptrcheck_verify_pointer (void *ptr,
 
             traceback_stderr(context->allocated_by.tb);
 
-            fprintf(stderr, "Freed at %s:%s():%u at %s\n",
+            fprintf(MY_STDERR, "Freed at %s:%s():%u at %s\n",
                     context->freed_by.file,
                     context->freed_by.func,
                     context->freed_by.line,
@@ -420,7 +421,7 @@ static ptrcheck *ptrcheck_verify_pointer (void *ptr,
                     history = &context->last_seen[MAX_PER_PTR_HISTORY-1];
                 }
 
-                fprintf(stderr, "Last seen at [%u] at %s:%s():%u at %s\n",
+                fprintf(MY_STDERR, "Last seen at [%u] at %s:%s():%u at %s\n",
                         i,
                         history->file,
                         history->func,
@@ -654,7 +655,7 @@ void ptrcheck_leak_print (void)
 
             leak++;
 
-            fprintf(stderr, "Leak %p \"%s\" (%u bytes) at %s:%s():%u at %s\n",
+            fprintf(MY_STDERR, "Leak %p \"%s\" (%u bytes) at %s:%s():%u at %s\n",
                     context->ptr,
                     context->what,
                     context->size,
@@ -677,7 +678,7 @@ void ptrcheck_leak_print (void)
                     history = &context->last_seen[MAX_PER_PTR_HISTORY-1];
                 }
 
-                fprintf(stderr, "Last seen at [%u] at %s:%s():%u at %s\n",
+                fprintf(MY_STDERR, "Last seen at [%u] at %s:%s():%u at %s\n",
                         j,
                         history->file,
                         history->func,
@@ -692,7 +693,7 @@ void ptrcheck_leak_print (void)
     }
 
     if (!leak) {
-        fprintf(stderr, "No memory leaks!\n");
+        fprintf(MY_STDOUT, "No memory leaks!\n");
     }
 }
 

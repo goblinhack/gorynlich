@@ -643,7 +643,7 @@ int main(int argc, char *argv[])
 	} else if (!slre_compile(&slre, argv[1])) {
 		printf("Error compiling slre: %s\n", slre.err_str);
 	} else {
-		slre_dump(&slre, stderr);
+		slre_dump(&slre, MY_STDERR);
 
 		(void) memset(caps, 0, sizeof(caps));
 

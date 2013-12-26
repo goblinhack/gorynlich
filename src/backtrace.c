@@ -33,7 +33,7 @@ void backtrace_print (void)
     strings = backtrace_symbols(array, size);
 
     for (i = 0; i < size; i++) {
-        printf("%s\n", strings[i]);
+        fprintf(MY_STDOUT, "%s\n", strings[i]);
     }
 
     free(strings);
@@ -79,7 +79,7 @@ void traceback_stdout (traceback *tb)
     strings = backtrace_symbols(tb->array, tb->size);
 
     for (i = 0; i < tb->size; i++) {
-        printf("%s\n", strings[i]);
+        fprintf(MY_STDOUT, "%s\n", strings[i]);
 
         if (strstr(strings[i], "main +")) {
             break;
@@ -102,7 +102,7 @@ void traceback_stderr (traceback *tb)
     strings = backtrace_symbols(tb->array, tb->size);
 
     for (i = 0; i < tb->size; i++) {
-        fprintf(stderr, "%s\n", strings[i]);
+        fprintf(MY_STDERR, "%s\n", strings[i]);
 
         if (strstr(strings[i], "main +")) {
             break;

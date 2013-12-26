@@ -26,7 +26,7 @@ unsigned char *mzip_file_read (const char *filename, int32_t *out_len)
 #ifndef MINIMAL
     buf_compressed = ramdisk_load(filename, &len);
     if (!buf_compressed) {
-        fprintf(stderr,
+        fprintf(MY_STDERR,
                 "Failed to read compressed file \"%s\" for reading: %s\n",
                 filename, strerror(errno));
         return (0);
@@ -34,7 +34,7 @@ unsigned char *mzip_file_read (const char *filename, int32_t *out_len)
 #else
     buf_compressed = file_read(filename, &len);
     if (!buf_compressed) {
-        fprintf(stderr,
+        fprintf(MY_STDERR,
                 "Failed to read compressed file \"%s\" for reading: %s\n",
                 filename, strerror(errno));
         return (0);
@@ -43,7 +43,7 @@ unsigned char *mzip_file_read (const char *filename, int32_t *out_len)
 
     buf = miniz_uncompress(buf_compressed, &len);
     if (!buf) {
-        fprintf(stderr,
+        fprintf(MY_STDERR,
                 "Failed to read compressed data for file \"%s\" len %d: %s\n",
                 filename, len, strerror(errno));
         myfree(buf_compressed);
@@ -68,14 +68,14 @@ int32_t mzip_file_write (const char *filename, unsigned char *buf,
 
     buf_compressed = miniz_compress(buf, len);
     if (!buf_compressed) {
-        fprintf(stderr,
+        fprintf(MY_STDERR,
                 "Failed to compress file \"%s\" len %d for writing: %s\n",
                 filename, *len, strerror(errno));
         return (-1);
     }
 
     if (file_write(filename, buf_compressed, *len)) {
-        fprintf(stderr,
+        fprintf(MY_STDERR,
                 "Failed to write compressed file \"%s\" len %d: %s\n",
                 filename, *len, strerror(errno));
         myfree(buf_compressed);
@@ -94,14 +94,14 @@ int32_t mzip_file_write2 (const char *filename, unsigned char *buf,
 
     buf_compressed = miniz_compress2(buf, len, level);
     if (!buf_compressed) {
-        fprintf(stderr,
+        fprintf(MY_STDERR,
                 "Failed to compress file \"%s\" len %d for writing: %s\n",
                 filename, *len, strerror(errno));
         return (-1);
     }
 
     if (file_write(filename, buf_compressed, *len)) {
-        fprintf(stderr,
+        fprintf(MY_STDERR,
                 "Failed to write compressed file \"%s\" len %d: %s\n",
                 filename, *len, strerror(errno));
         myfree(buf_compressed);

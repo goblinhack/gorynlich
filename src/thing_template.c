@@ -253,7 +253,7 @@ void thing_templates_marshal (marshal_p out)
 
         {
             marshal_p tmp;
-            tmp = marshal(0); /* stdout */
+            tmp = marshal(0); /* MY_STDOUT */
             marshal_thing_template(tmp, t);
             marshal_fini(tmp);
         }

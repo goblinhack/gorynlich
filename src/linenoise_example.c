@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
             linenoiseSetMultiLine(1);
             printf("Multi-line mode enabled.\n");
         } else {
-            fprintf(stderr, "Usage: %s [--multiline]\n", prgname);
+            fprintf(MY_STDERR, "Usage: %s [--multiline]\n", prgname);
             exit(1);
         }
     }
