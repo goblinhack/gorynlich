@@ -5,6 +5,7 @@
  */
 
 #include <SDL.h>
+#include <time.h>
 
 #include "main.h"
 #include "time.h"
