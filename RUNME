@@ -71,6 +71,26 @@ then
     log_warn "  For ubuntu do: sudo apt-get install xutils-dev"
     log_warn "  For MAC    do: sudo port install makedepend"
     log_warn "  For MingW  do: not supported AFAIK"
+    echo
+    log_warn "If you still can't find it, I have the source in third-party"
+    log_warn "  cd third-party"
+    log_warn "  tar xvf makedepend-1.0.5.tar"
+    log_warn "  cd makedepend-1.0.5"
+    log_warn "  ./configure"
+    echo
+    log_warn "Hit enter and I will try to build it for you"
+    read dummy
+
+    pushd .
+    cd third-party
+    tar xvf makedepend-1.0.5.tar
+    cd makedepend-1.0.5
+    ./configure
+    make
+    mv makedepend ../..
+    popd
+    cd src
+    ./makedepend *.c -p .o/ 2>/dev/null
 fi
 
 cd ..
