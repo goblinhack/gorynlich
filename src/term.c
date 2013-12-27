@@ -623,14 +623,26 @@ void zx_term_refresh (void)
 
 int term_test (int32_t argc, char *argv[])
 {
+    int x, y;
+
     zx_term_core_cls();
 
+    int r = 0;
     for (;;) {
-        zx_term_goto(rand() % 20, ZX_TERM_HEIGHT - 2);
-        zx_term_putf("hello %%fg=red$bob%%fg=reset$there");
+        r++;
+
+        for (x = 0; x < ZX_TERM_CORE_MAX_SIZE; x++) {
+            for (y = 0; y < ZX_TERM_CORE_MAX_SIZE; y++) {
+                zx_term_goto(x, y);
+
+                int d = (x + y + r);
+
+                zx_term_putc('a' + (d % 26));
+                zx_term_fgbg(d % 8, d % 8);
+            }
+        }
 
         zx_term_refresh();
-        zx_term_scroll();
     }
 }
 
