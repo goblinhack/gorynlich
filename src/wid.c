@@ -1418,7 +1418,6 @@ const char *wid_get_text_with_cursor (widp w)
     static char tmp[MAXSTR];
     static char cursor_char[2] = { TTF_CURSOR_CHAR, '\0' };
 
-
     if (!w->received_input) {
         w->cursor = (uint32_t)strlen(w->text);
     }

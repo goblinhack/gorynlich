@@ -411,11 +411,6 @@ static char wid_text[MAXSTR];
 static void console_set_text (char *s)
 {
     strcpy(wid_text, s);
-
-    zx_term_goto(0, ZX_TERM_HEIGHT - 1);
-    zx_term_putf("gorynlich> ");
-    zx_term_putf(s);
-    zx_term_refresh();
 }
 
 static const char *console_get_text (void)
@@ -423,60 +418,62 @@ static const char *console_get_text (void)
     return (wid_text);
 }
 
+static int cursor_x;
+
+static void console_clear (void)
+{
+    int x;
+
+    zx_term_goto(0, ZX_TERM_HEIGHT - 1);
+
+    for (x = 0; x < ZX_TERM_WIDTH; x++) {
+        zx_term_putc(' ');
+    }
+}
+
+static void console_refresh (void)
+{
+    static char tmp[MAXSTR];
+    static char cursor_char[2] = { '_', '\0' };
+
+    strlcpy(tmp, wid_text, cursor_x + 1);
+    strlcat(tmp, cursor_char, sizeof(tmp));
+    strlcat(tmp, wid_text + cursor_x, sizeof(tmp));
+
+    console_clear();
+
+    zx_term_goto(0, ZX_TERM_HEIGHT - 1);
+    zx_term_putf("gorynlich> ");
+    zx_term_putf(tmp);
+    zx_term_putf(" ");
+    zx_term_refresh();
+}
+
 void linenoise_tick (void)
 {
-#if 0
-    static int first = true;
-    char *line;
-
-    if (first) {
-        linenoise_init();
-        first = false;
-    }
-
-    if ((line = linenoise("gorynlich> ")) != NULL) {
-        /* Do something with the string. */
-        if (line[0] != '\0' && line[0] != '/') {
-
-            command_handle(line, 0, /* expandedtext */
-                           true /* boolean show_ambiguous */,
-                           true /* boolean show_complete */,
-                           true /* execute_command */,
-                           0 /* context */);
-
-            linenoiseHistoryAdd(line); /* Add to the history. */
-            linenoiseHistorySave("history.txt"); /* Save the history on disk. */
-
-        } else if (!strncmp(line,"/historylen",11)) {
-            /* The "/historylen" command will change the history len. */
-            int len = atoi(line+11);
-            linenoiseHistorySetMaxLen(len);
-        } else if (line[0] == '/') {
-            RAW("Unreconized command: %s\n", line);
-        }
-
-        free(line);
-    }
-#else
-    int fd = STDIN_FILENO;
-    int flags = fcntl(fd, F_GETFL, 0);
-    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-
     char seq[2];
     char seq2[2];
     char c;
+
+    console_refresh();
+
+    /*
+     * Read nonblocking to get chars.
+     */
+    int fd = STDIN_FILENO;
+    int flags = fcntl(fd, F_GETFL, 0);
     int nread;
+    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
     nread = read(fd,&c,1);
+    fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
     if (nread <= 0) {
         return;
     }
 
-    static int cursor_x;
     char beforecursor[MAXSTR];
     char updatedtext[MAXSTR];
     char aftercursor[MAXSTR];
     char entered[MAXSTR];
-    char tmp[MAXSTR];
     char newchar[2];
     uint32_t origlen;
     uint32_t cnt;
@@ -490,7 +487,6 @@ void linenoise_tick (void)
     strlcpy(beforecursor, wid_text, cursor_x + 1);
     strlcpy(aftercursor, wid_text + cursor_x, sizeof(aftercursor));
 
-            LOG("%x",c);
     switch (c) {
         case '':
             if (!history_walk) {
@@ -548,10 +544,9 @@ void linenoise_tick (void)
             return;
 
         case '\n':
+        case '\r':
             if (origlen) {
                 strlcpy(entered, console_get_text(), sizeof(entered));
-                snprintf(tmp, sizeof(tmp), "> %s", entered);
-                console_set_text(tmp);
 
                 if (!command_handle(entered, updatedtext,
                                 true /* show ambiguous */,
@@ -577,6 +572,8 @@ void linenoise_tick (void)
 
                 console_set_text("");
                 cursor_x = 0;
+            } else {
+                CON(" ");
             }
             return;
 
@@ -687,5 +684,4 @@ void linenoise_tick (void)
             console_set_text(updatedtext);
         }
     }
-#endif
 }

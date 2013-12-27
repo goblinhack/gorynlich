@@ -906,12 +906,10 @@ void sdl_loop (void)
             ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
         }
 
-        if (HEADLESS) {
-            /*
-             * Server input.
-             */
-            linenoise_tick();
-        }
+        /*
+         * Server input.
+         */
+        linenoise_tick();
 
         /*
          * Flip
@@ -922,9 +920,9 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
-
-            SDL_Delay(10);
         }
+
+        SDL_Delay(10);
     }
 }
 
