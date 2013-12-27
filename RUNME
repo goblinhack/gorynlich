@@ -61,10 +61,18 @@ scripts/RUNME.ramdisk.pl $RAMDISK_FILES
 #
 cd src
 
+
 rm Makefile
 cat Makefile.base | sed '/DO NOT DELETE/,$d' > Makefile.tmp
 mv Makefile.tmp Makefile
-makedepend *.c -p .o/ 2>/dev/null
+
+if [ -x ../makedepend ]
+then
+    ../makedepend *.c -p .o/ 2>/dev/null
+else
+    makedepend *.c -p .o/ 2>/dev/null
+fi
+
 if [ $? -ne 0 ]
 then
     log_warn "Is makedepend installed? If not:"
@@ -81,14 +89,14 @@ then
     log_warn "Hit enter and I will try to build it for you"
     read dummy
 
-    pushd .
+    cd ..
     cd third-party
     tar xvf makedepend-1.0.5.tar
     cd makedepend-1.0.5
     ./configure
     make
     mv makedepend ../..
-    popd
+    cd ../..
     cd src
     ./makedepend *.c -p .o/ 2>/dev/null
 fi
@@ -96,7 +104,8 @@ fi
 cd ..
 
 for i in \
-    /opt/local/bin/sdl2-config 
+    /opt/local/bin/sdl2-config \
+    /usr/bin/sdl2-config 
 do
     if [ -x $i ]
     then
@@ -107,7 +116,9 @@ done
 
 for i in \
     /opt/local/bin/sdl2-config \
-    /usr/local/bin/sdl-config
+    /usr/bin/sdl2-config \
+    /usr/local/bin/sdl-config \
+    /usr/bin/sdl-config
 do
     if [ -x $i ]
     then
@@ -119,9 +130,14 @@ done
 if [ "$SDL_CONFIG" = "" ]
 then
     log_warn "Is SDL 1.2 or 1.3 installed? If not:"
-    log_warn "  For ubuntu do: "
+    log_warn "  For ubuntu SDL2 do: "
+    log_warn "   sudo apt-get install libsdl2.0-dev"
+    log_warn "   sudo apt-get install libsdl2-mixer1.2-dev"
+    log_warn "   sudo apt-get install libsdl-net1.2-dev"
+    log_warn "  For ubuntu SDL1.2 do: "
     log_warn "   sudo apt-get install libsdl1.2-dev"
     log_warn "   sudo apt-get install libsdl-mixer1.2-dev"
+    log_warn "   sudo apt-get install libsdl-net1.2-dev"
     log_warn "  For macos, install Mac ports and then do: "
     log_warn "   sudo port install libsdl2"
     log_warn "   sudo port install libsdl2_image"
