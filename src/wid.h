@@ -359,3 +359,11 @@ extern const int32_t wid_fade_delay;
 extern const int32_t wid_hide_delay;
 extern const int32_t wid_visible_delay;
 extern const int32_t wid_swipe_delay;
+
+/*
+ * History for all text widgets.
+ */
+#define HISTORY_MAX 16
+extern char history[HISTORY_MAX][MAXSTR];
+extern uint32_t history_at;
+extern uint32_t history_walk;

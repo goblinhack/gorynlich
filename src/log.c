@@ -184,6 +184,8 @@ static void log_ (const char *fmt, va_list args)
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
+
+    term_log(buf);
 }
 
 void LOG (const char *fmt, ...)
@@ -206,6 +208,8 @@ static void warn_ (const char *fmt, va_list args)
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
+
+    term_log(buf);
 }
 
 void WARN (const char *fmt, ...)
@@ -355,11 +359,14 @@ static void err_ (const char *fmt, va_list args)
     putf(MY_STDERR, buf);
     fflush(MY_STDERR);
 
-    backtrace_print();
+    putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
     wid_console_log(buf);
-    term_log(buf + len);
+    term_log(buf);
+
+    backtrace_print();
+    fflush(MY_STDOUT);
 }
 
 static void croak_ (const char *fmt, va_list args)
@@ -374,6 +381,9 @@ static void croak_ (const char *fmt, va_list args)
 
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDERR, buf);
+    fflush(MY_STDERR);
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);

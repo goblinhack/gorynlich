@@ -39,11 +39,7 @@ extern int zx_term_core_buffer_size;
 // Speeds up goto strings to the terminal
 //
 extern char zx_term_core_goto_data[ZX_TERM_CORE_MAX_SIZE]
-[ZX_TERM_CORE_MAX_SIZE][20];
-
-extern int zx_term_core_init(void);
-extern void zx_term_core_exit(int sig);
-extern void zx_term_core_sigwinch_handler(int sig);
+                                  [ZX_TERM_CORE_MAX_SIZE][20];
 
 //
 // Formatted puts, with %%fg=yellow being the format style

@@ -74,7 +74,7 @@ char *iptodynstr (IPaddress ip)
                           hostname, ip1, ip2, ip3, ip4, port));
     } else {
         return (dynprintf("[%s] %u.%u.%u.%u:%u",
-                            hostname, ip1, ip2, ip3, ip4, port));
+                          hostname, ip1, ip2, ip3, ip4, port));
     }
 }
 

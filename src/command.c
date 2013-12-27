@@ -6,13 +6,18 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
 #include "slre.h"
+#include <SDL.h>
 
 #include "main.h"
 #include "command.h"
 #include "tree.h"
 #include "string.h"
-#include "linenoise.h"
+#include "term.h"
+#include "wid.h"
 
 /*
  * Simple wid_console expanding code, takes a comand input and expands it as
@@ -144,8 +149,7 @@ static int32_t command_matches (const char *input,
                                 boolean show_ambiguous,
                                 boolean show_complete,
                                 boolean execute_command,
-                                void *context,
-                                linenoiseCompletions *lc)
+                                void *context)
 {
     char cand_expand_to[MAXSTR];
     command_t *matched_command;
@@ -260,10 +264,6 @@ static int32_t command_matches (const char *input,
 
             if (show_ambiguous) {
                 RAW("  %-40s -- %s", match, match2);
-
-                if (lc) {
-                    linenoiseAddCompletion(lc, match);
-                }
             }
         } else {
 // CON("  NO MATCH \"%s\" [%d] longest %d", match,t,longest_match);
@@ -362,8 +362,7 @@ boolean command_handle (const char *input,
      * Check for ambiguous commands.
      */
     matches = command_matches(input, expandedtext, false, false,
-                              execute_command, context,
-                              0 /* lc */);
+                              execute_command, context);
     if (matches == 0) {
         RAW("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
         return (false);
@@ -376,8 +375,7 @@ boolean command_handle (const char *input,
         }
 
         command_matches(input, expandedtext, show_ambiguous, show_complete,
-                        execute_command, context,
-                        0 /* lc */);
+                        execute_command, context);
 
         if (!show_ambiguous) {
             if (expandedtext) {
@@ -386,13 +384,11 @@ boolean command_handle (const char *input,
                         "\"%s\"%%%%fg=reset$. Try:", input);
 
                     command_matches(input, expandedtext, true, show_complete,
-                                    execute_command, context,
-                                    0 /* lc */);
+                                    execute_command, context);
                 }
             } else {
                 command_matches(input, expandedtext, true, show_complete,
-                                execute_command, context,
-                                0 /* lc */);
+                                execute_command, context);
             }
         }
 
@@ -404,81 +400,32 @@ boolean command_handle (const char *input,
             "\"%s\"%%%%fg=reset$. Try:", input);
 
         command_matches(input, expandedtext, true, show_complete,
-                        execute_command, context,
-                        0 /* lc */);
+                        execute_command, context);
     }
 
     return (true);
 }
 
-void completion (const char *input, linenoiseCompletions *lc) 
+static char wid_text[MAXSTR];
+
+static void console_set_text (char *s)
 {
-    boolean show_ambiguous = true;
-    boolean show_complete = true;
-    boolean execute_command = false;
-    char *expandedtext = 0;
-    void *context = 0;
-    int32_t matches;
+    strcpy(wid_text, s);
 
-    /*
-     * Check for ambiguous commands.
-     */
-    matches = command_matches(input, expandedtext, false, false,
-                              execute_command, context, lc);
-    if (matches == 0) {
-        RAW("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
-        return;
-    }
-
-    if (matches > 1) {
-        if (show_ambiguous) {
-            RAW("> %%%%fg=red$Incomplete command, "
-                "\"%s\"%%%%fg=reset$. Try:", input);
-        }
-
-        command_matches(input, expandedtext, show_ambiguous, show_complete,
-                        execute_command, context, lc);
-
-        if (!show_ambiguous) {
-            if (expandedtext) {
-                if (!strcmp(input, expandedtext)) {
-                    RAW("> %%%%fg=red$Incomplete command, "
-                        "\"%s\"%%%%fg=reset$. Try:", input);
-
-                    command_matches(input, expandedtext, true, show_complete,
-                                    execute_command, context, lc);
-                }
-            } else {
-                command_matches(input, expandedtext, true, show_complete,
-                                execute_command, context, lc);
-            }
-        }
-
-        return;
-    }
-
-    if (!execute_command && (matches == 1)) {
-        RAW("> %%%%fg=red$Incomplete command, "
-            "\"%s\"%%%%fg=reset$. Try:", input);
-
-        command_matches(input, expandedtext, true, show_complete,
-                        execute_command, context, lc);
-    }
+    zx_term_goto(0, ZX_TERM_HEIGHT - 1);
+    zx_term_putf("gorynlich> ");
+    zx_term_putf(s);
+    zx_term_refresh();
 }
 
-static void linenoise_init (void)
+static const char *console_get_text (void)
 {
-    /* Set the completion callback. This will be called every time the
-     * user uses the <tab> key. */
-    linenoiseSetCompletionCallback(completion);
-
-    /* Load history from file. The history file is just a plain text file
-     * where entries are separated by newlines. */
-    linenoiseHistoryLoad("history.txt"); /* Load the history at startup */
+    return (wid_text);
 }
 
 void linenoise_tick (void)
 {
+#if 0
     static int first = true;
     char *line;
 
@@ -510,4 +457,235 @@ void linenoise_tick (void)
 
         free(line);
     }
+#else
+    int fd = STDIN_FILENO;
+    int flags = fcntl(fd, F_GETFL, 0);
+    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+
+    char seq[2];
+    char seq2[2];
+    char c;
+    int nread;
+    nread = read(fd,&c,1);
+    if (nread <= 0) {
+        return;
+    }
+
+    static int cursor_x;
+    char beforecursor[MAXSTR];
+    char updatedtext[MAXSTR];
+    char aftercursor[MAXSTR];
+    char entered[MAXSTR];
+    char tmp[MAXSTR];
+    char newchar[2];
+    uint32_t origlen;
+    uint32_t cnt;
+
+    newchar[0] = '\0';
+    newchar[0] = c;
+
+    origlen = (uint32_t)strlen(wid_text);
+    cursor_x = (uint32_t)strlen(wid_text);
+
+    strlcpy(beforecursor, wid_text, cursor_x + 1);
+    strlcpy(aftercursor, wid_text + cursor_x, sizeof(aftercursor));
+
+            LOG("%x",c);
+    switch (c) {
+        case '':
+            if (!history_walk) {
+                history_walk = HISTORY_MAX - 1;
+            } else {
+                history_walk--;
+            }
+
+            console_set_text(history[history_walk]);
+            cursor_x = (uint32_t)strlen(console_get_text());
+            break;
+
+        case '':
+            history_walk++;
+            if (history_walk >= HISTORY_MAX) {
+                history_walk = 0;
+            }
+
+            console_set_text(history[history_walk]);
+            cursor_x = (uint32_t)strlen(console_get_text());
+            break;
+
+        case '':
+            cursor_x = 0;
+            break;
+
+        case '':
+            cursor_x = origlen;
+            break;
+
+        case '':
+        case '':
+            if (cursor_x > 0) {
+                strlcpy(updatedtext, beforecursor, cursor_x);
+                strlcat(updatedtext, aftercursor, sizeof(updatedtext));
+
+                cursor_x--;
+
+                console_set_text(updatedtext);
+            }
+            break;
+
+        case '\t':
+            updatedtext[0] = '\0';
+            command_handle(console_get_text(), updatedtext,
+                            false /* show ambiguous */,
+                            true /* show complete */,
+                            false /* execute command */,
+                            0 /* context */);
+
+            if (updatedtext[0]) {
+                console_set_text(updatedtext);
+                cursor_x = (uint32_t)strlen(updatedtext);;
+            }
+            return;
+
+        case '\n':
+            if (origlen) {
+                strlcpy(entered, console_get_text(), sizeof(entered));
+                snprintf(tmp, sizeof(tmp), "> %s", entered);
+                console_set_text(tmp);
+
+                if (!command_handle(entered, updatedtext,
+                                true /* show ambiguous */,
+                                false /* show complete */,
+                                true /* execute command */,
+                                0 /* context */)) {
+                    return;
+                }
+
+                if (updatedtext[0]) {
+                    console_set_text(updatedtext);
+                    cursor_x = (uint32_t)strlen(updatedtext);;
+                }
+
+                strlcpy(history[history_at], updatedtext,
+                        sizeof(history[history_at]));
+
+                history_at++;
+                if (history_at >= HISTORY_MAX) {
+                    history_at = 0;
+                }
+                history_walk = history_at;
+
+                console_set_text("");
+                cursor_x = 0;
+            }
+            return;
+
+        case 27:    /* escape sequence */
+
+            if (read(fd,seq,2) == -1) break;
+
+            if (seq[0] == 91 && seq[1] == 68) {
+                if (cursor_x > 0) {
+                    cursor_x--;
+                }
+            } else if (seq[0] == 91 && seq[1] == 67) {
+                if (cursor_x < origlen) {
+                    cursor_x++;
+                }
+            } else if (seq[0] == 91 && (seq[1] == 65 || seq[1] == 66)) {
+                /* Up and Down arrows */
+                if (seq[1] == 65) {
+                    cnt = 0;
+                    while (cnt < HISTORY_MAX) {
+                        cnt++;
+                        if (!history_walk) {
+                            history_walk = HISTORY_MAX - 1;
+                        } else {
+                            history_walk--;
+                        }
+
+                        console_set_text(history[history_walk]);
+                        if (!history[history_walk][0]) {
+                            continue;
+                        }
+
+                        cursor_x = (uint32_t)strlen(console_get_text());
+                        break;
+                    }
+                    break;
+                } else {
+                    cnt = 0;
+                    while (cnt < HISTORY_MAX) {
+                        cnt++;
+
+                        history_walk++;
+                        if (history_walk >= HISTORY_MAX) {
+                            history_walk = 0;
+                        }
+
+                        console_set_text(history[history_walk]);
+                        if (!history[history_walk][0]) {
+                            continue;
+                        }
+
+                        cursor_x = (uint32_t)strlen(console_get_text());
+                        break;
+                    }
+                    break;
+                }
+
+            } else if (seq[0] == 91 && seq[1] > 48 && seq[1] < 55) {
+                /* extended escape, read additional two bytes. */
+                if (read(fd,seq2,2) == -1) break;
+
+                if (seq[1] == 51 && seq2[0] == 126) {
+                    /* Delete key. */
+                    if (cursor_x > 0) {
+                        strlcpy(updatedtext, beforecursor, cursor_x);
+                        strlcat(updatedtext, aftercursor, sizeof(updatedtext));
+
+                        cursor_x--;
+
+                        console_set_text(updatedtext);
+                    }
+                    break;
+                }
+            }
+            break;
+
+        case '?':
+            updatedtext[0] = '\0';
+            command_handle(console_get_text(), updatedtext,
+                            true /* show ambiguous */,
+                            false /* show complete */,
+                            false /* execute command */,
+                            0 /* context */);
+
+            if (updatedtext[0]) {
+                console_set_text(updatedtext);
+                cursor_x = (uint32_t)strlen(updatedtext);;
+            }
+            return;
+
+        default: {
+            if (origlen >= sizeof(updatedtext) - 1) {
+                break;
+            }
+
+            newchar[1] = '\0';
+            newchar[0] = c;
+            if (!newchar[0]) {
+                break;
+            }
+
+            strlcpy(updatedtext, beforecursor, cursor_x + 1);
+            strlcat(updatedtext, newchar, sizeof(updatedtext));
+            strlcat(updatedtext, aftercursor, sizeof(updatedtext));
+
+            cursor_x++;
+
+            console_set_text(updatedtext);
+        }
+    }
+#endif
 }
