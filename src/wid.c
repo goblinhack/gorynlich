@@ -402,9 +402,9 @@ static int32_t wid_lowest_priority = -1;
  * History for all text widgets.
  */
 #define HISTORY_MAX 16
-static char history[HISTORY_MAX][MAXSTR];
-static uint32_t history_at;
-static uint32_t history_walk;
+char history[HISTORY_MAX][MAXSTR];
+uint32_t history_at;
+uint32_t history_walk;
 
 static boolean wid_init_done;
 

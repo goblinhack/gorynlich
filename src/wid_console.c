@@ -89,8 +89,6 @@ void wid_console_hello (void)
 {
     RAW(" ");
     RAW("%%%%fg=red$          Welcome to the gorynlich Console!%%%%fg=reset$");
-    RAW("%%%%fg=green$aaa%%%%fg=reset$");
-    RAW("%%%%fg=white$aaa%%%%fg=reset$");
     RAW(" ");
     RAW("Press %%%%fg=red$<tab>%%%%fg=reset$ to complete commands.");
 
