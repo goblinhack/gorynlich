@@ -137,7 +137,7 @@ static int color_to_index (const char **s)
 static void putf (FILE *fp, const char *s)
 {
     char c;
-    bool looking_for_start = false;
+    boolean looking_for_start = false;
 
     while ((c = *s++) != '\0') {
 	if (!looking_for_start) {

@@ -422,7 +422,6 @@ static boolean wid_intro_quit_key_event (widp w, const SDL_KEYSYM *key)
 static void wid_intro_bg_create (void)
 {
     widp wid;
-    texp tex;
 
     if (wid_intro_title) {
         return;
@@ -430,8 +429,6 @@ static void wid_intro_bg_create (void)
 
     {
         wid = wid_intro_background = wid_new_window("bg");
-
-        tex = tex_find("gorynlich");
 
         fpoint tl = { 0.2, 0.1 };
         fpoint br = { 0.8, 0.9 };
@@ -456,8 +453,6 @@ static void wid_intro_bg_create (void)
 
     {
         wid = wid_intro_title = wid_new_window("title");
-
-        tex = tex_find("title");
 
         fpoint tl = { 0.1, 0.3 };
         fpoint br = { 0.9, 0.6 };
