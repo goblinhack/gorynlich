@@ -18,47 +18,92 @@
 #include "term.h"
 
 typedef struct zx_term_cell_ {
-    char                    c;
-    //
-    // Indicates a dummy cell when recording the screen and marks
-    // that we've drawn this frame.
-    //
-    uint8_t                   flip:1;
-    //
-    // For recording again, indicated the end of the recording.
-    //
-    uint8_t                   end:1;
+    char                        c;
     //
     // Indicates that this cell has been modified since the last
     // frame was drawn.
     //
-    uint8_t                   touched:1;
-    //
-    // When this cell is stored within a thing, indicates if this
-    // cell should be used in hit_obstacle detection.
-    //
-    uint8_t                   mask:1;
-    zx_term_color   fg;
-    zx_term_color   bg;
+    uint8_t                     fg;
+    uint8_t                     bg;
+    uint8_t                     touched:1;
 } zx_term_cell;
 
-extern zx_term_cell zx_term_cells[ZX_TERM_MAX_SIZE][ZX_TERM_MAX_SIZE];
+static void zx_term_core_refresh(void);
+
 int ZX_TERM_WIDTH;
 int ZX_TERM_HEIGHT;
-
 int zx_term_x;
 int zx_term_y;
+
 zx_term_color zx_term_fg_current = ZX_TERM_COLOR_WHITE;
 zx_term_color zx_term_bg_current = ZX_TERM_COLOR_BLACK;
+
 boolean zx_term_cursor_move_only;
+
 zx_term_cell zx_term_cells[ZX_TERM_MAX_SIZE][ZX_TERM_MAX_SIZE];
 zx_term_cell zx_term_bcells[ZX_TERM_MAX_SIZE][ZX_TERM_MAX_SIZE];
 char zx_term_core_goto_data[ZX_TERM_CORE_MAX_SIZE][ZX_TERM_CORE_MAX_SIZE][20];
+
 char *zx_term_core_buffer;
 int zx_term_core_buffer_pos;
 int zx_term_core_buffer_size;
 
 static boolean term_init_done;
+static struct termios zx_term_original_settings;
+
+static void zx_term_core_exit (void)
+{
+    static boolean exitting;
+
+    if (exitting) {
+        return;
+    }
+
+    exitting = true;
+
+    //
+    // Resore the terminal
+    //
+    tcsetattr(0, TCSANOW, &zx_term_original_settings);
+
+    zx_term_core_cls();
+
+    zx_term_core_cursor_show();
+    zx_term_core_refresh();
+
+    //
+    // Keep this last, after any terminal flushing
+    //
+    free(zx_term_core_buffer);
+}
+
+static void zx_term_core_init_zx_terminal (void)
+{
+    struct termios t;
+
+    zx_term_core_buffer_size = ZX_TERM_WIDTH *
+                               ZX_TERM_HEIGHT * 32;
+
+    if (!(zx_term_core_buffer = (char*) malloc(zx_term_core_buffer_size))) {
+        DIE("no mem");
+    }
+    
+    tcgetattr(0, &zx_term_original_settings);
+    memcpy(&t, &zx_term_original_settings, sizeof(struct termios));
+
+    t.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
+    t.c_oflag &= ~OPOST;
+    t.c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
+    t.c_cflag &= ~(CSIZE|PARENB);
+    t.c_cflag |= CS8;
+
+    tcsetattr(0, TCSANOW, &t);
+
+    zx_term_core_cls();
+
+    zx_term_core_cursor_hide();
+    zx_term_core_refresh();
+}
 
 static void zx_term_core_goto_init (void)
 {
@@ -77,11 +122,7 @@ boolean term_init (void)
 
     get_term_size(STDIN_FILENO, &ZX_TERM_WIDTH, &ZX_TERM_HEIGHT);
 
-    zx_term_core_buffer_size = ZX_TERM_WIDTH * ZX_TERM_HEIGHT * 32;
-
-    if (!(zx_term_core_buffer = (char*) malloc(zx_term_core_buffer_size))) {
-        DIE("no mem");
-    }
+    zx_term_core_init_zx_terminal();
 
     zx_term_core_goto_init();
 
@@ -95,6 +136,8 @@ void term_fini (void)
     FINI_LOG("%s", __FUNCTION__);
 
     if (term_init_done) {
+        zx_term_core_exit();
+
         term_init_done = false;
     }
 }
@@ -128,7 +171,6 @@ static void zx_term_core_puts (const char *str)
 
         if (!zx_term_core_buffer) {
             DIE("no mem");
-            zx_term_core_exit(1);
         }
     }
 
@@ -299,7 +341,7 @@ void zx_term_scroll (void)
 
     for (x = 0; x < ZX_TERM_WIDTH; x++) {
         for (y = 0; y < ZX_TERM_HEIGHT; y++) {
-            zx_term_cells[x][y].c = zx_term_cells[x][y + 1].c;
+            zx_term_cells[x][y].c  = zx_term_cells[x][y + 1].c;
             zx_term_cells[x][y].fg = zx_term_cells[x][y + 1].fg;
             zx_term_cells[x][y].bg = zx_term_cells[x][y + 1].bg;
             zx_term_cells[x][y].touched = true;
@@ -462,7 +504,7 @@ void zx_term_putf (const char *s)
                     zx_term_bg(zx_term_color_string_to_index(&s));
                     looking_for_start = false;
                     continue;
-                    }
+                }
             }
             zx_term_putc(c);
         }

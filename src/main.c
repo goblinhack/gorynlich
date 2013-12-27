@@ -475,7 +475,7 @@ static void parse_args (int32_t argc, char *argv[])
     if (is_server) {
         char *tmp = iptodynstr(server_address);
 
-        LOG("Server: %s", tmp);
+        CON("Server: %s", tmp);
 
         myfree(tmp);
 
@@ -485,7 +485,7 @@ static void parse_args (int32_t argc, char *argv[])
     if (is_client) {
         char *tmp = iptodynstr(client_address);
 
-        LOG("Client: %s", tmp);
+        CON("Client: %s", tmp);
 
         myfree(tmp);
 
