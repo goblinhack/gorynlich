@@ -335,7 +335,9 @@ void thing_tick_all (void)
                 wid_get_grid_dim(w, &gridpixwidth, &gridpixheight);
             }
 
+#if TODO
             boolean look_for_nexthop = true;
+#endif
             int32_t nexthop_x = -1;
             int32_t nexthop_y = -1;
 
@@ -345,7 +347,9 @@ void thing_tick_all (void)
             if (thing_redo_maze_search(t)) {
                 thing_set_redo_maze_search(t, false);
 
+#if TODO
                 look_for_nexthop = true;
+#endif
             }
 
             /*
