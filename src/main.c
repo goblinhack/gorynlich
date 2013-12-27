@@ -587,7 +587,6 @@ int32_t main (int32_t argc, char *argv[])
 
     term_init();
 
-#define TERM_TEST
 #ifdef TERM_TEST
     extern int term_test(int32_t argc, char *argv[]);
     term_test(argc, argv);

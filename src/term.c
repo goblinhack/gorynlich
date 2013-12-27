@@ -341,10 +341,17 @@ void zx_term_scroll (void)
 
     for (x = 0; x < ZX_TERM_WIDTH; x++) {
         for (y = 0; y < ZX_TERM_HEIGHT; y++) {
-            zx_term_cells[x][y].c  = zx_term_cells[x][y + 1].c;
-            zx_term_cells[x][y].fg = zx_term_cells[x][y + 1].fg;
-            zx_term_cells[x][y].bg = zx_term_cells[x][y + 1].bg;
-            zx_term_cells[x][y].touched = true;
+            if (y >= ZX_TERM_HEIGHT - 2) {
+                zx_term_cells[x][y].c  = ' ';
+                zx_term_cells[x][y].fg = 0;
+                zx_term_cells[x][y].bg = 0;
+                zx_term_cells[x][y].touched = true;
+            } else {
+                zx_term_cells[x][y].c  = zx_term_cells[x][y + 1].c;
+                zx_term_cells[x][y].fg = zx_term_cells[x][y + 1].fg;
+                zx_term_cells[x][y].bg = zx_term_cells[x][y + 1].bg;
+                zx_term_cells[x][y].touched = true;
+            }
         }
     }
 }
@@ -629,17 +636,33 @@ int term_test (int32_t argc, char *argv[])
 
     int r = 0;
     for (;;) {
-        r++;
+        int i;
 
-        for (x = 0; x < ZX_TERM_CORE_MAX_SIZE; x++) {
-            for (y = 0; y < ZX_TERM_CORE_MAX_SIZE; y++) {
-                zx_term_goto(x, y);
+        for (i = 0; i < 40; i++) {
+            r++;
 
-                int d = (x + y + r);
+            for (x = 0; x < ZX_TERM_CORE_MAX_SIZE; x++) {
+                for (y = 0; y < ZX_TERM_CORE_MAX_SIZE; y++) {
+                    zx_term_goto(x, y);
 
-                zx_term_putc('a' + (d % 26));
-                zx_term_fgbg(d % 8, d % 8);
+                    int d = (x + y + r);
+
+                    zx_term_putc('a' + (d % 26));
+                    zx_term_fgbg(d % 8, d % 8);
+                }
             }
+
+            term_log("------------abcdef-----------------");
+            term_log("-                                 -");
+            term_log("------------abcdef-----------------");
+
+            zx_term_refresh();
+        }
+
+        for (i = 0; i < 40; i++) {
+            zx_term_scroll();
+            zx_term_refresh();
+            usleep(50000);
         }
 
         zx_term_refresh();
