@@ -19,6 +19,7 @@ boolean is_server;
 boolean is_client;
 IPaddress server_address = {0};
 IPaddress client_address = {0};
+IPaddress no_address = {0};
 network net;
 
 static boolean net_show(tokens_t *tokens, void *context);
@@ -73,6 +74,10 @@ char *iptodynstr (IPaddress ip)
     const char *hostname;
 
     uint16_t port = SDLNet_Read16(&ip.port);
+
+    if (!memcmp(&ip, &no_address, sizeof(no_address))) {
+        return (dynprintf("<no IP address>"));
+    }
 
     if (!(hostname = SDLNet_ResolveIP(&ip))) {
         return (dynprintf("IPv4 %u.%u.%u.%u:%u",

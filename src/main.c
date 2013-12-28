@@ -406,6 +406,8 @@ static void parse_args (int32_t argc, char *argv[])
 {
     int32_t i;
 
+    LOG("Hello");
+
     is_server = false;
     is_client = false;
 
@@ -449,6 +451,10 @@ static void parse_args (int32_t argc, char *argv[])
 
             is_server = true;
 
+            char *tmp = iptodynstr(server_address);
+            LOG("User specified server: %s", tmp);
+            myfree(tmp);
+
             i += 2;
 
             continue;
@@ -476,6 +482,10 @@ static void parse_args (int32_t argc, char *argv[])
 
             is_client = true;
 
+            char *tmp = iptodynstr(client_address);
+            LOG("User specified client: %s", tmp);
+            myfree(tmp);
+
             i += 2;
 
             continue;
@@ -491,18 +501,6 @@ static void parse_args (int32_t argc, char *argv[])
 
         usage();
         DIE("unknown format argument, %s", argv[i]);
-    }
-
-    if (is_server) {
-        char *tmp = iptodynstr(server_address);
-        LOG("User specified server: %s", tmp);
-        myfree(tmp);
-    }
-
-    if (is_client) {
-        char *tmp = iptodynstr(client_address);
-        LOG("User specified client: %s", tmp);
-        myfree(tmp);
     }
 }
 
