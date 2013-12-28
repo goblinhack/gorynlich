@@ -25,18 +25,6 @@ static char buf[200];
 boolean debug_enabled;
 boolean croaked;
 
-enum {
-    TERM_COLOR_BLACK,
-    TERM_COLOR_RED,
-    TERM_COLOR_GREEN,
-    TERM_COLOR_YELLOW,
-    TERM_COLOR_BLUE,
-    TERM_COLOR_PINK,
-    TERM_COLOR_CYAN,
-    TERM_COLOR_WHITE,
-    TERM_COLOR_RESET,
-};
-
 /*
  * putfgbg
  */

@@ -106,7 +106,6 @@ void quit (void)
     sdl_fini();
     config_fini();
     enum_fmt_destroy();
-    term_fini();
 
     if (EXEC_FULL_PATH_AND_NAME) {
         myfree(EXEC_FULL_PATH_AND_NAME);
@@ -138,6 +137,8 @@ void quit (void)
         ptrcheck_fini();
     }
 #endif
+
+    term_fini();
 }
 
 void restart (void)
@@ -421,6 +422,8 @@ static void parse_args (int32_t argc, char *argv[])
                 DIE("need server host and port");
             }
 
+            LOG("Trying to resolve %s:%d", argv[i + 1], atoi(argv[i + 2]));
+
             if (SDLNet_ResolveHost(&server_address, 
                                    argv[i + 1], 
                                    atoi(argv[i + 2])) == -1) {
@@ -445,6 +448,8 @@ static void parse_args (int32_t argc, char *argv[])
             if (i + 2 >= argc) {
                 DIE("need client host and port");
             }
+
+            LOG("Trying to resolve %s:%d", argv[i + 1], atoi(argv[i + 2]));
 
             if (SDLNet_ResolveHost(&client_address, 
                                    argv[i + 1], 
@@ -475,7 +480,7 @@ static void parse_args (int32_t argc, char *argv[])
     if (is_server) {
         char *tmp = iptodynstr(server_address);
 
-        CON("Server: %s", tmp);
+        LOG("Server: %s", tmp);
 
         myfree(tmp);
 
@@ -485,7 +490,7 @@ static void parse_args (int32_t argc, char *argv[])
     if (is_client) {
         char *tmp = iptodynstr(client_address);
 
-        CON("Client: %s", tmp);
+        LOG("Client: %s", tmp);
 
         myfree(tmp);
 
@@ -515,6 +520,8 @@ int32_t main (int32_t argc, char *argv[])
     ARGV = argv;
 
     dospath2unix(ARGV[0]);
+
+    term_init();
 
     parse_args(argc, argv);
 
@@ -584,8 +591,6 @@ int32_t main (int32_t argc, char *argv[])
     quit();
     exit(0);
 #endif
-
-    term_init();
 
 #ifdef TERM_TEST
     extern int term_test(int32_t argc, char *argv[]);
@@ -737,7 +742,7 @@ int32_t main (int32_t argc, char *argv[])
 
     quit();
 
-    fprintf(MY_STDOUT, "Exited");
+    fprintf(MY_STDOUT, "Exited\n");
 
     return (0);
 }
