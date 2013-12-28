@@ -157,6 +157,8 @@ void die (void)
 {
     quit();
 
+    term_fini();
+
     fprintf(MY_STDERR, "exit(1) error\n");
 
     exit(1);
@@ -493,22 +495,14 @@ static void parse_args (int32_t argc, char *argv[])
 
     if (is_server) {
         char *tmp = iptodynstr(server_address);
-
-        LOG("Server: %s", tmp);
-
+        LOG("User specified server: %s", tmp);
         myfree(tmp);
-
-        host_add(server_address, "server", true);
     }
 
     if (is_client) {
         char *tmp = iptodynstr(client_address);
-
-        LOG("Client: %s", tmp);
-
+        LOG("User specified client: %s", tmp);
         myfree(tmp);
-
-        host_add(client_address, "client", true);
     }
 }
 
@@ -597,13 +591,6 @@ int32_t main (int32_t argc, char *argv[])
 #ifdef MAP_TEST
     extern int32_t map_jigsaw_test(int32_t argc, char **argv);
     map_jigsaw_test(argc, argv);
-#endif
-
-#ifdef NET_TEST
-    extern int net_test(int32_t argc, char *argv[]);
-    net_test(argc, argv);
-    quit();
-    exit(0);
 #endif
 
 #ifdef TERM_TEST

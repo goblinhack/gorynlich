@@ -13,20 +13,20 @@ extern boolean net_init(void);
 extern void net_fini(void);
 char *iptodynstr(IPaddress ip);
 
-#define NET_MAX_HOSTS 10
-
-typedef struct host_ {
-    IPaddress ip;
-    char *logname;
-    char *name;
-    uint32_t delay_ms;
-    boolean inuse;
-    boolean server;
-} host;
-
-const char *host_logname(hostp);
-hostp host_add(IPaddress ip, const char *name, boolean server);
-void host_dump(void);
-
 extern IPaddress server_address;
 extern IPaddress client_address;
+
+typedef struct {
+    boolean open;
+    boolean server;
+    UDPsocket udp_socket;
+    IPaddress client;
+    char *logname;
+} socket;
+
+typedef struct {
+    socket sockets[MAX_SOCKETS];
+    SDLNet_SocketSet socklist;
+} network;
+
+extern network net;
