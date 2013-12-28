@@ -20,4 +20,4 @@ boolean command_handle(const char *input, char *expandedtext,
                        void *context);
 void commands_test(void);
 
-void linenoise_tick(void);
+void console_tick(void);
