@@ -17,7 +17,7 @@
 #include "string.h"
 #include "term.h"
 
-typedef struct zx_term_cell_ {
+typedef struct term_cell_ {
     char                        c;
     //
     // Indicates that this cell has been modified since the last
@@ -26,32 +26,32 @@ typedef struct zx_term_cell_ {
     uint8_t                     fg;
     uint8_t                     bg;
     uint8_t                     touched:1;
-} zx_term_cell;
+} term_cell;
 
-static void zx_term_core_refresh(void);
+static void term_core_refresh(void);
 
-int ZX_TERM_WIDTH;
-int ZX_TERM_HEIGHT;
-int zx_term_x;
-int zx_term_y;
+int TERM_WIDTH;
+int TERM_HEIGHT;
+int term_x;
+int term_y;
 
-zx_term_color zx_term_fg_current = ZX_TERM_COLOR_WHITE;
-zx_term_color zx_term_bg_current = ZX_TERM_COLOR_BLACK;
+term_color term_fg_current = TERM_COLOR_RESET;
+term_color term_bg_current = TERM_COLOR_BLACK;
 
-boolean zx_term_cursor_move_only;
+boolean term_cursor_move_only;
 
-zx_term_cell zx_term_cells[ZX_TERM_MAX_SIZE][ZX_TERM_MAX_SIZE];
-zx_term_cell zx_term_bcells[ZX_TERM_MAX_SIZE][ZX_TERM_MAX_SIZE];
-char zx_term_core_goto_data[ZX_TERM_CORE_MAX_SIZE][ZX_TERM_CORE_MAX_SIZE][20];
+term_cell term_cells[TERM_MAX_SIZE][TERM_MAX_SIZE];
+term_cell term_bcells[TERM_MAX_SIZE][TERM_MAX_SIZE];
+char term_core_goto_data[TERM_CORE_MAX_SIZE][TERM_CORE_MAX_SIZE][20];
 
-char *zx_term_core_buffer;
-int zx_term_core_buffer_pos;
-int zx_term_core_buffer_size;
+char *term_core_buffer;
+int term_core_buffer_pos;
+int term_core_buffer_size;
 
 static boolean term_init_done;
-static struct termios zx_term_original_settings;
+static struct termios term_original_settings;
 
-static void zx_term_core_exit (void)
+static void term_core_exit (void)
 {
     static boolean exitting;
 
@@ -64,32 +64,32 @@ static void zx_term_core_exit (void)
     //
     // Resore the terminal
     //
-    tcsetattr(0, TCSANOW, &zx_term_original_settings);
+    tcsetattr(0, TCSANOW, &term_original_settings);
 
-    zx_term_core_cls();
+//    term_core_cls();
 
-    zx_term_core_cursor_show();
-    zx_term_core_refresh();
+    term_core_cursor_show();
+    term_core_refresh();
 
     //
     // Keep this last, after any terminal flushing
     //
-    free(zx_term_core_buffer);
+
+    free(term_core_buffer);
 }
 
-static void zx_term_core_init_zx_terminal (void)
+static void term_core_init_terminal (void)
 {
     struct termios t;
 
-    zx_term_core_buffer_size = ZX_TERM_WIDTH *
-                               ZX_TERM_HEIGHT * 32;
+    term_core_buffer_size = TERM_WIDTH * TERM_HEIGHT * 32;
 
-    if (!(zx_term_core_buffer = (char*) malloc(zx_term_core_buffer_size))) {
+    if (!(term_core_buffer = (char*) malloc(term_core_buffer_size))) {
         DIE("no mem");
     }
     
-    tcgetattr(0, &zx_term_original_settings);
-    memcpy(&t, &zx_term_original_settings, sizeof(struct termios));
+    tcgetattr(0, &term_original_settings);
+    memcpy(&t, &term_original_settings, sizeof(struct termios));
 
     t.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
     t.c_oflag &= ~OPOST;
@@ -99,19 +99,19 @@ static void zx_term_core_init_zx_terminal (void)
 
     tcsetattr(0, TCSANOW, &t);
 
-    zx_term_core_cls();
+    term_core_cls();
 
-    zx_term_core_cursor_hide();
-    zx_term_core_refresh();
+    term_core_cursor_hide();
+    term_core_refresh();
 }
 
-static void zx_term_core_goto_init (void)
+static void term_core_goto_init (void)
 {
     int x, y;
 
-    for (x = 0; x < ZX_TERM_CORE_MAX_SIZE; x++) {
-        for (y = 0; y < ZX_TERM_CORE_MAX_SIZE; y++) {
-            sprintf(zx_term_core_goto_data[x][y], "\033[%d;%dH", y, x);
+    for (x = 0; x < TERM_CORE_MAX_SIZE; x++) {
+        for (y = 0; y < TERM_CORE_MAX_SIZE; y++) {
+            sprintf(term_core_goto_data[x][y], "\033[%d;%dH", y, x);
         }
     }
 }
@@ -120,13 +120,13 @@ boolean term_init (void)
 {
     term_init_done = true;
 
-    get_term_size(STDIN_FILENO, &ZX_TERM_WIDTH, &ZX_TERM_HEIGHT);
+    get_term_size(STDIN_FILENO, &TERM_WIDTH, &TERM_HEIGHT);
 
-    zx_term_core_init_zx_terminal();
+    term_core_init_terminal();
 
-    zx_term_core_goto_init();
+    term_core_goto_init();
 
-    zx_term_cls_now();
+    term_cls_now();
 
     return (true);
 }
@@ -136,77 +136,94 @@ void term_fini (void)
     FINI_LOG("%s", __FUNCTION__);
 
     if (term_init_done) {
-        zx_term_core_exit();
+        term_core_exit();
 
         term_init_done = false;
     }
 }
 
-static void zx_term_core_putc (const char c)
+static void term_core_putc (const char c)
 {
-    zx_term_core_buffer[zx_term_core_buffer_pos++] = c;
+    term_core_buffer[term_core_buffer_pos++] = c;
 
-    if (zx_term_core_buffer_pos >= zx_term_core_buffer_size) {
-        zx_term_core_buffer_size <<= 1;
-        zx_term_core_buffer = (char*) realloc(zx_term_core_buffer,
-                                              zx_term_core_buffer_size);
+    if (term_core_buffer_pos >= term_core_buffer_size) {
+        term_core_buffer_size <<= 1;
+        term_core_buffer = (char*) realloc(term_core_buffer,
+                                              term_core_buffer_size);
 
-        if (!zx_term_core_buffer) {
+        if (!term_core_buffer) {
             DIE("no mem");
         }
     }
 }
 
-static void zx_term_core_puts (const char *str)
+static void term_core_puts (const char *str)
 {
     const int l = strlen(str);
 
-    if (zx_term_core_buffer_pos + l >= zx_term_core_buffer_size) {
-        while (zx_term_core_buffer_pos + l >= zx_term_core_buffer_size) {
-            zx_term_core_buffer_size <<= 1;
+    if (term_core_buffer_pos + l >= term_core_buffer_size) {
+        while (term_core_buffer_pos + l >= term_core_buffer_size) {
+            term_core_buffer_size <<= 1;
         }
 
-        zx_term_core_buffer = (char*) realloc(zx_term_core_buffer,
-                                              zx_term_core_buffer_size);
+        term_core_buffer = (char*) realloc(term_core_buffer,
+                                              term_core_buffer_size);
 
-        if (!zx_term_core_buffer) {
+        if (!term_core_buffer) {
             DIE("no mem");
         }
     }
 
-    memcpy(zx_term_core_buffer + zx_term_core_buffer_pos, str, l);
+    memcpy(term_core_buffer + term_core_buffer_pos, str, l);
 
-    zx_term_core_buffer_pos += l;
+    term_core_buffer_pos += l;
 }
 
-static void zx_term_core_refresh (void)
+static void term_core_refresh (void)
 {
-    write(1, zx_term_core_buffer, zx_term_core_buffer_pos);
+    write(1, term_core_buffer, term_core_buffer_pos);
 
-    zx_term_core_buffer_pos = 0;
+    term_core_buffer_pos = 0;
 }
 
-static inline void zx_term_core_fg (unsigned char a)
+static inline void term_core_fg (unsigned char a)
 {
     static char *data[] = {
         "[30m", "[31m", "[32m", "[33m",
         "[34m", "[35m", "[36m", "[37m",
+        "\033[m",
     };
 
-    zx_term_core_puts(data[a & 7]);
+    if (a >= ARRAY_SIZE(data)) {
+        DIE("overflow");
+    }
+
+    term_core_puts(data[a]);
 }
 
-static inline void zx_term_core_bg (unsigned char a)
+static inline void term_core_bg (unsigned char a)
 {
     static char *data[] = {
         "[40m", "[41m", "[42m", "[43m",
         "[44m", "[45m", "[46m", "[47m",
+        "\033[m",
     };
 
-    zx_term_core_puts(data[a & 7]);
+    if (a == 0) {
+        /*
+         * Allow the default color to be 0, that of the terminal.
+         */
+        return;
+    }
+
+    if (a >= ARRAY_SIZE(data)) {
+        DIE("overflow");
+    }
+
+    term_core_puts(data[a]);
 }
 
-static void zx_term_core_fgbg (unsigned char fg, unsigned char bg)
+static void term_core_fgbg (unsigned char fg, unsigned char bg)
 {
     static const char *data[] = {
             "[40;30m", "[40;31m", "[40;32m", "[40;33m",
@@ -227,265 +244,270 @@ static void zx_term_core_fgbg (unsigned char fg, unsigned char bg)
             "[47;34m", "[47;35m", "[47;36m", "[47;37m",
     };
 
-    zx_term_core_puts((char*)data[(bg & 7) * 8 + (fg & 7)]);
+    if (bg == 0) {
+        /*
+         * Allow the default color to be 0, that of the terminal.
+         */
+        term_core_fg(fg);
+        return;
+    }
+
+    term_core_puts((char*)data[(bg & 7) * 8 + (fg & 7)]);
 }
 
-void zx_term_core_cursor_show (void)
+void term_core_cursor_show (void)
 {
-    zx_term_core_puts("\033[?25h");
+    term_core_puts("\033[?25h");
 }
 
-void zx_term_core_cursor_hide (void)
+void term_core_cursor_hide (void)
 {
-    zx_term_core_puts("\033[?25l");
+    term_core_puts("\033[?25l");
 }
 
-void zx_term_core_goto (int x, int y)
+void term_core_goto (int x, int y)
 {
-    zx_term_core_puts(zx_term_core_goto_data[x][y]);
+    term_core_puts(term_core_goto_data[x][y]);
 }
 
-void zx_term_core_cls (void)
+void term_core_cls (void)
 {
-    zx_term_core_refresh();
+    term_core_refresh();
 
     //
     // Clear the screen with black
     //
-    zx_term_core_goto(0, 0);
-    zx_term_core_bg(0);
-    zx_term_core_puts("\033[2J");
-    zx_term_core_refresh();
+    term_core_goto(0, 0);
+    term_core_puts("\033[2J");
+    term_core_refresh();
 }
 
-void zx_term_core_bell (void)
+void term_core_bell (void)
 {
-    zx_term_core_puts("\007");
+    term_core_puts("\007");
 }
 
-static void zx_term_put (zx_term_cell *e)
+static void term_put (term_cell *e)
 {
-    if (zx_term_cursor_move_only) {
-        zx_term_x++;
+    if (term_cursor_move_only) {
+        term_x++;
         return;
     }
 
-    if (zx_term_x >= ZX_TERM_WIDTH) {
-        zx_term_x++;
+    if (term_x >= TERM_WIDTH) {
+        term_x++;
         return;
     }
 
-    if (zx_term_x < 0) {
-        zx_term_x++;
+    if (term_x < 0) {
+        term_x++;
         return;
     }
 
-    if (zx_term_y >= ZX_TERM_HEIGHT) {
-        zx_term_x++;
+    if (term_y >= TERM_HEIGHT) {
+        term_x++;
         return;
     }
 
-    if (zx_term_y < 0) {
-        zx_term_x++;
+    if (term_y < 0) {
+        term_x++;
         return;
     }
 
-    zx_term_cell *o = &zx_term_cells[zx_term_x][zx_term_y];
+    term_cell *o = &term_cells[term_x][term_y];
 
     e->touched = true;
 
     *o = *e;
-    zx_term_x++;
+    term_x++;
 }
 
-void zx_term_cursor_right (void)
+void term_cursor_right (void)
 {
-    zx_term_x++;
+    term_x++;
 }
 
-void zx_term_putc (const char c)
+void term_putc (const char c)
 {
-    zx_term_cell e = {0};
+    term_cell e = {0};
 
     e.c = c; 
-    e.fg = zx_term_fg_current;
-    e.bg = zx_term_bg_current;
+    e.fg = term_fg_current;
+    e.bg = term_bg_current;
 
-    zx_term_put(&e);
+    term_put(&e);
 }
 
-void zx_term_puts (const char* s)
+void term_puts (const char* s)
 {
     char c;
 
     while ((c = *s++) != '\0') {
-        zx_term_putc(c);
+        term_putc(c);
     }
 }
 
-void zx_term_fill_c (const char c)
+void term_fill_c (const char c)
 {
     int x, y;
 
-    for (x = 0; x < ZX_TERM_WIDTH; x++) {
-        for (y = 0; y < ZX_TERM_HEIGHT; y++) {
-            zx_term_cells[x][y].c = c;
-            zx_term_cells[x][y].touched = true;
+    for (x = 0; x < TERM_WIDTH; x++) {
+        for (y = 0; y < TERM_HEIGHT; y++) {
+            term_cells[x][y].c = c;
+            term_cells[x][y].touched = true;
         }
     }
 }
 
-void zx_term_scroll (void)
+void term_scroll (void)
 {
     int x, y;
 
-    for (x = 0; x < ZX_TERM_WIDTH; x++) {
-        for (y = 0; y < ZX_TERM_HEIGHT; y++) {
-            if (y >= ZX_TERM_HEIGHT - 2) {
-                zx_term_cells[x][y].c  = ' ';
-                zx_term_cells[x][y].fg = 0;
-                zx_term_cells[x][y].bg = 0;
-                zx_term_cells[x][y].touched = true;
+    for (x = 0; x < TERM_WIDTH; x++) {
+        for (y = 0; y < TERM_HEIGHT; y++) {
+            if (y >= TERM_HEIGHT - 2) {
+                term_cells[x][y].c  = ' ';
+                term_cells[x][y].fg = 0;
+                term_cells[x][y].bg = 0;
+                term_cells[x][y].touched = true;
             } else {
-                zx_term_cells[x][y].c  = zx_term_cells[x][y + 1].c;
-                zx_term_cells[x][y].fg = zx_term_cells[x][y + 1].fg;
-                zx_term_cells[x][y].bg = zx_term_cells[x][y + 1].bg;
-                zx_term_cells[x][y].touched = true;
+                term_cells[x][y].c  = term_cells[x][y + 1].c;
+                term_cells[x][y].fg = term_cells[x][y + 1].fg;
+                term_cells[x][y].bg = term_cells[x][y + 1].bg;
+                term_cells[x][y].touched = true;
             }
         }
     }
 }
 
-void zx_term_fill_fg (const zx_term_color fg)
+void term_fill_fg (const term_color fg)
 {
     int x, y;
 
-    for (x = 0; x < ZX_TERM_WIDTH; x++) {
-        for (y = 0; y < ZX_TERM_HEIGHT; y++) {
-            zx_term_cells[x][y].fg = fg;
-            zx_term_cells[x][y].touched = true;
+    for (x = 0; x < TERM_WIDTH; x++) {
+        for (y = 0; y < TERM_HEIGHT; y++) {
+            term_cells[x][y].fg = fg;
+            term_cells[x][y].touched = true;
         }
     }
 }
 
-void zx_term_fill_bg (const zx_term_color bg)
+void term_fill_bg (const term_color bg)
 {
     int x, y;
 
-    for (x = 0; x < ZX_TERM_WIDTH; x++) {
-        for (y = 0; y < ZX_TERM_HEIGHT; y++) {
-            zx_term_cells[x][y].bg = bg;
-            zx_term_cells[x][y].touched = true;
+    for (x = 0; x < TERM_WIDTH; x++) {
+        for (y = 0; y < TERM_HEIGHT; y++) {
+            term_cells[x][y].bg = bg;
+            term_cells[x][y].touched = true;
         }
     }
 }
 
-void zx_term_fg (zx_term_color fg)
+void term_fg (term_color fg)
 {
-    zx_term_fg_current = fg;
+    term_fg_current = fg;
 }
 
-void zx_term_bg (zx_term_color bg)
+void term_bg (term_color bg)
 {
-    zx_term_bg_current = bg;
+    term_bg_current = bg;
 }
 
-void zx_term_fgbg (zx_term_color fg, zx_term_color bg)
+void term_fgbg (term_color fg, term_color bg)
 {
-    zx_term_fg_current = fg;
-    zx_term_bg_current = bg;
+    term_fg_current = fg;
+    term_bg_current = bg;
 }
 
-void zx_term_goto (int x, int y)
+void term_goto (int x, int y)
 {
-    zx_term_x = x;
-    zx_term_y = y;
+    term_x = x;
+    term_y = y;
 }
 
-void zx_term_cursor_show (void)
+void term_cursor_show (void)
 {
-    zx_term_core_cursor_show();
+    term_core_cursor_show();
 }
 
-void zx_term_cursor_hide (void)
+void term_cursor_hide (void)
 {
-    zx_term_core_cursor_hide();
+    term_core_cursor_hide();
 }
 
-void zx_term_bell (void)
+void term_bell (void)
 {
-    zx_term_core_bell();
+    term_core_bell();
 }
 
-void zx_term_cls (void)
+void term_cls (void)
 {
-    zx_term_fill_c(' ');
-    zx_term_fill_bg(ZX_TERM_COLOR_BLACK);
-    zx_term_fill_fg(ZX_TERM_COLOR_BLACK);
+    term_fill_c(' ');
 }
 
-void zx_term_cls_now (void)
+void term_cls_now (void)
 {
-    zx_term_cls();
+    term_cls();
 
-    zx_term_refresh();
+    term_refresh();
 
-    zx_term_core_cls();
+    term_core_cls();
 }
 
-void zx_term_clear_buffer (void)
+void term_clear_buffer (void)
 {
-    memset(zx_term_cells, 0, sizeof(zx_term_cells));
+    memset(term_cells, 0, sizeof(term_cells));
 }
 
-void zx_term_clear_bbuffer (void)
+void term_clear_bbuffer (void)
 {
-    memset(zx_term_bcells, 0, sizeof(zx_term_bcells));
+    memset(term_bcells, 0, sizeof(term_bcells));
 }
 
-static zx_term_color zx_term_color_string_to_index (const char **s)
+static term_color term_color_string_to_index (const char **s)
 {
     if (!strncmp(*s, "black$", sizeof("black$")-1)) {
         *s += sizeof("black$")-1;
-        return (ZX_TERM_COLOR_BLACK);
+        return (TERM_COLOR_BLACK);
     }
     if (!strncmp(*s, "red$", sizeof("red$")-1)) {
         *s += sizeof("red$")-1;
-        return (ZX_TERM_COLOR_RED);
+        return (TERM_COLOR_RED);
     }
     if (!strncmp(*s, "green$", sizeof("green$")-1)) {
         *s += sizeof("green$")-1;
-        return (ZX_TERM_COLOR_GREEN);
+        return (TERM_COLOR_GREEN);
     }
     if (!strncmp(*s, "yellow$", sizeof("yellow$")-1)) {
         *s += sizeof("yellow$")-1;
-        return (ZX_TERM_COLOR_YELLOW);
+        return (TERM_COLOR_YELLOW);
     }
     if (!strncmp(*s, "blue$", sizeof("blue$")-1)) {
         *s += sizeof("blue$")-1;
-        return (ZX_TERM_COLOR_BLUE);
+        return (TERM_COLOR_BLUE);
     }
     if (!strncmp(*s, "pink$", sizeof("pink$")-1)) {
         *s += sizeof("pink$")-1;
-        return (ZX_TERM_COLOR_PINK);
+        return (TERM_COLOR_PINK);
     }
     if (!strncmp(*s, "cyan$", sizeof("cyan$")-1)) {
         *s += sizeof("cyan$")-1;
-        return (ZX_TERM_COLOR_CYAN);
+        return (TERM_COLOR_CYAN);
     }
     if (!strncmp(*s, "white$", sizeof("white$")-1)) {
         *s += sizeof("white$")-1;
-        return (ZX_TERM_COLOR_WHITE);
+        return (TERM_COLOR_WHITE);
     }
     if (!strncmp(*s, "reset$", sizeof("reset$")-1)) {
         *s += sizeof("reset$")-1;
-        return (ZX_TERM_COLOR_RESET);
+        return (TERM_COLOR_RESET);
     }
 
-    return (ZX_TERM_COLOR_WHITE);
+    return (TERM_COLOR_WHITE);
 }
 
-void zx_term_putf (const char *s)
+void term_putf (const char *s)
 {
     char c;
     boolean looking_for_start = false;
@@ -501,68 +523,68 @@ void zx_term_putf (const char *s)
             if (c == '%') {
                 if (!strncmp(s, "fg=", 3)) {
                     s += 3;
-                    zx_term_fg(zx_term_color_string_to_index(&s));
+                    term_fg(term_color_string_to_index(&s));
                     looking_for_start = false;
                     continue;
                 }
 
                 if (!strncmp(s, "bg=", 3)) {
                     s += 3;
-                    zx_term_bg(zx_term_color_string_to_index(&s));
+                    term_bg(term_color_string_to_index(&s));
                     looking_for_start = false;
                     continue;
                 }
             }
-            zx_term_putc(c);
+            term_putc(c);
         }
 
         looking_for_start = false;
 
-        zx_term_putc(c);
+        term_putc(c);
     }
 }
 
-void zx_term_putfy (int y, const char *s)
+void term_putfy (int y, const char *s)
 {
-    zx_term_goto(0, y);
+    term_goto(0, y);
 
-    zx_term_cursor_move_only = true;
-    zx_term_putf(s);
-    zx_term_cursor_move_only = false;
+    term_cursor_move_only = true;
+    term_putf(s);
+    term_cursor_move_only = false;
 
-    zx_term_goto(ZX_TERM_WIDTH/2 - zx_term_x/2, y);
-    zx_term_putf(s);
+    term_goto(TERM_WIDTH/2 - term_x/2, y);
+    term_putf(s);
 }
 
-void zx_term_putfmx (const char *s)
+void term_putfmx (const char *s)
 {
-    zx_term_putfy(zx_term_y, s);
+    term_putfy(term_y, s);
 }
 
-void zx_term_refresh (void)
+void term_refresh (void)
 {
     int x, y;
-    boolean zx_term_is_cursor_valid = false;
+    boolean term_is_cursor_valid = false;
 
-    for (y = 0; y < ZX_TERM_HEIGHT; y++) {
-        zx_term_is_cursor_valid = false;
+    for (y = 0; y < TERM_HEIGHT; y++) {
+        term_is_cursor_valid = false;
 
         //
         // Hitting the max col seems to mess the terminal up
         //
-        for (x = 0; x < ZX_TERM_WIDTH; x++) {
+        for (x = 0; x < TERM_WIDTH; x++) {
 
-            zx_term_cell *c = &zx_term_cells[x][y];
+            term_cell *c = &term_cells[x][y];
 
             if (!c->touched) {
                 //
                 // We're skipping some spaces. Need a goto when we restart.
                 //
-                zx_term_is_cursor_valid = false;
+                term_is_cursor_valid = false;
                 continue;
             }
 
-            zx_term_cell *b = &zx_term_bcells[x][y];
+            term_cell *b = &term_bcells[x][y];
 
             boolean cell_c_back_buffer_changed = (b->c != c->c);
             boolean cell_fg_back_buffer_changed = (b->fg != c->fg);
@@ -577,7 +599,7 @@ void zx_term_refresh (void)
                 //
                 // We're skipping some spaces. Need a goto when we restart.
                 //
-                zx_term_is_cursor_valid = false;
+                term_is_cursor_valid = false;
                 continue;
             }
 
@@ -585,27 +607,27 @@ void zx_term_refresh (void)
              * Has the cursor moved more than 1 char since current_pen change?
              * If so we need a goto.
              */
-            if (!zx_term_is_cursor_valid) {
-                zx_term_is_cursor_valid = true;
+            if (!term_is_cursor_valid) {
+                term_is_cursor_valid = true;
                 /*
                  * Terminal lines start at 1
                  */
-                zx_term_core_goto(x + 1, y + 1);
+                term_core_goto(x + 1, y + 1);
             }
 
-            zx_term_core_fgbg(c->fg, c->bg);
+            term_core_fgbg(c->fg, c->bg);
 
             if (!c->c) {
-                zx_term_core_putc(' ');
+                term_core_putc(' ');
             } else {
-                zx_term_core_putc(c->c);
+                term_core_putc(c->c);
             }
         }
     }
 
-    memcpy(zx_term_bcells, zx_term_cells, sizeof(zx_term_cells));
+    memcpy(term_bcells, term_cells, sizeof(term_cells));
 
-    zx_term_core_refresh();
+    term_core_refresh();
 }
 
 /*
@@ -632,8 +654,6 @@ int term_test (int32_t argc, char *argv[])
 {
     int x, y;
 
-    zx_term_core_cls();
-
     int r = 0;
     for (;;) {
         int i;
@@ -641,40 +661,39 @@ int term_test (int32_t argc, char *argv[])
         for (i = 0; i < 40; i++) {
             r++;
 
-            for (x = 0; x < ZX_TERM_CORE_MAX_SIZE; x++) {
-                for (y = 0; y < ZX_TERM_CORE_MAX_SIZE; y++) {
-                    zx_term_goto(x, y);
+            for (x = 0; x < TERM_CORE_MAX_SIZE; x++) {
+                for (y = 0; y < TERM_CORE_MAX_SIZE; y++) {
+                    term_goto(x, y);
 
                     int d = (x + y + r);
 
-                    zx_term_putc('a' + (d % 26));
-                    zx_term_fgbg(d % 8, d % 8);
+                    term_putc('a' + (d % 26));
+                    term_fg(d % 8);
+                    term_bg((d+1) % 8);
                 }
             }
 
-            term_log("------------abcdef-----------------");
-            term_log("-                                 -");
-            term_log("------------abcdef-----------------");
+            usleep(50000);
 
-            zx_term_refresh();
+            term_refresh();
         }
 
         for (i = 0; i < 40; i++) {
-            zx_term_scroll();
-            zx_term_refresh();
+            term_scroll();
+            term_refresh();
             usleep(50000);
         }
 
-        zx_term_refresh();
+        term_refresh();
     }
 }
 
 void term_log (const char *buf)
 {
-    zx_term_scroll();
-    zx_term_goto(0, ZX_TERM_HEIGHT - 2);
-    zx_term_putf(buf);
-    zx_term_refresh();
+    term_scroll();
+    term_goto(0, TERM_HEIGHT - 2);
+    term_putf(buf);
+    term_refresh();
 }
 
 /*

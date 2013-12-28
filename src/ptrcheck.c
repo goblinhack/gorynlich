@@ -125,8 +125,6 @@ void ptrcheck_fini (void)
     /*
      * Print memory leaks.
      */
-    ptrcheck_usage_print();
-
     ptrcheck_leak_print();
 
     ptrcheck_usage_cleanup();
@@ -693,7 +691,7 @@ void ptrcheck_leak_print (void)
     }
 
     if (!leak) {
-        fprintf(MY_STDOUT, "No memory leaks!\n");
+        LOG("No memory leaks!");
     }
 }
 
