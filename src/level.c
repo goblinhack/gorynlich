@@ -99,20 +99,13 @@ static boolean level_command_play (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean level_command_god_mode_on (tokens_t *tokens, void *context)
+static boolean level_command_god_mode (tokens_t *tokens, void *context)
 {
-    god_mode = true;
+    char *s = tokens->args[1];
 
-    CON("God mode on");
+    god_mode = strtol(s, 0, 10) ? 1 : 0;
 
-    return (true);
-}
-
-static boolean level_command_god_mode_off (tokens_t *tokens, void *context)
-{
-    god_mode = false;
-
-    CON("God mode off");
+    CON("God mode set to %u", god_mode);
 
     return (true);
 }
@@ -128,10 +121,8 @@ boolean level_init (void)
         command_add(level_command_level_end, 
                     "level end", "internal command to end the level");
 
-        command_add(level_command_god_mode_on, 
-                    "godmode 1", "enable god-mode");
-        command_add(level_command_god_mode_off, 
-                    "godmode 0", "disable god-mode");
+        command_add(level_command_god_mode, 
+                    "god [01]", "enable/disable god mode");
 
         command_add(level_command_play, 
                     "play [123456789]+", "play level x");
