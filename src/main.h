@@ -198,7 +198,6 @@ void WARN(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void INIT_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void FINI_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void CON(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
-void RAW(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void HOST_LOG(hostp, const char *fmt, ...) \

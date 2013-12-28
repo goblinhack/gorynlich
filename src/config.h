@@ -19,6 +19,11 @@
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
+#define DEFAULT_HOST              "localhost"
+#define DEFAULT_PORT              10000
+#define DEFAULT_PORT_MAX          10010
+#define MAX_CLIENTS               4
+
 /*
  * Screen sizes.
  */

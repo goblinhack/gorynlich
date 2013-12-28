@@ -263,7 +263,7 @@ static int32_t command_matches (const char *input,
             tokens_print_to(&command->readable_tokens, match2, sizeof(match2));
 
             if (show_ambiguous) {
-                RAW("  %-40s -- %s", match, match2);
+                CON("  %-40s -- %s", match, match2);
             }
         } else {
 // CON("  NO MATCH \"%s\" [%d] longest %d", match,t,longest_match);
@@ -364,13 +364,13 @@ boolean command_handle (const char *input,
     matches = command_matches(input, expandedtext, false, false,
                               execute_command, context);
     if (matches == 0) {
-        RAW("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
+        CON("> %%%%fg=red$Unknown command: \"%s\"%%%%fg=reset$", input);
         return (false);
     }
 
     if (matches > 1) {
         if (show_ambiguous) {
-            RAW("> %%%%fg=red$Incomplete command, "
+            CON("> %%%%fg=red$Incomplete command, "
                 "\"%s\"%%%%fg=reset$. Try:", input);
         }
 
@@ -380,7 +380,7 @@ boolean command_handle (const char *input,
         if (!show_ambiguous) {
             if (expandedtext) {
                 if (!strcmp(input, expandedtext)) {
-                    RAW("> %%%%fg=red$Incomplete command, "
+                    CON("> %%%%fg=red$Incomplete command, "
                         "\"%s\"%%%%fg=reset$. Try:", input);
 
                     command_matches(input, expandedtext, true, show_complete,
@@ -396,7 +396,7 @@ boolean command_handle (const char *input,
     }
 
     if (!execute_command && (matches == 1)) {
-        RAW("> %%%%fg=red$Incomplete command, "
+        CON("> %%%%fg=red$Incomplete command, "
             "\"%s\"%%%%fg=reset$. Try:", input);
 
         command_matches(input, expandedtext, true, show_complete,
@@ -449,7 +449,7 @@ static void console_refresh (void)
     term_refresh();
 }
 
-void linenoise_tick (void)
+void console_tick (void)
 {
     char seq[2];
     char seq2[2];

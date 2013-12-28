@@ -8,3 +8,4 @@
 
 extern boolean server_init(void);
 extern void server_fini(void);
+extern void server_tick(void);

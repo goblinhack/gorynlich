@@ -292,25 +292,6 @@ static void con_ (const char *fmt, va_list args)
     term_log(buf + len);
 }
 
-static void raw_ (const char *fmt, va_list args)
-{
-    uint32_t len;
-
-    buf[0] = '\0';
-    len = (uint32_t)strlen(buf);
-
-    len = (uint32_t)strlen(buf);
-    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
-
-    if (HEADLESS) {
-        putf(MY_STDOUT, buf);
-        fflush(MY_STDOUT);
-    }
-
-    wid_console_log(buf + len);
-    term_log(buf + len);
-}
-
 static void dying_ (const char *fmt, va_list args)
 {
     uint32_t len;
@@ -394,15 +375,6 @@ void CON (const char *fmt, ...)
 
     va_start(args, fmt);
     con_(fmt, args);
-    va_end(args);
-}
-
-void RAW (const char *fmt, ...)
-{
-    va_list args;
-
-    va_start(args, fmt);
-    raw_(fmt, args);
     va_end(args);
 }
 
