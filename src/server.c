@@ -78,6 +78,7 @@ boolean server_init (void)
         net.sockets[0].logname = tmp;
         net.sockets[0].client = server_address;
         net.sockets[0].open = true;
+        net.sockets[0].server = true;
 
         break;
     }
