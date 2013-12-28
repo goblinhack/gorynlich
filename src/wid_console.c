@@ -86,13 +86,13 @@ boolean wid_console_init (void)
  */
 void wid_console_hello (void)
 {
-    RAW(" ");
-    RAW("%%%%fg=red$          Welcome to the gorynlich Console!%%%%fg=reset$");
-    RAW(" ");
-    RAW("Press %%%%fg=red$<tab>%%%%fg=reset$ to complete commands.");
+    CON(" ");
+    CON("%%%%fg=red$          Welcome to the gorynlich Console!%%%%fg=reset$");
+    CON(" ");
+    CON("Press %%%%fg=red$<tab>%%%%fg=reset$ to complete commands.");
 
     if (!HEADLESS) {
-        RAW("Press %%%%fg=red$?%%%%fg=reset$ to show command options.");
+        CON("Press %%%%fg=red$?%%%%fg=reset$ to show command options.");
     }
 }
 

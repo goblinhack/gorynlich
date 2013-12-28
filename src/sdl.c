@@ -23,6 +23,7 @@
 #include "slre.h"
 #include "map.h"
 #include "command.h"
+#include "server.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -909,7 +910,9 @@ void sdl_loop (void)
         /*
          * Server input.
          */
-        linenoise_tick();
+        console_tick();
+
+        server_tick();
 
         /*
          * Flip

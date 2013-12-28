@@ -419,7 +419,21 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-s")) {
 
             if (i + 2 >= argc) {
-                DIE("need server host and port");
+                is_server = true;
+                continue;
+            }
+
+            if (i + 1 >= argc) {
+                is_server = true;
+                continue;
+            }
+
+            /*
+             * default -server ?
+             */
+            if (argv[i + 1][0] == '-') {
+                is_server = true;
+                continue;
             }
 
             LOG("Trying to resolve %s:%d", argv[i + 1], atoi(argv[i + 2]));

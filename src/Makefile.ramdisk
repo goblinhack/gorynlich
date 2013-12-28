@@ -1,488 +1,38 @@
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.S ../data/ttf/emulogic.ttf_pointsize22.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.S ../data/ttf/emulogic.ttf_pointsize25.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.S ../data/ttf/prstartk.ttf_pointsize20.tga
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.S ../data/ttf/prstartk.ttf_pointsize20.data
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_tga.S ../data/ttf/small.ttf_pointsize20.tga
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.S ../data/ttf/emulogic.ttf_pointsize15.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.S ../data/ttf/emulogic.ttf_pointsize21.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.S ../data/ttf/emulogic.ttf_pointsize24.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.S ../data/ttf/emulogic.ttf_pointsize14.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize10_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize10_data.S ../data/ttf/small.ttf_pointsize10.data
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize10_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize10_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.S ../data/ttf/emulogic.ttf_pointsize32.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.S ../data/ttf/emulogic.ttf_pointsize17.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.S ../data/ttf/prstartk.ttf_pointsize36.data
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.S ../data/ttf/emulogic.ttf_pointsize18.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.o
-
-.o/ramdisk_data_ttf_LICENSE_txt.o: asm/ramdisk_data_ttf_LICENSE_txt.S ../data/ttf/LICENSE.txt
-	gcc -c asm/ramdisk_data_ttf_LICENSE_txt.S -o .o/ramdisk_data_ttf_LICENSE_txt.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.S ../data/ttf/emulogic.ttf_pointsize22.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.S ../data/ttf/prstartk.ttf_pointsize24.tga
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.S ../data/ttf/emulogic.ttf_pointsize12.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.S ../data/ttf/emulogic.ttf_pointsize8.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.S ../data/ttf/emulogic.ttf_pointsize7.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.S ../data/ttf/emulogic.ttf_pointsize36.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.S ../data/ttf/emulogic.ttf_pointsize10.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.o
-
-.o/ramdisk_data_ttf_large_ttf_pointsize50_tga.o: asm/ramdisk_data_ttf_large_ttf_pointsize50_tga.S ../data/ttf/large.ttf_pointsize50.tga
-	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize50_tga.S -o .o/ramdisk_data_ttf_large_ttf_pointsize50_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.S ../data/ttf/emulogic.ttf_pointsize20.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.S ../data/ttf/emulogic.ttf_pointsize12.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.S ../data/ttf/emulogic.ttf_pointsize36.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.S ../data/ttf/emulogic.ttf_pointsize8.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.S ../data/ttf/emulogic.ttf_pointsize23.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.S ../data/ttf/emulogic.ttf_pointsize6.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.S ../data/ttf/emulogic.ttf_pointsize11.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.S ../data/ttf/emulogic.ttf_pointsize24.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.S ../data/ttf/emulogic.ttf_pointsize17.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.S ../data/ttf/emulogic.ttf_pointsize18.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.S ../data/ttf/emulogic.ttf_pointsize26.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.S ../data/ttf/emulogic.ttf_pointsize10.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.S ../data/ttf/emulogic.ttf_pointsize32.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.o
-
-.o/ramdisk_data_ttf_med_ttf_pointsize40_data.o: asm/ramdisk_data_ttf_med_ttf_pointsize40_data.S ../data/ttf/med.ttf_pointsize40.data
-	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize40_data.S -o .o/ramdisk_data_ttf_med_ttf_pointsize40_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.S ../data/ttf/emulogic.ttf_pointsize14.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.S ../data/ttf/emulogic.ttf_pointsize9.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.S ../data/ttf/emulogic.ttf_pointsize11.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.S ../data/ttf/prstartk.ttf_pointsize12.data
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.S ../data/ttf/emulogic.ttf_pointsize16.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.S ../data/ttf/emulogic.ttf_pointsize6.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.S ../data/ttf/emulogic.ttf_pointsize23.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.S ../data/ttf/emulogic.ttf_pointsize26.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.S ../data/ttf/emulogic.ttf_pointsize21.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.S ../data/ttf/emulogic.ttf_pointsize15.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.o
-
-.o/ramdisk_data_ttf_med_ttf_pointsize40_tga.o: asm/ramdisk_data_ttf_med_ttf_pointsize40_tga.S ../data/ttf/med.ttf_pointsize40.tga
-	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize40_tga.S -o .o/ramdisk_data_ttf_med_ttf_pointsize40_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.S ../data/ttf/emulogic.ttf_pointsize19.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.o
-
-.o/ramdisk_data_ttf_Readme_txt.o: asm/ramdisk_data_ttf_Readme_txt.S ../data/ttf/Readme.txt
-	gcc -c asm/ramdisk_data_ttf_Readme_txt.S -o .o/ramdisk_data_ttf_Readme_txt.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.S ../data/ttf/emulogic.ttf_pointsize20.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.S ../data/ttf/emulogic.ttf_pointsize19.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S ../data/ttf/small.ttf_pointsize20.data
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o
-
-.o/ramdisk_data_ttf_large_ttf_pointsize50_data.o: asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S ../data/ttf/large.ttf_pointsize50.data
-	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S -o .o/ramdisk_data_ttf_large_ttf_pointsize50_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.S ../data/ttf/emulogic.ttf_pointsize28.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.S ../data/ttf/emulogic.ttf_pointsize30.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.S ../data/ttf/emulogic.ttf_pointsize30.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.S ../data/ttf/prstartk.ttf_pointsize36.tga
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize15_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize15_tga.S ../data/ttf/small.ttf_pointsize15.tga
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize15_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize15_tga.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.S ../data/ttf/prstartk.ttf_pointsize12.tga
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.S ../data/ttf/emulogic.ttf_pointsize28.data
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize15_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize15_data.S ../data/ttf/small.ttf_pointsize15.data
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize15_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize15_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.S ../data/ttf/emulogic.ttf_pointsize7.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.o
-
-.o/ramdisk_data_ttf_emulogic_gif.o: asm/ramdisk_data_ttf_emulogic_gif.S ../data/ttf/emulogic.gif
-	gcc -c asm/ramdisk_data_ttf_emulogic_gif.S -o .o/ramdisk_data_ttf_emulogic_gif.o
-
-.o/ramdisk_data_ttf_small_ttf_pointsize10_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize10_tga.S ../data/ttf/small.ttf_pointsize10.tga
-	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize10_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize10_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.S ../data/ttf/emulogic.ttf_pointsize9.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.o
-
-.o/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.S ../data/ttf/prstartk.ttf_pointsize24.data
-	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.S ../data/ttf/emulogic.ttf_pointsize16.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.o
-
-.o/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.S ../data/ttf/emulogic.ttf_pointsize25.tga
-	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.o
-
-.o/ramdisk_data_sound_chomp_wav.o: asm/ramdisk_data_sound_chomp_wav.S ../data/sound/chomp.wav
-	gcc -c asm/ramdisk_data_sound_chomp_wav.S -o .o/ramdisk_data_sound_chomp_wav.o
-
-.o/ramdisk_data_sound_slime_wav.o: asm/ramdisk_data_sound_slime_wav.S ../data/sound/slime.wav
-	gcc -c asm/ramdisk_data_sound_slime_wav.S -o .o/ramdisk_data_sound_slime_wav.o
-
-.o/ramdisk_data_sound_rocket_wav.o: asm/ramdisk_data_sound_rocket_wav.S ../data/sound/rocket.wav
-	gcc -c asm/ramdisk_data_sound_rocket_wav.S -o .o/ramdisk_data_sound_rocket_wav.o
-
-.o/ramdisk_data_sound_powerup_wav.o: asm/ramdisk_data_sound_powerup_wav.S ../data/sound/powerup.wav
-	gcc -c asm/ramdisk_data_sound_powerup_wav.S -o .o/ramdisk_data_sound_powerup_wav.o
-
-.o/ramdisk_data_sound_level_end_wav.o: asm/ramdisk_data_sound_level_end_wav.S ../data/sound/level_end.wav
-	gcc -c asm/ramdisk_data_sound_level_end_wav.S -o .o/ramdisk_data_sound_level_end_wav.o
-
-.o/ramdisk_data_sound_click_wav.o: asm/ramdisk_data_sound_click_wav.S ../data/sound/click.wav
-	gcc -c asm/ramdisk_data_sound_click_wav.S -o .o/ramdisk_data_sound_click_wav.o
-
-.o/ramdisk_data_sound_letter_wav.o: asm/ramdisk_data_sound_letter_wav.S ../data/sound/letter.wav
-	gcc -c asm/ramdisk_data_sound_letter_wav.S -o .o/ramdisk_data_sound_letter_wav.o
-
-.o/ramdisk_data_sound_chomp2_wav.o: asm/ramdisk_data_sound_chomp2_wav.S ../data/sound/chomp2.wav
-	gcc -c asm/ramdisk_data_sound_chomp2_wav.S -o .o/ramdisk_data_sound_chomp2_wav.o
-
-.o/ramdisk_data_sound_ratdeath_wav.o: asm/ramdisk_data_sound_ratdeath_wav.S ../data/sound/ratdeath.wav
-	gcc -c asm/ramdisk_data_sound_ratdeath_wav.S -o .o/ramdisk_data_sound_ratdeath_wav.o
-
-.o/ramdisk_data_sound_explosion_wav.o: asm/ramdisk_data_sound_explosion_wav.S ../data/sound/explosion.wav
-	gcc -c asm/ramdisk_data_sound_explosion_wav.S -o .o/ramdisk_data_sound_explosion_wav.o
-
-.o/ramdisk_data_sound_spam_wav.o: asm/ramdisk_data_sound_spam_wav.S ../data/sound/spam.wav
-	gcc -c asm/ramdisk_data_sound_spam_wav.S -o .o/ramdisk_data_sound_spam_wav.o
-
-.o/ramdisk_data_sound_paper_wav.o: asm/ramdisk_data_sound_paper_wav.S ../data/sound/paper.wav
-	gcc -c asm/ramdisk_data_sound_paper_wav.S -o .o/ramdisk_data_sound_paper_wav.o
-
-.o/ramdisk_data_sound_doorbell_wav.o: asm/ramdisk_data_sound_doorbell_wav.S ../data/sound/doorbell.wav
-	gcc -c asm/ramdisk_data_sound_doorbell_wav.S -o .o/ramdisk_data_sound_doorbell_wav.o
-
-.o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
-	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
-
-.o/ramdisk_data_gfx_help1_png.o: asm/ramdisk_data_gfx_help1_png.S ../data/gfx/help1.png
-	gcc -c asm/ramdisk_data_gfx_help1_png.S -o .o/ramdisk_data_gfx_help1_png.o
-
-.o/ramdisk_data_gfx_sprites_small_xcf.o: asm/ramdisk_data_gfx_sprites_small_xcf.S ../data/gfx/sprites_small.xcf
-	gcc -c asm/ramdisk_data_gfx_sprites_small_xcf.S -o .o/ramdisk_data_gfx_sprites_small_xcf.o
-
-.o/ramdisk_data_gfx_help3_png.o: asm/ramdisk_data_gfx_help3_png.S ../data/gfx/help3.png
-	gcc -c asm/ramdisk_data_gfx_help3_png.S -o .o/ramdisk_data_gfx_help3_png.o
+.o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
+	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
 
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
 
-.o/ramdisk_data_gfx_sprites_small_png.o: asm/ramdisk_data_gfx_sprites_small_png.S ../data/gfx/sprites_small.png
-	gcc -c asm/ramdisk_data_gfx_sprites_small_png.S -o .o/ramdisk_data_gfx_sprites_small_png.o
-
-.o/ramdisk_data_gfx_title2_png.o: asm/ramdisk_data_gfx_title2_png.S ../data/gfx/title2.png
-	gcc -c asm/ramdisk_data_gfx_title2_png.S -o .o/ramdisk_data_gfx_title2_png.o
+.o/ramdisk_data_gfx_help1_png.o: asm/ramdisk_data_gfx_help1_png.S ../data/gfx/help1.png
+	gcc -c asm/ramdisk_data_gfx_help1_png.S -o .o/ramdisk_data_gfx_help1_png.o
 
 .o/ramdisk_data_gfx_help2_png.o: asm/ramdisk_data_gfx_help2_png.S ../data/gfx/help2.png
 	gcc -c asm/ramdisk_data_gfx_help2_png.S -o .o/ramdisk_data_gfx_help2_png.o
 
+.o/ramdisk_data_gfx_help3_png.o: asm/ramdisk_data_gfx_help3_png.S ../data/gfx/help3.png
+	gcc -c asm/ramdisk_data_gfx_help3_png.S -o .o/ramdisk_data_gfx_help3_png.o
+
 .o/ramdisk_data_gfx_rat_png.o: asm/ramdisk_data_gfx_rat_png.S ../data/gfx/rat.png
 	gcc -c asm/ramdisk_data_gfx_rat_png.S -o .o/ramdisk_data_gfx_rat_png.o
 
-.o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
-	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
+.o/ramdisk_data_gfx_sprites_small_png.o: asm/ramdisk_data_gfx_sprites_small_png.S ../data/gfx/sprites_small.png
+	gcc -c asm/ramdisk_data_gfx_sprites_small_png.S -o .o/ramdisk_data_gfx_sprites_small_png.o
+
+.o/ramdisk_data_gfx_sprites_small_xcf.o: asm/ramdisk_data_gfx_sprites_small_xcf.S ../data/gfx/sprites_small.xcf
+	gcc -c asm/ramdisk_data_gfx_sprites_small_xcf.S -o .o/ramdisk_data_gfx_sprites_small_xcf.o
 
 .o/ramdisk_data_gfx_title_png.o: asm/ramdisk_data_gfx_title_png.S ../data/gfx/title.png
 	gcc -c asm/ramdisk_data_gfx_title_png.S -o .o/ramdisk_data_gfx_title_png.o
 
+.o/ramdisk_data_gfx_title2_png.o: asm/ramdisk_data_gfx_title2_png.S ../data/gfx/title2.png
+	gcc -c asm/ramdisk_data_gfx_title2_png.S -o .o/ramdisk_data_gfx_title2_png.o
+
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o
 
-.o/ramdisk_data_things_exit5.o: asm/ramdisk_data_things_exit5.S ../data/things/exit5
-	gcc -c asm/ramdisk_data_things_exit5.S -o .o/ramdisk_data_things_exit5.o
-
-.o/ramdisk_data_things_plant.o: asm/ramdisk_data_things_plant.S ../data/things/plant
-	gcc -c asm/ramdisk_data_things_plant.S -o .o/ramdisk_data_things_plant.o
-
-.o/ramdisk_data_things_generator7.o: asm/ramdisk_data_things_generator7.S ../data/things/generator7
-	gcc -c asm/ramdisk_data_things_generator7.S -o .o/ramdisk_data_things_generator7.o
-
-.o/ramdisk_data_things_exit2.o: asm/ramdisk_data_things_exit2.S ../data/things/exit2
-	gcc -c asm/ramdisk_data_things_exit2.S -o .o/ramdisk_data_things_exit2.o
-
-.o/ramdisk_data_things_gem3.o: asm/ramdisk_data_things_gem3.S ../data/things/gem3
-	gcc -c asm/ramdisk_data_things_gem3.S -o .o/ramdisk_data_things_gem3.o
-
-.o/ramdisk_data_things_water2.o: asm/ramdisk_data_things_water2.S ../data/things/water2
-	gcc -c asm/ramdisk_data_things_water2.S -o .o/ramdisk_data_things_water2.o
-
-.o/ramdisk_data_things_wall2.o: asm/ramdisk_data_things_wall2.S ../data/things/wall2
-	gcc -c asm/ramdisk_data_things_wall2.S -o .o/ramdisk_data_things_wall2.o
-
-.o/ramdisk_data_things_gem6.o: asm/ramdisk_data_things_gem6.S ../data/things/gem6
-	gcc -c asm/ramdisk_data_things_gem6.S -o .o/ramdisk_data_things_gem6.o
-
-.o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
-	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
-
-.o/ramdisk_data_things_exit6.o: asm/ramdisk_data_things_exit6.S ../data/things/exit6
-	gcc -c asm/ramdisk_data_things_exit6.S -o .o/ramdisk_data_things_exit6.o
-
-.o/ramdisk_data_things_keys1.o: asm/ramdisk_data_things_keys1.S ../data/things/keys1
-	gcc -c asm/ramdisk_data_things_keys1.S -o .o/ramdisk_data_things_keys1.o
-
-.o/ramdisk_data_things_dwarve.o: asm/ramdisk_data_things_dwarve.S ../data/things/dwarve
-	gcc -c asm/ramdisk_data_things_dwarve.S -o .o/ramdisk_data_things_dwarve.o
-
-.o/ramdisk_data_things_wall5.o: asm/ramdisk_data_things_wall5.S ../data/things/wall5
-	gcc -c asm/ramdisk_data_things_wall5.S -o .o/ramdisk_data_things_wall5.o
-
-.o/ramdisk_data_things_exit1.o: asm/ramdisk_data_things_exit1.S ../data/things/exit1
-	gcc -c asm/ramdisk_data_things_exit1.S -o .o/ramdisk_data_things_exit1.o
-
-.o/ramdisk_data_things_gem7.o: asm/ramdisk_data_things_gem7.S ../data/things/gem7
-	gcc -c asm/ramdisk_data_things_gem7.S -o .o/ramdisk_data_things_gem7.o
-
-.o/ramdisk_data_things_chest1.o: asm/ramdisk_data_things_chest1.S ../data/things/chest1
-	gcc -c asm/ramdisk_data_things_chest1.S -o .o/ramdisk_data_things_chest1.o
-
-.o/ramdisk_data_things_exit4.o: asm/ramdisk_data_things_exit4.S ../data/things/exit4
-	gcc -c asm/ramdisk_data_things_exit4.S -o .o/ramdisk_data_things_exit4.o
-
-.o/ramdisk_data_things_generator1.o: asm/ramdisk_data_things_generator1.S ../data/things/generator1
-	gcc -c asm/ramdisk_data_things_generator1.S -o .o/ramdisk_data_things_generator1.o
-
-.o/ramdisk_data_things_potion4.o: asm/ramdisk_data_things_potion4.S ../data/things/potion4
-	gcc -c asm/ramdisk_data_things_potion4.S -o .o/ramdisk_data_things_potion4.o
-
-.o/ramdisk_data_things_floor3.o: asm/ramdisk_data_things_floor3.S ../data/things/floor3
-	gcc -c asm/ramdisk_data_things_floor3.S -o .o/ramdisk_data_things_floor3.o
-
-.o/ramdisk_data_things_keys2.o: asm/ramdisk_data_things_keys2.S ../data/things/keys2
-	gcc -c asm/ramdisk_data_things_keys2.S -o .o/ramdisk_data_things_keys2.o
-
-.o/ramdisk_data_things_door.o: asm/ramdisk_data_things_door.S ../data/things/door
-	gcc -c asm/ramdisk_data_things_door.S -o .o/ramdisk_data_things_door.o
-
-.o/ramdisk_data_things_lizard.o: asm/ramdisk_data_things_lizard.S ../data/things/lizard
-	gcc -c asm/ramdisk_data_things_lizard.S -o .o/ramdisk_data_things_lizard.o
-
-.o/ramdisk_data_things_gem1.o: asm/ramdisk_data_things_gem1.S ../data/things/gem1
-	gcc -c asm/ramdisk_data_things_gem1.S -o .o/ramdisk_data_things_gem1.o
-
-.o/ramdisk_data_things_warrior.o: asm/ramdisk_data_things_warrior.S ../data/things/warrior
-	gcc -c asm/ramdisk_data_things_warrior.S -o .o/ramdisk_data_things_warrior.o
-
-.o/ramdisk_data_things_gem5.o: asm/ramdisk_data_things_gem5.S ../data/things/gem5
-	gcc -c asm/ramdisk_data_things_gem5.S -o .o/ramdisk_data_things_gem5.o
-
-.o/ramdisk_data_things_monk.o: asm/ramdisk_data_things_monk.S ../data/things/monk
-	gcc -c asm/ramdisk_data_things_monk.S -o .o/ramdisk_data_things_monk.o
-
-.o/ramdisk_data_things_elve.o: asm/ramdisk_data_things_elve.S ../data/things/elve
-	gcc -c asm/ramdisk_data_things_elve.S -o .o/ramdisk_data_things_elve.o
-
-.o/ramdisk_data_things_floor4.o: asm/ramdisk_data_things_floor4.S ../data/things/floor4
-	gcc -c asm/ramdisk_data_things_floor4.S -o .o/ramdisk_data_things_floor4.o
-
-.o/ramdisk_data_things_water1.o: asm/ramdisk_data_things_water1.S ../data/things/water1
-	gcc -c asm/ramdisk_data_things_water1.S -o .o/ramdisk_data_things_water1.o
-
-.o/ramdisk_data_things_generator5.o: asm/ramdisk_data_things_generator5.S ../data/things/generator5
-	gcc -c asm/ramdisk_data_things_generator5.S -o .o/ramdisk_data_things_generator5.o
-
-.o/ramdisk_data_things_floor2.o: asm/ramdisk_data_things_floor2.S ../data/things/floor2
-	gcc -c asm/ramdisk_data_things_floor2.S -o .o/ramdisk_data_things_floor2.o
-
-.o/ramdisk_data_things_valkyrie.o: asm/ramdisk_data_things_valkyrie.S ../data/things/valkyrie
-	gcc -c asm/ramdisk_data_things_valkyrie.S -o .o/ramdisk_data_things_valkyrie.o
-
-.o/ramdisk_data_things_mask2.o: asm/ramdisk_data_things_mask2.S ../data/things/mask2
-	gcc -c asm/ramdisk_data_things_mask2.S -o .o/ramdisk_data_things_mask2.o
-
-.o/ramdisk_data_things_wall4.o: asm/ramdisk_data_things_wall4.S ../data/things/wall4
-	gcc -c asm/ramdisk_data_things_wall4.S -o .o/ramdisk_data_things_wall4.o
-
-.o/ramdisk_data_things_floor6.o: asm/ramdisk_data_things_floor6.S ../data/things/floor6
-	gcc -c asm/ramdisk_data_things_floor6.S -o .o/ramdisk_data_things_floor6.o
-
-.o/ramdisk_data_things_wizard.o: asm/ramdisk_data_things_wizard.S ../data/things/wizard
-	gcc -c asm/ramdisk_data_things_wizard.S -o .o/ramdisk_data_things_wizard.o
-
-.o/ramdisk_data_things_potion2.o: asm/ramdisk_data_things_potion2.S ../data/things/potion2
-	gcc -c asm/ramdisk_data_things_potion2.S -o .o/ramdisk_data_things_potion2.o
-
-.o/ramdisk_data_things_bomb.o: asm/ramdisk_data_things_bomb.S ../data/things/bomb
-	gcc -c asm/ramdisk_data_things_bomb.S -o .o/ramdisk_data_things_bomb.o
-
-.o/ramdisk_data_things_exit3.o: asm/ramdisk_data_things_exit3.S ../data/things/exit3
-	gcc -c asm/ramdisk_data_things_exit3.S -o .o/ramdisk_data_things_exit3.o
-
-.o/ramdisk_data_things_exit.o: asm/ramdisk_data_things_exit.S ../data/things/exit
-	gcc -c asm/ramdisk_data_things_exit.S -o .o/ramdisk_data_things_exit.o
-
-.o/ramdisk_data_things_coins1.o: asm/ramdisk_data_things_coins1.S ../data/things/coins1
-	gcc -c asm/ramdisk_data_things_coins1.S -o .o/ramdisk_data_things_coins1.o
-
-.o/ramdisk_data_things_seedpod.o: asm/ramdisk_data_things_seedpod.S ../data/things/seedpod
-	gcc -c asm/ramdisk_data_things_seedpod.S -o .o/ramdisk_data_things_seedpod.o
-
-.o/ramdisk_data_things_death.o: asm/ramdisk_data_things_death.S ../data/things/death
-	gcc -c asm/ramdisk_data_things_death.S -o .o/ramdisk_data_things_death.o
-
-.o/ramdisk_data_things_potion1.o: asm/ramdisk_data_things_potion1.S ../data/things/potion1
-	gcc -c asm/ramdisk_data_things_potion1.S -o .o/ramdisk_data_things_potion1.o
-
-.o/ramdisk_data_things_demon.o: asm/ramdisk_data_things_demon.S ../data/things/demon
-	gcc -c asm/ramdisk_data_things_demon.S -o .o/ramdisk_data_things_demon.o
-
-.o/ramdisk_data_things_generator2.o: asm/ramdisk_data_things_generator2.S ../data/things/generator2
-	gcc -c asm/ramdisk_data_things_generator2.S -o .o/ramdisk_data_things_generator2.o
-
-.o/ramdisk_data_things_floor5.o: asm/ramdisk_data_things_floor5.S ../data/things/floor5
-	gcc -c asm/ramdisk_data_things_floor5.S -o .o/ramdisk_data_things_floor5.o
-
-.o/ramdisk_data_things_generator4.o: asm/ramdisk_data_things_generator4.S ../data/things/generator4
-	gcc -c asm/ramdisk_data_things_generator4.S -o .o/ramdisk_data_things_generator4.o
-
-.o/ramdisk_data_things_wall.o: asm/ramdisk_data_things_wall.S ../data/things/wall
-	gcc -c asm/ramdisk_data_things_wall.S -o .o/ramdisk_data_things_wall.o
-
-.o/ramdisk_data_things_ghost.o: asm/ramdisk_data_things_ghost.S ../data/things/ghost
-	gcc -c asm/ramdisk_data_things_ghost.S -o .o/ramdisk_data_things_ghost.o
-
-.o/ramdisk_data_things_generator6.o: asm/ramdisk_data_things_generator6.S ../data/things/generator6
-	gcc -c asm/ramdisk_data_things_generator6.S -o .o/ramdisk_data_things_generator6.o
-
-.o/ramdisk_data_things_mask3.o: asm/ramdisk_data_things_mask3.S ../data/things/mask3
-	gcc -c asm/ramdisk_data_things_mask3.S -o .o/ramdisk_data_things_mask3.o
-
-.o/ramdisk_data_things_spam.o: asm/ramdisk_data_things_spam.S ../data/things/spam
-	gcc -c asm/ramdisk_data_things_spam.S -o .o/ramdisk_data_things_spam.o
-
-.o/ramdisk_data_things_explosion.o: asm/ramdisk_data_things_explosion.S ../data/things/explosion
-	gcc -c asm/ramdisk_data_things_explosion.S -o .o/ramdisk_data_things_explosion.o
-
-.o/ramdisk_data_things_exit7.o: asm/ramdisk_data_things_exit7.S ../data/things/exit7
-	gcc -c asm/ramdisk_data_things_exit7.S -o .o/ramdisk_data_things_exit7.o
-
-.o/ramdisk_data_things_pipe.o: asm/ramdisk_data_things_pipe.S ../data/things/pipe
-	gcc -c asm/ramdisk_data_things_pipe.S -o .o/ramdisk_data_things_pipe.o
-
-.o/ramdisk_data_things_potion3.o: asm/ramdisk_data_things_potion3.S ../data/things/potion3
-	gcc -c asm/ramdisk_data_things_potion3.S -o .o/ramdisk_data_things_potion3.o
-
-.o/ramdisk_data_things_noentry.o: asm/ramdisk_data_things_noentry.S ../data/things/noentry
-	gcc -c asm/ramdisk_data_things_noentry.S -o .o/ramdisk_data_things_noentry.o
-
-.o/ramdisk_data_things_food.o: asm/ramdisk_data_things_food.S ../data/things/food
-	gcc -c asm/ramdisk_data_things_food.S -o .o/ramdisk_data_things_food.o
-
-.o/ramdisk_data_things_gem2.o: asm/ramdisk_data_things_gem2.S ../data/things/gem2
-	gcc -c asm/ramdisk_data_things_gem2.S -o .o/ramdisk_data_things_gem2.o
-
-.o/ramdisk_data_things_mask1.o: asm/ramdisk_data_things_mask1.S ../data/things/mask1
-	gcc -c asm/ramdisk_data_things_mask1.S -o .o/ramdisk_data_things_mask1.o
-
-.o/ramdisk_data_things_gem4.o: asm/ramdisk_data_things_gem4.S ../data/things/gem4
-	gcc -c asm/ramdisk_data_things_gem4.S -o .o/ramdisk_data_things_gem4.o
-
-.o/ramdisk_data_things_potion5.o: asm/ramdisk_data_things_potion5.S ../data/things/potion5
-	gcc -c asm/ramdisk_data_things_potion5.S -o .o/ramdisk_data_things_potion5.o
-
-.o/ramdisk_data_things_generator3.o: asm/ramdisk_data_things_generator3.S ../data/things/generator3
-	gcc -c asm/ramdisk_data_things_generator3.S -o .o/ramdisk_data_things_generator3.o
-
-.o/ramdisk_data_things_floor.o: asm/ramdisk_data_things_floor.S ../data/things/floor
-	gcc -c asm/ramdisk_data_things_floor.S -o .o/ramdisk_data_things_floor.o
-
-.o/ramdisk_data_things_keys3.o: asm/ramdisk_data_things_keys3.S ../data/things/keys3
-	gcc -c asm/ramdisk_data_things_keys3.S -o .o/ramdisk_data_things_keys3.o
-
-.o/ramdisk_data_things_wall3.o: asm/ramdisk_data_things_wall3.S ../data/things/wall3
-	gcc -c asm/ramdisk_data_things_wall3.S -o .o/ramdisk_data_things_wall3.o
+.o/ramdisk_data_levels_2.o: asm/ramdisk_data_levels_2.S ../data/levels/2
+	gcc -c asm/ramdisk_data_levels_2.S -o .o/ramdisk_data_levels_2.o
 
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
@@ -493,9 +43,492 @@
 .o/ramdisk_data_music_hiscore_wav.o: asm/ramdisk_data_music_hiscore_wav.S ../data/music/hiscore.wav
 	gcc -c asm/ramdisk_data_music_hiscore_wav.S -o .o/ramdisk_data_music_hiscore_wav.o
 
+.o/ramdisk_data_music_intro_wav.o: asm/ramdisk_data_music_intro_wav.S ../data/music/intro.wav
+	gcc -c asm/ramdisk_data_music_intro_wav.S -o .o/ramdisk_data_music_intro_wav.o
+
 .o/ramdisk_data_music_music_wav.o: asm/ramdisk_data_music_music_wav.S ../data/music/music.wav
 	gcc -c asm/ramdisk_data_music_music_wav.S -o .o/ramdisk_data_music_music_wav.o
 
-.o/ramdisk_data_music_intro_wav.o: asm/ramdisk_data_music_intro_wav.S ../data/music/intro.wav
-	gcc -c asm/ramdisk_data_music_intro_wav.S -o .o/ramdisk_data_music_intro_wav.o
+.o/ramdisk_data_sound_chomp_wav.o: asm/ramdisk_data_sound_chomp_wav.S ../data/sound/chomp.wav
+	gcc -c asm/ramdisk_data_sound_chomp_wav.S -o .o/ramdisk_data_sound_chomp_wav.o
+
+.o/ramdisk_data_sound_chomp2_wav.o: asm/ramdisk_data_sound_chomp2_wav.S ../data/sound/chomp2.wav
+	gcc -c asm/ramdisk_data_sound_chomp2_wav.S -o .o/ramdisk_data_sound_chomp2_wav.o
+
+.o/ramdisk_data_sound_click_wav.o: asm/ramdisk_data_sound_click_wav.S ../data/sound/click.wav
+	gcc -c asm/ramdisk_data_sound_click_wav.S -o .o/ramdisk_data_sound_click_wav.o
+
+.o/ramdisk_data_sound_doorbell_wav.o: asm/ramdisk_data_sound_doorbell_wav.S ../data/sound/doorbell.wav
+	gcc -c asm/ramdisk_data_sound_doorbell_wav.S -o .o/ramdisk_data_sound_doorbell_wav.o
+
+.o/ramdisk_data_sound_explosion_wav.o: asm/ramdisk_data_sound_explosion_wav.S ../data/sound/explosion.wav
+	gcc -c asm/ramdisk_data_sound_explosion_wav.S -o .o/ramdisk_data_sound_explosion_wav.o
+
+.o/ramdisk_data_sound_letter_wav.o: asm/ramdisk_data_sound_letter_wav.S ../data/sound/letter.wav
+	gcc -c asm/ramdisk_data_sound_letter_wav.S -o .o/ramdisk_data_sound_letter_wav.o
+
+.o/ramdisk_data_sound_level_end_wav.o: asm/ramdisk_data_sound_level_end_wav.S ../data/sound/level_end.wav
+	gcc -c asm/ramdisk_data_sound_level_end_wav.S -o .o/ramdisk_data_sound_level_end_wav.o
+
+.o/ramdisk_data_sound_paper_wav.o: asm/ramdisk_data_sound_paper_wav.S ../data/sound/paper.wav
+	gcc -c asm/ramdisk_data_sound_paper_wav.S -o .o/ramdisk_data_sound_paper_wav.o
+
+.o/ramdisk_data_sound_powerup_wav.o: asm/ramdisk_data_sound_powerup_wav.S ../data/sound/powerup.wav
+	gcc -c asm/ramdisk_data_sound_powerup_wav.S -o .o/ramdisk_data_sound_powerup_wav.o
+
+.o/ramdisk_data_sound_ratdeath_wav.o: asm/ramdisk_data_sound_ratdeath_wav.S ../data/sound/ratdeath.wav
+	gcc -c asm/ramdisk_data_sound_ratdeath_wav.S -o .o/ramdisk_data_sound_ratdeath_wav.o
+
+.o/ramdisk_data_sound_rocket_wav.o: asm/ramdisk_data_sound_rocket_wav.S ../data/sound/rocket.wav
+	gcc -c asm/ramdisk_data_sound_rocket_wav.S -o .o/ramdisk_data_sound_rocket_wav.o
+
+.o/ramdisk_data_sound_slime_wav.o: asm/ramdisk_data_sound_slime_wav.S ../data/sound/slime.wav
+	gcc -c asm/ramdisk_data_sound_slime_wav.S -o .o/ramdisk_data_sound_slime_wav.o
+
+.o/ramdisk_data_sound_spam_wav.o: asm/ramdisk_data_sound_spam_wav.S ../data/sound/spam.wav
+	gcc -c asm/ramdisk_data_sound_spam_wav.S -o .o/ramdisk_data_sound_spam_wav.o
+
+.o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
+	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
+
+.o/ramdisk_data_things__death_session.o: asm/ramdisk_data_things__death_session.S ../data/things/.death.session
+	gcc -c asm/ramdisk_data_things__death_session.S -o .o/ramdisk_data_things__death_session.o
+
+.o/ramdisk_data_things__demon_session.o: asm/ramdisk_data_things__demon_session.S ../data/things/.demon.session
+	gcc -c asm/ramdisk_data_things__demon_session.S -o .o/ramdisk_data_things__demon_session.o
+
+.o/ramdisk_data_things__dwarve_session.o: asm/ramdisk_data_things__dwarve_session.S ../data/things/.dwarve.session
+	gcc -c asm/ramdisk_data_things__dwarve_session.S -o .o/ramdisk_data_things__dwarve_session.o
+
+.o/ramdisk_data_things__elve_session.o: asm/ramdisk_data_things__elve_session.S ../data/things/.elve.session
+	gcc -c asm/ramdisk_data_things__elve_session.S -o .o/ramdisk_data_things__elve_session.o
+
+.o/ramdisk_data_things__ghost_session.o: asm/ramdisk_data_things__ghost_session.S ../data/things/.ghost.session
+	gcc -c asm/ramdisk_data_things__ghost_session.S -o .o/ramdisk_data_things__ghost_session.o
+
+.o/ramdisk_data_things__lizard_session.o: asm/ramdisk_data_things__lizard_session.S ../data/things/.lizard.session
+	gcc -c asm/ramdisk_data_things__lizard_session.S -o .o/ramdisk_data_things__lizard_session.o
+
+.o/ramdisk_data_things__monk_session.o: asm/ramdisk_data_things__monk_session.S ../data/things/.monk.session
+	gcc -c asm/ramdisk_data_things__monk_session.S -o .o/ramdisk_data_things__monk_session.o
+
+.o/ramdisk_data_things__valkyrie_session.o: asm/ramdisk_data_things__valkyrie_session.S ../data/things/.valkyrie.session
+	gcc -c asm/ramdisk_data_things__valkyrie_session.S -o .o/ramdisk_data_things__valkyrie_session.o
+
+.o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
+	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
+
+.o/ramdisk_data_things__wizard_session.o: asm/ramdisk_data_things__wizard_session.S ../data/things/.wizard.session
+	gcc -c asm/ramdisk_data_things__wizard_session.S -o .o/ramdisk_data_things__wizard_session.o
+
+.o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
+	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
+
+.o/ramdisk_data_things_bomb.o: asm/ramdisk_data_things_bomb.S ../data/things/bomb
+	gcc -c asm/ramdisk_data_things_bomb.S -o .o/ramdisk_data_things_bomb.o
+
+.o/ramdisk_data_things_chest1.o: asm/ramdisk_data_things_chest1.S ../data/things/chest1
+	gcc -c asm/ramdisk_data_things_chest1.S -o .o/ramdisk_data_things_chest1.o
+
+.o/ramdisk_data_things_coins1.o: asm/ramdisk_data_things_coins1.S ../data/things/coins1
+	gcc -c asm/ramdisk_data_things_coins1.S -o .o/ramdisk_data_things_coins1.o
+
+.o/ramdisk_data_things_death.o: asm/ramdisk_data_things_death.S ../data/things/death
+	gcc -c asm/ramdisk_data_things_death.S -o .o/ramdisk_data_things_death.o
+
+.o/ramdisk_data_things_demon.o: asm/ramdisk_data_things_demon.S ../data/things/demon
+	gcc -c asm/ramdisk_data_things_demon.S -o .o/ramdisk_data_things_demon.o
+
+.o/ramdisk_data_things_door.o: asm/ramdisk_data_things_door.S ../data/things/door
+	gcc -c asm/ramdisk_data_things_door.S -o .o/ramdisk_data_things_door.o
+
+.o/ramdisk_data_things_dwarve.o: asm/ramdisk_data_things_dwarve.S ../data/things/dwarve
+	gcc -c asm/ramdisk_data_things_dwarve.S -o .o/ramdisk_data_things_dwarve.o
+
+.o/ramdisk_data_things_elve.o: asm/ramdisk_data_things_elve.S ../data/things/elve
+	gcc -c asm/ramdisk_data_things_elve.S -o .o/ramdisk_data_things_elve.o
+
+.o/ramdisk_data_things_exit.o: asm/ramdisk_data_things_exit.S ../data/things/exit
+	gcc -c asm/ramdisk_data_things_exit.S -o .o/ramdisk_data_things_exit.o
+
+.o/ramdisk_data_things_exit1.o: asm/ramdisk_data_things_exit1.S ../data/things/exit1
+	gcc -c asm/ramdisk_data_things_exit1.S -o .o/ramdisk_data_things_exit1.o
+
+.o/ramdisk_data_things_exit2.o: asm/ramdisk_data_things_exit2.S ../data/things/exit2
+	gcc -c asm/ramdisk_data_things_exit2.S -o .o/ramdisk_data_things_exit2.o
+
+.o/ramdisk_data_things_exit3.o: asm/ramdisk_data_things_exit3.S ../data/things/exit3
+	gcc -c asm/ramdisk_data_things_exit3.S -o .o/ramdisk_data_things_exit3.o
+
+.o/ramdisk_data_things_exit4.o: asm/ramdisk_data_things_exit4.S ../data/things/exit4
+	gcc -c asm/ramdisk_data_things_exit4.S -o .o/ramdisk_data_things_exit4.o
+
+.o/ramdisk_data_things_exit5.o: asm/ramdisk_data_things_exit5.S ../data/things/exit5
+	gcc -c asm/ramdisk_data_things_exit5.S -o .o/ramdisk_data_things_exit5.o
+
+.o/ramdisk_data_things_exit6.o: asm/ramdisk_data_things_exit6.S ../data/things/exit6
+	gcc -c asm/ramdisk_data_things_exit6.S -o .o/ramdisk_data_things_exit6.o
+
+.o/ramdisk_data_things_exit7.o: asm/ramdisk_data_things_exit7.S ../data/things/exit7
+	gcc -c asm/ramdisk_data_things_exit7.S -o .o/ramdisk_data_things_exit7.o
+
+.o/ramdisk_data_things_explosion.o: asm/ramdisk_data_things_explosion.S ../data/things/explosion
+	gcc -c asm/ramdisk_data_things_explosion.S -o .o/ramdisk_data_things_explosion.o
+
+.o/ramdisk_data_things_floor.o: asm/ramdisk_data_things_floor.S ../data/things/floor
+	gcc -c asm/ramdisk_data_things_floor.S -o .o/ramdisk_data_things_floor.o
+
+.o/ramdisk_data_things_floor2.o: asm/ramdisk_data_things_floor2.S ../data/things/floor2
+	gcc -c asm/ramdisk_data_things_floor2.S -o .o/ramdisk_data_things_floor2.o
+
+.o/ramdisk_data_things_floor3.o: asm/ramdisk_data_things_floor3.S ../data/things/floor3
+	gcc -c asm/ramdisk_data_things_floor3.S -o .o/ramdisk_data_things_floor3.o
+
+.o/ramdisk_data_things_floor4.o: asm/ramdisk_data_things_floor4.S ../data/things/floor4
+	gcc -c asm/ramdisk_data_things_floor4.S -o .o/ramdisk_data_things_floor4.o
+
+.o/ramdisk_data_things_floor5.o: asm/ramdisk_data_things_floor5.S ../data/things/floor5
+	gcc -c asm/ramdisk_data_things_floor5.S -o .o/ramdisk_data_things_floor5.o
+
+.o/ramdisk_data_things_floor6.o: asm/ramdisk_data_things_floor6.S ../data/things/floor6
+	gcc -c asm/ramdisk_data_things_floor6.S -o .o/ramdisk_data_things_floor6.o
+
+.o/ramdisk_data_things_food.o: asm/ramdisk_data_things_food.S ../data/things/food
+	gcc -c asm/ramdisk_data_things_food.S -o .o/ramdisk_data_things_food.o
+
+.o/ramdisk_data_things_gem1.o: asm/ramdisk_data_things_gem1.S ../data/things/gem1
+	gcc -c asm/ramdisk_data_things_gem1.S -o .o/ramdisk_data_things_gem1.o
+
+.o/ramdisk_data_things_gem2.o: asm/ramdisk_data_things_gem2.S ../data/things/gem2
+	gcc -c asm/ramdisk_data_things_gem2.S -o .o/ramdisk_data_things_gem2.o
+
+.o/ramdisk_data_things_gem3.o: asm/ramdisk_data_things_gem3.S ../data/things/gem3
+	gcc -c asm/ramdisk_data_things_gem3.S -o .o/ramdisk_data_things_gem3.o
+
+.o/ramdisk_data_things_gem4.o: asm/ramdisk_data_things_gem4.S ../data/things/gem4
+	gcc -c asm/ramdisk_data_things_gem4.S -o .o/ramdisk_data_things_gem4.o
+
+.o/ramdisk_data_things_gem5.o: asm/ramdisk_data_things_gem5.S ../data/things/gem5
+	gcc -c asm/ramdisk_data_things_gem5.S -o .o/ramdisk_data_things_gem5.o
+
+.o/ramdisk_data_things_gem6.o: asm/ramdisk_data_things_gem6.S ../data/things/gem6
+	gcc -c asm/ramdisk_data_things_gem6.S -o .o/ramdisk_data_things_gem6.o
+
+.o/ramdisk_data_things_gem7.o: asm/ramdisk_data_things_gem7.S ../data/things/gem7
+	gcc -c asm/ramdisk_data_things_gem7.S -o .o/ramdisk_data_things_gem7.o
+
+.o/ramdisk_data_things_generator1.o: asm/ramdisk_data_things_generator1.S ../data/things/generator1
+	gcc -c asm/ramdisk_data_things_generator1.S -o .o/ramdisk_data_things_generator1.o
+
+.o/ramdisk_data_things_generator2.o: asm/ramdisk_data_things_generator2.S ../data/things/generator2
+	gcc -c asm/ramdisk_data_things_generator2.S -o .o/ramdisk_data_things_generator2.o
+
+.o/ramdisk_data_things_generator3.o: asm/ramdisk_data_things_generator3.S ../data/things/generator3
+	gcc -c asm/ramdisk_data_things_generator3.S -o .o/ramdisk_data_things_generator3.o
+
+.o/ramdisk_data_things_generator4.o: asm/ramdisk_data_things_generator4.S ../data/things/generator4
+	gcc -c asm/ramdisk_data_things_generator4.S -o .o/ramdisk_data_things_generator4.o
+
+.o/ramdisk_data_things_generator5.o: asm/ramdisk_data_things_generator5.S ../data/things/generator5
+	gcc -c asm/ramdisk_data_things_generator5.S -o .o/ramdisk_data_things_generator5.o
+
+.o/ramdisk_data_things_generator6.o: asm/ramdisk_data_things_generator6.S ../data/things/generator6
+	gcc -c asm/ramdisk_data_things_generator6.S -o .o/ramdisk_data_things_generator6.o
+
+.o/ramdisk_data_things_generator7.o: asm/ramdisk_data_things_generator7.S ../data/things/generator7
+	gcc -c asm/ramdisk_data_things_generator7.S -o .o/ramdisk_data_things_generator7.o
+
+.o/ramdisk_data_things_ghost.o: asm/ramdisk_data_things_ghost.S ../data/things/ghost
+	gcc -c asm/ramdisk_data_things_ghost.S -o .o/ramdisk_data_things_ghost.o
+
+.o/ramdisk_data_things_keys1.o: asm/ramdisk_data_things_keys1.S ../data/things/keys1
+	gcc -c asm/ramdisk_data_things_keys1.S -o .o/ramdisk_data_things_keys1.o
+
+.o/ramdisk_data_things_keys2.o: asm/ramdisk_data_things_keys2.S ../data/things/keys2
+	gcc -c asm/ramdisk_data_things_keys2.S -o .o/ramdisk_data_things_keys2.o
+
+.o/ramdisk_data_things_keys3.o: asm/ramdisk_data_things_keys3.S ../data/things/keys3
+	gcc -c asm/ramdisk_data_things_keys3.S -o .o/ramdisk_data_things_keys3.o
+
+.o/ramdisk_data_things_lizard.o: asm/ramdisk_data_things_lizard.S ../data/things/lizard
+	gcc -c asm/ramdisk_data_things_lizard.S -o .o/ramdisk_data_things_lizard.o
+
+.o/ramdisk_data_things_mask1.o: asm/ramdisk_data_things_mask1.S ../data/things/mask1
+	gcc -c asm/ramdisk_data_things_mask1.S -o .o/ramdisk_data_things_mask1.o
+
+.o/ramdisk_data_things_mask2.o: asm/ramdisk_data_things_mask2.S ../data/things/mask2
+	gcc -c asm/ramdisk_data_things_mask2.S -o .o/ramdisk_data_things_mask2.o
+
+.o/ramdisk_data_things_mask3.o: asm/ramdisk_data_things_mask3.S ../data/things/mask3
+	gcc -c asm/ramdisk_data_things_mask3.S -o .o/ramdisk_data_things_mask3.o
+
+.o/ramdisk_data_things_monk.o: asm/ramdisk_data_things_monk.S ../data/things/monk
+	gcc -c asm/ramdisk_data_things_monk.S -o .o/ramdisk_data_things_monk.o
+
+.o/ramdisk_data_things_noentry.o: asm/ramdisk_data_things_noentry.S ../data/things/noentry
+	gcc -c asm/ramdisk_data_things_noentry.S -o .o/ramdisk_data_things_noentry.o
+
+.o/ramdisk_data_things_pipe.o: asm/ramdisk_data_things_pipe.S ../data/things/pipe
+	gcc -c asm/ramdisk_data_things_pipe.S -o .o/ramdisk_data_things_pipe.o
+
+.o/ramdisk_data_things_plant.o: asm/ramdisk_data_things_plant.S ../data/things/plant
+	gcc -c asm/ramdisk_data_things_plant.S -o .o/ramdisk_data_things_plant.o
+
+.o/ramdisk_data_things_potion1.o: asm/ramdisk_data_things_potion1.S ../data/things/potion1
+	gcc -c asm/ramdisk_data_things_potion1.S -o .o/ramdisk_data_things_potion1.o
+
+.o/ramdisk_data_things_potion2.o: asm/ramdisk_data_things_potion2.S ../data/things/potion2
+	gcc -c asm/ramdisk_data_things_potion2.S -o .o/ramdisk_data_things_potion2.o
+
+.o/ramdisk_data_things_potion3.o: asm/ramdisk_data_things_potion3.S ../data/things/potion3
+	gcc -c asm/ramdisk_data_things_potion3.S -o .o/ramdisk_data_things_potion3.o
+
+.o/ramdisk_data_things_potion4.o: asm/ramdisk_data_things_potion4.S ../data/things/potion4
+	gcc -c asm/ramdisk_data_things_potion4.S -o .o/ramdisk_data_things_potion4.o
+
+.o/ramdisk_data_things_potion5.o: asm/ramdisk_data_things_potion5.S ../data/things/potion5
+	gcc -c asm/ramdisk_data_things_potion5.S -o .o/ramdisk_data_things_potion5.o
+
+.o/ramdisk_data_things_seedpod.o: asm/ramdisk_data_things_seedpod.S ../data/things/seedpod
+	gcc -c asm/ramdisk_data_things_seedpod.S -o .o/ramdisk_data_things_seedpod.o
+
+.o/ramdisk_data_things_spam.o: asm/ramdisk_data_things_spam.S ../data/things/spam
+	gcc -c asm/ramdisk_data_things_spam.S -o .o/ramdisk_data_things_spam.o
+
+.o/ramdisk_data_things_valkyrie.o: asm/ramdisk_data_things_valkyrie.S ../data/things/valkyrie
+	gcc -c asm/ramdisk_data_things_valkyrie.S -o .o/ramdisk_data_things_valkyrie.o
+
+.o/ramdisk_data_things_wall.o: asm/ramdisk_data_things_wall.S ../data/things/wall
+	gcc -c asm/ramdisk_data_things_wall.S -o .o/ramdisk_data_things_wall.o
+
+.o/ramdisk_data_things_wall2.o: asm/ramdisk_data_things_wall2.S ../data/things/wall2
+	gcc -c asm/ramdisk_data_things_wall2.S -o .o/ramdisk_data_things_wall2.o
+
+.o/ramdisk_data_things_wall3.o: asm/ramdisk_data_things_wall3.S ../data/things/wall3
+	gcc -c asm/ramdisk_data_things_wall3.S -o .o/ramdisk_data_things_wall3.o
+
+.o/ramdisk_data_things_wall4.o: asm/ramdisk_data_things_wall4.S ../data/things/wall4
+	gcc -c asm/ramdisk_data_things_wall4.S -o .o/ramdisk_data_things_wall4.o
+
+.o/ramdisk_data_things_wall5.o: asm/ramdisk_data_things_wall5.S ../data/things/wall5
+	gcc -c asm/ramdisk_data_things_wall5.S -o .o/ramdisk_data_things_wall5.o
+
+.o/ramdisk_data_things_warrior.o: asm/ramdisk_data_things_warrior.S ../data/things/warrior
+	gcc -c asm/ramdisk_data_things_warrior.S -o .o/ramdisk_data_things_warrior.o
+
+.o/ramdisk_data_things_water1.o: asm/ramdisk_data_things_water1.S ../data/things/water1
+	gcc -c asm/ramdisk_data_things_water1.S -o .o/ramdisk_data_things_water1.o
+
+.o/ramdisk_data_things_water2.o: asm/ramdisk_data_things_water2.S ../data/things/water2
+	gcc -c asm/ramdisk_data_things_water2.S -o .o/ramdisk_data_things_water2.o
+
+.o/ramdisk_data_things_wizard.o: asm/ramdisk_data_things_wizard.S ../data/things/wizard
+	gcc -c asm/ramdisk_data_things_wizard.S -o .o/ramdisk_data_things_wizard.o
+
+.o/ramdisk_data_ttf_emulogic_gif.o: asm/ramdisk_data_ttf_emulogic_gif.S ../data/ttf/emulogic.gif
+	gcc -c asm/ramdisk_data_ttf_emulogic_gif.S -o .o/ramdisk_data_ttf_emulogic_gif.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.S ../data/ttf/emulogic.ttf_pointsize10.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize10_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.S ../data/ttf/emulogic.ttf_pointsize10.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize10_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.S ../data/ttf/emulogic.ttf_pointsize11.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize11_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.S ../data/ttf/emulogic.ttf_pointsize11.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize11_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.S ../data/ttf/emulogic.ttf_pointsize12.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize12_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.S ../data/ttf/emulogic.ttf_pointsize12.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize12_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.S ../data/ttf/emulogic.ttf_pointsize14.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize14_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.S ../data/ttf/emulogic.ttf_pointsize14.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize14_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.S ../data/ttf/emulogic.ttf_pointsize15.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize15_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.S ../data/ttf/emulogic.ttf_pointsize15.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize15_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.S ../data/ttf/emulogic.ttf_pointsize16.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize16_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.S ../data/ttf/emulogic.ttf_pointsize16.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize16_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.S ../data/ttf/emulogic.ttf_pointsize17.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize17_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.S ../data/ttf/emulogic.ttf_pointsize17.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize17_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.S ../data/ttf/emulogic.ttf_pointsize18.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize18_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.S ../data/ttf/emulogic.ttf_pointsize18.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize18_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.S ../data/ttf/emulogic.ttf_pointsize19.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize19_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.S ../data/ttf/emulogic.ttf_pointsize19.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize19_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.S ../data/ttf/emulogic.ttf_pointsize20.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize20_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.S ../data/ttf/emulogic.ttf_pointsize20.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize20_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.S ../data/ttf/emulogic.ttf_pointsize21.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize21_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.S ../data/ttf/emulogic.ttf_pointsize21.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize21_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.S ../data/ttf/emulogic.ttf_pointsize22.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize22_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.S ../data/ttf/emulogic.ttf_pointsize22.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize22_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.S ../data/ttf/emulogic.ttf_pointsize23.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize23_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.S ../data/ttf/emulogic.ttf_pointsize23.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize23_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.S ../data/ttf/emulogic.ttf_pointsize24.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize24_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.S ../data/ttf/emulogic.ttf_pointsize24.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize24_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.S ../data/ttf/emulogic.ttf_pointsize25.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize25_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.S ../data/ttf/emulogic.ttf_pointsize25.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize25_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.S ../data/ttf/emulogic.ttf_pointsize26.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize26_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.S ../data/ttf/emulogic.ttf_pointsize26.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize26_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.S ../data/ttf/emulogic.ttf_pointsize28.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize28_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.S ../data/ttf/emulogic.ttf_pointsize28.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize28_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.S ../data/ttf/emulogic.ttf_pointsize30.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize30_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.S ../data/ttf/emulogic.ttf_pointsize30.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize30_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.S ../data/ttf/emulogic.ttf_pointsize32.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize32_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.S ../data/ttf/emulogic.ttf_pointsize32.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize32_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.S ../data/ttf/emulogic.ttf_pointsize36.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize36_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.S ../data/ttf/emulogic.ttf_pointsize36.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize36_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.S ../data/ttf/emulogic.ttf_pointsize6.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize6_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.S ../data/ttf/emulogic.ttf_pointsize6.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize6_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.S ../data/ttf/emulogic.ttf_pointsize7.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize7_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.S ../data/ttf/emulogic.ttf_pointsize7.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize7_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.S ../data/ttf/emulogic.ttf_pointsize8.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize8_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.S ../data/ttf/emulogic.ttf_pointsize8.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize8_tga.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.S ../data/ttf/emulogic.ttf_pointsize9.data
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize9_data.o
+
+.o/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.o: asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.S ../data/ttf/emulogic.ttf_pointsize9.tga
+	gcc -c asm/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.S -o .o/ramdisk_data_ttf_emulogic_ttf_pointsize9_tga.o
+
+.o/ramdisk_data_ttf_large_ttf_pointsize50_data.o: asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S ../data/ttf/large.ttf_pointsize50.data
+	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize50_data.S -o .o/ramdisk_data_ttf_large_ttf_pointsize50_data.o
+
+.o/ramdisk_data_ttf_large_ttf_pointsize50_tga.o: asm/ramdisk_data_ttf_large_ttf_pointsize50_tga.S ../data/ttf/large.ttf_pointsize50.tga
+	gcc -c asm/ramdisk_data_ttf_large_ttf_pointsize50_tga.S -o .o/ramdisk_data_ttf_large_ttf_pointsize50_tga.o
+
+.o/ramdisk_data_ttf_LICENSE_txt.o: asm/ramdisk_data_ttf_LICENSE_txt.S ../data/ttf/LICENSE.txt
+	gcc -c asm/ramdisk_data_ttf_LICENSE_txt.S -o .o/ramdisk_data_ttf_LICENSE_txt.o
+
+.o/ramdisk_data_ttf_med_ttf_pointsize40_data.o: asm/ramdisk_data_ttf_med_ttf_pointsize40_data.S ../data/ttf/med.ttf_pointsize40.data
+	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize40_data.S -o .o/ramdisk_data_ttf_med_ttf_pointsize40_data.o
+
+.o/ramdisk_data_ttf_med_ttf_pointsize40_tga.o: asm/ramdisk_data_ttf_med_ttf_pointsize40_tga.S ../data/ttf/med.ttf_pointsize40.tga
+	gcc -c asm/ramdisk_data_ttf_med_ttf_pointsize40_tga.S -o .o/ramdisk_data_ttf_med_ttf_pointsize40_tga.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.S ../data/ttf/prstartk.ttf_pointsize12.data
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize12_data.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.S ../data/ttf/prstartk.ttf_pointsize12.tga
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize12_tga.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.S ../data/ttf/prstartk.ttf_pointsize20.data
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize20_data.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.S ../data/ttf/prstartk.ttf_pointsize20.tga
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize20_tga.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.S ../data/ttf/prstartk.ttf_pointsize24.data
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize24_data.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.S ../data/ttf/prstartk.ttf_pointsize24.tga
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize24_tga.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.S ../data/ttf/prstartk.ttf_pointsize36.data
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize36_data.o
+
+.o/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.o: asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.S ../data/ttf/prstartk.ttf_pointsize36.tga
+	gcc -c asm/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.S -o .o/ramdisk_data_ttf_prstartk_ttf_pointsize36_tga.o
+
+.o/ramdisk_data_ttf_readme_txt.o: asm/ramdisk_data_ttf_readme_txt.S ../data/ttf/readme.txt
+	gcc -c asm/ramdisk_data_ttf_readme_txt.S -o .o/ramdisk_data_ttf_readme_txt.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize10_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize10_data.S ../data/ttf/small.ttf_pointsize10.data
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize10_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize10_data.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize10_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize10_tga.S ../data/ttf/small.ttf_pointsize10.tga
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize10_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize10_tga.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize15_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize15_data.S ../data/ttf/small.ttf_pointsize15.data
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize15_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize15_data.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize15_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize15_tga.S ../data/ttf/small.ttf_pointsize15.tga
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize15_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize15_tga.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize20_data.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S ../data/ttf/small.ttf_pointsize20.data
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_data.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_data.o
+
+.o/ramdisk_data_ttf_small_ttf_pointsize20_tga.o: asm/ramdisk_data_ttf_small_ttf_pointsize20_tga.S ../data/ttf/small.ttf_pointsize20.tga
+	gcc -c asm/ramdisk_data_ttf_small_ttf_pointsize20_tga.S -o .o/ramdisk_data_ttf_small_ttf_pointsize20_tga.o
 
