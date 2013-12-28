@@ -908,10 +908,13 @@ void sdl_loop (void)
         }
 
         /*
-         * Server input.
+         * Console, end user input.
          */
         console_tick();
 
+        /*
+         * Server input.
+         */
         server_tick();
 
         /*
