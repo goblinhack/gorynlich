@@ -23,6 +23,8 @@
 #define DEFAULT_PORT              10000
 #define DEFAULT_PORT_MAX          10010
 #define MAX_CLIENTS               4
+#define MAX_SOCKETS               (MAX_CLIENTS + 1) // 1 for server
+#define MAX_PACKET_SIZE           1024
 
 /*
  * Screen sizes.
