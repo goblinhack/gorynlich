@@ -13,18 +13,6 @@
 #include "net.h"
 #include "server.h"
 
-typedef struct {
-    boolean open;
-    UDPsocket udp_socket;
-    IPaddress client;
-} socket;
-
-typedef struct {
-    socket sockets[MAX_SOCKETS];
-    SDLNet_SocketSet socklist;
-} network;
-
-network net;
 static boolean server_init_done;
 
 boolean server_init (void)
@@ -60,9 +48,11 @@ boolean server_init (void)
         SDLNet_Write16(port, &server_address.port);
         port = SDLNet_Read16(&server_address.port);
 
-        char *tmp = iptodynstr(server_address);
-        LOG("Trying server on: %s", tmp);
-        myfree(tmp);
+        {
+            char *tmp = iptodynstr(server_address);
+            LOG("Trying server on: %s", tmp);
+            myfree(tmp);
+        }
 
         net.sockets[0].udp_socket = SDLNet_UDP_Open(port);
         if (!net.sockets[0].udp_socket) {
@@ -70,19 +60,24 @@ boolean server_init (void)
             continue;
         }
 
-        net.sockets[0].client = server_address;
-        net.sockets[0].open = true;
-
         net.socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
         if (!net.socklist) {
             ERR("Failed to alloc socket list %s", SDLNet_GetError());
             continue;
         }
 
-        if (SDLNet_UDP_AddSocket(net.socklist, net.sockets[0].udp_socket) == -1) {
+        if (SDLNet_UDP_AddSocket(net.socklist, 
+                                 net.sockets[0].udp_socket) == -1) {
             ERR("Failed to add client to socket list %s", SDLNet_GetError());
             continue;
         }
+
+        char *tmp = iptodynstr(server_address);
+        LOG("Started server successfully on: %s", tmp);
+
+        net.sockets[0].logname = tmp;
+        net.sockets[0].client = server_address;
+        net.sockets[0].open = true;
 
         break;
     }
@@ -91,12 +86,6 @@ boolean server_init (void)
         ERR("Failed to start server");
         return (false);
     }
-
-    char *tmp = iptodynstr(server_address);
-
-    LOG("Started server successfully on: %s", tmp);
-
-    myfree(tmp);
 
     server_init_done = true;
 

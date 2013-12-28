@@ -340,25 +340,23 @@ static void err_ (const char *fmt, va_list args)
 
 static void croak_ (const char *fmt, va_list args)
 {
+    static char buf[200];
     uint32_t len;
+    uint32_t tslen;
 
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
+    tslen = len = (uint32_t)strlen(buf);
 
     snprintf(buf + len, sizeof(buf) - len, "FATAL ERROR: ");
 
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    putf(MY_STDERR, buf);
-    fflush(MY_STDERR);
+    fprintf(stderr, "%s", buf);
+    fflush(stderr);
 
-    putf(MY_STDOUT, buf);
-    fflush(MY_STDOUT);
-
-    backtrace_print();
-    fflush(MY_STDOUT);
+    ERR("%s", buf + tslen);
 
     if (croaked) {
         return;
@@ -448,37 +446,6 @@ void THING_LOG (thingp t, const char *fmt, ...)
 
     va_start(args, fmt);
     thing_log_(t, fmt, args);
-    va_end(args);
-}
-
-static void host_log_ (hostp t, const char *fmt, va_list args)
-{
-    static char buf[200];
-    uint32_t len;
-
-    buf[0] = '\0';
-    timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
-    snprintf(buf + len, sizeof(buf) - len, "%s: ", host_logname(t));
-    len = (uint32_t)strlen(buf);
-    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
-
-    putf(MY_STDOUT, buf);
-    fflush(MY_STDOUT);
-}
-
-void HOST_LOG (hostp t, const char *fmt, ...)
-{
-    va_list args;
-
-    if (!debug_enabled) {
-        return;
-    }
-
-    verify(t);
-
-    va_start(args, fmt);
-    host_log_(t, fmt, args);
     va_end(args);
 }
 
