@@ -12,24 +12,31 @@
 #include "main.h"
 #include "net.h"
 #include "string.h"
+#include "slre.h"
+#include "command.h"
 
 boolean is_server;
 boolean is_client;
 IPaddress server_address = {0};
 IPaddress client_address = {0};
+network net;
 
+static boolean net_show(tokens_t *tokens, void *context);
 static boolean net_init_done;
-static host hosts[NET_MAX_HOSTS];
-static void host_fini(void);
 
 boolean net_init (void)
 {
+    if (net_init_done) {
+        return (true);
+    }
+
     if (SDLNet_Init() < 0) {
         ERR("cannot init SDL_net");
         return (false);
     }
 
     net_init_done = true;
+    command_add(net_show, "show network", "clients and server info");
 
     return (true);
 }
@@ -38,24 +45,22 @@ void net_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    if (net_init_done) {
-        host_fini();
-        SDLNet_Quit();
-        net_init_done = false;
-    }
-}
-
-int net_test (int32_t argc, char *argv[])
-{
-    host_add(server_address, "server", true);
-    host_add(server_address, "server", true);
-    host_add(client_address, "neil", false);
-    host_dump();
-
-    if (is_server) {
+    if (!net_init_done) {
+        return;
     }
 
-    return (0);
+    SDLNet_Quit();
+
+    int s;
+    for (s = 0; s < MAX_SOCKETS; s++) {
+        if (net.sockets[s].logname) {
+            myfree(net.sockets[s].logname);
+        }
+    }
+
+    memset(&net, 0, sizeof(net));
+
+    net_init_done = false;
 }
 
 char *iptodynstr (IPaddress ip)
@@ -78,107 +83,22 @@ char *iptodynstr (IPaddress ip)
     }
 }
 
-const char *host_logname (hostp h)
+static boolean net_show (tokens_t *tokens, void *context)
 {
-    return (h->logname);
-}
+    const char *prefix = "  %-40s %-6s";
+    LOG(prefix, "Host", "Type");
+    LOG(prefix, "----", "----");
 
-hostp host_add (IPaddress ip, const char *name, boolean server)
-{
-    hostp found = 0;
-
-    FOR_ALL_IN_ARRAY(h, hosts) {
-        if (!h->inuse) {
+    int s;
+    for (s = 0; s < MAX_SOCKETS; s++) {
+        if (!net.sockets[s].open) {
+            LOG(prefix, "-", "-");
             continue;
         }
 
-        if (!memcmp(&ip, &h->ip, sizeof(ip))) {
-            found = h;
-            break;
-        }
+        LOG(prefix, net.sockets[s].logname, 
+            net.sockets[s].server ? "server" : "client");
     }
 
-    if (!found) {
-        FOR_ALL_IN_ARRAY(h, hosts) {
-            if (!h->inuse) {
-                found = h;
-                break;
-            }
-        }
-
-        if (!found) {
-            char *tmp = iptodynstr(ip);
-            ERR("Too many hosts, cannot add %s", tmp);
-            myfree(tmp);
-            return (false);
-        }
-    }
-
-    found->inuse = true;
-    found->ip = ip;
-    found->server = server;
-
-    if (found->name) {
-        myfree(found->name);
-    }
-    found->name = dupstr(name, "host name");
-
-    if (found->logname) {
-        myfree(found->logname);
-    }
-    found->logname = iptodynstr(ip);
-
-    return (found);
-}
-
-void host_dump (void)
-{
-    uint32_t i;
-
-    i = 0;
-
-    LOG("  %-40s %-6s %-10s %s", 
-        "Host", 
-        "Type",
-        "Name", 
-        "Delay(ms)");
-
-    LOG("  %-40s %-6s %-10s %s", 
-        "----", 
-        "----", 
-        "----",
-        "---------");
-
-    FOR_ALL_IN_ARRAY(h, hosts) {
-        if (!h->inuse) {
-            continue;
-        }
-
-        i++;
-
-        LOG("%u %-40s %-6s %-10s %u", i, 
-            h->logname, 
-            h->server ? "server" : "client", 
-            h->name, 
-            h->delay_ms);
-    }
-}
-
-static void host_fini (void)
-{
-    FOR_ALL_IN_ARRAY(h, hosts) {
-        if (!h->inuse) {
-            continue;
-        }
-
-        if (h->logname) {
-            myfree(h->logname);
-        }
-
-        if (h->name) {
-            myfree(h->name);
-        }
-
-        memset(h, 0, sizeof(*h));
-    }
+    return (true);
 }

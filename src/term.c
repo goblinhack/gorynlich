@@ -61,13 +61,6 @@ static void term_core_exit (void)
 
     exitting = true;
 
-    //
-    // Resore the terminal
-    //
-    tcsetattr(0, TCSANOW, &term_original_settings);
-
-//    term_core_cls();
-
     term_core_cursor_show();
     term_core_refresh();
 
@@ -76,11 +69,19 @@ static void term_core_exit (void)
     //
 
     free(term_core_buffer);
+
+    //
+    // Resore the terminal
+    //
+    tcsetattr(0, TCSANOW, &term_original_settings);
 }
 
 static void term_core_init_terminal (void)
 {
     struct termios t;
+
+    tcgetattr(0, &term_original_settings);
+    memcpy(&t, &term_original_settings, sizeof(struct termios));
 
     term_core_buffer_size = TERM_WIDTH * TERM_HEIGHT * 32;
 
@@ -88,9 +89,6 @@ static void term_core_init_terminal (void)
         DIE("no mem");
     }
     
-    tcgetattr(0, &term_original_settings);
-    memcpy(&t, &term_original_settings, sizeof(struct termios));
-
     t.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
     t.c_oflag &= ~OPOST;
     t.c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
@@ -136,9 +134,16 @@ void term_fini (void)
     FINI_LOG("%s", __FUNCTION__);
 
     if (term_init_done) {
+        term_init_done = false;
+
         term_core_exit();
 
-        term_init_done = false;
+        /*
+         * Extra cleaning if needed.
+         *
+        printf("\033[m");
+        printf("\033c");
+         */
     }
 }
 
