@@ -424,10 +424,10 @@ static void console_clear (void)
 {
     int x;
 
-    zx_term_goto(0, ZX_TERM_HEIGHT - 1);
+    term_goto(0, TERM_HEIGHT - 1);
 
-    for (x = 0; x < ZX_TERM_WIDTH; x++) {
-        zx_term_putc(' ');
+    for (x = 0; x < TERM_WIDTH; x++) {
+        term_putc(' ');
     }
 }
 
@@ -442,11 +442,11 @@ static void console_refresh (void)
 
     console_clear();
 
-    zx_term_goto(0, ZX_TERM_HEIGHT - 1);
-    zx_term_putf("gorynlich> ");
-    zx_term_putf(tmp);
-    zx_term_putf(" ");
-    zx_term_refresh();
+    term_goto(0, TERM_HEIGHT - 1);
+    term_putf("gorynlich> ");
+    term_putf(tmp);
+    term_putf(" ");
+    term_refresh();
 }
 
 void linenoise_tick (void)
@@ -482,7 +482,6 @@ void linenoise_tick (void)
     newchar[0] = c;
 
     origlen = (uint32_t)strlen(wid_text);
-    cursor_x = (uint32_t)strlen(wid_text);
 
     strlcpy(beforecursor, wid_text, cursor_x + 1);
     strlcpy(aftercursor, wid_text + cursor_x, sizeof(aftercursor));
@@ -582,6 +581,7 @@ void linenoise_tick (void)
             if (read(fd,seq,2) == -1) break;
 
             if (seq[0] == 91 && seq[1] == 68) {
+
                 if (cursor_x > 0) {
                     cursor_x--;
                 }
