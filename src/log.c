@@ -557,7 +557,11 @@ void LEVEL_LOG (levelp t, const char *fmt, ...)
  */
 boolean debug_enable (tokens_t *tokens, void *context)
 {
-    debug_enabled = true;
+    char *s = tokens->args[1];
+
+    debug_enabled = strtol(s, 0, 10) ? 1 : 0;
+
+    CON("Debug mode set to %u", debug_enabled);
 
     return (true);
 }
