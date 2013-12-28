@@ -67,8 +67,7 @@ boolean wid_console_init (void)
 {
     wid_console_inited = true;
 
-    command_add(debug_enable, "debug on", "enable debug mode");
-    command_add(debug_disable, "debug off", "disable debug mode");
+    command_add(debug_enable, "debug [01]", "enable/disable debug mode");
 
     if (is_client) {
         command_add(fps_enable, "fps on", "enable frames per sec counter");
