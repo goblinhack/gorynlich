@@ -13,9 +13,19 @@
 #include "net.h"
 #include "server.h"
 
+typedef struct {
+    boolean open;
+    UDPsocket udp_socket;
+    IPaddress client;
+} socket;
+
+typedef struct {
+    socket sockets[MAX_SOCKETS];
+    SDLNet_SocketSet socklist;
+} network;
+
+network net;
 static boolean server_init_done;
-static SDLNet_SocketSet socklist;
-static UDPsocket udpserver;
 
 boolean server_init (void)
 {
@@ -45,7 +55,7 @@ boolean server_init (void)
 
     uint16_t port = SDLNet_Read16(&server_address.port);
 
-    for (p = 0; p <= MAX_CLIENTS; p++, port++) {
+    for (p = 0; p <= MAX_SOCKETS; p++, port++) {
 
         SDLNet_Write16(port, &server_address.port);
         port = SDLNet_Read16(&server_address.port);
@@ -54,19 +64,22 @@ boolean server_init (void)
         LOG("Trying server on: %s", tmp);
         myfree(tmp);
 
-        udpserver = SDLNet_UDP_Open(port);
-        if (!udpserver) {
+        net.sockets[0].udp_socket = SDLNet_UDP_Open(port);
+        if (!net.sockets[0].udp_socket) {
             ERR("Failed to open local socket %s", SDLNet_GetError());
             continue;
         }
 
-        socklist = SDLNet_AllocSocketSet(MAX_CLIENTS + 1);
-        if (!socklist) {
+        net.sockets[0].client = server_address;
+        net.sockets[0].open = true;
+
+        net.socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
+        if (!net.socklist) {
             ERR("Failed to alloc socket list %s", SDLNet_GetError());
             continue;
         }
 
-        if (SDLNet_UDP_AddSocket(socklist, udpserver) == -1) {
+        if (SDLNet_UDP_AddSocket(net.socklist, net.sockets[0].udp_socket) == -1) {
             ERR("Failed to add client to socket list %s", SDLNet_GetError());
             continue;
         }
@@ -74,7 +87,7 @@ boolean server_init (void)
         break;
     }
 
-    if (p == MAX_CLIENTS) {
+    if (p == MAX_SOCKETS) {
         ERR("Failed to start server");
         return (false);
     }
@@ -98,31 +111,51 @@ void server_fini (void)
         server_init_done = false;
     }
 }
+
 void server_tick (void)
 {
-    UDPpacket *packet;      
-    packet = SDLNet_AllocPacket(1024);
-    numready = SDLNet_CheckSockets(socklist, waittime);
-    if(numready == -1)
-    {
-            printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
-            perror("SDLNet_CheckSockets");
-    } else if (numready) 
-    {
-            printf("There are %d sockets with activity!\n", numready);
-            // check all sockets with SDLNet_SocketReady and handle the active ones.
-            if(SDLNet_SocketReady(udpserver))
-            {
-                    numpks = SDLNet_UDP_Recv(udpserver, packet);
-                    if(numpks)
-                    {
-                            //process UDP xxpacket
-                            y = SDLNet_Read16(packet->data); //recieve UDP packet, and set y cord to UDP packet data
-                            x = SDLNet_Read16(packet->data+2); //recieve UDP packet, and set y cord to UDP packet data
-                            printf("Recieve X,Y = %d,%d\n",x,y);   //not working... 
-                    }       
-            }       
-            SDLNet_FreePacket(packet);
-            packet = NULL;
+    int waittime = 0;
+    int numready = SDLNet_CheckSockets(net.socklist, waittime);
+    if (numready <= 0) {
+        return;
     }
+
+    LOG("There are %d sockets with activity!", numready);
+
+    UDPpacket *packet;      
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        ERR("out of packet space, pak %d", MAX_PACKET_SIZE);
+        return;
+    }
+
+    int i;
+    for (i = 0; i < numready; i++) {
+        if (!net.sockets[i].open) {
+            continue;
+        }
+
+        if (!SDLNet_SocketReady(net.sockets[i].udp_socket)) {
+            continue;
+        }
+
+        int paks = SDLNet_UDP_Recv(net.sockets[0].udp_socket, packet);
+        if (paks != 1) {
+            char *tmp = iptodynstr(server_address);
+            ERR("Pak rx failed on: %s: %s", tmp, SDLNet_GetError());
+            myfree(tmp);
+            continue;
+        }
+
+        char *tmp = iptodynstr(server_address);
+        LOG("Pak rx on: %s", tmp);
+        myfree(tmp);
+
+        int y = SDLNet_Read16(packet->data);
+        int x = SDLNet_Read16(packet->data+2);
+        LOG("Recieve X,Y = %d,%d",x,y);   //not working... 
+    }
+
+    SDLNet_FreePacket(packet);
 }
