@@ -20,6 +20,10 @@ static socket *client_connect_socket;
 
 boolean client_init (void)
 {
+    if (!is_client) {
+        return (true);
+    }
+
     if (client_init_done) {
         return (true);
     }
@@ -162,6 +166,10 @@ y++;
 
 void client_tick (void)
 {
+    if (!is_client) {
+        return;
+    }
+
     client_poll();
     client_transmit();
 }
