@@ -157,8 +157,6 @@ void die (void)
 {
     quit();
 
-    term_fini();
-
     fprintf(MY_STDERR, "exit(1) error\n");
 
     exit(1);

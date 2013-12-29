@@ -15,6 +15,23 @@
 #include "slre.h"
 #include "command.h"
 
+typedef struct socket_ {
+    boolean open:1;
+    boolean server:1;
+    boolean client:1;
+    UDPsocket udp_socket;
+    IPaddress remote_ip;
+    IPaddress local_ip;
+    char *local_logname;
+    char *remote_logname;
+    int channel;
+    SDLNet_SocketSet socklist;
+} socket;
+
+typedef struct network_ {
+    socket sockets[MAX_SOCKETS];
+} network;
+
 boolean is_server;
 boolean is_client;
 IPaddress server_address = {0};
@@ -67,7 +84,7 @@ void net_fini (void)
     net_init_done = false;
 }
 
-socket *net_find_local_ip (IPaddress address)
+socket *socket_find_local_ip (IPaddress address)
 {
     uint32_t si;
 
@@ -82,7 +99,7 @@ socket *net_find_local_ip (IPaddress address)
     return (0);
 }
 
-socket *net_find_remote_ip (IPaddress address)
+socket *socket_find_remote_ip (IPaddress address)
 {
     uint32_t si;
 
@@ -185,11 +202,9 @@ socket *net_listen (IPaddress address)
             continue;
         }
 
-        char *tmp = iptodynstr(listen_address);
-        DBG("Trying to listen on: %s", tmp);
-
         s->udp_socket = SDLNet_UDP_Open(port);
         if (!s->udp_socket) {
+            char *tmp = iptodynstr(listen_address);
             ERR("SDLNet_UDP_Open %s failed", tmp);
             WARN("  %s", SDLNet_GetError());
             myfree(tmp);
@@ -198,6 +213,7 @@ socket *net_listen (IPaddress address)
 
         s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
         if (s->channel < 0) {
+            char *tmp = iptodynstr(listen_address);
             ERR("SDLNet_UDP_Bind %s failed", tmp);
             WARN("  %s", SDLNet_GetError());
             myfree(tmp);
@@ -206,6 +222,7 @@ socket *net_listen (IPaddress address)
 
         s->socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
         if (!s->socklist) {
+            char *tmp = iptodynstr(listen_address);
             ERR("SDLNet_AllocSocketSet %s failed", tmp);
             WARN("  %s", SDLNet_GetError());
             myfree(tmp);
@@ -213,13 +230,13 @@ socket *net_listen (IPaddress address)
         }
 
         if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
+            char *tmp = iptodynstr(listen_address);
             ERR("SDLNet_UDP_AddSocket %s failed", tmp);
             WARN("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
-        s->local_logname = tmp;
         s->open = true;
         s->local_ip = listen_address;
 
@@ -286,11 +303,9 @@ socket *net_connect (IPaddress address)
     SDLNet_Write16(port, &connect_address.port);
     port = SDLNet_Read16(&connect_address.port);
 
-    char *tmp = iptodynstr(connect_address);
-    DBG("Trying to connect to %s", tmp);
-
     s->udp_socket = SDLNet_UDP_Open(0);
     if (!s->udp_socket) {
+        char *tmp = iptodynstr(connect_address);
         ERR("SDLNet_UDP_Open %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
@@ -299,21 +314,17 @@ socket *net_connect (IPaddress address)
 
     s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
     if (s->channel < 0) {
+        char *tmp = iptodynstr(connect_address);
         ERR("SDLNet_UDP_Bind %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
         return (false);
     }
-    myfree(tmp);
 
-    s->local_logname = tmp;
     s->open = true;
 
     s->remote_ip = connect_address;
-    s->remote_logname = iptodynstr(s->remote_ip);
-
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
-    s->local_logname = iptodynstr(s->local_ip);
 
     return (s);
 }
@@ -351,18 +362,85 @@ static boolean net_show (tokens_t *tokens, void *context)
 
     int si;
     for (si = 0; si < MAX_SOCKETS; si++) {
-        const socket *s = &net.sockets[si];
+        const socketp s = &net.sockets[si];
 
         if (!s->open) {
             continue;
         }
 
         CON(prefix, 
-            s->local_logname ? s->local_logname : "n/a",
-            s->remote_logname ? s->remote_logname : "n/a",
+            socket_get_local_logname(s), 
+            socket_get_remote_logname(s), 
             s->server ? "Server" : "Client");
     }
 
     return (true);
 }
 
+IPaddress socket_get_local_ip (const socketp s)
+{
+    return (s->local_ip);
+}
+
+IPaddress socket_get_remote_ip (const socketp s)
+{
+    return (s->remote_ip);
+}
+
+const char * socket_get_local_logname (const socketp s)
+{
+    if (!s->local_logname) {
+        s->local_logname = iptodynstr(s->local_ip);
+    }
+
+    return (s->local_logname);
+}
+
+const char * socket_get_remote_logname (const socketp s)
+{
+    if (!s->remote_logname) {
+        s->remote_logname = iptodynstr(s->remote_ip);
+    }
+
+    return (s->remote_logname);
+}
+
+void socket_set_server (socketp s, boolean c)
+{
+    s->server = c;
+}
+
+boolean socket_get_server (const socketp s)
+{
+    return (s->server);
+}
+
+void socket_set_client (socketp s, boolean c)
+{
+    s->client = c;
+}
+
+boolean socket_get_client (const socketp s)
+{
+    return (s->client);
+}
+
+void socket_set_channel (socketp s, int c)
+{
+    s->channel = c;
+}
+
+boolean socket_get_channel (const socketp s)
+{
+    return (s->channel);
+}
+
+UDPsocket socket_get_udp_socket (const socketp s)
+{
+    return (s->udp_socket);
+}
+
+SDLNet_SocketSet socket_get_socklist (const socketp s)
+{
+    return (s->socklist);
+}
