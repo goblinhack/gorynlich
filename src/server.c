@@ -18,6 +18,10 @@ static socket *server_socket;
 
 boolean server_init (void)
 {
+    if (!is_server) {
+        return (true);
+    }
+
     if (server_init_done) {
         return (true);
     }
@@ -101,6 +105,10 @@ static void server_poll (void)
 
 void server_tick (void)
 {
+    if (!is_server) {
+        return;
+    }
+
     server_poll();
 }
 
