@@ -308,14 +308,13 @@ static boolean net_show (tokens_t *tokens, void *context)
     const char *prefix = "%-30s %-30s %-6s";
 
     CON(prefix, "Local", "Remote", "Type");
-    CON(prefix, "-----", "------", "---");
+    CON(prefix, "-----", "------", "----");
 
     int si;
     for (si = 0; si < MAX_SOCKETS; si++) {
         const socket *s = &net.sockets[si];
 
         if (!s->open) {
-            CON(prefix, "-", "-");
             continue;
         }
 
