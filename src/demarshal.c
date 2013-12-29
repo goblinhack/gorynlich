@@ -805,7 +805,7 @@ static boolean demarshal_internal_name (tree_demarshal *ctx, const char *want)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, "
+        ERR_TB("Error at file %s, line %d, "
             "expecting a name when looking for \"%s\", got \"%s\"",
             demarshal_parse_filename,
             demarshal_parse_line,
@@ -833,7 +833,7 @@ static boolean demarshal_internal_name (tree_demarshal *ctx, const char *want)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type name when looking for \"%s\", got \"%s\"",
                 demarshal_parse_filename,
                 node->line,
@@ -848,7 +848,7 @@ static boolean demarshal_internal_name (tree_demarshal *ctx, const char *want)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, "
+        ERR_TB("Error at file %s, line %d, "
             "looking for \"%s\", got \"%s\"",
             demarshal_parse_filename,
             node->line,
@@ -862,7 +862,7 @@ static boolean demarshal_internal_name (tree_demarshal *ctx, const char *want)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, "
+        ERR_TB("Error at file %s, line %d, "
             "looking for \"%s\", got %s:\"%s\"",
             demarshal_parse_filename,
             node->line,
@@ -897,7 +897,7 @@ static boolean demarshal_internal_string (tree_demarshal *ctx, char **out)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, "
+        ERR_TB("Error at file %s, line %d, "
             "expecting string, got %s",
             demarshal_parse_filename,
             demarshal_parse_line,
@@ -923,7 +923,7 @@ static boolean demarshal_internal_string (tree_demarshal *ctx, char **out)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type string, got %s",
                 demarshal_parse_filename,
                 node->line,
@@ -958,7 +958,7 @@ static boolean demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, no node",
+        ERR_TB("Error at file %s, line %d, no node",
             demarshal_parse_filename,
             demarshal_parse_line);
 
@@ -983,7 +983,7 @@ static boolean demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type int, got %s",
                 demarshal_parse_filename,
                 node->line,
@@ -1019,7 +1019,7 @@ static boolean demarshal_internal_float (tree_demarshal *ctx, float *out)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, "
+        ERR_TB("Error at file %s, line %d, "
             "expecting float, got %s",
             demarshal_parse_filename,
             demarshal_parse_line,
@@ -1046,7 +1046,7 @@ static boolean demarshal_internal_float (tree_demarshal *ctx, float *out)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type float, got %s",
                 demarshal_parse_filename,
                 node->line,
@@ -1082,7 +1082,7 @@ static boolean demarshal_internal_ptr (tree_demarshal *ctx, void **out)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, no node",
+        ERR_TB("Error at file %s, line %d, no node",
             demarshal_parse_filename,
             demarshal_parse_line);
 
@@ -1107,7 +1107,7 @@ static boolean demarshal_internal_ptr (tree_demarshal *ctx, void **out)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type ptr, got %s",
                 demarshal_parse_filename,
                 node->line,
@@ -1143,7 +1143,7 @@ static boolean demarshal_internal_ptr_ref (tree_demarshal *ctx, void **out)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, no node",
+        ERR_TB("Error at file %s, line %d, no node",
             demarshal_parse_filename,
             demarshal_parse_line);
 
@@ -1168,7 +1168,7 @@ static boolean demarshal_internal_ptr_ref (tree_demarshal *ctx, void **out)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type ptr-ref, got %s",
                 demarshal_parse_filename,
                 node->line,
@@ -1203,7 +1203,7 @@ static boolean demarshal_internal_bra (tree_demarshal *ctx)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, "
+        ERR_TB("Error at file %s, line %d, "
             "expecting {, got %s",
             demarshal_parse_filename,
             demarshal_parse_line,
@@ -1224,7 +1224,7 @@ static boolean demarshal_internal_bra (tree_demarshal *ctx)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type {, got %s",
                 demarshal_parse_filename,
                 node->line,
@@ -1258,7 +1258,7 @@ static boolean demarshal_internal_ket (tree_demarshal *ctx)
             return (0);
         }
 
-        ERR("Error at file %s, line %d, "
+        ERR_TB("Error at file %s, line %d, "
             "expecting }, got %s",
             demarshal_parse_filename,
             demarshal_parse_line,
@@ -1279,7 +1279,7 @@ static boolean demarshal_internal_ket (tree_demarshal *ctx)
                 return (0);
             }
 
-            ERR("Error at file %s, line %d, "
+            ERR_TB("Error at file %s, line %d, "
                 "expecting type }, got %s",
                 demarshal_parse_filename,
                 node->line,

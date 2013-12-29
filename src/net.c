@@ -17,8 +17,7 @@
 
 boolean is_server;
 boolean is_client;
-IPaddress listen_address = {0};
-IPaddress connect_address = {0};
+IPaddress server_address = {0};
 IPaddress no_address = {0};
 network net;
 
@@ -32,7 +31,7 @@ boolean net_init (void)
     }
 
     if (SDLNet_Init() < 0) {
-        ERR("cannot init SDL_net");
+        ERR_TB("cannot init SDL_net");
         return (false);
     }
 
@@ -89,7 +88,7 @@ socket *net_listen (IPaddress address)
     }
 
     if (!s) {
-        ERR("No more sockets are available");
+        ERR_TB("No more sockets are available");
         return (0);
     }
 
@@ -104,14 +103,14 @@ socket *net_listen (IPaddress address)
         if ((SDLNet_ResolveHost(&listen_address, 
                                 SERVER_DEFAULT_HOST,
                                 SERVER_DEFAULT_PORT)) == -1) {
-            ERR("Cannot resolve host %s port %d", 
+            ERR_TB("Cannot resolve host %s port %d", 
                 SERVER_DEFAULT_HOST, 
                 SERVER_DEFAULT_PORT);
             return (false);
         }
 
         if (!memcmp(&no_address, &listen_address, sizeof(no_address))) {
-            ERR("Cannot get a local port to listen on");
+            ERR_TB("Cannot get a local port to listen on");
             return (false);
         }
     }
@@ -161,7 +160,7 @@ socket *net_listen (IPaddress address)
 
         s->udp_socket = SDLNet_UDP_Open(port);
         if (!s->udp_socket) {
-            ERR("SDLNet_UDP_Open %s failed", tmp);
+            ERR_TB("SDLNet_UDP_Open %s failed", tmp);
             ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
@@ -169,7 +168,7 @@ socket *net_listen (IPaddress address)
 
         s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
         if (s->channel < 0) {
-            ERR("SDLNet_UDP_Bind %s failed", tmp);
+            ERR_TB("SDLNet_UDP_Bind %s failed", tmp);
             ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
@@ -177,14 +176,14 @@ socket *net_listen (IPaddress address)
 
         s->socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
         if (!s->socklist) {
-            ERR("SDLNet_AllocSocketSet %s failed", tmp);
+            ERR_TB("SDLNet_AllocSocketSet %s failed", tmp);
             ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
         if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
-            ERR("SDLNet_UDP_AddSocket %s failed", tmp);
+            ERR_TB("SDLNet_UDP_AddSocket %s failed", tmp);
             ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
@@ -262,7 +261,7 @@ socket *net_connect (IPaddress address)
 
     s->udp_socket = SDLNet_UDP_Open(0);
     if (!s->udp_socket) {
-        ERR("SDLNet_UDP_Open %s failed", tmp);
+        ERR_TB("SDLNet_UDP_Open %s failed", tmp);
         ERR("  %s", SDLNet_GetError());
         myfree(tmp);
         return (false);
@@ -270,7 +269,7 @@ socket *net_connect (IPaddress address)
 
     s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
     if (s->channel < 0) {
-        ERR("SDLNet_UDP_Bind %s failed", tmp);
+        ERR_TB("SDLNet_UDP_Bind %s failed", tmp);
         ERR("  %s", SDLNet_GetError());
         myfree(tmp);
         return (false);

@@ -13,8 +13,7 @@ extern boolean net_init(void);
 extern void net_fini(void);
 extern char *iptodynstr(IPaddress ip);
 
-extern IPaddress listen_address;
-extern IPaddress connect_address;
+extern IPaddress server_address;
 
 typedef struct {
     boolean open:1;

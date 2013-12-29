@@ -528,7 +528,7 @@ void things_marshal (marshal_p out)
 void demarshal_thing (demarshal_p ctx, thingp t)
 {
     if (!ctx) {
-        ERR("no thing to demarshal");
+        ERR_TB("no thing to demarshal");
     }
 
     char *name;

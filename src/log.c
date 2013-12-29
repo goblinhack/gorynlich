@@ -333,6 +333,32 @@ static void err_ (const char *fmt, va_list args)
 
     wid_console_log(buf);
     term_log(buf);
+}
+
+static void err_tb_ (const char *fmt, va_list args)
+{
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+
+    snprintf(buf + len, sizeof(buf) - len, "ERROR: %%%%fg=red$");
+
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    len = (uint32_t)strlen(buf);
+    snprintf(buf + len, sizeof(buf) - len, "%%%%fg=reset$");
+
+    putf(MY_STDERR, buf);
+    fflush(MY_STDERR);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    wid_console_log(buf);
+    term_log(buf);
 
     backtrace_print();
     fflush(MY_STDOUT);
@@ -356,7 +382,7 @@ static void croak_ (const char *fmt, va_list args)
     fprintf(stderr, "%s", buf);
     fflush(stderr);
 
-    ERR("%s", buf + tslen);
+    ERR_TB("%s", buf + tslen);
 
     if (croaked) {
         return;
@@ -404,6 +430,15 @@ void ERR (const char *fmt, ...)
 
     va_start(args, fmt);
     err_(fmt, args);
+    va_end(args);
+}
+
+void ERR_TB (const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    err_tb_(fmt, args);
     va_end(args);
 }
 

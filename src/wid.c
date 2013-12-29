@@ -3496,7 +3496,7 @@ void wid_empty_grid (widp w)
         TREE_WALK(grid->trees[i], node) {
             child = node->wid;
 
-            ERR("%s exists after empty grid",child->name);
+            ERR_TB("%s exists after empty grid",child->name);
         }
     }
 }
@@ -3647,7 +3647,7 @@ boolean demarshal_wid_grid (demarshal_p ctx, widp w,
 
         thing_template = thing_template_find(name);
         if (!thing_template) {
-            ERR("thing %s not found", name);
+            ERR_TB("thing %s not found", name);
             rc = false;
             continue;
         }
@@ -3658,7 +3658,7 @@ boolean demarshal_wid_grid (demarshal_p ctx, widp w,
         child = (*callback)(w, x, y, count, thing_template);
 
         if (!child) {
-            ERR("Loading thing %s failed to replace at (%u,%u)", name, x, y);
+            ERR_TB("Loading thing %s failed to replace at (%u,%u)", name, x, y);
             myfree(name);
 
             rc = false;

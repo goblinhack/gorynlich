@@ -573,7 +573,7 @@ widp wid_popup_error (const char *text)
 
     wid_set_on_key_down(w, wid_popup_error_key_event);
 
-    ERR("%s", text);
+    ERR_TB("%s", text);
 
     wid_set_color(w, WID_COLOR_BG, BLACK);
 

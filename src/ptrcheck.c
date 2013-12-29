@@ -366,7 +366,7 @@ static ptrcheck *ptrcheck_verify_pointer (void *ptr,
     /*
      * We may be about to crash. Complain!
      */
-    ERR("%s%p %s:%s():%u", bad_pointer_warning, ptr, file, func, line);
+    ERR_TB("%s%p %s:%s():%u", bad_pointer_warning, ptr, file, func, line);
 
     /*
      * Check the ring buffer to see if we've seen this pointer before.
