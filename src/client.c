@@ -15,8 +15,8 @@
 
 static void client_transmit(void);
 static boolean client_init_done;
-static socket *client_listen_socket;
-static socket *client_connect_socket;
+static socketp client_listen_socket;
+static socketp client_connect_socket;
 
 boolean client_init (void)
 {
@@ -28,7 +28,7 @@ boolean client_init (void)
         return (true);
     }
 
-    socket *s;
+    socketp s;
 
     /*
      * Connector.
@@ -40,9 +40,10 @@ boolean client_init (void)
     }
 
     client_connect_socket = s;
-    s->client = true;
-    LOG("Client connecting to   %s", s->remote_logname);
-    LOG("Client connecting from %s", s->local_logname);
+    socket_set_client(s, true);
+
+    LOG("Client connecting to   %s", socket_get_remote_logname(s));
+    LOG("Client connecting from %s", socket_get_local_logname(s));
 
     client_init_done = true;
 
@@ -60,13 +61,13 @@ void client_fini (void)
 
 static void client_poll (void)
 {
-    socket *s = client_listen_socket;
+    socketp s = client_listen_socket;
     if (!s) {
         return;
     }
 
     int waittime = 0;
-    int numready = SDLNet_CheckSockets(s->socklist, waittime);
+    int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
     if (numready <= 0) {
         return;
     }
@@ -83,17 +84,17 @@ static void client_poll (void)
 
     int i;
     for (i = 0; i < numready; i++) {
-        if (!SDLNet_SocketReady(s->udp_socket)) {
+        if (!SDLNet_SocketReady(socket_get_udp_socket(s))) {
             continue;
         }
 
-        int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
+        int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
         if (paks != 1) {
             ERR("Pak rx failed: %s", SDLNet_GetError());
             continue;
         }
 
-        char *tmp = iptodynstr(s->local_ip);
+        char *tmp = iptodynstr(socket_get_local_ip(s));
         LOG("Client Pak rx on: %s", tmp);
         myfree(tmp);
 
@@ -112,7 +113,7 @@ if (done > 1) {
 return;
 }
 done++;
-    socket *s = client_connect_socket;
+    socketp s = client_connect_socket;
     if (!s) {
         return;
     }
@@ -134,12 +135,13 @@ y++;
 y++;
     LOG("Sending X,Y = %d,%d", x,y);
 
-    packet->address = s->remote_ip;;
+    packet->address = socket_get_remote_ip(s);
     SDLNet_Write16(y,data);                 
     SDLNet_Write16(x,data+2);               
     packet->len = sizeof(data);
 
-    if (SDLNet_UDP_Send(s->udp_socket, s->channel, packet) < 1) {
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
         ERR("no UDP packet sent");
     } 
         

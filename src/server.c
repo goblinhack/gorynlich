@@ -14,7 +14,7 @@
 #include "server.h"
 
 static boolean server_init_done;
-static socket *server_socket;
+static socketp server_socket;
 
 boolean server_init (void)
 {
@@ -26,7 +26,7 @@ boolean server_init (void)
         return (true);
     }
 
-    socket *s;
+    socketp s;
 
     s = net_listen(server_address);
     if (!s) {
@@ -34,10 +34,10 @@ boolean server_init (void)
         return (false);
     }
 
-    LOG("Server listening on %s", s->local_logname);
+    LOG("Server listening on %s", socket_get_local_logname(s));
 
     server_socket = s;
-    s->server = true;
+    socket_set_server(s, true);
 
     server_init_done = true;
 
@@ -55,14 +55,14 @@ void server_fini (void)
 
 static void server_poll (void)
 {
-    socket *s = server_socket;
+    socketp s = server_socket;
 
     if (!s) {
         return;
     }
 
     int waittime = 0;
-    int numready = SDLNet_CheckSockets(s->socklist, waittime);
+    int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
     if (numready <= 0) {
         return;
     }
@@ -79,17 +79,17 @@ static void server_poll (void)
 
     int i;
     for (i = 0; i < numready; i++) {
-        if (!SDLNet_SocketReady(s->udp_socket)) {
+        if (!SDLNet_SocketReady(socket_get_udp_socket(s))) {
             continue;
         }
 
-        int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
+        int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
         if (paks != 1) {
             ERR("Pak rx failed: %s", SDLNet_GetError());
             continue;
         }
 
-        socket *s = net_find_remote_ip(packet->address);
+        socketp s = socket_find_remote_ip(packet->address);
         if (!s) {
             net_connect(packet->address);
         }
