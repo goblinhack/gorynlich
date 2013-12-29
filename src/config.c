@@ -62,7 +62,7 @@ boolean config_save (void)
 
     ctx = marshal(file);
     if (!ctx) {
-        ERR("Failed to save: %s", file);
+        WARN("Failed to save: %s", file);
         myfree(file);
         return (false);
     }
@@ -70,7 +70,7 @@ boolean config_save (void)
     marshal_config(ctx, &global_config);
 
     if (marshal_fini(ctx) < 0) {
-        ERR("Failed to finalize: %s", file);
+        WARN("Failed to finalize: %s", file);
         myfree(file);
         return (false);
     }
@@ -94,14 +94,12 @@ boolean config_load (void)
     global_config.music_volume = SOUND_MAX;
 
     if (!(ctx = demarshal(file))) {
-        ERR("Failed to read config: %s", file);
-
         myfree(file);
         return (true);
     }
 
     if (!demarshal_config(ctx, &global_config)) {
-        ERR_TB("Failed to parse: %s", file);
+        ERR("Failed to parse: %s", file);
     }
 
     myfree(file);

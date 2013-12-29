@@ -93,7 +93,7 @@ musicp music_load (const char *file, const char *name_alias)
     m->music = Mix_LoadMUS_RW(rw, false);
 #endif /* } */
     if (!m->music) {
-        ERR_TB("cannot make music %s: %s %s", file, Mix_GetError(),
+        ERR("cannot make music %s: %s %s", file, Mix_GetError(),
             SDL_GetError());
     }
 
@@ -155,7 +155,7 @@ void music_play (const char *file,
                       audio_channels,
                       audio_buffers) != 0) {
 
-        ERR_TB("unable to initialize SDL Mix audio: %s %s",
+        ERR("unable to initialize SDL Mix audio: %s %s",
 		Mix_GetError(), SDL_GetError());
     }
 

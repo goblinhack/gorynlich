@@ -501,11 +501,11 @@ int32_t main (int32_t argc, char *argv[])
 #ifdef ENABLE_LOGFILE
 #ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
     if (!freopen("stdout.txt", "w", MY_STDOUT)) {
-	ERR("Failed to open MY_STDOUT.txt");
+	WARN("Failed to open MY_STDOUT.txt");
     }
 
     if (!freopen("stderr.txt", "w", MY_STDERR)) {
-	ERR("Failed to open MY_STDERR.txt");
+	WARN("Failed to open MY_STDERR.txt");
     }
 #endif
 #endif
