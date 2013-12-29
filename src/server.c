@@ -21,72 +21,15 @@ boolean server_init (void)
         return (true);
     }
 
-    IPaddress no_address = {0};
-    uint16_t p;
+    socket *s;
 
-    /*
-     * If no server address is given, try and start one.
-     */
-    if (!memcmp(&no_address, &server_address, sizeof(no_address))) {
-        if ((SDLNet_ResolveHost(&server_address, DEFAULT_HOST,
-                                DEFAULT_PORT)) == -1) {
-            ERR("cannot resolve host %s port %d", DEFAULT_HOST, 
-                DEFAULT_PORT);
-            return (false);
-        }
-
-        if (!memcmp(&no_address, &server_address, sizeof(no_address))) {
-            ERR("cannot get a local port to start the server");
-            return (false);
-        }
-    }
-
-    uint16_t port = SDLNet_Read16(&server_address.port);
-
-    for (p = 0; p <= MAX_SOCKETS; p++, port++) {
-
-        SDLNet_Write16(port, &server_address.port);
-        port = SDLNet_Read16(&server_address.port);
-
-        {
-            char *tmp = iptodynstr(server_address);
-            LOG("Trying server on: %s", tmp);
-            myfree(tmp);
-        }
-
-        net.sockets[0].udp_socket = SDLNet_UDP_Open(port);
-        if (!net.sockets[0].udp_socket) {
-            ERR("Failed to open local socket %s", SDLNet_GetError());
-            continue;
-        }
-
-        net.socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
-        if (!net.socklist) {
-            ERR("Failed to alloc socket list %s", SDLNet_GetError());
-            continue;
-        }
-
-        if (SDLNet_UDP_AddSocket(net.socklist, 
-                                 net.sockets[0].udp_socket) == -1) {
-            ERR("Failed to add client to socket list %s", SDLNet_GetError());
-            continue;
-        }
-
-        char *tmp = iptodynstr(server_address);
-        LOG("Started server successfully on: %s", tmp);
-
-        net.sockets[0].logname = tmp;
-        net.sockets[0].client = server_address;
-        net.sockets[0].open = true;
-        net.sockets[0].server = true;
-
-        break;
-    }
-
-    if (p == MAX_SOCKETS) {
-        ERR("Failed to start server");
+    s = net_listen(listen_address);
+    if (!s) {
+        ERR("Server failed to listen");
         return (false);
     }
+
+    LOG("Server listening on %s", s->logname);
 
     server_init_done = true;
 
@@ -132,13 +75,13 @@ void server_tick (void)
 
         int paks = SDLNet_UDP_Recv(net.sockets[0].udp_socket, packet);
         if (paks != 1) {
-            char *tmp = iptodynstr(server_address);
+            char *tmp = iptodynstr(listen_address);
             ERR("Pak rx failed on: %s: %s", tmp, SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
-        char *tmp = iptodynstr(server_address);
+        char *tmp = iptodynstr(listen_address);
         LOG("Pak rx on: %s", tmp);
         myfree(tmp);
 

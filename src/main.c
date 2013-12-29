@@ -391,12 +391,14 @@ static void usage (void)
 {
     fprintf(MY_STDERR, "Gorynlich, options:\n");
     fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --server <hostname or ip> <port-number>\n");
+    fprintf(MY_STDERR, "        --server  <hostname or ip> <port-number>\n");
+    fprintf(MY_STDERR, "                  listen on this port\n");
     fprintf(MY_STDERR, "        -server          :\n");
     fprintf(MY_STDERR, "        -s               :\n");
     fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --client <hostname or ip> <port-number>\n");
-    fprintf(MY_STDERR, "        -client          :\n");
+    fprintf(MY_STDERR, "        --connect <hostname or ip> <port-number>\n");
+    fprintf(MY_STDERR, "                  connect to a server\n");
+    fprintf(MY_STDERR, "        -connect         :\n");
     fprintf(MY_STDERR, "        -c               :\n");
     fprintf(MY_STDERR, "\n");
     fprintf(MY_STDERR, "Written by Neil McGill, goblinhack@gmail.com\n");
@@ -442,7 +444,7 @@ static void parse_args (int32_t argc, char *argv[])
 
             LOG("Trying to resolve %s:%d", argv[i + 1], atoi(argv[i + 2]));
 
-            if (SDLNet_ResolveHost(&server_address, 
+            if (SDLNet_ResolveHost(&listen_address, 
                                    argv[i + 1], 
                                    atoi(argv[i + 2])) == -1) {
                 DIE("cannot resolve host %s port %s",
@@ -451,7 +453,7 @@ static void parse_args (int32_t argc, char *argv[])
 
             is_server = true;
 
-            char *tmp = iptodynstr(server_address);
+            char *tmp = iptodynstr(listen_address);
             LOG("User specified server: %s", tmp);
             myfree(tmp);
 
@@ -461,10 +463,10 @@ static void parse_args (int32_t argc, char *argv[])
         }
 
         /*
-         * -client
+         * -connect
          */
-        if (!strcmp(argv[i], "--client") ||
-            !strcmp(argv[i], "-client") ||
+        if (!strcmp(argv[i], "--connect") ||
+            !strcmp(argv[i], "-connect") ||
             !strcmp(argv[i], "-c")) {
 
             if (i + 2 >= argc) {
@@ -473,7 +475,7 @@ static void parse_args (int32_t argc, char *argv[])
 
             LOG("Trying to resolve %s:%d", argv[i + 1], atoi(argv[i + 2]));
 
-            if (SDLNet_ResolveHost(&client_address, 
+            if (SDLNet_ResolveHost(&connect_address, 
                                    argv[i + 1], 
                                    atoi(argv[i + 2])) == -1) {
                 DIE("cannot resolve host %s port %s",
@@ -482,8 +484,8 @@ static void parse_args (int32_t argc, char *argv[])
 
             is_client = true;
 
-            char *tmp = iptodynstr(client_address);
-            LOG("User specified client: %s", tmp);
+            char *tmp = iptodynstr(connect_address);
+            LOG("User specified client connect to: %s", tmp);
             myfree(tmp);
 
             i += 2;

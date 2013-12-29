@@ -24,6 +24,7 @@
 #include "map.h"
 #include "command.h"
 #include "server.h"
+#include "client.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -908,14 +909,19 @@ void sdl_loop (void)
         }
 
         /*
-         * Console, end user input.
+         * End user i/o.
          */
         console_tick();
 
         /*
-         * Server input.
+         * Network server i/o.
          */
         server_tick();
+
+        /*
+         * Network client i/o.
+         */
+        client_poll();
 
         /*
          * Flip
