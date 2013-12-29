@@ -14,6 +14,7 @@
 #include "server.h"
 
 static boolean server_init_done;
+static socket *server_socket;
 
 boolean server_init (void)
 {
@@ -29,7 +30,10 @@ boolean server_init (void)
         return (false);
     }
 
-    LOG("Server listening on %s", s->logname);
+    LOG("Server listening on %s", s->local_logname);
+
+    server_socket = s;
+    s->server = true;
 
     server_init_done = true;
 
@@ -45,10 +49,16 @@ void server_fini (void)
     }
 }
 
-void server_tick (void)
+static void server_poll (void)
 {
+    socket *s = server_socket;
+
+    if (!s) {
+        return;
+    }
+
     int waittime = 0;
-    int numready = SDLNet_CheckSockets(net.socklist, waittime);
+    int numready = SDLNet_CheckSockets(s->socklist, waittime);
     if (numready <= 0) {
         return;
     }
@@ -65,30 +75,32 @@ void server_tick (void)
 
     int i;
     for (i = 0; i < numready; i++) {
-        if (!net.sockets[i].open) {
+        if (!SDLNet_SocketReady(s->udp_socket)) {
             continue;
         }
 
-        if (!SDLNet_SocketReady(net.sockets[i].udp_socket)) {
-            continue;
-        }
-
-        int paks = SDLNet_UDP_Recv(net.sockets[0].udp_socket, packet);
+        int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
         if (paks != 1) {
-            char *tmp = iptodynstr(listen_address);
+            char *tmp = iptodynstr(connect_address);
             ERR("Pak rx failed on: %s: %s", tmp, SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
-        char *tmp = iptodynstr(listen_address);
-        LOG("Pak rx on: %s", tmp);
+        char *tmp = iptodynstr(packet->address);
+        LOG("Server Pak rx on: %s", tmp);
         myfree(tmp);
 
         int y = SDLNet_Read16(packet->data);
         int x = SDLNet_Read16(packet->data+2);
-        LOG("Recieve X,Y = %d,%d",x,y);   //not working... 
+        LOG("Server Recieve X,Y = %d,%d",x,y);   //not working... 
     }
 
     SDLNet_FreePacket(packet);
 }
+
+void server_tick (void)
+{
+    server_poll();
+}
+

@@ -8,4 +8,4 @@
 
 extern boolean client_init(void);
 extern void client_fini(void);
-extern void client_poll(void);
+extern void client_tick(void);

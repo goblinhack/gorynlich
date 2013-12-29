@@ -921,7 +921,7 @@ void sdl_loop (void)
         /*
          * Network client i/o.
          */
-        client_poll();
+        client_tick();
 
         /*
          * Flip
