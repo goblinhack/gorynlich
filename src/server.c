@@ -30,7 +30,7 @@ boolean server_init (void)
 
     s = net_listen(server_address);
     if (!s) {
-        ERR_TB("Server failed to listen");
+        ERR("Server failed to listen");
         return (false);
     }
 
@@ -73,7 +73,7 @@ static void server_poll (void)
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR_TB("out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR("out of packet space, pak %d", MAX_PACKET_SIZE);
         return;
     }
 
@@ -85,8 +85,13 @@ static void server_poll (void)
 
         int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
         if (paks != 1) {
-            ERR_TB("Pak rx failed: %s", SDLNet_GetError());
+            ERR("Pak rx failed: %s", SDLNet_GetError());
             continue;
+        }
+
+        socket *s = net_find_remote_ip(packet->address);
+        if (!s) {
+            net_connect(packet->address);
         }
 
         char *tmp = iptodynstr(packet->address);

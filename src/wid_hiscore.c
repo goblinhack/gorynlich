@@ -326,7 +326,7 @@ boolean hiscore_save (void)
 
     ctx = marshal(file);
     if (!ctx) {
-        ERR_TB("Failed to save: %s", file);
+        ERR("Failed to save: %s", file);
         myfree(file);
         return (false);
     }
@@ -343,7 +343,7 @@ boolean hiscore_save (void)
     }
 
     if (marshal_fini(ctx) < 0) {
-        ERR_TB("Failed to finalize: %s", file);
+        ERR("Failed to finalize: %s", file);
         myfree(file);
 
         return (false);
@@ -363,7 +363,7 @@ boolean hiscore_load (void)
         tree_destroy(&hiscores, 0);
     }
 
-    LOG("Load %s", file);
+    DBG("Load %s", file);
 
     uint32_t count = 0;
     hiscore h;

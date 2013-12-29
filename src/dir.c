@@ -57,7 +57,7 @@ tree_root *dirlist (const char *dir,
 
     d = opendir(dir);
     if (!d) {
-        ERR_TB("Cannot list dir %s", dir);
+        ERR("Cannot list dir %s", dir);
         return (0);
     }
 

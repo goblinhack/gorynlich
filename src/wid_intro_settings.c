@@ -257,7 +257,7 @@ static void wid_intro_settings_read (void)
     }
 
     if (val == WID_INTRO_MAX_VAL) {
-        ERR_TB("Window size %s was not found in known list", val_str);
+        ERR("Window size %s was not found in known list", val_str);
         val = 0;
     }
 
@@ -276,7 +276,7 @@ static void wid_intro_settings_read (void)
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_SOUND] = 0;
 
-        ERR_TB("Sound volume size %d was not found in known list", val);
+        ERR("Sound volume size %d was not found in known list", val);
     }
 
     /*
@@ -290,7 +290,7 @@ static void wid_intro_settings_read (void)
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_MUSIC] = 0;
 
-        ERR_TB("Music volume %d was not found in known list", val);
+        ERR("Music volume %d was not found in known list", val);
     }
 
 }

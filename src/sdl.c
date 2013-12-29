@@ -203,7 +203,7 @@ boolean sdl_init (void)
     int32_t value;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
-        ERR_TB("Couldn't initialize SDL: %s", SDL_GetError());
+        ERR("Couldn't initialize SDL: %s", SDL_GetError());
         return (false);
     }
 

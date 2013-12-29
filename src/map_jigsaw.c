@@ -513,7 +513,7 @@ static void map_jigsaw_buffer_print_file (FILE *fpin)
     if (!fpin) {
         fp = fopen(tmp, "w");
         if (!fp) {
-            ERR_TB("can't write map file");
+            ERR("can't write map file");
             return;
         }
     } else {

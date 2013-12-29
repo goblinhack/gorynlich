@@ -34,5 +34,8 @@ typedef struct {
 
 extern socket *net_listen(IPaddress address);
 extern socket *net_connect(IPaddress address);
+extern socket *net_find_local_ip(IPaddress address);
+extern socket *net_find_remote_ip(IPaddress address);
+
 extern network net;
 extern IPaddress no_address;

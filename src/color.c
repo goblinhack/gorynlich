@@ -1658,7 +1658,7 @@ color string2color (const char **s)
 
     target = (typeof(target)) tree_find(colors, &find.tree.node);
     if (!target) {
-        ERR_TB("Unknown color [%s]", tmp);
+        ERR("Unknown color [%s]", tmp);
         return (WHITE);
     }
 
