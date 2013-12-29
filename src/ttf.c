@@ -73,7 +73,7 @@ boolean ttf_init (void)
 {
 #ifdef ENABLE_GENERATE_TTF
     if (TTF_Init() < 0) {
-        ERR("cannot init SDL_ttf");
+        ERR_TB("cannot init SDL_ttf");
         return (false);
     }
 #endif
@@ -517,7 +517,7 @@ ttf_set_color_key (SDL_Surface *glyph_surface,
                             );
 
     if (!tmp) {
-        ERR("Failed to make RGB surface size %d %d: %s",
+        ERR_TB("Failed to make RGB surface size %d %d: %s",
             *width, *height, SDL_GetError());
         return;
     }
@@ -560,7 +560,7 @@ ttf_create_tex_from_char (TTF_Font *ttf, const char *name, font *f, uint8_t c)
                          &f->glyphs[c].maxy,
                          &f->glyphs[c].advance);
     if (e != 0) {
-        ERR("error loading font glyph %u %s", c, name);
+        ERR_TB("error loading font glyph %u %s", c, name);
         return;
     }
 
@@ -570,14 +570,14 @@ ttf_create_tex_from_char (TTF_Font *ttf, const char *name, font *f, uint8_t c)
     SDL_Surface *g0 =
             TTF_RenderText_Shaded(ttf, text, f->foreground, f->background);
     if (!g0) {
-        ERR("error rendering font glyph %u %s", c, name);
+        ERR_TB("error rendering font glyph %u %s", c, name);
         return;
     }
 
     SDL_Surface *g1 = 
             TTF_RenderText_Shaded(ttf, text, f->foreground, f->background);
     if (!g1) {
-        ERR("error getting display format for font glyph %u %s", c, name);
+        ERR_TB("error getting display format for font glyph %u %s", c, name);
         return;
     }
 

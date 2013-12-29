@@ -33,7 +33,7 @@ boolean client_init (void)
     /*
      * Connector.
      */
-    s = net_connect(connect_address);
+    s = net_connect(server_address);
     if (!s) {
         ERR("Client failed to connect");
         return (false);
@@ -43,22 +43,6 @@ boolean client_init (void)
     s->client = true;
     LOG("Client connecting to   %s", s->remote_logname);
     LOG("Client connecting from %s", s->local_logname);
-
-#if 0
-    /*
-     * Listener.
-     */
-    s = net_listen(ip2);
-    if (!s) {
-        ERR("Client failed to listen");
-        return (false);
-    }
-
-    client_listen_socket = s;
-    s->client = true;
-    LOG("Client listening on %s", s->logname);
-
-#endif
 
     client_init_done = true;
 
@@ -93,7 +77,7 @@ static void client_poll (void)
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR("out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR_TB("Out of packet space, pak %d", MAX_PACKET_SIZE);
         return;
     }
 
@@ -105,13 +89,11 @@ static void client_poll (void)
 
         int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
         if (paks != 1) {
-            char *tmp = iptodynstr(connect_address);
-            ERR("Pak rx failed on: %s: %s", tmp, SDLNet_GetError());
-            myfree(tmp);
+            ERR_TB("Pak rx failed: %s", SDLNet_GetError());
             continue;
         }
 
-        char *tmp = iptodynstr(connect_address);
+        char *tmp = iptodynstr(s->local_ip);
         LOG("Client Pak rx on: %s", tmp);
         myfree(tmp);
 
@@ -139,7 +121,7 @@ done++;
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR("out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR_TB("Out of packet space, pak %d", MAX_PACKET_SIZE);
         return;
     }
 
@@ -152,13 +134,13 @@ y++;
 y++;
     LOG("Sending X,Y = %d,%d", x,y);
 
-    packet->address = listen_address;
+    packet->address = s->remote_ip;;
     SDLNet_Write16(y,data);                 
     SDLNet_Write16(x,data+2);               
     packet->len = sizeof(data);
 
     if (SDLNet_UDP_Send(s->udp_socket, s->channel, packet) < 1) {
-        ERR("no UDP packet sent");
+        ERR_TB("no UDP packet sent");
     } 
         
     SDLNet_FreePacket(packet);

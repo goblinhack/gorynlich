@@ -326,7 +326,7 @@ boolean hiscore_save (void)
 
     ctx = marshal(file);
     if (!ctx) {
-        ERR("Failed to save: %s", file);
+        ERR_TB("Failed to save: %s", file);
         myfree(file);
         return (false);
     }
@@ -343,7 +343,7 @@ boolean hiscore_save (void)
     }
 
     if (marshal_fini(ctx) < 0) {
-        ERR("Failed to finalize: %s", file);
+        ERR_TB("Failed to finalize: %s", file);
         myfree(file);
 
         return (false);
