@@ -31,7 +31,7 @@ boolean net_init (void)
     }
 
     if (SDLNet_Init() < 0) {
-        ERR_TB("cannot init SDL_net");
+        ERR("cannot init SDL_net");
         return (false);
     }
 
@@ -67,6 +67,36 @@ void net_fini (void)
     net_init_done = false;
 }
 
+socket *net_find_local_ip (IPaddress address)
+{
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socket *s = &net.sockets[si];
+
+        if (!memcmp(&address, &s->local_ip, sizeof(IPaddress))) {
+            return (s);
+        }
+    }
+
+    return (0);
+}
+
+socket *net_find_remote_ip (IPaddress address)
+{
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socket *s = &net.sockets[si];
+
+        if (!memcmp(&address, &s->remote_ip, sizeof(IPaddress))) {
+            return (s);
+        }
+    }
+
+    return (0);
+}
+
 socket *net_listen (IPaddress address)
 {
     IPaddress listen_address = address;
@@ -87,8 +117,8 @@ socket *net_listen (IPaddress address)
         break;
     }
 
-    if (!s) {
-        ERR_TB("No more sockets are available");
+    if (si == MAX_SOCKETS) {
+        ERR("No more sockets are available");
         return (0);
     }
 
@@ -103,14 +133,14 @@ socket *net_listen (IPaddress address)
         if ((SDLNet_ResolveHost(&listen_address, 
                                 SERVER_DEFAULT_HOST,
                                 SERVER_DEFAULT_PORT)) == -1) {
-            ERR_TB("Cannot resolve host %s port %d", 
+            ERR("Cannot resolve host %s port %d", 
                 SERVER_DEFAULT_HOST, 
                 SERVER_DEFAULT_PORT);
             return (false);
         }
 
         if (!memcmp(&no_address, &listen_address, sizeof(no_address))) {
-            ERR_TB("Cannot get a local port to listen on");
+            ERR("Cannot get a local port to listen on");
             return (false);
         }
     }
@@ -160,31 +190,31 @@ socket *net_listen (IPaddress address)
 
         s->udp_socket = SDLNet_UDP_Open(port);
         if (!s->udp_socket) {
-            ERR_TB("SDLNet_UDP_Open %s failed", tmp);
-            ERR("  %s", SDLNet_GetError());
+            ERR("SDLNet_UDP_Open %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
         s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
         if (s->channel < 0) {
-            ERR_TB("SDLNet_UDP_Bind %s failed", tmp);
-            ERR("  %s", SDLNet_GetError());
+            ERR("SDLNet_UDP_Bind %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
         s->socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
         if (!s->socklist) {
-            ERR_TB("SDLNet_AllocSocketSet %s failed", tmp);
-            ERR("  %s", SDLNet_GetError());
+            ERR("SDLNet_AllocSocketSet %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
         if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
-            ERR_TB("SDLNet_UDP_AddSocket %s failed", tmp);
-            ERR("  %s", SDLNet_GetError());
+            ERR("SDLNet_UDP_AddSocket %s failed", tmp);
+            WARN("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
@@ -196,7 +226,7 @@ socket *net_listen (IPaddress address)
         return (s);
     }
 
-    ERR("Failed to listen");
+    WARN("Failed to listen");
     return (0);
 }
 
@@ -219,8 +249,8 @@ socket *net_connect (IPaddress address)
         break;
     }
 
-    if (!s) {
-        ERR("No more sockets are available");
+    if (si == MAX_SOCKETS) {
+        WARN("No more sockets are available");
         return (0);
     }
 
@@ -235,14 +265,14 @@ socket *net_connect (IPaddress address)
         if ((SDLNet_ResolveHost(&connect_address, 
                                 SERVER_DEFAULT_HOST,
                                 SERVER_DEFAULT_PORT)) == -1) {
-            ERR("Cannot resolve host %s port %d", 
+            WARN("Cannot resolve host %s port %d", 
                 SERVER_DEFAULT_HOST, 
                 SERVER_DEFAULT_PORT);
             return (false);
         }
 
         if (!memcmp(&no_address, &connect_address, sizeof(no_address))) {
-            ERR("Cannot get a local port to connect on");
+            WARN("Cannot get a local port to connect on");
             return (false);
         }
     }
@@ -261,16 +291,16 @@ socket *net_connect (IPaddress address)
 
     s->udp_socket = SDLNet_UDP_Open(0);
     if (!s->udp_socket) {
-        ERR_TB("SDLNet_UDP_Open %s failed", tmp);
-        ERR("  %s", SDLNet_GetError());
+        ERR("SDLNet_UDP_Open %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
         myfree(tmp);
         return (false);
     }
 
     s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
     if (s->channel < 0) {
-        ERR_TB("SDLNet_UDP_Bind %s failed", tmp);
-        ERR("  %s", SDLNet_GetError());
+        ERR("SDLNet_UDP_Bind %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
         myfree(tmp);
         return (false);
     }

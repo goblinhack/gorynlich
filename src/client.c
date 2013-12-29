@@ -35,7 +35,7 @@ boolean client_init (void)
      */
     s = net_connect(server_address);
     if (!s) {
-        ERR("Client failed to connect");
+        WARN("Client failed to connect");
         return (false);
     }
 
@@ -77,7 +77,7 @@ static void client_poll (void)
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR_TB("Out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
         return;
     }
 
@@ -89,7 +89,7 @@ static void client_poll (void)
 
         int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
         if (paks != 1) {
-            ERR_TB("Pak rx failed: %s", SDLNet_GetError());
+            ERR("Pak rx failed: %s", SDLNet_GetError());
             continue;
         }
 
@@ -121,7 +121,7 @@ done++;
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR_TB("Out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
         return;
     }
 
@@ -140,7 +140,7 @@ y++;
     packet->len = sizeof(data);
 
     if (SDLNet_UDP_Send(s->udp_socket, s->channel, packet) < 1) {
-        ERR_TB("no UDP packet sent");
+        ERR("no UDP packet sent");
     } 
         
     SDLNet_FreePacket(packet);
