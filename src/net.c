@@ -97,6 +97,10 @@ socket *net_listen (IPaddress address)
      * If no address is given, try and grab one from our well known base.
      */
     if (!memcmp(&no_address, &listen_address, sizeof(no_address))) {
+        DBG("Resolve host %s port %d", 
+            SERVER_DEFAULT_HOST, 
+            SERVER_DEFAULT_PORT);
+
         if ((SDLNet_ResolveHost(&listen_address, 
                                 SERVER_DEFAULT_HOST,
                                 SERVER_DEFAULT_PORT)) == -1) {
@@ -125,6 +129,8 @@ socket *net_listen (IPaddress address)
     }
 
     uint16_t port = SDLNet_Read16(&listen_address.port);
+
+    DBG("Find a server port...");
 
     for (p = 0; p <= max_port; p++, port++) {
 
@@ -223,6 +229,10 @@ socket *net_connect (IPaddress address)
      * If no address is given, try and grab one from our well known base.
      */
     if (!memcmp(&no_address, &connect_address, sizeof(no_address))) {
+        DBG("Resolve client host %s port %d", 
+            SERVER_DEFAULT_HOST, 
+            SERVER_DEFAULT_PORT);
+
         if ((SDLNet_ResolveHost(&connect_address, 
                                 SERVER_DEFAULT_HOST,
                                 SERVER_DEFAULT_PORT)) == -1) {
@@ -248,7 +258,7 @@ socket *net_connect (IPaddress address)
     port = SDLNet_Read16(&connect_address.port);
 
     char *tmp = iptodynstr(connect_address);
-    DBG("Trying to connect on: %s", tmp);
+    DBG("Trying to connect to %s", tmp);
 
     s->udp_socket = SDLNet_UDP_Open(0);
     if (!s->udp_socket) {
