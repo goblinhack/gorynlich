@@ -456,6 +456,7 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-s")) {
 
             host = argv[i + 1];
+            i++;
             continue;
         }
 
@@ -467,6 +468,7 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-s")) {
 
             port = atoi(argv[i + 1]);
+            i++;
             continue;
         }
 
