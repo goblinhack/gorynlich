@@ -15,6 +15,8 @@
 
 static void client_transmit(void);
 static boolean client_init_done;
+static socket *client_listen_socket;
+static socket *client_connect_socket;
 
 boolean client_init (void)
 {
@@ -24,15 +26,35 @@ boolean client_init (void)
 
     socket *s;
 
-    s = net_listen(no_address);
+    /*
+     * Connector.
+     */
+    s = net_connect(connect_address);
+    if (!s) {
+        ERR("Client failed to connect");
+        return (false);
+    }
+
+    client_connect_socket = s;
+    s->client = true;
+    LOG("Client connecting to   %s", s->remote_logname);
+    LOG("Client connecting from %s", s->local_logname);
+
+#if 0
+    /*
+     * Listener.
+     */
+    s = net_listen(ip2);
     if (!s) {
         ERR("Client failed to listen");
         return (false);
     }
 
-    s->server = true;
-
+    client_listen_socket = s;
+    s->client = true;
     LOG("Client listening on %s", s->logname);
+
+#endif
 
     client_init_done = true;
 
@@ -48,10 +70,15 @@ void client_fini (void)
     }
 }
 
-void client_poll (void)
+static void client_poll (void)
 {
+    socket *s = client_listen_socket;
+    if (!s) {
+        return;
+    }
+
     int waittime = 0;
-    int numready = SDLNet_CheckSockets(net.socklist, waittime);
+    int numready = SDLNet_CheckSockets(s->socklist, waittime);
     if (numready <= 0) {
         return;
     }
@@ -68,15 +95,11 @@ void client_poll (void)
 
     int i;
     for (i = 0; i < numready; i++) {
-        if (!net.sockets[i].open) {
+        if (!SDLNet_SocketReady(s->udp_socket)) {
             continue;
         }
 
-        if (!SDLNet_SocketReady(net.sockets[i].udp_socket)) {
-            continue;
-        }
-
-        int paks = SDLNet_UDP_Recv(net.sockets[0].udp_socket, packet);
+        int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
         if (paks != 1) {
             char *tmp = iptodynstr(connect_address);
             ERR("Pak rx failed on: %s: %s", tmp, SDLNet_GetError());
@@ -85,20 +108,29 @@ void client_poll (void)
         }
 
         char *tmp = iptodynstr(connect_address);
-        LOG("Pak rx on: %s", tmp);
+        LOG("Client Pak rx on: %s", tmp);
         myfree(tmp);
 
         int y = SDLNet_Read16(packet->data);
         int x = SDLNet_Read16(packet->data+2);
-        LOG("Recieve X,Y = %d,%d",x,y);   //not working... 
+        LOG("Client Recieve X,Y = %d,%d",x,y);   //not working... 
     }
 
     SDLNet_FreePacket(packet);
-client_transmit();
 }
 
 static void client_transmit (void)
 {
+static int done = 0;
+if (done > 1) {
+return;
+}
+done++;
+    socket *s = client_connect_socket;
+    if (!s) {
+        return;
+    }
+
     UDPpacket *packet;      
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
@@ -107,27 +139,29 @@ static void client_transmit (void)
         return;
     }
 
-    uint8_t data[4];
-    memset(data, 0, sizeof(data));
+    uint8_t *data = packet->data;
 
 static int x;
 static int y;
 x++;
 y++;
 y++;
-    LOG("Sending X,Y = %d,%d\n", x,y);
+    LOG("Sending X,Y = %d,%d", x,y);
 
     packet->address = listen_address;
     SDLNet_Write16(y,data);                 
     SDLNet_Write16(x,data+2);               
     packet->len = sizeof(data);
-    packet->data = (Uint8 *)data;
 
-#if 0
-    if (SDLNet_UDP_Send(udpclient, channel_server, packet) < 1) {
+    if (SDLNet_UDP_Send(s->udp_socket, s->channel, packet) < 1) {
         ERR("no UDP packet sent");
     } 
         
-#endif
     SDLNet_FreePacket(packet);
+}
+
+void client_tick (void)
+{
+    client_poll();
+    client_transmit();
 }

@@ -54,8 +54,12 @@ void net_fini (void)
 
     int s;
     for (s = 0; s < MAX_SOCKETS; s++) {
-        if (net.sockets[s].logname) {
-            myfree(net.sockets[s].logname);
+        if (net.sockets[s].local_logname) {
+            myfree(net.sockets[s].local_logname);
+        }
+
+        if (net.sockets[s].remote_logname) {
+            myfree(net.sockets[s].remote_logname);
         }
     }
 
@@ -72,11 +76,16 @@ socket *net_listen (IPaddress address)
     socket *s = 0;
     uint32_t si;
 
+    /*
+     * Find the first free socket.
+     */
     for (si = 0; si < MAX_SOCKETS; si++) {
         s = &net.sockets[si];
         if (s->open) {
             continue;
         }
+
+        break;
     }
 
     if (!s) {
@@ -126,7 +135,13 @@ socket *net_listen (IPaddress address)
          * Check the port is not in use.
          */
         for (si = 0; si < MAX_SOCKETS; si++) {
-            if (!memcmp(&listen_address, &s->ip, sizeof(IPaddress))) {
+            socket *s = &net.sockets[si];
+
+            if (!s->server) {
+                continue;
+            }
+
+            if (!memcmp(&listen_address, &s->local_ip, sizeof(IPaddress))) {
                 break;
             }
         }
@@ -138,46 +153,130 @@ socket *net_listen (IPaddress address)
         char *tmp = iptodynstr(listen_address);
         DBG("Trying to listen on: %s", tmp);
 
-        net.sockets[0].udp_socket = SDLNet_UDP_Open(port);
-        if (!net.sockets[0].udp_socket) {
-            ERR("SDLNet_UDP_Open %s failed: %s", tmp, SDLNet_GetError());
+        s->udp_socket = SDLNet_UDP_Open(port);
+        if (!s->udp_socket) {
+            ERR("SDLNet_UDP_Open %s failed", tmp);
+            ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
-        net.sockets[0].channel = SDLNet_UDP_Bind(net.sockets[0].udp_socket,
-                                                 -1,
-                                                 &listen_address);
-        if (net.sockets[0].channel < 0) {
-            ERR("SDLNet_UDP_Bind %s failed: %s", tmp, SDLNet_GetError());
+        s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
+        if (s->channel < 0) {
+            ERR("SDLNet_UDP_Bind %s failed", tmp);
+            ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
-        net.socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
-        if (!net.socklist) {
-            ERR("SDLNet_AllocSocketSet %s failed: %s", tmp, SDLNet_GetError());
+        s->socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
+        if (!s->socklist) {
+            ERR("SDLNet_AllocSocketSet %s failed", tmp);
+            ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
-        if (SDLNet_UDP_AddSocket(net.socklist, 
-                                 net.sockets[0].udp_socket) == -1) {
-            ERR("SDLNet_UDP_AddSocket %s failed: %s", tmp, SDLNet_GetError());
+        if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
+            ERR("SDLNet_UDP_AddSocket %s failed", tmp);
+            ERR("  %s", SDLNet_GetError());
             myfree(tmp);
             continue;
         }
 
-        s->logname = tmp;
+        s->local_logname = tmp;
         s->open = true;
-        s->ip = listen_address;
-        s->listener = true;
+        s->local_ip = listen_address;
 
         return (s);
     }
 
     ERR("Failed to listen");
     return (0);
+}
+
+socket *net_connect (IPaddress address)
+{
+    IPaddress connect_address = address;
+
+    socket *s = 0;
+    uint32_t si;
+
+    /*
+     * Find the first free socket.
+     */
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        s = &net.sockets[si];
+        if (s->open) {
+            continue;
+        }
+
+        break;
+    }
+
+    if (!s) {
+        ERR("No more sockets are available");
+        return (0);
+    }
+
+    /*
+     * If no address is given, try and grab one from our well known base.
+     */
+    if (!memcmp(&no_address, &connect_address, sizeof(no_address))) {
+        if ((SDLNet_ResolveHost(&connect_address, 
+                                SERVER_DEFAULT_HOST,
+                                SERVER_DEFAULT_PORT)) == -1) {
+            ERR("Cannot resolve host %s port %d", 
+                SERVER_DEFAULT_HOST, 
+                SERVER_DEFAULT_PORT);
+            return (false);
+        }
+
+        if (!memcmp(&no_address, &connect_address, sizeof(no_address))) {
+            ERR("Cannot get a local port to connect on");
+            return (false);
+        }
+    }
+
+    /*
+     * If given an address, we must listn on that specific address.
+     * If not then we can look for the next free.
+     */
+    uint16_t port = SDLNet_Read16(&connect_address.port);
+
+    SDLNet_Write16(port, &connect_address.port);
+    port = SDLNet_Read16(&connect_address.port);
+
+    char *tmp = iptodynstr(connect_address);
+    DBG("Trying to connect on: %s", tmp);
+
+    s->udp_socket = SDLNet_UDP_Open(0);
+    if (!s->udp_socket) {
+        ERR("SDLNet_UDP_Open %s failed", tmp);
+        ERR("  %s", SDLNet_GetError());
+        myfree(tmp);
+        return (false);
+    }
+
+    s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
+    if (s->channel < 0) {
+        ERR("SDLNet_UDP_Bind %s failed", tmp);
+        ERR("  %s", SDLNet_GetError());
+        myfree(tmp);
+        return (false);
+    }
+    myfree(tmp);
+
+    s->local_logname = tmp;
+    s->open = true;
+
+    s->remote_ip = connect_address;
+    s->remote_logname = iptodynstr(s->remote_ip);
+
+    s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
+    s->local_logname = iptodynstr(s->local_ip);
+
+    return (s);
 }
 
 char *iptodynstr (IPaddress ip)
@@ -206,22 +305,24 @@ char *iptodynstr (IPaddress ip)
 
 static boolean net_show (tokens_t *tokens, void *context)
 {
-    const char *prefix = "  %-40s %-6s %-6s";
+    const char *prefix = "%-30s %-30s %-6s";
 
-    CON(prefix, "Host", "Dir", "Type");
-    CON(prefix, "----", "---", "---");
+    CON(prefix, "Local", "Remote", "Type");
+    CON(prefix, "-----", "------", "---");
 
-    int s;
-    for (s = 0; s < MAX_SOCKETS; s++) {
-        if (!net.sockets[s].open) {
+    int si;
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        const socket *s = &net.sockets[si];
+
+        if (!s->open) {
             CON(prefix, "-", "-");
             continue;
         }
 
-        CON(prefix, net.sockets[s].logname, 
-            net.sockets[s].listener ? "listen" :
-            net.sockets[s].connect ? "Connect" : "n/a",
-            net.sockets[s].server ? "Server" : "Client");
+        CON(prefix, 
+            s->local_logname ? s->local_logname : "n/a",
+            s->remote_logname ? s->remote_logname : "n/a",
+            s->server ? "Server" : "Client");
     }
 
     return (true);
