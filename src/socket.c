@@ -10,7 +10,7 @@
 #include <SDL_net.h>
 
 #include "main.h"
-#include "net.h"
+#include "socket.h"
 #include "string.h"
 #include "slre.h"
 #include "command.h"
@@ -126,7 +126,7 @@ socket *socket_find_remote_ip (IPaddress address)
     return (0);
 }
 
-socket *net_listen (IPaddress address)
+socket *socket_listen (IPaddress address)
 {
     IPaddress listen_address = address;
     uint16_t p;
@@ -259,7 +259,7 @@ socket *net_listen (IPaddress address)
     return (0);
 }
 
-socket *net_connect (IPaddress address)
+socket *socket_connect (IPaddress address)
 {
     IPaddress connect_address = address;
 
