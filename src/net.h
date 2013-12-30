@@ -50,3 +50,8 @@ extern void socket_count_inc_pak_rx_error(const socketp);
 extern void socket_count_inc_pak_tx(const socketp);
 extern void socket_count_inc_pak_tx_error(const socketp);
 extern void socket_count_inc_pak_rx_bad_msg(const socketp);
+
+extern void send_ping(socketp s, uint16_t seq, uint32_t ts);
+extern void send_pong(socketp s, uint16_t seq, uint32_t ts);
+extern void receive_ping(socketp s, UDPpacket *packet, uint8_t *data);
+extern void receive_pong(socketp s, UDPpacket *packet, uint8_t *data);
