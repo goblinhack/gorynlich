@@ -128,6 +128,10 @@ static void client_poll (void)
             receive_pong(s, packet, data);
             break;
 
+        case MSG_TYPE_PING:
+            receive_ping(s, packet, data);
+            break;
+
         default:
             socket_count_inc_pak_rx_bad_msg(s);
             ERR("Unknown message type received [%u", type);
