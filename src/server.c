@@ -12,6 +12,7 @@
 #include "main.h"
 #include "socket.h"
 #include "server.h"
+#include "time.h"
 
 static boolean server_init_done;
 static socketp server_socket;
@@ -105,6 +106,10 @@ static void server_poll (void)
             receive_ping(s, packet, data);
             break;
 
+        case MSG_TYPE_PONG:
+            receive_pong(s, packet, data);
+            break;
+
         default:
             socket_count_inc_pak_rx_bad_msg(s);
             ERR("Unknown message type received [%u", type);
@@ -114,6 +119,40 @@ static void server_poll (void)
     SDLNet_FreePacket(packet);
 }
 
+static void server_send_ping (void)
+{
+    static uint32_t ts;
+    static uint32_t seq;
+
+    if (!time_have_x_tenths_passed_since(10, ts)) {
+        return;
+    }
+
+    ts = time_get_time_cached();
+
+    int si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        const socketp s = socket_get(si);
+        if (!s) {
+            continue;
+        }
+
+        if (!socket_get_open(s)) {
+            continue;
+        }
+
+        if (socket_get_server(s)) {
+            continue;
+        }
+
+        ts = time_get_time_cached();
+        send_ping(s, seq, ts);
+    }
+
+    seq++;
+}
+
 void server_tick (void)
 {
     if (!is_server) {
@@ -121,4 +160,5 @@ void server_tick (void)
     }
 
     server_poll();
+    server_send_ping();
 }
