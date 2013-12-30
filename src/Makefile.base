@@ -9,7 +9,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/term.o 			\
     $(OBJDIR)/client.o 			\
     $(OBJDIR)/server.o 			\
-    $(OBJDIR)/net.o 			\
+    $(OBJDIR)/socket.o 			\
     $(OBJDIR)/backtrace.o 		\
     $(OBJDIR)/color.o			\
     $(OBJDIR)/command.o 		\
