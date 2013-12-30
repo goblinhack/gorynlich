@@ -26,6 +26,14 @@ typedef struct socket_ {
     char *remote_logname;
     int channel;
     SDLNet_SocketSet socklist;
+    /*
+     * Counters.
+     */
+    uint32_t rx;
+    uint32_t tx;
+    uint32_t rx_error;
+    uint32_t tx_error;
+    uint32_t rx_bad_msg;
 } socket;
 
 typedef struct network_ {
@@ -34,8 +42,11 @@ typedef struct network_ {
 
 boolean is_server;
 boolean is_client;
+boolean is_headless;
+
 IPaddress server_address = {0};
 IPaddress no_address = {0};
+
 network net;
 
 static boolean net_show(tokens_t *tokens, void *context);
@@ -321,6 +332,23 @@ socket *net_connect (IPaddress address)
         return (false);
     }
 
+    s->socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
+    if (!s->socklist) {
+        char *tmp = iptodynstr(connect_address);
+        ERR("SDLNet_AllocSocketSet %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
+        myfree(tmp);
+        return (false);
+    }
+
+    if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
+        char *tmp = iptodynstr(connect_address);
+        ERR("SDLNet_UDP_AddSocket %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
+        myfree(tmp);
+        return (false);
+    }
+
     s->open = true;
 
     s->remote_ip = connect_address;
@@ -355,12 +383,8 @@ char *iptodynstr (IPaddress ip)
 
 static boolean net_show (tokens_t *tokens, void *context)
 {
-    const char *prefix = "%-30s %-30s %-6s";
-
-    CON(prefix, "Local", "Remote", "Type");
-    CON(prefix, "-----", "------", "----");
-
     int si;
+
     for (si = 0; si < MAX_SOCKETS; si++) {
         const socketp s = &net.sockets[si];
 
@@ -368,10 +392,21 @@ static boolean net_show (tokens_t *tokens, void *context)
             continue;
         }
 
-        CON(prefix, 
-            socket_get_local_logname(s), 
-            socket_get_remote_logname(s), 
-            s->server ? "Server" : "Client");
+        if (s->server) {
+            CON("[%d] Server", si);
+        } else {
+            CON("[%d] Client", si);
+        }
+
+        CON("  Local IP : %s", socket_get_local_logname(s));
+
+        if (s->client) {
+            CON("  Remote IP: %s", socket_get_remote_logname(s));
+        }
+
+        CON("  Tx: %u Rx: %u", s->tx, s->rx);
+        CON("  Tx error: %u Rx error: %u Bad message: %u", 
+            s->tx_error, s->rx_error, s->rx_bad_msg);
     }
 
     return (true);
@@ -444,3 +479,29 @@ SDLNet_SocketSet socket_get_socklist (const socketp s)
 {
     return (s->socklist);
 }
+
+void socket_count_inc_pak_rx (const socketp s)
+{
+    s->rx++;
+}
+
+void socket_count_inc_pak_tx (const socketp s)
+{
+    s->tx++;
+}
+
+void socket_count_inc_pak_rx_error (const socketp s)
+{
+    s->rx_error++;
+}
+
+void socket_count_inc_pak_tx_error (const socketp s)
+{
+    s->tx_error++;
+}
+
+void socket_count_inc_pak_rx_bad_msg (const socketp s)
+{
+    s->rx_bad_msg++;
+}
+

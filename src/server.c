@@ -53,6 +53,59 @@ void server_fini (void)
     }
 }
 
+static void send_pong (socketp s, uint16_t seq, uint32_t ts)
+{
+    UDPpacket *packet;      
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
+        return;
+    }
+
+    uint8_t *data = packet->data;
+    uint8_t *odata = data;
+
+    packet->address = socket_get_remote_ip(s);
+
+    SDLNet_Write16(MSG_TYPE_PONG, data);               
+    data += sizeof(uint16_t);
+
+    SDLNet_Write16(seq, data);               
+    data += sizeof(uint16_t);
+
+    SDLNet_Write32(ts, data);               
+    data += sizeof(uint32_t);
+
+    packet->len = data - odata;
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
+        ERR("no UDP packet sent");
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+    }
+        
+    SDLNet_FreePacket(packet);
+}
+
+static void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    uint16_t seq = SDLNet_Read16(data);
+    data += sizeof(uint16_t);
+
+    uint32_t ts = SDLNet_Read32(data);
+    data += sizeof(uint32_t);
+
+    char *tmp = iptodynstr(packet->address);
+    DBG("Pong [%s] %d", tmp, seq);
+    myfree(tmp);
+
+    send_pong(s, seq, ts);
+}
+
 static void server_poll (void)
 {
     socketp s = server_socket;
@@ -67,11 +120,7 @@ static void server_poll (void)
         return;
     }
 
-    LOG("There are %d sockets with activity!", numready);
-
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    UDPpacket *packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
         ERR("out of packet space, pak %d", MAX_PACKET_SIZE);
         return;
@@ -91,16 +140,28 @@ static void server_poll (void)
 
         socketp s = socket_find_remote_ip(packet->address);
         if (!s) {
-            net_connect(packet->address);
+            s = net_connect(packet->address);
+            if (!s) {
+                ERR("Pak rx failed to create client");
+                continue;
+            }
         }
 
-        char *tmp = iptodynstr(packet->address);
-        LOG("Server Pak rx on: %s", tmp);
-        myfree(tmp);
+        uint8_t *data = packet->data;
+        msg_type type = SDLNet_Read16(data);
+        data += sizeof(uint16_t);
 
-        int y = SDLNet_Read16(packet->data);
-        int x = SDLNet_Read16(packet->data+2);
-        LOG("Server Recieve X,Y = %d,%d",x,y);   //not working... 
+        socket_count_inc_pak_rx(s);
+
+        switch (type) {
+        case MSG_TYPE_PING:
+            receive_ping(s, packet, data);
+            break;
+
+        default:
+            socket_count_inc_pak_rx_bad_msg(s);
+            ERR("Unknown message type received [%u", type);
+        }
     }
 
     SDLNet_FreePacket(packet);
