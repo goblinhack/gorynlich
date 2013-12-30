@@ -14,28 +14,39 @@ extern void net_fini(void);
 extern char *iptodynstr(IPaddress ip);
 
 extern IPaddress server_address;
-
-typedef struct {
-    boolean open:1;
-    boolean server:1;
-    boolean client:1;
-    UDPsocket udp_socket;
-    IPaddress remote_ip;
-    IPaddress local_ip;
-    char *local_logname;
-    char *remote_logname;
-    int channel;
-    SDLNet_SocketSet socklist;
-} socket;
-
-typedef struct {
-    socket sockets[MAX_SOCKETS];
-} network;
-
-extern socket *net_listen(IPaddress address);
-extern socket *net_connect(IPaddress address);
-extern socket *net_find_local_ip(IPaddress address);
-extern socket *net_find_remote_ip(IPaddress address);
-
-extern network net;
 extern IPaddress no_address;
+
+extern socketp socket_find_local_ip(IPaddress address);
+extern socketp socket_find_remote_ip(IPaddress address);
+
+extern socketp net_listen(IPaddress address);
+extern socketp net_connect(IPaddress address);
+
+extern IPaddress socket_get_local_ip(socketp);
+extern IPaddress socket_get_remote_ip(socketp);
+
+extern const char * socket_get_local_logname(const socketp);
+extern const char * socket_get_remote_logname(const socketp);
+
+extern void socket_set_server(socketp, boolean);
+extern boolean socket_get_server(const socketp);
+
+extern void socket_set_client(socketp, boolean);
+extern boolean socket_get_client(const socketp);
+
+extern void socket_set_channel(socketp, int);
+extern boolean socket_get_channel(const socketp);
+
+extern UDPsocket socket_get_udp_socket(const socketp);
+extern SDLNet_SocketSet socket_get_socklist(const socketp);
+
+typedef enum {
+    MSG_TYPE_PING,
+    MSG_TYPE_PONG,
+} msg_type;
+
+extern void socket_count_inc_pak_rx(const socketp);
+extern void socket_count_inc_pak_rx_error(const socketp);
+extern void socket_count_inc_pak_tx(const socketp);
+extern void socket_count_inc_pak_tx_error(const socketp);
+extern void socket_count_inc_pak_rx_bad_msg(const socketp);

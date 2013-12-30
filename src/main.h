@@ -138,6 +138,8 @@ uint32_t strlcat(char *dst, const char *src, uint32_t maxlen);
 /*
  * Globals:
  */
+typedef struct socket_ *socketp;
+typedef struct net_ *netp;
 typedef struct font *fontp;
 typedef struct wid_console *wid_consolep;
 typedef struct config *configp;
@@ -412,9 +414,10 @@ int32_t map_jigsaw_test(int32_t argc, char **argv);
  */
 extern boolean is_server;
 extern boolean is_client;
+extern boolean is_headless;
 
 /*
  * Server with no displa.
  */
-#define HEADLESS (is_server && !is_client)
+#define HEADLESS ((is_server && !is_client) || is_headless)
 
