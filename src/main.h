@@ -414,9 +414,10 @@ int32_t map_jigsaw_test(int32_t argc, char **argv);
  */
 extern boolean is_server;
 extern boolean is_client;
+extern boolean is_headless;
 
 /*
  * Server with no displa.
  */
-#define HEADLESS (is_server && !is_client)
+#define HEADLESS ((is_server && !is_client) || is_headless)
 

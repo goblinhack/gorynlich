@@ -12,11 +12,12 @@
 #include "main.h"
 #include "net.h"
 #include "client.h"
+#include "time.h"
 
-static void client_transmit(void);
+static void send_ping(void);
 static boolean client_init_done;
-static socketp client_listen_socket;
 static socketp client_connect_socket;
+static void client_poll(void);
 
 boolean client_init (void)
 {
@@ -59,9 +60,89 @@ void client_fini (void)
     }
 }
 
+static void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    uint16_t seq = SDLNet_Read16(data);
+    data += sizeof(uint16_t);
+
+    uint32_t ts = SDLNet_Read32(data);
+    data += sizeof(uint32_t);
+
+    char *tmp = iptodynstr(packet->address);
+    LOG("Pong [%s] %d, elapsed %u",
+        tmp, seq, time_get_time_cached() - ts);
+
+    myfree(tmp);
+}
+
+static void send_ping (void)
+{
+    static uint32_t ts;
+    static uint32_t seq;
+
+    if (!time_have_x_tenths_passed_since(10, ts)) {
+        return;
+    }
+
+    ts = time_get_time_cached();
+
+    socketp s = client_connect_socket;
+    if (!s) {
+        return;
+    }
+
+    UDPpacket *packet;      
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
+        return;
+    }
+
+    uint8_t *data = packet->data;
+    uint8_t *odata = data;
+
+    packet->address = socket_get_remote_ip(s);
+
+    SDLNet_Write16(MSG_TYPE_PING, data);               
+    data += sizeof(uint16_t);
+
+    seq++;
+    SDLNet_Write16(seq, data);               
+    data += sizeof(uint16_t);
+
+    SDLNet_Write32(ts, data);               
+    data += sizeof(uint32_t);
+
+    packet->len = data - odata;
+
+    LOG("Ping [%s] %d, ts %d", socket_get_remote_logname(s), seq, ts);
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
+        ERR("no UDP packet sent");
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+    }
+        
+    SDLNet_FreePacket(packet);
+}
+
+void client_tick (void)
+{
+    if (!is_client) {
+        return;
+    }
+
+    client_poll();
+    send_ping();
+}
+
 static void client_poll (void)
 {
-    socketp s = client_listen_socket;
+    socketp s = client_connect_socket;
     if (!s) {
         return;
     }
@@ -71,8 +152,6 @@ static void client_poll (void)
     if (numready <= 0) {
         return;
     }
-
-    LOG("There are %d sockets with activity!", numready);
 
     UDPpacket *packet;      
 
@@ -94,66 +173,22 @@ static void client_poll (void)
             continue;
         }
 
-        char *tmp = iptodynstr(socket_get_local_ip(s));
-        LOG("Client Pak rx on: %s", tmp);
-        myfree(tmp);
+        uint8_t *data = packet->data;
+        msg_type type = SDLNet_Read16(data);
+        data += sizeof(uint16_t);
 
-        int y = SDLNet_Read16(packet->data);
-        int x = SDLNet_Read16(packet->data+2);
-        LOG("Client Recieve X,Y = %d,%d",x,y);   //not working... 
+        socket_count_inc_pak_rx(s);
+
+        switch (type) {
+        case MSG_TYPE_PONG:
+            receive_pong(s, packet, data);
+            break;
+
+        default:
+            socket_count_inc_pak_rx_bad_msg(s);
+            ERR("Unknown message type received [%u", type);
+        }
     }
 
     SDLNet_FreePacket(packet);
-}
-
-static void client_transmit (void)
-{
-static int done = 0;
-if (done > 1) {
-return;
-}
-done++;
-    socketp s = client_connect_socket;
-    if (!s) {
-        return;
-    }
-
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
-        return;
-    }
-
-    uint8_t *data = packet->data;
-
-static int x;
-static int y;
-x++;
-y++;
-y++;
-    LOG("Sending X,Y = %d,%d", x,y);
-
-    packet->address = socket_get_remote_ip(s);
-    SDLNet_Write16(y,data);                 
-    SDLNet_Write16(x,data+2);               
-    packet->len = sizeof(data);
-
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent");
-    } 
-        
-    SDLNet_FreePacket(packet);
-}
-
-void client_tick (void)
-{
-    if (!is_client) {
-        return;
-    }
-
-    client_poll();
-    client_transmit();
 }
