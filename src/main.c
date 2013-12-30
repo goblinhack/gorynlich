@@ -157,8 +157,6 @@ void die (void)
 {
     quit();
 
-    term_fini();
-
     fprintf(MY_STDERR, "exit(1) error\n");
 
     exit(1);
@@ -438,6 +436,17 @@ static void parse_args (int32_t argc, char *argv[])
         }
 
         /*
+         * -test
+         */
+        if (!strcmp(argv[i], "--test") ||
+            !strcmp(argv[i], "-test") ||
+            !strcmp(argv[i], "-t")) {
+
+            is_headless = true;
+            continue;
+        }
+
+        /*
          * -connect
          */
         if (!strcmp(argv[i], "--connect") ||
@@ -456,6 +465,7 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-s")) {
 
             host = argv[i + 1];
+            i++;
             continue;
         }
 
@@ -467,6 +477,7 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-s")) {
 
             port = atoi(argv[i + 1]);
+            i++;
             continue;
         }
 

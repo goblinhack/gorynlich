@@ -12,11 +12,12 @@
 #include "main.h"
 #include "net.h"
 #include "client.h"
+#include "time.h"
 
-static void client_transmit(void);
+static void send_ping(void);
 static boolean client_init_done;
-static socket *client_listen_socket;
-static socket *client_connect_socket;
+static socketp client_connect_socket;
+static void client_poll(void);
 
 boolean client_init (void)
 {
@@ -28,7 +29,7 @@ boolean client_init (void)
         return (true);
     }
 
-    socket *s;
+    socketp s;
 
     /*
      * Connector.
@@ -40,9 +41,10 @@ boolean client_init (void)
     }
 
     client_connect_socket = s;
-    s->client = true;
-    LOG("Client connecting to   %s", s->remote_logname);
-    LOG("Client connecting from %s", s->local_logname);
+    socket_set_client(s, true);
+
+    LOG("Client connecting to   %s", socket_get_remote_logname(s));
+    LOG("Client connecting from %s", socket_get_local_logname(s));
 
     client_init_done = true;
 
@@ -58,61 +60,33 @@ void client_fini (void)
     }
 }
 
-static void client_poll (void)
+static void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    socket *s = client_listen_socket;
-    if (!s) {
-        return;
-    }
+    uint16_t seq = SDLNet_Read16(data);
+    data += sizeof(uint16_t);
 
-    int waittime = 0;
-    int numready = SDLNet_CheckSockets(s->socklist, waittime);
-    if (numready <= 0) {
-        return;
-    }
+    uint32_t ts = SDLNet_Read32(data);
+    data += sizeof(uint32_t);
 
-    LOG("There are %d sockets with activity!", numready);
+    char *tmp = iptodynstr(packet->address);
+    LOG("Pong [%s] %d, elapsed %u",
+        tmp, seq, time_get_time_cached() - ts);
 
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
-        return;
-    }
-
-    int i;
-    for (i = 0; i < numready; i++) {
-        if (!SDLNet_SocketReady(s->udp_socket)) {
-            continue;
-        }
-
-        int paks = SDLNet_UDP_Recv(s->udp_socket, packet);
-        if (paks != 1) {
-            ERR("Pak rx failed: %s", SDLNet_GetError());
-            continue;
-        }
-
-        char *tmp = iptodynstr(s->local_ip);
-        LOG("Client Pak rx on: %s", tmp);
-        myfree(tmp);
-
-        int y = SDLNet_Read16(packet->data);
-        int x = SDLNet_Read16(packet->data+2);
-        LOG("Client Recieve X,Y = %d,%d",x,y);   //not working... 
-    }
-
-    SDLNet_FreePacket(packet);
+    myfree(tmp);
 }
 
-static void client_transmit (void)
+static void send_ping (void)
 {
-static int done = 0;
-if (done > 1) {
-return;
-}
-done++;
-    socket *s = client_connect_socket;
+    static uint32_t ts;
+    static uint32_t seq;
+
+    if (!time_have_x_tenths_passed_since(10, ts)) {
+        return;
+    }
+
+    ts = time_get_time_cached();
+
+    socketp s = client_connect_socket;
     if (!s) {
         return;
     }
@@ -126,22 +100,32 @@ done++;
     }
 
     uint8_t *data = packet->data;
+    uint8_t *odata = data;
 
-static int x;
-static int y;
-x++;
-y++;
-y++;
-    LOG("Sending X,Y = %d,%d", x,y);
+    packet->address = socket_get_remote_ip(s);
 
-    packet->address = s->remote_ip;;
-    SDLNet_Write16(y,data);                 
-    SDLNet_Write16(x,data+2);               
-    packet->len = sizeof(data);
+    SDLNet_Write16(MSG_TYPE_PING, data);               
+    data += sizeof(uint16_t);
 
-    if (SDLNet_UDP_Send(s->udp_socket, s->channel, packet) < 1) {
+    seq++;
+    SDLNet_Write16(seq, data);               
+    data += sizeof(uint16_t);
+
+    SDLNet_Write32(ts, data);               
+    data += sizeof(uint32_t);
+
+    packet->len = data - odata;
+
+    LOG("Ping [%s] %d, ts %d", socket_get_remote_logname(s), seq, ts);
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
         ERR("no UDP packet sent");
-    } 
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+    }
         
     SDLNet_FreePacket(packet);
 }
@@ -153,5 +137,58 @@ void client_tick (void)
     }
 
     client_poll();
-    client_transmit();
+    send_ping();
+}
+
+static void client_poll (void)
+{
+    socketp s = client_connect_socket;
+    if (!s) {
+        return;
+    }
+
+    int waittime = 0;
+    int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
+    if (numready <= 0) {
+        return;
+    }
+
+    UDPpacket *packet;      
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
+        return;
+    }
+
+    int i;
+    for (i = 0; i < numready; i++) {
+        if (!SDLNet_SocketReady(socket_get_udp_socket(s))) {
+            continue;
+        }
+
+        int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
+        if (paks != 1) {
+            ERR("Pak rx failed: %s", SDLNet_GetError());
+            continue;
+        }
+
+        uint8_t *data = packet->data;
+        msg_type type = SDLNet_Read16(data);
+        data += sizeof(uint16_t);
+
+        socket_count_inc_pak_rx(s);
+
+        switch (type) {
+        case MSG_TYPE_PONG:
+            receive_pong(s, packet, data);
+            break;
+
+        default:
+            socket_count_inc_pak_rx_bad_msg(s);
+            ERR("Unknown message type received [%u", type);
+        }
+    }
+
+    SDLNet_FreePacket(packet);
 }

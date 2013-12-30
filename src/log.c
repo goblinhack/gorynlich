@@ -309,7 +309,7 @@ static void dying_ (const char *fmt, va_list args)
     fflush(MY_STDOUT);
 }
 
-static void err_tb_ (const char *fmt, va_list args)
+static void err_ (const char *fmt, va_list args)
 {
     uint32_t len;
 
@@ -403,7 +403,7 @@ void ERR (const char *fmt, ...)
     va_list args;
 
     va_start(args, fmt);
-    err_tb_(fmt, args);
+    err_(fmt, args);
     va_end(args);
 }
 
