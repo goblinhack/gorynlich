@@ -36,7 +36,9 @@ static inline uint32_t time_get_time_milli (void)
             base_time_in_mill = time_in_mill;
         }
 
-        return (time_in_mill - base_time_in_mill);
+        time_now = (time_in_mill - base_time_in_mill);
+
+        return (time_now);
     }
 
     time_now = SDL_GetTicks();
