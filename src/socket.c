@@ -35,6 +35,7 @@ typedef struct socket_ {
     uint32_t rx_error;
     uint32_t tx_error;
     uint32_t rx_bad_msg;
+    uint32_t ping_responses[100];
 } socket;
 
 typedef struct network_ {
@@ -65,7 +66,11 @@ boolean net_init (void)
     }
 
     net_init_done = true;
-    command_add(sockets_show, "show network", "clients and server info");
+    command_add(sockets_show, "show socket", 
+                "clients and server sockets");
+
+    command_add(debug_ping_enable, "debug ping [01]",
+                "debug periodic pings");
 
     return (true);
 }
@@ -82,13 +87,7 @@ void net_fini (void)
 
     int s;
     for (s = 0; s < MAX_SOCKETS; s++) {
-        if (net.sockets[s].local_logname) {
-            myfree(net.sockets[s].local_logname);
-        }
-
-        if (net.sockets[s].remote_logname) {
-            myfree(net.sockets[s].remote_logname);
-        }
+        socket_disconnect(&net.sockets[s]);
     }
 
     memset(&net, 0, sizeof(net));
@@ -328,6 +327,36 @@ socket *socket_connect (IPaddress address)
     return (s);
 }
 
+void socket_disconnect (socketp s)
+{
+    if (!s->open) {
+        return;
+    }
+
+    LOG("Close peer [%s] %s", socket_get_remote_logname(s),
+        socket_get_local_logname(s));
+
+    if (s->socklist) {
+        SDLNet_FreeSocketSet(s->socklist);
+    }
+
+    if (s->udp_socket) {
+        SDLNet_UDP_Unbind(s->udp_socket, s->channel);
+
+        SDLNet_UDP_Close(s->udp_socket);
+    }
+
+    if (s->local_logname) {
+        myfree(s->local_logname);
+    }
+
+    if (s->remote_logname) {
+        myfree(s->remote_logname);
+    }
+
+    memset(s, 0, sizeof(*s));
+}
+
 socket *socket_get (uint32_t si)
 {
     if (si >= MAX_SOCKETS) {
@@ -409,17 +438,122 @@ static boolean sockets_show (tokens_t *tokens, void *context)
         }
 
         CON("  Local IP : %s", socket_get_local_logname(s));
+        CON("  Remote IP: %s", socket_get_remote_logname(s));
 
-        if (s->client) {
-            CON("  Remote IP: %s", socket_get_remote_logname(s));
+        CON("  Stats    : tx %u packets, rx %u packets", s->tx, s->rx);
+        CON("  Errors   : tx error %u, rx error %u, bad message %u packets", 
+            s->tx_error, s->rx_error, s->rx_bad_msg);
+
+        /*
+         * Ping stats.
+         */
+        uint32_t no_response = 0;
+        uint32_t response = 0;
+        uint32_t total_attempts = 0;
+
+        /*
+         * Latency.
+         */
+        uint32_t avg_latency = 0;
+        uint32_t max_latency = 0;
+        uint32_t min_latency = (uint32_t) -1;
+
+        FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
+            if (*latency == -1) {
+                ++no_response;
+                continue;
+            }
+
+            if (*latency == 0) {
+                continue;
+            }
+
+            ++response;
+
+            /*
+             * Latency.
+             */
+            avg_latency += *latency;
+
+            if (*latency > max_latency) {
+                max_latency = *latency;
+            }
+
+            if (*latency < min_latency) {
+                min_latency = *latency;
+            }
         }
 
-        CON("  Tx: %u Rx: %u", s->tx, s->rx);
-        CON("  Tx error: %u Rx error: %u Bad message: %u", 
-            s->tx_error, s->rx_error, s->rx_bad_msg);
+        total_attempts = no_response + response;
+
+        if (total_attempts) {
+            avg_latency = avg_latency /= total_attempts;
+
+            CON("  Ping     : success %2.2f percent, fails %2.2f percent",
+                ((float)((float)response / (float)total_attempts)) * 100.0,
+                ((float)((float)no_response / (float)total_attempts)) * 100.0);
+
+            CON("  Latency  : max %u ms, min %u ms, average %u ms",
+                max_latency, min_latency, avg_latency);
+        }
     }
 
     return (true);
+}
+
+static uint32_t sockets_fail_rate (socketp s)
+{
+    /*
+     * Ping stats.
+     */
+    uint32_t no_response = 0;
+    uint32_t response = 0;
+    uint32_t total_attempts = 0;
+
+    FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
+        if (*latency == -1) {
+            ++no_response;
+            continue;
+        }
+
+        if (*latency == 0) {
+            continue;
+        }
+
+        ++response;
+    }
+
+    total_attempts = no_response + response;
+
+    if (total_attempts > 1) {
+        float success = 
+                ((float)((float)response / (float)total_attempts)) * 100.0;
+
+        return (success);
+    }
+
+    return (100);
+}
+
+void sockets_alive_check (void)
+{
+    uint32_t si;
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socketp s = &net.sockets[si];
+
+        if (!s->open) {
+            continue;
+        }
+
+        uint32_t success = sockets_fail_rate(s);
+
+        if (success < 10) {
+            LOG("Dead peer [%s] ping success %u percent",
+                socket_get_remote_logname(s), success);
+
+            socket_disconnect(s);
+        }
+    }
 }
 
 IPaddress socket_get_local_ip (const socketp s)
@@ -546,7 +680,11 @@ void send_ping (socketp s, uint16_t seq, uint32_t ts)
 
     packet->len = data - odata;
 
-    LOG("Ping [%s] seq %d, ts %d", socket_get_remote_logname(s), seq, ts);
+    s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = (uint32_t) -1;
+
+    if (debug_ping_enabled) {
+        LOG("Ping [%s] seq %d, ts %d", socket_get_remote_logname(s), seq, ts);
+    }
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
@@ -606,9 +744,11 @@ void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
-    char *tmp = iptodynstr(packet->address);
-    LOG("Pong [%s] seq %d", tmp, seq);
-    myfree(tmp);
+    if (debug_ping_enabled) {
+        char *tmp = iptodynstr(packet->address);
+        LOG("Pong [%s] seq %d", tmp, seq);
+        myfree(tmp);
+    }
 
     send_pong(s, seq, ts);
 }
@@ -621,9 +761,31 @@ void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
-    char *tmp = iptodynstr(packet->address);
-    LOG("Pong [%s] seq %d, elapsed %u",
-        tmp, seq, time_get_time_cached() - ts);
+    if (debug_ping_enabled) {
+        char *tmp = iptodynstr(packet->address);
+        LOG("Pong [%s] seq %d, elapsed %u",
+            tmp, seq, time_get_time_cached() - ts);
+        myfree(tmp);
+    }
 
-    myfree(tmp);
+    s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = 
+                    time_get_time_cached() - ts;
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean debug_ping_enable (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[2];
+
+    if (!s || (*s == '\0')) {
+        debug_ping_enabled = 1;
+    } else {
+        debug_ping_enabled = strtol(s, 0, 10) ? 1 : 0;
+    }
+
+    CON("Debug ping mode set to %u", debug_ping_enabled);
+
+    return (true);
 }

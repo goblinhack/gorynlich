@@ -18,6 +18,8 @@ extern IPaddress no_address;
 
 extern socketp socket_listen(IPaddress address);
 extern socketp socket_connect(IPaddress address);
+extern void socket_disconnect(socketp s);
+extern void sockets_alive_check(void);
 
 extern socketp socket_get(uint32_t si);
 extern socketp socket_find_local_ip(IPaddress address);
@@ -26,8 +28,8 @@ extern socketp socket_find_remote_ip(IPaddress address);
 extern IPaddress socket_get_local_ip(socketp);
 extern IPaddress socket_get_remote_ip(socketp);
 
-extern const char * socket_get_local_logname(const socketp);
-extern const char * socket_get_remote_logname(const socketp);
+extern const char *socket_get_local_logname(const socketp);
+extern const char *socket_get_remote_logname(const socketp);
 
 extern boolean socket_get_open(const socketp);
 
