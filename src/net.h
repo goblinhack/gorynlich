@@ -39,3 +39,14 @@ extern boolean socket_get_channel(const socketp);
 
 extern UDPsocket socket_get_udp_socket(const socketp);
 extern SDLNet_SocketSet socket_get_socklist(const socketp);
+
+typedef enum {
+    MSG_TYPE_PING,
+    MSG_TYPE_PONG,
+} msg_type;
+
+extern void socket_count_inc_pak_rx(const socketp);
+extern void socket_count_inc_pak_rx_error(const socketp);
+extern void socket_count_inc_pak_tx(const socketp);
+extern void socket_count_inc_pak_tx_error(const socketp);
+extern void socket_count_inc_pak_rx_bad_msg(const socketp);

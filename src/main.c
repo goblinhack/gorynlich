@@ -436,6 +436,17 @@ static void parse_args (int32_t argc, char *argv[])
         }
 
         /*
+         * -test
+         */
+        if (!strcmp(argv[i], "--test") ||
+            !strcmp(argv[i], "-test") ||
+            !strcmp(argv[i], "-t")) {
+
+            is_headless = true;
+            continue;
+        }
+
+        /*
          * -connect
          */
         if (!strcmp(argv[i], "--connect") ||
