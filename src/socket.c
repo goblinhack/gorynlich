@@ -50,7 +50,7 @@ IPaddress no_address = {0};
 
 network net;
 
-static boolean net_show(tokens_t *tokens, void *context);
+static boolean sockets_show(tokens_t *tokens, void *context);
 static boolean net_init_done;
 
 boolean net_init (void)
@@ -65,7 +65,7 @@ boolean net_init (void)
     }
 
     net_init_done = true;
-    command_add(net_show, "show network", "clients and server info");
+    command_add(sockets_show, "show network", "clients and server info");
 
     return (true);
 }
@@ -94,36 +94,6 @@ void net_fini (void)
     memset(&net, 0, sizeof(net));
 
     net_init_done = false;
-}
-
-socket *socket_find_local_ip (IPaddress address)
-{
-    uint32_t si;
-
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socket *s = &net.sockets[si];
-
-        if (!memcmp(&address, &s->local_ip, sizeof(IPaddress))) {
-            return (s);
-        }
-    }
-
-    return (0);
-}
-
-socket *socket_find_remote_ip (IPaddress address)
-{
-    uint32_t si;
-
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socket *s = &net.sockets[si];
-
-        if (!memcmp(&address, &s->remote_ip, sizeof(IPaddress))) {
-            return (s);
-        }
-    }
-
-    return (0);
 }
 
 socket *socket_listen (IPaddress address)
@@ -358,6 +328,45 @@ socket *socket_connect (IPaddress address)
     return (s);
 }
 
+socket *socket_get (uint32_t si)
+{
+    if (si >= MAX_SOCKETS) {
+        return (0);
+    }
+
+    return (&net.sockets[si]);
+}
+
+socket *socket_find_local_ip (IPaddress address)
+{
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socket *s = &net.sockets[si];
+
+        if (!memcmp(&address, &s->local_ip, sizeof(IPaddress))) {
+            return (s);
+        }
+    }
+
+    return (0);
+}
+
+socket *socket_find_remote_ip (IPaddress address)
+{
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socket *s = &net.sockets[si];
+
+        if (!memcmp(&address, &s->remote_ip, sizeof(IPaddress))) {
+            return (s);
+        }
+    }
+
+    return (0);
+}
+
 char *iptodynstr (IPaddress ip)
 {
     uint32_t ipv4 = SDLNet_Read32(&ip.host);
@@ -382,7 +391,7 @@ char *iptodynstr (IPaddress ip)
     }
 }
 
-static boolean net_show (tokens_t *tokens, void *context)
+static boolean sockets_show (tokens_t *tokens, void *context)
 {
     int si;
 
@@ -439,6 +448,11 @@ const char * socket_get_remote_logname (const socketp s)
     }
 
     return (s->remote_logname);
+}
+
+boolean socket_get_open (const socketp s)
+{
+    return (s->open);
 }
 
 void socket_set_server (socketp s, boolean c)
@@ -532,7 +546,7 @@ void send_ping (socketp s, uint16_t seq, uint32_t ts)
 
     packet->len = data - odata;
 
-    LOG("Ping [%s] %d, ts %d", socket_get_remote_logname(s), seq, ts);
+    LOG("Ping [%s] seq %d, ts %d", socket_get_remote_logname(s), seq, ts);
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
@@ -593,7 +607,7 @@ void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
     data += sizeof(uint32_t);
 
     char *tmp = iptodynstr(packet->address);
-    LOG("Pong [%s] %d", tmp, seq);
+    LOG("Pong [%s] seq %d", tmp, seq);
     myfree(tmp);
 
     send_pong(s, seq, ts);
@@ -608,7 +622,7 @@ void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
     data += sizeof(uint32_t);
 
     char *tmp = iptodynstr(packet->address);
-    LOG("Pong [%s] %d, elapsed %u",
+    LOG("Pong [%s] seq %d, elapsed %u",
         tmp, seq, time_get_time_cached() - ts);
 
     myfree(tmp);
