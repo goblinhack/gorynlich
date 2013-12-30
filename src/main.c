@@ -462,7 +462,7 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (!strcmp(argv[i], "--host") ||
             !strcmp(argv[i], "-host") ||
-            !strcmp(argv[i], "-s")) {
+            !strcmp(argv[i], "-h")) {
 
             host = argv[i + 1];
             i++;
