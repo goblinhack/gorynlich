@@ -19,8 +19,8 @@ extern IPaddress no_address;
 extern socketp socket_find_local_ip(IPaddress address);
 extern socketp socket_find_remote_ip(IPaddress address);
 
-extern socketp net_listen(IPaddress address);
-extern socketp net_connect(IPaddress address);
+extern socketp socket_listen(IPaddress address);
+extern socketp socket_connect(IPaddress address);
 
 extern IPaddress socket_get_local_ip(socketp);
 extern IPaddress socket_get_remote_ip(socketp);

@@ -7,7 +7,6 @@
 #include <libgen.h>
 #include <unistd.h>
 #include <SDL.h>
-#include <SDL_net.h>
 #include "slre.h"
 
 #include "main.h"
@@ -44,7 +43,7 @@
 #include "init_fn.h"
 #include "ramdisk.h"
 #include "map.h"
-#include "net.h"
+#include "socket.h"
 #include "client.h"
 #include "term.h"
 #include "server.h"
