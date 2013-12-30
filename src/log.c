@@ -18,7 +18,7 @@
 #include "timer.h"
 #include "init_fn.h"
 #include "wid.h"
-#include "net.h"
+#include "socket.h"
 #include "term.h"
 
 static char buf[200];

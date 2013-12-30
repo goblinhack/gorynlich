@@ -10,7 +10,7 @@
 #include "SDL_timer.h"
 
 #include "main.h"
-#include "net.h"
+#include "socket.h"
 #include "client.h"
 #include "time.h"
 
@@ -34,7 +34,7 @@ boolean client_init (void)
     /*
      * Connector.
      */
-    s = net_connect(server_address);
+    s = socket_connect(server_address);
     if (!s) {
         WARN("Client failed to connect");
         return (false);

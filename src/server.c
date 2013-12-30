@@ -10,7 +10,7 @@
 #include "SDL_timer.h"
 
 #include "main.h"
-#include "net.h"
+#include "socket.h"
 #include "server.h"
 
 static boolean server_init_done;
@@ -28,7 +28,7 @@ boolean server_init (void)
 
     socketp s;
 
-    s = net_listen(server_address);
+    s = socket_listen(server_address);
     if (!s) {
         ERR("Server failed to listen");
         return (false);
@@ -87,7 +87,7 @@ static void server_poll (void)
 
         socketp s = socket_find_remote_ip(packet->address);
         if (!s) {
-            s = net_connect(packet->address);
+            s = socket_connect(packet->address);
             if (!s) {
                 ERR("Pak rx failed to create client");
                 continue;
