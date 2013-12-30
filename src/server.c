@@ -100,7 +100,7 @@ static void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
     data += sizeof(uint32_t);
 
     char *tmp = iptodynstr(packet->address);
-    DBG("Pong [%s] %d", tmp, seq);
+    LOG("Pong [%s] %d", tmp, seq);
     myfree(tmp);
 
     send_pong(s, seq, ts);
