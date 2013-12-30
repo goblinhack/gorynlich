@@ -23,6 +23,7 @@
 
 static char buf[200];
 boolean debug_enabled;
+boolean debug_ping_enabled;
 boolean croaked;
 
 /*
@@ -496,21 +497,15 @@ void LEVEL_LOG (levelp t, const char *fmt, ...)
  */
 boolean debug_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[1];
+    char *s = tokens->args[2];
 
-    debug_enabled = strtol(s, 0, 10) ? 1 : 0;
+    if (!s || (*s == '\0')) {
+        debug_enabled = 1;
+    } else {
+        debug_enabled = strtol(s, 0, 10) ? 1 : 0;
+    }
 
     CON("Debug mode set to %u", debug_enabled);
-
-    return (true);
-}
-
-/*
- * User has entered a command, run it
- */
-boolean debug_disable (tokens_t *tokens, void *context)
-{
-    debug_enabled = false;
 
     return (true);
 }

@@ -151,6 +151,13 @@ static void server_send_ping (void)
     }
 
     seq++;
+
+    /*
+     * Every 10 seconds check for dead peers.
+     */
+    if (seq % 10) {
+        sockets_alive_check();
+    }
 }
 
 void server_tick (void)
