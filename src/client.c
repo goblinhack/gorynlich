@@ -14,7 +14,7 @@
 #include "client.h"
 #include "time.h"
 
-static void send_ping(void);
+static void client_send_ping(void);
 static boolean client_init_done;
 static socketp client_connect_socket;
 static void client_poll(void);
@@ -60,22 +60,7 @@ void client_fini (void)
     }
 }
 
-static void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
-{
-    uint16_t seq = SDLNet_Read16(data);
-    data += sizeof(uint16_t);
-
-    uint32_t ts = SDLNet_Read32(data);
-    data += sizeof(uint32_t);
-
-    char *tmp = iptodynstr(packet->address);
-    LOG("Pong [%s] %d, elapsed %u",
-        tmp, seq, time_get_time_cached() - ts);
-
-    myfree(tmp);
-}
-
-static void send_ping (void)
+static void client_send_ping (void)
 {
     static uint32_t ts;
     static uint32_t seq;
@@ -86,48 +71,7 @@ static void send_ping (void)
 
     ts = time_get_time_cached();
 
-    socketp s = client_connect_socket;
-    if (!s) {
-        return;
-    }
-
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
-        return;
-    }
-
-    uint8_t *data = packet->data;
-    uint8_t *odata = data;
-
-    packet->address = socket_get_remote_ip(s);
-
-    SDLNet_Write16(MSG_TYPE_PING, data);               
-    data += sizeof(uint16_t);
-
-    seq++;
-    SDLNet_Write16(seq, data);               
-    data += sizeof(uint16_t);
-
-    SDLNet_Write32(ts, data);               
-    data += sizeof(uint32_t);
-
-    packet->len = data - odata;
-
-    LOG("Ping [%s] %d, ts %d", socket_get_remote_logname(s), seq, ts);
-
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent");
-
-        socket_count_inc_pak_tx_error(s);
-    } else {
-        socket_count_inc_pak_tx(s);
-    }
-        
-    SDLNet_FreePacket(packet);
+    send_ping(client_connect_socket, seq++, ts);
 }
 
 void client_tick (void)
@@ -137,7 +81,7 @@ void client_tick (void)
     }
 
     client_poll();
-    send_ping();
+    client_send_ping();
 }
 
 static void client_poll (void)
