@@ -35,7 +35,7 @@ typedef struct socket_ {
     uint32_t rx_error;
     uint32_t tx_error;
     uint32_t rx_bad_msg;
-    uint32_t ping_responses[100];
+    uint32_t ping_responses[20];
 } socket;
 
 typedef struct network_ {
@@ -124,14 +124,14 @@ socket *socket_listen (IPaddress address)
      * If no address is given, try and grab one from our well known base.
      */
     if (!memcmp(&no_address, &listen_address, sizeof(no_address))) {
-        DBG("Resolve host %s port %d", 
+        DBG("Resolve host %s port %u", 
             SERVER_DEFAULT_HOST, 
             SERVER_DEFAULT_PORT);
 
         if ((SDLNet_ResolveHost(&listen_address, 
                                 SERVER_DEFAULT_HOST,
                                 SERVER_DEFAULT_PORT)) == -1) {
-            ERR("Cannot resolve host %s port %d", 
+            ERR("Cannot resolve host %s port %u", 
                 SERVER_DEFAULT_HOST, 
                 SERVER_DEFAULT_PORT);
             return (false);
@@ -256,14 +256,14 @@ socket *socket_connect (IPaddress address)
      * If no address is given, try and grab one from our well known base.
      */
     if (!memcmp(&no_address, &connect_address, sizeof(no_address))) {
-        DBG("Resolve client host %s port %d", 
+        DBG("Resolve client host %s port %u", 
             SERVER_DEFAULT_HOST, 
             SERVER_DEFAULT_PORT);
 
         if ((SDLNet_ResolveHost(&connect_address, 
                                 SERVER_DEFAULT_HOST,
                                 SERVER_DEFAULT_PORT)) == -1) {
-            WARN("Cannot resolve host %s port %d", 
+            WARN("Cannot resolve host %s port %u", 
                 SERVER_DEFAULT_HOST, 
                 SERVER_DEFAULT_PORT);
             return (false);
@@ -432,13 +432,16 @@ static boolean sockets_show (tokens_t *tokens, void *context)
         }
 
         if (s->server) {
-            CON("[%d] Server", si);
+            CON("[%u] Server", si);
         } else {
-            CON("[%d] Client", si);
+            CON("[%u] Client", si);
         }
 
         CON("  Local IP : %s", socket_get_local_logname(s));
-        CON("  Remote IP: %s", socket_get_remote_logname(s));
+
+        if (!s->server) {
+            CON("  Remote IP: %s", socket_get_remote_logname(s));
+        }
 
         CON("  Stats    : tx %u packets, rx %u packets", s->tx, s->rx);
         CON("  Errors   : tx error %u, rx error %u, bad message %u packets", 
@@ -525,7 +528,7 @@ static uint32_t sockets_fail_rate (socketp s)
 
     total_attempts = no_response + response;
 
-    if (total_attempts > 1) {
+    if (total_attempts > ARRAY_SIZE(s->ping_responses) / 2) {
         float success = 
                 ((float)((float)response / (float)total_attempts)) * 100.0;
 
@@ -660,7 +663,7 @@ void send_ping (socketp s, uint16_t seq, uint32_t ts)
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
         return;
     }
 
@@ -683,7 +686,8 @@ void send_ping (socketp s, uint16_t seq, uint32_t ts)
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = (uint32_t) -1;
 
     if (debug_ping_enabled) {
-        LOG("Ping [%s] seq %d, ts %d", socket_get_remote_logname(s), seq, ts);
+        LOG("Tx Ping [%s] seq %u, ts %u", 
+            socket_get_remote_logname(s), seq, ts);
     }
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
@@ -704,7 +708,7 @@ void send_pong (socketp s, uint16_t seq, uint32_t ts)
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
         return;
     }
 
@@ -746,7 +750,7 @@ void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_ping_enabled) {
         char *tmp = iptodynstr(packet->address);
-        LOG("Pong [%s] seq %d", tmp, seq);
+        LOG("Rx ping [%s] seq %u", tmp, seq);
         myfree(tmp);
     }
 
@@ -763,7 +767,7 @@ void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_ping_enabled) {
         char *tmp = iptodynstr(packet->address);
-        LOG("Pong [%s] seq %d, elapsed %u",
+        LOG("Rx Pong [%s] seq %u, elapsed %u",
             tmp, seq, time_get_time_cached() - ts);
         myfree(tmp);
     }
