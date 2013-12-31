@@ -370,6 +370,42 @@ void socket_disconnect (socketp s)
     memset(s, 0, sizeof(*s));
 }
 
+/*
+ * User has entered a command, run it
+ */
+boolean debug_ping_enable (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[2];
+
+    if (!s || (*s == '\0')) {
+        debug_ping_enabled = 1;
+    } else {
+        debug_ping_enabled = strtol(s, 0, 10) ? 1 : 0;
+    }
+
+    CON("Debug ping mode set to %u", debug_ping_enabled);
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean debug_socket_enable (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[2];
+
+    if (!s || (*s == '\0')) {
+        debug_socket_enabled = 1;
+    } else {
+        debug_socket_enabled = strtol(s, 0, 10) ? 1 : 0;
+    }
+
+    CON("Debug socket mode set to %u", debug_socket_enabled);
+
+    return (true);
+}
+
 socket *socket_get (uint32_t si)
 {
     if (si >= MAX_SOCKETS) {
@@ -673,7 +709,7 @@ void socket_set_name (socketp s, const char *name)
 
     s->name = name;
 
-    send_name(s, s->name);
+    socket_tx_name(s, s->name);
 }
 
 const char * socket_get_local_logname (const socketp s)
@@ -747,7 +783,7 @@ void socket_set_connected (socketp s, boolean c)
 
     s->connected = c;
 
-    send_name(s, s->name);
+    socket_tx_name(s, s->name);
 }
 
 boolean socket_get_connected (const socketp s)
@@ -790,7 +826,7 @@ void socket_count_inc_pak_rx_bad_msg (const socketp s)
     s->rx_bad_msg++;
 }
 
-void send_ping (socketp s, uint8_t seq, uint32_t ts)
+void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 {
     UDPpacket *packet;      
 
@@ -832,7 +868,7 @@ void send_ping (socketp s, uint8_t seq, uint32_t ts)
     SDLNet_FreePacket(packet);
 }
 
-void send_pong (socketp s, uint8_t seq, uint32_t ts)
+void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
 {
     UDPpacket *packet;      
 
@@ -867,7 +903,7 @@ void send_pong (socketp s, uint8_t seq, uint32_t ts)
     SDLNet_FreePacket(packet);
 }
 
-void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 {
     uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
@@ -879,7 +915,7 @@ void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    send_pong(s, seq, ts);
+    socket_tx_pong(s, seq, ts);
 
     if (seq == 0) {
         socket_set_connected(s, false);
@@ -888,7 +924,7 @@ void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
     socket_set_connected(s, true);
 }
 
-void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 {
     uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
@@ -905,43 +941,7 @@ void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
                     time_get_time_cached() - ts;
 }
 
-/*
- * User has entered a command, run it
- */
-boolean debug_ping_enable (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[2];
-
-    if (!s || (*s == '\0')) {
-        debug_ping_enabled = 1;
-    } else {
-        debug_ping_enabled = strtol(s, 0, 10) ? 1 : 0;
-    }
-
-    CON("Debug ping mode set to %u", debug_ping_enabled);
-
-    return (true);
-}
-
-/*
- * User has entered a command, run it
- */
-boolean debug_socket_enable (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[2];
-
-    if (!s || (*s == '\0')) {
-        debug_socket_enabled = 1;
-    } else {
-        debug_socket_enabled = strtol(s, 0, 10) ? 1 : 0;
-    }
-
-    CON("Debug socket mode set to %u", debug_socket_enabled);
-
-    return (true);
-}
-
-void send_name (socketp s, const char *name)
+void socket_tx_name (socketp s, const char *name)
 {
     /*
      * Refresh the server with our name.
@@ -990,7 +990,7 @@ void send_name (socketp s, const char *name)
     SDLNet_FreePacket(packet);
 }
 
-void receive_name (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 {
     uint16_t len = *data++;
 

@@ -102,15 +102,15 @@ static void server_poll (void)
 
         switch (type) {
         case MSG_TYPE_PING:
-            receive_ping(s, packet, data);
+            socket_rx_ping(s, packet, data);
             break;
 
         case MSG_TYPE_PONG:
-            receive_pong(s, packet, data);
+            socket_rx_pong(s, packet, data);
             break;
 
         case MSG_TYPE_NAME:
-            receive_name(s, packet, data);
+            socket_rx_name(s, packet, data);
             break;
 
         default:
@@ -122,7 +122,7 @@ static void server_poll (void)
     SDLNet_FreePacket(packet);
 }
 
-static void server_send_ping (void)
+static void server_socket_tx_ping (void)
 {
     static uint32_t ts;
     static uint32_t seq;
@@ -150,7 +150,7 @@ static void server_send_ping (void)
         }
 
         ts = time_get_time_cached();
-        send_ping(s, seq, ts);
+        socket_tx_ping(s, seq, ts);
     }
 
     seq++;
@@ -170,5 +170,5 @@ void server_tick (void)
     }
 
     server_poll();
-    server_send_ping();
+    server_socket_tx_ping();
 }
