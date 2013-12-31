@@ -16,7 +16,7 @@
 #include "slre.h"
 #include "command.h"
 
-static void client_send_ping(void);
+static void client_socket_tx_ping(void);
 static boolean client_init_done;
 static socketp client_connect_socket;
 static void client_poll(void);
@@ -68,7 +68,7 @@ void client_fini (void)
     }
 }
 
-static void client_send_ping (void)
+static void client_socket_tx_ping (void)
 {
     static uint32_t ts;
     static uint32_t seq;
@@ -79,7 +79,7 @@ static void client_send_ping (void)
 
     ts = time_get_time_cached();
 
-    send_ping(client_connect_socket, seq++, ts);
+    socket_tx_ping(client_connect_socket, seq++, ts);
 }
 
 void client_tick (void)
@@ -89,7 +89,7 @@ void client_tick (void)
     }
 
     client_poll();
-    client_send_ping();
+    client_socket_tx_ping();
 }
 
 /*
@@ -151,11 +151,11 @@ static void client_poll (void)
 
         switch (type) {
         case MSG_TYPE_PONG:
-            receive_pong(s, packet, data);
+            socket_rx_pong(s, packet, data);
             break;
 
         case MSG_TYPE_PING:
-            receive_ping(s, packet, data);
+            socket_rx_ping(s, packet, data);
             break;
 
         default:
