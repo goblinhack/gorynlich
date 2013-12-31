@@ -8,9 +8,9 @@
 
 #include <SDL_net.h>
 
-extern int net_test(int32_t argc, char *argv[]);
-extern boolean net_init(void);
-extern void net_fini(void);
+extern int socket_test(int32_t argc, char *argv[]);
+extern boolean socket_init(void);
+extern void socket_fini(void);
 extern char *iptodynstr(IPaddress ip);
 
 extern IPaddress server_address;
@@ -28,10 +28,15 @@ extern socketp socket_find_remote_ip(IPaddress address);
 extern IPaddress socket_get_local_ip(socketp);
 extern IPaddress socket_get_remote_ip(socketp);
 
+extern const char *socket_get_player_name(const socketp);
+
 extern const char *socket_get_local_logname(const socketp);
 extern const char *socket_get_remote_logname(const socketp);
 
 extern boolean socket_get_open(const socketp);
+
+extern void socket_set_connected(const socketp, boolean);
+extern boolean socket_get_connected(const socketp);
 
 extern void socket_set_server(socketp, boolean);
 extern boolean socket_get_server(const socketp);
@@ -51,12 +56,18 @@ extern void socket_count_inc_pak_tx(const socketp);
 extern void socket_count_inc_pak_tx_error(const socketp);
 extern void socket_count_inc_pak_rx_bad_msg(const socketp);
 
+extern const char *socket_get_name(const socketp s);
+extern void socket_set_name(socketp s, const char *name);
+
 typedef enum {
     MSG_TYPE_PING,
     MSG_TYPE_PONG,
+    MSG_TYPE_NAME,
 } msg_type;
 
-extern void send_ping(socketp s, uint16_t seq, uint32_t ts);
-extern void send_pong(socketp s, uint16_t seq, uint32_t ts);
+extern void send_ping(socketp s, uint8_t seq, uint32_t ts);
+extern void send_pong(socketp s, uint8_t seq, uint32_t ts);
 extern void receive_ping(socketp s, UDPpacket *packet, uint8_t *data);
 extern void receive_pong(socketp s, UDPpacket *packet, uint8_t *data);
+extern void send_name(socketp s, const char *name);
+extern void receive_name(socketp s, UDPpacket *packet, uint8_t *data);

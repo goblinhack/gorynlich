@@ -92,7 +92,7 @@ void quit (void)
 
     command_fini();
 
-    net_fini();
+    socket_fini();
     server_fini();
     client_fini();
     wid_fini();
@@ -730,7 +730,7 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_help_init");
 #endif
 
-    net_init();
+    socket_init();
     server_init();
     client_init();
 

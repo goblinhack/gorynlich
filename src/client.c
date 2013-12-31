@@ -13,11 +13,14 @@
 #include "socket.h"
 #include "client.h"
 #include "time.h"
+#include "slre.h"
+#include "command.h"
 
 static void client_send_ping(void);
 static boolean client_init_done;
 static socketp client_connect_socket;
 static void client_poll(void);
+static boolean client_set_name(tokens_t *tokens, void *context);
 
 boolean client_init (void)
 {
@@ -45,6 +48,11 @@ boolean client_init (void)
 
     LOG("Client connecting to   %s", socket_get_remote_logname(s));
     LOG("Client connecting from %s", socket_get_local_logname(s));
+
+    command_add(client_set_name, "set name [A-Za-z0-9_-]*",
+                "set client name");
+
+    socket_set_name(client_connect_socket, dupstr("no name", "client name"));
 
     client_init_done = true;
 
@@ -84,6 +92,25 @@ void client_tick (void)
     client_send_ping();
 }
 
+/*
+ * User has entered a command, run it
+ */
+boolean client_set_name (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[2];
+
+    if (!client_connect_socket) {
+        ERR("No open socket to name");
+        return (false);
+    }
+
+    socket_set_name(client_connect_socket, dupstr(s, "socket name"));
+
+    CON("Client name set to \"%s\"", socket_get_name(client_connect_socket));
+
+    return (true);
+}
+
 static void client_poll (void)
 {
     socketp s = client_connect_socket;
@@ -118,8 +145,7 @@ static void client_poll (void)
         }
 
         uint8_t *data = packet->data;
-        msg_type type = SDLNet_Read16(data);
-        data += sizeof(uint16_t);
+        msg_type type = *data++;
 
         socket_count_inc_pak_rx(s);
 
@@ -134,7 +160,7 @@ static void client_poll (void)
 
         default:
             socket_count_inc_pak_rx_bad_msg(s);
-            ERR("Unknown message type received [%u", type);
+            ERR("Unknown message type received [%u]", type);
         }
     }
 
