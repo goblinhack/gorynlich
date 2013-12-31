@@ -65,9 +65,9 @@ typedef enum {
     MSG_TYPE_NAME,
 } msg_type;
 
-extern void send_ping(socketp s, uint8_t seq, uint32_t ts);
-extern void send_pong(socketp s, uint8_t seq, uint32_t ts);
-extern void receive_ping(socketp s, UDPpacket *packet, uint8_t *data);
-extern void receive_pong(socketp s, UDPpacket *packet, uint8_t *data);
-extern void send_name(socketp s, const char *name);
-extern void receive_name(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);
+extern void socket_tx_pong(socketp s, uint8_t seq, uint32_t ts);
+extern void socket_rx_ping(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_name(socketp s, const char *name);
+extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
