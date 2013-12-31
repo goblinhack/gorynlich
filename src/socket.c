@@ -46,6 +46,25 @@ typedef struct network_ {
     socket sockets[MAX_SOCKETS];
 } network;
 
+/*
+ * Individual messages.
+ */
+#define SOCKET_NAME_MAX 20
+
+typedef struct {
+    uint8_t type;
+    char name[SOCKET_NAME_MAX];
+} __attribute__ ((packed)) msg_name;
+
+typedef struct {
+    char name[SOCKET_NAME_MAX];
+} __attribute__ ((packed)) msg_player;
+
+typedef struct {
+    uint8_t type;
+    msg_player players[MAX_SOCKETS];
+} __attribute__ ((packed)) msg_players;
+
 boolean is_server;
 boolean is_client;
 boolean is_headless;
@@ -850,8 +869,6 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 
     packet->address = socket_get_remote_ip(s);
 
-    s->tx_msg[MSG_TYPE_PING]++;
-
     *data++ = MSG_TYPE_PING;
     *data++ = seq;
 
@@ -874,8 +891,10 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
         socket_count_inc_pak_tx_error(s);
     } else {
         socket_count_inc_pak_tx(s);
+
+        s->tx_msg[MSG_TYPE_PING]++;
     }
-        
+            
     SDLNet_FreePacket(packet);
 }
 
@@ -894,8 +913,6 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
 
     packet->address = socket_get_remote_ip(s);
 
-    s->tx_msg[MSG_TYPE_PONG]++;
-
     *data++ = MSG_TYPE_PONG;
     *data++ = seq;
 
@@ -911,6 +928,8 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
         socket_count_inc_pak_tx_error(s);
     } else {
         socket_count_inc_pak_tx(s);
+
+        s->tx_msg[MSG_TYPE_PONG]++;
     }
         
     SDLNet_FreePacket(packet);
@@ -979,19 +998,13 @@ void socket_tx_name (socketp s, const char *name)
         return;
     }
 
-    uint8_t *data = packet->data;
-    uint8_t *odata = data;
+    msg_name msg = {0};
+    msg.type = MSG_TYPE_NAME;
+    strncpy(msg.name, name, min(sizeof(msg.name), strlen(name))); 
 
+    memcpy(packet->data, &msg, sizeof(msg));
+    packet->len = sizeof(msg);
     packet->address = socket_get_remote_ip(s);
-
-    s->tx_msg[MSG_TYPE_NAME]++;
-
-    *data++ = MSG_TYPE_NAME;
-    *data++ = strlen(name);
-    memcpy(data, name, strlen(name));
-    data += strlen(name);
-
-    packet->len = data - odata;
 
     if (debug_socket_enabled) {
         LOG("Tx Name [%s]", name);
@@ -1004,6 +1017,8 @@ void socket_tx_name (socketp s, const char *name)
         socket_count_inc_pak_tx_error(s);
     } else {
         socket_count_inc_pak_tx(s);
+
+        s->tx_msg[msg.type]++;
     }
         
     SDLNet_FreePacket(packet);
@@ -1011,12 +1026,21 @@ void socket_tx_name (socketp s, const char *name)
 
 void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    uint16_t len = *data++;
+    msg_name msg = {0};
 
-    char *name = mymalloc(len + 1, "client name");
+    if (packet->len != sizeof(msg)) {
+        char *tmp = iptodynstr(packet->address);
+        LOG("Bad socket rx name message [%s]", tmp);
+        myfree(tmp);
 
-    memcpy(name, data, len);
-    name[len] = 0;
+        socket_count_inc_pak_rx_error(s);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    char *name = mymalloc(sizeof(msg.name) + 1, "client name");
+    memcpy(name, msg.name, sizeof(msg.name));
 
     debug_socket_enabled = 1;
     if (debug_socket_enabled) {
