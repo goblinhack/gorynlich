@@ -63,6 +63,7 @@ typedef enum {
     MSG_TYPE_PING,
     MSG_TYPE_PONG,
     MSG_TYPE_NAME,
+    MSG_TYPE_MAX,
 } msg_type;
 
 extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);

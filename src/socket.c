@@ -38,6 +38,8 @@ typedef struct socket_ {
     uint32_t tx_error;
     uint32_t rx_bad_msg;
     uint32_t ping_responses[20];
+    uint32_t tx_msg[MSG_TYPE_MAX];
+    uint32_t rx_msg[MSG_TYPE_MAX];
 } socket;
 
 typedef struct network_ {
@@ -496,6 +498,13 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         CON("  Errors   : tx error %u, rx error %u, bad message %u packets", 
             s->tx_error, s->rx_error, s->rx_bad_msg);
 
+        CON("  Ping     : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_PING], s->rx_msg[MSG_TYPE_PING]);
+        CON("  Pong     : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_PONG], s->rx_msg[MSG_TYPE_PONG]);
+        CON("  Name     : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_NAME], s->rx_msg[MSG_TYPE_NAME]);
+
         /*
          * Ping stats.
          */
@@ -841,6 +850,8 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 
     packet->address = socket_get_remote_ip(s);
 
+    s->tx_msg[MSG_TYPE_PING]++;
+
     *data++ = MSG_TYPE_PING;
     *data++ = seq;
 
@@ -883,6 +894,8 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
 
     packet->address = socket_get_remote_ip(s);
 
+    s->tx_msg[MSG_TYPE_PONG]++;
+
     *data++ = MSG_TYPE_PONG;
     *data++ = seq;
 
@@ -922,6 +935,8 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     socket_set_connected(s, true);
+
+    s->rx_msg[MSG_TYPE_PING]++;
 }
 
 void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
@@ -939,6 +954,8 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = 
                     time_get_time_cached() - ts;
+
+    s->rx_msg[MSG_TYPE_PONG]++;
 }
 
 void socket_tx_name (socketp s, const char *name)
@@ -966,6 +983,8 @@ void socket_tx_name (socketp s, const char *name)
     uint8_t *odata = data;
 
     packet->address = socket_get_remote_ip(s);
+
+    s->tx_msg[MSG_TYPE_NAME]++;
 
     *data++ = MSG_TYPE_NAME;
     *data++ = strlen(name);
@@ -1007,4 +1026,6 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     socket_set_name(s, name);
+
+    s->rx_msg[MSG_TYPE_NAME]++;
 }
