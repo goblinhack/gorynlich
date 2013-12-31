@@ -96,8 +96,7 @@ static void server_poll (void)
         }
 
         uint8_t *data = packet->data;
-        msg_type type = SDLNet_Read16(data);
-        data += sizeof(uint16_t);
+        msg_type type = *data++;
 
         socket_count_inc_pak_rx(s);
 
@@ -108,6 +107,10 @@ static void server_poll (void)
 
         case MSG_TYPE_PONG:
             receive_pong(s, packet, data);
+            break;
+
+        case MSG_TYPE_NAME:
+            receive_name(s, packet, data);
             break;
 
         default:

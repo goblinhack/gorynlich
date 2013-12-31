@@ -17,14 +17,16 @@
 #include "time.h"
 
 typedef struct socket_ {
-    boolean open:1;
-    boolean server:1;
-    boolean client:1;
+    boolean open;
+    boolean server;
+    boolean client;
+    boolean connected;
     UDPsocket udp_socket;
     IPaddress remote_ip;
     IPaddress local_ip;
-    char *local_logname;
-    char *remote_logname;
+    const char *name;
+    const char *local_logname;
+    const char *remote_logname;
     int channel;
     SDLNet_SocketSet socklist;
     /*
@@ -51,12 +53,15 @@ IPaddress no_address = {0};
 
 network net;
 
-static boolean sockets_show(tokens_t *tokens, void *context);
-static boolean net_init_done;
+static boolean sockets_show_all(tokens_t *tokens, void *context);
+static boolean sockets_show_clients(tokens_t *tokens, void *context);
+static boolean socket_init_done;
 
-boolean net_init (void)
+boolean socket_init (void)
 {
-    if (net_init_done) {
+    debug_socket_enabled = 1;
+
+    if (socket_init_done) {
         return (true);
     }
 
@@ -65,21 +70,25 @@ boolean net_init (void)
         return (false);
     }
 
-    net_init_done = true;
-    command_add(sockets_show, "show socket", 
+    command_add(sockets_show_all, "show socket", 
                 "clients and server sockets");
+
+    command_add(sockets_show_clients, "show users", 
+                "clients only");
 
     command_add(debug_ping_enable, "debug ping [01]",
                 "debug periodic pings");
 
+    socket_init_done = true;
+
     return (true);
 }
 
-void net_fini (void)
+void socket_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    if (!net_init_done) {
+    if (!socket_init_done) {
         return;
     }
 
@@ -92,7 +101,7 @@ void net_fini (void)
 
     memset(&net, 0, sizeof(net));
 
-    net_init_done = false;
+    socket_init_done = false;
 }
 
 socket *socket_listen (IPaddress address)
@@ -347,11 +356,15 @@ void socket_disconnect (socketp s)
     }
 
     if (s->local_logname) {
-        myfree(s->local_logname);
+        myfree((char *)s->local_logname);
     }
 
     if (s->remote_logname) {
-        myfree(s->remote_logname);
+        myfree((char *)s->remote_logname);
+    }
+
+    if (s->name) {
+        myfree((char *)s->name);
     }
 
     memset(s, 0, sizeof(*s));
@@ -420,7 +433,7 @@ char *iptodynstr (IPaddress ip)
     }
 }
 
-static boolean sockets_show (tokens_t *tokens, void *context)
+static boolean sockets_show_all (tokens_t *tokens, void *context)
 {
     int si;
 
@@ -504,6 +517,84 @@ static boolean sockets_show (tokens_t *tokens, void *context)
     return (true);
 }
 
+static boolean sockets_show_clients (tokens_t *tokens, void *context)
+{
+    int si;
+
+    CON("Name                 Quality  Latency       Remote IP");
+    CON("----                 -------  ------- ------------------------");
+        
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        const socketp s = &net.sockets[si];
+
+        if (!s->open) {
+            continue;
+        }
+
+        if (s->server) {
+            continue;
+        }
+
+        /*
+         * Ping stats.
+         */
+        uint32_t no_response = 0;
+        uint32_t response = 0;
+        uint32_t total_attempts = 0;
+
+        /*
+         * Latency.
+         */
+        uint32_t avg_latency = 0;
+        uint32_t max_latency = 0;
+        uint32_t min_latency = (uint32_t) -1;
+
+        FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
+            if (*latency == -1) {
+                ++no_response;
+                continue;
+            }
+
+            if (*latency == 0) {
+                continue;
+            }
+
+            ++response;
+
+            /*
+             * Latency.
+             */
+            avg_latency += *latency;
+
+            if (*latency > max_latency) {
+                max_latency = *latency;
+            }
+
+            if (*latency < min_latency) {
+                min_latency = *latency;
+            }
+        }
+
+        total_attempts = no_response + response;
+
+        if (total_attempts) {
+            avg_latency = avg_latency /= total_attempts;
+
+            CON("%-20s %3.0f pct %3d ms %-20s", 
+                socket_get_name(s),
+                ((float)((float)response / (float)total_attempts)) * 100.0,
+                avg_latency,
+                socket_get_remote_logname(s));
+        } else {
+            CON("%-20s ---     ---     %-20s", 
+                socket_get_name(s),
+                socket_get_remote_logname(s));
+        }
+    }
+
+    return (true);
+}
+
 static uint32_t sockets_fail_rate (socketp s)
 {
     /*
@@ -569,6 +660,22 @@ IPaddress socket_get_remote_ip (const socketp s)
     return (s->remote_ip);
 }
 
+const char *socket_get_name (const socketp s)
+{
+    return (s->name);
+}
+
+void socket_set_name (socketp s, const char *name)
+{
+    if (s->name) {
+        myfree((char *)s->name);
+    }
+
+    s->name = name;
+
+    send_name(s, s->name);
+}
+
 const char * socket_get_local_logname (const socketp s)
 {
     if (!s->local_logname) {
@@ -622,6 +729,32 @@ boolean socket_get_channel (const socketp s)
     return (s->channel);
 }
 
+void socket_set_connected (socketp s, boolean c)
+{
+    if (c == s->connected) {
+        return;
+    }
+
+    if (c) {
+        if (debug_socket_enabled) {
+            LOG("Connected to [%s]", socket_get_remote_logname(s));
+        }
+    } else {
+        if (debug_socket_enabled) {
+            LOG("Disconnected from [%s]", socket_get_remote_logname(s));
+        }
+    }
+
+    s->connected = c;
+
+    send_name(s, s->name);
+}
+
+boolean socket_get_connected (const socketp s)
+{
+    return (s->connected);
+}
+
 UDPsocket socket_get_udp_socket (const socketp s)
 {
     return (s->udp_socket);
@@ -657,7 +790,7 @@ void socket_count_inc_pak_rx_bad_msg (const socketp s)
     s->rx_bad_msg++;
 }
 
-void send_ping (socketp s, uint16_t seq, uint32_t ts)
+void send_ping (socketp s, uint8_t seq, uint32_t ts)
 {
     UDPpacket *packet;      
 
@@ -672,11 +805,8 @@ void send_ping (socketp s, uint16_t seq, uint32_t ts)
 
     packet->address = socket_get_remote_ip(s);
 
-    SDLNet_Write16(MSG_TYPE_PING, data);               
-    data += sizeof(uint16_t);
-
-    SDLNet_Write16(seq, data);               
-    data += sizeof(uint16_t);
+    *data++ = MSG_TYPE_PING;
+    *data++ = seq;
 
     SDLNet_Write32(ts, data);               
     data += sizeof(uint32_t);
@@ -702,7 +832,7 @@ void send_ping (socketp s, uint16_t seq, uint32_t ts)
     SDLNet_FreePacket(packet);
 }
 
-void send_pong (socketp s, uint16_t seq, uint32_t ts)
+void send_pong (socketp s, uint8_t seq, uint32_t ts)
 {
     UDPpacket *packet;      
 
@@ -717,11 +847,8 @@ void send_pong (socketp s, uint16_t seq, uint32_t ts)
 
     packet->address = socket_get_remote_ip(s);
 
-    SDLNet_Write16(MSG_TYPE_PONG, data);               
-    data += sizeof(uint16_t);
-
-    SDLNet_Write16(seq, data);               
-    data += sizeof(uint16_t);
+    *data++ = MSG_TYPE_PONG;
+    *data++ = seq;
 
     SDLNet_Write32(ts, data);               
     data += sizeof(uint32_t);
@@ -742,9 +869,7 @@ void send_pong (socketp s, uint16_t seq, uint32_t ts)
 
 void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    uint16_t seq = SDLNet_Read16(data);
-    data += sizeof(uint16_t);
-
+    uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
@@ -755,13 +880,17 @@ void receive_ping (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     send_pong(s, seq, ts);
+
+    if (seq == 0) {
+        socket_set_connected(s, false);
+    }
+
+    socket_set_connected(s, true);
 }
 
 void receive_pong (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    uint16_t seq = SDLNet_Read16(data);
-    data += sizeof(uint16_t);
-
+    uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
@@ -792,4 +921,90 @@ boolean debug_ping_enable (tokens_t *tokens, void *context)
     CON("Debug ping mode set to %u", debug_ping_enabled);
 
     return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean debug_socket_enable (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[2];
+
+    if (!s || (*s == '\0')) {
+        debug_socket_enabled = 1;
+    } else {
+        debug_socket_enabled = strtol(s, 0, 10) ? 1 : 0;
+    }
+
+    CON("Debug socket mode set to %u", debug_socket_enabled);
+
+    return (true);
+}
+
+void send_name (socketp s, const char *name)
+{
+    /*
+     * Refresh the server with our name.
+     */
+    if (!s->client) {
+        return;
+    }
+
+    UDPpacket *packet;      
+
+    if (!s->connected) {
+        return;
+    }
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
+        return;
+    }
+
+    uint8_t *data = packet->data;
+    uint8_t *odata = data;
+
+    packet->address = socket_get_remote_ip(s);
+
+    *data++ = MSG_TYPE_NAME;
+    *data++ = strlen(name);
+    memcpy(data, name, strlen(name));
+    data += strlen(name);
+
+    packet->len = data - odata;
+
+    if (debug_socket_enabled) {
+        LOG("Tx Name [%s]", name);
+    }
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
+        ERR("no UDP packet sent");
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+    }
+        
+    SDLNet_FreePacket(packet);
+}
+
+void receive_name (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    uint16_t len = *data++;
+
+    char *name = mymalloc(len + 1, "client name");
+
+    memcpy(name, data, len);
+    name[len] = 0;
+
+    debug_socket_enabled = 1;
+    if (debug_socket_enabled) {
+        char *tmp = iptodynstr(packet->address);
+        LOG("Rx name [%s] \"%s\"", tmp, name);
+        myfree(tmp);
+    }
+
+    socket_set_name(s, name);
 }

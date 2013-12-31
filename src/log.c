@@ -24,6 +24,7 @@
 static char buf[200];
 boolean debug_enabled;
 boolean debug_ping_enabled;
+boolean debug_socket_enabled;
 boolean croaked;
 
 /*
