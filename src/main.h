@@ -237,9 +237,11 @@ void WID_DBG(widp, const char *fmt, ...) \
 
 extern boolean debug_enabled;
 extern boolean debug_ping_enabled;
+extern boolean debug_socket_enabled;
 
 boolean debug_enable(tokensp, void *context);
 boolean debug_ping_enable(tokensp, void *context);
+boolean debug_socket_enable(tokensp, void *context);
 
 extern boolean fps_enabled;
 boolean fps_enable(tokensp, void *context);
