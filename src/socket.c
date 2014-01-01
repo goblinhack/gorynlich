@@ -17,10 +17,12 @@
 #include "time.h"
 
 typedef struct socket_ {
-    boolean open;
-    boolean server;
-    boolean client;
-    boolean connected;
+    uint8_t index;
+    uint8_t open;
+    uint8_t server;
+    uint8_t client;
+    uint8_t server_side_client;
+    uint8_t connected;
     UDPsocket udp_socket;
     IPaddress remote_ip;
     IPaddress local_ip;
@@ -250,6 +252,8 @@ socket *socket_listen (IPaddress address)
 
         s->open = true;
         s->local_ip = listen_address;
+        s->index = s - net.sockets;
+        s->server = true;
 
         return (s);
     }
@@ -258,7 +262,7 @@ socket *socket_listen (IPaddress address)
     return (0);
 }
 
-socket *socket_connect (IPaddress address)
+socket *socket_connect (IPaddress address, boolean server_side_client)
 {
     IPaddress connect_address = address;
 
@@ -350,9 +354,15 @@ socket *socket_connect (IPaddress address)
     }
 
     s->open = true;
+    s->server_side_client = server_side_client;
+
+    if (!server_side_client) {
+        s->client = true;
+    }
 
     s->remote_ip = connect_address;
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
+    s->index = s - net.sockets;
 
     return (s);
 }
@@ -362,6 +372,8 @@ void socket_disconnect (socketp s)
     if (!s->open) {
         return;
     }
+
+    socket_set_connected(s, false);
 
     LOG("Close peer [%s] %s", socket_get_remote_logname(s),
         socket_get_local_logname(s));
@@ -503,8 +515,12 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
 
         if (s->server) {
             CON("[%u] Server", si);
-        } else {
+        } else if (s->server_side_client) {
+            CON("[%u] Server-side-Client", si);
+        } else if (s->client) {
             CON("[%u] Client", si);
+        } else {
+            CON("[%u] Unknown", si);
         }
 
         CON("  Local IP : %s", socket_get_local_logname(s));
@@ -523,6 +539,8 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
             s->tx_msg[MSG_TYPE_PONG], s->rx_msg[MSG_TYPE_PONG]);
         CON("  Name     : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_NAME], s->rx_msg[MSG_TYPE_NAME]);
+        CON("  Players  : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_PLAYERS], s->rx_msg[MSG_TYPE_PLAYERS]);
 
         /*
          * Ping stats.
@@ -763,24 +781,19 @@ boolean socket_get_open (const socketp s)
     return (s->open);
 }
 
-void socket_set_server (socketp s, boolean c)
-{
-    s->server = c;
-}
-
 boolean socket_get_server (const socketp s)
 {
     return (s->server);
 }
 
-void socket_set_client (socketp s, boolean c)
-{
-    s->client = c;
-}
-
 boolean socket_get_client (const socketp s)
 {
     return (s->client);
+}
+
+boolean socket_get_server_side_client (const socketp s)
+{
+    return (s->server_side_client);
 }
 
 void socket_set_channel (socketp s, int c)
@@ -803,6 +816,9 @@ void socket_set_connected (socketp s, boolean c)
         if (debug_socket_enabled) {
             LOG("Connected to [%s]", socket_get_remote_logname(s));
         }
+
+        LOG("Locally      [%s]", socket_get_local_logname(s));
+
     } else {
         if (debug_socket_enabled) {
             LOG("Disconnected from [%s]", socket_get_remote_logname(s));
@@ -810,8 +826,15 @@ void socket_set_connected (socketp s, boolean c)
     }
 
     s->connected = c;
+    LOG("Connected on socket %d",s->index);
 
-    socket_tx_name(s, s->name);
+    if (c) {
+        socket_tx_name(s, s->name);
+
+        if (is_server) {
+            socket_tx_players();
+        }
+    }
 }
 
 boolean socket_get_connected (const socketp s)
@@ -880,7 +903,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = (uint32_t) -1;
 
     if (debug_ping_enabled) {
-        LOG("Tx Ping [%s] seq %u, ts %u", 
+        LOG("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -943,15 +966,11 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_ping_enabled) {
         char *tmp = iptodynstr(packet->address);
-        LOG("Rx ping [%s] seq %u", tmp, seq);
+        LOG("Rx ping [from %s] seq %u", tmp, seq);
         myfree(tmp);
     }
 
     socket_tx_pong(s, seq, ts);
-
-    if (seq == 0) {
-        socket_set_connected(s, false);
-    }
 
     socket_set_connected(s, true);
 
@@ -966,7 +985,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_ping_enabled) {
         char *tmp = iptodynstr(packet->address);
-        LOG("Rx Pong [%s] seq %u, elapsed %u",
+        LOG("Rx Pong [from %s] seq %u, elapsed %u",
             tmp, seq, time_get_time_cached() - ts);
         myfree(tmp);
     }
@@ -982,7 +1001,7 @@ void socket_tx_name (socketp s, const char *name)
     /*
      * Refresh the server with our name.
      */
-    if (!s->client) {
+    if (!socket_get_client(s)) {
         return;
     }
 
@@ -1007,7 +1026,7 @@ void socket_tx_name (socketp s, const char *name)
     packet->address = socket_get_remote_ip(s);
 
     if (debug_socket_enabled) {
-        LOG("Tx Name [%s]", name);
+        LOG("Tx Name [to %s] \"%s\"", socket_get_remote_logname(s), name);
     }
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
@@ -1045,11 +1064,88 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     debug_socket_enabled = 1;
     if (debug_socket_enabled) {
         char *tmp = iptodynstr(packet->address);
-        LOG("Rx name [%s] \"%s\"", tmp, name);
+        LOG("Rx name [from %s] \"%s\"", tmp, name);
         myfree(tmp);
     }
 
     socket_set_name(s, name);
 
     s->rx_msg[MSG_TYPE_NAME]++;
+}
+
+void socket_tx_players (void)
+{
+    /*
+     * Refresh the clients with all players.
+     */
+    if (!is_server) {
+        return;
+    }
+
+    UDPpacket *packet;      
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
+        return;
+    }
+
+    msg_players msg = {0};
+    msg.type = MSG_TYPE_PLAYERS;
+
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socketp s = &net.sockets[si];
+
+        if (!s->connected) {
+            continue;
+        }
+
+        if (!socket_get_client(s)) {
+            continue;
+        }
+
+        if (!s->name) {
+            continue;
+        }
+
+        strncpy(msg.players[si].name, s->name, 
+                min(sizeof(msg.players[si].name), strlen(s->name))); 
+    }
+
+    memcpy(packet->data, &msg, sizeof(msg));
+    packet->len = sizeof(msg);
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socketp s = &net.sockets[si];
+
+        if (!s->connected) {
+            continue;
+        }
+
+        if (!socket_get_client(s)) {
+            continue;
+        }
+
+        if (debug_socket_enabled) {
+            LOG("Tx Players [to %s]",
+                socket_get_remote_logname(s));
+        }
+
+        packet->address = socket_get_remote_ip(s);
+
+        if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                            socket_get_channel(s), packet) < 1) {
+            ERR("no UDP packet sent");
+
+            socket_count_inc_pak_tx_error(s);
+        } else {
+            socket_count_inc_pak_tx(s);
+
+            s->tx_msg[msg.type]++;
+        }
+    }
+        
+    SDLNet_FreePacket(packet);
 }

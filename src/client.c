@@ -37,14 +37,13 @@ boolean client_init (void)
     /*
      * Connector.
      */
-    s = socket_connect(server_address);
+    s = socket_connect(server_address, false /* client side */);
     if (!s) {
         WARN("Client failed to connect");
         return (false);
     }
 
     client_connect_socket = s;
-    socket_set_client(s, true);
 
     LOG("Client connecting to   %s", socket_get_remote_logname(s));
     LOG("Client connecting from %s", socket_get_local_logname(s));
@@ -71,7 +70,7 @@ void client_fini (void)
 static void client_socket_tx_ping (void)
 {
     static uint32_t ts;
-    static uint32_t seq;
+    static uint8_t seq;
 
     if (!time_have_x_tenths_passed_since(10, ts)) {
         return;
@@ -80,6 +79,13 @@ static void client_socket_tx_ping (void)
     ts = time_get_time_cached();
 
     socket_tx_ping(client_connect_socket, seq++, ts);
+
+    /*
+     * Every 10 seconds check for dead peers.
+     */
+    if (seq % 10) {
+        sockets_alive_check();
+    }
 }
 
 void client_tick (void)
@@ -115,6 +121,10 @@ static void client_poll (void)
 {
     socketp s = client_connect_socket;
     if (!s) {
+        return;
+    }
+
+    if (!socket_get_socklist(s)) {
         return;
     }
 
