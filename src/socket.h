@@ -48,15 +48,6 @@ extern boolean socket_get_channel(const socketp);
 extern UDPsocket socket_get_udp_socket(const socketp);
 extern SDLNet_SocketSet socket_get_socklist(const socketp);
 
-extern void socket_count_inc_pak_rx(const socketp);
-extern void socket_count_inc_pak_rx_error(const socketp);
-extern void socket_count_inc_pak_tx(const socketp);
-extern void socket_count_inc_pak_tx_error(const socketp);
-extern void socket_count_inc_pak_rx_bad_msg(const socketp);
-
-extern const char *socket_get_name(const socketp s);
-extern void socket_set_name(socketp s, const char *name);
-
 typedef enum {
     MSG_TYPE_PING,
     MSG_TYPE_PONG,
@@ -64,6 +55,15 @@ typedef enum {
     MSG_TYPE_PLAYERS,
     MSG_TYPE_MAX,
 } msg_type;
+
+extern void socket_count_inc_pak_rx(const socketp, msg_type);
+extern void socket_count_inc_pak_rx_error(const socketp);
+extern void socket_count_inc_pak_tx(const socketp);
+extern void socket_count_inc_pak_tx_error(const socketp);
+extern void socket_count_inc_pak_rx_bad_msg(const socketp);
+
+extern const char *socket_get_name(const socketp s);
+extern void socket_set_name(socketp s, const char *name);
 
 extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);
 extern void socket_tx_pong(socketp s, uint8_t seq, uint32_t ts);

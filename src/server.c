@@ -101,7 +101,7 @@ static void server_poll (void)
         uint8_t *data = packet->data;
         msg_type type = *data++;
 
-        socket_count_inc_pak_rx(s);
+        socket_count_inc_pak_rx(s, type);
 
         switch (type) {
         case MSG_TYPE_PING:
@@ -119,7 +119,6 @@ static void server_poll (void)
             break;
 
         default:
-            socket_count_inc_pak_rx_bad_msg(s);
             ERR("Unknown message type received [%u", type);
         }
     }
