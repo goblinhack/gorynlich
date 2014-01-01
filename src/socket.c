@@ -87,10 +87,10 @@ boolean socket_init (void)
         return (false);
     }
 
-    command_add(sockets_show_all, "show socket", 
+    command_add(sockets_show_all, "show sockets server", 
                 "clients and server sockets");
 
-    command_add(sockets_show_clients, "show client", 
+    command_add(sockets_show_clients, "show sockets client", 
                 "clients only");
 
     command_add(debug_socket_ping_enable, "debug socket ping [01]",
@@ -554,7 +554,7 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         CON("  Name     : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_NAME], s->rx_msg[MSG_TYPE_NAME]);
         CON("  Updates  : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_PLAYER_UPDATE], s->rx_msg[MSG_TYPE_PLAYER_UPDATE]);
+            s->tx_msg[MSG_TYPE_PLAYERS_ALL], s->rx_msg[MSG_TYPE_PLAYERS_ALL]);
 
         /*
          * Ping stats.
@@ -866,9 +866,13 @@ void socket_count_inc_pak_tx (const socketp s)
     s->tx++;
 }
 
-void socket_count_inc_pak_rx_error (const socketp s)
+static void socket_count_inc_pak_rx_error (const socketp s, UDPpacket *packet)
 {
     s->rx_error++;
+
+    char *tmp = iptodynstr(packet->address);
+    LOG("Bad socket message [from %s]", tmp);
+    myfree(tmp);
 }
 
 void socket_count_inc_pak_tx_error (const socketp s)
@@ -1011,7 +1015,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
                     time_get_time_cached() - ts;
 }
 
-void socket_tx_name (socketp s)
+void socket_tx_player (socketp s)
 {
     if (!socket_get_udp_socket(s)) {
         return;
@@ -1037,7 +1041,7 @@ void socket_tx_name (socketp s)
     memcpy(packet->data, &msg, sizeof(msg));
 
     if (debug_socket_players_enabled) {
-        LOG("Tx Name [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
+        LOG("Tx Player [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
     }
 
     packet->len = sizeof(msg);
@@ -1048,16 +1052,12 @@ void socket_tx_name (socketp s)
     socket_free_msg(packet);
 }
 
-void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_player (socketp s, UDPpacket *packet, uint8_t *data)
 {
     msg_name msg = {0};
 
     if (packet->len != sizeof(msg)) {
-        char *tmp = iptodynstr(packet->address);
-        LOG("Bad socket rx name message [%s]", tmp);
-        myfree(tmp);
-
-        socket_count_inc_pak_rx_error(s);
+        socket_count_inc_pak_rx_error(s, packet);
         return;
     }
 
@@ -1072,12 +1072,12 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     socket_set_name(s, msg.name);
 }
 
-void socket_tx_player_update (void)
+void socket_tx_players_all (void)
 {
     UDPpacket *packet = socket_alloc_msg();
 
     msg_players msg = {0};
-    msg.type = MSG_TYPE_PLAYER_UPDATE;
+    msg.type = MSG_TYPE_PLAYERS_ALL;
 
     uint32_t si;
 
@@ -1110,7 +1110,7 @@ void socket_tx_player_update (void)
         }
 
         if (debug_socket_players_enabled) {
-            LOG("Tx Players [to %s]",
+            LOG("Tx All Players [to %s]",
                 socket_get_remote_logname(s));
         }
 
@@ -1123,16 +1123,13 @@ void socket_tx_player_update (void)
     socket_free_msg(packet);
 }
 
-void socket_rx_player_update (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
+                            aplayer *players)
 {
     msg_players *msg;
 
     if (packet->len != sizeof(*msg)) {
-        char *tmp = iptodynstr(packet->address);
-        LOG("Bad socket rx name message [%s]", tmp);
-        myfree(tmp);
-
-        socket_count_inc_pak_rx_error(s);
+        socket_count_inc_pak_rx_error(s, packet);
         return;
     }
 
@@ -1152,7 +1149,7 @@ void socket_rx_player_update (socketp s, UDPpacket *packet, uint8_t *data)
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(packet->address);
-            LOG("Rx Players [from %s] %u:\"%s\"", tmp, si, pp->name);
+            LOG("Rx All Players [from %s] %u:\"%s\"", tmp, si, pp->name);
             myfree(tmp);
         }
     }

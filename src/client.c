@@ -15,12 +15,16 @@
 #include "time.h"
 #include "slre.h"
 #include "command.h"
+#include "player.h"
 
 static void client_socket_tx_ping(void);
 static boolean client_init_done;
 static socketp client_connect_socket;
 static void client_poll(void);
 static boolean client_set_name(tokens_t *tokens, void *context);
+static boolean client_players_show(tokens_t *tokens, void *context);
+
+aplayer client_players[MAX_PLAYERS];
 
 boolean client_init (void)
 {
@@ -48,8 +52,11 @@ boolean client_init (void)
     LOG("Client connecting to   %s", socket_get_remote_logname(s));
     LOG("                  from %s", socket_get_local_logname(s));
 
-    command_add(client_set_name, "set name [A-Za-z0-9_-]*",
+    command_add(client_set_name, "set client name [A-Za-z0-9_-]*",
                 "set client name");
+
+    command_add(client_players_show, "show client players", 
+                "show all players state");
 
     socket_set_name(client_connect_socket, dupstr("no name", "client name"));
 
@@ -171,11 +178,11 @@ static void client_poll (void)
         case MSG_TYPE_PING:
             socket_rx_ping(s, packet, data);
 
-            socket_tx_name(s);
+            socket_tx_player(s);
             break;
 
-        case MSG_TYPE_PLAYER_UPDATE:
-            socket_rx_player_update(s, packet, data);
+        case MSG_TYPE_PLAYERS_ALL:
+            socket_rx_players_all(s, packet, data, &client_players[0]);
             break;
 
         default:
@@ -184,4 +191,27 @@ static void client_poll (void)
     }
 
     SDLNet_FreePacket(packet);
+}
+
+/*
+ * User has entered a command, run it
+ */
+static boolean client_players_show (tokens_t *tokens, void *context)
+{
+    CON("Name");
+    CON("----");
+
+    uint32_t si;
+
+    for (si = 0; si < MAX_PLAYERS; si++) {
+        aplayer *pp = &client_players[si];
+
+        if (!pp->name[0]) {
+            continue;
+        }
+
+        CON("%s", pp->name);
+    }
+
+    return (true);
 }
