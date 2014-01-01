@@ -27,10 +27,6 @@ typedef struct socket_ {
     UDPsocket udp_socket;
     IPaddress remote_ip;
     IPaddress local_ip;
-    const char *name;
-    const char *local_logname;
-    const char *remote_logname;
-    int channel;
     SDLNet_SocketSet socklist;
     /*
      * Counters.
@@ -43,6 +39,10 @@ typedef struct socket_ {
     uint32_t ping_responses[20];
     uint32_t tx_msg[MSG_TYPE_MAX];
     uint32_t rx_msg[MSG_TYPE_MAX];
+    int channel;
+    const char *local_logname;
+    const char *remote_logname;
+    char name[PLAYER_NAME_MAX];
 } socket;
 
 typedef struct network_ {
@@ -90,7 +90,7 @@ boolean socket_init (void)
     command_add(sockets_show_all, "show socket", 
                 "clients and server sockets");
 
-    command_add(sockets_show_clients, "show users", 
+    command_add(sockets_show_clients, "show client", 
                 "clients only");
 
     command_add(debug_socket_ping_enable, "debug socket ping [01]",
@@ -99,7 +99,7 @@ boolean socket_init (void)
     command_add(debug_socket_connect_enable, "debug socket connect [01]",
                 "debug sockets connections");
 
-    command_add(debug_socket_players_enable, "debug socket player [01]",
+    command_add(debug_socket_players_enable, "debug socket update [01]",
                 "debug player updates");
 
     socket_init_done = true;
@@ -396,10 +396,6 @@ void socket_disconnect (socketp s)
         myfree((char *)s->remote_logname);
     }
 
-    if (s->name) {
-        myfree((char *)s->name);
-    }
-
     memset(s, 0, sizeof(*s));
 }
 
@@ -408,7 +404,7 @@ void socket_disconnect (socketp s)
  */
 boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[2];
+    char *s = tokens->args[4];
 
     if (!s || (*s == '\0')) {
         debug_socket_ping_enabled = 1;
@@ -426,7 +422,7 @@ boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
  */
 boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[2];
+    char *s = tokens->args[4];
 
     if (!s || (*s == '\0')) {
         debug_socket_connect_enabled = 1;
@@ -444,7 +440,7 @@ boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
  */
 boolean debug_socket_players_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[2];
+    char *s = tokens->args[4];
 
     if (!s || (*s == '\0')) {
         debug_socket_players_enabled = 1;
@@ -557,7 +553,7 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
             s->tx_msg[MSG_TYPE_PONG], s->rx_msg[MSG_TYPE_PONG]);
         CON("  Name     : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_NAME], s->rx_msg[MSG_TYPE_NAME]);
-        CON("  Players  : tx %u, rx %u",
+        CON("  Updates  : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_PLAYERS], s->rx_msg[MSG_TYPE_PLAYERS]);
 
         /*
@@ -605,7 +601,8 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         if (total_attempts) {
             avg_latency = avg_latency /= total_attempts;
 
-            CON("  Ping     : success %2.2f percent, fails %2.2f percent",
+            CON("  Quality  : success %2.2f percent, fails %2.2f percent",
+
                 ((float)((float)response / (float)total_attempts)) * 100.0,
                 ((float)((float)no_response / (float)total_attempts)) * 100.0);
 
@@ -767,11 +764,7 @@ const char *socket_get_name (const socketp s)
 
 void socket_set_name (socketp s, const char *name)
 {
-    if (s->name) {
-        myfree((char *)s->name);
-    }
-
-    s->name = name;
+    strncpy(s->name, name, sizeof(s->name) - 1);
 }
 
 const char * socket_get_local_logname (const socketp s)
@@ -858,9 +851,14 @@ SDLNet_SocketSet socket_get_socklist (const socketp s)
     return (s->socklist);
 }
 
-void socket_count_inc_pak_rx (const socketp s)
+void socket_count_inc_pak_rx (const socketp s, msg_type type)
 {
-    s->rx++;
+    if (type < MSG_TYPE_MAX) {
+        s->rx++;
+        s->rx_msg[type]++;
+    } else {
+        socket_count_inc_pak_rx_bad_msg(s);
+    }
 }
 
 void socket_count_inc_pak_tx (const socketp s)
@@ -883,32 +881,61 @@ void socket_count_inc_pak_rx_bad_msg (const socketp s)
     s->rx_bad_msg++;
 }
 
+static UDPpacket *socket_alloc_msg (void)
+{
+    UDPpacket *packet;
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
+    }
+
+    newptr(packet, "pak");
+
+    return (packet);
+}
+
+static void socket_free_msg (UDPpacket *packet)
+{
+    oldptr(packet);
+
+    SDLNet_FreePacket(packet);
+}
+
+static void socket_tx_msg (socketp s, UDPpacket *packet)
+{
+    msg_type type;
+
+    type = *(packet->data);
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
+        ERR("no UDP packet sent: %s", SDLNet_GetError());
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+
+        s->tx_msg[type]++;
+    }
+}
+
 void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 {
     if (!socket_get_udp_socket(s)) {
         return;
     }
 
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
-        return;
-    }
+    UDPpacket *packet = socket_alloc_msg();
 
     uint8_t *data = packet->data;
     uint8_t *odata = data;
-
-    packet->address = socket_get_remote_ip(s);
 
     *data++ = MSG_TYPE_PING;
     *data++ = seq;
 
     SDLNet_Write32(ts, data);               
     data += sizeof(uint32_t);
-
-    packet->len = data - odata;
 
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = (uint32_t) -1;
 
@@ -917,18 +944,12 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
             socket_get_remote_logname(s), seq, ts);
     }
 
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent: %s", SDLNet_GetError());
+    packet->len = data - odata;
+    packet->address = socket_get_remote_ip(s);
 
-        socket_count_inc_pak_tx_error(s);
-    } else {
-        socket_count_inc_pak_tx(s);
-
-        s->tx_msg[MSG_TYPE_PING]++;
-    }
+    socket_tx_msg(s, packet);
             
-    SDLNet_FreePacket(packet);
+    socket_free_msg(packet);
 }
 
 void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
@@ -937,18 +958,10 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
         return;
     }
 
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
-        return;
-    }
+    UDPpacket *packet = socket_alloc_msg();
 
     uint8_t *data = packet->data;
     uint8_t *odata = data;
-
-    packet->address = socket_get_remote_ip(s);
 
     *data++ = MSG_TYPE_PONG;
     *data++ = seq;
@@ -957,19 +970,11 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
     data += sizeof(uint32_t);
 
     packet->len = data - odata;
+    packet->address = socket_get_remote_ip(s);
 
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent: %s", SDLNet_GetError());
-
-        socket_count_inc_pak_tx_error(s);
-    } else {
-        socket_count_inc_pak_tx(s);
-
-        s->tx_msg[MSG_TYPE_PONG]++;
-    }
+    socket_tx_msg(s, packet);
         
-    SDLNet_FreePacket(packet);
+    socket_free_msg(packet);
 }
 
 void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
@@ -980,15 +985,13 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(packet->address);
-        LOG("Rx ping [from %s] seq %u", tmp, seq);
+        LOG("Rx Ping [from %s] seq %u", tmp, seq);
         myfree(tmp);
     }
 
     socket_tx_pong(s, seq, ts);
 
     socket_set_connected(s, true);
-
-    s->rx_msg[MSG_TYPE_PING]++;
 }
 
 void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1006,8 +1009,6 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = 
                     time_get_time_cached() - ts;
-
-    s->rx_msg[MSG_TYPE_PONG]++;
 }
 
 void socket_tx_name (socketp s)
@@ -1023,42 +1024,28 @@ void socket_tx_name (socketp s)
         return;
     }
 
-    UDPpacket *packet;      
-
     if (!s->connected) {
         return;
     }
 
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
-        return;
-    }
+    UDPpacket *packet = socket_alloc_msg();
 
     msg_name msg = {0};
     msg.type = MSG_TYPE_NAME;
-    strncpy(msg.name, s->name, min(sizeof(msg.name), strlen(s->name))); 
+    strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
-    packet->len = sizeof(msg);
-    packet->address = socket_get_remote_ip(s);
 
     if (debug_socket_players_enabled) {
         LOG("Tx Name [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
     }
 
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent: %s", SDLNet_GetError());
+    packet->len = sizeof(msg);
+    packet->address = socket_get_remote_ip(s);
 
-        socket_count_inc_pak_tx_error(s);
-    } else {
-        socket_count_inc_pak_tx(s);
-
-        s->tx_msg[msg.type]++;
-    }
+    socket_tx_msg(s, packet);
         
-    SDLNet_FreePacket(packet);
+    socket_free_msg(packet);
 }
 
 void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1076,29 +1063,18 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 
     memcpy(&msg, packet->data, sizeof(msg));
 
-    char *name = mymalloc(sizeof(msg.name) + 1, "client name");
-    memcpy(name, msg.name, sizeof(msg.name));
-
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(packet->address);
-        LOG("Rx name [from %s] \"%s\"", tmp, name);
+        LOG("Rx Name [from %s] \"%s\"", tmp, msg.name);
         myfree(tmp);
     }
 
-    socket_set_name(s, name);
-
-    s->rx_msg[MSG_TYPE_NAME]++;
+    socket_set_name(s, msg.name);
 }
 
 void socket_tx_players (void)
 {
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %u", MAX_PACKET_SIZE);
-        return;
-    }
+    UDPpacket *packet = socket_alloc_msg();
 
     msg_players msg = {0};
     msg.type = MSG_TYPE_PLAYERS;
@@ -1116,16 +1092,11 @@ void socket_tx_players (void)
             continue;
         }
 
-        if (!s->name) {
-            continue;
-        }
-
         strncpy(msg.players[si].name, s->name, 
                 min(sizeof(msg.players[si].name), strlen(s->name))); 
     }
 
     memcpy(packet->data, &msg, sizeof(msg));
-    packet->len = sizeof(msg);
 
     for (si = 0; si < MAX_SOCKETS; si++) {
         socketp s = &net.sockets[si];
@@ -1143,21 +1114,13 @@ void socket_tx_players (void)
                 socket_get_remote_logname(s));
         }
 
+        packet->len = sizeof(msg);
         packet->address = socket_get_remote_ip(s);
 
-        if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                            socket_get_channel(s), packet) < 1) {
-            ERR("no UDP packet sent: %s", SDLNet_GetError());
-
-            socket_count_inc_pak_tx_error(s);
-        } else {
-            socket_count_inc_pak_tx(s);
-
-            s->tx_msg[msg.type]++;
-        }
+        socket_tx_msg(s, packet);
     }
         
-    SDLNet_FreePacket(packet);
+    socket_free_msg(packet);
 }
 
 void socket_rx_players (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1189,10 +1152,8 @@ void socket_rx_players (socketp s, UDPpacket *packet, uint8_t *data)
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(packet->address);
-            LOG("Rx players [from %s] %u:\"%s\"", tmp, si, pp->name);
+            LOG("Rx Players [from %s] %u:\"%s\"", tmp, si, pp->name);
             myfree(tmp);
         }
     }
-
-    s->rx_msg[MSG_TYPE_PLAYERS]++;
 }
