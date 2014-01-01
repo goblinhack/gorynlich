@@ -69,6 +69,7 @@ extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);
 extern void socket_tx_pong(socketp s, uint8_t seq, uint32_t ts);
 extern void socket_rx_ping(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_name(socketp s, const char *name);
+extern void socket_tx_name(socketp s);
 extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_players(void);
+extern void socket_rx_players(socketp s, UDPpacket *packet, uint8_t *data);

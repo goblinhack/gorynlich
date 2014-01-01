@@ -23,8 +23,9 @@
 
 static char buf[200];
 boolean debug_enabled;
-boolean debug_ping_enabled;
-boolean debug_socket_enabled;
+boolean debug_socket_ping_enabled;
+boolean debug_socket_connect_enabled;
+boolean debug_socket_players_enabled;
 boolean croaked;
 
 /*
