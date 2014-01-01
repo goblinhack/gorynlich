@@ -38,7 +38,6 @@ boolean server_init (void)
     LOG("Server listening on %s", socket_get_local_logname(s));
 
     server_socket = s;
-    socket_set_server(s, true);
 
     server_init_done = true;
 
@@ -59,6 +58,10 @@ static void server_poll (void)
     socketp s = server_socket;
 
     if (!s) {
+        return;
+    }
+
+    if (!socket_get_socklist(s)) {
         return;
     }
 
@@ -88,7 +91,7 @@ static void server_poll (void)
 
         socketp s = socket_find_remote_ip(packet->address);
         if (!s) {
-            s = socket_connect(packet->address);
+            s = socket_connect(packet->address, true /* server side */);
             if (!s) {
                 ERR("Pak rx failed to create client");
                 continue;
@@ -125,7 +128,7 @@ static void server_poll (void)
 static void server_socket_tx_ping (void)
 {
     static uint32_t ts;
-    static uint32_t seq;
+    static uint8_t seq;
 
     if (!time_have_x_tenths_passed_since(10, ts)) {
         return;
