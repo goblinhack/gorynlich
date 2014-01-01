@@ -106,6 +106,8 @@ static void server_poll (void)
         switch (type) {
         case MSG_TYPE_PING:
             socket_rx_ping(s, packet, data);
+
+            socket_tx_players();
             break;
 
         case MSG_TYPE_PONG:

@@ -76,6 +76,10 @@ static void client_socket_tx_ping (void)
         return;
     }
 
+    if (!client_connect_socket) {
+        return;
+    }
+
     ts = time_get_time_cached();
 
     socket_tx_ping(client_connect_socket, seq++, ts);
@@ -166,6 +170,12 @@ static void client_poll (void)
 
         case MSG_TYPE_PING:
             socket_rx_ping(s, packet, data);
+
+            socket_tx_name(s);
+            break;
+
+        case MSG_TYPE_PLAYERS:
+            socket_rx_players(s, packet, data);
             break;
 
         default:
