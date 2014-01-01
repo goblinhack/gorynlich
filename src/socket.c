@@ -15,6 +15,7 @@
 #include "slre.h"
 #include "command.h"
 #include "time.h"
+#include "player.h"
 
 typedef struct socket_ {
     uint8_t index;
@@ -48,18 +49,13 @@ typedef struct network_ {
     socket sockets[MAX_SOCKETS];
 } network;
 
-/*
- * Individual messages.
- */
-#define SOCKET_NAME_MAX 20
-
 typedef struct {
     uint8_t type;
-    char name[SOCKET_NAME_MAX];
+    char name[PLAYER_NAME_MAX];
 } __attribute__ ((packed)) msg_name;
 
 typedef struct {
-    char name[SOCKET_NAME_MAX];
+    char name[PLAYER_NAME_MAX];
 } __attribute__ ((packed)) msg_player;
 
 typedef struct {
@@ -82,8 +78,6 @@ static boolean socket_init_done;
 
 boolean socket_init (void)
 {
-    debug_socket_enabled = 1;
-
     if (socket_init_done) {
         return (true);
     }
@@ -99,8 +93,14 @@ boolean socket_init (void)
     command_add(sockets_show_clients, "show users", 
                 "clients only");
 
-    command_add(debug_ping_enable, "debug ping [01]",
+    command_add(debug_socket_ping_enable, "debug socket ping [01]",
                 "debug periodic pings");
+
+    command_add(debug_socket_connect_enable, "debug socket connect [01]",
+                "debug sockets connections");
+
+    command_add(debug_socket_players_enable, "debug socket player [01]",
+                "debug player updates");
 
     socket_init_done = true;
 
@@ -406,17 +406,17 @@ void socket_disconnect (socketp s)
 /*
  * User has entered a command, run it
  */
-boolean debug_ping_enable (tokens_t *tokens, void *context)
+boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
     if (!s || (*s == '\0')) {
-        debug_ping_enabled = 1;
+        debug_socket_ping_enabled = 1;
     } else {
-        debug_ping_enabled = strtol(s, 0, 10) ? 1 : 0;
+        debug_socket_ping_enabled = strtol(s, 0, 10) ? 1 : 0;
     }
 
-    CON("Debug ping mode set to %u", debug_ping_enabled);
+    CON("Debug ping mode set to %u", debug_socket_ping_enabled);
 
     return (true);
 }
@@ -424,17 +424,35 @@ boolean debug_ping_enable (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean debug_socket_enable (tokens_t *tokens, void *context)
+boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
     if (!s || (*s == '\0')) {
-        debug_socket_enabled = 1;
+        debug_socket_connect_enabled = 1;
     } else {
-        debug_socket_enabled = strtol(s, 0, 10) ? 1 : 0;
+        debug_socket_connect_enabled = strtol(s, 0, 10) ? 1 : 0;
     }
 
-    CON("Debug socket mode set to %u", debug_socket_enabled);
+    CON("Debug socket connect mode set to %u", debug_socket_connect_enabled);
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean debug_socket_players_enable (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[2];
+
+    if (!s || (*s == '\0')) {
+        debug_socket_players_enabled = 1;
+    } else {
+        debug_socket_players_enabled = strtol(s, 0, 10) ? 1 : 0;
+    }
+
+    CON("Debug socket player mode set to %u", debug_socket_players_enabled);
 
     return (true);
 }
@@ -754,8 +772,6 @@ void socket_set_name (socketp s, const char *name)
     }
 
     s->name = name;
-
-    socket_tx_name(s, s->name);
 }
 
 const char * socket_get_local_logname (const socketp s)
@@ -813,27 +829,18 @@ void socket_set_connected (socketp s, boolean c)
     }
 
     if (c) {
-        if (debug_socket_enabled) {
+        if (debug_socket_connect_enabled) {
             LOG("Connected to [%s]", socket_get_remote_logname(s));
+            LOG("  Locally    [%s]", socket_get_local_logname(s));
         }
 
-        LOG("Locally      [%s]", socket_get_local_logname(s));
-
     } else {
-        if (debug_socket_enabled) {
+        if (debug_socket_connect_enabled) {
             LOG("Disconnected from [%s]", socket_get_remote_logname(s));
         }
     }
 
     s->connected = c;
-
-    if (c) {
-        socket_tx_name(s, s->name);
-
-        if (s->server_side_client) {
-            socket_tx_players();
-        }
-    }
 }
 
 boolean socket_get_connected (const socketp s)
@@ -878,6 +885,10 @@ void socket_count_inc_pak_rx_bad_msg (const socketp s)
 
 void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 {
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
     UDPpacket *packet;      
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
@@ -901,14 +912,14 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = (uint32_t) -1;
 
-    if (debug_ping_enabled) {
+    if (debug_socket_ping_enabled) {
         LOG("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent");
+        ERR("no UDP packet sent: %s", SDLNet_GetError());
 
         socket_count_inc_pak_tx_error(s);
     } else {
@@ -922,6 +933,10 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 
 void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
 {
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
     UDPpacket *packet;      
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
@@ -945,7 +960,7 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent");
+        ERR("no UDP packet sent: %s", SDLNet_GetError());
 
         socket_count_inc_pak_tx_error(s);
     } else {
@@ -963,7 +978,7 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
-    if (debug_ping_enabled) {
+    if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(packet->address);
         LOG("Rx ping [from %s] seq %u", tmp, seq);
         myfree(tmp);
@@ -982,7 +997,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
-    if (debug_ping_enabled) {
+    if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(packet->address);
         LOG("Rx Pong [from %s] seq %u, elapsed %u",
             tmp, seq, time_get_time_cached() - ts);
@@ -995,8 +1010,12 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
     s->rx_msg[MSG_TYPE_PONG]++;
 }
 
-void socket_tx_name (socketp s, const char *name)
+void socket_tx_name (socketp s)
 {
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
     /*
      * Refresh the server with our name.
      */
@@ -1018,19 +1037,19 @@ void socket_tx_name (socketp s, const char *name)
 
     msg_name msg = {0};
     msg.type = MSG_TYPE_NAME;
-    strncpy(msg.name, name, min(sizeof(msg.name), strlen(name))); 
+    strncpy(msg.name, s->name, min(sizeof(msg.name), strlen(s->name))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
     packet->len = sizeof(msg);
     packet->address = socket_get_remote_ip(s);
 
-    if (debug_socket_enabled) {
-        LOG("Tx Name [to %s] \"%s\"", socket_get_remote_logname(s), name);
+    if (debug_socket_players_enabled) {
+        LOG("Tx Name [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
     }
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent");
+        ERR("no UDP packet sent: %s", SDLNet_GetError());
 
         socket_count_inc_pak_tx_error(s);
     } else {
@@ -1060,8 +1079,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     char *name = mymalloc(sizeof(msg.name) + 1, "client name");
     memcpy(name, msg.name, sizeof(msg.name));
 
-    debug_socket_enabled = 1;
-    if (debug_socket_enabled) {
+    if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(packet->address);
         LOG("Rx name [from %s] \"%s\"", tmp, name);
         myfree(tmp);
@@ -1120,7 +1138,7 @@ void socket_tx_players (void)
             continue;
         }
 
-        if (debug_socket_enabled) {
+        if (debug_socket_players_enabled) {
             LOG("Tx Players [to %s]",
                 socket_get_remote_logname(s));
         }
@@ -1129,7 +1147,7 @@ void socket_tx_players (void)
 
         if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                             socket_get_channel(s), packet) < 1) {
-            ERR("no UDP packet sent");
+            ERR("no UDP packet sent: %s", SDLNet_GetError());
 
             socket_count_inc_pak_tx_error(s);
         } else {
@@ -1140,4 +1158,41 @@ void socket_tx_players (void)
     }
         
     SDLNet_FreePacket(packet);
+}
+
+void socket_rx_players (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_players *msg;
+
+    if (packet->len != sizeof(*msg)) {
+        char *tmp = iptodynstr(packet->address);
+        LOG("Bad socket rx name message [%s]", tmp);
+        myfree(tmp);
+
+        socket_count_inc_pak_rx_error(s);
+        return;
+    }
+
+    uint32_t si;
+
+    msg = (typeof(msg)) packet->data;
+
+    for (si = 0; si < MAX_PLAYERS; si++) {
+        aplayer *pp = &players[si];
+        msg_player *pm = &msg->players[si];
+
+        memcpy(pp->name, pm->name, PLAYER_NAME_MAX);
+
+        if (!pp->name[0]) {
+            continue;
+        }
+
+        if (debug_socket_players_enabled) {
+            char *tmp = iptodynstr(packet->address);
+            LOG("Rx players [from %s] %u:\"%s\"", tmp, si, pp->name);
+            myfree(tmp);
+        }
+    }
+
+    s->rx_msg[MSG_TYPE_PLAYERS]++;
 }

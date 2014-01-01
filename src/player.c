@@ -9,11 +9,18 @@
 #include "thing.h"
 #include "player.h"
 #include "level.h"
+#include "slre.h"
+#include "command.h"
 
+aplayer players[MAX_PLAYERS];
 thingp player;
+
+static boolean players_show(tokens_t *tokens, void *context);
 
 boolean player_init (void)
 {
+    command_add(players_show, "show players", "show all players state");
+
     return (true);
 }
 
@@ -48,4 +55,27 @@ void player_destroy (void)
     thing_destroy(player, "player destroy");
 
     player = 0;
+}
+
+/*
+ * User has entered a command, run it
+ */
+static boolean players_show (tokens_t *tokens, void *context)
+{
+    CON("Name");
+    CON("----");
+
+    uint32_t si;
+
+    for (si = 0; si < MAX_PLAYERS; si++) {
+        aplayer *pp = &players[si];
+
+        if (!pp->name[0]) {
+            continue;
+        }
+
+        CON("%s", pp->name);
+    }
+
+    return (true);
 }

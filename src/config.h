@@ -19,11 +19,11 @@
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
-#define SERVER_DEFAULT_HOST              "localhost"
-#define SERVER_DEFAULT_PORT              10000
-#define SERVER_DEFAULT_PORT_MAX          10010
-#define MAX_CLIENTS               4
-#define MAX_SOCKETS               (MAX_CLIENTS + 1) // 1 for server
+#define SERVER_DEFAULT_HOST       "localhost"
+#define SERVER_DEFAULT_PORT       10000
+#define SERVER_DEFAULT_PORT_MAX   10010
+#define MAX_PLAYERS               4
+#define MAX_SOCKETS               (MAX_PLAYERS + 1) // 1 for server
 #define MAX_PACKET_SIZE           1024
 
 /*
