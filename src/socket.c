@@ -826,12 +826,11 @@ void socket_set_connected (socketp s, boolean c)
     }
 
     s->connected = c;
-    LOG("Connected on socket %d",s->index);
 
     if (c) {
         socket_tx_name(s, s->name);
 
-        if (is_server) {
+        if (s->server_side_client) {
             socket_tx_players();
         }
     }
@@ -1075,13 +1074,6 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_tx_players (void)
 {
-    /*
-     * Refresh the clients with all players.
-     */
-    if (!is_server) {
-        return;
-    }
-
     UDPpacket *packet;      
 
     packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
@@ -1102,7 +1094,7 @@ void socket_tx_players (void)
             continue;
         }
 
-        if (!socket_get_client(s)) {
+        if (!s->server_side_client) {
             continue;
         }
 
@@ -1124,7 +1116,7 @@ void socket_tx_players (void)
             continue;
         }
 
-        if (!socket_get_client(s)) {
+        if (!s->server_side_client) {
             continue;
         }
 
