@@ -554,7 +554,7 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         CON("  Name     : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_NAME], s->rx_msg[MSG_TYPE_NAME]);
         CON("  Updates  : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_PLAYERS], s->rx_msg[MSG_TYPE_PLAYERS]);
+            s->tx_msg[MSG_TYPE_PLAYER_UPDATE], s->rx_msg[MSG_TYPE_PLAYER_UPDATE]);
 
         /*
          * Ping stats.
@@ -1072,12 +1072,12 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     socket_set_name(s, msg.name);
 }
 
-void socket_tx_players (void)
+void socket_tx_player_update (void)
 {
     UDPpacket *packet = socket_alloc_msg();
 
     msg_players msg = {0};
-    msg.type = MSG_TYPE_PLAYERS;
+    msg.type = MSG_TYPE_PLAYER_UPDATE;
 
     uint32_t si;
 
@@ -1123,7 +1123,7 @@ void socket_tx_players (void)
     socket_free_msg(packet);
 }
 
-void socket_rx_players (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_player_update (socketp s, UDPpacket *packet, uint8_t *data)
 {
     msg_players *msg;
 
