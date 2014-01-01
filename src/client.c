@@ -174,8 +174,8 @@ static void client_poll (void)
             socket_tx_name(s);
             break;
 
-        case MSG_TYPE_PLAYERS:
-            socket_rx_players(s, packet, data);
+        case MSG_TYPE_PLAYER_UPDATE:
+            socket_rx_player_update(s, packet, data);
             break;
 
         default:

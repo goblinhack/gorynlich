@@ -52,7 +52,7 @@ typedef enum {
     MSG_TYPE_PING,
     MSG_TYPE_PONG,
     MSG_TYPE_NAME,
-    MSG_TYPE_PLAYERS,
+    MSG_TYPE_PLAYER_UPDATE,
     MSG_TYPE_MAX,
 } msg_type;
 
@@ -71,5 +71,5 @@ extern void socket_rx_ping(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_name(socketp s);
 extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_players(void);
-extern void socket_rx_players(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_player_update(void);
+extern void socket_rx_player_update(socketp s, UDPpacket *packet, uint8_t *data);
