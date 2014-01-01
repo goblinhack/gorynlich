@@ -107,7 +107,7 @@ static void server_poll (void)
         case MSG_TYPE_PING:
             socket_rx_ping(s, packet, data);
 
-            socket_tx_player_update();
+            socket_tx_players_all();
             break;
 
         case MSG_TYPE_PONG:
@@ -115,7 +115,7 @@ static void server_poll (void)
             break;
 
         case MSG_TYPE_NAME:
-            socket_rx_name(s, packet, data);
+            socket_rx_player(s, packet, data);
             break;
 
         default:

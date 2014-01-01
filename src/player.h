@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#include <SDL_net.h>
+
 boolean player_init(void);
 void player_fini(void);
 
@@ -15,8 +17,8 @@ void player_destroy(void);
  */
 #define PLAYER_NAME_MAX 20
 
-typedef struct {
+typedef struct aplayer_ {
+    IPaddress local;
+    IPaddress remote;
     char name[PLAYER_NAME_MAX];
 } aplayer;
-
-extern aplayer players[MAX_PLAYERS];

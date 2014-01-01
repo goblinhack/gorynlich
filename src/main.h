@@ -138,6 +138,7 @@ uint32_t strlcat(char *dst, const char *src, uint32_t maxlen);
 /*
  * Globals:
  */
+typedef struct aplayer_ *aplayerp;
 typedef struct socket_ *socketp;
 typedef struct net_ *netp;
 typedef struct font *fontp;
