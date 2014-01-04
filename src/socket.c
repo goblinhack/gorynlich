@@ -773,7 +773,12 @@ void sockets_alive_check (void)
             LOG("Peer down [%s] qual %u percent",
                 socket_get_remote_logname(s), success);
 
-            socket_disconnect(s);
+            /*
+             * Clients try forever. Server clients disconnect.
+             */
+            if (socket_get_server_side_client(s)) {
+                socket_disconnect(s);
+            }
         }
     }
 }
@@ -1154,7 +1159,10 @@ void socket_tx_players_all (void)
         }
 
         msg_player *pm = &msg.players[si];
-        aplayer *pp = &players[si];
+        aplayer *pp = s->player;
+        if (!s->player) {
+            return;
+        }
 
         strncpy(pm->name, pp->name, min(sizeof(pm->name), strlen(pp->name))); 
         memcpy(&pm->local_ip, &pp->local_ip, sizeof(pp->local_ip));
