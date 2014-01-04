@@ -18,7 +18,7 @@ void player_destroy(void);
 #define PLAYER_NAME_MAX 20
 
 typedef struct aplayer_ {
-    IPaddress local;
-    IPaddress remote;
+    IPaddress local_ip;
+    IPaddress remote_ip;
     char name[PLAYER_NAME_MAX];
 } aplayer;

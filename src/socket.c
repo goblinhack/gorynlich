@@ -29,6 +29,10 @@ typedef struct socket_ {
     IPaddress local_ip;
     SDLNet_SocketSet socklist;
     /*
+     * If there is a player using this socket.
+     */
+    aplayer *player;
+    /*
      * Counters.
      */
     uint32_t rx;
@@ -36,7 +40,7 @@ typedef struct socket_ {
     uint32_t rx_error;
     uint32_t tx_error;
     uint32_t rx_bad_msg;
-    uint32_t ping_responses[20];
+    uint32_t ping_responses[SOCKET_PING_SEQ_NO_RANGE];
     uint32_t tx_msg[MSG_TYPE_MAX];
     uint32_t rx_msg[MSG_TYPE_MAX];
     int channel;
@@ -56,6 +60,8 @@ typedef struct {
 
 typedef struct {
     char name[PLAYER_NAME_MAX];
+    IPaddress local_ip;
+    IPaddress remote_ip;
 } __attribute__ ((packed)) msg_player;
 
 typedef struct {
@@ -73,7 +79,7 @@ IPaddress no_address = {0};
 network net;
 
 static boolean sockets_show_all(tokens_t *tokens, void *context);
-static boolean sockets_show_clients(tokens_t *tokens, void *context);
+static boolean sockets_show_summary(tokens_t *tokens, void *context);
 static boolean socket_init_done;
 
 boolean socket_init (void)
@@ -87,11 +93,11 @@ boolean socket_init (void)
         return (false);
     }
 
-    command_add(sockets_show_all, "show sockets server", 
+    command_add(sockets_show_all, "show sockets detail", 
                 "clients and server sockets");
 
-    command_add(sockets_show_clients, "show sockets client", 
-                "clients only");
+    command_add(sockets_show_summary, "show sockets summary", 
+                "one line output");
 
     command_add(debug_socket_ping_enable, "debug socket ping [01]",
                 "debug periodic pings");
@@ -364,6 +370,8 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
     s->index = s - net.sockets;
 
+    LOG("Peer up [%s]", socket_get_remote_logname(s));
+
     return (s);
 }
 
@@ -375,8 +383,7 @@ void socket_disconnect (socketp s)
 
     socket_set_connected(s, false);
 
-    LOG("Close peer [%s] %s", socket_get_remote_logname(s),
-        socket_get_local_logname(s));
+    LOG("Peer disc [%s]", socket_get_remote_logname(s));
 
     if (s->socklist) {
         SDLNet_FreeSocketSet(s->socklist);
@@ -396,6 +403,8 @@ void socket_disconnect (socketp s)
         myfree((char *)s->remote_logname);
     }
 
+    socket_set_player(s, 0);
+
     memset(s, 0, sizeof(*s));
 }
 
@@ -404,7 +413,7 @@ void socket_disconnect (socketp s)
  */
 boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[4];
+    char *s = tokens->args[3];
 
     if (!s || (*s == '\0')) {
         debug_socket_ping_enabled = 1;
@@ -422,7 +431,7 @@ boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
  */
 boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[4];
+    char *s = tokens->args[3];
 
     if (!s || (*s == '\0')) {
         debug_socket_connect_enabled = 1;
@@ -440,7 +449,7 @@ boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
  */
 boolean debug_socket_players_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[4];
+    char *s = tokens->args[3];
 
     if (!s || (*s == '\0')) {
         debug_socket_players_enabled = 1;
@@ -504,16 +513,39 @@ char *iptodynstr (IPaddress ip)
     uint16_t port = SDLNet_Read16(&ip.port);
 
     if (!memcmp(&ip, &no_address, sizeof(no_address))) {
-        return (dynprintf("<no IP address>"));
+        return (dynprintf("-"));
     }
 
     if (!(hostname = SDLNet_ResolveIP(&ip))) {
         return (dynprintf("IPv4 %u.%u.%u.%u:%u",
                           hostname, ip1, ip2, ip3, ip4, port));
-    } else {
-        return (dynprintf("[%s] %u.%u.%u.%u:%u",
-                          hostname, ip1, ip2, ip3, ip4, port));
+
     }
+
+    if (!strcmp(hostname, "0.0.0.0")) {
+        hostname = "";
+    }
+
+    if (strcmp(hostname, "localhost")) {
+        hostname = "local";
+    }
+
+    if ((ip1 == 0) && (ip2 == 0) && (ip3 == 0) && (ip4 == 0)) {
+        return (dynprintf("%s::%u",
+                           hostname && *hostname ? hostname : "",
+                           port));
+    }
+
+    if ((ip1 == 127) && (ip2 == 0) && (ip3 == 0) && (ip4 == 1)) {
+        return (dynprintf("%s::%u",
+                           hostname && *hostname ? hostname : "",
+                           port));
+    }
+
+    return (dynprintf("%s%s%u.%u.%u.%u:%u",
+                      hostname && *hostname ? hostname : "",
+                      hostname && *hostname ? "," : "",
+                      ip1, ip2, ip3, ip4, port));
 }
 
 static boolean sockets_show_all (tokens_t *tokens, void *context)
@@ -614,21 +646,17 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean sockets_show_clients (tokens_t *tokens, void *context)
+static boolean sockets_show_summary (tokens_t *tokens, void *context)
 {
     int si;
 
-    CON("Name                 Quality  Latency       Remote IP");
-    CON("----                 -------  ------- ------------------------");
+    CON("Name                 Quality  Latency       Remote IP           Local IP");
+    CON("----                 -------  ------- -------------------- ------------------");
         
     for (si = 0; si < MAX_SOCKETS; si++) {
         const socketp s = &net.sockets[si];
 
         if (!s->open) {
-            continue;
-        }
-
-        if (s->server) {
             continue;
         }
 
@@ -677,15 +705,17 @@ static boolean sockets_show_clients (tokens_t *tokens, void *context)
         if (total_attempts) {
             avg_latency = avg_latency /= total_attempts;
 
-            CON("%-20s %3.0f pct %3d ms %-20s", 
-                socket_get_name(s),
+            CON("%-20s %3.0f pct %5d ms %-20s %-20s", 
+                socket_get_server(s) ? "server" : socket_get_name(s),
                 ((float)((float)response / (float)total_attempts)) * 100.0,
                 avg_latency,
-                socket_get_remote_logname(s));
+                socket_get_remote_logname(s),
+                socket_get_local_logname(s));
         } else {
-            CON("%-20s ---     ---     %-20s", 
-                socket_get_name(s),
-                socket_get_remote_logname(s));
+            CON("%-20s                  %-20s %-20s", 
+                socket_get_server(s) ? "server" : socket_get_name(s),
+                socket_get_remote_logname(s),
+                socket_get_local_logname(s));
         }
     }
 
@@ -738,8 +768,8 @@ void sockets_alive_check (void)
 
         uint32_t success = sockets_fail_rate(s);
 
-        if (success < 10) {
-            LOG("Dead peer [%s] ping success %u percent",
+        if (success < SOCKET_PING_FAIL_THRESHOLD) {
+            LOG("Peer down [%s] qual %u percent",
                 socket_get_remote_logname(s), success);
 
             socket_disconnect(s);
@@ -849,6 +879,20 @@ UDPsocket socket_get_udp_socket (const socketp s)
 SDLNet_SocketSet socket_get_socklist (const socketp s)
 {
     return (s->socklist);
+}
+
+aplayerp socket_get_player (const socketp s)
+{
+    return (s->player);
+}
+
+void socket_set_player (const socketp s, aplayer *p)
+{
+    if (s->player) {
+        myfree(s->player);
+    }
+
+    s->player = p;
 }
 
 void socket_count_inc_pak_rx (const socketp s, msg_type type)
@@ -1070,11 +1114,27 @@ void socket_rx_player (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     socket_set_name(s, msg.name);
+
+    /*
+     * Update the player structure.
+     */
+    aplayer *p = myzalloc(sizeof(*p), "player");
+
+    memcpy(p->name, msg.name, PLAYER_NAME_MAX);
+    p->local_ip = s->local_ip;
+    p->remote_ip = s->remote_ip;
+    s->player = p;
 }
 
+/*
+ * Send an array of all curent players to all clients.
+ */
 void socket_tx_players_all (void)
 {
     UDPpacket *packet = socket_alloc_msg();
+    aplayer players[MAX_SOCKETS];
+
+    memset(&players, 0, sizeof(players));
 
     msg_players msg = {0};
     msg.type = MSG_TYPE_PLAYERS_ALL;
@@ -1092,8 +1152,12 @@ void socket_tx_players_all (void)
             continue;
         }
 
-        strncpy(msg.players[si].name, s->name, 
-                min(sizeof(msg.players[si].name), strlen(s->name))); 
+        msg_player *pm = &msg.players[si];
+        aplayer *pp = &players[si];
+
+        strncpy(pm->name, pp->name, min(sizeof(pm->name), strlen(pp->name))); 
+        memcpy(&pm->local_ip, &pp->local_ip, sizeof(pp->local_ip));
+        memcpy(&pm->remote_ip, &pp->remote_ip, sizeof(pp->remote_ip));
     }
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1123,6 +1187,9 @@ void socket_tx_players_all (void)
     socket_free_msg(packet);
 }
 
+/*
+ * Receive an array of all curent players from the server.
+ */
 void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
                             aplayer *players)
 {
@@ -1137,11 +1204,13 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
 
     msg = (typeof(msg)) packet->data;
 
-    for (si = 0; si < MAX_PLAYERS; si++) {
+    for (si = 0; si < MAX_SOCKETS; si++) {
         aplayer *pp = &players[si];
         msg_player *pm = &msg->players[si];
 
         memcpy(pp->name, pm->name, PLAYER_NAME_MAX);
+        memcpy(&pp->local_ip, &pm->local_ip, sizeof(s->local_ip));
+        memcpy(&pp->remote_ip, &pm->remote_ip, sizeof(s->remote_ip));
 
         if (!pp->name[0]) {
             continue;

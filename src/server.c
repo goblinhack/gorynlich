@@ -13,9 +13,14 @@
 #include "socket.h"
 #include "server.h"
 #include "time.h"
+#include "slre.h"
+#include "command.h"
+#include "player.h"
 
 static boolean server_init_done;
 static socketp server_socket;
+
+static boolean server_players_show(tokens_t *tokens, void *context);
 
 boolean server_init (void)
 {
@@ -38,6 +43,9 @@ boolean server_init (void)
     LOG("Server listening on %s", socket_get_local_logname(s));
 
     server_socket = s;
+
+    command_add(server_players_show, "show server players", 
+                "show all players state");
 
     server_init_done = true;
 
@@ -91,9 +99,12 @@ static void server_poll (void)
 
         socketp s = socket_find_remote_ip(packet->address);
         if (!s) {
+char *tmp = iptodynstr(packet->address);
+CON("find %s fail",tmp);
+myfree(tmp);
             s = socket_connect(packet->address, true /* server side */);
             if (!s) {
-                ERR("Pak rx failed to create client");
+                ERR("Pak rx failed to create socket for server");
                 continue;
             }
         }
@@ -175,4 +186,41 @@ void server_tick (void)
 
     server_poll();
     server_socket_tx_ping();
+}
+
+/*
+ * User has entered a command, run it
+ */
+static boolean server_players_show (tokens_t *tokens, void *context)
+{
+    CON("%-20s %s", "Name", "IP");
+    CON("%-20s %s", "----", "--");
+
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socketp s = socket_get(si);
+        if (!s) {
+            continue;
+        }
+
+        aplayer *p = socket_get_player(s);
+        if (!p) {
+            continue;
+        }
+
+        if (!p->name[0]) {
+            continue;
+        }
+
+        char *tmp = iptodynstr(p->local_ip);
+        CON("%-20s Local:  %s", p->name, tmp);
+        myfree(tmp);
+
+        tmp = iptodynstr(p->remote_ip);
+        CON("%-20s Remote: %s", " ", tmp);
+        myfree(tmp);
+    }
+
+    return (true);
 }

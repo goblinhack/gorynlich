@@ -23,8 +23,10 @@
 #define SERVER_DEFAULT_PORT       10000
 #define SERVER_DEFAULT_PORT_MAX   10010
 #define MAX_PLAYERS               4
-#define MAX_SOCKETS               (MAX_PLAYERS + 1) // 1 for server
+#define MAX_SOCKETS               (MAX_PLAYERS + 2) // 1 for server, 1 for local
 #define MAX_PACKET_SIZE           1024
+#define SOCKET_PING_SEQ_NO_RANGE  100 // how many pings to consider for quality
+#define SOCKET_PING_FAIL_THRESHOLD 10 // 90 percent of ping fails means down
 
 /*
  * Screen sizes.
