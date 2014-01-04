@@ -97,14 +97,10 @@ static void server_poll (void)
             continue;
         }
 
-        socketp s = socket_find_remote_ip(packet->address);
+        socketp s = socket_find_remote_ip(read_address(packet));
         if (!s) {
-char *tmp = iptodynstr(packet->address);
-CON("find %s fail",tmp);
-myfree(tmp);
-            s = socket_connect(packet->address, true /* server side */);
+            s = socket_connect(read_address(packet), true /* server side */);
             if (!s) {
-                ERR("Pak rx failed to create socket for server");
                 continue;
             }
         }

@@ -154,7 +154,7 @@ socket *socket_listen (IPaddress address)
     }
 
     if (si == MAX_SOCKETS) {
-        ERR("No more sockets are available");
+        ERR("No more sockets are available for listening");
         return (0);
     }
 
@@ -288,7 +288,8 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
     }
 
     if (si == MAX_SOCKETS) {
-        WARN("No more sockets are available");
+        WARN("No more sockets [%u] are available for connecting to clients",
+             MAX_SOCKETS);
         return (0);
     }
 
@@ -914,7 +915,7 @@ static void socket_count_inc_pak_rx_error (const socketp s, UDPpacket *packet)
 {
     s->rx_error++;
 
-    char *tmp = iptodynstr(packet->address);
+    char *tmp = iptodynstr(read_address(packet));
     LOG("Bad socket message [from %s]", tmp);
     myfree(tmp);
 }
@@ -993,7 +994,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     }
 
     packet->len = data - odata;
-    packet->address = socket_get_remote_ip(s);
+    write_address(packet, socket_get_remote_ip(s));
 
     socket_tx_msg(s, packet);
             
@@ -1018,7 +1019,7 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
     data += sizeof(uint32_t);
 
     packet->len = data - odata;
-    packet->address = socket_get_remote_ip(s);
+    write_address(packet, socket_get_remote_ip(s));
 
     socket_tx_msg(s, packet);
         
@@ -1032,7 +1033,7 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
     data += sizeof(uint32_t);
 
     if (debug_socket_ping_enabled) {
-        char *tmp = iptodynstr(packet->address);
+        char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Ping [from %s] seq %u", tmp, seq);
         myfree(tmp);
     }
@@ -1049,7 +1050,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
     data += sizeof(uint32_t);
 
     if (debug_socket_ping_enabled) {
-        char *tmp = iptodynstr(packet->address);
+        char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Pong [from %s] seq %u, elapsed %u",
             tmp, seq, time_get_time_cached() - ts);
         myfree(tmp);
@@ -1089,7 +1090,7 @@ void socket_tx_player (socketp s)
     }
 
     packet->len = sizeof(msg);
-    packet->address = socket_get_remote_ip(s);
+    write_address(packet, socket_get_remote_ip(s));
 
     socket_tx_msg(s, packet);
         
@@ -1108,7 +1109,7 @@ void socket_rx_player (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     if (debug_socket_players_enabled) {
-        char *tmp = iptodynstr(packet->address);
+        char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Name [from %s] \"%s\"", tmp, msg.name);
         myfree(tmp);
     }
@@ -1179,7 +1180,7 @@ void socket_tx_players_all (void)
         }
 
         packet->len = sizeof(msg);
-        packet->address = socket_get_remote_ip(s);
+        write_address(packet, socket_get_remote_ip(s));
 
         socket_tx_msg(s, packet);
     }
@@ -1217,7 +1218,7 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
         }
 
         if (debug_socket_players_enabled) {
-            char *tmp = iptodynstr(packet->address);
+            char *tmp = iptodynstr(read_address(packet));
             LOG("Rx All Players [from %s] %u:\"%s\"", tmp, si, pp->name);
             myfree(tmp);
         }
