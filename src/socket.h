@@ -76,3 +76,23 @@ extern void socket_rx_player(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_players_all(void);
 extern void socket_rx_players_all(socketp s, UDPpacket *packet, uint8_t *data,
                                   aplayerp players);
+
+/*
+ * Seemingly harmless, but we need this to read the 6 byte packet address
+ * into an 8 byte unpacked local address.
+ */
+static inline IPaddress read_address (UDPpacket *packet)
+{
+    IPaddress i;
+
+    i.host = packet->address.host;
+    i.port = packet->address.port;
+
+    return (i);
+}
+
+static inline void write_address (UDPpacket *packet, IPaddress i)
+{
+    packet->address.host = i.host;
+    packet->address.port = i.port;
+}

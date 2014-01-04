@@ -431,6 +431,8 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-s")) {
 
             is_server = true;
+            LOG_STDOUT = fopen("stdout.server.txt", "w+");
+            LOG_STDERR = fopen("stderr.server.txt", "w+");
             continue;
         }
 
@@ -453,6 +455,8 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-c")) {
 
             is_client = true;
+            LOG_STDOUT = fopen("stdout.client.txt", "w+");
+            LOG_STDERR = fopen("stderr.client.txt", "w+");
             continue;
         }
 
