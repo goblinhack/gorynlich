@@ -20,5 +20,10 @@ void player_destroy(void);
 typedef struct aplayer_ {
     IPaddress local_ip;
     IPaddress remote_ip;
+    uint8_t quality;
+    uint16_t avg_latency;
+    uint16_t min_latency;
+    uint16_t max_latency;
+    uint32_t score;
     char name[PLAYER_NAME_MAX];
 } aplayer;
