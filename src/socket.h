@@ -48,6 +48,9 @@ extern boolean socket_get_channel(const socketp);
 extern UDPsocket socket_get_udp_socket(const socketp);
 extern SDLNet_SocketSet socket_get_socklist(const socketp);
 
+extern aplayerp socket_get_player(const socketp);
+extern void socket_set_player(const socketp s, aplayerp);
+
 typedef enum {
     MSG_TYPE_PING,
     MSG_TYPE_PONG,

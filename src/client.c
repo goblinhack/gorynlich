@@ -24,7 +24,7 @@ static void client_poll(void);
 static boolean client_set_name(tokens_t *tokens, void *context);
 static boolean client_players_show(tokens_t *tokens, void *context);
 
-aplayer client_players[MAX_PLAYERS];
+aplayer client_players[MAX_SOCKETS];
 
 boolean client_init (void)
 {
@@ -198,19 +198,25 @@ static void client_poll (void)
  */
 static boolean client_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name");
-    CON("----");
+    CON("%-20s %s", "Name", "IP");
+    CON("%-20s %s", "----", "--");
 
     uint32_t si;
 
-    for (si = 0; si < MAX_PLAYERS; si++) {
+    for (si = 0; si < MAX_SOCKETS; si++) {
         aplayer *pp = &client_players[si];
 
         if (!pp->name[0]) {
             continue;
         }
 
-        CON("%s", pp->name);
+        char *tmp = iptodynstr(pp->local_ip);
+        CON("%-20s %s", pp->name, tmp);
+        myfree(tmp);
+
+        tmp = iptodynstr(pp->remote_ip);
+        CON("%-20s %s", " ", tmp);
+        myfree(tmp);
     }
 
     return (true);
