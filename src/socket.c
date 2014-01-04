@@ -33,6 +33,13 @@ typedef struct socket_ {
      */
     aplayer *player;
     /*
+     * Line quality.
+     */
+    uint8_t quality;
+    uint16_t avg_latency;
+    uint16_t min_latency;
+    uint16_t max_latency;
+    /*
      * Counters.
      */
     uint32_t rx;
@@ -62,6 +69,11 @@ typedef struct {
     char name[PLAYER_NAME_MAX];
     IPaddress local_ip;
     IPaddress remote_ip;
+    uint8_t quality;
+    uint16_t avg_latency;
+    uint16_t min_latency;
+    uint16_t max_latency;
+    uint32_t score;
 } __attribute__ ((packed)) msg_player;
 
 typedef struct {
@@ -524,11 +536,11 @@ char *iptodynstr (IPaddress ip)
     }
 
     if (!strcmp(hostname, "0.0.0.0")) {
-        hostname = "";
+        hostname = "lhost";
     }
 
-    if (strcmp(hostname, "localhost")) {
-        hostname = "local";
+    if (strstr(hostname, "localhost")) {
+        hostname = "lhost";
     }
 
     if ((ip1 == 0) && (ip2 == 0) && (ip3 == 0) && (ip4 == 0)) {
@@ -704,7 +716,7 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
         total_attempts = no_response + response;
 
         if (total_attempts) {
-            avg_latency = avg_latency /= total_attempts;
+            avg_latency /= total_attempts;
 
             CON("%-20s %3.0f pct %5d ms %-20s %-20s", 
                 socket_get_server(s) ? "server" : socket_get_name(s),
@@ -723,43 +735,79 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
     return (true);
 }
 
-static uint32_t sockets_fail_rate (socketp s)
+static boolean sockets_quality_check (void)
 {
-    /*
-     * Ping stats.
-     */
-    uint32_t no_response = 0;
-    uint32_t response = 0;
-    uint32_t total_attempts = 0;
+    int si;
 
-    FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
-        if (*latency == -1) {
-            ++no_response;
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        const socketp s = &net.sockets[si];
+
+        if (!s->open) {
             continue;
         }
 
-        if (*latency == 0) {
-            continue;
+        /*
+         * Ping stats.
+         */
+        uint32_t no_response = 0;
+        uint32_t response = 0;
+        uint32_t total_attempts = 0;
+
+        /*
+         * Latency.
+         */
+        uint32_t avg_latency = 0;
+        uint32_t max_latency = 0;
+        uint32_t min_latency = (uint32_t) -1;
+
+        FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
+            if (*latency == -1) {
+                ++no_response;
+                continue;
+            }
+
+            if (*latency == 0) {
+                continue;
+            }
+
+            ++response;
+
+            /*
+             * Latency.
+             */
+            avg_latency += *latency;
+
+            if (*latency > max_latency) {
+                max_latency = *latency;
+            }
+
+            if (*latency < min_latency) {
+                min_latency = *latency;
+            }
         }
 
-        ++response;
+        total_attempts = no_response + response;
+
+        if (total_attempts) {
+            s->quality = 
+                ((float)((float)response / (float)total_attempts)) * 100.0,
+
+            avg_latency /= total_attempts;
+            s->avg_latency = avg_latency;
+            s->min_latency = min_latency;
+            s->max_latency = max_latency;
+        }
     }
 
-    total_attempts = no_response + response;
-
-    if (total_attempts > ARRAY_SIZE(s->ping_responses) / 2) {
-        float success = 
-                ((float)((float)response / (float)total_attempts)) * 100.0;
-
-        return (success);
-    }
-
-    return (100);
+    return (true);
 }
 
 void sockets_alive_check (void)
 {
     uint32_t si;
+
+    sockets_quality_check();
+
     for (si = 0; si < MAX_SOCKETS; si++) {
         socketp s = &net.sockets[si];
 
@@ -767,11 +815,20 @@ void sockets_alive_check (void)
             continue;
         }
 
-        uint32_t success = sockets_fail_rate(s);
+        /*
+         * Don't kill off new born connections.
+         */
+        if (s->tx < 10) {
+            continue;
+        }
 
-        if (success < SOCKET_PING_FAIL_THRESHOLD) {
+        if (!socket_get_server_side_client(s)) {
+            continue;
+        }
+
+        if (s->quality < SOCKET_PING_FAIL_THRESHOLD) {
             LOG("Peer down [%s] qual %u percent",
-                socket_get_remote_logname(s), success);
+                socket_get_remote_logname(s), s->quality);
 
             /*
              * Clients try forever. Server clients disconnect.
@@ -1124,12 +1181,16 @@ void socket_rx_player (socketp s, UDPpacket *packet, uint8_t *data)
     /*
      * Update the player structure.
      */
-    aplayer *p = myzalloc(sizeof(*p), "player");
+    aplayer *p = s->player;
+    if (!p) {
+        p = myzalloc(sizeof(*p), "player");
+
+        socket_set_player(s, p);
+    }
 
     memcpy(p->name, msg.name, PLAYER_NAME_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
-    s->player = p;
 }
 
 /*
@@ -1158,15 +1219,27 @@ void socket_tx_players_all (void)
             continue;
         }
 
-        msg_player *pm = &msg.players[si];
+        msg_player *msg_tx = &msg.players[si];
         aplayer *pp = s->player;
         if (!s->player) {
             return;
         }
 
-        strncpy(pm->name, pp->name, min(sizeof(pm->name), strlen(pp->name))); 
-        memcpy(&pm->local_ip, &pp->local_ip, sizeof(pp->local_ip));
-        memcpy(&pm->remote_ip, &pp->remote_ip, sizeof(pp->remote_ip));
+        strncpy(msg_tx->name, pp->name, min(sizeof(msg_tx->name), 
+                                            strlen(pp->name))); 
+
+        SDLNet_Write32(pp->local_ip.host, &msg_tx->local_ip.host);
+        SDLNet_Write16(pp->local_ip.port, &msg_tx->local_ip.port);
+
+        SDLNet_Write32(pp->remote_ip.host, &msg_tx->remote_ip.host);
+        SDLNet_Write16(pp->remote_ip.port, &msg_tx->remote_ip.port);
+
+        msg_tx->quality = s->quality;
+        SDLNet_Write16(s->avg_latency, &msg_tx->avg_latency);
+        SDLNet_Write16(s->min_latency, &msg_tx->min_latency);
+        SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
+
+        SDLNet_Write32(pp->score, &msg_tx->score);
     }
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1215,11 +1288,23 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
 
     for (si = 0; si < MAX_SOCKETS; si++) {
         aplayer *pp = &players[si];
-        msg_player *pm = &msg->players[si];
+        msg_player *msg_rx = &msg->players[si];
 
-        memcpy(pp->name, pm->name, PLAYER_NAME_MAX);
-        memcpy(&pp->local_ip, &pm->local_ip, sizeof(s->local_ip));
-        memcpy(&pp->remote_ip, &pm->remote_ip, sizeof(s->remote_ip));
+        memcpy(pp->name, msg_rx->name, PLAYER_NAME_MAX);
+
+        pp->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
+        pp->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);
+
+        pp->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
+        pp->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
+
+        pp->quality = msg_rx->quality;
+
+        pp->avg_latency = SDLNet_Read16(&msg_rx->avg_latency);
+        pp->min_latency = SDLNet_Read16(&msg_rx->min_latency);
+        pp->max_latency = SDLNet_Read16(&msg_rx->max_latency);
+
+        pp->score = SDLNet_Read32(&msg_rx->score);
 
         if (!pp->name[0]) {
             continue;
