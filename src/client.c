@@ -52,10 +52,10 @@ boolean client_init (void)
     LOG("Client connecting to   %s", socket_get_remote_logname(s));
     LOG("                  from %s", socket_get_local_logname(s));
 
-    command_add(client_set_name, "set client name [A-Za-z0-9_-]*",
-                "set client name");
+    command_add(client_set_name, "set name [A-Za-z0-9_-]*",
+                "set player name");
 
-    command_add(client_players_show, "show client players", 
+    command_add(client_players_show, "show players", 
                 "show all players state");
 
     socket_set_name(client_connect_socket, dupstr("no name", "client name"));
@@ -118,6 +118,11 @@ boolean client_set_name (tokens_t *tokens, void *context)
 
     if (!client_connect_socket) {
         ERR("No open socket to name");
+        return (false);
+    }
+
+    if (!s || !*s) {
+        ERR("no name");
         return (false);
     }
 
@@ -198,8 +203,8 @@ static void client_poll (void)
  */
 static boolean client_players_show (tokens_t *tokens, void *context)
 {
-    CON("%-20s %s", "Name", "IP");
-    CON("%-20s %s", "----", "--");
+    CON("Name                 Quality  Latency       Remote IP       Score ");
+    CON("----                 -------  ------- -------------------- -------");
 
     uint32_t si;
 
@@ -210,13 +215,17 @@ static boolean client_players_show (tokens_t *tokens, void *context)
             continue;
         }
 
-        char *tmp = iptodynstr(pp->local_ip);
-        CON("%-20s %s", pp->name, tmp);
-        myfree(tmp);
+        char *tmp2 = iptodynstr(pp->remote_ip);
 
-        tmp = iptodynstr(pp->remote_ip);
-        CON("%-20s %s", " ", tmp);
-        myfree(tmp);
+        CON("%-20s %3d pct %5d ms %-20s %07d", 
+            pp->name,
+            pp->quality,
+            pp->avg_latency,
+            tmp2,
+            pp->score);
+
+        myfree(tmp2);
+
     }
 
     return (true);

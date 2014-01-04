@@ -142,6 +142,13 @@ static void server_socket_tx_ping (void)
         return;
     }
 
+    /*
+     * Every 10 seconds check for dead peers.
+     */
+    if (ts && (seq % 10)) {
+        sockets_alive_check();
+    }
+
     ts = time_get_time_cached();
 
     int si;
@@ -165,13 +172,6 @@ static void server_socket_tx_ping (void)
     }
 
     seq++;
-
-    /*
-     * Every 10 seconds check for dead peers.
-     */
-    if (seq % 10) {
-        sockets_alive_check();
-    }
 }
 
 void server_tick (void)
