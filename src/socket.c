@@ -1214,13 +1214,6 @@ void socket_tx_shout (socketp s, const char *shout)
         return;
     }
 
-    /*
-     * Refresh the server with our name.
-     */
-    if (!socket_get_client(s)) {
-        return;
-    }
-
     if (!s->connected) {
         return;
     }
@@ -1266,6 +1259,30 @@ void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Shout [from %s] \"%s\"", tmp, shout);
         myfree(tmp);
+    }
+
+    if (socket_get_client(s)) {
+        return;
+    }
+
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socketp sp = &net.sockets[si];
+
+        if (sp == s) {
+            continue;
+        }
+
+        if (!sp->connected) {
+            continue;
+        }
+
+        if (!sp->server_side_client) {
+            continue;
+        }
+
+        socket_tx_shout(sp, shout);
     }
 }
 
