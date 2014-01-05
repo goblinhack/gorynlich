@@ -16,12 +16,14 @@
 #include "slre.h"
 #include "command.h"
 #include "player.h"
+#include "string.h"
 
 static void client_socket_tx_ping(void);
 static boolean client_init_done;
 static socketp client_connect_socket;
 static void client_poll(void);
 static boolean client_set_name(tokens_t *tokens, void *context);
+static boolean client_shout(tokens_t *tokens, void *context);
 static boolean client_players_show(tokens_t *tokens, void *context);
 
 aplayer client_players[MAX_SOCKETS];
@@ -54,6 +56,9 @@ boolean client_init (void)
 
     command_add(client_set_name, "set name [A-Za-z0-9_-]*",
                 "set player name");
+
+    command_add(client_shout, "shout [A-Za-z0-9_-]*",
+                "shout to players");
 
     command_add(client_players_show, "show players", 
                 "show all players state");
@@ -133,6 +138,52 @@ boolean client_set_name (tokens_t *tokens, void *context)
     return (true);
 }
 
+/*
+ * User has entered a command, run it
+ */
+boolean client_shout (tokens_t *tokens, void *context)
+{
+    char shout[PLAYER_SHOUT_MAX] = {0};
+    uint32_t i = 1;
+    char *tmp;
+
+    tmp = 0;
+
+    if (!client_connect_socket) {
+        ERR("No open socket to name");
+        return (false);
+    }
+
+    for (;;) {
+
+        char *s = tokens->args[i++];
+        if (!s || !*s) {
+            break;
+        }
+
+        if (tmp) {
+            char *n = dynprintf("%s %s", tmp, s);
+            myfree(tmp);
+            tmp = n;
+        } else {
+            tmp = dynprintf("%s", s);
+        }
+    }
+
+    if (!tmp || !*tmp) {
+        ERR("no name");
+        return (false);
+    }
+
+    strncpy(shout, tmp, sizeof(shout) - 1);
+
+    socket_tx_shout(client_connect_socket, shout);
+
+    myfree(tmp);
+
+    return (true);
+}
+
 static void client_poll (void)
 {
     socketp s = client_connect_socket;
@@ -183,7 +234,7 @@ static void client_poll (void)
         case MSG_TYPE_PING:
             socket_rx_ping(s, packet, data);
 
-            socket_tx_player(s);
+            socket_tx_name(s);
             break;
 
         case MSG_TYPE_PLAYERS_ALL:
