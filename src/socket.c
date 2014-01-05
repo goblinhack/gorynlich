@@ -66,6 +66,11 @@ typedef struct {
 } __attribute__ ((packed)) msg_name;
 
 typedef struct {
+    uint8_t type;
+    char name[PLAYER_SHOUT_MAX];
+} __attribute__ ((packed)) msg_shout;
+
+typedef struct {
     char name[PLAYER_NAME_MAX];
     IPaddress local_ip;
     IPaddress remote_ip;
@@ -598,6 +603,8 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
             s->tx_msg[MSG_TYPE_PONG], s->rx_msg[MSG_TYPE_PONG]);
         CON("  Name     : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_NAME], s->rx_msg[MSG_TYPE_NAME]);
+        CON("  Shouts   : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_SHOUT], s->rx_msg[MSG_TYPE_SHOUT]);
         CON("  Updates  : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_PLAYERS_ALL], s->rx_msg[MSG_TYPE_PLAYERS_ALL]);
 
@@ -1130,7 +1137,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
                     time_get_time_cached() - ts;
 }
 
-void socket_tx_player (socketp s)
+void socket_tx_name (socketp s)
 {
     if (!socket_get_udp_socket(s)) {
         return;
@@ -1167,7 +1174,7 @@ void socket_tx_player (socketp s)
     socket_free_msg(packet);
 }
 
-void socket_rx_player (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 {
     msg_name msg = {0};
 
@@ -1199,6 +1206,67 @@ void socket_rx_player (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(p->name, msg.name, PLAYER_NAME_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
+}
+
+void socket_tx_shout (socketp s, const char *shout)
+{
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
+    /*
+     * Refresh the server with our name.
+     */
+    if (!socket_get_client(s)) {
+        return;
+    }
+
+    if (!s->connected) {
+        return;
+    }
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_shout msg = {0};
+    msg.type = MSG_TYPE_SHOUT;
+    strncpy(msg.name, shout, min(sizeof(msg.name) - 1, strlen(shout))); 
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        LOG("Tx Shout [to %s] \"%s\"", socket_get_remote_logname(s), shout);
+    }
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
+    socket_tx_msg(s, packet);
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_shout msg = {0};
+
+    if (packet->len != sizeof(msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    char shout[PLAYER_SHOUT_MAX + 1] = {0};
+
+    memcpy(shout, msg.name, PLAYER_SHOUT_MAX);
+
+    LOG("SHOUT: \"%s\"", shout);
+
+    if (debug_socket_players_enabled) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Rx Shout [from %s] \"%s\"", tmp, shout);
+        myfree(tmp);
+    }
 }
 
 /*

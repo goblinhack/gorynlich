@@ -127,7 +127,11 @@ static void server_poll (void)
             break;
 
         case MSG_TYPE_NAME:
-            socket_rx_player(s, packet, data);
+            socket_rx_name(s, packet, data);
+            break;
+
+        case MSG_TYPE_SHOUT:
+            socket_rx_shout(s, packet, data);
             break;
 
         default:
