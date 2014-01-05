@@ -248,7 +248,6 @@ boolean debug_socket_players_enable(tokensp, void *context);
 
 extern boolean fps_enabled;
 boolean fps_enable(tokensp, void *context);
-boolean fps_disable(tokensp, void *context);
 
 /*
  * util.c

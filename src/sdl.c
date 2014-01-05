@@ -678,17 +678,15 @@ boolean fps_enabled = 0;
  */
 boolean fps_enable (tokens_t *tokens, void *context)
 {
-    fps_enabled = true;
+    char *s = tokens->args[2];
 
-    return (true);
-}
+    if (!s || (*s == '\0')) {
+        fps_enabled = true;
+    } else {
+        fps_enabled = strtol(s, 0, 10) ? 1 : 0;
+    }
 
-/*
- * User has entered a command, run it
- */
-boolean fps_disable (tokens_t *tokens, void *context)
-{
-    fps_enabled = false;
+    CON("FPS mode set to %u", fps_enabled);
 
     return (true);
 }
@@ -887,25 +885,27 @@ void sdl_loop (void)
         /*
          * FPS counter.
          */
-        if (fps_enabled) {
+        if (!HEADLESS) {
+            if (fps_enabled) {
 
-            static char fps_text[10] = {0};
+                static char fps_text[10] = {0};
 
-            if (timestamp_now - timestamp_then2 >= 1000) {
+                if (timestamp_now - timestamp_then2 >= 1000) {
 
-                timestamp_then2 = timestamp_now;
+                    timestamp_then2 = timestamp_now;
 
-                /*
-                 * Update FPS counter.
-                 */
-                snprintf(fps_text, sizeof(fps_text), "%u", frames);
+                    /*
+                    * Update FPS counter.
+                    */
+                    snprintf(fps_text, sizeof(fps_text), "%u", frames);
 
-                frames = 0;
+                    frames = 0;
+                }
+
+                glcolor(RED);
+
+                ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
             }
-
-            glcolor(RED);
-
-            ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
         }
 
         /*
