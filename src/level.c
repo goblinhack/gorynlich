@@ -65,9 +65,13 @@ static uint32_t level_no_first_time;
 
 static boolean level_command_lives (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[1];
+    char *s = tokens->args[2];
 
-    start_lives = strtol(s, 0, 10);
+    if (!s || (*s == '\0')) {
+        start_lives = 1;
+    } else {
+        start_lives = strtol(s, 0, 10);
+    }
 
     CON("Start lives set to %u", start_lives);
 
@@ -78,7 +82,11 @@ static boolean level_command_play (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[1];
 
-    start_level = strtol(s, 0, 10);
+    if (!s || (*s == '\0')) {
+        start_level = 1;
+    } else {
+        start_level = strtol(s, 0, 10);
+    }
 
     CON("Start level set to %u", start_level);
 
@@ -101,9 +109,13 @@ static boolean level_command_play (tokens_t *tokens, void *context)
 
 static boolean level_command_god_mode (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[1];
+    char *s = tokens->args[2];
 
-    god_mode = strtol(s, 0, 10) ? 1 : 0;
+    if (!s || (*s == '\0')) {
+        god_mode = 1;
+    } else {
+        god_mode = strtol(s, 0, 10) ? 1 : 0;
+    }
 
     CON("God mode set to %u", god_mode);
 
@@ -122,12 +134,13 @@ boolean level_init (void)
                     "level end", "internal command to end the level");
 
         command_add(level_command_god_mode, 
-                    "god [01]", "enable/disable god mode");
+                    "set godmode [01]", "enable/disable god mode");
 
         command_add(level_command_play, 
                     "play [123456789]+", "play level x");
+
         command_add(level_command_lives, 
-                    "lives [123456789]+", "set player number of lives");
+                    "set lives [123456789]+", "set player number of lives");
     }
 
     return (true);

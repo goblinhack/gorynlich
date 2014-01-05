@@ -238,6 +238,10 @@ void ttf_text_size (font *f, const char *text,
  */
 void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
 {
+    if (HEADLESS) {
+        return;
+    }
+
     double texMinX = f->glyphs[c].texMinX;
     double texMaxX = f->glyphs[c].texMaxX;
     double texMinY = f->glyphs[c].texMinY;
