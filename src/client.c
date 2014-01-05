@@ -24,6 +24,7 @@ static socketp client_connect_socket;
 static void client_poll(void);
 static boolean client_set_name(tokens_t *tokens, void *context);
 static boolean client_shout(tokens_t *tokens, void *context);
+static boolean client_tell(tokens_t *tokens, void *context);
 static boolean client_players_show(tokens_t *tokens, void *context);
 
 aplayer client_players[MAX_SOCKETS];
@@ -60,10 +61,13 @@ boolean client_init (void)
     command_add(client_shout, "shout [A-Za-z0-9_-]*",
                 "shout to players");
 
+    command_add(client_tell, "tell [A-Za-z0-9_-]* [A-Za-z0-9_-]*",
+                "send a message to a player");
+
     command_add(client_players_show, "show players", 
                 "show all players state");
 
-    socket_set_name(client_connect_socket, dupstr("no name", "client name"));
+    socket_set_name(client_connect_socket, dupstr("nameless", "client name"));
 
     client_init_done = true;
 
@@ -127,7 +131,7 @@ boolean client_set_name (tokens_t *tokens, void *context)
     }
 
     if (!s || !*s) {
-        ERR("no name");
+        ERR("need to set a name");
         return (false);
     }
 
@@ -143,7 +147,7 @@ boolean client_set_name (tokens_t *tokens, void *context)
  */
 boolean client_shout (tokens_t *tokens, void *context)
 {
-    char shout[PLAYER_SHOUT_MAX] = {0};
+    char shout[PLAYER_MSG_MAX] = {0};
     uint32_t i = 1;
     char *tmp;
 
@@ -171,13 +175,70 @@ boolean client_shout (tokens_t *tokens, void *context)
     }
 
     if (!tmp || !*tmp) {
-        ERR("no name");
+        ERR("no message");
         return (false);
     }
 
     strncpy(shout, tmp, sizeof(shout) - 1);
 
     socket_tx_shout(client_connect_socket, shout);
+
+    myfree(tmp);
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean client_tell (tokens_t *tokens, void *context)
+{
+    char from[PLAYER_NAME_MAX] = {0};
+    char to[PLAYER_NAME_MAX] = {0};
+    char msg[PLAYER_MSG_MAX] = {0};
+    uint32_t i = 1;
+    char *tmp;
+
+    tmp = 0;
+
+    if (!client_connect_socket) {
+        ERR("No open socket to name");
+        return (false);
+    }
+
+    char *s = tokens->args[i++];
+    if (!s || !*s) {
+        ERR("no one to tell");
+        return (false);
+    }
+
+    strncpy(to, s, sizeof(to) - 1);
+
+    for (;;) {
+
+        char *s = tokens->args[i++];
+        if (!s || !*s) {
+            break;
+        }
+
+        if (tmp) {
+            char *n = dynprintf("%s %s", tmp, s);
+            myfree(tmp);
+            tmp = n;
+        } else {
+            tmp = dynprintf("%s", s);
+        }
+    }
+
+    if (!tmp || !*tmp) {
+        ERR("no message");
+        return (false);
+    }
+
+    strncpy(msg, tmp, sizeof(msg) - 1);
+    strncpy(from, socket_get_name(client_connect_socket), sizeof(from) - 1);
+
+    socket_tx_tell(client_connect_socket, from, to, msg);
 
     myfree(tmp);
 
@@ -239,6 +300,10 @@ static void client_poll (void)
 
         case MSG_TYPE_SHOUT:
             socket_rx_shout(s, packet, data);
+            break;
+
+        case MSG_TYPE_TELL:
+            socket_rx_tell(s, packet, data);
             break;
 
         case MSG_TYPE_PLAYERS_ALL:
