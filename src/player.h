@@ -16,6 +16,7 @@ void player_destroy(void);
  * Individual messages.
  */
 #define PLAYER_NAME_MAX 20
+#define PLAYER_SHOUT_MAX 100
 
 typedef struct aplayer_ {
     IPaddress local_ip;
@@ -25,5 +26,5 @@ typedef struct aplayer_ {
     uint16_t min_latency;
     uint16_t max_latency;
     uint32_t score;
-    char name[PLAYER_NAME_MAX];
+    char name[PLAYER_NAME_MAX + 1];
 } aplayer;
