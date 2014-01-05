@@ -44,8 +44,13 @@ boolean server_init (void)
 
     server_socket = s;
 
-    command_add(server_players_show, "show server players", 
-                "show all players state");
+    if (is_client) {
+        command_add(server_players_show, "show server players", 
+                    "show all players state");
+    } else {
+        command_add(server_players_show, "show players", 
+                    "show all players state");
+    }
 
     server_init_done = true;
 
@@ -189,8 +194,8 @@ void server_tick (void)
  */
 static boolean server_players_show (tokens_t *tokens, void *context)
 {
-    CON("%-20s %s", "Name", "IP");
-    CON("%-20s %s", "----", "--");
+    CON("Name                 Quality  Latency       Remote IP       Score ");
+    CON("----                 -------  ------- -------------------- -------");
 
     uint32_t si;
 
@@ -209,13 +214,17 @@ static boolean server_players_show (tokens_t *tokens, void *context)
             continue;
         }
 
-        char *tmp = iptodynstr(p->local_ip);
-        CON("%-20s Local:  %s", p->name, tmp);
-        myfree(tmp);
+        char *tmp2 = iptodynstr(p->remote_ip);
 
-        tmp = iptodynstr(p->remote_ip);
-        CON("%-20s Remote: %s", " ", tmp);
-        myfree(tmp);
+        CON("%-20s %3d pct %5d ms %-20s %07d", 
+            p->name,
+            p->quality,
+            p->avg_latency,
+            tmp2,
+            p->score);
+
+        myfree(tmp2);
+
     }
 
     return (true);

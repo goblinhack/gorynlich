@@ -67,11 +67,12 @@ boolean wid_console_init (void)
 {
     wid_console_inited = true;
 
-    command_add(debug_enable, "debug [01]", "enable/disable debug mode");
+    command_add(debug_enable, "set debug [01]", "enable/disable debug mode");
 
     if (is_client) {
-        command_add(fps_enable, "fps on", "enable frames per sec counter");
-        command_add(fps_disable, "fps off", "disable frames per sec counter");
+        if (!HEADLESS) {
+            command_add(fps_enable, "set fps [01]", "frames per sec counter");
+        }
     }
 
     command_add(sdl_user_exit, "quit", "exit the server or gam");

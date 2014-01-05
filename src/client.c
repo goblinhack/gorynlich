@@ -209,20 +209,20 @@ static boolean client_players_show (tokens_t *tokens, void *context)
     uint32_t si;
 
     for (si = 0; si < MAX_SOCKETS; si++) {
-        aplayer *pp = &client_players[si];
+        aplayer *p = &client_players[si];
 
-        if (!pp->name[0]) {
+        if (!p->name[0]) {
             continue;
         }
 
-        char *tmp2 = iptodynstr(pp->remote_ip);
+        char *tmp2 = iptodynstr(p->remote_ip);
 
         CON("%-20s %3d pct %5d ms %-20s %07d", 
-            pp->name,
-            pp->quality,
-            pp->avg_latency,
+            p->name,
+            p->quality,
+            p->avg_latency,
             tmp2,
-            pp->score);
+            p->score);
 
         myfree(tmp2);
 

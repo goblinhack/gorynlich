@@ -106,18 +106,18 @@ boolean socket_init (void)
     }
 
     command_add(sockets_show_all, "show sockets detail", 
-                "clients and server sockets");
+                "show clients and server sockets");
 
     command_add(sockets_show_summary, "show sockets summary", 
-                "one line output");
+                "show socket quality and latency");
 
-    command_add(debug_socket_ping_enable, "debug socket ping [01]",
+    command_add(debug_socket_ping_enable, "set debug socket ping [01]",
                 "debug periodic pings");
 
-    command_add(debug_socket_connect_enable, "debug socket connect [01]",
+    command_add(debug_socket_connect_enable, "set debug socket connect [01]",
                 "debug sockets connections");
 
-    command_add(debug_socket_players_enable, "debug socket update [01]",
+    command_add(debug_socket_players_enable, "set debug socket update [01]",
                 "debug player updates");
 
     socket_init_done = true;
@@ -426,7 +426,7 @@ void socket_disconnect (socketp s)
  */
 boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[3];
+    char *s = tokens->args[4];
 
     if (!s || (*s == '\0')) {
         debug_socket_ping_enabled = 1;
@@ -444,7 +444,7 @@ boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
  */
 boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[3];
+    char *s = tokens->args[4];
 
     if (!s || (*s == '\0')) {
         debug_socket_connect_enabled = 1;
@@ -462,7 +462,7 @@ boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
  */
 boolean debug_socket_players_enable (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[3];
+    char *s = tokens->args[4];
 
     if (!s || (*s == '\0')) {
         debug_socket_players_enabled = 1;
@@ -796,6 +796,14 @@ static boolean sockets_quality_check (void)
             s->avg_latency = avg_latency;
             s->min_latency = min_latency;
             s->max_latency = max_latency;
+
+            aplayer *p = s->player;
+            if (p) {
+                p->quality = s->quality;
+                p->avg_latency = s->avg_latency;
+                p->min_latency = s->min_latency;
+                p->max_latency = s->max_latency;
+            }
         }
     }
 
@@ -1220,26 +1228,26 @@ void socket_tx_players_all (void)
         }
 
         msg_player *msg_tx = &msg.players[si];
-        aplayer *pp = s->player;
+        aplayer *p = s->player;
         if (!s->player) {
             return;
         }
 
-        strncpy(msg_tx->name, pp->name, min(sizeof(msg_tx->name), 
-                                            strlen(pp->name))); 
+        strncpy(msg_tx->name, p->name, min(sizeof(msg_tx->name), 
+                                            strlen(p->name))); 
 
-        SDLNet_Write32(pp->local_ip.host, &msg_tx->local_ip.host);
-        SDLNet_Write16(pp->local_ip.port, &msg_tx->local_ip.port);
+        SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
+        SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
 
-        SDLNet_Write32(pp->remote_ip.host, &msg_tx->remote_ip.host);
-        SDLNet_Write16(pp->remote_ip.port, &msg_tx->remote_ip.port);
+        SDLNet_Write32(p->remote_ip.host, &msg_tx->remote_ip.host);
+        SDLNet_Write16(p->remote_ip.port, &msg_tx->remote_ip.port);
 
         msg_tx->quality = s->quality;
         SDLNet_Write16(s->avg_latency, &msg_tx->avg_latency);
         SDLNet_Write16(s->min_latency, &msg_tx->min_latency);
         SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
 
-        SDLNet_Write32(pp->score, &msg_tx->score);
+        SDLNet_Write32(p->score, &msg_tx->score);
     }
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1287,32 +1295,32 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
     msg = (typeof(msg)) packet->data;
 
     for (si = 0; si < MAX_SOCKETS; si++) {
-        aplayer *pp = &players[si];
+        aplayer *p = &players[si];
         msg_player *msg_rx = &msg->players[si];
 
-        memcpy(pp->name, msg_rx->name, PLAYER_NAME_MAX);
+        memcpy(p->name, msg_rx->name, PLAYER_NAME_MAX);
 
-        pp->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
-        pp->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);
+        p->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
+        p->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);
 
-        pp->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
-        pp->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
+        p->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
+        p->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
 
-        pp->quality = msg_rx->quality;
+        p->quality = msg_rx->quality;
 
-        pp->avg_latency = SDLNet_Read16(&msg_rx->avg_latency);
-        pp->min_latency = SDLNet_Read16(&msg_rx->min_latency);
-        pp->max_latency = SDLNet_Read16(&msg_rx->max_latency);
+        p->avg_latency = SDLNet_Read16(&msg_rx->avg_latency);
+        p->min_latency = SDLNet_Read16(&msg_rx->min_latency);
+        p->max_latency = SDLNet_Read16(&msg_rx->max_latency);
 
-        pp->score = SDLNet_Read32(&msg_rx->score);
+        p->score = SDLNet_Read32(&msg_rx->score);
 
-        if (!pp->name[0]) {
+        if (!p->name[0]) {
             continue;
         }
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Rx All Players [from %s] %u:\"%s\"", tmp, si, pp->name);
+            LOG("Rx All Players [from %s] %u:\"%s\"", tmp, si, p->name);
             myfree(tmp);
         }
     }
