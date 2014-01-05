@@ -134,6 +134,10 @@ static void server_poll (void)
             socket_rx_shout(s, packet, data);
             break;
 
+        case MSG_TYPE_TELL:
+            socket_rx_tell(s, packet, data);
+            break;
+
         default:
             ERR("Unknown message type received [%u", type);
         }
