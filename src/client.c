@@ -237,6 +237,10 @@ static void client_poll (void)
             socket_tx_name(s);
             break;
 
+        case MSG_TYPE_SHOUT:
+            socket_rx_shout(s, packet, data);
+            break;
+
         case MSG_TYPE_PLAYERS_ALL:
             socket_rx_players_all(s, packet, data, &client_players[0]);
             break;
