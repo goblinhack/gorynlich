@@ -623,7 +623,7 @@ widp thing_message (thingp t, const char *message)
 {
     verify(t);
 
-    if (!thing_is_player(t) && !thing_is_esnail(t) && !thing_is_car(t)) {
+    if (!thing_is_player(t) && !thing_is_esnail(t) && !thing_is_xxx12(t)) {
         return (0);
     }
     
@@ -1380,11 +1380,11 @@ boolean thing_is_star (thingp t)
     return (thing_template_is_star(thing_get_template(t)));
 }
 
-boolean thing_is_powerup_spam (thingp t)
+boolean thing_is_xxx10 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_powerup_spam(thing_get_template(t)));
+    return (thing_template_is_xxx10(thing_get_template(t)));
 }
 
 boolean thing_is_xxx11 (thingp t)
@@ -1394,67 +1394,67 @@ boolean thing_is_xxx11 (thingp t)
     return (thing_template_is_xxx11(thing_get_template(t)));
 }
 
-boolean thing_is_car (thingp t)
+boolean thing_is_xxx12 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_car(thing_get_template(t)));
+    return (thing_template_is_xxx12(thing_get_template(t)));
 }
 
-boolean thing_is_star_green (thingp t)
+boolean thing_is_xxx13 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_green(thing_get_template(t)));
+    return (thing_template_is_xxx13(thing_get_template(t)));
 }
 
-boolean thing_is_star_cyan (thingp t)
+boolean thing_is_xxx14 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_cyan(thing_get_template(t)));
+    return (thing_template_is_xxx14(thing_get_template(t)));
 }
 
-boolean thing_is_star_black (thingp t)
+boolean thing_is_xxx15 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_black(thing_get_template(t)));
+    return (thing_template_is_xxx15(thing_get_template(t)));
 }
 
-boolean thing_is_star_purple (thingp t)
+boolean thing_is_xxx16 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_purple(thing_get_template(t)));
+    return (thing_template_is_xxx16(thing_get_template(t)));
 }
 
-boolean thing_is_explosion (thingp t)
+boolean thing_is_xxx17 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_explosion(thing_get_template(t)));
+    return (thing_template_is_xxx17(thing_get_template(t)));
 }
 
-boolean thing_is_spikes (thingp t)
+boolean thing_is_xxx18 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_spikes(thing_get_template(t)));
+    return (thing_template_is_xxx18(thing_get_template(t)));
 }
 
-boolean thing_is_star_red (thingp t)
+boolean thing_is_xxx20 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_red(thing_get_template(t)));
+    return (thing_template_is_xxx20(thing_get_template(t)));
 }
 
-boolean thing_is_star_blue (thingp t)
+boolean thing_is_xxx21 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_star_blue(thing_get_template(t)));
+    return (thing_template_is_xxx21(thing_get_template(t)));
 }
 
 boolean thing_is_seedpod (thingp t)
@@ -1499,11 +1499,11 @@ boolean thing_is_scarable (thingp t)
     return (thing_template_is_scarable(thing_get_template(t)));
 }
 
-boolean thing_is_shrunk_when_carried (thingp t)
+boolean thing_is_xxx29 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_shrunk_when_carried(thing_get_template(t)));
+    return (thing_template_is_xxx29(thing_get_template(t)));
 }
 
 boolean thing_is_hidden_from_editor (thingp t)
@@ -1520,11 +1520,11 @@ boolean thing_is_animated (thingp t)
     return (thing_template_is_animated(thing_get_template(t)));
 }
 
-boolean thing_is_powerup_rocket (thingp t)
+boolean thing_is_xxx33 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_powerup_rocket(thing_get_template(t)));
+    return (thing_template_is_xxx33(thing_get_template(t)));
 }
 
 boolean thing_is_left_as_corpse_on_death (thingp t)
@@ -1616,7 +1616,7 @@ void thing_place (void *context)
                               0, /* give to player count */
                               place->thing_template);
 
-    if (thing_template_is_explosion(place->thing_template)) {
+    if (thing_template_is_xxx17(place->thing_template)) {
         sound_play_explosion();
     }
 

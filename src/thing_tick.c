@@ -131,7 +131,6 @@ void thing_tick_all (void)
         thing_templatep thing_template;
         boolean aligned_x;
         boolean aligned_y;
-        thingp owner;
         widp w;
 
         /*
@@ -423,36 +422,7 @@ void thing_tick_all (void)
             }
         }
 
-        /*
-         * Does ths item follows the owner?
-         */
-        if (w && owner && owner->wid &&
-            thing_template_is_follows_owner(thing_template)) {
-
-            fpoint tl;
-            fpoint br;
-
-            wid_get_tl_br(owner->wid, &tl, &br); 
-
-            float mx = (tl.x + br.x) / 2.0;
-            float my = (tl.y + br.y) / 2.0;
-
-            wid_rotate_immediate(w, wid_get_rotate(owner->wid));
-
-            /*
-             * Carried smaller and to the front of the carrier.
-             */
-            if (thing_template_is_shrunk_when_carried(thing_template)) {
-                wid_scale_immediate(w, 0.5);
-                my = ((tl.y + br.y) / 2.0) - ((br.y - tl.y) / 4.0);
-            }
-
-            wid_move_to_abs_centered(w, mx, my);
-            wid_set_z_depth(w, 20);
-
-            wid_flip_vert(w, wid_get_flip_vert(owner->wid));
-            wid_flip_horiz(w, wid_get_flip_horiz(owner->wid));
-        } else if (w) {
+        if (w) {
             if (t->is_dir_right) {
                 if (thing_template_is_effect_rotate_2way(thing_template)) {
                     wid_rotate_immediate(w, 0);
