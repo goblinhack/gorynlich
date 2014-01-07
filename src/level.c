@@ -195,7 +195,7 @@ static boolean level_command_dead (tokens_t *tokens, void *context)
     level = thing_level(t);
     verify(level);
 
-    if (thing_is_explosion(t)) {
+    if (thing_is_xxx17(t)) {
         thing_dead(t, 0 /* killer */, "finished blowing up");
         return (true);
     }

@@ -38,7 +38,7 @@ void thing_collision (thingp t, int32_t x, int32_t y)
     if (!thing_template_is_player(me) &&
         !thing_template_is_plant(me) &&
         !thing_template_is_seedpod(me) &&
-        !thing_template_is_car(me) &&
+        !thing_template_is_xxx12(me) &&
         !thing_template_is_bomb(me) &&
         !thing_template_is_esnail(me)) {
         return;

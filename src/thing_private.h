@@ -112,7 +112,7 @@ typedef struct thing_ {
     uint32_t is_qqq7:1;
     uint32_t got_to_exit_first:1;
     uint32_t redo_maze_search:1;
-    uint32_t is_follows_owner:1;
+    uint32_t is_xxx32:1;
     uint32_t is_dir_down:1;
     uint32_t is_dir_up:1;
     uint32_t is_dir_left:1;

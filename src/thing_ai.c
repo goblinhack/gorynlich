@@ -905,7 +905,7 @@ void dmap_goals_find (dmap *map, thingp t)
         maxpass = 2;
     } else if (thing_is_esnail(t)) {
         maxpass = 4;
-    } else if (thing_is_car(t)) {
+    } else if (thing_is_xxx12(t)) {
         return;
     } else if (thing_is_plant(t)) {
         maxpass = 2;
@@ -1389,7 +1389,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         /*
          * If no goal was found, try and keep moving the same way.
          */
-        if (thing_is_car(t)) {
+        if (thing_is_xxx12(t)) {
             found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
         } else {
             found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);
@@ -1483,7 +1483,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         /*
          * If no goal was found, try and keep moving the same way.
          */
-        if (thing_is_car(t)) {
+        if (thing_is_xxx12(t)) {
             found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
         } else {
             found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);
