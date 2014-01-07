@@ -17,7 +17,6 @@
 #include "wid.h"
 #include "level.h"
 #include "wid_game_map.h"
-#include "item.h"
 #include "math.h"
 
 static char walls[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
@@ -933,13 +932,6 @@ void dmap_goals_find (dmap *map, thingp t)
             }
 
             /*
-             * Ignore carried things.
-             */
-            if (thing_item_owner(thing_it)) {
-                continue;
-            }
-
-            /*
              * Try to ignore the dead!
              */
             if (thing_is_dead(thing_it)) {
@@ -956,147 +948,7 @@ void dmap_goals_find (dmap *map, thingp t)
             x = thing_it->grid_x;
             y = thing_it->grid_y;
 
-            if (thing_is_esnail(t)) {
-                if (pass == 0) {
-                    /*
-                     * Top priority.
-                     */
-                    if (thing_is_player(thing_it)) {
-                        if (thing_has_powerup_rocket_count(thing_it)) {
-                            /*
-                             * If the player has a rocket, avoid!
-                             */
-                            dmap_goal_flood(map, -5, x, y);
-                            running_away = true;
-                        }
-                    }
-
-                    if (thing_is_bomb(thing_it)) {
-                        /*
-                         * Avoid bombs!
-                         */
-                        if (thing_is_open(thing_it)) {
-                            dmap_goal_flood(map, -10, x, y);
-                            running_away = true;
-                        }
-                    }
-                } else if (pass == 1) {
-                    /*
-                     * Medium priority.
-                     */
-                    if (!running_away) {
-                        if (thing_is_player(thing_it)) {
-                            if (items_has_letter(thing_carried_items(thing_it))) {
-                                /*
-                                 * If the player has a letter, chase!
-                                 */
-                                dmap_goal_flood(map, 1, x, y);
-                                chasing = true;
-                            }
-                        }
-                    }
-                } else if (pass == 2) {
-                    /*
-                     * Low priority.
-                     */
-                    if (!running_away) {
-                        /*
-                         * Chase food.
-                         */
-                        if (thing_is_food(thing_it)) {
-                            dmap_goal_flood(map, 1, x, y);
-                        }
-
-                        /*
-                         * Chase letter.
-                         */
-                        if (thing_is_letter(thing_it)) {
-                            dmap_goal_flood(map, 1, x, y);
-                        }
-
-                        /*
-                         * Chase bombs.
-                         */
-                        if (thing_is_bomb(thing_it)) {
-                            if (!thing_is_open(thing_it)) {
-                                dmap_goal_flood(map, 2, x, y);
-                            }
-                        }
-
-                        /*
-                         * Chase stars.
-                         */
-                        if (thing_is_star(thing_it)) {
-                            dmap_goal_flood(map, 1, x, y);
-                        }
-
-                        /*
-                         * Chase bonus letter.
-                         */
-                        if (thing_is_bonus_letter(thing_it)) {
-                            dmap_goal_flood(map, 1, x, y);
-                        }
-
-                        /*
-                         * Chase end pipe
-                         */
-                        if (thing_is_pipe(thing_it)) {
-                            if ((x != thing_grid_x(thing_it)) &&
-                                (y != thing_grid_y(thing_it))) {
-                                if (level->end_pipe[x][y] != ' ') {
-                                    dmap_goal_flood(map, 1, x, y);
-                                }
-                            }
-                        }
-
-                    }
-
-                    if (thing_is_plant(thing_it)) {
-                        if (thing_has_powerup_rocket_count(t)) {
-                            /*
-                             * If I have a rocket, chase it.
-                             */
-                            dmap_goal_flood(map, 1, x, y);
-                        } else {
-                            /*
-                             * Avoid plants!
-                             */
-                            dmap_goal_flood(map, -10, x, y);
-                        }
-                    }
-
-                    if (thing_is_seedpod(thing_it)) {
-                        if (thing_has_powerup_rocket_count(t)) {
-                            /*
-                             * If I have a rocket, chase it.
-                             */
-                            dmap_goal_flood(map, 2, x, y);
-                        }
-                    }
-
-                    if (thing_is_car(thing_it)) {
-                        /*
-                         * Avoid cars!
-                         */
-                        dmap_goal_flood(map, -12, x, y);
-                    }
-                } else if (pass == 3) {
-                    /*
-                     * Lowest priority.
-                     */
-                    if (!map->goal_nodes) {
-                        /*
-                         * Chase the exit if it is open and nothing else
-                         * better to do.
-                         */
-                        if (level_is_exit_open(level)) {
-                            if (thing_is_exit(thing_it)) {
-                                dmap_goal_flood(map, 1, x, y);
-                            }
-                        }
-                    }
-                }
-            } else if (thing_is_plant(t)) {
+            if (thing_is_plant(t)) {
                 if (pass == 0) {
                     /*
                      * Top priority.

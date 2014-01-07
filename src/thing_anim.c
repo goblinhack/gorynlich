@@ -13,7 +13,6 @@
 #include "thing_private.h"
 #include "thing_template.h"
 #include "thing_tile.h"
-#include "item.h"
 #include "wid.h"
 #include "marshal.h"
 #include "time.h"

@@ -23,7 +23,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/gl.o 			\
     $(OBJDIR)/glshapes.o 		\
     $(OBJDIR)/geo.o 			\
-    $(OBJDIR)/item.o 			\
     $(OBJDIR)/level.o 			\
     $(OBJDIR)/log.o 			\
     $(OBJDIR)/main.o 			\
@@ -54,7 +53,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/tex.o 			\
     $(OBJDIR)/thing.o 			\
     $(OBJDIR)/thing_ai.o 		\
-    $(OBJDIR)/thing_item.o 		\
     $(OBJDIR)/thing_tick.o 		\
     $(OBJDIR)/thing_timer.o 		\
     $(OBJDIR)/thing_anim.o 		\

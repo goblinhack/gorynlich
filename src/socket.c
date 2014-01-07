@@ -63,6 +63,11 @@ typedef struct network_ {
 typedef struct {
     uint8_t type;
     char name[PLAYER_NAME_MAX];
+} __attribute__ ((packed)) msg_join;
+
+typedef struct {
+    uint8_t type;
+    char name[PLAYER_NAME_MAX];
 } __attribute__ ((packed)) msg_name;
 
 typedef struct {
@@ -1217,6 +1222,77 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     p->remote_ip = s->remote_ip;
 }
 
+void socket_tx_join (socketp s)
+{
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
+    /*
+     * Refresh the server with our name.
+     */
+    if (!socket_get_client(s)) {
+        return;
+    }
+
+    if (!s->connected) {
+        return;
+    }
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_join msg = {0};
+    msg.type = MSG_TYPE_JOIN;
+    strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        LOG("Tx Join [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
+    }
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
+    socket_tx_msg(s, packet);
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_join (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_join msg = {0};
+
+    if (packet->len != sizeof(msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Rx Join [from %s] \"%s\"", tmp, msg.name);
+        myfree(tmp);
+    }
+
+    socket_set_name(s, msg.name);
+
+    /*
+     * Update the player structure.
+     */
+    aplayer *p = s->player;
+    if (!p) {
+        p = myzalloc(sizeof(*p), "player");
+
+        socket_set_player(s, p);
+    }
+
+    memcpy(p->name, msg.name, PLAYER_NAME_MAX);
+    p->local_ip = s->local_ip;
+    p->remote_ip = s->remote_ip;
+}
+
 void socket_tx_shout (socketp s, const char *txt)
 {
     if (!socket_get_udp_socket(s)) {
@@ -1391,7 +1467,6 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
  */
 void socket_tx_players_all (void)
 {
-    UDPpacket *packet = socket_alloc_msg();
     aplayer players[MAX_SOCKETS];
 
     memset(&players, 0, sizeof(players));
@@ -1434,6 +1509,8 @@ void socket_tx_players_all (void)
 
         SDLNet_Write32(p->score, &msg_tx->score);
     }
+
+    UDPpacket *packet = socket_alloc_msg();
 
     memcpy(packet->data, &msg, sizeof(msg));
 

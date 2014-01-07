@@ -189,7 +189,7 @@ static boolean wid_console_receive_input (widp w, const SDL_KEYSYM *key)
  */
 static void wid_console_wid_create (void)
 {
-    fontp font = small_font;
+    fontp font = vsmall_font;
 
     {
         fpoint tl = {0.0f, 0.0f};

@@ -13,7 +13,6 @@
 #include "thing_template.h"
 #include "thing_timer.h"
 #include "timer.h"
-#include "item.h"
 #include "wid.h"
 #include "wid_game_map.h"
 #include "marshal.h"
@@ -140,11 +139,6 @@ void thing_tick_all (void)
          */
         verify(t);
         thing_template = thing_get_template(t);
-
-        owner = t->item_owner;
-        if (owner) {
-            verify(owner);
-        }
 
         w = t->wid;
         if (w) {
