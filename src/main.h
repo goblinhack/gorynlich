@@ -425,5 +425,5 @@ extern boolean is_headless;
 /*
  * Server with no displa.
  */
-#define HEADLESS ((is_server && !is_client) || is_headless)
+#define HEADLESS is_headless
 

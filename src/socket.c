@@ -16,6 +16,9 @@
 #include "command.h"
 #include "time.h"
 #include "player.h"
+#include "wid.h"
+#include "wid_button.h"
+#include "color.h"
 
 typedef struct socket_ {
     uint8_t index;
@@ -1345,6 +1348,17 @@ void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("Rx Shout [from %s] \"%s\"", tmp, txt);
         myfree(tmp);
     }
+
+    char *tmp = dynprintf("%s: shouts \"%s\"", socket_get_name(s), txt);
+    widp w = wid_button_transient(tmp, 0);
+    color c = BLACK;
+    c.a = 150;
+    wid_set_color(w, WID_COLOR_BG, c);
+    wid_set_color(w, WID_COLOR_TL, c);
+    wid_set_color(w, WID_COLOR_BR, c);
+    wid_move_to_pct_centered(w, 0.5, 0.1);
+    wid_set_text_outline(w, true);
+    myfree(tmp);
 
     if (socket_get_client(s)) {
         return;

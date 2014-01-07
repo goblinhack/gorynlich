@@ -388,19 +388,23 @@ static void usage (void)
 {
     fprintf(MY_STDERR, "Gorynlich, options:\n");
     fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --server   run as a server\n");
+    fprintf(MY_STDERR, "        --server      run as a server\n");
     fprintf(MY_STDERR, "        -server\n");
     fprintf(MY_STDERR, "        -s\n");
     fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --client   run as a client\n");
-    fprintf(MY_STDERR, "        -client\n");
+    fprintf(MY_STDERR, "        --connect     run as a client\n");
+    fprintf(MY_STDERR, "        -connect\n");
     fprintf(MY_STDERR, "        -c\n");
     fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --host     hostname or ip of server\n");
+    fprintf(MY_STDERR, "        --nodisplay   run with no display\n");
+    fprintf(MY_STDERR, "        -nodisplay\n");
+    fprintf(MY_STDERR, "        -n\n");
+    fprintf(MY_STDERR, "\n");
+    fprintf(MY_STDERR, "        --host        hostname or ip of server\n");
     fprintf(MY_STDERR, "        -host\n");
     fprintf(MY_STDERR, "        -h\n");
     fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --port     port of server, default %d\n",
+    fprintf(MY_STDERR, "        --port        port of server, default %d\n",
             SERVER_DEFAULT_PORT);
     fprintf(MY_STDERR, "        -port\n");
     fprintf(MY_STDERR, "        -p\n");
@@ -437,11 +441,11 @@ static void parse_args (int32_t argc, char *argv[])
         }
 
         /*
-         * -test
+         * -nodisplay
          */
-        if (!strcmp(argv[i], "--test") ||
-            !strcmp(argv[i], "-test") ||
-            !strcmp(argv[i], "-t")) {
+        if (!strcmp(argv[i], "--nodisplay") ||
+            !strcmp(argv[i], "-nodisplay") ||
+            !strcmp(argv[i], "-n")) {
 
             is_headless = true;
             continue;
@@ -692,10 +696,6 @@ int32_t main (int32_t argc, char *argv[])
                           0, "thing_init");
 
     action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_game_init,
-                          0, "wid_game_init");
-
-    action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_editor_init,
                           0, "wid_editor_init");
 
@@ -732,6 +732,11 @@ int32_t main (int32_t argc, char *argv[])
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_intro_help_init,
                           0, "wid_intro_help_init");
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)wid_game_init,
+                          0, "wid_game_init");
+
 #endif
 
     socket_init();
