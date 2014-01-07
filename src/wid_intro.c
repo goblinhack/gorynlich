@@ -43,6 +43,10 @@ static void wid_intro_create(void);
 
 boolean wid_intro_init (void)
 {
+    if (!is_client) {
+        return (true);
+    }
+
     if (!wid_intro_init_done) {
         wid_intro_create();
     }

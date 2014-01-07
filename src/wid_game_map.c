@@ -70,6 +70,11 @@ boolean wid_game_init (void)
 {
     wid_game_init_done = true;
 
+    if (is_server) {
+        if (!is_client) {
+            wid_game_visible();
+        }
+    }
     return (true);
 }
 
@@ -178,26 +183,16 @@ void wid_game_map_wid_create (void)
         br.x += base_tile_width;
         br.y += base_tile_height;
 
-        br.x += base_tile_width / 4.0;
-        br.y += base_tile_height / 4.0;
-
-        br.x += base_tile_width / 6.0;
-        br.y += base_tile_height / 4.0;
-
-        tl.x -= base_tile_height / 2.0;
-        br.x -= base_tile_width / 2.0;
-
-        tl.x += base_tile_height / 8.0;
-        br.x += base_tile_width / 8.0;
-
-        tl.y -= base_tile_height / 2.0;
-        br.y -= base_tile_width / 2.0;
-
-        tl.y -= base_tile_height / 4.0;
-        br.y -= base_tile_width / 4.0;
-
         tile_width = br.x - tl.x;
         tile_height = br.y - tl.y;
+
+        if (!tile_width) {
+            tile_width = TILE_WIDTH;
+        }
+
+        if (!tile_height) {
+            tile_height = TILE_HEIGHT;
+        }
 
         wid_new_grid(wid_game_map_grid_container,
                      TILES_MAP_WIDTH,
