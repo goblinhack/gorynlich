@@ -13,16 +13,6 @@ typedef struct thing_ {
     thing_templatep thing_template;
 
     /*
-     * Carried items.
-     */
-    tree_root *carried_items;
-
-    /*
-     * If an item, who is carrying me?
-     */
-    thingp item_owner;
-
-    /*
      * Name for debugging.
      */
     char *logname;

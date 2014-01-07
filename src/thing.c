@@ -12,7 +12,6 @@
 #include "thing.h"
 #include "thing_template.h"
 #include "thing_timer.h"
-#include "item.h"
 #include "wid.h"
 #include "wid_game_map.h"
 #include "marshal.h"
@@ -130,8 +129,6 @@ static void thing_destroy_internal2 (thingp t)
 
 static void thing_destroy_internal (thingp t, const char *why)
 {
-    thingp owner;
-
     THING_LOG(t, "destroy (%s)", why);
  
     /*
@@ -139,19 +136,10 @@ static void thing_destroy_internal (thingp t, const char *why)
      */
     thing_timers_destroy(t);
 
-    owner = t->item_owner;
-    if (owner) {
-        t->item_owner = 0;
-        thing_item_drop(owner, t, true /* destroy */,
-                        "destroyed whilst carried");
-    }
-
     if (t->dead_reason) {
         myfree(t->dead_reason);
         t->dead_reason = 0;
     }
-
-    thing_item_drop_all(t);
 
     if (t->wid) {
         thing_set_wid(t, 0);
@@ -276,12 +264,6 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         t->lives--;
     }
 
-    /*
-     * Get rid of end of life items. You can't take it with you when you go!
-     * Unless you have a spare life.
-     */
-    thing_item_drop_end_of_life(t);
-
     if (!thing_is_left_as_corpse_on_death(t)) {
         /*
          * Pop from the level.
@@ -354,16 +336,6 @@ void thing_reached_exit (thingp t)
      */
     thing_set_wid(t, 0);
 
-    /*
-     * Drop powerups.
-     */
-    thing_item_drop_end_of_level(t);
-
-    /*
-     * And all possessions.
-     */
-    thing_item_pop_all(t);
-
     if (t == player) {
         thing_set_level_no(t, thing_level_no(t) + 1);
 
@@ -407,14 +379,6 @@ void things_level_destroyed (levelp level)
 
         THING_LOG(t, "level destroyed");
 
-        /*
-         * Let the owner destroy it.
-         */
-        if (thing_item_owner(t)) {
-            thing_set_level(t, 0);
-            continue;
-        }
-
         thing_destroy(t, "level destroyed");
     }
 }
@@ -432,14 +396,6 @@ void things_level_restarted (levelp level)
 
         if (thing_template_is_player(t->thing_template)) {
             THING_LOG(t, "level restarted, keep player");
-            thing_set_level(t, 0);
-            continue;
-        }
-
-        /*
-         * Let the owner destroy it.
-         */
-        if (thing_item_owner(t)) {
             thing_set_level(t, 0);
             continue;
         }
@@ -752,28 +708,6 @@ widp thing_wid (thingp t)
     verify(t);
 
     return (t->wid);
-}
-
-thingp thing_item_owner (thingp t)
-{
-    verify(t);
-
-    return (t->item_owner);
-}
-
-void thing_set_item_owner (thingp t, thingp owner)
-{
-    verify(t);
-
-    if (owner) {
-        verify(owner);
-    }
-
-    t->item_owner = owner;
-
-    if (owner) {
-        THING_LOG(t, "set owner %s", thing_logname(owner));
-    }
 }
 
 void thing_set_wid (thingp t, widp w)
@@ -1153,13 +1087,6 @@ boolean thing_redo_maze_search (thingp t)
     verify(t);
 
     return (t->redo_maze_search);
-}
-
-void thing_set_is_follows_owner (thingp t, boolean val)
-{
-    verify(t);
-
-    t->is_follows_owner = val;
 }
 
 void thing_set_is_dir_down (thingp t, boolean val)
@@ -1565,13 +1492,6 @@ boolean thing_is_pipe (thingp t)
     return (thing_template_is_pipe(thing_get_template(t)));
 }
 
-boolean thing_is_item_removed_at_level_end (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_item_removed_at_level_end(thing_get_template(t)));
-}
-
 boolean thing_is_scarable (thingp t)
 {
     verify(t);
@@ -1600,13 +1520,6 @@ boolean thing_is_animated (thingp t)
     return (thing_template_is_animated(thing_get_template(t)));
 }
 
-boolean thing_is_follows_owner (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_follows_owner(thing_get_template(t)));
-}
-
 boolean thing_is_powerup_rocket (thingp t)
 {
     verify(t);
@@ -1621,25 +1534,11 @@ boolean thing_is_left_as_corpse_on_death (thingp t)
     return (thing_template_is_left_as_corpse_on_death(thing_get_template(t)));
 }
 
-boolean thing_is_item_perma (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_item_perma(thing_get_template(t)));
-}
-
 boolean thing_is_esnail (thingp t)
 {
     verify(t);
 
     return (thing_template_is_esnail(thing_get_template(t)));
-}
-
-boolean thing_is_item_hidden (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_item_hidden(thing_get_template(t)));
 }
 
 boolean thing_is_bonus_letter (thingp t)
@@ -1696,20 +1595,6 @@ boolean thing_is_effect_rotate_2way (thingp t)
     verify(t);
 
     return (thing_template_is_effect_rotate_2way(thing_get_template(t)));
-}
-
-tree_rootp *thing_carried_itemsp (thingp t)
-{
-    verify(t);
-
-    return (&t->carried_items);
-}
-
-tree_rootp thing_carried_items (thingp t)
-{
-    verify(t);
-
-    return (t->carried_items);
 }
 
 thing_tilep thing_current_tile (thingp t)

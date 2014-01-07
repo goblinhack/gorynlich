@@ -26,6 +26,7 @@ static boolean client_set_name(tokens_t *tokens, void *context);
 static boolean client_shout(tokens_t *tokens, void *context);
 static boolean client_tell(tokens_t *tokens, void *context);
 static boolean client_players_show(tokens_t *tokens, void *context);
+static boolean client_join(tokens_t *tokens, void *context);
 
 aplayer client_players[MAX_SOCKETS];
 
@@ -58,6 +59,9 @@ boolean client_init (void)
     command_add(client_set_name, "set name [A-Za-z0-9_-]*",
                 "set player name");
 
+    command_add(client_join, "join [A-Za-z0-9_-]*",
+                "join game as named player");
+
     command_add(client_shout, "shout [A-Za-z0-9_-]*",
                 "shout to players");
 
@@ -67,7 +71,7 @@ boolean client_init (void)
     command_add(client_players_show, "show players", 
                 "show all players state");
 
-    socket_set_name(client_connect_socket, dupstr("nameless", "client name"));
+    socket_set_name(client_connect_socket, "nameless");
 
     client_init_done = true;
 
@@ -135,9 +139,30 @@ boolean client_set_name (tokens_t *tokens, void *context)
         return (false);
     }
 
-    socket_set_name(client_connect_socket, dupstr(s, "socket name"));
+    socket_set_name(client_connect_socket, s);
 
     CON("Client name set to \"%s\"", socket_get_name(client_connect_socket));
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean client_join (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[1];
+
+    if (!client_connect_socket) {
+        ERR("No open socket to join with");
+        return (false);
+    }
+
+    if (s && *s) {
+        socket_set_name(client_connect_socket, s);
+    }
+
+    socket_tx_join(client_connect_socket);
 
     return (true);
 }

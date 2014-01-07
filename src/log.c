@@ -14,7 +14,6 @@
 #include "command.h"
 #include "thing.h"
 #include "level.h"
-#include "item.h"
 #include "timer.h"
 #include "init_fn.h"
 #include "wid.h"
@@ -510,37 +509,6 @@ boolean debug_enable (tokens_t *tokens, void *context)
     CON("Debug mode set to %u", debug_enabled);
 
     return (true);
-}
-
-static void item_log_ (itemp t, const char *fmt, va_list args)
-{
-    static char buf[200];
-    uint32_t len;
-
-    buf[0] = '\0';
-    timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
-    snprintf(buf + len, sizeof(buf) - len, "Items %s: ", item_logname(t));
-    len = (uint32_t)strlen(buf);
-    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
-
-    putf(MY_STDOUT, buf);
-    fflush(MY_STDOUT);
-}
-
-void ITEM_LOG (itemp t, const char *fmt, ...)
-{
-    va_list args;
-
-    if (!debug_enabled) {
-        return;
-    }
-
-    verify(t);
-
-    va_start(args, fmt);
-    item_log_(t, fmt, args);
-    va_end(args);
 }
 
 static void action_timer_log_ (timerp t, const char *fmt, va_list args)

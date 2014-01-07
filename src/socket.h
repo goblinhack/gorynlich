@@ -15,6 +15,7 @@ typedef enum {
     MSG_TYPE_SHOUT,
     MSG_TYPE_TELL,
     MSG_TYPE_PLAYERS_ALL,
+    MSG_TYPE_JOIN,
     MSG_TYPE_MAX,
 } msg_type;
 
@@ -76,6 +77,8 @@ extern void socket_rx_ping(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_name(socketp s);
 extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_join(socketp s);
+extern void socket_rx_join(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_shout(socketp s, const char *shout);
 extern void socket_rx_shout(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_tell(socketp s, 

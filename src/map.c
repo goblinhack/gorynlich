@@ -40,11 +40,6 @@ static boolean map_is_x_at (levelp level,
         thingp thing_it = wid_get_thing(w);
 
         if (thing_it) {
-            if (thing_item_owner(thing_it)) {
-                w = wid_grid_find_next(grid_wid, w, x, y);
-                continue;
-            }
-
             if (thing_is_dead(thing_it)) {
                 w = wid_grid_find_next(grid_wid, w, x, y);
                 continue;
@@ -85,18 +80,6 @@ static boolean map_count_x_at (levelp level,
      */
     w = wid_grid_find_first(grid_wid, x, y);
     while (w) {
-        /*
-         * If an item is being carried but is seen on the map then it is not 
-         * really on the map.
-         */
-        thingp t = wid_get_thing(w);
-        if (t) {
-            if (thing_item_owner(t)) {
-                w = wid_grid_find_next(grid_wid, w, x, y);
-                continue;
-            }
-        }
-
         thing_template = wid_get_thing_template(w);
         if (thing_template) {
             if ((*callback)(thing_template)) {
@@ -371,16 +354,6 @@ static thingp map_thing_is_x_at (levelp level,
         thingp thing_it = wid_get_thing(w);
 
         if (!thing_it) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
-
-        if (thing_item_owner(thing_it)) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
-
-        if (thing_item_owner(thing_it)) {
             w = wid_grid_find_next(grid_wid, w, x, y);
             continue;
         }
@@ -668,11 +641,6 @@ static tree_rootp map_all_things_is_x_at (levelp level,
         thingp thing_it = wid_get_thing(w);
 
         if (!thing_it) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
-
-        if (thing_item_owner(thing_it)) {
             w = wid_grid_find_next(grid_wid, w, x, y);
             continue;
         }
@@ -1786,11 +1754,6 @@ static tree_rootp map_all_things_is_x (levelp level,
                 thingp thing_it = wid_get_thing(w);
 
                 if (!thing_it) {
-                    w = wid_grid_find_next(grid_wid, w, x, y);
-                    continue;
-                }
-
-                if (thing_item_owner(thing_it)) {
                     w = wid_grid_find_next(grid_wid, w, x, y);
                     continue;
                 }
