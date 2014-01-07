@@ -381,32 +381,32 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx10", t->is_xxx10);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx11", t->is_xxx11);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_spikes", t->is_spikes);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_pink", t->is_star_pink);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_red", t->is_star_red);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_blue", t->is_star_blue);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx12", t->is_xxx12);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx13", t->is_xxx13);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx14", t->is_xxx14);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx15", t->is_xxx15);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx16", t->is_xxx16);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx17", t->is_xxx17);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx18", t->is_xxx18);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx19", t->is_xxx19);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx21", t->is_xxx21);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
         GET_OPT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
         GET_OPT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_item_removed_at_level_end", t->is_item_removed_at_level_end);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx27", t->is_xxx27);
         GET_OPT_NAMED_BITFIELD(ctx, "is_scarable", t->is_scarable);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_shrunk_when_carried", t->is_shrunk_when_carried);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_follows_owner", t->is_follows_owner);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_powerup_rocket", t->is_powerup_rocket);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx32", t->is_xxx32);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
         GET_OPT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_item_perma", t->is_item_perma);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
         GET_OPT_NAMED_BITFIELD(ctx, "is_esnail", t->is_esnail);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bonus_letter", t->is_bonus_letter);
@@ -484,32 +484,32 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
     PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
-    PUT_NAMED_BITFIELD(ctx, "is_powerup_spam", t->is_powerup_spam);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx10", t->is_xxx10);
     PUT_NAMED_BITFIELD(ctx, "is_xxx11", t->is_xxx11);
-    PUT_NAMED_BITFIELD(ctx, "is_car", t->is_car);
-    PUT_NAMED_BITFIELD(ctx, "is_star_green", t->is_star_green);
-    PUT_NAMED_BITFIELD(ctx, "is_star_cyan", t->is_star_cyan);
-    PUT_NAMED_BITFIELD(ctx, "is_star_black", t->is_star_black);
-    PUT_NAMED_BITFIELD(ctx, "is_star_purple", t->is_star_purple);
-    PUT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
-    PUT_NAMED_BITFIELD(ctx, "is_spikes", t->is_spikes);
-    PUT_NAMED_BITFIELD(ctx, "is_star_pink", t->is_star_pink);
-    PUT_NAMED_BITFIELD(ctx, "is_star_red", t->is_star_red);
-    PUT_NAMED_BITFIELD(ctx, "is_star_blue", t->is_star_blue);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx12", t->is_xxx12);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx13", t->is_xxx13);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx14", t->is_xxx14);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx15", t->is_xxx15);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx16", t->is_xxx16);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx17", t->is_xxx17);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx18", t->is_xxx18);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx19", t->is_xxx19);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx21", t->is_xxx21);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
     PUT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
     PUT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
-    PUT_NAMED_BITFIELD(ctx, "is_item_removed_at_level_end", t->is_item_removed_at_level_end);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx27", t->is_xxx27);
     PUT_NAMED_BITFIELD(ctx, "is_scarable", t->is_scarable);
-    PUT_NAMED_BITFIELD(ctx, "is_shrunk_when_carried", t->is_shrunk_when_carried);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
     PUT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
     PUT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
-    PUT_NAMED_BITFIELD(ctx, "is_follows_owner", t->is_follows_owner);
-    PUT_NAMED_BITFIELD(ctx, "is_powerup_rocket", t->is_powerup_rocket);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx32", t->is_xxx32);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
     PUT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
-    PUT_NAMED_BITFIELD(ctx, "is_item_perma", t->is_item_perma);
+    PUT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
     PUT_NAMED_BITFIELD(ctx, "is_esnail", t->is_esnail);
     PUT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
     PUT_NAMED_BITFIELD(ctx, "is_bonus_letter", t->is_bonus_letter);
@@ -775,9 +775,9 @@ boolean thing_template_is_star (thing_templatep t)
     return (t->is_star);
 }
 
-boolean thing_template_is_powerup_spam (thing_templatep t)
+boolean thing_template_is_xxx10 (thing_templatep t)
 {
-    return (t->is_powerup_spam);
+    return (t->is_xxx10);
 }
 
 boolean thing_template_is_xxx11 (thing_templatep t)
@@ -785,54 +785,54 @@ boolean thing_template_is_xxx11 (thing_templatep t)
     return (t->is_xxx11);
 }
 
-boolean thing_template_is_car (thing_templatep t)
+boolean thing_template_is_xxx12 (thing_templatep t)
 {
-    return (t->is_car);
+    return (t->is_xxx12);
 }
 
-boolean thing_template_is_star_green (thing_templatep t)
+boolean thing_template_is_xxx13 (thing_templatep t)
 {
-    return (t->is_star_green);
+    return (t->is_xxx13);
 }
 
-boolean thing_template_is_star_cyan (thing_templatep t)
+boolean thing_template_is_xxx14 (thing_templatep t)
 {
-    return (t->is_star_cyan);
+    return (t->is_xxx14);
 }
 
-boolean thing_template_is_star_black (thing_templatep t)
+boolean thing_template_is_xxx15 (thing_templatep t)
 {
-    return (t->is_star_black);
+    return (t->is_xxx15);
 }
 
-boolean thing_template_is_star_purple (thing_templatep t)
+boolean thing_template_is_xxx16 (thing_templatep t)
 {
-    return (t->is_star_purple);
+    return (t->is_xxx16);
 }
 
-boolean thing_template_is_explosion (thing_templatep t)
+boolean thing_template_is_xxx17 (thing_templatep t)
 {
-    return (t->is_explosion);
+    return (t->is_xxx17);
 }
 
-boolean thing_template_is_spikes (thing_templatep t)
+boolean thing_template_is_xxx18 (thing_templatep t)
 {
-    return (t->is_spikes);
+    return (t->is_xxx18);
 }
 
-boolean thing_template_is_star_red (thing_templatep t)
+boolean thing_template_is_xxx20 (thing_templatep t)
 {
-    return (t->is_star_red);
+    return (t->is_xxx20);
 }
 
-boolean thing_template_is_star_pink (thing_templatep t)
+boolean thing_template_is_xxx19 (thing_templatep t)
 {
-    return (t->is_star_pink);
+    return (t->is_xxx19);
 }
 
-boolean thing_template_is_star_blue (thing_templatep t)
+boolean thing_template_is_xxx21 (thing_templatep t)
 {
-    return (t->is_star_blue);
+    return (t->is_xxx21);
 }
 
 boolean thing_template_is_seedpod (thing_templatep t)
@@ -860,9 +860,9 @@ boolean thing_template_is_pipe (thing_templatep t)
     return (t->is_pipe);
 }
 
-boolean thing_template_is_item_removed_at_level_end (thing_templatep t)
+boolean thing_template_is_xxx27 (thing_templatep t)
 {
-    return (t->is_item_removed_at_level_end);
+    return (t->is_xxx27);
 }
 
 boolean thing_template_is_scarable (thing_templatep t)
@@ -870,9 +870,9 @@ boolean thing_template_is_scarable (thing_templatep t)
     return (t->is_scarable);
 }
 
-boolean thing_template_is_shrunk_when_carried (thing_templatep t)
+boolean thing_template_is_xxx29 (thing_templatep t)
 {
-    return (t->is_shrunk_when_carried);
+    return (t->is_xxx29);
 }
 
 boolean thing_template_is_hidden_from_editor (thing_templatep t)
@@ -885,14 +885,14 @@ boolean thing_template_is_animated (thing_templatep t)
     return (t->is_animated);
 }
 
-boolean thing_template_is_follows_owner (thing_templatep t)
+boolean thing_template_is_xxx32 (thing_templatep t)
 {
-    return (t->is_follows_owner);
+    return (t->is_xxx32);
 }
 
-boolean thing_template_is_powerup_rocket (thing_templatep t)
+boolean thing_template_is_xxx33 (thing_templatep t)
 {
-    return (t->is_powerup_rocket);
+    return (t->is_xxx33);
 }
 
 boolean thing_template_is_left_as_corpse_on_death (thing_templatep t)
@@ -900,9 +900,9 @@ boolean thing_template_is_left_as_corpse_on_death (thing_templatep t)
     return (t->is_left_as_corpse_on_death);
 }
 
-boolean thing_template_is_item_perma (thing_templatep t)
+boolean thing_template_is_xxx35 (thing_templatep t)
 {
-    return (t->is_item_perma);
+    return (t->is_xxx35);
 }
 
 boolean thing_template_is_esnail (thing_templatep t)
