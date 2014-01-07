@@ -130,6 +130,10 @@ static void server_poll (void)
             socket_rx_name(s, packet, data);
             break;
 
+        case MSG_TYPE_JOIN:
+            socket_rx_join(s, packet, data);
+            break;
+
         case MSG_TYPE_SHOUT:
             socket_rx_shout(s, packet, data);
             break;

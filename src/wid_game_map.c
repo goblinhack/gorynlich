@@ -28,7 +28,6 @@
 #include "level.h"
 #include "player.h"
 #include "thing.h"
-#include "item.h"
 #include "map.h"
 #include "wid_button.h"
 #include "sdl.h"
@@ -49,16 +48,10 @@ widp wid_name_title;
 widp wid_title;
 widp wid_level;
 
-static const char *wid_game_selected_item_name;
-static widp wid_game_last_selected_tile;
 static boolean wid_game_init_done;
 
-static float tile_width_pct = 1.0f / TILES_SCREEN_WIDTH;
-static float tile_height_pct = 1.0f / TILES_SCREEN_HEIGHT;
 uint32_t tile_width;
 uint32_t tile_height;
-
-static void wid_game_selected_item_name_reset(void);
 
 static void wid_game_map_set_thing_template (widp w, thing_templatep t)
 {
@@ -73,13 +66,6 @@ static void wid_game_map_set_thing_template (widp w, thing_templatep t)
     }
 }
 
-static boolean wid_game_map_tile_receive_mouse_down(widp w,
-                                                    int32_t x, int32_t y,
-                                                    uint32_t button);
-
-static boolean wid_game_map_tile_receive_mouse_up(widp w,
-                                                  int32_t x, int32_t y,
-                                                  uint32_t button);
 boolean wid_game_init (void)
 {
     wid_game_init_done = true;
@@ -106,11 +92,6 @@ void wid_game_hide (void)
         wid_detach_from_grid(wid_game_map_grid_container);
 
         wid_destroy_grid(wid_game_map_grid_container);
-
-        /*
-         * Reset the tile that we had last highlighted.
-         */
-        wid_game_selected_item_name_reset();
     }
 
     wid_intro_visible();
@@ -128,365 +109,10 @@ void wid_game_visible (void)
 }
 
 /*
- * Mouse down etc...
- */
-static boolean wid_game_map_receive_mouse_down (widp w,
-                                                int32_t x,
-                                                int32_t y,
-                                                uint32_t button)
-{
-    if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
-    }
-
-    if (SDL_BUTTON(SDL_BUTTON_RIGHT) & SDL_GetMouseState(0, 0)) {
-    }
-
-    return (false);
-}
-
-static boolean wid_game_map_receive_mouse_up (widp w,
-                                              int32_t x, int32_t y,
-                                              uint32_t button)
-{
-    return (false);
-}
-
-static boolean wid_game_map_tile_receive_mouse_up (widp w,
-                                                   int32_t x, int32_t y,
-                                                   uint32_t button)
-{
-    return (false);
-}
-
-static boolean wid_game_map_tile_can_place_here (int32_t x, int32_t y)
-{
-    thing_templatep thing_template;
-    boolean can_place_here;
-    widp t;
-
-    if (!wid_game_selected_item_name) {
-        return (false);
-    }
-
-    can_place_here = false;
-
-    /*
-     * Look for a floor tile where we can place stuff.
-     */
-    t = wid_grid_find_first(wid_game_map_grid_container, x, y);
-    while (t) {
-        thing_template = wid_get_thing_template(t);
-        if (thing_template) {
-            if (thing_template_is_floor(thing_template)) {
-                can_place_here = true;
-            }
-        }
-
-        t = wid_grid_find_next(wid_game_map_grid_container, t, x, y);
-    }
-
-    /*
-     * Check for exclusions.
-     */
-    t = wid_grid_find_first(wid_game_map_grid_container, x, y);
-    while (t) {
-        thing_template = wid_get_thing_template(t);
-        if (thing_template) {
-            if (thing_template_is_wall(thing_template)) {
-                can_place_here = false;
-            }
-
-            if (thing_template_is_pipe(thing_template)) {
-                levelp level;
-
-                level = thing_level(player);
-                if (level->end_pipe[x][y] == ' ') {
-                    can_place_here = false;
-                }
-            }
-
-            if (thing_template_is_food(thing_template)) {
-                /*
-                 * Ok to place food on food.
-                 *
-                can_place_here = false;
-                 */
-            }
-        }
-
-        t = wid_grid_find_next(wid_game_map_grid_container, t, x, y);
-    }
-
-    return (can_place_here);
-}
-
-static boolean wid_game_map_tile_receive_mouse_down (widp w,
-                                                     int32_t x, int32_t y,
-                                                     uint32_t button)
-{
-    thing_templatep thing_template;
-    boolean can_place_here;
-    const char *item_name;
-    tree_rootp items;
-    fpoint offset;
-    thingp thing;
-    itemp item;
-
-    if (!wid_game_selected_item_name) {
-        wid_tooltip_transient("Nothing left to place", 0);
-        return (true);
-    }
-
-    /*
-     * Map the mouse to tile coordinate.
-     */
-    wid_get_offset(wid_game_map_grid_container, &offset);
-
-    x += -offset.x;
-    y += -offset.y;
-
-    x /= tile_width;
-    y /= tile_height;
-
-    can_place_here = wid_game_map_tile_can_place_here(x, y);
-    if (!can_place_here) {
-        /*
-         * Too noisy
-         *
-        wid_tooltip_transient("You cannot place any items here.", 0);
-         */
-        return (true);
-    }
-
-    item_name = wid_game_selected_item_name;
-    thing_template = thing_template_find(item_name);
-    if (!thing_template) {
-        char *tmp = dynprintf("item [%s] has no thing template (1)",
-                              item_name);
-        (void) wid_popup_error(tmp);
-        myfree(tmp);
-        return (false);
-    }
-
-    items = thing_carried_items(player);
-    if (!items) {
-        wid_tooltip_transient("Nothing left to place. Sorry!", 0);
-
-        /*
-         * So we select a new thing.
-         */
-        wid_game_map_item_update(level_game);
-
-        return (false);
-    }
-
-    item = item_find_template(items, thing_template);
-    if (!item) {
-        char *tmp = dynprintf("item [%s] is not being carried",
-                              thing_template_name(thing_template));
-        (void) wid_popup_error(tmp);
-        myfree(tmp);
-        return (false);
-    }
-
-    thing = item_thing(item);
-
-    /*
-     * If this is something we can use, then do not place a star for example,
-     * but use it as a powerup.
-     */
-    if (thing_item_use(player, thing)) {
-        /*
-         * Do not place on map. Destroyed.
-         */
-    } else {
-        /*
-         * Place on map.
-         */
-        widp w = wid_game_map_replace_tile(wid_game_map_grid_container,
-                                  x, y, 0, thing_template);
-
-        thing_destroy(thing, "copy placed on map");
-
-        thingp t = wid_get_thing(w);
-
-        /*
-         * Pull the strings! Pull the strings!
-         */
-        if (thing_is_bomb(t)) {
-            thing_set_is_open(t, true);
-        }
-    }
-
-    wid_game_map_item_update(level_game);
-
-    return (true);
-}
-
-static void
-wid_game_map_tile_receive_on_mouse_over_begin (widp w)
-{
-    boolean can_place_here;
-    fpoint offset;
-    int32_t x;
-    int32_t y;
-
-    /*
-     * Map the mouse to tile coordinate.
-     */
-    (void) SDL_GetMouseState(&x, &y);
-
-    x *= global_config.xscale;
-    y *= global_config.yscale;
-
-    wid_get_offset(wid_game_map_grid_container, &offset);
-
-    x += -offset.x;
-    y += -offset.y;
-
-    x /= tile_width;
-    y /= tile_height;
-
-    can_place_here = wid_game_map_tile_can_place_here(x, y);
-
-    wid_effect_pulses(w);
-
-    if (can_place_here) {
-        wid_set_square_outline(w);
-        wid_set_bevel(w, 10);
-        wid_set_tile(w, 0);
-    } else {
-        wid_set_tilename(w, "noentry");
-        wid_set_no_shape(w);
-    }
-
-    wid_game_last_selected_tile = w;
-}
-
-/*
- * Reset the tile that we had last highlighted.
- */
-static void
-wid_game_selected_item_name_reset (void)
-{
-    if (!wid_game_last_selected_tile) {
-        return;
-    }
-
-    verify(wid_game_last_selected_tile);
-
-    wid_set_no_shape(wid_game_last_selected_tile);
-    wid_set_tile(wid_game_last_selected_tile, 0);
-
-    wid_game_last_selected_tile = 0;
-}
-
-static void
-wid_game_map_tile_receive_on_mouse_over_end (widp w)
-{
-    wid_set_no_shape(w);
-    wid_set_tile(w, 0);
-}
-
-static boolean wid_game_map_tile_key_down_event (widp w,
-                                                 const SDL_KEYSYM *key)
-{
-    /*
-     * Console.
-     */
-    switch (key->sym) {
-        case '`':
-            return (false);
-        default:
-            break;
-    }
-
-    switch (key->sym) {
-        case 'q':
-        case SDLK_ESCAPE:
-            wid_game_hide();
-            return (true);
-
-        default:
-            return (true);
-    }
-
-    return (false);
-}
-
-static boolean wid_game_map_tile_key_up_event (widp w,
-                                               const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        default:
-            return (true);
-    }
-
-    return (false);
-}
-
-/*
- * This is an item being select.
- */
-static boolean wid_game_map_button_receive_mouse_down (widp w,
-                                                       int32_t x, int32_t y,
-                                                       uint32_t button)
-{
-    thing_templatep thing_template;
-    tree_rootp items;
-    thingp thing;
-    itemp item;
-    
-    wid_game_selected_item_name = (typeof(wid_game_selected_item_name))
-                    wid_get_client_context(w);
-
-    if (!wid_game_selected_item_name) {
-        char *tmp = dynprintf("wid [%s] has no item", wid_name(w));
-        (void) wid_popup_error(tmp);
-        myfree(tmp);
-        return (false);
-    }
-
-    thing_template = thing_template_find(wid_game_selected_item_name);
-    if (!thing_template) {
-        return (false);
-    }
-
-    if (!player) {
-        return (false);
-    }
-
-    items = thing_carried_items(player);
-    if (!items) {
-        char *tmp = dynprintf("item [%s] has no items",
-                              wid_game_selected_item_name);
-        (void) wid_popup_error(tmp);
-        myfree(tmp);
-        return (false);
-    }
-
-    item = item_find_template(items, thing_template);
-    if (!item) {
-        char *tmp = dynprintf("item [%s] not found (2)",
-                              wid_game_selected_item_name);
-        (void) wid_popup_error(tmp);
-        myfree(tmp);
-        return (false);
-    }
-
-    thing = item_thing(item);
-    thing_item_use(player, thing);
-
-    return (true);
-}
-
-/*
  * Create the wid_game_map
  */
 void wid_game_map_wid_create (void)
 {
-    wid_game_selected_item_name = 0;
-
     if (sdl_is_exiting()) {
         return;
     }
@@ -509,15 +135,6 @@ void wid_game_map_wid_create (void)
         wid_set_text_scaling(wid_game_map_window, 2.0f);
         wid_set_text_pos(wid_game_map_window, true, 0.5f, 0.10f);
         wid_set_text_outline(wid_game_map_window, true);
-
-        wid_set_on_mouse_down(wid_game_map_window,
-                              wid_game_map_receive_mouse_down);
-        wid_set_on_mouse_up(wid_game_map_window,
-                            wid_game_map_receive_mouse_up);
-        wid_set_on_key_down(wid_game_map_window,
-                            wid_game_map_tile_key_down_event);
-        wid_set_on_key_up(wid_game_map_window,
-                          wid_game_map_tile_key_up_event);
 
         wid_set_text_bot(wid_game_map_window, true);
         wid_set_text_lhs(wid_game_map_window, true);
@@ -544,87 +161,43 @@ void wid_game_map_wid_create (void)
 
         wid_set_tl_br_pct(wid_game_map_grid_container, tl, br);
         wid_set_tex(wid_game_map_grid_container, 0, 0);
-
-        wid_set_on_mouse_down(wid_game_map_grid_container,
-                              wid_game_map_receive_mouse_down);
-        wid_set_on_mouse_up(wid_game_map_grid_container,
-                            wid_game_map_receive_mouse_up);
     }
 
     {
-        int32_t x;
-        int32_t y;
+        float base_tile_width =
+                ((1.0f / (float)TILES_SCREEN_WIDTH) *
+                    (float)global_config.video_gl_width);
 
-        widp child;
+        float base_tile_height =
+                ((1.0f / (float)TILES_SCREEN_HEIGHT) *
+                    (float)global_config.video_gl_height);
 
-        /*
-         * An array of tiles that we use for the cursor placement.
-         */
-        for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
-            for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
+        fpoint tl = { 0, 0 };
+        fpoint br = { 0, 0 };
 
-                if (y < 1 ) {
-                    /*
-                     * Nothing in the title area.
-                     */
-                    continue;
-                }
+        br.x += base_tile_width;
+        br.y += base_tile_height;
 
-                fpoint tl = {
-                    (tile_width_pct * (float)(x)),
-                    (tile_height_pct * (float)(y))
-                };
+        br.x += base_tile_width / 4.0;
+        br.y += base_tile_height / 4.0;
 
-                fpoint br = {
-                    (tile_width_pct * (float)(x+1)),
-                    (tile_height_pct * (float)(y+1))
-                };
+        br.x += base_tile_width / 6.0;
+        br.y += base_tile_height / 4.0;
 
-                child = wid_new_square_button(wid_game_map_grid_container,
-                                              "map base tile");
+        tl.x -= base_tile_height / 2.0;
+        br.x -= base_tile_width / 2.0;
 
-                wid_set_color(child, WID_COLOR_BG, BLACK);
-                color c = WHITE;
-                c.a = 100;
+        tl.x += base_tile_height / 8.0;
+        br.x += base_tile_width / 8.0;
 
-                wid_set_color(child, WID_COLOR_TEXT, c);
+        tl.y -= base_tile_height / 2.0;
+        br.y -= base_tile_width / 2.0;
 
-                if ((y >= 1) && (y < TILES_MAP_EDITABLE_HEIGHT - 1)) {
-                    wid_set_on_key_down(child,
-                                        wid_game_map_tile_key_down_event);
-                    wid_set_on_key_up(child,
-                                        wid_game_map_tile_key_up_event);
-                    wid_set_on_mouse_down(child,
-                                        wid_game_map_tile_receive_mouse_down);
-                    wid_set_on_mouse_up(child,
-                                        wid_game_map_tile_receive_mouse_up);
-                    wid_set_on_mouse_over_begin(
-                            child,
-                            wid_game_map_tile_receive_on_mouse_over_begin);
-                    wid_set_on_mouse_over_end(
-                            child,
-                            wid_game_map_tile_receive_on_mouse_over_end);
+        tl.y -= base_tile_height / 4.0;
+        br.y -= base_tile_width / 4.0;
 
-                    wid_set_mode(child, WID_MODE_OVER);
-                    wid_set_color(child, WID_COLOR_TL, STEELBLUE);
-                    wid_set_color(child, WID_COLOR_BR, STEELBLUE);
-
-                    wid_set_mode(child, WID_MODE_NORMAL);
-                    wid_set_color(child, WID_COLOR_TL, STEELBLUE);
-                    wid_set_color(child, WID_COLOR_BR, STEELBLUE);
-
-                    wid_set_z_depth(child, 100);
-                    wid_set_z_order(child, 0);
-                }
-
-                wid_set_no_shape(child);
-
-                wid_set_tl_br_pct(child, tl, br);
-
-                tile_width = wid_get_width(child);
-                tile_height = wid_get_height(child);
-            }
-        }
+        tile_width = br.x - tl.x;
+        tile_height = br.y - tl.y;
 
         wid_new_grid(wid_game_map_grid_container,
                      TILES_MAP_WIDTH,
@@ -632,8 +205,6 @@ void wid_game_map_wid_create (void)
     }
 
     wid_visible(wid_game_map_window, 0);
-
-    wid_game_selected_item_name = 0;
 
     if (!player) {
         player_new(0 /* level */, "data/things/warrior");
@@ -656,11 +227,6 @@ void wid_game_map_wid_create (void)
 void wid_game_map_wid_destroy (void)
 {
     FINI_LOG("Destroy game map");
-
-    /*
-     * Reset the tile that we had last highlighted.
-     */
-    wid_game_selected_item_name_reset();
 
     if (level_game) {
         level_destroy_immediate(&level_game);
@@ -690,7 +256,6 @@ wid_game_map_replace_tile (widp w,
 {
     tree_rootp thing_tiles;
     const char *tilename;
-    widp existing;
     tilep tile;
     widp child;
     levelp level;
@@ -783,40 +348,6 @@ wid_game_map_replace_tile (widp w,
 
     tl.y -= base_tile_height / 4.0;
     br.y -= base_tile_width / 4.0;
-
-    existing = wid_grid_find_thing_template_is(wid_game_map_grid_container,
-                                               x, y,
-                                               thing_template);
-    if (existing)  {
-        child = existing;
-
-        count = (typeof(count)) (uintptr_t)
-                        wid_get_client_context(child);
-        count++;
-
-        wid_game_map_set_thing_template(child, thing_template);
-
-        wid_update(child);
-
-        return (child);
-    }
-
-    /*
-     * Give this thing to the player and do not put it on the level.
-     */
-    if (count) {
-        while (count--) {
-            thingp thing = thing_new(level,
-                                     thing_template_name(thing_template));
-
-            if (!thing_item_collect_no_auto_use(player, thing)) {
-                DIE("failed to collect %s",
-                    thing_template_name(thing_template));
-            }
-        }
-
-        return (wid_game_map_grid_container);
-    }
 
     /*
      * Make a new thing.
@@ -1105,236 +636,6 @@ void wid_game_map_score_update (levelp level)
         wid_update(wid);
         wid_raise(wid);
     }
-
-    wid_update_mouse();
-}
-
-void wid_game_map_item_update (levelp level)
-{
-    boolean wid_game_selected_item_name_is_valid;
-
-    wid_game_selected_item_name_is_valid = false;
-
-    if (!player) {
-        wid_game_selected_item_name = 0;
-        return;
-    }
-
-    if (!wid_game_map_window) {
-        wid_game_selected_item_name = 0;
-        return;
-    }
-
-    wid_destroy(&wid_scoreline_container_bot);
-
-    /*
-     * Create the area for the items at the bottom.
-     */
-    {
-        fpoint tl;
-        fpoint br;
-
-        tl.x = 0;
-        tl.y = 0.8;
-        br.x = 1.0;
-        br.y = 1.0;
-
-        wid_scoreline_container_bot =
-            wid_new_plain(wid_game_map_window, "scoreline bot");
-
-        wid_set_tl_br_pct(wid_scoreline_container_bot, tl, br);
-        wid_set_no_shape(wid_scoreline_container_bot);
-    }
-
-    /*
-     * Check we have an item to use.
-     */
-    {
-        itemp item;
-        uint32_t i;
-
-        i = 0;
-        item = item_get_last(thing_carried_items(player));
-
-        while (item) {
-
-            if (!wid_game_selected_item_name) {
-                wid_game_selected_item_name = item_name(item);
-                wid_game_selected_item_name_is_valid = true;
-            } else {
-                if (!strcmp(wid_game_selected_item_name, item_name(item))) {
-                    wid_game_selected_item_name_is_valid = true;
-                }
-            }
-            item = item_get_prev(thing_carried_items(player), item);
-            i++;
-        }
-    }
-
-    if (!wid_game_selected_item_name_is_valid) {
-        wid_game_selected_item_name = 0;
-    }
-
-    /*
-     * Print all items.
-     */
-    {
-        thing_templatep thing_template = 0;
-        const uint32_t item_per_line = 8;
-        float item_height = 0.05;
-        float item_pad = item_height + 0.065;
-        float item_at = 0.050;
-        itemp item;
-        uint32_t i;
-
-        i = 0;
-        item = item_get_last(thing_carried_items(player));
-
-        while (item && (i < item_per_line)) {
-
-            thingp thing = item_thing(item);
-            if (!thing) {
-                ERR_POPUP("item [%s] has no thing template (3)",
-                          wid_game_selected_item_name);
-            }
-
-            if (thing_template == thing_get_template(thing)) {
-                item = item_get_prev(thing_carried_items(player), item);
-                continue;
-            }
-
-            thing_template = thing_get_template(thing);
-
-            if (thing_is_item_hidden(thing)) {
-                item = item_get_prev(thing_carried_items(player), item);
-                continue;
-            }
-
-            tree_rootp items = thing_carried_items(player);
-
-            widp wid_item_box;
-            widp wid_items_count;
-            widp wid_item;
-
-            color c;
-            c = BLACK;
-            c.a = 150;
-
-            /*
-             * Item container box.
-             */
-            wid_item_box =
-                wid_new_square_button(wid_scoreline_container_bot, 
-                                      item_name(item));
-
-            fpoint tl;
-            fpoint br;
-
-            tl.x = item_at + item_pad * i;
-            tl.y = 0.32;
-
-            br.x = tl.x + item_height + (item_pad - item_height) * 0.7;
-            br.y = 1.0;
-
-            wid_set_tl_br_pct(wid_item_box, tl, br);
-            wid_set_color(wid_item_box, WID_COLOR_BG, BLACK);
-            wid_set_on_mouse_down(wid_item_box,
-                                  wid_game_map_button_receive_mouse_down);
-
-            const char *name = item_name(item);
-            if (!name) {
-                ERR_POPUP("item [%s] has no name",
-                          wid_game_selected_item_name);
-            }
-
-            wid_set_client_context(wid_item_box, (void*)name);
-
-            wid_set_tooltip(wid_item_box,
-                            thing_template_get_tooltip(thing_template));
-
-            boolean highlight = false;
-
-            if (!wid_game_selected_item_name) {
-                wid_game_selected_item_name = item_name(item);
-                wid_game_selected_item_name_is_valid = true;
-                highlight = true;
-            } else {
-                if (!strcmp(wid_game_selected_item_name, item_name(item))) {
-                    wid_game_selected_item_name_is_valid = true;
-                    highlight = true;
-                }
-            }
-
-            if (highlight) {
-                wid_set_color(wid_item_box, WID_COLOR_TL, STEELBLUE);
-                wid_set_color(wid_item_box, WID_COLOR_BR, STEELBLUE);
-            }
-
-            wid_set_color(wid_item_box, WID_COLOR_BG, c);
-            wid_set_bevel(wid_item_box, 3);
-            wid_set_mode(wid_item_box, WID_MODE_OVER);
-            wid_set_color(wid_item_box, WID_COLOR_TL, BLUE);
-            wid_set_color(wid_item_box, WID_COLOR_BR, BLUE);
-            wid_set_mode(wid_item_box, WID_MODE_NORMAL);
-
-            /*
-             * Item tile box.
-             */
-            wid_item = wid_new_plain(wid_item_box, "item");
-
-            tl.x = 0.20;
-            tl.y = 0.05;
-            br.x = 0.80;
-            br.y = 0.8;
-
-            wid_set_tl_br_pct(wid_item, tl, br);
-
-            tree_rootp tiles = thing_template_get_tiles(thing_template);
-            if (!tiles) {
-                ERR_POPUP("item [%s] has no tiles",
-                          wid_game_selected_item_name);
-                return;
-            }
-
-            thing_tilep tile = (typeof(tile)) tree_root_first(tiles);
-            if (!tile) {
-                ERR_POPUP("item [%s] has no tile",
-                          wid_game_selected_item_name);
-                return;
-            }
-
-            wid_set_tilename(wid_item, thing_tile_name(tile));
-
-            /*
-             * Item count box.
-             */
-            wid_items_count = wid_new_plain(wid_item_box, "item count");
-
-            tl.x = 0.05;
-            tl.y = 0.35;
-            br.x = 0.95;
-            br.y = 1.15;
-
-            wid_set_tl_br_pct(wid_items_count, tl, br);
-
-            char *tmp = dynprintf("%u",
-                                  items_count_is_thing_template(items,
-                                                             thing_template));
-            wid_set_text(wid_items_count, tmp);
-            myfree(tmp);
-
-            wid_set_color(wid_items_count, WID_COLOR_TEXT, STEELBLUE);
-            wid_set_font(wid_items_count, med_font);
-            wid_set_text_bot(wid_items_count, true);
-
-            item = item_get_prev(thing_carried_items(player), item);
-            i++;
-        }
-    }
-
-    wid_raise(wid_scoreline_container_bot);
-
-    wid_update(wid_scoreline_container_bot);
 
     wid_update_mouse();
 }

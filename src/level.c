@@ -17,7 +17,6 @@
 #include "wid_textbox.h"
 #include "gl.h"
 #include "color.h"
-#include "item.h"
 #include "level.h"
 #include "level_private.h"
 #include "tile.h"
@@ -373,7 +372,6 @@ void level_destroy (levelp level)
     wid_set_on_key_down(w, wid_level_game_over_key_down_event);
 
     wid_game_map_score_update(level);
-    wid_game_map_item_update(level);
 
     widp h = hiscore_try_to_add(thing_score(player));
     if (h) {
@@ -401,7 +399,6 @@ static void level_last (levelp level)
     wid_set_on_key_down(w, wid_level_game_over_key_down_event);
 
     wid_game_map_score_update(level);
-    wid_game_map_item_update(level);
 
     music_play_hiscore();
 
@@ -454,7 +451,6 @@ void level_restart (levelp level)
     level_set_is_paused(level, true);
 
     wid_game_map_score_update(level);
-    wid_game_map_item_update(level);
 }
 
 static void level_completed_callback (widp wid)
@@ -493,7 +489,6 @@ void level_completed (levelp level)
     level_set_is_paused(level, true);
 
     wid_game_map_score_update(level);
-    wid_game_map_item_update(level);
 }
 
 levelp level_load (uint32_t level_no, widp wid)
@@ -553,7 +548,6 @@ levelp level_load (uint32_t level_no, widp wid)
     myfree(dir_and_file);
 
     wid_game_map_score_update(level);
-    wid_game_map_item_update(level);
 
     level_set_walls(level);
     level_set_monst_walls(level);
