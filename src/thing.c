@@ -623,7 +623,7 @@ widp thing_message (thingp t, const char *message)
 {
     verify(t);
 
-    if (!thing_is_player(t) && !thing_is_esnail(t) && !thing_is_xxx12(t)) {
+    if (!thing_is_player(t)) {
         return (0);
     }
     
@@ -1275,13 +1275,6 @@ boolean thing_is_food (thingp t)
     return (thing_template_is_food(thing_get_template(t)));
 }
 
-boolean thing_is_letter (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_letter(thing_get_template(t)));
-}
-
 boolean thing_is_monst (thingp t)
 {
     verify(t);
@@ -1301,20 +1294,6 @@ boolean thing_is_player (thingp t)
     verify(t);
 
     return (thing_template_is_player(thing_get_template(t)));
-}
-
-boolean thing_is_snail (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_snail(thing_get_template(t)));
-}
-
-boolean thing_is_star_yellow (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_star_yellow(thing_get_template(t)));
 }
 
 boolean thing_is_xxx1 (thingp t)
@@ -1532,20 +1511,6 @@ boolean thing_is_left_as_corpse_on_death (thingp t)
     verify(t);
 
     return (thing_template_is_left_as_corpse_on_death(thing_get_template(t)));
-}
-
-boolean thing_is_esnail (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_esnail(thing_get_template(t)));
-}
-
-boolean thing_is_bonus_letter (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_bonus_letter(thing_get_template(t)));
 }
 
 boolean thing_is_thing (thingp t)

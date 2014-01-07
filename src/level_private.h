@@ -17,11 +17,6 @@ typedef struct level_t_ {
     char end_pipe[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
 
     /*
-     * Is the bonus timer running?
-     */
-    timerp bonus_timer;
-
-    /*
      * On screen name for level.
      */
     char *title;

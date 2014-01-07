@@ -903,10 +903,6 @@ void dmap_goals_find (dmap *map, thingp t)
 
     if (thing_is_player(t)) {
         maxpass = 2;
-    } else if (thing_is_esnail(t)) {
-        maxpass = 4;
-    } else if (thing_is_xxx12(t)) {
-        return;
     } else if (thing_is_plant(t)) {
         maxpass = 2;
     } else {
@@ -966,13 +962,6 @@ void dmap_goals_find (dmap *map, thingp t)
                      */
                     if (!running_away) {
                         if (thing_is_player(thing_it)) {
-                            /*
-                             * Chases.
-                             */
-                            dmap_goal_flood(map, 1, x, y);
-                        }
-
-                        if (thing_is_esnail(thing_it)) {
                             /*
                              * Chases.
                              */

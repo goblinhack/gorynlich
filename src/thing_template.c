@@ -366,12 +366,9 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
         GET_OPT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_letter", t->is_letter);
         GET_OPT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx1", t->is_xxx1);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
@@ -407,9 +404,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
         GET_OPT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_esnail", t->is_esnail);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_bonus_letter", t->is_bonus_letter);
         GET_OPT_NAMED_BITFIELD(ctx, "is_thing", t->is_thing);
         GET_OPT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
@@ -469,12 +464,9 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
     PUT_NAMED_BITFIELD(ctx, "is_floor", t->is_floor);
     PUT_NAMED_BITFIELD(ctx, "is_food", t->is_food);
-    PUT_NAMED_BITFIELD(ctx, "is_letter", t->is_letter);
     PUT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
-    PUT_NAMED_BITFIELD(ctx, "is_snail", t->is_snail);
-    PUT_NAMED_BITFIELD(ctx, "is_star_yellow", t->is_star_yellow);
     PUT_NAMED_BITFIELD(ctx, "is_xxx1", t->is_xxx1);
     PUT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
     PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
@@ -510,9 +502,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
     PUT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
     PUT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
-    PUT_NAMED_BITFIELD(ctx, "is_esnail", t->is_esnail);
     PUT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
-    PUT_NAMED_BITFIELD(ctx, "is_bonus_letter", t->is_bonus_letter);
     PUT_NAMED_BITFIELD(ctx, "is_thing", t->is_thing);
     PUT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
     PUT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
@@ -700,11 +690,6 @@ boolean thing_template_is_food (thing_templatep t)
     return (t->is_food);
 }
 
-boolean thing_template_is_letter (thing_templatep t)
-{
-    return (t->is_letter);
-}
-
 boolean thing_template_is_monst (thing_templatep t)
 {
     return (t->is_monst);
@@ -718,16 +703,6 @@ boolean thing_template_is_plant (thing_templatep t)
 boolean thing_template_is_player (thing_templatep t)
 {
     return (t->is_player);
-}
-
-boolean thing_template_is_snail (thing_templatep t)
-{
-    return (t->is_snail);
-}
-
-boolean thing_template_is_star_yellow (thing_templatep t)
-{
-    return (t->is_star_yellow);
 }
 
 boolean thing_template_is_xxx1 (thing_templatep t)
@@ -905,19 +880,9 @@ boolean thing_template_is_xxx35 (thing_templatep t)
     return (t->is_xxx35);
 }
 
-boolean thing_template_is_esnail (thing_templatep t)
-{
-    return (t->is_esnail);
-}
-
 boolean thing_template_is_item_hidden (thing_templatep t)
 {
     return (t->is_item_hidden);
-}
-
-boolean thing_template_is_bonus_letter (thing_templatep t)
-{
-    return (t->is_bonus_letter);
 }
 
 boolean thing_template_is_thing (thing_templatep t)

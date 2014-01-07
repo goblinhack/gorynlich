@@ -44,8 +44,6 @@ static boolean level_command_dead(tokens_t *tokens, void *context);
 static boolean level_init_done;
 static void level_destroy_callback(widp wid);
 static void level_start_timers(levelp level);
-static void level_action_timer_bonus_fired(void *context);
-static void level_place_bonus(levelp level);
 boolean game_over;
 
 boolean god_mode = false;
@@ -758,88 +756,6 @@ void level_pipe_find_ends (levelp level)
 }
 
 /*
- * Place a bonus letter.
- */
-void level_place_bonus (levelp level)
-{
-    thing_templatep thing_template = 0;
-    uint32_t i;
-    int32_t x;
-    int32_t y;
-
-    if (level_count_is_bonus_letter(level) != 0) {
-        return;
-    }
-
-    for (i = 0;
-         i < TILES_MAP_EDITABLE_HEIGHT * TILES_MAP_EDITABLE_WIDTH; i++) {
-
-        x = rand() % TILES_MAP_EDITABLE_WIDTH;
-        y = rand() % TILES_MAP_EDITABLE_HEIGHT;
-
-        if (map_is_wall_at(level, x, y)) {
-            continue;
-        }
-
-        if (map_is_pipe_at(level, x, y)) {
-            continue;
-        }
-
-        if (map_is_player_at(level, x, y)) {
-            continue;
-        }
-
-        if (map_is_exit_at(level, x, y)) {
-            continue;
-        }
-
-        if (!map_is_floor_at(level, x, y)) {
-            continue;
-        }
-
-        switch (rand() % 9) {
-        case 0: // m
-            thing_template = thing_template_find("data/things/gem1");
-            break;
-        case 1: // a
-            thing_template = thing_template_find("data/things/gem2");
-            break;
-        case 2: // i
-            thing_template = thing_template_find("data/things/potion1");
-            break;
-        case 3: // l
-            thing_template = thing_template_find("data/things/potion2");
-            break;
-        case 4: // s
-            thing_template = thing_template_find("data/things/keys1");
-            break;
-        case 5: // n
-            thing_template = thing_template_find("data/things/water1");
-            break;
-        case 6: // a
-            thing_template = thing_template_find("data/things/water2");
-            break;
-        case 7: // i
-            thing_template = thing_template_find("data/things/generator1");
-            break;
-        case 8: // l
-            thing_template = thing_template_find("data/things/generator2");
-            break;
-        }
-
-        wid_game_map_replace_tile(wid_game_map_grid_container,
-                                  x,
-                                  y,
-                                  0, /* give to player count */
-                                  thing_template);
-                                  
-        wid_update(wid_game_map_grid_container);
-
-        return;
-    }
-}
-
-/*
  * Place a plant pod
  */
 void level_place_plant_pod (levelp level)
@@ -962,39 +878,10 @@ void level_place_explosion (levelp level, int32_t x, int32_t y)
 }
 
 /*
- * Timer fired. Place a bonus letter.
- */
-void level_action_timer_bonus_fired (void *context)
-{
-    levelp level;
-    level = (typeof(level)) context;
-    verify(level);
-
-    /*
-     * Allow refires.
-     */
-    level->bonus_timer = 0;
-
-    if (player && thing_wid(player)) {
-        level_place_bonus(level);
-    }
-}
-
-/*
  * Start any timers.
  */
 void level_start_timers (levelp level)
 {
-    if (level->bonus_timer) {
-        return;
-    }
-
-    level->bonus_timer = action_timer_create(&timers,
-                                             level_action_timer_bonus_fired,
-                                             level,
-                                             "place bonus",
-                                             ONESEC * 10, /* duration */
-                                             ONESEC * 10 /* jitter */);
 }
 
 /*

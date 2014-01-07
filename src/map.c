@@ -103,19 +103,9 @@ boolean map_is_monst_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_monst));
 }
 
-boolean map_is_snail_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_snail));
-}
-
 boolean map_is_wall_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_wall));
-}
-
-boolean map_is_star_yellow_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
 boolean map_is_xxx1_at (levelp level, int32_t x, int32_t y)
@@ -288,19 +278,9 @@ boolean map_is_xxx35_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_xxx35));
 }
 
-boolean map_is_esnail_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_esnail));
-}
-
 boolean map_is_item_hidden_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_item_hidden));
-}
-
-boolean map_is_bonus_letter_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_bonus_letter));
 }
 
 boolean map_is_thing_at (levelp level, int32_t x, int32_t y)
@@ -326,11 +306,6 @@ boolean map_is_floor_at (levelp level, int32_t x, int32_t y)
 boolean map_is_exit_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_exit));
-}
-
-boolean map_is_letter_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_letter));
 }
 
 static thingp map_thing_is_x_at (levelp level,
@@ -386,19 +361,9 @@ thingp map_thing_is_monst_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_monst));
 }
 
-thingp map_thing_is_snail_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_snail));
-}
-
 thingp map_thing_is_wall_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_wall));
-}
-
-thingp map_thing_is_star_yellow_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
 thingp map_thing_is_xxx1_at (levelp level, int32_t x, int32_t y)
@@ -571,19 +536,9 @@ thingp map_thing_is_xxx35_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_xxx35));
 }
 
-thingp map_thing_is_esnail_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_esnail));
-}
-
 thingp map_thing_is_item_hidden_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_item_hidden));
-}
-
-thingp map_thing_is_bonus_letter_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_bonus_letter));
 }
 
 thingp map_thing_is_thing_at (levelp level, int32_t x, int32_t y)
@@ -609,11 +564,6 @@ thingp map_thing_is_floor_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_exit_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_exit));
-}
-
-thingp map_thing_is_letter_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_letter));
 }
 
 static tree_rootp map_all_things_is_x_at (levelp level,
@@ -685,19 +635,9 @@ tree_rootp map_all_things_is_monst_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_monst));
 }
 
-tree_rootp map_all_things_is_snail_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_snail));
-}
-
 tree_rootp map_all_things_is_wall_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_wall));
-}
-
-tree_rootp map_all_things_is_star_yellow_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_star_yellow));
 }
 
 tree_rootp map_all_things_is_xxx1_at (levelp level, int32_t x, int32_t y)
@@ -870,19 +810,9 @@ tree_rootp map_all_things_is_xxx35_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx35));
 }
 
-tree_rootp map_all_things_is_esnail_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_esnail));
-}
-
 tree_rootp map_all_things_is_item_hidden_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_item_hidden));
-}
-
-tree_rootp map_all_things_is_bonus_letter_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_bonus_letter));
 }
 
 tree_rootp map_all_things_is_thing_at (levelp level, int32_t x, int32_t y)
@@ -908,11 +838,6 @@ tree_rootp map_all_things_is_floor_at (levelp level, int32_t x, int32_t y)
 tree_rootp map_all_things_is_exit_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_exit));
-}
-
-tree_rootp map_all_things_is_letter_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_letter));
 }
 
 static thing_templatep map_find_x_at (levelp level,
@@ -960,22 +885,10 @@ thing_templatep map_find_monst_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_monst, w));
 }
 
-thing_templatep map_find_snail_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_snail, w));
-}
-
 thing_templatep map_find_wall_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_wall, w));
-}
-
-thing_templatep map_find_star_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_star_yellow, w));
 }
 
 thing_templatep map_find_xxx1_at (levelp level,
@@ -1164,22 +1077,10 @@ thing_templatep map_find_item_perma_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_xxx35, w));
 }
 
-thing_templatep map_find_esnail_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_esnail, w));
-}
-
 thing_templatep map_find_is_item_hidden_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_item_hidden, w));
-}
-
-thing_templatep map_find_bonus_letter_at (levelp level,
-                                   int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_bonus_letter, w));
 }
 
 thing_templatep map_find_spawns_thing_at (levelp level,
@@ -1210,12 +1111,6 @@ thing_templatep map_find_exit_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_exit, w));
-}
-
-thing_templatep map_find_letter_at (levelp level,
-                                    int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_letter, w));
 }
 
 void map_fixup (levelp level)
@@ -1500,19 +1395,9 @@ uint32_t level_count_is_monst (levelp level)
     return (level_count_is_x(level, thing_template_is_monst));
 }
 
-uint32_t level_count_is_snail (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_snail));
-}
-
 uint32_t level_count_is_wall (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_wall));
-}
-
-uint32_t level_count_is_star_yellow (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_star_yellow));
 }
 
 uint32_t level_count_is_xxx1 (levelp level)
@@ -1680,19 +1565,9 @@ uint32_t level_count_is_xxx35 (levelp level)
     return (level_count_is_x(level, thing_template_is_xxx35));
 }
 
-uint32_t level_count_is_esnail (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_esnail));
-}
-
 uint32_t level_count_is_item_is_hidden (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_item_hidden));
-}
-
-uint32_t level_count_is_bonus_letter (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_bonus_letter));
 }
 
 uint32_t level_count_is_thing (levelp level)
@@ -1718,11 +1593,6 @@ uint32_t level_count_is_floor (levelp level)
 uint32_t level_count_is_exit (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_exit));
-}
-
-uint32_t level_count_is_letter (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_letter));
 }
 
 static tree_rootp map_all_things_is_x (levelp level,
@@ -1801,19 +1671,9 @@ tree_rootp map_all_things_is_monst (levelp level)
     return (map_all_things_is_x(level, thing_template_is_monst));
 }
 
-tree_rootp map_all_things_is_snail (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_snail));
-}
-
 tree_rootp map_all_things_is_wall (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_wall));
-}
-
-tree_rootp map_all_things_is_star_yellow (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_star_yellow));
 }
 
 tree_rootp map_all_things_is_xxx1 (levelp level)
@@ -1986,19 +1846,9 @@ tree_rootp map_all_things_is_xxx35 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_xxx35));
 }
 
-tree_rootp map_all_things_is_esnail (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_esnail));
-}
-
 tree_rootp map_all_things_is_item_hidden (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_item_hidden));
-}
-
-tree_rootp map_all_things_is_bonus_letter (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_bonus_letter));
 }
 
 tree_rootp map_all_things_is_thing (levelp level)
@@ -2024,9 +1874,4 @@ tree_rootp map_all_things_is_floor (levelp level)
 tree_rootp map_all_things_is_exit (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_exit));
-}
-
-tree_rootp map_all_things_is_letter (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_letter));
 }
