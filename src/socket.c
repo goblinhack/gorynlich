@@ -668,7 +668,7 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         total_attempts = no_response + response;
 
         if (total_attempts) {
-            avg_latency = avg_latency /= total_attempts;
+            avg_latency /= total_attempts;
 
             CON("  Quality  : success %2.2f percent, fails %2.2f percent",
 
