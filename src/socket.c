@@ -70,6 +70,10 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
+} __attribute__ ((packed)) msg_leave;
+
+typedef struct {
+    uint8_t type;
     char name[PLAYER_NAME_MAX];
 } __attribute__ ((packed)) msg_name;
 
@@ -308,15 +312,32 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
     uint32_t si;
 
     /*
-     * Find the first free socket.
+     * Reopen?
      */
     for (si = 0; si < MAX_SOCKETS; si++) {
         s = &net.sockets[si];
-        if (s->open) {
-            continue;
-        }
 
-        break;
+        if (!memcmp(&s->remote_ip, &address, sizeof(no_address))) {
+            if (s->open) {
+                return (s);
+            } else {
+                break;
+            }
+        }
+    }
+
+    /*
+     * Find the first free socket.
+     */
+    if (si == MAX_SOCKETS) {
+        for (si = 0; si < MAX_SOCKETS; si++) {
+            s = &net.sockets[si];
+            if (s->open) {
+                continue;
+            }
+
+            break;
+        }
     }
 
     if (si == MAX_SOCKETS) {
@@ -1294,6 +1315,62 @@ void socket_rx_join (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(p->name, msg.name, PLAYER_NAME_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
+}
+
+void socket_tx_leave (socketp s)
+{
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
+    /*
+     * Refresh the server with our name.
+     */
+    if (!socket_get_client(s)) {
+        return;
+    }
+
+    if (!s->connected) {
+        return;
+    }
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_leave msg = {0};
+    msg.type = MSG_TYPE_LEAVE;
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        LOG("Tx leave [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
+    }
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
+    socket_tx_msg(s, packet);
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_leave (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_leave msg = {0};
+
+    if (packet->len != sizeof(msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Rx leave [from %s]", tmp);
+        myfree(tmp);
+    }
+
+    socket_disconnect(s);
 }
 
 void socket_tx_shout (socketp s, const char *txt)

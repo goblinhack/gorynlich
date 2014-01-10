@@ -70,11 +70,6 @@ boolean wid_game_init (void)
 {
     wid_game_init_done = true;
 
-    if (is_server) {
-        if (!is_client) {
-            wid_game_visible();
-        }
-    }
     return (true);
 }
 
