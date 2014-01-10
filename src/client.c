@@ -27,8 +27,18 @@ static boolean client_shout(tokens_t *tokens, void *context);
 static boolean client_tell(tokens_t *tokens, void *context);
 static boolean client_players_show(tokens_t *tokens, void *context);
 static boolean client_join(tokens_t *tokens, void *context);
+static boolean client_leave(tokens_t *tokens, void *context);
+static boolean client_open(tokens_t *tokens, void *context);
+static boolean client_close(tokens_t *tokens, void *context);
+static boolean client_socket_leave(void);
+static boolean client_socket_shout(char *shout);
+static boolean client_socket_tell(char *from, char *to, char *msg);
+static boolean client_socket_join(char *host, char *port);
+static boolean client_socket_set_name(char *name);
 
 aplayer client_players[MAX_SOCKETS];
+static char client_name[PLAYER_NAME_MAX];
+static boolean joined;
 
 boolean client_init (void)
 {
@@ -59,8 +69,17 @@ boolean client_init (void)
     command_add(client_set_name, "set name [A-Za-z0-9_-]*",
                 "set player name");
 
-    command_add(client_join, "join [A-Za-z0-9_-]*",
-                "join game as named player");
+    command_add(client_open, "open [A-Za-z0-9_-.]* [0-9_-]*",
+                "loosely connect to server <ip> <port>");
+
+    command_add(client_close, "close [A-Za-z0-9_-.]* [0-9_-]*",
+                "close a connect to server <ip> <port>");
+
+    command_add(client_join, "join [A-Za-z0-9_-.]* [0-9_-]*",
+                "join server <ip> <port>");
+
+    command_add(client_leave, "leave current server game",
+                "leave game");
 
     command_add(client_shout, "shout [A-Za-z0-9_-]*",
                 "shout to players");
@@ -71,7 +90,7 @@ boolean client_init (void)
     command_add(client_players_show, "show players", 
                 "show all players state");
 
-    socket_set_name(client_connect_socket, "nameless");
+    strncpy(client_name, "nameless", sizeof(client_name) - 1);
 
     client_init_done = true;
 
@@ -125,7 +144,7 @@ void client_tick (void)
 /*
  * User has entered a command, run it
  */
-boolean client_set_name (tokens_t *tokens, void *context)
+static boolean client_set_name (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
@@ -139,7 +158,220 @@ boolean client_set_name (tokens_t *tokens, void *context)
         return (false);
     }
 
-    socket_set_name(client_connect_socket, s);
+    boolean r = client_socket_set_name(s);
+
+    return (r);
+}
+
+static boolean client_socket_open (char *host, char *port)
+{
+    uint32_t portno;
+    socketp s;
+
+    if (!host || !*host) {
+        host = SERVER_DEFAULT_HOST;
+    }
+
+    if (port && *port) {
+        portno = atoi(port);
+    } else {
+        portno = SERVER_DEFAULT_PORT;
+    }
+
+    if (SDLNet_ResolveHost(&server_address, host, portno)) {
+        ERR("cannot resolve host %s port %u", host, portno);
+        return (false);
+    }
+
+    /*
+     * Connector.
+     */
+    s = socket_connect(server_address, false /* client side */);
+    if (!s) {
+        WARN("Client failed to connect");
+        return (false);
+    }
+
+    client_connect_socket = s;
+
+    LOG("Client connecting to %s", socket_get_remote_logname(s));
+    LOG("                from %s", socket_get_local_logname(s));
+
+    return (true);
+}
+
+static boolean client_socket_close (char *host, char *port)
+{
+    uint32_t portno;
+    socketp s;
+
+    if (!host && !port && client_connect_socket) {
+        s = client_connect_socket;
+    } else {
+        if (!host || !*host) {
+            host = SERVER_DEFAULT_HOST;
+        }
+
+        if (port && *port) {
+            portno = atoi(port);
+        } else {
+            portno = SERVER_DEFAULT_PORT;
+        }
+
+        if (SDLNet_ResolveHost(&server_address, host, portno)) {
+            ERR("cannot resolve host %s port %u", host, portno);
+            return (false);
+        }
+
+        /*
+        * Connector.
+        */
+        s = socket_find_remote_ip(server_address);
+        if (!s) {
+            WARN("Client failed to connect");
+            return (false);
+        }
+    }
+
+    LOG("Client disconnecting %s", socket_get_remote_logname(s));
+    LOG("                from %s", socket_get_local_logname(s));
+
+    if (joined) {
+        socket_tx_leave(client_connect_socket);
+    }
+
+    client_socket_leave();
+
+    socket_disconnect(s);
+
+    return (true);
+}
+
+static boolean client_socket_join (char *host, char *port)
+{
+    uint32_t portno;
+    socketp s;
+
+    if (!host && !port && client_connect_socket) {
+        s = client_connect_socket;
+    } else {
+        if (!host || !*host) {
+            host = SERVER_DEFAULT_HOST;
+        }
+
+        if (port && *port) {
+            portno = atoi(port);
+        } else {
+            portno = SERVER_DEFAULT_PORT;
+        }
+
+        if (SDLNet_ResolveHost(&server_address, host, portno)) {
+            ERR("cannot resolve host %s port %u", host, portno);
+            return (false);
+        }
+
+        /*
+         * Connector.
+         */
+        s = socket_connect(server_address, false /* client side */);
+        if (!s) {
+            WARN("Client failed to connect");
+            return (false);
+        }
+
+        client_connect_socket = s;
+    }
+
+    socket_set_name(client_connect_socket, client_name);
+
+    socket_tx_join(client_connect_socket);
+
+    LOG("Client joining %s", socket_get_remote_logname(s));
+    LOG("          from %s", socket_get_local_logname(s));
+
+    joined = true;
+
+    return (true);
+}
+
+static boolean client_socket_leave (void)
+{
+    if (!client_connect_socket) {
+        ERR("No open socket to leave with");
+        return (false);
+    }
+
+    LOG("Client leaving to %s", 
+        socket_get_remote_logname(client_connect_socket));
+
+    socket_tx_leave(client_connect_socket);
+
+    client_connect_socket = 0;
+
+    joined = true;
+
+    return (true);
+}
+
+static boolean client_socket_shout (char *shout)
+{
+    if (!client_connect_socket) {
+        ERR("No open socket to name");
+        return (false);
+    }
+
+    if (!shout || !*shout) {
+        ERR("no message");
+        return (false);
+    }
+
+    socket_tx_shout(client_connect_socket, shout);
+
+    return (true);
+}
+
+static boolean client_socket_tell (char *from, char *to, char *msg)
+{
+    if (!client_connect_socket) {
+        ERR("No open socket to name");
+        return (false);
+    }
+
+    if (!from || !*from) {
+        ERR("no sender");
+        return (false);
+    }
+
+    if (!to || !*to) {
+        ERR("no recipient");
+        return (false);
+    }
+    if (!msg || !*msg) {
+        ERR("no message");
+        return (false);
+    }
+
+    socket_tx_tell(client_connect_socket, from, to, msg);
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+static boolean client_socket_set_name (char *name)
+{
+    if (!client_connect_socket) {
+        ERR("No open socket to name");
+        return (false);
+    }
+
+    if (!name || !*name) {
+        ERR("need to set a name");
+        return (false);
+    }
+
+    socket_set_name(client_connect_socket, name);
 
     CON("Client name set to \"%s\"", socket_get_name(client_connect_socket));
 
@@ -149,22 +381,50 @@ boolean client_set_name (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
+boolean client_open (tokens_t *tokens, void *context)
+{
+    char *host = tokens->args[1];
+    char *port = tokens->args[2];
+
+    boolean r = client_socket_open(host, port);
+
+    return (r);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean client_close (tokens_t *tokens, void *context)
+{
+    char *host = tokens->args[1];
+    char *port = tokens->args[2];
+
+    boolean r = client_socket_close(host, port);
+
+    return (r);
+}
+
+/*
+ * User has entered a command, run it
+ */
 boolean client_join (tokens_t *tokens, void *context)
 {
-    char *s = tokens->args[1];
+    char *host = tokens->args[1];
+    char *port = tokens->args[2];
 
-    if (!client_connect_socket) {
-        ERR("No open socket to join with");
-        return (false);
-    }
+    boolean r = client_socket_join(host, port);
 
-    if (s && *s) {
-        socket_set_name(client_connect_socket, s);
-    }
+    return (r);
+}
 
-    socket_tx_join(client_connect_socket);
+/*
+ * User has entered a command, run it
+ */
+boolean client_leave (tokens_t *tokens, void *context)
+{
+    boolean r = client_socket_leave();
 
-    return (true);
+    return (r);
 }
 
 /*
@@ -177,11 +437,6 @@ boolean client_shout (tokens_t *tokens, void *context)
     char *tmp;
 
     tmp = 0;
-
-    if (!client_connect_socket) {
-        ERR("No open socket to name");
-        return (false);
-    }
 
     for (;;) {
 
@@ -206,11 +461,11 @@ boolean client_shout (tokens_t *tokens, void *context)
 
     strncpy(shout, tmp, sizeof(shout) - 1);
 
-    socket_tx_shout(client_connect_socket, shout);
+    boolean r = client_socket_shout(shout);
 
     myfree(tmp);
 
-    return (true);
+    return (r);
 }
 
 /*
@@ -225,11 +480,6 @@ boolean client_tell (tokens_t *tokens, void *context)
     char *tmp;
 
     tmp = 0;
-
-    if (!client_connect_socket) {
-        ERR("No open socket to name");
-        return (false);
-    }
 
     char *s = tokens->args[i++];
     if (!s || !*s) {
@@ -260,14 +510,11 @@ boolean client_tell (tokens_t *tokens, void *context)
         return (false);
     }
 
-    strncpy(msg, tmp, sizeof(msg) - 1);
-    strncpy(from, socket_get_name(client_connect_socket), sizeof(from) - 1);
-
-    socket_tx_tell(client_connect_socket, from, to, msg);
+    boolean r = client_socket_tell(from, to, msg);
 
     myfree(tmp);
 
-    return (true);
+    return (r);
 }
 
 static void client_poll (void)
@@ -319,8 +566,6 @@ static void client_poll (void)
 
         case MSG_TYPE_PING:
             socket_rx_ping(s, packet, data);
-
-            socket_tx_name(s);
             break;
 
         case MSG_TYPE_SHOUT:
