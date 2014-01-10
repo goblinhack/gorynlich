@@ -16,6 +16,7 @@
 #include "slre.h"
 #include "command.h"
 #include "player.h"
+#include "wid_game_map.h"
 
 static boolean server_init_done;
 static socketp server_socket;
@@ -64,6 +65,18 @@ void server_fini (void)
     if (server_init_done) {
         server_init_done = false;
     }
+}
+
+static void server_rx_join (socketp s)
+{
+    LOG("join");
+    wid_game_visible();
+}
+
+static void server_rx_leave (void)
+{
+    LOG("leave");
+    wid_game_map_wid_destroy();
 }
 
 static void server_poll (void)
@@ -132,6 +145,12 @@ static void server_poll (void)
 
         case MSG_TYPE_JOIN:
             socket_rx_join(s, packet, data);
+            server_rx_join(s);
+            break;
+
+        case MSG_TYPE_LEAVE:
+            socket_rx_leave(s, packet, data);
+            server_rx_leave();
             break;
 
         case MSG_TYPE_SHOUT:
