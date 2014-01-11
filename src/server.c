@@ -153,6 +153,10 @@ static void server_poll (void)
             server_rx_leave();
             break;
 
+        case MSG_TYPE_CLOSE:
+            socket_rx_close(s, packet, data);
+            break;
+
         case MSG_TYPE_SHOUT:
             socket_rx_shout(s, packet, data);
             break;

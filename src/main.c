@@ -386,30 +386,30 @@ static void find_file_locations (void)
 
 static void usage (void)
 {
-    fprintf(MY_STDERR, "Gorynlich, options:\n");
-    fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --server      run as a server\n");
-    fprintf(MY_STDERR, "        -server\n");
-    fprintf(MY_STDERR, "        -s\n");
-    fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --connect     run as a client\n");
-    fprintf(MY_STDERR, "        -connect\n");
-    fprintf(MY_STDERR, "        -c\n");
-    fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --nodisplay   run with no display\n");
-    fprintf(MY_STDERR, "        -nodisplay\n");
-    fprintf(MY_STDERR, "        -n\n");
-    fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --host        hostname or ip of server\n");
-    fprintf(MY_STDERR, "        -host\n");
-    fprintf(MY_STDERR, "        -h\n");
-    fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "        --port        port of server, default %d\n",
+    LOG("Gorynlich, options:");
+    LOG(" ");
+    LOG("        --server      run as a server");
+    LOG("        -server");
+    LOG("        -s");
+    LOG(" ");
+    LOG("        --connect     run as a client");
+    LOG("        -connect");
+    LOG("        -c");
+    LOG(" ");
+    LOG("        --nodisplay   run with no display");
+    LOG("        -nodisplay");
+    LOG("        -n");
+    LOG(" ");
+    LOG("        --host        hostname or ip of server");
+    LOG("        -host");
+    LOG("        -h");
+    LOG(" ");
+    LOG("        --port        port of server, default %d",
             SERVER_DEFAULT_PORT);
-    fprintf(MY_STDERR, "        -port\n");
-    fprintf(MY_STDERR, "        -p\n");
-    fprintf(MY_STDERR, "\n");
-    fprintf(MY_STDERR, "Written by Neil McGill, goblinhack@gmail.com\n");
+    LOG("        -port");
+    LOG("        -p");
+    LOG(" ");
+    LOG("Written by Neil McGill, goblinhack@gmail.com");
 }
 
 static void parse_args (int32_t argc, char *argv[])
@@ -481,7 +481,7 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (!strcmp(argv[i], "--port") ||
             !strcmp(argv[i], "-port") ||
-            !strcmp(argv[i], "-s")) {
+            !strcmp(argv[i], "-p")) {
 
             port = atoi(argv[i + 1]);
             i++;

@@ -18,9 +18,13 @@
 #include "player.h"
 #include "string.h"
 
+/*
+ * Which socket we have actually joined on.
+ */
+static socketp client_joined_server;
+
 static void client_socket_tx_ping(void);
 static boolean client_init_done;
-static socketp client_connect_socket;
 static void client_poll(void);
 static boolean client_set_name(tokens_t *tokens, void *context);
 static boolean client_shout(tokens_t *tokens, void *context);
@@ -50,7 +54,7 @@ boolean client_init (void)
         return (true);
     }
 
-    socketp s;
+    socketp s = 0;
 
     /*
      * Connector.
@@ -60,8 +64,6 @@ boolean client_init (void)
         WARN("Client failed to connect");
         return (false);
     }
-
-    client_connect_socket = s;
 
     LOG("Client connecting to   %s", socket_get_remote_logname(s));
     LOG("                  from %s", socket_get_local_logname(s));
@@ -115,13 +117,23 @@ static void client_socket_tx_ping (void)
         return;
     }
 
-    if (!client_connect_socket) {
-        return;
+    uint32_t si;
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socketp s = socket_get(si);
+        if (!s) {
+            continue;
+        }
+
+        if (!socket_get_client(s)) {
+            continue;
+        }
+
+        ts = time_get_time_cached();
+        socket_tx_ping(s, seq, ts);
     }
 
-    ts = time_get_time_cached();
-
-    socket_tx_ping(client_connect_socket, seq++, ts);
+    seq++;
 
     /*
      * Every 10 seconds check for dead peers.
@@ -148,11 +160,6 @@ static boolean client_set_name (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
-    if (!client_connect_socket) {
-        ERR("No open socket to name");
-        return (false);
-    }
-
     if (!s || !*s) {
         ERR("need to set a name");
         return (false);
@@ -166,7 +173,7 @@ static boolean client_set_name (tokens_t *tokens, void *context)
 static boolean client_socket_open (char *host, char *port)
 {
     uint32_t portno;
-    socketp s;
+    socketp s = 0;
 
     if (!host || !*host) {
         host = SERVER_DEFAULT_HOST;
@@ -192,8 +199,6 @@ static boolean client_socket_open (char *host, char *port)
         return (false);
     }
 
-    client_connect_socket = s;
-
     LOG("Client connecting to %s", socket_get_remote_logname(s));
     LOG("                from %s", socket_get_local_logname(s));
 
@@ -203,10 +208,26 @@ static boolean client_socket_open (char *host, char *port)
 static boolean client_socket_close (char *host, char *port)
 {
     uint32_t portno;
-    socketp s;
+    socketp s = 0;
 
-    if (!host && !port && client_connect_socket) {
-        s = client_connect_socket;
+    if (!host && !port) {
+        uint32_t si;
+
+        for (si = 0; si < MAX_SOCKETS; si++) {
+            s = socket_get(si);
+            if (!s) {
+                continue;
+            }
+
+            if (socket_get_open(s)) {
+                break;
+            }
+        }
+
+        if (si == MAX_SOCKETS) {
+            ERR("do not know which socket to close");
+            return (false);
+        }
     } else {
         if (!host || !*host) {
             host = SERVER_DEFAULT_HOST;
@@ -224,8 +245,8 @@ static boolean client_socket_close (char *host, char *port)
         }
 
         /*
-        * Connector.
-        */
+         * Connector.
+         */
         s = socket_find_remote_ip(server_address);
         if (!s) {
             WARN("Client failed to connect");
@@ -233,14 +254,14 @@ static boolean client_socket_close (char *host, char *port)
         }
     }
 
+    if (client_joined_server == s) {
+        client_socket_leave();
+    }
+
     LOG("Client disconnecting %s", socket_get_remote_logname(s));
     LOG("                from %s", socket_get_local_logname(s));
 
-    if (joined) {
-        socket_tx_leave(client_connect_socket);
-    }
-
-    client_socket_leave();
+    socket_tx_close(s);
 
     socket_disconnect(s);
 
@@ -249,11 +270,32 @@ static boolean client_socket_close (char *host, char *port)
 
 static boolean client_socket_join (char *host, char *port)
 {
-    uint32_t portno;
-    socketp s;
+    if (client_joined_server) {
+        ERR("Leave the current server first");
+        return (false);
+    }
 
-    if (!host && !port && client_connect_socket) {
-        s = client_connect_socket;
+    uint32_t portno;
+    socketp s = 0;
+
+    if (!host && !port) {
+        uint32_t si;
+
+        for (si = 0; si < MAX_SOCKETS; si++) {
+            s = socket_get(si);
+            if (!s) {
+                continue;
+            }
+
+            if (socket_get_open(s)) {
+                break;
+            }
+        }
+
+        if (si == MAX_SOCKETS) {
+            ERR("do not know which socket to join on");
+            return (false);
+        }
     } else {
         if (!host || !*host) {
             host = SERVER_DEFAULT_HOST;
@@ -278,16 +320,16 @@ static boolean client_socket_join (char *host, char *port)
             WARN("Client failed to connect");
             return (false);
         }
-
-        client_connect_socket = s;
     }
 
-    socket_set_name(client_connect_socket, client_name);
+    socket_set_name(s, client_name);
 
-    socket_tx_join(client_connect_socket);
+    socket_tx_join(s);
 
     LOG("Client joining %s", socket_get_remote_logname(s));
     LOG("          from %s", socket_get_local_logname(s));
+
+    client_joined_server = s;
 
     joined = true;
 
@@ -296,17 +338,19 @@ static boolean client_socket_join (char *host, char *port)
 
 static boolean client_socket_leave (void)
 {
-    if (!client_connect_socket) {
-        ERR("No open socket to leave with");
+    if (!client_joined_server) {
+        ERR("Join a server first");
         return (false);
     }
 
-    LOG("Client leaving to %s", 
-        socket_get_remote_logname(client_connect_socket));
+    LOG("Client leaving %s", 
+        socket_get_remote_logname(client_joined_server));
 
-    socket_tx_leave(client_connect_socket);
+    socket_set_name(client_joined_server, 0);
 
-    client_connect_socket = 0;
+    socket_tx_leave(client_joined_server);
+
+    client_joined_server = 0;
 
     joined = true;
 
@@ -315,8 +359,8 @@ static boolean client_socket_leave (void)
 
 static boolean client_socket_shout (char *shout)
 {
-    if (!client_connect_socket) {
-        ERR("No open socket to name");
+    if (!client_joined_server) {
+        ERR("Join a server first");
         return (false);
     }
 
@@ -325,15 +369,15 @@ static boolean client_socket_shout (char *shout)
         return (false);
     }
 
-    socket_tx_shout(client_connect_socket, shout);
+    socket_tx_shout(client_joined_server, shout);
 
     return (true);
 }
 
 static boolean client_socket_tell (char *from, char *to, char *msg)
 {
-    if (!client_connect_socket) {
-        ERR("No open socket to name");
+    if (!client_joined_server) {
+        ERR("Join a server first");
         return (false);
     }
 
@@ -351,7 +395,7 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
         return (false);
     }
 
-    socket_tx_tell(client_connect_socket, from, to, msg);
+    socket_tx_tell(client_joined_server, from, to, msg);
 
     return (true);
 }
@@ -361,8 +405,8 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
  */
 static boolean client_socket_set_name (char *name)
 {
-    if (!client_connect_socket) {
-        ERR("No open socket to name");
+    if (!client_joined_server) {
+        ERR("Join a server first");
         return (false);
     }
 
@@ -371,9 +415,10 @@ static boolean client_socket_set_name (char *name)
         return (false);
     }
 
-    socket_set_name(client_connect_socket, name);
+    CON("Client name set to \"%s\"", 
+        socket_get_name(client_joined_server));
 
-    CON("Client name set to \"%s\"", socket_get_name(client_connect_socket));
+    socket_set_name(client_joined_server, name);
 
     return (true);
 }
@@ -519,73 +564,85 @@ boolean client_tell (tokens_t *tokens, void *context)
 
 static void client_poll (void)
 {
-    socketp s = client_connect_socket;
-    if (!s) {
-        return;
-    }
+    uint32_t si;
 
-    if (!socket_get_socklist(s)) {
-        return;
-    }
-
-    int waittime = 0;
-    int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
-    if (numready <= 0) {
-        return;
-    }
-
-    UDPpacket *packet;      
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
-        return;
-    }
-
-    int i;
-    for (i = 0; i < numready; i++) {
-        if (!SDLNet_SocketReady(socket_get_udp_socket(s))) {
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        socketp s = socket_get(si);
+        if (!s) {
             continue;
         }
 
-        int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
-        if (paks != 1) {
-            ERR("Pak rx failed: %s", SDLNet_GetError());
+        if (!socket_get_open(s)) {
             continue;
         }
 
-        uint8_t *data = packet->data;
-        msg_type type = *data++;
-
-        socket_count_inc_pak_rx(s, type);
-
-        switch (type) {
-        case MSG_TYPE_PONG:
-            socket_rx_pong(s, packet, data);
-            break;
-
-        case MSG_TYPE_PING:
-            socket_rx_ping(s, packet, data);
-            break;
-
-        case MSG_TYPE_SHOUT:
-            socket_rx_shout(s, packet, data);
-            break;
-
-        case MSG_TYPE_TELL:
-            socket_rx_tell(s, packet, data);
-            break;
-
-        case MSG_TYPE_PLAYERS_ALL:
-            socket_rx_players_all(s, packet, data, &client_players[0]);
-            break;
-
-        default:
-            ERR("Unknown message type received [%u]", type);
+        if (!socket_get_client(s)) {
+            continue;
         }
-    }
 
-    SDLNet_FreePacket(packet);
+        if (!socket_get_socklist(s)) {
+            continue;
+        }
+
+        int waittime = 0;
+        int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
+        if (numready <= 0) {
+            continue;
+        }
+
+        UDPpacket *packet;      
+
+        packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+        if (!packet) {
+            ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
+            continue;
+        }
+
+        int i;
+        for (i = 0; i < numready; i++) {
+            if (!SDLNet_SocketReady(socket_get_udp_socket(s))) {
+                continue;
+            }
+
+            int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
+            if (paks != 1) {
+                ERR("Pak rx failed: %s", SDLNet_GetError());
+                continue;
+            }
+
+            uint8_t *data = packet->data;
+            msg_type type = *data++;
+
+            socket_count_inc_pak_rx(s, type);
+
+            switch (type) {
+            case MSG_TYPE_PONG:
+                socket_rx_pong(s, packet, data);
+                break;
+
+            case MSG_TYPE_PING:
+                socket_rx_ping(s, packet, data);
+                break;
+
+            case MSG_TYPE_SHOUT:
+                socket_rx_shout(s, packet, data);
+                break;
+
+            case MSG_TYPE_TELL:
+                socket_rx_tell(s, packet, data);
+                break;
+
+            case MSG_TYPE_PLAYERS_ALL:
+                socket_rx_players_all(s, packet, data, &client_players[0]);
+                break;
+
+            default:
+                ERR("Unknown message type received [%u]", type);
+            }
+        }
+
+        SDLNet_FreePacket(packet);
+    }
 }
 
 /*
