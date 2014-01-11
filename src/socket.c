@@ -74,6 +74,10 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
+} __attribute__ ((packed)) msg_close;
+
+typedef struct {
+    uint8_t type;
     char name[PLAYER_NAME_MAX];
 } __attribute__ ((packed)) msg_name;
 
@@ -645,6 +649,12 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
             s->tx_msg[MSG_TYPE_TELL], s->rx_msg[MSG_TYPE_TELL]);
         CON("  Updates  : tx %u, rx %u",
             s->tx_msg[MSG_TYPE_PLAYERS_ALL], s->rx_msg[MSG_TYPE_PLAYERS_ALL]);
+        CON("  Join     : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_JOIN], s->rx_msg[MSG_TYPE_JOIN]);
+        CON("  Leave    : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_LEAVE], s->rx_msg[MSG_TYPE_LEAVE]);
+        CON("  Close    : tx %u, rx %u",
+            s->tx_msg[MSG_TYPE_CLOSE], s->rx_msg[MSG_TYPE_CLOSE]);
 
         /*
          * Ping stats.
@@ -910,7 +920,11 @@ const char *socket_get_name (const socketp s)
 
 void socket_set_name (socketp s, const char *name)
 {
-    strncpy(s->name, name, sizeof(s->name) - 1);
+    if (!name) {
+        memset(s->name, 0, sizeof(s->name));
+    } else {
+        strncpy(s->name, name, sizeof(s->name) - 1);
+    }
 }
 
 const char * socket_get_local_logname (const socketp s)
@@ -1367,6 +1381,62 @@ void socket_rx_leave (socketp s, UDPpacket *packet, uint8_t *data)
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx leave [from %s]", tmp);
+        myfree(tmp);
+    }
+
+    socket_set_player(s, 0);
+}
+
+void socket_tx_close (socketp s)
+{
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
+    /*
+     * Refresh the server with our name.
+     */
+    if (!socket_get_client(s)) {
+        return;
+    }
+
+    if (!s->connected) {
+        return;
+    }
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_close msg = {0};
+    msg.type = MSG_TYPE_CLOSE;
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    if (debug_socket_connect_enabled) {
+        LOG("Tx close [to %s]", socket_get_remote_logname(s));
+    }
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
+    socket_tx_msg(s, packet);
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_close (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_close msg = {0};
+
+    if (packet->len != sizeof(msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    if (debug_socket_connect_enabled) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Rx close [from %s]", tmp);
         myfree(tmp);
     }
 
