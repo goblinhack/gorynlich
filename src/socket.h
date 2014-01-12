@@ -93,6 +93,16 @@ extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_players_all(void);
 extern void socket_rx_players_all(socketp s, UDPpacket *packet, uint8_t *data,
                                   aplayerp players);
+extern boolean sockets_quality_check(void);
+extern uint32_t socket_get_quality(socketp s);
+extern uint32_t socket_get_avg_latency(socketp s);
+extern uint32_t socket_get_min_latency(socketp s);
+extern uint32_t socket_get_max_latency(socketp s);
+extern uint32_t socket_get_rx(socketp s);
+extern uint32_t socket_get_tx(socketp s);
+extern uint32_t socket_get_rx_error(socketp s);
+extern uint32_t socket_get_tx_error(socketp s);
+extern uint32_t socket_get_rx_bad_msg(socketp s);
 
 /*
  * Seemingly harmless, but we need this to read the 6 byte packet address

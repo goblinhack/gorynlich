@@ -39,10 +39,8 @@
 #include "wid_console.h"
 #include "wid_editor.h"
 
-static boolean level_command_level_end(tokens_t *tokens, void *context);
 static boolean level_command_dead(tokens_t *tokens, void *context);
 static boolean level_init_done;
-static void level_destroy_callback(widp wid);
 static void level_start_timers(levelp level);
 boolean game_over;
 
@@ -58,8 +56,6 @@ tree_rootp timers;
 /*
  * Used so we only do the slow countdown first time on each level.
  */
-static uint32_t level_no_first_time;
-
 static boolean level_command_lives (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
@@ -127,17 +123,16 @@ boolean level_init (void)
         command_add(level_command_dead, 
                     "dead", "internal command for thing suicide");
 
-        command_add(level_command_level_end, 
-                    "level end", "internal command to end the level");
-
+        if (0) {
         command_add(level_command_god_mode, 
-                    "set godmode [01]", "enable/disable god mode");
+                    "set godmode [01]", "TBD enable/disable god mode");
 
         command_add(level_command_play, 
-                    "play [123456789]+", "play level x");
+                    "play [123456789]+", "TBD play level x");
 
         command_add(level_command_lives, 
-                    "set lives [123456789]+", "set player number of lives");
+                    "set lives [123456789]+", "TBD set player number of lives");
+        }
     }
 
     return (true);
@@ -148,31 +143,6 @@ void level_fini (void)
     if (level_init_done) {
         level_init_done = false;
     }
-}
-
-/*
- * User has entered a command, run it
- */
-static boolean level_command_level_end (tokens_t *tokens, void *context)
-{
-    widp w;
-    thingp t;
-    levelp level;
-
-    t = (typeof(t)) context;
-    verify(t);
-
-    level = thing_level(t);
-    verify(level);
-
-    w = wid_button_large_transient("%%fg=red$Hurry up!", 0);
-    wid_set_no_shape(w);
-    wid_set_text_outline(w, true);
-    level_set_is_hurryup(level, true);
-
-    wid_set_client_context(w, (void*) level);
-
-    return (true);
 }
 
 /*
@@ -223,39 +193,6 @@ static boolean level_command_dead (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean wid_level_game_over_common (widp w)
-{
-    if (sdl_is_exiting()) {
-        return (false);
-    }
-
-    level_destroy_callback(w);
-
-    wid_destroy(&w);
-
-    music_halt();
-
-    return (true);
-}
-
-static boolean wid_level_game_over_mouse_down (widp w,
-                                               int32_t x,
-                                               int32_t y,
-                                               uint32_t button)
-{
-    wid_level_game_over_common(w);
-
-    return (true);
-}
-
-static boolean wid_level_game_over_key_down_event (widp w,
-                                                   const SDL_KEYSYM *key)
-{
-    wid_level_game_over_common(w);
-
-    return (true);
-}
-
 levelp level_new (widp map, uint32_t level_no)
 {
     levelp level;
@@ -273,7 +210,7 @@ levelp level_new (widp map, uint32_t level_no)
     return (level);
 }
 
-void level_destroy_immediate (levelp *plevel)
+void level_destroy (levelp *plevel)
 {
     levelp level;
 
@@ -294,6 +231,11 @@ void level_destroy_immediate (levelp *plevel)
     if (level == level_game) {
         level_game = 0;
     }
+
+    /*
+     * Kill all humans!
+     */
+    things_level_destroyed(level);
 
     LEVEL_LOG(level, "destroy now {");
 
@@ -316,177 +258,6 @@ void level_destroy_immediate (levelp *plevel)
     wid_game_map_wid_destroy();
 
     myfree(level);
-}
-
-static void level_destroy_callback (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    LEVEL_LOG(level, "destroy callback");
-
-    /*
-     * Used so we only do the slow countdown first time on each level.
-     */
-    level_no_first_time = 0;
-
-    /*
-     * Kill all humans!
-     */
-    things_level_destroyed(level);
-
-    level_destroy_immediate(&level);
-
-    /*
-     * Back to the main menu.
-     */
-    wid_game_hide();
-}
-
-widp wid_game_over;
-
-static void wid_level_game_over_hiscore_done (widp w)
-{
-    wid_level_game_over_common(wid_game_over);
-}
-
-void level_destroy (levelp level)
-{
-    LEVEL_LOG(level, "destroy on callback");
-
-    /*
-     * Make a transparent layer over the top of the level to grab input.
-     */
-    widp w = wid_game_over = wid_button_large("%%fg=red$Game Over");
-    wid_set_no_shape(w);
-    wid_set_client_context(w, level);
-    wid_set_on_mouse_down(w, wid_level_game_over_mouse_down);
-    wid_set_on_key_down(w, wid_level_game_over_key_down_event);
-
-    wid_game_map_score_update(level);
-
-    widp h = hiscore_try_to_add(thing_score(player));
-    if (h) {
-        wid_move_to_pct_centered(w, 0.5, 0.2);
-
-        wid_set_on_destroy(h, wid_level_game_over_hiscore_done);
-
-        music_play_hiscore();
-    } else {
-        wid_focus_lock(w);
-    }
-}
-
-static void level_last (levelp level)
-{
-    LEVEL_LOG(level, "destroy on callback");
-
-    /*
-     * Make a transparent layer over the top of the level to grab input.
-     */
-    widp w = wid_game_over = wid_button_large("%%fg=red$The End...");
-    wid_set_no_shape(w);
-    wid_set_client_context(w, level);
-    wid_set_on_mouse_down(w, wid_level_game_over_mouse_down);
-    wid_set_on_key_down(w, wid_level_game_over_key_down_event);
-
-    wid_game_map_score_update(level);
-
-    music_play_hiscore();
-
-    widp h = hiscore_try_to_add(thing_score(player));
-    if (h) {
-        wid_move_to_pct_centered(w, 0.5, 0.2);
-
-        wid_set_on_destroy(h, wid_level_game_over_hiscore_done);
-
-    } else {
-        wid_focus_lock(w);
-    }
-
-    game_over = true;
-}
-
-static void level_try_again_callback (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    LEVEL_LOG(level, "restart callback");
-
-    /*
-     * Restart all humans!
-     */
-    things_level_restarted(level);
-
-    level_destroy_immediate(&level);
-
-    wid_game_visible();
-}
-
-void level_restart (levelp level)
-{
-    LEVEL_LOG(level, "restart on callback");
-
-    widp w = wid_button_large_transient("%%fg=green$Try again", 1500);
-    wid_set_no_shape(w);
-    wid_set_on_destroy(w, level_try_again_callback);
-    wid_set_client_context(w, level);
-    wid_focus_lock(w);
-
-    level_set_is_paused(level, true);
-
-    wid_game_map_score_update(level);
-}
-
-static void level_completed_callback (widp wid)
-{
-    if (sdl_is_exiting()) {
-        return;
-    }
-
-    levelp level;
-
-    level = (typeof(level)) wid_get_client_context(wid);
-    verify(level);
-
-    LEVEL_LOG(level, "restart callback");
-
-    /*
-     * Restart all humans!
-     */
-    things_level_restarted(level);
-
-    level_destroy_immediate(&level);
-
-    wid_game_visible();
-}
-
-void level_completed (levelp level)
-{
-    LEVEL_LOG(level, "restart on callback");
-
-    widp w = wid_button_large_transient("%%fg=green$Level completed", 1500);
-    wid_set_no_shape(w);
-    wid_set_on_destroy(w, level_completed_callback);
-    wid_set_client_context(w, level);
-    wid_focus_lock(w);
-
-    level_set_is_paused(level, true);
-
-    wid_game_map_score_update(level);
 }
 
 levelp level_load (uint32_t level_no, widp wid)
@@ -522,7 +293,6 @@ levelp level_load (uint32_t level_no, widp wid)
         (void) wid_popup_error(popup_str);
         myfree(popup_str);
          */
-        level_last(level);
         myfree(dir_and_file);
 
         return (0);
@@ -544,8 +314,6 @@ levelp level_load (uint32_t level_no, widp wid)
     }
 
     myfree(dir_and_file);
-
-    wid_game_map_score_update(level);
 
     level_set_walls(level);
     level_set_monst_walls(level);
@@ -1367,4 +1135,5 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
     GET_KET(ctx);
 
     return (rc);
+
 }

@@ -41,8 +41,6 @@ uint32_t thing_level_no(thingp);
 void thing_set_level_no(thingp, uint32_t level);
 levelp thing_level(thingp);
 void thing_set_level(thingp, levelp level);
-uint32_t thing_lives(thingp);
-void thing_set_lives(thingp, uint32_t lives);
 uint32_t thing_score(thingp);
 void thing_set_score(thingp, uint32_t score);
 uint32_t thing_score_pump(thingp);

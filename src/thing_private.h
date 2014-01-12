@@ -33,11 +33,6 @@ typedef struct thing_ {
     levelp level;
 
     /*
-     * How many to go till the end?!
-     */
-    uint32_t lives;
-
-    /*
      * Last death reason.
      */
     char *dead_reason;

@@ -48,8 +48,6 @@ widp wid_name_title;
 widp wid_title;
 widp wid_level;
 
-static boolean wid_game_init_done;
-
 uint32_t tile_width;
 uint32_t tile_height;
 
@@ -68,8 +66,6 @@ static void wid_game_map_set_thing_template (widp w, thing_templatep t)
 
 boolean wid_game_init (void)
 {
-    wid_game_init_done = true;
-
     return (true);
 }
 
@@ -77,11 +73,7 @@ void wid_game_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    if (wid_game_init_done) {
-        wid_game_init_done = false;
-
-        wid_game_map_wid_destroy();
-    }
+    wid_game_map_wid_destroy();
 }
 
 void wid_game_hide (void)
@@ -219,7 +211,7 @@ void wid_game_map_wid_destroy (void)
     FINI_LOG("Destroy game map");
 
     if (level_game) {
-        level_destroy_immediate(&level_game);
+        level_destroy(&level_game);
     }
 
     if (wid_game_map_window) {
