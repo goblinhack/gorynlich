@@ -33,7 +33,6 @@ thingp player_new (levelp level, const char *name)
         player = thing_new(level, name);
 
         thing_set_level_no(player, start_level);
-        thing_set_lives(player, start_lives);
     }
 
     return (player);

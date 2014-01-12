@@ -17,6 +17,7 @@
 #include "command.h"
 #include "player.h"
 #include "wid_game_map.h"
+#include "string.h"
 
 static boolean server_init_done;
 static socketp server_socket;
@@ -69,13 +70,31 @@ void server_fini (void)
 
 static void server_rx_join (socketp s)
 {
-    LOG("join");
+    aplayerp p = socket_get_player(s);
+    if (!p) {
+        ERR("no player");
+        return;
+    }
+
+    char *tmp = dynprintf("\"%s\" joined the game", p->name);
+    socket_tx_shout(s, tmp);
+    myfree(tmp);
+
     wid_game_visible();
 }
 
-static void server_rx_leave (void)
+static void server_rx_leave (socketp s)
 {
-    LOG("leave");
+    aplayerp p = socket_get_player(s);
+    if (!p) {
+        ERR("no player");
+        return;
+    }
+
+    char *tmp = dynprintf("\"%s\" left the game", p->name);
+    socket_tx_shout(s, tmp);
+    myfree(tmp);
+
     wid_game_map_wid_destroy();
 }
 
@@ -150,7 +169,8 @@ static void server_poll (void)
 
         case MSG_TYPE_LEAVE:
             socket_rx_leave(s, packet, data);
-            server_rx_leave();
+            server_rx_leave(s);
+            socket_set_player(s, 0);
             break;
 
         case MSG_TYPE_CLOSE:
@@ -173,6 +193,44 @@ static void server_poll (void)
     SDLNet_FreePacket(packet);
 }
 
+static void server_alive_check (void)
+{
+    uint32_t si;
+
+    sockets_quality_check();
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        const socketp s = socket_get(si);
+
+        if (!socket_get_open(s)) {
+            continue;
+        }
+
+        if (!socket_get_server_side_client(s)) {
+            continue;
+        }
+
+        /*
+         * Don't kill off new born connections.
+         */
+        if (socket_get_tx(s) < 10) {
+            continue;
+        }
+
+        if (socket_get_quality(s) < SOCKET_PING_FAIL_THRESHOLD) {
+            /*
+             * Clients try forever. Server clients disconnect.
+             */
+            LOG("Player connection down [%s] qual %u percent",
+                socket_get_remote_logname(s), socket_get_quality(s));
+
+            server_rx_leave(s);
+
+            socket_disconnect(s);
+        }
+    }
+}
+
 static void server_socket_tx_ping (void)
 {
     static uint32_t ts;
@@ -186,7 +244,7 @@ static void server_socket_tx_ping (void)
      * Every 10 seconds check for dead peers.
      */
     if (ts && (seq % 10)) {
-        sockets_alive_check();
+        server_alive_check();
     }
 
     ts = time_get_time_cached();

@@ -790,7 +790,7 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean sockets_quality_check (void)
+boolean sockets_quality_check (void)
 {
     int si;
 
@@ -898,6 +898,10 @@ void sockets_alive_check (void)
              */
             if (socket_get_server_side_client(s)) {
                 socket_disconnect(s);
+            }
+
+            if (socket_get_client(s)) {
+                socket_tx_leave(s);
             }
         }
     }
@@ -1362,6 +1366,8 @@ void socket_tx_leave (socketp s)
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
 
+    socket_set_name(s, 0);
+
     socket_tx_msg(s, packet);
         
     socket_free_msg(packet);
@@ -1383,8 +1389,6 @@ void socket_rx_leave (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("Rx leave [from %s]", tmp);
         myfree(tmp);
     }
-
-    socket_set_player(s, 0);
 }
 
 void socket_tx_close (socketp s)
@@ -1747,4 +1751,49 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
             myfree(tmp);
         }
     }
+}
+
+uint32_t socket_get_quality (socketp s)
+{
+    return (s->quality);
+}
+
+uint32_t socket_get_avg_latency (socketp s)
+{
+    return (s->avg_latency);
+}
+
+uint32_t socket_get_min_latency (socketp s)
+{
+    return (s->min_latency);
+}
+
+uint32_t socket_get_max_latency (socketp s)
+{
+    return (s->max_latency);
+}
+
+uint32_t socket_get_rx (socketp s)
+{
+    return (s->min_latency);
+}
+
+uint32_t socket_get_tx (socketp s)
+{
+    return (s->tx);
+}
+
+uint32_t socket_get_rx_error (socketp s)
+{
+    return (s->min_latency);
+}
+
+uint32_t socket_get_tx_error (socketp s)
+{
+    return (s->min_latency);
+}
+
+uint32_t socket_get_rx_bad_msg (socketp s)
+{
+    return (s->min_latency);
 }

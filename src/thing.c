@@ -182,20 +182,7 @@ void thing_bury (thingp t)
     }
 
     thing_set_is_buried(t, true);
-
-    if (t == player) {
-        if (t->lives) {
-            THING_LOG(t, "buried and resurrected");
-            level_restart(t->level);
-        } else {
-            THING_LOG(t, "buried, dust and bones");
-            level_destroy(t->level);
-        }
-
-        sound_play_dead();
-    } else {
-        THING_LOG(t, "buried");
-    }
+    THING_LOG(t, "buried");
 }
 
 static void thing_dead_ (thingp t, thingp killer, char *reason)
@@ -260,10 +247,6 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         t->dead_reason = reason;
     }
 
-    if (t->lives) {
-        t->lives--;
-    }
-
     if (!thing_is_left_as_corpse_on_death(t)) {
         /*
          * Pop from the level.
@@ -271,11 +254,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         thing_set_wid(t, 0);
     }
 
-    if (t->lives) {
-        THING_LOG(t, "dead (%s) lives (%u) remaining", reason, t->lives);
-    } else {
-        THING_LOG(t, "dead (%s)", reason);
-    }
+    THING_LOG(t, "dead (%s)", reason);
 }
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
@@ -335,14 +314,6 @@ void thing_reached_exit (thingp t)
      * Pop from the level.
      */
     thing_set_wid(t, 0);
-
-    if (t == player) {
-        thing_set_level_no(t, thing_level_no(t) + 1);
-
-        level_completed(t->level);
-
-        sound_play_doorbell();
-    }
 
     sound_play_level_end();
 }
@@ -584,20 +555,6 @@ void thing_set_level (thingp t, levelp level)
     t->level = level;
 }
 
-uint32_t thing_lives (thingp t)
-{
-    verify(t);
-
-    return (t->lives);
-}
-
-void thing_set_lives (thingp t, uint32_t lives)
-{
-    verify(t);
-
-    t->lives = lives;
-}
-
 uint32_t thing_score (thingp t)
 {
     verify(t);
@@ -720,7 +677,6 @@ void thing_set_wid (thingp t, widp w)
         if (t->wid) {
             verify(t->wid);
             wid_destroy(&t->wid);
-
         }
     }
 
