@@ -108,6 +108,44 @@ void client_fini (void)
     }
 }
 
+static void client_alive_check (void)
+{
+    uint32_t si;
+
+    sockets_quality_check();
+
+    for (si = 0; si < MAX_SOCKETS; si++) {
+        const socketp s = socket_get(si);
+
+        if (!socket_get_open(s)) {
+            continue;
+        }
+
+        if (!socket_get_client(s)) {
+            continue;
+        }
+
+        /*
+         * Don't kill off new born connections.
+         */
+        if (socket_get_tx(s) < 10) {
+            continue;
+        }
+
+        if (socket_get_quality(s) < SOCKET_PING_FAIL_THRESHOLD) {
+            /*
+             * Clients try forever. Server clients disconnect.
+             */
+            LOG("Server down [%s] qual %u percent",
+                socket_get_remote_logname(s), socket_get_quality(s));
+
+            if (client_joined_server == s) {
+                client_socket_leave();
+            }
+        }
+    }
+}
+
 static void client_socket_tx_ping (void)
 {
     static uint32_t ts;
@@ -139,7 +177,7 @@ static void client_socket_tx_ping (void)
      * Every 10 seconds check for dead peers.
      */
     if (seq % 10) {
-        sockets_alive_check();
+        client_alive_check();
     }
 }
 
@@ -345,8 +383,6 @@ static boolean client_socket_leave (void)
 
     LOG("Client leaving %s", 
         socket_get_remote_logname(client_joined_server));
-
-    socket_set_name(client_joined_server, 0);
 
     socket_tx_leave(client_joined_server);
 

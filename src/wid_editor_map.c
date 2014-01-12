@@ -1024,7 +1024,7 @@ void wid_editor_map_wid_destroy (void)
     }
 
     if (level_ed) {
-        level_destroy_immediate(&level_ed);
+        level_destroy(&level_ed);
     }
 }
 
