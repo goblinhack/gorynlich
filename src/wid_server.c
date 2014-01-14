@@ -5,6 +5,7 @@
  */
 
 #include <SDL.h>
+#include <SDL_net.h>
 
 #include "main.h"
 #include "wid.h"
@@ -14,9 +15,10 @@
 #include "wid_text_input.h"
 #include "marshal.h"
 #include "sdl.h"
+#include "socket.h"
 
-static const char *server_dir_and_file = "gorynlich-server.txt";
-static const uint32_t MAX_HISCORES = 10;
+static const char *server_dir_and_file = "gorynlich-servers.txt";
+static const uint32_t MAX_SERVERS = 100;
 
 static widp wid_server;
 static widp wid_server_container;
@@ -28,14 +30,17 @@ static void wid_server_destroy(void);
 typedef struct server_ {
     tree_key_two_int tree;
 
-    char *name;
+    IPaddress remote_ip;
+    char *remote_host;
+    uint16_t remote_port;
+    char *host_and_port_str;
 } server;
 
 tree_rootp servers;
 
-void server_add (const char *name, uint32_t score)
+void server_add (IPaddress remote_ip)
 {
-    static uint32_t tiebreak;
+    static uint32_t port_tiebreak;
     server *h;
 
     if (!servers) {
@@ -44,12 +49,25 @@ void server_add (const char *name, uint32_t score)
 
     h = (typeof(h)) myzalloc(sizeof(*h), "TREE NODE: server");
 
-    h->name = dupstr(name, "name");
-    h->tree.key1 = score;
-    h->tree.key2 = tiebreak++;
+    h->tree.key1 = SDLNet_Read32(&remote_ip.host);
+    h->tree.key2 = SDLNet_Read16(&remote_ip.port);
+
+    if ((SDLNet_ResolveHost(&h->remote_ip, 
+                            h->remote_host,
+                            h->remote_port)) == -1) {
+        DBG("Cannot resolve host %s port %u", 
+            h->remote_host, 
+            h->remote_port);
+
+        h->host_and_port_str = dynprintf("-");
+    } else {
+        h->host_and_port_str = iptodynstr(h->remote_ip);
+        h->tree.key1 = SDLNet_Read32(&h->remote_ip.host);
+        h->tree.key2 = SDLNet_Read16(&h->remote_ip.port);
+    }
 
     while (!tree_insert(servers, &h->tree.node)) {
-        h->tree.key2 = tiebreak++;
+        h->tree.key2 = port_tiebreak++;
     }
 }
 
@@ -66,7 +84,7 @@ boolean wid_server_init (void)
 
 static void server_destroy (server *node)
 {
-    myfree(node->name);
+    myfree(node->host_and_port_str);
 }
 
 void wid_server_fini (void)
@@ -178,11 +196,11 @@ static void wid_server_create (void)
         fpoint tl = {0.0, 0.0};
         fpoint br = {1.0, 0.1};
 
-        w = wid_new_container(wid_server_container, "wid hiscrore title");
+        w = wid_new_container(wid_server_container, "wid server title");
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "High Scores");
+        wid_set_text(w, "Servers");
         wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
 
@@ -215,7 +233,7 @@ static void wid_server_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            wid_set_text(w, h->name);
+            wid_set_text(w, h->host_and_port_str);
 
             color c = BLACK;
 
@@ -305,18 +323,31 @@ static boolean demarshal_server (demarshal_p ctx, server *p)
 
     rc = true;
 
-    rc = rc && GET_OPT_NAMED_STRING(ctx, "name", p->name);
-    rc = rc && GET_OPT_NAMED_INT32(ctx, "score", p->tree.key1);
-    rc = rc && GET_OPT_NAMED_INT32(ctx, "tiebreak", p->tree.key2);
+    rc = rc && GET_OPT_NAMED_STRING(ctx, "remote_host", p->remote_host);
+
+    DBG("Resolve host %s port %u", 
+        p->remote_host, 
+        p->remote_port);
+
+    SDLNet_Write32(p->remote_ip.host, &p->remote_ip.host);
+    SDLNet_Write16(p->remote_ip.port, &p->remote_ip.port);
+
+    if ((SDLNet_ResolveHost(&p->remote_ip, 
+                            p->remote_host,
+                            p->remote_port)) == -1) {
+        WARN("Cannot resolve saved server, host %s port %u", 
+             p->remote_host, 
+             p->remote_port);
+    }
 
     return (rc);
 }
 
 static void marshal_server (marshal_p ctx, server *p)
 {
-    PUT_NAMED_STRING(ctx, "name", p->name);
-    PUT_NAMED_INT32(ctx, "score", p->tree.key1);
-    PUT_NAMED_INT32(ctx, "tiebreak", p->tree.key2);
+    if (p->remote_host) {
+        PUT_NAMED_STRING(ctx, "remote_host", p->remote_host);
+    }
 }
 
 boolean server_save (void)
@@ -337,7 +368,7 @@ boolean server_save (void)
     TREE_WALK_REVERSE(servers, h) {
         marshal_server(ctx, h);
 
-        if (count++ >= MAX_HISCORES - 1) {
+        if (count++ >= MAX_SERVERS - 1) {
             break;
         }
     }
@@ -370,19 +401,14 @@ boolean server_load (void)
 
     if ((ctx = demarshal(file))) {
         while (demarshal_server(ctx, &h)) {
-            server_add(h.name, h.tree.key1);
-            myfree(h.name);
+            server_add(h.remote_ip);
 
-            if (count++ > MAX_HISCORES) {
+            if (count++ > MAX_SERVERS) {
                 break;
             }
         }
 
         demarshal_fini(ctx);
-    }
-
-    while (count++ < MAX_HISCORES - 1) {
-        server_add("No one", 0);
     }
 
     myfree(file);
@@ -400,9 +426,9 @@ static void wid_server_name_ok (widp w)
     /*
      * We're given the ok or cancel button, so must name the text box.
      */
-    const char *name = wid_get_text(w);
+//    const char *host_and_port_str = wid_get_text(w);
 
-    server_add(name, score);
+//    server_add(dynprintf("%s", host_and_port_str), score);
 
     /*
      * Destroy the name dialog.
@@ -432,7 +458,7 @@ widp server_try_to_add (uint32_t score_in)
 
     TREE_WALK_REVERSE(servers, h) {
 
-        if (count >= MAX_HISCORES) {
+        if (count >= MAX_SERVERS) {
             return (0);
         }
 
