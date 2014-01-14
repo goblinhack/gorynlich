@@ -21,6 +21,7 @@
 #include "wid_intro_guide.h"
 #include "wid_game_over.h"
 #include "wid_hiscore.h"
+#include "wid_server.h"
 #include "music.h"
 #include "sdl.h"
 #include "level.h"
@@ -35,6 +36,7 @@ static void wid_intro_play_selected(void);
 static void wid_intro_about_selected(void);
 static void wid_intro_settings_selected(void);
 static void wid_intro_hiscore_selected(void);
+static void wid_intro_server_selected(void);
 static void wid_intro_help_selected(void);
 static void wid_intro_guide_selected(void);
 
@@ -163,6 +165,10 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_hiscore_selected();
             return (true);
 
+        case 'x':
+            wid_intro_server_selected();
+            return (true);
+
         case 'e':
             wid_intro_editor_selected();
             return (true);
@@ -234,6 +240,11 @@ static void wid_intro_settings_selected (void)
 static void wid_intro_hiscore_selected (void)
 {
     wid_hiscore_visible();
+}
+
+static void wid_intro_server_selected (void)
+{
+    wid_server_visible();
 }
 
 static void wid_intro_help_selected (void)
@@ -327,6 +338,28 @@ static boolean wid_intro_hiscore_key_event (widp w, const SDL_KEYSYM *key)
     switch (key->sym) {
         case SDLK_RETURN:
             wid_intro_hiscore_selected();
+            return (true);
+
+        default:
+            break;
+    }
+
+    return (false);
+}
+
+static boolean wid_intro_server_mouse_event (widp w, int32_t x, int32_t y,
+                                            uint32_t button)
+{
+    wid_intro_server_selected();
+
+    return (true);
+}
+
+static boolean wid_intro_server_key_event (widp w, const SDL_KEYSYM *key)
+{
+    switch (key->sym) {
+        case SDLK_RETURN:
+            wid_intro_server_selected();
             return (true);
 
         default:
@@ -631,6 +664,39 @@ static void wid_intro_create (void)
         wid_set_on_mouse_down(child, wid_intro_wid_noop);
         wid_set_on_mouse_up(child, wid_intro_hiscore_mouse_event);
         wid_set_on_key_down(child, wid_intro_hiscore_key_event);
+    }
+
+    {
+        widp child;
+
+        child = wid_new_square_button(wid_intro, "servers");
+        wid_set_font(child, med_font);
+        wid_set_no_shape(child);
+
+        fpoint tl = {0.7f, 0.2f};
+        fpoint br = {0.9f, 0.05};
+
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_text(child, "server");
+
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        color c = ORANGE;
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 200;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_FOCUS);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_NORMAL);
+
+        wid_set_on_mouse_down(child, wid_intro_wid_noop);
+        wid_set_on_mouse_up(child, wid_intro_server_mouse_event);
+        wid_set_on_key_down(child, wid_intro_server_key_event);
     }
 
     {
