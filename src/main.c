@@ -33,6 +33,7 @@
 #include "wid_game_over.h"
 #include "wid_intro_settings.h"
 #include "wid_hiscore.h"
+#include "wid_server.h"
 #include "wid_intro.h"
 #include "string.h"
 #include "dir.h"
@@ -71,6 +72,9 @@ void quit (void)
 
     FINI_LOG("%s", __FUNCTION__);
 
+    server_save();
+    hiscore_save();
+
     sdl_exit();
 
     wid_editor_fini();
@@ -89,6 +93,7 @@ void quit (void)
     wid_game_over_fini();
     wid_intro_settings_fini();
     wid_hiscore_fini();
+    wid_server_fini();
 
     command_fini();
 
@@ -652,7 +657,11 @@ int32_t main (int32_t argc, char *argv[])
     }
 
     if (!wid_hiscore_init()) {
-	DIE("hiscore init");
+	DIE("wid hiscore init");
+    }
+
+    if (!wid_server_init()) {
+	DIE("wid server init");
     }
 
 #ifdef ENABLE_LEAKCHECK
