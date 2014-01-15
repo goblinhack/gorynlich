@@ -18,9 +18,8 @@
 #include "socket.h"
 
 static const char *server_dir_and_file = "gorynlich-servers.txt";
-static const uint32_t MAX_SERVERS = 100;
 
-static widp wid_server;
+static widp wid_server_window;
 static widp wid_server_container;
 static boolean wid_server_init_done;
 
@@ -30,15 +29,15 @@ static void wid_server_destroy(void);
 typedef struct server_ {
     tree_key_two_int tree;
 
-    IPaddress remote_ip;
-    char *remote_host;
-    uint16_t remote_port;
+    IPaddress ip;
+    char *host;
+    uint16_t port;
     char *host_and_port_str;
 } server;
 
 tree_rootp servers;
 
-void server_add (IPaddress remote_ip)
+static void server_add (const server *s)
 {
     static uint32_t port_tiebreak;
     server *h;
@@ -48,23 +47,25 @@ void server_add (IPaddress remote_ip)
     }
 
     h = (typeof(h)) myzalloc(sizeof(*h), "TREE NODE: server");
+    h->host = dupstr(s->host, "hostname");
+    h->port = s->port;
 
-    h->tree.key1 = SDLNet_Read32(&remote_ip.host);
-    h->tree.key2 = SDLNet_Read16(&remote_ip.port);
+    if ((SDLNet_ResolveHost(&h->ip, 
+                            h->host,
+                            h->port)) == -1) {
+        LOG("Cannot resolve host %s port %u", 
+            h->host, 
+            h->port);
 
-    if ((SDLNet_ResolveHost(&h->remote_ip, 
-                            h->remote_host,
-                            h->remote_port)) == -1) {
-        DBG("Cannot resolve host %s port %u", 
-            h->remote_host, 
-            h->remote_port);
-
-        h->host_and_port_str = dynprintf("-");
+        h->host_and_port_str = dynprintf("%s:%u", h->host, h->port);
     } else {
-        h->host_and_port_str = iptodynstr(h->remote_ip);
-        h->tree.key1 = SDLNet_Read32(&h->remote_ip.host);
-        h->tree.key2 = SDLNet_Read16(&h->remote_ip.port);
+        h->host_and_port_str = iptodynstr(h->ip);
+
+        LOG("Resolve host %s port %u", h->host, h->port);
     }
+
+    h->tree.key1 = SDLNet_Read32(&h->ip.host);
+    h->tree.key2 = SDLNet_Read16(&h->ip.port);
 
     while (!tree_insert(servers, &h->tree.node)) {
         h->tree.key2 = port_tiebreak++;
@@ -154,11 +155,11 @@ static boolean wid_server_receive_mouse_motion (
 
 static void wid_server_create (void)
 {
-    if (wid_server) {
+    if (wid_server_window) {
         return;
     }
 
-    widp w = wid_server = wid_new_rounded_window("wid settings");
+    widp w = wid_server_window = wid_new_rounded_window("wid settings");
 
     fpoint tl = {0.05, 0.1};
     fpoint br = {0.95, 0.9};
@@ -184,25 +185,37 @@ static void wid_server_create (void)
 
     {
         widp w = wid_server_container =
-            wid_new_container(wid_server, "wid settings container");
+            wid_new_container(wid_server_window, "wid settings container");
 
-        fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 1.0};
+        fpoint tl = {0.0, 0.1};
+        fpoint br = {1.0, 0.9};
 
         wid_set_tl_br_pct(w, tl, br);
     }
 
     {
         fpoint tl = {0.0, 0.0};
+        fpoint br = {1.0, 1.0};
+
+        w = wid_new_container(wid_server_container, "server list");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        fpoint tl = {0.0, 0.0};
         fpoint br = {1.0, 0.1};
 
-        w = wid_new_container(wid_server_container, "wid server title");
+        widp w = wid_new_square_button(wid_server_window, "server name");
 
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Servers");
         wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
 
         wid_set_text_outline(w, true);
     }
@@ -215,8 +228,8 @@ static void wid_server_create (void)
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
-            fpoint tl = {0.05, 0.1};
-            fpoint br = {0.51, 0.2};
+            fpoint tl = {0.05, 0.0};
+            fpoint br = {0.51, 0.1};
 
             float height = 0.08;
 
@@ -264,8 +277,8 @@ static void wid_server_create (void)
             widp w = wid_new_square_button(wid_server_container,
                                            "server value");
 
-            fpoint tl = {0.52, 0.1};
-            fpoint br = {0.95, 0.2};
+            fpoint tl = {0.52, 0.0};
+            fpoint br = {0.95, 0.1};
 
             float height = 0.08;
 
@@ -307,14 +320,24 @@ static void wid_server_create (void)
         }
     }
 
-    wid_raise(wid_server);
+    widp wid_server_container_horiz_scroll;
+    widp wid_server_container_vert_scroll;
 
-    wid_update(wid_server);
+    wid_server_container_vert_scroll =
+        wid_new_vert_scroll_bar(wid_server_window, 
+                                wid_server_container);
+    wid_server_container_horiz_scroll =
+        wid_new_horiz_scroll_bar(wid_server_window, 
+                                 wid_server_container);
+
+    wid_raise(wid_server_window);
+
+    wid_update(wid_server_window);
 }
 
 void wid_server_destroy (void)
 {
-    wid_destroy(&wid_server);
+    wid_destroy(&wid_server_window);
 }
 
 static boolean demarshal_server (demarshal_p ctx, server *p)
@@ -323,31 +346,18 @@ static boolean demarshal_server (demarshal_p ctx, server *p)
 
     rc = true;
 
-    rc = rc && GET_OPT_NAMED_STRING(ctx, "remote_host", p->remote_host);
-
-    DBG("Resolve host %s port %u", 
-        p->remote_host, 
-        p->remote_port);
-
-    SDLNet_Write32(p->remote_ip.host, &p->remote_ip.host);
-    SDLNet_Write16(p->remote_ip.port, &p->remote_ip.port);
-
-    if ((SDLNet_ResolveHost(&p->remote_ip, 
-                            p->remote_host,
-                            p->remote_port)) == -1) {
-        WARN("Cannot resolve saved server, host %s port %u", 
-             p->remote_host, 
-             p->remote_port);
-    }
+    rc = rc && GET_OPT_NAMED_STRING(ctx, "host", p->host);
+    rc = rc && GET_OPT_NAMED_UINT16(ctx, "port", p->port);
 
     return (rc);
 }
 
 static void marshal_server (marshal_p ctx, server *p)
 {
-    if (p->remote_host) {
-        PUT_NAMED_STRING(ctx, "remote_host", p->remote_host);
-    }
+//    if (p->host) {
+        PUT_NAMED_STRING(ctx, "host", p->host);
+        PUT_NAMED_INT16(ctx, "port", p->port);
+//    }
 }
 
 boolean server_save (void)
@@ -362,15 +372,10 @@ boolean server_save (void)
         return (false);
     }
 
-    uint32_t count = 0;
     server *h;
 
     TREE_WALK_REVERSE(servers, h) {
         marshal_server(ctx, h);
-
-        if (count++ >= MAX_SERVERS - 1) {
-            break;
-        }
     }
 
     if (marshal_fini(ctx) < 0) {
@@ -396,16 +401,11 @@ boolean server_load (void)
 
     DBG("Load %s", file);
 
-    uint32_t count = 0;
     server h;
 
     if ((ctx = demarshal(file))) {
         while (demarshal_server(ctx, &h)) {
-            server_add(h.remote_ip);
-
-            if (count++ > MAX_SERVERS) {
-                break;
-            }
+            server_add(&h);
         }
 
         demarshal_fini(ctx);
@@ -457,10 +457,6 @@ widp server_try_to_add (uint32_t score_in)
     server *h;
 
     TREE_WALK_REVERSE(servers, h) {
-
-        if (count >= MAX_SERVERS) {
-            return (0);
-        }
 
         if (score_in > (uint32_t) h->tree.key1) {
             break;
