@@ -27,6 +27,8 @@ extern int socket_test(int32_t argc, char *argv[]);
 extern boolean socket_init(void);
 extern void socket_fini(void);
 extern char *iptodynstr(IPaddress ip);
+extern char *iprawtodynstr(IPaddress ip);
+extern char *iprawporttodynstr(IPaddress ip);
 
 extern IPaddress server_address;
 extern IPaddress no_address;
