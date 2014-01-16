@@ -72,8 +72,13 @@ void quit (void)
 
     FINI_LOG("%s", __FUNCTION__);
 
-    server_save();
-    hiscore_save();
+    if (is_client) {
+        server_save();
+    }
+
+    if (is_server) {
+        hiscore_save();
+    }
 
     sdl_exit();
 

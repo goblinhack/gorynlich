@@ -30,45 +30,50 @@ typedef struct server_ {
     tree_key_two_int tree;
 
     IPaddress ip;
-    char *host;
     uint16_t port;
+    char *host;
     char *host_and_port_str;
+    uint8_t quality;
+    uint16_t avg_latency;
 } server;
 
 tree_rootp servers;
 
-static void server_add (const server *s)
+static void server_add (const server *s_in)
 {
-    static uint32_t port_tiebreak;
-    server *h;
+    server *s;
 
     if (!servers) {
         servers = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: servers");
     }
 
-    h = (typeof(h)) myzalloc(sizeof(*h), "TREE NODE: server");
-    h->host = dupstr(s->host, "hostname");
-    h->port = s->port;
+    s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: server");
 
-    if ((SDLNet_ResolveHost(&h->ip, 
-                            h->host,
-                            h->port)) == -1) {
+    memcpy(s, s_in, sizeof(*s));
+    s->host = dupstr(s_in->host, "hostname");
+    s->port = s_in->port;
+
+    if ((SDLNet_ResolveHost(&s->ip, 
+                            s->host,
+                            s->port)) == -1) {
         LOG("Cannot resolve host %s port %u", 
-            h->host, 
-            h->port);
+            s->host, 
+            s->port);
 
-        h->host_and_port_str = dynprintf("%s:%u", h->host, h->port);
+        s->host_and_port_str = dynprintf("%s:%u", s->host, s->port);
     } else {
-        h->host_and_port_str = iptodynstr(h->ip);
+        s->host_and_port_str = iptodynstr(s->ip);
 
-        LOG("Resolve host %s port %u", h->host, h->port);
+        LOG("Resolve host %s port %u", s->host, s->port);
     }
 
-    h->tree.key1 = SDLNet_Read32(&h->ip.host);
-    h->tree.key2 = SDLNet_Read16(&h->ip.port);
+    s->tree.key1 = SDLNet_Read32(&s->ip.host);
+    s->tree.key2 = SDLNet_Read16(&s->ip.port) | (s->quality << 16);
 
-    while (!tree_insert(servers, &h->tree.node)) {
-        h->tree.key2 = port_tiebreak++;
+    while (!tree_insert(servers, &s->tree.node)) {
+        s->tree.key2++;
+
+        SDLNet_Write16(s->tree.key2, &s->ip.port);
     }
 }
 
@@ -109,6 +114,35 @@ void wid_server_hide (void)
 void wid_server_visible (void)
 {
     wid_server_create();
+}
+
+static void wid_server_redo (void)
+{
+    wid_server_destroy();
+    wid_server_create();
+}
+
+static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
+{
+    CON("JOIN");
+
+    return (true);
+}
+
+static boolean wid_server_add (widp w, int32_t x, int32_t y, uint32_t button)
+{
+    server s;
+
+    memset(&s, 0, sizeof(s));
+
+    s.host = SERVER_DEFAULT_HOST; 
+    s.port = SERVER_DEFAULT_PORT; 
+
+    server_add(&s);
+
+    wid_server_redo();
+
+    return (true);
 }
 
 static boolean wid_server_mouse_event (widp w, int32_t x, int32_t y,
@@ -153,13 +187,50 @@ static boolean wid_server_receive_mouse_motion (
     return (true);
 }
 
+static void wid_server_over_begin (widp w)
+{
+    wid_set_show_cursor(w, true);
+}
+
+static void wid_server_over_end (widp w)
+{
+    wid_set_show_cursor(w, false);
+}
+
+/*
+ * Key down etc...
+ */
+static boolean wid_server_receive_input (widp w, const SDL_KEYSYM *key)
+{
+    server *s;
+
+    s = wid_get_client_context(w);
+    if (!s) {
+        return (false);
+    }
+
+    switch (key->sym) {
+        case SDLK_RETURN: {
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    /*
+     * Feed to the general input handler
+     */
+    return (wid_receive_input(w, key));
+}
+
 static void wid_server_create (void)
 {
     if (wid_server_window) {
         return;
     }
 
-    widp w = wid_server_window = wid_new_rounded_window("wid settings");
+    widp w = wid_server_window = wid_new_square_window("wid settings");
 
     fpoint tl = {0.05, 0.1};
     fpoint br = {0.95, 0.9};
@@ -187,8 +258,8 @@ static void wid_server_create (void)
         widp w = wid_server_container =
             wid_new_container(wid_server_window, "wid settings container");
 
-        fpoint tl = {0.0, 0.1};
-        fpoint br = {1.0, 0.9};
+        fpoint tl = {0.0, 0.15};
+        fpoint br = {1.0, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
     }
@@ -221,24 +292,40 @@ static void wid_server_create (void)
     }
 
     {
-        uint32_t i = 0;
-        server *h;
+        fpoint tl = {0.00, 0.1};
+        fpoint br = {0.4, 0.15};
 
-        TREE_WALK_REVERSE(servers, h) {
+        widp w = wid_new_square_button(wid_server_window, "server hostname");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Hostname");
+        wid_set_font(w, med_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        uint32_t i = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
-            fpoint tl = {0.05, 0.0};
-            fpoint br = {0.51, 0.1};
+            fpoint tl = {0.00, 0.0};
+            fpoint br = {0.4, 0.1};
 
             float height = 0.08;
 
-            if (i < 1) {
-                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-            } else if (i < 4) {
+            if (s->quality == 100) {
                 wid_set_color(w, WID_COLOR_TEXT, GREEN);
+            } else if (s->quality > 75) {
+                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
             } else {
-                wid_set_color(w, WID_COLOR_TEXT, SKYBLUE);
+                wid_set_color(w, WID_COLOR_TEXT, RED);
             }
 
             br.y += (float)i * height;
@@ -246,7 +333,78 @@ static void wid_server_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            wid_set_text(w, h->host_and_port_str);
+            wid_set_text(w, s->host_and_port_str);
+
+            color c = BLACK;
+
+            c.a = 100;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_text_outline(w, true);
+            wid_set_font(w, small_font);
+            wid_set_text_lhs(w, true);
+
+            wid_set_on_mouse_over_begin(w, wid_server_over_begin);
+            wid_set_on_mouse_over_end(w, wid_server_over_end);
+            wid_set_on_mouse_down(w, wid_server_join);
+            wid_set_on_key_down(w, wid_server_receive_input);
+            wid_set_client_context(w, s);
+
+            i++;
+        }
+    }
+
+    {
+        fpoint tl = {0.4, 0.1};
+        fpoint br = {0.6, 0.15};
+
+        widp w = wid_new_square_button(wid_server_window, "server ip");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "IP");
+        wid_set_font(w, med_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        uint32_t i = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(servers, s) {
+            widp w = wid_new_square_button(wid_server_container,
+                                           "server name");
+
+            fpoint tl = {0.4, 0.0};
+            fpoint br = {0.6, 0.1};
+
+            float height = 0.08;
+
+            if (s->quality == 100) {
+                wid_set_color(w, WID_COLOR_TEXT, GREEN);
+            } else if (s->quality > 75) {
+                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
+            } else {
+                wid_set_color(w, WID_COLOR_TEXT, RED);
+            }
+
+            br.y += (float)i * height;
+            tl.y += (float)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+
+            char *tmp = iprawtodynstr(s->ip);
+            wid_set_text(w, tmp);
+            myfree(tmp);
 
             color c = BLACK;
 
@@ -259,10 +417,8 @@ static void wid_server_create (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_bevel(w,0);
-            wid_set_no_shape(w);
             wid_set_text_outline(w, true);
-            wid_set_font(w, large_font);
+            wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
             i++;
@@ -270,24 +426,40 @@ static void wid_server_create (void)
     }
 
     {
+        fpoint tl = {0.6, 0.1};
+        fpoint br = {0.8, 0.15};
+
+        widp w = wid_new_square_button(wid_server_window, "server port");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Port");
+        wid_set_font(w, med_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+    }
+
+    {
         uint32_t i = 0;
-        server *h;
+        server *s;
 
-        TREE_WALK_REVERSE(servers, h) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
-                                           "server value");
+                                           "server name");
 
-            fpoint tl = {0.52, 0.0};
-            fpoint br = {0.95, 0.1};
+            fpoint tl = {0.6, 0.0};
+            fpoint br = {0.8, 0.1};
 
             float height = 0.08;
 
-            if (i < 1) {
-                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-            } else if (i < 4) {
+            if (s->quality == 100) {
                 wid_set_color(w, WID_COLOR_TEXT, GREEN);
+            } else if (s->quality > 75) {
+                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
             } else {
-                wid_set_color(w, WID_COLOR_TEXT, SKYBLUE);
+                wid_set_color(w, WID_COLOR_TEXT, RED);
             }
 
             br.y += (float)i * height;
@@ -295,11 +467,11 @@ static void wid_server_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            char *tmp = dynprintf("%08d", h->tree.key1);
+            char *tmp = iprawporttodynstr(s->ip);
             wid_set_text(w, tmp);
             myfree(tmp);
 
-            color c = BLUE;
+            color c = BLACK;
 
             c.a = 100;
             wid_set_mode(w, WID_MODE_NORMAL);
@@ -310,14 +482,182 @@ static void wid_server_create (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_bevel(w,0);
-            wid_set_no_shape(w);
             wid_set_text_outline(w, true);
-            wid_set_text_fixed_width(w, true);
-            wid_set_font(w, large_font);
+            wid_set_font(w, small_font);
+            wid_set_text_lhs(w, true);
 
             i++;
         }
+    }
+
+    {
+        fpoint tl = {0.8, 0.1};
+        fpoint br = {0.9, 0.15};
+
+        widp w = wid_new_square_button(wid_server_window, "server latency");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Lag");
+        wid_set_font(w, med_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        uint32_t i = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(servers, s) {
+            widp w = wid_new_square_button(wid_server_container,
+                                           "server latency");
+
+            fpoint tl = {0.8, 0.0};
+            fpoint br = {0.9, 0.1};
+
+            float height = 0.08;
+
+            if (s->quality == 100) {
+                wid_set_color(w, WID_COLOR_TEXT, GREEN);
+            } else if (s->quality > 75) {
+                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
+            } else {
+                wid_set_color(w, WID_COLOR_TEXT, RED);
+            }
+
+            br.y += (float)i * height;
+            tl.y += (float)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+
+            char *tmp = dynprintf("%u", s->avg_latency);
+            wid_set_text(w, tmp);
+            myfree(tmp);
+
+            color c = BLACK;
+
+            c.a = 100;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_text_outline(w, true);
+            wid_set_font(w, small_font);
+            wid_set_text_lhs(w, true);
+
+            i++;
+        }
+    }
+
+    {
+        fpoint tl = {0.9, 0.1};
+        fpoint br = {1.0, 0.15};
+
+        widp w = wid_new_square_button(wid_server_window, "server latency");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Qual");
+        wid_set_font(w, med_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        uint32_t i = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(servers, s) {
+            widp w = wid_new_square_button(wid_server_container,
+                                           "server quality");
+
+            fpoint tl = {0.9, 0.0};
+            fpoint br = {1.0, 0.1};
+
+            float height = 0.08;
+
+            if (s->quality == 100) {
+                wid_set_color(w, WID_COLOR_TEXT, GREEN);
+            } else if (s->quality > 75) {
+                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
+            } else {
+                wid_set_color(w, WID_COLOR_TEXT, RED);
+            }
+
+            br.y += (float)i * height;
+            tl.y += (float)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+
+            char *tmp = dynprintf("%u", s->quality);
+            wid_set_text(w, tmp);
+            myfree(tmp);
+
+            color c = BLACK;
+
+            c.a = 100;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_text_outline(w, true);
+            wid_set_font(w, small_font);
+            wid_set_text_lhs(w, true);
+
+            i++;
+        }
+    }
+
+    {
+        fpoint tl = {0.7, 0.90};
+        fpoint br = {0.99, 0.99};
+
+        widp w = wid_new_rounded_small_button(wid_server_window,
+                                              "server finish");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Go back");
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+        wid_set_do_not_lower(w, true);
+    }
+
+    {
+        fpoint tl = {0.5, 0.90};
+        fpoint br = {0.69, 0.99};
+
+        widp w = wid_new_rounded_small_button(wid_server_window,
+                                              "server finish");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Add");
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+        wid_set_do_not_lower(w, true);
+
+        wid_set_on_mouse_up(w, wid_server_add);
     }
 
     widp wid_server_container_horiz_scroll;
@@ -340,24 +680,27 @@ void wid_server_destroy (void)
     wid_destroy(&wid_server_window);
 }
 
-static boolean demarshal_server (demarshal_p ctx, server *p)
+static boolean demarshal_server (demarshal_p ctx, server *s)
 {
     boolean rc;
 
     rc = true;
 
-    rc = rc && GET_OPT_NAMED_STRING(ctx, "host", p->host);
-    rc = rc && GET_OPT_NAMED_UINT16(ctx, "port", p->port);
+    rc = rc && GET_OPT_NAMED_STRING(ctx, "host", s->host);
+    rc = rc && GET_OPT_NAMED_UINT16(ctx, "port", s->port);
 
     return (rc);
 }
 
-static void marshal_server (marshal_p ctx, server *p)
+static void marshal_server (marshal_p ctx, server *s)
 {
-//    if (p->host) {
-        PUT_NAMED_STRING(ctx, "host", p->host);
-        PUT_NAMED_INT16(ctx, "port", p->port);
-//    }
+    char *host = s->host;
+    uint16_t port = SDLNet_Read16(&s->ip.port);
+
+    if (s->host) {
+        PUT_NAMED_STRING(ctx, "host", host);
+        PUT_NAMED_INT16(ctx, "port", port);
+    }
 }
 
 boolean server_save (void)
@@ -372,10 +715,10 @@ boolean server_save (void)
         return (false);
     }
 
-    server *h;
+    server *s;
 
-    TREE_WALK_REVERSE(servers, h) {
-        marshal_server(ctx, h);
+    TREE_WALK_REVERSE(servers, s) {
+        marshal_server(ctx, s);
     }
 
     if (marshal_fini(ctx) < 0) {
@@ -401,11 +744,13 @@ boolean server_load (void)
 
     DBG("Load %s", file);
 
-    server h;
+    server s;
 
     if ((ctx = demarshal(file))) {
-        while (demarshal_server(ctx, &h)) {
-            server_add(&h);
+        memset(&s, 0, sizeof(s));
+
+        while (demarshal_server(ctx, &s)) {
+            server_add(&s);
         }
 
         demarshal_fini(ctx);
@@ -454,11 +799,11 @@ widp server_try_to_add (uint32_t score_in)
     uint32_t count = 0;
 
     score = score_in;
-    server *h;
+    server *s;
 
-    TREE_WALK_REVERSE(servers, h) {
+    TREE_WALK_REVERSE(servers, s) {
 
-        if (score_in > (uint32_t) h->tree.key1) {
+        if (score_in > (uint32_t) s->tree.key1) {
             break;
         }
 

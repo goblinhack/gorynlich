@@ -606,6 +606,24 @@ char *iptodynstr (IPaddress ip)
                       ip1, ip2, ip3, ip4, port));
 }
 
+char *iprawtodynstr (IPaddress ip)
+{
+    uint32_t ipv4 = SDLNet_Read32(&ip.host);
+    uint8_t ip1 = (ipv4>>24) & 0xFF;
+    uint8_t ip2 = (ipv4>>16) & 0xFF;
+    uint8_t ip3 = (ipv4>>8)  & 0xFF;
+    uint8_t ip4 = ipv4 & 0xFF;
+
+    return (dynprintf("%u.%u.%u.%u", ip1, ip2, ip3, ip4));
+}
+
+char *iprawporttodynstr (IPaddress ip)
+{
+    uint16_t port = SDLNet_Read16(&ip.port);
+
+    return (dynprintf("%u", port));
+}
+
 static boolean sockets_show_all (tokens_t *tokens, void *context)
 {
     int si;
