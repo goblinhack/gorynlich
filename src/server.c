@@ -72,9 +72,11 @@ static void server_rx_join (socketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
-        ERR("no player");
+        WARN("Receive join, no player");
         return;
     }
+
+    LOG("\"%s\" joined the game", p->name);
 
     char *tmp = dynprintf("\"%s\" joined the game", p->name);
     socket_tx_shout(s, tmp);
@@ -87,9 +89,11 @@ static void server_rx_leave (socketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
-        ERR("no player");
+        WARN("Receive leave, no player");
         return;
     }
+
+    LOG("\"%s\" left the game", p->name);
 
     char *tmp = dynprintf("\"%s\" left the game", p->name);
     socket_tx_shout(s, tmp);
@@ -103,10 +107,12 @@ static void server_poll (void)
     socketp s = server_socket;
 
     if (!s) {
+        ERR("no server socket to listen on");
         return;
     }
 
     if (!socket_get_socklist(s)) {
+        ERR("no socklist to listen on");
         return;
     }
 
@@ -195,17 +201,11 @@ static void server_poll (void)
 
 static void server_alive_check (void)
 {
-    uint32_t si;
+    socketp s;
 
     sockets_quality_check();
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        const socketp s = socket_get(si);
-
-        if (!socket_get_open(s)) {
-            continue;
-        }
-
+    TREE_WALK(sockets, s) {
         if (!socket_get_server_side_client(s)) {
             continue;
         }
@@ -249,17 +249,9 @@ static void server_socket_tx_ping (void)
 
     ts = time_get_time_cached();
 
-    int si;
+    socketp s;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        const socketp s = socket_get(si);
-        if (!s) {
-            continue;
-        }
-
-        if (!socket_get_open(s)) {
-            continue;
-        }
+    TREE_WALK(sockets, s) {
 
         if (socket_get_server(s)) {
             continue;
@@ -290,13 +282,8 @@ static boolean server_players_show (tokens_t *tokens, void *context)
     CON("Name                 Quality  Latency       Remote IP       Score ");
     CON("----                 -------  ------- -------------------- -------");
 
-    uint32_t si;
-
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp s = socket_get(si);
-        if (!s) {
-            continue;
-        }
+    socketp s;
+    TREE_WALK(sockets, s) {
 
         aplayer *p = socket_get_player(s);
         if (!p) {

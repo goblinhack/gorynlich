@@ -7,6 +7,7 @@
  */
 
 #include <SDL_net.h>
+#include "tree.h"
 
 typedef enum {
     MSG_TYPE_PING,
@@ -21,6 +22,45 @@ typedef enum {
     MSG_TYPE_MAX,
 } msg_type;
 
+typedef struct socket_ {
+    tree_key_two_int tree;
+
+    uint8_t server;
+    uint8_t client;
+    uint8_t server_side_client;
+    uint8_t connected;
+    UDPsocket udp_socket;
+    IPaddress remote_ip;
+    IPaddress local_ip;
+    SDLNet_SocketSet socklist;
+    /*
+     * If there is a player using this socket.
+     */
+    aplayerp player;
+    /*
+     * Line quality.
+     */
+    uint8_t quality;
+    uint16_t avg_latency;
+    uint16_t min_latency;
+    uint16_t max_latency;
+    /*
+     * Counters.
+     */
+    uint32_t rx;
+    uint32_t tx;
+    uint32_t rx_error;
+    uint32_t tx_error;
+    uint32_t rx_bad_msg;
+    uint32_t ping_responses[SOCKET_PING_SEQ_NO_RANGE];
+    uint32_t tx_msg[MSG_TYPE_MAX];
+    uint32_t rx_msg[MSG_TYPE_MAX];
+    int channel;
+    const char *local_logname;
+    const char *remote_logname;
+    char name[PLAYER_NAME_LEN_MAX];
+} socket;
+
 extern void socket_count_inc_pak_rx(const socketp, msg_type);
 
 extern int socket_test(int32_t argc, char *argv[]);
@@ -33,12 +73,12 @@ extern char *iprawporttodynstr(IPaddress ip);
 extern IPaddress server_address;
 extern IPaddress no_address;
 
+extern socketp socket_find(IPaddress address);
 extern socketp socket_listen(IPaddress address);
 extern socketp socket_connect(IPaddress address, boolean server);
 extern void socket_disconnect(socketp s);
 extern void sockets_alive_check(void);
 
-extern socketp socket_get(uint32_t si);
 extern socketp socket_find_local_ip(IPaddress address);
 extern socketp socket_find_remote_ip(IPaddress address);
 
@@ -49,8 +89,6 @@ extern const char *socket_get_player_name(const socketp);
 
 extern const char *socket_get_local_logname(const socketp);
 extern const char *socket_get_remote_logname(const socketp);
-
-extern boolean socket_get_open(const socketp);
 
 extern void socket_set_connected(const socketp, boolean);
 extern boolean socket_get_connected(const socketp);
@@ -125,3 +163,5 @@ static inline void write_address (UDPpacket *packet, IPaddress i)
     packet->address.host = i.host;
     packet->address.port = i.port;
 }
+
+extern tree_rootp sockets;

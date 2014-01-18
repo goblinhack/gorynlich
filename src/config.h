@@ -23,7 +23,6 @@
 #define SERVER_DEFAULT_PORT       10000
 #define SERVER_DEFAULT_PORT_MAX   10010
 #define MAX_PLAYERS               4
-#define MAX_SOCKETS ((MAX_PLAYERS + 2) *2) // 1 server, 1 local, * 2 for restart
 #define MAX_PACKET_SIZE           1024
 #define SOCKET_PING_SEQ_NO_RANGE  100 // how many pings to consider for quality
 #define SOCKET_PING_FAIL_THRESHOLD 10 // 90 percent of ping fails means down
@@ -99,3 +98,10 @@
 #define MED_FONT                    "data/ttf/emulogic.ttf"
 #define LARGE_FONT                  "data/ttf/emulogic.ttf"
 #define VLARGE_FONT                 "data/ttf/emulogic.ttf"
+
+/*
+ * Messages.
+ */
+#define PLAYER_NAME_LEN_MAX             20
+#define PLAYER_MSG_MAX              100
+
