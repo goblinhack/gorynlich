@@ -19,53 +19,13 @@
 #include "wid.h"
 #include "wid_button.h"
 #include "color.h"
+#include "tree.h"
 
-typedef struct socket_ {
-    uint8_t index;
-    uint8_t open;
-    uint8_t server;
-    uint8_t client;
-    uint8_t server_side_client;
-    uint8_t connected;
-    UDPsocket udp_socket;
-    IPaddress remote_ip;
-    IPaddress local_ip;
-    SDLNet_SocketSet socklist;
-    /*
-     * If there is a player using this socket.
-     */
-    aplayer *player;
-    /*
-     * Line quality.
-     */
-    uint8_t quality;
-    uint16_t avg_latency;
-    uint16_t min_latency;
-    uint16_t max_latency;
-    /*
-     * Counters.
-     */
-    uint32_t rx;
-    uint32_t tx;
-    uint32_t rx_error;
-    uint32_t tx_error;
-    uint32_t rx_bad_msg;
-    uint32_t ping_responses[SOCKET_PING_SEQ_NO_RANGE];
-    uint32_t tx_msg[MSG_TYPE_MAX];
-    uint32_t rx_msg[MSG_TYPE_MAX];
-    int channel;
-    const char *local_logname;
-    const char *remote_logname;
-    char name[PLAYER_NAME_MAX];
-} socket;
-
-typedef struct network_ {
-    socket sockets[MAX_SOCKETS];
-} network;
+tree_rootp sockets;
 
 typedef struct {
     uint8_t type;
-    char name[PLAYER_NAME_MAX];
+    char name[PLAYER_NAME_LEN_MAX];
 } __attribute__ ((packed)) msg_join;
 
 typedef struct {
@@ -78,7 +38,7 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    char name[PLAYER_NAME_MAX];
+    char name[PLAYER_NAME_LEN_MAX];
 } __attribute__ ((packed)) msg_name;
 
 typedef struct {
@@ -88,13 +48,13 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    char from[PLAYER_NAME_MAX];
-    char to[PLAYER_NAME_MAX];
+    char from[PLAYER_NAME_LEN_MAX];
+    char to[PLAYER_NAME_LEN_MAX];
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_tell;
 
 typedef struct {
-    char name[PLAYER_NAME_MAX];
+    char name[PLAYER_NAME_LEN_MAX];
     IPaddress local_ip;
     IPaddress remote_ip;
     uint8_t quality;
@@ -106,7 +66,7 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    msg_player players[MAX_SOCKETS];
+    msg_player players[MAX_PLAYERS];
 } __attribute__ ((packed)) msg_players;
 
 boolean is_server;
@@ -116,8 +76,7 @@ boolean is_headless;
 IPaddress server_address = {0};
 IPaddress no_address = {0};
 
-network net;
-
+static void socket_destroy(socketp s);
 static boolean sockets_show_all(tokens_t *tokens, void *context);
 static boolean sockets_show_summary(tokens_t *tokens, void *context);
 static boolean socket_init_done;
@@ -126,6 +85,10 @@ boolean socket_init (void)
 {
     if (socket_init_done) {
         return (true);
+    }
+
+    if (!sockets) {
+        sockets = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: sockets");
     }
 
     if (SDLNet_Init() < 0) {
@@ -163,224 +126,132 @@ void socket_fini (void)
 
     SDLNet_Quit();
 
-    int s;
-    for (s = 0; s < MAX_SOCKETS; s++) {
-        socket_disconnect(&net.sockets[s]);
-    }
-
-    memset(&net, 0, sizeof(net));
+    tree_destroy(&sockets, (tree_destroy_func)socket_destroy);
 
     socket_init_done = false;
 }
 
-socket *socket_listen (IPaddress address)
+static socketp socket_create (IPaddress address)
 {
-    IPaddress listen_address = address;
-    uint16_t p;
+    socketp s;
 
-    socket *s = 0;
-    uint32_t si;
-
-    /*
-     * Find the first free socket.
-     */
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        s = &net.sockets[si];
-        if (s->open) {
-            continue;
-        }
-
-        break;
-    }
-
-    if (si == MAX_SOCKETS) {
-        ERR("No more sockets are available for listening");
+    uint16_t port = address.port;
+    if (!port) {
+        ERR("Specify a local port to listen on");
         return (0);
     }
 
     /*
-     * If no address is given, try and grab one from our well known base.
+     * Create a new socket.
      */
-    if (!memcmp(&no_address, &listen_address, sizeof(no_address))) {
-        DBG("Resolve host %s port %u", 
-            SERVER_DEFAULT_HOST, 
-            SERVER_DEFAULT_PORT);
+    s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: socket");
 
-        if ((SDLNet_ResolveHost(&listen_address, 
-                                SERVER_DEFAULT_HOST,
-                                SERVER_DEFAULT_PORT)) == -1) {
-            ERR("Cannot resolve host %s port %u", 
-                SERVER_DEFAULT_HOST, 
-                SERVER_DEFAULT_PORT);
-            return (false);
-        }
+    s->tree.key1 = address.host;
+    s->tree.key2 = address.port;
 
-        if (!memcmp(&no_address, &listen_address, sizeof(no_address))) {
-            ERR("Cannot get a local port to listen on");
-            return (false);
-        }
+    if (!tree_insert(sockets, &s->tree.node)) {
+        ERR("failed to add socket");
+        return (0);
     }
 
+    s->socklist = SDLNet_AllocSocketSet(1);
+    if (!s->socklist) {
+        char *tmp = iptodynstr(address);
+        ERR("SDLNet_AllocSocketSet %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
+        myfree(tmp);
+
+        socket_disconnect(s);
+        return (0);
+    }
+
+    return (s);
+}
+
+socket *socket_listen (IPaddress address)
+{
     /*
-     * If given an address, we must listn on that specific address.
-     * If not then we can look for the next free.
+     * Relisten?
      */
-    uint16_t max_port;
-
-    if (!memcmp(&no_address, &address, sizeof(no_address))) {
-        max_port = 1;
-    } else {
-        max_port = MAX_SOCKETS;
-    }
-
-    uint16_t port = SDLNet_Read16(&listen_address.port);
-
-    DBG("Find a server port...");
-
-    for (p = 0; p <= max_port; p++, port++) {
-
-        SDLNet_Write16(port, &listen_address.port);
-        port = SDLNet_Read16(&listen_address.port);
-
-        /*
-         * Check the port is not in use.
-         */
-        for (si = 0; si < MAX_SOCKETS; si++) {
-            socket *s = &net.sockets[si];
-
-            if (!s->server) {
-                continue;
-            }
-
-            if (!memcmp(&listen_address, &s->local_ip, sizeof(IPaddress))) {
-                break;
-            }
-        }
-
-        if (si != MAX_SOCKETS) {
-            continue;
-        }
-
-        s->udp_socket = SDLNet_UDP_Open(port);
-        if (!s->udp_socket) {
-            char *tmp = iptodynstr(listen_address);
-            ERR("SDLNet_UDP_Open %s failed", tmp);
-            WARN("  %s", SDLNet_GetError());
-            myfree(tmp);
-            continue;
-        }
-
-        s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
-        if (s->channel < 0) {
-            char *tmp = iptodynstr(listen_address);
-            ERR("SDLNet_UDP_Bind %s failed", tmp);
-            WARN("  %s", SDLNet_GetError());
-            myfree(tmp);
-            continue;
-        }
-
-        s->socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
-        if (!s->socklist) {
-            char *tmp = iptodynstr(listen_address);
-            ERR("SDLNet_AllocSocketSet %s failed", tmp);
-            WARN("  %s", SDLNet_GetError());
-            myfree(tmp);
-            continue;
-        }
-
-        if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
-            char *tmp = iptodynstr(listen_address);
-            ERR("SDLNet_UDP_AddSocket %s failed", tmp);
-            WARN("  %s", SDLNet_GetError());
-            myfree(tmp);
-            continue;
-        }
-
-        s->open = true;
-        s->local_ip = listen_address;
-        s->index = s - net.sockets;
-        s->server = true;
-
+    socketp s = socket_find(address);
+    if (s) {
         return (s);
     }
 
-    WARN("Failed to listen");
-    return (0);
+    s = socket_create(address);
+    if (!s) {
+        return (0);
+    }
+
+    uint16_t port = SDLNet_Read16(&address.port);
+    s->udp_socket = SDLNet_UDP_Open(port);
+    if (!s->udp_socket) {
+        char *tmp = iptodynstr(address);
+        ERR("SDLNet_UDP_Open %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
+        myfree(tmp);
+
+        socket_disconnect(s);
+        return (0);
+    }
+
+    s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &address);
+    if (s->channel < 0) {
+        char *tmp = iptodynstr(address);
+        ERR("SDLNet_UDP_Bind %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
+        myfree(tmp);
+
+        socket_disconnect(s);
+        return (0);
+    }
+
+    if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
+        char *tmp = iptodynstr(address);
+        ERR("SDLNet_UDP_AddSocket %s failed", tmp);
+        WARN("  %s", SDLNet_GetError());
+        myfree(tmp);
+
+        socket_disconnect(s);
+        return (0);
+    }
+
+    s->local_ip = address;
+    s->server = true;
+
+    return (s);
+}
+
+socketp socket_find (IPaddress address)
+{
+    socket findme;
+    socket *s;
+
+    memset(&findme, 0, sizeof(findme));
+    findme.tree.key1 = address.host;
+    findme.tree.key2 = address.port;
+
+    s = (typeof(s)) tree_find(sockets, &findme.tree.node);
+
+    return (s);
 }
 
 socket *socket_connect (IPaddress address, boolean server_side_client)
 {
     IPaddress connect_address = address;
 
-    socket *s = 0;
-    uint32_t si;
-
     /*
      * Reopen?
      */
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        s = &net.sockets[si];
-
-        if (!memcmp(&s->remote_ip, &address, sizeof(no_address))) {
-            if (s->open) {
-                return (s);
-            } else {
-                break;
-            }
-        }
+    socketp s = socket_find(address);
+    if (s) {
+        return (s);
     }
 
-    /*
-     * Find the first free socket.
-     */
-    if (si == MAX_SOCKETS) {
-        for (si = 0; si < MAX_SOCKETS; si++) {
-            s = &net.sockets[si];
-            if (s->open) {
-                continue;
-            }
-
-            break;
-        }
-    }
-
-    if (si == MAX_SOCKETS) {
-        WARN("No more sockets [%u] are available for connecting to clients",
-             MAX_SOCKETS);
+    s = socket_create(address);
+    if (!s) {
         return (0);
     }
-
-    /*
-     * If no address is given, try and grab one from our well known base.
-     */
-    if (!memcmp(&no_address, &connect_address, sizeof(no_address))) {
-        DBG("Resolve client host %s port %u", 
-            SERVER_DEFAULT_HOST, 
-            SERVER_DEFAULT_PORT);
-
-        if ((SDLNet_ResolveHost(&connect_address, 
-                                SERVER_DEFAULT_HOST,
-                                SERVER_DEFAULT_PORT)) == -1) {
-            WARN("Cannot resolve host %s port %u", 
-                SERVER_DEFAULT_HOST, 
-                SERVER_DEFAULT_PORT);
-            return (false);
-        }
-
-        if (!memcmp(&no_address, &connect_address, sizeof(no_address))) {
-            WARN("Cannot get a local port to connect on");
-            return (false);
-        }
-    }
-
-    /*
-     * If given an address, we must listn on that specific address.
-     * If not then we can look for the next free.
-     */
-    uint16_t port = SDLNet_Read16(&connect_address.port);
-
-    SDLNet_Write16(port, &connect_address.port);
-    port = SDLNet_Read16(&connect_address.port);
 
     s->udp_socket = SDLNet_UDP_Open(0);
     if (!s->udp_socket) {
@@ -388,7 +259,9 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
         ERR("SDLNet_UDP_Open %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
-        return (false);
+
+        socket_disconnect(s);
+        return (0);
     }
 
     s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
@@ -397,16 +270,9 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
         ERR("SDLNet_UDP_Bind %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
-        return (false);
-    }
 
-    s->socklist = SDLNet_AllocSocketSet(MAX_SOCKETS);
-    if (!s->socklist) {
-        char *tmp = iptodynstr(connect_address);
-        ERR("SDLNet_AllocSocketSet %s failed", tmp);
-        WARN("  %s", SDLNet_GetError());
-        myfree(tmp);
-        return (false);
+        socket_disconnect(s);
+        return (0);
     }
 
     if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
@@ -414,10 +280,11 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
         ERR("SDLNet_UDP_AddSocket %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
-        return (false);
+
+        socket_disconnect(s);
+        return (0);
     }
 
-    s->open = true;
     s->server_side_client = server_side_client;
 
     if (!server_side_client) {
@@ -426,19 +293,14 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
 
     s->remote_ip = connect_address;
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
-    s->index = s - net.sockets;
 
     LOG("Peer up [%s]", socket_get_remote_logname(s));
 
     return (s);
 }
 
-void socket_disconnect (socketp s)
+static void socket_destroy (socketp s)
 {
-    if (!s->open) {
-        return;
-    }
-
     socket_set_connected(s, false);
 
     LOG("Peer disc [%s]", socket_get_remote_logname(s));
@@ -462,8 +324,13 @@ void socket_disconnect (socketp s)
     }
 
     socket_set_player(s, 0);
+}
 
-    memset(s, 0, sizeof(*s));
+void socket_disconnect (socketp s)
+{
+    tree_remove_found_node(sockets, &s->tree.node);
+
+    socket_destroy(s);
 }
 
 /*
@@ -520,22 +387,10 @@ boolean debug_socket_players_enable (tokens_t *tokens, void *context)
     return (true);
 }
 
-socket *socket_get (uint32_t si)
-{
-    if (si >= MAX_SOCKETS) {
-        return (0);
-    }
-
-    return (&net.sockets[si]);
-}
-
 socket *socket_find_local_ip (IPaddress address)
 {
-    uint32_t si;
-
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socket *s = &net.sockets[si];
-
+    socketp s;
+    TREE_WALK(sockets, s) {
         if (!memcmp(&address, &s->local_ip, sizeof(IPaddress))) {
             return (s);
         }
@@ -546,11 +401,8 @@ socket *socket_find_local_ip (IPaddress address)
 
 socket *socket_find_remote_ip (IPaddress address)
 {
-    uint32_t si;
-
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socket *s = &net.sockets[si];
-
+    socketp s;
+    TREE_WALK(sockets, s) {
         if (!memcmp(&address, &s->remote_ip, sizeof(IPaddress))) {
             return (s);
         }
@@ -626,14 +478,12 @@ char *iprawporttodynstr (IPaddress ip)
 
 static boolean sockets_show_all (tokens_t *tokens, void *context)
 {
-    int si;
+    uint32_t si = 0;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        const socketp s = &net.sockets[si];
+    socketp s;
+    TREE_WALK(sockets, s) {
 
-        if (!s->open) {
-            continue;
-        }
+        si++;
 
         if (s->server) {
             CON("[%u] Server", si);
@@ -734,17 +584,15 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
 
 static boolean sockets_show_summary (tokens_t *tokens, void *context)
 {
-    int si;
+    int si = 0;
 
     CON("Name                 Quality  Latency       Remote IP           Local IP");
     CON("----                 -------  ------- -------------------- ------------------");
         
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        const socketp s = &net.sockets[si];
+    socketp s;
+    TREE_WALK(sockets, s) {
 
-        if (!s->open) {
-            continue;
-        }
+        si++;
 
         /*
          * Ping stats.
@@ -810,15 +658,9 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
 
 boolean sockets_quality_check (void)
 {
-    int si;
+    socketp s;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        const socketp s = &net.sockets[si];
-
-        if (!s->open) {
-            continue;
-        }
-
+    TREE_WALK(sockets, s) {
         /*
          * Ping stats.
          */
@@ -885,17 +727,11 @@ boolean sockets_quality_check (void)
 
 void sockets_alive_check (void)
 {
-    uint32_t si;
-
     sockets_quality_check();
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp s = &net.sockets[si];
+    socketp s;
 
-        if (!s->open) {
-            continue;
-        }
-
+    TREE_WALK(sockets, s) {
         /*
          * Don't kill off new born connections.
          */
@@ -965,11 +801,6 @@ const char * socket_get_remote_logname (const socketp s)
     }
 
     return (s->remote_logname);
-}
-
-boolean socket_get_open (const socketp s)
-{
-    return (s->open);
 }
 
 boolean socket_get_server (const socketp s)
@@ -1277,7 +1108,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
         socket_set_player(s, p);
     }
 
-    memcpy(p->name, msg.name, PLAYER_NAME_MAX);
+    memcpy(p->name, msg.name, PLAYER_NAME_LEN_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
 }
@@ -1348,7 +1179,7 @@ void socket_rx_join (socketp s, UDPpacket *packet, uint8_t *data)
         socket_set_player(s, p);
     }
 
-    memcpy(p->name, msg.name, PLAYER_NAME_MAX);
+    memcpy(p->name, msg.name, PLAYER_NAME_LEN_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
 }
@@ -1533,11 +1364,9 @@ void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
-    uint32_t si;
+    socketp sp;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp sp = &net.sockets[si];
-
+    TREE_WALK(sockets, sp) {
         if (sp == s) {
             continue;
         }
@@ -1603,12 +1432,12 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char txt[PLAYER_MSG_MAX + 1] = {0};
-    char from[PLAYER_NAME_MAX + 1] = {0};
-    char to[PLAYER_NAME_MAX + 1] = {0};
+    char from[PLAYER_NAME_LEN_MAX + 1] = {0};
+    char to[PLAYER_NAME_LEN_MAX + 1] = {0};
 
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
-    memcpy(from, msg.from, PLAYER_NAME_MAX);
-    memcpy(to, msg.to, PLAYER_NAME_MAX);
+    memcpy(from, msg.from, PLAYER_NAME_LEN_MAX);
+    memcpy(to, msg.to, PLAYER_NAME_LEN_MAX);
 
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
@@ -1622,10 +1451,9 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
-    uint32_t si;
+    socketp sp;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp sp = &net.sockets[si];
+    TREE_WALK(sockets, sp) {
 
         if (sp == s) {
             continue;
@@ -1650,31 +1478,32 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
  */
 void socket_tx_players_all (void)
 {
-    aplayer players[MAX_SOCKETS];
+    aplayer players[MAX_PLAYERS];
 
     memset(&players, 0, sizeof(players));
 
     msg_players msg = {0};
     msg.type = MSG_TYPE_PLAYERS_ALL;
 
-    uint32_t si;
+    socketp s;
+    uint32_t si = 0;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp s = &net.sockets[si];
-
-        if (!s->connected) {
-            continue;
-        }
-
+    TREE_WALK(sockets, s) {
         if (!s->server_side_client) {
             continue;
         }
 
-        msg_player *msg_tx = &msg.players[si];
         aplayer *p = s->player;
         if (!s->player) {
-            return;
+            continue;
         }
+
+        if (si >= MAX_PLAYERS) {
+            ERR("too many players to send all in message");
+            continue;
+        }
+
+        msg_player *msg_tx = &msg.players[si];
 
         strncpy(msg_tx->name, p->name, min(sizeof(msg_tx->name), 
                                             strlen(p->name))); 
@@ -1691,34 +1520,36 @@ void socket_tx_players_all (void)
         SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
 
         SDLNet_Write32(p->score, &msg_tx->score);
+
+        si++;
     }
 
     UDPpacket *packet = socket_alloc_msg();
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp s = &net.sockets[si];
+    {
+        TREE_WALK(sockets, s) {
+            if (!s->connected) {
+                continue;
+            }
 
-        if (!s->connected) {
-            continue;
+            if (!s->server_side_client) {
+                continue;
+            }
+
+            if (debug_socket_players_enabled) {
+                LOG("Tx All Players [to %s]",
+                    socket_get_remote_logname(s));
+            }
+
+            packet->len = sizeof(msg);
+            write_address(packet, socket_get_remote_ip(s));
+
+            socket_tx_msg(s, packet);
         }
-
-        if (!s->server_side_client) {
-            continue;
-        }
-
-        if (debug_socket_players_enabled) {
-            LOG("Tx All Players [to %s]",
-                socket_get_remote_logname(s));
-        }
-
-        packet->len = sizeof(msg);
-        write_address(packet, socket_get_remote_ip(s));
-
-        socket_tx_msg(s, packet);
     }
-        
+            
     socket_free_msg(packet);
 }
 
@@ -1735,15 +1566,15 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
         return;
     }
 
-    uint32_t si;
+    uint32_t pi;
 
     msg = (typeof(msg)) packet->data;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        aplayer *p = &players[si];
-        msg_player *msg_rx = &msg->players[si];
+    for (pi = 0; pi < MAX_PLAYERS; pi++) {
+        aplayer *p = &players[pi];
+        msg_player *msg_rx = &msg->players[pi];
 
-        memcpy(p->name, msg_rx->name, PLAYER_NAME_MAX);
+        memcpy(p->name, msg_rx->name, PLAYER_NAME_LEN_MAX);
 
         p->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
         p->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);
@@ -1765,7 +1596,7 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Rx All Players [from %s] %u:\"%s\"", tmp, si, p->name);
+            LOG("Rx All Players [from %s] %u:\"%s\"", tmp, pi, p->name);
             myfree(tmp);
         }
     }
