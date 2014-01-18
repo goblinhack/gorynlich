@@ -17,6 +17,7 @@
 #include "command.h"
 #include "player.h"
 #include "string.h"
+#include "tree.h"
 
 /*
  * Which socket we have actually joined on.
@@ -40,8 +41,8 @@ static boolean client_socket_tell(char *from, char *to, char *msg);
 static boolean client_socket_join(char *host, char *port);
 static boolean client_socket_set_name(char *name);
 
-aplayer client_players[MAX_SOCKETS];
-static char client_name[PLAYER_NAME_MAX];
+aplayer client_players[MAX_PLAYERS];
+static char client_name[PLAYER_NAME_LEN_MAX];
 static boolean joined;
 
 boolean client_init (void)
@@ -110,17 +111,11 @@ void client_fini (void)
 
 static void client_alive_check (void)
 {
-    uint32_t si;
+    socketp s;
 
     sockets_quality_check();
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        const socketp s = socket_get(si);
-
-        if (!socket_get_open(s)) {
-            continue;
-        }
-
+    TREE_WALK(sockets, s) {
         if (!socket_get_client(s)) {
             continue;
         }
@@ -155,14 +150,9 @@ static void client_socket_tx_ping (void)
         return;
     }
 
-    uint32_t si;
+    socketp s;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp s = socket_get(si);
-        if (!s) {
-            continue;
-        }
-
+    TREE_WALK(sockets, s) {
         if (!socket_get_client(s)) {
             continue;
         }
@@ -199,7 +189,7 @@ static boolean client_set_name (tokens_t *tokens, void *context)
     char *s = tokens->args[2];
 
     if (!s || !*s) {
-        ERR("need to set a name");
+        WARN("need to set a name");
         return (false);
     }
 
@@ -249,21 +239,12 @@ static boolean client_socket_close (char *host, char *port)
     socketp s = 0;
 
     if (!host && !port) {
-        uint32_t si;
-
-        for (si = 0; si < MAX_SOCKETS; si++) {
-            s = socket_get(si);
-            if (!s) {
-                continue;
-            }
-
-            if (socket_get_open(s)) {
-                break;
-            }
+        TREE_WALK(sockets, s) {
+            break;
         }
 
-        if (si == MAX_SOCKETS) {
-            ERR("do not know which socket to close");
+        if (!s) {
+            WARN("Do not know which socket to close");
             return (false);
         }
     } else {
@@ -309,7 +290,7 @@ static boolean client_socket_close (char *host, char *port)
 static boolean client_socket_join (char *host, char *port)
 {
     if (client_joined_server) {
-        ERR("Leave the current server first");
+        WARN("Leave the current server first");
         return (false);
     }
 
@@ -317,21 +298,12 @@ static boolean client_socket_join (char *host, char *port)
     socketp s = 0;
 
     if (!host && !port) {
-        uint32_t si;
-
-        for (si = 0; si < MAX_SOCKETS; si++) {
-            s = socket_get(si);
-            if (!s) {
-                continue;
-            }
-
-            if (socket_get_open(s)) {
-                break;
-            }
+        TREE_WALK(sockets, s) {
+            break;
         }
 
-        if (si == MAX_SOCKETS) {
-            ERR("do not know which socket to join on");
+        if (!s) {
+            WARN("Do not know which socket to join");
             return (false);
         }
     } else {
@@ -377,7 +349,7 @@ static boolean client_socket_join (char *host, char *port)
 static boolean client_socket_leave (void)
 {
     if (!client_joined_server) {
-        ERR("Join a server first");
+        WARN("Join a server first before trying to leave");
         return (false);
     }
 
@@ -396,12 +368,12 @@ static boolean client_socket_leave (void)
 static boolean client_socket_shout (char *shout)
 {
     if (!client_joined_server) {
-        ERR("Join a server first");
+        WARN("Join a server first before trying to shout");
         return (false);
     }
 
     if (!shout || !*shout) {
-        ERR("no message");
+        WARN("No message");
         return (false);
     }
 
@@ -413,21 +385,21 @@ static boolean client_socket_shout (char *shout)
 static boolean client_socket_tell (char *from, char *to, char *msg)
 {
     if (!client_joined_server) {
-        ERR("Join a server first");
+        WARN("Join a server first before trying to speak");
         return (false);
     }
 
     if (!from || !*from) {
-        ERR("no sender");
+        WARN("no sender");
         return (false);
     }
 
     if (!to || !*to) {
-        ERR("no recipient");
+        WARN("no recipient");
         return (false);
     }
     if (!msg || !*msg) {
-        ERR("no message");
+        WARN("no message");
         return (false);
     }
 
@@ -442,12 +414,12 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
 static boolean client_socket_set_name (char *name)
 {
     if (!client_joined_server) {
-        ERR("Join a server first");
+        WARN("Join a server first before trying to set your name");
         return (false);
     }
 
     if (!name || !*name) {
-        ERR("need to set a name");
+        WARN("need to set a name");
         return (false);
     }
 
@@ -536,7 +508,7 @@ boolean client_shout (tokens_t *tokens, void *context)
     }
 
     if (!tmp || !*tmp) {
-        ERR("no message");
+        WARN("no message");
         return (false);
     }
 
@@ -554,8 +526,8 @@ boolean client_shout (tokens_t *tokens, void *context)
  */
 boolean client_tell (tokens_t *tokens, void *context)
 {
-    char from[PLAYER_NAME_MAX] = {0};
-    char to[PLAYER_NAME_MAX] = {0};
+    char from[PLAYER_NAME_LEN_MAX] = {0};
+    char to[PLAYER_NAME_LEN_MAX] = {0};
     char msg[PLAYER_MSG_MAX] = {0};
     uint32_t i = 1;
     char *tmp;
@@ -564,7 +536,7 @@ boolean client_tell (tokens_t *tokens, void *context)
 
     char *s = tokens->args[i++];
     if (!s || !*s) {
-        ERR("no one to tell");
+        WARN("no one to tell");
         return (false);
     }
 
@@ -587,7 +559,7 @@ boolean client_tell (tokens_t *tokens, void *context)
     }
 
     if (!tmp || !*tmp) {
-        ERR("no message");
+        WARN("no message");
         return (false);
     }
 
@@ -600,18 +572,9 @@ boolean client_tell (tokens_t *tokens, void *context)
 
 static void client_poll (void)
 {
-    uint32_t si;
+    socketp s;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
-        socketp s = socket_get(si);
-        if (!s) {
-            continue;
-        }
-
-        if (!socket_get_open(s)) {
-            continue;
-        }
-
+    TREE_WALK(sockets, s) {
         if (!socket_get_client(s)) {
             continue;
         }
@@ -691,7 +654,7 @@ static boolean client_players_show (tokens_t *tokens, void *context)
 
     uint32_t si;
 
-    for (si = 0; si < MAX_SOCKETS; si++) {
+    for (si = 0; si < MAX_PLAYERS; si++) {
         aplayer *p = &client_players[si];
 
         if (!p->name[0]) {
