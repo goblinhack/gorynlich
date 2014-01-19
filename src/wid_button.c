@@ -54,6 +54,7 @@ wid_button_internal (const char *text, float x, float y, fontp font,
     {
         wid_button_window = wid_new_square_window("wid_button");
         wid_set_text(wid_button_window, text);
+        wid_set_font(wid_button_window, med_font);
 
         wid_set_color(wid_button_window, WID_COLOR_TEXT, WHITE);
 

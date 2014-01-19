@@ -294,6 +294,16 @@ static void wid_console_wid_create (void)
                 wid_set_name(child, "console input");
                 wid_set_focusable(child, 1);
                 wid_console_input_line = child;
+                wid_move_delta(child, 15, 0);
+
+                widp prefix = wid_new_container(wid_console_container, "");
+                wid_set_tl_br_pct(prefix, tl, br);
+                wid_set_text_lhs(prefix, true);
+                wid_set_text_bot(prefix, true);
+                wid_set_text_fixed_width(prefix, true);
+                wid_set_font(prefix, font);
+                wid_set_text(prefix,">");
+
             } else {
                 wid_set_color(child, WID_COLOR_TEXT, CONSOLE_TEXT_COLOR);
                 wid_set_name(child, "console output");
