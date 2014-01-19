@@ -45,7 +45,6 @@ static void client_check_still_in_game(void);
 
 aplayer client_players[MAX_PLAYERS];
 static char client_name[PLAYER_NAME_LEN_MAX];
-static boolean joined;
 
 boolean client_init (void)
 {
@@ -351,8 +350,6 @@ static boolean client_socket_join (char *host, char *port)
 
     verify(client_joined_server);
 
-    joined = true;
-
     return (true);
 }
 
@@ -366,7 +363,7 @@ static boolean client_socket_leave_implicit (void)
 
     client_joined_server = 0;
 
-    joined = true;
+    memset(client_players, 0, sizeof(client_players));
 
     return (true);
 }
@@ -387,7 +384,7 @@ static boolean client_socket_leave (void)
 
     client_joined_server = 0;
 
-    joined = true;
+    memset(client_players, 0, sizeof(client_players));
 
     return (true);
 }
