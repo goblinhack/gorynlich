@@ -10,16 +10,17 @@
 #include "tree.h"
 
 typedef enum {
-    MSG_TYPE_PING,
-    MSG_TYPE_PONG,
-    MSG_TYPE_NAME,
-    MSG_TYPE_SHOUT,
-    MSG_TYPE_TELL,
-    MSG_TYPE_PLAYERS_ALL,
-    MSG_TYPE_JOIN,
-    MSG_TYPE_LEAVE,
-    MSG_TYPE_CLOSE,
-    MSG_TYPE_MAX,
+    MSG_PING,
+    MSG_PONG,
+    MSG_NAME,
+    MSG_SHOUT,
+    MSG_TELL,
+    MSG_CLIENT_JOIN,
+    MSG_CLIENT_LEAVE,
+    MSG_CLIENT_CLOSE,
+    MSG_SERVER_CLOSE,
+    MSG_SERVER_STATUS,
+    MSG_MAX,
 } msg_type;
 
 typedef struct socket_ {
@@ -53,8 +54,8 @@ typedef struct socket_ {
     uint32_t tx_error;
     uint32_t rx_bad_msg;
     uint32_t ping_responses[SOCKET_PING_SEQ_NO_RANGE];
-    uint32_t tx_msg[MSG_TYPE_MAX];
-    uint32_t rx_msg[MSG_TYPE_MAX];
+    uint32_t tx_msg[MSG_MAX];
+    uint32_t rx_msg[MSG_MAX];
     int channel;
     const char *local_logname;
     const char *remote_logname;
@@ -68,6 +69,7 @@ extern boolean socket_init(void);
 extern void socket_fini(void);
 extern char *iptodynstr(IPaddress ip);
 extern char *iprawtodynstr(IPaddress ip);
+extern char *iptodynstr_no_resolve(IPaddress ip);
 extern char *iprawporttodynstr(IPaddress ip);
 
 extern IPaddress server_address;
@@ -119,19 +121,21 @@ extern void socket_rx_ping(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_name(socketp s);
 extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_join(socketp s);
-extern void socket_rx_join(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_leave(socketp s);
-extern void socket_rx_leave(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_close(socketp s);
-extern void socket_rx_close(socketp s, UDPpacket *packet, uint8_t *data);
+extern boolean socket_tx_client_join(socketp s, uint32_t *key);
+extern void socket_rx_client_join(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_client_leave(socketp s);
+extern void socket_rx_client_leave(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_client_close(socketp s);
+extern void socket_rx_client_close(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_server_close(void);
+extern void socket_rx_server_close(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_shout(socketp s, const char *shout);
 extern void socket_rx_shout(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_tell(socketp s, 
                            const char *from, const char *to, const char *shout);
 extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_players_all(void);
-extern void socket_rx_players_all(socketp s, UDPpacket *packet, uint8_t *data,
+extern void socket_tx_server_status(void);
+extern void socket_rx_server_status(socketp s, UDPpacket *packet, uint8_t *data,
                                   aplayerp players);
 extern boolean sockets_quality_check(void);
 extern uint32_t socket_get_quality(socketp s);
@@ -162,6 +166,11 @@ static inline void write_address (UDPpacket *packet, IPaddress i)
 {
     packet->address.host = i.host;
     packet->address.port = i.port;
+}
+
+static inline boolean cmp_address (const IPaddress *a, const IPaddress *b)
+{
+    return ((a->host == b->host) && (a->port == b->port));
 }
 
 extern tree_rootp sockets;

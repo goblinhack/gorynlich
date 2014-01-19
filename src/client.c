@@ -23,6 +23,7 @@
  * Which socket we have actually joined on.
  */
 static socketp client_joined_server;
+static uint32_t client_joined_server_key;
 
 static void client_socket_tx_ping(void);
 static boolean client_init_done;
@@ -40,6 +41,7 @@ static boolean client_socket_shout(char *shout);
 static boolean client_socket_tell(char *from, char *to, char *msg);
 static boolean client_socket_join(char *host, char *port);
 static boolean client_socket_set_name(char *name);
+static void client_check_still_in_game(void);
 
 aplayer client_players[MAX_PLAYERS];
 static char client_name[PLAYER_NAME_LEN_MAX];
@@ -66,8 +68,7 @@ boolean client_init (void)
         return (false);
     }
 
-    LOG("Client connecting to   %s", socket_get_remote_logname(s));
-    LOG("                  from %s", socket_get_local_logname(s));
+    LOG("Client trying to connect to %s", socket_get_remote_logname(s));
 
     command_add(client_set_name, "set name [A-Za-z0-9_-]*",
                 "set player name");
@@ -106,6 +107,10 @@ void client_fini (void)
 
     if (client_init_done) {
         client_init_done = false;
+
+        if (client_joined_server) {
+            socket_tx_client_close(client_joined_server);
+        }
     }
 }
 
@@ -127,12 +132,11 @@ static void client_alive_check (void)
             continue;
         }
 
-        if (socket_get_quality(s) < SOCKET_PING_FAIL_THRESHOLD) {
+        if (socket_get_quality(s) <= SOCKET_PING_FAIL_THRESHOLD) {
             /*
              * Clients try forever. Server clients disconnect.
              */
-            LOG("Server down [%s] qual %u percent",
-                socket_get_remote_logname(s), socket_get_quality(s));
+            socket_set_connected(s, false);
 
             if (client_joined_server == s) {
                 client_socket_leave();
@@ -178,6 +182,7 @@ void client_tick (void)
     }
 
     client_poll();
+
     client_socket_tx_ping();
 }
 
@@ -227,9 +232,6 @@ static boolean client_socket_open (char *host, char *port)
         return (false);
     }
 
-    LOG("Client connecting to %s", socket_get_remote_logname(s));
-    LOG("                from %s", socket_get_local_logname(s));
-
     return (true);
 }
 
@@ -278,9 +280,8 @@ static boolean client_socket_close (char *host, char *port)
     }
 
     LOG("Client disconnecting %s", socket_get_remote_logname(s));
-    LOG("                from %s", socket_get_local_logname(s));
 
-    socket_tx_close(s);
+    socket_tx_client_close(s);
 
     socket_disconnect(s);
 
@@ -334,10 +335,11 @@ static boolean client_socket_join (char *host, char *port)
 
     socket_set_name(s, client_name);
 
-    socket_tx_join(s);
+    if (!socket_tx_client_join(s, &client_joined_server_key)) {
+        return (false);
+    }
 
     LOG("Client joining %s", socket_get_remote_logname(s));
-    LOG("          from %s", socket_get_local_logname(s));
 
     client_joined_server = s;
 
@@ -356,7 +358,7 @@ static boolean client_socket_leave (void)
     LOG("Client leaving %s", 
         socket_get_remote_logname(client_joined_server));
 
-    socket_tx_leave(client_joined_server);
+    socket_tx_client_leave(client_joined_server);
 
     client_joined_server = 0;
 
@@ -615,24 +617,30 @@ static void client_poll (void)
             socket_count_inc_pak_rx(s, type);
 
             switch (type) {
-            case MSG_TYPE_PONG:
+            case MSG_PONG:
                 socket_rx_pong(s, packet, data);
                 break;
 
-            case MSG_TYPE_PING:
+            case MSG_PING:
                 socket_rx_ping(s, packet, data);
                 break;
 
-            case MSG_TYPE_SHOUT:
+            case MSG_SHOUT:
                 socket_rx_shout(s, packet, data);
                 break;
 
-            case MSG_TYPE_TELL:
+            case MSG_TELL:
                 socket_rx_tell(s, packet, data);
                 break;
 
-            case MSG_TYPE_PLAYERS_ALL:
-                socket_rx_players_all(s, packet, data, &client_players[0]);
+            case MSG_SERVER_STATUS:
+                socket_rx_server_status(s, packet, data, &client_players[0]);
+
+                client_check_still_in_game();
+                break;
+
+            case MSG_SERVER_CLOSE:
+                socket_rx_client_close(s, packet, data);
                 break;
 
             default:
@@ -649,30 +657,68 @@ static void client_poll (void)
  */
 static boolean client_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name                 Quality  Latency       Remote IP       Score ");
-    CON("----                 -------  ------- -------------------- -------");
+    CON("Name           Quality  Latency      Remote IP      Local IP     Score ");
+    CON("----           -------  ------- --------------- --------------- -------");
 
-    uint32_t si;
+    uint32_t pi;
 
-    for (si = 0; si < MAX_PLAYERS; si++) {
-        aplayer *p = &client_players[si];
+    for (pi = 0; pi < MAX_PLAYERS; pi++) {
+        aplayer *p = &client_players[pi];
+
+        char *tmp = iptodynstr(p->local_ip);
+        char *tmp2 = iptodynstr(p->remote_ip);
+
+        CON("[%d] %-10s %3d pct %5d ms %-15s %-15s %07d", 
+            pi, 
+            p->name,
+            p->quality,
+            p->avg_latency,
+            tmp,
+            tmp2,
+            p->score);
+
+        myfree(tmp);
+        myfree(tmp2);
+    }
+
+    return (true);
+}
+
+static void client_check_still_in_game (void)
+{
+    uint32_t pi;
+
+    if (!client_joined_server) {
+        return;
+    }
+
+    if (!socket_get_connected(client_joined_server)) {
+        return;
+    }
+
+    for (pi = 0; pi < MAX_PLAYERS; pi++) {
+        aplayer *p = &client_players[pi];
 
         if (!p->name[0]) {
             continue;
         }
 
-        char *tmp2 = iptodynstr(p->remote_ip);
+        if (p->key != client_joined_server_key) {
+            continue;
+        }
 
-        CON("%-20s %3d pct %5d ms %-20s %07d", 
-            p->name,
-            p->quality,
-            p->avg_latency,
-            tmp2,
-            p->score);
+        if (strcmp(p->name, client_name)) {
+            continue;
+        }
 
-        myfree(tmp2);
+        if (!p->connection_confrimed) {
+            p->connection_confrimed = true;
+            LOG("Server has added you, \"%s\" to the game", client_name);
+        }
 
+        return;
     }
 
-    return (true);
+    CON("Server does not report you in the game!");
 }
+

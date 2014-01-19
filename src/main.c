@@ -102,9 +102,9 @@ void quit (void)
 
     command_fini();
 
-    socket_fini();
-    server_fini();
     client_fini();
+    server_fini();
+    socket_fini();
     wid_fini();
     ttf_fini();
     font_fini();

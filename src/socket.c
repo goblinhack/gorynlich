@@ -26,15 +26,20 @@ tree_rootp sockets;
 typedef struct {
     uint8_t type;
     char name[PLAYER_NAME_LEN_MAX];
-} __attribute__ ((packed)) msg_join;
+    uint32_t key;
+} __attribute__ ((packed)) msg_client_join;
 
 typedef struct {
     uint8_t type;
-} __attribute__ ((packed)) msg_leave;
+} __attribute__ ((packed)) msg_client_leave;
 
 typedef struct {
     uint8_t type;
-} __attribute__ ((packed)) msg_close;
+} __attribute__ ((packed)) msg_client_close;
+
+typedef struct {
+    uint8_t type;
+} __attribute__ ((packed)) msg_server_close;
 
 typedef struct {
     uint8_t type;
@@ -62,6 +67,7 @@ typedef struct {
     uint16_t min_latency;
     uint16_t max_latency;
     uint32_t score;
+    uint32_t key;
 } __attribute__ ((packed)) msg_player;
 
 typedef struct {
@@ -170,6 +176,8 @@ static socketp socket_create (IPaddress address)
 
 socket *socket_listen (IPaddress address)
 {
+    IPaddress listen_address;
+
     /*
      * Relisten?
      */
@@ -195,7 +203,7 @@ socket *socket_listen (IPaddress address)
         return (0);
     }
 
-    s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &address);
+    s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
     if (s->channel < 0) {
         char *tmp = iptodynstr(address);
         ERR("SDLNet_UDP_Bind %s failed", tmp);
@@ -294,7 +302,11 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
     s->remote_ip = connect_address;
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
 
-    LOG("Peer up [%s]", socket_get_remote_logname(s));
+    LOG("Socket create to %s", socket_get_remote_logname(s));
+
+    if (debug_socket_connect_enabled) {
+        LOG("       from      %s", socket_get_local_logname(s));
+    }
 
     return (s);
 }
@@ -303,7 +315,7 @@ static void socket_destroy (socketp s)
 {
     socket_set_connected(s, false);
 
-    LOG("Peer disc [%s]", socket_get_remote_logname(s));
+    LOG("Socket destroy [%s]", socket_get_remote_logname(s));
 
     if (s->socklist) {
         SDLNet_FreeSocketSet(s->socklist);
@@ -391,7 +403,7 @@ socket *socket_find_local_ip (IPaddress address)
 {
     socketp s;
     TREE_WALK(sockets, s) {
-        if (!memcmp(&address, &s->local_ip, sizeof(IPaddress))) {
+        if (cmp_address(&address, &s->local_ip)) {
             return (s);
         }
     }
@@ -403,7 +415,7 @@ socket *socket_find_remote_ip (IPaddress address)
 {
     socketp s;
     TREE_WALK(sockets, s) {
-        if (!memcmp(&address, &s->remote_ip, sizeof(IPaddress))) {
+        if (cmp_address(&address, &s->remote_ip)) {
             return (s);
         }
     }
@@ -422,7 +434,7 @@ char *iptodynstr (IPaddress ip)
 
     uint16_t port = SDLNet_Read16(&ip.port);
 
-    if (!memcmp(&ip, &no_address, sizeof(no_address))) {
+    if (cmp_address(&ip, &no_address)) {
         return (dynprintf("-"));
     }
 
@@ -430,10 +442,6 @@ char *iptodynstr (IPaddress ip)
         return (dynprintf("IPv4 %u.%u.%u.%u:%u",
                           hostname, ip1, ip2, ip3, ip4, port));
 
-    }
-
-    if (!strcmp(hostname, "0.0.0.0")) {
-        hostname = "lhost";
     }
 
     if (strstr(hostname, "localhost")) {
@@ -455,6 +463,20 @@ char *iptodynstr (IPaddress ip)
     return (dynprintf("%s%s%u.%u.%u.%u:%u",
                       hostname && *hostname ? hostname : "",
                       hostname && *hostname ? "," : "",
+                      ip1, ip2, ip3, ip4, port));
+}
+
+char *iptodynstr_no_resolve (IPaddress ip)
+{
+    uint32_t ipv4 = SDLNet_Read32(&ip.host);
+    uint8_t ip1 = (ipv4>>24) & 0xFF;
+    uint8_t ip2 = (ipv4>>16) & 0xFF;
+    uint8_t ip3 = (ipv4>>8)  & 0xFF;
+    uint8_t ip4 = ipv4 & 0xFF;
+
+    uint16_t port = SDLNet_Read16(&ip.port);
+
+    return (dynprintf("%u.%u.%u.%u:%u",
                       ip1, ip2, ip3, ip4, port));
 }
 
@@ -505,24 +527,45 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         CON("  Errors   : tx error %u, rx error %u, bad message %u packets", 
             s->tx_error, s->rx_error, s->rx_bad_msg);
 
-        CON("  Ping     : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_PING], s->rx_msg[MSG_TYPE_PING]);
-        CON("  Pong     : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_PONG], s->rx_msg[MSG_TYPE_PONG]);
-        CON("  Name     : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_NAME], s->rx_msg[MSG_TYPE_NAME]);
-        CON("  Shout    : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_SHOUT], s->rx_msg[MSG_TYPE_SHOUT]);
-        CON("  Tell     : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_TELL], s->rx_msg[MSG_TYPE_TELL]);
-        CON("  Updates  : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_PLAYERS_ALL], s->rx_msg[MSG_TYPE_PLAYERS_ALL]);
-        CON("  Join     : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_JOIN], s->rx_msg[MSG_TYPE_JOIN]);
-        CON("  Leave    : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_LEAVE], s->rx_msg[MSG_TYPE_LEAVE]);
-        CON("  Close    : tx %u, rx %u",
-            s->tx_msg[MSG_TYPE_CLOSE], s->rx_msg[MSG_TYPE_CLOSE]);
+        CON("  Ping           : tx %u, rx %u",
+            s->tx_msg[MSG_PING], 
+            s->rx_msg[MSG_PING]);
+
+        CON("  Pong           : tx %u, rx %u",
+            s->tx_msg[MSG_PONG], 
+            s->rx_msg[MSG_PONG]);
+
+        CON("  Name           : tx %u, rx %u",
+            s->tx_msg[MSG_NAME], 
+            s->rx_msg[MSG_NAME]);
+
+        CON("  Shout          : tx %u, rx %u",
+            s->tx_msg[MSG_SHOUT], 
+            s->rx_msg[MSG_SHOUT]);
+
+        CON("  Tell           : tx %u, rx %u",
+            s->tx_msg[MSG_TELL], 
+            s->rx_msg[MSG_TELL]);
+
+        CON("  Join           : tx %u, rx %u",
+            s->tx_msg[MSG_CLIENT_JOIN], 
+            s->rx_msg[MSG_CLIENT_JOIN]);
+
+        CON("  Leave          : tx %u, rx %u",
+            s->tx_msg[MSG_CLIENT_LEAVE], 
+            s->rx_msg[MSG_CLIENT_LEAVE]);
+
+        CON("  Close          : tx %u, rx %u",
+            s->tx_msg[MSG_CLIENT_CLOSE], 
+            s->rx_msg[MSG_CLIENT_CLOSE]);
+
+        CON("  Server Status  : tx %u, rx %u",
+            s->tx_msg[MSG_SERVER_STATUS], 
+            s->rx_msg[MSG_SERVER_STATUS]);
+
+        CON("  Server Close   : tx %u, rx %u",
+            s->tx_msg[MSG_SERVER_CLOSE], 
+            s->rx_msg[MSG_SERVER_CLOSE]);
 
         /*
          * Ping stats.
@@ -755,7 +798,7 @@ void sockets_alive_check (void)
             }
 
             if (socket_get_client(s)) {
-                socket_tx_leave(s);
+                socket_tx_client_leave(s);
             }
         }
     }
@@ -835,18 +878,17 @@ void socket_set_connected (socketp s, boolean c)
     }
 
     if (c) {
-        if (debug_socket_connect_enabled) {
-            LOG("Connected to [%s]", socket_get_remote_logname(s));
-            LOG("  Locally    [%s]", socket_get_local_logname(s));
-        }
-
+        LOG("Connected to %s", socket_get_remote_logname(s));
     } else {
-        if (debug_socket_connect_enabled) {
-            LOG("Disconnected from [%s]", socket_get_remote_logname(s));
-        }
+        LOG("Disconnected from %s", socket_get_remote_logname(s));
     }
 
     s->connected = c;
+
+    /*
+     * For aliveness checks so they see this as a new connection.
+     */
+    s->tx = 0;
 }
 
 boolean socket_get_connected (const socketp s)
@@ -880,7 +922,7 @@ void socket_set_player (const socketp s, aplayer *p)
 
 void socket_count_inc_pak_rx (const socketp s, msg_type type)
 {
-    if (type < MSG_TYPE_MAX) {
+    if (type < MSG_MAX) {
         s->rx++;
         s->rx_msg[type]++;
     } else {
@@ -898,7 +940,7 @@ static void socket_count_inc_pak_rx_error (const socketp s, UDPpacket *packet)
     s->rx_error++;
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Bad socket message [from %s]", tmp);
+    LOG("Bad socket message from %s", tmp);
     myfree(tmp);
 }
 
@@ -962,7 +1004,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     uint8_t *data = packet->data;
     uint8_t *odata = data;
 
-    *data++ = MSG_TYPE_PING;
+    *data++ = MSG_PING;
     *data++ = seq;
 
     SDLNet_Write32(ts, data);               
@@ -994,7 +1036,7 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
     uint8_t *data = packet->data;
     uint8_t *odata = data;
 
-    *data++ = MSG_TYPE_PONG;
+    *data++ = MSG_PONG;
     *data++ = seq;
 
     SDLNet_Write32(ts, data);               
@@ -1016,7 +1058,7 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Ping [from %s] seq %u", tmp, seq);
+        LOG("Rx Ping from %s seq %u", tmp, seq);
         myfree(tmp);
     }
 
@@ -1033,7 +1075,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Pong [from %s] seq %u, elapsed %u",
+        LOG("Rx Pong from %s seq %u, elapsed %u",
             tmp, seq, time_get_time_cached() - ts);
         myfree(tmp);
     }
@@ -1062,7 +1104,7 @@ void socket_tx_name (socketp s)
     UDPpacket *packet = socket_alloc_msg();
 
     msg_name msg = {0};
-    msg.type = MSG_TYPE_NAME;
+    msg.type = MSG_NAME;
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1092,7 +1134,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Name [from %s] \"%s\"", tmp, msg.name);
+        LOG("Rx Name from %s \"%s\"", tmp, msg.name);
         myfree(tmp);
     }
 
@@ -1113,27 +1155,34 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     p->remote_ip = s->remote_ip;
 }
 
-void socket_tx_join (socketp s)
+boolean socket_tx_client_join (socketp s, uint32_t *key)
 {
     if (!socket_get_udp_socket(s)) {
-        return;
+        ERR("no socket to join on");
+        return (false);
     }
 
     /*
      * Refresh the server with our name.
      */
     if (!socket_get_client(s)) {
-        return;
+        ERR("not a client, cannot join");
+        return (false);
     }
 
     if (!s->connected) {
-        return;
+        ERR("not connected, cannot join yet");
+        return (false);
     }
 
     UDPpacket *packet = socket_alloc_msg();
 
-    msg_join msg = {0};
-    msg.type = MSG_TYPE_JOIN;
+    msg_client_join msg = {0};
+    msg.type = MSG_CLIENT_JOIN;
+
+    *key = rand() % time(NULL);
+    SDLNet_Write32(*key, &msg.key);
+
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1148,11 +1197,13 @@ void socket_tx_join (socketp s)
     socket_tx_msg(s, packet);
         
     socket_free_msg(packet);
+
+    return (true);
 }
 
-void socket_rx_join (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    msg_join msg = {0};
+    msg_client_join msg = {0};
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);
@@ -1163,7 +1214,7 @@ void socket_rx_join (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Join [from %s] \"%s\"", tmp, msg.name);
+        LOG("Rx Join from %s \"%s\"", tmp, msg.name);
         myfree(tmp);
     }
 
@@ -1182,9 +1233,10 @@ void socket_rx_join (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(p->name, msg.name, PLAYER_NAME_LEN_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
+    p->key = SDLNet_Read32(&msg.key);
 }
 
-void socket_tx_leave (socketp s)
+void socket_tx_client_leave (socketp s)
 {
     if (!socket_get_udp_socket(s)) {
         return;
@@ -1203,8 +1255,8 @@ void socket_tx_leave (socketp s)
 
     UDPpacket *packet = socket_alloc_msg();
 
-    msg_leave msg = {0};
-    msg.type = MSG_TYPE_LEAVE;
+    msg_client_leave msg = {0};
+    msg.type = MSG_CLIENT_LEAVE;
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -1222,9 +1274,9 @@ void socket_tx_leave (socketp s)
     socket_free_msg(packet);
 }
 
-void socket_rx_leave (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    msg_leave msg = {0};
+    msg_client_leave msg = {0};
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);
@@ -1235,12 +1287,12 @@ void socket_rx_leave (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx leave [from %s]", tmp);
+        LOG("Rx leave from %s", tmp);
         myfree(tmp);
     }
 }
 
-void socket_tx_close (socketp s)
+void socket_tx_client_close (socketp s)
 {
     if (!socket_get_udp_socket(s)) {
         return;
@@ -1259,14 +1311,12 @@ void socket_tx_close (socketp s)
 
     UDPpacket *packet = socket_alloc_msg();
 
-    msg_close msg = {0};
-    msg.type = MSG_TYPE_CLOSE;
+    msg_client_close msg = {0};
+    msg.type = MSG_CLIENT_CLOSE;
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_connect_enabled) {
-        LOG("Tx close [to %s]", socket_get_remote_logname(s));
-    }
+    LOG("Tx close [to %s]", socket_get_remote_logname(s));
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1276,9 +1326,9 @@ void socket_tx_close (socketp s)
     socket_free_msg(packet);
 }
 
-void socket_rx_close (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    msg_close msg = {0};
+    msg_client_close msg = {0};
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);
@@ -1287,11 +1337,9 @@ void socket_rx_close (socketp s, UDPpacket *packet, uint8_t *data)
 
     memcpy(&msg, packet->data, sizeof(msg));
 
-    if (debug_socket_connect_enabled) {
-        char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx close [from %s]", tmp);
-        myfree(tmp);
-    }
+    char *tmp = iptodynstr(read_address(packet));
+    LOG("Rx close from %s", tmp);
+    myfree(tmp);
 
     socket_disconnect(s);
 }
@@ -1309,7 +1357,7 @@ void socket_tx_shout (socketp s, const char *txt)
     UDPpacket *packet = socket_alloc_msg();
 
     msg_shout msg = {0};
-    msg.type = MSG_TYPE_SHOUT;
+    msg.type = MSG_SHOUT;
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1345,7 +1393,7 @@ void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Shout [from %s] \"%s\"", tmp, txt);
+        LOG("Rx Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
     }
 
@@ -1399,7 +1447,7 @@ void socket_tx_tell (socketp s,
     UDPpacket *packet = socket_alloc_msg();
 
     msg_tell msg = {0};
-    msg.type = MSG_TYPE_TELL;
+    msg.type = MSG_TELL;
 
     strncpy(msg.from, from, min(sizeof(msg.from) - 1, strlen(from))); 
     strncpy(msg.to, to, min(sizeof(msg.to) - 1, strlen(to))); 
@@ -1443,7 +1491,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Shout [from %s] \"%s\"", tmp, txt);
+        LOG("Rx Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
     }
 
@@ -1474,16 +1522,16 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
 }
 
 /*
- * Send an array of all curent players to all clients.
+ * Send an array of all current players to all clients.
  */
-void socket_tx_players_all (void)
+void socket_tx_server_status (void)
 {
     aplayer players[MAX_PLAYERS];
 
     memset(&players, 0, sizeof(players));
 
     msg_players msg = {0};
-    msg.type = MSG_TYPE_PLAYERS_ALL;
+    msg.type = MSG_SERVER_STATUS;
 
     socketp s;
     uint32_t si = 0;
@@ -1506,7 +1554,7 @@ void socket_tx_players_all (void)
         msg_player *msg_tx = &msg.players[si];
 
         strncpy(msg_tx->name, p->name, min(sizeof(msg_tx->name), 
-                                            strlen(p->name))); 
+                                           strlen(p->name))); 
 
         SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
         SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
@@ -1520,6 +1568,7 @@ void socket_tx_players_all (void)
         SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
 
         SDLNet_Write32(p->score, &msg_tx->score);
+        SDLNet_Write32(p->key, &msg_tx->key);
 
         si++;
     }
@@ -1554,9 +1603,9 @@ void socket_tx_players_all (void)
 }
 
 /*
- * Receive an array of all curent players from the server.
+ * Receive an array of all current players from the server.
  */
-void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
+void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
                             aplayer *players)
 {
     msg_players *msg;
@@ -1589,6 +1638,7 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
         p->max_latency = SDLNet_Read16(&msg_rx->max_latency);
 
         p->score = SDLNet_Read32(&msg_rx->score);
+        p->key = SDLNet_Read32(&msg_rx->key);
 
         if (!p->name[0]) {
             continue;
@@ -1596,10 +1646,59 @@ void socket_rx_players_all (socketp s, UDPpacket *packet, uint8_t *data,
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Rx All Players [from %s] %u:\"%s\"", tmp, pi, p->name);
+            LOG("Rx All Players from %s %u:\"%s\"", tmp, pi, p->name);
             myfree(tmp);
         }
     }
+}
+
+/*
+ * Tell all players the server is down.
+ */
+void socket_tx_server_close (void)
+{
+    msg_server_close msg = {0};
+    msg.type = MSG_SERVER_CLOSE;
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    socketp s;
+
+    TREE_WALK(sockets, s) {
+        if (!s->connected) {
+            continue;
+        }
+
+        if (!s->server_side_client) {
+            continue;
+        }
+
+        LOG("Tx Server down [to %s]",
+            socket_get_remote_logname(s));
+
+        packet->len = sizeof(msg);
+        write_address(packet, socket_get_remote_ip(s));
+
+        socket_tx_msg(s, packet);
+    }
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_server_close *msg;
+
+    if (packet->len != sizeof(*msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    char *tmp = iptodynstr(read_address(packet));
+    LOG("Rx Server down from %s", tmp);
+    myfree(tmp);
 }
 
 uint32_t socket_get_quality (socketp s)
