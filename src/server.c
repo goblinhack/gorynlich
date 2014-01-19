@@ -23,6 +23,7 @@ static boolean server_init_done;
 static socketp server_socket;
 
 static boolean server_players_show(tokens_t *tokens, void *context);
+static boolean server_shout(tokens_t *tokens, void *context);
 
 boolean server_init (void)
 {
@@ -54,6 +55,9 @@ boolean server_init (void)
                     "show all players state");
     }
 
+    command_add(server_shout, "notify [A-Za-z0-9_-]*",
+                "shout to all players");
+
     server_init_done = true;
 
     return (true);
@@ -65,6 +69,8 @@ void server_fini (void)
 
     if (server_init_done) {
         server_init_done = false;
+
+        socket_tx_server_shout("SERVER GOING DOWN");
 
         socket_tx_server_close();
     }
@@ -83,7 +89,7 @@ static void server_rx_client_join (socketp s)
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s joined the game", p->name);
-    socket_tx_shout(s, tmp);
+    socket_tx_server_shout(tmp);
     myfree(tmp);
 
     wid_game_visible();
@@ -114,7 +120,7 @@ static void server_rx_client_leave (socketp s)
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s left the game", p->name);
-    socket_tx_shout(s, tmp);
+    socket_tx_server_shout(tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -131,7 +137,7 @@ static void server_rx_client_close (socketp s)
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s suddenly left the game", p->name);
-    socket_tx_shout(s, tmp);
+    socket_tx_server_shout(tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -219,12 +225,12 @@ static void server_poll (void)
             break;
 
         case MSG_CLIENT_CLOSE:
-            socket_rx_client_close(s, packet, data);
             server_rx_client_close(s);
+            socket_rx_client_close(s, packet, data);
             break;
 
-        case MSG_SHOUT:
-            socket_rx_shout(s, packet, data);
+        case MSG_CLIENT_SHOUT:
+            socket_rx_client_shout(s, packet, data);
             break;
 
         case MSG_TELL:
@@ -265,7 +271,7 @@ static void server_alive_check (void)
 
             if (p) {
                 char *tmp = dynprintf("%s connection dropped", p->name);
-                socket_tx_shout(s, tmp);
+                socket_tx_client_shout(s, tmp);
                 myfree(tmp);
 
                 LOG("\"%s\" dropped out of the game from %s", p->name,
@@ -363,6 +369,47 @@ static boolean server_players_show (tokens_t *tokens, void *context)
         myfree(tmp2);
         myfree(tmp);
     }
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean server_shout (tokens_t *tokens, void *context)
+{
+    char shout[PLAYER_MSG_MAX] = {0};
+    uint32_t i = 1;
+    char *tmp;
+
+    tmp = 0;
+
+    for (;;) {
+
+        char *s = tokens->args[i++];
+        if (!s || !*s) {
+            break;
+        }
+
+        if (tmp) {
+            char *n = dynprintf("%s %s", tmp, s);
+            myfree(tmp);
+            tmp = n;
+        } else {
+            tmp = dynprintf("%s", s);
+        }
+    }
+
+    if (!tmp || !*tmp) {
+        WARN("no message");
+        return (false);
+    }
+
+    strncpy(shout, tmp, sizeof(shout) - 1);
+
+    socket_tx_server_shout(shout);
+
+    myfree(tmp);
 
     return (true);
 }

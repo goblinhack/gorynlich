@@ -13,8 +13,9 @@ typedef enum {
     MSG_PING,
     MSG_PONG,
     MSG_NAME,
-    MSG_SHOUT,
     MSG_TELL,
+    MSG_CLIENT_SHOUT,
+    MSG_SERVER_SHOUT,
     MSG_CLIENT_JOIN,
     MSG_CLIENT_LEAVE,
     MSG_CLIENT_CLOSE,
@@ -129,8 +130,10 @@ extern void socket_tx_client_close(socketp s);
 extern void socket_rx_client_close(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_close(void);
 extern void socket_rx_server_close(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_shout(socketp s, const char *shout);
-extern void socket_rx_shout(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_client_shout(socketp s, const char *shout);
+extern void socket_rx_client_shout(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_server_shout(const char *shout);
+extern void socket_rx_server_shout(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_tell(socketp s, 
                            const char *from, const char *to, const char *shout);
 extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);

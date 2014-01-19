@@ -109,6 +109,8 @@ void client_fini (void)
         client_init_done = false;
 
         if (client_joined_server) {
+            verify(client_joined_server);
+
             socket_tx_client_close(client_joined_server);
         }
     }
@@ -139,6 +141,8 @@ static void client_alive_check (void)
             socket_set_connected(s, false);
 
             if (client_joined_server == s) {
+                verify(client_joined_server);
+
                 client_socket_leave();
             }
         }
@@ -276,6 +280,8 @@ static boolean client_socket_close (char *host, char *port)
     }
 
     if (client_joined_server == s) {
+        verify(client_joined_server);
+
         client_socket_leave();
     }
 
@@ -343,6 +349,23 @@ static boolean client_socket_join (char *host, char *port)
 
     client_joined_server = s;
 
+    verify(client_joined_server);
+
+    joined = true;
+
+    return (true);
+}
+
+static boolean client_socket_leave_implicit (void)
+{
+    if (!client_joined_server) {
+        return (false);
+    }
+
+    LOG("YOU WERE DROPPED FROM THE SERVER");
+
+    client_joined_server = 0;
+
     joined = true;
 
     return (true);
@@ -354,6 +377,8 @@ static boolean client_socket_leave (void)
         WARN("Join a server first before trying to leave");
         return (false);
     }
+
+    verify(client_joined_server);
 
     LOG("Client leaving %s", 
         socket_get_remote_logname(client_joined_server));
@@ -374,12 +399,14 @@ static boolean client_socket_shout (char *shout)
         return (false);
     }
 
+    verify(client_joined_server);
+
     if (!shout || !*shout) {
         WARN("No message");
         return (false);
     }
 
-    socket_tx_shout(client_joined_server, shout);
+    socket_tx_client_shout(client_joined_server, shout);
 
     return (true);
 }
@@ -390,6 +417,8 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
         WARN("Join a server first before trying to speak");
         return (false);
     }
+
+    verify(client_joined_server);
 
     if (!from || !*from) {
         WARN("no sender");
@@ -419,6 +448,8 @@ static boolean client_socket_set_name (char *name)
         WARN("Join a server first before trying to set your name");
         return (false);
     }
+
+    verify(client_joined_server);
 
     if (!name || !*name) {
         WARN("need to set a name");
@@ -576,6 +607,10 @@ static void client_poll (void)
 {
     socketp s;
 
+    if (client_joined_server) {
+        verify(client_joined_server);
+    }
+
     TREE_WALK(sockets, s) {
         if (!socket_get_client(s)) {
             continue;
@@ -625,8 +660,12 @@ static void client_poll (void)
                 socket_rx_ping(s, packet, data);
                 break;
 
-            case MSG_SHOUT:
-                socket_rx_shout(s, packet, data);
+            case MSG_CLIENT_SHOUT:
+                socket_rx_client_shout(s, packet, data);
+                break;
+
+            case MSG_SERVER_SHOUT:
+                socket_rx_server_shout(s, packet, data);
                 break;
 
             case MSG_TELL:
@@ -640,7 +679,9 @@ static void client_poll (void)
                 break;
 
             case MSG_SERVER_CLOSE:
-                socket_rx_client_close(s, packet, data);
+                socket_rx_server_close(s, packet, data);
+
+                client_socket_leave_implicit();
                 break;
 
             default:
@@ -691,6 +732,8 @@ static void client_check_still_in_game (void)
     if (!client_joined_server) {
         return;
     }
+
+    verify(client_joined_server);
 
     if (!socket_get_connected(client_joined_server)) {
         return;
