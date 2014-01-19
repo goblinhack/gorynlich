@@ -23,5 +23,7 @@ typedef struct aplayer_ {
     uint16_t min_latency;
     uint16_t max_latency;
     uint32_t score;
+    uint32_t key;
     char name[PLAYER_NAME_LEN_MAX + 1];
+    boolean connection_confrimed;
 } aplayer;
