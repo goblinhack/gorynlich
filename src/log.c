@@ -175,6 +175,7 @@ static void log_ (const char *fmt, va_list args)
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
+    wid_console_log(buf);
     term_log(buf);
 }
 
@@ -199,6 +200,7 @@ static void warn_ (const char *fmt, va_list args)
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
+    wid_console_log(buf);
     term_log(buf);
 }
 

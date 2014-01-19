@@ -883,10 +883,24 @@ void socket_set_connected (socketp s, boolean c)
         return;
     }
 
-    if (c) {
-        LOG("Connected to %s", socket_get_remote_logname(s));
+    if (socket_get_server(s)) {
+        if (c) {
+            LOG("Server present %s", socket_get_remote_logname(s));
+        } else {
+            LOG("Server disconnect from %s", socket_get_remote_logname(s));
+        }
+    } else if (socket_get_client(s)) {
+        if (c) {
+            LOG("Server present %s", socket_get_remote_logname(s));
+        } else {
+            LOG("Server disconnect from %s", socket_get_remote_logname(s));
+        }
     } else {
-        LOG("Disconnected from %s", socket_get_remote_logname(s));
+        if (c) {
+            LOG("Client present %s", socket_get_remote_logname(s));
+        } else {
+            LOG("Client disconnect from %s", socket_get_remote_logname(s));
+        }
     }
 
     s->connected = c;
@@ -1177,7 +1191,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     }
 
     if (!s->connected) {
-        ERR("not connected, cannot join yet");
+        WARN("server is not present, cannot join yet");
         return (false);
     }
 
@@ -1553,8 +1567,7 @@ void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    char *tmp = dynprintf("%s: server message \"%s\"", 
-                          socket_get_name(s), txt);
+    char *tmp = dynprintf(" server message \"%s\"", txt);
     widp w = wid_button_transient(tmp, 0);
     color c = BLACK;
     c.a = 150;
@@ -1628,7 +1641,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("Rx Client Tell from %s \"%s\"", from, txt);
     }
 
-    if (socket_get_client(s)) {
+    if (!socket_get_server(s)) {
         char *tmp = dynprintf("%s: says \"%s\"", from, txt);
         widp w = wid_button_transient(tmp, 0);
         color c = BLACK;
