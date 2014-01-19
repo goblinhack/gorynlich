@@ -1442,7 +1442,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    char *tmp = dynprintf("%s: shouts \"%s\"", socket_get_name(s), txt);
+    char *tmp = dynprintf("%s: \"%s\"", from, txt);
     widp w = wid_button_transient(tmp, 0);
     color c = BLACK;
     c.a = 150;
@@ -1625,12 +1625,21 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (debug_socket_players_enabled) {
-        char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Client Tell from %s \"%s\"", tmp, txt);
-        myfree(tmp);
+        LOG("Rx Client Tell from %s \"%s\"", from, txt);
     }
 
     if (socket_get_client(s)) {
+        char *tmp = dynprintf("%s: says \"%s\"", from, txt);
+        widp w = wid_button_transient(tmp, 0);
+        color c = BLACK;
+        c.a = 150;
+        wid_set_color(w, WID_COLOR_BG, c);
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
+        wid_move_to_pct_centered(w, 0.5, 0.1);
+        wid_set_text_outline(w, true);
+        myfree(tmp);
+
         return;
     }
 
@@ -1741,7 +1750,7 @@ void socket_tx_server_status (void)
  * Receive an array of all current players from the server.
  */
 void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
-                            aplayer *players)
+                              aplayer *players)
 {
     msg_players *msg;
 
