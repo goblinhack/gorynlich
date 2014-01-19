@@ -65,41 +65,76 @@ void server_fini (void)
 
     if (server_init_done) {
         server_init_done = false;
+
+        socket_tx_server_close();
     }
 }
 
-static void server_rx_join (socketp s)
+static void server_rx_client_join (socketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
-        WARN("Receive join, no player");
+        WARN("Received join %s, but no player on socket",
+             socket_get_remote_logname(s));
         return;
     }
 
-    LOG("\"%s\" joined the game", p->name);
+    LOG("\"%s\" joined the game from %s", p->name,
+        socket_get_remote_logname(s));
 
-    char *tmp = dynprintf("\"%s\" joined the game", p->name);
+    char *tmp = dynprintf("%s joined the game", p->name);
     socket_tx_shout(s, tmp);
     myfree(tmp);
 
     wid_game_visible();
 }
 
-static void server_rx_leave (socketp s)
+static void server_rx_client_leave_implicit (socketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
-        WARN("Receive leave, no player");
         return;
     }
 
-    LOG("\"%s\" left the game", p->name);
+    wid_game_map_wid_destroy();
 
-    char *tmp = dynprintf("\"%s\" left the game", p->name);
+    socket_set_player(s, 0);
+}
+
+static void server_rx_client_leave (socketp s)
+{
+    aplayerp p = socket_get_player(s);
+    if (!p) {
+        WARN("Received leave %s, but no player on socket",
+             socket_get_remote_logname(s));
+        return;
+    }
+
+    LOG("\"%s\" left the game from %s", p->name,
+        socket_get_remote_logname(s));
+
+    char *tmp = dynprintf("%s left the game", p->name);
     socket_tx_shout(s, tmp);
     myfree(tmp);
 
-    wid_game_map_wid_destroy();
+    server_rx_client_leave_implicit(s);
+}
+
+static void server_rx_client_close (socketp s)
+{
+    aplayerp p = socket_get_player(s);
+    if (!p) {
+        return;
+    }
+
+    LOG("\"%s\" suddenly left of the game from %s", p->name,
+        socket_get_remote_logname(s));
+
+    char *tmp = dynprintf("%s suddenly left the game", p->name);
+    socket_tx_shout(s, tmp);
+    myfree(tmp);
+
+    server_rx_client_leave_implicit(s);
 }
 
 static void server_poll (void)
@@ -142,6 +177,11 @@ static void server_poll (void)
 
         socketp s = socket_find_remote_ip(read_address(packet));
         if (!s) {
+
+            char *tmp = iptodynstr(read_address(packet));
+            LOG("Server new client from %s", tmp);
+            myfree(tmp);
+
             s = socket_connect(read_address(packet), true /* server side */);
             if (!s) {
                 continue;
@@ -154,40 +194,40 @@ static void server_poll (void)
         socket_count_inc_pak_rx(s, type);
 
         switch (type) {
-        case MSG_TYPE_PING:
+        case MSG_PING:
             socket_rx_ping(s, packet, data);
 
-            socket_tx_players_all();
+            socket_tx_server_status();
             break;
 
-        case MSG_TYPE_PONG:
+        case MSG_PONG:
             socket_rx_pong(s, packet, data);
             break;
 
-        case MSG_TYPE_NAME:
+        case MSG_NAME:
             socket_rx_name(s, packet, data);
             break;
 
-        case MSG_TYPE_JOIN:
-            socket_rx_join(s, packet, data);
-            server_rx_join(s);
+        case MSG_CLIENT_JOIN:
+            socket_rx_client_join(s, packet, data);
+            server_rx_client_join(s);
             break;
 
-        case MSG_TYPE_LEAVE:
-            socket_rx_leave(s, packet, data);
-            server_rx_leave(s);
-            socket_set_player(s, 0);
+        case MSG_CLIENT_LEAVE:
+            socket_rx_client_leave(s, packet, data);
+            server_rx_client_leave(s);
             break;
 
-        case MSG_TYPE_CLOSE:
-            socket_rx_close(s, packet, data);
+        case MSG_CLIENT_CLOSE:
+            socket_rx_client_close(s, packet, data);
+            server_rx_client_close(s);
             break;
 
-        case MSG_TYPE_SHOUT:
+        case MSG_SHOUT:
             socket_rx_shout(s, packet, data);
             break;
 
-        case MSG_TYPE_TELL:
+        case MSG_TELL:
             socket_rx_tell(s, packet, data);
             break;
 
@@ -221,10 +261,18 @@ static void server_alive_check (void)
             /*
              * Clients try forever. Server clients disconnect.
              */
-            LOG("Player connection down [%s] qual %u percent",
-                socket_get_remote_logname(s), socket_get_quality(s));
+            aplayerp p = socket_get_player(s);
 
-            server_rx_leave(s);
+            if (p) {
+                char *tmp = dynprintf("%s connection dropped", p->name);
+                socket_tx_shout(s, tmp);
+                myfree(tmp);
+
+                LOG("\"%s\" dropped out of the game from %s", p->name,
+                    socket_get_remote_logname(s));
+            }
+
+            server_rx_client_leave_implicit(s);
 
             socket_disconnect(s);
         }
@@ -279,8 +327,12 @@ void server_tick (void)
  */
 static boolean server_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name                 Quality  Latency       Remote IP       Score ");
-    CON("----                 -------  ------- -------------------- -------");
+    CON("Name           Quality  Latency      Remote IP      Local IP     Score ");
+    CON("----           -------  ------- --------------- --------------- -------");
+
+    uint32_t pi;
+
+    pi = 0;
 
     socketp s;
     TREE_WALK(sockets, s) {
@@ -294,17 +346,22 @@ static boolean server_players_show (tokens_t *tokens, void *context)
             continue;
         }
 
+        char *tmp = iptodynstr(p->local_ip);
         char *tmp2 = iptodynstr(p->remote_ip);
 
-        CON("%-20s %3d pct %5d ms %-20s %07d", 
+        pi++;
+
+        CON("[%d] %-10s %3d pct %5d ms %-15s %-15s %07d", 
+            pi,
             p->name,
             p->quality,
             p->avg_latency,
+            tmp,
             tmp2,
             p->score);
 
         myfree(tmp2);
-
+        myfree(tmp);
     }
 
     return (true);

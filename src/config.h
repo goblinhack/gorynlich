@@ -19,14 +19,6 @@
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
-#define SERVER_DEFAULT_HOST       "localhost"
-#define SERVER_DEFAULT_PORT       10000
-#define SERVER_DEFAULT_PORT_MAX   10010
-#define MAX_PLAYERS               4
-#define MAX_PACKET_SIZE           1024
-#define SOCKET_PING_SEQ_NO_RANGE  100 // how many pings to consider for quality
-#define SOCKET_PING_FAIL_THRESHOLD 10 // 90 percent of ping fails means down
-
 /*
  * Screen sizes.
  */
@@ -102,6 +94,16 @@
 /*
  * Messages.
  */
-#define PLAYER_NAME_LEN_MAX             20
+#define MAX_PLAYERS                 4
+#define PLAYER_NAME_LEN_MAX         20
 #define PLAYER_MSG_MAX              100
+
+/*
+ * Connections.
+ */
+#define SERVER_DEFAULT_HOST         "localhost"
+#define SERVER_DEFAULT_PORT         10000
+#define MAX_PACKET_SIZE             1024
+#define SOCKET_PING_SEQ_NO_RANGE    20 // how many pings to consider for quality
+#define SOCKET_PING_FAIL_THRESHOLD  10 // 90 percent of ping fails means down
 
