@@ -402,7 +402,7 @@ static boolean client_socket_shout (char *shout)
     verify(client_joined_server);
 
     if (!shout || !*shout) {
-        WARN("No message");
+        WARN("No message to shout");
         return (false);
     }
 
@@ -421,16 +421,17 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
     verify(client_joined_server);
 
     if (!from || !*from) {
-        WARN("no sender");
+        WARN("no sender for tell");
         return (false);
     }
 
     if (!to || !*to) {
-        WARN("no recipient");
+        WARN("no recipient to tell");
         return (false);
     }
+
     if (!msg || !*msg) {
-        WARN("no message");
+        WARN("no message to tell");
         return (false);
     }
 
@@ -444,22 +445,20 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
  */
 static boolean client_socket_set_name (char *name)
 {
-    if (!client_joined_server) {
-        WARN("Join a server first before trying to set your name");
-        return (false);
-    }
-
-    verify(client_joined_server);
-
     if (!name || !*name) {
         WARN("need to set a name");
         return (false);
     }
 
-    CON("Client name set to \"%s\"", 
-        socket_get_name(client_joined_server));
+    strncpy(client_name, name, sizeof(client_name) - 1);
 
-    socket_set_name(client_joined_server, name);
+    CON("Client name set to \"%s\"", name);
+
+    if (client_joined_server) {
+        socket_set_name(client_joined_server, name);
+
+        socket_tx_name(client_joined_server);
+    }
 
     return (true);
 }
@@ -559,9 +558,7 @@ boolean client_shout (tokens_t *tokens, void *context)
  */
 boolean client_tell (tokens_t *tokens, void *context)
 {
-    char from[PLAYER_NAME_LEN_MAX] = {0};
     char to[PLAYER_NAME_LEN_MAX] = {0};
-    char msg[PLAYER_MSG_MAX] = {0};
     uint32_t i = 1;
     char *tmp;
 
@@ -576,7 +573,6 @@ boolean client_tell (tokens_t *tokens, void *context)
     strncpy(to, s, sizeof(to) - 1);
 
     for (;;) {
-
         char *s = tokens->args[i++];
         if (!s || !*s) {
             break;
@@ -596,7 +592,7 @@ boolean client_tell (tokens_t *tokens, void *context)
         return (false);
     }
 
-    boolean r = client_socket_tell(from, to, msg);
+    boolean r = client_socket_tell(client_name, to, tmp);
 
     myfree(tmp);
 
