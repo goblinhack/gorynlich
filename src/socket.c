@@ -48,8 +48,14 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
+    char from[PLAYER_NAME_LEN_MAX];
     char txt[PLAYER_MSG_MAX];
-} __attribute__ ((packed)) msg_shout;
+} __attribute__ ((packed)) msg_client_shout;
+
+typedef struct {
+    uint8_t type;
+    char txt[PLAYER_MSG_MAX];
+} __attribute__ ((packed)) msg_server_shout;
 
 typedef struct {
     uint8_t type;
@@ -539,10 +545,6 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
             s->tx_msg[MSG_NAME], 
             s->rx_msg[MSG_NAME]);
 
-        CON("  Shout          : tx %u, rx %u",
-            s->tx_msg[MSG_SHOUT], 
-            s->rx_msg[MSG_SHOUT]);
-
         CON("  Tell           : tx %u, rx %u",
             s->tx_msg[MSG_TELL], 
             s->rx_msg[MSG_TELL]);
@@ -551,13 +553,17 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
             s->tx_msg[MSG_CLIENT_JOIN], 
             s->rx_msg[MSG_CLIENT_JOIN]);
 
-        CON("  Leave          : tx %u, rx %u",
+        CON("  Client Leave   : tx %u, rx %u",
             s->tx_msg[MSG_CLIENT_LEAVE], 
             s->rx_msg[MSG_CLIENT_LEAVE]);
 
-        CON("  Close          : tx %u, rx %u",
+        CON("  Client Close   : tx %u, rx %u",
             s->tx_msg[MSG_CLIENT_CLOSE], 
             s->rx_msg[MSG_CLIENT_CLOSE]);
+
+        CON("  Server Shout   : tx %u, rx %u",
+            s->tx_msg[MSG_SERVER_SHOUT], 
+            s->rx_msg[MSG_SERVER_SHOUT]);
 
         CON("  Server Status  : tx %u, rx %u",
             s->tx_msg[MSG_SERVER_STATUS], 
@@ -1316,7 +1322,7 @@ void socket_tx_client_close (socketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx close [to %s]", socket_get_remote_logname(s));
+    LOG("Tx Client Close [to %s]", socket_get_remote_logname(s));
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1338,32 +1344,38 @@ void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Rx close from %s", tmp);
+    LOG("Rx Client Close from %s", tmp);
     myfree(tmp);
 
     socket_disconnect(s);
 }
 
-void socket_tx_shout (socketp s, const char *txt)
+/*
+ * The server is relaying a shout to clients.
+ */
+static void socket_tx_client_shout_relay (socketp s, const char *txt,
+                                          socketp from)
 {
     if (!socket_get_udp_socket(s)) {
         return;
     }
 
-    if (!s->connected) {
-        return;
-    }
-
     UDPpacket *packet = socket_alloc_msg();
 
-    msg_shout msg = {0};
-    msg.type = MSG_SHOUT;
+    msg_client_shout msg = {0};
+    msg.type = MSG_CLIENT_SHOUT;
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+    if (from && from->name) {
+        char *name = from->name;
+        strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
+    }
 
     memcpy(packet->data, &msg, sizeof(msg));
 
     if (debug_socket_players_enabled) {
-        LOG("Tx Shout [to %s] \"%s\"", socket_get_remote_logname(s), txt);
+        LOG("Tx Client Shout [to %s] \"%s\"", 
+            socket_get_remote_logname(s), txt);
     }
 
     packet->len = sizeof(msg);
@@ -1374,9 +1386,36 @@ void socket_tx_shout (socketp s, const char *txt)
     socket_free_msg(packet);
 }
 
-void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_tx_client_shout (socketp s, const char *txt)
 {
-    msg_shout msg = {0};
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_client_shout msg = {0};
+    msg.type = MSG_CLIENT_SHOUT;
+    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        LOG("Tx Client Shout [to %s] \"%s\"", 
+            socket_get_remote_logname(s), txt);
+    }
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
+    socket_tx_msg(s, packet);
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_client_shout msg = {0};
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);
@@ -1386,14 +1425,20 @@ void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char txt[PLAYER_MSG_MAX + 1] = {0};
+    char from[PLAYER_NAME_LEN_MAX + 1] = {0};
 
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
+    memcpy(from, msg.from, PLAYER_NAME_LEN_MAX);
 
-    LOG("SHOUT: \"%s\"", txt);
+    if (msg.from[0]) {
+        LOG("SHOUT: \"%s\" from %s", txt, msg.from);
+    } else {
+        LOG("SHOUT: \"%s\"", txt);
+    }
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Shout from %s \"%s\"", tmp, txt);
+        LOG("Rx Client Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
     }
 
@@ -1412,6 +1457,9 @@ void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
+    /*
+     * This is for relaying the shout from the server to clietns.
+     */
     socketp sp;
 
     TREE_WALK(sockets, sp) {
@@ -1427,8 +1475,95 @@ void socket_rx_shout (socketp s, UDPpacket *packet, uint8_t *data)
             continue;
         }
 
-        socket_tx_shout(sp, txt);
+        /*
+         * Only talk to players who joined this server.
+         */
+        if (!sp->player) {
+            continue;
+        }
+
+        /*
+         * Include the source of the spammer.
+         */
+        socket_tx_client_shout_relay(sp, txt, s);
     }
+}
+
+void socket_tx_server_shout (const char *txt)
+{
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_server_shout msg = {0};
+    msg.type = MSG_SERVER_SHOUT;
+    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        LOG("Tx Server Shout \"%s\"", txt);
+    }
+
+    packet->len = sizeof(msg);
+
+    socketp sp;
+
+    TREE_WALK(sockets, sp) {
+        if (!sp->connected) {
+            continue;
+        }
+
+        if (!sp->server_side_client) {
+            continue;
+        }
+
+        /*
+         * Only talk to players who joined this server.
+         */
+        if (!sp->player) {
+            continue;
+        }
+
+        write_address(packet, socket_get_remote_ip(sp));
+
+        socket_tx_msg(sp, packet);
+    }
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    msg_server_shout msg = {0};
+
+    if (packet->len != sizeof(msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    char txt[PLAYER_MSG_MAX + 1] = {0};
+    memcpy(txt, msg.txt, PLAYER_MSG_MAX);
+
+    LOG("SERVER MESSAGE: \"%s\"", txt);
+
+    if (debug_socket_players_enabled) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Rx Server Shout from %s \"%s\"", tmp, txt);
+        myfree(tmp);
+    }
+
+    char *tmp = dynprintf("%s: server message \"%s\"", 
+                          socket_get_name(s), txt);
+    widp w = wid_button_transient(tmp, 0);
+    color c = BLACK;
+    c.a = 150;
+    wid_set_color(w, WID_COLOR_BG, c);
+    wid_set_color(w, WID_COLOR_TL, c);
+    wid_set_color(w, WID_COLOR_BR, c);
+    wid_move_to_pct_centered(w, 0.5, 0.1);
+    wid_set_text_outline(w, true);
+    myfree(tmp);
 }
 
 void socket_tx_tell (socketp s, 
@@ -1491,7 +1626,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Shout from %s \"%s\"", tmp, txt);
+        LOG("Rx Client Tell from %s \"%s\"", tmp, txt);
         myfree(tmp);
     }
 
@@ -1699,6 +1834,8 @@ void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
     char *tmp = iptodynstr(read_address(packet));
     LOG("Rx Server down from %s", tmp);
     myfree(tmp);
+
+    socket_set_connected(s, false);
 }
 
 uint32_t socket_get_quality (socketp s)
