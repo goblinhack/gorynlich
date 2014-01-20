@@ -44,7 +44,6 @@ static boolean client_socket_set_name(char *name);
 static void client_check_still_in_game(void);
 
 aplayer client_players[MAX_PLAYERS];
-static char client_name[PLAYER_NAME_LEN_MAX];
 
 boolean client_init (void)
 {
@@ -93,7 +92,10 @@ boolean client_init (void)
     command_add(client_players_show, "show players", 
                 "show all players state");
 
-    strncpy(client_name, "nameless", sizeof(client_name) - 1);
+    if (!global_config.name[0]) {
+        strncpy(global_config.name, "nameless", 
+                sizeof(global_config.name) - 1);
+    }
 
     client_init_done = true;
 
@@ -338,7 +340,7 @@ static boolean client_socket_join (char *host, char *port)
         }
     }
 
-    socket_set_name(s, client_name);
+    socket_set_name(s, global_config.name);
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
         return (false);
@@ -447,7 +449,7 @@ static boolean client_socket_set_name (char *name)
         return (false);
     }
 
-    strncpy(client_name, name, sizeof(client_name) - 1);
+    strncpy(global_config.name, name, sizeof(global_config.name) - 1);
 
     CON("Client name set to \"%s\"", name);
 
@@ -589,7 +591,7 @@ boolean client_tell (tokens_t *tokens, void *context)
         return (false);
     }
 
-    boolean r = client_socket_tell(client_name, to, tmp);
+    boolean r = client_socket_tell(global_config.name, to, tmp);
 
     myfree(tmp);
 
@@ -743,13 +745,14 @@ static void client_check_still_in_game (void)
             continue;
         }
 
-        if (strcmp(p->name, client_name)) {
+        if (strcmp(p->name, global_config.name)) {
             continue;
         }
 
         if (!p->connection_confrimed) {
             p->connection_confrimed = true;
-            LOG("Server has added you, \"%s\" to the game", client_name);
+            LOG("Server has added you, \"%s\" to the game", 
+                global_config.name);
         }
 
         return;

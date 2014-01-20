@@ -72,6 +72,13 @@ void quit (void)
 
     FINI_LOG("%s", __FUNCTION__);
 
+    /*
+     * Save the players name.
+     */
+    if (is_client) {
+        config_save();
+    }
+
     if (is_client) {
         server_save();
     }
