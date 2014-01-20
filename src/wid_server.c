@@ -146,7 +146,7 @@ static boolean wid_server_add (widp w, int32_t x, int32_t y, uint32_t button)
 }
 
 static boolean wid_server_mouse_event (widp w, int32_t x, int32_t y,
-                                        uint32_t button)
+                                       uint32_t button)
 {
     wid_server_hide();
 
@@ -291,9 +291,18 @@ static void wid_server_create (void)
         wid_set_text_outline(w, true);
     }
 
+    const float width1 = 0.3;
+    const float width2 = 0.2;
+    const float width3 = 0.1;
+    const float width4 = 0.1;
+    const float width5 = 0.1;
+    const float width6 = 0.1;
+    const float width7 = 0.1;
+    float width_at = 0.0;
+
     {
-        fpoint tl = {0.00, 0.1};
-        fpoint br = {0.4, 0.15};
+        fpoint tl = {width_at, 0.1};
+        fpoint br = {width_at + width1, 0.15};
 
         widp w = wid_new_square_button(wid_server_window, "server hostname");
 
@@ -315,8 +324,8 @@ static void wid_server_create (void)
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
-            fpoint tl = {0.00, 0.0};
-            fpoint br = {0.4, 0.1};
+            fpoint tl = {width_at, 0.0};
+            fpoint br = {width_at + width1, 0.1};
 
             float height = 0.08;
 
@@ -332,8 +341,7 @@ static void wid_server_create (void)
             tl.y += (float)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
-
-            wid_set_text(w, s->host_and_port_str);
+            wid_set_text(w, s->host);
 
             color c = BLACK;
 
@@ -360,9 +368,11 @@ static void wid_server_create (void)
         }
     }
 
+    width_at += width1;
+
     {
-        fpoint tl = {0.4, 0.1};
-        fpoint br = {0.6, 0.15};
+        fpoint tl = {width_at, 0.1};
+        fpoint br = {width_at + width2, 0.15};
 
         widp w = wid_new_square_button(wid_server_window, "server ip");
 
@@ -384,8 +394,8 @@ static void wid_server_create (void)
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
-            fpoint tl = {0.4, 0.0};
-            fpoint br = {0.6, 0.1};
+            fpoint tl = {width_at, 0.0};
+            fpoint br = {width_at + width2, 0.1};
 
             float height = 0.08;
 
@@ -425,9 +435,11 @@ static void wid_server_create (void)
         }
     }
 
+    width_at += width2;
+
     {
-        fpoint tl = {0.6, 0.1};
-        fpoint br = {0.8, 0.15};
+        fpoint tl = {width_at, 0.1};
+        fpoint br = {width_at + width3, 0.15};
 
         widp w = wid_new_square_button(wid_server_window, "server port");
 
@@ -449,8 +461,8 @@ static void wid_server_create (void)
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
-            fpoint tl = {0.6, 0.0};
-            fpoint br = {0.8, 0.1};
+            fpoint tl = {width_at, 0.0};
+            fpoint br = {width_at + width3, 0.1};
 
             float height = 0.08;
 
@@ -490,9 +502,11 @@ static void wid_server_create (void)
         }
     }
 
+    width_at += width3;
+
     {
-        fpoint tl = {0.8, 0.1};
-        fpoint br = {0.9, 0.15};
+        fpoint tl = {width_at, 0.1};
+        fpoint br = {width_at + width4, 0.15};
 
         widp w = wid_new_square_button(wid_server_window, "server latency");
 
@@ -514,8 +528,8 @@ static void wid_server_create (void)
             widp w = wid_new_square_button(wid_server_container,
                                            "server latency");
 
-            fpoint tl = {0.8, 0.0};
-            fpoint br = {0.9, 0.1};
+            fpoint tl = {width_at, 0.0};
+            fpoint br = {width_at + width4, 0.1};
 
             float height = 0.08;
 
@@ -555,11 +569,13 @@ static void wid_server_create (void)
         }
     }
 
-    {
-        fpoint tl = {0.9, 0.1};
-        fpoint br = {1.0, 0.15};
+    width_at += width4;
 
-        widp w = wid_new_square_button(wid_server_window, "server latency");
+    {
+        fpoint tl = {width_at, 0.1};
+        fpoint br = {width_at + width5, 0.15};
+
+        widp w = wid_new_square_button(wid_server_window, "server quality");
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -579,8 +595,8 @@ static void wid_server_create (void)
             widp w = wid_new_square_button(wid_server_container,
                                            "server quality");
 
-            fpoint tl = {0.9, 0.0};
-            fpoint br = {1.0, 0.1};
+            fpoint tl = {width_at, 0.0};
+            fpoint br = {width_at + width5, 0.1};
 
             float height = 0.08;
 
@@ -619,6 +635,90 @@ static void wid_server_create (void)
             i++;
         }
     }
+
+    width_at += width5;
+
+    {
+        uint32_t i = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(servers, s) {
+            widp w = wid_new_rounded_small_button(wid_server_container,
+                                           "server remove");
+
+            fpoint tl = {width_at, 0.0};
+            fpoint br = {width_at + width6, 0.1};
+
+            float height = 0.08;
+
+            wid_set_color(w, WID_COLOR_TEXT, RED);
+
+            br.y += (float)i * height;
+            tl.y += (float)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_text(w, "Delete");
+            wid_set_font(w, vsmall_font);
+            color c = STEELBLUE;
+
+            c.a = 100;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            c = RED;
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_text_outline(w, true);
+
+            i++;
+        }
+    }
+
+    width_at += width6;
+
+    {
+        uint32_t i = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(servers, s) {
+            widp w = wid_new_rounded_small_button(wid_server_container,
+                                           "server join");
+
+            fpoint tl = {width_at, 0.0};
+            fpoint br = {width_at + width7, 0.1};
+
+            float height = 0.08;
+
+            wid_set_color(w, WID_COLOR_TEXT, WHITE);
+
+            br.y += (float)i * height;
+            tl.y += (float)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_text(w, "Join");
+            wid_set_font(w, vsmall_font);
+            color c = STEELBLUE;
+
+            c.a = 100;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            c = RED;
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_text_outline(w, true);
+
+            i++;
+        }
+    }
+
+    width_at += width7;
 
     {
         fpoint tl = {0.7, 0.90};
