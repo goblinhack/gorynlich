@@ -351,6 +351,7 @@ struct config {
     float yscale;
     int32_t sound_volume;
     int32_t music_volume;
+    char name[PLAYER_NAME_LEN_MAX];
 };
 
 extern struct config global_config;
