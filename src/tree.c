@@ -66,6 +66,47 @@ tree_key_two_int32_compare_func (const tree_node *a, const tree_node *b)
     return (0);
 }
 
+static int32_t
+tree_key_four_int32_compare_func (const tree_node *a, const tree_node *b)
+{
+    tree_key_four_int *A = (typeof(A))a;
+    tree_key_four_int *B = (typeof(B))b;
+
+    if (A->key1 < B->key1) {
+        return (-1);
+    }
+
+    if (A->key1 > B->key1) {
+        return (1);
+    }
+
+    if (A->key2 < B->key2) {
+        return (-1);
+    }
+
+    if (A->key2 > B->key2) {
+        return (1);
+    }
+
+    if (A->key3 < B->key3) {
+        return (-1);
+    }
+
+    if (A->key3 > B->key3) {
+        return (1);
+    }
+
+    if (A->key4 < B->key4) {
+        return (-1);
+    }
+
+    if (A->key4 > B->key4) {
+        return (1);
+    }
+
+    return (0);
+}
+
 static int32_t tree_key_string_compare_func (const tree_node *a,
                                              const tree_node *b)
 {
@@ -103,6 +144,8 @@ static inline int32_t tree_node_compare_func (const tree_root *root,
         return (tree_key_int32_compare_func(a, b));
     case TREE_KEY_TWO_INTEGER:
         return (tree_key_two_int32_compare_func(a, b));
+    case TREE_KEY_FOUR_INTEGER:
+        return (tree_key_four_int32_compare_func(a, b));
     case TREE_KEY_STRING:
         return (tree_key_string_compare_func(a, b));
     case TREE_KEY_POINTER:
@@ -1512,6 +1555,8 @@ void tree_empty (tree_root *root, tree_destroy_func func)
             case TREE_KEY_INTEGER:
                 break;
             case TREE_KEY_TWO_INTEGER:
+                break;
+            case TREE_KEY_FOUR_INTEGER:
                 break;
             case TREE_KEY_POINTER:
                 break;

@@ -17,6 +17,7 @@
 #include "sdl.h"
 #include "socket.h"
 #include "wid_popup.h"
+#include "client.h"
 
 static const char *server_dir_and_file = "gorynlich-servers.txt";
 
@@ -26,17 +27,19 @@ static boolean wid_server_init_done;
 
 static void wid_server_create(void);
 static void wid_server_destroy(void);
-static void wid_server_redo(void);
+static boolean user_is_typing;
 
 typedef struct server_ {
-    tree_key_two_int tree;
+    tree_key_four_int tree;
 
     IPaddress ip;
     uint16_t port;
     char *host;
     char *host_and_port_str;
     uint8_t quality;
-    uint16_t avg_latency;
+    uint32_t avg_latency;
+    uint32_t min_latency;
+    uint32_t max_latency;
     socketp socket;
 } server;
 
@@ -70,8 +73,12 @@ static void server_add (const server *s_in)
         LOG("Resolve host %s port %u", s->host, s->port);
     }
 
-    s->tree.key1 = SDLNet_Read32(&s->ip.host);
-    s->tree.key2 = SDLNet_Read16(&s->ip.port) | (s->quality << 16);
+    SDLNet_Write16(s->port, &s->ip.port);
+
+    s->tree.key1 = s->quality;
+    s->tree.key2 = s->avg_latency;
+    s->tree.key3 = SDLNet_Read32(&s->ip.host);
+    s->tree.key4 = SDLNet_Read16(&s->ip.port);
 
     while (!tree_insert(servers, &s->tree.node)) {
         s->tree.key2++;
@@ -130,8 +137,30 @@ void wid_server_visible (void)
     wid_server_create();
 }
 
-static void wid_server_redo (void)
+void wid_server_redo (void)
 {
+    if (!wid_server_window) {
+        return;
+    }
+
+    if (user_is_typing) {
+        return;
+    }
+
+    server *s;
+
+    TREE_WALK(servers, s) {
+        socketp sp = socket_find(s->ip);
+        if (!sp) {
+            continue;
+        }
+
+        s->quality = socket_get_quality(sp);
+        s->avg_latency = socket_get_avg_latency(sp);
+        s->min_latency = socket_get_min_latency(sp);
+        s->max_latency = socket_get_max_latency(sp);
+    }
+
     wid_server_destroy();
     wid_server_create();
 }
@@ -152,6 +181,13 @@ static boolean wid_server_go_back (widp w, int32_t x, int32_t y, uint32_t button
 
 static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
 {
+    server *s = wid_get_client_context(w);
+    if (!s) {
+        return (false);
+    }
+
+    client_socket_join(s->host, 0, s->port);
+
     return (true);
 }
 
@@ -221,6 +257,7 @@ static boolean wid_server_hostname_mouse_down (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
     wid_set_show_cursor(w, true);
+    user_is_typing = true;
 
     return (true);
 }
@@ -229,6 +266,7 @@ static boolean wid_server_ip_mouse_down (widp w, int32_t x, int32_t y,
                                          uint32_t button)
 {
     wid_set_show_cursor(w, true);
+    user_is_typing = true;
 
     return (true);
 }
@@ -237,6 +275,7 @@ static boolean wid_server_port_mouse_down (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_set_show_cursor(w, true);
+    user_is_typing = true;
 
     return (true);
 }
@@ -260,6 +299,7 @@ static boolean wid_server_hostname_receive_input (widp w,
              * Change hostname.
              */
             wid_set_show_cursor(w, false);
+            user_is_typing = false;
 
             server sn;
 
@@ -309,6 +349,7 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
              * Change IP address.
              */
             wid_set_show_cursor(w, false);
+            user_is_typing = false;
 
             server sn;
 
@@ -415,6 +456,7 @@ static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
              * Change port address.
              */
             wid_set_show_cursor(w, false);
+            user_is_typing = false;
 
             server sn;
 
@@ -566,7 +608,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK_REVERSE(servers, s) {
+        TREE_WALK(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
@@ -635,7 +677,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK_REVERSE(servers, s) {
+        TREE_WALK(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
@@ -707,7 +749,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK_REVERSE(servers, s) {
+        TREE_WALK(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
@@ -779,7 +821,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK_REVERSE(servers, s) {
+        TREE_WALK(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server latency");
 
@@ -846,7 +888,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK_REVERSE(servers, s) {
+        TREE_WALK(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server quality");
 
@@ -897,7 +939,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK_REVERSE(servers, s) {
+        TREE_WALK(servers, s) {
             widp w = wid_new_rounded_small_button(wid_server_container,
                                            "server remove");
 
@@ -941,7 +983,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK_REVERSE(servers, s) {
+        TREE_WALK(servers, s) {
             widp w = wid_new_rounded_small_button(wid_server_container,
                                            "server join");
 
@@ -1064,6 +1106,8 @@ static void wid_server_create (void)
 void wid_server_destroy (void)
 {
     wid_destroy(&wid_server_window);
+
+    user_is_typing = false;
 }
 
 static boolean demarshal_server (demarshal_p ctx, server *s)
@@ -1103,7 +1147,7 @@ boolean server_save (void)
 
     server *s;
 
-    TREE_WALK_REVERSE(servers, s) {
+    TREE_WALK(servers, s) {
         marshal_server(ctx, s);
     }
 
@@ -1187,7 +1231,7 @@ widp server_try_to_add (uint32_t score_in)
     score = score_in;
     server *s;
 
-    TREE_WALK_REVERSE(servers, s) {
+    TREE_WALK(servers, s) {
 
         if (score_in > (uint32_t) s->tree.key1) {
             break;

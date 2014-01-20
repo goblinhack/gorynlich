@@ -24,6 +24,7 @@ typedef enum {
     TREE_KEY_CUSTOM,
     TREE_KEY_INTEGER,
     TREE_KEY_TWO_INTEGER,
+    TREE_KEY_FOUR_INTEGER,
     TREE_KEY_STRING,
     TREE_KEY_POINTER,
 } tree_key_type;
@@ -64,6 +65,14 @@ typedef struct {
     int32_t key1;
     int32_t key2;
 } tree_key_two_int;
+
+typedef struct {
+    tree_node node;
+    int32_t key1;
+    int32_t key2;
+    int32_t key3;
+    int32_t key4;
+} tree_key_four_int;
 
 tree_root *tree_alloc(tree_key_type, const char *name);
 tree_root *tree_alloc_custom(tree_key_func, const char *name);

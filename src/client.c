@@ -18,6 +18,7 @@
 #include "player.h"
 #include "string.h"
 #include "tree.h"
+#include "wid_server.h"
 
 /*
  * Which socket we have actually joined on.
@@ -39,7 +40,6 @@ static boolean client_close(tokens_t *tokens, void *context);
 static boolean client_socket_leave(void);
 static boolean client_socket_shout(char *shout);
 static boolean client_socket_tell(char *from, char *to, char *msg);
-static boolean client_socket_join(char *host, char *port);
 static boolean client_socket_set_name(char *name);
 static void client_check_still_in_game(void);
 
@@ -295,14 +295,13 @@ static boolean client_socket_close (char *host, char *port)
     return (true);
 }
 
-static boolean client_socket_join (char *host, char *port)
+boolean client_socket_join (char *host, char *port, uint16_t portno)
 {
     if (client_joined_server) {
         WARN("Leave the current server first");
         return (false);
     }
 
-    uint32_t portno;
     socketp s = 0;
 
     if (!host && !port) {
@@ -319,10 +318,12 @@ static boolean client_socket_join (char *host, char *port)
             host = SERVER_DEFAULT_HOST;
         }
 
-        if (port && *port) {
-            portno = atoi(port);
-        } else {
-            portno = SERVER_DEFAULT_PORT;
+        if (!portno) {
+            if (port && *port) {
+                portno = atoi(port);
+            } else {
+                portno = SERVER_DEFAULT_PORT;
+            }
         }
 
         if (SDLNet_ResolveHost(&server_address, host, portno)) {
@@ -496,7 +497,7 @@ boolean client_join (tokens_t *tokens, void *context)
     char *host = tokens->args[1];
     char *port = tokens->args[2];
 
-    boolean r = client_socket_join(host, port);
+    boolean r = client_socket_join(host, port, 0);
 
     return (r);
 }
@@ -671,6 +672,8 @@ static void client_poll (void)
                 socket_rx_server_status(s, packet, data, &client_players[0]);
 
                 client_check_still_in_game();
+
+                wid_server_redo();
                 break;
 
             case MSG_SERVER_CLOSE:
