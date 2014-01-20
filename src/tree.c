@@ -80,15 +80,11 @@ tree_key_four_int32_compare_func (const tree_node *a, const tree_node *b)
         return (1);
     }
 
-    if (A->key2 < B->key2) {
-        return (-1);
-    }
-
     if (A->key2 > B->key2) {
         return (1);
     }
 
-    if (A->key3 < B->key3) {
+    if (A->key2 < B->key2) {
         return (-1);
     }
 
@@ -96,12 +92,16 @@ tree_key_four_int32_compare_func (const tree_node *a, const tree_node *b)
         return (1);
     }
 
-    if (A->key4 < B->key4) {
+    if (A->key3 < B->key3) {
         return (-1);
     }
 
     if (A->key4 > B->key4) {
         return (1);
+    }
+
+    if (A->key4 < B->key4) {
+        return (-1);
     }
 
     return (0);

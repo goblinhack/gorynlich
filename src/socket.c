@@ -99,10 +99,6 @@ boolean socket_init (void)
         return (true);
     }
 
-    if (!sockets) {
-        sockets = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: sockets");
-    }
-
     if (SDLNet_Init() < 0) {
         ERR("cannot init SDL_net");
         return (false);
@@ -146,6 +142,10 @@ void socket_fini (void)
 static socketp socket_create (IPaddress address)
 {
     socketp s;
+
+    if (!sockets) {
+        sockets = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: sockets");
+    }
 
     uint16_t port = address.port;
     if (!port) {
@@ -308,7 +308,7 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
     s->remote_ip = connect_address;
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
 
-    LOG("Socket create to %s", socket_get_remote_logname(s));
+    LOG("Socket connect to %s", socket_get_remote_logname(s));
 
     if (debug_socket_connect_enabled) {
         LOG("       from      %s", socket_get_local_logname(s));

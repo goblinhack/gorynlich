@@ -41,6 +41,7 @@ typedef struct server_ {
     uint32_t min_latency;
     uint32_t max_latency;
     socketp socket;
+    boolean walked;
 } server;
 
 tree_rootp servers;
@@ -69,28 +70,56 @@ static void server_add (const server *s_in)
         s->host_and_port_str = dynprintf("%s:%u", s->host, s->port);
     } else {
         s->host_and_port_str = iptodynstr(s->ip);
-
-        LOG("Resolve host %s port %u", s->host, s->port);
     }
 
     SDLNet_Write16(s->port, &s->ip.port);
 
+    /*
+     * Connector.
+     */
+    if (is_client) {
+        socketp sp = socket_connect(s->ip, false /* client side */);
+        if (sp) {
+            s->quality = socket_get_quality(sp);
+            s->avg_latency = socket_get_avg_latency(sp);
+            s->min_latency = socket_get_min_latency(sp);
+            s->max_latency = socket_get_max_latency(sp);
+        }
+    }
+
     s->tree.key1 = s->quality;
     s->tree.key2 = s->avg_latency;
-    s->tree.key3 = SDLNet_Read32(&s->ip.host);
-    s->tree.key4 = SDLNet_Read16(&s->ip.port);
+    s->tree.key3 = SDLNet_Read16(&s->ip.port);
+    s->tree.key4 = SDLNet_Read32(&s->ip.host);
 
-    int tries = 0;
+    /*
+     * Check this ip and port combination is not added already.
+     */
+    boolean collision = false;
 
-    while (!tree_insert(servers, &s->tree.node)) {
-        s->tree.key4++;
+    do {
+        server *sw;
 
-        SDLNet_Write16(s->tree.key4, &s->ip.port);
-        s->port = s->ip.port;
-        if (tries++ > 10) {
-            ERR("Cannot add host %s port %u", s->host, s->port);
-            return;
+        collision = false;
+
+        TREE_WALK(servers, sw) {
+            if (cmp_address(&sw->ip, &s->ip)) {
+                collision = true;
+                break;
+            }
         }
+
+        if (collision) {
+            s->tree.key3++;
+            SDLNet_Write16(s->tree.key3, &s->ip.port);
+            s->port = s->tree.key3;
+        }
+    } while (collision);
+
+    if (!tree_insert(servers, &s->tree.node)) {
+        ERR("Cannot add host %s port %u", s->host, s->port);
+        myfree(s);
+        return;
     }
 }
 
@@ -101,8 +130,7 @@ static void server_remove (server *s)
     }
 
     tree_remove(servers, &s->tree.node);
-
-    wid_server_redo();
+    myfree(s);
 }
 
 boolean wid_server_init (void)
@@ -118,7 +146,10 @@ boolean wid_server_init (void)
 
 static void server_destroy (server *node)
 {
-    myfree(node->host_and_port_str);
+    if (node->host_and_port_str) {
+        myfree(node->host_and_port_str);
+        node->host_and_port_str = 0;
+    }
 }
 
 void wid_server_fini (void)
@@ -130,7 +161,9 @@ void wid_server_fini (void)
 
         wid_server_destroy();
 
-        tree_destroy(&servers, (tree_destroy_func)server_destroy);
+        if (servers) {
+            tree_destroy(&servers, (tree_destroy_func)server_destroy);
+        }
     }
 }
 
@@ -156,8 +189,30 @@ void wid_server_redo (void)
 
     server *s;
 
+    {
+        TREE_WALK(servers, s) {
+            s->walked = false;
+        }
+    }
+
     TREE_WALK(servers, s) {
+        if (s->walked) {
+            continue;
+        }
+
+        s->walked = true;
+
         socketp sp = socket_find(s->ip);
+        if (!sp) {
+            /*
+             * Connector.
+             */
+            if (is_client) {
+                socket_connect(s->ip, false /* client side */);
+            }
+        }
+
+        sp = socket_find(s->ip);
         if (!sp) {
             continue;
         }
@@ -166,9 +221,27 @@ void wid_server_redo (void)
         s->avg_latency = socket_get_avg_latency(sp);
         s->min_latency = socket_get_min_latency(sp);
         s->max_latency = socket_get_max_latency(sp);
+
+        /*
+         * Re-sort the server.
+         */
+        if (!tree_remove(servers, &s->tree.node)) {
+            ERR("Cannot find to re-sort host %s port %u", s->host, s->port);
+        }
+
+        s->tree.key1 = s->quality;
+        s->tree.key2 = s->avg_latency;
+        s->tree.key3 = SDLNet_Read16(&s->ip.port);
+        s->tree.key4 = SDLNet_Read32(&s->ip.host);
+
+        if (!tree_insert(servers, &s->tree.node)) {
+            ERR("Cannot re-sort host %s port %u qual %d lat %d", 
+                s->host, s->port, s->quality, s->avg_latency);
+        }
     }
 
     wid_server_destroy();
+
     wid_server_create();
 }
 
@@ -206,6 +279,7 @@ static boolean wid_server_delete (widp w, int32_t x, int32_t y, uint32_t button)
     }
 
     server_remove(s);
+    server_save();
 
     return (true);
 }
@@ -220,7 +294,7 @@ static boolean wid_server_add (widp w, int32_t x, int32_t y, uint32_t button)
     s.port = SERVER_DEFAULT_PORT; 
 
     server_add(&s);
-
+    server_save();
     wid_server_redo();
 
     return (true);
@@ -315,6 +389,7 @@ static boolean wid_server_hostname_receive_input (widp w,
             sn.host = (char*) wid_get_text(w);
             if (!sn.host || !*sn.host) {
                 server_remove(s);
+                server_save();
                 wid_server_redo();
                 return (true);
             }
@@ -323,6 +398,7 @@ static boolean wid_server_hostname_receive_input (widp w,
 
             server_remove(s);
             server_add(&sn);
+            server_save();
             wid_server_redo();
 
             break;
@@ -422,6 +498,7 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
              */
             if (!sn.host || !*sn.host) {
                 server_remove(s);
+                server_save();
                 wid_server_redo();
                 return (true);
             }
@@ -430,6 +507,7 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
 
             server_remove(s);
             server_add(&sn);
+            server_save();
             wid_server_redo();
 
             break;
@@ -504,6 +582,7 @@ static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
 
             server_remove(s);
             server_add(&sn);
+            server_save();
             wid_server_redo();
 
             break;
@@ -630,7 +709,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK(servers, s) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
@@ -693,7 +772,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK(servers, s) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
@@ -759,7 +838,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK(servers, s) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server name");
 
@@ -825,7 +904,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK(servers, s) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server latency");
 
@@ -886,7 +965,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK(servers, s) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_square_button(wid_server_container,
                                            "server quality");
 
@@ -931,7 +1010,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK(servers, s) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_rounded_small_button(wid_server_container,
                                            "server remove");
 
@@ -975,7 +1054,7 @@ static void wid_server_create (void)
         uint32_t i = 0;
         server *s;
 
-        TREE_WALK(servers, s) {
+        TREE_WALK_REVERSE(servers, s) {
             widp w = wid_new_rounded_small_button(wid_server_container,
                                            "server join");
 
@@ -1097,7 +1176,9 @@ static void wid_server_create (void)
 
 void wid_server_destroy (void)
 {
-    wid_destroy(&wid_server_window);
+    if (wid_server_window) {
+        wid_destroy(&wid_server_window);
+    }
 
     user_is_typing = false;
 }
