@@ -512,6 +512,19 @@ static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
     return (wid_receive_input(w, key));
 }
 
+static void wid_server_set_color (widp w, server *s)
+{
+    if (s->quality == 100) {
+        wid_set_color(w, WID_COLOR_TEXT, GREEN);
+    } else if (s->quality > 75) {
+        wid_set_color(w, WID_COLOR_TEXT, YELLOW);
+    } else if (s->quality > 75) {
+        wid_set_color(w, WID_COLOR_TEXT, ORANGE);
+    } else {
+        wid_set_color(w, WID_COLOR_TEXT, GRAY);
+    }
+}
+
 static void wid_server_create (void)
 {
     if (wid_server_window) {
@@ -617,13 +630,7 @@ static void wid_server_create (void)
 
             float height = 0.08;
 
-            if (s->quality == 100) {
-                wid_set_color(w, WID_COLOR_TEXT, GREEN);
-            } else if (s->quality > 75) {
-                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-            } else {
-                wid_set_color(w, WID_COLOR_TEXT, RED);
-            }
+            wid_server_set_color(w, s);
 
             br.y += (float)i * height;
             tl.y += (float)i * height;
@@ -686,13 +693,7 @@ static void wid_server_create (void)
 
             float height = 0.08;
 
-            if (s->quality == 100) {
-                wid_set_color(w, WID_COLOR_TEXT, GREEN);
-            } else if (s->quality > 75) {
-                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-            } else {
-                wid_set_color(w, WID_COLOR_TEXT, RED);
-            }
+            wid_server_set_color(w, s);
 
             br.y += (float)i * height;
             tl.y += (float)i * height;
@@ -758,13 +759,7 @@ static void wid_server_create (void)
 
             float height = 0.08;
 
-            if (s->quality == 100) {
-                wid_set_color(w, WID_COLOR_TEXT, GREEN);
-            } else if (s->quality > 75) {
-                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-            } else {
-                wid_set_color(w, WID_COLOR_TEXT, RED);
-            }
+            wid_server_set_color(w, s);
 
             br.y += (float)i * height;
             tl.y += (float)i * height;
@@ -830,13 +825,7 @@ static void wid_server_create (void)
 
             float height = 0.08;
 
-            if (s->quality == 100) {
-                wid_set_color(w, WID_COLOR_TEXT, GREEN);
-            } else if (s->quality > 75) {
-                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-            } else {
-                wid_set_color(w, WID_COLOR_TEXT, RED);
-            }
+            wid_server_set_color(w, s);
 
             br.y += (float)i * height;
             tl.y += (float)i * height;
@@ -897,13 +886,7 @@ static void wid_server_create (void)
 
             float height = 0.08;
 
-            if (s->quality == 100) {
-                wid_set_color(w, WID_COLOR_TEXT, GREEN);
-            } else if (s->quality > 75) {
-                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-            } else {
-                wid_set_color(w, WID_COLOR_TEXT, RED);
-            }
+            wid_server_set_color(w, s);
 
             br.y += (float)i * height;
             tl.y += (float)i * height;
