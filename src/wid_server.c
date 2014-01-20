@@ -35,6 +35,7 @@ typedef struct server_ {
     char *host_and_port_str;
     uint8_t quality;
     uint16_t avg_latency;
+    socketp socket;
 } server;
 
 tree_rootp servers;
@@ -122,9 +123,37 @@ static void wid_server_redo (void)
     wid_server_create();
 }
 
+static boolean wid_server_refresh (widp w, int32_t x, int32_t y, uint32_t button)
+{
+    wid_server_redo();
+
+    return (true);
+}
+
+static boolean wid_server_go_back (widp w, int32_t x, int32_t y, uint32_t button)
+{
+    wid_server_hide();
+
+    return (true);
+}
+
 static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
 {
-    CON("JOIN");
+    return (true);
+}
+
+static boolean wid_server_delete (widp w, int32_t x, int32_t y, uint32_t button)
+{
+    server *s = wid_get_client_context(w);
+    if (!s) {
+        return (false);
+    }
+
+    LOG("remove %p %s",s,s->host_and_port_str);
+    CON("REMOVE");
+
+    tree_remove(servers, &s->tree.node);
+    wid_server_redo();
 
     return (true);
 }
@@ -141,14 +170,6 @@ static boolean wid_server_add (widp w, int32_t x, int32_t y, uint32_t button)
     server_add(&s);
 
     wid_server_redo();
-
-    return (true);
-}
-
-static boolean wid_server_mouse_event (widp w, int32_t x, int32_t y,
-                                       uint32_t button)
-{
-    wid_server_hide();
 
     return (true);
 }
@@ -249,7 +270,6 @@ static void wid_server_create (void)
     wid_set_color(w, WID_COLOR_TL, c);
     wid_set_color(w, WID_COLOR_BR, c);
     wid_set_bevel(w, 4);
-    wid_set_on_mouse_up(w, wid_server_mouse_event);
     wid_set_on_key_down(w, wid_server_key_event);
 
     wid_set_on_mouse_motion(w, wid_server_receive_mouse_motion);
@@ -360,7 +380,6 @@ static void wid_server_create (void)
 
             wid_set_on_mouse_over_begin(w, wid_server_over_begin);
             wid_set_on_mouse_over_end(w, wid_server_over_end);
-            wid_set_on_mouse_down(w, wid_server_join);
             wid_set_on_key_down(w, wid_server_receive_input);
             wid_set_client_context(w, s);
 
@@ -431,6 +450,9 @@ static void wid_server_create (void)
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
+            wid_set_on_key_down(w, wid_server_receive_input);
+            wid_set_client_context(w, s);
+
             i++;
         }
     }
@@ -497,6 +519,9 @@ static void wid_server_create (void)
             wid_set_text_outline(w, true);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
+
+            wid_set_on_key_down(w, wid_server_receive_input);
+            wid_set_client_context(w, s);
 
             i++;
         }
@@ -670,8 +695,10 @@ static void wid_server_create (void)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_NORMAL);
-
             wid_set_text_outline(w, true);
+
+            wid_set_on_mouse_down(w, wid_server_delete);
+            wid_set_client_context(w, s);
 
             i++;
         }
@@ -711,8 +738,10 @@ static void wid_server_create (void)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_NORMAL);
-
             wid_set_text_outline(w, true);
+
+            wid_set_on_mouse_down(w, wid_server_join);
+            wid_set_client_context(w, s);
 
             i++;
         }
@@ -737,6 +766,8 @@ static void wid_server_create (void)
         wid_set_text_outline(w, true);
         wid_raise(w);
         wid_set_do_not_lower(w, true);
+
+        wid_set_on_mouse_up(w, wid_server_go_back);
     }
 
     {
@@ -758,6 +789,27 @@ static void wid_server_create (void)
         wid_set_do_not_lower(w, true);
 
         wid_set_on_mouse_up(w, wid_server_add);
+    }
+
+    {
+        fpoint tl = {0.0, 0.90};
+        fpoint br = {0.3, 0.99};
+
+        widp w = wid_new_rounded_small_button(wid_server_window,
+                                              "server finish");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Refresh");
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+        wid_set_do_not_lower(w, true);
+
+        wid_set_on_mouse_up(w, wid_server_refresh);
     }
 
     widp wid_server_container_horiz_scroll;
