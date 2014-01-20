@@ -4,6 +4,7 @@
  * See the README file for license.
  */
 
+#include <string.h>
 
 #include "main.h"
 #include "marshal.h"
@@ -42,6 +43,13 @@ static boolean demarshal_config (demarshal_p ctx, struct config *p)
     rc = rc && GET_OPT_NAMED_INT32(ctx, "sound_volume", p->sound_volume);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "music_volume", p->music_volume);
 
+    char *tmp = 0;
+    GET_OPT_NAMED_STRING(ctx, "name", tmp);
+    if (tmp) {
+        strncpy(p->name, tmp, sizeof(p->name) - 1);
+        myfree(tmp);
+    }
+
     return (rc);
 }
 
@@ -51,6 +59,10 @@ static void marshal_config (marshal_p ctx, struct config *p)
     PUT_NAMED_INT32(ctx, "height", p->video_pix_height);
     PUT_NAMED_INT32(ctx, "sound_volume", p->sound_volume);
     PUT_NAMED_INT32(ctx, "music_volume", p->music_volume);
+
+    if (p->name[0]) {
+        PUT_NAMED_STRING(ctx, "name", p->name);
+    }
 }
 
 boolean config_save (void)
@@ -92,6 +104,11 @@ boolean config_load (void)
     global_config.video_pix_height = 0;
     global_config.sound_volume = SOUND_MAX;
     global_config.music_volume = SOUND_MAX;
+
+    if (!global_config.name[0]) {
+        strncpy(global_config.name, "nameless", 
+                sizeof(global_config.name) - 1);
+    }
 
     if (!(ctx = demarshal(file))) {
         myfree(file);
