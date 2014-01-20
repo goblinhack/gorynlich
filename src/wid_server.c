@@ -36,6 +36,7 @@ typedef struct server_ {
     uint16_t port;
     char *host;
     char *host_and_port_str;
+    char *tooltip;
     uint8_t quality;
     uint32_t avg_latency;
     uint32_t min_latency;
@@ -150,6 +151,11 @@ static void server_destroy (server *node)
         myfree(node->host_and_port_str);
         node->host_and_port_str = 0;
     }
+
+    if (node->tooltip) {
+        myfree(node->tooltip);
+        node->tooltip = 0;
+    }
 }
 
 void wid_server_fini (void)
@@ -238,6 +244,18 @@ void wid_server_redo (void)
             ERR("Cannot re-sort host %s port %u qual %d lat %d", 
                 s->host, s->port, s->quality, s->avg_latency);
         }
+
+        if (s->tooltip) {
+            myfree(s->tooltip);
+        }
+
+        s->tooltip = dynprintf(
+            "%%fmt=leftAverage latency %x ms\n"
+            "%%fmt=leftMinimum latency %x ms\n"
+            "%%fmt=leftMaxumum latency %x ms\n",
+            s->avg_latency,
+            s->min_latency,
+            s->max_latency);
     }
 
     wid_server_destroy();
@@ -613,6 +631,12 @@ static void wid_server_set_color (widp w, server *s)
     } else {
         wid_set_color(w, WID_COLOR_TEXT, GRAY);
     }
+
+    if (s->tooltip) {
+        wid_set_tooltip(w, s->tooltip);
+    } else {
+        wid_set_tooltip(w, "Cick to edit");
+    }
 }
 
 static void wid_server_create (void)
@@ -745,7 +769,6 @@ static void wid_server_create (void)
             wid_set_on_key_down(w, wid_server_hostname_receive_input);
             wid_set_client_context(w, s);
 
-            wid_set_tooltip(w, "Cick to edit");
             i++;
         }
     }
@@ -811,7 +834,6 @@ static void wid_server_create (void)
             wid_set_on_key_down(w, wid_server_ip_receive_input);
             wid_set_client_context(w, s);
 
-            wid_set_tooltip(w, "Cick to edit");
             i++;
         }
     }
@@ -877,7 +899,6 @@ static void wid_server_create (void)
             wid_set_on_key_down(w, wid_server_port_receive_input);
             wid_set_client_context(w, s);
 
-            wid_set_tooltip(w, "Cick to edit");
             i++;
         }
     }
@@ -1063,7 +1084,11 @@ static void wid_server_create (void)
 
             float height = 0.08;
 
-            wid_set_color(w, WID_COLOR_TEXT, WHITE);
+            if (s->quality > 0) {
+                wid_set_color(w, WID_COLOR_TEXT, GREEN);
+            } else {
+                wid_set_color(w, WID_COLOR_TEXT, WHITE);
+            }
 
             br.y += (float)i * height;
             tl.y += (float)i * height;
