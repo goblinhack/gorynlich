@@ -16,6 +16,7 @@
 #include "marshal.h"
 #include "sdl.h"
 #include "socket.h"
+#include "wid_popup.h"
 
 static const char *server_dir_and_file = "gorynlich-servers.txt";
 
@@ -25,6 +26,7 @@ static boolean wid_server_init_done;
 
 static void wid_server_create(void);
 static void wid_server_destroy(void);
+static void wid_server_redo(void);
 
 typedef struct server_ {
     tree_key_two_int tree;
@@ -76,6 +78,17 @@ static void server_add (const server *s_in)
 
         SDLNet_Write16(s->tree.key2, &s->ip.port);
     }
+}
+
+static void server_remove (server *s)
+{
+    if (!servers) {
+        return;
+    }
+
+    tree_remove(servers, &s->tree.node);
+
+    wid_server_redo();
 }
 
 boolean wid_server_init (void)
@@ -149,11 +162,7 @@ static boolean wid_server_delete (widp w, int32_t x, int32_t y, uint32_t button)
         return (false);
     }
 
-    LOG("remove %p %s",s,s->host_and_port_str);
-    CON("REMOVE");
-
-    tree_remove(servers, &s->tree.node);
-    wid_server_redo();
+    server_remove(s);
 
     return (true);
 }
@@ -208,20 +217,35 @@ static boolean wid_server_receive_mouse_motion (
     return (true);
 }
 
-static void wid_server_over_begin (widp w)
+static boolean wid_server_hostname_mouse_down (widp w, int32_t x, int32_t y, 
+                                               uint32_t button)
 {
     wid_set_show_cursor(w, true);
+
+    return (true);
 }
 
-static void wid_server_over_end (widp w)
+static boolean wid_server_ip_mouse_down (widp w, int32_t x, int32_t y,
+                                         uint32_t button)
 {
-    wid_set_show_cursor(w, false);
+    wid_set_show_cursor(w, true);
+
+    return (true);
+}
+
+static boolean wid_server_port_mouse_down (widp w, int32_t x, int32_t y,
+                                           uint32_t button)
+{
+    wid_set_show_cursor(w, true);
+
+    return (true);
 }
 
 /*
  * Key down etc...
  */
-static boolean wid_server_receive_input (widp w, const SDL_KEYSYM *key)
+static boolean wid_server_hostname_receive_input (widp w, 
+                                                  const SDL_KEYSYM *key)
 {
     server *s;
 
@@ -232,6 +256,207 @@ static boolean wid_server_receive_input (widp w, const SDL_KEYSYM *key)
 
     switch (key->sym) {
         case SDLK_RETURN: {
+            /*
+             * Change hostname.
+             */
+            wid_set_show_cursor(w, false);
+
+            server sn;
+
+            memset(&sn, 0, sizeof(sn));
+
+            sn.host = (char*) wid_get_text(w);
+            if (!sn.host || !*sn.host) {
+                server_remove(s);
+                wid_server_redo();
+                return (true);
+            }
+
+            sn.port = s->port;
+
+            server_remove(s);
+            server_add(&sn);
+            wid_server_redo();
+
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    /*
+     * Feed to the general input handler
+     */
+    return (wid_receive_input(w, key));
+}
+
+/*
+ * Key down etc...
+ */
+static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
+{
+    server *s;
+
+    s = wid_get_client_context(w);
+    if (!s) {
+        return (false);
+    }
+
+    switch (key->sym) {
+        case SDLK_RETURN: {
+            /*
+             * Change IP address.
+             */
+            wid_set_show_cursor(w, false);
+
+            server sn;
+
+            memset(&sn, 0, sizeof(sn));
+
+            const char *ip_str = wid_get_text(w);
+            int a,b,c,d;
+            int success = sscanf(ip_str, "%u.%u.%u.%u", &a, &b, &c, &d);
+            if (success != 4) {
+                /*
+                 * Fail
+                 */
+                char *popup_str = 
+                    dynprintf("Failed to parse IP address, "
+                              "not in A.B.C.D format");
+
+                (void) wid_popup_error(popup_str);
+                myfree(popup_str);
+
+                return (true);
+            }
+
+            if ((a > 255) || (b > 255) | (c > 255) | (d > 255)) {
+                /*
+                 * Fail
+                 */
+                char *popup_str = 
+                    dynprintf("Failed to parse IP address, "
+                              "Each number must be in the 0 to 255 range");
+
+                (void) wid_popup_error(popup_str);
+                myfree(popup_str);
+
+                return (true);
+            }
+
+            /*
+             * Create an IP address for SDL to parse.
+             */
+            IPaddress ipaddress = {0};
+            
+            uint32_t ipv4 = (a << 24) | (b << 16) | (c << 8) | d;
+
+            SDLNet_Write32(ipv4, &ipaddress.host);
+
+            sn.host = (char*)SDLNet_ResolveIP(&ipaddress);
+            if (!sn.host) {
+                /*
+                 * Fail
+                 */
+                char *popup_str = 
+                    dynprintf("Failed to resolve IP address %s to a hostname",
+                              ip_str);
+
+                (void) wid_popup_error(popup_str);
+                myfree(popup_str);
+
+                return (true);
+            }
+
+            /*
+             * Replace the server.
+             */
+            if (!sn.host || !*sn.host) {
+                server_remove(s);
+                wid_server_redo();
+                return (true);
+            }
+
+            sn.port = s->port;
+
+            server_remove(s);
+            server_add(&sn);
+            wid_server_redo();
+
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    /*
+     * Feed to the general input handler
+     */
+    return (wid_receive_input(w, key));
+}
+
+/*
+ * Key down etc...
+ */
+static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
+{
+    server *s;
+
+    s = wid_get_client_context(w);
+    if (!s) {
+        return (false);
+    }
+
+    switch (key->sym) {
+        case SDLK_RETURN: {
+            /*
+             * Change port address.
+             */
+            wid_set_show_cursor(w, false);
+
+            server sn;
+
+            memset(&sn, 0, sizeof(sn));
+
+            const char *ip_str = wid_get_text(w);
+            int a;
+            int success = sscanf(ip_str, "%u", &a);
+            if (success != 1) {
+                /*
+                 * Fail
+                 */
+                char *popup_str = 
+                    dynprintf("Failed to parse port number");
+
+                (void) wid_popup_error(popup_str);
+                myfree(popup_str);
+
+                return (true);
+            }
+
+            if ((a > 65535) || (a < 1024)) {
+                /*
+                 * Fail
+                 */
+                char *popup_str = 
+                    dynprintf("Failed to parse port number, "
+                              "must be in the 1024 to 65535 range");
+
+                (void) wid_popup_error(popup_str);
+                myfree(popup_str);
+
+                return (true);
+            }
+
+            sn.host = s->host;
+            sn.port = a;
+
+            server_remove(s);
+            server_add(&sn);
+            wid_server_redo();
+
             break;
         }
 
@@ -301,6 +526,7 @@ static void wid_server_create (void)
 
         widp w = wid_new_square_button(wid_server_window, "server name");
 
+        wid_set_tooltip(w, "Click on a server to edit it");
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Servers");
@@ -311,8 +537,8 @@ static void wid_server_create (void)
         wid_set_text_outline(w, true);
     }
 
-    const float width1 = 0.3;
-    const float width2 = 0.2;
+    const float width1 = 0.25;
+    const float width2 = 0.25;
     const float width3 = 0.1;
     const float width4 = 0.1;
     const float width5 = 0.1;
@@ -378,11 +604,11 @@ static void wid_server_create (void)
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
-            wid_set_on_mouse_over_begin(w, wid_server_over_begin);
-            wid_set_on_mouse_over_end(w, wid_server_over_end);
-            wid_set_on_key_down(w, wid_server_receive_input);
+            wid_set_on_mouse_down(w, wid_server_hostname_mouse_down);
+            wid_set_on_key_down(w, wid_server_hostname_receive_input);
             wid_set_client_context(w, s);
 
+            wid_set_tooltip(w, "Cick to edit");
             i++;
         }
     }
@@ -450,9 +676,11 @@ static void wid_server_create (void)
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
-            wid_set_on_key_down(w, wid_server_receive_input);
+            wid_set_on_mouse_down(w, wid_server_ip_mouse_down);
+            wid_set_on_key_down(w, wid_server_ip_receive_input);
             wid_set_client_context(w, s);
 
+            wid_set_tooltip(w, "Cick to edit");
             i++;
         }
     }
@@ -520,9 +748,11 @@ static void wid_server_create (void)
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
-            wid_set_on_key_down(w, wid_server_receive_input);
+            wid_set_on_mouse_down(w, wid_server_port_mouse_down);
+            wid_set_on_key_down(w, wid_server_port_receive_input);
             wid_set_client_context(w, s);
 
+            wid_set_tooltip(w, "Cick to edit");
             i++;
         }
     }
@@ -683,6 +913,7 @@ static void wid_server_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, "Delete");
+            wid_set_tooltip(w, "Remove this server from the list");
             wid_set_font(w, vsmall_font);
             color c = STEELBLUE;
 
@@ -726,6 +957,7 @@ static void wid_server_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, "Join");
+            wid_set_tooltip(w, "Try to join the game on this server");
             wid_set_font(w, vsmall_font);
             color c = STEELBLUE;
 
@@ -780,6 +1012,7 @@ static void wid_server_create (void)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Add");
+        wid_set_tooltip(w, "Add a new server to the list");
         wid_set_font(w, small_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
@@ -801,6 +1034,7 @@ static void wid_server_create (void)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Refresh");
+        wid_set_tooltip(w, "Update server list");
         wid_set_font(w, small_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
