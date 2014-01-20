@@ -10,6 +10,7 @@ boolean wid_server_init(void);
 void wid_server_fini(void);
 void wid_server_hide(void);
 void wid_server_visible(void);
+void wid_server_redo(void);
 boolean server_save(void);
 boolean server_load(void);
 widp server_try_to_add(uint32_t score_in);
