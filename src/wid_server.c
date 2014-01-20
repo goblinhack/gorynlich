@@ -50,7 +50,7 @@ static void server_add (const server *s_in)
     server *s;
 
     if (!servers) {
-        servers = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: servers");
+        servers = tree_alloc(TREE_KEY_FOUR_INTEGER, "TREE ROOT: servers");
     }
 
     s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: server");
@@ -80,10 +80,17 @@ static void server_add (const server *s_in)
     s->tree.key3 = SDLNet_Read32(&s->ip.host);
     s->tree.key4 = SDLNet_Read16(&s->ip.port);
 
-    while (!tree_insert(servers, &s->tree.node)) {
-        s->tree.key2++;
+    int tries = 0;
 
-        SDLNet_Write16(s->tree.key2, &s->ip.port);
+    while (!tree_insert(servers, &s->tree.node)) {
+        s->tree.key4++;
+
+        SDLNet_Write16(s->tree.key4, &s->ip.port);
+        s->port = s->ip.port;
+        if (tries++ > 10) {
+            ERR("Cannot add host %s port %u", s->host, s->port);
+            return;
+        }
     }
 }
 
@@ -514,12 +521,16 @@ static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
 
 static void wid_server_set_color (widp w, server *s)
 {
-    if (s->quality == 100) {
+    if (s->quality >= 95) {
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+    } else if (s->quality >= 75) {
         wid_set_color(w, WID_COLOR_TEXT, GREEN);
-    } else if (s->quality > 75) {
+    } else if (s->quality >= 50) {
         wid_set_color(w, WID_COLOR_TEXT, YELLOW);
-    } else if (s->quality > 75) {
+    } else if (s->quality >= 25) {
         wid_set_color(w, WID_COLOR_TEXT, ORANGE);
+    } else if (s->quality > 0) {
+        wid_set_color(w, WID_COLOR_TEXT, RED);
     } else {
         wid_set_color(w, WID_COLOR_TEXT, GRAY);
     }
@@ -542,11 +553,9 @@ static void wid_server_create (void)
     wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
     color c = BLACK;
-    c.a = 200;
     wid_set_color(w, WID_COLOR_BG, c);
 
     c = STEELBLUE;
-    c.a = 200;
     wid_set_color(w, WID_COLOR_TL, c);
     wid_set_color(w, WID_COLOR_BR, c);
     wid_set_bevel(w, 4);
@@ -1172,83 +1181,4 @@ boolean server_load (void)
     myfree(file);
 
     return (true);
-}
-
-static widp wid_server_name_popup;
-static uint32_t score;
-
-static void wid_server_name_ok (widp w)
-{
-    widp top;
-
-    /*
-     * We're given the ok or cancel button, so must name the text box.
-     */
-//    const char *host_and_port_str = wid_get_text(w);
-
-//    server_add(dynprintf("%s", host_and_port_str), score);
-
-    /*
-     * Destroy the name dialog.
-     */
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_server_name_popup = 0;
-
-    server_save();
-}
-
-static void wid_server_name_cancel (widp w)
-{
-    widp top;
-
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_server_name_popup = 0;
-}
-
-widp server_try_to_add (uint32_t score_in)
-{
-    uint32_t count = 0;
-
-    score = score_in;
-    server *s;
-
-    TREE_WALK(servers, s) {
-
-        if (score_in > (uint32_t) s->tree.key1) {
-            break;
-        }
-
-        count++;
-    }
-    const char *which[] = {
-        "First",
-        "Second",
-        "Third",
-        "Fourth",
-        "Fifth",
-        "Sixth",
-        "Seventh",
-        "Eighth",
-        "Nineth",
-        "Tenth",
-    };
-
-    if (count >= ARRAY_SIZE(which)) {
-        return (0);
-    }
-
-    char *place_str = dynprintf("%s place!", which[count]);
-
-    wid_server_name_popup = wid_large_text_input(
-          place_str,
-          0.5, 0.5,                 /* position */
-          2,                        /* buttons */
-          "Ok", wid_server_name_ok,
-          "Cancel", wid_server_name_cancel);
-
-    myfree(place_str);
-
-    return (wid_server_name_popup);
 }
