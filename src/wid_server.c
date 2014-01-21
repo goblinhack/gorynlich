@@ -23,9 +23,11 @@ static const char *server_dir_and_file = "gorynlich-servers.txt";
 
 static widp wid_server_window;
 static widp wid_server_container;
+static widp wid_server_window_container;
+static widp wid_server_container_vert_scroll;
 static boolean wid_server_init_done;
 
-static void wid_server_create(void);
+static void wid_server_create(boolean redo);
 static void wid_server_destroy(void);
 static boolean user_is_typing;
 
@@ -180,10 +182,10 @@ void wid_server_hide (void)
 
 void wid_server_visible (void)
 {
-    wid_server_create();
+    wid_server_create(false);
 }
 
-void wid_server_redo (void)
+void wid_server_redo (boolean soft_refresh)
 {
     if (!wid_server_window) {
         return;
@@ -249,25 +251,25 @@ void wid_server_redo (void)
             myfree(s->tooltip);
         }
 
-        s->tooltip = dynprintf(
-            "%%fmt=leftAverage latency %x ms\n"
-            "%%fmt=leftMinimum latency %x ms\n"
-            "%%fmt=leftMaxumum latency %x ms\n",
-            s->avg_latency,
-            s->min_latency,
-            s->max_latency);
+        if (s->quality) {
+            s->tooltip = dynprintf(
+                "%%%%fmt=left$Average latency %u ms\n"
+                "%%%%fmt=left$Minimum latency %u ms\n"
+                "%%%%fmt=left$Maxumum latency %u ms\n",
+                s->avg_latency,
+                s->min_latency,
+                s->max_latency);
+        } else {
+            s->tooltip = dynprintf("server is down");
+        }
     }
 
-    wid_server_destroy();
-
-    wid_server_create();
-}
-
-static boolean wid_server_refresh (widp w, int32_t x, int32_t y, uint32_t button)
-{
-    wid_server_redo();
-
-    return (true);
+    if (soft_refresh) {
+        wid_server_create(true);
+    } else {
+        wid_server_destroy();
+        wid_server_create(false);
+    }
 }
 
 static boolean wid_server_go_back (widp w, int32_t x, int32_t y, uint32_t button)
@@ -298,6 +300,7 @@ static boolean wid_server_delete (widp w, int32_t x, int32_t y, uint32_t button)
 
     server_remove(s);
     server_save();
+    wid_server_redo(false /* hard refresh */);
 
     return (true);
 }
@@ -313,7 +316,7 @@ static boolean wid_server_add (widp w, int32_t x, int32_t y, uint32_t button)
 
     server_add(&s);
     server_save();
-    wid_server_redo();
+    wid_server_redo(false /* hard refresh */);
 
     return (true);
 }
@@ -408,7 +411,7 @@ static boolean wid_server_hostname_receive_input (widp w,
             if (!sn.host || !*sn.host) {
                 server_remove(s);
                 server_save();
-                wid_server_redo();
+                wid_server_redo(false /* hard refresh */);
                 return (true);
             }
 
@@ -417,7 +420,7 @@ static boolean wid_server_hostname_receive_input (widp w,
             server_remove(s);
             server_add(&sn);
             server_save();
-            wid_server_redo();
+            wid_server_redo(false /* hard refresh */);
 
             break;
         }
@@ -517,7 +520,7 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
             if (!sn.host || !*sn.host) {
                 server_remove(s);
                 server_save();
-                wid_server_redo();
+                wid_server_redo(false /* hard refresh */);
                 return (true);
             }
 
@@ -526,7 +529,7 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
             server_remove(s);
             server_add(&sn);
             server_save();
-            wid_server_redo();
+            wid_server_redo(false /* hard refresh */);
 
             break;
         }
@@ -601,7 +604,7 @@ static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
             server_remove(s);
             server_add(&sn);
             server_save();
-            wid_server_redo();
+            wid_server_redo(false /* hard refresh */);
 
             break;
         }
@@ -639,59 +642,72 @@ static void wid_server_set_color (widp w, server *s)
     }
 }
 
-static void wid_server_create (void)
+static void wid_server_create (boolean redo)
 {
-    if (wid_server_window) {
-        return;
-    }
+    float scroll_delta = 0;
 
-    widp w = wid_server_window = wid_new_square_window("wid settings");
+    if (redo) {
+        wid_destroy(&wid_server_window_container);
+        if (wid_server_container_vert_scroll) {
+            scroll_delta = 
+                wid_get_tl_y(wid_get_parent(wid_server_container_vert_scroll)) -
+                wid_get_tl_y(wid_server_container_vert_scroll);
+        }
 
-    fpoint tl = {0.05, 0.1};
-    fpoint br = {0.95, 0.9};
+    } else {
+        if (wid_server_window) {
+            return;
+        }
 
-    wid_set_tl_br_pct(w, tl, br);
-    wid_set_font(w, med_font);
+        widp w = wid_server_window = wid_new_square_window("wid server");
 
-    wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-    color c = BLACK;
-    wid_set_color(w, WID_COLOR_BG, c);
-
-    c = STEELBLUE;
-    wid_set_color(w, WID_COLOR_TL, c);
-    wid_set_color(w, WID_COLOR_BR, c);
-    wid_set_bevel(w, 4);
-    wid_set_on_key_down(w, wid_server_key_event);
-
-    wid_set_on_mouse_motion(w, wid_server_receive_mouse_motion);
-
-    {
-        widp w = wid_server_container =
-            wid_new_container(wid_server_window, "wid settings container");
-
-        fpoint tl = {0.0, 0.15};
-        fpoint br = {1.0, 1.0};
+        fpoint tl = {0.05, 0.1};
+        fpoint br = {0.95, 0.9};
 
         wid_set_tl_br_pct(w, tl, br);
+        wid_set_font(w, med_font);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+
+        color c = BLACK;
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        c = STEELBLUE;
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
+        wid_set_bevel(w, 4);
+        wid_set_on_key_down(w, wid_server_key_event);
+
+        wid_set_on_mouse_motion(w, wid_server_receive_mouse_motion);
     }
+
+    wid_server_window_container =
+        wid_new_container(wid_server_window, "wid settings container");
 
     {
         fpoint tl = {0.0, 0.0};
         fpoint br = {1.0, 1.0};
 
-        w = wid_new_container(wid_server_container, "server list");
+        wid_set_tl_br_pct(wid_server_window_container, tl, br);
+    }
+
+    {
+        widp w = wid_server_container =
+            wid_new_container(wid_server_window_container,
+                              "wid settings container");
+
+        fpoint tl = {0.0, 0.15};
+        fpoint br = {1.0, 0.9};
 
         wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text_outline(w, true);
     }
 
     {
         fpoint tl = {0.0, 0.0};
         fpoint br = {1.0, 0.1};
 
-        widp w = wid_new_square_button(wid_server_window, "server name");
+        widp w = wid_new_square_button(wid_server_window_container,
+                                       "server name");
 
         wid_set_tooltip(w, "Click on a server to edit it");
         wid_set_tl_br_pct(w, tl, br);
@@ -717,7 +733,8 @@ static void wid_server_create (void)
         fpoint tl = {width_at, 0.1};
         fpoint br = {width_at + width1, 0.15};
 
-        widp w = wid_new_square_button(wid_server_window, "server hostname");
+        widp w = wid_new_square_button(wid_server_window_container,
+                                       "server hostname");
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -779,7 +796,8 @@ static void wid_server_create (void)
         fpoint tl = {width_at, 0.1};
         fpoint br = {width_at + width2, 0.15};
 
-        widp w = wid_new_square_button(wid_server_window, "server ip");
+        widp w = wid_new_square_button(wid_server_window_container,
+                                       "server ip");
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -844,7 +862,8 @@ static void wid_server_create (void)
         fpoint tl = {width_at, 0.1};
         fpoint br = {width_at + width3, 0.15};
 
-        widp w = wid_new_square_button(wid_server_window, "server port");
+        widp w = wid_new_square_button(wid_server_window_container,
+                                       "server port");
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -909,7 +928,8 @@ static void wid_server_create (void)
         fpoint tl = {width_at, 0.1};
         fpoint br = {width_at + width4, 0.15};
 
-        widp w = wid_new_square_button(wid_server_window, "server latency");
+        widp w = wid_new_square_button(wid_server_window_container,
+                                       "server latency");
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -970,7 +990,8 @@ static void wid_server_create (void)
         fpoint tl = {width_at, 0.1};
         fpoint br = {width_at + width5, 0.15};
 
-        widp w = wid_new_square_button(wid_server_window, "server quality");
+        widp w = wid_new_square_button(wid_server_window_container,
+                                       "server quality");
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1123,8 +1144,9 @@ static void wid_server_create (void)
         fpoint tl = {0.7, 0.90};
         fpoint br = {0.99, 0.99};
 
-        widp w = wid_new_rounded_small_button(wid_server_window,
-                                              "server finish");
+        widp w = wid_new_rounded_small_button(wid_server_window_container,
+                                              "wid server go back");
+        wid_raise(w);
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1134,8 +1156,6 @@ static void wid_server_create (void)
         wid_set_color(w, WID_COLOR_BG, BLACK);
 
         wid_set_text_outline(w, true);
-        wid_raise(w);
-        wid_set_do_not_lower(w, true);
 
         wid_set_on_mouse_up(w, wid_server_go_back);
     }
@@ -1144,8 +1164,8 @@ static void wid_server_create (void)
         fpoint tl = {0.5, 0.90};
         fpoint br = {0.69, 0.99};
 
-        widp w = wid_new_rounded_small_button(wid_server_window,
-                                              "server finish");
+        widp w = wid_new_rounded_small_button(wid_server_window_container,
+                                              "wid server add");
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1157,44 +1177,20 @@ static void wid_server_create (void)
 
         wid_set_text_outline(w, true);
         wid_raise(w);
-        wid_set_do_not_lower(w, true);
 
         wid_set_on_mouse_up(w, wid_server_add);
     }
 
-    {
-        fpoint tl = {0.0, 0.90};
-        fpoint br = {0.3, 0.99};
-
-        widp w = wid_new_rounded_small_button(wid_server_window,
-                                              "server finish");
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "Refresh");
-        wid_set_tooltip(w, "Update server list");
-        wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-
-        wid_set_text_outline(w, true);
-        wid_raise(w);
-        wid_set_do_not_lower(w, true);
-
-        wid_set_on_mouse_up(w, wid_server_refresh);
-    }
-
-    widp wid_server_container_horiz_scroll;
-    widp wid_server_container_vert_scroll;
-
     wid_server_container_vert_scroll =
         wid_new_vert_scroll_bar(wid_server_window, 
                                 wid_server_container);
-    wid_server_container_horiz_scroll =
-        wid_new_horiz_scroll_bar(wid_server_window, 
-                                 wid_server_container);
 
-    wid_raise(wid_server_window);
+    wid_visible(wid_get_parent(wid_server_container_vert_scroll), 1);
+    wid_visible(wid_server_container_vert_scroll, 1);
+
+    if (redo) {
+        wid_move_delta(wid_server_container_vert_scroll, 0, -scroll_delta);
+    }
 
     wid_update(wid_server_window);
 }
