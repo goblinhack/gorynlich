@@ -23,7 +23,7 @@
 /*
  * Which socket we have actually joined on.
  */
-static socketp client_joined_server;
+socketp client_joined_server;
 static uint32_t client_joined_server_key;
 
 static void client_socket_tx_ping(void);
@@ -37,7 +37,6 @@ static boolean client_join(tokens_t *tokens, void *context);
 static boolean client_leave(tokens_t *tokens, void *context);
 static boolean client_open(tokens_t *tokens, void *context);
 static boolean client_close(tokens_t *tokens, void *context);
-static boolean client_socket_leave(void);
 static boolean client_socket_shout(char *shout);
 static boolean client_socket_tell(char *from, char *to, char *msg);
 static boolean client_socket_set_name(char *name);
@@ -373,7 +372,7 @@ static boolean client_socket_leave_implicit (void)
     return (true);
 }
 
-static boolean client_socket_leave (void)
+boolean client_socket_leave (void)
 {
     if (!client_joined_server) {
         WARN("Join a server first before trying to leave");

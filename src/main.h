@@ -201,6 +201,8 @@ void WARN(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void INIT_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void FINI_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void CON(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+void MSG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+void MSGERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void HOST_LOG(hostp, const char *fmt, ...) \
@@ -228,13 +230,6 @@ void WID_DBG(widp, const char *fmt, ...) \
 #define WID_DBG(...)
 #define WID_LOG(...)
 #endif
-
-#define ERR_POPUP(...)                                                      \
-{                                                                           \
-    char *tmp = dynprintf(__VA_ARGS__);                                     \
-    (void) wid_popup_error(tmp);                                            \
-    myfree(tmp);                                                            \
-}                                                                           \
 
 extern boolean debug_enabled;
 extern boolean debug_socket_ping_enabled;
