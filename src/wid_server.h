@@ -10,6 +10,6 @@ boolean wid_server_init(void);
 void wid_server_fini(void);
 void wid_server_hide(void);
 void wid_server_visible(void);
-void wid_server_redo(void);
+void wid_server_redo(boolean soft_refresh);
 boolean server_save(void);
 boolean server_load(void);
