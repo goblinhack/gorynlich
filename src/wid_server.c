@@ -16,7 +16,6 @@
 #include "marshal.h"
 #include "sdl.h"
 #include "socket.h"
-#include "wid_popup.h"
 #include "client.h"
 
 static const char *server_dir_and_file = "gorynlich-servers.txt";
@@ -29,6 +28,7 @@ static boolean wid_server_init_done;
 
 static void wid_server_create(boolean redo);
 static void wid_server_destroy(void);
+
 static boolean user_is_typing;
 
 typedef struct server_ {
@@ -47,6 +47,8 @@ typedef struct server_ {
     boolean walked;
 } server;
 
+static void wid_server_destroy_internal(server *node);
+
 tree_rootp servers;
 
 static void server_add (const server *s_in)
@@ -60,7 +62,7 @@ static void server_add (const server *s_in)
     s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: server");
 
     memcpy(s, s_in, sizeof(*s));
-    s->host = dupstr(s_in->host, "hostname");
+    s->host = dupstr(s_in->host, "server hostname");
     s->port = s_in->port;
 
     if ((SDLNet_ResolveHost(&s->ip, 
@@ -132,6 +134,7 @@ static void server_remove (server *s)
         return;
     }
 
+    wid_server_destroy_internal(s);
     tree_remove(servers, &s->tree.node);
     myfree(s);
 }
@@ -147,7 +150,7 @@ boolean wid_server_init (void)
     return (true);
 }
 
-static void server_destroy (server *node)
+static void wid_server_destroy_internal (server *node)
 {
     if (node->host_and_port_str) {
         myfree(node->host_and_port_str);
@@ -170,7 +173,8 @@ void wid_server_fini (void)
         wid_server_destroy();
 
         if (servers) {
-            tree_destroy(&servers, (tree_destroy_func)server_destroy);
+            tree_destroy(&servers, 
+                         (tree_destroy_func)wid_server_destroy_internal);
         }
     }
 }
@@ -287,6 +291,18 @@ static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
     }
 
     client_socket_join(s->host, 0, s->port);
+
+    return (true);
+}
+
+static boolean wid_server_leave (widp w, int32_t x, int32_t y, uint32_t button)
+{
+    server *s = wid_get_client_context(w);
+    if (!s) {
+        return (false);
+    }
+
+    client_socket_leave();
 
     return (true);
 }
@@ -466,13 +482,7 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                char *popup_str = 
-                    dynprintf("Failed to parse IP address, "
-                              "not in A.B.C.D format");
-
-                (void) wid_popup_error(popup_str);
-                myfree(popup_str);
-
+                MSGERR("Failed to parse IP address, not in A.B.C.D format");
                 return (true);
             }
 
@@ -480,12 +490,8 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                char *popup_str = 
-                    dynprintf("Failed to parse IP address, "
-                              "Each number must be in the 0 to 255 range");
-
-                (void) wid_popup_error(popup_str);
-                myfree(popup_str);
+                MSGERR("Failed to parse IP address, "
+                       "Each number must be in the 0 to 255 range");
 
                 return (true);
             }
@@ -504,12 +510,7 @@ static boolean wid_server_ip_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                char *popup_str = 
-                    dynprintf("Failed to resolve IP address %s to a hostname",
-                              ip_str);
-
-                (void) wid_popup_error(popup_str);
-                myfree(popup_str);
+                MSGERR("Failed to resolve IP address to a hostname");
 
                 return (true);
             }
@@ -575,11 +576,7 @@ static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                char *popup_str = 
-                    dynprintf("Failed to parse port number");
-
-                (void) wid_popup_error(popup_str);
-                myfree(popup_str);
+                MSGERR("Failed to parse port number");
 
                 return (true);
             }
@@ -588,12 +585,8 @@ static boolean wid_server_port_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                char *popup_str = 
-                    dynprintf("Failed to parse port number, "
-                              "must be in the 1024 to 65535 range");
-
-                (void) wid_popup_error(popup_str);
-                myfree(popup_str);
+                MSGERR("Failed to parse port number, "
+                       "must be in the 1024 to 65535 range");
 
                 return (true);
             }
@@ -1053,6 +1046,11 @@ static void wid_server_create (boolean redo)
         server *s;
 
         TREE_WALK_REVERSE(servers, s) {
+            socketp sp = socket_find(s->ip);
+            if (sp && (sp == client_joined_server)) {
+                continue;
+            }
+
             widp w = wid_new_rounded_small_button(wid_server_container,
                                            "server remove");
 
@@ -1115,8 +1113,18 @@ static void wid_server_create (boolean redo)
             tl.y += (float)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, "Join");
-            wid_set_tooltip(w, "Try to join the game on this server");
+
+            socketp sp = socket_find(s->ip);
+            if (sp && (sp == client_joined_server)) {
+                wid_set_text(w, "Leave");
+                wid_set_tooltip(w, "Exit this gam");
+                wid_set_on_mouse_down(w, wid_server_leave);
+            } else {
+                wid_set_text(w, "Join");
+                wid_set_tooltip(w, "Try to join the game on this server");
+                wid_set_on_mouse_down(w, wid_server_join);
+            }
+
             wid_set_font(w, vsmall_font);
             color c = STEELBLUE;
 
@@ -1131,7 +1139,6 @@ static void wid_server_create (boolean redo)
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_text_outline(w, true);
 
-            wid_set_on_mouse_down(w, wid_server_join);
             wid_set_client_context(w, s);
 
             i++;
@@ -1193,6 +1200,12 @@ static void wid_server_create (boolean redo)
     }
 
     wid_update(wid_server_window);
+    static int x;
+    if (!x) {
+        x = 1;
+    MSG("heloooooooooooooooo");
+//    MSGERR("long error");
+    }
 }
 
 void wid_server_destroy (void)
