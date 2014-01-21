@@ -4176,6 +4176,10 @@ static void wid_raise_override (widp parent)
      */
     widp w;
 
+    if (parent->do_not_lower) {
+        wid_raise_internal(parent);
+    }
+
     TREE_WALK(parent->children_display_sorted, w) {
         if (w->do_not_lower) {
             wid_raise_internal(w);
