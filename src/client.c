@@ -43,7 +43,7 @@ static boolean client_socket_tell(char *from, char *to, char *msg);
 static boolean client_socket_set_name(char *name);
 static void client_check_still_in_game(void);
 
-aplayer client_players[MAX_PLAYERS];
+static aplayer client_players[MAX_PLAYERS];
 
 boolean client_init (void)
 {
@@ -170,14 +170,16 @@ static void client_socket_tx_ping (void)
         socket_tx_ping(s, seq, ts);
     }
 
-    seq++;
-
     /*
-     * Every 10 seconds check for dead peers.
+     * Every few seconds check for dead peers.
      */
-    if (seq % 10) {
+    if (ts && !(seq % 3)) {
         client_alive_check();
     }
+
+    wid_server_redo(true /* soft refresh */);
+
+    seq++;
 }
 
 void client_tick (void)
@@ -669,11 +671,13 @@ static void client_poll (void)
                 break;
 
             case MSG_SERVER_STATUS:
-                socket_rx_server_status(s, packet, data, &client_players[0]);
+                if (s == client_joined_server) {
+                    socket_rx_server_status(s, packet, data, 
+                                    &client_players[0]);
 
-                client_check_still_in_game();
+                    client_check_still_in_game();
+                }
 
-                wid_server_redo();
                 break;
 
             case MSG_SERVER_CLOSE:
@@ -761,6 +765,15 @@ static void client_check_still_in_game (void)
         return;
     }
 
-    CON("Server does not report you in the game!");
+    LOG("Server does not report you in the game!");
+
+    LOG("  You are player: \"%s\", ID %u", 
+        global_config.name, client_joined_server_key);
+
+    for (pi = 0; pi < MAX_PLAYERS; pi++) {
+        aplayer *p = &client_players[pi];
+
+        LOG("  Player %u is \"%s\", ID %u ", pi+1, p->name, p->key);
+    }
 }
 

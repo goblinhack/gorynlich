@@ -9,6 +9,8 @@
 #include <SDL_net.h>
 #include "tree.h"
 
+#include "player.h"
+
 typedef enum {
     MSG_PING,
     MSG_PONG,
@@ -61,6 +63,7 @@ typedef struct socket_ {
     const char *local_logname;
     const char *remote_logname;
     char name[PLAYER_NAME_LEN_MAX];
+    aplayer client_players[MAX_PLAYERS];
 } socket;
 
 extern void socket_count_inc_pak_rx(const socketp, msg_type);

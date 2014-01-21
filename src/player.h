@@ -6,6 +6,9 @@
 
 #include <SDL_net.h>
 
+#ifndef _PLAYER_H_
+#define _PLAYER_H_
+
 boolean player_init(void);
 void player_fini(void);
 
@@ -27,3 +30,5 @@ typedef struct aplayer_ {
     char name[PLAYER_NAME_LEN_MAX + 1];
     boolean connection_confrimed;
 } aplayer;
+
+#endif

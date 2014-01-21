@@ -295,9 +295,9 @@ static void server_socket_tx_ping (void)
     }
 
     /*
-     * Every 10 seconds check for dead peers.
+     * Every few seconds check for dead peers.
      */
-    if (ts && (seq % 10)) {
+    if (ts && (!(seq % 3))) {
         server_alive_check();
     }
 
