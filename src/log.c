@@ -19,6 +19,9 @@
 #include "wid.h"
 #include "socket.h"
 #include "term.h"
+#include "wid_button.h"
+#include "wid_popup.h"
+#include "color.h"
 
 static char buf[200];
 boolean debug_enabled;
@@ -287,10 +290,8 @@ static void con_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    if (HEADLESS) {
-        putf(MY_STDOUT, buf);
-        fflush(MY_STDOUT);
-    }
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 
     wid_console_log(buf + len);
     term_log(buf + len);
@@ -626,3 +627,68 @@ void WID_DBG (widp t, const char *fmt, ...)
     va_end(args);
 }
 #endif
+
+static void msg_ (const char *fmt, va_list args)
+{
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    wid_console_log(buf + len);
+    term_log(buf + len);
+
+    widp w = wid_button_transient(buf + len, 0);
+    color c = BLACK;
+    c.a = 150;
+    wid_set_color(w, WID_COLOR_BG, c);
+    wid_set_color(w, WID_COLOR_TL, c);
+    wid_set_color(w, WID_COLOR_BR, c);
+    wid_move_to_pct_centered(w, 0.5, 0.1);
+    wid_set_text_outline(w, true);
+}
+
+void MSG (const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    msg_(fmt, args);
+    va_end(args);
+}
+
+static void msgerr_ (const char *fmt, va_list args)
+{
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDERR, buf);
+    fflush(MY_STDERR);
+
+    wid_console_log(buf + len);
+    term_log(buf + len);
+
+    wid_popup_error(buf + len);
+}
+
+void MSGERR (const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    msgerr_(fmt, args);
+    va_end(args);
+}
