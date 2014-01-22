@@ -549,7 +549,7 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 100;
+        c.a = 50;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
@@ -582,7 +582,7 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 100;
+        c.a = 50;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
@@ -615,7 +615,7 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 100;
+        c.a = 50;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
@@ -648,7 +648,7 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 100;
+        c.a = 50;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
@@ -681,7 +681,7 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 100;
+        c.a = 50;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
@@ -714,7 +714,7 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 100;
+        c.a = 50;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
@@ -745,7 +745,7 @@ static void wid_intro_create (void)
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
-        c.a = 100;
+        c.a = 50;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
