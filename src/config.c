@@ -116,7 +116,7 @@ boolean config_load (void)
     }
 
     if (!demarshal_config(ctx, &global_config)) {
-        ERR("Failed to parse: %s", file);
+        MSGERR("Failed to parse: %s", file);
     }
 
     myfree(file);
