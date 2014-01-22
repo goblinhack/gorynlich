@@ -250,7 +250,7 @@ socketp socket_find (IPaddress address)
     return (s);
 }
 
-socket *socket_connect (IPaddress address, boolean server_side_client)
+static socket *socket_connect (IPaddress address, boolean server_side_client)
 {
     IPaddress connect_address = address;
 
@@ -317,8 +317,20 @@ socket *socket_connect (IPaddress address, boolean server_side_client)
     return (s);
 }
 
+socket *socket_connect_from_client (IPaddress address)
+{
+    return (socket_connect(address, false));
+}
+
+socket *socket_connect_from_server (IPaddress address)
+{
+    return (socket_connect(address, true));
+}
+
 static void socket_destroy (socketp s)
 {
+    verify(s);
+
     socket_set_connected(s, false);
 
     LOG("Socket destroy [%s]", socket_get_remote_logname(s));
@@ -346,6 +358,8 @@ static void socket_destroy (socketp s)
 
 void socket_disconnect (socketp s)
 {
+    verify(s);
+
     tree_remove_found_node(sockets, &s->tree.node);
 
     socket_destroy(s);
@@ -812,21 +826,29 @@ void sockets_alive_check (void)
 
 IPaddress socket_get_local_ip (const socketp s)
 {
+    verify(s);
+
     return (s->local_ip);
 }
 
 IPaddress socket_get_remote_ip (const socketp s)
 {
+    verify(s);
+
     return (s->remote_ip);
 }
 
 const char *socket_get_name (const socketp s)
 {
+    verify(s);
+
     return (s->name);
 }
 
 void socket_set_name (socketp s, const char *name)
 {
+    verify(s);
+
     if (!name) {
         memset(s->name, 0, sizeof(s->name));
     } else {
@@ -836,6 +858,8 @@ void socket_set_name (socketp s, const char *name)
 
 const char * socket_get_local_logname (const socketp s)
 {
+    verify(s);
+
     if (!s->local_logname) {
         s->local_logname = iptodynstr(s->local_ip);
     }
@@ -845,6 +869,8 @@ const char * socket_get_local_logname (const socketp s)
 
 const char * socket_get_remote_logname (const socketp s)
 {
+    verify(s);
+
     if (!s->remote_logname) {
         s->remote_logname = iptodynstr(s->remote_ip);
     }
@@ -854,31 +880,43 @@ const char * socket_get_remote_logname (const socketp s)
 
 boolean socket_get_server (const socketp s)
 {
+    verify(s);
+
     return (s->server);
 }
 
 boolean socket_get_client (const socketp s)
 {
+    verify(s);
+
     return (s->client);
 }
 
 boolean socket_get_server_side_client (const socketp s)
 {
+    verify(s);
+
     return (s->server_side_client);
 }
 
 void socket_set_channel (socketp s, int c)
 {
+    verify(s);
+
     s->channel = c;
 }
 
 boolean socket_get_channel (const socketp s)
 {
+    verify(s);
+
     return (s->channel);
 }
 
 void socket_set_connected (socketp s, boolean c)
 {
+    verify(s);
+
     if (c == s->connected) {
         return;
     }
@@ -913,21 +951,29 @@ void socket_set_connected (socketp s, boolean c)
 
 boolean socket_get_connected (const socketp s)
 {
+    verify(s);
+
     return (s->connected);
 }
 
 UDPsocket socket_get_udp_socket (const socketp s)
 {
+    verify(s);
+
     return (s->udp_socket);
 }
 
 SDLNet_SocketSet socket_get_socklist (const socketp s)
 {
+    verify(s);
+
     return (s->socklist);
 }
 
 aplayerp socket_get_player (const socketp s)
 {
+    verify(s);
+
     return (s->player);
 }
 
@@ -942,6 +988,8 @@ void socket_set_player (const socketp s, aplayer *p)
 
 void socket_count_inc_pak_rx (const socketp s, msg_type type)
 {
+    verify(s);
+
     if (type < MSG_MAX) {
         s->rx++;
         s->rx_msg[type]++;
@@ -952,11 +1000,15 @@ void socket_count_inc_pak_rx (const socketp s, msg_type type)
 
 void socket_count_inc_pak_tx (const socketp s)
 {
+    verify(s);
+
     s->tx++;
 }
 
 static void socket_count_inc_pak_rx_error (const socketp s, UDPpacket *packet)
 {
+    verify(s);
+
     s->rx_error++;
 
     char *tmp = iptodynstr(read_address(packet));
@@ -966,11 +1018,15 @@ static void socket_count_inc_pak_rx_error (const socketp s, UDPpacket *packet)
 
 void socket_count_inc_pak_tx_error (const socketp s)
 {
+    verify(s);
+
     s->tx_error++;
 }
 
 void socket_count_inc_pak_rx_bad_msg (const socketp s)
 {
+    verify(s);
+
     s->rx_bad_msg++;
 }
 
@@ -1015,6 +1071,8 @@ static void socket_tx_msg (socketp s, UDPpacket *packet)
 
 void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1047,6 +1105,8 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 
 void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1072,6 +1132,8 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
 
 void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
@@ -1089,6 +1151,8 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
     data += sizeof(uint32_t);
@@ -1106,6 +1170,8 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_tx_name (socketp s)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1143,6 +1209,8 @@ void socket_tx_name (socketp s)
 
 void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_name msg = {0};
 
     if (packet->len != sizeof(msg)) {
@@ -1177,6 +1245,8 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 
 boolean socket_tx_client_join (socketp s, uint32_t *key)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         ERR("no socket to join on");
         return (false);
@@ -1223,6 +1293,8 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
 
 void socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_client_join msg = {0};
 
     if (packet->len != sizeof(msg)) {
@@ -1258,6 +1330,8 @@ void socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_tx_client_leave (socketp s)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1296,6 +1370,8 @@ void socket_tx_client_leave (socketp s)
 
 void socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_client_leave msg = {0};
 
     if (packet->len != sizeof(msg)) {
@@ -1314,6 +1390,8 @@ void socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_tx_client_close (socketp s)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1348,6 +1426,8 @@ void socket_tx_client_close (socketp s)
 
 void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_client_close msg = {0};
 
     if (packet->len != sizeof(msg)) {
@@ -1370,6 +1450,8 @@ void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
 static void socket_tx_client_shout_relay (socketp s, const char *txt,
                                           socketp from)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1402,6 +1484,8 @@ static void socket_tx_client_shout_relay (socketp s, const char *txt,
 
 void socket_tx_client_shout (socketp s, const char *txt)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1429,6 +1513,8 @@ void socket_tx_client_shout (socketp s, const char *txt)
 
 void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_client_shout msg = {0};
 
     if (packet->len != sizeof(msg)) {
@@ -1547,6 +1633,8 @@ void socket_tx_server_shout (const char *txt)
 
 void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_server_shout msg = {0};
 
     if (packet->len != sizeof(msg)) {
@@ -1584,6 +1672,8 @@ void socket_tx_tell (socketp s,
                      const char *to,
                      const char *txt)
 {
+    verify(s);
+
     if (!socket_get_udp_socket(s)) {
         return;
     }
@@ -1618,6 +1708,8 @@ void socket_tx_tell (socketp s,
 
 void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_tell msg = {0};
 
     if (packet->len != sizeof(msg)) {
@@ -1765,6 +1857,8 @@ void socket_tx_server_status (void)
 void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
                               aplayer *players)
 {
+    verify(s);
+
     msg_players *msg;
 
     if (packet->len != sizeof(*msg)) {
@@ -1846,6 +1940,8 @@ void socket_tx_server_close (void)
 
 void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    verify(s);
+
     msg_server_close *msg;
 
     if (packet->len != sizeof(*msg)) {
@@ -1862,45 +1958,63 @@ void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
 
 uint32_t socket_get_quality (socketp s)
 {
+    verify(s);
+
     return (s->quality);
 }
 
 uint32_t socket_get_avg_latency (socketp s)
 {
+    verify(s);
+
     return (s->avg_latency);
 }
 
 uint32_t socket_get_min_latency (socketp s)
 {
+    verify(s);
+
     return (s->min_latency);
 }
 
 uint32_t socket_get_max_latency (socketp s)
 {
+    verify(s);
+
     return (s->max_latency);
 }
 
 uint32_t socket_get_rx (socketp s)
 {
+    verify(s);
+
     return (s->min_latency);
 }
 
 uint32_t socket_get_tx (socketp s)
 {
+    verify(s);
+
     return (s->tx);
 }
 
 uint32_t socket_get_rx_error (socketp s)
 {
+    verify(s);
+
     return (s->min_latency);
 }
 
 uint32_t socket_get_tx_error (socketp s)
 {
+    verify(s);
+
     return (s->min_latency);
 }
 
 uint32_t socket_get_rx_bad_msg (socketp s)
 {
+    verify(s);
+
     return (s->min_latency);
 }

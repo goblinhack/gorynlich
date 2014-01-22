@@ -188,7 +188,7 @@ static void server_poll (void)
             LOG("Server new client from %s", tmp);
             myfree(tmp);
 
-            s = socket_connect(read_address(packet), true /* server side */);
+            s = socket_connect_from_server(read_address(packet));
             if (!s) {
                 continue;
             }

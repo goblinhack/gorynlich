@@ -59,7 +59,7 @@ boolean client_init (void)
     /*
      * Connector.
      */
-    s = socket_connect(server_address, false /* client side */);
+    s = socket_connect_from_client(server_address);
     if (!s) {
         WARN("Client failed to connect");
         return (false);
@@ -232,7 +232,7 @@ static boolean client_socket_open (char *host, char *port)
     /*
      * Connector.
      */
-    s = socket_connect(server_address, false /* client side */);
+    s = socket_connect_from_client(server_address);
     if (!s) {
         WARN("Client failed to connect");
         return (false);
@@ -335,7 +335,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
         /*
          * Connector.
          */
-        s = socket_connect(server_address, false /* client side */);
+        s = socket_connect_from_client(server_address);
         if (!s) {
             WARN("Client failed to connect");
             return (false);
