@@ -81,7 +81,8 @@ extern IPaddress no_address;
 
 extern socketp socket_find(IPaddress address);
 extern socketp socket_listen(IPaddress address);
-extern socketp socket_connect(IPaddress address, boolean server);
+extern socketp socket_connect_from_client(IPaddress address);
+extern socketp socket_connect_from_server(IPaddress address);
 extern void socket_disconnect(socketp s);
 extern void sockets_alive_check(void);
 
