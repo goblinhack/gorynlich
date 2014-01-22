@@ -83,7 +83,7 @@ static void server_add (const server *s_in)
      * Connector.
      */
     if (is_client) {
-        socketp sp = socket_connect(s->ip, false /* client side */);
+        socketp sp = socket_connect_from_client(s->ip);
         if (sp) {
             s->quality = socket_get_quality(sp);
             s->avg_latency = socket_get_avg_latency(sp);
@@ -225,7 +225,7 @@ void wid_server_redo (boolean soft_refresh)
              * Connector.
              */
             if (is_client) {
-                socket_connect(s->ip, false /* client side */);
+                socket_connect_from_client(s->ip);
             }
         }
 
@@ -297,6 +297,17 @@ static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
 
     client_socket_join(s->host, 0, s->port);
 
+    /*
+     * Leave all other sockets.
+     */
+    TREE_WALK(servers, s) {
+        socketp sp = socket_find(s->ip);
+        if (sp && (sp != client_joined_server)) {
+            socket_disconnect(sp);
+            continue;
+        }
+    }
+
     return (true);
 }
 
@@ -308,6 +319,17 @@ static boolean wid_server_leave (widp w, int32_t x, int32_t y, uint32_t button)
     }
 
     client_socket_leave();
+
+    /*
+     * Rescan all sockets to get new stats.
+     */
+    TREE_WALK(servers, s) {
+        socketp sp = socket_find(s->ip);
+        if (sp) {
+            socket_connect_from_client(s->ip);
+            continue;
+        }
+    }
 
     return (true);
 }
@@ -1052,9 +1074,6 @@ static void wid_server_create (boolean redo)
 
         TREE_WALK_REVERSE(servers, s) {
             socketp sp = socket_find(s->ip);
-            if (sp && (sp == client_joined_server)) {
-                continue;
-            }
 
             widp w = wid_new_rounded_small_button(wid_server_container,
                                            "server remove");
@@ -1070,8 +1089,15 @@ static void wid_server_create (boolean redo)
             tl.y += (float)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, "Delete");
-            wid_set_tooltip(w, "Remove this server from the list");
+
+            if (sp && (sp == client_joined_server)) {
+                wid_set_text(w, "-");
+            } else {
+                wid_set_on_mouse_down(w, wid_server_delete);
+                wid_set_text(w, "Delete");
+                wid_set_tooltip(w, "Remove this server from the list");
+            }
+
             wid_set_font(w, vsmall_font);
             color c = STEELBLUE;
 
@@ -1086,7 +1112,6 @@ static void wid_server_create (boolean redo)
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_text_outline(w, true);
 
-            wid_set_on_mouse_down(w, wid_server_delete);
             wid_set_client_context(w, s);
 
             i++;
