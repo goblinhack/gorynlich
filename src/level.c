@@ -291,7 +291,7 @@ levelp level_load (uint32_t level_no, widp wid)
                                     dir_and_file,
                                     strerror(errno));
 
-        (void) wid_popup_error(popup_str);
+        MSGERR("%s", popup_str);
         myfree(popup_str);
          */
         myfree(dir_and_file);
@@ -307,7 +307,7 @@ levelp level_load (uint32_t level_no, widp wid)
                                         dir_and_file,
                                         strerror(errno));
 
-            (void) wid_popup_error(popup_str);
+            MSGERR("%s", popup_str);
             myfree(popup_str);
         }
 
