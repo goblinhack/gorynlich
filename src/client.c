@@ -225,7 +225,7 @@ static boolean client_socket_open (char *host, char *port)
     }
 
     if (SDLNet_ResolveHost(&server_address, host, portno)) {
-        ERR("cannot resolve host %s port %u", host, portno);
+        MSGERR("Open socket, cannot resolve %s:%u", host, portno);
         return (false);
     }
 
@@ -267,7 +267,7 @@ static boolean client_socket_close (char *host, char *port)
         }
 
         if (SDLNet_ResolveHost(&server_address, host, portno)) {
-            ERR("cannot resolve host %s port %u", host, portno);
+            ERR("Close socket, cannot resolve %s:%u", host, portno);
             return (false);
         }
 
@@ -328,7 +328,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
         }
 
         if (SDLNet_ResolveHost(&server_address, host, portno)) {
-            ERR("cannot resolve host %s port %u", host, portno);
+            MSGERR("Cannot join %s:%u", host, portno);
             return (false);
         }
 
@@ -337,7 +337,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
          */
         s = socket_connect_from_client(server_address);
         if (!s) {
-            WARN("Client failed to connect");
+            MSGERR("Join, failed to connect");
             return (false);
         }
     }
@@ -345,10 +345,11 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
     socket_set_name(s, global_config.name);
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
+        MSG("Join failed");
         return (false);
     }
 
-    LOG("Client joining %s", socket_get_remote_logname(s));
+    MSG("Joining %s", socket_get_remote_logname(s));
 
     client_joined_server = s;
 
@@ -363,7 +364,7 @@ static boolean client_socket_leave_implicit (void)
         return (false);
     }
 
-    LOG("YOU WERE DROPPED FROM THE SERVER");
+    MSGERR("YOU WERE DROPPED FROM THE SERVER");
 
     client_joined_server = 0;
 
@@ -757,14 +758,14 @@ static void client_check_still_in_game (void)
 
         if (!p->connection_confrimed) {
             p->connection_confrimed = true;
-            LOG("Server has added you, \"%s\" to the game", 
+            MSG("Server has added you, \"%s\" to the game", 
                 global_config.name);
         }
 
         return;
     }
 
-    LOG("Server does not report you in the game!");
+    MSG("Server does not report you in the game!");
 
     LOG("  You are player: \"%s\", ID %u", 
         global_config.name, client_joined_server_key);
