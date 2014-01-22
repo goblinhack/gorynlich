@@ -152,6 +152,11 @@ boolean wid_server_init (void)
 
 static void wid_server_destroy_internal (server *node)
 {
+    if (node->host) {
+        myfree(node->host);
+        node->host= 0;
+    }
+
     if (node->host_and_port_str) {
         myfree(node->host_and_port_str);
         node->host_and_port_str = 0;
@@ -1200,12 +1205,6 @@ static void wid_server_create (boolean redo)
     }
 
     wid_update(wid_server_window);
-    static int x;
-    if (!x) {
-        x = 1;
-    MSG("heloooooooooooooooo");
-//    MSGERR("long error");
-    }
 }
 
 void wid_server_destroy (void)
@@ -1247,7 +1246,7 @@ boolean server_save (void)
 
     ctx = marshal(file);
     if (!ctx) {
-        ERR("Failed to save: %s", file);
+        MSGERR("Failed to save: %s", file);
         myfree(file);
         return (false);
     }

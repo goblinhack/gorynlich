@@ -326,7 +326,7 @@ boolean hiscore_save (void)
 
     ctx = marshal(file);
     if (!ctx) {
-        ERR("Failed to save: %s", file);
+        MSGERR("Failed to save: %s", file);
         myfree(file);
         return (false);
     }

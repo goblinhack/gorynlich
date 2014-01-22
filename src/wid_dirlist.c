@@ -223,7 +223,7 @@ static boolean wid_dirlist_dir_event (widp w, int32_t x, int32_t y,
         char *popup_str = dynprintf("Cannot list dir %s: %s", context->dir,
                                   strerror(errno));
 
-        (void) wid_popup_error(popup_str);
+        MSGERR("%s", popup_str);
         myfree(popup_str);
         myfree(new_dir);
 
@@ -579,7 +579,7 @@ widp wid_dirlist (const char *dir,
         char *popup_str = dynprintf("Cannot list dir %s: %s", dir,
                                   strerror(errno));
 
-        (void) wid_popup_error(popup_str);
+        MSGERR("%s", popup_str);
         myfree(popup_str);
 
         return (0);

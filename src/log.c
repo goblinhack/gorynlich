@@ -672,16 +672,27 @@ static void msgerr_ (const char *fmt, va_list args)
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
 
+    snprintf(buf + len, sizeof(buf) - len, "ERROR: %%%%fg=red$");
+
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    len = (uint32_t)strlen(buf);
+    snprintf(buf + len, sizeof(buf) - len, "%%%%fg=reset$");
 
     putf(MY_STDERR, buf);
     fflush(MY_STDERR);
 
-    wid_console_log(buf + len);
-    term_log(buf + len);
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
 
-    wid_popup_error(buf + len);
+    wid_console_log(buf);
+    term_log(buf);
+
+    wid_popup_error(buf);
+
+    backtrace_print();
+    fflush(MY_STDOUT);
 }
 
 void MSGERR (const char *fmt, ...)
