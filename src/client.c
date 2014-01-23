@@ -42,7 +42,8 @@ static boolean client_socket_tell(char *from, char *to, char *msg);
 static boolean client_socket_set_name(char *name);
 static void client_check_still_in_game(void);
 
-static aplayer client_players[MAX_PLAYERS];
+static msg_server_status server_status;
+static boolean server_connection_confirmed;
 
 boolean client_init (void)
 {
@@ -368,7 +369,8 @@ static boolean client_socket_leave_implicit (void)
 
     client_joined_server = 0;
 
-    memset(client_players, 0, sizeof(client_players));
+    memset(&server_status, 0, sizeof(server_status));
+    server_connection_confirmed = false;
 
     return (true);
 }
@@ -389,7 +391,8 @@ boolean client_socket_leave (void)
 
     client_joined_server = 0;
 
-    memset(client_players, 0, sizeof(client_players));
+    memset(&server_status, 0, sizeof(server_status));
+    server_connection_confirmed = false;
 
     return (true);
 }
@@ -670,15 +673,20 @@ static void client_poll (void)
                 socket_rx_tell(s, packet, data);
                 break;
 
-            case MSG_SERVER_STATUS:
-                if (s == client_joined_server) {
-                    socket_rx_server_status(s, packet, data, 
-                                    &client_players[0]);
+            case MSG_SERVER_STATUS: {
+                msg_server_status latest_status;
 
+                socket_rx_server_status(s, packet, data, &latest_status);
+
+                if (s == client_joined_server) {
                     client_check_still_in_game();
+
+                    memcpy(&server_status, &latest_status, 
+                           sizeof(server_status));
                 }
 
                 break;
+            }
 
             case MSG_SERVER_CLOSE:
                 socket_rx_server_close(s, packet, data);
@@ -706,7 +714,7 @@ static boolean client_players_show (tokens_t *tokens, void *context)
     uint32_t pi;
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        aplayer *p = &client_players[pi];
+        msg_player *p = &server_status.players[pi];
 
         char *tmp = iptodynstr(p->local_ip);
         char *tmp2 = iptodynstr(p->remote_ip);
@@ -742,7 +750,7 @@ static void client_check_still_in_game (void)
     }
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        aplayer *p = &client_players[pi];
+        msg_player *p = &server_status.players[pi];
 
         if (!p->name[0]) {
             continue;
@@ -756,8 +764,8 @@ static void client_check_still_in_game (void)
             continue;
         }
 
-        if (!p->connection_confrimed) {
-            p->connection_confrimed = true;
+        if (!server_connection_confirmed) {
+            server_connection_confirmed = true;
             MSG("Server has added you, \"%s\" to the game", 
                 global_config.name);
         }
@@ -771,7 +779,7 @@ static void client_check_still_in_game (void)
         global_config.name, client_joined_server_key);
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        aplayer *p = &client_players[pi];
+        msg_player *p = &server_status.players[pi];
 
         LOG("  Player %u is \"%s\", ID %u ", pi+1, p->name, p->key);
     }

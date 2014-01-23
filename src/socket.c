@@ -23,64 +23,6 @@
 
 tree_rootp sockets;
 
-typedef struct {
-    uint8_t type;
-    char name[PLAYER_NAME_LEN_MAX];
-    uint32_t key;
-} __attribute__ ((packed)) msg_client_join;
-
-typedef struct {
-    uint8_t type;
-} __attribute__ ((packed)) msg_client_leave;
-
-typedef struct {
-    uint8_t type;
-} __attribute__ ((packed)) msg_client_close;
-
-typedef struct {
-    uint8_t type;
-} __attribute__ ((packed)) msg_server_close;
-
-typedef struct {
-    uint8_t type;
-    char name[PLAYER_NAME_LEN_MAX];
-} __attribute__ ((packed)) msg_name;
-
-typedef struct {
-    uint8_t type;
-    char from[PLAYER_NAME_LEN_MAX];
-    char txt[PLAYER_MSG_MAX];
-} __attribute__ ((packed)) msg_client_shout;
-
-typedef struct {
-    uint8_t type;
-    char txt[PLAYER_MSG_MAX];
-} __attribute__ ((packed)) msg_server_shout;
-
-typedef struct {
-    uint8_t type;
-    char from[PLAYER_NAME_LEN_MAX];
-    char to[PLAYER_NAME_LEN_MAX];
-    char txt[PLAYER_MSG_MAX];
-} __attribute__ ((packed)) msg_tell;
-
-typedef struct {
-    char name[PLAYER_NAME_LEN_MAX];
-    IPaddress local_ip;
-    IPaddress remote_ip;
-    uint8_t quality;
-    uint16_t avg_latency;
-    uint16_t min_latency;
-    uint16_t max_latency;
-    uint32_t score;
-    uint32_t key;
-} __attribute__ ((packed)) msg_player;
-
-typedef struct {
-    uint8_t type;
-    msg_player players[MAX_PLAYERS];
-} __attribute__ ((packed)) msg_players;
-
 boolean is_server;
 boolean is_client;
 boolean is_headless;
@@ -899,6 +841,13 @@ boolean socket_get_server_side_client (const socketp s)
     return (s->server_side_client);
 }
 
+msg_server_status *socket_get_server_status (const socketp s)
+{
+    verify(s);
+
+    return (&s->server_status);
+}
+
 void socket_set_channel (socketp s, int c)
 {
     verify(s);
@@ -1291,7 +1240,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     return (true);
 }
 
-void socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
+boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1299,16 +1248,30 @@ void socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);
-        return;
+        return (false);
     }
 
     memcpy(&msg, packet->data, sizeof(msg));
+
+    /*
+     * Check for player limits.
+     */
+    if (global_config.server_current_players >= global_config.server_max_players) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Rx Join (rejected) from %s \"%s\"", tmp, msg.name);
+        myfree(tmp);
+
+        socket_tx_tell(s, "Join rejected:", msg.name, "Too many players");
+        return (false);
+    }
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Join from %s \"%s\"", tmp, msg.name);
         myfree(tmp);
     }
+
+    global_config.server_current_players++;
 
     socket_set_name(s, msg.name);
 
@@ -1326,6 +1289,8 @@ void socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
     p->key = SDLNet_Read32(&msg.key);
+
+    return (true);
 }
 
 void socket_tx_client_leave (socketp s)
@@ -1368,7 +1333,7 @@ void socket_tx_client_leave (socketp s)
     socket_free_msg(packet);
 }
 
-void socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
+boolean socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1376,16 +1341,32 @@ void socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);
-        return;
+        return (false);
     }
 
     memcpy(&msg, packet->data, sizeof(msg));
+
+    /*
+     * Check for player limits.
+     */
+    if (!s->player) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Rx bad leave from %s", tmp);
+        myfree(tmp);
+
+        socket_tx_tell(s, "Leave rejected:", "Unknown layer", "Not in game");
+        return (false);
+    }
+
+    global_config.server_current_players--;
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx leave from %s", tmp);
         myfree(tmp);
     }
+
+    return (true);
 }
 
 void socket_tx_client_close (socketp s)
@@ -1779,12 +1760,22 @@ void socket_tx_server_status (void)
 
     memset(&players, 0, sizeof(players));
 
-    msg_players msg = {0};
+    msg_server_status msg = {0};
     msg.type = MSG_SERVER_STATUS;
+
+    strncpy(msg.server_name, global_config.server_name,
+            min(sizeof(msg.server_name), 
+                strlen(global_config.server_name))); 
+
+    msg.server_max_players = global_config.server_max_players;
+    msg.server_current_players = global_config.server_current_players;
 
     socketp s;
     uint32_t si = 0;
 
+    /*
+     * Add all current players.
+     */
     TREE_WALK(sockets, s) {
         if (!s->server_side_client) {
             continue;
@@ -1837,7 +1828,7 @@ void socket_tx_server_status (void)
             }
 
             if (debug_socket_players_enabled) {
-                LOG("Tx All Players [to %s]",
+                LOG("Tx Status [to %s]",
                     socket_get_remote_logname(s));
             }
 
@@ -1855,11 +1846,11 @@ void socket_tx_server_status (void)
  * Receive an array of all current players from the server.
  */
 void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
-                              aplayer *players)
+                              msg_server_status *status)
 {
     verify(s);
 
-    msg_players *msg;
+    msg_server_status *msg;
 
     if (packet->len != sizeof(*msg)) {
         socket_count_inc_pak_rx_error(s, packet);
@@ -1871,7 +1862,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
     msg = (typeof(msg)) packet->data;
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        aplayer *p = &players[pi];
+        msg_player *p = &status->players[pi];
         msg_player *msg_rx = &msg->players[pi];
 
         memcpy(p->name, msg_rx->name, PLAYER_NAME_LEN_MAX);
@@ -1897,10 +1888,12 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Rx All Players from %s %u:\"%s\"", tmp, pi, p->name);
+            LOG("Rx Status from %s %u:\"%s\"", tmp, pi, p->name);
             myfree(tmp);
         }
     }
+
+    memcpy(&s->server_status, status, sizeof(s->server_status));
 }
 
 /*
