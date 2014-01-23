@@ -130,6 +130,9 @@ static void server_rx_client_close (socketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
+        /*
+         * Not an error. Just not in our game.
+         */
         return;
     }
 
@@ -215,13 +218,15 @@ static void server_poll (void)
             break;
 
         case MSG_CLIENT_JOIN:
-            socket_rx_client_join(s, packet, data);
-            server_rx_client_join(s);
+            if (socket_rx_client_join(s, packet, data)) {
+                server_rx_client_join(s);
+            }
             break;
 
         case MSG_CLIENT_LEAVE:
-            socket_rx_client_leave(s, packet, data);
-            server_rx_client_leave(s);
+            if (socket_rx_client_leave(s, packet, data)) {
+                server_rx_client_leave(s);
+            }
             break;
 
         case MSG_CLIENT_CLOSE:
