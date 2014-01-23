@@ -175,7 +175,7 @@ void wid_server_fini (void)
     if (wid_server_init_done) {
         wid_server_init_done = false;
 
-        wid_server_destroy();
+        wid_server_hide();
 
         if (servers) {
             tree_destroy(&servers, 
@@ -187,6 +187,22 @@ void wid_server_fini (void)
 void wid_server_hide (void)
 {
     wid_server_destroy();
+
+    /*
+     * Leave all other sockets other than the joined on.
+     */
+    server *s;
+
+    /*
+     * Leave all other sockets.
+     */
+    TREE_WALK(servers, s) {
+        socketp sp = socket_find(s->ip);
+        if (sp && (sp != client_joined_server)) {
+            socket_disconnect(sp);
+            continue;
+        }
+    }
 }
 
 void wid_server_visible (void)
