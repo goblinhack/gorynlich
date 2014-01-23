@@ -520,6 +520,10 @@ static boolean wid_popup_ok_key_event (widp w, const SDL_KEYSYM *key)
 
 widp wid_popup_ok (const char *text)
 {
+    if (!sdl_init_video) {
+        return (0);
+    }
+
     widp w;
 
     w = wid_popup(text,             /* body text */
@@ -561,6 +565,10 @@ static boolean wid_popup_error_key_event (widp w, const SDL_KEYSYM *key)
 widp wid_popup_error (const char *text)
 {
     widp w;
+
+    if (!sdl_init_video) {
+        return (0);
+    }
 
     w = wid_popup(text,             /* body text */
                   0,                /* title */

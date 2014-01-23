@@ -51,6 +51,7 @@ static boolean demarshal_config (demarshal_p ctx, struct config *p)
         tmp = 0;
     }
 
+    tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "server_name", tmp);
     if (tmp) {
         strncpy(p->server_name, tmp, sizeof(p->server_name) - 1);
