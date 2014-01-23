@@ -26,6 +26,67 @@ typedef enum {
     MSG_MAX,
 } msg_type;
 
+typedef struct {
+    uint8_t type;
+    char name[PLAYER_NAME_LEN_MAX];
+    uint32_t key;
+} __attribute__ ((packed)) msg_client_join;
+
+typedef struct {
+    uint8_t type;
+} __attribute__ ((packed)) msg_client_leave;
+
+typedef struct {
+    uint8_t type;
+} __attribute__ ((packed)) msg_client_close;
+
+typedef struct {
+    uint8_t type;
+} __attribute__ ((packed)) msg_server_close;
+
+typedef struct {
+    uint8_t type;
+    char name[PLAYER_NAME_LEN_MAX];
+} __attribute__ ((packed)) msg_name;
+
+typedef struct {
+    uint8_t type;
+    char from[PLAYER_NAME_LEN_MAX];
+    char txt[PLAYER_MSG_MAX];
+} __attribute__ ((packed)) msg_client_shout;
+
+typedef struct {
+    uint8_t type;
+    char txt[PLAYER_MSG_MAX];
+} __attribute__ ((packed)) msg_server_shout;
+
+typedef struct {
+    uint8_t type;
+    char from[PLAYER_NAME_LEN_MAX];
+    char to[PLAYER_NAME_LEN_MAX];
+    char txt[PLAYER_MSG_MAX];
+} __attribute__ ((packed)) msg_tell;
+
+typedef struct {
+    char name[PLAYER_NAME_LEN_MAX];
+    IPaddress local_ip;
+    IPaddress remote_ip;
+    uint8_t quality;
+    uint16_t avg_latency;
+    uint16_t min_latency;
+    uint16_t max_latency;
+    uint32_t score;
+    uint32_t key;
+} __attribute__ ((packed)) msg_player;
+
+typedef struct {
+    uint8_t type;
+    msg_player players[MAX_PLAYERS];
+    char server_name[PLAYER_NAME_LEN_MAX];
+    uint8_t server_max_players;
+    uint8_t server_current_players;
+} __attribute__ ((packed)) msg_server_status;
+
 typedef struct socket_ {
     tree_key_two_int tree;
 
@@ -62,8 +123,16 @@ typedef struct socket_ {
     int channel;
     const char *local_logname;
     const char *remote_logname;
+
+    /*
+     * Player name.
+     */
     char name[PLAYER_NAME_LEN_MAX];
-    aplayer client_players[MAX_PLAYERS];
+
+    /*
+     * Last status from this server.
+     */
+    msg_server_status server_status;
 } socket;
 
 extern void socket_count_inc_pak_rx(const socketp, msg_type);
@@ -101,6 +170,7 @@ extern void socket_set_connected(const socketp, boolean);
 extern boolean socket_get_connected(const socketp);
 
 extern boolean socket_get_server(const socketp);
+extern msg_server_status *socket_get_server_status(const socketp);
 extern boolean socket_get_server_side_client(const socketp s);
 extern boolean socket_get_client(const socketp);
 
@@ -127,9 +197,9 @@ extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_name(socketp s);
 extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
 extern boolean socket_tx_client_join(socketp s, uint32_t *key);
-extern void socket_rx_client_join(socketp s, UDPpacket *packet, uint8_t *data);
+extern boolean socket_rx_client_join(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_leave(socketp s);
-extern void socket_rx_client_leave(socketp s, UDPpacket *packet, uint8_t *data);
+extern boolean socket_rx_client_leave(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_close(socketp s);
 extern void socket_rx_client_close(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_close(void);
@@ -143,7 +213,7 @@ extern void socket_tx_tell(socketp s,
 extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_status(void);
 extern void socket_rx_server_status(socketp s, UDPpacket *packet, 
-                                    uint8_t *data, aplayerp players);
+                                    uint8_t *data, msg_server_status *);
 extern boolean sockets_quality_check(void);
 extern uint32_t socket_get_quality(socketp s);
 extern uint32_t socket_get_avg_latency(socketp s);

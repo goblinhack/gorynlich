@@ -365,12 +365,12 @@ void thing_tick_all (void)
                 t->is_dir_left = false;
                 t->is_dir_right = false;
 
-                widp wid_curr_floor = wid_grid_find_thing_template(
+                widp wid_current_floor = wid_grid_find_thing_template(
                                                 wid_game_map_grid_container,
                                                 t->grid_x,
                                                 t->grid_y,
                                                 thing_template_is_floor);
-                if (!wid_curr_floor) {
+                if (!wid_current_floor) {
                     DIE("not on a floor tile");
                 }
 
@@ -384,7 +384,7 @@ void thing_tick_all (void)
                 }
  
                 double this_floor_x, this_floor_y;
-                wid_get_mxy(wid_curr_floor, &this_floor_x, &this_floor_y);
+                wid_get_mxy(wid_current_floor, &this_floor_x, &this_floor_y);
 
                 double next_floor_x, next_floor_y;
                 wid_get_mxy(wid_next_floor, &next_floor_x, &next_floor_y);

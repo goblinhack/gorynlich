@@ -17,6 +17,7 @@
 #include "sdl.h"
 #include "socket.h"
 #include "client.h"
+#include "string_ext.h"
 
 static const char *server_dir_and_file = "gorynlich-servers.txt";
 
@@ -277,13 +278,47 @@ void wid_server_redo (boolean soft_refresh)
         }
 
         if (s->quality) {
+            int size;
+            int used;
+            char *tmp;
+
+            tmp = 0;
+            size = 1024;
+
+            snprintf_realloc(&tmp, &size, &used, 
+                             "%%%%fmt=left$Name           Score \n");
+            snprintf_realloc(&tmp, &size, &used, 
+                             "%%%%fmt=left$----           -------\n");
+
+            uint32_t pi;
+
+            msg_server_status *server_status = socket_get_server_status(sp);
+
+            for (pi = 0; pi < MAX_PLAYERS; pi++) {
+                msg_player *p = &server_status->players[pi];
+
+                snprintf_realloc(&tmp, &size, &used, 
+                                 "%%%%fmt=left$[%d] %-10s %07d\n", 
+                    pi, 
+                    p->name,
+                    p->score);
+            }
+
             s->tooltip = dynprintf(
                 "%%%%fmt=left$Average latency %u ms\n"
                 "%%%%fmt=left$Minimum latency %u ms\n"
                 "%%%%fmt=left$Maxumum latency %u ms\n",
+                "%%%%fmt=left$Maxumum players %u\n",
+                "%%%%fmt=left$Current players %u\n"
+                "%s",
                 s->avg_latency,
                 s->min_latency,
-                s->max_latency);
+                s->max_latency,
+                server_status->server_max_players,
+                server_status->server_current_players,
+                tmp);
+
+            myfree(tmp);
         } else {
             s->tooltip = dynprintf("server is down");
         }
