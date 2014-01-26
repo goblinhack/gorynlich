@@ -91,7 +91,7 @@ static void server_rx_client_join (socketp s)
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s joined the game", p->name);
-    socket_tx_server_shout(tmp);
+    socket_tx_server_shout_except_to(tmp, s);
     myfree(tmp);
 
     wid_game_visible();

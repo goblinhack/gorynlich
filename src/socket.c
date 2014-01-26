@@ -1219,8 +1219,9 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     msg_client_join msg = {0};
     msg.type = MSG_CLIENT_JOIN;
 
-    *key = rand() % time(NULL);
+    *key = time_get_time_cached();
     SDLNet_Write32(*key, &msg.key);
+LOG("send key %d", *key);
 
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
 
@@ -1587,6 +1588,52 @@ void socket_tx_server_shout (const char *txt)
     socketp sp;
 
     TREE_WALK(sockets, sp) {
+        if (!sp->connected) {
+            continue;
+        }
+
+        if (!sp->server_side_client) {
+            continue;
+        }
+
+        /*
+         * Only talk to players who joined this server.
+         */
+        if (!sp->player) {
+            continue;
+        }
+
+        write_address(packet, socket_get_remote_ip(sp));
+
+        socket_tx_msg(sp, packet);
+    }
+        
+    socket_free_msg(packet);
+}
+
+void socket_tx_server_shout_except_to (const char *txt, socketp except)
+{
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_server_shout msg = {0};
+    msg.type = MSG_SERVER_SHOUT;
+    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    if (debug_socket_players_enabled) {
+        LOG("Tx Server Shout \"%s\"", txt);
+    }
+
+    packet->len = sizeof(msg);
+
+    socketp sp;
+
+    TREE_WALK(sockets, sp) {
+        if (sp == except) {
+            continue;
+        }
+
         if (!sp->connected) {
             continue;
         }

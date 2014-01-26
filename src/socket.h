@@ -207,6 +207,7 @@ extern void socket_rx_server_close(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_shout(socketp s, const char *shout);
 extern void socket_rx_client_shout(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_shout(const char *shout);
+extern void socket_tx_server_shout_except_to(const char *shout, socketp s);
 extern void socket_rx_server_shout(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_tell(socketp s, 
                            const char *from, const char *to, const char *shout);

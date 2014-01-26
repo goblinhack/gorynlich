@@ -24,6 +24,7 @@
  * Which socket we have actually joined on.
  */
 socketp client_joined_server;
+uint32_t client_joined_server_when;
 static uint32_t client_joined_server_key;
 
 static void client_socket_tx_ping(void);
@@ -350,9 +351,12 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
         return (false);
     }
 
-    MSG("Joining %s", socket_get_remote_logname(s));
+    LOG("Joining server %s", socket_get_remote_logname(s));
+
+    MSG("Joining server...");
 
     client_joined_server = s;
+    client_joined_server_when = time_get_time_cached();
 
     verify(client_joined_server);
 
@@ -751,6 +755,10 @@ static void client_check_still_in_game (void)
         return;
     }
 
+    if (!time_have_x_tenths_passed_since(15, client_joined_server_when)) {
+        return;
+    }
+
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
         msg_player *p = &server_status.players[pi];
 
@@ -768,8 +776,7 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG("Server has added you, \"%s\" to the game", 
-                global_config.name);
+            MSG("You are in the game");
         }
 
         return;
