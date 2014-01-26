@@ -85,6 +85,8 @@ static void server_rx_client_join (socketp s)
         return;
     }
 
+    global_config.server_current_players++;
+
     LOG("\"%s\" joined the game from %s", p->name,
         socket_get_remote_logname(s));
 
@@ -105,6 +107,8 @@ static void server_rx_client_leave_implicit (socketp s)
     wid_game_map_wid_destroy();
 
     socket_set_player(s, 0);
+
+    global_config.server_current_players--;
 }
 
 static void server_rx_client_leave (socketp s)

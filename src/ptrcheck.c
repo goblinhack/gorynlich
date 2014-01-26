@@ -517,8 +517,8 @@ void *ptrcheck_alloc (void *ptr,
     context->ptr = ptr;
     context->what = what;
     context->size = size;
-    context->allocated_by.func = file;
-    context->allocated_by.file = func;
+    context->allocated_by.func = func;
+    context->allocated_by.file = file;
     context->allocated_by.line = line;
     context->allocated_by.ms = time_get_time_milli();
     context->allocated_by.tb = traceback_alloc();

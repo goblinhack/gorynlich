@@ -286,30 +286,37 @@ void wid_server_redo (boolean soft_refresh)
             size = 1024;
 
             snprintf_realloc(&tmp, &size, &used, 
-                             "%%%%fmt=left$Name           Score \n");
+                             "%%%%fmt=left$   Name            Score\n");
             snprintf_realloc(&tmp, &size, &used, 
-                             "%%%%fmt=left$----           -------\n");
+                             "%%%%fmt=left$   ----           -------\n");
 
             uint32_t pi;
+            uint32_t idx = 0;
 
             msg_server_status *server_status = socket_get_server_status(sp);
 
             for (pi = 0; pi < MAX_PLAYERS; pi++) {
                 msg_player *p = &server_status->players[pi];
 
+                if (!p->name[0]) {
+                    continue;
+                }
+
                 snprintf_realloc(&tmp, &size, &used, 
-                                 "%%%%fmt=left$[%d] %-10s %07d\n", 
-                    pi, 
-                    p->name,
-                    p->score);
+                                 "%%%%fmt=left$[%d] %-10s %07d\n",
+                                 idx++,
+                                 p->name,
+                                 p->score);
             }
 
-            s->tooltip = dynprintf(
+            snprintf_realloc(&tmp, &size, &used, "\n");
+
+            char *tmp2 = dynprintf(
                 "%%%%fmt=left$Average latency %u ms\n"
                 "%%%%fmt=left$Minimum latency %u ms\n"
-                "%%%%fmt=left$Maxumum latency %u ms\n",
-                "%%%%fmt=left$Maxumum players %u\n",
-                "%%%%fmt=left$Current players %u\n"
+                "%%%%fmt=left$Maxumum latency %u ms\n\n"
+                "%%%%fmt=left$Maxumum players %u\n"
+                "%%%%fmt=left$Current players %u\n\n"
                 "%s",
                 s->avg_latency,
                 s->min_latency,
@@ -318,6 +325,7 @@ void wid_server_redo (boolean soft_refresh)
                 server_status->server_current_players,
                 tmp);
 
+            s->tooltip = tmp2;
             myfree(tmp);
         } else {
             s->tooltip = dynprintf("server is down");
