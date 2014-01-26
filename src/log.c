@@ -23,7 +23,7 @@
 #include "wid_popup.h"
 #include "color.h"
 
-static char buf[200];
+static char buf[MAXSTR];
 boolean debug_enabled;
 boolean debug_socket_ping_enabled;
 boolean debug_socket_connect_enabled;
@@ -345,7 +345,7 @@ static void err_ (const char *fmt, va_list args)
 
 static void croak_ (const char *fmt, va_list args)
 {
-    static char buf[200];
+    static char buf[MAXSTR];
     uint32_t len;
     uint32_t tslen;
 
@@ -425,7 +425,7 @@ void CROAK (const char *fmt, ...)
 
 static void thing_log_ (thingp t, const char *fmt, va_list args)
 {
-    static char buf[200];
+    static char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -471,7 +471,7 @@ void THING_DBG (thingp t, const char *fmt, ...)
 
 static void level_log_ (levelp l, const char *fmt, va_list args)
 {
-    static char buf[200];
+    static char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -523,7 +523,7 @@ boolean debug_enable (tokens_t *tokens, void *context)
 
 static void action_timer_log_ (timerp t, const char *fmt, va_list args)
 {
-    static char buf[200];
+    static char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -554,7 +554,7 @@ void TIMER_LOG (timerp t, const char *fmt, ...)
 
 static void action_init_fn_log_ (init_fnp t, const char *fmt, va_list args)
 {
-    static char buf[200];
+    static char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -587,7 +587,7 @@ void INIT_FN_LOG (init_fnp t, const char *fmt, ...)
 #ifdef ENABLE_WID_DEBUG
 static void wid_log_ (widp t, const char *fmt, va_list args)
 {
-    static char buf[200];
+    static char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';

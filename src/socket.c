@@ -1256,7 +1256,9 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
     /*
      * Check for player limits.
      */
-    if (global_config.server_current_players >= global_config.server_max_players) {
+    if (global_config.server_current_players + 1 > 
+            global_config.server_max_players) {
+
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Join (rejected) from %s \"%s\"", tmp, msg.name);
         myfree(tmp);
@@ -1270,8 +1272,6 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("Rx Join from %s \"%s\"", tmp, msg.name);
         myfree(tmp);
     }
-
-    global_config.server_current_players++;
 
     socket_set_name(s, msg.name);
 
@@ -1354,11 +1354,9 @@ boolean socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("Rx bad leave from %s", tmp);
         myfree(tmp);
 
-        socket_tx_tell(s, "Leave rejected:", "Unknown layer", "Not in game");
+        socket_tx_tell(s, "Leave rejected:", "Unknown player", "Not in game");
         return (false);
     }
-
-    global_config.server_current_players--;
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
@@ -1892,6 +1890,10 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
             myfree(tmp);
         }
     }
+
+    status->server_max_players = msg->server_max_players;
+    status->server_current_players = msg->server_current_players;
+    memcpy(status->server_name, msg->server_name, sizeof(status->server_name));
 
     memcpy(&s->server_status, status, sizeof(s->server_status));
 }
