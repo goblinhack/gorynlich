@@ -150,7 +150,7 @@ void ttf_free (font *f)
 /*
  * Return a SDL rectangle with the size of the font
  */
-void ttf_text_size (font *f, const char *text,
+void ttf_text_size (font *f, const char *text_in,
                     uint32_t *w, uint32_t *h,
                     enum_fmt *fmt,
                     double scaling,
@@ -164,6 +164,7 @@ void ttf_text_size (font *f, const char *text,
     int32_t x_start = 0;
     int32_t x;
     enum_fmt _fmt;
+    const char *text = text_in;
 
     if (HEADLESS) {
         return;
@@ -426,6 +427,11 @@ static void ttf_puts_internal (font *f, const char *text,
         } else {
             double maxc = f->glyphs[TTF_FIXED_WIDTH_CHAR].width;
             double thisc = f->glyphs[c].width;
+
+            if (fixed_width) {
+                thisc = maxc;
+            }
+
             double pad = ((maxc - thisc) * scaling * advance) / 2.0;
 
             if (fixed_width) {

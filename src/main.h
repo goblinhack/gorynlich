@@ -14,7 +14,7 @@
 #undef ONESEC
 #define ONESEC                          1000
 
-#define MAXSTR                          256
+#define MAXSTR                          1024
 
 #ifndef true
 #define true                            1

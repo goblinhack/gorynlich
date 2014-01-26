@@ -676,6 +676,8 @@ static void client_poll (void)
             case MSG_SERVER_STATUS: {
                 msg_server_status latest_status;
 
+                memset(&latest_status, 0, sizeof(latest_status));
+
                 socket_rx_server_status(s, packet, data, &latest_status);
 
                 if (s == client_joined_server) {
