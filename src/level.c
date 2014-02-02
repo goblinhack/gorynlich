@@ -34,7 +34,7 @@
 #include "map.h"
 #include "timer.h"
 #include "wid_hiscore.h"
-#include "wid_server.h"
+#include "wid_server_join.h"
 #include "music.h"
 #include "sound.h"
 #include "wid_console.h"

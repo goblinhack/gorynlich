@@ -21,7 +21,8 @@
 #include "wid_intro_guide.h"
 #include "wid_game_over.h"
 #include "wid_hiscore.h"
-#include "wid_server.h"
+#include "wid_server_join.h"
+#include "wid_server_create.h"
 #include "music.h"
 #include "sdl.h"
 #include "level.h"
@@ -35,7 +36,8 @@ static void wid_intro_play_selected(void);
 static void wid_intro_about_selected(void);
 static void wid_intro_settings_selected(void);
 static void wid_intro_hiscore_selected(void);
-static void wid_intro_server_selected(void);
+static void wid_server_join_selected(void);
+static void wid_server_create_selected(void);
 static void wid_intro_help_selected(void);
 static void wid_intro_guide_selected(void);
 
@@ -153,12 +155,16 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_settings_selected();
             return (true);
 
-        case 'c':
+        case 'H':
             wid_intro_hiscore_selected();
             return (true);
 
-        case 'x':
-            wid_intro_server_selected();
+        case 'j':
+            wid_server_join_selected();
+            return (true);
+
+        case 'n':
+            wid_server_create_selected();
             return (true);
 
         case 'e':
@@ -234,9 +240,14 @@ static void wid_intro_hiscore_selected (void)
     wid_hiscore_visible();
 }
 
-static void wid_intro_server_selected (void)
+static void wid_server_join_selected (void)
 {
-    wid_server_visible();
+    wid_server_join_visible();
+}
+
+static void wid_server_create_selected (void)
+{
+    wid_server_create_visible();
 }
 
 static void wid_intro_help_selected (void)
@@ -339,19 +350,19 @@ static boolean wid_intro_hiscore_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static boolean wid_intro_server_mouse_event (widp w, int32_t x, int32_t y,
+static boolean wid_server_join_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
-    wid_intro_server_selected();
+    wid_server_join_selected();
 
     return (true);
 }
 
-static boolean wid_intro_server_key_event (widp w, const SDL_KEYSYM *key)
+static boolean wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case SDLK_RETURN:
-            wid_intro_server_selected();
+            wid_server_join_selected();
             return (true);
 
         default:
@@ -670,8 +681,8 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_server_mouse_event);
-        wid_set_on_key_down(child, wid_intro_server_key_event);
+        wid_set_on_mouse_up(child, wid_server_join_mouse_event);
+        wid_set_on_key_down(child, wid_server_join_key_event);
     }
 
     {

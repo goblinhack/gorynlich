@@ -33,7 +33,8 @@
 #include "wid_game_over.h"
 #include "wid_intro_settings.h"
 #include "wid_hiscore.h"
-#include "wid_server.h"
+#include "wid_server_join.h"
+#include "wid_server_create.h"
 #include "wid_intro.h"
 #include "string.h"
 #include "dir.h"
@@ -79,9 +80,8 @@ void quit (void)
         config_save();
     }
 
-    if (is_client) {
-        server_save();
-    }
+    wid_server_save_remote_server_list();
+    wid_server_save_local_server();
 
     if (is_server) {
         hiscore_save();
@@ -105,7 +105,7 @@ void quit (void)
     wid_game_over_fini();
     wid_intro_settings_fini();
     wid_hiscore_fini();
-    wid_server_fini();
+    wid_server_join_fini();
 
     command_fini();
 
@@ -672,8 +672,12 @@ int32_t main (int32_t argc, char *argv[])
 	DIE("wid hiscore init");
     }
 
-    if (!wid_server_init()) {
-	DIE("wid server init");
+    if (!wid_server_join_init()) {
+	DIE("wid server join init");
+    }
+
+    if (!wid_server_create_init()) {
+	DIE("wid server create init");
     }
 
 #ifdef ENABLE_LEAKCHECK

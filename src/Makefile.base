@@ -78,7 +78,8 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_intro_about.o 	\
     $(OBJDIR)/wid_intro_settings.o 	\
     $(OBJDIR)/wid_hiscore.o 		\
-    $(OBJDIR)/wid_server.o 		\
+    $(OBJDIR)/wid_server_join.o 	\
+    $(OBJDIR)/wid_server_create.o 	\
     $(OBJDIR)/wid_intro_help.o 		\
     $(OBJDIR)/wid_intro_guide.o 	\
     $(OBJDIR)/wid_game_over.o 		\
