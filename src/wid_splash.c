@@ -26,7 +26,7 @@ void sdl_splashscreen_update (void)
     }
 
     if (wid_icon) {
-        wid_destroy(&wid_icon);
+        wid_destroy_nodelay(&wid_icon);
     }
 
     if (!init_fns) {

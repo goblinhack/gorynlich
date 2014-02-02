@@ -1221,7 +1221,6 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
 
     *key = time_get_time_cached();
     SDLNet_Write32(*key, &msg.key);
-LOG("send key %d", *key);
 
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
 
