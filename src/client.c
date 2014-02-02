@@ -18,7 +18,7 @@
 #include "player.h"
 #include "string.h"
 #include "tree.h"
-#include "wid_server.h"
+#include "wid_server_join.h"
 
 /*
  * Which socket we have actually joined on.
@@ -178,7 +178,7 @@ static void client_socket_tx_ping (void)
         client_alive_check();
     }
 
-    wid_server_redo(true /* soft refresh */);
+    wid_server_join_redo(true /* soft refresh */);
 
     seq++;
 }
