@@ -74,8 +74,8 @@ void sdl_splashscreen_update (void)
 
         tex = tex_find("gorynlich");
 
-        fpoint tl = { 0.2, 0.1 };
-        fpoint br = { 0.8, 0.9 };
+        fpoint tl = { 0.3, 0.15 };
+        fpoint br = { 0.7, 0.7 };
 
         wid_set_tl_br_pct(wid_icon, tl, br);
 
