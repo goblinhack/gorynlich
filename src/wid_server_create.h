@@ -10,5 +10,5 @@ boolean wid_server_create_init(void);
 void wid_server_create_fini(void);
 void wid_server_create_hide(void);
 void wid_server_create_visible(void);
-void wid_server_create_redo(boolean soft_refresh);
+void wid_server_create_redo(void);
 boolean wid_server_save_local_server(void);

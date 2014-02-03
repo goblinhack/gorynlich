@@ -20,10 +20,49 @@
 #include "string.h"
 
 static boolean server_init_done;
-static socketp server_socket;
+socketp server_socket;
 
 static boolean server_players_show(tokens_t *tokens, void *context);
 static boolean server_shout(tokens_t *tokens, void *context);
+
+boolean server_start (IPaddress address)
+{
+    if (!is_server) {
+        return (true);
+    }
+
+    if (server_socket) {
+        return (true);
+    }
+
+    socketp s;
+
+    s = socket_listen(address);
+    if (!s) {
+        MSGERR("Failed to start server on listen address");
+        return (false);
+    }
+
+    LOG("Server listening on %s", socket_get_local_logname(s));
+
+    server_socket = s;
+
+    return (true);
+}
+
+void server_stop (void)
+{
+    if (!server_socket) {
+        return;
+    }
+
+    socket_tx_server_shout("SERVER GOING DOWN");
+
+    socket_tx_server_close();
+
+    socket_disconnect(server_socket);
+    server_socket = 0;
+}
 
 boolean server_init (void)
 {
@@ -34,18 +73,6 @@ boolean server_init (void)
     if (server_init_done) {
         return (true);
     }
-
-    socketp s;
-
-    s = socket_listen(server_address);
-    if (!s) {
-        ERR("Server failed to listen");
-        return (false);
-    }
-
-    LOG("Server listening on %s", socket_get_local_logname(s));
-
-    server_socket = s;
 
     if (is_client) {
         command_add(server_players_show, "show server players", 
@@ -70,9 +97,7 @@ void server_fini (void)
     if (server_init_done) {
         server_init_done = false;
 
-        socket_tx_server_shout("SERVER GOING DOWN");
-
-        socket_tx_server_close();
+        server_stop();
     }
 }
 

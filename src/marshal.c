@@ -45,7 +45,7 @@ tree_marshal *marshal (const char *filename)
     ctx = (typeof(ctx)) myzalloc(sizeof(*ctx), "marshal ctr");
 
     if (filename) {
-        ctx->filename = dupstr(filename, "marshal name");
+        ctx->filename = dupstr(filename, "marshal file name");
     } else {
         ctx->filename = 0;
     }
@@ -303,16 +303,15 @@ boolean marshal_fini (tree_marshal *ctx)
         } else if (strstr(ctx->filename, ".mz")) {
             rc = mzip_file_write(ctx->filename, (unsigned char*)ctx->buf,
                                  &ctx->buf_used);
-            myfree(ctx->filename);
         } else {
             rc = file_write(ctx->filename, (unsigned char*)ctx->buf,
                             ctx->buf_used);
-            myfree(ctx->filename);
         }
 
         myfree(buf);
     }
 
+    myfree(ctx->filename);
     myfree(ctx);
 
     return (rc);
