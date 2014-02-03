@@ -106,6 +106,7 @@ void quit (void)
     wid_intro_settings_fini();
     wid_hiscore_fini();
     wid_server_join_fini();
+    wid_server_create_fini();
 
     command_fini();
 
@@ -676,10 +677,6 @@ int32_t main (int32_t argc, char *argv[])
 	DIE("wid server join init");
     }
 
-    if (!wid_server_create_init()) {
-	DIE("wid server create init");
-    }
-
 #ifdef ENABLE_LEAKCHECK
     ptrcheck_leak_snapshot();
 #endif
@@ -766,6 +763,18 @@ int32_t main (int32_t argc, char *argv[])
 
     socket_init();
     server_init();
+
+    if (is_server) {
+        if (!server_start(server_address)) {
+            ERR("Server failed to listen");
+            return (false);
+        }
+    }
+
+    if (!wid_server_create_init()) {
+	DIE("wid server create init");
+    }
+
     client_init();
 
     gl_enter_2d_mode();

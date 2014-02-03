@@ -494,6 +494,12 @@ static boolean wid_server_join_hostname_receive_input (widp w,
 {
     server *s;
 
+    switch (key->sym) {
+        case SDLK_ESCAPE:
+            wid_server_join_hide();
+            return (true);
+    }
+
     s = wid_get_client_context(w);
     if (!s) {
         return (false);
@@ -545,6 +551,12 @@ static boolean wid_server_join_hostname_receive_input (widp w,
 static boolean wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
 {
     server *s;
+
+    switch (key->sym) {
+        case SDLK_ESCAPE:
+            wid_server_join_hide();
+            return (true);
+    }
 
     s = wid_get_client_context(w);
     if (!s) {
@@ -640,6 +652,12 @@ static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
 {
     server *s;
 
+    switch (key->sym) {
+        case SDLK_ESCAPE:
+            wid_server_join_hide();
+            return (true);
+    }
+
     s = wid_get_client_context(w);
     if (!s) {
         return (false);
@@ -657,9 +675,9 @@ static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
 
             memset(&sn, 0, sizeof(sn));
 
-            const char *ip_str = wid_get_text(w);
+            const char *port_str = wid_get_text(w);
             int a;
-            int success = sscanf(ip_str, "%u", &a);
+            int success = sscanf(port_str, "%u", &a);
             if (success != 1) {
                 /*
                  * Fail
@@ -679,13 +697,14 @@ static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
                 return (true);
             }
 
-            sn.host = s->host;
+            sn.host = dupstr(s->host, "wid client port change");
             sn.port = a;
 
             server_remove(s);
             server_add(&sn);
             wid_server_save_remote_server_list();
             wid_server_join_redo(false /* hard refresh */);
+            myfree(sn.host);
 
             break;
         }
@@ -1326,7 +1345,7 @@ void wid_server_join_destroy (void)
     user_is_typing = false;
 }
 
-static boolean demarshal_server (demarshal_p ctx, server *s)
+static boolean demarshal_servers (demarshal_p ctx, server *s)
 {
     boolean rc;
 
@@ -1338,7 +1357,7 @@ static boolean demarshal_server (demarshal_p ctx, server *s)
     return (rc);
 }
 
-static void marshal_server (marshal_p ctx, server *s)
+static void marshal_servers (marshal_p ctx, server *s)
 {
     char *host = s->host;
     uint16_t port = SDLNet_Read16(&s->ip.port);
@@ -1364,7 +1383,7 @@ boolean wid_server_save_remote_server_list (void)
     server *s;
 
     TREE_WALK(remote_servers, s) {
-        marshal_server(ctx, s);
+        marshal_servers(ctx, s);
     }
 
     if (marshal_fini(ctx) < 0) {
@@ -1395,8 +1414,9 @@ static boolean wid_server_load_remote_server_list (void)
     if ((ctx = demarshal(file))) {
         memset(&s, 0, sizeof(s));
 
-        while (demarshal_server(ctx, &s)) {
+        while (demarshal_servers(ctx, &s)) {
             server_add(&s);
+            myfree(s.host);
         }
 
         demarshal_fini(ctx);

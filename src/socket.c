@@ -20,6 +20,7 @@
 #include "wid_button.h"
 #include "color.h"
 #include "tree.h"
+#include "server.h"
 
 tree_rootp sockets;
 
@@ -279,12 +280,15 @@ static void socket_destroy (socketp s)
 
     if (s->socklist) {
         SDLNet_FreeSocketSet(s->socklist);
+        s->socklist = 0;
     }
 
     if (s->udp_socket) {
         SDLNet_UDP_Unbind(s->udp_socket, s->channel);
 
         SDLNet_UDP_Close(s->udp_socket);
+
+        s->udp_socket = 0;
     }
 
     if (s->local_logname) {
@@ -296,6 +300,10 @@ static void socket_destroy (socketp s)
     }
 
     socket_set_player(s, 0);
+
+    if (s == server_socket) {
+        server_socket = 0;
+    }
 }
 
 void socket_disconnect (socketp s)
