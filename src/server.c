@@ -37,9 +37,15 @@ boolean server_start (IPaddress address)
 
     socketp s;
 
+    char *tmp = iptodynstr(address);
+    LOG("Server trying to start on %s", tmp);
+    myfree(tmp);
+
     s = socket_listen(address);
     if (!s) {
-        MSGERR("Failed to start server on listen address");
+        char *tmp = iptodynstr(address);
+        MSGERR("Failed to start server on listen address %s", tmp);
+        myfree(tmp);
         return (false);
     }
 
@@ -180,7 +186,6 @@ static void server_poll (void)
     socketp s = server_socket;
 
     if (!s) {
-        ERR("no server socket to listen on");
         return;
     }
 
