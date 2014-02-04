@@ -276,7 +276,12 @@ static void socket_destroy (socketp s)
 
     socket_set_connected(s, false);
 
-    LOG("Socket destroy [%s]", socket_get_remote_logname(s));
+    if (s->server) {
+        LOG("Socket destroy [listen %s]", socket_get_local_logname(s));
+    } else {
+        LOG("Socket destroy [to %s]", socket_get_remote_logname(s));
+        LOG("               [from %s]", socket_get_local_logname(s));
+    }
 
     if (s->socklist) {
         SDLNet_FreeSocketSet(s->socklist);
@@ -304,6 +309,8 @@ static void socket_destroy (socketp s)
     if (s == server_socket) {
         server_socket = 0;
     }
+
+    myfree(s);
 }
 
 void socket_disconnect (socketp s)
@@ -404,14 +411,15 @@ char *iptodynstr (IPaddress ip)
 
     uint16_t port = SDLNet_Read16(&ip.port);
 
+        return (dynprintf("IPv4 %u.%u.%u.%u:%u",
+                          ip1, ip2, ip3, ip4, port));
     if (cmp_address(&ip, &no_address)) {
-        return (dynprintf("-"));
+        return (dynprintf("<no-address>"));
     }
 
     if (!(hostname = SDLNet_ResolveIP(&ip))) {
         return (dynprintf("IPv4 %u.%u.%u.%u:%u",
-                          hostname, ip1, ip2, ip3, ip4, port));
-
+                          ip1, ip2, ip3, ip4, port));
     }
 
     if (strstr(hostname, "localhost")) {
@@ -420,14 +428,14 @@ char *iptodynstr (IPaddress ip)
 
     if ((ip1 == 0) && (ip2 == 0) && (ip3 == 0) && (ip4 == 0)) {
         return (dynprintf("%s::%u",
-                           hostname && *hostname ? hostname : "",
-                           port));
+                          hostname && *hostname ? hostname : "",
+                          port));
     }
 
     if ((ip1 == 127) && (ip2 == 0) && (ip3 == 0) && (ip4 == 1)) {
         return (dynprintf("%s::%u",
-                           hostname && *hostname ? hostname : "",
-                           port));
+                          hostname && *hostname ? hostname : "",
+                          port));
     }
 
     return (dynprintf("%s%s%u.%u.%u.%u:%u",

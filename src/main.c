@@ -772,10 +772,10 @@ int32_t main (int32_t argc, char *argv[])
     }
 
     if (!wid_server_create_init()) {
-	DIE("wid server create init");
+        DIE("wid server create init");
     }
 
-    client_init();
+//    client_init();
 
     gl_enter_2d_mode();
     sdl_loop();
