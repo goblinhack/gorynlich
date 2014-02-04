@@ -65,16 +65,39 @@ static void wid_server_local_server_add (const server *s_in)
         s->name = dupstr(s_in->name, "server name");
     }
 
-    s->port = s_in->port;
+    uint16_t port;
+    uint32_t host;
 
-    if ((SDLNet_ResolveHost(&s->ip, "localhost", s->port)) == -1) {
-        LOG("Cannot resolve port %u", s->port);
+    if (!cmp_address(&s_in->ip, &no_address)) {
+        char *tmp = iptodynstr(s->ip);
+        LOG("Added pre-resolved server %s", tmp);
+        myfree(tmp);
+
+        /*
+         * Given a resolved address.
+         */
+        port = SDLNet_Read16(&s->ip.port);
+        host = SDLNet_Read32(&s->ip.host);
+    } else {
+        LOG("Added server, need resolve");
+
+        /*
+         * Need to resolve.
+         */
+        if ((SDLNet_ResolveHost(&s->ip, "localhost", s_in->port)) == -1) {
+            LOG("Cannot resolve port %u", s_in->port);
+        }
+
+        port = SDLNet_Read16(&s->ip.port);
+        host = SDLNet_Read32(&s->ip.host);
+
+        char *tmp = iptodynstr(s->ip);
+        LOG("Added server %s", tmp);
+        myfree(tmp);
     }
 
-    SDLNet_Write16(s->port, &s->ip.port);
-
-    s->tree.key1 = s->ip.port;
-    s->tree.key2 = s->ip.host;
+    s->tree.key1 = port;
+    s->tree.key2 = host;
 
     /*
      * Check this ip and port combination is not added already.
@@ -240,10 +263,6 @@ static boolean wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
     server *s;
 
     TREE_WALK_REVERSE(local_servers, s) {
-        IPaddress ip;
-
-        ip.port = s->tree.key1;
-        ip.host = s->tree.key2;
 
         if (!server_start(s->ip)) {
             return (true);
@@ -831,13 +850,14 @@ static boolean wid_server_load_local_server (void)
      * cli overrides the config file.
      */
     if (server_socket) {
+        LOG("Using existing server from cli");
+
         server s;
 
         memset(&s, 0, sizeof(s));
 
         IPaddress ip = socket_get_local_ip(server_socket);; 
-        s.port = ip.port;
-        s.port = SDLNet_Read16(&ip.port);
+        s.ip = ip;
 
         wid_server_local_server_add(&s);
         wid_server_save_local_server();
@@ -867,6 +887,8 @@ static boolean wid_server_load_local_server (void)
      */
     if (!local_servers || !tree_root_size(local_servers)) {
         server s;
+
+        LOG("Load default server details");
 
         memset(&s, 0, sizeof(s));
 
