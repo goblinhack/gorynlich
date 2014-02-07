@@ -325,7 +325,5 @@ static void wid_console_wid_create (void)
 
     wid_hide(wid_console_window, 0);
 
-    wid_set_do_not_lower(wid_console_window, true);
-
     wid_update(wid_console_window);
 }

@@ -150,7 +150,7 @@ socket *socket_listen (IPaddress address)
     s->udp_socket = SDLNet_UDP_Open(port);
     if (!s->udp_socket) {
         char *tmp = iptodynstr(address);
-        ERR("SDLNet_UDP_Open %s failed", tmp);
+        WARN("SDLNet_UDP_Open %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
 
@@ -161,7 +161,7 @@ socket *socket_listen (IPaddress address)
     s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &listen_address);
     if (s->channel < 0) {
         char *tmp = iptodynstr(address);
-        ERR("SDLNet_UDP_Bind %s failed", tmp);
+        WARN("SDLNet_UDP_Bind %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
 
@@ -171,7 +171,7 @@ socket *socket_listen (IPaddress address)
 
     if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
         char *tmp = iptodynstr(address);
-        ERR("SDLNet_UDP_AddSocket %s failed", tmp);
+        WARN("SDLNet_UDP_AddSocket %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
 
@@ -219,7 +219,7 @@ static socket *socket_connect (IPaddress address, boolean server_side_client)
     s->udp_socket = SDLNet_UDP_Open(0);
     if (!s->udp_socket) {
         char *tmp = iptodynstr(connect_address);
-        ERR("SDLNet_UDP_Open %s failed", tmp);
+        WARN("SDLNet_UDP_Open %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
 
@@ -230,7 +230,7 @@ static socket *socket_connect (IPaddress address, boolean server_side_client)
     s->channel = SDLNet_UDP_Bind(s->udp_socket, -1, &connect_address);
     if (s->channel < 0) {
         char *tmp = iptodynstr(connect_address);
-        ERR("SDLNet_UDP_Bind %s failed", tmp);
+        WARN("SDLNet_UDP_Bind %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
 
@@ -240,7 +240,7 @@ static socket *socket_connect (IPaddress address, boolean server_side_client)
 
     if (SDLNet_UDP_AddSocket(s->socklist, s->udp_socket) == -1) {
         char *tmp = iptodynstr(connect_address);
-        ERR("SDLNet_UDP_AddSocket %s failed", tmp);
+        WARN("SDLNet_UDP_AddSocket %s failed", tmp);
         WARN("  %s", SDLNet_GetError());
         myfree(tmp);
 
@@ -1029,7 +1029,7 @@ static void socket_tx_msg (socketp s, UDPpacket *packet)
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent: %s", SDLNet_GetError());
+        WARN("no UDP packet sent: %s", SDLNet_GetError());
 
         socket_count_inc_pak_tx_error(s);
     } else {
