@@ -128,6 +128,9 @@ widp wid_button_transient (const char *text, uint32_t delay)
 
     wid_destroy_in(w, delay);
 
+    wid_raise(w);
+    wid_set_do_not_lower(w, true);
+
     return (w);
 }
 
@@ -146,6 +149,9 @@ widp wid_button_large_transient (const char *text, uint32_t delay)
                             );
 
     wid_destroy_in(w, delay);
+
+    wid_raise(w);
+    wid_set_do_not_lower(w, true);
 
     return (w);
 }
