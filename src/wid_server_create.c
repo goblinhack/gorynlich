@@ -68,33 +68,20 @@ static void wid_server_local_server_add (const server *s_in)
     uint16_t port;
     uint32_t host;
 
-    if (!cmp_address(&s_in->ip, &no_address)) {
-        char *tmp = iptodynstr(s->ip);
-        LOG("Added pre-resolved server %s", tmp);
-        myfree(tmp);
+    /*
+     * Use 0.0.0.0 for listening always as it is different from the client
+     * connecting on 127.0.0.1
+     */
 
-        /*
-         * Given a resolved address.
-         */
-        port = SDLNet_Read16(&s->ip.port);
-        host = SDLNet_Read32(&s->ip.host);
-    } else {
-        LOG("Added server, need resolve");
-
-        /*
-         * Need to resolve.
-         */
-        if ((SDLNet_ResolveHost(&s->ip, "localhost", s_in->port)) == -1) {
-            LOG("Cannot resolve port %u", s_in->port);
-        }
-
-        port = SDLNet_Read16(&s->ip.port);
-        host = SDLNet_Read32(&s->ip.host);
-
-        char *tmp = iptodynstr(s->ip);
-        LOG("Added server %s", tmp);
-        myfree(tmp);
+    /*
+     * Need to resolve.
+     */
+    if ((SDLNet_ResolveHost(&s->ip, "0.0.0.0", s_in->port)) == -1) {
+        LOG("Cannot resolve port %u", s_in->port);
     }
+
+    port = SDLNet_Read16(&s->ip.port);
+    host = SDLNet_Read32(&s->ip.host);
 
     s->tree.key1 = port;
     s->tree.key2 = host;
@@ -839,7 +826,6 @@ boolean wid_server_save_local_server (void)
 
 static boolean wid_server_load_local_server (void)
 {
-    char *file = dynprintf("%s", config_file);
     demarshal_p ctx;
 
     if (local_servers) {
@@ -864,11 +850,13 @@ static boolean wid_server_load_local_server (void)
         return (true);
     }
 
+    char *file = dynprintf("%s", config_file);
+
     DBG("Load %s", file);
 
-    server s;
-
     if ((ctx = demarshal(file))) {
+        server s;
+
         memset(&s, 0, sizeof(s));
 
         while (demarshal_server(ctx, &s)) {
@@ -888,9 +876,9 @@ static boolean wid_server_load_local_server (void)
     if (!local_servers || !tree_root_size(local_servers)) {
         server s;
 
-        LOG("Load default server details");
-
         memset(&s, 0, sizeof(s));
+
+        LOG("Load default server details");
 
         s.port = SERVER_DEFAULT_PORT; 
 

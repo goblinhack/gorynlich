@@ -140,6 +140,12 @@ socket *socket_listen (IPaddress address)
         return (0);
     }
 
+    /*
+     * Use 0.0.0.0 for listening always as it is different from the client
+     * connecting on 127.0.0.1
+     */
+    address.host = 0;
+
     uint16_t port = SDLNet_Read16(&address.port);
     s->udp_socket = SDLNet_UDP_Open(port);
     if (!s->udp_socket) {
@@ -309,8 +315,6 @@ static void socket_destroy (socketp s)
     if (s == server_socket) {
         server_socket = 0;
     }
-
-    myfree(s);
 }
 
 void socket_disconnect (socketp s)
@@ -320,6 +324,8 @@ void socket_disconnect (socketp s)
     tree_remove_found_node(sockets, &s->tree.node);
 
     socket_destroy(s);
+
+    myfree(s);
 }
 
 /*
@@ -411,15 +417,14 @@ char *iptodynstr (IPaddress ip)
 
     uint16_t port = SDLNet_Read16(&ip.port);
 
-        return (dynprintf("IPv4 %u.%u.%u.%u:%u",
-                          ip1, ip2, ip3, ip4, port));
-    if (cmp_address(&ip, &no_address)) {
-        return (dynprintf("<no-address>"));
+    if ((ip1 == 0) && (ip2 == 0) && (ip3 == 0) && (ip4 == 0)) {
+        return (dynprintf("0.0.0.0:%u", port));
     }
 
     if (!(hostname = SDLNet_ResolveIP(&ip))) {
         return (dynprintf("IPv4 %u.%u.%u.%u:%u",
-                          ip1, ip2, ip3, ip4, port));
+                          hostname, ip1, ip2, ip3, ip4, port));
+
     }
 
     if (strstr(hostname, "localhost")) {
@@ -427,15 +432,15 @@ char *iptodynstr (IPaddress ip)
     }
 
     if ((ip1 == 0) && (ip2 == 0) && (ip3 == 0) && (ip4 == 0)) {
-        return (dynprintf("%s::%u",
-                          hostname && *hostname ? hostname : "",
-                          port));
+        return (dynprintf("%s:%u",
+                           hostname && *hostname ? hostname : "",
+                           port));
     }
 
     if ((ip1 == 127) && (ip2 == 0) && (ip3 == 0) && (ip4 == 1)) {
-        return (dynprintf("%s::%u",
-                          hostname && *hostname ? hostname : "",
-                          port));
+        return (dynprintf("%s:%u",
+                           hostname && *hostname ? hostname : "",
+                           port));
     }
 
     return (dynprintf("%s%s%u.%u.%u.%u:%u",

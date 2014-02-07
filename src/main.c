@@ -176,6 +176,8 @@ void die (void)
 
     fprintf(MY_STDERR, "exit(1) error\n");
 
+    term_fini();
+
     exit(1);
 }
 
@@ -775,7 +777,7 @@ int32_t main (int32_t argc, char *argv[])
         DIE("wid server create init");
     }
 
-//    client_init();
+    client_init();
 
     gl_enter_2d_mode();
     sdl_loop();

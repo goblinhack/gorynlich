@@ -37,14 +37,12 @@ boolean server_start (IPaddress address)
 
     socketp s;
 
-    char *tmp = iptodynstr(address);
-    LOG("Server trying to start on %s", tmp);
-    myfree(tmp);
+    address.host = 0;
 
     s = socket_listen(address);
     if (!s) {
         char *tmp = iptodynstr(address);
-        MSGERR("Failed to start server on listen address %s", tmp);
+        MSGERR("Failed to start server on %s", tmp);
         myfree(tmp);
         return (false);
     }
