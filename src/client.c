@@ -67,8 +67,6 @@ boolean client_init (void)
         return (false);
     }
 
-    LOG("Client trying to connect to %s", socket_get_remote_logname(s));
-
     command_add(client_set_name, "set name [A-Za-z0-9_-]*",
                 "set player name");
 

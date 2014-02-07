@@ -101,9 +101,13 @@
 /*
  * Connections.
  */
+#define DEFAULT_PORT                10000
+
 #define SERVER_DEFAULT_HOST         "localhost"
-#define SERVER_DEFAULT_PORT         10000
+#define SERVER_DEFAULT_PORT         DEFAULT_PORT
+
 #define MAX_PACKET_SIZE             1024
+
 #define SOCKET_PING_SEQ_NO_RANGE    20 // how many pings to consider for quality
 #define SOCKET_PING_FAIL_THRESHOLD  10 // 90 percent of ping fails means down
 

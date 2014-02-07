@@ -80,8 +80,6 @@ static void server_add (const server *s_in)
         s->host_and_port_str = iptodynstr(s->ip);
     }
 
-    SDLNet_Write16(s->port, &s->ip.port);
-
     /*
      * Connector.
      */
