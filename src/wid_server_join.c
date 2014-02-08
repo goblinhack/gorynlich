@@ -354,7 +354,11 @@ static boolean wid_server_join_join (widp w, int32_t x, int32_t y, uint32_t butt
         return (false);
     }
 
-    client_socket_join(s->host, 0, s->port);
+    if (!client_socket_join(s->host, 0, s->port)) {
+        return (false);
+    }
+
+    wid_server_join_hide();
 
     /*
      * Leave all other sockets.
@@ -719,9 +723,7 @@ static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
 
 static void wid_server_join_set_color (widp w, server *s)
 {
-    if (s->quality >= 95) {
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-    } else if (s->quality >= 75) {
+    if (s->quality >= 90) {
         wid_set_color(w, WID_COLOR_TEXT, GREEN);
     } else if (s->quality >= 50) {
         wid_set_color(w, WID_COLOR_TEXT, YELLOW);
