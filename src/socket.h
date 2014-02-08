@@ -215,7 +215,7 @@ extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_status(void);
 extern void socket_rx_server_status(socketp s, UDPpacket *packet, 
                                     uint8_t *data, msg_server_status *);
-extern boolean sockets_quality_check(void);
+extern void sockets_quality_check(void);
 extern uint32_t socket_get_quality(socketp s);
 extern uint32_t socket_get_avg_latency(socketp s);
 extern uint32_t socket_get_min_latency(socketp s);

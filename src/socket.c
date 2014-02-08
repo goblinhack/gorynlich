@@ -699,8 +699,20 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
     return (true);
 }
 
-boolean sockets_quality_check (void)
+void sockets_quality_check (void)
 {
+    /*
+     * If called by both server and client, make sure we only run once per 
+     * sec.
+     */
+    static uint32_t ts;
+
+    if (!time_have_x_tenths_passed_since(10, ts)) {
+        return;
+    }
+
+    ts = time_get_time_cached();
+
     socketp s;
 
     TREE_WALK(sockets, s) {
@@ -764,8 +776,6 @@ boolean sockets_quality_check (void)
             }
         }
     }
-
-    return (true);
 }
 
 void sockets_alive_check (void)
