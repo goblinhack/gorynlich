@@ -26,6 +26,7 @@
 #include "music.h"
 #include "sdl.h"
 #include "level.h"
+#include "timer.h"
 
 static widp wid_intro;
 static widp wid_intro_background;
@@ -87,13 +88,11 @@ void wid_intro_hide (void)
         DIE("no wid intro");
     }
 
-    wid_move_end(wid_intro);
-    wid_move_end(wid_intro_background);
+//    wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 2000, 0);
+    wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 2000, 0);
+    wid_fade_out(wid_intro_background, 2000);
 
     wid_hide(wid_intro, wid_swipe_delay);
-    wid_hide(wid_intro_background, wid_swipe_delay);
-
-    wid_lower(wid_intro_background);
     wid_raise(wid_intro);
     wid_update(wid_intro);
 }
@@ -120,14 +119,10 @@ void wid_intro_visible (void)
     }
 
     wid_visible(wid_intro, 0);
-    wid_visible(wid_intro_background, 0);
-
-    wid_move_end(wid_intro);
-    wid_move_end(wid_intro_background);
-
-    wid_lower(wid_intro_background);
     wid_raise(wid_intro);
     wid_update(wid_intro);
+
+    wid_fade_in(wid_intro_background, 1000);
 }
 
 static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
@@ -191,9 +186,20 @@ boolean wid_intro_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
     return (true);
 }
 
-static void wid_intro_play_selected (void)
+static void wid_intro_play_selected_cb (void *context)
 {
     wid_game_visible();
+}
+
+static void wid_intro_play_selected (void)
+{
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_intro_play_selected_cb,
+            0, /* context */
+            "start game",
+            1500,
+            0 /* jitter */);
 
     wid_intro_hide();
 }
@@ -251,9 +257,20 @@ static void wid_intro_help_selected (void)
     wid_intro_help_visible();
 }
 
-static void wid_intro_guide_selected (void)
+static void wid_intro_guide_selected_cb (void *context)
 {
     wid_intro_guide_visible();
+}
+
+static void wid_intro_guide_selected (void)
+{
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_intro_guide_selected_cb,
+            0, /* context */
+            "start guide",
+            1500,
+            0 /* jitter */);
 
     wid_intro_hide();
 }
@@ -368,9 +385,20 @@ static boolean wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static void wid_intro_editor_selected (void)
+static void wid_intro_editor_selected_cb (void *context)
 {
     wid_editor_visible();
+}
+
+static void wid_intro_editor_selected (void)
+{
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_intro_editor_selected_cb,
+            0, /* context */
+            "start editor",
+            1500,
+            0 /* jitter */);
 
     wid_intro_hide();
 }

@@ -26,6 +26,7 @@
 #include "string.h"
 #include "config.h"
 #include "sound.h"
+#include "timer.h"
 
 typedef struct {
     /*
@@ -408,6 +409,8 @@ uint32_t history_walk;
 
 static boolean wid_init_done;
 
+tree_rootp wid_timers;
+
 boolean wid_init (void)
 {
     wid_init_done = true;
@@ -425,6 +428,8 @@ void wid_fini (void)
         tree_destroy(&wid_top_level2, (tree_destroy_func)0);
         tree_destroy(&wid_top_level,
                      (tree_destroy_func)wid_destroy_immediate_internal);
+
+        action_timers_destroy(&wid_timers);
     }
 }
 
@@ -6696,6 +6701,7 @@ static void wid_display (widp w,
     boolean fading;
     boolean hidden;
     int32_t owidth;
+    boolean scaling;
     int32_t oheight;
     int32_t otlx;
     int32_t otly;
@@ -6733,8 +6739,13 @@ static void wid_display (widp w,
 
     fading = wid_is_fading(w);
     hidden = wid_is_hidden(w);
+    scaling = wid_is_scaling(w);
 
     if (fading) {
+        /*
+         * Always render. Not hidden yet.
+         */
+    } else if (scaling) {
         /*
          * Always render. Not hidden yet.
          */
@@ -7103,6 +7114,8 @@ void wid_tick_all (void)
     { TREE2_WALK(wid_top_level2, w) {
         wid_tick(w);
     } }
+
+    action_timers_tick(wid_timers);
 }
 
 /*
@@ -7207,6 +7220,29 @@ boolean wid_is_fading (widp w)
         w = w->parent;
 
         if (w->fade_out || w->fade_in) {
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+boolean wid_is_scaling (widp w)
+{
+    fast_verify(w);
+
+    if (!w) {
+        return (false);
+    }
+
+    if (w->scaling_h || w->scaling_w) {
+        return (true);
+    }
+
+    while (w->parent) {
+        w = w->parent;
+
+        if (w->scaling_h || w->scaling_w) {
             return (true);
         }
     }
