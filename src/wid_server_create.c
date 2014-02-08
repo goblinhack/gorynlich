@@ -43,6 +43,10 @@ typedef struct server_ {
 } server;
 
 static void wid_server_create_destroy_internal(server *node);
+static boolean wid_server_create_name_receive_input(widp w,
+                                                    const SDL_KEYSYM *key);
+static boolean wid_server_create_port_receive_input(widp w, 
+                                                    const SDL_KEYSYM *key);
 
 static tree_rootp local_servers;
 
@@ -173,20 +177,8 @@ void wid_server_create_hide (void)
     wid_server_create_destroy();
 
     /*
-     * Leave all other sockets other than the joined on.
+     * Leave server socket open.
      */
-    server *s;
-
-    /*
-     * Leave all other sockets.
-     */
-    TREE_WALK(local_servers, s) {
-        socketp sp = socket_find(s->ip);
-        if (sp && (sp == server_socket)) {
-            socket_disconnect(sp);
-            continue;
-        }
-    }
 }
 
 void wid_server_create_visible (void)
@@ -282,6 +274,14 @@ static boolean wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
             wid_server_create_hide();
             return (true);
 
+        case ' ':
+            if (server_socket) {
+                wid_server_stop(w, 0, 0, 0);
+            } else {
+                wid_server_start(w, 0, 0, 0);
+            }
+            return (true);
+
         default:
             break;
     }
@@ -312,6 +312,7 @@ static boolean wid_server_create_name_mouse_down (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
     wid_set_show_cursor(w, true);
+    wid_set_on_key_down(w, wid_server_create_name_receive_input);
 
     return (true);
 }
@@ -320,6 +321,7 @@ static boolean wid_server_create_port_mouse_down (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_set_show_cursor(w, true);
+    wid_set_on_key_down(w, wid_server_create_port_receive_input);
 
     return (true);
 }
@@ -327,8 +329,8 @@ static boolean wid_server_create_port_mouse_down (widp w, int32_t x, int32_t y,
 /*
  * Key down etc...
  */
-static boolean wid_server_create_name_receive_input (widp w, 
-                                                  const SDL_KEYSYM *key)
+static boolean wid_server_create_name_receive_input (widp w,
+                                                     const SDL_KEYSYM *key)
 {
     server *s;
 
@@ -378,7 +380,8 @@ static boolean wid_server_create_name_receive_input (widp w,
 /*
  * Key down etc...
  */
-static boolean wid_server_create_port_receive_input (widp w, const SDL_KEYSYM *key)
+static boolean wid_server_create_port_receive_input (widp w, 
+                                                     const SDL_KEYSYM *key)
 {
     server *s;
 
@@ -601,7 +604,6 @@ static void wid_server_create_create (boolean redo)
             wid_set_text_lhs(w, true);
 
             wid_set_on_mouse_down(w, wid_server_create_name_mouse_down);
-            wid_set_on_key_down(w, wid_server_create_name_receive_input);
             wid_set_client_context(w, s);
 
             i++;
@@ -673,7 +675,6 @@ static void wid_server_create_create (boolean redo)
             wid_set_text_lhs(w, true);
 
             wid_set_on_mouse_down(w, wid_server_create_port_mouse_down);
-            wid_set_on_key_down(w, wid_server_create_port_receive_input);
             wid_set_client_context(w, s);
 
             i++;
