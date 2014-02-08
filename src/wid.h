@@ -350,6 +350,7 @@ boolean wid_is_moving(widp w);
 void wid_move_stop(widp w);
 void wid_move_resume(widp w);
 boolean wid_is_hidden(widp w);
+boolean wid_is_scaling(widp w);
 boolean wid_is_fading(widp w);
 void wid_get_grid_coord(widp w, int32_t *x, int32_t *y,
                         boolean *aligned_x,
@@ -369,3 +370,5 @@ extern const int32_t wid_swipe_delay;
 extern char history[HISTORY_MAX][MAXSTR];
 extern uint32_t history_at;
 extern uint32_t history_walk;
+
+extern tree_rootp wid_timers;
