@@ -248,6 +248,7 @@ widp wid_popup (const char *text, const char *title,
                           false /* fixed width */);
 
             w += BUTTON_PAD_X;
+            h += h / 2;
 
             maxbuttonw = max(w, maxbuttonw);
             maxbuttonh = max(h, maxbuttonh);

@@ -250,7 +250,9 @@ static boolean wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
         break;
     }
 
-    wid_server_create_redo();
+    wid_server_create_hide();
+
+    MSG("Server started");
 
     return (true);
 }
@@ -576,7 +578,7 @@ static void wid_server_create_create (boolean redo)
                                            "server name container 2");
 
             fpoint tl = {width_at, 0.4};
-            fpoint br = {width_at + width1, 0.6};
+            fpoint br = {width_at + width1, 0.7};
 
             float height = 0.08;
 
@@ -644,7 +646,7 @@ static void wid_server_create_create (boolean redo)
                                            "server port container2");
 
             fpoint tl = {width_at, 0.4};
-            fpoint br = {width_at + width3, 0.6};
+            fpoint br = {width_at + width3, 0.7};
 
             float height = 0.08;
 
@@ -698,7 +700,7 @@ static void wid_server_create_create (boolean redo)
                                            "server join");
 
             fpoint tl = {width_at, 0.4};
-            fpoint br = {width_at + width7, 0.6};
+            fpoint br = {width_at + width7, 0.7};
 
             float height = 0.08;
 
