@@ -21,6 +21,7 @@
 #include "color.h"
 #include "tree.h"
 #include "server.h"
+#include "client.h"
 
 tree_rootp sockets;
 
@@ -612,7 +613,7 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
 {
     int si = 0;
 
-    CON("Name                 Quality  Latency       Remote IP           Local IP");
+    CON("Name                 Quality  Latency       Local IP            Remote IP");
     CON("----                 -------  ------- -------------------- ------------------");
         
     socketp s;
@@ -662,20 +663,36 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
 
         total_attempts = no_response + response;
 
+        const char *name = socket_get_name(s);
+
+        if (!name || !*name) {
+            if (client_joined_server && (s == client_joined_server)) {
+                name = "joined client";
+            } else if (server_socket && (s == server_socket)) {
+                name = "local server";
+            } else if (socket_get_server(s)) {
+                name = "other server";
+            } else if (socket_get_server_side_client(s)) {
+                name = "server side client";
+            } else if (socket_get_client(s)) {
+                name = "client";
+            }
+        }
+
         if (total_attempts) {
             avg_latency /= total_attempts;
 
             CON("%-20s %3.0f pct %5d ms %-20s %-20s", 
-                socket_get_server(s) ? "server" : socket_get_name(s),
+                name,
                 ((float)((float)response / (float)total_attempts)) * 100.0,
                 avg_latency,
-                socket_get_remote_logname(s),
-                socket_get_local_logname(s));
+                socket_get_local_logname(s),
+                socket_get_remote_logname(s));
         } else {
             CON("%-20s                  %-20s %-20s", 
-                socket_get_server(s) ? "server" : socket_get_name(s),
-                socket_get_remote_logname(s),
-                socket_get_local_logname(s));
+                name,
+                socket_get_local_logname(s),
+                socket_get_remote_logname(s));
         }
     }
 
@@ -1231,7 +1248,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     }
 
     if (!s->connected) {
-        WARN("server is not present, cannot join yet");
+        MSGERR("Server is not present, cannot join yet");
         return (false);
     }
 

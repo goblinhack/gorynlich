@@ -33,7 +33,10 @@ void backtrace_print (void)
     strings = backtrace_symbols(array, size);
 
     for (i = 0; i < size; i++) {
+#if 0
+        // tracebacks to the console?
         CON("%s", strings[i]);
+#endif
 
         fprintf(MY_STDERR, "%s\n", strings[i]);
         fflush(MY_STDERR);
