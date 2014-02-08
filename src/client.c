@@ -248,7 +248,9 @@ static boolean client_socket_close (char *host, char *port)
 
     if (!host && !port) {
         TREE_WALK(sockets, s) {
-            break;
+            if (socket_get_client(s)) {
+                break;
+            }
         }
 
         if (!s) {
@@ -307,7 +309,9 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
 
     if (!host && !port) {
         TREE_WALK(sockets, s) {
-            break;
+            if (socket_get_client(s)) {
+                break;
+            }
         }
 
         if (!s) {
@@ -712,7 +716,7 @@ static void client_poll (void)
  */
 static boolean client_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name           Quality  Latency      Remote IP      Local IP     Score ");
+    CON("Name           Quality  Latency      Local IP       Remote IP    Score ");
     CON("----           -------  ------- --------------- --------------- -------");
 
     uint32_t pi;
@@ -728,8 +732,8 @@ static boolean client_players_show (tokens_t *tokens, void *context)
             p->name,
             p->quality,
             p->avg_latency,
-            tmp,
             tmp2,
+            tmp,
             p->score);
 
         myfree(tmp);
