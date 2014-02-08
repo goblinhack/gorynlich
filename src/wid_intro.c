@@ -45,6 +45,8 @@ static void wid_intro_guide_selected(void);
 static boolean wid_intro_init_done;
 static void wid_intro_create(void);
 
+static int intro_effect_delay = 1000;
+
 boolean wid_intro_init (void)
 {
     if (!wid_intro_init_done) {
@@ -88,11 +90,10 @@ void wid_intro_hide (void)
         DIE("no wid intro");
     }
 
-//    wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 2000, 0);
-    wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 2000, 0);
-    wid_fade_out(wid_intro_background, 2000);
+    wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, intro_effect_delay, 0);
+    wid_fade_out(wid_intro_background, intro_effect_delay);
 
-    wid_hide(wid_intro, wid_swipe_delay);
+    wid_hide(wid_intro, 0);
     wid_raise(wid_intro);
     wid_update(wid_intro);
 }
@@ -122,7 +123,7 @@ void wid_intro_visible (void)
     wid_raise(wid_intro);
     wid_update(wid_intro);
 
-    wid_fade_in(wid_intro_background, 1000);
+    wid_fade_in(wid_intro_background, intro_effect_delay);
 }
 
 static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
@@ -198,7 +199,7 @@ static void wid_intro_play_selected (void)
             (action_timer_callback)wid_intro_play_selected_cb,
             0, /* context */
             "start game",
-            1500,
+            intro_effect_delay,
             0 /* jitter */);
 
     wid_intro_hide();
@@ -269,7 +270,7 @@ static void wid_intro_guide_selected (void)
             (action_timer_callback)wid_intro_guide_selected_cb,
             0, /* context */
             "start guide",
-            1500,
+            intro_effect_delay,
             0 /* jitter */);
 
     wid_intro_hide();
@@ -397,7 +398,7 @@ static void wid_intro_editor_selected (void)
             (action_timer_callback)wid_intro_editor_selected_cb,
             0, /* context */
             "start editor",
-            1500,
+            intro_effect_delay,
             0 /* jitter */);
 
     wid_intro_hide();
