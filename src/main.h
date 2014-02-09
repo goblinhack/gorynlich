@@ -348,6 +348,7 @@ struct config {
     int32_t music_volume;
     char name[PLAYER_NAME_LEN_MAX];
     char server_name[PLAYER_NAME_LEN_MAX];
+    uint16_t server_port;
     uint8_t server_max_players;
     uint8_t server_current_players;
 };

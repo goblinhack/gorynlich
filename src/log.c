@@ -666,11 +666,14 @@ void MSG (const char *fmt, ...)
 
 static void msgerr_ (const char *fmt, va_list args)
 {
+    uint32_t ts_len;
     uint32_t len;
 
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
+
+    ts_len = len;
 
     snprintf(buf + len, sizeof(buf) - len, "ERROR: %%%%fg=red$");
 
@@ -689,7 +692,7 @@ static void msgerr_ (const char *fmt, va_list args)
     wid_console_log(buf);
     term_log(buf);
 
-    wid_popup_error(buf);
+    wid_popup_error(buf + ts_len);
 
     backtrace_print();
     fflush(MY_STDOUT);

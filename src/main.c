@@ -81,7 +81,6 @@ void quit (void)
     }
 
     wid_server_save_remote_server_list();
-    wid_server_save_local_server();
 
     if (is_server) {
         hiscore_save();

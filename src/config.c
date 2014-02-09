@@ -61,6 +61,8 @@ static boolean demarshal_config (demarshal_p ctx, struct config *p)
     rc = rc && GET_OPT_NAMED_UINT8(ctx, "server_max_players", 
                                    p->server_max_players);
 
+    rc = rc && GET_OPT_NAMED_UINT16(ctx, "server_port", p->server_port);
+
     return (rc);
 }
 
@@ -80,6 +82,8 @@ static void marshal_config (marshal_p ctx, struct config *p)
     }
 
     PUT_NAMED_UINT8(ctx, "server_max_players", p->server_max_players);
+
+    PUT_NAMED_UINT16(ctx, "server_port", p->server_port);
 }
 
 boolean config_save (void)
@@ -133,6 +137,7 @@ boolean config_load (void)
     }
 
     global_config.server_max_players = 4;
+    global_config.server_port = SERVER_DEFAULT_PORT;
 
     if (!(ctx = demarshal(file))) {
         myfree(file);
