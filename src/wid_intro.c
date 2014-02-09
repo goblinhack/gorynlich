@@ -128,7 +128,7 @@ void wid_intro_visible (void)
 
 static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
-    switch (key->sym) {
+    switch ((int)key->sym) {
         case ' ':
         case SDLK_RETURN:
             wid_intro_play_selected();
