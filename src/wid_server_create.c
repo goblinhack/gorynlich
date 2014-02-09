@@ -21,8 +21,6 @@
 #include "string_ext.h"
 #include "server.h"
 
-static const char *config_file = "gorynlich-server.txt";
-
 static widp wid_server_create_window;
 static widp wid_server_create_container;
 static widp wid_server_create_window_container;
@@ -363,9 +361,11 @@ static boolean wid_server_create_name_receive_input (widp w,
             sn.name = (char*) wid_get_text(w);
             sn.port = s->port;
 
+            strncpy(global_config.server_name, sn.name,
+                    sizeof(global_config.server_name));
+
             server_remove(s);
             wid_server_local_server_add(&sn);
-            wid_server_save_local_server();
             wid_server_create_redo();
 
             break;
@@ -434,11 +434,11 @@ static boolean wid_server_create_port_receive_input (widp w,
             }
 
             sn.port = a;
+            global_config.server_port = sn.port;
             sn.name = dupstr(s->name, "wid port change");
 
             server_remove(s);
             wid_server_local_server_add(&sn);
-            wid_server_save_local_server();
             wid_server_create_redo();
             myfree(sn.name);
 
@@ -776,63 +776,8 @@ void wid_server_create_destroy (void)
     }
 }
 
-static boolean demarshal_server (demarshal_p ctx, server *s)
-{
-    boolean rc;
-
-    rc = true;
-
-    rc = rc && GET_OPT_NAMED_STRING(ctx, "name", s->name);
-    rc = rc && GET_OPT_NAMED_UINT16(ctx, "port", s->port);
-
-    return (rc);
-}
-
-static void marshal_server (marshal_p ctx, server *s)
-{
-    char *name = s->name;
-    uint16_t port = SDLNet_Read16(&s->ip.port);
-
-    if (s->port) {
-        PUT_NAMED_STRING(ctx, "name", name);
-        PUT_NAMED_INT16(ctx, "port", port);
-    }
-}
-
-boolean wid_server_save_local_server (void)
-{
-    char *file = dynprintf("%s", config_file);
-    marshal_p ctx;
-
-    ctx = marshal(file);
-    if (!ctx) {
-        MSGERR("Failed to save: %s", file);
-        myfree(file);
-        return (false);
-    }
-
-    server *s;
-
-    TREE_WALK(local_servers, s) {
-        marshal_server(ctx, s);
-    }
-
-    if (marshal_fini(ctx) < 0) {
-        ERR("Failed to finalize: %s", file);
-        myfree(file);
-
-        return (false);
-    }
-
-    myfree(file);
-
-    return (true);
-}
-
 static boolean wid_server_load_local_server (void)
 {
-    demarshal_p ctx;
-
     if (local_servers) {
         tree_destroy(&local_servers, 0);
     }
@@ -851,45 +796,17 @@ static boolean wid_server_load_local_server (void)
         s.ip = ip;
 
         wid_server_local_server_add(&s);
-        wid_server_save_local_server();
         return (true);
     }
 
-    char *file = dynprintf("%s", config_file);
+    server s;
 
-    DBG("Load %s", file);
+    memset(&s, 0, sizeof(s));
 
-    if ((ctx = demarshal(file))) {
-        server s;
+    s.name = global_config.server_name;
+    s.port = global_config.server_port;
 
-        memset(&s, 0, sizeof(s));
-
-        while (demarshal_server(ctx, &s)) {
-            wid_server_local_server_add(&s);
-            myfree(s.name);
-            break;
-        }
-
-        demarshal_fini(ctx);
-    }
-
-    myfree(file);
-
-    /*
-     * If nothing loaded, then default.
-     */
-    if (!local_servers || !tree_root_size(local_servers)) {
-        server s;
-
-        memset(&s, 0, sizeof(s));
-
-        LOG("Load default server details");
-
-        s.port = SERVER_DEFAULT_PORT; 
-
-        wid_server_local_server_add(&s);
-        wid_server_save_local_server();
-    }
+    wid_server_local_server_add(&s);
 
     return (true);
 }
