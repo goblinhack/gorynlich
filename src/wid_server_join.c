@@ -777,7 +777,7 @@ static void wid_server_join_create (boolean redo)
         widp w = wid_server_join_window = wid_new_square_window("wid server");
 
         fpoint tl = {0.05, 0.1};
-        fpoint br = {0.95, 0.7};
+        fpoint br = {0.95, 0.8};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
