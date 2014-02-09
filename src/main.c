@@ -674,10 +674,6 @@ int32_t main (int32_t argc, char *argv[])
 	DIE("wid hiscore init");
     }
 
-    if (!wid_server_join_init()) {
-	DIE("wid server join init");
-    }
-
 #ifdef ENABLE_LEAKCHECK
     ptrcheck_leak_snapshot();
 #endif
@@ -760,23 +756,19 @@ int32_t main (int32_t argc, char *argv[])
                           (action_init_fn_callback)wid_game_init,
                           0, "wid_game_init");
 
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)socket_init,
+                          0, "socket_init");
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)server_init,
+                          0, "server_init");
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)client_init,
+                          0, "client_init");
+
 #endif
-
-    socket_init();
-    server_init();
-
-    if (is_server) {
-        if (!server_start(server_address)) {
-            ERR("Server failed to listen");
-            return (false);
-        }
-    }
-
-    if (!wid_server_create_init()) {
-        DIE("wid server create init");
-    }
-
-    client_init();
 
     gl_enter_2d_mode();
     sdl_loop();

@@ -48,10 +48,6 @@ static boolean server_connection_confirmed;
 
 boolean client_init (void)
 {
-    if (!is_client) {
-        return (true);
-    }
-
     if (client_init_done) {
         return (true);
     }
@@ -61,10 +57,12 @@ boolean client_init (void)
     /*
      * Connector.
      */
-    s = socket_connect_from_client(server_address);
-    if (!s) {
-        WARN("Client failed to connect");
-        return (false);
+    if (is_client) {
+        s = socket_connect_from_client(server_address);
+        if (!s) {
+            WARN("Client failed to connect");
+            return (false);
+        }
     }
 
     command_add(client_set_name, "set name [A-Za-z0-9_-]*",
@@ -97,6 +95,10 @@ boolean client_init (void)
     }
 
     client_init_done = true;
+
+    if (!wid_server_join_init()) {
+	DIE("wid server join init");
+    }
 
     return (true);
 }
