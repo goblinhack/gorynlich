@@ -139,10 +139,6 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_quit_selected();
             return (true);
 
-        case 'a':
-            wid_intro_about_selected();
-            return (true);
-
         case 's':
             wid_intro_settings_selected();
             return (true);
@@ -151,12 +147,9 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_hiscore_selected();
             return (true);
 
-        case 'j':
-            wid_server_join_selected();
-            return (true);
-
-        case 'n':
+        case 'm':
             wid_server_create_selected();
+            wid_server_join_selected();
             return (true);
 
         case 'e':
@@ -179,12 +172,6 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
     }
 
     return (false);
-}
-
-static
-boolean wid_intro_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
-{
-    return (true);
 }
 
 static void wid_intro_play_selected_cb (void *context)
@@ -464,7 +451,7 @@ static boolean wid_intro_quit_selected (void)
 /*
  * Mouse up etc...
  */
-static boolean wid_intro_quit_receive_mouse_up (widp w,
+static boolean wid_intro_quit_receive_mouse_down (widp w,
                                                 int32_t x, int32_t y,
                                                 uint32_t button)
 {
@@ -573,8 +560,7 @@ static void wid_intro_create (void)
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_editor_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_editor_mouse_event);
         wid_set_on_key_down(child, wid_intro_editor_key_event);
     }
 
@@ -606,8 +592,7 @@ static void wid_intro_create (void)
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_about_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_about_mouse_event);
         wid_set_on_key_down(child, wid_intro_about_key_event);
     }
 
@@ -639,8 +624,7 @@ static void wid_intro_create (void)
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_settings_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_settings_mouse_event);
         wid_set_on_key_down(child, wid_intro_settings_key_event);
     }
 
@@ -672,8 +656,7 @@ static void wid_intro_create (void)
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_hiscore_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_hiscore_mouse_event);
         wid_set_on_key_down(child, wid_intro_hiscore_key_event);
     }
 
@@ -705,8 +688,7 @@ static void wid_intro_create (void)
 
         wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_server_join_mouse_event);
+        wid_set_on_mouse_down(child, wid_server_join_mouse_event);
         wid_set_on_key_down(child, wid_server_join_key_event);
     }
 
@@ -736,8 +718,7 @@ static void wid_intro_create (void)
         c.a = 100;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_help_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_help_mouse_event);
         wid_set_on_key_down(child, wid_intro_help_key_event);
     }
 
@@ -767,8 +748,7 @@ static void wid_intro_create (void)
         c.a = 100;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_quit_receive_mouse_up);
+        wid_set_on_mouse_down(child, wid_intro_quit_receive_mouse_down);
         wid_set_on_key_down(child, wid_intro_quit_key_event);
     }
 
@@ -799,8 +779,7 @@ static void wid_intro_create (void)
         c.a = 100;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
-        wid_set_on_mouse_down(child, wid_intro_wid_noop);
-        wid_set_on_mouse_up(child, wid_intro_play_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_play_mouse_event);
         wid_set_on_key_down(child, wid_intro_play_key_event);
     }
 

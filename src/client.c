@@ -355,8 +355,6 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
 
     LOG("Joining server %s", socket_get_remote_logname(s));
 
-    MSG("Joining server...");
-
     client_joined_server = s;
     client_joined_server_when = time_get_time_cached();
 
