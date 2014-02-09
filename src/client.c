@@ -776,7 +776,7 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG("You are in the game");
+            MSG("Welcome %s", p->name);
         }
 
         return;
@@ -786,6 +786,8 @@ static void client_check_still_in_game (void)
 
     LOG("  You are player: \"%s\", ID %u", 
         global_config.name, client_joined_server_key);
+
+    server_connection_confirmed = false;
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
         msg_player *p = &server_status.players[pi];
