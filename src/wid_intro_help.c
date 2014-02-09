@@ -79,13 +79,11 @@ static void wid_intro_help_create (void)
 
     wid_intro_help =
         wid_popup("%%fmt=left$%%fg=red$space\t%%fg=green$Play game\n"
+                  "%%fmt=left$%%fg=red$m\t\t%%fg=green$Multiplayer\n"
                   "%%fmt=left$%%fg=red$e\t\t%%fg=green$Level editor\n"
-                  "%%fmt=left$%%fg=red$q\t\t%%fg=green$Quit\n"
                   "%%fmt=left$%%fg=red$s\t\t%%fg=green$Settings\n"
-                  "%%fmt=left$%%fg=red$j\t\t%%fg=green$Join server\n"
-                  "%%fmt=left$%%fg=red$n\t\t%%fg=green$New server\n"
                   "%%fmt=left$%%fg=red$i\t\t%%fg=green$Hi-scores\n"
-                  "%%fmt=left$%%fg=red$a\t\t%%fg=green$About\n"
+                  "%%fmt=left$%%fg=red$q\t\t%%fg=green$Quit\n"
                   ,
                   "Keys",         /* title */
                   0.5f, 0.5f,

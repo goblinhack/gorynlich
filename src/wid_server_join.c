@@ -11,6 +11,7 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_server_join.h"
+#include "wid_server_create.h"
 #include "string.h"
 #include "wid_text_input.h"
 #include "marshal.h"
@@ -343,6 +344,7 @@ void wid_server_join_redo (boolean soft_refresh)
 static boolean wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t button)
 {
     wid_server_join_hide();
+    wid_server_create_hide();
 
     return (true);
 }
@@ -359,6 +361,7 @@ static boolean wid_server_join_join (widp w, int32_t x, int32_t y, uint32_t butt
     }
 
     wid_server_join_hide();
+    wid_server_create_hide();
 
     /*
      * Leave all other sockets.
@@ -433,6 +436,7 @@ static boolean wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
         case 'q':
         case SDLK_ESCAPE:
             wid_server_join_hide();
+            wid_server_create_hide();
             return (true);
 
         default:
@@ -499,6 +503,7 @@ static boolean wid_server_join_hostname_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
+            wid_server_create_hide();
             return (true);
     }
 
@@ -557,6 +562,7 @@ static boolean wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
+            wid_server_create_hide();
             return (true);
     }
 
@@ -657,6 +663,7 @@ static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
+            wid_server_create_hide();
             return (true);
     }
 
@@ -762,7 +769,7 @@ static void wid_server_join_create (boolean redo)
         widp w = wid_server_join_window = wid_new_square_window("wid server");
 
         fpoint tl = {0.05, 0.1};
-        fpoint br = {0.95, 0.9};
+        fpoint br = {0.95, 0.7};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
