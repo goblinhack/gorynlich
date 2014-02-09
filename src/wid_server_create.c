@@ -479,7 +479,7 @@ static void wid_server_create_create (boolean redo)
 
     widp w = wid_server_create_window = wid_new_square_window("wid server");
 
-    fpoint tl = {0.05, 0.7};
+    fpoint tl = {0.05, 0.8};
     fpoint br = {0.95, 1.0};
 
     wid_set_tl_br_pct(w, tl, br);
@@ -552,7 +552,7 @@ static void wid_server_create_create (boolean redo)
 
     {
         fpoint tl = {width_at, 0.3};
-        fpoint br = {width_at + width1, 0.45};
+        fpoint br = {width_at + width1, 0.5};
 
         widp w = wid_new_container(wid_server_create_window_container,
                                        "server name container");
@@ -579,15 +579,10 @@ static void wid_server_create_create (boolean redo)
             widp w = wid_new_square_button(wid_server_create_container,
                                            "server name container 2");
 
-            fpoint tl = {width_at, 0.4};
-            fpoint br = {width_at + width1, 0.7};
-
-            float height = 0.08;
+            fpoint tl = {width_at, 0.45};
+            fpoint br = {width_at + width1, 0.75};
 
             wid_server_create_set_color(w, s);
-
-            br.y += (float)i * height;
-            tl.y += (float)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, s->name);
@@ -620,7 +615,7 @@ static void wid_server_create_create (boolean redo)
 
     {
         fpoint tl = {width_at, 0.3};
-        fpoint br = {width_at + width3, 0.45};
+        fpoint br = {width_at + width3, 0.5};
 
         widp w = wid_new_container(wid_server_create_window_container,
                                        "server port container");
@@ -647,15 +642,10 @@ static void wid_server_create_create (boolean redo)
             widp w = wid_new_square_button(wid_server_create_container,
                                            "server port container2");
 
-            fpoint tl = {width_at, 0.4};
-            fpoint br = {width_at + width3, 0.7};
-
-            float height = 0.08;
+            fpoint tl = {width_at, 0.45};
+            fpoint br = {width_at + width3, 0.75};
 
             wid_server_create_set_color(w, s);
-
-            br.y += (float)i * height;
-            tl.y += (float)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
 
@@ -701,15 +691,10 @@ static void wid_server_create_create (boolean redo)
             widp w = wid_new_rounded_small_button(wid_server_create_container,
                                            "server join");
 
-            fpoint tl = {width_at, 0.4};
+            fpoint tl = {width_at, 0.2};
             fpoint br = {width_at + width7, 0.7};
 
-            float height = 0.08;
-
             wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-            br.y += (float)i * height;
-            tl.y += (float)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
 
@@ -747,7 +732,7 @@ static void wid_server_create_create (boolean redo)
     width_at += width7;
 
     {
-        fpoint tl = {0.7, 0.75};
+        fpoint tl = {0.7, 0.7};
         fpoint br = {0.99, 0.99};
 
         widp w = wid_new_rounded_small_button(wid_server_create_window_container,

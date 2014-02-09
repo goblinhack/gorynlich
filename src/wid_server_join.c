@@ -48,6 +48,7 @@ typedef struct server_ {
     uint32_t max_latency;
     socketp socket;
     boolean walked;
+    char name[PLAYER_NAME_LEN_MAX];
 } server;
 
 static void wid_server_join_destroy_internal(server *node);
@@ -91,6 +92,8 @@ static void server_add (const server *s_in)
             s->avg_latency = socket_get_avg_latency(sp);
             s->min_latency = socket_get_min_latency(sp);
             s->max_latency = socket_get_max_latency(sp);
+            strncpy(s->name, socket_get_name(sp),
+                    sizeof(s->name) - 1);
         }
     }
 
@@ -278,6 +281,10 @@ void wid_server_join_redo (boolean soft_refresh)
             myfree(s->tooltip);
         }
 
+        msg_server_status *server_status = socket_get_server_status(sp);
+
+        strncpy(s->name, server_status->server_name, sizeof(s->name) - 1);
+
         if (s->quality) {
             int size;
             int used;
@@ -293,8 +300,6 @@ void wid_server_join_redo (boolean soft_refresh)
 
             uint32_t pi;
             uint32_t idx = 0;
-
-            msg_server_status *server_status = socket_get_server_status(sp);
 
             for (pi = 0; pi < MAX_PLAYERS; pi++) {
                 msg_player *p = &server_status->players[pi];
@@ -313,12 +318,15 @@ void wid_server_join_redo (boolean soft_refresh)
             snprintf_realloc(&tmp, &size, &used, "\n");
 
             char *tmp2 = dynprintf(
+                "%%%%fmt=centerx$%s\n"
+                "\n"
                 "%%%%fmt=left$Average latency %u ms\n"
                 "%%%%fmt=left$Minimum latency %u ms\n"
                 "%%%%fmt=left$Maxumum latency %u ms\n\n"
                 "%%%%fmt=left$Maxumum players %u\n"
                 "%%%%fmt=left$Current players %u\n\n"
                 "%s",
+                server_status->server_name,
                 s->avg_latency,
                 s->min_latency,
                 s->max_latency,
@@ -832,12 +840,12 @@ static void wid_server_join_create (boolean redo)
     }
 
     const float width1 = 0.25;
-    const float width2 = 0.25;
+    const float width2 = 0.20;
     const float width3 = 0.1;
-    const float width4 = 0.1;
+    const float width4 = 0.23;
     const float width5 = 0.1;
-    const float width6 = 0.1;
-    const float width7 = 0.1;
+    const float width6 = 0.05;
+    const float width7 = 0.07;
     float width_at = 0.0;
 
     {
@@ -1052,11 +1060,11 @@ static void wid_server_join_create (boolean redo)
         fpoint br = {width_at + width4, 0.15};
 
         widp w = wid_new_container(wid_server_join_window_container,
-                                       "server latency");
+                                       "server name");
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "Lag");
+        wid_set_text(w, "Name");
         wid_set_font(w, small_font);
 
         wid_set_color(w, WID_COLOR_BG, BLACK);
@@ -1074,7 +1082,7 @@ static void wid_server_join_create (boolean redo)
 
         TREE_WALK_REVERSE(remote_servers, s) {
             widp w = wid_new_square_button(wid_server_join_container,
-                                           "server latency");
+                                           "server name");
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width4, 0.1};
@@ -1088,7 +1096,7 @@ static void wid_server_join_create (boolean redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            char *tmp = dynprintf("%u", s->avg_latency);
+            char *tmp = dynprintf("%s", s->name);
             wid_set_text(w, tmp);
             myfree(tmp);
 
@@ -1132,6 +1140,7 @@ static void wid_server_join_create (boolean redo)
         wid_set_bevelled(w, true);
         wid_set_bevel(w, 2);
         wid_set_text_outline(w, true);
+        wid_set_text_centerx(w, true);
     }
 
     {
@@ -1171,7 +1180,7 @@ static void wid_server_join_create (boolean redo)
 
             wid_set_text_outline(w, true);
             wid_set_font(w, vsmall_font);
-            wid_set_text_lhs(w, true);
+            wid_set_text_centerx(w, true);
 
             i++;
         }
@@ -1205,7 +1214,7 @@ static void wid_server_join_create (boolean redo)
                 wid_set_text(w, "-");
             } else {
                 wid_set_on_mouse_down(w, wid_server_join_delete);
-                wid_set_text(w, "Delete");
+                wid_set_text(w, "Del");
                 wid_set_tooltip(w, "Remove this server from the list");
             }
 
