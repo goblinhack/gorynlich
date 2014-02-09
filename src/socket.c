@@ -1057,6 +1057,7 @@ static void socket_tx_msg (socketp s, UDPpacket *packet)
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
         WARN("no UDP packet sent: %s", SDLNet_GetError());
+        WARN("  remote: %s", socket_get_remote_logname(s));
 
         socket_count_inc_pak_tx_error(s);
     } else {

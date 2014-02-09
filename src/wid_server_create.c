@@ -561,8 +561,8 @@ static void wid_server_create_create (boolean redo)
 
     widp w = wid_server_create_window = wid_new_square_window("wid server");
 
-    fpoint tl = {0.05, 0.8};
-    fpoint br = {0.95, 1.0};
+    fpoint tl = {0.01, 0.8};
+    fpoint br = {0.99, 1.0};
 
     wid_set_tl_br_pct(w, tl, br);
     wid_set_font(w, small_font);
@@ -611,7 +611,7 @@ static void wid_server_create_create (boolean redo)
         wid_set_tooltip(w, "Click on a server to edit it");
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "Start a server");
+        wid_set_text(w, "Start a multiplayer game");
         wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
