@@ -673,11 +673,11 @@ static void msgerr_ (const char *fmt, va_list args)
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
 
-    ts_len = len;
-
     snprintf(buf + len, sizeof(buf) - len, "ERROR: %%%%fg=red$");
 
     len = (uint32_t)strlen(buf);
+    ts_len = len;
+
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
     len = (uint32_t)strlen(buf);

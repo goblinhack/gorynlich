@@ -139,6 +139,17 @@ static void server_remove (server *s)
         return;
     }
 
+    /*
+     * Remove this socket.
+     */
+    TREE_WALK(remote_servers, s) {
+        socketp sp = socket_find(s->ip);
+        if (sp) {
+            socket_disconnect(sp);
+            break;
+        }
+    }
+
     wid_server_join_destroy_internal(s);
     tree_remove(remote_servers, &s->tree.node);
     myfree(s);
@@ -416,13 +427,15 @@ static boolean wid_server_join_delete (widp w, int32_t x, int32_t y, uint32_t bu
     }
 
     server_remove(s);
+
     wid_server_save_remote_server_list();
     wid_server_join_redo(false /* hard refresh */);
 
     return (true);
 }
 
-static boolean wid_server_join_add (widp w, int32_t x, int32_t y, uint32_t button)
+static boolean wid_server_join_add (widp w, int32_t x, int32_t y, 
+                                    uint32_t button)
 {
     server s;
 
@@ -783,8 +796,8 @@ static void wid_server_join_create (boolean redo)
 
         widp w = wid_server_join_window = wid_new_square_window("wid server");
 
-        fpoint tl = {0.05, 0.1};
-        fpoint br = {0.95, 0.8};
+        fpoint tl = {0.01, 0.01};
+        fpoint br = {0.99, 0.8};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
