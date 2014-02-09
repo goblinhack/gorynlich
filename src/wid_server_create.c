@@ -354,6 +354,8 @@ static boolean wid_server_create_name_receive_input (widp w,
         case SDLK_ESCAPE:
             wid_server_create_hide();
             return (true);
+        default:
+            break;
     }
 
     s = wid_get_client_context(w);
@@ -407,6 +409,8 @@ static boolean wid_server_create_port_receive_input (widp w,
         case SDLK_ESCAPE:
             wid_server_create_hide();
             return (true);
+        default:
+            break;
     }
 
     s = wid_get_client_context(w);
@@ -481,6 +485,8 @@ static boolean wid_server_create_max_players_receive_input (widp w,
         case SDLK_ESCAPE:
             wid_server_create_hide();
             return (true);
+        default:
+            break;
     }
 
     s = wid_get_client_context(w);

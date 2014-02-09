@@ -513,6 +513,9 @@ static boolean wid_server_join_hostname_receive_input (widp w,
             wid_server_join_hide();
             wid_server_create_hide();
             return (true);
+
+        default:
+            break;
     }
 
     s = wid_get_client_context(w);
@@ -572,6 +575,8 @@ static boolean wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
             wid_server_join_hide();
             wid_server_create_hide();
             return (true);
+        default:
+            break;
     }
 
     s = wid_get_client_context(w);
@@ -673,6 +678,8 @@ static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
             wid_server_join_hide();
             wid_server_create_hide();
             return (true);
+        default:
+            break;
     }
 
     s = wid_get_client_context(w);
