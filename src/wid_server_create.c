@@ -46,6 +46,8 @@ static boolean wid_server_create_name_receive_input(widp w,
                                                     const SDL_KEYSYM *key);
 static boolean wid_server_create_port_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
+static boolean wid_server_create_max_players_receive_input(widp w, 
+                                                    const SDL_KEYSYM *key);
 
 static tree_rootp local_servers;
 
@@ -310,8 +312,9 @@ static boolean wid_server_create_receive_mouse_motion (
     return (true);
 }
 
-static boolean wid_server_create_name_mouse_down (widp w, int32_t x, int32_t y, 
-                                               uint32_t button)
+static boolean wid_server_create_name_mouse_down (widp w, 
+                                                  int32_t x, int32_t y,
+                                                  uint32_t button)
 {
     wid_set_show_cursor(w, true);
     wid_set_on_key_down(w, wid_server_create_name_receive_input);
@@ -319,11 +322,22 @@ static boolean wid_server_create_name_mouse_down (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_server_create_port_mouse_down (widp w, int32_t x, int32_t y,
-                                           uint32_t button)
+static boolean wid_server_create_port_mouse_down (widp w, 
+                                                  int32_t x, int32_t y,
+                                                  uint32_t button)
 {
     wid_set_show_cursor(w, true);
     wid_set_on_key_down(w, wid_server_create_port_receive_input);
+
+    return (true);
+}
+
+static boolean wid_server_create_max_players_mouse_down (widp w, 
+                                                         int32_t x, int32_t y,
+                                                         uint32_t button)
+{
+    wid_set_show_cursor(w, true);
+    wid_set_on_key_down(w, wid_server_create_max_players_receive_input);
 
     return (true);
 }
@@ -455,6 +469,68 @@ static boolean wid_server_create_port_receive_input (widp w,
     return (wid_receive_input(w, key));
 }
 
+/*
+ * Key down etc...
+ */
+static boolean wid_server_create_max_players_receive_input (widp w, 
+                                                     const SDL_KEYSYM *key)
+{
+    server *s;
+
+    switch (key->sym) {
+        case SDLK_ESCAPE:
+            wid_server_create_hide();
+            return (true);
+    }
+
+    s = wid_get_client_context(w);
+    if (!s) {
+        return (false);
+    }
+
+    switch (key->sym) {
+        case SDLK_RETURN: {
+            /*
+             * Change max_players address.
+             */
+            wid_set_show_cursor(w, false);
+
+            server sn;
+
+            memset(&sn, 0, sizeof(sn));
+
+            const char *max_players_str = wid_get_text(w);
+            int a;
+            int success = sscanf(max_players_str, "%u", &a);
+            if (success != 1) {
+                /*
+                 * Fail
+                 */
+                MSGERR("Failed to parse max players number");
+
+                return (true);
+            }
+
+            if (a < 0) {
+                a = 0;
+            }
+
+            global_config.server_max_players = a;
+            wid_server_create_redo();
+
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    /*
+     * Feed to the general input handler
+     */
+    return (wid_receive_input(w, key));
+}
+
 static void wid_server_create_set_color (widp w, server *s)
 {
     socketp sp = socket_find(s->ip);
@@ -542,12 +618,12 @@ static void wid_server_create_create (boolean redo)
     }
 
     const float width1 = 0.25;
-    const float width2 = 0.25;
+    const float width2 = 0.2;
     const float width3 = 0.1;
-    const float width4 = 0.1;
-    const float width5 = 0.1;
-    const float width6 = 0.1;
-    const float width7 = 0.1;
+    const float width4 = 0.0;
+    const float width5 = 0.0;
+    const float width6 = 0.0;
+    const float width7 = 0.45;
     float width_at = 0.0;
 
     {
@@ -610,6 +686,68 @@ static void wid_server_create_create (boolean redo)
     }
 
     width_at += width1;
+
+    {
+        fpoint tl = {width_at, 0.3};
+        fpoint br = {width_at + width2, 0.5};
+
+        widp w = wid_new_container(wid_server_create_window_container,
+                                       "server max players container");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Max players");
+        wid_set_font(w, small_font);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_square(w);
+        wid_set_bevelled(w, true);
+        wid_set_bevel(w, 2);
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        uint32_t i = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(local_servers, s) {
+            widp w = wid_new_square_button(wid_server_create_container,
+                                           "server max players container2");
+
+            fpoint tl = {width_at, 0.45};
+            fpoint br = {width_at + width2, 0.75};
+
+            wid_server_create_set_color(w, s);
+
+            wid_set_tl_br_pct(w, tl, br);
+
+            char *tmp = dynprintf("%u", global_config.server_max_players);
+            wid_set_text(w, tmp);
+            myfree(tmp);
+
+            color c = BLACK;
+
+            c.a = 100;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_text_outline(w, true);
+            wid_set_font(w, vsmall_font);
+            wid_set_text_centerx(w, true);
+
+            wid_set_on_mouse_down(w, wid_server_create_max_players_mouse_down);
+            wid_set_client_context(w, s);
+
+            i++;
+        }
+    }
 
     width_at += width2;
 
