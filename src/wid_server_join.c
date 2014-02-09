@@ -1163,7 +1163,7 @@ static void wid_server_join_create (boolean redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            char *tmp = dynprintf("%u", s->quality);
+            char *tmp = dynprintf("%u/%u", s->quality, s->avg_latency);
             wid_set_text(w, tmp);
             myfree(tmp);
 
