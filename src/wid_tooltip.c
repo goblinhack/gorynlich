@@ -42,8 +42,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
     mx *= global_config.xscale;
     mx *= global_config.yscale;
 
-    if ((my >= (int32_t) ((global_config.video_gl_width / 7) * 2)) &&
-        (my <= (int32_t) ((global_config.video_gl_height / 7) * 5))) {
+    if ((my >= (int32_t) ((global_config.video_gl_width / 7) * 2))) {
         /*
          * Mouse at to 
          */

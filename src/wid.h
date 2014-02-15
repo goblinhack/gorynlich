@@ -126,6 +126,7 @@ typedef boolean(*on_mouse_motion_t)(widp,
 typedef boolean(*on_key_down_t)(widp, const struct SDL_KEYSYM *);
 typedef boolean(*on_key_up_t)(widp, const struct SDL_KEYSYM *);
 typedef void(*on_destroy_t)(widp);
+typedef void(*on_tick_t)(widp);
 
 typedef widp (*grid_wid_replace_t)(widp,
                                    int32_t x,
@@ -276,6 +277,7 @@ void wid_set_on_mouse_over_begin(widp, on_mouse_over_begin_t fn);
 void wid_set_on_mouse_over_end(widp, on_mouse_over_end_t fn);
 void wid_set_on_mouse_up(widp, on_mouse_up_t fn);
 void wid_set_on_destroy(widp, on_destroy_t fn);
+void wid_set_on_tick(widp, on_tick_t fn);
 void wid_set_prev(widp w, widp);
 void wid_set_radius(widp, fsize val);
 void wid_set_received_input(widp, boolean val);

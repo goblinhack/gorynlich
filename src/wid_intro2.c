@@ -19,9 +19,13 @@
 #include "sdl.h"
 #include "level.h"
 #include "timer.h"
+#include "tree.h"
+#include "time.h"
+#include "thing_template.h"
 
 static widp wid_intro2;
 static widp wid_intro2_background;
+static widp wid_intro_player_container;
 
 static void wid_intro2_play_selected(void);
 
@@ -195,6 +199,96 @@ static void wid_intro2_bg_create (void)
     }
 }
 
+static thing_templatep first_thing_template;
+static const int32_t TILES_ACROSS = 2;
+static const int32_t TILES_DOWN = 3;
+
+static void wid_intro2_buttons_tick (widp wid)
+{
+    int tick = time_get_time_milli() / 100;
+    int which = tick % 8;
+
+    thing_templatep t = wid_get_thing_template(wid);
+    const char *tn = thing_template_shortname(t);
+
+    char tilename[20];
+
+    switch (which) {
+    case 0: snprintf(tilename, sizeof(tilename) - 1, "%s-right", tn); break;
+    case 1: snprintf(tilename, sizeof(tilename) - 1, "%s-br", tn); break;
+    case 2: snprintf(tilename, sizeof(tilename) - 1, "%s-down", tn); break;
+    case 3: snprintf(tilename, sizeof(tilename) - 1, "%s-bl", tn); break;
+    case 4: snprintf(tilename, sizeof(tilename) - 1, "%s-left", tn); break;
+    case 5: snprintf(tilename, sizeof(tilename) - 1, "%s-tl", tn); break;
+    case 6: snprintf(tilename, sizeof(tilename) - 1, "%s-up", tn); break;
+    case 7: snprintf(tilename, sizeof(tilename) - 1, "%s-tr", tn); break;
+    }
+
+    wid_set_tilename(wid, tilename);
+}
+
+static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
+{
+    static int32_t x;
+    static int32_t y;
+    thing_templatep thing_template;
+    widp child;
+
+    thing_template = (typeof(thing_template)) 
+            (((char*) node) - STRUCT_OFFSET(struct thing_template_, tree2));
+
+    if (!thing_template_is_player(thing_template)) {
+        return (true);
+    }
+
+    if (!first_thing_template) {
+        first_thing_template = thing_template;
+    }
+
+    float w = 0.36;
+    float h = 0.32;
+
+    fpoint tl = {
+        (w * (float)(x)),
+        (h * (float)(y))
+    };
+
+    fpoint br = {
+        (w * (float)(x+1)),
+        (h * (float)(y+1))
+    };
+
+    br.x -= 0.04;
+    br.y -= 0.04;
+
+    child = wid_new_square_button(wid_intro_player_container,
+                                  "possible players");
+
+    wid_set_color(child, WID_COLOR_BG, BLACK);
+    wid_set_color(child, WID_COLOR_TEXT, WHITE);
+    wid_set_color(child, WID_COLOR_BR, PINK);
+    wid_set_color(child, WID_COLOR_BG, BLACK);
+
+    wid_set_mode(child, WID_MODE_OVER);
+    wid_set_color(child, WID_COLOR_BG, STEELBLUE);
+
+    wid_set_mode(child, WID_MODE_NORMAL);
+
+    wid_set_thing_template(child, thing_template);
+    wid_set_tooltip(child, thing_template_get_tooltip(thing_template));
+    wid_set_tl_br_pct(child, tl, br);
+    wid_set_on_tick(child, wid_intro2_buttons_tick);
+
+    x++;
+
+    if (x >= TILES_ACROSS) {
+        x = 0;
+        y++;
+    }
+
+    return (true);
+}
+
 static void wid_intro2_create (void)
 {
     if (wid_intro2) {
@@ -250,6 +344,28 @@ static void wid_intro2_create (void)
         wid_set_on_key_down(child, wid_intro2_play_key_event);
         wid_set_text_outline(child, true);
     }
+
+    {
+        wid_intro_player_container = wid_new_window("players");
+
+        fpoint tl = {0.75f, 0.42f};
+        fpoint br = {1.0, 1.0f};
+        wid_set_tl_br_pct(wid_intro_player_container, tl, br);
+
+        color col = BLACK;
+        col.a = 0;
+        glcolor(col);
+
+        wid_set_mode(wid_intro_player_container, WID_MODE_NORMAL);
+        wid_set_color(wid_intro_player_container, WID_COLOR_TL, col);
+        wid_set_color(wid_intro_player_container, WID_COLOR_BR, col);
+        wid_set_color(wid_intro_player_container, WID_COLOR_BG, col);
+
+        tree_walk(thing_templates_create_order,
+                  wid_intro2_buttons_add_tiles, 0 /* arg */);
+    }
+
+    wid_update(wid_intro_player_container);
 
     wid_intro2_bg_create();
     wid_update(wid_intro2);

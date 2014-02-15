@@ -1,6 +1,6 @@
 {
- shortname="wizard"
- tooltip="wizard"
+ shortname="wizard1"
+ tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
  z_depth=3
  z_order=10
  speed=500

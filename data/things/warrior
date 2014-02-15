@@ -1,6 +1,6 @@
 {
- shortname="warrior"
- tooltip="Warrior"
+ shortname="warrior1"
+ tooltip="Good health, big muscles.\n\n%%fg=red$Make good looking corpse."
  z_depth=3
  z_order=10
  speed=500
