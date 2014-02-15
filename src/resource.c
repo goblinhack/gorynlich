@@ -51,7 +51,8 @@ static boolean resource_init_6 (void *context)
 
 static boolean resource_init_7 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/dragon.png",
+                     "dragon") != 0);
 }
 
 static boolean resource_init_8 (void *context)

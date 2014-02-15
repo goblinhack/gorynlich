@@ -81,6 +81,9 @@ static unsigned char *load_raw_image (const char *filename,
     int32_t len;
 
     ramdisk_data = ramdisk_load(filename, &len);
+    if (!ramdisk_data) {
+        DIE("could not read ramdisk for file, %s", filename);
+    }
 
     if (strstr(filename, ".tga")) {
         image_data = stbi_tga_load_from_memory(ramdisk_data,

@@ -75,6 +75,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_game_map.o 		\
     $(OBJDIR)/wid_splash.o 		\
     $(OBJDIR)/wid_intro.o 		\
+    $(OBJDIR)/wid_intro2.o 		\
     $(OBJDIR)/wid_intro_about.o 	\
     $(OBJDIR)/wid_intro_settings.o 	\
     $(OBJDIR)/wid_hiscore.o 		\

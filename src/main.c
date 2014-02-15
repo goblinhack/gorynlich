@@ -36,6 +36,7 @@
 #include "wid_server_join.h"
 #include "wid_server_create.h"
 #include "wid_intro.h"
+#include "wid_intro2.h"
 #include "string.h"
 #include "dir.h"
 #include "file.h"
@@ -98,6 +99,7 @@ void quit (void)
 
     wid_console_fini();
     wid_intro_fini();
+    wid_intro2_fini();
     wid_intro_about_fini();
     wid_intro_help_fini();
     wid_intro_guide_fini();
@@ -735,6 +737,10 @@ int32_t main (int32_t argc, char *argv[])
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_intro_init,
                           0, "wid_intro_init");
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)wid_intro2_init,
+                          0, "wid_intro2_init");
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_game_over_init,
