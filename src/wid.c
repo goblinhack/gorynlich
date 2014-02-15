@@ -237,6 +237,7 @@ typedef struct wid_ {
     on_mouse_over_begin_t on_mouse_over_begin;
     on_mouse_over_end_t on_mouse_over_end;
     on_destroy_t on_destroy;
+    on_tick_t on_tick;
 
     /*
      * Fade in/out/... effects.
@@ -2584,6 +2585,13 @@ void wid_set_on_destroy (widp w, on_destroy_t fn)
     fast_verify(w);
 
     w->on_destroy = fn;
+}
+
+void wid_set_on_tick (widp w, on_tick_t fn)
+{
+    fast_verify(w);
+
+    w->on_tick = fn;
 }
 
 static int32_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
@@ -6678,6 +6686,10 @@ static void wid_tick (widp w)
 
     TREE2_WALK(w->children_unsorted, child) {
         wid_tick(child);
+    }
+
+    if (w->on_tick) {
+        (w->on_tick)(w);
     }
 
     /*

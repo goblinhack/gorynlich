@@ -1,6 +1,6 @@
 {
- shortname="valkyrie"
- tooltip="valkyrie"
+ shortname="valkyrie1"
+ tooltip="Deadly mix of good health and speed.\n\n%%fg=cyan$Good line of beauty products."
  z_depth=3
  z_order=10
  speed=500
