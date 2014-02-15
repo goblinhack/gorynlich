@@ -790,4 +790,5 @@ static void wid_intro_create (void)
     wid_update(wid_intro);
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
+    wid_fade_in(wid_intro_background, intro_effect_delay*2);
 }
