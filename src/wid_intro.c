@@ -11,6 +11,7 @@
 #include "tex.h"
 #include "color.h"
 #include "wid_intro.h"
+#include "wid_intro2.h"
 #include "wid_popup.h"
 #include "wid_editor.h"
 #include "wid_editor_map.h"
@@ -45,7 +46,7 @@ static void wid_intro_guide_selected(void);
 static boolean wid_intro_init_done;
 static void wid_intro_create(void);
 
-static int intro_effect_delay = 1000;
+static int intro_effect_delay = 500;
 
 boolean wid_intro_init (void)
 {
@@ -90,7 +91,8 @@ void wid_intro_hide (void)
         DIE("no wid intro");
     }
 
-    wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, intro_effect_delay, 0);
+    wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 
+                          intro_effect_delay, 0);
     wid_fade_out(wid_intro_background, intro_effect_delay);
 
     wid_hide(wid_intro, 0);
@@ -176,7 +178,7 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 
 static void wid_intro_play_selected_cb (void *context)
 {
-    wid_game_visible();
+    wid_intro2_visible();
 }
 
 static void wid_intro_play_selected (void)
