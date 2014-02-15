@@ -88,7 +88,7 @@ void sdl_splashscreen_update (void)
 
         wid_set_mode(wid_icon, WID_MODE_NORMAL);
         color c = WHITE;
-        c.a = ((255.0 / (float)maxsize) * (float)(maxsize - size));
+        c.a = ((100.0 / (float)maxsize) * (float)(maxsize - size));
 
         wid_set_color(wid_icon, WID_COLOR_TL, c);
         wid_set_color(wid_icon, WID_COLOR_BR, c);
