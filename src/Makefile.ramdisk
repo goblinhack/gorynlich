@@ -1,6 +1,9 @@
 .o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
 	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
 
+.o/ramdisk_data_gfx_dragon_xcf.o: asm/ramdisk_data_gfx_dragon_xcf.S ../data/gfx/dragon.xcf
+	gcc -c asm/ramdisk_data_gfx_dragon_xcf.S -o .o/ramdisk_data_gfx_dragon_xcf.o
+
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
 
@@ -27,6 +30,18 @@
 
 .o/ramdisk_data_gfx_title_xcf.o: asm/ramdisk_data_gfx_title_xcf.S ../data/gfx/title.xcf
 	gcc -c asm/ramdisk_data_gfx_title_xcf.S -o .o/ramdisk_data_gfx_title_xcf.o
+
+.o/ramdisk_data_gfx_title2_png.o: asm/ramdisk_data_gfx_title2_png.S ../data/gfx/title2.png
+	gcc -c asm/ramdisk_data_gfx_title2_png.S -o .o/ramdisk_data_gfx_title2_png.o
+
+.o/ramdisk_data_gfx_title2_xcf.o: asm/ramdisk_data_gfx_title2_xcf.S ../data/gfx/title2.xcf
+	gcc -c asm/ramdisk_data_gfx_title2_xcf.S -o .o/ramdisk_data_gfx_title2_xcf.o
+
+.o/ramdisk_data_gfx_title3_png.o: asm/ramdisk_data_gfx_title3_png.S ../data/gfx/title3.png
+	gcc -c asm/ramdisk_data_gfx_title3_png.S -o .o/ramdisk_data_gfx_title3_png.o
+
+.o/ramdisk_data_gfx_title3_xcf.o: asm/ramdisk_data_gfx_title3_xcf.S ../data/gfx/title3.xcf
+	gcc -c asm/ramdisk_data_gfx_title3_xcf.S -o .o/ramdisk_data_gfx_title3_xcf.o
 
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o

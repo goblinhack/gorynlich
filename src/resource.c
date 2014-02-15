@@ -57,7 +57,8 @@ static boolean resource_init_7 (void *context)
 
 static boolean resource_init_8 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/title3.png",
+                     "title3") != 0);
 }
 
 static boolean resource_init_9 (void *context)

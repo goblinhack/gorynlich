@@ -46,7 +46,7 @@ static void wid_intro_guide_selected(void);
 static boolean wid_intro_init_done;
 static void wid_intro_create(void);
 
-static int intro_effect_delay = 500;
+static int intro_effect_delay = 200;
 
 boolean wid_intro_init (void)
 {
@@ -780,6 +780,7 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_FOCUS);
         c.a = 100;
         wid_set_color(child, WID_COLOR_TEXT, c);
+        wid_set_text_outline(child, true);
 
         wid_set_on_mouse_down(child, wid_intro_play_mouse_event);
         wid_set_on_key_down(child, wid_intro_play_key_event);
