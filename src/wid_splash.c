@@ -50,8 +50,8 @@ void sdl_splashscreen_update (void)
     /*
      * Progress bar.
      */
-    fpoint tl = {0.2f, 0.8f};
-    fpoint br = {0.8f, 0.82f};
+    fpoint tl = {0.2f, 0.85f};
+    fpoint br = {0.8f, 0.90f};
 
     br.x = ((0.6 / (float)maxsize) * (float)(maxsize - size)) + 0.2;
 
