@@ -346,8 +346,9 @@ struct config {
     float yscale;
     int32_t sound_volume;
     int32_t music_volume;
-    char name[PLAYER_NAME_LEN_MAX];
-    char server_name[PLAYER_NAME_LEN_MAX];
+    char name[SMALL_STRING_LEN_MAX];
+    char pclass[SMALL_STRING_LEN_MAX];
+    char server_name[SMALL_STRING_LEN_MAX];
     uint16_t server_port;
     uint8_t server_max_players;
     uint8_t server_current_players;

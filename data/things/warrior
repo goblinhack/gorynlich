@@ -1,5 +1,5 @@
 {
- shortname="warrior1"
+ shortname="warrior"
  tooltip="Good health, big muscles.\n\n%%fg=red$Make good looking corpse."
  z_depth=3
  z_order=10
@@ -11,7 +11,7 @@
  tiles={
   tile={
    delay=200
-   tile="warrior1-right"
+   tile="warrior-right"
   }
  }
 }

@@ -48,7 +48,7 @@ typedef struct server_ {
     uint32_t max_latency;
     socketp socket;
     boolean walked;
-    char name[PLAYER_NAME_LEN_MAX];
+    char name[SMALL_STRING_LEN_MAX];
 } server;
 
 static void wid_server_join_destroy_internal(server *node);

@@ -2,8 +2,6 @@
  * Copyright (C) 2011 Neil McGill
  *
  * See the README file for license.
- *
- * A useful hack to help debug stale/free/bad pointers.
  */
 
 #include <SDL.h>
@@ -835,6 +833,13 @@ const char *socket_get_name (const socketp s)
     return (s->name);
 }
 
+const char *socket_get_pclass (const socketp s)
+{
+    verify(s);
+
+    return (s->pclass);
+}
+
 void socket_set_name (socketp s, const char *name)
 {
     verify(s);
@@ -843,6 +848,17 @@ void socket_set_name (socketp s, const char *name)
         memset(s->name, 0, sizeof(s->name));
     } else {
         strncpy(s->name, name, sizeof(s->name) - 1);
+    }
+}
+
+void socket_set_pclass (socketp s, const char *pclass)
+{
+    verify(s);
+
+    if (!pclass) {
+        memset(s->pclass, 0, sizeof(s->pclass));
+    } else {
+        strncpy(s->pclass, pclass, sizeof(s->pclass) - 1);
     }
 }
 
@@ -1189,7 +1205,9 @@ void socket_tx_name (socketp s)
 
     msg_name msg = {0};
     msg.type = MSG_NAME;
+
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
+    strncpy(msg.pclass, s->pclass, min(sizeof(msg.pclass) - 1, strlen(s->pclass))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -1225,6 +1243,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     socket_set_name(s, msg.name);
+    socket_set_pclass(s, msg.pclass);
 
     /*
      * Update the player structure.
@@ -1236,7 +1255,8 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
         socket_set_player(s, p);
     }
 
-    memcpy(p->name, msg.name, PLAYER_NAME_LEN_MAX);
+    memcpy(p->name, msg.name, SMALL_STRING_LEN_MAX);
+    memcpy(p->pclass, msg.pclass, SMALL_STRING_LEN_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
 }
@@ -1272,6 +1292,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     SDLNet_Write32(*key, &msg.key);
 
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
+    strncpy(msg.pclass, s->pclass, min(sizeof(msg.pclass) - 1, strlen(s->pclass))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -1323,6 +1344,7 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     socket_set_name(s, msg.name);
+    socket_set_pclass(s, msg.pclass);
 
     /*
      * Update the player structure.
@@ -1334,7 +1356,9 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         socket_set_player(s, p);
     }
 
-    memcpy(p->name, msg.name, PLAYER_NAME_LEN_MAX);
+    memcpy(p->name, msg.name, SMALL_STRING_LEN_MAX);
+    memcpy(p->pclass, msg.pclass, SMALL_STRING_LEN_MAX);
+
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
     p->key = SDLNet_Read32(&msg.key);
@@ -1376,6 +1400,7 @@ void socket_tx_client_leave (socketp s)
     write_address(packet, socket_get_remote_ip(s));
 
     socket_set_name(s, 0);
+    socket_set_pclass(s, 0);
 
     socket_tx_msg(s, packet);
         
@@ -1553,10 +1578,10 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char txt[PLAYER_MSG_MAX + 1] = {0};
-    char from[PLAYER_NAME_LEN_MAX + 1] = {0};
+    char from[SMALL_STRING_LEN_MAX + 1] = {0};
 
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
-    memcpy(from, msg.from, PLAYER_NAME_LEN_MAX);
+    memcpy(from, msg.from, SMALL_STRING_LEN_MAX);
 
     if (msg.from[0]) {
         LOG("SHOUT: \"%s\" from %s", txt, msg.from);
@@ -1794,12 +1819,12 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char txt[PLAYER_MSG_MAX + 1] = {0};
-    char from[PLAYER_NAME_LEN_MAX + 1] = {0};
-    char to[PLAYER_NAME_LEN_MAX + 1] = {0};
+    char from[SMALL_STRING_LEN_MAX + 1] = {0};
+    char to[SMALL_STRING_LEN_MAX + 1] = {0};
 
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
-    memcpy(from, msg.from, PLAYER_NAME_LEN_MAX);
-    memcpy(to, msg.to, PLAYER_NAME_LEN_MAX);
+    memcpy(from, msg.from, SMALL_STRING_LEN_MAX);
+    memcpy(to, msg.to, SMALL_STRING_LEN_MAX);
 
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
@@ -1889,6 +1914,9 @@ void socket_tx_server_status (void)
         strncpy(msg_tx->name, p->name, min(sizeof(msg_tx->name), 
                                            strlen(p->name))); 
 
+        strncpy(msg_tx->pclass, p->pclass, min(sizeof(msg_tx->pclass), 
+                                           strlen(p->pclass))); 
+
         SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
         SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
 
@@ -1958,7 +1986,8 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
         msg_player *p = &status->players[pi];
         msg_player *msg_rx = &msg->players[pi];
 
-        memcpy(p->name, msg_rx->name, PLAYER_NAME_LEN_MAX);
+        memcpy(p->name, msg_rx->name, SMALL_STRING_LEN_MAX);
+        memcpy(p->pclass, msg_rx->pclass, SMALL_STRING_LEN_MAX);
 
         p->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
         p->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);
