@@ -553,6 +553,7 @@ static void wid_intro2_create (void)
         c.a = 100;
         wid_set_color(w, WID_COLOR_TEXT, c);
 
+        wid_set_mode(w, WID_MODE_NORMAL);
         wid_set_text_outline(w, true);
 
         wid_set_on_mouse_down(w, wid_intro2_go_back_mouse_event);

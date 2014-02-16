@@ -11,6 +11,7 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_server_create.h"
+#include "wid_intro.h"
 #include "wid_server_join.h"
 #include "string.h"
 #include "wid_text_input.h"
@@ -231,6 +232,7 @@ static boolean wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t
 {
     wid_server_create_hide();
     wid_server_join_hide();
+    wid_intro_visible();
 
     return (true);
 }
@@ -892,7 +894,7 @@ static void wid_server_create_create (boolean redo)
 
         wid_set_text_outline(w, true);
 
-        wid_set_on_mouse_up(w, wid_server_create_go_back);
+        wid_set_on_mouse_down(w, wid_server_create_go_back);
     }
 
     wid_update(wid_server_create_window);

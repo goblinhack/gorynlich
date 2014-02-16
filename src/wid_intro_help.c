@@ -79,9 +79,10 @@ static void wid_intro_help_create (void)
 
     wid_intro_help =
         wid_popup("%%fmt=left$%%fg=red$space\t%%fg=green$Play game\n"
-                  "%%fmt=left$%%fg=red$m\t\t%%fg=green$Multiplayer\n"
+                  "%%fmt=left$%%fg=red$s\t\t%%fg=green$Single player\n"
+                  "%%fmt=left$%%fg=red$m\t\t%%fg=green$Multi player\n"
                   "%%fmt=left$%%fg=red$e\t\t%%fg=green$Level editor\n"
-                  "%%fmt=left$%%fg=red$s\t\t%%fg=green$Settings\n"
+                  "%%fmt=left$%%fg=red$c\t\t%%fg=green$config cettings\n"
                   "%%fmt=left$%%fg=red$i\t\t%%fg=green$Hi-scores\n"
                   "%%fmt=left$%%fg=red$q\t\t%%fg=green$Quit\n"
                   ,

@@ -35,6 +35,7 @@ static widp wid_intro_background;
 static boolean wid_intro_quit_selected(void);
 static void wid_intro_editor_selected(void);
 static void wid_intro_play_selected(void);
+static void wid_intro_single_play_selected(void);
 static void wid_intro_about_selected(void);
 static void wid_intro_settings_selected(void);
 static void wid_intro_hiscore_selected(void);
@@ -135,12 +136,16 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_play_selected();
             return (true);
 
+        case 's':
+            wid_intro_single_play_selected();
+            return (true);
+
         case 'q':
         case SDLK_ESCAPE:
             wid_intro_quit_selected();
             return (true);
 
-        case 's':
+        case 'c':
             wid_intro_settings_selected();
             return (true);
 
@@ -175,6 +180,24 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
+static void wid_intro_single_play_selected_cb (void *context)
+{
+    wid_game_visible();
+}
+
+static void wid_intro_single_play_selected (void)
+{
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_intro_single_play_selected_cb,
+            0, /* context */
+            "start game",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_intro_hide();
+}
+
 static void wid_intro_play_selected_cb (void *context)
 {
     wid_intro2_visible();
@@ -199,20 +222,6 @@ static boolean wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
     wid_intro_play_selected();
 
     return (true);
-}
-
-static boolean wid_intro_play_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case ' ':
-            wid_intro_play_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
 }
 
 static void wid_intro_about_selected (void)
@@ -271,43 +280,12 @@ static boolean wid_intro_help_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_help_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        /*
-         * TODO
-        case SDLK_RETURN:
-            wid_intro_guide_selected();
-            return (true);
-         */
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static boolean wid_intro_about_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
     wid_intro_about_selected();
 
     return (true);
-}
-
-static boolean wid_intro_about_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case SDLK_RETURN:
-            wid_intro_about_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
 }
 
 static boolean wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
@@ -318,20 +296,6 @@ static boolean wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case SDLK_RETURN:
-            wid_intro_settings_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static boolean wid_intro_hiscore_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
@@ -340,40 +304,12 @@ static boolean wid_intro_hiscore_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_hiscore_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case SDLK_RETURN:
-            wid_intro_hiscore_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static boolean wid_server_join_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
     wid_server_join_selected();
 
     return (true);
-}
-
-static boolean wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case SDLK_RETURN:
-            wid_server_join_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
 }
 
 static void wid_intro_editor_selected_cb (void *context)
@@ -400,20 +336,6 @@ static boolean wid_intro_editor_mouse_event (widp w, int32_t x, int32_t y,
     wid_intro_editor_selected();
 
     return (true);
-}
-
-static boolean wid_intro_editor_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case SDLK_RETURN:
-            wid_intro_editor_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
 }
 
 static widp wid_intro_quit_popup;
@@ -459,19 +381,6 @@ static boolean wid_intro_quit_receive_mouse_down (widp w,
                                                 uint32_t button)
 {
     return (wid_intro_quit_selected());
-}
-
-static boolean wid_intro_quit_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case SDLK_RETURN:
-            return (wid_intro_quit_selected());
-
-        default:
-            break;
-    }
-
-    return (false);
 }
 
 static void wid_intro_bg_create (void)
@@ -526,7 +435,6 @@ static void wid_intro_create (void)
     wid_set_tl_br_pct(wid_intro, tl, br);
     wid_set_on_key_down(wid_intro, wid_intro_key_event);
     wid_set_on_mouse_down(wid_intro, wid_intro_play_mouse_event);
-    wid_set_on_key_down(wid_intro, wid_intro_play_key_event);
 
     color col = BLACK;
     col.a = 0;
@@ -566,7 +474,6 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_editor_mouse_event);
-        wid_set_on_key_down(child, wid_intro_editor_key_event);
     }
 
     {
@@ -598,7 +505,6 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_about_mouse_event);
-        wid_set_on_key_down(child, wid_intro_about_key_event);
     }
 
     {
@@ -630,7 +536,6 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_settings_mouse_event);
-        wid_set_on_key_down(child, wid_intro_settings_key_event);
     }
 
     {
@@ -662,7 +567,6 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_hiscore_mouse_event);
-        wid_set_on_key_down(child, wid_intro_hiscore_key_event);
     }
 
     {
@@ -694,7 +598,6 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_server_join_mouse_event);
-        wid_set_on_key_down(child, wid_server_join_key_event);
     }
 
     {
@@ -724,7 +627,6 @@ static void wid_intro_create (void)
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_on_mouse_down(child, wid_intro_help_mouse_event);
-        wid_set_on_key_down(child, wid_intro_help_key_event);
     }
 
     {
@@ -754,7 +656,6 @@ static void wid_intro_create (void)
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_on_mouse_down(child, wid_intro_quit_receive_mouse_down);
-        wid_set_on_key_down(child, wid_intro_quit_key_event);
     }
 
     {
@@ -786,7 +687,6 @@ static void wid_intro_create (void)
         wid_set_text_outline(child, true);
 
         wid_set_on_mouse_down(child, wid_intro_play_mouse_event);
-        wid_set_on_key_down(child, wid_intro_play_key_event);
     }
 
     wid_intro_bg_create();

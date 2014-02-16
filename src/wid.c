@@ -931,8 +931,10 @@ boolean wid_ignore_for_events (widp w)
     verify(w);
 
     if (w->moving ||
-        w->fade_out ||
-        w->fade_in ||
+        /*
+         * For buttons that pulse.
+         */
+        (!w->fade_count && (w->fade_out || w->fade_in)) ||
         w->hidden ||
         w->being_destroyed) {
         return (true);
@@ -942,7 +944,7 @@ boolean wid_ignore_for_events (widp w)
         top = wid_get_top_parent(w);
 
         if (top->moving ||
-            top->fade_in ||
+            (!w->fade_count && (w->fade_in)) ||
             top->hidden ||
             top->being_destroyed) {
             return (true);
