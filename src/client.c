@@ -31,6 +31,7 @@ static void client_socket_tx_ping(void);
 static boolean client_init_done;
 static void client_poll(void);
 static boolean client_set_name(tokens_t *tokens, void *context);
+static boolean client_set_pclass(tokens_t *tokens, void *context);
 static boolean client_shout(tokens_t *tokens, void *context);
 static boolean client_tell(tokens_t *tokens, void *context);
 static boolean client_players_show(tokens_t *tokens, void *context);
@@ -40,7 +41,6 @@ static boolean client_open(tokens_t *tokens, void *context);
 static boolean client_close(tokens_t *tokens, void *context);
 static boolean client_socket_shout(char *shout);
 static boolean client_socket_tell(char *from, char *to, char *msg);
-static boolean client_socket_set_name(char *name);
 static void client_check_still_in_game(void);
 
 static msg_server_status server_status;
@@ -68,6 +68,9 @@ boolean client_init (void)
     command_add(client_set_name, "set name [A-Za-z0-9_-]*",
                 "set player name");
 
+    command_add(client_set_pclass, "set class [A-Za-z0-9_-]*",
+                "set player class e.g warrior");
+
     command_add(client_open, "open [A-Za-z0-9_-.]* [0-9_-]*",
                 "loosely connect to server <ip> <port>");
 
@@ -92,6 +95,11 @@ boolean client_init (void)
     if (!global_config.name[0]) {
         strncpy(global_config.name, "nameless", 
                 sizeof(global_config.name) - 1);
+    }
+
+    if (!global_config.pclass[0]) {
+        strncpy(global_config.pclass, "warrior", 
+                sizeof(global_config.pclass) - 1);
     }
 
     client_init_done = true;
@@ -207,6 +215,23 @@ static boolean client_set_name (tokens_t *tokens, void *context)
     }
 
     boolean r = client_socket_set_name(s);
+
+    return (r);
+}
+
+/*
+ * User has entered a command, run it
+ */
+static boolean client_set_pclass (tokens_t *tokens, void *context)
+{
+    char *s = tokens->args[2];
+
+    if (!s || !*s) {
+        WARN("need to set a string");
+        return (false);
+    }
+
+    boolean r = client_socket_set_pclass(s);
 
     return (r);
 }
@@ -349,6 +374,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
     }
 
     socket_set_name(s, global_config.name);
+    socket_set_pclass(s, global_config.pclass);
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
         MSG("Join failed");
@@ -454,7 +480,7 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
 /*
  * User has entered a command, run it
  */
-static boolean client_socket_set_name (char *name)
+boolean client_socket_set_name (char *name)
 {
     if (!name || !*name) {
         WARN("need to set a name");
@@ -467,6 +493,29 @@ static boolean client_socket_set_name (char *name)
 
     if (client_joined_server) {
         socket_set_name(client_joined_server, name);
+
+        socket_tx_name(client_joined_server);
+    }
+
+    return (true);
+}
+
+/*
+ * User has entered a command, run it
+ */
+boolean client_socket_set_pclass (char *pclass)
+{
+    if (!pclass || !*pclass) {
+        WARN("need to set a pclass");
+        return (false);
+    }
+
+    strncpy(global_config.pclass, pclass, sizeof(global_config.pclass) - 1);
+
+    CON("Client pclass set to \"%s\"", pclass);
+
+    if (client_joined_server) {
+        socket_set_pclass(client_joined_server, pclass);
 
         socket_tx_name(client_joined_server);
     }
@@ -569,7 +618,7 @@ boolean client_shout (tokens_t *tokens, void *context)
  */
 boolean client_tell (tokens_t *tokens, void *context)
 {
-    char to[PLAYER_NAME_LEN_MAX] = {0};
+    char to[SMALL_STRING_LEN_MAX] = {0};
     uint32_t i = 1;
     char *tmp;
 
