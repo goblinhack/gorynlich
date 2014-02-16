@@ -480,7 +480,7 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
 /*
  * User has entered a command, run it
  */
-boolean client_socket_set_name (char *name)
+boolean client_socket_set_name (const char *name)
 {
     if (!name || !*name) {
         WARN("need to set a name");
@@ -503,7 +503,7 @@ boolean client_socket_set_name (char *name)
 /*
  * User has entered a command, run it
  */
-boolean client_socket_set_pclass (char *pclass)
+boolean client_socket_set_pclass (const char *pclass)
 {
     if (!pclass || !*pclass) {
         WARN("need to set a pclass");
