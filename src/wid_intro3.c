@@ -225,11 +225,41 @@ static void wid_intro3_create (void)
         wid_set_font(child, med_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.2f, 0.70f};
-        fpoint br = {0.8f, 0.90f};
+        fpoint tl = {0.1f, 0.00f};
+        fpoint br = {0.5f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Multi or single player?");
+        wid_set_text(child, "single player");
+        wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
+
+        color c = STEELBLUE;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 200;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_FOCUS);
+        c.a = 100;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+        wid_set_text_outline(child, true);
+
+        wid_set_on_mouse_down(child, wid_intro3_play_mouse_event);
+        wid_set_on_key_down(child, wid_intro3_play_key_event);
+    }
+
+    {
+        widp child;
+
+        child = wid_new_square_button(wid_intro3, "play");
+        wid_set_font(child, med_font);
+        wid_set_no_shape(child);
+
+        fpoint tl = {0.5f, 0.00f};
+        fpoint br = {1.0f, 1.00f};
+
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_text(child, "multi player");
         wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
 
         color c = STEELBLUE;
