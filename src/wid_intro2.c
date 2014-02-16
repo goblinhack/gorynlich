@@ -10,6 +10,7 @@
 #include "wid.h"
 #include "tex.h"
 #include "color.h"
+#include "wid_intro.h"
 #include "wid_intro2.h"
 #include "wid_intro3.h"
 #include "wid_popup.h"
@@ -112,20 +113,6 @@ void wid_intro2_visible (void)
     wid_fade_in(wid_intro_player_container, intro_effect_delay);
 }
 
-static boolean wid_intro2_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch ((int)key->sym) {
-        case ' ':
-            wid_intro2_play_selected();
-            return (true);
-
-        default:
-            return (true);
-    }
-
-    return (false);
-}
-
 static void wid_intro2_play_selected_cb (void *context)
 {
     wid_intro3_visible();
@@ -170,8 +157,12 @@ static boolean wid_intro2_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
-        case SDLK_RETURN:
             wid_intro2_play_selected();
+            return (true);
+
+        case SDLK_ESCAPE:
+            wid_intro2_hide();
+            wid_intro_visible();
             return (true);
 
         default:
@@ -377,7 +368,8 @@ static void wid_intro2_create (void)
     fpoint tl = {0.0f, 0.0f};
     fpoint br = {1.0f, 1.0f};
     wid_set_tl_br_pct(wid_intro2, tl, br);
-    wid_set_on_key_down(wid_intro2, wid_intro2_key_event);
+    wid_set_on_mouse_down(wid_intro2, wid_intro2_play_mouse_event);
+    wid_set_on_key_down(wid_intro2, wid_intro2_play_key_event);
 
     color col = BLACK;
     col.a = 0;
@@ -387,6 +379,8 @@ static void wid_intro2_create (void)
     wid_set_color(wid_intro2, WID_COLOR_TL, col);
     wid_set_color(wid_intro2, WID_COLOR_BR, col);
     wid_set_color(wid_intro2, WID_COLOR_BG, col);
+    wid_set_on_mouse_down(wid_intro2, wid_intro2_play_mouse_event);
+    wid_set_on_key_down(wid_intro2, wid_intro2_play_key_event);
 
     {
         widp child;
