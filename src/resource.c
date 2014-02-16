@@ -1094,14 +1094,14 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         // row 29
-        "Wizard-right",
-        "Wizard-br",
-        "Wizard-down",
-        "Wizard-bl",
-        "Wizard-left",
-        "Wizard-tl",
-        "Wizard-up",
-        "Wizard-tr",
+        "wizard-right",
+        "wizard-br",
+        "wizard-down",
+        "wizard-bl",
+        "wizard-left",
+        "wizard-tl",
+        "wizard-up",
+        "wizard-tr",
         0,
         0,
         0,
@@ -1214,7 +1214,7 @@ static boolean resource_init_23 (void *context)
     thing_template_load("data/things/warrior");
     thing_template_load("data/things/valkyrie");
     thing_template_load("data/things/wizard");
-    thing_template_load("data/things/elve");
+    thing_template_load("data/things/elf");
     thing_template_load("data/things/Dwarf");
     thing_template_load("data/things/ghost");
     thing_template_load("data/things/demon");

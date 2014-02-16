@@ -1,5 +1,5 @@
 {
- shortname="valkyrie1"
+ shortname="valkyrie"
  tooltip="Deadly mix of good health and speed.\n\n%%fg=cyan$Good line of beauty products."
  z_depth=3
  z_order=10
@@ -11,7 +11,7 @@
  tiles={
   tile={
    delay=200
-   tile="valkyrie1-right"
+   tile="valkyrie-right"
   }
  }
 }

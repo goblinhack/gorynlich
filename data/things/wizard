@@ -1,5 +1,5 @@
 {
- shortname="wizard1"
+ shortname="wizard"
  tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
  z_depth=3
  z_order=10
@@ -11,7 +11,7 @@
  tiles={
   tile={
    delay=200
-   tile="wizard1-right"
+   tile="wizard-right"
   }
  }
 }
