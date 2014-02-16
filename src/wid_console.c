@@ -324,6 +324,4 @@ static void wid_console_wid_create (void)
     wid_visible(wid_console_horiz_scroll, 0);
 
     wid_hide(wid_console_window, 0);
-
-    wid_update(wid_console_window);
 }

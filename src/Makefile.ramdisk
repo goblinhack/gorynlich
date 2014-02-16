@@ -133,14 +133,8 @@
 .o/ramdisk_data_things_dwarf.o: asm/ramdisk_data_things_dwarf.S ../data/things/dwarf
 	gcc -c asm/ramdisk_data_things_dwarf.S -o .o/ramdisk_data_things_dwarf.o
 
-.o/ramdisk_data_things_dwarve.o: asm/ramdisk_data_things_dwarve.S ../data/things/dwarve
-	gcc -c asm/ramdisk_data_things_dwarve.S -o .o/ramdisk_data_things_dwarve.o
-
 .o/ramdisk_data_things_elf.o: asm/ramdisk_data_things_elf.S ../data/things/elf
 	gcc -c asm/ramdisk_data_things_elf.S -o .o/ramdisk_data_things_elf.o
-
-.o/ramdisk_data_things_elve.o: asm/ramdisk_data_things_elve.S ../data/things/elve
-	gcc -c asm/ramdisk_data_things_elve.S -o .o/ramdisk_data_things_elve.o
 
 .o/ramdisk_data_things_exit.o: asm/ramdisk_data_things_exit.S ../data/things/exit
 	gcc -c asm/ramdisk_data_things_exit.S -o .o/ramdisk_data_things_exit.o
