@@ -153,6 +153,15 @@ static boolean wid_intro2_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
+static boolean wid_intro2_go_back_mouse_event (widp w, int32_t x, int32_t y,
+                                               uint32_t button)
+{
+    wid_intro2_hide();
+    wid_intro_visible();
+
+    return (true);
+}
+
 static boolean wid_intro2_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
@@ -516,6 +525,37 @@ static void wid_intro2_create (void)
         wid_set_color(w, WID_COLOR_TL, STEELBLUE);
         wid_set_color(w, WID_COLOR_BR, STEELBLUE);
         wid_set_text_outline(w, true);
+    }
+
+    {
+        fpoint tl = {0.0, 0.9};
+        fpoint br = {0.2, 0.99};
+
+        widp w = wid_new_rounded_small_button(wid_intro2,
+                                              "wid go back");
+        wid_raise(w);
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Go back");
+        wid_set_no_shape(w);
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        color c = STEELBLUE;
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        wid_set_mode(w, WID_MODE_OVER);
+        c.a = 200;
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        wid_set_mode(w, WID_MODE_FOCUS);
+        c.a = 100;
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        wid_set_text_outline(w, true);
+
+        wid_set_on_mouse_down(w, wid_intro2_go_back_mouse_event);
     }
 
     wid_update(wid_intro_player_container);
