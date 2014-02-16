@@ -55,6 +55,7 @@ void wid_intro2_fini (void)
         if (wid_intro2) {
             wid_destroy(&wid_intro2);
             wid_destroy_in(wid_intro2_background, wid_hide_delay * 2);
+            wid_destroy_in(wid_intro_player_container, wid_hide_delay * 2);
         }
     }
 }
@@ -76,6 +77,7 @@ void wid_intro2_hide (void)
     }
 
     wid_fade_out(wid_intro2_background, intro_effect_delay);
+    wid_fade_out(wid_intro_player_container, intro_effect_delay);
 
     wid_hide(wid_intro2, 0);
     wid_raise(wid_intro2);
@@ -107,13 +109,13 @@ void wid_intro2_visible (void)
     wid_update(wid_intro2);
 
     wid_fade_in(wid_intro2_background, intro_effect_delay);
+    wid_fade_in(wid_intro_player_container, intro_effect_delay);
 }
 
 static boolean wid_intro2_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch ((int)key->sym) {
         case ' ':
-        case SDLK_RETURN:
             wid_intro2_play_selected();
             return (true);
 
@@ -140,6 +142,20 @@ static void wid_intro2_play_selected (void)
             0 /* jitter */);
 
     wid_intro2_hide();
+}
+
+static boolean wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
+                                              uint32_t button)
+{
+    thing_templatep t = (typeof(t)) wid_get_client_context(w);
+
+    client_socket_set_pclass((char*) thing_template_shortname(t));
+
+    wid_destroy(&wid_intro2);
+    wid_destroy(&wid_intro_player_container);
+    wid_intro2_create();
+
+    return (true);
 }
 
 static boolean wid_intro2_play_mouse_event (widp w, int32_t x, int32_t y,
@@ -228,10 +244,11 @@ static void wid_intro2_buttons_tick (widp wid)
     wid_set_tilename(wid, tilename);
 }
 
+static int32_t x;
+static int32_t y;
+
 static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
 {
-    static int32_t x;
-    static int32_t y;
     thing_templatep thing_template;
     widp child;
 
@@ -270,9 +287,19 @@ static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_color(child, WID_COLOR_BR, PINK);
     wid_set_color(child, WID_COLOR_BG, BLACK);
 
+    color c = WHITE;
+    c.a = 50;
+    wid_set_color(child, WID_COLOR_TL, RED);
+    wid_set_color(child, WID_COLOR_BG, c);
+    wid_set_color(child, WID_COLOR_BR, RED);
+
     if (!strcmp(thing_template_shortname(thing_template), 
                 global_config.pclass)) {
+        color c = RED;
+        c.a = 100;
         wid_set_color(child, WID_COLOR_TL, RED);
+        wid_set_color(child, WID_COLOR_BG, c);
+        wid_set_color(child, WID_COLOR_BR, RED);
     }
 
     wid_set_mode(child, WID_MODE_OVER);
@@ -284,6 +311,9 @@ static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_tooltip(child, thing_template_get_tooltip(thing_template));
     wid_set_tl_br_pct(child, tl, br);
     wid_set_on_tick(child, wid_intro2_buttons_tick);
+
+    wid_set_on_mouse_down(child, wid_intro2_select_class_event);
+    wid_set_client_context(child, thing_template);
 
     x++;
 
@@ -306,6 +336,7 @@ static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
              * Change name.
              */
             wid_set_show_cursor(w, false);
+            wid_set_on_key_down(w, 0);
 
             char *name = (char*) wid_get_text(w);
 
@@ -321,6 +352,16 @@ static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
      * Feed to the general input handler
      */
     return (wid_receive_input(w, key));
+}
+
+static boolean wid_intro2_select_name_event (widp w, int32_t x, int32_t y,
+                                             uint32_t button)
+{
+    wid_set_on_key_down(w, wid_intro2_name_receive_input);
+
+    wid_set_show_cursor(w, true);
+
+    return (true);
 }
 
 static void wid_intro2_create (void)
@@ -395,6 +436,8 @@ static void wid_intro2_create (void)
         wid_set_color(wid_intro_player_container, WID_COLOR_BR, col);
         wid_set_color(wid_intro_player_container, WID_COLOR_BG, col);
 
+        x = 0;
+        y = 0;
         tree_walk(thing_templates_create_order,
                   wid_intro2_buttons_add_tiles, 0 /* arg */);
     }
@@ -435,9 +478,7 @@ static void wid_intro2_create (void)
         wid_set_bevelled(w, true);
         wid_set_bevel(w, 2);
         wid_set_text_outline(w, true);
-
-        wid_set_show_cursor(w, true);
-        wid_set_on_key_down(w, wid_intro2_name_receive_input);
+        wid_set_on_mouse_down(w, wid_intro2_select_name_event);
     }
 
     {
