@@ -278,7 +278,7 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
         } else if (time_have_x_tenths_passed_since(1, last)) {
             glcolor(CONSOLE_CURSOR_COLOR);
         } else {
-            glcolor(BLACK);
+            glcolor(CONSOLE_CURSOR_OTHER_COLOR);
 
             gl_blitsquare(left, top, right, bottom);
 
@@ -287,7 +287,7 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
             top += 1;
             bottom -= 1;
 
-            gl_blitsquare(left, top, right, bottom);
+            gl_blitquad(left, top, right, bottom);
 
             glcolor_restore();
             return;

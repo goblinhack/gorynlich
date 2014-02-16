@@ -12,6 +12,7 @@
 #include "color.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
+#include "wid_intro.h"
 #include "string.h"
 #include "wid_text_input.h"
 #include "marshal.h"
@@ -364,6 +365,7 @@ static boolean wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t b
 {
     wid_server_join_hide();
     wid_server_create_hide();
+    wid_intro_visible();
 
     return (true);
 }

@@ -104,9 +104,38 @@ void wid_intro3_visible (void)
     wid_fade_in(wid_intro3_background, intro_effect_delay);
 }
 
+static void wid_server_join_selected (void)
+{
+    wid_server_join_visible();
+}
+
+static void wid_server_create_selected (void)
+{
+    wid_server_create_visible();
+}
+
 static void wid_intro3_play_selected_cb (void *context)
 {
     wid_game_visible();
+}
+
+static void wid_intro3_multi_play_selected_cb (void *context)
+{
+    wid_server_create_selected();
+    wid_server_join_selected();
+}
+
+static void wid_intro3_multi_play_selected (void)
+{
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_intro3_multi_play_selected_cb,
+            0, /* context */
+            "start game",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_intro3_hide();
 }
 
 static void wid_intro3_play_selected (void)
@@ -130,6 +159,14 @@ static boolean wid_intro3_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
+static boolean wid_intro3_multi_play_mouse_event (widp w, int32_t x, int32_t y,
+                                           uint32_t button)
+{
+    wid_intro3_multi_play_selected();
+
+    return (true);
+}
+
 static boolean wid_intro3_go_back_mouse_event (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
@@ -143,6 +180,35 @@ static boolean wid_intro3_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
+        case 's':
+            wid_intro3_play_selected();
+            return (true);
+
+        case 'm':
+            wid_intro3_multi_play_selected();
+            return (true);
+
+        case SDLK_ESCAPE:
+            wid_intro3_hide();
+            wid_intro_visible();
+            return (true);
+
+        default:
+            break;
+    }
+
+    return (false);
+}
+
+static boolean wid_intro3_multi_play_key_event (widp w, const SDL_KEYSYM *key)
+{
+    switch (key->sym) {
+        case ' ':
+        case 'm':
+            wid_intro3_multi_play_selected();
+            return (true);
+
+        case 's':
             wid_intro3_play_selected();
             return (true);
 
@@ -222,7 +288,7 @@ static void wid_intro3_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro3, "play");
-        wid_set_font(child, med_font);
+        wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.1f, 0.00f};
@@ -230,18 +296,19 @@ static void wid_intro3_create (void)
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "single player");
-        wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
 
-        color c = STEELBLUE;
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        color c = ORANGE;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
-        c.a = 200;
+        c = RED;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
         wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_NORMAL);
         wid_set_text_outline(child, true);
 
         wid_set_on_mouse_down(child, wid_intro3_play_mouse_event);
@@ -252,7 +319,7 @@ static void wid_intro3_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro3, "play");
-        wid_set_font(child, med_font);
+        wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.5f, 0.00f};
@@ -260,22 +327,23 @@ static void wid_intro3_create (void)
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "multi player");
-        wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
 
-        color c = STEELBLUE;
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        color c = ORANGE;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
-        c.a = 200;
+        c = RED;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
         wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_NORMAL);
         wid_set_text_outline(child, true);
 
-        wid_set_on_mouse_down(child, wid_intro3_play_mouse_event);
-        wid_set_on_key_down(child, wid_intro3_play_key_event);
+        wid_set_on_mouse_down(child, wid_intro3_multi_play_mouse_event);
+        wid_set_on_key_down(child, wid_intro3_multi_play_key_event);
     }
 
     {
@@ -304,6 +372,7 @@ static void wid_intro3_create (void)
         c.a = 100;
         wid_set_color(w, WID_COLOR_TEXT, c);
 
+        wid_set_mode(w, WID_MODE_NORMAL);
         wid_set_text_outline(w, true);
 
         wid_set_on_mouse_down(w, wid_intro3_go_back_mouse_event);

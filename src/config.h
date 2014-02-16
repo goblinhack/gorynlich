@@ -78,7 +78,8 @@
 /*
  * Console
  */
-#define CONSOLE_CURSOR_COLOR        ORANGE
+#define CONSOLE_CURSOR_COLOR        GREEN
+#define CONSOLE_CURSOR_OTHER_COLOR  DARKGREEN
 #define CONSOLE_TEXT_COLOR          GREEN
 #define CONSOLE_HEIGHT              100
 
