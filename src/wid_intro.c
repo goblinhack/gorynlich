@@ -132,7 +132,6 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch ((int)key->sym) {
         case ' ':
-        case SDLK_RETURN:
             wid_intro_play_selected();
             return (true);
 
@@ -206,7 +205,6 @@ static boolean wid_intro_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
-        case SDLK_RETURN:
             wid_intro_play_selected();
             return (true);
 
@@ -276,9 +274,12 @@ static boolean wid_intro_help_mouse_event (widp w, int32_t x, int32_t y,
 static boolean wid_intro_help_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
+        /*
+         * TODO
         case SDLK_RETURN:
             wid_intro_guide_selected();
             return (true);
+         */
 
         default:
             break;
@@ -524,6 +525,8 @@ static void wid_intro_create (void)
     fpoint br = {1.0f, 1.0f};
     wid_set_tl_br_pct(wid_intro, tl, br);
     wid_set_on_key_down(wid_intro, wid_intro_key_event);
+    wid_set_on_mouse_down(wid_intro, wid_intro_play_mouse_event);
+    wid_set_on_key_down(wid_intro, wid_intro_play_key_event);
 
     color col = BLACK;
     col.a = 0;
