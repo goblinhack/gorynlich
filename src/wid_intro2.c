@@ -321,6 +321,9 @@ static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
  */
 static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
 {
+    int r;
+    char *name = (char*) wid_get_text(w);
+
     switch (key->sym) {
         case SDLK_RETURN: {
             /*
@@ -328,8 +331,6 @@ static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
              */
             wid_set_show_cursor(w, false);
             wid_set_on_key_down(w, 0);
-
-            char *name = (char*) wid_get_text(w);
 
             client_socket_set_name(name);
             break;
@@ -342,7 +343,13 @@ static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
     /*
      * Feed to the general input handler
      */
-    return (wid_receive_input(w, key));
+    r = (wid_receive_input(w, key));
+
+    name = (char*) wid_get_text(w);
+
+    client_socket_set_name(name);
+
+    return (r);
 }
 
 static boolean wid_intro2_select_name_event (widp w, int32_t x, int32_t y,
