@@ -11,5 +11,7 @@ extern void client_fini(void);
 extern void client_tick(void);
 boolean client_socket_join(char *host, char *port, uint16_t portno);
 boolean client_socket_leave(void);
+boolean client_socket_set_name(char *name);
+boolean client_socket_set_pclass(char *name);
 
 extern socketp client_joined_server;

@@ -7,6 +7,9 @@
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
 
+.o/ramdisk_data_gfx_gorynlich_xcf.o: asm/ramdisk_data_gfx_gorynlich_xcf.S ../data/gfx/gorynlich.xcf
+	gcc -c asm/ramdisk_data_gfx_gorynlich_xcf.S -o .o/ramdisk_data_gfx_gorynlich_xcf.o
+
 .o/ramdisk_data_gfx_help1_png.o: asm/ramdisk_data_gfx_help1_png.S ../data/gfx/help1.png
 	gcc -c asm/ramdisk_data_gfx_help1_png.S -o .o/ramdisk_data_gfx_help1_png.o
 
@@ -127,8 +130,14 @@
 .o/ramdisk_data_things_door.o: asm/ramdisk_data_things_door.S ../data/things/door
 	gcc -c asm/ramdisk_data_things_door.S -o .o/ramdisk_data_things_door.o
 
+.o/ramdisk_data_things_dwarf.o: asm/ramdisk_data_things_dwarf.S ../data/things/dwarf
+	gcc -c asm/ramdisk_data_things_dwarf.S -o .o/ramdisk_data_things_dwarf.o
+
 .o/ramdisk_data_things_dwarve.o: asm/ramdisk_data_things_dwarve.S ../data/things/dwarve
 	gcc -c asm/ramdisk_data_things_dwarve.S -o .o/ramdisk_data_things_dwarve.o
+
+.o/ramdisk_data_things_elf.o: asm/ramdisk_data_things_elf.S ../data/things/elf
+	gcc -c asm/ramdisk_data_things_elf.S -o .o/ramdisk_data_things_elf.o
 
 .o/ramdisk_data_things_elve.o: asm/ramdisk_data_things_elve.S ../data/things/elve
 	gcc -c asm/ramdisk_data_things_elve.S -o .o/ramdisk_data_things_elve.o

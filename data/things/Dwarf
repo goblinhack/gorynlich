@@ -1,5 +1,5 @@
 {
- shortname="dwarve1"
+ shortname="dwarf"
  tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo."
  z_depth=3
  z_order=10
@@ -11,7 +11,7 @@
  tiles={
   tile={
    delay=200
-   tile="dwarve1-right"
+   tile="dwarf-right"
   }
  }
 }

@@ -22,6 +22,7 @@
 #include "tree.h"
 #include "time.h"
 #include "thing_template.h"
+#include "client.h"
 
 static widp wid_intro2;
 static widp wid_intro2_background;
@@ -269,6 +270,11 @@ static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_color(child, WID_COLOR_BR, PINK);
     wid_set_color(child, WID_COLOR_BG, BLACK);
 
+    if (!strcmp(thing_template_shortname(thing_template), 
+                global_config.pclass)) {
+        wid_set_color(child, WID_COLOR_TL, RED);
+    }
+
     wid_set_mode(child, WID_MODE_OVER);
     wid_set_color(child, WID_COLOR_BG, STEELBLUE);
 
@@ -287,6 +293,34 @@ static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     }
 
     return (true);
+}
+
+/*
+ * Key down etc...
+ */
+static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
+{
+    switch (key->sym) {
+        case SDLK_RETURN: {
+            /*
+             * Change name.
+             */
+            wid_set_show_cursor(w, false);
+
+            char *name = (char*) wid_get_text(w);
+
+            client_socket_set_name(name);
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    /*
+     * Feed to the general input handler
+     */
+    return (wid_receive_input(w, key));
 }
 
 static void wid_intro2_create (void)
@@ -348,7 +382,7 @@ static void wid_intro2_create (void)
     {
         wid_intro_player_container = wid_new_window("players");
 
-        fpoint tl = {0.75f, 0.42f};
+        fpoint tl = {0.75f, 0.43f};
         fpoint br = {1.0, 1.0f};
         wid_set_tl_br_pct(wid_intro_player_container, tl, br);
 
@@ -363,6 +397,83 @@ static void wid_intro2_create (void)
 
         tree_walk(thing_templates_create_order,
                   wid_intro2_buttons_add_tiles, 0 /* arg */);
+    }
+
+    {
+        fpoint tl = {0.4, 0.45};
+        fpoint br = {0.5, 0.5};
+
+        widp w = wid_new_container(wid_intro2, "wid intro name container");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "name");
+        wid_set_font(w, small_font);
+        wid_set_no_shape(w);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        fpoint tl = {0.5, 0.45};
+        fpoint br = {0.7, 0.5};
+
+        widp w = wid_new_container(wid_intro2, "wid intro name value");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, global_config.name);
+        wid_set_font(w, small_font);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_square(w);
+        wid_set_bevelled(w, true);
+        wid_set_bevel(w, 2);
+        wid_set_text_outline(w, true);
+
+        wid_set_show_cursor(w, true);
+        wid_set_on_key_down(w, wid_intro2_name_receive_input);
+    }
+
+    {
+        fpoint tl = {0.4, 0.51};
+        fpoint br = {0.5, 0.56};
+
+        widp w = wid_new_container(wid_intro2, "wid intro pclass container");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "class");
+        wid_set_font(w, small_font);
+        wid_set_no_shape(w);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        fpoint tl = {0.5, 0.51};
+        fpoint br = {0.7, 0.56};
+
+        widp w = wid_new_container(wid_intro2, "wid intro pclass value");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, global_config.pclass);
+        wid_set_font(w, small_font);
+        wid_set_no_shape(w);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_text_outline(w, true);
     }
 
     wid_update(wid_intro_player_container);

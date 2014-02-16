@@ -52,6 +52,14 @@ static boolean demarshal_config (demarshal_p ctx, struct config *p)
     }
 
     tmp = 0;
+    GET_OPT_NAMED_STRING(ctx, "class", tmp);
+    if (tmp) {
+        strncpy(p->pclass, tmp, sizeof(p->pclass) - 1);
+        myfree(tmp);
+        tmp = 0;
+    }
+
+    tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "server_name", tmp);
     if (tmp) {
         strncpy(p->server_name, tmp, sizeof(p->server_name) - 1);
@@ -75,6 +83,10 @@ static void marshal_config (marshal_p ctx, struct config *p)
 
     if (p->name[0]) {
         PUT_NAMED_STRING(ctx, "name", p->name);
+    }
+
+    if (p->pclass[0]) {
+        PUT_NAMED_STRING(ctx, "class", p->pclass);
     }
 
     if (p->server_name[0]) {
@@ -129,6 +141,11 @@ boolean config_load (void)
     if (!global_config.name[0]) {
         strncpy(global_config.name, "nameless", 
                 sizeof(global_config.name) - 1);
+    }
+
+    if (!global_config.pclass[0]) {
+        strncpy(global_config.pclass, "warrior", 
+                sizeof(global_config.pclass) - 1);
     }
 
     if (!global_config.server_name[0]) {

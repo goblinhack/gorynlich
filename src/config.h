@@ -95,7 +95,7 @@
  * Messages.
  */
 #define MAX_PLAYERS                 4
-#define PLAYER_NAME_LEN_MAX         20
+#define SMALL_STRING_LEN_MAX         20
 #define PLAYER_MSG_MAX              100
 
 /*

@@ -28,7 +28,8 @@ typedef enum {
 
 typedef struct {
     uint8_t type;
-    char name[PLAYER_NAME_LEN_MAX];
+    char name[SMALL_STRING_LEN_MAX];
+    char pclass[SMALL_STRING_LEN_MAX];
     uint32_t key;
 } __attribute__ ((packed)) msg_client_join;
 
@@ -46,12 +47,13 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    char name[PLAYER_NAME_LEN_MAX];
+    char name[SMALL_STRING_LEN_MAX];
+    char pclass[SMALL_STRING_LEN_MAX];
 } __attribute__ ((packed)) msg_name;
 
 typedef struct {
     uint8_t type;
-    char from[PLAYER_NAME_LEN_MAX];
+    char from[SMALL_STRING_LEN_MAX];
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_client_shout;
 
@@ -62,13 +64,14 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    char from[PLAYER_NAME_LEN_MAX];
-    char to[PLAYER_NAME_LEN_MAX];
+    char from[SMALL_STRING_LEN_MAX];
+    char to[SMALL_STRING_LEN_MAX];
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_tell;
 
 typedef struct {
-    char name[PLAYER_NAME_LEN_MAX];
+    char name[SMALL_STRING_LEN_MAX];
+    char pclass[SMALL_STRING_LEN_MAX];
     IPaddress local_ip;
     IPaddress remote_ip;
     uint8_t quality;
@@ -82,7 +85,7 @@ typedef struct {
 typedef struct {
     uint8_t type;
     msg_player players[MAX_PLAYERS];
-    char server_name[PLAYER_NAME_LEN_MAX];
+    char server_name[SMALL_STRING_LEN_MAX];
     uint8_t server_max_players;
     uint8_t server_current_players;
 } __attribute__ ((packed)) msg_server_status;
@@ -127,7 +130,8 @@ typedef struct socket_ {
     /*
      * Player name.
      */
-    char name[PLAYER_NAME_LEN_MAX];
+    char name[SMALL_STRING_LEN_MAX];
+    char pclass[SMALL_STRING_LEN_MAX];
 
     /*
      * Last status from this server.
@@ -162,6 +166,7 @@ extern IPaddress socket_get_local_ip(socketp);
 extern IPaddress socket_get_remote_ip(socketp);
 
 extern const char *socket_get_player_name(const socketp);
+extern const char *socket_get_player_pclass(const socketp);
 
 extern const char *socket_get_local_logname(const socketp);
 extern const char *socket_get_remote_logname(const socketp);
@@ -188,7 +193,9 @@ extern void socket_count_inc_pak_tx_error(const socketp);
 extern void socket_count_inc_pak_rx_bad_msg(const socketp);
 
 extern const char *socket_get_name(const socketp s);
+extern const char *socket_get_pclass(const socketp s);
 extern void socket_set_name(socketp s, const char *name);
+extern void socket_set_pclass(socketp s, const char *pclass);
 
 extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);
 extern void socket_tx_pong(socketp s, uint8_t seq, uint32_t ts);
