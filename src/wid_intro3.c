@@ -11,6 +11,7 @@
 #include "tex.h"
 #include "color.h"
 #include "wid_intro3.h"
+#include "wid_intro.h"
 #include "wid_popup.h"
 #include "wid_game_map.h"
 #include "wid_server_join.h"
@@ -103,21 +104,6 @@ void wid_intro3_visible (void)
     wid_fade_in(wid_intro3_background, intro_effect_delay);
 }
 
-static boolean wid_intro3_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch ((int)key->sym) {
-        case ' ':
-        case SDLK_RETURN:
-            wid_intro3_play_selected();
-            return (true);
-
-        default:
-            return (true);
-    }
-
-    return (false);
-}
-
 static void wid_intro3_play_selected_cb (void *context)
 {
     wid_game_visible();
@@ -148,8 +134,12 @@ static boolean wid_intro3_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
-        case SDLK_RETURN:
             wid_intro3_play_selected();
+            return (true);
+
+        case SDLK_ESCAPE:
+            wid_intro3_hide();
+            wid_intro_visible();
             return (true);
 
         default:
@@ -207,7 +197,8 @@ static void wid_intro3_create (void)
     fpoint tl = {0.0f, 0.0f};
     fpoint br = {1.0f, 1.0f};
     wid_set_tl_br_pct(wid_intro3, tl, br);
-    wid_set_on_key_down(wid_intro3, wid_intro3_key_event);
+    wid_set_on_mouse_down(wid_intro3, wid_intro3_play_mouse_event);
+    wid_set_on_key_down(wid_intro3, wid_intro3_play_key_event);
 
     color col = BLACK;
     col.a = 0;
