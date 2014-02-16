@@ -272,10 +272,10 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
 
         glcolor_save();
 
-        if (time_have_x_tenths_passed_since(10, last)) {
+        if (time_have_x_tenths_passed_since(5, last)) {
             glcolor(CONSOLE_CURSOR_COLOR);
             last = time_get_time_cached();
-        } else if (time_have_x_tenths_passed_since(5, last)) {
+        } else if (time_have_x_tenths_passed_since(1, last)) {
             glcolor(CONSOLE_CURSOR_COLOR);
         } else {
             glcolor(BLACK);
