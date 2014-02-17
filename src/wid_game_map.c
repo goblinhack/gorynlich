@@ -34,6 +34,9 @@
 #include "config.h"
 #include "level.h"
 #include "level_private.h"
+#include "server.h"
+#include "client.h"
+#include "socket.h"
 
 levelp level_game;
 widp wid_game_map_window;
@@ -93,6 +96,12 @@ void wid_game_hide (void)
 
 void wid_game_visible (void)
 {
+    is_server = true;
+
+    server_start(server_address);
+
+    client_socket_join(SERVER_DEFAULT_HOST, 0, SERVER_DEFAULT_PORT);
+
     if (wid_game_map_window) {
         wid_visible(wid_game_map_window, 0);
     } else {
