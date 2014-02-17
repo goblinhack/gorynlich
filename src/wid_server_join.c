@@ -370,7 +370,7 @@ static boolean wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t b
     return (true);
 }
 
-static boolean wid_server_join_join (widp w, int32_t x, int32_t y, uint32_t button)
+static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
 {
     server *s = wid_get_client_context(w);
     if (!s) {
@@ -1294,7 +1294,7 @@ static void wid_server_join_create (boolean redo)
             } else {
                 wid_set_text(w, "Join");
                 wid_set_tooltip(w, "Try to join the game on this server");
-                wid_set_on_mouse_down(w, wid_server_join_join);
+                wid_set_on_mouse_down(w, wid_server_join);
             }
 
             wid_set_font(w, vsmall_font);
