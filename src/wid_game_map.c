@@ -51,6 +51,8 @@ widp wid_level;
 uint32_t tile_width;
 uint32_t tile_height;
 
+static float tile_scale = 4.0;
+
 static void wid_game_map_set_thing_template (widp w, thing_templatep t)
 {
     wid_set_thing_template(w, t);
@@ -157,11 +159,11 @@ void wid_game_map_wid_create (void)
 
     {
         float base_tile_width =
-                ((1.0f / (float)TILES_SCREEN_WIDTH) *
+                ((1.0f / ((float)TILES_SCREEN_WIDTH) / (tile_scale)) *
                     (float)global_config.video_gl_width);
 
         float base_tile_height =
-                ((1.0f / (float)TILES_SCREEN_HEIGHT) *
+                ((1.0f / ((float)TILES_SCREEN_HEIGHT) / (tile_scale)) *
                     (float)global_config.video_gl_height);
 
         fpoint tl = { 0, 0 };
@@ -170,6 +172,8 @@ void wid_game_map_wid_create (void)
         br.x += base_tile_width;
         br.y += base_tile_height;
 
+        tile_width = br.x - tl.x;
+        tile_height = br.y - tl.y;
         tile_width = br.x - tl.x;
         tile_height = br.y - tl.y;
 
@@ -204,6 +208,7 @@ void wid_game_map_wid_create (void)
     wid_editor_map_loading = false;
 
     things_level_start(level_game);
+    wid_game_map_score_update(level_game);
 }
 
 void wid_game_map_wid_destroy (void)
@@ -246,12 +251,6 @@ wid_game_map_replace_tile (widp w,
 
     level = (typeof(level)) wid_get_client_context(w);
     verify(level);
-
-    if ((x < 0) || (y < 0) ||
-        (x >= TILES_MAP_EDITABLE_WIDTH) ||
-        (y >= TILES_MAP_EDITABLE_HEIGHT)) {
-        return (0);
-    }
 
     /*
      * Find the midpoint of the tile.
@@ -303,11 +302,11 @@ wid_game_map_replace_tile (widp w,
     }
 
     float base_tile_width =
-            ((1.0f / (float)TILES_SCREEN_WIDTH) *
+            ((1.0f / ((float)TILES_SCREEN_WIDTH) / (tile_scale)) *
                 (float)global_config.video_gl_width);
 
     float base_tile_height =
-            ((1.0f / (float)TILES_SCREEN_HEIGHT) *
+            ((1.0f / ((float)TILES_SCREEN_HEIGHT) / (tile_scale)) *
                 (float)global_config.video_gl_height);
 
     br.x += base_tile_width;
