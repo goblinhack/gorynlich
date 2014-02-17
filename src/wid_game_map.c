@@ -5,38 +5,25 @@
  */
 
 #include <SDL.h>
-#include <errno.h>
 
 #include "main.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
 #include "thing_template.h"
-#include "tree.h"
 #include "string.h"
-#include "marshal.h"
-#include "wid_popup.h"
 #include "wid_textbox.h"
 #include "wid_game_map.h"
-#include "wid_tooltip.h"
 #include "wid_intro.h"
 #include "wid_editor.h"
-#include "wid_editor_map.h"
-#include "gl.h"
-#include "level.h"
-#include "player.h"
 #include "thing.h"
 #include "map.h"
-#include "wid_button.h"
-#include "sdl.h"
-#include "config.h"
 #include "level.h"
-#include "level_private.h"
 #include "server.h"
 #include "client.h"
 #include "socket.h"
+#include "timer.h"
 
 levelp level_game;
 widp wid_game_map_window;
@@ -94,13 +81,32 @@ void wid_game_hide (void)
     wid_intro_visible();
 }
 
+static void wid_game_start_cb (void *context)
+{
+    if (!client_socket_join(SERVER_DEFAULT_HOST, 0, SERVER_DEFAULT_PORT)) {
+        action_timer_create(
+                &wid_timers,
+                (action_timer_callback)wid_game_start_cb,
+                0, /* context */
+                "join server",
+                1000,
+                0 /* jitter */);
+    }
+}
+
 void wid_game_visible (void)
 {
     is_server = true;
 
     server_start(server_address);
 
-    client_socket_join(SERVER_DEFAULT_HOST, 0, SERVER_DEFAULT_PORT);
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_game_start_cb,
+            0, /* context */
+            "join server",
+            1000,
+            0 /* jitter */);
 
     if (wid_game_map_window) {
         wid_visible(wid_game_map_window, 0);
