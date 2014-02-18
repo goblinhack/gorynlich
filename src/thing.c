@@ -13,7 +13,8 @@
 #include "thing_template.h"
 #include "thing_timer.h"
 #include "wid.h"
-#include "wid_game_map.h"
+#include "wid_game_map_client.h"
+#include "wid_game_map_server.h"
 #include "marshal.h"
 #include "map.h"
 #include "level.h"
@@ -21,7 +22,6 @@
 #include "time.h"
 #include "string.h"
 #include "wid_textbox.h"
-#include "wid_game_map.h"
 #include "color.h"
 #include "config.h"
 #include "gl.h"
@@ -588,7 +588,7 @@ widp thing_message (thingp t, const char *message)
         return (0);
     }
 
-    widp w = wid_textbox(wid_game_map_window,
+    widp w = wid_textbox(wid_game_map_client_window,
                          &wid_score, message, 0.5, 0.03, med_font);
 
     wid_set_no_shape(w);
@@ -1531,11 +1531,11 @@ void thing_place (void *context)
 
     place = (typeof(place)) context;
 
-    wid_game_map_replace_tile(wid_game_map_grid_container,
-                              place->x,
-                              place->y,
-                              0, /* give to player count */
-                              place->thing_template);
+    wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
+                                     place->x,
+                                     place->y,
+                                     0, /* give to player count */
+                                     place->thing_template);
 
     if (thing_template_is_xxx17(place->thing_template)) {
         sound_play_explosion();
@@ -1553,7 +1553,7 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
     t->timestamp_teleport = time_get_time_cached();
 
     widp wid_next_floor = wid_grid_find_thing_template(
-                                    wid_game_map_grid_container,
+                                    wid_game_map_server_grid_container,
                                     x,
                                     y,
                                     thing_template_is_floor);

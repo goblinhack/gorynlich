@@ -164,7 +164,7 @@ static void client_socket_tx_ping (void)
     static uint32_t ts;
     static uint8_t seq;
 
-    if (!time_have_x_tenths_passed_since(10, ts)) {
+    if (!time_have_x_tenths_passed_since(5, ts)) {
         return;
     }
 
@@ -325,7 +325,8 @@ static boolean client_socket_close (char *host, char *port)
     return (true);
 }
 
-boolean client_socket_join (char *host, char *port, uint16_t portno)
+boolean client_socket_join (char *host, char *port, uint16_t portno,
+                            boolean quiet)
 {
     if (client_joined_server) {
         WARN("Leave the current server first");
@@ -359,7 +360,11 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
         }
 
         if (SDLNet_ResolveHost(&server_address, host, portno)) {
-            MSGERR("Cannot join %s:%u", host, portno);
+            if (quiet) {
+                WARN("Cannot join %s:%u", host, portno);
+            } else {
+                MSGERR("Cannot join %s:%u", host, portno);
+            }
             return (false);
         }
 
@@ -368,7 +373,11 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
          */
         s = socket_connect_from_client(server_address);
         if (!s) {
-            MSGERR("Join, failed to connect");
+            if (quiet) {
+                WARN("Join, failed to connect");
+            } else {
+                MSGERR("Join, failed to connect");
+            }
             return (false);
         }
     }
@@ -377,7 +386,9 @@ boolean client_socket_join (char *host, char *port, uint16_t portno)
     socket_set_pclass(s, global_config.pclass);
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
-        MSG("Join failed");
+        if (!quiet) {
+            MSG("Join failed");
+        }
         return (false);
     }
 
@@ -557,7 +568,7 @@ boolean client_join (tokens_t *tokens, void *context)
     char *host = tokens->args[1];
     char *port = tokens->args[2];
 
-    boolean r = client_socket_join(host, port, 0);
+    boolean r = client_socket_join(host, port, 0, false /* quiet */);
 
     return (r);
 }

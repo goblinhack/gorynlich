@@ -26,7 +26,6 @@
 #include "thing_template.h"
 #include "wid.h"
 #include "sdl.h"
-#include "wid_game_map.h"
 #include "wid_intro_about.h"
 #include "wid_intro_help.h"
 #include "wid_intro_guide.h"
@@ -37,6 +36,8 @@
 #include "wid_server_create.h"
 #include "wid_intro.h"
 #include "wid_intro2.h"
+#include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "wid_intro3.h"
 #include "string.h"
 #include "dir.h"
@@ -91,7 +92,8 @@ void quit (void)
     sdl_exit();
 
     wid_editor_fini();
-    wid_game_fini();
+    wid_game_map_client_fini();
+    wid_game_map_server_fini();
 
     level_fini();
     player_fini();
@@ -765,8 +767,12 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_help_init");
 
     action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_game_init,
-                          0, "wid_game_init");
+                          (action_init_fn_callback)wid_game_map_server_init,
+                          0, "wid_game_map_server_init");
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)wid_game_map_client_init,
+                          0, "wid_game_map_client_init");
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)socket_init,
