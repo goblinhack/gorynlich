@@ -10,7 +10,6 @@
 #include "map.h"
 #include "tree.h"
 #include "wid.h"
-#include "wid_game_map.h"
 #include "thing.h"
 #include "thing_template.h"
 #include "thing_tile.h"

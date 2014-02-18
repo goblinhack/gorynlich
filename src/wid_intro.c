@@ -15,12 +15,13 @@
 #include "wid_popup.h"
 #include "wid_editor.h"
 #include "wid_editor_map.h"
-#include "wid_game_map.h"
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_help.h"
 #include "wid_intro_guide.h"
 #include "wid_game_over.h"
+#include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "wid_hiscore.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
@@ -182,7 +183,8 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 
 static void wid_intro_single_play_selected_cb (void *context)
 {
-    wid_game_visible();
+    wid_game_map_server_visible();
+    wid_game_map_client_visible();
 }
 
 static void wid_intro_single_play_selected (void)

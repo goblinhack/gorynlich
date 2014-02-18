@@ -13,9 +13,10 @@
 #include "wid_intro3.h"
 #include "wid_intro.h"
 #include "wid_popup.h"
-#include "wid_game_map.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
+#include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "sdl.h"
 #include "level.h"
 #include "timer.h"
@@ -116,7 +117,8 @@ static void wid_server_create_selected (void)
 
 static void wid_intro3_play_selected_cb (void *context)
 {
-    wid_game_visible();
+    wid_game_map_server_visible();
+    wid_game_map_client_visible();
 }
 
 static void wid_intro3_multi_play_selected_cb (void *context)

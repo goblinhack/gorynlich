@@ -28,7 +28,7 @@
 #include "wid_button.h"
 #include "time.h"
 #include "marshal.h"
-#include "wid_game_map.h"
+#include "wid_game_map_server.h"
 #include "wid_editor_map.h"
 #include "sdl.h"
 #include "map.h"
@@ -179,11 +179,11 @@ static boolean level_command_dead (tokens_t *tokens, void *context)
     if (thing_is_seedpod(t)) {
         thing_templatep thing_template = thing_template_find("data/things/plant");
 
-        wid_game_map_replace_tile(wid_game_map_grid_container,
-                                  thing_grid_x(t),
-                                  thing_grid_y(t),
-                                  0, /* give to player count */
-                                  thing_template);
+        wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
+                                         thing_grid_x(t),
+                                         thing_grid_y(t),
+                                         0, /* give to player count */
+                                         thing_template);
 
         sound_play_slime();
 
@@ -256,7 +256,7 @@ void level_destroy (levelp *plevel)
         myfree((void*) level->logname);
     }
 
-    wid_game_map_wid_destroy();
+    wid_game_map_server_wid_destroy();
 
     myfree(level);
 }
@@ -562,11 +562,11 @@ void level_place_plant_pod (levelp level)
 
         thing_template = thing_template_find("data/things/seedpod");
 
-        wid_game_map_replace_tile(wid_game_map_grid_container,
-                                  x,
-                                  y,
-                                  0, /* give to player count */
-                                  thing_template);
+        wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
+                                         x,
+                                         y,
+                                         0, /* give to player count */
+                                         thing_template);
 
         sound_play_slime();
 
@@ -1120,7 +1120,7 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
                                 wid_editor_map_thing_replace_template);
     } else {
         rc = demarshal_wid_grid(ctx, wid,
-                                wid_game_map_replace_tile);
+                                wid_game_map_server_replace_tile);
     }
 
     wid_editor_map_loading = false;
@@ -1130,7 +1130,7 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
     if (level_is_editor(level)) {
         wid_update(wid_editor_map_grid_container);
     } else {
-        wid_update(wid_game_map_grid_container);
+        wid_update(wid_game_map_server_grid_container);
     }
 
     GET_KET(ctx);

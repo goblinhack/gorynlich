@@ -14,7 +14,8 @@
 #include "thing_timer.h"
 #include "timer.h"
 #include "wid.h"
-#include "wid_game_map.h"
+#include "wid_game_map_client.h"
+#include "wid_game_map_server.h"
 #include "marshal.h"
 #include "map.h"
 #include "level.h"
@@ -32,12 +33,6 @@ static boolean level_ignore_events (void)
 {
     if (level_game) {
         if (level_is_frozen(level_game)) {
-            return (true);
-        }
-    }
-
-    if (wid_game_map_window) {
-        if (wid_ignore_for_events(wid_game_map_window)) {
             return (true);
         }
     }
@@ -88,6 +83,7 @@ void thing_tick_all (void)
         return;
     }
 
+#if 0
     /*
      * If the window was moving we could not attach the widgets yet.
      * Now it has stopped moving, we can.
@@ -102,6 +98,7 @@ void thing_tick_all (void)
             DIE("no grid");
         }
     }
+#endif
 
     /*
      * Allow level timers to fire.
@@ -292,7 +289,7 @@ void thing_tick_all (void)
             }
 
             if (player == t) {
-                wid_game_map_score_update(level);
+                wid_game_map_client_score_update(level);
             }
         }
 
@@ -366,19 +363,19 @@ void thing_tick_all (void)
                 t->is_dir_right = false;
 
                 widp wid_current_floor = wid_grid_find_thing_template(
-                                                wid_game_map_grid_container,
-                                                t->grid_x,
-                                                t->grid_y,
-                                                thing_template_is_floor);
+                                            wid_game_map_server_grid_container,
+                                            t->grid_x,
+                                            t->grid_y,
+                                            thing_template_is_floor);
                 if (!wid_current_floor) {
                     DIE("not on a floor tile");
                 }
 
                 widp wid_next_floor = wid_grid_find_thing_template(
-                                                wid_game_map_grid_container,
-                                                nexthop_x,
-                                                nexthop_y,
-                                                thing_template_is_floor);
+                                            wid_game_map_server_grid_container,
+                                            nexthop_x,
+                                            nexthop_y,
+                                            thing_template_is_floor);
                 if (!wid_next_floor) {
                     DIE("no floor tile to hpp to");
                 }

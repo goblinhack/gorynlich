@@ -14,7 +14,6 @@
 #include "wid_intro2.h"
 #include "wid_intro3.h"
 #include "wid_popup.h"
-#include "wid_game_map.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
 #include "sdl.h"

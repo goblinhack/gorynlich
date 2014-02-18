@@ -14,7 +14,7 @@
 #include "level.h"
 #include "map.h"
 #include "wid_tooltip.h"
-#include "wid_game_map.h"
+#include "wid_game_map_server.h"
 #include "sound.h"
 #include "timer.h"
 
@@ -55,11 +55,11 @@ void thing_collision (thingp t, int32_t x, int32_t y)
 
     verify(wid_me);
 
-    wid_it = wid_grid_find_first(wid_game_map_grid_container, x, y);
+    wid_it = wid_grid_find_first(wid_game_map_server_grid_container, x, y);
     while (wid_it) {
         verify(wid_it);
 
-        wid_next = wid_grid_find_next(wid_game_map_grid_container,
+        wid_next = wid_grid_find_next(wid_game_map_server_grid_container,
                                       wid_it, x, y);
         if (wid_me == wid_it) {
             wid_it = wid_next;
