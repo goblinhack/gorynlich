@@ -16,7 +16,7 @@
 #include "slre.h"
 #include "command.h"
 #include "player.h"
-#include "wid_game_map.h"
+#include "wid_game_map_server.h"
 #include "wid_server_create.h"
 #include "string.h"
 
@@ -125,7 +125,7 @@ static void server_rx_client_join (socketp s)
     socket_tx_server_shout_except_to(tmp, s);
     myfree(tmp);
 
-    wid_game_visible();
+    wid_game_map_server_visible();
 }
 
 static void server_rx_client_leave_implicit (socketp s)
@@ -135,11 +135,13 @@ static void server_rx_client_leave_implicit (socketp s)
         return;
     }
 
-    wid_game_map_wid_destroy();
+    global_config.server_current_players--;
+
+    if (!global_config.server_current_players) {
+        wid_game_map_server_wid_destroy();
+    }
 
     socket_set_player(s, 0);
-
-    global_config.server_current_players--;
 }
 
 static void server_rx_client_leave (socketp s)
@@ -329,7 +331,7 @@ static void server_socket_tx_ping (void)
     static uint32_t ts;
     static uint8_t seq;
 
-    if (!time_have_x_tenths_passed_since(10, ts)) {
+    if (!time_have_x_tenths_passed_since(5, ts)) {
         return;
     }
 

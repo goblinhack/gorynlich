@@ -377,7 +377,7 @@ static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
         return (false);
     }
 
-    if (!client_socket_join(s->host, 0, s->port)) {
+    if (!client_socket_join(s->host, 0, s->port, true /* quiet */)) {
         return (false);
     }
 

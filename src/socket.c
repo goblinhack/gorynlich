@@ -1266,7 +1266,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     verify(s);
 
     if (!socket_get_udp_socket(s)) {
-        ERR("no socket to join on");
+        WARN("no socket to join on");
         return (false);
     }
 
@@ -1274,12 +1274,12 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
      * Refresh the server with our name.
      */
     if (!socket_get_client(s)) {
-        ERR("not a client, cannot join");
+        WARN("not a client, cannot join");
         return (false);
     }
 
     if (!s->connected) {
-        MSGERR("Server is not present, cannot join yet");
+        WARN("Server is not present, cannot join yet");
         return (false);
     }
 

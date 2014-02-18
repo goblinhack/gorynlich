@@ -16,7 +16,7 @@
 #include "map.h"
 #include "wid.h"
 #include "level.h"
-#include "wid_game_map.h"
+#include "wid_game_map_server.h"
 #include "math.h"
 
 static char walls[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
