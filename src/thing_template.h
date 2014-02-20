@@ -167,7 +167,6 @@ typedef struct thing_template_ {
     uint8_t is_left_as_corpse_on_death:1;
     uint8_t is_xxx35:1;
     uint8_t is_item_hidden:1;
-    uint8_t is_thing:1;
     uint8_t is_joinable:1;
     uint8_t is_wall:1;
     uint8_t is_effect_sway:1;
@@ -262,7 +261,6 @@ boolean thing_template_is_xxx33(thing_templatep);
 boolean thing_template_is_left_as_corpse_on_death(thing_templatep);
 boolean thing_template_is_xxx35(thing_templatep);
 boolean thing_template_is_item_hidden(thing_templatep);
-boolean thing_template_is_thing(thing_templatep);
 boolean thing_template_is_plant(thing_templatep);
 boolean thing_template_is_joinable(thing_templatep);
 boolean thing_template_is_effect_sway(thing_templatep);
