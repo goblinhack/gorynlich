@@ -1469,13 +1469,6 @@ boolean thing_is_left_as_corpse_on_death (thingp t)
     return (thing_template_is_left_as_corpse_on_death(thing_get_template(t)));
 }
 
-boolean thing_is_thing (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_thing(thing_get_template(t)));
-}
-
 boolean thing_is_joinable (thingp t)
 {
     verify(t);

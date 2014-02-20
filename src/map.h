@@ -6,7 +6,6 @@
 
 
 boolean map_is_item_hidden_at(levelp, int32_t x, int32_t y);
-boolean map_is_thing_at(levelp, int32_t x, int32_t y);
 boolean map_is_xxx11_at(levelp, int32_t x, int32_t y);
 boolean map_is_exit_at(levelp, int32_t x, int32_t y);
 boolean map_is_floor_at(levelp, int32_t x, int32_t y);
@@ -142,8 +141,6 @@ thingp map_thing_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
 
 tree_rootp map_all_things_is_item_hidden(levelp);
 tree_rootp map_all_things_is_item_hidden_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_thing(levelp);
-tree_rootp map_all_things_is_thing_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_exit(levelp);
 tree_rootp map_all_things_is_exit_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_floor(levelp);
@@ -230,7 +227,6 @@ tree_rootp map_all_things_is_left_as_corpse_on_death(levelp);
 tree_rootp map_all_things_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y);
 
 uint32_t level_count_is_item_is_hidden(levelp);
-uint32_t level_count_is_thing(levelp);
 uint32_t level_count_is_exit(levelp);
 uint32_t level_count_is_floor(levelp);
 uint32_t level_count_is_food(levelp);

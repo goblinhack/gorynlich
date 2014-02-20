@@ -282,11 +282,6 @@ boolean map_is_item_hidden_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_item_hidden));
 }
 
-boolean map_is_thing_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_thing));
-}
-
 boolean map_is_plant_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_plant));
@@ -538,11 +533,6 @@ thingp map_thing_is_xxx35_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_item_hidden_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_item_hidden));
-}
-
-thingp map_thing_is_thing_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_thing));
 }
 
 thingp map_thing_is_plant_at (levelp level, int32_t x, int32_t y)
@@ -814,11 +804,6 @@ tree_rootp map_all_things_is_item_hidden_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_item_hidden));
 }
 
-tree_rootp map_all_things_is_thing_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_thing));
-}
-
 tree_rootp map_all_things_is_plant_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_plant));
@@ -1080,12 +1065,6 @@ thing_templatep map_find_is_item_hidden_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_item_hidden, w));
-}
-
-thing_templatep map_find_spawns_thing_at (levelp level,
-                                          int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_thing, w));
 }
 
 thing_templatep map_find_plant_at (levelp level,
@@ -1569,11 +1548,6 @@ uint32_t level_count_is_item_is_hidden (levelp level)
     return (level_count_is_x(level, thing_template_is_item_hidden));
 }
 
-uint32_t level_count_is_thing (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_thing));
-}
-
 uint32_t level_count_is_plant (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_plant));
@@ -1848,11 +1822,6 @@ tree_rootp map_all_things_is_xxx35 (levelp level)
 tree_rootp map_all_things_is_item_hidden (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_item_hidden));
-}
-
-tree_rootp map_all_things_is_thing (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_thing));
 }
 
 tree_rootp map_all_things_is_plant (levelp level)

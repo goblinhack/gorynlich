@@ -8,7 +8,6 @@
  is_monst
  is_animated
  is_plant
- is_thing
  is_effect_rotate_2way
  is_scarable
  tiles={
