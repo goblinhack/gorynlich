@@ -405,7 +405,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_thing", t->is_thing);
         GET_OPT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);
@@ -503,7 +502,6 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
     PUT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
     PUT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
-    PUT_NAMED_BITFIELD(ctx, "is_thing", t->is_thing);
     PUT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
     PUT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
     PUT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);
@@ -883,11 +881,6 @@ boolean thing_template_is_xxx35 (thing_templatep t)
 boolean thing_template_is_item_hidden (thing_templatep t)
 {
     return (t->is_item_hidden);
-}
-
-boolean thing_template_is_thing (thing_templatep t)
-{
-    return (t->is_thing);
 }
 
 boolean thing_template_is_joinable (thing_templatep t)

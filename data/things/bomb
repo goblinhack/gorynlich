@@ -5,7 +5,6 @@
  z_order=2
  is_bomb
  is_animated
- is_thing
  tiles={
   tile={
    tile="bomb1"

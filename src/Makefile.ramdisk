@@ -46,6 +46,15 @@
 .o/ramdisk_data_gfx_title3_xcf.o: asm/ramdisk_data_gfx_title3_xcf.S ../data/gfx/title3.xcf
 	gcc -c asm/ramdisk_data_gfx_title3_xcf.S -o .o/ramdisk_data_gfx_title3_xcf.o
 
+.o/ramdisk_data_gfx_title_small_png.o: asm/ramdisk_data_gfx_title_small_png.S ../data/gfx/title_small.png
+	gcc -c asm/ramdisk_data_gfx_title_small_png.S -o .o/ramdisk_data_gfx_title_small_png.o
+
+.o/ramdisk_data_gfx_title_small_xcf.o: asm/ramdisk_data_gfx_title_small_xcf.S ../data/gfx/title_small.xcf
+	gcc -c asm/ramdisk_data_gfx_title_small_xcf.S -o .o/ramdisk_data_gfx_title_small_xcf.o
+
+.o/ramdisk_data_gfx_titlesmall_xcf.o: asm/ramdisk_data_gfx_titlesmall_xcf.S ../data/gfx/titlesmall.xcf
+	gcc -c asm/ramdisk_data_gfx_titlesmall_xcf.S -o .o/ramdisk_data_gfx_titlesmall_xcf.o
+
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o
 

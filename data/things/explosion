@@ -5,7 +5,6 @@
  z_order=2
  is_xxx17
  is_animated
- is_thing
  is_hidden_from_editor
  tiles={
   tile={
