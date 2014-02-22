@@ -1043,46 +1043,6 @@ void socket_count_inc_pak_rx_bad_msg (const socketp s)
     s->rx_bad_msg++;
 }
 
-static UDPpacket *socket_alloc_msg (void)
-{
-    UDPpacket *packet;
-
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
-    }
-
-    newptr(packet, "pak");
-
-    return (packet);
-}
-
-static void socket_free_msg (UDPpacket *packet)
-{
-    oldptr(packet);
-
-    SDLNet_FreePacket(packet);
-}
-
-static void socket_tx_msg (socketp s, UDPpacket *packet)
-{
-    msg_type type;
-
-    type = *(packet->data);
-
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        WARN("no UDP packet sent: %s", SDLNet_GetError());
-        WARN("  remote: %s", socket_get_remote_logname(s));
-
-        socket_count_inc_pak_tx_error(s);
-    } else {
-        socket_count_inc_pak_tx(s);
-
-        s->tx_msg[type]++;
-    }
-}
-
 void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 {
     verify(s);
