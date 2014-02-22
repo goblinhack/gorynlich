@@ -248,7 +248,7 @@ extern uint32_t socket_get_tx(socketp s);
 extern uint32_t socket_get_rx_error(socketp s);
 extern uint32_t socket_get_tx_error(socketp s);
 extern uint32_t socket_get_rx_bad_msg(socketp s);
-extern void socket_tx_map_update(void);
+extern void socket_tx_map_update(socketp);
 extern void socket_rx_map_update(socketp s, UDPpacket *packet, uint8_t *data);
 
 /*

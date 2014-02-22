@@ -393,8 +393,8 @@ static void dmap_find_oldest_visited (dmap *map, thingp t,
     int16_t best_visited = INT16_MAX;
     boolean got_one = false;
     int16_t score = 0;
-    int16_t x = t->grid_x;
-    int16_t y = t->grid_y;
+    int16_t x = (int)t->x;
+    int16_t y = (int)t->y;
 
     MAP_FLOODWALK_BEGIN(x, y, score)
 
@@ -423,8 +423,8 @@ static void dmap_find_best_cell (dmap *map, thingp t,
     int16_t best_score = -INT16_MAX;
     boolean got_one = false;
     int16_t score = 0;
-    int16_t x = t->grid_x;
-    int16_t y = t->grid_y;
+    int16_t x = (int)t->x;
+    int16_t y = (int)t->y;
 
     MAP_FLOODWALK_BEGIN(x, y, score)
 
@@ -480,8 +480,8 @@ static void dmap_goal_flood (dmap *map, int16_t score, int16_t x, int16_t y)
 static void dmap_distance_flood (dmap *map, thingp t)
 {
     int16_t distance = 0;
-    int16_t x = t->grid_x;
-    int16_t y = t->grid_y;
+    int16_t x = (int)t->x;
+    int16_t y = (int)t->y;
 
     MAP_FLOODWALK_BEGIN(x, y, distance)
 
@@ -805,8 +805,8 @@ static void dmap_astar_reconstruct_path (dmap *map, dmap_astar_node *came_from)
 static boolean dmap_astar_best_path (dmap *map, thingp t,
                                      int16_t target_x, int16_t target_y)
 {
-    int16_t start_x = t->grid_x;
-    int16_t start_y = t->grid_y;
+    int16_t start_x = (int)t->x;
+    int16_t start_y = (int)t->y;
 
     map->goal_x = target_x;
     map->goal_y = target_y;
@@ -941,8 +941,8 @@ void dmap_goals_find (dmap *map, thingp t)
                 continue;
             }
 
-            x = thing_it->grid_x;
-            y = thing_it->grid_y;
+            x = (int)thing_it->x;
+            y = (int)thing_it->y;
 
             if (thing_is_plant(t)) {
                 if (pass == 0) {
@@ -1023,10 +1023,10 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
 {
     boolean moved = false;
 
-    int16_t x = t->grid_x;
-    int16_t y = t->grid_y;
+    int16_t x = t->x;
+    int16_t y = t->y;
 
-    if (t->last_x < t->grid_x) {
+    if (t->last_x < t->x) {
         if (walls[x+1][y] == ' ') {
             moved = true;
             *nexthop_x = x+1;
@@ -1043,7 +1043,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_x > t->grid_x) {
+        if (t->last_x > t->x) {
             if (walls[x-1][y] == ' ') {
                 moved = true;
                 *nexthop_x = x-1;
@@ -1061,7 +1061,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y < t->grid_y) {
+        if (t->last_y < t->y) {
             if (walls[x][y+1] == ' ') {
                 moved = true;
                 *nexthop_x = x;
@@ -1079,7 +1079,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y > t->grid_y) {
+        if (t->last_y > t->y) {
             if (walls[x][y-1] == ' ') {
                 moved = true;
                 *nexthop_x = x;
@@ -1100,7 +1100,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
      * Try the other direction.
      */
     if (!moved) {
-        if (t->last_x < t->grid_x) {
+        if (t->last_x < t->x) {
             if (walls[x-1][y] == ' ') {
                 moved = true;
                 *nexthop_x = x-1;
@@ -1110,7 +1110,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_x > t->grid_x) {
+        if (t->last_x > t->x) {
             if (walls[x+1][y] == ' ') {
                 moved = true;
                 *nexthop_x = x+1;
@@ -1120,7 +1120,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y < t->grid_y) {
+        if (t->last_y < t->y) {
             if (walls[x][y-1] == ' ') {
                 moved = true;
                 *nexthop_x = x;
@@ -1130,7 +1130,7 @@ static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y > t->grid_y) {
+        if (t->last_y > t->y) {
             if (walls[x][y+1] == ' ') {
                 moved = true;
                 *nexthop_x = x;
@@ -1147,10 +1147,10 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
 {
     boolean moved = false;
 
-    int16_t x = t->grid_x;
-    int16_t y = t->grid_y;
+    int16_t x = t->x;
+    int16_t y = t->y;
 
-    if (t->last_x < t->grid_x) {
+    if (t->last_x < t->x) {
         if ((rand() % 100) < 50) {
             if (level->roads[x+1][y] != ' ') {
                 moved = true;
@@ -1183,7 +1183,7 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_x > t->grid_x) {
+        if (t->last_x > t->x) {
             if ((rand() % 100) < 50) {
                 if (level->roads[x-1][y] != ' ') {
                     moved = true;
@@ -1217,7 +1217,7 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y < t->grid_y) {
+        if (t->last_y < t->y) {
             if ((rand() % 100) < 50) {
                 if (level->roads[x][y+1] != ' ') {
                     moved = true;
@@ -1251,7 +1251,7 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y > t->grid_y) {
+        if (t->last_y > t->y) {
             if ((rand() % 100) < 50) {
                 if (level->roads[x][y-1] != ' ') {
                     moved = true;
@@ -1288,7 +1288,7 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
      * Try the other direction.
      */
     if (!moved) {
-        if (t->last_x < t->grid_x) {
+        if (t->last_x < t->x) {
             if (level->roads[x-1][y] != ' ') {
                 moved = true;
                 *nexthop_x = x-1;
@@ -1298,7 +1298,7 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_x > t->grid_x) {
+        if (t->last_x > t->x) {
             if (level->roads[x+1][y] != ' ') {
                 moved = true;
                 *nexthop_x = x+1;
@@ -1308,7 +1308,7 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y < t->grid_y) {
+        if (t->last_y < t->y) {
             if (level->roads[x][y-1] != ' ') {
                 moved = true;
                 *nexthop_x = x;
@@ -1318,7 +1318,7 @@ static boolean dmap_move_in_same_door_dir (dmap *map, levelp level, thingp t,
     }
 
     if (!moved) {
-        if (t->last_y > t->grid_y) {
+        if (t->last_y > t->y) {
             if (level->roads[x][y+1] != ' ') {
                 moved = true;
                 *nexthop_x = x;
@@ -1341,19 +1341,19 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         memcpy(walls, level->walls, sizeof(walls));
     }
 
-    if (t->grid_x < 0) {
+    if (t->x < 0) {
         return (false);
     }
 
-    if (t->grid_y < 0) {
+    if (t->y < 0) {
         return (false);
     }
 
-    if (t->grid_x > TILES_MAP_EDITABLE_WIDTH - 1) {
+    if (t->x > TILES_MAP_EDITABLE_WIDTH - 1) {
         return (false);
     }
 
-    if (t->grid_y > TILES_MAP_EDITABLE_HEIGHT - 1) {
+    if (t->y > TILES_MAP_EDITABLE_HEIGHT - 1) {
         return (false);
     }
 
@@ -1362,7 +1362,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
      */
     static uint16_t visited;
 
-    t->visited[t->grid_x][t->grid_y] = ++visited;
+    t->visited[(int)t->x][(int)t->y] = ++visited;
 
     /*
      * Flood how far various nodes are from us.
@@ -1410,7 +1410,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
             /*
              * Stick with the same next hop if nothing good.
              */
-            if ((goal->x == t->grid_x) && (goal->y == t->grid_y)) {
+            if ((goal->x == t->x) && (goal->y == t->y)) {
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
                 found_goal = true;
@@ -1439,7 +1439,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
 
         dmap_find_best_cell(map, t, &target_x, &target_y);
 
-        if ((target_x != t->grid_x) || (target_y != t->grid_y)) {
+        if ((target_x != t->x) || (target_y != t->y)) {
             if (dmap_astar_best_path(map, t, target_x, target_y)) {
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
@@ -1457,7 +1457,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
 
         dmap_find_oldest_visited(map, t, &target_x, &target_y);
 
-        if ((target_x != t->grid_x) || (target_y != t->grid_y)) {
+        if ((target_x != t->x) || (target_y != t->y)) {
             if (dmap_astar_best_path(map, t, target_x, target_y)) {
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
@@ -1490,7 +1490,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
 
 #ifdef ENABLE_MAP_DEBUG
         if (thing_is_esnail(t)) {
-            dmap_print_map(map, t->grid_x, t->grid_y, true, true);
+            dmap_print_map(map, t->x, t->y, true, true);
         }
 #endif
         LOG("nexthop %d %d into a wall", *nexthop_x, *nexthop_y);
@@ -1498,15 +1498,15 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         return (false);
     }
 
-    t->last_x = t->grid_x;
-    t->last_y = t->grid_y;
+    t->last_x = t->x;
+    t->last_y = t->y;
 
     /*
      * Show likely best path.
      */
 #ifdef ENABLE_MAP_DEBUG
     if (thing_is_esnail(t)) {
-        dmap_print_map(map, t->grid_x, t->grid_y, true, true);
+        dmap_print_map(map, t->x, t->y, true, true);
     }
 #endif
 
