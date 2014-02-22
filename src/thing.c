@@ -26,8 +26,11 @@
 #include "config.h"
 #include "gl.h"
 #include "sound.h"
+#include "socket.h"
 
-tree_root *things;
+tree_root *server_things;
+tree_root *client_things;
+
 static uint32_t thing_id;
 static boolean thing_init_done;
 static void thing_destroy_internal(thingp t, const char *why);
@@ -47,14 +50,17 @@ void thing_fini (void)
     if (thing_init_done) {
         thing_init_done = false;
 
-        tree_destroy(&things, (tree_destroy_func)thing_destroy_internal2);
+        tree_destroy(&client_things, 
+                     (tree_destroy_func)thing_destroy_internal2);
+        tree_destroy(&server_things, 
+                     (tree_destroy_func)thing_destroy_internal2);
     }
 }
 
 /*
  * Create a new thing.
  */
-thingp thing_new (levelp level, const char *name)
+thingp thing_server_new (levelp level, const char *name)
 {
     thingp t;
     thing_templatep thing_template;
@@ -64,15 +70,15 @@ thingp thing_new (levelp level, const char *name)
         DIE("thing [%s] has no template", name);
     }
 
-    if (!things) {
-        things = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+    if (!server_things) {
+        server_things = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
     t->tree.key = ++thing_id;
     t->thing_template = thing_template;
 
-    if (!tree_insert(things, &t->tree.node)) {
+    if (!tree_insert(server_things, &t->tree.node)) {
         DIE("thing insert name [%s] failed", name);
     }
 
@@ -80,11 +86,54 @@ thingp thing_new (levelp level, const char *name)
         thing_set_level(t, level);
     }
 
-    t->logname = dynprintf("%s[%p]", thing_shortname(t), t);
+    t->logname = dynprintf("%s[%p] (server)", thing_shortname(t), t);
+    t->updated++;
 
     THING_LOG(t, "created");
 
     return (t);
+}
+
+/*
+ * Create a new thing.
+ */
+thingp thing_client_new (uint32_t id, thing_templatep thing_template)
+{
+    thingp t;
+
+    if (!client_things) {
+        client_things = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+    }
+
+    t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
+    t->tree.key = id;
+    t->thing_template = thing_template;
+
+    if (!tree_insert(server_things, &t->tree.node)) {
+        DIE("thing client insert id [%d] failed", id);
+    }
+
+    t->logname = dynprintf("%s[%p] (client)", thing_shortname(t), t);
+
+    THING_LOG(t, "created");
+
+    return (t);
+}
+
+/*
+ * Find an existing new thing.
+ */
+static thingp thing_client_find (uint32_t thing_id)
+{
+    thing target;
+    thingp result;
+
+    // memset(&target, 0, sizeof(target));
+    target.tree.key = thing_id;
+
+    result = (typeof(result)) tree_find(client_things, &target.tree.node);
+
+    return (result);
 }
 
 void thing_restarted (thingp t, levelp level)
@@ -151,11 +200,28 @@ static void thing_destroy_internal (thingp t, const char *why)
     }
 }
 
-void thing_destroy (thingp t, const char *why)
+void thing_client_destroy (thingp t, const char *why)
 {
     verify(t);
 
-    if (!tree_remove(things, &t->tree.node)) {
+    if (!tree_remove(client_things, &t->tree.node)) {
+        DIE("thing template destroy name [%s] failed", thing_name(t));
+    }
+
+    thing_destroy_internal(t, why);
+
+    if (t == player) {
+        player = 0;
+    }
+
+    myfree(t);
+}
+
+void thing_server_destroy (thingp t, const char *why)
+{
+    verify(t);
+
+    if (!tree_remove(server_things, &t->tree.node)) {
         DIE("thing template destroy name [%s] failed", thing_name(t));
     }
 
@@ -282,6 +348,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     } else {
         thing_dead_(t, killer, 0);
     }
+
+    t->updated++;
+    t->updated++;
 }
 
 void thing_reached_exit (thingp t)
@@ -322,7 +391,7 @@ void things_level_start (levelp level)
 {
     thingp t;
 
-    TREE_WALK(things, t) {
+    TREE_WALK(server_things, t) {
         verify(t);
 
         if (t->wid) {
@@ -341,7 +410,7 @@ void things_level_destroyed (levelp level)
 {
     thingp t;
 
-    TREE_WALK(things, t) {
+    TREE_WALK(server_things, t) {
         verify(t);
 
         if (t->wid) {
@@ -350,7 +419,7 @@ void things_level_destroyed (levelp level)
 
         THING_LOG(t, "level destroyed");
 
-        thing_destroy(t, "level destroyed");
+        thing_server_destroy(t, "level destroyed");
     }
 }
 
@@ -358,7 +427,7 @@ void things_level_restarted (levelp level)
 {
     thingp t;
 
-    TREE_WALK(things, t) {
+    TREE_WALK(server_things, t) {
         verify(t);
 
         if (t->wid) {
@@ -371,7 +440,7 @@ void things_level_restarted (levelp level)
             continue;
         }
 
-        thing_destroy(t, "level restarted");
+        thing_server_destroy(t, "level restarted");
     }
 }
 
@@ -405,7 +474,7 @@ void things_stop (levelp level)
 {
     thingp t;
 
-    TREE_WALK(things, t) {
+    TREE_WALK(server_things, t) {
         verify(t);
 
         thing_stop(t);
@@ -416,7 +485,7 @@ void things_stop_all_except (levelp level, thingp o)
 {
     thingp t;
 
-    TREE_WALK(things, t) {
+    TREE_WALK(server_things, t) {
         verify(t);
 
         if (t == o) {
@@ -432,7 +501,7 @@ void things_marshal (marshal_p out)
     tree_root *tree;
     thingp t;
 
-    tree = things;
+    tree = server_things;
 
     TREE_WALK(tree, t) {
         verify(t);
@@ -1049,6 +1118,7 @@ void thing_set_is_dir_down (thingp t, boolean val)
 {
     verify(t);
 
+    t->updated++;
     t->is_dir_down = val;
 }
 
@@ -1064,6 +1134,7 @@ void thing_set_is_dir_up (thingp t, boolean val)
     verify(t);
 
     t->is_dir_up = val;
+    t->updated++;
 }
 
 boolean thing_is_dir_up (thingp t)
@@ -1077,6 +1148,7 @@ void thing_set_is_dir_left (thingp t, boolean val)
 {
     verify(t);
 
+    t->updated++;
     t->is_dir_left = val;
 }
 
@@ -1091,6 +1163,7 @@ void thing_set_is_dir_right (thingp t, boolean val)
 {
     verify(t);
 
+    t->updated++;
     t->is_dir_right = val;
 }
 
@@ -1527,7 +1600,6 @@ void thing_place (void *context)
     wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                      place->x,
                                      place->y,
-                                     0, /* give to player count */
                                      place->thing_template);
 
     if (thing_template_is_xxx17(place->thing_template)) {
@@ -1564,4 +1636,163 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
     wid_move_to_abs_centered_in(w, next_floor_x, next_floor_y, 0);
 
     sound_play_level_end();
+}
+
+void socket_tx_map_update (void)
+{
+    /*
+     * Allocate a fresh packet.
+     */
+    UDPpacket *packet = socket_alloc_msg();
+    uint8_t *odata = packet->data;
+    uint8_t *data = packet->data;
+    *data++ = MSG_MAP_UPDATE;
+
+    /*
+     * This is the count of the number of updates we sqeeze into each packet.
+     */
+    uint16_t packed = 0;
+
+    /*
+     * And this is th max per packet.
+     */
+    static const uint16_t max_pack = 
+        (MAX_PACKET_SIZE - sizeof(msg_map_update)) / sizeof(msg_thing_update);
+
+    thingp t;
+
+    TREE_WALK(server_things, t) {
+        if (!t->updated) {
+            continue;
+        }
+
+        t->updated--;
+
+        uint8_t state = 
+                ((t->is_dir_down    ? 1 : 0) << 5) |
+                ((t->is_dir_up      ? 1 : 0) << 4) |
+                ((t->is_dir_left    ? 1 : 0) << 3) |
+                ((t->is_dir_right   ? 1 : 0) << 2) |
+                ((t->is_dead        ? 1 : 0) << 1) |
+                ((t->is_buried      ? 1 : 0) << 0);
+
+        *data++ = state;
+        *data++ = t->thing_template - thing_templates_chunk;
+
+        SDLNet_Write32(t->tree.key, data);               
+        data += sizeof(uint32_t);
+
+        SDLNet_Write16(t->x, data);               
+        data += sizeof(uint16_t);
+        
+        SDLNet_Write16(t->y, data);               
+        data += sizeof(uint16_t);
+
+        packed++;
+
+        if (packed < max_pack) {
+            /*
+             * Can fit more in.
+             */
+            continue;
+        }
+
+        /*
+         * We reached the limit for this packet? Send now.
+         */
+        packet->len = data - odata;
+        packed = 0;
+
+        /*
+         * Broadcast to all clients.
+         */
+        socketp sp;
+
+        TREE_WALK(sockets, sp) {
+            if (!sp->player) {
+                continue;
+            }
+
+            write_address(packet, socket_get_remote_ip(sp));
+            socket_tx_msg(sp, packet);
+        }
+            
+        /*
+         * Reuse the same packet.
+         */
+        data = packet->data;
+        *data++ = MSG_MAP_UPDATE;
+    }
+
+    /*
+     * Any left over, send them now.
+     */
+    if (packed) {
+        socketp sp;
+
+        packet->len = data - odata;
+
+        TREE_WALK(sockets, sp) {
+            if (!sp->player) {
+                continue;
+            }
+
+            write_address(packet, socket_get_remote_ip(sp));
+            socket_tx_msg(sp, packet);
+        }
+    }
+
+    socket_free_msg(packet);
+}
+
+void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    verify(s);
+
+    uint8_t *eodata = data + packet->len - 1;
+
+    while (data < eodata) {
+        uint8_t state = *data++;
+        uint8_t template_id = *data++;
+
+        uint32_t thing_id = SDLNet_Read32(data);
+        data += sizeof(uint32_t);
+
+        uint16_t x = SDLNet_Read16(data);
+        data += sizeof(uint16_t);
+
+        uint16_t y = SDLNet_Read16(data);
+        data += sizeof(uint16_t);
+
+        thingp t = thing_client_find(thing_id);
+        if (!t) {
+            thing_templatep thing_template = 
+                                    &thing_templates_chunk[template_id];
+
+            t = thing_client_new(0, thing_template);
+        }
+
+        thing_set_is_dir_down(t,    (state & (1 << 5)) ? 1 : 0);
+        thing_set_is_dir_up(t,      (state & (1 << 4)) ? 1 : 0);
+        thing_set_is_dir_left(t,    (state & (1 << 3)) ? 1 : 0);
+        thing_set_is_dir_right(t,   (state & (1 << 3)) ? 1 : 0);
+
+        widp w = thing_wid(t);
+        if (w) {
+            wid_move_to_abs_centered_in(w, x, y, 100);
+        } else {
+            wid_game_map_client_replace_tile(
+                                    wid_game_map_server_grid_container,
+                                    x, y, t);
+        }
+
+        if (state & (1 << 0)) {
+            thing_dead(t, 0, "server killed");
+        }
+
+        levelp level;
+        level = (typeof(level)) wid_get_client_context(w);
+        verify(level);
+        map_fixup(level);
+    }
 }

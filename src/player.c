@@ -30,7 +30,7 @@ void player_fini (void)
 thingp player_new (levelp level, const char *name)
 {
     if (!player) {
-        player = thing_new(level, name);
+        player = thing_server_new(level, name);
 
         thing_set_level_no(player, start_level);
     }
@@ -44,7 +44,7 @@ void player_destroy (void)
         return;
     }
 
-    thing_destroy(player, "player destroy");
+    thing_server_destroy(player, "player destroy");
 
     player = 0;
 }

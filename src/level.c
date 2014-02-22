@@ -177,12 +177,12 @@ static boolean level_command_dead (tokens_t *tokens, void *context)
 
 
     if (thing_is_seedpod(t)) {
-        thing_templatep thing_template = thing_template_find("data/things/plant");
+        thing_templatep thing_template = 
+                thing_template_find("data/things/plant");
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          thing_grid_x(t),
                                          thing_grid_y(t),
-                                         0, /* give to player count */
                                          thing_template);
 
         sound_play_slime();
@@ -565,7 +565,6 @@ void level_place_plant_pod (levelp level)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
-                                         0, /* give to player count */
                                          thing_template);
 
         sound_play_slime();

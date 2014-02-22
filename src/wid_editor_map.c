@@ -56,7 +56,6 @@ static boolean wid_editor_ignore_events (widp w)
 widp wid_editor_map_thing_replace_template (widp w,
                                            int32_t x,
                                            int32_t y,
-                                           uint32_t count,
                                            thing_templatep thing_template)
 {
     tree_rootp thing_tiles;
@@ -288,7 +287,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     }
 
     wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
-                                          xin, yin, 0, thing_template);
+                                          xin, yin, thing_template);
 
     wid_editor_map_thing_flood_fill_template(xin + 1, yin, thing_template);
     wid_editor_map_thing_flood_fill_template(xin - 1, yin, thing_template);
@@ -379,7 +378,7 @@ static boolean wid_editor_map_thing_replace (widp w,
     }
 
     (void) wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
-                                                 x, y, 0,
+                                                 x, y,
                                                  thing_template);
 
     return (true);

@@ -24,6 +24,7 @@
 #include "string.h"
 #include "color.h"
 #include "sound.h"
+#include "socket.h"
 
 /*
  * If the map is swiping, we cannot move things. Or if the main menu is up, 
@@ -124,7 +125,7 @@ void thing_tick_all (void)
         scared = true;
     }
 
-    TREE_WALK(things, t) {
+    TREE_WALK(server_things, t) {
         thing_templatep thing_template;
         boolean aligned_x;
         boolean aligned_y;
@@ -196,7 +197,7 @@ void thing_tick_all (void)
             if (thing_is_left_as_corpse_on_death(t)) {
                 thing_bury(t);
             } else {
-                thing_destroy(t, "died");
+                thing_server_destroy(t, "died");
             }
 
             continue;
@@ -441,4 +442,6 @@ void thing_tick_all (void)
             }
         }
     }
+
+    socket_tx_map_update();
 }

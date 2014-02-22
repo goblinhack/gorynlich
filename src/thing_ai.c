@@ -919,7 +919,7 @@ void dmap_goals_find (dmap *map, thingp t)
     for (pass = 0; pass < maxpass; pass++) {
         thingp thing_it;
 
-        TREE_WALK_UNSAFE(things, thing_it) {
+        TREE_WALK_UNSAFE(server_things, thing_it) {
             /*
              * Not on the map.
              */

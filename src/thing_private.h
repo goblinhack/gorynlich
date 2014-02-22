@@ -98,6 +98,13 @@ typedef struct thing_ {
      */
     uint32_t timestamp_lifestamp;
 
+    /*
+     * A counter to indicate the number of times we want to update the client 
+     * with the state of this thing. To compensate for udp drops we might want 
+     * to send a couple of updates for important events like death.
+     */
+    uint8_t updated;
+
     uint32_t is_qqq1:1;
     uint32_t is_qqq2:1;
     uint32_t is_qqq3:1;
@@ -118,3 +125,4 @@ typedef struct thing_ {
     uint32_t is_left_as_corpse_on_death:1;
     uint32_t is_dead:1;
 } thing;
+

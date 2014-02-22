@@ -3627,7 +3627,6 @@ boolean demarshal_wid_grid (demarshal_p ctx, widp w,
     thing_templatep thing_template;
     uint32_t width;
     uint32_t height;
-    uint32_t count;
     widgrid *grid;
     uint32_t i;
     uint32_t x;
@@ -3667,10 +3666,7 @@ boolean demarshal_wid_grid (demarshal_p ctx, widp w,
             continue;
         }
 
-        count = 0;
-        GET_OPT_NAMED_UINT32(ctx, "count", count);
-
-        child = (*callback)(w, x, y, count, thing_template);
+        child = (*callback)(w, x, y, thing_template);
 
         if (!child) {
             ERR("Loading thing %s failed to replace at (%u,%u)", name, x, y);
