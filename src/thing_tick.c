@@ -26,21 +26,6 @@
 #include "sound.h"
 #include "socket.h"
 
-/*
- * If the map is swiping, we cannot move things. Or if the main menu is up, 
- * ignore events.
- */
-static boolean level_ignore_events (void)
-{
-    if (level_game) {
-        if (level_is_frozen(level_game)) {
-            return (true);
-        }
-    }
-
-    return (false);
-}
-
 void thing_tick_all (void)
 {
     static uint32_t gridpixwidth;
@@ -63,35 +48,10 @@ void thing_tick_all (void)
         pulsate_delta = -pulsate_delta;
     }
 
-    level = level_game;
+    level = server_level;
     if (!level) {
         return;
     }
-
-    /*
-     * If the map is swiping, we cannot move things. Or if the main menu is 
-     * up, ignore events.
-     */
-    if (level_ignore_events()) {
-        return;
-    }
-
-#if 0
-    /*
-     * If the window was moving we could not attach the widgets yet.
-     * Now it has stopped moving, we can.
-     */
-    if (!wid_has_grid(wid_game_map_grid_container)) {
-        wid_new_grid(wid_game_map_grid_container,
-                     TILES_MAP_WIDTH,
-                     TILES_MAP_HEIGHT, tile_width, tile_height);
-
-        wid_attach_to_grid(wid_game_map_grid_container);
-        if (!wid_has_grid(wid_game_map_grid_container)) {
-            DIE("no grid");
-        }
-    }
-#endif
 
     /*
      * Allow level timers to fire.

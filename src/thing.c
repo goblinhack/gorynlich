@@ -1933,7 +1933,7 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         levelp level;
         level = 
             (typeof(level)) wid_get_client_context(
-                                        wid_game_map_server_grid_container);
+                                        wid_game_map_client_grid_container);
         verify(level);
 
         map_fixup(level);
