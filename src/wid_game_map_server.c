@@ -172,7 +172,7 @@ void wid_game_map_server_wid_create (void)
     wid_editor_map_loading = true;
 
     server_level = level_load(thing_level_no(player),
-                            wid_game_map_server_grid_container);
+                              wid_game_map_server_grid_container);
     if (!server_level) {
         WARN("failed to load level");
         return;
