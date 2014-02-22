@@ -223,6 +223,8 @@ int16_t thing_path_cost_is_effect_rotate_2way(thingp t);
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t);
 void thing_place(void *);
+void thing_server_wid_update(thingp t, double x, double y);
+void thing_client_wid_update(thingp t, double x, double y, boolean smooth);
 
 typedef struct {
     thing_templatep thing_template;

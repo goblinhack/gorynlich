@@ -69,18 +69,12 @@ typedef struct thing_ {
     /*
      * Grid coordinates.
      */
-    int32_t x;
-    int32_t y;
-    int32_t tl_x;
-    int32_t tl_y;
-    int32_t br_x;
-    int32_t br_y;
-    int32_t grid_x;
-    int32_t grid_y;
-    int32_t last_x;
-    int32_t last_y;
-    int32_t target_x;
-    int32_t target_y;
+    double x;
+    double y;
+    double last_x;
+    double last_y;
+    double target_x;
+    double target_y;
 
     /*
      * For animation.

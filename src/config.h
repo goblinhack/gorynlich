@@ -26,29 +26,6 @@
 #define DEFAULT_VIDEO_HEIGHT        720
 
 /*
- * We zoom the tiles in, by default 8x16 so they look more blocky and retro.
- */
-#define DEFAULT_TILE_ZOOM           3
-
-/*
- * How far we can cast light
- */
-#define DEFAULT_LIGHT_RAY_LENGTH    35
-
-/*
- * How much solid rock light can permeat through. Too high and you can see
- * traps. Too low and it looks lousy.
- */
-#define DEFAULT_LIGHT_PENETRATE     3
-
-/*
- * Map size is 2 ^ MAP_WIDTH_LOG. So MAP_WIDTH_LOG 8 is 256, 10 is 1024
- */
-#define MAP_WIDTH_LOG               10
-#define MAP_WIDTH                   (1 << MAP_WIDTH_LOG)
-#define MAP_HEIGHT                  MAP_WIDTH
-
-/*
  * This is multiplied by jigsaw piece size.
  */
 #define MAP_JIGSAW_PIECE_WIDTH      5
@@ -75,6 +52,9 @@
 #define TILES_SCREEN_WIDTH              21
 #define TILES_SCREEN_HEIGHT             14
 
+#define TILES_SERVER_SCALE              4
+#define TILES_CLIENT_SCALE              1
+
 /*
  * Console
  */
@@ -96,7 +76,7 @@
  * Messages.
  */
 #define MAX_PLAYERS                 4
-#define SMALL_STRING_LEN_MAX         20
+#define SMALL_STRING_LEN_MAX        20
 #define PLAYER_MSG_MAX              100
 
 /*
@@ -107,7 +87,7 @@
 #define SERVER_DEFAULT_HOST         "localhost"
 #define SERVER_DEFAULT_PORT         DEFAULT_PORT
 
-#define MAX_PACKET_SIZE             1024
+#define MAX_PACKET_SIZE             4096
 
 #define SOCKET_PING_SEQ_NO_RANGE    20 // how many pings to consider for quality
 #define SOCKET_PING_FAIL_THRESHOLD  10 // 90 percent of ping fails means down

@@ -31,6 +31,7 @@
 tree_root *server_things;
 tree_root *client_things;
 
+static double thing_coord_scale = 100.0;
 static uint32_t thing_id;
 static boolean thing_init_done;
 static void thing_destroy_internal(thingp t, const char *why);
@@ -109,7 +110,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
     t->tree.key = id;
     t->thing_template = thing_template;
 
-    if (!tree_insert(server_things, &t->tree.node)) {
+    if (!tree_insert(client_things, &t->tree.node)) {
         DIE("thing client insert id [%d] failed", id);
     }
 
@@ -1273,14 +1274,14 @@ int32_t thing_grid_x (thingp t)
 {
     verify(t);
 
-    return (t->grid_x);
+    return (t->x);
 }
 
 int32_t thing_grid_y (thingp t)
 {
     verify(t);
 
-    return (t->grid_y);
+    return (t->y);
 }
 
 boolean thing_is_exit (thingp t)
@@ -1638,7 +1639,109 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
     sound_play_level_end();
 }
 
-void socket_tx_map_update (void)
+void thing_server_wid_update (thingp t, double x, double y)
+{
+    verify(t);
+
+    t->x = x;
+    t->y = y;
+
+    x *= server_tile_width;
+    y *= server_tile_height;
+
+    x += server_tile_width / 2;
+    y += server_tile_height / 2;
+
+    fpoint tl = { x, y };
+    fpoint br = { x, y };
+
+    float base_tile_width =
+            ((1.0f / ((float)TILES_SCREEN_WIDTH) / TILES_SERVER_SCALE) *
+                (float)global_config.video_gl_width);
+
+    float base_tile_height =
+            ((1.0f / ((float)TILES_SCREEN_HEIGHT) / TILES_SERVER_SCALE) *
+                (float)global_config.video_gl_height);
+
+    br.x += base_tile_width;
+    br.y += base_tile_height;
+
+    br.x += base_tile_width / 4.0;
+    br.y += base_tile_height / 4.0;
+
+    br.x += base_tile_width / 6.0;
+    br.y += base_tile_height / 4.0;
+
+    tl.x -= base_tile_height / 2.0;
+    br.x -= base_tile_width / 2.0;
+
+    tl.x += base_tile_height / 8.0;
+    br.x += base_tile_width / 8.0;
+
+    tl.y -= base_tile_height / 2.0;
+    br.y -= base_tile_width / 2.0;
+
+    tl.y -= base_tile_height / 4.0;
+    br.y -= base_tile_width / 4.0;
+
+    wid_set_tl_br(t->wid, tl, br);
+}
+
+void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
+{
+    verify(t);
+
+    t->x = x;
+    t->y = y;
+
+    verify(t);
+
+    x *= client_tile_width;
+    y *= client_tile_height;
+
+    x += client_tile_width / 2;
+    y += client_tile_height / 2;
+
+    fpoint tl = { x, y };
+    fpoint br = { x, y };
+
+    float base_tile_width =
+            ((1.0f / ((float)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+                (float)global_config.video_gl_width);
+
+    float base_tile_height =
+            ((1.0f / ((float)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+                (float)global_config.video_gl_height);
+
+    br.x += base_tile_width;
+    br.y += base_tile_height;
+
+    br.x += base_tile_width / 4.0;
+    br.y += base_tile_height / 4.0;
+
+    br.x += base_tile_width / 6.0;
+    br.y += base_tile_height / 4.0;
+
+    tl.x -= base_tile_height / 2.0;
+    br.x -= base_tile_width / 2.0;
+
+    tl.x += base_tile_height / 8.0;
+    br.x += base_tile_width / 8.0;
+
+    tl.y -= base_tile_height / 2.0;
+    br.y -= base_tile_width / 2.0;
+
+    tl.y -= base_tile_height / 4.0;
+    br.y -= base_tile_width / 4.0;
+
+    if (smooth) {
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 100);
+    } else {
+        wid_set_tl_br(t->wid, tl, br);
+    }
+}
+
+void socket_tx_map_update (socketp p)
 {
     /*
      * Allocate a fresh packet.
@@ -1662,11 +1765,17 @@ void socket_tx_map_update (void)
     thingp t;
 
     TREE_WALK(server_things, t) {
-        if (!t->updated) {
-            continue;
-        }
+        /*
+         * If updating to all sockets, decrement the update counter for this 
+         * thing. We only send updates on modified things.
+         */
+        if (!p) {
+            if (!t->updated) {
+                continue;
+            }
 
-        t->updated--;
+            t->updated--;
+        }
 
         uint8_t state = 
                 ((t->is_dir_down    ? 1 : 0) << 5) |
@@ -1682,11 +1791,27 @@ void socket_tx_map_update (void)
         SDLNet_Write32(t->tree.key, data);               
         data += sizeof(uint32_t);
 
-        SDLNet_Write16(t->x, data);               
-        data += sizeof(uint16_t);
-        
-        SDLNet_Write16(t->y, data);               
-        data += sizeof(uint16_t);
+        widp w = thing_wid(t);
+
+        if (w) {
+            uint16_t x;
+            uint16_t y;
+
+            x = (uint16_t)(t->x * thing_coord_scale);
+            y = (uint16_t)(t->y * thing_coord_scale);
+
+            SDLNet_Write16((uint16_t) x, data);               
+            data += sizeof(uint16_t);
+            
+            SDLNet_Write16((uint16_t) y, data);               
+            data += sizeof(uint16_t);
+        } else {
+            SDLNet_Write16(-1, data);               
+            data += sizeof(uint16_t);
+            
+            SDLNet_Write16(-1, data);               
+            data += sizeof(uint16_t);
+        }
 
         packed++;
 
@@ -1709,6 +1834,10 @@ void socket_tx_map_update (void)
         socketp sp;
 
         TREE_WALK(sockets, sp) {
+            if (p && (p != sp)) {
+                continue;
+            }
+
             if (!sp->player) {
                 continue;
             }
@@ -1747,6 +1876,7 @@ void socket_tx_map_update (void)
 
 void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    boolean need_fixup = false;
     verify(s);
 
     uint8_t *eodata = data + packet->len - 1;
@@ -1758,18 +1888,26 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         uint32_t thing_id = SDLNet_Read32(data);
         data += sizeof(uint32_t);
 
-        uint16_t x = SDLNet_Read16(data);
+        uint16_t tx = SDLNet_Read16(data);
         data += sizeof(uint16_t);
 
-        uint16_t y = SDLNet_Read16(data);
+        uint16_t ty = SDLNet_Read16(data);
         data += sizeof(uint16_t);
+
+        double x = ((double)tx) / thing_coord_scale;
+        double y = ((double)ty) / thing_coord_scale;
 
         thingp t = thing_client_find(thing_id);
         if (!t) {
             thing_templatep thing_template = 
                                     &thing_templates_chunk[template_id];
 
-            t = thing_client_new(0, thing_template);
+            t = thing_client_new(thing_id, thing_template);
+
+            need_fixup = need_fixup ||
+                thing_template_is_wall(thing_template) ||
+                thing_template_is_pipe(thing_template) ||
+                thing_template_is_door(thing_template);
         }
 
         thing_set_is_dir_down(t,    (state & (1 << 5)) ? 1 : 0);
@@ -1779,20 +1917,28 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
         widp w = thing_wid(t);
         if (w) {
-            wid_move_to_abs_centered_in(w, x, y, 100);
+            thing_client_wid_update(t, x, y, true /* smooth */);
         } else {
             wid_game_map_client_replace_tile(
-                                    wid_game_map_server_grid_container,
+                                    wid_game_map_client_grid_container,
                                     x, y, t);
         }
 
         if (state & (1 << 0)) {
             thing_dead(t, 0, "server killed");
         }
+    }
 
+    if (need_fixup) {
         levelp level;
-        level = (typeof(level)) wid_get_client_context(w);
+        level = 
+            (typeof(level)) wid_get_client_context(
+                                        wid_game_map_server_grid_container);
         verify(level);
+
         map_fixup(level);
     }
+
+    wid_raise(wid_game_map_client_grid_container);
+    wid_update(wid_game_map_client_grid_container);
 }

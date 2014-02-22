@@ -63,14 +63,6 @@ void thing_tick_all (void)
         pulsate_delta = -pulsate_delta;
     }
 
-    /*
-     * Console open? Allow debugging.
-     */
-    if (wid_console_input_line &&
-        !wid_is_hidden(wid_console_input_line)) {
-        return;
-    }
-
     level = level_game;
     if (!level) {
         return;
@@ -127,8 +119,6 @@ void thing_tick_all (void)
 
     TREE_WALK(server_things, t) {
         thing_templatep thing_template;
-        boolean aligned_x;
-        boolean aligned_y;
         widp w;
 
         /*
@@ -140,9 +130,6 @@ void thing_tick_all (void)
         w = t->wid;
         if (w) {
             verify(w);
-
-            wid_get_grid_coord(w, &t->grid_x, &t->grid_y,
-                               &aligned_x, &aligned_y);
         }
 
         /*
@@ -297,11 +284,11 @@ void thing_tick_all (void)
         /*
          * Look for collisions.
          */
-        thing_collision(t, t->grid_x, t->grid_y);
-        thing_collision(t, t->grid_x + 1, t->grid_y);
-        thing_collision(t, t->grid_x, t->grid_y - 1);
-        thing_collision(t, t->grid_x - 1, t->grid_y);
-        thing_collision(t, t->grid_x, t->grid_y + 1);
+        thing_collision(t, t->x, t->y);
+        thing_collision(t, t->x + 1, t->y);
+        thing_collision(t, t->x, t->y - 1);
+        thing_collision(t, t->x - 1, t->y);
+        thing_collision(t, t->x, t->y + 1);
         w = t->wid;
 
         /*
@@ -315,13 +302,6 @@ void thing_tick_all (void)
          * If stopped moving, look for a next hop.
          */
         if (speed && w && !wid_is_moving(w)) {
-            t->tl_x = wid_get_tl_x(w);
-            t->br_x = wid_get_br_x(w);
-            t->tl_y = wid_get_tl_y(w);
-            t->br_y = wid_get_br_y(w);
-            t->x = (t->tl_x + t->br_x) / 2;
-            t->y = (t->tl_y + t->br_y) / 2;
-
             if (!gridpixwidth) {
                 wid_get_grid_dim(w, &gridpixwidth, &gridpixheight);
             }
@@ -365,8 +345,8 @@ void thing_tick_all (void)
 
                 widp wid_current_floor = wid_grid_find_thing_template(
                                             wid_game_map_server_grid_container,
-                                            t->grid_x,
-                                            t->grid_y,
+                                            t->x,
+                                            t->y,
                                             thing_template_is_floor);
                 if (!wid_current_floor) {
                     DIE("not on a floor tile");
@@ -387,6 +367,9 @@ void thing_tick_all (void)
                 double next_floor_x, next_floor_y;
                 wid_get_mxy(wid_next_floor, &next_floor_x, &next_floor_y);
 
+                boolean aligned_x = (t->x == floor(t->x));
+                boolean aligned_y = (t->y == floor(t->y));
+
                 if (!aligned_x) {
                     next_floor_y = this_floor_y;
                 }
@@ -404,14 +387,6 @@ void thing_tick_all (void)
                 } else if (next_floor_y < t->y) {
                     t->is_dir_up = true;
                 } else {
-                    THING_LOG(t,
-                              "this %f %f next %f %f at %d %d align %d %d w %p %s",
-                              this_floor_x,this_floor_y,
-                              next_floor_x,next_floor_y,
-                              t->x, t->y,
-                              aligned_x, aligned_y,
-                              w, wid_logname(w));
-
                     DIE("no next hop to go to");
                 }
 
@@ -443,5 +418,5 @@ void thing_tick_all (void)
         }
     }
 
-    socket_tx_map_update();
+    socket_tx_map_update(0 /* all clients */);
 }
