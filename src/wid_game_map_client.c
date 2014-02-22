@@ -131,7 +131,8 @@ void wid_game_map_client_wid_create (void)
         fpoint tl = {0.0f, 0.0f};
         fpoint br = {1.0f, 1.0f};
 
-        wid_game_map_client_window = wid_new_square_window("wid_game_map_client");
+        wid_game_map_client_window = 
+                        wid_new_square_window("wid_game_map_client");
         wid_set_movable(wid_game_map_client_window, false);
         wid_set_do_not_raise(wid_game_map_client_window, true);
 
@@ -155,7 +156,7 @@ void wid_game_map_client_wid_create (void)
 
     {
         fpoint tl = {0.00f, 0.00f};
-        fpoint br = {0.00f, 1.00f};
+        fpoint br = {0.67f, 1.00f};
 
         wid_game_map_client_grid_container =
                         wid_new_container(wid_game_map_client_window,
@@ -214,7 +215,6 @@ void wid_game_map_client_wid_create (void)
         return;
     }
 
-    things_level_start(client_level);
     wid_game_map_client_score_update(client_level);
 }
 
