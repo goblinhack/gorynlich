@@ -22,6 +22,8 @@
 #include "client.h"
 #include "thing_template.h"
 #include "wid_game_map_server.h"
+#include "thing.h"
+#include "thing_private.h"
 
 tree_rootp sockets;
 
@@ -1300,8 +1302,7 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 
     thing_templatep thing_template = thing_template_find(msg.pclass);
     if (!thing_template) {
-        thing_templatep thing_template = 
-                        thing_template_find_short_name(msg.pclass);
+        thing_template = thing_template_find_short_name(msg.pclass);
         if (!thing_template) {
             char *tmp = iptodynstr(read_address(packet));
             LOG("Rx Join (rejected) from %s \"%s\" unknown class %s", 
@@ -1343,7 +1344,6 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          0, 0,
                                          thing_template);
-
     p->thing = wid_get_thing(w);
 
     return (true);
@@ -2171,5 +2171,17 @@ void socket_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
     const boolean down  = (msg.dir & (1 << 2)) ? 1 : 0;
     const boolean left  = (msg.dir & (1 << 1)) ? 1 : 0;
     const boolean right = (msg.dir & (1 << 0)) ? 1 : 0;
-    LOG("up %d down %d left %d right %d",up,down,left,right);
+
+    thingp t = p->thing;
+    if (!t) {
+        return;
+    }
+
+    t->x += right;
+    t->x -= left;
+    t->y += down;
+    t->y -= up;
+    t->updated++;
+
+    thing_server_wid_update(t, t->x, t->y);
 }

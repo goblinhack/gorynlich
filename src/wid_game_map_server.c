@@ -219,7 +219,7 @@ wid_game_map_server_replace_tile (widp w,
      * Grow tl and br to fit the template thing. Use the first tile.
      */
     if (!thing_template) {
-        DIE("no thing template");
+        DIE("no thing template to place on server map");
     }
 
     thing_tiles = thing_template_get_tiles(thing_template);
