@@ -25,7 +25,7 @@
 #include "socket.h"
 #include "timer.h"
 
-levelp level_game;
+levelp client_level;
 widp wid_game_map_client_window;
 widp wid_game_map_client_grid_container;
 widp wid_scoreline_container_top;
@@ -222,8 +222,8 @@ void wid_game_map_client_wid_destroy (void)
 {
     FINI_LOG("Destroy game map");
 
-    if (level_game) {
-        level_destroy(&level_game);
+    if (client_level) {
+        level_destroy(&client_level);
     }
 
     if (wid_game_map_client_window) {
