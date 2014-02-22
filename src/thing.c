@@ -1931,6 +1931,7 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (need_fixup) {
         levelp level;
+
         level = 
             (typeof(level)) wid_get_client_context(
                                         wid_game_map_client_grid_container);
