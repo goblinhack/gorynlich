@@ -100,7 +100,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     thing_tiles = thing_template_get_tiles(thing_template);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_shortname(thing_template));
+            thing_template_short_name(thing_template));
     }
 
     thing_tilep thing_tile;
@@ -120,7 +120,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_shortname(thing_template));
+            thing_template_short_name(thing_template));
     }
 
     float base_tile_width =
@@ -250,7 +250,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     thing_tiles = thing_template_get_tiles(thing_template);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_shortname(thing_template));
+            thing_template_short_name(thing_template));
     }
 
     thing_tilep thing_tile;
@@ -270,7 +270,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_shortname(thing_template));
+            thing_template_short_name(thing_template));
     }
 
     /*

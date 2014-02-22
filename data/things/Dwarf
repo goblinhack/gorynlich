@@ -1,5 +1,5 @@
 {
- shortname="dwarf"
+ short_name="dwarf"
  tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo."
  z_depth=3
  z_order=10

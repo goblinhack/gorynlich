@@ -1,5 +1,5 @@
 {
- shortname="floor"
+ short_name="floor"
  tooltip="Floor"
  z_depth=1
  z_order=0

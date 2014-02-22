@@ -1,5 +1,5 @@
 {
- shortname="plant"
+ short_name="plant"
  tooltip="Seedpod"
  z_depth=2
  z_order=4

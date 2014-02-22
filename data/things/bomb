@@ -1,5 +1,5 @@
 {
- shortname="bomb"
+ short_name="bomb"
  tooltip="Bomb. Kaboom!"
  z_depth=2
  z_order=2

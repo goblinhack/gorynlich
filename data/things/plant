@@ -1,5 +1,5 @@
 {
- shortname="plant"
+ short_name="plant"
  tooltip="Hungry plant!"
  z_depth=2
  speed=3000

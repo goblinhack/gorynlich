@@ -1,5 +1,5 @@
 {
- shortname="spam"
+ short_name="spam"
  tooltip="Spam, slows you down"
  z_depth=2
  z_order=2
