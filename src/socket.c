@@ -20,6 +20,8 @@
 #include "tree.h"
 #include "server.h"
 #include "client.h"
+#include "thing_template.h"
+#include "wid_game_map_server.h"
 
 tree_rootp sockets;
 
@@ -1216,7 +1218,6 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     memcpy(p->name, msg.name, SMALL_STRING_LEN_MAX);
-    memcpy(p->pclass, msg.pclass, SMALL_STRING_LEN_MAX);
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
 }
@@ -1297,6 +1298,21 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         return (false);
     }
 
+    thing_templatep thing_template = thing_template_find(msg.pclass);
+    if (!thing_template) {
+        thing_templatep thing_template = 
+                        thing_template_find_short_name(msg.pclass);
+        if (!thing_template) {
+            char *tmp = iptodynstr(read_address(packet));
+            LOG("Rx Join (rejected) from %s \"%s\" unknown class %s", 
+                tmp, msg.name, msg.pclass);
+            myfree(tmp);
+
+            socket_tx_tell(s, "Join rejected:", msg.name, "Unknown player class");
+            return (false);
+        }
+    }
+
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Join from %s \"%s\"", tmp, msg.name);
@@ -1322,6 +1338,13 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
     p->key = SDLNet_Read32(&msg.key);
+
+    widp w = 
+        wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
+                                         0, 0,
+                                         thing_template);
+
+    p->thing = wid_get_thing(w);
 
     return (true);
 }
