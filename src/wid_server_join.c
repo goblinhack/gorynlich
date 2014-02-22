@@ -11,6 +11,7 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_server_join.h"
+#include "wid_game_map_client.h"
 #include "wid_server_create.h"
 #include "wid_intro.h"
 #include "string.h"
@@ -394,6 +395,8 @@ static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
             continue;
         }
     }
+
+    wid_game_map_client_visible();
 
     return (true);
 }
