@@ -329,7 +329,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno,
                             boolean quiet)
 {
     if (client_joined_server) {
-        WARN("Leave the current server first");
+        WARN("Leave the current server first before trying to join again");
         return (false);
     }
 

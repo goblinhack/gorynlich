@@ -97,20 +97,19 @@ void wid_game_map_client_visible (void)
 {
     is_server = true;
 
-    action_timer_create(
-            &wid_timers,
-            (action_timer_callback)wid_game_map_client_start_cb,
-            0, /* context */
-            "join server",
-            100,
-            0 /* jitter */);
-
-    if (wid_game_map_client_window) {
-        wid_visible(wid_game_map_client_window, 0);
-    } else {
-        wid_game_map_client_wid_create();
+    if (!client_joined_server) {
+        action_timer_create(
+                &wid_timers,
+                (action_timer_callback)wid_game_map_client_start_cb,
+                0, /* context */
+                "join server",
+                100,
+                0 /* jitter */);
     }
 
+    wid_game_map_client_wid_create();
+
+    wid_visible(wid_game_map_client_window, 0);
     wid_raise(wid_game_map_client_window);
 }
 
