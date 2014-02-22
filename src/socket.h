@@ -23,6 +23,7 @@ typedef enum {
     MSG_CLIENT_CLOSE,
     MSG_SERVER_CLOSE,
     MSG_SERVER_STATUS,
+    MSG_MAP_UPDATE,
     MSG_MAX,
 } msg_type;
 
@@ -89,6 +90,21 @@ typedef struct {
     uint8_t server_max_players;
     uint8_t server_current_players;
 } __attribute__ ((packed)) msg_server_status;
+
+typedef struct {
+    /*
+     * Upper 8 bits are state
+     */
+    uint8_t state;
+    uint8_t template_id;
+    uint32_t thing_id;
+    uint16_t x;
+    uint16_t y;
+} __attribute__ ((packed)) msg_thing_update;
+
+typedef struct {
+    uint8_t type;
+} __attribute__ ((packed)) msg_map_update;
 
 typedef struct socket_ {
     tree_key_two_int tree;
@@ -232,6 +248,8 @@ extern uint32_t socket_get_tx(socketp s);
 extern uint32_t socket_get_rx_error(socketp s);
 extern uint32_t socket_get_tx_error(socketp s);
 extern uint32_t socket_get_rx_bad_msg(socketp s);
+extern void socket_tx_map_update(void);
+extern void socket_rx_map_update(socketp s, UDPpacket *packet, uint8_t *data);
 
 /*
  * Seemingly harmless, but we need this to read the 6 byte packet address
@@ -259,3 +277,43 @@ static inline boolean cmp_address (const IPaddress *a, const IPaddress *b)
 }
 
 extern tree_rootp sockets;
+
+static inline UDPpacket *socket_alloc_msg (void)
+{
+    UDPpacket *packet;
+
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
+    }
+
+    newptr(packet, "pak");
+
+    return (packet);
+}
+
+static inline void socket_free_msg (UDPpacket *packet)
+{
+    oldptr(packet);
+
+    SDLNet_FreePacket(packet);
+}
+
+static inline void socket_tx_msg (socketp s, UDPpacket *packet)
+{
+    msg_type type;
+
+    type = *(packet->data);
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
+        WARN("no UDP packet sent: %s", SDLNet_GetError());
+        WARN("  remote: %s", socket_get_remote_logname(s));
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+
+        s->tx_msg[type]++;
+    }
+}

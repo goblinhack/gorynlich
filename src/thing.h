@@ -6,9 +6,11 @@
 
 boolean thing_init(void);
 void thing_fini(void);
-thingp thing_new(levelp, const char *name);
+thingp thing_server_new(levelp, const char *name);
+thingp thing_client_new(uint32_t, thing_templatep);
 void thing_restarted(thingp t, levelp level);
-void thing_destroy(thingp, const char *why);
+void thing_server_destroy(thingp, const char *why);
+void thing_client_destroy(thingp, const char *why);
 void thing_tick_all(void);
 void thing_bury(thingp);
 void thing_dead(thingp, thingp killer,
@@ -128,8 +130,6 @@ uint32_t thing_speed(thingp);
 tree_rootp thing_tiles(thingp);
 tree_rootp thing_tiles2(thingp);
 
-extern tree_rootp things;
-
 boolean thing_is_exit(thingp t);
 boolean thing_is_floor(thingp t);
 boolean thing_is_food(thingp t);
@@ -232,3 +232,6 @@ typedef struct {
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);
+
+extern tree_rootp server_things;
+extern tree_rootp client_things;
