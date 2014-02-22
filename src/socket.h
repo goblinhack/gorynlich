@@ -24,6 +24,7 @@ typedef enum {
     MSG_SERVER_CLOSE,
     MSG_SERVER_STATUS,
     MSG_MAP_UPDATE,
+    MSG_CLIENT_MOVE,
     MSG_MAX,
 } msg_type;
 
@@ -57,6 +58,11 @@ typedef struct {
     char from[SMALL_STRING_LEN_MAX];
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_client_shout;
+
+typedef struct {
+    uint8_t type;
+    uint8_t dir;
+} __attribute__ ((packed)) msg_client_move;
 
 typedef struct {
     uint8_t type;
@@ -229,6 +235,12 @@ extern void socket_tx_server_close(void);
 extern void socket_rx_server_close(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_shout(socketp s, const char *shout);
 extern void socket_rx_client_shout(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_client_move(socketp s, 
+                                  const boolean up,
+                                  const boolean down,
+                                  const boolean left,
+                                  const boolean right);
+extern void socket_rx_client_move(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_shout(const char *shout);
 extern void socket_tx_server_shout_except_to(const char *shout, socketp s);
 extern void socket_rx_server_shout(socketp s, UDPpacket *packet, uint8_t *data);

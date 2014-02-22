@@ -113,6 +113,33 @@ void wid_game_map_client_visible (void)
     wid_raise(wid_game_map_client_window);
 }
 
+static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
+{
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+    const uint8_t *state = SDL_GetKeyState(0);
+
+    boolean right = state[SDLK_RIGHT] ? 1 : 0;
+    boolean left  = state[SDLK_LEFT] ? 1 : 0;
+    boolean up    = state[SDLK_UP] ? 1 : 0;
+    boolean down  = state[SDLK_DOWN] ? 1 : 0;
+#else /* } { */
+    const uint8_t *state = SDL_GetKeyboardState(0);
+
+    boolean right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
+    boolean left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
+    boolean up    = state[SDL_SCANCODE_UP] ? 1 : 0;
+    boolean down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
+#endif /* } */
+
+    if (!client_joined_server) {
+        return (false);
+    }
+
+    socket_tx_client_move(client_joined_server, up, down, left, right);
+
+    return (false);
+}
+
 /*
  * Create the wid_game_map_client
  */
@@ -151,6 +178,8 @@ void wid_game_map_client_wid_create (void)
 
         fsize sz2 = {1.0f, 1.0f};
         wid_set_tex_br(wid_game_map_client_window, sz2);
+
+        wid_set_on_key_down(wid_game_map_client_window, wid_game_map_key_event);
     }
 
     {

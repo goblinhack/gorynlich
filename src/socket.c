@@ -2097,3 +2097,56 @@ uint32_t socket_get_rx_bad_msg (socketp s)
 
     return (s->min_latency);
 }
+
+void socket_tx_client_move (socketp s, 
+                            const boolean up,
+                            const boolean down,
+                            const boolean left, 
+                            const boolean right)
+{
+    verify(s);
+
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
+    msg_client_move msg = {0};
+    msg.type = MSG_CLIENT_MOVE;
+    msg.dir = (up << 3) | (down << 2) | (left << 1) | right;
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
+    socket_tx_msg(s, packet);
+        
+    socket_free_msg(packet);
+}
+
+void socket_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
+{
+    verify(s);
+
+    msg_client_move msg = {0};
+
+    if (packet->len != sizeof(msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    aplayer *p = s->player;
+    if (!p) {
+        return;
+    }
+
+    const boolean up    = (msg.dir & (1 << 3)) ? 1 : 0;
+    const boolean down  = (msg.dir & (1 << 2)) ? 1 : 0;
+    const boolean left  = (msg.dir & (1 << 1)) ? 1 : 0;
+    const boolean right = (msg.dir & (1 << 0)) ? 1 : 0;
+    LOG("up %d down %d left %d right %d",up,down,left,right);
+}
