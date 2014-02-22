@@ -283,6 +283,22 @@ thing_templatep thing_template_find (const char *name)
     return (result);
 }
 
+thing_templatep thing_template_find_short_name (const char *name)
+{
+    tree_root *tree;
+    thing_templatep t;
+
+    tree = thing_templates;
+
+    TREE_WALK(tree, t) {
+        if (!strcmp(name, t->shortname)) {
+            return (t);
+        }
+    }
+
+    return (0);
+}
+
 /*
  * Given a string name, map to a thing template.
  */

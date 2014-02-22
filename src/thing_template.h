@@ -183,6 +183,7 @@ boolean thing_template_init(void);
 void thing_template_fini(void);
 thing_templatep thing_template_load(const char *file);
 thing_templatep thing_template_find(const char *name);
+thing_templatep thing_template_find_short_name(const char *name);
 void demarshal_thing_template(demarshal_p ctx, thing_templatep);
 void marshal_thing_template(marshal_p ctx, thing_templatep);
 void thing_templates_marshal(marshal_p out);

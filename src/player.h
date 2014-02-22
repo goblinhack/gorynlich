@@ -30,6 +30,7 @@ typedef struct aplayer_ {
     char name[SMALL_STRING_LEN_MAX + 1];
     char pclass[SMALL_STRING_LEN_MAX + 1];
     boolean connection_confrimed;
+    thingp thing;
 } aplayer;
 
 #endif
