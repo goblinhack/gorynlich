@@ -225,7 +225,7 @@ wid_game_map_server_replace_tile (widp w,
     thing_tiles = thing_template_get_tiles(thing_template);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_shortname(thing_template));
+            thing_template_short_name(thing_template));
     }
 
     thing_tilep thing_tile;
@@ -244,7 +244,7 @@ wid_game_map_server_replace_tile (widp w,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_shortname(thing_template));
+            thing_template_short_name(thing_template));
     }
 
     /*

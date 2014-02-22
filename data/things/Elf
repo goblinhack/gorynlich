@@ -1,5 +1,5 @@
 {
- shortname="elf"
+ short_name="elf"
  tooltip="Fast, strong.\n\n%%fg=yellow$Awesome teeth.\n\nUses weapons made of twigs."
  z_depth=3
  z_order=10

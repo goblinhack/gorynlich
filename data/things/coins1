@@ -1,5 +1,5 @@
 {
- shortname="coins"
+ short_name="coins"
  tooltip="Loot"
  z_depth=2
  z_order=2

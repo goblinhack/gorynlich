@@ -1,5 +1,5 @@
 {
- shortname="amulet"
+ short_name="amulet"
  tooltip="Special powers granted"
  z_depth=2
  z_order=2

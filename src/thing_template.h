@@ -69,7 +69,7 @@ typedef struct thing_template_ {
     /*
      * Internal description of the thing.
      */
-    char *shortname;
+    char *short_name;
 
     /*
      * End user description of the thing.
@@ -191,7 +191,7 @@ boolean thing_test(int32_t argc, char *argv[]);
 thing_templatep string2thing_template(const char **s);
 
 const char *thing_template_name(thing_templatep);
-const char *thing_template_shortname(thing_templatep);
+const char *thing_template_short_name(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
 uint8_t thing_template_get_z_depth(thing_templatep);
 uint8_t thing_template_get_z_order(thing_templatep);

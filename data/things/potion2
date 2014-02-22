@@ -1,5 +1,5 @@
 {
- shortname="potion"
+ short_name="potion"
  tooltip="Magic potion"
  z_depth=2
  z_order=2

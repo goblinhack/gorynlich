@@ -135,7 +135,7 @@ static boolean wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
 {
     thing_templatep t = (typeof(t)) wid_get_client_context(w);
 
-    client_socket_set_pclass((char*) thing_template_shortname(t));
+    client_socket_set_pclass((char*) thing_template_short_name(t));
 
     wid_destroy(&wid_intro2);
     wid_destroy(&wid_intro_player_container);
@@ -225,7 +225,7 @@ static void wid_intro2_buttons_tick (widp wid)
     int which = tick % 8;
 
     thing_templatep t = wid_get_thing_template(wid);
-    const char *tn = thing_template_shortname(t);
+    const char *tn = thing_template_short_name(t);
 
     char tilename[20];
 
@@ -292,7 +292,7 @@ static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_color(child, WID_COLOR_BG, c);
     wid_set_color(child, WID_COLOR_BR, RED);
 
-    if (!strcmp(thing_template_shortname(thing_template), 
+    if (!strcmp(thing_template_short_name(thing_template), 
                 global_config.pclass)) {
         color c = RED;
         c.a = 100;

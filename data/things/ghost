@@ -1,5 +1,5 @@
 {
- shortname="ghost"
+ short_name="ghost"
  tooltip="Ghost!"
  z_depth=2
  speed=3000
