@@ -29,6 +29,7 @@
 #include "time.h"
 #include "marshal.h"
 #include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "wid_editor_map.h"
 #include "sdl.h"
 #include "map.h"
@@ -229,8 +230,12 @@ void level_destroy (levelp *plevel)
     /*
      * Ensure no stale pointers.
      */
-    if (level == level_game) {
-        level_game = 0;
+    if (level == client_level) {
+        client_level = 0;
+    }
+
+    if (level == server_level) {
+        server_level = 0;
     }
 
     /*
