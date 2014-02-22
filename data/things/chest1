@@ -1,5 +1,5 @@
 {
- shortname="chest"
+ short_name="chest"
  tooltip="Treasure chest"
  z_depth=2
  z_order=2

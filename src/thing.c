@@ -87,7 +87,7 @@ thingp thing_server_new (levelp level, const char *name)
         thing_set_level(t, level);
     }
 
-    t->logname = dynprintf("%s[%p] (server)", thing_shortname(t), t);
+    t->logname = dynprintf("%s[%p] (server)", thing_short_name(t), t);
     t->updated++;
 
     THING_LOG(t, "created");
@@ -114,7 +114,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
         DIE("thing client insert id [%d] failed", id);
     }
 
-    t->logname = dynprintf("%s[%p] (client)", thing_shortname(t), t);
+    t->logname = dynprintf("%s[%p] (client)", thing_short_name(t), t);
 
     THING_LOG(t, "created");
 
@@ -569,11 +569,11 @@ const char *thing_logname (thingp t)
     return (t->logname);
 }
 
-const char *thing_shortname (thingp t)
+const char *thing_short_name (thingp t)
 {
     verify(t);
 
-    return (thing_template_shortname(t->thing_template));
+    return (thing_template_short_name(t->thing_template));
 }
 
 const char *thing_dead_reason (thingp t)

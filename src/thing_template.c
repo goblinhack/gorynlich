@@ -169,13 +169,13 @@ static void thing_template_fill_cache (thing_templatep t)
         tile = tile_find(thing_tile_name(thing_tile));
         if (!tile) {
             DIE("no tile for join index %d for %s, tile name %s",
-                index, t->shortname, thing_tile_name(thing_tile));
+                index, t->short_name, thing_tile_name(thing_tile));
         }
 
         t->tilep_join_tile[index][ t->tilep_join_count[index] ] = tile;
 
         if (t->tilep_join_count[index]++ >= IS_JOIN_ALT_MAX) {
-            DIE("too many tile join alternatives for %s", t->shortname);
+            DIE("too many tile join alternatives for %s", t->short_name);
         }
     }
 }
@@ -238,7 +238,7 @@ static void thing_template_destroy_internal (thing_templatep t)
     tree_destroy(&t->tiles2, (tree_destroy_func)thing_tile_free);
 
     myfree(t->tooltip);
-    myfree(t->shortname);
+    myfree(t->short_name);
 }
 
 void thing_templates_marshal (marshal_p out)
@@ -291,7 +291,7 @@ thing_templatep thing_template_find_short_name (const char *name)
     tree = thing_templates;
 
     TREE_WALK(tree, t) {
-        if (!strcmp(name, t->shortname)) {
+        if (!strcmp(name, t->short_name)) {
             return (t);
         }
     }
@@ -345,7 +345,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
     GET_BRA(ctx);
 
     GET_OPT_DEF_NAMED_STRING(ctx, "name", name, "<no name>");
-    GET_OPT_DEF_NAMED_STRING(ctx, "shortname", t->shortname, "<no name>");
+    GET_OPT_DEF_NAMED_STRING(ctx, "short_name", t->short_name, "<no name>");
     GET_OPT_DEF_NAMED_STRING(ctx, "tooltip", t->tooltip, "<no name>");
 
     (void) demarshal_gotone(ctx);
@@ -446,7 +446,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_BRA(ctx);
 
     PUT_NAMED_STRING(ctx, "name", t->tree.key);
-    PUT_NAMED_STRING(ctx, "shortname", t->shortname);
+    PUT_NAMED_STRING(ctx, "short_name", t->short_name);
     PUT_NAMED_STRING(ctx, "tooltip", t->tooltip);
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
@@ -539,9 +539,9 @@ const char *thing_template_name (thing_templatep t)
     return (t->tree.key);
 }
 
-const char *thing_template_shortname (thing_templatep t)
+const char *thing_template_short_name (thing_templatep t)
 {
-    return (t->shortname);
+    return (t->short_name);
 }
 
 const char *thing_template_get_tooltip (thing_templatep t)
