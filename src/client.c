@@ -19,6 +19,7 @@
 #include "string.h"
 #include "tree.h"
 #include "wid_server_join.h"
+#include "wid_game_map_client.h"
 
 /*
  * Which socket we have actually joined on.
@@ -753,6 +754,8 @@ static void client_poll (void)
 
                     memcpy(&server_status, &latest_status, 
                            sizeof(server_status));
+
+                    wid_game_map_client_score_update(client_level);
                 }
 
                 break;
@@ -782,20 +785,21 @@ static void client_poll (void)
  */
 static boolean client_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name           Quality  Latency      Local IP       Remote IP    Score ");
-    CON("----           -------  ------- --------------- --------------- -------");
+    CON("Name                    Quality  Latency      Local IP       Remote IP    Score ");
+    CON("----                    -------  ------- --------------- --------------- -------");
 
     uint32_t pi;
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player *p = &server_status.players[pi];
+        msg_player_state *p = &server_status.players[pi];
 
         char *tmp = iptodynstr(p->local_ip);
         char *tmp2 = iptodynstr(p->remote_ip);
 
-        CON("[%d] %-10s %3d pct %5d ms %-15s %-15s %07d", 
+        CON("[%d] %-10s/%8s %3d pct %5d ms %-15s %-15s %07d", 
             pi, 
             p->name,
+            p->pclass,
             p->quality,
             p->avg_latency,
             tmp2,
@@ -807,6 +811,12 @@ static boolean client_players_show (tokens_t *tokens, void *context)
     }
 
     return (true);
+}
+
+msg_player_statep client_get_player (int n)
+{
+    msg_player_state *p = &server_status.players[n];
+    return (p);
 }
 
 static void client_check_still_in_game (void)
@@ -828,7 +838,7 @@ static void client_check_still_in_game (void)
     }
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player *p = &server_status.players[pi];
+        msg_player_state *p = &server_status.players[pi];
 
         if (!p->name[0]) {
             continue;
@@ -844,7 +854,7 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG("Welcome %s", p->name);
+            MSG("Welcome %s, %s", p->pclass, p->name);
         }
 
         return;
@@ -858,7 +868,7 @@ static void client_check_still_in_game (void)
     server_connection_confirmed = false;
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player *p = &server_status.players[pi];
+        msg_player_state *p = &server_status.players[pi];
 
         LOG("  Player %u is \"%s\", ID %u ", pi+1, p->name, p->key);
     }

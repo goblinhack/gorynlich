@@ -14,5 +14,6 @@ boolean client_socket_join(char *host, char *port, uint16_t portno,
 boolean client_socket_leave(void);
 boolean client_socket_set_name(const char *name);
 boolean client_socket_set_pclass(const char *name);
+msg_player_statep client_get_player(int n);
 
 extern socketp client_joined_server;

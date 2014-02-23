@@ -354,6 +354,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
         GET_OPT_NAMED_UINT32(ctx, "speed", t->speed);
+        GET_OPT_NAMED_UINT32(ctx, "health", t->health);
         GET_OPT_NAMED_UINT32(ctx, "lifespan", t->lifespan);
         GET_OPT_NAMED_UINT32(ctx, "score_on_death", t->score_on_death);
         GET_OPT_NAMED_UINT32(ctx, "score_on_collect", t->score_on_collect);
@@ -451,6 +452,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
     PUT_NAMED_INT32(ctx, "speed", t->speed);
+    PUT_NAMED_INT32(ctx, "health", t->health);
     PUT_NAMED_INT32(ctx, "lifespan", t->lifespan);
     PUT_NAMED_INT32(ctx, "score_on_death", t->score_on_death);
     PUT_NAMED_INT32(ctx, "score_on_collect", t->score_on_collect);
@@ -562,6 +564,11 @@ uint8_t thing_template_get_z_order (thing_templatep t)
 uint32_t thing_template_get_speed (thing_templatep t)
 {
     return (t->speed);
+}
+
+uint32_t thing_template_get_health (thing_templatep t)
+{
+    return (t->health);
 }
 
 uint32_t thing_template_get_lifespan (thing_templatep t)

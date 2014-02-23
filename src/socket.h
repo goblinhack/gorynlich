@@ -76,7 +76,7 @@ typedef struct {
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_tell;
 
-typedef struct {
+typedef struct msg_player_state_ {
     char name[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
     IPaddress local_ip;
@@ -86,12 +86,13 @@ typedef struct {
     uint16_t min_latency;
     uint16_t max_latency;
     uint32_t score;
+    uint32_t health;
     uint32_t key;
-} __attribute__ ((packed)) msg_player;
+} __attribute__ ((packed)) msg_player_state;
 
 typedef struct {
     uint8_t type;
-    msg_player players[MAX_PLAYERS];
+    msg_player_state players[MAX_PLAYERS];
     char server_name[SMALL_STRING_LEN_MAX];
     uint8_t server_max_players;
     uint8_t server_current_players;

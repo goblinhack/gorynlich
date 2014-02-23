@@ -3,6 +3,7 @@
  tooltip="monk!"
  z_depth=2
  speed=3000
+ health=30
  score_on_death=250
  z_order=4
  is_monst

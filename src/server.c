@@ -399,8 +399,8 @@ void server_tick (void)
  */
 static boolean server_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name           Quality  Latency      Remote IP      Local IP     Score ");
-    CON("----           -------  ------- --------------- --------------- -------");
+    CON("Name           Quality  Latency      Remote IP      Local IP   ");
+    CON("----           -------  ------- --------------- ---------------");
 
     uint32_t pi;
 
@@ -423,14 +423,13 @@ static boolean server_players_show (tokens_t *tokens, void *context)
 
         pi++;
 
-        CON("[%d] %-10s %3d pct %5d ms %-15s %-15s %07d", 
+        CON("[%d] %-10s %3d pct %5d ms %-15s %-15s", 
             pi,
             p->name,
             p->quality,
             p->avg_latency,
             tmp,
-            tmp2,
-            p->score);
+            tmp2);
 
         myfree(tmp2);
         myfree(tmp);
