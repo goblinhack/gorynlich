@@ -417,36 +417,31 @@ static void usage (void)
     LOG("        -server");
     LOG("        -s");
     LOG(" ");
-    LOG("        --connect     run as a client");
-    LOG("        -connect");
-    LOG("        -c");
-    LOG(" ");
     LOG("        --nodisplay   run with no display");
     LOG("        -nodisplay");
     LOG("        -n");
-    LOG(" ");
-    LOG("        --host        hostname or ip of server");
-    LOG("        -host");
-    LOG("        -h");
     LOG(" ");
     LOG("        --port        port of server, default %d",
             SERVER_DEFAULT_PORT);
     LOG("        -port");
     LOG("        -p");
     LOG(" ");
+    LOG("        --name        optional name of server");
+    LOG("        -name");
+    LOG("        -n");
+    LOG(" ");
     LOG("Written by Neil McGill, goblinhack@gmail.com");
 }
 
 static void parse_args (int32_t argc, char *argv[])
 {
-    const char *host = SERVER_DEFAULT_HOST;
     uint16_t port = SERVER_DEFAULT_PORT;
     int32_t i;
 
     LOG("Hello");
 
     is_server = false;
-    is_client = false;
+    is_client = true;
 
     /*
      * Parse format args
@@ -466,6 +461,20 @@ static void parse_args (int32_t argc, char *argv[])
         }
 
         /*
+         * -name
+         */
+        if (!strcmp(argv[i], "--name") ||
+            !strcmp(argv[i], "-name") ||
+            !strcmp(argv[i], "-n")) {
+
+            const char *name = argv[i + 1];
+            i++;
+            strncpy(global_config.user_server_name, name, 
+                    sizeof(global_config.user_server_name));
+            continue;
+        }
+
+        /*
          * -nodisplay
          */
         if (!strcmp(argv[i], "--nodisplay") ||
@@ -477,31 +486,6 @@ static void parse_args (int32_t argc, char *argv[])
         }
 
         /*
-         * -connect
-         */
-        if (!strcmp(argv[i], "--connect") ||
-            !strcmp(argv[i], "-connect") ||
-            !strcmp(argv[i], "-c")) {
-
-            is_client = true;
-            LOG_STDOUT = fopen("stdout.client.txt", "w+");
-            LOG_STDERR = fopen("stderr.client.txt", "w+");
-            continue;
-        }
-
-        /*
-         * -host
-         */
-        if (!strcmp(argv[i], "--host") ||
-            !strcmp(argv[i], "-host") ||
-            !strcmp(argv[i], "-h")) {
-
-            host = argv[i + 1];
-            i++;
-            continue;
-        }
-
-        /*
          * -port
          */
         if (!strcmp(argv[i], "--port") ||
@@ -509,6 +493,7 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-p")) {
 
             port = atoi(argv[i + 1]);
+            global_config.user_server_port = port;
             i++;
             continue;
         }
@@ -523,16 +508,6 @@ static void parse_args (int32_t argc, char *argv[])
 
         usage();
         DIE("unknown format argument, %s", argv[i]);
-    }
-
-    if (!is_server && !is_client) {
-        is_client = true;
-    }
-
-    LOG("Trying to resolve %s:%u", host, port);
-
-    if (SDLNet_ResolveHost(&server_address, host, port)) {
-        DIE("cannot resolve host %s port %u", host, port);
     }
 }
 

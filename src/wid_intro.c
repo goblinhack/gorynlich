@@ -183,6 +183,9 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 
 static void wid_intro_single_play_selected_cb (void *context)
 {
+    wid_server_join_hide();
+    wid_server_create_hide();
+
     wid_game_map_server_visible();
     wid_game_map_client_visible();
 }
