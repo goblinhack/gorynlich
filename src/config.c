@@ -5,11 +5,13 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "main.h"
 #include "marshal.h"
 #include "config.h"
 #include "string.h"
+#include "socket.h"
 
 struct config global_config;
 
@@ -167,6 +169,18 @@ boolean config_load (void)
 
     myfree(file);
     demarshal_fini(ctx);
+
+    LOG("Trying to resolve server address %s:%u", 
+        SERVER_DEFAULT_HOST, 
+        global_config.server_port);
+
+    if (SDLNet_ResolveHost(&server_address, SERVER_DEFAULT_HOST, 
+                           global_config.server_port)) {
+        MSGERR("Open socket, cannot resolve %s:%u", 
+               SERVER_DEFAULT_HOST, 
+               global_config.server_port);
+        return (false);
+    }
 
     return (true);
 }
