@@ -1898,7 +1898,7 @@ void socket_tx_server_status (void)
             continue;
         }
 
-        msg_player *msg_tx = &msg.players[si];
+        msg_player_state *msg_tx = &msg.players[si];
 
         strncpy(msg_tx->name, p->name, min(sizeof(msg_tx->name), 
                                            strlen(p->name))); 
@@ -1917,7 +1917,15 @@ void socket_tx_server_status (void)
         SDLNet_Write16(s->min_latency, &msg_tx->min_latency);
         SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
 
-        SDLNet_Write32(p->score, &msg_tx->score);
+        thingp t = p->thing;
+        if (t) {
+            SDLNet_Write32(t->score, &msg_tx->score);
+            SDLNet_Write32(t->health, &msg_tx->health);
+        } else {
+            SDLNet_Write32(0, &msg_tx->score);
+            SDLNet_Write32(0, &msg_tx->health);
+        }
+
         SDLNet_Write32(p->key, &msg_tx->key);
 
         si++;
@@ -1972,8 +1980,8 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
     msg = (typeof(msg)) packet->data;
 
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player *p = &status->players[pi];
-        msg_player *msg_rx = &msg->players[pi];
+        msg_player_state *p = &status->players[pi];
+        msg_player_state *msg_rx = &msg->players[pi];
 
         memcpy(p->name, msg_rx->name, SMALL_STRING_LEN_MAX);
         memcpy(p->pclass, msg_rx->pclass, SMALL_STRING_LEN_MAX);
@@ -1991,6 +1999,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
         p->max_latency = SDLNet_Read16(&msg_rx->max_latency);
 
         p->score = SDLNet_Read32(&msg_rx->score);
+        p->health = SDLNet_Read32(&msg_rx->health);
         p->key = SDLNet_Read32(&msg_rx->key);
 
         if (!p->name[0]) {

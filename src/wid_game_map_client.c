@@ -406,29 +406,31 @@ void wid_game_map_client_score_update (levelp level)
         color c;
         char *name_title;
 
+        msg_player_state *p = client_get_player(y);
+        name_title = p->pclass;
+        if (!p->pclass[0]) {
+            name_title = "No player";
+        }
+
         switch (y) {
         case 0:
             c = RED;
-            name_title = "WARRIOR";
             break;
         case 1:
             c = SKYBLUE;
-            name_title = "VALKYRIE";
             break;
         case 2:
             c = YELLOW;
-            name_title = "WIZARD";
             break;
         case 3:
             c = GREEN;
-            name_title = "ELF";
             break;
         }
 
         /*
          * Score
          */
-        char *tmp = dynprintf("%06u", thing_score(player));
+        char *tmp = dynprintf("%06u", p->score);
 
         widp wid_score_container;
 
@@ -445,7 +447,7 @@ void wid_game_map_client_score_update (levelp level)
         /*
          * Health
          */
-        tmp = dynprintf("%06u", thing_score(player));
+        tmp = dynprintf("%06u", p->health);
 
         widp wid_health_container;
 

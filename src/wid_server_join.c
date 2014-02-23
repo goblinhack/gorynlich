@@ -315,7 +315,7 @@ void wid_server_join_redo (boolean soft_refresh)
             uint32_t idx = 0;
 
             for (pi = 0; pi < MAX_PLAYERS; pi++) {
-                msg_player *p = &server_status->players[pi];
+                msg_player_state *p = &server_status->players[pi];
 
                 if (!p->name[0]) {
                     continue;
