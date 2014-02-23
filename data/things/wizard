@@ -4,6 +4,7 @@
  z_depth=3
  z_order=10
  speed=500
+ health=100
  is_player
  is_animated
  is_left_as_corpse_on_death

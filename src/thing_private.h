@@ -44,6 +44,11 @@ typedef struct thing_ {
     uint32_t score_pump;
 
     /*
+     * Thing health.
+     */
+    uint32_t health;
+
+    /*
      * Periodic spam message.
      */
     timerp timer_spam;

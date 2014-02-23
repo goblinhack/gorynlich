@@ -163,6 +163,7 @@ typedef struct tree_marshal_ *marshal_p;
 typedef struct tokens_t_ *tokensp;
 typedef struct level_t_ *levelp;
 typedef struct map_t_ *mapp;
+typedef struct msg_player_state_ *msg_player_statep;
 
 extern thingp player;
 extern fontp vsmall_font;

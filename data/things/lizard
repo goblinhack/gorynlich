@@ -3,6 +3,7 @@
  tooltip="lizard!"
  z_depth=2
  speed=3000
+ health=20
  score_on_death=250
  z_order=4
  is_monst

@@ -78,6 +78,7 @@ thingp thing_server_new (levelp level, const char *name)
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
     t->tree.key = ++thing_id;
     t->thing_template = thing_template;
+    t->health = thing_template_get_health(thing_template);
 
     if (!tree_insert(server_things, &t->tree.node)) {
         DIE("thing insert name [%s] failed", name);
