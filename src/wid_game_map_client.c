@@ -81,7 +81,16 @@ void wid_game_map_client_hide (void)
 
 static void wid_game_map_client_start_cb (void *context)
 {
-    if (!client_socket_join(SERVER_DEFAULT_HOST, 0, SERVER_DEFAULT_PORT,
+    uint16_t portno;
+
+    portno = global_config.server_port;
+
+    if (server_socket) {
+        IPaddress addr = socket_get_local_ip(server_socket);
+        portno = SDLNet_Read16(&addr.port);
+    }
+
+    if (!client_socket_join(SERVER_DEFAULT_HOST, 0, portno,
                             true /* quiet */)) {
         action_timer_create(
                 &wid_timers,
@@ -568,7 +577,7 @@ void wid_game_map_client_score_update (levelp level)
         widp wid = wid_new_square_button(wid_scoreline_container_top, "title");
 
         fpoint tl = { 0.0, 0.0 };
-        fpoint br = { 1.0, 0.15 };
+        fpoint br = { 1.0, 0.20 };
 
         wid_set_tl_br_pct(wid, tl, br);
 

@@ -248,8 +248,10 @@ static boolean client_socket_open (char *host, char *port)
     if (port && *port) {
         portno = atoi(port);
     } else {
-        portno = SERVER_DEFAULT_PORT;
+        portno = global_config.server_port;
     }
+
+    LOG("Trying to resolve server address %s:%u", host, portno);
 
     if (SDLNet_ResolveHost(&server_address, host, portno)) {
         MSGERR("Open socket, cannot resolve %s:%u", host, portno);
@@ -292,7 +294,7 @@ static boolean client_socket_close (char *host, char *port)
         if (port && *port) {
             portno = atoi(port);
         } else {
-            portno = SERVER_DEFAULT_PORT;
+            portno = global_config.server_port;
         }
 
         if (SDLNet_ResolveHost(&server_address, host, portno)) {
@@ -355,7 +357,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno,
             if (port && *port) {
                 portno = atoi(port);
             } else {
-                portno = SERVER_DEFAULT_PORT;
+                portno = global_config.server_port;
             }
         }
 
