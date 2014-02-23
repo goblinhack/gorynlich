@@ -396,6 +396,7 @@ static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
         }
     }
 
+    wid_intro_hide();
     wid_game_map_client_visible();
 
     return (true);

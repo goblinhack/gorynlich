@@ -349,7 +349,9 @@ struct config {
     char name[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
     char server_name[SMALL_STRING_LEN_MAX];
+    char user_server_name[SMALL_STRING_LEN_MAX];
     uint16_t server_port;
+    uint16_t user_server_port;
     uint8_t server_max_players;
     uint8_t server_current_players;
 };

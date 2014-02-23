@@ -390,6 +390,10 @@ static boolean wid_server_create_name_receive_input (widp w,
             strncpy(global_config.server_name, sn.name,
                     sizeof(global_config.server_name));
 
+            if (global_config.user_server_name[0]) {
+                global_config.user_server_name[0] = 0;
+            }
+
             server_remove(s);
             wid_server_local_server_add(&sn);
             wid_server_create_redo();
@@ -843,7 +847,7 @@ static void wid_server_create_create (boolean redo)
 
         TREE_WALK_REVERSE(local_servers, s) {
             widp w = wid_new_rounded_small_button(wid_server_create_container,
-                                           "server join");
+                                                  "server join");
 
             fpoint tl = {width_at, 0.2};
             fpoint br = {width_at + width7, 0.7};
@@ -925,14 +929,21 @@ static boolean wid_server_load_local_server (void)
      * cli overrides the config file.
      */
     if (server_socket) {
-        LOG("Using existing server from cli");
+        LOG("Using existing server");
 
         server s;
 
         memset(&s, 0, sizeof(s));
 
-        IPaddress ip = socket_get_local_ip(server_socket);; 
+        IPaddress ip = socket_get_local_ip(server_socket);
         s.ip = ip;
+        s.port = SDLNet_Read16(&ip.port);
+
+        if (global_config.user_server_name[0]) {
+            s.name = global_config.user_server_name;
+        } else {
+            s.name = global_config.server_name;
+        }
 
         wid_server_local_server_add(&s);
         return (true);
@@ -942,7 +953,12 @@ static boolean wid_server_load_local_server (void)
 
     memset(&s, 0, sizeof(s));
 
-    s.name = global_config.server_name;
+    if (global_config.user_server_name[0]) {
+        s.name = global_config.user_server_name;
+    } else {
+        s.name = global_config.server_name;
+    }
+
     s.port = global_config.server_port;
 
     wid_server_local_server_add(&s);
