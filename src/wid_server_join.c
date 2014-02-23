@@ -447,7 +447,7 @@ static boolean wid_server_join_add (widp w, int32_t x, int32_t y,
     memset(&s, 0, sizeof(s));
 
     s.host = SERVER_DEFAULT_HOST; 
-    s.port = SERVER_DEFAULT_PORT; 
+    s.port = global_config.server_port; 
 
     server_add(&s);
     wid_server_save_remote_server_list();

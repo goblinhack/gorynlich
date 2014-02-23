@@ -15,6 +15,8 @@
 #include "wid_server_join.h"
 #include "string.h"
 #include "wid_text_input.h"
+#include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "marshal.h"
 #include "sdl.h"
 #include "socket.h"
@@ -255,6 +257,12 @@ static boolean wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
     }
 
     wid_server_create_redo();
+
+    wid_game_map_server_visible();
+    wid_game_map_client_visible();
+    wid_server_create_hide();
+    wid_server_join_hide();
+    wid_intro_hide();
 
     MSG("Server started");
 

@@ -2127,7 +2127,13 @@ void socket_tx_client_move (socketp s,
                             const boolean left, 
                             const boolean right)
 {
-    verify(s);
+    static uint32_t ts;
+
+    if (!time_have_x_tenths_passed_since(1, ts)) {
+        return;
+    }
+
+    ts = time_get_time_cached();
 
     if (!socket_get_udp_socket(s)) {
         return;
