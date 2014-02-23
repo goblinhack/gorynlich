@@ -1864,9 +1864,15 @@ void socket_tx_server_status (void)
     msg_server_status msg = {0};
     msg.type = MSG_SERVER_STATUS;
 
-    strncpy(msg.server_name, global_config.server_name,
-            min(sizeof(msg.server_name), 
-                strlen(global_config.server_name))); 
+    if (global_config.user_server_name[0]) {
+        strncpy(msg.server_name, global_config.user_server_name,
+                min(sizeof(msg.server_name), 
+                    strlen(global_config.user_server_name))); 
+    } else {
+        strncpy(msg.server_name, global_config.server_name,
+                min(sizeof(msg.server_name), 
+                    strlen(global_config.server_name))); 
+    }
 
     msg.server_max_players = global_config.server_max_players;
     msg.server_current_players = global_config.server_current_players;

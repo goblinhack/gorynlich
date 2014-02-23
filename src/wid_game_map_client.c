@@ -117,6 +117,7 @@ void wid_game_map_client_visible (void)
     }
 
     wid_game_map_client_wid_create();
+    wid_intro_hide();
 
     wid_visible(wid_game_map_client_window, 0);
     wid_raise(wid_game_map_client_window);

@@ -81,6 +81,25 @@ boolean server_init (void)
     command_add(server_shout, "notify [A-Za-z0-9_-]*",
                 "shout to all players");
 
+    uint16_t portno;
+
+    portno = global_config.user_server_port;
+    if (!portno) {
+        portno = global_config.server_port;
+        if (!portno) {
+            portno = SERVER_DEFAULT_PORT;
+        }
+    }
+
+    LOG("Trying to resolve server address %s:%u", 
+        SERVER_DEFAULT_HOST, portno);
+
+    if (SDLNet_ResolveHost(&server_address, SERVER_DEFAULT_HOST, portno)) {
+        MSGERR("Open socket, cannot resolve %s:%u",
+               SERVER_DEFAULT_HOST, portno);
+        return (false);
+    }
+
     if (is_server) {
         if (!server_start(server_address)) {
             ERR("Server failed to listen");
