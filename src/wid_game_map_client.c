@@ -153,10 +153,28 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         return (false);
     }
 
-    thing_set_is_dir_up(player, up);
-    thing_set_is_dir_down(player, down);
-    thing_set_is_dir_left(player, left);
-    thing_set_is_dir_right(player, right);
+    if (up) {
+        if (left) {
+            thing_set_is_dir_tl(player);
+        } if (right) {
+            thing_set_is_dir_tr(player);
+        } else {
+            thing_set_is_dir_left(player);
+        }
+    } else if (down) {
+        if (left) {
+            thing_set_is_dir_bl(player);
+        } if (right) {
+            thing_set_is_dir_br(player);
+        } else {
+            thing_set_is_dir_right(player);
+        }
+    } else if (left) {
+        thing_set_is_dir_left(player);
+    } else if (right) {
+        thing_set_is_dir_right(player);
+    }
+
 
     thing_animate(player);
 

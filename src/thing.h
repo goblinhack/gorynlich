@@ -99,14 +99,25 @@ void thing_set_got_to_exit_first(thingp t, boolean val);
 boolean thing_got_to_exit_first(thingp t);
 void thing_set_redo_maze_search(thingp t, boolean val);
 boolean thing_redo_maze_search(thingp t);
-void thing_set_is_dir_down(thingp t, boolean val);
-boolean thing_is_dir_down(thingp t);
-void thing_set_is_dir_up(thingp t, boolean val);
-boolean thing_is_dir_up(thingp t);
-void thing_set_is_dir_left(thingp t, boolean val);
-boolean thing_is_dir_left(thingp t);
-void thing_set_is_dir_right(thingp t, boolean val);
-boolean thing_is_dir_right(thingp t);
+
+void thing_set_is_dir_down(thingp t);
+uint8_t thing_is_dir_down(thingp t);
+void thing_set_is_dir_up(thingp t);
+uint8_t thing_is_dir_up(thingp t);
+void thing_set_is_dir_left(thingp t);
+uint8_t thing_is_dir_left(thingp t);
+void thing_set_is_dir_right(thingp t);
+uint8_t thing_is_dir_right(thingp t);
+
+void thing_set_is_dir_tl(thingp t);
+uint8_t thing_is_dir_tl(thingp t);
+void thing_set_is_dir_bl(thingp t);
+uint8_t thing_is_dir_bl(thingp t);
+void thing_set_is_dir_tr(thingp t);
+uint8_t thing_is_dir_tr(thingp t);
+void thing_set_is_dir_br(thingp t);
+uint8_t thing_is_dir_br(thingp t);
+
 void thing_set_opened_exit(thingp t, boolean val);
 boolean thing_opened_exit(thingp t);
 void thing_set_is_open(thingp t, boolean val);
@@ -238,3 +249,15 @@ thingp thing_client_find(uint32_t thing_id);
 
 extern tree_rootp server_things;
 extern tree_rootp client_things;
+
+enum {
+    THING_DIR_NONE,
+    THING_DIR_DOWN,
+    THING_DIR_UP,
+    THING_DIR_LEFT,
+    THING_DIR_RIGHT,
+    THING_DIR_TL,
+    THING_DIR_BL,
+    THING_DIR_TR,
+    THING_DIR_BR,
+};

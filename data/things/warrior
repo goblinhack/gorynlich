@@ -29,5 +29,29 @@
    is_dir_right
    tile="warrior-right"
   }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="warrior-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="warrior-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="warrior-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="warrior-br"
+  }
  }
 }
