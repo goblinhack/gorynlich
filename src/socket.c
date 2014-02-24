@@ -1893,6 +1893,11 @@ void socket_tx_server_status (void)
             continue;
         }
 
+        thingp t = p->thing;
+        if (!t) {
+            continue;
+        }
+
         if (si >= MAX_PLAYERS) {
             ERR("too many players to send all in message");
             continue;
@@ -1917,14 +1922,9 @@ void socket_tx_server_status (void)
         SDLNet_Write16(s->min_latency, &msg_tx->min_latency);
         SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
 
-        thingp t = p->thing;
-        if (t) {
-            SDLNet_Write32(t->score, &msg_tx->score);
-            SDLNet_Write32(t->health, &msg_tx->health);
-        } else {
-            SDLNet_Write32(0, &msg_tx->score);
-            SDLNet_Write32(0, &msg_tx->health);
-        }
+        SDLNet_Write32(t->score, &msg_tx->score);
+        SDLNet_Write32(t->health, &msg_tx->health);
+        SDLNet_Write32(t->tree.key, &msg_tx->thing_id);
 
         SDLNet_Write32(p->key, &msg_tx->key);
 
@@ -2000,6 +2000,8 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
         p->score = SDLNet_Read32(&msg_rx->score);
         p->health = SDLNet_Read32(&msg_rx->health);
+        p->thing_id = SDLNet_Read32(&msg_rx->thing_id);
+
         p->key = SDLNet_Read32(&msg_rx->key);
 
         if (!p->name[0]) {
@@ -2142,17 +2144,17 @@ void socket_tx_client_move (socketp s,
                             const boolean left, 
                             const boolean right)
 {
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
     static uint32_t ts;
 
-    if (!time_have_x_tenths_passed_since(1, ts)) {
+    if (!time_have_x_hundredths_passed_since(5, ts)) {
         return;
     }
 
     ts = time_get_time_cached();
-
-    if (!socket_get_udp_socket(s)) {
-        return;
-    }
 
     msg_client_move msg = {0};
     msg.type = MSG_CLIENT_MOVE;
@@ -2198,11 +2200,18 @@ void socket_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
-    t->x += right;
-    t->x -= left;
-    t->y += down;
-    t->y -= up;
+    double scale = 3.0;
+
+    t->x += (double)right / scale;
+    t->x -= (double)left / scale;
+    t->y += (double)down / scale;
+    t->y -= (double)up / scale;
     t->updated++;
+
+    thing_set_is_dir_up(t, up);
+    thing_set_is_dir_down(t, down);
+    thing_set_is_dir_left(t, left);
+    thing_set_is_dir_right(t, right);
 
     thing_server_wid_update(t, t->x, t->y);
 }

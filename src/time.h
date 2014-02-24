@@ -8,6 +8,7 @@
 #include "sdl.h"
 
 uint32_t time_get_time_cached(void);
+boolean time_have_x_hundredths_passed_since(uint32_t tenths, uint32_t since);
 boolean time_have_x_tenths_passed_since(uint32_t tenths, uint32_t since);
 boolean time_have_x_secs_passed_since(uint32_t tenths, uint32_t since);
 const char *time2str(uint32_t ms, char *buf, int32_t len);

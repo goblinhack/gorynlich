@@ -88,6 +88,7 @@ typedef struct msg_player_state_ {
     uint32_t score;
     uint32_t health;
     uint32_t key;
+    uint32_t thing_id;
 } __attribute__ ((packed)) msg_player_state;
 
 typedef struct {

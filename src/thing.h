@@ -234,6 +234,7 @@ typedef struct {
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);
+thingp thing_client_find(uint32_t thing_id);
 
 extern tree_rootp server_things;
 extern tree_rootp client_things;

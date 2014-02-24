@@ -11,6 +11,22 @@
  tiles={
   tile={
    delay=200
+   is_dir_up
+   tile="wizard-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="wizard-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="wizard-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
    tile="wizard-right"
   }
  }

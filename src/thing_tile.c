@@ -81,10 +81,10 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_270", t->is_join_x4_270);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_180", t->is_join_x4_180);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_90", t->is_join_x4_90);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_yyy1", t->is_yyy1);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_yyy2", t->is_yyy2);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_yyy3", t->is_yyy3);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_yyy4", t->is_yyy4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_left", t->is_dir_left);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_right", t->is_dir_right);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_up", t->is_dir_up);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_down", t->is_dir_down);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy5", t->is_yyy5);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy6", t->is_yyy6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy7", t->is_yyy7);
@@ -154,10 +154,10 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
     PUT_NAMED_BITFIELD(ctx, "is_join_t270_1", t->is_join_t270_1);
     PUT_NAMED_BITFIELD(ctx, "is_join_t270_2", t->is_join_t270_2);
     PUT_NAMED_BITFIELD(ctx, "is_join_t270_3", t->is_join_t270_3);
-    PUT_NAMED_BITFIELD(ctx, "is_yyy1", t->is_yyy1);
-    PUT_NAMED_BITFIELD(ctx, "is_yyy2", t->is_yyy2);
-    PUT_NAMED_BITFIELD(ctx, "is_yyy3", t->is_yyy3);
-    PUT_NAMED_BITFIELD(ctx, "is_yyy4", t->is_yyy4);
+    PUT_NAMED_BITFIELD(ctx, "is_dir_left", t->is_dir_left);
+    PUT_NAMED_BITFIELD(ctx, "is_dir_right", t->is_dir_right);
+    PUT_NAMED_BITFIELD(ctx, "is_dir_up", t->is_dir_up);
+    PUT_NAMED_BITFIELD(ctx, "is_dir_down", t->is_dir_down);
     PUT_NAMED_BITFIELD(ctx, "is_yyy5", t->is_yyy5);
     PUT_NAMED_BITFIELD(ctx, "is_yyy6", t->is_yyy6);
     PUT_NAMED_BITFIELD(ctx, "is_yyy7", t->is_yyy7);
@@ -530,24 +530,24 @@ boolean thing_tile_is_join_x4_90 (thing_tilep t)
     return (t->is_join_x4_90);
 }
 
-boolean thing_tile_is_yyy1 (thing_tilep t)
+boolean thing_tile_is_dir_left (thing_tilep t)
 {
-    return (t->is_yyy1);
+    return (t->is_dir_left);
 }
 
-boolean thing_tile_is_yyy2 (thing_tilep t)
+boolean thing_tile_is_dir_right (thing_tilep t)
 {
-    return (t->is_yyy2);
+    return (t->is_dir_right);
 }
 
-boolean thing_tile_is_yyy3 (thing_tilep t)
+boolean thing_tile_is_dir_up (thing_tilep t)
 {
-    return (t->is_yyy3);
+    return (t->is_dir_up);
 }
 
-boolean thing_tile_is_yyy4 (thing_tilep t)
+boolean thing_tile_is_dir_down (thing_tilep t)
 {
-    return (t->is_yyy4);
+    return (t->is_dir_down);
 }
 
 boolean thing_tile_is_yyy5 (thing_tilep t)
