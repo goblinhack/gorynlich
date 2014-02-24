@@ -104,6 +104,8 @@ typedef struct thing_ {
      */
     uint8_t updated;
 
+    uint8_t dir:4;
+
     uint32_t is_qqq1:1;
     uint32_t is_qqq2:1;
     uint32_t is_qqq3:1;
@@ -114,10 +116,6 @@ typedef struct thing_ {
     uint32_t got_to_exit_first:1;
     uint32_t redo_maze_search:1;
     uint32_t is_xxx32:1;
-    uint32_t is_dir_down:1;
-    uint32_t is_dir_up:1;
-    uint32_t is_dir_left:1;
-    uint32_t is_dir_right:1;
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_buried:1;

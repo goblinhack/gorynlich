@@ -1116,72 +1116,140 @@ boolean thing_redo_maze_search (thingp t)
     return (t->redo_maze_search);
 }
 
-void thing_set_is_dir_down (thingp t, boolean val)
+void thing_set_is_dir_down (thingp t)
 {
     verify(t);
 
-    if (val != t->is_dir_down) {
+    if (t->dir != THING_DIR_DOWN) {
         t->updated++;
-        t->is_dir_down = val;
+        t->dir = THING_DIR_DOWN;
     }
 }
 
-boolean thing_is_dir_down (thingp t)
+uint8_t thing_is_dir_down (thingp t)
 {
     verify(t);
 
-    return (t->is_dir_down);
+    return (t->dir == THING_DIR_DOWN);
 }
 
-void thing_set_is_dir_up (thingp t, boolean val)
+void thing_set_is_dir_up (thingp t)
 {
     verify(t);
 
-    if (val != t->is_dir_up) {
-        t->is_dir_up = val;
+    if (t->dir != THING_DIR_UP) {
         t->updated++;
+        t->dir = THING_DIR_UP;
     }
 }
 
-boolean thing_is_dir_up (thingp t)
+uint8_t thing_is_dir_up (thingp t)
 {
     verify(t);
 
-    return (t->is_dir_up);
+    return (t->dir == THING_DIR_UP);
 }
 
-void thing_set_is_dir_left (thingp t, boolean val)
+void thing_set_is_dir_left (thingp t)
 {
     verify(t);
 
-    if (val != t->is_dir_left) {
+    if (t->dir != THING_DIR_LEFT) {
         t->updated++;
-        t->is_dir_left = val;
+        t->dir = THING_DIR_LEFT;
     }
 }
 
-boolean thing_is_dir_left (thingp t)
+uint8_t thing_is_dir_left (thingp t)
 {
     verify(t);
 
-    return (t->is_dir_left);
+    return (t->dir == THING_DIR_LEFT);
 }
 
-void thing_set_is_dir_right (thingp t, boolean val)
+void thing_set_is_dir_right (thingp t)
 {
     verify(t);
 
-    if (val != t->is_dir_right) {
+    if (t->dir != THING_DIR_DOWN) {
         t->updated++;
-        t->is_dir_right = val;
+        t->dir = THING_DIR_DOWN;
     }
 }
 
-boolean thing_is_dir_right (thingp t)
+uint8_t thing_is_dir_right (thingp t)
 {
     verify(t);
 
-    return (t->is_dir_right);
+    return (t->dir == THING_DIR_RIGHT);
+}
+
+void thing_set_is_dir_tl (thingp t)
+{
+    verify(t);
+
+    if (t->dir != THING_DIR_TL) {
+        t->updated++;
+        t->dir = THING_DIR_TL;
+    }
+}
+
+uint8_t thing_is_dir_tl (thingp t)
+{
+    verify(t);
+
+    return (t->dir == THING_DIR_TL);
+}
+
+void thing_set_is_dir_bl (thingp t)
+{
+    verify(t);
+
+    if (t->dir != THING_DIR_BL) {
+        t->updated++;
+        t->dir = THING_DIR_BL;
+    }
+}
+
+uint8_t thing_is_dir_bl (thingp t)
+{
+    verify(t);
+
+    return (t->dir == THING_DIR_BL);
+}
+
+void thing_set_is_dir_tr (thingp t)
+{
+    verify(t);
+
+    if (t->dir != THING_DIR_TR) {
+        t->updated++;
+        t->dir = THING_DIR_TR;
+    }
+}
+
+uint8_t thing_is_dir_tr (thingp t)
+{
+    verify(t);
+
+    return (t->dir == THING_DIR_TR);
+}
+
+void thing_set_is_dir_br (thingp t)
+{
+    verify(t);
+
+    if (t->dir != THING_DIR_BR) {
+        t->updated++;
+        t->dir = THING_DIR_BR;
+    }
+}
+
+uint8_t thing_is_dir_br (thingp t)
+{
+    verify(t);
+
+    return (t->dir == THING_DIR_BR);
 }
 
 void thing_set_opened_exit (thingp t, boolean val)
@@ -1786,11 +1854,47 @@ void socket_tx_map_update (socketp p)
             t->updated--;
         }
 
+        uint8_t up = false;
+        uint8_t down = false;
+        uint8_t left = false;
+        uint8_t right = false;
+
+        switch (t->dir) {
+        case THING_DIR_LEFT:
+            left = true;
+            break;
+        case THING_DIR_RIGHT:
+            right = true;
+            break;
+        case THING_DIR_UP:
+            up = true;
+            break;
+        case THING_DIR_DOWN:
+            down = true;
+            break;
+        case THING_DIR_TL:
+            left = true;
+            up = true;
+            break;
+        case THING_DIR_BL:
+            down = true;
+            left = true;
+            break;
+        case THING_DIR_TR:
+            up = true;
+            right = true;
+            break;
+        case THING_DIR_BR:
+            right = true;
+            down = true;
+            break;
+        }
+
         uint8_t state = 
-                ((t->is_dir_up      ? 1 : 0) << 5) |
-                ((t->is_dir_down    ? 1 : 0) << 4) |
-                ((t->is_dir_left    ? 1 : 0) << 3) |
-                ((t->is_dir_right   ? 1 : 0) << 2) |
+                ((up                ? 1 : 0) << 5) |
+                ((down              ? 1 : 0) << 4) |
+                ((left              ? 1 : 0) << 3) |
+                ((right             ? 1 : 0) << 2) |
                 ((t->is_dead        ? 1 : 0) << 1) |
                 ((t->is_buried      ? 1 : 0) << 0);
 
@@ -1919,10 +2023,32 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 thing_template_is_door(thing_template);
         }
 
-        thing_set_is_dir_up(t,      (state & (1 << 5)) ? 1 : 0);
-        thing_set_is_dir_down(t,    (state & (1 << 4)) ? 1 : 0);
-        thing_set_is_dir_left(t,    (state & (1 << 3)) ? 1 : 0);
-        thing_set_is_dir_right(t,   (state & (1 << 2)) ? 1 : 0);
+        uint8_t up =        (state & (1 << 5)) ? 1 : 0;
+        uint8_t down =      (state & (1 << 4)) ? 1 : 0;
+        uint8_t left =      (state & (1 << 3)) ? 1 : 0;
+        uint8_t right =     (state & (1 << 2)) ? 1 : 0;
+
+        if (up) {
+            if (left) {
+                thing_set_is_dir_tl(t);
+            } if (right) {
+                thing_set_is_dir_tr(t);
+            } else {
+                thing_set_is_dir_left(t);
+            }
+        } else if (down) {
+            if (left) {
+                thing_set_is_dir_bl(t);
+            } if (right) {
+                thing_set_is_dir_br(t);
+            } else {
+                thing_set_is_dir_right(t);
+            }
+        } else if (left) {
+            thing_set_is_dir_left(t);
+        } else if (right) {
+            thing_set_is_dir_right(t);
+        }
 
         widp w = thing_wid(t);
         if (w) {

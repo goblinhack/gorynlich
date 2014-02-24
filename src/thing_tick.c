@@ -298,10 +298,7 @@ void thing_tick_all (void)
             have_nexthop = false;
 
             if (have_nexthop) {
-                t->is_dir_up = false;
-                t->is_dir_down = false;
-                t->is_dir_left = false;
-                t->is_dir_right = false;
+                t->dir = THING_DIR_NONE;
 
                 widp wid_current_floor = wid_grid_find_thing_template(
                                             wid_game_map_server_grid_container,
@@ -339,13 +336,37 @@ void thing_tick_all (void)
                 }
 
                 if (next_floor_x > t->x) {
-                    t->is_dir_right = true;
+                    if (next_floor_y > t->y) {
+                        thing_set_is_dir_tr(t);
+                    } else if (next_floor_y < t->y) {
+                        thing_set_is_dir_br(t);
+                    } else {
+                        thing_set_is_dir_right(t);
+                    }
                 } else if (next_floor_x < t->x) {
-                    t->is_dir_left = true;
+                    if (next_floor_y > t->y) {
+                        thing_set_is_dir_tl(t);
+                    } else if (next_floor_y < t->y) {
+                        thing_set_is_dir_bl(t);
+                    } else {
+                        thing_set_is_dir_left(t);
+                    }
                 } else if (next_floor_y > t->y) {
-                    t->is_dir_down = true;
+                    if (next_floor_x > t->x) {
+                        thing_set_is_dir_br(t);
+                    } else if (next_floor_x < t->x) {
+                        thing_set_is_dir_bl(t);
+                    } else {
+                        thing_set_is_dir_down(t);
+                    }
                 } else if (next_floor_y < t->y) {
-                    t->is_dir_up = true;
+                    if (next_floor_x > t->x) {
+                        thing_set_is_dir_tr(t);
+                    } else if (next_floor_x < t->x) {
+                        thing_set_is_dir_br(t);
+                    } else {
+                        thing_set_is_dir_up(t);
+                    }
                 } else {
                     DIE("no next hop to go to");
                 }
@@ -356,24 +377,65 @@ void thing_tick_all (void)
         }
 
         if (w) {
-            if (t->is_dir_right) {
-                if (thing_template_is_effect_rotate_2way(thing_template)) {
-                    wid_rotate_immediate(w, 0);
-                    wid_flip_vert(w, false);
-                }
-            } else if (t->is_dir_left) {
+            switch (t->dir) {
+            case THING_DIR_LEFT:
                 if (thing_template_is_effect_rotate_2way(thing_template)) {
                     wid_rotate_immediate(w, 180);
                     wid_flip_vert(w, true);
                 }
-            } else if (t->is_dir_down) {
-                if (thing_template_is_effect_rotate_4way(thing_template)) {
-                    wid_rotate_immediate(w, 90);
+                break;
+            case THING_DIR_RIGHT:
+                if (thing_template_is_effect_rotate_2way(thing_template)) {
+                    wid_rotate_immediate(w, 0);
+                    wid_flip_vert(w, false);
                 }
-            } else if (t->is_dir_up) {
+                break;
+            case THING_DIR_UP:
                 if (thing_template_is_effect_rotate_4way(thing_template)) {
                     wid_rotate_immediate(w, 270);
                 }
+                break;
+            case THING_DIR_DOWN:
+                if (thing_template_is_effect_rotate_4way(thing_template)) {
+                    wid_rotate_immediate(w, 90);
+                }
+                break;
+            case THING_DIR_TL:
+                if (thing_template_is_effect_rotate_2way(thing_template)) {
+                    wid_rotate_immediate(w, 180);
+                    wid_flip_vert(w, true);
+                }
+                if (thing_template_is_effect_rotate_4way(thing_template)) {
+                    wid_rotate_immediate(w, 270);
+                }
+                break;
+            case THING_DIR_BL:
+                if (thing_template_is_effect_rotate_2way(thing_template)) {
+                    wid_rotate_immediate(w, 180);
+                    wid_flip_vert(w, true);
+                }
+                if (thing_template_is_effect_rotate_4way(thing_template)) {
+                    wid_rotate_immediate(w, 90);
+                }
+                break;
+            case THING_DIR_TR:
+                if (thing_template_is_effect_rotate_2way(thing_template)) {
+                    wid_rotate_immediate(w, 0);
+                    wid_flip_vert(w, false);
+                }
+                if (thing_template_is_effect_rotate_4way(thing_template)) {
+                    wid_rotate_immediate(w, 270);
+                }
+                break;
+            case THING_DIR_BR:
+                if (thing_template_is_effect_rotate_2way(thing_template)) {
+                    wid_rotate_immediate(w, 0);
+                    wid_flip_vert(w, false);
+                }
+                if (thing_template_is_effect_rotate_4way(thing_template)) {
+                    wid_rotate_immediate(w, 90);
+                }
+                break;
             }
         }
     }

@@ -2208,10 +2208,27 @@ void socket_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
     t->y -= (double)up / scale;
     t->updated++;
 
-    thing_set_is_dir_up(t, up);
-    thing_set_is_dir_down(t, down);
-    thing_set_is_dir_left(t, left);
-    thing_set_is_dir_right(t, right);
+    if (up) {
+        if (left) {
+            thing_set_is_dir_tl(t);
+        } if (right) {
+            thing_set_is_dir_tr(t);
+        } else {
+            thing_set_is_dir_left(t);
+        }
+    } else if (down) {
+        if (left) {
+            thing_set_is_dir_bl(t);
+        } if (right) {
+            thing_set_is_dir_br(t);
+        } else {
+            thing_set_is_dir_right(t);
+        }
+    } else if (left) {
+        thing_set_is_dir_left(t);
+    } else if (right) {
+        thing_set_is_dir_right(t);
+    }
 
     thing_server_wid_update(t, t->x, t->y);
 }

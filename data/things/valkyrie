@@ -29,5 +29,29 @@
    is_dir_right
    tile="valkyrie-right"
   }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="valkyrie-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="valkyrie-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="valkyrie-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="valkyrie-br"
+  }
  }
 }
