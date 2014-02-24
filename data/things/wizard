@@ -29,5 +29,29 @@
    is_dir_right
    tile="wizard-right"
   }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="wizard-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="wizard-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="wizard-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="wizard-br"
+  }
  }
 }

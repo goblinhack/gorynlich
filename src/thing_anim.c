@@ -70,7 +70,27 @@ void thing_animate (thingp t)
             tile = thing_tile_first(tiles);
         }
 
-        if (thing_is_dir_up(t)) {
+        if (thing_is_dir_tl(t)) {
+            if (!thing_tile_is_dir_tl(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
+        } else if (thing_is_dir_bl(t)) {
+            if (!thing_tile_is_dir_bl(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
+        } else if (thing_is_dir_br(t)) {
+            if (!thing_tile_is_dir_br(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
+        } else if (thing_is_dir_br(t)) {
+            if (!thing_tile_is_dir_br(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
+        } else if (thing_is_dir_up(t)) {
             if (!thing_tile_is_dir_up(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;

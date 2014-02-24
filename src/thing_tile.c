@@ -31,6 +31,11 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
     (void) demarshal_gotone(ctx);
 
     do {
+        boolean up = false;
+        boolean down = false;
+        boolean left = false;
+        boolean right = false;
+
         GET_OPT_NAMED_UINT32(ctx, "delay", t->delay);
         GET_OPT_NAMED_STRING(ctx, "tile", t->tile);
         GET_OPT_NAMED_STRING(ctx, "command", t->command);
@@ -81,10 +86,10 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_270", t->is_join_x4_270);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_180", t->is_join_x4_180);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_90", t->is_join_x4_90);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_left", t->is_dir_left);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_right", t->is_dir_right);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_up", t->is_dir_up);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_down", t->is_dir_down);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_left", left);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_right", right);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_up", up);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_dir_down", down);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy5", t->is_yyy5);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy6", t->is_yyy6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_yyy7", t->is_yyy7);
@@ -101,6 +106,28 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_open", t->is_open);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dead", t->is_dead);
         GET_OPT_NAMED_BITFIELD(ctx, "is_end_of_anim", t->is_end_of_anim);
+
+        if (up) {
+            if (left) {
+                t->dir = THING_DIR_TL;
+            } if (right) {
+                t->dir = THING_DIR_TR;
+            } else {
+                t->dir = THING_DIR_LEFT;
+            }
+        } else if (down) {
+            if (left) {
+                t->dir = THING_DIR_BL;
+            } if (right) {
+                t->dir = THING_DIR_BR;
+            } else {
+                t->dir = THING_DIR_RIGHT;
+            }
+        } else if (left) {
+            t->dir = THING_DIR_LEFT;
+        } else if (right) {
+            t->dir = THING_DIR_RIGHT;
+        }
 
     } while (demarshal_gotone(ctx));
 
@@ -154,10 +181,6 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
     PUT_NAMED_BITFIELD(ctx, "is_join_t270_1", t->is_join_t270_1);
     PUT_NAMED_BITFIELD(ctx, "is_join_t270_2", t->is_join_t270_2);
     PUT_NAMED_BITFIELD(ctx, "is_join_t270_3", t->is_join_t270_3);
-    PUT_NAMED_BITFIELD(ctx, "is_dir_left", t->is_dir_left);
-    PUT_NAMED_BITFIELD(ctx, "is_dir_right", t->is_dir_right);
-    PUT_NAMED_BITFIELD(ctx, "is_dir_up", t->is_dir_up);
-    PUT_NAMED_BITFIELD(ctx, "is_dir_down", t->is_dir_down);
     PUT_NAMED_BITFIELD(ctx, "is_yyy5", t->is_yyy5);
     PUT_NAMED_BITFIELD(ctx, "is_yyy6", t->is_yyy6);
     PUT_NAMED_BITFIELD(ctx, "is_yyy7", t->is_yyy7);
@@ -174,6 +197,37 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
     PUT_NAMED_BITFIELD(ctx, "is_open", t->is_open);
     PUT_NAMED_BITFIELD(ctx, "is_dead", t->is_dead);
     PUT_NAMED_BITFIELD(ctx, "is_end_of_anim", t->is_end_of_anim);
+
+    switch (t->dir) {
+    case THING_DIR_LEFT:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_left", 1);
+        break;
+    case THING_DIR_RIGHT:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_right", 1);
+        break;
+    case THING_DIR_UP:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_up", 1);
+        break;
+    case THING_DIR_DOWN:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_down", 1);
+        break;
+    case THING_DIR_TL:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_left", 1);
+        PUT_NAMED_BITFIELD(ctx, "is_dir_up", 1);
+        break;
+    case THING_DIR_BL:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_left", 1);
+        PUT_NAMED_BITFIELD(ctx, "is_dir_down", 1);
+        break;
+    case THING_DIR_TR:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_right", 1);
+        PUT_NAMED_BITFIELD(ctx, "is_dir_up", 1);
+        break;
+    case THING_DIR_BR:
+        PUT_NAMED_BITFIELD(ctx, "is_dir_right", 1);
+        PUT_NAMED_BITFIELD(ctx, "is_dir_down", 1);
+        break;
+    }
 
     PUT_KET(ctx);
 }
@@ -530,24 +584,44 @@ boolean thing_tile_is_join_x4_90 (thing_tilep t)
     return (t->is_join_x4_90);
 }
 
-boolean thing_tile_is_dir_left (thing_tilep t)
+boolean thing_tile_is_dir_down (thing_tilep t)
 {
-    return (t->is_dir_left);
-}
-
-boolean thing_tile_is_dir_right (thing_tilep t)
-{
-    return (t->is_dir_right);
+    return (t->dir == THING_DIR_DOWN);
 }
 
 boolean thing_tile_is_dir_up (thing_tilep t)
 {
-    return (t->is_dir_up);
+    return (t->dir == THING_DIR_UP);
 }
 
-boolean thing_tile_is_dir_down (thing_tilep t)
+boolean thing_tile_is_dir_left (thing_tilep t)
 {
-    return (t->is_dir_down);
+    return (t->dir == THING_DIR_LEFT);
+}
+
+boolean thing_tile_is_dir_right (thing_tilep t)
+{
+    return (t->dir == THING_DIR_RIGHT);
+}
+
+boolean thing_tile_is_dir_tl (thing_tilep t)
+{
+    return (t->dir == THING_DIR_TL);
+}
+
+boolean thing_tile_is_dir_bl (thing_tilep t)
+{
+    return (t->dir == THING_DIR_BL);
+}
+
+boolean thing_tile_is_dir_tr (thing_tilep t)
+{
+    return (t->dir == THING_DIR_TR);
+}
+
+boolean thing_tile_is_dir_br (thing_tilep t)
+{
+    return (t->dir == THING_DIR_BR);
 }
 
 boolean thing_tile_is_yyy5 (thing_tilep t)
