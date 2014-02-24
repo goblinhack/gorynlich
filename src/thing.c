@@ -125,7 +125,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 /*
  * Find an existing new thing.
  */
-static thingp thing_client_find (uint32_t thing_id)
+thingp thing_client_find (uint32_t thing_id)
 {
     thing target;
     thingp result;
@@ -1120,8 +1120,10 @@ void thing_set_is_dir_down (thingp t, boolean val)
 {
     verify(t);
 
-    t->updated++;
-    t->is_dir_down = val;
+    if (val != t->is_dir_down) {
+        t->updated++;
+        t->is_dir_down = val;
+    }
 }
 
 boolean thing_is_dir_down (thingp t)
@@ -1135,8 +1137,10 @@ void thing_set_is_dir_up (thingp t, boolean val)
 {
     verify(t);
 
-    t->is_dir_up = val;
-    t->updated++;
+    if (val != t->is_dir_up) {
+        t->is_dir_up = val;
+        t->updated++;
+    }
 }
 
 boolean thing_is_dir_up (thingp t)
@@ -1150,8 +1154,10 @@ void thing_set_is_dir_left (thingp t, boolean val)
 {
     verify(t);
 
-    t->updated++;
-    t->is_dir_left = val;
+    if (val != t->is_dir_left) {
+        t->updated++;
+        t->is_dir_left = val;
+    }
 }
 
 boolean thing_is_dir_left (thingp t)
@@ -1165,8 +1171,10 @@ void thing_set_is_dir_right (thingp t, boolean val)
 {
     verify(t);
 
-    t->updated++;
-    t->is_dir_right = val;
+    if (val != t->is_dir_right) {
+        t->updated++;
+        t->is_dir_right = val;
+    }
 }
 
 boolean thing_is_dir_right (thingp t)
@@ -1736,7 +1744,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, 100);
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 50);
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
@@ -1779,8 +1787,8 @@ void socket_tx_map_update (socketp p)
         }
 
         uint8_t state = 
-                ((t->is_dir_down    ? 1 : 0) << 5) |
-                ((t->is_dir_up      ? 1 : 0) << 4) |
+                ((t->is_dir_up      ? 1 : 0) << 5) |
+                ((t->is_dir_down    ? 1 : 0) << 4) |
                 ((t->is_dir_left    ? 1 : 0) << 3) |
                 ((t->is_dir_right   ? 1 : 0) << 2) |
                 ((t->is_dead        ? 1 : 0) << 1) |
@@ -1911,10 +1919,10 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 thing_template_is_door(thing_template);
         }
 
-        thing_set_is_dir_down(t,    (state & (1 << 5)) ? 1 : 0);
-        thing_set_is_dir_up(t,      (state & (1 << 4)) ? 1 : 0);
+        thing_set_is_dir_up(t,      (state & (1 << 5)) ? 1 : 0);
+        thing_set_is_dir_down(t,    (state & (1 << 4)) ? 1 : 0);
         thing_set_is_dir_left(t,    (state & (1 << 3)) ? 1 : 0);
-        thing_set_is_dir_right(t,   (state & (1 << 3)) ? 1 : 0);
+        thing_set_is_dir_right(t,   (state & (1 << 2)) ? 1 : 0);
 
         widp w = thing_wid(t);
         if (w) {
@@ -1925,7 +1933,7 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                                     x, y, t);
         }
 
-        if (state & (1 << 0)) {
+        if (state & (1 << 1)) {
             thing_dead(t, 0, "server killed");
         }
     }

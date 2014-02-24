@@ -20,6 +20,7 @@
 #include "tree.h"
 #include "wid_server_join.h"
 #include "wid_game_map_client.h"
+#include "thing.h"
 
 /*
  * Which socket we have actually joined on.
@@ -833,7 +834,7 @@ static void client_check_still_in_game (void)
         return;
     }
 
-    if (!time_have_x_tenths_passed_since(15, client_joined_server_when)) {
+    if (!time_have_x_tenths_passed_since(5, client_joined_server_when)) {
         return;
     }
 
@@ -855,6 +856,8 @@ static void client_check_still_in_game (void)
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
             MSG("Welcome %s, %s", p->pclass, p->name);
+
+            player = thing_client_find(p->thing_id);
         }
 
         return;

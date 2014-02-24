@@ -437,6 +437,9 @@ static void thing_log_ (thingp t, const char *fmt, va_list args)
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
+
+    wid_console_log(buf + len);
+    term_log(buf + len);
 }
 
 void THING_LOG (thingp t, const char *fmt, ...)
