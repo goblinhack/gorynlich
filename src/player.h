@@ -12,7 +12,6 @@
 boolean player_init(void);
 void player_fini(void);
 
-thingp player_new(levelp, const char *name);
 void player_destroy(void);
 
 /*

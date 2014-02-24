@@ -11,6 +11,22 @@
  tiles={
   tile={
    delay=200
+   is_dir_up
+   tile="valkyrie-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="valkyrie-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="valkyrie-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
    tile="valkyrie-right"
   }
  }

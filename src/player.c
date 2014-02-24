@@ -24,27 +24,13 @@ void player_fini (void)
     player_destroy();
 }
 
-/*
- * Create a new player.
- */
-thingp player_new (levelp level, const char *name)
-{
-    if (!player) {
-        player = thing_server_new(level, name);
-
-        thing_set_level_no(player, start_level);
-    }
-
-    return (player);
-}
-
 void player_destroy (void)
 {
     if (!player) {
         return;
     }
 
-    thing_server_destroy(player, "player destroy");
+    thing_client_destroy(player, "player destroy");
 
     player = 0;
 }

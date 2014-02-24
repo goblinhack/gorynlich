@@ -11,6 +11,22 @@
  tiles={
   tile={
    delay=200
+   is_dir_up
+   tile="elf-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="elf-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="elf-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
    tile="elf-right"
   }
  }

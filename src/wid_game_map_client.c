@@ -125,25 +125,40 @@ void wid_game_map_client_visible (void)
 
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-    const uint8_t *state = SDL_GetKeyState(0);
+    uint8_t right = 0;
+    uint8_t left  = 0;
+    uint8_t up    = 0;
+    uint8_t down  = 0;
 
-    boolean right = state[SDLK_RIGHT] ? 1 : 0;
-    boolean left  = state[SDLK_LEFT] ? 1 : 0;
-    boolean up    = state[SDLK_UP] ? 1 : 0;
-    boolean down  = state[SDLK_DOWN] ? 1 : 0;
-#else /* } { */
-    const uint8_t *state = SDL_GetKeyboardState(0);
+    switch ((int)key->sym) {
+    case SDLK_LEFT:
+        left = 1;
+        break;
+    case SDLK_RIGHT:
+        right = 1;
+        break;
+    case SDLK_UP:
+        up = 1;
+        break;
+    case SDLK_DOWN:
+        down = 1;
+        break;
+    }
 
-    boolean right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
-    boolean left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
-    boolean up    = state[SDL_SCANCODE_UP] ? 1 : 0;
-    boolean down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
-#endif /* } */
+    if (!player) {
+        return (false);
+    }
 
     if (!client_joined_server) {
         return (false);
     }
+
+    thing_set_is_dir_up(player, up);
+    thing_set_is_dir_down(player, down);
+    thing_set_is_dir_left(player, left);
+    thing_set_is_dir_right(player, right);
+
+    thing_animate(player);
 
     socket_tx_client_move(client_joined_server, up, down, left, right);
 
@@ -242,10 +257,6 @@ void wid_game_map_client_wid_create (void)
     }
 
     wid_visible(wid_game_map_client_window, 0);
-
-    if (!player) {
-        player_new(0 /* level */, "data/things/warrior");
-    }
 
     client_level = level_new(wid_game_map_client_grid_container, 0);
     if (!client_level) {

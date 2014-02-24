@@ -165,14 +165,9 @@ void wid_game_map_server_wid_create (void)
 
     wid_visible(wid_game_map_server_window, 0);
 
-    if (!player) {
-        player_new(0 /* level */, "data/things/warrior");
-    }
-
     wid_editor_map_loading = true;
 
-    server_level = level_load(thing_level_no(player),
-                              wid_game_map_server_grid_container);
+    server_level = level_load(1, wid_game_map_server_grid_container);
     if (!server_level) {
         WARN("failed to load level");
         return;
