@@ -85,8 +85,8 @@ void thing_animate (thingp t)
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dir_br(t)) {
-            if (!thing_tile_is_dir_br(tile)) {
+        } else if (thing_is_dir_tr(t)) {
+            if (!thing_tile_is_dir_tr(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }

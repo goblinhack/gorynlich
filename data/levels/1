@@ -272,10 +272,6 @@
   } {   
    x=2 
    y=2 
-   t="data/things/warrior" 
-  } {   
-   x=2 
-   y=2 
    t="data/things/floor" 
   } {   
    x=3 

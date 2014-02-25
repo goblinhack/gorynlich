@@ -125,25 +125,21 @@ void wid_game_map_client_visible (void)
 
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-    uint8_t right = 0;
-    uint8_t left  = 0;
-    uint8_t up    = 0;
-    uint8_t down  = 0;
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+    uint8_t *state = SDL_GetKeyState(0);
 
-    switch ((int)key->sym) {
-    case SDLK_LEFT:
-        left = 1;
-        break;
-    case SDLK_RIGHT:
-        right = 1;
-        break;
-    case SDLK_UP:
-        up = 1;
-        break;
-    case SDLK_DOWN:
-        down = 1;
-        break;
-    }
+    boolean right = state[SDLK_RIGHT];
+    boolean left  = state[SDLK_LEFT];
+    boolean up    = state[SDLK_UP];
+    boolean down  = state[SDLK_DOWN];
+#else /* } { */
+    const uint8_t *state = SDL_GetKeyboardState(0);
+
+    boolean right = state[SDL_SCANCODE_RIGHT];
+    boolean left  = state[SDL_SCANCODE_LEFT];
+    boolean up    = state[SDL_SCANCODE_UP];
+    boolean down  = state[SDL_SCANCODE_DOWN];
+#endif /* } */
 
     if (!player) {
         return (false);
@@ -156,27 +152,24 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     if (up) {
         if (left) {
             thing_set_is_dir_tl(player);
-        } if (right) {
+        } else if (right) {
             thing_set_is_dir_tr(player);
         } else {
-            thing_set_is_dir_left(player);
+            thing_set_is_dir_up(player);
         }
     } else if (down) {
         if (left) {
             thing_set_is_dir_bl(player);
-        } if (right) {
+        } else if (right) {
             thing_set_is_dir_br(player);
         } else {
-            thing_set_is_dir_right(player);
+            thing_set_is_dir_down(player);
         }
     } else if (left) {
         thing_set_is_dir_left(player);
     } else if (right) {
         thing_set_is_dir_right(player);
     }
-
-
-    thing_animate(player);
 
     socket_tx_client_move(client_joined_server, up, down, left, right);
 

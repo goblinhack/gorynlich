@@ -66,7 +66,7 @@ void wid_game_map_server_visible (void)
     server_start(server_address);
 
     if (wid_game_map_server_window) {
-        wid_visible(wid_game_map_server_window, 0);
+        wid_hide(wid_game_map_server_window, 0);
     } else {
         wid_game_map_server_wid_create();
     }
@@ -163,7 +163,10 @@ void wid_game_map_server_wid_create (void)
                      TILES_MAP_HEIGHT, server_tile_width, server_tile_height);
     }
 
-    wid_visible(wid_game_map_server_window, 0);
+    /*
+     * Never show the server things
+     */
+    wid_hide(wid_game_map_server_window, 0);
 
     wid_editor_map_loading = true;
 

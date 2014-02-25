@@ -1216,7 +1216,7 @@ static boolean resource_init_23 (void *context)
     thing_template_load("data/things/valkyrie");
     thing_template_load("data/things/wizard");
     thing_template_load("data/things/elf");
-    thing_template_load("data/things/Dwarf");
+    thing_template_load("data/things/dwarf");
     thing_template_load("data/things/ghost");
     thing_template_load("data/things/demon");
     thing_template_load("data/things/monk");

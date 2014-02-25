@@ -762,7 +762,7 @@ static void client_poll (void)
                 break;
 
             case MSG_MAP_UPDATE:
-                socket_rx_map_update(s, packet, data);
+                socket_client_rx_map_update(s, packet, data);
                 break;
             }
 

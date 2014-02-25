@@ -2172,7 +2172,7 @@ void socket_tx_client_move (socketp s,
     socket_free_msg(packet);
 }
 
-void socket_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -2211,18 +2211,18 @@ void socket_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
     if (up) {
         if (left) {
             thing_set_is_dir_tl(t);
-        } if (right) {
+        } else if (right) {
             thing_set_is_dir_tr(t);
         } else {
-            thing_set_is_dir_left(t);
+            thing_set_is_dir_up(t);
         }
     } else if (down) {
         if (left) {
             thing_set_is_dir_bl(t);
-        } if (right) {
+        } else if (right) {
             thing_set_is_dir_br(t);
         } else {
-            thing_set_is_dir_right(t);
+            thing_set_is_dir_down(t);
         }
     } else if (left) {
         thing_set_is_dir_left(t);
