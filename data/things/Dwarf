@@ -33,7 +33,7 @@
    delay=200
    is_dir_up
    is_dir_left
-   tile="dwarf-tl
+   tile="dwarf-tl"
   }
   tile={
    delay=200

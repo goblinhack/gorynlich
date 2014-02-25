@@ -26,15 +26,16 @@ void thing_tile_free (thing_tile *t)
 
 static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
 {
+    uint8_t up = false;
+    uint8_t down = false;
+    uint8_t left = false;
+    uint8_t right = false;
+
     GET_BRA(ctx);
 
     (void) demarshal_gotone(ctx);
 
     do {
-        boolean up = false;
-        boolean down = false;
-        boolean left = false;
-        boolean right = false;
 
         GET_OPT_NAMED_UINT32(ctx, "delay", t->delay);
         GET_OPT_NAMED_STRING(ctx, "tile", t->tile);
@@ -107,29 +108,29 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_dead", t->is_dead);
         GET_OPT_NAMED_BITFIELD(ctx, "is_end_of_anim", t->is_end_of_anim);
 
-        if (up) {
-            if (left) {
-                t->dir = THING_DIR_TL;
-            } if (right) {
-                t->dir = THING_DIR_TR;
-            } else {
-                t->dir = THING_DIR_LEFT;
-            }
-        } else if (down) {
-            if (left) {
-                t->dir = THING_DIR_BL;
-            } if (right) {
-                t->dir = THING_DIR_BR;
-            } else {
-                t->dir = THING_DIR_RIGHT;
-            }
-        } else if (left) {
-            t->dir = THING_DIR_LEFT;
-        } else if (right) {
-            t->dir = THING_DIR_RIGHT;
-        }
-
     } while (demarshal_gotone(ctx));
+
+    if (up) {
+        if (left) {
+            t->dir = THING_DIR_TL;
+        } else if (right) {
+            t->dir = THING_DIR_TR;
+        } else {
+            t->dir = THING_DIR_UP;
+        }
+    } else if (down) {
+        if (left) {
+            t->dir = THING_DIR_BL;
+        } else if (right) {
+            t->dir = THING_DIR_BR;
+        } else {
+            t->dir = THING_DIR_DOWN;
+        }
+    } else if (left) {
+        t->dir = THING_DIR_LEFT;
+    } else if (right) {
+        t->dir = THING_DIR_RIGHT;
+    }
 
     GET_KET(ctx);
 }

@@ -144,7 +144,7 @@ static void server_rx_client_join (socketp s)
     socket_tx_server_shout_except_to(tmp, s);
     myfree(tmp);
 
-    socket_tx_map_update(s);
+    socket_server_tx_map_update(s);
 
     wid_game_map_server_visible();
 }
@@ -300,7 +300,7 @@ static void server_poll (void)
             break;
 
         case MSG_CLIENT_MOVE:
-            socket_rx_client_move(s, packet, data);
+            socket_server_rx_client_move(s, packet, data);
             break;
 
         default:
