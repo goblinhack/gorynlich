@@ -1171,9 +1171,9 @@ void thing_set_is_dir_right (thingp t)
 {
     verify(t);
 
-    if (t->dir != THING_DIR_DOWN) {
+    if (t->dir != THING_DIR_RIGHT) {
         t->updated++;
-        t->dir = THING_DIR_DOWN;
+        t->dir = THING_DIR_RIGHT;
     }
 }
 
@@ -1818,7 +1818,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     }
 }
 
-void socket_tx_map_update (socketp p)
+void socket_server_tx_map_update (socketp p)
 {
     /*
      * Allocate a fresh packet.
@@ -1987,7 +1987,7 @@ void socket_tx_map_update (socketp p)
     socket_free_msg(packet);
 }
 
-void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 {
     boolean need_fixup = false;
     verify(s);
@@ -2031,18 +2031,18 @@ void socket_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         if (up) {
             if (left) {
                 thing_set_is_dir_tl(t);
-            } if (right) {
+            } else if (right) {
                 thing_set_is_dir_tr(t);
             } else {
-                thing_set_is_dir_left(t);
+                thing_set_is_dir_up(t);
             }
         } else if (down) {
             if (left) {
                 thing_set_is_dir_bl(t);
-            } if (right) {
+            } else if (right) {
                 thing_set_is_dir_br(t);
             } else {
-                thing_set_is_dir_right(t);
+                thing_set_is_dir_down(t);
             }
         } else if (left) {
             thing_set_is_dir_left(t);

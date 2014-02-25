@@ -26,32 +26,17 @@
 #include "sound.h"
 #include "socket.h"
 
-void thing_tick_all (void)
+static void thing_tick_server_all (void)
 {
-    static uint32_t gridpixwidth;
-    static uint32_t gridpixheight;
-    static int32_t pulsate_delta = 2;
-    static int32_t pulsate;
-    boolean scared;
-    levelp level;
-    thingp t;
-
-    pulsate += pulsate_delta;
-
-    if (pulsate > 255) {
-        pulsate = 255;
-        pulsate_delta = -pulsate_delta;
-    }
-
-    if (pulsate < 0) {
-        pulsate = 6;
-        pulsate_delta = -pulsate_delta;
-    }
-
-    level = server_level;
+    levelp level = server_level;
     if (!level) {
         return;
     }
+
+    static uint32_t gridpixwidth;
+    static uint32_t gridpixheight;
+    boolean scared;
+    thingp t;
 
     /*
      * Allow level timers to fire.
@@ -90,51 +75,6 @@ void thing_tick_all (void)
         w = t->wid;
         if (w) {
             verify(w);
-        }
-
-        /*
-         * If on the map.
-         */
-        if (w) {
-            wid_set_blit_outline(w, false);
-
-            /*
-             * Animate before death checks so dead things can wriggle.
-             *
-             * Need to check to avoid for things that are popped off the map, 
-             * like stars.
-             */
-            if (thing_is_animated(t)) {
-                thing_animate(t);
-            }
-
-            /*
-             * Make the monsters flash.
-             */
-            if (scared && thing_is_scarable(t)) {
-                color c;
-
-                c.r = pulsate;
-                c.g = pulsate;
-                c.b = 255;
-                c.a = 255;
-
-                wid_set_blit_outline(w, true);
-                wid_set_color(w, WID_COLOR_BLIT_OUTLINE, c);
-            }
-        }
-
-        /*
-         * Is the level paused ?
-         *
-         * Keep this after animate, so dead things wiggle.
-         */
-        if (level_is_paused(t->level)) {
-            if (w) {
-                wid_move_stop(w);
-            }
-
-            continue;
         }
 
         /*
@@ -184,16 +124,6 @@ void thing_tick_all (void)
          */
         if (w && thing_has_powerup_rocket_count(t)) {
             speed /= 2.0;
-
-            color c;
-
-            c = STEELBLUE;
-            c.g = pulsate;
-            c.b = pulsate;
-            c.a = 255;
-
-            wid_set_blit_outline(w, true);
-            wid_set_color(w, WID_COLOR_BLIT_OUTLINE, c);
         }
 
         /*
@@ -375,6 +305,93 @@ void thing_tick_all (void)
                                             next_floor_x, next_floor_y, speed);
             }
         }
+    }
+
+    socket_server_tx_map_update(0 /* all clients */);
+}
+
+static void thing_tick_client_all (void)
+{
+    thingp t;
+    levelp level = client_level;
+    if (!level) {
+        return;
+    }
+
+    static int32_t pulsate_delta = 2;
+    static int32_t pulsate;
+    boolean scared;
+
+    pulsate += pulsate_delta;
+
+    if (pulsate > 255) {
+        pulsate = 255;
+        pulsate_delta = -pulsate_delta;
+    }
+
+    if (pulsate < 0) {
+        pulsate = 6;
+        pulsate_delta = -pulsate_delta;
+    }
+
+    /*
+     * Allow level timers to fire.
+     */
+    level_tick(level);
+
+    /*
+     * Any timers waiting to fire?
+     */
+    if (thing_timers) {
+        action_timers_tick(thing_timers);
+    }
+
+    TREE_WALK(client_things, t) {
+        thing_templatep thing_template;
+        widp w;
+
+        /*
+         * Sanity checks.
+         */
+        verify(t);
+        thing_template = thing_get_template(t);
+
+        w = t->wid;
+        if (w) {
+            verify(w);
+        }
+
+        /*
+         * If on the map.
+         */
+        if (w) {
+            wid_set_blit_outline(w, false);
+
+            /*
+             * Animate before death checks so dead things can wriggle.
+             *
+             * Need to check to avoid for things that are popped off the map, 
+             * like stars.
+             */
+            if (thing_is_animated(t)) {
+                thing_animate(t);
+            }
+
+            /*
+             * Make the monsters flash.
+             */
+            if (scared && thing_is_scarable(t)) {
+                color c;
+
+                c.r = pulsate;
+                c.g = pulsate;
+                c.b = 255;
+                c.a = 255;
+
+                wid_set_blit_outline(w, true);
+                wid_set_color(w, WID_COLOR_BLIT_OUTLINE, c);
+            }
+        }
 
         if (w) {
             switch (t->dir) {
@@ -439,6 +456,10 @@ void thing_tick_all (void)
             }
         }
     }
+}
 
-    socket_tx_map_update(0 /* all clients */);
+void thing_tick_all (void)
+{
+    thing_tick_server_all();
+    thing_tick_client_all();
 }

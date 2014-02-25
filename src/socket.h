@@ -242,7 +242,7 @@ extern void socket_tx_client_move(socketp s,
                                   const boolean down,
                                   const boolean left,
                                   const boolean right);
-extern void socket_rx_client_move(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_server_rx_client_move(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_shout(const char *shout);
 extern void socket_tx_server_shout_except_to(const char *shout, socketp s);
 extern void socket_rx_server_shout(socketp s, UDPpacket *packet, uint8_t *data);
@@ -262,8 +262,8 @@ extern uint32_t socket_get_tx(socketp s);
 extern uint32_t socket_get_rx_error(socketp s);
 extern uint32_t socket_get_tx_error(socketp s);
 extern uint32_t socket_get_rx_bad_msg(socketp s);
-extern void socket_tx_map_update(socketp);
-extern void socket_rx_map_update(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_server_tx_map_update(socketp);
+extern void socket_client_rx_map_update(socketp s, UDPpacket *packet, uint8_t *data);
 
 /*
  * Seemingly harmless, but we need this to read the 6 byte packet address
