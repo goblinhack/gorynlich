@@ -3,6 +3,7 @@
  tooltip="Bomb. Kaboom!"
  z_depth=2
  z_order=2
+ is_boring
  is_bomb
  is_animated
  tiles={

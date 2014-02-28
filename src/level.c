@@ -93,8 +93,6 @@ static boolean level_command_play (tokens_t *tokens, void *context)
         CON("Player level set to %u", start_level);
 
         if (level) {
-//            level_restart(level);
-
             wid_hide(wid_console_window, 0);
         }
     }

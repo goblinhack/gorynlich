@@ -9,7 +9,6 @@
 #include "main.h"
 #include "tree.h"
 #include "thing_tile_private.h"
-#include "thing_template_private.h"
 #include "thing_template.h"
 #include "thing_tile.h"
 #include "thing.h"

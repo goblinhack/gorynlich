@@ -92,3 +92,13 @@
 #define SOCKET_PING_SEQ_NO_RANGE    20 // how many pings to consider for quality
 #define SOCKET_PING_FAIL_THRESHOLD  10 // 90 percent of ping fails means down
 
+/*
+ * When converting from thing co-ords where 1.0 is one grid, we must convert
+ * to int when sending over the network. This is the granularity.
+ */
+#define THING_COORD_SCALE           100.0
+
+/*
+ * How much we allow the player to move per step. Fraction of one grid.
+ */
+#define THING_COORD_MOVE            0.1

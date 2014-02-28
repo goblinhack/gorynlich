@@ -3,6 +3,7 @@
  tooltip="Floor tile"
  z_depth=1
  z_order=0
+ is_boring
  is_floor
  tiles={
   tile={

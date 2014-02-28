@@ -8,7 +8,6 @@
 
 #include "main.h"
 #include "tree.h"
-#include "thing_template_private.h"
 #include "thing_template.h"
 #include "thing_tile_private.h"
 #include "thing_tile.h"
@@ -420,7 +419,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx32", t->is_xxx32);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
         GET_OPT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
         GET_OPT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
@@ -518,7 +517,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx32", t->is_xxx32);
     PUT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
     PUT_NAMED_BITFIELD(ctx, "is_left_as_corpse_on_death", t->is_left_as_corpse_on_death);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx35", t->is_xxx35);
+    PUT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
     PUT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
     PUT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
     PUT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
@@ -896,9 +895,9 @@ boolean thing_template_is_left_as_corpse_on_death (thing_templatep t)
     return (t->is_left_as_corpse_on_death);
 }
 
-boolean thing_template_is_xxx35 (thing_templatep t)
+boolean thing_template_is_boring (thing_templatep t)
 {
-    return (t->is_xxx35);
+    return (t->is_boring);
 }
 
 boolean thing_template_is_item_hidden (thing_templatep t)

@@ -115,11 +115,9 @@ typedef struct thing_ {
     uint32_t is_qqq7:1;
     uint32_t got_to_exit_first:1;
     uint32_t redo_maze_search:1;
-    uint32_t is_xxx32:1;
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_buried:1;
-    uint32_t is_left_as_corpse_on_death:1;
     uint32_t is_dead:1;
 } thing;
 
