@@ -8,7 +8,6 @@ boolean level_init(void);
 void level_fini(void);
 
 levelp level_new(widp, uint32_t);
-void level_restart(levelp);
 void level_completed(levelp);
 void level_destroy(levelp *);
 void level_tick(levelp);

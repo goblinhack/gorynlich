@@ -3,6 +3,7 @@
  tooltip="Non destructable wall"
  z_depth=2
  z_order=0
+ is_boring
  is_wall
  tiles={
   tile={

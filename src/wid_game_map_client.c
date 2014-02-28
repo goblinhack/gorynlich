@@ -24,6 +24,7 @@
 #include "client.h"
 #include "socket.h"
 #include "timer.h"
+#include "thing_private.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -171,7 +172,14 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         thing_set_is_dir_right(player);
     }
 
-    socket_tx_client_move(client_joined_server, up, down, left, right);
+    player->x += THING_COORD_MOVE * (double)right;
+    player->x -= THING_COORD_MOVE * (double)left;
+    player->y -= THING_COORD_MOVE * (double)up;
+    player->y += THING_COORD_MOVE * (double)down;
+
+    thing_client_wid_update(player, player->x, player->y, true);
+
+    socket_tx_client_move(client_joined_server, player, up, down, left, right);
 
     return (false);
 }

@@ -62,6 +62,8 @@ typedef struct {
 typedef struct {
     uint8_t type;
     uint8_t dir;
+    uint16_t x;
+    uint16_t y;
 } __attribute__ ((packed)) msg_client_move;
 
 typedef struct {
@@ -238,6 +240,7 @@ extern void socket_rx_server_close(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_shout(socketp s, const char *shout);
 extern void socket_rx_client_shout(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_move(socketp s, 
+                                  thingp t,
                                   const boolean up,
                                   const boolean down,
                                   const boolean left,
@@ -262,8 +265,9 @@ extern uint32_t socket_get_tx(socketp s);
 extern uint32_t socket_get_rx_error(socketp s);
 extern uint32_t socket_get_tx_error(socketp s);
 extern uint32_t socket_get_rx_bad_msg(socketp s);
-extern void socket_server_tx_map_update(socketp);
-extern void socket_client_rx_map_update(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_server_tx_map_update(socketp, tree_rootp);
+extern void socket_client_rx_map_update(socketp s, 
+                                        UDPpacket *packet, uint8_t *data);
 
 /*
  * Seemingly harmless, but we need this to read the 6 byte packet address

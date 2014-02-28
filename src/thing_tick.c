@@ -62,7 +62,7 @@ static void thing_tick_server_all (void)
         scared = true;
     }
 
-    TREE_WALK(server_things, t) {
+    TREE_WALK(server_active_things, t) {
         thing_templatep thing_template;
         widp w;
 
@@ -307,7 +307,7 @@ static void thing_tick_server_all (void)
         }
     }
 
-    socket_server_tx_map_update(0 /* all clients */);
+    socket_server_tx_map_update(0 /* all clients */, server_active_things);
 }
 
 static void thing_tick_client_all (void)
@@ -346,7 +346,7 @@ static void thing_tick_client_all (void)
         action_timers_tick(thing_timers);
     }
 
-    TREE_WALK(client_things, t) {
+    TREE_WALK(client_active_things, t) {
         thing_templatep thing_template;
         widp w;
 

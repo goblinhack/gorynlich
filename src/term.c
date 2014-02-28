@@ -718,34 +718,48 @@ get_term_size (int fd, int *x, int *y)
 #endif
 
 #ifdef TIOCGSIZE
-    if (ioctl (fd, TIOCGSIZE, &win))
-        return 0;
-    if (y)
-        *y=win.ts_lines;
-    if (x)
-        *x=win.ts_cols;
+    if (!ioctl(fd, TIOCGSIZE, &win)) {
+        if (y) {
+            *y=win.ts_lines;
+        }
+        if (x) {
+            *x=win.ts_cols;
+        }
+    }
 #elif defined TIOCGWINSZ
-    if (ioctl (fd, TIOCGWINSZ, &win))
-        return 0;
-    if (y)
+    if (ioctl(fd, TIOCGWINSZ, &win)) {
+        return (0);
+    }
+
+    if (y) {
         *y=win.ws_row;
-    if (x)
+    }
+
+    if (x) {
         *x=win.ws_col;
+    }
 #else
     {
         const char *s;
         s=getenv("LINES");
-        if (s)
+        if (s) {
             *y=strtol(s,NULL,10);
-        else
-            *y=25;
+        }
         s=getenv("COLUMNS");
-        if (s)
+        if (s) {
             *x=strtol(s,NULL,10);
-        else
-            *x=80;
+        }
     }
 #endif
-    return 1;
+
+    if (!*x) {
+        *x = 80;
+    }
+
+    if (!*y) {
+        *y = 25;
+    }
+
+    return (1);
 }
 
