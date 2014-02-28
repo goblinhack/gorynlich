@@ -599,7 +599,6 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
             avg_latency /= total_attempts;
 
             CON("  Quality  : success %2.2f percent, fails %2.2f percent",
-
                 ((float)((float)response / (float)total_attempts)) * 100.0,
                 ((float)((float)no_response / (float)total_attempts)) * 100.0);
 
@@ -2139,6 +2138,7 @@ uint32_t socket_get_rx_bad_msg (socketp s)
 }
 
 void socket_tx_client_move (socketp s, 
+                            thingp t,
                             const boolean up,
                             const boolean down,
                             const boolean left, 
@@ -2159,6 +2159,9 @@ void socket_tx_client_move (socketp s,
     msg_client_move msg = {0};
     msg.type = MSG_CLIENT_MOVE;
     msg.dir = (up << 3) | (down << 2) | (left << 1) | right;
+
+    SDLNet_Write16(t->x * THING_COORD_SCALE, &msg.x);               
+    SDLNet_Write16(t->y * THING_COORD_SCALE, &msg.y);               
 
     UDPpacket *packet = socket_alloc_msg();
 
@@ -2200,12 +2203,12 @@ void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
-    double scale = 3.0;
+    msg.x = SDLNet_Read16(&msg.x);
+    msg.y = SDLNet_Read16(&msg.y);
 
-    t->x += (double)right / scale;
-    t->x -= (double)left / scale;
-    t->y += (double)down / scale;
-    t->y -= (double)up / scale;
+    t->x = ((double)msg.x) / THING_COORD_SCALE;
+    t->y = ((double)msg.y) / THING_COORD_SCALE;
+
     t->updated++;
 
     if (up) {

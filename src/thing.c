@@ -28,10 +28,11 @@
 #include "sound.h"
 #include "socket.h"
 
-tree_root *server_things;
-tree_root *client_things;
+tree_root *server_active_things;
+tree_root *client_active_things;
+tree_root *server_boring_things;
+tree_root *client_boring_things;
 
-static double thing_coord_scale = 100.0;
 static uint32_t thing_id;
 static boolean thing_init_done;
 static void thing_destroy_internal(thingp t, const char *why);
@@ -51,9 +52,14 @@ void thing_fini (void)
     if (thing_init_done) {
         thing_init_done = false;
 
-        tree_destroy(&client_things, 
+        tree_destroy(&client_active_things, 
                      (tree_destroy_func)thing_destroy_internal2);
-        tree_destroy(&server_things, 
+        tree_destroy(&server_active_things, 
+                     (tree_destroy_func)thing_destroy_internal2);
+
+        tree_destroy(&client_boring_things, 
+                     (tree_destroy_func)thing_destroy_internal2);
+        tree_destroy(&server_boring_things, 
                      (tree_destroy_func)thing_destroy_internal2);
     }
 }
@@ -71,8 +77,14 @@ thingp thing_server_new (levelp level, const char *name)
         DIE("thing [%s] has no template", name);
     }
 
-    if (!server_things) {
-        server_things = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+    if (!server_active_things) {
+        server_active_things = 
+                        tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+    }
+
+    if (!server_boring_things) {
+        server_boring_things = 
+                        tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
@@ -80,8 +92,14 @@ thingp thing_server_new (levelp level, const char *name)
     t->thing_template = thing_template;
     t->health = thing_template_get_health(thing_template);
 
-    if (!tree_insert(server_things, &t->tree.node)) {
-        DIE("thing insert name [%s] failed", name);
+    if (thing_template_is_boring(thing_template)) {
+        if (!tree_insert(server_boring_things, &t->tree.node)) {
+            DIE("thing insert name [%s] failed", name);
+        }
+    } else {
+        if (!tree_insert(server_active_things, &t->tree.node)) {
+            DIE("thing insert name [%s] failed", name);
+        }
     }
 
     if (level) {
@@ -103,16 +121,28 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 {
     thingp t;
 
-    if (!client_things) {
-        client_things = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+    if (!client_active_things) {
+        client_active_things = 
+                        tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+    }
+
+    if (!client_boring_things) {
+        client_boring_things = 
+                        tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
     t->tree.key = id;
     t->thing_template = thing_template;
 
-    if (!tree_insert(client_things, &t->tree.node)) {
-        DIE("thing client insert id [%d] failed", id);
+    if (thing_template_is_boring(thing_template)) {
+        if (!tree_insert(client_boring_things, &t->tree.node)) {
+            DIE("thing insert id [%u] failed", id);
+        }
+    } else {
+        if (!tree_insert(client_active_things, &t->tree.node)) {
+            DIE("thing insert id [%u] failed", id);
+        }
     }
 
     t->logname = dynprintf("%s[%p] (client)", thing_short_name(t), t);
@@ -133,7 +163,12 @@ thingp thing_client_find (uint32_t thing_id)
     // memset(&target, 0, sizeof(target));
     target.tree.key = thing_id;
 
-    result = (typeof(result)) tree_find(client_things, &target.tree.node);
+    result = (typeof(result)) 
+                    tree_find(client_active_things, &target.tree.node);
+    if (!result) {
+        result = (typeof(result)) 
+                        tree_find(client_boring_things, &target.tree.node);
+    }
 
     return (result);
 }
@@ -206,8 +241,14 @@ void thing_client_destroy (thingp t, const char *why)
 {
     verify(t);
 
-    if (!tree_remove(client_things, &t->tree.node)) {
-        DIE("thing template destroy name [%s] failed", thing_name(t));
+    if (thing_template_is_boring(t->thing_template)){
+        if (!tree_remove(client_boring_things, &t->tree.node)) {
+            DIE("thing template destroy name [%s] failed", thing_name(t));
+        }
+    } else {
+        if (!tree_remove(client_active_things, &t->tree.node)) {
+            DIE("thing template destroy name [%s] failed", thing_name(t));
+        }
     }
 
     thing_destroy_internal(t, why);
@@ -223,8 +264,14 @@ void thing_server_destroy (thingp t, const char *why)
 {
     verify(t);
 
-    if (!tree_remove(server_things, &t->tree.node)) {
-        DIE("thing template destroy name [%s] failed", thing_name(t));
+    if (thing_template_is_boring(t->thing_template)){
+        if (!tree_remove(server_boring_things, &t->tree.node)) {
+            DIE("thing template destroy name [%s] failed", thing_name(t));
+        }
+    } else {
+        if (!tree_remove(server_active_things, &t->tree.node)) {
+            DIE("thing template destroy name [%s] failed", thing_name(t));
+        }
     }
 
     thing_destroy_internal(t, why);
@@ -297,11 +344,6 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
             wid_rotate_to_pct_in(t->wid, 0, 0, 0, 0);
         }
     }
-
-    /*
-     * Stop moving.
-     */
-    thing_stop(t);
 
     /*
      * Why did I die!? 8(
@@ -393,18 +435,16 @@ void things_level_start (levelp level)
 {
     thingp t;
 
-    TREE_WALK(server_things, t) {
-        verify(t);
-
-        if (t->wid) {
-            verify(t->wid);
+    {
+        TREE_WALK(server_active_things, t) {
+            thing_set_level(t, level);
         }
+    }
 
-        if (t->level) {
-            continue;
+    {
+        TREE_WALK(server_boring_things, t) {
+            thing_set_level(t, level);
         }
-
-        thing_set_level(t, level);
     }
 }
 
@@ -412,148 +452,29 @@ void things_level_destroyed (levelp level)
 {
     thingp t;
 
-    TREE_WALK(server_things, t) {
-        verify(t);
-
-        if (t->wid) {
-            verify(t->wid);
-        }
-
-        THING_LOG(t, "level destroyed");
-
-        thing_server_destroy(t, "level destroyed");
-    }
-}
-
-void things_level_restarted (levelp level)
-{
-    thingp t;
-
-    TREE_WALK(server_things, t) {
-        verify(t);
-
-        if (t->wid) {
-            verify(t->wid);
-        }
-
-        if (thing_template_is_player(t->thing_template)) {
-            THING_LOG(t, "level restarted, keep player");
-            thing_set_level(t, 0);
-            continue;
-        }
-
-        thing_server_destroy(t, "level restarted");
-    }
-}
-
-void thing_stop (thingp t)
-{
-    verify(t);
-
-    if (t->wid) {
-        verify(t->wid);
-    }
-
-    if (t->wid) {
-        wid_move_stop(t->wid);
-    }
-}
-
-void thing_resume (thingp t)
-{
-    verify(t);
-
-    if (t->wid) {
-        verify(t->wid);
-    }
-
-    if (t->wid) {
-        wid_move_resume(t->wid);
-    }
-}
-
-void things_stop (levelp level)
-{
-    thingp t;
-
-    TREE_WALK(server_things, t) {
-        verify(t);
-
-        thing_stop(t);
-    }
-}
-
-void things_stop_all_except (levelp level, thingp o)
-{
-    thingp t;
-
-    TREE_WALK(server_things, t) {
-        verify(t);
-
-        if (t == o) {
-            continue;
-        }
-
-        thing_stop(t);
-    }
-}
-
-void things_marshal (marshal_p out)
-{
-    tree_root *tree;
-    thingp t;
-
-    tree = server_things;
-
-    TREE_WALK(tree, t) {
-        verify(t);
-
-        if (t->wid) {
-            verify(t->wid);
-        }
-
-        marshal_thing(out, t);
-
-        {
-            marshal_p tmp;
-            tmp = marshal(0); /* MY_STDOUT */
-            marshal_thing(tmp, t);
-            marshal_fini(tmp);
+    {
+        TREE_WALK(server_active_things, t) {
+            thing_server_destroy(t, "level destroyed");
         }
     }
-}
 
-void demarshal_thing (demarshal_p ctx, thingp t)
-{
-    if (!ctx) {
-        ERR("no thing to demarshal");
+    {
+        TREE_WALK(server_boring_things, t) {
+            thing_server_destroy(t, "level destroyed");
+        }
     }
 
-    char *name;
-
-    GET_OPT_DEF_NAMED_STRING(ctx, "name", name, "<no name>");
-
-    myfree(name);
-}
-
-void marshal_thing (marshal_p ctx, thingp t)
-{
-    if (t->tree.key) {
-        PUT_NAMED_STRING(ctx,  "name", thing_name(t));
+    {
+        TREE_WALK(client_active_things, t) {
+            thing_client_destroy(t, "level destroyed");
+        }
     }
-}
 
-boolean thing_test (int32_t argc, char *argv[])
-{
-    marshal_p out;
-
-    out = marshal("things_test.data");
-
-    thing_templates_marshal(out);
-
-    marshal_fini(out);
-
-    return (0);
+    {
+        TREE_WALK(client_boring_things, t) {
+            thing_client_destroy(t, "level destroyed");
+        }
+    }
 }
 
 thing_templatep thing_get_template (thingp t)
@@ -1818,7 +1739,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     }
 }
 
-void socket_server_tx_map_update (socketp p)
+void socket_server_tx_map_update (socketp p, tree_rootp tree)
 {
     /*
      * Allocate a fresh packet.
@@ -1841,7 +1762,7 @@ void socket_server_tx_map_update (socketp p)
 
     thingp t;
 
-    TREE_WALK(server_things, t) {
+    TREE_WALK(tree, t) {
         /*
          * If updating to all sockets, decrement the update counter for this 
          * thing. We only send updates on modified things.
@@ -1910,8 +1831,8 @@ void socket_server_tx_map_update (socketp p)
             uint16_t x;
             uint16_t y;
 
-            x = (uint16_t)(t->x * thing_coord_scale);
-            y = (uint16_t)(t->y * thing_coord_scale);
+            x = (t->x * THING_COORD_SCALE);
+            y = (t->y * THING_COORD_SCALE);
 
             SDLNet_Write16((uint16_t) x, data);               
             data += sizeof(uint16_t);
@@ -2007,8 +1928,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         uint16_t ty = SDLNet_Read16(data);
         data += sizeof(uint16_t);
 
-        double x = ((double)tx) / thing_coord_scale;
-        double y = ((double)ty) / thing_coord_scale;
+        double x = ((double)tx) / THING_COORD_SCALE;
+        double y = ((double)ty) / THING_COORD_SCALE;
 
         thingp t = thing_client_find(thing_id);
         if (!t) {
@@ -2052,7 +1973,13 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
         widp w = thing_wid(t);
         if (w) {
-            thing_client_wid_update(t, x, y, true /* smooth */);
+            if (t == player) {
+                /*
+                 * Local echo only.
+                 */
+            } else {
+                thing_client_wid_update(t, x, y, true /* smooth */);
+            }
         } else {
             wid_game_map_client_replace_tile(
                                     wid_game_map_client_grid_container,

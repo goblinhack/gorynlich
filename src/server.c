@@ -19,6 +19,7 @@
 #include "wid_game_map_server.h"
 #include "wid_server_create.h"
 #include "string.h"
+#include "thing.h"
 
 static boolean server_init_done;
 socketp server_socket;
@@ -144,7 +145,8 @@ static void server_rx_client_join (socketp s)
     socket_tx_server_shout_except_to(tmp, s);
     myfree(tmp);
 
-    socket_server_tx_map_update(s);
+    socket_server_tx_map_update(s, server_active_things);
+    socket_server_tx_map_update(s, server_boring_things);
 
     wid_game_map_server_visible();
 }

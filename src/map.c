@@ -272,9 +272,9 @@ boolean map_is_left_as_corpse_on_death_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_left_as_corpse_on_death));
 }
 
-boolean map_is_xxx35_at (levelp level, int32_t x, int32_t y)
+boolean map_is_boring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx35));
+    return (map_is_x_at(level, x, y, thing_template_is_boring));
 }
 
 boolean map_is_item_hidden_at (levelp level, int32_t x, int32_t y)
@@ -525,9 +525,9 @@ thingp map_thing_is_left_as_corpse_on_death_at (levelp level, int32_t x, int32_t
     return (map_thing_is_x_at(level, x, y, thing_template_is_left_as_corpse_on_death));
 }
 
-thingp map_thing_is_xxx35_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_boring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx35));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_boring));
 }
 
 thingp map_thing_is_item_hidden_at (levelp level, int32_t x, int32_t y)
@@ -794,9 +794,9 @@ tree_rootp map_all_things_is_left_as_corpse_on_death_at (levelp level, int32_t x
     return (map_all_things_is_x_at(level, x, y, thing_template_is_left_as_corpse_on_death));
 }
 
-tree_rootp map_all_things_is_xxx35_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_boring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx35));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_boring));
 }
 
 tree_rootp map_all_things_is_item_hidden_at (levelp level, int32_t x, int32_t y)
@@ -1058,7 +1058,7 @@ thing_templatep map_find_is_left_as_corpse_on_death_at (levelp level,
 thing_templatep map_find_item_perma_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx35, w));
+    return (map_find_x_at(level, x, y, thing_template_is_boring, w));
 }
 
 thing_templatep map_find_is_item_hidden_at (levelp level,
@@ -1538,9 +1538,9 @@ uint32_t level_count_is_left_as_corpse_on_death (levelp level)
     return (level_count_is_x(level, thing_template_is_left_as_corpse_on_death));
 }
 
-uint32_t level_count_is_xxx35 (levelp level)
+uint32_t level_count_is_boring (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx35));
+    return (level_count_is_x(level, thing_template_is_boring));
 }
 
 uint32_t level_count_is_item_is_hidden (levelp level)
@@ -1814,9 +1814,9 @@ tree_rootp map_all_things_is_left_as_corpse_on_death (levelp level)
     return (map_all_things_is_x(level, thing_template_is_left_as_corpse_on_death));
 }
 
-tree_rootp map_all_things_is_xxx35 (levelp level)
+tree_rootp map_all_things_is_boring (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx35));
+    return (map_all_things_is_x(level, thing_template_is_boring));
 }
 
 tree_rootp map_all_things_is_item_hidden (levelp level)

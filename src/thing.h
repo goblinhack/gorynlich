@@ -17,11 +17,6 @@ void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void things_level_start(levelp);
 void things_level_destroyed(levelp);
-void things_level_restarted(levelp);
-void thing_stop(thingp t);
-void thing_resume(thingp t);
-void things_stop(levelp level);
-void things_stop_all_except(levelp level, thingp t);
 void demarshal_thing(demarshal_p ctx, thingp);
 void marshal_thing(marshal_p ctx, thingp);
 void thing_templates_marshal(marshal_p out);
@@ -247,8 +242,10 @@ typedef struct {
 void thing_teleport(thingp t, int32_t x, int32_t y);
 thingp thing_client_find(uint32_t thing_id);
 
-extern tree_rootp server_things;
-extern tree_rootp client_things;
+extern tree_rootp server_active_things;
+extern tree_rootp client_active_things;
+extern tree_rootp server_boring_things;
+extern tree_rootp client_boring_things;
 
 enum {
     THING_DIR_NONE,
