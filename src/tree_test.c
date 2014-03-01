@@ -50,13 +50,13 @@ typedef struct tree_debug_node_ {
 
 static tree_debug_node tree_debug_nodes[TREE_DEBUG_NUM_NODES];
 
-static int32_t tree_debug_compare_func(const tree_node *, const tree_node *);
+static int8_t tree_debug_compare_func(const tree_node *, const tree_node *);
 
 tree_root tree_debug_root = {
     tree_debug_compare_func
 };
 
-static int32_t tree_debug_compare_func (const tree_node *a, const tree_node *b)
+static int8_t tree_debug_compare_func (const tree_node *a, const tree_node *b)
 {
     tree_debug_node *A = (typeof(A))a;
     tree_debug_node *B = (typeof(B))b;

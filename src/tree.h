@@ -7,17 +7,19 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include <string.h>
+
 typedef enum { RB_RED, RB_BLACK } node_color;
 
 typedef struct tree_node_ {
     struct tree_node_ *left;
     struct tree_node_ *right;
     struct tree_node_ *parent;
-    node_color color;
-    uint8_t is_static_mem:1;
+    uint16_t color;
+    uint16_t is_static_mem;
 } tree_node;
 
-typedef int32_t (*tree_key_func)(const tree_node *, const tree_node *);
+typedef int8_t (*tree_key_func)(const tree_node *, const tree_node *);
 typedef boolean (*tree_destroy_func)(tree_node *);
 
 typedef enum {
@@ -84,7 +86,6 @@ tree_node *tree_first(tree_node *);
 tree_node *tree_root_get_nth(tree_root *, uint32_t n);
 tree_node *tree_root_get_random(tree_root *);
 tree_node *tree_last(tree_node *);
-tree_node *tree_get_next(tree_root *, tree_node *top, tree_node *);
 tree_node *tree_get_prev(tree_root *, tree_node *top, tree_node *);
 uint32_t tree_root_size(tree_root *);
 uint32_t tree_size(const tree_node *top);
@@ -210,4 +211,230 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
             retnode2ctx(ROOT,                                               \
                 tree_get_next((ROOT), (ROOT)->node, &saved_key.node)))
 
+static inline int8_t
+tree_key_int32_compare_func (const tree_node *a, const tree_node *b)
+{
+    tree_key_int *A = (typeof(A))a;
+    tree_key_int *B = (typeof(B))b;
+
+    if (A->key < B->key) {
+        return (-1);
+    }
+
+    if (A->key > B->key) {
+        return (1);
+    }
+
+    return (0);
+}
+
+static inline int8_t
+tree_key_two_int32_compare_func (const tree_node *a, const tree_node *b)
+{
+    tree_key_two_int *A = (typeof(A))a;
+    tree_key_two_int *B = (typeof(B))b;
+
+    if (A->key1 < B->key1) {
+        return (-1);
+    }
+
+    if (A->key1 > B->key1) {
+        return (1);
+    }
+
+    if (A->key2 < B->key2) {
+        return (-1);
+    }
+
+    if (A->key2 > B->key2) {
+        return (1);
+    }
+
+    return (0);
+}
+
+static inline int8_t
+tree_key_four_int32_compare_func (const tree_node *a, const tree_node *b)
+{
+    tree_key_four_int *A = (typeof(A))a;
+    tree_key_four_int *B = (typeof(B))b;
+
+    if (A->key1 < B->key1) {
+        return (-1);
+    }
+
+    if (A->key1 > B->key1) {
+        return (1);
+    }
+
+    if (A->key2 > B->key2) {
+        return (1);
+    }
+
+    if (A->key2 < B->key2) {
+        return (-1);
+    }
+
+    if (A->key3 > B->key3) {
+        return (1);
+    }
+
+    if (A->key3 < B->key3) {
+        return (-1);
+    }
+
+    if (A->key4 > B->key4) {
+        return (1);
+    }
+
+    if (A->key4 < B->key4) {
+        return (-1);
+    }
+
+    return (0);
+}
+
+static inline int8_t tree_key_string_compare_func (const tree_node *a,
+                                             const tree_node *b)
+{
+    tree_key_string *A = (typeof(A))a;
+    tree_key_string *B = (typeof(B))b;
+
+    return (strcmp(A->key, B->key));
+}
+
+static inline int8_t tree_key_pointer_compare_func (const tree_node *a,
+                                                     const tree_node *b)
+{
+    tree_key_pointer *A = (typeof(A))a;
+    tree_key_pointer *B = (typeof(B))b;
+
+    if (A->key < B->key) {
+        return (-1);
+    }
+
+    if (A->key > B->key) {
+        return (1);
+    }
+
+    return (0);
+}
+
+static inline int8_t tree_node_compare_func (const tree_root *root,
+                                             const tree_node *a,
+                                             const tree_node *b)
+{
+    switch (root->type) {
+    case TREE_KEY_CUSTOM:
+        return (*(root->compare_func))(a, b);
+    case TREE_KEY_INTEGER:
+        return (tree_key_int32_compare_func(a, b));
+    case TREE_KEY_TWO_INTEGER:
+        return (tree_key_two_int32_compare_func(a, b));
+    case TREE_KEY_FOUR_INTEGER:
+        return (tree_key_four_int32_compare_func(a, b));
+    case TREE_KEY_STRING:
+        return (tree_key_string_compare_func(a, b));
+    case TREE_KEY_POINTER:
+        return (tree_key_pointer_compare_func(a, b));
+    }
+
+    return (0);
+}
+
+/*
+ * Get the least node in the subtree.
+ */
+static inline tree_node *tree_first_fast (tree_node *top)
+{
+    while (top->left) {
+        top = top->left;
+    }
+
+    return (top);
+}
+
+/*
+ * Find the next highest node.
+ */
+static inline tree_node *tree_get_next (tree_root *root,
+                                        tree_node *top,
+                                        tree_node *node)
+{
+    tree_node *subtree;
+    int8_t compare;
+
+    compare = tree_node_compare_func(root, top, node);
+
+    if (compare == 0) {
+        /*
+         * top == node
+         *
+         * Dive into the right tree and return the least node.
+         *
+         *        4   (top 4, node 4, look at 7)
+         *       / \
+         *      3   8
+         *     /   / \
+         *    1   7   9
+         */
+        if (!top->right) {
+            return (0);
+        }
+
+	return (tree_first_fast(top->right));
+    }
+
+    if (compare < 0) {
+        /*
+         * top < node
+         *
+         * Dive into the right tree.
+         *
+         *        4   (top 4, node 5, look at 8)
+         *       / \
+         *      3   8
+         *     /   / \
+         *    1   7   9
+         */
+        if (!top->right) {
+            return (0);
+        }
+
+	return (tree_get_next(root, top->right, node));
+    }
+
+    /*
+     * top > node
+     *
+     * Dive into the left tree.
+     *
+     *        4   (top 4, node 3, look at 1)
+     *       / \
+     *      3   8
+     *     /   / \
+     *    1   7   9
+     */
+    if (!top->left) {
+        return (0);
+    }
+
+    subtree = tree_get_next(root, top->left, node);
+    if (subtree) {
+        return (subtree);
+    }
+
+    /*
+     * top > node
+     *
+     * If there is no subtree.
+     *
+     *        4   (top 1, node 0, look at 1)
+     *       / \
+     *      3   8
+     *     /   / \
+     *    1   7   9
+     */
+    return (top);
+}
 #endif
