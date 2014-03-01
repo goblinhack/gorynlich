@@ -444,8 +444,8 @@ void demarshal_print (tree_demarshal *ctx)
     }
 }
 
-static int32_t tree_demarshal_ptr_compare_func (const tree_node *a,
-                                                const tree_node *b)
+static int8_t tree_demarshal_ptr_compare_func (const tree_node *a,
+                                               const tree_node *b)
 {
     tree_demarshal_ptr_node *A = (typeof(A))a;
     tree_demarshal_ptr_node *B = (typeof(B))b;

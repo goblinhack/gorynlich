@@ -2596,7 +2596,7 @@ void wid_set_on_tick (widp w, on_tick_t fn)
     w->on_tick = fn;
 }
 
-static int32_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
+static int8_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
 {
     widp A = (typeof(A))a;
     widp B = (typeof(B))b;

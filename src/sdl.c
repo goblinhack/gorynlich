@@ -824,7 +824,6 @@ void sdl_loop (void)
              * Give up some CPU to allow events to arrive and time for the GPU 
              * to process the above.
              */
-
             timestamp_then = timestamp_now;
 
             /*
