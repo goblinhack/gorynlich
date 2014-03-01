@@ -364,6 +364,10 @@ static inline tree_node *tree_get_next (tree_root *root,
     tree_node *subtree;
     int8_t compare;
 
+    if (!top) {
+        return (0);
+    }
+
     compare = tree_node_compare_func(root, top, node);
 
     if (compare == 0) {
@@ -397,10 +401,6 @@ static inline tree_node *tree_get_next (tree_root *root,
          *     /   / \
          *    1   7   9
          */
-        if (!top->right) {
-            return (0);
-        }
-
 	return (tree_get_next(root, top->right, node));
     }
 
@@ -415,10 +415,6 @@ static inline tree_node *tree_get_next (tree_root *root,
      *     /   / \
      *    1   7   9
      */
-    if (!top->left) {
-        return (0);
-    }
-
     subtree = tree_get_next(root, top->left, node);
     if (subtree) {
         return (subtree);
