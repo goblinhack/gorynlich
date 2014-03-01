@@ -492,7 +492,7 @@ static void dmap_distance_flood (dmap *map, thingp t)
     MAP_FLOODWALK_END(x, y, distance)
 }
 
-static int32_t dmap_goal_compare (const tree_node *a, const tree_node *b)
+static int8_t dmap_goal_compare (const tree_node *a, const tree_node *b)
 {
     dmap_goal *A = (typeof(A))a;
     dmap_goal *B = (typeof(B))b;
@@ -577,7 +577,7 @@ static void dmap_goal_free (dmap *map, dmap_goal *node)
     myfree(node);
 }
 
-static int32_t dmap_astar_compare (const tree_node *a, const tree_node *b)
+static int8_t dmap_astar_compare (const tree_node *a, const tree_node *b)
 {
     dmap_astar_node *A = (typeof(A))a;
     dmap_astar_node *B = (typeof(B))b;
