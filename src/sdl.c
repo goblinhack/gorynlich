@@ -827,6 +827,11 @@ void sdl_loop (void)
             timestamp_then = timestamp_now;
 
             /*
+             * End user i/o.
+             */
+            console_tick();
+
+            /*
              * Let widgets move.
              */
             wid_tick_all();
@@ -906,11 +911,6 @@ void sdl_loop (void)
                 ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
             }
         }
-
-        /*
-         * End user i/o.
-         */
-        console_tick();
 
         /*
          * Network server i/o.
