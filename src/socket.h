@@ -298,11 +298,13 @@ extern tree_rootp sockets;
 
 static inline UDPpacket *socket_alloc_msg (void)
 {
-    UDPpacket *packet;
+    static UDPpacket *packet;
 
-    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
+        packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+        if (!packet) {
+            DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
+        }
     }
 
     newptr(packet, "pak");
@@ -314,7 +316,7 @@ static inline void socket_free_msg (UDPpacket *packet)
 {
     oldptr(packet);
 
-    SDLNet_FreePacket(packet);
+//    SDLNet_FreePacket(packet);
 }
 
 static inline void socket_tx_msg (socketp s, UDPpacket *packet)
