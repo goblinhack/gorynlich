@@ -25,6 +25,7 @@
 #include "socket.h"
 #include "timer.h"
 #include "thing_private.h"
+#include "time.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -126,6 +127,16 @@ void wid_game_map_client_visible (void)
 
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
+#if 0
+    static uint32_t ts;
+
+    if (!time_have_x_hundredths_passed_since(5, ts)) {
+        return (true);
+    }
+
+    ts = time_get_time_cached();
+#endif
+
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
     uint8_t *state = SDL_GetKeyState(0);
 
@@ -393,16 +404,18 @@ void wid_game_map_client_score_update (levelp level)
         return;
     }
 
-    if (!wid_game_map_client_window) {
-        return;
-    }
+    boolean update;
 
-    wid_destroy(&wid_scoreline_container_top);
+    if (wid_scoreline_container_top) {
+        update = true;
+    } else {
+        update = false;
+    }
 
     /*
      * Create the area for the scores at the top.
      */
-    {
+    if (!update) {
         fpoint tl;
         fpoint br;
 
@@ -433,15 +446,58 @@ void wid_game_map_client_score_update (levelp level)
     int y;
     for (y = 0; y < 4; y++) 
     {
-        color c;
-        char *name_title;
-
         msg_player_state *p = client_get_player(y);
-        name_title = p->pclass;
+
+        /*
+         * Score
+         */
+        char tmp[20];
+        snprintf(tmp, sizeof(tmp), "%06u", p->score);
+
+        static widp wid_score_container[MAX_PLAYERS];
+
+        if (!update) {
+            wid_score_container[y] = wid_textbox_fixed_width(
+                                        wid_scoreline_container_top,
+                                        &wid_score,
+                                        tmp, 
+                                        atx1, aty1 + dy*(float)y, 
+                                        small_font);
+            wid_set_no_shape(wid_score_container[y]);
+        } else {
+            wid_set_text(wid_score_container[y], tmp);
+        }
+
+        /*
+         * Health
+         */
+        snprintf(tmp, sizeof(tmp), "%06u", p->health);
+
+        static widp wid_health_container[MAX_PLAYERS];
+
+        if (!update) {
+            wid_health_container[y] = wid_textbox_fixed_width(
+                                        wid_scoreline_container_top,
+                                        &wid_health,
+                                        tmp,  
+                                        atx2, aty1 + dy*(float)y, 
+                                        small_font);
+
+            wid_set_no_shape(wid_health_container[y]);
+        } else {
+            wid_set_text(wid_health_container[y], tmp);
+        }
+
+        if (update) {
+            continue;
+        }
+
+        char *name_title = p->pclass;
         if (!p->pclass[0]) {
             name_title = "No player";
         }
 
+        color c;
         switch (y) {
         case 0:
             c = RED;
@@ -456,40 +512,6 @@ void wid_game_map_client_score_update (levelp level)
             c = GREEN;
             break;
         }
-
-        /*
-         * Score
-         */
-        char *tmp = dynprintf("%06u", p->score);
-
-        widp wid_score_container;
-
-        wid_score_container = wid_textbox_fixed_width(
-                                    wid_scoreline_container_top,
-                                    &wid_score,
-                                    tmp, 
-                                    atx1, aty1 + dy*(float)y, 
-                                    small_font);
-        myfree(tmp);
-
-        wid_set_no_shape(wid_score_container);
-
-        /*
-         * Health
-         */
-        tmp = dynprintf("%06u", p->health);
-
-        widp wid_health_container;
-
-        wid_health_container = wid_textbox_fixed_width(
-                                    wid_scoreline_container_top,
-                                    &wid_health,
-                                    tmp,  
-                                    atx2, aty1 + dy*(float)y, 
-                                    small_font);
-        myfree(tmp);
-
-        wid_set_no_shape(wid_health_container);
 
         /*
          * Score title
@@ -566,6 +588,10 @@ void wid_game_map_client_score_update (levelp level)
         wid_set_color(wid_score_title, WID_COLOR_TEXT, c);
         wid_set_color(wid_health_title, WID_COLOR_TEXT, c);
         wid_set_color(wid_name_title, WID_COLOR_TEXT, c);
+    }
+
+    if (update) {
+        return;
     }
 
     /*
