@@ -336,62 +336,6 @@ texp tex_from_surface (SDL_Surface *surface,
         glBindTexture(GL_TEXTURE_2D, gl_surface_binding);
     }
 
-#ifdef ENABLE_INVERTED_DISPLAY
-    //
-    // If a bitmap is all black or white then it is a mask and is meant to
-    // stay that way so that we can blit it with different colors - e.g. a
-    // font.
-    //
-    // If it has colors, it needs to have those inverted.
-    //
-    {
-        boolean image_is_all_black_or_white;
-        unsigned char *p;
-        int32_t cnt;
-
-        p = (unsigned char*)surface->pixels;
-        cnt = surface->w * surface->h;
-
-        image_is_all_black_or_white = true;
-        while (cnt--) {
-            if ((*p != 255) && (*p != 0)) {
-                image_is_all_black_or_white = false;
-                break;
-            }
-            p++;
-
-            if ((*p != 255) && (*p != 0)) {
-                image_is_all_black_or_white = false;
-                break;
-            }
-            p++;
-
-            if ((*p != 255) && (*p != 0)) {
-                image_is_all_black_or_white = false;
-                break;
-            }
-            p++;
-            p++;
-        }
-
-        if (!image_is_all_black_or_white) {
-            p = (unsigned char*)surface->pixels;
-
-            cnt = surface->w * surface->h;
-
-            while (cnt--) {
-                *p = 255-*p;
-                p++;
-                *p = 255-*p;
-                p++;
-                *p = 255-*p;
-                p++;
-                p++;
-            }
-        }
-    }
-#endif
-
     /*
      * Generate the tex
      */
@@ -657,9 +601,8 @@ void tex_blit (tex *tex, point at)
     br.x = at.x + tex->width/2;
     tl.y = at.y + tex->height/2;
 
-    glBindTexture(GL_TEXTURE_2D, tex->gl_surface_binding);
-
-    blit(0.0f, 1.0f, 1.0f, 0.0f, tl.x, tl.y, br.x, br.y);
+    blit(tex->gl_surface_binding,
+         0.0f, 1.0f, 1.0f, 0.0f, tl.x, tl.y, br.x, br.y);
 }
 
 texp string2tex (const char **s)

@@ -1547,58 +1547,8 @@ void color_init (void)
     color_set("yellow", &YELLOW, 255, 255, 0, 255);
 }
 
-static color gl_save_color;
-static color gl_last_color;
-
-/*
- * Set the current GL color, We cannot invert this color as it is being
- * applied to a tex. Instead the tex itself needs to be inverted
- * and the color here is just luminosity.
- */
-void gltexcolor (texp tex, color s)
-{
-    /*
-     * If there is no tex then it is safe to invert colors.
-     */
-    if (tex) {
-        gl_last_color = s;
-
-        if (HEADLESS) {
-            return;
-        }
-
-        glColor4ub(s.r, s.g, s.b, s.a);
-    } else {
-        glcolor(s);
-    }
-}
-
-/*
- * Set the current GL color, inverting it if needed if the display is
- * inverted.
- */
-void glcolor (color s)
-{
-#ifdef ENABLE_INVERTED_DISPLAY
-    s.r = 255 - s.r;
-    s.g = 255 - s.g;
-    s.b = 255 - s.b;
-#endif
-    {
-        gl_last_color = s;
-
-        if (HEADLESS) {
-            return;
-        }
-
-        glColor4ub(s.r, s.g, s.b, s.a);
-    }
-}
-
-color gl_color_current (void)
-{
-    return (gl_last_color);
-}
+color gl_save_color;
+color gl_last_color;
 
 void glcolor_save (void)
 {
@@ -1640,13 +1590,6 @@ color string2color (const char **s)
 
     if (!strcmp(tmp, "reset")) {
         color c = gl_save_color;
-
-#ifdef ENABLE_INVERTED_DISPLAY
-        c.r = 255 - c.r;
-        c.g = 255 - c.g;
-        c.b = 255 - c.b;
-#endif
-
 	return (c);
     }
 

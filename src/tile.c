@@ -238,9 +238,8 @@ void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
         tile = tile_find(name);
     }
 
-    glBindTexture(GL_TEXTURE_2D, tile->gl_surface_binding);
-
-    blit(tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
+    blit(tile->gl_surface_binding,
+         tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
 }
 
 /*
@@ -256,9 +255,8 @@ void tile_blit_at (tile *tile, char *name, point tl, point br)
         tile = tile_find(name);
     }
 
-    glBindTexture(GL_TEXTURE_2D, tile->gl_surface_binding);
-
-    blit(tile->x1, tile->y2, tile->x2, tile->y1, tl.x, tl.y, br.x, br.y);
+    blit(tile->gl_surface_binding,
+         tile->x1, tile->y2, tile->x2, tile->y1, tl.x, tl.y, br.x, br.y);
 }
 
 /*

@@ -7318,6 +7318,10 @@ static void wid_display (widp w,
         }
     }
 
+    if (w->children_display_sorted) {
+        blit_flush();
+    }
+
     /*
      * Undo any push we did earlier.
      */
@@ -7405,6 +7409,8 @@ void wid_display_all (void)
                     false /* disable_scissors */,
                     0 /* updated_scissors */);
     } }
+
+    blit_flush();
 
     glDisable(GL_SCISSOR_TEST);
 }

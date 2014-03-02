@@ -48,8 +48,10 @@
 void gl_enter_2d_mode(void);
 void gl_leave_2d_mode(void);
 
-void blit(float tx0, float ty0, float tx1, float ty1,
+void blit(int tex,
+          float tx0, float ty0, float tx1, float ty1,
           float tlx, float tly, float brx, float bry);
+void blit_flush(void);
 void gl_blitquad(float tlx, float tly, float brx, float bry);
 void gl_blitsquare(float tlx, float tly, float brx, float bry);
 

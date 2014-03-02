@@ -4,10 +4,9 @@
  * See the README file.
  */
 
+#include "glapi.h"
+
 void color_init(void);
-color gl_color_current(void);
-void gltexcolor(texp, color s);
-void glcolor(color s);
 void glcolor_save(void);
 void glcolor_restore(void);
 color string2color(const char **s);
@@ -762,3 +761,25 @@ extern color YELLOW4;
 extern color YELLOW_GREEN;
 extern color YELLOWGREEN;
 extern color YELLOW;
+
+extern color gl_save_color;
+extern color gl_last_color;
+
+/*
+ * Set the current GL color
+ */
+static inline void glcolor (color s)
+{
+    gl_last_color = s;
+
+    if (HEADLESS) {
+        return;
+    }
+
+    glColor4ub(s.r, s.g, s.b, s.a);
+}
+
+static inline color gl_color_current (void)
+{
+    return (gl_last_color);
+}
