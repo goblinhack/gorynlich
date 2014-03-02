@@ -5,7 +5,7 @@
  */
 
 #undef  ENABLE_LOGFILE            // Log stdout and err to a file
-#undef ENABLE_LEAKCHECK          // Memory leak check
+#undef ENABLE_LEAKCHECK           // Memory leak check
 #undef ENABLE_PTRCHECK            // Check validity of pointers too
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
@@ -18,6 +18,8 @@
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
+#define ENABLE_FPS_COUNTER      1 // Frames per sec counter
+#define PING_DELAY_TENTHS       5 // Frequency of client and server pings
 
 /*
  * Screen sizes.
@@ -62,6 +64,7 @@
 #define CONSOLE_CURSOR_OTHER_COLOR  DARKGREEN
 #define CONSOLE_TEXT_COLOR          GREEN
 #define CONSOLE_HEIGHT              100
+#define ENABLE_CONSOLE              // Enable terminal console all the time
 
 /*
  * Fonts

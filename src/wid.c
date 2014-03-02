@@ -100,9 +100,19 @@ typedef struct wid_ {
     tree_key_int tree2;
 
     /*
-     * A tree for moving and ticking things
+     * A tree for moving things
      */
     tree_key_int tree3;
+    
+    /*
+     * A tree for things being destroyed.
+     */
+    tree_key_int tree4;
+
+    /*
+     * A tree for ticking things
+     */
+    tree_key_int tree5;
 
     /*
      * Widget internal name.
@@ -335,6 +345,8 @@ typedef struct wid_ {
     uint8_t do_not_raise:1;
     uint8_t do_not_lower:1;
     uint8_t in_tree3:1;
+    uint8_t in_tree4:1;
+    uint8_t in_tree5:1;
 } wid;
 
 /*
@@ -348,9 +360,19 @@ static tree_root *wid_top_level;
 static tree_root *wid_top_level2;
 
 /*
- * Unsorted; used for moving and ticking things.
+ * For moving things.
  */
 static tree_root *wid_top_level3;
+
+/*
+ * For garbage collection.
+ */
+static tree_root *wid_top_level4;
+
+/*
+ * For ticking things.
+ */
+static tree_root *wid_top_level5;
 
 /*
  * Mouse movement
@@ -404,8 +426,14 @@ static void wid_tree_detach(widp w);
 static void wid_tree_attach(widp w);
 static void wid_tree_remove(widp w);
 static void wid_tree2_remove(widp w);
-static void wid_tree3_remove(widp w, boolean force);
+static void wid_tree3_remove(widp w);
 static void wid_tree3_insert(widp w);
+static void wid_tree4_remove(widp w);
+static void wid_tree4_insert(widp w);
+static void wid_tree4_remove(widp w);
+static void wid_tree4_insert(widp w);
+static void wid_tree5_remove(widp w);
+static void wid_tree5_insert(widp w);
 
 /*
  * Child sort priority
@@ -441,11 +469,10 @@ void wid_fini (void)
         wid_init_done = false;
         wid_exiting = true;
 
-        LOG("destroy 3 tree");
+        tree_destroy(&wid_top_level5, (tree_destroy_func)0);
+        tree_destroy(&wid_top_level4, (tree_destroy_func)0);
         tree_destroy(&wid_top_level3, (tree_destroy_func)0);
-        LOG("destroy 2 tree");
         tree_destroy(&wid_top_level2, (tree_destroy_func)0);
-        LOG("destroy 1 tree");
         tree_destroy(&wid_top_level,
                      (tree_destroy_func)wid_destroy_immediate_internal);
 
@@ -2614,8 +2641,7 @@ void wid_set_on_tick (widp w, on_tick_t fn)
 
     w->on_tick = fn;
 
-    wid_tree3_insert(w);
-
+    wid_tree5_insert(w);
 }
 
 static int8_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
@@ -2809,7 +2835,7 @@ static void wid_tree3_insert (widp w)
     root = wid_top_level3;
 
     if (!root) {
-        root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT2: wid");
+        root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT3: wid");
         wid_top_level3 = root;
 
         root->offset = STRUCT_OFFSET(struct wid_, tree3);
@@ -2829,6 +2855,88 @@ static void wid_tree3_insert (widp w)
      */
     w->tree3.node.is_static_mem = true;
     w->in_tree3 = true;
+}
+
+static void wid_tree4_insert (widp w)
+{
+    fast_verify(w);
+
+    if (w->in_tree4) {
+        return;
+    }
+
+    if (wid_exiting) {
+        return;
+    }
+
+    static int32_t key;
+
+    tree_root *root;
+
+    root = wid_top_level4;
+
+    if (!root) {
+        root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT4: wid");
+        wid_top_level4 = root;
+
+        root->offset = STRUCT_OFFSET(struct wid_, tree4);
+    }
+
+    /*
+     * Get a wid sort ID.
+     */
+    w->tree4.key = ++key;
+
+    if (!tree_insert(root, &w->tree4.node)) {
+        DIE("widget tree4 insert");
+    }
+
+    /*
+     * The other tree will do the actual node free.
+     */
+    w->tree4.node.is_static_mem = true;
+    w->in_tree4 = true;
+}
+
+static void wid_tree5_insert (widp w)
+{
+    fast_verify(w);
+
+    if (w->in_tree5) {
+        return;
+    }
+
+    if (wid_exiting) {
+        return;
+    }
+
+    static int32_t key;
+
+    tree_root *root;
+
+    root = wid_top_level5;
+
+    if (!root) {
+        root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT5: wid");
+        wid_top_level5 = root;
+
+        root->offset = STRUCT_OFFSET(struct wid_, tree5);
+    }
+
+    /*
+     * Get a wid sort ID.
+     */
+    w->tree5.key = ++key;
+
+    if (!tree_insert(root, &w->tree5.node)) {
+        DIE("widget tree5 insert");
+    }
+
+    /*
+     * The other tree will do the actual node free.
+     */
+    w->tree5.node.is_static_mem = true;
+    w->in_tree5 = true;
 }
 
 static void wid_tree_remove (widp w)
@@ -2865,24 +2973,12 @@ static void wid_tree2_remove (widp w)
     }
 }
 
-static void wid_tree3_remove (widp w, boolean force)
+static void wid_tree3_remove (widp w)
 {
     fast_verify(w);
 
     if (!w->in_tree3) {
         return;
-    }
-
-    if (!force) {
-        if (w->moving ||
-            w->being_destroyed ||
-            w->on_tick ||
-            w->destroy_when) {
-            /*
-             * Keep in the tree until done.
-             */
-            return;
-        }
     }
 
     tree_root *root;
@@ -2894,10 +2990,56 @@ static void wid_tree3_remove (widp w, boolean force)
     }
 
     if (!tree_remove(root, &w->tree3.node)) {
-        DIE("remove from tick tree");
+        DIE("remove from move tree");
     }
 
     w->in_tree3 = false;
+}
+
+static void wid_tree4_remove (widp w)
+{
+    fast_verify(w);
+
+    if (!w->in_tree4) {
+        return;
+    }
+
+    tree_root *root;
+
+    root = wid_top_level4;
+
+    if (!root) {
+        return;
+    }
+
+    if (!tree_remove(root, &w->tree4.node)) {
+        DIE("remove from gc tree");
+    }
+
+    w->in_tree4 = false;
+}
+
+static inline void wid_tree5_remove (widp w)
+{
+    fast_verify(w);
+
+    if (!w->in_tree5) {
+        return;
+    }
+
+    tree_root *root;
+
+    root = wid_top_level5;
+
+    if (!root) {
+        return;
+    }
+
+    if (!tree_remove(root, &w->tree5.node)) {
+        DIE("remove from tick tree");
+    }
+
+    w->in_tree5 = false;
 }
 
 /*
@@ -2934,7 +3076,7 @@ static void wid_destroy_immediate_internal (widp w)
 {
     fast_verify(w);
 
-    wid_tree3_remove(w, true /* force */);
+    wid_tree4_remove(w);
 
     if (w->on_destroy) {
         (w->on_destroy)(w);
@@ -3056,7 +3198,7 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
     }
 
     w->being_destroyed = true;
-    wid_tree3_insert(w);
+    wid_tree4_insert(w);
 
     if (wid_focus == w) {
         wid_mouse_focus_end();
@@ -3104,7 +3246,7 @@ void wid_destroy_in (widp w, uint32_t ms)
 
     w->destroy_when = time_get_time_cached() + ms;
 
-    wid_tree3_insert(w);
+    wid_tree4_insert(w);
 }
 
 /*
@@ -6728,42 +6870,14 @@ void wid_move_end (widp w)
 
     w->moving = false;
 
-    wid_tree3_remove(w, false /* force */);
+    wid_tree3_remove(w);
 }
 
 /*
  * Do stuff for widgets once per frame.
  */
-static void wid_tick (widp w)
+static void wid_gc (widp w)
 {
-    boolean moving;
-    int32_t x;
-    int32_t y;
-
-    moving = wid_is_moving(w);
-
-    if (moving) {
-        if (time_get_time_cached() >= w->timestamp_moving_end) {
-            x = w->moving_end.x;
-            y = w->moving_end.y;
-
-            w->moving = false;
-
-            wid_tree3_remove(w, false /* force */);
-        } else {
-            double time_step =
-                (double)(time_get_time_cached() - w->timestamp_moving_begin) /
-                (double)(w->timestamp_moving_end - w->timestamp_moving_begin);
-
-            x = (time_step * (double)(w->moving_end.x - w->moving_start.x)) +
-                w->moving_start.x;
-            y = (time_step * (double)(w->moving_end.y - w->moving_start.y)) +
-                w->moving_start.y;
-        }
-
-        wid_move_to_abs(w, x, y);
-    }
-
     if (w->being_destroyed) {
         /*
          * If being destroyed, is it done fading ? We only do this for the top
@@ -6786,18 +6900,6 @@ static void wid_tick (widp w)
             wid_destroy_immediate(w);
             return;
         }
-    }
-
-#if 0
-    widp child;
-
-    TREE2_WALK(w->children_unsorted, child) {
-        wid_tick(child);
-    }
-#endif
-
-    if (w->on_tick) {
-        (w->on_tick)(w);
     }
 
     /*
@@ -7227,12 +7329,57 @@ static void wid_display (widp w,
 /*
  * Do stuff for all widgets.
  */
-void wid_tick_all (void)
+void wid_move_all (void)
 {
     widp w;
 
     { TREE2_WALK(wid_top_level3, w) {
-        wid_tick(w);
+        int32_t x;
+        int32_t y;
+
+        if (time_get_time_cached() >= w->timestamp_moving_end) {
+            x = w->moving_end.x;
+            y = w->moving_end.y;
+
+            w->moving = false;
+
+            wid_tree3_remove(w);
+        } else {
+            double time_step =
+                (double)(time_get_time_cached() - w->timestamp_moving_begin) /
+                (double)(w->timestamp_moving_end - w->timestamp_moving_begin);
+
+            x = (time_step * (double)(w->moving_end.x - w->moving_start.x)) +
+                w->moving_start.x;
+            y = (time_step * (double)(w->moving_end.y - w->moving_start.y)) +
+                w->moving_start.y;
+        }
+
+        wid_move_to_abs(w, x, y);
+    } }
+}
+
+/*
+ * Do stuff for all widgets.
+ */
+void wid_gc_all (void)
+{
+    widp w;
+
+    { TREE2_WALK(wid_top_level4, w) {
+        wid_gc(w);
+    } }
+}
+
+/*
+ * Do stuff for all widgets.
+ */
+void wid_tick_all (void)
+{
+    widp w;
+
+    { TREE2_WALK(wid_top_level5, w) {
+        (w->on_tick)(w);
     } }
 
     action_timers_tick(wid_timers);
@@ -7557,7 +7704,7 @@ void wid_move_stop (widp w)
     w->moving = false;
     w->paused = true;
 
-    wid_tree3_remove(w, false /* force */);
+    wid_tree3_remove(w);
 }
 
 void wid_move_resume (widp w)
