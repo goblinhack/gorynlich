@@ -11,13 +11,18 @@
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
 #undef ENABLE_VIDEO_SYNC          // Vertical sync
-#undef ENABLE_INVERTED_DISPLAY    // For running on a Mac with inverted gfx
 #undef ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #undef ENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
+
+/*
+ * Tries to batch calls to draw arrays for more speed.
+ */
+#define ENABLE_GL_BULK_DRAW_ARRAYS 
+
 #define ENABLE_FPS_COUNTER      1 // Frames per sec counter
 #define PING_DELAY_TENTHS       5 // Frequency of client and server pings
 

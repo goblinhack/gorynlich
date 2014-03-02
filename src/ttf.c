@@ -313,8 +313,8 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
     GLfloat top = (GLfloat)(y);
     GLfloat bottom = (GLfloat)(y + f->glyphs[c].height * (scaling));
 
-    glBindTexture(GL_TEXTURE_2D, f->tex[c].tex);
-    blit(texMinX, texMinY, texMaxX, texMaxY, left, top, right, bottom);
+    blit(f->tex[c].tex,
+         texMinX, texMinY, texMaxX, texMaxY, left, top, right, bottom);
 }
 
 /*

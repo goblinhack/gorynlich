@@ -222,7 +222,6 @@ void wid_game_map_client_wid_create (void)
         wid_set_text_advance(wid_game_map_client_window, 0.9f);
         wid_set_text_scaling(wid_game_map_client_window, 2.0f);
         wid_set_text_pos(wid_game_map_client_window, true, 0.5f, 0.10f);
-        wid_set_text_outline(wid_game_map_client_window, true);
 
         wid_set_text_bot(wid_game_map_client_window, true);
         wid_set_text_lhs(wid_game_map_client_window, true);
@@ -377,7 +376,6 @@ wid_game_map_client_replace_tile (widp w, int32_t x, int32_t y, thingp thing)
     wid_set_color(child, WID_COLOR_TL, BLACK);
     wid_set_color(child, WID_COLOR_BG, BLACK);
     wid_set_color(child, WID_COLOR_BR, BLACK);
-    wid_set_text_outline(child, true);
     wid_set_font(child, small_font);
     wid_set_no_shape(child);
 
