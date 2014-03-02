@@ -671,7 +671,7 @@ void sdl_exit (void)
     sdl_main_loop_running = false;
 }
 
-boolean fps_enabled = 0;
+boolean fps_enabled = ENABLE_FPS_COUNTER;
 
 /*
  * User has entered a command, run it
@@ -819,7 +819,7 @@ void sdl_loop (void)
          */
         int32_t timestamp_now = time_get_time_milli();
 
-        if (timestamp_now - timestamp_then > 10) {
+        if (timestamp_now - timestamp_then > 50) {
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
              * to process the above.
@@ -827,14 +827,14 @@ void sdl_loop (void)
             timestamp_then = timestamp_now;
 
             /*
-             * End user i/o.
-             */
-            console_tick();
-
-            /*
              * Let widgets move.
              */
             wid_tick_all();
+
+            /*
+             * Clean up dead widgets.
+             */
+            wid_gc_all();
 
             if (!HEADLESS) {
                 /*
@@ -870,6 +870,16 @@ void sdl_loop (void)
                     sdl_event(&events[i]);
                 }
             }
+#ifdef ENABLE_CONSOLE
+            console_tick();
+#else
+            else {
+                /*
+                 * End user i/o.
+                 */
+                console_tick();
+            }
+#endif
 
             if (!sdl_main_loop_running) {
                 break;
@@ -877,9 +887,24 @@ void sdl_loop (void)
         }
 
         /*
+         * Network server i/o.
+         */
+        server_tick();
+
+        /*
+         * Network client i/o.
+         */
+        client_tick();
+
+        /*
          * Let things move.
          */
         thing_tick_all();
+
+        /*
+         * Let widgets move.
+         */
+        wid_move_all();
 
         /*
          * Display windows.
@@ -891,7 +916,6 @@ void sdl_loop (void)
          */
         if (!HEADLESS) {
             if (fps_enabled) {
-
                 static char fps_text[10] = {0};
 
                 if (timestamp_now - timestamp_then2 >= 1000) {
@@ -911,16 +935,6 @@ void sdl_loop (void)
                 ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
             }
         }
-
-        /*
-         * Network server i/o.
-         */
-        server_tick();
-
-        /*
-         * Network client i/o.
-         */
-        client_tick();
 
         /*
          * Flip

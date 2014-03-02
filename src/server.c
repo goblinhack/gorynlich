@@ -358,7 +358,7 @@ static void server_socket_tx_ping (void)
     static uint32_t ts;
     static uint8_t seq;
 
-    if (!time_have_x_tenths_passed_since(5, ts)) {
+    if (!time_have_x_tenths_passed_since(PING_DELAY_TENTHS, ts)) {
         return;
     }
 
@@ -375,12 +375,13 @@ static void server_socket_tx_ping (void)
 
     TREE_WALK(sockets, s) {
 
-        if (socket_get_server(s)) {
+        if (socket_get_client(s)) {
             continue;
         }
 
         ts = time_get_time_cached();
         socket_tx_ping(s, seq, ts);
+LOG("server ping");
     }
 
     seq++;

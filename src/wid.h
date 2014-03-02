@@ -72,6 +72,8 @@ widp wid_find(widp, const char *name);
 void wid_update(widp);
 void wid_update_mouse(void);
 void wid_tick_all(void);
+void wid_move_all(void);
+void wid_gc_all(void);
 void wid_display_all(void);
 boolean wid_ignore_for_events(widp);
 boolean wid_ignore_for_focus(widp);
