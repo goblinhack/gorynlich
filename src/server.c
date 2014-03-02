@@ -381,7 +381,6 @@ static void server_socket_tx_ping (void)
 
         ts = time_get_time_cached();
         socket_tx_ping(s, seq, ts);
-LOG("server ping");
     }
 
     seq++;

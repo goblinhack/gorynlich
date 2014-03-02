@@ -104,4 +104,4 @@
 /*
  * How much we allow the player to move per step. Fraction of one grid.
  */
-#define THING_COORD_MOVE            0.1
+#define THING_COORD_MOVE            0.25
