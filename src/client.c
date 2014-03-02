@@ -166,7 +166,7 @@ static void client_socket_tx_ping (void)
     static uint32_t ts;
     static uint8_t seq;
 
-    if (!time_have_x_tenths_passed_since(5, ts)) {
+    if (!time_have_x_tenths_passed_since(PING_DELAY_TENTHS, ts)) {
         return;
     }
 
@@ -756,8 +756,7 @@ static void client_poll (void)
                     memcpy(&server_status, &latest_status, 
                            sizeof(server_status));
 
-LOG("XXXX FIXME");
-//                    wid_game_map_client_score_update(client_level);
+                    wid_game_map_client_score_update(client_level);
                 }
 
                 break;
@@ -835,7 +834,8 @@ static void client_check_still_in_game (void)
         return;
     }
 
-    if (!time_have_x_tenths_passed_since(10, client_joined_server_when)) {
+    if (!time_have_x_tenths_passed_since(PING_DELAY_TENTHS * 2,
+                                         client_joined_server_when)) {
         return;
     }
 
