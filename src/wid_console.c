@@ -198,13 +198,8 @@ static void wid_console_wid_create (void)
 
         wid_console_window = wid_new_square_window("wid_console");
 
-#ifdef ENABLE_INVERTED_DISPLAY
-        c = WHITE;
-        c.a = 200;
-#else
         c = BLACK;
         c.a = 200;
-#endif
 
         wid_set_mode(wid_console_window, WID_MODE_NORMAL);
         wid_set_color(wid_console_window, WID_COLOR_TL, c);

@@ -730,11 +730,7 @@ void sdl_loop (void)
     sdl_main_loop_running = true;
 
     if (!HEADLESS) {
-#ifdef ENABLE_INVERTED_DISPLAY
-        glClearColor(WHITE.r, WHITE.g, WHITE.b, 1.0f);
-#else
         glClearColor(BLACK.r, BLACK.g, BLACK.b, 1.0f);
-#endif
     }
 
     while (!init_done) {
@@ -936,6 +932,8 @@ void sdl_loop (void)
             }
         }
 
+        blit_flush();
+
         /*
          * Flip
          */
@@ -947,7 +945,7 @@ void sdl_loop (void)
 #endif /* } */
         }
 
-        SDL_Delay(10);
+//        SDL_Delay(25);
     }
 }
 

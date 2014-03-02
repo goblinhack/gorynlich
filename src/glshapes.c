@@ -109,16 +109,16 @@ void gl_list_square (fpoint tl, fpoint br,
     /*
      * Draw the central flat square
      */
-    gltexcolor(tex, med);
+    glcolor(med);
 
     Begin(GL_TRIANGLE_STRIP);
 
-    gltexcolor(tex, hi);
+    glcolor(hi);
     vertex(tl, br, a.x, a.y, tex_tl, tex_br, uv);
-    gltexcolor(tex, med);
+    glcolor(med);
     vertex(tl, br, b.x, b.y, tex_tl, tex_br, uv);
     vertex(tl, br, d.x, d.y, tex_tl, tex_br, uv);
-    gltexcolor(tex, lo);
+    glcolor(lo);
     vertex(tl, br, c.x, c.y, tex_tl, tex_br, uv);
 
     End();
@@ -148,13 +148,13 @@ void gl_list_square_bevelled (fpoint tl, fpoint br,
      */
     Begin(GL_TRIANGLE_FAN);
 
-    gltexcolor(tex, hi);
+    glcolor(hi);
     vertex(tl, br, a.x, a.y, tex_tl, tex_br, uv);
-    gltexcolor(tex, med);
+    glcolor(med);
     vertex(tl, br, b.x, b.y, tex_tl, tex_br, uv);
-    gltexcolor(tex, lo);
+    glcolor(lo);
     vertex(tl, br, c.x, c.y, tex_tl, tex_br, uv);
-    gltexcolor(tex, med);
+    glcolor(med);
     vertex(tl, br, d.x, d.y, tex_tl, tex_br, uv);
 
     End();
@@ -162,14 +162,14 @@ void gl_list_square_bevelled (fpoint tl, fpoint br,
     /*
      * Now draw the bevelled border
      */
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, c1, c, d, d1, tex_tl, tex_br, uv);
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, a1, d1, d, tex_tl, tex_br, uv);
 
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, b, b1, a1, tex_tl, tex_br, uv);
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, b, c, c1, b1, tex_tl, tex_br, uv);
 }
 
@@ -197,7 +197,7 @@ void gl_list_square_bevelled_plain (fpoint tl, fpoint br,
      */
     Begin(GL_TRIANGLE_FAN);
 
-    gltexcolor(tex, med);
+    glcolor(med);
     vertex(tl, br, a.x, a.y, tex_tl, tex_br, uv);
     vertex(tl, br, b.x, b.y, tex_tl, tex_br, uv);
     vertex(tl, br, c.x, c.y, tex_tl, tex_br, uv);
@@ -208,14 +208,14 @@ void gl_list_square_bevelled_plain (fpoint tl, fpoint br,
     /*
      * Now draw the bevelled border
      */
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, c1, c, d, d1, tex_tl, tex_br, uv);
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, a1, d1, d, tex_tl, tex_br, uv);
 
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, b, b1, a1, tex_tl, tex_br, uv);
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, b, c, c1, b1, tex_tl, tex_br, uv);
 }
 
@@ -230,7 +230,7 @@ void gl_list_rounded_square (fpoint tl, fpoint br,
     radius.width = min(radius.width, (br.x - tl.x)/3);
     radius.height = min(radius.height, (br.y - tl.y)/3);
 
-    gltexcolor(tex, med);
+    glcolor(med);
 
     glEnable(GL_TEXTURE_2D);
 
@@ -401,20 +401,20 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
     /*
      * Draw the central flat square (1);
      */
-    gltexcolor(tex, med);
+    glcolor(med);
     quaduv(tl, br, a1, b1, c1, d1, tex_tl, tex_br, uv);
 
     /*
      * Now draw the bevelled border (2);
      */
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, c1, c, d, d1, tex_tl, tex_br, uv);
     quaduv(tl, br, a, a1, d1, d, tex_tl, tex_br, uv);
 
     /*
      * (3);
      */
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, b, b1, a1, tex_tl, tex_br, uv);
     quaduv(tl, br, b, c, c1, b1, tex_tl, tex_br, uv);
     }
@@ -458,7 +458,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
     /*
      * Draw the central flat squares (1);
      */
-    gltexcolor(tex, med);
+    glcolor(med);
     quaduv(tl, br, a1, a2, d2, d1, tex_tl, tex_br, uv);
     quaduv(tl, br, b2, b1, c1, c2, tex_tl, tex_br, uv);
 
@@ -469,13 +469,13 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
     /*
      * (3);
      */
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, a1, d1, d, tex_tl, tex_br, uv);
 
     /*
      * (4);
      */
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, b, c, c1, b1, tex_tl, tex_br, uv);
 
     float step = RAD_360 / sides;
@@ -495,7 +495,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
     float y = br.y - radius.height;
     float j = 0.0f;
 
-    gltexcolor(tex, lo);
+    glcolor(lo);
     vertex(tl, br, x, y, tex_tl, tex_br, uv);
 
     int32_t i;
@@ -513,7 +513,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
         j += step;
 
         if (i == sides/8) {
-            gltexcolor(tex, lo);
+            glcolor(lo);
         }
     }
 
@@ -528,7 +528,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
     y = tl.y + radius.height;
     j = RAD_90;
 
-    gltexcolor(tex, lo);
+    glcolor(lo);
     vertex(tl, br, x, y, tex_tl, tex_br, uv);
 
     for (i = 0; i <= sides/4; i++) {
@@ -546,7 +546,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
         j += step;
 
         if (i == sides/8) {
-            gltexcolor(tex, hi);
+            glcolor(hi);
         }
     }
 
@@ -561,7 +561,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
     y = tl.y + radius.height;
     j = RAD_180;
 
-    gltexcolor(tex, hi);
+    glcolor(hi);
     vertex(tl, br, x, y, tex_tl, tex_br, uv);
 
     for (i = 0; i <= sides/4; i++) {
@@ -592,7 +592,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
 
     vertex(tl, br, x, y, tex_tl, tex_br, uv);
 
-    gltexcolor(tex, hi);
+    glcolor(hi);
 
     for (i = 0; i <= sides/4; i++) {
 
@@ -607,7 +607,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
             tex_tl, tex_br, uv);
 
         if (i == sides/8) {
-            gltexcolor(tex, lo);
+            glcolor(lo);
         }
 
         j += step;
@@ -615,7 +615,7 @@ void gl_list_rounded_square_bevelled (fpoint tl, fpoint br,
 
     End();
 
-    gltexcolor(tex, med);
+    glcolor(med);
 
     /*
      * Now draw the rounded filled edges, smaller, plain
@@ -763,13 +763,13 @@ gl_list_square_outline_bevelled_plain (fpoint tl, fpoint br,
     /*
      * Now draw the bevelled border
      */
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, c1, c, d, d1, tex_tl, tex_br, uv);
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, a1, d1, d, tex_tl, tex_br, uv);
 
-    gltexcolor(tex, hi);
+    glcolor(hi);
     quaduv(tl, br, a, b, b1, a1, tex_tl, tex_br, uv);
-    gltexcolor(tex, lo);
+    glcolor(lo);
     quaduv(tl, br, b, c, c1, b1, tex_tl, tex_br, uv);
 }
