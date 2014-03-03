@@ -117,6 +117,9 @@ static void wid_server_create_selected (void)
 
 static void wid_intro3_play_selected_cb (void *context)
 {
+    wid_server_join_hide();
+    wid_server_create_hide();
+
     wid_game_map_server_visible();
     wid_game_map_client_visible();
 }
