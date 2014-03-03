@@ -52,6 +52,7 @@ void blit(int tex,
           float tx0, float ty0, float tx1, float ty1,
           float tlx, float tly, float brx, float bry);
 void blit_flush(void);
+void blit_fini(void);
 void gl_blitquad(float tlx, float tly, float brx, float bry);
 void gl_blitsquare(float tlx, float tly, float brx, float bry);
 
