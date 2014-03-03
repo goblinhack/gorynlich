@@ -173,7 +173,7 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
          (NODE = (PREV)) != 0;                                              \
          PREV = (typeof(NODE)) tree_prev((ROOT), (tree_node*)(NODE)))       \
 
-#define TREE2_WALK_UNSAFE(ROOT, OUT)                                       \
+#define TREE_OFFSET_WALK_UNSAFE(ROOT, OUT)                                 \
     typeof(OUT) NEXT;                                                      \
     typeof(OUT) NODE;                                                      \
                                                                            \
@@ -184,7 +184,7 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
          getnode2ctx((ROOT), (tree_node**) &(OUT),                         \
                      tree_next((ROOT), (tree_node*)(NODE))))               \
                                                                             
-#define TREE2_WALK_REVERSE_UNSAFE(ROOT, OUT)                               \
+#define TREE_OFFSET_WALK_REVERSE_UNSAFE(ROOT, OUT)                         \
     typeof(OUT) PREV;                                                      \
     typeof(OUT) NODE;                                                      \
                                                                            \
@@ -195,8 +195,8 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
          getnode2ctx((ROOT), (tree_node**) &(OUT),                         \
                      tree_prev((ROOT), (tree_node*)(NODE))))               \
 
-#define TREE2_WALK(ROOT, NODE)                                              \
-    typeof((NODE)->tree2) saved_key;                                        \
+#define TREE_OFFSET_WALK(ROOT, NODE, NAME)                                  \
+    typeof((NODE)->NAME) saved_key;                                         \
     extern int32_t gcc_no_warn;                                             \
                                                                             \
     if (ROOT)                                                               \
@@ -205,7 +205,7 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
          retnode2ctx(ROOT, tree_first((ROOT)->node));                       \
                                                                             \
         gcc_no_warn =                                                       \
-            (NODE) ? saved_key = (NODE)->tree2, 0 : 0, (NODE);              \
+            (NODE) ? saved_key = (NODE)->NAME, 0 : 0, (NODE);               \
                                                                             \
         (NODE) = (typeof(NODE))                                             \
             retnode2ctx(ROOT,                                               \
