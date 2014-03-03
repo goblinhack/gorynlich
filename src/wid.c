@@ -2932,6 +2932,7 @@ static void wid_tree5_insert (widp w)
      */
     w->tree5.key = ++key;
 
+    LOG("added %s key %d root %p",w->name,key, wid_top_level5);
     if (!tree_insert(root, &w->tree5.node)) {
         DIE("widget tree5 insert");
     }
@@ -3218,7 +3219,7 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
         wid_mouse_motion_end();
     }
 
-    TREE2_WALK(w->children_unsorted, child) {
+    TREE_OFFSET_WALK(w->children_unsorted, child, tree2) {
         widp c;
 
         fast_verify(child);
@@ -3803,7 +3804,7 @@ static void wid_attach_to_grid_internal (widp w)
 {
     widp child;
 
-    { TREE2_WALK(w->children_unsorted, child) {
+    { TREE_OFFSET_WALK(w->children_unsorted, child, tree2) {
         wid_attach_to_grid_internal(child);
     } }
 
@@ -5008,7 +5009,7 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
      * Find out the space that the children take up then use this to
      * adjust the scrollbar dimensions.
      */
-    TREE2_WALK_UNSAFE(owner->children_unsorted, child) {
+    TREE_OFFSET_WALK_UNSAFE(owner->children_unsorted, child) {
         fast_verify(child);
 
         double tminx = wid_get_tl_x(child) - wid_get_tl_x(child->parent);
@@ -5218,7 +5219,7 @@ static void wid_update_internal (widp w)
     /*
      * Clip all the children
      */
-    TREE2_WALK_UNSAFE(w->children_unsorted, child) {
+    TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
         wid_update_internal(child);
     }
 
@@ -6070,7 +6071,7 @@ static void wid_children_move_delta_internal (widp w, double dx, double dy)
 
     widp child;
 
-    { TREE2_WALK_UNSAFE(w->children_unsorted, child) {
+    { TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
         wid_children_move_delta_internal(child, dx, dy);
     } }
 }
@@ -6110,7 +6111,7 @@ static void wid_move_delta_internal (widp w, double dx, double dy)
 
     widp child;
 
-    { TREE2_WALK_UNSAFE(w->children_unsorted, child) {
+    { TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
         wid_children_move_delta_internal(child, dx, dy);
     } }
 
@@ -7343,7 +7344,7 @@ void wid_move_all (void)
 {
     widp w;
 
-    { TREE2_WALK(wid_top_level3, w) {
+    { TREE_OFFSET_WALK_UNSAFE(wid_top_level3, w) {
         verify(w);
 
         int32_t x;
@@ -7378,7 +7379,7 @@ void wid_gc_all (void)
 {
     widp w;
 
-    { TREE2_WALK(wid_top_level4, w) {
+    { TREE_OFFSET_WALK(wid_top_level4, w, tree4) {
         wid_gc(w);
     } }
 }
@@ -7390,7 +7391,7 @@ void wid_tick_all (void)
 {
     widp w;
 
-    { TREE2_WALK(wid_top_level5, w) {
+    { TREE_OFFSET_WALK_UNSAFE(wid_top_level5, w) {
         verify(w);
 
         if (!w->on_tick) {
