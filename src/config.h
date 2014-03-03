@@ -5,12 +5,12 @@
  */
 
 #undef  ENABLE_LOGFILE            // Log stdout and err to a file
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
-#undef ENABLE_VIDEO_SYNC          // Vertical sync
+#define ENABLE_VIDEO_SYNC          // Vertical sync
 #undef ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #undef ENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map

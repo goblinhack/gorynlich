@@ -217,6 +217,14 @@ static void blit_init (void)
     bufp_end = gl_array_buf_end;
 }
 
+void blit_fini (void)
+{
+    if (gl_array_buf) {
+        myfree(gl_array_buf);
+        gl_array_buf = 0;
+    }
+}
+
 void blit_flush (void)
 {
     if (gl_array_buf == bufp) {
