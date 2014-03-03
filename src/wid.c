@@ -2932,7 +2932,6 @@ static void wid_tree5_insert (widp w)
      */
     w->tree5.key = ++key;
 
-    LOG("added %s key %d root %p",w->name,key, wid_top_level5);
     if (!tree_insert(root, &w->tree5.node)) {
         DIE("widget tree5 insert");
     }
