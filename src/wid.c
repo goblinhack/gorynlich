@@ -2639,6 +2639,10 @@ void wid_set_on_tick (widp w, on_tick_t fn)
 {
     fast_verify(w);
 
+    if (!fn) {
+        DIE("no ticker function set");
+    }
+
     w->on_tick = fn;
 
     wid_tree5_insert(w);
@@ -3076,7 +3080,9 @@ static void wid_destroy_immediate_internal (widp w)
 {
     fast_verify(w);
 
+    wid_tree3_remove(w);
     wid_tree4_remove(w);
+    wid_tree5_remove(w);
 
     if (w->on_destroy) {
         (w->on_destroy)(w);
@@ -7338,6 +7344,8 @@ void wid_move_all (void)
     widp w;
 
     { TREE2_WALK(wid_top_level3, w) {
+        verify(w);
+
         int32_t x;
         int32_t y;
 
@@ -7383,6 +7391,12 @@ void wid_tick_all (void)
     widp w;
 
     { TREE2_WALK(wid_top_level5, w) {
+        verify(w);
+
+        if (!w->on_tick) {
+            DIE("wid on ticker tree, but no callback set");
+        }
+
         (w->on_tick)(w);
     } }
 

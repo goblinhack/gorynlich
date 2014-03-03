@@ -128,6 +128,7 @@ void quit (void)
     sdl_fini();
     config_fini();
     enum_fmt_destroy();
+    blit_fini();
 
     if (EXEC_FULL_PATH_AND_NAME) {
         myfree(EXEC_FULL_PATH_AND_NAME);
