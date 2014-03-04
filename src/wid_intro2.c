@@ -400,50 +400,30 @@ static void wid_intro2_create (void)
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro2, "play");
+        child = wid_new_container(wid_intro2, "play");
         wid_set_font(child, med_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.2f, 0.70f};
-        fpoint br = {0.8f, 0.90f};
+        fpoint tl = {0.0f, 0.50f};
+        fpoint br = {0.9f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Choose player");
+        wid_set_text(child, "Choose or click to continue");
         wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
-        wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_on_mouse_down(child, wid_intro2_play_mouse_event);
         wid_set_on_key_down(child, wid_intro2_play_key_event);
         wid_set_text_outline(child, true);
+        wid_raise(child);
     }
 
     {
-        wid_intro_player_container = wid_new_window("players");
+        wid_intro_player_container = wid_new_container(wid_intro2, 
+                                                           "intro2 players");
 
         fpoint tl = {0.75f, 0.43f};
         fpoint br = {1.0, 1.0f};
         wid_set_tl_br_pct(wid_intro_player_container, tl, br);
-
-        color col = BLACK;
-        col.a = 0;
-        glcolor(col);
-
-        wid_set_mode(wid_intro_player_container, WID_MODE_NORMAL);
-        wid_set_color(wid_intro_player_container, WID_COLOR_TL, col);
-        wid_set_color(wid_intro_player_container, WID_COLOR_BR, col);
-        wid_set_color(wid_intro_player_container, WID_COLOR_BG, col);
 
         x = 0;
         y = 0;
@@ -467,6 +447,7 @@ static void wid_intro2_create (void)
         wid_set_color(w, WID_COLOR_TL, STEELBLUE);
         wid_set_color(w, WID_COLOR_BR, STEELBLUE);
         wid_set_text_outline(w, true);
+        wid_raise(w);
     }
 
     {
@@ -488,6 +469,7 @@ static void wid_intro2_create (void)
         wid_set_bevel(w, 2);
         wid_set_text_outline(w, true);
         wid_set_on_mouse_down(w, wid_intro2_select_name_event);
+        wid_raise(w);
     }
 
     {
@@ -506,6 +488,7 @@ static void wid_intro2_create (void)
         wid_set_color(w, WID_COLOR_TL, STEELBLUE);
         wid_set_color(w, WID_COLOR_BR, STEELBLUE);
         wid_set_text_outline(w, true);
+        wid_raise(w);
     }
 
     {
@@ -524,6 +507,7 @@ static void wid_intro2_create (void)
         wid_set_color(w, WID_COLOR_TL, STEELBLUE);
         wid_set_color(w, WID_COLOR_BR, STEELBLUE);
         wid_set_text_outline(w, true);
+        wid_raise(w);
     }
 
     {
