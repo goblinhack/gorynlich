@@ -6359,6 +6359,8 @@ void wid_mouse_motion (int32_t x, int32_t y,
         return;
     }
 
+    boolean over = false;
+
     TREE_WALK(wid_top_level, w) {
         fast_verify(w);
 
@@ -6385,20 +6387,28 @@ void wid_mouse_motion (int32_t x, int32_t y,
             w = w->parent;
         }
 
-        if (!w) {
-            wid_mouse_over_end();
+        boolean done = false;
 
+        if (!w) {
             /*
              * Allow scrollbar to grab.
              */
             w = orig_wid;
-        }
+        } else {
+            /*
+             * This widget reacted somehow when we went over it. i.e. popup ot 
+             * function.
+             */
+            done = true;
 
-        boolean done = false;
+            over = true;
+        }
 
         w = wid_mouse_motion_handler(x, y, relx, rely, wheelx, wheely);
         if (w) {
-            wid_mouse_over_begin(w, x, y);
+            if (wid_mouse_over_begin(w, x, y)) {
+                over = true;
+            }
 
             /*
              * If the mouse event is fully processed then do not pass onto
@@ -6409,7 +6419,7 @@ void wid_mouse_motion (int32_t x, int32_t y,
 
                 if ((*w->on_mouse_motion)(w, x, y,
                                           relx, rely, wheelx, wheely)) {
-                    return;
+                    break;
                 }
             }
 
@@ -6420,13 +6430,13 @@ void wid_mouse_motion (int32_t x, int32_t y,
              */
             if (w->tooltip) {
                 if (!wheelx && !wheely) {
-                    return;
+                    break;
                 }
             }
 
             if (wid_over == w) {
                 if (!wheelx && !wheely) {
-                    return;
+                    break;
                 }
             }
 
@@ -6458,11 +6468,15 @@ void wid_mouse_motion (int32_t x, int32_t y,
                  */
                 w = w->parent;
             }
-        }
+        } 
 
         if (done) {
-            return;
+            break;
         }
+    }
+
+    if (!over) {
+        wid_mouse_over_end();
     }
 }
 
