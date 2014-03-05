@@ -402,7 +402,8 @@ static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
     return (true);
 }
 
-static boolean wid_server_join_leave (widp w, int32_t x, int32_t y, uint32_t button)
+static boolean wid_server_join_leave (widp w, int32_t x, int32_t y, 
+                                      uint32_t button)
 {
     server *s = wid_get_client_context(w);
     if (!s) {
@@ -425,7 +426,8 @@ static boolean wid_server_join_leave (widp w, int32_t x, int32_t y, uint32_t but
     return (true);
 }
 
-static boolean wid_server_join_delete (widp w, int32_t x, int32_t y, uint32_t button)
+static boolean wid_server_join_delete (widp w, int32_t x, int32_t y, 
+                                       uint32_t button)
 {
     server *s = wid_get_client_context(w);
     if (!s) {
