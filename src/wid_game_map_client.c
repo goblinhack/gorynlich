@@ -188,6 +188,8 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     player->y -= THING_COORD_MOVE * (double)up;
     player->y += THING_COORD_MOVE * (double)down;
 
+wid_move_delta_pct_in(wid_game_map_client_grid_container, 0.1, 0.1, 100);
+
     thing_client_wid_update(player, player->x, player->y, true);
 
     socket_tx_client_move(client_joined_server, player, up, down, left, right);
