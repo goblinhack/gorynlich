@@ -17,6 +17,13 @@ typedef struct level_t_ {
     char end_pipe[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
 
     /*
+     * Possible places for players to start.
+     */
+    fpoint player_start_position[MAX_PLAYERS];
+    uint8_t player_start_max;
+    uint8_t player_start_at;
+
+    /*
      * On screen name for level.
      */
     char *title;
