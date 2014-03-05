@@ -20,6 +20,7 @@
 #include "thing.h"
 #include "map.h"
 #include "level.h"
+#include "level_private.h"
 #include "server.h"
 #include "client.h"
 #include "socket.h"
@@ -212,6 +213,45 @@ wid_game_map_server_replace_tile (widp w,
 
     level = (typeof(level)) wid_get_client_context(w);
     verify(level);
+
+    /*
+     * If we find a player, it is really a placeholder of where to put a 
+     * future player who joins.
+     */
+    if (thing_template_is_player(thing_template)) {
+        if ((x == 0) && (y == 0)) {
+            /*
+             * Grab a position from the list loaded.
+             */
+            x = level->player_start_position[level->player_start_at].x;
+            y = level->player_start_position[level->player_start_at].y;
+            level->player_start_at++;
+
+            if (level->player_start_at >= level->player_start_max) {
+                level->player_start_at = 0;
+            }
+        } else {
+            /*
+             * Add a position to the list.
+             */
+            if (level->player_start_max == MAX_PLAYERS) {
+                ERR("Too many player start positions in level");
+                return (0);
+            }
+
+            /*
+             * Append to the array of possible start positions.
+             */
+            level->player_start_position[level->player_start_max].x = x;
+            level->player_start_position[level->player_start_max].y = y;
+            level->player_start_max++;
+
+            /*
+             * Dummy value just so it is not an error.
+             */
+            return (w);
+        }
+    }
 
     /*
      * Grow tl and br to fit the template thing. Use the first tile.

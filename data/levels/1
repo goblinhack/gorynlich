@@ -2,6 +2,22 @@
  title="bob" {  
   width=64 
   height=64 {   
+   x=3 
+   y=1 
+   t="data/things/warrior" 
+  } {   
+   x=5 
+   y=3 
+   t="data/things/warrior" 
+  } {   
+   x=5 
+   y=1 
+   t="data/things/warrior" 
+  } {   
+   x=3 
+   y=3 
+   t="data/things/warrior" 
+  } {   
    x=0 
    y=0 
    t="data/things/wall" 
