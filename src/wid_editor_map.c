@@ -947,12 +947,12 @@ void wid_editor_map_wid_create (void)
                               wid_editor_map_receive_mouse_down);
         wid_set_on_mouse_motion(wid_editor_map_window,
                                 wid_editor_map_receive_mouse_motion);
+        wid_set_on_mouse_motion(wid_editor_map_window,
+                                wid_editor_map_tile_mouse_motion);
         wid_set_on_mouse_up(wid_editor_map_window,
                             wid_editor_map_receive_mouse_up);
         wid_set_on_key_down(wid_editor_map_window,
                             wid_editor_map_tile_key_down_event);
-        wid_set_on_mouse_motion(wid_editor_map_window,
-                                wid_editor_map_tile_mouse_motion);
         wid_set_on_key_up(wid_editor_map_window,
                           wid_editor_map_tile_key_up_event);
 

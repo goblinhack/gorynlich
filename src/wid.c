@@ -6399,8 +6399,6 @@ void wid_mouse_motion (int32_t x, int32_t y,
              * This widget reacted somehow when we went over it. i.e. popup ot 
              * function.
              */
-            done = true;
-
             over = true;
         }
 
