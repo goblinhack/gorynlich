@@ -16,7 +16,6 @@
 #include "wid_textbox.h"
 #include "wid_game_map_client.h"
 #include "wid_intro.h"
-#include "wid_editor.h"
 #include "thing.h"
 #include "map.h"
 #include "level.h"
@@ -30,6 +29,8 @@
 levelp client_level;
 widp wid_game_map_client_window;
 widp wid_game_map_client_grid_container;
+static widp wid_game_map_client_horiz_scroll;
+static widp wid_game_map_client_vert_scroll;
 widp wid_scoreline_container_top;
 widp wid_scoreline_container_bot;
 widp wid_score;
@@ -125,6 +126,25 @@ void wid_game_map_client_visible (void)
     wid_raise(wid_game_map_client_window);
 }
 
+static boolean wid_game_map_client_receive_mouse_motion (
+                    widp w,
+                    int32_t x, int32_t y,
+                    int32_t relx, int32_t rely,
+                    int32_t wheelx, int32_t wheely)
+{
+    if (wheelx || wheely) {
+        /*
+         * Allow scrolling.
+         */
+        return (false);
+    }
+
+    /*
+     * Block moving the window.
+     */
+    return (true);
+}
+
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
 #if 0
@@ -188,8 +208,6 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     player->y -= THING_COORD_MOVE * (double)up;
     player->y += THING_COORD_MOVE * (double)down;
 
-wid_move_delta_pct_in(wid_game_map_client_grid_container, 0.1, 0.1, 100);
-
     thing_client_wid_update(player, player->x, player->y, true);
 
     socket_tx_client_move(client_joined_server, player, up, down, left, right);
@@ -228,6 +246,8 @@ void wid_game_map_client_wid_create (void)
         wid_set_text_bot(wid_game_map_client_window, true);
         wid_set_text_lhs(wid_game_map_client_window, true);
         wid_set_tl_br_pct(wid_game_map_client_window, tl, br);
+        wid_set_on_mouse_motion(wid_game_map_client_window,
+                                wid_game_map_client_receive_mouse_motion);
 
         fsize sz = {0.0f, 0.0f};
         wid_set_tex_tl(wid_game_map_client_window, sz);
@@ -287,15 +307,28 @@ void wid_game_map_client_wid_create (void)
                      TILES_MAP_HEIGHT, client_tile_width, client_tile_height);
     }
 
-    wid_visible(wid_game_map_client_window, 0);
-
     client_level = level_new(wid_game_map_client_grid_container, 0);
     if (!client_level) {
         WARN("failed to load level");
-        return;
     }
 
+    wid_game_map_client_vert_scroll =
+        wid_new_vert_scroll_bar(wid_game_map_client_window,
+                                wid_game_map_client_grid_container);
+    wid_game_map_client_horiz_scroll =
+        wid_new_horiz_scroll_bar(wid_game_map_client_window,
+                                 wid_game_map_client_grid_container);
+
+    wid_visible(wid_get_parent(wid_game_map_client_vert_scroll), 1);
+    wid_visible(wid_get_parent(wid_game_map_client_horiz_scroll), 1);
+
+    wid_visible(wid_game_map_client_vert_scroll, 1);
+    wid_visible(wid_game_map_client_horiz_scroll, 1);
+
+    wid_move_to_bottom(wid_game_map_client_vert_scroll);
+
     wid_game_map_client_score_update(client_level);
+
 }
 
 void wid_game_map_client_wid_destroy (void)
