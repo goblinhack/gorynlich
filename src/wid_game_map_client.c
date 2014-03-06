@@ -212,6 +212,66 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
     socket_tx_client_move(client_joined_server, player, up, down, left, right);
 
+    float px = player->x;
+    float py = player->y;
+
+    static boolean bounds_set;
+    static float minx;
+    static float miny;
+    static float maxx;
+    static float maxy;
+
+    if (!bounds_set) {
+        minx = px - ((float)TILES_SCREEN_WIDTH / 3.0);
+        maxx = px + ((float)TILES_SCREEN_WIDTH / 3.0);
+
+        miny = py - ((float)TILES_SCREEN_HEIGHT / 3.0);
+        maxy = py + ((float)TILES_SCREEN_HEIGHT / 3.0);
+
+        bounds_set = true;
+    }
+
+    float scroll_step = 0.1;
+    float scroll_speed = 500;
+
+    if (px < minx) {
+        minx += -scroll_step;
+        maxx += -scroll_step;
+    } else if (px > maxx) {
+        minx += scroll_step;
+        maxx += scroll_step;
+    }
+
+    if (py < miny) {
+        miny += -scroll_step;
+        maxy += -scroll_step;
+        wid_move_to_pct_in(wid_game_map_client_vert_scroll, 
+                           0, miny, scroll_speed);
+    } else if (py > maxy) {
+        miny += scroll_step;
+        maxy += scroll_step;
+    }
+
+    if (minx < 0) {
+        minx = 0;
+    }
+
+    if (miny < 0) {
+        miny = 0;
+    }
+
+    if (maxx > 1.0) {
+        maxx = 1.0;
+    }
+
+    if (maxy > 1.0) {
+        maxy = 1.0;
+    }
+
+LOG("x %f  %f  min %f %f     max %f %f ",px,py, minx,miny, maxx,maxy);
+    wid_move_to_pct_in(wid_game_map_client_vert_scroll, 0, miny, scroll_speed);
+    wid_move_to_pct_in(wid_game_map_client_horiz_scroll, minx, 0, scroll_speed);
+
     return (false);
 }
 
@@ -325,10 +385,7 @@ void wid_game_map_client_wid_create (void)
     wid_visible(wid_game_map_client_vert_scroll, 1);
     wid_visible(wid_game_map_client_horiz_scroll, 1);
 
-    wid_move_to_bottom(wid_game_map_client_vert_scroll);
-
     wid_game_map_client_score_update(client_level);
-
 }
 
 void wid_game_map_client_wid_destroy (void)
