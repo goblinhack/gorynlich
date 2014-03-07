@@ -145,6 +145,103 @@ static boolean wid_game_map_client_receive_mouse_motion (
     return (true);
 }
 
+static float minx;
+static float miny;
+static float maxx;
+static float maxy;
+
+static const float map_scroll_step = 1;
+static const float map_scroll_speed = 1000;
+static const float map_vis_width = ((float)TILES_SCREEN_HEIGHT * 0.8);
+static const float map_vis_height = ((float)TILES_SCREEN_HEIGHT * 0.8);
+static const float map_hvis_width = map_vis_width / 2.0;
+static const float map_hvis_height = map_vis_height / 2.0;
+static const float map_scale_width = 1.0 / ((float)TILES_SCREEN_HEIGHT);
+static const float map_scale_height = 1.0 / ((float)TILES_SCREEN_HEIGHT);
+
+static void map_scroll_set_limits (void)
+{
+    if (minx < 0) {
+        minx = 0;
+        maxx = minx + map_vis_width;
+    }
+
+    if (maxx > TILES_MAP_WIDTH) {
+        maxx = TILES_MAP_WIDTH;
+        minx = maxx - map_vis_width;;
+    }
+
+    if (miny < 0) {
+        miny = 0;
+        maxy = miny + map_vis_height;
+    }
+
+    if (maxy > TILES_MAP_HEIGHT) {
+        maxy = TILES_MAP_HEIGHT;
+        miny = maxy - map_vis_height;;
+    }
+}
+
+static void map_scroll_fixup (void) 
+{
+    static boolean bounds_set;
+    boolean moved = false;
+    float px = player->x;
+    float py = player->y;
+
+    if (!bounds_set) {
+        bounds_set = true;
+        moved = true;
+
+        minx = px - map_hvis_width;
+        maxx = px + map_hvis_width;
+
+        miny = py - map_hvis_height;
+        maxy = py + map_hvis_height;
+    }
+
+    map_scroll_set_limits();
+
+    if (px < minx) {
+        minx -= map_scroll_step;
+        maxx -= map_scroll_step;
+        moved = true;
+    } else if (px > maxx) {
+        minx += map_scroll_step;
+        maxx += map_scroll_step;
+        moved = true;
+    }
+
+    if (py < miny) {
+        miny -= map_scroll_step;
+        maxy -= map_scroll_step;
+        moved = true;
+    } else if (py > maxy) {
+        miny += map_scroll_step;
+        maxy += map_scroll_step;
+        moved = true;
+    }
+
+    map_scroll_set_limits();
+
+LOG("x %f  %f  min %f %f     max %f %f ",px,py, minx,miny, maxx,maxy);
+
+    if (!moved) {
+        return;
+    }
+
+    map_scroll_set_limits();
+
+    float sx = minx * map_scale_width;
+    float sy = miny * map_scale_height;
+
+LOG("%f %f ", sx,sy);
+    wid_move_to_pct_in(wid_game_map_client_vert_scroll, 0, sy, 
+                       map_scroll_speed);
+    wid_move_to_pct_in(wid_game_map_client_horiz_scroll, sx, 0, 
+                       map_scroll_speed);
+}
+
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
 #if 0
@@ -208,71 +305,29 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     player->y -= THING_COORD_MOVE * (double)up;
     player->y += THING_COORD_MOVE * (double)down;
 
+    if (player->x < 0) {
+        player->x = 0;
+    }
+
+    if (player->y < 0) {
+        player->y = 0;
+    }
+
+    if (player->x > TILES_MAP_WIDTH - 1) {
+        player->x = TILES_MAP_WIDTH - 1;
+    }
+
+    if (player->y > TILES_MAP_HEIGHT - 1) {
+        player->y = TILES_MAP_HEIGHT - 1;
+    }
+
     thing_client_wid_update(player, player->x, player->y, true);
 
     socket_tx_client_move(client_joined_server, player, up, down, left, right);
 
-    float px = player->x;
-    float py = player->y;
+    map_scroll_fixup();
 
-    static boolean bounds_set;
-    static float minx;
-    static float miny;
-    static float maxx;
-    static float maxy;
-
-    if (!bounds_set) {
-        minx = px - ((float)TILES_SCREEN_WIDTH / 3.0);
-        maxx = px + ((float)TILES_SCREEN_WIDTH / 3.0);
-
-        miny = py - ((float)TILES_SCREEN_HEIGHT / 3.0);
-        maxy = py + ((float)TILES_SCREEN_HEIGHT / 3.0);
-
-        bounds_set = true;
-    }
-
-    float scroll_step = 0.1;
-    float scroll_speed = 500;
-
-    if (px < minx) {
-        minx += -scroll_step;
-        maxx += -scroll_step;
-    } else if (px > maxx) {
-        minx += scroll_step;
-        maxx += scroll_step;
-    }
-
-    if (py < miny) {
-        miny += -scroll_step;
-        maxy += -scroll_step;
-        wid_move_to_pct_in(wid_game_map_client_vert_scroll, 
-                           0, miny, scroll_speed);
-    } else if (py > maxy) {
-        miny += scroll_step;
-        maxy += scroll_step;
-    }
-
-    if (minx < 0) {
-        minx = 0;
-    }
-
-    if (miny < 0) {
-        miny = 0;
-    }
-
-    if (maxx > 1.0) {
-        maxx = 1.0;
-    }
-
-    if (maxy > 1.0) {
-        maxy = 1.0;
-    }
-
-LOG("x %f  %f  min %f %f     max %f %f ",px,py, minx,miny, maxx,maxy);
-    wid_move_to_pct_in(wid_game_map_client_vert_scroll, 0, miny, scroll_speed);
-    wid_move_to_pct_in(wid_game_map_client_horiz_scroll, minx, 0, scroll_speed);
-
-    return (false);
+    return (true);
 }
 
 /*
