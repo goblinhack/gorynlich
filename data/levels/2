@@ -2566,7 +2566,7 @@
    y=16 
    t="data/things/floor" 
   } {   
-   x=32 
+   x=31 
    y=16 
    t="data/things/wall" 
   } {   
@@ -2706,7 +2706,7 @@
    y=17 
    t="data/things/floor" 
   } {   
-   x=32 
+   x=31 
    y=17 
    t="data/things/wall" 
   } {   
@@ -2846,7 +2846,7 @@
    y=18 
    t="data/things/floor" 
   } {   
-   x=32 
+   x=31 
    y=18 
    t="data/things/wall" 
   } {   
@@ -4739,7 +4739,7 @@
    t="data/things/floor" 
   } {   
    x=31 
-   y=32 
+   y=31 
    t="data/things/wall" 
   } 
  } 

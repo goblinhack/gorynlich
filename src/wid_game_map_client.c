@@ -150,35 +150,51 @@ static float miny;
 static float maxx;
 static float maxy;
 
-static const float map_scroll_step = 1;
-static const float map_scroll_speed = 1000;
-static const float map_vis_width = ((float)TILES_SCREEN_HEIGHT * 0.8);
-static const float map_vis_height = ((float)TILES_SCREEN_HEIGHT * 0.8);
-static const float map_hvis_width = map_vis_width / 2.0;
-static const float map_hvis_height = map_vis_height / 2.0;
-static const float map_scale_width = 1.0 / ((float)TILES_SCREEN_HEIGHT);
-static const float map_scale_height = 1.0 / ((float)TILES_SCREEN_HEIGHT);
+static const float map_scale_width  = 1.0 / ((float)TILES_MAP_WIDTH);
+static const float map_scale_height = 1.0 / ((float)TILES_MAP_HEIGHT);
+
+static const float map_vis_width    = map_scale_width *
+                                      ((float)TILES_SCREEN_HEIGHT);
+static const float map_vis_height   = map_scale_height *
+                                      ((float)TILES_SCREEN_HEIGHT);
+
+static const float map_scroll_thresh_horiz
+                                    = map_scale_width  * 5.0;
+static const float map_scroll_thresh_vert   
+                                    = map_scale_height * 5.0;
+static const float map_scroll_percent = 0.05;
+static const float map_scroll_speed   = 750;
+
+static const float map_scroll_thresh_horiz2
+                                    = map_scale_width  * 3.0;
+static const float map_scroll_thresh_vert2   
+                                    = map_scale_height * 3.0;
+static const float map_scroll_percent2 = 0.2;
+static const float map_scroll_speed2   = 250;
+
+static const float map_hvis_width   = map_vis_width  / 2.0;
+static const float map_hvis_height  = map_vis_height / 2.0;
 
 static void map_scroll_set_limits (void)
 {
-    if (minx < 0) {
-        minx = 0;
-        maxx = minx + map_vis_width;
+    if (minx < 0.0) {
+        minx = 0.0;
+        maxx = map_vis_width;
     }
 
-    if (maxx > TILES_MAP_WIDTH) {
-        maxx = TILES_MAP_WIDTH;
-        minx = maxx - map_vis_width;;
+    if (maxx > 1.0) {
+        minx = 1.0 - map_vis_width;
+        maxx = 1.0;
     }
 
-    if (miny < 0) {
-        miny = 0;
-        maxy = miny + map_vis_height;
+    if (miny < 0.0) {
+        miny = 0.0;
+        maxy = map_vis_height;
     }
 
-    if (maxy > TILES_MAP_HEIGHT) {
-        maxy = TILES_MAP_HEIGHT;
-        miny = maxy - map_vis_height;;
+    if (maxy > 1.0) {
+        miny = 1.0 - map_vis_height;
+        maxy = 1.0;
     }
 }
 
@@ -186,8 +202,8 @@ static void map_scroll_fixup (void)
 {
     static boolean bounds_set;
     boolean moved = false;
-    float px = player->x;
-    float py = player->y;
+    float px = (player->x * map_scale_width)  + (map_scale_width  / 2.0);
+    float py = (player->y * map_scale_height) + (map_scale_height / 2.0);
 
     if (!bounds_set) {
         bounds_set = true;
@@ -201,45 +217,60 @@ static void map_scroll_fixup (void)
     }
 
     map_scroll_set_limits();
+    float speed = map_scroll_speed;
 
-    if (px < minx) {
-        minx -= map_scroll_step;
-        maxx -= map_scroll_step;
+    if (px < minx + map_scroll_thresh_horiz2) {
+        minx -= map_scroll_percent2;
+        maxx -= map_scroll_percent2;
+        speed = map_scroll_speed2;
         moved = true;
-    } else if (px > maxx) {
-        minx += map_scroll_step;
-        maxx += map_scroll_step;
+    } else if (px > maxx - map_scroll_thresh_horiz2) {
+        minx += map_scroll_percent2;
+        maxx += map_scroll_percent2;
+        speed = map_scroll_speed2;
+        moved = true;
+    } else if (px < minx + map_scroll_thresh_horiz) {
+        minx -= map_scroll_percent;
+        maxx -= map_scroll_percent;
+        speed = map_scroll_speed;
+        moved = true;
+    } else if (px > maxx - map_scroll_thresh_horiz) {
+        minx += map_scroll_percent;
+        maxx += map_scroll_percent;
+        speed = map_scroll_speed;
         moved = true;
     }
 
-    if (py < miny) {
-        miny -= map_scroll_step;
-        maxy -= map_scroll_step;
+    if (py < miny + map_scroll_thresh_vert2) {
+        miny -= map_scroll_percent2;
+        maxy -= map_scroll_percent2;
+        speed = map_scroll_speed2;
         moved = true;
-    } else if (py > maxy) {
-        miny += map_scroll_step;
-        maxy += map_scroll_step;
+    } else if (py > maxy - map_scroll_thresh_vert2) {
+        miny += map_scroll_percent2;
+        maxy += map_scroll_percent2;
+        speed = map_scroll_speed2;
+        moved = true;
+    } else if (py < miny + map_scroll_thresh_vert) {
+        miny -= map_scroll_percent;
+        maxy -= map_scroll_percent;
+        speed = map_scroll_speed;
+        moved = true;
+    } else if (py > maxy - map_scroll_thresh_vert) {
+        miny += map_scroll_percent;
+        maxy += map_scroll_percent;
+        speed = map_scroll_speed;
         moved = true;
     }
 
     map_scroll_set_limits();
-
-LOG("x %f  %f  min %f %f     max %f %f ",px,py, minx,miny, maxx,maxy);
 
     if (!moved) {
         return;
     }
 
-    map_scroll_set_limits();
-
-    float sx = minx * map_scale_width;
-    float sy = miny * map_scale_height;
-
-LOG("%f %f ", sx,sy);
-    wid_move_to_pct_in(wid_game_map_client_vert_scroll, 0, sy, 
-                       map_scroll_speed);
-    wid_move_to_pct_in(wid_game_map_client_horiz_scroll, sx, 0, 
-                       map_scroll_speed);
+    wid_move_to_vert_pct_in(wid_game_map_client_vert_scroll, miny, speed);
+    wid_move_to_horiz_pct_in(wid_game_map_client_horiz_scroll, minx, speed);
 }
 
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
