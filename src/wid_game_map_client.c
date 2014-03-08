@@ -159,18 +159,18 @@ static const float map_vis_height   = map_scale_height *
                                       ((float)TILES_SCREEN_HEIGHT);
 
 static const float map_scroll_thresh_horiz
-                                    = map_scale_width  * 5.0;
+                                    = map_scale_width  * 6.0;
 static const float map_scroll_thresh_vert   
-                                    = map_scale_height * 5.0;
-static const float map_scroll_percent = 0.05;
-static const float map_scroll_speed   = 750;
+                                    = map_scale_height * 6.0;
+static const float map_scroll_percent = 0.01;
+static const float map_scroll_speed   = 200;
 
 static const float map_scroll_thresh_horiz2
-                                    = map_scale_width  * 3.0;
+                                    = map_scale_width  * 5.0;
 static const float map_scroll_thresh_vert2   
-                                    = map_scale_height * 3.0;
-static const float map_scroll_percent2 = 0.2;
-static const float map_scroll_speed2   = 250;
+                                    = map_scale_height * 5.0;
+static const float map_scroll_percent2 = 0.02;
+static const float map_scroll_speed2   = 200;
 
 static const float map_hvis_width   = map_vis_width  / 2.0;
 static const float map_hvis_height  = map_vis_height / 2.0;
