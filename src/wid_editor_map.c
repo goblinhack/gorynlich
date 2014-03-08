@@ -74,6 +74,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     if ((x < 0) || (y < 0) ||
         (x >= TILES_MAP_EDITABLE_WIDTH) ||
         (y >= TILES_MAP_EDITABLE_HEIGHT)) {
+        ERR("overflow on placing tile at %d,%d", x,y); 
         return (0);
     }
 
