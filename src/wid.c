@@ -3879,7 +3879,6 @@ boolean demarshal_wid_grid (demarshal_p ctx, widp w,
     uint32_t width;
     uint32_t height;
     widgrid *grid;
-    uint32_t i;
     uint32_t x;
     uint32_t y;
     widp child;
@@ -3897,7 +3896,7 @@ boolean demarshal_wid_grid (demarshal_p ctx, widp w,
     GET_NAMED_UINT32(ctx, "width", width);
     GET_NAMED_UINT32(ctx, "height", height);
 
-    for (i = 0; i < grid->nelems; i++) {
+    for (;;) {
         if (!GET_PEEK_BRA(ctx)) {
             break;
         }
@@ -6133,11 +6132,6 @@ void wid_move_to_bottom (widp w)
     wid_move_delta(w, 0, wid_get_br_y(w->parent) - wid_get_br_y(w));
 }
 
-void wid_move_to_top (widp w)
-{
-    wid_move_delta(w, 0, wid_get_tl_y(w->parent) - wid_get_tl_y(w));
-}
-
 void wid_move_to_left (widp w)
 {
     wid_move_delta(w, wid_get_tl_x(w->parent) - wid_get_tl_x(w), 0);
@@ -6146,6 +6140,47 @@ void wid_move_to_left (widp w)
 void wid_move_to_right (widp w)
 {
     wid_move_delta(w, wid_get_br_x(w->parent) - wid_get_br_x(w), 0);
+}
+
+void wid_move_to_vert_pct (widp w, float pct)
+{
+    float pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
+    float at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
+    float delta = (pct - at) * pheight;
+    
+    wid_move_delta(w, 0, delta);
+}
+
+void wid_move_to_horiz_pct (widp w, float pct)
+{
+    float pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
+    float at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
+    float delta = (pct - at) * pwidth;
+    
+    wid_move_delta(w, delta, 0);
+}
+
+void wid_move_to_vert_pct_in (widp w, float pct, float in)
+{
+    float pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
+    float at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
+    float delta = (pct - at) * pheight;
+    
+    wid_move_to_abs_in(w, wid_get_tl_x(w), wid_get_tl_y(w) + delta, in);
+}
+
+void wid_move_to_horiz_pct_in (widp w, float pct, float in)
+{
+    float pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
+    float at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
+    float delta = (pct - at) * pwidth;
+    
+    wid_move_to_abs_in(w, wid_get_tl_x(w) + delta, wid_get_tl_y(w), in);
+}
+
+void wid_move_to_top (widp w)
+{
+    wid_move_delta(w, 0, wid_get_tl_y(w->parent) - wid_get_tl_y(w));
 }
 
 static widp wid_mouse_down_handler (int32_t x, int32_t y)

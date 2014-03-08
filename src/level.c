@@ -1110,9 +1110,12 @@ boolean demarshal_level (demarshal_p ctx, levelp level)
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz15", level->is_zzz15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz16", level->is_zzz16);
         GET_OPT_NAMED_BITFIELD(ctx, "is_zzz17", level->is_zzz17);
-        GET_OPT_NAMED_BITFIELD(ctx, "exit_reached_when_open", level->exit_reached_when_open);
-        GET_OPT_NAMED_BITFIELD(ctx, "warned_exit_not_open", level->warned_exit_not_open);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_exit_open", level->exit_reached_when_open);
+        GET_OPT_NAMED_BITFIELD(ctx, "exit_reached_when_open", 
+                               level->exit_reached_when_open);
+        GET_OPT_NAMED_BITFIELD(ctx, "warned_exit_not_open", 
+                               level->warned_exit_not_open);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_exit_open", 
+                               level->exit_reached_when_open);
     } while (demarshal_gotone(ctx));
 
     wid_editor_map_loading = true;
