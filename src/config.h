@@ -23,8 +23,10 @@
  */
 #define ENABLE_GL_BULK_DRAW_ARRAYS 
 
-#define ENABLE_FPS_COUNTER      1 // Frames per sec counter
-#define PING_DELAY_TENTHS       5 // Frequency of client and server pings
+/*
+ * Frames per sec counter.
+ */
+#define ENABLE_FPS_COUNTER          1
 
 /*
  * Screen sizes.
@@ -91,14 +93,24 @@
  * Connections.
  */
 #define DEFAULT_PORT                10000
-
 #define SERVER_DEFAULT_HOST         "localhost"
 #define SERVER_DEFAULT_PORT         DEFAULT_PORT
-
 #define MAX_PACKET_SIZE             4096
 
-#define SOCKET_PING_SEQ_NO_RANGE    20 // how many pings to consider for quality
-#define SOCKET_PING_FAIL_THRESHOLD  10 // 90 percent of ping fails means down
+/*
+ * Frequency of client and server pings
+ */
+#define PING_DELAY_TENTHS           5
+
+/*
+ * How many pings to consider for quality
+ */
+#define SOCKET_PING_SEQ_NO_RANGE    20
+
+/* 
+ * 90 percent of ping fails means down
+ */
+#define SOCKET_PING_FAIL_THRESHOLD  10
 
 /*
  * When converting from thing co-ords where 1.0 is one grid, we must convert
