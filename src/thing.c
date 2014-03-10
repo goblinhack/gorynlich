@@ -1812,13 +1812,13 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         }
 
         uint8_t state = 
-                ((up                ? 1 : 0) << 6) |
-                ((down              ? 1 : 0) << 5) |
-                ((left              ? 1 : 0) << 4) |
-                ((right             ? 1 : 0) << 3) |
-                ((t->resync         ? 1 : 0) << 2) |
-                ((t->is_dead        ? 1 : 0) << 1) |
-                ((t->is_buried      ? 1 : 0) << 0);
+                ((up            ? 1 : 0) << THING_STATE_BIT_SHIFT_UP) |
+                ((down          ? 1 : 0) << THING_STATE_BIT_SHIFT_DOWN) |
+                ((left          ? 1 : 0) << THING_STATE_BIT_SHIFT_LEFT) |
+                ((right         ? 1 : 0) << THING_STATE_BIT_SHIFT_RIGHT) |
+                ((t->resync     ? 1 : 0) << THING_STATE_BIT_SHIFT_RESYNC) |
+                ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_DEAD) |
+                ((t->is_buried  ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_BURIED);
 
         t->resync = 0;
         *data++ = state;
@@ -1946,10 +1946,10 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 thing_template_is_door(thing_template);
         }
 
-        uint8_t up =        (state & (1 << 6)) ? 1 : 0;
-        uint8_t down =      (state & (1 << 5)) ? 1 : 0;
-        uint8_t left =      (state & (1 << 4)) ? 1 : 0;
-        uint8_t right =     (state & (1 << 3)) ? 1 : 0;
+        uint8_t up =    (state & (1 << THING_STATE_BIT_SHIFT_UP))    ? 1 : 0;
+        uint8_t down =  (state & (1 << THING_STATE_BIT_SHIFT_DOWN))  ? 1 : 0;
+        uint8_t left =  (state & (1 << THING_STATE_BIT_SHIFT_LEFT))  ? 1 : 0;
+        uint8_t right = (state & (1 << THING_STATE_BIT_SHIFT_RIGHT)) ? 1 : 0;
 
         if (up) {
             if (left) {
@@ -1980,7 +1980,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 /*
                  * Local echo only.
                  */
-                if ((state & (1 << 2)) ||
+                if ((state & (1 << THING_STATE_BIT_SHIFT_RESYNC)) ||
                     (fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
                     (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
                     /*
@@ -2003,7 +2003,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                                     x, y, t);
         }
 
-        if (state & (1 << 1)) {
+        if (state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD)) {
             thing_dead(t, 0, "server killed");
         }
     }

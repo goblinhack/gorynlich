@@ -2230,10 +2230,6 @@ void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
 
     double x = ((double)msg.x) / THING_COORD_SCALE;
     double y = ((double)msg.y) / THING_COORD_SCALE;
-    double ox = t->x;
-    double oy = t->y;
-
-    thing_server_wid_update(t, x, y);
 
     if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
         (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
@@ -2244,7 +2240,6 @@ void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
 
         t->updated++;
         t->resync = 1;
-        thing_server_wid_update(t, ox, oy);
         return;
     }
 
@@ -2258,9 +2253,9 @@ void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
          */
         t->updated++;
         t->resync = 1;
-        thing_server_wid_update(t, ox, oy);
         return;
     }
 
+    thing_server_wid_update(t, x, y);
     t->updated++;
 }
