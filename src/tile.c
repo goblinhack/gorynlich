@@ -12,6 +12,7 @@
 #include "tile.h"
 #include "tree.h"
 #include "tex.h"
+#include "pixel.h"
 #include "tile_private.h"
 
 tree_root *tiles;
@@ -40,6 +41,7 @@ void tile_fini (void)
     }
 }
 
+#ifdef UNUSED
 void tile_load (const char *tex_name, uint32_t width, uint32_t height,
                 uint32_t nargs, ...)
 {
@@ -106,6 +108,7 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
 
     va_end(args);
 }
+#endif
 
 void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
                     uint32_t nargs, const char *arr[])
@@ -116,6 +119,11 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
     uint32_t x = 0;
     uint32_t y = 0;
     uint32_t idx = 0;
+
+    size pixel_size;
+
+    pixel_size.width = (((float)tex_get_width(tex)) / ((float)width));
+    pixel_size.height = (((float)tex_get_height(tex)) / ((float)height));
 
     while (nargs--) {
 
@@ -151,6 +159,47 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
             t->y2 = t->y1 + fh;
 
             DBG("Tile: %-10s %ux%u (%u, %u)", name, width, height, x, y);
+
+            SDL_Surface *s = tex_get_surface(tex);
+
+	    point AT = {
+                pixel_size.width * x,
+                pixel_size.height * y
+            };
+
+	    point MAX = {
+                pixel_size.width * x,
+		pixel_size.height * y
+            };
+
+	    point MIN = {
+               (pixel_size.width * x) + pixel_size.width - 1,
+	       (pixel_size.height * y) + pixel_size.height - 1
+            };
+
+	    for (int y1=pixel_size.height-1; y1>=0; y1--) {
+		for (int x1=0; x1<pixel_size.width; x1++) {
+
+		    point at = {
+                        (pixel_size.width * x) + x1,
+			(pixel_size.height * y) + y1
+                    };
+
+		    color p = getPixel(s, at.x, at.y);
+
+		    if ((p.r || p.g || p.b) && (p.a == 0xff)) {
+			MIN.x = min(at.x, MIN.x);
+			MIN.y = min(at.y, MIN.y);
+			MAX.x = max(at.x, MAX.x);
+			MAX.y = max(at.y, MAX.y);
+		    }
+		}
+	    }
+
+            t->px1 = ((double) (MIN.x - AT.x)) / (double) pixel_size.width;
+            t->px2 = ((double) (MAX.x - AT.x)) / (double) pixel_size.width;
+            t->py1 = ((double) (MIN.y - AT.y)) / (double) pixel_size.height;
+            t->py2 = ((double) (MAX.y - AT.y)) / (double) pixel_size.height;
         }
 
         x++;

@@ -17,6 +17,7 @@
 #include "tile.h"
 #include "thing.h"
 #include "thing_template.h"
+#include "tile_private.h"
 #include "thing_tile.h"
 #include "command.h"
 #include "time.h"
@@ -6142,38 +6143,38 @@ void wid_move_to_right (widp w)
     wid_move_delta(w, wid_get_br_x(w->parent) - wid_get_br_x(w), 0);
 }
 
-void wid_move_to_vert_pct (widp w, float pct)
+void wid_move_to_vert_pct (widp w, double pct)
 {
-    float pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
-    float at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
-    float delta = (pct - at) * pheight;
+    double pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
+    double at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
+    double delta = (pct - at) * pheight;
     
     wid_move_delta(w, 0, delta);
 }
 
-void wid_move_to_horiz_pct (widp w, float pct)
+void wid_move_to_horiz_pct (widp w, double pct)
 {
-    float pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
-    float at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
-    float delta = (pct - at) * pwidth;
+    double pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
+    double at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
+    double delta = (pct - at) * pwidth;
     
     wid_move_delta(w, delta, 0);
 }
 
-void wid_move_to_vert_pct_in (widp w, float pct, float in)
+void wid_move_to_vert_pct_in (widp w, double pct, double in)
 {
-    float pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
-    float at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
-    float delta = (pct - at) * pheight;
+    double pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
+    double at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
+    double delta = (pct - at) * pheight;
     
     wid_move_to_abs_in(w, wid_get_tl_x(w), wid_get_tl_y(w) + delta, in);
 }
 
-void wid_move_to_horiz_pct_in (widp w, float pct, float in)
+void wid_move_to_horiz_pct_in (widp w, double pct, double in)
 {
-    float pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
-    float at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
-    float delta = (pct - at) * pwidth;
+    double pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
+    double at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
+    double delta = (pct - at) * pwidth;
     
     wid_move_to_abs_in(w, wid_get_tl_x(w) + delta, wid_get_tl_y(w), in);
 }
@@ -7218,8 +7219,8 @@ static void wid_display (widp w,
         /*
          * Fit texture to the window size.
          */
-        texuv.width *= ((float)(br.x - tl.x)) / ((float)tex_get_width(tex));
-        texuv.height *= ((float)(br.y - tl.y)) / ((float)tex_get_height(tex));
+        texuv.width *= ((double)(br.x - tl.x)) / ((double)tex_get_width(tex));
+        texuv.height *= ((double)(br.y - tl.y)) / ((double)tex_get_height(tex));
 
         glBindTexture(GL_TEXTURE_2D, tex_get_gl_binding(tex));
     } else {
@@ -8123,20 +8124,80 @@ double wid_get_rotate (widp w)
 
 boolean wids_overlap (widp A, widp B)
 {
-    double Ax = (A->tree.tl.x + A->tree.br.x) / 2.0;
-    double Ay = (A->tree.tl.y + A->tree.br.y) / 2.0;
-    double Bx = (B->tree.tl.x + B->tree.br.x) / 2.0;
-    double By = (B->tree.tl.y + B->tree.br.y) / 2.0;
+    /*
+     * The rectangles don't overlap if one rectangle's minimum in some 
+     * dimension is greater than the other's maximum in that dimension.
+     */
+    bool no_overlap = (A->tree.tl.x > B->tree.br.x) ||
+                      (B->tree.tl.x > A->tree.br.x) ||
+                      (A->tree.tl.y > B->tree.br.y) ||
+                      (B->tree.tl.y > A->tree.br.y);
 
-    if ((Ax >= B->tree.tl.x) && (Ax <= B->tree.br.x) &&
-        (Ay >= B->tree.tl.y) && (Ay <= B->tree.br.y)) {
-        return (true);
+    return (!no_overlap);
+}
+
+boolean wids_overlap2 (widp A, widp B)
+{
+    /*
+     * The rectangles don't overlap if one rectangle's minimum in some 
+     * dimension is greater than the other's maximum in that dimension.
+     */
+    tilep tA = A->tile;
+    tilep tB = B->tile;
+
+    /*
+     * Width/height of the tiles in pixels.
+     */
+    double wA = A->tree.br.x - A->tree.tl.x;
+    double hA = A->tree.br.y - A->tree.tl.y;
+    double wB = B->tree.br.x - B->tree.tl.x;
+    double hB = B->tree.br.y - B->tree.tl.y;
+
+    double Apx1 = tA->px1;
+    double Apx2 = tA->px2;
+    double Apy1 = tA->py1;
+    double Apy2 = tA->py2;
+
+    double Bpx1 = tB->px1;
+    double Bpx2 = tB->px2;
+    double Bpy1 = tB->py1;
+    double Bpy2 = tB->py2;
+
+    thing_templatep At = wid_get_thing_template(A);
+    thing_templatep Bt = wid_get_thing_template(B);
+
+    double xoverlap = 0.1;
+    double yoverlap = 0.3;
+
+    if (thing_template_is_monst(At) || thing_template_is_player(At)) {
+        Apx1 += xoverlap;
+        Apx2 -= xoverlap;
+        Apy1 += yoverlap;
     }
 
-    if ((Bx >= A->tree.tl.x) && (Bx <= A->tree.br.x) &&
-        (By >= A->tree.tl.y) && (By <= A->tree.br.y)) {
-        return (true);
+    if (thing_template_is_monst(Bt) || thing_template_is_player(Bt)) {
+        Bpx1 += xoverlap;
+        Bpx2 -= xoverlap;
+        Bpy1 += yoverlap;
     }
 
-    return (false);
+    /*
+     * Find the start of pixels in the tile.
+     */
+    double Atlx = A->tree.tl.x + (Apx1 * wA);
+    double Abrx = A->tree.tl.x + (Apx2 * wA);
+    double Atly = A->tree.tl.y + (Apy1 * hA);
+    double Abry = A->tree.tl.y + (Apy2 * hA);
+
+    double Btlx = B->tree.tl.x + (Bpx1 * wB);
+    double Bbrx = B->tree.tl.x + (Bpx2 * wB);
+    double Btly = B->tree.tl.y + (Bpy1 * hB);
+    double Bbry = B->tree.tl.y + (Bpy2 * hB);
+
+    bool no_overlap = (Atlx > Bbrx) ||
+                      (Btlx > Abrx) ||
+                      (Atly > Bbry) ||
+                      (Btly > Abry);
+
+    return (!no_overlap);
 }
