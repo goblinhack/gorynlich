@@ -364,7 +364,6 @@ void wid_get_grid_coord(widp w, int32_t *x, int32_t *y,
                         boolean *aligned_y);
 void wid_get_grid_dim(widp w, uint32_t *x, uint32_t *y);
 boolean wids_overlap(widp A, widp B);
-boolean wids_overlap2(widp A, widp B);
 
 extern const int32_t wid_fade_delay;
 extern const int32_t wid_hide_delay;
