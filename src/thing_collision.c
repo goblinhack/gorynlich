@@ -11,10 +11,10 @@
 #include "thing.h"
 #include "thing_template.h"
 #include "wid.h"
-#include "level.h"
 #include "map.h"
 #include "wid_tooltip.h"
 #include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "sound.h"
 #include "timer.h"
 
@@ -25,7 +25,6 @@ void thing_collision (thingp t, int32_t x, int32_t y)
 {
     thing_templatep me;
     thing_templatep it;
-    levelp level;
     widp wid_next;
     widp wid_me;
     widp wid_it;
@@ -36,14 +35,9 @@ void thing_collision (thingp t, int32_t x, int32_t y)
     me = thing_get_template(t);
 
     if (!thing_template_is_player(me) &&
-        !thing_template_is_plant(me) &&
-        !thing_template_is_seedpod(me) &&
-        !thing_template_is_bomb(me)) {
+        !thing_template_is_monst(me)) {
         return;
     }
-
-    level = thing_level(t);
-    verify(level);
 
     /*
      * Popped from the level?
@@ -95,4 +89,58 @@ void thing_collision (thingp t, int32_t x, int32_t y)
 
         wid_it = wid_next;
     }
+}
+
+/*
+ * Have we hit anything?
+ */
+boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
+{
+    thing_templatep it;
+    widp wid_next;
+    widp wid_me;
+    widp wid_it;
+
+    verify(t);
+    wid_me = thing_wid(t);
+    verify(wid_me);
+
+    int32_t dx, dy;
+
+    for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
+        int32_t x = (int32_t)nx + dx;
+        int32_t y = (int32_t)ny + dy;
+
+        wid_it = wid_grid_find_first(grid, x, y);
+        while (wid_it) {
+            verify(wid_it);
+
+            wid_next = wid_grid_find_next(grid, wid_it, x, y);
+            if (wid_me == wid_it) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            it = wid_get_thing_template(wid_it);
+            if (thing_template_is_floor(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (!thing_template_is_wall(it) && 
+                !thing_template_is_door(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (!wids_overlap2(wid_me, wid_it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            return (true);
+        }
+    }
+
+    return (false);
 }

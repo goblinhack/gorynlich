@@ -446,10 +446,6 @@ void THING_LOG (thingp t, const char *fmt, ...)
 {
     va_list args;
 
-    if (!debug_enabled) {
-        return;
-    }
-
     verify(t);
 
     va_start(args, fmt);

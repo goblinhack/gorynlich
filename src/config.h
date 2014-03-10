@@ -110,3 +110,11 @@
  * How much we allow the player to move per step. Fraction of one grid.
  */
 #define THING_COORD_MOVE            0.25
+
+/*
+ * How many tiles difference between the client and server do we allow.
+ * This allows local moves to occur without the lag of waiting for the
+ * server. Set this too high and the client can push through walls. Too
+ * low and it will be jerky, jumping back when we have high latency.
+ */
+#define THING_MAX_SERVER_DISCREPANCY 1.0
