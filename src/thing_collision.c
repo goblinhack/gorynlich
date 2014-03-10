@@ -21,7 +21,10 @@
 #include "sound.h"
 #include "timer.h"
 
-static boolean things_overlap (const thingp A, const thingp B)
+static boolean things_overlap (const thingp A, 
+                               double nx,
+                               double ny,
+                               const thingp B)
 {
     static tilep wall;
     static double xscale;
@@ -74,10 +77,10 @@ static boolean things_overlap (const thingp A, const thingp B)
     /*
      * Find the start of pixels in the tile.
      */
-    double Atlx = A->x + Apx1;
-    double Abrx = A->x + Apx2;
-    double Atly = A->y + Apy1;
-    double Abry = A->y + Apy2;
+    double Atlx = nx + Apx1;
+    double Abrx = nx + Apx2;
+    double Atly = ny + Apy1;
+    double Abry = ny + Apy2;
 
     double Btlx = B->x + Bpx1;
     double Bbrx = B->x + Bpx2;
@@ -214,7 +217,7 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
-            if (!things_overlap(me, it)) {
+            if (!things_overlap(me, nx, ny, it)) {
                 wid_it = wid_next;
                 continue;
             }

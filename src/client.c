@@ -834,7 +834,7 @@ static void client_check_still_in_game (void)
         return;
     }
 
-    if (!time_have_x_tenths_passed_since(PING_DELAY_TENTHS * 2,
+    if (!time_have_x_tenths_passed_since(PING_DELAY_TENTHS,
                                          client_joined_server_when)) {
         return;
     }

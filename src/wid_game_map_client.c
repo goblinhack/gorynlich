@@ -345,26 +345,21 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     y -= THING_COORD_MOVE * (double)up;
     y += THING_COORD_MOVE * (double)down;
 
-    double ox = player->x;
-    double oy = player->y;
-
-    thing_client_wid_update(player, x, y, false);
-
     if (thing_hit_solid_obstacle(wid_game_map_client_grid_container,
                                  player, x, y)) {
-        thing_client_wid_update(player, ox, oy, false);
-        LOG(" no move");
         return (true);
     }
 
-    thing_client_wid_update(player, ox, oy, false);
     thing_client_wid_update(player, x, y, true);
 
     socket_tx_client_move(client_joined_server, player, up, down, left, right);
 
     map_scroll_fixup();
 
-    return (true);
+    /*
+     * If no key then we allow the console.
+     */
+    return (up || down || left || right);
 }
 
 /*
@@ -607,9 +602,10 @@ void wid_game_map_client_score_update (levelp level)
         br.y = 1.0;
 
         wid_scoreline_container_top =
-            wid_new_square_button(wid_game_map_client_window, "scoreline top");
+            wid_new_container(wid_game_map_client_window, "scoreline top");
 
         wid_set_tl_br_pct(wid_scoreline_container_top, tl, br);
+
         wid_set_color(wid_scoreline_container_top, WID_COLOR_TL, BLACK);
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BG, BLACK);
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
@@ -815,7 +811,7 @@ void wid_game_map_client_score_update (levelp level)
     wid_update(wid_scoreline_container_top);
 
     {
-        widp wid = wid_new_square_button(wid_scoreline_container_top, "title");
+        widp wid = wid_new_container(wid_scoreline_container_top, "title");
 
         fpoint tl = { 0.0, 0.0 };
         fpoint br = { 1.0, 0.20 };
