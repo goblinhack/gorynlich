@@ -109,7 +109,7 @@ thingp thing_server_new (levelp level, const char *name)
     t->logname = dynprintf("%s[%p] (server)", thing_short_name(t), t);
     t->updated++;
 
-    THING_LOG(t, "created");
+    THING_DBG(t, "created");
 
     return (t);
 }
@@ -147,7 +147,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 
     t->logname = dynprintf("%s[%p] (client)", thing_short_name(t), t);
 
-    THING_LOG(t, "created");
+    THING_DBG(t, "created");
 
     return (t);
 }
@@ -215,7 +215,7 @@ static void thing_destroy_internal2 (thingp t)
 
 static void thing_destroy_internal (thingp t, const char *why)
 {
-    THING_LOG(t, "destroy (%s)", why);
+    THING_DBG(t, "destroy (%s)", why);
  
     /*
      * Stop all timers.
@@ -297,7 +297,7 @@ void thing_bury (thingp t)
     }
 
     thing_set_is_buried(t, true);
-    THING_LOG(t, "buried");
+    THING_DBG(t, "buried");
 }
 
 static void thing_dead_ (thingp t, thingp killer, char *reason)
@@ -364,7 +364,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         thing_set_wid(t, 0);
     }
 
-    THING_LOG(t, "dead (%s)", reason);
+    THING_DBG(t, "dead (%s)", reason);
 }
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
@@ -607,7 +607,7 @@ widp thing_message (thingp t, const char *message)
     /*
      * Float up from the thing.
      */
-    float floater = global_config.video_gl_height / TILES_SCREEN_HEIGHT;
+    double floater = global_config.video_gl_height / TILES_SCREEN_HEIGHT;
 
     wid_move_to_abs_centered(w, mx, my - floater / 2.0);
     wid_move_to_abs_centered_in(w, mx, my - floater * 1.5, lifespan);
@@ -1653,13 +1653,13 @@ void thing_server_wid_update (thingp t, double x, double y)
     fpoint tl = { x, y };
     fpoint br = { x, y };
 
-    float base_tile_width =
-            ((1.0f / ((float)TILES_SCREEN_WIDTH) / TILES_SERVER_SCALE) *
-                (float)global_config.video_gl_width);
+    double base_tile_width =
+            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_SERVER_SCALE) *
+                (double)global_config.video_gl_width);
 
-    float base_tile_height =
-            ((1.0f / ((float)TILES_SCREEN_HEIGHT) / TILES_SERVER_SCALE) *
-                (float)global_config.video_gl_height);
+    double base_tile_height =
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_SERVER_SCALE) *
+                (double)global_config.video_gl_height);
 
     br.x += base_tile_width;
     br.y += base_tile_height;
@@ -1703,13 +1703,13 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     fpoint tl = { x, y };
     fpoint br = { x, y };
 
-    float base_tile_width =
-            ((1.0f / ((float)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
-                (float)global_config.video_gl_width);
+    double base_tile_width =
+            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+                (double)global_config.video_gl_width);
 
-    float base_tile_height =
-            ((1.0f / ((float)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
-                (float)global_config.video_gl_height);
+    double base_tile_height =
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+                (double)global_config.video_gl_height);
 
     br.x += base_tile_width;
     br.y += base_tile_height;
@@ -1812,13 +1812,15 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         }
 
         uint8_t state = 
-                ((up                ? 1 : 0) << 5) |
-                ((down              ? 1 : 0) << 4) |
-                ((left              ? 1 : 0) << 3) |
-                ((right             ? 1 : 0) << 2) |
+                ((up                ? 1 : 0) << 6) |
+                ((down              ? 1 : 0) << 5) |
+                ((left              ? 1 : 0) << 4) |
+                ((right             ? 1 : 0) << 3) |
+                ((t->resync         ? 1 : 0) << 2) |
                 ((t->is_dead        ? 1 : 0) << 1) |
                 ((t->is_buried      ? 1 : 0) << 0);
 
+        t->resync = 0;
         *data++ = state;
         *data++ = t->thing_template - thing_templates_chunk;
 
@@ -1944,10 +1946,10 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 thing_template_is_door(thing_template);
         }
 
-        uint8_t up =        (state & (1 << 5)) ? 1 : 0;
-        uint8_t down =      (state & (1 << 4)) ? 1 : 0;
-        uint8_t left =      (state & (1 << 3)) ? 1 : 0;
-        uint8_t right =     (state & (1 << 2)) ? 1 : 0;
+        uint8_t up =        (state & (1 << 6)) ? 1 : 0;
+        uint8_t down =      (state & (1 << 5)) ? 1 : 0;
+        uint8_t left =      (state & (1 << 4)) ? 1 : 0;
+        uint8_t right =     (state & (1 << 3)) ? 1 : 0;
 
         if (up) {
             if (left) {
@@ -1971,12 +1973,27 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             thing_set_is_dir_right(t);
         }
 
+
         widp w = thing_wid(t);
         if (w) {
             if (t == player) {
                 /*
                  * Local echo only.
                  */
+                if ((state & (1 << 2)) ||
+                    (fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
+                    (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
+                    /*
+                     * Check we are roughly where the server thinks we are.
+                     * If wildly out of whack, correct our viewpoint.
+                     */
+                    THING_LOG(t, "client out of sync with server, correcting");
+
+                    t->x = x;
+                    t->y = y;
+
+                    thing_client_wid_update(t, x, y, true /* smooth */);
+                }
             } else {
                 thing_client_wid_update(t, x, y, true /* smooth */);
             }

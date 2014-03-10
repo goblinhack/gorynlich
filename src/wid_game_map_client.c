@@ -145,35 +145,35 @@ static boolean wid_game_map_client_receive_mouse_motion (
     return (true);
 }
 
-static float minx;
-static float miny;
-static float maxx;
-static float maxy;
+static double minx;
+static double miny;
+static double maxx;
+static double maxy;
 
-static const float map_scale_width  = 1.0 / ((float)TILES_MAP_WIDTH);
-static const float map_scale_height = 1.0 / ((float)TILES_MAP_HEIGHT);
+static const double map_scale_width  = 1.0 / ((double)TILES_MAP_WIDTH);
+static const double map_scale_height = 1.0 / ((double)TILES_MAP_HEIGHT);
 
-static const float map_vis_width    = map_scale_width *
-                                      ((float)TILES_SCREEN_HEIGHT);
-static const float map_vis_height   = map_scale_height *
-                                      ((float)TILES_SCREEN_HEIGHT);
+static const double map_vis_width    = map_scale_width *
+                                      ((double)TILES_SCREEN_HEIGHT);
+static const double map_vis_height   = map_scale_height *
+                                      ((double)TILES_SCREEN_HEIGHT);
 
-static const float map_scroll_thresh_horiz
+static const double map_scroll_thresh_horiz
                                     = map_scale_width  * 6.0;
-static const float map_scroll_thresh_vert   
+static const double map_scroll_thresh_vert   
                                     = map_scale_height * 6.0;
-static const float map_scroll_percent = 0.01;
-static const float map_scroll_speed   = 200;
+static const double map_scroll_percent = 0.01;
+static const double map_scroll_speed   = 200;
 
-static const float map_scroll_thresh_horiz2
+static const double map_scroll_thresh_horiz2
                                     = map_scale_width  * 5.0;
-static const float map_scroll_thresh_vert2   
+static const double map_scroll_thresh_vert2   
                                     = map_scale_height * 5.0;
-static const float map_scroll_percent2 = 0.02;
-static const float map_scroll_speed2   = 200;
+static const double map_scroll_percent2 = 0.02;
+static const double map_scroll_speed2   = 200;
 
-static const float map_hvis_width   = map_vis_width  / 2.0;
-static const float map_hvis_height  = map_vis_height / 2.0;
+static const double map_hvis_width   = map_vis_width  / 2.0;
+static const double map_hvis_height  = map_vis_height / 2.0;
 
 static void map_scroll_set_limits (void)
 {
@@ -202,8 +202,8 @@ static void map_scroll_fixup (void)
 {
     static boolean bounds_set;
     boolean moved = false;
-    float px = (player->x * map_scale_width)  + (map_scale_width  / 2.0);
-    float py = (player->y * map_scale_height) + (map_scale_height / 2.0);
+    double px = (player->x * map_scale_width)  + (map_scale_width  / 2.0);
+    double py = (player->y * map_scale_height) + (map_scale_height / 2.0);
 
     if (!bounds_set) {
         bounds_set = true;
@@ -217,7 +217,7 @@ static void map_scroll_fixup (void)
     }
 
     map_scroll_set_limits();
-    float speed = map_scroll_speed;
+    double speed = map_scroll_speed;
 
     if (px < minx + map_scroll_thresh_horiz2) {
         minx -= map_scroll_percent2;
@@ -275,16 +275,6 @@ static void map_scroll_fixup (void)
 
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-#if 0
-    static uint32_t ts;
-
-    if (!time_have_x_hundredths_passed_since(5, ts)) {
-        return (true);
-    }
-
-    ts = time_get_time_cached();
-#endif
-
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
     uint8_t *state = SDL_GetKeyState(0);
 
@@ -331,28 +321,44 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         thing_set_is_dir_right(player);
     }
 
-    player->x += THING_COORD_MOVE * (double)right;
-    player->x -= THING_COORD_MOVE * (double)left;
-    player->y -= THING_COORD_MOVE * (double)up;
-    player->y += THING_COORD_MOVE * (double)down;
+    double x = player->x;
+    double y = player->y;
 
-    if (player->x < 0) {
-        player->x = 0;
+    if (x < 0) {
+        x = 0;
     }
 
-    if (player->y < 0) {
-        player->y = 0;
+    if (y < 0) {
+        y = 0;
     }
 
-    if (player->x > TILES_MAP_WIDTH - 1) {
-        player->x = TILES_MAP_WIDTH - 1;
+    if (x > TILES_MAP_WIDTH - 1) {
+        x = TILES_MAP_WIDTH - 1;
     }
 
-    if (player->y > TILES_MAP_HEIGHT - 1) {
-        player->y = TILES_MAP_HEIGHT - 1;
+    if (y > TILES_MAP_HEIGHT - 1) {
+        y = TILES_MAP_HEIGHT - 1;
     }
 
-    thing_client_wid_update(player, player->x, player->y, true);
+    x += THING_COORD_MOVE * (double)right;
+    x -= THING_COORD_MOVE * (double)left;
+    y -= THING_COORD_MOVE * (double)up;
+    y += THING_COORD_MOVE * (double)down;
+
+    double ox = player->x;
+    double oy = player->y;
+
+    thing_client_wid_update(player, x, y, false);
+
+    if (thing_hit_solid_obstacle(wid_game_map_client_grid_container,
+                                 player, x, y)) {
+        thing_client_wid_update(player, ox, oy, false);
+        LOG(" no move");
+        return (true);
+    }
+
+    thing_client_wid_update(player, ox, oy, false);
+    thing_client_wid_update(player, x, y, true);
 
     socket_tx_client_move(client_joined_server, player, up, down, left, right);
 
@@ -421,13 +427,13 @@ void wid_game_map_client_wid_create (void)
     }
 
     {
-        float base_tile_width =
-                ((1.0f / ((float)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
-                    (float)global_config.video_gl_width);
+        double base_tile_width =
+                ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+                    (double)global_config.video_gl_width);
 
-        float base_tile_height =
-                ((1.0f / ((float)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
-                    (float)global_config.video_gl_height);
+        double base_tile_height =
+                ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+                    (double)global_config.video_gl_height);
 
         fpoint tl = { 0, 0 };
         fpoint br = { 0, 0 };
@@ -609,12 +615,12 @@ void wid_game_map_client_score_update (levelp level)
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
     }
 
-    float atx1 = 0.75;
-    float atx2 = 0.90;
-    float aty1 = 0.35;
-    float dy = 0.15;
-    float dy2 = 0.03;
-    float dy3 = 0.05;
+    double atx1 = 0.75;
+    double atx2 = 0.90;
+    double aty1 = 0.35;
+    double dy = 0.15;
+    double dy2 = 0.03;
+    double dy3 = 0.05;
 
     /*
      * Print the score.
@@ -637,7 +643,7 @@ void wid_game_map_client_score_update (levelp level)
                                         wid_scoreline_container_top,
                                         &wid_score,
                                         tmp, 
-                                        atx1, aty1 + dy*(float)y, 
+                                        atx1, aty1 + dy*(double)y, 
                                         small_font);
             wid_set_no_shape(wid_score_container[y]);
         } else {
@@ -656,7 +662,7 @@ void wid_game_map_client_score_update (levelp level)
                                         wid_scoreline_container_top,
                                         &wid_health,
                                         tmp,  
-                                        atx2, aty1 + dy*(float)y, 
+                                        atx2, aty1 + dy*(double)y, 
                                         small_font);
 
             wid_set_no_shape(wid_health_container[y]);
@@ -698,7 +704,7 @@ void wid_game_map_client_score_update (levelp level)
                                     wid_scoreline_container_top,
                                     &wid_score_title,
                                     "SCORE", 
-                                    atx1, aty1 + dy*(float)y - dy2,
+                                    atx1, aty1 + dy*(double)y - dy2,
                                     vsmall_font);
 
         wid_set_no_shape(wid_score_title_container);
@@ -712,7 +718,7 @@ void wid_game_map_client_score_update (levelp level)
                                     wid_scoreline_container_top,
                                     &wid_health_title,
                                     "HEALTH",  
-                                    atx2, aty1 + dy*(float)y - dy2,
+                                    atx2, aty1 + dy*(double)y - dy2,
                                     vsmall_font);
 
         wid_set_no_shape(wid_health_title_container);
@@ -727,7 +733,7 @@ void wid_game_map_client_score_update (levelp level)
                                     &wid_name_title,
                                     name_title,
                                     (atx1 + atx2) / 2,
-                                    aty1 + dy*(float)y - dy3,
+                                    aty1 + dy*(double)y - dy3,
                                     vsmall_font);
 
         wid_set_no_shape(wid_name_title_container);

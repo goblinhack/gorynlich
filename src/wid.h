@@ -237,10 +237,10 @@ void wid_move_to_pct_centered_in(widp, double dx, double dy, uint32_t delay);
 void wid_move_to_pct_in(widp, double dx, double dy, uint32_t delay);
 void wid_move_to_right(widp);
 void wid_move_to_top(widp);
-void wid_move_to_vert_pct(widp w, float pct);
-void wid_move_to_horiz_pct(widp w, float pct);
-void wid_move_to_vert_pct_in(widp w, float pct, float in);
-void wid_move_to_horiz_pct_in(widp w, float pct, float in);
+void wid_move_to_vert_pct(widp w, double pct);
+void wid_move_to_horiz_pct(widp w, double pct);
+void wid_move_to_vert_pct_in(widp w, double pct, double in);
+void wid_move_to_horiz_pct_in(widp w, double pct, double in);
 void wid_scale_immediate(widp, double val);
 void wid_scale_w_immediate(widp, double val);
 void wid_scale_h_immediate(widp, double val);
@@ -364,6 +364,7 @@ void wid_get_grid_coord(widp w, int32_t *x, int32_t *y,
                         boolean *aligned_y);
 void wid_get_grid_dim(widp w, uint32_t *x, uint32_t *y);
 boolean wids_overlap(widp A, widp B);
+boolean wids_overlap2(widp A, widp B);
 
 extern const int32_t wid_fade_delay;
 extern const int32_t wid_hide_delay;

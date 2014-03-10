@@ -119,5 +119,10 @@ typedef struct thing_ {
     uint32_t is_open:1;
     uint32_t is_buried:1;
     uint32_t is_dead:1;
+
+    /*
+     * Force client to server postion.
+     */
+    uint32_t resync:1;
 } thing;
 
