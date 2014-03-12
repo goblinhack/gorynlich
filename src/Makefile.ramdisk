@@ -124,6 +124,15 @@
 .o/ramdisk_data_things__explosion_session.o: asm/ramdisk_data_things__explosion_session.S ../data/things/.explosion.session
 	gcc -c asm/ramdisk_data_things__explosion_session.S -o .o/ramdisk_data_things__explosion_session.o
 
+.o/ramdisk_data_things__keys_session.o: asm/ramdisk_data_things__keys_session.S ../data/things/.keys.session
+	gcc -c asm/ramdisk_data_things__keys_session.S -o .o/ramdisk_data_things__keys_session.o
+
+.o/ramdisk_data_things__keys1_session.o: asm/ramdisk_data_things__keys1_session.S ../data/things/.keys1.session
+	gcc -c asm/ramdisk_data_things__keys1_session.S -o .o/ramdisk_data_things__keys1_session.o
+
+.o/ramdisk_data_things__keys3_session.o: asm/ramdisk_data_things__keys3_session.S ../data/things/.keys3.session
+	gcc -c asm/ramdisk_data_things__keys3_session.S -o .o/ramdisk_data_things__keys3_session.o
+
 .o/ramdisk_data_things__plant_session.o: asm/ramdisk_data_things__plant_session.S ../data/things/.plant.session
 	gcc -c asm/ramdisk_data_things__plant_session.S -o .o/ramdisk_data_things__plant_session.o
 

@@ -174,11 +174,7 @@ static void thing_tick_server_all (void)
         /*
          * Look for collisions.
          */
-        thing_collision(t, t->x, t->y);
-        thing_collision(t, t->x + 1, t->y);
-        thing_collision(t, t->x, t->y - 1);
-        thing_collision(t, t->x - 1, t->y);
-        thing_collision(t, t->x, t->y + 1);
+        thing_handle_collisions(wid_game_map_server_grid_container, t);
         w = t->wid;
 
         /*

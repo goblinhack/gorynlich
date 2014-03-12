@@ -2206,56 +2206,8 @@ void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
     msg.x = SDLNet_Read16(&msg.x);
     msg.y = SDLNet_Read16(&msg.y);
 
-    if (up) {
-        if (left) {
-            thing_set_is_dir_tl(t);
-        } else if (right) {
-            thing_set_is_dir_tr(t);
-        } else {
-            thing_set_is_dir_up(t);
-        }
-    } else if (down) {
-        if (left) {
-            thing_set_is_dir_bl(t);
-        } else if (right) {
-            thing_set_is_dir_br(t);
-        } else {
-            thing_set_is_dir_down(t);
-        }
-    } else if (left) {
-        thing_set_is_dir_left(t);
-    } else if (right) {
-        thing_set_is_dir_right(t);
-    }
-
     double x = ((double)msg.x) / THING_COORD_SCALE;
     double y = ((double)msg.y) / THING_COORD_SCALE;
 
-    if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
-        (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
-        /*
-         * Client is cheating?
-         */
-        THING_LOG(t, "client moved too much, ignore move");
-
-        t->updated++;
-        t->resync = 1;
-        return;
-    }
-
-    if (thing_hit_solid_obstacle(wid_game_map_server_grid_container,
-                                 t, x, y)) {
-        THING_LOG(t, "error, client move blocked, hit obstacle on server");
-            
-        /*
-         * Fake an update so we tell the client our position again so they can 
-         * correct.
-         */
-        t->updated++;
-        t->resync = 1;
-        return;
-    }
-
-    thing_server_wid_update(t, x, y);
-    t->updated++;
+    thing_server_move(t, x, y, up, down, left, right);
 }
