@@ -385,7 +385,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx1", t->is_xxx1);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
@@ -394,16 +394,16 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx10", t->is_xxx10);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx11", t->is_xxx11);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx12", t->is_xxx12);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx13", t->is_xxx13);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx14", t->is_xxx14);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx15", t->is_xxx15);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx16", t->is_xxx16);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx17", t->is_xxx17);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx18", t->is_xxx18);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx19", t->is_xxx19);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key4", t->is_key4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key5", t->is_key5);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key6", t->is_key6);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key7", t->is_key7);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx21", t->is_xxx21);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
@@ -483,7 +483,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_monst", t->is_monst);
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx1", t->is_xxx1);
+    PUT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
     PUT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
     PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
     PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
@@ -492,16 +492,16 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
     PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx10", t->is_xxx10);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx11", t->is_xxx11);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx12", t->is_xxx12);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx13", t->is_xxx13);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx14", t->is_xxx14);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx15", t->is_xxx15);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx16", t->is_xxx16);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx17", t->is_xxx17);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx18", t->is_xxx18);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx19", t->is_xxx19);
+    PUT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
+    PUT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);
+    PUT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
+    PUT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
+    PUT_NAMED_BITFIELD(ctx, "is_key4", t->is_key4);
+    PUT_NAMED_BITFIELD(ctx, "is_key5", t->is_key5);
+    PUT_NAMED_BITFIELD(ctx, "is_key6", t->is_key6);
+    PUT_NAMED_BITFIELD(ctx, "is_key7", t->is_key7);
+    PUT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
+    PUT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
     PUT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
     PUT_NAMED_BITFIELD(ctx, "is_xxx21", t->is_xxx21);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
@@ -725,9 +725,9 @@ boolean thing_template_is_player (thing_templatep t)
     return (t->is_player);
 }
 
-boolean thing_template_is_xxx1 (thing_templatep t)
+boolean thing_template_is_key (thing_templatep t)
 {
-    return (t->is_xxx1);
+    return (t->is_key);
 }
 
 boolean thing_template_is_xxx2 (thing_templatep t)
@@ -770,49 +770,49 @@ boolean thing_template_is_star (thing_templatep t)
     return (t->is_star);
 }
 
-boolean thing_template_is_xxx10 (thing_templatep t)
+boolean thing_template_is_key0 (thing_templatep t)
 {
-    return (t->is_xxx10);
+    return (t->is_key0);
 }
 
-boolean thing_template_is_xxx11 (thing_templatep t)
+boolean thing_template_is_key1 (thing_templatep t)
 {
-    return (t->is_xxx11);
+    return (t->is_key1);
 }
 
-boolean thing_template_is_xxx12 (thing_templatep t)
+boolean thing_template_is_key2 (thing_templatep t)
 {
-    return (t->is_xxx12);
+    return (t->is_key2);
 }
 
-boolean thing_template_is_xxx13 (thing_templatep t)
+boolean thing_template_is_key3 (thing_templatep t)
 {
-    return (t->is_xxx13);
+    return (t->is_key3);
 }
 
-boolean thing_template_is_xxx14 (thing_templatep t)
+boolean thing_template_is_key4 (thing_templatep t)
 {
-    return (t->is_xxx14);
+    return (t->is_key4);
 }
 
-boolean thing_template_is_xxx15 (thing_templatep t)
+boolean thing_template_is_key5 (thing_templatep t)
 {
-    return (t->is_xxx15);
+    return (t->is_key5);
 }
 
-boolean thing_template_is_xxx16 (thing_templatep t)
+boolean thing_template_is_key6 (thing_templatep t)
 {
-    return (t->is_xxx16);
+    return (t->is_key6);
 }
 
-boolean thing_template_is_xxx17 (thing_templatep t)
+boolean thing_template_is_key7 (thing_templatep t)
 {
-    return (t->is_xxx17);
+    return (t->is_key7);
 }
 
-boolean thing_template_is_xxx18 (thing_templatep t)
+boolean thing_template_is_key8 (thing_templatep t)
 {
-    return (t->is_xxx18);
+    return (t->is_key8);
 }
 
 boolean thing_template_is_xxx20 (thing_templatep t)
@@ -820,9 +820,9 @@ boolean thing_template_is_xxx20 (thing_templatep t)
     return (t->is_xxx20);
 }
 
-boolean thing_template_is_xxx19 (thing_templatep t)
+boolean thing_template_is_key9 (thing_templatep t)
 {
-    return (t->is_xxx19);
+    return (t->is_key9);
 }
 
 boolean thing_template_is_xxx21 (thing_templatep t)

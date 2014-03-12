@@ -27,6 +27,7 @@
 #include "gl.h"
 #include "sound.h"
 #include "socket.h"
+#include "client.h"
 
 tree_root *server_active_things;
 tree_root *client_active_things;
@@ -1324,11 +1325,11 @@ boolean thing_is_player (thingp t)
     return (thing_template_is_player(thing_get_template(t)));
 }
 
-boolean thing_is_xxx1 (thingp t)
+boolean thing_is_key (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx1(thing_get_template(t)));
+    return (thing_template_is_key(thing_get_template(t)));
 }
 
 boolean thing_is_xxx2 (thingp t)
@@ -1387,67 +1388,67 @@ boolean thing_is_star (thingp t)
     return (thing_template_is_star(thing_get_template(t)));
 }
 
-boolean thing_is_xxx10 (thingp t)
+boolean thing_is_key0 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx10(thing_get_template(t)));
+    return (thing_template_is_key0(thing_get_template(t)));
 }
 
-boolean thing_is_xxx11 (thingp t)
+boolean thing_is_key1 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx11(thing_get_template(t)));
+    return (thing_template_is_key1(thing_get_template(t)));
 }
 
-boolean thing_is_xxx12 (thingp t)
+boolean thing_is_key2 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx12(thing_get_template(t)));
+    return (thing_template_is_key2(thing_get_template(t)));
 }
 
-boolean thing_is_xxx13 (thingp t)
+boolean thing_is_key3 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx13(thing_get_template(t)));
+    return (thing_template_is_key3(thing_get_template(t)));
 }
 
-boolean thing_is_xxx14 (thingp t)
+boolean thing_is_key4 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx14(thing_get_template(t)));
+    return (thing_template_is_key4(thing_get_template(t)));
 }
 
-boolean thing_is_xxx15 (thingp t)
+boolean thing_is_key5 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx15(thing_get_template(t)));
+    return (thing_template_is_key5(thing_get_template(t)));
 }
 
-boolean thing_is_xxx16 (thingp t)
+boolean thing_is_key6 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx16(thing_get_template(t)));
+    return (thing_template_is_key6(thing_get_template(t)));
 }
 
-boolean thing_is_xxx17 (thingp t)
+boolean thing_is_key7 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx17(thing_get_template(t)));
+    return (thing_template_is_key7(thing_get_template(t)));
 }
 
-boolean thing_is_xxx18 (thingp t)
+boolean thing_is_key8 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx18(thing_get_template(t)));
+    return (thing_template_is_key8(thing_get_template(t)));
 }
 
 boolean thing_is_xxx20 (thingp t)
@@ -1601,7 +1602,7 @@ void thing_place (void *context)
                                      place->y,
                                      place->thing_template);
 
-    if (thing_template_is_xxx17(place->thing_template)) {
+    if (thing_template_is_key7(place->thing_template)) {
         sound_play_explosion();
     }
 
@@ -2021,4 +2022,113 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     wid_raise(wid_game_map_client_grid_container);
     wid_update(wid_game_map_client_grid_container);
+}
+
+static void thing_common_move (thingp t,
+                               double *x,
+                               double *y,
+                               const boolean up,
+                               const boolean down,
+                               const boolean left,
+                               const boolean right)
+{
+    if (*x < 0) {
+        *x = 0;
+    }
+
+    if (*y < 0) {
+        *y = 0;
+    }
+
+    if (*x > TILES_MAP_WIDTH - 1) {
+        *x = TILES_MAP_WIDTH - 1;
+    }
+
+    if (*y > TILES_MAP_HEIGHT - 1) {
+        *y = TILES_MAP_HEIGHT - 1;
+    }
+
+    if (up) {
+        if (left) {
+            thing_set_is_dir_tl(t);
+        } else if (right) {
+            thing_set_is_dir_tr(t);
+        } else {
+            thing_set_is_dir_up(t);
+        }
+    } else if (down) {
+        if (left) {
+            thing_set_is_dir_bl(t);
+        } else if (right) {
+            thing_set_is_dir_br(t);
+        } else {
+            thing_set_is_dir_down(t);
+        }
+    } else if (left) {
+        thing_set_is_dir_left(t);
+    } else if (right) {
+        thing_set_is_dir_right(t);
+    }
+}
+
+void thing_client_move (thingp t,
+                        double x,
+                        double y,
+                        const boolean up,
+                        const boolean down,
+                        const boolean left,
+                        const boolean right)
+{
+    thing_common_move(t, &x, &y, up, down, left, right);
+
+    if (thing_hit_solid_obstacle(wid_game_map_client_grid_container, t, x, y)) {
+        return;
+    }
+
+    thing_client_wid_update(t, x, y, true);
+
+    socket_tx_client_move(client_joined_server, t, up, down, left, right);
+
+    wid_game_map_client_scroll_adjust();
+}
+
+void thing_server_move (thingp t,
+                        double x,
+                        double y,
+                        const boolean up,
+                        const boolean down,
+                        const boolean left,
+                        const boolean right)
+{
+    thing_common_move(t, &x, &y, up, down, left, right);
+
+    if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
+        (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
+        /*
+         * Client is cheating?
+         */
+        THING_LOG(t, "client moved too much, ignore move");
+
+        t->updated++;
+        t->resync = 1;
+        return;
+    }
+
+    if (thing_hit_solid_obstacle(wid_game_map_server_grid_container,
+                                 t, x, y)) {
+        THING_LOG(t, "error, client move blocked, hit obstacle on server");
+            
+        /*
+         * Fake an update so we tell the client our position again so they can 
+         * correct.
+         */
+        t->updated++;
+        t->resync = 1;
+        return;
+    }
+
+    thing_server_wid_update(t, x, y);
+    t->updated++;
+
+    thing_handle_collisions(wid_game_map_server_grid_container, t);
 }
