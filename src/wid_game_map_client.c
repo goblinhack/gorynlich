@@ -158,6 +158,9 @@ static const double map_vis_width    = map_scale_width *
 static const double map_vis_height   = map_scale_height *
                                       ((double)TILES_SCREEN_HEIGHT);
 
+static const double map_hvis_width   = map_vis_width  / 2.0;
+static const double map_hvis_height  = map_vis_height / 2.0;
+
 static const double map_scroll_thresh_horiz
                                     = map_scale_width  * 6.0;
 static const double map_scroll_thresh_vert   
@@ -172,10 +175,7 @@ static const double map_scroll_thresh_vert2
 static const double map_scroll_percent2 = 0.02;
 static const double map_scroll_speed2   = 200;
 
-static const double map_hvis_width   = map_vis_width  / 2.0;
-static const double map_hvis_height  = map_vis_height / 2.0;
-
-static void map_scroll_set_limits (void)
+static void wid_game_map_client_scroll_set_limits (void)
 {
     if (minx < 0.0) {
         minx = 0.0;
@@ -198,7 +198,7 @@ static void map_scroll_set_limits (void)
     }
 }
 
-static void map_scroll_fixup (void) 
+void wid_game_map_client_scroll_adjust (void) 
 {
     static boolean bounds_set;
     boolean moved = false;
@@ -216,7 +216,7 @@ static void map_scroll_fixup (void)
         maxy = py + map_hvis_height;
     }
 
-    map_scroll_set_limits();
+    wid_game_map_client_scroll_set_limits();
     double speed = map_scroll_speed;
 
     if (px < minx + map_scroll_thresh_horiz2) {
@@ -263,7 +263,7 @@ static void map_scroll_fixup (void)
         moved = true;
     }
 
-    map_scroll_set_limits();
+    wid_game_map_client_scroll_set_limits();
 
     if (!moved) {
         return;
@@ -299,62 +299,19 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         return (false);
     }
 
-    if (up) {
-        if (left) {
-            thing_set_is_dir_tl(player);
-        } else if (right) {
-            thing_set_is_dir_tr(player);
-        } else {
-            thing_set_is_dir_up(player);
-        }
-    } else if (down) {
-        if (left) {
-            thing_set_is_dir_bl(player);
-        } else if (right) {
-            thing_set_is_dir_br(player);
-        } else {
-            thing_set_is_dir_down(player);
-        }
-    } else if (left) {
-        thing_set_is_dir_left(player);
-    } else if (right) {
-        thing_set_is_dir_right(player);
+    if (!up && !down && !left && !right) {
+        return (false);
     }
 
     double x = player->x;
     double y = player->y;
-
-    if (x < 0) {
-        x = 0;
-    }
-
-    if (y < 0) {
-        y = 0;
-    }
-
-    if (x > TILES_MAP_WIDTH - 1) {
-        x = TILES_MAP_WIDTH - 1;
-    }
-
-    if (y > TILES_MAP_HEIGHT - 1) {
-        y = TILES_MAP_HEIGHT - 1;
-    }
 
     x += THING_COORD_MOVE * (double)right;
     x -= THING_COORD_MOVE * (double)left;
     y -= THING_COORD_MOVE * (double)up;
     y += THING_COORD_MOVE * (double)down;
 
-    if (thing_hit_solid_obstacle(wid_game_map_client_grid_container,
-                                 player, x, y)) {
-        return (true);
-    }
-
-    thing_client_wid_update(player, x, y, true);
-
-    socket_tx_client_move(client_joined_server, player, up, down, left, right);
-
-    map_scroll_fixup();
+    thing_client_move(player, x, y, up, down, left, right);
 
     /*
      * If no key then we allow the console.

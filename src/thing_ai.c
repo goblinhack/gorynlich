@@ -339,6 +339,8 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     c = 'E';
                 } else if (map_is_food_at(level, x, y)) {
                     c = 'F';
+                } else if (map_is_key_at(level, x, y)) {
+                    c = 'k';
                 } else if (map_is_letter_at(level, x, y)) {
                     c = 'L';
                 } else if (map_is_star_at(level, x, y)) {
@@ -1378,7 +1380,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         /*
          * If no goal was found, try and keep moving the same way.
          */
-        if (thing_is_xxx12(t)) {
+        if (thing_is_key2(t)) {
             found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
         } else {
             found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);
@@ -1472,7 +1474,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         /*
          * If no goal was found, try and keep moving the same way.
          */
-        if (thing_is_xxx12(t)) {
+        if (thing_is_key2(t)) {
             found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
         } else {
             found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);

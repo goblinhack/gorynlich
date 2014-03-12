@@ -749,15 +749,15 @@ static void client_poll (void)
                 memset(&latest_status, 0, sizeof(latest_status));
 
                 socket_rx_server_status(s, packet, data, &latest_status);
+                // if score change update
 
                 if (s == client_joined_server) {
                     client_check_still_in_game();
-
-                    memcpy(&server_status, &latest_status, 
-                           sizeof(server_status));
-
-                    wid_game_map_client_score_update(client_level);
                 }
+
+                memcpy(&server_status, &latest_status, sizeof(server_status));
+
+                wid_game_map_client_score_update(client_level);
 
                 break;
 

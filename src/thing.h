@@ -46,7 +46,7 @@ void thing_set_score_pump(thingp, uint32_t score);
 void thing_inc_score_pump(thingp, uint32_t score);
 void thing_animate(thingp);
 boolean thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
-void thing_collision(thingp t, int32_t x, int32_t y);
+void thing_handle_collisions(widp grid, thingp t);
 boolean thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
 void thing_inc_powerup_spam_count(thingp t, boolean val);
 void thing_dec_powerup_spam_count(thingp t, boolean val);
@@ -143,7 +143,7 @@ boolean thing_is_food(thingp t);
 boolean thing_is_monst(thingp t);
 boolean thing_is_plant(thingp t);
 boolean thing_is_player(thingp t);
-boolean thing_is_xxx1(thingp t);
+boolean thing_is_key(thingp t);
 boolean thing_is_xxx2(thingp t);
 boolean thing_is_xxx3(thingp t);
 boolean thing_is_xxx4(thingp t);
@@ -152,15 +152,15 @@ boolean thing_is_xxx6(thingp t);
 boolean thing_is_xxx7(thingp t);
 boolean thing_is_xxx8(thingp t);
 boolean thing_is_star(thingp t);
-boolean thing_is_xxx10(thingp t);
-boolean thing_is_xxx11(thingp t);
-boolean thing_is_xxx12(thingp t);
-boolean thing_is_xxx13(thingp t);
-boolean thing_is_xxx14(thingp t);
-boolean thing_is_xxx15(thingp t);
-boolean thing_is_xxx16(thingp t);
-boolean thing_is_xxx17(thingp t);
-boolean thing_is_xxx18(thingp t);
+boolean thing_is_key0(thingp t);
+boolean thing_is_key1(thingp t);
+boolean thing_is_key2(thingp t);
+boolean thing_is_key3(thingp t);
+boolean thing_is_key4(thingp t);
+boolean thing_is_key5(thingp t);
+boolean thing_is_key6(thingp t);
+boolean thing_is_key7(thingp t);
+boolean thing_is_key8(thingp t);
 boolean thing_is_xxx20(thingp t);
 boolean thing_is_xxx20(thingp t);
 boolean thing_is_xxx21(thingp t);
@@ -188,7 +188,7 @@ int16_t thing_path_cost_is_food(thingp t);
 int16_t thing_path_cost_is_monst(thingp t);
 int16_t thing_path_cost_is_plant(thingp t);
 int16_t thing_path_cost_is_player(thingp t);
-int16_t thing_path_cost_is_xxx1(thingp t);
+int16_t thing_path_cost_is_key(thingp t);
 int16_t thing_path_cost_is_xxx2(thingp t);
 int16_t thing_path_cost_is_xxx3(thingp t);
 int16_t thing_path_cost_is_xxx4(thingp t);
@@ -197,15 +197,15 @@ int16_t thing_path_cost_is_xxx6(thingp t);
 int16_t thing_path_cost_is_xxx7(thingp t);
 int16_t thing_path_cost_is_xxx8(thingp t);
 int16_t thing_path_cost_is_star(thingp t);
-int16_t thing_path_cost_is_xxx10(thingp t);
-int16_t thing_path_cost_is_xxx11(thingp t);
-int16_t thing_path_cost_is_xxx12(thingp t);
-int16_t thing_path_cost_is_xxx13(thingp t);
-int16_t thing_path_cost_is_xxx14(thingp t);
-int16_t thing_path_cost_is_xxx15(thingp t);
-int16_t thing_path_cost_is_xxx16(thingp t);
-int16_t thing_path_cost_is_xxx17(thingp t);
-int16_t thing_path_cost_is_xxx18(thingp t);
+int16_t thing_path_cost_is_key0(thingp t);
+int16_t thing_path_cost_is_key1(thingp t);
+int16_t thing_path_cost_is_key2(thingp t);
+int16_t thing_path_cost_is_key3(thingp t);
+int16_t thing_path_cost_is_key4(thingp t);
+int16_t thing_path_cost_is_key5(thingp t);
+int16_t thing_path_cost_is_key6(thingp t);
+int16_t thing_path_cost_is_key7(thingp t);
+int16_t thing_path_cost_is_key8(thingp t);
 int16_t thing_path_cost_is_xxx20(thingp t);
 int16_t thing_path_cost_is_xxx20(thingp t);
 int16_t thing_path_cost_is_xxx21(thingp t);
@@ -269,3 +269,19 @@ enum {
     THING_STATE_BIT_SHIFT_IS_DEAD,
     THING_STATE_BIT_SHIFT_IS_BURIED,
 };
+
+void thing_server_move(thingp t,
+                       double x,
+                       double y,
+                       const boolean up,
+                       const boolean down,
+                       const boolean left,
+                       const boolean rigth);
+
+void thing_client_move(thingp t,
+                       double x,
+                       double y,
+                       const boolean up,
+                       const boolean down,
+                       const boolean left,
+                       const boolean rigth);

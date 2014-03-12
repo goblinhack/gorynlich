@@ -15,6 +15,8 @@ void wid_game_map_client_wid_create(void);
 void wid_game_map_client_wid_destroy(void);
 void wid_game_map_client_score_update(levelp);
 void wid_game_map_client_item_update(levelp);
+void wid_game_map_client_scroll_adjust(void);
+
 extern widp
 wid_game_map_client_replace_tile(widp, int32_t x, int32_t y, thingp t);
 
