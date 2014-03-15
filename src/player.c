@@ -30,7 +30,7 @@ void player_destroy (void)
         return;
     }
 
-    thing_client_destroy(player, "player destroy");
+    thing_destroy(player, "player destroy");
 
     player = 0;
 }
