@@ -18,8 +18,7 @@
 /*
  * Using static memory as these things never change once made.
  */
-#define THING_TEMPLATElS_CHUNK_COUNT_MAX 256
-thing_template thing_templates_chunk[THING_TEMPLATES_CHUNK_COUNT_MAX];
+thing_template thing_templates_chunk[THING_MAX];
 static uint32_t thing_templates_chunk_count;
 
 tree_root *thing_templates;
@@ -179,7 +178,7 @@ static void thing_template_fill_cache (thing_templatep t)
     }
 }
 
-thing_templatep thing_template_load (const char *name)
+thing_templatep thing_template_load (uint16_t *id, const char *name)
 {
     thing_templatep t;
     demarshal_p in;
@@ -198,12 +197,14 @@ thing_templatep thing_template_load (const char *name)
                                    "TREE ROOT: thing create order");
     }
 
-    if (thing_templates_chunk_count >= THING_TEMPLATES_CHUNK_COUNT_MAX - 1) {
+    if (thing_templates_chunk_count >= THING_MAX - 1) {
         DIE("too many thing templates");
     }
 
     t = &thing_templates_chunk[thing_templates_chunk_count++];
     t->tree.key = dupstr(name, "TREE KEY: thing");
+
+    *id = thing_templates_chunk_count;
 
     if (!tree_insert_static(thing_templates, &t->tree.node)) {
         DIE("thing template insert name [%s] failed", name);

@@ -18,6 +18,11 @@ typedef struct thing_ {
     char *logname;
 
     /*
+     * Which tree are we on, server active? client boring? etc...
+     */
+    tree_rootp client_or_server_tree;
+
+    /*
      * Widget for displaying thing.
      */
     widp wid;
@@ -72,6 +77,11 @@ typedef struct thing_ {
     int32_t visited[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
 
     /*
+     * How many and of what we are carrying.
+     */
+    uint16_t carrying[THING_MAX];
+
+    /*
      * Grid coordinates.
      */
     double x;
@@ -104,6 +114,12 @@ typedef struct thing_ {
      */
     uint8_t updated;
 
+    /*
+     * To keep a thing around for a while so we can clean it up once the 
+     * client has been notified of the server death.
+     */
+    uint8_t destroy_delay;
+
     uint8_t dir:4;
 
     uint32_t is_qqq1:1;
@@ -119,6 +135,7 @@ typedef struct thing_ {
     uint32_t is_open:1;
     uint32_t is_buried:1;
     uint32_t is_dead:1;
+    uint32_t on_active_list:1;
 
     /*
      * Force client to server postion.

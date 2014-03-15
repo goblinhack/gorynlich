@@ -137,7 +137,7 @@ void thing_handle_collisions (widp grid, thingp t)
 
             it = wid_get_thing(wid_it);
 
-            if (thing_is_floor(it)) {
+            if (thing_is_floor(it) || thing_is_wall(it)) {
                 wid_it = wid_next;
                 continue;
             }
@@ -151,8 +151,14 @@ void thing_handle_collisions (widp grid, thingp t)
              * handle
              */
             if (thing_is_key(it)) {
+                thing_dead(it, t, "collected");
+                it->carrying[THING_KEYS1]++;
+
+                wid_it = wid_next;
                 continue;
             }
+
+            wid_it = wid_next;
         }
     }
 }
