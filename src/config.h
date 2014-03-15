@@ -113,6 +113,11 @@
 #define SOCKET_PING_FAIL_THRESHOLD  10
 
 /*
+ * Maximum number of thing types. Dicates message sizes etc...
+ */
+#define THING_MAX 128
+
+/*
  * When converting from thing co-ords where 1.0 is one grid, we must convert
  * to int when sending over the network. This is the granularity.
  */

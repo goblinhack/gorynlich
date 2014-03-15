@@ -81,12 +81,15 @@ static void thing_tick_server_all (void)
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {
-            if (thing_is_left_as_corpse_on_death(t)) {
-                thing_bury(t);
-            } else {
-                thing_server_destroy(t, "died");
+            if (t->destroy_delay > 0) {
+                if (--t->destroy_delay == 0) {
+                    if (thing_is_left_as_corpse_on_death(t)) {
+                        thing_bury(t);
+                    } else {
+                        thing_destroy(t, "died");
+                    }
+                }
             }
-
             continue;
         }
 
@@ -174,7 +177,7 @@ static void thing_tick_server_all (void)
         /*
          * Look for collisions.
          */
-        thing_handle_collisions(wid_game_map_server_grid_container, t);
+//        thing_handle_collisions(wid_game_map_server_grid_container, t);
         w = t->wid;
 
         /*
@@ -355,6 +358,22 @@ static void thing_tick_client_all (void)
         w = t->wid;
         if (w) {
             verify(w);
+        }
+
+        /*
+         * Thing has croaked it?
+         */
+        if (thing_is_dead(t)) {
+            if (t->destroy_delay > 0) {
+                if (--t->destroy_delay == 0) {
+                    if (thing_is_left_as_corpse_on_death(t)) {
+                        thing_bury(t);
+                    } else {
+                        thing_destroy(t, "died");
+                    }
+                }
+            }
+            continue;
         }
 
         /*

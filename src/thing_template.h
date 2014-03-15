@@ -7,7 +7,6 @@
 #include "tree.h"
 
 #define IS_JOIN_ALT_MAX 10
-#define THING_TEMPLATES_CHUNK_COUNT_MAX 1024
 
 enum {
     IS_JOIN_BLOCK,
@@ -186,7 +185,7 @@ typedef struct thing_template_ {
 
 boolean thing_template_init(void);
 void thing_template_fini(void);
-thing_templatep thing_template_load(const char *file);
+thing_templatep thing_template_load(uint16_t *id, const char *file);
 thing_templatep thing_template_find(const char *name);
 thing_templatep thing_template_find_short_name(const char *name);
 void demarshal_thing_template(demarshal_p ctx, thing_templatep);
@@ -331,7 +330,7 @@ tree_rootp thing_template_get_tiles2(thing_templatep);
 extern tree_rootp thing_templates;
 extern tree_rootp thing_templates_create_order;
 
-extern thing_template thing_templates_chunk[THING_TEMPLATES_CHUNK_COUNT_MAX];
+extern thing_template thing_templates_chunk[THING_MAX];
 
 static inline int16_t thing_template_to_id (thing_templatep t) 
 {

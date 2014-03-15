@@ -29,6 +29,74 @@
 #include "socket.h"
 #include "client.h"
 
+uint16_t THING_WALL;
+uint16_t THING_WALL2;
+uint16_t THING_WALL3;
+uint16_t THING_WALL4;
+uint16_t THING_WALL5;
+uint16_t THING_DOOR;
+uint16_t THING_NOENTRY;
+uint16_t THING_FOOD;
+uint16_t THING_FLOOR;
+uint16_t THING_FLOOR2;
+uint16_t THING_FLOOR3;
+uint16_t THING_FLOOR4;
+uint16_t THING_FLOOR5;
+uint16_t THING_FLOOR6;
+uint16_t THING_WARRIOR;
+uint16_t THING_VALKYRIE;
+uint16_t THING_WIZARD;
+uint16_t THING_ELF;
+uint16_t THING_DWARF;
+uint16_t THING_GHOST;
+uint16_t THING_DEMON;
+uint16_t THING_MONK;
+uint16_t THING_LIZARD;
+uint16_t THING_DEATH;
+uint16_t THING_PLANT;
+uint16_t THING_SEEDPOD;
+uint16_t THING_PIPE;
+uint16_t THING_EXPLOSION;
+uint16_t THING_BOMB;
+uint16_t THING_SPAM;
+uint16_t THING_POTION1;
+uint16_t THING_POTION2;
+uint16_t THING_POTION3;
+uint16_t THING_POTION4;
+uint16_t THING_POTION5;
+uint16_t THING_WATER1;
+uint16_t THING_WATER2;
+uint16_t THING_MASK1;
+uint16_t THING_MASK2;
+uint16_t THING_MASK3;
+uint16_t THING_GEM1;
+uint16_t THING_GEM2;
+uint16_t THING_GEM3;
+uint16_t THING_GEM4;
+uint16_t THING_GEM5;
+uint16_t THING_GEM6;
+uint16_t THING_GEM7;
+uint16_t THING_EXIT1;
+uint16_t THING_EXIT2;
+uint16_t THING_EXIT3;
+uint16_t THING_EXIT4;
+uint16_t THING_EXIT5;
+uint16_t THING_EXIT6;
+uint16_t THING_EXIT7;
+uint16_t THING_GENERATOR1;
+uint16_t THING_GENERATOR2;
+uint16_t THING_GENERATOR3;
+uint16_t THING_GENERATOR4;
+uint16_t THING_GENERATOR5;
+uint16_t THING_GENERATOR6;
+uint16_t THING_GENERATOR7;
+uint16_t THING_KEYS1;
+uint16_t THING_KEYS2;
+uint16_t THING_KEYS3;
+uint16_t THING_COINS1;
+uint16_t THING_AMULET1;
+uint16_t THING_CHEST1;
+
 tree_root *server_active_things;
 tree_root *client_active_things;
 tree_root *server_boring_things;
@@ -36,8 +104,7 @@ tree_root *client_boring_things;
 
 static uint32_t thing_id;
 static boolean thing_init_done;
-static void thing_destroy_internal(thingp t, const char *why);
-static void thing_destroy_internal2(thingp t);
+static void thing_destroy_implicit(thingp t);
 
 boolean thing_init (void)
 {
@@ -54,14 +121,14 @@ void thing_fini (void)
         thing_init_done = false;
 
         tree_destroy(&client_active_things, 
-                     (tree_destroy_func)thing_destroy_internal2);
+                     (tree_destroy_func)thing_destroy_implicit);
         tree_destroy(&server_active_things, 
-                     (tree_destroy_func)thing_destroy_internal2);
+                     (tree_destroy_func)thing_destroy_implicit);
 
         tree_destroy(&client_boring_things, 
-                     (tree_destroy_func)thing_destroy_internal2);
+                     (tree_destroy_func)thing_destroy_implicit);
         tree_destroy(&server_boring_things, 
-                     (tree_destroy_func)thing_destroy_internal2);
+                     (tree_destroy_func)thing_destroy_implicit);
     }
 }
 
@@ -97,10 +164,15 @@ thingp thing_server_new (levelp level, const char *name)
         if (!tree_insert(server_boring_things, &t->tree.node)) {
             DIE("thing insert name [%s] failed", name);
         }
+
+        t->client_or_server_tree = server_boring_things;
     } else {
         if (!tree_insert(server_active_things, &t->tree.node)) {
             DIE("thing insert name [%s] failed", name);
         }
+
+        t->on_active_list = true;
+        t->client_or_server_tree = server_active_things;
     }
 
     if (level) {
@@ -140,10 +212,15 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
         if (!tree_insert(client_boring_things, &t->tree.node)) {
             DIE("thing insert id [%u] failed", id);
         }
+
+        t->client_or_server_tree = client_boring_things;
     } else {
         if (!tree_insert(client_active_things, &t->tree.node)) {
             DIE("thing insert id [%u] failed", id);
         }
+
+        t->client_or_server_tree = client_active_things;
+        t->on_active_list = true;
     }
 
     t->logname = dynprintf("%s[%p] (client)", thing_short_name(t), t);
@@ -209,15 +286,24 @@ void thing_restarted (thingp t, levelp level)
     thing_set_got_to_exit_first(t, false);
 }
 
-static void thing_destroy_internal2 (thingp t)
+static void thing_destroy_implicit (thingp t)
 {
-    thing_destroy_internal(t, "end of game");
+    thing_destroy(t, "end of game");
 }
 
-static void thing_destroy_internal (thingp t, const char *why)
+void thing_destroy (thingp t, const char *why)
 {
+    verify(t);
+
     THING_DBG(t, "destroy (%s)", why);
  
+    if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
+        DIE("thing template destroy name [%s] failed", thing_name(t));
+    }
+
+    t->client_or_server_tree = 0;
+    t->on_active_list = false;
+
     /*
      * Stop all timers.
      */
@@ -236,46 +322,6 @@ static void thing_destroy_internal (thingp t, const char *why)
         myfree(t->logname);
         t->logname = 0;
     }
-}
-
-void thing_client_destroy (thingp t, const char *why)
-{
-    verify(t);
-
-    if (thing_template_is_boring(t->thing_template)){
-        if (!tree_remove(client_boring_things, &t->tree.node)) {
-            DIE("thing template destroy name [%s] failed", thing_name(t));
-        }
-    } else {
-        if (!tree_remove(client_active_things, &t->tree.node)) {
-            DIE("thing template destroy name [%s] failed", thing_name(t));
-        }
-    }
-
-    thing_destroy_internal(t, why);
-
-    if (t == player) {
-        player = 0;
-    }
-
-    myfree(t);
-}
-
-void thing_server_destroy (thingp t, const char *why)
-{
-    verify(t);
-
-    if (thing_template_is_boring(t->thing_template)){
-        if (!tree_remove(server_boring_things, &t->tree.node)) {
-            DIE("thing template destroy name [%s] failed", thing_name(t));
-        }
-    } else {
-        if (!tree_remove(server_active_things, &t->tree.node)) {
-            DIE("thing template destroy name [%s] failed", thing_name(t));
-        }
-    }
-
-    thing_destroy_internal(t, why);
 
     if (t == player) {
         player = 0;
@@ -396,6 +442,36 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
     t->updated++;
     t->updated++;
+
+    /*
+     * If we use update + 1 it means we will have time to send both updates
+     * and then kill the thing.
+     */
+    t->destroy_delay = 3;
+
+    if (!t->on_active_list) {
+        if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
+            DIE("thing move, remove boring [%s] failed", thing_name(t));
+        }
+
+        if (t->client_or_server_tree == server_boring_things) {
+            if (!tree_insert(server_active_things, &t->tree.node)) {
+                DIE("thing move, insert active [%s] failed", thing_name(t));
+            }
+
+            t->client_or_server_tree = server_active_things;
+        } else if (t->client_or_server_tree == client_boring_things) {
+            if (!tree_insert(client_active_things, &t->tree.node)) {
+                DIE("thing move, insert active [%s] failed", thing_name(t));
+            }
+
+            t->client_or_server_tree = client_active_things;
+        } else {
+            DIE("bug, not on client or server list");
+        }
+
+        t->on_active_list = true;
+    }
 }
 
 void thing_reached_exit (thingp t)
@@ -455,25 +531,25 @@ void things_level_destroyed (levelp level)
 
     {
         TREE_WALK(server_active_things, t) {
-            thing_server_destroy(t, "level destroyed");
+            thing_destroy(t, "level destroyed");
         }
     }
 
     {
         TREE_WALK(server_boring_things, t) {
-            thing_server_destroy(t, "level destroyed");
+            thing_destroy(t, "level destroyed");
         }
     }
 
     {
         TREE_WALK(client_active_things, t) {
-            thing_client_destroy(t, "level destroyed");
+            thing_destroy(t, "level destroyed");
         }
     }
 
     {
         TREE_WALK(client_boring_things, t) {
-            thing_client_destroy(t, "level destroyed");
+            thing_destroy(t, "level destroyed");
         }
     }
 }
