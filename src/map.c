@@ -1102,8 +1102,8 @@ void map_fixup (levelp level)
     thing_templatep nbrs[3][3];
     widp w;
 
-    for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
+    for (x = 0; x < TILES_MAP_WIDTH; x++) {
+        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
 
             if (!map_find_wall_at(level, x, y, &w) &&
                 !map_find_pipe_at(level, x, y, &w) &&
@@ -1286,8 +1286,8 @@ static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)
 
     count = 0;
 
-    for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
+    for (x = 0; x < TILES_MAP_WIDTH; x++) {
+        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
             count += map_count_x_at(level, x, y, callback);
         }
     }
@@ -1295,7 +1295,7 @@ static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)
     return (count);
 }
 
-static char this_pipe[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+static char this_pipe[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
 static void pipe_flood (levelp level, int32_t x, int32_t y)
 {
@@ -1319,8 +1319,8 @@ boolean level_pipe_find_exit (levelp level,
                               int32_t ix, int32_t iy,
                               int32_t *exit_x, int32_t *exit_y)
 {
-    int32_t exits_x[TILES_MAP_EDITABLE_WIDTH];
-    int32_t exits_y[TILES_MAP_EDITABLE_WIDTH];
+    int32_t exits_x[TILES_MAP_WIDTH];
+    int32_t exits_y[TILES_MAP_WIDTH];
     int32_t nexits;
     int32_t x;
     int32_t y;
@@ -1332,8 +1332,8 @@ boolean level_pipe_find_exit (levelp level,
 
     pipe_flood(level, ix, iy);
 
-    for (x = 1; x < TILES_MAP_EDITABLE_WIDTH-1; x++) {
-        for (y = 1; y < TILES_MAP_EDITABLE_HEIGHT-1; y++) {
+    for (x = 1; x < TILES_MAP_WIDTH-1; x++) {
+        for (y = 1; y < TILES_MAP_HEIGHT-1; y++) {
 
             if ((x == ix) && (y == iy)) {
                 continue;
@@ -1361,6 +1361,49 @@ boolean level_pipe_find_exit (levelp level,
     *exit_y = exits_y[exit];
 
     return (true);
+}
+
+static thingp this_door[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+
+static void door_flood (levelp level, int32_t x, int32_t y)
+{
+    if (this_door[x][y]) {
+        return;
+    }
+
+    if (!(this_door[x][y] = map_thing_is_door_at(level, x, y))) {
+        this_door[x][y] = (void*)-1;
+        return;
+    }
+
+    door_flood(level, x-1, y);
+    door_flood(level, x+1, y);
+    door_flood(level, x, y-1);
+    door_flood(level, x, y+1);
+}
+
+void level_open_door (levelp level, int32_t ix, int32_t iy)
+{
+    int32_t x;
+    int32_t y;
+
+    memset(this_door, 0, sizeof(this_door));
+
+    door_flood(level, ix, iy);
+
+    for (x = 0; x < TILES_MAP_WIDTH; x++) {
+        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+            if (!this_door[x][y]) {
+                continue;
+            }
+
+            if (this_door[x][y] == (void*)-1) {
+                continue;
+            }
+
+            thing_dead(this_door[x][y], 0 /* killer */, "open");
+        }
+    }
 }
 
 uint32_t level_count_is_player (levelp level)
@@ -1586,8 +1629,8 @@ static tree_rootp map_all_things_is_x (levelp level,
         DIE("no grid wid");
     }
 
-    for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
 
             /*
              * Look for a floor tile where we can place stuff.

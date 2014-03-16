@@ -10,11 +10,11 @@ typedef struct level_t_ {
     /*
      * A quick cache of where the walls are.
      */
-    char walls[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
-    char monst_walls[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
-    char roads[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
-    char pipes[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
-    char end_pipe[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+    char walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    char monst_walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    char roads[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    char pipes[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    char end_pipe[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * Possible places for players to start.
