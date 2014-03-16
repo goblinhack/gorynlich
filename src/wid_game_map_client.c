@@ -575,11 +575,14 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
 
     double atx1 = 0.75;
     double atx2 = 0.90;
-    double aty1 = 0.35;
-    double dy = 0.15;
+    double aty1 = 0.24; // player start y
+    double dy = 0.1;
     double dy2 = 0.03;
     double dy3 = 0.05;
     double dy4 = 0.05;
+
+    double atx3 = 0.00; // items x
+    double aty2 = 0.31; // items y
 
     /*
      * Print the score.
@@ -601,7 +604,7 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                         wid_scoreline_container_top,
                                         &wid_score,
                                         tmp, 
-                                        atx1, aty1 + dy*(double)y, 
+                                        atx1, aty1,
                                         small_font);
             wid_set_no_shape(wid_score_container[y]);
         } else {
@@ -620,7 +623,7 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                         wid_scoreline_container_top,
                                         &wid_health,
                                         tmp,  
-                                        atx2, aty1 + dy*(double)y, 
+                                        atx2, aty1,
                                         small_font);
 
             wid_set_no_shape(wid_health_container[y]);
@@ -662,7 +665,7 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                     wid_scoreline_container_top,
                                     &wid_score_title,
                                     "SCORE", 
-                                    atx1, aty1 + dy*(double)y - dy2,
+                                    atx1, aty1 - dy2,
                                     vsmall_font);
 
         wid_set_no_shape(wid_score_title_container);
@@ -676,7 +679,7 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                     wid_scoreline_container_top,
                                     &wid_health_title,
                                     "HEALTH",  
-                                    atx2, aty1 + dy*(double)y - dy2,
+                                    atx2, aty1 - dy2,
                                     vsmall_font);
 
         wid_set_no_shape(wid_health_title_container);
@@ -691,7 +694,7 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                     &wid_name_title,
                                     name_title,
                                     (atx1 + atx2) / 2,
-                                    aty1 + dy*(double)y - dy3,
+                                    aty1 - dy3,
                                     vsmall_font);
 
         wid_set_no_shape(wid_name_title_container);
@@ -740,37 +743,57 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                 }
 
                 if (t->carrying[c]) {
-                    count++;
-
                     widp w;
 
-                    w = wid_new_square_button(
-                                                wid_scoreline_container_top,
-                                                "item");
+                    w = wid_new_rounded_button(wid_scoreline_container_top,
+                                               "item");
                     fpoint tl;
                     fpoint br;
-                    double width = 0.2;
-                    double height = 0.2;
+                    uint32_t cols = 10;
+                    double width = 0.1;
+                    double height = 0.05;
 
-                    tl.x = atx1;
-                    tl.y = aty1 + dy*(double)y - dy4;
+                    tl.x = atx3 + (width * (count % cols));
+                    tl.y = aty2 + dy*(double)y - dy4 + (height * (count / cols));
 
-                    br.x = tl.x + width;
+                    br.x = tl.x + width * 0.9;
                     br.y = tl.y + height;
+
+                    if (!(count % cols)) {
+                        aty1 += height;
+                    }
 
                     wid_set_tl_br_pct(w, tl, br);
 
-                    thing_templatep t = id_to_thing_template(c);
-                    thing_tilep tile;
-                    tile = thing_tile_first(thing_template_get_tiles(t));
+                    thing_templatep temp = 
+                                    id_to_thing_template(c);
+                    thing_tilep tile = 
+                            thing_tile_first(thing_template_get_tiles(temp));
 
                     wid_set_tilename(w, thing_tile_name(tile));
-                    LOG("%s", thing_tile_name(tile));
 
-    wid_set_thing_template(w, t);
+                    wid_set_color(w, WID_COLOR_TEXT, WHITE);
+                    wid_set_color(w, WID_COLOR_BG, BLACK);
+                    wid_set_color(w, WID_COLOR_TL, RED);
+                    wid_set_color(w, WID_COLOR_BR, RED);
+                    wid_set_bevel(w, 1);
+
+                    if (t->carrying[c] > 1) {
+                        char tmp[20];
+                        snprintf(tmp, sizeof(tmp) - 1, "%d", t->carrying[c]);
+
+                        wid_set_text(w, tmp);
+                        wid_set_font(w, vsmall_font);
+                        wid_set_text_rhs(w, true);
+                        wid_set_text_bot(w, true);
+                    }
+
+                    count++;
                 }
             }
         }
+
+        aty1 += dy;
     }
 
     if (update) {
@@ -805,7 +828,7 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,
                                             &wid_level,
-                                            tmp, atx1, 0.2, small_font);
+                                            tmp, atx1, 0.15, vsmall_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);
