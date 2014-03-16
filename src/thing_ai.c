@@ -19,7 +19,7 @@
 #include "wid_game_map_server.h"
 #include "math.h"
 
-static char walls[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+static char walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
 /*
  * Used while doing an A* search to keep track of score nodes.
@@ -64,34 +64,34 @@ typedef struct dmap_t_ {
     /*
      * Merged score for all targets.
      */
-    int16_t score[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
-    int8_t score_hits[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+    int16_t score[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    int8_t score_hits[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * Distance from the source for each reachable tile.
      */
-    int16_t distance[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+    int16_t distance[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * For debugging, to see the best path.
      */
 #ifdef ENABLE_MAP_DEBUG
-    char best[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+    char best[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 #endif
 
     /*
      * Targets we look for, sorted in order of best first.
      */
     tree_rootp goal_nodes;
-    dmap_goal *goals[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+    dmap_goal *goals[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * A* search nodes.
      */
     tree_rootp open_nodes;
     tree_rootp closed_nodes;
-    dmap_astar_node *open[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
-    dmap_astar_node *closed[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+    dmap_astar_node *open[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    dmap_astar_node *closed[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     int16_t best_score;
     int16_t worst_score;
@@ -118,10 +118,10 @@ static uint32_t floodwalk_cnt;
 #define MAP_FLOODWALK_BEGIN(_x_, _y_, _score_)                          \
                                                                         \
     static uint32_t floodwalk                                           \
-        [TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];          \
+        [TILES_MAP_WIDTH][TILES_MAP_HEIGHT];          \
                                                                         \
     static dmap_floodwalk                                               \
-        queue[TILES_MAP_EDITABLE_WIDTH*TILES_MAP_EDITABLE_HEIGHT];      \
+        queue[TILES_MAP_WIDTH*TILES_MAP_HEIGHT];      \
                                                                         \
     dmap_floodwalk *queue_limit = &queue[ARRAY_SIZE(queue)];            \
     dmap_floodwalk *queue_end = queue;                                  \
@@ -147,7 +147,7 @@ static uint32_t floodwalk_cnt;
         /*                                                              \
          * Try adjacent tiles and push at the end of the queue.         \
          */                                                             \
-        if (_x_ < TILES_MAP_EDITABLE_WIDTH - 1) {                       \
+        if (_x_ < TILES_MAP_WIDTH - 1) {                       \
             int16_t dx = _x_ + 1;                                       \
             int16_t dy = _y_;                                           \
             if (walls[dx][dy] == ' ') {                     \
@@ -175,7 +175,7 @@ static uint32_t floodwalk_cnt;
             }                                                           \
         }                                                               \
                                                                         \
-        if (_y_ < TILES_MAP_EDITABLE_HEIGHT - 1) {                      \
+        if (_y_ < TILES_MAP_HEIGHT - 1) {                      \
             int16_t dx = _x_;                                           \
             int16_t dy = _y_ + 1;                                       \
             if (walls[dx][dy] == ' ') {                     \
@@ -223,8 +223,8 @@ static void dmap_print_scores (dmap *map)
     int16_t x;
     int16_t y;
 
-    for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
 
             /*
              * Skip walls.
@@ -256,8 +256,8 @@ static inline void dmap_distance_print (dmap *map)
     int16_t x;
     int16_t y;
 
-    for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
 
             /*
              * Skip walls.
@@ -294,8 +294,8 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
         dmap_print_scores(map);
     }
 
-    for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
 
             if (map_is_wall_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
@@ -372,8 +372,8 @@ static void dmap_normalize (dmap *map)
     int16_t x;
     int16_t y;
 
-    for (y = 0; y < TILES_MAP_EDITABLE_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_EDITABLE_WIDTH; x++) {
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
 
             if (walls[x][y] != ' ') {
                 continue;
@@ -704,11 +704,11 @@ static void dmap_astar_eval_neighbor (dmap *map, dmap_astar_node *current,
         return;
     }
 
-    if (nexthop_x >= TILES_MAP_EDITABLE_WIDTH - 1) {
+    if (nexthop_x >= TILES_MAP_WIDTH - 1) {
         return;
     }
 
-    if (nexthop_y >= TILES_MAP_EDITABLE_HEIGHT - 1) {
+    if (nexthop_y >= TILES_MAP_HEIGHT - 1) {
         return;
     }
 
@@ -1351,11 +1351,11 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         return (false);
     }
 
-    if (t->x > TILES_MAP_EDITABLE_WIDTH - 1) {
+    if (t->x > TILES_MAP_WIDTH - 1) {
         return (false);
     }
 
-    if (t->y > TILES_MAP_EDITABLE_HEIGHT - 1) {
+    if (t->y > TILES_MAP_HEIGHT - 1) {
         return (false);
     }
 

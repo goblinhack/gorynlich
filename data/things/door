@@ -1,6 +1,6 @@
 {
- short_name="wall"
- tooltip="Non destructable wall"
+ short_name="door"
+ tooltip="Non destructable door"
  z_depth=2
  z_order=0
  is_boring

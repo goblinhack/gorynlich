@@ -213,6 +213,12 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
+            if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+                level_open_door(server_level, x, y);
+                wid_it = wid_next;
+                continue;
+            }
+
             return (true);
         }
     }

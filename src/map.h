@@ -94,6 +94,8 @@ thing_templatep map_find_xxx28_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_is_xxx29_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_hidden_from_editor_at(levelp, int32_t x, int32_t y, widp *);
 
+void level_open_door(levelp level, int32_t ix, int32_t iy);
+
 thingp map_thing_is_item_hidden_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_thing_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_exit_at(levelp, int32_t x, int32_t y);
