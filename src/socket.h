@@ -24,6 +24,7 @@ typedef enum {
     MSG_SERVER_CLOSE,
     MSG_SERVER_STATUS,
     MSG_MAP_UPDATE,
+    MSG_PLAYER_UPDATE,
     MSG_CLIENT_MOVE,
     MSG_MAX,
 } msg_type;
@@ -115,6 +116,12 @@ typedef struct {
 typedef struct {
     uint8_t type;
 } __attribute__ ((packed)) msg_map_update;
+
+typedef struct {
+    uint8_t type;
+    uint32_t thing_id;
+    uint8_t carrying[THING_MAX];
+} __attribute__ ((packed)) msg_player_update;
 
 typedef struct socket_ {
     tree_key_two_int tree;
@@ -268,6 +275,10 @@ extern uint32_t socket_get_rx_bad_msg(socketp s);
 extern void socket_server_tx_map_update(socketp, tree_rootp);
 extern void socket_client_rx_map_update(socketp s, 
                                         UDPpacket *packet, uint8_t *data);
+extern void socket_server_tx_player_update(thingp);
+extern void socket_client_rx_player_update(socketp s,
+                                          UDPpacket *packet, uint8_t *data);
+
 
 /*
  * Seemingly harmless, but we need this to read the 6 byte packet address

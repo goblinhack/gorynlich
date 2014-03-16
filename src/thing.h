@@ -231,6 +231,7 @@ void thing_reached_exit(thingp t);
 void thing_place(void *);
 void thing_server_wid_update(thingp t, double x, double y);
 void thing_client_wid_update(thingp t, double x, double y, boolean smooth);
+void thing_collect(thingp t, thing_templatep tmp);
 
 typedef struct {
     thing_templatep thing_template;

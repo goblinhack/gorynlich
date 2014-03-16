@@ -25,6 +25,7 @@
 #include "timer.h"
 #include "thing_private.h"
 #include "time.h"
+#include "thing_tile.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -429,7 +430,7 @@ void wid_game_map_client_wid_create (void)
     wid_visible(wid_game_map_client_vert_scroll, 1);
     wid_visible(wid_game_map_client_horiz_scroll, 1);
 
-    wid_game_map_client_score_update(client_level);
+    wid_game_map_client_score_update(client_level, true /* redo */);
 }
 
 void wid_game_map_client_wid_destroy (void)
@@ -532,7 +533,7 @@ wid_game_map_client_replace_tile (widp w, int32_t x, int32_t y, thingp thing)
     return (child);
 }
 
-void wid_game_map_client_score_update (levelp level)
+void wid_game_map_client_score_update (levelp level, boolean redo)
 {
     if (!player) {
         return;
@@ -543,6 +544,10 @@ void wid_game_map_client_score_update (levelp level)
     if (wid_scoreline_container_top) {
         update = true;
     } else {
+        update = false;
+    }
+
+    if (redo) {
         update = false;
     }
 
@@ -574,13 +579,13 @@ void wid_game_map_client_score_update (levelp level)
     double dy = 0.15;
     double dy2 = 0.03;
     double dy3 = 0.05;
+    double dy4 = 0.05;
 
     /*
      * Print the score.
      */
     int y;
-    for (y = 0; y < 4; y++) 
-    {
+    for (y = 0; y < 4; y++) {
         msg_player_state *p = client_get_player(y);
 
         /*
@@ -723,6 +728,49 @@ void wid_game_map_client_score_update (levelp level)
         wid_set_color(wid_score_title, WID_COLOR_TEXT, c);
         wid_set_color(wid_health_title, WID_COLOR_TEXT, c);
         wid_set_color(wid_name_title, WID_COLOR_TEXT, c);
+
+        {
+            uint32_t c;
+            uint32_t count = 0;
+
+            for (c = 0; c < THING_MAX; c++) {
+                thingp t = thing_client_find(p->thing_id);
+                if (!t) {
+                    continue;
+                }
+
+                if (t->carrying[c]) {
+                    count++;
+
+                    widp w;
+
+                    w = wid_new_square_button(
+                                                wid_scoreline_container_top,
+                                                "item");
+                    fpoint tl;
+                    fpoint br;
+                    double width = 0.2;
+                    double height = 0.2;
+
+                    tl.x = atx1;
+                    tl.y = aty1 + dy*(double)y - dy4;
+
+                    br.x = tl.x + width;
+                    br.y = tl.y + height;
+
+                    wid_set_tl_br_pct(w, tl, br);
+
+                    thing_templatep t = id_to_thing_template(c);
+                    thing_tilep tile;
+                    tile = thing_tile_first(thing_template_get_tiles(t));
+
+                    wid_set_tilename(w, thing_tile_name(tile));
+                    LOG("%s", thing_tile_name(tile));
+
+    wid_set_thing_template(w, t);
+                }
+            }
+        }
     }
 
     if (update) {

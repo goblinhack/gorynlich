@@ -365,18 +365,8 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
                                                 thing_get_template(t));
 
         if (score) {
-            thing_inc_score_pump(killer, score);
+            thing_set_score(killer, thing_score(killer) + score);
         }
-    }
-
-    /*
-     * Any last bonuses still being pumped?
-     */
-    uint32_t score_pump = thing_score_pump(t);
-
-    if (score_pump) {
-        thing_set_score(t, thing_score(t) + score_pump);
-        thing_set_score_pump(t, 0);
     }
 
     /*
@@ -492,12 +482,8 @@ void thing_reached_exit (thingp t)
         thing_set_got_to_exit_first(t, true);
 
         THING_LOG(t, "reached exit first");
-
-        thing_inc_score_pump(t, ONESEC);
     } else {
         THING_LOG(t, "reached exit");
-
-        thing_inc_score_pump(t, 100);
     }
 
     /*
@@ -636,13 +622,6 @@ void thing_set_score (thingp t, uint32_t score)
     verify(t);
 
     t->score = score;
-}
-
-uint32_t thing_score_pump (thingp t)
-{
-    verify(t);
-
-    return (t->score_pump);
 }
 
 widp thing_message (thingp t, const char *message)
@@ -1899,7 +1878,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
         t->resync = 0;
         *data++ = state;
-        *data++ = t->thing_template - thing_templates_chunk;
+        *data++ = thing_template_to_id(t->thing_template);
 
         SDLNet_Write32(t->tree.key, data);               
         data += sizeof(uint32_t);
@@ -2013,7 +1992,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         thingp t = thing_client_find(thing_id);
         if (!t) {
             thing_templatep thing_template = 
-                                    &thing_templates_chunk[template_id];
+                    id_to_thing_template(template_id);
 
             t = thing_client_new(thing_id, thing_template);
 
@@ -2098,6 +2077,61 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     wid_raise(wid_game_map_client_grid_container);
     wid_update(wid_game_map_client_grid_container);
+}
+
+void socket_server_tx_player_update (thingp t)
+{
+    /*
+     * Allocate a fresh packet.
+     */
+    UDPpacket *packet = socket_alloc_msg();
+    uint8_t *odata = packet->data;
+    uint8_t *data = packet->data;
+
+    *data++ = MSG_PLAYER_UPDATE;
+
+    SDLNet_Write32(t->tree.key, data);               
+    data += sizeof(uint32_t);
+
+    memcpy(data, t->carrying, sizeof(t->carrying));
+    data += sizeof(t->carrying);
+
+    packet->len = data - odata;
+
+    /*
+     * Broadcast to all clients.
+     */
+    socketp sp;
+
+    TREE_WALK(sockets, sp) {
+        if (!sp->player) {
+            continue;
+        }
+
+        write_address(packet, socket_get_remote_ip(sp));
+        socket_tx_msg(sp, packet);
+    }
+        
+    socket_free_msg(packet);
+}
+
+void socket_client_rx_player_update (socketp s, UDPpacket *packet, 
+                                     uint8_t *data)
+{
+    verify(s);
+
+    uint8_t *eodata = data + packet->len - 1;
+
+    uint32_t thing_id = SDLNet_Read32(data);
+    data += sizeof(uint32_t);
+
+    thingp t = thing_client_find(thing_id);
+    if (!t) {
+        ERR("thing id from server, id %u not found", thing_id);
+        return;
+    }
+
+    memcpy(t->carrying, data, eodata - data);
 }
 
 static void thing_common_move (thingp t,
@@ -2207,4 +2241,17 @@ void thing_server_move (thingp t,
     t->updated++;
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
+}
+
+void thing_collect (thingp t, thing_templatep tmp)
+{
+    uint32_t id;
+
+    id = thing_template_to_id(tmp);
+
+    THING_LOG(t, "collects %s", thing_template_name(tmp));
+
+    t->carrying[id]++;
+
+    socket_server_tx_player_update(t);
 }
