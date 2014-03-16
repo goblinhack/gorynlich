@@ -201,10 +201,13 @@ thing_templatep thing_template_load (uint16_t *id, const char *name)
         DIE("too many thing templates");
     }
 
-    t = &thing_templates_chunk[thing_templates_chunk_count++];
+    t = &thing_templates_chunk[thing_templates_chunk_count];
     t->tree.key = dupstr(name, "TREE KEY: thing");
 
     *id = thing_templates_chunk_count;
+    t->id = *id;
+
+    thing_templates_chunk_count++;
 
     if (!tree_insert_static(thing_templates, &t->tree.node)) {
         DIE("thing template insert name [%s] failed", name);

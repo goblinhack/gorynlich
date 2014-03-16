@@ -749,7 +749,6 @@ static void client_poll (void)
                 memset(&latest_status, 0, sizeof(latest_status));
 
                 socket_rx_server_status(s, packet, data, &latest_status);
-                // if score change update
 
                 if (s == client_joined_server) {
                     client_check_still_in_game();
@@ -757,14 +756,19 @@ static void client_poll (void)
 
                 memcpy(&server_status, &latest_status, sizeof(server_status));
 
-                wid_game_map_client_score_update(client_level);
-
+                wid_game_map_client_score_update(client_level, false /* redo */);
                 break;
+            }
 
             case MSG_MAP_UPDATE:
                 socket_client_rx_map_update(s, packet, data);
                 break;
-            }
+
+            case MSG_PLAYER_UPDATE:
+                socket_client_rx_player_update(s, packet, data);
+
+                wid_game_map_client_score_update(client_level, true /* redo */);
+                break;
 
             case MSG_SERVER_CLOSE:
                 socket_rx_server_close(s, packet, data);

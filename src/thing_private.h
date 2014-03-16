@@ -79,7 +79,7 @@ typedef struct thing_ {
     /*
      * How many and of what we are carrying.
      */
-    uint16_t carrying[THING_MAX];
+    uint8_t carrying[THING_MAX];
 
     /*
      * Grid coordinates.

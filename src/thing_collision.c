@@ -151,8 +151,8 @@ void thing_handle_collisions (widp grid, thingp t)
              * handle
              */
             if (thing_is_key(it)) {
+                thing_collect(me, thing_get_template(it));
                 thing_dead(it, t, "collected");
-                it->carrying[THING_KEYS1]++;
 
                 wid_it = wid_next;
                 continue;
