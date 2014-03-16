@@ -330,8 +330,6 @@ tree_rootp thing_template_get_tiles2(thing_templatep);
 extern tree_rootp thing_templates;
 extern tree_rootp thing_templates_create_order;
 
-extern thing_template thing_templates_chunk[THING_MAX];
-
 static inline int16_t thing_template_to_id (thing_templatep t) 
 {
     return (t->id);
@@ -339,5 +337,11 @@ static inline int16_t thing_template_to_id (thing_templatep t)
 
 static inline thing_templatep id_to_thing_template (uint16_t id) 
 {
+    extern thing_template thing_templates_chunk[THING_MAX];
+
+    if (id >= THING_MAX) {
+        DIE("overflow, id %u", id);
+    }
+
     return (&thing_templates_chunk[id]);
 }

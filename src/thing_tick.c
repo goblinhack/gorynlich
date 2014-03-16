@@ -141,40 +141,6 @@ static void thing_tick_server_all (void)
         }
 
         /*
-         * Pump the score in little increments as it looks cool.
-         */
-        uint32_t score_pump = thing_score_pump(t);
-
-        if (score_pump) {
-            uint32_t score_pump_big_step = 100;
-            uint32_t score_pump_small_step = 15;
-
-            if (score_pump > score_pump_big_step) {
-                thing_set_score(t,
-                    thing_score(t) + score_pump_big_step);
-
-                thing_set_score_pump(t,
-                    thing_score_pump(t) - score_pump_big_step);
-            } else if (score_pump > score_pump_small_step) {
-                thing_set_score(t,
-                    thing_score(t) + score_pump_small_step);
-
-                thing_set_score_pump(t,
-                    thing_score_pump(t) - score_pump_small_step);
-            } else {
-                thing_set_score(t,
-                    thing_score(t) + score_pump);
-
-                thing_set_score_pump(t,
-                    thing_score_pump(t) - score_pump);
-            }
-
-            if (player == t) {
-                wid_game_map_client_score_update(level);
-            }
-        }
-
-        /*
          * Look for collisions.
          */
 //        thing_handle_collisions(wid_game_map_server_grid_container, t);

@@ -13,8 +13,7 @@ void wid_game_map_client_load(void);
 
 void wid_game_map_client_wid_create(void);
 void wid_game_map_client_wid_destroy(void);
-void wid_game_map_client_score_update(levelp);
-void wid_game_map_client_item_update(levelp);
+void wid_game_map_client_score_update(levelp, boolean redo);
 void wid_game_map_client_scroll_adjust(void);
 
 extern widp
