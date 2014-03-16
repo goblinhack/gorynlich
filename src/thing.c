@@ -2029,7 +2029,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             thing_set_is_dir_right(t);
         }
 
-
         widp w = thing_wid(t);
         if (w) {
             if (t == player) {
@@ -2254,4 +2253,13 @@ void thing_collect (thingp t, thing_templatep tmp)
     t->carrying[id]++;
 
     socket_server_tx_player_update(t);
+}
+
+boolean thing_has (thingp t, uint32_t id)
+{
+    if (!t->carrying[id]) {
+        return (false);
+    }
+
+    return (true);
 }

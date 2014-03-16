@@ -74,7 +74,7 @@ typedef struct thing_ {
     /*
      * Array of which tiles we've been to.
      */
-    int32_t visited[TILES_MAP_EDITABLE_WIDTH][TILES_MAP_EDITABLE_HEIGHT];
+    int32_t visited[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * How many and of what we are carrying.
