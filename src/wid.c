@@ -7267,6 +7267,14 @@ static void wid_display (widp w,
             tile_blit_fat(tile2, 0, tl, br);
             glBindTexture(GL_TEXTURE_2D, 0);
         }
+
+        /*
+         * If we are just blitting the occasional tile and this is not part of 
+         * the main map grid, then just flush the blit pipe.
+         */
+        if (!w->gridtree) {
+            blit_flush();
+        }
     }
 
     if (text && text[0]) {
@@ -7352,6 +7360,8 @@ static void wid_display (widp w,
          */
         glcolor(col_text);
         ttf_puts(font, text, x, y, scaling, advance, fixed_width);
+
+        blit_flush();
     }
 
     /*
@@ -7475,8 +7485,6 @@ void wid_display_all (void)
                     false /* disable_scissors */,
                     0 /* updated_scissors */);
     } }
-
-    blit_flush();
 
     glDisable(GL_SCISSOR_TEST);
 }

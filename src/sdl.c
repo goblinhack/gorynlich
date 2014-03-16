@@ -929,10 +929,10 @@ void sdl_loop (void)
                 glcolor(RED);
 
                 ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
-
-                blit_flush();
             }
         }
+
+        blit_flush();
 
         /*
          * Flip
