@@ -641,18 +641,27 @@ void wid_get_grid_coord (widp w, int32_t *x, int32_t *y,
 
 void wid_get_grid_dim (widp w, uint32_t *x, uint32_t *y)
 {
-    if (!w->parent) {
-        DIE("no parent for grid dim");
-        return;
-    }
-
-    if (!w->parent->grid) {
+    if (!w->grid) {
         DIE("no parent grid");
         return;
     }
 
-    *x = w->parent->grid->pixwidth;
-    *y = w->parent->grid->pixheight;
+    *x = w->grid->pixwidth * w->grid->width;
+    *y = w->grid->pixheight * w->grid->height;
+}
+
+double wid_get_cx (widp w)
+{
+    double cx = (w->tree.tl.x + w->tree.br.x) / 2.0;
+
+    return (cx);
+}
+
+double wid_get_cy (widp w)
+{
+    double cy = (w->tree.tl.y + w->tree.br.y) / 2.0;
+
+    return (cy);
 }
 
 double wid_get_tl_x (widp w)
@@ -6149,6 +6158,14 @@ void wid_move_to_right (widp w)
 
 void wid_move_to_vert_pct (widp w, double pct)
 {
+    if (pct < 0.0) {
+        pct = 0.0;
+    }
+
+    if (pct > 1.0) {
+        pct = 1.0;
+    }
+
     double pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
     double at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
     double delta = (pct - at) * pheight;
@@ -6158,6 +6175,14 @@ void wid_move_to_vert_pct (widp w, double pct)
 
 void wid_move_to_horiz_pct (widp w, double pct)
 {
+    if (pct < 0.0) {
+        pct = 0.0;
+    }
+
+    if (pct > 1.0) {
+        pct = 1.0;
+    }
+
     double pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
     double at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
     double delta = (pct - at) * pwidth;
@@ -6167,6 +6192,14 @@ void wid_move_to_horiz_pct (widp w, double pct)
 
 void wid_move_to_vert_pct_in (widp w, double pct, double in)
 {
+    if (pct < 0.0) {
+        pct = 0.0;
+    }
+
+    if (pct > 1.0) {
+        pct = 1.0;
+    }
+
     double pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
     double at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
     double delta = (pct - at) * pheight;
@@ -6176,6 +6209,14 @@ void wid_move_to_vert_pct_in (widp w, double pct, double in)
 
 void wid_move_to_horiz_pct_in (widp w, double pct, double in)
 {
+    if (pct < 0.0) {
+        pct = 0.0;
+    }
+
+    if (pct > 1.0) {
+        pct = 1.0;
+    }
+
     double pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
     double at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
     double delta = (pct - at) * pwidth;
