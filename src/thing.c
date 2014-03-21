@@ -1790,7 +1790,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, 65);
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
@@ -2212,7 +2212,10 @@ void thing_client_move (thingp t,
         return;
     }
 
-    thing_client_wid_update(t, x, y, true);
+    /*
+     * Oddly doing smooth moving makes it more jumpy when scrolling.
+     */
+    thing_client_wid_update(t, x, y, false);
 
     socket_tx_client_move(client_joined_server, t, up, down, left, right);
 }
