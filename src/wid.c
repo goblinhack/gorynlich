@@ -2233,6 +2233,9 @@ void wid_set_thing (widp w, thingp t)
     fast_verify(w);
 
     w->thing = t;
+    if (!t) {
+        return;
+    }
 
     wid_set_z_depth(w, thing_z_depth(t));
     wid_set_z_order(w, thing_z_order(t));
