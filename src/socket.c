@@ -665,19 +665,20 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
         total_attempts = no_response + response;
 
         const char *name = socket_get_name(s);
+        const char *sock;
 
-        if (!name || !*name) {
-            if (client_joined_server && (s == client_joined_server)) {
-                name = "joined client";
-            } else if (server_socket && (s == server_socket)) {
-                name = "local server";
-            } else if (socket_get_server(s)) {
-                name = "other server";
-            } else if (socket_get_server_side_client(s)) {
-                name = "server side client";
-            } else if (socket_get_client(s)) {
-                name = "client";
-            }
+        if (client_joined_server && (s == client_joined_server)) {
+            sock = "joined client";
+        } else if (server_socket && (s == server_socket)) {
+            sock = "local server";
+        } else if (socket_get_server(s)) {
+            sock = "other server";
+        } else if (socket_get_server_side_client(s)) {
+            sock = "server side client";
+        } else if (socket_get_client(s)) {
+            sock = "client";
+        } else {
+            sock = "none";
         }
 
         if (total_attempts) {
@@ -689,11 +690,13 @@ static boolean sockets_show_summary (tokens_t *tokens, void *context)
                 avg_latency,
                 socket_get_local_logname(s),
                 socket_get_remote_logname(s));
+            CON("%-20s", sock);
         } else {
             CON("%-20s                  %-20s %-20s", 
                 name,
                 socket_get_local_logname(s),
                 socket_get_remote_logname(s));
+            CON("%-20s", sock);
         }
     }
 

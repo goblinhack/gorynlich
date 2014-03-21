@@ -123,8 +123,8 @@ void wid_game_map_client_visible (void)
     wid_game_map_client_wid_create();
     wid_intro_hide();
 
-    wid_visible(wid_game_map_client_window, 0);
-    wid_raise(wid_game_map_client_window);
+//    wid_visible(wid_game_map_client_window, 0);
+//    wid_raise(wid_game_map_client_window);
 }
 
 static boolean wid_game_map_client_receive_mouse_motion (
@@ -146,132 +146,38 @@ static boolean wid_game_map_client_receive_mouse_motion (
     return (true);
 }
 
-static double minx;
-static double miny;
-static double maxx;
-static double maxy;
-
-static const double map_scale_width  = 1.0 / ((double)TILES_MAP_WIDTH);
-static const double map_scale_height = 1.0 / ((double)TILES_MAP_HEIGHT);
-
-static const double map_vis_width    = map_scale_width *
-                                      ((double)TILES_SCREEN_HEIGHT);
-static const double map_vis_height   = map_scale_height *
-                                      ((double)TILES_SCREEN_HEIGHT);
-
-static const double map_hvis_width   = map_vis_width  / 2.0;
-static const double map_hvis_height  = map_vis_height / 2.0;
-
-static const double map_scroll_thresh_horiz
-                                    = map_scale_width  * 6.0;
-static const double map_scroll_thresh_vert   
-                                    = map_scale_height * 6.0;
-static const double map_scroll_percent = 0.01;
-static const double map_scroll_speed   = 200;
-
-static const double map_scroll_thresh_horiz2
-                                    = map_scale_width  * 5.0;
-static const double map_scroll_thresh_vert2   
-                                    = map_scale_height * 5.0;
-static const double map_scroll_percent2 = 0.02;
-static const double map_scroll_speed2   = 200;
-
-static void wid_game_map_client_scroll_set_limits (void)
-{
-    if (minx < 0.0) {
-        minx = 0.0;
-        maxx = map_vis_width;
-    }
-
-    if (maxx > 1.0) {
-        minx = 1.0 - map_vis_width;
-        maxx = 1.0;
-    }
-
-    if (miny < 0.0) {
-        miny = 0.0;
-        maxy = map_vis_height;
-    }
-
-    if (maxy > 1.0) {
-        miny = 1.0 - map_vis_height;
-        maxy = 1.0;
-    }
-}
-
 void wid_game_map_client_scroll_adjust (void) 
 {
-    static boolean bounds_set;
-    boolean moved = false;
-    double px = (player->x * map_scale_width)  + (map_scale_width  / 2.0);
-    double py = (player->y * map_scale_height) + (map_scale_height / 2.0);
-
-    if (!bounds_set) {
-        bounds_set = true;
-        moved = true;
-
-        minx = px - map_hvis_width;
-        maxx = px + map_hvis_width;
-
-        miny = py - map_hvis_height;
-        maxy = py + map_hvis_height;
-    }
-
-    wid_game_map_client_scroll_set_limits();
-    double speed = map_scroll_speed;
-
-    if (px < minx + map_scroll_thresh_horiz2) {
-        minx -= map_scroll_percent2;
-        maxx -= map_scroll_percent2;
-        speed = map_scroll_speed2;
-        moved = true;
-    } else if (px > maxx - map_scroll_thresh_horiz2) {
-        minx += map_scroll_percent2;
-        maxx += map_scroll_percent2;
-        speed = map_scroll_speed2;
-        moved = true;
-    } else if (px < minx + map_scroll_thresh_horiz) {
-        minx -= map_scroll_percent;
-        maxx -= map_scroll_percent;
-        speed = map_scroll_speed;
-        moved = true;
-    } else if (px > maxx - map_scroll_thresh_horiz) {
-        minx += map_scroll_percent;
-        maxx += map_scroll_percent;
-        speed = map_scroll_speed;
-        moved = true;
-    }
-
-    if (py < miny + map_scroll_thresh_vert2) {
-        miny -= map_scroll_percent2;
-        maxy -= map_scroll_percent2;
-        speed = map_scroll_speed2;
-        moved = true;
-    } else if (py > maxy - map_scroll_thresh_vert2) {
-        miny += map_scroll_percent2;
-        maxy += map_scroll_percent2;
-        speed = map_scroll_speed2;
-        moved = true;
-    } else if (py < miny + map_scroll_thresh_vert) {
-        miny -= map_scroll_percent;
-        maxy -= map_scroll_percent;
-        speed = map_scroll_speed;
-        moved = true;
-    } else if (py > maxy - map_scroll_thresh_vert) {
-        miny += map_scroll_percent;
-        maxy += map_scroll_percent;
-        speed = map_scroll_speed;
-        moved = true;
-    }
-
-    wid_game_map_client_scroll_set_limits();
-
-    if (!moved) {
+    widp w = player->wid;
+    if (!w) {
         return;
     }
 
-    wid_move_to_vert_pct_in(wid_game_map_client_vert_scroll, miny, speed);
-    wid_move_to_horiz_pct_in(wid_game_map_client_horiz_scroll, minx, speed);
+    uint32_t gridw;
+    uint32_t gridh;
+
+    wid_get_grid_dim(wid_game_map_client_grid_container, &gridw, &gridh);
+
+    double fgridw = (double)gridw;
+    double fgridh = (double)gridh;
+
+    double winw = wid_get_width(wid_game_map_client_window) * 0.75;
+    double winh = wid_get_height(wid_game_map_client_window);
+
+    gridw -= winw;
+    gridh -= winh;
+
+    double playerx = wid_get_cx(w);
+    double playery = wid_get_cy(w);
+
+    playerx -= winw / 2.0;
+    playery -= winh / 2.0;
+
+    playerx /= fgridw;
+    playery /= fgridh;
+
+    wid_move_to_vert_pct(wid_game_map_client_vert_scroll, playery);
+    wid_move_to_horiz_pct(wid_game_map_client_horiz_scroll, playerx);
 }
 
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
@@ -279,17 +185,17 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
     uint8_t *state = SDL_GetKeyState(0);
 
-    boolean right = state[SDLK_RIGHT];
-    boolean left  = state[SDLK_LEFT];
-    boolean up    = state[SDLK_UP];
-    boolean down  = state[SDLK_DOWN];
+    boolean right = state[SDLK_RIGHT] ? 1 : 0;
+    boolean left  = state[SDLK_LEFT] ? 1 : 0;
+    boolean up    = state[SDLK_UP] ? 1 : 0;
+    boolean down  = state[SDLK_DOWN] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
-    boolean right = state[SDL_SCANCODE_RIGHT];
-    boolean left  = state[SDL_SCANCODE_LEFT];
-    boolean up    = state[SDL_SCANCODE_UP];
-    boolean down  = state[SDL_SCANCODE_DOWN];
+    boolean right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
+    boolean left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
+    boolean up    = state[SDL_SCANCODE_UP] ? 1 : 0;
+    boolean down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
 #endif /* } */
 
     if (!player) {

@@ -724,6 +724,7 @@ void thing_set_wid (thingp t, widp w)
     } else {
         if (t->wid) {
             verify(t->wid);
+            wid_set_thing(t->wid, 0);
             wid_destroy(&t->wid);
         }
     }
@@ -1789,7 +1790,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, 50);
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 65);
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
@@ -1986,8 +1987,19 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         uint16_t ty = SDLNet_Read16(data);
         data += sizeof(uint16_t);
 
-        double x = ((double)tx) / THING_COORD_SCALE;
-        double y = ((double)ty) / THING_COORD_SCALE;
+        boolean on_map;
+        double x;
+        double y;
+
+        if ((tx == (uint16_t)-1) || (y == (uint16_t)-1)) {
+            on_map = false;
+            x = -1;
+            y = -1;
+        } else{
+            on_map = true;
+            x = ((double)tx) / THING_COORD_SCALE;
+            y = ((double)ty) / THING_COORD_SCALE;
+        }
 
         thingp t = thing_client_find(thing_id);
         if (!t) {
@@ -2029,33 +2041,41 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             thing_set_is_dir_right(t);
         }
 
-        widp w = thing_wid(t);
-        if (w) {
-            if (t == player) {
-                /*
-                 * Local echo only.
-                 */
-                if ((state & (1 << THING_STATE_BIT_SHIFT_RESYNC)) ||
-                    (fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
-                    (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
+        if (on_map) {
+            widp w = thing_wid(t);
+            if (w) {
+                if (t == player) {
                     /*
-                     * Check we are roughly where the server thinks we are.
-                     * If wildly out of whack, correct our viewpoint.
-                     */
-                    THING_LOG(t, "client out of sync with server, correcting");
+                    * Local echo only.
+                    */
+                    if ((state & (1 << THING_STATE_BIT_SHIFT_RESYNC)) ||
+                        (fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
+                        (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
+                        /*
+                        * Check we are roughly where the server thinks we are.
+                        * If wildly out of whack, correct our viewpoint.
+                        */
+                        THING_LOG(t, "client out of sync with server, correcting");
 
-                    t->x = x;
-                    t->y = y;
+                        t->x = x;
+                        t->y = y;
 
+                        thing_client_wid_update(t, x, y, true /* smooth */);
+                    }
+                } else {
                     thing_client_wid_update(t, x, y, true /* smooth */);
                 }
             } else {
-                thing_client_wid_update(t, x, y, true /* smooth */);
+                if (t->is_dead) {
+                    /*
+                    * Already dead? No new tile.
+                    */
+                } else {
+                    wid_game_map_client_replace_tile(
+                                            wid_game_map_client_grid_container,
+                                            x, y, t);
+                }
             }
-        } else {
-            wid_game_map_client_replace_tile(
-                                    wid_game_map_client_grid_container,
-                                    x, y, t);
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD)) {
@@ -2073,9 +2093,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
         map_fixup(level);
     }
-
-    wid_raise(wid_game_map_client_grid_container);
-    wid_update(wid_game_map_client_grid_container);
 }
 
 void socket_server_tx_player_update (thingp t)
@@ -2190,15 +2207,14 @@ void thing_client_move (thingp t,
 {
     thing_common_move(t, &x, &y, up, down, left, right);
 
-    if (thing_hit_solid_obstacle(wid_game_map_client_grid_container, t, x, y)) {
+    if (thing_hit_solid_obstacle(wid_game_map_client_grid_container, 
+                                 t, x, y)) {
         return;
     }
 
     thing_client_wid_update(t, x, y, true);
 
     socket_tx_client_move(client_joined_server, t, up, down, left, right);
-
-    wid_game_map_client_scroll_adjust();
 }
 
 void thing_server_move (thingp t,
