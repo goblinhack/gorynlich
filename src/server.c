@@ -379,6 +379,13 @@ static void server_socket_tx_ping (void)
             continue;
         }
 
+        /*
+         * Don't ping thyself if both server and client.
+         */
+        if (socket_get_server(s)) {
+            continue;
+        }
+
         ts = time_get_time_cached();
         socket_tx_ping(s, seq, ts);
     }

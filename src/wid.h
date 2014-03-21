@@ -195,6 +195,8 @@ double wid_get_text_advance(widp);
 double wid_get_text_scaling(widp);
 double wid_get_tl_x(widp);
 double wid_get_tl_y(widp);
+double wid_get_cx(widp);
+double wid_get_cy(widp);
 double wid_get_width(widp);
 fontp wid_get_font(widp);
 fontp wid_get_mode_font(widp);

@@ -33,8 +33,6 @@ static void thing_tick_server_all (void)
         return;
     }
 
-    static uint32_t gridpixwidth;
-    static uint32_t gridpixheight;
     boolean scared;
     thingp t;
 
@@ -157,10 +155,6 @@ static void thing_tick_server_all (void)
          * If stopped moving, look for a next hop.
          */
         if (speed && w && !wid_is_moving(w)) {
-            if (!gridpixwidth) {
-                wid_get_grid_dim(w, &gridpixwidth, &gridpixheight);
-            }
-
 #if TODO
             boolean look_for_nexthop = true;
 #endif
@@ -443,4 +437,8 @@ void thing_tick_all (void)
 {
     thing_tick_server_all();
     thing_tick_client_all();
+
+    if (player) {
+        wid_game_map_client_scroll_adjust();
+    }
 }
