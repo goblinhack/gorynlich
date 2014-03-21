@@ -815,17 +815,12 @@ void sdl_loop (void)
          */
         int32_t timestamp_now = time_get_time_milli();
 
-        if (timestamp_now - timestamp_then > 50) {
+        if (timestamp_now - timestamp_then > 5) {
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
              * to process the above.
              */
             timestamp_then = timestamp_now;
-
-            /*
-             * Let widgets move.
-             */
-            wid_tick_all();
 
             /*
              * Clean up dead widgets.
@@ -881,6 +876,11 @@ void sdl_loop (void)
                 break;
             }
         }
+
+        /*
+         * Let widgets move.
+         */
+        wid_tick_all();
 
         /*
          * Network server i/o.

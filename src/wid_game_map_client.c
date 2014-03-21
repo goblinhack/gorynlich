@@ -122,9 +122,6 @@ void wid_game_map_client_visible (void)
 
     wid_game_map_client_wid_create();
     wid_intro_hide();
-
-//    wid_visible(wid_game_map_client_window, 0);
-//    wid_raise(wid_game_map_client_window);
 }
 
 static boolean wid_game_map_client_receive_mouse_motion (
@@ -330,13 +327,17 @@ void wid_game_map_client_wid_create (void)
         wid_new_horiz_scroll_bar(wid_game_map_client_window,
                                  wid_game_map_client_grid_container);
 
-    wid_visible(wid_get_parent(wid_game_map_client_vert_scroll), 1);
-    wid_visible(wid_get_parent(wid_game_map_client_horiz_scroll), 1);
+    wid_visible(wid_get_parent(wid_game_map_client_vert_scroll), 0);
+    wid_visible(wid_get_parent(wid_game_map_client_horiz_scroll), 0);
+    wid_visible(wid_game_map_client_vert_scroll, 0);
+    wid_visible(wid_game_map_client_horiz_scroll, 0);
 
-    wid_visible(wid_game_map_client_vert_scroll, 1);
-    wid_visible(wid_game_map_client_horiz_scroll, 1);
+    wid_update(wid_game_map_client_vert_scroll);
+    wid_update(wid_game_map_client_horiz_scroll);
 
     wid_game_map_client_score_update(client_level, true /* redo */);
+
+    wid_hide(wid_game_map_client_window, 0);
 }
 
 void wid_game_map_client_wid_destroy (void)

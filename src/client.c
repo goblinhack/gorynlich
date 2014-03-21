@@ -20,6 +20,7 @@
 #include "tree.h"
 #include "wid_server_join.h"
 #include "wid_game_map_client.h"
+#include "wid.h"
 #include "thing.h"
 
 /*
@@ -863,6 +864,8 @@ static void client_check_still_in_game (void)
             MSG("Welcome %s, %s", p->pclass, p->name);
 
             player = thing_client_find(p->thing_id);
+
+            wid_visible(wid_game_map_client_window, wid_hide_delay);
         }
 
         return;
