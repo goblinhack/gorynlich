@@ -6161,14 +6161,6 @@ void wid_move_to_right (widp w)
 
 void wid_move_to_vert_pct (widp w, double pct)
 {
-    if (pct < 0.0) {
-        pct = 0.0;
-    }
-
-    if (pct > 1.0) {
-        pct = 1.0;
-    }
-
     double pheight = wid_get_br_y(w->parent) - wid_get_tl_y(w->parent);
     double at = (wid_get_tl_y(w) - wid_get_tl_y(w->parent)) / pheight;
     double delta = (pct - at) * pheight;
@@ -6178,14 +6170,6 @@ void wid_move_to_vert_pct (widp w, double pct)
 
 void wid_move_to_horiz_pct (widp w, double pct)
 {
-    if (pct < 0.0) {
-        pct = 0.0;
-    }
-
-    if (pct > 1.0) {
-        pct = 1.0;
-    }
-
     double pwidth = wid_get_br_x(w->parent) - wid_get_tl_x(w->parent);
     double at = (wid_get_tl_x(w) - wid_get_tl_x(w->parent)) / pwidth;
     double delta = (pct - at) * pwidth;

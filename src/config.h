@@ -123,7 +123,7 @@
 /*
  * How much we allow the player to move per step. Fraction of one grid.
  */
-#define THING_COORD_MOVE            0.25
+#define THING_COORD_MOVE            0.15
 
 /*
  * How many tiles difference between the client and server do we allow.
