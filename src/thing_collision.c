@@ -61,17 +61,20 @@ static boolean things_overlap (const thingp A,
 
     double xoverlap = 0.1;
     double yoverlap = 0.3;
+    double yoverlap2 = 5.4;
 
     if (thing_is_monst(A) || thing_is_player(A)) {
         Apx1 += xoverlap;
         Apx2 -= xoverlap;
         Apy1 += yoverlap;
+        Apy2 += yoverlap2;
     }
 
     if (thing_is_monst(B) || thing_is_player(B)) {
         Bpx1 += xoverlap;
         Bpx2 -= xoverlap;
         Bpy1 += yoverlap;
+        Bpy2 += yoverlap2;
     }
 
     /*
