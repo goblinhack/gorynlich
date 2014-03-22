@@ -865,7 +865,7 @@ static void client_check_still_in_game (void)
 
             player = thing_client_find(p->thing_id);
 
-            wid_visible(wid_game_map_client_window, wid_hide_delay);
+            wid_visible(wid_game_map_client_window, 0);
         }
 
         return;

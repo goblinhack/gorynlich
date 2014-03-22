@@ -73,7 +73,7 @@ void wid_game_map_client_fini (void)
 void wid_game_map_client_hide (void)
 {
     if (wid_game_map_client_window) {
-        wid_hide(wid_game_map_client_window, wid_swipe_delay);
+        wid_hide(wid_game_map_client_window, 0);
 
         wid_detach_from_grid(wid_game_map_client_grid_container);
 
