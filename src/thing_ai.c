@@ -720,8 +720,6 @@ static void dmap_astar_eval_neighbor (dmap *map, dmap_astar_node *current,
      * Ignore walls.
      */
     if (walls[nexthop_x][nexthop_y] != ' ') {
-dmap_print_walls(map);
-LOG(" %d %d hit wall",nexthop_x, nexthop_y);
         return;
     }
 
@@ -856,7 +854,6 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
          */
         dmap_astar_node *current =
                 (typeof(current)) tree_root_first(map->open_nodes);
-LOG(" cur %d %d goal  %d %d",current->x,current->y,map->goal_x,map->goal_y);
 
         /*
          * Reached the goal?
@@ -887,7 +884,6 @@ LOG(" cur %d %d goal  %d %d",current->x,current->y,map->goal_x,map->goal_y);
     tree_destroy(&map->closed_nodes, 0);
 
     if (!goal_found) {
-DIE("  goal not found");
         return (false);
     }
 
@@ -1364,7 +1360,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
             dmap_goal *goal =
                     (typeof(goal)) tree_root_first(map->goal_nodes);
 
-LOG("goal score %d at %f %f goal %d %d",goal->score,t->x,t->y,goal->x,goal->y);
             /*
              * Goal is something we want to avoid? Ignore for now.
              */
@@ -1385,7 +1380,6 @@ LOG("goal score %d at %f %f goal %d %d",goal->score,t->x,t->y,goal->x,goal->y);
              * Stick with the same next hop if nothing good.
              */
             if ((goal->x == t->x) && (goal->y == t->y)) {
-LOG("  same goal");
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
                 found_goal = true;
@@ -1393,7 +1387,6 @@ LOG("  same goal");
             }
 
             if (dmap_astar_best_path(map, t, goal->x, goal->y)) {
-LOG("  path to goal");
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
                 found_goal = true;
@@ -1460,7 +1453,6 @@ LOG("  path to goal");
     if (!found_goal) {
         dmap_print_map(map, t->x, t->y, true, true);
         THING_LOG(t, "no goal");
-        sleep(1);
         return (false);
     }
 
