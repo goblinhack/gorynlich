@@ -286,6 +286,7 @@ static boolean wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_ESCAPE:
             wid_server_create_hide();
             wid_server_join_hide();
+            wid_intro_visible();
             return (true);
 
         case ' ':
@@ -363,6 +364,8 @@ static boolean wid_server_create_name_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_create_hide();
+            wid_server_join_hide();
+            wid_intro_visible();
             return (true);
         default:
             break;
@@ -422,6 +425,8 @@ static boolean wid_server_create_port_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_create_hide();
+            wid_server_join_hide();
+            wid_intro_visible();
             return (true);
         default:
             break;
@@ -498,6 +503,8 @@ static boolean wid_server_create_max_players_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_create_hide();
+            wid_server_join_hide();
+            wid_intro_visible();
             return (true);
         default:
             break;
