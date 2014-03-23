@@ -206,7 +206,9 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
-            if (!thing_is_wall(it) && !thing_is_door(it)) {
+            if (!thing_is_wall(it) && 
+                !thing_is_door(it) && 
+                !thing_is_monst(t)) {
                 wid_it = wid_next;
                 continue;
             }
