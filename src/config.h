@@ -131,4 +131,5 @@
  * server. Set this too high and the client can push through walls. Too
  * low and it will be jerky, jumping back when we have high latency.
  */
-#define THING_MAX_SERVER_DISCREPANCY 1.0
+#define THING_MAX_SERVER_DISCREPANCY 2.0
+#define THING_PLAYER_POLL_SPEED      1 // hundredths
