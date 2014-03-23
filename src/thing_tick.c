@@ -439,6 +439,13 @@ void thing_tick_all (void)
     thing_tick_client_all();
 
     if (player) {
+        static uint32_t ts;
+
+        if (time_have_x_hundredths_passed_since(THING_PLAYER_POLL_SPEED, ts)) {
+            ts = time_get_time_cached();
+            wid_game_map_client_player_move();
+        }
+
         wid_game_map_client_scroll_adjust();
     }
 }
