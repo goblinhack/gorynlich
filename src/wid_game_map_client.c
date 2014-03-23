@@ -177,7 +177,7 @@ void wid_game_map_client_scroll_adjust (void)
     wid_move_to_horiz_pct(wid_game_map_client_horiz_scroll, playerx);
 }
 
-static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
+boolean wid_game_map_client_player_move (void)
 {
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
     uint8_t *state = SDL_GetKeyState(0);
@@ -221,6 +221,14 @@ static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
      * If no key then we allow the console.
      */
     return (up || down || left || right);
+}
+
+static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
+{
+    /*
+     * Just poll instead.
+     */
+    return (false);
 }
 
 /*
