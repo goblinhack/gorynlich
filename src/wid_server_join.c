@@ -466,6 +466,7 @@ static boolean wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_ESCAPE:
             wid_server_join_hide();
             wid_server_create_hide();
+            wid_intro_visible();
             return (true);
 
         default:
@@ -533,6 +534,7 @@ static boolean wid_server_join_hostname_receive_input (widp w,
         case SDLK_ESCAPE:
             wid_server_join_hide();
             wid_server_create_hide();
+            wid_intro_visible();
             return (true);
 
         default:
@@ -595,6 +597,7 @@ static boolean wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
         case SDLK_ESCAPE:
             wid_server_join_hide();
             wid_server_create_hide();
+            wid_intro_visible();
             return (true);
         default:
             break;
@@ -698,6 +701,7 @@ static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
         case SDLK_ESCAPE:
             wid_server_join_hide();
             wid_server_create_hide();
+            wid_intro_visible();
             return (true);
         default:
             break;
