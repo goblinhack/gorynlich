@@ -229,7 +229,7 @@ int16_t thing_path_cost_is_effect_rotate_2way(thingp t);
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t);
 void thing_place(void *);
-void thing_server_wid_update(thingp t, double x, double y);
+void thing_server_wid_update(thingp t, double x, double y, boolean is_new);
 void thing_client_wid_update(thingp t, double x, double y, boolean smooth);
 void thing_collect(thingp t, thing_templatep tmp);
 boolean thing_use(thingp t, uint32_t id);

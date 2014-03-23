@@ -311,7 +311,7 @@ wid_game_map_server_replace_tile (widp w,
                                     thing_template_name(thing_template));
     wid_set_thing(child, thing);
 
-    thing_server_wid_update(thing, x, y);
+    thing_server_wid_update(thing, x, y, true /* is_new */);
 
     /*
      * This adds it to the grid wid.

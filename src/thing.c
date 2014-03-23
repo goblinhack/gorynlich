@@ -1694,7 +1694,7 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
     sound_play_level_end();
 }
 
-void thing_server_wid_update (thingp t, double x, double y)
+void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
 {
     verify(t);
 
@@ -1739,7 +1739,11 @@ void thing_server_wid_update (thingp t, double x, double y)
     tl.y -= base_tile_height / 4.0;
     br.y -= base_tile_width / 4.0;
 
-    wid_set_tl_br(t->wid, tl, br);
+    if (is_new || thing_is_player(t)) {
+        wid_set_tl_br(t->wid, tl, br);
+    } else {
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+    }
 }
 
 void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
@@ -2046,16 +2050,19 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             if (w) {
                 if (t == player) {
                     /*
-                    * Local echo only.
-                    */
+                     * Local echo only.
+                     */
                     if ((state & (1 << THING_STATE_BIT_SHIFT_RESYNC)) ||
                         (fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
                         (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
                         /*
-                        * Check we are roughly where the server thinks we are.
-                        * If wildly out of whack, correct our viewpoint.
-                        */
-                        THING_LOG(t, "client out of sync with server, correcting");
+                         * Check we are roughly where the server thinks we 
+                         * are. If wildly out of whack, correct our viewpoint.
+                         */
+                        THING_LOG(t, "%s out of sync with server, correcting ",
+                                  t->logname);
+                        THING_LOG(t, "  server %f %f", t->x, t->y);
+                        THING_LOG(t, "  client %f %f", x, y);
 
                         t->x = x;
                         t->y = y;
@@ -2068,8 +2075,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             } else {
                 if (t->is_dead) {
                     /*
-                    * Already dead? No new tile.
-                    */
+                     * Already dead? No new tile.
+                     */
                 } else {
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
@@ -2230,32 +2237,36 @@ void thing_server_move (thingp t,
 {
     thing_common_move(t, &x, &y, up, down, left, right);
 
-    if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
-        (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
-        /*
-         * Client is cheating?
-         */
-        THING_LOG(t, "client moved too much, ignore move");
+    if (thing_is_player(t)) {
+        if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
+            (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
+            /*
+            * Client is cheating?
+            */
+            THING_LOG(t, "client moved too much, ignore move");
 
-        t->updated++;
-        t->resync = 1;
-        return;
+            t->updated++;
+            t->resync = 1;
+            return;
+        }
     }
 
     if (thing_hit_solid_obstacle(wid_game_map_server_grid_container,
                                  t, x, y)) {
-        THING_LOG(t, "error, client move blocked, hit obstacle on server");
-            
-        /*
-         * Fake an update so we tell the client our position again so they can 
-         * correct.
-         */
-        t->updated++;
-        t->resync = 1;
+        if (thing_is_player(t)) {
+            THING_LOG(t, "error, client move blocked, hit obstacle on server");
+
+            /*
+             * Fake an update so we tell the client our position again so they 
+             * can correct.
+             */
+            t->updated++;
+            t->resync = 1;
+        }
         return;
     }
 
-    thing_server_wid_update(t, x, y);
+    thing_server_wid_update(t, x, y, false /* is_new */);
     t->updated++;
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
