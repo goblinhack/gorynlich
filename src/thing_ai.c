@@ -6,6 +6,7 @@
 
 #define __STDC_LIMIT_MACROS
 #include <SDL.h>
+#include <unistd.h>
 
 #include "main.h"
 #include "tree.h"
@@ -18,6 +19,7 @@
 #include "level.h"
 #include "wid_game_map_server.h"
 #include "math.h"
+#include "term.h"
 
 static char walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
@@ -118,10 +120,10 @@ static uint32_t floodwalk_cnt;
 #define MAP_FLOODWALK_BEGIN(_x_, _y_, _score_)                          \
                                                                         \
     static uint32_t floodwalk                                           \
-        [TILES_MAP_WIDTH][TILES_MAP_HEIGHT];          \
+        [TILES_MAP_WIDTH][TILES_MAP_HEIGHT];                            \
                                                                         \
     static dmap_floodwalk                                               \
-        queue[TILES_MAP_WIDTH*TILES_MAP_HEIGHT];      \
+        queue[TILES_MAP_WIDTH*TILES_MAP_HEIGHT];                        \
                                                                         \
     dmap_floodwalk *queue_limit = &queue[ARRAY_SIZE(queue)];            \
     dmap_floodwalk *queue_end = queue;                                  \
@@ -143,14 +145,14 @@ static uint32_t floodwalk_cnt;
         _y_ = queue_at->y;                                              \
         queue_at++;                                                     \
 
-#define MAP_FLOODWALK_END(_x_, _y_, _score_)                                         \
+#define MAP_FLOODWALK_END(_x_, _y_, _score_)                            \
         /*                                                              \
          * Try adjacent tiles and push at the end of the queue.         \
          */                                                             \
-        if (_x_ < TILES_MAP_WIDTH - 1) {                       \
+        if (_x_ < TILES_MAP_WIDTH - 1) {                                \
             int16_t dx = _x_ + 1;                                       \
             int16_t dy = _y_;                                           \
-            if (walls[dx][dy] == ' ') {                     \
+            if (walls[dx][dy] == ' ') {                                 \
                 if (floodwalk[dx][dy] != floodwalk_cnt) {               \
                     floodwalk[dx][dy] = floodwalk_cnt;                  \
                     queue_end->x = dx;                                  \
@@ -164,7 +166,7 @@ static uint32_t floodwalk_cnt;
         if (_x_ > 0) {                                                  \
             int16_t dx = _x_ - 1;                                       \
             int16_t dy = _y_;                                           \
-            if (walls[dx][dy] == ' ') {                     \
+            if (walls[dx][dy] == ' ') {                                 \
                 if (floodwalk[dx][dy] != floodwalk_cnt) {               \
                     floodwalk[dx][dy] = floodwalk_cnt;                  \
                     queue_end->x = dx;                                  \
@@ -175,10 +177,10 @@ static uint32_t floodwalk_cnt;
             }                                                           \
         }                                                               \
                                                                         \
-        if (_y_ < TILES_MAP_HEIGHT - 1) {                      \
+        if (_y_ < TILES_MAP_HEIGHT - 1) {                               \
             int16_t dx = _x_;                                           \
             int16_t dy = _y_ + 1;                                       \
-            if (walls[dx][dy] == ' ') {                     \
+            if (walls[dx][dy] == ' ') {                                 \
                 if (floodwalk[dx][dy] != floodwalk_cnt) {               \
                     floodwalk[dx][dy] = floodwalk_cnt;                  \
                     queue_end->x = dx;                                  \
@@ -192,7 +194,7 @@ static uint32_t floodwalk_cnt;
         if (_y_ > 0) {                                                  \
             int16_t dx = _x_;                                           \
             int16_t dy = _y_ - 1;                                       \
-            if (walls[dx][dy] == ' ') {                     \
+            if (walls[dx][dy] == ' ') {                                 \
                 if (floodwalk[dx][dy] != floodwalk_cnt) {               \
                     floodwalk[dx][dy] = floodwalk_cnt;                  \
                     queue_end->x = dx;                                  \
@@ -230,20 +232,19 @@ static void dmap_print_scores (dmap *map)
              * Skip walls.
              */
             if (walls[x][y] != ' ') {
-                printf("%3s ","");
+                sprintf(tmp, "   ");
+                term_goto(TILES_MAP_WIDTH + x * 4, y);
+                term_puts(tmp);
                 continue;
             }
 
             int16_t score = map->score[x][y];
 
             sprintf(tmp, "%3d", score);
-            printf("%3s ", tmp);
+            term_goto(TILES_MAP_WIDTH + x * 4, y);
+            term_puts(tmp);
         }
-
-        printf("\n");
     }
-
-    printf("\n");
 }
 #endif
 
@@ -263,19 +264,31 @@ static inline void dmap_distance_print (dmap *map)
              * Skip walls.
              */
             if (walls[x][y] != ' ') {
-                printf("%3s ","");
                 continue;
             }
 
+            term_goto(TILES_MAP_WIDTH + x * 4, y);
+
             sprintf(tmp, "%3d", map->distance[x][y]);
-
-            printf("%3s ", tmp);
+            term_puts(tmp);
         }
-
-        printf("\n");
     }
+}
 
-    printf("\n");
+/*
+ * Print the distance from the start of each cell.
+ */
+static inline void dmap_print_walls (dmap *map)
+{
+    int16_t x;
+    int16_t y;
+
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
+            term_goto(x, y);
+            term_putc(walls[x][y]);
+        }
+    }
 }
 
 /*
@@ -290,7 +303,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
     int16_t y;
     char c;
 
-    if (show_best) {
+    if (0 && show_best) {
         dmap_print_scores(map);
     }
 
@@ -335,18 +348,12 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     c = '#';
                 } else if (map_is_monst_at(level, x, y)) {
                     c = 'm';
-                } else if (map_is_esnail_at(level, x, y)) {
-                    c = 'E';
                 } else if (map_is_food_at(level, x, y)) {
                     c = 'F';
                 } else if (map_is_key_at(level, x, y)) {
                     c = 'k';
-                } else if (map_is_letter_at(level, x, y)) {
-                    c = 'L';
                 } else if (map_is_star_at(level, x, y)) {
                     c = 'o';
-                } else if (map_is_bonus_letter_at(level, x, y)) {
-                    c = 'B';
                 } else if (map_is_exit_at(level, x, y)) {
                     c = '<';
                 } else if (map_is_player_at(level, x, y)) {
@@ -354,13 +361,10 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                 }
             }
 
-            putchar(c);
+            term_goto(x, y);
+            term_putc(c);
         }
-
-        putchar('\n');
     }
-
-    putchar('\n');
 }
 #endif
 
@@ -716,6 +720,8 @@ static void dmap_astar_eval_neighbor (dmap *map, dmap_astar_node *current,
      * Ignore walls.
      */
     if (walls[nexthop_x][nexthop_y] != ' ') {
+dmap_print_walls(map);
+LOG(" %d %d hit wall",nexthop_x, nexthop_y);
         return;
     }
 
@@ -850,6 +856,7 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
          */
         dmap_astar_node *current =
                 (typeof(current)) tree_root_first(map->open_nodes);
+LOG(" cur %d %d goal  %d %d",current->x,current->y,map->goal_x,map->goal_y);
 
         /*
          * Reached the goal?
@@ -880,6 +887,7 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     tree_destroy(&map->closed_nodes, 0);
 
     if (!goal_found) {
+DIE("  goal not found");
         return (false);
     }
 
@@ -905,14 +913,13 @@ void dmap_goals_find (dmap *map, thingp t)
 
     if (thing_is_player(t)) {
         maxpass = 2;
-    } else if (thing_is_plant(t)) {
+    } else if (thing_is_monst(t)) {
         maxpass = 2;
     } else {
         THING_LOG(t, "need to specify a number of map passes for searching");
     }
 
     boolean running_away = false;
-    boolean chasing = false;
 
     /*
      * Walk the map and find all targets. Flood each target into its own map
@@ -946,7 +953,7 @@ void dmap_goals_find (dmap *map, thingp t)
             x = (int)thing_it->x;
             y = (int)thing_it->y;
 
-            if (thing_is_plant(t)) {
+            if (thing_is_monst(t)) {
                 if (pass == 0) {
                     /*
                      * Top priority.
@@ -971,44 +978,6 @@ void dmap_goals_find (dmap *map, thingp t)
                         }
                     }
 
-                }
-            } else if (thing_is_player(t)) {
-                if (pass == 0) {
-                    /*
-                     * Top priority.
-                     */
-                    if (thing_is_food(thing_it)) {
-                        /*
-                         * Chase food.
-                         */
-                        dmap_goal_flood(map, 1, x, y);
-                        chasing = true;
-                    }
-
-                    /*
-                     * If using a rocket, do not head for the exit.
-                     */
-                    if (thing_has_powerup_rocket_count(t)) {
-                        chasing = true;
-                    }
-                } else if (pass == 1) {
-
-                    /*
-                     * Medium priority.
-                     */
-                    if (!chasing) {
-                        /*
-                         * If the exit is open, and no food left, head for 
-                         * that.
-                         */
-                        if (thing_is_exit(thing_it)) {
-                            if (level_is_exit_open(level)) {
-                                if (!level_count_is_food(level)) {
-                                    dmap_goal_flood(map, 1, x, y);
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -1337,7 +1306,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
 {
     boolean found_goal = false;
 
-    if (thing_is_plant(t)) {
+    if (thing_is_monst(t)) {
         memcpy(walls, level->monst_walls, sizeof(walls));
     } else {
         memcpy(walls, level->walls, sizeof(walls));
@@ -1380,10 +1349,12 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         /*
          * If no goal was found, try and keep moving the same way.
          */
-        if (thing_is_key2(t)) {
-            found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
+        if (thing_has(t, THING_KEYS1)) {
+            found_goal = dmap_move_in_same_door_dir(map, level, t, 
+                                                    nexthop_x, nexthop_y);
         } else {
-            found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);
+            found_goal = dmap_move_in_same_dir(map, level, t, 
+                                               nexthop_x, nexthop_y);
         }
     } else {
         /*
@@ -1393,6 +1364,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
             dmap_goal *goal =
                     (typeof(goal)) tree_root_first(map->goal_nodes);
 
+LOG("goal score %d at %f %f goal %d %d",goal->score,t->x,t->y,goal->x,goal->y);
             /*
              * Goal is something we want to avoid? Ignore for now.
              */
@@ -1413,6 +1385,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
              * Stick with the same next hop if nothing good.
              */
             if ((goal->x == t->x) && (goal->y == t->y)) {
+LOG("  same goal");
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
                 found_goal = true;
@@ -1420,6 +1393,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
             }
 
             if (dmap_astar_best_path(map, t, goal->x, goal->y)) {
+LOG("  path to goal");
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
                 found_goal = true;
@@ -1474,15 +1448,19 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         /*
          * If no goal was found, try and keep moving the same way.
          */
-        if (thing_is_key2(t)) {
-            found_goal = dmap_move_in_same_door_dir(map, level, t, nexthop_x, nexthop_y);
+        if (thing_has(t, THING_KEYS1)) {
+            found_goal = dmap_move_in_same_door_dir(map, level, t, 
+                                                    nexthop_x, nexthop_y);
         } else {
-            found_goal = dmap_move_in_same_dir(map, level, t, nexthop_x, nexthop_y);
+            found_goal = dmap_move_in_same_dir(map, level, t, 
+                                               nexthop_x, nexthop_y);
         }
     }
 
     if (!found_goal) {
+        dmap_print_map(map, t->x, t->y, true, true);
         THING_LOG(t, "no goal");
+        sleep(1);
         return (false);
     }
 
@@ -1491,7 +1469,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
                   *nexthop_x, *nexthop_y, found_goal);
 
 #ifdef ENABLE_MAP_DEBUG
-        if (thing_is_esnail(t)) {
+        if (thing_is_monst(t)) {
             dmap_print_map(map, t->x, t->y, true, true);
         }
 #endif
@@ -1507,7 +1485,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
      * Show likely best path.
      */
 #ifdef ENABLE_MAP_DEBUG
-    if (thing_is_esnail(t)) {
+    if (thing_is_monst(t)) {
         dmap_print_map(map, t->x, t->y, true, true);
     }
 #endif
@@ -1526,5 +1504,7 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     memset(&map, 0, sizeof(map));
     levelp level = map.level = thing_level(t);
 
-    return (dmap_find_nexthop(&map, level, t, nexthop_x, nexthop_y));
+    int rc = dmap_find_nexthop(&map, level, t, nexthop_x, nexthop_y);
+
+    return (rc);
 }

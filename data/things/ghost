@@ -11,8 +11,48 @@
  is_scarable
  tiles={
   tile={
+   delay=200
+   is_dir_up
+   tile="ghost1-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="ghost1-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="ghost1-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
    tile="ghost1-right"
-   delay=100
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="ghost1-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="ghost1-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="ghost1-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="ghost1-br"
   }
  }
 }

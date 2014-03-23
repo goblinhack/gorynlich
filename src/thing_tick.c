@@ -154,10 +154,9 @@ static void thing_tick_server_all (void)
         /*
          * If stopped moving, look for a next hop.
          */
-        if (speed && w && !wid_is_moving(w)) {
-#if TODO
+        if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
+            LOG("NH");
             boolean look_for_nexthop = true;
-#endif
             int32_t nexthop_x = -1;
             int32_t nexthop_y = -1;
 
@@ -167,24 +166,18 @@ static void thing_tick_server_all (void)
             if (thing_redo_maze_search(t)) {
                 thing_set_redo_maze_search(t, false);
 
-#if TODO
                 look_for_nexthop = true;
-#endif
             }
 
             /*
              * Need to look for a nexthop? Or keep walking on?
              */
             boolean have_nexthop;
-#if TODO
             if (look_for_nexthop) {
                 have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
             } else {
                 have_nexthop = true;
             }
-#endif
-
-            have_nexthop = false;
 
             if (have_nexthop) {
                 t->dir = THING_DIR_NONE;
@@ -204,54 +197,40 @@ static void thing_tick_server_all (void)
                                             nexthop_y,
                                             thing_template_is_floor);
                 if (!wid_next_floor) {
-                    DIE("no floor tile to hpp to");
+                    DIE("no floor tile to hpp to for %s", thing_logname(t));
                 }
  
-                double this_floor_x, this_floor_y;
-                wid_get_mxy(wid_current_floor, &this_floor_x, &this_floor_y);
+                double fnexthop_x = (double)nexthop_x;
+                double fnexthop_y = (double)nexthop_y;
 
-                double next_floor_x, next_floor_y;
-                wid_get_mxy(wid_next_floor, &next_floor_x, &next_floor_y);
-
-                boolean aligned_x = (t->x == floor(t->x));
-                boolean aligned_y = (t->y == floor(t->y));
-
-                if (!aligned_x) {
-                    next_floor_y = this_floor_y;
-                }
-
-                if (!aligned_y) {
-                    next_floor_x = this_floor_x;
-                }
-
-                if (next_floor_x > t->x) {
-                    if (next_floor_y > t->y) {
+                if (fnexthop_x > t->x) {
+                    if (fnexthop_y > t->y) {
                         thing_set_is_dir_tr(t);
-                    } else if (next_floor_y < t->y) {
+                    } else if (fnexthop_y < t->y) {
                         thing_set_is_dir_br(t);
                     } else {
                         thing_set_is_dir_right(t);
                     }
-                } else if (next_floor_x < t->x) {
-                    if (next_floor_y > t->y) {
+                } else if (fnexthop_x < t->x) {
+                    if (fnexthop_y > t->y) {
                         thing_set_is_dir_tl(t);
-                    } else if (next_floor_y < t->y) {
+                    } else if (fnexthop_y < t->y) {
                         thing_set_is_dir_bl(t);
                     } else {
                         thing_set_is_dir_left(t);
                     }
-                } else if (next_floor_y > t->y) {
-                    if (next_floor_x > t->x) {
+                } else if (fnexthop_y > t->y) {
+                    if (fnexthop_x > t->x) {
                         thing_set_is_dir_br(t);
-                    } else if (next_floor_x < t->x) {
+                    } else if (fnexthop_x < t->x) {
                         thing_set_is_dir_bl(t);
                     } else {
                         thing_set_is_dir_down(t);
                     }
-                } else if (next_floor_y < t->y) {
-                    if (next_floor_x > t->x) {
+                } else if (fnexthop_y < t->y) {
+                    if (fnexthop_x > t->x) {
                         thing_set_is_dir_tr(t);
-                    } else if (next_floor_x < t->x) {
+                    } else if (fnexthop_x < t->x) {
                         thing_set_is_dir_br(t);
                     } else {
                         thing_set_is_dir_up(t);
@@ -260,8 +239,18 @@ static void thing_tick_server_all (void)
                     DIE("no next hop to go to");
                 }
 
-                wid_move_to_abs_centered_in(w,
-                                            next_floor_x, next_floor_y, speed);
+                double x = t->x + ((fnexthop_x - t->x) * 1);
+                double y = t->y + ((fnexthop_y - t->y) * 1);
+//                double x = t->x + ((fnexthop_x - t->x) * THING_COORD_MOVE);
+//                double y = t->y + ((fnexthop_y - t->y) * THING_COORD_MOVE);
+
+                thing_server_move(t,
+                        x,
+                        y,
+                        thing_is_dir_up(t),
+                        thing_is_dir_down(t),
+                        thing_is_dir_left(t),
+                        thing_is_dir_right(t));
             }
         }
     }

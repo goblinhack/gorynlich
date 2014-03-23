@@ -7,13 +7,14 @@
 #undef  ENABLE_LOGFILE            // Log stdout and err to a file
 #define ENABLE_LEAKCHECK           // Memory leak check
 #define ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_CONSOLE              // Enable terminal console all the time
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
 #define ENABLE_VIDEO_SYNC          // Vertical sync
 #undef ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #undef ENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
-#undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
+#define ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
@@ -68,7 +69,6 @@
 #define CONSOLE_CURSOR_OTHER_COLOR  DARKGREEN
 #define CONSOLE_TEXT_COLOR          GREEN
 #define CONSOLE_HEIGHT              100
-#define ENABLE_CONSOLE              // Enable terminal console all the time
 
 /*
  * Fonts
