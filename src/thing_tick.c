@@ -155,7 +155,6 @@ static void thing_tick_server_all (void)
          * If stopped moving, look for a next hop.
          */
         if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
-            LOG("NH");
             boolean look_for_nexthop = true;
             int32_t nexthop_x = -1;
             int32_t nexthop_y = -1;
@@ -169,14 +168,21 @@ static void thing_tick_server_all (void)
                 look_for_nexthop = true;
             }
 
+            if (!time_have_x_tenths_passed_since(5, t->timestamp_ai)) {
+                look_for_nexthop = false;
+            }
+
             /*
              * Need to look for a nexthop? Or keep walking on?
              */
             boolean have_nexthop;
             if (look_for_nexthop) {
+            LOG("NH");
                 have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
+
+                t->timestamp_ai = time_get_time_cached();
             } else {
-                have_nexthop = true;
+                have_nexthop = false;
             }
 
             if (have_nexthop) {
@@ -197,7 +203,7 @@ static void thing_tick_server_all (void)
                                             nexthop_y,
                                             thing_template_is_floor);
                 if (!wid_next_floor) {
-                    DIE("no floor tile to hpp to for %s", thing_logname(t));
+                    LOG("no floor tile to hpp to for %s", thing_logname(t));
                 }
  
                 double fnexthop_x = (double)nexthop_x;
@@ -239,10 +245,8 @@ static void thing_tick_server_all (void)
                     DIE("no next hop to go to");
                 }
 
-                double x = t->x + ((fnexthop_x - t->x) * 1);
-                double y = t->y + ((fnexthop_y - t->y) * 1);
-//                double x = t->x + ((fnexthop_x - t->x) * THING_COORD_MOVE);
-//                double y = t->y + ((fnexthop_y - t->y) * THING_COORD_MOVE);
+                double x = t->x + ((fnexthop_x - t->x) * THING_COORD_MOVE);
+                double y = t->y + ((fnexthop_y - t->y) * THING_COORD_MOVE);
 
                 thing_server_move(t,
                         x,

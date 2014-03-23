@@ -1742,7 +1742,7 @@ void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
     if (is_new || thing_is_player(t)) {
         wid_set_tl_br(t->wid, tl, br);
     } else {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 50);
     }
 }
 
