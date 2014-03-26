@@ -210,10 +210,10 @@ boolean wid_game_map_client_player_move (void)
     double x = player->x;
     double y = player->y;
 
-    x += THING_COORD_MOVE * (double)right;
-    x -= THING_COORD_MOVE * (double)left;
-    y -= THING_COORD_MOVE * (double)up;
-    y += THING_COORD_MOVE * (double)down;
+    x += THING_PLAYER_COORD_MOVE * (double)right;
+    x -= THING_PLAYER_COORD_MOVE * (double)left;
+    y -= THING_PLAYER_COORD_MOVE * (double)up;
+    y += THING_PLAYER_COORD_MOVE * (double)down;
 
     thing_client_move(player, x, y, up, down, left, right);
 
