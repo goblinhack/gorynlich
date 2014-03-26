@@ -25,6 +25,7 @@
 #include "color.h"
 #include "sound.h"
 #include "socket.h"
+#include "math.h"
 
 static void thing_tick_server_all (void)
 {
@@ -168,7 +169,7 @@ static void thing_tick_server_all (void)
                 look_for_nexthop = true;
             }
 
-            if (!time_have_x_tenths_passed_since(5, t->timestamp_ai)) {
+            if (!time_have_x_hundredths_passed_since(5, t->timestamp_ai)) {
                 look_for_nexthop = false;
             }
 
@@ -177,7 +178,7 @@ static void thing_tick_server_all (void)
              */
             boolean have_nexthop;
             if (look_for_nexthop) {
-            LOG("NH");
+LOG("NH");
                 have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
 
                 t->timestamp_ai = time_get_time_cached();
@@ -203,50 +204,25 @@ static void thing_tick_server_all (void)
                                             nexthop_y,
                                             thing_template_is_floor);
                 if (!wid_next_floor) {
-                    LOG("no floor tile to hpp to for %s", thing_logname(t));
+                    LOG("no floor tile to hop to for %s", thing_logname(t));
                 }
  
                 double fnexthop_x = (double)nexthop_x;
                 double fnexthop_y = (double)nexthop_y;
 
-                if (fnexthop_x > t->x) {
-                    if (fnexthop_y > t->y) {
-                        thing_set_is_dir_tr(t);
-                    } else if (fnexthop_y < t->y) {
-                        thing_set_is_dir_br(t);
-                    } else {
-                        thing_set_is_dir_right(t);
-                    }
-                } else if (fnexthop_x < t->x) {
-                    if (fnexthop_y > t->y) {
-                        thing_set_is_dir_tl(t);
-                    } else if (fnexthop_y < t->y) {
-                        thing_set_is_dir_bl(t);
-                    } else {
-                        thing_set_is_dir_left(t);
-                    }
-                } else if (fnexthop_y > t->y) {
-                    if (fnexthop_x > t->x) {
-                        thing_set_is_dir_br(t);
-                    } else if (fnexthop_x < t->x) {
-                        thing_set_is_dir_bl(t);
-                    } else {
-                        thing_set_is_dir_down(t);
-                    }
-                } else if (fnexthop_y < t->y) {
-                    if (fnexthop_x > t->x) {
-                        thing_set_is_dir_tr(t);
-                    } else if (fnexthop_x < t->x) {
-                        thing_set_is_dir_br(t);
-                    } else {
-                        thing_set_is_dir_up(t);
-                    }
-                } else {
-                    DIE("no next hop to go to");
-                }
+                fpoint p;
 
-                double x = t->x + ((fnexthop_x - t->x) * THING_COORD_MOVE);
-                double y = t->y + ((fnexthop_y - t->y) * THING_COORD_MOVE);
+                p.x = fnexthop_x - t->x;
+                p.y = fnexthop_y - t->y;
+
+                p = funit(p);
+
+                double d = DISTANCE(t->x, t->y, fnexthop_x, fnexthop_y);
+                d = min(THING_MONST_COORD_MOVE, d);
+                p = fmul(d, p);
+
+                double x = t->x + p.x;
+                double y = t->y + p.y;
 
                 thing_server_move(t,
                         x,

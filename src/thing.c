@@ -1742,7 +1742,7 @@ void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
     if (is_new || thing_is_player(t)) {
         wid_set_tl_br(t->wid, tl, br);
     } else {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, 50);
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000);
     }
 }
 
@@ -1794,7 +1794,11 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+        if (thing_is_monst(t)) {
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000);
+        } else {
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+        }
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
@@ -2160,11 +2164,14 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
 static void thing_common_move (thingp t,
                                double *x,
                                double *y,
-                               const boolean up,
-                               const boolean down,
-                               const boolean left,
-                               const boolean right)
+                               boolean up,
+                               boolean down,
+                               boolean left,
+                               boolean right)
 {
+    double ox = t->x;
+    double oy = t->y;
+
     if (*x < 0) {
         *x = 0;
     }
@@ -2179,6 +2186,22 @@ static void thing_common_move (thingp t,
 
     if (*y > TILES_MAP_HEIGHT - 1) {
         *y = TILES_MAP_HEIGHT - 1;
+    }
+
+    if (*x > ox) {
+        right = true;
+    }
+
+    if (*x < ox) {
+        left = true;
+    }
+
+    if (*y > oy) {
+        down = true;
+    }
+
+    if (*y < oy) {
+        up = true;
     }
 
     if (up) {
@@ -2212,12 +2235,21 @@ void thing_client_move (thingp t,
                         const boolean left,
                         const boolean right)
 {
-    thing_common_move(t, &x, &y, up, down, left, right);
-
-    if (thing_hit_solid_obstacle(wid_game_map_client_grid_container, 
+    if (thing_hit_solid_obstacle(wid_game_map_server_grid_container,
                                  t, x, y)) {
-        return;
+
+        if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
+                                    t, x, t->y)) {
+            y = t->y;
+        } else if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
+                                    t, t->x, y)) {
+            x = t->x;
+        } else {
+            return;
+        }
     }
+
+    thing_common_move(t, &x, &y, up, down, left, right);
 
     /*
      * Oddly doing smooth moving makes it more jumpy when scrolling.
@@ -2235,14 +2267,12 @@ void thing_server_move (thingp t,
                         const boolean left,
                         const boolean right)
 {
-    thing_common_move(t, &x, &y, up, down, left, right);
-
     if (thing_is_player(t)) {
         if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
             (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
             /*
-            * Client is cheating?
-            */
+             * Client is cheating?
+             */
             THING_LOG(t, "client moved too much, ignore move");
 
             t->updated++;
@@ -2253,18 +2283,30 @@ void thing_server_move (thingp t,
 
     if (thing_hit_solid_obstacle(wid_game_map_server_grid_container,
                                  t, x, y)) {
-        if (thing_is_player(t)) {
-            THING_LOG(t, "error, client move blocked, hit obstacle on server");
 
-            /*
-             * Fake an update so we tell the client our position again so they 
-             * can correct.
-             */
-            t->updated++;
-            t->resync = 1;
+        if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
+                                      t, x, t->y)) {
+            y = t->y;
+        } else if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
+                                             t, t->x, y)) {
+            x = t->x;
+        } else {
+            THING_LOG(t, "error, server move blocked, hit obstacle on server");
+
+            if (thing_is_player(t)) {
+
+                /*
+                 * Fake an update so we tell the client our position again so 
+                 * they can correct.
+                 */
+                t->updated++;
+                t->resync = 1;
+            }
+            return;
         }
-        return;
     }
+
+    thing_common_move(t, &x, &y, up, down, left, right);
 
     thing_server_wid_update(t, x, y, false /* is_new */);
     t->updated++;

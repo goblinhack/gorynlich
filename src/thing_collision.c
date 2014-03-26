@@ -27,8 +27,13 @@ static boolean things_overlap (const thingp A,
                                const thingp B)
 {
     static tilep wall;
+    static tilep monst;
     static double xscale;
     static double yscale;
+    static double Mpx1;
+    static double Mpx2;
+    static double Mpy1;
+    static double Mpy2;
 
     /*
      * The tiles are considered to be 1 unit wide. However the actual pixels
@@ -38,46 +43,69 @@ static boolean things_overlap (const thingp A,
      */
     if (!wall) {
         wall = tile_find("wall_0_0");
+        if (!wall) {
+            DIE("no wall for collisions");
+        }
 
         xscale = 1.0 / (wall->px2 - wall->px1);
         yscale = 1.0 / (wall->py2 - wall->py1);
+
+        monst = tile_find("monst-overlap");
+        if (!monst) {
+            DIE("no monst for collisions");
+        }
+
+        Mpx1 = monst->px1;
+        Mpx2 = monst->px2;
+        Mpy1 = monst->py1;
+        Mpy2 = monst->py2;
+        LOG("%f %f %f %f",Mpx1,Mpx2,Mpy1,Mpy2);
+        Mpx1 = monst->px1 * xscale;
+        Mpx2 = monst->px2 * xscale;
+        Mpy1 = monst->py1 * yscale;
+        Mpy2 = monst->py2 * yscale;
+        LOG("%f %f %f %f",Mpx1,Mpx2,Mpy1,Mpy2);
     }
 
     widp widA = thing_wid(A);
     widp widB = thing_wid(B);
 
-    tilep tileA = wid_get_tile(widA);
-    tilep tileB = wid_get_tile(widB);
+    double Apx1;
+    double Apx2;
+    double Apy1;
+    double Apy2;
 
-    double Apx1 = tileA->px1 * xscale;
-    double Apx2 = tileA->px2 * xscale;
-    double Apy1 = tileA->py1 * yscale;
-    double Apy2 = tileA->py2 * yscale;
+    double Bpx1;
+    double Bpx2;
+    double Bpy1;
+    double Bpy2;
 
-    double Bpx1 = tileB->px1 * xscale;
-    double Bpx2 = tileB->px2 * xscale;
-    double Bpy1 = tileB->py1 * yscale;
-    double Bpy2 = tileB->py2 * yscale;
-
-    double xoverlap = 0.1;
-    double yoverlap = 0.3;
-    double yoverlap2 = 5.4;
-
-    if (thing_is_monst(A)) {
-        return (false);
-    }
     if (thing_is_monst(A) || thing_is_player(A)) {
-        Apx1 += xoverlap;
-        Apx2 -= xoverlap;
-        Apy1 += yoverlap;
-        Apy2 += yoverlap2;
+        Apx1 = Mpx1;
+        Apx2 = Mpx2;
+        Apy1 = Mpy1;
+        Apy2 = Mpy2;
+    } else {
+        tilep tileA = wid_get_tile(widA);
+
+        Apx1 = tileA->px1 * xscale;
+        Apx2 = tileA->px2 * xscale;
+        Apy1 = tileA->py1 * yscale;
+        Apy2 = tileA->py2 * yscale;
     }
 
     if (thing_is_monst(B) || thing_is_player(B)) {
-        Bpx1 += xoverlap;
-        Bpx2 -= xoverlap;
-        Bpy1 += yoverlap;
-        Bpy2 += yoverlap2;
+        Bpx1 = Mpx1;
+        Bpx2 = Mpx2;
+        Bpy1 = Mpy1;
+        Bpy2 = Mpy2;
+    } else {
+        tilep tileB = wid_get_tile(widB);
+
+        Bpx1 = tileB->px1 * xscale;
+        Bpx2 = tileB->px2 * xscale;
+        Bpy1 = tileB->py1 * yscale;
+        Bpy2 = tileB->py2 * yscale;
     }
 
     /*
