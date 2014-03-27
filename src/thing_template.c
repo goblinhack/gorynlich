@@ -415,7 +415,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
         GET_OPT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
         GET_OPT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx27", t->is_xxx27);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_generator", t->is_generator);
         GET_OPT_NAMED_BITFIELD(ctx, "is_scarable", t->is_scarable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
@@ -513,7 +513,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
     PUT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
     PUT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx27", t->is_xxx27);
+    PUT_NAMED_BITFIELD(ctx, "is_generator", t->is_generator);
     PUT_NAMED_BITFIELD(ctx, "is_scarable", t->is_scarable);
     PUT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
     PUT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
@@ -859,9 +859,9 @@ boolean thing_template_is_pipe (thing_templatep t)
     return (t->is_pipe);
 }
 
-boolean thing_template_is_xxx27 (thing_templatep t)
+boolean thing_template_is_generator (thing_templatep t)
 {
-    return (t->is_xxx27);
+    return (t->is_generator);
 }
 
 boolean thing_template_is_scarable (thing_templatep t)

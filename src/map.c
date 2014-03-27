@@ -232,9 +232,9 @@ boolean map_is_pipe_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_pipe));
 }
 
-boolean map_is_xxx27_at (levelp level, int32_t x, int32_t y)
+boolean map_is_generator_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx27));
+    return (map_is_x_at(level, x, y, thing_template_is_generator));
 }
 
 boolean map_is_scarable_at (levelp level, int32_t x, int32_t y)
@@ -485,9 +485,9 @@ thingp map_thing_is_pipe_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_pipe));
 }
 
-thingp map_thing_is_xxx27_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_generator_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx27));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_generator));
 }
 
 thingp map_thing_is_scarable_at (levelp level, int32_t x, int32_t y)
@@ -754,9 +754,9 @@ tree_rootp map_all_things_is_pipe_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_pipe));
 }
 
-tree_rootp map_all_things_is_xxx27_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_generator_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx27));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_generator));
 }
 
 tree_rootp map_all_things_is_scarable_at (levelp level, int32_t x, int32_t y)
@@ -1025,10 +1025,10 @@ thing_templatep map_find_pipe_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_pipe, w));
 }
 
-thing_templatep map_find_xxx27_at (levelp level,
+thing_templatep map_find_generator_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx27, w));
+    return (map_find_x_at(level, x, y, thing_template_is_generator, w));
 }
 
 thing_templatep map_find_xxx28_at (levelp level,
@@ -1546,9 +1546,9 @@ uint32_t level_count_is_pipe (levelp level)
     return (level_count_is_x(level, thing_template_is_pipe));
 }
 
-uint32_t level_count_is_xxx27 (levelp level)
+uint32_t level_count_is_generator (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx27));
+    return (level_count_is_x(level, thing_template_is_generator));
 }
 
 uint32_t level_count_is_scarable (levelp level)
@@ -1817,9 +1817,9 @@ tree_rootp map_all_things_is_pipe (levelp level)
     return (map_all_things_is_x(level, thing_template_is_pipe));
 }
 
-tree_rootp map_all_things_is_xxx27 (levelp level)
+tree_rootp map_all_things_is_generator (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx27));
+    return (map_all_things_is_x(level, thing_template_is_generator));
 }
 
 tree_rootp map_all_things_is_scarable (levelp level)
