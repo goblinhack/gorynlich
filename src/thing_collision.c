@@ -55,16 +55,10 @@ static boolean things_overlap (const thingp A,
             DIE("no monst for collisions");
         }
 
-        Mpx1 = monst->px1;
-        Mpx2 = monst->px2;
-        Mpy1 = monst->py1;
-        Mpy2 = monst->py2;
-        LOG("%f %f %f %f",Mpx1,Mpx2,Mpy1,Mpy2);
         Mpx1 = monst->px1 * xscale;
         Mpx2 = monst->px2 * xscale;
         Mpy1 = monst->py1 * yscale;
         Mpy2 = monst->py2 * yscale;
-        LOG("%f %f %f %f",Mpx1,Mpx2,Mpy1,Mpy2);
     }
 
     widp widA = thing_wid(A);
@@ -184,12 +178,14 @@ void thing_handle_collisions (widp grid, thingp t)
             /*
              * handle
              */
-            if (thing_is_key(it)) {
-                thing_collect(me, thing_get_template(it));
-                thing_dead(it, t, "collected");
+            if (thing_is_player(me)) {
+                if (thing_is_key(it)) {
+                    thing_collect(me, thing_get_template(it));
+                    thing_dead(it, t, "collected");
 
-                wid_it = wid_next;
-                continue;
+                    wid_it = wid_next;
+                    continue;
+                }
             }
 
             wid_it = wid_next;

@@ -125,6 +125,7 @@
  */
 #define THING_PLAYER_COORD_MOVE     0.10
 #define THING_MONST_COORD_MOVE      1.00
+#define THING_MONST_SPEED           250
 
 /*
  * How many tiles difference between the client and server do we allow.
