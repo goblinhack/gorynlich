@@ -361,6 +361,8 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     c = 'F';
                 } else if (map_is_key_at(level, x, y)) {
                     c = 'k';
+                } else if (map_is_generator_at(level, x, y)) {
+                    c = 'G';
                 } else if (map_is_star_at(level, x, y)) {
                     c = 'o';
                 } else if (map_is_exit_at(level, x, y)) {
@@ -740,7 +742,6 @@ static void dmap_astar_eval_neighbor (dmap *map, dmap_astar_node *current,
      */
     dmap_goal *goal = map->goals[nexthop_x][nexthop_y];
     if (goal && (goal->score < 0)) {
-fprintf(fp,"  terminal goal %d %d\n", nexthop_x, nexthop_y);
         return;
     }
 
@@ -754,7 +755,6 @@ fprintf(fp,"  terminal goal %d %d\n", nexthop_x, nexthop_y);
     int16_t distance_to_nexthop =
         map->score[nexthop_x][nexthop_y];
 
-fprintf(fp,"  eval %d %d distance_to_nexthop %d\n", nexthop_x, nexthop_y, distance_to_nexthop);
     /*
      * We use positive scores for good, but want to minimize distance.
      */
@@ -771,7 +771,6 @@ fprintf(fp,"  eval %d %d distance_to_nexthop %d\n", nexthop_x, nexthop_y, distan
         neighbor->cost_from_start_to_goal = cost_from_start_to_here +
             dmap_astar_cost_est_from_here_to_goal(map, nexthop_x, nexthop_y);
 
-fprintf(fp,"  add go open %d %d\n", nexthop_x, nexthop_y);
         dmap_astar_add_to_open(map, neighbor);
         return;
     }
@@ -784,7 +783,6 @@ fprintf(fp,"  add go open %d %d\n", nexthop_x, nexthop_y);
         neighbor->cost_from_start_to_goal = cost_from_start_to_here +
             dmap_astar_cost_est_from_here_to_goal(map, nexthop_x, nexthop_y);
 
-fprintf(fp,"  add better to open %d %d\n", nexthop_x, nexthop_y);
         dmap_astar_add_to_open(map, neighbor);
     }
 }
@@ -864,7 +862,6 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     node->cost_from_start_to_goal =
             dmap_astar_cost_est_from_here_to_goal(map, start_x, start_y);
 
-fprintf(fp," want goal %d %d\n", map->goal_x, map->goal_y);
     while (!tree_root_is_empty(map->open_nodes)) {
         /*
          * current := the node in openset having the lowest f_score[] value
@@ -878,7 +875,6 @@ fprintf(fp," want goal %d %d\n", map->goal_x, map->goal_y);
         if ((current->x == map->goal_x) && (current->y == map->goal_y)) {
             dmap_astar_reconstruct_path(map, current);
             goal_found = true;
-fprintf(fp," found goal %d %d\n", current->x, current->y);
             break;
         }
 
@@ -1361,7 +1357,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
     dmap_print_map(map, t->x, t->y, true, true);
 
     if (!map->goal_nodes) {
-LOG("no goal");
         /*
          * If no goal was found, try and keep moving the same way.
          */
@@ -1380,7 +1375,6 @@ LOG("no goal");
             dmap_goal *goal =
                     (typeof(goal)) tree_root_first(map->goal_nodes);
 
-LOG("  possible %d %d score %d",goal->x,goal->y, goal->score);
             /*
              * Goal is something we want to avoid? Ignore for now.
              */
@@ -1393,7 +1387,6 @@ LOG("  possible %d %d score %d",goal->x,goal->y, goal->score);
              * Too close to a bad goal? Ignore this goal for now.
              */
             if (map->score[goal->x][goal->y] < -7) {
-LOG("    too close to bad");
                 dmap_goal_free(map, goal);
                 continue;
             }
@@ -1402,7 +1395,6 @@ LOG("    too close to bad");
              * Stick with the same next hop if nothing good.
              */
             if ((goal->x == t->x) && (goal->y == t->y)) {
-LOG("    same goal");
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
                 found_goal = true;
@@ -1416,7 +1408,6 @@ LOG("    same goal");
                 break;
             }
 
-LOG("    no star path");
             dmap_goal_free(map, goal);
         }
 
@@ -1430,7 +1421,6 @@ LOG("    no star path");
         int16_t target_x = -1;
         int16_t target_y = -1;
 
-LOG("no goal2");
         dmap_find_best_cell(map, t, &target_x, &target_y);
 
         if ((target_x != t->x) || (target_y != t->y)) {
@@ -1448,7 +1438,6 @@ LOG("no goal2");
     if (!found_goal) {
         int16_t target_x = -1;
         int16_t target_y = -1;
-LOG("no goal3");
 
         dmap_find_oldest_visited(map, t, &target_x, &target_y);
 
@@ -1464,7 +1453,6 @@ LOG("no goal3");
     if (!found_goal) {
         THING_LOG(t, "found no goal, try moving the same way");
 
-LOG("no goal4");
         /*
          * If no goal was found, try and keep moving the same way.
          */
@@ -1478,7 +1466,6 @@ LOG("no goal4");
     }
 
     if (!found_goal) {
-LOG("no goal5");
         dmap_print_map(map, t->x, t->y, true, true);
         THING_LOG(t, "no goal");
         return (false);
@@ -1500,7 +1487,6 @@ LOG("no goal5");
 
     t->last_x = t->x;
     t->last_y = t->y;
-LOG("goal %d %d",*nexthop_x, *nexthop_y);
 
     /*
      * Show likely best path.
