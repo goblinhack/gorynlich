@@ -1445,7 +1445,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         int16_t target_x = -1;
         int16_t target_y = -1;
 
-        LOG("no goal; find best area");
         dmap_find_best_cell(map, t, &target_x, &target_y);
 
         if ((target_x != t->x) || (target_y != t->y)) {
@@ -1464,7 +1463,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         int16_t target_x = -1;
         int16_t target_y = -1;
 
-        LOG("no goal; find oldest area");
         dmap_find_oldest_visited(map, t, &target_x, &target_y);
 
         if ((target_x != t->x) || (target_y != t->y)) {
@@ -1495,7 +1493,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
 #ifdef ENABLE_MAP_DEBUG
         dmap_print_map(map, t->x, t->y, false, true);
 #endif
-        LOG("no goal");
         return (false);
     }
 
@@ -1508,8 +1505,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
             dmap_print_map(map, t->x, t->y, false, true);
         }
 #endif
-        LOG("nexthop %d %d into a wall", *nexthop_x, *nexthop_y);
-
         return (false);
     }
 
