@@ -7433,7 +7433,7 @@ void wid_move_all (void)
 {
     widp w;
 
-    { TREE_OFFSET_WALK_UNSAFE(wid_top_level3, w) {
+    { TREE_OFFSET_WALK(wid_top_level3, w, tree3) {
         verify(w);
 
         int32_t x;
