@@ -165,9 +165,11 @@ static void thing_tick_server_all (void)
                 look_for_nexthop = true;
             }
 
+#if 0
             if (!time_have_x_hundredths_passed_since(5, t->timestamp_ai)) {
                 look_for_nexthop = false;
             }
+#endif
 
             /*
              * Need to look for a nexthop? Or keep walking on?
@@ -175,7 +177,6 @@ static void thing_tick_server_all (void)
             boolean have_nexthop;
             if (look_for_nexthop) {
                 have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
-LOG("NH at %f %f %d %d", t->x, t->y, nexthop_x, nexthop_y);
 
                 t->timestamp_ai = time_get_time_cached();
             } else {

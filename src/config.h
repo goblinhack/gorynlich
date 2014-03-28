@@ -14,7 +14,7 @@
 #define ENABLE_VIDEO_SYNC          // Vertical sync
 #undef ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #undef ENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
-#define ENABLE_MAP_DEBUG           // Debug AI by printing the map
+#undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
