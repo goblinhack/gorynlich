@@ -217,6 +217,7 @@ boolean wid_game_map_client_player_move (void)
 
     thing_client_move(player, x, y, up, down, left, right);
 
+    wid_hide(wid_game_map_client_window, 0);
     /*
      * If no key then we allow the console.
      */
