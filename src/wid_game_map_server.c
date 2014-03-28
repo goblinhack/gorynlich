@@ -50,7 +50,7 @@ void wid_game_map_server_fini (void)
 void wid_game_map_server_hide (void)
 {
     if (wid_game_map_server_window) {
-//        wid_hide(wid_game_map_server_window, wid_swipe_delay);
+        wid_hide(wid_game_map_server_window, wid_swipe_delay);
 
         wid_detach_from_grid(wid_game_map_server_grid_container);
 
@@ -67,8 +67,7 @@ void wid_game_map_server_visible (void)
     server_start(server_address);
 
     if (wid_game_map_server_window) {
-//        wid_hide(wid_game_map_server_window, 0);
-//        wid_raise(wid_game_map_server_window);
+        wid_hide(wid_game_map_server_window, 0);
     } else {
         wid_game_map_server_wid_create();
     }
@@ -168,7 +167,7 @@ void wid_game_map_server_wid_create (void)
     /*
      * Never show the server things
      */
-//    wid_hide(wid_game_map_server_window, 0);
+    wid_hide(wid_game_map_server_window, 0);
 
     wid_editor_map_loading = true;
 

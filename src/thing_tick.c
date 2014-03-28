@@ -165,11 +165,9 @@ static void thing_tick_server_all (void)
                 look_for_nexthop = true;
             }
 
-#if 0
-            if (!time_have_x_hundredths_passed_since(5, t->timestamp_ai)) {
+            if (!time_have_x_hundredths_passed_since(10, t->timestamp_ai)) {
                 look_for_nexthop = false;
             }
-#endif
 
             /*
              * Need to look for a nexthop? Or keep walking on?
