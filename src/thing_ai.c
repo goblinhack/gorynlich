@@ -341,12 +341,6 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     }
                 }
 
-                if (show_best) {
-                    if (map->best[x][y] != ' ') {
-                        c = 'b';
-                    }
-                }
-
                 if (map_is_pipe_at(level, x, y)) {
                     if (level->end_pipe[x][y] != ' ') {
                         c = 'P';
@@ -361,14 +355,22 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     c = 'F';
                 } else if (map_is_key_at(level, x, y)) {
                     c = 'k';
+#if 0
                 } else if (map_is_generator_at(level, x, y)) {
                     c = 'G';
+#endif
                 } else if (map_is_star_at(level, x, y)) {
                     c = 'o';
                 } else if (map_is_exit_at(level, x, y)) {
                     c = '<';
                 } else if (map_is_player_at(level, x, y)) {
                     c = '@';
+                }
+
+                if (show_best) {
+                    if (map->best[x][y] != ' ') {
+                        c = 'b';
+                    }
                 }
             }
 
@@ -892,6 +894,29 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
         dmap_astar_eval_neighbor(map, current,  1, 0);
         dmap_astar_eval_neighbor(map, current,  0, -1);
         dmap_astar_eval_neighbor(map, current,  0,  1);
+
+        int16_t current_x = current->x;
+        int16_t current_y = current->y;
+
+        if (walls[current_x - 1][current_y] == ' ') {
+            if (walls[current_x][current_y - 1] == ' ') {
+                dmap_astar_eval_neighbor(map, current, -1, -1);
+            }
+
+            if (walls[current_x][current_y + 1] == ' ') {
+                dmap_astar_eval_neighbor(map, current, -1, +1);
+            }
+        }
+
+        if (walls[current_x + 1][current_y] == ' ') {
+            if (walls[current_x][current_y - 1] == ' ') {
+                dmap_astar_eval_neighbor(map, current, 1, -1);
+            }
+
+            if (walls[current_x][current_y + 1] == ' ') {
+                dmap_astar_eval_neighbor(map, current, 1, +1);
+            }
+        }
     }
 
     tree_destroy(&map->open_nodes, 0);
@@ -1354,7 +1379,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
      * Find all goals.
      */
     dmap_goals_find(map, t);
-    dmap_print_map(map, t->x, t->y, true, true);
 
     if (!map->goal_nodes) {
         /*
@@ -1421,6 +1445,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         int16_t target_x = -1;
         int16_t target_y = -1;
 
+        LOG("no goal; find best area");
         dmap_find_best_cell(map, t, &target_x, &target_y);
 
         if ((target_x != t->x) || (target_y != t->y)) {
@@ -1439,6 +1464,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         int16_t target_x = -1;
         int16_t target_y = -1;
 
+        LOG("no goal; find oldest area");
         dmap_find_oldest_visited(map, t, &target_x, &target_y);
 
         if ((target_x != t->x) || (target_y != t->y)) {
@@ -1451,7 +1477,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
     }
 
     if (!found_goal) {
-        THING_LOG(t, "found no goal, try moving the same way");
+        LOG("found no goal, try moving the same way");
 
         /*
          * If no goal was found, try and keep moving the same way.
@@ -1466,8 +1492,10 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
     }
 
     if (!found_goal) {
-        dmap_print_map(map, t->x, t->y, true, true);
-        THING_LOG(t, "no goal");
+#ifdef ENABLE_MAP_DEBUG
+        dmap_print_map(map, t->x, t->y, false, true);
+#endif
+        LOG("no goal");
         return (false);
     }
 
@@ -1477,7 +1505,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
 
 #ifdef ENABLE_MAP_DEBUG
         if (thing_is_monst(t)) {
-            dmap_print_map(map, t->x, t->y, true, true);
+            dmap_print_map(map, t->x, t->y, false, true);
         }
 #endif
         LOG("nexthop %d %d into a wall", *nexthop_x, *nexthop_y);
@@ -1493,7 +1521,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
      */
 #ifdef ENABLE_MAP_DEBUG
     if (thing_is_monst(t)) {
-        dmap_print_map(map, t->x, t->y, true, true);
+        dmap_print_map(map, t->x, t->y, false, true);
     }
 #endif
 

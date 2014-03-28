@@ -112,9 +112,9 @@ boolean map_is_key_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_key));
 }
 
-boolean map_is_xxx2_at (levelp level, int32_t x, int32_t y)
+boolean map_is_collision_map_small_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx2));
+    return (map_is_x_at(level, x, y, thing_template_is_collision_map_small));
 }
 
 boolean map_is_xxx3_at (levelp level, int32_t x, int32_t y)
@@ -365,9 +365,9 @@ thingp map_thing_is_key_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_key));
 }
 
-thingp map_thing_is_xxx2_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_collision_map_small_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx2));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_collision_map_small));
 }
 
 thingp map_thing_is_xxx3_at (levelp level, int32_t x, int32_t y)
@@ -634,9 +634,9 @@ tree_rootp map_all_things_is_key_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_key));
 }
 
-tree_rootp map_all_things_is_xxx2_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_collision_map_small_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx2));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_collision_map_small));
 }
 
 tree_rootp map_all_things_is_xxx3_at (levelp level, int32_t x, int32_t y)
@@ -884,7 +884,7 @@ thing_templatep map_find_key_at (levelp level,
 thing_templatep map_find_xxx2_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx2, w));
+    return (map_find_x_at(level, x, y, thing_template_is_collision_map_small, w));
 }
 
 thing_templatep map_find_xxx3_at (levelp level,
@@ -1426,9 +1426,9 @@ uint32_t level_count_is_key (levelp level)
     return (level_count_is_x(level, thing_template_is_key));
 }
 
-uint32_t level_count_is_xxx2 (levelp level)
+uint32_t level_count_is_collision_map_small (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx2));
+    return (level_count_is_x(level, thing_template_is_collision_map_small));
 }
 
 uint32_t level_count_is_xxx3 (levelp level)
@@ -1697,9 +1697,9 @@ tree_rootp map_all_things_is_key (levelp level)
     return (map_all_things_is_x(level, thing_template_is_key));
 }
 
-tree_rootp map_all_things_is_xxx2 (levelp level)
+tree_rootp map_all_things_is_collision_map_small (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx2));
+    return (map_all_things_is_x(level, thing_template_is_collision_map_small));
 }
 
 tree_rootp map_all_things_is_xxx3 (levelp level)

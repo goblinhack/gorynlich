@@ -7,6 +7,7 @@
  score_on_death=250
  z_order=4
  is_monst
+is_collision_map_small
  is_animated
  is_plant
  is_effect_rotate_2way
