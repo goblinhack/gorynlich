@@ -6,6 +6,7 @@
  speed=500
  health=150
  is_player
+is_collision_map_small
  is_animated
  is_left_as_corpse_on_death
  tiles={

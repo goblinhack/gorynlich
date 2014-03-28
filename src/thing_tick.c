@@ -139,10 +139,6 @@ static void thing_tick_server_all (void)
             }
         }
 
-        /*
-         * Look for collisions.
-         */
-//        thing_handle_collisions(wid_game_map_server_grid_container, t);
         w = t->wid;
 
         /*
@@ -178,8 +174,8 @@ static void thing_tick_server_all (void)
              */
             boolean have_nexthop;
             if (look_for_nexthop) {
-LOG("NH");
                 have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
+LOG("NH at %f %f %d %d", t->x, t->y, nexthop_x, nexthop_y);
 
                 t->timestamp_ai = time_get_time_cached();
             } else {
@@ -207,9 +203,18 @@ LOG("NH");
                     LOG("no floor tile to hop to for %s", thing_logname(t));
                 }
  
+#if 1
                 double fnexthop_x = (double)nexthop_x;
                 double fnexthop_y = (double)nexthop_y;
 
+                thing_server_move(t,
+                        fnexthop_x,
+                        fnexthop_y,
+                        thing_is_dir_up(t),
+                        thing_is_dir_down(t),
+                        thing_is_dir_left(t),
+                        thing_is_dir_right(t));
+#else
                 fpoint p;
 
                 p.x = fnexthop_x - t->x;
@@ -231,6 +236,7 @@ LOG("NH");
                         thing_is_dir_down(t),
                         thing_is_dir_left(t),
                         thing_is_dir_right(t));
+#endif
             }
         }
     }

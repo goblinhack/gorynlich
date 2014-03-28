@@ -745,6 +745,9 @@ static void client_poll (void)
                 break;
 
             case MSG_SERVER_STATUS: {
+                /*
+                 * This is an update of all players in the game.
+                 */
                 msg_server_status latest_status;
 
                 memset(&latest_status, 0, sizeof(latest_status));
@@ -755,9 +758,19 @@ static void client_poll (void)
                     client_check_still_in_game();
                 }
 
+                boolean redo = false;
+
+                if (server_status.server_current_players !=
+                    latest_status.server_current_players) {
+                    LOG("Number of players in game now %u", 
+                        latest_status.server_current_players);
+
+                    redo = true;
+                }
+
                 memcpy(&server_status, &latest_status, sizeof(server_status));
 
-                wid_game_map_client_score_update(client_level, false /* redo */);
+                wid_game_map_client_score_update(client_level, redo);
                 break;
             }
 
@@ -766,6 +779,9 @@ static void client_poll (void)
                 break;
 
             case MSG_PLAYER_UPDATE:
+                /*
+                 * This is an update of a single player (usually score).
+                 */
                 socket_client_rx_player_update(s, packet, data);
 
                 wid_game_map_client_score_update(client_level, true /* redo */);
