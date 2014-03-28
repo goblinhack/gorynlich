@@ -390,7 +390,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_small", t->is_collision_map_small);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
@@ -488,7 +488,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx2", t->is_xxx2);
+    PUT_NAMED_BITFIELD(ctx, "is_collision_map_small", t->is_collision_map_small);
     PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
     PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
     PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
@@ -734,9 +734,9 @@ boolean thing_template_is_key (thing_templatep t)
     return (t->is_key);
 }
 
-boolean thing_template_is_xxx2 (thing_templatep t)
+boolean thing_template_is_collision_map_small (thing_templatep t)
 {
-    return (t->is_xxx2);
+    return (t->is_collision_map_small);
 }
 
 boolean thing_template_is_xxx3 (thing_templatep t)

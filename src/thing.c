@@ -1388,11 +1388,11 @@ boolean thing_is_key (thingp t)
     return (thing_template_is_key(thing_get_template(t)));
 }
 
-boolean thing_is_xxx2 (thingp t)
+boolean thing_is_collision_map_small (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx2(thing_get_template(t)));
+    return (thing_template_is_collision_map_small(thing_get_template(t)));
 }
 
 boolean thing_is_xxx3 (thingp t)
@@ -2235,15 +2235,12 @@ void thing_client_move (thingp t,
                         const boolean left,
                         const boolean right)
 {
-    LOG("%f %f",x,y);
-    if (thing_hit_solid_obstacle(wid_game_map_server_grid_container,
-                                 t, x, y)) {
+    widp grid = wid_game_map_client_grid_container;
 
-        if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
-                                    t, x, t->y)) {
+    if (thing_client_hit_solid_obstacle(grid, t, x, y)) {
+        if (!thing_client_hit_solid_obstacle(grid, t, x, t->y)) {
             y = t->y;
-        } else if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
-                                    t, t->x, y)) {
+        } else if (!thing_client_hit_solid_obstacle(grid, t, t->x, y)) {
             x = t->x;
         } else {
             return;
@@ -2268,6 +2265,18 @@ void thing_server_move (thingp t,
                         const boolean left,
                         const boolean right)
 {
+    widp grid = wid_game_map_server_grid_container;
+
+    if (thing_server_hit_solid_obstacle(grid, t, x, y)) {
+        if (!thing_server_hit_solid_obstacle(grid, t, x, t->y)) {
+            y = t->y;
+        } else if (!thing_server_hit_solid_obstacle(grid, t, t->x, y)) {
+            x = t->x;
+        } else {
+            return;
+        }
+    }
+
     if (thing_is_player(t)) {
         if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
             (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
@@ -2278,31 +2287,6 @@ void thing_server_move (thingp t,
 
             t->updated++;
             t->resync = 1;
-            return;
-        }
-    }
-
-    if (thing_hit_solid_obstacle(wid_game_map_server_grid_container,
-                                 t, x, y)) {
-
-        if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
-                                      t, x, t->y)) {
-            y = t->y;
-        } else if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container,
-                                             t, t->x, y)) {
-            x = t->x;
-        } else {
-            THING_LOG(t, "error, server move blocked, hit obstacle on server");
-
-            if (thing_is_player(t)) {
-
-                /*
-                 * Fake an update so we tell the client our position again so 
-                 * they can correct.
-                 */
-                t->updated++;
-                t->resync = 1;
-            }
             return;
         }
     }

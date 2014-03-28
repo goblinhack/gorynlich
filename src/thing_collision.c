@@ -74,7 +74,7 @@ static boolean things_overlap (const thingp A,
     double Bpy1;
     double Bpy2;
 
-    if (thing_is_monst(A) || thing_is_player(A)) {
+    if (thing_is_collision_map_small(A)) {
         Apx1 = Mpx1;
         Apx2 = Mpx2;
         Apy1 = Mpy1;
@@ -88,7 +88,7 @@ static boolean things_overlap (const thingp A,
         Apy2 = tileA->py2 * yscale;
     }
 
-    if (thing_is_monst(B) || thing_is_player(B)) {
+    if (thing_is_collision_map_small(B)) {
         Bpx1 = Mpx1;
         Bpx2 = Mpx2;
         Bpy1 = Mpy1;
@@ -195,8 +195,73 @@ void thing_handle_collisions (widp grid, thingp t)
 
 /*
  * Have we hit anything?
+ *
+ * No open doors in here.
  */
-boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
+boolean thing_client_hit_solid_obstacle (widp grid, 
+                                         thingp t, double nx, double ny)
+{
+    thingp it;
+    thingp me;
+    widp wid_next;
+    widp wid_me;
+    widp wid_it;
+
+    verify(t);
+    wid_me = thing_wid(t);
+    verify(wid_me);
+
+    int32_t dx, dy;
+
+    me = wid_get_thing(wid_me);
+
+    for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
+        int32_t x = (int32_t)nx + dx;
+        int32_t y = (int32_t)ny + dy;
+
+        wid_it = wid_grid_find_first(grid, x, y);
+        while (wid_it) {
+            verify(wid_it);
+
+            wid_next = wid_grid_find_next(grid, wid_it, x, y);
+            if (wid_me == wid_it) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            it = wid_get_thing(wid_it);
+
+            if (thing_is_floor(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (!thing_is_wall(it) && 
+                !thing_is_door(it) && 
+                !thing_is_monst(t)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (!things_overlap(me, nx, ny, it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+/*
+ * Have we hit anything?
+ *
+ * Can open doors.
+ */
+boolean thing_server_hit_solid_obstacle (widp grid, 
+                                         thingp t, double nx, double ny)
 {
     thingp it;
     thingp me;
