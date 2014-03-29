@@ -2237,10 +2237,10 @@ void thing_client_move (thingp t,
 {
     widp grid = wid_game_map_client_grid_container;
 
-    if (thing_client_hit_solid_obstacle(grid, t, x, y)) {
-        if (!thing_client_hit_solid_obstacle(grid, t, x, t->y)) {
+    if (thing_hit_solid_obstacle(grid, t, x, y)) {
+        if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
             y = t->y;
-        } else if (!thing_client_hit_solid_obstacle(grid, t, t->x, y)) {
+        } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
             x = t->x;
         } else {
             return;
@@ -2267,10 +2267,10 @@ void thing_server_move (thingp t,
 {
     widp grid = wid_game_map_server_grid_container;
 
-    if (thing_server_hit_solid_obstacle(grid, t, x, y)) {
-        if (!thing_server_hit_solid_obstacle(grid, t, x, t->y)) {
+    if (thing_hit_solid_obstacle(grid, t, x, y)) {
+        if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
             y = t->y;
-        } else if (!thing_server_hit_solid_obstacle(grid, t, t->x, y)) {
+        } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
             x = t->x;
         } else {
             return;

@@ -176,6 +176,15 @@ void thing_handle_collisions (widp grid, thingp t)
             }
 
             /*
+             * Open doors if you have a key.
+             */
+            if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+                level_open_door(server_level, x, y);
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
              * handle
              */
             if (thing_is_player(me)) {
@@ -198,8 +207,7 @@ void thing_handle_collisions (widp grid, thingp t)
  *
  * No open doors in here.
  */
-boolean thing_client_hit_solid_obstacle (widp grid, 
-                                         thingp t, double nx, double ny)
+boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 {
     thingp it;
     thingp me;
@@ -243,75 +251,15 @@ boolean thing_client_hit_solid_obstacle (widp grid,
                 continue;
             }
 
-            if (!things_overlap(me, nx, ny, it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            return (true);
-        }
-    }
-
-    return (false);
-}
-
-/*
- * Have we hit anything?
- *
- * Can open doors.
- */
-boolean thing_server_hit_solid_obstacle (widp grid, 
-                                         thingp t, double nx, double ny)
-{
-    thingp it;
-    thingp me;
-    widp wid_next;
-    widp wid_me;
-    widp wid_it;
-
-    verify(t);
-    wid_me = thing_wid(t);
-    verify(wid_me);
-
-    int32_t dx, dy;
-
-    me = wid_get_thing(wid_me);
-
-    for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
-        int32_t x = (int32_t)nx + dx;
-        int32_t y = (int32_t)ny + dy;
-
-        wid_it = wid_grid_find_first(grid, x, y);
-        while (wid_it) {
-            verify(wid_it);
-
-            wid_next = wid_grid_find_next(grid, wid_it, x, y);
-            if (wid_me == wid_it) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            it = wid_get_thing(wid_it);
-
-            if (thing_is_floor(it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            if (!thing_is_wall(it) && 
-                !thing_is_door(it) && 
-                !thing_is_monst(t)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            if (!things_overlap(me, nx, ny, it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
+            /*
+             * Allow to walk through doors so we can open them later.
+             */
             if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
-                level_open_door(server_level, x, y);
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (!things_overlap(me, nx, ny, it)) {
                 wid_it = wid_next;
                 continue;
             }

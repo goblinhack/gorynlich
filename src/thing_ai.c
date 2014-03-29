@@ -255,6 +255,7 @@ static void dmap_print_scores (dmap *map)
  */
 static inline void dmap_distance_print (dmap *map)
 {
+#ifdef ENABLE_MAP_DEBUG_CONSOLE
     char tmp[10];
     int16_t x;
     int16_t y;
@@ -275,6 +276,7 @@ static inline void dmap_distance_print (dmap *map)
             term_puts(tmp);
         }
     }
+#endif
 }
 
 /*
@@ -287,8 +289,10 @@ static inline void dmap_print_walls (dmap *map)
 
     for (y = 0; y < TILES_MAP_HEIGHT; y++) {
         for (x = 0; x < TILES_MAP_WIDTH; x++) {
+#ifdef ENABLE_MAP_DEBUG_CONSOLE
             term_goto(x, y);
             term_putc(walls[x][y]);
+#endif
         }
     }
 }
@@ -374,8 +378,10 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                 }
             }
 
+#ifdef ENABLE_MAP_DEBUG_CONSOLE
             term_goto(x, y);
             term_putc(c);
+#endif
             fprintf(fp, "%c", c);
         }
         fprintf(fp, "\n");
@@ -1475,8 +1481,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
     }
 
     if (!found_goal) {
-        LOG("found no goal, try moving the same way");
-
         /*
          * If no goal was found, try and keep moving the same way.
          */
