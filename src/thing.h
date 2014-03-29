@@ -46,8 +46,7 @@ void thing_inc_score_pump(thingp, uint32_t score);
 void thing_animate(thingp);
 boolean thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
 void thing_handle_collisions(widp grid, thingp t);
-boolean thing_client_hit_solid_obstacle(widp grid, 
-                                        thingp t, double nx, double ny);
+boolean thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
 boolean thing_server_hit_solid_obstacle(widp grid, 
                                         thingp t, double nx, double ny);
 void thing_inc_powerup_spam_count(thingp t, boolean val);

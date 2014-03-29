@@ -7432,9 +7432,16 @@ static void wid_display (widp w,
 void wid_move_all (void)
 {
     widp w;
+    widp wids[TILE_WIDTH * TILE_HEIGHT];
+    uint32_t n = 0;
 
-    { TREE_OFFSET_WALK(wid_top_level3, w, tree3) {
-        verify(w);
+    { TREE_OFFSET_WALK_UNSAFE(wid_top_level3, w) {
+        wids[n] = w;
+        n++;
+    } }
+
+    while (n--) {
+        w = wids[n];
 
         int32_t x;
         int32_t y;
@@ -7458,7 +7465,7 @@ void wid_move_all (void)
         }
 
         wid_move_to_abs(w, x, y);
-    } }
+    }
 }
 
 /*
