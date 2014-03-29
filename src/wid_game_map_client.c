@@ -276,7 +276,7 @@ void wid_game_map_client_wid_create (void)
 
     {
         fpoint tl = {0.00f, 0.00f};
-        fpoint br = {0.67f, 1.00f};
+        fpoint br = {MAP_WINDOW_WIDTH, 1.00f};
 
         wid_game_map_client_grid_container =
                         wid_new_container(wid_game_map_client_window,
@@ -473,7 +473,7 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
         fpoint tl;
         fpoint br;
 
-        tl.x = 0.67;
+        tl.x = MAP_WINDOW_WIDTH;
         tl.y = 0.0;
         br.x = 1.0;
         br.y = 1.0;
