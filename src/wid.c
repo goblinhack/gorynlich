@@ -7431,8 +7431,13 @@ static void wid_display (widp w,
  */
 void wid_move_all (void)
 {
+    if (!wid_top_level3) {
+        return;
+    }
+
+    uint32_t N = tree_root_size(wid_top_level3);
     widp w;
-    widp wids[TILE_WIDTH * TILE_HEIGHT];
+    widp wids[N];
     uint32_t n = 0;
 
     { TREE_OFFSET_WALK_UNSAFE(wid_top_level3, w) {

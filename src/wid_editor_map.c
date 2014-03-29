@@ -67,7 +67,6 @@ widp wid_editor_map_thing_replace_template (widp w,
     widp child;
     levelp level;
 
-
     level = (typeof(level)) wid_get_client_context(w);
     verify(level);
 
@@ -87,14 +86,37 @@ widp wid_editor_map_thing_replace_template (widp w,
     x += tile_width / 2;
     y += tile_height / 2;
 
-    fpoint tl = {
-        (float) x, (float) y
-    };
+    fpoint tl = { x, y };
+    fpoint br = { x, y };
 
-    fpoint br = {
-        (float) x, (float) y
-    };
+    double base_tile_width =
+            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+                (double)global_config.video_gl_width);
 
+    double base_tile_height =
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+                (double)global_config.video_gl_height);
+
+    br.x += base_tile_width;
+    br.y += base_tile_height;
+
+    br.x += base_tile_width / 4.0;
+    br.y += base_tile_height / 4.0;
+
+    br.x += base_tile_width / 6.0;
+    br.y += base_tile_height / 4.0;
+
+    tl.x -= base_tile_height / 2.0;
+    br.x -= base_tile_width / 2.0;
+
+    tl.x += base_tile_height / 8.0;
+    br.x += base_tile_width / 8.0;
+
+    tl.y -= base_tile_height / 2.0;
+    br.y -= base_tile_width / 2.0;
+
+    tl.y -= base_tile_height / 4.0;
+    br.y -= base_tile_width / 4.0;
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
@@ -123,35 +145,6 @@ widp wid_editor_map_thing_replace_template (widp w,
             tilename,
             thing_template_short_name(thing_template));
     }
-
-    float base_tile_width =
-            ((1.0f / (float)TILES_SCREEN_WIDTH) *
-                (float)global_config.video_gl_width);
-
-    float base_tile_height =
-            ((1.0f / (float)TILES_SCREEN_HEIGHT) *
-                (float)global_config.video_gl_height);
-
-    br.x += base_tile_width;
-    br.y += base_tile_height;
-
-    br.x += base_tile_width / 4.0;
-    br.y += base_tile_height / 4.0;
-
-    br.x += base_tile_width / 6.0;
-    br.y += base_tile_height / 4.0;
-
-    tl.x -= base_tile_height / 2.0;
-    br.x -= base_tile_width / 2.0;
-
-    tl.x += base_tile_height / 8.0;
-    br.x += base_tile_width / 8.0;
-
-    tl.y -= base_tile_height / 2.0;
-    br.y -= base_tile_width / 2.0;
-
-    tl.y -= base_tile_height / 4.0;
-    br.y -= base_tile_width / 4.0;
 
     z_depth = thing_template_get_z_depth(thing_template);
     z_order = thing_template_get_z_order(thing_template);
@@ -876,9 +869,6 @@ void wid_editor_add_grid (void)
                 wid_set_z_order(child, 0);
 
                 wid_set_tl_br_pct(child, tl, br);
-
-                tile_width = wid_get_width(child);
-                tile_height = wid_get_height(child);
             }
         }
     }
@@ -970,7 +960,7 @@ void wid_editor_map_wid_create (void)
 
     {
         fpoint tl = {0.00f, 0.00f};
-        fpoint br = {1.00f, 1.00f};
+        fpoint br = {MAP_WINDOW_WIDTH, 1.00f};
 
         wid_editor_map_grid_container =
                         wid_new_container(wid_editor_map_window,
@@ -990,6 +980,33 @@ void wid_editor_map_wid_create (void)
     }
 
     wid_editor_add_grid();
+
+    double base_tile_width =
+            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+                (double)global_config.video_gl_width);
+
+    double base_tile_height =
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+                (double)global_config.video_gl_height);
+
+    fpoint tl = { 0, 0 };
+    fpoint br = { 0, 0 };
+
+    br.x += base_tile_width;
+    br.y += base_tile_height;
+
+    tile_width = br.x - tl.x;
+    tile_height = br.y - tl.y;
+    tile_width = br.x - tl.x;
+    tile_height = br.y - tl.y;
+
+    if (!tile_width) {
+        tile_width = TILE_WIDTH;
+    }
+
+    if (!tile_height) {
+        tile_height = TILE_HEIGHT;
+    }
 
     wid_new_grid(wid_editor_map_grid_container,
                     TILES_MAP_WIDTH,
