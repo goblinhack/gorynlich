@@ -22,7 +22,6 @@
 #include "tile.h"
 #include "player.h"
 #include "thing.h"
-#include "thing_template.h"
 #include "thing_tile.h"
 #include "command.h"
 #include "wid_button.h"
@@ -418,9 +417,9 @@ void level_set_monst_walls (levelp level)
                 map_is_exit_at(level, x, y) ||
                 map_is_spam_at(level, x, y) ||
                 map_is_key_at(level, x, y) ||
+                map_is_door_at(level, x, y) ||
                 map_is_generator_at(level, x, y) ||
                 map_is_food_at(level, x, y) ||
-                map_is_monst_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
                 level->monst_walls[x][y] = '+';
             } else {

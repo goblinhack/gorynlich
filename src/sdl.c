@@ -813,7 +813,7 @@ void sdl_loop (void)
          * Do processing of some things, like reading the keyboard or doing
          * stuff with widgets only occasionally if we do not need to.
          */
-        int32_t timestamp_now = time_get_time_milli();
+        int32_t timestamp_now = time_update_time_milli();
 
         if (timestamp_now - timestamp_then > 5) {
             /*

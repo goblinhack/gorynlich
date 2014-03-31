@@ -13,7 +13,7 @@ extern int get_term_size(int fd, int *x, int *y);
 extern int TERM_WIDTH;
 extern int TERM_HEIGHT;
 
-#define TERM_CORE_MAX_SIZE   512
+#define TERM_CORE_MAX_SIZE   128
 #define TERM_MAX_SIZE        TERM_CORE_MAX_SIZE
 
 typedef enum {

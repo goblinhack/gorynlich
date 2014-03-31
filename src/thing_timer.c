@@ -8,7 +8,6 @@
 
 #include "main.h"
 #include "tree.h"
-#include "thing_private.h"
 #include "thing.h"
 #include "thing_timer.h"
 #include "level.h"

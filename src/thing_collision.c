@@ -9,10 +9,8 @@
 #include "main.h"
 #include "tree.h"
 #include "thing.h"
-#include "thing_private.h"
 #include "tile.h"
 #include "tile_private.h"
-#include "thing_template.h"
 #include "wid.h"
 #include "map.h"
 #include "wid_tooltip.h"
@@ -155,8 +153,6 @@ void thing_handle_collisions (widp grid, thingp t)
 
         wid_it = wid_grid_find_first(grid, x, y);
         while (wid_it) {
-            verify(wid_it);
-
             wid_next = wid_grid_find_next(grid, wid_it, x, y);
             if (wid_me == wid_it) {
                 wid_it = wid_next;

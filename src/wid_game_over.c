@@ -13,9 +13,9 @@
 #include "wid_intro.h"
 #include "wid_game_over.h"
 #include "sdl.h"
-#include "thing_template.h"
 #include "wid_popup.h"
 #include "wid_game_over.h"
+#include "thing.h"
 
 static widp wid_game_over;
 static widp wid_game_over_credits;
