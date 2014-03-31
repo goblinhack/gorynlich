@@ -23,7 +23,6 @@
 #include "sound.h"
 #include "tile.h"
 #include "thing.h"
-#include "thing_template.h"
 #include "wid.h"
 #include "sdl.h"
 #include "wid_intro_about.h"

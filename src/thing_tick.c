@@ -8,9 +8,7 @@
 
 #include "main.h"
 #include "tree.h"
-#include "thing_private.h"
 #include "thing.h"
-#include "thing_template.h"
 #include "thing_timer.h"
 #include "timer.h"
 #include "wid.h"
@@ -165,7 +163,8 @@ static void thing_tick_server_all (void)
                 look_for_nexthop = true;
             }
 
-            if (!time_have_x_hundredths_passed_since(10, t->timestamp_ai)) {
+            if (!time_have_x_thousandths_passed_since(THING_MONST_SPEED,
+                                                      t->timestamp_ai)) {
                 look_for_nexthop = false;
             }
 
@@ -415,11 +414,11 @@ void thing_tick_all (void)
     if (player) {
         static uint32_t ts;
 
-        if (time_have_x_hundredths_passed_since(THING_PLAYER_POLL_SPEED, ts)) {
+        if (time_have_x_thousandths_passed_since(THING_PLAYER_POLL_SPEED, ts)) {
             ts = time_get_time_cached();
             wid_game_map_client_player_move();
-        }
 
-        wid_game_map_client_scroll_adjust();
+            wid_game_map_client_scroll_adjust();
+        }
     }
 }

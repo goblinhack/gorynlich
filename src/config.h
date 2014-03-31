@@ -5,8 +5,8 @@
  */
 
 #undef  ENABLE_LOGFILE            // Log stdout and err to a file
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 #define ENABLE_CONSOLE              // Enable terminal console all the time
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
@@ -16,7 +16,6 @@
 #undef ENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
-#undef ENABLE_GEN_LIGHT_MAP_FILE  // Recreate the raytrace light map file
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
 /*
@@ -130,7 +129,7 @@
  */
 #define THING_PLAYER_COORD_MOVE     0.10
 #define THING_MONST_COORD_MOVE      1.00
-#define THING_MONST_SPEED           250
+#define THING_MONST_SPEED           250    // thousandths
 
 /*
  * How many tiles difference between the client and server do we allow.
@@ -139,4 +138,4 @@
  * low and it will be jerky, jumping back when we have high latency.
  */
 #define THING_MAX_SERVER_DISCREPANCY 2.0
-#define THING_PLAYER_POLL_SPEED      1 // hundredths
+#define THING_PLAYER_POLL_SPEED      2 // thousandths

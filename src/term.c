@@ -23,8 +23,8 @@ typedef struct term_cell_ {
     // Indicates that this cell has been modified since the last
     // frame was drawn.
     //
-    uint8_t                     fg;
-    uint8_t                     bg;
+    uint8_t                     fg:3;
+    uint8_t                     bg:3;
     uint8_t                     touched:1;
 } term_cell;
 
@@ -119,6 +119,14 @@ boolean term_init (void)
     term_init_done = true;
 
     get_term_size(STDIN_FILENO, &TERM_WIDTH, &TERM_HEIGHT);
+
+    if (TERM_WIDTH > TERM_MAX_SIZE) {
+        TERM_WIDTH = TERM_MAX_SIZE;
+    }
+
+    if (TERM_HEIGHT > TERM_MAX_SIZE) {
+        TERM_HEIGHT = TERM_MAX_SIZE;
+    }
 
     term_core_init_terminal();
 

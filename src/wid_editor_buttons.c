@@ -16,8 +16,8 @@
 #include "tree.h"
 #include "tile.h"
 #include "tile_private.h"
-#include "thing_template.h"
 #include "wid_popup.h"
+#include "thing.h"
 
 widp wid_editor_buttons_window;
 widp wid_editor_buttons_container1;

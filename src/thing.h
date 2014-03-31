@@ -4,6 +4,9 @@
  * See the LICENSE file.
  */
 
+#include "tree.h"
+#include <stdlib.h>
+
 boolean thing_init(void);
 void thing_fini(void);
 thingp thing_server_new(levelp, const char *name);
@@ -118,13 +121,9 @@ uint8_t thing_is_dir_br(thingp t);
 void thing_set_opened_exit(thingp t, boolean val);
 boolean thing_opened_exit(thingp t);
 void thing_set_is_open(thingp t, boolean val);
-boolean thing_is_open(thingp t);
 void thing_set_is_buried(thingp t, boolean val);
-boolean thing_is_buried(thingp t);
 void thing_set_is_left_as_corpse_on_death(thingp t, boolean val);
-boolean thing_is_left_as_corpse_on_death(thingp t);
 void thing_set_is_dead(thingp t, boolean val);
-boolean thing_is_dead(thingp t);
 void thing_set_qqq20(thingp t, boolean val);
 boolean thing_qqq20(thingp t);
 const char *thing_name(thingp);
@@ -138,96 +137,6 @@ uint32_t thing_speed(thingp);
 tree_rootp thing_tiles(thingp);
 tree_rootp thing_tiles2(thingp);
 
-boolean thing_is_exit(thingp t);
-boolean thing_is_floor(thingp t);
-boolean thing_is_food(thingp t);
-boolean thing_is_monst(thingp t);
-boolean thing_is_plant(thingp t);
-boolean thing_is_player(thingp t);
-boolean thing_is_key(thingp t);
-boolean thing_is_collision_map_small(thingp t);
-boolean thing_is_xxx3(thingp t);
-boolean thing_is_xxx4(thingp t);
-boolean thing_is_xxx5(thingp t);
-boolean thing_is_xxx6(thingp t);
-boolean thing_is_xxx7(thingp t);
-boolean thing_is_xxx8(thingp t);
-boolean thing_is_star(thingp t);
-boolean thing_is_key0(thingp t);
-boolean thing_is_key1(thingp t);
-boolean thing_is_key2(thingp t);
-boolean thing_is_key3(thingp t);
-boolean thing_is_key4(thingp t);
-boolean thing_is_key5(thingp t);
-boolean thing_is_key6(thingp t);
-boolean thing_is_key7(thingp t);
-boolean thing_is_key8(thingp t);
-boolean thing_is_xxx20(thingp t);
-boolean thing_is_xxx20(thingp t);
-boolean thing_is_xxx21(thingp t);
-boolean thing_is_seedpod(thingp t);
-boolean thing_is_bomb(thingp t);
-boolean thing_is_spam(thingp t);
-boolean thing_is_door(thingp t);
-boolean thing_is_pipe(thingp t);
-boolean thing_is_scarable(thingp t);
-boolean thing_is_xxx29(thingp t);
-boolean thing_is_hidden_from_editor(thingp t);
-boolean thing_is_animated(thingp t);
-boolean thing_is_xxx33(thingp t);
-boolean thing_is_left_as_corpse_on_death(thingp t);
-boolean thing_is_thing(thingp t);
-boolean thing_is_joinable(thingp t);
-boolean thing_is_wall(thingp t);
-boolean thing_is_effect_sway(thingp t);
-boolean thing_is_effect_pulse(thingp t);
-boolean thing_is_effect_rotate_4way(thingp t);
-boolean thing_is_effect_rotate_2way(thingp t);
-int16_t thing_path_cost_is_exit(thingp t);
-int16_t thing_path_cost_is_floor(thingp t);
-int16_t thing_path_cost_is_food(thingp t);
-int16_t thing_path_cost_is_monst(thingp t);
-int16_t thing_path_cost_is_plant(thingp t);
-int16_t thing_path_cost_is_player(thingp t);
-int16_t thing_path_cost_is_key(thingp t);
-int16_t thing_path_cost_is_collision_map_small(thingp t);
-int16_t thing_path_cost_is_xxx3(thingp t);
-int16_t thing_path_cost_is_xxx4(thingp t);
-int16_t thing_path_cost_is_xxx5(thingp t);
-int16_t thing_path_cost_is_xxx6(thingp t);
-int16_t thing_path_cost_is_xxx7(thingp t);
-int16_t thing_path_cost_is_xxx8(thingp t);
-int16_t thing_path_cost_is_star(thingp t);
-int16_t thing_path_cost_is_key0(thingp t);
-int16_t thing_path_cost_is_key1(thingp t);
-int16_t thing_path_cost_is_key2(thingp t);
-int16_t thing_path_cost_is_key3(thingp t);
-int16_t thing_path_cost_is_key4(thingp t);
-int16_t thing_path_cost_is_key5(thingp t);
-int16_t thing_path_cost_is_key6(thingp t);
-int16_t thing_path_cost_is_key7(thingp t);
-int16_t thing_path_cost_is_key8(thingp t);
-int16_t thing_path_cost_is_xxx20(thingp t);
-int16_t thing_path_cost_is_xxx20(thingp t);
-int16_t thing_path_cost_is_xxx21(thingp t);
-int16_t thing_path_cost_is_seedpod(thingp t);
-int16_t thing_path_cost_is_bomb(thingp t);
-int16_t thing_path_cost_is_spam(thingp t);
-int16_t thing_path_cost_is_door(thingp t);
-int16_t thing_path_cost_is_pipe(thingp t);
-int16_t thing_path_cost_is_scarable(thingp t);
-int16_t thing_path_cost_is_xxx29(thingp t);
-int16_t thing_path_cost_is_hidden_from_editor(thingp t);
-int16_t thing_path_cost_is_animated(thingp t);
-int16_t thing_path_cost_is_xxx33(thingp t);
-int16_t thing_path_cost_is_left_as_corpse_on_death(thingp t);
-int16_t thing_path_cost_is_thing(thingp t);
-int16_t thing_path_cost_is_joinable(thingp t);
-int16_t thing_path_cost_is_wall(thingp t);
-int16_t thing_path_cost_is_effect_sway(thingp t);
-int16_t thing_path_cost_is_effect_pulse(thingp t);
-int16_t thing_path_cost_is_effect_rotate_4way(thingp t);
-int16_t thing_path_cost_is_effect_rotate_2way(thingp t);
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t);
 void thing_place(void *);
@@ -357,3 +266,701 @@ extern uint16_t THING_KEYS3;
 extern uint16_t THING_COINS1;
 extern uint16_t THING_AMULET1;
 extern uint16_t THING_CHEST1;
+
+typedef struct thing_ {
+    tree_key_int tree;
+
+    /*
+     * Pointer to common settings for this thing.
+     */
+    thing_templatep thing_template;
+
+    /*
+     * Name for debugging.
+     */
+    char *logname;
+
+    /*
+     * Which tree are we on, server active? client boring? etc...
+     */
+    tree_rootp client_or_server_tree;
+
+    /*
+     * Widget for displaying thing.
+     */
+    widp wid;
+
+    /*
+     * Player current level or level of monster.
+     */
+    uint32_t level_no;
+
+    /*
+     * What level is the thing on?
+     */
+    levelp level;
+
+    /*
+     * Last death reason.
+     */
+    char *dead_reason;
+
+    /*
+     * Scoring
+     */
+    uint32_t score;
+    uint32_t score_pump;
+
+    /*
+     * Thing health.
+     */
+    uint32_t health;
+
+    /*
+     * Periodic spam message.
+     */
+    timerp timer_spam;
+
+    /*
+     * Powerups
+     */
+    uint8_t powerup_spam_count;
+    uint8_t powerup2_count;
+    uint8_t powerup3_count;
+    uint8_t powerup4_count;
+    uint8_t powerup5_count;
+    uint8_t powerup6_count;
+    uint8_t powerup7_count;
+    uint8_t powerup8_count;
+    uint8_t powerup_rocket_count;
+
+    /*
+     * Array of which tiles we've been to.
+     */
+    int32_t visited[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+
+    /*
+     * How many and of what we are carrying.
+     */
+    uint8_t carrying[THING_MAX];
+
+    /*
+     * Grid coordinates.
+     */
+    double x;
+    double y;
+    double last_x;
+    double last_y;
+    double target_x;
+    double target_y;
+
+    /*
+     * For animation.
+     */
+    thing_tilep current_tile;
+
+    /*
+     * When to change frame.
+     */
+    uint32_t timestamp_change_to_next_frame;
+    uint32_t timestamp_teleport;
+
+    /*
+     * Last time we did an expensive AI operation.
+     */
+    uint32_t timestamp_ai;
+
+    /*
+     * When do I die? 8(
+     */
+    uint32_t timestamp_lifestamp;
+
+    /*
+     * A counter to indicate the number of times we want to update the client 
+     * with the state of this thing. To compensate for udp drops we might want 
+     * to send a couple of updates for important events like death.
+     */
+    uint8_t updated;
+
+    /*
+     * To keep a thing around for a while so we can clean it up once the 
+     * client has been notified of the server death.
+     */
+    uint8_t destroy_delay;
+
+    uint8_t dir:4;
+
+    uint32_t is_qqq1:1;
+    uint32_t is_qqq2:1;
+    uint32_t is_qqq3:1;
+    uint32_t is_qqq4:1;
+    uint32_t is_qqq5:1;
+    uint32_t is_qqq6:1;
+    uint32_t is_qqq7:1;
+    uint32_t got_to_exit_first:1;
+    uint32_t redo_maze_search:1;
+    uint32_t opened_exit:1;
+    uint32_t is_open:1;
+    uint32_t is_buried:1;
+    uint32_t is_dead:1;
+    uint32_t on_active_list:1;
+
+    /*
+     * Force client to server postion.
+     */
+    uint32_t resync:1;
+} thing;
+
+#include "thing_template.h"
+
+static inline boolean thing_is_open (thingp t)
+{
+    verify(t);
+
+    return (t->is_open);
+}
+
+static inline boolean thing_is_buried (thingp t)
+{
+    verify(t);
+
+    return (t->is_buried);
+}
+
+static inline boolean thing_is_dead (thingp t)
+{
+    verify(t);
+
+    return (t->is_dead);
+}
+
+static inline boolean thing_is_exit (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_exit(thing_get_template(t)));
+}
+
+static inline boolean thing_is_floor (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_floor(thing_get_template(t)));
+}
+
+static inline boolean thing_is_food (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_food(thing_get_template(t)));
+}
+
+static inline boolean thing_is_monst (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_monst(thing_get_template(t)));
+}
+
+static inline boolean thing_is_plant (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_plant(thing_get_template(t)));
+}
+
+static inline boolean thing_is_player (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_player(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key(thing_get_template(t)));
+}
+
+static inline boolean thing_is_collision_map_small (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_collision_map_small(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx3 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx3(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx4 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx4(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx5 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx5(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx6 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx6(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx7 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx7(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx8 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx8(thing_get_template(t)));
+}
+
+static inline boolean thing_is_star (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_star(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key0 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key0(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key1 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key1(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key2 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key2(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key3 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key3(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key4 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key4(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key5 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key5(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key6 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key6(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key7 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key7(thing_get_template(t)));
+}
+
+static inline boolean thing_is_key8 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_key8(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx20 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx20(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx21 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx21(thing_get_template(t)));
+}
+
+static inline boolean thing_is_seedpod (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_seedpod(thing_get_template(t)));
+}
+
+static inline boolean thing_is_bomb (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_bomb(thing_get_template(t)));
+}
+
+static inline boolean thing_is_spam (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_spam(thing_get_template(t)));
+}
+
+static inline boolean thing_is_door (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_door(thing_get_template(t)));
+}
+
+static inline boolean thing_is_pipe (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_pipe(thing_get_template(t)));
+}
+
+static inline boolean thing_is_scarable (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_scarable(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx29 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx29(thing_get_template(t)));
+}
+
+static inline boolean thing_is_hidden_from_editor (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_hidden_from_editor(thing_get_template(t)));
+}
+
+static inline boolean thing_is_animated (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_animated(thing_get_template(t)));
+}
+
+static inline boolean thing_is_xxx33 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_xxx33(thing_get_template(t)));
+}
+
+static inline boolean thing_is_left_as_corpse_on_death (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_left_as_corpse_on_death(thing_get_template(t)));
+}
+
+static inline boolean thing_is_joinable (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_joinable(thing_get_template(t)));
+}
+
+static inline boolean thing_is_wall (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_wall(thing_get_template(t)));
+}
+
+static inline boolean thing_is_effect_sway (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_effect_sway(thing_get_template(t)));
+}
+
+static inline boolean thing_is_effect_pulse (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_effect_pulse(thing_get_template(t)));
+}
+
+static inline boolean thing_is_effect_rotate_4way (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_effect_rotate_4way(thing_get_template(t)));
+}
+
+static inline boolean thing_is_effect_rotate_2way (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_effect_rotate_2way(thing_get_template(t)));
+}
+
+static inline boolean thing_is_open_fast (thingp t)
+{
+    return (t->is_open);
+}
+
+static inline boolean thing_is_buried_fast (thingp t)
+{
+    return (t->is_buried);
+}
+
+static inline boolean thing_is_dead_fast (thingp t)
+{
+    return (t->is_dead);
+}
+
+static inline boolean thing_is_exit_fast (thingp t)
+{
+    return (t->thing_template->is_exit);
+}
+
+static inline boolean thing_is_floor_fast (thingp t)
+{
+    return (t->thing_template->is_floor);
+}
+
+static inline boolean thing_is_food_fast (thingp t)
+{
+    return (t->thing_template->is_food);
+}
+
+static inline boolean thing_is_monst_fast (thingp t)
+{
+    return (t->thing_template->is_monst);
+}
+
+static inline boolean thing_is_plant_fast (thingp t)
+{
+    return (t->thing_template->is_plant);
+}
+
+static inline boolean thing_is_player_fast (thingp t)
+{
+    return (t->thing_template->is_player);
+}
+
+static inline boolean thing_is_key_fast (thingp t)
+{
+    return (t->thing_template->is_key);
+}
+
+static inline boolean thing_is_collision_map_small_fast (thingp t)
+{
+    return (t->thing_template->is_collision_map_small);
+}
+
+static inline boolean thing_is_xxx3_fast (thingp t)
+{
+    return (t->thing_template->is_xxx3);
+}
+
+static inline boolean thing_is_xxx4_fast (thingp t)
+{
+    return (t->thing_template->is_xxx4);
+}
+
+static inline boolean thing_is_xxx5_fast (thingp t)
+{
+    return (t->thing_template->is_xxx5);
+}
+
+static inline boolean thing_is_xxx6_fast (thingp t)
+{
+    return (t->thing_template->is_xxx6);
+}
+
+static inline boolean thing_is_xxx7_fast (thingp t)
+{
+    return (t->thing_template->is_xxx7);
+}
+
+static inline boolean thing_is_xxx8_fast (thingp t)
+{
+    return (t->thing_template->is_xxx8);
+}
+
+static inline boolean thing_is_star_fast (thingp t)
+{
+    return (t->thing_template->is_star);
+}
+
+static inline boolean thing_is_key0_fast (thingp t)
+{
+    return (t->thing_template->is_key0);
+}
+
+static inline boolean thing_is_key1_fast (thingp t)
+{
+    return (t->thing_template->is_key1);
+}
+
+static inline boolean thing_is_key2_fast (thingp t)
+{
+    return (t->thing_template->is_key2);
+}
+
+static inline boolean thing_is_key3_fast (thingp t)
+{
+    return (t->thing_template->is_key3);
+}
+
+static inline boolean thing_is_key4_fast (thingp t)
+{
+    return (t->thing_template->is_key4);
+}
+
+static inline boolean thing_is_key5_fast (thingp t)
+{
+    return (t->thing_template->is_key5);
+}
+
+static inline boolean thing_is_key6_fast (thingp t)
+{
+    return (t->thing_template->is_key6);
+}
+
+static inline boolean thing_is_key7_fast (thingp t)
+{
+    return (t->thing_template->is_key7);
+}
+
+static inline boolean thing_is_key8_fast (thingp t)
+{
+    return (t->thing_template->is_key8);
+}
+
+static inline boolean thing_is_xxx20_fast (thingp t)
+{
+    return (t->thing_template->is_xxx20);
+}
+
+static inline boolean thing_is_xxx21_fast (thingp t)
+{
+    return (t->thing_template->is_xxx21);
+}
+
+static inline boolean thing_is_seedpod_fast (thingp t)
+{
+    return (t->thing_template->is_seedpod);
+}
+
+static inline boolean thing_is_bomb_fast (thingp t)
+{
+    return (t->thing_template->is_bomb);
+}
+
+static inline boolean thing_is_spam_fast (thingp t)
+{
+    return (t->thing_template->is_spam);
+}
+
+static inline boolean thing_is_door_fast (thingp t)
+{
+    return (t->thing_template->is_door);
+}
+
+static inline boolean thing_is_pipe_fast (thingp t)
+{
+    return (t->thing_template->is_pipe);
+}
+
+static inline boolean thing_is_scarable_fast (thingp t)
+{
+    return (t->thing_template->is_scarable);
+}
+
+static inline boolean thing_is_xxx29_fast (thingp t)
+{
+    return (t->thing_template->is_xxx29);
+}
+
+static inline boolean thing_is_hidden_from_editor_fast (thingp t)
+{
+    return (t->thing_template->is_hidden_from_editor);
+}
+
+static inline boolean thing_is_animated_fast (thingp t)
+{
+    return (t->thing_template->is_animated);
+}
+
+static inline boolean thing_is_xxx33_fast (thingp t)
+{
+    return (t->thing_template->is_xxx33);
+}
+
+static inline boolean thing_is_left_as_corpse_on_death_fast (thingp t)
+{
+    return (t->thing_template->is_left_as_corpse_on_death);
+}
+
+static inline boolean thing_is_joinable_fast (thingp t)
+{
+    return (t->thing_template->is_joinable);
+}
+
+static inline boolean thing_is_wall_fast (thingp t)
+{
+    return (t->thing_template->is_wall);
+}
+
+static inline boolean thing_is_effect_sway_fast (thingp t)
+{
+    return (t->thing_template->is_effect_sway);
+}
+
+static inline boolean thing_is_effect_pulse_fast (thingp t)
+{
+    return (t->thing_template->is_effect_pulse);
+}
+
+static inline boolean thing_is_effect_rotate_4way_fast (thingp t)
+{
+    return (t->thing_template->is_effect_rotate_4way);
+}
+
+static inline boolean thing_is_effect_rotate_2way_fast (thingp t)
+{
+    return (t->thing_template->is_effect_rotate_2way);
+}
