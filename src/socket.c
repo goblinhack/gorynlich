@@ -20,10 +20,8 @@
 #include "tree.h"
 #include "server.h"
 #include "client.h"
-#include "thing_template.h"
 #include "wid_game_map_server.h"
 #include "thing.h"
-#include "thing_private.h"
 
 tree_rootp sockets;
 

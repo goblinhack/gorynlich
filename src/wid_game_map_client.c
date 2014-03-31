@@ -11,7 +11,6 @@
 #include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
-#include "thing_template.h"
 #include "string.h"
 #include "wid_textbox.h"
 #include "wid_game_map_client.h"
@@ -23,7 +22,6 @@
 #include "client.h"
 #include "socket.h"
 #include "timer.h"
-#include "thing_private.h"
 #include "time.h"
 #include "thing_tile.h"
 
@@ -173,8 +171,19 @@ void wid_game_map_client_scroll_adjust (void)
     playerx /= fgridw;
     playery /= fgridh;
 
-    wid_move_to_vert_pct(wid_game_map_client_vert_scroll, playery);
-    wid_move_to_horiz_pct(wid_game_map_client_horiz_scroll, playerx);
+    static double last_playery;
+    static double last_playerx;
+
+    if (last_playery != playery) {
+        wid_move_to_vert_pct(wid_game_map_client_vert_scroll, playery);
+    }
+
+    if (last_playerx != playerx) {
+        wid_move_to_horiz_pct(wid_game_map_client_horiz_scroll, playerx);
+    }
+
+    last_playerx = playerx;
+    last_playery = playery;
 }
 
 boolean wid_game_map_client_player_move (void)

@@ -11,7 +11,6 @@
 #include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
-#include "thing_template.h"
 #include "string.h"
 #include "wid_textbox.h"
 #include "wid_game_map_server.h"

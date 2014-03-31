@@ -11,7 +11,6 @@
 #include "tree.h"
 #include "wid.h"
 #include "thing.h"
-#include "thing_template.h"
 #include "thing_tile.h"
 #include "level.h"
 #include "level_private.h"
@@ -1404,6 +1403,8 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
             thing_dead(this_door[x][y], 0 /* killer */, "open");
         }
     }
+
+    level_set_monst_walls(level);
 }
 
 uint32_t level_count_is_player (levelp level)

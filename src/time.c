@@ -71,11 +71,6 @@ const char *timestamp (char *buf, int32_t len)
     return (buf_);
 }
 
-uint32_t time_get_time_cached (void)
-{
-    return (time_now);
-}
-
 boolean time_have_x_hundredths_passed_since (uint32_t val, uint32_t since)
 {
     time_get_time_milli();
@@ -86,6 +81,18 @@ boolean time_have_x_hundredths_passed_since (uint32_t val, uint32_t since)
     uint32_t delay = time_now - since;
 
     return ((int32_t)(delay / 10) > (int32_t)val);
+}
+
+boolean time_have_x_thousandths_passed_since (uint32_t val, uint32_t since)
+{
+    time_get_time_milli();
+
+    /*
+     * Cater for negative future times.
+     */
+    uint32_t delay = time_now - since;
+
+    return ((int32_t)(delay) > (int32_t)val);
 }
 
 boolean time_have_x_tenths_passed_since (uint32_t val, uint32_t since)
@@ -147,32 +154,4 @@ timeval_diff (struct timeval *difference,
     }
 
     return (1000000LL * difference->tv_sec + difference->tv_usec);
-}
-
-uint32_t time_get_time_milli (void)
-{
-    extern uint32_t time_now;
-    extern uint32_t SDL_GetTicks(void);
-
-    if (!sdl_init_video || HEADLESS) {
-        static uint32_t base_time_in_mill;
-        struct timeval  tv;
-
-        gettimeofday(&tv, NULL);
-
-        uint32_t time_in_mill = 
-                (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
-
-        if (!base_time_in_mill) {
-            base_time_in_mill = time_in_mill;
-        }
-
-        time_now = (time_in_mill - base_time_in_mill);
-
-        return (time_now);
-    }
-
-    time_now = SDL_GetTicks();
-
-    return (time_now);
 }

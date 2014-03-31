@@ -10,8 +10,6 @@
 #include "main.h"
 #include "tree.h"
 #include "thing.h"
-#include "thing_private.h"
-#include "thing_template.h"
 #include "thing_tile.h"
 #include "wid.h"
 #include "marshal.h"

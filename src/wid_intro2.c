@@ -21,8 +21,8 @@
 #include "timer.h"
 #include "tree.h"
 #include "time.h"
-#include "thing_template.h"
 #include "client.h"
+#include "thing.h"
 
 static widp wid_intro2;
 static widp wid_intro2_background;

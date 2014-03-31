@@ -11,8 +11,6 @@
 #include "main.h"
 #include "tree.h"
 #include "thing.h"
-#include "thing_private.h"
-#include "thing_template.h"
 #include "level_private.h"
 #include "map.h"
 #include "wid.h"
@@ -91,7 +89,6 @@ typedef struct dmap_t_ {
      * A* search nodes.
      */
     tree_rootp open_nodes;
-    tree_rootp closed_nodes;
     dmap_astar_node *open[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
     dmap_astar_node *closed[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
@@ -322,19 +319,22 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
 
     for (y = 0; y < TILES_MAP_HEIGHT; y++) {
         for (x = 0; x < TILES_MAP_WIDTH; x++) {
+            c = ' ';
+
+            if (map_is_floor_at(level, x, y)) {
+                c = ',';
+            }
 
             if (map_is_wall_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
 
                 if (map_is_door_at(level, x, y)) {
-                    c = ' ';
+                    c = 'D';
                 } else {
                     c = '+';
                 }
 
             } else {
-                c = ' ';
-
                 if (show_open) {
                     if (map->closed[x][y]) {
                         c = '_';
@@ -345,7 +345,9 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     }
                 }
 
-                if (map_is_pipe_at(level, x, y)) {
+                if ((x == found_x) && (y == found_y)) {
+                    c = 'S';
+                } else if (map_is_pipe_at(level, x, y)) {
                     if (level->end_pipe[x][y] != ' ') {
                         c = 'P';
                     } else {
@@ -479,13 +481,6 @@ static void dmap_goal_flood (dmap *map, int16_t score, int16_t x, int16_t y)
 {
     dmap_goal_add(map, x, y, score, -map->distance[x][y]);
 
-    /*
-     * Only flood negative goals to avoid.
-     */
-    if (score > 0) {
-        return;
-    }
-
     MAP_FLOODWALK_BEGIN(x, y, score)
 
         if (score > 0) {
@@ -596,8 +591,6 @@ static void dmap_goal_add (dmap *map, int16_t x, int16_t y,
  */
 static void dmap_goal_free (dmap *map, dmap_goal *node)
 {
-    verify(node);
-
     if (!tree_remove(map->goal_nodes, &node->node)) {
         DIE("failed to remove from goal nodes");
     }
@@ -650,8 +643,6 @@ static dmap_astar_node *dmap_astar_alloc (int16_t x, int16_t y)
  */
 static void dmap_astar_add_to_open (dmap *map, dmap_astar_node *node)
 {
-    verify(node);
-
     if (map->open[node->x][node->y]) {
         DIE("already in open");
     }
@@ -668,8 +659,6 @@ static void dmap_astar_add_to_open (dmap *map, dmap_astar_node *node)
  */
 static void dmap_astar_remove_from_open (dmap *map, dmap_astar_node *node)
 {
-    verify(node);
-
     if (!map->open[node->x][node->y]) {
         DIE("not in in open");
     }
@@ -686,17 +675,11 @@ static void dmap_astar_remove_from_open (dmap *map, dmap_astar_node *node)
  */
 static void dmap_astar_add_to_closed (dmap *map, dmap_astar_node *node)
 {
-    verify(node);
-
     if (map->closed[node->x][node->y]) {
         DIE("already in closed");
     }
 
     map->closed[node->x][node->y] = node;
-
-    if (!tree_insert(map->closed_nodes, &node->node)) {
-        DIE("failed to add start to add to closed nodes");
-    }
 }
 
 /*
@@ -845,9 +828,6 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     map->open_nodes =
             tree_alloc_custom(dmap_astar_compare, "TREE ROOT: A* open");
 
-    map->closed_nodes =
-            tree_alloc_custom(dmap_astar_compare, "TREE ROOT: A* closed");
-
     memset(map->open, 0, sizeof(map->open));
 
     /*
@@ -926,7 +906,6 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     }
 
     tree_destroy(&map->open_nodes, 0);
-    tree_destroy(&map->closed_nodes, 0);
 
     if (!goal_found) {
         return (false);
@@ -947,81 +926,36 @@ void dmap_goals_find (dmap *map, thingp t)
     level = thing_level(t);
 
     /*
-     * Walk the things a number of times, working out our priorities.
-     */
-    uint16_t maxpass;
-    uint16_t pass;
-
-    if (thing_is_player(t)) {
-        maxpass = 2;
-    } else if (thing_is_monst(t)) {
-        maxpass = 2;
-    } else {
-        THING_LOG(t, "need to specify a number of map passes for searching");
-    }
-
-    boolean running_away = false;
-
-    /*
      * Walk the map and find all targets. Flood each target into its own map
      * and merge with the combined map
      */
-    for (pass = 0; pass < maxpass; pass++) {
-        thingp thing_it;
+    thingp thing_it;
 
-        TREE_WALK_UNSAFE(server_active_things, thing_it) {
-            /*
-             * Not on the map.
-             */
-            if (!t->wid) {
-                continue;
-            }
-
-            /*
-             * Try to ignore the dead!
-             */
-            if (thing_is_dead(thing_it)) {
-                continue;
-            }
-
-            /*
-             * If not on the map, ignore.
-             */
-            if (!thing_it->wid) {
-                continue;
-            }
-
-            x = (int)(thing_it->x + 0.5);
-            y = (int)(thing_it->y + 0.5);
-
-            if (thing_is_monst(t)) {
-                if (pass == 0) {
-                    /*
-                     * Top priority.
-                     */
-                    if (thing_has_powerup_rocket_count(thing_it)) {
-                        /*
-                         * If the player has a rocket, avoid!
-                         */
-                        dmap_goal_flood(map, -10, x, y);
-                        running_away = true;
-                    }
-                } else if (pass == 1) {
-                    /*
-                     * Medium priority.
-                     */
-                    if (!running_away) {
-                        if (thing_is_player(thing_it)) {
-                            /*
-                             * Chases.
-                             */
-                            dmap_goal_flood(map, 1, x, y);
-                        }
-                    }
-
-                }
-            }
+    TREE_WALK_UNSAFE(server_active_things, thing_it) {
+        /*
+         * Only chase players.
+         */
+        if (!thing_is_player_fast(thing_it)) {
+            continue;
         }
+
+        /*
+         * Ignore dead players.
+         */
+        if (thing_is_dead_fast(thing_it)) {
+            continue;
+        }
+
+        /*
+         * Aim for center of tile.
+         */
+        x = (int)(thing_it->x + 0.5);
+        y = (int)(thing_it->y + 0.5);
+
+        /*
+         * Chases.
+         */
+        dmap_goal_flood(map, 100, x, y);
     }
 
     /*
@@ -1425,10 +1359,12 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
              * Stick with the same next hop if nothing good.
              */
             if ((goal->x == t->x) && (goal->y == t->y)) {
-                *nexthop_x = map->nexthop_x;
-                *nexthop_y = map->nexthop_y;
-                found_goal = true;
-                break;
+                if (map->nexthop_x && map->nexthop_y) {
+                    *nexthop_x = map->nexthop_x;
+                    *nexthop_y = map->nexthop_y;
+                    found_goal = true;
+                    break;
+                }
             }
 
             if (dmap_astar_best_path(map, t, goal->x, goal->y)) {
@@ -1529,8 +1465,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
 
 boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
-    verify(t);
-
     /*
      * This is the merged map with scores from all targets.
      */

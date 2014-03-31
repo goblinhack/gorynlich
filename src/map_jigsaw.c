@@ -22,7 +22,6 @@
 
 #include "main.h"
 #include "ramdisk.h"
-#include "thing_template.h"
 #include "bits.h"
 #include "map_tiles.h"
 

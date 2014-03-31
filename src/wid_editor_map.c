@@ -17,7 +17,6 @@
 #include "wid_editor_map.h"
 #include "wid_editor_buttons.h"
 #include "wid_textbox.h"
-#include "thing_template.h"
 #include "wid_intro.h"
 #include "gl.h"
 #include "map.h"

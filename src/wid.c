@@ -16,7 +16,6 @@
 #include "tex.h"
 #include "tile.h"
 #include "thing.h"
-#include "thing_template.h"
 #include "tile_private.h"
 #include "thing_tile.h"
 #include "command.h"
@@ -690,6 +689,22 @@ double wid_get_br_y (widp w)
     double cy = (w->tree.tl.y + w->tree.br.y) / 2.0;
 
     return (cy + ((w->tree.br.y - cy) * wid_get_scaling_h(w)));
+}
+
+static inline void wid_get_tl_x_tl_y_br_x_br_y (widp w, 
+                                                double *tl_x,
+                                                double *tl_y,
+                                                double *br_x,
+                                                double *br_y)
+{
+    const double cx = (w->tree.tl.x + w->tree.br.x) / 2.0;
+    const double cy = (w->tree.tl.y + w->tree.br.y) / 2.0;
+    const double scaling = wid_get_scaling_w(w);
+
+    *tl_x = cx - ((cx - w->tree.tl.x) * scaling);
+    *tl_y = cy - ((cy - w->tree.tl.y) * scaling);
+    *br_x = cx + ((w->tree.br.x - cx) * scaling);
+    *br_y = cy + ((w->tree.br.y - cy) * scaling);
 }
 
 /*
@@ -5025,12 +5040,18 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
      * adjust the scrollbar dimensions.
      */
     TREE_OFFSET_WALK_UNSAFE(owner->children_unsorted, child) {
-        fast_verify(child);
 
-        double tminx = wid_get_tl_x(child) - wid_get_tl_x(child->parent);
-        double tminy = wid_get_tl_y(child) - wid_get_tl_y(child->parent);
-        double tmaxx = wid_get_br_x(child) - wid_get_tl_x(child->parent);
-        double tmaxy = wid_get_br_y(child) - wid_get_tl_y(child->parent);
+        double tl_x, tl_y, br_x, br_y;
+        wid_get_tl_x_tl_y_br_x_br_y(child, &tl_x, &tl_y, &br_x, &br_y);
+
+        double ptl_x, ptl_y, pbr_x, pbr_y;
+        wid_get_tl_x_tl_y_br_x_br_y(child->parent, 
+                                    &ptl_x, &ptl_y, &pbr_x, &pbr_y);
+
+        double tminx = tl_x - ptl_x;
+        double tminy = tl_y - ptl_y;
+        double tmaxx = br_x - ptl_x;
+        double tmaxy = br_y - ptl_y;
 
         if (first) {
             minx = tminx;
