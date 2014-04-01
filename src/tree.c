@@ -1333,6 +1333,8 @@ void tree_empty (tree_root *root, tree_destroy_func func)
                 break;
             case TREE_KEY_TWO_INTEGER:
                 break;
+            case TREE_KEY_THREE_INTEGER:
+                break;
             case TREE_KEY_FOUR_INTEGER:
                 break;
             case TREE_KEY_POINTER:
