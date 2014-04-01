@@ -29,7 +29,7 @@ typedef struct dmap_astar_node_ {
     struct dmap_astar_node_ *came_from;
     int16_t cost_from_start_to_goal;
     int16_t cost_from_start_to_here;
-    uint16_t tiebreak;
+    int16_t tiebreak;
     int16_t x;
     int16_t y;
 } dmap_astar_node;
@@ -39,8 +39,8 @@ typedef struct dmap_astar_node_ {
  */
 typedef struct dmap_goal_ {
     tree_node node;
-    uint16_t distance;
-    uint16_t tiebreak;
+    int16_t distance;
+    int16_t tiebreak;
     int16_t score;
     int16_t x;
     int16_t y;
@@ -90,7 +90,7 @@ typedef struct dmap_t_ {
      */
     tree_rootp open_nodes;
     dmap_astar_node *open[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-    dmap_astar_node *closed[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    uint8_t closed[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     int16_t best_score;
     int16_t worst_score;
@@ -208,7 +208,7 @@ static uint32_t floodwalk_cnt;
     }                                                                   \
 
 static void dmap_goal_add(dmap *map, int16_t x, int16_t y,
-                          int16_t score, uint16_t distance);
+                          int16_t score, int16_t distance);
 static void dmap_goal_free(dmap *map, dmap_goal *node);
 static void dmap_goals_find(dmap *map, thingp t);
 
@@ -548,15 +548,16 @@ static int8_t dmap_goal_compare (const tree_node *a, const tree_node *b)
 }
 
 static dmap_goal *dmap_goal_alloc (int16_t x, int16_t y,
-                                   int16_t score, uint16_t distance)
+                                   int16_t score, int16_t distance)
 {
-    static uint16_t tiebreak;
+    static int16_t tiebreak;
 
     tiebreak++;
 
     dmap_goal *node =
-        (typeof(node)) myzalloc(sizeof(*node), "TREE NODE: A* goal node");
+        (typeof(node)) mymalloc(sizeof(*node), "TREE NODE: A* goal node");
 
+    memset(&node->node, 0, sizeof(node->node));
     node->x = x;
     node->y = y;
     node->score = score;
@@ -570,7 +571,7 @@ static dmap_goal *dmap_goal_alloc (int16_t x, int16_t y,
  * Add to the goal set.
  */
 static void dmap_goal_add (dmap *map, int16_t x, int16_t y,
-                           int16_t score, uint16_t distance)
+                           int16_t score, int16_t distance)
 {
     if (!map->goal_nodes) {
         map->goal_nodes =
@@ -624,13 +625,17 @@ static int8_t dmap_astar_compare (const tree_node *a, const tree_node *b)
 
 static dmap_astar_node *dmap_astar_alloc (int16_t x, int16_t y)
 {
-    static uint16_t tiebreak;
+    static int16_t tiebreak;
 
     tiebreak++;
 
     dmap_astar_node *node =
-        (typeof(node)) myzalloc(sizeof(*node), "TREE NODE: A* node");
+        (typeof(node)) mymalloc(sizeof(*node), "TREE NODE: A* node");
 
+    memset(&node->node, 0, sizeof(node->node));
+    node->came_from = 0;
+    node->cost_from_start_to_goal = 0;
+    node->cost_from_start_to_here = 0;
     node->tiebreak = tiebreak++;
     node->x = x;
     node->y = y;
@@ -679,7 +684,7 @@ static void dmap_astar_add_to_closed (dmap *map, dmap_astar_node *node)
         DIE("already in closed");
     }
 
-    map->closed[node->x][node->y] = node;
+    map->closed[node->x][node->y] = 1;
 }
 
 /*
@@ -1306,7 +1311,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
     /*
      * For finding oldest cells.
      */
-    static uint16_t visited;
+    static int16_t visited;
 
     t->visited[(int)t->x][(int)t->y] = ++visited;
 
@@ -1343,14 +1348,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
              * Goal is something we want to avoid? Ignore for now.
              */
             if (goal->score < 0) {
-                dmap_goal_free(map, goal);
-                continue;
-            }
-
-            /*
-             * Too close to a bad goal? Ignore this goal for now.
-             */
-            if (map->score[goal->x][goal->y] < -7) {
                 dmap_goal_free(map, goal);
                 continue;
             }

@@ -863,13 +863,6 @@ void sdl_loop (void)
             }
 #ifdef ENABLE_CONSOLE
             console_tick();
-#else
-            else {
-                /*
-                 * End user i/o.
-                 */
-                console_tick();
-            }
 #endif
 
             if (!sdl_main_loop_running) {

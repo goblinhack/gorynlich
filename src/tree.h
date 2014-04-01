@@ -26,6 +26,7 @@ typedef enum {
     TREE_KEY_CUSTOM,
     TREE_KEY_INTEGER,
     TREE_KEY_TWO_INTEGER,
+    TREE_KEY_THREE_INTEGER,
     TREE_KEY_FOUR_INTEGER,
     TREE_KEY_STRING,
     TREE_KEY_POINTER,
@@ -67,6 +68,13 @@ typedef struct {
     int32_t key1;
     int32_t key2;
 } tree_key_two_int;
+
+typedef struct {
+    tree_node node;
+    int32_t key1;
+    int32_t key2;
+    int32_t key3;
+} tree_key_three_int;
 
 typedef struct {
     tree_node node;
@@ -254,6 +262,39 @@ tree_key_two_int32_compare_func (const tree_node *a, const tree_node *b)
 }
 
 static inline int8_t
+tree_key_three_int32_compare_func (const tree_node *a, const tree_node *b)
+{
+    tree_key_three_int *A = (typeof(A))a;
+    tree_key_three_int *B = (typeof(B))b;
+
+    if (A->key1 < B->key1) {
+        return (-1);
+    }
+
+    if (A->key1 > B->key1) {
+        return (1);
+    }
+
+    if (A->key2 > B->key2) {
+        return (1);
+    }
+
+    if (A->key2 < B->key2) {
+        return (-1);
+    }
+
+    if (A->key3 > B->key3) {
+        return (1);
+    }
+
+    if (A->key3 < B->key3) {
+        return (-1);
+    }
+
+    return (0);
+}
+
+static inline int8_t
 tree_key_four_int32_compare_func (const tree_node *a, const tree_node *b)
 {
     tree_key_four_int *A = (typeof(A))a;
@@ -331,6 +372,8 @@ static inline int8_t tree_node_compare_func (const tree_root *root,
         return (tree_key_int32_compare_func(a, b));
     case TREE_KEY_TWO_INTEGER:
         return (tree_key_two_int32_compare_func(a, b));
+    case TREE_KEY_THREE_INTEGER:
+        return (tree_key_three_int32_compare_func(a, b));
     case TREE_KEY_FOUR_INTEGER:
         return (tree_key_four_int32_compare_func(a, b));
     case TREE_KEY_STRING:

@@ -160,7 +160,9 @@ void quit (void)
     }
 #endif
 
+#ifdef ENABLE_CONSOLE
     term_fini();
+#endif
 }
 
 void restart (void)
@@ -181,7 +183,9 @@ void die (void)
 
     fprintf(MY_STDERR, "exit(1) error\n");
 
+#ifdef ENABLE_CONSOLE
     term_fini();
+#endif
 
     exit(1);
 }
@@ -534,7 +538,9 @@ int32_t main (int32_t argc, char *argv[])
 
     dospath2unix(ARGV[0]);
 
+#ifdef ENABLE_CONSOLE
     term_init();
+#endif
 
     parse_args(argc, argv);
 
