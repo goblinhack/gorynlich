@@ -1,2 +1,4 @@
 
+- per packet huffman compression
+- avoid nat issues by identifying based on client id in packet
 - ben wants sprint function
