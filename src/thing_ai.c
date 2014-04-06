@@ -18,6 +18,7 @@
 #include "wid_game_map_server.h"
 #include "math.h"
 #include "term.h"
+#include "binary_heap.c" // yep, for inlining
 
 static char walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
@@ -25,14 +26,24 @@ static char walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
  * Used while doing an A* search to keep track of score nodes.
  */
 typedef struct dmap_astar_node_ {
-    tree_node node;
     struct dmap_astar_node_ *came_from;
     int16_t cost_from_start_to_goal;
     int16_t cost_from_start_to_here;
-    int16_t tiebreak;
     int16_t x;
     int16_t y;
+    /*
+     * Set if we find a better path to this node and have inserted a copy of 
+     * this node into the heap with a preferred cost.
+     */
+    boolean ignore_this_node;
 } dmap_astar_node;
+
+/*
+ * Run time heap to avoid the need to allocate A* map nodes. This gets cleaned 
+ * out each A* search.
+ */
+static dmap_astar_node dmap_astar_nodes[TILES_MAP_WIDTH * TILES_MAP_HEIGHT * 2];
+static uint32_t dmap_astar_node_count;
 
 /*
  * A goal that we want to head for.
@@ -88,7 +99,7 @@ typedef struct dmap_t_ {
     /*
      * A* search nodes.
      */
-    tree_rootp open_nodes;
+    bheap *open_nodes;
     dmap_astar_node *open[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
     uint8_t closed[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
@@ -313,7 +324,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
         }
     }
 
-    if (show_best) {
+    if (0) {
         dmap_print_scores(map);
     }
 
@@ -322,7 +333,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
             c = ' ';
 
             if (map_is_floor_at(level, x, y)) {
-                c = ',';
+                c = ' ';
             }
 
             if (map_is_wall_at(level, x, y) ||
@@ -336,12 +347,12 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
 
             } else {
                 if (show_open) {
-                    if (map->closed[x][y]) {
-                        c = '_';
-                    }
-
                     if (map->open[x][y]) {
                         c = '.';
+                    }
+
+                    if (map->closed[x][y]) {
+                        c = '_';
                     }
                 }
 
@@ -599,44 +610,13 @@ static void dmap_goal_free (dmap *map, dmap_goal *node)
     myfree(node);
 }
 
-static int8_t dmap_astar_compare (const tree_node *a, const tree_node *b)
-{
-    dmap_astar_node *A = (typeof(A))a;
-    dmap_astar_node *B = (typeof(B))b;
-
-    if (A->cost_from_start_to_goal < B->cost_from_start_to_goal) {
-        return (-1);
-    }
-
-    if (A->cost_from_start_to_goal > B->cost_from_start_to_goal) {
-        return (1);
-    }
-
-    if (A->tiebreak < B->tiebreak) {
-        return (-1);
-    }
-
-    if (A->tiebreak > B->tiebreak) {
-        return (1);
-    }
-
-    return (0);
-}
-
 static dmap_astar_node *dmap_astar_alloc (int16_t x, int16_t y)
 {
-    static int16_t tiebreak;
+    assert(dmap_astar_node_count < ARRAY_SIZE(dmap_astar_nodes));
 
-    tiebreak++;
+    dmap_astar_node *node = &dmap_astar_nodes[dmap_astar_node_count++];
 
-    dmap_astar_node *node =
-        (typeof(node)) mymalloc(sizeof(*node), "TREE NODE: A* node");
-
-    memset(&node->node, 0, sizeof(node->node));
-    node->came_from = 0;
-    node->cost_from_start_to_goal = 0;
-    node->cost_from_start_to_here = 0;
-    node->tiebreak = tiebreak++;
+    memset(node, 0, sizeof(*node));
     node->x = x;
     node->y = y;
 
@@ -654,25 +634,12 @@ static void dmap_astar_add_to_open (dmap *map, dmap_astar_node *node)
 
     map->open[node->x][node->y] = node;
 
-    if (!tree_insert(map->open_nodes, &node->node)) {
-        DIE("failed to add start to add to open nodes");
-    }
-}
+    bheap_data data;
 
-/*
- * Remove from the open set.
- */
-static void dmap_astar_remove_from_open (dmap *map, dmap_astar_node *node)
-{
-    if (!map->open[node->x][node->y]) {
-        DIE("not in in open");
-    }
+    data.sort_key = node->cost_from_start_to_goal;
+    data.user_data = node;
 
-    map->open[node->x][node->y] = 0;
-
-    if (!tree_remove(map->open_nodes, &node->node)) {
-        DIE("failed to remove from open nodes");
-    }
+    map->open_nodes = bheap_insert(map->open_nodes, &data);
 }
 
 /*
@@ -772,14 +739,33 @@ static void dmap_astar_eval_neighbor (dmap *map, dmap_astar_node *current,
     }
 
     if (cost_from_start_to_here < neighbor->cost_from_start_to_here) {
-        dmap_astar_remove_from_open(map, neighbor);
+        /*
+         * Ignore this node in future path finding.
+         */
+        neighbor->ignore_this_node = true;
 
-        neighbor->came_from = current;
-        neighbor->cost_from_start_to_here = cost_from_start_to_here;
-        neighbor->cost_from_start_to_goal = cost_from_start_to_here +
+        /*
+         * Use this copy of the above node instead. It will have a better 
+         * search path. This allows us to avoid needing to resort the above 
+         * element which in a binary heap is messy.
+         */
+        dmap_astar_node *better_neighbor = 
+                        dmap_astar_alloc(neighbor->x, neighbor->y);
+
+        /*
+         * Now insert a copy of this node with the new path.
+         */
+        better_neighbor->came_from = current;
+        better_neighbor->cost_from_start_to_here = cost_from_start_to_here;
+        better_neighbor->cost_from_start_to_goal = cost_from_start_to_here +
             dmap_astar_cost_est_from_here_to_goal(map, nexthop_x, nexthop_y);
 
-        dmap_astar_add_to_open(map, neighbor);
+        /*
+         * Remove it from the open list; prior to adding again.
+         */
+        map->open[neighbor->x][neighbor->y] = 0;
+
+        dmap_astar_add_to_open(map, better_neighbor);
     }
 }
 
@@ -830,8 +816,8 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     /*
      * The set of tentative nodes to be evaluated.
      */
-    map->open_nodes =
-            tree_alloc_custom(dmap_astar_compare, "TREE ROOT: A* open");
+    map->open_nodes = bheap_malloc(TILES_MAP_WIDTH * TILES_MAP_HEIGHT /* elements */,
+                                   0 /* bheap_print_func */);
 
     memset(map->open, 0, sizeof(map->open));
 
@@ -843,6 +829,7 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     /*
      * Create the start node.
      */
+    dmap_astar_node_count = 0;
     dmap_astar_node *node = dmap_astar_alloc(start_x, start_y);
     dmap_astar_add_to_open(map, node);
 
@@ -855,12 +842,20 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     node->cost_from_start_to_goal =
             dmap_astar_cost_est_from_here_to_goal(map, start_x, start_y);
 
-    while (!tree_root_is_empty(map->open_nodes)) {
+    while (!bheap_empty(map->open_nodes)) {
+        bheap_data data = bheap_pop(map->open_nodes);
+
         /*
          * current := the node in openset having the lowest f_score[] value
          */
-        dmap_astar_node *current =
-                (typeof(current)) tree_root_first(map->open_nodes);
+        dmap_astar_node *current = data.user_data;
+
+        /*
+         * Ignore this node?
+         */
+        if (current->ignore_this_node) {
+            continue;
+        }
 
         /*
          * Reached the goal?
@@ -870,11 +865,6 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
             goal_found = true;
             break;
         }
-
-        /*
-         * Remove current from openset
-         */
-        dmap_astar_remove_from_open(map, current);
 
         /*
          * Add current to closedset
@@ -910,7 +900,7 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
         }
     }
 
-    tree_destroy(&map->open_nodes, 0);
+    bheap_free(map->open_nodes);
 
     if (!goal_found) {
         return (false);
@@ -1381,6 +1371,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
      * If no goal, just try and find the best area to head.
      */
     if (!found_goal) {
+DIE("no goal");
         int16_t target_x = -1;
         int16_t target_y = -1;
 
@@ -1402,6 +1393,10 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         int16_t target_x = -1;
         int16_t target_y = -1;
 
+#ifdef ENABLE_MAP_DEBUG
+        dmap_print_map(map, t->x, t->y, false, true);
+#endif
+DIE("no goal");
         dmap_find_oldest_visited(map, t, &target_x, &target_y);
 
         if ((target_x != t->x) || (target_y != t->y)) {
@@ -1417,6 +1412,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         /*
          * If no goal was found, try and keep moving the same way.
          */
+DIE("no goal");
         if (thing_has(t, THING_KEYS1)) {
             found_goal = dmap_move_in_same_door_dir(map, level, t, 
                                                     nexthop_x, nexthop_y);
@@ -1453,7 +1449,7 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
      */
 #ifdef ENABLE_MAP_DEBUG
     if (thing_is_monst(t)) {
-        dmap_print_map(map, t->x, t->y, false, true);
+        dmap_print_map(map, t->x, t->y, true, true);
     }
 #endif
 
