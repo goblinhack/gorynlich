@@ -309,7 +309,8 @@ static inline void dmap_print_walls (dmap *map)
  * Print the map.
  */
 #ifdef ENABLE_MAP_DEBUG
-static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
+static void inline dmap_print_map (dmap *map, 
+                                   int16_t found_x, int16_t found_y,
                                    boolean show_best, boolean show_open)
 {
     levelp level = map->level;
@@ -324,7 +325,7 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
         }
     }
 
-    if (0) {
+    if (1) {
         dmap_print_scores(map);
     }
 
@@ -388,6 +389,10 @@ static void inline dmap_print_map (dmap *map, int16_t found_x, int16_t found_y,
                     if (map->best[x][y] != ' ') {
                         c = 'b';
                     }
+                }
+
+                if ((x == found_x) && (y == found_y)) {
+                    c = 'S';
                 }
             }
 
@@ -663,7 +668,9 @@ static int16_t dmap_astar_cost_est_from_here_to_goal (dmap *map,
     /*
      * Manhattan distance.
      */
-    return (abs(map->goal_x - x) + abs(map->goal_y - y));
+    return (100 - map->score[x][y]);
+
+//                    + abs(map->goal_x - x) + abs(map->goal_y - y);
 }
 
 /*
@@ -716,12 +723,12 @@ static void dmap_astar_eval_neighbor (dmap *map, dmap_astar_node *current,
     }
 
     int16_t distance_to_nexthop =
-        map->score[nexthop_x][nexthop_y];
+        100 - map->score[nexthop_x][nexthop_y];
 
     /*
      * We use positive scores for good, but want to minimize distance.
      */
-    distance_to_nexthop = -distance_to_nexthop;
+//    distance_to_nexthop = -distance_to_nexthop;
 
     int16_t cost_from_start_to_here = current->cost_from_start_to_here +
                     distance_to_nexthop;
