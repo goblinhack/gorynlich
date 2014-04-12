@@ -13,7 +13,6 @@
 #include "wid_game_map_server.h"
 #include "map.h"
 
-#define ENABLE_MAP_DEBUG
 static FILE *fp;
 
 /*
