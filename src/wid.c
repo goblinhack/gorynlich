@@ -5,7 +5,7 @@
  */
 
 #include <SDL.h>
-#include "glapi.h"
+// REMOVED #include "glapi.h"
 #include "slre.h"
 
 #include "main.h"
@@ -16,7 +16,7 @@
 #include "tex.h"
 #include "tile.h"
 #include "thing.h"
-#include "tile_private.h"
+// REMOVED #include "tile_private.h"
 #include "thing_tile.h"
 #include "command.h"
 #include "time.h"
@@ -24,7 +24,7 @@
 #include "wid_tooltip.h"
 #include "marshal.h"
 #include "string.h"
-#include "config.h"
+// REMOVED #include "config.h"
 #include "sound.h"
 #include "timer.h"
 
