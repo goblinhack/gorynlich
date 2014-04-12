@@ -185,6 +185,7 @@ typedef struct thing_template_ {
      */
     int16_t dmap[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
     boolean dmap_valid;
+    uint32_t dmap_checksum;
 } thing_template;
 
 boolean thing_template_init(void);
