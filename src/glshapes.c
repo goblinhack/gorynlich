@@ -43,7 +43,7 @@ static void Begin (GLsizei gl_enum)
     gl_state = gl_enum;
 }
 
-static void End (void)
+static inline void End (void)
 {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);

@@ -153,13 +153,14 @@ static void dmap_process (thing_templatep t, levelp level)
 /*
  * Generate goal points with a low value.
  */
-static void dmap_goals_set (thing_templatep t)
+static uint32_t dmap_goals_set (thing_templatep t)
 {
+    uint32_t checksum = 0;
     thingp thing_it;
     int16_t x;
     int16_t y;
 
-    { TREE_WALK_UNSAFE(server_active_things, thing_it) {
+    { TREE_OFFSET_WALK_UNSAFE(server_player_things, thing_it) {
         /*
          * Only chase players.
          */
@@ -181,7 +182,12 @@ static void dmap_goals_set (thing_templatep t)
         y = (int)(thing_it->y + 0.5);
 
         t->dmap[x][y] = 0;
+
+        checksum ^= x | (y << 16);
+        checksum = checksum << 1;
     } }
+
+    return (checksum);
 }
 
 /*
@@ -208,6 +214,9 @@ static void dmap_generate (uint32_t i, levelp level)
 {
     thing_templatep t = id_to_thing_template(i);
 
+    /*
+     * If no level yet, there is nothing to chase.
+     */
     if (!server_level) {
         t->dmap_valid = false;
         return;
@@ -215,10 +224,27 @@ static void dmap_generate (uint32_t i, levelp level)
 
     t->dmap_valid = true;
 
+    /*
+     * Only reprocess the djkstra map if something has changed on the map
+     * We use a checksum of the goals to indicate this with reasonable 
+     * certainty.
+     */
+    uint32_t checksum = dmap_goals_set(t);
+    if (t->dmap_checksum == checksum) {
+        return;
+    }
+    t->dmap_checksum = checksum;
+
     dmap_init(t);
-    dmap_goals_set(t);
+    dmap_goals_set(t); // redo for real this time.
     dmap_process(t, level);
-    if (0) dmap_print(t, level);
+
+#ifdef ENABLE_MAP_DEBUG
+    if (1)
+#else
+    if (0)
+#endif
+    dmap_print(t, level);
 }
 
 /*
@@ -310,7 +336,12 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     *nexthop_x = x + dx;
     *nexthop_y = y + dy;
 
-    if (0) dmap_thing_print(t, server_level, *nexthop_x, *nexthop_y);
+#ifdef ENABLE_MAP_DEBUG
+    if (1)
+#else
+    if (0)
+#endif
+    dmap_thing_print(t, server_level, *nexthop_x, *nexthop_y);
 
     return (true);
 }

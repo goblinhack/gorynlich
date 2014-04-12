@@ -157,8 +157,12 @@ typedef struct {
 void thing_teleport(thingp t, int32_t x, int32_t y);
 thingp thing_client_find(uint32_t thing_id);
 
+extern tree_root *server_player_things;
+extern tree_root *client_player_things;
+
 extern tree_rootp server_active_things;
 extern tree_rootp client_active_things;
+
 extern tree_rootp server_boring_things;
 extern tree_rootp client_boring_things;
 
@@ -270,6 +274,11 @@ extern uint16_t THING_CHEST1;
 
 typedef struct thing_ {
     tree_key_int tree;
+
+    /*
+     * For player things.
+     */
+    tree_key_int tree2;
 
     /*
      * Pointer to common settings for this thing.
@@ -405,6 +414,7 @@ typedef struct thing_ {
     uint32_t is_buried:1;
     uint32_t is_dead:1;
     uint32_t on_active_list:1;
+    uint32_t on_server:1;
 
     /*
      * Force client to server postion.

@@ -7,22 +7,17 @@
 #include <SDL.h>
 
 #include "main.h"
-#include "tree.h"
 #include "thing.h"
 #include "thing_timer.h"
 #include "wid.h"
 #include "wid_game_map_client.h"
 #include "wid_game_map_server.h"
-#include "marshal.h"
 #include "map.h"
 #include "level.h"
-#include "wid_console.h"
 #include "time.h"
 #include "string.h"
 #include "wid_textbox.h"
 #include "color.h"
-#include "config.h"
-#include "gl.h"
 #include "sound.h"
 #include "socket.h"
 #include "client.h"
@@ -95,8 +90,12 @@ uint16_t THING_COINS1;
 uint16_t THING_AMULET1;
 uint16_t THING_CHEST1;
 
+tree_root *server_player_things;
+tree_root *client_player_things;
+
 tree_root *server_active_things;
 tree_root *client_active_things;
+
 tree_root *server_boring_things;
 tree_root *client_boring_things;
 
@@ -117,6 +116,11 @@ void thing_fini (void)
 
     if (thing_init_done) {
         thing_init_done = false;
+
+        tree_destroy(&client_player_things, 
+                     (tree_destroy_func)0);
+        tree_destroy(&server_player_things, 
+                     (tree_destroy_func)0);
 
         tree_destroy(&client_active_things, 
                      (tree_destroy_func)thing_destroy_implicit);
@@ -143,20 +147,38 @@ thingp thing_server_new (levelp level, const char *name)
         DIE("thing [%s] has no template", name);
     }
 
+    if (!server_player_things) {
+        server_player_things = 
+            tree_alloc(TREE_KEY_INTEGER, "server_player_things");
+
+        server_player_things->offset = STRUCT_OFFSET(struct thing_, tree2);
+    }
+
     if (!server_active_things) {
         server_active_things = 
-                        tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+            tree_alloc(TREE_KEY_INTEGER, "server_active_things");
     }
 
     if (!server_boring_things) {
         server_boring_things = 
-                        tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
+            tree_alloc(TREE_KEY_INTEGER, "server_boring_things");
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
     t->tree.key = ++thing_id;
     t->thing_template = thing_template;
     t->health = thing_template_get_health(thing_template);
+    t->on_server = true;
+
+    if (thing_template_is_player(thing_template)) {
+        t->tree2.key = thing_id;
+
+        if (!tree_insert(server_player_things, &t->tree2.node)) {
+            DIE("thing insert name [%s] failed", name);
+        }
+
+        t->tree2.node.is_static_mem = true;
+    }
 
     if (thing_template_is_boring(thing_template)) {
         if (!tree_insert(server_boring_things, &t->tree.node)) {
@@ -192,6 +214,13 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 {
     thingp t;
 
+    if (!client_player_things) {
+        client_player_things = 
+            tree_alloc(TREE_KEY_INTEGER, "client_player_things");
+
+        client_player_things->offset = STRUCT_OFFSET(struct thing_, tree2);
+    }
+
     if (!client_active_things) {
         client_active_things = 
                         tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: thing");
@@ -205,6 +234,17 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
     t->tree.key = id;
     t->thing_template = thing_template;
+    t->on_server = false;
+
+    if (thing_template_is_player(thing_template)) {
+        t->tree2.key = thing_id;
+
+        if (!tree_insert(client_player_things, &t->tree2.node)) {
+            DIE("thing insert id [%u] failed", id);
+        }
+
+        t->tree2.node.is_static_mem = true;
+    }
 
     if (thing_template_is_boring(thing_template)) {
         if (!tree_insert(client_boring_things, &t->tree.node)) {
@@ -436,6 +476,20 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * and then kill the thing.
      */
     t->destroy_delay = 3;
+
+    if (thing_is_player(t)) {
+        if (t->on_server) {
+            if (!tree_remove(server_player_things, &t->tree2.node)) {
+                DIE("thing move, remove server player [%s] failed", 
+                    thing_name(t));
+            }
+        } else {
+            if (!tree_remove(client_player_things, &t->tree2.node)) {
+                DIE("thing move, remove client player [%s] failed", 
+                    thing_name(t));
+            }
+        }
+    }
 
     if (!t->on_active_list) {
         if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
