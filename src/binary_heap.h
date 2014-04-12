@@ -12,7 +12,7 @@ typedef struct {
     /*
      * We save 50 ms on 2 million entries by using shorts!
      */
-    unsigned short sort_key;
+    short sort_key;
     struct dmap_astar_node_ *user_data;
 } bheap_data;
 
@@ -39,14 +39,13 @@ typedef struct bheap_ {
     bheap_data data[0];
 } bheap;
 
-bheap *bheap_malloc(const bheap_idx max_size,
-                    bheap_print_func printer);
+static bheap *bheap_malloc(const bheap_idx max_size, bheap_print_func printer);
 
-void bheap_free(bheap *h);
+static void bheap_free(bheap *h);
 
-bheap *bheap_insert(bheap *h, const bheap_data *insert_data);
+static bheap *bheap_insert(bheap *h, const bheap_data *insert_data);
 
-bheap_data bheap_pop(bheap *h);
+static bheap_data bheap_pop(bheap *h);
 
 static inline unsigned int bheap_empty (bheap *h)
 {

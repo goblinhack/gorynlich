@@ -179,6 +179,12 @@ typedef struct thing_template_ {
     thing_tilep tilep_join[IS_JOIN_MAX][IS_JOIN_ALT_MAX];
     tilep tilep_join_tile[IS_JOIN_MAX][IS_JOIN_ALT_MAX];
     uint8_t tilep_join_count[IS_JOIN_MAX];
+
+    /*
+     * djkstra map
+     */
+    int16_t dmap[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    boolean dmap_valid;
 } thing_template;
 
 boolean thing_template_init(void);

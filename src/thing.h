@@ -48,6 +48,7 @@ void thing_set_score_pump(thingp, uint32_t score);
 void thing_inc_score_pump(thingp, uint32_t score);
 void thing_animate(thingp);
 boolean thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
+void thing_generate_dmaps(void);
 void thing_handle_collisions(widp grid, thingp t);
 boolean thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
 boolean thing_server_hit_solid_obstacle(widp grid, 
@@ -337,7 +338,7 @@ typedef struct thing_ {
     /*
      * Array of which tiles we've been to.
      */
-    int32_t visited[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    int16_t visited[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * How many and of what we are carrying.

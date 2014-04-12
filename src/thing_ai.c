@@ -42,7 +42,7 @@ typedef struct dmap_astar_node_ {
  * Run time heap to avoid the need to allocate A* map nodes. This gets cleaned 
  * out each A* search.
  */
-static dmap_astar_node dmap_astar_nodes[TILES_MAP_WIDTH * TILES_MAP_HEIGHT * 2];
+static dmap_astar_node dmap_astar_nodes[TILES_MAP_WIDTH * TILES_MAP_HEIGHT * 200];
 static uint32_t dmap_astar_node_count;
 
 /*
@@ -50,7 +50,6 @@ static uint32_t dmap_astar_node_count;
  */
 typedef struct dmap_goal_ {
     tree_node node;
-    int16_t distance;
     int16_t tiebreak;
     int16_t score;
     int16_t x;
@@ -73,15 +72,19 @@ typedef struct dmap_t_ {
     levelp level;
 
     /*
+     * Targets we look for, sorted in order of best first.
+     */
+    tree_rootp goal_nodes;
+
+    /*
+     * A* search nodes.
+     */
+    bheap *open_nodes;
+
+    /*
      * Merged score for all targets.
      */
     int16_t score[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-    int8_t score_hits[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-
-    /*
-     * Distance from the source for each reachable tile.
-     */
-    int16_t distance[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * For debugging, to see the best path.
@@ -90,16 +93,6 @@ typedef struct dmap_t_ {
     char best[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 #endif
 
-    /*
-     * Targets we look for, sorted in order of best first.
-     */
-    tree_rootp goal_nodes;
-    dmap_goal *goals[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-
-    /*
-     * A* search nodes.
-     */
-    bheap *open_nodes;
     dmap_astar_node *open[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
     uint8_t closed[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
@@ -218,8 +211,7 @@ static uint32_t floodwalk_cnt;
         }                                                               \
     }                                                                   \
 
-static void dmap_goal_add(dmap *map, int16_t x, int16_t y,
-                          int16_t score, int16_t distance);
+static void dmap_goal_add(dmap *map, int16_t x, int16_t y, int16_t score);
 static void dmap_goal_free(dmap *map, dmap_goal *node);
 static void dmap_goals_find(dmap *map, thingp t);
 
@@ -229,7 +221,7 @@ static FILE *fp;
 /*
  * Print the score of each cell.
  */
-static void dmap_print_scores (dmap *map)
+static void dmap_print_visited (dmap *map, thingp t)
 {
     char tmp[10];
     int16_t x;
@@ -247,7 +239,7 @@ static void dmap_print_scores (dmap *map)
                 continue;
             }
 
-            int16_t score = map->score[x][y];
+            int16_t score = t->visited[x][y];
 
             sprintf(tmp, "%3d", score);
             fprintf(fp, "%s", tmp);
@@ -256,14 +248,12 @@ static void dmap_print_scores (dmap *map)
     }
     fprintf(fp, "\n");
 }
-#endif
 
 /*
- * Print the distance from the start of each cell.
+ * Print the score of each cell.
  */
-static inline void dmap_distance_print (dmap *map)
+static void dmap_print_scores (dmap *map)
 {
-#ifdef ENABLE_MAP_DEBUG_CONSOLE
     char tmp[10];
     int16_t x;
     int16_t y;
@@ -275,21 +265,22 @@ static inline void dmap_distance_print (dmap *map)
              * Skip walls.
              */
             if (walls[x][y] != ' ') {
+                sprintf(tmp, "    ");
+                fprintf(fp, "%s", tmp);
                 continue;
             }
 
-            term_goto(TILES_MAP_WIDTH + x * 4, y);
+            int16_t score = map->score[x][y];
 
-            sprintf(tmp, "%3d", map->distance[x][y]);
-            term_puts(tmp);
+            sprintf(tmp, "%4d", score);
+            fprintf(fp, "%s", tmp);
         }
+        fprintf(fp, "\n");
     }
-#endif
+    fprintf(fp, "\n");
 }
+#endif
 
-/*
- * Print the distance from the start of each cell.
- */
 static inline void dmap_print_walls (dmap *map)
 {
     int16_t x;
@@ -310,6 +301,7 @@ static inline void dmap_print_walls (dmap *map)
  */
 #ifdef ENABLE_MAP_DEBUG
 static void inline dmap_print_map (dmap *map, 
+                                   thingp t,
                                    int16_t found_x, int16_t found_y,
                                    boolean show_best, boolean show_open)
 {
@@ -323,6 +315,10 @@ static void inline dmap_print_map (dmap *map,
         if (!fp) {
             DIE("no map log file");
         }
+    }
+
+    if (0) {
+        dmap_print_visited(map, t);
     }
 
     if (1) {
@@ -357,6 +353,12 @@ static void inline dmap_print_map (dmap *map,
                     }
                 }
 
+                if (show_best) {
+                    if (map->best[x][y] != ' ') {
+                        c = 'b';
+                    }
+                }
+
                 if ((x == found_x) && (y == found_y)) {
                     c = 'S';
                 } else if (map_is_pipe_at(level, x, y)) {
@@ -385,12 +387,6 @@ static void inline dmap_print_map (dmap *map,
                     c = '@';
                 }
 
-                if (show_best) {
-                    if (map->best[x][y] != ' ') {
-                        c = 'b';
-                    }
-                }
-
                 if ((x == found_x) && (y == found_y)) {
                     c = 'S';
                 }
@@ -407,28 +403,6 @@ static void inline dmap_print_map (dmap *map,
     fprintf(fp, "\n");
 }
 #endif
-
-/*
- * Round out the total of all the map scores merged together.
- */
-static void dmap_normalize (dmap *map)
-{
-    int16_t x;
-    int16_t y;
-
-    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_WIDTH; x++) {
-
-            if (walls[x][y] != ' ') {
-                continue;
-            }
-
-            if (map->score_hits[x][y]) {
-                map->score[x][y] /= (int16_t) map->score_hits[x][y];
-            }
-        }
-    }
-}
 
 /*
  * Do a breadth first flood to all nodes and find the oldest cell.
@@ -461,41 +435,11 @@ static void dmap_find_oldest_visited (dmap *map, thingp t,
 }
 
 /*
- * Do a breadth first flood to all nodes and find the oldest cell.
- */
-static void dmap_find_best_cell (dmap *map, thingp t,
-                                 int16_t *found_x, int16_t *found_y)
-{
-    int16_t best_score = -INT16_MAX;
-    boolean got_one = false;
-    int16_t score = 0;
-    int16_t x = (int)t->x;
-    int16_t y = (int)t->y;
-
-    MAP_FLOODWALK_BEGIN(x, y, score)
-
-        int16_t score = map->score[x][y];
-
-        if (score > best_score) {
-            best_score = score;
-            got_one = true;
-            *found_x = x;
-            *found_y = y;
-        }
-
-    MAP_FLOODWALK_END(x, y, score)
-
-    if (!got_one) {
-        DIE("no oldest cell");
-    }
-}
-
-/*
  * Do a breadth first flood to all nodes, decrementing the score as we go.
  */
 static void dmap_goal_flood (dmap *map, int16_t score, int16_t x, int16_t y)
 {
-    dmap_goal_add(map, x, y, score, -map->distance[x][y]);
+    dmap_goal_add(map, x, y, score);
 
     MAP_FLOODWALK_BEGIN(x, y, score)
 
@@ -508,41 +452,14 @@ static void dmap_goal_flood (dmap *map, int16_t score, int16_t x, int16_t y)
         }
 
         map->score[x][y] += score;
-        map->score_hits[x][y]++;
 
     MAP_FLOODWALK_END(x, y, score)
-}
-
-/*
- * Do a breadth first flood to all nodes of the distance from the player.
- */
-static void dmap_distance_flood (dmap *map, thingp t)
-{
-    int16_t distance = 0;
-    int16_t x = (int)t->x;
-    int16_t y = (int)t->y;
-
-    MAP_FLOODWALK_BEGIN(x, y, distance)
-
-        distance--;
-
-        map->distance[x][y] = distance;
-
-    MAP_FLOODWALK_END(x, y, distance)
 }
 
 static int8_t dmap_goal_compare (const tree_node *a, const tree_node *b)
 {
     dmap_goal *A = (typeof(A))a;
     dmap_goal *B = (typeof(B))b;
-
-    if (A->distance < B->distance) {
-        return (-1);
-    }
-
-    if (A->distance > B->distance) {
-        return (1);
-    }
 
     if (A->score < B->score) {
         return (-1);
@@ -563,8 +480,7 @@ static int8_t dmap_goal_compare (const tree_node *a, const tree_node *b)
     return (0);
 }
 
-static dmap_goal *dmap_goal_alloc (int16_t x, int16_t y,
-                                   int16_t score, int16_t distance)
+static dmap_goal *dmap_goal_alloc (int16_t x, int16_t y, int16_t score)
 {
     static int16_t tiebreak;
 
@@ -577,7 +493,6 @@ static dmap_goal *dmap_goal_alloc (int16_t x, int16_t y,
     node->x = x;
     node->y = y;
     node->score = score;
-    node->distance = distance;
     node->tiebreak = tiebreak;
 
     return (node);
@@ -586,21 +501,18 @@ static dmap_goal *dmap_goal_alloc (int16_t x, int16_t y,
 /*
  * Add to the goal set.
  */
-static void dmap_goal_add (dmap *map, int16_t x, int16_t y,
-                           int16_t score, int16_t distance)
+static void dmap_goal_add (dmap *map, int16_t x, int16_t y, int16_t score)
 {
     if (!map->goal_nodes) {
         map->goal_nodes =
             tree_alloc_custom(dmap_goal_compare, "TREE ROOT: A* goals");
     }
 
-    dmap_goal *node = dmap_goal_alloc(x, y, score, distance);
+    dmap_goal *node = dmap_goal_alloc(x, y, score);
 
     if (!tree_insert(map->goal_nodes, &node->node)) {
         DIE("failed to add start to add to goal nodes");
     }
-
-    map->goals[x][y] = node;
 }
 
 /*
@@ -666,11 +578,9 @@ static int16_t dmap_astar_cost_est_from_here_to_goal (dmap *map,
                                                       int16_t x, int16_t y)
 {
     /*
-     * Manhattan distance.
+     * Lower scores are preferred.
      */
-    return (100 - map->score[x][y]);
-
-//                    + abs(map->goal_x - x) + abs(map->goal_y - y);
+    return (map->score[x][y]);
 }
 
 /*
@@ -708,32 +618,63 @@ static void dmap_astar_eval_neighbor (dmap *map, dmap_astar_node *current,
     }
 
     /*
-     * Reached a terminal goal; like an enemy?
+     * Lowest score is best.
      */
-    dmap_goal *goal = map->goals[nexthop_x][nexthop_y];
-    if (goal && (goal->score < 0)) {
+    int16_t score_nexthop = map->score[nexthop_x][nexthop_y];
+
+    /*
+     * End of search limits?
+     */
+    if (score_nexthop >= 0) {
         return;
     }
+
+    dmap_astar_node *neighbor = map->open[nexthop_x][nexthop_y];
 
     /*
      * If in the closed set already, ignore.
      */
     if (map->closed[nexthop_x][nexthop_y]) {
+        int16_t cost_from_start_to_here = current->cost_from_start_to_here +
+                        score_nexthop;
+
+        if (neighbor && 
+            (cost_from_start_to_here < neighbor->cost_from_start_to_here)) {
+            /*
+            * Ignore this node in future path finding.
+            */
+            neighbor->ignore_this_node = true;
+
+            /*
+            * Use this copy of the above node instead. It will have a better 
+            * search path. This allows us to avoid needing to resort the above 
+            * element which in a binary heap is messy.
+            */
+            dmap_astar_node *better_neighbor = 
+                            dmap_astar_alloc(neighbor->x, neighbor->y);
+
+            /*
+            * Now insert a copy of this node with the new path.
+            */
+            better_neighbor->came_from = current;
+            better_neighbor->cost_from_start_to_here = cost_from_start_to_here;
+            better_neighbor->cost_from_start_to_goal = cost_from_start_to_here +
+                dmap_astar_cost_est_from_here_to_goal(map, nexthop_x, nexthop_y);
+
+            /*
+            * Remove it from the open list; prior to adding again.
+            */
+            map->closed[neighbor->x][neighbor->y] = 0;
+            map->open[neighbor->x][neighbor->y] = 0;
+
+            dmap_astar_add_to_open(map, better_neighbor);
+        }
         return;
     }
 
-    int16_t distance_to_nexthop =
-        100 - map->score[nexthop_x][nexthop_y];
-
-    /*
-     * We use positive scores for good, but want to minimize distance.
-     */
-//    distance_to_nexthop = -distance_to_nexthop;
-
     int16_t cost_from_start_to_here = current->cost_from_start_to_here +
-                    distance_to_nexthop;
+                    score_nexthop;
  
-    dmap_astar_node *neighbor = map->open[nexthop_x][nexthop_y];
     if (!neighbor) {
         neighbor = dmap_astar_alloc(nexthop_x, nexthop_y);
         neighbor->came_from = current;
@@ -784,10 +725,6 @@ static void dmap_astar_reconstruct_path (dmap *map, dmap_astar_node *came_from)
     /*
      * And best path for debugging.
      */
-#ifdef ENABLE_MAP_DEBUG
-    memset(map->best, ' ', sizeof(map->best));
-#endif
-
     map->nexthop_x = came_from->x;
     map->nexthop_y = came_from->y;
 
@@ -823,8 +760,9 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
     /*
      * The set of tentative nodes to be evaluated.
      */
-    map->open_nodes = bheap_malloc(TILES_MAP_WIDTH * TILES_MAP_HEIGHT /* elements */,
-                                   0 /* bheap_print_func */);
+    map->open_nodes = bheap_malloc(
+                            TILES_MAP_WIDTH * TILES_MAP_HEIGHT /* elements */,
+                            0 /* bheap_print_func */);
 
     memset(map->open, 0, sizeof(map->open));
 
@@ -832,6 +770,10 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
      * The set of nodes already evaluated.
      */
     memset(map->closed, 0, sizeof(map->closed));
+
+#ifdef ENABLE_MAP_DEBUG
+    memset(map->best, ' ', sizeof(map->best));
+#endif
 
     /*
      * Create the start node.
@@ -870,7 +812,6 @@ static boolean dmap_astar_best_path (dmap *map, thingp t,
         if ((current->x == map->goal_x) && (current->y == map->goal_y)) {
             dmap_astar_reconstruct_path(map, current);
             goal_found = true;
-            break;
         }
 
         /*
@@ -933,11 +874,17 @@ void dmap_goals_find (dmap *map, thingp t)
      */
     thingp thing_it;
 
-    TREE_WALK_UNSAFE(server_active_things, thing_it) {
+//    TREE_WALK_UNSAFE(server_active_things, thing_it) {
+    TREE_WALK_UNSAFE(server_boring_things, thing_it) {
         /*
          * Only chase players.
          */
+#if 0
         if (!thing_is_player_fast(thing_it)) {
+            continue;
+        }
+#endif
+        if (!thing_is_key_fast(thing_it)) {
             continue;
         }
 
@@ -957,13 +904,8 @@ void dmap_goals_find (dmap *map, thingp t)
         /*
          * Chases.
          */
-        dmap_goal_flood(map, 100, x, y);
+        dmap_goal_flood(map, -100, x, y);
     }
-
-    /*
-     * Round out the total of all the maps merged together.
-     */
-    dmap_normalize(map);
 }
 
 static boolean dmap_move_in_same_dir (dmap *map, levelp level, thingp t,
@@ -1306,16 +1248,15 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
     }
 
     /*
-     * For finding oldest cells.
+     * Age out adjacent cells so we wander around when bored.
      */
-    static int16_t visited;
+    int dx, dy;
 
-    t->visited[(int)t->x][(int)t->y] = ++visited;
-
-    /*
-     * Flood how far various nodes are from us.
-     */
-    dmap_distance_flood(map, t);
+    for (dx = -1; dx <= 1; dx++) {
+        for (dy = -1; dy <= 1; dy++) {
+            t->visited[(int)t->x + dx][(int)t->y + dy]++;
+        }
+    }
 
     /*
      * Find all goals.
@@ -1340,15 +1281,6 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
         while (tree_root_size(map->goal_nodes)) {
             dmap_goal *goal =
                     (typeof(goal)) tree_root_first(map->goal_nodes);
-
-            /*
-             * Goal is something we want to avoid? Ignore for now.
-             */
-            if (goal->score < 0) {
-                dmap_goal_free(map, goal);
-                continue;
-            }
-
             /*
              * Stick with the same next hop if nothing good.
              */
@@ -1362,35 +1294,19 @@ static boolean dmap_find_nexthop (dmap *map, levelp level, thingp t,
             }
 
             if (dmap_astar_best_path(map, t, goal->x, goal->y)) {
+LOG("goal at %d %d found",goal->x,goal->y);
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
                 found_goal = true;
                 break;
             }
+LOG("goal at %d %d not found",goal->x,goal->y);
+        dmap_print_map(map, t, t->x, t->y, true, true);
 
             dmap_goal_free(map, goal);
         }
 
         tree_destroy(&map->goal_nodes, 0);
-    }
-
-    /*
-     * If no goal, just try and find the best area to head.
-     */
-    if (!found_goal) {
-DIE("no goal");
-        int16_t target_x = -1;
-        int16_t target_y = -1;
-
-        dmap_find_best_cell(map, t, &target_x, &target_y);
-
-        if ((target_x != t->x) || (target_y != t->y)) {
-            if (dmap_astar_best_path(map, t, target_x, target_y)) {
-                *nexthop_x = map->nexthop_x;
-                *nexthop_y = map->nexthop_y;
-                found_goal = true;
-            }
-        }
     }
 
     /*
@@ -1400,13 +1316,12 @@ DIE("no goal");
         int16_t target_x = -1;
         int16_t target_y = -1;
 
-#ifdef ENABLE_MAP_DEBUG
-        dmap_print_map(map, t->x, t->y, false, true);
-#endif
-DIE("no goal");
         dmap_find_oldest_visited(map, t, &target_x, &target_y);
+LOG("find oldest %d %d",target_x, target_y);
 
         if ((target_x != t->x) || (target_y != t->y)) {
+            dmap_goal_flood(map, -100, target_x, target_y);
+
             if (dmap_astar_best_path(map, t, target_x, target_y)) {
                 *nexthop_x = map->nexthop_x;
                 *nexthop_y = map->nexthop_y;
@@ -1419,7 +1334,7 @@ DIE("no goal");
         /*
          * If no goal was found, try and keep moving the same way.
          */
-DIE("no goal");
+LOG("last resort just keep moving");
         if (thing_has(t, THING_KEYS1)) {
             found_goal = dmap_move_in_same_door_dir(map, level, t, 
                                                     nexthop_x, nexthop_y);
@@ -1431,7 +1346,7 @@ DIE("no goal");
 
     if (!found_goal) {
 #ifdef ENABLE_MAP_DEBUG
-        dmap_print_map(map, t->x, t->y, false, true);
+        dmap_print_map(map, t, t->x, t->y, false, true);
 #endif
         return (false);
     }
@@ -1442,7 +1357,7 @@ DIE("no goal");
 
 #ifdef ENABLE_MAP_DEBUG
         if (thing_is_monst(t)) {
-            dmap_print_map(map, t->x, t->y, false, true);
+            dmap_print_map(map, t, t->x, t->y, false, true);
         }
 #endif
         return (false);
@@ -1456,23 +1371,326 @@ DIE("no goal");
      */
 #ifdef ENABLE_MAP_DEBUG
     if (thing_is_monst(t)) {
-        dmap_print_map(map, t->x, t->y, true, true);
+        dmap_print_map(map, t, t->x, t->y, true, true);
     }
 #endif
 
     return (true);
 }
 
+/*
+ * Print the Dijkstra map scores shared by all things of the same type.
+ */
+static void dmap_print (thing_templatep t, levelp level)
+{
+    int16_t x;
+    int16_t y;
+
+    if (!fp) {
+        fp = fopen("map.txt", "w");
+    }
+
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
+            if (level->monst_walls[x][y] != ' ') {
+                fprintf(fp, "   ");
+                continue;
+            }
+
+            fprintf(fp, "%3d", t->dmap[x][y]);
+        }
+
+        fprintf(fp, "\n");
+    }
+
+    fprintf(fp, "\n");
+}
+
+/*
+ * Print the Dijkstra map scores shared by all things of the same type.
+ */
+static void dmap_thing_print (thingp t, 
+                              levelp level,
+                              int16_t nexthop_x,
+                              int16_t nexthop_y)
+{
+    thing_templatep temp = t->thing_template;
+    int16_t x;
+    int16_t y;
+
+    if (!fp) {
+        fp = fopen("map.txt", "w");
+    }
+
+    int16_t tx;
+    int16_t ty;
+
+    tx = (int)(t->x + 0.5);
+    ty = (int)(t->y + 0.5);
+
+    LOG("%d %d %d %d",tx,ty,nexthop_x,nexthop_y);
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
+            if (level->monst_walls[x][y] != ' ') {
+                fprintf(fp, "   ");
+                continue;
+            }
+
+            if ((nexthop_x == x) && (nexthop_y == y)) {
+                fprintf(fp, " N ");
+            } else {
+                if ((x == tx) && (y == ty)) {
+                    fprintf(fp, " @ ");
+                } else {
+                    fprintf(fp, "%3d", temp->dmap[x][y]);
+                }
+            }
+        }
+
+        fprintf(fp, "\n");
+    }
+
+    fprintf(fp, "\n");
+}
+
+/*
+ * http://www.roguebasin.com/index.php?title=The_Incredible_Power_of_Dijkstra_Maps
+ *
+ * To get a Dijkstra map, you start with an integer array representing your
+ * map, with some set of goal cells set to zero and all the rest set to a very
+ * high number. 
+ *
+ * Iterate through the map's "floor" cells -- skip the impassable wall cells.
+ * If any floor tile has a value that is at least 2 greater than its 
+ * lowest-value floor neighbor, set it to be exactly 1 greater than its lowest 
+ * value neighbor. Repeat until no changes are made. The resulting grid of 
+ * numbers represents the number of steps that it will take to get from any 
+ * given tile to the nearest goal. 
+ */
+static void dmap_process (thing_templatep t, levelp level)
+{
+    int16_t x;
+    int16_t y;
+    int16_t a;
+    int16_t b;
+    int16_t c;
+    int16_t d;
+    int16_t *e;
+    int16_t f;
+    int16_t g;
+    int16_t h;
+    int16_t i;
+    int16_t lowest;
+    boolean changed;
+
+    do {
+        changed = false;
+
+        for (x = 1; x < TILES_MAP_WIDTH - 1; x++) {
+            for (y = 1; y < TILES_MAP_HEIGHT - 1; y++) {
+                if (level->monst_walls[x][y] != ' ') {
+                    continue;
+                }
+
+                a =  t->dmap[x-1][y-1] * 2;
+                b =  t->dmap[x  ][y-1];
+                c =  t->dmap[x+1][y-1] * 2;
+
+                d =  t->dmap[x-1][y];
+                e = &t->dmap[x  ][y];
+                f =  t->dmap[x+1][y];
+                 
+                g =  t->dmap[x-1][y+1] * 2;
+                h =  t->dmap[x  ][y+1];
+                i =  t->dmap[x+1][y+1] * 2;
+
+                lowest = min(a, min(b, min(c, min(d, min(f, min(g, min(h,i)))))));
+
+                if (*e - lowest >= 2) {
+                    *e = lowest + 1;
+                    changed = true;
+                }
+            }
+        }
+    } while (changed);
+}
+
+/*
+ * Generate goal points with a low value.
+ */
+static void dmap_goals_set (thing_templatep t)
+{
+    thingp thing_it;
+    int16_t x;
+    int16_t y;
+
+    { TREE_WALK_UNSAFE(server_active_things, thing_it) {
+        /*
+         * Only chase players.
+         */
+        if (!thing_is_player_fast(thing_it)) {
+            continue;
+        }
+
+        /*
+         * Ignore dead players.
+         */
+        if (thing_is_dead_fast(thing_it)) {
+            continue;
+        }
+
+        /*
+         * Aim for center of tile.
+         */
+        x = (int)(thing_it->x + 0.5);
+        y = (int)(thing_it->y + 0.5);
+
+        t->dmap[x][y] = 0;
+    } }
+
+    { TREE_WALK_UNSAFE(server_boring_things, thing_it) {
+        if (!thing_is_key_fast(thing_it)) {
+            continue;
+        }
+
+        /*
+         * Aim for center of tile.
+         */
+        x = (int)(thing_it->x + 0.5);
+        y = (int)(thing_it->y + 0.5);
+
+        t->dmap[x][y] = 0;
+    } }
+}
+
+/*
+ * Initialize the djkstra map with high values.
+ */
+static void dmap_init (thing_templatep t)
+{
+    int16_t x;
+    int16_t y;
+
+    const int16_t not_preferred = 999;
+
+    for (x = 0; x < TILES_MAP_WIDTH; x++) {
+        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+            t->dmap[x][y] = not_preferred;
+        }
+    }
+}
+
+/*
+ * Generate a djkstra map for the thing.
+ */
+static void dmap_generate (uint32_t i, levelp level)
+{
+    thing_templatep t = id_to_thing_template(i);
+
+    if (!server_level) {
+        t->dmap_valid = false;
+        return;
+    }
+
+    t->dmap_valid = true;
+
+    dmap_init(t);
+    dmap_goals_set(t);
+    dmap_process(t, level);
+    if (0) dmap_print(t, level);
+}
+
+/*
+ * Generate a djkstra map for the thing.
+e*/
+void thing_generate_dmaps (void)
+{
+    dmap_generate(THING_GHOST, server_level);
+}
+
 boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
-    /*
-     * This is the merged map with scores from all targets.
-     */
-    static dmap map;
-    memset(&map, 0, sizeof(map));
-    levelp level = map.level = thing_level(t);
+    thing_templatep temp = t->thing_template;
 
-    int rc = dmap_find_nexthop(&map, level, t, nexthop_x, nexthop_y);
+    if (!temp->dmap_valid) {
+        return (false);
+    }
 
-    return (rc);
+    int16_t x;
+    int16_t y;
+
+    x = (int)(t->x + 0.5);
+    y = (int)(t->y + 0.5);
+
+    int16_t a;
+    int16_t b;
+    int16_t c;
+    int16_t d;
+    int16_t e;
+    int16_t f;
+    int16_t g;
+    int16_t h;
+    int16_t i;
+    int16_t lowest;
+
+    a = temp->dmap[x-1][y-1];
+    b = temp->dmap[x  ][y-1];
+    c = temp->dmap[x+1][y-1];
+
+    d = temp->dmap[x-1][y];
+    e = temp->dmap[x  ][y];
+    f = temp->dmap[x+1][y];
+        
+    g = temp->dmap[x-1][y+1];
+    h = temp->dmap[x  ][y+1];
+    i = temp->dmap[x+1][y+1];
+
+    lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
+
+    const int16_t not_preferred = 999;
+
+    if (a != lowest) { a += not_preferred; }
+    if (b != lowest) { b += not_preferred; }
+    if (c != lowest) { c += not_preferred; }
+    if (d != lowest) { d += not_preferred; }
+    if (e != lowest) { e += not_preferred; }
+    if (f != lowest) { f += not_preferred; }
+    if (g != lowest) { g += not_preferred; }
+    if (h != lowest) { h += not_preferred; }
+    if (i != lowest) { i += not_preferred; }
+
+    a += t->visited[x-1][y-1];
+    b += t->visited[x  ][y-1];
+    c += t->visited[x+1][y-1];
+
+    d += t->visited[x-1][y];
+    e += t->visited[x  ][y];
+    f += t->visited[x+1][y];
+        
+    g += t->visited[x-1][y+1];
+    h += t->visited[x  ][y+1];
+    i += t->visited[x+1][y+1];
+
+    lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
+
+    int16_t dx = 0;
+    int16_t dy = 0;
+
+    if (a == lowest) { dx = -1; dy = -1; }
+    else if (b == lowest) { dx =  0; dy = -1; }
+    else if (c == lowest) { dx = +1; dy = -1; }
+    else if (d == lowest) { dx = -1; dy =  0; }
+    else if (e == lowest) { dx =  0; dy =  0; }
+    else if (f == lowest) { dx = +1; dy =  0; }
+    else if (g == lowest) { dx = -1; dy =  1; }
+    else if (h == lowest) { dx =  0; dy =  1; }
+    else if (i == lowest) { dx = +1; dy =  1; }
+
+    *nexthop_x = x + dx;
+    *nexthop_y = y + dy;
+
+    dmap_thing_print(t, server_level, *nexthop_x, *nexthop_y);
+
+if (0) dmap_find_nexthop(0, 0, t, nexthop_x, nexthop_y);
+    return (true);
 }

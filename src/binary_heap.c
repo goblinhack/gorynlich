@@ -111,7 +111,7 @@ popped   92 (0  in use):
 /*
  * How much contiguous memory to hold the heap struct and data elems?
  */
-static size_t bheap_size (const bheap_idx max_size)
+static inline size_t bheap_size (const bheap_idx max_size)
 {
     /*
      * Get the real sizes, taking into account padding of structs in memory.
@@ -126,7 +126,7 @@ static size_t bheap_size (const bheap_idx max_size)
 /*
  * Allocate contiguous heap memory for all elements.
  */
-bheap *bheap_malloc (const bheap_idx max_size,
+static inline bheap *bheap_malloc (const bheap_idx max_size,
                      bheap_print_func printer)
 {
     bheap *h = malloc(bheap_size(max_size));
@@ -146,7 +146,7 @@ bheap *bheap_malloc (const bheap_idx max_size,
 /*
  * Destroy the contiguous heap memory.
  */
-void bheap_free (bheap *h)
+static inline void bheap_free (bheap *h)
 {
     free(h);
 }
@@ -165,7 +165,7 @@ static unsigned char inline bheap_compare_sort_keys (const bheap_data *a,
 /*
  * Insert a new element in to the heap and sort it.
  */
-bheap *bheap_insert (bheap *h, const bheap_data *insert_data)
+static inline bheap *bheap_insert (bheap *h, const bheap_data *insert_data)
 {
     /*
      * Resize the bheap if needed.
@@ -236,7 +236,7 @@ bheap *bheap_insert (bheap *h, const bheap_data *insert_data)
 /*
  * Pop the head of the heap and resort.
  */
-bheap_data bheap_pop (bheap *h)
+static inline bheap_data bheap_pop (bheap *h)
 {
     /*
      * The head element is what we will return.
