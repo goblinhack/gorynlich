@@ -408,6 +408,7 @@ static void thing_tick_client_all (void)
 
 void thing_tick_all (void)
 {
+    thing_generate_dmaps();
     thing_tick_server_all();
     thing_tick_client_all();
 

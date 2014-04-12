@@ -193,6 +193,15 @@ void thing_handle_collisions (widp grid, thingp t)
                 }
             }
 
+            if (thing_is_monst(me)) {
+                if (thing_is_key(it)) {
+                    thing_dead(it, t, "collected");
+
+                    wid_it = wid_next;
+                    continue;
+                }
+            }
+
             wid_it = wid_next;
         }
     }
