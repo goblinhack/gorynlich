@@ -11,7 +11,9 @@
 #include "thing.h"
 #include "level_private.h"
 #include "wid_game_map_server.h"
+#include "map.h"
 
+#define ENABLE_MAP_DEBUG
 static FILE *fp;
 
 /*
@@ -28,12 +30,46 @@ static void dmap_print (thing_templatep t, levelp level)
 
     for (y = 0; y < TILES_MAP_HEIGHT; y++) {
         for (x = 0; x < TILES_MAP_WIDTH; x++) {
-            if (level->monst_walls[x][y] != ' ') {
-                fprintf(fp, "   ");
+            if (map_is_wall_at(level, x, y)) {
+                fprintf(fp, " ## ");
+                continue;
+            }
+            if (map_is_bomb_at(level, x, y)) {
+                fprintf(fp, " Bo ");
+                continue;
+            }
+            if (map_is_exit_at(level, x, y)) {
+                fprintf(fp, " Ex ");
+                continue;
+            }
+            if (map_is_spam_at(level, x, y)) {
+                fprintf(fp, " Sp ");
+                continue;
+            }
+            if (map_is_door_at(level, x, y)) {
+                fprintf(fp, " Do ");
+                continue;
+            }
+            if (map_is_generator_at(level, x, y)) {
+                fprintf(fp, " Gn ");
+                continue;
+            }
+            if (map_is_food_at(level, x, y)) {
+                fprintf(fp, " Fd ");
                 continue;
             }
 
-            fprintf(fp, "%3d", t->dmap[x][y]);
+            if (!map_is_floor_at(level, x, y)) {
+                fprintf(fp, " -- ");
+                continue;
+            }
+
+            if (level->monst_walls[x][y] != ' ') {
+                fprintf(fp, " ## ");
+                continue;
+            }
+
+            fprintf(fp, "%4d", t->dmap[x][y]);
         }
 
         fprintf(fp, "\n");
@@ -66,18 +102,13 @@ static void dmap_thing_print (thingp t,
 
     for (y = 0; y < TILES_MAP_HEIGHT; y++) {
         for (x = 0; x < TILES_MAP_WIDTH; x++) {
-            if (level->monst_walls[x][y] != ' ') {
-                fprintf(fp, "   ");
-                continue;
-            }
-
             if ((nexthop_x == x) && (nexthop_y == y)) {
-                fprintf(fp, " N ");
+                fprintf(fp, " Nh ");
             } else {
                 if ((x == tx) && (y == ty)) {
-                    fprintf(fp, " @ ");
+                    fprintf(fp, " Mo ");
                 } else {
-                    fprintf(fp, "%3d", temp->dmap[x][y]);
+                    fprintf(fp, "%4d", temp->dmap[x][y]);
                 }
             }
         }
@@ -153,7 +184,7 @@ static void dmap_process (thing_templatep t, levelp level)
 /*
  * Generate goal points with a low value.
  */
-static uint32_t dmap_goals_set (thing_templatep t)
+static uint32_t dmap_goals_set (thing_templatep t, boolean test)
 {
     uint32_t checksum = 0;
     thingp thing_it;
@@ -181,7 +212,9 @@ static uint32_t dmap_goals_set (thing_templatep t)
         x = (int)(thing_it->x + 0.5);
         y = (int)(thing_it->y + 0.5);
 
-        t->dmap[x][y] = 0;
+        if (!test) {
+            t->dmap[x][y] = 0;
+        }
 
         checksum ^= x | (y << 16);
         checksum = checksum << 1;
@@ -214,29 +247,34 @@ static void dmap_generate (uint32_t i, levelp level)
 {
     thing_templatep t = id_to_thing_template(i);
 
+    t->dmap_valid = false;
+
     /*
      * If no level yet, there is nothing to chase.
      */
     if (!server_level) {
-        t->dmap_valid = false;
         return;
     }
-
-    t->dmap_valid = true;
 
     /*
      * Only reprocess the djkstra map if something has changed on the map
      * We use a checksum of the goals to indicate this with reasonable 
      * certainty.
      */
-    uint32_t checksum = dmap_goals_set(t);
+    uint32_t checksum = dmap_goals_set(t, true /* test */);
+    if (!checksum) {
+        return;
+    }
+
+    t->dmap_valid = true;
     if (t->dmap_checksum == checksum) {
         return;
     }
+
     t->dmap_checksum = checksum;
 
     dmap_init(t);
-    dmap_goals_set(t); // redo for real this time.
+    dmap_goals_set(t, false /* test */); // redo for real this time.
     dmap_process(t, level);
 
 #ifdef ENABLE_MAP_DEBUG
