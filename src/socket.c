@@ -2151,7 +2151,7 @@ void socket_tx_client_move (socketp s,
 
     static uint32_t ts;
 
-    if (!time_have_x_hundredths_passed_since(5, ts)) {
+    if (!time_have_x_hundredths_passed_since(TX_PLAYER_POSITION_DELAY, ts)) {
         return;
     }
 
