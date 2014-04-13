@@ -202,14 +202,6 @@ static void thing_tick_server_all (void)
 
     socket_server_tx_map_update(0 /* all clients */, server_player_things);
 
-    static uint32_t ts;
-
-    if (!time_have_x_hundredths_passed_since(5, ts)) {
-        return;
-    }
-
-    ts = time_get_time_cached();
-
     socket_server_tx_map_update(0 /* all clients */, server_active_things);
 }
 
