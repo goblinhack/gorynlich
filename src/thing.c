@@ -1132,20 +1132,6 @@ boolean thing_got_to_exit_first (thingp t)
     return (t->got_to_exit_first);
 }
 
-void thing_set_redo_maze_search (thingp t, boolean val)
-{
-    verify(t);
-
-    t->redo_maze_search = val;
-}
-
-boolean thing_redo_maze_search (thingp t)
-{
-    verify(t);
-
-    return (t->redo_maze_search);
-}
-
 void thing_set_is_dir_down (thingp t)
 {
     verify(t);
@@ -1786,9 +1772,23 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                     /*
                      * Local echo only.
                      */
-                    if ((state & (1 << THING_STATE_BIT_SHIFT_RESYNC)) ||
-                        (fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY) ||
-                        (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY)) {
+                    if ((state & (1 << THING_STATE_BIT_SHIFT_RESYNC))) {
+                        /*
+                         * Check we are roughly where the server thinks we 
+                         * are. If wildly out of whack, correct our viewpoint.
+                         */
+                        THING_LOG(t, "%s server asked for resync",
+                                  t->logname);
+                        THING_LOG(t, "  server %f %f", t->x, t->y);
+                        THING_LOG(t, "  client %f %f", x, y);
+
+                        t->x = x;
+                        t->y = y;
+
+                        thing_client_wid_update(t, x, y, true /* smooth */);
+                    } else 
+                        if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
+                            (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
                         /*
                          * Check we are roughly where the server thinks we 
                          * are. If wildly out of whack, correct our viewpoint.
@@ -1997,12 +1997,19 @@ void thing_server_move (thingp t,
 {
     widp grid = wid_game_map_server_grid_container;
 
+    thing_common_move(t, &x, &y, up, down, left, right);
+
     if (thing_hit_solid_obstacle(grid, t, x, y)) {
         if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
             y = t->y;
         } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
             x = t->x;
         } else {
+            if (thing_is_player(t)) {
+                THING_LOG(t, "client collision, ignore move");
+                THING_LOG(t, "  server %f %f", t->x, t->y);
+                THING_LOG(t, "  client %f %f", x, y);
+            }
             return;
         }
     }
@@ -2014,6 +2021,8 @@ void thing_server_move (thingp t,
              * Client is cheating?
              */
             THING_LOG(t, "client moved too much, ignore move");
+            THING_LOG(t, "  server %f %f", t->x, t->y);
+            THING_LOG(t, "  client %f %f", x, y);
 
             t->updated++;
             t->resync = 1;

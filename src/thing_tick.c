@@ -155,27 +155,11 @@ static void thing_tick_server_all (void)
             int32_t nexthop_y = -1;
 
             /*
-             * Has something on the level changed that needs a research.
-             */
-            if (thing_redo_maze_search(t)) {
-                thing_set_redo_maze_search(t, false);
-
-                look_for_nexthop = true;
-            }
-
-            if (!time_have_x_thousandths_passed_since(THING_MONST_SPEED,
-                                                      t->timestamp_ai)) {
-                look_for_nexthop = false;
-            }
-
-            /*
              * Need to look for a nexthop? Or keep walking on?
              */
             boolean have_nexthop;
             if (look_for_nexthop) {
                 have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
-
-                t->timestamp_ai = time_get_time_cached();
             } else {
                 have_nexthop = false;
             }
@@ -202,43 +186,29 @@ static void thing_tick_server_all (void)
                         nexthop_x, nexthop_y, thing_logname(t));
                 }
  
-#if 1
                 double fnexthop_x = (double)nexthop_x;
                 double fnexthop_y = (double)nexthop_y;
 
                 thing_server_move(t,
                         fnexthop_x,
                         fnexthop_y,
-                        thing_is_dir_up(t),
-                        thing_is_dir_down(t),
-                        thing_is_dir_left(t),
-                        thing_is_dir_right(t));
-#else
-                fpoint p;
-
-                p.x = fnexthop_x - t->x;
-                p.y = fnexthop_y - t->y;
-
-                p = funit(p);
-
-                double d = DISTANCE(t->x, t->y, fnexthop_x, fnexthop_y);
-                d = min(THING_MONST_COORD_MOVE, d);
-                p = fmul(d, p);
-
-                double x = t->x + p.x;
-                double y = t->y + p.y;
-
-                thing_server_move(t,
-                        x,
-                        y,
-                        thing_is_dir_up(t),
-                        thing_is_dir_down(t),
-                        thing_is_dir_left(t),
-                        thing_is_dir_right(t));
-#endif
+                        fnexthop_y < t->y,
+                        fnexthop_y > t->y,
+                        fnexthop_x < t->x,
+                        fnexthop_x > t->x);
             }
         }
     }
+
+    socket_server_tx_map_update(0 /* all clients */, server_player_things);
+
+    static uint32_t ts;
+
+    if (!time_have_x_hundredths_passed_since(5, ts)) {
+        return;
+    }
+
+    ts = time_get_time_cached();
 
     socket_server_tx_map_update(0 /* all clients */, server_active_things);
 }
@@ -416,8 +386,10 @@ void thing_tick_all (void)
     if (player) {
         static uint32_t ts;
 
-        if (time_have_x_thousandths_passed_since(THING_PLAYER_POLL_SPEED, ts)) {
+        if (time_have_x_thousandths_passed_since(THING_PLAYER_POLL_SPEED, 
+                                                 ts)) {
             ts = time_get_time_cached();
+
             wid_game_map_client_player_move();
 
             wid_game_map_client_scroll_adjust();
