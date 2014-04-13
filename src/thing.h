@@ -376,11 +376,6 @@ typedef struct thing_ {
     uint32_t timestamp_teleport;
 
     /*
-     * Last time we did an expensive AI operation.
-     */
-    uint32_t timestamp_ai;
-
-    /*
      * When do I die? 8(
      */
     uint32_t timestamp_lifestamp;
@@ -408,7 +403,6 @@ typedef struct thing_ {
     uint32_t is_qqq6:1;
     uint32_t is_qqq7:1;
     uint32_t got_to_exit_first:1;
-    uint32_t redo_maze_search:1;
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_buried:1;
