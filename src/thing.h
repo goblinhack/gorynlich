@@ -381,11 +381,17 @@ typedef struct thing_ {
     uint32_t timestamp_lifestamp;
 
     /*
+     * When the thing was last updated from the server to clients.
+     */
+    uint32_t timestamp_update;
+
+    /*
      * A counter to indicate the number of times we want to update the client 
      * with the state of this thing. To compensate for udp drops we might want 
      * to send a couple of updates for important events like death.
      */
     uint8_t updated;
+    uint8_t last_state;
 
     /*
      * To keep a thing around for a while so we can clean it up once the 

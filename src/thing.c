@@ -388,6 +388,7 @@ void thing_bury (thingp t)
 static void thing_dead_ (thingp t, thingp killer, char *reason)
 {
     verify(t);
+LOG("  dead %s",thing_logname(t));
 
     if (t->is_dead) {
         return;
@@ -437,6 +438,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
          * Pop from the level.
          */
         thing_set_wid(t, 0);
+LOG("  remove wid %s",thing_logname(t));
     }
 
     THING_DBG(t, "dead (%s)", reason);
@@ -459,6 +461,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     if (t->is_dead) {
         return;
     }
+LOG("dead %s",thing_logname(t));
 
     if (reason) {
         va_start(args, reason);
@@ -492,18 +495,21 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 
     if (!t->on_active_list) {
+LOG("  not on active list");
         if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
             DIE("thing move, remove boring [%s] failed", thing_name(t));
         }
 
         if (t->client_or_server_tree == server_boring_things) {
             if (!tree_insert(server_active_things, &t->tree.node)) {
+LOG("  added to server active things");
                 DIE("thing move, insert active [%s] failed", thing_name(t));
             }
 
             t->client_or_server_tree = server_active_things;
         } else if (t->client_or_server_tree == client_boring_things) {
             if (!tree_insert(client_active_things, &t->tree.node)) {
+LOG("  added to client active things");
                 DIE("thing move, insert active [%s] failed", thing_name(t));
             }
 
@@ -1550,6 +1556,12 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          */
         if (!p) {
             if (!t->updated) {
+if (thing_is_door_fast(t)) {
+LOG("will not update door");
+}
+if (thing_is_key_fast(t)) {
+LOG("will not update key");
+}
                 continue;
             }
 
@@ -1602,6 +1614,27 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
                 ((t->is_buried  ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_BURIED);
 
         t->resync = 0;
+
+if (thing_is_door_fast(t)) {
+LOG("tx update door %d",thing_template_to_id(t->thing_template));
+}
+if (thing_is_key_fast(t)) {
+LOG("tx update key %d",thing_template_to_id(t->thing_template));
+}
+        if (state == t->last_state) {
+            /*
+             * No change in direction or state. Only send an update 
+             * occasionally.
+             */
+            if (!time_have_x_hundredths_passed_since(5, t->timestamp_update)) {
+                return;
+            }
+        } else {
+            t->last_state = state;
+        }
+
+        t->timestamp_update = time_get_time_cached();
+
         *data++ = state;
         *data++ = thing_template_to_id(t->thing_template);
 
@@ -1698,6 +1731,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     uint8_t *eodata = data + packet->len - 1;
 
+LOG("rx update len %ld",eodata - data);
     while (data < eodata) {
         uint8_t state = *data++;
         uint8_t template_id = *data++;
@@ -1705,6 +1739,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         uint32_t thing_id = SDLNet_Read32(data);
         data += sizeof(uint32_t);
 
+LOG("  rx update %d",thing_id);
         uint16_t tx = SDLNet_Read16(data);
         data += sizeof(uint16_t);
 
@@ -1820,6 +1855,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD)) {
+LOG("server killed %s",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
     }
