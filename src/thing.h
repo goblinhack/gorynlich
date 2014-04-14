@@ -281,6 +281,11 @@ typedef struct thing_ {
     tree_key_int tree2;
 
     /*
+     * Unique id per thing.
+     */
+    uint16_t thing_id;
+
+    /*
      * Pointer to common settings for this thing.
      */
     thing_templatep thing_template;
@@ -347,7 +352,7 @@ typedef struct thing_ {
     /*
      * Array of which tiles we've been to.
      */
-    int16_t visited[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    int8_t visited[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
     /*
      * How many and of what we are carrying.

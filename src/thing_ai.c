@@ -14,14 +14,15 @@
 #include "map.h"
 
 static FILE *fp;
+static const int8_t not_preferred = 63;
 
 /*
  * Print the Dijkstra map scores shared by all things of the same type.
  */
 static void dmap_print (thing_templatep t, levelp level)
 {
-    int16_t x;
-    int16_t y;
+    int8_t x;
+    int8_t y;
 
     if (!fp) {
         fp = fopen("map.txt", "w");
@@ -82,19 +83,19 @@ static void dmap_print (thing_templatep t, levelp level)
  */
 static void dmap_thing_print (thingp t, 
                               levelp level,
-                              int16_t nexthop_x,
-                              int16_t nexthop_y)
+                              int8_t nexthop_x,
+                              int8_t nexthop_y)
 {
     thing_templatep temp = t->thing_template;
-    int16_t x;
-    int16_t y;
+    int8_t x;
+    int8_t y;
 
     if (!fp) {
         fp = fopen("map.txt", "w");
     }
 
-    int16_t tx;
-    int16_t ty;
+    int8_t tx;
+    int8_t ty;
 
     tx = (int)(t->x + 0.5);
     ty = (int)(t->y + 0.5);
@@ -134,19 +135,19 @@ static void dmap_thing_print (thingp t,
  */
 static void dmap_process (thing_templatep t, levelp level)
 {
-    int16_t x;
-    int16_t y;
-    int16_t a;
-    int16_t b;
-    int16_t c;
-    int16_t d;
-    int16_t *e;
-    int16_t f;
-    int16_t g;
-    int16_t h;
-    int16_t i;
-    int16_t lowest;
-    boolean changed;
+    uint8_t x;
+    uint8_t y;
+    int8_t a;
+    int8_t b;
+    int8_t c;
+    int8_t d;
+    int8_t *e;
+    int8_t f;
+    int8_t g;
+    int8_t h;
+    int8_t i;
+    int8_t lowest;
+    uint8_t changed;
 
     do {
         changed = false;
@@ -187,8 +188,8 @@ static uint32_t dmap_goals_set (thing_templatep t, boolean test)
 {
     uint32_t checksum = 0;
     thingp thing_it;
-    int16_t x;
-    int16_t y;
+    int8_t x;
+    int8_t y;
 
     { TREE_OFFSET_WALK_UNSAFE(server_player_things, thing_it) {
         /*
@@ -227,10 +228,8 @@ static uint32_t dmap_goals_set (thing_templatep t, boolean test)
  */
 static void dmap_init (thing_templatep t)
 {
-    int16_t x;
-    int16_t y;
-
-    const int16_t not_preferred = 999;
+    int8_t x;
+    int8_t y;
 
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
@@ -300,22 +299,22 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         return (false);
     }
 
-    int16_t x;
-    int16_t y;
+    int8_t x;
+    int8_t y;
 
     x = (int)(t->x + 0.5);
     y = (int)(t->y + 0.5);
 
-    int16_t a;
-    int16_t b;
-    int16_t c;
-    int16_t d;
-    int16_t e;
-    int16_t f;
-    int16_t g;
-    int16_t h;
-    int16_t i;
-    int16_t lowest;
+    int8_t a;
+    int8_t b;
+    int8_t c;
+    int8_t d;
+    int8_t e;
+    int8_t f;
+    int8_t g;
+    int8_t h;
+    int8_t i;
+    int8_t lowest;
 
     a = temp->dmap[x-1][y-1];
     b = temp->dmap[x  ][y-1];
@@ -330,8 +329,6 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     i = temp->dmap[x+1][y+1];
 
     lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
-
-    const int16_t not_preferred = 999;
 
     if (a != lowest) { a += not_preferred; }
     if (b != lowest) { b += not_preferred; }
@@ -357,8 +354,8 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 
     lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
 
-    int16_t dx = 0;
-    int16_t dy = 0;
+    int8_t dx = 0;
+    int8_t dy = 0;
 
     if (a == lowest) { dx = -1; dy = -1; }
     else if (b == lowest) { dx =  0; dy = -1; }

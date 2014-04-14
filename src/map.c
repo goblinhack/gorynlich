@@ -1400,7 +1400,6 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
                 continue;
             }
 
-LOG("open");
             thing_dead(this_door[x][y], 0 /* killer */, "open");
         }
     }

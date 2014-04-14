@@ -125,6 +125,7 @@ void wid_game_map_server_wid_create (void)
         wid_set_color(wid_game_map_server_grid_container, WID_COLOR_TL, BLACK);
         wid_set_color(wid_game_map_server_grid_container, WID_COLOR_BG, BLACK);
         wid_set_color(wid_game_map_server_grid_container, WID_COLOR_BR, BLACK);
+        wid_set_ignore_events(wid_game_map_server_grid_container, true);
 
         wid_set_tl_br_pct(wid_game_map_server_grid_container, tl, br);
         wid_set_tex(wid_game_map_server_grid_container, 0, 0);

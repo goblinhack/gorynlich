@@ -7,7 +7,7 @@
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 #undef ENABLE_LEAKCHECK           // Memory leak check
 #undef ENABLE_PTRCHECK            // Check validity of pointers too
-#undef ENABLE_CONSOLE            // Enable terminal console all the time
+#define ENABLE_CONSOLE            // Enable terminal console all the time
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
@@ -112,6 +112,7 @@
  * Maximum number of thing types. Dicates message sizes etc...
  */
 #define THING_MAX                   128
+#define THING_ID_MAX                4096
 
 /*
  * When converting from thing co-ords where 1.0 is one grid, we must convert
