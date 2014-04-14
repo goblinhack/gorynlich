@@ -175,6 +175,7 @@ typedef struct thing_template_ {
     uint8_t is_effect_pulse:1;
     uint8_t is_effect_rotate_4way:1;
     uint8_t is_effect_rotate_2way:1;
+    uint8_t dmap_valid:1;
 
     thing_tilep tilep_join[IS_JOIN_MAX][IS_JOIN_ALT_MAX];
     tilep tilep_join_tile[IS_JOIN_MAX][IS_JOIN_ALT_MAX];
@@ -183,8 +184,7 @@ typedef struct thing_template_ {
     /*
      * djkstra map
      */
-    int16_t dmap[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-    boolean dmap_valid;
+    int8_t dmap[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
     uint32_t dmap_checksum;
 } thing_template;
 
