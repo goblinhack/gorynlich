@@ -100,6 +100,7 @@ tree_root *server_boring_things;
 tree_root *client_boring_things;
 
 static uint32_t thing_id;
+static thingp thing_ids[THING_ID_MAX];
 static boolean thing_init_done;
 static void thing_destroy_implicit(thingp t);
 
@@ -165,7 +166,25 @@ thingp thing_server_new (levelp level, const char *name)
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
-    t->tree.key = ++thing_id;
+
+    /*
+     * Find a free thign slot
+     */
+    int looped = 0;
+    while (thing_ids[++thing_id]) {
+        thing_id++;
+        if (thing_id >= THING_ID_MAX) {
+            thing_id = 0;
+            if (looped++) {
+                DIE("out of thing ids!");
+            }
+        }
+    }
+
+    t->tree.key = thing_id;
+    thing_ids[thing_id] = t;
+    t->thing_id = thing_id;
+
     t->thing_template = thing_template;
     t->health = thing_template_get_health(thing_template);
     t->on_server = true;
@@ -364,6 +383,8 @@ void thing_destroy (thingp t, const char *why)
     if (t == player) {
         player = 0;
     }
+
+    thing_ids[t->thing_id] = 0;
 
     myfree(t);
 }
@@ -1621,33 +1642,41 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
         t->timestamp_update = time_get_time_cached();
 
-        *data++ = state;
-        *data++ = thing_template_to_id(t->thing_template);
-
-        SDLNet_Write32(t->tree.key, data);               
-        data += sizeof(uint32_t);
+        /*
+         * We squeeze the template ID in where we can
+         */
+        uint16_t template_id = thing_template_to_id(t->thing_template);
+        uint16_t thing_id = t->thing_id | ((template_id & 0x0f) << 12);
+        uint16_t tx;
+        uint16_t ty;
 
         widp w = thing_wid(t);
-
         if (w) {
-            uint16_t x;
-            uint16_t y;
-
-            x = (t->x * THING_COORD_SCALE);
-            y = (t->y * THING_COORD_SCALE);
-
-            SDLNet_Write16((uint16_t) x, data);               
-            data += sizeof(uint16_t);
-            
-            SDLNet_Write16((uint16_t) y, data);               
-            data += sizeof(uint16_t);
+            tx = (t->x * THING_COORD_SCALE);
+            ty = (t->y * THING_COORD_SCALE);
         } else {
-            SDLNet_Write16(-1, data);               
-            data += sizeof(uint16_t);
-            
-            SDLNet_Write16(-1, data);               
-            data += sizeof(uint16_t);
+            tx = -1;
+            ty = -1;
         }
+
+        tx &= 0x3fff;
+        ty &= 0x3fff;
+        tx |= ((template_id & 0x30) >> 4) << 14;
+        ty |= ((template_id & 0xc0) >> 4) << 14;
+
+        /*
+         * Now pack the raw data.
+         */
+        *data++ = state;
+
+        SDLNet_Write16(thing_id, data);               
+        data += sizeof(uint16_t);
+
+        SDLNet_Write16((uint16_t) tx, data);               
+        data += sizeof(uint16_t);
+            
+        SDLNet_Write16((uint16_t) ty, data);               
+        data += sizeof(uint16_t);
 
         packed++;
 
@@ -1719,10 +1748,9 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     while (data < eodata) {
         uint8_t state = *data++;
-        uint8_t template_id = *data++;
 
-        uint32_t thing_id = SDLNet_Read32(data);
-        data += sizeof(uint32_t);
+        uint16_t thing_id = SDLNet_Read16(data);
+        data += sizeof(uint16_t);
 
         uint16_t tx = SDLNet_Read16(data);
         data += sizeof(uint16_t);
@@ -1730,11 +1758,20 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         uint16_t ty = SDLNet_Read16(data);
         data += sizeof(uint16_t);
 
+        /*
+         * We squeeze the template ID in where we can
+         */
+        uint8_t template_id = 
+                (thing_id >> 12) | ((tx >> 14) << 4) | ((ty >> 14) << 6);
+        thing_id &= 0x0fff;
+        tx &= 0x3fff;
+        ty &= 0x3fff;
+
         boolean on_map;
         double x;
         double y;
 
-        if ((tx == (uint16_t)-1) || (y == (uint16_t)-1)) {
+        if ((tx == 0x3fff) || (y == 0x3fff)) {
             on_map = false;
             x = -1;
             y = -1;

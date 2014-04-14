@@ -319,6 +319,7 @@ typedef struct wid_ {
     uint8_t fade_in:1;
     uint8_t fade_out:1;
     uint8_t moving:1;
+    uint8_t ignore_for_events:1;
     uint8_t paused:1;
     uint8_t scaled_w:1;
     uint8_t scaled_h:1;
@@ -988,6 +989,11 @@ static void wid_mouse_motion_end (void)
     wid_moving = 0;
 }
 
+void wid_set_ignore_events (widp w, boolean val)
+{
+    w->ignore_for_events = val;
+}
+
 /*
  * Should this widget be ignored for events?
  */
@@ -1001,7 +1007,7 @@ boolean wid_ignore_for_events (widp w)
 
     verify(w);
 
-    if (w->moving ||
+    if (w->ignore_for_events || w->moving ||
         /*
          * For buttons that pulse.
          */

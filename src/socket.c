@@ -1924,7 +1924,7 @@ void socket_tx_server_status (void)
 
         SDLNet_Write32(t->score, &msg_tx->score);
         SDLNet_Write32(t->health, &msg_tx->health);
-        SDLNet_Write32(t->tree.key, &msg_tx->thing_id);
+        SDLNet_Write16(t->tree.key, &msg_tx->thing_id);
 
         SDLNet_Write32(p->key, &msg_tx->key);
 
@@ -2000,7 +2000,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
         p->score = SDLNet_Read32(&msg_rx->score);
         p->health = SDLNet_Read32(&msg_rx->health);
-        p->thing_id = SDLNet_Read32(&msg_rx->thing_id);
+        p->thing_id = SDLNet_Read16(&msg_rx->thing_id);
 
         p->key = SDLNet_Read32(&msg_rx->key);
 

@@ -91,7 +91,7 @@ typedef struct msg_player_state_ {
     uint32_t score;
     uint32_t health;
     uint32_t key;
-    uint32_t thing_id;
+    uint16_t thing_id;
 } __attribute__ ((packed)) msg_player_state;
 
 typedef struct {
@@ -107,8 +107,7 @@ typedef struct {
      * Upper 8 bits are state
      */
     uint8_t state;
-    uint8_t template_id;
-    uint32_t thing_id;
+    uint16_t thing_id;
     uint16_t x;
     uint16_t y;
 } __attribute__ ((packed)) msg_thing_update;
@@ -119,7 +118,7 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    uint32_t thing_id;
+    uint16_t thing_id;
     uint8_t carrying[THING_MAX];
 } __attribute__ ((packed)) msg_player_update;
 
