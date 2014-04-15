@@ -167,7 +167,7 @@ static void client_socket_tx_ping (void)
     static uint32_t ts;
     static uint8_t seq;
 
-    if (!time_have_x_tenths_passed_since(PING_DELAY_TENTHS, ts)) {
+    if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING, ts)) {
         return;
     }
 
@@ -855,7 +855,7 @@ static void client_check_still_in_game (void)
         return;
     }
 
-    if (!time_have_x_tenths_passed_since(PING_DELAY_TENTHS,
+    if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING,
                                          client_joined_server_when)) {
         return;
     }

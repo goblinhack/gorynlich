@@ -1633,7 +1633,9 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
              * No change in direction or state. Only send an update 
              * occasionally.
              */
-            if (!time_have_x_hundredths_passed_since(5, t->timestamp_update)) {
+            if (!time_have_x_hundredths_passed_since(
+                                    DELAY_HUNDREDTHS_THING_TX_UPDATE, 
+                                    t->timestamp_update)) {
                 continue;
             }
         } else {

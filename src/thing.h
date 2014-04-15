@@ -379,6 +379,7 @@ typedef struct thing_ {
      */
     uint32_t timestamp_change_to_next_frame;
     uint32_t timestamp_teleport;
+    uint32_t timestamp_ai;
 
     /*
      * When do I die? 8(
