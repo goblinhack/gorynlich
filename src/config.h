@@ -94,11 +94,6 @@
 #define MAX_PACKET_SIZE             4096
 
 /*
- * Frequency of client and server pings
- */
-#define PING_DELAY_TENTHS           5
-
-/*
  * How many pings to consider for quality
  */
 #define SOCKET_PING_SEQ_NO_RANGE    20
@@ -139,5 +134,18 @@
  * low and it will be jerky, jumping back when we have high latency.
  */
 #define THING_MAX_SERVER_DISCREPANCY 3.0
-#define THING_PLAYER_POLL_SPEED      10 // thousandths
-#define TX_PLAYER_POSITION_DELAY     5 // hundredths
+
+/*
+ * Timers
+ */
+#define DELAY_TENTHS_THING_AI                   1
+#define DELAY_TENTHS_PING                       5
+#define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
+#define DELAY_TENTHS_CURSOR_VISIBLE             5
+#define DELAY_TENTHS_CURSOR_INVISIBLE           1
+
+#define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     20
+#define DELAY_HUNDREDTHS_THING_TX_UPDATE        20
+
+#define DELAY_THOUSANDTHS_PLAYER_POLL           15
+

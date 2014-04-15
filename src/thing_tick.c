@@ -147,6 +147,14 @@ static void thing_tick_server_all (void)
         }
 
         /*
+         * Don't do stuff too often.
+         */
+        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI,
+                                             t->timestamp_ai)) {
+            continue;
+        }
+
+        /*
          * If stopped moving, look for a next hop.
          */
         if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
@@ -196,6 +204,8 @@ static void thing_tick_server_all (void)
                         fnexthop_y > t->y,
                         fnexthop_x < t->x,
                         fnexthop_x > t->x);
+
+                t->timestamp_ai = time_get_time_cached();
             }
         }
     }
@@ -378,7 +388,7 @@ void thing_tick_all (void)
     if (player) {
         static uint32_t ts;
 
-        if (time_have_x_thousandths_passed_since(THING_PLAYER_POLL_SPEED, 
+        if (time_have_x_thousandths_passed_since(DELAY_THOUSANDTHS_PLAYER_POLL, 
                                                  ts)) {
             ts = time_get_time_cached();
 
