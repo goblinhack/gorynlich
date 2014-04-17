@@ -208,6 +208,8 @@ case `uname` in
 	;;
 esac
 
+LDLIBS="$LDLIBS -lpthread"
+
 cd src
 
 echo "COMPILER_FLAGS=-Werror -g -ggdb3 -O0 $SDL_FLAGS # AUTOGEN" >> .Makefile

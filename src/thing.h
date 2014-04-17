@@ -47,8 +47,6 @@ widp thing_message(thingp t, const char *message);
 void thing_set_score_pump(thingp, uint32_t score);
 void thing_inc_score_pump(thingp, uint32_t score);
 void thing_animate(thingp);
-boolean thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
-void thing_generate_dmaps(void);
 void thing_handle_collisions(widp grid, thingp t);
 boolean thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
 boolean thing_server_hit_solid_obstacle(widp grid, 
@@ -146,6 +144,14 @@ void thing_client_wid_update(thingp t, double x, double y, boolean smooth);
 void thing_collect(thingp t, thing_templatep tmp);
 boolean thing_use(thingp t, uint32_t id);
 boolean thing_has(thingp t, uint32_t id);
+
+/*
+ * thing_ai.c
+ */
+boolean thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
+void thing_generate_dmaps(void);
+void dmap_process_init(void);
+void dmap_process_fini(void);
 
 typedef struct {
     thing_templatep thing_template;

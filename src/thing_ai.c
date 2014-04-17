@@ -6,6 +6,7 @@
 
 #define __STDC_LIMIT_MACROS
 #include <SDL.h>
+#include <pthread.h>
 
 #include "main.h"
 #include "thing.h"
@@ -15,6 +16,16 @@
 
 static FILE *fp;
 static const int8_t not_preferred = 63;
+
+static pthread_t dmap_thread;
+static pthread_mutex_t dmap_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t dmap_condition_var = PTHREAD_COND_INITIALIZER;
+
+static char monst_walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+static int8_t dmap[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+static int8_t dmap_output[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+static uint32_t dmap_checksum;
+static uint8_t dmap_valid;
 
 /*
  * Print the Dijkstra map scores shared by all things of the same type.
@@ -69,7 +80,7 @@ static void dmap_print (thing_templatep t, levelp level)
                 continue;
             }
 
-            fprintf(fp, "%4d", t->dmap[x][y]);
+            fprintf(fp, "%4d", dmap[x][y]);
         }
 
         fprintf(fp, "\n");
@@ -82,11 +93,9 @@ static void dmap_print (thing_templatep t, levelp level)
  * Print the Dijkstra map scores shared by all things of the same type.
  */
 static void dmap_thing_print (thingp t, 
-                              levelp level,
                               int8_t nexthop_x,
                               int8_t nexthop_y)
 {
-    thing_templatep temp = t->thing_template;
     int8_t x;
     int8_t y;
 
@@ -108,7 +117,7 @@ static void dmap_thing_print (thingp t,
                 if ((x == tx) && (y == ty)) {
                     fprintf(fp, " Mo ");
                 } else {
-                    fprintf(fp, "%4d", temp->dmap[x][y]);
+                    fprintf(fp, "%4d", dmap[x][y]);
                 }
             }
         }
@@ -133,7 +142,7 @@ static void dmap_thing_print (thingp t,
  * numbers represents the number of steps that it will take to get from any 
  * given tile to the nearest goal. 
  */
-static void dmap_process (thing_templatep t, levelp level)
+static void dmap_process (void)
 {
     uint8_t x;
     uint8_t y;
@@ -154,21 +163,21 @@ static void dmap_process (thing_templatep t, levelp level)
 
         for (x = 1; x < TILES_MAP_WIDTH - 1; x++) {
             for (y = 1; y < TILES_MAP_HEIGHT - 1; y++) {
-                if (level->monst_walls[x][y] != ' ') {
+                if (monst_walls[x][y] != ' ') {
                     continue;
                 }
 
-                a =  t->dmap[x-1][y-1] * 2;
-                b =  t->dmap[x  ][y-1];
-                c =  t->dmap[x+1][y-1] * 2;
+                a =  dmap[x-1][y-1] * 2;
+                b =  dmap[x  ][y-1];
+                c =  dmap[x+1][y-1] * 2;
 
-                d =  t->dmap[x-1][y];
-                e = &t->dmap[x  ][y];
-                f =  t->dmap[x+1][y];
+                d =  dmap[x-1][y];
+                e = &dmap[x  ][y];
+                f =  dmap[x+1][y];
                  
-                g =  t->dmap[x-1][y+1] * 2;
-                h =  t->dmap[x  ][y+1];
-                i =  t->dmap[x+1][y+1] * 2;
+                g =  dmap[x-1][y+1] * 2;
+                h =  dmap[x  ][y+1];
+                i =  dmap[x+1][y+1] * 2;
 
                 lowest = min(a, min(b, min(c, min(d, min(f, min(g, min(h,i)))))));
 
@@ -179,6 +188,7 @@ static void dmap_process (thing_templatep t, levelp level)
             }
         }
     } while (changed);
+    LOG("done");
 }
 
 /*
@@ -213,7 +223,7 @@ static uint32_t dmap_goals_set (thing_templatep t, boolean test)
         y = (int)(thing_it->y + 0.5);
 
         if (!test) {
-            t->dmap[x][y] = 0;
+            dmap[x][y] = 0;
         }
 
         checksum ^= x | (y << 16);
@@ -233,8 +243,91 @@ static void dmap_init (thing_templatep t)
 
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-            t->dmap[x][y] = not_preferred;
+            dmap[x][y] = not_preferred;
         }
+    }
+}
+
+static void *dmap_process_thread (void *context)
+{
+printf("process thread ");
+fflush(stdout);
+    for (;;) {
+        pthread_mutex_lock(&dmap_mutex);
+
+        pthread_cond_wait(&dmap_condition_var, &dmap_mutex );
+
+printf("got mutex ");
+fflush(stdout);
+        dmap_process();
+
+        memcpy(dmap_output, dmap, sizeof(dmap));
+printf("gave mutex ");
+fflush(stdout);
+
+        pthread_mutex_unlock(&dmap_mutex);
+    }
+}
+
+static void dmap_process_wake (thing_templatep t, levelp level)
+{
+    if (!pthread_mutex_trylock(&dmap_mutex)) {
+        return;
+    }
+
+    dmap_valid = false;
+
+    /*
+     * Only reprocess the djkstra map if something has changed on the map
+     * We use a checksum of the goals to indicate this with reasonable 
+     * certainty.
+     */
+    uint32_t checksum = dmap_goals_set(t, true /* test */);
+    if (!checksum) {
+        pthread_mutex_unlock(&dmap_mutex);
+        return;
+    }
+
+    dmap_valid = true;
+
+    if (dmap_checksum == checksum) {
+        pthread_mutex_unlock(&dmap_mutex);
+        return;
+    }
+
+    dmap_checksum = checksum;
+
+    dmap_init(t);
+    dmap_goals_set(t, false /* test */); // redo for real this time.
+    memcpy(monst_walls, level->monst_walls, sizeof(level->monst_walls));
+
+printf("wake ");
+fflush(stdout);
+    pthread_cond_signal(&dmap_condition_var);
+
+    pthread_mutex_unlock(&dmap_mutex);
+}
+
+void dmap_process_init (void)
+{
+    if (dmap_thread) {
+        return;
+    }
+
+    int rc = pthread_create(&dmap_thread, NULL, &dmap_process_thread, NULL);
+
+    if (rc != 0) {
+        DIE("no dmap thread %s", strerror(rc));
+    }
+}
+
+void dmap_process_fini (void)
+{
+    return;
+
+    if (dmap_thread) {
+        pthread_join(dmap_thread, NULL);
+        dmap_thread = NULL;
     }
 }
 
@@ -245,8 +338,6 @@ static void dmap_generate (uint32_t i, levelp level)
 {
     thing_templatep t = id_to_thing_template(i);
 
-    t->dmap_valid = false;
-
     /*
      * If no level yet, there is nothing to chase.
      */
@@ -254,26 +345,9 @@ static void dmap_generate (uint32_t i, levelp level)
         return;
     }
 
-    /*
-     * Only reprocess the djkstra map if something has changed on the map
-     * We use a checksum of the goals to indicate this with reasonable 
-     * certainty.
-     */
-    uint32_t checksum = dmap_goals_set(t, true /* test */);
-    if (!checksum) {
-        return;
-    }
-
-    t->dmap_valid = true;
-    if (t->dmap_checksum == checksum) {
-        return;
-    }
-
-    t->dmap_checksum = checksum;
-
-    dmap_init(t);
-    dmap_goals_set(t, false /* test */); // redo for real this time.
-    dmap_process(t, level);
+printf(" generate ");
+fflush(stdout);
+    dmap_process_wake(t, level);
 
 #ifdef ENABLE_MAP_DEBUG
     if (1)
@@ -293,9 +367,7 @@ void thing_generate_dmaps (void)
 
 boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
-    thing_templatep temp = t->thing_template;
-
-    if (!temp->dmap_valid) {
+    if (!dmap_valid) {
         return (false);
     }
 
@@ -316,17 +388,17 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     int8_t i;
     int8_t lowest;
 
-    a = temp->dmap[x-1][y-1];
-    b = temp->dmap[x  ][y-1];
-    c = temp->dmap[x+1][y-1];
+    a = dmap_output[x-1][y-1];
+    b = dmap_output[x  ][y-1];
+    c = dmap_output[x+1][y-1];
 
-    d = temp->dmap[x-1][y];
-    e = temp->dmap[x  ][y];
-    f = temp->dmap[x+1][y];
+    d = dmap_output[x-1][y];
+    e = dmap_output[x  ][y];
+    f = dmap_output[x+1][y];
         
-    g = temp->dmap[x-1][y+1];
-    h = temp->dmap[x  ][y+1];
-    i = temp->dmap[x+1][y+1];
+    g = dmap_output[x-1][y+1];
+    h = dmap_output[x  ][y+1];
+    i = dmap_output[x+1][y+1];
 
     lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
 
@@ -340,6 +412,7 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     if (h != lowest) { h += not_preferred; }
     if (i != lowest) { i += not_preferred; }
 
+#if 0
     a += t->visited[x-1][y-1];
     b += t->visited[x  ][y-1];
     c += t->visited[x+1][y-1];
@@ -351,6 +424,7 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     g += t->visited[x-1][y+1];
     h += t->visited[x  ][y+1];
     i += t->visited[x+1][y+1];
+#endif
 
     lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
 
@@ -375,7 +449,7 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 #else
     if (0)
 #endif
-    dmap_thing_print(t, server_level, *nexthop_x, *nexthop_y);
+    dmap_thing_print(t, *nexthop_x, *nexthop_y);
 
     return (true);
 }
