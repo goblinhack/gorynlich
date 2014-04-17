@@ -190,8 +190,9 @@ static void thing_tick_server_all (void)
                                             nexthop_y,
                                             thing_template_is_floor);
                 if (!wid_next_floor) {
-                    DIE("no floor tile to hop to %d %d for %s", 
+                    LOG("no floor tile to hop to %d %d for %s", 
                         nexthop_x, nexthop_y, thing_logname(t));
+                    continue;
                 }
  
                 double fnexthop_x = (double)nexthop_x;

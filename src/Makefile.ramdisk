@@ -64,6 +64,9 @@
 .o/ramdisk_data_levels_3.o: asm/ramdisk_data_levels_3.S ../data/levels/3
 	gcc -c asm/ramdisk_data_levels_3.S -o .o/ramdisk_data_levels_3.o
 
+.o/ramdisk_data_levels_4.o: asm/ramdisk_data_levels_4.S ../data/levels/4
+	gcc -c asm/ramdisk_data_levels_4.S -o .o/ramdisk_data_levels_4.o
+
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
 
