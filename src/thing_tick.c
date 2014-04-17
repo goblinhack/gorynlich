@@ -382,7 +382,16 @@ static void thing_tick_client_all (void)
 
 void thing_tick_all (void)
 {
-    thing_generate_dmaps();
+    if (server_level) {
+        static uint32_t ts;
+
+        if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI, ts)) {
+            ts = time_get_time_cached();
+
+            thing_generate_dmaps();
+        }
+    }
+
     thing_tick_server_all();
     thing_tick_client_all();
 
