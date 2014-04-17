@@ -108,6 +108,8 @@ boolean thing_init (void)
 {
     thing_init_done = true;
 
+    dmap_process_init();
+
     return (true);
 }
 
@@ -132,6 +134,8 @@ void thing_fini (void)
                      (tree_destroy_func)thing_destroy_implicit);
         tree_destroy(&server_boring_things, 
                      (tree_destroy_func)thing_destroy_implicit);
+
+        dmap_process_fini();
     }
 }
 
