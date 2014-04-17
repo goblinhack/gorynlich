@@ -815,7 +815,7 @@ void sdl_loop (void)
          */
         int32_t timestamp_now = time_update_time_milli();
 
-        if (timestamp_now - timestamp_then > 5) {
+        if (timestamp_now - timestamp_then > 20) {
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
              * to process the above.

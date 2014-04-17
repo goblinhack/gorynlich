@@ -25,12 +25,11 @@ static char monst_walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 static int8_t dmap[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 static int8_t dmap_output[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 static uint32_t dmap_checksum;
-static uint8_t dmap_valid;
 
 /*
  * Print the Dijkstra map scores shared by all things of the same type.
  */
-static void dmap_print (thing_templatep t, levelp level)
+static void dmap_print (levelp level)
 {
     int8_t x;
     int8_t y;
@@ -188,13 +187,12 @@ static void dmap_process (void)
             }
         }
     } while (changed);
-    LOG("done");
 }
 
 /*
  * Generate goal points with a low value.
  */
-static uint32_t dmap_goals_set (thing_templatep t, boolean test)
+static uint32_t dmap_goals_set (boolean test)
 {
     uint32_t checksum = 0;
     thingp thing_it;
@@ -236,7 +234,7 @@ static uint32_t dmap_goals_set (thing_templatep t, boolean test)
 /*
  * Initialize the djkstra map with high values.
  */
-static void dmap_init (thing_templatep t)
+static void dmap_init (void)
 {
     int8_t x;
     int8_t y;
@@ -248,61 +246,53 @@ static void dmap_init (thing_templatep t)
     }
 }
 
+/*
+ * Run forever waiting to be woken up and then running the djkstra map.
+ */
 static void *dmap_process_thread (void *context)
 {
-printf("process thread ");
-fflush(stdout);
     for (;;) {
         pthread_mutex_lock(&dmap_mutex);
 
         pthread_cond_wait(&dmap_condition_var, &dmap_mutex );
 
-printf("got mutex ");
-fflush(stdout);
         dmap_process();
 
         memcpy(dmap_output, dmap, sizeof(dmap));
-printf("gave mutex ");
-fflush(stdout);
 
         pthread_mutex_unlock(&dmap_mutex);
     }
 }
 
-static void dmap_process_wake (thing_templatep t, levelp level)
+/*
+ * Wake up the thread that creates the djkstra map.
+ */
+static void dmap_process_wake (levelp level)
 {
-    if (!pthread_mutex_trylock(&dmap_mutex)) {
-        return;
-    }
-
-    dmap_valid = false;
-
     /*
      * Only reprocess the djkstra map if something has changed on the map
      * We use a checksum of the goals to indicate this with reasonable 
      * certainty.
      */
-    uint32_t checksum = dmap_goals_set(t, true /* test */);
+    uint32_t checksum = dmap_goals_set(true /* test */);
     if (!checksum) {
-        pthread_mutex_unlock(&dmap_mutex);
         return;
     }
 
-    dmap_valid = true;
-
     if (dmap_checksum == checksum) {
-        pthread_mutex_unlock(&dmap_mutex);
+        return;
+    }
+
+    if (!pthread_mutex_trylock(&dmap_mutex)) {
         return;
     }
 
     dmap_checksum = checksum;
 
-    dmap_init(t);
-    dmap_goals_set(t, false /* test */); // redo for real this time.
+    dmap_init();
+    dmap_goals_set(false /* test */); // redo for real this time.
     memcpy(monst_walls, level->monst_walls, sizeof(level->monst_walls));
 
-printf("wake ");
-fflush(stdout);
     pthread_cond_signal(&dmap_condition_var);
 
     pthread_mutex_unlock(&dmap_mutex);
@@ -334,43 +324,28 @@ void dmap_process_fini (void)
 /*
  * Generate a djkstra map for the thing.
  */
-static void dmap_generate (uint32_t i, levelp level)
+static void dmap_generate (levelp level)
 {
-    thing_templatep t = id_to_thing_template(i);
-
-    /*
-     * If no level yet, there is nothing to chase.
-     */
-    if (!server_level) {
-        return;
-    }
-
-printf(" generate ");
-fflush(stdout);
-    dmap_process_wake(t, level);
+    dmap_process_wake(level);
 
 #ifdef ENABLE_MAP_DEBUG
     if (1)
 #else
     if (0)
 #endif
-    dmap_print(t, level);
+    dmap_print(level);
 }
 
 /*
  * Generate a djkstra map for the thing.
-e*/
+ */
 void thing_generate_dmaps (void)
 {
-    dmap_generate(THING_GHOST, server_level);
+    dmap_generate(server_level);
 }
 
 boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
-    if (!dmap_valid) {
-        return (false);
-    }
-
     int8_t x;
     int8_t y;
 
