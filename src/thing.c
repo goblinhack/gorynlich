@@ -1537,11 +1537,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        if (thing_is_monst(t)) {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
-        } else {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
-        }
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
