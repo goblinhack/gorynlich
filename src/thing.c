@@ -578,13 +578,13 @@ void things_level_start (levelp level)
     thingp t;
 
     {
-        TREE_WALK(server_active_things, t) {
+        TREE_WALK_UNSAFE(server_active_things, t) {
             thing_set_level(t, level);
         }
     }
 
     {
-        TREE_WALK(server_boring_things, t) {
+        TREE_WALK_UNSAFE(server_boring_things, t) {
             thing_set_level(t, level);
         }
     }
@@ -1570,7 +1570,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
     thingp t;
 
-    TREE_WALK(tree, t) {
+    TREE_WALK_UNSAFE(tree, t) {
         /*
          * If updating to all sockets, decrement the update counter for this 
          * thing. We only send updates on modified things.
@@ -1708,7 +1708,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          */
         socketp sp;
 
-        TREE_WALK(sockets, sp) {
+        TREE_WALK_UNSAFE(sockets, sp) {
             if (p && (p != sp)) {
                 continue;
             }
@@ -1736,7 +1736,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
         packet->len = data - odata;
 
-        TREE_WALK(sockets, sp) {
+        TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
                 continue;
             }
@@ -1926,7 +1926,7 @@ void socket_server_tx_player_update (thingp t)
      */
     socketp sp;
 
-    TREE_WALK(sockets, sp) {
+    TREE_WALK_UNSAFE(sockets, sp) {
         if (!sp->player) {
             continue;
         }
