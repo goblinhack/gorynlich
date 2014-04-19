@@ -200,6 +200,7 @@ thingp thing_server_new (levelp level, const char *name)
             DIE("thing insert name [%s] failed", name);
         }
 
+        t->on_server_player_things = true;
         t->tree2.node.is_static_mem = true;
     }
 
@@ -266,6 +267,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
             DIE("thing insert id [%u] failed", id);
         }
 
+        t->on_client_player_things = true;
         t->tree2.node.is_static_mem = true;
     }
 
@@ -364,6 +366,20 @@ void thing_destroy (thingp t, const char *why)
 
     t->client_or_server_tree = 0;
     t->on_active_list = false;
+
+    if (t->on_client_player_things) {
+        t->on_client_player_things = false;
+        if (!tree_remove(client_player_things, &t->tree.node)) {
+            DIE("thing template destroy name [%s] failed", thing_name(t));
+        }
+    }
+
+    if (t->on_server_player_things) {
+        t->on_server_player_things = false;
+        if (!tree_remove(server_player_things, &t->tree.node)) {
+            DIE("thing template destroy name [%s] failed", thing_name(t));
+        }
+    }
 
     /*
      * Stop all timers.
@@ -501,20 +517,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * and then kill the thing.
      */
     t->destroy_delay = 3;
-
-    if (thing_is_player(t)) {
-        if (t->on_server) {
-            if (!tree_remove(server_player_things, &t->tree2.node)) {
-                DIE("thing move, remove server player [%s] failed", 
-                    thing_name(t));
-            }
-        } else {
-            if (!tree_remove(client_player_things, &t->tree2.node)) {
-                DIE("thing move, remove client player [%s] failed", 
-                    thing_name(t));
-            }
-        }
-    }
 
     if (!t->on_active_list) {
         if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
@@ -1574,7 +1576,9 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          * thing. We only send updates on modified things.
          */
         if (!p) {
-            if (!t->updated) {
+            verify(t);
+
+            if (!t->updated) { // invalid read xxx
                 continue;
             }
 
@@ -1777,7 +1781,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         double x;
         double y;
 
-        if ((tx == 0x3fff) || (y == 0x3fff)) {
+        if ((tx == 0x3fff) || (ty == 0x3fff)) {
             on_map = false;
             x = -1;
             y = -1;

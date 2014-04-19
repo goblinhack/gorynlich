@@ -32,7 +32,6 @@ static void thing_tick_server_all (void)
         return;
     }
 
-    boolean scared;
     thingp t;
 
     /*
@@ -45,18 +44,6 @@ static void thing_tick_server_all (void)
      */
     if (thing_timers) {
         action_timers_tick(thing_timers);
-    }
-
-    /*
-     * Do some things once per tich.
-     */
-    scared = false;
-
-    if (player && thing_has_powerup_rocket_count(player)) {
-        /*
-         * Set monster scared flag.
-         */
-        scared = true;
     }
 
     TREE_WALK(server_active_things, t) {
@@ -211,8 +198,6 @@ static void thing_tick_server_all (void)
         }
     }
 
-    socket_server_tx_map_update(0 /* all clients */, server_player_things);
-
     socket_server_tx_map_update(0 /* all clients */, server_active_things);
 }
 
@@ -226,7 +211,6 @@ static void thing_tick_client_all (void)
 
     static int32_t pulsate_delta = 2;
     static int32_t pulsate;
-    boolean scared;
 
     pulsate += pulsate_delta;
 
@@ -287,8 +271,6 @@ static void thing_tick_client_all (void)
          * If on the map.
          */
         if (w) {
-            wid_set_blit_outline(w, false);
-
             /*
              * Animate before death checks so dead things can wriggle.
              *
@@ -297,21 +279,6 @@ static void thing_tick_client_all (void)
              */
             if (thing_is_animated(t)) {
                 thing_animate(t);
-            }
-
-            /*
-             * Make the monsters flash.
-             */
-            if (scared && thing_is_scarable(t)) {
-                color c;
-
-                c.r = pulsate;
-                c.g = pulsate;
-                c.b = 255;
-                c.a = 255;
-
-                wid_set_blit_outline(w, true);
-                wid_set_color(w, WID_COLOR_BLIT_OUTLINE, c);
             }
         }
 
@@ -393,7 +360,6 @@ void thing_tick_all (void)
     }
 
     thing_tick_server_all();
-    thing_tick_client_all();
 
     if (player) {
         static uint32_t ts;
@@ -407,4 +373,6 @@ void thing_tick_all (void)
             wid_game_map_client_scroll_adjust();
         }
     }
+
+    thing_tick_client_all();
 }
