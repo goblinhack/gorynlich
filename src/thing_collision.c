@@ -243,6 +243,10 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             }
 
             it = wid_get_thing(wid_it);
+            if (!it) {
+                wid_it = wid_next;
+                continue;
+            }
 
             if (thing_is_floor(it)) {
                 wid_it = wid_next;
