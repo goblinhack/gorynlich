@@ -427,6 +427,8 @@ typedef struct thing_ {
     uint32_t is_dead:1;
     uint32_t on_active_list:1;
     uint32_t on_server:1;
+    uint32_t on_server_player_things:1;
+    uint32_t on_client_player_things:1;
 
     /*
      * Force client to server postion.

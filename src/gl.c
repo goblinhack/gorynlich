@@ -103,9 +103,8 @@ static const uint32_t NUMBER_BYTES_PER_VERTICE =
                                             sizeof(GLfloat) *
                                             NUMBER_COMPONENTS_PER_COLOR;
 
-static const uint32_t NUMBER_BYTES_PER_ARRAY_ELEM =
-                                            NUMBER_BYTES_PER_VERTICE * 
-                                            NUMBER_COORDS_PER_VERTEX;
+#define NUMBER_BYTES_PER_ARRAY_ELEM (NUMBER_BYTES_PER_VERTICE * NUMBER_COORDS_PER_VERTEX)
+
 /*
  * Two arrays, xy and uv.
  */

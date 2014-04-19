@@ -177,8 +177,10 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
 	       (pixel_size.height * y) + pixel_size.height - 1
             };
 
-	    for (int y1=pixel_size.height-1; y1>=0; y1--) {
-		for (int x1=0; x1<pixel_size.width; x1++) {
+            int x1, y1;
+
+	    for (y1=pixel_size.height-1; y1>=0; y1--) {
+		for (x1=0; x1<pixel_size.width; x1++) {
 
 		    point at = {
                         (pixel_size.width * x) + x1,
