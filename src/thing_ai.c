@@ -426,5 +426,9 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 #endif
     dmap_thing_print(t, *nexthop_x, *nexthop_y);
 
+    if (monst_walls[*nexthop_x][*nexthop_y] != ' ') {
+        return (false);
+    }
+
     return (true);
 }

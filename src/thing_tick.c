@@ -145,20 +145,14 @@ static void thing_tick_server_all (void)
          * If stopped moving, look for a next hop.
          */
         if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
-            boolean look_for_nexthop = true;
             int32_t nexthop_x = -1;
             int32_t nexthop_y = -1;
 
             /*
              * Need to look for a nexthop? Or keep walking on?
              */
-            boolean have_nexthop;
-            if (look_for_nexthop) {
-                have_nexthop = thing_find_nexthop(t, &nexthop_x, &nexthop_y);
-            } else {
-                have_nexthop = false;
-            }
-
+            boolean have_nexthop = 
+                            thing_find_nexthop(t, &nexthop_x, &nexthop_y);
             if (have_nexthop) {
                 t->dir = THING_DIR_NONE;
 
