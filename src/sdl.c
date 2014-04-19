@@ -938,9 +938,7 @@ void sdl_loop (void)
 #endif /* } */
         }
 
-#ifndef ENABLE_VIDEO_SYNC
-        SDL_Delay(10);
-#endif
+        SDL_Delay(5);
     }
 }
 
