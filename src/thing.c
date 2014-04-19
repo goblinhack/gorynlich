@@ -261,10 +261,10 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
     t->on_server = false;
 
     if (thing_template_is_player(thing_template)) {
-        t->tree2.key = thing_id;
+        t->tree2.key = id;
 
         if (!tree_insert(client_player_things, &t->tree2.node)) {
-            DIE("thing insert id [%u] failed", id);
+            DIE("thing insert id [%u] failed into client_player_things", id);
         }
 
         t->on_client_player_things = true;
@@ -273,13 +273,13 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 
     if (thing_template_is_boring(thing_template)) {
         if (!tree_insert(client_boring_things, &t->tree.node)) {
-            DIE("thing insert id [%u] failed", id);
+            DIE("thing insert id [%u] failed into client_boring_things", id);
         }
 
         t->client_or_server_tree = client_boring_things;
     } else {
         if (!tree_insert(client_active_things, &t->tree.node)) {
-            DIE("thing insert id [%u] failed", id);
+            DIE("thing insert id [%u] failed into client_active_things", id);
         }
 
         t->client_or_server_tree = client_active_things;
@@ -296,13 +296,13 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 /*
  * Find an existing new thing.
  */
-thingp thing_client_find (uint32_t thing_id)
+thingp thing_client_find (uint32_t id)
 {
     thing target;
     thingp result;
 
     // memset(&target, 0, sizeof(target));
-    target.tree.key = thing_id;
+    target.tree.key = id;
 
     result = (typeof(result)) 
                     tree_find(client_active_things, &target.tree.node);
@@ -1540,7 +1540,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
         if (thing_is_monst(t)) {
             wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
         } else {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
         }
     } else {
         wid_set_tl_br(t->wid, tl, br);
@@ -1656,7 +1656,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          * We squeeze the template ID in where we can
          */
         uint16_t template_id = thing_template_to_id(t->thing_template);
-        uint16_t thing_id = t->thing_id | ((template_id & 0x0f) << 12);
+        uint16_t id = t->thing_id | ((template_id & 0x0f) << 12);
         uint16_t tx;
         uint16_t ty;
 
@@ -1679,7 +1679,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          */
         *data++ = state;
 
-        SDLNet_Write16(thing_id, data);               
+        SDLNet_Write16(id, data);               
         data += sizeof(uint16_t);
 
         SDLNet_Write16((uint16_t) tx, data);               
@@ -1759,7 +1759,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
     while (data < eodata) {
         uint8_t state = *data++;
 
-        uint16_t thing_id = SDLNet_Read16(data);
+        uint16_t id = SDLNet_Read16(data);
         data += sizeof(uint16_t);
 
         uint16_t tx = SDLNet_Read16(data);
@@ -1772,8 +1772,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
          * We squeeze the template ID in where we can
          */
         uint8_t template_id = 
-                (thing_id >> 12) | ((tx >> 14) << 4) | ((ty >> 14) << 6);
-        thing_id &= 0x0fff;
+                (id >> 12) | ((tx >> 14) << 4) | ((ty >> 14) << 6);
+        id &= 0x0fff;
         tx &= 0x3fff;
         ty &= 0x3fff;
 
@@ -1791,12 +1791,12 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             y = ((double)ty) / THING_COORD_SCALE;
         }
 
-        thingp t = thing_client_find(thing_id);
+        thingp t = thing_client_find(id);
         if (!t) {
             thing_templatep thing_template = 
                     id_to_thing_template(template_id);
 
-            t = thing_client_new(thing_id, thing_template);
+            t = thing_client_new(id, thing_template);
 
             need_fixup = need_fixup ||
                 thing_template_is_wall(thing_template) ||
@@ -1945,12 +1945,12 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
 
     uint8_t *eodata = data + packet->len - 1;
 
-    uint32_t thing_id = SDLNet_Read32(data);
+    uint32_t id = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
-    thingp t = thing_client_find(thing_id);
+    thingp t = thing_client_find(id);
     if (!t) {
-        ERR("thing id from server, id %u not found", thing_id);
+        ERR("thing id from server, id %u not found", id);
         return;
     }
 
