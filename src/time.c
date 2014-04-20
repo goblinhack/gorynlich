@@ -92,7 +92,7 @@ boolean time_have_x_thousandths_passed_since (uint32_t val, uint32_t since)
      */
     uint32_t delay = time_now - since;
 
-    return ((int32_t)(delay) > (int32_t)val);
+    return ((int32_t)(delay) >= (int32_t)val);
 }
 
 boolean time_have_x_tenths_passed_since (uint32_t val, uint32_t since)
@@ -104,7 +104,7 @@ boolean time_have_x_tenths_passed_since (uint32_t val, uint32_t since)
      */
     uint32_t delay = time_now - since;
 
-    return ((int32_t)(delay / 100) > (int32_t)val);
+    return ((int32_t)(delay / 100) >= (int32_t)val);
 }
 
 boolean time_have_x_secs_passed_since (uint32_t val, uint32_t since)
@@ -116,7 +116,7 @@ boolean time_have_x_secs_passed_since (uint32_t val, uint32_t since)
      */
     uint32_t delay = time_now - since;
 
-    return ((int32_t)(delay / ONESEC) > (int32_t)val);
+    return ((int32_t)(delay / ONESEC) >= (int32_t)val);
 }
 
 const char *unixtime2str (time_t *time)
