@@ -453,7 +453,12 @@ wid_game_map_client_replace_tile (widp w, int32_t x, int32_t y, thingp thing)
     /*
      * This adds it to the grid wid.
      */
+#ifdef DEBUG_CLIENT_THING
     wid_update(child);
+    char name[20];
+    sprintf(name, "%d",thing->thing_id);
+    wid_set_text(child,name);
+#endif
 
     return (child);
 }

@@ -5,9 +5,9 @@
  */
 
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
-#define ENABLE_CONSOLE             // Enable terminal console all the time
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_CONSOLE             // Enable terminal console all the time
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
@@ -90,7 +90,7 @@
 #define DEFAULT_PORT                10000
 #define SERVER_DEFAULT_HOST         "localhost"
 #define SERVER_DEFAULT_PORT         DEFAULT_PORT
-#define MAX_PACKET_SIZE             4096
+#define MAX_PACKET_SIZE             1400
 
 /*
  * How many pings to consider for quality
@@ -142,9 +142,9 @@
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
 #define DELAY_TENTHS_CURSOR_VISIBLE             5
 #define DELAY_TENTHS_CURSOR_INVISIBLE           1
+#define DELAY_TENTHS_TX_MAP_UPDATE              1
 
 #define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     20
-#define DELAY_HUNDREDTHS_THING_TX_UPDATE        20
 
 #define DELAY_THOUSANDTHS_PLAYER_POLL           15
 

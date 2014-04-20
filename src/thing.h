@@ -173,7 +173,6 @@ extern tree_rootp server_boring_things;
 extern tree_rootp client_boring_things;
 
 enum {
-    THING_DIR_NONE,
     THING_DIR_DOWN,
     THING_DIR_UP,
     THING_DIR_LEFT,
@@ -185,13 +184,12 @@ enum {
 };
 
 enum {
-    THING_STATE_BIT_SHIFT_UP,
-    THING_STATE_BIT_SHIFT_DOWN,
-    THING_STATE_BIT_SHIFT_LEFT,
-    THING_STATE_BIT_SHIFT_RIGHT,
+    THING_STATE_BIT_SHIFT_DIR_BIT0,
+    THING_STATE_BIT_SHIFT_DIR_BIT1,
+    THING_STATE_BIT_SHIFT_DIR_BIT2,
     THING_STATE_BIT_SHIFT_RESYNC,
     THING_STATE_BIT_SHIFT_IS_DEAD,
-    THING_STATE_BIT_SHIFT_IS_BURIED,
+    THING_STATE_BIT_SHIFT_NO_MOVE,
 };
 
 void thing_server_move(thingp t,
@@ -356,11 +354,6 @@ typedef struct thing_ {
     uint8_t powerup_rocket_count;
 
     /*
-     * Array of which tiles we've been to.
-     */
-    int8_t visited[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-
-    /*
      * How many and of what we are carrying.
      */
     uint8_t carrying[THING_MAX];
@@ -370,10 +363,9 @@ typedef struct thing_ {
      */
     double x;
     double y;
-    double last_x;
-    double last_y;
-    double target_x;
-    double target_y;
+    uint16_t last_id;
+    uint16_t last_tx;
+    uint16_t last_ty;
 
     /*
      * For animation.
@@ -393,25 +385,13 @@ typedef struct thing_ {
     uint32_t timestamp_lifestamp;
 
     /*
-     * When the thing was last updated from the server to clients.
-     */
-    uint32_t timestamp_update;
-
-    /*
      * A counter to indicate the number of times we want to update the client 
      * with the state of this thing. To compensate for udp drops we might want 
      * to send a couple of updates for important events like death.
      */
     uint8_t updated;
-    uint8_t last_state;
 
-    /*
-     * To keep a thing around for a while so we can clean it up once the 
-     * client has been notified of the server death.
-     */
-    uint8_t destroy_delay;
-
-    uint8_t dir:4;
+    uint8_t dir:3;
 
     uint32_t is_qqq1:1;
     uint32_t is_qqq2:1;

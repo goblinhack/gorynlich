@@ -65,13 +65,15 @@ static void thing_tick_server_all (void)
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {
-            if (t->destroy_delay > 0) {
-                if (--t->destroy_delay == 0) {
-                    if (thing_is_left_as_corpse_on_death(t)) {
-                        thing_bury(t);
-                    } else {
-                        thing_destroy(t, "died");
-                    }
+            /*
+             * Wait until the last server update has been sent before burying 
+             * the thing.
+             */
+            if (!t->updated) {
+                if (thing_is_left_as_corpse_on_death(t)) {
+                    thing_bury(t);
+                } else {
+                    thing_destroy(t, "died");
                 }
             }
             continue;
@@ -154,8 +156,6 @@ static void thing_tick_server_all (void)
             boolean have_nexthop = 
                             thing_find_nexthop(t, &nexthop_x, &nexthop_y);
             if (have_nexthop) {
-                t->dir = THING_DIR_NONE;
-
                 widp wid_current_floor = wid_grid_find_thing_template(
                                             wid_game_map_server_grid_container,
                                             t->x,
@@ -192,7 +192,15 @@ static void thing_tick_server_all (void)
         }
     }
 
-    socket_server_tx_map_update(0 /* all clients */, server_active_things);
+    if (server_level) {
+        static uint32_t ts;
+
+        if (time_have_x_tenths_passed_since(DELAY_TENTHS_TX_MAP_UPDATE, ts)) {
+            ts = time_get_time_cached();
+
+            socket_server_tx_map_update(0 /* all clients */, server_active_things);
+        }
+    }
 }
 
 static void thing_tick_client_all (void)
@@ -249,14 +257,10 @@ static void thing_tick_client_all (void)
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {
-            if (t->destroy_delay > 0) {
-                if (--t->destroy_delay == 0) {
-                    if (thing_is_left_as_corpse_on_death(t)) {
-                        thing_bury(t);
-                    } else {
-                        thing_destroy(t, "died");
-                    }
-                }
+            if (thing_is_left_as_corpse_on_death(t)) {
+                thing_bury(t);
+            } else {
+                thing_destroy(t, "died");
             }
             continue;
         }
