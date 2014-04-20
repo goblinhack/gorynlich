@@ -1738,7 +1738,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     uint8_t *eodata = data + packet->len - 1;
 
-LOG("rx %d",packet->len);
     while (data < eodata) {
         uint8_t state = *data++;
         uint8_t template_id;

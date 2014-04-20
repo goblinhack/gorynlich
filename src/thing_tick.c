@@ -191,16 +191,6 @@ static void thing_tick_server_all (void)
             }
         }
     }
-
-    if (server_level) {
-        static uint32_t ts;
-
-        if (time_have_x_tenths_passed_since(DELAY_TENTHS_TX_MAP_UPDATE, ts)) {
-            ts = time_get_time_cached();
-
-            socket_server_tx_map_update(0 /* all clients */, server_active_things);
-        }
-    }
 }
 
 static void thing_tick_client_all (void)
@@ -358,6 +348,17 @@ void thing_tick_all (void)
     }
 
     thing_tick_server_all();
+
+    if (server_level) {
+        static uint32_t ts;
+
+        if (time_have_x_tenths_passed_since(DELAY_TENTHS_TX_MAP_UPDATE, ts)) {
+            ts = time_get_time_cached();
+
+            socket_server_tx_map_update(0 /* all clients */, 
+                                        server_active_things);
+        }
+    }
 
     if (player) {
         static uint32_t ts;
