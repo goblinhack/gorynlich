@@ -113,7 +113,14 @@ typedef struct {
 } __attribute__ ((packed)) msg_thing_update;
 
 typedef struct {
-    uint8_t type;
+    /*
+     * We don't actually send this message, this is just the max size it can 
+     * be. We send only what portions of this message are changed.
+     */
+    uint8_t data;
+    uint16_t id;
+    uint16_t x;
+    uint16_t y;
 } __attribute__ ((packed)) msg_map_update;
 
 typedef struct {
