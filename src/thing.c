@@ -226,6 +226,12 @@ thingp thing_server_new (levelp level, const char *name)
     t->logname = dynprintf("%s[%p] (server)", thing_short_name(t), t);
     t->updated++;
 
+    /*
+     * So we send a move update to the client.
+     */
+    t->last_tx = -1;
+    t->last_ty = -1;
+
     THING_DBG(t, "created");
 
     return (t);
@@ -322,8 +328,6 @@ void thing_restarted (thingp t, levelp level)
 
     t->current_tile = 0;
 
-    memset(t->visited, 0, sizeof(t->visited));
-
     if (!thing_is_dead(t) || !thing_is_buried(t)) {
         return;
     }
@@ -335,12 +339,6 @@ void thing_restarted (thingp t, levelp level)
 
     thing_set_is_dead(t, false);
     thing_set_is_buried(t, false);
-
-    /*
-     * Reset last map position.
-     */
-    t->last_x = 0;
-    t->last_y = 0;
 
     /*
      * Record this thing opened the exit.
@@ -511,12 +509,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
     t->updated++;
     t->updated++;
-
-    /*
-     * If we use update + 1 it means we will have time to send both updates
-     * and then kill the thing.
-     */
-    t->destroy_delay = 3;
 
     if (!t->on_active_list) {
         if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
@@ -1537,7 +1529,11 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
+        if (t == player) {
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+        } else {
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
+        }
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
@@ -1549,22 +1545,34 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
      * Allocate a fresh packet.
      */
     UDPpacket *packet = socket_alloc_msg();
+    uint8_t *eodata = ((uint8_t*)packet->data) + MAX_PACKET_SIZE;
     uint8_t *odata = packet->data;
     uint8_t *data = packet->data;
     *data++ = MSG_MAP_UPDATE;
-
-    /*
-     * This is the count of the number of updates we sqeeze into each packet.
-     */
-    uint16_t packed = 0;
-
-    /*
-     * And this is th max per packet.
-     */
-    static const uint16_t max_pack = 
-        (MAX_PACKET_SIZE - sizeof(msg_map_update)) / sizeof(msg_thing_update);
-
     thingp t;
+
+    /*
+     * If no players, then send nothing.
+     */
+    {
+        uint8_t players = 0;
+        socketp sp;
+
+        TREE_WALK_UNSAFE(sockets, sp) {
+            if (!sp->player) {
+                continue;
+            }
+
+            players++;
+        }
+
+        /*
+         * No one playing yet?
+         */
+        if (!players) {
+            return;
+        }
+    }
 
     TREE_WALK_UNSAFE(tree, t) {
         /*
@@ -1574,79 +1582,21 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         if (!p) {
             verify(t);
 
-            if (!t->updated) { // invalid read xxx
+            /*
+             * No change to the thing? Nothing to send.
+             */
+            if (!t->updated) {
                 continue;
             }
 
             t->updated--;
         }
 
-        uint8_t up = false;
-        uint8_t down = false;
-        uint8_t left = false;
-        uint8_t right = false;
-
-        switch (t->dir) {
-        case THING_DIR_LEFT:
-            left = true;
-            break;
-        case THING_DIR_RIGHT:
-            right = true;
-            break;
-        case THING_DIR_UP:
-            up = true;
-            break;
-        case THING_DIR_DOWN:
-            down = true;
-            break;
-        case THING_DIR_TL:
-            left = true;
-            up = true;
-            break;
-        case THING_DIR_BL:
-            down = true;
-            left = true;
-            break;
-        case THING_DIR_TR:
-            up = true;
-            right = true;
-            break;
-        case THING_DIR_BR:
-            right = true;
-            down = true;
-            break;
-        }
-
-        uint8_t state = 
-                ((up            ? 1 : 0) << THING_STATE_BIT_SHIFT_UP) |
-                ((down          ? 1 : 0) << THING_STATE_BIT_SHIFT_DOWN) |
-                ((left          ? 1 : 0) << THING_STATE_BIT_SHIFT_LEFT) |
-                ((right         ? 1 : 0) << THING_STATE_BIT_SHIFT_RIGHT) |
+        uint8_t state = t->dir | 
                 ((t->resync     ? 1 : 0) << THING_STATE_BIT_SHIFT_RESYNC) |
-                ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_DEAD) |
-                ((t->is_buried  ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_BURIED);
+                ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_DEAD);
 
         t->resync = 0;
-
-        if (t->is_dead || t->resync || t->is_buried) {
-            /*
-             * Always send.
-             */
-        } else if (state == t->last_state) {
-            /*
-             * No change in direction or state. Only send an update 
-             * occasionally.
-             */
-            if (!time_have_x_hundredths_passed_since(
-                                    DELAY_HUNDREDTHS_THING_TX_UPDATE, 
-                                    t->timestamp_update)) {
-                continue;
-            }
-        } else {
-            t->last_state = state;
-        }
-
-        t->timestamp_update = time_get_time_cached();
 
         /*
          * We squeeze the template ID in where we can
@@ -1671,22 +1621,57 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         ty |= ((template_id & 0xc0) >> 4) << 14;
 
         /*
-         * Now pack the raw data.
+         * If no move, then don't sent new co-ords to save space.
          */
-        *data++ = state;
+        boolean can_omit_coordinates = true;
 
-        SDLNet_Write16(id, data);               
-        data += sizeof(uint16_t);
+        /*
+         * Don't do this optimization if sending to a single server as this
+         * will be likely the first time it has seen these things.
+         */
+        if (p) {
+            can_omit_coordinates = false;
+        }
 
-        SDLNet_Write16((uint16_t) tx, data);               
-        data += sizeof(uint16_t);
-            
-        SDLNet_Write16((uint16_t) ty, data);               
-        data += sizeof(uint16_t);
+        if ((tx != t->last_tx) || (ty != t->last_ty)) {
+            can_omit_coordinates = false;
+        }
 
-        packed++;
+        if (t->resync || t->is_dead || t->is_buried) {
+            can_omit_coordinates = false;
+        }
 
-        if (packed < max_pack) {
+        if (can_omit_coordinates) {
+            state |= 1 << THING_STATE_BIT_SHIFT_NO_MOVE;
+
+            /*
+             * Now pack the raw data.
+             */
+            *data++ = state;
+
+            SDLNet_Write16(id, data);               
+            data += sizeof(uint16_t);
+
+        } else {
+            /*
+             * Now pack the raw data.
+             */
+            *data++ = state;
+
+            SDLNet_Write16(id, data);               
+            data += sizeof(uint16_t);
+
+            SDLNet_Write16((uint16_t) tx, data);               
+            data += sizeof(uint16_t);
+                
+            SDLNet_Write16((uint16_t) ty, data);               
+            data += sizeof(uint16_t);
+
+            t->last_tx = tx;
+            t->last_ty = ty;
+        }
+
+        if (data + sizeof(msg_map_update) < eodata) {
             /*
              * Can fit more in.
              */
@@ -1697,7 +1682,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          * We reached the limit for this packet? Send now.
          */
         packet->len = data - odata;
-        packed = 0;
+LOG("frag %d",packet->len);
 
         /*
          * Broadcast to all clients.
@@ -1727,11 +1712,12 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
     /*
      * Any left over, send them now.
      */
-    if (packed) {
+    if (data != odata) {
         socketp sp;
 
         packet->len = data - odata;
 
+LOG("last frag %d",packet->len);
         TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
                 continue;
@@ -1752,82 +1738,93 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     uint8_t *eodata = data + packet->len - 1;
 
+LOG("rx %d",packet->len);
     while (data < eodata) {
         uint8_t state = *data++;
-
-        uint16_t id = SDLNet_Read16(data);
-        data += sizeof(uint16_t);
-
-        uint16_t tx = SDLNet_Read16(data);
-        data += sizeof(uint16_t);
-
-        uint16_t ty = SDLNet_Read16(data);
-        data += sizeof(uint16_t);
-
-        /*
-         * We squeeze the template ID in where we can
-         */
-        uint8_t template_id = 
-                (id >> 12) | ((tx >> 14) << 4) | ((ty >> 14) << 6);
-        id &= 0x0fff;
-        tx &= 0x3fff;
-        ty &= 0x3fff;
-
+        uint8_t template_id;
+        uint16_t id;
         boolean on_map;
+        thingp t;
         double x;
         double y;
 
-        if ((tx == 0x3fff) || (ty == 0x3fff)) {
-            on_map = false;
-            x = -1;
-            y = -1;
-        } else{
+        id = SDLNet_Read16(data);
+        data += sizeof(uint16_t);
+
+        /*
+         * Is this just a direction update?
+         */
+        if (state & (1 << THING_STATE_BIT_SHIFT_NO_MOVE)) {
+            template_id = -1; 
             on_map = true;
-            x = ((double)tx) / THING_COORD_SCALE;
-            y = ((double)ty) / THING_COORD_SCALE;
-        }
+            id &= 0x0fff;
 
-        thingp t = thing_client_find(id);
-        if (!t) {
-            thing_templatep thing_template = 
-                    id_to_thing_template(template_id);
+            t = thing_client_find(id);
+            if (!t) {
+                /*
+                 * This can happen due to packet loss. Hopefully a retransmit
+                 * when the thing moves will create it.
+                 */
+                LOG("received thing %u with no move bit, but never created",
+                    id);
 
-            t = thing_client_new(id, thing_template);
-
-            need_fixup = need_fixup ||
-                thing_template_is_wall(thing_template) ||
-                thing_template_is_pipe(thing_template) ||
-                thing_template_is_door(thing_template);
-        }
-
-        uint8_t up =    (state & (1 << THING_STATE_BIT_SHIFT_UP))    ? 1 : 0;
-        uint8_t down =  (state & (1 << THING_STATE_BIT_SHIFT_DOWN))  ? 1 : 0;
-        uint8_t left =  (state & (1 << THING_STATE_BIT_SHIFT_LEFT))  ? 1 : 0;
-        uint8_t right = (state & (1 << THING_STATE_BIT_SHIFT_RIGHT)) ? 1 : 0;
-
-        if (up) {
-            if (left) {
-                thing_set_is_dir_tl(t);
-            } else if (right) {
-                thing_set_is_dir_tr(t);
-            } else {
-                thing_set_is_dir_up(t);
+                continue;
             }
-        } else if (down) {
-            if (left) {
-                thing_set_is_dir_bl(t);
-            } else if (right) {
-                thing_set_is_dir_br(t);
+
+            x = t->x;
+            y = t->y;
+        } else {
+            /*
+             * Full move update.
+             */
+            uint16_t tx = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+
+            uint16_t ty = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+
+            template_id = 
+                    (id >> 12) | ((tx >> 14) << 4) | ((ty >> 14) << 6);
+            id &= 0x0fff;
+            tx &= 0x3fff;
+            ty &= 0x3fff;
+
+            if ((tx == 0x3fff) || (ty == 0x3fff)) {
+                on_map = false;
+                x = -1;
+                y = -1;
             } else {
-                thing_set_is_dir_down(t);
+                on_map = true;
+                x = ((double)tx) / THING_COORD_SCALE;
+                y = ((double)ty) / THING_COORD_SCALE;
             }
-        } else if (left) {
-            thing_set_is_dir_left(t);
-        } else if (right) {
-            thing_set_is_dir_right(t);
+
+            t = thing_client_find(id);
+            if (!t) {
+                thing_templatep thing_template = 
+                        id_to_thing_template(template_id);
+
+                t = thing_client_new(id, thing_template);
+
+                need_fixup = need_fixup ||
+                    thing_template_is_wall(thing_template) ||
+                    thing_template_is_pipe(thing_template) ||
+                    thing_template_is_door(thing_template);
+            }
         }
 
-        if (on_map) {
+        t->dir = state & 0x7;
+
+        /*
+         * Mirror the thing id of the server on the client.
+         */
+        t->thing_id = id;
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_NO_MOVE)) {
+            /*
+             * Do nothing.
+             */
+        } else if (on_map) {
             widp w = thing_wid(t);
             if (w) {
                 if (t == player) {
