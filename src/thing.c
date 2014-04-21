@@ -1707,7 +1707,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          * We reached the limit for this packet? Send now.
          */
         packet->len = data - odata;
-LOG("frag %d",packet->len);
 
         /*
          * Broadcast to all clients.
@@ -1742,7 +1741,6 @@ LOG("frag %d",packet->len);
 
         packet->len = data - odata;
 
-LOG("last frag %d",packet->len);
         TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
                 continue;
