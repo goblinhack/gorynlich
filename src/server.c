@@ -20,6 +20,7 @@
 #include "wid_server_create.h"
 #include "string.h"
 #include "thing.h"
+#include "mzip_lib.h"
 
 static boolean server_init_done;
 socketp server_socket;
@@ -256,7 +257,27 @@ static void server_poll (void)
             }
         }
 
-        uint8_t *data = packet->data;
+        uint8_t *data;
+        uint8_t *odata;
+        uint8_t *pdata;
+        boolean uncompressed = false;
+
+        /*
+         * Uncompress the packet if it has an invalid type.
+         */
+        if (*packet->data == MSG_COMPRESSED) {
+            data = miniz_uncompress(packet->data + 1, &packet->len);
+            odata = data;
+            pdata = packet->data;
+
+            packet->data = data;
+            uncompressed = true;
+        } else {
+            data = packet->data;
+            odata = data;
+            pdata = data;
+        }
+
         msg_type type = *data++;
 
         socket_count_inc_pak_rx(s, type);
@@ -301,12 +322,17 @@ static void server_poll (void)
             socket_rx_tell(s, packet, data);
             break;
 
-        case MSG_CLIENT_MOVE:
+        case MSG_CLIENT_PLAYER_MOVE:
             socket_server_rx_client_move(s, packet, data);
             break;
 
         default:
             ERR("Unknown message type received [%u", type);
+        }
+
+        if (uncompressed) {
+            packet->data = pdata;
+            myfree(odata);
         }
     }
 
