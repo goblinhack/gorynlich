@@ -90,7 +90,7 @@
 #define DEFAULT_PORT                10000
 #define SERVER_DEFAULT_HOST         "localhost"
 #define SERVER_DEFAULT_PORT         DEFAULT_PORT
-#define MAX_PACKET_SIZE             1400
+#define MAX_PACKET_SIZE             4000
 
 /*
  * How many pings to consider for quality

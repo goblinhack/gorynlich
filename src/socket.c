@@ -336,8 +336,10 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
 
     type = *(packet->data);
 
+    /*
+     * A good enough size for compression to work and give a smaller packet.
+     */
     if (packet->len > 200) {
-        uint32_t olen = packet->len;
         unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
 
         if (packet->len > MAX_PACKET_SIZE) {
@@ -348,8 +350,6 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
         memcpy(packet->data + 1, tmp, packet->len);
         myfree(tmp);
         packet->len++;
-
-        LOG("%u -> %u",olen, packet->len);
     }
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
