@@ -22,6 +22,7 @@
 #include "client.h"
 #include "wid_game_map_server.h"
 #include "thing.h"
+#include "mzip_lib.h"
 
 tree_rootp sockets;
 
@@ -329,6 +330,45 @@ void socket_disconnect (socketp s)
     myfree(s);
 }
 
+void socket_tx_msg (socketp s, UDPpacket *packet)
+{
+    msg_type type;
+
+    type = *(packet->data);
+
+    if (packet->len > 200) {
+        uint32_t olen = packet->len;
+        unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
+
+        if (packet->len > MAX_PACKET_SIZE) {
+            DIE("compress fail");
+        }
+
+        *packet->data = MSG_COMPRESSED;
+        memcpy(packet->data + 1, tmp, packet->len);
+        myfree(tmp);
+        packet->len++;
+
+        LOG("%u -> %u",olen, packet->len);
+    }
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
+        ERR("no UDP packet sent: %s", SDLNet_GetError());
+        WARN("  packet: %p", packet);
+        WARN("  udp: %p", socket_get_udp_socket(s));
+        WARN("  remote: %s", socket_get_remote_logname(s));
+        WARN("  local: %s", socket_get_local_logname(s));
+        WARN("  channel: %d", socket_get_channel(s));
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+
+        s->tx_msg[type]++;
+    }
+}
+
 /*
  * User has entered a command, run it
  */
@@ -550,6 +590,18 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         CON("  Server Close   : tx %u, rx %u",
             s->tx_msg[MSG_SERVER_CLOSE], 
             s->rx_msg[MSG_SERVER_CLOSE]);
+
+        CON("  Server map upd : tx %u, rx %u",
+            s->tx_msg[MSG_SERVER_MAP_UPDATE], 
+            s->rx_msg[MSG_SERVER_MAP_UPDATE]);
+
+        CON("  Player update  : tx %u, rx %u",
+            s->tx_msg[MSG_SERVER_PLAYER_UPDATE], 
+            s->rx_msg[MSG_SERVER_PLAYER_UPDATE]);
+
+        CON("  Client move    : tx %u, rx %u",
+            s->tx_msg[MSG_CLIENT_PLAYER_MOVE], 
+            s->rx_msg[MSG_CLIENT_PLAYER_MOVE]);
 
         /*
          * Ping stats.
@@ -2159,7 +2211,7 @@ void socket_tx_client_move (socketp s,
     ts = time_get_time_cached();
 
     msg_client_move msg = {0};
-    msg.type = MSG_CLIENT_MOVE;
+    msg.type = MSG_CLIENT_PLAYER_MOVE;
     msg.dir = (up << 3) | (down << 2) | (left << 1) | right;
 
     SDLNet_Write16(t->x * THING_COORD_SCALE, &msg.x);               

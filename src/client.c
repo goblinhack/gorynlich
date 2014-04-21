@@ -22,6 +22,7 @@
 #include "wid_game_map_client.h"
 #include "wid.h"
 #include "thing.h"
+#include "mzip_lib.h"
 
 /*
  * Which socket we have actually joined on.
@@ -718,7 +719,26 @@ static void client_poll (void)
                 continue;
             }
 
-            uint8_t *data = packet->data;
+            uint8_t *data;
+            uint8_t *odata;
+            uint8_t *pdata;
+            boolean uncompressed = false;
+
+            /*
+             * Uncompress the packet if it has an invalid type.
+             */
+            if (*packet->data == MSG_COMPRESSED) {
+                data = miniz_uncompress(packet->data + 1, &packet->len);
+                odata = data;
+                pdata = packet->data;
+                packet->data = data;
+                uncompressed = true;
+            } else {
+                data = packet->data;
+                odata = data;
+                pdata = data;
+            }
+
             msg_type type = *data++;
 
             socket_count_inc_pak_rx(s, type);
@@ -774,11 +794,11 @@ static void client_poll (void)
                 break;
             }
 
-            case MSG_MAP_UPDATE:
+            case MSG_SERVER_MAP_UPDATE:
                 socket_client_rx_map_update(s, packet, data);
                 break;
 
-            case MSG_PLAYER_UPDATE:
+            case MSG_SERVER_PLAYER_UPDATE:
                 /*
                  * This is an update of a single player (usually score).
                  */
@@ -795,6 +815,11 @@ static void client_poll (void)
 
             default:
                 ERR("Unknown message type received [%u]", type);
+            }
+
+            if (uncompressed) {
+                packet->data = pdata;
+                myfree(odata);
             }
         }
 

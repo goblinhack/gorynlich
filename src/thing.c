@@ -99,7 +99,8 @@ tree_root *client_active_things;
 tree_root *server_boring_things;
 tree_root *client_boring_things;
 
-static uint32_t thing_id;
+static uint32_t next_thing_id;
+static uint32_t next_monst_thing_id;
 static thingp thing_ids[THING_ID_MAX];
 static boolean thing_init_done;
 static void thing_destroy_implicit(thingp t);
@@ -172,29 +173,53 @@ thingp thing_server_new (levelp level, const char *name)
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
 
     /*
-     * Find a free thign slot
+     * Use a different base for monsters so that the IDs we create are going
+     * to be contiguous and allows us to optimize when sending map updates.
+     */
+    uint32_t *next;
+    uint32_t id;
+    uint32_t min;
+    uint32_t max;
+
+    if (thing_template_is_monst(thing_template) ||
+        thing_template_is_player(thing_template)) {
+        next = &next_monst_thing_id;
+        id = next_monst_thing_id;
+        min = THING_ID_MAX / 2;
+        max = THING_ID_MAX;
+    } else {
+        next = &next_thing_id;
+        id = next_thing_id;
+        min = 0;
+        max = THING_ID_MAX / 2;
+    }
+
+    /*
+     * Find a free thing slot
      */
     int looped = 0;
-    while (thing_ids[++thing_id]) {
-        thing_id++;
-        if (thing_id >= THING_ID_MAX) {
-            thing_id = 0;
+
+    while (thing_ids[id]) {
+        id++;
+        if (id >= max) {
+            id = min;
             if (looped++) {
-                DIE("out of thing ids!");
+                DIE("out of thing ids, min %u max %u!", min, max);
             }
         }
     }
 
-    t->tree.key = thing_id;
-    thing_ids[thing_id] = t;
-    t->thing_id = thing_id;
+    t->tree.key = id;
+    thing_ids[id] = t;
+    t->thing_id = id;
+    *next = id;
 
     t->thing_template = thing_template;
     t->health = thing_template_get_health(thing_template);
     t->on_server = true;
 
     if (thing_template_is_player(thing_template)) {
-        t->tree2.key = thing_id;
+        t->tree2.key = id;
 
         if (!tree_insert(server_player_things, &t->tree2.node)) {
             DIE("thing insert name [%s] failed", name);
@@ -1548,7 +1573,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
     uint8_t *eodata = ((uint8_t*)packet->data) + MAX_PACKET_SIZE;
     uint8_t *odata = packet->data;
     uint8_t *data = packet->data;
-    *data++ = MSG_MAP_UPDATE;
+    *data++ = MSG_SERVER_MAP_UPDATE;
     thingp t;
 
     /*
@@ -1706,7 +1731,7 @@ LOG("frag %d",packet->len);
          * Reuse the same packet.
          */
         data = packet->data;
-        *data++ = MSG_MAP_UPDATE;
+        *data++ = MSG_SERVER_MAP_UPDATE;
     }
 
     /*
@@ -1903,7 +1928,7 @@ void socket_server_tx_player_update (thingp t)
     uint8_t *odata = packet->data;
     uint8_t *data = packet->data;
 
-    *data++ = MSG_PLAYER_UPDATE;
+    *data++ = MSG_SERVER_PLAYER_UPDATE;
 
     SDLNet_Write32(t->tree.key, data);               
     data += sizeof(uint32_t);

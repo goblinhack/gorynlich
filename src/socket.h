@@ -23,10 +23,11 @@ typedef enum {
     MSG_CLIENT_CLOSE,
     MSG_SERVER_CLOSE,
     MSG_SERVER_STATUS,
-    MSG_MAP_UPDATE,
-    MSG_PLAYER_UPDATE,
-    MSG_CLIENT_MOVE,
+    MSG_SERVER_MAP_UPDATE,
+    MSG_SERVER_PLAYER_UPDATE,
+    MSG_CLIENT_PLAYER_MOVE,
     MSG_MAX,
+    MSG_COMPRESSED = 0xFF,
 } msg_type;
 
 typedef struct {
@@ -336,26 +337,4 @@ static inline void socket_free_msg (UDPpacket *packet)
 //    SDLNet_FreePacket(packet);
 }
 
-static inline void socket_tx_msg (socketp s, UDPpacket *packet)
-{
-    msg_type type;
-
-    type = *(packet->data);
-
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent: %s", SDLNet_GetError());
-        WARN("  packet: %p", packet);
-        WARN("  data: %p", packet->data);
-        WARN("  udp: %p", socket_get_udp_socket(s));
-        WARN("  remote: %s", socket_get_remote_logname(s));
-        WARN("  local: %s", socket_get_local_logname(s));
-        WARN("  channel: %d", socket_get_channel(s));
-
-        socket_count_inc_pak_tx_error(s);
-    } else {
-        socket_count_inc_pak_tx(s);
-
-        s->tx_msg[type]++;
-    }
-}
+void socket_tx_msg(socketp s, UDPpacket *packet);
