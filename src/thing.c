@@ -1599,6 +1599,10 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         }
     }
 
+    uint16_t last_id;
+
+    last_id = 0;
+
     TREE_WALK_UNSAFE(tree, t) {
         /*
          * If updating to all sockets, decrement the update counter for this 
@@ -1617,91 +1621,90 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             t->updated--;
         }
 
-        uint8_t state = t->dir | 
-                ((t->resync     ? 1 : 0) << THING_STATE_BIT_SHIFT_RESYNC) |
-                ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_DEAD);
-
-        t->resync = 0;
-
         /*
-         * We squeeze the template ID in where we can
+         * Work out what we are going to send.
          */
-        uint16_t template_id = thing_template_to_id(t->thing_template);
-        uint16_t id = t->thing_id | ((template_id & 0x0f) << 12);
-        uint16_t tx;
-        uint16_t ty;
+        uint8_t template_id = thing_template_to_id(t->thing_template);
+        uint16_t id = t->thing_id;
+        uint8_t tx;
+        uint8_t ty;
 
         widp w = thing_wid(t);
         if (w) {
-            tx = (t->x * THING_COORD_SCALE);
-            ty = (t->y * THING_COORD_SCALE);
+            tx = (uint8_t)(int)((t->x * ((double)256)) / TILES_MAP_WIDTH);
+            ty = (uint8_t)(int)((t->y * ((double)256)) / TILES_MAP_HEIGHT);
         } else {
             tx = -1;
             ty = -1;
         }
 
-        tx &= 0x3fff;
-        ty &= 0x3fff;
-        tx |= ((template_id & 0x30) >> 4) << 14;
-        ty |= ((template_id & 0xc0) >> 4) << 14;
+        uint8_t state = t->dir | 
+                ((t->resync     ? 1 : 0) << THING_STATE_BIT_SHIFT_RESYNC) |
+                ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_DEAD);
 
         /*
-         * If no move, then don't sent new co-ords to save space.
+         * Do we need to encode the thing template? Yes if this is the first 
+         * update or sending to a new client.
          */
-        boolean can_omit_coordinates = true;
-
-        /*
-         * Don't do this optimization if sending to a single server as this
-         * will be likely the first time it has seen these things.
-         */
-        if (p) {
-            can_omit_coordinates = false;
+        if (t->first_update || p) {
+            state |= 1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT;
+            state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
+        /*
+         * Send co-ordinates if we moved since last send?
+         */
         if ((tx != t->last_tx) || (ty != t->last_ty)) {
-            can_omit_coordinates = false;
+            state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
         if (t->resync || t->is_dead || t->is_buried) {
-            can_omit_coordinates = false;
+            state |= 1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT;
+            state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
-        if (can_omit_coordinates) {
-            state |= 1 << THING_STATE_BIT_SHIFT_NO_MOVE;
+        /*
+         * If the ID is close to the previous one, send a delta instead.
+         */
+        if (id - last_id <= 255) {
+            state |= 1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT;
+        }
 
-            /*
-             * Now pack the raw data.
-             */
-            *data++ = state;
+        /*
+         * Write the data.
+         */
+        *data++ = state;
 
-            SDLNet_Write16(id, data);               
-            data += sizeof(uint16_t);
-
+        if (state & (1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT)) {
+            *data++ = id - last_id;
         } else {
-            /*
-             * Now pack the raw data.
-             */
-            *data++ = state;
-
             SDLNet_Write16(id, data);               
             data += sizeof(uint16_t);
-
-            SDLNet_Write16((uint16_t) tx, data);               
-            data += sizeof(uint16_t);
-                
-            SDLNet_Write16((uint16_t) ty, data);               
-            data += sizeof(uint16_t);
-
-            t->last_tx = tx;
-            t->last_ty = ty;
         }
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT)) {
+            *data++ = template_id;
+        }
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
+            *data++ = tx;
+            *data++ = ty;
+        }
+
+        t->last_tx = tx;
+        t->last_ty = ty;
+        t->resync = 0;
+        t->first_update = false;
 
         if (data + sizeof(msg_map_update) < eodata) {
             /*
              * Can fit more in.
              */
+            last_id = id;
             continue;
         }
+
+        last_id = 0;
 
         /*
          * We reached the limit for this packet? Send now.
@@ -1760,6 +1763,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
     verify(s);
 
     uint8_t *eodata = data + packet->len - 1;
+    uint16_t last_id = 0;
 
     while (data < eodata) {
         uint8_t state = *data++;
@@ -1769,72 +1773,80 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         thingp t;
         double x;
         double y;
+        uint8_t tx;
+        uint8_t ty;
 
-        id = SDLNet_Read16(data);
-        data += sizeof(uint16_t);
-
-        /*
-         * Is this just a direction update?
-         */
-        if (state & (1 << THING_STATE_BIT_SHIFT_NO_MOVE)) {
-            template_id = -1; 
-            on_map = true;
-            id &= 0x0fff;
-
-            t = thing_client_find(id);
-            if (!t) {
-                /*
-                 * This can happen due to packet loss. Hopefully a retransmit
-                 * when the thing moves will create it.
-                 */
-                LOG("received thing %u with no move bit, but never created",
-                    id);
-
-                continue;
-            }
-
-            x = t->x;
-            y = t->y;
+        if (state & (1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT)) {
+            /*
+             * Delta ID update.
+             */
+            id = *data++ + last_id;
         } else {
+            /*
+             * Full ID update.
+             */
+            id = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+        }
+        last_id = id;
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT)) {
+            /*
+             * Full template ID update.
+             */
+            template_id = *data++;
+        } else {
+            template_id = -1;
+        }
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             /*
              * Full move update.
              */
-            uint16_t tx = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
+            tx = *data++;
+            ty = *data++;
 
-            uint16_t ty = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
-
-            template_id = 
-                    (id >> 12) | ((tx >> 14) << 4) | ((ty >> 14) << 6);
-            id &= 0x0fff;
-            tx &= 0x3fff;
-            ty &= 0x3fff;
-
-            if ((tx == 0x3fff) || (ty == 0x3fff)) {
-                on_map = false;
-                x = -1;
-                y = -1;
-            } else {
-                on_map = true;
-                x = ((double)tx) / THING_COORD_SCALE;
-                y = ((double)ty) / THING_COORD_SCALE;
-            }
-
-            t = thing_client_find(id);
-            if (!t) {
-                thing_templatep thing_template = 
-                        id_to_thing_template(template_id);
-
-                t = thing_client_new(id, thing_template);
-
-                need_fixup = need_fixup ||
-                    thing_template_is_wall(thing_template) ||
-                    thing_template_is_pipe(thing_template) ||
-                    thing_template_is_door(thing_template);
-            }
+            x = ((double)tx) / (256 / TILES_MAP_WIDTH);
+            y = ((double)ty) / (256 / TILES_MAP_HEIGHT);
+        } else {
+            tx = -1;
+            ty = -1;
+            x = -1;
+            y = -1;
         }
 
+        if ((tx == (uint8_t)-1) && (ty == (uint8_t)-1)) {
+            on_map = false;
+        } else {
+            on_map = true;
+        }
+
+        t = thing_client_find(id);
+        if (!t) {
+            if (template_id == (uint8_t)-1) {
+                /*
+                 * This could happen due to packet loss and we have no way
+                 * to rebuild the thing without a resend. Need a way to ask
+                 * for a resync.
+                 */
+                ERR("received unknown thing %u, need resync", id);
+                continue;
+            }
+
+            thing_templatep thing_template = 
+                    id_to_thing_template(template_id);
+
+            t = thing_client_new(id, thing_template);
+
+            need_fixup = need_fixup ||
+                thing_template_is_wall(thing_template) ||
+                thing_template_is_pipe(thing_template) ||
+                thing_template_is_door(thing_template);
+        }
+
+        /*
+         * Get the thing direction.
+         */
         t->dir = state & 0x7;
 
         /*
@@ -1842,11 +1854,10 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
          */
         t->thing_id = id;
 
-        if (state & (1 << THING_STATE_BIT_SHIFT_NO_MOVE)) {
-            /*
-             * Do nothing.
-             */
-        } else if (on_map) {
+        /*
+         * Move the thing?
+         */
+        if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             widp w = thing_wid(t);
             if (w) {
                 if (t == player) {
@@ -1858,8 +1869,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                          * Check we are roughly where the server thinks we 
                          * are. If wildly out of whack, correct our viewpoint.
                          */
-                        THING_LOG(t, "%s server asked for resync",
-                                  t->logname);
+                        THING_LOG(t, "%s server asked for resync", t->logname);
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
