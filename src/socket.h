@@ -119,9 +119,10 @@ typedef struct {
      * be. We send only what portions of this message are changed.
      */
     uint8_t data;
-    uint16_t id;
-    uint16_t x;
-    uint16_t y;
+    uint8_t template_id;        // optional
+    uint16_t id;                // optional
+    uint8_t x;                  // optional
+    uint8_t y;                  // optional
 } __attribute__ ((packed)) msg_map_update;
 
 typedef struct {
