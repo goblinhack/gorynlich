@@ -189,7 +189,9 @@ enum {
     THING_STATE_BIT_SHIFT_DIR_BIT2,
     THING_STATE_BIT_SHIFT_RESYNC,
     THING_STATE_BIT_SHIFT_IS_DEAD,
-    THING_STATE_BIT_SHIFT_NO_MOVE,
+    THING_STATE_BIT_SHIFT_XY_PRESENT,
+    THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT,
+    THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT,
 };
 
 void thing_server_move(thingp t,
@@ -363,9 +365,8 @@ typedef struct thing_ {
      */
     double x;
     double y;
-    uint16_t last_id;
-    uint16_t last_tx;
-    uint16_t last_ty;
+    uint8_t last_tx;
+    uint8_t last_ty;
 
     /*
      * For animation.
@@ -392,6 +393,11 @@ typedef struct thing_ {
     uint8_t updated;
 
     uint8_t dir:3;
+
+    /*
+     * First time sent to a client?
+     */
+    uint32_t first_update:1;
 
     uint32_t is_qqq1:1;
     uint32_t is_qqq2:1;
