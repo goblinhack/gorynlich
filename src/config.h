@@ -20,6 +20,7 @@
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 #undef MORE_SPEED_LESS_VISUALS    // Go for max fps over loops
+#define ENABLE_VIDEO_SYNC
 
 /*
  * Other windows are darker when popups appear
