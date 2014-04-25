@@ -861,9 +861,10 @@ void sdl_loop (void)
                     sdl_event(&events[i]);
                 }
             }
-#ifdef ENABLE_CONSOLE
-            console_tick();
-#endif
+
+            if (is_server) {
+                console_tick();
+            }
 
             if (!sdl_main_loop_running) {
                 break;

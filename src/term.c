@@ -116,6 +116,12 @@ static void term_core_goto_init (void)
 
 boolean term_init (void)
 {
+    if (!is_server) {
+        TERM_WIDTH = TERM_MAX_SIZE;
+        TERM_HEIGHT = TERM_MAX_SIZE;
+        return (true);
+    }
+
     term_init_done = true;
 
     get_term_size(STDIN_FILENO, &TERM_WIDTH, &TERM_HEIGHT);
@@ -268,6 +274,75 @@ static void term_core_fgbg (unsigned char fg, unsigned char bg)
     term_core_puts((char*)data[(bg & 7) * 8 + (fg & 7)]);
 }
 
+static inline void term_puts_fg (unsigned char a)
+{
+    static char *data[] = {
+        "[30m", "[31m", "[32m", "[33m",
+        "[34m", "[35m", "[36m", "[37m",
+        "\033[m",
+    };
+
+    if (a >= ARRAY_SIZE(data)) {
+        DIE("overflow");
+    }
+
+    fputs(data[a], stdout);
+}
+
+static inline void term_puts_bg (unsigned char a)
+{
+    static char *data[] = {
+        "[40m", "[41m", "[42m", "[43m",
+        "[44m", "[45m", "[46m", "[47m",
+        "\033[m",
+    };
+
+    if (a == 0) {
+        /*
+         * Allow the default color to be 0, that of the terminal.
+         */
+        return;
+    }
+
+    if (a >= ARRAY_SIZE(data)) {
+        DIE("overflow");
+    }
+
+    fputs(data[a], stdout);
+}
+
+static inline void term_puts_fgbg (unsigned char fg, unsigned char bg)
+{
+    static const char *data[] = {
+            "[40;30m", "[40;31m", "[40;32m", "[40;33m",
+            "[40;34m", "[40;35m", "[40;36m", "[40;37m",
+            "[41;30m", "[41;31m", "[41;32m", "[41;33m",
+            "[41;34m", "[41;35m", "[41;36m", "[41;37m",
+            "[42;30m", "[42;31m", "[42;32m", "[42;33m",
+            "[42;34m", "[42;35m", "[42;36m", "[42;37m",
+            "[43;30m", "[43;31m", "[43;32m", "[43;33m",
+            "[43;34m", "[43;35m", "[43;36m", "[43;37m",
+            "[44;30m", "[44;31m", "[44;32m", "[44;33m",
+            "[44;34m", "[44;35m", "[44;36m", "[44;37m",
+            "[45;30m", "[45;31m", "[45;32m", "[45;33m",
+            "[45;34m", "[45;35m", "[45;36m", "[45;37m",
+            "[46;30m", "[46;31m", "[46;32m", "[46;33m",
+            "[46;34m", "[46;35m", "[46;36m", "[46;37m",
+            "[47;30m", "[47;31m", "[47;32m", "[47;33m",
+            "[47;34m", "[47;35m", "[47;36m", "[47;37m",
+    };
+
+    if (bg == 0) {
+        /*
+         * Allow the default color to be 0, that of the terminal.
+         */
+        term_puts_fg(fg);
+        return;
+    }
+
+    fputs((char*)data[(bg & 7) * 8 + (fg & 7)], stdout);
+}
+
 void term_core_cursor_show (void)
 {
     term_core_puts("\033[?25h");
@@ -307,7 +382,8 @@ static void term_put (term_cell *e)
         return;
     }
 
-    if (term_x >= TERM_WIDTH) {
+    if (term_x >= TERM_MAX_SIZE) { 
+        // not screen width so we can store long lines
         term_x++;
         return;
     }
@@ -529,8 +605,8 @@ void term_putf (const char *s)
 
         if (!looking_for_start) {
             if (c == '%') {
-                    looking_for_start = true;
-                    continue;
+                looking_for_start = true;
+                continue;
             }
         } else if (looking_for_start) {
             if (c == '%') {
@@ -643,26 +719,6 @@ void term_refresh (void)
     term_core_refresh();
 }
 
-/*
-    Copyright (C) 1996 1997 Uwe Ohse
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
-    Contact: uwe@tirka.gun.de, Uwe Ohse @ DU3 (mausnet)
-*/
-
 int term_test (int32_t argc, char *argv[])
 {
     int x, y;
@@ -701,12 +757,45 @@ int term_test (int32_t argc, char *argv[])
     }
 }
 
+static void term_print_last_line (void)
+{
+    int x, y;
+
+    y = term_y;
+
+    //
+    // Hitting the max col seems to mess the terminal up
+    //
+    for (x = 0; x < term_x; x++) {
+
+        term_cell *c = &term_cells[x][y];
+
+        term_puts_fgbg(c->fg, c->bg);
+
+        if (!c->c) {
+            putchar(' ');
+        } else {
+            putchar(c->c);
+        }
+    }
+}
+
 void term_log (const char *buf)
 {
-    term_scroll();
-    term_goto(0, TERM_HEIGHT - 2);
+    if (is_server) {
+        term_scroll();
+        term_goto(0, TERM_HEIGHT - 2);
+    }
+
     term_putf(buf);
-    term_refresh();
+
+    if (is_server) {
+        term_refresh();
+    } else {
+        term_print_last_line();
+        putchar('\n');
+        term_x = 0;
+    }
 }
 
 /*
