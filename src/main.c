@@ -419,7 +419,7 @@ static void usage (void)
     LOG(" ");
     LOG("        --nodisplay   run with no display");
     LOG("        -nodisplay");
-    LOG("        -n");
+    LOG("        -N");
     LOG(" ");
     LOG("        --port        port of server, default %d",
             SERVER_DEFAULT_PORT);
@@ -465,7 +465,7 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (!strcmp(argv[i], "--name") ||
             !strcmp(argv[i], "-name") ||
-            !strcmp(argv[i], "-N")) {
+            !strcmp(argv[i], "-n")) {
 
             const char *name = argv[i + 1];
             if (!name) {
@@ -483,7 +483,7 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (!strcmp(argv[i], "--nodisplay") ||
             !strcmp(argv[i], "-nodisplay") ||
-            !strcmp(argv[i], "-n")) {
+            !strcmp(argv[i], "-N")) {
 
             is_headless = true;
             continue;
