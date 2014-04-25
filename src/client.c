@@ -814,7 +814,7 @@ static void client_poll (void)
                 break;
 
             default:
-                ERR("Unknown message type received [%u]", type);
+                ERR("Unknown client message type received [%u]", type);
             }
 
             if (uncompressed) {
