@@ -30,8 +30,8 @@ typedef struct term_cell_ {
 
 static void term_core_refresh(void);
 
-int TERM_WIDTH;
-int TERM_HEIGHT;
+int TERM_WIDTH = TERM_MAX_SIZE;
+int TERM_HEIGHT = TERM_MAX_SIZE;
 int term_x;
 int term_y;
 
@@ -117,8 +117,6 @@ static void term_core_goto_init (void)
 boolean term_init (void)
 {
     if (!is_server) {
-        TERM_WIDTH = TERM_MAX_SIZE;
-        TERM_HEIGHT = TERM_MAX_SIZE;
         return (true);
     }
 

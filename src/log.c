@@ -358,7 +358,7 @@ static void croak_ (const char *fmt, va_list args)
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
-    fprintf(stderr, "%s", buf);
+    fprintf(stderr, "%s\n", buf);
     fflush(stderr);
 
     ERR("%s", buf + tslen);
