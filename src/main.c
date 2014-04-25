@@ -465,9 +465,13 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (!strcmp(argv[i], "--name") ||
             !strcmp(argv[i], "-name") ||
-            !strcmp(argv[i], "-n")) {
+            !strcmp(argv[i], "-N")) {
 
             const char *name = argv[i + 1];
+            if (!name) {
+                DIE("no name");
+            }
+
             i++;
             strncpy(global_config.user_server_name, name, 
                     sizeof(global_config.user_server_name));
