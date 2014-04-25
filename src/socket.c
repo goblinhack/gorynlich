@@ -336,10 +336,20 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
 
     type = *(packet->data);
 
-    /*
-     * A good enough size for compression to work and give a smaller packet.
-     */
-    if (packet->len > 200) {
+    if (type != MSG_COMPRESSED) {
+        s->tx_msg[type]++;
+    }
+
+    if (type == MSG_COMPRESSED) {
+        /*
+         * Resend of an already compressed message but to another client? I 
+         * hope so.
+         */
+    } else if (packet->len > 200) {
+        /*
+         * A good enough size for compression to work and give a smaller 
+         * packet.
+         */
         unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
 
         if (packet->len > MAX_PACKET_SIZE) {
@@ -364,8 +374,6 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
         socket_count_inc_pak_tx_error(s);
     } else {
         socket_count_inc_pak_tx(s);
-
-        s->tx_msg[type]++;
     }
 }
 
@@ -1346,6 +1354,8 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Join (rejected) from %s \"%s\"", tmp, msg.name);
+        LOG("  current players %u", global_config.server_current_players);
+        LOG("  max     players %u", global_config.server_max_players);
         myfree(tmp);
 
         socket_tx_tell(s, "Join rejected:", msg.name, "Too many players");
@@ -1391,6 +1401,8 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
     p->key = SDLNet_Read32(&msg.key);
+
+    wid_game_map_server_visible();
 
     widp w = 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
@@ -1826,6 +1838,8 @@ void socket_tx_tell (socketp s,
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
+
+    LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (debug_socket_players_enabled) {
         LOG("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 

@@ -246,7 +246,6 @@ static void server_poll (void)
 
         socketp s = socket_find_remote_ip(read_address(packet));
         if (!s) {
-
             char *tmp = iptodynstr(read_address(packet));
             LOG("Server new client from %s", tmp);
             myfree(tmp);

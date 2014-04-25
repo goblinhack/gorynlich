@@ -116,7 +116,7 @@ static void term_core_goto_init (void)
 
 boolean term_init (void)
 {
-    if (!is_server) {
+    if (!is_server && !is_headless) {
         return (true);
     }
 
@@ -780,14 +780,14 @@ static void term_print_last_line (void)
 
 void term_log (const char *buf)
 {
-    if (is_server) {
+    if (is_server || is_headless) {
         term_scroll();
         term_goto(0, TERM_HEIGHT - 2);
     }
 
     term_putf(buf);
 
-    if (is_server) {
+    if (is_server || is_headless) {
         term_refresh();
     } else {
         term_print_last_line();

@@ -108,8 +108,10 @@ boolean client_init (void)
 
     client_init_done = true;
 
-    if (!wid_server_join_init()) {
-	DIE("wid server join init");
+    if (!is_server) {
+        if (!wid_server_join_init()) {
+            DIE("wid server join init");
+        }
     }
 
     return (true);
@@ -727,6 +729,7 @@ static void client_poll (void)
             /*
              * Uncompress the packet if it has an invalid type.
              */
+
             if (*packet->data == MSG_COMPRESSED) {
                 data = miniz_uncompress(packet->data + 1, &packet->len);
                 odata = data;
