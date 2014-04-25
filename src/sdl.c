@@ -862,7 +862,7 @@ void sdl_loop (void)
                 }
             }
 
-            if (is_server) {
+            if (is_server || is_headless) {
                 console_tick();
             }
 

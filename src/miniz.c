@@ -3350,37 +3350,30 @@ mz_bool mz_zip_reader_extract_to_mem_no_alloc(mz_zip_archive *pZip, mz_uint file
   mz_uint local_header_u32[(MZ_ZIP_LOCAL_DIR_HEADER_SIZE + sizeof(mz_uint) - 1) / sizeof(mz_uint)]; mz_uint8_t *pLocal_header = (mz_uint8_t *)local_header_u32;
   tinfl_decompressor inflator;
 
-printf("%s %d\n",__FUNCTION__,__LINE__);
   if ((buf_size) && (!pBuf))
     return MZ_FALSE;
-printf("%s %d\n",__FUNCTION__,__LINE__);
 
   if (!mz_zip_reader_file_stat(pZip, file_index, &file_stat))
     return MZ_FALSE;
 
-printf("%s %d\n",__FUNCTION__,__LINE__);
   if (!file_stat.m_comp_size)
     return MZ_TRUE;
 
   // Encryption and patch files are not supported.
-printf("%s %d\n",__FUNCTION__,__LINE__);
   if (file_stat.m_bit_flag & (1 | 32))
     return MZ_FALSE;
 
   // This function only supports stored and deflate.
-printf("%s %d\n",__FUNCTION__,__LINE__);
   if ((!(flags & MZ_ZIP_FLAG_COMPRESSED_DATA)) && (file_stat.m_method != 0) && (file_stat.m_method != MZ_DEFLATED))
     return MZ_FALSE;
 
   // Ensure supplied output buffer is large enough.
   needed_size = (flags & MZ_ZIP_FLAG_COMPRESSED_DATA) ? file_stat.m_comp_size : file_stat.m_uncomp_size;
-printf("%s %d\n",__FUNCTION__,__LINE__);
   if (buf_size < needed_size)
     return MZ_FALSE;
 
   // Read and parse the local directory entry.
   cur_file_ofs = file_stat.m_local_header_ofs;
-printf("%s %d\n",__FUNCTION__,__LINE__);
   if (pZip->m_pRead(pZip->m_pIO_opaque, cur_file_ofs, pLocal_header, MZ_ZIP_LOCAL_DIR_HEADER_SIZE) != MZ_ZIP_LOCAL_DIR_HEADER_SIZE)
     return MZ_FALSE;
 printf("%s %d\n",__FUNCTION__,__LINE__);
@@ -3491,11 +3484,9 @@ void *mz_zip_reader_extract_to_heap(mz_zip_archive *pZip, mz_uint file_index, si
   void *pBuf;
 
   if (pSize) {
-printf("%s %d\n",__FUNCTION__,__LINE__);
     *pSize = 0;
   }
   if (!p) {
-printf("%s %d\n",__FUNCTION__,__LINE__);
     return 0;
   }
 
@@ -3504,24 +3495,20 @@ printf("%s %d\n",__FUNCTION__,__LINE__);
 
   alloc_size = (flags & MZ_ZIP_FLAG_COMPRESSED_DATA) ? comp_size : uncomp_size;
   if (((sizeof(size_t) == sizeof(mz_uint))) && (alloc_size > 0x7FFFFFFF)) {
-printf("%s %d\n",__FUNCTION__,__LINE__);
     return 0;
   }
   if (0 == (pBuf = pZip->m_pAlloc(pZip->m_pAlloc_opaque, 1, (size_t)alloc_size))) {
-printf("%s %d\n",__FUNCTION__,__LINE__);
     return 0;
   }
 
   if (!mz_zip_reader_extract_to_mem(pZip, file_index, pBuf, (size_t)alloc_size, flags))
   {
-printf("%s %d\n",__FUNCTION__,__LINE__);
     pZip->m_pFree(pZip->m_pAlloc_opaque, pBuf);
     return 0;
   }
 
   if (pSize) {
   *pSize = (size_t)alloc_size;
-printf("%s %d\n",__FUNCTION__,__LINE__);
   }
   return pBuf;
 }
