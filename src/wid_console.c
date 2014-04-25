@@ -87,6 +87,10 @@ boolean wid_console_init (void)
  */
 void wid_console_hello (void)
 {
+    if (!is_server) {
+        return;
+    }
+
     CON(" ");
     CON("%%%%fg=red$          Welcome to the gorynlich Console!%%%%fg=reset$");
     CON(" ");
