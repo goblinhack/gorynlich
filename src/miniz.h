@@ -849,4 +849,3 @@ mz_uint tdefl_create_comp_flags_from_zip_params(int level, int window_bits, int 
 
 // ------------------- End of Header: Implementation follows. (If you only want the header, define MINIZ_HEADER_FILE_ONLY.)
 
-void miniz_fini(void);
