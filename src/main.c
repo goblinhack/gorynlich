@@ -417,10 +417,6 @@ static void usage (void)
     LOG("        -server");
     LOG("        -s");
     LOG(" ");
-    LOG("        --nodisplay   run with no display");
-    LOG("        -nodisplay");
-    LOG("        -N");
-    LOG(" ");
     LOG("        --port        port of server, default %d",
             SERVER_DEFAULT_PORT);
     LOG("        -port");
@@ -455,6 +451,8 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-s")) {
 
             is_server = true;
+            is_client = false;
+            is_headless = true;
             LOG_STDOUT = fopen("stdout.server.txt", "w+");
             LOG_STDERR = fopen("stderr.server.txt", "w+");
             continue;
@@ -475,17 +473,6 @@ static void parse_args (int32_t argc, char *argv[])
             i++;
             strncpy(global_config.user_server_name, name, 
                     sizeof(global_config.user_server_name));
-            continue;
-        }
-
-        /*
-         * -nodisplay
-         */
-        if (!strcmp(argv[i], "--nodisplay") ||
-            !strcmp(argv[i], "-nodisplay") ||
-            !strcmp(argv[i], "-N")) {
-
-            is_headless = true;
             continue;
         }
 

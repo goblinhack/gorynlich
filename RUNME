@@ -201,6 +201,7 @@ case `uname` in
 	;;
     *Darwin*)
 	EXE=""
+	DSYM="dsymutil ../gorynlich"
 	;;
     *)
 	EXE=""
@@ -265,6 +266,7 @@ fi
 
 echo "    " >> .Makefile
 echo "EXE=$EXE # AUTOGEN" >> .Makefile
+echo "DSYM=$DSYM # AUTOGEN" >> .Makefile
 echo "LDLIBS=$LDLIBS # AUTOGEN" >> .Makefile
 echo "CFLAGS=\$(COMPILER_FLAGS) \$(COMPILER_WARNINGS) # AUTOGEN" >> .Makefile
 

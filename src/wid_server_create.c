@@ -936,8 +936,6 @@ static boolean wid_server_load_local_server (void)
      * cli overrides the config file.
      */
     if (server_socket) {
-        LOG("Using existing server");
-
         server s;
 
         memset(&s, 0, sizeof(s));
