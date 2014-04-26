@@ -137,7 +137,7 @@
  * Timers
  */
 #define DELAY_TENTHS_THING_AI                   1
-#define DELAY_TENTHS_PING                       2
+#define DELAY_TENTHS_PING                       10
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
 #define DELAY_TENTHS_CURSOR_VISIBLE             5
 #define DELAY_TENTHS_CURSOR_INVISIBLE           1

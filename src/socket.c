@@ -1235,9 +1235,7 @@ void socket_tx_name (socketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        LOG("Tx Player [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
-    }
+    LOG("Tx Name [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1260,11 +1258,9 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 
     memcpy(&msg, packet->data, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Name from %s \"%s\"", tmp, msg.name);
-        myfree(tmp);
-    }
+    char *tmp = iptodynstr(read_address(packet));
+    LOG("Rx Name from %s \"%s\"", tmp, msg.name);
+    myfree(tmp);
 
     socket_set_name(s, msg.name);
     socket_set_pclass(s, msg.pclass);
@@ -1319,9 +1315,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        LOG("Tx Join [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
-    }
+    LOG("Tx Join [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1376,11 +1370,9 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         }
     }
 
-    if (debug_socket_players_enabled) {
-        char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Join from %s \"%s\"", tmp, msg.name);
-        myfree(tmp);
-    }
+    char *tmp = iptodynstr(read_address(packet));
+    LOG("Rx Join from %s \"%s\"", tmp, msg.name);
+    myfree(tmp);
 
     socket_set_name(s, msg.name);
     socket_set_pclass(s, msg.pclass);
@@ -1439,9 +1431,7 @@ void socket_tx_client_leave (socketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        LOG("Tx leave [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
-    }
+    LOG("Tx leave [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1479,11 +1469,9 @@ boolean socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
         return (false);
     }
 
-    if (debug_socket_players_enabled) {
-        char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx leave from %s", tmp);
-        myfree(tmp);
-    }
+    char *tmp = iptodynstr(read_address(packet));
+    LOG("Rx leave from %s", tmp);
+    myfree(tmp);
 
     return (true);
 }
@@ -1569,10 +1557,8 @@ static void socket_tx_client_shout_relay (socketp s, const char *txt,
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        LOG("Tx Client Shout [to %s] \"%s\"", 
-            socket_get_remote_logname(s), txt);
-    }
+    LOG("Tx Client Shout [to %s] \"%s\"", 
+        socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1598,10 +1584,8 @@ void socket_tx_client_shout (socketp s, const char *txt)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        LOG("Tx Client Shout [to %s] \"%s\"", 
-            socket_get_remote_logname(s), txt);
-    }
+    LOG("Tx Client Shout [to %s] \"%s\"", 
+        socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1636,7 +1620,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("SHOUT: \"%s\"", txt);
     }
 
-    if (debug_socket_players_enabled) {
+    {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Client Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
@@ -1699,9 +1683,7 @@ void socket_tx_server_shout (const char *txt)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        LOG("Tx Server Shout \"%s\"", txt);
-    }
+    LOG("Tx Server Shout \"%s\"", txt);
 
     packet->len = sizeof(msg);
 
@@ -1741,9 +1723,7 @@ void socket_tx_server_shout_except_to (const char *txt, socketp except)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    if (debug_socket_players_enabled) {
-        LOG("Tx Server Shout \"%s\"", txt);
-    }
+    LOG("Tx Server Shout \"%s\"", txt);
 
     packet->len = sizeof(msg);
 

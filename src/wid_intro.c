@@ -183,6 +183,8 @@ static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 
 static void wid_intro_single_play_selected_cb (void *context)
 {
+    is_server = true;
+
     wid_server_join_hide();
     wid_server_create_hide();
 
