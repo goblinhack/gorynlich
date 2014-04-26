@@ -264,6 +264,8 @@ static boolean client_socket_open (char *host, char *port)
         return (false);
     }
 
+    LOG("Client connecting to server address %s:%u", host, portno);
+
     /*
      * Connector.
      */

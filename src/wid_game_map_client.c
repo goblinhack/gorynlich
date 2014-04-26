@@ -106,8 +106,6 @@ static void wid_game_map_client_start_cb (void *context)
 
 void wid_game_map_client_visible (void)
 {
-    is_server = true;
-
     if (!client_joined_server) {
         action_timer_create(
                 &wid_timers,

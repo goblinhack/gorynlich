@@ -433,6 +433,10 @@ static void console_clear (void)
 
 static void console_refresh (void)
 {
+    if (!HEADLESS) {
+        return;
+    }
+
     static char tmp[MAXSTR];
     static char cursor_char[2] = { '_', '\0' };
 
@@ -451,6 +455,10 @@ static void console_refresh (void)
 
 void console_tick (void)
 {
+    if (!HEADLESS) {
+        return;
+    }
+
     char seq[2];
     char seq2[2];
     char c;
