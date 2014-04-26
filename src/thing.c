@@ -795,9 +795,8 @@ void thing_set_wid (thingp t, widp w)
         if (t->wid) {
             verify(t->wid);
             wid_set_thing(t->wid, 0);
-//            wid_destroy(&t->wid);
-                wid_fade_out(t->wid, 500);
-                wid_destroy_in(t->wid, 500);
+            wid_fade_out(t->wid, 500);
+            wid_destroy_in(t->wid, 500);
         }
     }
 
