@@ -126,6 +126,8 @@ static void thing_tick_server_all (void)
             }
         }
 
+        thing_handle_collisions(wid_game_map_server_grid_container, t);
+
         w = t->wid;
 
         /*

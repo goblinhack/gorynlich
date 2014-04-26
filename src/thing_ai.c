@@ -387,20 +387,6 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     if (h != lowest) { h += not_preferred; }
     if (i != lowest) { i += not_preferred; }
 
-#if 0
-    a += t->visited[x-1][y-1];
-    b += t->visited[x  ][y-1];
-    c += t->visited[x+1][y-1];
-
-    d += t->visited[x-1][y];
-    e += t->visited[x  ][y];
-    f += t->visited[x+1][y];
-        
-    g += t->visited[x-1][y+1];
-    h += t->visited[x  ][y+1];
-    i += t->visited[x+1][y+1];
-#endif
-
     lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
 
     int8_t dx = 0;
