@@ -51,6 +51,7 @@
 #include "client.h"
 #include "term.h"
 #include "server.h"
+#include "mzip_lib.h"
 
 static char **ARGV;
 char *EXEC_FULL_PATH_AND_NAME;
@@ -128,6 +129,7 @@ void quit (void)
     config_fini();
     enum_fmt_destroy();
     blit_fini();
+    miniz_fini();
 
     if (EXEC_FULL_PATH_AND_NAME) {
         myfree(EXEC_FULL_PATH_AND_NAME);

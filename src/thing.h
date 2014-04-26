@@ -14,7 +14,6 @@ thingp thing_client_new(uint32_t, thing_templatep);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
-void thing_bury(thingp);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void things_level_start(levelp);
@@ -120,8 +119,7 @@ uint8_t thing_is_dir_br(thingp t);
 void thing_set_opened_exit(thingp t, boolean val);
 boolean thing_opened_exit(thingp t);
 void thing_set_is_open(thingp t, boolean val);
-void thing_set_is_buried(thingp t, boolean val);
-void thing_set_is_left_as_corpse_on_death(thingp t, boolean val);
+void thing_set_is_xxx34(thingp t, boolean val);
 void thing_set_is_dead(thingp t, boolean val);
 void thing_set_qqq20(thingp t, boolean val);
 boolean thing_qqq20(thingp t);
@@ -409,7 +407,6 @@ typedef struct thing_ {
     uint32_t got_to_exit_first:1;
     uint32_t opened_exit:1;
     uint32_t is_open:1;
-    uint32_t is_buried:1;
     uint32_t is_dead:1;
     uint32_t on_active_list:1;
     uint32_t on_server:1;
@@ -429,13 +426,6 @@ static inline boolean thing_is_open (thingp t)
     verify(t);
 
     return (t->is_open);
-}
-
-static inline boolean thing_is_buried (thingp t)
-{
-    verify(t);
-
-    return (t->is_buried);
 }
 
 static inline boolean thing_is_dead (thingp t)
@@ -697,11 +687,11 @@ static inline boolean thing_is_xxx33 (thingp t)
     return (thing_template_is_xxx33(thing_get_template(t)));
 }
 
-static inline boolean thing_is_left_as_corpse_on_death (thingp t)
+static inline boolean thing_is_xxx34 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_left_as_corpse_on_death(thing_get_template(t)));
+    return (thing_template_is_xxx34(thing_get_template(t)));
 }
 
 static inline boolean thing_is_joinable (thingp t)
@@ -749,11 +739,6 @@ static inline boolean thing_is_effect_rotate_2way (thingp t)
 static inline boolean thing_is_open_fast (thingp t)
 {
     return (t->is_open);
-}
-
-static inline boolean thing_is_buried_fast (thingp t)
-{
-    return (t->is_buried);
 }
 
 static inline boolean thing_is_dead_fast (thingp t)
@@ -941,9 +926,9 @@ static inline boolean thing_is_xxx33_fast (thingp t)
     return (t->thing_template->is_xxx33);
 }
 
-static inline boolean thing_is_left_as_corpse_on_death_fast (thingp t)
+static inline boolean thing_is_xxx34_fast (thingp t)
 {
-    return (t->thing_template->is_left_as_corpse_on_death);
+    return (t->thing_template->is_xxx34);
 }
 
 static inline boolean thing_is_joinable_fast (thingp t)

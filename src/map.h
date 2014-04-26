@@ -48,14 +48,14 @@ boolean map_is_generator_at(levelp, int32_t x, int32_t y);
 boolean map_is_scarable_at(levelp, int32_t x, int32_t y);
 boolean map_is_xxx29_at(levelp, int32_t x, int32_t y);
 boolean map_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
-boolean map_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y);
+boolean map_is_xxx34_at(levelp, int32_t x, int32_t y);
 
 thing_templatep map_find_key1_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_is_item_hidden_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_exit_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_floor_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_food_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y, widp *);
+thing_templatep map_find_is_xxx34_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_monst_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_item_perma_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_plant_at(levelp, int32_t x, int32_t y, widp *);
@@ -109,7 +109,7 @@ thingp map_thing_is_wall_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_animated_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_xxx32_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_xxx33_at(levelp, int32_t x, int32_t y);
-thingp map_thing_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y);
+thingp map_thing_is_xxx34_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_key_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_collision_map_small_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_xxx3_at(levelp, int32_t x, int32_t y);
@@ -225,8 +225,8 @@ tree_rootp map_all_things_is_xxx29(levelp);
 tree_rootp map_all_things_is_xxx29_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_hidden_from_editor(levelp);
 tree_rootp map_all_things_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_left_as_corpse_on_death(levelp);
-tree_rootp map_all_things_is_left_as_corpse_on_death_at(levelp, int32_t x, int32_t y);
+tree_rootp map_all_things_is_xxx34(levelp);
+tree_rootp map_all_things_is_xxx34_at(levelp, int32_t x, int32_t y);
 
 uint32_t level_count_is_item_is_hidden(levelp);
 uint32_t level_count_is_exit(levelp);
@@ -269,7 +269,7 @@ uint32_t level_count_is_generator(levelp);
 uint32_t level_count_is_scarable(levelp);
 uint32_t level_count_is_xxx29(levelp);
 uint32_t level_count_is_hidden_from_editor(levelp);
-uint32_t level_count_is_left_as_corpse_on_death(levelp);
+uint32_t level_count_is_xxx34(levelp);
 
 #include "tree.h"
 
