@@ -1663,6 +1663,13 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
+        if ((tx == -1) && (ty == -1)) {
+            /*
+             * Do not send.
+             */
+            state &= ~(1 << THING_STATE_BIT_SHIFT_XY_PRESENT);
+        }
+
         /*
          * If the ID is close to the previous one, send a delta instead.
          */
@@ -1894,13 +1901,18 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
                         thing_client_wid_update(t, x, y, true /* smooth */);
                     }
-                } else {
+                } else if (on_map) {
                     thing_client_wid_update(t, x, y, true /* smooth */);
                 }
             } else {
-                if (t->is_dead) {
+                if (t->is_dead || 
+                    (state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD))) {
                     /*
                      * Already dead? No new tile.
+                     */
+                } else if (!on_map) {
+                    /*
+                     * Popped off the map.
                      */
                 } else {
                     wid_game_map_client_replace_tile(

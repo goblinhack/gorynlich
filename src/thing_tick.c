@@ -128,8 +128,6 @@ static void thing_tick_server_all (void)
 
         thing_handle_collisions(wid_game_map_server_grid_container, t);
 
-        w = t->wid;
-
         /*
          * Died in a collision ? 8( Handle it next time around.
          */
@@ -148,6 +146,8 @@ static void thing_tick_server_all (void)
         /*
          * If stopped moving, look for a next hop.
          */
+        w = t->wid;
+
         if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
             int32_t nexthop_x = -1;
             int32_t nexthop_y = -1;
