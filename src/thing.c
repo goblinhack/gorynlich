@@ -353,7 +353,7 @@ void thing_restarted (thingp t, levelp level)
 
     t->current_tile = 0;
 
-    if (!thing_is_dead(t) || !thing_is_buried(t)) {
+    if (!thing_is_dead(t)) {
         return;
     }
 
@@ -363,7 +363,6 @@ void thing_restarted (thingp t, levelp level)
     }
 
     thing_set_is_dead(t, false);
-    thing_set_is_buried(t, false);
 
     /*
      * Record this thing opened the exit.
@@ -432,23 +431,6 @@ void thing_destroy (thingp t, const char *why)
     myfree(t);
 }
 
-void thing_bury (thingp t)
-{
-    verify(t);
-
-    if (!thing_is_dead(t)) {
-        DIE("can't bury %s if not dead!", thing_logname(t));
-        return;
-    }
-
-    if (thing_is_buried(t)) {
-        return;
-    }
-
-    thing_set_is_buried(t, true);
-    THING_DBG(t, "buried");
-}
-
 static void thing_dead_ (thingp t, thingp killer, char *reason)
 {
     verify(t);
@@ -496,13 +478,6 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         t->dead_reason = reason;
     }
 
-    if (!thing_is_left_as_corpse_on_death(t)) {
-        /*
-         * Pop from the level.
-         */
-        thing_set_wid(t, 0);
-    }
-
     THING_DBG(t, "dead (%s)", reason);
 }
 
@@ -532,7 +507,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         thing_dead_(t, killer, 0);
     }
 
-    t->updated++;
     t->updated++;
 
     if (!t->on_active_list) {
@@ -821,7 +795,9 @@ void thing_set_wid (thingp t, widp w)
         if (t->wid) {
             verify(t->wid);
             wid_set_thing(t->wid, 0);
-            wid_destroy(&t->wid);
+//            wid_destroy(&t->wid);
+                wid_fade_out(t->wid, 500);
+                wid_destroy_in(t->wid, 500);
         }
     }
 
@@ -1337,13 +1313,6 @@ void thing_set_is_open (thingp t, boolean val)
     t->is_open = val;
 }
 
-void thing_set_is_buried (thingp t, boolean val)
-{
-    verify(t);
-
-    t->is_buried = val;
-}
-
 void thing_set_is_dead (thingp t, boolean val)
 {
     verify(t);
@@ -1658,7 +1627,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
-        if (t->resync || t->is_dead || t->is_buried) {
+        if (t->resync || t->is_dead) {
             state |= 1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT;
             state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
