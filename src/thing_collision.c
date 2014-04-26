@@ -160,6 +160,10 @@ void thing_handle_collisions (widp grid, thingp t)
             }
 
             it = wid_get_thing(wid_it);
+            if (!it) {
+                wid_it = wid_next;
+                continue;
+            }
 
             if (thing_is_floor(it) || thing_is_wall(it)) {
                 wid_it = wid_next;
@@ -181,24 +185,42 @@ void thing_handle_collisions (widp grid, thingp t)
             }
 
             /*
-             * handle
+             * Collect keys
              */
             if (thing_is_player(me)) {
                 if (thing_is_key(it)) {
                     thing_collect(me, thing_get_template(it));
                     thing_dead(it, t, "collected");
+                    wid_it = wid_next;
+                    continue;
+                }
+            }
+
+            /*
+             * Bumped into a monster.
+             */
+            if (thing_is_player(me)) {
+                if (thing_is_monst(it)) {
+                    /*
+                     * Monster dies in the collision but steals hitpoints.
+                     */
+                    thing_dead(it, t, "hit");
 
                     wid_it = wid_next;
                     continue;
                 }
             }
 
+            /*
+             * Bumped into a monster.
+             */
             if (thing_is_monst(me)) {
-                if (thing_is_key(it)) {
-                    thing_dead(it, t, "collected");
-
-                    wid_it = wid_next;
-                    continue;
+                if (thing_is_player(it)) {
+                    /*
+                     * Monster dies in the collision but steals hitpoints.
+                     */
+                    thing_dead(me, t, "hit");
+                    break;
                 }
             }
 
@@ -256,6 +278,14 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             if (!thing_is_wall(it) && 
                 !thing_is_door(it) && 
                 !thing_is_monst(t)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+             * Allow monsters to walk into the player.
+             */
+            if (thing_is_player(it) && thing_is_monst(me)) {
                 wid_it = wid_next;
                 continue;
             }
