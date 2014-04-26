@@ -55,10 +55,19 @@ unsigned char *miniz_compress2 (unsigned char *buf, int32_t *uncompressed_len,
     return (buf_compressed);
 }
 
+static unsigned char *scratch_pad;
+
+void miniz_fini (void) 
+{
+    if (scratch_pad) {
+        myfree(scratch_pad);
+        scratch_pad = 0;
+    }
+}
+
 unsigned char *miniz_uncompress (unsigned char *buf, int32_t *compressed_len)
 {
     static unsigned long scratch_pad_size = 16 * 1024;
-    static unsigned char *scratch_pad;
     unsigned char *buf_uncompressed;
     unsigned long uncompressed_len;
 

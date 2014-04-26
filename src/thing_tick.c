@@ -70,11 +70,7 @@ static void thing_tick_server_all (void)
              * the thing.
              */
             if (!t->updated) {
-                if (thing_is_left_as_corpse_on_death(t)) {
-                    thing_bury(t);
-                } else {
-                    thing_destroy(t, "died");
-                }
+                thing_destroy(t, "died");
             }
             continue;
         }
@@ -249,11 +245,7 @@ static void thing_tick_client_all (void)
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {
-            if (thing_is_left_as_corpse_on_death(t)) {
-                thing_bury(t);
-            } else {
-                thing_destroy(t, "died");
-            }
+            thing_destroy(t, "died");
             continue;
         }
 

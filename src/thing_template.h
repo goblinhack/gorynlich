@@ -166,7 +166,7 @@ typedef struct thing_template_ {
     uint8_t is_animated:1;
     uint8_t is_xxx32:1;
     uint8_t is_xxx33:1;
-    uint8_t is_left_as_corpse_on_death:1;
+    uint8_t is_xxx34:1;
     uint8_t is_boring:1;
     uint8_t is_item_hidden:1;
     uint8_t is_joinable:1;
@@ -440,9 +440,9 @@ static inline boolean thing_template_is_xxx33 (thing_templatep t)
     return (t->is_xxx33);
 }
 
-static inline boolean thing_template_is_left_as_corpse_on_death (thing_templatep t)
+static inline boolean thing_template_is_xxx34 (thing_templatep t)
 {
-    return (t->is_left_as_corpse_on_death);
+    return (t->is_xxx34);
 }
 
 static inline boolean thing_template_is_boring (thing_templatep t)
