@@ -5,8 +5,8 @@
  */
 
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
@@ -121,7 +121,7 @@
 /*
  * How much we allow the player to move per step. Fraction of one grid.
  */
-#define THING_PLAYER_COORD_MOVE     0.10
+#define THING_PLAYER_COORD_MOVE     (1.0/8.0)
 #define THING_MONST_COORD_MOVE      1.00
 #define THING_MONST_SPEED           250    // thousandths
 
@@ -137,13 +137,11 @@
  * Timers
  */
 #define DELAY_TENTHS_THING_AI                   1
-#define DELAY_TENTHS_PING                       10
+#define DELAY_TENTHS_PING                       5
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
 #define DELAY_TENTHS_CURSOR_VISIBLE             5
 #define DELAY_TENTHS_CURSOR_INVISIBLE           1
 #define DELAY_TENTHS_TX_MAP_UPDATE              1
-
 #define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     20
-
 #define DELAY_THOUSANDTHS_PLAYER_POLL           15
 

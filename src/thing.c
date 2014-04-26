@@ -1567,16 +1567,6 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
 void socket_server_tx_map_update (socketp p, tree_rootp tree)
 {
     /*
-     * Allocate a fresh packet.
-     */
-    UDPpacket *packet = socket_alloc_msg();
-    uint8_t *eodata = ((uint8_t*)packet->data) + MAX_PACKET_SIZE;
-    uint8_t *odata = packet->data;
-    uint8_t *data = packet->data;
-    *data++ = MSG_SERVER_MAP_UPDATE;
-    thingp t;
-
-    /*
      * If no players, then send nothing.
      */
     {
@@ -1598,6 +1588,16 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             return;
         }
     }
+
+    /*
+     * Allocate a fresh packet.
+     */
+    UDPpacket *packet = socket_alloc_msg();
+    uint8_t *eodata = ((uint8_t*)packet->data) + MAX_PACKET_SIZE;
+    uint8_t *odata = packet->data;
+    uint8_t *data = packet->data;
+    *data++ = MSG_SERVER_MAP_UPDATE;
+    thingp t;
 
     uint16_t last_id;
 
