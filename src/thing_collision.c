@@ -165,11 +165,17 @@ void thing_handle_collisions (widp grid, thingp t)
                 continue;
             }
 
-            if (thing_is_floor(it) || thing_is_wall(it)) {
+            /*
+             * Filter out boring things.
+             */
+            if (thing_is_floor(it)) {
                 wid_it = wid_next;
                 continue;
             }
 
+            /*
+             * Do we overlap with something?
+             */
             if (!things_overlap(me, nx, ny, it)) {
                 wid_it = wid_next;
                 continue;
@@ -195,12 +201,9 @@ void thing_handle_collisions (widp grid, thingp t)
                     continue;
                 }
 
-            }
-
-            /*
-             * Bumped into a monster.
-             */
-            if (thing_is_player(me)) {
+                /*
+                 * Bumped into a monster.
+                 */
                 if (thing_is_monst(it)) {
                     /*
                      * Monster dies in the collision but steals hitpoints.

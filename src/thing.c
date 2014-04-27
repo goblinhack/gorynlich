@@ -2130,10 +2130,6 @@ void thing_server_move (thingp t,
 
         thingp projectile = wid_get_thing(w);
 
-        thing_common_move(projectile, &x, &y, up, down, left, right);
-
-        socket_server_tx_map_update(0 /* all clients */, server_active_things);
-
         /*
          * Try current direction.
          */
@@ -2197,14 +2193,17 @@ void thing_server_move (thingp t,
         /*
          * This should never happen
          */
-        if ((projectile->dx == 0) && (projectile->dy ==0) ) {
+        if ((projectile->dx == 0) && (projectile->dy == 0) ) {
             projectile->dx = 0.0;
             projectile->dy = 1.0;
         }
 
         x += 0.5;
-        y += 10.5;
-        thing_server_wid_update(projectile, x, y, true /* is_new */);
+        y += 0.5;
+
+        thing_server_move(projectile, x, y, up, down, left, right, false);
+
+        socket_server_tx_map_update(0 /* all clients */, server_active_things);
     }
 }
 
