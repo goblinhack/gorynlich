@@ -175,25 +175,26 @@ void thing_handle_collisions (widp grid, thingp t)
                 continue;
             }
 
-            /*
-             * Open doors if you have a key.
-             */
-            if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
-                level_open_door(server_level, x, y);
-                wid_it = wid_next;
-                continue;
-            }
-
-            /*
-             * Collect keys
-             */
             if (thing_is_player(me)) {
+                /*
+                 * Collect keys
+                 */
                 if (thing_is_key(it)) {
                     thing_collect(me, thing_get_template(it));
                     thing_dead(it, t, "collected");
                     wid_it = wid_next;
                     continue;
                 }
+
+                /*
+                 * Open doors if you have a key.
+                 */
+                if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+                    level_open_door(server_level, x, y);
+                    wid_it = wid_next;
+                    continue;
+                }
+
             }
 
             /*
@@ -208,6 +209,21 @@ void thing_handle_collisions (widp grid, thingp t)
 
                     wid_it = wid_next;
                     continue;
+                }
+            }
+
+            /*
+             * Weapon hit something?
+             */
+            if (thing_is_projectile(me)) {
+                if (thing_is_monst(it) ||
+                    thing_is_wall(it) ||
+                    thing_is_door(it)) {
+                    /*
+                     * Weapon dies in the collision but steals hitpoints.
+                     */
+                    thing_dead(me, t, "hit");
+                    break;
                 }
             }
 
@@ -285,7 +301,17 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * Allow monsters to walk into the player.
              */
-            if (thing_is_player(it) && thing_is_monst(me)) {
+            if (thing_is_monst(me)) {
+                if (thing_is_player(it)) {
+                    wid_it = wid_next;
+                    continue;
+                }
+            }
+
+            /*
+             * Allow projectiles to "walk" into the anything.
+             */
+            if (thing_is_projectile(me)) {
                 wid_it = wid_next;
                 continue;
             }
@@ -293,9 +319,11 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * Allow to walk through doors so we can open them later.
              */
-            if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
-                wid_it = wid_next;
-                continue;
+            if (thing_is_player(me)) {
+                if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+                    wid_it = wid_next;
+                    continue;
+                }
             }
 
             if (!things_overlap(me, nx, ny, it)) {

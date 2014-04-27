@@ -2189,7 +2189,8 @@ void socket_tx_client_move (socketp s,
                             const boolean up,
                             const boolean down,
                             const boolean left, 
-                            const boolean right)
+                            const boolean right,
+                            const boolean fire)
 {
     if (!socket_get_udp_socket(s)) {
         return;
@@ -2206,7 +2207,7 @@ void socket_tx_client_move (socketp s,
 
     msg_client_move msg = {0};
     msg.type = MSG_CLIENT_PLAYER_MOVE;
-    msg.dir = (up << 3) | (down << 2) | (left << 1) | right;
+    msg.dir = (fire << 4) | (up << 3) | (down << 2) | (left << 1) | right;
 
     SDLNet_Write16(t->x * THING_COORD_SCALE, &msg.x);               
     SDLNet_Write16(t->y * THING_COORD_SCALE, &msg.y);               
@@ -2223,7 +2224,7 @@ void socket_tx_client_move (socketp s,
     socket_free_msg(packet);
 }
 
-void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_server_rx_player_move (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -2241,6 +2242,7 @@ void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
+    const boolean fire  = (msg.dir & (1 << 4)) ? 1 : 0;
     const boolean up    = (msg.dir & (1 << 3)) ? 1 : 0;
     const boolean down  = (msg.dir & (1 << 2)) ? 1 : 0;
     const boolean left  = (msg.dir & (1 << 1)) ? 1 : 0;
@@ -2257,5 +2259,5 @@ void socket_server_rx_client_move (socketp s, UDPpacket *packet, uint8_t *data)
     double x = ((double)msg.x) / THING_COORD_SCALE;
     double y = ((double)msg.y) / THING_COORD_SCALE;
 
-    thing_server_move(t, x, y, up, down, left, right);
+    thing_server_move(t, x, y, up, down, left, right, fire);
 }

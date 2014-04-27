@@ -258,6 +258,7 @@ thingp thing_server_new (levelp level, const char *name)
      */
     t->last_tx = -1;
     t->last_ty = -1;
+    t->first_update = true;
 
     THING_DBG(t, "created");
 
@@ -2036,7 +2037,8 @@ void thing_client_move (thingp t,
                         const boolean up,
                         const boolean down,
                         const boolean left,
-                        const boolean right)
+                        const boolean right,
+                        const boolean fire)
 {
     widp grid = wid_game_map_client_grid_container;
 
@@ -2057,7 +2059,8 @@ void thing_client_move (thingp t,
      */
     thing_client_wid_update(t, x, y, false);
 
-    socket_tx_client_move(client_joined_server, t, up, down, left, right);
+    socket_tx_client_move(client_joined_server, t, up, down, left, right, 
+                          fire);
 }
 
 void thing_server_move (thingp t,
@@ -2066,7 +2069,8 @@ void thing_server_move (thingp t,
                         const boolean up,
                         const boolean down,
                         const boolean left,
-                        const boolean right)
+                        const boolean right,
+                        const boolean fire)
 {
     widp grid = wid_game_map_server_grid_container;
 
@@ -2109,6 +2113,39 @@ void thing_server_move (thingp t,
     t->updated++;
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
+
+    if (fire) {
+        thing_templatep thing_template = 
+                thing_template_find("data/things/arrow");
+
+        widp w = wid_game_map_server_replace_tile(
+                                        wid_game_map_server_grid_container,
+                                        thing_grid_x(t),
+                                        thing_grid_y(t),
+                                        thing_template);
+
+        thingp projectile = wid_get_thing(w);
+
+        thing_common_move(projectile, &x, &y, up, down, left, right);
+
+        socket_server_tx_map_update(0 /* all clients */, server_active_things);
+
+        if (thing_is_dir_down(t)) {
+            projectile->dy = 1.0;
+        }
+
+        if (thing_is_dir_up(t)) {
+            projectile->dy = -1.0;
+        }
+
+        if (thing_is_dir_right(t)) {
+            projectile->dx = 1.0;
+        }
+
+        if (thing_is_dir_left(t)) {
+            projectile->dx = -1.0;
+        }
+    }
 }
 
 void thing_collect (thingp t, thing_templatep tmp)

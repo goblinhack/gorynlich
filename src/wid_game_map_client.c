@@ -193,6 +193,7 @@ boolean wid_game_map_client_player_move (void)
     boolean left  = state[SDLK_LEFT] ? 1 : 0;
     boolean up    = state[SDLK_UP] ? 1 : 0;
     boolean down  = state[SDLK_DOWN] ? 1 : 0;
+    boolean fire  = state[SDLK_FIRE] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
@@ -200,6 +201,7 @@ boolean wid_game_map_client_player_move (void)
     boolean left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
     boolean up    = state[SDL_SCANCODE_UP] ? 1 : 0;
     boolean down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
+    boolean fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
 #endif /* } */
 
     if (!player) {
@@ -210,8 +212,26 @@ boolean wid_game_map_client_player_move (void)
         return (false);
     }
 
-    if (!up && !down && !left && !right) {
+    if (!up && !down && !left && !right && !fire) {
         return (false);
+    }
+LOG("key");
+
+    if (fire) {
+        /*
+         * Don't fire too often.
+         */
+        static uint32_t last_fired = 0;
+
+        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_FIRE,
+                                             last_fired)) {
+            fire = 0;
+        }
+
+        if (fire) {
+            last_fired = time_get_time_cached();
+            LOG("last fire %u",last_fired);
+        }
     }
 
     double x = player->x;
@@ -222,12 +242,12 @@ boolean wid_game_map_client_player_move (void)
     y -= THING_PLAYER_COORD_MOVE * (double)up;
     y += THING_PLAYER_COORD_MOVE * (double)down;
 
-    thing_client_move(player, x, y, up, down, left, right);
+    thing_client_move(player, x, y, up, down, left, right, fire);
 
     /*
      * If no key then we allow the console.
      */
-    return (up || down || left || right);
+    return (up || down || left || right || fire);
 }
 
 static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
