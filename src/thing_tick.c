@@ -139,6 +139,24 @@ static void thing_tick_server_all (void)
             continue;
         }
 
+
+        /*
+         * If a projectile, move it by the delta
+         */
+        if ((t->dx != 0) || (t->dy != 0)) {
+            double fnexthop_x = t->x + t->dx;
+            double fnexthop_y = t->y + t->dy;
+
+            thing_server_move(t,
+                    fnexthop_x,
+                    fnexthop_y,
+                    fnexthop_y < t->y,
+                    fnexthop_y > t->y,
+                    fnexthop_x < t->x,
+                    fnexthop_x > t->x,
+                    false);
+        }
+
         /*
          * If stopped moving, look for a next hop.
          */
@@ -183,7 +201,8 @@ static void thing_tick_server_all (void)
                         fnexthop_y < t->y,
                         fnexthop_y > t->y,
                         fnexthop_x < t->x,
-                        fnexthop_x > t->x);
+                        fnexthop_x > t->x,
+                        false);
 
                 t->timestamp_ai = time_get_time_cached();
             }

@@ -119,7 +119,7 @@ uint8_t thing_is_dir_br(thingp t);
 void thing_set_opened_exit(thingp t, boolean val);
 boolean thing_opened_exit(thingp t);
 void thing_set_is_open(thingp t, boolean val);
-void thing_set_is_xxx34(thingp t, boolean val);
+void thing_set_is_projectile(thingp t, boolean val);
 void thing_set_is_dead(thingp t, boolean val);
 void thing_set_qqq20(thingp t, boolean val);
 boolean thing_qqq20(thingp t);
@@ -198,7 +198,8 @@ void thing_server_move(thingp t,
                        const boolean up,
                        const boolean down,
                        const boolean left,
-                       const boolean rigth);
+                       const boolean right,
+                       const boolean fire);
 
 void thing_client_move(thingp t,
                        double x,
@@ -206,7 +207,8 @@ void thing_client_move(thingp t,
                        const boolean up,
                        const boolean down,
                        const boolean left,
-                       const boolean rigth);
+                       const boolean right,
+                       const boolean fire);
 
 extern uint16_t THING_WALL;
 extern uint16_t THING_WALL2;
@@ -365,6 +367,16 @@ typedef struct thing_ {
      */
     double x;
     double y;
+
+    /*
+     * For moving
+     */
+    double dx;
+    double dy;
+
+    /*
+     * Last co-ords sent to the client
+     */
     uint8_t last_tx;
     uint8_t last_ty;
 
@@ -689,11 +701,11 @@ static inline boolean thing_is_xxx33 (thingp t)
     return (thing_template_is_xxx33(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx34 (thingp t)
+static inline boolean thing_is_projectile (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx34(thing_get_template(t)));
+    return (thing_template_is_projectile(thing_get_template(t)));
 }
 
 static inline boolean thing_is_joinable (thingp t)
@@ -928,9 +940,9 @@ static inline boolean thing_is_xxx33_fast (thingp t)
     return (t->thing_template->is_xxx33);
 }
 
-static inline boolean thing_is_xxx34_fast (thingp t)
+static inline boolean thing_is_projectile_fast (thingp t)
 {
-    return (t->thing_template->is_xxx34);
+    return (t->thing_template->is_projectile);
 }
 
 static inline boolean thing_is_joinable_fast (thingp t)

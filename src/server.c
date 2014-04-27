@@ -322,7 +322,7 @@ static void server_poll (void)
             break;
 
         case MSG_CLIENT_PLAYER_MOVE:
-            socket_server_rx_client_move(s, packet, data);
+            socket_server_rx_player_move(s, packet, data);
             break;
 
         default:
