@@ -103,7 +103,7 @@ tree_root *client_boring_things;
 
 static uint32_t next_thing_id;
 static uint32_t next_monst_thing_id;
-static thingp thing_ids[THING_ID_MAX];
+static thingp thing_server_ids[THING_ID_MAX];
 static boolean thing_init_done;
 static void thing_destroy_implicit(thingp t);
 
@@ -201,7 +201,7 @@ thingp thing_server_new (levelp level, const char *name)
      */
     int looped = 0;
 
-    while (thing_ids[id]) {
+    while (thing_server_ids[id]) {
         id++;
         if (id >= max) {
             id = min;
@@ -212,7 +212,7 @@ thingp thing_server_new (levelp level, const char *name)
     }
 
     t->tree.key = id;
-    thing_ids[id] = t;
+    thing_server_ids[id] = t;
     t->thing_id = id;
     *next = id;
 
@@ -224,8 +224,8 @@ thingp thing_server_new (levelp level, const char *name)
         t->tree2.key = id;
 
         if (!tree_insert(server_player_things, &t->tree2.node)) {
-            DIE("thing insert name [%s] into server_player_things failed", 
-                name);
+            DIE("thing insert name [%s, %u] into server_player_things failed", 
+                name, id);
         }
 
         t->on_server_player_things = true;
@@ -234,15 +234,15 @@ thingp thing_server_new (levelp level, const char *name)
 
     if (thing_template_is_boring(thing_template)) {
         if (!tree_insert(server_boring_things, &t->tree.node)) {
-            DIE("thing insert name [%s] into server_boring_things failed", 
-                name);
+            DIE("thing insert name [%s, %u] into server_boring_things failed", 
+                name, id);
         }
 
         t->client_or_server_tree = server_boring_things;
     } else {
         if (!tree_insert(server_active_things, &t->tree.node)) {
-            DIE("thing insert name [%s] into server_active_things failed", 
-                name);
+            DIE("thing insert name [%s, %u] into server_active_things failed", 
+                name, id);
         }
 
         t->on_active_list = true;
@@ -397,14 +397,14 @@ void thing_destroy (thingp t, const char *why)
 
     if (t->on_client_player_things) {
         t->on_client_player_things = false;
-        if (!tree_remove(client_player_things, &t->tree.node)) {
+        if (!tree_remove(client_player_things, &t->tree2.node)) {
             DIE("thing template destroy name [%s] failed", thing_name(t));
         }
     }
 
     if (t->on_server_player_things) {
         t->on_server_player_things = false;
-        if (!tree_remove(server_player_things, &t->tree.node)) {
+        if (!tree_remove(server_player_things, &t->tree2.node)) {
             DIE("thing template destroy name [%s] failed", thing_name(t));
         }
     }
@@ -432,7 +432,9 @@ void thing_destroy (thingp t, const char *why)
         player = 0;
     }
 
-    thing_ids[t->thing_id] = 0;
+    if (t->on_server) {
+        thing_server_ids[t->thing_id] = 0;
+    }
 
     myfree(t);
 }
@@ -489,8 +491,6 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
 {
-    verify(t);
-
     va_list args;
 
     verify(t);
@@ -2134,21 +2134,77 @@ void thing_server_move (thingp t,
 
         socket_server_tx_map_update(0 /* all clients */, server_active_things);
 
-        if (thing_is_dir_down(t)) {
+        /*
+         * Try current direction.
+         */
+        if (down) {
             projectile->dy = 1.0;
         }
 
-        if (thing_is_dir_up(t)) {
+        if (up) {
             projectile->dy = -1.0;
         }
 
-        if (thing_is_dir_right(t)) {
+        if (right) {
             projectile->dx = 1.0;
         }
 
-        if (thing_is_dir_left(t)) {
+        if (left) {
             projectile->dx = -1.0;
         }
+
+        /*
+         * If no dir, then try the last thing dir.
+         */
+        if ((projectile->dx == 0) && (projectile->dy == 0)) {
+            if (thing_is_dir_down(t)) {
+                projectile->dy = 1.0;
+            }
+
+            if (thing_is_dir_up(t)) {
+                projectile->dy = -1.0;
+            }
+
+            if (thing_is_dir_right(t)) {
+                projectile->dx = 1.0;
+            }
+
+            if (thing_is_dir_left(t)) {
+                projectile->dx = -1.0;
+            }
+
+            if (thing_is_dir_tl(t)) {
+                projectile->dx = -1.0;
+                projectile->dy = -1.0;
+            }
+
+            if (thing_is_dir_tr(t)) {
+                projectile->dx = 1.0;
+                projectile->dy = -1.0;
+            }
+
+            if (thing_is_dir_bl(t)) {
+                projectile->dx = -1.0;
+                projectile->dy = 1.0;
+            }
+
+            if (thing_is_dir_br(t)) {
+                projectile->dx = 1.0;
+                projectile->dy = 1.0;
+            }
+        }
+
+        /*
+         * This should never happen
+         */
+        if ((projectile->dx == 0) && (projectile->dy ==0) ) {
+            projectile->dx = 0.0;
+            projectile->dy = 1.0;
+        }
+
+        x += 0.5;
+        y += 10.5;
+        thing_server_wid_update(projectile, x, y, true /* is_new */);
     }
 }
 
