@@ -2196,14 +2196,19 @@ void socket_tx_client_move (socketp s,
         return;
     }
 
-    static uint32_t ts;
+    /*
+     * Allow firing to always be sent.
+     */
+    if (!fire) {
+        static uint32_t ts;
 
-    if (!time_have_x_hundredths_passed_since(
-                            DELAY_HUNDREDTHS_PLAYER_TX_POSITION, ts)) {
-        return;
+        if (!time_have_x_hundredths_passed_since(
+                                DELAY_HUNDREDTHS_PLAYER_TX_POSITION, ts)) {
+            return;
+        }
+
+        ts = time_get_time_cached();
     }
-
-    ts = time_get_time_cached();
 
     msg_client_move msg = {0};
     msg.type = MSG_CLIENT_PLAYER_MOVE;
