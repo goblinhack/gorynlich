@@ -215,7 +215,6 @@ boolean wid_game_map_client_player_move (void)
     if (!up && !down && !left && !right && !fire) {
         return (false);
     }
-LOG("key");
 
     if (fire) {
         /*
@@ -230,7 +229,6 @@ LOG("key");
 
         if (fire) {
             last_fired = time_get_time_cached();
-            LOG("last fire %u",last_fired);
         }
     }
 
