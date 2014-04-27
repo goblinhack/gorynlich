@@ -139,7 +139,6 @@ static void thing_tick_server_all (void)
             continue;
         }
 
-
         /*
          * If a projectile, move it by the delta
          */
