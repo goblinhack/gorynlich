@@ -7,6 +7,7 @@
  speed=500
  is_collision_map_small
  is_animated
+ is_projectile
  tiles={
   tile={
    is_dir_up

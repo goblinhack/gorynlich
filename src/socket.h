@@ -245,27 +245,37 @@ extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_name(socketp s);
 extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
 extern boolean socket_tx_client_join(socketp s, uint32_t *key);
-extern boolean socket_rx_client_join(socketp s, UDPpacket *packet, uint8_t *data);
+extern boolean socket_rx_client_join(socketp s, 
+                                     UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_leave(socketp s);
-extern boolean socket_rx_client_leave(socketp s, UDPpacket *packet, uint8_t *data);
+extern boolean socket_rx_client_leave(socketp s, 
+                                      UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_close(socketp s);
-extern void socket_rx_client_close(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_rx_client_close(socketp s, 
+                                   UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_close(void);
-extern void socket_rx_server_close(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_client_shout(socketp s, const char *shout);
-extern void socket_rx_client_shout(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_rx_server_close(socketp s, 
+                                   UDPpacket *packet, uint8_t *data);
+extern void socket_tx_client_shout(socketp s, 
+                                   const char *shout);
+extern void socket_rx_client_shout(socketp s, 
+                                   UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_move(socketp s, 
                                   thingp t,
                                   const boolean up,
                                   const boolean down,
                                   const boolean left,
-                                  const boolean right);
-extern void socket_server_rx_client_move(socketp s, UDPpacket *packet, uint8_t *data);
+                                  const boolean right,
+                                  const boolean fire);
+extern void socket_server_rx_player_move(socketp s, UDPpacket *packet, 
+                                         uint8_t *data);
 extern void socket_tx_server_shout(const char *shout);
 extern void socket_tx_server_shout_except_to(const char *shout, socketp s);
-extern void socket_rx_server_shout(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_rx_server_shout(socketp s, UDPpacket *packet, 
+                                   uint8_t *data);
 extern void socket_tx_tell(socketp s, 
-                           const char *from, const char *to, const char *shout);
+                           const char *from, const char *to, 
+                           const char *shout);
 extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_status(void);
 extern void socket_rx_server_status(socketp s, UDPpacket *packet, 
