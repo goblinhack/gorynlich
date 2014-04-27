@@ -224,7 +224,8 @@ thingp thing_server_new (levelp level, const char *name)
         t->tree2.key = id;
 
         if (!tree_insert(server_player_things, &t->tree2.node)) {
-            DIE("thing insert name [%s] failed", name);
+            DIE("thing insert name [%s] into server_player_things failed", 
+                name);
         }
 
         t->on_server_player_things = true;
@@ -233,13 +234,15 @@ thingp thing_server_new (levelp level, const char *name)
 
     if (thing_template_is_boring(thing_template)) {
         if (!tree_insert(server_boring_things, &t->tree.node)) {
-            DIE("thing insert name [%s] failed", name);
+            DIE("thing insert name [%s] into server_boring_things failed", 
+                name);
         }
 
         t->client_or_server_tree = server_boring_things;
     } else {
         if (!tree_insert(server_active_things, &t->tree.node)) {
-            DIE("thing insert name [%s] failed", name);
+            DIE("thing insert name [%s] into server_active_things failed", 
+                name);
         }
 
         t->on_active_list = true;
@@ -2048,7 +2051,8 @@ void thing_client_move (thingp t,
         } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
             x = t->x;
         } else {
-            return;
+            x = t->x;
+            y = t->y;
         }
     }
 
