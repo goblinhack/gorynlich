@@ -17,7 +17,7 @@ extern void wid_game_map_server_score_update(levelp);
 extern void wid_game_map_server_item_update(levelp);
 
 extern widp
-wid_game_map_server_replace_tile(widp, int32_t x, int32_t y,
+wid_game_map_server_replace_tile(widp, double x, double y,
                                  thing_templatep thing_template);
 
 extern widp wid_game_map_server_window;
