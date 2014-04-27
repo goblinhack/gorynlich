@@ -200,7 +200,7 @@ void wid_game_map_server_wid_destroy (void)
  */
 widp
 wid_game_map_server_replace_tile (widp w,
-                                  int32_t x, int32_t y,
+                                  double x, double y,
                                   thing_templatep thing_template)
 {
     tree_rootp thing_tiles;

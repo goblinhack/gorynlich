@@ -53,9 +53,9 @@ static boolean wid_editor_ignore_events (widp w)
  * Replace or place a tile.
  */
 widp wid_editor_map_thing_replace_template (widp w,
-                                           int32_t x,
-                                           int32_t y,
-                                           thing_templatep thing_template)
+                                            double x,
+                                            double y,
+                                            thing_templatep thing_template)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -72,7 +72,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     if ((x < 0) || (y < 0) ||
         (x >= TILES_MAP_WIDTH) ||
         (y >= TILES_MAP_HEIGHT)) {
-        ERR("overflow on placing tile at %d,%d", x,y); 
+        ERR("overflow on placing tile at %f,%f", x,y); 
         return (0);
     }
 
