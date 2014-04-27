@@ -322,7 +322,11 @@ wid_game_map_server_replace_tile (widp w,
         return (child);
     }
 
-    map_fixup(level);
+    if (thing_is_wall(thing) ||
+        thing_is_door(thing) ||
+        thing_is_pipe(thing)) {
+        map_fixup(level);
+    }
 
     return (child);
 }
