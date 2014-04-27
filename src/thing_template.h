@@ -74,6 +74,11 @@ typedef struct thing_template_ {
     char *tooltip;
 
     /*
+     * What the thing throws.
+     */
+    char *weapon;
+
+    /*
      * In relation to other widgets, where are we.
      */
     uint8_t z_depth;
@@ -194,6 +199,7 @@ thing_templatep string2thing_template(const char **s);
 
 const char *thing_template_name(thing_templatep);
 const char *thing_template_short_name(thing_templatep);
+const char *thing_template_weapon(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
 uint8_t thing_template_get_z_depth(thing_templatep);
 uint8_t thing_template_get_z_order(thing_templatep);

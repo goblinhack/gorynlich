@@ -204,26 +204,26 @@ static boolean resource_init_23 (void *context)
         "generator7",
         0,
         // row 2
-        "fireball1",
-        "fireball2",
-        "fireball3",
-        "fireball4",
-        "fireball5",
-        "fireball6",
-        "fireball7",
-        "fireball8",
+        "fireball-tr",
+        "fireball-right",
+        "fireball-br",
+        "fireball-down",
+        "fireball-bl",
+        "fireball-left",
+        "fireball-tl",
+        "fireball-up",
         "sphere1",
         "sphere2",
         "sphere3",
         "sphere4",
-        "arrow1",
-        "arrow2",
-        "arrow3",
-        "arrow4",
-        "arrow5",
-        "arrow6",
-        "arrow7",
-        "arrow8",
+        "arrow-up",
+        "arrow-tr",
+        "arrow-right",
+        "arrow-br",
+        "arrow-down",
+        "arrow-bl",
+        "arrow-left",
+        "arrow-tl",
         "food1",
         0,
         0,
@@ -1265,6 +1265,8 @@ static boolean resource_init_23 (void *context)
     thing_template_load(&THING_COINS1, "data/things/coins1");
     thing_template_load(&THING_AMULET1, "data/things/amulet1");
     thing_template_load(&THING_CHEST1, "data/things/chest1");
+    thing_template_load(&THING_ARROW, "data/things/arrow");
+    thing_template_load(&THING_FIREBALL, "data/things/fireball");
 
     return (true);
 }

@@ -275,6 +275,8 @@ extern uint16_t THING_KEYS3;
 extern uint16_t THING_COINS1;
 extern uint16_t THING_AMULET1;
 extern uint16_t THING_CHEST1;
+extern uint16_t THING_ARROW;
+extern uint16_t THING_FIREBALL;
 
 typedef struct thing_ {
     tree_key_int tree;

@@ -89,6 +89,8 @@ uint16_t THING_KEYS3;
 uint16_t THING_COINS1;
 uint16_t THING_AMULET1;
 uint16_t THING_CHEST1;
+uint16_t THING_ARROW;
+uint16_t THING_FIREBALL;
 
 tree_root *server_player_things;
 tree_root *client_player_things;
