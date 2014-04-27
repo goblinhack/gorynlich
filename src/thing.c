@@ -2119,89 +2119,88 @@ void thing_server_move (thingp t,
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 
     if (fire) {
-        thing_templatep thing_template = 
-                thing_template_find("data/things/arrow");
-
-        widp w = wid_game_map_server_replace_tile(
-                                        wid_game_map_server_grid_container,
-                                        thing_grid_x(t),
-                                        thing_grid_y(t),
-                                        thing_template);
-
-        thingp projectile = wid_get_thing(w);
+        double dx, dy;
 
         /*
          * Try current direction.
          */
+        dx = 0.0;
+        dx = 0.0;
+
         if (down) {
-            projectile->dy = 1.0;
+            dy = 1.0;
         }
 
         if (up) {
-            projectile->dy = -1.0;
+            dy = -1.0;
         }
 
         if (right) {
-            projectile->dx = 1.0;
+            dx = 1.0;
         }
 
         if (left) {
-            projectile->dx = -1.0;
+            dx = -1.0;
         }
 
         /*
          * If no dir, then try the last thing dir.
          */
-        if ((projectile->dx == 0) && (projectile->dy == 0)) {
+        if ((dx == 0) && (dy == 0)) {
             if (thing_is_dir_down(t)) {
-                projectile->dy = 1.0;
+                dy = 1.0;
             }
 
             if (thing_is_dir_up(t)) {
-                projectile->dy = -1.0;
+                dy = -1.0;
             }
 
             if (thing_is_dir_right(t)) {
-                projectile->dx = 1.0;
+                dx = 1.0;
             }
 
             if (thing_is_dir_left(t)) {
-                projectile->dx = -1.0;
+                dx = -1.0;
             }
 
             if (thing_is_dir_tl(t)) {
-                projectile->dx = -1.0;
-                projectile->dy = -1.0;
+                dx = -1.0;
+                dy = -1.0;
             }
 
             if (thing_is_dir_tr(t)) {
-                projectile->dx = 1.0;
-                projectile->dy = -1.0;
+                dx = 1.0;
+                dy = -1.0;
             }
 
             if (thing_is_dir_bl(t)) {
-                projectile->dx = -1.0;
-                projectile->dy = 1.0;
+                dx = -1.0;
+                dy = 1.0;
             }
 
             if (thing_is_dir_br(t)) {
-                projectile->dx = 1.0;
-                projectile->dy = 1.0;
+                dx = 1.0;
+                dy = 1.0;
             }
         }
 
-        /*
-         * This should never happen
-         */
-        if ((projectile->dx == 0) && (projectile->dy == 0) ) {
-            projectile->dx = 0.0;
-            projectile->dy = 1.0;
-        }
+//        x += dx / 2.0;
+//        y += dy / 2.0;
 
-        x += 0.5;
-        y += 0.5;
+        thing_templatep thing_template = 
+                thing_template_find("data/things/arrow");
 
-        thing_server_move(projectile, x, y, up, down, left, right, false);
+        widp w = wid_game_map_server_replace_tile(
+                                        wid_game_map_server_grid_container,
+                                        x,
+                                        y,
+                                        thing_template);
+
+        thingp projectile = wid_get_thing(w);
+
+        projectile->dx = dx;
+        projectile->dy = dy;
+        LOG("%f %f",dx,dy);
 
         socket_server_tx_map_update(0 /* all clients */, server_active_things);
     }

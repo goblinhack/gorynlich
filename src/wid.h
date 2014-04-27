@@ -132,8 +132,8 @@ typedef void(*on_destroy_t)(widp);
 typedef void(*on_tick_t)(widp);
 
 typedef widp (*grid_wid_replace_t)(widp,
-                                   int32_t x,
-                                   int32_t y,
+                                   double x,
+                                   double y,
                                    thing_templatep thing_template);
 
 /*
