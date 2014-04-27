@@ -1,6 +1,7 @@
 {
  short_name="valkyrie"
  tooltip="Deadly mix of good health and speed.\n\n%%fg=cyan$Good line of beauty products."
+ weapon="arrow"
  z_depth=3
  z_order=10
  speed=500
