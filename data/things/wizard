@@ -1,6 +1,7 @@
 {
  short_name="wizard"
  tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
+ weapon="fireball"
  z_depth=3
  z_order=10
  speed=500
