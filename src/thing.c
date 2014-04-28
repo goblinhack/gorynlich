@@ -2125,7 +2125,7 @@ void thing_server_move (thingp t,
          * Try current direction.
          */
         dx = 0.0;
-        dx = 0.0;
+        dy = 0.0;
 
         if (down) {
             dy = 1.0;
@@ -2184,8 +2184,14 @@ void thing_server_move (thingp t,
             }
         }
 
-//        x += dx / 2.0;
-//        y += dy / 2.0;
+        x += 0.5;
+        y += 0.5;
+
+        x += dx;
+        y += dy;
+
+        dx /= 5.0;
+        dy /= 5.0;
 
         thing_templatep thing_template = 
                 thing_template_find("data/things/arrow");
@@ -2200,7 +2206,6 @@ void thing_server_move (thingp t,
 
         projectile->dx = dx;
         projectile->dy = dy;
-        LOG("%f %f",dx,dy);
 
         socket_server_tx_map_update(0 /* all clients */, server_active_things);
     }
