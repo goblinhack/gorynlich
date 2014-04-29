@@ -8207,7 +8207,7 @@ boolean wids_overlap (widp A, widp B)
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
      */
-    bool no_overlap = (A->tree.tl.x > B->tree.br.x) ||
+    boolean no_overlap = (A->tree.tl.x > B->tree.br.x) ||
                       (B->tree.tl.x > A->tree.br.x) ||
                       (A->tree.tl.y > B->tree.br.y) ||
                       (B->tree.tl.y > A->tree.br.y);
