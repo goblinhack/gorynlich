@@ -117,7 +117,7 @@ static boolean things_overlap (const thingp A,
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
      */
-    bool no_overlap = (Atlx > Bbrx) ||
+    boolean no_overlap = (Atlx > Bbrx) ||
                       (Btlx > Abrx) ||
                       (Atly > Bbry) ||
                       (Btly > Abry);
