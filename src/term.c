@@ -202,7 +202,11 @@ static void term_core_puts (const char *str)
 
 static void term_core_refresh (void)
 {
-    write(1, term_core_buffer, term_core_buffer_pos);
+    if (write(1, term_core_buffer, term_core_buffer_pos) < 0) {
+        /*
+         * Really what can we do?
+         */
+    }
 
     term_core_buffer_pos = 0;
 }
