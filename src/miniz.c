@@ -2178,7 +2178,9 @@ static __forceinline void tdefl_find_match(tdefl_compressor *d, mz_uint lookahea
   mz_uint dist, pos = lookahead_pos & TDEFL_LZ_DICT_SIZE_MASK, match_len = *pMatch_len, probe_pos = pos, next_probe_pos, probe_len;
   mz_uint num_probes_left = d->m_max_probes[match_len >= 32];
   const mz_uint16_t *s = (const mz_uint16_t*)(d->m_dict + pos), *p, *q;
-  mz_uint16_t c01 = TDEFL_READ_UNALIGNED_WORD(&d->m_dict[pos + match_len - 1]), s01 = TDEFL_READ_UNALIGNED_WORD(s);
+  mz_uint8_t *p2 = &d->m_dict[pos + match_len - 1];
+  mz_uint16_t c01 = TDEFL_READ_UNALIGNED_WORD(p2);
+  mz_uint16_t s01 = TDEFL_READ_UNALIGNED_WORD(s);
   MZ_ASSERT(max_match_len <= TDEFL_MAX_MATCH_LEN); if (max_match_len <= match_len) return;
   for ( ; ; )
   {
@@ -2189,7 +2191,8 @@ static __forceinline void tdefl_find_match(tdefl_compressor *d, mz_uint lookahea
         next_probe_pos = d->m_next[probe_pos]; \
         if ((!next_probe_pos) || ((dist = (mz_uint16_t)(lookahead_pos - next_probe_pos)) > max_dist)) return; \
         probe_pos = next_probe_pos & TDEFL_LZ_DICT_SIZE_MASK; \
-        if (TDEFL_READ_UNALIGNED_WORD(&d->m_dict[probe_pos + match_len - 1]) == c01) break;
+        p2 = &d->m_dict[probe_pos + match_len - 1]; \
+        if (TDEFL_READ_UNALIGNED_WORD(p2) == c01) break;
       TDEFL_PROBE; TDEFL_PROBE; TDEFL_PROBE;
     }
     if (!dist) break; q = (const mz_uint16_t*)(d->m_dict + probe_pos); if (TDEFL_READ_UNALIGNED_WORD(q) != s01) continue; p = s; probe_len = 32;
@@ -2202,7 +2205,8 @@ static __forceinline void tdefl_find_match(tdefl_compressor *d, mz_uint lookahea
     else if ((probe_len = ((mz_uint)(p - s) * 2) + (mz_uint)(*(const mz_uint8_t*)p == *(const mz_uint8_t*)q)) > match_len)
     {
       *pMatch_dist = dist; if ((*pMatch_len = match_len = MZ_MIN(max_match_len, probe_len)) == max_match_len) break;
-      c01 = TDEFL_READ_UNALIGNED_WORD(&d->m_dict[pos + match_len - 1]);
+      p2 = &d->m_dict[pos + match_len - 1];
+      c01 = TDEFL_READ_UNALIGNED_WORD(p2);
     }
   }
 }
@@ -2275,7 +2279,9 @@ static mz_bool tdefl_compress_fast(tdefl_compressor *d)
       mz_uint probe_pos = d->m_hash[hash];
       d->m_hash[hash] = (mz_uint16_t)lookahead_pos;
 
-      if (((cur_match_dist = (mz_uint16_t)(lookahead_pos - probe_pos)) <= dict_size) && ((*(const mz_uint *)(d->m_dict + (probe_pos &= TDEFL_LZ_DICT_SIZE_MASK)) & 0xFFFFFF) == first_trigram))
+    mz_uint8_t * p = d->m_dict + (probe_pos &= TDEFL_LZ_DICT_SIZE_MASK);
+
+      if (((cur_match_dist = (mz_uint16_t)(lookahead_pos - probe_pos)) <= dict_size) && ((*(const mz_uint *) (p) & 0xFFFFFF) == first_trigram))
       {
         const mz_uint16_t *p = (const mz_uint16_t *)pCur_dict;
         const mz_uint16_t *q = (const mz_uint16_t *)(d->m_dict + probe_pos);
