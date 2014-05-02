@@ -119,13 +119,6 @@
 #define MAP_WINDOW_WIDTH             0.67
 
 /*
- * How much we allow the player to move per step. Fraction of one grid.
- */
-#define THING_PLAYER_COORD_MOVE     (1.0/8.0)
-#define THING_MONST_COORD_MOVE      1.00
-#define THING_MONST_SPEED           250    // thousandths
-
-/*
  * How many tiles difference between the client and server do we allow.
  * This allows local moves to occur without the lag of waiting for the
  * server. Set this too high and the client can push through walls. Too

@@ -1,12 +1,13 @@
 {
  short_name="elf"
  tooltip="Fast, strong.\n\n%%fg=yellow$Awesome teeth.\n\nUses weapons made of twigs."
+ weapon="data/things/arrow"
  z_depth=3
  z_order=10
- speed=500
+ speed=100
  health=150
  is_player
-is_collision_map_small
+ is_collision_map_small
  is_animated
  tiles={
   tile={
