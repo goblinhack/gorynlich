@@ -262,6 +262,8 @@ static void *dmap_process_thread (void *context)
 
         pthread_mutex_unlock(&dmap_mutex);
     }
+
+    return (0);
 }
 
 /*
@@ -317,7 +319,7 @@ void dmap_process_fini (void)
 
     if (dmap_thread) {
         pthread_join(dmap_thread, NULL);
-        dmap_thread = NULL;
+        dmap_thread = 0;
     }
 }
 

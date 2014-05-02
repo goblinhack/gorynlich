@@ -193,7 +193,7 @@ boolean wid_game_map_client_player_move (void)
     boolean left  = state[SDLK_LEFT] ? 1 : 0;
     boolean up    = state[SDLK_UP] ? 1 : 0;
     boolean down  = state[SDLK_DOWN] ? 1 : 0;
-    boolean fire  = state[SDLK_FIRE] ? 1 : 0;
+    boolean fire  = state[SDLK_SPACE] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
