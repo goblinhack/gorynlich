@@ -1339,11 +1339,11 @@ const char * thing_tooltip (thingp t)
     return (thing_template_get_tooltip(t->thing_template));
 }
 
-uint32_t thing_speed (thingp t)
+double thing_speed (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_speed(t->thing_template));
+    return (((double)thing_template_get_speed(t->thing_template)) / 1000.0);
 }
 
 tree_rootp thing_tiles (thingp t)
@@ -1475,8 +1475,10 @@ void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
 
     if (is_new || thing_is_player(t)) {
         wid_set_tl_br(t->wid, tl, br);
+    } else if (thing_is_monst(t)) {
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
     } else {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 1000.0);
     }
 }
 
@@ -1528,10 +1530,12 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        if (t == player) {
+        if (thing_is_player(t)) {
             wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+        } else if (thing_is_monst(t)) {
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
         } else {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, THING_MONST_SPEED);
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 1000.0);
         }
     } else {
         wid_set_tl_br(t->wid, tl, br);
@@ -2184,17 +2188,29 @@ void thing_server_move (thingp t,
             }
         }
 
-        x += 0.5;
-        y += 0.5;
+        thing_templatep thing_template = 
+                thing_template_find(thing_template_weapon(t->thing_template));
+
+        if (!thing_template) {
+            /*
+             * Fallback.
+             */
+            thing_template = thing_template_find("data/things/arrow");
+        }
+
+        /*
+         * Fire from the player position plus the initial delta so it looks 
+         * like it comes from outside of the body.
+         */
+        x = t->x;
+        y = t->y;
 
         x += dx;
         y += dy;
 
-        dx /= 5.0;
-        dy /= 5.0;
-
-        thing_templatep thing_template = 
-                thing_template_find("data/things/arrow");
+        double speed = thing_speed(player);
+        dx *= speed;
+        dy *= speed;
 
         widp w = wid_game_map_server_replace_tile(
                                         wid_game_map_server_grid_container,
@@ -2206,6 +2222,7 @@ void thing_server_move (thingp t,
 
         projectile->dx = dx;
         projectile->dy = dy;
+        projectile->dir = t->dir;
 
         socket_server_tx_map_update(0 /* all clients */, server_active_things);
     }

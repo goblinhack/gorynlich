@@ -130,7 +130,7 @@ uint8_t thing_z_depth(thingp);
 uint8_t thing_z_order(thingp);
 int32_t thing_player_cost(thingp);
 int32_t thing_monst_cost(thingp);
-uint32_t thing_speed(thingp);
+double thing_speed(thingp);
 tree_rootp thing_tiles(thingp);
 tree_rootp thing_tiles2(thingp);
 

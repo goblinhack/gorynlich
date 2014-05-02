@@ -4,10 +4,10 @@
  is_hidden_from_editor
  z_depth=2
  z_order=2
- speed=500
+ speed=100
  is_collision_map_small
- is_animated
  is_projectile
+ is_animated
  tiles={
   tile={
    is_dir_up

@@ -235,10 +235,12 @@ boolean wid_game_map_client_player_move (void)
     double x = player->x;
     double y = player->y;
 
-    x += THING_PLAYER_COORD_MOVE * (double)right;
-    x -= THING_PLAYER_COORD_MOVE * (double)left;
-    y -= THING_PLAYER_COORD_MOVE * (double)up;
-    y += THING_PLAYER_COORD_MOVE * (double)down;
+    double speed = thing_speed(player);
+
+    x += (double)right * speed;
+    x -= (double)left * speed;
+    y -= (double)up * speed;
+    y += (double)down * speed;
 
     thing_client_move(player, x, y, up, down, left, right, fire);
 
@@ -399,7 +401,7 @@ void wid_game_map_client_wid_destroy (void)
  * Replace or place a tile.
  */
 widp
-wid_game_map_client_replace_tile (widp w, int32_t x, int32_t y, thingp thing)
+wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
 {
     tree_rootp thing_tiles;
     const char *tilename;
