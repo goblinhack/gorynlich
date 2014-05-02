@@ -165,6 +165,11 @@ void thing_handle_collisions (widp grid, thingp t)
                 continue;
             }
 
+            if (thing_is_dead(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
             /*
              * Filter out boring things.
              */
@@ -219,11 +224,23 @@ void thing_handle_collisions (widp grid, thingp t)
              * Weapon hit something?
              */
             if (thing_is_projectile(me)) {
-                if (thing_is_monst(it) ||
-                    thing_is_wall(it) ||
+                if (thing_is_wall(it) ||
                     thing_is_door(it)) {
                     /*
-                     * Weapon dies in the collision but steals hitpoints.
+                     * Weapon dies in the collision.
+                     */
+                    thing_dead(me, t, "hit");
+                    break;
+                }
+
+                if (thing_is_monst(it)) {
+                    /*
+                     * Monster dies.
+                     */
+                    thing_dead(it, t, "hit");
+
+                    /*
+                     * Weapon dies in the collision.
                      */
                     thing_dead(me, t, "hit");
                     break;
@@ -294,36 +311,45 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
-            if (!thing_is_wall(it) && 
-                !thing_is_door(it) && 
-                !thing_is_monst(t)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            /*
-             * Allow monsters to walk into the player.
-             */
             if (thing_is_monst(me)) {
+                /*
+                 * Allow monsters to walk into the player.
+                 */
                 if (thing_is_player(it)) {
                     wid_it = wid_next;
                     continue;
                 }
             }
 
-            /*
-             * Allow projectiles to "walk" into the anything.
-             */
             if (thing_is_projectile(me)) {
+                /*
+                 * Allow projectiles to pass through anything.
+                 */
                 wid_it = wid_next;
                 continue;
             }
 
-            /*
-             * Allow to walk through doors so we can open them later.
-             */
             if (thing_is_player(me)) {
+                /*
+                 * Allow to walk through doors so we can open them later.
+                 */
                 if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+                    wid_it = wid_next;
+                    continue;
+                }
+
+                /*
+                 * Allow players to collect keys.
+                 */
+                if (thing_is_key(it) ||
+                    /*
+                     * And walk through monsters.
+                     */
+                    thing_is_monst(it) ||
+                    /*
+                     * Or friendly fire.
+                     */
+                    thing_is_projectile(it)) {
                     wid_it = wid_next;
                     continue;
                 }
