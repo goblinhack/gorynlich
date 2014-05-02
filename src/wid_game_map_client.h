@@ -18,7 +18,7 @@ void wid_game_map_client_scroll_adjust(void);
 boolean wid_game_map_client_player_move(void);
 
 extern widp
-wid_game_map_client_replace_tile(widp, int32_t x, int32_t y, thingp t);
+wid_game_map_client_replace_tile(widp, double x, double y, thingp t);
 
 extern widp wid_game_map_client_window;
 extern widp wid_game_map_client_grid_container;

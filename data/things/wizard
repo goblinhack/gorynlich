@@ -1,10 +1,10 @@
 {
  short_name="wizard"
  tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
- weapon="fireball"
+ weapon="data/things/fireball"
  z_depth=3
  z_order=10
- speed=500
+ speed=50
  health=100
  is_player
 is_collision_map_small
