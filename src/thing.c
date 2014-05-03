@@ -541,6 +541,65 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 }
 
+static void thing_hit_ (thingp t, 
+                        thingp hitter, 
+                        uint32_t damage, 
+                        char *reason)
+{
+    verify(t);
+
+    if (t->is_dead) {
+        return;
+    }
+
+    if (!damage) {
+        if (hitter) {
+            damage = thing_get_template(hitter)->damage;
+        }
+    }
+    
+    if (t->health < damage) {
+        t->health = 0;
+        thing_dead(t, hitter, "hit [%s]", reason);
+    }  else {
+        t->health -= damage;
+
+        THING_DBG(t, "hit (%s)", reason);
+    }
+}
+
+void thing_hit (thingp t, 
+                thingp hitter, 
+                uint32_t damage,
+                const char *reason, ...)
+{
+    va_list args;
+
+    verify(t);
+
+    if (god_mode) {
+        if (thing_is_player(t)) {
+            return;
+        }
+    }
+
+    if (t->is_dead) {
+        return;
+    }
+
+    if (reason) {
+        va_start(args, reason);
+        thing_hit_(t, hitter, damage, dynvprintf(reason, args));
+        va_end(args);
+    } else {
+        thing_hit_(t, hitter, damage, 0);
+    }
+
+    if (thing_is_player(t)) {
+        socket_server_tx_player_update(t);
+    }
+}
+
 void thing_reached_exit (thingp t)
 {
     levelp level;
@@ -751,24 +810,6 @@ widp thing_message (thingp t, const char *message)
     wid_set_z_depth(w, 100);
 
     return (wid_score);
-}
-
-void thing_inc_score_pump (thingp t, uint32_t delta)
-{
-    verify(t);
-
-    t->score_pump += delta;
-
-    char *tmp = dynprintf("%6u", delta);
-    thing_message(t, tmp);
-    myfree(tmp);
-}
-
-void thing_set_score_pump (thingp t, uint32_t score_pump)
-{
-    verify(t);
-
-    t->score_pump = score_pump;
 }
 
 tree_rootp thing_tile_tiles (thingp t)

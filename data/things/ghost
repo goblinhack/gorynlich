@@ -4,7 +4,8 @@
  z_depth=2
  speed=3000
  health=10
- score_on_death=250
+ damage=1
+ score_on_death=5
  z_order=4
  is_monst
  is_collision_map_small
