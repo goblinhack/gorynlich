@@ -12,6 +12,7 @@ typedef enum {
     WID_COLOR_BR,
     WID_COLOR_TEXT,
     WID_COLOR_BLIT_OUTLINE,
+    WID_COLOR_BLIT,
     WID_COLOR_MAX,
 } wid_color;
 
