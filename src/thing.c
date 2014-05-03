@@ -594,10 +594,6 @@ void thing_hit (thingp t,
     } else {
         thing_hit_(t, hitter, damage, 0);
     }
-
-    if (thing_is_player(t)) {
-        socket_server_tx_player_update(t);
-    }
 }
 
 void thing_reached_exit (thingp t)
@@ -1573,7 +1569,7 @@ void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
 
     if (smooth) {
         if (thing_is_player(t)) {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, 20);
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, 100.0);
         } else if (thing_is_monst(t)) {
             wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
         } else {
