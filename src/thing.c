@@ -2132,20 +2132,24 @@ void thing_server_move (thingp t,
         dx = 0.0;
         dy = 0.0;
 
+        /*
+         * If the player is moving too then the weapon has a bit more
+         * speed than if thrown when stationary.
+         */
         if (down) {
-            dy = 1.0;
+            dy = 1.5;
         }
 
         if (up) {
-            dy = -1.0;
+            dy = -1.5;
         }
 
         if (right) {
-            dx = 1.0;
+            dx = 1.5;
         }
 
         if (left) {
-            dx = -1.0;
+            dx = -1.5;
         }
 
         /*
