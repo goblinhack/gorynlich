@@ -126,6 +126,109 @@ static boolean things_overlap (const thingp A,
 }
 
 /*
+ * handle a single collision between two things
+ */
+static void thing_handle_collision (thingp me, thingp it, 
+                                    int32_t x, int32_t y)
+{
+    double nx = me->x;
+    double ny = me->y;
+
+    if (thing_is_dead(it)) {
+        return;
+    }
+
+    /*
+     * Filter out boring things.
+     */
+    if (thing_is_floor(it)) {
+        return;
+    }
+
+    /*
+     * Do we overlap with something?
+     */
+    if (!things_overlap(me, nx, ny, it)) {
+        return;
+    }
+
+    if (thing_is_player(me)) {
+        /*
+         * Collect keys
+         */
+        if (thing_is_key(it)) {
+            thing_collect(me, thing_get_template(it));
+
+            thing_dead(it, me, "collected");
+            return;
+        }
+
+        /*
+         * Open doors if you have a key.
+         */
+        if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+            level_open_door(server_level, x, y);
+            return;
+        }
+
+        /*
+         * Player bumped into a monster.
+         */
+        if (thing_is_monst(it)) {
+            /*
+             * Monster dies in the collision but steals hitpoints.
+             */
+            thing_hit(me, it, 0, "monst");
+
+            /*
+             * No killer to avoid givin a bonus.
+             */
+            thing_dead(it, 0, "hit");
+            return;
+        }
+    }
+
+    /*
+     * Weapon hit something?
+     */
+    if (thing_is_projectile(me)) {
+        if (thing_is_wall(it) || thing_is_door(it)) {
+            /*
+             * Weapon dies in the collision.
+             */
+            thing_dead(me, it, "hit");
+            return;
+        }
+
+        if (thing_is_monst(it)) {
+            /*
+             * Monster dies.
+             */
+            thing_dead(it, me, "hit");
+
+            /*
+             * Weapon dies in the collision.
+             */
+            thing_dead(me, it, "hit");
+            return;
+        }
+
+        if (thing_is_generator(it)) {
+            /*
+             * Weapon hits. Generator dies. Spawn a smaller one?
+             */
+            thing_dead(it, me, "hit");
+
+            /*
+             * Weapon dies in the collision.
+             */
+            thing_dead(me, it, "hit");
+            return;
+        }
+    }
+}
+
+/*
  * Have we hit anything?
  */
 void thing_handle_collisions (widp grid, thingp t)
@@ -140,16 +243,13 @@ void thing_handle_collisions (widp grid, thingp t)
     wid_me = thing_wid(t);
     verify(wid_me);
 
-    double nx = t->x;
-    double ny = t->y;
-
     int32_t dx, dy;
 
     me = wid_get_thing(wid_me);
 
     for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
-        int32_t x = (int32_t)nx + dx;
-        int32_t y = (int32_t)ny + dy;
+        int32_t x = (int32_t)t->x + dx;
+        int32_t y = (int32_t)t->y + dy;
 
         wid_it = wid_grid_find_first(grid, x, y);
         while (wid_it) {
@@ -165,120 +265,7 @@ void thing_handle_collisions (widp grid, thingp t)
                 continue;
             }
 
-            if (thing_is_dead(it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            /*
-             * Filter out boring things.
-             */
-            if (thing_is_floor(it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            /*
-             * Do we overlap with something?
-             */
-            if (!things_overlap(me, nx, ny, it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            if (thing_is_player(me)) {
-                /*
-                 * Collect keys
-                 */
-                if (thing_is_key(it)) {
-                    thing_collect(me, thing_get_template(it));
-                    thing_dead(it, t, "collected");
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                /*
-                 * Open doors if you have a key.
-                 */
-                if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
-                    level_open_door(server_level, x, y);
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                /*
-                 * Player bumped into a monster.
-                 */
-                if (thing_is_monst(it)) {
-                    /*
-                     * Monster dies in the collision but steals hitpoints.
-                     */
-                    thing_hit(me, it, 0, "monst");
-
-                    /*
-                     * No killer to avoid givin a bonus.
-                     */
-                    thing_dead(it, 0, "hit");
-
-                    wid_it = wid_next;
-                    continue;
-                }
-            }
-
-            /*
-             * Weapon hit something?
-             */
-            if (thing_is_projectile(me)) {
-                if (thing_is_wall(it) ||
-                    thing_is_door(it)) {
-                    /*
-                     * Weapon dies in the collision.
-                     */
-                    thing_dead(me, t, "hit");
-                    break;
-                }
-
-                if (thing_is_monst(it)) {
-                    /*
-                     * Monster dies.
-                     */
-                    thing_dead(it, t, "hit");
-
-                    /*
-                     * Weapon dies in the collision.
-                     */
-                    thing_dead(me, t, "hit");
-                    break;
-                }
-
-                if (thing_is_generator(it)) {
-                    /*
-                     * Weapon hits. Generator dies. Spawn a smaller one?
-                     */
-                    thing_dead(it, t, "hit");
-
-                    /*
-                     * Weapon dies in the collision.
-                     */
-                    thing_dead(me, t, "hit");
-                    break;
-                }
-            }
-
-            /*
-             * Bumped into a monster.
-             */
-            if (thing_is_monst(me)) {
-                if (thing_is_player(it)) {
-                    /*
-                     * Monster dies in the collision but steals hitpoints.
-                     *
-                     * No killer to avoid giving bonus.
-                     */
-                    thing_dead(me, 0, "hit");
-                    break;
-                }
-            }
+            thing_handle_collision(me, it, x, y);
 
             wid_it = wid_next;
         }

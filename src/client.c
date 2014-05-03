@@ -805,7 +805,7 @@ static void client_poll (void)
 
             case MSG_SERVER_PLAYER_UPDATE:
                 /*
-                 * This is an update of a single player (usually score).
+                 * This is an update of a single players carried items.
                  */
                 socket_client_rx_player_update(s, packet, data);
 
