@@ -558,7 +558,7 @@ static void thing_hit_ (thingp t,
         }
     }
     
-    if (t->health < damage) {
+    if (t->health <= damage) {
         t->health = 0;
         thing_dead(t, hitter, "hit [%s]", reason);
     }  else {
@@ -566,6 +566,12 @@ static void thing_hit_ (thingp t,
 
         THING_DBG(t, "hit (%s)", reason);
     }
+
+    /*
+     * Flash briefly red.
+     */
+    wid_set_mode(player->wid, WID_MODE_ACTIVE);
+    wid_set_color(player->wid, WID_COLOR_BLIT, RED);
 }
 
 void thing_hit (thingp t, 
