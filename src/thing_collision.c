@@ -213,7 +213,12 @@ void thing_handle_collisions (widp grid, thingp t)
                     /*
                      * Monster dies in the collision but steals hitpoints.
                      */
-                    thing_dead(it, t, "hit");
+                    thing_hit(me, it, 0, "monst");
+
+                    /*
+                     * No killer to avoid givin a bonus.
+                     */
+                    thing_dead(it, 0, "hit");
 
                     wid_it = wid_next;
                     continue;
@@ -267,8 +272,10 @@ void thing_handle_collisions (widp grid, thingp t)
                 if (thing_is_player(it)) {
                     /*
                      * Monster dies in the collision but steals hitpoints.
+                     *
+                     * No killer to avoid giving bonus.
                      */
-                    thing_dead(me, t, "hit");
+                    thing_dead(me, 0, "hit");
                     break;
                 }
             }
