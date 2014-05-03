@@ -7129,8 +7129,7 @@ static void wid_display (widp w,
     color col_br = wid_get_color(w, WID_COLOR_BR);
     color col_blit_outline = wid_get_color(w, WID_COLOR_BLIT_OUTLINE);
     color col = wid_get_color(w, WID_COLOR_BG);
-
-    color col_tile = WHITE;
+    color col_tile = wid_get_color(w, WID_COLOR_BLIT);
 
     if (wid_focus_locked) {
         if (wid_get_top_parent(w) != wid_focus_locked) {
@@ -7312,6 +7311,29 @@ static void wid_display (widp w,
     }
 
     if (tile) {
+        /*
+         * Blit a border around the tile.
+         */
+        if (wid_get_blit_outline(w)) {
+            glcolor(col_blit_outline);
+
+            fpoint otl;
+            fpoint obr;
+            int32_t dx;
+            int32_t dy;
+
+            dx = 2;
+            dy = 2;
+            otl.x = tl.x - dx;
+            otl.y = tl.y - dx;
+            obr.x = br.x + dy;
+            obr.y = br.y + dy;
+
+            tile_blit_fat(tile, 0, otl, obr);
+
+            glcolor(WHITE);
+        }
+
         glcolor(col_tile);
         tile_blit_fat(tile, 0, tl, br);
         glBindTexture(GL_TEXTURE_2D, 0);
