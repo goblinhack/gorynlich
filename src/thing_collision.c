@@ -207,7 +207,7 @@ void thing_handle_collisions (widp grid, thingp t)
                 }
 
                 /*
-                 * Bumped into a monster.
+                 * Player bumped into a monster.
                  */
                 if (thing_is_monst(it)) {
                     /*
@@ -236,6 +236,19 @@ void thing_handle_collisions (widp grid, thingp t)
                 if (thing_is_monst(it)) {
                     /*
                      * Monster dies.
+                     */
+                    thing_dead(it, t, "hit");
+
+                    /*
+                     * Weapon dies in the collision.
+                     */
+                    thing_dead(me, t, "hit");
+                    break;
+                }
+
+                if (thing_is_generator(it)) {
+                    /*
+                     * Weapon hits. Generator dies. Spawn a smaller one?
                      */
                     thing_dead(it, t, "hit");
 
@@ -306,7 +319,18 @@ boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
+            /*
+             * No collisions with the floor!
+             */
             if (thing_is_floor(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+             * Allow dead ghosts to walk over each other!
+             */
+            if (thing_is_dead(it)) {
                 wid_it = wid_next;
                 continue;
             }

@@ -477,6 +477,13 @@ static inline boolean thing_is_monst (thingp t)
     return (thing_template_is_monst(thing_get_template(t)));
 }
 
+static inline boolean thing_is_generator (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_generator(thing_get_template(t)));
+}
+
 static inline boolean thing_is_plant (thingp t)
 {
     verify(t);

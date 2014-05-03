@@ -557,7 +557,9 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                         tmp, 
                                         score_x, player_y_offset,
                                         small_font);
-            wid_set_no_shape(wid_score_container[y]);
+            wid_set_no_shape(
+                wid_get_parent(
+                        wid_get_parent(wid_score_container[y])));
         } else {
             wid_set_text(wid_score_container[y], tmp);
         }
@@ -577,7 +579,9 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                         health_x, player_y_offset,
                                         small_font);
 
-            wid_set_no_shape(wid_health_container[y]);
+            wid_set_no_shape(
+                wid_get_parent(
+                        wid_get_parent(wid_health_container[y])));
         } else {
             wid_set_text(wid_health_container[y], tmp);
         }
@@ -619,7 +623,9 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                     score_x, player_y_offset - score_and_health_title_offset,
                                     vsmall_font);
 
-        wid_set_no_shape(wid_score_title_container);
+        wid_set_no_shape(
+            wid_get_parent(
+                    wid_get_parent(wid_score_title_container)));
 
         /*
          * Health title
@@ -633,7 +639,10 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                     health_x, player_y_offset - score_and_health_title_offset,
                                     vsmall_font);
 
-        wid_set_no_shape(wid_health_title_container);
+        wid_set_no_shape(
+            wid_get_parent(
+                    wid_get_parent(wid_health_title_container)));
+
 
         /*
          * Score title
@@ -648,7 +657,10 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                     player_y_offset - score_and_health_value_offset,
                                     vsmall_font);
 
-        wid_set_no_shape(wid_name_title_container);
+        wid_set_no_shape(
+            wid_get_parent(
+                    wid_get_parent(wid_name_title_container)));
+
 
         switch (y) {
         case 0:
@@ -764,7 +776,10 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                     &wid_title,
                     level_get_title(level), 0.5, 0.07, small_font);
 
-        wid_set_no_shape(wid_title_container);
+        wid_set_no_shape(
+            wid_get_parent(
+                    wid_get_parent(wid_title_container)));
+
         wid_raise(wid_title_container);
         wid_set_do_not_lower(wid_title_container, true);
         wid_set_color(wid_title, WID_COLOR_TEXT, STEELBLUE);
@@ -782,7 +797,10 @@ void wid_game_map_client_score_update (levelp level, boolean redo)
                                             tmp, score_x, 0.15, vsmall_font);
         myfree(tmp);
 
-        wid_set_no_shape(wid_level_container);
+        wid_set_no_shape(
+            wid_get_parent(
+                    wid_get_parent(wid_level_container)));
+
         wid_set_color(wid_level, WID_COLOR_TEXT, WHITE);
     }
 
