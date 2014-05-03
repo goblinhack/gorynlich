@@ -101,6 +101,11 @@ typedef struct thing_template_ {
     uint32_t health;
 
     /*
+     * Damage on hits.
+     */
+    uint32_t damage;
+
+    /*
      * Lifespan in milliseconds.
      */
     uint32_t lifespan;
@@ -206,6 +211,7 @@ uint8_t thing_template_get_z_order(thing_templatep);
 uint32_t thing_template_get_speed(thing_templatep);
 uint32_t thing_template_get_lifespan(thing_templatep);
 uint32_t thing_template_get_health(thing_templatep);
+uint32_t thing_template_get_damage(thing_templatep);
 uint32_t thing_template_get_score_on_death(thing_templatep);
 uint32_t thing_template_get_score_on_collect(thing_templatep);
 uint32_t thing_template_get_ppp1(thing_templatep);

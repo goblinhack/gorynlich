@@ -16,6 +16,8 @@ void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
+void thing_hit(thingp, thingp hitter, uint32_t damage,
+               const char *fmt, ...) __attribute__ ((format (printf, 4, 5)));
 void things_level_start(levelp);
 void things_level_destroyed(levelp);
 void demarshal_thing(demarshal_p ctx, thingp);
@@ -41,10 +43,7 @@ levelp thing_level(thingp);
 void thing_set_level(thingp, levelp level);
 uint32_t thing_score(thingp);
 void thing_set_score(thingp, uint32_t score);
-uint32_t thing_score_pump(thingp);
 widp thing_message(thingp t, const char *message);
-void thing_set_score_pump(thingp, uint32_t score);
-void thing_inc_score_pump(thingp, uint32_t score);
 void thing_animate(thingp);
 void thing_handle_collisions(widp grid, thingp t);
 boolean thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
@@ -294,6 +293,26 @@ typedef struct thing_ {
     uint16_t thing_id;
 
     /*
+     * Player current level or level of monster.
+     */
+    uint16_t level_no;
+
+    /*
+     * Scoring
+     */
+    uint32_t score;
+
+    /*
+     * How much damage per hit?
+     */
+    uint16_t damage;
+
+    /*
+     * Thing health.
+     */
+    uint16_t health;
+
+    /*
      * Pointer to common settings for this thing.
      */
     thing_templatep thing_template;
@@ -314,11 +333,6 @@ typedef struct thing_ {
     widp wid;
 
     /*
-     * Player current level or level of monster.
-     */
-    uint32_t level_no;
-
-    /*
      * What level is the thing on?
      */
     levelp level;
@@ -327,17 +341,6 @@ typedef struct thing_ {
      * Last death reason.
      */
     char *dead_reason;
-
-    /*
-     * Scoring
-     */
-    uint32_t score;
-    uint32_t score_pump;
-
-    /*
-     * Thing health.
-     */
-    uint32_t health;
 
     /*
      * Periodic spam message.
