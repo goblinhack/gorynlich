@@ -85,6 +85,8 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_270", t->is_join_x4_270);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_180", t->is_join_x4_180);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_x4_90", t->is_join_x4_90);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_horiz2", t->is_join_horiz2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_join_vert2", t->is_join_vert2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dir_left", left);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dir_right", right);
         GET_OPT_NAMED_BITFIELD(ctx, "is_dir_up", up);
@@ -581,6 +583,16 @@ boolean thing_tile_is_join_x4_180 (thing_tilep t)
 boolean thing_tile_is_join_x4_90 (thing_tilep t)
 {
     return (t->is_join_x4_90);
+}
+
+boolean thing_tile_is_join_horiz2 (thing_tilep t)
+{
+    return (t->is_join_horiz2);
+}
+
+boolean thing_tile_is_join_vert2 (thing_tilep t)
+{
+    return (t->is_join_vert2);
 }
 
 boolean thing_tile_is_dir_down (thing_tilep t)

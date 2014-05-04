@@ -442,13 +442,52 @@ void thing_destroy (thingp t, const char *why)
 
 static void thing_dead_ (thingp t, thingp killer, char *reason)
 {
+    /*
+     * Why did I die!? 8(
+     */
+    if (t->dead_reason) {
+        myfree(t->dead_reason);
+        t->dead_reason = 0;
+    }
+    
+    if (reason) {
+        t->dead_reason = reason;
+    }
+
+    THING_LOG(t, "dead (%s)", reason);
+}
+
+void thing_dead (thingp t, thingp killer, const char *reason, ...)
+{
+    va_list args;
+
     verify(t);
 
+    if (god_mode) {
+        if (thing_is_player(t)) {
+            return;
+        }
+    }
+
+    /*
+     * You only die once.
+     */
     if (t->is_dead) {
         return;
     }
 
     thing_set_is_dead(t, true);
+
+    /*
+     * Flash briefly red on death.
+     */
+    if (thing_is_monst(t)) {
+        widp w = t->wid;
+        if (w) {
+            wid_set_mode(w, WID_MODE_ACTIVE);
+            wid_set_color(w, WID_COLOR_BLIT, RED);
+        }
+    }
 
     /*
      * Bounty for the killer?
@@ -476,45 +515,8 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     }
 
     /*
-     * Why did I die!? 8(
+     * Log the means of death!
      */
-    if (t->dead_reason) {
-        myfree(t->dead_reason);
-        t->dead_reason = 0;
-    }
-    
-    if (reason) {
-        t->dead_reason = reason;
-    }
-
-    THING_DBG(t, "dead (%s)", reason);
-}
-
-void thing_dead (thingp t, thingp killer, const char *reason, ...)
-{
-    va_list args;
-
-    verify(t);
-
-    if (god_mode) {
-        if (thing_is_player(t)) {
-            return;
-        }
-    }
-
-    if (t->is_dead) {
-        return;
-    }
-
-    widp w = t->wid;
-    if (w) {
-        /*
-         * Flash briefly red.
-         */
-        wid_set_mode(w, WID_MODE_ACTIVE);
-        wid_set_color(w, WID_COLOR_BLIT, RED);
-    }
-
     if (reason) {
         va_start(args, reason);
         thing_dead_(t, killer, dynvprintf(reason, args));
@@ -523,6 +525,10 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         thing_dead_(t, killer, 0);
     }
 
+    /*
+     * Move the thing from the boring list to the active list and update it so 
+     * that it gets sent to the client.
+     */
     t->updated++;
 
     if (!t->on_active_list) {

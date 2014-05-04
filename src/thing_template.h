@@ -54,6 +54,8 @@ enum {
     IS_JOIN_X4_270,
     IS_JOIN_X4_180,
     IS_JOIN_X4_90,
+    IS_JOIN_VERT2,
+    IS_JOIN_HORIZ2,
     IS_JOIN_MAX,
 };
 

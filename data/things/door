@@ -194,5 +194,13 @@
    tile="door_0_is_join_x4_90"
    is_join_x4_90
   }
+  tile={
+   tile="door_0_is_join_horiz2"
+   is_join_horiz2
+  }
+  tile={
+   tile="door_0_is_join_vert2"
+   is_join_vert2
+  }
  }
 }

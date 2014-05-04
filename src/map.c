@@ -1232,6 +1232,31 @@ void map_fixup (levelp level)
             BLOCK(1,1,1,1,1,1,1,1,0,IS_JOIN_X4_180)
             BLOCK(1,1,0,1,1,1,1,1,1,IS_JOIN_X4_90)
 
+            /*
+             * Single node doors need to join onto walls.
+             */
+            if (index == IS_JOIN_NODE) {
+                if (map_find_door_at(level, x, y, &w)) {
+                    if ( map_find_wall_at(level, x - 1, y, 0) &&
+                         map_find_wall_at(level, x + 1, y, 0) &&
+                        !map_find_wall_at(level, x, y - 1, 0) &&
+                        !map_find_wall_at(level, x, y + 1, 0)) {
+                        index = IS_JOIN_HORIZ2;
+                    }
+                }
+            }
+
+            if (index == IS_JOIN_NODE) {
+                if (map_find_door_at(level, x, y, &w)) {
+                    if (!map_find_wall_at(level, x - 1, y, 0) &&
+                        !map_find_wall_at(level, x + 1, y, 0) &&
+                         map_find_wall_at(level, x, y - 1, 0) &&
+                         map_find_wall_at(level, x, y + 1, 0)) {
+                        index = IS_JOIN_VERT2;
+                    }
+                }
+            }
+
             if (index == -1) {
                 DIE("%u%u%u %u%u%u %u%u%u not handled",
                     a ? 1 : 0,
