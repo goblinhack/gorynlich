@@ -61,6 +61,8 @@ boolean thing_tile_is_join_x4(thing_tilep);
 boolean thing_tile_is_join_x4_270(thing_tilep);
 boolean thing_tile_is_join_x4_180(thing_tilep);
 boolean thing_tile_is_join_x4_90(thing_tilep);
+boolean thing_tile_is_join_horiz2(thing_tilep);
+boolean thing_tile_is_join_vert2(thing_tilep);
 boolean thing_tile_is_dir_up(thing_tilep);
 boolean thing_tile_is_dir_down(thing_tilep);
 boolean thing_tile_is_dir_left(thing_tilep);
