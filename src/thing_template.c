@@ -157,6 +157,10 @@ static void thing_template_fill_cache (thing_templatep t)
             index = IS_JOIN_X4_180;
         } else if (thing_tile->is_join_x4_90) {
             index = IS_JOIN_X4_90;
+        } else if (thing_tile->is_join_horiz2) {
+            index = IS_JOIN_HORIZ2;
+        } else if (thing_tile->is_join_vert2) {
+            index = IS_JOIN_VERT2;
         } else {
             continue;
         }
