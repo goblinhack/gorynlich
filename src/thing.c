@@ -506,6 +506,15 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         return;
     }
 
+    widp w = t->wid;
+    if (w) {
+        /*
+         * Flash briefly red.
+         */
+        wid_set_mode(w, WID_MODE_ACTIVE);
+        wid_set_color(w, WID_COLOR_BLIT, RED);
+    }
+
     if (reason) {
         va_start(args, reason);
         thing_dead_(t, killer, dynvprintf(reason, args));
@@ -566,12 +575,6 @@ static void thing_hit_ (thingp t,
 
         THING_DBG(t, "hit (%s)", reason);
     }
-
-    /*
-     * Flash briefly red.
-     */
-    wid_set_mode(player->wid, WID_MODE_ACTIVE);
-    wid_set_color(player->wid, WID_COLOR_BLIT, RED);
 }
 
 void thing_hit (thingp t, 
@@ -796,7 +799,7 @@ widp thing_message (thingp t, const char *message)
     /*
      * Self destroy.
      */
-    wid_destroy_in(w, lifespan / 2);
+    wid_destroy_in(w, lifespan / 4);
 
     /*
      * Float up from the thing.
