@@ -183,7 +183,7 @@ static widp wid_textbox_internal (widp parent,
         *textbox = firstchild;
     }
 
-    return (firstchild);
+    return (wid_textbox_window);
 }
 
 /*
@@ -195,6 +195,7 @@ widp wid_textbox (widp parent,
 {
     return (wid_textbox_internal(parent, textbox, text, x, y, font, false));
 }
+
 /*
  * Create the wid_textbox
  */
