@@ -832,7 +832,7 @@ static boolean resource_init_23 (void *context)
         0,
         // row 21
         "monst-overlap",
-        0,
+        "monst-overlap-small",
         0,
         0,
         0,

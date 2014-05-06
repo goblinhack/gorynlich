@@ -7862,6 +7862,33 @@ void wid_move_to_pct_in (widp w, double x, double y, uint32_t ms)
     wid_tree3_insert(w);
 }
 
+/*
+ * Return numbers in the 0 to 1 range indicating how far the move has 
+ * progressed from start to end.
+ */
+void wid_get_move_interpolated_progress (widp w, double *dx, double *dy)
+{
+    fast_verify(w);
+
+    if (!wid_is_moving(w)) {
+        *dx = 0.0;
+        *dy = 0.0;
+        return;
+    }
+
+    double x = wid_get_tl_x(w);
+    double y = wid_get_tl_y(w);
+      
+    x -= w->moving_start.x;
+    y -= w->moving_start.y;
+
+    double wx = (double)(w->moving_end.x - w->moving_start.x);
+    double wy = (double)(w->moving_end.y - w->moving_start.y);
+
+    *dx = x / wx;
+    *dy = y / wy;
+}
+
 void wid_move_stop (widp w)
 {
     fast_verify(w);

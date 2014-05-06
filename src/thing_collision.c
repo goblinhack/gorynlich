@@ -19,6 +19,31 @@
 #include "sound.h"
 #include "timer.h"
 
+/*
+ * On the server, things move in jumps. Find the real position the client
+ * will see so collisions look more accurate.
+ */
+static void 
+thingp_get_interpolated_position (const thingp t, double *x, double *y)
+{
+    widp w = thing_wid(t);
+
+    if (!wid_is_moving(w)) {
+        *x = t->x;
+        *y = t->y;
+        return;
+    }
+
+    double wdx, wdy;
+    double dx = t->x - t->last_x;
+    double dy = t->y - t->last_y;
+
+    wid_get_move_interpolated_progress(thing_wid(t), &wdx, &wdy);
+
+    *x = t->last_x + (dx * wdx);
+    *y = t->last_y + (dy * wdy);
+}
+
 static boolean things_overlap (const thingp A, 
                                double nx,
                                double ny,
@@ -28,10 +53,14 @@ static boolean things_overlap (const thingp A,
     static tilep monst;
     static double xscale;
     static double yscale;
-    static double Mpx1;
-    static double Mpx2;
-    static double Mpy1;
-    static double Mpy2;
+    static double monst_overlap_x1;
+    static double monst_overlap_x2;
+    static double monst_overlap_y1;
+    static double monst_overlap_y2;
+    static double monst_overlap_small_x1;
+    static double monst_overlap_small_x2;
+    static double monst_overlap_small_y1;
+    static double monst_overlap_small_y2;
 
     /*
      * The tiles are considered to be 1 unit wide. However the actual pixels
@@ -53,11 +82,43 @@ static boolean things_overlap (const thingp A,
             DIE("no monst for collisions");
         }
 
-        Mpx1 = monst->px1 * xscale;
-        Mpx2 = monst->px2 * xscale;
-        Mpy1 = monst->py1 * yscale;
-        Mpy2 = monst->py2 * yscale;
+        monst_overlap_x1 = monst->px1 * xscale;
+        monst_overlap_x2 = monst->px2 * xscale;
+        monst_overlap_y1 = monst->py1 * yscale;
+        monst_overlap_y2 = monst->py2 * yscale;
+
+        monst = tile_find("monst-overlap-small");
+        if (!monst) {
+            DIE("no monst for collisions");
+        }
+
+        monst_overlap_small_x1 = monst->px1 * xscale;
+        monst_overlap_small_x2 = monst->px2 * xscale;
+        monst_overlap_small_y1 = monst->py1 * yscale;
+        monst_overlap_small_y2 = monst->py2 * yscale;
     }
+
+    /*
+     * Find out the position of the thing on the client. On the server we move 
+     * in jumps, but on the server we want the collision to be more accurate
+     * so we use the amount of time passed to interpolate the thing position.
+     */
+    double Ax, Ay;
+
+    /*
+     * If -1, -1 then we are looking at the current position.
+     *
+     * If not then we are just checking out a future position.
+     */
+    if ((nx == -1.0) && (ny == -1.0)) {
+        thingp_get_interpolated_position(A, &Ax, &Ay);
+    } else {
+        Ax = nx;
+        Ay = ny;
+    }
+
+    double Bx, By;
+    thingp_get_interpolated_position(B, &Bx, &By);
 
     widp widA = thing_wid(A);
     widp widB = thing_wid(B);
@@ -72,11 +133,16 @@ static boolean things_overlap (const thingp A,
     double Bpy1;
     double Bpy2;
 
-    if (thing_is_collision_map_small(A)) {
-        Apx1 = Mpx1;
-        Apx2 = Mpx2;
-        Apy1 = Mpy1;
-        Apy2 = Mpy2;
+    if (thing_is_collision_map_vsmall(A)) {
+        Apx1 = monst_overlap_small_x1;
+        Apx2 = monst_overlap_small_x2;
+        Apy1 = monst_overlap_small_y1;
+        Apy2 = monst_overlap_small_y2;
+    } else if (thing_is_collision_map_small(A)) {
+        Apx1 = monst_overlap_x1;
+        Apx2 = monst_overlap_x2;
+        Apy1 = monst_overlap_y1;
+        Apy2 = monst_overlap_y2;
     } else {
         tilep tileA = wid_get_tile(widA);
 
@@ -87,10 +153,15 @@ static boolean things_overlap (const thingp A,
     }
 
     if (thing_is_collision_map_small(B)) {
-        Bpx1 = Mpx1;
-        Bpx2 = Mpx2;
-        Bpy1 = Mpy1;
-        Bpy2 = Mpy2;
+        Bpx1 = monst_overlap_small_x1;
+        Bpx2 = monst_overlap_small_x2;
+        Bpy1 = monst_overlap_small_y1;
+        Bpy2 = monst_overlap_small_y2;
+    } else if (thing_is_collision_map_small(B)) {
+        Bpx1 = monst_overlap_x1;
+        Bpx2 = monst_overlap_x2;
+        Bpy1 = monst_overlap_y1;
+        Bpy2 = monst_overlap_y2;
     } else {
         tilep tileB = wid_get_tile(widB);
 
@@ -103,24 +174,24 @@ static boolean things_overlap (const thingp A,
     /*
      * Find the start of pixels in the tile.
      */
-    double Atlx = nx + Apx1;
-    double Abrx = nx + Apx2;
-    double Atly = ny + Apy1;
-    double Abry = ny + Apy2;
+    double Atlx = Ax + Apx1;
+    double Abrx = Ax + Apx2;
+    double Atly = Ay + Apy1;
+    double Abry = Ay + Apy2;
 
-    double Btlx = B->x + Bpx1;
-    double Bbrx = B->x + Bpx2;
-    double Btly = B->y + Bpy1;
-    double Bbry = B->y + Bpy2;
+    double Btlx = Bx + Bpx1;
+    double Bbrx = Bx + Bpx2;
+    double Btly = By + Bpy1;
+    double Bbry = By + Bpy2;
 
     /*
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
      */
     boolean no_overlap = (Atlx > Bbrx) ||
-                      (Btlx > Abrx) ||
-                      (Atly > Bbry) ||
-                      (Btly > Abry);
+                         (Btlx > Abrx) ||
+                         (Atly > Bbry) ||
+                         (Btly > Abry);
 
     return (!no_overlap);
 }
@@ -131,9 +202,6 @@ static boolean things_overlap (const thingp A,
 static void thing_handle_collision (thingp me, thingp it, 
                                     int32_t x, int32_t y)
 {
-    double nx = me->x;
-    double ny = me->y;
-
     if (thing_is_dead(it)) {
         return;
     }
@@ -148,7 +216,7 @@ static void thing_handle_collision (thingp me, thingp it,
     /*
      * Do we overlap with something?
      */
-    if (!things_overlap(me, nx, ny, it)) {
+    if (!things_overlap(me, -1.0, -1.0, it)) {
         return;
     }
 
@@ -179,6 +247,8 @@ static void thing_handle_collision (thingp me, thingp it,
              * Monster dies in the collision but steals hitpoints.
              */
             thing_hit(me, it, 0, "monst");
+LOG("monst %f %f",it->x,it->y);
+LOG("play  %f %f",me->x,me->y);
 
             /*
              * No killer to avoid givin a bonus.
@@ -275,7 +345,7 @@ void thing_handle_collisions (widp grid, thingp t)
 /*
  * Have we hit anything?
  *
- * No open doors in here.
+ * No opening of doors in here or other actions. This is just a check.
  */
 boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 {

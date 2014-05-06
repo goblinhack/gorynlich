@@ -221,6 +221,14 @@ thingp thing_server_new (levelp level, const char *name)
     t->health = thing_template_get_health(thing_template);
     t->on_server = true;
 
+    /*
+     * Start out not on the map.
+     */
+    t->last_x = -1.0;
+    t->last_y = -1.0;
+    t->x = -1.0;
+    t->y = -1.0;
+
     if (thing_template_is_player(thing_template)) {
         t->tree2.key = id;
 
@@ -1481,12 +1489,25 @@ void thing_teleport (thingp t, int32_t x, int32_t y)
     sound_play_level_end();
 }
 
-void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
+static void thing_move (thingp t, double x, double y)
 {
     verify(t);
 
+    if ((t->last_x == -1.0) && (t->last_y == -1.0)) {
+        t->last_x = x;
+        t->last_y = y;
+    } else {
+        t->last_x = t->x;
+        t->last_y = t->y;
+    }
+
     t->x = x;
     t->y = y;
+}
+
+void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
+{
+    thing_move(t, x, y);
 
     x *= server_tile_width;
     y *= server_tile_height;
@@ -1537,12 +1558,7 @@ void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
 
 void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
 {
-    verify(t);
-
-    t->x = x;
-    t->y = y;
-
-    verify(t);
+    thing_move(t, x, y);
 
     x *= client_tile_width;
     y *= client_tile_height;
@@ -1844,8 +1860,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             tx = *data++;
             ty = *data++;
 
-            x = ((double)tx) / (256 / TILES_MAP_WIDTH);
-            y = ((double)ty) / (256 / TILES_MAP_HEIGHT);
+            x = ((double)tx) / (double) (256 / TILES_MAP_WIDTH);
+            y = ((double)ty) / (double) (256 / TILES_MAP_HEIGHT);
         } else {
             tx = -1;
             ty = -1;
@@ -1911,9 +1927,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-                        t->x = x;
-                        t->y = y;
-
                         thing_client_wid_update(t, x, y, true /* smooth */);
                     } else 
                         if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
@@ -1926,9 +1939,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                                   t->logname);
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
-
-                        t->x = x;
-                        t->y = y;
 
                         thing_client_wid_update(t, x, y, true /* smooth */);
                     }
