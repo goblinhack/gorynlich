@@ -7885,8 +7885,17 @@ void wid_get_move_interpolated_progress (widp w, double *dx, double *dy)
     double wx = (double)(w->moving_end.x - w->moving_start.x);
     double wy = (double)(w->moving_end.y - w->moving_start.y);
 
-    *dx = x / wx;
-    *dy = y / wy;
+    if (wx == 0.0) {
+        *dx = x;
+    } else {
+        *dx = x / wx;
+    }
+
+    if (wy == 0.0) {
+        *dy = y;
+    } else {
+        *dy = y / wy;
+    }
 }
 
 void wid_move_stop (widp w)
