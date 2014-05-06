@@ -104,6 +104,7 @@ static boolean things_overlap (const thingp A,
      * so we use the amount of time passed to interpolate the thing position.
      */
     double Ax, Ay;
+    double Bx, By;
 
     /*
      * If -1, -1 then we are looking at the current position.
@@ -112,13 +113,13 @@ static boolean things_overlap (const thingp A,
      */
     if ((nx == -1.0) && (ny == -1.0)) {
         thingp_get_interpolated_position(A, &Ax, &Ay);
+        thingp_get_interpolated_position(B, &Bx, &By);
     } else {
         Ax = nx;
         Ay = ny;
+        Bx = B->x;
+        By = B->y;
     }
-
-    double Bx, By;
-    thingp_get_interpolated_position(B, &Bx, &By);
 
     widp widA = thing_wid(A);
     widp widB = thing_wid(B);
@@ -247,8 +248,6 @@ static void thing_handle_collision (thingp me, thingp it,
              * Monster dies in the collision but steals hitpoints.
              */
             thing_hit(me, it, 0, "monst");
-LOG("monst %f %f",it->x,it->y);
-LOG("play  %f %f",me->x,me->y);
 
             /*
              * No killer to avoid givin a bonus.

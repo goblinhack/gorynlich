@@ -415,7 +415,6 @@ void level_set_monst_walls (levelp level)
             if (map_is_wall_at(level, x, y) ||
                 map_is_bomb_at(level, x, y) ||
                 map_is_exit_at(level, x, y) ||
-                map_is_door_at(level, x, y) ||
                 map_is_spam_at(level, x, y) ||
                 map_is_generator_at(level, x, y) ||
                 map_is_food_at(level, x, y) ||
