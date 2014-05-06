@@ -178,7 +178,13 @@ static void dmap_process (void)
                 h =  dmap[x  ][y+1];
                 i =  dmap[x+1][y+1] * 2;
 
-                lowest = min(a, min(b, min(c, min(d, min(f, min(g, min(h,i)))))));
+                lowest = min(a, 
+                             min(b, 
+                                 min(c, 
+                                     min(d, 
+                                         min(f, 
+                                             min(g, 
+                                                 min(h,i)))))));
 
                 if (*e - lowest >= 2) {
                     *e = lowest + 1;

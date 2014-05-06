@@ -372,6 +372,13 @@ typedef struct thing_ {
     double y;
 
     /*
+     * Previous hop where we were. We use this to interpolate the real 
+     * position on the server when moving.
+     */
+    double last_x;
+    double last_y;
+
+    /*
      * For moving
      */
     double dx;
@@ -513,6 +520,13 @@ static inline boolean thing_is_collision_map_small (thingp t)
     verify(t);
 
     return (thing_template_is_collision_map_small(thing_get_template(t)));
+}
+
+static inline boolean thing_is_collision_map_vsmall (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_collision_map_vsmall(thing_get_template(t)));
 }
 
 static inline boolean thing_is_xxx3 (thingp t)
