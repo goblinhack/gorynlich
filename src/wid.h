@@ -245,6 +245,7 @@ void wid_move_to_vert_pct(widp w, double pct);
 void wid_move_to_horiz_pct(widp w, double pct);
 void wid_move_to_vert_pct_in(widp w, double pct, double in);
 void wid_move_to_horiz_pct_in(widp w, double pct, double in);
+void wid_get_move_interpolated_progress(widp w, double *dx, double *dy);
 void wid_scale_immediate(widp, double val);
 void wid_scale_w_immediate(widp, double val);
 void wid_scale_h_immediate(widp, double val);

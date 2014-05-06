@@ -257,9 +257,9 @@ boolean map_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-boolean map_is_xxx32_at (levelp level, int32_t x, int32_t y)
+boolean map_is_collision_map_vsmall_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx32));
+    return (map_is_x_at(level, x, y, thing_template_is_collision_map_vsmall));
 }
 
 boolean map_is_xxx33_at (levelp level, int32_t x, int32_t y)
@@ -510,9 +510,9 @@ thingp map_thing_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-thingp map_thing_is_xxx32_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_collision_map_vsmall_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx32));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_collision_map_vsmall));
 }
 
 thingp map_thing_is_xxx33_at (levelp level, int32_t x, int32_t y)
@@ -779,9 +779,9 @@ tree_rootp map_all_things_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-tree_rootp map_all_things_is_xxx32_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_collision_map_vsmall_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx32));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_collision_map_vsmall));
 }
 
 tree_rootp map_all_things_is_xxx33_at (levelp level, int32_t x, int32_t y)
@@ -1600,9 +1600,9 @@ uint32_t level_count_is_hidden_from_editor (levelp level)
     return (level_count_is_x(level, thing_template_is_hidden_from_editor));
 }
 
-uint32_t level_count_is_xxx32 (levelp level)
+uint32_t level_count_is_collision_map_vsmall (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx32));
+    return (level_count_is_x(level, thing_template_is_collision_map_vsmall));
 }
 
 uint32_t level_count_is_xxx33 (levelp level)
@@ -1876,9 +1876,9 @@ tree_rootp map_all_things_is_animated (levelp level)
     return (map_all_things_is_x(level, thing_template_is_animated));
 }
 
-tree_rootp map_all_things_is_xxx32 (levelp level)
+tree_rootp map_all_things_is_collision_map_vsmall (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx32));
+    return (map_all_things_is_x(level, thing_template_is_collision_map_vsmall));
 }
 
 tree_rootp map_all_things_is_xxx33 (levelp level)

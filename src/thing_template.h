@@ -176,7 +176,7 @@ typedef struct thing_template_ {
     uint8_t is_xxx29:1;
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
-    uint8_t is_xxx32:1;
+    uint8_t is_collision_map_vsmall:1;
     uint8_t is_xxx33:1;
     uint8_t is_projectile:1;
     uint8_t is_boring:1;
@@ -444,9 +444,9 @@ static inline boolean thing_template_is_animated (thing_templatep t)
     return (t->is_animated);
 }
 
-static inline boolean thing_template_is_xxx32 (thing_templatep t)
+static inline boolean thing_template_is_collision_map_vsmall (thing_templatep t)
 {
-    return (t->is_xxx32);
+    return (t->is_collision_map_vsmall);
 }
 
 static inline boolean thing_template_is_xxx33 (thing_templatep t)
