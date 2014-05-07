@@ -396,7 +396,9 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_small", t->is_collision_map_small);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_monst", t->is_collision_map_monst);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_player", t->is_collision_map_player);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_weapon", t->is_collision_map_weapon);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
@@ -426,7 +428,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_vsmall", t->is_collision_map_vsmall);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
         GET_OPT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
         GET_OPT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
@@ -496,7 +497,9 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
-    PUT_NAMED_BITFIELD(ctx, "is_collision_map_small", t->is_collision_map_small);
+    PUT_NAMED_BITFIELD(ctx, "is_collision_map_weapon", t->is_collision_map_weapon);
+    PUT_NAMED_BITFIELD(ctx, "is_collision_map_player", t->is_collision_map_player);
+    PUT_NAMED_BITFIELD(ctx, "is_collision_map_monst", t->is_collision_map_monst);
     PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
     PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
     PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
@@ -526,7 +529,6 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
     PUT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
     PUT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
-    PUT_NAMED_BITFIELD(ctx, "is_collision_map_vsmall", t->is_collision_map_vsmall);
     PUT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
     PUT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
     PUT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);

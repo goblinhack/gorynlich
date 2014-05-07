@@ -5,7 +5,7 @@
  z_order=0
  is_boring
  is_exit
-is_collision_map_small
+is_collision_map_player
  tiles={
   tile={
    tile="mask_0"

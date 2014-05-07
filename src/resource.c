@@ -831,9 +831,9 @@ static boolean resource_init_23 (void *context)
         0,
         0,
         // row 21
-        "monst-overlap",
-        "monst-overlap-small",
-        0,
+        "player-collision-map",
+        "monst-collision-map",
+        "weapon-collision-map",
         0,
         0,
         0,
