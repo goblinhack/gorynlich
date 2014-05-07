@@ -112,11 +112,6 @@ boolean map_is_key_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_key));
 }
 
-boolean map_is_collision_map_small_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_collision_map_small));
-}
-
 boolean map_is_xxx3_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_xxx3));
@@ -257,11 +252,6 @@ boolean map_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-boolean map_is_collision_map_vsmall_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_collision_map_vsmall));
-}
-
 boolean map_is_xxx33_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_xxx33));
@@ -363,11 +353,6 @@ thingp map_thing_is_wall_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_key_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_key));
-}
-
-thingp map_thing_is_collision_map_small_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_collision_map_small));
 }
 
 thingp map_thing_is_xxx3_at (levelp level, int32_t x, int32_t y)
@@ -510,11 +495,6 @@ thingp map_thing_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-thingp map_thing_is_collision_map_vsmall_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_collision_map_vsmall));
-}
-
 thingp map_thing_is_xxx33_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_xxx33));
@@ -632,11 +612,6 @@ tree_rootp map_all_things_is_wall_at (levelp level, int32_t x, int32_t y)
 tree_rootp map_all_things_is_key_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_key));
-}
-
-tree_rootp map_all_things_is_collision_map_small_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_collision_map_small));
 }
 
 tree_rootp map_all_things_is_xxx3_at (levelp level, int32_t x, int32_t y)
@@ -779,11 +754,6 @@ tree_rootp map_all_things_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-tree_rootp map_all_things_is_collision_map_vsmall_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_collision_map_vsmall));
-}
-
 tree_rootp map_all_things_is_xxx33_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx33));
@@ -879,12 +849,6 @@ thing_templatep map_find_key_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_key, w));
-}
-
-thing_templatep map_find_xxx2_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_collision_map_small, w));
 }
 
 thing_templatep map_find_xxx3_at (levelp level,
@@ -1460,11 +1424,6 @@ uint32_t level_count_is_key (levelp level)
     return (level_count_is_x(level, thing_template_is_key));
 }
 
-uint32_t level_count_is_collision_map_small (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_collision_map_small));
-}
-
 uint32_t level_count_is_xxx3 (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_xxx3));
@@ -1600,11 +1559,6 @@ uint32_t level_count_is_hidden_from_editor (levelp level)
     return (level_count_is_x(level, thing_template_is_hidden_from_editor));
 }
 
-uint32_t level_count_is_collision_map_vsmall (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_collision_map_vsmall));
-}
-
 uint32_t level_count_is_xxx33 (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_xxx33));
@@ -1729,11 +1683,6 @@ tree_rootp map_all_things_is_wall (levelp level)
 tree_rootp map_all_things_is_key (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_key));
-}
-
-tree_rootp map_all_things_is_collision_map_small (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_collision_map_small));
 }
 
 tree_rootp map_all_things_is_xxx3 (levelp level)
@@ -1874,11 +1823,6 @@ tree_rootp map_all_things_is_hidden_from_editor (levelp level)
 tree_rootp map_all_things_is_animated (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_animated));
-}
-
-tree_rootp map_all_things_is_collision_map_vsmall (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_collision_map_vsmall));
 }
 
 tree_rootp map_all_things_is_xxx33 (levelp level)

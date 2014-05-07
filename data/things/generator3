@@ -4,7 +4,7 @@
  z_depth=2
  z_order=2
  is_generator
-is_collision_map_small
+is_collision_map_player
  tiles={
   tile={
    tile="generator3"

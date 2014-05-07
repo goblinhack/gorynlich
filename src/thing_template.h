@@ -146,7 +146,6 @@ typedef struct thing_template_ {
     uint8_t is_plant:1;
     uint8_t is_player:1;
     uint8_t is_key:1;
-    uint8_t is_collision_map_small:1;
     uint8_t is_xxx3:1;
     uint8_t is_xxx4:1;
     uint8_t is_xxx5:1;
@@ -176,7 +175,9 @@ typedef struct thing_template_ {
     uint8_t is_xxx29:1;
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
-    uint8_t is_collision_map_vsmall:1;
+    uint8_t is_collision_map_monst:1;
+    uint8_t is_collision_map_player:1;
+    uint8_t is_collision_map_weapon:1;
     uint8_t is_xxx33:1;
     uint8_t is_projectile:1;
     uint8_t is_boring:1;
@@ -292,11 +293,6 @@ static inline boolean thing_template_is_player (thing_templatep t)
 static inline boolean thing_template_is_key (thing_templatep t)
 {
     return (t->is_key);
-}
-
-static inline boolean thing_template_is_collision_map_small (thing_templatep t)
-{
-    return (t->is_collision_map_small);
 }
 
 static inline boolean thing_template_is_xxx3 (thing_templatep t)
@@ -444,9 +440,19 @@ static inline boolean thing_template_is_animated (thing_templatep t)
     return (t->is_animated);
 }
 
-static inline boolean thing_template_is_collision_map_vsmall (thing_templatep t)
+static inline boolean thing_template_is_collision_map_weapon (thing_templatep t)
 {
-    return (t->is_collision_map_vsmall);
+    return (t->is_collision_map_weapon);
+}
+
+static inline boolean thing_template_is_collision_map_player (thing_templatep t)
+{
+    return (t->is_collision_map_player);
+}
+
+static inline boolean thing_template_is_collision_map_monst (thing_templatep t)
+{
+    return (t->is_collision_map_monst);
 }
 
 static inline boolean thing_template_is_xxx33 (thing_templatep t)

@@ -6,7 +6,7 @@
  z_order=2
  speed=150
  damage=1
- is_collision_map_vsmall
+ is_collision_map_weapon
  is_projectile
  is_animated
  tiles={

@@ -6,7 +6,7 @@
  speed=70
  health=250
  is_player
-is_collision_map_small
+is_collision_map_player
  is_animated
  tiles={
   tile={
