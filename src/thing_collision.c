@@ -50,17 +50,20 @@ static boolean things_overlap (const thingp A,
                                const thingp B)
 {
     static tilep wall;
-    static tilep monst;
     static double xscale;
     static double yscale;
-    static double monst_overlap_x1;
-    static double monst_overlap_x2;
-    static double monst_overlap_y1;
-    static double monst_overlap_y2;
-    static double monst_overlap_small_x1;
-    static double monst_overlap_small_x2;
-    static double monst_overlap_small_y1;
-    static double monst_overlap_small_y2;
+    static double collision_map_player_x1;
+    static double collision_map_player_x2;
+    static double collision_map_player_y1;
+    static double collision_map_player_y2;
+    static double collision_map_monst_x1;
+    static double collision_map_monst_x2;
+    static double collision_map_monst_y1;
+    static double collision_map_monst_y2;
+    static double collision_map_weapon_x1;
+    static double collision_map_weapon_x2;
+    static double collision_map_weapon_y1;
+    static double collision_map_weapon_y2;
 
     /*
      * The tiles are considered to be 1 unit wide. However the actual pixels
@@ -77,25 +80,35 @@ static boolean things_overlap (const thingp A,
         xscale = 1.0 / (wall->px2 - wall->px1);
         yscale = 1.0 / (wall->py2 - wall->py1);
 
-        monst = tile_find("monst-overlap");
+        tilep player = tile_find("player-collision-map");
+        if (!player) {
+            DIE("no player for collisions");
+        }
+
+        collision_map_player_x1 = player->px1 * xscale;
+        collision_map_player_x2 = player->px2 * xscale;
+        collision_map_player_y1 = player->py1 * yscale;
+        collision_map_player_y2 = player->py2 * yscale;
+
+        tilep monst = tile_find("monst-collision-map");
         if (!monst) {
             DIE("no monst for collisions");
         }
 
-        monst_overlap_x1 = monst->px1 * xscale;
-        monst_overlap_x2 = monst->px2 * xscale;
-        monst_overlap_y1 = monst->py1 * yscale;
-        monst_overlap_y2 = monst->py2 * yscale;
+        collision_map_monst_x1 = monst->px1 * xscale;
+        collision_map_monst_x2 = monst->px2 * xscale;
+        collision_map_monst_y1 = monst->py1 * yscale;
+        collision_map_monst_y2 = monst->py2 * yscale;
 
-        monst = tile_find("monst-overlap-small");
-        if (!monst) {
-            DIE("no monst for collisions");
+        tilep weapon = tile_find("weapon-collision-map");
+        if (!weapon) {
+            DIE("no weapon for collisions");
         }
 
-        monst_overlap_small_x1 = monst->px1 * xscale;
-        monst_overlap_small_x2 = monst->px2 * xscale;
-        monst_overlap_small_y1 = monst->py1 * yscale;
-        monst_overlap_small_y2 = monst->py2 * yscale;
+        collision_map_weapon_x1 = weapon->px1 * xscale;
+        collision_map_weapon_x2 = weapon->px2 * xscale;
+        collision_map_weapon_y1 = weapon->py1 * yscale;
+        collision_map_weapon_y2 = weapon->py2 * yscale;
     }
 
     /*
@@ -134,16 +147,21 @@ static boolean things_overlap (const thingp A,
     double Bpy1;
     double Bpy2;
 
-    if (thing_is_collision_map_vsmall(A)) {
-        Apx1 = monst_overlap_small_x1;
-        Apx2 = monst_overlap_small_x2;
-        Apy1 = monst_overlap_small_y1;
-        Apy2 = monst_overlap_small_y2;
-    } else if (thing_is_collision_map_small(A)) {
-        Apx1 = monst_overlap_x1;
-        Apx2 = monst_overlap_x2;
-        Apy1 = monst_overlap_y1;
-        Apy2 = monst_overlap_y2;
+    if (thing_is_collision_map_monst(A)) {
+        Apx1 = collision_map_monst_x1;
+        Apx2 = collision_map_monst_x2;
+        Apy1 = collision_map_monst_y1;
+        Apy2 = collision_map_monst_y2;
+    } else if (thing_is_collision_map_weapon(A)) {
+        Apx1 = collision_map_weapon_x1;
+        Apx2 = collision_map_weapon_x2;
+        Apy1 = collision_map_weapon_y1;
+        Apy2 = collision_map_weapon_y2;
+    } else if (thing_is_collision_map_player(A)) {
+        Apx1 = collision_map_player_x1;
+        Apx2 = collision_map_player_x2;
+        Apy1 = collision_map_player_y1;
+        Apy2 = collision_map_player_y2;
     } else {
         tilep tileA = wid_get_tile(widA);
 
@@ -153,16 +171,21 @@ static boolean things_overlap (const thingp A,
         Apy2 = tileA->py2 * yscale;
     }
 
-    if (thing_is_collision_map_small(B)) {
-        Bpx1 = monst_overlap_small_x1;
-        Bpx2 = monst_overlap_small_x2;
-        Bpy1 = monst_overlap_small_y1;
-        Bpy2 = monst_overlap_small_y2;
-    } else if (thing_is_collision_map_small(B)) {
-        Bpx1 = monst_overlap_x1;
-        Bpx2 = monst_overlap_x2;
-        Bpy1 = monst_overlap_y1;
-        Bpy2 = monst_overlap_y2;
+    if (thing_is_collision_map_player(B)) {
+        Bpx1 = collision_map_monst_x1;
+        Bpx2 = collision_map_monst_x2;
+        Bpy1 = collision_map_monst_y1;
+        Bpy2 = collision_map_monst_y2;
+    } else if (thing_is_collision_map_player(B)) {
+        Bpx1 = collision_map_weapon_x1;
+        Bpx2 = collision_map_weapon_x2;
+        Bpy1 = collision_map_weapon_y1;
+        Bpy2 = collision_map_weapon_y2;
+    } else if (thing_is_collision_map_player(B)) {
+        Bpx1 = collision_map_player_x1;
+        Bpx2 = collision_map_player_x2;
+        Bpy1 = collision_map_player_y1;
+        Bpy2 = collision_map_player_y2;
     } else {
         tilep tileB = wid_get_tile(widB);
 

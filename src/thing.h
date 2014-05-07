@@ -515,18 +515,25 @@ static inline boolean thing_is_key (thingp t)
     return (thing_template_is_key(thing_get_template(t)));
 }
 
-static inline boolean thing_is_collision_map_small (thingp t)
+static inline boolean thing_is_collision_map_player (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_collision_map_small(thing_get_template(t)));
+    return (thing_template_is_collision_map_player(thing_get_template(t)));
 }
 
-static inline boolean thing_is_collision_map_vsmall (thingp t)
+static inline boolean thing_is_collision_map_monst (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_collision_map_vsmall(thing_get_template(t)));
+    return (thing_template_is_collision_map_monst(thing_get_template(t)));
+}
+
+static inline boolean thing_is_collision_map_weapon (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_collision_map_weapon(thing_get_template(t)));
 }
 
 static inline boolean thing_is_xxx3 (thingp t)
@@ -819,9 +826,19 @@ static inline boolean thing_is_key_fast (thingp t)
     return (t->thing_template->is_key);
 }
 
-static inline boolean thing_is_collision_map_small_fast (thingp t)
+static inline boolean thing_is_collision_map_player_fast (thingp t)
 {
-    return (t->thing_template->is_collision_map_small);
+    return (t->thing_template->is_collision_map_player);
+}
+
+static inline boolean thing_is_collision_map_monst_fast (thingp t)
+{
+    return (t->thing_template->is_collision_map_monst);
+}
+
+static inline boolean thing_is_collision_map_weapon_fast (thingp t)
+{
+    return (t->thing_template->is_collision_map_weapon);
 }
 
 static inline boolean thing_is_xxx3_fast (thingp t)
