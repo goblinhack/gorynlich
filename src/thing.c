@@ -263,7 +263,9 @@ thingp thing_server_new (levelp level, const char *name)
     }
 
     t->logname = dynprintf("%s[%p] (server)", thing_short_name(t), t);
-    t->updated++;
+    if (!t->updated) {
+        t->updated++;
+    }
 
     /*
      * So we send a move update to the client.
@@ -537,7 +539,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Move the thing from the boring list to the active list and update it so 
      * that it gets sent to the client.
      */
-    t->updated++;
+    if (!t->updated) {
+        t->updated++;
+    }
 
     if (!t->on_active_list) {
         if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
@@ -1223,7 +1227,10 @@ void thing_set_is_dir_down (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_DOWN) {
-        t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_DOWN;
     }
 }
@@ -1241,6 +1248,14 @@ void thing_set_is_dir_up (thingp t)
 
     if (t->dir != THING_DIR_UP) {
         t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_UP;
     }
 }
@@ -1258,6 +1273,10 @@ void thing_set_is_dir_left (thingp t)
 
     if (t->dir != THING_DIR_LEFT) {
         t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_LEFT;
     }
 }
@@ -1275,6 +1294,10 @@ void thing_set_is_dir_right (thingp t)
 
     if (t->dir != THING_DIR_RIGHT) {
         t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_RIGHT;
     }
 }
@@ -1292,6 +1315,10 @@ void thing_set_is_dir_tl (thingp t)
 
     if (t->dir != THING_DIR_TL) {
         t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_TL;
     }
 }
@@ -1309,6 +1336,10 @@ void thing_set_is_dir_bl (thingp t)
 
     if (t->dir != THING_DIR_BL) {
         t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_BL;
     }
 }
@@ -1326,6 +1357,10 @@ void thing_set_is_dir_tr (thingp t)
 
     if (t->dir != THING_DIR_TR) {
         t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_TR;
     }
 }
@@ -1343,6 +1378,10 @@ void thing_set_is_dir_br (thingp t)
 
     if (t->dir != THING_DIR_BR) {
         t->updated++;
+        if (!t->updated) {
+            t->updated++;
+        }
+
         t->dir = THING_DIR_BR;
     }
 }
@@ -1887,6 +1926,13 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 continue;
             }
 
+            if ((state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD))) {
+                /*
+                 * Don't create the thing if already dead.
+                 */
+                continue;
+            }
+
             thing_templatep thing_template = 
                     id_to_thing_template(template_id);
 
@@ -2172,7 +2218,10 @@ void thing_server_move (thingp t,
             THING_LOG(t, "  server %f %f", t->x, t->y);
             THING_LOG(t, "  client %f %f", x, y);
 
-            t->updated++;
+            if (!t->updated) {
+                t->updated++;
+            }
+
             t->resync = 1;
             return;
         }
@@ -2181,7 +2230,9 @@ void thing_server_move (thingp t,
     thing_common_move(t, &x, &y, up, down, left, right);
 
     thing_server_wid_update(t, x, y, false /* is_new */);
-    t->updated++;
+    if (!t->updated) {
+        t->updated++;
+    }
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 
