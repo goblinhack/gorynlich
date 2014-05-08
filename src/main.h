@@ -4,6 +4,10 @@
  * See the README file.
  */
 
+#pragma once
+
+#pragma once
+
 #include <stdio.h>
 #include <stdint.h>
 #include "config.h"

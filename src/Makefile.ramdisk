@@ -1,3 +1,6 @@
+.o/ramdisk_data__door_session.o: asm/ramdisk_data__door_session.S ../data/.door.session
+	gcc -c asm/ramdisk_data__door_session.S -o .o/ramdisk_data__door_session.o
+
 .o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
 	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
 

@@ -6,6 +6,8 @@
  * A useful hack to help debug stale/free/bad pointers.
  */
 
+#pragma once
+
 extern boolean client_init(void);
 extern void client_fini(void);
 extern void client_tick(void);

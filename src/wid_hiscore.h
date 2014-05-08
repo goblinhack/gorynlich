@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 boolean wid_hiscore_init(void);
 void wid_hiscore_fini(void);
 void wid_hiscore_hide(void);

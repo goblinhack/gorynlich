@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #include "tree.h"
 
 typedef struct tree_file_node_ {

@@ -21,9 +21,21 @@ static pthread_t dmap_thread;
 static pthread_mutex_t dmap_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t dmap_condition_var = PTHREAD_COND_INITIALIZER;
 
-static char monst_walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-static int8_t dmap[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-static int8_t dmap_output[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+static level_walls monst_walls;
+static level_walls monst_walls_no_doors;
+
+/*
+ * Scratch pad dmap.
+ */
+static level_walls dmap_output;
+static level_walls dmap_input;
+
+/*
+ * Final dmaps
+ */
+static level_walls dmap_monst_walls;
+static level_walls dmap_monst_walls_no_doors;
+
 static uint32_t dmap_checksum;
 
 /*
@@ -74,12 +86,12 @@ static void dmap_print (levelp level)
                 continue;
             }
 
-            if (level->monst_walls[x][y] != ' ') {
+            if (level->monst_walls.walls[x][y] != ' ') {
                 fprintf(fp, " ## ");
                 continue;
             }
 
-            fprintf(fp, "%4d", dmap[x][y]);
+            fprintf(fp, "%4d", dmap_input.walls[x][y]);
         }
 
         fprintf(fp, "\n");
@@ -116,7 +128,7 @@ static void dmap_thing_print (thingp t,
                 if ((x == tx) && (y == ty)) {
                     fprintf(fp, " Mo ");
                 } else {
-                    fprintf(fp, "%4d", dmap[x][y]);
+                    fprintf(fp, "%4d", dmap_input.walls[x][y]);
                 }
             }
         }
@@ -141,7 +153,7 @@ static void dmap_thing_print (thingp t,
  * numbers represents the number of steps that it will take to get from any 
  * given tile to the nearest goal. 
  */
-static void dmap_process (void)
+static void dmap_process_ (level_walls *map)
 {
     uint8_t x;
     uint8_t y;
@@ -162,21 +174,21 @@ static void dmap_process (void)
 
         for (x = 1; x < TILES_MAP_WIDTH - 1; x++) {
             for (y = 1; y < TILES_MAP_HEIGHT - 1; y++) {
-                if (monst_walls[x][y] != ' ') {
+                if (map->walls[x][y] != ' ') {
                     continue;
                 }
 
-                a =  dmap[x-1][y-1] * 2;
-                b =  dmap[x  ][y-1];
-                c =  dmap[x+1][y-1] * 2;
+                a =  dmap_output.walls[x-1][y-1] * 2;
+                b =  dmap_output.walls[x  ][y-1];
+                c =  dmap_output.walls[x+1][y-1] * 2;
 
-                d =  dmap[x-1][y];
-                e = &dmap[x  ][y];
-                f =  dmap[x+1][y];
+                d =  dmap_output.walls[x-1][y];
+                e = &dmap_output.walls[x  ][y];
+                f =  dmap_output.walls[x+1][y];
                  
-                g =  dmap[x-1][y+1] * 2;
-                h =  dmap[x  ][y+1];
-                i =  dmap[x+1][y+1] * 2;
+                g =  dmap_output.walls[x-1][y+1] * 2;
+                h =  dmap_output.walls[x  ][y+1];
+                i =  dmap_output.walls[x+1][y+1] * 2;
 
                 lowest = min(a, 
                              min(b, 
@@ -194,6 +206,17 @@ static void dmap_process (void)
         }
     } while (changed);
 }
+
+static void dmap_process (level_walls *walls, level_walls *dmap_out)
+{
+    /*
+     * Start with a clean dmap for each set of obstacles to consider.
+     */
+    memcpy(&dmap_output, &dmap_input, sizeof(dmap_output));
+    dmap_process_(walls);
+    memcpy(dmap_out, &dmap_output, sizeof(dmap_output));
+}
+
 
 /*
  * Generate goal points with a low value.
@@ -227,7 +250,7 @@ static uint32_t dmap_goals_set (boolean test)
         y = (int)(thing_it->y + 0.5);
 
         if (!test) {
-            dmap[x][y] = 0;
+            dmap_input.walls[x][y] = 0;
         }
 
         checksum ^= x | (y << 16);
@@ -247,7 +270,7 @@ static void dmap_init (void)
 
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-            dmap[x][y] = not_preferred;
+            dmap_input.walls[x][y] = not_preferred;
         }
     }
 }
@@ -262,9 +285,11 @@ static void *dmap_process_thread (void *context)
 
         pthread_cond_wait(&dmap_condition_var, &dmap_mutex );
 
-        dmap_process();
-
-        memcpy(dmap_output, dmap, sizeof(dmap));
+        /*
+         * Start with a clean dmap for each set of obstacles to consider.
+         */
+        dmap_process(&monst_walls, &dmap_monst_walls);
+        dmap_process(&monst_walls_no_doors, &dmap_monst_walls_no_doors);
 
         pthread_mutex_unlock(&dmap_mutex);
     }
@@ -299,8 +324,19 @@ static void dmap_process_wake (levelp level)
 
     dmap_init();
     dmap_goals_set(false /* test */); // redo for real this time.
-    memcpy(monst_walls, level->monst_walls, sizeof(level->monst_walls));
 
+    /*
+     * Set up the data for the dmaps
+     */
+    memcpy(&monst_walls, &level->monst_walls, 
+           sizeof(level->monst_walls));
+
+    memcpy(&monst_walls_no_doors, &level->monst_walls_no_doors, 
+           sizeof(level->monst_walls_no_doors));
+
+    /*
+     * Now wake the dmap processor.
+     */
     pthread_cond_signal(&dmap_condition_var);
 
     pthread_mutex_unlock(&dmap_mutex);
@@ -352,7 +388,10 @@ void thing_generate_dmaps (void)
     dmap_generate(server_level);
 }
 
-boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
+static boolean thing_find_nexthop_dmap (thingp t, 
+                                        level_walls *dmap,
+                                        int32_t *nexthop_x, 
+                                        int32_t *nexthop_y)
 {
     int8_t x;
     int8_t y;
@@ -371,17 +410,17 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     int8_t i;
     int8_t lowest;
 
-    a = dmap_output[x-1][y-1];
-    b = dmap_output[x  ][y-1];
-    c = dmap_output[x+1][y-1];
+    a = dmap->walls[x-1][y-1];
+    b = dmap->walls[x  ][y-1];
+    c = dmap->walls[x+1][y-1];
 
-    d = dmap_output[x-1][y];
-    e = dmap_output[x  ][y];
-    f = dmap_output[x+1][y];
+    d = dmap->walls[x-1][y];
+    e = dmap->walls[x  ][y];
+    f = dmap->walls[x+1][y];
         
-    g = dmap_output[x-1][y+1];
-    h = dmap_output[x  ][y+1];
-    i = dmap_output[x+1][y+1];
+    g = dmap->walls[x-1][y+1];
+    h = dmap->walls[x  ][y+1];
+    i = dmap->walls[x+1][y+1];
 
     lowest = min(a, min(b, min(c, min(d, min(e, min(f, min(g, min(h,i))))))));
 
@@ -420,8 +459,41 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 #endif
     dmap_thing_print(t, *nexthop_x, *nexthop_y);
 
-    if (monst_walls[*nexthop_x][*nexthop_y] != ' ') {
-        return (false);
+    return (true);
+}
+
+boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
+{
+    level_walls *dmap;
+    
+    if (!t->walls) {
+        t->walls = &server_level->monst_walls;
+    }
+
+    if (t->walls == &server_level->monst_walls) {
+        dmap = &dmap_monst_walls;
+    } else {
+        dmap = &dmap_monst_walls_no_doors;
+    }
+
+    boolean ret = thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y);
+    if (!ret) {
+        /*
+         * Try a differnt djkstra map one more time.
+         */
+        if (t->walls == &server_level->monst_walls) {
+            t->walls = &server_level->monst_walls_no_doors;
+        } else {
+            t->walls = &server_level->monst_walls;
+        }
+
+        if (t->walls == &server_level->monst_walls) {
+            dmap = &dmap_monst_walls;
+        } else {
+            dmap = &dmap_monst_walls_no_doors;
+        }
+
+        return (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y));
     }
 
     return (true);

@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 typedef struct action_timer_ {
     tree_key_two_int tree;
 

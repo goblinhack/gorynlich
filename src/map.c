@@ -1332,7 +1332,7 @@ boolean level_pipe_find_exit (levelp level,
                 continue;
             }
 
-            if (level->end_pipe[x][y] != ' ') {
+            if (level->end_pipe.walls[x][y] != ' ') {
                 exits_x[nexits] = x;
                 exits_y[nexits] = y;
                 nexits++;
@@ -1395,6 +1395,7 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
     }
 
     level_set_monst_walls(level);
+    level_set_monst_walls_no_doors(level);
 
     /*
      * Send the update quickly to the client. Don't wait for the things to

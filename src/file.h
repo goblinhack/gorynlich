@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 unsigned char *file_read(const char *filename, int32_t *len);
 int32_t file_write(const char *filename, unsigned char *buffer, int32_t len);
 boolean file_exists(const char *filename);

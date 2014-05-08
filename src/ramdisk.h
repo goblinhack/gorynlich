@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 unsigned char *ramdisk_load(const char *filename, int32_t *outlen);
 
 typedef struct ramdisk_t_ {

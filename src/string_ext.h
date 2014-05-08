@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #include "enum.h"
 
 typedef struct tree_string_split_node_ {

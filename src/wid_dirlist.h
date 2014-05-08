@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 widp wid_dirlist(const char *dir,
                  const char *title,
                  const char *include_suffix,

@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #include "enum.h"
 
 boolean ttf_init(void);
