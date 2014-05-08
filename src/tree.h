@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 #ifndef TREE_H
 #define TREE_H
 

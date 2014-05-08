@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 /*
  * Bit routines
  */

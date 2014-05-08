@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 typedef struct action_init_fn_ {
     tree_key_int tree;
 

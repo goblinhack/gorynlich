@@ -4,6 +4,8 @@
  * See the README file.
  */
 typedef boolean (*action_init_fn_callback)(void *);
+#pragma once
+
 
 void action_init_fns_destroy(tree_rootp *root);
 void action_init_fn_destroy(tree_rootp *t, init_fnp p);

@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 #include <math.h>
 
 typedef struct {

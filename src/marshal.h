@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 #include "tree.h"
 
 demarshal_p demarshal(const char *filename);

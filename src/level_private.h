@@ -4,17 +4,24 @@
  * See the LICENSE file.
  */
 
+#pragma once
+
+typedef struct {
+    int8_t walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+} level_walls;
+
 typedef struct level_t_ {
     uint32_t level_no;
 
     /*
      * A quick cache of where the walls are.
      */
-    char walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-    char monst_walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-    char roads[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-    char pipes[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-    char end_pipe[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    level_walls walls;
+    level_walls monst_walls;
+    level_walls monst_walls_no_doors;
+    level_walls roads;
+    level_walls pipes;
+    level_walls end_pipe;
 
     /*
      * Possible places for players to start.

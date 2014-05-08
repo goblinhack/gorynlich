@@ -4,4 +4,6 @@
  * See the README file.
  */
 
+#pragma once
+
 boolean resource_init(void);

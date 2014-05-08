@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 #define __IPHONEOS__
 #include "SDL_opengles.h"

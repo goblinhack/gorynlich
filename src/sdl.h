@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 boolean sdl_init(void);
 void sdl_fini(void);
 void sdl_loop(void);

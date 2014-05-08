@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #include <stdarg.h>
 
 void strrepc(char *s, const char *replace_set, char replace_with);

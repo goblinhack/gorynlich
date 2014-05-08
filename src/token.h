@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 typedef struct tokens_t_ {
     struct slre regexp[MAXSTR];
     char *args[MAXSTR];

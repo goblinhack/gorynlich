@@ -428,10 +428,6 @@
   } {   
    x=6 
    y=2 
-   t="data/things/wall3" 
-  } {   
-   x=6 
-   y=2 
    t="data/things/floor2" 
   } {   
    x=7 
@@ -576,10 +572,6 @@
   } {   
    x=6 
    y=3 
-   t="data/things/door" 
-  } {   
-   x=6 
-   y=3 
    t="data/things/floor2" 
   } {   
    x=7 
@@ -589,10 +581,6 @@
    x=8 
    y=3 
    t="data/things/floor2" 
-  } {   
-   x=9 
-   y=3 
-   t="data/things/wall2" 
   } {   
    x=9 
    y=3 
@@ -609,10 +597,6 @@
    x=12 
    y=3 
    t="data/things/floor2" 
-  } {   
-   x=13 
-   y=3 
-   t="data/things/ghost" 
   } {   
    x=13 
    y=3 
@@ -748,10 +732,6 @@
   } {   
    x=6 
    y=4 
-   t="data/things/door" 
-  } {   
-   x=6 
-   y=4 
    t="data/things/floor2" 
   } {   
    x=7 
@@ -772,7 +752,15 @@
   } {   
    x=10 
    y=4 
+   t="data/things/wall2" 
+  } {   
+   x=10 
+   y=4 
    t="data/things/floor2" 
+  } {   
+   x=11 
+   y=4 
+   t="data/things/wall2" 
   } {   
    x=11 
    y=4 
@@ -780,7 +768,15 @@
   } {   
    x=12 
    y=4 
+   t="data/things/wall2" 
+  } {   
+   x=12 
+   y=4 
    t="data/things/floor2" 
+  } {   
+   x=13 
+   y=4 
+   t="data/things/wall2" 
   } {   
    x=13 
    y=4 
@@ -904,10 +900,6 @@
   } {   
    x=6 
    y=5 
-   t="data/things/door" 
-  } {   
-   x=6 
-   y=5 
    t="data/things/floor2" 
   } {   
    x=7 
@@ -928,10 +920,6 @@
   } {   
    x=10 
    y=5 
-   t="data/things/wall" 
-  } {   
-   x=10 
-   y=5 
    t="data/things/floor2" 
   } {   
    x=11 
@@ -944,15 +932,15 @@
   } {   
    x=13 
    y=5 
+   t="data/things/wall2" 
+  } {   
+   x=13 
+   y=5 
    t="data/things/floor2" 
   } {   
    x=14 
    y=5 
    t="data/things/floor2" 
-  } {   
-   x=15 
-   y=5 
-   t="data/things/wall2" 
   } {   
    x=15 
    y=5 
@@ -1076,10 +1064,6 @@
   } {   
    x=6 
    y=6 
-   t="data/things/door" 
-  } {   
-   x=6 
-   y=6 
    t="data/things/floor2" 
   } {   
    x=7 
@@ -1112,15 +1096,15 @@
   } {   
    x=13 
    y=6 
+   t="data/things/wall2" 
+  } {   
+   x=13 
+   y=6 
    t="data/things/floor2" 
   } {   
    x=14 
    y=6 
    t="data/things/floor2" 
-  } {   
-   x=15 
-   y=6 
-   t="data/things/wall2" 
   } {   
    x=15 
    y=6 
@@ -1220,23 +1204,11 @@
   } {   
    x=2 
    y=7 
-   t="data/things/wall3" 
-  } {   
-   x=2 
-   y=7 
    t="data/things/floor2" 
   } {   
    x=3 
    y=7 
-   t="data/things/door" 
-  } {   
-   x=3 
-   y=7 
    t="data/things/floor2" 
-  } {   
-   x=4 
-   y=7 
-   t="data/things/wall3" 
   } {   
    x=4 
    y=7 
@@ -1245,10 +1217,6 @@
    x=5 
    y=7 
    t="data/things/floor2" 
-  } {   
-   x=6 
-   y=7 
-   t="data/things/wall3" 
   } {   
    x=6 
    y=7 
@@ -1288,6 +1256,10 @@
   } {   
    x=13 
    y=7 
+   t="data/things/wall2" 
+  } {   
+   x=13 
+   y=7 
    t="data/things/floor2" 
   } {   
    x=14 
@@ -1296,11 +1268,11 @@
   } {   
    x=15 
    y=7 
-   t="data/things/wall2" 
-  } {   
-   x=15 
-   y=7 
    t="data/things/floor2" 
+  } {   
+   x=16 
+   y=7 
+   t="data/things/wall2" 
   } {   
    x=16 
    y=7 
@@ -1308,7 +1280,15 @@
   } {   
    x=17 
    y=7 
+   t="data/things/wall2" 
+  } {   
+   x=17 
+   y=7 
    t="data/things/floor2" 
+  } {   
+   x=18 
+   y=7 
+   t="data/things/wall2" 
   } {   
    x=18 
    y=7 
@@ -1408,10 +1388,6 @@
   } {   
    x=6 
    y=8 
-   t="data/things/wall3" 
-  } {   
-   x=6 
-   y=8 
    t="data/things/floor2" 
   } {   
    x=7 
@@ -1424,7 +1400,7 @@
   } {   
    x=9 
    y=8 
-   t="data/things/wall2" 
+   t="data/things/door" 
   } {   
    x=9 
    y=8 
@@ -1452,10 +1428,6 @@
   } {   
    x=15 
    y=8 
-   t="data/things/wall2" 
-  } {   
-   x=15 
-   y=8 
    t="data/things/floor2" 
   } {   
    x=16 
@@ -1580,23 +1552,11 @@
   } {   
    x=4 
    y=9 
-   t="data/things/wall2" 
-  } {   
-   x=4 
-   y=9 
    t="data/things/floor2" 
   } {   
    x=5 
    y=9 
-   t="data/things/wall2" 
-  } {   
-   x=5 
-   y=9 
    t="data/things/floor2" 
-  } {   
-   x=6 
-   y=9 
-   t="data/things/wall2" 
   } {   
    x=6 
    y=9 
@@ -1612,7 +1572,7 @@
   } {   
    x=8 
    y=9 
-   t="data/things/wall2" 
+   t="data/things/door" 
   } {   
    x=8 
    y=9 
@@ -1628,7 +1588,15 @@
   } {   
    x=10 
    y=9 
+   t="data/things/wall2" 
+  } {   
+   x=10 
+   y=9 
    t="data/things/floor2" 
+  } {   
+   x=11 
+   y=9 
+   t="data/things/wall2" 
   } {   
    x=11 
    y=9 
@@ -1776,10 +1744,6 @@
   } {   
    x=4 
    y=10 
-   t="data/things/wall2" 
-  } {   
-   x=4 
-   y=10 
    t="data/things/floor2" 
   } {   
    x=5 
@@ -1789,6 +1753,10 @@
    x=6 
    y=10 
    t="data/things/floor2" 
+  } {   
+   x=7 
+   y=10 
+   t="data/things/wall2" 
   } {   
    x=7 
    y=10 
@@ -1936,10 +1904,6 @@
   } {   
    x=4 
    y=11 
-   t="data/things/wall2" 
-  } {   
-   x=4 
-   y=11 
    t="data/things/floor2" 
   } {   
    x=5 
@@ -1949,6 +1913,10 @@
    x=6 
    y=11 
    t="data/things/floor2" 
+  } {   
+   x=7 
+   y=11 
+   t="data/things/wall2" 
   } {   
    x=7 
    y=11 
@@ -2112,6 +2080,10 @@
   } {   
    x=7 
    y=12 
+   t="data/things/wall2" 
+  } {   
+   x=7 
+   y=12 
    t="data/things/floor2" 
   } {   
    x=8 
@@ -2272,7 +2244,15 @@
   } {   
    x=7 
    y=13 
+   t="data/things/wall2" 
+  } {   
+   x=7 
+   y=13 
    t="data/things/floor2" 
+  } {   
+   x=8 
+   y=13 
+   t="data/things/wall2" 
   } {   
    x=8 
    y=13 
@@ -2280,7 +2260,15 @@
   } {   
    x=9 
    y=13 
+   t="data/things/wall2" 
+  } {   
+   x=9 
+   y=13 
    t="data/things/floor2" 
+  } {   
+   x=10 
+   y=13 
+   t="data/things/wall2" 
   } {   
    x=10 
    y=13 

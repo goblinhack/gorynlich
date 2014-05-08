@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 /*
  * http://en.wikipedia.org/wiki/Display_resolution
  *

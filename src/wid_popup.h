@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 widp wid_popup(const char *text, const char *title,
                float x, float y,
                fontp title_font,

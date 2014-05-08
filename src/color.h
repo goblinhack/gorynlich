@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #include "glapi.h"
 
 void color_init(void);

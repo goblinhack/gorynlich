@@ -4,6 +4,8 @@
  * See the README file.
  */
 typedef void (*action_timer_callback)(void *);
+#pragma once
+
 
 void action_timers_destroy(tree_rootp *root);
 void action_timer_destroy(tree_rootp *t, timerp p);

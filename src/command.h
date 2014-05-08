@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 typedef boolean(*command_fn_t)(tokenp, void *context);
 
 #include "token.h"

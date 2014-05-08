@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 void backtrace_print(void);
 
 struct traceback_;
