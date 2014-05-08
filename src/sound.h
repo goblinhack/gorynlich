@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 boolean sound_init(void);
 void sound_fini(void);
 soundp sound_load(const char *file, const char *name);

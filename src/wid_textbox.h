@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 widp wid_textbox(widp parent,
                  widp *textbox,
                  const char *text, float x, float y, fontp font);

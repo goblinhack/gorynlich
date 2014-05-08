@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 #undef ENABLE_LEAKCHECK           // Memory leak check
 #undef ENABLE_PTRCHECK            // Check validity of pointers too

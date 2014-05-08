@@ -4,7 +4,10 @@
  * See the LICENSE file.
  */
 
+#pragma once
+
 #include "tree.h"
+#include "level_private.h"
 #include <stdlib.h>
 
 boolean thing_init(void);
@@ -311,6 +314,11 @@ typedef struct thing_ {
      * Thing health.
      */
     uint16_t health;
+
+    /*
+     * Which djkstra map this thing is using.
+     */
+    level_walls *walls;
 
     /*
      * Pointer to common settings for this thing.

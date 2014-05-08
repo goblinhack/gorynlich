@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 #include <SDL_net.h>
 
 #ifndef _PLAYER_H_

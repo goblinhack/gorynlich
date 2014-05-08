@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 typedef struct tile_ {
     tree_key_string tree;
     /*

@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 #include <string.h>
 
 extern boolean term_init(void);

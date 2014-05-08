@@ -320,6 +320,7 @@ levelp level_load (uint32_t level_no, widp wid)
 
     level_set_walls(level);
     level_set_monst_walls(level);
+    level_set_monst_walls_no_doors(level);
     level_set_doors(level);
     level_set_pipes(level);
     level_pipe_find_ends(level);
@@ -394,9 +395,9 @@ void level_set_walls (levelp level)
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
             if (map_is_wall_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
-                level->walls[x][y] = '+';
+                level->walls.walls[x][y] = '+';
             } else {
-                level->walls[x][y] = ' ';
+                level->walls.walls[x][y] = ' ';
             }
         }
     }
@@ -419,9 +420,35 @@ void level_set_monst_walls (levelp level)
                 map_is_generator_at(level, x, y) ||
                 map_is_food_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
-                level->monst_walls[x][y] = '+';
+                level->monst_walls.walls[x][y] = '+';
             } else {
-                level->monst_walls[x][y] = ' ';
+                level->monst_walls.walls[x][y] = ' ';
+            }
+        }
+    }
+}
+
+/*
+ * Or other things we collide with.
+ */
+void level_set_monst_walls_no_doors (levelp level)
+{
+    int32_t x;
+    int32_t y;
+
+    for (x = 0; x < TILES_MAP_WIDTH; x++) {
+        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+            if (map_is_wall_at(level, x, y) ||
+                map_is_bomb_at(level, x, y) ||
+                map_is_door_at(level, x, y) ||
+                map_is_exit_at(level, x, y) ||
+                map_is_spam_at(level, x, y) ||
+                map_is_generator_at(level, x, y) ||
+                map_is_food_at(level, x, y) ||
+                !map_is_floor_at(level, x, y)) {
+                level->monst_walls_no_doors.walls[x][y] = '+';
+            } else {
+                level->monst_walls_no_doors.walls[x][y] = ' ';
             }
         }
     }
@@ -438,9 +465,9 @@ void level_set_doors (levelp level)
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
             if (map_is_door_at(level, x, y)) {
-                level->roads[x][y] = '+';
+                level->roads.walls[x][y] = '+';
             } else {
-                level->roads[x][y] = ' ';
+                level->roads.walls[x][y] = ' ';
             }
         }
     }
@@ -457,9 +484,9 @@ void level_set_pipes (levelp level)
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
             if (map_is_pipe_at(level, x, y)) {
-                level->pipes[x][y] = '+';
+                level->pipes.walls[x][y] = '+';
             } else {
-                level->pipes[x][y] = ' ';
+                level->pipes.walls[x][y] = ' ';
             }
         }
     }
@@ -470,59 +497,59 @@ void level_pipe_find_ends (levelp level)
     int32_t x;
     int32_t y;
 
-    memset(level->end_pipe, ' ', sizeof(level->end_pipe));
+    memset(&level->end_pipe, ' ', sizeof(level->end_pipe));
 
     for (x = 1; x < TILES_MAP_WIDTH-1; x++) {
         for (y = 1; y < TILES_MAP_HEIGHT-1; y++) {
 
-            if (level->pipes[x][y] == ' ') {
+            if (level->pipes.walls[x][y] == ' ') {
                 continue;
             }
 
-            level->walls[x][y] = '+';
+            level->walls.walls[x][y] = '+';
 
             //  .
             // .x.
             // ?x?
-            if ((level->pipes[x][y+1] == '+') &&
-                (level->pipes[x][y-1] == ' ') &&
-                (level->pipes[x+1][y] == ' ') &&
-                (level->pipes[x+1][y] == ' ')) {
-                level->end_pipe[x][y] = '+';
-                level->walls[x][y] = ' ';
+            if ((level->pipes.walls[x][y+1] == '+') &&
+                (level->pipes.walls[x][y-1] == ' ') &&
+                (level->pipes.walls[x+1][y] == ' ') &&
+                (level->pipes.walls[x+1][y] == ' ')) {
+                level->end_pipe.walls[x][y] = '+';
+                level->walls.walls[x][y] = ' ';
             }
 
             // ?x?
             // .x.
             //  .
-            if ((level->pipes[x][y-1] == '+') &&
-                (level->pipes[x][y+1] == ' ') &&
-                (level->pipes[x+1][y] == ' ') &&
-                (level->pipes[x+1][y] == ' ')) {
-                level->end_pipe[x][y] = '+';
-                level->walls[x][y] = ' ';
+            if ((level->pipes.walls[x][y-1] == '+') &&
+                (level->pipes.walls[x][y+1] == ' ') &&
+                (level->pipes.walls[x+1][y] == ' ') &&
+                (level->pipes.walls[x+1][y] == ' ')) {
+                level->end_pipe.walls[x][y] = '+';
+                level->walls.walls[x][y] = ' ';
             }
 
             //  .?
             // .xx
             //  .?
-            if ((level->pipes[x+1][y] == '+') &&
-                (level->pipes[x-1][y] == ' ') &&
-                (level->pipes[x][y-1] == ' ') &&
-                (level->pipes[x][y+1] == ' ')) {
-                level->end_pipe[x][y] = '+';
-                level->walls[x][y] = ' ';
+            if ((level->pipes.walls[x+1][y] == '+') &&
+                (level->pipes.walls[x-1][y] == ' ') &&
+                (level->pipes.walls[x][y-1] == ' ') &&
+                (level->pipes.walls[x][y+1] == ' ')) {
+                level->end_pipe.walls[x][y] = '+';
+                level->walls.walls[x][y] = ' ';
             }
 
             //  .?
             // .xx
             //  .?
-            if ((level->pipes[x-1][y] == '+') &&
-                (level->pipes[x+1][y] == ' ') &&
-                (level->pipes[x][y-1] == ' ') &&
-                (level->pipes[x][y+1] == ' ')) {
-                level->walls[x][y] = ' ';
-                level->end_pipe[x][y] = '+';
+            if ((level->pipes.walls[x-1][y] == '+') &&
+                (level->pipes.walls[x+1][y] == ' ') &&
+                (level->pipes.walls[x][y-1] == ' ') &&
+                (level->pipes.walls[x][y+1] == ' ')) {
+                level->walls.walls[x][y] = ' ';
+                level->end_pipe.walls[x][y] = '+';
             }
         }
     }

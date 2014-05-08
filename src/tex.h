@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 boolean tex_init(void);
 void tex_fini(void);
 texp tex_load(const char *file, const char *name);

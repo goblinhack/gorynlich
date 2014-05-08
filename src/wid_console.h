@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 void wid_console_fini(void);
 boolean wid_console_init(void);
 void wid_console_log(const char *s);

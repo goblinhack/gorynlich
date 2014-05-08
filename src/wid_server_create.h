@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#pragma once
+
 #include <SDL_net.h>
 
 boolean wid_server_create_init(void);

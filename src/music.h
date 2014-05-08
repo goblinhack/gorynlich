@@ -4,6 +4,8 @@
  * See the README file.
  */
 
+#pragma once
+
 boolean music_init(void);
 void music_fini(void);
 musicp music_load(const char *file, const char *name);
