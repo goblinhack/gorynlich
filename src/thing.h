@@ -194,14 +194,14 @@ enum {
     THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT,
 };
 
-void thing_server_move(thingp t,
-                       double x,
-                       double y,
-                       const boolean up,
-                       const boolean down,
-                       const boolean left,
-                       const boolean right,
-                       const boolean fire);
+boolean thing_server_move(thingp t,
+                          double x,
+                          double y,
+                          const boolean up,
+                          const boolean down,
+                          const boolean left,
+                          const boolean right,
+                          const boolean fire);
 
 void thing_client_move(thingp t,
                        double x,

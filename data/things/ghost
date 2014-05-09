@@ -2,7 +2,7 @@
  short_name="ghost"
  tooltip="Ghost!"
  z_depth=2
- speed=3000
+ speed=2000
  health=10
  damage=1
  score_on_death=5

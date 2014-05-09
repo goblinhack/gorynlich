@@ -17,8 +17,8 @@ typedef struct level_t_ {
      * A quick cache of where the walls are.
      */
     level_walls walls;
-    level_walls monst_walls;
-    level_walls monst_walls_no_doors;
+    level_walls monst_map_consider_doors;
+    level_walls monst_map_ignore_doors;
     level_walls roads;
     level_walls pipes;
     level_walls end_pipe;
