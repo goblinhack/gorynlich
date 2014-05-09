@@ -5,15 +5,12 @@
  */
 
 #include <SDL.h>
-#include "slre.h"
 
 #include "main.h"
 #include "wid_text_input.h"
 #include "wid.h"
 #include "color.h"
 #include "ttf.h"
-#include "config.h"
-#include "sdl.h"
 
 static const int32_t LINE_WIDTH = 25;
 static const uint32_t MAX_ROWS = 6;

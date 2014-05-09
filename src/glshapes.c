@@ -4,8 +4,6 @@
  * See the README file for license.
  */
 
-#include <math.h>
-#include "glapi.h"
 
 #include "main.h"
 #include "gl.h"

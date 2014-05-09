@@ -4,14 +4,9 @@
  * See the README file for license.
  */
 
-#include <string.h>
-#include <stdlib.h>
-
 #include "main.h"
 #include "marshal.h"
-#include "config.h"
 #include "string.h"
-#include "socket.h"
 
 struct config global_config;
 

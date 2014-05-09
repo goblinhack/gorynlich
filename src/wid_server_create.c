@@ -5,7 +5,6 @@
  */
 
 #include <SDL.h>
-#include <SDL_net.h>
 
 #include "main.h"
 #include "wid.h"
@@ -14,14 +13,9 @@
 #include "wid_intro.h"
 #include "wid_server_join.h"
 #include "string.h"
-#include "wid_text_input.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
-#include "marshal.h"
-#include "sdl.h"
 #include "socket.h"
-#include "client.h"
-#include "string_ext.h"
 #include "server.h"
 
 static widp wid_server_create_window;

@@ -8,13 +8,11 @@
 
 #include "main.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
 #include "wid_intro.h"
 #include "wid_intro2.h"
 #include "wid_popup.h"
 #include "wid_editor.h"
-#include "wid_editor_map.h"
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_help.h"
@@ -26,7 +24,6 @@
 #include "wid_server_join.h"
 #include "wid_server_create.h"
 #include "music.h"
-#include "sdl.h"
 #include "level.h"
 #include "timer.h"
 

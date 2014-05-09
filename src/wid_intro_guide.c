@@ -12,7 +12,6 @@
 #include "color.h"
 #include "wid_intro.h"
 #include "wid_intro_guide.h"
-#include "sdl.h"
 
 static widp wid_intro_guide;
 static boolean wid_intro_guide_init_done;

@@ -5,8 +5,6 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
-#include "glapi.h"
 
 #include "main.h"
 #include "color.h"

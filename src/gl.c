@@ -5,10 +5,8 @@
  */
 
 #include <stdlib.h>
-#include "glapi.h"
 
 #include "main.h"
-#include "config.h"
 #include "gl.h"
 #include "color.h"
 

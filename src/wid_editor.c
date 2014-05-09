@@ -18,7 +18,6 @@
 #include "wid_tooltip.h"
 #include "wid_dirlist.h"
 #include "wid_intro.h"
-#include "dir.h"
 #include "file.h"
 #include "string.h"
 #include "marshal.h"
