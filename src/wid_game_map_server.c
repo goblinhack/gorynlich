@@ -11,19 +11,14 @@
 #include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
-#include "string.h"
-#include "wid_textbox.h"
 #include "wid_game_map_server.h"
 #include "wid_intro.h"
 #include "wid_editor.h"
 #include "thing.h"
 #include "map.h"
 #include "level.h"
-#include "level_private.h"
 #include "server.h"
-#include "client.h"
 #include "socket.h"
-#include "timer.h"
 
 levelp server_level;
 widp wid_game_map_server_window;

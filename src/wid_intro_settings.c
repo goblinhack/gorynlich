@@ -8,15 +8,10 @@
 
 #include "main.h"
 #include "wid.h"
-#include "tex.h"
 #include "color.h"
-#include "wid_intro_settings.h"
 #include "wid_popup.h"
 #include "wid_intro_settings.h"
-#include "sdl.h"
-#include "config.h"
 #include "string.h"
-#include "gl.h"
 #include "music.h"
 
 static widp wid_intro_settings;

@@ -15,15 +15,7 @@
  *
  * goblinhack@gmail.com
  */
-#include <libgen.h>
-#include <unistd.h>
-#include <SDL.h>
-#include <time.h>
 
-#include "main.h"
-#include "ramdisk.h"
-#include "bits.h"
-#include "map_tiles.h"
 
 /*
  * Creates a map somewhat like this

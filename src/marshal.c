@@ -20,9 +20,7 @@
  * The aim is to be *fast* at the expense of robustness.
  */
 
-#include <string.h>
 #include <math.h>
-#include <stdio.h>
 
 #include "main.h"
 #include "file.h"

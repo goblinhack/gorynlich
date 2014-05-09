@@ -12,7 +12,6 @@
 #include "string_ext.h"
 #include "ttf.h"
 #include "wid_tooltip.h"
-#include "config.h"
 
 static const int32_t PAD_X = 80;
 static const int32_t PAD_Y = 25;

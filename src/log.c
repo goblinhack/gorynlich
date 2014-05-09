@@ -17,7 +17,6 @@
 #include "timer.h"
 #include "init_fn.h"
 #include "wid.h"
-#include "socket.h"
 #include "term.h"
 #include "wid_button.h"
 #include "wid_popup.h"
