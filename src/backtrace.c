@@ -7,7 +7,6 @@
 #ifndef WIN32
 #include <execinfo.h>
 #endif
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 

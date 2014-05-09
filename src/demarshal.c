@@ -22,8 +22,6 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "main.h"
 #include "string.h"

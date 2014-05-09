@@ -5,7 +5,6 @@
  */
 
 #include <SDL.h>
-#include <SDL_net.h>
 
 #include "main.h"
 #include "wid.h"
@@ -15,9 +14,7 @@
 #include "wid_server_create.h"
 #include "wid_intro.h"
 #include "string.h"
-#include "wid_text_input.h"
 #include "marshal.h"
-#include "sdl.h"
 #include "socket.h"
 #include "client.h"
 #include "string_ext.h"

@@ -5,7 +5,6 @@
  */
 
 #include <SDL.h>
-#include "slre.h"
 
 #include "main.h"
 #include "wid.h"

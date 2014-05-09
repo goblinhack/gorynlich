@@ -5,7 +5,6 @@
  */
 
 #include <SDL.h>
-#include "slre.h"
 
 #include "main.h"
 #include "wid.h"
@@ -13,7 +12,6 @@
 #include "string_ext.h"
 #include "ttf.h"
 #include "wid_popup.h"
-#include "sdl.h"
 
 static const int32_t PAD_X = 80;
 static const int32_t PAD_Y = 45;

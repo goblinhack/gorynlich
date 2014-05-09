@@ -13,7 +13,6 @@
 #include "string.h"
 #include "wid_text_input.h"
 #include "marshal.h"
-#include "sdl.h"
 
 static const char *hiscore_dir_and_file = "gorynlich-hiscore.txt";
 static const uint32_t MAX_HISCORES = 10;

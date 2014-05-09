@@ -4,12 +4,10 @@
  * See the README file for license.
  */
 
-#include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <time.h>
 
 #include "main.h"
 #include "mzip_file.h"

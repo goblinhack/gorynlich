@@ -6,7 +6,6 @@
 
 #include <errno.h>
 #include <SDL.h>
-#include "slre.h"
 
 #include "main.h"
 #include "wid_dirlist.h"
@@ -15,9 +14,6 @@
 #include "ttf.h"
 #include "dir.h"
 #include "string.h"
-#include "wid_popup.h"
-#include "config.h"
-#include "sdl.h"
 
 static const int32_t LINE_WIDTH = 25;
 static const uint32_t MAX_ROWS = 6;

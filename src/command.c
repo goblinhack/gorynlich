@@ -4,11 +4,8 @@
  * See the README file for license.
  */
 
-#include <string.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <errno.h>
 #include "slre.h"
 #include <SDL.h>
 

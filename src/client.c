@@ -6,17 +6,13 @@
  * A useful hack to help debug stale/free/bad pointers.
  */
 
-#include "SDL_timer.h"
-
 #include "main.h"
 #include "socket.h"
 #include "client.h"
 #include "time.h"
 #include "slre.h"
 #include "command.h"
-#include "player.h"
 #include "string.h"
-#include "tree.h"
 #include "wid_server_join.h"
 #include "wid_game_map_client.h"
 #include "wid.h"

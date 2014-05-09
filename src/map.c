@@ -8,12 +8,10 @@
 
 #include "main.h"
 #include "map.h"
-#include "tree.h"
 #include "wid.h"
 #include "thing.h"
 #include "thing_tile.h"
 #include "level.h"
-#include "level_private.h"
 #include "bits.h"
 #include "socket.h"
 
