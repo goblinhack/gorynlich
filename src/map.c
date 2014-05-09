@@ -1392,8 +1392,8 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
         }
     }
 
-    level_set_monst_walls(level);
-    level_set_monst_walls_no_doors(level);
+    level_set_monst_map_consider_doors(level);
+    level_set_monst_map_ignore_doors(level);
 
     /*
      * Send the update quickly to the client. Don't wait for the things to
