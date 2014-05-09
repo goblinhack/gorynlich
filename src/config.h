@@ -104,10 +104,16 @@
 #define SOCKET_PING_FAIL_THRESHOLD  10
 
 /*
- * Maximum number of thing types. Dicates message sizes etc...
+ * Maximum number of thing types. This cannot be exceeded without changing
+ * the message format in tx updates.
  */
-#define THING_MAX                   128
-#define THING_ID_MAX                4096
+#define THING_MAX                   256
+
+/*
+ * Thumb in air. Needs to be big enough so wrap arounds and id reuse is less 
+ * common.
+ */
+#define THING_ID_MAX                8192
 
 /*
  * When converting from thing co-ords where 1.0 is one grid, we must convert

@@ -728,7 +728,15 @@
   } {   
    x=5 
    y=4 
+   t="data/things/wall2" 
+  } {   
+   x=5 
+   y=4 
    t="data/things/floor2" 
+  } {   
+   x=6 
+   y=4 
+   t="data/things/wall2" 
   } {   
    x=6 
    y=4 
@@ -736,7 +744,15 @@
   } {   
    x=7 
    y=4 
+   t="data/things/wall2" 
+  } {   
+   x=7 
+   y=4 
    t="data/things/floor2" 
+  } {   
+   x=8 
+   y=4 
+   t="data/things/wall2" 
   } {   
    x=8 
    y=4 
@@ -896,6 +912,10 @@
   } {   
    x=5 
    y=5 
+   t="data/things/wall2" 
+  } {   
+   x=5 
+   y=5 
    t="data/things/floor2" 
   } {   
    x=6 
@@ -909,10 +929,6 @@
    x=8 
    y=5 
    t="data/things/floor2" 
-  } {   
-   x=9 
-   y=5 
-   t="data/things/wall2" 
   } {   
    x=9 
    y=5 
@@ -1060,6 +1076,10 @@
   } {   
    x=5 
    y=6 
+   t="data/things/wall2" 
+  } {   
+   x=5 
+   y=6 
    t="data/things/floor2" 
   } {   
    x=6 
@@ -1073,10 +1093,6 @@
    x=8 
    y=6 
    t="data/things/floor2" 
-  } {   
-   x=9 
-   y=6 
-   t="data/things/wall2" 
   } {   
    x=9 
    y=6 
@@ -1216,6 +1232,10 @@
   } {   
    x=5 
    y=7 
+   t="data/things/wall2" 
+  } {   
+   x=5 
+   y=7 
    t="data/things/floor2" 
   } {   
    x=6 
@@ -1229,10 +1249,6 @@
    x=8 
    y=7 
    t="data/things/floor2" 
-  } {   
-   x=9 
-   y=7 
-   t="data/things/wall2" 
   } {   
    x=9 
    y=7 
@@ -1384,6 +1400,10 @@
   } {   
    x=5 
    y=8 
+   t="data/things/wall2" 
+  } {   
+   x=5 
+   y=8 
    t="data/things/floor2" 
   } {   
    x=6 
@@ -1397,10 +1417,6 @@
    x=8 
    y=8 
    t="data/things/floor2" 
-  } {   
-   x=9 
-   y=8 
-   t="data/things/door" 
   } {   
    x=9 
    y=8 
@@ -1556,7 +1572,15 @@
   } {   
    x=5 
    y=9 
+   t="data/things/wall2" 
+  } {   
+   x=5 
+   y=9 
    t="data/things/floor2" 
+  } {   
+   x=6 
+   y=9 
+   t="data/things/door" 
   } {   
    x=6 
    y=9 
@@ -1932,10 +1956,6 @@
   } {   
    x=10 
    y=11 
-   t="data/things/ghost" 
-  } {   
-   x=10 
-   y=11 
    t="data/things/floor2" 
   } {   
    x=11 
@@ -4085,10 +4105,6 @@
    x=19 
    y=24 
    t="data/things/floor2" 
-  } {   
-   x=20 
-   y=24 
-   t="data/things/ghost" 
   } {   
    x=20 
    y=24 

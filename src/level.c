@@ -304,8 +304,8 @@ levelp level_load (uint32_t level_no, widp wid)
     myfree(dir_and_file);
 
     level_set_walls(level);
-    level_set_monst_walls(level);
-    level_set_monst_walls_no_doors(level);
+    level_set_monst_map_consider_doors(level);
+    level_set_monst_map_ignore_doors(level);
     level_set_doors(level);
     level_set_pipes(level);
     level_pipe_find_ends(level);
@@ -391,7 +391,7 @@ void level_set_walls (levelp level)
 /*
  * Or other things we collide with.
  */
-void level_set_monst_walls (levelp level)
+void level_set_monst_map_consider_doors (levelp level)
 {
     int32_t x;
     int32_t y;
@@ -405,9 +405,12 @@ void level_set_monst_walls (levelp level)
                 map_is_generator_at(level, x, y) ||
                 map_is_food_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
-                level->monst_walls.walls[x][y] = '+';
+                level->monst_map_consider_doors.walls[x][y] = '+';
             } else {
-                level->monst_walls.walls[x][y] = ' ';
+                /*
+                 * Note, doors are considered as empty space.
+                 */
+                level->monst_map_consider_doors.walls[x][y] = ' ';
             }
         }
     }
@@ -416,7 +419,7 @@ void level_set_monst_walls (levelp level)
 /*
  * Or other things we collide with.
  */
-void level_set_monst_walls_no_doors (levelp level)
+void level_set_monst_map_ignore_doors (levelp level)
 {
     int32_t x;
     int32_t y;
@@ -431,9 +434,13 @@ void level_set_monst_walls_no_doors (levelp level)
                 map_is_generator_at(level, x, y) ||
                 map_is_food_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
-                level->monst_walls_no_doors.walls[x][y] = '+';
+
+                /*
+                 * Doors are considered as walls.
+                 */
+                level->monst_map_ignore_doors.walls[x][y] = '+';
             } else {
-                level->monst_walls_no_doors.walls[x][y] = ' ';
+                level->monst_map_ignore_doors.walls[x][y] = ' ';
             }
         }
     }

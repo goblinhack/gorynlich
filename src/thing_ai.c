@@ -21,8 +21,8 @@ static pthread_t dmap_thread;
 static pthread_mutex_t dmap_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t dmap_condition_var = PTHREAD_COND_INITIALIZER;
 
-static level_walls monst_walls;
-static level_walls monst_walls_no_doors;
+static level_walls monst_map_consider_doors;
+static level_walls monst_map_ignore_doors;
 
 /*
  * Scratch pad dmap.
@@ -33,8 +33,8 @@ static level_walls dmap_input;
 /*
  * Final dmaps
  */
-static level_walls dmap_monst_walls;
-static level_walls dmap_monst_walls_no_doors;
+static level_walls dmap_monst_map_consider_doors;
+static level_walls dmap_monst_map_ignore_doors;
 
 static uint32_t dmap_checksum;
 
@@ -86,7 +86,7 @@ static void dmap_print (levelp level)
                 continue;
             }
 
-            if (level->monst_walls.walls[x][y] != ' ') {
+            if (level->monst_map_consider_doors.walls[x][y] != ' ') {
                 fprintf(fp, " ## ");
                 continue;
             }
@@ -288,8 +288,8 @@ static void *dmap_process_thread (void *context)
         /*
          * Start with a clean dmap for each set of obstacles to consider.
          */
-        dmap_process(&monst_walls, &dmap_monst_walls);
-        dmap_process(&monst_walls_no_doors, &dmap_monst_walls_no_doors);
+        dmap_process(&monst_map_consider_doors, &dmap_monst_map_consider_doors);
+        dmap_process(&monst_map_ignore_doors, &dmap_monst_map_ignore_doors);
 
         pthread_mutex_unlock(&dmap_mutex);
     }
@@ -328,11 +328,11 @@ static void dmap_process_wake (levelp level)
     /*
      * Set up the data for the dmaps
      */
-    memcpy(&monst_walls, &level->monst_walls, 
-           sizeof(level->monst_walls));
+    memcpy(&monst_map_consider_doors, &level->monst_map_consider_doors, 
+           sizeof(level->monst_map_consider_doors));
 
-    memcpy(&monst_walls_no_doors, &level->monst_walls_no_doors, 
-           sizeof(level->monst_walls_no_doors));
+    memcpy(&monst_map_ignore_doors, &level->monst_map_ignore_doors, 
+           sizeof(level->monst_map_ignore_doors));
 
     /*
      * Now wake the dmap processor.
@@ -467,34 +467,14 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     level_walls *dmap;
     
     if (!t->walls) {
-        t->walls = &server_level->monst_walls;
+        t->walls = &server_level->monst_map_consider_doors;
     }
 
-    if (t->walls == &server_level->monst_walls) {
-        dmap = &dmap_monst_walls;
+    if (t->walls == &server_level->monst_map_consider_doors) {
+        dmap = &dmap_monst_map_consider_doors;
     } else {
-        dmap = &dmap_monst_walls_no_doors;
+        dmap = &dmap_monst_map_ignore_doors;
     }
 
-    boolean ret = thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y);
-    if (!ret) {
-        /*
-         * Try a differnt djkstra map one more time.
-         */
-        if (t->walls == &server_level->monst_walls) {
-            t->walls = &server_level->monst_walls_no_doors;
-        } else {
-            t->walls = &server_level->monst_walls;
-        }
-
-        if (t->walls == &server_level->monst_walls) {
-            dmap = &dmap_monst_walls;
-        } else {
-            dmap = &dmap_monst_walls_no_doors;
-        }
-
-        return (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y));
-    }
-
-    return (true);
+    return (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y));
 }

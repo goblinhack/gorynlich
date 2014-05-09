@@ -194,14 +194,24 @@ static void thing_tick_server_all (void)
                 double fnexthop_x = (double)nexthop_x;
                 double fnexthop_y = (double)nexthop_y;
 
-                thing_server_move(t,
-                        fnexthop_x,
-                        fnexthop_y,
-                        fnexthop_y < t->y,
-                        fnexthop_y > t->y,
-                        fnexthop_x < t->x,
-                        fnexthop_x > t->x,
-                        false);
+                if (!thing_server_move(t,
+                                       fnexthop_x,
+                                       fnexthop_y,
+                                       fnexthop_y < t->y,
+                                       fnexthop_y > t->y,
+                                       fnexthop_x < t->x,
+                                       fnexthop_x > t->x,
+                                       false)) {
+                    /*
+                     * Hit an obstacle? Try a different map for the next time
+                     * we find a next hop.
+                     */
+                    if (t->walls == &server_level->monst_map_consider_doors) {
+                        t->walls = &server_level->monst_map_ignore_doors;
+                    } else {
+                        t->walls = &server_level->monst_map_consider_doors;
+                    }
+                }
 
                 t->timestamp_ai = time_get_time_cached();
             }

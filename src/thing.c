@@ -2180,23 +2180,25 @@ void thing_client_move (thingp t,
                           fire);
 }
 
-void thing_server_move (thingp t,
-                        double x,
-                        double y,
-                        const boolean up,
-                        const boolean down,
-                        const boolean left,
-                        const boolean right,
-                        const boolean fire)
+boolean thing_server_move (thingp t,
+                           double x,
+                           double y,
+                           const boolean up,
+                           const boolean down,
+                           const boolean left,
+                           const boolean right,
+                           const boolean fire)
 {
     widp grid = wid_game_map_server_grid_container;
 
     thing_common_move(t, &x, &y, up, down, left, right);
 
     if (thing_hit_solid_obstacle(grid, t, x, y)) {
-        if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
+        if ((x != t->x) &&
+            !thing_hit_solid_obstacle(grid, t, x, t->y)) {
             y = t->y;
-        } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
+        } else if ((y != t->y) &&
+                   !thing_hit_solid_obstacle(grid, t, t->x, y)) {
             x = t->x;
         } else {
             if (thing_is_player(t)) {
@@ -2204,7 +2206,8 @@ void thing_server_move (thingp t,
                 THING_LOG(t, "  server %f %f", t->x, t->y);
                 THING_LOG(t, "  client %f %f", x, y);
             }
-            return;
+
+            return (false);
         }
     }
 
@@ -2223,7 +2226,8 @@ void thing_server_move (thingp t,
             }
 
             t->resync = 1;
-            return;
+
+            return (false);
         }
     }
 
@@ -2344,6 +2348,8 @@ void thing_server_move (thingp t,
 
         socket_server_tx_map_update(0 /* all clients */, server_active_things);
     }
+
+    return (true);
 }
 
 void thing_collect (thingp t, thing_templatep tmp)
