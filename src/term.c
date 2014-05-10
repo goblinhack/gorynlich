@@ -28,6 +28,12 @@ typedef struct term_cell_ {
     uint8_t                     touched:1;
 } term_cell;
 
+#ifdef ENABLE_CONSOLE
+int enable_console = 1;
+#else
+int enable_console = 0;
+#endif
+
 static void term_core_refresh(void);
 
 int TERM_WIDTH = TERM_MAX_SIZE;
@@ -116,7 +122,7 @@ static void term_core_goto_init (void)
 
 boolean term_init (void)
 {
-    if (!HEADLESS) {
+    if (!HEADLESS && !enable_console) {
         return (true);
     }
 
@@ -658,6 +664,10 @@ void term_putfmx (const char *s)
 
 void term_refresh (void)
 {
+    if (!term_init_done) {
+        return;
+    }
+
     int x, y;
     boolean term_is_cursor_valid = false;
 
@@ -788,14 +798,14 @@ static void term_print_last_line (void)
 
 void term_log (const char *buf)
 {
-    if (HEADLESS) {
+    if (HEADLESS || enable_console) {
         term_scroll();
         term_goto(0, TERM_HEIGHT - 2);
     }
 
     term_putf(buf);
 
-    if (HEADLESS) {
+    if (HEADLESS || enable_console) {
         term_refresh();
     } else {
         term_print_last_line();

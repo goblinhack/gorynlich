@@ -206,10 +206,10 @@ static void thing_tick_server_all (void)
                      * Hit an obstacle? Try a different map for the next time
                      * we find a next hop.
                      */
-                    if (t->walls == &server_level->monst_map_consider_doors) {
-                        t->walls = &server_level->monst_map_ignore_doors;
+                    if (t->walls == &server_level->monst_map_treat_doors_as_passable) {
+                        t->walls = &server_level->monst_map_treat_doors_as_walls;
                     } else {
-                        t->walls = &server_level->monst_map_consider_doors;
+                        t->walls = &server_level->monst_map_treat_doors_as_passable;
                     }
                 }
 

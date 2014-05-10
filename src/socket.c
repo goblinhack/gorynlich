@@ -559,57 +559,83 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
         CON("  Errors   : tx error %u, rx error %u, bad message %u packets", 
             s->tx_error, s->rx_error, s->rx_bad_msg);
 
-        CON("  Ping           : tx %u, rx %u",
-            s->tx_msg[MSG_PING], 
-            s->rx_msg[MSG_PING]);
+        if (s->tx_msg[MSG_PING] || s->rx_msg[MSG_PING]) {
+            CON("  Ping           : tx %u, rx %u",
+                s->tx_msg[MSG_PING], 
+                s->rx_msg[MSG_PING]);
+        }
 
-        CON("  Pong           : tx %u, rx %u",
-            s->tx_msg[MSG_PONG], 
-            s->rx_msg[MSG_PONG]);
+        if (s->tx_msg[MSG_PONG] || s->rx_msg[MSG_PONG]) {
+            CON("  Pong           : tx %u, rx %u",
+                s->tx_msg[MSG_PONG], 
+                s->rx_msg[MSG_PONG]);
+        }
 
-        CON("  Name           : tx %u, rx %u",
-            s->tx_msg[MSG_NAME], 
-            s->rx_msg[MSG_NAME]);
+        if (s->tx_msg[MSG_NAME] || s->rx_msg[MSG_NAME]) {
+            CON("  Name           : tx %u, rx %u",
+                s->tx_msg[MSG_NAME], 
+                s->rx_msg[MSG_NAME]);
+        }
 
-        CON("  Tell           : tx %u, rx %u",
-            s->tx_msg[MSG_TELL], 
-            s->rx_msg[MSG_TELL]);
+        if (s->tx_msg[MSG_TELL] || s->rx_msg[MSG_TELL]) {
+            CON("  Tell           : tx %u, rx %u",
+                s->tx_msg[MSG_TELL], 
+                s->rx_msg[MSG_TELL]);
+        }
 
-        CON("  Join           : tx %u, rx %u",
-            s->tx_msg[MSG_CLIENT_JOIN], 
-            s->rx_msg[MSG_CLIENT_JOIN]);
+        if (s->tx_msg[MSG_CLIENT_JOIN] || s->rx_msg[MSG_CLIENT_JOIN]) {
+            CON("  Join           : tx %u, rx %u",
+                s->tx_msg[MSG_CLIENT_JOIN], 
+                s->rx_msg[MSG_CLIENT_JOIN]);
+        }
 
-        CON("  Client Leave   : tx %u, rx %u",
-            s->tx_msg[MSG_CLIENT_LEAVE], 
-            s->rx_msg[MSG_CLIENT_LEAVE]);
+        if (s->tx_msg[MSG_CLIENT_LEAVE] || s->rx_msg[MSG_CLIENT_LEAVE]) {
+            CON("  Client Leave   : tx %u, rx %u",
+                s->tx_msg[MSG_CLIENT_LEAVE], 
+                s->rx_msg[MSG_CLIENT_LEAVE]);
+        }
 
-        CON("  Client Close   : tx %u, rx %u",
-            s->tx_msg[MSG_CLIENT_CLOSE], 
-            s->rx_msg[MSG_CLIENT_CLOSE]);
+        if (s->tx_msg[MSG_CLIENT_CLOSE] || s->rx_msg[MSG_CLIENT_CLOSE]) {
+            CON("  Client Close   : tx %u, rx %u",
+                s->tx_msg[MSG_CLIENT_CLOSE], 
+                s->rx_msg[MSG_CLIENT_CLOSE]);
+        }
 
-        CON("  Server Shout   : tx %u, rx %u",
-            s->tx_msg[MSG_SERVER_SHOUT], 
-            s->rx_msg[MSG_SERVER_SHOUT]);
+        if (s->tx_msg[MSG_SERVER_SHOUT] || s->rx_msg[MSG_SERVER_SHOUT]) {
+            CON("  Server Shout   : tx %u, rx %u",
+                s->tx_msg[MSG_SERVER_SHOUT], 
+                s->rx_msg[MSG_SERVER_SHOUT]);
+        }
 
-        CON("  Server Status  : tx %u, rx %u",
-            s->tx_msg[MSG_SERVER_STATUS], 
-            s->rx_msg[MSG_SERVER_STATUS]);
+        if (s->tx_msg[MSG_SERVER_STATUS] || s->rx_msg[MSG_SERVER_STATUS]) {
+            CON("  Server Status  : tx %u, rx %u",
+                s->tx_msg[MSG_SERVER_STATUS], 
+                s->rx_msg[MSG_SERVER_STATUS]);
+        }
 
-        CON("  Server Close   : tx %u, rx %u",
-            s->tx_msg[MSG_SERVER_CLOSE], 
-            s->rx_msg[MSG_SERVER_CLOSE]);
+        if (s->tx_msg[MSG_SERVER_CLOSE] || s->rx_msg[MSG_SERVER_CLOSE]) {
+            CON("  Server Close   : tx %u, rx %u",
+                s->tx_msg[MSG_SERVER_CLOSE], 
+                s->rx_msg[MSG_SERVER_CLOSE]);
+        }
 
-        CON("  Server map upd : tx %u, rx %u",
-            s->tx_msg[MSG_SERVER_MAP_UPDATE], 
-            s->rx_msg[MSG_SERVER_MAP_UPDATE]);
+        if (s->tx_msg[MSG_SERVER_MAP_UPDATE] || s->rx_msg[MSG_SERVER_MAP_UPDATE]) {
+            CON("  Server map upd : tx %u, rx %u",
+                s->tx_msg[MSG_SERVER_MAP_UPDATE], 
+                s->rx_msg[MSG_SERVER_MAP_UPDATE]);
+        }
 
-        CON("  Player update  : tx %u, rx %u",
-            s->tx_msg[MSG_SERVER_PLAYER_UPDATE], 
-            s->rx_msg[MSG_SERVER_PLAYER_UPDATE]);
+        if (s->tx_msg[MSG_SERVER_PLAYER_UPDATE] || s->rx_msg[MSG_SERVER_PLAYER_UPDATE]) {
+            CON("  Player update  : tx %u, rx %u",
+                s->tx_msg[MSG_SERVER_PLAYER_UPDATE], 
+                s->rx_msg[MSG_SERVER_PLAYER_UPDATE]);
+        }
 
-        CON("  Client move    : tx %u, rx %u",
-            s->tx_msg[MSG_CLIENT_PLAYER_MOVE], 
-            s->rx_msg[MSG_CLIENT_PLAYER_MOVE]);
+        if (s->tx_msg[MSG_CLIENT_PLAYER_MOVE] || s->rx_msg[MSG_CLIENT_PLAYER_MOVE]) {
+            CON("  Client move    : tx %u, rx %u",
+                s->tx_msg[MSG_CLIENT_PLAYER_MOVE], 
+                s->rx_msg[MSG_CLIENT_PLAYER_MOVE]);
+        }
 
         /*
          * Ping stats.
@@ -1006,15 +1032,15 @@ void socket_set_connected (socketp s, boolean c)
         }
     } else if (socket_get_client(s)) {
         if (c) {
-            LOG("Server present %s", socket_get_remote_logname(s));
+            LOG("Client: Server present %s", socket_get_remote_logname(s));
         } else {
-            LOG("Server disconnect from %s", socket_get_remote_logname(s));
+            LOG("Client: Server disconnect from %s", socket_get_remote_logname(s));
         }
     } else {
         if (c) {
-            LOG("Client present %s", socket_get_remote_logname(s));
+            LOG("Server: Client present %s", socket_get_remote_logname(s));
         } else {
-            LOG("Client disconnect from %s", socket_get_remote_logname(s));
+            LOG("Server: Client disconnect from %s", socket_get_remote_logname(s));
         }
     }
 
@@ -1235,7 +1261,8 @@ void socket_tx_name (socketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx Name [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
+    LOG("Client: Tx Name [to %s] \"%s\"", 
+        socket_get_remote_logname(s), s->name);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1259,7 +1286,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Rx Name from %s \"%s\"", tmp, msg.name);
+    LOG("Server: Rx Name from %s \"%s\"", tmp, msg.name);
     myfree(tmp);
 
     socket_set_name(s, msg.name);
@@ -1298,7 +1325,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     }
 
     if (!s->connected) {
-        WARN("Server is not present, cannot join yet");
+        WARN("Client: Server is not present, cannot join yet");
         return (false);
     }
 
@@ -1315,7 +1342,8 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx Join [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
+    LOG("Client: Tx Join [to %s] \"%s\"", 
+        socket_get_remote_logname(s), s->name);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1347,7 +1375,7 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
             global_config.server_max_players) {
 
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Join (rejected) from %s \"%s\"", tmp, msg.name);
+        LOG("Server: Rx Join (rejected) from %s \"%s\"", tmp, msg.name);
         LOG("  current players %u", global_config.server_current_players);
         LOG("  max     players %u", global_config.server_max_players);
         myfree(tmp);
@@ -1361,7 +1389,7 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         thing_template = thing_template_find_short_name(msg.pclass);
         if (!thing_template) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Rx Join (rejected) from %s \"%s\" unknown class %s", 
+            LOG("Server: Rx Join (rejected) from %s \"%s\" unknown class %s", 
                 tmp, msg.name, msg.pclass);
             myfree(tmp);
 
@@ -1371,7 +1399,7 @@ boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Rx Join from %s \"%s\"", tmp, msg.name);
+    LOG("Server: Rx Join from %s \"%s\"", tmp, msg.name);
     myfree(tmp);
 
     socket_set_name(s, msg.name);
@@ -1431,7 +1459,8 @@ void socket_tx_client_leave (socketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx leave [to %s] \"%s\"", socket_get_remote_logname(s), s->name);
+    LOG("Client: Tx leave [to %s] \"%s\"", 
+        socket_get_remote_logname(s), s->name);
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1462,7 +1491,7 @@ boolean socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
      */
     if (!s->player) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx bad leave from %s", tmp);
+        LOG("Server: Rx bad leave from %s", tmp);
         myfree(tmp);
 
         socket_tx_tell(s, "Leave rejected:", "Unknown player", "Not in game");
@@ -1470,7 +1499,7 @@ boolean socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Rx leave from %s", tmp);
+    LOG("Server: Rx leave from %s", tmp);
     myfree(tmp);
 
     return (true);
@@ -1502,7 +1531,7 @@ void socket_tx_client_close (socketp s)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx Client Close [to %s]", socket_get_remote_logname(s));
+    LOG("Client: Tx Close [to %s]", socket_get_remote_logname(s));
 
     packet->len = sizeof(msg);
     write_address(packet, socket_get_remote_ip(s));
@@ -1526,7 +1555,7 @@ void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Rx Client Close from %s", tmp);
+    LOG("Server: Rx Close from %s", tmp);
     myfree(tmp);
 
     socket_disconnect(s);
@@ -1557,7 +1586,7 @@ static void socket_tx_client_shout_relay (socketp s, const char *txt,
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx Client Shout [to %s] \"%s\"", 
+    LOG("Client: Tx Shout [to %s] \"%s\"", 
         socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
@@ -1584,7 +1613,7 @@ void socket_tx_client_shout (socketp s, const char *txt)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx Client Shout [to %s] \"%s\"", 
+    LOG("Client: Tx Shout [to %s] \"%s\"", 
         socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
@@ -1614,15 +1643,9 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
     memcpy(from, msg.from, SMALL_STRING_LEN_MAX);
 
-    if (msg.from[0]) {
-        LOG("SHOUT: \"%s\" from %s", txt, msg.from);
-    } else {
-        LOG("SHOUT: \"%s\"", txt);
-    }
-
     {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Client Shout from %s \"%s\"", tmp, txt);
+        LOG("Server: Rx Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
     }
 
@@ -1683,8 +1706,6 @@ void socket_tx_server_shout (const char *txt)
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Tx Server Shout \"%s\"", txt);
-
     packet->len = sizeof(msg);
 
     socketp sp;
@@ -1705,6 +1726,9 @@ void socket_tx_server_shout (const char *txt)
             continue;
         }
 
+        LOG("Server: Tx Shout \"%s\" to %s", txt,
+            socket_get_remote_logname(sp));
+
         write_address(packet, socket_get_remote_ip(sp));
 
         socket_tx_msg(sp, packet);
@@ -1722,8 +1746,6 @@ void socket_tx_server_shout_except_to (const char *txt, socketp except)
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
-
-    LOG("Tx Server Shout \"%s\"", txt);
 
     packet->len = sizeof(msg);
 
@@ -1749,6 +1771,9 @@ void socket_tx_server_shout_except_to (const char *txt, socketp except)
             continue;
         }
 
+        LOG("Server: Tx Shout \"%s\" to %s", txt,
+            socket_get_remote_logname(sp));
+
         write_address(packet, socket_get_remote_ip(sp));
 
         socket_tx_msg(sp, packet);
@@ -1773,11 +1798,9 @@ void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
     char txt[PLAYER_MSG_MAX + 1] = {0};
     memcpy(txt, msg.txt, PLAYER_MSG_MAX);
 
-    LOG("SERVER MESSAGE: \"%s\"", txt);
-
-    if (debug_socket_players_enabled) {
+    {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Server Shout from %s \"%s\"", tmp, txt);
+        LOG("Client: Rx Shout from %s \"%s\"", tmp, txt);
         myfree(tmp);
     }
 
@@ -1858,7 +1881,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (debug_socket_players_enabled) {
-        LOG("Rx Client Tell from %s \"%s\"", from, txt);
+        LOG("Client: Rx Tell from %s \"%s\"", from, txt);
     }
 
     if (!socket_get_server(s)) {
@@ -1992,7 +2015,7 @@ void socket_tx_server_status (void)
             }
 
             if (debug_socket_players_enabled) {
-                LOG("Tx Status [to %s]",
+                LOG("Server: Tx Status [to %s]",
                     socket_get_remote_logname(s));
             }
 
@@ -2056,7 +2079,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Rx Status from %s %u:\"%s\"", tmp, pi, p->name);
+            LOG("Client: Rx Status from %s %u:\"%s\"", tmp, pi, p->name);
             myfree(tmp);
         }
     }
@@ -2091,7 +2114,7 @@ void socket_tx_server_close (void)
             continue;
         }
 
-        LOG("Tx Server down [to %s]",
+        LOG("Server: Tx down [to %s]",
             socket_get_remote_logname(s));
 
         packet->len = sizeof(msg);
@@ -2115,7 +2138,7 @@ void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Rx Server down from %s", tmp);
+    LOG("Server: Rx down from %s", tmp);
     myfree(tmp);
 
     socket_set_connected(s, false);

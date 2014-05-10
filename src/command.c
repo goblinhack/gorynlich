@@ -430,7 +430,7 @@ static void console_clear (void)
 
 static void console_refresh (void)
 {
-    if (!HEADLESS) {
+    if (!HEADLESS && !enable_console) {
         return;
     }
 
@@ -452,7 +452,7 @@ static void console_refresh (void)
 
 void console_tick (void)
 {
-    if (!HEADLESS) {
+    if (!HEADLESS && !enable_console) {
         return;
     }
 

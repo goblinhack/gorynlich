@@ -149,6 +149,7 @@ boolean thing_has(thingp t, uint32_t id);
  * thing_ai.c
  */
 boolean thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
+void dmap_generate_monst_map_wander(levelp level);
 void thing_generate_dmaps(void);
 void dmap_process_init(void);
 void dmap_process_fini(void);

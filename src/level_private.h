@@ -14,20 +14,13 @@ typedef struct level_t_ {
     uint32_t level_no;
 
     /*
-     * Djkstra maps so we can quickly tell the next hop.
-     *
-     * This one is for every single map position, how to get there.
-     */
-    level_walls monst_map_wander[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
-
-    /*
      * This is for monsters. One map where they try to go through doors and 
      * another where they give up. This way in a closed room with a door the
      * monster will wait by the door. If there is an open wall it will hit the
      * door and then decide to go for the opening.
      */
-    level_walls monst_map_consider_doors;
-    level_walls monst_map_ignore_doors;
+    level_walls monst_map_treat_doors_as_passable;
+    level_walls monst_map_treat_doors_as_walls;
 
     level_walls walls;
     level_walls roads;

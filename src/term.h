@@ -85,3 +85,4 @@ extern void term_clear_bbuffer(void);
 extern int term_test(int32_t argc, char *argv[]);
 extern void term_scroll(void);
 extern void term_log(const char *buf);
+extern int enable_console;
