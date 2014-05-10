@@ -42,7 +42,6 @@ static level_walls dmap_monst_map_treat_doors_as_walls_scratchpad;
  */
 static level_walls dmap_monst_map_wander[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
 
-
 /*
  * Print the Dijkstra map scores shared by all things of the same type.
  */
@@ -469,7 +468,24 @@ static boolean thing_find_nexthop_dmap (thingp t,
     else if (g == lowest) { dx = -1; dy =  1; }
     else if (h == lowest) { dx =  0; dy =  1; }
     else if (i == lowest) { dx = +1; dy =  1; }
+    else {
+        return (false);
+    }
 
+    /*
+     * Best hop is into something we can't move onto?
+     */
+    if (lowest == not_preferred) {
+        return (false);
+    }
+
+    if (lowest == is_a_wall) {
+        return (false);
+    }
+
+    /*
+     * Success.
+     */
     *nexthop_x = x + dx;
     *nexthop_y = y + dy;
 
@@ -483,19 +499,76 @@ static boolean thing_find_nexthop_dmap (thingp t,
     return (true);
 }
 
+static boolean thing_try_nexthop (thingp t,
+                                  level_walls *dmap,
+                                  int32_t *nexthop_x, int32_t *nexthop_y)
+{
+    if (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y) &&
+        thing_server_move(t, *nexthop_x, *nexthop_y,
+                          *nexthop_y < t->y, *nexthop_y > t->y,
+                          *nexthop_x < t->x, *nexthop_x > t->x, false)) {
+        return (true);
+    }
+
+    return (false);
+}
+
 boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
-    level_walls *dmap;
-    
-    if (!t->walls) {
-        t->walls = &server_level->monst_map_treat_doors_as_passable;
+    /*
+     * Start out with treating doors as passable.
+     */
+    if (!t->dmap) {
+        t->dmap = &dmap_monst_map_treat_doors_as_passable;
     }
 
-    if (t->walls == &server_level->monst_map_treat_doors_as_passable) {
-        dmap = &dmap_monst_map_treat_doors_as_passable;
+    /*
+     * Try the current map.
+     */
+    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y)) {
+        return (true);
+    }
+
+    /*
+     * Try the alternative map.
+     */
+    if (t->dmap == &dmap_monst_map_treat_doors_as_passable) {
+        t->dmap = &dmap_monst_map_treat_doors_as_walls;
     } else {
-        dmap = &dmap_monst_map_treat_doors_as_walls;
+        t->dmap = &dmap_monst_map_treat_doors_as_passable;
     }
 
-    return (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y));
+    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y)) {
+        return (true);
+    }
+
+    /*
+     * Try the wander map.
+     */
+    if (t->dmap_wander) {
+        if (!t->dmap_wander->walls[(int)t->x][(int)t->y]) {
+            /*
+             * Reached the destination. Try a new map.
+             */
+            t->dmap_wander = 0;
+        }
+    }
+
+    uint32_t x = rand() % TILES_MAP_WIDTH;
+    uint32_t y = rand() % TILES_MAP_HEIGHT;
+
+    if (!t->dmap_wander) {
+        t->dmap_wander = &dmap_monst_map_wander[x][y];
+    }
+
+    if (thing_try_nexthop(t, t->dmap_wander, nexthop_x, nexthop_y)) {
+        return (true);
+    }
+
+    /*
+     * Try a new wander map next time.
+     */
+    t->dmap_wander = &dmap_monst_map_wander[x][y];
+
+    return (false);
 }

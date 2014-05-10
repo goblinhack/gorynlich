@@ -165,54 +165,7 @@ static void thing_tick_server_all (void)
             int32_t nexthop_x = -1;
             int32_t nexthop_y = -1;
 
-            /*
-             * Need to look for a nexthop? Or keep walking on?
-             */
-            boolean have_nexthop = 
-                            thing_find_nexthop(t, &nexthop_x, &nexthop_y);
-            if (have_nexthop) {
-                widp wid_current_floor = wid_grid_find_thing_template(
-                                            wid_game_map_server_grid_container,
-                                            t->x,
-                                            t->y,
-                                            thing_template_is_floor);
-                if (!wid_current_floor) {
-                    DIE("not on a floor tile");
-                }
-
-                widp wid_next_floor = wid_grid_find_thing_template(
-                                            wid_game_map_server_grid_container,
-                                            nexthop_x,
-                                            nexthop_y,
-                                            thing_template_is_floor);
-                if (!wid_next_floor) {
-                    LOG("no floor tile to hop to %d %d for %s", 
-                        nexthop_x, nexthop_y, thing_logname(t));
-                    continue;
-                }
- 
-                double fnexthop_x = (double)nexthop_x;
-                double fnexthop_y = (double)nexthop_y;
-
-                if (!thing_server_move(t,
-                                       fnexthop_x,
-                                       fnexthop_y,
-                                       fnexthop_y < t->y,
-                                       fnexthop_y > t->y,
-                                       fnexthop_x < t->x,
-                                       fnexthop_x > t->x,
-                                       false)) {
-                    /*
-                     * Hit an obstacle? Try a different map for the next time
-                     * we find a next hop.
-                     */
-                    if (t->walls == &server_level->monst_map_treat_doors_as_passable) {
-                        t->walls = &server_level->monst_map_treat_doors_as_walls;
-                    } else {
-                        t->walls = &server_level->monst_map_treat_doors_as_passable;
-                    }
-                }
-
+            if (thing_find_nexthop(t, &nexthop_x, &nexthop_y)) {
                 t->timestamp_ai = time_get_time_cached();
             }
         }
