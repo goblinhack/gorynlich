@@ -25,6 +25,7 @@
 #include "command.h"
 #include "server.h"
 #include "client.h"
+#include "term.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -862,7 +863,7 @@ void sdl_loop (void)
                 }
             }
 
-            if (HEADLESS) {
+            if (HEADLESS || enable_console) {
                 console_tick();
             }
 

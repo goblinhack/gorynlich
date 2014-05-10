@@ -50,7 +50,7 @@ boolean server_start (IPaddress address)
         return (false);
     }
 
-    LOG("Server listening on %s", socket_get_local_logname(s));
+    LOG("Server: listening on %s", socket_get_local_logname(s));
 
     server_socket = s;
 
@@ -93,7 +93,7 @@ boolean server_init (void)
         }
     }
 
-    LOG("Trying to resolve server address %s:%u", 
+    LOG("Server: Trying to resolve server address %s:%u", 
         SERVER_DEFAULT_HOST, portno);
 
     if (SDLNet_ResolveHost(&server_address, SERVER_DEFAULT_HOST, portno)) {
@@ -139,7 +139,7 @@ static void server_rx_client_join (socketp s)
 
     global_config.server_current_players++;
 
-    LOG("\"%s\" joined the game from %s", p->name,
+    LOG("Server: \"%s\" joined the game from %s", p->name,
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s joined the game", p->name);
@@ -177,7 +177,7 @@ static void server_rx_client_leave (socketp s)
         return;
     }
 
-    LOG("\"%s\" left the game from %s", p->name,
+    LOG("Server: \"%s\" left the game from %s", p->name,
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s left the game", p->name);
@@ -197,7 +197,7 @@ static void server_rx_client_close (socketp s)
         return;
     }
 
-    LOG("\"%s\" suddenly left of the game from %s", p->name,
+    LOG("Server: \"%s\" suddenly left of the game from %s", p->name,
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s suddenly left the game", p->name);
@@ -247,7 +247,7 @@ static void server_poll (void)
         socketp s = socket_find_remote_ip(read_address(packet));
         if (!s) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Server new client from %s", tmp);
+            LOG("Server: new client from %s", tmp);
             myfree(tmp);
 
             s = socket_connect_from_server(read_address(packet));
@@ -352,7 +352,7 @@ static void server_alive_check (void)
         /*
          * Don't kill off new born connections.
          */
-        if (socket_get_tx(s) < 10) {
+        if (socket_get_tx(s) < 50) {
             continue;
         }
 
@@ -367,8 +367,8 @@ static void server_alive_check (void)
                 socket_tx_client_shout(s, tmp);
                 myfree(tmp);
 
-                LOG("\"%s\" dropped out of the game from %s", p->name,
-                    socket_get_remote_logname(s));
+                LOG("Server: \"%s\" dropped out of the game from %s", 
+                    p->name, socket_get_remote_logname(s));
             }
 
             server_rx_client_leave_implicit(s);

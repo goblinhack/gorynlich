@@ -252,14 +252,14 @@ static boolean client_socket_open (char *host, char *port)
         portno = global_config.server_port;
     }
 
-    LOG("Trying to resolve server address %s:%u", host, portno);
+    LOG("Client: Trying to resolve server address %s:%u", host, portno);
 
     if (SDLNet_ResolveHost(&server_address, host, portno)) {
         MSGERR("Open socket, cannot resolve %s:%u", host, portno);
         return (false);
     }
 
-    LOG("Client connecting to server address %s:%u", host, portno);
+    LOG("Client: Connecting to server address %s:%u", host, portno);
 
     /*
      * Connector.
@@ -321,7 +321,7 @@ static boolean client_socket_close (char *host, char *port)
         client_socket_leave();
     }
 
-    LOG("Client disconnecting %s", socket_get_remote_logname(s));
+    LOG("Client: disconnecting %s", socket_get_remote_logname(s));
 
     socket_tx_client_close(s);
 
@@ -397,7 +397,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno,
         return (false);
     }
 
-    LOG("Joining server %s", socket_get_remote_logname(s));
+    LOG("Client: Joining server %s", socket_get_remote_logname(s));
 
     client_joined_server = s;
     client_joined_server_when = time_get_time_cached();
@@ -432,7 +432,7 @@ boolean client_socket_leave (void)
 
     verify(client_joined_server);
 
-    LOG("Client leaving %s", 
+    LOG("Client: leaving %s", 
         socket_get_remote_logname(client_joined_server));
 
     socket_tx_client_leave(client_joined_server);
@@ -782,7 +782,7 @@ static void client_poll (void)
 
                 if (server_status.server_current_players !=
                     latest_status.server_current_players) {
-                    LOG("Number of players in game now %u", 
+                    LOG("Client: Number of players in game now %u", 
                         latest_status.server_current_players);
 
                     redo = true;
@@ -912,9 +912,17 @@ static void client_check_still_in_game (void)
         return;
     }
 
+    /*
+     * Only if no report for a long time, whinge.
+     */
+    if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING * 5,
+                                         client_joined_server_when)) {
+        return;
+    }
+
     MSG("Server does not report you in the game!");
 
-    LOG("  You are player: \"%s\", ID %u", 
+    LOG("Client:  You are player: \"%s\", ID %u", 
         global_config.name, client_joined_server_key);
 
     server_connection_confirmed = false;
@@ -922,7 +930,7 @@ static void client_check_still_in_game (void)
     for (pi = 0; pi < MAX_PLAYERS; pi++) {
         msg_player_state *p = &server_status.players[pi];
 
-        LOG("  Player %u is \"%s\", ID %u ", pi+1, p->name, p->key);
+        LOG("Client:  Player %u is \"%s\", ID %u ", pi+1, p->name, p->key);
     }
 }
 
