@@ -319,7 +319,8 @@ typedef struct thing_ {
     /*
      * Which djkstra map this thing is using.
      */
-    level_walls *walls;
+    level_walls *dmap;
+    level_walls *dmap_wander;
 
     /*
      * Pointer to common settings for this thing.
