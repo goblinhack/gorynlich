@@ -15,20 +15,12 @@
 #include "map.h"
 
 static FILE *fp;
-static const int8_t not_preferred = 63;
+static const int8_t is_a_wall = 63;
+static const int8_t not_preferred = 62;
 
 static pthread_t dmap_thread;
 static pthread_mutex_t dmap_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t dmap_condition_var = PTHREAD_COND_INITIALIZER;
-
-static level_walls monst_map_consider_doors;
-static level_walls monst_map_ignore_doors;
-
-/*
- * Scratch pad dmap.
- */
-static level_walls dmap_output;
-static level_walls dmap_input;
 
 /*
  * Final dmaps
@@ -36,12 +28,17 @@ static level_walls dmap_input;
 static level_walls dmap_monst_map_consider_doors;
 static level_walls dmap_monst_map_ignore_doors;
 
-static uint32_t dmap_checksum;
+/*
+ * Scratch pad dmaps are updated to the above dmaps when complete so the 
+ * monster never sees a partail dmap.
+ */
+static level_walls dmap_monst_map_consider_doors_scratchpad;
+static level_walls dmap_monst_map_ignore_doors_scratchpad;
 
 /*
  * Print the Dijkstra map scores shared by all things of the same type.
  */
-static void dmap_print (levelp level)
+static void dmap_print (levelp level, level_walls *dmap)
 {
     int8_t x;
     int8_t y;
@@ -52,10 +49,6 @@ static void dmap_print (levelp level)
 
     for (y = 0; y < TILES_MAP_HEIGHT; y++) {
         for (x = 0; x < TILES_MAP_WIDTH; x++) {
-            if (map_is_wall_at(level, x, y)) {
-                fprintf(fp, " ## ");
-                continue;
-            }
             if (map_is_bomb_at(level, x, y)) {
                 fprintf(fp, " Bo ");
                 continue;
@@ -86,12 +79,7 @@ static void dmap_print (levelp level)
                 continue;
             }
 
-            if (level->monst_map_consider_doors.walls[x][y] != ' ') {
-                fprintf(fp, " ## ");
-                continue;
-            }
-
-            fprintf(fp, "%4d", dmap_input.walls[x][y]);
+            fprintf(fp, "%4d", dmap->walls[x][y]);
         }
 
         fprintf(fp, "\n");
@@ -128,7 +116,8 @@ static void dmap_thing_print (thingp t,
                 if ((x == tx) && (y == ty)) {
                     fprintf(fp, " Mo ");
                 } else {
-                    fprintf(fp, "%4d", dmap_input.walls[x][y]);
+                    fprintf(fp, "%4d", 
+                            dmap_monst_map_ignore_doors.walls[x][y]);
                 }
             }
         }
@@ -153,7 +142,7 @@ static void dmap_thing_print (thingp t,
  * numbers represents the number of steps that it will take to get from any 
  * given tile to the nearest goal. 
  */
-static void dmap_process_ (level_walls *map)
+static void dmap_process (level_walls *dmap, level_walls *dmap_final)
 {
     uint8_t x;
     uint8_t y;
@@ -174,21 +163,21 @@ static void dmap_process_ (level_walls *map)
 
         for (x = 1; x < TILES_MAP_WIDTH - 1; x++) {
             for (y = 1; y < TILES_MAP_HEIGHT - 1; y++) {
-                if (map->walls[x][y] != ' ') {
+                e = &dmap->walls[x  ][y];
+                if (*e == is_a_wall) {
                     continue;
                 }
 
-                a =  dmap_output.walls[x-1][y-1] * 2;
-                b =  dmap_output.walls[x  ][y-1];
-                c =  dmap_output.walls[x+1][y-1] * 2;
+                a =  dmap->walls[x-1][y-1] * 2;
+                b =  dmap->walls[x  ][y-1];
+                c =  dmap->walls[x+1][y-1] * 2;
 
-                d =  dmap_output.walls[x-1][y];
-                e = &dmap_output.walls[x  ][y];
-                f =  dmap_output.walls[x+1][y];
+                d =  dmap->walls[x-1][y];
+                f =  dmap->walls[x+1][y];
                  
-                g =  dmap_output.walls[x-1][y+1] * 2;
-                h =  dmap_output.walls[x  ][y+1];
-                i =  dmap_output.walls[x+1][y+1] * 2;
+                g =  dmap->walls[x-1][y+1] * 2;
+                h =  dmap->walls[x  ][y+1];
+                i =  dmap->walls[x+1][y+1] * 2;
 
                 lowest = min(a, 
                              min(b, 
@@ -205,23 +194,18 @@ static void dmap_process_ (level_walls *map)
             }
         }
     } while (changed);
-}
 
-static void dmap_process (level_walls *walls, level_walls *dmap_out)
-{
     /*
-     * Start with a clean dmap for each set of obstacles to consider.
+     * Only update the map when done so the monsters never see a map work
+     * in progress.
      */
-    memcpy(&dmap_output, &dmap_input, sizeof(dmap_output));
-    dmap_process_(walls);
-    memcpy(dmap_out, &dmap_output, sizeof(dmap_output));
+    memcpy(dmap_final, dmap, sizeof(level_walls));
 }
-
 
 /*
  * Generate goal points with a low value.
  */
-static uint32_t dmap_goals_set (boolean test)
+static uint32_t dmap_goals_set (boolean test, level_walls *dmap)
 {
     uint32_t checksum = 0;
     thingp thing_it;
@@ -250,7 +234,7 @@ static uint32_t dmap_goals_set (boolean test)
         y = (int)(thing_it->y + 0.5);
 
         if (!test) {
-            dmap_input.walls[x][y] = 0;
+            dmap->walls[x][y] = 0;
         }
 
         checksum ^= x | (y << 16);
@@ -263,14 +247,19 @@ static uint32_t dmap_goals_set (boolean test)
 /*
  * Initialize the djkstra map with high values.
  */
-static void dmap_init (void)
+static void dmap_init (level_walls *dmap, level_walls *map)
 {
     int8_t x;
     int8_t y;
 
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-            dmap_input.walls[x][y] = not_preferred;
+            if (map->walls[x][y] != ' ') {
+                dmap->walls[x][y] = is_a_wall;
+                continue;
+            }
+
+            dmap->walls[x][y] = not_preferred;
         }
     }
 }
@@ -288,8 +277,10 @@ static void *dmap_process_thread (void *context)
         /*
          * Start with a clean dmap for each set of obstacles to consider.
          */
-        dmap_process(&monst_map_consider_doors, &dmap_monst_map_consider_doors);
-        dmap_process(&monst_map_ignore_doors, &dmap_monst_map_ignore_doors);
+        dmap_process(&dmap_monst_map_consider_doors_scratchpad,
+                     &dmap_monst_map_consider_doors);
+        dmap_process(&dmap_monst_map_ignore_doors_scratchpad,
+                     &dmap_monst_map_ignore_doors);
 
         pthread_mutex_unlock(&dmap_mutex);
     }
@@ -302,12 +293,14 @@ static void *dmap_process_thread (void *context)
  */
 static void dmap_process_wake (levelp level)
 {
+    static uint32_t dmap_checksum;
+
     /*
      * Only reprocess the djkstra map if something has changed on the map
      * We use a checksum of the goals to indicate this with reasonable 
      * certainty.
      */
-    uint32_t checksum = dmap_goals_set(true /* test */);
+    uint32_t checksum = dmap_goals_set(true /* test */, 0);
     if (!checksum) {
         return;
     }
@@ -322,17 +315,15 @@ static void dmap_process_wake (levelp level)
 
     dmap_checksum = checksum;
 
-    dmap_init();
-    dmap_goals_set(false /* test */); // redo for real this time.
+    dmap_init(&dmap_monst_map_consider_doors_scratchpad,
+              &level->monst_map_consider_doors);
+    dmap_goals_set(false /* test */,
+                   &dmap_monst_map_consider_doors_scratchpad);
 
-    /*
-     * Set up the data for the dmaps
-     */
-    memcpy(&monst_map_consider_doors, &level->monst_map_consider_doors, 
-           sizeof(level->monst_map_consider_doors));
-
-    memcpy(&monst_map_ignore_doors, &level->monst_map_ignore_doors, 
-           sizeof(level->monst_map_ignore_doors));
+    dmap_init(&dmap_monst_map_ignore_doors_scratchpad,
+              &level->monst_map_ignore_doors);
+    dmap_goals_set(false /* test */,
+                   &dmap_monst_map_ignore_doors_scratchpad);
 
     /*
      * Now wake the dmap processor.
@@ -377,7 +368,7 @@ static void dmap_generate (levelp level)
 #else
     if (0)
 #endif
-    dmap_print(level);
+    dmap_print(level, &dmap_monst_map_consider_doors);
 }
 
 /*
