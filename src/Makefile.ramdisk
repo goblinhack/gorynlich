@@ -4,14 +4,8 @@
 .o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
 	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
 
-.o/ramdisk_data_gfx_dragon_xcf.o: asm/ramdisk_data_gfx_dragon_xcf.S ../data/gfx/dragon.xcf
-	gcc -c asm/ramdisk_data_gfx_dragon_xcf.S -o .o/ramdisk_data_gfx_dragon_xcf.o
-
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
-
-.o/ramdisk_data_gfx_gorynlich_xcf.o: asm/ramdisk_data_gfx_gorynlich_xcf.S ../data/gfx/gorynlich.xcf
-	gcc -c asm/ramdisk_data_gfx_gorynlich_xcf.S -o .o/ramdisk_data_gfx_gorynlich_xcf.o
 
 .o/ramdisk_data_gfx_help1_png.o: asm/ramdisk_data_gfx_help1_png.S ../data/gfx/help1.png
 	gcc -c asm/ramdisk_data_gfx_help1_png.S -o .o/ramdisk_data_gfx_help1_png.o
@@ -28,35 +22,17 @@
 .o/ramdisk_data_gfx_sprites_small_png.o: asm/ramdisk_data_gfx_sprites_small_png.S ../data/gfx/sprites_small.png
 	gcc -c asm/ramdisk_data_gfx_sprites_small_png.S -o .o/ramdisk_data_gfx_sprites_small_png.o
 
-.o/ramdisk_data_gfx_sprites_small_xcf.o: asm/ramdisk_data_gfx_sprites_small_xcf.S ../data/gfx/sprites_small.xcf
-	gcc -c asm/ramdisk_data_gfx_sprites_small_xcf.S -o .o/ramdisk_data_gfx_sprites_small_xcf.o
-
 .o/ramdisk_data_gfx_title_png.o: asm/ramdisk_data_gfx_title_png.S ../data/gfx/title.png
 	gcc -c asm/ramdisk_data_gfx_title_png.S -o .o/ramdisk_data_gfx_title_png.o
-
-.o/ramdisk_data_gfx_title_xcf.o: asm/ramdisk_data_gfx_title_xcf.S ../data/gfx/title.xcf
-	gcc -c asm/ramdisk_data_gfx_title_xcf.S -o .o/ramdisk_data_gfx_title_xcf.o
 
 .o/ramdisk_data_gfx_title2_png.o: asm/ramdisk_data_gfx_title2_png.S ../data/gfx/title2.png
 	gcc -c asm/ramdisk_data_gfx_title2_png.S -o .o/ramdisk_data_gfx_title2_png.o
 
-.o/ramdisk_data_gfx_title2_xcf.o: asm/ramdisk_data_gfx_title2_xcf.S ../data/gfx/title2.xcf
-	gcc -c asm/ramdisk_data_gfx_title2_xcf.S -o .o/ramdisk_data_gfx_title2_xcf.o
-
 .o/ramdisk_data_gfx_title3_png.o: asm/ramdisk_data_gfx_title3_png.S ../data/gfx/title3.png
 	gcc -c asm/ramdisk_data_gfx_title3_png.S -o .o/ramdisk_data_gfx_title3_png.o
 
-.o/ramdisk_data_gfx_title3_xcf.o: asm/ramdisk_data_gfx_title3_xcf.S ../data/gfx/title3.xcf
-	gcc -c asm/ramdisk_data_gfx_title3_xcf.S -o .o/ramdisk_data_gfx_title3_xcf.o
-
 .o/ramdisk_data_gfx_title_small_png.o: asm/ramdisk_data_gfx_title_small_png.S ../data/gfx/title_small.png
 	gcc -c asm/ramdisk_data_gfx_title_small_png.S -o .o/ramdisk_data_gfx_title_small_png.o
-
-.o/ramdisk_data_gfx_title_small_xcf.o: asm/ramdisk_data_gfx_title_small_xcf.S ../data/gfx/title_small.xcf
-	gcc -c asm/ramdisk_data_gfx_title_small_xcf.S -o .o/ramdisk_data_gfx_title_small_xcf.o
-
-.o/ramdisk_data_gfx_titlesmall_xcf.o: asm/ramdisk_data_gfx_titlesmall_xcf.S ../data/gfx/titlesmall.xcf
-	gcc -c asm/ramdisk_data_gfx_titlesmall_xcf.S -o .o/ramdisk_data_gfx_titlesmall_xcf.o
 
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o
@@ -138,6 +114,9 @@
 
 .o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
 	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
+
+.o/ramdisk_data_things__ghost1_session.o: asm/ramdisk_data_things__ghost1_session.S ../data/things/.ghost1.session
+	gcc -c asm/ramdisk_data_things__ghost1_session.S -o .o/ramdisk_data_things__ghost1_session.o
 
 .o/ramdisk_data_things__keys_session.o: asm/ramdisk_data_things__keys_session.S ../data/things/.keys.session
 	gcc -c asm/ramdisk_data_things__keys_session.S -o .o/ramdisk_data_things__keys_session.o
@@ -292,8 +271,14 @@
 .o/ramdisk_data_things_generator7.o: asm/ramdisk_data_things_generator7.S ../data/things/generator7
 	gcc -c asm/ramdisk_data_things_generator7.S -o .o/ramdisk_data_things_generator7.o
 
-.o/ramdisk_data_things_ghost.o: asm/ramdisk_data_things_ghost.S ../data/things/ghost
-	gcc -c asm/ramdisk_data_things_ghost.S -o .o/ramdisk_data_things_ghost.o
+.o/ramdisk_data_things_ghost1.o: asm/ramdisk_data_things_ghost1.S ../data/things/ghost1
+	gcc -c asm/ramdisk_data_things_ghost1.S -o .o/ramdisk_data_things_ghost1.o
+
+.o/ramdisk_data_things_ghost2.o: asm/ramdisk_data_things_ghost2.S ../data/things/ghost2
+	gcc -c asm/ramdisk_data_things_ghost2.S -o .o/ramdisk_data_things_ghost2.o
+
+.o/ramdisk_data_things_ghost3.o: asm/ramdisk_data_things_ghost3.S ../data/things/ghost3
+	gcc -c asm/ramdisk_data_things_ghost3.S -o .o/ramdisk_data_things_ghost3.o
 
 .o/ramdisk_data_things_keys1.o: asm/ramdisk_data_things_keys1.S ../data/things/keys1
 	gcc -c asm/ramdisk_data_things_keys1.S -o .o/ramdisk_data_things_keys1.o
