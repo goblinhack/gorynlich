@@ -509,13 +509,24 @@ static boolean thing_find_nexthop_dmap (thingp t,
 
 static boolean thing_try_nexthop (thingp t,
                                   level_walls *dmap,
-                                  int32_t *nexthop_x, int32_t *nexthop_y)
+                                  int32_t *nexthop_x, 
+                                  int32_t *nexthop_y,
+                                  boolean can_change_dir_without_moving)
 {
-    if (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y) &&
-        thing_server_move(t, *nexthop_x, *nexthop_y,
-                          *nexthop_y < t->y, *nexthop_y > t->y,
-                          *nexthop_x < t->x, *nexthop_x > t->x, false)) {
-        return (true);
+    if (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y)) {
+
+        if (!can_change_dir_without_moving) {
+            if (thing_hit_solid_obstacle(wid_game_map_server_grid_container, t, 
+                                        *nexthop_x, *nexthop_y)) {
+                return (false);
+            }
+        }
+
+        if (thing_server_move(t, *nexthop_x, *nexthop_y,
+                              *nexthop_y < t->y, *nexthop_y > t->y,
+                              *nexthop_x < t->x, *nexthop_x > t->x, false)) {
+            return (true);
+        }
     }
 
     return (false);
@@ -533,7 +544,8 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     /*
      * Try the current map.
      */
-    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y)) {
+    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                          true /* can_change_dir_without_moving */)) {
         return (true);
     }
 
@@ -546,7 +558,8 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         t->dmap = &dmap_monst_map_treat_doors_as_passable;
     }
 
-    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y)) {
+    if (thing_try_nexthop(t, t->dmap, nexthop_x, nexthop_y,
+                          false /* can_change_dir_without_moving */)) {
         return (true);
     }
 
@@ -569,11 +582,9 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         t->dmap_wander = &dmap_monst_map_wander[x][y];
     }
 
-    if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container, t, 
-                                  *nexthop_x, *nexthop_y)) {
-        if (thing_try_nexthop(t, t->dmap_wander, nexthop_x, nexthop_y)) {
-            return (true);
-        }
+    if (thing_try_nexthop(t, t->dmap_wander, nexthop_x, nexthop_y,
+                          false /* can_change_dir_without_moving */)) {
+        return (true);
     }
 
     /*
