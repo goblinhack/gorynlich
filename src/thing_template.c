@@ -246,6 +246,7 @@ static void thing_template_destroy_internal (thing_templatep t)
     myfree(t->tooltip);
     myfree(t->short_name);
     myfree(t->weapon);
+    myfree(t->spawn_on_death);
 }
 
 void thing_templates_marshal (marshal_p out)
@@ -354,11 +355,13 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
     GET_OPT_DEF_NAMED_STRING(ctx, "name", name, "<no name>");
     GET_OPT_DEF_NAMED_STRING(ctx, "short_name", t->short_name, "<no name>");
     GET_OPT_DEF_NAMED_STRING(ctx, "tooltip", t->tooltip, "<no name>");
-    GET_OPT_DEF_NAMED_STRING(ctx, "weapon", t->weapon, "<no name>");
 
     (void) demarshal_gotone(ctx);
 
     do {
+        GET_OPT_NAMED_STRING(ctx, "weapon", t->weapon);
+        GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
+
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
         GET_OPT_NAMED_UINT16(ctx, "speed", t->speed);
@@ -461,6 +464,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_STRING(ctx, "short_name", t->short_name);
     PUT_NAMED_STRING(ctx, "tooltip", t->tooltip);
     PUT_NAMED_STRING(ctx, "weapon", t->weapon);
+    PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
     PUT_NAMED_INT32(ctx, "speed", t->speed);
@@ -564,6 +568,11 @@ const char *thing_template_short_name (thing_templatep t)
 const char *thing_template_weapon (thing_templatep t)
 {
     return (t->weapon);
+}
+
+const char *thing_template_spawn_on_death (thing_templatep t)
+{
+    return (t->spawn_on_death);
 }
 
 const char *thing_template_get_tooltip (thing_templatep t)
