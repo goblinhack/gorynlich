@@ -914,8 +914,8 @@ void sdl_loop (void)
                     timestamp_then2 = timestamp_now;
 
                     /*
-                    * Update FPS counter.
-                    */
+                     * Update FPS counter.
+                     */
                     snprintf(fps_text, sizeof(fps_text), "%u", frames);
 
                     frames = 0;

@@ -287,8 +287,6 @@ void wid_game_map_client_wid_create (void)
         wid_set_text_bot(wid_game_map_client_window, true);
         wid_set_text_lhs(wid_game_map_client_window, true);
         wid_set_tl_br_pct(wid_game_map_client_window, tl, br);
-        wid_set_on_mouse_motion(wid_game_map_client_window,
-                                wid_game_map_client_receive_mouse_motion);
 
         fsize sz = {0.0f, 0.0f};
         wid_set_tex_tl(wid_game_map_client_window, sz);
@@ -310,7 +308,8 @@ void wid_game_map_client_wid_create (void)
         wid_set_color(wid_game_map_client_grid_container, WID_COLOR_TL, BLACK);
         wid_set_color(wid_game_map_client_grid_container, WID_COLOR_BG, BLACK);
         wid_set_color(wid_game_map_client_grid_container, WID_COLOR_BR, BLACK);
-        wid_set_ignore_events(wid_game_map_client_grid_container, true);
+        wid_set_on_mouse_motion(wid_game_map_client_grid_container,
+                                wid_game_map_client_receive_mouse_motion);
 
         wid_set_tl_br_pct(wid_game_map_client_grid_container, tl, br);
         wid_set_tex(wid_game_map_client_grid_container, 0, 0);

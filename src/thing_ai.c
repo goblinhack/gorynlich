@@ -483,6 +483,14 @@ static boolean thing_find_nexthop_dmap (thingp t,
         return (false);
     }
 
+    thing_templatep thing_template;
+
+    thing_template = thing_get_template(t);
+
+    if (lowest > thing_template_get_vision_distance(thing_template)) {
+        return (false);
+    }
+
     /*
      * Success.
      */
@@ -561,8 +569,11 @@ boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         t->dmap_wander = &dmap_monst_map_wander[x][y];
     }
 
-    if (thing_try_nexthop(t, t->dmap_wander, nexthop_x, nexthop_y)) {
-        return (true);
+    if (!thing_hit_solid_obstacle(wid_game_map_server_grid_container, t, 
+                                  *nexthop_x, *nexthop_y)) {
+        if (thing_try_nexthop(t, t->dmap_wander, nexthop_x, nexthop_y)) {
+            return (true);
+        }
     }
 
     /*
