@@ -5,9 +5,10 @@
  speed=3000
  health=20
  score_on_death=250
+ vision_distance=15
  z_order=4
  is_monst
-is_collision_map_player
+ is_collision_map_player
  is_animated
  is_scarable
  tiles={

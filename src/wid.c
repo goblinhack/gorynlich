@@ -6467,7 +6467,20 @@ void wid_mouse_motion (int32_t x, int32_t y,
         }
 
         if (wid_ignore_for_events(w)) {
-            continue;
+            /*
+             * This wid is ignoring events, but what about the parent?
+             */
+            w = w->parent;
+            while (w) {
+                if (!wid_ignore_for_events(w)) {
+                    break;
+                }
+                w = w->parent;
+            }
+
+            if (!w) {
+                continue;
+            }
         }
 
         /*

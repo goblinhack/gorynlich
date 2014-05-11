@@ -95,28 +95,33 @@ typedef struct thing_template_ {
     /*
      * Speed in milliseconds it takes to move one tile.
      */
-    uint32_t speed;
+    uint16_t speed;
 
     /*
      * Vitality.
      */
-    uint32_t health;
+    uint16_t health;
 
     /*
      * Damage on hits.
      */
-    uint32_t damage;
+    uint16_t damage;
 
     /*
      * Lifespan in milliseconds.
      */
-    uint32_t lifespan;
+    uint16_t lifespan;
+
+    /*
+     * How far in tiles the thing can detect the monster.
+     */
+    uint8_t vision_distance;
 
     /*
      * Various bounties.
      */
-    uint32_t score_on_death;
-    uint32_t score_on_collect;
+    uint16_t score_on_death;
+    uint16_t score_on_collect;
 
     uint32_t ppp1;
     uint32_t ppp2;
@@ -216,6 +221,7 @@ uint32_t thing_template_get_lifespan(thing_templatep);
 uint32_t thing_template_get_health(thing_templatep);
 uint32_t thing_template_get_damage(thing_templatep);
 uint32_t thing_template_get_score_on_death(thing_templatep);
+uint32_t thing_template_get_vision_distance(thing_templatep);
 uint32_t thing_template_get_score_on_collect(thing_templatep);
 uint32_t thing_template_get_ppp1(thing_templatep);
 uint32_t thing_template_get_ppp2(thing_templatep);

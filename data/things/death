@@ -6,6 +6,7 @@
  health=1000
  damage=5
  score_on_death=1000
+ vision_distance=60
  z_order=4
  is_monst
 is_collision_map_player
