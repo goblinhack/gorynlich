@@ -138,10 +138,10 @@ static boolean resource_init_23 (void *context)
 {
     static const char *small_tiles[] = {
         // row 0 floor tiles
+        "space",
         "player-collision-map",
         "monst-collision-map",
         "weapon-collision-map",
-        "space",
         "noentry",
         0,
         0,

@@ -163,6 +163,9 @@ static boolean things_overlap (const thingp A,
         Apy1 = collision_map_player_y1;
         Apy2 = collision_map_player_y2;
     } else {
+        /*
+         * Just use pixel and alpha values.
+         */
         tilep tileA = wid_get_tile(widA);
 
         Apx1 = tileA->px1 * xscale;
@@ -171,12 +174,12 @@ static boolean things_overlap (const thingp A,
         Apy2 = tileA->py2 * yscale;
     }
 
-    if (thing_is_collision_map_player(B)) {
+    if (thing_is_collision_map_monst(B)) {
         Bpx1 = collision_map_monst_x1;
         Bpx2 = collision_map_monst_x2;
         Bpy1 = collision_map_monst_y1;
         Bpy2 = collision_map_monst_y2;
-    } else if (thing_is_collision_map_player(B)) {
+    } else if (thing_is_collision_map_weapon(B)) {
         Bpx1 = collision_map_weapon_x1;
         Bpx2 = collision_map_weapon_x2;
         Bpy1 = collision_map_weapon_y1;
@@ -187,6 +190,9 @@ static boolean things_overlap (const thingp A,
         Bpy1 = collision_map_player_y1;
         Bpy2 = collision_map_player_y2;
     } else {
+        /*
+         * Just use pixel and alpha values.
+         */
         tilep tileB = wid_get_tile(widB);
 
         Bpx1 = tileB->px1 * xscale;
