@@ -568,6 +568,21 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
         t->on_active_list = true;
     }
+
+    /*
+     * When it dies, does it spawn an entity?
+     */
+    const char *spawn = thing_template_spawn_on_death(t->thing_template);
+    if (spawn) {
+        thing_templatep what = thing_template_find(spawn);
+        if (what) {
+            wid_game_map_server_replace_tile(
+                wid_game_map_server_grid_container,
+                t->x,
+                t->y,
+                what);
+        }
+    }
 }
 
 static void thing_hit_ (thingp t, 
