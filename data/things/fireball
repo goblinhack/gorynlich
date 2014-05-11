@@ -12,39 +12,147 @@
  tiles={
   tile={
    is_dir_up
-   tile="fireball-up"
+   tile="fireball1a-up"
   }
   tile={
    is_dir_down
-   tile="fireball-down"
+   tile="fireball1a-down"
   }
   tile={
    is_dir_left
-   tile="fireball-left"
+   tile="fireball1a-left"
   }
   tile={
    is_dir_right
-   tile="fireball-right"
+   tile="fireball1a-right"
   }
   tile={
    is_dir_up
    is_dir_left
-   tile="fireball-tl"
+   tile="fireball1a-tl"
   }
   tile={
    is_dir_down
    is_dir_left
-   tile="fireball-bl"
+   tile="fireball1a-bl"
   }
   tile={
    is_dir_up
    is_dir_right
-   tile="fireball-tr"
+   tile="fireball1a-tr"
   }
   tile={
    is_dir_down
    is_dir_right
-   tile="fireball-br"
+   tile="fireball1a-br"
+  }
+  tile={
+   is_dir_up
+   tile="fireball1b-up"
+  }
+  tile={
+   is_dir_down
+   tile="fireball1b-down"
+  }
+  tile={
+   is_dir_left
+   tile="fireball1b-left"
+  }
+  tile={
+   is_dir_right
+   tile="fireball1b-right"
+  }
+  tile={
+   is_dir_up
+   is_dir_left
+   tile="fireball1b-tl"
+  }
+  tile={
+   is_dir_down
+   is_dir_left
+   tile="fireball1b-bl"
+  }
+  tile={
+   is_dir_up
+   is_dir_right
+   tile="fireball1b-tr"
+  }
+  tile={
+   is_dir_down
+   is_dir_right
+   tile="fireball1b-br"
+  }
+  tile={
+   is_dir_up
+   tile="fireball1c-up"
+  }
+  tile={
+   is_dir_down
+   tile="fireball1c-down"
+  }
+  tile={
+   is_dir_left
+   tile="fireball1c-left"
+  }
+  tile={
+   is_dir_right
+   tile="fireball1c-right"
+  }
+  tile={
+   is_dir_up
+   is_dir_left
+   tile="fireball1c-tl"
+  }
+  tile={
+   is_dir_down
+   is_dir_left
+   tile="fireball1c-bl"
+  }
+  tile={
+   is_dir_up
+   is_dir_right
+   tile="fireball1c-tr"
+  }
+  tile={
+   is_dir_down
+   is_dir_right
+   tile="fireball1c-br"
+  }
+  tile={
+   is_dir_up
+   tile="fireball1d-up"
+  }
+  tile={
+   is_dir_down
+   tile="fireball1d-down"
+  }
+  tile={
+   is_dir_left
+   tile="fireball1d-left"
+  }
+  tile={
+   is_dir_right
+   tile="fireball1d-right"
+  }
+  tile={
+   is_dir_up
+   is_dir_left
+   tile="fireball1d-tl"
+  }
+  tile={
+   is_dir_down
+   is_dir_left
+   tile="fireball1d-bl"
+  }
+  tile={
+   is_dir_up
+   is_dir_right
+   tile="fireball1d-tr"
+  }
+  tile={
+   is_dir_down
+   is_dir_right
+   tile="fireball1d-br"
   }
  }
 }
