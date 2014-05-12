@@ -247,6 +247,7 @@ static void thing_template_destroy_internal (thing_templatep t)
     myfree(t->short_name);
     myfree(t->weapon);
     myfree(t->polymorph_on_death);
+    myfree(t->mob_spawn);
 }
 
 void thing_templates_marshal (marshal_p out)
@@ -361,7 +362,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
     do {
         GET_OPT_NAMED_STRING(ctx, "weapon", t->weapon);
         GET_OPT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
-
+        GET_OPT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
         GET_OPT_NAMED_UINT16(ctx, "speed", t->speed);
@@ -390,7 +391,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp17", t->ppp17);
         GET_OPT_NAMED_UINT32(ctx, "ppp18", t->ppp18);
         GET_OPT_NAMED_UINT32(ctx, "ppp19", t->ppp19);
-        GET_OPT_NAMED_UINT32(ctx, "ppp20", t->ppp20);
+        GET_OPT_NAMED_UINT32(ctx, "mob_spawn_delay_tenths", t->mob_spawn_delay_tenths);
 
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
@@ -465,6 +466,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_STRING(ctx, "tooltip", t->tooltip);
     PUT_NAMED_STRING(ctx, "weapon", t->weapon);
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
+    PUT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
     PUT_NAMED_INT32(ctx, "speed", t->speed);
@@ -474,26 +476,26 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "score_on_death", t->score_on_death);
     PUT_NAMED_INT32(ctx, "vision_distance", t->vision_distance);
     PUT_NAMED_INT32(ctx, "score_on_collect", t->score_on_collect);
-    PUT_NAMED_INT32(ctx, "score_on_ppp1", t->ppp1);
-    PUT_NAMED_INT32(ctx, "score_on_ppp2", t->ppp2);
-    PUT_NAMED_INT32(ctx, "score_on_ppp3", t->ppp3);
-    PUT_NAMED_INT32(ctx, "score_on_ppp4", t->ppp4);
-    PUT_NAMED_INT32(ctx, "score_on_ppp5", t->ppp5);
-    PUT_NAMED_INT32(ctx, "score_on_ppp6", t->ppp6);
-    PUT_NAMED_INT32(ctx, "score_on_ppp7", t->ppp7);
-    PUT_NAMED_INT32(ctx, "score_on_ppp8", t->ppp8);
-    PUT_NAMED_INT32(ctx, "score_on_ppp9", t->ppp9);
-    PUT_NAMED_INT32(ctx, "score_on_ppp10", t->ppp10);
-    PUT_NAMED_INT32(ctx, "score_on_ppp11", t->ppp11);
-    PUT_NAMED_INT32(ctx, "score_on_ppp12", t->ppp12);
-    PUT_NAMED_INT32(ctx, "score_on_ppp13", t->ppp13);
-    PUT_NAMED_INT32(ctx, "score_on_ppp14", t->ppp14);
-    PUT_NAMED_INT32(ctx, "score_on_ppp15", t->ppp15);
-    PUT_NAMED_INT32(ctx, "score_on_ppp16", t->ppp16);
-    PUT_NAMED_INT32(ctx, "score_on_ppp17", t->ppp17);
-    PUT_NAMED_INT32(ctx, "score_on_ppp18", t->ppp18);
-    PUT_NAMED_INT32(ctx, "score_on_ppp19", t->ppp19);
-    PUT_NAMED_INT32(ctx, "score_on_ppp20", t->ppp20);
+    PUT_NAMED_INT32(ctx, "ppp1", t->ppp1);
+    PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
+    PUT_NAMED_INT32(ctx, "ppp3", t->ppp3);
+    PUT_NAMED_INT32(ctx, "ppp4", t->ppp4);
+    PUT_NAMED_INT32(ctx, "ppp5", t->ppp5);
+    PUT_NAMED_INT32(ctx, "ppp6", t->ppp6);
+    PUT_NAMED_INT32(ctx, "ppp7", t->ppp7);
+    PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
+    PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
+    PUT_NAMED_INT32(ctx, "ppp10", t->ppp10);
+    PUT_NAMED_INT32(ctx, "ppp11", t->ppp11);
+    PUT_NAMED_INT32(ctx, "ppp12", t->ppp12);
+    PUT_NAMED_INT32(ctx, "ppp13", t->ppp13);
+    PUT_NAMED_INT32(ctx, "ppp14", t->ppp14);
+    PUT_NAMED_INT32(ctx, "ppp15", t->ppp15);
+    PUT_NAMED_INT32(ctx, "ppp16", t->ppp16);
+    PUT_NAMED_INT32(ctx, "ppp17", t->ppp17);
+    PUT_NAMED_INT32(ctx, "ppp18", t->ppp18);
+    PUT_NAMED_INT32(ctx, "ppp19", t->ppp19);
+    PUT_NAMED_INT32(ctx, "mob_spawn_delay_tenths", t->mob_spawn_delay_tenths);
 
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_exit", t->is_exit);
@@ -573,6 +575,11 @@ const char *thing_template_weapon (thing_templatep t)
 const char *thing_template_polymorph_on_death (thing_templatep t)
 {
     return (t->polymorph_on_death);
+}
+
+const char *thing_template_mob_spawn (thing_templatep t)
+{
+    return (t->mob_spawn);
 }
 
 const char *thing_template_get_tooltip (thing_templatep t)
@@ -720,9 +727,9 @@ uint32_t thing_template_get_ppp19 (thing_templatep t)
     return (t->ppp19);
 }
 
-uint32_t thing_template_get_ppp20 (thing_templatep t)
+uint32_t thing_template_get_mob_spawn_delay_tenths (thing_templatep t)
 {
-    return (t->ppp20);
+    return (t->mob_spawn_delay_tenths);
 }
 
 tree_rootp thing_template_get_tiles (thing_templatep t)

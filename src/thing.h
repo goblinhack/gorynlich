@@ -17,6 +17,7 @@ thingp thing_client_new(uint32_t, thing_templatep);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
+boolean thing_mob_spawn(thingp);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_hit(thingp, thingp hitter, uint32_t damage,
@@ -408,11 +409,24 @@ typedef struct thing_ {
     thing_tilep current_tile;
 
     /*
-     * When to change frame.
+     * When to change frame for animation.
      */
     uint32_t timestamp_change_to_next_frame;
+
+    /*
+     * When we last teleported.
+     */
     uint32_t timestamp_teleport;
+
+    /*
+     * When we last thunked about direction.
+     */
     uint32_t timestamp_ai;
+
+    /*
+     * When we last spawned.
+     */
+    uint32_t timestamp_mob_spawn;
 
     /*
      * When do I die? 8(
