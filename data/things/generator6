@@ -1,6 +1,6 @@
 {
  short_name="generator"
- tooltip="Mob spawner"
+ tooltip="Mob polymorpher"
  z_depth=2
  z_order=2
  is_generator

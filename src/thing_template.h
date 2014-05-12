@@ -83,7 +83,7 @@ typedef struct thing_template_ {
     /*
      * What to create when you die. Usually a smaller monster.
      */
-    char *spawn_on_death;
+    char *polymorph_on_death;
 
     /*
      * In relation to other widgets, where are we.
@@ -218,7 +218,7 @@ thing_templatep string2thing_template(const char **s);
 const char *thing_template_name(thing_templatep);
 const char *thing_template_short_name(thing_templatep);
 const char *thing_template_weapon(thing_templatep);
-const char *thing_template_spawn_on_death(thing_templatep);
+const char *thing_template_polymorph_on_death(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
 uint8_t thing_template_get_z_depth(thing_templatep);
 uint8_t thing_template_get_z_order(thing_templatep);
