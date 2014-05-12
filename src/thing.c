@@ -482,14 +482,21 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 
     /*
-     * When it dies, does it polymorph an entity?
+     * Pre death server events.
      */
     if (t->on_server) {
-        const char *polymorph = thing_template_polymorph_on_death(t->thing_template);
+        /*
+         * When it dies, doth it polymorph and thus avoid the reaper?
+         */
+        const char *polymorph = 
+                        thing_template_polymorph_on_death(t->thing_template);
         if (polymorph) {
             thing_templatep what = thing_template_find(polymorph);
 
             if (what) {
+                /*
+                 * It doth.
+                 */
                 t->resync = 1;
                 t->thing_template = what;
                 return;
@@ -505,6 +512,19 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 
     thing_set_is_dead(t, true);
+
+    /*
+     * Post death server events.
+     */
+    if (t->on_server) {
+        /*
+         * If this is a dead player, then rethink AI targets.
+         */
+        if (thing_is_player(t)) {
+            level_set_monst_map_treat_doors_as_passable(server_level);
+            level_set_monst_map_treat_doors_as_walls(server_level);
+        }
+    }
 
     /*
      * Flash briefly red on death.

@@ -308,9 +308,6 @@ static void dmap_process_wake (levelp level)
      * certainty.
      */
     uint32_t checksum = dmap_goals_set(true /* test */, 0);
-    if (!checksum) {
-        return;
-    }
 
     if (dmap_checksum == checksum) {
         return;

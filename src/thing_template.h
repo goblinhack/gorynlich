@@ -86,6 +86,11 @@ typedef struct thing_template_ {
     char *polymorph_on_death;
 
     /*
+     * Periodically spawn something.
+     */
+    char *mob_spawn;
+
+    /*
      * In relation to other widgets, where are we.
      */
     uint8_t z_depth;
@@ -147,7 +152,7 @@ typedef struct thing_template_ {
     uint32_t ppp17;
     uint32_t ppp18;
     uint32_t ppp19;
-    uint32_t ppp20;
+    uint32_t mob_spawn_delay_tenths;
 
     uint8_t is_exit:1;
     uint8_t is_floor:1;
@@ -219,6 +224,7 @@ const char *thing_template_name(thing_templatep);
 const char *thing_template_short_name(thing_templatep);
 const char *thing_template_weapon(thing_templatep);
 const char *thing_template_polymorph_on_death(thing_templatep);
+const char *thing_template_mob_spawn(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
 uint8_t thing_template_get_z_depth(thing_templatep);
 uint8_t thing_template_get_z_order(thing_templatep);
@@ -248,7 +254,7 @@ uint32_t thing_template_get_ppp16(thing_templatep);
 uint32_t thing_template_get_ppp17(thing_templatep);
 uint32_t thing_template_get_ppp18(thing_templatep);
 uint32_t thing_template_get_ppp19(thing_templatep);
-uint32_t thing_template_get_ppp20(thing_templatep);
+uint32_t thing_template_get_mob_spawn_delay_tenths(thing_templatep);
 
 tree_rootp thing_template_get_tiles(thing_templatep);
 tree_rootp thing_template_get_tiles2(thing_templatep);
