@@ -166,7 +166,33 @@ static void thing_tick_server_all (void)
             int32_t nexthop_y = -1;
 
             if (thing_find_nexthop(t, &nexthop_x, &nexthop_y)) {
-                t->timestamp_ai = time_get_time_cached();
+                /*
+                 * Add some jitter.
+                 */
+                t->timestamp_ai = time_get_time_cached() +
+                                (rand() % DELAY_TENTHS_THING_AI);
+            }
+        }
+
+        /*
+         * Time to spawn a thing?
+         */
+        if (thing_is_generator(t)) {
+            uint32_t delay = 
+                    thing_template_get_mob_spawn_delay_tenths(thing_template);
+
+            if (time_have_x_tenths_passed_since(delay,
+                                                t->timestamp_mob_spawn)) {
+                /*
+                 * Not sure if should retry rapidly when we can't place.
+                 */
+                thing_mob_spawn(t);
+
+                /*
+                 * Add some jitter.
+                 */
+                t->timestamp_mob_spawn = time_get_time_cached() +
+                                (rand() % delay);
             }
         }
     }

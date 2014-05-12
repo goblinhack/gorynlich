@@ -4,7 +4,10 @@
  z_depth=2
  z_order=2
  is_generator
-is_collision_map_player
+ is_monst
+ is_collision_map_player
+ mob_spawn_delay_tenths=100
+ mob_spawn="data/things/ghost1"
  tiles={
   tile={
    tile="generator2"

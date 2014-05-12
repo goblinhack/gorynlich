@@ -58,7 +58,6 @@ thing_templatep map_find_monst_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_item_perma_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_plant_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_player_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_polymorphs_thing_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_star_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_wall_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_key_at(levelp, int32_t x, int32_t y, widp *);

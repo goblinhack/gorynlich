@@ -4,7 +4,11 @@
  z_depth=2
  z_order=2
  is_generator
-is_collision_map_player
+ is_monst
+ is_collision_map_player
+ mob_spawn_delay_tenths=1
+ polymorph_on_death="data/things/generator1"
+ mob_spawn="data/things/ghost3"
  tiles={
   tile={
    tile="generator4"
