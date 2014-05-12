@@ -482,6 +482,22 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 
     /*
+     * When it dies, does it polymorph an entity?
+     */
+    if (t->on_server) {
+        const char *polymorph = thing_template_polymorph_on_death(t->thing_template);
+        if (polymorph) {
+            thing_templatep what = thing_template_find(polymorph);
+
+            if (what) {
+                t->resync = 1;
+                t->thing_template = what;
+                return;
+            }
+        }
+    }
+
+    /*
      * You only die once.
      */
     if (t->is_dead) {
@@ -567,21 +583,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         }
 
         t->on_active_list = true;
-    }
-
-    /*
-     * When it dies, does it spawn an entity?
-     */
-    const char *spawn = thing_template_spawn_on_death(t->thing_template);
-    if (spawn) {
-        thing_templatep what = thing_template_find(spawn);
-        if (what) {
-            wid_game_map_server_replace_tile(
-                wid_game_map_server_grid_container,
-                t->x,
-                t->y,
-                what);
-        }
     }
 }
 
@@ -1959,6 +1960,16 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 thing_template_is_wall(thing_template) ||
                 thing_template_is_pipe(thing_template) ||
                 thing_template_is_door(thing_template);
+        } else {
+            if (template_id != (uint8_t)-1) {
+                /*
+                 * Update the template ID so things can polymorph.
+                 */
+                thing_templatep thing_template = 
+                        id_to_thing_template(template_id);
+
+                t->thing_template = thing_template;
+            }
         }
 
         /*

@@ -153,10 +153,17 @@ static boolean things_overlap (const thingp A,
         Apy1 = collision_map_monst_y1;
         Apy2 = collision_map_monst_y2;
     } else if (thing_is_collision_map_weapon(A)) {
-        Apx1 = collision_map_weapon_x1;
-        Apx2 = collision_map_weapon_x2;
-        Apy1 = collision_map_weapon_y1;
-        Apy2 = collision_map_weapon_y2;
+        if (thing_is_collision_map_monst(B)) {
+            Apx1 = collision_map_monst_x1;
+            Apx2 = collision_map_monst_x2;
+            Apy1 = collision_map_monst_y1;
+            Apy2 = collision_map_monst_y2;
+        } else {
+            Apx1 = collision_map_weapon_x1;
+            Apx2 = collision_map_weapon_x2;
+            Apy1 = collision_map_weapon_y1;
+            Apy2 = collision_map_weapon_y2;
+        }
     } else if (thing_is_collision_map_player(A)) {
         Apx1 = collision_map_player_x1;
         Apx2 = collision_map_player_x2;
@@ -180,10 +187,17 @@ static boolean things_overlap (const thingp A,
         Bpy1 = collision_map_monst_y1;
         Bpy2 = collision_map_monst_y2;
     } else if (thing_is_collision_map_weapon(B)) {
-        Bpx1 = collision_map_weapon_x1;
-        Bpx2 = collision_map_weapon_x2;
-        Bpy1 = collision_map_weapon_y1;
-        Bpy2 = collision_map_weapon_y2;
+        if (thing_is_collision_map_monst(A)) {
+            Bpx1 = collision_map_monst_x1;
+            Bpx2 = collision_map_monst_x2;
+            Bpy1 = collision_map_monst_y1;
+            Bpy2 = collision_map_monst_y2;
+        } else {
+            Bpx1 = collision_map_weapon_x1;
+            Bpx2 = collision_map_weapon_x2;
+            Bpy1 = collision_map_weapon_y1;
+            Bpy2 = collision_map_weapon_y2;
+        }
     } else if (thing_is_collision_map_player(B)) {
         Bpx1 = collision_map_player_x1;
         Bpx2 = collision_map_player_x2;
