@@ -79,9 +79,9 @@ boolean thing_mob_spawn (thingp t)
         }
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
-                                        x,
-                                        y,
-                                        what);
+                                         x,
+                                         y,
+                                         what);
         return (true);
     }
 
