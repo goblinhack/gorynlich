@@ -161,16 +161,26 @@ static void thing_tick_server_all (void)
          */
         w = t->wid;
 
-        if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
-            int32_t nexthop_x = -1;
-            int32_t nexthop_y = -1;
+        /*
+         * If waiting to update this thing to the client, like if it was newly 
+         * born, then do not move it before the client gets a chance to find 
+         * out.
+         */
+        if (!t->updated) {
+            /*
+             * Look for a new hpp.
+             */
+            if (thing_is_monst(t) && speed && w && !wid_is_moving(w)) {
+                int32_t nexthop_x = -1;
+                int32_t nexthop_y = -1;
 
-            if (thing_find_nexthop(t, &nexthop_x, &nexthop_y)) {
-                /*
-                 * Add some jitter.
-                 */
-                t->timestamp_ai = time_get_time_cached() +
-                                (rand() % DELAY_TENTHS_THING_AI);
+                if (thing_find_nexthop(t, &nexthop_x, &nexthop_y)) {
+                    /*
+                    * Add some jitter.
+                    */
+                    t->timestamp_ai = time_get_time_cached() +
+                                    (DELAY_TENTHS_THING_AI * 10);
+                }
             }
         }
 
@@ -192,7 +202,7 @@ static void thing_tick_server_all (void)
                  * Add some jitter.
                  */
                 t->timestamp_mob_spawn = time_get_time_cached() +
-                                (rand() % delay);
+                                (rand() % (delay * 100));
             }
         }
     }

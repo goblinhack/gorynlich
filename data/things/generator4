@@ -6,8 +6,8 @@
  is_generator
  is_monst
  is_collision_map_player
- mob_spawn_delay_tenths=1
- polymorph_on_death="data/things/generator1"
+ mob_spawn_delay_tenths=50
+ polymorph_on_death="data/things/generator3"
  mob_spawn="data/things/ghost3"
  tiles={
   tile={
