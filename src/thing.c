@@ -625,11 +625,11 @@ static void thing_hit_ (thingp t,
     
     if (t->health <= damage) {
         t->health = 0;
-        thing_dead(t, hitter, "hit [%s]", reason);
+        thing_dead(t, hitter, "hit [%s] for %u", reason, damage);
     }  else {
         t->health -= damage;
 
-        THING_DBG(t, "hit (%s)", reason);
+        THING_LOG(t, "hit (%s) for %u", reason, damage);
     }
 }
 
@@ -650,6 +650,22 @@ void thing_hit (thingp t,
 
     if (t->is_dead) {
         return;
+    }
+
+    /*
+     * Allow now more hits than x per second by the hitter.
+     */
+    if (hitter) {
+        uint32_t delay = 
+                        thing_template_get_hit_delay_tenths(hitter->thing_template);
+        if (delay) {
+            if (!time_have_x_tenths_passed_since(delay, 
+                                                 hitter->timestamp_hit)) {
+                return;
+            }
+
+            hitter->timestamp_hit = time_get_time_cached();
+        }
     }
 
     if (reason) {
