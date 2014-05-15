@@ -433,7 +433,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
+        GET_OPT_NAMED_BITFIELD(ctx, "explode_on_death", t->explode_on_death);
         GET_OPT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
         GET_OPT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
@@ -537,7 +537,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx29", t->is_xxx29);
     PUT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
     PUT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx33", t->is_xxx33);
+    PUT_NAMED_BITFIELD(ctx, "explode_on_death", t->explode_on_death);
     PUT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
     PUT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
     PUT_NAMED_BITFIELD(ctx, "is_item_hidden", t->is_item_hidden);
