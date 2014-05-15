@@ -18,11 +18,11 @@
 /*
  * Does the requested dir exist?
  */
-boolean dir_exists (const char *indir)
+uint8_t dir_exists (const char *indir)
 {
     struct stat buf;
     char *dir;
-    boolean rc;
+    uint8_t rc;
 
     /*
      * msys is crap and unless you remove the / from the end of the name
@@ -44,8 +44,8 @@ boolean dir_exists (const char *indir)
 tree_root *dirlist (const char *dir,
                     const char *include_suffix,
                     const char *exclude_suffix,
-                    boolean include_dirs,
-                    boolean include_ramdisk)
+                    uint8_t include_dirs,
+                    uint8_t include_ramdisk)
 {
     tree_file_node *node;
     struct dirent * e;

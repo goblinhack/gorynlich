@@ -4,7 +4,7 @@
  * See the LICENSE file for license.
  */
 
-boolean wid_intro_guide_init(void);
+uint8_t wid_intro_guide_init(void);
 void wid_intro_guide_fini(void);
 void wid_intro_guide_hide(void);
 void wid_intro_guide_visible(void);

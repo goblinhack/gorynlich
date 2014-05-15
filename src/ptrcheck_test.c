@@ -9,7 +9,7 @@
 
 #include "main.h"
 
-boolean ptrcheck_test (int32_t argc, char *argv[])
+uint8_t ptrcheck_test (int32_t argc, char *argv[])
 {
     void *p;
 

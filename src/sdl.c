@@ -5,6 +5,7 @@
  */
 
 #include <SDL.h>
+#include <unistd.h>
 #include "glapi.h"
 
 #include "main.h"
@@ -62,7 +63,7 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 #endif
 #endif /* } */
 
-static boolean sdl_main_loop_running;
+static uint8_t sdl_main_loop_running;
 int32_t sdl_init_video;
 
 #ifdef ENABLE_SDL_WINDOW /* { */
@@ -91,9 +92,9 @@ void sdl_fini (void)
     SDL_Quit();
 }
 
-static inline boolean sdl_find_video_size (int32_t w, int32_t h)
+static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 {
-    static boolean first = true;
+    static uint8_t first = true;
     int32_t i;
 
     first = true;
@@ -193,7 +194,7 @@ static inline boolean sdl_find_video_size (int32_t w, int32_t h)
     return (false);
 }
 
-boolean sdl_init (void)
+uint8_t sdl_init (void)
 {
     if (HEADLESS) {
         return (true);
@@ -212,19 +213,19 @@ boolean sdl_init (void)
 
     INIT_LOG("SDL version : %u.%u", SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
 
-    boolean iphone_size = sdl_find_video_size(
+    uint8_t iphone_size = sdl_find_video_size(
                             IPHONE_VIDEO_WIDTH,
                             IPHONE_VIDEO_HEIGHT);
 
-    boolean medium_size = sdl_find_video_size(
+    uint8_t medium_size = sdl_find_video_size(
                             MEDIUM_VIDEO_WIDTH,
                             MEDIUM_VIDEO_HEIGHT);
 
-    boolean ipad_size = sdl_find_video_size(
+    uint8_t ipad_size = sdl_find_video_size(
                             IPAD_VIDEO_WIDTH,
                             IPAD_VIDEO_HEIGHT);
 
-    boolean default_size = sdl_find_video_size(
+    uint8_t default_size = sdl_find_video_size(
                             DEFAULT_VIDEO_WIDTH,
                             DEFAULT_VIDEO_HEIGHT);
     /*
@@ -656,7 +657,7 @@ static void sdl_event (SDL_Event * event)
     }
 }
 
-boolean sdl_is_exiting (void)
+uint8_t sdl_is_exiting (void)
 {
     return (!sdl_main_loop_running);
 }
@@ -672,12 +673,12 @@ void sdl_exit (void)
     sdl_main_loop_running = false;
 }
 
-boolean fps_enabled = ENABLE_FPS_COUNTER;
+uint8_t fps_enabled = ENABLE_FPS_COUNTER;
 
 /*
  * User has entered a command, run it
  */
-boolean fps_enable (tokens_t *tokens, void *context)
+uint8_t fps_enable (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
@@ -695,7 +696,7 @@ boolean fps_enable (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean sdl_user_exit (tokens_t *tokens, void *context)
+uint8_t sdl_user_exit (tokens_t *tokens, void *context)
 {
     sdl_exit();
 
@@ -708,7 +709,7 @@ boolean sdl_user_exit (tokens_t *tokens, void *context)
 void sdl_loop (void)
 {
     SDL_Event events[10];
-    boolean init_done = false;
+    uint8_t init_done = false;
     int32_t found;
     int32_t i;
     uint16_t frames = 0;
@@ -938,9 +939,11 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
-        }
 
-        SDL_Delay(5);
+            SDL_Delay(5);
+        } else {
+            usleep(5);
+        }
     }
 }
 

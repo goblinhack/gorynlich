@@ -51,7 +51,7 @@ tree_marshal *marshal (const char *filename)
     return (ctx);
 }
 
-boolean marshal_name (tree_marshal *ctx, const char *name)
+uint8_t marshal_name (tree_marshal *ctx, const char *name)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -60,7 +60,7 @@ boolean marshal_name (tree_marshal *ctx, const char *name)
                              "%s=", name));
 }
 
-boolean marshal_name_only (tree_marshal *ctx, const char *name)
+uint8_t marshal_name_only (tree_marshal *ctx, const char *name)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -69,13 +69,13 @@ boolean marshal_name_only (tree_marshal *ctx, const char *name)
                              "%s", name));
 }
 
-boolean marshal_string (tree_marshal *ctx, const char *out)
+uint8_t marshal_string (tree_marshal *ctx, const char *out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "\"%s\" ", out));
 }
 
-boolean marshal_named_string (tree_marshal *ctx, const char *name,
+uint8_t marshal_named_string (tree_marshal *ctx, const char *name,
                           const char *out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
@@ -85,13 +85,13 @@ boolean marshal_named_string (tree_marshal *ctx, const char *name,
                              "%s=\"%s\" ", name, out));
 }
 
-boolean marshal_int8 (tree_marshal *ctx, int8_t out)
+uint8_t marshal_int8 (tree_marshal *ctx, int8_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%d ", out));
 }
 
-boolean marshal_named_int8 (tree_marshal *ctx, const char *name, int8_t out)
+uint8_t marshal_named_int8 (tree_marshal *ctx, const char *name, int8_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -100,13 +100,13 @@ boolean marshal_named_int8 (tree_marshal *ctx, const char *name, int8_t out)
                              "%s=%d ", name, out));
 }
 
-boolean marshal_int16 (tree_marshal *ctx, int16_t out)
+uint8_t marshal_int16 (tree_marshal *ctx, int16_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%d ", out));
 }
 
-boolean marshal_named_int16 (tree_marshal *ctx, const char *name, int16_t out)
+uint8_t marshal_named_int16 (tree_marshal *ctx, const char *name, int16_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -115,13 +115,13 @@ boolean marshal_named_int16 (tree_marshal *ctx, const char *name, int16_t out)
                              "%s=%d ", name, out));
 }
 
-boolean marshal_int32 (tree_marshal *ctx, int32_t out)
+uint8_t marshal_int32 (tree_marshal *ctx, int32_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%d ", out));
 }
 
-boolean marshal_named_int32 (tree_marshal *ctx, const char *name, int32_t out)
+uint8_t marshal_named_int32 (tree_marshal *ctx, const char *name, int32_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -130,13 +130,13 @@ boolean marshal_named_int32 (tree_marshal *ctx, const char *name, int32_t out)
                              "%s=%d ", name, out));
 }
 
-boolean marshal_int64 (tree_marshal *ctx, int64_t out)
+uint8_t marshal_int64 (tree_marshal *ctx, int64_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%lld ", out));
 }
 
-boolean marshal_named_int64 (tree_marshal *ctx, const char *name, int64_t out)
+uint8_t marshal_named_int64 (tree_marshal *ctx, const char *name, int64_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -145,13 +145,13 @@ boolean marshal_named_int64 (tree_marshal *ctx, const char *name, int64_t out)
                              "%s=%ld ", name, out));
 }
 
-boolean marshal_uint8 (tree_marshal *ctx, uint8_t out)
+uint8_t marshal_uint8 (tree_marshal *ctx, uint8_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%u ", out));
 }
 
-boolean marshal_named_uint8 (tree_marshal *ctx, const char *name, uint8_t out)
+uint8_t marshal_named_uint8 (tree_marshal *ctx, const char *name, uint8_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -160,13 +160,13 @@ boolean marshal_named_uint8 (tree_marshal *ctx, const char *name, uint8_t out)
                              "%s=%u ", name, out));
 }
 
-boolean marshal_uint16 (tree_marshal *ctx, uint16_t out)
+uint8_t marshal_uint16 (tree_marshal *ctx, uint16_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%u ", out));
 }
 
-boolean marshal_named_uint16 (tree_marshal *ctx, const char *name, uint16_t out)
+uint8_t marshal_named_uint16 (tree_marshal *ctx, const char *name, uint16_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -175,13 +175,13 @@ boolean marshal_named_uint16 (tree_marshal *ctx, const char *name, uint16_t out)
                              "%s=%u ", name, out));
 }
 
-boolean marshal_uint32 (tree_marshal *ctx, uint32_t out)
+uint8_t marshal_uint32 (tree_marshal *ctx, uint32_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%lu ", out));
 }
 
-boolean marshal_named_uint32 (tree_marshal *ctx, const char *name, uint32_t out)
+uint8_t marshal_named_uint32 (tree_marshal *ctx, const char *name, uint32_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -190,13 +190,13 @@ boolean marshal_named_uint32 (tree_marshal *ctx, const char *name, uint32_t out)
                              "%s=%lu ", name, out));
 }
 
-boolean marshal_uint64 (tree_marshal *ctx, uint64_t out)
+uint8_t marshal_uint64 (tree_marshal *ctx, uint64_t out)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                              "%llu ", out));
 }
 
-boolean marshal_named_uint64 (tree_marshal *ctx, const char *name, uint64_t out)
+uint8_t marshal_named_uint64 (tree_marshal *ctx, const char *name, uint64_t out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -205,7 +205,7 @@ boolean marshal_named_uint64 (tree_marshal *ctx, const char *name, uint64_t out)
                              "%s=%llu ", name, out));
 }
 
-boolean marshal_float (tree_marshal *ctx, float out)
+uint8_t marshal_float (tree_marshal *ctx, float out)
 {
     if (isnan(out) || isinf(out)) {
         out = 0.0f;
@@ -215,7 +215,7 @@ boolean marshal_float (tree_marshal *ctx, float out)
                              "%f ", out));
 }
 
-boolean marshal_named_float (tree_marshal *ctx, const char *name, float out)
+uint8_t marshal_named_float (tree_marshal *ctx, const char *name, float out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
                      "\n%*s", ctx->indent, "");
@@ -228,7 +228,7 @@ boolean marshal_named_float (tree_marshal *ctx, const char *name, float out)
                              "%s=%f ", name, out));
 }
 
-boolean marshal_named_ptr (tree_marshal *ctx, const char *name,
+uint8_t marshal_named_ptr (tree_marshal *ctx, const char *name,
                        void *out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
@@ -238,7 +238,7 @@ boolean marshal_named_ptr (tree_marshal *ctx, const char *name,
                              "%s=*%p ", name, out));
 }
 
-boolean marshal_named_ptr_ref (tree_marshal *ctx, const char *name,
+uint8_t marshal_named_ptr_ref (tree_marshal *ctx, const char *name,
                            void *out)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used,
@@ -248,7 +248,7 @@ boolean marshal_named_ptr_ref (tree_marshal *ctx, const char *name,
                              "%s=@%p ", name, out));
 }
 
-boolean marshal_bra (tree_marshal *ctx)
+uint8_t marshal_bra (tree_marshal *ctx)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used, "{");
     ctx->indent++;
@@ -257,7 +257,7 @@ boolean marshal_bra (tree_marshal *ctx)
                              "%*s", ctx->indent, ""));
 }
 
-boolean marshal_ket (tree_marshal *ctx)
+uint8_t marshal_ket (tree_marshal *ctx)
 {
     snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used, "\n");
 
@@ -268,20 +268,20 @@ boolean marshal_ket (tree_marshal *ctx)
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used, "} "));
 }
 
-boolean marshal_array_bra (tree_marshal *ctx)
+uint8_t marshal_array_bra (tree_marshal *ctx)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used, "[ "));
 }
 
-boolean marshal_array_ket (tree_marshal *ctx)
+uint8_t marshal_array_ket (tree_marshal *ctx)
 {
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used, "] "));
 }
 
-boolean marshal_fini (tree_marshal *ctx)
+uint8_t marshal_fini (tree_marshal *ctx)
 {
     char *buf;
-    boolean rc;
+    uint8_t rc;
 
     if (ctx->buf_used) {
         ctx->buf_used--; /* to remote trailing space */

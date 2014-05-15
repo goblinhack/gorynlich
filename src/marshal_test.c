@@ -135,7 +135,7 @@ static void marshal_a (marshal_p ctx, struct A *a)
     PUT_KET(ctx); /* } */
 }
 
-boolean marshal_test (int32_t argc, char *argv[])
+uint8_t marshal_test (int32_t argc, char *argv[])
 {
     struct A a;
 

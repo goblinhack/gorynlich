@@ -29,7 +29,7 @@ uint32_t server_tile_height;
 
 static float tile_scale = 4.0;
 
-boolean wid_game_map_server_init (void)
+uint8_t wid_game_map_server_init (void)
 {
     return (true);
 }
@@ -171,6 +171,11 @@ void wid_game_map_server_wid_create (void)
         WARN("failed to load level");
         return;
     }
+
+    /*
+     * One time generate of expensive wander map
+     */
+    dmap_generate_monst_map_wander(server_level);
 
     wid_editor_map_loading = false;
 

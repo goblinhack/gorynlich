@@ -30,7 +30,7 @@
 static widp wid_intro;
 static widp wid_intro_background;
 
-static boolean wid_intro_quit_selected(void);
+static uint8_t wid_intro_quit_selected(void);
 static void wid_intro_editor_selected(void);
 static void wid_intro_play_selected(void);
 static void wid_intro_single_play_selected(void);
@@ -42,12 +42,12 @@ static void wid_server_create_selected(void);
 static void wid_intro_help_selected(void);
 static void wid_intro_guide_selected(void);
 
-static boolean wid_intro_init_done;
+static uint8_t wid_intro_init_done;
 static void wid_intro_create(void);
 
 static int intro_effect_delay = 200;
 
-boolean wid_intro_init (void)
+uint8_t wid_intro_init (void)
 {
     if (!wid_intro_init_done) {
         wid_intro_create();
@@ -72,8 +72,8 @@ void wid_intro_fini (void)
     }
 }
 
-static boolean wid_intro_is_hidden;
-static boolean wid_intro_is_visible;
+static uint8_t wid_intro_is_hidden;
+static uint8_t wid_intro_is_visible;
 
 void wid_intro_hide (void)
 {
@@ -127,7 +127,7 @@ void wid_intro_visible (void)
     wid_fade_in(wid_intro_background, intro_effect_delay);
 }
 
-static boolean wid_intro_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch ((int)key->sym) {
         case ' ':
@@ -220,7 +220,7 @@ static void wid_intro_play_selected (void)
     wid_intro_hide();
 }
 
-static boolean wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_intro_play_selected();
@@ -276,7 +276,7 @@ static void wid_intro_guide_selected (void)
     wid_intro_hide();
 }
 
-static boolean wid_intro_help_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_help_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_intro_guide_selected();
@@ -284,7 +284,7 @@ static boolean wid_intro_help_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_about_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_about_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
     wid_intro_about_selected();
@@ -292,7 +292,7 @@ static boolean wid_intro_about_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
     wid_intro_settings_selected();
@@ -300,7 +300,7 @@ static boolean wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_hiscore_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_hiscore_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
     wid_intro_hiscore_selected();
@@ -308,7 +308,7 @@ static boolean wid_intro_hiscore_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_server_join_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_server_join_mouse_event (widp w, int32_t x, int32_t y,
                                             uint32_t button)
 {
     wid_server_join_selected();
@@ -334,7 +334,7 @@ static void wid_intro_editor_selected (void)
     wid_intro_hide();
 }
 
-static boolean wid_intro_editor_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_editor_mouse_event (widp w, int32_t x, int32_t y,
                                              uint32_t button)
 {
     wid_intro_editor_selected();
@@ -357,7 +357,7 @@ static void wid_intro_quit_callback_no (widp wid)
     wid_destroy(&wid_intro_quit_popup);
 }
 
-static boolean wid_intro_quit_selected (void)
+static uint8_t wid_intro_quit_selected (void)
 {
     if (wid_intro_quit_popup) {
         return (false);
@@ -380,7 +380,7 @@ static boolean wid_intro_quit_selected (void)
 /*
  * Mouse up etc...
  */
-static boolean wid_intro_quit_receive_mouse_down (widp w,
+static uint8_t wid_intro_quit_receive_mouse_down (widp w,
                                                 int32_t x, int32_t y,
                                                 uint32_t button)
 {

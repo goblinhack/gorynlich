@@ -17,9 +17,9 @@
 
 tree_root *tiles;
 
-static boolean tile_init_done;
+static uint8_t tile_init_done;
 
-boolean tile_init (void)
+uint8_t tile_init (void)
 {
     tile_init_done = true;
 

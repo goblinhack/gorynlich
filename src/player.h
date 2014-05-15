@@ -11,7 +11,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-boolean player_init(void);
+uint8_t player_init(void);
 void player_fini(void);
 
 void player_destroy(void);
@@ -29,7 +29,7 @@ typedef struct aplayer_ {
     uint32_t key;
     char name[SMALL_STRING_LEN_MAX + 1];
     char pclass[SMALL_STRING_LEN_MAX + 1];
-    boolean connection_confrimed;
+    uint8_t connection_confrimed;
     thingp thing;
 } aplayer;
 

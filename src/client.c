@@ -27,25 +27,25 @@ uint32_t client_joined_server_when;
 static uint32_t client_joined_server_key;
 
 static void client_socket_tx_ping(void);
-static boolean client_init_done;
+static uint8_t client_init_done;
 static void client_poll(void);
-static boolean client_set_name(tokens_t *tokens, void *context);
-static boolean client_set_pclass(tokens_t *tokens, void *context);
-static boolean client_shout(tokens_t *tokens, void *context);
-static boolean client_tell(tokens_t *tokens, void *context);
-static boolean client_players_show(tokens_t *tokens, void *context);
-static boolean client_join(tokens_t *tokens, void *context);
-static boolean client_leave(tokens_t *tokens, void *context);
-static boolean client_open(tokens_t *tokens, void *context);
-static boolean client_close(tokens_t *tokens, void *context);
-static boolean client_socket_shout(char *shout);
-static boolean client_socket_tell(char *from, char *to, char *msg);
+static uint8_t client_set_name(tokens_t *tokens, void *context);
+static uint8_t client_set_pclass(tokens_t *tokens, void *context);
+static uint8_t client_shout(tokens_t *tokens, void *context);
+static uint8_t client_tell(tokens_t *tokens, void *context);
+static uint8_t client_players_show(tokens_t *tokens, void *context);
+static uint8_t client_join(tokens_t *tokens, void *context);
+static uint8_t client_leave(tokens_t *tokens, void *context);
+static uint8_t client_open(tokens_t *tokens, void *context);
+static uint8_t client_close(tokens_t *tokens, void *context);
+static uint8_t client_socket_shout(char *shout);
+static uint8_t client_socket_tell(char *from, char *to, char *msg);
 static void client_check_still_in_game(void);
 
 static msg_server_status server_status;
-static boolean server_connection_confirmed;
+static uint8_t server_connection_confirmed;
 
-boolean client_init (void)
+uint8_t client_init (void)
 {
     if (client_init_done) {
         return (true);
@@ -206,7 +206,7 @@ void client_tick (void)
 /*
  * User has entered a command, run it
  */
-static boolean client_set_name (tokens_t *tokens, void *context)
+static uint8_t client_set_name (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
@@ -215,7 +215,7 @@ static boolean client_set_name (tokens_t *tokens, void *context)
         return (false);
     }
 
-    boolean r = client_socket_set_name(s);
+    uint8_t r = client_socket_set_name(s);
 
     return (r);
 }
@@ -223,7 +223,7 @@ static boolean client_set_name (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-static boolean client_set_pclass (tokens_t *tokens, void *context)
+static uint8_t client_set_pclass (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
@@ -232,12 +232,12 @@ static boolean client_set_pclass (tokens_t *tokens, void *context)
         return (false);
     }
 
-    boolean r = client_socket_set_pclass(s);
+    uint8_t r = client_socket_set_pclass(s);
 
     return (r);
 }
 
-static boolean client_socket_open (char *host, char *port)
+static uint8_t client_socket_open (char *host, char *port)
 {
     uint32_t portno;
     socketp s = 0;
@@ -273,7 +273,7 @@ static boolean client_socket_open (char *host, char *port)
     return (true);
 }
 
-static boolean client_socket_close (char *host, char *port)
+static uint8_t client_socket_close (char *host, char *port)
 {
     uint32_t portno;
     socketp s = 0;
@@ -330,8 +330,8 @@ static boolean client_socket_close (char *host, char *port)
     return (true);
 }
 
-boolean client_socket_join (char *host, char *port, uint16_t portno,
-                            boolean quiet)
+uint8_t client_socket_join (char *host, char *port, uint16_t portno,
+                            uint8_t quiet)
 {
     if (client_joined_server) {
         WARN("Leave the current server first before trying to join again");
@@ -407,7 +407,7 @@ boolean client_socket_join (char *host, char *port, uint16_t portno,
     return (true);
 }
 
-static boolean client_socket_leave_implicit (void)
+static uint8_t client_socket_leave_implicit (void)
 {
     if (!client_joined_server) {
         return (false);
@@ -423,7 +423,7 @@ static boolean client_socket_leave_implicit (void)
     return (true);
 }
 
-boolean client_socket_leave (void)
+uint8_t client_socket_leave (void)
 {
     if (!client_joined_server) {
         WARN("Join a server first before trying to leave");
@@ -445,7 +445,7 @@ boolean client_socket_leave (void)
     return (true);
 }
 
-static boolean client_socket_shout (char *shout)
+static uint8_t client_socket_shout (char *shout)
 {
     if (!client_joined_server) {
         WARN("Join a server first before trying to shout");
@@ -464,7 +464,7 @@ static boolean client_socket_shout (char *shout)
     return (true);
 }
 
-static boolean client_socket_tell (char *from, char *to, char *msg)
+static uint8_t client_socket_tell (char *from, char *to, char *msg)
 {
     if (!client_joined_server) {
         WARN("Join a server first before trying to speak");
@@ -496,7 +496,7 @@ static boolean client_socket_tell (char *from, char *to, char *msg)
 /*
  * User has entered a command, run it
  */
-boolean client_socket_set_name (const char *name)
+uint8_t client_socket_set_name (const char *name)
 {
     if (!name || !*name) {
         WARN("need to set a name");
@@ -519,7 +519,7 @@ boolean client_socket_set_name (const char *name)
 /*
  * User has entered a command, run it
  */
-boolean client_socket_set_pclass (const char *pclass)
+uint8_t client_socket_set_pclass (const char *pclass)
 {
     if (!pclass || !*pclass) {
         WARN("need to set a pclass");
@@ -542,12 +542,12 @@ boolean client_socket_set_pclass (const char *pclass)
 /*
  * User has entered a command, run it
  */
-boolean client_open (tokens_t *tokens, void *context)
+uint8_t client_open (tokens_t *tokens, void *context)
 {
     char *host = tokens->args[1];
     char *port = tokens->args[2];
 
-    boolean r = client_socket_open(host, port);
+    uint8_t r = client_socket_open(host, port);
 
     return (r);
 }
@@ -555,12 +555,12 @@ boolean client_open (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean client_close (tokens_t *tokens, void *context)
+uint8_t client_close (tokens_t *tokens, void *context)
 {
     char *host = tokens->args[1];
     char *port = tokens->args[2];
 
-    boolean r = client_socket_close(host, port);
+    uint8_t r = client_socket_close(host, port);
 
     return (r);
 }
@@ -568,12 +568,12 @@ boolean client_close (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean client_join (tokens_t *tokens, void *context)
+uint8_t client_join (tokens_t *tokens, void *context)
 {
     char *host = tokens->args[1];
     char *port = tokens->args[2];
 
-    boolean r = client_socket_join(host, port, 0, false /* quiet */);
+    uint8_t r = client_socket_join(host, port, 0, false /* quiet */);
 
     return (r);
 }
@@ -581,9 +581,9 @@ boolean client_join (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean client_leave (tokens_t *tokens, void *context)
+uint8_t client_leave (tokens_t *tokens, void *context)
 {
-    boolean r = client_socket_leave();
+    uint8_t r = client_socket_leave();
 
     return (r);
 }
@@ -591,7 +591,7 @@ boolean client_leave (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean client_shout (tokens_t *tokens, void *context)
+uint8_t client_shout (tokens_t *tokens, void *context)
 {
     char shout[PLAYER_MSG_MAX] = {0};
     uint32_t i = 1;
@@ -622,7 +622,7 @@ boolean client_shout (tokens_t *tokens, void *context)
 
     strncpy(shout, tmp, sizeof(shout) - 1);
 
-    boolean r = client_socket_shout(shout);
+    uint8_t r = client_socket_shout(shout);
 
     myfree(tmp);
 
@@ -632,7 +632,7 @@ boolean client_shout (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean client_tell (tokens_t *tokens, void *context)
+uint8_t client_tell (tokens_t *tokens, void *context)
 {
     char to[SMALL_STRING_LEN_MAX] = {0};
     uint32_t i = 1;
@@ -668,7 +668,7 @@ boolean client_tell (tokens_t *tokens, void *context)
         return (false);
     }
 
-    boolean r = client_socket_tell(global_config.name, to, tmp);
+    uint8_t r = client_socket_tell(global_config.name, to, tmp);
 
     myfree(tmp);
 
@@ -721,7 +721,7 @@ static void client_poll (void)
             uint8_t *data;
             uint8_t *odata;
             uint8_t *pdata;
-            boolean uncompressed = false;
+            uint8_t uncompressed = false;
 
             /*
              * Uncompress the packet if it has an invalid type.
@@ -778,7 +778,7 @@ static void client_poll (void)
                     client_check_still_in_game();
                 }
 
-                boolean redo = false;
+                uint8_t redo = false;
 
                 if (server_status.server_current_players !=
                     latest_status.server_current_players) {
@@ -830,7 +830,7 @@ static void client_poll (void)
 /*
  * User has entered a command, run it
  */
-static boolean client_players_show (tokens_t *tokens, void *context)
+static uint8_t client_players_show (tokens_t *tokens, void *context)
 {
     CON("Name                    Quality  Latency      Local IP       Remote IP    Score ");
     CON("----                    -------  ------- --------------- --------------- -------");

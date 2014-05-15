@@ -3,7 +3,7 @@
  *
  * See the README file.
  */
-typedef boolean (*action_init_fn_callback)(void *);
+typedef uint8_t (*action_init_fn_callback)(void *);
 #pragma once
 
 
@@ -14,6 +14,6 @@ init_fnp action_init_fn_create(tree_rootp *root,
                                void *context,
                                const char *name);
 const char *action_init_fn_logname(init_fnp t);
-boolean action_init_fns_tick(tree_rootp *root);
+uint8_t action_init_fns_tick(tree_rootp *root);
 
 extern tree_rootp init_fns;

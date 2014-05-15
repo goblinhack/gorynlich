@@ -22,7 +22,7 @@ static const int32_t PAD_Y = 25;
 static widp wid_textbox_internal (widp parent,
                   widp *textbox,
                   const char *text, float x, float y, fontp font,
-                  boolean fixed_width)
+                  uint8_t fixed_width)
 {
     widp wid_textbox_container;
     widp wid_textbox_window;

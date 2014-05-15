@@ -14,12 +14,12 @@
 #include "wid_intro_guide.h"
 
 static widp wid_intro_guide;
-static boolean wid_intro_guide_init_done;
+static uint8_t wid_intro_guide_init_done;
 static void wid_intro_guide_create(void);
 static void wid_intro_guide_destroy(void);
 static void wid_intro_guide_finished(widp wid);
 
-boolean wid_intro_guide_init (void)
+uint8_t wid_intro_guide_init (void)
 {
     if (!wid_intro_guide_init_done) {
     }
@@ -55,7 +55,7 @@ static void wid_intro_guide_destroy (void)
     wid_destroy(&wid_intro_guide);
 }
 
-static boolean wid_intro_guide_common (widp w)
+static uint8_t wid_intro_guide_common (widp w)
 {
     widp top = wid_get_top_parent(w);
     wid_destroy_in(top, 500);
@@ -64,13 +64,13 @@ static boolean wid_intro_guide_common (widp w)
     return (true);
 }
 
-static boolean wid_intro_guide_key_down (widp w,
+static uint8_t wid_intro_guide_key_down (widp w,
                                         const SDL_KEYSYM *key)
 {
     return (wid_intro_guide_common(w));
 }
 
-static boolean wid_intro_guide_mouse_down (widp w,
+static uint8_t wid_intro_guide_mouse_down (widp w,
                                           int32_t x,
                                           int32_t y,
                                           uint32_t button)

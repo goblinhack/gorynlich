@@ -25,7 +25,7 @@
 #include "socket.h"
 #include "math.h"
 
-boolean thing_mob_spawn (thingp t)
+uint8_t thing_mob_spawn (thingp t)
 {
     const char *mob_spawn = thing_template_mob_spawn(t->thing_template);
     if (!mob_spawn) {

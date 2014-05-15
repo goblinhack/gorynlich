@@ -44,7 +44,7 @@ thingp_get_interpolated_position (const thingp t, double *x, double *y)
     *y = t->last_y + (dy * wdy);
 }
 
-static boolean things_overlap (const thingp A, 
+static uint8_t things_overlap (const thingp A, 
                                double nx,
                                double ny,
                                const thingp B)
@@ -232,7 +232,7 @@ static boolean things_overlap (const thingp A,
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
      */
-    boolean no_overlap = (Atlx > Bbrx) ||
+    uint8_t no_overlap = (Atlx > Bbrx) ||
                          (Btlx > Abrx) ||
                          (Atly > Bbry) ||
                          (Btly > Abry);
@@ -288,14 +288,16 @@ static void thing_handle_collision (thingp me, thingp it,
          */
         if (thing_is_monst(it)) {
             /*
-             * Monster dies in the collision but steals hitpoints.
+             * I'm hit!
              */
             thing_hit(me, it, 0, "monst");
 
             /*
-             * No killer to avoid givin a bonus.
+             * No killer to avoid givin a bonus to monsters!
              */
-            thing_dead(it, 0, "hit");
+            if (thing_is_killed_on_hitting_player(it)) {
+                thing_dead(it, 0, "hit");
+            }
             return;
         }
     }
@@ -389,7 +391,7 @@ void thing_handle_collisions (widp grid, thingp t)
  *
  * No opening of doors in here or other actions. This is just a check.
  */
-boolean thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
+uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 {
     thingp it;
     thingp me;

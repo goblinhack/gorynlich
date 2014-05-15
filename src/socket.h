@@ -185,7 +185,7 @@ typedef struct socket_ {
 extern void socket_count_inc_pak_rx(const socketp, msg_type);
 
 extern int socket_test(int32_t argc, char *argv[]);
-extern boolean socket_init(void);
+extern uint8_t socket_init(void);
 extern void socket_fini(void);
 extern char *iptodynstr(IPaddress ip);
 extern char *iprawtodynstr(IPaddress ip);
@@ -214,16 +214,16 @@ extern const char *socket_get_player_pclass(const socketp);
 extern const char *socket_get_local_logname(const socketp);
 extern const char *socket_get_remote_logname(const socketp);
 
-extern void socket_set_connected(const socketp, boolean);
-extern boolean socket_get_connected(const socketp);
+extern void socket_set_connected(const socketp, uint8_t);
+extern uint8_t socket_get_connected(const socketp);
 
-extern boolean socket_get_server(const socketp);
+extern uint8_t socket_get_server(const socketp);
 extern msg_server_status *socket_get_server_status(const socketp);
-extern boolean socket_get_server_side_client(const socketp s);
-extern boolean socket_get_client(const socketp);
+extern uint8_t socket_get_server_side_client(const socketp s);
+extern uint8_t socket_get_client(const socketp);
 
 extern void socket_set_channel(socketp, int);
-extern boolean socket_get_channel(const socketp);
+extern uint8_t socket_get_channel(const socketp);
 
 extern UDPsocket socket_get_udp_socket(const socketp);
 extern SDLNet_SocketSet socket_get_socklist(const socketp);
@@ -246,11 +246,11 @@ extern void socket_rx_ping(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_name(socketp s);
 extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
-extern boolean socket_tx_client_join(socketp s, uint32_t *key);
-extern boolean socket_rx_client_join(socketp s, 
+extern uint8_t socket_tx_client_join(socketp s, uint32_t *key);
+extern uint8_t socket_rx_client_join(socketp s, 
                                      UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_leave(socketp s);
-extern boolean socket_rx_client_leave(socketp s, 
+extern uint8_t socket_rx_client_leave(socketp s, 
                                       UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_close(socketp s);
 extern void socket_rx_client_close(socketp s, 
@@ -264,11 +264,11 @@ extern void socket_rx_client_shout(socketp s,
                                    UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_move(socketp s, 
                                   thingp t,
-                                  const boolean up,
-                                  const boolean down,
-                                  const boolean left,
-                                  const boolean right,
-                                  const boolean fire);
+                                  const uint8_t up,
+                                  const uint8_t down,
+                                  const uint8_t left,
+                                  const uint8_t right,
+                                  const uint8_t fire);
 extern void socket_server_rx_player_move(socketp s, UDPpacket *packet, 
                                          uint8_t *data);
 extern void socket_tx_server_shout(const char *shout);
@@ -320,7 +320,7 @@ static inline void write_address (UDPpacket *packet, IPaddress i)
     packet->address.port = i.port;
 }
 
-static inline boolean cmp_address (const IPaddress *a, const IPaddress *b)
+static inline uint8_t cmp_address (const IPaddress *a, const IPaddress *b)
 {
     return ((a->host == b->host) && (a->port == b->port));
 }

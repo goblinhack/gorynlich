@@ -11,120 +11,120 @@
 demarshal_p demarshal(const char *filename);
 void demarshal_print(demarshal_p);
 void demarshal_fini(demarshal_p);
-boolean demarshal_gotone(demarshal_p);
-boolean demarshal_name(demarshal_p, const char *want);
-boolean demarshal_peek_name(demarshal_p, const char *want);
+uint8_t demarshal_gotone(demarshal_p);
+uint8_t demarshal_name(demarshal_p, const char *want);
+uint8_t demarshal_peek_name(demarshal_p, const char *want);
 
-boolean demarshal_string(demarshal_p, char **out);
-boolean demarshal_named_string(demarshal_p, const char *name, char **out);
-boolean demarshal_opt_named_string(demarshal_p, const char *name, char **out);
-boolean demarshal_opt_def_named_string(demarshal_p, const char *name, char **out, const char *def);
-boolean demarshal_peek_string(demarshal_p, char **out);
+uint8_t demarshal_string(demarshal_p, char **out);
+uint8_t demarshal_named_string(demarshal_p, const char *name, char **out);
+uint8_t demarshal_opt_named_string(demarshal_p, const char *name, char **out);
+uint8_t demarshal_opt_def_named_string(demarshal_p, const char *name, char **out, const char *def);
+uint8_t demarshal_peek_string(demarshal_p, char **out);
 
-boolean demarshal_uint8(demarshal_p, uint8_t *out);
-boolean demarshal_named_uint8(demarshal_p, const char *name, uint8_t *out);
-boolean demarshal_opt_named_uint8(demarshal_p, const char *name, uint8_t *out);
-boolean demarshal_opt_def_named_uint8(demarshal_p, const char *name, uint8_t *out, uint8_t def);
-boolean demarshal_peek_uint8(demarshal_p, uint8_t *out);
+uint8_t demarshal_uint8(demarshal_p, uint8_t *out);
+uint8_t demarshal_named_uint8(demarshal_p, const char *name, uint8_t *out);
+uint8_t demarshal_opt_named_uint8(demarshal_p, const char *name, uint8_t *out);
+uint8_t demarshal_opt_def_named_uint8(demarshal_p, const char *name, uint8_t *out, uint8_t def);
+uint8_t demarshal_peek_uint8(demarshal_p, uint8_t *out);
 
-boolean demarshal_uint16(demarshal_p, uint16_t *out);
-boolean demarshal_named_uint16(demarshal_p, const char *name, uint16_t *out);
-boolean demarshal_opt_named_uint16(demarshal_p, const char *name, uint16_t *out);
-boolean demarshal_opt_def_named_uint16(demarshal_p, const char *name, uint16_t *out, uint16_t def);
-boolean demarshal_peek_uint16(demarshal_p, uint16_t *out);
+uint8_t demarshal_uint16(demarshal_p, uint16_t *out);
+uint8_t demarshal_named_uint16(demarshal_p, const char *name, uint16_t *out);
+uint8_t demarshal_opt_named_uint16(demarshal_p, const char *name, uint16_t *out);
+uint8_t demarshal_opt_def_named_uint16(demarshal_p, const char *name, uint16_t *out, uint16_t def);
+uint8_t demarshal_peek_uint16(demarshal_p, uint16_t *out);
 
-boolean demarshal_uint32(demarshal_p, uint32_t *out);
-boolean demarshal_named_uint32(demarshal_p, const char *name, uint32_t *out);
-boolean demarshal_opt_named_uint32(demarshal_p, const char *name, uint32_t *out);
-boolean demarshal_opt_def_named_uint32(demarshal_p, const char *name, uint32_t *out, uint32_t def);
-boolean demarshal_peek_uint32(demarshal_p, uint32_t *out);
+uint8_t demarshal_uint32(demarshal_p, uint32_t *out);
+uint8_t demarshal_named_uint32(demarshal_p, const char *name, uint32_t *out);
+uint8_t demarshal_opt_named_uint32(demarshal_p, const char *name, uint32_t *out);
+uint8_t demarshal_opt_def_named_uint32(demarshal_p, const char *name, uint32_t *out, uint32_t def);
+uint8_t demarshal_peek_uint32(demarshal_p, uint32_t *out);
 
-boolean demarshal_uint64(demarshal_p, uint64_t *out);
-boolean demarshal_named_uint64(demarshal_p, const char *name, uint64_t *out);
-boolean demarshal_opt_named_uint64(demarshal_p, const char *name, uint64_t *out);
-boolean demarshal_opt_def_named_uint64(demarshal_p, const char *name, uint64_t *out, uint64_t def);
-boolean demarshal_peek_uint64(demarshal_p, uint64_t *out);
+uint8_t demarshal_uint64(demarshal_p, uint64_t *out);
+uint8_t demarshal_named_uint64(demarshal_p, const char *name, uint64_t *out);
+uint8_t demarshal_opt_named_uint64(demarshal_p, const char *name, uint64_t *out);
+uint8_t demarshal_opt_def_named_uint64(demarshal_p, const char *name, uint64_t *out, uint64_t def);
+uint8_t demarshal_peek_uint64(demarshal_p, uint64_t *out);
 
-boolean demarshal_int8(demarshal_p, int8_t *out);
-boolean demarshal_named_int8(demarshal_p, const char *name, int8_t *out);
-boolean demarshal_opt_named_int8(demarshal_p, const char *name, int8_t *out);
-boolean demarshal_opt_def_named_int8(demarshal_p, const char *name, int8_t *out, int8_t def);
-boolean demarshal_peek_int8(demarshal_p, int8_t *out);
+uint8_t demarshal_int8(demarshal_p, int8_t *out);
+uint8_t demarshal_named_int8(demarshal_p, const char *name, int8_t *out);
+uint8_t demarshal_opt_named_int8(demarshal_p, const char *name, int8_t *out);
+uint8_t demarshal_opt_def_named_int8(demarshal_p, const char *name, int8_t *out, int8_t def);
+uint8_t demarshal_peek_int8(demarshal_p, int8_t *out);
 
-boolean demarshal_int16(demarshal_p, int16_t *out);
-boolean demarshal_named_int16(demarshal_p, const char *name, int16_t *out);
-boolean demarshal_opt_named_int16(demarshal_p, const char *name, int16_t *out);
-boolean demarshal_opt_def_named_int16(demarshal_p, const char *name, int16_t *out, int16_t def);
-boolean demarshal_peek_int16(demarshal_p, int16_t *out);
+uint8_t demarshal_int16(demarshal_p, int16_t *out);
+uint8_t demarshal_named_int16(demarshal_p, const char *name, int16_t *out);
+uint8_t demarshal_opt_named_int16(demarshal_p, const char *name, int16_t *out);
+uint8_t demarshal_opt_def_named_int16(demarshal_p, const char *name, int16_t *out, int16_t def);
+uint8_t demarshal_peek_int16(demarshal_p, int16_t *out);
 
-boolean demarshal_int32(demarshal_p, int32_t *out);
-boolean demarshal_named_int32(demarshal_p, const char *name, int32_t *out);
-boolean demarshal_opt_named_int32(demarshal_p, const char *name, int32_t *out);
-boolean demarshal_opt_def_named_int32(demarshal_p, const char *name, int32_t *out, int32_t def);
-boolean demarshal_peek_int32(demarshal_p, int32_t *out);
+uint8_t demarshal_int32(demarshal_p, int32_t *out);
+uint8_t demarshal_named_int32(demarshal_p, const char *name, int32_t *out);
+uint8_t demarshal_opt_named_int32(demarshal_p, const char *name, int32_t *out);
+uint8_t demarshal_opt_def_named_int32(demarshal_p, const char *name, int32_t *out, int32_t def);
+uint8_t demarshal_peek_int32(demarshal_p, int32_t *out);
 
-boolean demarshal_int64(demarshal_p, int64_t *out);
-boolean demarshal_named_int64(demarshal_p, const char *name, int64_t *out);
-boolean demarshal_opt_named_int64(demarshal_p, const char *name, int64_t *out);
-boolean demarshal_opt_def_named_int64(demarshal_p, const char *name, int64_t *out, int64_t def);
-boolean demarshal_peek_int64(demarshal_p, int64_t *out);
+uint8_t demarshal_int64(demarshal_p, int64_t *out);
+uint8_t demarshal_named_int64(demarshal_p, const char *name, int64_t *out);
+uint8_t demarshal_opt_named_int64(demarshal_p, const char *name, int64_t *out);
+uint8_t demarshal_opt_def_named_int64(demarshal_p, const char *name, int64_t *out, int64_t def);
+uint8_t demarshal_peek_int64(demarshal_p, int64_t *out);
 
-boolean demarshal_float(demarshal_p, float *out);
-boolean demarshal_named_float(demarshal_p, const char *name, float *out);
-boolean demarshal_opt_named_float(demarshal_p, const char *name, float *out);
-boolean demarshal_opt_def_named_float(demarshal_p, const char *name, float *out, float def);
-boolean demarshal_peek_float(demarshal_p);
+uint8_t demarshal_float(demarshal_p, float *out);
+uint8_t demarshal_named_float(demarshal_p, const char *name, float *out);
+uint8_t demarshal_opt_named_float(demarshal_p, const char *name, float *out);
+uint8_t demarshal_opt_def_named_float(demarshal_p, const char *name, float *out, float def);
+uint8_t demarshal_peek_float(demarshal_p);
 
-boolean demarshal_ptr(demarshal_p, void **out);
-boolean demarshal_named_ptr(demarshal_p, const char *name, void **out);
-boolean demarshal_opt_named_ptr(demarshal_p, const char *name, void **out);
-boolean demarshal_peek_ptr(demarshal_p, void **out);
+uint8_t demarshal_ptr(demarshal_p, void **out);
+uint8_t demarshal_named_ptr(demarshal_p, const char *name, void **out);
+uint8_t demarshal_opt_named_ptr(demarshal_p, const char *name, void **out);
+uint8_t demarshal_peek_ptr(demarshal_p, void **out);
 
-boolean demarshal_ptr_ref(demarshal_p, void *out);
-boolean demarshal_named_ptr_ref(demarshal_p, const char *name, void **out);
-boolean demarshal_opt_named_ptr_ref(demarshal_p, const char *name, void **out);
-boolean demarshal_peek_ptr_ref(demarshal_p, void **out);
+uint8_t demarshal_ptr_ref(demarshal_p, void *out);
+uint8_t demarshal_named_ptr_ref(demarshal_p, const char *name, void **out);
+uint8_t demarshal_opt_named_ptr_ref(demarshal_p, const char *name, void **out);
+uint8_t demarshal_peek_ptr_ref(demarshal_p, void **out);
 
-boolean demarshal_bra(demarshal_p);
-boolean demarshal_peek_bra(demarshal_p);
-boolean demarshal_ket(demarshal_p);
+uint8_t demarshal_bra(demarshal_p);
+uint8_t demarshal_peek_bra(demarshal_p);
+uint8_t demarshal_ket(demarshal_p);
 
 marshal_p marshal(const char *filename);
 void marshal_print(marshal_p);
-boolean marshal_fini(marshal_p);
-boolean marshal_name(marshal_p, const char *name);
-boolean marshal_name_only(marshal_p, const char *name);
-boolean marshal_string(marshal_p, const char *out);
-boolean marshal_named_string(marshal_p, const char *name, const char *out);
+uint8_t marshal_fini(marshal_p);
+uint8_t marshal_name(marshal_p, const char *name);
+uint8_t marshal_name_only(marshal_p, const char *name);
+uint8_t marshal_string(marshal_p, const char *out);
+uint8_t marshal_named_string(marshal_p, const char *name, const char *out);
 
-boolean marshal_uint8(marshal_p, uint8_t out);
-boolean marshal_named_uint8(marshal_p, const char *name, uint8_t out);
-boolean marshal_uint16(marshal_p, uint16_t out);
-boolean marshal_named_uint16(marshal_p, const char *name, uint16_t out);
-boolean marshal_uint32(marshal_p, uint32_t out);
-boolean marshal_named_uint32(marshal_p, const char *name, uint32_t out);
-boolean marshal_uint64(marshal_p, uint64_t out);
-boolean marshal_named_uint64(marshal_p, const char *name, uint64_t out);
+uint8_t marshal_uint8(marshal_p, uint8_t out);
+uint8_t marshal_named_uint8(marshal_p, const char *name, uint8_t out);
+uint8_t marshal_uint16(marshal_p, uint16_t out);
+uint8_t marshal_named_uint16(marshal_p, const char *name, uint16_t out);
+uint8_t marshal_uint32(marshal_p, uint32_t out);
+uint8_t marshal_named_uint32(marshal_p, const char *name, uint32_t out);
+uint8_t marshal_uint64(marshal_p, uint64_t out);
+uint8_t marshal_named_uint64(marshal_p, const char *name, uint64_t out);
 
-boolean marshal_int8(marshal_p, int8_t out);
-boolean marshal_named_int8(marshal_p, const char *name, int8_t out);
-boolean marshal_int16(marshal_p, int16_t out);
-boolean marshal_named_int16(marshal_p, const char *name, int16_t out);
-boolean marshal_int32(marshal_p, int32_t out);
-boolean marshal_named_int32(marshal_p, const char *name, int32_t out);
-boolean marshal_int64(marshal_p, int64_t out);
-boolean marshal_named_int64(marshal_p, const char *name, int64_t out);
+uint8_t marshal_int8(marshal_p, int8_t out);
+uint8_t marshal_named_int8(marshal_p, const char *name, int8_t out);
+uint8_t marshal_int16(marshal_p, int16_t out);
+uint8_t marshal_named_int16(marshal_p, const char *name, int16_t out);
+uint8_t marshal_int32(marshal_p, int32_t out);
+uint8_t marshal_named_int32(marshal_p, const char *name, int32_t out);
+uint8_t marshal_int64(marshal_p, int64_t out);
+uint8_t marshal_named_int64(marshal_p, const char *name, int64_t out);
 
-boolean marshal_float(marshal_p, float out);
-boolean marshal_named_float(marshal_p, const char *name, float out);
-boolean marshal_ptr(marshal_p, void *out);
-boolean marshal_named_ptr(marshal_p, const char *name, void *out);
-boolean marshal_ptr_ref(marshal_p, void *out);
-boolean marshal_named_ptr_ref(marshal_p, const char *name, void *out);
-boolean marshal_bra(marshal_p);
-boolean marshal_ket(marshal_p);
-boolean marshal_array_bra(marshal_p);
-boolean marshal_array_ket(marshal_p);
+uint8_t marshal_float(marshal_p, float out);
+uint8_t marshal_named_float(marshal_p, const char *name, float out);
+uint8_t marshal_ptr(marshal_p, void *out);
+uint8_t marshal_named_ptr(marshal_p, const char *name, void *out);
+uint8_t marshal_ptr_ref(marshal_p, void *out);
+uint8_t marshal_named_ptr_ref(marshal_p, const char *name, void *out);
+uint8_t marshal_bra(marshal_p);
+uint8_t marshal_ket(marshal_p);
+uint8_t marshal_array_bra(marshal_p);
+uint8_t marshal_array_ket(marshal_p);
 
 #define GET_NAME(D, N)                 demarshal_name((D), (N))
 #define GET_PEEK_NAME(D, N)            demarshal_peek_name((D), (N))

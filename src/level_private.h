@@ -14,6 +14,11 @@ typedef struct level_t_ {
     uint32_t level_no;
 
     /*
+     * Someone is still using this level.
+     */
+    uint8_t locked;
+
+    /*
      * This is for monsters. One map where they try to go through doors and 
      * another where they give up. This way in a closed room with a door the
      * monster will wait by the door. If there is an open wall it will hit the

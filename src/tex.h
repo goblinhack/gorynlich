@@ -6,7 +6,7 @@
 
 #pragma once
 
-boolean tex_init(void);
+uint8_t tex_init(void);
 void tex_fini(void);
 texp tex_load(const char *file, const char *name);
 texp tex_load_tiled(const char *file, const char *name, 

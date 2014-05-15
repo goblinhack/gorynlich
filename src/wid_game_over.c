@@ -16,12 +16,12 @@
 
 static widp wid_game_over;
 static widp wid_game_over_credits;
-static boolean wid_game_over_init_done;
+static uint8_t wid_game_over_init_done;
 static void wid_game_over_create(void);
 static void wid_game_over_destroy(void);
 static void wid_game_over_finished(widp wid);
 
-boolean wid_game_over_init (void)
+uint8_t wid_game_over_init (void)
 {
     if (!wid_game_over_init_done) {
     }

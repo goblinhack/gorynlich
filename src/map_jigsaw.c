@@ -84,9 +84,9 @@ static int32_t map_jigsaw_buffer_at_y;
 /*
  * Global modes.
  */
-static boolean jigpiece_horiz_flip;
-static boolean jigpiece_vert_flip;
-static boolean jigpiece_rotatable;
+static uint8_t jigpiece_horiz_flip;
+static uint8_t jigpiece_vert_flip;
+static uint8_t jigpiece_rotatable;
 
 enum {
     TERM_COLOR_BLACK,
@@ -1943,7 +1943,7 @@ static void maze_convert_to_map (dungeon_t *dg)
  * Make a list of all the jigpiece that satisfy the connection needs of this
  * maze cell.
  */
-static boolean maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
+static uint8_t maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
 {
     int32_t w = MAP_JIGSAW_PIECE_WIDTH;
     int32_t h = MAP_JIGSAW_PIECE_HEIGHT;
@@ -2260,7 +2260,7 @@ static int32_t maze_solve_search (dungeon_t *dg, maze_cell_t *c)
 /*
  * Find "old" in a room and replace with "new"
  */
-static boolean 
+static uint8_t 
 maze_replace_room_char (uint32_t rx, uint32_t ry, char new)
 {
     uint32_t tries = JIGPIECE_WIDTH * JIGPIECE_HEIGHT * 100;
@@ -2349,7 +2349,7 @@ static int32_t maze_solve (dungeon_t *dg, int32_t w, int32_t h)
 /*
  * maze_generate_and_solve
  */
-static boolean maze_generate_and_solve (dungeon_t *dg)
+static uint8_t maze_generate_and_solve (dungeon_t *dg)
 {
     int32_t y;
     int32_t x;

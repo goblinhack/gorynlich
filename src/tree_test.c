@@ -204,7 +204,7 @@ static void tree_debug_print (tree_root root)
 #endif
 
 #ifdef TREE_DEBUG_PRINT_WALKS
-static boolean tree_debug_walk_print (const tree_node *node, void *arg)
+static uint8_t tree_debug_walk_print (const tree_node *node, void *arg)
 {
     tree_debug_node *A = (typeof(A))node;
 

@@ -39,7 +39,7 @@ static const int32_t TILES_DOWN = 10;
 /*
  * Mouse up etc...
  */
-static boolean wid_editor_buttons_receive_mouse_up (widp w,
+static uint8_t wid_editor_buttons_receive_mouse_up (widp w,
                                                     int32_t x,
                                                     int32_t y,
                                                     uint32_t button)
@@ -50,7 +50,7 @@ static boolean wid_editor_buttons_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_tile_receive_mouse_up (widp w,
                                           int32_t x,
                                           int32_t y,
@@ -77,7 +77,7 @@ wid_editor_buttons_tile_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_recent_tile_receive_mouse_up (widp w,
                                                  int32_t x,
                                                  int32_t y,
@@ -91,7 +91,7 @@ wid_editor_buttons_recent_tile_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_back_receive_mouse_up (widp w,
                                                int32_t x,
                                                int32_t y,
@@ -105,7 +105,7 @@ wid_editor_buttons_icon_back_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_save_receive_mouse_up (widp w,
                                                int32_t x,
                                                int32_t y,
@@ -119,7 +119,7 @@ wid_editor_buttons_icon_save_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_title_receive_mouse_up (widp w,
                                                int32_t x,
                                                int32_t y,
@@ -133,7 +133,7 @@ wid_editor_buttons_icon_title_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_load_receive_mouse_up (widp w,
                                                int32_t x,
                                                int32_t y,
@@ -147,7 +147,7 @@ wid_editor_buttons_icon_load_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_draw_receive_mouse_up (widp w,
                                                int32_t x,
                                                int32_t y,
@@ -161,7 +161,7 @@ wid_editor_buttons_icon_draw_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_line_receive_mouse_up (widp w,
                                                int32_t x,
                                                int32_t y,
@@ -175,7 +175,7 @@ wid_editor_buttons_icon_line_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_fill_receive_mouse_up (widp w,
                                                int32_t x,
                                                int32_t y,
@@ -189,7 +189,7 @@ wid_editor_buttons_icon_fill_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_clear_receive_mouse_up (widp w,
                                                 int32_t x,
                                                 int32_t y,
@@ -203,7 +203,7 @@ wid_editor_buttons_icon_clear_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_erase_receive_mouse_up (widp w,
                                                 int32_t x,
                                                 int32_t y,
@@ -217,7 +217,7 @@ wid_editor_buttons_icon_erase_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_undo_receive_mouse_up (widp w,
                                                 int32_t x,
                                                 int32_t y,
@@ -232,7 +232,7 @@ wid_editor_buttons_icon_undo_receive_mouse_up (widp w,
 /*
  * Mouse up etc...
  */
-static boolean
+static uint8_t
 wid_editor_buttons_icon_redo_receive_mouse_up (widp w,
                                                 int32_t x,
                                                 int32_t y,
@@ -245,7 +245,7 @@ wid_editor_buttons_icon_redo_receive_mouse_up (widp w,
 
 static thing_templatep first_thing_template;
 
-static boolean wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
+static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
 {
     static int32_t x;
     static int32_t y;

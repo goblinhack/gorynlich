@@ -12,11 +12,11 @@
 #include "wid_intro_help.h"
 
 static widp wid_intro_help;
-static boolean wid_intro_help_init_done;
+static uint8_t wid_intro_help_init_done;
 static void wid_intro_help_create(void);
 static void wid_intro_help_destroy(void);
 
-boolean wid_intro_help_init (void)
+uint8_t wid_intro_help_init (void)
 {
     if (!wid_intro_help_init_done) {
     }
@@ -47,7 +47,7 @@ void wid_intro_help_visible (void)
     wid_intro_help_create();
 }
 
-static boolean wid_intro_help_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_intro_help_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':

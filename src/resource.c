@@ -13,128 +13,128 @@
 #include "init_fn.h"
 #include "thing.h"
 
-static boolean resource_init_1 (void *context)
+static uint8_t resource_init_1 (void *context)
 {
     return (tex_load("data/gfx/gorynlich.png",
                      "gorynlich") != 0);
 }
 
-static boolean resource_init_2 (void *context)
+static uint8_t resource_init_2 (void *context)
 {
     return (tex_load("data/gfx/title2.png",
                      "title2") != 0);
 }
 
-static boolean resource_init_3 (void *context)
+static uint8_t resource_init_3 (void *context)
 {
     return (tex_load("data/gfx/title.png",
                      "title") != 0);
 }
 
-static boolean resource_init_4 (void *context)
+static uint8_t resource_init_4 (void *context)
 {
     return (tex_load("data/gfx/help1.png",
                      "help1") != 0);
 }
 
-static boolean resource_init_5 (void *context)
+static uint8_t resource_init_5 (void *context)
 {
     return (tex_load("data/gfx/help2.png",
                      "help2") != 0);
 }
 
-static boolean resource_init_6 (void *context)
+static uint8_t resource_init_6 (void *context)
 {
     return (tex_load("data/gfx/help3.png",
                      "help3") != 0);
 }
 
-static boolean resource_init_7 (void *context)
+static uint8_t resource_init_7 (void *context)
 {
     return (tex_load("data/gfx/dragon.png",
                      "dragon") != 0);
 }
 
-static boolean resource_init_8 (void *context)
+static uint8_t resource_init_8 (void *context)
 {
     return (tex_load("data/gfx/title3.png",
                      "title3") != 0);
 }
 
-static boolean resource_init_9 (void *context)
+static uint8_t resource_init_9 (void *context)
 {
     return (tex_load("data/gfx/title_small.png",
                      "title_small") != 0);
 }
 
-static boolean resource_init_10 (void *context)
+static uint8_t resource_init_10 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_11 (void *context)
+static uint8_t resource_init_11 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_12 (void *context)
+static uint8_t resource_init_12 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_13 (void *context)
+static uint8_t resource_init_13 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_14 (void *context)
+static uint8_t resource_init_14 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_15 (void *context)
+static uint8_t resource_init_15 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_16 (void *context)
+static uint8_t resource_init_16 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_17 (void *context)
+static uint8_t resource_init_17 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_18 (void *context)
+static uint8_t resource_init_18 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_19 (void *context)
+static uint8_t resource_init_19 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_20 (void *context)
+static uint8_t resource_init_20 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_21 (void *context)
+static uint8_t resource_init_21 (void *context)
 {
     return (tex_load_tiled("data/gfx/sprites_small.png",
                            "sprites_small",
                            TILE_WIDTH, TILE_HEIGHT) != 0);
 }
 
-static boolean resource_init_22 (void *context)
+static uint8_t resource_init_22 (void *context)
 {
     return (true);
 }
 
-static boolean resource_init_23 (void *context)
+static uint8_t resource_init_23 (void *context)
 {
     static const char *small_tiles[] = {
         // row 0 floor tiles
@@ -1288,7 +1288,7 @@ static boolean resource_init_23 (void *context)
     return (true);
 }
 
-boolean resource_init (void)
+uint8_t resource_init (void)
 {
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_1,

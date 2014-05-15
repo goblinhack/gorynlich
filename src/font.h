@@ -7,4 +7,4 @@
 #pragma once
 
 void font_fini(void);
-boolean font_init(void);
+uint8_t font_init(void);

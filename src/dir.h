@@ -13,13 +13,13 @@ typedef struct tree_file_node_ {
     int8_t is_file:1;
 } tree_file_node;
 
-boolean dir_exists(const char *filename);
+uint8_t dir_exists(const char *filename);
 
 tree_root *dirlist(const char *dir,
                    const char *include_suffix,
                    const char *exclude_suffix,
-                   boolean include_dirs,
-                   boolean include_ramdisk);
+                   uint8_t include_dirs,
+                   uint8_t include_ramdisk);
 
 void dirlist_free(tree_root **root);
 char *dir_dot(void);

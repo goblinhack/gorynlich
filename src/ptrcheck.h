@@ -38,19 +38,19 @@
 #define dupstr(__ptr__, __what__)   \
     dupstr_((__ptr__), (__what__), PTRCHECK_AT)
 
-boolean ptrcheck_init(void);
+uint8_t ptrcheck_init(void);
 void ptrcheck_fini(void);
 
 void *ptrcheck_alloc(void *ptr, const char *what, const uint32_t size,
                      const char *file, const char *func, const uint32_t line);
 
-boolean ptrcheck_verify(void *ptr, const char *file, const char *func,
+uint8_t ptrcheck_verify(void *ptr, const char *file, const char *func,
                         const uint32_t line);
 
-boolean ptrcheck_fast_verify(void *ptr, const char *file, const char *func,
+uint8_t ptrcheck_fast_verify(void *ptr, const char *file, const char *func,
                              const uint32_t line);
 
-boolean ptrcheck_free(void *ptr, const char *file, const char *func,
+uint8_t ptrcheck_free(void *ptr, const char *file, const char *func,
                       const uint32_t line);
 
 void ptrcheck_leak_print(void);
