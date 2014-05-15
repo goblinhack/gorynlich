@@ -22,13 +22,13 @@
 #include "thing.h"
 #include "mzip_lib.h"
 
-static boolean server_init_done;
+static uint8_t server_init_done;
 socketp server_socket;
 
-static boolean server_players_show(tokens_t *tokens, void *context);
-static boolean server_shout(tokens_t *tokens, void *context);
+static uint8_t server_players_show(tokens_t *tokens, void *context);
+static uint8_t server_shout(tokens_t *tokens, void *context);
 
-boolean server_start (IPaddress address)
+uint8_t server_start (IPaddress address)
 {
     if (!is_server) {
         return (true);
@@ -71,7 +71,7 @@ void server_stop (void)
     server_socket = 0;
 }
 
-boolean server_init (void)
+uint8_t server_init (void)
 {
     if (server_init_done) {
         return (true);
@@ -259,7 +259,7 @@ static void server_poll (void)
         uint8_t *data;
         uint8_t *odata;
         uint8_t *pdata;
-        boolean uncompressed = false;
+        uint8_t uncompressed = false;
 
         /*
          * Uncompress the packet if it has an invalid type.
@@ -431,7 +431,7 @@ void server_tick (void)
 /*
  * User has entered a command, run it
  */
-static boolean server_players_show (tokens_t *tokens, void *context)
+static uint8_t server_players_show (tokens_t *tokens, void *context)
 {
     CON("Name           Quality  Latency      Remote IP      Local IP   ");
     CON("----           -------  ------- --------------- ---------------");
@@ -475,7 +475,7 @@ static boolean server_players_show (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean server_shout (tokens_t *tokens, void *context)
+uint8_t server_shout (tokens_t *tokens, void *context)
 {
     char shout[PLAYER_MSG_MAX] = {0};
     uint32_t i = 1;

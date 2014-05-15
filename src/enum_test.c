@@ -17,7 +17,7 @@
 ENUM_DEF_H(ENUM_TESTVAL, enum_testval)
 ENUM_DEF_C(ENUM_TESTVAL, enum_testval)
 
-boolean enum_test (int32_t argc, char *argv[])
+uint8_t enum_test (int32_t argc, char *argv[])
 {
     printf("ENUM_TESTVAL_STEELBLUE   = %d\n", ENUM_TESTVAL_STEELBLUE);
     printf("ENUM_TESTVAL_GREEN = %d\n", ENUM_TESTVAL_GREEN);

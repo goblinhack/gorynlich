@@ -6,7 +6,7 @@
 
 #pragma once
 
-boolean music_init(void);
+uint8_t music_init(void);
 void music_fini(void);
 musicp music_load(const char *file, const char *name);
 musicp music_find(const char *name);
@@ -17,4 +17,4 @@ void music_play_hiscore(void);
 void music_halt(void);
 void music_update_volume(void);
 
-extern boolean music_init_done;
+extern uint8_t music_init_done;

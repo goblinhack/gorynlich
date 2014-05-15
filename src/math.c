@@ -79,7 +79,7 @@ double gauss (const double m, const double s)
  * true if perpendicular line from point is in line segment.
  */
 #if 0
-boolean get_line_intersection (fpoint p0,
+uint8_t get_line_intersection (fpoint p0,
                                fpoint p1,
                                fpoint p2,
                                fpoint p3,
@@ -111,7 +111,7 @@ boolean get_line_intersection (fpoint p0,
 }
 #endif
 
-boolean get_line_intersection (fpoint p0,
+uint8_t get_line_intersection (fpoint p0,
                                fpoint p1,
                                fpoint p2,
                                fpoint p3,
@@ -146,7 +146,7 @@ boolean get_line_intersection (fpoint p0,
     return (false);
 }
 
-boolean 
+uint8_t 
 fpoint_dist_line (fpoint P0, fpoint L0, fpoint L1, double *dist,
                   fpoint *intersect_out)
 {

@@ -385,10 +385,10 @@ char *mybasename (const char *in, const char *who)
  *
  * Returns false if we finished with an empty block.
  */
-boolean hex_dump (void *addr, uint64_t offset, uint64_t len)
+uint8_t hex_dump (void *addr, uint64_t offset, uint64_t len)
 {
 #define HEX_DUMP_WIDTH 16
-    boolean skipping_blanks = false;
+    uint8_t skipping_blanks = false;
     uint8_t empty[HEX_DUMP_WIDTH] = {0};
     uint8_t buf[HEX_DUMP_WIDTH + 1];
     uint8_t *pc = (typeof(pc)) addr;

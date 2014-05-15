@@ -9,7 +9,7 @@
 #include "string.h"
 #include "string_ext.h"
 
-boolean string_test (int32_t argc, char *argv[])
+uint8_t string_test (int32_t argc, char *argv[])
 {
 #define SPLIT_TEST
 #ifdef SPLIT_TEST

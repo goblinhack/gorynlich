@@ -14,7 +14,7 @@ static const char *s_pStr = "Good morning Dr. Chandra. This is Hal. I am ready f
   "Good morning Dr. Chandra. This is Hal. I am ready for my first lesson." \
   "Good morning Dr. Chandra. This is Hal. I am ready for my first lesson.";
 
-boolean miniz_test (int32_t argc, char *argv[])
+uint8_t miniz_test (int32_t argc, char *argv[])
 {
   uint32_t step = 0;
   int32_t cmp_status;

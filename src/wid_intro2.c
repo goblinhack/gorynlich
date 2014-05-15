@@ -24,12 +24,12 @@ static widp wid_intro_player_container;
 
 static void wid_intro2_play_selected(void);
 
-static boolean wid_intro2_init_done;
+static uint8_t wid_intro2_init_done;
 static void wid_intro2_create(void);
 
 static int intro_effect_delay = 200;
 
-boolean wid_intro2_init (void)
+uint8_t wid_intro2_init (void)
 {
     if (!wid_intro2_init_done) {
     }
@@ -54,8 +54,8 @@ void wid_intro2_fini (void)
     }
 }
 
-static boolean wid_intro2_is_hidden;
-static boolean wid_intro2_is_visible;
+static uint8_t wid_intro2_is_hidden;
+static uint8_t wid_intro2_is_visible;
 
 void wid_intro2_hide (void)
 {
@@ -124,7 +124,7 @@ static void wid_intro2_play_selected (void)
     wid_intro2_hide();
 }
 
-static boolean wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
                                               uint32_t button)
 {
     thing_templatep t = (typeof(t)) wid_get_client_context(w);
@@ -138,7 +138,7 @@ static boolean wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro2_play_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro2_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_intro2_play_selected();
@@ -146,7 +146,7 @@ static boolean wid_intro2_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro2_go_back_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro2_go_back_mouse_event (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
     wid_intro2_hide();
@@ -155,7 +155,7 @@ static boolean wid_intro2_go_back_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro2_play_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_intro2_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
@@ -240,7 +240,7 @@ static void wid_intro2_buttons_tick (widp wid)
 static int32_t x;
 static int32_t y;
 
-static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
+static uint8_t wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
 {
     thing_templatep thing_template;
     widp child;
@@ -321,7 +321,7 @@ static boolean wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
 /*
  * Key down etc...
  */
-static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
 {
     int r;
     char *name = (char*) wid_get_text(w);
@@ -354,7 +354,7 @@ static boolean wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
     return (r);
 }
 
-static boolean wid_intro2_select_name_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro2_select_name_event (widp w, int32_t x, int32_t y,
                                              uint32_t button)
 {
     wid_set_on_key_down(w, wid_intro2_name_receive_input);

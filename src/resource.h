@@ -6,4 +6,4 @@
 
 #pragma once
 
-boolean resource_init(void);
+uint8_t resource_init(void);

@@ -166,7 +166,7 @@ typedef struct thing_template_ {
     uint8_t is_xxx5:1;
     uint8_t is_xxx6:1;
     uint8_t is_xxx7:1;
-    uint8_t is_xxx8:1;
+    uint8_t is_killed_on_hitting_player:1;
     uint8_t is_star:1;
     uint8_t is_key0:1;
     uint8_t is_key1:1;
@@ -209,7 +209,7 @@ typedef struct thing_template_ {
     uint8_t tilep_join_count[IS_JOIN_MAX];
 } thing_template;
 
-boolean thing_template_init(void);
+uint8_t thing_template_init(void);
 void thing_template_fini(void);
 thing_templatep thing_template_load(uint16_t *id, const char *file);
 thing_templatep thing_template_find(const char *name);
@@ -217,7 +217,7 @@ thing_templatep thing_template_find_short_name(const char *name);
 void demarshal_thing_template(demarshal_p ctx, thing_templatep);
 void marshal_thing_template(marshal_p ctx, thing_templatep);
 void thing_templates_marshal(marshal_p out);
-boolean thing_test(int32_t argc, char *argv[]);
+uint8_t thing_test(int32_t argc, char *argv[]);
 thing_templatep string2thing_template(const char **s);
 
 const char *thing_template_name(thing_templatep);
@@ -278,247 +278,247 @@ static inline thing_templatep id_to_thing_template (uint16_t id)
     return (&thing_templates_chunk[id]);
 }
 
-static inline boolean thing_template_is_exit (thing_templatep t)
+static inline uint8_t thing_template_is_exit (thing_templatep t)
 {
     return (t->is_exit);
 }
 
-static inline boolean thing_template_is_floor (thing_templatep t)
+static inline uint8_t thing_template_is_floor (thing_templatep t)
 {
     return (t->is_floor);
 }
 
-static inline boolean thing_template_is_food (thing_templatep t)
+static inline uint8_t thing_template_is_food (thing_templatep t)
 {
     return (t->is_food);
 }
 
-static inline boolean thing_template_is_monst (thing_templatep t)
+static inline uint8_t thing_template_is_monst (thing_templatep t)
 {
     return (t->is_monst);
 }
 
-static inline boolean thing_template_is_plant (thing_templatep t)
+static inline uint8_t thing_template_is_plant (thing_templatep t)
 {
     return (t->is_plant);
 }
 
-static inline boolean thing_template_is_player (thing_templatep t)
+static inline uint8_t thing_template_is_player (thing_templatep t)
 {
     return (t->is_player);
 }
 
-static inline boolean thing_template_is_key (thing_templatep t)
+static inline uint8_t thing_template_is_key (thing_templatep t)
 {
     return (t->is_key);
 }
 
-static inline boolean thing_template_is_xxx3 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx3 (thing_templatep t)
 {
     return (t->is_xxx3);
 }
 
-static inline boolean thing_template_is_xxx4 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx4 (thing_templatep t)
 {
     return (t->is_xxx4);
 }
 
-static inline boolean thing_template_is_xxx5 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx5 (thing_templatep t)
 {
     return (t->is_xxx5);
 }
 
-static inline boolean thing_template_is_xxx6 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx6 (thing_templatep t)
 {
     return (t->is_xxx6);
 }
 
-static inline boolean thing_template_is_xxx7 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx7 (thing_templatep t)
 {
     return (t->is_xxx7);
 }
 
-static inline boolean thing_template_is_xxx8 (thing_templatep t)
+static inline uint8_t thing_template_is_killed_on_hitting_player (thing_templatep t)
 {
-    return (t->is_xxx8);
+    return (t->is_killed_on_hitting_player);
 }
 
-static inline boolean thing_template_is_star (thing_templatep t)
+static inline uint8_t thing_template_is_star (thing_templatep t)
 {
     return (t->is_star);
 }
 
-static inline boolean thing_template_is_key0 (thing_templatep t)
+static inline uint8_t thing_template_is_key0 (thing_templatep t)
 {
     return (t->is_key0);
 }
 
-static inline boolean thing_template_is_key1 (thing_templatep t)
+static inline uint8_t thing_template_is_key1 (thing_templatep t)
 {
     return (t->is_key1);
 }
 
-static inline boolean thing_template_is_key2 (thing_templatep t)
+static inline uint8_t thing_template_is_key2 (thing_templatep t)
 {
     return (t->is_key2);
 }
 
-static inline boolean thing_template_is_key3 (thing_templatep t)
+static inline uint8_t thing_template_is_key3 (thing_templatep t)
 {
     return (t->is_key3);
 }
 
-static inline boolean thing_template_is_key4 (thing_templatep t)
+static inline uint8_t thing_template_is_key4 (thing_templatep t)
 {
     return (t->is_key4);
 }
 
-static inline boolean thing_template_is_key5 (thing_templatep t)
+static inline uint8_t thing_template_is_key5 (thing_templatep t)
 {
     return (t->is_key5);
 }
 
-static inline boolean thing_template_is_key6 (thing_templatep t)
+static inline uint8_t thing_template_is_key6 (thing_templatep t)
 {
     return (t->is_key6);
 }
 
-static inline boolean thing_template_is_key7 (thing_templatep t)
+static inline uint8_t thing_template_is_key7 (thing_templatep t)
 {
     return (t->is_key7);
 }
 
-static inline boolean thing_template_is_key8 (thing_templatep t)
+static inline uint8_t thing_template_is_key8 (thing_templatep t)
 {
     return (t->is_key8);
 }
 
-static inline boolean thing_template_is_xxx20 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx20 (thing_templatep t)
 {
     return (t->is_xxx20);
 }
 
-static inline boolean thing_template_is_key9 (thing_templatep t)
+static inline uint8_t thing_template_is_key9 (thing_templatep t)
 {
     return (t->is_key9);
 }
 
-static inline boolean thing_template_is_xxx21 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx21 (thing_templatep t)
 {
     return (t->is_xxx21);
 }
 
-static inline boolean thing_template_is_seedpod (thing_templatep t)
+static inline uint8_t thing_template_is_seedpod (thing_templatep t)
 {
     return (t->is_seedpod);
 }
 
-static inline boolean thing_template_is_bomb (thing_templatep t)
+static inline uint8_t thing_template_is_bomb (thing_templatep t)
 {
     return (t->is_bomb);
 }
 
-static inline boolean thing_template_is_spam (thing_templatep t)
+static inline uint8_t thing_template_is_spam (thing_templatep t)
 {
     return (t->is_spam);
 }
 
-static inline boolean thing_template_is_door (thing_templatep t)
+static inline uint8_t thing_template_is_door (thing_templatep t)
 {
     return (t->is_door);
 }
 
-static inline boolean thing_template_is_pipe (thing_templatep t)
+static inline uint8_t thing_template_is_pipe (thing_templatep t)
 {
     return (t->is_pipe);
 }
 
-static inline boolean thing_template_is_generator (thing_templatep t)
+static inline uint8_t thing_template_is_generator (thing_templatep t)
 {
     return (t->is_generator);
 }
 
-static inline boolean thing_template_is_scarable (thing_templatep t)
+static inline uint8_t thing_template_is_scarable (thing_templatep t)
 {
     return (t->is_scarable);
 }
 
-static inline boolean thing_template_is_xxx29 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx29 (thing_templatep t)
 {
     return (t->is_xxx29);
 }
 
-static inline boolean thing_template_is_hidden_from_editor (thing_templatep t)
+static inline uint8_t thing_template_is_hidden_from_editor (thing_templatep t)
 {
     return (t->is_hidden_from_editor);
 }
 
-static inline boolean thing_template_is_animated (thing_templatep t)
+static inline uint8_t thing_template_is_animated (thing_templatep t)
 {
     return (t->is_animated);
 }
 
-static inline boolean thing_template_is_collision_map_weapon (thing_templatep t)
+static inline uint8_t thing_template_is_collision_map_weapon (thing_templatep t)
 {
     return (t->is_collision_map_weapon);
 }
 
-static inline boolean thing_template_is_collision_map_player (thing_templatep t)
+static inline uint8_t thing_template_is_collision_map_player (thing_templatep t)
 {
     return (t->is_collision_map_player);
 }
 
-static inline boolean thing_template_is_collision_map_monst (thing_templatep t)
+static inline uint8_t thing_template_is_collision_map_monst (thing_templatep t)
 {
     return (t->is_collision_map_monst);
 }
 
-static inline boolean thing_template_is_xxx33 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx33 (thing_templatep t)
 {
     return (t->is_xxx33);
 }
 
-static inline boolean thing_template_is_projectile (thing_templatep t)
+static inline uint8_t thing_template_is_projectile (thing_templatep t)
 {
     return (t->is_projectile);
 }
 
-static inline boolean thing_template_is_boring (thing_templatep t)
+static inline uint8_t thing_template_is_boring (thing_templatep t)
 {
     return (t->is_boring);
 }
 
-static inline boolean thing_template_is_item_hidden (thing_templatep t)
+static inline uint8_t thing_template_is_item_hidden (thing_templatep t)
 {
     return (t->is_item_hidden);
 }
 
-static inline boolean thing_template_is_joinable (thing_templatep t)
+static inline uint8_t thing_template_is_joinable (thing_templatep t)
 {
     return (t->is_joinable);
 }
 
-static inline boolean thing_template_is_wall (thing_templatep t)
+static inline uint8_t thing_template_is_wall (thing_templatep t)
 {
     return (t->is_wall);
 }
 
-static inline boolean thing_template_is_effect_sway (thing_templatep t)
+static inline uint8_t thing_template_is_effect_sway (thing_templatep t)
 {
     return (t->is_effect_sway);
 }
 
-static inline boolean thing_template_is_effect_pulse (thing_templatep t)
+static inline uint8_t thing_template_is_effect_pulse (thing_templatep t)
 {
     return (t->is_effect_pulse);
 }
 
-static inline boolean thing_template_is_effect_rotate_4way (thing_templatep t)
+static inline uint8_t thing_template_is_effect_rotate_4way (thing_templatep t)
 {
     return (t->is_effect_rotate_4way);
 }
 
-static inline boolean thing_template_is_effect_rotate_2way (thing_templatep t)
+static inline uint8_t thing_template_is_effect_rotate_2way (thing_templatep t)
 {
     return (t->is_effect_rotate_2way);
 }

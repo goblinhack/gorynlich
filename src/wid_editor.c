@@ -25,7 +25,7 @@
 #include "wid_textbox.h"
 #include "level.h"
 
-static boolean wid_editor_init_done;
+static uint8_t wid_editor_init_done;
 
 widp wid_editor_clear_popup;
 widp wid_editor_help_popup;
@@ -34,16 +34,16 @@ widp wid_editor_title_popup;
 widp wid_editor_load_popup;
 widp wid_editor_filename_and_title;
 
-boolean wid_editor_mode_eraser;
-boolean wid_editor_mode_inc;
-boolean wid_editor_mode_dec;
-boolean wid_editor_mode_draw;
-boolean wid_editor_mode_line;
-boolean wid_editor_mode_fill;
+uint8_t wid_editor_mode_eraser;
+uint8_t wid_editor_mode_inc;
+uint8_t wid_editor_mode_dec;
+uint8_t wid_editor_mode_draw;
+uint8_t wid_editor_mode_line;
+uint8_t wid_editor_mode_fill;
 
 static void wid_editor_clear_callback_yes(widp wid);
 
-boolean wid_editor_init (void)
+uint8_t wid_editor_init (void)
 {
     wid_editor_init_done = true;
 
@@ -96,7 +96,7 @@ void wid_editor_visible (void)
     wid_editor_save_point();
 }
 
-static boolean wid_editor_any_popup (void)
+static uint8_t wid_editor_any_popup (void)
 {
     if (wid_editor_help_popup ||
         wid_editor_clear_popup ||

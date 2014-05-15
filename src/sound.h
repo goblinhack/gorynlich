@@ -6,7 +6,7 @@
 
 #pragma once
 
-boolean sound_init(void);
+uint8_t sound_init(void);
 void sound_fini(void);
 soundp sound_load(const char *file, const char *name);
 soundp sound_find(const char *name);

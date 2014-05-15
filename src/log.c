@@ -23,11 +23,8 @@
 #include "color.h"
 
 static char buf[MAXSTR];
-boolean debug_enabled;
-boolean debug_socket_ping_enabled;
-boolean debug_socket_connect_enabled;
-boolean debug_socket_players_enabled;
-boolean croaked;
+uint8_t debug_enabled = 0;
+uint8_t croaked;
 
 /*
  * putfgbg
@@ -129,7 +126,7 @@ static int color_to_index (const char **s)
 static void putf (FILE *fp, const char *s)
 {
     char c;
-    boolean looking_for_start = false;
+    uint8_t looking_for_start = false;
 
     while ((c = *s++) != '\0') {
 	if (!looking_for_start) {
@@ -497,7 +494,7 @@ void LEVEL_LOG (levelp t, const char *fmt, ...)
 /*
  * User has entered a command, run it
  */
-boolean debug_enable (tokens_t *tokens, void *context)
+uint8_t debug_enable (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 

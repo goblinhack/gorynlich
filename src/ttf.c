@@ -67,9 +67,9 @@ static void ttf_create_tex_from_char(TTF_Font *ttf, const char *name,
                                      font *f, uint8_t c);
 #endif
 
-static boolean ttf_init_done;
+static uint8_t ttf_init_done;
 
-boolean ttf_init (void)
+uint8_t ttf_init (void)
 {
 #ifdef ENABLE_GENERATE_TTF
     if (TTF_Init() < 0) {
@@ -155,9 +155,9 @@ void ttf_text_size (font *f, const char *text_in,
                     enum_fmt *fmt,
                     double scaling,
                     double advance,
-                    boolean fixed_width)
+                    uint8_t fixed_width)
 {
-    boolean found_format_string = false;
+    uint8_t found_format_string = false;
     int32_t c;
     texp tex;
     tilep tile;
@@ -253,7 +253,7 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
     double texMaxY = f->glyphs[c].texMaxY;
 
     if (c == TTF_CURSOR_CHAR) {
-        static boolean first = true;
+        static uint8_t first = true;
         static uint32_t last;
 
         c = TTF_FIXED_WIDTH_CHAR;
@@ -324,13 +324,13 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
 static void ttf_puts_internal (font *f, const char *text,
                                int32_t x, int32_t y,
                                double scaling, double advance,
-                               boolean include_formatting,
-                               boolean draw_cursor,
-                               boolean fixed_width)
+                               uint8_t include_formatting,
+                               uint8_t draw_cursor,
+                               uint8_t fixed_width)
 {
     color saved_color = gl_color_current();
-    boolean color_retore_needed = false;
-    boolean found_format_string = false;
+    uint8_t color_retore_needed = false;
+    uint8_t found_format_string = false;
     int32_t c;
     texp tex;
     tilep tile;
@@ -467,7 +467,7 @@ static void ttf_puts_internal (font *f, const char *text,
 
 void ttf_puts (font *f, const char *text, int32_t x, int32_t y,
                double scaling, double advance,
-               boolean fixed_width)
+               uint8_t fixed_width)
 {
     ttf_puts_internal(f, text, x, y, scaling, advance,
                       true, /* include formatting */
@@ -477,7 +477,7 @@ void ttf_puts (font *f, const char *text, int32_t x, int32_t y,
 
 void ttf_puts_no_fmt (font *f, const char *text, int32_t x, int32_t y,
                       double scaling, double advance,
-                      boolean fixed_width)
+                      uint8_t fixed_width)
 {
     ttf_puts_internal(f, text, x, y, scaling, advance,
                       false, /* include formatting */

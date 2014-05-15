@@ -19,7 +19,7 @@ static const uint32_t MAX_HISCORES = 10;
 
 static widp wid_hiscore;
 static widp wid_hiscore_container;
-static boolean wid_hiscore_init_done;
+static uint8_t wid_hiscore_init_done;
 
 static void wid_hiscore_create(void);
 static void wid_hiscore_destroy(void);
@@ -52,7 +52,7 @@ void hiscore_add (const char *name, uint32_t score)
     }
 }
 
-boolean wid_hiscore_init (void)
+uint8_t wid_hiscore_init (void)
 {
     if (!wid_hiscore_init_done) {
         hiscore_load();
@@ -91,7 +91,7 @@ void wid_hiscore_visible (void)
     wid_hiscore_create();
 }
 
-static boolean wid_hiscore_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_hiscore_mouse_event (widp w, int32_t x, int32_t y,
                                         uint32_t button)
 {
     wid_hiscore_hide();
@@ -99,7 +99,7 @@ static boolean wid_hiscore_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_hiscore_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_hiscore_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
@@ -114,7 +114,7 @@ static boolean wid_hiscore_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static boolean wid_hiscore_receive_mouse_motion (
+static uint8_t wid_hiscore_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
                     int32_t relx, int32_t rely,
@@ -298,9 +298,9 @@ void wid_hiscore_destroy (void)
     wid_destroy(&wid_hiscore);
 }
 
-static boolean demarshal_hiscore (demarshal_p ctx, hiscore *p)
+static uint8_t demarshal_hiscore (demarshal_p ctx, hiscore *p)
 {
-    boolean rc;
+    uint8_t rc;
 
     rc = true;
 
@@ -318,7 +318,7 @@ static void marshal_hiscore (marshal_p ctx, hiscore *p)
     PUT_NAMED_INT32(ctx, "tiebreak", p->tree.key2);
 }
 
-boolean hiscore_save (void)
+uint8_t hiscore_save (void)
 {
     char *file = dynprintf("%s", hiscore_dir_and_file);
     marshal_p ctx;
@@ -353,7 +353,7 @@ boolean hiscore_save (void)
     return (true);
 }
 
-boolean hiscore_load (void)
+uint8_t hiscore_load (void)
 {
     char *file = dynprintf("%s", hiscore_dir_and_file);
     demarshal_p ctx;

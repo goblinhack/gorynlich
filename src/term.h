@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-extern boolean term_init(void);
+extern uint8_t term_init(void);
 extern void term_fini(void);
 extern int get_term_size(int fd, int *x, int *y);
 

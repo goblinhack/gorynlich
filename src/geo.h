@@ -36,7 +36,7 @@ triangle_line_intersect(const line ray,
 /*
  * true on intersection.
  */
-boolean
+uint8_t
 cube_line_intersect(const line ray, 
                     const fpoint3d p0,
                     const fpoint3d p1,
@@ -52,5 +52,5 @@ cube_line_intersect(const line ray,
 /*
  * true if perpendicular line from point is in line segment.
  */
-boolean 
+uint8_t 
 dist_point_line(fpoint3d P0, fpoint3d L0, fpoint3d L1, float *dist);

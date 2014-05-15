@@ -21,11 +21,11 @@
 static widp wid_server_create_window;
 static widp wid_server_create_container;
 static widp wid_server_create_window_container;
-static boolean wid_server_create_init_done;
+static uint8_t wid_server_create_init_done;
 
-static void wid_server_create_create(boolean redo);
+static void wid_server_create_create(uint8_t redo);
 static void wid_server_create_destroy(void);
-static boolean wid_server_load_local_server(void);
+static uint8_t wid_server_load_local_server(void);
 
 typedef struct server_ {
     tree_key_two_int tree;
@@ -34,16 +34,16 @@ typedef struct server_ {
     char *name;
     uint16_t port;
     char *tooltip;
-    boolean walked;
-    boolean started;
+    uint8_t walked;
+    uint8_t started;
 } server;
 
 static void wid_server_create_destroy_internal(server *node);
-static boolean wid_server_create_name_receive_input(widp w,
+static uint8_t wid_server_create_name_receive_input(widp w,
                                                     const SDL_KEYSYM *key);
-static boolean wid_server_create_port_receive_input(widp w, 
+static uint8_t wid_server_create_port_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
-static boolean wid_server_create_max_players_receive_input(widp w, 
+static uint8_t wid_server_create_max_players_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
 
 static tree_rootp local_servers;
@@ -91,7 +91,7 @@ static void wid_server_local_server_add (const server *s_in)
     /*
      * Check this ip and port combination is not added already.
      */
-    boolean collision = false;
+    uint8_t collision = false;
 
     do {
         server *sw;
@@ -130,7 +130,7 @@ static void server_remove (server *s)
     myfree(s);
 }
 
-boolean wid_server_create_init (void)
+uint8_t wid_server_create_init (void)
 {
     if (!wid_server_create_init_done) {
         wid_server_load_local_server();
@@ -224,7 +224,7 @@ void wid_server_create_redo (void)
     wid_server_create_create(false);
 }
 
-static boolean wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t button)
+static uint8_t wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t button)
 {
     wid_server_create_hide();
     wid_server_join_hide();
@@ -233,7 +233,7 @@ static boolean wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t
     return (true);
 }
 
-static boolean wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
+static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 {
     is_server = true;
 
@@ -263,7 +263,7 @@ static boolean wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
     return (true);
 }
 
-static boolean wid_server_stop (widp w, int32_t x, int32_t y, uint32_t button)
+static uint8_t wid_server_stop (widp w, int32_t x, int32_t y, uint32_t button)
 {
     server_stop();
 
@@ -274,7 +274,7 @@ static boolean wid_server_stop (widp w, int32_t x, int32_t y, uint32_t button)
     return (true);
 }
 
-static boolean wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case SDLK_ESCAPE:
@@ -298,7 +298,7 @@ static boolean wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static boolean wid_server_create_receive_mouse_motion (
+static uint8_t wid_server_create_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
                     int32_t relx, int32_t rely,
@@ -317,7 +317,7 @@ static boolean wid_server_create_receive_mouse_motion (
     return (true);
 }
 
-static boolean wid_server_create_name_mouse_down (widp w, 
+static uint8_t wid_server_create_name_mouse_down (widp w, 
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
 {
@@ -327,7 +327,7 @@ static boolean wid_server_create_name_mouse_down (widp w,
     return (true);
 }
 
-static boolean wid_server_create_port_mouse_down (widp w, 
+static uint8_t wid_server_create_port_mouse_down (widp w, 
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
 {
@@ -337,7 +337,7 @@ static boolean wid_server_create_port_mouse_down (widp w,
     return (true);
 }
 
-static boolean wid_server_create_max_players_mouse_down (widp w, 
+static uint8_t wid_server_create_max_players_mouse_down (widp w, 
                                                          int32_t x, int32_t y,
                                                          uint32_t button)
 {
@@ -350,7 +350,7 @@ static boolean wid_server_create_max_players_mouse_down (widp w,
 /*
  * Key down etc...
  */
-static boolean wid_server_create_name_receive_input (widp w,
+static uint8_t wid_server_create_name_receive_input (widp w,
                                                      const SDL_KEYSYM *key)
 {
     server *s;
@@ -411,7 +411,7 @@ static boolean wid_server_create_name_receive_input (widp w,
 /*
  * Key down etc...
  */
-static boolean wid_server_create_port_receive_input (widp w, 
+static uint8_t wid_server_create_port_receive_input (widp w, 
                                                      const SDL_KEYSYM *key)
 {
     server *s;
@@ -489,7 +489,7 @@ static boolean wid_server_create_port_receive_input (widp w,
 /*
  * Key down etc...
  */
-static boolean wid_server_create_max_players_receive_input (widp w, 
+static uint8_t wid_server_create_max_players_receive_input (widp w, 
                                                      const SDL_KEYSYM *key)
 {
     server *s;
@@ -568,7 +568,7 @@ static void wid_server_create_set_color (widp w, server *s)
     }
 }
 
-static void wid_server_create_create (boolean redo)
+static void wid_server_create_create (uint8_t redo)
 {
     if (wid_server_create_window) {
         return;
@@ -920,7 +920,7 @@ void wid_server_create_destroy (void)
     }
 }
 
-static boolean wid_server_load_local_server (void)
+static uint8_t wid_server_load_local_server (void)
 {
     if (local_servers) {
         tree_destroy(&local_servers, 0);

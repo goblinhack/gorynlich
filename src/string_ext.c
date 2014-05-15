@@ -28,7 +28,7 @@
 tree_root *split (const char *text, uint32_t max_line_len)
 {
     tree_string_split_node *node;
-    boolean found_format_string;
+    uint8_t found_format_string;
     const char *line_start;
     const char *line_end;
     tree_root *root;

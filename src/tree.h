@@ -22,7 +22,7 @@ typedef struct tree_node_ {
 } tree_node;
 
 typedef int8_t (*tree_key_func)(const tree_node *, const tree_node *);
-typedef boolean (*tree_destroy_func)(tree_node *);
+typedef uint8_t (*tree_destroy_func)(tree_node *);
 
 typedef enum {
     TREE_KEY_CUSTOM,
@@ -101,18 +101,18 @@ uint32_t tree_root_size(tree_root *);
 uint32_t tree_size(const tree_node *top);
 tree_node *tree_find(tree_root *, const tree_node *);
 
-typedef boolean (*tree_walker_func)(const tree_node *, void *arg);
+typedef uint8_t (*tree_walker_func)(const tree_node *, void *arg);
 
 tree_node *tree_next(tree_root *root, tree_node *node);
 tree_node *tree_prev(tree_root *root, tree_node *node);
-boolean tree_walk(tree_root *, tree_walker_func, void *arg);
-boolean tree_walk_reverse(tree_root *, tree_walker_func, void *arg);
+uint8_t tree_walk(tree_root *, tree_walker_func, void *arg);
+uint8_t tree_walk_reverse(tree_root *, tree_walker_func, void *arg);
 
-boolean tree_insert(tree_root *, tree_node *);
-boolean tree_insert_static(tree_root *, tree_node *);
-boolean tree_remove(tree_root *, tree_node *);
-boolean tree_remove_found_node(tree_root *, tree_node *);
-boolean tree_root_is_empty(tree_root *root);
+uint8_t tree_insert(tree_root *, tree_node *);
+uint8_t tree_insert_static(tree_root *, tree_node *);
+uint8_t tree_remove(tree_root *, tree_node *);
+uint8_t tree_remove_found_node(tree_root *, tree_node *);
+uint8_t tree_root_is_empty(tree_root *root);
 void tree_empty(tree_root *, tree_destroy_func);
 void tree_destroy(tree_root **, tree_destroy_func);
 

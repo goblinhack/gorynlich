@@ -26,19 +26,23 @@
 
 tree_rootp sockets;
 
-boolean is_server;
-boolean is_client;
-boolean is_headless;
+uint8_t debug_socket_ping_enabled = 0;
+uint8_t debug_socket_connect_enabled = 0;
+uint8_t debug_socket_players_enabled = 0;
+
+uint8_t is_server;
+uint8_t is_client;
+uint8_t is_headless;
 
 IPaddress server_address = {0};
 IPaddress no_address = {0};
 
 static void socket_destroy(socketp s);
-static boolean sockets_show_all(tokens_t *tokens, void *context);
-static boolean sockets_show_summary(tokens_t *tokens, void *context);
-static boolean socket_init_done;
+static uint8_t sockets_show_all(tokens_t *tokens, void *context);
+static uint8_t sockets_show_summary(tokens_t *tokens, void *context);
+static uint8_t socket_init_done;
 
-boolean socket_init (void)
+uint8_t socket_init (void)
 {
     if (socket_init_done) {
         return (true);
@@ -201,7 +205,7 @@ socketp socket_find (IPaddress address)
     return (s);
 }
 
-static socket *socket_connect (IPaddress address, boolean server_side_client)
+static socket *socket_connect (IPaddress address, uint8_t server_side_client)
 {
     IPaddress connect_address = address;
 
@@ -380,7 +384,7 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
 /*
  * User has entered a command, run it
  */
-boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
+uint8_t debug_socket_ping_enable (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[4];
 
@@ -398,7 +402,7 @@ boolean debug_socket_ping_enable (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
+uint8_t debug_socket_connect_enable (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[4];
 
@@ -416,7 +420,7 @@ boolean debug_socket_connect_enable (tokens_t *tokens, void *context)
 /*
  * User has entered a command, run it
  */
-boolean debug_socket_players_enable (tokens_t *tokens, void *context)
+uint8_t debug_socket_players_enable (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[4];
 
@@ -530,7 +534,7 @@ char *iprawporttodynstr (IPaddress ip)
     return (dynprintf("%u", port));
 }
 
-static boolean sockets_show_all (tokens_t *tokens, void *context)
+static uint8_t sockets_show_all (tokens_t *tokens, void *context)
 {
     uint32_t si = 0;
 
@@ -694,7 +698,7 @@ static boolean sockets_show_all (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean sockets_show_summary (tokens_t *tokens, void *context)
+static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
 {
     int si = 0;
 
@@ -974,21 +978,21 @@ const char * socket_get_remote_logname (const socketp s)
     return (s->remote_logname);
 }
 
-boolean socket_get_server (const socketp s)
+uint8_t socket_get_server (const socketp s)
 {
     verify(s);
 
     return (s->server);
 }
 
-boolean socket_get_client (const socketp s)
+uint8_t socket_get_client (const socketp s)
 {
     verify(s);
 
     return (s->client);
 }
 
-boolean socket_get_server_side_client (const socketp s)
+uint8_t socket_get_server_side_client (const socketp s)
 {
     verify(s);
 
@@ -1009,14 +1013,14 @@ void socket_set_channel (socketp s, int c)
     s->channel = c;
 }
 
-boolean socket_get_channel (const socketp s)
+uint8_t socket_get_channel (const socketp s)
 {
     verify(s);
 
     return (s->channel);
 }
 
-void socket_set_connected (socketp s, boolean c)
+void socket_set_connected (socketp s, uint8_t c)
 {
     verify(s);
 
@@ -1052,7 +1056,7 @@ void socket_set_connected (socketp s, boolean c)
     s->tx = 0;
 }
 
-boolean socket_get_connected (const socketp s)
+uint8_t socket_get_connected (const socketp s)
 {
     verify(s);
 
@@ -1189,6 +1193,11 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
     packet->len = data - odata;
     write_address(packet, socket_get_remote_ip(s));
 
+    if (debug_socket_ping_enabled) {
+        LOG("Tx Pong [to %s] seq %u, ts %u", 
+            socket_get_remote_logname(s), seq, ts);
+    }
+
     socket_tx_msg(s, packet);
         
     socket_free_msg(packet);
@@ -1307,7 +1316,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     p->remote_ip = s->remote_ip;
 }
 
-boolean socket_tx_client_join (socketp s, uint32_t *key)
+uint8_t socket_tx_client_join (socketp s, uint32_t *key)
 {
     verify(s);
 
@@ -1355,7 +1364,7 @@ boolean socket_tx_client_join (socketp s, uint32_t *key)
     return (true);
 }
 
-boolean socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
+uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1473,7 +1482,7 @@ void socket_tx_client_leave (socketp s)
     socket_free_msg(packet);
 }
 
-boolean socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
+uint8_t socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -2209,11 +2218,11 @@ uint32_t socket_get_rx_bad_msg (socketp s)
 
 void socket_tx_client_move (socketp s, 
                             thingp t,
-                            const boolean up,
-                            const boolean down,
-                            const boolean left, 
-                            const boolean right,
-                            const boolean fire)
+                            const uint8_t up,
+                            const uint8_t down,
+                            const uint8_t left, 
+                            const uint8_t right,
+                            const uint8_t fire)
 {
     if (!socket_get_udp_socket(s)) {
         return;
@@ -2270,11 +2279,11 @@ void socket_server_rx_player_move (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
-    const boolean fire  = (msg.dir & (1 << 4)) ? 1 : 0;
-    const boolean up    = (msg.dir & (1 << 3)) ? 1 : 0;
-    const boolean down  = (msg.dir & (1 << 2)) ? 1 : 0;
-    const boolean left  = (msg.dir & (1 << 1)) ? 1 : 0;
-    const boolean right = (msg.dir & (1 << 0)) ? 1 : 0;
+    const uint8_t fire  = (msg.dir & (1 << 4)) ? 1 : 0;
+    const uint8_t up    = (msg.dir & (1 << 3)) ? 1 : 0;
+    const uint8_t down  = (msg.dir & (1 << 2)) ? 1 : 0;
+    const uint8_t left  = (msg.dir & (1 << 1)) ? 1 : 0;
+    const uint8_t right = (msg.dir & (1 << 0)) ? 1 : 0;
 
     thingp t = p->thing;
     if (!t) {

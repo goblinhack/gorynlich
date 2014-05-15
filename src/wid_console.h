@@ -7,7 +7,7 @@
 #pragma once
 
 void wid_console_fini(void);
-boolean wid_console_init(void);
+uint8_t wid_console_init(void);
 void wid_console_log(const char *s);
 void wid_console_hello(void);
 

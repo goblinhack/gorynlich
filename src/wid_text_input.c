@@ -28,12 +28,12 @@ static const char wid_text_input_file_str[] =
 typedef void (*wid_text_input_callback)(widp);
 
 static
-boolean wid_text_input_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
+uint8_t wid_text_input_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
 {
     return (true);
 }
 
-static boolean wid_text_input_button_selected (widp w)
+static uint8_t wid_text_input_button_selected (widp w)
 {
     wid_text_input_callback callback;
     widp wid_input;
@@ -55,7 +55,7 @@ static boolean wid_text_input_button_selected (widp w)
     return (true);
 }
 
-static boolean wid_text_input_button_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_text_input_button_event (widp w, int32_t x, int32_t y,
                                          uint32_t button)
 {
     wid_text_input_button_selected(w);
@@ -66,7 +66,7 @@ static boolean wid_text_input_button_event (widp w, int32_t x, int32_t y,
 /*
  * Key down etc...
  */
-static boolean wid_text_input_receive_input (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_text_input_receive_input (widp w, const SDL_KEYSYM *key)
 {
     widp button;
 

@@ -114,7 +114,7 @@ static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
 static inline void
 gl_push (float **p,
          float *p_end,
-         boolean first,
+         uint8_t first,
          float tex_left,
          float tex_top,
          float tex_right,
@@ -288,7 +288,7 @@ void blit (int tex,
            float bottom)
 {
 #ifdef ENABLE_GL_BULK_DRAW_ARRAYS
-    boolean first;
+    uint8_t first;
 
     if (!buf_tex) {
         blit_init();

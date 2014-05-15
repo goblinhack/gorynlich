@@ -6,7 +6,7 @@
 
 #pragma once
 
-boolean tile_init(void);
+uint8_t tile_init(void);
 void tile_fini(void);
 void tile_load(const char *file, uint32_t width, uint32_t height,
                uint32_t nargs, ...);

@@ -22,9 +22,9 @@ typedef struct sound_ {
 
 tree_root *all_sound;
 
-static boolean sound_init_done;
+static uint8_t sound_init_done;
 
-boolean sound_init (void)
+uint8_t sound_init (void)
 {
     sound_init_done = true;
 

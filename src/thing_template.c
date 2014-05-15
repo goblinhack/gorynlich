@@ -23,10 +23,10 @@ static uint32_t thing_templates_chunk_count;
 tree_root *thing_templates;
 tree_root *thing_templates_create_order;
 
-static boolean thing_template_init_done;
+static uint8_t thing_template_init_done;
 static void thing_template_destroy_internal(thing_templatep t);
 
-boolean thing_template_init (void)
+uint8_t thing_template_init (void)
 {
     thing_template_init_done = true;
 
@@ -409,7 +409,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_killed_on_hitting_player", t->is_killed_on_hitting_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);
@@ -513,7 +513,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
     PUT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
     PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
+    PUT_NAMED_BITFIELD(ctx, "is_killed_on_hitting_player", t->is_killed_on_hitting_player);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
     PUT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);

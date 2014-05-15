@@ -9,7 +9,7 @@ void wid_editor_map_wid_destroy (void);
 
 extern widp wid_editor_map_window;
 extern widp wid_editor_map_grid_container;
-extern boolean wid_editor_got_line_start;
+extern uint8_t wid_editor_got_line_start;
 
 widp wid_editor_map_thing_replace_template(widp,
                                            double x, double y,

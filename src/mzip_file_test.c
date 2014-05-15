@@ -10,7 +10,7 @@
 #include "main.h"
 #include "mzip_file.h"
 
-boolean mzip_file_test (int32_t argc, char *argv[])
+uint8_t mzip_file_test (int32_t argc, char *argv[])
 {
     const char *filename = "test.mz";
     char out[] =
