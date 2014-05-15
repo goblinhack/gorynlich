@@ -151,7 +151,7 @@ typedef struct thing_template_ {
     uint32_t ppp16;
     uint32_t ppp17;
     uint32_t ppp18;
-    uint32_t ppp19;
+    uint32_t hit_delay_tenths;
     uint32_t mob_spawn_delay_tenths;
 
     uint8_t is_exit:1;
@@ -253,7 +253,7 @@ uint32_t thing_template_get_ppp15(thing_templatep);
 uint32_t thing_template_get_ppp16(thing_templatep);
 uint32_t thing_template_get_ppp17(thing_templatep);
 uint32_t thing_template_get_ppp18(thing_templatep);
-uint32_t thing_template_get_ppp19(thing_templatep);
+uint32_t thing_template_get_hit_delay_tenths(thing_templatep);
 uint32_t thing_template_get_mob_spawn_delay_tenths(thing_templatep);
 
 tree_rootp thing_template_get_tiles(thing_templatep);
