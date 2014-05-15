@@ -94,7 +94,7 @@ typedef struct command_t_ {
     command_fn_t callback;
 } command_t;
 
-static boolean command_inited;
+static uint8_t command_inited;
 static tree_root *commands;
 
 void command_fini (void)
@@ -108,7 +108,7 @@ void command_fini (void)
     }
 }
 
-boolean command_init (void)
+uint8_t command_init (void)
 {
     command_inited = true;
 
@@ -143,9 +143,9 @@ void command_add (command_fn_t callback,
 
 static int32_t command_matches (const char *input,
                                 char *output,
-                                boolean show_ambiguous,
-                                boolean show_complete,
-                                boolean execute_command,
+                                uint8_t show_ambiguous,
+                                uint8_t show_complete,
+                                uint8_t execute_command,
                                 void *context)
 {
     char cand_expand_to[MAXSTR];
@@ -342,11 +342,11 @@ static int32_t command_matches (const char *input,
     return (matches);
 }
 
-boolean command_handle (const char *input,
+uint8_t command_handle (const char *input,
                         char *expandedtext,
-                        boolean show_ambiguous,
-                        boolean show_complete,
-                        boolean execute_command,
+                        uint8_t show_ambiguous,
+                        uint8_t show_complete,
+                        uint8_t execute_command,
                         void *context)
 {
     int32_t matches;

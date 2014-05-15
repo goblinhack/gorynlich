@@ -44,7 +44,7 @@ int term_y;
 term_color term_fg_current = TERM_COLOR_RESET;
 term_color term_bg_current = TERM_COLOR_BLACK;
 
-boolean term_cursor_move_only;
+uint8_t term_cursor_move_only;
 
 term_cell term_cells[TERM_MAX_SIZE][TERM_MAX_SIZE];
 term_cell term_bcells[TERM_MAX_SIZE][TERM_MAX_SIZE];
@@ -54,12 +54,12 @@ char *term_core_buffer;
 int term_core_buffer_pos;
 int term_core_buffer_size;
 
-static boolean term_init_done;
+static uint8_t term_init_done;
 static struct termios term_original_settings;
 
 static void term_core_exit (void)
 {
-    static boolean exitting;
+    static uint8_t exitting;
 
     if (exitting) {
         return;
@@ -120,7 +120,7 @@ static void term_core_goto_init (void)
     }
 }
 
-boolean term_init (void)
+uint8_t term_init (void)
 {
     if (!HEADLESS && !enable_console) {
         return (true);
@@ -611,7 +611,7 @@ static term_color term_color_string_to_index (const char **s)
 void term_putf (const char *s)
 {
     char c;
-    boolean looking_for_start = false;
+    uint8_t looking_for_start = false;
 
     while ((c = *s++) != '\0') {
 
@@ -669,7 +669,7 @@ void term_refresh (void)
     }
 
     int x, y;
-    boolean term_is_cursor_valid = false;
+    uint8_t term_is_cursor_valid = false;
 
     for (y = 0; y < TERM_HEIGHT; y++) {
         term_is_cursor_valid = false;
@@ -691,9 +691,9 @@ void term_refresh (void)
 
             term_cell *b = &term_bcells[x][y];
 
-            boolean cell_c_back_buffer_changed = (b->c != c->c);
-            boolean cell_fg_back_buffer_changed = (b->fg != c->fg);
-            boolean cell_bg_back_buffer_changed = (b->bg != c->bg);
+            uint8_t cell_c_back_buffer_changed = (b->c != c->c);
+            uint8_t cell_fg_back_buffer_changed = (b->fg != c->fg);
+            uint8_t cell_bg_back_buffer_changed = (b->bg != c->bg);
 
             /*
              * Any changes in this cell with the back buffer cell?

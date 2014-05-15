@@ -21,12 +21,12 @@ static const int32_t BUTTON_PAD_Y = 10;
 typedef void (*wid_popup_callback)(widp);
 
 static
-boolean wid_popup_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
+uint8_t wid_popup_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
 {
     return (true);
 }
 
-static boolean wid_popup_button_selected (widp w)
+static uint8_t wid_popup_button_selected (widp w)
 {
     wid_popup_callback callback;
 
@@ -41,7 +41,7 @@ static boolean wid_popup_button_selected (widp w)
     return (true);
 }
 
-static boolean wid_popup_wid_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_popup_wid_mouse_event (widp w, int32_t x, int32_t y,
                                           uint32_t button)
 {
     wid_popup_button_selected(w);
@@ -49,7 +49,7 @@ static boolean wid_popup_wid_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_popup_wid_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_popup_wid_key_event (widp w, const SDL_KEYSYM *key)
 {
     widp button;
     widp focus;
@@ -502,7 +502,7 @@ static void wid_popup_ok_close (widp wid)
     wid_destroy(&wid);
 }
 
-static boolean wid_popup_ok_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_popup_ok_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
@@ -546,7 +546,7 @@ static void wid_popup_error_close (widp wid)
     wid_destroy(&wid);
 }
 
-static boolean wid_popup_error_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_popup_error_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':

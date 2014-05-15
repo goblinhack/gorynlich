@@ -18,9 +18,19 @@ static FILE *fp;
 static const int8_t is_a_wall = 63;
 static const int8_t not_preferred = 62;
 
-static pthread_t dmap_thread;
-static pthread_mutex_t dmap_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_cond_t dmap_condition_var = PTHREAD_COND_INITIALIZER;
+/*
+ * We use two threads one to calculate dmaps whenever the player moves
+ *
+ * The other is uses to create dmaps at level start for every position.
+ * This takes a long time.
+ */
+static pthread_t dmap_thread1;
+static pthread_mutex_t dmap_thread1_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t dmap_thread1_cond = PTHREAD_COND_INITIALIZER;
+
+static pthread_t dmap_thread2;
+static pthread_mutex_t dmap_thread2_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t dmap_thread2_cond = PTHREAD_COND_INITIALIZER;
 
 /*
  * Final dmaps
@@ -212,7 +222,7 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
 /*
  * Generate goal points with a low value.
  */
-static uint32_t dmap_goals_set (boolean test, level_walls *dmap)
+static uint32_t dmap_goals_set (uint8_t test, level_walls *dmap)
 {
     uint32_t checksum = 0;
     thingp thing_it;
@@ -274,12 +284,12 @@ static void dmap_init (level_walls *dmap, const level_walls *map)
 /*
  * Run forever waiting to be woken up and then running the djkstra map.
  */
-static void *dmap_process_thread (void *context)
+static void *dmap_thread1_func (void *context)
 {
     for (;;) {
-        pthread_mutex_lock(&dmap_mutex);
+        pthread_mutex_lock(&dmap_thread1_mutex);
 
-        pthread_cond_wait(&dmap_condition_var, &dmap_mutex );
+        pthread_cond_wait(&dmap_thread1_cond, &dmap_thread1_mutex );
 
         /*
          * Start with a clean dmap for each set of obstacles to consider.
@@ -289,7 +299,7 @@ static void *dmap_process_thread (void *context)
         dmap_process(&dmap_monst_map_treat_doors_as_walls_scratchpad,
                      &dmap_monst_map_treat_doors_as_walls);
 
-        pthread_mutex_unlock(&dmap_mutex);
+        pthread_mutex_unlock(&dmap_thread1_mutex);
     }
 
     return (0);
@@ -298,7 +308,7 @@ static void *dmap_process_thread (void *context)
 /*
  * Wake up the thread that creates the djkstra map.
  */
-static void dmap_process_wake (levelp level)
+static void dmap_thread1_wake (levelp level)
 {
     static uint32_t dmap_checksum;
 
@@ -313,7 +323,7 @@ static void dmap_process_wake (levelp level)
         return;
     }
 
-    if (!pthread_mutex_trylock(&dmap_mutex)) {
+    if (!pthread_mutex_trylock(&dmap_thread1_mutex)) {
         return;
     }
 
@@ -332,45 +342,36 @@ static void dmap_process_wake (levelp level)
     /*
      * Now wake the dmap processor.
      */
-    pthread_cond_signal(&dmap_condition_var);
+    pthread_cond_signal(&dmap_thread1_cond);
 
-    pthread_mutex_unlock(&dmap_mutex);
-}
-
-void dmap_process_init (void)
-{
-    if (dmap_thread) {
-        return;
-    }
-
-    int rc = pthread_create(&dmap_thread, NULL, &dmap_process_thread, NULL);
-
-    if (rc != 0) {
-        DIE("no dmap thread %s", strerror(rc));
-    }
-}
-
-void dmap_process_fini (void)
-{
-    return;
-
-    if (dmap_thread) {
-        pthread_join(dmap_thread, NULL);
-        dmap_thread = 0;
-    }
+    pthread_mutex_unlock(&dmap_thread1_mutex);
 }
 
 /*
- * Generate maps to allow things to wander to any location.
+ * Run forever waiting to be woken up and then running the djkstra map.
  */
-void dmap_generate_monst_map_wander (levelp level)
+static void *dmap_thread2_func (void *context)
 {
+    pthread_mutex_lock(&dmap_thread2_mutex);
+
+    pthread_cond_wait(&dmap_thread2_cond, &dmap_thread2_mutex);
+
+    server_level->locked++;
+
     level_walls tmp;
     uint32_t x, y;
 
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-            dmap_init(&tmp, &level->monst_map_treat_doors_as_walls);
+            dmap_init(&tmp, &server_level->monst_map_treat_doors_as_walls);
+
+            /*
+             * If a wall then we can't get to ia,t period.
+             */
+            if (server_level->
+                    monst_map_treat_doors_as_walls.walls[x][y] != ' ') {
+                continue;
+            }
 
             /*
              * Set the goal.
@@ -380,6 +381,89 @@ void dmap_generate_monst_map_wander (levelp level)
             dmap_process(&tmp, &dmap_monst_map_wander[x][y]);
         }
     }
+
+    server_level->locked--;
+
+    pthread_mutex_unlock(&dmap_thread2_mutex);
+
+    return (0);
+}
+
+/*
+ * Wake up the thread that creates the djkstra map.
+ */
+static void dmap_thread2_wake (void)
+{
+    /*
+     * Now wake the dmap processor.
+     */
+    pthread_cond_signal(&dmap_thread2_cond);
+}
+
+static void dmap_thread1_init (void)
+{
+    if (dmap_thread1) {
+        return;
+    }
+
+    int rc = pthread_create(&dmap_thread1, NULL, &dmap_thread1_func, NULL);
+
+    if (rc != 0) {
+        DIE("no dmap thread %s", strerror(rc));
+    }
+}
+
+static void dmap_thread1_fini (void)
+{
+    return;
+
+    if (dmap_thread1) {
+        pthread_join(dmap_thread1, NULL);
+        dmap_thread1 = 0;
+    }
+}
+
+static void dmap_thread2_init (void)
+{
+    if (dmap_thread2) {
+        return;
+    }
+
+    int rc = pthread_create(&dmap_thread2, NULL, &dmap_thread2_func, NULL);
+
+    if (rc != 0) {
+        DIE("no dmap thread %s", strerror(rc));
+    }
+}
+
+static void dmap_thread2_fini (void)
+{
+    return;
+
+    if (dmap_thread2) {
+        pthread_join(dmap_thread2, NULL);
+        dmap_thread2 = 0;
+    }
+}
+
+void dmap_process_init (void)
+{
+    dmap_thread1_init();
+    dmap_thread2_init();
+}
+
+void dmap_process_fini (void)
+{
+    dmap_thread1_fini();
+    dmap_thread2_fini();
+}
+
+/*
+ * Generate maps to allow things to wander to any location.
+ */
+void dmap_generate_monst_map_wander (levelp level)
+{
+    dmap_thread2_wake();
 }
 
 /*
@@ -387,7 +471,7 @@ void dmap_generate_monst_map_wander (levelp level)
  */
 static void dmap_generate (levelp level)
 {
-    dmap_process_wake(level);
+    dmap_thread1_wake(level);
 
 #ifdef ENABLE_MAP_DEBUG
     if (1)
@@ -405,7 +489,7 @@ void thing_generate_dmaps (void)
     dmap_generate(server_level);
 }
 
-static boolean thing_find_nexthop_dmap (thingp t, 
+static uint8_t thing_find_nexthop_dmap (thingp t, 
                                         level_walls *dmap,
                                         int32_t *nexthop_x, 
                                         int32_t *nexthop_y)
@@ -504,11 +588,11 @@ static boolean thing_find_nexthop_dmap (thingp t,
     return (true);
 }
 
-static boolean thing_try_nexthop (thingp t,
+static uint8_t thing_try_nexthop (thingp t,
                                   level_walls *dmap,
                                   int32_t *nexthop_x, 
                                   int32_t *nexthop_y,
-                                  boolean can_change_dir_without_moving)
+                                  uint8_t can_change_dir_without_moving)
 {
     if (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y)) {
 
@@ -529,7 +613,7 @@ static boolean thing_try_nexthop (thingp t,
     return (false);
 }
 
-boolean thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
+uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
 {
     /*
      * Start out with treating doors as passable.

@@ -25,13 +25,13 @@ static widp wid_server_join_window;
 static widp wid_server_join_container;
 static widp wid_server_join_window_container;
 static widp wid_server_join_container_vert_scroll;
-static boolean wid_server_join_init_done;
+static uint8_t wid_server_join_init_done;
 
-static void wid_server_join_create(boolean redo);
+static void wid_server_join_create(uint8_t redo);
 static void wid_server_join_destroy(void);
-static boolean wid_server_load_remote_server_list(void);
+static uint8_t wid_server_load_remote_server_list(void);
 
-static boolean user_is_typing;
+static uint8_t user_is_typing;
 
 typedef struct server_ {
     tree_key_four_int tree;
@@ -46,7 +46,7 @@ typedef struct server_ {
     uint32_t min_latency;
     uint32_t max_latency;
     socketp socket;
-    boolean walked;
+    uint8_t walked;
     char name[SMALL_STRING_LEN_MAX];
 } server;
 
@@ -104,7 +104,7 @@ static void server_add (const server *s_in)
     /*
      * Check this ip and port combination is not added already.
      */
-    boolean collision = false;
+    uint8_t collision = false;
 
     do {
         server *sw;
@@ -154,7 +154,7 @@ static void server_remove (server *s)
     myfree(s);
 }
 
-boolean wid_server_join_init (void)
+uint8_t wid_server_join_init (void)
 {
     if (!wid_server_join_init_done) {
         wid_server_load_remote_server_list();
@@ -225,7 +225,7 @@ void wid_server_join_visible (void)
     wid_server_join_create(false);
 }
 
-void wid_server_join_redo (boolean soft_refresh)
+void wid_server_join_redo (uint8_t soft_refresh)
 {
     if (!wid_server_join_window) {
         return;
@@ -359,7 +359,7 @@ void wid_server_join_redo (boolean soft_refresh)
     }
 }
 
-static boolean wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t button)
+static uint8_t wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t button)
 {
     wid_server_join_hide();
     wid_server_create_hide();
@@ -368,7 +368,7 @@ static boolean wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t b
     return (true);
 }
 
-static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
+static uint8_t wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
 {
     server *s = wid_get_client_context(w);
     if (!s) {
@@ -399,7 +399,7 @@ static boolean wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
     return (true);
 }
 
-static boolean wid_server_join_leave (widp w, int32_t x, int32_t y, 
+static uint8_t wid_server_join_leave (widp w, int32_t x, int32_t y, 
                                       uint32_t button)
 {
     server *s = wid_get_client_context(w);
@@ -423,7 +423,7 @@ static boolean wid_server_join_leave (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_server_join_delete (widp w, int32_t x, int32_t y, 
+static uint8_t wid_server_join_delete (widp w, int32_t x, int32_t y, 
                                        uint32_t button)
 {
     server *s = wid_get_client_context(w);
@@ -439,7 +439,7 @@ static boolean wid_server_join_delete (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_server_join_add (widp w, int32_t x, int32_t y, 
+static uint8_t wid_server_join_add (widp w, int32_t x, int32_t y, 
                                     uint32_t button)
 {
     server s;
@@ -456,7 +456,7 @@ static boolean wid_server_join_add (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
@@ -473,7 +473,7 @@ static boolean wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static boolean wid_server_join_receive_mouse_motion (
+static uint8_t wid_server_join_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
                     int32_t relx, int32_t rely,
@@ -492,7 +492,7 @@ static boolean wid_server_join_receive_mouse_motion (
     return (true);
 }
 
-static boolean wid_server_join_hostname_mouse_down (widp w, int32_t x, int32_t y, 
+static uint8_t wid_server_join_hostname_mouse_down (widp w, int32_t x, int32_t y, 
                                                uint32_t button)
 {
     wid_set_show_cursor(w, true);
@@ -501,7 +501,7 @@ static boolean wid_server_join_hostname_mouse_down (widp w, int32_t x, int32_t y
     return (true);
 }
 
-static boolean wid_server_join_ip_mouse_down (widp w, int32_t x, int32_t y,
+static uint8_t wid_server_join_ip_mouse_down (widp w, int32_t x, int32_t y,
                                          uint32_t button)
 {
     wid_set_show_cursor(w, true);
@@ -510,7 +510,7 @@ static boolean wid_server_join_ip_mouse_down (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_server_join_port_mouse_down (widp w, int32_t x, int32_t y,
+static uint8_t wid_server_join_port_mouse_down (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_set_show_cursor(w, true);
@@ -522,7 +522,7 @@ static boolean wid_server_join_port_mouse_down (widp w, int32_t x, int32_t y,
 /*
  * Key down etc...
  */
-static boolean wid_server_join_hostname_receive_input (widp w, 
+static uint8_t wid_server_join_hostname_receive_input (widp w, 
                                                   const SDL_KEYSYM *key)
 {
     server *s;
@@ -586,7 +586,7 @@ static boolean wid_server_join_hostname_receive_input (widp w,
 /*
  * Key down etc...
  */
-static boolean wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
 {
     server *s;
 
@@ -690,7 +690,7 @@ static boolean wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
 /*
  * Key down etc...
  */
-static boolean wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key)
 {
     server *s;
 
@@ -786,7 +786,7 @@ static void wid_server_join_set_color (widp w, server *s)
     }
 }
 
-static void wid_server_join_create (boolean redo)
+static void wid_server_join_create (uint8_t redo)
 {
     float scroll_delta = 0;
 
@@ -1390,9 +1390,9 @@ void wid_server_join_destroy (void)
     user_is_typing = false;
 }
 
-static boolean demarshal_servers (demarshal_p ctx, server *s)
+static uint8_t demarshal_servers (demarshal_p ctx, server *s)
 {
-    boolean rc;
+    uint8_t rc;
 
     rc = true;
 
@@ -1413,7 +1413,7 @@ static void marshal_servers (marshal_p ctx, server *s)
     }
 }
 
-boolean wid_server_save_remote_server_list (void)
+uint8_t wid_server_save_remote_server_list (void)
 {
     char *file = dynprintf("%s", config_file);
     marshal_p ctx;
@@ -1443,7 +1443,7 @@ boolean wid_server_save_remote_server_list (void)
     return (true);
 }
 
-static boolean wid_server_load_remote_server_list (void)
+static uint8_t wid_server_load_remote_server_list (void)
 {
     char *file = dynprintf("%s", config_file);
     demarshal_p ctx;

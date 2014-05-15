@@ -350,367 +350,367 @@ uint32_t thing_tile_delay (thing_tile *t)
     return (t->delay);
 }
 
-boolean thing_tile_is_join_block (thing_tilep t)
+uint8_t thing_tile_is_join_block (thing_tilep t)
 {
     return (t->is_join_block);
 }
 
-boolean thing_tile_is_join_horiz (thing_tilep t)
+uint8_t thing_tile_is_join_horiz (thing_tilep t)
 {
     return (t->is_join_horiz);
 }
 
-boolean thing_tile_is_join_vert (thing_tilep t)
+uint8_t thing_tile_is_join_vert (thing_tilep t)
 {
     return (t->is_join_vert);
 }
 
-boolean thing_tile_is_join_node (thing_tilep t)
+uint8_t thing_tile_is_join_node (thing_tilep t)
 {
     return (t->is_join_node);
 }
 
-boolean thing_tile_is_join_left (thing_tilep t)
+uint8_t thing_tile_is_join_left (thing_tilep t)
 {
     return (t->is_join_left);
 }
 
-boolean thing_tile_is_join_right (thing_tilep t)
+uint8_t thing_tile_is_join_right (thing_tilep t)
 {
     return (t->is_join_right);
 }
 
-boolean thing_tile_is_join_top (thing_tilep t)
+uint8_t thing_tile_is_join_top (thing_tilep t)
 {
     return (t->is_join_top);
 }
 
-boolean thing_tile_is_join_bot (thing_tilep t)
+uint8_t thing_tile_is_join_bot (thing_tilep t)
 {
     return (t->is_join_bot);
 }
 
-boolean thing_tile_is_join_tl (thing_tilep t)
+uint8_t thing_tile_is_join_tl (thing_tilep t)
 {
     return (t->is_join_tl);
 }
 
-boolean thing_tile_is_join_tr (thing_tilep t)
+uint8_t thing_tile_is_join_tr (thing_tilep t)
 {
     return (t->is_join_tr);
 }
 
-boolean thing_tile_is_join_bl (thing_tilep t)
+uint8_t thing_tile_is_join_bl (thing_tilep t)
 {
     return (t->is_join_bl);
 }
 
-boolean thing_tile_is_join_br (thing_tilep t)
+uint8_t thing_tile_is_join_br (thing_tilep t)
 {
     return (t->is_join_br);
 }
 
-boolean thing_tile_is_join_t (thing_tilep t)
+uint8_t thing_tile_is_join_t (thing_tilep t)
 {
     return (t->is_join_t);
 }
 
-boolean thing_tile_is_join_t90 (thing_tilep t)
+uint8_t thing_tile_is_join_t90 (thing_tilep t)
 {
     return (t->is_join_t90);
 }
 
-boolean thing_tile_is_join_t180 (thing_tilep t)
+uint8_t thing_tile_is_join_t180 (thing_tilep t)
 {
     return (t->is_join_t180);
 }
 
-boolean thing_tile_is_join_t270 (thing_tilep t)
+uint8_t thing_tile_is_join_t270 (thing_tilep t)
 {
     return (t->is_join_t270);
 }
 
-boolean thing_tile_is_join_x (thing_tilep t)
+uint8_t thing_tile_is_join_x (thing_tilep t)
 {
     return (t->is_join_x);
 }
 
-boolean thing_tile_is_join_tl2 (thing_tilep t)
+uint8_t thing_tile_is_join_tl2 (thing_tilep t)
 {
     return (t->is_join_tl2);
 }
 
-boolean thing_tile_is_join_tr2 (thing_tilep t)
+uint8_t thing_tile_is_join_tr2 (thing_tilep t)
 {
     return (t->is_join_tr2);
 }
 
-boolean thing_tile_is_join_bl2 (thing_tilep t)
+uint8_t thing_tile_is_join_bl2 (thing_tilep t)
 {
     return (t->is_join_bl2);
 }
 
-boolean thing_tile_is_join_br2 (thing_tilep t)
+uint8_t thing_tile_is_join_br2 (thing_tilep t)
 {
     return (t->is_join_br2);
 }
 
-boolean thing_tile_is_join_t_1 (thing_tilep t)
+uint8_t thing_tile_is_join_t_1 (thing_tilep t)
 {
     return (t->is_join_t_1);
 }
 
-boolean thing_tile_is_join_t_2 (thing_tilep t)
+uint8_t thing_tile_is_join_t_2 (thing_tilep t)
 {
     return (t->is_join_t_2);
 }
 
-boolean thing_tile_is_join_t_3 (thing_tilep t)
+uint8_t thing_tile_is_join_t_3 (thing_tilep t)
 {
     return (t->is_join_t_3);
 }
 
-boolean thing_tile_is_join_t90_1 (thing_tilep t)
+uint8_t thing_tile_is_join_t90_1 (thing_tilep t)
 {
     return (t->is_join_t90_1);
 }
 
-boolean thing_tile_is_join_t90_2 (thing_tilep t)
+uint8_t thing_tile_is_join_t90_2 (thing_tilep t)
 {
     return (t->is_join_t90_2);
 }
 
-boolean thing_tile_is_join_t90_3 (thing_tilep t)
+uint8_t thing_tile_is_join_t90_3 (thing_tilep t)
 {
     return (t->is_join_t90_3);
 }
 
-boolean thing_tile_is_join_t180_1 (thing_tilep t)
+uint8_t thing_tile_is_join_t180_1 (thing_tilep t)
 {
     return (t->is_join_t180_1);
 }
 
-boolean thing_tile_is_join_t180_2 (thing_tilep t)
+uint8_t thing_tile_is_join_t180_2 (thing_tilep t)
 {
     return (t->is_join_t180_2);
 }
 
-boolean thing_tile_is_join_t180_3 (thing_tilep t)
+uint8_t thing_tile_is_join_t180_3 (thing_tilep t)
 {
     return (t->is_join_t180_3);
 }
 
-boolean thing_tile_is_join_t270_1 (thing_tilep t)
+uint8_t thing_tile_is_join_t270_1 (thing_tilep t)
 {
     return (t->is_join_t270_1);
 }
 
-boolean thing_tile_is_join_t270_2 (thing_tilep t)
+uint8_t thing_tile_is_join_t270_2 (thing_tilep t)
 {
     return (t->is_join_t270_2);
 }
 
-boolean thing_tile_is_join_t270_3 (thing_tilep t)
+uint8_t thing_tile_is_join_t270_3 (thing_tilep t)
 {
     return (t->is_join_t270_3);
 }
 
-boolean thing_tile_is_join_x1 (thing_tilep t)
+uint8_t thing_tile_is_join_x1 (thing_tilep t)
 {
     return (t->is_join_x1);
 }
 
-boolean thing_tile_is_join_x1_270 (thing_tilep t)
+uint8_t thing_tile_is_join_x1_270 (thing_tilep t)
 {
     return (t->is_join_x1_270);
 }
 
-boolean thing_tile_is_join_x1_180 (thing_tilep t)
+uint8_t thing_tile_is_join_x1_180 (thing_tilep t)
 {
     return (t->is_join_x1_180);
 }
 
-boolean thing_tile_is_join_x1_90 (thing_tilep t)
+uint8_t thing_tile_is_join_x1_90 (thing_tilep t)
 {
     return (t->is_join_x1_90);
 }
 
-boolean thing_tile_is_join_x2 (thing_tilep t)
+uint8_t thing_tile_is_join_x2 (thing_tilep t)
 {
     return (t->is_join_x2);
 }
 
-boolean thing_tile_is_join_x2_270 (thing_tilep t)
+uint8_t thing_tile_is_join_x2_270 (thing_tilep t)
 {
     return (t->is_join_x2_270);
 }
 
-boolean thing_tile_is_join_x2_180 (thing_tilep t)
+uint8_t thing_tile_is_join_x2_180 (thing_tilep t)
 {
     return (t->is_join_x2_180);
 }
 
-boolean thing_tile_is_join_x2_90 (thing_tilep t)
+uint8_t thing_tile_is_join_x2_90 (thing_tilep t)
 {
     return (t->is_join_x2_90);
 }
 
-boolean thing_tile_is_join_x3 (thing_tilep t)
+uint8_t thing_tile_is_join_x3 (thing_tilep t)
 {
     return (t->is_join_x3);
 }
 
-boolean thing_tile_is_join_x3_180 (thing_tilep t)
+uint8_t thing_tile_is_join_x3_180 (thing_tilep t)
 {
     return (t->is_join_x3_180);
 }
 
-boolean thing_tile_is_join_x4 (thing_tilep t)
+uint8_t thing_tile_is_join_x4 (thing_tilep t)
 {
     return (t->is_join_x4);
 }
 
-boolean thing_tile_is_join_x4_270 (thing_tilep t)
+uint8_t thing_tile_is_join_x4_270 (thing_tilep t)
 {
     return (t->is_join_x4_270);
 }
 
-boolean thing_tile_is_join_x4_180 (thing_tilep t)
+uint8_t thing_tile_is_join_x4_180 (thing_tilep t)
 {
     return (t->is_join_x4_180);
 }
 
-boolean thing_tile_is_join_x4_90 (thing_tilep t)
+uint8_t thing_tile_is_join_x4_90 (thing_tilep t)
 {
     return (t->is_join_x4_90);
 }
 
-boolean thing_tile_is_join_horiz2 (thing_tilep t)
+uint8_t thing_tile_is_join_horiz2 (thing_tilep t)
 {
     return (t->is_join_horiz2);
 }
 
-boolean thing_tile_is_join_vert2 (thing_tilep t)
+uint8_t thing_tile_is_join_vert2 (thing_tilep t)
 {
     return (t->is_join_vert2);
 }
 
-boolean thing_tile_is_dir_down (thing_tilep t)
+uint8_t thing_tile_is_dir_down (thing_tilep t)
 {
     return (t->dir == THING_DIR_DOWN);
 }
 
-boolean thing_tile_is_dir_up (thing_tilep t)
+uint8_t thing_tile_is_dir_up (thing_tilep t)
 {
     return (t->dir == THING_DIR_UP);
 }
 
-boolean thing_tile_is_dir_left (thing_tilep t)
+uint8_t thing_tile_is_dir_left (thing_tilep t)
 {
     return (t->dir == THING_DIR_LEFT);
 }
 
-boolean thing_tile_is_dir_right (thing_tilep t)
+uint8_t thing_tile_is_dir_right (thing_tilep t)
 {
     return (t->dir == THING_DIR_RIGHT);
 }
 
-boolean thing_tile_is_dir_tl (thing_tilep t)
+uint8_t thing_tile_is_dir_tl (thing_tilep t)
 {
     return (t->dir == THING_DIR_TL);
 }
 
-boolean thing_tile_is_dir_bl (thing_tilep t)
+uint8_t thing_tile_is_dir_bl (thing_tilep t)
 {
     return (t->dir == THING_DIR_BL);
 }
 
-boolean thing_tile_is_dir_tr (thing_tilep t)
+uint8_t thing_tile_is_dir_tr (thing_tilep t)
 {
     return (t->dir == THING_DIR_TR);
 }
 
-boolean thing_tile_is_dir_br (thing_tilep t)
+uint8_t thing_tile_is_dir_br (thing_tilep t)
 {
     return (t->dir == THING_DIR_BR);
 }
 
-boolean thing_tile_is_yyy5 (thing_tilep t)
+uint8_t thing_tile_is_yyy5 (thing_tilep t)
 {
     return (t->is_yyy5);
 }
 
-boolean thing_tile_is_yyy6 (thing_tilep t)
+uint8_t thing_tile_is_yyy6 (thing_tilep t)
 {
     return (t->is_yyy6);
 }
 
-boolean thing_tile_is_yyy7 (thing_tilep t)
+uint8_t thing_tile_is_yyy7 (thing_tilep t)
 {
     return (t->is_yyy7);
 }
 
-boolean thing_tile_is_yyy8 (thing_tilep t)
+uint8_t thing_tile_is_yyy8 (thing_tilep t)
 {
     return (t->is_yyy8);
 }
 
-boolean thing_tile_is_yyy9 (thing_tilep t)
+uint8_t thing_tile_is_yyy9 (thing_tilep t)
 {
     return (t->is_yyy9);
 }
 
-boolean thing_tile_is_yyy10 (thing_tilep t)
+uint8_t thing_tile_is_yyy10 (thing_tilep t)
 {
     return (t->is_yyy10);
 }
 
-boolean thing_tile_is_yyy11 (thing_tilep t)
+uint8_t thing_tile_is_yyy11 (thing_tilep t)
 {
     return (t->is_yyy11);
 }
 
-boolean thing_tile_is_yyy12 (thing_tilep t)
+uint8_t thing_tile_is_yyy12 (thing_tilep t)
 {
     return (t->is_yyy12);
 }
 
-boolean thing_tile_is_yyy13 (thing_tilep t)
+uint8_t thing_tile_is_yyy13 (thing_tilep t)
 {
     return (t->is_yyy13);
 }
 
-boolean thing_tile_is_yyy14 (thing_tilep t)
+uint8_t thing_tile_is_yyy14 (thing_tilep t)
 {
     return (t->is_yyy14);
 }
 
-boolean thing_tile_is_yyy15 (thing_tilep t)
+uint8_t thing_tile_is_yyy15 (thing_tilep t)
 {
     return (t->is_yyy15);
 }
 
-boolean thing_tile_is_yyy16 (thing_tilep t)
+uint8_t thing_tile_is_yyy16 (thing_tilep t)
 {
     return (t->is_yyy16);
 }
 
-boolean thing_tile_is_yyy17 (thing_tilep t)
+uint8_t thing_tile_is_yyy17 (thing_tilep t)
 {
     return (t->is_yyy17);
 }
 
-boolean thing_tile_is_open (thing_tilep t)
+uint8_t thing_tile_is_open (thing_tilep t)
 {
     return (t->is_open);
 }
 
-boolean thing_tile_is_dead (thing_tilep t)
+uint8_t thing_tile_is_dead (thing_tilep t)
 {
     return (t->is_dead);
 }
 
-boolean thing_tile_is_end_of_anim (thing_tilep t)
+uint8_t thing_tile_is_end_of_anim (thing_tilep t)
 {
     return (t->is_end_of_anim);
 }

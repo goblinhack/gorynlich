@@ -25,12 +25,12 @@
 #include "wid_console.h"
 #include "wid_editor.h"
 
-static boolean level_command_dead(tokens_t *tokens, void *context);
-static boolean level_init_done;
+static uint8_t level_command_dead(tokens_t *tokens, void *context);
+static uint8_t level_init_done;
 static void level_start_timers(levelp level);
-boolean game_over;
+uint8_t game_over;
 
-boolean god_mode = false;
+uint8_t god_mode = false;
 uint32_t start_level = 1;
 uint32_t start_lives = 3;
 
@@ -42,7 +42,7 @@ tree_rootp timers;
 /*
  * Used so we only do the slow countdown first time on each level.
  */
-static boolean level_command_lives (tokens_t *tokens, void *context)
+static uint8_t level_command_lives (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
@@ -57,7 +57,7 @@ static boolean level_command_lives (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean level_command_play (tokens_t *tokens, void *context)
+static uint8_t level_command_play (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[1];
 
@@ -84,7 +84,7 @@ static boolean level_command_play (tokens_t *tokens, void *context)
     return (true);
 }
 
-static boolean level_command_god_mode (tokens_t *tokens, void *context)
+static uint8_t level_command_god_mode (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
 
@@ -99,7 +99,7 @@ static boolean level_command_god_mode (tokens_t *tokens, void *context)
     return (true);
 }
 
-boolean level_init (void)
+uint8_t level_init (void)
 {
     level_init_done = true;
 
@@ -132,7 +132,7 @@ void level_fini (void)
 /*
  * User has entered a command, run it
  */
-static boolean level_command_dead (tokens_t *tokens, void *context)
+static uint8_t level_command_dead (tokens_t *tokens, void *context)
 {
     thingp t;
     levelp level;
@@ -208,6 +208,14 @@ void level_destroy (levelp *plevel)
     }
 
     *plevel = 0;
+
+    /*
+     * Perhaps another thread is still using this level for map generation?
+     */
+    while (level->locked) {
+        LOG("Level locked... waiting");
+        sleep(1);
+    }
 
     /*
      * Ensure no stale pointers.
@@ -303,6 +311,8 @@ levelp level_load (uint32_t level_no, widp wid)
 
     myfree(dir_and_file);
 
+    LOG("Level set thing AI maps");
+
     level_set_walls(level);
     level_set_monst_map_treat_doors_as_passable(level);
     level_set_monst_map_treat_doors_as_walls(level);
@@ -310,13 +320,10 @@ levelp level_load (uint32_t level_no, widp wid)
     level_set_pipes(level);
     level_pipe_find_ends(level);
 
-    /*
-     * One time generate of expensive wander map
-     */
-    dmap_generate_monst_map_wander(level);
-
     level_set_is_paused(level, false);
     level_start_timers(level);
+
+    LOG("Level loaded");
 
     return (level);
 }
@@ -604,7 +611,7 @@ void level_place_plant_pod (levelp level)
 /*
  * Place an explosion
  */
-static boolean level_place_explosion_at (levelp level,
+static uint8_t level_place_explosion_at (levelp level,
                                          int32_t x, int32_t y, int32_t i)
 {
     if (map_is_wall_at(level, x, y) ||
@@ -641,10 +648,10 @@ static boolean level_place_explosion_at (levelp level,
  */
 void level_place_explosion (levelp level, int32_t x, int32_t y)
 {
-    boolean u_ok = true;
-    boolean d_ok = true;
-    boolean l_ok = true;
-    boolean r_ok = true;
+    uint8_t u_ok = true;
+    uint8_t d_ok = true;
+    uint8_t l_ok = true;
+    uint8_t r_ok = true;
     uint32_t i;
 
     level_place_explosion_at(level, x, y, 0);
@@ -718,336 +725,336 @@ void level_set_timestamp_started (levelp level, uint32_t val)
     level->timestamp_started = val;
 }
 
-boolean level_is_hurryup (levelp level)
+uint8_t level_is_hurryup (levelp level)
 {
     verify(level);
 
     return (level->is_hurryup);
 }
 
-void level_set_is_hurryup (levelp level, boolean val)
+void level_set_is_hurryup (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_hurryup = val;
 }
 
-boolean level_is_zzz1 (levelp level)
+uint8_t level_is_zzz1 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz1);
 }
 
-void level_set_is_zzz1 (levelp level, boolean val)
+void level_set_is_zzz1 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz1 = val;
 }
 
-boolean level_is_zzz2 (levelp level)
+uint8_t level_is_zzz2 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz2);
 }
 
-void level_set_is_zzz2 (levelp level, boolean val)
+void level_set_is_zzz2 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz2 = val;
 }
 
-boolean level_is_zzz3 (levelp level)
+uint8_t level_is_zzz3 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz3);
 }
 
-void level_set_is_zzz3 (levelp level, boolean val)
+void level_set_is_zzz3 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz3 = val;
 }
 
-boolean level_is_zzz4 (levelp level)
+uint8_t level_is_zzz4 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz4);
 }
 
-void level_set_is_zzz4 (levelp level, boolean val)
+void level_set_is_zzz4 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz4 = val;
 }
 
-boolean level_is_zzz5 (levelp level)
+uint8_t level_is_zzz5 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz5);
 }
 
-void level_set_is_zzz5 (levelp level, boolean val)
+void level_set_is_zzz5 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz5 = val;
 }
 
-boolean level_is_zzz6 (levelp level)
+uint8_t level_is_zzz6 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz6);
 }
 
-void level_set_is_zzz6 (levelp level, boolean val)
+void level_set_is_zzz6 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz6 = val;
 }
 
-boolean level_is_zzz7 (levelp level)
+uint8_t level_is_zzz7 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz7);
 }
 
-void level_set_is_zzz7 (levelp level, boolean val)
+void level_set_is_zzz7 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz7 = val;
 }
 
-boolean level_is_zzz8 (levelp level)
+uint8_t level_is_zzz8 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz8);
 }
 
-void level_set_is_zzz8 (levelp level, boolean val)
+void level_set_is_zzz8 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz8 = val;
 }
 
-boolean level_is_zzz9 (levelp level)
+uint8_t level_is_zzz9 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz9);
 }
 
-void level_set_is_zzz9 (levelp level, boolean val)
+void level_set_is_zzz9 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz9 = val;
 }
 
-boolean level_is_zzz10 (levelp level)
+uint8_t level_is_zzz10 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz10);
 }
 
-void level_set_is_zzz10 (levelp level, boolean val)
+void level_set_is_zzz10 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz10 = val;
 }
 
-boolean level_is_zzz11 (levelp level)
+uint8_t level_is_zzz11 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz11);
 }
 
-void level_set_is_zzz11 (levelp level, boolean val)
+void level_set_is_zzz11 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz11 = val;
 }
 
-boolean level_is_zzz12 (levelp level)
+uint8_t level_is_zzz12 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz12);
 }
 
-void level_set_is_zzz12 (levelp level, boolean val)
+void level_set_is_zzz12 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz12 = val;
 }
 
-boolean level_is_zzz13 (levelp level)
+uint8_t level_is_zzz13 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz13);
 }
 
-void level_set_is_zzz13 (levelp level, boolean val)
+void level_set_is_zzz13 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz13 = val;
 }
 
-boolean level_is_zzz14 (levelp level)
+uint8_t level_is_zzz14 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz14);
 }
 
-void level_set_is_zzz14 (levelp level, boolean val)
+void level_set_is_zzz14 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz14 = val;
 }
 
-boolean level_is_zzz15 (levelp level)
+uint8_t level_is_zzz15 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz15);
 }
 
-void level_set_is_zzz15 (levelp level, boolean val)
+void level_set_is_zzz15 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz15 = val;
 }
 
-boolean level_is_zzz16 (levelp level)
+uint8_t level_is_zzz16 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz16);
 }
 
-void level_set_is_zzz16 (levelp level, boolean val)
+void level_set_is_zzz16 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz16 = val;
 }
 
-boolean level_is_zzz17 (levelp level)
+uint8_t level_is_zzz17 (levelp level)
 {
     verify(level);
 
     return (level->is_zzz17);
 }
 
-void level_set_is_zzz17 (levelp level, boolean val)
+void level_set_is_zzz17 (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_zzz17 = val;
 }
 
-boolean level_exit_reached_when_open (levelp level)
+uint8_t level_exit_reached_when_open (levelp level)
 {
     verify(level);
 
     return (level->exit_reached_when_open);
 }
 
-void level_set_exit_reached_when_open (levelp level, boolean val)
+void level_set_exit_reached_when_open (levelp level, uint8_t val)
 {
     verify(level);
 
     level->exit_reached_when_open = val;
 }
 
-boolean level_get_warned_exit_not_open (levelp level)
+uint8_t level_get_warned_exit_not_open (levelp level)
 {
     verify(level);
 
     return (level->warned_exit_not_open);
 }
 
-void level_set_warned_exit_not_open (levelp level, boolean val)
+void level_set_warned_exit_not_open (levelp level, uint8_t val)
 {
     verify(level);
 
     level->warned_exit_not_open = val;
 }
 
-boolean level_is_exit_open (levelp level)
+uint8_t level_is_exit_open (levelp level)
 {
     verify(level);
 
     return (level->is_exit_open);
 }
 
-void level_set_is_exit_open (levelp level, boolean val)
+void level_set_is_exit_open (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_exit_open = val;
 }
 
-boolean level_is_editor (levelp level)
+uint8_t level_is_editor (levelp level)
 {
     verify(level);
 
     return (level->is_editor);
 }
 
-void level_set_is_editor (levelp level, boolean val)
+void level_set_is_editor (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_editor = val;
 }
 
-boolean level_is_paused (levelp level)
+uint8_t level_is_paused (levelp level)
 {
     verify(level);
 
     return (level->is_paused);
 }
 
-void level_set_is_paused (levelp level, boolean val)
+void level_set_is_paused (levelp level, uint8_t val)
 {
     verify(level);
 
     level->is_paused = val;
 }
 
-boolean level_is_frozen (levelp level)
+uint8_t level_is_frozen (levelp level)
 {
     verify(level);
 
     return (level->is_frozen);
 }
 
-void level_set_is_frozen (levelp level, boolean val)
+void level_set_is_frozen (levelp level, uint8_t val)
 {
     verify(level);
 
@@ -1096,9 +1103,9 @@ void marshal_level (marshal_p ctx, levelp level)
     PUT_KET(ctx);
 }
 
-boolean demarshal_level (demarshal_p ctx, levelp level)
+uint8_t demarshal_level (demarshal_p ctx, levelp level)
 {
-    boolean rc;
+    uint8_t rc;
     widp wid;
 
     if (!level) {

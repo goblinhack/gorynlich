@@ -21,9 +21,9 @@ typedef struct music_ {
 
 tree_root *all_music;
 
-boolean music_init_done;
+uint8_t music_init_done;
 
-boolean music_init (void)
+uint8_t music_init (void)
 {
     return (true);
 }

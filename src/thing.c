@@ -107,10 +107,10 @@ tree_root *client_boring_things;
 static uint32_t next_thing_id;
 static uint32_t next_monst_thing_id;
 static thingp thing_server_ids[THING_ID_MAX];
-static boolean thing_init_done;
+static uint8_t thing_init_done;
 static void thing_destroy_implicit(thingp t);
 
-boolean thing_init (void)
+uint8_t thing_init (void)
 {
     thing_init_done = true;
 
@@ -916,14 +916,14 @@ void thing_set_wid (thingp t, widp w)
     }
 }
 
-void thing_inc_powerup_spam_count (thingp t, boolean val)
+void thing_inc_powerup_spam_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup_spam_count += val;
 }
 
-void thing_dec_powerup_spam_count (thingp t, boolean val)
+void thing_dec_powerup_spam_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -934,21 +934,21 @@ void thing_dec_powerup_spam_count (thingp t, boolean val)
     t->powerup_spam_count -= val;
 }
 
-boolean thing_has_powerup_spam_count (thingp t)
+uint8_t thing_has_powerup_spam_count (thingp t)
 {
     verify(t);
 
     return (t->powerup_spam_count);
 }
 
-void thing_inc_powerup2_count (thingp t, boolean val)
+void thing_inc_powerup2_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup2_count += val;
 }
 
-void thing_dec_powerup2_count (thingp t, boolean val)
+void thing_dec_powerup2_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -959,21 +959,21 @@ void thing_dec_powerup2_count (thingp t, boolean val)
     t->powerup2_count -= val;
 }
 
-boolean thing_has_powerup2_count (thingp t)
+uint8_t thing_has_powerup2_count (thingp t)
 {
     verify(t);
 
     return (t->powerup2_count);
 }
 
-void thing_inc_powerup3_count (thingp t, boolean val)
+void thing_inc_powerup3_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup3_count += val;
 }
 
-void thing_dec_powerup3_count (thingp t, boolean val)
+void thing_dec_powerup3_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -984,21 +984,21 @@ void thing_dec_powerup3_count (thingp t, boolean val)
     t->powerup3_count -= val;
 }
 
-boolean thing_has_powerup3_count (thingp t)
+uint8_t thing_has_powerup3_count (thingp t)
 {
     verify(t);
 
     return (t->powerup3_count);
 }
 
-void thing_inc_powerup4_count (thingp t, boolean val)
+void thing_inc_powerup4_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup4_count += val;
 }
 
-void thing_dec_powerup4_count (thingp t, boolean val)
+void thing_dec_powerup4_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1009,21 +1009,21 @@ void thing_dec_powerup4_count (thingp t, boolean val)
     t->powerup4_count -= val;
 }
 
-boolean thing_has_powerup4_count (thingp t)
+uint8_t thing_has_powerup4_count (thingp t)
 {
     verify(t);
 
     return (t->powerup4_count);
 }
 
-void thing_inc_powerup5_count (thingp t, boolean val)
+void thing_inc_powerup5_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup5_count += val;
 }
 
-void thing_dec_powerup5_count (thingp t, boolean val)
+void thing_dec_powerup5_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1034,21 +1034,21 @@ void thing_dec_powerup5_count (thingp t, boolean val)
     t->powerup5_count -= val;
 }
 
-boolean thing_has_powerup5_count (thingp t)
+uint8_t thing_has_powerup5_count (thingp t)
 {
     verify(t);
 
     return (t->powerup5_count);
 }
 
-void thing_inc_powerup6_count (thingp t, boolean val)
+void thing_inc_powerup6_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup6_count += val;
 }
 
-void thing_dec_powerup6_count (thingp t, boolean val)
+void thing_dec_powerup6_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1059,21 +1059,21 @@ void thing_dec_powerup6_count (thingp t, boolean val)
     t->powerup6_count -= val;
 }
 
-boolean thing_has_powerup6_count (thingp t)
+uint8_t thing_has_powerup6_count (thingp t)
 {
     verify(t);
 
     return (t->powerup6_count);
 }
 
-void thing_inc_powerup7_count (thingp t, boolean val)
+void thing_inc_powerup7_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup7_count += val;
 }
 
-void thing_dec_powerup7_count (thingp t, boolean val)
+void thing_dec_powerup7_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1084,21 +1084,21 @@ void thing_dec_powerup7_count (thingp t, boolean val)
     t->powerup7_count -= val;
 }
 
-boolean thing_has_powerup7_count (thingp t)
+uint8_t thing_has_powerup7_count (thingp t)
 {
     verify(t);
 
     return (t->powerup7_count);
 }
 
-void thing_inc_powerup8_count (thingp t, boolean val)
+void thing_inc_powerup8_count (thingp t, uint8_t val)
 {
     verify(t);
 
     t->powerup8_count += val;
 }
 
-void thing_dec_powerup8_count (thingp t, boolean val)
+void thing_dec_powerup8_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1109,14 +1109,14 @@ void thing_dec_powerup8_count (thingp t, boolean val)
     t->powerup8_count -= val;
 }
 
-boolean thing_has_powerup8_count (thingp t)
+uint8_t thing_has_powerup8_count (thingp t)
 {
     verify(t);
 
     return (t->powerup8_count);
 }
 
-void thing_inc_powerup_rocket_count (thingp t, boolean val)
+void thing_inc_powerup_rocket_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1127,7 +1127,7 @@ void thing_inc_powerup_rocket_count (thingp t, boolean val)
     sound_play_rocket();
 }
 
-void thing_dec_powerup_rocket_count (thingp t, boolean val)
+void thing_dec_powerup_rocket_count (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1141,119 +1141,119 @@ void thing_dec_powerup_rocket_count (thingp t, boolean val)
     THING_LOG(t, "powerup dec, rocket now %d", t->powerup_rocket_count);
 }
 
-boolean thing_has_powerup_rocket_count (thingp t)
+uint8_t thing_has_powerup_rocket_count (thingp t)
 {
     verify(t);
 
     return (t->powerup_rocket_count);
 }
 
-void thing_set_is_qqq1 (thingp t, boolean val)
+void thing_set_is_qqq1 (thingp t, uint8_t val)
 {
     verify(t);
 
     t->is_qqq1 = val;
 }
 
-boolean thing_is_qqq1 (thingp t)
+uint8_t thing_is_qqq1 (thingp t)
 {
     verify(t);
 
     return (t->is_qqq1);
 }
 
-void thing_set_is_qqq2 (thingp t, boolean val)
+void thing_set_is_qqq2 (thingp t, uint8_t val)
 {
     verify(t);
 
     t->is_qqq2 = val;
 }
 
-boolean thing_is_qqq2 (thingp t)
+uint8_t thing_is_qqq2 (thingp t)
 {
     verify(t);
 
     return (t->is_qqq2);
 }
 
-void thing_set_is_qqq3 (thingp t, boolean val)
+void thing_set_is_qqq3 (thingp t, uint8_t val)
 {
     verify(t);
 
     t->is_qqq3 = val;
 }
 
-boolean thing_is_qqq3 (thingp t)
+uint8_t thing_is_qqq3 (thingp t)
 {
     verify(t);
 
     return (t->is_qqq3);
 }
 
-void thing_set_is_qqq4 (thingp t, boolean val)
+void thing_set_is_qqq4 (thingp t, uint8_t val)
 {
     verify(t);
 
     t->is_qqq4 = val;
 }
 
-boolean thing_is_qqq4 (thingp t)
+uint8_t thing_is_qqq4 (thingp t)
 {
     verify(t);
 
     return (t->is_qqq4);
 }
 
-void thing_set_is_qqq5 (thingp t, boolean val)
+void thing_set_is_qqq5 (thingp t, uint8_t val)
 {
     verify(t);
 
     t->is_qqq5 = val;
 }
 
-boolean thing_is_qqq5 (thingp t)
+uint8_t thing_is_qqq5 (thingp t)
 {
     verify(t);
 
     return (t->is_qqq5);
 }
 
-void thing_set_is_qqq6 (thingp t, boolean val)
+void thing_set_is_qqq6 (thingp t, uint8_t val)
 {
     verify(t);
 
     t->is_qqq6 = val;
 }
 
-boolean thing_is_qqq6 (thingp t)
+uint8_t thing_is_qqq6 (thingp t)
 {
     verify(t);
 
     return (t->is_qqq6);
 }
 
-void thing_set_is_qqq7 (thingp t, boolean val)
+void thing_set_is_qqq7 (thingp t, uint8_t val)
 {
     verify(t);
 
     t->is_qqq7 = val;
 }
 
-boolean thing_is_qqq7 (thingp t)
+uint8_t thing_is_qqq7 (thingp t)
 {
     verify(t);
 
     return (t->is_qqq7);
 }
 
-void thing_set_got_to_exit_first (thingp t, boolean val)
+void thing_set_got_to_exit_first (thingp t, uint8_t val)
 {
     verify(t);
 
     t->got_to_exit_first = val;
 }
 
-boolean thing_got_to_exit_first (thingp t)
+uint8_t thing_got_to_exit_first (thingp t)
 {
     verify(t);
 
@@ -1431,7 +1431,7 @@ uint8_t thing_is_dir_br (thingp t)
     return (t->dir == THING_DIR_BR);
 }
 
-void thing_set_opened_exit (thingp t, boolean val)
+void thing_set_opened_exit (thingp t, uint8_t val)
 {
     THING_LOG(t, "opened exit");
 
@@ -1440,14 +1440,14 @@ void thing_set_opened_exit (thingp t, boolean val)
     t->opened_exit = val;
 }
 
-boolean thing_opened_exit (thingp t)
+uint8_t thing_opened_exit (thingp t)
 {
     verify(t);
 
     return (t->opened_exit);
 }
 
-void thing_set_is_open (thingp t, boolean val)
+void thing_set_is_open (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1456,7 +1456,7 @@ void thing_set_is_open (thingp t, boolean val)
     t->is_open = val;
 }
 
-void thing_set_is_dead (thingp t, boolean val)
+void thing_set_is_dead (thingp t, uint8_t val)
 {
     verify(t);
 
@@ -1582,7 +1582,7 @@ static void thing_move (thingp t, double x, double y)
     t->y = y;
 }
 
-void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
+void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
 {
     thing_move(t, x, y);
 
@@ -1633,7 +1633,7 @@ void thing_server_wid_update (thingp t, double x, double y, boolean is_new)
     }
 }
 
-void thing_client_wid_update (thingp t, double x, double y, boolean smooth)
+void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
     thing_move(t, x, y);
 
@@ -1890,7 +1890,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
 void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 {
-    boolean need_fixup = false;
+    uint8_t need_fixup = false;
     verify(s);
 
     uint8_t *eodata = data + packet->len - 1;
@@ -1900,7 +1900,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         uint8_t state = *data++;
         uint8_t template_id;
         uint16_t id;
-        boolean on_map;
+        uint8_t on_map;
         thingp t;
         double x;
         double y;
@@ -2132,10 +2132,10 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
 static void thing_common_move (thingp t,
                                double *x,
                                double *y,
-                               boolean up,
-                               boolean down,
-                               boolean left,
-                               boolean right)
+                               uint8_t up,
+                               uint8_t down,
+                               uint8_t left,
+                               uint8_t right)
 {
     double ox = t->x;
     double oy = t->y;
@@ -2198,11 +2198,11 @@ static void thing_common_move (thingp t,
 void thing_client_move (thingp t,
                         double x,
                         double y,
-                        const boolean up,
-                        const boolean down,
-                        const boolean left,
-                        const boolean right,
-                        const boolean fire)
+                        const uint8_t up,
+                        const uint8_t down,
+                        const uint8_t left,
+                        const uint8_t right,
+                        const uint8_t fire)
 {
     widp grid = wid_game_map_client_grid_container;
 
@@ -2228,14 +2228,14 @@ void thing_client_move (thingp t,
                           fire);
 }
 
-boolean thing_server_move (thingp t,
+uint8_t thing_server_move (thingp t,
                            double x,
                            double y,
-                           const boolean up,
-                           const boolean down,
-                           const boolean left,
-                           const boolean right,
-                           const boolean fire)
+                           const uint8_t up,
+                           const uint8_t down,
+                           const uint8_t left,
+                           const uint8_t right,
+                           const uint8_t fire)
 {
     widp grid = wid_game_map_server_grid_container;
 
@@ -2413,7 +2413,7 @@ void thing_collect (thingp t, thing_templatep tmp)
     socket_server_tx_player_update(t);
 }
 
-boolean thing_has (thingp t, uint32_t id)
+uint8_t thing_has (thingp t, uint32_t id)
 {
     if (!t->carrying[id]) {
         return (false);

@@ -62,7 +62,7 @@ void wid_console_fini (void)
     }
 }
 
-boolean wid_console_init (void)
+uint8_t wid_console_init (void)
 {
     wid_console_inited = true;
 
@@ -168,7 +168,7 @@ void wid_console_log (const char *s)
 /*
  * Key down etc...
  */
-static boolean wid_console_receive_input (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_console_receive_input (widp w, const SDL_KEYSYM *key)
 {
     wid_console_reset_scroll();
 

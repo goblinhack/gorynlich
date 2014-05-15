@@ -80,8 +80,6 @@
 /*
  * Types
  */
-#define boolean              char
-
 #ifndef __int8_t_defined
 #ifndef _INT8_T
 #define _INT8_T
@@ -178,7 +176,7 @@ extern fontp vlarge_font;
 extern wid_consolep wid_console;
 extern configp config;
 
-typedef boolean (*thing_template_is_callback)(thing_templatep);
+typedef uint8_t (*thing_template_is_callback)(thing_templatep);
 
 /*
  * log.c
@@ -188,7 +186,7 @@ typedef boolean (*thing_template_is_callback)(thing_templatep);
     CROAK(args);                                                              \
     exit(1);
 
-extern boolean croaked;
+extern uint8_t croaked;
 
 #ifdef ENABLE_ASSERT
 #define ASSERT(x)                                                             \
@@ -236,18 +234,18 @@ void WID_DBG(widp, const char *fmt, ...) \
 #define WID_LOG(...)
 #endif
 
-extern boolean debug_enabled;
-extern boolean debug_socket_ping_enabled;
-extern boolean debug_socket_connect_enabled;
-extern boolean debug_socket_players_enabled;
+extern uint8_t debug_enabled;
+extern uint8_t debug_socket_ping_enabled;
+extern uint8_t debug_socket_connect_enabled;
+extern uint8_t debug_socket_players_enabled;
 
-boolean debug_enable(tokensp, void *context);
-boolean debug_socket_ping_enable(tokensp, void *context);
-boolean debug_socket_connect_enable(tokensp, void *context);
-boolean debug_socket_players_enable(tokensp, void *context);
+uint8_t debug_enable(tokensp, void *context);
+uint8_t debug_socket_ping_enable(tokensp, void *context);
+uint8_t debug_socket_connect_enable(tokensp, void *context);
+uint8_t debug_socket_players_enable(tokensp, void *context);
 
-extern boolean fps_enabled;
-boolean fps_enable(tokensp, void *context);
+extern uint8_t fps_enabled;
+uint8_t fps_enable(tokensp, void *context);
 
 /*
  * util.c
@@ -320,27 +318,27 @@ extern char *DATA_PATH;
 extern char *LEVELS_PATH;
 extern char *GFX_PATH;
 extern char *TTF_PATH;
-extern boolean quitting;
+extern uint8_t quitting;
 
 void quit(void);
 void restart(void);
 void die(void);
 void tree_debug_test(void);
-boolean miniz_test(int32_t argc, char *argv[]);
-boolean mzip_file_test(int32_t argc, char *argv[]);
-boolean dir_test(int32_t argc, char *argv[]);
-boolean string_test(int32_t argc, char *argv[]);
-boolean marshal_test(int32_t argc, char *argv[]);
-boolean enum_test(int32_t argc, char *argv[]);
-boolean ptrcheck_test(int32_t argc, char *argv[]);
+uint8_t miniz_test(int32_t argc, char *argv[]);
+uint8_t mzip_file_test(int32_t argc, char *argv[]);
+uint8_t dir_test(int32_t argc, char *argv[]);
+uint8_t string_test(int32_t argc, char *argv[]);
+uint8_t marshal_test(int32_t argc, char *argv[]);
+uint8_t enum_test(int32_t argc, char *argv[]);
+uint8_t ptrcheck_test(int32_t argc, char *argv[]);
 
 /*
  * config.c
  */
 void config_fini(void);
-boolean config_init(void);
-boolean config_save(void);
-boolean config_load(void);
+uint8_t config_init(void);
+uint8_t config_save(void);
+uint8_t config_load(void);
 
 struct config {
     int32_t video_pix_width;
@@ -426,9 +424,9 @@ int32_t map_jigsaw_test(int32_t argc, char **argv);
 /*
  * net.h
  */
-extern boolean is_server;
-extern boolean is_client;
-extern boolean is_headless;
+extern uint8_t is_server;
+extern uint8_t is_client;
+extern uint8_t is_headless;
 
 /*
  * Server with no displa.

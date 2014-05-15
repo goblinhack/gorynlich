@@ -23,12 +23,12 @@ static widp wid_intro3_background;
 
 static void wid_intro3_play_selected(void);
 
-static boolean wid_intro3_init_done;
+static uint8_t wid_intro3_init_done;
 static void wid_intro3_create(void);
 
 static int intro_effect_delay = 200;
 
-boolean wid_intro3_init (void)
+uint8_t wid_intro3_init (void)
 {
     if (!wid_intro3_init_done) {
     }
@@ -52,8 +52,8 @@ void wid_intro3_fini (void)
     }
 }
 
-static boolean wid_intro3_is_hidden;
-static boolean wid_intro3_is_visible;
+static uint8_t wid_intro3_is_hidden;
+static uint8_t wid_intro3_is_visible;
 
 void wid_intro3_hide (void)
 {
@@ -153,7 +153,7 @@ static void wid_intro3_play_selected (void)
     wid_intro3_hide();
 }
 
-static boolean wid_intro3_play_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro3_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_intro3_play_selected();
@@ -161,7 +161,7 @@ static boolean wid_intro3_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro3_multi_play_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro3_multi_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
     wid_intro3_multi_play_selected();
@@ -169,7 +169,7 @@ static boolean wid_intro3_multi_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro3_go_back_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro3_go_back_mouse_event (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
     wid_intro3_hide();
@@ -178,7 +178,7 @@ static boolean wid_intro3_go_back_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro3_play_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_intro3_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
@@ -202,7 +202,7 @@ static boolean wid_intro3_play_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static boolean wid_intro3_multi_play_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_intro3_multi_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':

@@ -83,7 +83,7 @@ unsigned char *file_read (const char *filename, int32_t *out_len)
 int32_t file_write (const char *filename, unsigned char *buffer, int32_t len)
 {
     FILE *file;
-    boolean rc;
+    uint8_t rc;
 
     file = fopen(filename, "w");
     if (!file) {
@@ -120,7 +120,7 @@ int32_t file_write (const char *filename, unsigned char *buffer, int32_t len)
 /*
  * Does the requested file exist?
  */
-boolean file_exists (const char *filename)
+uint8_t file_exists (const char *filename)
 {
     struct stat buf;
 
@@ -185,7 +185,7 @@ int32_t file_size (const char *filename)
 /*
  * Does the requested file exist?
  */
-boolean file_non_zero_size_exists (const char *filename)
+uint8_t file_non_zero_size_exists (const char *filename)
 {
     if (!file_exists(filename)) {
         return (0);
@@ -201,7 +201,7 @@ boolean file_non_zero_size_exists (const char *filename)
 /*
  * Remove the file if it exists.
  */
-boolean file_unlink (const char *filename)
+uint8_t file_unlink (const char *filename)
 {
     if (!file_exists(filename)) {
         return (0);
@@ -231,7 +231,7 @@ double file_age (const char *filename)
 /*
  * If the first filename newer than the second ?
  */
-boolean file_exists_and_is_newer_than (const char *filename1,
+uint8_t file_exists_and_is_newer_than (const char *filename1,
                                        const char *filename2)
 {
     struct stat buf1;

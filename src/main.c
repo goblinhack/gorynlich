@@ -61,7 +61,7 @@ char *GFX_PATH;
 FILE *LOG_STDOUT;
 FILE *LOG_STDERR;
 
-boolean quitting;
+uint8_t quitting;
 
 void quit (void)
 {

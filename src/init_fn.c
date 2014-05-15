@@ -96,7 +96,7 @@ const char *action_init_fn_logname (init_fnp t)
     return (t->logname);
 }
 
-boolean action_init_fns_tick (tree_rootp *root)
+uint8_t action_init_fns_tick (tree_rootp *root)
 {
     init *t;
 

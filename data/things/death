@@ -2,20 +2,60 @@
  short_name="death"
  tooltip="death!"
  z_depth=2
- speed=3000
- health=1000
+ speed=1000
+ health=255
  damage=5
  score_on_death=1000
  vision_distance=60
  z_order=4
  is_monst
-is_collision_map_player
+ is_collision_map_player
  is_animated
  is_scarable
  tiles={
   tile={
+   delay=200
+   is_dir_up
+   tile="death1-up"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="death1-down"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="death1-left"
+  }
+  tile={
+   delay=200
+   is_dir_right
    tile="death1-right"
-   delay=100
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="death1-tl"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="death1-bl"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="death1-tr"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="death1-br"
   }
  }
 }

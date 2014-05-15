@@ -22,16 +22,16 @@ void config_fini (void)
     }
 }
 
-boolean config_init (void)
+uint8_t config_init (void)
 {
     config_inited = true;
 
     return (true);
 }
 
-static boolean demarshal_config (demarshal_p ctx, struct config *p)
+static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
 {
-    boolean rc;
+    uint8_t rc;
 
     rc = true;
 
@@ -95,7 +95,7 @@ static void marshal_config (marshal_p ctx, struct config *p)
     PUT_NAMED_UINT16(ctx, "server_port", p->server_port);
 }
 
-boolean config_save (void)
+uint8_t config_save (void)
 {
     char *file = dynprintf("%s", config_dir_and_file);
     marshal_p ctx;
@@ -122,7 +122,7 @@ boolean config_save (void)
     return (true);
 }
 
-boolean config_load (void)
+uint8_t config_load (void)
 {
     char *file = dynprintf("%s", config_dir_and_file);
     demarshal_p ctx;

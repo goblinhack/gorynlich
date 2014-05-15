@@ -12,7 +12,7 @@
 
 thingp player;
 
-boolean player_init (void)
+uint8_t player_init (void)
 {
     return (true);
 }

@@ -10,7 +10,7 @@
 #include "dir.h"
 #include "string.h"
 
-boolean dir_test (int32_t argc, char *argv[])
+uint8_t dir_test (int32_t argc, char *argv[])
 {
     tree_root *d;
     tree_file_node *n;

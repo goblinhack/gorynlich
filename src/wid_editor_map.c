@@ -31,10 +31,10 @@ static float tile_height_pct = 1.0f / TILES_SCREEN_HEIGHT;
 static uint32_t tile_width;
 static uint32_t tile_height;
 levelp level_ed;
-boolean wid_editor_map_loading;
-boolean wid_editor_got_line_start;
+uint8_t wid_editor_map_loading;
+uint8_t wid_editor_got_line_start;
 
-static boolean wid_editor_ignore_events (widp w)
+static uint8_t wid_editor_ignore_events (widp w)
 {
     if (wid_ignore_for_events(wid_editor_map_window)) {
         return (true);
@@ -285,7 +285,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
 /*
  * Remove the top tile.
  */
-static boolean wid_editor_map_thing_remove_template (
+static uint8_t wid_editor_map_thing_remove_template (
                                              int32_t x,
                                              int32_t y)
 {
@@ -326,10 +326,10 @@ static boolean wid_editor_map_thing_remove_template (
 /*
  * Mouse down etc...
  */
-static boolean wid_editor_map_thing_replace (widp w,
+static uint8_t wid_editor_map_thing_replace (widp w,
                                              int32_t x,
                                              int32_t y,
-                                             boolean scaled)
+                                             uint8_t scaled)
 {
     thing_templatep thing_template;
     widp focus;
@@ -374,7 +374,7 @@ static boolean wid_editor_map_thing_replace (widp w,
 /*
  * Mouse down etc...
  */
-static boolean wid_editor_map_thing_flood_fill (widp w, int32_t x, int32_t y)
+static uint8_t wid_editor_map_thing_flood_fill (widp w, int32_t x, int32_t y)
 {
     thing_templatep thing_template;
     fpoint offset;
@@ -409,7 +409,7 @@ static boolean wid_editor_map_thing_flood_fill (widp w, int32_t x, int32_t y)
 /*
  * Mouse down etc...
  */
-static boolean wid_editor_map_thing_remove (widp w,
+static uint8_t wid_editor_map_thing_remove (widp w,
                                             int32_t x,
                                             int32_t y)
 {
@@ -523,7 +523,7 @@ static void wid_editor_draw_line (widp w, int32_t x0, int32_t y0, int32_t x1, in
     }
 }
 
-static boolean wid_editor_map_thing_replace_wrap (widp w,
+static uint8_t wid_editor_map_thing_replace_wrap (widp w,
                                                   int32_t x,
                                                   int32_t y)
 {
@@ -588,7 +588,7 @@ static boolean wid_editor_map_thing_replace_wrap (widp w,
 /*
  * Mouse down etc...
  */
-static boolean wid_editor_map_receive_mouse_down (widp w,
+static uint8_t wid_editor_map_receive_mouse_down (widp w,
                                                   int32_t x,
                                                   int32_t y,
                                                   uint32_t button)
@@ -604,7 +604,7 @@ static boolean wid_editor_map_receive_mouse_down (widp w,
     return (false);
 }
 
-static boolean wid_editor_map_receive_mouse_motion (
+static uint8_t wid_editor_map_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
                     int32_t relx, int32_t rely,
@@ -634,18 +634,18 @@ static boolean wid_editor_map_receive_mouse_motion (
 /*
  * Mouse up etc...
  */
-static boolean wid_editor_map_receive_mouse_up (widp w, int32_t x, int32_t y,
+static uint8_t wid_editor_map_receive_mouse_up (widp w, int32_t x, int32_t y,
                                                 uint32_t button)
 {
     return (false);
 }
 
-static boolean wid_editor_map_tile_key_down_event (widp w,
+static uint8_t wid_editor_map_tile_key_down_event (widp w,
                                                    const SDL_KEYSYM *key)
 {
     int32_t x;
     int32_t y;
-    boolean rc;
+    uint8_t rc;
 
     if (wid_editor_ignore_events(w)) {
         return (false);
@@ -744,7 +744,7 @@ static boolean wid_editor_map_tile_key_down_event (widp w,
     return (false);
 }
 
-static boolean wid_editor_map_tile_mouse_motion (widp w,
+static uint8_t wid_editor_map_tile_mouse_motion (widp w,
                     int32_t x, int32_t y,
                     int32_t relx, int32_t rely,
                     int32_t wheelx, int32_t wheely)
@@ -770,7 +770,7 @@ static boolean wid_editor_map_tile_mouse_motion (widp w,
     return (true);
 }
 
-static boolean wid_editor_map_tile_key_up_event (widp w,
+static uint8_t wid_editor_map_tile_key_up_event (widp w,
                                                  const SDL_KEYSYM *key)
 {
     if (wid_editor_ignore_events(w)) {
@@ -1043,9 +1043,9 @@ void wid_editor_marshal (marshal_p ctx)
     marshal_level(ctx, level_ed);
 }
 
-boolean wid_editor_demarshal (demarshal_p ctx)
+uint8_t wid_editor_demarshal (demarshal_p ctx)
 {
-    boolean rc;
+    uint8_t rc;
 
     rc = demarshal_level(ctx, level_ed);
 

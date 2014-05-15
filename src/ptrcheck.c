@@ -104,13 +104,13 @@ static uint32_t ringbuf_current_size;
 /*
  * Prototypes.
  */
-static boolean ptrcheck_usage_print_command(tokens_t *tokens,
+static uint8_t ptrcheck_usage_print_command(tokens_t *tokens,
                                             void *context);
 static void ptrcheck_usage_cleanup(void);
 
-static boolean ptrcheck_init_done;
+static uint8_t ptrcheck_init_done;
 
-boolean ptrcheck_init (void)
+uint8_t ptrcheck_init (void)
 {
     ptrcheck_init_done = true;
 
@@ -309,7 +309,7 @@ static ptrcheck *ptrcheck_verify_pointer (void *ptr,
                                           const char *func,
                                           const char *file,
                                           const uint32_t line,
-                                          boolean dont_store)
+                                          uint8_t dont_store)
 {
     static const char *bad_pointer_warning = "**BAD POINTER** ";
     static const char *null_pointer_warning = "**NULL POINTER** ";
@@ -537,7 +537,7 @@ void *ptrcheck_alloc (void *ptr,
  * Check a pointer is valid and if so add it to the ring buffer. If not,
  * return false and avert the myfree(), just in case.
  */
-boolean ptrcheck_free (void *ptr,
+uint8_t ptrcheck_free (void *ptr,
                        const char *func,
                        const char *file,
                        const uint32_t line)
@@ -596,7 +596,7 @@ boolean ptrcheck_free (void *ptr,
  *
  * Check a pointer for validity.
  */
-boolean ptrcheck_verify (void *ptr,
+uint8_t ptrcheck_verify (void *ptr,
                          const char *func,
                          const char *file,
                          const uint32_t line)
@@ -610,7 +610,7 @@ boolean ptrcheck_verify (void *ptr,
  *
  * Check a pointer for validity with no recording of history.
  */
-boolean ptrcheck_fast_verify (void *ptr,
+uint8_t ptrcheck_fast_verify (void *ptr,
                               const char *func,
                               const char *file,
                               const uint32_t line)
@@ -784,7 +784,7 @@ void ptrcheck_usage_print (void)
         }
     }
 
-    boolean first = true;
+    uint8_t first = true;
 
     while (tree_root_top(root)) {
         tree_usage_node *largest;
@@ -871,7 +871,7 @@ static void ptrcheck_usage_cleanup (void)
     hash = 0;
 }
 
-static boolean ptrcheck_usage_print_command (tokens_t *tokens,
+static uint8_t ptrcheck_usage_print_command (tokens_t *tokens,
                                              void *context)
 {
     ptrcheck_usage_print();

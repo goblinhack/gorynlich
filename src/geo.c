@@ -170,7 +170,7 @@ triangle_line_intersect (const line ray,
  * Returns the distance to the closest intersection point of the light
  * with this cube.
  */
-boolean
+uint8_t
 cube_line_intersect (const line ray, 
                      const fpoint3d p0,
                      const fpoint3d p1,
@@ -183,7 +183,7 @@ cube_line_intersect (const line ray,
                      fpoint3d *best_intersection,
                      float *best_distance)
 {
-    boolean gotone = false;
+    uint8_t gotone = false;
 
     const fpoint3d VA = {p0.x, p0.y, p0.z};
     const fpoint3d VB = {p1.x, p1.y, p1.z};
@@ -238,7 +238,7 @@ cube_line_intersect (const line ray,
 /*
  * true if perpendicular line from point is in line segment.
  */
-boolean 
+uint8_t 
 dist_point_line (fpoint3d P0, fpoint3d L0, fpoint3d L1, float *dist)
 {
     fpoint3d intersect;

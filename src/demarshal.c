@@ -462,7 +462,7 @@ tree_demarshal *demarshal (const char *filename)
     demarshal_parse_state state;
     int8_t depth;
     tree_demarshal *ctx;
-    boolean newline;
+    uint8_t newline;
     char *next;
     char *buf;
     int32_t size;
@@ -472,9 +472,9 @@ tree_demarshal *demarshal (const char *filename)
     int64_t tmp_int = 0;
     uint64_t tmp_hex = 0;
     int64_t tmp_mul = 0;
-    boolean compress;
-    boolean reading_ptr;
-    boolean reading_ptr_ref;
+    uint8_t compress;
+    uint8_t reading_ptr;
+    uint8_t reading_ptr_ref;
 
     reading_ptr = 0;
     reading_ptr_ref = 0;
@@ -633,7 +633,7 @@ tree_demarshal *demarshal (const char *filename)
 
             if (c == '.') {
 
-                boolean need_lex = 0;
+                uint8_t need_lex = 0;
 
                 tmp_float = (float)tmp_int;
 
@@ -792,7 +792,7 @@ tree_demarshal *demarshal (const char *filename)
 //
 // Look at the next node without stepping forward.
 //
-static boolean demarshal_internal_name (tree_demarshal *ctx, const char *want)
+static uint8_t demarshal_internal_name (tree_demarshal *ctx, const char *want)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -884,7 +884,7 @@ static boolean demarshal_internal_name (tree_demarshal *ctx, const char *want)
 //
 // Get or peek at the next node
 //
-static boolean demarshal_internal_string (tree_demarshal *ctx, char **out)
+static uint8_t demarshal_internal_string (tree_demarshal *ctx, char **out)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -945,7 +945,7 @@ static boolean demarshal_internal_string (tree_demarshal *ctx, char **out)
 //
 // Get or peek at the next node
 //
-static boolean demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
+static uint8_t demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -1006,7 +1006,7 @@ static boolean demarshal_internal_int (tree_demarshal *ctx, int64_t *out)
 //
 // Get or peek at the next node
 //
-static boolean demarshal_internal_float (tree_demarshal *ctx, float *out)
+static uint8_t demarshal_internal_float (tree_demarshal *ctx, float *out)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -1069,7 +1069,7 @@ static boolean demarshal_internal_float (tree_demarshal *ctx, float *out)
 //
 // Get or peek at the next node
 //
-static boolean demarshal_internal_ptr (tree_demarshal *ctx, void **out)
+static uint8_t demarshal_internal_ptr (tree_demarshal *ctx, void **out)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -1130,7 +1130,7 @@ static boolean demarshal_internal_ptr (tree_demarshal *ctx, void **out)
 //
 // Get or peek at the next node
 //
-static boolean demarshal_internal_ptr_ref (tree_demarshal *ctx, void **out)
+static uint8_t demarshal_internal_ptr_ref (tree_demarshal *ctx, void **out)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -1190,7 +1190,7 @@ static boolean demarshal_internal_ptr_ref (tree_demarshal *ctx, void **out)
 //
 // Get or peek at the next node
 //
-static boolean demarshal_internal_bra (tree_demarshal *ctx)
+static uint8_t demarshal_internal_bra (tree_demarshal *ctx)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -1245,7 +1245,7 @@ static boolean demarshal_internal_bra (tree_demarshal *ctx)
 //
 // Get or peek at the next node
 //
-static boolean demarshal_internal_ket (tree_demarshal *ctx)
+static uint8_t demarshal_internal_ket (tree_demarshal *ctx)
 {
     tree_root *root = ctx->root;
     tree_demarshal_node **n = &ctx->node;
@@ -1297,28 +1297,28 @@ static boolean demarshal_internal_ket (tree_demarshal *ctx)
     return (1);
 }
 
-boolean demarshal_name (tree_demarshal *ctx, const char *want)
+uint8_t demarshal_name (tree_demarshal *ctx, const char *want)
 {
     ctx->peek = 0;
 
     return (demarshal_internal_name(ctx, want));
 }
 
-boolean demarshal_peek_name (tree_demarshal *ctx, const char *want)
+uint8_t demarshal_peek_name (tree_demarshal *ctx, const char *want)
 {
     ctx->peek = 1;
 
     return (demarshal_internal_name(ctx, want));
 }
 
-boolean demarshal_string (tree_demarshal *ctx, char **out)
+uint8_t demarshal_string (tree_demarshal *ctx, char **out)
 {
     ctx->peek = 0;
 
     return (demarshal_internal_string(ctx, out));
 }
 
-boolean demarshal_named_string (tree_demarshal *ctx, const char *name, char **out)
+uint8_t demarshal_named_string (tree_demarshal *ctx, const char *name, char **out)
 {
     ctx->peek = 0;
 
@@ -1329,7 +1329,7 @@ boolean demarshal_named_string (tree_demarshal *ctx, const char *name, char **ou
     return (demarshal_internal_string(ctx, out));
 }
 
-boolean demarshal_opt_named_string (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_string (tree_demarshal *ctx, const char *name,
                                 char **out)
 {
     ctx->peek = 1;
@@ -1341,7 +1341,7 @@ boolean demarshal_opt_named_string (tree_demarshal *ctx, const char *name,
     return (demarshal_named_string(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_string (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_string (tree_demarshal *ctx, const char *name,
                                     char **out, const char *def)
 {
     if (!demarshal_opt_named_string(ctx, name, out)) {
@@ -1352,21 +1352,21 @@ boolean demarshal_opt_def_named_string (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_peek_string (tree_demarshal *ctx, char **out)
+uint8_t demarshal_peek_string (tree_demarshal *ctx, char **out)
 {
     ctx->peek = 1;
 
     return (demarshal_internal_string(ctx, out));
 }
 
-boolean demarshal_int64 (tree_demarshal *ctx, int64_t *out)
+uint8_t demarshal_int64 (tree_demarshal *ctx, int64_t *out)
 {
     ctx->peek = 0;
 
     return (demarshal_internal_int(ctx, out));
 }
 
-boolean demarshal_named_int64 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_int64 (tree_demarshal *ctx, const char *name,
                            int64_t *out)
 {
     ctx->peek = 0;
@@ -1378,7 +1378,7 @@ boolean demarshal_named_int64 (tree_demarshal *ctx, const char *name,
     return (demarshal_internal_int(ctx, out));
 }
 
-boolean demarshal_opt_named_int64 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_int64 (tree_demarshal *ctx, const char *name,
                                int64_t *out)
 {
     ctx->peek = 1;
@@ -1390,7 +1390,7 @@ boolean demarshal_opt_named_int64 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_int64(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_int64 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_int64 (tree_demarshal *ctx, const char *name,
                                    int64_t *out, int64_t def)
 {
     if (!demarshal_opt_named_int64(ctx, name, out)) {
@@ -1400,10 +1400,10 @@ boolean demarshal_opt_def_named_int64 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_int32 (tree_demarshal *ctx, int32_t *out)
+uint8_t demarshal_int32 (tree_demarshal *ctx, int32_t *out)
 {
     int64_t tmp;
-    boolean rc;
+    uint8_t rc;
 
     ctx->peek = 0;
     rc = demarshal_internal_int(ctx, &tmp);
@@ -1412,11 +1412,11 @@ boolean demarshal_int32 (tree_demarshal *ctx, int32_t *out)
     return (rc);
 }
 
-boolean demarshal_named_int32 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_int32 (tree_demarshal *ctx, const char *name,
                            int32_t *out)
 {
     int64_t tmp;
-    boolean rc;
+    uint8_t rc;
 
     ctx->peek = 0;
 
@@ -1430,7 +1430,7 @@ boolean demarshal_named_int32 (tree_demarshal *ctx, const char *name,
     return (rc);
 }
 
-boolean demarshal_opt_named_int32 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_int32 (tree_demarshal *ctx, const char *name,
                                int32_t *out)
 {
     ctx->peek = 1;
@@ -1442,7 +1442,7 @@ boolean demarshal_opt_named_int32 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_int32(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_int32 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_int32 (tree_demarshal *ctx, const char *name,
                                    int32_t *out, int32_t def)
 {
     if (!demarshal_opt_named_int32(ctx, name, out)) {
@@ -1452,10 +1452,10 @@ boolean demarshal_opt_def_named_int32 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_int16 (tree_demarshal *ctx, int16_t *out)
+uint8_t demarshal_int16 (tree_demarshal *ctx, int16_t *out)
 {
     int64_t tmp;
-    boolean rc;
+    uint8_t rc;
 
     ctx->peek = 0;
     rc = demarshal_internal_int(ctx, &tmp);
@@ -1464,11 +1464,11 @@ boolean demarshal_int16 (tree_demarshal *ctx, int16_t *out)
     return (rc);
 }
 
-boolean demarshal_named_int16 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_int16 (tree_demarshal *ctx, const char *name,
                            int16_t *out)
 {
     int64_t tmp;
-    boolean rc;
+    uint8_t rc;
 
     ctx->peek = 0;
 
@@ -1482,7 +1482,7 @@ boolean demarshal_named_int16 (tree_demarshal *ctx, const char *name,
     return (rc);
 }
 
-boolean demarshal_opt_named_int16 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_int16 (tree_demarshal *ctx, const char *name,
                                int16_t *out)
 {
     ctx->peek = 1;
@@ -1494,7 +1494,7 @@ boolean demarshal_opt_named_int16 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_int16(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_int16 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_int16 (tree_demarshal *ctx, const char *name,
                                    int16_t *out, int16_t def)
 {
     if (!demarshal_opt_named_int16(ctx, name, out)) {
@@ -1504,10 +1504,10 @@ boolean demarshal_opt_def_named_int16 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_int8 (tree_demarshal *ctx, int8_t *out)
+uint8_t demarshal_int8 (tree_demarshal *ctx, int8_t *out)
 {
     int64_t tmp;
-    boolean rc;
+    uint8_t rc;
 
     ctx->peek = 0;
     rc = demarshal_internal_int(ctx, &tmp);
@@ -1516,11 +1516,11 @@ boolean demarshal_int8 (tree_demarshal *ctx, int8_t *out)
     return (rc);
 }
 
-boolean demarshal_named_int8 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_int8 (tree_demarshal *ctx, const char *name,
                           int8_t *out)
 {
     int64_t tmp;
-    boolean rc;
+    uint8_t rc;
 
     ctx->peek = 0;
 
@@ -1534,7 +1534,7 @@ boolean demarshal_named_int8 (tree_demarshal *ctx, const char *name,
     return (rc);
 }
 
-boolean demarshal_opt_named_int8 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_int8 (tree_demarshal *ctx, const char *name,
                               int8_t *out)
 {
     ctx->peek = 1;
@@ -1546,7 +1546,7 @@ boolean demarshal_opt_named_int8 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_int8(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_int8 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_int8 (tree_demarshal *ctx, const char *name,
                                   int8_t *out, int8_t def)
 {
     if (!demarshal_opt_named_int8(ctx, name, out)) {
@@ -1556,7 +1556,7 @@ boolean demarshal_opt_def_named_int8 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_uint64 (tree_demarshal *ctx, uint64_t *out)
+uint8_t demarshal_uint64 (tree_demarshal *ctx, uint64_t *out)
 {
     int64_t tmp;
     uint32_t rc;
@@ -1568,7 +1568,7 @@ boolean demarshal_uint64 (tree_demarshal *ctx, uint64_t *out)
     return (rc);
 }
 
-boolean demarshal_named_uint64 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_uint64 (tree_demarshal *ctx, const char *name,
                             uint64_t *out)
 {
     int64_t tmp;
@@ -1586,7 +1586,7 @@ boolean demarshal_named_uint64 (tree_demarshal *ctx, const char *name,
     return (rc);
 }
 
-boolean demarshal_opt_named_uint64 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_uint64 (tree_demarshal *ctx, const char *name,
                                 uint64_t *out)
 {
     ctx->peek = 1;
@@ -1598,7 +1598,7 @@ boolean demarshal_opt_named_uint64 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_uint64(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_uint64 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_uint64 (tree_demarshal *ctx, const char *name,
                                     uint64_t *out, uint64_t def)
 {
     if (!demarshal_opt_named_uint64(ctx, name, out)) {
@@ -1608,7 +1608,7 @@ boolean demarshal_opt_def_named_uint64 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_uint32 (tree_demarshal *ctx, uint32_t *out)
+uint8_t demarshal_uint32 (tree_demarshal *ctx, uint32_t *out)
 {
     int64_t tmp;
     uint32_t rc;
@@ -1620,7 +1620,7 @@ boolean demarshal_uint32 (tree_demarshal *ctx, uint32_t *out)
     return (rc);
 }
 
-boolean demarshal_named_uint32 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_uint32 (tree_demarshal *ctx, const char *name,
                             uint32_t *out)
 {
     int64_t tmp;
@@ -1638,7 +1638,7 @@ boolean demarshal_named_uint32 (tree_demarshal *ctx, const char *name,
     return (rc);
 }
 
-boolean demarshal_opt_named_uint32 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_uint32 (tree_demarshal *ctx, const char *name,
                                 uint32_t *out)
 {
     ctx->peek = 1;
@@ -1650,7 +1650,7 @@ boolean demarshal_opt_named_uint32 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_uint32(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_uint32 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_uint32 (tree_demarshal *ctx, const char *name,
                                     uint32_t *out, uint32_t def)
 {
     if (!demarshal_opt_named_uint32(ctx, name, out)) {
@@ -1660,7 +1660,7 @@ boolean demarshal_opt_def_named_uint32 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_uint16 (tree_demarshal *ctx, uint16_t *out)
+uint8_t demarshal_uint16 (tree_demarshal *ctx, uint16_t *out)
 {
     int64_t tmp;
     uint32_t rc;
@@ -1672,7 +1672,7 @@ boolean demarshal_uint16 (tree_demarshal *ctx, uint16_t *out)
     return (rc);
 }
 
-boolean demarshal_named_uint16 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_uint16 (tree_demarshal *ctx, const char *name,
                             uint16_t *out)
 {
     int64_t tmp;
@@ -1690,7 +1690,7 @@ boolean demarshal_named_uint16 (tree_demarshal *ctx, const char *name,
     return (rc);
 }
 
-boolean demarshal_opt_named_uint16 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_uint16 (tree_demarshal *ctx, const char *name,
                                     uint16_t *out)
 {
     ctx->peek = 1;
@@ -1702,7 +1702,7 @@ boolean demarshal_opt_named_uint16 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_uint16(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_uint16 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_uint16 (tree_demarshal *ctx, const char *name,
                                         uint16_t *out, uint16_t def)
 {
     if (!demarshal_opt_named_uint16(ctx, name, out)) {
@@ -1712,7 +1712,7 @@ boolean demarshal_opt_def_named_uint16 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_uint8 (tree_demarshal *ctx, uint8_t *out)
+uint8_t demarshal_uint8 (tree_demarshal *ctx, uint8_t *out)
 {
     int64_t tmp;
     uint32_t rc;
@@ -1724,7 +1724,7 @@ boolean demarshal_uint8 (tree_demarshal *ctx, uint8_t *out)
     return (rc);
 }
 
-boolean demarshal_named_uint8 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_uint8 (tree_demarshal *ctx, const char *name,
                                uint8_t *out)
 {
     int64_t tmp;
@@ -1742,7 +1742,7 @@ boolean demarshal_named_uint8 (tree_demarshal *ctx, const char *name,
     return (rc);
 }
 
-boolean demarshal_opt_named_uint8 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_uint8 (tree_demarshal *ctx, const char *name,
                                    uint8_t *out)
 {
     ctx->peek = 1;
@@ -1754,7 +1754,7 @@ boolean demarshal_opt_named_uint8 (tree_demarshal *ctx, const char *name,
     return (demarshal_named_uint8(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_uint8 (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_uint8 (tree_demarshal *ctx, const char *name,
                                    uint8_t *out, uint8_t def)
 {
     if (!demarshal_opt_named_uint8(ctx, name, out)) {
@@ -1764,21 +1764,21 @@ boolean demarshal_opt_def_named_uint8 (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_peek_float (tree_demarshal *ctx)
+uint8_t demarshal_peek_float (tree_demarshal *ctx)
 {
     ctx->peek = 1;
 
     return (demarshal_internal_float(ctx, 0));
 }
 
-boolean demarshal_float (tree_demarshal *ctx, float *out)
+uint8_t demarshal_float (tree_demarshal *ctx, float *out)
 {
     ctx->peek = 0;
 
     return (demarshal_internal_float(ctx, out));
 }
 
-boolean demarshal_named_float (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_float (tree_demarshal *ctx, const char *name,
                            float *out)
 {
     ctx->peek = 0;
@@ -1790,7 +1790,7 @@ boolean demarshal_named_float (tree_demarshal *ctx, const char *name,
     return (demarshal_internal_float(ctx, out));
 }
 
-boolean demarshal_opt_named_float (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_float (tree_demarshal *ctx, const char *name,
                                float *out)
 {
     ctx->peek = 1;
@@ -1802,7 +1802,7 @@ boolean demarshal_opt_named_float (tree_demarshal *ctx, const char *name,
     return (demarshal_named_float(ctx, name, out));
 }
 
-boolean demarshal_opt_def_named_float (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_def_named_float (tree_demarshal *ctx, const char *name,
                                    float *out, float def)
 {
     if (!demarshal_opt_named_float(ctx, name, out)) {
@@ -1812,7 +1812,7 @@ boolean demarshal_opt_def_named_float (tree_demarshal *ctx, const char *name,
     return (1);
 }
 
-boolean demarshal_named_ptr (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_ptr (tree_demarshal *ctx, const char *name,
                          void **out)
 {
     ctx->peek = 0;
@@ -1824,7 +1824,7 @@ boolean demarshal_named_ptr (tree_demarshal *ctx, const char *name,
     return (demarshal_internal_ptr(ctx, out));
 }
 
-boolean demarshal_opt_named_ptr (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_ptr (tree_demarshal *ctx, const char *name,
                              void **out)
 {
     ctx->peek = 1;
@@ -1836,7 +1836,7 @@ boolean demarshal_opt_named_ptr (tree_demarshal *ctx, const char *name,
     return (demarshal_named_ptr(ctx, name, out));
 }
 
-boolean demarshal_named_ptr_ref (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_named_ptr_ref (tree_demarshal *ctx, const char *name,
                              void **out)
 {
     ctx->peek = 0;
@@ -1848,7 +1848,7 @@ boolean demarshal_named_ptr_ref (tree_demarshal *ctx, const char *name,
     return (demarshal_internal_ptr_ref(ctx, out));
 }
 
-boolean demarshal_opt_named_ptr_ref (tree_demarshal *ctx, const char *name,
+uint8_t demarshal_opt_named_ptr_ref (tree_demarshal *ctx, const char *name,
                                  void **out)
 {
     ctx->peek = 1;
@@ -1860,30 +1860,30 @@ boolean demarshal_opt_named_ptr_ref (tree_demarshal *ctx, const char *name,
     return (demarshal_named_ptr_ref(ctx, name, out));
 }
 
-boolean demarshal_bra (tree_demarshal *ctx)
+uint8_t demarshal_bra (tree_demarshal *ctx)
 {
     ctx->peek = 0;
 
     return (demarshal_internal_bra(ctx));
 }
 
-boolean demarshal_peek_bra (tree_demarshal *ctx)
+uint8_t demarshal_peek_bra (tree_demarshal *ctx)
 {
     ctx->peek = 1;
 
     return (demarshal_internal_bra(ctx));
 }
 
-boolean demarshal_ket (tree_demarshal *ctx)
+uint8_t demarshal_ket (tree_demarshal *ctx)
 {
     ctx->peek = 0;
 
     return (demarshal_internal_ket(ctx));
 }
 
-boolean demarshal_gotone (tree_demarshal *ctx)
+uint8_t demarshal_gotone (tree_demarshal *ctx)
 {
-    boolean gotone;
+    uint8_t gotone;
 
     gotone = ctx->gotone;
 

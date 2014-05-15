@@ -37,9 +37,9 @@ typedef struct tex_ {
 
 tree_root *textures;
 
-static boolean tex_init_done;
+static uint8_t tex_init_done;
 
-boolean tex_init (void)
+uint8_t tex_init (void)
 {
     tex_init_done = true;
 

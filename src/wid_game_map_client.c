@@ -54,7 +54,7 @@ static void wid_game_map_client_set_thing_template (widp w, thing_templatep t)
     }
 }
 
-boolean wid_game_map_client_init (void)
+uint8_t wid_game_map_client_init (void)
 {
     return (true);
 }
@@ -118,7 +118,7 @@ void wid_game_map_client_visible (void)
     wid_intro_hide();
 }
 
-static boolean wid_game_map_client_receive_mouse_motion (
+static uint8_t wid_game_map_client_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
                     int32_t relx, int32_t rely,
@@ -182,24 +182,24 @@ void wid_game_map_client_scroll_adjust (void)
     last_playery = playery;
 }
 
-boolean wid_game_map_client_player_move (void)
+uint8_t wid_game_map_client_player_move (void)
 {
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
     uint8_t *state = SDL_GetKeyState(0);
 
-    boolean right = state[SDLK_RIGHT] ? 1 : 0;
-    boolean left  = state[SDLK_LEFT] ? 1 : 0;
-    boolean up    = state[SDLK_UP] ? 1 : 0;
-    boolean down  = state[SDLK_DOWN] ? 1 : 0;
-    boolean fire  = state[SDLK_SPACE] ? 1 : 0;
+    uint8_t right = state[SDLK_RIGHT] ? 1 : 0;
+    uint8_t left  = state[SDLK_LEFT] ? 1 : 0;
+    uint8_t up    = state[SDLK_UP] ? 1 : 0;
+    uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
+    uint8_t fire  = state[SDLK_SPACE] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
-    boolean right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
-    boolean left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
-    boolean up    = state[SDL_SCANCODE_UP] ? 1 : 0;
-    boolean down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
-    boolean fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
+    uint8_t right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
+    uint8_t left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
+    uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
+    uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
+    uint8_t fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
 #endif /* } */
 
     if (!player) {
@@ -248,7 +248,7 @@ boolean wid_game_map_client_player_move (void)
     return (up || down || left || right || fire);
 }
 
-static boolean wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
     /*
      * Just poll instead.
@@ -478,13 +478,13 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
     return (child);
 }
 
-void wid_game_map_client_score_update (levelp level, boolean redo)
+void wid_game_map_client_score_update (levelp level, uint8_t redo)
 {
     if (!player) {
         return;
     }
 
-    boolean update;
+    uint8_t update;
 
     if (wid_scoreline_container_top) {
         update = true;

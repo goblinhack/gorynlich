@@ -406,9 +406,9 @@ const int32_t wid_pulse_delay = 300;
 /*
  * Prototypes.
  */
-static boolean wid_scroll_trough_mouse_down(widp w, int32_t x, int32_t y,
+static uint8_t wid_scroll_trough_mouse_down(widp w, int32_t x, int32_t y,
                                             uint32_t button);
-static boolean wid_scroll_trough_mouse_motion(widp w,
+static uint8_t wid_scroll_trough_mouse_motion(widp w,
                                               int32_t x, int32_t y,
                                               int32_t relx, int32_t rely,
                                               int32_t wheelx, int32_t wheely);
@@ -418,7 +418,7 @@ static void wid_find_top_focus(void);
 static void wid_destroy_immediate(widp w);
 static void wid_destroy_immediate_internal(widp w);
 static void wid_grid_tree_attach(widp w);
-static boolean wid_grid_tree_detach(widp w);
+static uint8_t wid_grid_tree_detach(widp w);
 static void wid_update_internal(widp w);
 static void wid_tree_detach(widp w);
 static void wid_tree_attach(widp w);
@@ -447,12 +447,12 @@ char history[HISTORY_MAX][MAXSTR];
 uint32_t history_at;
 uint32_t history_walk;
 
-static boolean wid_init_done;
-static boolean wid_exiting;
+static uint8_t wid_init_done;
+static uint8_t wid_exiting;
 
 tree_rootp wid_timers;
 
-boolean wid_init (void)
+uint8_t wid_init (void)
 {
     wid_init_done = true;
 
@@ -572,7 +572,7 @@ static void wid_grid_tree_attach (widp w)
     w->gridnode->aligned_y = !((my + (grid->pixheight/2)) % grid->pixheight);
 }
 
-static boolean wid_grid_tree_detach (widp w)
+static uint8_t wid_grid_tree_detach (widp w)
 {
     fast_verify(w);
 
@@ -596,8 +596,8 @@ static boolean wid_grid_tree_detach (widp w)
 }
 
 void wid_get_grid_coord (widp w, int32_t *x, int32_t *y,
-                         boolean *aligned_x,
-                         boolean *aligned_y)
+                         uint8_t *aligned_x,
+                         uint8_t *aligned_y)
 {
     if (!w->gridnode) {
         if (x) {
@@ -986,7 +986,7 @@ static void wid_mouse_motion_end (void)
     wid_moving = 0;
 }
 
-void wid_set_ignore_events (widp w, boolean val)
+void wid_set_ignore_events (widp w, uint8_t val)
 {
     w->ignore_for_events = val;
 }
@@ -994,7 +994,7 @@ void wid_set_ignore_events (widp w, boolean val)
 /*
  * Should this widget be ignored for events?
  */
-boolean wid_ignore_for_events (widp w)
+uint8_t wid_ignore_for_events (widp w)
 {
     widp top;
 
@@ -1028,7 +1028,7 @@ boolean wid_ignore_for_events (widp w)
     return (false);
 }
 
-boolean wid_ignore_for_focus (widp w)
+uint8_t wid_ignore_for_focus (widp w)
 {
     widp top;
 
@@ -1052,7 +1052,7 @@ boolean wid_ignore_for_focus (widp w)
 /*
  * Should this widget be ignored for events?
  */
-boolean wid_ignore_being_destroyed (widp w)
+uint8_t wid_ignore_being_destroyed (widp w)
 {
     widp top;
 
@@ -1160,7 +1160,7 @@ static void wid_mouse_over_end (void)
     }
 }
 
-static boolean wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
+static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
 {
     if (wid_over == w) {
         return (true);
@@ -1576,12 +1576,12 @@ void wid_set_tooltip (widp w, const char *string)
     w->tooltip = dupstr(string, "wid tooltip");
 }
 
-boolean wid_get_received_input (widp w)
+uint8_t wid_get_received_input (widp w)
 {
     return (w->received_input);
 }
 
-void wid_set_received_input (widp w, boolean val)
+void wid_set_received_input (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1687,7 +1687,7 @@ void wid_set_focusable (widp w, uint8_t val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_show_cursor (widp w)
+uint8_t wid_get_show_cursor (widp w)
 {
     return (w->show_cursor);
 }
@@ -1695,7 +1695,7 @@ boolean wid_get_show_cursor (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_show_cursor (widp w, boolean val)
+void wid_set_show_cursor (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1705,7 +1705,7 @@ void wid_set_show_cursor (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_do_not_raise (widp w)
+uint8_t wid_get_do_not_raise (widp w)
 {
     return (w->do_not_raise);
 }
@@ -1713,7 +1713,7 @@ boolean wid_get_do_not_raise (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_do_not_raise (widp w, boolean val)
+void wid_set_do_not_raise (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1723,7 +1723,7 @@ void wid_set_do_not_raise (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_do_not_lower (widp w)
+uint8_t wid_get_do_not_lower (widp w)
 {
     return (w->do_not_lower);
 }
@@ -1731,7 +1731,7 @@ boolean wid_get_do_not_lower (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_do_not_lower (widp w, boolean val)
+void wid_set_do_not_lower (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1741,7 +1741,7 @@ void wid_set_do_not_lower (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_movable (widp w)
+uint8_t wid_get_movable (widp w)
 {
     if (w->movable_set) {
         return (w->movable);
@@ -1753,7 +1753,7 @@ boolean wid_get_movable (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_movable (widp w, boolean val)
+void wid_set_movable (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1767,7 +1767,7 @@ void wid_set_movable (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_movable_horiz (widp w)
+uint8_t wid_get_movable_horiz (widp w)
 {
     if (w->movable_horiz_set) {
         return (w->movable_horiz);
@@ -1779,7 +1779,7 @@ boolean wid_get_movable_horiz (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_movable_horiz (widp w, boolean val)
+void wid_set_movable_horiz (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1790,7 +1790,7 @@ void wid_set_movable_horiz (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_movable_vert (widp w)
+uint8_t wid_get_movable_vert (widp w)
 {
     if (w->movable_vert_set) {
         return (w->movable_vert);
@@ -1802,7 +1802,7 @@ boolean wid_get_movable_vert (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_movable_vert (widp w, boolean val)
+void wid_set_movable_vert (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1813,7 +1813,7 @@ void wid_set_movable_vert (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_movable_bounded (widp w)
+uint8_t wid_get_movable_bounded (widp w)
 {
     if (w->movable_bounded_set) {
         return (w->movable_bounded);
@@ -1825,7 +1825,7 @@ boolean wid_get_movable_bounded (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_movable_bounded (widp w, boolean val)
+void wid_set_movable_bounded (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1836,7 +1836,7 @@ void wid_set_movable_bounded (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_lhs (widp w)
+uint8_t wid_get_text_lhs (widp w)
 {
     return (w->text_lhs);
 }
@@ -1844,7 +1844,7 @@ boolean wid_get_text_lhs (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_lhs (widp w, boolean val)
+void wid_set_text_lhs (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1854,7 +1854,7 @@ void wid_set_text_lhs (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_rhs (widp w)
+uint8_t wid_get_text_rhs (widp w)
 {
     return (w->text_rhs);
 }
@@ -1862,7 +1862,7 @@ boolean wid_get_text_rhs (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_rhs (widp w, boolean val)
+void wid_set_text_rhs (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1872,7 +1872,7 @@ void wid_set_text_rhs (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_centerx (widp w)
+uint8_t wid_get_text_centerx (widp w)
 {
     return (w->text_centerx);
 }
@@ -1880,7 +1880,7 @@ boolean wid_get_text_centerx (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_centerx (widp w, boolean val)
+void wid_set_text_centerx (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1890,7 +1890,7 @@ void wid_set_text_centerx (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_top (widp w)
+uint8_t wid_get_text_top (widp w)
 {
     return (w->text_top);
 }
@@ -1898,7 +1898,7 @@ boolean wid_get_text_top (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_top (widp w, boolean val)
+void wid_set_text_top (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1908,7 +1908,7 @@ void wid_set_text_top (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_bot (widp w)
+uint8_t wid_get_text_bot (widp w)
 {
     return (w->text_bot);
 }
@@ -1916,7 +1916,7 @@ boolean wid_get_text_bot (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_bot (widp w, boolean val)
+void wid_set_text_bot (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1926,7 +1926,7 @@ void wid_set_text_bot (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_centery (widp w)
+uint8_t wid_get_text_centery (widp w)
 {
     return (w->text_centery);
 }
@@ -1934,7 +1934,7 @@ boolean wid_get_text_centery (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_centery (widp w, boolean val)
+void wid_set_text_centery (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1944,7 +1944,7 @@ void wid_set_text_centery (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_pos (widp w, double *x, double *y)
+uint8_t wid_get_text_pos (widp w, double *x, double *y)
 {
     if (w->text_pos_set) {
         *x = w->text_pos.x;
@@ -1959,7 +1959,7 @@ boolean wid_get_text_pos (widp w, double *x, double *y)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_pos (widp w, boolean val, double x, double y)
+void wid_set_text_pos (widp w, uint8_t val, double x, double y)
 {
     fast_verify(w);
 
@@ -1971,7 +1971,7 @@ void wid_set_text_pos (widp w, boolean val, double x, double y)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_outline (widp w)
+uint8_t wid_get_text_outline (widp w)
 {
     return (w->text_outline);
 }
@@ -1979,7 +1979,7 @@ boolean wid_get_text_outline (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_outline (widp w, boolean val)
+void wid_set_text_outline (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -1989,7 +1989,7 @@ void wid_set_text_outline (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_blit_outline (widp w)
+uint8_t wid_get_blit_outline (widp w)
 {
     return (w->blit_outline);
 }
@@ -1997,7 +1997,7 @@ boolean wid_get_blit_outline (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_blit_outline (widp w, boolean val)
+void wid_set_blit_outline (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -2073,7 +2073,7 @@ void wid_set_text_advance (widp w, double val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_text_fixed_width (widp w)
+uint8_t wid_get_text_fixed_width (widp w)
 {
     return (w->text_fixed_width);
 }
@@ -2081,7 +2081,7 @@ boolean wid_get_text_fixed_width (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_text_fixed_width (widp w, boolean val)
+void wid_set_text_fixed_width (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -2455,7 +2455,7 @@ void wid_set_color (widp w, wid_color col, color val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_bevelled (widp w)
+uint8_t wid_get_bevelled (widp w)
 {
     return (w->bevelled);
 }
@@ -2463,7 +2463,7 @@ boolean wid_get_bevelled (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_bevelled (widp w, boolean val)
+void wid_set_bevelled (widp w, uint8_t val)
 {
     fast_verify(w);
 
@@ -2473,7 +2473,7 @@ void wid_set_bevelled (widp w, boolean val)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_rounded (widp w)
+uint8_t wid_get_rounded (widp w)
 {
     return (w->rounded);
 }
@@ -2513,7 +2513,7 @@ void wid_set_rounded_small (widp w)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_square (widp w)
+uint8_t wid_get_square (widp w)
 {
     return (w->square);
 }
@@ -2533,7 +2533,7 @@ void wid_set_square (widp w)
 /*
  * Look at all the wid modes and return the most relevent setting
  */
-boolean wid_get_square_outline (widp w)
+uint8_t wid_get_square_outline (widp w)
 {
     return (w->square_outline);
 }
@@ -3571,7 +3571,7 @@ static widp wid_new_scroll_trough (widp parent)
  * Initialize a wid with basic settings
  */
 static widp wid_new_scroll_bar (widp parent, widp scrollbar_owner,
-                                boolean vertical)
+                                uint8_t vertical)
 {
     color c;
     color tl;
@@ -3718,7 +3718,7 @@ widp wid_new_horiz_scroll_bar (widp parent, widp scrollbar_owner)
     return (scrollbar);
 }
 
-boolean wid_has_grid (widp w)
+uint8_t wid_has_grid (widp w)
 {
     verify(w);
 
@@ -3907,7 +3907,7 @@ void marshal_wid_grid (marshal_p ctx, widp w)
     PUT_KET(ctx);
 }
 
-boolean demarshal_wid_grid (demarshal_p ctx, widp w,
+uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
                             grid_wid_replace_t callback)
 {
     thing_templatep thing_template;
@@ -3917,7 +3917,7 @@ boolean demarshal_wid_grid (demarshal_p ctx, widp w,
     uint32_t x;
     uint32_t y;
     widp child;
-    boolean rc;
+    uint8_t rc;
 
     rc = true;
 
@@ -4931,7 +4931,7 @@ void wid_hide (widp w, uint32_t delay)
     wid_find_top_focus();
 }
 
-static boolean wid_scroll_trough_mouse_down (widp w,
+static uint8_t wid_scroll_trough_mouse_down (widp w,
                                              int32_t x,
                                              int32_t y,
                                              uint32_t button)
@@ -4980,7 +4980,7 @@ static boolean wid_scroll_trough_mouse_down (widp w,
     return (true);
 }
 
-static boolean wid_scroll_trough_mouse_motion (widp w,
+static uint8_t wid_scroll_trough_mouse_motion (widp w,
                                                int32_t x, int32_t y,
                                                int32_t relx, int32_t rely,
                                                int32_t wheelx, int32_t wheely)
@@ -5035,7 +5035,7 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
     double minx = 0;
     double maxx = 0;
     double pct;
-    boolean first = true;
+    uint8_t first = true;
     widp child;
 
     /*
@@ -5160,7 +5160,7 @@ void wid_get_children_size (widp owner, double *w, double *h)
     double maxy = 0;
     double minx = 0;
     double maxx = 0;
-    boolean first = true;
+    uint8_t first = true;
     widp child;
 
     /*
@@ -5366,7 +5366,7 @@ void wid_scroll_with_input (widp w, const char *str)
     }
 }
 
-boolean wid_receive_input (widp w, const SDL_KEYSYM *key)
+uint8_t wid_receive_input (widp w, const SDL_KEYSYM *key)
 {
     char beforecursor[MAXSTR];
     char updatedtext[MAXSTR];
@@ -5624,7 +5624,7 @@ boolean wid_receive_input (widp w, const SDL_KEYSYM *key)
 /*
  * Handle keys no one grabbed.
  */
-static boolean wid_receive_unhandled_input (const SDL_KEYSYM *key)
+static uint8_t wid_receive_unhandled_input (const SDL_KEYSYM *key)
 {
     widp w;
 
@@ -5695,7 +5695,7 @@ static widp wid_find_at (widp w, int32_t x, int32_t y)
 }
 
 static widp wid_key_down_handler_at (widp w, int32_t x, int32_t y,
-                                     boolean strict)
+                                     uint8_t strict)
 {
     widp child;
 
@@ -5760,7 +5760,7 @@ static widp wid_key_down_handler_at (widp w, int32_t x, int32_t y,
 }
 
 static widp wid_key_up_handler_at (widp w, int32_t x, int32_t y,
-                                     boolean strict)
+                                     uint8_t strict)
 {
     widp child;
 
@@ -5824,7 +5824,7 @@ static widp wid_key_up_handler_at (widp w, int32_t x, int32_t y,
 }
 
 static widp wid_mouse_down_handler_at (widp w, int32_t x, int32_t y,
-                                       boolean strict)
+                                       uint8_t strict)
 {
     widp child;
 
@@ -5894,7 +5894,7 @@ static widp wid_mouse_down_handler_at (widp w, int32_t x, int32_t y,
     return (0);
 }
 
-static widp wid_mouse_up_handler_at (widp w, int32_t x, int32_t y, boolean strict)
+static widp wid_mouse_up_handler_at (widp w, int32_t x, int32_t y, uint8_t strict)
 {
     widp child;
 
@@ -5967,7 +5967,7 @@ static widp wid_mouse_up_handler_at (widp w, int32_t x, int32_t y, boolean stric
 static widp wid_mouse_motion_handler_at (widp w, int32_t x, int32_t y,
                                          int32_t relx, int32_t rely,
                                          int32_t wheelx, int32_t wheely,
-                                         boolean strict)
+                                         uint8_t strict)
 {
     widp child;
 
@@ -6451,7 +6451,7 @@ void wid_mouse_motion (int32_t x, int32_t y,
         return;
     }
 
-    boolean over = false;
+    uint8_t over = false;
 
     TREE_WALK(wid_top_level, w) {
         fast_verify(w);
@@ -6492,7 +6492,7 @@ void wid_mouse_motion (int32_t x, int32_t y,
             w = w->parent;
         }
 
-        boolean done = false;
+        uint8_t done = false;
 
         if (!w) {
             /*
@@ -7037,16 +7037,16 @@ static void wid_gc (widp w)
  * Display one wid and its children
  */
 static void wid_display (widp w,
-                         boolean disable_scissor,
-                         boolean *updated_scissors)
+                         uint8_t disable_scissor,
+                         uint8_t *updated_scissors)
 {
-    boolean did_push_matrix;
+    uint8_t did_push_matrix;
     int32_t clip_height;
     int32_t clip_width;
-    boolean fading;
-    boolean hidden;
+    uint8_t fading;
+    uint8_t hidden;
     int32_t owidth;
-    boolean scaling;
+    uint8_t scaling;
     int32_t oheight;
     int32_t otlx;
     int32_t otly;
@@ -7368,7 +7368,7 @@ static void wid_display (widp w,
         fontp font = wid_get_font(w);
         double scaling = wid_get_text_scaling(w);
         double advance = wid_get_text_advance(w);
-        boolean fixed_width = wid_get_text_fixed_width(w);
+        uint8_t fixed_width = wid_get_text_fixed_width(w);
 
         int32_t x, y;
         double xpc, ypc;
@@ -7455,7 +7455,7 @@ static void wid_display (widp w,
      * If this is a grid wid, draw the elements in y sorted order.
      */
     TREE_WALK_REVERSE_UNSAFE(w->children_display_sorted, child) {
-        boolean child_updated_scissors = false;
+        uint8_t child_updated_scissors = false;
 
         wid_display(child, disable_scissor, &child_updated_scissors);
 
@@ -7608,7 +7608,7 @@ void wid_fade_out (widp w, uint32_t delay)
     w->fade_in = false;
 }
 
-void wid_fade_in_out (widp w, uint32_t delay, uint32_t repeat, boolean in)
+void wid_fade_in_out (widp w, uint32_t delay, uint32_t repeat, uint8_t in)
 {
     fast_verify(w);
 
@@ -7627,7 +7627,7 @@ void wid_fade_in_out (widp w, uint32_t delay, uint32_t repeat, boolean in)
     w->fade_delay = delay;
 }
 
-boolean wid_is_hidden (widp w)
+uint8_t wid_is_hidden (widp w)
 {
     fast_verify(w);
 
@@ -7650,7 +7650,7 @@ boolean wid_is_hidden (widp w)
     return (false);
 }
 
-boolean wid_is_fading (widp w)
+uint8_t wid_is_fading (widp w)
 {
     fast_verify(w);
 
@@ -7673,7 +7673,7 @@ boolean wid_is_fading (widp w)
     return (false);
 }
 
-boolean wid_is_scaling (widp w)
+uint8_t wid_is_scaling (widp w)
 {
     fast_verify(w);
 
@@ -7790,7 +7790,7 @@ static double wid_get_fade_amount (widp w)
     return (1.0f);
 }
 
-boolean wid_is_moving (widp w)
+uint8_t wid_is_moving (widp w)
 {
     fast_verify(w);
 
@@ -8193,28 +8193,28 @@ void wid_rotate_immediate (widp w, double rotate_base)
     w->rotate_base = rotate_base;
 }
 
-void wid_flip_horiz (widp w, boolean val)
+void wid_flip_horiz (widp w, uint8_t val)
 {
     fast_verify(w);
 
     w->flip_vert = val;
 }
 
-void wid_flip_vert (widp w, boolean val)
+void wid_flip_vert (widp w, uint8_t val)
 {
     fast_verify(w);
 
     w->flip_horiz = val;
 }
 
-boolean wid_get_flip_horiz (widp w)
+uint8_t wid_get_flip_horiz (widp w)
 {
     fast_verify(w);
 
     return (w->flip_vert);
 }
 
-boolean wid_get_flip_vert (widp w)
+uint8_t wid_get_flip_vert (widp w)
 {
     fast_verify(w);
 
@@ -8269,13 +8269,13 @@ double wid_get_rotate (widp w)
     return (w->rotate_base + rotating);
 }
 
-boolean wids_overlap (widp A, widp B)
+uint8_t wids_overlap (widp A, widp B)
 {
     /*
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
      */
-    boolean no_overlap = (A->tree.tl.x > B->tree.br.x) ||
+    uint8_t no_overlap = (A->tree.tl.x > B->tree.br.x) ||
                       (B->tree.tl.x > A->tree.br.x) ||
                       (A->tree.tl.y > B->tree.br.y) ||
                       (B->tree.tl.y > A->tree.br.y);

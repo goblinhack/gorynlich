@@ -37,7 +37,7 @@ typedef struct {
     uint32_t rows;
     const char *include_suffix;
     const char *exclude_suffix;
-    boolean include_dirs;
+    uint8_t include_dirs;
     char *dir;
     widp wid_dirlist_vert_scroll;
     widp wid_dirlist_horiz_scroll;
@@ -60,12 +60,12 @@ static void wid_dirlist_destroy (widp w)
 }
 
 static
-boolean wid_dirlist_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
+uint8_t wid_dirlist_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
 {
     return (true);
 }
 
-static boolean wid_dirlist_button_selected (widp w)
+static uint8_t wid_dirlist_button_selected (widp w)
 {
     wid_dirlist_callback callback;
     wid_dirlist_context *context;
@@ -103,7 +103,7 @@ static boolean wid_dirlist_button_selected (widp w)
     return (true);
 }
 
-static boolean wid_dirlist_file_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_dirlist_file_event (widp w, int32_t x, int32_t y,
                                        uint32_t button)
 {
     widp wid_input = wid_find(wid_get_top_parent(w),
@@ -120,7 +120,7 @@ static boolean wid_dirlist_file_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_dirlist_dir_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_dirlist_dir_event (widp w, int32_t x, int32_t y,
                                       uint32_t button)
 {
     wid_dirlist_context *context;
@@ -237,7 +237,7 @@ static boolean wid_dirlist_dir_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_dirlist_button_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_dirlist_button_event (widp w, int32_t x, int32_t y,
                                          uint32_t button)
 {
     wid_dirlist_button_selected(w);
@@ -248,7 +248,7 @@ static boolean wid_dirlist_button_event (widp w, int32_t x, int32_t y,
 /*
  * Key down etc...
  */
-static boolean wid_dirlist_receive_input (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_dirlist_receive_input (widp w, const SDL_KEYSYM *key)
 {
     widp button;
 
@@ -431,7 +431,7 @@ static boolean wid_dirlist_receive_input (widp w, const SDL_KEYSYM *key)
     return (ret);
 }
 
-static boolean wid_dirlist_ignore_input (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_dirlist_ignore_input (widp w, const SDL_KEYSYM *key)
 {
     return (true);
 }
@@ -550,8 +550,8 @@ widp wid_dirlist (const char *dir,
     uint32_t button_y;
     va_list ap;
     const char *button_names[args];
-    boolean need_horiz_scroll = false;
-    boolean need_vert_scroll = false;
+    uint8_t need_horiz_scroll = false;
+    uint8_t need_vert_scroll = false;
     wid_dirlist_context *context;
 
     context = (typeof(context))

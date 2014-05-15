@@ -4,7 +4,7 @@
  * See the LICENSE file for license.
  */
 
-extern boolean wid_game_map_server_init(void);
+extern uint8_t wid_game_map_server_init(void);
 extern void wid_game_map_server_fini(void);
 extern void wid_game_map_server_hide(void);
 extern void wid_game_map_server_visible(void);

@@ -10,14 +10,14 @@
 #include "level_private.h"
 #include <stdlib.h>
 
-boolean thing_init(void);
+uint8_t thing_init(void);
 void thing_fini(void);
 thingp thing_server_new(levelp, const char *name);
 thingp thing_client_new(uint32_t, thing_templatep);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
-boolean thing_mob_spawn(thingp);
+uint8_t thing_mob_spawn(thingp);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_hit(thingp, thingp hitter, uint32_t damage,
@@ -50,56 +50,56 @@ void thing_set_score(thingp, uint32_t score);
 widp thing_message(thingp t, const char *message);
 void thing_animate(thingp);
 void thing_handle_collisions(widp grid, thingp t);
-boolean thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
-boolean thing_server_hit_solid_obstacle(widp grid, 
+uint8_t thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
+uint8_t thing_server_hit_solid_obstacle(widp grid, 
                                         thingp t, double nx, double ny);
-void thing_inc_powerup_spam_count(thingp t, boolean val);
-void thing_dec_powerup_spam_count(thingp t, boolean val);
-boolean thing_has_powerup_spam_count(thingp t);
-void thing_inc_powerup2_count(thingp t, boolean val);
-void thing_dec_powerup2_count(thingp t, boolean val);
-boolean thing_has_powerup2_count(thingp t);
-void thing_inc_powerup3_count(thingp t, boolean val);
-void thing_dec_powerup3_count(thingp t, boolean val);
-boolean thing_has_powerup3_count(thingp t);
-void thing_inc_powerup4_count(thingp t, boolean val);
-void thing_dec_powerup4_count(thingp t, boolean val);
-boolean thing_has_powerup4_count(thingp t);
-void thing_inc_powerup5_count(thingp t, boolean val);
-void thing_dec_powerup5_count(thingp t, boolean val);
-boolean thing_has_powerup5_count(thingp t);
-void thing_inc_powerup6_count(thingp t, boolean val);
-void thing_dec_powerup6_count(thingp t, boolean val);
-boolean thing_has_powerup6_count(thingp t);
-void thing_inc_powerup7_count(thingp t, boolean val);
-void thing_dec_powerup7_count(thingp t, boolean val);
-boolean thing_has_powerup7_count(thingp t);
-void thing_inc_powerup8_count(thingp t, boolean val);
-void thing_dec_powerup8_count(thingp t, boolean val);
-boolean thing_has_powerup8_count(thingp t);
-void thing_inc_powerup_rocket_count(thingp t, boolean val);
-void thing_dec_powerup_rocket_count(thingp t, boolean val);
-boolean thing_has_powerup_rocket_count(thingp t);
-void thing_set_is_qqq1(thingp t, boolean val);
-boolean thing_is_qqq1(thingp t);
-void thing_set_is_qqq2(thingp t, boolean val);
-boolean thing_is_qqq2(thingp t);
-void thing_set_is_qqq3(thingp t, boolean val);
-boolean thing_is_qqq3(thingp t);
-void thing_set_is_qqq4(thingp t, boolean val);
-boolean thing_is_qqq4(thingp t);
-void thing_set_is_qqq5(thingp t, boolean val);
-boolean thing_is_qqq5(thingp t);
-void thing_set_is_qqq6(thingp t, boolean val);
-boolean thing_is_qqq6(thingp t);
-void thing_set_is_qqq7(thingp t, boolean val);
-boolean thing_is_qqq7(thingp t);
-void thing_set_is_chasing_target(thingp t, boolean val);
-boolean thing_is_chasing_target(thingp t);
-void thing_set_got_to_exit_first(thingp t, boolean val);
-boolean thing_got_to_exit_first(thingp t);
-void thing_set_redo_maze_search(thingp t, boolean val);
-boolean thing_redo_maze_search(thingp t);
+void thing_inc_powerup_spam_count(thingp t, uint8_t val);
+void thing_dec_powerup_spam_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup_spam_count(thingp t);
+void thing_inc_powerup2_count(thingp t, uint8_t val);
+void thing_dec_powerup2_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup2_count(thingp t);
+void thing_inc_powerup3_count(thingp t, uint8_t val);
+void thing_dec_powerup3_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup3_count(thingp t);
+void thing_inc_powerup4_count(thingp t, uint8_t val);
+void thing_dec_powerup4_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup4_count(thingp t);
+void thing_inc_powerup5_count(thingp t, uint8_t val);
+void thing_dec_powerup5_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup5_count(thingp t);
+void thing_inc_powerup6_count(thingp t, uint8_t val);
+void thing_dec_powerup6_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup6_count(thingp t);
+void thing_inc_powerup7_count(thingp t, uint8_t val);
+void thing_dec_powerup7_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup7_count(thingp t);
+void thing_inc_powerup8_count(thingp t, uint8_t val);
+void thing_dec_powerup8_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup8_count(thingp t);
+void thing_inc_powerup_rocket_count(thingp t, uint8_t val);
+void thing_dec_powerup_rocket_count(thingp t, uint8_t val);
+uint8_t thing_has_powerup_rocket_count(thingp t);
+void thing_set_is_qqq1(thingp t, uint8_t val);
+uint8_t thing_is_qqq1(thingp t);
+void thing_set_is_qqq2(thingp t, uint8_t val);
+uint8_t thing_is_qqq2(thingp t);
+void thing_set_is_qqq3(thingp t, uint8_t val);
+uint8_t thing_is_qqq3(thingp t);
+void thing_set_is_qqq4(thingp t, uint8_t val);
+uint8_t thing_is_qqq4(thingp t);
+void thing_set_is_qqq5(thingp t, uint8_t val);
+uint8_t thing_is_qqq5(thingp t);
+void thing_set_is_qqq6(thingp t, uint8_t val);
+uint8_t thing_is_qqq6(thingp t);
+void thing_set_is_qqq7(thingp t, uint8_t val);
+uint8_t thing_is_qqq7(thingp t);
+void thing_set_is_chasing_target(thingp t, uint8_t val);
+uint8_t thing_is_chasing_target(thingp t);
+void thing_set_got_to_exit_first(thingp t, uint8_t val);
+uint8_t thing_got_to_exit_first(thingp t);
+void thing_set_redo_maze_search(thingp t, uint8_t val);
+uint8_t thing_redo_maze_search(thingp t);
 
 void thing_set_is_dir_down(thingp t);
 uint8_t thing_is_dir_down(thingp t);
@@ -119,13 +119,13 @@ uint8_t thing_is_dir_tr(thingp t);
 void thing_set_is_dir_br(thingp t);
 uint8_t thing_is_dir_br(thingp t);
 
-void thing_set_opened_exit(thingp t, boolean val);
-boolean thing_opened_exit(thingp t);
-void thing_set_is_open(thingp t, boolean val);
-void thing_set_is_projectile(thingp t, boolean val);
-void thing_set_is_dead(thingp t, boolean val);
-void thing_set_qqq20(thingp t, boolean val);
-boolean thing_qqq20(thingp t);
+void thing_set_opened_exit(thingp t, uint8_t val);
+uint8_t thing_opened_exit(thingp t);
+void thing_set_is_open(thingp t, uint8_t val);
+void thing_set_is_projectile(thingp t, uint8_t val);
+void thing_set_is_dead(thingp t, uint8_t val);
+void thing_set_qqq20(thingp t, uint8_t val);
+uint8_t thing_qqq20(thingp t);
 const char *thing_name(thingp);
 const char *thing_short_name(thingp);
 const char *thing_tooltip(thingp);
@@ -140,16 +140,16 @@ tree_rootp thing_tiles2(thingp);
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t);
 void thing_place(void *);
-void thing_server_wid_update(thingp t, double x, double y, boolean is_new);
-void thing_client_wid_update(thingp t, double x, double y, boolean smooth);
+void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
+void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
 void thing_collect(thingp t, thing_templatep tmp);
-boolean thing_use(thingp t, uint32_t id);
-boolean thing_has(thingp t, uint32_t id);
+uint8_t thing_use(thingp t, uint32_t id);
+uint8_t thing_has(thingp t, uint32_t id);
 
 /*
  * thing_ai.c
  */
-boolean thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
+uint8_t thing_find_nexthop(thingp t, int32_t *x, int32_t *y);
 void dmap_generate_monst_map_wander(levelp level);
 void thing_generate_dmaps(void);
 void dmap_process_init(void);
@@ -196,23 +196,23 @@ enum {
     THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT,
 };
 
-boolean thing_server_move(thingp t,
+uint8_t thing_server_move(thingp t,
                           double x,
                           double y,
-                          const boolean up,
-                          const boolean down,
-                          const boolean left,
-                          const boolean right,
-                          const boolean fire);
+                          const uint8_t up,
+                          const uint8_t down,
+                          const uint8_t left,
+                          const uint8_t right,
+                          const uint8_t fire);
 
 void thing_client_move(thingp t,
                        double x,
                        double y,
-                       const boolean up,
-                       const boolean down,
-                       const boolean left,
-                       const boolean right,
-                       const boolean fire);
+                       const uint8_t up,
+                       const uint8_t down,
+                       const uint8_t left,
+                       const uint8_t right,
+                       const uint8_t fire);
 
 extern uint16_t THING_WALL;
 extern uint16_t THING_WALL2;
@@ -471,573 +471,573 @@ typedef struct thing_ {
 
 #include "thing_template.h"
 
-static inline boolean thing_is_open (thingp t)
+static inline uint8_t thing_is_open (thingp t)
 {
     verify(t);
 
     return (t->is_open);
 }
 
-static inline boolean thing_is_dead (thingp t)
+static inline uint8_t thing_is_dead (thingp t)
 {
     verify(t);
 
     return (t->is_dead);
 }
 
-static inline boolean thing_is_exit (thingp t)
+static inline uint8_t thing_is_exit (thingp t)
 {
     verify(t);
 
     return (thing_template_is_exit(thing_get_template(t)));
 }
 
-static inline boolean thing_is_floor (thingp t)
+static inline uint8_t thing_is_floor (thingp t)
 {
     verify(t);
 
     return (thing_template_is_floor(thing_get_template(t)));
 }
 
-static inline boolean thing_is_food (thingp t)
+static inline uint8_t thing_is_food (thingp t)
 {
     verify(t);
 
     return (thing_template_is_food(thing_get_template(t)));
 }
 
-static inline boolean thing_is_monst (thingp t)
+static inline uint8_t thing_is_monst (thingp t)
 {
     verify(t);
 
     return (thing_template_is_monst(thing_get_template(t)));
 }
 
-static inline boolean thing_is_generator (thingp t)
+static inline uint8_t thing_is_generator (thingp t)
 {
     verify(t);
 
     return (thing_template_is_generator(thing_get_template(t)));
 }
 
-static inline boolean thing_is_plant (thingp t)
+static inline uint8_t thing_is_plant (thingp t)
 {
     verify(t);
 
     return (thing_template_is_plant(thing_get_template(t)));
 }
 
-static inline boolean thing_is_player (thingp t)
+static inline uint8_t thing_is_player (thingp t)
 {
     verify(t);
 
     return (thing_template_is_player(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key (thingp t)
+static inline uint8_t thing_is_key (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key(thing_get_template(t)));
 }
 
-static inline boolean thing_is_collision_map_player (thingp t)
+static inline uint8_t thing_is_collision_map_player (thingp t)
 {
     verify(t);
 
     return (thing_template_is_collision_map_player(thing_get_template(t)));
 }
 
-static inline boolean thing_is_collision_map_monst (thingp t)
+static inline uint8_t thing_is_collision_map_monst (thingp t)
 {
     verify(t);
 
     return (thing_template_is_collision_map_monst(thing_get_template(t)));
 }
 
-static inline boolean thing_is_collision_map_weapon (thingp t)
+static inline uint8_t thing_is_collision_map_weapon (thingp t)
 {
     verify(t);
 
     return (thing_template_is_collision_map_weapon(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx3 (thingp t)
+static inline uint8_t thing_is_xxx3 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx3(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx4 (thingp t)
+static inline uint8_t thing_is_xxx4 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx4(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx5 (thingp t)
+static inline uint8_t thing_is_xxx5 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx5(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx6 (thingp t)
+static inline uint8_t thing_is_xxx6 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx6(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx7 (thingp t)
+static inline uint8_t thing_is_xxx7 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx7(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx8 (thingp t)
+static inline uint8_t thing_is_killed_on_hitting_player (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx8(thing_get_template(t)));
+    return (thing_template_is_killed_on_hitting_player(thing_get_template(t)));
 }
 
-static inline boolean thing_is_star (thingp t)
+static inline uint8_t thing_is_star (thingp t)
 {
     verify(t);
 
     return (thing_template_is_star(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key0 (thingp t)
+static inline uint8_t thing_is_key0 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key0(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key1 (thingp t)
+static inline uint8_t thing_is_key1 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key1(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key2 (thingp t)
+static inline uint8_t thing_is_key2 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key2(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key3 (thingp t)
+static inline uint8_t thing_is_key3 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key3(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key4 (thingp t)
+static inline uint8_t thing_is_key4 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key4(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key5 (thingp t)
+static inline uint8_t thing_is_key5 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key5(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key6 (thingp t)
+static inline uint8_t thing_is_key6 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key6(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key7 (thingp t)
+static inline uint8_t thing_is_key7 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key7(thing_get_template(t)));
 }
 
-static inline boolean thing_is_key8 (thingp t)
+static inline uint8_t thing_is_key8 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_key8(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx20 (thingp t)
+static inline uint8_t thing_is_xxx20 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx20(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx21 (thingp t)
+static inline uint8_t thing_is_xxx21 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx21(thing_get_template(t)));
 }
 
-static inline boolean thing_is_seedpod (thingp t)
+static inline uint8_t thing_is_seedpod (thingp t)
 {
     verify(t);
 
     return (thing_template_is_seedpod(thing_get_template(t)));
 }
 
-static inline boolean thing_is_bomb (thingp t)
+static inline uint8_t thing_is_bomb (thingp t)
 {
     verify(t);
 
     return (thing_template_is_bomb(thing_get_template(t)));
 }
 
-static inline boolean thing_is_spam (thingp t)
+static inline uint8_t thing_is_spam (thingp t)
 {
     verify(t);
 
     return (thing_template_is_spam(thing_get_template(t)));
 }
 
-static inline boolean thing_is_door (thingp t)
+static inline uint8_t thing_is_door (thingp t)
 {
     verify(t);
 
     return (thing_template_is_door(thing_get_template(t)));
 }
 
-static inline boolean thing_is_pipe (thingp t)
+static inline uint8_t thing_is_pipe (thingp t)
 {
     verify(t);
 
     return (thing_template_is_pipe(thing_get_template(t)));
 }
 
-static inline boolean thing_is_scarable (thingp t)
+static inline uint8_t thing_is_scarable (thingp t)
 {
     verify(t);
 
     return (thing_template_is_scarable(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx29 (thingp t)
+static inline uint8_t thing_is_xxx29 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx29(thing_get_template(t)));
 }
 
-static inline boolean thing_is_hidden_from_editor (thingp t)
+static inline uint8_t thing_is_hidden_from_editor (thingp t)
 {
     verify(t);
 
     return (thing_template_is_hidden_from_editor(thing_get_template(t)));
 }
 
-static inline boolean thing_is_animated (thingp t)
+static inline uint8_t thing_is_animated (thingp t)
 {
     verify(t);
 
     return (thing_template_is_animated(thing_get_template(t)));
 }
 
-static inline boolean thing_is_xxx33 (thingp t)
+static inline uint8_t thing_is_xxx33 (thingp t)
 {
     verify(t);
 
     return (thing_template_is_xxx33(thing_get_template(t)));
 }
 
-static inline boolean thing_is_projectile (thingp t)
+static inline uint8_t thing_is_projectile (thingp t)
 {
     verify(t);
 
     return (thing_template_is_projectile(thing_get_template(t)));
 }
 
-static inline boolean thing_is_joinable (thingp t)
+static inline uint8_t thing_is_joinable (thingp t)
 {
     verify(t);
 
     return (thing_template_is_joinable(thing_get_template(t)));
 }
 
-static inline boolean thing_is_wall (thingp t)
+static inline uint8_t thing_is_wall (thingp t)
 {
     verify(t);
 
     return (thing_template_is_wall(thing_get_template(t)));
 }
 
-static inline boolean thing_is_effect_sway (thingp t)
+static inline uint8_t thing_is_effect_sway (thingp t)
 {
     verify(t);
 
     return (thing_template_is_effect_sway(thing_get_template(t)));
 }
 
-static inline boolean thing_is_effect_pulse (thingp t)
+static inline uint8_t thing_is_effect_pulse (thingp t)
 {
     verify(t);
 
     return (thing_template_is_effect_pulse(thing_get_template(t)));
 }
 
-static inline boolean thing_is_effect_rotate_4way (thingp t)
+static inline uint8_t thing_is_effect_rotate_4way (thingp t)
 {
     verify(t);
 
     return (thing_template_is_effect_rotate_4way(thing_get_template(t)));
 }
 
-static inline boolean thing_is_effect_rotate_2way (thingp t)
+static inline uint8_t thing_is_effect_rotate_2way (thingp t)
 {
     verify(t);
 
     return (thing_template_is_effect_rotate_2way(thing_get_template(t)));
 }
 
-static inline boolean thing_is_open_fast (thingp t)
+static inline uint8_t thing_is_open_fast (thingp t)
 {
     return (t->is_open);
 }
 
-static inline boolean thing_is_dead_fast (thingp t)
+static inline uint8_t thing_is_dead_fast (thingp t)
 {
     return (t->is_dead);
 }
 
-static inline boolean thing_is_exit_fast (thingp t)
+static inline uint8_t thing_is_exit_fast (thingp t)
 {
     return (t->thing_template->is_exit);
 }
 
-static inline boolean thing_is_floor_fast (thingp t)
+static inline uint8_t thing_is_floor_fast (thingp t)
 {
     return (t->thing_template->is_floor);
 }
 
-static inline boolean thing_is_food_fast (thingp t)
+static inline uint8_t thing_is_food_fast (thingp t)
 {
     return (t->thing_template->is_food);
 }
 
-static inline boolean thing_is_monst_fast (thingp t)
+static inline uint8_t thing_is_monst_fast (thingp t)
 {
     return (t->thing_template->is_monst);
 }
 
-static inline boolean thing_is_plant_fast (thingp t)
+static inline uint8_t thing_is_plant_fast (thingp t)
 {
     return (t->thing_template->is_plant);
 }
 
-static inline boolean thing_is_player_fast (thingp t)
+static inline uint8_t thing_is_player_fast (thingp t)
 {
     return (t->thing_template->is_player);
 }
 
-static inline boolean thing_is_key_fast (thingp t)
+static inline uint8_t thing_is_key_fast (thingp t)
 {
     return (t->thing_template->is_key);
 }
 
-static inline boolean thing_is_collision_map_player_fast (thingp t)
+static inline uint8_t thing_is_collision_map_player_fast (thingp t)
 {
     return (t->thing_template->is_collision_map_player);
 }
 
-static inline boolean thing_is_collision_map_monst_fast (thingp t)
+static inline uint8_t thing_is_collision_map_monst_fast (thingp t)
 {
     return (t->thing_template->is_collision_map_monst);
 }
 
-static inline boolean thing_is_collision_map_weapon_fast (thingp t)
+static inline uint8_t thing_is_collision_map_weapon_fast (thingp t)
 {
     return (t->thing_template->is_collision_map_weapon);
 }
 
-static inline boolean thing_is_xxx3_fast (thingp t)
+static inline uint8_t thing_is_xxx3_fast (thingp t)
 {
     return (t->thing_template->is_xxx3);
 }
 
-static inline boolean thing_is_xxx4_fast (thingp t)
+static inline uint8_t thing_is_xxx4_fast (thingp t)
 {
     return (t->thing_template->is_xxx4);
 }
 
-static inline boolean thing_is_xxx5_fast (thingp t)
+static inline uint8_t thing_is_xxx5_fast (thingp t)
 {
     return (t->thing_template->is_xxx5);
 }
 
-static inline boolean thing_is_xxx6_fast (thingp t)
+static inline uint8_t thing_is_xxx6_fast (thingp t)
 {
     return (t->thing_template->is_xxx6);
 }
 
-static inline boolean thing_is_xxx7_fast (thingp t)
+static inline uint8_t thing_is_xxx7_fast (thingp t)
 {
     return (t->thing_template->is_xxx7);
 }
 
-static inline boolean thing_is_xxx8_fast (thingp t)
+static inline uint8_t thing_is_killed_on_hitting_player_fast (thingp t)
 {
-    return (t->thing_template->is_xxx8);
+    return (t->thing_template->is_killed_on_hitting_player);
 }
 
-static inline boolean thing_is_star_fast (thingp t)
+static inline uint8_t thing_is_star_fast (thingp t)
 {
     return (t->thing_template->is_star);
 }
 
-static inline boolean thing_is_key0_fast (thingp t)
+static inline uint8_t thing_is_key0_fast (thingp t)
 {
     return (t->thing_template->is_key0);
 }
 
-static inline boolean thing_is_key1_fast (thingp t)
+static inline uint8_t thing_is_key1_fast (thingp t)
 {
     return (t->thing_template->is_key1);
 }
 
-static inline boolean thing_is_key2_fast (thingp t)
+static inline uint8_t thing_is_key2_fast (thingp t)
 {
     return (t->thing_template->is_key2);
 }
 
-static inline boolean thing_is_key3_fast (thingp t)
+static inline uint8_t thing_is_key3_fast (thingp t)
 {
     return (t->thing_template->is_key3);
 }
 
-static inline boolean thing_is_key4_fast (thingp t)
+static inline uint8_t thing_is_key4_fast (thingp t)
 {
     return (t->thing_template->is_key4);
 }
 
-static inline boolean thing_is_key5_fast (thingp t)
+static inline uint8_t thing_is_key5_fast (thingp t)
 {
     return (t->thing_template->is_key5);
 }
 
-static inline boolean thing_is_key6_fast (thingp t)
+static inline uint8_t thing_is_key6_fast (thingp t)
 {
     return (t->thing_template->is_key6);
 }
 
-static inline boolean thing_is_key7_fast (thingp t)
+static inline uint8_t thing_is_key7_fast (thingp t)
 {
     return (t->thing_template->is_key7);
 }
 
-static inline boolean thing_is_key8_fast (thingp t)
+static inline uint8_t thing_is_key8_fast (thingp t)
 {
     return (t->thing_template->is_key8);
 }
 
-static inline boolean thing_is_xxx20_fast (thingp t)
+static inline uint8_t thing_is_xxx20_fast (thingp t)
 {
     return (t->thing_template->is_xxx20);
 }
 
-static inline boolean thing_is_xxx21_fast (thingp t)
+static inline uint8_t thing_is_xxx21_fast (thingp t)
 {
     return (t->thing_template->is_xxx21);
 }
 
-static inline boolean thing_is_seedpod_fast (thingp t)
+static inline uint8_t thing_is_seedpod_fast (thingp t)
 {
     return (t->thing_template->is_seedpod);
 }
 
-static inline boolean thing_is_bomb_fast (thingp t)
+static inline uint8_t thing_is_bomb_fast (thingp t)
 {
     return (t->thing_template->is_bomb);
 }
 
-static inline boolean thing_is_spam_fast (thingp t)
+static inline uint8_t thing_is_spam_fast (thingp t)
 {
     return (t->thing_template->is_spam);
 }
 
-static inline boolean thing_is_door_fast (thingp t)
+static inline uint8_t thing_is_door_fast (thingp t)
 {
     return (t->thing_template->is_door);
 }
 
-static inline boolean thing_is_pipe_fast (thingp t)
+static inline uint8_t thing_is_pipe_fast (thingp t)
 {
     return (t->thing_template->is_pipe);
 }
 
-static inline boolean thing_is_scarable_fast (thingp t)
+static inline uint8_t thing_is_scarable_fast (thingp t)
 {
     return (t->thing_template->is_scarable);
 }
 
-static inline boolean thing_is_xxx29_fast (thingp t)
+static inline uint8_t thing_is_xxx29_fast (thingp t)
 {
     return (t->thing_template->is_xxx29);
 }
 
-static inline boolean thing_is_hidden_from_editor_fast (thingp t)
+static inline uint8_t thing_is_hidden_from_editor_fast (thingp t)
 {
     return (t->thing_template->is_hidden_from_editor);
 }
 
-static inline boolean thing_is_animated_fast (thingp t)
+static inline uint8_t thing_is_animated_fast (thingp t)
 {
     return (t->thing_template->is_animated);
 }
 
-static inline boolean thing_is_xxx33_fast (thingp t)
+static inline uint8_t thing_is_xxx33_fast (thingp t)
 {
     return (t->thing_template->is_xxx33);
 }
 
-static inline boolean thing_is_projectile_fast (thingp t)
+static inline uint8_t thing_is_projectile_fast (thingp t)
 {
     return (t->thing_template->is_projectile);
 }
 
-static inline boolean thing_is_joinable_fast (thingp t)
+static inline uint8_t thing_is_joinable_fast (thingp t)
 {
     return (t->thing_template->is_joinable);
 }
 
-static inline boolean thing_is_wall_fast (thingp t)
+static inline uint8_t thing_is_wall_fast (thingp t)
 {
     return (t->thing_template->is_wall);
 }
 
-static inline boolean thing_is_effect_sway_fast (thingp t)
+static inline uint8_t thing_is_effect_sway_fast (thingp t)
 {
     return (t->thing_template->is_effect_sway);
 }
 
-static inline boolean thing_is_effect_pulse_fast (thingp t)
+static inline uint8_t thing_is_effect_pulse_fast (thingp t)
 {
     return (t->thing_template->is_effect_pulse);
 }
 
-static inline boolean thing_is_effect_rotate_4way_fast (thingp t)
+static inline uint8_t thing_is_effect_rotate_4way_fast (thingp t)
 {
     return (t->thing_template->is_effect_rotate_4way);
 }
 
-static inline boolean thing_is_effect_rotate_2way_fast (thingp t)
+static inline uint8_t thing_is_effect_rotate_2way_fast (thingp t)
 {
     return (t->thing_template->is_effect_rotate_2way);
 }

@@ -90,7 +90,7 @@ static node_color tree_node_color (const tree_node * node)
 /*
  * Tree has no contents?
  */
-boolean tree_root_is_empty (tree_root *root)
+uint8_t tree_root_is_empty (tree_root *root)
 {
     tree_node *top;
 
@@ -399,7 +399,7 @@ tree_node *tree_prev (tree_root *root, tree_node *node)
 /*
  * Walk all nodes. Not safe if next node is destroyed. Use TREE_WALK instead.
  */
-boolean tree_walk (tree_root *root, tree_walker_func walker_func, void *arg)
+uint8_t tree_walk (tree_root *root, tree_walker_func walker_func, void *arg)
 {
     tree_node *node;
     tree_node *next;
@@ -421,7 +421,7 @@ boolean tree_walk (tree_root *root, tree_walker_func walker_func, void *arg)
 /*
  * Walk all nodes. Not safe if next node is destroyed. Use TREE_WALK instead.
  */
-boolean tree_walk_reverse (tree_root *root,
+uint8_t tree_walk_reverse (tree_root *root,
                            tree_walker_func walker_func, void *arg)
 {
     tree_node *node;
@@ -895,7 +895,7 @@ static void tree_rotate_left (tree_root *root, tree_node *node)
 /*
  * Insert a node.
  */
-static boolean tree_insert_internal (tree_root *root,
+static uint8_t tree_insert_internal (tree_root *root,
                                      tree_node **root_node,
                                      tree_node *node)
 {
@@ -1077,7 +1077,7 @@ static void tree_balance (tree_root *root, tree_node *node)
  *
  * 1 on success.
  */
-boolean tree_insert (tree_root *root, tree_node *node)
+uint8_t tree_insert (tree_root *root, tree_node *node)
 {
     if (!tree_insert_internal(root, &root->node, node)) {
         return (0);
@@ -1101,7 +1101,7 @@ boolean tree_insert (tree_root *root, tree_node *node)
  *
  * 1 on success.
  */
-boolean tree_insert_static (tree_root *root, tree_node *node)
+uint8_t tree_insert_static (tree_root *root, tree_node *node)
 {
     if (!tree_insert_internal(root, &root->node, node)) {
         return (0);
@@ -1217,7 +1217,7 @@ static void tree_black_node_removed (tree_root *root, tree_node * node)
 /*
  * Remove a node without doing a find.
  */
-boolean tree_remove_found_node (tree_root *root, tree_node *node)
+uint8_t tree_remove_found_node (tree_root *root, tree_node *node)
 {
     tree_node *successor;
     tree_node *child;
@@ -1293,7 +1293,7 @@ boolean tree_remove_found_node (tree_root *root, tree_node *node)
 /*
  * Remove a node.
  */
-boolean tree_remove (tree_root *root, tree_node *node)
+uint8_t tree_remove (tree_root *root, tree_node *node)
 {
     node = tree_find(root, node);
     if (!node) {

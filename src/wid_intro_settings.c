@@ -16,14 +16,14 @@
 
 static widp wid_intro_settings;
 static widp wid_intro_settings_container;
-static boolean wid_intro_settings_init_done;
-static boolean wid_intro_settings_restart_needed;
+static uint8_t wid_intro_settings_init_done;
+static uint8_t wid_intro_settings_restart_needed;
 static struct config old_global_config;
 
 static void wid_intro_settings_create(void);
 static void wid_intro_settings_destroy(void);
 static void wid_intro_settings_save(void);
-static boolean wid_intro_restart_selected(void);
+static uint8_t wid_intro_restart_selected(void);
 
 #define WID_INTRO_MAX_SETTINGS  3
 #define WID_INTRO_MAX_VAL      30 
@@ -87,7 +87,7 @@ static const char *wid_intro_button_col4
 
 static uint32_t wid_intro_button_val[WID_INTRO_MAX_SETTINGS];
 
-boolean wid_intro_settings_init (void)
+uint8_t wid_intro_settings_init (void)
 {
     if (!wid_intro_settings_init_done) {
     }
@@ -118,7 +118,7 @@ void wid_intro_settings_visible (void)
     wid_intro_settings_create();
 }
 
-static boolean wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
     wid_intro_settings_save();
@@ -130,14 +130,14 @@ static boolean wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static boolean wid_intro_settings_col1_mouse_event (widp w,
+static uint8_t wid_intro_settings_col1_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
     return (true);
 }
 
-static boolean wid_intro_settings_col2_mouse_event (widp w,
+static uint8_t wid_intro_settings_col2_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
@@ -161,7 +161,7 @@ static boolean wid_intro_settings_col2_mouse_event (widp w,
     return (true);
 }
 
-static boolean wid_intro_settings_col3_mouse_event (widp w,
+static uint8_t wid_intro_settings_col3_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
@@ -185,14 +185,14 @@ static boolean wid_intro_settings_col3_mouse_event (widp w,
     return (true);
 }
 
-static boolean wid_intro_settings_col4_mouse_event (widp w,
+static uint8_t wid_intro_settings_col4_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
     return (true);
 }
 
-static boolean wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
@@ -207,7 +207,7 @@ static boolean wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static boolean wid_intro_settings_receive_mouse_motion (
+static uint8_t wid_intro_settings_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
                     int32_t relx, int32_t rely,
@@ -306,7 +306,7 @@ static void wid_intro_restart_callback_no (widp wid)
     wid_destroy(&wid_intro_restart_popup);
 }
 
-static boolean wid_intro_restart_selected (void)
+static uint8_t wid_intro_restart_selected (void)
 {
     if (wid_intro_restart_popup) {
         return (false);
