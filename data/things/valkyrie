@@ -8,6 +8,7 @@
  health=120
  is_player
  is_collision_map_player
+ explode_on_death
  is_animated
  tiles={
   tile={

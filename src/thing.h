@@ -756,11 +756,11 @@ static inline uint8_t thing_is_animated (thingp t)
     return (thing_template_is_animated(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx33 (thingp t)
+static inline uint8_t thing_explode_on_death (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx33(thing_get_template(t)));
+    return (thing_template_explode_on_death(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_projectile (thingp t)
@@ -1007,9 +1007,9 @@ static inline uint8_t thing_is_animated_fast (thingp t)
     return (t->thing_template->is_animated);
 }
 
-static inline uint8_t thing_is_xxx33_fast (thingp t)
+static inline uint8_t thing_explode_on_death_fast (thingp t)
 {
-    return (t->thing_template->is_xxx33);
+    return (t->thing_template->explode_on_death);
 }
 
 static inline uint8_t thing_is_projectile_fast (thingp t)

@@ -250,9 +250,9 @@ uint8_t map_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-uint8_t map_is_xxx33_at (levelp level, int32_t x, int32_t y)
+uint8_t map_explode_on_death_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx33));
+    return (map_is_x_at(level, x, y, thing_template_explode_on_death));
 }
 
 uint8_t map_is_projectile_at (levelp level, int32_t x, int32_t y)
@@ -493,9 +493,9 @@ thingp map_thing_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-thingp map_thing_is_xxx33_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_explode_on_death_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx33));
+    return (map_thing_is_x_at(level, x, y, thing_template_explode_on_death));
 }
 
 thingp map_thing_is_projectile_at (levelp level, int32_t x, int32_t y)
@@ -752,9 +752,9 @@ tree_rootp map_all_things_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-tree_rootp map_all_things_is_xxx33_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_explode_on_death_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx33));
+    return (map_all_things_is_x_at(level, x, y, thing_template_explode_on_death));
 }
 
 tree_rootp map_all_things_is_projectile_at (levelp level, int32_t x, int32_t y)
@@ -1558,9 +1558,9 @@ uint32_t level_count_is_hidden_from_editor (levelp level)
     return (level_count_is_x(level, thing_template_is_hidden_from_editor));
 }
 
-uint32_t level_count_is_xxx33 (levelp level)
+uint32_t level_count_explode_on_death (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx33));
+    return (level_count_is_x(level, thing_template_explode_on_death));
 }
 
 uint32_t level_count_is_projectile (levelp level)
@@ -1824,9 +1824,9 @@ tree_rootp map_all_things_is_animated (levelp level)
     return (map_all_things_is_x(level, thing_template_is_animated));
 }
 
-tree_rootp map_all_things_is_xxx33 (levelp level)
+tree_rootp map_all_things_explode_on_death (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx33));
+    return (map_all_things_is_x(level, thing_template_explode_on_death));
 }
 
 tree_rootp map_all_things_is_projectile (levelp level)

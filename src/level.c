@@ -27,6 +27,7 @@
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
+static uint8_t level_server_init_done;
 static void level_start_timers(levelp level);
 uint8_t game_over;
 
@@ -101,22 +102,37 @@ static uint8_t level_command_god_mode (tokens_t *tokens, void *context)
 
 uint8_t level_init (void)
 {
+    if (level_init_done) {
+        return (true);
+    }
+
     level_init_done = true;
 
-    if (is_server) {
-        command_add(level_command_dead, 
-                    "dead", "internal command for thing suicide");
-
-        if (0) {
-        command_add(level_command_god_mode, 
-                    "set godmode [01]", "TBD enable/disable god mode");
-
+    if (0) {
         command_add(level_command_play, 
                     "play [123456789]+", "TBD play level x");
 
         command_add(level_command_lives, 
                     "set lives [123456789]+", "TBD set player number of lives");
-        }
+    }
+
+    return (true);
+}
+
+static uint8_t level_server_init (void)
+{
+    if (level_server_init_done) {
+        return (true);
+    }
+
+    level_server_init_done = true;
+
+    if (is_server) {
+        command_add(level_command_dead, 
+                    "dead", "internal command for thing suicide");
+
+        command_add(level_command_god_mode, 
+                    "set godmode [01]", "TBD enable/disable god mode");
     }
 
     return (true);
@@ -147,7 +163,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     level = thing_level(t);
     verify(level);
 
-    if (thing_is_key7(t)) {
+    if (t->thing_template->id == THING_EXPLOSION) {
         thing_dead(t, 0 /* killer */, "finished blowing up");
         return (true);
     }
@@ -157,7 +173,6 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
         thing_dead(t, 0 /* killer */, "blew up");
         return (true);
     }
-
 
     if (thing_is_seedpod(t)) {
         thing_templatep thing_template = 
@@ -322,6 +337,8 @@ levelp level_load (uint32_t level_no, widp wid)
 
     level_set_is_paused(level, false);
     level_start_timers(level);
+
+    level_server_init();
 
     LOG("Level loaded");
 

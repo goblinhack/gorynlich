@@ -502,6 +502,14 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 return;
             }
         }
+
+        /*
+         * Explodes on death ala Sith Lord?
+         */
+        if (thing_template_explode_on_death(t->thing_template)) {
+            level_place_explosion(t->level, 
+                                  thing_grid_x(t), thing_grid_y(t));
+        }
     }
 
     /*
