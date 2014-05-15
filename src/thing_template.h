@@ -193,7 +193,7 @@ typedef struct thing_template_ {
     uint8_t is_collision_map_monst:1;
     uint8_t is_collision_map_player:1;
     uint8_t is_collision_map_weapon:1;
-    uint8_t is_xxx33:1;
+    uint8_t explode_on_death:1;
     uint8_t is_projectile:1;
     uint8_t is_boring:1;
     uint8_t is_item_hidden:1;
@@ -473,9 +473,9 @@ static inline uint8_t thing_template_is_collision_map_monst (thing_templatep t)
     return (t->is_collision_map_monst);
 }
 
-static inline uint8_t thing_template_is_xxx33 (thing_templatep t)
+static inline uint8_t thing_template_explode_on_death (thing_templatep t)
 {
-    return (t->is_xxx33);
+    return (t->explode_on_death);
 }
 
 static inline uint8_t thing_template_is_projectile (thing_templatep t)
