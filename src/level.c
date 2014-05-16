@@ -9,6 +9,7 @@
 #include "slre.h"
 
 #include "main.h"
+#include "math.h"
 #include "string.h"
 #include "wid.h"
 #include "level.h"
@@ -169,7 +170,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     }
 
     if (thing_is_bomb(t)) {
-        level_place_explosion(level, thing_grid_x(t), thing_grid_y(t));
+        level_place_explosion(level, t->x, t->y);
         thing_dead(t, 0 /* killer */, "blew up");
         return (true);
     }
@@ -629,7 +630,9 @@ void level_place_plant_pod (levelp level)
  * Place an explosion
  */
 static uint8_t level_place_explosion_at (levelp level,
-                                         int32_t x, int32_t y, int32_t i)
+                                         double x, 
+                                         double y, 
+                                         int32_t i)
 {
     if (map_is_wall_at(level, x, y) ||
         map_is_pipe_at(level, x, y)) {
@@ -663,36 +666,41 @@ static uint8_t level_place_explosion_at (levelp level,
 /*
  * Place an explosion
  */
-void level_place_explosion (levelp level, int32_t x, int32_t y)
+void level_place_explosion (levelp level, double x, double y)
 {
-    uint8_t u_ok = true;
-    uint8_t d_ok = true;
-    uint8_t l_ok = true;
-    uint8_t r_ok = true;
-    uint32_t i;
+    uint8_t rad_blocked_explosion[360] = {0};
 
-    level_place_explosion_at(level, x, y, 0);
+    double radius;
+    for (radius = 1; radius < 7; radius += 0.5) {
 
-    for (i = 0; i < 4; i++) {
+        double explosion_width = 1.0;
+        double circumference = 2.0 * PI * radius;
+        double nexplosions = circumference / explosion_width;
+        double arc_step = RAD_360 / nexplosions;
 
-        if (u_ok) {
-            u_ok = level_place_explosion_at(level, x, y-i-1, i);
-        }
+        double rad;
+        for (rad = 0; rad < RAD_360; rad += arc_step) {
 
-        if (d_ok) {
-            d_ok = level_place_explosion_at(level, x, y+i+1, i);
-        }
+            double exp_x = x + radius * cos(rad);
+            double exp_y = y + radius * sin(rad);
 
-        if (l_ok) {
-            l_ok = level_place_explosion_at(level, x-i-1, y, i);
-        }
+            uint32_t deg = radians2angle(rad);
+            deg += rand() % 20;
+            deg = deg % 360;
 
-        if (r_ok) {
-            r_ok = level_place_explosion_at(level, x+i+1, y, i);
-        }
+            if (rad_blocked_explosion[deg]) {
+                continue;
+            }
 
-        if (!u_ok && !d_ok && !l_ok && !r_ok) {
-            return;
+            if (!level_place_explosion_at(level, exp_x, exp_y, radius)) {
+
+                int i;
+                int d = 45 - (radius * 5);
+
+                for (i = - d; i < + d; i++) {
+                    rad_blocked_explosion[(deg + i) % 360] = 1;
+                }
+            }
         }
     }
 }
