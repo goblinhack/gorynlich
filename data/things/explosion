@@ -9,103 +9,103 @@
  tiles={
   tile={
    tile="explosion1"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion2"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion3"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion4"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion5"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion6"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion7"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion8"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion9"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion10"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion11"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion12"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion13"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion14"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion15"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion16"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion17"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion18"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion19"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion20"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion21"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion22"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion23"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion24"
-   delay=2
+   delay=50
   }
   tile={
    tile="explosion25"
-   delay=2
+   delay=50
    is_end_of_anim
    command="dead"
   }

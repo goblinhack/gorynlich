@@ -122,8 +122,8 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
 
     size pixel_size;
 
-    pixel_size.width = (((float)tex_get_width(tex)) / ((float)width));
-    pixel_size.height = (((float)tex_get_height(tex)) / ((float)height));
+    pixel_size.width = width;
+    pixel_size.height = height;
 
     while (nargs--) {
 
