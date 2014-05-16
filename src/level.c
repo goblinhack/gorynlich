@@ -164,7 +164,15 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     level = thing_level(t);
     verify(level);
 
-    if (t->thing_template->id == THING_EXPLOSION) {
+    if ((t->thing_template->id == THING_EXPLOSION) ||
+        (t->thing_template->id == THING_EXPLOSION1) ||
+        (t->thing_template->id == THING_EXPLOSION2) ||
+        (t->thing_template->id == THING_EXPLOSION3) ||
+        (t->thing_template->id == THING_EXPLOSION4) ||
+        (t->thing_template->id == THING_EXPLOSION5) ||
+        (t->thing_template->id == THING_EXPLOSION6) ||
+        (t->thing_template->id == THING_EXPLOSION7) ||
+        (t->thing_template->id == THING_EXPLOSION8)) {
         thing_dead(t, 0 /* killer */, "finished blowing up");
         return (true);
     }
@@ -647,7 +655,31 @@ static uint8_t level_place_explosion_at (levelp level,
     context->x = x;
     context->y = y;
     context->level = level;
-    context->thing_template = thing_template_find("data/things/explosion");
+
+    switch (rand() % 7) {
+    case 0:
+        context->thing_template = thing_template_find("data/things/explosion1");
+        break;
+    case 1:
+        context->thing_template = thing_template_find("data/things/explosion2");
+        break;
+    case 2:
+        context->thing_template = thing_template_find("data/things/explosion3");
+        break;
+    case 3:
+        context->thing_template = thing_template_find("data/things/explosion4");
+        break;
+    case 4:
+        context->thing_template = thing_template_find("data/things/explosion5");
+        break;
+    case 5:
+        context->thing_template = thing_template_find("data/things/explosion6");
+        break;
+    case 6:
+        context->thing_template = thing_template_find("data/things/explosion7");
+        break;
+    }
+
     if (!context->thing_template) {
         DIE("no explosion");
     }
