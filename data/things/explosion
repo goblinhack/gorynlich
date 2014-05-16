@@ -5,6 +5,7 @@
  z_order=2
  is_animated
  is_hidden_from_editor
+ is_effect_pulse
  tiles={
   tile={
    tile="explosion1"
