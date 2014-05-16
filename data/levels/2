@@ -296,6 +296,10 @@
   } {   
    x=8 
    y=1 
+   t="data/things/keys1" 
+  } {   
+   x=8 
+   y=1 
    t="data/things/floor2" 
   } {   
    x=9 
@@ -313,6 +317,10 @@
    x=12 
    y=1 
    t="data/things/floor2" 
+  } {   
+   x=13 
+   y=1 
+   t="data/things/wall2" 
   } {   
    x=13 
    y=1 
@@ -456,7 +464,15 @@
   } {   
    x=12 
    y=2 
+   t="data/things/death" 
+  } {   
+   x=12 
+   y=2 
    t="data/things/floor2" 
+  } {   
+   x=13 
+   y=2 
+   t="data/things/wall2" 
   } {   
    x=13 
    y=2 
@@ -612,7 +628,15 @@
   } {   
    x=10 
    y=3 
+   t="data/things/wall2" 
+  } {   
+   x=10 
+   y=3 
    t="data/things/floor2" 
+  } {   
+   x=11 
+   y=3 
+   t="data/things/wall2" 
   } {   
    x=11 
    y=3 
@@ -620,7 +644,15 @@
   } {   
    x=12 
    y=3 
+   t="data/things/wall2" 
+  } {   
+   x=12 
+   y=3 
    t="data/things/floor2" 
+  } {   
+   x=13 
+   y=3 
+   t="data/things/wall2" 
   } {   
    x=13 
    y=3 
@@ -792,7 +824,15 @@
   } {   
    x=12 
    y=4 
+   t="data/things/generator4" 
+  } {   
+   x=12 
+   y=4 
    t="data/things/floor2" 
+  } {   
+   x=13 
+   y=4 
+   t="data/things/wall2" 
   } {   
    x=13 
    y=4 
@@ -956,7 +996,15 @@
   } {   
    x=12 
    y=5 
+   t="data/things/water1" 
+  } {   
+   x=12 
+   y=5 
    t="data/things/floor2" 
+  } {   
+   x=13 
+   y=5 
+   t="data/things/wall2" 
   } {   
    x=13 
    y=5 
@@ -1128,6 +1176,10 @@
   } {   
    x=8 
    y=6 
+   t="data/things/wall2" 
+  } {   
+   x=8 
+   y=6 
    t="data/things/floor2" 
   } {   
    x=9 
@@ -1140,6 +1192,10 @@
   } {   
    x=10 
    y=6 
+   t="data/things/wall2" 
+  } {   
+   x=10 
+   y=6 
    t="data/things/floor2" 
   } {   
    x=11 
@@ -1148,7 +1204,15 @@
   } {   
    x=12 
    y=6 
+   t="data/things/wall2" 
+  } {   
+   x=12 
+   y=6 
    t="data/things/floor2" 
+  } {   
+   x=13 
+   y=6 
+   t="data/things/wall2" 
   } {   
    x=13 
    y=6 
@@ -1656,7 +1720,7 @@
   } {   
    x=11 
    y=9 
-   t="data/things/generator3" 
+   t="data/things/wall2" 
   } {   
    x=11 
    y=9 
@@ -5057,6 +5121,10 @@
    x=0 
    y=30 
    t="data/things/floor2" 
+  } {   
+   x=1 
+   y=30 
+   t="data/things/chest1" 
   } {   
    x=1 
    y=30 

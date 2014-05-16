@@ -466,7 +466,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         t->dead_reason = reason;
     }
 
-    THING_LOG(t, "dead (%s)", reason);
+    THING_DBG(t, "dead (%s)", reason);
 }
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
@@ -637,7 +637,7 @@ static void thing_hit_ (thingp t,
     }  else {
         t->health -= damage;
 
-        THING_LOG(t, "hit (%s) for %u", reason, damage);
+        THING_DBG(t, "hit (%s) for %u", reason, damage);
     }
 }
 
@@ -1146,7 +1146,7 @@ void thing_inc_powerup_rocket_count (thingp t, uint8_t val)
 
     t->powerup_rocket_count += val;
 
-    THING_LOG(t, "powerup inc, rocket now %d", t->powerup_rocket_count);
+    THING_DBG(t, "powerup inc, rocket now %d", t->powerup_rocket_count);
 
     sound_play_rocket();
 }
@@ -1162,7 +1162,7 @@ void thing_dec_powerup_rocket_count (thingp t, uint8_t val)
 
     t->powerup_rocket_count -= val;
 
-    THING_LOG(t, "powerup dec, rocket now %d", t->powerup_rocket_count);
+    THING_DBG(t, "powerup dec, rocket now %d", t->powerup_rocket_count);
 }
 
 uint8_t thing_has_powerup_rocket_count (thingp t)
@@ -2047,8 +2047,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
                         thing_client_wid_update(t, x, y, true /* smooth */);
                     } else 
-                        if ((fabs(x - t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
-                            (fabs(y - t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
+                        if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
+                            (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
                         /*
                          * Check we are roughly where the server thinks we 
                          * are. If wildly out of whack, correct our viewpoint.

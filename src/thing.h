@@ -158,8 +158,8 @@ void dmap_process_fini(void);
 typedef struct {
     thing_templatep thing_template;
     levelp level;
-    int32_t x;
-    int32_t y;
+    double x;
+    double y;
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);
