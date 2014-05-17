@@ -56,3 +56,18 @@ void thing_action_timer_callback_spam (void *context)
                                     ONESEC / 2, 0);
     }
 }
+
+void thing_action_timer_callback_dead (void *context)
+{
+    thing_place_context_t *place;
+
+    place = (typeof(place)) context;
+
+    thingp thing;
+    thing = place->thing;
+    verify(thing);
+
+    thing_dead(thing, 0, "callback");
+
+    myfree(context);
+}

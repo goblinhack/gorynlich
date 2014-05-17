@@ -1813,7 +1813,7 @@ void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    char *tmp = dynprintf(" server message \"%s\"", txt);
+    char *tmp = dynprintf("%s", txt);
     widp w = wid_button_transient(tmp, 0);
     color c = BLACK;
     c.a = 150;

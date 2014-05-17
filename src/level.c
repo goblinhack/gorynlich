@@ -651,6 +651,7 @@ static uint8_t level_place_explosion_at (levelp level,
     context->x = x;
     context->y = y;
     context->level = level;
+    context->destroy_in = 10000;
 
     switch (rand() % 7) {
     case 0:
@@ -682,9 +683,9 @@ static uint8_t level_place_explosion_at (levelp level,
 
     action_timer_create(
             &timers,
-            (action_timer_callback)thing_place,
+            (action_timer_callback)thing_place_and_destroy_delayed,
             context,
-            "place thing",
+            "place and destroy thing",
             i * 200,
             i * 100 /* jitter */);
 

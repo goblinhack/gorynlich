@@ -132,14 +132,6 @@ static void thing_tick_server_all (void)
         }
 
         /*
-         * Don't do stuff too often.
-         */
-        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI,
-                                             t->timestamp_ai)) {
-            continue;
-        }
-
-        /*
          * If a projectile, move it by the delta
          */
         if ((t->dx != 0) || (t->dy != 0)) {
@@ -154,6 +146,14 @@ static void thing_tick_server_all (void)
                     fnexthop_x < t->x,
                     fnexthop_x > t->x,
                     false);
+        }
+
+        /*
+         * Don't do stuff too often.
+         */
+        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI,
+                                             t->timestamp_ai)) {
+            continue;
         }
 
         /*

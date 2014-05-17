@@ -22,6 +22,7 @@
 #include "sound.h"
 #include "socket.h"
 #include "client.h"
+#include "timer.h"
 
 uint16_t THING_WALL;
 uint16_t THING_WALL2;
@@ -284,7 +285,9 @@ thingp thing_server_new (levelp level, const char *name)
     t->last_ty = -1;
     t->first_update = true;
 
-    THING_DBG(t, "created");
+    if (thing_is_player(t)) {
+        THING_LOG(t, "created on server");
+    }
 
     return (t);
 }
@@ -346,7 +349,9 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 
     t->logname = dynprintf("%s[%p] (client)", thing_short_name(t), t);
 
-    THING_DBG(t, "created");
+    if (thing_is_player(t)) {
+        THING_LOG(t, "created on client");
+    }
 
     return (t);
 }
@@ -407,7 +412,9 @@ void thing_destroy (thingp t, const char *why)
 {
     verify(t);
 
-    THING_DBG(t, "destroy (%s)", why);
+    if (thing_is_player(t)) {
+        THING_LOG(t, "destroy (%s)", why);
+    }
  
     if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
         DIE("thing template destroy name [%s] failed", thing_name(t));
@@ -449,14 +456,14 @@ void thing_destroy (thingp t, const char *why)
         t->logname = 0;
     }
 
-    if (t == player) {
-        player = 0;
-    }
-
     if (t->on_server) {
         thing_server_ids[t->thing_id] = 0;
     }
 
+    /*
+     * If this is a player on the server, tell the client the player has 
+     * croaked it.
+     */
     socketp s;
 
     TREE_WALK(sockets, s) {
@@ -465,7 +472,11 @@ void thing_destroy (thingp t, const char *why)
             continue;
         }
 
-        if (p->thing == t) {
+        if (p->thing != t) {
+            continue;
+        }
+
+        if (t->on_server) {
             p->thing = 0;
 
             LOG("\"%s\" player died", p->name);
@@ -476,6 +487,15 @@ void thing_destroy (thingp t, const char *why)
 
             break;
         }
+    }
+
+    /*
+     * Record that the client player may have died so we do not disconnect.
+     */
+    if (t == player) {
+        player = 0;
+
+        client_player_died = true;
     }
 
     myfree(t);
@@ -495,7 +515,9 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         t->dead_reason = reason;
     }
 
-    THING_DBG(t, "dead (%s)", reason);
+    if (thing_is_player(t)) {
+        THING_LOG(t, "dead (%s)", reason);
+    }
 }
 
 void thing_dead (thingp t, thingp killer, const char *reason, ...)
@@ -666,7 +688,9 @@ static void thing_hit_ (thingp t,
     }  else {
         t->health -= damage;
 
-        THING_DBG(t, "hit (%s) for %u", reason, damage);
+        if (thing_is_player(t)) {
+            THING_LOG(t, "hit (%s) for %u", reason, damage);
+        }
     }
 }
 
@@ -1583,11 +1607,34 @@ void thing_place (void *context)
                                      place->y,
                                      place->thing_template);
 
-    if (thing_template_is_key7(place->thing_template)) {
-        sound_play_explosion();
-    }
-
     myfree(context);
+}
+
+void thing_place_and_destroy_delayed (void *context)
+{
+    thing_place_context_t *place;
+
+    place = (typeof(place)) context;
+
+    widp w = wid_game_map_server_replace_tile(
+                                    wid_game_map_server_grid_container,
+                                    place->x,
+                                    place->y,
+                                    place->thing_template);
+
+    /*
+     * Just pass the same context along as it has the expire time but add
+     * the newborn thing.
+     */
+    place->thing = wid_get_thing(w);
+
+    action_timer_create(
+            &timers,
+            (action_timer_callback)thing_action_timer_callback_dead,
+            context,
+            "kill thing",
+            place->destroy_in,
+            0 /* jitter */);
 }
 
 void thing_teleport (thingp t, int32_t x, int32_t y)

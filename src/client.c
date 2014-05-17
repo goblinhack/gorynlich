@@ -25,6 +25,7 @@
 socketp client_joined_server;
 uint32_t client_joined_server_when;
 static uint32_t client_joined_server_key;
+uint32_t client_player_died;
 
 static void client_socket_tx_ping(void);
 static uint8_t client_init_done;
@@ -917,6 +918,10 @@ static void client_check_still_in_game (void)
      */
     if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING * 5,
                                          client_joined_server_when)) {
+        return;
+    }
+
+    if (client_player_died) {
         return;
     }
 
