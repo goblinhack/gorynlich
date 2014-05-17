@@ -529,8 +529,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     double items_y = 0.31; // items y
     double items_y_offset = 0.05;
     uint32_t item_columns = 10;
-    double item_width = 0.1;
-    double item_height = 0.05;
+    double item_width = 0.15;
+    double item_height = 0.08;
 
     /*
      * Print the score.
@@ -744,10 +744,29 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     wid_set_tilename(w, thing_tile_name(tile));
 
                     wid_set_color(w, WID_COLOR_TEXT, WHITE);
-                    wid_set_color(w, WID_COLOR_BG, MEDIUMBLUE);
+                    color col;
+                    col.r = 0;
+                    col.g = 0x66;
+                    col.b = 0xff;
+                    col.a = 0xdf;
+                    wid_set_color(w, WID_COLOR_BG, col);
+                    wid_set_color(w, WID_COLOR_TL, LIGHTBLUE);
+                    wid_set_color(w, WID_COLOR_BR, LIGHTBLUE);
+                    wid_set_bevel(w, 2);
+
+                    wid_set_mode(w, WID_MODE_OVER);
+
+                    wid_set_color(w, WID_COLOR_TEXT, WHITE);
+                    col.r = 0;
+                    col.g = 0x66;
+                    col.b = 0xff;
+                    col.a = 0xff;
+                    wid_set_color(w, WID_COLOR_BG, col);
                     wid_set_color(w, WID_COLOR_TL, WHITE);
                     wid_set_color(w, WID_COLOR_BR, WHITE);
-                    wid_set_bevel(w, 1);
+                    wid_set_bevel(w, 2);
+
+                    wid_set_mode(w, WID_MODE_NORMAL);
 
                     if (t->carrying[c] > 1) {
                         char tmp[20];

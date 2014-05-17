@@ -278,7 +278,11 @@ static void thing_handle_collision (thingp me, thingp it,
         /*
          * Collect keys
          */
-        if (thing_is_key(it)) {
+        if (thing_is_key(it) ||
+            /*
+             * And food.
+             */
+            thing_is_food(it)) {
             thing_collect(me, thing_get_template(it));
 
             thing_dead(it, me, "collected");
@@ -492,6 +496,10 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * Allow players to collect keys.
                  */
                 if (thing_is_key(it) ||
+                    /*
+                     * And collect food.
+                     */
+                    thing_is_food(it) ||
                     /*
                      * And walk through monsters.
                      */
