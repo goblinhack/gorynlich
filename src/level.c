@@ -152,7 +152,6 @@ void level_fini (void)
 static uint8_t level_command_dead (tokens_t *tokens, void *context)
 {
     thingp t;
-    levelp level;
 
     if (!context) {
         return (false);
@@ -160,9 +159,6 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
 
     t = (typeof(t)) context;
     verify(t);
-
-    level = thing_level(t);
-    verify(level);
 
     if ((t->thing_template->id == THING_EXPLOSION) ||
         (t->thing_template->id == THING_EXPLOSION1) ||
@@ -178,7 +174,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     }
 
     if (thing_is_bomb(t)) {
-        level_place_explosion(level, t->x, t->y);
+        level_place_explosion(server_level, t->x, t->y);
         thing_dead(t, 0 /* killer */, "blew up");
         return (true);
     }

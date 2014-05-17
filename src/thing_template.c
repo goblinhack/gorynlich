@@ -243,11 +243,25 @@ static void thing_template_destroy_internal (thing_templatep t)
     tree_destroy(&t->tiles, (tree_destroy_func)thing_tile_free);
     tree_destroy(&t->tiles2, (tree_destroy_func)thing_tile_free);
 
-    myfree(t->tooltip);
-    myfree(t->short_name);
-    myfree(t->weapon);
-    myfree(t->polymorph_on_death);
-    myfree(t->mob_spawn);
+    if (t->tooltip) {
+        myfree(t->tooltip);
+    }
+
+    if (t->short_name) {
+        myfree(t->short_name);
+    }
+
+    if (t->weapon) {
+        myfree(t->weapon);
+    }
+
+    if (t->polymorph_on_death) {
+        myfree(t->polymorph_on_death);
+    }
+
+    if (t->mob_spawn) {
+        myfree(t->mob_spawn);
+    }
 }
 
 void thing_templates_marshal (marshal_p out)
