@@ -457,6 +457,27 @@ void thing_destroy (thingp t, const char *why)
         thing_server_ids[t->thing_id] = 0;
     }
 
+    socketp s;
+
+    TREE_WALK(sockets, s) {
+        aplayer *p = s->player;
+        if (!s->player) {
+            continue;
+        }
+
+        if (p->thing == t) {
+            p->thing = 0;
+
+            LOG("\"%s\" player died", p->name);
+
+            char *tmp = dynprintf("%s died", p->name);
+            socket_tx_server_shout(tmp);
+            myfree(tmp);
+
+            break;
+        }
+    }
+
     myfree(t);
 }
 
