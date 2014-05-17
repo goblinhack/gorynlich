@@ -461,6 +461,14 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     wid_it = wid_next;
                     continue;
                 }
+
+                /*
+                 * Allow monsters to walk through keys.
+                 */
+                if (thing_is_key(it)) {
+                    wid_it = wid_next;
+                    continue;
+                }
             }
 
             if (thing_is_projectile(me)) {
