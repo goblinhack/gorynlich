@@ -1096,6 +1096,10 @@
   } {   
    x=5 
    y=6 
+   t="data/things/wall2" 
+  } {   
+   x=5 
+   y=6 
    t="data/things/floor2" 
   } {   
    x=6 
@@ -1260,6 +1264,10 @@
   } {   
    x=4 
    y=7 
+   t="data/things/wall2" 
+  } {   
+   x=4 
+   y=7 
    t="data/things/floor2" 
   } {   
    x=5 
@@ -1409,6 +1417,10 @@
    x=2 
    y=8 
    t="data/things/floor2" 
+  } {   
+   x=3 
+   y=8 
+   t="data/things/wall2" 
   } {   
    x=3 
    y=8 
