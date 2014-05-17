@@ -39,7 +39,6 @@
    tile="seedpod8"
    delay=1000
    is_end_of_anim
-   command="dead"
   }
  }
 }

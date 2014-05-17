@@ -46,7 +46,6 @@
    delay=500
    is_end_of_anim
    is_open
-   command="dead"
   }
  }
 }

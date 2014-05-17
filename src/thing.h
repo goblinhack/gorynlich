@@ -140,6 +140,7 @@ tree_rootp thing_tiles2(thingp);
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t);
 void thing_place(void *);
+void thing_place_and_destroy_delayed(void *);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
 void thing_collect(thingp t, thing_templatep tmp);
@@ -160,6 +161,8 @@ typedef struct {
     levelp level;
     double x;
     double y;
+    uint32_t destroy_in;
+    thingp thing;
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);

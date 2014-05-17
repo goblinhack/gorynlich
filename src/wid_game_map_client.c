@@ -699,17 +699,25 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             uint32_t c;
             uint32_t count = 0;
 
-            for (c = 0; c < THING_MAX; c++) {
-                thingp t = thing_client_find(p->thing_id);
-                if (!t) {
-                    continue;
-                }
+            thingp t = thing_client_find(p->thing_id);
+            if (!t) {
+                continue;
+            }
 
-                if (t->carrying[c]) {
+            /*
+             * Only print the items of the local player.
+             */
+            if (t == player) {
+                for (c = 0; c < THING_MAX; c++) {
+                    if (!t->carrying[c]) {
+                        continue;
+                    }
+
                     widp w;
 
-                    w = wid_new_rounded_button(wid_scoreline_container_top,
-                                               "item");
+                    w = wid_new_rounded_small_button(
+                                        wid_scoreline_container_top,
+                                        "item");
                     fpoint tl;
                     fpoint br;
 
@@ -736,9 +744,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     wid_set_tilename(w, thing_tile_name(tile));
 
                     wid_set_color(w, WID_COLOR_TEXT, WHITE);
-                    wid_set_color(w, WID_COLOR_BG, BLACK);
-                    wid_set_color(w, WID_COLOR_TL, RED);
-                    wid_set_color(w, WID_COLOR_BR, RED);
+                    wid_set_color(w, WID_COLOR_BG, MEDIUMBLUE);
+                    wid_set_color(w, WID_COLOR_TL, WHITE);
+                    wid_set_color(w, WID_COLOR_BR, WHITE);
                     wid_set_bevel(w, 1);
 
                     if (t->carrying[c] > 1) {
