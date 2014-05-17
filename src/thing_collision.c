@@ -153,7 +153,12 @@ static uint8_t things_overlap (const thingp A,
         Apy1 = collision_map_monst_y1;
         Apy2 = collision_map_monst_y2;
     } else if (thing_is_collision_map_weapon(A)) {
-        if (thing_is_collision_map_monst(B)) {
+        if (thing_is_collision_map_player(B)) {
+            Apx1 = collision_map_player_x1;
+            Apx2 = collision_map_player_x2;
+            Apy1 = collision_map_player_y1;
+            Apy2 = collision_map_player_y2;
+        } else if (thing_is_collision_map_player(B)) {
             Apx1 = collision_map_monst_x1;
             Apx2 = collision_map_monst_x2;
             Apy1 = collision_map_monst_y1;
@@ -187,7 +192,12 @@ static uint8_t things_overlap (const thingp A,
         Bpy1 = collision_map_monst_y1;
         Bpy2 = collision_map_monst_y2;
     } else if (thing_is_collision_map_weapon(B)) {
-        if (thing_is_collision_map_monst(A)) {
+        if (thing_is_collision_map_player(A)) {
+            Bpx1 = collision_map_player_x1;
+            Bpx2 = collision_map_player_x2;
+            Bpy1 = collision_map_player_y1;
+            Bpy2 = collision_map_player_y2;
+        } else if (thing_is_collision_map_player(A)) {
             Bpx1 = collision_map_monst_x1;
             Bpx2 = collision_map_monst_x2;
             Bpy1 = collision_map_monst_y1;
