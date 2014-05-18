@@ -144,6 +144,7 @@ void thing_place_and_destroy_delayed(void *);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
 void thing_collect(thingp t, thing_templatep tmp);
+void thing_used(thingp t, thing_templatep tmp);
 uint8_t thing_use(thingp t, uint32_t id);
 uint8_t thing_has(thingp t, uint32_t id);
 
@@ -207,6 +208,10 @@ uint8_t thing_server_move(thingp t,
                           const uint8_t left,
                           const uint8_t right,
                           const uint8_t fire);
+
+void thing_server_action(thingp t,
+                         uint8_t action,
+                         uint16_t item);
 
 void thing_client_move(thingp t,
                        double x,
@@ -310,6 +315,11 @@ typedef struct thing_ {
      * For player things.
      */
     tree_key_int tree2;
+
+    /*
+     * Socket information for the player.
+     */
+    aplayerp player;
 
     /*
      * Unique id per thing.
@@ -752,11 +762,11 @@ static inline uint8_t thing_is_scarable (thingp t)
     return (thing_template_is_scarable(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx29 (thingp t)
+static inline uint8_t thing_is_explosion (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx29(thing_get_template(t)));
+    return (thing_template_is_explosion(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_hidden_from_editor (thingp t)
@@ -1009,9 +1019,9 @@ static inline uint8_t thing_is_scarable_fast (thingp t)
     return (t->thing_template->is_scarable);
 }
 
-static inline uint8_t thing_is_xxx29_fast (thingp t)
+static inline uint8_t thing_is_explosion_fast (thingp t)
 {
-    return (t->thing_template->is_xxx29);
+    return (t->thing_template->is_explosion);
 }
 
 static inline uint8_t thing_is_hidden_from_editor_fast (thingp t)

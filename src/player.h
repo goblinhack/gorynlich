@@ -20,6 +20,7 @@ void player_destroy(void);
  * Individual messages.
  */
 typedef struct aplayer_ {
+    socketp socket;
     IPaddress local_ip;
     IPaddress remote_ip;
     uint8_t quality;

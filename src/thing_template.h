@@ -187,7 +187,7 @@ typedef struct thing_template_ {
     uint8_t is_pipe:1;
     uint8_t is_generator:1;
     uint8_t is_scarable:1;
-    uint8_t is_xxx29:1;
+    uint8_t is_explosion:1;
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
     uint8_t is_collision_map_monst:1;
@@ -443,9 +443,9 @@ static inline uint8_t thing_template_is_scarable (thing_templatep t)
     return (t->is_scarable);
 }
 
-static inline uint8_t thing_template_is_xxx29 (thing_templatep t)
+static inline uint8_t thing_template_is_explosion (thing_templatep t)
 {
-    return (t->is_xxx29);
+    return (t->is_explosion);
 }
 
 static inline uint8_t thing_template_is_hidden_from_editor (thing_templatep t)
