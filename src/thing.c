@@ -734,6 +734,13 @@ void thing_hit (thingp t,
 
             hitter->timestamp_hit = time_get_time_cached();
         }
+
+        /*
+         * No killer to avoid giving a bonus to monsters!
+         */
+        if (thing_is_destroyed_on_hitting(hitter)) {
+            thing_dead(hitter, 0, "self destruct on hitting");
+        }
     }
 
     if (reason) {
@@ -1603,45 +1610,61 @@ thing_tilep thing_current_tile (thingp t)
     return (t->current_tile);
 }
 
-void thing_place (void *context)
+/*
+ * Place a thing after a delay.
+ */
+void thing_place_timed (thing_templatep thing_template, 
+                        double x,
+                        double y,
+                        uint32_t ms, 
+                        uint32_t jitter)
 {
-    thing_place_context_t *place;
+    thing_place_context_t *context;
 
-    place = (typeof(place)) context;
+    context = (typeof(context)) myzalloc(sizeof(*context), "place thing");
 
-    wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
-                                     place->x,
-                                     place->y,
-                                     place->thing_template);
-
-    myfree(context);
-}
-
-void thing_place_and_destroy_delayed (void *context)
-{
-    thing_place_context_t *place;
-
-    place = (typeof(place)) context;
-
-    widp w = wid_game_map_server_replace_tile(
-                                    wid_game_map_server_grid_container,
-                                    place->x,
-                                    place->y,
-                                    place->thing_template);
-
-    /*
-     * Just pass the same context along as it has the expire time but add
-     * the newborn thing.
-     */
-    place->thing = wid_get_thing(w);
+    context->x = x;
+    context->y = y;
+    context->level = server_level;
+    context->thing_template = thing_template;
 
     action_timer_create(
             &timers,
-            (action_timer_callback)thing_action_timer_callback_dead,
+            (action_timer_callback) thing_timer_place_callback,
             context,
-            "kill thing",
-            place->destroy_in,
-            0 /* jitter */);
+            "place thing",
+            ms,
+            jitter);
+}
+
+/*
+ * Place a thing after a delay.
+ */
+void thing_place_and_destroy_timed (thing_templatep thing_template, 
+                                    double x,
+                                    double y,
+                                    uint32_t ms, 
+                                    uint32_t destroy_in, 
+                                    uint32_t jitter)
+{
+    thing_place_context_t *context;
+
+    context = (typeof(context)) myzalloc(sizeof(*context), "place thing");
+
+    context->x = x;
+    context->y = y;
+    context->level = server_level;
+    context->destroy_in = destroy_in;
+    context->thing_template = thing_template;
+
+    action_timer_create(
+            &timers,
+            (action_timer_callback)
+                thing_timer_place_and_destroy_callback,
+            context,
+            "place and destroy thing",
+            ms,
+            jitter);
 }
 
 void thing_teleport (thingp t, int32_t x, int32_t y)

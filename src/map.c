@@ -135,9 +135,9 @@ uint8_t map_is_xxx7_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_xxx7));
 }
 
-uint8_t map_is_killed_on_hitting_player_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_killed_on_hitting_player));
+    return (map_is_x_at(level, x, y, thing_template_is_destroyed_on_hitting));
 }
 
 uint8_t map_is_star_at (levelp level, int32_t x, int32_t y)
@@ -378,9 +378,9 @@ thingp map_thing_is_xxx7_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_xxx7));
 }
 
-thingp map_thing_is_killed_on_hitting_player_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_killed_on_hitting_player));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_destroyed_on_hitting));
 }
 
 thingp map_thing_is_star_at (levelp level, int32_t x, int32_t y)
@@ -637,9 +637,9 @@ tree_rootp map_all_things_is_xxx7_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx7));
 }
 
-tree_rootp map_all_things_is_killed_on_hitting_player_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_killed_on_hitting_player));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_destroyed_on_hitting));
 }
 
 tree_rootp map_all_things_is_star_at (levelp level, int32_t x, int32_t y)
@@ -879,10 +879,10 @@ thing_templatep map_find_xxx7_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_xxx7, w));
 }
 
-thing_templatep map_find_is_killed_on_hitting_player_at (levelp level,
+thing_templatep map_find_is_destroyed_on_hitting_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_killed_on_hitting_player, w));
+    return (map_find_x_at(level, x, y, thing_template_is_destroyed_on_hitting, w));
 }
 
 thing_templatep map_find_is_star_at (levelp level,
@@ -1448,9 +1448,9 @@ uint32_t level_count_is_xxx7 (levelp level)
     return (level_count_is_x(level, thing_template_is_xxx7));
 }
 
-uint32_t level_count_is_killed_on_hitting_player (levelp level)
+uint32_t level_count_is_destroyed_on_hitting (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_killed_on_hitting_player));
+    return (level_count_is_x(level, thing_template_is_destroyed_on_hitting));
 }
 
 uint32_t level_count_is_star (levelp level)
@@ -1709,9 +1709,9 @@ tree_rootp map_all_things_is_xxx7 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_xxx7));
 }
 
-tree_rootp map_all_things_is_killed_on_hitting_player (levelp level)
+tree_rootp map_all_things_is_destroyed_on_hitting (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_killed_on_hitting_player));
+    return (map_all_things_is_x(level, thing_template_is_destroyed_on_hitting));
 }
 
 tree_rootp map_all_things_is_star (levelp level)
