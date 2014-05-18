@@ -7,6 +7,7 @@
  speed=100
  damage=2
  is_collision_map_weapon
+ is_destroyed_on_hitting
  is_projectile
  is_animated
  tiles={

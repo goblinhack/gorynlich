@@ -6,7 +6,6 @@
 typedef void (*action_timer_callback)(void *);
 #pragma once
 
-
 void action_timers_destroy(tree_rootp *root);
 void action_timer_destroy(tree_rootp *t, timerp p);
 timerp action_timer_create(tree_rootp *root,
