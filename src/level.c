@@ -168,7 +168,14 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
         (t->thing_template->id == THING_EXPLOSION5) ||
         (t->thing_template->id == THING_EXPLOSION6) ||
         (t->thing_template->id == THING_EXPLOSION7) ||
-        (t->thing_template->id == THING_EXPLOSION8)) {
+        (t->thing_template->id == THING_EXPLOSION8) ||
+        (t->thing_template->id == THING_POTION_EFFECT1) ||
+        (t->thing_template->id == THING_POTION_EFFECT2) ||
+        (t->thing_template->id == THING_POTION_EFFECT3) ||
+        (t->thing_template->id == THING_POTION_EFFECT4) ||
+        (t->thing_template->id == THING_POTION_EFFECT5) ||
+        (t->thing_template->id == THING_POTION_EFFECT6)
+        ) {
         thing_dead(t, 0 /* killer */, "finished blowing up");
         return (true);
     }
@@ -636,7 +643,9 @@ void level_place_plant_pod (levelp level)
 static uint8_t level_place_explosion_at (levelp level,
                                          double x, 
                                          double y, 
-                                         int32_t i)
+                                         int32_t i,
+                                         uint32_t nargs,
+                                         va_list args)
 {
     if (map_is_wall_at(level, x, y) ||
         map_is_pipe_at(level, x, y)) {
@@ -653,30 +662,14 @@ static uint8_t level_place_explosion_at (levelp level,
     context->level = level;
     context->destroy_in = 10000;
 
-    switch (rand() % 7) {
-    case 0:
-        context->thing_template = thing_template_find("data/things/explosion1");
-        break;
-    case 1:
-        context->thing_template = thing_template_find("data/things/explosion2");
-        break;
-    case 2:
-        context->thing_template = thing_template_find("data/things/explosion3");
-        break;
-    case 3:
-        context->thing_template = thing_template_find("data/things/explosion4");
-        break;
-    case 4:
-        context->thing_template = thing_template_find("data/things/explosion5");
-        break;
-    case 5:
-        context->thing_template = thing_template_find("data/things/explosion6");
-        break;
-    case 6:
-        context->thing_template = thing_template_find("data/things/explosion7");
-        break;
+    uint32_t r = (rand() % nargs) + 1;
+
+    const char *name;
+    while (r--) {
+        name = va_arg(args, char *);
     }
 
+    context->thing_template = thing_template_find(name);
     if (!context->thing_template) {
         DIE("no explosion");
     }
@@ -695,23 +688,29 @@ static uint8_t level_place_explosion_at (levelp level,
 /*
  * Place an explosion
  */
-void level_place_explosion (levelp level, double x, double y)
+static void level_place_explosion_ (levelp level, 
+                                    double x, 
+                                    double y,
+                                    uint32_t radius,
+                                    uint32_t nargs, ...)
 {
+    va_list args;
+
     uint8_t rad_blocked_explosion[360] = {0};
 
-    double radius;
-    for (radius = 1; radius < 7; radius += 0.5) {
+    double r;
+    for (r = 1; r < radius; r += 0.5) {
 
         double explosion_width = 1.0;
-        double circumference = 2.0 * PI * radius;
+        double circumference = 2.0 * PI * r;
         double nexplosions = circumference / explosion_width;
         double arc_step = RAD_360 / nexplosions;
 
         double rad;
         for (rad = 0; rad < RAD_360; rad += arc_step) {
 
-            double exp_x = x + radius * cos(rad);
-            double exp_y = y + radius * sin(rad);
+            double exp_x = x + r * cos(rad);
+            double exp_y = y + r * sin(rad);
 
             uint32_t deg = radians2angle(rad);
             deg += rand() % 20;
@@ -721,10 +720,15 @@ void level_place_explosion (levelp level, double x, double y)
                 continue;
             }
 
-            if (!level_place_explosion_at(level, exp_x, exp_y, radius)) {
+            va_start(args, nargs);
 
+            int ret = level_place_explosion_at(level, exp_x, exp_y, r,
+                                               nargs, args);
+            va_end(args);
+
+            if (!ret) {
                 int i;
-                int d = 45 - (radius * 5);
+                int d = 45 - (r * 5);
 
                 for (i = - d; i < + d; i++) {
                     rad_blocked_explosion[(deg + i) % 360] = 1;
@@ -732,6 +736,29 @@ void level_place_explosion (levelp level, double x, double y)
             }
         }
     }
+}
+
+void level_place_explosion (levelp level, double x, double y)
+{
+    level_place_explosion_(level, x, y,
+                           7, // radius
+                           7, // nargs
+                           "data/things/explosion1",
+                           "data/things/explosion2",
+                           "data/things/explosion3",
+                           "data/things/explosion4",
+                           "data/things/explosion5",
+                           "data/things/explosion6",
+                           "data/things/explosion7");
+}
+
+void level_place_potion_effect1 (levelp level, double x, double y)
+{
+    level_place_explosion_(level, x, y,
+                           7, // radius
+                           2, // nargs
+                           "data/things/potion_effect1",
+                           "data/things/potion_effect2");
 }
 
 /*
