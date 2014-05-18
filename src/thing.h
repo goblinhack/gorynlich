@@ -140,7 +140,19 @@ tree_rootp thing_tiles2(thingp);
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t);
 void thing_place(void *);
-void thing_place_and_destroy_delayed(void *);
+void thing_place_timed(thing_templatep t, 
+                       double x,
+                       double y,
+                       uint32_t ms, 
+                       uint32_t jitter);
+void thing_place_and_destroy_timed(thing_templatep t, 
+                                   double x,
+                                   double y,
+                                   uint32_t ms, 
+                                   uint32_t destroy_in, 
+                                   uint32_t jitter);
+void thing_timer_place_and_destroy_callback(void *context);
+void thing_timer_place_callback(void *context);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
 void thing_collect(thingp t, thing_templatep tmp);
@@ -388,6 +400,11 @@ typedef struct thing_ {
     timerp timer_spam;
 
     /*
+     * Thing dead in x ms.
+     */
+    timerp timer_dead;
+
+    /*
      * Powerups
      */
     uint8_t powerup_spam_count;
@@ -629,11 +646,11 @@ static inline uint8_t thing_is_xxx7 (thingp t)
     return (thing_template_is_xxx7(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_killed_on_hitting_player (thingp t)
+static inline uint8_t thing_is_destroyed_on_hitting (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_killed_on_hitting_player(thing_get_template(t)));
+    return (thing_template_is_destroyed_on_hitting(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_star (thingp t)
@@ -924,9 +941,9 @@ static inline uint8_t thing_is_xxx7_fast (thingp t)
     return (t->thing_template->is_xxx7);
 }
 
-static inline uint8_t thing_is_killed_on_hitting_player_fast (thingp t)
+static inline uint8_t thing_is_destroyed_on_hitting_fast (thingp t)
 {
-    return (t->thing_template->is_killed_on_hitting_player);
+    return (t->thing_template->is_destroyed_on_hitting);
 }
 
 static inline uint8_t thing_is_star_fast (thingp t)

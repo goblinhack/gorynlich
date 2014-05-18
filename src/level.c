@@ -652,16 +652,6 @@ static uint8_t level_place_explosion_at (levelp level,
         return (false);
     }
 
-    thing_place_context_t *context;
-
-    context =
-        (typeof(context)) myzalloc(sizeof(*context), "place thing");
-
-    context->x = x;
-    context->y = y;
-    context->level = level;
-    context->destroy_in = 10000;
-
     uint32_t r = (rand() % nargs) + 1;
 
     const char *name;
@@ -669,18 +659,17 @@ static uint8_t level_place_explosion_at (levelp level,
         name = va_arg(args, char *);
     }
 
-    context->thing_template = thing_template_find(name);
-    if (!context->thing_template) {
+    thing_templatep thing_template = thing_template_find(name);
+    if (!thing_template) {
         DIE("no explosion");
     }
 
-    action_timer_create(
-            &timers,
-            (action_timer_callback)thing_place_and_destroy_delayed,
-            context,
-            "place and destroy thing",
-            i * 200,
-            i * 100 /* jitter */);
+    thing_place_and_destroy_timed(thing_template,
+                                  x,
+                                  y,
+                                  i * 200, // place in
+                                  10000, // destroy in
+                                  i * 100);
 
     return (true);
 }

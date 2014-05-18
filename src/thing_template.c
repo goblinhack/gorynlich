@@ -423,7 +423,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_killed_on_hitting_player", t->is_killed_on_hitting_player);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_destroyed_on_hitting", t->is_destroyed_on_hitting);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);
@@ -527,7 +527,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
     PUT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
     PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
-    PUT_NAMED_BITFIELD(ctx, "is_killed_on_hitting_player", t->is_killed_on_hitting_player);
+    PUT_NAMED_BITFIELD(ctx, "is_destroyed_on_hitting", t->is_destroyed_on_hitting);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
     PUT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);

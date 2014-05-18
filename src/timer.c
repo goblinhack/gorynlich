@@ -48,11 +48,17 @@ void action_timer_destroy (tree_rootp *t, timerp p)
         return;
     }
 
-    TIMER_LOG(p, "destroyed");
+    TIMER_LOG(p, "destroy");
+
+    if (!*t) {
+        DIE("no timer tree");
+    }
 
     if (!tree_remove(*t, &p->tree.node)) {
-        DIE("timer destroy name [%s] failed", action_timer_logname(p));
+        DIE("timer remove [%s] failed", action_timer_logname(p));
     }
+
+    TIMER_LOG(p, "destroyed");
 
     action_timer_free(p);
 
@@ -91,9 +97,9 @@ timerp action_timer_create (tree_rootp *root,
         DIE("collect timer [%s] failed", action_timer_logname(t));
     }
 
-    t->logname = dynprintf("%s[timer:%p] context:%p", name, t, context);
+    t->logname = dynprintf("%s [timer:%p] context:%p", name, t, context);
 
-    TIMER_LOG(t, "fires in %3.2f secs",
+    TIMER_LOG(t, "created, fires in %3.2f secs",
               ((float)(t->expires_when - time_get_time_cached())) /
               (float)ONESEC);
 

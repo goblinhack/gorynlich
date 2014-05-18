@@ -271,14 +271,8 @@ static void thing_handle_collision (thingp me, thingp it,
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
-if (thing_is_explosion(me)) {
-LOG("no overlap");
-}
         return;
     }
-if (thing_is_explosion(me)) {
-LOG("overlap");
-}
 
     if (thing_is_player(me)) {
         /*
@@ -304,31 +298,14 @@ LOG("overlap");
         }
 
         /*
-         * Player bumped into a monster.
+         * Player bumped into something.
          */
-        if (thing_is_monst(it)) {
+        if (thing_is_monst(it) ||
+            thing_is_explosion(it)) {
             /*
              * I'm hit!
              */
             thing_hit(me, it, 0, "monst");
-
-            /*
-             * No killer to avoid giving a bonus to monsters!
-             */
-            if (thing_is_killed_on_hitting_player(it)) {
-                thing_dead(it, 0, "hit");
-            }
-            return;
-        }
-
-        /*
-         * Player caught in an explosion.
-         */
-        if (thing_is_explosion(it)) {
-            /*
-             * I'm hit!
-             */
-            thing_hit(me, it, 0, "explosion");
             return;
         }
     }
@@ -337,40 +314,15 @@ LOG("overlap");
      * Weapon or explosion hit something?
      */
     if (thing_is_projectile(me) || thing_is_explosion(me)) {
-if (thing_is_explosion(me)) {
-LOG("overlap with %s?", thing_logname(it));
-}
-        if (thing_is_wall(it) || thing_is_door(it)) {
+        if (thing_is_monst(it) || 
+            thing_is_generator(it) ||
+            thing_is_door(it) ||
+            thing_is_wall(it) ||
+            thing_is_food(it)) {
             /*
-             * Weapon dies in the collision.
-             */
-            thing_dead(me, it, "hit");
-            return;
-        }
-
-        if (thing_is_monst(it)) {
-            /*
-             * Monster is hit.
+             * Weapon hits monster or generator.
              */
             thing_hit(it, me, 0, "hit");
-
-            /*
-             * Weapon dies in the collision.
-             */
-            thing_dead(me, it, "hit");
-            return;
-        }
-
-        if (thing_is_generator(it)) {
-            /*
-             * Weapon hits. Generator dies. Spawn a smaller one?
-             */
-            thing_dead(it, me, "hit");
-
-            /*
-             * Weapon dies in the collision.
-             */
-            thing_dead(me, it, "hit");
             return;
         }
     }
@@ -395,9 +347,6 @@ void thing_handle_collisions (widp grid, thingp t)
 
     me = wid_get_thing(wid_me);
 
-if (thing_is_explosion(t)) {
-LOG("handle exp");
-}
     for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
         int32_t x = (int32_t)t->x + dx;
         int32_t y = (int32_t)t->y + dy;
@@ -482,17 +431,13 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 
             if (thing_is_monst(me)) {
                 /*
-                 * Allow monsters to walk into the player.
+                 * Allow monsters to walk into these things:
                  */
-                if (thing_is_player(it)) {
-                    wid_it = wid_next;
-                    continue;
-                }
-
-                /*
-                 * Allow monsters to walk through keys.
-                 */
-                if (thing_is_key(it)) {
+                if (thing_is_player(it) ||
+                    thing_is_key(it) ||
+                    thing_is_explosion(it) ||
+                    thing_is_projectile(it) ||
+                    thing_is_food(it)) {
                     wid_it = wid_next;
                     continue;
                 }
