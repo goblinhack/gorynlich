@@ -256,6 +256,22 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
+static uint8_t wid_game_map_item_mouse_event (widp w, int32_t x, int32_t y, 
+                                              uint32_t button)
+{
+    thing_templatep thing_template;
+
+    thing_template = wid_get_thing_template(w);
+
+    if (button == 1) {
+        if (thing_template->id == THING_POTION1) {
+            level_place_potion_effect1(player->level, player->x, player->y);
+        }
+    }
+
+    return (true);
+}
+
 /*
  * Create the wid_game_map_client
  */
@@ -738,6 +754,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
                     thing_templatep temp = 
                                     id_to_thing_template(c);
+
+                    wid_set_thing_template(w, temp);
+
                     thing_tilep tile = 
                             thing_tile_first(thing_template_get_tiles(temp));
 
@@ -777,6 +796,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                         wid_set_text_rhs(w, true);
                         wid_set_text_bot(w, true);
                     }
+
+                    wid_set_on_mouse_up(w, wid_game_map_item_mouse_event);
 
                     count++;
                 }
