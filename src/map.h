@@ -44,7 +44,7 @@ uint8_t map_is_door_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_pipe_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_generator_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_scarable_at(levelp, int32_t x, int32_t y);
-uint8_t map_is_xxx29_at(levelp, int32_t x, int32_t y);
+uint8_t map_is_explosion_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_projectile_at(levelp, int32_t x, int32_t y);
 
@@ -88,7 +88,7 @@ thing_templatep map_find_door_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_pipe_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_generator_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_xxx28_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_xxx29_at(levelp, int32_t x, int32_t y, widp *);
+thing_templatep map_find_is_explosion_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_hidden_from_editor_at(levelp, int32_t x, int32_t y, widp *);
 
 void level_open_door(levelp level, int32_t ix, int32_t iy);
@@ -133,7 +133,7 @@ thingp map_thing_is_door_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_pipe_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_generator_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_scarable_at(levelp, int32_t x, int32_t y);
-thingp map_thing_is_xxx29_at(levelp, int32_t x, int32_t y);
+thingp map_thing_is_explosion_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
 
 tree_rootp map_all_things_is_item_hidden(levelp);
@@ -212,8 +212,8 @@ tree_rootp map_all_things_is_generator(levelp);
 tree_rootp map_all_things_is_generator_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_scarable(levelp);
 tree_rootp map_all_things_is_scarable_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_xxx29(levelp);
-tree_rootp map_all_things_is_xxx29_at(levelp, int32_t x, int32_t y);
+tree_rootp map_all_things_is_explosion(levelp);
+tree_rootp map_all_things_is_explosion_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_hidden_from_editor(levelp);
 tree_rootp map_all_things_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_projectile(levelp);
@@ -256,7 +256,7 @@ uint32_t level_count_is_door(levelp);
 uint32_t level_count_is_pipe(levelp);
 uint32_t level_count_is_generator(levelp);
 uint32_t level_count_is_scarable(levelp);
-uint32_t level_count_is_xxx29(levelp);
+uint32_t level_count_is_explosion(levelp);
 uint32_t level_count_is_hidden_from_editor(levelp);
 uint32_t level_count_is_projectile(levelp);
 

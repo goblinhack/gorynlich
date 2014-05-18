@@ -325,6 +325,10 @@ static void server_poll (void)
             socket_server_rx_player_move(s, packet, data);
             break;
 
+        case MSG_CLIENT_PLAYER_ACTION:
+            socket_server_rx_player_action(s, packet, data);
+            break;
+
         default:
             ERR("Unknown server message type received [%u", type);
         }

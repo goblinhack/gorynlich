@@ -2330,7 +2330,7 @@ void thing_client_move (thingp t,
      */
     thing_client_wid_update(t, x, y, false);
 
-    socket_tx_client_move(client_joined_server, t, up, down, left, right, 
+    socket_tx_player_move(client_joined_server, t, up, down, left, right, 
                           fire);
 }
 
@@ -2519,6 +2519,19 @@ void thing_collect (thingp t, thing_templatep tmp)
     socket_server_tx_player_update(t);
 }
 
+void thing_used (thingp t, thing_templatep tmp)
+{
+    uint32_t id;
+
+    id = thing_template_to_id(tmp);
+
+    THING_LOG(t, "used %s", thing_template_name(tmp));
+
+    t->carrying[id]--;
+
+    socket_server_tx_player_update(t);
+}
+
 uint8_t thing_has (thingp t, uint32_t id)
 {
     if (!t->carrying[id]) {
@@ -2526,4 +2539,120 @@ uint8_t thing_has (thingp t, uint32_t id)
     }
 
     return (true);
+}
+
+void thing_server_action (thingp t,
+                          uint8_t action,
+                          uint16_t item)
+{
+    widp grid = wid_game_map_client_grid_container;
+
+    thing_templatep thing_template = id_to_thing_template(item);
+    if (!thing_template) {
+        ERR("Unkown item use request, id %u", item);
+        return;
+    }
+
+    if (t->player) {
+        socket_tx_server_shout_only_to("HEllo", t->player->socket);
+    }
+    switch (action) {
+    case PLAYER_ACTION_USE:
+        if (!thing_has(t, item)) {
+            /*
+             * Sneaky.
+             */
+            return;
+        }
+
+        if (item == THING_POTION1) {
+            level_place_potion_effect1(server_level, t->x, t->y);
+            break;
+        }
+
+        /*
+         * Failed to use.
+         */
+        return;
+
+    case PLAYER_ACTION_DROP: {
+        double dx = 0;
+        double dy = 0;
+
+        if (thing_is_dir_down(t)) {
+            dy = 1.0;
+        }
+
+        if (thing_is_dir_up(t)) {
+            dy = -1.0;
+        }
+
+        if (thing_is_dir_right(t)) {
+            dx = 1.0;
+        }
+
+        if (thing_is_dir_left(t)) {
+            dx = -1.0;
+        }
+
+        if (thing_is_dir_tl(t)) {
+            dx = -1.0;
+            dy = -1.0;
+        }
+
+        if (thing_is_dir_tr(t)) {
+            dx = 1.0;
+            dy = -1.0;
+        }
+
+        if (thing_is_dir_bl(t)) {
+            dx = -1.0;
+            dy = 1.0;
+        }
+
+        if (thing_is_dir_br(t)) {
+            dx = 1.0;
+            dy = 1.0;
+        }
+
+        double x = t->x + dx;
+        double y = t->y + dy;
+
+        if (!thing_hit_solid_obstacle(grid, t, x, y)) {
+            if (wid_game_map_server_replace_tile(grid, x, y, thing_template)) {
+                break;
+            }
+        }
+
+
+        for (dx = -1.0; dx <= 1.0; dx += 1.0) {
+            for (dy = -1.0; dy <= 1.0; dy += 1.0) {
+                double x = t->x + dx;
+                double y = t->y + dy;
+
+                if (!thing_hit_solid_obstacle(grid, t, x, y)) {
+                    if (wid_game_map_server_replace_tile(grid, x, y, 
+                                                         thing_template)) {
+                        goto done;
+                    }
+                }
+
+            }
+        }
+
+        socket_tx_server_shout_only_to("Drop failed", t->player->socket);
+
+        /*
+         * Failed to drop.
+         */
+        }
+        return;
+
+    default:
+        ERR("Unkown player action %u on item id %u", action, item);
+        return;
+    }
+
+done:
+    thing_used(t, thing_template);
 }

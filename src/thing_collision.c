@@ -307,11 +307,22 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_hit(me, it, 0, "monst");
 
             /*
-             * No killer to avoid givin a bonus to monsters!
+             * No killer to avoid giving a bonus to monsters!
              */
             if (thing_is_killed_on_hitting_player(it)) {
                 thing_dead(it, 0, "hit");
             }
+            return;
+        }
+
+        /*
+         * Player caught in an explosion.
+         */
+        if (thing_is_explosion(it)) {
+            /*
+             * I'm hit!
+             */
+            thing_hit(me, it, 0, "explosion");
             return;
         }
     }
@@ -330,14 +341,22 @@ static void thing_handle_collision (thingp me, thingp it,
 
         if (thing_is_monst(it)) {
             /*
-             * Monster dies.
+             * Monster is hit.
              */
-            thing_dead(it, me, "hit");
+            thing_hit(it, me, 0, "hit");
 
             /*
              * Weapon dies in the collision.
              */
             thing_dead(me, it, "hit");
+            return;
+        }
+
+        if (thing_is_explosion(it)) {
+            /*
+             * Monster is hit.
+             */
+            thing_hit(it, me, 0, "hit by explosion");
             return;
         }
 

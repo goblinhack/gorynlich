@@ -145,6 +145,9 @@
 .o/ramdisk_data_things__potion_effect1_session.o: asm/ramdisk_data_things__potion_effect1_session.S ../data/things/.potion_effect1.session
 	gcc -c asm/ramdisk_data_things__potion_effect1_session.S -o .o/ramdisk_data_things__potion_effect1_session.o
 
+.o/ramdisk_data_things__potion_effect5_session.o: asm/ramdisk_data_things__potion_effect5_session.S ../data/things/.potion_effect5.session
+	gcc -c asm/ramdisk_data_things__potion_effect5_session.S -o .o/ramdisk_data_things__potion_effect5_session.o
+
 .o/ramdisk_data_things__seedpod_session.o: asm/ramdisk_data_things__seedpod_session.S ../data/things/.seedpod.session
 	gcc -c asm/ramdisk_data_things__seedpod_session.S -o .o/ramdisk_data_things__seedpod_session.o
 
