@@ -288,6 +288,10 @@
   } {   
    x=6 
    y=1 
+   t="data/things/potion1" 
+  } {   
+   x=6 
+   y=1 
    t="data/things/floor2" 
   } {   
    x=7 
@@ -444,6 +448,10 @@
   } {   
    x=5 
    y=2 
+   t="data/things/potion1" 
+  } {   
+   x=5 
+   y=2 
    t="data/things/floor2" 
   } {   
    x=6 
@@ -593,6 +601,10 @@
    x=4 
    y=3 
    t="data/things/floor2" 
+  } {   
+   x=5 
+   y=3 
+   t="data/things/potion1" 
   } {   
    x=5 
    y=3 
@@ -761,6 +773,10 @@
    x=3 
    y=4 
    t="data/things/floor2" 
+  } {   
+   x=4 
+   y=4 
+   t="data/things/potion1" 
   } {   
    x=4 
    y=4 

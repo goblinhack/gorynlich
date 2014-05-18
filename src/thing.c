@@ -697,6 +697,7 @@ static void thing_hit_ (thingp t,
         if (thing_is_player(t)) {
             THING_LOG(t, "hit (%s) for %u", reason, damage);
         }
+            THING_LOG(t, "hit (%s) for %u", reason, damage);
     }
 }
 
@@ -2553,15 +2554,24 @@ void thing_server_action (thingp t,
         return;
     }
 
-    if (t->player) {
-        socket_tx_server_shout_only_to("HEllo", t->player->socket);
+    if (!t->player) {
+        ERR("no player to handle action");
+        return;
     }
+
+    socketp s = t->player->socket;
+    if (!s) {
+        ERR("no player socket to handle action");
+        return;
+    }
+
     switch (action) {
     case PLAYER_ACTION_USE:
         if (!thing_has(t, item)) {
             /*
              * Sneaky.
              */
+            socket_tx_server_shout_only_to("You do not have that item", s);
             return;
         }
 
@@ -2573,6 +2583,7 @@ void thing_server_action (thingp t,
         /*
          * Failed to use.
          */
+        socket_tx_server_shout_only_to("Failed to use", s);
         return;
 
     case PLAYER_ACTION_DROP: {
@@ -2623,7 +2634,6 @@ void thing_server_action (thingp t,
                 break;
             }
         }
-
 
         for (dx = -1.0; dx <= 1.0; dx += 1.0) {
             for (dy = -1.0; dy <= 1.0; dy += 1.0) {
