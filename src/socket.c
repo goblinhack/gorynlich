@@ -2427,6 +2427,9 @@ void socket_server_rx_player_action (socketp s, UDPpacket *packet,
 
     thingp t = p->thing;
     if (!t) {
+        /*
+         * Player is dead?
+         */
         return;
     }
 
