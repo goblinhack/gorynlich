@@ -235,9 +235,9 @@ uint8_t map_is_scarable_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_scarable));
 }
 
-uint8_t map_is_xxx29_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_explosion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx29));
+    return (map_is_x_at(level, x, y, thing_template_is_explosion));
 }
 
 uint8_t map_is_hidden_from_editor_at (levelp level, int32_t x, int32_t y)
@@ -478,9 +478,9 @@ thingp map_thing_is_scarable_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_scarable));
 }
 
-thingp map_thing_is_xxx29_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_explosion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx29));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_explosion));
 }
 
 thingp map_thing_is_hidden_from_editor_at (levelp level, int32_t x, int32_t y)
@@ -737,9 +737,9 @@ tree_rootp map_all_things_is_scarable_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_scarable));
 }
 
-tree_rootp map_all_things_is_xxx29_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_explosion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx29));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_explosion));
 }
 
 tree_rootp map_all_things_is_hidden_from_editor_at (levelp level, int32_t x, int32_t y)
@@ -999,10 +999,10 @@ thing_templatep map_find_xxx28_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_scarable, w));
 }
 
-thing_templatep map_find_is_xxx29_at (levelp level,
+thing_templatep map_find_is_explosion_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx29, w));
+    return (map_find_x_at(level, x, y, thing_template_is_explosion, w));
 }
 
 thing_templatep map_find_hidden_from_editor_at (levelp level,
@@ -1548,9 +1548,9 @@ uint32_t level_count_is_scarable (levelp level)
     return (level_count_is_x(level, thing_template_is_scarable));
 }
 
-uint32_t level_count_is_xxx29 (levelp level)
+uint32_t level_count_is_explosion (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx29));
+    return (level_count_is_x(level, thing_template_is_explosion));
 }
 
 uint32_t level_count_is_hidden_from_editor (levelp level)
@@ -1809,9 +1809,9 @@ tree_rootp map_all_things_is_scarable (levelp level)
     return (map_all_things_is_x(level, thing_template_is_scarable));
 }
 
-tree_rootp map_all_things_is_xxx29 (levelp level)
+tree_rootp map_all_things_is_explosion (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx29));
+    return (map_all_things_is_x(level, thing_template_is_explosion));
 }
 
 tree_rootp map_all_things_is_hidden_from_editor (levelp level)

@@ -264,9 +264,13 @@ static uint8_t wid_game_map_item_mouse_event (widp w, int32_t x, int32_t y,
     thing_template = wid_get_thing_template(w);
 
     if (button == 1) {
-        if (thing_template->id == THING_POTION1) {
-            level_place_potion_effect1(player->level, player->x, player->y);
-        }
+        socket_tx_player_action(client_joined_server, player, 
+                                PLAYER_ACTION_USE,
+                                thing_template_to_id(thing_template));
+    } else{
+        socket_tx_player_action(client_joined_server, player, 
+                                PLAYER_ACTION_DROP,
+                                thing_template_to_id(thing_template));
     }
 
     return (true);

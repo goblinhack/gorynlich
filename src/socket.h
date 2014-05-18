@@ -28,6 +28,7 @@ typedef enum {
     MSG_SERVER_MAP_UPDATE,
     MSG_SERVER_PLAYER_UPDATE,
     MSG_CLIENT_PLAYER_MOVE,
+    MSG_CLIENT_PLAYER_ACTION,
     MSG_MAX,
     MSG_COMPRESSED = 0xFF,
 } msg_type;
@@ -68,7 +69,18 @@ typedef struct {
     uint8_t dir;
     uint16_t x;
     uint16_t y;
-} __attribute__ ((packed)) msg_client_move;
+} __attribute__ ((packed)) msg_player_move;
+
+enum {
+    PLAYER_ACTION_USE,
+    PLAYER_ACTION_DROP,
+};
+
+typedef struct {
+    uint8_t type;
+    uint8_t action;
+    uint16_t item;
+} __attribute__ ((packed)) msg_player_action;
 
 typedef struct {
     uint8_t type;
@@ -262,17 +274,24 @@ extern void socket_tx_client_shout(socketp s,
                                    const char *shout);
 extern void socket_rx_client_shout(socketp s, 
                                    UDPpacket *packet, uint8_t *data);
-extern void socket_tx_client_move(socketp s, 
+extern void socket_tx_player_move(socketp s, 
                                   thingp t,
                                   const uint8_t up,
                                   const uint8_t down,
                                   const uint8_t left,
                                   const uint8_t right,
                                   const uint8_t fire);
+extern void socket_tx_player_action(socketp s, 
+                                    thingp t,
+                                    const uint8_t action,
+                                    const uint16_t item);
 extern void socket_server_rx_player_move(socketp s, UDPpacket *packet, 
+                                         uint8_t *data);
+extern void socket_server_rx_player_action(socketp s, UDPpacket *packet, 
                                          uint8_t *data);
 extern void socket_tx_server_shout(const char *shout);
 extern void socket_tx_server_shout_except_to(const char *shout, socketp s);
+extern void socket_tx_server_shout_only_to(const char *shout, socketp s);
 extern void socket_rx_server_shout(socketp s, UDPpacket *packet, 
                                    uint8_t *data);
 extern void socket_tx_tell(socketp s, 

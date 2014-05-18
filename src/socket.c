@@ -623,22 +623,32 @@ static uint8_t sockets_show_all (tokens_t *tokens, void *context)
                 s->rx_msg[MSG_SERVER_CLOSE]);
         }
 
-        if (s->tx_msg[MSG_SERVER_MAP_UPDATE] || s->rx_msg[MSG_SERVER_MAP_UPDATE]) {
+        if (s->tx_msg[MSG_SERVER_MAP_UPDATE] || 
+            s->rx_msg[MSG_SERVER_MAP_UPDATE]) {
             CON("  Server map upd : tx %u, rx %u",
                 s->tx_msg[MSG_SERVER_MAP_UPDATE], 
                 s->rx_msg[MSG_SERVER_MAP_UPDATE]);
         }
 
-        if (s->tx_msg[MSG_SERVER_PLAYER_UPDATE] || s->rx_msg[MSG_SERVER_PLAYER_UPDATE]) {
+        if (s->tx_msg[MSG_SERVER_PLAYER_UPDATE] || 
+            s->rx_msg[MSG_SERVER_PLAYER_UPDATE]) {
             CON("  Player update  : tx %u, rx %u",
                 s->tx_msg[MSG_SERVER_PLAYER_UPDATE], 
                 s->rx_msg[MSG_SERVER_PLAYER_UPDATE]);
         }
 
-        if (s->tx_msg[MSG_CLIENT_PLAYER_MOVE] || s->rx_msg[MSG_CLIENT_PLAYER_MOVE]) {
+        if (s->tx_msg[MSG_CLIENT_PLAYER_MOVE] || 
+            s->rx_msg[MSG_CLIENT_PLAYER_MOVE]) {
             CON("  Client move    : tx %u, rx %u",
                 s->tx_msg[MSG_CLIENT_PLAYER_MOVE], 
                 s->rx_msg[MSG_CLIENT_PLAYER_MOVE]);
+        }
+
+        if (s->tx_msg[MSG_CLIENT_PLAYER_ACTION] || 
+            s->rx_msg[MSG_CLIENT_PLAYER_ACTION]) {
+            CON("  Client action  : tx %u, rx %u",
+                s->tx_msg[MSG_CLIENT_PLAYER_ACTION], 
+                s->rx_msg[MSG_CLIENT_PLAYER_ACTION]);
         }
 
         /*
@@ -1086,11 +1096,31 @@ aplayerp socket_get_player (const socketp s)
 
 void socket_set_player (const socketp s, aplayer *p)
 {
+    thingp t = 0;
+
     if (s->player) {
-        myfree(s->player);
+        t = s->player->thing;
+        if (t) {
+            verify(t);
+        }
+    }
+
+    if (!p) {
+        if (t) {
+            t->player = 0;
+        }
+
+        if (s->player) {
+            s->player->thing = 0;
+            s->player->socket = 0;
+            myfree(s->player);
+        }
+
+        return;
     }
 
     s->player = p;
+    p->socket = s;
 }
 
 void socket_count_inc_pak_rx (const socketp s, msg_type type)
@@ -1402,7 +1432,8 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
                 tmp, msg.name, msg.pclass);
             myfree(tmp);
 
-            socket_tx_tell(s, "Join rejected:", msg.name, "Unknown player class");
+            socket_tx_tell(s, "Join rejected:", 
+                           msg.name, "Unknown player class");
             return (false);
         }
     }
@@ -1437,7 +1468,11 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          0, 0,
                                          thing_template);
-    p->thing = wid_get_thing(w);
+    thingp t = wid_get_thing(w);
+    verify(t);
+
+    p->thing = t;
+    t->player = p;
 
     return (true);
 }
@@ -1762,6 +1797,51 @@ void socket_tx_server_shout_except_to (const char *txt, socketp except)
 
     TREE_WALK(sockets, sp) {
         if (sp == except) {
+            continue;
+        }
+
+        if (!sp->connected) {
+            continue;
+        }
+
+        if (!sp->server_side_client) {
+            continue;
+        }
+
+        /*
+         * Only talk to players who joined this server.
+         */
+        if (!sp->player) {
+            continue;
+        }
+
+        LOG("Server: Tx Shout \"%s\" to %s", txt,
+            socket_get_remote_logname(sp));
+
+        write_address(packet, socket_get_remote_ip(sp));
+
+        socket_tx_msg(sp, packet);
+    }
+        
+    socket_free_msg(packet);
+}
+
+void socket_tx_server_shout_only_to (const char *txt, socketp target)
+{
+    UDPpacket *packet = socket_alloc_msg();
+
+    msg_server_shout msg = {0};
+    msg.type = MSG_SERVER_SHOUT;
+    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    packet->len = sizeof(msg);
+
+    socketp sp;
+
+    TREE_WALK(sockets, sp) {
+        if (sp != target) {
             continue;
         }
 
@@ -2216,7 +2296,7 @@ uint32_t socket_get_rx_bad_msg (socketp s)
     return (s->min_latency);
 }
 
-void socket_tx_client_move (socketp s, 
+void socket_tx_player_move (socketp s, 
                             thingp t,
                             const uint8_t up,
                             const uint8_t down,
@@ -2242,7 +2322,7 @@ void socket_tx_client_move (socketp s,
         ts = time_get_time_cached();
     }
 
-    msg_client_move msg = {0};
+    msg_player_move msg = {0};
     msg.type = MSG_CLIENT_PLAYER_MOVE;
     msg.dir = (fire << 4) | (up << 3) | (down << 2) | (left << 1) | right;
 
@@ -2265,7 +2345,7 @@ void socket_server_rx_player_move (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
-    msg_client_move msg = {0};
+    msg_player_move msg = {0};
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);
@@ -2297,4 +2377,61 @@ void socket_server_rx_player_move (socketp s, UDPpacket *packet, uint8_t *data)
     double y = ((double)msg.y) / THING_COORD_SCALE;
 
     thing_server_move(t, x, y, up, down, left, right, fire);
+}
+
+void socket_tx_player_action (socketp s, 
+                              thingp t,
+                              const uint8_t action,
+                              const uint16_t item)
+{
+    if (!socket_get_udp_socket(s)) {
+        return;
+    }
+
+    msg_player_action msg = {0};
+    msg.type = MSG_CLIENT_PLAYER_ACTION;
+    msg.action = action;
+
+    SDLNet_Write16(item, &msg.item);               
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
+    socket_tx_msg(s, packet);
+        
+    socket_free_msg(packet);
+}
+
+void socket_server_rx_player_action (socketp s, UDPpacket *packet, 
+                                     uint8_t *data)
+{
+    verify(s);
+
+    msg_player_action msg = {0};
+
+    if (packet->len != sizeof(msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    memcpy(&msg, packet->data, sizeof(msg));
+
+    aplayer *p = s->player;
+    if (!p) {
+        return;
+    }
+
+    thingp t = p->thing;
+    if (!t) {
+        return;
+    }
+
+    uint8_t action = msg.action;
+    uint8_t item = SDLNet_Read16(&msg.item);
+
+    thing_server_action(t, action, item);
 }
