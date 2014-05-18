@@ -271,8 +271,14 @@ static void thing_handle_collision (thingp me, thingp it,
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
+if (thing_is_explosion(me)) {
+LOG("no overlap");
+}
         return;
     }
+if (thing_is_explosion(me)) {
+LOG("overlap");
+}
 
     if (thing_is_player(me)) {
         /*
@@ -328,9 +334,12 @@ static void thing_handle_collision (thingp me, thingp it,
     }
 
     /*
-     * Weapon hit something?
+     * Weapon or explosion hit something?
      */
-    if (thing_is_projectile(me)) {
+    if (thing_is_projectile(me) || thing_is_explosion(me)) {
+if (thing_is_explosion(me)) {
+LOG("overlap with %s?", thing_logname(it));
+}
         if (thing_is_wall(it) || thing_is_door(it)) {
             /*
              * Weapon dies in the collision.
@@ -349,14 +358,6 @@ static void thing_handle_collision (thingp me, thingp it,
              * Weapon dies in the collision.
              */
             thing_dead(me, it, "hit");
-            return;
-        }
-
-        if (thing_is_explosion(it)) {
-            /*
-             * Monster is hit.
-             */
-            thing_hit(it, me, 0, "hit by explosion");
             return;
         }
 
@@ -394,6 +395,9 @@ void thing_handle_collisions (widp grid, thingp t)
 
     me = wid_get_thing(wid_me);
 
+if (thing_is_explosion(t)) {
+LOG("handle exp");
+}
     for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
         int32_t x = (int32_t)t->x + dx;
         int32_t y = (int32_t)t->y + dy;
@@ -502,6 +506,14 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
+            if (thing_is_explosion(me)) {
+                /*
+                 * Allow explosions to pass through anything.
+                 */
+                wid_it = wid_next;
+                continue;
+            }
+
             if (thing_is_player(me)) {
                 /*
                  * Allow to walk through doors so we can open them later.
@@ -526,7 +538,11 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     /*
                      * Or friendly fire.
                      */
-                    thing_is_projectile(it)) {
+                    thing_is_projectile(it) ||
+                    /*
+                     * Or friendly fire.
+                     */
+                    thing_is_explosion(it)) {
                     wid_it = wid_next;
                     continue;
                 }
