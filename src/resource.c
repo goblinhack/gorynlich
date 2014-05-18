@@ -1217,8 +1217,8 @@ static uint8_t resource_init_23 (void *context)
         "explosion6.1",
         "explosion7.1",
         "explosion8.1",
-        0,
-        0,
+        "potion_effect1.1",
+        "potion_effect2.1",
         0,
         0,
         0,
@@ -1250,8 +1250,8 @@ static uint8_t resource_init_23 (void *context)
         "explosion6.2",
         "explosion7.2",
         "explosion8.2",
-        0,
-        0,
+        "potion_effect1.2",
+        "potion_effect2.2",
         0,
         0,
         0,
@@ -1283,8 +1283,8 @@ static uint8_t resource_init_23 (void *context)
         "explosion6.3",
         "explosion7.3",
         "explosion8.3",
-        0,
-        0,
+        "potion_effect1.3",
+        "potion_effect2.3",
         0,
         0,
         0,
@@ -1316,8 +1316,8 @@ static uint8_t resource_init_23 (void *context)
         "explosion6.4",
         "explosion7.4",
         "explosion8.4",
-        0,
-        0,
+        "potion_effect1.4",
+        "potion_effect2.4",
         0,
         0,
         0,
@@ -1349,8 +1349,8 @@ static uint8_t resource_init_23 (void *context)
         "explosion6.5",
         "explosion7.5",
         "explosion8.5",
-        0,
-        0,
+        "potion_effect1.5",
+        "potion_effect2.5",
         0,
         0,
         0,
@@ -1382,8 +1382,8 @@ static uint8_t resource_init_23 (void *context)
         "explosion6.6",
         "explosion7.6",
         "explosion8.6",
-        0,
-        0,
+        "potion_effect1.6",
+        "potion_effect2.6",
         0,
         0,
         0,
@@ -1415,8 +1415,8 @@ static uint8_t resource_init_23 (void *context)
         "explosion6.7",
         "explosion7.7",
         "explosion8.7",
-        0,
-        0,
+        "potion_effect1.7",
+        "potion_effect2.7",
         0,
         0,
         0,
@@ -1523,6 +1523,12 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_EXPLOSION6, "data/things/explosion6");
     thing_template_load(&THING_EXPLOSION7, "data/things/explosion7");
     thing_template_load(&THING_EXPLOSION8, "data/things/explosion8");
+    thing_template_load(&THING_POTION_EFFECT1, "data/things/potion_effect1");
+    thing_template_load(&THING_POTION_EFFECT2, "data/things/potion_effect2");
+    thing_template_load(&THING_POTION_EFFECT3, "data/things/potion_effect3");
+    thing_template_load(&THING_POTION_EFFECT4, "data/things/potion_effect4");
+    thing_template_load(&THING_POTION_EFFECT5, "data/things/potion_effect5");
+    thing_template_load(&THING_POTION_EFFECT6, "data/things/potion_effect6");
 
     return (true);
 }
