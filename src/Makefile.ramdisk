@@ -106,6 +106,9 @@
 .o/ramdisk_data_things__arrow_session.o: asm/ramdisk_data_things__arrow_session.S ../data/things/.arrow.session
 	gcc -c asm/ramdisk_data_things__arrow_session.S -o .o/ramdisk_data_things__arrow_session.o
 
+.o/ramdisk_data_things__bomb_session.o: asm/ramdisk_data_things__bomb_session.S ../data/things/.bomb.session
+	gcc -c asm/ramdisk_data_things__bomb_session.S -o .o/ramdisk_data_things__bomb_session.o
+
 .o/ramdisk_data_things__dwarf_session.o: asm/ramdisk_data_things__dwarf_session.S ../data/things/.dwarf.session
 	gcc -c asm/ramdisk_data_things__dwarf_session.S -o .o/ramdisk_data_things__dwarf_session.o
 
@@ -114,6 +117,12 @@
 
 .o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
 	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
+
+.o/ramdisk_data_things__explosion7_session.o: asm/ramdisk_data_things__explosion7_session.S ../data/things/.explosion7.session
+	gcc -c asm/ramdisk_data_things__explosion7_session.S -o .o/ramdisk_data_things__explosion7_session.o
+
+.o/ramdisk_data_things__explosion8_session.o: asm/ramdisk_data_things__explosion8_session.S ../data/things/.explosion8.session
+	gcc -c asm/ramdisk_data_things__explosion8_session.S -o .o/ramdisk_data_things__explosion8_session.o
 
 .o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
 	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
@@ -132,6 +141,12 @@
 
 .o/ramdisk_data_things__plant_session.o: asm/ramdisk_data_things__plant_session.S ../data/things/.plant.session
 	gcc -c asm/ramdisk_data_things__plant_session.S -o .o/ramdisk_data_things__plant_session.o
+
+.o/ramdisk_data_things__potion_effect1_session.o: asm/ramdisk_data_things__potion_effect1_session.S ../data/things/.potion_effect1.session
+	gcc -c asm/ramdisk_data_things__potion_effect1_session.S -o .o/ramdisk_data_things__potion_effect1_session.o
+
+.o/ramdisk_data_things__seedpod_session.o: asm/ramdisk_data_things__seedpod_session.S ../data/things/.seedpod.session
+	gcc -c asm/ramdisk_data_things__seedpod_session.S -o .o/ramdisk_data_things__seedpod_session.o
 
 .o/ramdisk_data_things__valkyrie_session.o: asm/ramdisk_data_things__valkyrie_session.S ../data/things/.valkyrie.session
 	gcc -c asm/ramdisk_data_things__valkyrie_session.S -o .o/ramdisk_data_things__valkyrie_session.o
@@ -354,6 +369,24 @@
 
 .o/ramdisk_data_things_potion5.o: asm/ramdisk_data_things_potion5.S ../data/things/potion5
 	gcc -c asm/ramdisk_data_things_potion5.S -o .o/ramdisk_data_things_potion5.o
+
+.o/ramdisk_data_things_potion_effect1.o: asm/ramdisk_data_things_potion_effect1.S ../data/things/potion_effect1
+	gcc -c asm/ramdisk_data_things_potion_effect1.S -o .o/ramdisk_data_things_potion_effect1.o
+
+.o/ramdisk_data_things_potion_effect2.o: asm/ramdisk_data_things_potion_effect2.S ../data/things/potion_effect2
+	gcc -c asm/ramdisk_data_things_potion_effect2.S -o .o/ramdisk_data_things_potion_effect2.o
+
+.o/ramdisk_data_things_potion_effect3.o: asm/ramdisk_data_things_potion_effect3.S ../data/things/potion_effect3
+	gcc -c asm/ramdisk_data_things_potion_effect3.S -o .o/ramdisk_data_things_potion_effect3.o
+
+.o/ramdisk_data_things_potion_effect4.o: asm/ramdisk_data_things_potion_effect4.S ../data/things/potion_effect4
+	gcc -c asm/ramdisk_data_things_potion_effect4.S -o .o/ramdisk_data_things_potion_effect4.o
+
+.o/ramdisk_data_things_potion_effect5.o: asm/ramdisk_data_things_potion_effect5.S ../data/things/potion_effect5
+	gcc -c asm/ramdisk_data_things_potion_effect5.S -o .o/ramdisk_data_things_potion_effect5.o
+
+.o/ramdisk_data_things_potion_effect6.o: asm/ramdisk_data_things_potion_effect6.S ../data/things/potion_effect6
+	gcc -c asm/ramdisk_data_things_potion_effect6.S -o .o/ramdisk_data_things_potion_effect6.o
 
 .o/ramdisk_data_things_seedpod.o: asm/ramdisk_data_things_seedpod.S ../data/things/seedpod
 	gcc -c asm/ramdisk_data_things_seedpod.S -o .o/ramdisk_data_things_seedpod.o
