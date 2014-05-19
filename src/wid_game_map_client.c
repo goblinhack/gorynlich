@@ -28,6 +28,9 @@ widp wid_game_map_client_window;
 widp wid_game_map_client_grid_container;
 static widp wid_game_map_client_horiz_scroll;
 static widp wid_game_map_client_vert_scroll;
+#define MAX_SHORTCUTS 10
+static thing_templatep wid_key_shortcuts[MAX_SHORTCUTS];
+static thing_templatep wid_key_shortcuts_override[MAX_SHORTCUTS];
 widp wid_scoreline_container_top;
 widp wid_scoreline_container_bot;
 widp wid_score;
@@ -250,19 +253,86 @@ uint8_t wid_game_map_client_player_move (void)
 
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-    /*
-     * Just poll instead.
-     */
+    thing_templatep thing_template;
+    uint32_t shortcut;
+
+    switch (key->sym) {
+    case SDLK_0:
+    case SDLK_1:
+    case SDLK_2:
+    case SDLK_3:
+    case SDLK_4:
+    case SDLK_5:
+    case SDLK_6:
+    case SDLK_7:
+    case SDLK_8:
+    case SDLK_9:
+        shortcut = ((int)key->sym) - SDLK_0;
+
+        thing_template = wid_key_shortcuts[shortcut];
+        if (thing_template) {
+            socket_tx_player_action(client_joined_server, player, 
+                                    PLAYER_ACTION_USE,
+                                    thing_template_to_id(thing_template));
+            return (true);
+        }
+    }
+
     return (false);
 }
 
-static uint8_t wid_game_map_item_mouse_event (widp w, int32_t x, int32_t y, 
-                                              uint32_t button)
+static uint8_t 
+wid_game_map_item_shortcut_key_event_common (const SDL_KEYSYM *key,
+                                             thing_templatep thing_template)
 {
-    thing_templatep thing_template;
+    uint32_t shortcut;
+    uint32_t i;
 
-    thing_template = wid_get_thing_template(w);
+    switch (key->sym) {
+    case SDLK_0:
+    case SDLK_1:
+    case SDLK_2:
+    case SDLK_3:
+    case SDLK_4:
+    case SDLK_5:
+    case SDLK_6:
+    case SDLK_7:
+    case SDLK_8:
+    case SDLK_9:
+        /*
+         * Clear existing shortcut key.
+         */
+        for (i = 0; i < MAX_SHORTCUTS; i++) {
+            if (wid_key_shortcuts_override[i] == thing_template) {
+                wid_key_shortcuts_override[i] = 0;
+            }
+        }
 
+        shortcut = ((int)key->sym) - SDLK_0;
+        wid_key_shortcuts_override[shortcut] = thing_template;
+
+        if (!thing_template) {
+            break;
+        }
+
+        LOG("grabbed shortcut %s",
+            thing_template_name(thing_template));
+
+        /*
+         * Redo the widgets with the new shortcut key
+         */
+        wid_game_map_client_score_update(client_level, true /* redo */);
+
+        return (true);
+    }
+
+    return (false);
+}
+
+static uint8_t 
+wid_game_map_item_mouse_event_common (uint32_t button,
+                                      thing_templatep thing_template)
+{
     if (button == 1) {
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_USE,
@@ -274,6 +344,47 @@ static uint8_t wid_game_map_item_mouse_event (widp w, int32_t x, int32_t y,
     }
 
     return (true);
+}
+
+static uint8_t wid_game_map_item_shortcut_key_event (widp w, 
+                                                     const SDL_KEYSYM *key)
+{
+    thing_templatep thing_template = wid_get_client_context(w);
+
+LOG("%s",__FUNCTION__);
+    return (wid_game_map_item_shortcut_key_event_common(key, thing_template));
+}
+
+static uint8_t wid_game_map_item_shortcut_mouse_event (widp w, 
+                                                       int32_t x, int32_t y,
+                                                       uint32_t button)
+{
+    thing_templatep thing_template = wid_get_client_context(w);
+
+LOG("%s",__FUNCTION__);
+    return (wid_game_map_item_mouse_event_common(button, thing_template));
+}
+
+static uint8_t wid_game_map_item_key_event (widp w, const SDL_KEYSYM *key)
+
+{
+    thing_templatep thing_template;
+
+LOG("%s",__FUNCTION__);
+    thing_template = wid_get_thing_template(w);
+
+    return (wid_game_map_item_shortcut_key_event_common(key, thing_template));
+}
+
+static uint8_t wid_game_map_item_mouse_event (widp w, int32_t x, int32_t y, 
+                                              uint32_t button)
+{
+    thing_templatep thing_template;
+LOG("%s",__FUNCTION__);
+
+    thing_template = wid_get_thing_template(w);
+
+    return (wid_game_map_item_mouse_event_common(button, thing_template));
 }
 
 /*
@@ -314,7 +425,8 @@ void wid_game_map_client_wid_create (void)
         fsize sz2 = {1.0f, 1.0f};
         wid_set_tex_br(wid_game_map_client_window, sz2);
 
-        wid_set_on_key_down(wid_game_map_client_window, wid_game_map_key_event);
+        wid_set_on_key_down(wid_game_map_client_window, 
+                            wid_game_map_key_event);
     }
 
     {
@@ -333,6 +445,9 @@ void wid_game_map_client_wid_create (void)
 
         wid_set_tl_br_pct(wid_game_map_client_grid_container, tl, br);
         wid_set_tex(wid_game_map_client_grid_container, 0, 0);
+
+        wid_set_on_key_down(wid_game_map_client_grid_container, 
+                            wid_game_map_key_event);
     }
 
     {
@@ -548,7 +663,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     double items_x = 0.00; // items x
     double items_y = 0.31; // items y
     double items_y_offset = 0.05;
-    uint32_t item_columns = 10;
+    uint32_t item_columns = 6;
     double item_width = 0.15;
     double item_height = 0.08;
 
@@ -718,6 +833,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         {
             uint32_t c;
             uint32_t count = 0;
+            uint32_t shortcut_count = 1;
 
             thingp t = thing_client_find(p->thing_id);
             if (!t) {
@@ -728,6 +844,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
              * Only print the items of the local player.
              */
             if (t == player) {
+                memcpy(wid_key_shortcuts, wid_key_shortcuts_override,
+                    sizeof(wid_key_shortcuts));
+
                 for (c = 0; c < THING_MAX; c++) {
                     if (!t->carrying[c]) {
                         continue;
@@ -802,8 +921,85 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     }
 
                     wid_set_on_mouse_down(w, wid_game_map_item_mouse_event);
+                    wid_set_on_key_down(w, wid_game_map_item_key_event);
 
                     count++;
+
+                    /*
+                     * Add a shortcut key if this thing is useful to have
+                     * one.
+                     */
+                    if (thing_template_is_shortcut(temp)) {
+                        widp w;
+
+                        /*
+                         * Skip this key as it is grabbed already.
+                         */
+                        if (wid_key_shortcuts[shortcut_count]) {
+                            shortcut_count++;
+                            shortcut_count = shortcut_count % MAX_SHORTCUTS;
+
+                            /*
+                             * Unless this is the template for that key,
+                             */
+                            if (wid_key_shortcuts[shortcut_count] != temp) {
+                                break;
+                            }
+                        }
+
+                        w = wid_new_square_button(
+                                            wid_scoreline_container_top,
+                                            "item shortcut");
+
+                        br.x = tl.x + ((br.x - tl.x) / 2.5);
+                        br.y = tl.y + ((br.y - tl.y) / 2.5);
+                        tl.x -= 0.01;
+                        tl.y -= 0.01;
+                        br.x -= 0.01;
+                        br.y -= 0.01;
+
+                        wid_set_tl_br_pct(w, tl, br);
+
+                        wid_set_client_context(w, temp);
+
+
+                        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+                        wid_set_color(w, WID_COLOR_BG, RED);
+                        wid_set_color(w, WID_COLOR_TL, LIGHTBLUE);
+                        wid_set_color(w, WID_COLOR_BR, LIGHTBLUE);
+                        wid_set_bevel(w, 1);
+
+                        /*
+                         * Try and find a set shortcut key for this thing.
+                         */
+                        uint32_t key = shortcut_count;
+                        uint32_t j;
+
+                        for (j = 0; j < MAX_SHORTCUTS; j++) {
+                            if (wid_key_shortcuts[j] == temp) {
+                                key = j;
+                                break;
+                            }
+                        }
+
+                        if (j == MAX_SHORTCUTS) {
+                            wid_key_shortcuts[key] = temp;
+
+                            shortcut_count++;
+                            shortcut_count = shortcut_count % MAX_SHORTCUTS;
+                        }
+
+                        snprintf(tmp, sizeof(tmp) - 1, "%d", key);
+
+                        wid_set_text(w, tmp);
+                        wid_set_font(w, vsmall_font);
+                        wid_raise(w);
+
+                        wid_set_on_mouse_down(w, 
+                                    wid_game_map_item_shortcut_mouse_event);
+                        wid_set_on_key_down(w, 
+                                    wid_game_map_item_shortcut_key_event);
+                    }
                 }
             }
         }
@@ -875,4 +1071,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     }
 
     wid_update_mouse();
+
+    wid_set_focus(wid_game_map_client_grid_container);
 }
