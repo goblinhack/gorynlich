@@ -316,13 +316,20 @@ static void thing_handle_collision (thingp me, thingp it,
     if (thing_is_projectile(me) || thing_is_explosion(me)) {
         if (thing_is_monst(it) || 
             thing_is_generator(it) ||
-            thing_is_door(it) ||
-            thing_is_wall(it) ||
             thing_is_food(it)) {
             /*
              * Weapon hits monster or generator.
              */
             thing_hit(it, me, 0, "hit");
+            return;
+        }
+
+        if (thing_is_door(it) ||
+            thing_is_wall(it)) {
+            /*
+             * Weapon hits a wall
+             */
+            thing_dead(me, 0, "hit solid obstacle");
             return;
         }
     }

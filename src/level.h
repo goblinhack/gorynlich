@@ -82,8 +82,15 @@ void level_set_is_frozen(levelp level, uint8_t val);
 uint8_t level_is_frozen(levelp level);
 void level_set_is_paused(levelp level, uint8_t val);
 void level_place_plant_pod(levelp);
-void level_place_explosion(levelp level, double x, double y);
-void level_place_potion_effect1(levelp level, double x, double y);
+void level_place_explosion(levelp level, 
+                           thingp owner,
+                           double x, double y);
+void level_place_small_explosion(levelp level, 
+                                 thingp owner,
+                                 double x, double y);
+void level_place_potion_effect1(levelp level, 
+                                thingp owner,
+                                double x, double y);
 extern uint8_t game_over;
 
 extern uint8_t god_mode;
