@@ -6,9 +6,9 @@
  is_animated
  is_hidden_from_editor
  is_explosion
-is_destroyed_on_hitting
+ is_destroyed_on_hitting
  is_collision_map_monst
- damage=5
+ damage=100
  hit_delay_tenths=1
  tiles={
   tile={

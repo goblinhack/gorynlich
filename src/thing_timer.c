@@ -24,6 +24,14 @@ tree_rootp thing_timers;
 void thing_timers_destroy (thingp thing)
 {
     if (!thing_timers) {
+        if (thing->timer_spam) {
+            DIE("spam timer still running but no tree?");
+        }
+
+        if (thing->timer_dead) {
+            DIE("dead timer still running but no tree?");
+        }
+
         return;
     }
 
@@ -31,12 +39,20 @@ void thing_timers_destroy (thingp thing)
         action_timer_destroy(&thing_timers, thing->timer_spam);
 
         thing->timer_spam = 0;
+
+        if (!thing_timers) {
+            return;
+        }
     }
 
     if (thing->timer_dead) {
         action_timer_destroy(&thing_timers, thing->timer_dead);
 
         thing->timer_dead = 0;
+
+        if (!thing_timers) {
+            return;
+        }
     }
 }
 
@@ -74,13 +90,12 @@ static void thing_action_timer_callback_dead (void *context)
 
     place = (typeof(place)) context;
 
-    thingp thing;
-    thing = place->thing;
-    verify(thing);
-
-    thing->timer_dead = 0;
-
-    thing_dead(thing, 0, "callback");
+    thingp thing = thing_server_find(place->thing_id);
+    if (thing) {
+        verify(thing);
+        thing->timer_dead = 0;
+        thing_dead(thing, 0, "callback");
+    }
 
     myfree(context);
 }
@@ -105,10 +120,17 @@ void thing_timer_place_and_destroy_callback (void *context)
      * Just pass the same context along as it has the expire time but add
      * the newborn thing.
      */
-    thingp t = place->thing = wid_get_thing(w);
+    thingp t = wid_get_thing(w);
+
+    place->thing_id = t->thing_id;
+
+    /*
+     * Save the owner of this new thing. This could be who cast a spell.
+     */
+    t->owner_id = place->owner_id;
 
     t->timer_dead = action_timer_create(
-            &timers,
+            &thing_timers,
             (action_timer_callback)thing_action_timer_callback_dead,
             context,
             "kill thing",
@@ -122,10 +144,18 @@ void thing_timer_place_callback (void *context)
 
     place = (typeof(place)) context;
 
-    wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
-                                     place->x,
-                                     place->y,
-                                     place->thing_template);
+    widp w = wid_game_map_server_replace_tile(
+                                    wid_game_map_server_grid_container,
+                                    place->x,
+                                    place->y,
+                                    place->thing_template);
+
+    thingp t = wid_get_thing(w);
+
+    /*
+     * Save the owner of this new thing. This could be who cast a spell.
+     */
+    t->owner_id = place->owner_id;
 
     myfree(context);
 }

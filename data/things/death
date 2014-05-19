@@ -3,8 +3,8 @@
  tooltip="death!"
  z_depth=2
  speed=1000
- health=255
- damage=5
+ health=100
+ damage=20
  score_on_death=1000
  vision_distance=60
  hit_delay_tenths=1
