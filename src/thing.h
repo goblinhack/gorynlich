@@ -738,11 +738,11 @@ static inline uint8_t thing_is_xxx20 (thingp t)
     return (thing_template_is_xxx20(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx21 (thingp t)
+static inline uint8_t thing_is_shortcut (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx21(thing_get_template(t)));
+    return (thing_template_is_shortcut(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_seedpod (thingp t)
@@ -1009,9 +1009,9 @@ static inline uint8_t thing_is_xxx20_fast (thingp t)
     return (t->thing_template->is_xxx20);
 }
 
-static inline uint8_t thing_is_xxx21_fast (thingp t)
+static inline uint8_t thing_is_shortcut_fast (thingp t)
 {
-    return (t->thing_template->is_xxx21);
+    return (t->thing_template->is_shortcut);
 }
 
 static inline uint8_t thing_is_seedpod_fast (thingp t)
