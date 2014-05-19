@@ -146,6 +146,7 @@ void thing_place_timed(thing_templatep t,
                        uint32_t ms, 
                        uint32_t jitter);
 void thing_place_and_destroy_timed(thing_templatep t, 
+                                   thingp owner,
                                    double x,
                                    double y,
                                    uint32_t ms, 
@@ -175,11 +176,13 @@ typedef struct {
     double x;
     double y;
     uint32_t destroy_in;
-    thingp thing;
+    uint32_t owner_id;
+    uint32_t thing_id;
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);
 thingp thing_client_find(uint32_t thing_id);
+thingp thing_server_find(uint32_t thing_id);
 
 extern tree_root *server_player_things;
 extern tree_root *client_player_things;
@@ -337,6 +340,11 @@ typedef struct thing_ {
      * Unique id per thing.
      */
     uint16_t thing_id;
+
+    /*
+     * Who created this thing? e.g. who cast a spell?
+     */
+    uint16_t owner_id;
 
     /*
      * Player current level or level of monster.

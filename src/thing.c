@@ -363,7 +363,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 }
 
 /*
- * Find an existing new thing.
+ * Find an existing thing.
  */
 thingp thing_client_find (uint32_t id)
 {
@@ -378,6 +378,27 @@ thingp thing_client_find (uint32_t id)
     if (!result) {
         result = (typeof(result)) 
                         tree_find(client_boring_things, &target.tree.node);
+    }
+
+    return (result);
+}
+
+/*
+ * Find an existing thing.
+ */
+thingp thing_server_find (uint32_t id)
+{
+    thing target;
+    thingp result;
+
+    // memset(&target, 0, sizeof(target));
+    target.tree.key = id;
+
+    result = (typeof(result)) 
+                    tree_find(server_active_things, &target.tree.node);
+    if (!result) {
+        result = (typeof(result)) 
+                        tree_find(server_boring_things, &target.tree.node);
     }
 
     return (result);
@@ -564,8 +585,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
          * Explodes on death ala Sith Lord?
          */
         if (thing_template_explode_on_death(t->thing_template)) {
-            level_place_explosion(t->level, 
-                                  thing_grid_x(t), thing_grid_y(t));
+            level_place_small_explosion(t->level, 
+                                        0, // owner
+                                        t->x, t->y);
         }
     }
 
@@ -724,8 +746,16 @@ void thing_hit (thingp t,
      * Allow now more hits than x per second by the hitter.
      */
     if (hitter) {
+        /*
+         * Have we ran into our own spell effect? Cast no damage on ourselves.
+         */
+        if (hitter->owner_id == t->thing_id) {
+            return;
+        }
+
         uint32_t delay = 
-                        thing_template_get_hit_delay_tenths(hitter->thing_template);
+            thing_template_get_hit_delay_tenths(hitter->thing_template);
+
         if (delay) {
             if (!time_have_x_tenths_passed_since(delay, 
                                                  hitter->timestamp_hit)) {
@@ -1641,6 +1671,7 @@ void thing_place_timed (thing_templatep thing_template,
  * Place a thing after a delay.
  */
 void thing_place_and_destroy_timed (thing_templatep thing_template, 
+                                    thingp owner,
                                     double x,
                                     double y,
                                     uint32_t ms, 
@@ -1656,6 +1687,9 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
     context->level = server_level;
     context->destroy_in = destroy_in;
     context->thing_template = thing_template;
+    if (owner) {
+        context->owner_id = owner->thing_id;
+    }
 
     action_timer_create(
             &timers,
@@ -2420,6 +2454,7 @@ uint8_t thing_server_move (thingp t,
 
     if (fire) {
         double dx, dy;
+        double dist_from_player = 0.7;
 
         /*
          * Try current direction.
@@ -2432,19 +2467,19 @@ uint8_t thing_server_move (thingp t,
          * speed than if thrown when stationary.
          */
         if (down) {
-            dy = 1.5;
+            dy = dist_from_player;
         }
 
         if (up) {
-            dy = -1.5;
+            dy = -dist_from_player;
         }
 
         if (right) {
-            dx = 1.5;
+            dx = dist_from_player;
         }
 
         if (left) {
-            dx = -1.5;
+            dx = -dist_from_player;
         }
 
         /*
@@ -2452,39 +2487,39 @@ uint8_t thing_server_move (thingp t,
          */
         if ((dx == 0) && (dy == 0)) {
             if (thing_is_dir_down(t)) {
-                dy = 1.0;
+                dy = dist_from_player;
             }
 
             if (thing_is_dir_up(t)) {
-                dy = -1.0;
+                dy = -dist_from_player;
             }
 
             if (thing_is_dir_right(t)) {
-                dx = 1.0;
+                dx = dist_from_player;
             }
 
             if (thing_is_dir_left(t)) {
-                dx = -1.0;
+                dx = -dist_from_player;
             }
 
             if (thing_is_dir_tl(t)) {
-                dx = -1.0;
-                dy = -1.0;
+                dx = -dist_from_player;
+                dy = -dist_from_player;
             }
 
             if (thing_is_dir_tr(t)) {
-                dx = 1.0;
-                dy = -1.0;
+                dx = dist_from_player;
+                dy = -dist_from_player;
             }
 
             if (thing_is_dir_bl(t)) {
-                dx = -1.0;
-                dy = 1.0;
+                dx = -dist_from_player;
+                dy = dist_from_player;
             }
 
             if (thing_is_dir_br(t)) {
-                dx = 1.0;
-                dy = 1.0;
+                dx = dist_from_player;
+                dy = dist_from_player;
             }
         }
 
@@ -2599,7 +2634,7 @@ void thing_server_action (thingp t,
         }
 
         if (item == THING_POTION1) {
-            level_place_potion_effect1(server_level, t->x, t->y);
+            level_place_potion_effect1(server_level, t, t->x, t->y);
             break;
         }
 

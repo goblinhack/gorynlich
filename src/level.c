@@ -181,7 +181,9 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     }
 
     if (thing_is_bomb(t)) {
-        level_place_explosion(server_level, t->x, t->y);
+        level_place_explosion(server_level,
+                              0, // owner
+                              t->x, t->y);
         thing_dead(t, 0 /* killer */, "blew up");
         return (true);
     }
@@ -641,6 +643,7 @@ void level_place_plant_pod (levelp level)
  * Place an explosion
  */
 static uint8_t level_place_explosion_at (levelp level,
+                                         thingp owner,
                                          double x, 
                                          double y, 
                                          int32_t i,
@@ -665,10 +668,11 @@ static uint8_t level_place_explosion_at (levelp level,
     }
 
     thing_place_and_destroy_timed(thing_template,
+                                  owner,
                                   x,
                                   y,
                                   i * 200, // place in
-                                  10000, // destroy in
+                                  400, // destroy in
                                   i * 100);
 
     return (true);
@@ -678,6 +682,7 @@ static uint8_t level_place_explosion_at (levelp level,
  * Place an explosion
  */
 static void level_place_explosion_ (levelp level, 
+                                    thingp owner,
                                     double x, 
                                     double y,
                                     uint32_t radius,
@@ -711,7 +716,9 @@ static void level_place_explosion_ (levelp level,
 
             va_start(args, nargs);
 
-            int ret = level_place_explosion_at(level, exp_x, exp_y, r,
+            int ret = level_place_explosion_at(level, 
+                                               owner,
+                                               exp_x, exp_y, r,
                                                nargs, args);
             va_end(args);
 
@@ -727,9 +734,13 @@ static void level_place_explosion_ (levelp level,
     }
 }
 
-void level_place_explosion (levelp level, double x, double y)
+void level_place_explosion (levelp level, 
+                            thingp owner,
+                            double x, double y)
 {
-    level_place_explosion_(level, x, y,
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
                            7, // radius
                            7, // nargs
                            "data/things/explosion1",
@@ -741,9 +752,31 @@ void level_place_explosion (levelp level, double x, double y)
                            "data/things/explosion7");
 }
 
-void level_place_potion_effect1 (levelp level, double x, double y)
+void level_place_small_explosion (levelp level, 
+                                  thingp owner,
+                                  double x, double y)
 {
-    level_place_explosion_(level, x, y,
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           2, // radius
+                           7, // nargs
+                           "data/things/explosion1",
+                           "data/things/explosion2",
+                           "data/things/explosion3",
+                           "data/things/explosion4",
+                           "data/things/explosion5",
+                           "data/things/explosion6",
+                           "data/things/explosion7");
+}
+
+void level_place_potion_effect1 (levelp level, 
+                                 thingp owner,
+                                 double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
                            7, // radius
                            2, // nargs
                            "data/things/potion_effect1",

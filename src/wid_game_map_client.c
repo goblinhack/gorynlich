@@ -801,7 +801,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                         wid_set_text_bot(w, true);
                     }
 
-                    wid_set_on_mouse_up(w, wid_game_map_item_mouse_event);
+                    wid_set_on_mouse_down(w, wid_game_map_item_mouse_event);
 
                     count++;
                 }

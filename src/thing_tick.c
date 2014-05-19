@@ -216,33 +216,6 @@ static void thing_tick_client_all (void)
         return;
     }
 
-    static int32_t pulsate_delta = 2;
-    static int32_t pulsate;
-
-    pulsate += pulsate_delta;
-
-    if (pulsate > 255) {
-        pulsate = 255;
-        pulsate_delta = -pulsate_delta;
-    }
-
-    if (pulsate < 0) {
-        pulsate = 6;
-        pulsate_delta = -pulsate_delta;
-    }
-
-    /*
-     * Allow level timers to fire.
-     */
-    level_tick(level);
-
-    /*
-     * Any timers waiting to fire?
-     */
-    if (thing_timers) {
-        action_timers_tick(thing_timers);
-    }
-
     TREE_WALK(client_active_things, t) {
         thing_templatep thing_template;
         widp w;
