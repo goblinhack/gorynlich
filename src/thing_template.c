@@ -436,7 +436,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx21", t->is_xxx21);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
@@ -540,7 +540,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
     PUT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
     PUT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx21", t->is_xxx21);
+    PUT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);

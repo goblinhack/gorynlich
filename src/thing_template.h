@@ -179,7 +179,7 @@ typedef struct thing_template_ {
     uint8_t is_key8:1;
     uint8_t is_key9:1;
     uint8_t is_xxx20:1;
-    uint8_t is_xxx21:1;
+    uint8_t is_shortcut:1;
     uint8_t is_seedpod:1;
     uint8_t is_bomb:1;
     uint8_t is_spam:1;
@@ -403,9 +403,9 @@ static inline uint8_t thing_template_is_key9 (thing_templatep t)
     return (t->is_key9);
 }
 
-static inline uint8_t thing_template_is_xxx21 (thing_templatep t)
+static inline uint8_t thing_template_is_shortcut (thing_templatep t)
 {
-    return (t->is_xxx21);
+    return (t->is_shortcut);
 }
 
 static inline uint8_t thing_template_is_seedpod (thing_templatep t)

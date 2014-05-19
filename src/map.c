@@ -195,9 +195,9 @@ uint8_t map_is_xxx20_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_xxx20));
 }
 
-uint8_t map_is_xxx21_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_shortcut_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx21));
+    return (map_is_x_at(level, x, y, thing_template_is_shortcut));
 }
 
 uint8_t map_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -438,9 +438,9 @@ thingp map_thing_is_xxx20_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_xxx20));
 }
 
-thingp map_thing_is_xxx21_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_shortcut_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx21));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_shortcut));
 }
 
 thingp map_thing_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -697,9 +697,9 @@ tree_rootp map_all_things_is_xxx20_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx20));
 }
 
-tree_rootp map_all_things_is_xxx21_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_shortcut_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx21));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_shortcut));
 }
 
 tree_rootp map_all_things_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -951,10 +951,10 @@ thing_templatep map_find_is_xxx20_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_xxx20, w));
 }
 
-thing_templatep map_find_is_xxx21_at (levelp level,
+thing_templatep map_find_is_shortcut_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx21, w));
+    return (map_find_x_at(level, x, y, thing_template_is_shortcut, w));
 }
 
 thing_templatep map_find_seedpod_at (levelp level,
@@ -1508,9 +1508,9 @@ uint32_t level_count_is_xxx20 (levelp level)
     return (level_count_is_x(level, thing_template_is_xxx20));
 }
 
-uint32_t level_count_is_xxx21 (levelp level)
+uint32_t level_count_is_shortcut (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx21));
+    return (level_count_is_x(level, thing_template_is_shortcut));
 }
 
 uint32_t level_count_is_seedpod (levelp level)
@@ -1769,9 +1769,9 @@ tree_rootp map_all_things_is_xxx20 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_xxx20));
 }
 
-tree_rootp map_all_things_is_xxx21 (levelp level)
+tree_rootp map_all_things_is_shortcut (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx21));
+    return (map_all_things_is_x(level, thing_template_is_shortcut));
 }
 
 tree_rootp map_all_things_is_seedpod (levelp level)
