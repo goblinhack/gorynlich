@@ -1449,50 +1449,15 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_WALL3, "data/things/wall3");
     thing_template_load(&THING_WALL4, "data/things/wall4");
     thing_template_load(&THING_WALL5, "data/things/wall5");
-    thing_template_load(&THING_DOOR, "data/things/door");
-    thing_template_load(&THING_NOENTRY, "data/things/noentry");
-    thing_template_load(&THING_FOOD, "data/things/food");
     thing_template_load(&THING_FLOOR, "data/things/floor");
     thing_template_load(&THING_FLOOR2, "data/things/floor2");
     thing_template_load(&THING_FLOOR3, "data/things/floor3");
     thing_template_load(&THING_FLOOR4, "data/things/floor4");
     thing_template_load(&THING_FLOOR5, "data/things/floor5");
     thing_template_load(&THING_FLOOR6, "data/things/floor6");
-    thing_template_load(&THING_WARRIOR, "data/things/warrior");
-    thing_template_load(&THING_VALKYRIE, "data/things/valkyrie");
-    thing_template_load(&THING_WIZARD, "data/things/wizard");
-    thing_template_load(&THING_ELF, "data/things/elf");
-    thing_template_load(&THING_DWARF, "data/things/dwarf");
-    thing_template_load(&THING_GHOST1, "data/things/ghost1");
-    thing_template_load(&THING_GHOST2, "data/things/ghost2");
-    thing_template_load(&THING_GHOST3, "data/things/ghost3");
-    thing_template_load(&THING_DEMON, "data/things/demon");
-    thing_template_load(&THING_MONK, "data/things/monk");
-    thing_template_load(&THING_LIZARD, "data/things/lizard");
-    thing_template_load(&THING_DEATH, "data/things/death");
-    thing_template_load(&THING_PLANT, "data/things/plant");
-    thing_template_load(&THING_SEEDPOD, "data/things/seedpod");
+    thing_template_load(&THING_DOOR, "data/things/door");
+    thing_template_load(&THING_NOENTRY, "data/things/noentry");
     thing_template_load(&THING_PIPE, "data/things/pipe");
-    thing_template_load(&THING_EXPLOSION, "data/things/explosion");
-    thing_template_load(&THING_BOMB, "data/things/bomb");
-    thing_template_load(&THING_SPAM, "data/things/spam");
-    thing_template_load(&THING_POTION1, "data/things/potion1");
-    thing_template_load(&THING_POTION2, "data/things/potion2");
-    thing_template_load(&THING_POTION3, "data/things/potion3");
-    thing_template_load(&THING_POTION4, "data/things/potion4");
-    thing_template_load(&THING_POTION5, "data/things/potion5");
-    thing_template_load(&THING_WATER1, "data/things/water1");
-    thing_template_load(&THING_WATER2, "data/things/water2");
-    thing_template_load(&THING_MASK1, "data/things/mask1");
-    thing_template_load(&THING_MASK2, "data/things/mask2");
-    thing_template_load(&THING_MASK3, "data/things/mask3");
-    thing_template_load(&THING_GEM1, "data/things/gem1");
-    thing_template_load(&THING_GEM2, "data/things/gem2");
-    thing_template_load(&THING_GEM3, "data/things/gem3");
-    thing_template_load(&THING_GEM4, "data/things/gem4");
-    thing_template_load(&THING_GEM5, "data/things/gem5");
-    thing_template_load(&THING_GEM6, "data/things/gem6");
-    thing_template_load(&THING_GEM7, "data/things/gem7");
     thing_template_load(&THING_EXIT1, "data/things/exit1");
     thing_template_load(&THING_EXIT2, "data/things/exit2");
     thing_template_load(&THING_EXIT3, "data/things/exit3");
@@ -1507,14 +1472,78 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_GENERATOR5, "data/things/generator5");
     thing_template_load(&THING_GENERATOR6, "data/things/generator6");
     thing_template_load(&THING_GENERATOR7, "data/things/generator7");
+
+    /*
+     * Heroes
+     */
+    thing_template_load(&THING_WARRIOR, "data/things/warrior");
+    thing_template_load(&THING_VALKYRIE, "data/things/valkyrie");
+    thing_template_load(&THING_WIZARD, "data/things/wizard");
+    thing_template_load(&THING_ELF, "data/things/elf");
+    thing_template_load(&THING_DWARF, "data/things/dwarf");
+
+    /*
+     * Monsters
+     */
+    thing_template_load(&THING_GHOST1, "data/things/ghost1");
+    thing_template_load(&THING_GHOST2, "data/things/ghost2");
+    thing_template_load(&THING_GHOST3, "data/things/ghost3");
+    thing_template_load(&THING_DEMON, "data/things/demon");
+    thing_template_load(&THING_MONK, "data/things/monk");
+    thing_template_load(&THING_LIZARD, "data/things/lizard");
+    thing_template_load(&THING_DEATH, "data/things/death");
+    thing_template_load(&THING_PLANT, "data/things/plant");
+    thing_template_load(&THING_SEEDPOD, "data/things/seedpod");
+
+    /*
+     * Important stuff that cannot be used.
+     */
     thing_template_load(&THING_KEYS1, "data/things/keys1");
     thing_template_load(&THING_KEYS2, "data/things/keys2");
     thing_template_load(&THING_KEYS3, "data/things/keys3");
-    thing_template_load(&THING_COINS1, "data/things/coins1");
-    thing_template_load(&THING_AMULET1, "data/things/amulet1");
-    thing_template_load(&THING_CHEST1, "data/things/chest1");
+
+    /*
+     * Wearable items that are used as weapons. Shown first on list of player 
+     * items.
+     */
     thing_template_load(&THING_ARROW, "data/things/arrow");
     thing_template_load(&THING_FIREBALL, "data/things/fireball");
+    thing_template_load(&THING_AMULET1, "data/things/amulet1");
+
+    /*
+     * Lesser items like food.
+     */
+    thing_template_load(&THING_FOOD, "data/things/food");
+    thing_template_load(&THING_POTION1, "data/things/potion1");
+    thing_template_load(&THING_POTION2, "data/things/potion2");
+    thing_template_load(&THING_POTION3, "data/things/potion3");
+    thing_template_load(&THING_POTION4, "data/things/potion4");
+    thing_template_load(&THING_POTION5, "data/things/potion5");
+    thing_template_load(&THING_WATER1, "data/things/water1");
+    thing_template_load(&THING_WATER2, "data/things/water2");
+
+    /*
+     * Lowest priority junk
+     */
+    thing_template_load(&THING_MASK1, "data/things/mask1");
+    thing_template_load(&THING_MASK2, "data/things/mask2");
+    thing_template_load(&THING_MASK3, "data/things/mask3");
+    thing_template_load(&THING_GEM1, "data/things/gem1");
+    thing_template_load(&THING_GEM2, "data/things/gem2");
+    thing_template_load(&THING_GEM3, "data/things/gem3");
+    thing_template_load(&THING_GEM4, "data/things/gem4");
+    thing_template_load(&THING_GEM5, "data/things/gem5");
+    thing_template_load(&THING_GEM6, "data/things/gem6");
+    thing_template_load(&THING_GEM7, "data/things/gem7");
+    thing_template_load(&THING_COINS1, "data/things/coins1");
+    thing_template_load(&THING_CHEST1, "data/things/chest1");
+    thing_template_load(&THING_BOMB, "data/things/bomb");
+    thing_template_load(&THING_SPAM, "data/things/spam");
+
+    /*
+     * Effects
+     */
+    thing_template_load(&THING_EXPLOSION, "data/things/explosion");
     thing_template_load(&THING_EXPLOSION1, "data/things/explosion1");
     thing_template_load(&THING_EXPLOSION2, "data/things/explosion2");
     thing_template_load(&THING_EXPLOSION3, "data/things/explosion3");

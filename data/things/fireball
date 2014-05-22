@@ -10,6 +10,7 @@
  is_destroyed_on_hitting
  is_projectile
  is_animated
+ is_item_wearable
  tiles={
   tile={
    is_dir_up

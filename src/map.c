@@ -125,14 +125,14 @@ uint8_t map_is_xxx5_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_xxx5));
 }
 
-uint8_t map_is_xxx6_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_treasure_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx6));
+    return (map_is_x_at(level, x, y, thing_template_is_treasure));
 }
 
-uint8_t map_is_xxx7_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_item_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx7));
+    return (map_is_x_at(level, x, y, thing_template_is_item_wearable));
 }
 
 uint8_t map_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
@@ -190,9 +190,9 @@ uint8_t map_is_key8_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_key8));
 }
 
-uint8_t map_is_xxx20_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_item_unusable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx20));
+    return (map_is_x_at(level, x, y, thing_template_is_item_unusable));
 }
 
 uint8_t map_is_shortcut_at (levelp level, int32_t x, int32_t y)
@@ -368,14 +368,14 @@ thingp map_thing_is_xxx5_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_xxx5));
 }
 
-thingp map_thing_is_xxx6_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_treasure_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx6));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_treasure));
 }
 
-thingp map_thing_is_xxx7_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_item_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx7));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_item_wearable));
 }
 
 thingp map_thing_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
@@ -433,9 +433,9 @@ thingp map_thing_is_key8_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_key8));
 }
 
-thingp map_thing_is_xxx20_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_item_unusable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx20));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_item_unusable));
 }
 
 thingp map_thing_is_shortcut_at (levelp level, int32_t x, int32_t y)
@@ -627,14 +627,14 @@ tree_rootp map_all_things_is_xxx5_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx5));
 }
 
-tree_rootp map_all_things_is_xxx6_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_treasure_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx6));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_treasure));
 }
 
-tree_rootp map_all_things_is_xxx7_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_item_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx7));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_wearable));
 }
 
 tree_rootp map_all_things_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
@@ -692,9 +692,9 @@ tree_rootp map_all_things_is_key8_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_key8));
 }
 
-tree_rootp map_all_things_is_xxx20_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_item_unusable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx20));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_unusable));
 }
 
 tree_rootp map_all_things_is_shortcut_at (levelp level, int32_t x, int32_t y)
@@ -870,13 +870,13 @@ thing_templatep map_find_xxx5_at (levelp level,
 thing_templatep map_find_xxx6_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx6, w));
+    return (map_find_x_at(level, x, y, thing_template_is_treasure, w));
 }
 
 thing_templatep map_find_xxx7_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx7, w));
+    return (map_find_x_at(level, x, y, thing_template_is_item_wearable, w));
 }
 
 thing_templatep map_find_is_destroyed_on_hitting_at (levelp level,
@@ -945,10 +945,10 @@ thing_templatep map_find_spikes_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_key8, w));
 }
 
-thing_templatep map_find_is_xxx20_at (levelp level,
+thing_templatep map_find_is_item_unusable_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx20, w));
+    return (map_find_x_at(level, x, y, thing_template_is_item_unusable, w));
 }
 
 thing_templatep map_find_is_shortcut_at (levelp level,
@@ -1438,14 +1438,14 @@ uint32_t level_count_is_xxx5 (levelp level)
     return (level_count_is_x(level, thing_template_is_xxx5));
 }
 
-uint32_t level_count_is_xxx6 (levelp level)
+uint32_t level_count_is_treasure (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx6));
+    return (level_count_is_x(level, thing_template_is_treasure));
 }
 
-uint32_t level_count_is_xxx7 (levelp level)
+uint32_t level_count_is_item_wearable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx7));
+    return (level_count_is_x(level, thing_template_is_item_wearable));
 }
 
 uint32_t level_count_is_destroyed_on_hitting (levelp level)
@@ -1503,9 +1503,9 @@ uint32_t level_count_is_key8 (levelp level)
     return (level_count_is_x(level, thing_template_is_key8));
 }
 
-uint32_t level_count_is_xxx20 (levelp level)
+uint32_t level_count_is_item_unusable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx20));
+    return (level_count_is_x(level, thing_template_is_item_unusable));
 }
 
 uint32_t level_count_is_shortcut (levelp level)
@@ -1699,14 +1699,14 @@ tree_rootp map_all_things_is_xxx5 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_xxx5));
 }
 
-tree_rootp map_all_things_is_xxx6 (levelp level)
+tree_rootp map_all_things_is_treasure (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx6));
+    return (map_all_things_is_x(level, thing_template_is_treasure));
 }
 
-tree_rootp map_all_things_is_xxx7 (levelp level)
+tree_rootp map_all_things_is_item_wearable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx7));
+    return (map_all_things_is_x(level, thing_template_is_item_wearable));
 }
 
 tree_rootp map_all_things_is_destroyed_on_hitting (levelp level)
@@ -1764,9 +1764,9 @@ tree_rootp map_all_things_is_key8 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_key8));
 }
 
-tree_rootp map_all_things_is_xxx20 (levelp level)
+tree_rootp map_all_things_is_item_unusable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx20));
+    return (map_all_things_is_x(level, thing_template_is_item_unusable));
 }
 
 tree_rootp map_all_things_is_shortcut (levelp level)
