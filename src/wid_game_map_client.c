@@ -427,6 +427,7 @@ static uint8_t
 wid_game_map_item_mouse_event_common (uint32_t button,
                                       thing_templatep thing_template)
 {
+LOG("button %d",button);
     if (button == 1) {
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_USE,
