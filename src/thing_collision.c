@@ -525,3 +525,72 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 
     return (false);
 }
+
+/*
+ * Have we hit anything?
+ *
+ * Is there anything other than floor here
+ */
+uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
+{
+    thingp it;
+    thingp me;
+    widp wid_next;
+    widp wid_me;
+    widp wid_it;
+
+    verify(t);
+    wid_me = thing_wid(t);
+    verify(wid_me);
+
+    int32_t dx, dy;
+
+    me = wid_get_thing(wid_me);
+
+    for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
+        int32_t x = (int32_t)nx + dx;
+        int32_t y = (int32_t)ny + dy;
+
+        wid_it = wid_grid_find_first(grid, x, y);
+        while (wid_it) {
+            verify(wid_it);
+
+            wid_next = wid_grid_find_next(grid, wid_it, x, y);
+            if (wid_me == wid_it) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            it = wid_get_thing(wid_it);
+            if (!it) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+             * No collisions with the floor!
+             */
+            if (thing_is_floor(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            /*
+             * Allow dead ghosts to walk over each other!
+             */
+            if (thing_is_dead(it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (!things_overlap(me, nx, ny, it)) {
+                wid_it = wid_next;
+                continue;
+            }
+
+            return (true);
+        }
+    }
+
+    return (false);
+}

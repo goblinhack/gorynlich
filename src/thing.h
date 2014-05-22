@@ -51,6 +51,7 @@ widp thing_message(thingp t, const char *message);
 void thing_animate(thingp);
 void thing_handle_collisions(widp grid, thingp t);
 uint8_t thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
+uint8_t thing_hit_any_obstacle(widp grid, thingp t, double nx, double ny);
 uint8_t thing_server_hit_solid_obstacle(widp grid, 
                                         thingp t, double nx, double ny);
 void thing_inc_powerup_spam_count(thingp t, uint8_t val);
