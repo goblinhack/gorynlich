@@ -276,13 +276,18 @@ static void thing_handle_collision (thingp me, thingp it,
 
     if (thing_is_player(me)) {
         /*
-         * Collect keys
+         * Player collects keys
          */
         if (thing_is_key(it) ||
+            /*
+             * And treasure.
+             */
+            thing_is_treasure(it) ||
             /*
              * And food.
              */
             thing_is_food(it)) {
+
             thing_collect(me, thing_get_template(it));
 
             thing_dead(it, me, "collected");
@@ -300,8 +305,7 @@ static void thing_handle_collision (thingp me, thingp it,
         /*
          * Player bumped into something.
          */
-        if (thing_is_monst(it) ||
-            thing_is_explosion(it)) {
+        if (thing_is_monst(it) || thing_is_explosion(it)) {
             /*
              * I'm hit!
              */
@@ -314,9 +318,7 @@ static void thing_handle_collision (thingp me, thingp it,
      * Weapon or explosion hit something?
      */
     if (thing_is_projectile(me) || thing_is_explosion(me)) {
-        if (thing_is_monst(it) || 
-            thing_is_generator(it) ||
-            thing_is_food(it)) {
+        if (thing_is_monst(it) || thing_is_generator(it)) {
             /*
              * Weapon hits monster or generator.
              */
@@ -324,8 +326,15 @@ static void thing_handle_collision (thingp me, thingp it,
             return;
         }
 
-        if (thing_is_door(it) ||
-            thing_is_wall(it)) {
+        if (thing_is_destroyed_on_hitting(it)) {
+            /*
+             * Weapon hits food or similar?
+             */
+            thing_hit(it, me, 0, "hit");
+            return;
+        }
+
+        if (thing_is_door(it) || thing_is_wall(it)) {
             /*
              * Weapon hits a wall
              */
@@ -440,10 +449,11 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow monsters to walk into these things:
                  */
-                if (thing_is_player(it) ||
-                    thing_is_key(it) ||
-                    thing_is_explosion(it) ||
+                if (thing_is_player(it)     ||
+                    thing_is_key(it)        ||
+                    thing_is_explosion(it)  ||
                     thing_is_projectile(it) ||
+                    thing_is_treasure(it)   ||
                     thing_is_food(it)) {
                     wid_it = wid_next;
                     continue;
@@ -483,6 +493,10 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      * And collect food.
                      */
                     thing_is_food(it) ||
+                    /*
+                     * And collect treasure.
+                     */
+                    thing_is_treasure(it) ||
                     /*
                      * And walk through monsters.
                      */
