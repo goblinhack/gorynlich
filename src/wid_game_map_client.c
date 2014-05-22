@@ -979,13 +979,28 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                             thing_tile_first(thing_template_get_tiles(temp));
 
                     wid_set_tilename(w, thing_tile_name(tile));
+                    wid_set_do_not_raise(w, true);
+
+                    color col;
+
+                    if (thing_template_is_item_unusable(temp)) {
+                        col = BLACK;
+                    } else if (thing_template_is_item_wearable(temp)) {
+                        col.r = 0;
+                        col.g = 0x66;
+                        col.b = 0xff;
+                    } else if (thing_template_is_food(temp)) {
+                        col.r = 0;
+                        col.g = 0x66;
+                        col.b = 0x1f;
+                    } else if (thing_template_is_treasure(temp)) {
+                        col.r = 0x20;
+                        col.g = 0x20;
+                        col.b = 0x20;
+                    }
+                    col.a = 0xdf;
 
                     wid_set_color(w, WID_COLOR_TEXT, WHITE);
-                    color col;
-                    col.r = 0;
-                    col.g = 0x66;
-                    col.b = 0xff;
-                    col.a = 0xdf;
                     wid_set_color(w, WID_COLOR_BG, col);
                     wid_set_color(w, WID_COLOR_TL, LIGHTBLUE);
                     wid_set_color(w, WID_COLOR_BR, LIGHTBLUE);
@@ -994,9 +1009,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     wid_set_mode(w, WID_MODE_OVER);
 
                     wid_set_color(w, WID_COLOR_TEXT, WHITE);
-                    col.r = 0;
-                    col.g = 0x66;
-                    col.b = 0xff;
                     col.a = 0xff;
                     wid_set_color(w, WID_COLOR_BG, col);
                     wid_set_color(w, WID_COLOR_TL, WHITE);

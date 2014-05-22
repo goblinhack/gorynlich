@@ -640,18 +640,18 @@ static inline uint8_t thing_is_xxx5 (thingp t)
     return (thing_template_is_xxx5(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx6 (thingp t)
+static inline uint8_t thing_is_treasure (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx6(thing_get_template(t)));
+    return (thing_template_is_treasure(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx7 (thingp t)
+static inline uint8_t thing_is_item_wearable (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx7(thing_get_template(t)));
+    return (thing_template_is_item_wearable(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_destroyed_on_hitting (thingp t)
@@ -731,11 +731,11 @@ static inline uint8_t thing_is_key8 (thingp t)
     return (thing_template_is_key8(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx20 (thingp t)
+static inline uint8_t thing_is_item_unusable (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx20(thing_get_template(t)));
+    return (thing_template_is_item_unusable(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_shortcut (thingp t)
@@ -939,14 +939,14 @@ static inline uint8_t thing_is_xxx5_fast (thingp t)
     return (t->thing_template->is_xxx5);
 }
 
-static inline uint8_t thing_is_xxx6_fast (thingp t)
+static inline uint8_t thing_is_treasure_fast (thingp t)
 {
-    return (t->thing_template->is_xxx6);
+    return (t->thing_template->is_treasure);
 }
 
-static inline uint8_t thing_is_xxx7_fast (thingp t)
+static inline uint8_t thing_is_item_wearable_fast (thingp t)
 {
-    return (t->thing_template->is_xxx7);
+    return (t->thing_template->is_item_wearable);
 }
 
 static inline uint8_t thing_is_destroyed_on_hitting_fast (thingp t)
@@ -1004,9 +1004,9 @@ static inline uint8_t thing_is_key8_fast (thingp t)
     return (t->thing_template->is_key8);
 }
 
-static inline uint8_t thing_is_xxx20_fast (thingp t)
+static inline uint8_t thing_is_item_unusable_fast (thingp t)
 {
-    return (t->thing_template->is_xxx20);
+    return (t->thing_template->is_item_unusable);
 }
 
 static inline uint8_t thing_is_shortcut_fast (thingp t)

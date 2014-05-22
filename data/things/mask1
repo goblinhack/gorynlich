@@ -4,7 +4,7 @@
  z_depth=2
  z_order=2
  is_boring
- is_food
+ is_treasure
  tiles={
   tile={
    tile="mask1"

@@ -164,8 +164,8 @@ typedef struct thing_template_ {
     uint8_t is_xxx3:1;
     uint8_t is_xxx4:1;
     uint8_t is_xxx5:1;
-    uint8_t is_xxx6:1;
-    uint8_t is_xxx7:1;
+    uint8_t is_treasure:1;
+    uint8_t is_item_wearable:1;
     uint8_t is_destroyed_on_hitting:1;
     uint8_t is_star:1;
     uint8_t is_key0:1;
@@ -178,7 +178,7 @@ typedef struct thing_template_ {
     uint8_t is_key7:1;
     uint8_t is_key8:1;
     uint8_t is_key9:1;
-    uint8_t is_xxx20:1;
+    uint8_t is_item_unusable:1;
     uint8_t is_shortcut:1;
     uint8_t is_seedpod:1;
     uint8_t is_bomb:1;
@@ -328,14 +328,14 @@ static inline uint8_t thing_template_is_xxx5 (thing_templatep t)
     return (t->is_xxx5);
 }
 
-static inline uint8_t thing_template_is_xxx6 (thing_templatep t)
+static inline uint8_t thing_template_is_treasure (thing_templatep t)
 {
-    return (t->is_xxx6);
+    return (t->is_treasure);
 }
 
-static inline uint8_t thing_template_is_xxx7 (thing_templatep t)
+static inline uint8_t thing_template_is_item_wearable (thing_templatep t)
 {
-    return (t->is_xxx7);
+    return (t->is_item_wearable);
 }
 
 static inline uint8_t thing_template_is_destroyed_on_hitting (thing_templatep t)
@@ -393,9 +393,9 @@ static inline uint8_t thing_template_is_key8 (thing_templatep t)
     return (t->is_key8);
 }
 
-static inline uint8_t thing_template_is_xxx20 (thing_templatep t)
+static inline uint8_t thing_template_is_item_unusable (thing_templatep t)
 {
-    return (t->is_xxx20);
+    return (t->is_item_unusable);
 }
 
 static inline uint8_t thing_template_is_key9 (thing_templatep t)

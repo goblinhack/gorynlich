@@ -421,8 +421,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_treasure", t->is_treasure);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_item_wearable", t->is_item_wearable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_destroyed_on_hitting", t->is_destroyed_on_hitting);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
@@ -435,7 +435,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_key7", t->is_key7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
@@ -525,8 +525,8 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
     PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
     PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
+    PUT_NAMED_BITFIELD(ctx, "is_treasure", t->is_treasure);
+    PUT_NAMED_BITFIELD(ctx, "is_item_wearable", t->is_item_wearable);
     PUT_NAMED_BITFIELD(ctx, "is_destroyed_on_hitting", t->is_destroyed_on_hitting);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
@@ -539,7 +539,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_key7", t->is_key7);
     PUT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
     PUT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx20", t->is_xxx20);
+    PUT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
     PUT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
