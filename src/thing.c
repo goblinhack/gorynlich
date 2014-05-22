@@ -2583,6 +2583,10 @@ void thing_used (thingp t, thing_templatep tmp)
     uint32_t id;
 
     id = thing_template_to_id(tmp);
+    if (!t->carrying[id]) {
+        ERR("tried to drop %s not in use", thing_template_name(tmp));
+        return;
+    }
 
     THING_LOG(t, "used %s", thing_template_name(tmp));
 
@@ -2604,7 +2608,7 @@ void thing_server_action (thingp t,
                           uint8_t action,
                           uint16_t item)
 {
-    widp grid = wid_game_map_client_grid_container;
+    widp grid = wid_game_map_server_grid_container;
 
     thing_templatep thing_template = id_to_thing_template(item);
     if (!thing_template) {
@@ -2684,23 +2688,43 @@ void thing_server_action (thingp t,
             dy = 1.0;
         }
 
+        /*
+         * Sanity check we got one dir.
+         */
+        if ((dx == 0.0) && (dy == 0.0)) {
+            dx = 1.0;
+            dy = 1.0;
+        }
+
         double x = t->x + dx;
         double y = t->y + dy;
 
-        if (!thing_hit_solid_obstacle(grid, t, x, y)) {
+        /*
+         * Try to place in front of the player.
+         */
+        if (!thing_hit_any_obstacle(grid, t, x, y)) {
             if (wid_game_map_server_replace_tile(grid, x, y, thing_template)) {
+                socket_server_tx_map_update(0, server_boring_things);
                 break;
             }
         }
 
+        /*
+         * Just place anywhere free.
+         */
         for (dx = -1.0; dx <= 1.0; dx += 1.0) {
             for (dy = -1.0; dy <= 1.0; dy += 1.0) {
                 double x = t->x + dx;
                 double y = t->y + dy;
 
-                if (!thing_hit_solid_obstacle(grid, t, x, y)) {
+                if ((dx == 0.0) && (dy == 0.0)) {
+                    continue;
+                }
+
+                if (!thing_hit_any_obstacle(grid, t, x, y)) {
                     if (wid_game_map_server_replace_tile(grid, x, y, 
                                                          thing_template)) {
+                        socket_server_tx_map_update(0, server_boring_things);
                         goto done;
                     }
                 }
@@ -2708,6 +2732,9 @@ void thing_server_action (thingp t,
             }
         }
 
+        /*
+         * Urk!
+         */
         socket_tx_server_shout_only_to("Drop failed", t->player->socket);
 
         /*
