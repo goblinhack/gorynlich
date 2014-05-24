@@ -676,6 +676,10 @@
   } {   
    x=10 
    y=3 
+   t="data/things/bow1" 
+  } {   
+   x=10 
+   y=3 
    t="data/things/floor2" 
   } {   
    x=11 
@@ -1357,6 +1361,10 @@
    x=0 
    y=7 
    t="data/things/floor2" 
+  } {   
+   x=1 
+   y=7 
+   t="data/things/wand_fire" 
   } {   
    x=1 
    y=7 
