@@ -315,6 +315,11 @@ extern uint16_t THING_GENERATOR4;
 extern uint16_t THING_GENERATOR5;
 extern uint16_t THING_GENERATOR6;
 extern uint16_t THING_GENERATOR7;
+extern uint16_t THING_BOW1;
+extern uint16_t THING_BOW2;
+extern uint16_t THING_BOW3;
+extern uint16_t THING_BOW4;
+extern uint16_t THING_WAND_FIRE;
 extern uint16_t THING_KEYS1;
 extern uint16_t THING_KEYS2;
 extern uint16_t THING_KEYS3;
@@ -634,11 +639,11 @@ static inline uint8_t thing_is_xxx4 (thingp t)
     return (thing_template_is_xxx4(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx5 (thingp t)
+static inline uint8_t thing_is_weapon (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx5(thing_get_template(t)));
+    return (thing_template_is_weapon(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_treasure (thingp t)
@@ -935,9 +940,9 @@ static inline uint8_t thing_is_xxx4_fast (thingp t)
     return (t->thing_template->is_xxx4);
 }
 
-static inline uint8_t thing_is_xxx5_fast (thingp t)
+static inline uint8_t thing_is_weapon_fast (thingp t)
 {
-    return (t->thing_template->is_xxx5);
+    return (t->thing_template->is_weapon);
 }
 
 static inline uint8_t thing_is_treasure_fast (thingp t)

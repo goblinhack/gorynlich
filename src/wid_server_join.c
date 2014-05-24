@@ -96,10 +96,10 @@ static void server_add (const server *s_in)
         }
     }
 
-    s->tree.key1 = s->quality;
-    s->tree.key2 = s->avg_latency;
-    s->tree.key3 = SDLNet_Read16(&s->ip.port);
-    s->tree.key4 = SDLNet_Read32(&s->ip.host);
+    s->tree.qqq2 = s->quality;
+    s->tree.qqq3 = s->avg_latency;
+    s->tree.qqq4 = SDLNet_Read16(&s->ip.port);
+    s->tree.qqq5 = SDLNet_Read32(&s->ip.host);
 
     /*
      * Check this ip and port combination is not added already.
@@ -119,9 +119,9 @@ static void server_add (const server *s_in)
         }
 
         if (collision) {
-            s->tree.key3++;
-            SDLNet_Write16(s->tree.key3, &s->ip.port);
-            s->port = s->tree.key3;
+            s->tree.qqq4++;
+            SDLNet_Write16(s->tree.qqq4, &s->ip.port);
+            s->port = s->tree.qqq4;
         }
     } while (collision);
 
@@ -277,10 +277,10 @@ void wid_server_join_redo (uint8_t soft_refresh)
             ERR("Cannot find to re-sort host %s port %u", s->host, s->port);
         }
 
-        s->tree.key1 = s->quality;
-        s->tree.key2 = s->avg_latency;
-        s->tree.key3 = SDLNet_Read16(&s->ip.port);
-        s->tree.key4 = SDLNet_Read32(&s->ip.host);
+        s->tree.qqq2 = s->quality;
+        s->tree.qqq3 = s->avg_latency;
+        s->tree.qqq4 = SDLNet_Read16(&s->ip.port);
+        s->tree.qqq5 = SDLNet_Read32(&s->ip.host);
 
         if (!tree_insert(remote_servers, &s->tree.node)) {
             ERR("Cannot re-sort host %s port %u qual %d lat %d", 
