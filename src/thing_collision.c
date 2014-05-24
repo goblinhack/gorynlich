@@ -276,20 +276,11 @@ static void thing_handle_collision (thingp me, thingp it,
 
     if (thing_is_player(me)) {
         /*
-         * Player collects keys
+         * Player collects keys and other items
          */
         if (thing_is_key(it) ||
-            /*
-             * And treasure.
-             */
             thing_is_treasure(it) ||
-            /*
-             * And treasure.
-             */
             thing_is_weapon(it) ||
-            /*
-             * And food.
-             */
             thing_is_food(it)) {
 
             thing_collect(me, thing_get_template(it));
@@ -301,7 +292,7 @@ static void thing_handle_collision (thingp me, thingp it,
         /*
          * Open doors if you have a key.
          */
-        if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+        if (thing_is_door(it) && thing_is_carrying(me, THING_KEYS1)) {
             level_open_door(server_level, x, y);
             return;
         }
@@ -485,33 +476,25 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow to walk through doors so we can open them later.
                  */
-                if (thing_is_door(it) && thing_has(me, THING_KEYS1)) {
+                if (thing_is_door(it) && thing_is_carrying(me, THING_KEYS1)) {
                     wid_it = wid_next;
                     continue;
                 }
 
                 /*
-                 * Allow players to collect keys.
+                 * Allow players to collect keys and other junk.
                  */
                 if (thing_is_key(it) ||
-                    /*
-                     * And collect food.
-                     */
                     thing_is_food(it) ||
-                    /*
-                     * And collect treasure.
-                     */
                     thing_is_treasure(it) ||
-                    /*
-                     * And walk through monsters.
-                     */
+                    thing_is_weapon(it) ||
                     thing_is_monst(it) ||
                     /*
-                     * Or friendly fire.
+                     * Walk through friendly fire.
                      */
                     thing_is_projectile(it) ||
                     /*
-                     * Or friendly fire.
+                     * Walk through friendly fire.
                      */
                     thing_is_explosion(it)) {
                     wid_it = wid_next;

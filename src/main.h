@@ -210,6 +210,8 @@ void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void HOST_LOG(hostp, const char *fmt, ...) \
                      __attribute__ ((format (printf, 2, 3)));
+void THING_SHOUT_AT(thingp, const char *fmt, ...) \
+                     __attribute__ ((format (printf, 2, 3)));
 void THING_LOG(thingp, const char *fmt, ...) \
                      __attribute__ ((format (printf, 2, 3)));
 void THING_DBG(thingp, const char *fmt, ...) \

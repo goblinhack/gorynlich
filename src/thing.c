@@ -724,7 +724,6 @@ static void thing_hit_ (thingp t,
         if (thing_is_player(t)) {
             THING_LOG(t, "hit (%s) for %u", reason, damage);
         }
-            THING_LOG(t, "hit (%s) for %u", reason, damage);
     }
 }
 
@@ -2397,6 +2396,131 @@ void thing_client_move (thingp t,
                           fire);
 }
 
+void thing_fire (thingp t,
+                 const uint8_t up,
+                 const uint8_t down,
+                 const uint8_t left,
+                 const uint8_t right)
+{
+    /*
+     * Use the currently wielded weapon. Or perhaps the thing has an
+     * intrinsic weapon ability?
+     */
+    thing_templatep weapon = t->weapon;
+    if (!weapon) {
+        weapon = 
+            thing_template_find(thing_template_weapon(t->thing_template));
+        if (!weapon) {
+            return;
+        }
+    }
+
+    if (weapon == t->weapon) {
+        if (rand() % thing_template_get_failure_rate(weapon)) {
+            thing_item_destroyed(t, weapon);
+            return;
+        }
+    }
+
+    double dx, dy;
+    double dist_from_player = 0.7;
+
+    /*
+     * Try current direction.
+     */
+    dx = 0.0;
+    dy = 0.0;
+
+    /*
+     * If the player is moving too then the weapon has a bit more
+     * speed than if thrown when stationary.
+     */
+    if (down) {
+        dy = dist_from_player;
+    }
+
+    if (up) {
+        dy = -dist_from_player;
+    }
+
+    if (right) {
+        dx = dist_from_player;
+    }
+
+    if (left) {
+        dx = -dist_from_player;
+    }
+
+    /*
+     * If no dir, then try the last thing dir.
+     */
+    if ((dx == 0) && (dy == 0)) {
+        if (thing_is_dir_down(t)) {
+            dy = dist_from_player;
+        }
+
+        if (thing_is_dir_up(t)) {
+            dy = -dist_from_player;
+        }
+
+        if (thing_is_dir_right(t)) {
+            dx = dist_from_player;
+        }
+
+        if (thing_is_dir_left(t)) {
+            dx = -dist_from_player;
+        }
+
+        if (thing_is_dir_tl(t)) {
+            dx = -dist_from_player;
+            dy = -dist_from_player;
+        }
+
+        if (thing_is_dir_tr(t)) {
+            dx = dist_from_player;
+            dy = -dist_from_player;
+        }
+
+        if (thing_is_dir_bl(t)) {
+            dx = -dist_from_player;
+            dy = dist_from_player;
+        }
+
+        if (thing_is_dir_br(t)) {
+            dx = dist_from_player;
+            dy = dist_from_player;
+        }
+    }
+
+    /*
+     * Fire from the player position plus the initial delta so it looks like 
+     * it comes from outside of the body.
+     */
+    double x = t->x;
+    double y = t->y;
+
+    x += dx;
+    y += dy;
+
+    double speed = thing_speed(player);
+    dx *= speed;
+    dy *= speed;
+
+    widp w = wid_game_map_server_replace_tile(
+                                    wid_game_map_server_grid_container,
+                                    x,
+                                    y,
+                                    weapon);
+
+    thingp projectile = wid_get_thing(w);
+
+    projectile->dx = dx;
+    projectile->dy = dy;
+    projectile->dir = t->dir;
+
+    socket_server_tx_map_update(0 /* all clients */, server_active_things);
+}
+
 uint8_t thing_server_move (thingp t,
                            double x,
                            double y,
@@ -2458,116 +2582,30 @@ uint8_t thing_server_move (thingp t,
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 
     if (fire) {
-        double dx, dy;
-        double dist_from_player = 0.7;
-
-        /*
-         * Try current direction.
-         */
-        dx = 0.0;
-        dy = 0.0;
-
-        /*
-         * If the player is moving too then the weapon has a bit more
-         * speed than if thrown when stationary.
-         */
-        if (down) {
-            dy = dist_from_player;
-        }
-
-        if (up) {
-            dy = -dist_from_player;
-        }
-
-        if (right) {
-            dx = dist_from_player;
-        }
-
-        if (left) {
-            dx = -dist_from_player;
-        }
-
-        /*
-         * If no dir, then try the last thing dir.
-         */
-        if ((dx == 0) && (dy == 0)) {
-            if (thing_is_dir_down(t)) {
-                dy = dist_from_player;
-            }
-
-            if (thing_is_dir_up(t)) {
-                dy = -dist_from_player;
-            }
-
-            if (thing_is_dir_right(t)) {
-                dx = dist_from_player;
-            }
-
-            if (thing_is_dir_left(t)) {
-                dx = -dist_from_player;
-            }
-
-            if (thing_is_dir_tl(t)) {
-                dx = -dist_from_player;
-                dy = -dist_from_player;
-            }
-
-            if (thing_is_dir_tr(t)) {
-                dx = dist_from_player;
-                dy = -dist_from_player;
-            }
-
-            if (thing_is_dir_bl(t)) {
-                dx = -dist_from_player;
-                dy = dist_from_player;
-            }
-
-            if (thing_is_dir_br(t)) {
-                dx = dist_from_player;
-                dy = dist_from_player;
-            }
-        }
-
-        thing_templatep thing_template = 
-                thing_template_find(thing_template_weapon(t->thing_template));
-
-        if (!thing_template) {
-            /*
-             * Fallback.
-             */
-            thing_template = thing_template_find("data/things/arrow");
-        }
-
-        /*
-         * Fire from the player position plus the initial delta so it looks 
-         * like it comes from outside of the body.
-         */
-        x = t->x;
-        y = t->y;
-
-        x += dx;
-        y += dy;
-
-        double speed = thing_speed(player);
-        dx *= speed;
-        dy *= speed;
-
-        widp w = wid_game_map_server_replace_tile(
-                                        wid_game_map_server_grid_container,
-                                        x,
-                                        y,
-                                        thing_template);
-
-        thingp projectile = wid_get_thing(w);
-
-        projectile->dx = dx;
-        projectile->dy = dy;
-        projectile->dir = t->dir;
-
-        socket_server_tx_map_update(0 /* all clients */, server_active_things);
+        thing_fire(t, up, down, left, right);
     }
 
     return (true);
+}
+
+void thing_unwield (thingp t)
+{
+    if (!t->weapon) {
+        return;
+    }
+
+    THING_LOG(t, "unwield %s", thing_template_name(t->weapon));
+
+    t->weapon = 0;
+}
+
+void thing_wield (thingp t, thing_templatep tmp)
+{
+    thing_unwield(t);
+
+    t->weapon = tmp;
+
+    THING_SHOUT_AT(t, "You wield the %s", thing_template_name(tmp));
 }
 
 void thing_collect (thingp t, thing_templatep tmp)
@@ -2580,6 +2618,17 @@ void thing_collect (thingp t, thing_templatep tmp)
 
     t->carrying[id]++;
 
+    /*
+     * Auto use a weapon if carrying none.
+     */
+    if (thing_template_is_weapon(tmp)) {
+        if (!t->weapon) {
+            THING_LOG(t, "auto weild %s", thing_template_name(tmp));
+
+            thing_wield(t, tmp);
+        }
+    }
+
     socket_server_tx_player_update(t);
 }
 
@@ -2589,7 +2638,15 @@ void thing_used (thingp t, thing_templatep tmp)
 
     id = thing_template_to_id(tmp);
     if (!t->carrying[id]) {
-        ERR("tried to drop %s not in use", thing_template_name(tmp));
+        ERR("tried to use %s not carried", thing_template_name(tmp));
+        return;
+    }
+
+    /*
+     * Switch of weapons.
+     */
+    if (thing_template_is_weapon(tmp)) {
+        thing_wield(t, tmp);
         return;
     }
 
@@ -2600,7 +2657,54 @@ void thing_used (thingp t, thing_templatep tmp)
     socket_server_tx_player_update(t);
 }
 
-uint8_t thing_has (thingp t, uint32_t id)
+void thing_item_destroyed (thingp t, thing_templatep tmp)
+{
+    uint32_t id;
+
+    id = thing_template_to_id(tmp);
+    if (!t->carrying[id]) {
+        ERR("tried to item destroy %s not carried", thing_template_name(tmp));
+        return;
+    }
+
+    if (thing_template_is_weapon(tmp)) {
+        thing_unwield(t);
+
+        THING_SHOUT_AT(t, "Your weapon crumbles to dust");
+    }
+
+    THING_LOG(t, "item destroyed %s", thing_template_name(tmp));
+
+    t->carrying[id]--;
+
+    socket_server_tx_player_update(t);
+}
+
+void thing_drop (thingp t, thing_templatep tmp)
+{
+    uint32_t id;
+
+    id = thing_template_to_id(tmp);
+    if (!t->carrying[id]) {
+        ERR("tried to drop %s not carried", thing_template_name(tmp));
+        return;
+    }
+
+    /*
+     * Dropping the current weapon.
+     */
+    if (tmp == t->weapon) {
+        thing_unwield(t);
+    }
+
+    THING_LOG(t, "drop %s", thing_template_name(tmp));
+
+    t->carrying[id]--;
+
+    socket_server_tx_player_update(t);
+}
+
+uint8_t thing_is_carrying (thingp t, uint32_t id)
 {
     if (!t->carrying[id]) {
         return (false);
@@ -2634,11 +2738,11 @@ void thing_server_action (thingp t,
 
     switch (action) {
     case PLAYER_ACTION_USE:
-        if (!thing_has(t, item)) {
+        if (!thing_is_carrying(t, item)) {
             /*
              * Sneaky.
              */
-            socket_tx_server_shout_only_to("You do not have that item", s);
+            THING_SHOUT_AT(t, "You do not have that item");
             return;
         }
 
@@ -2650,7 +2754,7 @@ void thing_server_action (thingp t,
         /*
          * Failed to use.
          */
-        socket_tx_server_shout_only_to("Failed to use", s);
+        THING_SHOUT_AT(t, "Failed to use");
         return;
 
     case PLAYER_ACTION_DROP: {
@@ -2740,7 +2844,7 @@ void thing_server_action (thingp t,
         /*
          * Urk!
          */
-        socket_tx_server_shout_only_to("Drop failed", t->player->socket);
+        THING_SHOUT_AT(t, "Drop failed");
 
         /*
          * Failed to drop.
@@ -2754,5 +2858,14 @@ void thing_server_action (thingp t,
     }
 
 done:
-    thing_used(t, thing_template);
+
+    switch (action) {
+    case PLAYER_ACTION_USE:
+        thing_used(t, thing_template);
+        break;
+
+    case PLAYER_ACTION_DROP:
+        thing_drop(t, thing_template);
+        break;
+    }
 }

@@ -157,10 +157,20 @@ void thing_timer_place_and_destroy_callback(void *context);
 void thing_timer_place_callback(void *context);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
+void thing_shout_at(thingp t, const char *what);
 void thing_collect(thingp t, thing_templatep tmp);
 void thing_used(thingp t, thing_templatep tmp);
+void thing_unwield(thingp t);
+void thing_wield(thingp t, thing_templatep tmp);
+void thing_item_destroyed(thingp t, thing_templatep tmp);
+void thing_drop(thingp t, thing_templatep tmp);
+void thing_fire(thingp t,
+                const uint8_t up,
+                const uint8_t down,
+                const uint8_t left,
+                const uint8_t right);
 uint8_t thing_use(thingp t, uint32_t id);
-uint8_t thing_has(thingp t, uint32_t id);
+uint8_t thing_is_carrying(thingp t, uint32_t id);
 
 /*
  * thing_ai.c
@@ -435,6 +445,11 @@ typedef struct thing_ {
      * How many and of what we are carrying.
      */
     uint8_t carrying[THING_MAX];
+
+    /*
+     * Current weapon.
+     */
+    thing_templatep weapon;
 
     /*
      * Grid coordinates.
