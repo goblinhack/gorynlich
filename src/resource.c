@@ -204,11 +204,11 @@ static uint8_t resource_init_23 (void *context)
         "generator7",
         0,
         // row 2
-        0,
-        0,
-        0,
-        0,
-        0,
+        "wand_fire",
+        "bow1",
+        "bow2",
+        "bow3",
+        "bow4",
         0,
         0,
         0,
@@ -1506,8 +1506,12 @@ static uint8_t resource_init_23 (void *context)
      * Wearable items that are used as weapons. Shown first on list of player 
      * items.
      */
+    thing_template_load(&THING_WAND_FIRE, "data/things/wand_fire");
+    thing_template_load(&THING_BOW1, "data/things/bow1");
+    thing_template_load(&THING_BOW2, "data/things/bow2");
+    thing_template_load(&THING_BOW3, "data/things/bow3");
+    thing_template_load(&THING_BOW4, "data/things/bow4");
     thing_template_load(&THING_ARROW, "data/things/arrow");
-    thing_template_load(&THING_FIREBALL, "data/things/fireball");
     thing_template_load(&THING_AMULET1, "data/things/amulet1");
 
     /*
@@ -1543,6 +1547,7 @@ static uint8_t resource_init_23 (void *context)
     /*
      * Effects
      */
+    thing_template_load(&THING_FIREBALL, "data/things/fireball");
     thing_template_load(&THING_EXPLOSION, "data/things/explosion");
     thing_template_load(&THING_EXPLOSION1, "data/things/explosion1");
     thing_template_load(&THING_EXPLOSION2, "data/things/explosion2");
