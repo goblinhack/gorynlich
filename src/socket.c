@@ -107,8 +107,8 @@ static socketp socket_create (IPaddress address)
      */
     s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: socket");
 
-    s->tree.key1 = address.host;
-    s->tree.key2 = address.port;
+    s->tree.qqq2 = address.host;
+    s->tree.qqq3 = address.port;
 
     if (!tree_insert(sockets, &s->tree.node)) {
         ERR("failed to add socket");
@@ -197,8 +197,8 @@ socketp socket_find (IPaddress address)
     socket *s;
 
     memset(&findme, 0, sizeof(findme));
-    findme.tree.key1 = address.host;
-    findme.tree.key2 = address.port;
+    findme.tree.qqq2 = address.host;
+    findme.tree.qqq3 = address.port;
 
     s = (typeof(s)) tree_find(sockets, &findme.tree.node);
 

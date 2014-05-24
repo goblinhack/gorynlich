@@ -85,8 +85,8 @@ static void wid_server_local_server_add (const server *s_in)
     port = SDLNet_Read16(&s->ip.port);
     host = SDLNet_Read32(&s->ip.host);
 
-    s->tree.key1 = port;
-    s->tree.key2 = host;
+    s->tree.qqq2 = port;
+    s->tree.qqq3 = host;
 
     /*
      * Check this ip and port combination is not added already.
@@ -106,9 +106,9 @@ static void wid_server_local_server_add (const server *s_in)
         }
 
         if (collision) {
-            s->tree.key1++;
-            SDLNet_Write16(s->tree.key1, &s->ip.port);
-            s->port = s->tree.key1;
+            s->tree.qqq2++;
+            SDLNet_Write16(s->tree.qqq2, &s->ip.port);
+            s->port = s->tree.qqq2;
         }
     } while (collision);
 
