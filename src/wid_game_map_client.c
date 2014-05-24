@@ -1005,10 +1005,16 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     }
                     col.a = 0xdf;
 
+                    if (temp == player->weapon) {
+                        wid_set_color(w, WID_COLOR_TL, RED);
+                        wid_set_color(w, WID_COLOR_BR, RED);
+                    } else {
+                        wid_set_color(w, WID_COLOR_TL, LIGHTBLUE);
+                        wid_set_color(w, WID_COLOR_BR, LIGHTBLUE);
+                    }
+
                     wid_set_color(w, WID_COLOR_TEXT, WHITE);
                     wid_set_color(w, WID_COLOR_BG, col);
-                    wid_set_color(w, WID_COLOR_TL, LIGHTBLUE);
-                    wid_set_color(w, WID_COLOR_BR, LIGHTBLUE);
                     wid_set_bevel(w, 2);
 
                     wid_set_mode(w, WID_MODE_OVER);
@@ -1016,8 +1022,15 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     wid_set_color(w, WID_COLOR_TEXT, WHITE);
                     col.a = 0xff;
                     wid_set_color(w, WID_COLOR_BG, col);
-                    wid_set_color(w, WID_COLOR_TL, WHITE);
-                    wid_set_color(w, WID_COLOR_BR, WHITE);
+
+                    if (temp == player->weapon) {
+                        wid_set_color(w, WID_COLOR_TL, ORANGE);
+                        wid_set_color(w, WID_COLOR_BR, ORANGE);
+                    } else {
+                        wid_set_color(w, WID_COLOR_TL, WHITE);
+                        wid_set_color(w, WID_COLOR_BR, WHITE);
+                    }
+
                     wid_set_bevel(w, 2);
 
                     wid_set_mode(w, WID_MODE_NORMAL);

@@ -1,12 +1,13 @@
 {
  short_name="bow4"
- tooltip="bow4"
+ tooltip="enchanted double bow"
  z_depth=2
  z_order=2
  is_weapon
  is_collision_map_player
  is_destroyed_on_hitting
  is_item_wearable
+ failure_rate=10000
  tiles={
   tile={
    tile="bow4"

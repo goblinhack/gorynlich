@@ -21,6 +21,8 @@
 #include "wid_button.h"
 #include "wid_popup.h"
 #include "color.h"
+#include "player.h"
+#include "socket.h"
 
 static char buf[MAXSTR];
 uint8_t debug_enabled = 0;
@@ -417,6 +419,47 @@ void CROAK (const char *fmt, ...)
     va_end(args);
 
     quit();
+}
+
+static void thing_shout_at_ (thingp t, const char *fmt, va_list args)
+{
+    static char buf[MAXSTR];
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+    snprintf(buf + len, sizeof(buf) - len, "Thing %s: ", thing_logname(t));
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    wid_console_log(buf);
+    term_log(buf);
+
+    if (!t->player) {
+        return;
+    }
+
+    socketp s = t->player->socket;
+    if (!s) {
+        return;
+    }
+
+    socket_tx_server_shout_only_to(buf, s);
+}
+
+void THING_SHOUT_AT (thingp t, const char *fmt, ...)
+{
+    va_list args;
+
+    verify(t);
+
+    va_start(args, fmt);
+    thing_shout_at_(t, fmt, args);
+    va_end(args);
 }
 
 static void thing_log_ (thingp t, const char *fmt, va_list args)
