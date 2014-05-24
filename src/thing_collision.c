@@ -284,6 +284,10 @@ static void thing_handle_collision (thingp me, thingp it,
              */
             thing_is_treasure(it) ||
             /*
+             * And treasure.
+             */
+            thing_is_weapon(it) ||
+            /*
              * And food.
              */
             thing_is_food(it)) {
@@ -454,6 +458,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_explosion(it)  ||
                     thing_is_projectile(it) ||
                     thing_is_treasure(it)   ||
+                    thing_is_weapon(it)     ||
                     thing_is_food(it)) {
                     wid_it = wid_next;
                     continue;

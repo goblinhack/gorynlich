@@ -986,6 +986,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
                     if (thing_template_is_item_unusable(temp)) {
                         col = BLACK;
+                    } else if (thing_template_is_weapon(temp)) {
+                        col.r = 0x66;
+                        col.g = 0x10;
+                        col.b = 0x10;
                     } else if (thing_template_is_item_wearable(temp)) {
                         col.r = 0;
                         col.g = 0x66;
