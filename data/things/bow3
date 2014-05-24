@@ -1,12 +1,13 @@
 {
  short_name="bow3"
- tooltip="bow3"
+ tooltip="craftsman double bow"
  z_depth=2
  z_order=2
  is_weapon
  is_collision_map_player
  is_destroyed_on_hitting
  is_item_wearable
+ failure_rate=5000
  tiles={
   tile={
    tile="bow3"
