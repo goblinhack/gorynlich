@@ -118,8 +118,14 @@
 .o/ramdisk_data_things__splat_session.o: asm/ramdisk_data_things__splat_session.S ../data/things/.splat.session
 	gcc -c asm/ramdisk_data_things__splat_session.S -o .o/ramdisk_data_things__splat_session.o
 
+.o/ramdisk_data_things__valkyrie_session.o: asm/ramdisk_data_things__valkyrie_session.S ../data/things/.valkyrie.session
+	gcc -c asm/ramdisk_data_things__valkyrie_session.S -o .o/ramdisk_data_things__valkyrie_session.o
+
 .o/ramdisk_data_things__wand_fire_session.o: asm/ramdisk_data_things__wand_fire_session.S ../data/things/.wand_fire.session
 	gcc -c asm/ramdisk_data_things__wand_fire_session.S -o .o/ramdisk_data_things__wand_fire_session.o
+
+.o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
+	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
 
 .o/ramdisk_data_things_1.o: asm/ramdisk_data_things_1.S ../data/things/1
 	gcc -c asm/ramdisk_data_things_1.S -o .o/ramdisk_data_things_1.o

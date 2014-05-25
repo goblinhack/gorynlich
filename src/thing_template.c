@@ -361,6 +361,43 @@ thing_templatep string2thing_template (const char **s)
     return (target);
 }
 
+static void demarshal_thing_carrying (demarshal_p ctx, thing_template *t)
+{
+    if (!GET_PEEK_NAME(ctx, "carrying")) {
+        return;
+    }
+
+    GET_NAME(ctx, "carrying");
+
+    GET_BRA(ctx);
+
+    (void) demarshal_gotone(ctx);
+
+    char *val;
+
+    while (GET_PEEK_STRING(ctx, val)) {
+        GET_STRING(ctx, val);
+
+        thing_templatep c = thing_template_find(val);
+        if (!c) {
+            DIE("carried thing %s not found", val);
+            continue;
+        }
+
+        uint32_t id = thing_template_to_id(c);
+        if (!id) {
+            DIE("carried thing %s not in database", val);
+        }
+LOG("carry %d %s",id,val);
+
+        t->carrying[id]++;
+
+        myfree(val);
+    } while (demarshal_gotone(ctx));
+
+    GET_KET(ctx);
+}
+
 void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
 {
     char *name;
@@ -370,6 +407,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
     GET_OPT_DEF_NAMED_STRING(ctx, "name", name, "<no name>");
     GET_OPT_DEF_NAMED_STRING(ctx, "short_name", t->short_name, "<no name>");
     GET_OPT_DEF_NAMED_STRING(ctx, "tooltip", t->tooltip, "<no name>");
+
+    demarshal_thing_carrying(ctx, t);
 
     (void) demarshal_gotone(ctx);
 
@@ -416,7 +455,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
         GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_monst", t->is_collision_map_monst);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_player", t->is_collision_map_player);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_large", t->is_collision_map_large);
         GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_weapon", t->is_collision_map_weapon);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
@@ -434,7 +473,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_key6", t->is_key6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key7", t->is_key7);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
+        GET_OPT_NAMED_BITFIELD(ctx, "can_carry", t->can_carry);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
@@ -520,7 +559,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
     PUT_NAMED_BITFIELD(ctx, "is_collision_map_weapon", t->is_collision_map_weapon);
-    PUT_NAMED_BITFIELD(ctx, "is_collision_map_player", t->is_collision_map_player);
+    PUT_NAMED_BITFIELD(ctx, "is_collision_map_large", t->is_collision_map_large);
     PUT_NAMED_BITFIELD(ctx, "is_collision_map_monst", t->is_collision_map_monst);
     PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
     PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
@@ -538,7 +577,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_key6", t->is_key6);
     PUT_NAMED_BITFIELD(ctx, "is_key7", t->is_key7);
     PUT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
-    PUT_NAMED_BITFIELD(ctx, "is_key9", t->is_key9);
+    PUT_NAMED_BITFIELD(ctx, "can_carry", t->can_carry);
     PUT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
     PUT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);

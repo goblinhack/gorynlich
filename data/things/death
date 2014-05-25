@@ -10,7 +10,7 @@
  hit_delay_tenths=1
  z_order=4
  is_monst
- is_collision_map_player
+ is_collision_map_large
  explode_on_death
  is_animated
  is_scarable

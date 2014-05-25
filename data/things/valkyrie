@@ -1,12 +1,17 @@
 {
  short_name="valkyrie"
  tooltip="Deadly mix of good health and speed.\n\n%%fg=cyan$Good line of beauty products."
+ carrying={
+    "data/things/wand_fire"
+    "data/things/bow1"
+ }
  z_depth=3
  z_order=10
  speed=90
  health=120
  is_player
- is_collision_map_player
+ can_carry
+ is_collision_map_large
  explode_on_death
  is_animated
  tiles={

@@ -91,6 +91,12 @@ typedef struct thing_template_ {
     char *mob_spawn;
 
     /*
+     * How many and of what we are carrying. This is the base items a thing
+     * starts out with.
+     */
+    uint8_t carrying[THING_MAX];
+
+    /*
      * In relation to other widgets, where are we.
      */
     uint8_t z_depth;
@@ -177,7 +183,7 @@ typedef struct thing_template_ {
     uint8_t is_key6:1;
     uint8_t is_key7:1;
     uint8_t is_key8:1;
-    uint8_t is_key9:1;
+    uint8_t can_carry:1;
     uint8_t is_item_unusable:1;
     uint8_t is_shortcut:1;
     uint8_t is_seedpod:1;
@@ -191,7 +197,7 @@ typedef struct thing_template_ {
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
     uint8_t is_collision_map_monst:1;
-    uint8_t is_collision_map_player:1;
+    uint8_t is_collision_map_large:1;
     uint8_t is_collision_map_weapon:1;
     uint8_t explode_on_death:1;
     uint8_t is_projectile:1;
@@ -398,9 +404,9 @@ static inline uint8_t thing_template_is_item_unusable (thing_templatep t)
     return (t->is_item_unusable);
 }
 
-static inline uint8_t thing_template_is_key9 (thing_templatep t)
+static inline uint8_t thing_template_can_carry (thing_templatep t)
 {
-    return (t->is_key9);
+    return (t->can_carry);
 }
 
 static inline uint8_t thing_template_is_shortcut (thing_templatep t)
@@ -463,9 +469,9 @@ static inline uint8_t thing_template_is_collision_map_weapon (thing_templatep t)
     return (t->is_collision_map_weapon);
 }
 
-static inline uint8_t thing_template_is_collision_map_player (thing_templatep t)
+static inline uint8_t thing_template_is_collision_map_large (thing_templatep t)
 {
-    return (t->is_collision_map_player);
+    return (t->is_collision_map_large);
 }
 
 static inline uint8_t thing_template_is_collision_map_monst (thing_templatep t)
