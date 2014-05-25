@@ -175,9 +175,6 @@ static void log_ (const char *fmt, va_list args)
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
-
-    wid_console_log(buf);
-    term_log(buf);
 }
 
 void LOG (const char *fmt, ...)
@@ -229,9 +226,6 @@ static void init_log_ (const char *fmt, va_list args)
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
-
-    wid_console_log(buf + len);
-    term_log(buf + len);
 }
 
 void INIT_LOG (const char *fmt, ...)
@@ -437,9 +431,6 @@ static void thing_shout_at_ (thingp t, const char *fmt, va_list args)
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
-    wid_console_log(buf);
-    term_log(buf);
-
     if (!t->player) {
         return;
     }
@@ -477,9 +468,6 @@ static void thing_log_ (thingp t, const char *fmt, va_list args)
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
-
-    wid_console_log(buf);
-    term_log(buf);
 }
 
 void THING_LOG (thingp t, const char *fmt, ...)
