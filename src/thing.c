@@ -202,7 +202,6 @@ thingp thing_server_new (levelp level, const char *name)
      */
     if (thing_template_can_carry(thing_template)) {
         memcpy(t->carrying, thing_template->carrying, sizeof(t->carrying));
-LOG("copy carrying %d",t->carrying[THING_WAND_FIRE]);
     }
 
     /*
@@ -2643,7 +2642,7 @@ void thing_collect (thingp t, thing_templatep tmp)
         }
     }
 
-    socket_server_tx_player_update(t);
+    t->needs_tx_player_update = true;
 }
 
 void thing_used (thingp t, thing_templatep tmp)
@@ -2668,7 +2667,7 @@ void thing_used (thingp t, thing_templatep tmp)
 
     t->carrying[id]--;
 
-    socket_server_tx_player_update(t);
+    t->needs_tx_player_update = true;
 }
 
 void thing_item_destroyed (thingp t, thing_templatep tmp)
@@ -2691,7 +2690,7 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
 
     t->carrying[id]--;
 
-    socket_server_tx_player_update(t);
+    t->needs_tx_player_update = true;
 }
 
 void thing_drop (thingp t, thing_templatep tmp)
@@ -2715,7 +2714,7 @@ void thing_drop (thingp t, thing_templatep tmp)
 
     t->carrying[id]--;
 
-    socket_server_tx_player_update(t);
+    t->needs_tx_player_update = true;
 }
 
 uint8_t thing_is_carrying (thingp t, uint32_t id)

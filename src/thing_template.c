@@ -388,7 +388,6 @@ static void demarshal_thing_carrying (demarshal_p ctx, thing_template *t)
         if (!id) {
             DIE("carried thing %s not in database", val);
         }
-LOG("carry %d %s",id,val);
 
         t->carrying[id]++;
 
