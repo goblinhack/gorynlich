@@ -430,6 +430,7 @@ static void thing_shout_at_ (thingp t, const char *fmt, va_list args)
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
     snprintf(buf + len, sizeof(buf) - len, "Thing %s: ", thing_logname(t));
+
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
@@ -448,7 +449,7 @@ static void thing_shout_at_ (thingp t, const char *fmt, va_list args)
         return;
     }
 
-    socket_tx_server_shout_only_to(buf, s);
+    socket_tx_server_shout_only_to(buf + len, s);
 }
 
 void THING_SHOUT_AT (thingp t, const char *fmt, ...)

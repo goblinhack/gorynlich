@@ -1,0 +1,30 @@
+{
+ short_name="wand-fire"
+ tooltip="wand of fire"
+ z_depth=2
+ z_order=2
+ is_weapon
+ is_collision_map_large
+ is_destroyed_on_hitting
+ is_item_wearable
+ is_animated
+ failure_rate=10
+ tiles={
+  tile={
+   tile="wand-fire1"
+   delay=50
+  }
+  tile={
+   tile="wand-fire2"
+   delay=50
+  }
+  tile={
+   tile="wand-fire3"
+   delay=50
+  }
+  tile={
+   tile="wand-fire4"
+   delay=50
+  }
+ }
+}

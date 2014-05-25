@@ -353,12 +353,6 @@ wid_game_map_new_shortcut (uint32_t shortcut, thing_templatep temp)
 {
     uint32_t i;
 
-    for (i = 0; i < MAX_SHORTCUTS; i++) {
-        if (wid_key_shortcuts[i]) {
-            LOG("old %d %s",i,thing_template_name(wid_key_shortcuts[i]));
-        }
-    }
-
     /*
      * Check this thing is not used by another key elsewhere.
      */
@@ -379,12 +373,6 @@ wid_game_map_new_shortcut (uint32_t shortcut, thing_templatep temp)
     wid_key_shortcuts_user[shortcut] = temp;
 
     wid_game_map_update_shortcuts();
-    for (i = 0; i < MAX_SHORTCUTS; i++) {
-        if (wid_key_shortcuts[i]) {
-            LOG("now %d %s",i,thing_template_name(wid_key_shortcuts[i]));
-        }
-    }
-
 }
 
 static uint8_t 
@@ -1005,7 +993,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     }
                     col.a = 0xdf;
 
-                    if (temp == player->weapon) {
+                    if (player->weapon && (temp == player->weapon)) {
                         wid_set_color(w, WID_COLOR_TL, RED);
                         wid_set_color(w, WID_COLOR_BR, RED);
                     } else {
@@ -1023,7 +1011,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     col.a = 0xff;
                     wid_set_color(w, WID_COLOR_BG, col);
 
-                    if (temp == player->weapon) {
+                    if (player->weapon && (temp == player->weapon)) {
                         wid_set_color(w, WID_COLOR_TL, ORANGE);
                         wid_set_color(w, WID_COLOR_BR, ORANGE);
                     } else {
