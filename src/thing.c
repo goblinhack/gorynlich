@@ -198,6 +198,14 @@ thingp thing_server_new (levelp level, const char *name)
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
 
     /*
+     * Start out with the items carried on the template if any.
+     */
+    if (thing_template_can_carry(thing_template)) {
+        memcpy(t->carrying, thing_template->carrying, sizeof(t->carrying));
+LOG("copy carrying %d",t->carrying[THING_WAND_FIRE]);
+    }
+
+    /*
      * Use a different base for monsters so that the IDs we create are going
      * to be contiguous and allows us to optimize when sending map updates.
      */
@@ -2408,9 +2416,15 @@ void thing_fire (thingp t,
      */
     thing_templatep weapon = t->weapon;
     if (!weapon) {
-        weapon = 
-            thing_template_find(thing_template_weapon(t->thing_template));
+        const char *tmp = thing_template_weapon(t->thing_template);
+        if (!tmp) {
+            THING_SHOUT_AT(t, "No weapon");
+            return;
+        }
+
+        weapon = thing_template_find(tmp);
         if (!weapon) {
+            ERR("weapon %s not found", tmp);
             return;
         }
     }

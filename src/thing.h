@@ -619,11 +619,11 @@ static inline uint8_t thing_is_key (thingp t)
     return (thing_template_is_key(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_collision_map_player (thingp t)
+static inline uint8_t thing_is_collision_map_large (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_collision_map_player(thing_get_template(t)));
+    return (thing_template_is_collision_map_large(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_collision_map_monst (thingp t)
@@ -930,9 +930,9 @@ static inline uint8_t thing_is_key_fast (thingp t)
     return (t->thing_template->is_key);
 }
 
-static inline uint8_t thing_is_collision_map_player_fast (thingp t)
+static inline uint8_t thing_is_collision_map_large_fast (thingp t)
 {
-    return (t->thing_template->is_collision_map_player);
+    return (t->thing_template->is_collision_map_large);
 }
 
 static inline uint8_t thing_is_collision_map_monst_fast (thingp t)
