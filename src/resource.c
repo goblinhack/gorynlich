@@ -1474,28 +1474,6 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_GENERATOR7, "data/things/generator7");
 
     /*
-     * Heroes
-     */
-    thing_template_load(&THING_WARRIOR, "data/things/warrior");
-    thing_template_load(&THING_VALKYRIE, "data/things/valkyrie");
-    thing_template_load(&THING_WIZARD, "data/things/wizard");
-    thing_template_load(&THING_ELF, "data/things/elf");
-    thing_template_load(&THING_DWARF, "data/things/dwarf");
-
-    /*
-     * Monsters
-     */
-    thing_template_load(&THING_GHOST1, "data/things/ghost1");
-    thing_template_load(&THING_GHOST2, "data/things/ghost2");
-    thing_template_load(&THING_GHOST3, "data/things/ghost3");
-    thing_template_load(&THING_DEMON, "data/things/demon");
-    thing_template_load(&THING_MONK, "data/things/monk");
-    thing_template_load(&THING_LIZARD, "data/things/lizard");
-    thing_template_load(&THING_DEATH, "data/things/death");
-    thing_template_load(&THING_PLANT, "data/things/plant");
-    thing_template_load(&THING_SEEDPOD, "data/things/seedpod");
-
-    /*
      * Important stuff that cannot be used.
      */
     thing_template_load(&THING_KEYS1, "data/things/keys1");
@@ -1543,6 +1521,28 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_CHEST1, "data/things/chest1");
     thing_template_load(&THING_BOMB, "data/things/bomb");
     thing_template_load(&THING_SPAM, "data/things/spam");
+
+    /*
+     * Heroes. Must come after items they can carry.
+     */
+    thing_template_load(&THING_WARRIOR, "data/things/warrior");
+    thing_template_load(&THING_VALKYRIE, "data/things/valkyrie");
+    thing_template_load(&THING_WIZARD, "data/things/wizard");
+    thing_template_load(&THING_ELF, "data/things/elf");
+    thing_template_load(&THING_DWARF, "data/things/dwarf");
+
+    /*
+     * Monsters
+     */
+    thing_template_load(&THING_GHOST1, "data/things/ghost1");
+    thing_template_load(&THING_GHOST2, "data/things/ghost2");
+    thing_template_load(&THING_GHOST3, "data/things/ghost3");
+    thing_template_load(&THING_DEMON, "data/things/demon");
+    thing_template_load(&THING_MONK, "data/things/monk");
+    thing_template_load(&THING_LIZARD, "data/things/lizard");
+    thing_template_load(&THING_DEATH, "data/things/death");
+    thing_template_load(&THING_PLANT, "data/things/plant");
+    thing_template_load(&THING_SEEDPOD, "data/things/seedpod");
 
     /*
      * Effects

@@ -5,7 +5,7 @@
  z_order=2
  is_generator
  is_monst
- is_collision_map_player
+ is_collision_map_large
  mob_spawn_delay_tenths=100
  tiles={
   tile={

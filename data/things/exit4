@@ -5,7 +5,7 @@
  z_order=2
  is_boring
  is_exit
-is_collision_map_player
+is_collision_map_large
  tiles={
   tile={
    tile="exit4"
