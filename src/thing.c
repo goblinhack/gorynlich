@@ -198,19 +198,6 @@ thingp thing_server_new (levelp level, const char *name)
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
 
     /*
-     * Start out with the items carried on the template if any.
-     */
-    if (thing_template_can_carry(thing_template)) {
-        uint32_t i;
-
-        for (i = 0; i < THING_MAX; i++) {
-            if (thing_template->carrying[i]) {
-                thing_collect(t, id_to_thing_template(i));
-            }
-        }
-    }
-
-    /*
      * Use a different base for monsters so that the IDs we create are going
      * to be contiguous and allows us to optimize when sending map updates.
      */
@@ -308,6 +295,19 @@ thingp thing_server_new (levelp level, const char *name)
     t->last_tx = -1;
     t->last_ty = -1;
     t->first_update = true;
+
+    /*
+     * Start out with the items carried on the template if any.
+     */
+    if (thing_template_can_carry(thing_template)) {
+        uint32_t i;
+
+        for (i = 0; i < THING_MAX; i++) {
+            if (thing_template->carrying[i]) {
+                thing_collect(t, id_to_thing_template(i));
+            }
+        }
+    }
 
     if (thing_is_player(t)) {
         /*

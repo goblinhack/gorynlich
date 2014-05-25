@@ -1364,7 +1364,7 @@ uint8_t socket_tx_client_join (socketp s, uint32_t *key)
     }
 
     if (!s->connected) {
-        WARN("Client: Server is not present, cannot join yet");
+        WARN("Server is not present, cannot join yet. Retrying...");
         return (false);
     }
 
@@ -1693,16 +1693,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    char *tmp = dynprintf("%s: \"%s\"", from, txt);
-    widp w = wid_button_transient(tmp, 0);
-    color c = BLACK;
-    c.a = 150;
-    wid_set_color(w, WID_COLOR_BG, c);
-    wid_set_color(w, WID_COLOR_TL, c);
-    wid_set_color(w, WID_COLOR_BR, c);
-    wid_move_to_pct_centered(w, 0.5, 0.1);
-    wid_set_text_outline(w, true);
-    myfree(tmp);
+    MSG("%s: \"%s\"", from, txt);
 
     if (socket_get_client(s)) {
         return;
@@ -1893,16 +1884,7 @@ void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    char *tmp = dynprintf("%s", txt);
-    widp w = wid_button_transient(tmp, 0);
-    color c = BLACK;
-    c.a = 150;
-    wid_set_color(w, WID_COLOR_BG, c);
-    wid_set_color(w, WID_COLOR_TL, c);
-    wid_set_color(w, WID_COLOR_BR, c);
-    wid_move_to_pct_centered(w, 0.5, 0.1);
-    wid_set_text_outline(w, true);
-    myfree(tmp);
+    MSG("%s", txt);
 }
 
 void socket_tx_tell (socketp s, 
@@ -1974,17 +1956,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (!socket_get_server(s)) {
-        char *tmp = dynprintf("%s: says \"%s\"", from, txt);
-        widp w = wid_button_transient(tmp, 0);
-        color c = BLACK;
-        c.a = 150;
-        wid_set_color(w, WID_COLOR_BG, c);
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_move_to_pct_centered(w, 0.5, 0.1);
-        wid_set_text_outline(w, true);
-        myfree(tmp);
-
+        MSG("%s: says \"%s\"", from, txt);
         return;
     }
 
