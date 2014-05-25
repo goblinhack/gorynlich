@@ -143,6 +143,7 @@ typedef struct {
     uint8_t type;
     uint16_t thing_id;
     uint8_t carrying[THING_MAX];
+    uint8_t weapon;
 } __attribute__ ((packed)) msg_player_update;
 
 typedef struct socket_ {

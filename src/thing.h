@@ -540,6 +540,7 @@ typedef struct thing_ {
     uint32_t on_server:1;
     uint32_t on_server_player_things:1;
     uint32_t on_client_player_things:1;
+    uint32_t needs_tx_player_update:1;
 
     /*
      * Force client to server postion.
