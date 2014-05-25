@@ -1,11 +1,10 @@
 {
- short_name="water"
+ short_name="tasty water"
  tooltip="Poisoned water"
  z_depth=2
  z_order=2
  is_boring
  is_food
-is_shortcut
  tiles={
   tile={
    tile="water2"

@@ -251,10 +251,6 @@ static void thing_template_destroy_internal (thing_templatep t)
         myfree(t->short_name);
     }
 
-    if (t->weapon) {
-        myfree(t->weapon);
-    }
-
     if (t->polymorph_on_death) {
         myfree(t->polymorph_on_death);
     }
@@ -412,7 +408,17 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
     (void) demarshal_gotone(ctx);
 
     do {
-        GET_OPT_NAMED_STRING(ctx, "weapon", t->weapon);
+        
+        char *val;
+        if (GET_OPT_NAMED_STRING(ctx, "fires", val)) {
+            t->fires = thing_template_find(val);
+            if (!t->fires) {
+                DIE("cannot find %s for %s to fire",
+                    val, t->short_name);
+            }
+            myfree(val);
+        }
+
         GET_OPT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
         GET_OPT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
@@ -474,7 +480,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
         GET_OPT_NAMED_BITFIELD(ctx, "can_carry", t->can_carry);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_valid_for_shortcut_key", t->is_valid_for_shortcut_key);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
         GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
@@ -516,7 +522,9 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_STRING(ctx, "name", t->tree.key);
     PUT_NAMED_STRING(ctx, "short_name", t->short_name);
     PUT_NAMED_STRING(ctx, "tooltip", t->tooltip);
-    PUT_NAMED_STRING(ctx, "weapon", t->weapon);
+    if (t->fires) {
+        PUT_NAMED_STRING(ctx, "fires", thing_template_name(t->fires));
+    }
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
     PUT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
@@ -578,7 +586,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_key8", t->is_key8);
     PUT_NAMED_BITFIELD(ctx, "can_carry", t->can_carry);
     PUT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
-    PUT_NAMED_BITFIELD(ctx, "is_shortcut", t->is_shortcut);
+    PUT_NAMED_BITFIELD(ctx, "is_valid_for_shortcut_key", t->is_valid_for_shortcut_key);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
     PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
@@ -619,9 +627,9 @@ const char *thing_template_short_name (thing_templatep t)
     return (t->short_name);
 }
 
-const char *thing_template_weapon (thing_templatep t)
+thing_templatep thing_template_fires (thing_templatep t)
 {
-    return (t->weapon);
+    return (t->fires);
 }
 
 const char *thing_template_polymorph_on_death (thing_templatep t)

@@ -78,7 +78,7 @@ typedef struct thing_template_ {
     /*
      * What the thing throws.
      */
-    char *weapon;
+    thing_templatep fires;
 
     /*
      * What to create when you die. Usually a smaller monster.
@@ -185,7 +185,7 @@ typedef struct thing_template_ {
     uint8_t is_key8:1;
     uint8_t can_carry:1;
     uint8_t is_item_unusable:1;
-    uint8_t is_shortcut:1;
+    uint8_t is_valid_for_shortcut_key:1;
     uint8_t is_seedpod:1;
     uint8_t is_bomb:1;
     uint8_t is_spam:1;
@@ -228,7 +228,7 @@ thing_templatep string2thing_template(const char **s);
 
 const char *thing_template_name(thing_templatep);
 const char *thing_template_short_name(thing_templatep);
-const char *thing_template_weapon(thing_templatep);
+thing_templatep thing_template_fires(thing_templatep);
 const char *thing_template_polymorph_on_death(thing_templatep);
 const char *thing_template_mob_spawn(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
@@ -409,9 +409,9 @@ static inline uint8_t thing_template_can_carry (thing_templatep t)
     return (t->can_carry);
 }
 
-static inline uint8_t thing_template_is_shortcut (thing_templatep t)
+static inline uint8_t thing_template_is_valid_for_shortcut_key (thing_templatep t)
 {
-    return (t->is_shortcut);
+    return (t->is_valid_for_shortcut_key);
 }
 
 static inline uint8_t thing_template_is_seedpod (thing_templatep t)

@@ -1,7 +1,9 @@
 {
  short_name="wizard"
  tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
- weapon="data/things/fireball"
+ carrying={
+    "data/things/wand_fire"
+ }
  z_depth=3
  z_order=10
  speed=50

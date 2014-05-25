@@ -106,6 +106,12 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__amulet1_session.o: asm/ramdisk_data_things__amulet1_session.S ../data/things/.amulet1.session
+	gcc -c asm/ramdisk_data_things__amulet1_session.S -o .o/ramdisk_data_things__amulet1_session.o
+
+.o/ramdisk_data_things__bow3_session.o: asm/ramdisk_data_things__bow3_session.S ../data/things/.bow3.session
+	gcc -c asm/ramdisk_data_things__bow3_session.S -o .o/ramdisk_data_things__bow3_session.o
+
 .o/ramdisk_data_things__bow4_session.o: asm/ramdisk_data_things__bow4_session.S ../data/things/.bow4.session
 	gcc -c asm/ramdisk_data_things__bow4_session.S -o .o/ramdisk_data_things__bow4_session.o
 
@@ -114,6 +120,9 @@
 
 .o/ramdisk_data_things__gem1_session.o: asm/ramdisk_data_things__gem1_session.S ../data/things/.gem1.session
 	gcc -c asm/ramdisk_data_things__gem1_session.S -o .o/ramdisk_data_things__gem1_session.o
+
+.o/ramdisk_data_things__potion1_session.o: asm/ramdisk_data_things__potion1_session.S ../data/things/.potion1.session
+	gcc -c asm/ramdisk_data_things__potion1_session.S -o .o/ramdisk_data_things__potion1_session.o
 
 .o/ramdisk_data_things__splat_session.o: asm/ramdisk_data_things__splat_session.S ../data/things/.splat.session
 	gcc -c asm/ramdisk_data_things__splat_session.S -o .o/ramdisk_data_things__splat_session.o
@@ -127,8 +136,8 @@
 .o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
 	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
 
-.o/ramdisk_data_things_1.o: asm/ramdisk_data_things_1.S ../data/things/1
-	gcc -c asm/ramdisk_data_things_1.S -o .o/ramdisk_data_things_1.o
+.o/ramdisk_data_things__water2_session.o: asm/ramdisk_data_things__water2_session.S ../data/things/.water2.session
+	gcc -c asm/ramdisk_data_things__water2_session.S -o .o/ramdisk_data_things__water2_session.o
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o

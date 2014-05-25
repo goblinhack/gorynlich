@@ -2438,23 +2438,21 @@ void thing_fire (thingp t,
      */
     thing_templatep weapon = t->weapon;
     if (!weapon) {
-        const char *tmp = thing_template_weapon(t->thing_template);
-        if (!tmp) {
-            THING_SHOUT_AT(t, "No weapon");
-            return;
-        }
-
-        weapon = thing_template_find(tmp);
-        if (!weapon) {
-            ERR("weapon %s not found", tmp);
-            return;
-        }
+        THING_SHOUT_AT(t, "No weapon");
+        return;
     }
 
+    /*
+     * Check if the weapon reaches its end of warranty.
+     */
     if (weapon == t->weapon) {
-        if (rand() % thing_template_get_failure_rate(weapon)) {
-            thing_item_destroyed(t, weapon);
-            return;
+        uint32_t failure_rate = thing_template_get_failure_rate(weapon);
+
+        if (failure_rate) {
+            if ((rand() % failure_rate) == 0) {
+                thing_item_destroyed(t, weapon);
+                return;
+            }
         }
     }
 
@@ -2542,17 +2540,23 @@ void thing_fire (thingp t,
     dx *= speed;
     dy *= speed;
 
+    thing_templatep projectile = thing_template_fires(weapon);
+    if (!projectile) {
+        ERR("weapon %s has no projectile", thing_template_name(weapon));
+        return;
+    }
+
     widp w = wid_game_map_server_replace_tile(
                                     wid_game_map_server_grid_container,
                                     x,
                                     y,
-                                    weapon);
+                                    projectile);
 
-    thingp projectile = wid_get_thing(w);
+    thingp p = wid_get_thing(w);
 
-    projectile->dx = dx;
-    projectile->dy = dy;
-    projectile->dir = t->dir;
+    p->dx = dx;
+    p->dy = dy;
+    p->dir = t->dir;
 
     socket_server_tx_map_update(0 /* all clients */, server_active_things);
 }
