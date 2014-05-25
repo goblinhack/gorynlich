@@ -320,7 +320,7 @@ wid_game_map_update_shortcuts (void)
          * Is this thing used with a shortcut key?
          */
         thing_templatep temp = id_to_thing_template(i);
-        if (!thing_template_is_shortcut(temp)) {
+        if (!thing_template_is_valid_for_shortcut_key(temp)) {
             continue;
         }
 

@@ -760,11 +760,11 @@ static inline uint8_t thing_is_item_unusable (thingp t)
     return (thing_template_is_item_unusable(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_shortcut (thingp t)
+static inline uint8_t thing_is_valid_for_shortcut_key (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_shortcut(thing_get_template(t)));
+    return (thing_template_is_valid_for_shortcut_key(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_seedpod (thingp t)
@@ -1031,9 +1031,9 @@ static inline uint8_t thing_is_item_unusable_fast (thingp t)
     return (t->thing_template->is_item_unusable);
 }
 
-static inline uint8_t thing_is_shortcut_fast (thingp t)
+static inline uint8_t thing_is_valid_for_shortcut_key_fast (thingp t)
 {
-    return (t->thing_template->is_shortcut);
+    return (t->thing_template->is_valid_for_shortcut_key);
 }
 
 static inline uint8_t thing_is_seedpod_fast (thingp t)

@@ -5,7 +5,6 @@
  z_order=2
  is_boring
  is_food
-is_shortcut
  tiles={
   tile={
    tile="food1"

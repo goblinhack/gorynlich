@@ -1444,6 +1444,9 @@ static uint8_t resource_init_23 (void *context)
     tile_load_arr("sprites_small", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(small_tiles), small_tiles);
 
+    /*
+     * Walls
+     */
     thing_template_load(&THING_WALL, "data/things/wall");
     thing_template_load(&THING_WALL2, "data/things/wall2");
     thing_template_load(&THING_WALL3, "data/things/wall3");
@@ -1474,7 +1477,32 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_GENERATOR7, "data/things/generator7");
 
     /*
-     * Important stuff that cannot be used.
+     * Projectiles
+     */
+    thing_template_load(&THING_ARROW, "data/things/arrow");
+    thing_template_load(&THING_FIREBALL, "data/things/fireball");
+
+    /*
+     * Effects
+     */
+    thing_template_load(&THING_EXPLOSION, "data/things/explosion");
+    thing_template_load(&THING_EXPLOSION1, "data/things/explosion1");
+    thing_template_load(&THING_EXPLOSION2, "data/things/explosion2");
+    thing_template_load(&THING_EXPLOSION3, "data/things/explosion3");
+    thing_template_load(&THING_EXPLOSION4, "data/things/explosion4");
+    thing_template_load(&THING_EXPLOSION5, "data/things/explosion5");
+    thing_template_load(&THING_EXPLOSION6, "data/things/explosion6");
+    thing_template_load(&THING_EXPLOSION7, "data/things/explosion7");
+    thing_template_load(&THING_EXPLOSION8, "data/things/explosion8");
+    thing_template_load(&THING_POTION_EFFECT1, "data/things/potion_effect1");
+    thing_template_load(&THING_POTION_EFFECT2, "data/things/potion_effect2");
+    thing_template_load(&THING_POTION_EFFECT3, "data/things/potion_effect3");
+    thing_template_load(&THING_POTION_EFFECT4, "data/things/potion_effect4");
+    thing_template_load(&THING_POTION_EFFECT5, "data/things/potion_effect5");
+    thing_template_load(&THING_POTION_EFFECT6, "data/things/potion_effect6");
+
+    /*
+     * Important stuff that cannot be used by clicking on.
      */
     thing_template_load(&THING_KEYS1, "data/things/keys1");
     thing_template_load(&THING_KEYS2, "data/things/keys2");
@@ -1489,7 +1517,6 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_BOW2, "data/things/bow2");
     thing_template_load(&THING_BOW3, "data/things/bow3");
     thing_template_load(&THING_BOW4, "data/things/bow4");
-    thing_template_load(&THING_ARROW, "data/things/arrow");
     thing_template_load(&THING_AMULET1, "data/things/amulet1");
 
     /*
@@ -1543,26 +1570,6 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_DEATH, "data/things/death");
     thing_template_load(&THING_PLANT, "data/things/plant");
     thing_template_load(&THING_SEEDPOD, "data/things/seedpod");
-
-    /*
-     * Effects
-     */
-    thing_template_load(&THING_FIREBALL, "data/things/fireball");
-    thing_template_load(&THING_EXPLOSION, "data/things/explosion");
-    thing_template_load(&THING_EXPLOSION1, "data/things/explosion1");
-    thing_template_load(&THING_EXPLOSION2, "data/things/explosion2");
-    thing_template_load(&THING_EXPLOSION3, "data/things/explosion3");
-    thing_template_load(&THING_EXPLOSION4, "data/things/explosion4");
-    thing_template_load(&THING_EXPLOSION5, "data/things/explosion5");
-    thing_template_load(&THING_EXPLOSION6, "data/things/explosion6");
-    thing_template_load(&THING_EXPLOSION7, "data/things/explosion7");
-    thing_template_load(&THING_EXPLOSION8, "data/things/explosion8");
-    thing_template_load(&THING_POTION_EFFECT1, "data/things/potion_effect1");
-    thing_template_load(&THING_POTION_EFFECT2, "data/things/potion_effect2");
-    thing_template_load(&THING_POTION_EFFECT3, "data/things/potion_effect3");
-    thing_template_load(&THING_POTION_EFFECT4, "data/things/potion_effect4");
-    thing_template_load(&THING_POTION_EFFECT5, "data/things/potion_effect5");
-    thing_template_load(&THING_POTION_EFFECT6, "data/things/potion_effect6");
 
     return (true);
 }

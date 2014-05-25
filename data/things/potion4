@@ -5,7 +5,7 @@
  z_order=2
  is_boring
  is_food
-is_shortcut
+is_valid_for_shortcut_key
  tiles={
   tile={
    tile="potion4"

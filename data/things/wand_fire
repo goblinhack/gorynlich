@@ -1,6 +1,7 @@
 {
- short_name="wand-fire"
+ short_name="wand of fire"
  tooltip="wand of fire"
+ fires="data/things/fireball"
  z_depth=2
  z_order=2
  is_weapon
@@ -8,7 +9,8 @@
  is_destroyed_on_hitting
  is_item_wearable
  is_animated
- failure_rate=10
+ is_valid_for_shortcut_key
+ failure_rate=100
  tiles={
   tile={
    tile="wand-fire1"
