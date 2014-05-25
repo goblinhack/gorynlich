@@ -201,7 +201,13 @@ thingp thing_server_new (levelp level, const char *name)
      * Start out with the items carried on the template if any.
      */
     if (thing_template_can_carry(thing_template)) {
-        memcpy(t->carrying, thing_template->carrying, sizeof(t->carrying));
+        uint32_t i;
+
+        for (i = 0; i < THING_MAX; i++) {
+            if (thing_template->carrying[i]) {
+                thing_collect(t, id_to_thing_template(i));
+            }
+        }
     }
 
     /*
@@ -304,6 +310,11 @@ thingp thing_server_new (levelp level, const char *name)
     t->first_update = true;
 
     if (thing_is_player(t)) {
+        /*
+         * So the client sees any carried weapons at start.
+         */
+        t->needs_tx_player_update = true;
+
         THING_LOG(t, "created on server");
     }
 
@@ -1595,11 +1606,11 @@ void thing_set_is_dead (thingp t, uint8_t val)
     t->is_dead = val;
 }
 
-const char * thing_name (thingp t)
+const char *thing_name (thingp t)
 {
     verify(t);
 
-    return (thing_template_name(t->thing_template));
+    return (thing_template_short_name(t->thing_template));
 }
 
 const char * thing_tooltip (thingp t)
@@ -2266,6 +2277,12 @@ void socket_server_tx_player_update (thingp t)
     memcpy(data, t->carrying, sizeof(t->carrying));
     data += sizeof(t->carrying);
 
+    if (t->weapon) {
+        *data++ = thing_template_to_id(t->weapon);
+    } else {
+        *data++ = 0;
+    }
+
     packet->len = data - odata;
 
     /*
@@ -2290,8 +2307,6 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
 {
     verify(s);
 
-    uint8_t *eodata = data + packet->len - 1;
-
     uint32_t id = SDLNet_Read32(data);
     data += sizeof(uint32_t);
 
@@ -2301,7 +2316,15 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         return;
     }
 
-    memcpy(t->carrying, data, eodata - data);
+    memcpy(t->carrying, data, sizeof(t->carrying));
+    data += sizeof(t->carrying);
+
+    id = *data++;
+    if (id) {
+        t->weapon = id_to_thing_template(id);
+    } else {
+        t->weapon = 0;
+    }
 }
 
 static void thing_common_move (thingp t,
@@ -2601,13 +2624,28 @@ uint8_t thing_server_move (thingp t,
     return (true);
 }
 
+static void thing_wield_next_weapon (thingp t)
+{
+    uint32_t i;
+
+    for (i = 0; i < THING_MAX; i++) {
+        if (!thing_is_carrying(t, i)) {
+            continue;
+        }
+
+        thing_templatep tmp = id_to_thing_template(i);
+        thing_wield(t, tmp);
+        break;
+    }
+}
+
 void thing_unwield (thingp t)
 {
     if (!t->weapon) {
         return;
     }
 
-    THING_LOG(t, "unwield %s", thing_template_name(t->weapon));
+    THING_LOG(t, "unwield %s", thing_template_short_name(t->weapon));
 
     t->weapon = 0;
 }
@@ -2618,7 +2656,7 @@ void thing_wield (thingp t, thing_templatep tmp)
 
     t->weapon = tmp;
 
-    THING_SHOUT_AT(t, "You wield the %s", thing_template_name(tmp));
+    THING_SHOUT_AT(t, "You wield the %s", thing_template_short_name(tmp));
 }
 
 void thing_collect (thingp t, thing_templatep tmp)
@@ -2627,7 +2665,7 @@ void thing_collect (thingp t, thing_templatep tmp)
 
     id = thing_template_to_id(tmp);
 
-    THING_LOG(t, "collects %s", thing_template_name(tmp));
+    THING_LOG(t, "collects %s", thing_template_short_name(tmp));
 
     t->carrying[id]++;
 
@@ -2636,7 +2674,7 @@ void thing_collect (thingp t, thing_templatep tmp)
      */
     if (thing_template_is_weapon(tmp)) {
         if (!t->weapon) {
-            THING_LOG(t, "auto weild %s", thing_template_name(tmp));
+            THING_LOG(t, "auto weild %s", thing_template_short_name(tmp));
 
             thing_wield(t, tmp);
         }
@@ -2651,7 +2689,7 @@ void thing_used (thingp t, thing_templatep tmp)
 
     id = thing_template_to_id(tmp);
     if (!t->carrying[id]) {
-        ERR("tried to use %s not carried", thing_template_name(tmp));
+        ERR("tried to use %s not carried", thing_template_short_name(tmp));
         return;
     }
 
@@ -2663,7 +2701,7 @@ void thing_used (thingp t, thing_templatep tmp)
         return;
     }
 
-    THING_LOG(t, "used %s", thing_template_name(tmp));
+    THING_LOG(t, "used %s", thing_template_short_name(tmp));
 
     t->carrying[id]--;
 
@@ -2676,19 +2714,22 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
 
     id = thing_template_to_id(tmp);
     if (!t->carrying[id]) {
-        ERR("tried to item destroy %s not carried", thing_template_name(tmp));
+        ERR("tried to item destroy %s not carried", 
+            thing_template_short_name(tmp));
         return;
     }
+
+    t->carrying[id]--;
+
+    THING_LOG(t, "item destroyed %s", thing_template_short_name(tmp));
 
     if (thing_template_is_weapon(tmp)) {
         thing_unwield(t);
 
         THING_SHOUT_AT(t, "Your weapon crumbles to dust");
+
+        thing_wield_next_weapon(t);
     }
-
-    THING_LOG(t, "item destroyed %s", thing_template_name(tmp));
-
-    t->carrying[id]--;
 
     t->needs_tx_player_update = true;
 }
@@ -2699,7 +2740,7 @@ void thing_drop (thingp t, thing_templatep tmp)
 
     id = thing_template_to_id(tmp);
     if (!t->carrying[id]) {
-        ERR("tried to drop %s not carried", thing_template_name(tmp));
+        ERR("tried to drop %s not carried", thing_template_short_name(tmp));
         return;
     }
 
@@ -2710,7 +2751,7 @@ void thing_drop (thingp t, thing_templatep tmp)
         thing_unwield(t);
     }
 
-    THING_LOG(t, "drop %s", thing_template_name(tmp));
+    THING_LOG(t, "drop %s", thing_template_short_name(tmp));
 
     t->carrying[id]--;
 

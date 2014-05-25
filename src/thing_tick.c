@@ -66,7 +66,7 @@ static void thing_tick_server_all (void)
          * client, do so now.
          */
         if (t->needs_tx_player_update) {
-            t->needs_tx_player_update = 0;
+            t->needs_tx_player_update = false;
             socket_server_tx_player_update(t);
         }
 
