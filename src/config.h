@@ -8,8 +8,8 @@
 
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
@@ -108,7 +108,7 @@
  * Maximum number of thing types. This cannot be exceeded without changing
  * the message format in tx updates.
  */
-#define THING_MAX                   256
+#define THING_MAX                   128
 
 /*
  * Thumb in air. Needs to be big enough so wrap arounds and id reuse is less 
