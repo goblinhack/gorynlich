@@ -20,6 +20,11 @@
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
 /*
+ * So we don't hog all the CPU
+ */
+#define MAIN_LOOP_DELAY            5
+
+/*
  * Tries to batch calls to draw arrays for more speed.
  */
 #define ENABLE_GL_BULK_DRAW_ARRAYS 
