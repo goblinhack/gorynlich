@@ -5,8 +5,7 @@
  z_order=2
  is_boring
  is_food
- is_destroyed_on_hitting
- destroyed_on_hitting
+ is_fragile
  tiles={
   tile={
    tile="food1"

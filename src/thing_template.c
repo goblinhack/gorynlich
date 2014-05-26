@@ -467,7 +467,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_weapon", t->is_weapon);
         GET_OPT_NAMED_BITFIELD(ctx, "is_treasure", t->is_treasure);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wearable", t->is_wearable);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_destroyed_on_hitting", t->is_destroyed_on_hitting);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_fragile", t->is_fragile);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);
@@ -573,7 +573,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_weapon", t->is_weapon);
     PUT_NAMED_BITFIELD(ctx, "is_treasure", t->is_treasure);
     PUT_NAMED_BITFIELD(ctx, "is_wearable", t->is_wearable);
-    PUT_NAMED_BITFIELD(ctx, "is_destroyed_on_hitting", t->is_destroyed_on_hitting);
+    PUT_NAMED_BITFIELD(ctx, "is_fragile", t->is_fragile);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_key0", t->is_key0);
     PUT_NAMED_BITFIELD(ctx, "is_key1", t->is_key1);

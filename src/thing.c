@@ -792,7 +792,7 @@ void thing_hit (thingp t,
         /*
          * No killer to avoid giving a bonus to monsters!
          */
-        if (thing_is_destroyed_on_hitting(hitter)) {
+        if (thing_is_fragile(hitter)) {
             thing_dead(hitter, 0, "self destruct on hitting");
         }
     }

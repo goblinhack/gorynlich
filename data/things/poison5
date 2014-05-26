@@ -6,7 +6,7 @@
  is_animated
  is_hidden_from_editor
  is_poison
- is_destroyed_on_hitting
+ is_fragile
  is_collision_map_medium
  damage=100
  hit_delay_tenths=1

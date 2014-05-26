@@ -321,7 +321,7 @@ static void thing_handle_collision (thingp me, thingp it,
             return;
         }
 
-        if (thing_is_destroyed_on_hitting(it)) {
+        if (thing_is_fragile(it)) {
             /*
              * Weapon hits food or similar?
              */

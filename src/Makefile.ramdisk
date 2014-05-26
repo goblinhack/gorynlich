@@ -106,6 +106,9 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__poison8_session.o: asm/ramdisk_data_things__poison8_session.S ../data/things/.poison8.session
+	gcc -c asm/ramdisk_data_things__poison8_session.S -o .o/ramdisk_data_things__poison8_session.o
+
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
 
@@ -327,6 +330,9 @@
 
 .o/ramdisk_data_things_poison7.o: asm/ramdisk_data_things_poison7.S ../data/things/poison7
 	gcc -c asm/ramdisk_data_things_poison7.S -o .o/ramdisk_data_things_poison7.o
+
+.o/ramdisk_data_things_poison8.o: asm/ramdisk_data_things_poison8.S ../data/things/poison8
+	gcc -c asm/ramdisk_data_things_poison8.S -o .o/ramdisk_data_things_poison8.o
 
 .o/ramdisk_data_things_potion_death.o: asm/ramdisk_data_things_potion_death.S ../data/things/potion_death
 	gcc -c asm/ramdisk_data_things_potion_death.S -o .o/ramdisk_data_things_potion_death.o

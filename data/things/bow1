@@ -5,9 +5,9 @@
  z_depth=2
  z_order=2
  is_weapon
- is_destroyed_on_hitting
+ is_fragile
  is_collision_map_large
- is_destroyed_on_hitting
+ is_fragile
  is_valid_for_shortcut_key
  is_wearable
  failure_rate=1000

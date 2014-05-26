@@ -12,7 +12,7 @@
  is_collision_map_medium
  is_animated
  is_scarable
- is_destroyed_on_hitting
+ is_fragile
  tiles={
   tile={
    delay=200
