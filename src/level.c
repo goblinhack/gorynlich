@@ -446,7 +446,7 @@ void level_set_monst_map_treat_doors_as_passable (levelp level)
                 map_is_bomb_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
-                map_is_generator_at(level, x, y)    ||
+                map_is_mob_spawner_at(level, x, y)    ||
                 map_is_food_at(level, x, y)         ||
                 map_is_weapon_at(level, x, y)       ||
                 map_is_treasure_at(level, x, y)     ||
@@ -477,7 +477,7 @@ void level_set_monst_map_treat_doors_as_walls (levelp level)
                 map_is_door_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
-                map_is_generator_at(level, x, y)    ||
+                map_is_mob_spawner_at(level, x, y)    ||
                 map_is_treasure_at(level, x, y)     ||
                 map_is_weapon_at(level, x, y)       ||
                 map_is_food_at(level, x, y)         ||

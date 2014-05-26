@@ -301,7 +301,7 @@ thingp thing_server_new (levelp level, const char *name)
     /*
      * Start out with the items carried on the template if any.
      */
-    if (thing_template_can_carry(thing_template)) {
+    if (thing_template_is_carryable(thing_template)) {
         uint32_t i;
 
         for (i = 0; i < THING_MAX; i++) {
@@ -609,7 +609,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         /*
          * Explodes on death ala Sith Lord? Only a lesser one, mind.
          */
-        if (thing_template_explode_on_death(t->thing_template)) {
+        if (thing_template_is_combustable(t->thing_template)) {
             level_place_small_explosion(t->level, 
                                         0, // owner
                                         t->x, t->y);

@@ -1,5 +1,5 @@
 {
- short_name="poison1"
+ short_name="poison8"
  tooltip="poison cloud!"
  z_depth=2
  z_order=2
@@ -12,31 +12,31 @@
  hit_delay_tenths=1
  tiles={
   tile={
-   tile="poison1.1"
+   tile="poison8.1"
    delay=50
   }
   tile={
-   tile="poison1.2"
+   tile="poison8.2"
    delay=50
   }
   tile={
-   tile="poison1.3"
+   tile="poison8.3"
    delay=50
   }
   tile={
-   tile="poison1.4"
+   tile="poison8.4"
    delay=50
   }
   tile={
-   tile="poison1.5"
+   tile="poison8.5"
    delay=50
   }
   tile={
-   tile="poison1.6"
+   tile="poison8.6"
    delay=50
   }
   tile={
-   tile="poison1.7"
+   tile="poison8.7"
    delay=50
   }
   tile={

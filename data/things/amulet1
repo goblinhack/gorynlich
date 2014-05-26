@@ -4,7 +4,7 @@
  z_depth=2
  z_order=2
  is_boring
- is_item_wearable
+ is_wearable
  is_valid_for_shortcut_key
  tiles={
   tile={

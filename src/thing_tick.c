@@ -196,7 +196,7 @@ static void thing_tick_server_all (void)
         /*
          * Time to spawn a thing?
          */
-        if (thing_is_generator(t)) {
+        if (thing_is_mob_spawner(t)) {
             uint32_t delay = 
                     thing_template_get_mob_spawn_delay_tenths(thing_template);
 

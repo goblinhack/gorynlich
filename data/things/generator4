@@ -3,7 +3,7 @@
  tooltip="Mob polymorpher"
  z_depth=2
  z_order=2
- is_generator
+ is_mob_spawner
  is_monst
  is_collision_map_large
  mob_spawn_delay_tenths=50

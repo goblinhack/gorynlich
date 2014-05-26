@@ -82,7 +82,7 @@ static void dmap_print (levelp level, level_walls *dmap)
                 fprintf(fp, " Do ");
                 continue;
             }
-            if (map_is_generator_at(level, x, y)) {
+            if (map_is_mob_spawner_at(level, x, y)) {
                 fprintf(fp, " Gn ");
                 continue;
             }
