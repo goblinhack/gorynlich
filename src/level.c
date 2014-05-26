@@ -676,9 +676,9 @@ static uint8_t level_place_explosion_at (levelp level,
                                   owner,
                                   x,
                                   y,
-                                  i * 50, // place in
+                                  i * 100, // place in
                                   500,     // destroy in
-                                  i * 20); // jitter
+                                  10);     // jitter
 
     return (true);
 }
@@ -698,7 +698,7 @@ static void level_place_explosion_ (levelp level,
     uint8_t rad_blocked_explosion[360] = {0};
 
     double r;
-    for (r = 0; r <= radius; r += 0.5) {
+    for (r = 0; r <= radius; r += 0.2) {
 
         double explosion_width = 1.0;
         double circumference = 2.0 * PI * r;

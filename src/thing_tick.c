@@ -35,11 +35,6 @@ static void thing_tick_server_all (void)
     thingp t;
 
     /*
-     * Allow level timers to fire.
-     */
-    level_tick(level);
-
-    /*
      * Any timers waiting to fire?
      */
     if (thing_timers) {
@@ -330,6 +325,11 @@ static void thing_tick_client_all (void)
 
 void thing_tick_all (void)
 {
+    /*
+     * Allow level timers to fire.
+     */
+    level_tick(server_level);
+
     if (server_level) {
         static uint32_t ts;
 
