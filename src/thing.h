@@ -678,11 +678,11 @@ static inline uint8_t thing_is_wearable (thingp t)
     return (thing_template_is_wearable(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_destroyed_on_hitting (thingp t)
+static inline uint8_t thing_is_fragile (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_destroyed_on_hitting(thing_get_template(t)));
+    return (thing_template_is_fragile(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_star (thingp t)
@@ -973,9 +973,9 @@ static inline uint8_t thing_is_wearable_fast (thingp t)
     return (t->thing_template->is_wearable);
 }
 
-static inline uint8_t thing_is_destroyed_on_hitting_fast (thingp t)
+static inline uint8_t thing_is_fragile_fast (thingp t)
 {
-    return (t->thing_template->is_destroyed_on_hitting);
+    return (t->thing_template->is_fragile);
 }
 
 static inline uint8_t thing_is_star_fast (thingp t)

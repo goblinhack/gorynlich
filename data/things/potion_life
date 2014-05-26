@@ -6,7 +6,7 @@
  is_boring
  is_food
  is_combustable
- is_destroyed_on_hitting
+ is_fragile
  is_valid_for_shortcut_key
  tiles={
   tile={

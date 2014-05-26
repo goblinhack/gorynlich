@@ -7,7 +7,7 @@
  speed=100
  damage=2
  is_collision_map_tiny
- is_destroyed_on_hitting
+ is_fragile
  is_projectile
  is_animated
  is_wearable
