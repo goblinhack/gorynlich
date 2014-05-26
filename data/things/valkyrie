@@ -12,7 +12,6 @@
  is_player
  can_carry
  is_collision_map_large
- explode_on_death
  is_animated
  tiles={
   tile={

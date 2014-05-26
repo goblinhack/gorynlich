@@ -2928,7 +2928,7 @@
   } {   
    x=1 
    y=17 
-   t="data/things/potion1" 
+   t="data/things/potion_monsticide" 
   } {   
    x=1 
    y=17 
@@ -4636,7 +4636,7 @@
   } {   
    x=23 
    y=26 
-   t="data/things/potion2" 
+   t="data/things/potion_fire" 
   } {   
    x=23 
    y=26 

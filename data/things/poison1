@@ -1,42 +1,42 @@
 {
- short_name="explosion1"
+ short_name="poison1"
  tooltip="Boom!"
  z_depth=2
  z_order=2
  is_animated
  is_hidden_from_editor
- is_explosion
+ is_poison
  is_destroyed_on_hitting
  is_collision_map_monst
- damage=150
+ damage=100
  hit_delay_tenths=1
  tiles={
   tile={
-   tile="explosion1.1"
+   tile="poison1.1"
    delay=50
   }
   tile={
-   tile="explosion1.2"
+   tile="poison1.2"
    delay=50
   }
   tile={
-   tile="explosion1.3"
+   tile="poison1.3"
    delay=50
   }
   tile={
-   tile="explosion1.4"
+   tile="poison1.4"
    delay=50
   }
   tile={
-   tile="explosion1.5"
+   tile="poison1.5"
    delay=50
   }
   tile={
-   tile="explosion1.6"
+   tile="poison1.6"
    delay=50
   }
   tile={
-   tile="explosion1.7"
+   tile="poison1.7"
    delay=50
   }
   tile={
