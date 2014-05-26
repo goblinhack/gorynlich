@@ -940,9 +940,9 @@ void sdl_loop (void)
             SDL_GL_SwapBuffers();
 #endif /* } */
 
-            SDL_Delay(5);
+            SDL_Delay(MAIN_LOOP_DELAY);
         } else {
-            usleep(5);
+            usleep(MAIN_LOOP_DELAY);
         }
     }
 }
