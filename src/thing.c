@@ -605,15 +605,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 return;
             }
         }
-
-        /*
-         * Explodes on death ala Sith Lord? Only a lesser one, mind.
-         */
-        if (thing_template_is_combustable(t->thing_template)) {
-            level_place_small_explosion(t->level, 
-                                        0, // owner
-                                        t->x, t->y);
-        }
     }
 
     /*
@@ -737,6 +728,16 @@ static void thing_hit_ (thingp t,
     
     if (t->health <= damage) {
         t->health = 0;
+
+        /*
+         * Explodes on death ala Sith Lord? Only a lesser one, mind.
+         */
+        if (thing_template_is_combustable(t->thing_template)) {
+            level_place_small_explosion(t->level, 
+                                        0, // owner
+                                        t->x, t->y);
+        }
+
         thing_dead(t, hitter, "hit [%s] for %u", reason, damage);
     }  else {
         t->health -= damage;
