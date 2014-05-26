@@ -82,6 +82,5 @@ static inline uint32_t time_update_time_milli (void)
 
 static inline uint32_t time_get_time_milli (void)
 {
-time_update_time_milli();
     return (time_get_time_cached());
 }

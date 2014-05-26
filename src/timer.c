@@ -121,20 +121,22 @@ void action_timers_tick (tree_rootp root)
         return;
     }
 
-    t = (typeof(t)) tree_root_first(root);
-    if (!t) {
-        return;
+    for (;;) {
+        t = (typeof(t)) tree_root_first(root);
+        if (!t) {
+            return;
+        }
+
+        if (t->expires_when > time_get_time_cached()) {
+            return;
+        }
+
+        TIMER_LOG(t, "fired");
+
+        (t->callback)(t->context);
+
+        tree_remove_found_node(root, &t->tree.node);
+
+        action_timer_free(t);
     }
-
-    if (t->expires_when > time_get_time_cached()) {
-        return;
-    }
-
-    TIMER_LOG(t, "fired");
-
-    (t->callback)(t->context);
-
-    tree_remove_found_node(root, &t->tree.node);
-
-    action_timer_free(t);
 }
