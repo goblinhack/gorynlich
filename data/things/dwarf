@@ -6,7 +6,7 @@
  speed=70
  health=250
  is_player
- can_carry
+ is_carryable
  is_collision_map_large
  is_animated
  tiles={

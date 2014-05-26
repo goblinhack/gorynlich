@@ -171,7 +171,7 @@ typedef struct thing_template_ {
     uint8_t is_xxx4:1;
     uint8_t is_weapon:1;
     uint8_t is_treasure:1;
-    uint8_t is_item_wearable:1;
+    uint8_t is_wearable:1;
     uint8_t is_destroyed_on_hitting:1;
     uint8_t is_star:1;
     uint8_t is_key0:1;
@@ -182,8 +182,8 @@ typedef struct thing_template_ {
     uint8_t is_key5:1;
     uint8_t is_key6:1;
     uint8_t is_key7:1;
-    uint8_t is_key8:1;
-    uint8_t can_carry:1;
+    uint8_t is_poison:1;
+    uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
     uint8_t is_valid_for_shortcut_key:1;
     uint8_t is_seedpod:1;
@@ -191,18 +191,18 @@ typedef struct thing_template_ {
     uint8_t is_spam:1;
     uint8_t is_door:1;
     uint8_t is_pipe:1;
-    uint8_t is_generator:1;
+    uint8_t is_mob_spawner:1;
     uint8_t is_scarable:1;
     uint8_t is_explosion:1;
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
-    uint8_t is_collision_map_monst:1;
+    uint8_t is_collision_map_medium:1;
     uint8_t is_collision_map_large:1;
-    uint8_t is_collision_map_weapon:1;
-    uint8_t explode_on_death:1;
+    uint8_t is_collision_map_tiny:1;
+    uint8_t is_combustable:1;
     uint8_t is_projectile:1;
     uint8_t is_boring:1;
-    uint8_t is_item_hidden:1;
+    uint8_t is_xxx8:1;
     uint8_t is_joinable:1;
     uint8_t is_wall:1;
     uint8_t is_effect_sway:1;
@@ -339,9 +339,9 @@ static inline uint8_t thing_template_is_treasure (thing_templatep t)
     return (t->is_treasure);
 }
 
-static inline uint8_t thing_template_is_item_wearable (thing_templatep t)
+static inline uint8_t thing_template_is_wearable (thing_templatep t)
 {
-    return (t->is_item_wearable);
+    return (t->is_wearable);
 }
 
 static inline uint8_t thing_template_is_destroyed_on_hitting (thing_templatep t)
@@ -394,9 +394,9 @@ static inline uint8_t thing_template_is_key7 (thing_templatep t)
     return (t->is_key7);
 }
 
-static inline uint8_t thing_template_is_key8 (thing_templatep t)
+static inline uint8_t thing_template_is_poison (thing_templatep t)
 {
-    return (t->is_key8);
+    return (t->is_poison);
 }
 
 static inline uint8_t thing_template_is_item_unusable (thing_templatep t)
@@ -404,9 +404,9 @@ static inline uint8_t thing_template_is_item_unusable (thing_templatep t)
     return (t->is_item_unusable);
 }
 
-static inline uint8_t thing_template_can_carry (thing_templatep t)
+static inline uint8_t thing_template_is_carryable (thing_templatep t)
 {
-    return (t->can_carry);
+    return (t->is_carryable);
 }
 
 static inline uint8_t thing_template_is_valid_for_shortcut_key (thing_templatep t)
@@ -439,9 +439,9 @@ static inline uint8_t thing_template_is_pipe (thing_templatep t)
     return (t->is_pipe);
 }
 
-static inline uint8_t thing_template_is_generator (thing_templatep t)
+static inline uint8_t thing_template_is_mob_spawner (thing_templatep t)
 {
-    return (t->is_generator);
+    return (t->is_mob_spawner);
 }
 
 static inline uint8_t thing_template_is_scarable (thing_templatep t)
@@ -464,9 +464,9 @@ static inline uint8_t thing_template_is_animated (thing_templatep t)
     return (t->is_animated);
 }
 
-static inline uint8_t thing_template_is_collision_map_weapon (thing_templatep t)
+static inline uint8_t thing_template_is_collision_map_tiny (thing_templatep t)
 {
-    return (t->is_collision_map_weapon);
+    return (t->is_collision_map_tiny);
 }
 
 static inline uint8_t thing_template_is_collision_map_large (thing_templatep t)
@@ -474,14 +474,14 @@ static inline uint8_t thing_template_is_collision_map_large (thing_templatep t)
     return (t->is_collision_map_large);
 }
 
-static inline uint8_t thing_template_is_collision_map_monst (thing_templatep t)
+static inline uint8_t thing_template_is_collision_map_medium (thing_templatep t)
 {
-    return (t->is_collision_map_monst);
+    return (t->is_collision_map_medium);
 }
 
-static inline uint8_t thing_template_explode_on_death (thing_templatep t)
+static inline uint8_t thing_template_is_combustable (thing_templatep t)
 {
-    return (t->explode_on_death);
+    return (t->is_combustable);
 }
 
 static inline uint8_t thing_template_is_projectile (thing_templatep t)
@@ -494,9 +494,9 @@ static inline uint8_t thing_template_is_boring (thing_templatep t)
     return (t->is_boring);
 }
 
-static inline uint8_t thing_template_is_item_hidden (thing_templatep t)
+static inline uint8_t thing_template_is_xxx8 (thing_templatep t)
 {
-    return (t->is_item_hidden);
+    return (t->is_xxx8);
 }
 
 static inline uint8_t thing_template_is_joinable (thing_templatep t)

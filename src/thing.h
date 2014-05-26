@@ -594,11 +594,11 @@ static inline uint8_t thing_is_monst (thingp t)
     return (thing_template_is_monst(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_generator (thingp t)
+static inline uint8_t thing_is_mob_spawner (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_generator(thing_get_template(t)));
+    return (thing_template_is_mob_spawner(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_plant (thingp t)
@@ -629,18 +629,18 @@ static inline uint8_t thing_is_collision_map_large (thingp t)
     return (thing_template_is_collision_map_large(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_collision_map_monst (thingp t)
+static inline uint8_t thing_is_collision_map_medium (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_collision_map_monst(thing_get_template(t)));
+    return (thing_template_is_collision_map_medium(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_collision_map_weapon (thingp t)
+static inline uint8_t thing_is_collision_map_tiny (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_collision_map_weapon(thing_get_template(t)));
+    return (thing_template_is_collision_map_tiny(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_xxx3 (thingp t)
@@ -671,11 +671,11 @@ static inline uint8_t thing_is_treasure (thingp t)
     return (thing_template_is_treasure(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_item_wearable (thingp t)
+static inline uint8_t thing_is_wearable (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_item_wearable(thing_get_template(t)));
+    return (thing_template_is_wearable(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_destroyed_on_hitting (thingp t)
@@ -748,11 +748,11 @@ static inline uint8_t thing_is_key7 (thingp t)
     return (thing_template_is_key7(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_key8 (thingp t)
+static inline uint8_t thing_is_poison (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_key8(thing_get_template(t)));
+    return (thing_template_is_poison(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_item_unusable (thingp t)
@@ -832,11 +832,11 @@ static inline uint8_t thing_is_animated (thingp t)
     return (thing_template_is_animated(thing_get_template(t)));
 }
 
-static inline uint8_t thing_explode_on_death (thingp t)
+static inline uint8_t thing_is_combustable (thingp t)
 {
     verify(t);
 
-    return (thing_template_explode_on_death(thing_get_template(t)));
+    return (thing_template_is_combustable(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_projectile (thingp t)
@@ -938,14 +938,14 @@ static inline uint8_t thing_is_collision_map_large_fast (thingp t)
     return (t->thing_template->is_collision_map_large);
 }
 
-static inline uint8_t thing_is_collision_map_monst_fast (thingp t)
+static inline uint8_t thing_is_collision_map_medium_fast (thingp t)
 {
-    return (t->thing_template->is_collision_map_monst);
+    return (t->thing_template->is_collision_map_medium);
 }
 
-static inline uint8_t thing_is_collision_map_weapon_fast (thingp t)
+static inline uint8_t thing_is_collision_map_tiny_fast (thingp t)
 {
-    return (t->thing_template->is_collision_map_weapon);
+    return (t->thing_template->is_collision_map_tiny);
 }
 
 static inline uint8_t thing_is_xxx3_fast (thingp t)
@@ -968,9 +968,9 @@ static inline uint8_t thing_is_treasure_fast (thingp t)
     return (t->thing_template->is_treasure);
 }
 
-static inline uint8_t thing_is_item_wearable_fast (thingp t)
+static inline uint8_t thing_is_wearable_fast (thingp t)
 {
-    return (t->thing_template->is_item_wearable);
+    return (t->thing_template->is_wearable);
 }
 
 static inline uint8_t thing_is_destroyed_on_hitting_fast (thingp t)
@@ -1023,9 +1023,9 @@ static inline uint8_t thing_is_key7_fast (thingp t)
     return (t->thing_template->is_key7);
 }
 
-static inline uint8_t thing_is_key8_fast (thingp t)
+static inline uint8_t thing_is_poison_fast (thingp t)
 {
-    return (t->thing_template->is_key8);
+    return (t->thing_template->is_poison);
 }
 
 static inline uint8_t thing_is_item_unusable_fast (thingp t)
@@ -1083,9 +1083,9 @@ static inline uint8_t thing_is_animated_fast (thingp t)
     return (t->thing_template->is_animated);
 }
 
-static inline uint8_t thing_explode_on_death_fast (thingp t)
+static inline uint8_t thing_is_combustable_fast (thingp t)
 {
-    return (t->thing_template->explode_on_death);
+    return (t->thing_template->is_combustable);
 }
 
 static inline uint8_t thing_is_projectile_fast (thingp t)

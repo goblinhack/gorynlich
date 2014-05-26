@@ -1,13 +1,13 @@
 {
  short_name="poison2"
- tooltip="Boom!"
+ tooltip="poison cloud!"
  z_depth=2
  z_order=2
  is_animated
  is_hidden_from_editor
  is_poison
  is_destroyed_on_hitting
- is_collision_map_monst
+ is_collision_map_medium
  damage=100
  hit_delay_tenths=1
  tiles={

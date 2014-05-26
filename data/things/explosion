@@ -1,6 +1,6 @@
 {
  short_name="explosion"
- tooltip="Boom!"
+ tooltip="flames!"
  z_depth=2
  z_order=2
  is_animated
