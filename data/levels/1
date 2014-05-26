@@ -1396,11 +1396,23 @@
   } {   
    x=7 
    y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=7 
+   y=7 
    t="data/things/floor2" 
   } {   
    x=8 
    y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=8 
+   y=7 
    t="data/things/floor2" 
+  } {   
+   x=9 
+   y=7 
+   t="data/things/potion_fire" 
   } {   
    x=9 
    y=7 
@@ -1565,6 +1577,10 @@
    x=6 
    y=8 
    t="data/things/floor2" 
+  } {   
+   x=7 
+   y=8 
+   t="data/things/potion_fire" 
   } {   
    x=7 
    y=8 
@@ -1761,6 +1777,10 @@
    x=6 
    y=9 
    t="data/things/floor2" 
+  } {   
+   x=7 
+   y=9 
+   t="data/things/potion_fire" 
   } {   
    x=7 
    y=9 

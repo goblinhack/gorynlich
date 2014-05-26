@@ -300,7 +300,9 @@ static void thing_handle_collision (thingp me, thingp it,
         /*
          * Player bumped into something.
          */
-        if (thing_is_monst(it) || thing_is_explosion(it)) {
+        if (thing_is_monst(it) || 
+            thing_is_poison(it) ||
+            thing_is_explosion(it)) {
             /*
              * I'm hit!
              */
@@ -312,7 +314,10 @@ static void thing_handle_collision (thingp me, thingp it,
     /*
      * Weapon or explosion hit something?
      */
-    if (thing_is_projectile(me) || thing_is_explosion(me)) {
+    if (thing_is_projectile(me) || 
+        thing_is_poison(me) ||
+        thing_is_explosion(me)) {
+
         if (thing_is_monst(it) || thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
@@ -447,6 +452,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 if (thing_is_player(it)     ||
                     thing_is_key(it)        ||
                     thing_is_explosion(it)  ||
+                    thing_is_poison(it)     ||
                     thing_is_projectile(it) ||
                     thing_is_treasure(it)   ||
                     thing_is_weapon(it)     ||
@@ -465,6 +471,14 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             }
 
             if (thing_is_explosion(me)) {
+                /*
+                 * Allow explosions to pass through anything.
+                 */
+                wid_it = wid_next;
+                continue;
+            }
+
+            if (thing_is_poison(me)) {
                 /*
                  * Allow explosions to pass through anything.
                  */
@@ -493,9 +507,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      * Walk through friendly fire.
                      */
                     thing_is_projectile(it) ||
-                    /*
-                     * Walk through friendly fire.
-                     */
+                    thing_is_poison(it) ||
                     thing_is_explosion(it)) {
                     wid_it = wid_next;
                     continue;

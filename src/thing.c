@@ -1870,7 +1870,7 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
         } else if (thing_is_monst(t)) {
             wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
         } else {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 100.0);
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 1000.0);
         }
     } else {
         wid_set_tl_br(t->wid, tl, br);
