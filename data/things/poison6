@@ -1,42 +1,42 @@
 {
- short_name="potion_effect6"
+ short_name="poison6"
  tooltip="Boom!"
  z_depth=2
  z_order=2
  is_animated
  is_hidden_from_editor
- is_explosion
-is_destroyed_on_hitting
+ is_poison
+ is_destroyed_on_hitting
  is_collision_map_monst
  damage=100
  hit_delay_tenths=1
  tiles={
   tile={
-   tile="potion_effect6.1"
+   tile="poison6.1"
    delay=50
   }
   tile={
-   tile="potion_effect6.2"
+   tile="poison6.2"
    delay=50
   }
   tile={
-   tile="potion_effect6.3"
+   tile="poison6.3"
    delay=50
   }
   tile={
-   tile="potion_effect6.4"
+   tile="poison6.4"
    delay=50
   }
   tile={
-   tile="potion_effect6.5"
+   tile="poison6.5"
    delay=50
   }
   tile={
-   tile="potion_effect6.6"
+   tile="poison6.6"
    delay=50
   }
   tile={
-   tile="potion_effect6.7"
+   tile="poison6.7"
    delay=50
   }
   tile={

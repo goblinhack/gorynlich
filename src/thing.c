@@ -62,19 +62,21 @@ uint16_t THING_EXPLOSION5;
 uint16_t THING_EXPLOSION6;
 uint16_t THING_EXPLOSION7;
 uint16_t THING_EXPLOSION8;
-uint16_t THING_POTION_EFFECT1;
-uint16_t THING_POTION_EFFECT2;
-uint16_t THING_POTION_EFFECT3;
-uint16_t THING_POTION_EFFECT4;
-uint16_t THING_POTION_EFFECT5;
-uint16_t THING_POTION_EFFECT6;
+uint16_t THING_POISON1;
+uint16_t THING_POISON2;
+uint16_t THING_POISON3;
+uint16_t THING_POISON4;
+uint16_t THING_POISON5;
+uint16_t THING_POISON6;
+uint16_t THING_POISON7;
+uint16_t THING_POISON8;
 uint16_t THING_BOMB;
 uint16_t THING_SPAM;
-uint16_t THING_POTION1;
-uint16_t THING_POTION2;
-uint16_t THING_POTION3;
-uint16_t THING_POTION4;
-uint16_t THING_POTION5;
+uint16_t THING_POTION_MONSTICIDE;
+uint16_t THING_POTION_FIRE;
+uint16_t THING_POTION_DEATH;
+uint16_t THING_POTION_LIFE;
+uint16_t THING_POTION_SHIELD;
 uint16_t THING_WATER1;
 uint16_t THING_WATER2;
 uint16_t THING_MASK1;
@@ -605,7 +607,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         }
 
         /*
-         * Explodes on death ala Sith Lord?
+         * Explodes on death ala Sith Lord? Only a lesser one, mind.
          */
         if (thing_template_explode_on_death(t->thing_template)) {
             level_place_small_explosion(t->level, 
@@ -2804,15 +2806,24 @@ void thing_server_action (thingp t,
             return;
         }
 
-        if (item == THING_POTION1) {
-            level_place_potion_effect1(server_level, t, t->x, t->y);
+        if (thing_template_is_weapon(thing_template)) {
+            thing_wield(t, thing_template);
+            return;
+        }
+
+        if (item == THING_POTION_FIRE) {
+            level_place_potion_effect_fireball(server_level, t, t->x, t->y);
+            break;
+        } else if (item == THING_POTION_MONSTICIDE) {
+            level_place_potion_effect_poison(server_level, t, t->x, t->y);
             break;
         }
 
         /*
          * Failed to use.
          */
-        THING_SHOUT_AT(t, "Failed to use");
+        THING_SHOUT_AT(t, "Failed to use the %s", 
+                       thing_template_short_name(thing_template));
         return;
 
     case PLAYER_ACTION_DROP: {

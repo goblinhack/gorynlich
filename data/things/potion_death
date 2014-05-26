@@ -5,10 +5,12 @@
  z_order=2
  is_boring
  is_food
-is_valid_for_shortcut_key
+ explode_on_death
+ is_destroyed_on_hitting
+ is_valid_for_shortcut_key
  tiles={
   tile={
-   tile="potion4"
+   tile="potion_death"
   }
  }
 }

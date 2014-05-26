@@ -106,39 +106,6 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
-.o/ramdisk_data_things__amulet1_session.o: asm/ramdisk_data_things__amulet1_session.S ../data/things/.amulet1.session
-	gcc -c asm/ramdisk_data_things__amulet1_session.S -o .o/ramdisk_data_things__amulet1_session.o
-
-.o/ramdisk_data_things__bow3_session.o: asm/ramdisk_data_things__bow3_session.S ../data/things/.bow3.session
-	gcc -c asm/ramdisk_data_things__bow3_session.S -o .o/ramdisk_data_things__bow3_session.o
-
-.o/ramdisk_data_things__bow4_session.o: asm/ramdisk_data_things__bow4_session.S ../data/things/.bow4.session
-	gcc -c asm/ramdisk_data_things__bow4_session.S -o .o/ramdisk_data_things__bow4_session.o
-
-.o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
-	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
-
-.o/ramdisk_data_things__gem1_session.o: asm/ramdisk_data_things__gem1_session.S ../data/things/.gem1.session
-	gcc -c asm/ramdisk_data_things__gem1_session.S -o .o/ramdisk_data_things__gem1_session.o
-
-.o/ramdisk_data_things__potion1_session.o: asm/ramdisk_data_things__potion1_session.S ../data/things/.potion1.session
-	gcc -c asm/ramdisk_data_things__potion1_session.S -o .o/ramdisk_data_things__potion1_session.o
-
-.o/ramdisk_data_things__splat_session.o: asm/ramdisk_data_things__splat_session.S ../data/things/.splat.session
-	gcc -c asm/ramdisk_data_things__splat_session.S -o .o/ramdisk_data_things__splat_session.o
-
-.o/ramdisk_data_things__valkyrie_session.o: asm/ramdisk_data_things__valkyrie_session.S ../data/things/.valkyrie.session
-	gcc -c asm/ramdisk_data_things__valkyrie_session.S -o .o/ramdisk_data_things__valkyrie_session.o
-
-.o/ramdisk_data_things__wand_fire_session.o: asm/ramdisk_data_things__wand_fire_session.S ../data/things/.wand_fire.session
-	gcc -c asm/ramdisk_data_things__wand_fire_session.S -o .o/ramdisk_data_things__wand_fire_session.o
-
-.o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
-	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
-
-.o/ramdisk_data_things__water2_session.o: asm/ramdisk_data_things__water2_session.S ../data/things/.water2.session
-	gcc -c asm/ramdisk_data_things__water2_session.S -o .o/ramdisk_data_things__water2_session.o
-
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
 
@@ -340,38 +307,41 @@
 .o/ramdisk_data_things_plant.o: asm/ramdisk_data_things_plant.S ../data/things/plant
 	gcc -c asm/ramdisk_data_things_plant.S -o .o/ramdisk_data_things_plant.o
 
-.o/ramdisk_data_things_potion1.o: asm/ramdisk_data_things_potion1.S ../data/things/potion1
-	gcc -c asm/ramdisk_data_things_potion1.S -o .o/ramdisk_data_things_potion1.o
+.o/ramdisk_data_things_poison1.o: asm/ramdisk_data_things_poison1.S ../data/things/poison1
+	gcc -c asm/ramdisk_data_things_poison1.S -o .o/ramdisk_data_things_poison1.o
 
-.o/ramdisk_data_things_potion2.o: asm/ramdisk_data_things_potion2.S ../data/things/potion2
-	gcc -c asm/ramdisk_data_things_potion2.S -o .o/ramdisk_data_things_potion2.o
+.o/ramdisk_data_things_poison2.o: asm/ramdisk_data_things_poison2.S ../data/things/poison2
+	gcc -c asm/ramdisk_data_things_poison2.S -o .o/ramdisk_data_things_poison2.o
 
-.o/ramdisk_data_things_potion3.o: asm/ramdisk_data_things_potion3.S ../data/things/potion3
-	gcc -c asm/ramdisk_data_things_potion3.S -o .o/ramdisk_data_things_potion3.o
+.o/ramdisk_data_things_poison3.o: asm/ramdisk_data_things_poison3.S ../data/things/poison3
+	gcc -c asm/ramdisk_data_things_poison3.S -o .o/ramdisk_data_things_poison3.o
 
-.o/ramdisk_data_things_potion4.o: asm/ramdisk_data_things_potion4.S ../data/things/potion4
-	gcc -c asm/ramdisk_data_things_potion4.S -o .o/ramdisk_data_things_potion4.o
+.o/ramdisk_data_things_poison4.o: asm/ramdisk_data_things_poison4.S ../data/things/poison4
+	gcc -c asm/ramdisk_data_things_poison4.S -o .o/ramdisk_data_things_poison4.o
 
-.o/ramdisk_data_things_potion5.o: asm/ramdisk_data_things_potion5.S ../data/things/potion5
-	gcc -c asm/ramdisk_data_things_potion5.S -o .o/ramdisk_data_things_potion5.o
+.o/ramdisk_data_things_poison5.o: asm/ramdisk_data_things_poison5.S ../data/things/poison5
+	gcc -c asm/ramdisk_data_things_poison5.S -o .o/ramdisk_data_things_poison5.o
 
-.o/ramdisk_data_things_potion_effect1.o: asm/ramdisk_data_things_potion_effect1.S ../data/things/potion_effect1
-	gcc -c asm/ramdisk_data_things_potion_effect1.S -o .o/ramdisk_data_things_potion_effect1.o
+.o/ramdisk_data_things_poison6.o: asm/ramdisk_data_things_poison6.S ../data/things/poison6
+	gcc -c asm/ramdisk_data_things_poison6.S -o .o/ramdisk_data_things_poison6.o
 
-.o/ramdisk_data_things_potion_effect2.o: asm/ramdisk_data_things_potion_effect2.S ../data/things/potion_effect2
-	gcc -c asm/ramdisk_data_things_potion_effect2.S -o .o/ramdisk_data_things_potion_effect2.o
+.o/ramdisk_data_things_poison7.o: asm/ramdisk_data_things_poison7.S ../data/things/poison7
+	gcc -c asm/ramdisk_data_things_poison7.S -o .o/ramdisk_data_things_poison7.o
 
-.o/ramdisk_data_things_potion_effect3.o: asm/ramdisk_data_things_potion_effect3.S ../data/things/potion_effect3
-	gcc -c asm/ramdisk_data_things_potion_effect3.S -o .o/ramdisk_data_things_potion_effect3.o
+.o/ramdisk_data_things_potion_death.o: asm/ramdisk_data_things_potion_death.S ../data/things/potion_death
+	gcc -c asm/ramdisk_data_things_potion_death.S -o .o/ramdisk_data_things_potion_death.o
 
-.o/ramdisk_data_things_potion_effect4.o: asm/ramdisk_data_things_potion_effect4.S ../data/things/potion_effect4
-	gcc -c asm/ramdisk_data_things_potion_effect4.S -o .o/ramdisk_data_things_potion_effect4.o
+.o/ramdisk_data_things_potion_fire.o: asm/ramdisk_data_things_potion_fire.S ../data/things/potion_fire
+	gcc -c asm/ramdisk_data_things_potion_fire.S -o .o/ramdisk_data_things_potion_fire.o
 
-.o/ramdisk_data_things_potion_effect5.o: asm/ramdisk_data_things_potion_effect5.S ../data/things/potion_effect5
-	gcc -c asm/ramdisk_data_things_potion_effect5.S -o .o/ramdisk_data_things_potion_effect5.o
+.o/ramdisk_data_things_potion_life.o: asm/ramdisk_data_things_potion_life.S ../data/things/potion_life
+	gcc -c asm/ramdisk_data_things_potion_life.S -o .o/ramdisk_data_things_potion_life.o
 
-.o/ramdisk_data_things_potion_effect6.o: asm/ramdisk_data_things_potion_effect6.S ../data/things/potion_effect6
-	gcc -c asm/ramdisk_data_things_potion_effect6.S -o .o/ramdisk_data_things_potion_effect6.o
+.o/ramdisk_data_things_potion_monsticide.o: asm/ramdisk_data_things_potion_monsticide.S ../data/things/potion_monsticide
+	gcc -c asm/ramdisk_data_things_potion_monsticide.S -o .o/ramdisk_data_things_potion_monsticide.o
+
+.o/ramdisk_data_things_potion_shield.o: asm/ramdisk_data_things_potion_shield.S ../data/things/potion_shield
+	gcc -c asm/ramdisk_data_things_potion_shield.S -o .o/ramdisk_data_things_potion_shield.o
 
 .o/ramdisk_data_things_seedpod.o: asm/ramdisk_data_things_seedpod.S ../data/things/seedpod
 	gcc -c asm/ramdisk_data_things_seedpod.S -o .o/ramdisk_data_things_seedpod.o

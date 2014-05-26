@@ -5,6 +5,7 @@
  z_order=2
  is_boring
  is_food
+ is_destroyed_on_hitting
  tiles={
   tile={
    tile="water1"
