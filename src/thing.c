@@ -1050,8 +1050,8 @@ void thing_set_wid (thingp t, widp w)
         if (t->wid) {
             verify(t->wid);
             wid_set_thing(t->wid, 0);
-            wid_fade_out(t->wid, 500);
-            wid_destroy_in(t->wid, 500);
+            wid_fade_out(t->wid, 100);
+            wid_destroy_in(t->wid, 100);
         }
     }
 
@@ -1870,7 +1870,7 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
         } else if (thing_is_monst(t)) {
             wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
         } else {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 1000.0);
+            wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 100.0);
         }
     } else {
         wid_set_tl_br(t->wid, tl, br);

@@ -7,7 +7,7 @@
  is_weapon
  is_fragile
  is_collision_map_large
- is_fragile
+ is_combustable
  is_wearable
  is_animated
  is_valid_for_shortcut_key
