@@ -5,7 +5,7 @@
  z_order=2
  is_boring
  is_food
- explode_on_death
+ is_combustable
  is_destroyed_on_hitting
  is_valid_for_shortcut_key
  tiles={

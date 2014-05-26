@@ -9,7 +9,7 @@
  is_collision_map_large
  is_destroyed_on_hitting
  is_valid_for_shortcut_key
- is_item_wearable
+ is_wearable
  failure_rate=1000
  tiles={
   tile={

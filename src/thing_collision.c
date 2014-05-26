@@ -147,12 +147,12 @@ static uint8_t things_overlap (const thingp A,
     double Bpy1;
     double Bpy2;
 
-    if (thing_is_collision_map_monst(A)) {
+    if (thing_is_collision_map_medium(A)) {
         Apx1 = collision_map_monst_x1;
         Apx2 = collision_map_monst_x2;
         Apy1 = collision_map_monst_y1;
         Apy2 = collision_map_monst_y2;
-    } else if (thing_is_collision_map_weapon(A)) {
+    } else if (thing_is_collision_map_tiny(A)) {
         if (thing_is_collision_map_large(B)) {
             Apx1 = collision_map_large_x1;
             Apx2 = collision_map_large_x2;
@@ -186,12 +186,12 @@ static uint8_t things_overlap (const thingp A,
         Apy2 = tileA->py2 * yscale;
     }
 
-    if (thing_is_collision_map_monst(B)) {
+    if (thing_is_collision_map_medium(B)) {
         Bpx1 = collision_map_monst_x1;
         Bpx2 = collision_map_monst_x2;
         Bpy1 = collision_map_monst_y1;
         Bpy2 = collision_map_monst_y2;
-    } else if (thing_is_collision_map_weapon(B)) {
+    } else if (thing_is_collision_map_tiny(B)) {
         if (thing_is_collision_map_large(A)) {
             Bpx1 = collision_map_large_x1;
             Bpx2 = collision_map_large_x2;
@@ -313,7 +313,7 @@ static void thing_handle_collision (thingp me, thingp it,
      * Weapon or explosion hit something?
      */
     if (thing_is_projectile(me) || thing_is_explosion(me)) {
-        if (thing_is_monst(it) || thing_is_generator(it)) {
+        if (thing_is_monst(it) || thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
              */

@@ -130,9 +130,9 @@ uint8_t map_is_treasure_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_treasure));
 }
 
-uint8_t map_is_item_wearable_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_item_wearable));
+    return (map_is_x_at(level, x, y, thing_template_is_wearable));
 }
 
 uint8_t map_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
@@ -185,9 +185,9 @@ uint8_t map_is_key7_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_key7));
 }
 
-uint8_t map_is_key8_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_key8));
+    return (map_is_x_at(level, x, y, thing_template_is_poison));
 }
 
 uint8_t map_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -225,9 +225,9 @@ uint8_t map_is_pipe_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_pipe));
 }
 
-uint8_t map_is_generator_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_generator));
+    return (map_is_x_at(level, x, y, thing_template_is_mob_spawner));
 }
 
 uint8_t map_is_scarable_at (levelp level, int32_t x, int32_t y)
@@ -250,9 +250,9 @@ uint8_t map_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-uint8_t map_explode_on_death_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_combustable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_explode_on_death));
+    return (map_is_x_at(level, x, y, thing_template_is_combustable));
 }
 
 uint8_t map_is_projectile_at (levelp level, int32_t x, int32_t y)
@@ -265,9 +265,9 @@ uint8_t map_is_boring_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_boring));
 }
 
-uint8_t map_is_item_hidden_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_xxx8_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_item_hidden));
+    return (map_is_x_at(level, x, y, thing_template_is_xxx8));
 }
 
 uint8_t map_is_plant_at (levelp level, int32_t x, int32_t y)
@@ -373,9 +373,9 @@ thingp map_thing_is_treasure_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_treasure));
 }
 
-thingp map_thing_is_item_wearable_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_item_wearable));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_wearable));
 }
 
 thingp map_thing_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
@@ -428,9 +428,9 @@ thingp map_thing_is_key7_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_key7));
 }
 
-thingp map_thing_is_key8_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_key8));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_poison));
 }
 
 thingp map_thing_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -468,9 +468,9 @@ thingp map_thing_is_pipe_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_pipe));
 }
 
-thingp map_thing_is_generator_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_generator));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_mob_spawner));
 }
 
 thingp map_thing_is_scarable_at (levelp level, int32_t x, int32_t y)
@@ -493,9 +493,9 @@ thingp map_thing_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-thingp map_thing_explode_on_death_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_combustable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_explode_on_death));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_combustable));
 }
 
 thingp map_thing_is_projectile_at (levelp level, int32_t x, int32_t y)
@@ -508,9 +508,9 @@ thingp map_thing_is_boring_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_boring));
 }
 
-thingp map_thing_is_item_hidden_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_xxx8_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_item_hidden));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx8));
 }
 
 thingp map_thing_is_plant_at (levelp level, int32_t x, int32_t y)
@@ -632,9 +632,9 @@ tree_rootp map_all_things_is_treasure_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_treasure));
 }
 
-tree_rootp map_all_things_is_item_wearable_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_wearable));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_wearable));
 }
 
 tree_rootp map_all_things_is_destroyed_on_hitting_at (levelp level, int32_t x, int32_t y)
@@ -687,9 +687,9 @@ tree_rootp map_all_things_is_key7_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_key7));
 }
 
-tree_rootp map_all_things_is_key8_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_key8));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_poison));
 }
 
 tree_rootp map_all_things_is_item_unusable_at (levelp level, int32_t x, int32_t y)
@@ -727,9 +727,9 @@ tree_rootp map_all_things_is_pipe_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_pipe));
 }
 
-tree_rootp map_all_things_is_generator_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_generator));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_mob_spawner));
 }
 
 tree_rootp map_all_things_is_scarable_at (levelp level, int32_t x, int32_t y)
@@ -752,9 +752,9 @@ tree_rootp map_all_things_is_animated_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_animated));
 }
 
-tree_rootp map_all_things_explode_on_death_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_combustable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_explode_on_death));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_combustable));
 }
 
 tree_rootp map_all_things_is_projectile_at (levelp level, int32_t x, int32_t y)
@@ -767,9 +767,9 @@ tree_rootp map_all_things_is_boring_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_boring));
 }
 
-tree_rootp map_all_things_is_item_hidden_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_xxx8_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_hidden));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx8));
 }
 
 tree_rootp map_all_things_is_plant_at (levelp level, int32_t x, int32_t y)
@@ -876,7 +876,7 @@ thing_templatep map_find_xxx6_at (levelp level,
 thing_templatep map_find_xxx7_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_item_wearable, w));
+    return (map_find_x_at(level, x, y, thing_template_is_wearable, w));
 }
 
 thing_templatep map_find_is_destroyed_on_hitting_at (levelp level,
@@ -942,7 +942,7 @@ thing_templatep map_find_explosion_at (levelp level,
 thing_templatep map_find_spikes_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_key8, w));
+    return (map_find_x_at(level, x, y, thing_template_is_poison, w));
 }
 
 thing_templatep map_find_is_item_unusable_at (levelp level,
@@ -990,7 +990,7 @@ thing_templatep map_find_pipe_at (levelp level,
 thing_templatep map_find_generator_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_generator, w));
+    return (map_find_x_at(level, x, y, thing_template_is_mob_spawner, w));
 }
 
 thing_templatep map_find_xxx28_at (levelp level,
@@ -1023,10 +1023,10 @@ thing_templatep map_find_item_perma_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_boring, w));
 }
 
-thing_templatep map_find_is_item_hidden_at (levelp level,
+thing_templatep map_find_is_xxx8_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_item_hidden, w));
+    return (map_find_x_at(level, x, y, thing_template_is_xxx8, w));
 }
 
 thing_templatep map_find_plant_at (levelp level,
@@ -1443,9 +1443,9 @@ uint32_t level_count_is_treasure (levelp level)
     return (level_count_is_x(level, thing_template_is_treasure));
 }
 
-uint32_t level_count_is_item_wearable (levelp level)
+uint32_t level_count_is_wearable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_item_wearable));
+    return (level_count_is_x(level, thing_template_is_wearable));
 }
 
 uint32_t level_count_is_destroyed_on_hitting (levelp level)
@@ -1498,9 +1498,9 @@ uint32_t level_count_is_key7 (levelp level)
     return (level_count_is_x(level, thing_template_is_key7));
 }
 
-uint32_t level_count_is_key8 (levelp level)
+uint32_t level_count_is_poison (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_key8));
+    return (level_count_is_x(level, thing_template_is_poison));
 }
 
 uint32_t level_count_is_item_unusable (levelp level)
@@ -1538,9 +1538,9 @@ uint32_t level_count_is_pipe (levelp level)
     return (level_count_is_x(level, thing_template_is_pipe));
 }
 
-uint32_t level_count_is_generator (levelp level)
+uint32_t level_count_is_mob_spawner (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_generator));
+    return (level_count_is_x(level, thing_template_is_mob_spawner));
 }
 
 uint32_t level_count_is_scarable (levelp level)
@@ -1558,9 +1558,9 @@ uint32_t level_count_is_hidden_from_editor (levelp level)
     return (level_count_is_x(level, thing_template_is_hidden_from_editor));
 }
 
-uint32_t level_count_explode_on_death (levelp level)
+uint32_t level_count_is_combustable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_explode_on_death));
+    return (level_count_is_x(level, thing_template_is_combustable));
 }
 
 uint32_t level_count_is_projectile (levelp level)
@@ -1575,7 +1575,7 @@ uint32_t level_count_is_boring (levelp level)
 
 uint32_t level_count_is_item_is_hidden (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_item_hidden));
+    return (level_count_is_x(level, thing_template_is_xxx8));
 }
 
 uint32_t level_count_is_plant (levelp level)
@@ -1704,9 +1704,9 @@ tree_rootp map_all_things_is_treasure (levelp level)
     return (map_all_things_is_x(level, thing_template_is_treasure));
 }
 
-tree_rootp map_all_things_is_item_wearable (levelp level)
+tree_rootp map_all_things_is_wearable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_item_wearable));
+    return (map_all_things_is_x(level, thing_template_is_wearable));
 }
 
 tree_rootp map_all_things_is_destroyed_on_hitting (levelp level)
@@ -1759,9 +1759,9 @@ tree_rootp map_all_things_is_key7 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_key7));
 }
 
-tree_rootp map_all_things_is_key8 (levelp level)
+tree_rootp map_all_things_is_poison (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_key8));
+    return (map_all_things_is_x(level, thing_template_is_poison));
 }
 
 tree_rootp map_all_things_is_item_unusable (levelp level)
@@ -1799,9 +1799,9 @@ tree_rootp map_all_things_is_pipe (levelp level)
     return (map_all_things_is_x(level, thing_template_is_pipe));
 }
 
-tree_rootp map_all_things_is_generator (levelp level)
+tree_rootp map_all_things_is_mob_spawner (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_generator));
+    return (map_all_things_is_x(level, thing_template_is_mob_spawner));
 }
 
 tree_rootp map_all_things_is_scarable (levelp level)
@@ -1824,9 +1824,9 @@ tree_rootp map_all_things_is_animated (levelp level)
     return (map_all_things_is_x(level, thing_template_is_animated));
 }
 
-tree_rootp map_all_things_explode_on_death (levelp level)
+tree_rootp map_all_things_is_combustable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_explode_on_death));
+    return (map_all_things_is_x(level, thing_template_is_combustable));
 }
 
 tree_rootp map_all_things_is_projectile (levelp level)
@@ -1839,9 +1839,9 @@ tree_rootp map_all_things_is_boring (levelp level)
     return (map_all_things_is_x(level, thing_template_is_boring));
 }
 
-tree_rootp map_all_things_is_item_hidden (levelp level)
+tree_rootp map_all_things_is_xxx8 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_item_hidden));
+    return (map_all_things_is_x(level, thing_template_is_xxx8));
 }
 
 tree_rootp map_all_things_is_plant (levelp level)

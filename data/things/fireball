@@ -6,11 +6,11 @@
  z_order=2
  speed=100
  damage=2
- is_collision_map_weapon
+ is_collision_map_tiny
  is_destroyed_on_hitting
  is_projectile
  is_animated
- is_item_wearable
+ is_wearable
  tiles={
   tile={
    is_dir_up
