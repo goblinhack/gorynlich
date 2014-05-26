@@ -6,8 +6,8 @@
  is_animated
  is_hidden_from_editor
  is_explosion
-is_destroyed_on_hitting
- damage=100
+ is_destroyed_on_hitting
+ damage=150
  hit_delay_tenths=1
  tiles={
   tile={

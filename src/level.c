@@ -169,13 +169,14 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
         (t->thing_template->id == THING_EXPLOSION6) ||
         (t->thing_template->id == THING_EXPLOSION7) ||
         (t->thing_template->id == THING_EXPLOSION8) ||
-        (t->thing_template->id == THING_POTION_EFFECT1) ||
-        (t->thing_template->id == THING_POTION_EFFECT2) ||
-        (t->thing_template->id == THING_POTION_EFFECT3) ||
-        (t->thing_template->id == THING_POTION_EFFECT4) ||
-        (t->thing_template->id == THING_POTION_EFFECT5) ||
-        (t->thing_template->id == THING_POTION_EFFECT6)
-        ) {
+        (t->thing_template->id == THING_POISON1) ||
+        (t->thing_template->id == THING_POISON2) ||
+        (t->thing_template->id == THING_POISON3) ||
+        (t->thing_template->id == THING_POISON4) ||
+        (t->thing_template->id == THING_POISON5) ||
+        (t->thing_template->id == THING_POISON6) ||
+        (t->thing_template->id == THING_POISON7) ||
+        (t->thing_template->id == THING_POISON8)) {
         thing_dead(t, 0 /* killer */, "finished blowing up");
         return (true);
     }
@@ -774,17 +775,40 @@ void level_place_small_explosion (levelp level,
                            "data/things/explosion7");
 }
 
-void level_place_potion_effect1 (levelp level, 
-                                 thingp owner,
-                                 double x, double y)
+void level_place_potion_effect_fireball (levelp level, 
+                                         thingp owner,
+                                         double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
                            x, y,
                            7, // radius
                            2, // nargs
-                           "data/things/potion_effect1",
-                           "data/things/potion_effect2");
+                           "data/things/explosion1",
+                           "data/things/explosion2",
+                           "data/things/explosion3",
+                           "data/things/explosion4",
+                           "data/things/explosion5",
+                           "data/things/explosion6",
+                           "data/things/explosion7");
+}
+
+void level_place_potion_effect_poison (levelp level, 
+                                       thingp owner,
+                                       double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           7, // radius
+                           2, // nargs
+                           "data/things/poison1",
+                           "data/things/poison2",
+                           "data/things/poison3",
+                           "data/things/poison4",
+                           "data/things/poison5",
+                           "data/things/poison6",
+                           "data/things/poison7");
 }
 
 /*
