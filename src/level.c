@@ -660,11 +660,18 @@ static uint8_t level_place_explosion_at (levelp level,
         return (false);
     }
 
+    /*
+     * Choose one of the things in the args list to place.
+     */
     uint32_t r = (rand() % nargs) + 1;
 
-    const char *name;
+    const char *name = 0;
     while (r--) {
         name = va_arg(args, char *);
+    }
+
+    if (!name) {
+        DIE("cannot place explosion thing");
     }
 
     thing_templatep thing_template = thing_template_find(name);
