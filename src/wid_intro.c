@@ -194,6 +194,7 @@ static void wid_intro_single_play_selected (void)
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro_single_play_selected_cb,
+            (action_timer_destroy_callback)0,
             0, /* context */
             "start game",
             intro_effect_delay,
@@ -212,6 +213,7 @@ static void wid_intro_play_selected (void)
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro_play_selected_cb,
+            (action_timer_destroy_callback)0,
             0, /* context */
             "start game",
             intro_effect_delay,
@@ -268,6 +270,7 @@ static void wid_intro_guide_selected (void)
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro_guide_selected_cb,
+            (action_timer_destroy_callback)0,
             0, /* context */
             "start guide",
             intro_effect_delay,
@@ -326,6 +329,7 @@ static void wid_intro_editor_selected (void)
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro_editor_selected_cb,
+            (action_timer_destroy_callback)0,
             0, /* context */
             "start editor",
             intro_effect_delay,
