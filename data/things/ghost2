@@ -1,8 +1,8 @@
 {
- short_name="ghost2"
- tooltip="Ghost!"
+ short_name="phantom"
+ tooltip="phantom"
  z_depth=2
- speed=2200
+ speed=2
  health=1
  damage=1
  polymorph_on_death="data/things/ghost1"

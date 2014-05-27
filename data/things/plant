@@ -2,7 +2,7 @@
  short_name="plant"
  tooltip="Hungry plant!"
  z_depth=2
- speed=3000
+ speed=3
  health=30
  score_on_death=250
  z_order=4

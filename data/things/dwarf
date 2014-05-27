@@ -3,7 +3,7 @@
  tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo."
  z_depth=3
  z_order=10
- speed=70
+ speed=7
  health=250
  is_player
  is_carryable
