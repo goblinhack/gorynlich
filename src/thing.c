@@ -164,6 +164,10 @@ void thing_fini (void)
         tree_destroy(&server_boring_things, 
                      (tree_destroy_func)thing_destroy_implicit);
 
+        if (thing_timers) {
+            action_timers_destroy(&thing_timers);
+        }
+
         dmap_process_fini();
     }
 }
@@ -216,9 +220,12 @@ thingp thing_server_new (levelp level, const char *name)
         min = THING_ID_MAX / 2;
         max = THING_ID_MAX;
     } else {
+        /*
+         * Reserve thing id 0 for unused.
+         */
         next = &next_thing_id;
         id = next_thing_id;
-        min = 0;
+        min = 1;
         max = THING_ID_MAX / 2;
     }
 
@@ -603,6 +610,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                  */
                 t->resync = 1;
                 t->thing_template = what;
+                t->health = thing_template_get_health(what);
                 t->updated++;
                 return;
             }
@@ -728,26 +736,51 @@ static void thing_hit_ (thingp t,
         }
     }
     
-LOG("hit damage %d heal %d",damage,t->health);
-    if (t->health <= damage) {
-LOG("  dead");
-        t->health = 0;
+    /*
+     * Keep hitting until all damage is used up or the thing is dead.
+     */
+    while (damage > 0) {
+        if (t->health <= damage) {
+            /*
+             * Explodes on death ala Sith Lord? Only a lesser one, mind.
+             */
+            if (thing_template_is_combustable(t->thing_template)) {
+                level_place_small_explosion(t->level, 
+                                            0, // owner
+                                            t->x, t->y);
+            }
 
-        /*
-         * Explodes on death ala Sith Lord? Only a lesser one, mind.
-         */
-        if (thing_template_is_combustable(t->thing_template)) {
-            level_place_small_explosion(t->level, 
-                                        0, // owner
-                                        t->x, t->y);
-        }
+            t->health = 0;
+            thing_dead(t, hitter, "hit [%s] for %u", reason, damage);
+            damage -= t->health;
 
-        thing_dead(t, hitter, "hit [%s] for %u", reason, damage);
-    }  else {
-        t->health -= damage;
+            /*
+             * If polymorphed, hit again?
+             */
+            if (!t->health) {
+                /*
+                 * No it really died.
+                 */
+                break;
+            }
 
-        if (thing_is_player(t)) {
-            THING_LOG(t, "hit (%s) for %u", reason, damage);
+            if (!damage) {
+                /*
+                 * If polymorphed, but we're out of damage.
+                 */
+                break;
+            }
+        } else {
+            /*
+             * A hit, but not enough to kil the thing.
+             */
+            t->health -= damage;
+
+            if (thing_is_player(t)) {
+                THING_LOG(t, "hit (%s) for %u", reason, damage);
+            }
+
+            damage = 0;
         }
     }
 }
@@ -803,9 +836,13 @@ void thing_hit (thingp t,
     }
 
     if (reason) {
+        char *tmp = dynvprintf(reason, args);
+
         va_start(args, reason);
-        thing_hit_(t, hitter, damage, dynvprintf(reason, args));
+        thing_hit_(t, hitter, damage, tmp);
         va_end(args);
+
+        myfree(tmp);
     } else {
         thing_hit_(t, hitter, damage, 0);
     }
@@ -1690,6 +1727,7 @@ void thing_place_timed (thing_templatep thing_template,
     action_timer_create(
             &timers,
             (action_timer_callback) thing_timer_place_callback,
+            (action_timer_callback) thing_timer_place_destroy_callback,
             context,
             "place thing",
             ms,
@@ -1724,6 +1762,8 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
             &timers,
             (action_timer_callback)
                 thing_timer_place_and_destroy_callback,
+            (action_timer_callback)
+                thing_timer_place_and_destroy_destroy_callback,
             context,
             "place and destroy thing",
             ms,

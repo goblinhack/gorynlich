@@ -99,33 +99,6 @@ static void thing_tick_server_all (void)
             }
         }
 
-        /*
-         * Make things go faster if taking too long.
-         */
-        float speed = thing_template_get_speed(thing_template);
-
-        if (level_is_hurryup(level)) {
-            speed /= 2.0;
-        }
-
-        /*
-         * Go faster!
-         */
-        if (w && thing_has_powerup_rocket_count(t)) {
-            speed /= 2.0;
-        }
-
-        /*
-         * Go slower!
-         */
-        if (thing_has_powerup_spam_count(t)) {
-            speed *= 4.0;
-
-            if (!t->timer_spam) {
-                thing_action_timer_callback_spam(t);
-            }
-        }
-
         thing_handle_collisions(wid_game_map_server_grid_container, t);
 
         /*
@@ -176,6 +149,11 @@ static void thing_tick_server_all (void)
          * out.
          */
         if (!t->updated) {
+            /*
+             * Make things go faster if taking too long.
+             */
+            float speed = thing_template_get_speed(thing_template);
+
             /*
              * Look for a new hpp.
              */

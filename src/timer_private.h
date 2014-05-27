@@ -23,6 +23,12 @@ typedef struct action_timer_ {
      * What to do on callback.
      */
     action_timer_callback callback;
+
+    /*
+     * What to do on timer free.
+     */
+    action_timer_destroy_callback destroy_callback;
+
     void *context;
 
 } timer;
