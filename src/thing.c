@@ -603,6 +603,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                  */
                 t->resync = 1;
                 t->thing_template = what;
+                t->updated++;
                 return;
             }
         }
@@ -727,7 +728,9 @@ static void thing_hit_ (thingp t,
         }
     }
     
+LOG("hit damage %d heal %d",damage,t->health);
     if (t->health <= damage) {
+LOG("  dead");
         t->health = 0;
 
         /*

@@ -705,7 +705,7 @@ static void level_place_explosion_ (levelp level,
     uint8_t rad_blocked_explosion[360] = {0};
 
     double r;
-    for (r = 0; r <= radius; r += 0.2) {
+    for (r = 0; r <= radius; r += 0.1) {
 
         double explosion_width = 1.0;
         double circumference = 2.0 * PI * r;
