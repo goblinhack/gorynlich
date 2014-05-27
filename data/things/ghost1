@@ -1,8 +1,8 @@
 {
- short_name="ghost1"
- tooltip="Weak Ghost!"
+ short_name="lesser phantom"
+ tooltip="Lesser phantom"
  z_depth=2
- speed=2500
+ speed=3
  health=1
  damage=2
  score_on_death=5

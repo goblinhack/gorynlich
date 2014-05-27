@@ -138,18 +138,23 @@ static void thing_tick_server_all (void)
         /*
          * If a projectile, move it by the delta
          */
-        if ((t->dx != 0) || (t->dy != 0)) {
-            double fnexthop_x = t->x + t->dx;
-            double fnexthop_y = t->y + t->dy;
+        if (!wid_is_moving(w)) {
+            /*
+             * Only if it finished moving the last delta.
+             */
+            if ((t->dx != 0) || (t->dy != 0)) {
+                double fnexthop_x = t->x + t->dx;
+                double fnexthop_y = t->y + t->dy;
 
-            thing_server_move(t,
-                    fnexthop_x,
-                    fnexthop_y,
-                    fnexthop_y < t->y,
-                    fnexthop_y > t->y,
-                    fnexthop_x < t->x,
-                    fnexthop_x > t->x,
-                    false);
+                thing_server_move(t,
+                        fnexthop_x,
+                        fnexthop_y,
+                        fnexthop_y < t->y,
+                        fnexthop_y > t->y,
+                        fnexthop_x < t->x,
+                        fnexthop_x > t->x,
+                        false);
+            }
         }
 
         /*
@@ -345,7 +350,8 @@ void thing_tick_all (void)
     if (server_level) {
         static uint32_t ts;
 
-        if (time_have_x_tenths_passed_since(DELAY_TENTHS_TX_MAP_UPDATE, ts)) {
+        if (time_have_x_thousandths_passed_since(
+                                    DELAY_THOUSANDTHS_TX_MAP_UPDATE, ts)) {
             ts = time_get_time_cached();
 
             socket_server_tx_map_update(0 /* all clients */, 

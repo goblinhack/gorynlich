@@ -23,6 +23,7 @@
 #include "socket.h"
 #include "client.h"
 #include "timer.h"
+#include "math.h"
 
 uint16_t THING_WALL;
 uint16_t THING_WALL2;
@@ -1627,7 +1628,7 @@ double thing_speed (thingp t)
 {
     verify(t);
 
-    return (((double)thing_template_get_speed(t->thing_template)) / 1000.0);
+    return (((double)thing_template_get_speed(t->thing_template)));
 }
 
 tree_rootp thing_tiles (thingp t)
@@ -1815,15 +1816,21 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
 
     if (is_new || thing_is_player(t)) {
         wid_set_tl_br(t->wid, tl, br);
-    } else if (thing_is_monst(t)) {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
     } else {
-        wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 1000.0);
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
     }
 }
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
+    double dist = DISTANCE(t->x, t->y, x, y);
+
+    if (smooth) {
+        if (dist == 0.0) {
+            return;
+        }
+    }
+
     thing_move(t, x, y);
 
     x *= client_tile_width;
@@ -1865,13 +1872,10 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     br.y -= base_tile_width / 4.0;
 
     if (smooth) {
-        if (thing_is_player(t)) {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, 100.0);
-        } else if (thing_is_monst(t)) {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
-        } else {
-            wid_move_to_abs_in(t->wid, tl.x, tl.y, thing_speed(t) * 1000.0);
-        }
+        double time_step = dist;
+        double ms = (1000.0 / thing_speed(t)) / (1.0 / time_step);
+
+        wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
@@ -2539,10 +2543,6 @@ void thing_fire (thingp t,
     x += dx;
     y += dy;
 
-    double speed = thing_speed(player);
-    dx *= speed;
-    dy *= speed;
-
     thing_templatep projectile = thing_template_fires(weapon);
     if (!projectile) {
         ERR("weapon %s has no projectile", thing_template_name(weapon));
@@ -2556,6 +2556,11 @@ void thing_fire (thingp t,
                                     projectile);
 
     thingp p = wid_get_thing(w);
+
+    dx *= 10.0;
+    dy *= 10.0;
+    dx /= (dist_from_player * 10.0);
+    dy /= (dist_from_player * 10.0);
 
     p->dx = dx;
     p->dy = dy;
