@@ -757,7 +757,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
     double items_x = 0.00; // items x
     double items_y = 0.31; // items y
-    double items_y_offset = 0.05;
+    double items_y_offset = 0.04;
     uint32_t item_columns = 6;
     double item_width = 0.15;
     double item_height = 0.08;
