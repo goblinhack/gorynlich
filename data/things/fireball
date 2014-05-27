@@ -6,7 +6,7 @@
  z_order=2
  speed=10
  damage=2
- is_collision_map_tiny
+ is_collision_map_large
  is_fragile
  is_projectile
  is_animated
