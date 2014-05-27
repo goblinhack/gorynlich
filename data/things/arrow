@@ -4,7 +4,7 @@
  is_hidden_from_editor
  z_depth=2
  z_order=2
- speed=1000
+ speed=15
  damage=1
  is_collision_map_tiny
  is_projectile

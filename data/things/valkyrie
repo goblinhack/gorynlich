@@ -7,7 +7,7 @@
  }
  z_depth=3
  z_order=10
- speed=90
+ speed=8
  health=120
  is_player
  is_carryable

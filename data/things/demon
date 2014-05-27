@@ -2,7 +2,7 @@
  short_name="demon"
  tooltip="demon!"
  z_depth=2
- speed=3000
+ speed=2
  health=50
  score_on_death=250
  vision_distance=20

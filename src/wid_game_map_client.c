@@ -236,12 +236,12 @@ uint8_t wid_game_map_client_player_move (void)
     double x = player->x;
     double y = player->y;
 
-    double speed = thing_speed(player);
+    double delta = 0.10;
 
-    x += (double)right * speed;
-    x -= (double)left * speed;
-    y -= (double)up * speed;
-    y += (double)down * speed;
+    x += (double)right * delta;
+    x -= (double)left * delta;
+    y -= (double)up * delta;
+    y += (double)down * delta;
 
     thing_client_move(player, x, y, up, down, left, right, fire);
 

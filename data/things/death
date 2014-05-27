@@ -1,8 +1,8 @@
 {
- short_name="death"
- tooltip="death!"
+ short_name="reaper"
+ tooltip="the reaper!"
  z_depth=2
- speed=1000
+ speed=2
  health=100
  damage=20
  score_on_death=1000
