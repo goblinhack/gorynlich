@@ -293,6 +293,7 @@ static void thing_handle_collision (thingp me, thingp it,
          * Open doors if you have a key.
          */
         if (thing_is_door(it) && thing_is_carrying(me, THING_KEYS1)) {
+            thing_used(me, id_to_thing_template(THING_KEYS1));
             level_open_door(server_level, x, y);
             return;
         }
