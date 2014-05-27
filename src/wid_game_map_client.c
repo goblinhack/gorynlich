@@ -278,6 +278,10 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         }
 
         MSG("No carried item is using that key");
+        break;
+
+    default:
+        break;
     }
 
     return (false);
@@ -406,6 +410,9 @@ wid_game_map_item_shortcut_key_event_common (const SDL_KEYSYM *key,
         wid_game_map_client_score_update(client_level, true /* redo */);
 
         return (true);
+
+    default:
+        break;
     }
 
     return (false);
@@ -435,7 +442,7 @@ static uint8_t wid_game_map_item_shortcut_key_event (widp w,
     thing_templatep thing_template = wid_get_client_context(w);
 
     if (wid_get_mode(w) != WID_MODE_OVER) {
-        return (FALSE);
+        return (false);
     }
 
     return (wid_game_map_item_shortcut_key_event_common(key, thing_template));
@@ -456,7 +463,7 @@ static uint8_t wid_game_map_item_key_event (widp w, const SDL_KEYSYM *key)
     thing_templatep thing_template;
 
     if (wid_get_mode(w) != WID_MODE_OVER) {
-        return (FALSE);
+        return (false);
     }
     thing_template = wid_get_thing_template(w);
 
