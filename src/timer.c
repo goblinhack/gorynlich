@@ -35,6 +35,10 @@ void action_timers_destroy (tree_rootp *root)
 
 static void action_timer_free (timerp p)
 {
+    if (p->destroy_callback) {
+        (p->destroy_callback)(p->context);
+    }
+
     if (p->logname) {
         myfree(p->logname);
     }
@@ -69,6 +73,7 @@ void action_timer_destroy (tree_rootp *t, timerp p)
 
 timerp action_timer_create (tree_rootp *root,
                             action_timer_callback callback,
+                            action_timer_destroy_callback destroy_callback,
                             void *context,
                             const char *name,
                             uint32_t duration_ms,
@@ -90,6 +95,7 @@ timerp action_timer_create (tree_rootp *root,
 
     t->context = context;
     t->callback = callback;
+    t->destroy_callback = destroy_callback;
     t->tree.qqq2 = t->expires_when;
     t->tree.qqq3 = tiebreak++;
 

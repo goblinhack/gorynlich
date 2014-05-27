@@ -98,6 +98,7 @@ static void wid_game_map_client_start_cb (void *context)
         action_timer_create(
                 &wid_timers,
                 (action_timer_callback)wid_game_map_client_start_cb,
+                (action_timer_destroy_callback)0,
                 0, /* context */
                 "join server",
                 100,
@@ -111,6 +112,7 @@ void wid_game_map_client_visible (void)
         action_timer_create(
                 &wid_timers,
                 (action_timer_callback)wid_game_map_client_start_cb,
+                (action_timer_destroy_callback)0,
                 0, /* context */
                 "join server",
                 100,

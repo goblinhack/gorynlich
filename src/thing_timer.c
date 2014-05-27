@@ -24,25 +24,11 @@ tree_rootp thing_timers;
 void thing_timers_destroy (thingp thing)
 {
     if (!thing_timers) {
-        if (thing->timer_spam) {
-            DIE("spam timer still running but no tree?");
-        }
-
         if (thing->timer_dead) {
             DIE("dead timer still running but no tree?");
         }
 
         return;
-    }
-
-    if (thing->timer_spam) {
-        action_timer_destroy(&thing_timers, thing->timer_spam);
-
-        thing->timer_spam = 0;
-
-        if (!thing_timers) {
-            return;
-        }
     }
 
     if (thing->timer_dead) {
@@ -53,34 +39,6 @@ void thing_timers_destroy (thingp thing)
         if (!thing_timers) {
             return;
         }
-    }
-}
-
-void thing_action_timer_callback_spam (void *context)
-{
-    thingp thing;
-    thing = (typeof(thing)) context;
-    verify(thing);
-
-    thing->timer_spam = 0;
-
-    widp w = thing_message(thing, "Spam!");
-    if (w) {
-        wid_set_color(w, WID_COLOR_TEXT, PINK1);
-    }
-
-    THING_LOG(thing, "timer spam fired");
-
-    /*
-     * While carrying spam, keep on firing the timer.
-     */
-    if (thing_has_powerup_spam_count(thing)) {
-        thing->timer_spam =
-                action_timer_create(&thing_timers,
-                                    thing_action_timer_callback_spam,
-                                    (void*) thing,
-                                    "spam",
-                                    ONESEC / 2, 0);
     }
 }
 
@@ -95,6 +53,23 @@ static void thing_action_timer_callback_dead (void *context)
         verify(thing);
         thing->timer_dead = 0;
         thing_dead(thing, 0, "callback");
+    }
+
+    place->thing_id = 0;
+}
+
+static void thing_action_timer_destroy_callback_dead (void *context)
+{
+    thing_place_context_t *place;
+
+    place = (typeof(place)) context;
+
+    if (place->thing_id) {
+        thingp thing = thing_server_find(place->thing_id);
+        if (thing) {
+            verify(thing);
+            thing->timer_dead = 0;
+        }
     }
 
     myfree(context);
@@ -129,13 +104,32 @@ void thing_timer_place_and_destroy_callback (void *context)
      */
     t->owner_id = place->owner_id;
 
+    /*
+     * Make a copy of the original context that is used in the next timer.
+     */
+    thing_place_context_t *context2;
+
+    context2 = (typeof(context2)) myzalloc(sizeof(*context2), 
+                                           "place and destroy thing");
+    memcpy(context2, context, sizeof(*context2));
+
     t->timer_dead = action_timer_create(
             &thing_timers,
             (action_timer_callback)thing_action_timer_callback_dead,
-            context,
+            (action_timer_callback)thing_action_timer_destroy_callback_dead,
+            context2,
             "kill thing",
             place->destroy_in,
             0 /* jitter */);
+}
+
+void thing_timer_place_and_destroy_destroy_callback (void *context)
+{
+    thing_place_context_t *place;
+
+    place = (typeof(place)) context;
+
+    myfree(place);
 }
 
 void thing_timer_place_callback (void *context)
@@ -156,6 +150,13 @@ void thing_timer_place_callback (void *context)
      * Save the owner of this new thing. This could be who cast a spell.
      */
     t->owner_id = place->owner_id;
+}
+
+void thing_timer_place_destroy_callback (void *context)
+{
+    thing_place_context_t *place;
+
+    place = (typeof(place)) context;
 
     myfree(context);
 }

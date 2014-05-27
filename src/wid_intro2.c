@@ -116,6 +116,7 @@ static void wid_intro2_play_selected (void)
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro2_play_selected_cb,
+            (action_timer_destroy_callback)0,
             0, /* context */
             "start game",
             intro_effect_delay,

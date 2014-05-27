@@ -154,7 +154,9 @@ void thing_place_and_destroy_timed(thing_templatep t,
                                    uint32_t destroy_in, 
                                    uint32_t jitter);
 void thing_timer_place_and_destroy_callback(void *context);
+void thing_timer_place_and_destroy_destroy_callback(void *context);
 void thing_timer_place_callback(void *context);
+void thing_timer_place_destroy_callback(void *context);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
 void thing_shout_at(thingp t, const char *what);
@@ -419,11 +421,6 @@ typedef struct thing_ {
      * Last death reason.
      */
     char *dead_reason;
-
-    /*
-     * Periodic spam message.
-     */
-    timerp timer_spam;
 
     /*
      * Thing dead in x ms.
