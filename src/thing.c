@@ -109,7 +109,7 @@ uint16_t THING_BOW2;
 uint16_t THING_BOW3;
 uint16_t THING_BOW4;
 uint16_t THING_WAND_FIRE;
-uint16_t THING_KEYS1;
+uint16_t THING_KEY;
 uint16_t THING_KEYS2;
 uint16_t THING_KEYS3;
 uint16_t THING_COINS1;
@@ -2717,19 +2717,36 @@ void thing_wield (thingp t, thing_templatep tmp)
 void thing_collect (thingp t, thing_templatep tmp)
 {
     uint32_t id;
+    uint32_t quantity;
 
     id = thing_template_to_id(tmp);
+    quantity = 1;
 
-    THING_LOG(t, "collects %s", thing_template_short_name(tmp));
+    if (thing_template_is_key2(tmp)) {
+        id = THING_KEY;
+        quantity = 2;
+    }
 
-    t->carrying[id]++;
+    if (thing_template_is_key3(tmp)) {
+        id = THING_KEY;
+        quantity = 3;
+    }
+
+    if (quantity > 1) {
+        THING_LOG(t, "collects %u %s", quantity,
+                  thing_template_short_name(tmp));
+    } else {
+        THING_LOG(t, "collects %s", thing_template_short_name(tmp));
+    }
+
+    t->carrying[id] += quantity;
 
     /*
      * Auto use a weapon if carrying none.
      */
     if (thing_template_is_weapon(tmp)) {
         if (!t->weapon) {
-            THING_LOG(t, "auto weild %s", thing_template_short_name(tmp));
+            THING_LOG(t, "auto wield %s", thing_template_short_name(tmp));
 
             thing_wield(t, tmp);
         }

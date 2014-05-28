@@ -174,14 +174,15 @@ typedef struct thing_template_ {
     uint8_t is_wearable:1;
     uint8_t is_fragile:1;
     uint8_t is_star:1;
-    uint8_t is_key0:1;
-    uint8_t is_key1:1;
+    uint8_t is_xxx5:1;
+    uint8_t is_xxx6:1;
     uint8_t is_key2:1;
     uint8_t is_key3:1;
-    uint8_t is_key4:1;
-    uint8_t is_key5:1;
-    uint8_t is_key6:1;
-    uint8_t is_key7:1;
+    uint8_t is_xxx7:1;
+    uint8_t is_xxx8:1;
+    uint8_t is_xxx9:1;
+    uint8_t is_xxx10:1;
+    uint8_t is_xxx11:1;
     uint8_t is_poison:1;
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
@@ -202,7 +203,6 @@ typedef struct thing_template_ {
     uint8_t is_combustable:1;
     uint8_t is_projectile:1;
     uint8_t is_boring:1;
-    uint8_t is_xxx8:1;
     uint8_t is_joinable:1;
     uint8_t is_wall:1;
     uint8_t is_effect_sway:1;
@@ -354,14 +354,14 @@ static inline uint8_t thing_template_is_star (thing_templatep t)
     return (t->is_star);
 }
 
-static inline uint8_t thing_template_is_key0 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx5 (thing_templatep t)
 {
-    return (t->is_key0);
+    return (t->is_xxx5);
 }
 
-static inline uint8_t thing_template_is_key1 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx6 (thing_templatep t)
 {
-    return (t->is_key1);
+    return (t->is_xxx6);
 }
 
 static inline uint8_t thing_template_is_key2 (thing_templatep t)
@@ -374,24 +374,29 @@ static inline uint8_t thing_template_is_key3 (thing_templatep t)
     return (t->is_key3);
 }
 
-static inline uint8_t thing_template_is_key4 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx7 (thing_templatep t)
 {
-    return (t->is_key4);
+    return (t->is_xxx7);
 }
 
-static inline uint8_t thing_template_is_key5 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx8 (thing_templatep t)
 {
-    return (t->is_key5);
+    return (t->is_xxx8);
 }
 
-static inline uint8_t thing_template_is_key6 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx9 (thing_templatep t)
 {
-    return (t->is_key6);
+    return (t->is_xxx9);
 }
 
-static inline uint8_t thing_template_is_key7 (thing_templatep t)
+static inline uint8_t thing_template_is_xxx10 (thing_templatep t)
 {
-    return (t->is_key7);
+    return (t->is_xxx10);
+}
+
+static inline uint8_t thing_template_is_xxx11 (thing_templatep t)
+{
+    return (t->is_xxx11);
 }
 
 static inline uint8_t thing_template_is_poison (thing_templatep t)
@@ -492,11 +497,6 @@ static inline uint8_t thing_template_is_projectile (thing_templatep t)
 static inline uint8_t thing_template_is_boring (thing_templatep t)
 {
     return (t->is_boring);
-}
-
-static inline uint8_t thing_template_is_xxx8 (thing_templatep t)
-{
-    return (t->is_xxx8);
 }
 
 static inline uint8_t thing_template_is_joinable (thing_templatep t)
