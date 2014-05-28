@@ -976,6 +976,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     thing_tilep tile = 
                             thing_tile_first(thing_template_get_tiles(temp));
 
+                    // XXX
+//dd                    wid_set_tooltip
+
                     wid_set_tilename(w, thing_tile_name(tile));
                     wid_set_do_not_raise(w, true);
 

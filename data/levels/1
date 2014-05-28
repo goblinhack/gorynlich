@@ -320,7 +320,7 @@
   } {   
    x=8 
    y=1 
-   t="data/things/keys1" 
+   t="data/things/key" 
   } {   
    x=8 
    y=1 
@@ -368,7 +368,7 @@
   } {   
    x=17 
    y=1 
-   t="data/things/keys1" 
+   t="data/things/key" 
   } {   
    x=17 
    y=1 
@@ -665,6 +665,10 @@
    x=7 
    y=3 
    t="data/things/floor2" 
+  } {   
+   x=8 
+   y=3 
+   t="data/things/keys2" 
   } {   
    x=8 
    y=3 
@@ -1037,6 +1041,10 @@
    x=8 
    y=5 
    t="data/things/floor2" 
+  } {   
+   x=9 
+   y=5 
+   t="data/things/keys3" 
   } {   
    x=9 
    y=5 
@@ -2084,7 +2092,7 @@
   } {   
    x=30 
    y=10 
-   t="data/things/keys1" 
+   t="data/things/key" 
   } {   
    x=30 
    y=10 
@@ -2916,7 +2924,7 @@
   } {   
    x=1 
    y=16 
-   t="data/things/keys1" 
+   t="data/things/key" 
   } {   
    x=1 
    y=16 
@@ -3844,7 +3852,7 @@
   } {   
    x=11 
    y=21 
-   t="data/things/keys1" 
+   t="data/things/key" 
   } {   
    x=11 
    y=21 
@@ -4996,7 +5004,7 @@
   } {   
    x=7 
    y=28 
-   t="data/things/keys1" 
+   t="data/things/key" 
   } {   
    x=7 
    y=28 
