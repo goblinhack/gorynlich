@@ -334,7 +334,7 @@ extern uint16_t THING_BOW2;
 extern uint16_t THING_BOW3;
 extern uint16_t THING_BOW4;
 extern uint16_t THING_WAND_FIRE;
-extern uint16_t THING_KEYS1;
+extern uint16_t THING_KEY;
 extern uint16_t THING_KEYS2;
 extern uint16_t THING_KEYS3;
 extern uint16_t THING_COINS1;
@@ -689,18 +689,18 @@ static inline uint8_t thing_is_star (thingp t)
     return (thing_template_is_star(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_key0 (thingp t)
+static inline uint8_t thing_is_xxx5 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_key0(thing_get_template(t)));
+    return (thing_template_is_xxx5(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_key1 (thingp t)
+static inline uint8_t thing_is_xxx6 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_key1(thing_get_template(t)));
+    return (thing_template_is_xxx6(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_key2 (thingp t)
@@ -717,32 +717,32 @@ static inline uint8_t thing_is_key3 (thingp t)
     return (thing_template_is_key3(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_key4 (thingp t)
+static inline uint8_t thing_is_xxx7 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_key4(thing_get_template(t)));
+    return (thing_template_is_xxx7(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_key5 (thingp t)
+static inline uint8_t thing_is_xxx8 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_key5(thing_get_template(t)));
+    return (thing_template_is_xxx8(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_key6 (thingp t)
+static inline uint8_t thing_is_xxx9 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_key6(thing_get_template(t)));
+    return (thing_template_is_xxx9(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_key7 (thingp t)
+static inline uint8_t thing_is_xxx10 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_key7(thing_get_template(t)));
+    return (thing_template_is_xxx10(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_poison (thingp t)
@@ -980,14 +980,14 @@ static inline uint8_t thing_is_star_fast (thingp t)
     return (t->thing_template->is_star);
 }
 
-static inline uint8_t thing_is_key0_fast (thingp t)
+static inline uint8_t thing_is_xxx5_fast (thingp t)
 {
-    return (t->thing_template->is_key0);
+    return (t->thing_template->is_xxx5);
 }
 
-static inline uint8_t thing_is_key1_fast (thingp t)
+static inline uint8_t thing_is_xxx6_fast (thingp t)
 {
-    return (t->thing_template->is_key1);
+    return (t->thing_template->is_xxx6);
 }
 
 static inline uint8_t thing_is_key2_fast (thingp t)
@@ -1000,24 +1000,24 @@ static inline uint8_t thing_is_key3_fast (thingp t)
     return (t->thing_template->is_key3);
 }
 
-static inline uint8_t thing_is_key4_fast (thingp t)
+static inline uint8_t thing_is_xxx7_fast (thingp t)
 {
-    return (t->thing_template->is_key4);
+    return (t->thing_template->is_xxx7);
 }
 
-static inline uint8_t thing_is_key5_fast (thingp t)
+static inline uint8_t thing_is_xxx8_fast (thingp t)
 {
-    return (t->thing_template->is_key5);
+    return (t->thing_template->is_xxx8);
 }
 
-static inline uint8_t thing_is_key6_fast (thingp t)
+static inline uint8_t thing_is_xxx9_fast (thingp t)
 {
-    return (t->thing_template->is_key6);
+    return (t->thing_template->is_xxx9);
 }
 
-static inline uint8_t thing_is_key7_fast (thingp t)
+static inline uint8_t thing_is_xxx10_fast (thingp t)
 {
-    return (t->thing_template->is_key7);
+    return (t->thing_template->is_xxx10);
 }
 
 static inline uint8_t thing_is_poison_fast (thingp t)

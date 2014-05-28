@@ -171,7 +171,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // row 1 items
-        "keys1",
+        "key",
         "keys2",
         "keys3",
         "coins1",
@@ -1507,7 +1507,7 @@ static uint8_t resource_init_23 (void *context)
     /*
      * Important stuff that cannot be used by clicking on.
      */
-    thing_template_load(&THING_KEYS1, "data/things/keys1");
+    thing_template_load(&THING_KEY, "data/things/key");
     thing_template_load(&THING_KEYS2, "data/things/keys2");
     thing_template_load(&THING_KEYS3, "data/things/keys3");
 

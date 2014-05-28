@@ -112,6 +112,9 @@
 .o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
 	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
 
+.o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
+	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
+
 .o/ramdisk_data_things__ghost_session.o: asm/ramdisk_data_things__ghost_session.S ../data/things/.ghost.session
 	gcc -c asm/ramdisk_data_things__ghost_session.S -o .o/ramdisk_data_things__ghost_session.o
 
@@ -120,6 +123,9 @@
 
 .o/ramdisk_data_things__ghost3_session.o: asm/ramdisk_data_things__ghost3_session.S ../data/things/.ghost3.session
 	gcc -c asm/ramdisk_data_things__ghost3_session.S -o .o/ramdisk_data_things__ghost3_session.o
+
+.o/ramdisk_data_things__keys2_session.o: asm/ramdisk_data_things__keys2_session.S ../data/things/.keys2.session
+	gcc -c asm/ramdisk_data_things__keys2_session.S -o .o/ramdisk_data_things__keys2_session.o
 
 .o/ramdisk_data_things__lizard_session.o: asm/ramdisk_data_things__lizard_session.S ../data/things/.lizard.session
 	gcc -c asm/ramdisk_data_things__lizard_session.S -o .o/ramdisk_data_things__lizard_session.o
@@ -307,8 +313,8 @@
 .o/ramdisk_data_things_ghost3.o: asm/ramdisk_data_things_ghost3.S ../data/things/ghost3
 	gcc -c asm/ramdisk_data_things_ghost3.S -o .o/ramdisk_data_things_ghost3.o
 
-.o/ramdisk_data_things_keys1.o: asm/ramdisk_data_things_keys1.S ../data/things/keys1
-	gcc -c asm/ramdisk_data_things_keys1.S -o .o/ramdisk_data_things_keys1.o
+.o/ramdisk_data_things_key.o: asm/ramdisk_data_things_key.S ../data/things/key
+	gcc -c asm/ramdisk_data_things_key.S -o .o/ramdisk_data_things_key.o
 
 .o/ramdisk_data_things_keys2.o: asm/ramdisk_data_things_keys2.S ../data/things/keys2
 	gcc -c asm/ramdisk_data_things_keys2.S -o .o/ramdisk_data_things_keys2.o

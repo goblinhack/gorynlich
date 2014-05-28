@@ -1,10 +1,11 @@
 {
- short_name="keys"
+ short_name="key"
  tooltip="Keys to open doors"
  z_depth=2
  z_order=2
  is_boring
  is_key
+ is_key3
  tiles={
   tile={
    tile="keys3"

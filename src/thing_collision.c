@@ -292,8 +292,8 @@ static void thing_handle_collision (thingp me, thingp it,
         /*
          * Open doors if you have a key.
          */
-        if (thing_is_door(it) && thing_is_carrying(me, THING_KEYS1)) {
-            thing_used(me, id_to_thing_template(THING_KEYS1));
+        if (thing_is_door(it) && thing_is_carrying(me, THING_KEY)) {
+            thing_used(me, id_to_thing_template(THING_KEY));
             level_open_door(server_level, x, y);
             return;
         }
@@ -491,7 +491,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow to walk through doors so we can open them later.
                  */
-                if (thing_is_door(it) && thing_is_carrying(me, THING_KEYS1)) {
+                if (thing_is_door(it) && thing_is_carrying(me, THING_KEY)) {
                     wid_it = wid_next;
                     continue;
                 }
