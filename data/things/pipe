@@ -15,7 +15,7 @@
    is_join_vert
   }
   tile={
-   tile="pipe-node"
+   tile="pipe-top"
    is_join_node
   }
   tile={

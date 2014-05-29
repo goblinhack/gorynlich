@@ -279,7 +279,6 @@ extern uint16_t THING_DEATH;
 extern uint16_t THING_PLANT;
 extern uint16_t THING_SEEDPOD;
 extern uint16_t THING_PIPE;
-extern uint16_t THING_EXPLOSION;
 extern uint16_t THING_EXPLOSION1;
 extern uint16_t THING_EXPLOSION2;
 extern uint16_t THING_EXPLOSION3;
@@ -296,7 +295,6 @@ extern uint16_t THING_POISON5;
 extern uint16_t THING_POISON6;
 extern uint16_t THING_POISON7;
 extern uint16_t THING_POISON8;
-extern uint16_t THING_BOMB;
 extern uint16_t THING_SPAM;
 extern uint16_t THING_POTION_MONSTICIDE;
 extern uint16_t THING_POTION_FIRE;
@@ -773,13 +771,6 @@ static inline uint8_t thing_is_seedpod (thingp t)
     return (thing_template_is_seedpod(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_bomb (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_bomb(thing_get_template(t)));
-}
-
 static inline uint8_t thing_is_spam (thingp t)
 {
     verify(t);
@@ -1038,11 +1029,6 @@ static inline uint8_t thing_is_valid_for_shortcut_key_fast (thingp t)
 static inline uint8_t thing_is_seedpod_fast (thingp t)
 {
     return (t->thing_template->is_seedpod);
-}
-
-static inline uint8_t thing_is_bomb_fast (thingp t)
-{
-    return (t->thing_template->is_bomb);
 }
 
 static inline uint8_t thing_is_spam_fast (thingp t)

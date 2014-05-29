@@ -160,8 +160,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     t = (typeof(t)) context;
     verify(t);
 
-    if ((t->thing_template->id == THING_EXPLOSION) ||
-        (t->thing_template->id == THING_EXPLOSION1) ||
+    if ((t->thing_template->id == THING_EXPLOSION1) ||
         (t->thing_template->id == THING_EXPLOSION2) ||
         (t->thing_template->id == THING_EXPLOSION3) ||
         (t->thing_template->id == THING_EXPLOSION4) ||
@@ -178,14 +177,6 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
         (t->thing_template->id == THING_POISON7) ||
         (t->thing_template->id == THING_POISON8)) {
         thing_dead(t, 0 /* killer */, "finished blowing up");
-        return (true);
-    }
-
-    if (thing_is_bomb(t)) {
-        level_place_explosion(server_level,
-                              0, // owner
-                              t->x, t->y);
-        thing_dead(t, 0 /* killer */, "blew up");
         return (true);
     }
 
@@ -443,7 +434,6 @@ void level_set_monst_map_treat_doors_as_passable (levelp level)
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
             if (map_is_wall_at(level, x, y)         ||
-                map_is_bomb_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
                 map_is_mob_spawner_at(level, x, y)    ||
@@ -473,7 +463,6 @@ void level_set_monst_map_treat_doors_as_walls (levelp level)
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
             if (map_is_wall_at(level, x, y)         ||
-                map_is_bomb_at(level, x, y)         ||
                 map_is_door_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||

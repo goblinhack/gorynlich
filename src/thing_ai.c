@@ -66,10 +66,6 @@ static void dmap_print (levelp level, level_walls *dmap)
 
     for (y = 0; y < TILES_MAP_HEIGHT; y++) {
         for (x = 0; x < TILES_MAP_WIDTH; x++) {
-            if (map_is_bomb_at(level, x, y)) {
-                fprintf(fp, " Bo ");
-                continue;
-            }
             if (map_is_exit_at(level, x, y)) {
                 fprintf(fp, " Ex ");
                 continue;
