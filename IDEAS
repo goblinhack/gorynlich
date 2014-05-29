@@ -1,13 +1,11 @@
 bugs
 ---
 
-open doors bug
 tooltips
 explosion hit monst bug
 collect food
 poison food
 gems as points
-alpha blend around ghost/bomb
 doors can be damaged
 monsters do not spawn onto treasure
 monsters get blocked on treasure?
@@ -16,6 +14,7 @@ level ed, first select of a thing does not choose it
 ideas
 -----
 
+- exit pulse green
 - ben wants sprint function
 - rage
 - avoid nat issues by identifying based on client id in packet

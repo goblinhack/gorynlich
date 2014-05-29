@@ -1,6 +1,6 @@
 {
- short_name="amulet"
- tooltip="Special powers granted"
+ short_name="amulet of protection"
+ tooltip="amulet of protection"
  z_depth=2
  z_order=2
  is_boring

@@ -106,11 +106,26 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__bomb_session.o: asm/ramdisk_data_things__bomb_session.S ../data/things/.bomb.session
+	gcc -c asm/ramdisk_data_things__bomb_session.S -o .o/ramdisk_data_things__bomb_session.o
+
 .o/ramdisk_data_things__death_session.o: asm/ramdisk_data_things__death_session.S ../data/things/.death.session
 	gcc -c asm/ramdisk_data_things__death_session.S -o .o/ramdisk_data_things__death_session.o
 
 .o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
 	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
+
+.o/ramdisk_data_things__exit_session.o: asm/ramdisk_data_things__exit_session.S ../data/things/.exit.session
+	gcc -c asm/ramdisk_data_things__exit_session.S -o .o/ramdisk_data_things__exit_session.o
+
+.o/ramdisk_data_things__exit1_session.o: asm/ramdisk_data_things__exit1_session.S ../data/things/.exit1.session
+	gcc -c asm/ramdisk_data_things__exit1_session.S -o .o/ramdisk_data_things__exit1_session.o
+
+.o/ramdisk_data_things__exit6_session.o: asm/ramdisk_data_things__exit6_session.S ../data/things/.exit6.session
+	gcc -c asm/ramdisk_data_things__exit6_session.S -o .o/ramdisk_data_things__exit6_session.o
+
+.o/ramdisk_data_things__exit7_session.o: asm/ramdisk_data_things__exit7_session.S ../data/things/.exit7.session
+	gcc -c asm/ramdisk_data_things__exit7_session.S -o .o/ramdisk_data_things__exit7_session.o
 
 .o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
 	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
@@ -124,6 +139,9 @@
 .o/ramdisk_data_things__ghost3_session.o: asm/ramdisk_data_things__ghost3_session.S ../data/things/.ghost3.session
 	gcc -c asm/ramdisk_data_things__ghost3_session.S -o .o/ramdisk_data_things__ghost3_session.o
 
+.o/ramdisk_data_things__highlights_session.o: asm/ramdisk_data_things__highlights_session.S ../data/things/.highlights.session
+	gcc -c asm/ramdisk_data_things__highlights_session.S -o .o/ramdisk_data_things__highlights_session.o
+
 .o/ramdisk_data_things__keys2_session.o: asm/ramdisk_data_things__keys2_session.S ../data/things/.keys2.session
 	gcc -c asm/ramdisk_data_things__keys2_session.S -o .o/ramdisk_data_things__keys2_session.o
 
@@ -132,6 +150,9 @@
 
 .o/ramdisk_data_things__monk_session.o: asm/ramdisk_data_things__monk_session.S ../data/things/.monk.session
 	gcc -c asm/ramdisk_data_things__monk_session.S -o .o/ramdisk_data_things__monk_session.o
+
+.o/ramdisk_data_things__pipe_session.o: asm/ramdisk_data_things__pipe_session.S ../data/things/.pipe.session
+	gcc -c asm/ramdisk_data_things__pipe_session.S -o .o/ramdisk_data_things__pipe_session.o
 
 .o/ramdisk_data_things__plant_session.o: asm/ramdisk_data_things__plant_session.S ../data/things/.plant.session
 	gcc -c asm/ramdisk_data_things__plant_session.S -o .o/ramdisk_data_things__plant_session.o
@@ -150,9 +171,6 @@
 
 .o/ramdisk_data_things_arrow.o: asm/ramdisk_data_things_arrow.S ../data/things/arrow
 	gcc -c asm/ramdisk_data_things_arrow.S -o .o/ramdisk_data_things_arrow.o
-
-.o/ramdisk_data_things_bomb.o: asm/ramdisk_data_things_bomb.S ../data/things/bomb
-	gcc -c asm/ramdisk_data_things_bomb.S -o .o/ramdisk_data_things_bomb.o
 
 .o/ramdisk_data_things_bow1.o: asm/ramdisk_data_things_bow1.S ../data/things/bow1
 	gcc -c asm/ramdisk_data_things_bow1.S -o .o/ramdisk_data_things_bow1.o
@@ -187,9 +205,6 @@
 .o/ramdisk_data_things_elf.o: asm/ramdisk_data_things_elf.S ../data/things/elf
 	gcc -c asm/ramdisk_data_things_elf.S -o .o/ramdisk_data_things_elf.o
 
-.o/ramdisk_data_things_exit.o: asm/ramdisk_data_things_exit.S ../data/things/exit
-	gcc -c asm/ramdisk_data_things_exit.S -o .o/ramdisk_data_things_exit.o
-
 .o/ramdisk_data_things_exit1.o: asm/ramdisk_data_things_exit1.S ../data/things/exit1
 	gcc -c asm/ramdisk_data_things_exit1.S -o .o/ramdisk_data_things_exit1.o
 
@@ -210,9 +225,6 @@
 
 .o/ramdisk_data_things_exit7.o: asm/ramdisk_data_things_exit7.S ../data/things/exit7
 	gcc -c asm/ramdisk_data_things_exit7.S -o .o/ramdisk_data_things_exit7.o
-
-.o/ramdisk_data_things_explosion.o: asm/ramdisk_data_things_explosion.S ../data/things/explosion
-	gcc -c asm/ramdisk_data_things_explosion.S -o .o/ramdisk_data_things_explosion.o
 
 .o/ramdisk_data_things_explosion1.o: asm/ramdisk_data_things_explosion1.S ../data/things/explosion1
 	gcc -c asm/ramdisk_data_things_explosion1.S -o .o/ramdisk_data_things_explosion1.o
