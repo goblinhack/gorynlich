@@ -3,12 +3,37 @@
  tooltip="Level exit"
  z_depth=2
  z_order=2
- is_boring
  is_exit
+ is_animated
  is_collision_map_large
  tiles={
   tile={
-   tile="exit5"
+   tile="exit5.1"
+   delay=50
+  }
+  tile={
+   tile="exit5.2"
+   delay=50
+  }
+  tile={
+   tile="exit5.3"
+   delay=50
+  }
+  tile={
+   tile="exit5.4"
+   delay=50
+  }
+  tile={
+   tile="exit5.3"
+   delay=50
+  }
+  tile={
+   tile="exit5.2"
+   delay=50
+  }
+  tile={
+   tile="exit5.1"
+   delay=50
   }
  }
 }

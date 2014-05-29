@@ -188,7 +188,6 @@ typedef struct thing_template_ {
     uint8_t is_item_unusable:1;
     uint8_t is_valid_for_shortcut_key:1;
     uint8_t is_seedpod:1;
-    uint8_t is_bomb:1;
     uint8_t is_spam:1;
     uint8_t is_door:1;
     uint8_t is_pipe:1;
@@ -422,11 +421,6 @@ static inline uint8_t thing_template_is_valid_for_shortcut_key (thing_templatep 
 static inline uint8_t thing_template_is_seedpod (thing_templatep t)
 {
     return (t->is_seedpod);
-}
-
-static inline uint8_t thing_template_is_bomb (thing_templatep t)
-{
-    return (t->is_bomb);
 }
 
 static inline uint8_t thing_template_is_spam (thing_templatep t)

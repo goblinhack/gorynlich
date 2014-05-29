@@ -38,7 +38,6 @@ uint8_t map_is_item_unusable_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_item_unusable_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_valid_for_shortcut_key_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_seedpod_at(levelp, int32_t x, int32_t y);
-uint8_t map_is_bomb_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_spam_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_door_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_pipe_at(levelp, int32_t x, int32_t y);

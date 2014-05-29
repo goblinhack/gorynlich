@@ -190,11 +190,6 @@ uint8_t map_is_seedpod_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_seedpod));
 }
 
-uint8_t map_is_bomb_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_is_x_at(level, x, y, thing_template_is_bomb));
-}
-
 uint8_t map_is_spam_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_spam));
@@ -421,11 +416,6 @@ thingp map_thing_is_valid_for_shortcut_key_at (levelp level, int32_t x, int32_t 
 thingp map_thing_is_seedpod_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_seedpod));
-}
-
-thingp map_thing_is_bomb_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_bomb));
 }
 
 thingp map_thing_is_spam_at (levelp level, int32_t x, int32_t y)
@@ -672,11 +662,6 @@ tree_rootp map_all_things_is_seedpod_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_seedpod));
 }
 
-tree_rootp map_all_things_is_bomb_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_bomb));
-}
-
 tree_rootp map_all_things_is_spam_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_spam));
@@ -921,12 +906,6 @@ thing_templatep map_find_seedpod_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_seedpod, w));
-}
-
-thing_templatep map_find_bomb_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, thing_template_is_bomb, w));
 }
 
 thing_templatep map_find_spam_at (levelp level,
@@ -1473,11 +1452,6 @@ uint32_t level_count_is_seedpod (levelp level)
     return (level_count_is_x(level, thing_template_is_seedpod));
 }
 
-uint32_t level_count_is_bomb (levelp level)
-{
-    return (level_count_is_x(level, thing_template_is_bomb));
-}
-
 uint32_t level_count_is_spam (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_spam));
@@ -1727,11 +1701,6 @@ tree_rootp map_all_things_is_valid_for_shortcut_key (levelp level)
 tree_rootp map_all_things_is_seedpod (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_seedpod));
-}
-
-tree_rootp map_all_things_is_bomb (levelp level)
-{
-    return (map_all_things_is_x(level, thing_template_is_bomb));
 }
 
 tree_rootp map_all_things_is_spam (levelp level)

@@ -482,7 +482,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_valid_for_shortcut_key", t->is_valid_for_shortcut_key);
         GET_OPT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
         GET_OPT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
         GET_OPT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
@@ -588,7 +587,6 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
     PUT_NAMED_BITFIELD(ctx, "is_valid_for_shortcut_key", t->is_valid_for_shortcut_key);
     PUT_NAMED_BITFIELD(ctx, "is_seedpod", t->is_seedpod);
-    PUT_NAMED_BITFIELD(ctx, "is_bomb", t->is_bomb);
     PUT_NAMED_BITFIELD(ctx, "is_spam", t->is_spam);
     PUT_NAMED_BITFIELD(ctx, "is_door", t->is_door);
     PUT_NAMED_BITFIELD(ctx, "is_pipe", t->is_pipe);
