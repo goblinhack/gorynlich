@@ -155,8 +155,8 @@ typedef struct thing_template_ {
     uint32_t ppp14;
     uint32_t ppp15;
     uint32_t ppp16;
-    uint32_t ppp17;
-    uint32_t failure_rate;
+    uint32_t can_be_hit_chance;
+    uint32_t failure_chance;
     uint32_t hit_delay_tenths;
     uint32_t mob_spawn_delay_tenths;
 
@@ -256,8 +256,8 @@ uint32_t thing_template_get_ppp13(thing_templatep);
 uint32_t thing_template_get_ppp14(thing_templatep);
 uint32_t thing_template_get_ppp15(thing_templatep);
 uint32_t thing_template_get_ppp16(thing_templatep);
-uint32_t thing_template_get_ppp17(thing_templatep);
-uint32_t thing_template_get_failure_rate(thing_templatep);
+uint32_t thing_template_get_can_be_hit_chance(thing_templatep);
+uint32_t thing_template_get_failure_chance(thing_templatep);
 uint32_t thing_template_get_hit_delay_tenths(thing_templatep);
 uint32_t thing_template_get_mob_spawn_delay_tenths(thing_templatep);
 

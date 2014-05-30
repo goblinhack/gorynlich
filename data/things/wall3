@@ -1,10 +1,11 @@
 {
  short_name="wall"
- tooltip="Non destructable wall"
+ tooltip="wall"
  z_depth=2
  z_order=0
  is_boring
  is_wall
+ can_be_hit_chance=10
  tiles={
   tile={
    tile="wall3_0_0"

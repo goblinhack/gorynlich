@@ -11,7 +11,7 @@
  is_wearable
  is_animated
  is_valid_for_shortcut_key
- failure_rate=1000
+ failure_chance=1000
  tiles={
   tile={
    tile="wand-fire1"

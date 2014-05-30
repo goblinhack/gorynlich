@@ -337,9 +337,11 @@ static void thing_handle_collision (thingp me, thingp it,
 
         if (thing_is_door(it) || thing_is_wall(it)) {
             /*
-             * Weapon hits a wall
+             * Weapon hits a wall. Slim chance of wall being destroyed.
              */
-            thing_dead(me, 0, "hit solid obstacle");
+            thing_hit(it, me, 0, "hit");
+
+            thing_dead(me, 0, "hit wall");
             return;
         }
     }

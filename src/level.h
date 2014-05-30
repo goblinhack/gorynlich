@@ -11,6 +11,7 @@ levelp level_new(widp, uint32_t);
 void level_completed(levelp);
 void level_destroy(levelp *);
 void level_tick(levelp);
+void level_update(levelp level);
 levelp level_load(uint32_t level, widp);
 void marshal_level(marshal_p ctx, levelp level);
 uint8_t demarshal_level(demarshal_p ctx, levelp l);

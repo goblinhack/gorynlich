@@ -277,6 +277,23 @@ void level_destroy (levelp *plevel)
     myfree(level);
 }
 
+void level_update (levelp level)
+{
+    map_fixup(level);
+
+    level_set_walls(level);
+    level_set_monst_map_treat_doors_as_passable(level);
+    level_set_monst_map_treat_doors_as_walls(level);
+    level_set_doors(level);
+    level_set_pipes(level);
+    level_pipe_find_ends(level);
+
+    /*
+     * One time generate of expensive wander map
+     */
+    dmap_generate_monst_map_wander(level);
+}
+
 levelp level_load (uint32_t level_no, widp wid)
 {
     levelp level;
@@ -332,14 +349,7 @@ levelp level_load (uint32_t level_no, widp wid)
 
     myfree(dir_and_file);
 
-    LOG("Level set thing AI maps");
-
-    level_set_walls(level);
-    level_set_monst_map_treat_doors_as_passable(level);
-    level_set_monst_map_treat_doors_as_walls(level);
-    level_set_doors(level);
-    level_set_pipes(level);
-    level_pipe_find_ends(level);
+    level_update(level);
 
     level_set_is_paused(level, false);
     level_start_timers(level);
@@ -644,8 +654,8 @@ static uint8_t level_place_explosion_at (levelp level,
                                          uint32_t nargs,
                                          va_list args)
 {
-    if (map_is_wall_at(level, x, y) ||
-        map_is_pipe_at(level, x, y)) {
+    if (map_is_wall_at(level, x + 0.5, y + 0.5) ||
+        map_is_pipe_at(level, x + 0.5, y + 0.5)) {
         return (false);
     }
 

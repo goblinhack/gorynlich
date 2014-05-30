@@ -352,6 +352,13 @@ static void *dmap_thread2_func (void *context)
 
     pthread_cond_wait(&dmap_thread2_cond, &dmap_thread2_mutex);
 
+    if (!server_level) {
+        ERR("no server level to generate monster map");
+
+        pthread_mutex_unlock(&dmap_thread2_mutex);
+        return (0);
+    }
+
     server_level->locked++;
 
     level_walls tmp;
