@@ -5,7 +5,7 @@
  z_order=0
  is_boring
  is_wall
- can_be_hit_chance=10
+ can_be_hit_chance=2
  tiles={
   tile={
    tile="wall5_0_0"

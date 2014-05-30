@@ -790,8 +790,6 @@ static void thing_hit_ (thingp t,
     if (thing_is_dead(t)) {
         if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
             level_update(server_level);
-
-            socket_server_tx_map_update(0, server_boring_things);
         }
     }
 }
@@ -2247,6 +2245,11 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         id_to_thing_template(template_id);
 
                 t->thing_template = thing_template;
+
+                need_fixup = need_fixup ||
+                    thing_template_is_wall(thing_template) ||
+                    thing_template_is_pipe(thing_template) ||
+                    thing_template_is_door(thing_template);
             }
         }
 
