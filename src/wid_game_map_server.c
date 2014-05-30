@@ -172,11 +172,6 @@ void wid_game_map_server_wid_create (void)
         return;
     }
 
-    /*
-     * One time generate of expensive wander map
-     */
-    dmap_generate_monst_map_wander(server_level);
-
     wid_editor_map_loading = false;
 
     things_level_start(server_level);

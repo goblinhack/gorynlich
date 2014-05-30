@@ -1200,6 +1200,16 @@ void map_fixup (levelp level)
 
             wid_set_tilename(w, tilename);
             wid_set_font(w, small_font);
+            
+            {
+                thingp t = wid_get_thing(w);
+                if (t) {
+CON("thing");
+                    if (!t->updated) {
+                        t->updated++;
+                    }
+                }
+            }
         }
     }
 }

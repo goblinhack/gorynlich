@@ -1,10 +1,11 @@
 {
  short_name="door"
- tooltip="Non destructable door"
+ tooltip="door"
  z_depth=2
  z_order=0
  is_boring
  is_door
+ can_be_hit_chance=10
  tiles={
   tile={
    tile="door_0_0"

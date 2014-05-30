@@ -10,7 +10,7 @@
  is_fragile
  is_valid_for_shortcut_key
  is_wearable
- failure_rate=5000
+ failure_chance=5000
  tiles={
   tile={
    tile="bow3"
