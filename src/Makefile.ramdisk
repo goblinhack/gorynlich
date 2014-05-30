@@ -163,6 +163,9 @@
 .o/ramdisk_data_things__valkyrie_session.o: asm/ramdisk_data_things__valkyrie_session.S ../data/things/.valkyrie.session
 	gcc -c asm/ramdisk_data_things__valkyrie_session.S -o .o/ramdisk_data_things__valkyrie_session.o
 
+.o/ramdisk_data_things__wall_session.o: asm/ramdisk_data_things__wall_session.S ../data/things/.wall.session
+	gcc -c asm/ramdisk_data_things__wall_session.S -o .o/ramdisk_data_things__wall_session.o
+
 .o/ramdisk_data_things__wizard_session.o: asm/ramdisk_data_things__wizard_session.S ../data/things/.wizard.session
 	gcc -c asm/ramdisk_data_things__wizard_session.S -o .o/ramdisk_data_things__wizard_session.o
 

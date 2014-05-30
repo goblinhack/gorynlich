@@ -783,6 +783,17 @@ static void thing_hit_ (thingp t,
             damage = 0;
         }
     }
+
+    /*
+     * If a thing that modifies the level dies, update it.
+     */
+    if (thing_is_dead(t)) {
+        if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
+            level_update(server_level);
+
+            socket_server_tx_map_update(0, server_boring_things);
+        }
+    }
 }
 
 void thing_hit (thingp t, 
@@ -802,6 +813,17 @@ void thing_hit (thingp t,
 
     if (t->is_dead) {
         return;
+    }
+
+    /*
+     * Does the thing get off being hit.
+     */
+    uint32_t can_be_hit_chance = 
+                    thing_template_get_can_be_hit_chance(t->thing_template);
+    if (can_be_hit_chance) {
+        if ((rand() % can_be_hit_chance) != 0) {
+            return;
+        }
     }
 
     /*
@@ -2496,10 +2518,10 @@ void thing_fire (thingp t,
      * Check if the weapon reaches its end of warranty.
      */
     if (weapon == t->weapon) {
-        uint32_t failure_rate = thing_template_get_failure_rate(weapon);
+        uint32_t failure_chance = thing_template_get_failure_chance(weapon);
 
-        if (failure_rate) {
-            if ((rand() % failure_rate) == 0) {
+        if (failure_chance) {
+            if ((rand() % failure_chance) == 0) {
                 thing_item_destroyed(t, weapon);
                 return;
             }
