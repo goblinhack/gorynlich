@@ -25,6 +25,7 @@
 #include "sound.h"
 #include "wid_console.h"
 #include "wid_editor.h"
+#include "socket.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
@@ -292,6 +293,8 @@ void level_update (levelp level)
      * One time generate of expensive wander map
      */
     dmap_generate_monst_map_wander(level);
+
+    level->need_map_update = 1;
 }
 
 levelp level_load (uint32_t level_no, widp wid)
@@ -833,6 +836,15 @@ void level_tick (levelp level)
 {
     if (timers) {
         action_timers_tick(timers);
+    }
+
+    if (level) {
+        if (level->need_map_update) {
+            level->need_map_update = 0;
+
+            socket_server_tx_map_update(0, server_active_things);
+            socket_server_tx_map_update(0, server_boring_things);
+        }
     }
 }
 

@@ -65,6 +65,11 @@ typedef struct level_t_ {
     int32_t timestamp_started;
 
     /*
+     * Send an update to the client, the level map has changed.
+     */
+    uint8_t need_map_update:1;
+
+    /*
      * Things cannot move but can be animated.
      */
     uint8_t is_paused:1;

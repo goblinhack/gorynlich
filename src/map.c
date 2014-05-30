@@ -753,6 +753,19 @@ static thing_templatep map_find_x_at (levelp level,
 
     w = wid_grid_find_first(grid_wid, x, y);
     while (w) {
+        thingp thing_it = wid_get_thing(w);
+
+        /*
+         * Need to filter dead things so map fixup can no longer see wall
+         * tiles that are in the process of being destroyed.
+         */
+        if (thing_it) {
+            if (thing_is_dead(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y);
+                continue;
+            }
+        }
+
         thing_template = wid_get_thing_template(w);
         if (thing_template) {
             if ((*callback)(thing_template)) {
@@ -1006,9 +1019,17 @@ void map_fixup (levelp level)
     for (x = 0; x < TILES_MAP_WIDTH; x++) {
         for (y = 0; y < TILES_MAP_HEIGHT; y++) {
 
-            if (!map_find_wall_at(level, x, y, &w) &&
-                !map_find_pipe_at(level, x, y, &w) &&
-                !map_find_door_at(level, x, y, &w)) {
+            widp mywid = 0;
+
+            if (map_find_wall_at(level, x, y, &w)) {
+                mywid = w;
+            } else if (map_find_pipe_at(level, x, y, &w)) {
+                mywid = w;
+            } else if (map_find_door_at(level, x, y, &w)) {
+                mywid = w;
+            }
+
+            if (!mywid) {
                 continue;
             }
 
@@ -1137,7 +1158,7 @@ void map_fixup (levelp level)
              * Single node doors need to join onto walls.
              */
             if (index == IS_JOIN_NODE) {
-                if (map_find_door_at(level, x, y, &w)) {
+                if (map_find_door_at(level, x, y, &mywid)) {
                     if ( map_find_wall_at(level, x - 1, y, 0) &&
                          map_find_wall_at(level, x + 1, y, 0) &&
                         !map_find_wall_at(level, x, y - 1, 0) &&
@@ -1148,7 +1169,7 @@ void map_fixup (levelp level)
             }
 
             if (index == IS_JOIN_NODE) {
-                if (map_find_door_at(level, x, y, &w)) {
+                if (map_find_door_at(level, x, y, &mywid)) {
                     if (!map_find_wall_at(level, x - 1, y, 0) &&
                         !map_find_wall_at(level, x + 1, y, 0) &&
                          map_find_wall_at(level, x, y - 1, 0) &&
@@ -1198,18 +1219,25 @@ void map_fixup (levelp level)
                 DIE("no tilename for %s", thing_template_name(e));
             }
 
-            wid_set_tilename(w, tilename);
-            wid_set_font(w, small_font);
-            
+            /*
+             * If an existing thing, make sure and send an update if say
+             * a door or wall is destroyed.
+             */
             {
-                thingp t = wid_get_thing(w);
-                if (t) {
-CON("thing");
-                    if (!t->updated) {
-                        t->updated++;
+                tilep existing_tile = wid_get_tile(mywid);
+
+                if (existing_tile && (existing_tile != tile)) {
+                    thingp t = wid_get_thing(mywid);
+                    if (t) {
+                        if (!t->updated) {
+                            t->updated++;
+                        }
                     }
                 }
             }
+
+            wid_set_tilename(mywid, tilename);
+            wid_set_font(mywid, small_font);
         }
     }
 }
