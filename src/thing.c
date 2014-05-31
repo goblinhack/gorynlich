@@ -734,6 +734,16 @@ static void thing_hit_ (thingp t,
     }
 
     /*
+     * Take note of the hit so we can send an event to the client.
+     */
+    t->is_hit = true;
+CON("hit on server %s",thing_logname(t));
+
+    if (!t->updated) {
+        t->updated++;
+    }
+
+    /*
      * Keep hitting until all damage is used up or the thing is dead.
      */
     while (damage > 0) {
@@ -769,7 +779,7 @@ static void thing_hit_ (thingp t,
             }
         } else {
             /*
-             * A hit, but not enough to kil the thing.
+             * A hit, but not enough to kill the thing.
              */
             t->health -= damage;
 
@@ -804,6 +814,26 @@ void thing_hit (thingp t,
         if (thing_is_player(t)) {
             return;
         }
+    }
+
+    /*
+     * If called via the server this is just an update to do an effect on hit.
+     */
+    if (!t->on_server) {
+        /*
+         * Flash briefly red on death.
+         */
+        if (thing_is_monst(t) || 
+            thing_is_mob_spawner(t) || 
+            thing_is_door(t)) {
+
+            widp w = t->wid;
+            if (w) {
+                wid_set_mode(w, WID_MODE_ACTIVE);
+                wid_set_color(w, WID_COLOR_BLIT, RED);
+            }
+        }
+        return;
     }
 
     if (t->is_dead) {
@@ -1907,8 +1937,6 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
-double ox = x;
-double otx = t->x;
     double dist = DISTANCE(t->x, t->y, x, y);
 
     if (smooth) {
@@ -1961,9 +1989,6 @@ double otx = t->x;
         double time_step = dist;
         double ms = (1000.0 / thing_speed(t)) / (1.0 / time_step);
 
-if (thing_is_projectile(t)) {
-    LOG("%s %f->%f  wid %f   in %f",thing_logname(t),otx,ox,tl.x,ms);
-}
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
     } else {
         wid_set_tl_br(t->wid, tl, br);
@@ -2060,8 +2085,15 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         }
 
         uint8_t state = t->dir | 
-                ((t->resync     ? 1 : 0) << THING_STATE_BIT_SHIFT_RESYNC) |
-                ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_IS_DEAD);
+            ((t->resync     ? 1 : 0) << THING_STATE_BIT_SHIFT_RESYNC) |
+            ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_PRESENT) |
+            ((t->is_hit     ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_PRESENT);
+
+        const uint8_t ext =
+            ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
+            ((t->is_hit     ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_IS_HIT);
+
+        t->is_hit = 0;
 
         /*
          * Do we need to encode the thing template? Yes if this is the first 
@@ -2112,6 +2144,10 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT)) {
             *data++ = template_id;
+        }
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_EXT_PRESENT)) {
+            *data++ = ext;
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
@@ -2195,6 +2231,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
     while (data < eodata) {
         uint8_t state = *data++;
+        uint8_t ext;
         uint8_t template_id;
         uint16_t id;
         uint8_t on_map;
@@ -2225,6 +2262,15 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             template_id = *data++;
         } else {
             template_id = -1;
+        }
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_EXT_PRESENT)) {
+            /*
+             * Full template ID update.
+             */
+            ext = *data++;
+        } else {
+            ext = 0;
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
@@ -2261,7 +2307,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 continue;
             }
 
-            if ((state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD))) {
+            if ((ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD))) {
                 /*
                  * Don't create the thing if already dead.
                  */
@@ -2343,7 +2389,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 }
             } else {
                 if (t->is_dead || 
-                    (state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD))) {
+                    (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD))) {
                     /*
                      * Already dead? No new tile.
                      */
@@ -2359,7 +2405,12 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             }
         }
 
-        if (state & (1 << THING_STATE_BIT_SHIFT_IS_DEAD)) {
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT)) {
+CON("hit %s",thing_logname(t));
+            thing_hit(t, 0, 0, "from server");
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
             thing_dead(t, 0, "server killed");
         }
     }
