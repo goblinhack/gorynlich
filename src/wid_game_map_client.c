@@ -574,8 +574,8 @@ void wid_game_map_client_wid_create (void)
         }
 
         wid_new_grid(wid_game_map_client_grid_container,
-                     TILES_MAP_WIDTH,
-                     TILES_MAP_HEIGHT, client_tile_width, client_tile_height);
+                     MAP_WIDTH,
+                     MAP_HEIGHT, client_tile_width, client_tile_height);
     }
 
     client_level = level_new(wid_game_map_client_grid_container, 0);

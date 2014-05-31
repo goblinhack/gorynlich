@@ -50,7 +50,7 @@ static level_walls dmap_monst_map_treat_doors_as_walls_scratchpad;
  *
  * This is for every single map position, how to get there.
  */
-static level_walls dmap_monst_map_wander[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+static level_walls dmap_monst_map_wander[MAP_WIDTH][MAP_HEIGHT];
 
 /*
  * Print the Dijkstra map scores shared by all things of the same type.
@@ -64,8 +64,8 @@ static void dmap_print (levelp level, level_walls *dmap)
         fp = fopen("map.txt", "w");
     }
 
-    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_WIDTH; x++) {
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
             if (map_is_exit_at(level, x, y)) {
                 fprintf(fp, " Ex ");
                 continue;
@@ -121,8 +121,8 @@ static void dmap_thing_print (thingp t,
     tx = (int)(t->x + 0.5);
     ty = (int)(t->y + 0.5);
 
-    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_WIDTH; x++) {
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
             if ((nexthop_x == x) && (nexthop_y == y)) {
                 fprintf(fp, " Nh ");
             } else {
@@ -174,8 +174,8 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
     do {
         changed = false;
 
-        for (x = 1; x < TILES_MAP_WIDTH - 1; x++) {
-            for (y = 1; y < TILES_MAP_HEIGHT - 1; y++) {
+        for (x = 1; x < MAP_WIDTH - 1; x++) {
+            for (y = 1; y < MAP_HEIGHT - 1; y++) {
                 e = &dmap->walls[x  ][y];
                 if (*e == is_a_wall) {
                     continue;
@@ -265,8 +265,8 @@ static void dmap_init (level_walls *dmap, const level_walls *map)
     int8_t x;
     int8_t y;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             if (map->walls[x][y] != ' ') {
                 dmap->walls[x][y] = is_a_wall;
                 continue;
@@ -364,8 +364,8 @@ static void *dmap_thread2_func (void *context)
     level_walls tmp;
     uint32_t x, y;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             dmap_init(&tmp, &server_level->monst_map_treat_doors_as_walls);
 
             /*
@@ -659,8 +659,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         }
     }
 
-    uint32_t x = rand() % TILES_MAP_WIDTH;
-    uint32_t y = rand() % TILES_MAP_HEIGHT;
+    uint32_t x = rand() % MAP_WIDTH;
+    uint32_t y = rand() % MAP_HEIGHT;
 
     if (!t->dmap_wander) {
         t->dmap_wander = &dmap_monst_map_wander[x][y];

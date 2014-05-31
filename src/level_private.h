@@ -7,7 +7,7 @@
 #pragma once
 
 typedef struct {
-    int8_t walls[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+    int8_t walls[MAP_WIDTH][MAP_HEIGHT];
 } level_walls;
 
 typedef struct level_t_ {

@@ -64,8 +64,8 @@ widp wid_editor_map_thing_replace_template (widp w,
     verify(level);
 
     if ((x < 0) || (y < 0) ||
-        (x >= TILES_MAP_WIDTH) ||
-        (y >= TILES_MAP_HEIGHT)) {
+        (x >= MAP_WIDTH) ||
+        (y >= MAP_HEIGHT)) {
         ERR("overflow on placing tile at %f,%f", x,y); 
         return (0);
     }
@@ -223,8 +223,8 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     uint32_t yin;
 
     if ((x < 0) || (y < 0) ||
-        (x >= TILES_MAP_WIDTH) ||
-        (y >= TILES_MAP_HEIGHT)) {
+        (x >= MAP_WIDTH) ||
+        (y >= MAP_HEIGHT)) {
         return;
     }
 
@@ -809,8 +809,8 @@ void wid_editor_add_grid (void)
 
         widp child;
 
-        for (x = 0; x < TILES_MAP_WIDTH; x++) {
-            for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            for (y = 0; y < MAP_HEIGHT; y++) {
 
                 fpoint tl = {
                     (tile_width_pct * (float)(x)),
@@ -839,8 +839,8 @@ void wid_editor_add_grid (void)
                     wid_set_text(child, tmp);
                 }
 
-                if ((x < TILES_MAP_WIDTH) &&
-                    (y < TILES_MAP_HEIGHT)) {
+                if ((x < MAP_WIDTH) &&
+                    (y < MAP_HEIGHT)) {
                     wid_set_on_key_down(child,
                                         wid_editor_map_tile_key_down_event);
                     wid_set_on_key_up(child,
@@ -1002,8 +1002,8 @@ void wid_editor_map_wid_create (void)
     }
 
     wid_new_grid(wid_editor_map_grid_container,
-                    TILES_MAP_WIDTH,
-                    TILES_MAP_HEIGHT, tile_width, tile_height);
+                    MAP_WIDTH,
+                    MAP_HEIGHT, tile_width, tile_height);
 
     level_ed = level_new(wid_editor_map_grid_container, 0);
 
