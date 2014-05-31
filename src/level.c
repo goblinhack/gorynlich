@@ -427,8 +427,8 @@ void level_set_walls (levelp level)
     int32_t x;
     int32_t y;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             if (map_is_wall_at(level, x, y) ||
                 !map_is_floor_at(level, x, y)) {
                 level->walls.walls[x][y] = '+';
@@ -447,8 +447,8 @@ void level_set_monst_map_treat_doors_as_passable (levelp level)
     int32_t x;
     int32_t y;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             if (map_is_wall_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
@@ -476,8 +476,8 @@ void level_set_monst_map_treat_doors_as_walls (levelp level)
     int32_t x;
     int32_t y;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             if (map_is_wall_at(level, x, y)         ||
                 map_is_door_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
@@ -507,8 +507,8 @@ void level_set_doors (levelp level)
     int32_t x;
     int32_t y;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             if (map_is_door_at(level, x, y)) {
                 level->roads.walls[x][y] = '+';
             } else {
@@ -526,8 +526,8 @@ void level_set_pipes (levelp level)
     int32_t x;
     int32_t y;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             if (map_is_pipe_at(level, x, y)) {
                 level->pipes.walls[x][y] = '+';
             } else {
@@ -544,8 +544,8 @@ void level_pipe_find_ends (levelp level)
 
     memset(&level->end_pipe, ' ', sizeof(level->end_pipe));
 
-    for (x = 1; x < TILES_MAP_WIDTH-1; x++) {
-        for (y = 1; y < TILES_MAP_HEIGHT-1; y++) {
+    for (x = 1; x < MAP_WIDTH-1; x++) {
+        for (y = 1; y < MAP_HEIGHT-1; y++) {
 
             if (level->pipes.walls[x][y] == ' ') {
                 continue;
@@ -611,10 +611,10 @@ void level_place_plant_pod (levelp level)
     int32_t y;
 
     for (i = 0;
-         i < TILES_MAP_HEIGHT * TILES_MAP_WIDTH; i++) {
+         i < MAP_HEIGHT * MAP_WIDTH; i++) {
 
-        x = rand() % TILES_MAP_WIDTH;
-        y = rand() % TILES_MAP_HEIGHT;
+        x = rand() % MAP_WIDTH;
+        y = rand() % MAP_HEIGHT;
 
         if (map_is_wall_at(level, x, y)) {
             continue;

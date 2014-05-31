@@ -730,12 +730,6 @@ static void thing_hit_ (thingp t,
         return;
     }
 
-    if (!damage) {
-        if (hitter) {
-            damage = thing_get_template(hitter)->damage;
-        }
-    }
-    
     /*
      * Keep hitting until all damage is used up or the thing is dead.
      */
@@ -814,12 +808,36 @@ void thing_hit (thingp t,
     }
 
     /*
+     * Does the thing do damage?
+     */
+    if (!damage) {
+        if (hitter) {
+            damage = thing_get_template(hitter)->damage;
+        }
+    }
+    
+    /*
+     * If this is a thing on the edge of the level acting as a indestrucatble
+     * wall, then don't allow it to be destroyed.
+     */
+    if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
+        if ((t->x <= 0) || (t->x >= MAP_WIDTH - 1) ||
+            (t->y <= 0) || (t->y >= MAP_HEIGHT - 1)) {
+            return;
+        }
+
+        level_update(server_level);
+    }
+
+    /*
      * Does the thing get off being hit.
      */
     uint32_t can_be_hit_chance = 
                     thing_template_get_can_be_hit_chance(t->thing_template);
     if (can_be_hit_chance) {
-        if ((rand() % can_be_hit_chance) != 0) {
+        uint32_t chance = rand() % can_be_hit_chance;
+
+        if (chance > damage) {
             return;
         }
     }
@@ -2011,8 +2029,8 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
         widp w = thing_wid(t);
         if (w) {
-            tx = (uint8_t)(int)((t->x * ((double)256)) / TILES_MAP_WIDTH);
-            ty = (uint8_t)(int)((t->y * ((double)256)) / TILES_MAP_HEIGHT);
+            tx = (uint8_t)(int)((t->x * ((double)256)) / MAP_WIDTH);
+            ty = (uint8_t)(int)((t->y * ((double)256)) / MAP_HEIGHT);
         } else {
             tx = -1;
             ty = -1;
@@ -2193,8 +2211,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             tx = *data++;
             ty = *data++;
 
-            x = ((double)tx) / (double) (256 / TILES_MAP_WIDTH);
-            y = ((double)ty) / (double) (256 / TILES_MAP_HEIGHT);
+            x = ((double)tx) / (double) (256 / MAP_WIDTH);
+            y = ((double)ty) / (double) (256 / MAP_HEIGHT);
         } else {
             tx = -1;
             ty = -1;
@@ -2421,12 +2439,12 @@ static void thing_common_move (thingp t,
         *y = 0;
     }
 
-    if (*x > TILES_MAP_WIDTH - 1) {
-        *x = TILES_MAP_WIDTH - 1;
+    if (*x > MAP_WIDTH - 1) {
+        *x = MAP_WIDTH - 1;
     }
 
-    if (*y > TILES_MAP_HEIGHT - 1) {
-        *y = TILES_MAP_HEIGHT - 1;
+    if (*y > MAP_HEIGHT - 1) {
+        *y = MAP_HEIGHT - 1;
     }
 
     if (*x > ox) {

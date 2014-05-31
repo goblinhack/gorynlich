@@ -155,8 +155,8 @@ void wid_game_map_server_wid_create (void)
         }
 
         wid_new_grid(wid_game_map_server_grid_container,
-                     TILES_MAP_WIDTH,
-                     TILES_MAP_HEIGHT, server_tile_width, server_tile_height);
+                     MAP_WIDTH,
+                     MAP_HEIGHT, server_tile_width, server_tile_height);
     }
 
     /*
