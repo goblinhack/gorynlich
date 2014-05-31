@@ -1,10 +1,11 @@
 {
- short_name="mask"
- tooltip="Gemstone"
+ short_name="starstone"
+ tooltip="starstone"
  z_depth=2
  z_order=2
  is_boring
  is_treasure
+ score_on_collect=50000
  tiles={
   tile={
    tile="gem7"

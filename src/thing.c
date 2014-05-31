@@ -81,8 +81,8 @@ uint16_t THING_POTION_SHIELD;
 uint16_t THING_WATER1;
 uint16_t THING_WATER2;
 uint16_t THING_MASK1;
-uint16_t THING_MASK2;
-uint16_t THING_MASK3;
+uint16_t THING_RING2;
+uint16_t THING_RING3;
 uint16_t THING_GEM1;
 uint16_t THING_GEM2;
 uint16_t THING_GEM3;
@@ -2900,10 +2900,14 @@ void thing_collect (thingp t, thing_templatep tmp)
     }
 
     /*
+     * Bonus for collecting?
+     */
+    t->score += thing_template_get_score_on_collect(tmp) * quantity;
+
+    /*
      * If treasure, just add it to the score. Don't carry it.
      */
-    if (thing_template_is_weapon(tmp)) {
-        t->score += thing_template_get_score_on_collect(tmp) * quantity;
+    if (thing_template_is_treasure(tmp)) {
         return;
     }
 
