@@ -311,9 +311,9 @@ void thing_tick_all (void)
     /*
      * Allow level timers to fire.
      */
-    level_tick(server_level);
-
     if (server_level) {
+        level_tick(server_level);
+
         static uint32_t ts;
 
         if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI, ts)) {
