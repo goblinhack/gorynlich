@@ -445,7 +445,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp13", t->ppp13);
         GET_OPT_NAMED_UINT32(ctx, "ppp14", t->ppp14);
         GET_OPT_NAMED_UINT32(ctx, "ppp15", t->ppp15);
-        GET_OPT_NAMED_UINT32(ctx, "ppp16", t->ppp16);
+        GET_OPT_NAMED_UINT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
         GET_OPT_NAMED_UINT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
         GET_OPT_NAMED_UINT32(ctx, "failure_chance", t->failure_chance);
         GET_OPT_NAMED_UINT32(ctx, "hit_delay_tenths", t->hit_delay_tenths);
@@ -503,6 +503,14 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
 
     } while (demarshal_gotone(ctx));
 
+    if (t->is_player || t->is_projectile) {
+        t->tx_map_update_delay_thousandths = 
+                        DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST;
+    } else {
+        t->tx_map_update_delay_thousandths = 
+                        DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW;
+    }
+
     /*
      * Read the tiles tree.
      */
@@ -550,7 +558,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "ppp13", t->ppp13);
     PUT_NAMED_INT32(ctx, "ppp14", t->ppp14);
     PUT_NAMED_INT32(ctx, "ppp15", t->ppp15);
-    PUT_NAMED_INT32(ctx, "ppp16", t->ppp16);
+    PUT_NAMED_INT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
     PUT_NAMED_INT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
     PUT_NAMED_INT32(ctx, "failure_chance", t->failure_chance);
     PUT_NAMED_INT32(ctx, "hit_delay_tenths", t->hit_delay_tenths);
@@ -765,9 +773,9 @@ uint32_t thing_template_get_ppp15 (thing_templatep t)
     return (t->ppp15);
 }
 
-uint32_t thing_template_get_ppp16 (thing_templatep t)
+uint32_t thing_template_get_tx_map_update_delay_thousandths (thing_templatep t)
 {
-    return (t->ppp16);
+    return (t->tx_map_update_delay_thousandths);
 }
 
 uint32_t thing_template_get_can_be_hit_chance (thing_templatep t)

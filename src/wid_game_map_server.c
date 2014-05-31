@@ -174,6 +174,8 @@ void wid_game_map_server_wid_create (void)
 
     wid_editor_map_loading = false;
 
+    level_update_now(server_level);
+
     things_level_start(server_level);
 }
 
