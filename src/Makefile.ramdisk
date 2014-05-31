@@ -106,11 +106,20 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__amulet1_session.o: asm/ramdisk_data_things__amulet1_session.S ../data/things/.amulet1.session
+	gcc -c asm/ramdisk_data_things__amulet1_session.S -o .o/ramdisk_data_things__amulet1_session.o
+
 .o/ramdisk_data_things__bomb_session.o: asm/ramdisk_data_things__bomb_session.S ../data/things/.bomb.session
 	gcc -c asm/ramdisk_data_things__bomb_session.S -o .o/ramdisk_data_things__bomb_session.o
 
+.o/ramdisk_data_things__chest1_session.o: asm/ramdisk_data_things__chest1_session.S ../data/things/.chest1.session
+	gcc -c asm/ramdisk_data_things__chest1_session.S -o .o/ramdisk_data_things__chest1_session.o
+
 .o/ramdisk_data_things__death_session.o: asm/ramdisk_data_things__death_session.S ../data/things/.death.session
 	gcc -c asm/ramdisk_data_things__death_session.S -o .o/ramdisk_data_things__death_session.o
+
+.o/ramdisk_data_things__door_session.o: asm/ramdisk_data_things__door_session.S ../data/things/.door.session
+	gcc -c asm/ramdisk_data_things__door_session.S -o .o/ramdisk_data_things__door_session.o
 
 .o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
 	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
@@ -129,6 +138,18 @@
 
 .o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
 	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
+
+.o/ramdisk_data_things__floor_session.o: asm/ramdisk_data_things__floor_session.S ../data/things/.floor.session
+	gcc -c asm/ramdisk_data_things__floor_session.S -o .o/ramdisk_data_things__floor_session.o
+
+.o/ramdisk_data_things__gem1_session.o: asm/ramdisk_data_things__gem1_session.S ../data/things/.gem1.session
+	gcc -c asm/ramdisk_data_things__gem1_session.S -o .o/ramdisk_data_things__gem1_session.o
+
+.o/ramdisk_data_things__gem2_session.o: asm/ramdisk_data_things__gem2_session.S ../data/things/.gem2.session
+	gcc -c asm/ramdisk_data_things__gem2_session.S -o .o/ramdisk_data_things__gem2_session.o
+
+.o/ramdisk_data_things__gem7_session.o: asm/ramdisk_data_things__gem7_session.S ../data/things/.gem7.session
+	gcc -c asm/ramdisk_data_things__gem7_session.S -o .o/ramdisk_data_things__gem7_session.o
 
 .o/ramdisk_data_things__ghost_session.o: asm/ramdisk_data_things__ghost_session.S ../data/things/.ghost.session
 	gcc -c asm/ramdisk_data_things__ghost_session.S -o .o/ramdisk_data_things__ghost_session.o
@@ -159,6 +180,15 @@
 
 .o/ramdisk_data_things__poison8_session.o: asm/ramdisk_data_things__poison8_session.S ../data/things/.poison8.session
 	gcc -c asm/ramdisk_data_things__poison8_session.S -o .o/ramdisk_data_things__poison8_session.o
+
+.o/ramdisk_data_things__ring1_session.o: asm/ramdisk_data_things__ring1_session.S ../data/things/.ring1.session
+	gcc -c asm/ramdisk_data_things__ring1_session.S -o .o/ramdisk_data_things__ring1_session.o
+
+.o/ramdisk_data_things__ring2_session.o: asm/ramdisk_data_things__ring2_session.S ../data/things/.ring2.session
+	gcc -c asm/ramdisk_data_things__ring2_session.S -o .o/ramdisk_data_things__ring2_session.o
+
+.o/ramdisk_data_things__ring3_session.o: asm/ramdisk_data_things__ring3_session.S ../data/things/.ring3.session
+	gcc -c asm/ramdisk_data_things__ring3_session.S -o .o/ramdisk_data_things__ring3_session.o
 
 .o/ramdisk_data_things__valkyrie_session.o: asm/ramdisk_data_things__valkyrie_session.S ../data/things/.valkyrie.session
 	gcc -c asm/ramdisk_data_things__valkyrie_session.S -o .o/ramdisk_data_things__valkyrie_session.o
@@ -340,15 +370,6 @@
 .o/ramdisk_data_things_lizard.o: asm/ramdisk_data_things_lizard.S ../data/things/lizard
 	gcc -c asm/ramdisk_data_things_lizard.S -o .o/ramdisk_data_things_lizard.o
 
-.o/ramdisk_data_things_mask1.o: asm/ramdisk_data_things_mask1.S ../data/things/mask1
-	gcc -c asm/ramdisk_data_things_mask1.S -o .o/ramdisk_data_things_mask1.o
-
-.o/ramdisk_data_things_mask2.o: asm/ramdisk_data_things_mask2.S ../data/things/mask2
-	gcc -c asm/ramdisk_data_things_mask2.S -o .o/ramdisk_data_things_mask2.o
-
-.o/ramdisk_data_things_mask3.o: asm/ramdisk_data_things_mask3.S ../data/things/mask3
-	gcc -c asm/ramdisk_data_things_mask3.S -o .o/ramdisk_data_things_mask3.o
-
 .o/ramdisk_data_things_monk.o: asm/ramdisk_data_things_monk.S ../data/things/monk
 	gcc -c asm/ramdisk_data_things_monk.S -o .o/ramdisk_data_things_monk.o
 
@@ -399,6 +420,15 @@
 
 .o/ramdisk_data_things_potion_shield.o: asm/ramdisk_data_things_potion_shield.S ../data/things/potion_shield
 	gcc -c asm/ramdisk_data_things_potion_shield.S -o .o/ramdisk_data_things_potion_shield.o
+
+.o/ramdisk_data_things_ring1.o: asm/ramdisk_data_things_ring1.S ../data/things/ring1
+	gcc -c asm/ramdisk_data_things_ring1.S -o .o/ramdisk_data_things_ring1.o
+
+.o/ramdisk_data_things_ring2.o: asm/ramdisk_data_things_ring2.S ../data/things/ring2
+	gcc -c asm/ramdisk_data_things_ring2.S -o .o/ramdisk_data_things_ring2.o
+
+.o/ramdisk_data_things_ring3.o: asm/ramdisk_data_things_ring3.S ../data/things/ring3
+	gcc -c asm/ramdisk_data_things_ring3.S -o .o/ramdisk_data_things_ring3.o
 
 .o/ramdisk_data_things_seedpod.o: asm/ramdisk_data_things_seedpod.S ../data/things/seedpod
 	gcc -c asm/ramdisk_data_things_seedpod.S -o .o/ramdisk_data_things_seedpod.o

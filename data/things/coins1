@@ -1,6 +1,6 @@
 {
  short_name="coins"
- tooltip="Loot"
+ tooltip="Pile of coins"
  z_depth=2
  z_order=2
  is_boring

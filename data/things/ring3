@@ -1,14 +1,15 @@
 {
- short_name="deathstone"
- tooltip="deathstone"
+ short_name="ring"
+ tooltip="magical ring major"
  z_depth=2
  z_order=2
  is_boring
  is_treasure
+ is_ring
  score_on_collect=20000
  tiles={
   tile={
-   tile="gem6"
+   tile="ring3"
   }
  }
 }
