@@ -7,6 +7,7 @@
 #define __STDC_LIMIT_MACROS
 #include <SDL.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "main.h"
 #include "thing.h"
@@ -352,40 +353,49 @@ static void *dmap_thread2_func (void *context)
 
     pthread_cond_wait(&dmap_thread2_cond, &dmap_thread2_mutex);
 
-    if (!server_level) {
-        ERR("no server level to generate monster map");
-
-        pthread_mutex_unlock(&dmap_thread2_mutex);
-        return (0);
-    }
-
-    server_level->locked++;
-
-    level_walls tmp;
-    uint32_t x, y;
-
-    for (x = 0; x < MAP_WIDTH; x++) {
-        for (y = 0; y < MAP_HEIGHT; y++) {
-            dmap_init(&tmp, &server_level->monst_map_treat_doors_as_walls);
-
+    for (;;) {
+        if (!server_level) {
             /*
-             * If a wall then we can't get to ia,t period.
+             * Happens whilst we load the level and before we set the server
+             * level pointer.
+             *
              */
-            if (server_level->
-                    monst_map_treat_doors_as_walls.walls[x][y] != ' ') {
-                continue;
-            }
+            ERR("no server level to generate monster map");
 
-            /*
-             * Set the goal.
-             */
-            tmp.walls[x][y] = 0;
-
-            dmap_process(&tmp, &dmap_monst_map_wander[x][y]);
+            sleep(1);
+            continue;
         }
-    }
 
-    server_level->locked--;
+        server_level->locked++;
+
+        level_walls tmp;
+        uint32_t x, y;
+
+        for (x = 0; x < MAP_WIDTH; x++) {
+            for (y = 0; y < MAP_HEIGHT; y++) {
+                dmap_init(&tmp, &server_level->monst_map_treat_doors_as_walls);
+
+                /*
+                 * If a wall then we can't get to it, period.
+                 */
+                if (server_level->
+                        monst_map_treat_doors_as_walls.walls[x][y] != ' ') {
+                    continue;
+                }
+
+                /*
+                 * Set the goal.
+                 */
+                tmp.walls[x][y] = 0;
+
+                dmap_process(&tmp, &dmap_monst_map_wander[x][y]);
+            }
+        }
+
+        server_level->locked--;
+
+        break;
+    }
 
     pthread_mutex_unlock(&dmap_thread2_mutex);
 
@@ -636,6 +646,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     /*
      * Try the alternative map.
      */
+#if 0
     if (t->dmap == &dmap_monst_map_treat_doors_as_passable) {
         t->dmap = &dmap_monst_map_treat_doors_as_walls;
     } else {
@@ -646,6 +657,7 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
                           false /* can_change_dir_without_moving */)) {
         return (true);
     }
+#endif
 
     /*
      * Try the wander map.
