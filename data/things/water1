@@ -5,6 +5,7 @@
  z_order=2
  is_boring
  is_food
+ health_on_use=20
  is_fragile
  tiles={
   tile={

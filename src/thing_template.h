@@ -153,7 +153,7 @@ typedef struct thing_template_ {
     uint32_t ppp12;
     uint32_t ppp13;
     uint32_t ppp14;
-    uint32_t ppp15;
+    uint32_t health_on_use;
     uint32_t tx_map_update_delay_thousandths;
     uint32_t can_be_hit_chance;
     uint32_t failure_chance;
@@ -254,7 +254,7 @@ uint32_t thing_template_get_ppp11(thing_templatep);
 uint32_t thing_template_get_ppp12(thing_templatep);
 uint32_t thing_template_get_ppp13(thing_templatep);
 uint32_t thing_template_get_ppp14(thing_templatep);
-uint32_t thing_template_get_ppp15(thing_templatep);
+uint32_t thing_template_get_health_on_use(thing_templatep);
 uint32_t thing_template_get_tx_map_update_delay_thousandths(thing_templatep);
 uint32_t thing_template_get_can_be_hit_chance(thing_templatep);
 uint32_t thing_template_get_failure_chance(thing_templatep);
