@@ -1005,7 +1005,7 @@ void wid_editor_map_wid_create (void)
                     MAP_WIDTH,
                     MAP_HEIGHT, tile_width, tile_height);
 
-    level_ed = level_new(wid_editor_map_grid_container, 0);
+    level_ed = level_new(wid_editor_map_grid_container, 0, true);
 
     wid_editor_map_vert_scroll =
         wid_new_vert_scroll_bar(wid_editor_map_window,

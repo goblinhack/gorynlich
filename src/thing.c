@@ -642,7 +642,10 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     /*
      * Flash briefly red on death.
      */
-    if (thing_is_monst(t)) {
+    if (thing_is_monst(t) || 
+        thing_is_mob_spawner(t) || 
+        thing_is_door(t)) {
+
         widp w = t->wid;
         if (w) {
             wid_set_mode(w, WID_MODE_ACTIVE);
