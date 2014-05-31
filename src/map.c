@@ -401,9 +401,9 @@ thingp map_thing_is_xxx7_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_xxx7));
 }
 
-thingp map_thing_is_xxx8_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_ring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx8));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_ring));
 }
 
 thingp map_thing_is_xxx9_at (levelp level, int32_t x, int32_t y)
@@ -645,9 +645,9 @@ tree_rootp map_all_things_is_xxx7_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx7));
 }
 
-tree_rootp map_all_things_is_xxx8_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_ring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx8));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_ring));
 }
 
 tree_rootp map_all_things_is_xxx9_at (levelp level, int32_t x, int32_t y)
@@ -903,7 +903,7 @@ thing_templatep map_find_star_cyan_at (levelp level,
 thing_templatep map_find_star_black_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx8, w));
+    return (map_find_x_at(level, x, y, thing_template_is_ring, w));
 }
 
 thing_templatep map_find_star_purple_at (levelp level,
@@ -996,10 +996,10 @@ thing_templatep map_find_item_perma_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_boring, w));
 }
 
-thing_templatep map_find_is_xxx8_at (levelp level,
+thing_templatep map_find_is_ring_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx8, w));
+    return (map_find_x_at(level, x, y, thing_template_is_ring, w));
 }
 
 thing_templatep map_find_plant_at (levelp level,
@@ -1511,9 +1511,9 @@ uint32_t level_count_is_xxx7 (levelp level)
     return (level_count_is_x(level, thing_template_is_xxx7));
 }
 
-uint32_t level_count_is_xxx8 (levelp level)
+uint32_t level_count_is_ring (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx8));
+    return (level_count_is_x(level, thing_template_is_ring));
 }
 
 uint32_t level_count_is_xxx9 (levelp level)
@@ -1593,7 +1593,7 @@ uint32_t level_count_is_boring (levelp level)
 
 uint32_t level_count_is_item_is_hidden (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx8));
+    return (level_count_is_x(level, thing_template_is_ring));
 }
 
 uint32_t level_count_is_plant (levelp level)
@@ -1762,9 +1762,9 @@ tree_rootp map_all_things_is_xxx7 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_xxx7));
 }
 
-tree_rootp map_all_things_is_xxx8 (levelp level)
+tree_rootp map_all_things_is_ring (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx8));
+    return (map_all_things_is_x(level, thing_template_is_ring));
 }
 
 tree_rootp map_all_things_is_xxx9 (levelp level)

@@ -735,11 +735,11 @@ static inline uint8_t thing_is_xxx7 (thingp t)
     return (thing_template_is_xxx7(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx8 (thingp t)
+static inline uint8_t thing_is_ring (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx8(thing_get_template(t)));
+    return (thing_template_is_ring(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_xxx9 (thingp t)
@@ -1009,9 +1009,9 @@ static inline uint8_t thing_is_xxx7_fast (thingp t)
     return (t->thing_template->is_xxx7);
 }
 
-static inline uint8_t thing_is_xxx8_fast (thingp t)
+static inline uint8_t thing_is_ring_fast (thingp t)
 {
-    return (t->thing_template->is_xxx8);
+    return (t->thing_template->is_ring);
 }
 
 static inline uint8_t thing_is_xxx9_fast (thingp t)
