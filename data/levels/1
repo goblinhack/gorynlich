@@ -276,15 +276,7 @@
   } {   
    x=2 
    y=1 
-   t="data/things/mask1" 
-  } {   
-   x=2 
-   y=1 
    t="data/things/floor2" 
-  } {   
-   x=3 
-   y=1 
-   t="data/things/potion_shield" 
   } {   
    x=3 
    y=1 
@@ -292,23 +284,11 @@
   } {   
    x=4 
    y=1 
-   t="data/things/potion_death" 
-  } {   
-   x=4 
-   y=1 
    t="data/things/floor2" 
   } {   
    x=5 
    y=1 
-   t="data/things/potion_fire" 
-  } {   
-   x=5 
-   y=1 
    t="data/things/floor2" 
-  } {   
-   x=6 
-   y=1 
-   t="data/things/potion_monsticide" 
   } {   
    x=6 
    y=1 
@@ -317,10 +297,6 @@
    x=7 
    y=1 
    t="data/things/floor2" 
-  } {   
-   x=8 
-   y=1 
-   t="data/things/key" 
   } {   
    x=8 
    y=1 
@@ -333,10 +309,6 @@
    x=10 
    y=1 
    t="data/things/floor2" 
-  } {   
-   x=11 
-   y=1 
-   t="data/things/wall2" 
   } {   
    x=11 
    y=1 
@@ -464,15 +436,7 @@
   } {   
    x=2 
    y=2 
-   t="data/things/mask2" 
-  } {   
-   x=2 
-   y=2 
    t="data/things/floor2" 
-  } {   
-   x=3 
-   y=2 
-   t="data/things/mask3" 
   } {   
    x=3 
    y=2 
@@ -481,10 +445,6 @@
    x=4 
    y=2 
    t="data/things/floor2" 
-  } {   
-   x=5 
-   y=2 
-   t="data/things/potion_monsticide" 
   } {   
    x=5 
    y=2 
@@ -512,15 +472,7 @@
   } {   
    x=11 
    y=2 
-   t="data/things/wall2" 
-  } {   
-   x=11 
-   y=2 
    t="data/things/floor2" 
-  } {   
-   x=12 
-   y=2 
-   t="data/things/death" 
   } {   
    x=12 
    y=2 
@@ -632,10 +584,6 @@
   } {   
    x=2 
    y=3 
-   t="data/things/gem3" 
-  } {   
-   x=2 
-   y=3 
    t="data/things/floor2" 
   } {   
    x=3 
@@ -652,10 +600,6 @@
   } {   
    x=5 
    y=3 
-   t="data/things/potion_monsticide" 
-  } {   
-   x=5 
-   y=3 
    t="data/things/floor2" 
   } {   
    x=6 
@@ -665,10 +609,6 @@
    x=7 
    y=3 
    t="data/things/floor2" 
-  } {   
-   x=8 
-   y=3 
-   t="data/things/keys2" 
   } {   
    x=8 
    y=3 
@@ -828,23 +768,11 @@
   } {   
    x=2 
    y=4 
-   t="data/things/gem4" 
-  } {   
-   x=2 
-   y=4 
    t="data/things/floor2" 
   } {   
    x=3 
    y=4 
-   t="data/things/gem6" 
-  } {   
-   x=3 
-   y=4 
    t="data/things/floor2" 
-  } {   
-   x=4 
-   y=4 
-   t="data/things/potion_monsticide" 
   } {   
    x=4 
    y=4 

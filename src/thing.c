@@ -1904,6 +1904,8 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
+double ox = x;
+double otx = t->x;
     double dist = DISTANCE(t->x, t->y, x, y);
 
     if (smooth) {
@@ -1956,6 +1958,9 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
         double time_step = dist;
         double ms = (1000.0 / thing_speed(t)) / (1.0 / time_step);
 
+if (thing_is_projectile(t)) {
+    LOG("%s %f->%f  wid %f   in %f",thing_logname(t),otx,ox,tl.x,ms);
+}
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
     } else {
         wid_set_tl_br(t->wid, tl, br);
@@ -2002,13 +2007,16 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
     last_id = 0;
 
     TREE_WALK_UNSAFE(tree, t) {
+
+        verify(t);
+
+        thing_templatep thing_template = t->thing_template;
+
         /*
          * If updating to all sockets, decrement the update counter for this 
          * thing. We only send updates on modified things.
          */
         if (!p) {
-            verify(t);
-
             /*
              * No change to the thing? Nothing to send.
              */
@@ -2016,13 +2024,36 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
                 continue;
             }
 
+            /*
+             * There is a change, but don't send too often.
+             */
+            if (!time_have_x_thousandths_passed_since(
+                    thing_template_get_tx_map_update_delay_thousandths(
+                                                            thing_template),
+                    t->timestamp_tx_map_update)) {
+#if 0
+if (thing_is_projectile(t)) {
+    LOG("%s don't send update %f",thing_logname(t),t->x);
+}
+#endif
+                continue;
+            }
+
+#if 0
+
+if (thing_is_projectile(t)) {
+    LOG("%s send update %f delay %d",thing_logname(t),t->x, time_get_time_cached() - t->timestamp_tx_map_update);
+}
+#endif
+            t->timestamp_tx_map_update = time_get_time_cached();
+
             t->updated--;
         }
 
         /*
          * Work out what we are going to send.
          */
-        uint8_t template_id = thing_template_to_id(t->thing_template);
+        uint8_t template_id = thing_template_to_id(thing_template);
         uint16_t id = t->thing_id;
         uint8_t tx;
         uint8_t ty;
@@ -2550,7 +2581,7 @@ void thing_fire (thingp t,
     }
 
     double dx, dy;
-    double dist_from_player = 0.7;
+    double dist_from_player = 0.2;
 
     /*
      * Try current direction.
@@ -2643,6 +2674,9 @@ void thing_fire (thingp t,
 
     thingp p = wid_get_thing(w);
 
+    /*
+     * Round up say -0.7 to -1.0
+     */
     dx *= 10.0;
     dy *= 10.0;
     dx /= (dist_from_player * 10.0);
@@ -2652,7 +2686,17 @@ void thing_fire (thingp t,
     p->dy = dy;
     p->dir = t->dir;
 
-    socket_server_tx_map_update(0 /* all clients */, server_active_things);
+    double fnexthop_x = p->x + p->dx;
+    double fnexthop_y = p->y + p->dy;
+
+    thing_server_move(p,
+            fnexthop_x,
+            fnexthop_y,
+            fnexthop_y < p->y,
+            fnexthop_y > p->y,
+            fnexthop_x < p->x,
+            fnexthop_x > p->x,
+            false);
 }
 
 uint8_t thing_server_move (thingp t,
