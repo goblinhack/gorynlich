@@ -55,8 +55,8 @@
 /*
  * Tiles
  */
-#define TILES_MAP_WIDTH                 32
-#define TILES_MAP_HEIGHT                32
+#define MAP_WIDTH                 32
+#define MAP_HEIGHT                32
 
 /*
  * The number of tiles per screen.

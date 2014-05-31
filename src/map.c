@@ -1033,8 +1033,8 @@ void map_fixup (levelp level)
     }
 #endif
 
-    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_WIDTH; x++) {
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
 
             widp mywid = 0;
 
@@ -1283,8 +1283,8 @@ static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)
 
     count = 0;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             count += map_count_x_at(level, x, y, callback);
         }
     }
@@ -1292,7 +1292,7 @@ static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)
     return (count);
 }
 
-static char this_pipe[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+static char this_pipe[MAP_WIDTH][MAP_HEIGHT];
 
 static void pipe_flood (levelp level, int32_t x, int32_t y)
 {
@@ -1316,8 +1316,8 @@ uint8_t level_pipe_find_exit (levelp level,
                               int32_t ix, int32_t iy,
                               int32_t *exit_x, int32_t *exit_y)
 {
-    int32_t exits_x[TILES_MAP_WIDTH];
-    int32_t exits_y[TILES_MAP_WIDTH];
+    int32_t exits_x[MAP_WIDTH];
+    int32_t exits_y[MAP_WIDTH];
     int32_t nexits;
     int32_t x;
     int32_t y;
@@ -1329,8 +1329,8 @@ uint8_t level_pipe_find_exit (levelp level,
 
     pipe_flood(level, ix, iy);
 
-    for (x = 1; x < TILES_MAP_WIDTH-1; x++) {
-        for (y = 1; y < TILES_MAP_HEIGHT-1; y++) {
+    for (x = 1; x < MAP_WIDTH-1; x++) {
+        for (y = 1; y < MAP_HEIGHT-1; y++) {
 
             if ((x == ix) && (y == iy)) {
                 continue;
@@ -1360,7 +1360,7 @@ uint8_t level_pipe_find_exit (levelp level,
     return (true);
 }
 
-static thingp this_door[TILES_MAP_WIDTH][TILES_MAP_HEIGHT];
+static thingp this_door[MAP_WIDTH][MAP_HEIGHT];
 
 static void door_flood (levelp level, int32_t x, int32_t y)
 {
@@ -1388,8 +1388,8 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
 
     door_flood(level, ix, iy);
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
             if (!this_door[x][y]) {
                 continue;
             }
@@ -1616,8 +1616,8 @@ static tree_rootp map_all_things_is_x (levelp level,
         DIE("no grid wid");
     }
 
-    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
-        for (x = 0; x < TILES_MAP_WIDTH; x++) {
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
 
             /*
              * Look for a floor tile where we can place stuff.
