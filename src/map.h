@@ -5,7 +5,7 @@
  */
 
 
-uint8_t map_is_xxx8_at(levelp, int32_t x, int32_t y);
+uint8_t map_is_ring_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_xxx6_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_exit_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_floor_at(levelp, int32_t x, int32_t y);
@@ -30,7 +30,7 @@ uint8_t map_is_xxx6_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_key2_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_key3_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_xxx7_at(levelp, int32_t x, int32_t y);
-uint8_t map_is_xxx8_at(levelp, int32_t x, int32_t y);
+uint8_t map_is_ring_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_xxx9_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_xxx10_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_poison_at(levelp, int32_t x, int32_t y);
@@ -48,7 +48,7 @@ uint8_t map_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_projectile_at(levelp, int32_t x, int32_t y);
 
 thing_templatep map_find_key1_at(levelp, int32_t x, int32_t y, widp *);
-thing_templatep map_find_is_xxx8_at(levelp, int32_t x, int32_t y, widp *);
+thing_templatep map_find_is_ring_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_exit_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_floor_at(levelp, int32_t x, int32_t y, widp *);
 thing_templatep map_find_food_at(levelp, int32_t x, int32_t y, widp *);
@@ -92,7 +92,7 @@ thing_templatep map_find_hidden_from_editor_at(levelp, int32_t x, int32_t y, wid
 
 void level_open_door(levelp level, int32_t ix, int32_t iy);
 
-thingp map_thing_is_xxx8_at(levelp, int32_t x, int32_t y);
+thingp map_thing_is_ring_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_thing_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_exit_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_floor_at(levelp, int32_t x, int32_t y);
@@ -118,7 +118,7 @@ thingp map_thing_is_xxx6_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_key2_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_key3_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_xxx7_at(levelp, int32_t x, int32_t y);
-thingp map_thing_is_xxx8_at(levelp, int32_t x, int32_t y);
+thingp map_thing_is_ring_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_xxx9_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_xxx9_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_poison_at(levelp, int32_t x, int32_t y);
@@ -135,8 +135,8 @@ thingp map_thing_is_scarable_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_explosion_at(levelp, int32_t x, int32_t y);
 thingp map_thing_is_hidden_from_editor_at(levelp, int32_t x, int32_t y);
 
-tree_rootp map_all_things_is_xxx8(levelp);
-tree_rootp map_all_things_is_xxx8_at(levelp, int32_t x, int32_t y);
+tree_rootp map_all_things_is_ring(levelp);
+tree_rootp map_all_things_is_ring_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_exit(levelp);
 tree_rootp map_all_things_is_exit_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_floor(levelp);
@@ -183,8 +183,8 @@ tree_rootp map_all_things_is_key3(levelp);
 tree_rootp map_all_things_is_key3_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_xxx7(levelp);
 tree_rootp map_all_things_is_xxx7_at(levelp, int32_t x, int32_t y);
-tree_rootp map_all_things_is_xxx8(levelp);
-tree_rootp map_all_things_is_xxx8_at(levelp, int32_t x, int32_t y);
+tree_rootp map_all_things_is_ring(levelp);
+tree_rootp map_all_things_is_ring_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_xxx9(levelp);
 tree_rootp map_all_things_is_xxx9_at(levelp, int32_t x, int32_t y);
 tree_rootp map_all_things_is_xxx9(levelp);
@@ -241,7 +241,7 @@ uint32_t level_count_is_xxx6(levelp);
 uint32_t level_count_is_key2(levelp);
 uint32_t level_count_is_key3(levelp);
 uint32_t level_count_is_xxx7(levelp);
-uint32_t level_count_is_xxx8(levelp);
+uint32_t level_count_is_ring(levelp);
 uint32_t level_count_is_xxx9(levelp);
 uint32_t level_count_is_xxx9(levelp);
 uint32_t level_count_is_poison(levelp);

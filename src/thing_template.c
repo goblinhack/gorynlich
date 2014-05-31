@@ -474,7 +474,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
@@ -493,7 +493,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_combustable", t->is_combustable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
         GET_OPT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);
@@ -587,7 +587,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
     PUT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
     PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
+    PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
     PUT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
     PUT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
     PUT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
@@ -606,7 +606,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_combustable", t->is_combustable);
     PUT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
     PUT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx8", t->is_xxx8);
+    PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
     PUT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
     PUT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
     PUT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);
