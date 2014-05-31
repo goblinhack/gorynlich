@@ -278,7 +278,7 @@ void level_destroy (levelp *plevel)
     myfree(level);
 }
 
-void level_update (levelp level)
+static void level_update_now (levelp level)
 {
     map_fixup(level);
 
@@ -293,7 +293,10 @@ void level_update (levelp level)
      * One time generate of expensive wander map
      */
     dmap_generate_monst_map_wander(level);
+}
 
+void level_update (levelp level)
+{
     level->need_map_update = 1;
 }
 
@@ -352,7 +355,7 @@ levelp level_load (uint32_t level_no, widp wid)
 
     myfree(dir_and_file);
 
-    level_update(level);
+    level_update_now(level);
 
     level_set_is_paused(level, false);
     level_start_timers(level);
@@ -841,6 +844,8 @@ void level_tick (levelp level)
     if (level) {
         if (level->need_map_update) {
             level->need_map_update = 0;
+
+            level_update_now(level);
 
             socket_server_tx_map_update(0, server_active_things);
             socket_server_tx_map_update(0, server_boring_things);
