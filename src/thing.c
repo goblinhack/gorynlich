@@ -2879,6 +2879,8 @@ void thing_collect (thingp t, thing_templatep tmp)
     uint32_t id;
     uint32_t quantity;
 
+    t->needs_tx_player_update = true;
+
     id = thing_template_to_id(tmp);
     quantity = 1;
 
@@ -2923,8 +2925,6 @@ void thing_collect (thingp t, thing_templatep tmp)
             thing_wield(t, tmp);
         }
     }
-
-    t->needs_tx_player_update = true;
 }
 
 void thing_used (thingp t, thing_templatep tmp)
@@ -2937,6 +2937,8 @@ void thing_used (thingp t, thing_templatep tmp)
         return;
     }
 
+    t->needs_tx_player_update = true;
+
     /*
      * Switch of weapons.
      */
@@ -2945,11 +2947,11 @@ void thing_used (thingp t, thing_templatep tmp)
         return;
     }
 
+    t->health += thing_template_get_health_on_use(tmp);
+
     THING_LOG(t, "used %s", thing_template_short_name(tmp));
 
     t->carrying[id]--;
-
-    t->needs_tx_player_update = true;
 }
 
 void thing_item_destroyed (thingp t, thing_templatep tmp)
@@ -3054,6 +3056,15 @@ void thing_server_action (thingp t,
             break;
         } else if (item == THING_POTION_MONSTICIDE) {
             level_place_potion_effect_poison(server_level, t, t->x, t->y);
+            break;
+        } else if (item == THING_WATER1) {
+            THING_SHOUT_AT(t, "Slurp.");
+            break;
+        } else if (item == THING_WATER2) {
+            THING_SHOUT_AT(t, "Urgh. Poisoned water.");
+            break;
+        } else if (item == THING_FOOD) {
+            THING_SHOUT_AT(t, "Yum.");
             break;
         }
 
