@@ -358,10 +358,7 @@ static void *dmap_thread2_func (void *context)
             /*
              * Happens whilst we load the level and before we set the server
              * level pointer.
-             *
              */
-            ERR("no server level to generate monster map");
-
             sleep(1);
             continue;
         }

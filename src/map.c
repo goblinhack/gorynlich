@@ -18,6 +18,10 @@
 
 typedef uint8_t (*map_is_at_callback)(thing_templatep);
 
+#ifdef DEBUG
+FILE *fp = 0;
+#endif
+
 static uint8_t map_is_x_at (levelp level,
                             int32_t x, int32_t y, map_is_at_callback callback)
 {
@@ -1034,8 +1038,6 @@ void map_fixup (levelp level)
     widp w;
                 
 #ifdef DEBUG
-    FILE *fp;
-
     if (!fp) {
         fp = fopen("map.txt","w");
     }
@@ -1053,6 +1055,7 @@ void map_fixup (levelp level)
 
             if (map_find_wall_at(level, x, y, &w)) {
 #ifdef DEBUG
+if (level != server_level)
                 fprintf(fp,"x");
 #endif
                 mywid = w;
@@ -1060,6 +1063,7 @@ void map_fixup (levelp level)
                 mywid = w;
             } else if (map_find_door_at(level, x, y, &w)) {
 #ifdef DEBUG
+if (level != server_level)
                 fprintf(fp,"D");
 #endif
                 mywid = w;
@@ -1067,6 +1071,7 @@ void map_fixup (levelp level)
 
             if (!mywid) {
 #ifdef DEBUG
+if (level != server_level)
                 fprintf(fp," ");
 #endif
                 continue;
