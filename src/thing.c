@@ -736,9 +736,8 @@ static void thing_hit_ (thingp t,
     /*
      * Take note of the hit so we can send an event to the client.
      */
-    t->is_hit = true;
-CON("hit on server %s",thing_logname(t));
-
+    t->is_hit_success = true;
+    t->is_hit_miss = false;
     if (!t->updated) {
         t->updated++;
     }
@@ -816,28 +815,24 @@ void thing_hit (thingp t,
         }
     }
 
-    /*
-     * If called via the server this is just an update to do an effect on hit.
-     */
-    if (!t->on_server) {
-        /*
-         * Flash briefly red on death.
-         */
-        if (thing_is_monst(t) || 
-            thing_is_mob_spawner(t) || 
-            thing_is_door(t)) {
-
-            widp w = t->wid;
-            if (w) {
-                wid_set_mode(w, WID_MODE_ACTIVE);
-                wid_set_color(w, WID_COLOR_BLIT, RED);
-            }
-        }
+    if (t->is_dead) {
         return;
     }
 
-    if (t->is_dead) {
-        return;
+    /*
+     * Flash briefly red on attempted hits..
+     */
+    if (thing_is_monst(t) || 
+        thing_is_mob_spawner(t) || 
+        thing_is_door(t)) {
+
+        /*
+         * Assume missed due to the logic below where we detect chance.
+         */
+        t->is_hit_miss = true;
+        if (!t->updated) {
+            t->updated++;
+        }
     }
 
     /*
@@ -876,7 +871,7 @@ void thing_hit (thingp t,
     }
 
     /*
-     * Allow now more hits than x per second by the hitter.
+     * Allow no more hits than x per second by the hitter.
      */
     if (hitter) {
         /*
@@ -916,6 +911,28 @@ void thing_hit (thingp t,
         myfree(tmp);
     } else {
         thing_hit_(t, hitter, damage, 0);
+    }
+}
+
+static void thing_effect_hit_success (thingp t)
+{
+    verify(t);
+
+    widp w = t->wid;
+    if (w) {
+        wid_set_mode(w, WID_MODE_ACTIVE);
+        wid_set_color(w, WID_COLOR_BLIT, PINK);
+    }
+}
+
+static void thing_effect_hit_miss (thingp t)
+{
+    verify(t);
+
+    widp w = t->wid;
+    if (w) {
+        wid_set_mode(w, WID_MODE_ACTIVE);
+        wid_set_color(w, WID_COLOR_BLIT, RED);
     }
 }
 
@@ -2085,15 +2102,25 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         }
 
         uint8_t state = t->dir | 
-            ((t->resync     ? 1 : 0) << THING_STATE_BIT_SHIFT_RESYNC) |
-            ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_PRESENT) |
-            ((t->is_hit     ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_PRESENT);
+            ((t->resync         ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_RESYNC) |
+            ((t->is_dead        ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
+            ((t->is_hit_success ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
+            ((t->is_hit_miss    ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_PRESENT);
 
         const uint8_t ext =
-            ((t->is_dead    ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
-            ((t->is_hit     ? 1 : 0) << THING_STATE_BIT_SHIFT_EXT_IS_HIT);
+            ((t->is_dead        ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
+            ((t->is_hit_success ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS) |
+            ((t->is_hit_miss    ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS);
 
-        t->is_hit = 0;
+        t->is_hit_success = 0;
+        t->is_hit_miss = 0;
 
         /*
          * Do we need to encode the thing template? Yes if this is the first 
@@ -2405,9 +2432,12 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             }
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT)) {
-CON("hit %s",thing_logname(t));
-            thing_hit(t, 0, 0, "from server");
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS)) {
+            thing_effect_hit_miss(t);
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS)) {
+            thing_effect_hit_success(t);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
@@ -2867,6 +2897,14 @@ void thing_collect (thingp t, thing_templatep tmp)
                   thing_template_short_name(tmp));
     } else {
         THING_LOG(t, "collects %s", thing_template_short_name(tmp));
+    }
+
+    /*
+     * If treasure, just add it to the score. Don't carry it.
+     */
+    if (thing_template_is_weapon(tmp)) {
+        t->score += thing_template_get_score_on_collect(tmp) * quantity;
+        return;
     }
 
     t->carrying[id] += quantity;

@@ -230,7 +230,8 @@ enum {
 
 enum {
     THING_STATE_BIT_SHIFT_EXT_IS_DEAD,
-    THING_STATE_BIT_SHIFT_EXT_IS_HIT,
+    THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS,
+    THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS,
 };
 
 uint8_t thing_server_move(thingp t,
@@ -543,7 +544,8 @@ typedef struct thing_ {
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_dead:1;
-    uint32_t is_hit:1;
+    uint32_t is_hit_success:1;
+    uint32_t is_hit_miss:1;
     uint32_t on_active_list:1;
     uint32_t on_server:1;
     uint32_t on_server_player_things:1;
@@ -570,13 +572,6 @@ static inline uint8_t thing_is_dead (thingp t)
     verify(t);
 
     return (t->is_dead);
-}
-
-static inline uint8_t thing_is_hit (thingp t)
-{
-    verify(t);
-
-    return (t->is_hit);
 }
 
 static inline uint8_t thing_is_exit (thingp t)

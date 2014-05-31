@@ -4,6 +4,7 @@
  z_depth=2
  z_order=2
  is_boring
+ score_on_collect=10
  is_treasure
  tiles={
   tile={
