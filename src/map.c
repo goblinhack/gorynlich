@@ -14,6 +14,7 @@
 #include "level.h"
 #include "bits.h"
 #include "socket.h"
+#include "wid_game_map_server.h"
 
 typedef uint8_t (*map_is_at_callback)(thing_templatep);
 
@@ -759,11 +760,14 @@ static thing_templatep map_find_x_at (levelp level,
          * Need to filter dead things so map fixup can no longer see wall
          * tiles that are in the process of being destroyed.
          */
-        if (thing_it) {
-            if (thing_is_dead(thing_it)) {
-                w = wid_grid_find_next(grid_wid, w, x, y);
-                continue;
-            }
+        if (!thing_it) {
+            w = wid_grid_find_next(grid_wid, w, x, y);
+            continue;
+        }
+
+        if (thing_is_dead(thing_it)) {
+            w = wid_grid_find_next(grid_wid, w, x, y);
+            continue;
         }
 
         thing_template = wid_get_thing_template(w);
@@ -1015,21 +1019,43 @@ void map_fixup (levelp level)
     int32_t dy;
     thing_templatep nbrs[3][3];
     widp w;
+                
+#ifdef DEBUG
+    FILE *fp;
 
-    for (x = 0; x < TILES_MAP_WIDTH; x++) {
-        for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+    if (!fp) {
+        fp = fopen("map.txt","w");
+    }
+    if (level == server_level) {
+        fprintf(fp,"update server level %p\n", level);
+    } else {
+        fprintf(fp,"update client level %p\n",level);
+    }
+#endif
+
+    for (y = 0; y < TILES_MAP_HEIGHT; y++) {
+        for (x = 0; x < TILES_MAP_WIDTH; x++) {
 
             widp mywid = 0;
 
             if (map_find_wall_at(level, x, y, &w)) {
+#ifdef DEBUG
+                fprintf(fp,"x");
+#endif
                 mywid = w;
             } else if (map_find_pipe_at(level, x, y, &w)) {
                 mywid = w;
             } else if (map_find_door_at(level, x, y, &w)) {
+#ifdef DEBUG
+                fprintf(fp,"D");
+#endif
                 mywid = w;
             }
 
             if (!mywid) {
+#ifdef DEBUG
+                fprintf(fp," ");
+#endif
                 continue;
             }
 
@@ -1239,7 +1265,14 @@ void map_fixup (levelp level)
             wid_set_tilename(mywid, tilename);
             wid_set_font(mywid, small_font);
         }
+#ifdef DEBUG
+        fprintf(fp,"\n");
+#endif
     }
+#ifdef DEBUG
+    fprintf(fp,"\n");
+    fprintf(fp,"\n");
+#endif
 }
 
 static uint32_t level_count_is_x (levelp level, map_is_at_callback callback)
