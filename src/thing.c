@@ -2031,20 +2031,9 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
                     thing_template_get_tx_map_update_delay_thousandths(
                                                             thing_template),
                     t->timestamp_tx_map_update)) {
-#if 0
-if (thing_is_projectile(t)) {
-    LOG("%s don't send update %f",thing_logname(t),t->x);
-}
-#endif
                 continue;
             }
 
-#if 0
-
-if (thing_is_projectile(t)) {
-    LOG("%s send update %f delay %d",thing_logname(t),t->x, time_get_time_cached() - t->timestamp_tx_map_update);
-}
-#endif
             t->timestamp_tx_map_update = time_get_time_cached();
 
             t->updated--;
