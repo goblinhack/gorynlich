@@ -329,7 +329,7 @@ void thing_tick_all (void)
         static uint32_t ts;
 
         if (time_have_x_thousandths_passed_since(
-                                    DELAY_THOUSANDTHS_TX_MAP_UPDATE, ts)) {
+                            DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST, ts)) {
             ts = time_get_time_cached();
 
             socket_server_tx_map_update(0 /* all clients */, 

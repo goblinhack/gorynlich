@@ -37,7 +37,15 @@ static uint8_t map_is_x_at (levelp level,
     while (w) {
         thingp thing_it = wid_get_thing(w);
 
-        if (thing_it) {
+        /*
+         * No things on level editor, just templates.
+         */
+        if (!level_is_editor(level)) {
+            if (!thing_it) {
+                w = wid_grid_find_next(grid_wid, w, x, y);
+                continue;
+            }
+
             if (thing_is_dead(thing_it)) {
                 w = wid_grid_find_next(grid_wid, w, x, y);
                 continue;
@@ -757,17 +765,22 @@ static thing_templatep map_find_x_at (levelp level,
         thingp thing_it = wid_get_thing(w);
 
         /*
-         * Need to filter dead things so map fixup can no longer see wall
-         * tiles that are in the process of being destroyed.
+         * No things on level editor, just templates.
          */
-        if (!thing_it) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
+        if (!level_is_editor(level)) {
+            /*
+             * Need to filter dead things so map fixup can no longer see wall
+             * tiles that are in the process of being destroyed.
+             */
+            if (!thing_it) {
+                w = wid_grid_find_next(grid_wid, w, x, y);
+                continue;
+            }
 
-        if (thing_is_dead(thing_it)) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
+            if (thing_is_dead(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y);
+                continue;
+            }
         }
 
         thing_template = wid_get_thing_template(w);

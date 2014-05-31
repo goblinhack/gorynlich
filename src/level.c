@@ -278,7 +278,7 @@ void level_destroy (levelp *plevel)
     myfree(level);
 }
 
-static void level_update_now (levelp level)
+void level_update_now (levelp level)
 {
     map_fixup(level);
 
