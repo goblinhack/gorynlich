@@ -185,9 +185,9 @@ static uint8_t resource_init_23 (void *context)
         "potion_death",
         "potion_life",
         "potion_shield",
-        "mask1",
-        "mask2",
-        "mask3",
+        "ring1",
+        "ring2",
+        "ring3",
         "gem1",
         "gem2",
         "gem3",
@@ -1536,9 +1536,9 @@ static uint8_t resource_init_23 (void *context)
     /*
      * Lowest priority junk
      */
-    thing_template_load(&THING_MASK1, "data/things/mask1");
-    thing_template_load(&THING_MASK2, "data/things/mask2");
-    thing_template_load(&THING_MASK3, "data/things/mask3");
+    thing_template_load(&THING_MASK1, "data/things/ring1");
+    thing_template_load(&THING_RING2, "data/things/ring2");
+    thing_template_load(&THING_RING3, "data/things/ring3");
     thing_template_load(&THING_GEM1, "data/things/gem1");
     thing_template_load(&THING_GEM2, "data/things/gem2");
     thing_template_load(&THING_GEM3, "data/things/gem3");

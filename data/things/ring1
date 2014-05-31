@@ -1,0 +1,15 @@
+{
+ short_name="ring"
+ tooltip="magical ring lesser"
+ z_depth=2
+ z_order=2
+ is_boring
+ is_treasure
+ is_ring
+ score_on_collect=5000
+ tiles={
+  tile={
+   tile="ring2"
+  }
+ }
+}

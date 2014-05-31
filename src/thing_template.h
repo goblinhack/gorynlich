@@ -182,7 +182,7 @@ typedef struct thing_template_ {
     uint8_t is_xxx8:1;
     uint8_t is_xxx9:1;
     uint8_t is_xxx10:1;
-    uint8_t is_xxx11:1;
+    uint8_t is_ring:1;
     uint8_t is_poison:1;
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
@@ -393,9 +393,9 @@ static inline uint8_t thing_template_is_xxx10 (thing_templatep t)
     return (t->is_xxx10);
 }
 
-static inline uint8_t thing_template_is_xxx11 (thing_templatep t)
+static inline uint8_t thing_template_is_ring (thing_templatep t)
 {
-    return (t->is_xxx11);
+    return (t->is_ring);
 }
 
 static inline uint8_t thing_template_is_poison (thing_templatep t)
