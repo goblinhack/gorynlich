@@ -416,7 +416,9 @@ void CROAK (const char *fmt, ...)
     quit();
 }
 
-static void thing_shout_at_ (thingp t, const char *fmt, va_list args)
+static void thing_shout_at_ (thingp t, 
+                             uint32_t level,
+                             const char *fmt, va_list args)
 {
     static char buf[MAXSTR];
     uint32_t len;
@@ -441,17 +443,19 @@ static void thing_shout_at_ (thingp t, const char *fmt, va_list args)
         return;
     }
 
-    socket_tx_server_shout_only_to(buf + len, s);
+    socket_tx_server_shout_only_to(level, buf + len, s);
 }
 
-void THING_SHOUT_AT (thingp t, const char *fmt, ...)
+void THING_SHOUT_AT (thingp t, 
+                     uint32_t level,
+                     const char *fmt, ...)
 {
     va_list args;
 
     verify(t);
 
     va_start(args, fmt);
-    thing_shout_at_(t, fmt, args);
+    thing_shout_at_(t, level, fmt, args);
     va_end(args);
 }
 
@@ -673,6 +677,7 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     wid_console_log(buf + len);
     term_log(buf + len);
 
+#if 0
     widp w = wid_button_transient(buf + len, 0);
     color c = BLACK;
     c.a = 150;
@@ -681,6 +686,7 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     wid_set_color(w, WID_COLOR_BR, c);
     wid_move_to_pct_centered(w, 0.5, 0.1);
     wid_set_text_outline(w, true);
+#endif
 
     wid_notify(level, buf + len);
 }

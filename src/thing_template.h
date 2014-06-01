@@ -136,8 +136,8 @@ typedef struct thing_template_ {
     /*
      * Various bounties.
      */
-    int16_t bonus_score_on_death;
-    int16_t bonus_score_on_collect;
+    int32_t bonus_score_on_death;
+    int32_t bonus_score_on_collect;
     int16_t bonus_health_on_use;
 
     uint32_t ppp1;
@@ -237,9 +237,9 @@ uint32_t thing_template_get_speed(thing_templatep);
 uint32_t thing_template_get_lifespan(thing_templatep);
 int16_t thing_template_get_health(thing_templatep);
 uint32_t thing_template_get_damage(thing_templatep);
-int16_t thing_template_get_bonus_score_on_death(thing_templatep);
+int32_t thing_template_get_bonus_score_on_death(thing_templatep);
 uint32_t thing_template_get_vision_distance(thing_templatep);
-int16_t thing_template_get_bonus_score_on_collect(thing_templatep);
+int32_t thing_template_get_bonus_score_on_collect(thing_templatep);
 uint32_t thing_template_get_ppp1(thing_templatep);
 uint32_t thing_template_get_ppp2(thing_templatep);
 uint32_t thing_template_get_ppp3(thing_templatep);

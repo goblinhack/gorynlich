@@ -63,7 +63,7 @@ void server_stop (void)
         return;
     }
 
-    socket_tx_server_shout("SERVER GOING DOWN");
+    socket_tx_server_shout(CRITICAL, "SERVER GOING DOWN");
 
     socket_tx_server_close();
 
@@ -143,7 +143,7 @@ static void server_rx_client_join (socketp s)
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s joined the game", p->name);
-    socket_tx_server_shout_except_to(tmp, s);
+    socket_tx_server_shout_except_to(WARNING, tmp, s);
     myfree(tmp);
 
     socket_server_tx_map_update(s, server_active_things);
@@ -181,7 +181,7 @@ static void server_rx_client_leave (socketp s)
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s left the game", p->name);
-    socket_tx_server_shout(tmp);
+    socket_tx_server_shout(WARNING, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -201,7 +201,7 @@ static void server_rx_client_close (socketp s)
         socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s suddenly left the game", p->name);
-    socket_tx_server_shout(tmp);
+    socket_tx_server_shout(WARNING, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -510,7 +510,7 @@ uint8_t server_shout (tokens_t *tokens, void *context)
 
     strncpy(shout, tmp, sizeof(shout) - 1);
 
-    socket_tx_server_shout(shout);
+    socket_tx_server_shout(CHAT, shout);
 
     myfree(tmp);
 

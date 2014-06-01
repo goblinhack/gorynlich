@@ -1737,12 +1737,14 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
     }
 }
 
-void socket_tx_server_shout (const char *txt)
+void socket_tx_server_shout (uint32_t level, const char *txt)
 {
     UDPpacket *packet = socket_alloc_msg();
 
     msg_server_shout msg = {0};
     msg.type = MSG_SERVER_SHOUT;
+    msg.level = level;
+
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1778,12 +1780,14 @@ void socket_tx_server_shout (const char *txt)
     socket_free_msg(packet);
 }
 
-void socket_tx_server_shout_except_to (const char *txt, socketp except)
+void socket_tx_server_shout_except_to (uint32_t level, const char *txt, 
+                                       socketp except)
 {
     UDPpacket *packet = socket_alloc_msg();
 
     msg_server_shout msg = {0};
     msg.type = MSG_SERVER_SHOUT;
+    msg.level = level;
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1823,12 +1827,14 @@ void socket_tx_server_shout_except_to (const char *txt, socketp except)
     socket_free_msg(packet);
 }
 
-void socket_tx_server_shout_only_to (const char *txt, socketp target)
+void socket_tx_server_shout_only_to (uint32_t level, const char *txt, 
+                                     socketp target)
 {
     UDPpacket *packet = socket_alloc_msg();
 
     msg_server_shout msg = {0};
     msg.type = MSG_SERVER_SHOUT;
+    msg.level = level;
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
