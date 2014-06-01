@@ -542,7 +542,7 @@ void thing_destroy (thingp t, const char *why)
             LOG("\"%s\" player died", p->name);
 
             char *tmp = dynprintf("%s died", p->name);
-            socket_tx_server_shout(tmp);
+            socket_tx_server_shout(CRITICAL, tmp);
             myfree(tmp);
 
             break;
@@ -578,7 +578,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     if (thing_is_player(t)) {
         THING_LOG(t, "dead (%s)", reason);
 
-        THING_SHOUT_AT(t, "Killed by %s", reason);
+        THING_SHOUT_AT(t, CRITICAL, "Killed by %s", reason);
     }
 }
 
@@ -765,7 +765,13 @@ static void thing_hit_ (thingp t,
             }
 
             t->health = 0;
-            thing_dead(t, hitter, "hit [%s] for %u", reason, damage);
+            if (hitter) {
+                thing_dead(t, hitter, "%s",
+                           thing_template_short_name(hitter->thing_template));
+            } else {
+                thing_dead(t, hitter, "hit");
+            }
+
             damage -= t->health;
 
             /*
@@ -2674,7 +2680,7 @@ void thing_fire (thingp t,
      */
     thing_templatep weapon = t->weapon;
     if (!weapon) {
-        THING_SHOUT_AT(t, "You have no weapon");
+        THING_SHOUT_AT(t, WARNING, "You have no weapon");
         return;
     }
 
@@ -2910,7 +2916,8 @@ void thing_wield (thingp t, thing_templatep tmp)
 
     t->weapon = tmp;
 
-    THING_SHOUT_AT(t, "You wield the %s", thing_template_short_name(tmp));
+    THING_SHOUT_AT(t, INFO,
+                   "You wield the %s", thing_template_short_name(tmp));
 }
 
 void thing_collect (thingp t, thing_templatep tmp)
@@ -2947,6 +2954,7 @@ void thing_collect (thingp t, thing_templatep tmp)
      * Bonus for collecting?
      */
     t->score += thing_template_get_bonus_score_on_collect(tmp) * quantity;
+LOG("%s %d",thing_template_name(tmp),thing_template_get_bonus_score_on_collect(tmp));
 
     /*
      * If treasure, just add it to the score. Don't carry it.
@@ -2964,7 +2972,7 @@ void thing_collect (thingp t, thing_templatep tmp)
     }
 
     if (thing_is_player(t)) {
-        THING_SHOUT_AT(t, "You collect the %s", 
+        THING_SHOUT_AT(t, INFO, "You collect the %s", 
                        thing_template_short_name(tmp));
     }
 
@@ -3033,7 +3041,7 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
     if (thing_template_is_weapon(tmp)) {
         thing_unwield(t);
 
-        THING_SHOUT_AT(t, "Your weapon crumbles to dust");
+        THING_SHOUT_AT(t, WARNING, "Your weapon crumbles to dust");
 
         thing_wield_next_weapon(t);
     }
@@ -3103,7 +3111,7 @@ void thing_server_action (thingp t,
             /*
              * Sneaky.
              */
-            THING_SHOUT_AT(t, "You do not have that item");
+            THING_SHOUT_AT(t, WARNING, "You do not have that item");
             return;
         }
 
@@ -3122,20 +3130,20 @@ void thing_server_action (thingp t,
             level_place_potion_effect_cloudkill(server_level, t, t->x, t->y);
             break;
         } else if (item == THING_WATER) {
-            THING_SHOUT_AT(t, "Slurp");
+            THING_SHOUT_AT(t, INFO, "Slurp");
             break;
         } else if (item == THING_WATER_POISON) {
-            THING_SHOUT_AT(t, "Urgh. Poisoned water");
+            THING_SHOUT_AT(t, WARNING, "Urgh. Poisoned water");
             break;
         } else if (item == THING_FOOD) {
-            THING_SHOUT_AT(t, "Yum");
+            THING_SHOUT_AT(t, INFO, "Yum");
             break;
         }
 
         /*
          * Failed to use.
          */
-        THING_SHOUT_AT(t, "You fail to use the %s", 
+        THING_SHOUT_AT(t, WARNING, "You fail to use the %s", 
                        thing_template_short_name(thing_template));
         return;
 
@@ -3226,7 +3234,7 @@ void thing_server_action (thingp t,
         /*
          * Urk!
          */
-        THING_SHOUT_AT(t, "Drop failed");
+        THING_SHOUT_AT(t, INFO, "Drop failed");
 
         /*
          * Failed to drop.

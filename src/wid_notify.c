@@ -15,12 +15,10 @@
 #include "tree.h"
 #include "string_ext.h"
 
-static const int32_t PAD_X = 80;
-static const int32_t PAD_Y = 25;
-
 typedef struct {
     uint32_t created;
-    widp w;
+    widp notify_box_wid;
+    char text[200];
 } wid_notify_elem;
 
 #define MAX_ELEMS 10
@@ -47,7 +45,7 @@ wid_notify_internal (const char *text, uint32_t level)
     uint32_t chars_per_line;
     uint32_t max_rows;
 
-    chars_per_line = 20;
+    chars_per_line = 25;
     max_rows = 22;
 
     d = split(text, chars_per_line);
@@ -100,8 +98,12 @@ wid_notify_internal (const char *text, uint32_t level)
         switch (level) {
         case CHAT:
             bg = BLUE;
-            bg.a = 20;
             fg = WHITE;
+            break;
+        case GENINFO:
+            bg = BLUE;
+            bg.a = 100;
+            fg = YELLOW;
             break;
         case INFO:
             bg = WHITE;
@@ -118,13 +120,14 @@ wid_notify_internal (const char *text, uint32_t level)
         }
 
         wid_set_color(wid_notify_window, WID_COLOR_BG, bg);
+        wid_set_color(wid_notify_window, WID_COLOR_TEXT, fg);
 
         color c = WHITE;
-        c.a = 150;
+        c.a = 50;
         wid_set_color(wid_notify_window, WID_COLOR_TL, c);
         wid_set_color(wid_notify_window, WID_COLOR_BR, c);
 
-        wid_move_to_pct(wid_notify_window, X, 0);
+        wid_move_to_pct(wid_notify_window, X + 0.2, 1.0);
     }
 
     {
@@ -171,11 +174,12 @@ wid_notify_internal (const char *text, uint32_t level)
 
             child = wid_new_container(wid_notify_container,
                                       "wid notify container3");
+
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, n->line);
             wid_set_text_lhs(child, true);
             wid_set_font(child, vsmall_font);
-//            wid_set_text_outline(child, true);
+            wid_set_text_outline(child, true);
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
         }
 
@@ -209,9 +213,10 @@ static void wid_notify_move_wids (void)
         wid_notify_elem *elem = &elems[i];
 
         h -= 
-            wid_get_height(elem->w) / (double)global_config.video_gl_height;
+            wid_get_height(elem->notify_box_wid) / 
+                (double)global_config.video_gl_height;
 
-        wid_move_to_pct_in(elem->w, X, h, 500);
+        wid_move_to_pct_in(elem->notify_box_wid, X, h, 200);
     }
 }
 
@@ -225,7 +230,7 @@ static void wid_notify_scroll (void)
      * Pop the head element.
      */
     wid_notify_elem *elem = &elems[0];
-    wid_destroy(&elem->w);
+    wid_destroy(&elem->notify_box_wid);
     nelems--;
 
     /*
@@ -234,11 +239,14 @@ static void wid_notify_scroll (void)
     uint32_t i;
 
     for (i = 0; i < nelems; i++) {
-        elems[i].w = elems[i+1].w;
-        elems[i].created = elems[i+1].created;
+        wid_notify_elem *e = &elems[i];
+        wid_notify_elem *f = &elems[i+1];
+
+        memcpy(e, f, sizeof(*e));
     }
-    elems[i].w = 0;
-    elems[i].created = 0;
+
+    wid_notify_elem *e = &elems[i];
+    memset(e, 0, sizeof(*e));
 
     wid_notify_move_wids();
 }
@@ -247,6 +255,17 @@ widp wid_notify (uint32_t level, const char *text)
 {
     widp w;
 
+    if (nelems) {
+        wid_notify_elem *e = &elems[nelems - 1];
+
+        if (!strcmp(e->text, text)) {
+            wid_set_mode(e->notify_box_wid, WID_MODE_ACTIVE);
+            wid_set_color(e->notify_box_wid, WID_COLOR_BG, RED);
+
+            return (e->notify_box_wid);
+        }
+    }
+
     w = wid_notify_internal(text, level);
 
     while (nelems >= MAX_ELEMS - 1) {
@@ -254,8 +273,12 @@ widp wid_notify (uint32_t level, const char *text)
     }
 
     int32_t timestamp_now = time_update_time_milli();
-    elems[nelems].created = timestamp_now;
-    elems[nelems].w = w;
+
+    wid_notify_elem *e = &elems[nelems];
+    e->created = timestamp_now;
+    e->notify_box_wid = w;
+    strncpy(e->text, text, sizeof(e->text) - 1);
+
     nelems++;
 
     wid_notify_move_wids();
@@ -265,15 +288,6 @@ widp wid_notify (uint32_t level, const char *text)
 
 void wid_notify_tick (void)
 {
-    static int x;
-
-    if (!x) {
-        wid_notify(INFO, "you kill the long named creatuee");
-        wid_notify(WARNING, "there");
-        wid_notify(CRITICAL, "you");
-        x = 1;
-    }
-
     if (!nelems) {
         return;
     }

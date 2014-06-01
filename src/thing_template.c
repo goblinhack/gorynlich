@@ -428,8 +428,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT16(ctx, "damage", t->damage);
         GET_OPT_NAMED_UINT16(ctx, "lifespan", t->lifespan);
         GET_OPT_NAMED_UINT8(ctx, "vision_distance", t->vision_distance);
-        GET_OPT_NAMED_INT16(ctx, "bonus_score_on_death", t->bonus_score_on_death);
-        GET_OPT_NAMED_INT16(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
+        GET_OPT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
+        GET_OPT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
         GET_OPT_NAMED_INT16(ctx, "bonus_health_on_use", t->bonus_health_on_use);
         GET_OPT_NAMED_UINT32(ctx, "ppp1", t->ppp1);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
@@ -683,7 +683,7 @@ uint32_t thing_template_get_lifespan (thing_templatep t)
     return (t->lifespan);
 }
 
-int16_t thing_template_get_bonus_score_on_death (thing_templatep t)
+int32_t thing_template_get_bonus_score_on_death (thing_templatep t)
 {
     return (t->bonus_score_on_death);
 }
@@ -693,7 +693,7 @@ uint32_t thing_template_get_vision_distance (thing_templatep t)
     return (t->vision_distance);
 }
 
-int16_t thing_template_get_bonus_score_on_collect (thing_templatep t)
+int32_t thing_template_get_bonus_score_on_collect (thing_templatep t)
 {
     return (t->bonus_score_on_collect);
 }

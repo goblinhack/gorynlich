@@ -26,6 +26,7 @@
 #include "music.h"
 #include "level.h"
 #include "timer.h"
+#include "wid_notify.h"
 
 static widp wid_intro;
 static widp wid_intro_background;
@@ -431,6 +432,9 @@ static void wid_intro_create (void)
     if (wid_intro) {
         return;
     }
+
+    wid_notify(GENINFO, "Press h for help");
+    wid_notify(GENINFO, "Press s for quick start single player");
 
     music_play_intro();
 
