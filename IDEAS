@@ -1,12 +1,23 @@
 bugs
 ---
 
+move chest/water up 2 pixels
+poison polymorph on collect
+s/you collect/collect
+cloud kill crash
+killed by "explosion7"
+crumble auto weapon use picked a key and tried to fire it
+item collect needs faster tx map update
+glitchy when lots of explosions
+lots of ghosts FPS down to 25
 tooltips
 collect food
 poison food
-gems as points
 monsters do not spawn onto treasure
 monsters get blocked on treasure?
+weapon for dwarf
+arrow shot into wall
+level ed, fill with potion failed
 level ed, first select of a thing does not choose it
 
 ideas
