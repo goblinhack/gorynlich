@@ -116,7 +116,7 @@ typedef struct thing_template_ {
     /*
      * Vitality.
      */
-    uint16_t health;
+    int16_t health;
 
     /*
      * Damage on hits.
@@ -136,8 +136,9 @@ typedef struct thing_template_ {
     /*
      * Various bounties.
      */
-    uint16_t score_on_death;
-    uint16_t score_on_collect;
+    int16_t bonus_score_on_death;
+    int16_t bonus_score_on_collect;
+    int16_t bonus_health_on_use;
 
     uint32_t ppp1;
     uint32_t ppp2;
@@ -153,7 +154,6 @@ typedef struct thing_template_ {
     uint32_t ppp12;
     uint32_t ppp13;
     uint32_t ppp14;
-    uint32_t health_on_use;
     uint32_t tx_map_update_delay_thousandths;
     uint32_t can_be_hit_chance;
     uint32_t failure_chance;
@@ -178,7 +178,7 @@ typedef struct thing_template_ {
     uint8_t is_xxx6:1;
     uint8_t is_key2:1;
     uint8_t is_key3:1;
-    uint8_t is_xxx7:1;
+    uint8_t is_fire:1;
     uint8_t is_ring:1;
     uint8_t is_xxx9:1;
     uint8_t is_xxx10:1;
@@ -235,11 +235,11 @@ uint8_t thing_template_get_z_depth(thing_templatep);
 uint8_t thing_template_get_z_order(thing_templatep);
 uint32_t thing_template_get_speed(thing_templatep);
 uint32_t thing_template_get_lifespan(thing_templatep);
-uint32_t thing_template_get_health(thing_templatep);
+int16_t thing_template_get_health(thing_templatep);
 uint32_t thing_template_get_damage(thing_templatep);
-uint32_t thing_template_get_score_on_death(thing_templatep);
+int16_t thing_template_get_bonus_score_on_death(thing_templatep);
 uint32_t thing_template_get_vision_distance(thing_templatep);
-uint32_t thing_template_get_score_on_collect(thing_templatep);
+int16_t thing_template_get_bonus_score_on_collect(thing_templatep);
 uint32_t thing_template_get_ppp1(thing_templatep);
 uint32_t thing_template_get_ppp2(thing_templatep);
 uint32_t thing_template_get_ppp3(thing_templatep);
@@ -254,7 +254,7 @@ uint32_t thing_template_get_ppp11(thing_templatep);
 uint32_t thing_template_get_ppp12(thing_templatep);
 uint32_t thing_template_get_ppp13(thing_templatep);
 uint32_t thing_template_get_ppp14(thing_templatep);
-uint32_t thing_template_get_health_on_use(thing_templatep);
+int16_t thing_template_get_bonus_health_on_use(thing_templatep);
 uint32_t thing_template_get_tx_map_update_delay_thousandths(thing_templatep);
 uint32_t thing_template_get_can_be_hit_chance(thing_templatep);
 uint32_t thing_template_get_failure_chance(thing_templatep);
@@ -373,9 +373,9 @@ static inline uint8_t thing_template_is_key3 (thing_templatep t)
     return (t->is_key3);
 }
 
-static inline uint8_t thing_template_is_xxx7 (thing_templatep t)
+static inline uint8_t thing_template_is_fire (thing_templatep t)
 {
-    return (t->is_xxx7);
+    return (t->is_fire);
 }
 
 static inline uint8_t thing_template_is_ring (thing_templatep t)

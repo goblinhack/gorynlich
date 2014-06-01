@@ -1,42 +1,41 @@
 {
- short_name="explosion2"
- tooltip="flames!"
+ short_name="cloudkill4"
+ tooltip="cloudkill cloud!"
  z_depth=2
  z_order=2
  is_animated
  is_hidden_from_editor
- is_explosion
-is_fire
+ is_poison
  is_collision_map_medium
- damage=150
+ damage=200
  hit_delay_tenths=1
  tiles={
   tile={
-   tile="explosion2.1"
+   tile="cloudkill4.1"
    delay=50
   }
   tile={
-   tile="explosion2.2"
+   tile="cloudkill4.2"
    delay=50
   }
   tile={
-   tile="explosion2.3"
+   tile="cloudkill4.3"
    delay=50
   }
   tile={
-   tile="explosion2.4"
+   tile="cloudkill4.4"
    delay=50
   }
   tile={
-   tile="explosion2.5"
+   tile="cloudkill4.5"
    delay=50
   }
   tile={
-   tile="explosion2.6"
+   tile="cloudkill4.6"
    delay=50
   }
   tile={
-   tile="explosion2.7"
+   tile="cloudkill4.7"
    delay=50
   }
   tile={

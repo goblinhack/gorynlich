@@ -12,6 +12,7 @@
 #include "gl.h"
 #include "wid.h"
 #include "wid_console.h"
+#include "wid_notify.h"
 #include "color.h"
 #include "time.h"
 #include "thing.h"
@@ -818,6 +819,7 @@ void sdl_loop (void)
         int32_t timestamp_now = time_update_time_milli();
 
         if (timestamp_now - timestamp_then > 20) {
+
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
              * to process the above.
@@ -907,12 +909,23 @@ void sdl_loop (void)
          * FPS counter.
          */
         if (!HEADLESS) {
-            if (fps_enabled) {
-                static char fps_text[10] = {0};
+            /*
+             * Very occasional.
+             */
+            if (timestamp_now - timestamp_then2 >= 1000) {
 
-                if (timestamp_now - timestamp_then2 >= 1000) {
+                timestamp_then2 = timestamp_now;
 
-                    timestamp_then2 = timestamp_now;
+                /*
+                 * User notifications.
+                 */
+                wid_notify_tick();
+
+                /*
+                 * FPS
+                 */
+                if (fps_enabled) {
+                    static char fps_text[10] = {0};
 
                     /*
                      * Update FPS counter.
@@ -920,11 +933,11 @@ void sdl_loop (void)
                     snprintf(fps_text, sizeof(fps_text), "%u", frames);
 
                     frames = 0;
+
+                    glcolor(RED);
+
+                    ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
                 }
-
-                glcolor(RED);
-
-                ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
             }
         }
 

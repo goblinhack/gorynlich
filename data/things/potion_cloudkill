@@ -1,5 +1,5 @@
 {
- short_name="potion"
+ short_name="potion of cloudkill"
  tooltip="Magic potion"
  z_depth=2
  z_order=2
@@ -10,7 +10,7 @@
  is_valid_for_shortcut_key
  tiles={
   tile={
-   tile="potion_death"
+   tile="potion_cloudkill"
   }
  }
 }

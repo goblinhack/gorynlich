@@ -92,6 +92,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\
     $(OBJDIR)/wid_button.o 		\
+    $(OBJDIR)/wid_notify.o 		\
     $(OBJDIR)/wid_editor.o 		\
     $(OBJDIR)/wid_editor_buttons.o 	\
     $(OBJDIR)/wid_editor_map.o 		\

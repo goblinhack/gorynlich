@@ -6,7 +6,7 @@
  is_boring
  is_treasure
  is_ring
- score_on_collect=10000
+ bonus_score_on_collect=10000
  tiles={
   tile={
    tile="ring2"

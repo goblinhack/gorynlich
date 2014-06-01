@@ -824,6 +824,24 @@ void level_place_potion_effect_poison (levelp level,
                            "data/things/poison7");
 }
 
+void level_place_potion_effect_cloudkill (levelp level, 
+                                       thingp owner,
+                                       double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           12, // radius
+                           2, // nargs
+                           "data/things/cloudkill1",
+                           "data/things/cloudkill2",
+                           "data/things/cloudkill3",
+                           "data/things/cloudkill4",
+                           "data/things/cloudkill5",
+                           "data/things/cloudkill6",
+                           "data/things/cloudkill7");
+}
+
 /*
  * Start any timers.
  */
