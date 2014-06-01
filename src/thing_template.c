@@ -424,12 +424,13 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
         GET_OPT_NAMED_UINT16(ctx, "speed", t->speed);
-        GET_OPT_NAMED_UINT16(ctx, "health", t->health);
+        GET_OPT_NAMED_INT16(ctx, "health", t->health);
         GET_OPT_NAMED_UINT16(ctx, "damage", t->damage);
         GET_OPT_NAMED_UINT16(ctx, "lifespan", t->lifespan);
-        GET_OPT_NAMED_UINT16(ctx, "score_on_death", t->score_on_death);
         GET_OPT_NAMED_UINT8(ctx, "vision_distance", t->vision_distance);
-        GET_OPT_NAMED_UINT16(ctx, "score_on_collect", t->score_on_collect);
+        GET_OPT_NAMED_INT16(ctx, "bonus_score_on_death", t->bonus_score_on_death);
+        GET_OPT_NAMED_INT16(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
+        GET_OPT_NAMED_INT16(ctx, "bonus_health_on_use", t->bonus_health_on_use);
         GET_OPT_NAMED_UINT32(ctx, "ppp1", t->ppp1);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
         GET_OPT_NAMED_UINT32(ctx, "ppp3", t->ppp3);
@@ -444,7 +445,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp12", t->ppp12);
         GET_OPT_NAMED_UINT32(ctx, "ppp13", t->ppp13);
         GET_OPT_NAMED_UINT32(ctx, "ppp14", t->ppp14);
-        GET_OPT_NAMED_UINT32(ctx, "health_on_use", t->health_on_use);
         GET_OPT_NAMED_UINT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
         GET_OPT_NAMED_UINT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
         GET_OPT_NAMED_UINT32(ctx, "failure_chance", t->failure_chance);
@@ -473,7 +473,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
@@ -540,9 +540,9 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "health", t->health);
     PUT_NAMED_INT32(ctx, "damage", t->damage);
     PUT_NAMED_INT32(ctx, "lifespan", t->lifespan);
-    PUT_NAMED_INT32(ctx, "score_on_death", t->score_on_death);
+    PUT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
     PUT_NAMED_INT32(ctx, "vision_distance", t->vision_distance);
-    PUT_NAMED_INT32(ctx, "score_on_collect", t->score_on_collect);
+    PUT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
     PUT_NAMED_INT32(ctx, "ppp1", t->ppp1);
     PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
     PUT_NAMED_INT32(ctx, "ppp3", t->ppp3);
@@ -557,7 +557,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "ppp12", t->ppp12);
     PUT_NAMED_INT32(ctx, "ppp13", t->ppp13);
     PUT_NAMED_INT32(ctx, "ppp14", t->ppp14);
-    PUT_NAMED_INT32(ctx, "health_on_use", t->health_on_use);
+    PUT_NAMED_INT32(ctx, "bonus_health_on_use", t->bonus_health_on_use);
     PUT_NAMED_INT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
     PUT_NAMED_INT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
     PUT_NAMED_INT32(ctx, "failure_chance", t->failure_chance);
@@ -586,7 +586,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_xxx6", t->is_xxx6);
     PUT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
     PUT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx7", t->is_xxx7);
+    PUT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
     PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
     PUT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
     PUT_NAMED_BITFIELD(ctx, "is_xxx9", t->is_xxx9);
@@ -668,7 +668,7 @@ uint32_t thing_template_get_speed (thing_templatep t)
     return (t->speed);
 }
 
-uint32_t thing_template_get_health (thing_templatep t)
+int16_t thing_template_get_health (thing_templatep t)
 {
     return (t->health);
 }
@@ -683,9 +683,9 @@ uint32_t thing_template_get_lifespan (thing_templatep t)
     return (t->lifespan);
 }
 
-uint32_t thing_template_get_score_on_death (thing_templatep t)
+int16_t thing_template_get_bonus_score_on_death (thing_templatep t)
 {
-    return (t->score_on_death);
+    return (t->bonus_score_on_death);
 }
 
 uint32_t thing_template_get_vision_distance (thing_templatep t)
@@ -693,9 +693,9 @@ uint32_t thing_template_get_vision_distance (thing_templatep t)
     return (t->vision_distance);
 }
 
-uint32_t thing_template_get_score_on_collect (thing_templatep t)
+int16_t thing_template_get_bonus_score_on_collect (thing_templatep t)
 {
-    return (t->score_on_collect);
+    return (t->bonus_score_on_collect);
 }
 
 uint32_t thing_template_get_ppp1 (thing_templatep t)
@@ -768,9 +768,9 @@ uint32_t thing_template_get_ppp14 (thing_templatep t)
     return (t->ppp14);
 }
 
-uint32_t thing_template_get_health_on_use (thing_templatep t)
+int16_t thing_template_get_bonus_health_on_use (thing_templatep t)
 {
-    return (t->health_on_use);
+    return (t->bonus_health_on_use);
 }
 
 uint32_t thing_template_get_tx_map_update_delay_thousandths (thing_templatep t)

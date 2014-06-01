@@ -96,6 +96,9 @@ void level_place_potion_effect_fireball(levelp level,
 void level_place_potion_effect_poison(levelp level, 
                                 thingp owner,
                                 double x, double y);
+void level_place_potion_effect_cloudkill(levelp level, 
+                                thingp owner,
+                                double x, double y);
 extern uint8_t game_over;
 
 extern uint8_t god_mode;

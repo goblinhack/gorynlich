@@ -304,11 +304,11 @@ extern uint16_t THING_POISON8;
 extern uint16_t THING_SPAM;
 extern uint16_t THING_POTION_MONSTICIDE;
 extern uint16_t THING_POTION_FIRE;
-extern uint16_t THING_POTION_DEATH;
+extern uint16_t THING_POTION_CLOUDKILL;
 extern uint16_t THING_POTION_LIFE;
 extern uint16_t THING_POTION_SHIELD;
-extern uint16_t THING_WATER1;
-extern uint16_t THING_WATER2;
+extern uint16_t THING_WATER;
+extern uint16_t THING_WATER_POISON;
 extern uint16_t THING_MASK1;
 extern uint16_t THING_RING2;
 extern uint16_t THING_RING3;
@@ -388,7 +388,7 @@ typedef struct thing_ {
     /*
      * Thing health.
      */
-    uint16_t health;
+    int16_t health;
 
     /*
      * Which djkstra map this thing is using.
@@ -556,6 +556,11 @@ typedef struct thing_ {
      * Force client to server postion.
      */
     uint32_t resync:1;
+
+    /*
+     * Limit certain message types.
+     */
+    uint32_t message_open_door_need_key:1;
 } thing;
 
 #include "thing_template.h"
@@ -728,11 +733,11 @@ static inline uint8_t thing_is_key3 (thingp t)
     return (thing_template_is_key3(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx7 (thingp t)
+static inline uint8_t thing_is_fire (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx7(thing_get_template(t)));
+    return (thing_template_is_fire(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_ring (thingp t)
@@ -1004,9 +1009,9 @@ static inline uint8_t thing_is_key3_fast (thingp t)
     return (t->thing_template->is_key3);
 }
 
-static inline uint8_t thing_is_xxx7_fast (thingp t)
+static inline uint8_t thing_is_fire_fast (thingp t)
 {
-    return (t->thing_template->is_xxx7);
+    return (t->thing_template->is_fire);
 }
 
 static inline uint8_t thing_is_ring_fast (thingp t)

@@ -6,7 +6,7 @@
  is_boring
  is_food
  is_fragile
- health_on_use=50
+ bonus_health_on_use=50
  tiles={
   tile={
    tile="food1"
