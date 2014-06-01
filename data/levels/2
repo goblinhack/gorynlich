@@ -964,7 +964,7 @@
   } {   
    x=12 
    y=5 
-   t="data/things/water1" 
+   t="data/things/water" 
   } {   
    x=12 
    y=5 
@@ -2632,7 +2632,7 @@
   } {   
    x=1 
    y=15 
-   t="data/things/water2" 
+   t="data/things/water_poison" 
   } {   
    x=1 
    y=15 

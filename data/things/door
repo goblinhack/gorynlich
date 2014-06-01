@@ -5,6 +5,7 @@
  z_order=0
  is_boring
  is_door
+is_joinable
  can_be_hit_chance=200
  tiles={
   tile={

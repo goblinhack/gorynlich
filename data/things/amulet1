@@ -6,7 +6,7 @@
  is_boring
  is_wearable
  is_valid_for_shortcut_key
- score_on_collect=15000
+ bonus_score_on_collect=15000
  tiles={
   tile={
    tile="amulet1"

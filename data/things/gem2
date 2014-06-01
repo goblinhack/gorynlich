@@ -5,7 +5,7 @@
  z_order=2
  is_boring
  is_treasure
- score_on_collect=2000
+ bonus_score_on_collect=2000
  tiles={
   tile={
    tile="gem2"

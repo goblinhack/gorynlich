@@ -23,6 +23,7 @@
 #include "color.h"
 #include "player.h"
 #include "socket.h"
+#include "wid_notify.h"
 
 static char buf[MAXSTR];
 uint8_t debug_enabled = 0;
@@ -680,6 +681,7 @@ static void msg_ (const char *fmt, va_list args)
     wid_set_color(w, WID_COLOR_BR, c);
     wid_move_to_pct_centered(w, 0.5, 0.1);
     wid_set_text_outline(w, true);
+    wid_notify(buf + len, NORMAL);
 }
 
 void MSG (const char *fmt, ...)

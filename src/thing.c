@@ -75,11 +75,11 @@ uint16_t THING_BOMB;
 uint16_t THING_SPAM;
 uint16_t THING_POTION_MONSTICIDE;
 uint16_t THING_POTION_FIRE;
-uint16_t THING_POTION_DEATH;
+uint16_t THING_POTION_CLOUDKILL;
 uint16_t THING_POTION_LIFE;
 uint16_t THING_POTION_SHIELD;
-uint16_t THING_WATER1;
-uint16_t THING_WATER2;
+uint16_t THING_WATER;
+uint16_t THING_WATER_POISON;
 uint16_t THING_MASK1;
 uint16_t THING_RING2;
 uint16_t THING_RING3;
@@ -577,6 +577,8 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
 
     if (thing_is_player(t)) {
         THING_LOG(t, "dead (%s)", reason);
+
+        THING_SHOUT_AT(t, "Killed by %s", reason);
     }
 }
 
@@ -612,6 +614,12 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 t->thing_template = what;
                 t->health = thing_template_get_health(what);
                 t->updated++;
+
+                if (!t->updated) {
+                    t->updated++;
+                }
+
+                socket_server_tx_map_update(0, server_boring_things);
                 return;
             }
         }
@@ -657,7 +665,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Bounty for the killer?
      */
     if (killer) {
-        uint32_t score = thing_template_get_score_on_death(
+        uint32_t score = thing_template_get_bonus_score_on_death(
                                                 thing_get_template(t));
 
         if (score) {
@@ -820,7 +828,26 @@ void thing_hit (thingp t,
     }
 
     /*
-     * Flash briefly red on attempted hits..
+     * Check to see if this is a thing tht can be damaged by the hitter.
+     */
+    if (hitter) {
+        /*
+         * Walls and doors and other solid object are not damaged by poison
+         * or similar effects. Limit it to explosions and the like.
+         */
+        if (thing_is_door(t) || 
+            thing_is_mob_spawner(t) || 
+            thing_is_door(t)) {
+
+            if (!thing_is_explosion(hitter) &&
+                !thing_is_projectile(hitter)) {
+                return;
+            }
+        }
+    }
+
+    /*
+     * Flash briefly red on attempted hits.
      */
     if (thing_is_monst(t) || 
         thing_is_mob_spawner(t) || 
@@ -2360,6 +2387,18 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
                 t->thing_template = thing_template;
 
+                /*
+                 * Polymorph the thing. This is not needed if the thing is
+                 * animated. But if not, we do.
+                 */
+                if (!thing_is_animated(t) && !thing_is_joinable(t)) {
+                    widp w = thing_wid(t);
+
+                    if (w) {
+                        wid_set_thing_template(w, thing_template);
+                    }
+                }
+
                 need_fixup = need_fixup ||
                     thing_template_is_wall(thing_template) ||
                     thing_template_is_pipe(thing_template) ||
@@ -2635,7 +2674,7 @@ void thing_fire (thingp t,
      */
     thing_templatep weapon = t->weapon;
     if (!weapon) {
-        THING_SHOUT_AT(t, "No weapon");
+        THING_SHOUT_AT(t, "You have no weapon");
         return;
     }
 
@@ -2876,21 +2915,24 @@ void thing_wield (thingp t, thing_templatep tmp)
 
 void thing_collect (thingp t, thing_templatep tmp)
 {
-    uint32_t id;
+    uint32_t item;
     uint32_t quantity;
 
     t->needs_tx_player_update = true;
 
-    id = thing_template_to_id(tmp);
+    item = thing_template_to_id(tmp);
     quantity = 1;
 
+    /*
+     * Collect bundles of keys as the key item.
+     */
     if (thing_template_is_key2(tmp)) {
-        id = THING_KEY;
+        item = THING_KEY;
         quantity = 2;
     }
 
     if (thing_template_is_key3(tmp)) {
-        id = THING_KEY;
+        item = THING_KEY;
         quantity = 3;
     }
 
@@ -2904,7 +2946,7 @@ void thing_collect (thingp t, thing_templatep tmp)
     /*
      * Bonus for collecting?
      */
-    t->score += thing_template_get_score_on_collect(tmp) * quantity;
+    t->score += thing_template_get_bonus_score_on_collect(tmp) * quantity;
 
     /*
      * If treasure, just add it to the score. Don't carry it.
@@ -2913,7 +2955,20 @@ void thing_collect (thingp t, thing_templatep tmp)
         return;
     }
 
-    t->carrying[id] += quantity;
+    /*
+     * Collecting poisoned water poisons other water being carried.
+     */
+    if (item == THING_WATER_POISON) {
+        t->carrying[item] += t->carrying[THING_WATER];
+        t->carrying[THING_WATER] = 0;
+    }
+
+    if (thing_is_player(t)) {
+        THING_SHOUT_AT(t, "You collect the %s", 
+                       thing_template_short_name(tmp));
+    }
+
+    t->carrying[item] += quantity;
 
     /*
      * Auto use a weapon if carrying none.
@@ -2929,10 +2984,10 @@ void thing_collect (thingp t, thing_templatep tmp)
 
 void thing_used (thingp t, thing_templatep tmp)
 {
-    uint32_t id;
+    uint32_t item;
 
-    id = thing_template_to_id(tmp);
-    if (!t->carrying[id]) {
+    item = thing_template_to_id(tmp);
+    if (!t->carrying[item]) {
         ERR("tried to use %s not carried", thing_template_short_name(tmp));
         return;
     }
@@ -2947,25 +3002,31 @@ void thing_used (thingp t, thing_templatep tmp)
         return;
     }
 
-    t->health += thing_template_get_health_on_use(tmp);
+    t->health += thing_template_get_bonus_health_on_use(tmp);
+
+    if (t->health < 0) {
+        const char *name = thing_template_short_name(tmp);
+
+        thing_dead(t, 0, "%s", name);
+    }
 
     THING_LOG(t, "used %s", thing_template_short_name(tmp));
 
-    t->carrying[id]--;
+    t->carrying[item]--;
 }
 
 void thing_item_destroyed (thingp t, thing_templatep tmp)
 {
-    uint32_t id;
+    uint32_t item;
 
-    id = thing_template_to_id(tmp);
-    if (!t->carrying[id]) {
+    item = thing_template_to_id(tmp);
+    if (!t->carrying[item]) {
         ERR("tried to item destroy %s not carried", 
             thing_template_short_name(tmp));
         return;
     }
 
-    t->carrying[id]--;
+    t->carrying[item]--;
 
     THING_LOG(t, "item destroyed %s", thing_template_short_name(tmp));
 
@@ -2982,10 +3043,10 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
 
 void thing_drop (thingp t, thing_templatep tmp)
 {
-    uint32_t id;
+    uint32_t item;
 
-    id = thing_template_to_id(tmp);
-    if (!t->carrying[id]) {
+    item = thing_template_to_id(tmp);
+    if (!t->carrying[item]) {
         ERR("tried to drop %s not carried", thing_template_short_name(tmp));
         return;
     }
@@ -2999,14 +3060,14 @@ void thing_drop (thingp t, thing_templatep tmp)
 
     THING_LOG(t, "drop %s", thing_template_short_name(tmp));
 
-    t->carrying[id]--;
+    t->carrying[item]--;
 
     t->needs_tx_player_update = true;
 }
 
-uint8_t thing_is_carrying (thingp t, uint32_t id)
+uint8_t thing_is_carrying (thingp t, uint32_t item)
 {
-    if (!t->carrying[id]) {
+    if (!t->carrying[item]) {
         return (false);
     }
 
@@ -3057,21 +3118,24 @@ void thing_server_action (thingp t,
         } else if (item == THING_POTION_MONSTICIDE) {
             level_place_potion_effect_poison(server_level, t, t->x, t->y);
             break;
-        } else if (item == THING_WATER1) {
-            THING_SHOUT_AT(t, "Slurp.");
+        } else if (item == THING_POTION_CLOUDKILL) {
+            level_place_potion_effect_cloudkill(server_level, t, t->x, t->y);
             break;
-        } else if (item == THING_WATER2) {
-            THING_SHOUT_AT(t, "Urgh. Poisoned water.");
+        } else if (item == THING_WATER) {
+            THING_SHOUT_AT(t, "Slurp");
+            break;
+        } else if (item == THING_WATER_POISON) {
+            THING_SHOUT_AT(t, "Urgh. Poisoned water");
             break;
         } else if (item == THING_FOOD) {
-            THING_SHOUT_AT(t, "Yum.");
+            THING_SHOUT_AT(t, "Yum");
             break;
         }
 
         /*
          * Failed to use.
          */
-        THING_SHOUT_AT(t, "Failed to use the %s", 
+        THING_SHOUT_AT(t, "You fail to use the %s", 
                        thing_template_short_name(thing_template));
         return;
 

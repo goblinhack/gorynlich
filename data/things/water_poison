@@ -5,12 +5,12 @@
  z_order=2
  is_boring
  is_food
- health_on_use=-50
+ bonus_health_on_use=-50
  is_poison
  is_fragile
  tiles={
   tile={
-   tile="water2"
+   tile="water_poison"
   }
  }
 }
