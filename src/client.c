@@ -393,7 +393,7 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
         if (!quiet) {
-            MSG("Join failed");
+            MSG(CRITICAL, "Join failed");
         }
         return (false);
     }
@@ -460,7 +460,7 @@ static uint8_t client_socket_shout (char *shout)
         return (false);
     }
 
-    socket_tx_client_shout(client_joined_server, shout);
+    socket_tx_client_shout(client_joined_server, CHAT, shout);
 
     return (true);
 }
@@ -903,7 +903,7 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG("Welcome %s, %s", p->pclass, p->name);
+            MSG(INFO, "Welcome %s, %s", p->pclass, p->name);
 
             player = thing_client_find(p->thing_id);
 
@@ -925,7 +925,7 @@ static void client_check_still_in_game (void)
         return;
     }
 
-    MSG("Server does not report you in the game!");
+    MSG(CRITICAL, "Server does not report you in the game!");
 
     LOG("Client:  You are player: \"%s\", ID %u", 
         global_config.name, client_joined_server_key);

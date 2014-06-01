@@ -1608,7 +1608,9 @@ void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
 /*
  * The server is relaying a shout to clients.
  */
-static void socket_tx_client_shout_relay (socketp s, const char *txt,
+static void socket_tx_client_shout_relay (socketp s, 
+                                          uint32_t level,
+                                          const char *txt,
                                           socketp from)
 {
     verify(s);
@@ -1621,6 +1623,7 @@ static void socket_tx_client_shout_relay (socketp s, const char *txt,
 
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
+    msg.level = level;
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     if (from && from->name) {
@@ -1641,7 +1644,9 @@ static void socket_tx_client_shout_relay (socketp s, const char *txt,
     socket_free_msg(packet);
 }
 
-void socket_tx_client_shout (socketp s, const char *txt)
+void socket_tx_client_shout (socketp s, 
+                             uint32_t level,
+                             const char *txt)
 {
     verify(s);
 
@@ -1653,6 +1658,7 @@ void socket_tx_client_shout (socketp s, const char *txt)
 
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
+    msg.level = level;
     strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1693,7 +1699,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    MSG("%s: \"%s\"", from, txt);
+    MSG(msg.level, "%s: \"%s\"", from, txt);
 
     if (socket_get_client(s)) {
         return;
@@ -1727,7 +1733,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
         /*
          * Include the source of the spammer.
          */
-        socket_tx_client_shout_relay(sp, txt, s);
+        socket_tx_client_shout_relay(sp, msg.level, txt, s);
     }
 }
 
@@ -1884,7 +1890,7 @@ void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    MSG("%s", txt);
+    MSG(msg.level, "%s", txt);
 }
 
 void socket_tx_tell (socketp s, 
@@ -1956,7 +1962,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (!socket_get_server(s)) {
-        MSG("%s: says \"%s\"", from, txt);
+        MSG(CHAT, "%s: says \"%s\"", from, txt);
         return;
     }
 

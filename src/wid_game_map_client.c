@@ -279,7 +279,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
             return (true);
         }
 
-        MSG("No carried item is using that key");
+        MSG(WARNING, "No carried item is using that key");
         break;
 
     default:

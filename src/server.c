@@ -368,7 +368,7 @@ static void server_alive_check (void)
 
             if (p) {
                 char *tmp = dynprintf("%s connection dropped", p->name);
-                socket_tx_client_shout(s, tmp);
+                socket_tx_client_shout(s, CRITICAL, tmp);
                 myfree(tmp);
 
                 LOG("Server: \"%s\" dropped out of the game from %s", 

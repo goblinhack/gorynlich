@@ -204,7 +204,17 @@ void WARN(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void INIT_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void FINI_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void CON(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
-void MSG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+
+enum {
+    CHAT,
+    INFO,
+    WARNING,
+    CRITICAL
+};
+
+void MSG(uint32_t level, const char *fmt, ...) 
+    __attribute__ ((format (printf, 2, 3)));
+
 void MSGERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
