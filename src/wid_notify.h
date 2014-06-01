@@ -6,11 +6,5 @@
 
 #pragma once
 
-widp wid_notify(const char *text, uint32_t level);
+widp wid_notify(uint32_t level, const char *text);
 void wid_notify_tick(void);
-
-enum {
-    NORMAL,
-    WARNING,
-    SEVERE
-};

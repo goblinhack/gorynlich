@@ -60,6 +60,7 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
+    uint8_t level;
     char from[SMALL_STRING_LEN_MAX];
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_client_shout;
@@ -84,6 +85,7 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
+    uint8_t level;
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_server_shout;
 
@@ -272,6 +274,7 @@ extern void socket_tx_server_close(void);
 extern void socket_rx_server_close(socketp s, 
                                    UDPpacket *packet, uint8_t *data);
 extern void socket_tx_client_shout(socketp s, 
+                                   uint32_t level,
                                    const char *shout);
 extern void socket_rx_client_shout(socketp s, 
                                    UDPpacket *packet, uint8_t *data);

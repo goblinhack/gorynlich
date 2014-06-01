@@ -30,36 +30,6 @@ static wid_notify_elem elems[MAX_ELEMS];
 static double X = 0.675;
 static uint32_t DELAY = 5000;
 
-#if 0
-/*
- * Create the wid_notify
- */
-static widp
-wid_notify_internal (const char *text, uint32_t level)
-{
-    widp wid_notify_window;
-    uint32_t maxw = 0;
-    uint32_t maxh = 0;
-    fontp font = vsmall_font;
-
-    ttf_text_size(font, text, &maxw, &maxh, 0, 1.0f, 1.0f,
-                  false /* fixed width */);
-
-    {
-        wid_notify_window = wid_new_rounded_window("wid_notify");
-        wid_set_text(wid_notify_window, text);
-
-    }
-
-    wid_raise(wid_notify_window);
-
-    wid_update(wid_notify_window);
-
-    wid_set_do_not_lower(wid_notify_window, true);
-
-    return (wid_notify_window);
-}
-#endif
 /*
  * Create the wid_notify
  */
@@ -124,24 +94,32 @@ wid_notify_internal (const char *text, uint32_t level)
     }
 
     {
-        color c = BLACK;
+        color bg = BLACK;
+        color fg = WHITE;
 
         switch (level) {
-        case 0:
-            c = WHITE;
-            c.a = 20;
+        case CHAT:
+            bg = BLUE;
+            bg.a = 20;
+            fg = WHITE;
             break;
-        case 1:
-            c = ORANGE;
+        case INFO:
+            bg = WHITE;
+            bg.a = 20;
             break;
-        case 2:
-            c = DARKRED;
+        case WARNING:
+            bg = ORANGE;
+            fg = BLACK;
+            break;
+        case CRITICAL:
+            bg = DARKRED;
+            fg = RED;
             break;
         }
 
-        wid_set_color(wid_notify_window, WID_COLOR_BG, c);
+        wid_set_color(wid_notify_window, WID_COLOR_BG, bg);
 
-        c = WHITE;
+        color c = WHITE;
         c.a = 150;
         wid_set_color(wid_notify_window, WID_COLOR_TL, c);
         wid_set_color(wid_notify_window, WID_COLOR_BR, c);
@@ -265,7 +243,7 @@ static void wid_notify_scroll (void)
     wid_notify_move_wids();
 }
 
-widp wid_notify (const char *text, uint32_t level)
+widp wid_notify (uint32_t level, const char *text)
 {
     widp w;
 
@@ -290,11 +268,9 @@ void wid_notify_tick (void)
     static int x;
 
     if (!x) {
-        wid_notify("you kill the long named creatuee", NORMAL);
-        wid_notify("there", NORMAL);
-        wid_notify("you", NORMAL);
-        wid_notify("oh-oh", WARNING);
-        wid_notify("panic panic panic panic panic panic v panic v v panic panic panic v panicx x x x x x x x x x x x x x x x x x x panic dive dive!", SEVERE);
+        wid_notify(INFO, "you kill the long named creatuee");
+        wid_notify(WARNING, "there");
+        wid_notify(CRITICAL, "you");
         x = 1;
     }
 
