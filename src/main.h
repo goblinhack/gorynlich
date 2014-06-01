@@ -208,6 +208,7 @@ void CON(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 enum {
     CHAT,
     INFO,
+    GENINFO,
     WARNING,
     CRITICAL
 };
@@ -218,21 +219,23 @@ void MSG(uint32_t level, const char *fmt, ...)
 void MSGERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
-void HOST_LOG(hostp, const char *fmt, ...) \
+void HOST_LOG(hostp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
-void THING_SHOUT_AT(thingp, const char *fmt, ...) \
+void THING_SHOUT_AT(thingp,
+                    uint32_t level,
+                    const char *fmt, ...)
+                     __attribute__ ((format (printf, 3, 4)));
+void THING_LOG(thingp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
-void THING_LOG(thingp, const char *fmt, ...) \
+void THING_DBG(thingp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
-void THING_DBG(thingp, const char *fmt, ...) \
+void ITEM_LOG(itemp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
-void ITEM_LOG(itemp, const char *fmt, ...) \
+void TIMER_LOG(timerp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
-void TIMER_LOG(timerp, const char *fmt, ...) \
+void INIT_FN_LOG(init_fnp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
-void INIT_FN_LOG(init_fnp, const char *fmt, ...) \
-                     __attribute__ ((format (printf, 2, 3)));
-void LEVEL_LOG(levelp, const char *fmt, ...) \
+void LEVEL_LOG(levelp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
 
 #ifdef ENABLE_WID_DEBUG
