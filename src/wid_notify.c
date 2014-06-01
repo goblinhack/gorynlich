@@ -28,8 +28,6 @@ static uint32_t nelems;
 static wid_notify_elem elems[MAX_ELEMS];
 
 static double X = 0.675;
-static double Y = 1.0;
-static double H = 0.05;
 static uint32_t DELAY = 5000;
 
 #if 0
@@ -137,7 +135,7 @@ wid_notify_internal (const char *text, uint32_t level)
             c = ORANGE;
             break;
         case 2:
-            c = RED;
+            c = DARKRED;
             break;
         }
 
@@ -227,10 +225,15 @@ static void wid_notify_move_wids (void)
      */
     uint32_t i;
 
+    double h = 1.0;
+
     for (i = 0; i < nelems; i++) {
         wid_notify_elem *elem = &elems[i];
 
-        wid_move_to_pct_in(elem->w, X, Y - H * (double) (i+1), 500);
+        h -= 
+            wid_get_height(elem->w) / (double)global_config.video_gl_height;
+
+        wid_move_to_pct_in(elem->w, X, h, 500);
     }
 }
 
@@ -287,7 +290,7 @@ void wid_notify_tick (void)
     static int x;
 
     if (!x) {
-        wid_notify("hello", NORMAL);
+        wid_notify("you kill the long named creatuee", NORMAL);
         wid_notify("there", NORMAL);
         wid_notify("you", NORMAL);
         wid_notify("oh-oh", WARNING);
