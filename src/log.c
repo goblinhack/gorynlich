@@ -656,7 +656,7 @@ void WID_DBG (widp t, const char *fmt, ...)
 }
 #endif
 
-static void msg_ (const char *fmt, va_list args)
+static void msg_ (uint32_t level, const char *fmt, va_list args)
 {
     uint32_t len;
 
@@ -681,15 +681,16 @@ static void msg_ (const char *fmt, va_list args)
     wid_set_color(w, WID_COLOR_BR, c);
     wid_move_to_pct_centered(w, 0.5, 0.1);
     wid_set_text_outline(w, true);
-    wid_notify(buf + len, NORMAL);
+
+    wid_notify(level, buf + len);
 }
 
-void MSG (const char *fmt, ...)
+void MSG (uint32_t level, const char *fmt, ...)
 {
     va_list args;
 
     va_start(args, fmt);
-    msg_(fmt, args);
+    msg_(level, fmt, args);
     va_end(args);
 }
 

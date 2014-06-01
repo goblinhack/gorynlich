@@ -258,7 +258,7 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
     wid_server_join_hide();
     wid_intro_hide();
 
-    MSG("Server started");
+    MSG(INFO, "Server started");
 
     return (true);
 }
