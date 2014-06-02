@@ -1,5 +1,5 @@
 {
- short_name="wand of fire"
+ short_name="fire wand"
  tooltip="wand of fire"
  fires="data/things/fireball"
  z_depth=2
