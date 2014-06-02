@@ -909,6 +909,8 @@ void sdl_loop (void)
          * FPS counter.
          */
         if (!HEADLESS) {
+            static char fps_text[10] = {0};
+
             /*
              * Very occasional.
              */
@@ -925,19 +927,22 @@ void sdl_loop (void)
                  * FPS
                  */
                 if (fps_enabled) {
-                    static char fps_text[10] = {0};
-
                     /*
                      * Update FPS counter.
                      */
                     snprintf(fps_text, sizeof(fps_text), "%u", frames);
 
                     frames = 0;
-
-                    glcolor(RED);
-
-                    ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
                 }
+            }
+
+            /*
+             * FPS
+             */
+            if (fps_enabled) {
+                glcolor(RED);
+
+                ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
             }
         }
 
