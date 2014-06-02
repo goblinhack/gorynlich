@@ -1503,6 +1503,15 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_POISON7, "data/things/poison7");
     thing_template_load(&THING_POISON8, "data/things/poison8");
 
+    thing_template_load(&THING_CLOUDKILL1, "data/things/cloudkill1");
+    thing_template_load(&THING_CLOUDKILL2, "data/things/cloudkill2");
+    thing_template_load(&THING_CLOUDKILL3, "data/things/cloudkill3");
+    thing_template_load(&THING_CLOUDKILL4, "data/things/cloudkill4");
+    thing_template_load(&THING_CLOUDKILL5, "data/things/cloudkill5");
+    thing_template_load(&THING_CLOUDKILL6, "data/things/cloudkill6");
+    thing_template_load(&THING_CLOUDKILL7, "data/things/cloudkill7");
+    thing_template_load(&THING_CLOUDKILL8, "data/things/cloudkill8");
+
     /*
      * Important stuff that cannot be used by clicking on.
      */
@@ -1524,14 +1533,22 @@ static uint8_t resource_init_23 (void *context)
     /*
      * Lesser items like food.
      */
-    thing_template_load(&THING_FOOD, "data/things/food");
-    thing_template_load(&THING_POTION_MONSTICIDE, "data/things/potion_monsticide");
-    thing_template_load(&THING_POTION_FIRE, "data/things/potion_fire");
-    thing_template_load(&THING_POTION_CLOUDKILL, "data/things/potion_cloudkill");
-    thing_template_load(&THING_POTION_LIFE, "data/things/potion_life");
-    thing_template_load(&THING_POTION_SHIELD, "data/things/potion_shield");
-    thing_template_load(&THING_WATER, "data/things/water");
-    thing_template_load(&THING_WATER_POISON, "data/things/water_poison");
+    thing_template_load(&THING_FOOD, 
+                        "data/things/food");
+    thing_template_load(&THING_POTION_MONSTICIDE, 
+                        "data/things/potion_monsticide");
+    thing_template_load(&THING_POTION_FIRE, 
+                        "data/things/potion_fire");
+    thing_template_load(&THING_POTION_CLOUDKILL, 
+                        "data/things/potion_cloudkill");
+    thing_template_load(&THING_POTION_LIFE, 
+                        "data/things/potion_life");
+    thing_template_load(&THING_POTION_SHIELD, 
+                        "data/things/potion_shield");
+    thing_template_load(&THING_WATER, 
+                        "data/things/water");
+    thing_template_load(&THING_WATER_POISON, 
+                        "data/things/water_poison");
 
     /*
      * Lowest priority junk
