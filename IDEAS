@@ -1,11 +1,12 @@
 bugs
 ---
 
-poison polymorph on collect
+flood fill poition
+larger explosion radisu
+poison polymorph water on collect
 cloud kill crash
 killed by "explosion7"
 explosion in long corridor only goes in front of player not behind
-larger explosion radisu
 crumble auto weapon use picked a key and tried to fire it
 item collect needs faster tx map update
 glitchy when lots of explosions
