@@ -262,7 +262,7 @@ widp wid_notify (uint32_t level, const char *text)
             wid_set_mode(e->notify_box_wid, WID_MODE_ACTIVE);
             wid_set_color(e->notify_box_wid, WID_COLOR_BG, RED);
 
-            return (e->notify_box_wid);
+            return (0);
         }
     }
 

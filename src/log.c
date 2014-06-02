@@ -674,8 +674,10 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
-    wid_console_log(buf + len);
-    term_log(buf + len);
+    if (wid_notify(level, buf + len)) {
+        wid_console_log(buf + len);
+        term_log(buf + len);
+    }
 
 #if 0
     widp w = wid_button_transient(buf + len, 0);
@@ -687,8 +689,6 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     wid_move_to_pct_centered(w, 0.5, 0.1);
     wid_set_text_outline(w, true);
 #endif
-
-    wid_notify(level, buf + len);
 }
 
 void MSG (uint32_t level, const char *fmt, ...)
