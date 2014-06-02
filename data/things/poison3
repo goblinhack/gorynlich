@@ -1,5 +1,5 @@
 {
- short_name="poison3"
+ short_name="poison"
  tooltip="poison cloud!"
  z_depth=2
  z_order=2

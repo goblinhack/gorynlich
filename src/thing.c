@@ -2972,7 +2972,7 @@ LOG("%s %d",thing_template_name(tmp),thing_template_get_bonus_score_on_collect(t
     }
 
     if (thing_is_player(t)) {
-        THING_SHOUT_AT(t, INFO, "You collect the %s", 
+        THING_SHOUT_AT(t, INFO, "%s collected", 
                        thing_template_short_name(tmp));
     }
 

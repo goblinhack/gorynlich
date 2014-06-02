@@ -1,6 +1,6 @@
 {
- short_name="lesser phantom"
- tooltip="Lesser phantom"
+ short_name="minor phantom"
+ tooltip="minor phantom"
  z_depth=2
  speed=3
  health=1
