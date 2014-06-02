@@ -176,7 +176,15 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
         (t->thing_template->id == THING_POISON5) ||
         (t->thing_template->id == THING_POISON6) ||
         (t->thing_template->id == THING_POISON7) ||
-        (t->thing_template->id == THING_POISON8)) {
+        (t->thing_template->id == THING_POISON8) ||
+        (t->thing_template->id == THING_CLOUDKILL1) ||
+        (t->thing_template->id == THING_CLOUDKILL2) ||
+        (t->thing_template->id == THING_CLOUDKILL3) ||
+        (t->thing_template->id == THING_CLOUDKILL4) ||
+        (t->thing_template->id == THING_CLOUDKILL5) ||
+        (t->thing_template->id == THING_CLOUDKILL6) ||
+        (t->thing_template->id == THING_CLOUDKILL7) ||
+        (t->thing_template->id == THING_CLOUDKILL8)) {
         thing_dead(t, 0 /* killer */, "finished blowing up");
         return (true);
     }
@@ -813,7 +821,7 @@ void level_place_potion_effect_poison (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           7, // radius
+                           15, // radius
                            2, // nargs
                            "data/things/poison1",
                            "data/things/poison2",
@@ -831,7 +839,7 @@ void level_place_potion_effect_cloudkill (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           12, // radius
+                           25, // radius
                            2, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",

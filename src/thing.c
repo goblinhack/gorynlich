@@ -71,6 +71,14 @@ uint16_t THING_POISON5;
 uint16_t THING_POISON6;
 uint16_t THING_POISON7;
 uint16_t THING_POISON8;
+uint16_t THING_CLOUDKILL1;
+uint16_t THING_CLOUDKILL2;
+uint16_t THING_CLOUDKILL3;
+uint16_t THING_CLOUDKILL4;
+uint16_t THING_CLOUDKILL5;
+uint16_t THING_CLOUDKILL6;
+uint16_t THING_CLOUDKILL7;
+uint16_t THING_CLOUDKILL8;
 uint16_t THING_BOMB;
 uint16_t THING_SPAM;
 uint16_t THING_POTION_MONSTICIDE;
@@ -2954,7 +2962,6 @@ void thing_collect (thingp t, thing_templatep tmp)
      * Bonus for collecting?
      */
     t->score += thing_template_get_bonus_score_on_collect(tmp) * quantity;
-LOG("%s %d",thing_template_name(tmp),thing_template_get_bonus_score_on_collect(tmp));
 
     /*
      * If treasure, just add it to the score. Don't carry it.
@@ -2972,7 +2979,7 @@ LOG("%s %d",thing_template_name(tmp),thing_template_get_bonus_score_on_collect(t
     }
 
     if (thing_is_player(t)) {
-        THING_SHOUT_AT(t, INFO, "%s collected", 
+        THING_SHOUT_AT(t, INFO, "%s added", 
                        thing_template_short_name(tmp));
     }
 
