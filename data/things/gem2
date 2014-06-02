@@ -1,6 +1,6 @@
 {
- short_name="turquoise gemstone"
- tooltip="turquoise gemstone"
+ short_name="turquoise gem"
+ tooltip="turquoise gem"
  z_depth=2
  z_order=2
  is_boring
