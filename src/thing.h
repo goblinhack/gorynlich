@@ -182,6 +182,7 @@ void dmap_generate_monst_map_wander(levelp level);
 void thing_generate_dmaps(void);
 void dmap_process_init(void);
 void dmap_process_fini(void);
+void dmap_generate_player_map(double x, double y);
 
 typedef struct {
     thing_templatep thing_template;

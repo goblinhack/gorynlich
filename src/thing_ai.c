@@ -14,6 +14,7 @@
 #include "level_private.h"
 #include "wid_game_map_server.h"
 #include "map.h"
+#include "time.h"
 
 static FILE *fp;
 static const int8_t is_a_wall = 63;
@@ -45,6 +46,12 @@ static level_walls dmap_monst_map_treat_doors_as_walls;
  */
 static level_walls dmap_monst_map_treat_doors_as_passable_scratchpad;
 static level_walls dmap_monst_map_treat_doors_as_walls_scratchpad;
+
+/*
+ * For individual players. Updated each time we need it.
+ */
+static level_walls dmap_player_map_treat_doors_as_walls_scratchpad;
+level_walls dmap_player_map_treat_doors_as_walls;
 
 /*
  * Djkstra maps so we can quickly tell the next hop.
@@ -219,7 +226,7 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
 /*
  * Generate goal points with a low value.
  */
-static uint32_t dmap_goals_set (uint8_t test, level_walls *dmap)
+static uint32_t dmap_monst_goals_set (uint8_t test, level_walls *dmap)
 {
     uint32_t checksum = 0;
     thingp thing_it;
@@ -256,6 +263,20 @@ static uint32_t dmap_goals_set (uint8_t test, level_walls *dmap)
     } }
 
     return (checksum);
+}
+
+/*
+ * Generate goal points with a low value.
+ */
+static void dmap_player_goals_set (double x, double y, level_walls *dmap)
+{
+    /*
+     * Aim for center of tile.
+     */
+    uint32_t ix = (int)(x + 0.5);
+    uint32_t iy = (int)(y + 0.5);
+
+    dmap->walls[ix][iy] = 0;
 }
 
 /*
@@ -314,7 +335,7 @@ static void dmap_thread1_wake (levelp level)
      * We use a checksum of the goals to indicate this with reasonable 
      * certainty.
      */
-    uint32_t checksum = dmap_goals_set(true /* test */, 0);
+    uint32_t checksum = dmap_monst_goals_set(true /* test */, 0);
 
     if (dmap_checksum == checksum) {
         return;
@@ -328,12 +349,12 @@ static void dmap_thread1_wake (levelp level)
 
     dmap_init(&dmap_monst_map_treat_doors_as_passable_scratchpad,
               &level->monst_map_treat_doors_as_passable);
-    dmap_goals_set(false /* test */,
+    dmap_monst_goals_set(false /* test */,
                    &dmap_monst_map_treat_doors_as_passable_scratchpad);
 
     dmap_init(&dmap_monst_map_treat_doors_as_walls_scratchpad,
               &level->monst_map_treat_doors_as_walls);
-    dmap_goals_set(false /* test */,
+    dmap_monst_goals_set(false /* test */,
                    &dmap_monst_map_treat_doors_as_walls_scratchpad);
 
     /*
@@ -466,6 +487,20 @@ void dmap_process_fini (void)
 {
     dmap_thread1_fini();
     dmap_thread2_fini();
+}
+
+void dmap_generate_player_map (double x, double y)
+{
+time_update_time_milli();
+LOG("start");
+    dmap_init(&dmap_player_map_treat_doors_as_walls_scratchpad,
+              &server_level->player_map_treat_doors_as_walls);
+    dmap_player_goals_set(x, y,
+                &dmap_player_map_treat_doors_as_walls_scratchpad);
+    dmap_process(&dmap_player_map_treat_doors_as_walls_scratchpad,
+                 &dmap_player_map_treat_doors_as_walls);
+time_update_time_milli();
+LOG("done");
 }
 
 /*
@@ -643,7 +678,6 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
     /*
      * Try the alternative map.
      */
-#if 0
     if (t->dmap == &dmap_monst_map_treat_doors_as_passable) {
         t->dmap = &dmap_monst_map_treat_doors_as_walls;
     } else {
@@ -654,7 +688,6 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
                           false /* can_change_dir_without_moving */)) {
         return (true);
     }
-#endif
 
     /*
      * Try the wander map.

@@ -26,6 +26,7 @@
 #include "wid_console.h"
 #include "wid_editor.h"
 #include "socket.h"
+#include "level_private.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
@@ -293,6 +294,7 @@ void level_update_now (levelp level)
     level_set_walls(level);
     level_set_monst_map_treat_doors_as_passable(level);
     level_set_monst_map_treat_doors_as_walls(level);
+    level_set_player_map_treat_doors_as_walls(level);
     level_set_doors(level);
     level_set_pipes(level);
     level_pipe_find_ends(level);
@@ -459,7 +461,7 @@ void level_set_monst_map_treat_doors_as_passable (levelp level)
             if (map_is_wall_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
-                map_is_mob_spawner_at(level, x, y)    ||
+                map_is_mob_spawner_at(level, x, y)  ||
                 map_is_food_at(level, x, y)         ||
                 map_is_weapon_at(level, x, y)       ||
                 map_is_treasure_at(level, x, y)     ||
@@ -489,18 +491,45 @@ void level_set_monst_map_treat_doors_as_walls (levelp level)
                 map_is_door_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
-                map_is_mob_spawner_at(level, x, y)    ||
+                map_is_mob_spawner_at(level, x, y)  ||
                 map_is_treasure_at(level, x, y)     ||
                 map_is_weapon_at(level, x, y)       ||
                 map_is_food_at(level, x, y)         ||
                 !map_is_floor_at(level, x, y)) {
 
                 /*
-                 * Doors are considered as walls.
+                 * Considered as walls.
                  */
                 level->monst_map_treat_doors_as_walls.walls[x][y] = '+';
             } else {
                 level->monst_map_treat_doors_as_walls.walls[x][y] = ' ';
+            }
+        }
+    }
+}
+
+/*
+ * Used in flood filling explosions
+ */
+void level_set_player_map_treat_doors_as_walls (levelp level)
+{
+    int32_t x;
+    int32_t y;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            if (map_is_wall_at(level, x, y)         ||
+                map_is_door_at(level, x, y)         ||
+                map_is_exit_at(level, x, y)         ||
+                map_is_spam_at(level, x, y)         ||
+                !map_is_floor_at(level, x, y)) {
+
+                /*
+                 * Considered as walls for explosions.
+                 */
+                level->player_map_treat_doors_as_walls.walls[x][y] = '+';
+            } else {
+                level->player_map_treat_doors_as_walls.walls[x][y] = ' ';
             }
         }
     }
@@ -667,10 +696,6 @@ static uint8_t level_place_explosion_at (levelp level,
                                          uint32_t nargs,
                                          va_list args)
 {
-    if (map_is_wall_at(level, x + 0.5, y + 0.5) ||
-        map_is_pipe_at(level, x + 0.5, y + 0.5)) {
-        return (false);
-    }
 
     /*
      * Choose one of the things in the args list to place.
@@ -714,46 +739,35 @@ static void level_place_explosion_ (levelp level,
 {
     va_list args;
 
-    uint8_t rad_blocked_explosion[360] = {0};
+    dmap_generate_player_map(x, y);
 
-    double r;
-    for (r = 0; r <= radius; r += 0.1) {
+    uint32_t ix, iy;
 
-        double explosion_width = 1.0;
-        double circumference = 2.0 * PI * r;
-        double nexplosions = circumference / explosion_width;
-        double arc_step = RAD_360 / nexplosions;
+    for (ix = 1; ix < MAP_WIDTH - 1; ix++) {
+        for (iy = 1; iy < MAP_HEIGHT - 1; iy++) {
+            int8_t dist = dmap_player_map_treat_doors_as_walls.walls[ix][iy];
 
-        double rad;
-        for (rad = 0; rad < RAD_360; rad += arc_step) {
-
-            double exp_x = x + r * cos(rad);
-            double exp_y = y + r * sin(rad);
-
-            uint32_t deg = radians2angle(rad);
-            deg += rand() % 20;
-            deg = deg % 360;
-
-            if (rad_blocked_explosion[deg]) {
+            if (dist > radius) {
                 continue;
             }
 
-            va_start(args, nargs);
+            double density = 0.5;
+            double dx, dy;
 
-            int ret = level_place_explosion_at(level, 
-                                               owner,
-                                               exp_x, 
-                                               exp_y, 
-                                               r,
-                                               nargs, args);
-            va_end(args);
+            for (dx = -0.5; dx < 0.5; dx += density) {
+                for (dy = -0.5; dy < 0.5; dy += density) {
+                    double ex = ix + dx;
+                    double ey = iy + dy;
 
-            if (!ret) {
-                int i;
-                int d = 45 - (r * 5);
+                    va_start(args, nargs);
 
-                for (i = - d; i < + d; i++) {
-                    rad_blocked_explosion[(deg + i) % 360] = 1;
+                    (void) level_place_explosion_at(level, 
+                                                    owner,
+                                                    ex, 
+                                                    ey, 
+                                                    dist,
+                                                    nargs, args);
+                    va_end(args);
                 }
             }
         }
@@ -803,7 +817,7 @@ void level_place_potion_effect_fireball (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           7, // radius
+                           12, // radius
                            2, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",

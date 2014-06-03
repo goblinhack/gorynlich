@@ -25,6 +25,7 @@ void level_set_map(levelp level, widp val);
 void level_set_walls(levelp level);
 void level_set_monst_map_treat_doors_as_passable(levelp level);
 void level_set_monst_map_treat_doors_as_walls(levelp level);
+void level_set_player_map_treat_doors_as_walls(levelp level);
 void level_set_doors(levelp level);
 void level_set_pipes(levelp level);
 void level_pipe_find_ends(levelp level);
