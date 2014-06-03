@@ -130,10 +130,10 @@ static uint8_t level_server_init (void)
 
     level_server_init_done = true;
 
-    if (is_server) {
-        command_add(level_command_dead, 
-                    "dead", "internal command for thing suicide");
+    command_add(level_command_dead, 
+                "dead", "internal command for thing suicide");
 
+    if (is_server) {
         command_add(level_command_god_mode, 
                     "set godmode [01]", "TBD enable/disable god mode");
     }
