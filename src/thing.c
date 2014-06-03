@@ -2126,6 +2126,16 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         }
 
         /*
+         * As an optimization do not send dead events for explosions. Let the
+         * client destroy those on its own to save sending loads of events.
+         */
+        if (thing_is_dead(t)) {
+            if (thing_template_is_explosion(thing_template)) {
+                continue;
+            }
+        }
+
+        /*
          * Work out what we are going to send.
          */
         uint8_t template_id = thing_template_to_id(thing_template);
