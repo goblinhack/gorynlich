@@ -27,6 +27,11 @@ typedef struct level_t_ {
     level_walls monst_map_treat_doors_as_passable;
     level_walls monst_map_treat_doors_as_walls;
 
+    /*
+     * And this is for players to define the range of a flood fill explosion.
+     */
+    level_walls player_map_treat_doors_as_walls;
+
     level_walls walls;
     level_walls roads;
     level_walls pipes;
@@ -111,3 +116,4 @@ typedef struct level_t_ {
 
 } level_t;
 
+extern level_walls dmap_player_map_treat_doors_as_walls;

@@ -117,9 +117,9 @@
 
 /*
  * Thumb in air. Needs to be big enough so wrap arounds and id reuse is less 
- * common.
+ * common. Max is 64K for tx map sending from server to client.
  */
-#define THING_ID_MAX                8192
+#define THING_ID_MAX                (32*1024)
 
 /*
  * When converting from thing co-ords where 1.0 is one grid, we must convert
