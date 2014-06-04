@@ -715,15 +715,17 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         return;
     }
 
+    if (redo) {
+        if (wid_scoreline_container_top) {
+            wid_destroy(&wid_scoreline_container_top);
+        }
+    }
+
     uint8_t update;
 
     if (wid_scoreline_container_top) {
         update = true;
     } else {
-        update = false;
-    }
-
-    if (redo) {
         update = false;
     }
 
