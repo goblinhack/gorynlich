@@ -183,6 +183,21 @@ void thing_fini (void)
 /*
  * Create a new thing.
  */
+static void thing_try_to_flush_ids (void)
+{
+    uint32_t i;
+
+    for (i = 0; i < THING_ID_MAX; i++) {
+        thingp t = thing_server_ids[i];
+        if (thing_is_explosion(t)) {
+            thing_destroy(t, "too many things");
+        }
+    }
+}
+
+/*
+ * Create a new thing.
+ */
 thingp thing_server_new (levelp level, const char *name)
 {
     thingp t;
@@ -246,7 +261,16 @@ thingp thing_server_new (levelp level, const char *name)
         id++;
         if (id >= max) {
             id = min;
-            if (looped++) {
+            looped++;
+
+            /*
+             * Try hard to reclaim space.
+             */
+            if (looped == 2) {
+                thing_try_to_flush_ids();
+            }
+
+            if (looped == 3) {
                 DIE("out of thing ids, min %u max %u!", min, max);
             }
         }
@@ -2148,8 +2172,8 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             tx = (uint8_t)(int)((t->x * ((double)256)) / MAP_WIDTH);
             ty = (uint8_t)(int)((t->y * ((double)256)) / MAP_HEIGHT);
         } else {
-            tx = -1;
-            ty = -1;
+            tx = 0xFF;
+            ty = 0xFF;
         }
 
         uint8_t state = t->dir | 
@@ -2194,7 +2218,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
-        if ((tx == -1) && (ty == -1)) {
+        if ((tx == 0xFF) && (ty == 0xFF)) {
             /*
              * Do not send.
              */
@@ -2361,13 +2385,13 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             x = ((double)tx) / (double) (256 / MAP_WIDTH);
             y = ((double)ty) / (double) (256 / MAP_HEIGHT);
         } else {
-            tx = -1;
-            ty = -1;
+            tx = 0xFF;
+            ty = 0xFF;
             x = -1;
             y = -1;
         }
 
-        if ((tx == (uint8_t)-1) && (ty == (uint8_t)-1)) {
+        if ((tx == 0xFF) && (ty == 0xFF)) {
             on_map = false;
         } else {
             on_map = true;

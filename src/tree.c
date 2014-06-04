@@ -496,7 +496,7 @@ uint32_t tree_root_size (tree_root *root)
         return (0);
     }
 
-    return (tree_size(top));
+    return (root->size);
 }
 
 tree_node *tree_root_get_random (tree_root *root)
@@ -1093,6 +1093,8 @@ uint8_t tree_insert (tree_root *root, tree_node *node)
 
     tree_verify(root);
 
+    root->size++;
+
     return (1);
 }
 
@@ -1117,6 +1119,8 @@ uint8_t tree_insert_static (tree_root *root, tree_node *node)
     tree_balance(root, node);
 
     tree_verify(root);
+
+    root->size++;
 
     return (1);
 }
@@ -1345,6 +1349,8 @@ void tree_empty (tree_root *root, tree_destroy_func func)
                 myfree(A->key);
             }
         }
+
+        root->size--;
 
         if (!node->is_static_mem) {
             myfree(node);

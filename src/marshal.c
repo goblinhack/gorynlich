@@ -278,10 +278,10 @@ uint8_t marshal_array_ket (tree_marshal *ctx)
     return (snprintf_realloc(&ctx->buf, &ctx->buf_size, &ctx->buf_used, "] "));
 }
 
-uint8_t marshal_fini (tree_marshal *ctx)
+int marshal_fini (tree_marshal *ctx)
 {
     char *buf;
-    uint8_t rc;
+    int rc;
 
     if (ctx->buf_used) {
         ctx->buf_used--; /* to remote trailing space */

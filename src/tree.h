@@ -39,6 +39,8 @@ typedef struct tree_root_ {
 
     tree_node *node;
 
+    uint32_t size;
+
     /*
      * Negative offset to start of base structure.
      */

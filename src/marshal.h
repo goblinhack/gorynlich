@@ -91,7 +91,7 @@ uint8_t demarshal_ket(demarshal_p);
 
 marshal_p marshal(const char *filename);
 void marshal_print(marshal_p);
-uint8_t marshal_fini(marshal_p);
+int marshal_fini(marshal_p);
 uint8_t marshal_name(marshal_p, const char *name);
 uint8_t marshal_name_only(marshal_p, const char *name);
 uint8_t marshal_string(marshal_p, const char *out);

@@ -689,7 +689,7 @@ double wid_get_br_y (widp w)
     return (cy + ((w->tree.br.y - cy) * wid_get_scaling_h(w)));
 }
 
-static inline void wid_get_tl_x_tl_y_br_x_br_y (widp w, 
+static void wid_get_tl_x_tl_y_br_x_br_y (widp w, 
                                                 double *tl_x,
                                                 double *tl_y,
                                                 double *br_x,
@@ -3058,7 +3058,7 @@ static void wid_tree4_remove (widp w)
     w->in_tree4 = false;
 }
 
-static inline void wid_tree5_remove (widp w)
+static void wid_tree5_remove (widp w)
 {
     fast_verify(w);
 

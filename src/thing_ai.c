@@ -14,7 +14,6 @@
 #include "level_private.h"
 #include "wid_game_map_server.h"
 #include "map.h"
-#include "time.h"
 
 static FILE *fp;
 static const int8_t is_a_wall = 63;
@@ -491,16 +490,12 @@ void dmap_process_fini (void)
 
 void dmap_generate_player_map (double x, double y)
 {
-time_update_time_milli();
-LOG("start");
     dmap_init(&dmap_player_map_treat_doors_as_walls_scratchpad,
               &server_level->player_map_treat_doors_as_walls);
     dmap_player_goals_set(x, y,
                 &dmap_player_map_treat_doors_as_walls_scratchpad);
     dmap_process(&dmap_player_map_treat_doors_as_walls_scratchpad,
                  &dmap_player_map_treat_doors_as_walls);
-time_update_time_milli();
-LOG("done");
 }
 
 /*
