@@ -189,6 +189,11 @@ static void thing_try_to_flush_ids (void)
 
     for (i = 0; i < THING_ID_MAX; i++) {
         thingp t = thing_server_ids[i];
+
+        if (!t) {
+            continue;
+        }
+
         if (thing_is_explosion(t)) {
             thing_destroy(t, "too many things");
         }
@@ -788,6 +793,16 @@ static void thing_hit_ (thingp t,
     while (damage > 0) {
         if (t->health <= damage) {
             /*
+             * Record who dun it.
+             */
+            if (hitter) {
+                thing_dead(t, hitter, "%s",
+                           thing_template_short_name(hitter->thing_template));
+            } else {
+                thing_dead(t, hitter, "hit");
+            }
+
+            /*
              * Explodes on death ala Sith Lord? Only a lesser one, mind.
              */
             if (thing_template_is_combustable(t->thing_template)) {
@@ -797,13 +812,6 @@ static void thing_hit_ (thingp t,
             }
 
             t->health = 0;
-            if (hitter) {
-                thing_dead(t, hitter, "%s",
-                           thing_template_short_name(hitter->thing_template));
-            } else {
-                thing_dead(t, hitter, "hit");
-            }
-
             damage -= t->health;
 
             /*
