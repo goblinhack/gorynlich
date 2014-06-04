@@ -771,6 +771,8 @@ int term_test (int32_t argc, char *argv[])
 
         term_refresh();
     }
+
+    return (0);
 }
 
 static void term_print_last_line (void)

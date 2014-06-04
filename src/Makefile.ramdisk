@@ -46,6 +46,9 @@
 .o/ramdisk_data_levels_4.o: asm/ramdisk_data_levels_4.S ../data/levels/4
 	gcc -c asm/ramdisk_data_levels_4.S -o .o/ramdisk_data_levels_4.o
 
+.o/ramdisk_data_levels_ben.o: asm/ramdisk_data_levels_ben.S ../data/levels/ben
+	gcc -c asm/ramdisk_data_levels_ben.S -o .o/ramdisk_data_levels_ben.o
+
 .o/ramdisk_data_levels_q.o: asm/ramdisk_data_levels_q.S ../data/levels/q
 	gcc -c asm/ramdisk_data_levels_q.S -o .o/ramdisk_data_levels_q.o
 
@@ -105,6 +108,15 @@
 
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
+
+.o/ramdisk_data_things__explosion_session.o: asm/ramdisk_data_things__explosion_session.S ../data/things/.explosion.session
+	gcc -c asm/ramdisk_data_things__explosion_session.S -o .o/ramdisk_data_things__explosion_session.o
+
+.o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
+	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
+
+.o/ramdisk_data_things__water_poison_session.o: asm/ramdisk_data_things__water_poison_session.S ../data/things/.water_poison.session
+	gcc -c asm/ramdisk_data_things__water_poison_session.S -o .o/ramdisk_data_things__water_poison_session.o
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
