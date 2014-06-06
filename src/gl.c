@@ -240,6 +240,8 @@ void blit_flush (void)
     nvertices = ((char*)bufp - (char*)gl_array_buf) /
                     NUMBER_BYTES_PER_VERTICE;
 
+    glBindTexture(GL_TEXTURE_2D, buf_tex);
+
     glTexCoordPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (u,v)
         GL_FLOAT,
@@ -263,8 +265,6 @@ void blit_flush (void)
             NUMBER_DIMENSIONS_PER_COORD +
             sizeof(GLfloat) *        // skip (u,v)
             NUMBER_DIMENSIONS_PER_COORD);
-
-    glBindTexture(GL_TEXTURE_2D, buf_tex);
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, nvertices);
 
