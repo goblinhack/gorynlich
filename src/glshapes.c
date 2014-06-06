@@ -4,6 +4,7 @@
  * See the README file for license.
  */
 
+#include <string.h>
 
 #include "main.h"
 #include "gl.h"
@@ -62,8 +63,8 @@ static inline void End (void)
     colp = col;
 }
 
-static void vertex (fpoint tl, fpoint br, float x, float y,
-                    fsize tex_tl, fsize tex_br, fsize tex_uv)
+static inline void vertex (fpoint tl, fpoint br, float x, float y,
+                           fsize tex_tl, fsize tex_br, fsize tex_uv)
 {
     float tx = (x - tl.x) / tex_uv.width;
     tx *= tex_br.width - tex_tl.width;
@@ -97,11 +98,6 @@ void gl_list_square (fpoint tl, fpoint br,
                      texp tex, fsize tex_tl, fsize tex_br, fsize uv,
                      color hi, color med, color lo)
 {
-    fpoint a = {tl.x, tl.y};
-    fpoint b = {br.x, tl.y};
-    fpoint c = {br.x, br.y};
-    fpoint d = {tl.x, br.y};
-
     glEnable(GL_TEXTURE_2D);
 
     /*
@@ -111,13 +107,21 @@ void gl_list_square (fpoint tl, fpoint br,
 
     Begin(GL_TRIANGLE_STRIP);
 
-    glcolor(hi);
-    vertex(tl, br, a.x, a.y, tex_tl, tex_br, uv);
-    glcolor(med);
-    vertex(tl, br, b.x, b.y, tex_tl, tex_br, uv);
-    vertex(tl, br, d.x, d.y, tex_tl, tex_br, uv);
-    glcolor(lo);
-    vertex(tl, br, c.x, c.y, tex_tl, tex_br, uv);
+    if (!memcmp(&hi, &med, sizeof(color)) &&
+        !memcmp(&hi, &lo, sizeof(color))) {
+        vertex(tl, br, tl.x, tl.y, tex_tl, tex_br, uv);
+        vertex(tl, br, br.x, tl.y, tex_tl, tex_br, uv);
+        vertex(tl, br, tl.x, br.y, tex_tl, tex_br, uv);
+        vertex(tl, br, br.x, br.y, tex_tl, tex_br, uv);
+    } else {
+        glcolor(hi);
+        vertex(tl, br, tl.x, tl.y, tex_tl, tex_br, uv);
+        glcolor(med);
+        vertex(tl, br, br.x, tl.y, tex_tl, tex_br, uv);
+        vertex(tl, br, tl.x, br.y, tex_tl, tex_br, uv);
+        glcolor(lo);
+        vertex(tl, br, br.x, br.y, tex_tl, tex_br, uv);
+    }
 
     End();
 }
