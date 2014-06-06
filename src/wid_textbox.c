@@ -130,6 +130,7 @@ static widp wid_textbox_internal (widp parent,
 
         wid_textbox_container = wid_new_container(wid_textbox_window,
                                                   "wid textbox container");
+            wid_set_no_shape(wid_textbox_container);
         wid_set_tl_br(wid_textbox_container, tl, br);
     }
 
@@ -164,6 +165,7 @@ static widp wid_textbox_internal (widp parent,
             wid_set_text(child, n->line);
             wid_set_font(child, font);
             wid_set_text_outline(child, true);
+            wid_set_no_shape(child);
 
             if (!firstchild) {
                 firstchild = child;

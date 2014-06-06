@@ -503,6 +503,7 @@ void wid_game_map_client_wid_create (void)
                         wid_new_square_window("wid_game_map_client");
         wid_set_movable(wid_game_map_client_window, false);
         wid_set_do_not_raise(wid_game_map_client_window, true);
+        wid_set_no_shape(wid_game_map_client_window);
 
         wid_set_mode(wid_game_map_client_window, WID_MODE_NORMAL);
 
@@ -531,6 +532,8 @@ void wid_game_map_client_wid_create (void)
         wid_game_map_client_grid_container =
                         wid_new_container(wid_game_map_client_window,
                                           "wid game grid container");
+
+        wid_set_no_shape(wid_game_map_client_grid_container);
 
         wid_set_color(wid_game_map_client_grid_container, WID_COLOR_TL, BLACK);
         wid_set_color(wid_game_map_client_grid_container, WID_COLOR_BG, BLACK);
@@ -744,6 +747,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_scoreline_container_top =
             wid_new_container(wid_game_map_client_window, "scoreline top");
 
+        wid_set_no_shape(wid_scoreline_container_top);
         wid_set_tl_br_pct(wid_scoreline_container_top, tl, br);
 
         wid_set_color(wid_scoreline_container_top, WID_COLOR_TL, BLACK);

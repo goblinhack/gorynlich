@@ -1608,6 +1608,10 @@
   } {   
    x=2 
    y=10 
+   t="data/things/wand_fire" 
+  } {   
+   x=2 
+   y=10 
    t="data/things/floor3" 
   } {   
    x=3 
@@ -1860,6 +1864,10 @@
   } {   
    x=22 
    y=11 
+   t="data/things/generator4" 
+  } {   
+   x=22 
+   y=11 
    t="data/things/floor3" 
   } {   
    x=23 
@@ -2032,6 +2040,10 @@
   } {   
    x=27 
    y=12 
+   t="data/things/generator4" 
+  } {   
+   x=27 
+   y=12 
    t="data/things/floor3" 
   } {   
    x=28 
@@ -2580,6 +2592,10 @@
   } {   
    x=23 
    y=16 
+   t="data/things/generator4" 
+  } {   
+   x=23 
+   y=16 
    t="data/things/floor3" 
   } {   
    x=24 
@@ -3108,6 +3124,10 @@
   } {   
    x=27 
    y=20 
+   t="data/things/generator4" 
+  } {   
+   x=27 
+   y=20 
    t="data/things/floor3" 
   } {   
    x=28 
@@ -3180,6 +3200,10 @@
   } {   
    x=13 
    y=21 
+   t="data/things/generator4" 
+  } {   
+   x=13 
+   y=21 
    t="data/things/floor3" 
   } {   
    x=14 
@@ -3280,6 +3304,10 @@
   } {   
    x=6 
    y=22 
+   t="data/things/generator4" 
+  } {   
+   x=6 
+   y=22 
    t="data/things/floor3" 
   } {   
    x=7 
@@ -3325,6 +3353,10 @@
    x=17 
    y=22 
    t="data/things/floor3" 
+  } {   
+   x=18 
+   y=22 
+   t="data/things/generator4" 
   } {   
    x=18 
    y=22 
@@ -3480,6 +3512,10 @@
   } {   
    x=24 
    y=23 
+   t="data/things/generator4" 
+  } {   
+   x=24 
+   y=23 
    t="data/things/floor3" 
   } {   
    x=25 
@@ -3756,6 +3792,10 @@
   } {   
    x=29 
    y=25 
+   t="data/things/generator4" 
+  } {   
+   x=29 
+   y=25 
    t="data/things/floor3" 
   } {   
    x=30 
@@ -3792,6 +3832,10 @@
   } {   
    x=6 
    y=26 
+   t="data/things/generator4" 
+  } {   
+   x=6 
+   y=26 
    t="data/things/floor3" 
   } {   
    x=7 
@@ -3845,6 +3889,10 @@
    x=19 
    y=26 
    t="data/things/floor3" 
+  } {   
+   x=20 
+   y=26 
+   t="data/things/generator4" 
   } {   
    x=20 
    y=26 
@@ -3956,6 +4004,10 @@
   } {   
    x=15 
    y=27 
+   t="data/things/generator4" 
+  } {   
+   x=15 
+   y=27 
    t="data/things/floor3" 
   } {   
    x=16 
@@ -4253,6 +4305,10 @@
    x=25 
    y=29 
    t="data/things/floor3" 
+  } {   
+   x=26 
+   y=29 
+   t="data/things/generator4" 
   } {   
    x=26 
    y=29 
@@ -4437,6 +4493,10 @@
    x=7 
    y=31 
    t="data/things/floor3" 
+  } {   
+   x=8 
+   y=31 
+   t="data/things/generator4" 
   } {   
    x=8 
    y=31 
