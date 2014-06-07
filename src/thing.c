@@ -259,9 +259,7 @@ static void thing_map_dump_ (thing_map *map, const char *name)
 
     FILE *fp;
 
-    if (!fp) {
-        fp = fopen(name, "w");
-    }
+    fp = fopen(name, "w");
 
     uint32_t width = 0;
 
