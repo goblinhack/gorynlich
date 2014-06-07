@@ -12,6 +12,8 @@
 
 uint8_t thing_init(void);
 void thing_fini(void);
+void thing_map_sanity(void);
+void thing_map_dump(void);
 thingp thing_server_new(levelp, const char *name);
 thingp thing_client_new(uint32_t, thing_templatep);
 void thing_restarted(thingp t, levelp level);
@@ -29,6 +31,8 @@ void marshal_thing(marshal_p ctx, thingp);
 void thing_templates_marshal(marshal_p out);
 void things_marshal(marshal_p out);
 void thing_set_wid(thingp, widp);
+void thing_map_remove(thingp t);
+void thing_map_add(thingp t, int32_t x, int32_t y);
 int32_t thing_grid_x(thingp);
 int32_t thing_grid_y(thingp);
 widp thing_wid(thingp);
@@ -468,6 +472,12 @@ typedef struct thing_ {
      */
     double x;
     double y;
+
+    /*
+     * Map grid co-ordinates.
+     */
+    int16_t map_x;
+    int16_t map_y;
 
     /*
      * Previous hop where we were. We use this to interpolate the real 
@@ -1132,3 +1142,26 @@ static inline uint8_t thing_is_effect_rotate_2way_fast (thingp t)
 {
     return (t->thing_template->is_effect_rotate_2way);
 }
+
+typedef struct {
+    uint8_t count;
+    uint16_t id[MAP_THINGS_PER_CELL];
+} thing_map_cell;
+
+typedef struct {
+    thing_map_cell cells[MAP_WIDTH][MAP_HEIGHT];
+} thing_map;
+
+static inline thing_map *thing_get_map (thingp t)
+{
+    extern thing_map thing_server_map;
+    extern thing_map thing_client_map;
+
+    if (t->on_server) {
+        return (&thing_server_map);
+    }
+    return (&thing_client_map);
+}
+
+extern thingp thing_server_ids[THING_ID_MAX];
+extern thingp thing_client_ids[THING_ID_MAX];

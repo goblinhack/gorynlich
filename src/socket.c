@@ -1098,7 +1098,11 @@ void socket_set_player (const socketp s, aplayer *p)
 {
     thingp t = 0;
 
+    verify(s);
+
     if (s->player) {
+        verify(s->player);
+
         t = s->player->thing;
         if (t) {
             verify(t);
@@ -1114,12 +1118,15 @@ void socket_set_player (const socketp s, aplayer *p)
             s->player->thing = 0;
             s->player->socket = 0;
             myfree(s->player);
+            s->player = 0;
         }
 
         return;
     }
 
     s->player = p;
+    verify(p);
+
     p->socket = s;
 }
 

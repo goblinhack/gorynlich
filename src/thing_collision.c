@@ -354,11 +354,8 @@ static void thing_handle_collision (thingp me, thingp it,
  */
 void thing_handle_collisions (widp grid, thingp t)
 {
-    thingp it;
     thingp me;
-    widp wid_next;
     widp wid_me;
-    widp wid_it;
 
     verify(t);
     wid_me = thing_wid(t);
@@ -368,27 +365,31 @@ void thing_handle_collisions (widp grid, thingp t)
 
     me = wid_get_thing(wid_me);
 
+    thing_map *map = thing_get_map(t);
+
     for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
         int32_t x = (int32_t)t->x + dx;
         int32_t y = (int32_t)t->y + dy;
 
-        wid_it = wid_grid_find_first(grid, x, y);
-        while (wid_it) {
-            wid_next = wid_grid_find_next(grid, wid_it, x, y);
-            if (wid_me == wid_it) {
-                wid_it = wid_next;
-                continue;
+        if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
+            continue;
+        }
+
+        thing_map_cell *cell = &map->cells[x][y];
+
+        uint32_t i;
+        for (i = 0; i < cell->count; i++) {
+            thingp it;
+            
+            if (t->on_server) {
+                it = thing_server_ids[cell->id[i]];
+            } else {
+                it = thing_client_ids[cell->id[i]];
             }
 
-            it = wid_get_thing(wid_it);
-            if (!it) {
-                wid_it = wid_next;
-                continue;
-            }
+            verify(it);
 
             thing_handle_collision(me, it, x, y);
-
-            wid_it = wid_next;
         }
     }
 }
@@ -400,11 +401,8 @@ void thing_handle_collisions (widp grid, thingp t)
  */
 uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 {
-    thingp it;
     thingp me;
-    widp wid_next;
     widp wid_me;
-    widp wid_it;
 
     verify(t);
     wid_me = thing_wid(t);
@@ -414,31 +412,38 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
 
     me = wid_get_thing(wid_me);
 
+    thing_map *map = thing_get_map(t);
+
     for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
         int32_t x = (int32_t)nx + dx;
         int32_t y = (int32_t)ny + dy;
 
-        wid_it = wid_grid_find_first(grid, x, y);
-        while (wid_it) {
-            verify(wid_it);
+        if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
+            continue;
+        }
 
-            wid_next = wid_grid_find_next(grid, wid_it, x, y);
-            if (wid_me == wid_it) {
-                wid_it = wid_next;
+        thing_map_cell *cell = &map->cells[x][y];
+
+        uint32_t i;
+        for (i = 0; i < cell->count; i++) {
+            thingp it;
+            
+            if (t->on_server) {
+                it = thing_server_ids[cell->id[i]];
+            } else {
+                it = thing_client_ids[cell->id[i]];
+            }
+
+            if (it == t) {
                 continue;
             }
 
-            it = wid_get_thing(wid_it);
-            if (!it) {
-                wid_it = wid_next;
-                continue;
-            }
+            verify(it);
 
             /*
              * No collisions with the floor!
              */
             if (thing_is_floor(it)) {
-                wid_it = wid_next;
                 continue;
             }
 
@@ -446,7 +451,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
              * Allow dead ghosts to walk over each other!
              */
             if (thing_is_dead(it)) {
-                wid_it = wid_next;
                 continue;
             }
 
@@ -462,7 +466,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_treasure(it)   ||
                     thing_is_weapon(it)     ||
                     thing_is_food(it)) {
-                    wid_it = wid_next;
                     continue;
                 }
             }
@@ -471,7 +474,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow projectiles to pass through anything.
                  */
-                wid_it = wid_next;
                 continue;
             }
 
@@ -479,7 +481,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow explosions to pass through anything.
                  */
-                wid_it = wid_next;
                 continue;
             }
 
@@ -487,7 +488,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow explosions to pass through anything.
                  */
-                wid_it = wid_next;
                 continue;
             }
 
@@ -497,7 +497,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  */
                 if (thing_is_door(it)) {
                     if (thing_is_carrying(me, THING_KEY)) {
-                        wid_it = wid_next;
                         continue;
                     } else {
                         if (!me->message_open_door_need_key) {
@@ -522,16 +521,15 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_projectile(it) ||
                     thing_is_poison(it) ||
                     thing_is_explosion(it)) {
-                    wid_it = wid_next;
                     continue;
                 }
             }
 
             if (!things_overlap(me, nx, ny, it)) {
-                wid_it = wid_next;
                 continue;
             }
 
+LOG("%s hit %s",thing_logname(t),thing_logname(it));
             return (true);
         }
     }
