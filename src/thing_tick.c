@@ -323,6 +323,10 @@ void thing_tick_all (void)
         }
     }
 
+#ifdef ENABLE_MAP_SANITY
+    thing_map_sanity();
+#endif
+
     thing_tick_server_all();
 
     if (server_level) {

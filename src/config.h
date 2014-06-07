@@ -10,6 +10,7 @@
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 #undef ENABLE_LEAKCHECK           // Memory leak check
 #undef ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
@@ -55,17 +56,18 @@
 /*
  * Tiles
  */
-#define MAP_WIDTH                 32
-#define MAP_HEIGHT                32
+#define MAP_WIDTH                   32
+#define MAP_HEIGHT                  32
+#define MAP_THINGS_PER_CELL         8
 
 /*
  * The number of tiles per screen.
  */
-#define TILES_SCREEN_WIDTH              21
-#define TILES_SCREEN_HEIGHT             14
+#define TILES_SCREEN_WIDTH          21
+#define TILES_SCREEN_HEIGHT         14
 
-#define TILES_SERVER_SCALE              4
-#define TILES_CLIENT_SCALE              1
+#define TILES_SERVER_SCALE          4
+#define TILES_CLIENT_SCALE          1
 
 /*
  * Console
