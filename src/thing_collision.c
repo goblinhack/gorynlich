@@ -352,24 +352,15 @@ static void thing_handle_collision (thingp me, thingp it,
 /*
  * Have we hit anything?
  */
-void thing_handle_collisions (widp grid, thingp t)
+void thing_handle_collisions (widp grid, thingp me)
 {
-    thingp me;
-    widp wid_me;
-
-    verify(t);
-    wid_me = thing_wid(t);
-    verify(wid_me);
-
     int32_t dx, dy;
 
-    me = wid_get_thing(wid_me);
-
-    thing_map *map = thing_get_map(t);
+    thing_map *map = thing_get_map(me);
 
     for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
-        int32_t x = (int32_t)t->x + dx;
-        int32_t y = (int32_t)t->y + dy;
+        int32_t x = (int32_t)me->x + dx;
+        int32_t y = (int32_t)me->y + dy;
 
         if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
             continue;
@@ -381,13 +372,15 @@ void thing_handle_collisions (widp grid, thingp t)
         for (i = 0; i < cell->count; i++) {
             thingp it;
             
-            if (t->on_server) {
+            if (me->on_server) {
                 it = thing_server_ids[cell->id[i]];
             } else {
                 it = thing_client_ids[cell->id[i]];
             }
 
-            verify(it);
+            if (me == it) {
+                continue;
+            }
 
             thing_handle_collision(me, it, x, y);
         }
