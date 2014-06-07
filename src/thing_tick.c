@@ -99,15 +99,6 @@ static void thing_tick_server_all (void)
             }
         }
 
-        thing_handle_collisions(wid_game_map_server_grid_container, t);
-
-        /*
-         * Died in a collision ? 8( Handle it next time around.
-         */
-        if (thing_is_dead(t)) {
-            continue;
-        }
-
         /*
          * If a projectile, move it by the delta
          */
@@ -128,6 +119,22 @@ static void thing_tick_server_all (void)
                         fnexthop_x > t->x,
                         false);
             }
+        }
+
+        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_COLLISION_TEST,
+                                             t->timestamp_collision)) {
+            continue;
+        }
+
+        thing_handle_collisions(wid_game_map_server_grid_container, t);
+
+        t->timestamp_collision = time_get_time_cached() + (rand() % 100);
+
+        /*
+         * Died in a collision ? 8( Handle it next time around.
+         */
+        if (thing_is_dead(t)) {
+            continue;
         }
 
         /*
@@ -163,10 +170,9 @@ static void thing_tick_server_all (void)
 
                 if (thing_find_nexthop(t, &nexthop_x, &nexthop_y)) {
                     /*
-                    * Add some jitter.
-                    */
-                    t->timestamp_ai = time_get_time_cached() +
-                                    (DELAY_TENTHS_THING_AI * 10);
+                     * Add some jitter.
+                     */
+                    t->timestamp_ai = time_get_time_cached() + (rand() % 100);
                 }
             }
         }
