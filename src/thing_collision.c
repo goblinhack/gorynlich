@@ -529,7 +529,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
-LOG("%s hit %s",thing_logname(t),thing_logname(it));
             return (true);
         }
     }

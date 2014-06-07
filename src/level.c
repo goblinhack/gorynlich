@@ -781,7 +781,7 @@ void level_place_explosion (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           7, // radius
+                           6, // radius
                            7, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
@@ -799,7 +799,7 @@ void level_place_small_explosion (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           2, // radius
+                           3, // radius
                            7, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
@@ -817,7 +817,7 @@ void level_place_potion_effect_fireball (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           12, // radius
+                           7, // radius
                            2, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
@@ -835,7 +835,7 @@ void level_place_potion_effect_poison (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           15, // radius
+                           9, // radius
                            2, // nargs
                            "data/things/poison1",
                            "data/things/poison2",
@@ -853,7 +853,7 @@ void level_place_potion_effect_cloudkill (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           25, // radius
+                           12, // radius
                            2, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
