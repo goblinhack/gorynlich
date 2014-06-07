@@ -345,6 +345,7 @@ typedef struct wid_ {
     uint8_t in_tree3:1;
     uint8_t in_tree4:1;
     uint8_t in_tree5:1;
+    uint8_t can_be_atteched_now:1;
 } wid;
 
 /*
@@ -482,6 +483,10 @@ static void wid_grid_tree_attach (widp w)
 {
     widgrid *grid;
 
+    if (!w->can_be_atteched_now) {
+        return;
+    }
+
     if (!w->parent) {
         return;
     }
@@ -570,6 +575,10 @@ static void wid_grid_tree_attach (widp w)
     w->gridnode->y = y;
     w->gridnode->aligned_x = !((mx + (grid->pixwidth/2)) % grid->pixwidth);
     w->gridnode->aligned_y = !((my + (grid->pixheight/2)) % grid->pixheight);
+
+    if (w->thing) {
+        thing_map_add(w->thing, x, y);
+    }
 }
 
 static uint8_t wid_grid_tree_detach (widp w)
@@ -591,6 +600,10 @@ static uint8_t wid_grid_tree_detach (widp w)
 
     w->gridnode = 0;
     w->gridtree = 0;
+
+    if (w->thing) {
+        thing_map_remove(w->thing);
+    }
 
     return (true);
 }
@@ -730,6 +743,7 @@ void wid_set_tl_br (widp w, fpoint tl, fpoint br)
         w->tree.br.y += wid_get_tl_y(p);
     }
 
+    w->can_be_atteched_now = true;
     wid_tree_attach(w);
 }
 
@@ -770,6 +784,7 @@ void wid_set_tl_br_pct (widp w, fpoint tl, fpoint br)
         w->tree.br.y += wid_get_tl_y(p);
     }
 
+    w->can_be_atteched_now = true;
     wid_tree_attach(w);
 }
 
@@ -804,6 +819,7 @@ void wid_setx_tl_br_pct (widp w, fpoint tl, fpoint br)
         w->tree.br.x += wid_get_tl_x(p);
     }
 
+    w->can_be_atteched_now = true;
     wid_tree_attach(w);
 }
 
@@ -838,6 +854,7 @@ void wid_sety_tl_br_pct (widp w, fpoint tl, fpoint br)
         w->tree.br.y += wid_get_tl_y(p);
     }
 
+    w->can_be_atteched_now = true;
     wid_tree_attach(w);
 }
 
@@ -6154,6 +6171,7 @@ static void wid_move_delta_internal (widp w, double dx, double dy)
         wid_children_move_delta_internal(child, dx, dy);
     } }
 
+    w->can_be_atteched_now = true;
     wid_tree_attach(w);
 }
 

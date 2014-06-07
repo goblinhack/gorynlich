@@ -137,9 +137,19 @@ tree_root *client_boring_things;
 
 static uint32_t next_thing_id;
 static uint32_t next_monst_thing_id;
-static thingp thing_server_ids[THING_ID_MAX];
+
+thingp thing_server_ids[THING_ID_MAX];
+thingp thing_client_ids[THING_ID_MAX];
+
 static uint8_t thing_init_done;
 static void thing_destroy_implicit(thingp t);
+static void thing_map_check_empty(void);
+
+/*
+ * What things live on the map.
+ */
+thing_map thing_server_map;
+thing_map thing_client_map;
 
 uint8_t thing_init (void)
 {
@@ -177,18 +187,20 @@ void thing_fini (void)
         }
 
         dmap_process_fini();
+
+        thing_map_check_empty();
     }
 }
 
 /*
  * Create a new thing.
  */
-static void thing_try_to_flush_ids (void)
+static void thing_try_to_flush_ids_ (thingp *ids)
 {
     uint32_t i;
 
     for (i = 0; i < THING_ID_MAX; i++) {
-        thingp t = thing_server_ids[i];
+        thingp t = ids[i];
 
         if (!t) {
             continue;
@@ -198,6 +210,333 @@ static void thing_try_to_flush_ids (void)
             thing_destroy(t, "too many things");
         }
     }
+}
+
+static void thing_try_to_flush_ids (void)
+{
+    thing_try_to_flush_ids_(thing_server_ids);
+    thing_try_to_flush_ids_(thing_client_ids);
+}
+
+static void thing_map_check_empty_ (thing_map *map, thingp *ids)
+{
+    uint32_t i;
+    uint32_t x;
+    uint32_t y;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            thing_map_cell *cell = &map->cells[x][y];
+
+            for (i = 0; i < cell->count; i++) {
+
+                uint16_t m = cell->id[i];
+                if (!m) {
+                    continue;
+                }
+
+                thingp t = ids[m];
+
+                ERR("thing id %d still on map at %d,%d [%d]", m, x, y, i);
+
+                ERR("thing id %d %s still on map", m, thing_logname(t));
+            }
+        }
+    }
+}
+
+static void thing_map_check_empty (void)
+{
+    thing_map_check_empty_(&thing_server_map, thing_server_ids);
+    thing_map_check_empty_(&thing_client_map, thing_client_ids);
+}
+
+static void thing_map_dump_ (thing_map *map, const char *name)
+{
+    uint32_t i;
+    uint32_t x;
+    uint32_t y;
+
+    FILE *fp;
+
+    if (!fp) {
+        fp = fopen(name, "w");
+    }
+
+    uint32_t width = 0;
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            thing_map_cell *cell = &map->cells[x][y];
+
+            width = max(width, cell->count);
+        }
+    }
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            thing_map_cell *cell = &map->cells[x][y];
+
+            for (i = 0; i < width; i++) {
+                uint16_t m = cell->id[i];
+
+                if (!m) {
+                    fprintf(fp, "----- ");
+                    continue;
+                }
+                
+                fprintf(fp, "%5u ", m);
+            }
+
+            fprintf(fp, "|");
+        }
+        fprintf(fp, "\n");
+    }
+}
+
+void thing_map_dump (void)
+{
+    thing_map_dump_(&thing_client_map, "client.map");
+    thing_map_dump_(&thing_server_map, "server.map");
+}
+
+static void thing_map_sanity_ (thing_map *map, thingp *ids)
+{
+    uint32_t i;
+    uint32_t x;
+    uint32_t y;
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            thing_map_cell *cell = &map->cells[x][y];
+
+            uint8_t found_start = 0;
+            uint8_t found_end = 0;
+
+            for (i = 0; i < MAP_THINGS_PER_CELL; i++) {
+                uint16_t m = cell->id[i];
+
+                if (!m) {
+                    found_end = true;
+                    continue;
+                }
+
+                if (found_end) {
+                    thing_map_dump();
+
+                    DIE("map elements are not contiguous at %d,%d", x, y);
+                }
+
+                found_start = true;
+
+                thingp t = ids[m];
+
+                if (!t) {
+                    DIE("thing %p id %d is invalid and on map", t, m);
+                }
+
+                verify(t);
+            }
+        }
+    }
+}
+
+void thing_map_sanity (void)
+{
+    thing_map_sanity_(&thing_server_map, thing_server_ids);
+    thing_map_sanity_(&thing_client_map, thing_client_ids);
+}
+
+void thing_map_remove (thingp t)
+{
+    uint32_t i;
+
+    verify(t);
+
+    int32_t x = t->map_x;
+    int32_t y = t->map_y;
+
+    /*
+     * Check not on the map.
+     */
+    if ((x == -1) || (y == -1)) {
+        return;
+    }
+
+    thing_map *map = thing_get_map(t);
+//LOG("rem %s to %s map", thing_logname(t), map == &thing_server_map ?  
+//"server" : "client");
+    thing_map_cell *cell = &map->cells[x][y];
+
+    if (!cell->count) {
+        ERR("map count mismatch");
+        return;
+    }
+
+    /*
+     * Remove from the map.
+     */
+    for (i = 0; i < cell->count; i++) {
+        uint16_t m = cell->id[i];
+        if (m != t->thing_id) {
+            continue;
+        }
+
+        if (i == cell->count - 1) {
+            /*
+             * Popping last element.
+             */
+            cell->id[i] = 0;
+        } else {
+            /*
+             * Pop and swap last element.
+             */
+            cell->id[i] = cell->id[cell->count - 1];
+            cell->id[cell->count - 1] = 0;
+        }
+
+        cell->count--;
+
+        t->map_x = -1;
+        t->map_y = -1;
+
+        return;
+    }
+
+    DIE("did not find id %u/%s on map at %d,%d to remove", 
+        t->thing_id, thing_logname(t), x, y);
+}
+
+void thing_map_add (thingp t, int32_t x, int32_t y)
+{
+    verify(t);
+
+    if (!t->thing_id) {
+        DIE("cannot add ID of 0");
+    }
+
+    if (x < 0) {
+        DIE("map underflow");
+    }
+
+    if (y < 0) {
+        DIE("map y underflow");
+    }
+
+    if (x >= MAP_WIDTH) {
+        DIE("map x overflow");
+    }
+
+    if (y >= MAP_HEIGHT) {
+        DIE("map y overflow");
+    }
+
+    thingp *ids;
+    if (t->on_server) {
+        ids = thing_server_ids;
+    } else {
+        ids = thing_client_ids;
+    }
+
+    thing_map *map = thing_get_map(t);
+//LOG("add %s to %s map", thing_logname(t), map == &thing_server_map ?  
+//"server" : "client");
+
+    /*
+     * Check not on the map.
+     */
+    if ((t->map_x != -1) || (t->map_y != -1)) {
+        DIE("thing %s already on map at %d,%d", t->logname,
+            t->map_x, t->map_y);
+        return;
+    }
+
+    uint32_t i;
+
+    /*
+     * Sanity check we're not on already.
+     */
+    thing_map_cell *cell = &map->cells[x][y];
+
+#ifdef ENABLE_MAP_SANITY
+    for (i = 0; i < cell->count; i++) {
+        uint16_t m = cell->id[i];
+
+        if (!m) {
+            continue;
+        }
+
+        /*
+         * Something is on the map.
+         */
+        if (m == t->thing_id) {
+            /*
+             * It's us?
+             */
+            DIE("already found on map");
+        }
+
+        thingp p = ids[m];
+        if (p == t) {
+            DIE("already found thing %s on map", t->logname);
+        }
+    }
+#endif
+
+    if (cell->count == MAP_THINGS_PER_CELL) {
+        /*
+         * Try to find something we can boot out.
+         */
+        if (thing_is_explosion(t)) {
+            /*
+             * Don't bother. This is a transient thing.
+             */
+            return;
+        }
+
+        /*
+         * This is a more important thing. Try and boot out something less
+         * important.
+         */
+        for (i = 0; i < cell->count; i++) {
+            uint16_t m = cell->id[i];
+            if (!m) {
+                DIE("expected to find a map id on the map here");
+            }
+
+            thingp p = ids[m];
+            if (!p) {
+                DIE("expected to find a thing on the map here");
+            }
+
+            if (thing_is_explosion(p)) {
+                thing_map_remove(p);
+                break;
+            }
+        }
+    }
+
+    if (cell->count == MAP_THINGS_PER_CELL) {
+        /*
+         * We're hosed.
+         */
+        ERR("out of map slots trying to add %s", t->logname);
+
+        for (i = 0; i < cell->count; i++) {
+            uint16_t m = cell->id[i];
+            thingp p = ids[m];
+
+            LOG("  slot [%d] id %d %s", i, m, p->logname);
+        }
+
+        return;
+    }
+
+    cell->id[cell->count] = t->thing_id;
+    cell->count++;
+
+    t->map_x = x;
+    t->map_y = y;
 }
 
 /*
@@ -231,6 +570,17 @@ thingp thing_server_new (levelp level, const char *name)
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
+    t->on_server = true;
+
+    /*
+     * Start out not on the map.
+     */
+    t->last_x = -1.0;
+    t->last_y = -1.0;
+    t->map_x = -1.0;
+    t->map_y = -1.0;
+    t->x = -1.0;
+    t->y = -1.0;
 
     /*
      * Use a different base for monsters so that the IDs we create are going
@@ -255,6 +605,10 @@ thingp thing_server_new (levelp level, const char *name)
         id = next_thing_id;
         min = 1;
         max = THING_ID_MAX / 2;
+    }
+
+    if (!id) {
+        id = min;
     }
 
     /*
@@ -284,19 +638,14 @@ thingp thing_server_new (levelp level, const char *name)
     t->tree.key = id;
     thing_server_ids[id] = t;
     t->thing_id = id;
+    if (!id) {
+        DIE("sanity check, ID 0 never used min %u max %u", min, max);
+    }
+
     *next = id;
 
     t->thing_template = thing_template;
     t->health = thing_template_get_health(thing_template);
-    t->on_server = true;
-
-    /*
-     * Start out not on the map.
-     */
-    t->last_x = -1.0;
-    t->last_y = -1.0;
-    t->x = -1.0;
-    t->y = -1.0;
 
     if (thing_template_is_player(thing_template)) {
         t->tree2.key = id;
@@ -393,7 +742,11 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
+    t->map_x = -1.0;
+    t->map_y = -1.0;
+
     t->tree.key = id;
+    thing_client_ids[id] = t;
     t->thing_template = thing_template;
     t->on_server = false;
 
@@ -545,6 +898,7 @@ void thing_destroy (thingp t, const char *why)
     }
 
     if (t->wid) {
+        thing_map_remove(t);
         thing_set_wid(t, 0);
     }
 
@@ -555,6 +909,8 @@ void thing_destroy (thingp t, const char *why)
 
     if (t->on_server) {
         thing_server_ids[t->thing_id] = 0;
+    } else {
+        thing_client_ids[t->thing_id] = 0;
     }
 
     /*
