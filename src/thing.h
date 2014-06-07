@@ -519,6 +519,11 @@ typedef struct thing_ {
     uint32_t timestamp_ai;
 
     /*
+     * When we last checked for hitting something.
+     */
+    uint32_t timestamp_collision;
+
+    /*
      * When we last spawned.
      */
     uint32_t timestamp_mob_spawn;
