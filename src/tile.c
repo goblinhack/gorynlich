@@ -293,63 +293,6 @@ const char *tile_name (tile *tile)
     return (tile->tree.key);
 }
 
-/*
- * Blits a whole tile. Y co-ords are inverted.
- */
-void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
-{
-    if (!tile) {
-        if (!name) {
-            DIE("no name for tile blit");
-        }
-
-        tile = tile_find(name);
-    }
-
-    blit(tile->gl_surface_binding,
-         tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
-}
-
-/*
- * Blits a whole tile.
- */
-void tile_blit_at (tile *tile, char *name, point tl, point br)
-{
-    if (!tile) {
-        if (!name) {
-            DIE("no name for tile blit");
-        }
-
-        tile = tile_find(name);
-    }
-
-    blit(tile->gl_surface_binding,
-         tile->x1, tile->y2, tile->x2, tile->y1, tl.x, tl.y, br.x, br.y);
-}
-
-/*
- * Blits a whole tile.
- */
-void tile_blit (tile *tile, char *name, point at)
-{
-    point tl, br;
-
-    if (!tile) {
-        if (!name) {
-            DIE("no name for tile blit");
-        }
-
-        tile = tile_find(name);
-    }
-
-    tl.x = at.x - tile->width/2;
-    br.y = at.y - tile->height/2;
-    br.x = at.x + tile->width/2;
-    tl.y = at.y + tile->height/2;
-
-    tile_blit_at(tile, name, tl, br);
-}
-
 void tile_get_coords (tile *tile, float *x1, float *y1, float *x2, float *y2)
 {
     *x1 = tile->x1;

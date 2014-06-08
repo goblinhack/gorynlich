@@ -25,6 +25,8 @@
 #include "socket.h"
 #include "math.h"
 
+TREE_GET_NEXT_INLINE(tree_key_two_int32_compare_func)
+
 static void thing_tick_server_all (void)
 {
     levelp level = server_level;
@@ -41,7 +43,8 @@ static void thing_tick_server_all (void)
         action_timers_tick(thing_timers);
     }
 
-    TREE_WALK(server_active_things, t) {
+    TREE_WALK_INLINE(server_active_things, t,
+                     tree_get_next_tree_key_two_int32_compare_func) {
         thing_templatep thing_template;
         widp w;
 
@@ -209,7 +212,8 @@ static void thing_tick_client_all (void)
         return;
     }
 
-    TREE_WALK(client_active_things, t) {
+    TREE_WALK_INLINE(client_active_things, t,
+                     tree_get_next_tree_key_two_int32_compare_func) {
         thing_templatep thing_template;
         widp w;
 

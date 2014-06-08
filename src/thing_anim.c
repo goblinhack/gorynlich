@@ -36,6 +36,10 @@ void thing_animate (thingp t)
          * Stop the animation here?
          */
         if (thing_tile_is_end_of_anim(tile)) {
+            if (thing_tile_is_dead_on_end_of_anim(tile)) {
+                thing_dead(t, 0, "end of anim");
+                return;
+            }
             return;
         }
     }
