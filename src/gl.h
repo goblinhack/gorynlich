@@ -4,6 +4,10 @@
  * See the README file.
  */
 
+#include <stdlib.h>
+
+#include "color.h"
+
 #pragma once
 
 /*
@@ -50,9 +54,6 @@
 void gl_enter_2d_mode(void);
 void gl_leave_2d_mode(void);
 
-void blit(int tex,
-          float tx0, float ty0, float tx1, float ty1,
-          float tlx, float tly, float brx, float bry);
 void blit_flush(void);
 void blit_fini(void);
 void gl_blitquad(float tlx, float tly, float brx, float bry);
@@ -136,3 +137,176 @@ gl_push_rgba (float **p, float r, float g, float b, float a)
     *xyp++ = x;                                 \
     *xyp++ = y;
 
+extern GLfloat *bufp;
+extern GLfloat *bufp_end;
+extern int buf_tex;
+
+extern void blit_init(void);
+
+/*
+ * gl_push
+ */
+static inline void
+gl_push (float **p,
+         float *p_end,
+         uint8_t first,
+         float tex_left,
+         float tex_top,
+         float tex_right,
+         float tex_bottom,
+         float left,
+         float top,
+         float right,
+         float bottom,
+         float r1, float g1, float b1, float a1,
+         float r2, float g2, float b2, float a2,
+         float r3, float g3, float b3, float a3,
+         float r4, float g4, float b4, float a4)
+{
+    static float last_tex_right;
+    static float last_tex_bottom;
+    static float last_right;
+    static float last_bottom;
+
+    if (*p + 24 >= p_end) {
+        DIE("overflow on gl bug");
+    }
+
+    if (!first) {
+        /*
+         * If there is a break in the triangle strip then make a degenerate
+         * triangle.
+         */
+        if ((last_right != left) || (last_bottom != bottom)) {
+            gl_push_texcoord(p, last_tex_right, last_tex_bottom);
+            gl_push_vertex(p, last_right, last_bottom);
+            gl_push_rgba(p, r4, g4, b4, a4);
+
+            gl_push_texcoord(p, tex_left,  tex_top);
+            gl_push_vertex(p, left,  top);
+            gl_push_rgba(p, r1, g1, b1, a1);
+        }
+    }
+
+    gl_push_texcoord(p, tex_left,  tex_top);
+    gl_push_vertex(p, left,  top);
+    gl_push_rgba(p, r1, g1, b1, a1);
+
+    gl_push_texcoord(p, tex_left,  tex_bottom);
+    gl_push_vertex(p, left,  bottom);
+    gl_push_rgba(p, r2, g2, b2, a2);
+
+    gl_push_texcoord(p, tex_right, tex_top);
+    gl_push_vertex(p, right, top);
+    gl_push_rgba(p, r3, g3, b3, a3);
+
+    gl_push_texcoord(p, tex_right, tex_bottom);
+    gl_push_vertex(p, right, bottom);
+    gl_push_rgba(p, r4, g4, b4, a4);
+
+    last_tex_right = tex_right;
+    last_tex_bottom = tex_bottom;
+    last_right = right;
+    last_bottom = bottom;
+}
+
+static inline
+void blit (int tex,
+           float texMinX,
+           float texMinY,
+           float texMaxX,
+           float texMaxY,
+           float left,
+           float top,
+           float right,
+           float bottom)
+{
+#ifdef ENABLE_GL_BULK_DRAW_ARRAYS
+    uint8_t first;
+
+    if (!buf_tex) {
+        blit_init();
+        first = true;
+    } else if (buf_tex != tex) {
+        blit_flush();
+        first = true;
+    } else {
+        first = false;
+    }
+
+    buf_tex = tex;
+
+    color c = gl_color_current();
+
+    float r = ((float)c.r) / 255.0;
+    float g = ((float)c.g) / 255.0;
+    float b = ((float)c.b) / 255.0;
+    float a = ((float)c.a) / 255.0;
+
+    float r1 = r;
+    float g1 = g;
+    float b1 = b;
+    float a1 = a;
+
+    float r2 = r;
+    float g2 = g;
+    float b2 = b;
+    float a2 = a;
+
+    float r3 = r;
+    float g3 = g;
+    float b3 = b;
+    float a3 = a;
+
+    float r4 = r;
+    float g4 = g;
+    float b4 = b;
+    float a4 = a;
+
+    gl_push(&bufp,
+            bufp_end,
+            first,
+            texMinX,
+            texMinY,
+            texMaxX,
+            texMaxY,
+            left,
+            top,
+            right,
+            bottom,
+            r1, g1, b1, a1,
+            r2, g2, b2, a2,
+            r3, g3, b3, a3,
+            r4, g4, b4, a4);
+#else
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    GLfloat xy[4*2];
+    GLfloat uv[4*2];
+    GLfloat *xyp = xy;
+    GLfloat *uvp = uv;
+
+#define TexCoord2f(x, y) *uvp++ = x; *uvp++ = y;
+#define Vertex2f(x, y) *xyp++ = x; *xyp++ = y;
+
+    TexCoord2f(texMinX, texMinY);
+    TexCoord2f(texMaxX, texMinY);
+    TexCoord2f(texMinX, texMaxY);
+    TexCoord2f(texMaxX, texMaxY);
+
+    Vertex2f(left, top);
+    Vertex2f(right, top);
+    Vertex2f(left, bottom);
+    Vertex2f(right, bottom);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glVertexPointer(2, GL_FLOAT, 0, xy);
+    glTexCoordPointer(2, GL_FLOAT, 0, uv);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+#endif
+}

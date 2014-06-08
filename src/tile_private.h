@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "tree.h"
+
 typedef struct tile_ {
     tree_key_string tree;
     /*

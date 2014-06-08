@@ -762,7 +762,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     double score_and_health_title_offset = 0.03;
     double score_and_health_value_offset = 0.05;
 
-    double items_x = 0.00; // items x
+    double items_x = 0.01; // items x
     double items_y = 0.31; // items y
     double items_y_offset = 0.04;
     uint32_t item_columns = 6;
@@ -954,7 +954,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
                     widp w;
 
-                    w = wid_new_rounded_small_button(
+                    w = wid_new_square_button(
                                         wid_scoreline_container_top,
                                         "item");
                     fpoint tl;
