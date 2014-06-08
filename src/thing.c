@@ -3103,7 +3103,7 @@ void thing_fire (thingp t,
     }
 
     double dx, dy;
-    double dist_from_player = 0.2;
+    double dist_from_player = 0.1;
 
     /*
      * Try current direction.
