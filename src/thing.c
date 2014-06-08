@@ -2917,8 +2917,8 @@ void socket_server_tx_player_update (thingp t)
 
     *data++ = MSG_SERVER_PLAYER_UPDATE;
 
-    SDLNet_Write32(t->tree.key, data);               
-    data += sizeof(uint32_t);
+    SDLNet_Write16(t->thing_id, data);               
+    data += sizeof(uint16_t);
 
     memcpy(data, t->carrying, sizeof(t->carrying));
     data += sizeof(t->carrying);
@@ -2953,8 +2953,8 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
 {
     verify(s);
 
-    uint32_t id = SDLNet_Read32(data);
-    data += sizeof(uint32_t);
+    uint16_t id = SDLNet_Read16(data);
+    data += sizeof(uint16_t);
 
     thingp t = thing_client_find(id);
     if (!t) {
@@ -3322,6 +3322,8 @@ void thing_wield (thingp t, thing_templatep tmp)
 
     THING_SHOUT_AT(t, INFO,
                    "You wield the %s", thing_template_short_name(tmp));
+
+    t->needs_tx_player_update = true;
 }
 
 void thing_collect (thingp t, thing_templatep tmp)

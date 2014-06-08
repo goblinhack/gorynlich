@@ -19,11 +19,16 @@
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
+#undef MORE_SPEED_LESS_VISUALS    // Go for max fps over loops
 
 /*
  * So we don't hog all the CPU
  */
+#ifdef MORE_SPEED_LESS_VISUALS
+#define MAIN_LOOP_DELAY            2
+#else
 #define MAIN_LOOP_DELAY            5
+#endif
 
 /*
  * Tries to batch calls to draw arrays for more speed.

@@ -954,9 +954,18 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
                     widp w;
 
+                    /*
+                     * It is faster to use square here, but this looks better.
+                     */
+#ifdef MORE_SPEED_LESS_VISUALS
                     w = wid_new_square_button(
                                         wid_scoreline_container_top,
                                         "item");
+#else
+                    w = wid_new_rounded_small_button(
+                                        wid_scoreline_container_top,
+                                        "item");
+#endif
                     fpoint tl;
                     fpoint br;
 
