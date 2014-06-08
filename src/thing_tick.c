@@ -110,6 +110,18 @@ static void thing_tick_server_all (void)
              * Only if it finished moving the last delta.
              */
             if ((t->dx != 0) || (t->dy != 0)) {
+                /*
+                 * Clean up missiles that have hit the edge and stopped 
+                 * moving.
+                 */
+                if ((t->x <= 0) || 
+                    (t->y <= 0) || 
+                    (t->x >= MAP_WIDTH - 1) ||
+                    (t->y >= MAP_HEIGHT - 1)) {
+                    thing_dead(t, 0, "missile at edge of level"); 
+                    continue;
+                }
+
                 double fnexthop_x = t->x + t->dx;
                 double fnexthop_y = t->y + t->dy;
 
