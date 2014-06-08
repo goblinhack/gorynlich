@@ -124,19 +124,25 @@ static void thing_tick_server_all (void)
             }
         }
 
-        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_COLLISION_TEST,
-                                             t->timestamp_collision)) {
-            continue;
-        }
-
-        thing_handle_collisions(wid_game_map_server_grid_container, t);
-
-        t->timestamp_collision = time_get_time_cached() + (rand() % 100);
-
         /*
-         * Died in a collision ? 8( Handle it next time around.
+         * Do expensive collision tests less often. But for weapons do them
+         * all the time else you can have weapons speed through walls.
          */
-        if (thing_is_dead(t)) {
+        if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_COLLISION_TEST,
+                                             t->timestamp_collision) ||
+            thing_is_projectile(t)) {
+
+            thing_handle_collisions(wid_game_map_server_grid_container, t);
+
+            t->timestamp_collision = time_get_time_cached() + (rand() % 100);
+
+            /*
+             * Died in a collision ? 8( Handle it next time around.
+             */
+            if (thing_is_dead(t)) {
+                continue;
+            }
+        } else {
             continue;
         }
 
