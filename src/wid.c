@@ -2700,7 +2700,8 @@ void wid_set_on_tick (widp w, on_tick_t fn)
     wid_tree5_insert(w);
 }
 
-static int8_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
+static inline int8_t 
+tree_wid_compare_func (const tree_node *a, const tree_node *b)
 {
     widp A = (typeof(A))a;
     widp B = (typeof(B))b;
@@ -2766,6 +2767,9 @@ static int8_t tree_wid_compare_func (const tree_node *a, const tree_node *b)
 
     return (0);
 }
+
+TREE_NEXT_INLINE(tree_wid_compare_func) 
+TREE_PREV_INLINE(tree_wid_compare_func) 
 
 /*
  * Remove this wid from any trees it is in.
@@ -7472,7 +7476,8 @@ static void wid_display (widp w,
     /*
      * If this is a grid wid, draw the elements in y sorted order.
      */
-    TREE_WALK_REVERSE_UNSAFE(w->children_display_sorted, child) {
+    TREE_WALK_REVERSE_UNSAFE_INLINE(w->children_display_sorted, child,
+                                    tree_prev_tree_wid_compare_func) {
         uint8_t child_updated_scissors = false;
 
         wid_display(child, disable_scissor, &child_updated_scissors);

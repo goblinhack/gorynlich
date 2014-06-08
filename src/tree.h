@@ -142,6 +142,69 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
     return (node);
 }
 
+/*
+ * Walk all nodes. Not safe if next node is destroyed. Use TREE_WALK instead.
+ */
+#define TREE_NEXT_INLINE(compare_func)                                      \
+static inline                                                               \
+tree_node *tree_next_ ## compare_func (tree_root *root, tree_node *node)    \
+{                                                                           \
+    tree_node *next;                                                        \
+    int32_t compare;                                                        \
+                                                                            \
+    if (!node) {                                                            \
+        return (0);                                                         \
+    }                                                                       \
+                                                                            \
+    if (node->right) {                                                      \
+        next = tree_first_fast(node->right);                                \
+    } else if (node->parent) {                                              \
+        next = node;                                                        \
+        do {                                                                \
+            next = next->parent;                                            \
+            if (!next) {                                                    \
+                break;                                                      \
+            }                                                               \
+                                                                            \
+            compare = (compare_func)(next, node);                           \
+        } while (compare <= 0);                                             \
+    } else {                                                                \
+        next = 0;                                                           \
+    }                                                                       \
+                                                                            \
+    return (next);                                                          \
+}                                                                           \
+    
+#define TREE_PREV_INLINE(compare_func)                                      \
+static inline                                                               \
+tree_node *tree_prev_ ## compare_func (tree_root *root, tree_node *node)    \
+{                                                                           \
+    tree_node *next;                                                        \
+    int32_t compare;                                                        \
+                                                                            \
+    if (!node) {                                                            \
+        return (0);                                                         \
+    }                                                                       \
+                                                                            \
+    if (node->left) {                                                       \
+        next = tree_last(node->left);                                       \
+    } else if (node->parent) {                                              \
+        next = node;                                                        \
+        do {                                                                \
+            next = next->parent;                                            \
+            if (!next) {                                                    \
+                break;                                                      \
+            }                                                               \
+                                                                            \
+            compare = (compare_func)(next, node);                           \
+        } while (compare > 0);                                              \
+    } else {                                                                \
+        next = 0;                                                           \
+    }                                                                       \
+                                                                            \
+    return (next);                                                          \
+}                                                                           \
+
 #define TREE_WALK(ROOT, NODE)                                               \
     typeof((NODE)->tree) saved_key;                                         \
     extern int32_t gcc_no_warn;                                             \
@@ -155,6 +218,20 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
                                                                             \
         (NODE) = (typeof(NODE))                                             \
             tree_get_next((ROOT), (ROOT)->node, &saved_key.node))
+
+#define TREE_WALK_INLINE(ROOT, NODE, tree_get_next_func)                    \
+    typeof((NODE)->tree) saved_key;                                         \
+    extern int32_t gcc_no_warn;                                             \
+                                                                            \
+    if (ROOT)                                                               \
+                                                                            \
+    for ((NODE) = (typeof(NODE)) tree_first((ROOT)->node);                  \
+                                                                            \
+        gcc_no_warn =                                                       \
+            (NODE) ? saved_key = (NODE)->tree, 0 : 0, (NODE);               \
+                                                                            \
+        (NODE) = (typeof(NODE))                                             \
+            (tree_get_next_func)((ROOT), (ROOT)->node, &saved_key.node))
 
 
 #define TREE_WALK_REVERSE(ROOT, NODE)                                       \
@@ -184,6 +261,13 @@ static inline void *getnode2ctx (tree_root *root, tree_node **out,
     for (PREV = (NODE) = (typeof(NODE)) tree_root_last((ROOT));             \
          (NODE = (PREV)) != 0;                                              \
          PREV = (typeof(NODE)) tree_prev((ROOT), (tree_node*)(NODE)))       \
+
+#define TREE_WALK_REVERSE_UNSAFE_INLINE(ROOT, NODE, tree_prev_func)         \
+    typeof(NODE) PREV;                                                      \
+                                                                            \
+    for (PREV = (NODE) = (typeof(NODE)) tree_root_last((ROOT));             \
+         (NODE = (PREV)) != 0;                                              \
+         PREV = (typeof(NODE)) (tree_prev_func)((ROOT), (tree_node*)(NODE))) \
 
 #define TREE_OFFSET_WALK_UNSAFE(ROOT, OUT)                                 \
     typeof(OUT) NEXT;                                                      \
@@ -480,4 +564,86 @@ static inline tree_node *tree_get_next (tree_root *root,
      */
     return (top);
 }
+
+#define TREE_GET_NEXT_INLINE(compare_func)                              \
+/*                                                                      \
+ * Find the next highest node.						\
+ */									\
+static inline tree_node *tree_get_next_ ## compare_func (tree_root *root, \
+                                                         tree_node *top,  \
+                                                         tree_node *node) \
+{									\
+    tree_node *subtree;							\
+    int8_t compare;							\
+									\
+    if (!top) {								\
+        return (0);							\
+    }									\
+									\
+    compare = (compare_func)(top, node);				\
+									\
+    if (compare == 0) {							\
+        /*								\
+         * top == node							\
+         *								\
+         * Dive into the right tree and return the least node.		\
+         *								\
+         *        4   (top 4, node 4, look at 7)			\
+         *       / \							\
+         *      3   8							\
+         *     /   / \							\
+         *    1   7   9							\
+         */								\
+        if (!top->right) {						\
+            return (0);							\
+        }								\
+									\
+	return (tree_first_fast(top->right));				\
+    }									\
+									\
+    if (compare < 0) {							\
+        /*								\
+         * top < node							\
+         *								\
+         * Dive into the right tree.					\
+         *								\
+         *        4   (top 4, node 5, look at 8)			\
+         *       / \							\
+         *      3   8							\
+         *     /   / \							\
+         *    1   7   9							\
+         */								\
+	return ((tree_get_next_ ## compare_func)(root, top->right, node)); \
+    }									\
+									\
+    /*									\
+     * top > node							\
+     *									\
+     * Dive into the left tree.						\
+     *									\
+     *        4   (top 4, node 3, look at 1)				\
+     *       / \							\
+     *      3   8							\
+     *     /   / \							\
+     *    1   7   9							\
+     */									\
+    subtree = (tree_get_next_ ## compare_func)(root, top->left, node);	\
+    if (subtree) {							\
+        return (subtree);						\
+    }									\
+									\
+    /*									\
+     * top > node							\
+     *									\
+     * If there is no subtree.						\
+     *									\
+     *        4   (top 1, node 0, look at 1)				\
+     *       / \							\
+     *      3   8							\
+     *     /   / \							\
+     *    1   7   9							\
+     */									\
+    return (top);							\
+}									\
+
 #endif

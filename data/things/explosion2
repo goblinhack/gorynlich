@@ -43,7 +43,7 @@ is_fire
    tile="space"
    delay=50
    is_end_of_anim
-command="dead"
+   is_dead_on_end_of_anim
   }
  }
 }
