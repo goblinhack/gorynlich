@@ -164,12 +164,6 @@ void thing_timer_place_destroy_callback(void *context);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
 void thing_shout_at(thingp t, const char *what);
-void thing_collect(thingp t, thingp it, thing_templatep tmp);
-void thing_used(thingp t, thing_templatep tmp);
-void thing_unwield(thingp t);
-void thing_wield(thingp t, thing_templatep tmp);
-void thing_item_destroyed(thingp t, thing_templatep tmp);
-void thing_drop(thingp t, thing_templatep tmp);
 void thing_fire(thingp t,
                 const uint8_t up,
                 const uint8_t down,
@@ -1170,3 +1164,18 @@ static inline thing_map *thing_get_map (thingp t)
 
 extern thingp thing_server_ids[THING_ID_MAX];
 extern thingp thing_client_ids[THING_ID_MAX];
+
+/*
+ * thing_weapon.h
+ */
+void thing_unwield(thingp t);
+void thing_wield(thingp t, thing_templatep tmp);
+
+/*
+ * thing_item.h
+ */
+void thing_collect(thingp t, thingp it, thing_templatep tmp);
+void thing_used(thingp t, thing_templatep tmp);
+void thing_item_destroyed(thingp t, thing_templatep tmp);
+void thing_drop(thingp t, thing_templatep tmp);
+void thing_wield_next_weapon(thingp t);
