@@ -956,6 +956,10 @@
   } {   
    x=7 
    y=5 
+   t="data/things/water" 
+  } {   
+   x=7 
+   y=5 
    t="data/things/floor" 
   } {   
    x=8 
