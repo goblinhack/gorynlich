@@ -698,7 +698,7 @@ thingp thing_server_new (levelp level, const char *name)
 
         for (i = 0; i < THING_MAX; i++) {
             if (thing_template->carrying[i]) {
-                thing_collect(t, id_to_thing_template(i));
+                thing_collect(t, 0 /* it */, id_to_thing_template(i));
             }
         }
     }
@@ -990,28 +990,34 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      */
     if (t->on_server) {
         /*
-         * When it dies, doth it polymorph and thus avoid the reaper?
+         * If the reason of death was collection, some things we do not want
+         * to do.
          */
-        const char *polymorph = 
-                        thing_template_polymorph_on_death(t->thing_template);
-        if (polymorph) {
-            thing_templatep what = thing_template_find(polymorph);
+        if (!t->is_collected) {
+            /*
+             * When it dies, doth it polymorph and thus avoid the reaper?
+             */
+            const char *polymorph = 
+                            thing_template_polymorph_on_death(t->thing_template);
+            if (polymorph) {
+                thing_templatep what = thing_template_find(polymorph);
 
-            if (what) {
-                /*
-                 * It doth.
-                 */
-                t->resync = 1;
-                t->thing_template = what;
-                t->health = thing_template_get_health(what);
-                t->updated++;
-
-                if (!t->updated) {
+                if (what) {
+                    /*
+                    * It doth.
+                    */
+                    t->resync = 1;
+                    t->thing_template = what;
+                    t->health = thing_template_get_health(what);
                     t->updated++;
-                }
 
-                socket_server_tx_map_update(0, server_boring_things);
-                return;
+                    if (!t->updated) {
+                        t->updated++;
+                    }
+
+                    socket_server_tx_map_update(0, server_boring_things);
+                    return;
+                }
             }
         }
     }
@@ -1934,18 +1940,18 @@ uint8_t thing_is_qqq6 (thingp t)
     return (t->is_qqq6);
 }
 
-void thing_set_is_qqq7 (thingp t, uint8_t val)
+void thing_set_is_collected (thingp t, uint8_t val)
 {
     verify(t);
 
-    t->is_qqq7 = val;
+    t->is_collected = val;
 }
 
-uint8_t thing_is_qqq7 (thingp t)
+uint8_t thing_is_collected (thingp t)
 {
     verify(t);
 
-    return (t->is_qqq7);
+    return (t->is_collected);
 }
 
 void thing_set_got_to_exit_first (thingp t, uint8_t val)
@@ -3326,7 +3332,7 @@ void thing_wield (thingp t, thing_templatep tmp)
     t->needs_tx_player_update = true;
 }
 
-void thing_collect (thingp t, thing_templatep tmp)
+void thing_collect (thingp t, thingp it, thing_templatep tmp)
 {
     uint32_t item;
     uint32_t quantity;
@@ -3377,8 +3383,7 @@ void thing_collect (thingp t, thing_templatep tmp)
     }
 
     if (thing_is_player(t)) {
-        THING_SHOUT_AT(t, INFO, "%s added", 
-                       thing_template_short_name(tmp));
+        THING_SHOUT_AT(t, INFO, "%s added", thing_template_short_name(tmp));
     }
 
     t->carrying[item] += quantity;
@@ -3392,6 +3397,10 @@ void thing_collect (thingp t, thing_templatep tmp)
 
             thing_wield(t, tmp);
         }
+    }
+
+    if (it) {
+        it->is_collected = true;
     }
 }
 

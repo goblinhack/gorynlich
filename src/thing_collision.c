@@ -283,7 +283,7 @@ static void thing_handle_collision (thingp me, thingp it,
             thing_is_weapon(it) ||
             thing_is_food(it)) {
 
-            thing_collect(me, thing_get_template(it));
+            thing_collect(me, it, thing_get_template(it));
 
             thing_dead(it, me, "collected");
             return;
