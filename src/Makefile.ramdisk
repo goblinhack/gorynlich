@@ -115,6 +115,12 @@
 .o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
 	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
 
+.o/ramdisk_data_things__food_session.o: asm/ramdisk_data_things__food_session.S ../data/things/.food.session
+	gcc -c asm/ramdisk_data_things__food_session.S -o .o/ramdisk_data_things__food_session.o
+
+.o/ramdisk_data_things__poison8_session.o: asm/ramdisk_data_things__poison8_session.S ../data/things/.poison8.session
+	gcc -c asm/ramdisk_data_things__poison8_session.S -o .o/ramdisk_data_things__poison8_session.o
+
 .o/ramdisk_data_things__water_poison_session.o: asm/ramdisk_data_things__water_poison_session.S ../data/things/.water_poison.session
 	gcc -c asm/ramdisk_data_things__water_poison_session.S -o .o/ramdisk_data_things__water_poison_session.o
 
