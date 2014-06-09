@@ -60,6 +60,8 @@ GAME_OBJECTS=				\
     $(OBJDIR)/thing_collision.o 	\
     $(OBJDIR)/thing_template.o 		\
     $(OBJDIR)/thing_tile.o 		\
+    $(OBJDIR)/thing_item.o 		\
+    $(OBJDIR)/thing_weapon.o 		\
     $(OBJDIR)/tile.o 			\
     $(OBJDIR)/timer.o 			\
     $(OBJDIR)/init_fn.o 		\

@@ -148,6 +148,10 @@
   } {   
    x=2 
    y=1 
+   t="data/things/ring1" 
+  } {   
+   x=2 
+   y=1 
    t="data/things/floor" 
   } {   
    x=3 
@@ -161,6 +165,10 @@
    x=5 
    y=1 
    t="data/things/floor" 
+  } {   
+   x=6 
+   y=1 
+   t="data/things/ring1" 
   } {   
    x=6 
    y=1 
@@ -365,6 +373,10 @@
    x=6 
    y=2 
    t="data/things/floor" 
+  } {   
+   x=7 
+   y=2 
+   t="data/things/food" 
   } {   
    x=7 
    y=2 
@@ -557,6 +569,10 @@
    x=6 
    y=3 
    t="data/things/floor" 
+  } {   
+   x=7 
+   y=3 
+   t="data/things/coins1" 
   } {   
    x=7 
    y=3 

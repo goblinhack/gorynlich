@@ -54,26 +54,23 @@ uint8_t thing_mob_spawn (thingp t)
             y += 1.0;
         }
 
-        if (map_is_wall_at(server_level, x, y)) {
+        /*
+         * Things not to spawn onto.
+         */
+        if (map_is_wall_at(server_level, x, y)          ||
+            map_is_monst_at(server_level, x, y)         ||
+            map_is_pipe_at(server_level, x, y)          ||
+            map_is_player_at(server_level, x, y)        ||
+            map_is_treasure_at(server_level, x, y)      ||
+            map_is_food_at(server_level, x, y)          ||
+            map_is_mob_spawner_at(server_level, x, y)   ||
+            map_is_exit_at(server_level, x, y)) {
             continue;
         }
 
-        if (map_is_monst_at(server_level, x, y)) {
-            continue;
-        }
-
-        if (map_is_pipe_at(server_level, x, y)) {
-            continue;
-        }
-
-        if (map_is_player_at(server_level, x, y)) {
-            continue;
-        }
-
-        if (map_is_exit_at(server_level, x, y)) {
-            continue;
-        }
-
+        /*
+         * Must have a floor tile to spawn onto
+         */
         if (!map_is_floor_at(server_level, x, y)) {
             continue;
         }
