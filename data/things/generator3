@@ -6,6 +6,7 @@
  is_mob_spawner
  is_monst
  is_collision_map_large
+ bonus_score_on_death=50
  mob_spawn_delay_tenths=20
  polymorph_on_death="data/things/generator2"
  mob_spawn="data/things/ghost2"
