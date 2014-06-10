@@ -441,8 +441,6 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
     }
 
     thing_map *map = thing_get_map(t);
-//LOG("add %s to %s map", thing_logname(t), map == &thing_server_map ?  
-//"server" : "client");
 
     /*
      * Check not on the map.
@@ -1046,6 +1044,25 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
             level_set_monst_map_treat_doors_as_passable(server_level);
             level_set_monst_map_treat_doors_as_walls(server_level);
         }
+
+        /*
+         * Bounty for the killer?
+         */
+        uint32_t score = thing_template_get_bonus_score_on_death(
+                                                thing_get_template(t));
+        if (score && killer) {
+            thingp recipient = killer;
+
+            /*
+             * Did someone throw this weapon and gets the score?
+             */
+            if (killer->owner_id) {
+                recipient = thing_server_ids[killer->owner_id];
+                verify(recipient);
+            }
+
+            thing_set_score(recipient, thing_score(recipient) + score);
+        }
     }
 
     /*
@@ -1053,24 +1070,13 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      */
     if (thing_is_monst(t) || 
         thing_is_mob_spawner(t) || 
+        thing_is_wall(t) || 
         thing_is_door(t)) {
 
         widp w = t->wid;
         if (w) {
             wid_set_mode(w, WID_MODE_ACTIVE);
             wid_set_color(w, WID_COLOR_BLIT, RED);
-        }
-    }
-
-    /*
-     * Bounty for the killer?
-     */
-    if (killer) {
-        uint32_t score = thing_template_get_bonus_score_on_death(
-                                                thing_get_template(t));
-
-        if (score) {
-            thing_set_score(killer, thing_score(killer) + score);
         }
     }
 
@@ -1212,7 +1218,9 @@ static void thing_hit_ (thingp t,
      * If a thing that modifies the level dies, update it.
      */
     if (thing_is_dead(t)) {
-        if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
+        if (thing_is_wall(t) || 
+            thing_is_door(t) || 
+            thing_is_pipe(t)) {
             level_update(server_level);
         }
     }
@@ -1238,6 +1246,17 @@ void thing_hit (thingp t,
     }
 
     /*
+     * If this is a thing on the edge of the level acting as a indestrucatble
+     * wall, then don't allow it to be destroyed.
+     */
+    if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
+        if ((t->x <= 0) || (t->x >= MAP_WIDTH - 1) ||
+            (t->y <= 0) || (t->y >= MAP_HEIGHT - 1)) {
+            return;
+        }
+    }
+
+    /*
      * Check to see if this is a thing tht can be damaged by the hitter.
      */
     if (hitter) {
@@ -1245,9 +1264,9 @@ void thing_hit (thingp t,
          * Walls and doors and other solid object are not damaged by poison
          * or similar effects. Limit it to explosions and the like.
          */
-        if (thing_is_door(t) || 
-            thing_is_mob_spawner(t) || 
-            thing_is_door(t)) {
+        if (thing_is_door(t)            || 
+            thing_is_mob_spawner(t)     || 
+            thing_is_wall(t)) {
 
             if (!thing_is_explosion(hitter) &&
                 !thing_is_projectile(hitter)) {
@@ -1259,8 +1278,9 @@ void thing_hit (thingp t,
     /*
      * Flash briefly red on attempted hits.
      */
-    if (thing_is_monst(t) || 
-        thing_is_mob_spawner(t) || 
+    if (thing_is_monst(t)               || 
+        thing_is_mob_spawner(t)         || 
+        thing_is_wall(t)                ||
         thing_is_door(t)) {
 
         /*
@@ -1282,15 +1302,9 @@ void thing_hit (thingp t,
     }
     
     /*
-     * If this is a thing on the edge of the level acting as a indestrucatble
-     * wall, then don't allow it to be destroyed.
+     * Update the map for destruction of the scenery.
      */
     if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
-        if ((t->x <= 0) || (t->x >= MAP_WIDTH - 1) ||
-            (t->y <= 0) || (t->y >= MAP_HEIGHT - 1)) {
-            return;
-        }
-
         level_update(server_level);
     }
 
@@ -1358,7 +1372,7 @@ static void thing_effect_hit_success (thingp t)
     widp w = t->wid;
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
-        wid_set_color(w, WID_COLOR_BLIT, PINK);
+        wid_set_color(w, WID_COLOR_BLIT, RED);
     }
 }
 
@@ -1369,7 +1383,7 @@ static void thing_effect_hit_miss (thingp t)
     widp w = t->wid;
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
-        wid_set_color(w, WID_COLOR_BLIT, RED);
+        wid_set_color(w, WID_COLOR_BLIT, GRAY);
     }
 }
 
@@ -1531,6 +1545,8 @@ void thing_set_score (thingp t, uint32_t score)
     verify(t);
 
     t->score = score;
+
+    t->needs_tx_player_update = true;
 }
 
 widp thing_message (thingp t, const char *message)
@@ -3205,6 +3221,11 @@ void thing_fire (thingp t,
                                     projectile);
 
     thingp p = wid_get_thing(w);
+
+    /*
+     * Make sure we keep track of who fired so we can award scores.
+     */
+    p->owner_id = t->thing_id;
 
     /*
      * Round up say -0.7 to -1.0

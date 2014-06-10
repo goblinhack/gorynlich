@@ -58,7 +58,8 @@ void thing_collect (thingp t, thingp it, thing_templatep tmp)
     /*
      * Bonus for collecting?
      */
-    t->score += thing_template_get_bonus_score_on_collect(tmp) * quantity;
+    thing_set_score(t, thing_score(t) +
+                thing_template_get_bonus_score_on_collect(tmp) * quantity);
 
     /*
      * If treasure, just add it to the score. Don't carry it.

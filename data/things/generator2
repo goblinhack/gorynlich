@@ -5,6 +5,7 @@
  z_order=2
  is_mob_spawner
  is_monst
+ bonus_score_on_death=100
  is_collision_map_large
  mob_spawn_delay_tenths=50
  mob_spawn="data/things/ghost1"
