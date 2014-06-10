@@ -35,6 +35,10 @@ void thing_wield_next_weapon (thingp t)
         }
 
         thing_templatep tmp = id_to_thing_template(i);
+        if (!thing_template_is_weapon(tmp)) {
+            continue;
+        }
+
         thing_wield(t, tmp);
         break;
     }
@@ -60,5 +64,7 @@ void thing_wield (thingp t, thing_templatep tmp)
     THING_SHOUT_AT(t, INFO,
                    "You wield the %s", thing_template_short_name(tmp));
 
-    t->needs_tx_player_update = true;
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
 }
