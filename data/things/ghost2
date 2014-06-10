@@ -6,6 +6,7 @@
  health=1
  damage=1
  polymorph_on_death="data/things/ghost1"
+ bonus_score_on_death=15
  vision_distance=20
  z_order=4
  is_monst

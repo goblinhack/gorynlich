@@ -4,6 +4,7 @@
  z_depth=2
  z_order=2
  is_mob_spawner
+ bonus_score_on_death=200
  is_monst
  is_collision_map_large
  mob_spawn_delay_tenths=100
