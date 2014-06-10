@@ -30,7 +30,9 @@ void thing_collect (thingp t, thingp it, thing_templatep tmp)
     uint32_t item;
     uint32_t quantity;
 
-    t->needs_tx_player_update = true;
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
 
     item = thing_template_to_id(tmp);
     quantity = 1;
@@ -108,7 +110,9 @@ void thing_used (thingp t, thing_templatep tmp)
         return;
     }
 
-    t->needs_tx_player_update = true;
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
 
     /*
      * Switch of weapons.
@@ -154,7 +158,9 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
         thing_wield_next_weapon(t);
     }
 
-    t->needs_tx_player_update = true;
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
 }
 
 void thing_drop (thingp t, thing_templatep tmp)
@@ -178,7 +184,9 @@ void thing_drop (thingp t, thing_templatep tmp)
 
     t->carrying[item]--;
 
-    t->needs_tx_player_update = true;
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
 }
 
 uint8_t thing_is_carrying (thingp t, uint32_t item)
