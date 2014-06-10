@@ -32,7 +32,11 @@ uint16_t THING_WALL4;
 uint16_t THING_WALL5;
 uint16_t THING_DOOR;
 uint16_t THING_NOENTRY;
-uint16_t THING_FOOD;
+uint16_t THING_APPLE;
+uint16_t THING_APPLE_POISON;
+uint16_t THING_BANANA;
+uint16_t THING_CHEESE;
+uint16_t THING_BREAD;
 uint16_t THING_FLOOR;
 uint16_t THING_FLOOR2;
 uint16_t THING_FLOOR3;
@@ -1004,8 +1008,8 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
                 if (what) {
                     /*
-                    * It doth.
-                    */
+                     * It doth.
+                     */
                     t->resync = 1;
                     t->thing_template = what;
                     t->health = thing_template_get_health(what);
@@ -3341,21 +3345,18 @@ void thing_server_action (thingp t,
         } else if (item == THING_POTION_CLOUDKILL) {
             level_place_potion_effect_cloudkill(server_level, t, t->x, t->y);
             break;
-        } else if (item == THING_WATER) {
-            THING_SHOUT_AT(t, INFO, "Slurp");
-            break;
-        } else if (item == THING_WATER_POISON) {
-            THING_SHOUT_AT(t, WARNING, "Urgh. Poisoned water");
-            break;
-        } else if (item == THING_FOOD) {
-            THING_SHOUT_AT(t, INFO, "Yum");
+        }
+
+        const char *message = thing_template_message_on_use(t->thing_template);
+        if (message) {
+            THING_SHOUT_AT(t, INFO, "%s", message);
             break;
         }
 
         /*
          * Failed to use.
          */
-        THING_SHOUT_AT(t, WARNING, "You fail to use the %s", 
+        THING_SHOUT_AT(t, WARNING, "Failed to use the %s", 
                        thing_template_short_name(thing_template));
         return;
 

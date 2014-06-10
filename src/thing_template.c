@@ -255,6 +255,10 @@ static void thing_template_destroy_internal (thing_templatep t)
         myfree(t->polymorph_on_death);
     }
 
+    if (t->message_on_use) {
+        myfree(t->message_on_use);
+    }
+
     if (t->mob_spawn) {
         myfree(t->mob_spawn);
     }
@@ -420,6 +424,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         }
 
         GET_OPT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
+        GET_OPT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
         GET_OPT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
@@ -533,6 +538,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
         PUT_NAMED_STRING(ctx, "fires", thing_template_name(t->fires));
     }
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
+    PUT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
     PUT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
@@ -641,6 +647,11 @@ thing_templatep thing_template_fires (thing_templatep t)
 const char *thing_template_polymorph_on_death (thing_templatep t)
 {
     return (t->polymorph_on_death);
+}
+
+const char *thing_template_message_on_use (thing_templatep t)
+{
+    return (t->message_on_use);
 }
 
 const char *thing_template_mob_spawn (thing_templatep t)

@@ -376,7 +376,7 @@
   } {   
    x=7 
    y=2 
-   t="data/things/food" 
+   t="data/things/apple" 
   } {   
    x=7 
    y=2 
@@ -780,6 +780,10 @@
   } {   
    x=7 
    y=4 
+   t="data/things/apple_poison" 
+  } {   
+   x=7 
+   y=4 
    t="data/things/floor" 
   } {   
    x=8 
@@ -960,11 +964,23 @@
   } {   
    x=4 
    y=5 
+   t="data/things/banana" 
+  } {   
+   x=4 
+   y=5 
    t="data/things/floor" 
   } {   
    x=5 
    y=5 
+   t="data/things/cheese" 
+  } {   
+   x=5 
+   y=5 
    t="data/things/floor" 
+  } {   
+   x=6 
+   y=5 
+   t="data/things/bread" 
   } {   
    x=6 
    y=5 

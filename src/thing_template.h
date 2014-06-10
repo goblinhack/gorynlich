@@ -86,6 +86,11 @@ typedef struct thing_template_ {
     char *polymorph_on_death;
 
     /*
+     * What to shout when an item is used.
+     */
+    char *message_on_use;
+
+    /*
      * Periodically spawn something.
      */
     char *mob_spawn;
@@ -229,6 +234,7 @@ const char *thing_template_name(thing_templatep);
 const char *thing_template_short_name(thing_templatep);
 thing_templatep thing_template_fires(thing_templatep);
 const char *thing_template_polymorph_on_death(thing_templatep);
+const char *thing_template_message_on_use(thing_templatep);
 const char *thing_template_mob_spawn(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
 uint8_t thing_template_get_z_depth(thing_templatep);

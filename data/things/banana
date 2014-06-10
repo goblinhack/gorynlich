@@ -1,0 +1,17 @@
+{
+ short_name="banana"
+ tooltip="banana"
+ z_depth=2
+ z_order=2
+ is_boring
+ is_food
+ is_valid_for_shortcut_key
+ is_fragile
+ bonus_health_on_use=60
+ message_on_use="banana power"
+ tiles={
+  tile={
+   tile="banana"
+  }
+ }
+}
