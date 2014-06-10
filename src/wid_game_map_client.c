@@ -992,8 +992,19 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     thing_tilep tile = 
                             thing_tile_first(thing_template_get_tiles(temp));
 
-                    // XXX
-//dd                    wid_set_tooltip
+                    const char *tooltip = thing_template_get_tooltip(temp);
+                    if (!tooltip) {
+                        ERR("need a tooltip for %s", 
+                            thing_template_name(temp));
+                    } else {
+                        char *full_tooltip = 
+//                            dynprintf("test %s\\\n\\n", tooltip);
+                            dynprintf( tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo.");
+
+                        wid_set_tooltip(w, full_tooltip);
+
+                        myfree(full_tooltip);
+                    }
 
                     wid_set_tilename(w, thing_tile_name(tile));
                     wid_set_do_not_raise(w, true);
