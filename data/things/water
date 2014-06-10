@@ -7,7 +7,7 @@
  is_food
  is_valid_for_shortcut_key
  polymorph_on_death="data/things/water_poison"
- message_on_use="refreshing"
+ message_on_use="%%fg=lightblue$refreshing"
  bonus_health_on_use=20
  is_fragile
  tiles={

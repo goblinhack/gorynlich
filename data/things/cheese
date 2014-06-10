@@ -8,7 +8,7 @@
  is_valid_for_shortcut_key
  is_fragile
  bonus_health_on_use=100
- message_on_use="more cheese Gromit?"
+ message_on_use="%%fg=yellow$more cheese Gromit?"
  tiles={
   tile={
    tile="cheese"
