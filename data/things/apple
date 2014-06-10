@@ -7,7 +7,7 @@
  is_food
  is_valid_for_shortcut_key
  polymorph_on_death="data/things/apple_poison"
- message_on_use="crunch"
+ message_on_use="%%fg=green$crunch"
  bonus_health_on_use=50
  is_fragile
  tiles={

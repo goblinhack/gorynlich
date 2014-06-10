@@ -3347,7 +3347,7 @@ void thing_server_action (thingp t,
             break;
         }
 
-        const char *message = thing_template_message_on_use(t->thing_template);
+        const char *message = thing_template_message_on_use(thing_template);
         if (message) {
             THING_SHOUT_AT(t, INFO, "%s", message);
             break;

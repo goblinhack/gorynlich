@@ -9,7 +9,7 @@ is_valid_for_shortcut_key
  bonus_health_on_use=-50
  is_poison
  is_fragile
- message_on_use="urgh, tastes horrible"
+ message_on_use="%%fg=red$urgh, tastes horrible"
  tiles={
   tile={
    tile="water_poison"

@@ -326,6 +326,8 @@ static void thing_handle_collision (thingp me, thingp it,
              * Weapon hits monster or generator.
              */
             thing_hit(it, me, 0, "hit");
+
+            thing_dead(me, 0, "hit monst");
             return;
         }
 
@@ -334,6 +336,8 @@ static void thing_handle_collision (thingp me, thingp it,
              * Weapon hits food or similar?
              */
             thing_hit(it, me, 0, "hit");
+
+            thing_dead(me, 0, "hit item");
             return;
         }
 
