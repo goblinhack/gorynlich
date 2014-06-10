@@ -143,11 +143,11 @@ static uint8_t resource_init_23 (void *context)
         "monst-collision-map",
         "weapon-collision-map",
         "noentry",
-        0,
-        0,
-        0,
-        0,
-        0,
+        "apple_poison",
+        "apple",
+        "bread",
+        "banana",
+        "cheese",
         0,
         0,
         0,
@@ -224,7 +224,7 @@ static uint8_t resource_init_23 (void *context)
         "arrow-bl",
         "arrow-left",
         "arrow-tl",
-        "food1",
+        0,
         0,
         0,
         0,
@@ -1533,8 +1533,17 @@ static uint8_t resource_init_23 (void *context)
     /*
      * Lesser items like food.
      */
-    thing_template_load(&THING_FOOD, 
-                        "data/things/food");
+    thing_template_load(&THING_APPLE, 
+                        "data/things/apple");
+    thing_template_load(&THING_APPLE_POISON, 
+                        "data/things/apple_poison");
+    thing_template_load(&THING_BREAD, 
+                        "data/things/bread");
+    thing_template_load(&THING_CHEESE, 
+                        "data/things/cheese");
+    thing_template_load(&THING_BANANA, 
+                        "data/things/banana");
+
     thing_template_load(&THING_POTION_MONSTICIDE, 
                         "data/things/potion_monsticide");
     thing_template_load(&THING_POTION_FIRE, 

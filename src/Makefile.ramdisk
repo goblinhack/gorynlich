@@ -109,6 +109,12 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__apple_session.o: asm/ramdisk_data_things__apple_session.S ../data/things/.apple.session
+	gcc -c asm/ramdisk_data_things__apple_session.S -o .o/ramdisk_data_things__apple_session.o
+
+.o/ramdisk_data_things__cheese_session.o: asm/ramdisk_data_things__cheese_session.S ../data/things/.cheese.session
+	gcc -c asm/ramdisk_data_things__cheese_session.S -o .o/ramdisk_data_things__cheese_session.o
+
 .o/ramdisk_data_things__explosion_session.o: asm/ramdisk_data_things__explosion_session.S ../data/things/.explosion.session
 	gcc -c asm/ramdisk_data_things__explosion_session.S -o .o/ramdisk_data_things__explosion_session.o
 
@@ -127,8 +133,17 @@
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
 
+.o/ramdisk_data_things_apple.o: asm/ramdisk_data_things_apple.S ../data/things/apple
+	gcc -c asm/ramdisk_data_things_apple.S -o .o/ramdisk_data_things_apple.o
+
+.o/ramdisk_data_things_apple_poison.o: asm/ramdisk_data_things_apple_poison.S ../data/things/apple_poison
+	gcc -c asm/ramdisk_data_things_apple_poison.S -o .o/ramdisk_data_things_apple_poison.o
+
 .o/ramdisk_data_things_arrow.o: asm/ramdisk_data_things_arrow.S ../data/things/arrow
 	gcc -c asm/ramdisk_data_things_arrow.S -o .o/ramdisk_data_things_arrow.o
+
+.o/ramdisk_data_things_banana.o: asm/ramdisk_data_things_banana.S ../data/things/banana
+	gcc -c asm/ramdisk_data_things_banana.S -o .o/ramdisk_data_things_banana.o
 
 .o/ramdisk_data_things_bow1.o: asm/ramdisk_data_things_bow1.S ../data/things/bow1
 	gcc -c asm/ramdisk_data_things_bow1.S -o .o/ramdisk_data_things_bow1.o
@@ -141,6 +156,12 @@
 
 .o/ramdisk_data_things_bow4.o: asm/ramdisk_data_things_bow4.S ../data/things/bow4
 	gcc -c asm/ramdisk_data_things_bow4.S -o .o/ramdisk_data_things_bow4.o
+
+.o/ramdisk_data_things_bread.o: asm/ramdisk_data_things_bread.S ../data/things/bread
+	gcc -c asm/ramdisk_data_things_bread.S -o .o/ramdisk_data_things_bread.o
+
+.o/ramdisk_data_things_cheese.o: asm/ramdisk_data_things_cheese.S ../data/things/cheese
+	gcc -c asm/ramdisk_data_things_cheese.S -o .o/ramdisk_data_things_cheese.o
 
 .o/ramdisk_data_things_chest1.o: asm/ramdisk_data_things_chest1.S ../data/things/chest1
 	gcc -c asm/ramdisk_data_things_chest1.S -o .o/ramdisk_data_things_chest1.o
@@ -252,9 +273,6 @@
 
 .o/ramdisk_data_things_floor6.o: asm/ramdisk_data_things_floor6.S ../data/things/floor6
 	gcc -c asm/ramdisk_data_things_floor6.S -o .o/ramdisk_data_things_floor6.o
-
-.o/ramdisk_data_things_food.o: asm/ramdisk_data_things_food.S ../data/things/food
-	gcc -c asm/ramdisk_data_things_food.S -o .o/ramdisk_data_things_food.o
 
 .o/ramdisk_data_things_gem1.o: asm/ramdisk_data_things_gem1.S ../data/things/gem1
 	gcc -c asm/ramdisk_data_things_gem1.S -o .o/ramdisk_data_things_gem1.o

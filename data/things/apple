@@ -1,0 +1,18 @@
+{
+ short_name="apple"
+ tooltip="apple"
+ z_depth=2
+ z_order=2
+ is_boring
+ is_food
+ is_valid_for_shortcut_key
+ polymorph_on_death="data/things/apple_poison"
+ message_on_use="crunch"
+ bonus_health_on_use=50
+ is_fragile
+ tiles={
+  tile={
+   tile="apple"
+  }
+ }
+}
