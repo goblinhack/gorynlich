@@ -1,18 +1,18 @@
 {
- short_name="tasty water"
- tooltip="Poisoned water"
+ short_name="apple"
+ tooltip="very ripe apple"
  z_depth=2
  z_order=2
  is_boring
  is_food
 is_valid_for_shortcut_key
- bonus_health_on_use=-50
- is_poison
  is_fragile
- message_on_use="urgh, tastes horrible"
+ bonus_health_on_use=-50
+ message_on_use="urgh choke, poison"
+ is_poison
  tiles={
   tile={
-   tile="water_poison"
+   tile="apple_poison"
   }
  }
 }
