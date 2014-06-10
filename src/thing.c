@@ -1546,7 +1546,9 @@ void thing_set_score (thingp t, uint32_t score)
 
     t->score = score;
 
-    t->needs_tx_player_update = true;
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
 }
 
 widp thing_message (thingp t, const char *message)
@@ -2934,6 +2936,12 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_server_tx_player_update (thingp t)
 {
+    if (!thing_is_player(t)) {
+        ERR("trying to send player update from not player thing %s",
+            thing_logname(t));
+        return;
+    }
+
     /*
      * Allocate a fresh packet.
      */
