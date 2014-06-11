@@ -1,9 +1,7 @@
 bugs
 ---
 
-crumble auto weapon use picked a key and tried to fire it
 item collect needs faster tx map update
-tooltips
 weapon for dwarf
 level ed, fill with potion failed
 level ed, first select of a thing does not choose it
@@ -12,9 +10,6 @@ ideas
 -----
 
 - combine cheese and bread for more health
-- shoot apple, turns red poison?
-- mob spawn on player death
-- exit pulse green
 - ben wants sprint function
 - rage
 - avoid nat issues by identifying based on client id in packet

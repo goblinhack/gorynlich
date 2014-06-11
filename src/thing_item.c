@@ -166,6 +166,7 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
 void thing_drop (thingp t, thing_templatep tmp)
 {
     uint32_t item;
+    uint8_t auto_wield = false;
 
     item = thing_template_to_id(tmp);
     if (!t->carrying[item]) {
@@ -178,11 +179,19 @@ void thing_drop (thingp t, thing_templatep tmp)
      */
     if (tmp == t->weapon) {
         thing_unwield(t);
+        auto_wield = true;
     }
 
     THING_LOG(t, "drop %s", thing_template_short_name(tmp));
 
     t->carrying[item]--;
+
+    /*
+     * Wield the next weapon we have.
+     */
+    if (auto_wield) {
+        thing_wield_next_weapon(t);
+    }
 
     if (thing_is_player(t)) {
         t->needs_tx_player_update = true;

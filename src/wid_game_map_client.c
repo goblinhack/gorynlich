@@ -424,7 +424,6 @@ static uint8_t
 wid_game_map_item_mouse_event_common (uint32_t button,
                                       thing_templatep thing_template)
 {
-LOG("button %d",button);
     if (button == 1) {
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_USE,
@@ -938,6 +937,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
             thingp t = thing_client_find(p->thing_id);
             if (!t) {
+                player_y_offset += next_player_y_delta;
                 continue;
             }
 
@@ -992,14 +992,46 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     thing_tilep tile = 
                             thing_tile_first(thing_template_get_tiles(temp));
 
+                    /*
+                     * If this item has a tooltip create the text.
+                     */
                     const char *tooltip = thing_template_get_tooltip(temp);
                     if (!tooltip) {
-                        ERR("need a tooltip for %s", 
+                        ERR("need a tooltip defined for %s", 
                             thing_template_name(temp));
                     } else {
-                        char *full_tooltip = 
-//                            dynprintf("test %s\\\n\\n", tooltip);
-                            dynprintf( tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo.");
+                        char *full_tooltip;
+
+                        full_tooltip = strappend(
+                                tooltip,
+                                "\n\n%%fg=green$left click to use%%fg=reset$\n"
+                                "%%fg=red$right click to drop%%fg=reset$\n");
+
+                        /*
+                         * Add on the shortcut key if one exists fo r this 
+                         * thing.
+                         */
+                        uint32_t shortcut;
+                        for (shortcut = 0; shortcut < 10; shortcut++) {
+                            thing_templatep t = wid_key_shortcuts[shortcut];
+                            if (t && (t == temp)) {
+                                /*
+                                 * Yes there is a shortcut and it matches this
+                                 * thing template.
+                                 */
+                                char *extra = dynprintf(
+                                    "\npress '%%%%fg=green$"
+                                    "%c"
+                                    "%%%%fg=reset$' to use\n",
+                                    '0' + shortcut);
+
+                                char *old_full_tooltip = full_tooltip;
+                                full_tooltip = strappend(full_tooltip, extra);
+                                myfree(old_full_tooltip);
+                                myfree(extra);
+                                break;
+                            }
+                        }
 
                         wid_set_tooltip(w, full_tooltip);
 

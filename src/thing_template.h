@@ -86,6 +86,11 @@ typedef struct thing_template_ {
     char *polymorph_on_death;
 
     /*
+     * What to spawn when you die. Usually a generator or grave.
+     */
+    char *spawn_on_death;
+
+    /*
      * What to shout when an item is used.
      */
     char *message_on_use;
@@ -234,6 +239,7 @@ const char *thing_template_name(thing_templatep);
 const char *thing_template_short_name(thing_templatep);
 thing_templatep thing_template_fires(thing_templatep);
 const char *thing_template_polymorph_on_death(thing_templatep);
+const char *thing_template_spawn_on_death(thing_templatep);
 const char *thing_template_message_on_use(thing_templatep);
 const char *thing_template_mob_spawn(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
