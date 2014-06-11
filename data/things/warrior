@@ -6,6 +6,7 @@
  speed=7
  health=200
  is_player
+ spawn_on_death="data/things/generator3"
  is_carryable
  is_collision_map_large
  is_animated

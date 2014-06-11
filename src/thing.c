@@ -998,28 +998,51 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         if (!t->is_collected) {
             /*
              * When it dies, doth it polymorph and thus avoid the reaper?
+             * e.g. a mob spawner dying and creating a smaller one.
              */
             const char *polymorph = 
-                            thing_template_polymorph_on_death(t->thing_template);
+                    thing_template_polymorph_on_death(t->thing_template);
             if (polymorph) {
                 thing_templatep what = thing_template_find(polymorph);
-
-                if (what) {
-                    /*
-                     * It doth.
-                     */
-                    t->resync = 1;
-                    t->thing_template = what;
-                    t->health = thing_template_get_health(what);
-                    t->updated++;
-
-                    if (!t->updated) {
-                        t->updated++;
-                    }
-
-                    socket_server_tx_map_update(0, server_boring_things);
-                    return;
+                if (!what) {
+                    DIE("could now find %s to polymorph into on %s death",
+                        polymorph, thing_logname(t));
                 }
+
+                /*
+                 * It doth.
+                 */
+                t->resync = 1;
+                t->thing_template = what;
+                t->health = thing_template_get_health(what);
+                t->updated++;
+
+                if (!t->updated) {
+                    t->updated++;
+                }
+
+                socket_server_tx_map_update(0, server_boring_things);
+                return;
+            }
+
+            /*
+             * Or perhaps it does die, but spawns something else, like the
+             * player dying and creating a mob spawner.
+             */
+            const char *spawn = 
+                    thing_template_spawn_on_death(t->thing_template);
+            if (spawn) {
+                thing_templatep what = thing_template_find(spawn);
+                if (!what) {
+                    DIE("could now find %s to spawn on %s death",
+                        spawn, thing_logname(t));
+                }
+
+                wid_game_map_server_replace_tile(
+                                        wid_game_map_server_grid_container,
+                                        t->x,
+                                        t->y,
+                                        what);
             }
         }
     }

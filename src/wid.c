@@ -1217,7 +1217,23 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
     }
 
     if (w->tooltip) {
-        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.5, small_font);
+        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.5, vsmall_font);
+
+        /*
+         * Move just above and to the left of the widget.
+         */
+        double px = x - wid_get_width(wid_popup_tooltip) - wid_get_width(w);
+        double py = y - wid_get_height(wid_popup_tooltip) - wid_get_height(w);
+
+        if (py < 0) {
+            py = y + wid_get_height(w);
+        }
+
+        if (px < 0) {
+            px = x + wid_get_width(w);
+        }
+
+        wid_move_to_abs(wid_popup_tooltip, px, py);
     }
 
     return (true);
@@ -5124,7 +5140,8 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
             if (trough_height - scrollbar_height == 0.0f) {
                 pct = 0.0f;
             } else {
-                pct = (wid_get_tl_y(scrollbar) - wid_get_tl_y(scrollbar->parent)) /
+                pct = (wid_get_tl_y(scrollbar) - 
+                       wid_get_tl_y(scrollbar->parent)) /
                         (trough_height - scrollbar_height);
             }
 
@@ -5151,7 +5168,8 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
             if (trough_width - scrollbar_width == 0.0f) {
                 pct = 0.0f;
             } else {
-                pct = (wid_get_tl_x(scrollbar) - wid_get_tl_x(scrollbar->parent)) /
+                pct = (wid_get_tl_x(scrollbar) - 
+                       wid_get_tl_x(scrollbar->parent)) /
                         (trough_width - scrollbar_width);
             }
 

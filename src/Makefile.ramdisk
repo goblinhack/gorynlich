@@ -112,8 +112,32 @@
 .o/ramdisk_data_things__apple_session.o: asm/ramdisk_data_things__apple_session.S ../data/things/.apple.session
 	gcc -c asm/ramdisk_data_things__apple_session.S -o .o/ramdisk_data_things__apple_session.o
 
+.o/ramdisk_data_things__arrow_session.o: asm/ramdisk_data_things__arrow_session.S ../data/things/.arrow.session
+	gcc -c asm/ramdisk_data_things__arrow_session.S -o .o/ramdisk_data_things__arrow_session.o
+
+.o/ramdisk_data_things__banana_session.o: asm/ramdisk_data_things__banana_session.S ../data/things/.banana.session
+	gcc -c asm/ramdisk_data_things__banana_session.S -o .o/ramdisk_data_things__banana_session.o
+
+.o/ramdisk_data_things__bow_session.o: asm/ramdisk_data_things__bow_session.S ../data/things/.bow.session
+	gcc -c asm/ramdisk_data_things__bow_session.S -o .o/ramdisk_data_things__bow_session.o
+
+.o/ramdisk_data_things__bow1_session.o: asm/ramdisk_data_things__bow1_session.S ../data/things/.bow1.session
+	gcc -c asm/ramdisk_data_things__bow1_session.S -o .o/ramdisk_data_things__bow1_session.o
+
+.o/ramdisk_data_things__bread_session.o: asm/ramdisk_data_things__bread_session.S ../data/things/.bread.session
+	gcc -c asm/ramdisk_data_things__bread_session.S -o .o/ramdisk_data_things__bread_session.o
+
 .o/ramdisk_data_things__cheese_session.o: asm/ramdisk_data_things__cheese_session.S ../data/things/.cheese.session
 	gcc -c asm/ramdisk_data_things__cheese_session.S -o .o/ramdisk_data_things__cheese_session.o
+
+.o/ramdisk_data_things__door_session.o: asm/ramdisk_data_things__door_session.S ../data/things/.door.session
+	gcc -c asm/ramdisk_data_things__door_session.S -o .o/ramdisk_data_things__door_session.o
+
+.o/ramdisk_data_things__dwarf_session.o: asm/ramdisk_data_things__dwarf_session.S ../data/things/.dwarf.session
+	gcc -c asm/ramdisk_data_things__dwarf_session.S -o .o/ramdisk_data_things__dwarf_session.o
+
+.o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
+	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
 
 .o/ramdisk_data_things__explosion_session.o: asm/ramdisk_data_things__explosion_session.S ../data/things/.explosion.session
 	gcc -c asm/ramdisk_data_things__explosion_session.S -o .o/ramdisk_data_things__explosion_session.o
@@ -121,14 +145,32 @@
 .o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
 	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
 
+.o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
+	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
+
 .o/ramdisk_data_things__food_session.o: asm/ramdisk_data_things__food_session.S ../data/things/.food.session
 	gcc -c asm/ramdisk_data_things__food_session.S -o .o/ramdisk_data_things__food_session.o
+
+.o/ramdisk_data_things__generator3_session.o: asm/ramdisk_data_things__generator3_session.S ../data/things/.generator3.session
+	gcc -c asm/ramdisk_data_things__generator3_session.S -o .o/ramdisk_data_things__generator3_session.o
 
 .o/ramdisk_data_things__poison8_session.o: asm/ramdisk_data_things__poison8_session.S ../data/things/.poison8.session
 	gcc -c asm/ramdisk_data_things__poison8_session.S -o .o/ramdisk_data_things__poison8_session.o
 
+.o/ramdisk_data_things__wa_session.o: asm/ramdisk_data_things__wa_session.S ../data/things/.wa.session
+	gcc -c asm/ramdisk_data_things__wa_session.S -o .o/ramdisk_data_things__wa_session.o
+
+.o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
+	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
+
+.o/ramdisk_data_things__water_session.o: asm/ramdisk_data_things__water_session.S ../data/things/.water.session
+	gcc -c asm/ramdisk_data_things__water_session.S -o .o/ramdisk_data_things__water_session.o
+
 .o/ramdisk_data_things__water_poison_session.o: asm/ramdisk_data_things__water_poison_session.S ../data/things/.water_poison.session
 	gcc -c asm/ramdisk_data_things__water_poison_session.S -o .o/ramdisk_data_things__water_poison_session.o
+
+.o/ramdisk_data_things__wizard_session.o: asm/ramdisk_data_things__wizard_session.S ../data/things/.wizard.session
+	gcc -c asm/ramdisk_data_things__wizard_session.S -o .o/ramdisk_data_things__wizard_session.o
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
