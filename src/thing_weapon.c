@@ -38,7 +38,7 @@ thingp thing_weapon_anim (thingp t)
         }
     } else {
         if (t->weapon_anim_id) {
-            weapon_anim = thing_server_ids[t->weapon_anim_id];
+            weapon_anim = thing_client_ids[t->weapon_anim_id];
         }
     }
 
@@ -100,7 +100,7 @@ void thing_wield (thingp t, thing_templatep tmp)
     }
 
     const char *weapon_anim = thing_template_weapon_anim(tmp);
-CON("wield anim %s",weapon_anim);
+
     if (weapon_anim) {
         thing_templatep what = thing_template_find(weapon_anim);
         if (!what) {
@@ -118,6 +118,5 @@ CON("wield anim %s",weapon_anim);
          */
         thingp weapon_anim = wid_get_thing(weapon_anim_wid);
         t->weapon_anim_id = weapon_anim->thing_id;
-CON("new %s",thing_logname(weapon_anim));
     }
 }

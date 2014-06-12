@@ -648,6 +648,11 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
         DIE("no thing template");
     }
 
+    if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
+        DIE("thing template [%s] cannot be placed at %f %f",
+            thing_template_short_name(thing_template), x, y);
+    }
+
     thing_tiles = thing_template_get_tiles(thing_template);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
