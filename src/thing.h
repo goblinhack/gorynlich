@@ -12,6 +12,7 @@
 
 uint8_t thing_init(void);
 void thing_fini(void);
+void thing_update(thingp t);
 void thing_map_sanity(void);
 void thing_map_dump(void);
 thingp thing_server_new(levelp, const char *name);
@@ -95,8 +96,8 @@ void thing_set_is_qqq4(thingp t, uint8_t val);
 uint8_t thing_is_qqq4(thingp t);
 void thing_set_is_qqq5(thingp t, uint8_t val);
 uint8_t thing_is_qqq5(thingp t);
-void thing_set_is_qqq6(thingp t, uint8_t val);
-uint8_t thing_is_qqq6(thingp t);
+void thing_set_qqq6(thingp t, uint8_t val);
+uint8_t thing_qqq6(thingp t);
 void thing_set_is_collected(thingp t, uint8_t val);
 uint8_t thing_is_collected(thingp t);
 void thing_set_is_chasing_target(thingp t, uint8_t val);
@@ -287,6 +288,12 @@ extern uint16_t THING_LIZARD;
 extern uint16_t THING_DEATH;
 extern uint16_t THING_PLANT;
 extern uint16_t THING_SEEDPOD;
+extern uint16_t THING_SWORD1_ANIM;
+extern uint16_t THING_SWORD2_ANIM;
+extern uint16_t THING_SWORD3_ANIM;
+extern uint16_t THING_AXE1_ANIM;
+extern uint16_t THING_AXE2_ANIM;
+extern uint16_t THING_SCYTHE1_ANIM;
 extern uint16_t THING_PIPE;
 extern uint16_t THING_EXPLOSION1;
 extern uint16_t THING_EXPLOSION2;
@@ -349,6 +356,12 @@ extern uint16_t THING_BOW2;
 extern uint16_t THING_BOW3;
 extern uint16_t THING_BOW4;
 extern uint16_t THING_WAND_FIRE;
+extern uint16_t THING_SWORD1;
+extern uint16_t THING_SWORD2;
+extern uint16_t THING_SWORD3;
+extern uint16_t THING_AXE1;
+extern uint16_t THING_AXE2;
+extern uint16_t THING_SCYTHE1;
 extern uint16_t THING_KEY;
 extern uint16_t THING_KEYS2;
 extern uint16_t THING_KEYS3;
@@ -428,6 +441,17 @@ typedef struct thing_ {
     widp wid;
 
     /*
+     * The animation of this weapon that is wielded. This thing fires and
+     * does nothing.
+     */
+    uint16_t weapon_anim_id;
+
+    /*
+     * But this is the actual weapon.
+     */
+    thing_templatep weapon;
+
+    /*
      * What level is the thing on?
      */
     levelp level;
@@ -459,11 +483,6 @@ typedef struct thing_ {
      * How many and of what we are carrying.
      */
     uint8_t carrying[THING_MAX];
-
-    /*
-     * Current weapon.
-     */
-    thing_templatep weapon;
 
     /*
      * Grid coordinates.
@@ -560,7 +579,7 @@ typedef struct thing_ {
     uint32_t is_qqq3:1;
     uint32_t is_qqq4:1;
     uint32_t is_qqq5:1;
-    uint32_t is_qqq6:1;
+    uint32_t qqq6:1;
     uint32_t is_collected:1;
     uint32_t got_to_exit_first:1;
     uint32_t opened_exit:1;
@@ -1174,6 +1193,8 @@ extern thingp thing_client_ids[THING_ID_MAX];
  */
 void thing_unwield(thingp t);
 void thing_wield(thingp t, thing_templatep tmp);
+thingp thing_weapon_anim(thingp t);
+thing_templatep thing_weapon(thingp t);
 
 /*
  * thing_item.h
