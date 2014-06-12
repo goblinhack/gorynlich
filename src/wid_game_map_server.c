@@ -207,6 +207,11 @@ wid_game_map_server_replace_tile (widp w,
     widp child;
     levelp level;
 
+    if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
+        DIE("thing template [%s] cannot be placed at %f %f",
+            thing_template_short_name(thing_template), x, y);
+    }
+
     verify(w);
 
     level = (typeof(level)) wid_get_client_context(w);
@@ -306,7 +311,8 @@ wid_game_map_server_replace_tile (widp w,
     wid_set_thing_template(child, thing_template);
 
     thingp thing = thing_server_new(level, 
-                                    thing_template_name(thing_template));
+                                    thing_template_name(thing_template),
+                                    x, y);
     wid_set_thing(child, thing);
 
     thing_server_wid_update(thing, x, y, true /* is_new */);
