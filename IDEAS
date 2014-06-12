@@ -1,17 +1,19 @@
 bugs
 ---
 
-item collect needs faster tx map update
-weapon for dwarf
 level ed, fill with potion failed
 level ed, first select of a thing does not choose it
 
 ideas
 -----
 
-- combine cheese and bread for more health
+- backpack drop on death
+- ben wants to combine cheese and bread for more health
 - ben wants sprint function
+- ben wants zombies
+- ben wants to play as jesus
 - rage
-- avoid nat issues by identifying based on client id in packet
 - thief, kill thief to recover items
 - repeating width levels?
+- avoid nat issues by identifying based on client id in packet
+- add a big jesus weapon

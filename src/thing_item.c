@@ -90,6 +90,7 @@ void thing_collect (thingp t, thingp it, thing_templatep tmp)
     if (thing_template_is_weapon(tmp)) {
         if (!t->weapon) {
             THING_LOG(t, "auto wield %s", thing_template_short_name(tmp));
+            CON("auto wield %s", thing_template_short_name(tmp));
 
             thing_wield(t, tmp);
         }

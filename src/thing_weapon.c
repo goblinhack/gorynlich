@@ -94,13 +94,13 @@ void thing_wield (thingp t, thing_templatep tmp)
 
     if (thing_is_player(t)) {
         THING_SHOUT_AT(t, INFO,
-                    "You wield the %s", thing_template_short_name(tmp));
+                       "You wield the %s", thing_template_short_name(tmp));
 
         t->needs_tx_player_update = true;
     }
 
-    const char *weapon_anim = 
-            thing_template_weapon_anim(t->thing_template);
+    const char *weapon_anim = thing_template_weapon_anim(tmp);
+CON("wield anim %s",weapon_anim);
     if (weapon_anim) {
         thing_templatep what = thing_template_find(weapon_anim);
         if (!what) {
@@ -118,5 +118,6 @@ void thing_wield (thingp t, thing_templatep tmp)
          */
         thingp weapon_anim = wid_get_thing(weapon_anim_wid);
         t->weapon_anim_id = weapon_anim->thing_id;
+CON("new %s",thing_logname(weapon_anim));
     }
 }

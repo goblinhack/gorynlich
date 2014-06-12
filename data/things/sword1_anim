@@ -8,46 +8,46 @@
   tile={
    delay=200
    is_dir_up
-   tile="sword1.7"
+   tile="water_poison"
   }
   tile={
    delay=200
    is_dir_down
-   tile="sword1.3"
+   tile="water_poison"
   }
   tile={
    delay=200
    is_dir_left
-   tile="sword1.5"
+   tile="water_poison"
   }
   tile={
    delay=200
    is_dir_right
-   tile="sword1.1"
+   tile="water_poison"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="sword1.6"
+   tile="water_poison"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="sword1.4"
+   tile="water_poison"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="sword1.8"
+   tile="water_poison"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="sword1.2"
+   tile="water_poison"
   }
  }
 }
