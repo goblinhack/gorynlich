@@ -2487,12 +2487,15 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
         if (weapon_anim) {
+CON("client weapon %s move1 %f %f",thing_logname(weapon_anim), tl.x,tl.y);
             wid_move_to_abs_in(weapon_anim->wid, tl.x, tl.y, ms);
         }
     } else {
         wid_set_tl_br(t->wid, tl, br);
         if (weapon_anim) {
-            wid_set_tl_br(weapon_anim->wid, tl, br);
+CON("client weapon %s move2 %f %f",thing_logname(weapon_anim), tl.x,tl.y);
+//            wid_set_tl_br(weapon_anim->wid, tl, br);
+            wid_move_to_abs_in(weapon_anim->wid, 0, 0, 1000);
         }
     }
 }
@@ -3030,6 +3033,7 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
     }
 
     t->weapon_anim_id = SDLNet_Read16(data);
+CON("client weapon id %d",t->weapon_anim_id);
     data += sizeof(uint16_t);
 
     memcpy(t->carrying, data, sizeof(t->carrying));
