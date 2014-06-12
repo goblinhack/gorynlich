@@ -57,6 +57,12 @@ uint16_t THING_LIZARD;
 uint16_t THING_DEATH;
 uint16_t THING_PLANT;
 uint16_t THING_SEEDPOD;
+uint16_t THING_SWORD1_ANIM;
+uint16_t THING_SWORD2_ANIM;
+uint16_t THING_SWORD3_ANIM;
+uint16_t THING_AXE1_ANIM;
+uint16_t THING_AXE2_ANIM;
+uint16_t THING_SCYTHE1_ANIM;
 uint16_t THING_PIPE;
 uint16_t THING_EXPLOSION;
 uint16_t THING_EXPLOSION1;
@@ -121,6 +127,12 @@ uint16_t THING_BOW2;
 uint16_t THING_BOW3;
 uint16_t THING_BOW4;
 uint16_t THING_WAND_FIRE;
+uint16_t THING_SWORD1;
+uint16_t THING_SWORD2;
+uint16_t THING_SWORD3;
+uint16_t THING_AXE1;
+uint16_t THING_AXE2;
+uint16_t THING_SCYTHE1;
 uint16_t THING_KEY;
 uint16_t THING_KEYS2;
 uint16_t THING_KEYS3;
@@ -193,6 +205,20 @@ void thing_fini (void)
         dmap_process_fini();
 
         thing_map_check_empty();
+    }
+}
+
+void thing_update (thingp t)
+{
+    if (t->updated) {
+        return;
+    }
+
+    t->updated++;
+
+    thingp weapon_anim = thing_weapon_anim(t);
+    if (weapon_anim) {
+        thing_update(weapon_anim);
     }
 }
 
@@ -366,8 +392,6 @@ void thing_map_remove (thingp t)
     }
 
     thing_map *map = thing_get_map(t);
-//LOG("rem %s to %s map", thing_logname(t), map == &thing_server_map ?  
-//"server" : "client");
     thing_map_cell *cell = &map->cells[x][y];
 
     if (!cell->count) {
@@ -681,9 +705,7 @@ thingp thing_server_new (levelp level, const char *name)
     }
 
     t->logname = dynprintf("%s[%p] (server)", thing_short_name(t), t);
-    if (!t->updated) {
-        t->updated++;
-    }
+    thing_update(t);
 
     /*
      * So we send a move update to the client.
@@ -907,6 +929,12 @@ void thing_destroy (thingp t, const char *why)
         t->logname = 0;
     }
 
+
+    /*
+     * Destroy the things weapon. Eventually drop a backpack.
+     */
+    thing_unwield(t);
+
     if (t->on_server) {
         thing_server_ids[t->thing_id] = 0;
     } else {
@@ -1015,11 +1043,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 t->resync = 1;
                 t->thing_template = what;
                 t->health = thing_template_get_health(what);
-                t->updated++;
-
-                if (!t->updated) {
-                    t->updated++;
-                }
+                thing_update(t);
 
                 socket_server_tx_map_update(0, server_boring_things);
                 return;
@@ -1131,9 +1155,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Move the thing from the boring list to the active list and update it so 
      * that it gets sent to the client.
      */
-    if (!t->updated) {
-        t->updated++;
-    }
+    thing_update(t);
 
     if (!t->on_active_list) {
         if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
@@ -1176,9 +1198,7 @@ static void thing_hit_ (thingp t,
      */
     t->is_hit_success = true;
     t->is_hit_miss = false;
-    if (!t->updated) {
-        t->updated++;
-    }
+    thing_update(t);
 
     /*
      * Keep hitting until all damage is used up or the thing is dead.
@@ -1310,9 +1330,7 @@ void thing_hit (thingp t,
          * Assume missed due to the logic below where we detect chance.
          */
         t->is_hit_miss = true;
-        if (!t->updated) {
-            t->updated++;
-        }
+        thing_update(t);
     }
 
     /*
@@ -1971,18 +1989,18 @@ uint8_t thing_is_qqq5 (thingp t)
     return (t->is_qqq5);
 }
 
-void thing_set_is_qqq6 (thingp t, uint8_t val)
+void thing_set_qqq6 (thingp t, uint8_t val)
 {
     verify(t);
 
-    t->is_qqq6 = val;
+    t->qqq6 = val;
 }
 
-uint8_t thing_is_qqq6 (thingp t)
+uint8_t thing_qqq6 (thingp t)
 {
     verify(t);
 
-    return (t->is_qqq6);
+    return (t->qqq6);
 }
 
 void thing_set_is_collected (thingp t, uint8_t val)
@@ -2018,11 +2036,8 @@ void thing_set_is_dir_down (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_DOWN) {
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_DOWN;
+        thing_update(t);
     }
 }
 
@@ -2038,16 +2053,8 @@ void thing_set_is_dir_up (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_UP) {
-        t->updated++;
-        if (!t->updated) {
-            t->updated++;
-        }
-
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_UP;
+        thing_update(t);
     }
 }
 
@@ -2063,12 +2070,8 @@ void thing_set_is_dir_left (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_LEFT) {
-        t->updated++;
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_LEFT;
+        thing_update(t);
     }
 }
 
@@ -2084,12 +2087,8 @@ void thing_set_is_dir_right (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_RIGHT) {
-        t->updated++;
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_RIGHT;
+        thing_update(t);
     }
 }
 
@@ -2105,12 +2104,8 @@ void thing_set_is_dir_tl (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_TL) {
-        t->updated++;
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_TL;
+        thing_update(t);
     }
 }
 
@@ -2126,12 +2121,8 @@ void thing_set_is_dir_bl (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_BL) {
-        t->updated++;
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_BL;
+        thing_update(t);
     }
 }
 
@@ -2147,12 +2138,8 @@ void thing_set_is_dir_tr (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_TR) {
-        t->updated++;
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_TR;
+        thing_update(t);
     }
 }
 
@@ -2168,12 +2155,8 @@ void thing_set_is_dir_br (thingp t)
     verify(t);
 
     if (t->dir != THING_DIR_BR) {
-        t->updated++;
-        if (!t->updated) {
-            t->updated++;
-        }
-
         t->dir = THING_DIR_BR;
+        thing_update(t);
     }
 }
 
@@ -2423,10 +2406,23 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
     tl.y -= base_tile_height / 4.0;
     br.y -= base_tile_width / 4.0;
 
+    /*
+     * Make the weapon follow the thing.
+     */
+    thingp weapon_anim = thing_weapon_anim(t);
+
     if (is_new || thing_is_player(t)) {
         wid_set_tl_br(t->wid, tl, br);
+        if (weapon_anim) {
+            wid_set_tl_br(weapon_anim->wid, tl, br);
+        }
     } else {
         wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
+
+        if (weapon_anim) {
+            wid_move_to_abs_in(weapon_anim->wid, tl.x, tl.y, 
+                               1000.0 / thing_speed(t));
+        }
     }
 }
 
@@ -2480,13 +2476,24 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     tl.y -= base_tile_height / 4.0;
     br.y -= base_tile_width / 4.0;
 
+    /*
+     * Make the weapon follow the thing.
+     */
+    thingp weapon_anim = thing_weapon_anim(t);
+
     if (smooth) {
         double time_step = dist;
         double ms = (1000.0 / thing_speed(t)) / (1.0 / time_step);
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
+        if (weapon_anim) {
+            wid_move_to_abs_in(weapon_anim->wid, tl.x, tl.y, ms);
+        }
     } else {
         wid_set_tl_br(t->wid, tl, br);
+        if (weapon_anim) {
+            wid_set_tl_br(weapon_anim->wid, tl, br);
+        }
     }
 }
 
@@ -2977,6 +2984,9 @@ void socket_server_tx_player_update (thingp t)
     SDLNet_Write16(t->thing_id, data);               
     data += sizeof(uint16_t);
 
+    SDLNet_Write16(t->weapon_anim_id, data);               
+    data += sizeof(uint16_t);
+
     memcpy(data, t->carrying, sizeof(t->carrying));
     data += sizeof(t->carrying);
 
@@ -3018,6 +3028,9 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         ERR("thing id from server, id %u not found", id);
         return;
     }
+
+    t->weapon_anim_id = SDLNet_Read16(data);
+    data += sizeof(uint16_t);
 
     memcpy(t->carrying, data, sizeof(t->carrying));
     data += sizeof(t->carrying);
@@ -3324,10 +3337,7 @@ uint8_t thing_server_move (thingp t,
             THING_LOG(t, "  server %f %f", t->x, t->y);
             THING_LOG(t, "  client %f %f", x, y);
 
-            if (!t->updated) {
-                t->updated++;
-            }
-
+            thing_update(t);
             t->resync = 1;
 
             return (false);
@@ -3337,9 +3347,7 @@ uint8_t thing_server_move (thingp t,
     thing_common_move(t, &x, &y, up, down, left, right);
 
     thing_server_wid_update(t, x, y, false /* is_new */);
-    if (!t->updated) {
-        t->updated++;
-    }
+    thing_update(t);
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
 

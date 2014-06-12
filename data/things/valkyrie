@@ -2,8 +2,7 @@
  short_name="valkyrie"
  tooltip="Deadly mix of good health and speed.\n\n%%fg=cyan$Good line of beauty products."
  carrying={
-    "data/things/wand_fire"
-    "data/things/bow1"
+    "data/things/sword1"
  }
  z_depth=3
  z_order=10
