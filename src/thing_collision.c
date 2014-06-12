@@ -263,7 +263,8 @@ static void thing_handle_collision (thingp me, thingp it,
     /*
      * Filter out boring things.
      */
-    if (thing_is_floor(it)) {
+    if (thing_is_floor(it) ||
+        thing_is_animation(it)) {
         return;
     }
 
@@ -440,7 +441,8 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * No collisions with the floor!
              */
-            if (thing_is_floor(it)) {
+            if (thing_is_floor(it) ||
+                thing_is_animation(it)) {
                 continue;
             }
 

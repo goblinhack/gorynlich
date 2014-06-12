@@ -4,6 +4,7 @@
  z_order=9
  is_animated
  is_hidden_from_editor
+is_animation
  tiles={
   tile={
    delay=200

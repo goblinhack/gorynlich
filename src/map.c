@@ -406,9 +406,9 @@ thingp map_thing_is_ring_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_ring));
 }
 
-thingp map_thing_is_xxx9_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_animation_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx9));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_animation));
 }
 
 thingp map_thing_is_poison_at (levelp level, int32_t x, int32_t y)
@@ -650,9 +650,9 @@ tree_rootp map_all_things_is_ring_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_ring));
 }
 
-tree_rootp map_all_things_is_xxx9_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_animation_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx9));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_animation));
 }
 
 tree_rootp map_all_things_is_poison_at (levelp level, int32_t x, int32_t y)
@@ -909,13 +909,13 @@ thing_templatep map_find_star_black_at (levelp level,
 thing_templatep map_find_star_purple_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx9, w));
+    return (map_find_x_at(level, x, y, thing_template_is_animation, w));
 }
 
 thing_templatep map_find_explosion_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx9, w));
+    return (map_find_x_at(level, x, y, thing_template_is_animation, w));
 }
 
 thing_templatep map_find_spikes_at (levelp level,
@@ -1515,9 +1515,9 @@ uint32_t level_count_is_ring (levelp level)
     return (level_count_is_x(level, thing_template_is_ring));
 }
 
-uint32_t level_count_is_xxx9 (levelp level)
+uint32_t level_count_is_animation (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx9));
+    return (level_count_is_x(level, thing_template_is_animation));
 }
 
 uint32_t level_count_is_poison (levelp level)
@@ -1766,9 +1766,9 @@ tree_rootp map_all_things_is_ring (levelp level)
     return (map_all_things_is_x(level, thing_template_is_ring));
 }
 
-tree_rootp map_all_things_is_xxx9 (levelp level)
+tree_rootp map_all_things_is_animation (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx9));
+    return (map_all_things_is_x(level, thing_template_is_animation));
 }
 
 tree_rootp map_all_things_is_poison (levelp level)

@@ -566,7 +566,9 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
 /*
  * Create a new thing.
  */
-thingp thing_server_new (levelp level, const char *name)
+thingp thing_server_new (levelp level, const char *name,
+                         double x,
+                         double y)
 {
     thingp t;
     thing_templatep thing_template;
@@ -603,8 +605,8 @@ thingp thing_server_new (levelp level, const char *name)
     t->last_y = -1.0;
     t->map_x = -1.0;
     t->map_y = -1.0;
-    t->x = -1.0;
-    t->y = -1.0;
+    t->x = x;
+    t->y = y;
 
     /*
      * Use a different base for monsters so that the IDs we create are going
@@ -2366,7 +2368,15 @@ static void thing_move (thingp t, double x, double y)
 
 void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
 {
+    /*
+     * Make the weapon follow the thing.
+     */
+    thingp weapon_anim = thing_weapon_anim(t);
+
     thing_move(t, x, y);
+    if (weapon_anim) {
+        thing_move(weapon_anim, x, y);
+    }
 
     x *= server_tile_width;
     y *= server_tile_height;
@@ -2406,13 +2416,9 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
     tl.y -= base_tile_height / 4.0;
     br.y -= base_tile_width / 4.0;
 
-    /*
-     * Make the weapon follow the thing.
-     */
-    thingp weapon_anim = thing_weapon_anim(t);
-
     if (is_new || thing_is_player(t)) {
         wid_set_tl_br(t->wid, tl, br);
+
         if (weapon_anim) {
             wid_set_tl_br(weapon_anim->wid, tl, br);
         }
@@ -2437,6 +2443,11 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     }
 
     thing_move(t, x, y);
+
+    thingp weapon_anim = thing_weapon_anim(t);
+    if (weapon_anim) {
+        thing_move(weapon_anim, x, y);
+    }
 
     x *= client_tile_width;
     y *= client_tile_height;
@@ -2479,23 +2490,18 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     /*
      * Make the weapon follow the thing.
      */
-    thingp weapon_anim = thing_weapon_anim(t);
-
     if (smooth) {
         double time_step = dist;
         double ms = (1000.0 / thing_speed(t)) / (1.0 / time_step);
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
         if (weapon_anim) {
-CON("client weapon %s move1 %f %f",thing_logname(weapon_anim), tl.x,tl.y);
             wid_move_to_abs_in(weapon_anim->wid, tl.x, tl.y, ms);
         }
     } else {
         wid_set_tl_br(t->wid, tl, br);
         if (weapon_anim) {
-CON("client weapon %s move2 %f %f",thing_logname(weapon_anim), tl.x,tl.y);
-//            wid_set_tl_br(weapon_anim->wid, tl, br);
-            wid_move_to_abs_in(weapon_anim->wid, 0, 0, 1000);
+            wid_set_tl_br(weapon_anim->wid, tl, br);
         }
     }
 }
@@ -2546,6 +2552,16 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         thing_templatep thing_template = t->thing_template;
 
         /*
+         * As an optimization do not send dead events for explosions. Let the
+         * client destroy those on its own to save sending loads of events.
+         */
+        if (thing_is_dead(t)) {
+            if (thing_template_is_explosion(thing_template)) {
+                continue;
+            }
+        }
+
+        /*
          * If updating to all sockets, decrement the update counter for this 
          * thing. We only send updates on modified things.
          */
@@ -2560,7 +2576,12 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             /*
              * There is a change, but don't send too often.
              */
-            if (!time_have_x_thousandths_passed_since(
+            if (thing_is_animation(t)) {
+                /*
+                 * Send thing animation changes all the time so that weapons
+                 * stay close to the player.
+                 */
+            } else if (!time_have_x_thousandths_passed_since(
                     thing_template_get_tx_map_update_delay_thousandths(
                                                             thing_template),
                     t->timestamp_tx_map_update)) {
@@ -2570,16 +2591,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
             t->timestamp_tx_map_update = time_get_time_cached();
 
             t->updated--;
-        }
-
-        /*
-         * As an optimization do not send dead events for explosions. Let the
-         * client destroy those on its own to save sending loads of events.
-         */
-        if (thing_is_dead(t)) {
-            if (thing_template_is_explosion(thing_template)) {
-                continue;
-            }
         }
 
         /*
@@ -2751,6 +2762,17 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
     uint8_t need_fixup = false;
     verify(s);
 
+    /*
+     * Cache the local player weapon. We do not accept updates for it as
+     * we locally echo the weapon and player.
+     */
+    thingp weapon_anim;
+    if (player) {
+        weapon_anim = thing_weapon_anim(player);
+    } else {
+        weapon_anim = 0;
+    }
+
     uint8_t *eodata = data + packet->len - 1;
     uint16_t last_id = 0;
 
@@ -2893,7 +2915,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             widp w = thing_wid(t);
             if (w) {
-                if (t == player) {
+                if ((t == player) || ((t == weapon_anim) && weapon_anim)) {
                     /*
                      * Local echo only.
                      */
@@ -2922,6 +2944,10 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         thing_client_wid_update(t, x, y, true /* smooth */);
                     }
                 } else if (on_map) {
+                    /*
+                     * Move something which is not the local player. Could
+                     * be another player or monster etc...
+                     */
                     thing_client_wid_update(t, x, y, true /* smooth */);
                 }
             } else {
@@ -2935,6 +2961,9 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                      * Popped off the map.
                      */
                 } else {
+                    /*
+                     * Thing has no wid. Make one.
+                     */
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
                                             x, y, t);
@@ -3033,7 +3062,6 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
     }
 
     t->weapon_anim_id = SDLNet_Read16(data);
-CON("client weapon id %d",t->weapon_anim_id);
     data += sizeof(uint16_t);
 
     memcpy(t->carrying, data, sizeof(t->carrying));
@@ -3136,6 +3164,14 @@ void thing_client_move (thingp t,
     }
 
     thing_common_move(t, &x, &y, up, down, left, right);
+
+    /*
+     * Move the weapon too.
+     */
+    thingp weapon_anim = thing_weapon_anim(t);
+    if (weapon_anim) {
+        thing_common_move(weapon_anim, &x, &y, up, down, left, right);
+    }
 
     /*
      * Oddly doing smooth moving makes it more jumpy when scrolling.
@@ -3313,6 +3349,14 @@ uint8_t thing_server_move (thingp t,
 
     thing_common_move(t, &x, &y, up, down, left, right);
 
+    /*
+     * Move the weapon too.
+     */
+    thingp weapon_anim = thing_weapon_anim(t);
+    if (weapon_anim) {
+        thing_common_move(weapon_anim, &x, &y, up, down, left, right);
+    }
+
     if (thing_hit_solid_obstacle(grid, t, x, y)) {
         if ((x != t->x) &&
             !thing_hit_solid_obstacle(grid, t, x, t->y)) {
@@ -3349,6 +3393,13 @@ uint8_t thing_server_move (thingp t,
     }
 
     thing_common_move(t, &x, &y, up, down, left, right);
+
+    /*
+     * Move the weapon too.
+     */
+    if (weapon_anim) {
+        thing_common_move(weapon_anim, &x, &y, up, down, left, right);
+    }
 
     thing_server_wid_update(t, x, y, false /* is_new */);
     thing_update(t);
