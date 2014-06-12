@@ -1,0 +1,19 @@
+{
+ short_name="light axe"
+ tooltip="light axe"
+ z_depth=2
+ z_order=2
+ is_weapon
+ is_collision_map_large
+ is_wearable
+ is_animated
+ is_valid_for_shortcut_key
+ failure_chance=20000
+ weapon_anim="data/things/axe1_anim"
+ tiles={
+  tile={
+   tile="axe1"
+   delay=50
+  }
+ }
+}

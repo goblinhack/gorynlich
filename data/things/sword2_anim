@@ -1,62 +1,53 @@
 {
- short_name="dwarf"
- tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo."
- carrying={
-    "data/things/axe1"
- }
+ short_name="sword2 anim"
  z_depth=3
- z_order=10
- speed=7
- health=250
- is_player
- spawn_on_death="data/things/generator3"
- is_carryable
- is_collision_map_large
+ z_order=9
  is_animated
+ is_hidden_from_editor
  tiles={
   tile={
    delay=200
    is_dir_up
-   tile="dwarf-up"
+   tile="sword2.7"
   }
   tile={
    delay=200
    is_dir_down
-   tile="dwarf-down"
+   tile="sword2.3"
   }
   tile={
    delay=200
    is_dir_left
-   tile="dwarf-left"
+   tile="sword2.5"
   }
   tile={
    delay=200
    is_dir_right
-   tile="dwarf-right"
+   tile="sword2.1"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_left
-   tile="dwarf-tl"
+   tile="sword2.6"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_left
-   tile="dwarf-bl"
+   tile="sword2.4"
   }
   tile={
    delay=200
    is_dir_up
    is_dir_right
-   tile="dwarf-tr"
+   tile="sword2.8"
   }
   tile={
    delay=200
    is_dir_down
    is_dir_right
-   tile="dwarf-br"
+   tile="sword2.2"
   }
  }
 }

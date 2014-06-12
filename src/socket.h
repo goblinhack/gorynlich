@@ -144,6 +144,7 @@ typedef struct {
 typedef struct {
     uint8_t type;
     uint16_t thing_id;
+    uint16_t weapon_id;
     uint8_t carrying[THING_MAX];
     uint8_t weapon;
 } __attribute__ ((packed)) msg_player_update;

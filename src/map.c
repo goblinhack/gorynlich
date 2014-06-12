@@ -1273,9 +1273,7 @@ if (level != server_level)
                 if (existing_tile && (existing_tile != tile)) {
                     thingp t = wid_get_thing(mywid);
                     if (t) {
-                        if (!t->updated) {
-                            t->updated++;
-                        }
+                        thing_update(t);
                     }
                 }
             }

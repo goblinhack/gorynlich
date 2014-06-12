@@ -1,6 +1,9 @@
 {
  short_name="lizard"
  tooltip="lizard!"
+ carrying={
+    "data/things/sword2"
+ }
  z_depth=2
  speed=2
  health=20

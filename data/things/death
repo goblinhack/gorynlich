@@ -1,6 +1,9 @@
 {
  short_name="reaper"
  tooltip="the reaper!"
+ carrying={
+    "data/things/scythe1"
+ }
  z_depth=2
  speed=2
  health=100
