@@ -85,6 +85,9 @@ void level_set_is_frozen(levelp level, uint8_t val);
 uint8_t level_is_frozen(levelp level);
 void level_set_is_paused(levelp level, uint8_t val);
 void level_place_plant_pod(levelp);
+void level_place_weapon_hit1(levelp level, 
+                             thingp owner,
+                             double x, double y);
 void level_place_explosion(levelp level, 
                            thingp owner,
                            double x, double y);

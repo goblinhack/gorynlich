@@ -66,7 +66,7 @@ uint16_t THING_AXE2_ANIM;
 uint16_t THING_BOW1_ANIM;
 uint16_t THING_SCYTHE1_ANIM;
 uint16_t THING_PIPE;
-uint16_t THING_EXPLOSION;
+uint16_t THING_WEAPON_HIT1;
 uint16_t THING_EXPLOSION1;
 uint16_t THING_EXPLOSION2;
 uint16_t THING_EXPLOSION3;
@@ -3309,6 +3309,7 @@ void thing_fire (thingp t,
         /*
          * Might be a sword.
          */
+        level_place_weapon_hit1(server_level, t, t->x, t->y);
         return;
     }
 
