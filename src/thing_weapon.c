@@ -118,5 +118,6 @@ void thing_wield (thingp t, thing_templatep tmp)
          */
         thingp weapon_anim = wid_get_thing(weapon_anim_wid);
         t->weapon_anim_id = weapon_anim->thing_id;
+        weapon_anim->dir = t->dir;
     }
 }

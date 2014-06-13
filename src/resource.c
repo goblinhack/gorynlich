@@ -1440,14 +1440,14 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // row 39
-        "sword1.1",
-        "sword1.2",
-        "sword1.3",
-        "sword1.4",
-        "sword1.5",
-        "sword1.6",
-        "sword1.7",
-        "sword1.8",
+        "sword3.1",
+        "sword3.2",
+        "sword3.3",
+        "sword3.4",
+        "sword3.5",
+        "sword3.6",
+        "sword3.7",
+        "sword3.8",
         0,
         0,
         0,
@@ -1506,14 +1506,14 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // row 41
-        "sword3.1",
-        "sword3.2",
-        "sword3.3",
-        "sword3.4",
-        "sword3.5",
-        "sword3.6",
-        "sword3.7",
-        "sword3.8",
+        "sword1.1",
+        "sword1.2",
+        "sword1.3",
+        "sword1.4",
+        "sword1.5",
+        "sword1.6",
+        "sword1.7",
+        "sword1.8",
         0,
         0,
         0,
@@ -1638,14 +1638,14 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // row 45
-        "axe1.1",
-        "axe1.2",
-        "axe1.3",
-        "axe1.4",
-        "axe1.5",
-        "axe1.6",
-        "axe1.7",
-        "axe1.8",
+        "axe2.1",
+        "axe2.2",
+        "axe2.3",
+        "axe2.4",
+        "axe2.5",
+        "axe2.6",
+        "axe2.7",
+        "axe2.8",
         0,
         0,
         0,
@@ -1671,14 +1671,14 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // row 46
-        "axe2.1",
-        "axe2.2",
-        "axe2.3",
-        "axe2.4",
-        "axe2.5",
-        "axe2.6",
-        "axe2.7",
-        "axe2.8",
+        "axe1.1",
+        "axe1.2",
+        "axe1.3",
+        "axe1.4",
+        "axe1.5",
+        "axe1.6",
+        "axe1.7",
+        "axe1.8",
         0,
         0,
         0,
@@ -1871,11 +1871,13 @@ static uint8_t resource_init_23 (void *context)
     /*
      * Weapon animations.
      */
+    thing_template_load(&THING_WAND1_ANIM, "data/things/wand1_anim");
     thing_template_load(&THING_SWORD1_ANIM, "data/things/sword1_anim");
     thing_template_load(&THING_SWORD2_ANIM, "data/things/sword2_anim");
     thing_template_load(&THING_SWORD3_ANIM, "data/things/sword3_anim");
     thing_template_load(&THING_AXE1_ANIM, "data/things/axe1_anim");
     thing_template_load(&THING_AXE2_ANIM, "data/things/axe2_anim");
+    thing_template_load(&THING_BOW1_ANIM, "data/things/bow1_anim");
     thing_template_load(&THING_SCYTHE1_ANIM, "data/things/scythe1_anim");
 
     return (true);
