@@ -127,6 +127,9 @@
 .o/ramdisk_data_things__bow1_session.o: asm/ramdisk_data_things__bow1_session.S ../data/things/.bow1.session
 	gcc -c asm/ramdisk_data_things__bow1_session.S -o .o/ramdisk_data_things__bow1_session.o
 
+.o/ramdisk_data_things__bow1_anim_session.o: asm/ramdisk_data_things__bow1_anim_session.S ../data/things/.bow1_anim.session
+	gcc -c asm/ramdisk_data_things__bow1_anim_session.S -o .o/ramdisk_data_things__bow1_anim_session.o
+
 .o/ramdisk_data_things__bread_session.o: asm/ramdisk_data_things__bread_session.S ../data/things/.bread.session
 	gcc -c asm/ramdisk_data_things__bread_session.S -o .o/ramdisk_data_things__bread_session.o
 
@@ -228,6 +231,9 @@
 
 .o/ramdisk_data_things_bow1.o: asm/ramdisk_data_things_bow1.S ../data/things/bow1
 	gcc -c asm/ramdisk_data_things_bow1.S -o .o/ramdisk_data_things_bow1.o
+
+.o/ramdisk_data_things_bow1_anim.o: asm/ramdisk_data_things_bow1_anim.S ../data/things/bow1_anim
+	gcc -c asm/ramdisk_data_things_bow1_anim.S -o .o/ramdisk_data_things_bow1_anim.o
 
 .o/ramdisk_data_things_bow2.o: asm/ramdisk_data_things_bow2.S ../data/things/bow2
 	gcc -c asm/ramdisk_data_things_bow2.S -o .o/ramdisk_data_things_bow2.o
