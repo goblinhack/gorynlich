@@ -306,6 +306,7 @@ static void thing_handle_collision (thingp me, thingp it,
          */
         if (thing_is_monst(it) || 
             thing_is_poison(it) ||
+            thing_is_weapon_hit_effect(it) ||
             thing_is_explosion(it)) {
             /*
              * I'm hit!
@@ -320,6 +321,7 @@ static void thing_handle_collision (thingp me, thingp it,
      */
     if (thing_is_projectile(me) || 
         thing_is_poison(me) ||
+        thing_is_weapon_hit_effect(me) ||
         thing_is_explosion(me)) {
 
         if (thing_is_monst(it) || thing_is_mob_spawner(it)) {
@@ -457,38 +459,29 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow monsters to walk into these things:
                  */
-                if (thing_is_player(it)     ||
-                    thing_is_key(it)        ||
-                    thing_is_explosion(it)  ||
-                    thing_is_poison(it)     ||
-                    thing_is_projectile(it) ||
-                    thing_is_treasure(it)   ||
-                    thing_is_weapon(it)     ||
+                if (thing_is_player(it)             ||
+                    thing_is_key(it)                ||
+                    thing_is_weapon_hit_effect(it)  ||
+                    thing_is_explosion(it)          ||
+                    thing_is_poison(it)             ||
+                    thing_is_projectile(it)         ||
+                    thing_is_treasure(it)           ||
+                    thing_is_weapon(it)             ||
                     thing_is_food(it)) {
                     continue;
                 }
             }
 
-            if (thing_is_projectile(me)) {
+            if (thing_is_explosion(me)              ||
+                thing_is_projectile(me)             ||
+                thing_is_poison(me)                 ||
+                thing_is_weapon_hit_effect(me)) {
                 /*
-                 * Allow projectiles to pass through anything.
+                 * Allow these to pass through anything.
                  */
                 continue;
             }
 
-            if (thing_is_explosion(me)) {
-                /*
-                 * Allow explosions to pass through anything.
-                 */
-                continue;
-            }
-
-            if (thing_is_poison(me)) {
-                /*
-                 * Allow explosions to pass through anything.
-                 */
-                continue;
-            }
 
             if (thing_is_player(me)) {
                 /*
@@ -509,16 +502,17 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow players to collect keys and other junk.
                  */
-                if (thing_is_key(it) ||
-                    thing_is_food(it) ||
-                    thing_is_treasure(it) ||
-                    thing_is_weapon(it) ||
-                    thing_is_monst(it) ||
+                if (thing_is_key(it)                    ||
+                    thing_is_food(it)                   ||
+                    thing_is_treasure(it)               ||
+                    thing_is_weapon(it)                 ||
+                    thing_is_monst(it)                  ||
                     /*
                      * Walk through friendly fire.
                      */
-                    thing_is_projectile(it) ||
-                    thing_is_poison(it) ||
+                    thing_is_projectile(it)             ||
+                    thing_is_poison(it)                 ||
+                    thing_is_weapon_hit_effect(it)      ||
                     thing_is_explosion(it)) {
                     continue;
                 }
