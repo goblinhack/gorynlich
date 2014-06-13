@@ -756,11 +756,11 @@ static inline uint8_t thing_is_xxx5 (thingp t)
     return (thing_template_is_xxx5(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx6 (thingp t)
+static inline uint8_t thing_is_weapon_hit_effect (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx6(thing_get_template(t)));
+    return (thing_template_is_weapon_hit_effect(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_key2 (thingp t)
@@ -1038,9 +1038,9 @@ static inline uint8_t thing_is_xxx5_fast (thingp t)
     return (t->thing_template->is_xxx5);
 }
 
-static inline uint8_t thing_is_xxx6_fast (thingp t)
+static inline uint8_t thing_is_weapon_hit_effect_fast (thingp t)
 {
-    return (t->thing_template->is_xxx6);
+    return (t->thing_template->is_weapon_hit_effect);
 }
 
 static inline uint8_t thing_is_key2_fast (thingp t)
