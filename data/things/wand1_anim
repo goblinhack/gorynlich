@@ -1,0 +1,54 @@
+{
+ short_name="wand1 anim"
+ z_depth=3
+ z_order=9
+ is_animated
+ is_hidden_from_editor
+is_animation
+ tiles={
+  tile={
+   delay=200
+   is_dir_up
+   tile="wand1.7"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="wand1.3"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="wand1.5"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="wand1.1"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="wand1.6"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="wand1.4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="wand1.8"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="wand1.2"
+  }
+ }
+}

@@ -12,6 +12,7 @@
  is_animated
  is_valid_for_shortcut_key
  failure_chance=1000
+ weapon_anim="data/things/wand1_anim"
  tiles={
   tile={
    tile="wand-fire1"

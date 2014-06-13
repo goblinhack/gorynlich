@@ -57,11 +57,13 @@ uint16_t THING_LIZARD;
 uint16_t THING_DEATH;
 uint16_t THING_PLANT;
 uint16_t THING_SEEDPOD;
+uint16_t THING_WAND1_ANIM;
 uint16_t THING_SWORD1_ANIM;
 uint16_t THING_SWORD2_ANIM;
 uint16_t THING_SWORD3_ANIM;
 uint16_t THING_AXE1_ANIM;
 uint16_t THING_AXE2_ANIM;
+uint16_t THING_BOW1_ANIM;
 uint16_t THING_SCYTHE1_ANIM;
 uint16_t THING_PIPE;
 uint16_t THING_EXPLOSION;
@@ -3152,14 +3154,16 @@ void thing_client_move (thingp t,
 {
     widp grid = wid_game_map_client_grid_container;
 
-    if (thing_hit_solid_obstacle(grid, t, x, y)) {
-        if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
-            y = t->y;
-        } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
-            x = t->x;
-        } else {
-            x = t->x;
-            y = t->y;
+    if (t->wid) {
+        if (thing_hit_solid_obstacle(grid, t, x, y)) {
+            if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
+                y = t->y;
+            } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
+                x = t->x;
+            } else {
+                x = t->x;
+                y = t->y;
+            }
         }
     }
 
@@ -3171,6 +3175,14 @@ void thing_client_move (thingp t,
     thingp weapon_anim = thing_weapon_anim(t);
     if (weapon_anim) {
         thing_common_move(weapon_anim, &x, &y, up, down, left, right);
+    }
+
+    /*
+     * If no widget yet then this can be a dummy move during thing creation
+     * just to set the weapon anim correctly.
+     */
+    if (!t->wid) {
+        return;
     }
 
     /*
@@ -3294,7 +3306,9 @@ void thing_fire (thingp t,
 
     thing_templatep projectile = thing_template_fires(weapon);
     if (!projectile) {
-        ERR("weapon %s has no projectile", thing_template_name(weapon));
+        /*
+         * Might be a sword.
+         */
         return;
     }
 

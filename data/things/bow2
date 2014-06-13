@@ -11,6 +11,7 @@
  is_fragile
  is_wearable
  failure_chance=2000
+ weapon_anim="data/things/bow1_anim"
  tiles={
   tile={
    tile="bow2"
