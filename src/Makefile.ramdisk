@@ -187,6 +187,9 @@
 .o/ramdisk_data_things__wa_session.o: asm/ramdisk_data_things__wa_session.S ../data/things/.wa.session
 	gcc -c asm/ramdisk_data_things__wa_session.S -o .o/ramdisk_data_things__wa_session.o
 
+.o/ramdisk_data_things__wand1_anim_session.o: asm/ramdisk_data_things__wand1_anim_session.S ../data/things/.wand1_anim.session
+	gcc -c asm/ramdisk_data_things__wand1_anim_session.S -o .o/ramdisk_data_things__wand1_anim_session.o
+
 .o/ramdisk_data_things__wand_fire_session.o: asm/ramdisk_data_things__wand_fire_session.S ../data/things/.wand_fire.session
 	gcc -c asm/ramdisk_data_things__wand_fire_session.S -o .o/ramdisk_data_things__wand_fire_session.o
 
@@ -198,6 +201,9 @@
 
 .o/ramdisk_data_things__water_poison_session.o: asm/ramdisk_data_things__water_poison_session.S ../data/things/.water_poison.session
 	gcc -c asm/ramdisk_data_things__water_poison_session.S -o .o/ramdisk_data_things__water_poison_session.o
+
+.o/ramdisk_data_things__weapon_hit_session.o: asm/ramdisk_data_things__weapon_hit_session.S ../data/things/.weapon_hit.session
+	gcc -c asm/ramdisk_data_things__weapon_hit_session.S -o .o/ramdisk_data_things__weapon_hit_session.o
 
 .o/ramdisk_data_things__wizard_session.o: asm/ramdisk_data_things__wizard_session.S ../data/things/.wizard.session
 	gcc -c asm/ramdisk_data_things__wizard_session.S -o .o/ramdisk_data_things__wizard_session.o
@@ -532,6 +538,9 @@
 .o/ramdisk_data_things_wall5.o: asm/ramdisk_data_things_wall5.S ../data/things/wall5
 	gcc -c asm/ramdisk_data_things_wall5.S -o .o/ramdisk_data_things_wall5.o
 
+.o/ramdisk_data_things_wand1_anim.o: asm/ramdisk_data_things_wand1_anim.S ../data/things/wand1_anim
+	gcc -c asm/ramdisk_data_things_wand1_anim.S -o .o/ramdisk_data_things_wand1_anim.o
+
 .o/ramdisk_data_things_wand_fire.o: asm/ramdisk_data_things_wand_fire.S ../data/things/wand_fire
 	gcc -c asm/ramdisk_data_things_wand_fire.S -o .o/ramdisk_data_things_wand_fire.o
 
@@ -543,6 +552,9 @@
 
 .o/ramdisk_data_things_water_poison.o: asm/ramdisk_data_things_water_poison.S ../data/things/water_poison
 	gcc -c asm/ramdisk_data_things_water_poison.S -o .o/ramdisk_data_things_water_poison.o
+
+.o/ramdisk_data_things_weapon_hit1.o: asm/ramdisk_data_things_weapon_hit1.S ../data/things/weapon_hit1
+	gcc -c asm/ramdisk_data_things_weapon_hit1.S -o .o/ramdisk_data_things_weapon_hit1.o
 
 .o/ramdisk_data_things_wizard.o: asm/ramdisk_data_things_wizard.S ../data/things/wizard
 	gcc -c asm/ramdisk_data_things_wizard.S -o .o/ramdisk_data_things_wizard.o
