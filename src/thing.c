@@ -1304,7 +1304,7 @@ void thing_hit (thingp t,
     }
 
     /*
-     * Check to see if this is a thing tht can be damaged by the hitter.
+     * Check to see if this is a thing that can be damaged by the hitter.
      */
     if (hitter) {
         /*
@@ -1316,6 +1316,7 @@ void thing_hit (thingp t,
             thing_is_wall(t)) {
 
             if (!thing_is_explosion(hitter) &&
+                !thing_is_weapon_hit_effect(hitter) &&
                 !thing_is_projectile(hitter)) {
                 return;
             }
@@ -2558,7 +2559,8 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          * client destroy those on its own to save sending loads of events.
          */
         if (thing_is_dead(t)) {
-            if (thing_template_is_explosion(thing_template)) {
+            if (thing_template_is_explosion(thing_template) ||
+                thing_template_is_weapon_hit_effect(thing_template)) {
                 continue;
             }
         }
