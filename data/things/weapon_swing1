@@ -4,6 +4,7 @@
  z_depth=2
  z_order=2
  is_animated
+ is_animated_no_dir
  is_hidden_from_editor
  is_weapon_swing_effect
  is_collision_map_large
@@ -12,35 +13,35 @@
  tiles={
   tile={
    tile="weapon_swing1.1"
-   delay=50
+   delay=1
   }
   tile={
    tile="weapon_swing1.2"
-   delay=50
+   delay=1
   }
   tile={
    tile="weapon_swing1.3"
-   delay=50
+   delay=1
   }
   tile={
    tile="weapon_swing1.4"
-   delay=50
+   delay=1
   }
   tile={
    tile="weapon_swing1.5"
-   delay=50
+   delay=1
   }
   tile={
    tile="weapon_swing1.6"
-   delay=50
+   delay=1
   }
   tile={
    tile="weapon_swing1.7"
-   delay=50
+   delay=1
   }
   tile={
    tile="space"
-   delay=50
+   delay=1
    is_end_of_anim
    is_dead_on_end_of_anim
   }
