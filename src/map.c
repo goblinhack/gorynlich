@@ -158,9 +158,9 @@ uint8_t map_is_star_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_star));
 }
 
-uint8_t map_is_xxx5_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_animated_no_dir_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx5));
+    return (map_is_x_at(level, x, y, thing_template_is_animated_no_dir));
 }
 
 uint8_t map_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
@@ -376,9 +376,9 @@ thingp map_thing_is_star_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_star));
 }
 
-thingp map_thing_is_xxx5_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_animated_no_dir_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx5));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_animated_no_dir));
 }
 
 thingp map_thing_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
@@ -620,9 +620,9 @@ tree_rootp map_all_things_is_star_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_star));
 }
 
-tree_rootp map_all_things_is_xxx5_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_animated_no_dir_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx5));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_animated_no_dir));
 }
 
 tree_rootp map_all_things_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
@@ -873,7 +873,7 @@ thing_templatep map_find_is_star_at (levelp level,
 thing_templatep map_find_powerup_spam_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx5, w));
+    return (map_find_x_at(level, x, y, thing_template_is_animated_no_dir, w));
 }
 
 thing_templatep map_find_key1_at (levelp level,
@@ -1272,7 +1272,7 @@ if (level != server_level)
 
                 if (existing_tile && (existing_tile != tile)) {
                     thingp t = wid_get_thing(mywid);
-                    if (t) {
+                    if (t && t->on_server) {
                         thing_update(t);
                     }
                 }
@@ -1485,9 +1485,9 @@ uint32_t level_count_is_star (levelp level)
     return (level_count_is_x(level, thing_template_is_star));
 }
 
-uint32_t level_count_is_xxx5 (levelp level)
+uint32_t level_count_is_animated_no_dir (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx5));
+    return (level_count_is_x(level, thing_template_is_animated_no_dir));
 }
 
 uint32_t level_count_is_weapon_swing_effect (levelp level)
@@ -1736,9 +1736,9 @@ tree_rootp map_all_things_is_star (levelp level)
     return (map_all_things_is_x(level, thing_template_is_star));
 }
 
-tree_rootp map_all_things_is_xxx5 (levelp level)
+tree_rootp map_all_things_is_animated_no_dir (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx5));
+    return (map_all_things_is_x(level, thing_template_is_animated_no_dir));
 }
 
 tree_rootp map_all_things_is_weapon_swing_effect (levelp level)

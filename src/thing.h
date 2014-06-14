@@ -158,6 +158,7 @@ void thing_place_and_destroy_timed(thing_templatep t,
                                    uint32_t ms, 
                                    uint32_t destroy_in, 
                                    uint32_t jitter);
+void thing_timer_destroy(thingp t, uint32_t destroy_in);
 void thing_timer_place_and_destroy_callback(void *context);
 void thing_timer_place_and_destroy_destroy_callback(void *context);
 void thing_timer_place_callback(void *context);
@@ -750,11 +751,11 @@ static inline uint8_t thing_is_star (thingp t)
     return (thing_template_is_star(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx5 (thingp t)
+static inline uint8_t thing_is_animated_no_dir (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx5(thing_get_template(t)));
+    return (thing_template_is_animated_no_dir(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_weapon_swing_effect (thingp t)
@@ -1034,9 +1035,9 @@ static inline uint8_t thing_is_star_fast (thingp t)
     return (t->thing_template->is_star);
 }
 
-static inline uint8_t thing_is_xxx5_fast (thingp t)
+static inline uint8_t thing_is_animated_no_dir_fast (thingp t)
 {
-    return (t->thing_template->is_xxx5);
+    return (t->thing_template->is_animated_no_dir);
 }
 
 static inline uint8_t thing_is_weapon_swing_effect_fast (thingp t)
