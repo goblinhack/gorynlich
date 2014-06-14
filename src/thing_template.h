@@ -93,7 +93,9 @@ typedef struct thing_template_ {
     /*
      * How this weapon appears on screen when it is used.
      */
-    char *weapon_anim;
+    char *weapon_carry_anim;
+
+    char *weapon_swing_anim;
 
     /*
      * What to shout when an item is used.
@@ -190,7 +192,7 @@ typedef struct thing_template_ {
     uint8_t is_fragile:1;
     uint8_t is_star:1;
     uint8_t is_xxx5:1;
-    uint8_t is_weapon_hit_effect:1;
+    uint8_t is_weapon_swing_effect:1;
     uint8_t is_key2:1;
     uint8_t is_key3:1;
     uint8_t is_fire:1;
@@ -245,7 +247,8 @@ const char *thing_template_short_name(thing_templatep);
 thing_templatep thing_template_fires(thing_templatep);
 const char *thing_template_polymorph_on_death(thing_templatep);
 const char *thing_template_spawn_on_death(thing_templatep);
-const char *thing_template_weapon_anim(thing_templatep);
+const char *thing_template_weapon_carry_anim(thing_templatep);
+const char *thing_template_weapon_swing_anim(thing_templatep);
 const char *thing_template_message_on_use(thing_templatep);
 const char *thing_template_mob_spawn(thing_templatep);
 const char *thing_template_get_tooltip(thing_templatep);
@@ -376,9 +379,9 @@ static inline uint8_t thing_template_is_xxx5 (thing_templatep t)
     return (t->is_xxx5);
 }
 
-static inline uint8_t thing_template_is_weapon_hit_effect (thing_templatep t)
+static inline uint8_t thing_template_is_weapon_swing_effect (thing_templatep t)
 {
-    return (t->is_weapon_hit_effect);
+    return (t->is_weapon_swing_effect);
 }
 
 static inline uint8_t thing_template_is_key2 (thing_templatep t)

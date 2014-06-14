@@ -772,26 +772,6 @@ static void level_place_explosion_ (levelp level,
     }
 }
 
-void level_place_weapon_hit1 (levelp level, 
-                              thingp owner,
-                              double x, double y)
-{
-    thing_templatep thing_template = thing_template_find(
-                                    "data/things/weapon_hit1");
-    if (!thing_template) {
-        DIE("no weapon hit effect");
-    }
-
-    thing_place_and_destroy_timed(thing_template,
-                                  owner,
-                                  x,
-                                  y,
-                                  0,       // place in
-                                  500,     // destroy in
-                                  10);     // jitter
-
-}
-
 void level_place_explosion (levelp level, 
                             thingp owner,
                             double x, double y)

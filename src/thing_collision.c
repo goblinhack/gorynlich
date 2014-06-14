@@ -306,7 +306,7 @@ static void thing_handle_collision (thingp me, thingp it,
          */
         if (thing_is_monst(it) || 
             thing_is_poison(it) ||
-            thing_is_weapon_hit_effect(it) ||
+            thing_is_weapon_swing_effect(it) ||
             thing_is_explosion(it)) {
             /*
              * I'm hit!
@@ -321,7 +321,7 @@ static void thing_handle_collision (thingp me, thingp it,
      */
     if (thing_is_projectile(me) || 
         thing_is_poison(me) ||
-        thing_is_weapon_hit_effect(me) ||
+        thing_is_weapon_swing_effect(me) ||
         thing_is_explosion(me)) {
 
         if (thing_is_monst(it) || thing_is_mob_spawner(it)) {
@@ -461,7 +461,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  */
                 if (thing_is_player(it)             ||
                     thing_is_key(it)                ||
-                    thing_is_weapon_hit_effect(it)  ||
+                    thing_is_weapon_swing_effect(it)  ||
                     thing_is_explosion(it)          ||
                     thing_is_poison(it)             ||
                     thing_is_projectile(it)         ||
@@ -475,7 +475,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             if (thing_is_explosion(me)              ||
                 thing_is_projectile(me)             ||
                 thing_is_poison(me)                 ||
-                thing_is_weapon_hit_effect(me)) {
+                thing_is_weapon_swing_effect(me)) {
                 /*
                  * Allow these to pass through anything.
                  */
@@ -512,7 +512,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      */
                     thing_is_projectile(it)             ||
                     thing_is_poison(it)                 ||
-                    thing_is_weapon_hit_effect(it)      ||
+                    thing_is_weapon_swing_effect(it)      ||
                     thing_is_explosion(it)) {
                     continue;
                 }
