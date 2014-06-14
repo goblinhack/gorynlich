@@ -218,9 +218,20 @@ void thing_update (thingp t)
 
     t->updated++;
 
-    thingp weapon_anim = thing_weapon_anim(t);
-    if (weapon_anim) {
-        thing_update(weapon_anim);
+    /*
+     * Update the weapon being carried.
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_update(weapon_carry_anim);
+    }
+
+    /*
+     * Update the weapon being swung.
+     */
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        thing_update(weapon_swing_anim);
     }
 }
 
@@ -914,6 +925,11 @@ void thing_destroy (thingp t, const char *why)
     }
 
     /*
+     * Destroy the things weapon. Eventually drop a backpack.
+     */
+    thing_unwield(t);
+
+    /*
      * Stop all timers.
      */
     thing_timers_destroy(t);
@@ -932,12 +948,6 @@ void thing_destroy (thingp t, const char *why)
         myfree(t->logname);
         t->logname = 0;
     }
-
-
-    /*
-     * Destroy the things weapon. Eventually drop a backpack.
-     */
-    thing_unwield(t);
 
     if (t->on_server) {
         thing_server_ids[t->thing_id] = 0;
@@ -996,6 +1006,37 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         t->dead_reason = 0;
     }
     
+    /*
+     * Detach from the owner
+     */
+    if (t->on_server) {
+        if (t->owner_id) {
+            thingp owner = thing_server_ids[t->owner_id];
+
+            if (t->thing_id == owner->weapon_carry_anim_id) {
+                owner->weapon_carry_anim_id = 0;
+            }
+
+            if (t->thing_id == owner->weapon_swing_anim_id) {
+                owner->weapon_swing_anim_id = 0;
+            }
+        }
+
+        if (t->weapon_carry_anim_id) {
+            thingp item = thing_server_ids[t->weapon_carry_anim_id];
+            t->weapon_carry_anim_id = 0;
+            verify(item);
+            item->owner_id = 0;
+        }
+
+        if (t->weapon_swing_anim_id) {
+            thingp item = thing_server_ids[t->weapon_swing_anim_id];
+            t->weapon_swing_anim_id = 0;
+            verify(item);
+            item->owner_id = 0;
+        }
+    }
+
     if (reason) {
         t->dead_reason = reason;
     }
@@ -1316,7 +1357,7 @@ void thing_hit (thingp t,
             thing_is_wall(t)) {
 
             if (!thing_is_explosion(hitter) &&
-                !thing_is_weapon_hit_effect(hitter) &&
+                !thing_is_weapon_swing_effect(hitter) &&
                 !thing_is_projectile(hitter)) {
                 return;
             }
@@ -2371,14 +2412,24 @@ static void thing_move (thingp t, double x, double y)
 
 void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
 {
+    thing_move(t, x, y);
+
     /*
      * Make the weapon follow the thing.
      */
-    thingp weapon_anim = thing_weapon_anim(t);
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_move(weapon_carry_anim, x, y);
+    }
 
-    thing_move(t, x, y);
-    if (weapon_anim) {
-        thing_move(weapon_anim, x, y);
+    /*
+     * Make the weapon being swung follow the thing.
+     */
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        double dx, dy;
+        thing_weapon_swing_offset(t, &dx, &dy);
+        thing_move(weapon_swing_anim, x + dx, y + dy);
     }
 
     x *= server_tile_width;
@@ -2422,14 +2473,35 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
     if (is_new || thing_is_player(t)) {
         wid_set_tl_br(t->wid, tl, br);
 
-        if (weapon_anim) {
-            wid_set_tl_br(weapon_anim->wid, tl, br);
+        if (weapon_carry_anim) {
+            wid_set_tl_br(weapon_carry_anim->wid, tl, br);
+        }
+
+        if (weapon_swing_anim) {
+            double dx, dy;
+            thing_weapon_swing_offset(t, &dx, &dy);
+            tl.x += dx;
+            tl.y += dy;
+            br.x += dx;
+            br.y += dy;
+
+            wid_set_tl_br(weapon_swing_anim->wid, tl, br);
         }
     } else {
         wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
 
-        if (weapon_anim) {
-            wid_move_to_abs_in(weapon_anim->wid, tl.x, tl.y, 
+        if (weapon_carry_anim) {
+            wid_move_to_abs_in(weapon_carry_anim->wid, tl.x, tl.y, 
+                               1000.0 / thing_speed(t));
+        }
+
+        if (weapon_swing_anim) {
+            double dx, dy;
+            thing_weapon_swing_offset(t, &dx, &dy);
+            tl.x += dx;
+            tl.y += dy;
+
+            wid_move_to_abs_in(weapon_swing_anim->wid, tl.x, tl.y, 
                                1000.0 / thing_speed(t));
         }
     }
@@ -2447,9 +2519,22 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 
     thing_move(t, x, y);
 
-    thingp weapon_anim = thing_weapon_anim(t);
-    if (weapon_anim) {
-        thing_move(weapon_anim, x, y);
+    /*
+     * Update the weapon being carried.
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_move(weapon_carry_anim, x, y);
+    }
+
+    /*
+     * Update the weapon being swung.
+     */
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        double dx, dy;
+        thing_weapon_swing_offset(t, &dx, &dy);
+        thing_move(weapon_swing_anim, x + dx, y + dy);
     }
 
     x *= client_tile_width;
@@ -2498,13 +2583,31 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
         double ms = (1000.0 / thing_speed(t)) / (1.0 / time_step);
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
-        if (weapon_anim) {
-            wid_move_to_abs_in(weapon_anim->wid, tl.x, tl.y, ms);
+        if (weapon_carry_anim) {
+            wid_move_to_abs_in(weapon_carry_anim->wid, tl.x, tl.y, ms);
+        }
+
+        if (weapon_swing_anim) {
+            double dx, dy;
+            thing_weapon_swing_offset(t, &dx, &dy);
+            wid_move_to_abs_in(weapon_swing_anim->wid, 
+                               tl.x + dx, tl.y + dy, ms);
         }
     } else {
         wid_set_tl_br(t->wid, tl, br);
-        if (weapon_anim) {
-            wid_set_tl_br(weapon_anim->wid, tl, br);
+
+        if (weapon_carry_anim) {
+            wid_set_tl_br(weapon_carry_anim->wid, tl, br);
+        }
+
+        if (weapon_swing_anim) {
+            double dx, dy;
+            thing_weapon_swing_offset(t, &dx, &dy);
+            tl.x += dx;
+            tl.y += dy;
+            br.x += dx;
+            br.y += dy;
+            wid_set_tl_br(weapon_swing_anim->wid, tl, br);
         }
     }
 }
@@ -2559,8 +2662,11 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
          * client destroy those on its own to save sending loads of events.
          */
         if (thing_is_dead(t)) {
-            if (thing_template_is_explosion(thing_template) ||
-                thing_template_is_weapon_hit_effect(thing_template)) {
+            if (thing_template_is_explosion(thing_template)) {
+                continue;
+            }
+
+            if (thing_template_is_weapon_swing_effect(thing_template)) {
                 continue;
             }
         }
@@ -2770,11 +2876,18 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
      * Cache the local player weapon. We do not accept updates for it as
      * we locally echo the weapon and player.
      */
-    thingp weapon_anim;
+    thingp weapon_carry_anim;
     if (player) {
-        weapon_anim = thing_weapon_anim(player);
+        weapon_carry_anim = thing_weapon_carry_anim(player);
     } else {
-        weapon_anim = 0;
+        weapon_carry_anim = 0;
+    }
+
+    thingp weapon_swing_anim;
+    if (player) {
+        weapon_swing_anim = thing_weapon_swing_anim(player);
+    } else {
+        weapon_swing_anim = 0;
     }
 
     uint8_t *eodata = data + packet->len - 1;
@@ -2919,7 +3032,9 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             widp w = thing_wid(t);
             if (w) {
-                if ((t == player) || ((t == weapon_anim) && weapon_anim)) {
+                if ((t == player) || 
+                    ((t == weapon_carry_anim) && weapon_carry_anim) ||
+                    ((t == weapon_swing_anim) && weapon_swing_anim)) {
                     /*
                      * Local echo only.
                      */
@@ -3020,7 +3135,10 @@ void socket_server_tx_player_update (thingp t)
     SDLNet_Write16(t->thing_id, data);               
     data += sizeof(uint16_t);
 
-    SDLNet_Write16(t->weapon_anim_id, data);               
+    SDLNet_Write16(t->weapon_carry_anim_id, data);               
+    data += sizeof(uint16_t);
+
+    SDLNet_Write16(t->weapon_swing_anim_id, data);               
     data += sizeof(uint16_t);
 
     memcpy(data, t->carrying, sizeof(t->carrying));
@@ -3065,7 +3183,10 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         return;
     }
 
-    t->weapon_anim_id = SDLNet_Read16(data);
+    t->weapon_carry_anim_id = SDLNet_Read16(data);
+    data += sizeof(uint16_t);
+
+    t->weapon_swing_anim_id = SDLNet_Read16(data);
     data += sizeof(uint16_t);
 
     memcpy(t->carrying, data, sizeof(t->carrying));
@@ -3174,9 +3295,14 @@ void thing_client_move (thingp t,
     /*
      * Move the weapon too.
      */
-    thingp weapon_anim = thing_weapon_anim(t);
-    if (weapon_anim) {
-        thing_common_move(weapon_anim, &x, &y, up, down, left, right);
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_common_move(weapon_carry_anim, &x, &y, up, down, left, right);
+    }
+
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        thing_common_move(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
     /*
@@ -3311,7 +3437,7 @@ void thing_fire (thingp t,
         /*
          * Might be a sword.
          */
-        level_place_weapon_hit1(server_level, t, t->x, t->y);
+        thing_swing(t);
         return;
     }
 
@@ -3369,9 +3495,14 @@ uint8_t thing_server_move (thingp t,
     /*
      * Move the weapon too.
      */
-    thingp weapon_anim = thing_weapon_anim(t);
-    if (weapon_anim) {
-        thing_common_move(weapon_anim, &x, &y, up, down, left, right);
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_common_move(weapon_carry_anim, &x, &y, up, down, left, right);
+    }
+
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        thing_common_move(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
     if (thing_hit_solid_obstacle(grid, t, x, y)) {
@@ -3414,8 +3545,12 @@ uint8_t thing_server_move (thingp t,
     /*
      * Move the weapon too.
      */
-    if (weapon_anim) {
-        thing_common_move(weapon_anim, &x, &y, up, down, left, right);
+    if (weapon_carry_anim) {
+        thing_common_move(weapon_carry_anim, &x, &y, up, down, left, right);
+    }
+
+    if (weapon_swing_anim) {
+        thing_common_move(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
     thing_server_wid_update(t, x, y, false /* is_new */);

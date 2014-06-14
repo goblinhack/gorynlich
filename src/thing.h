@@ -447,7 +447,8 @@ typedef struct thing_ {
      * The animation of this weapon that is wielded. This thing fires and
      * does nothing.
      */
-    uint16_t weapon_anim_id;
+    uint16_t weapon_carry_anim_id;
+    uint16_t weapon_swing_anim_id;
 
     /*
      * But this is the actual weapon.
@@ -756,11 +757,11 @@ static inline uint8_t thing_is_xxx5 (thingp t)
     return (thing_template_is_xxx5(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_weapon_hit_effect (thingp t)
+static inline uint8_t thing_is_weapon_swing_effect (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_weapon_hit_effect(thing_get_template(t)));
+    return (thing_template_is_weapon_swing_effect(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_key2 (thingp t)
@@ -1038,9 +1039,9 @@ static inline uint8_t thing_is_xxx5_fast (thingp t)
     return (t->thing_template->is_xxx5);
 }
 
-static inline uint8_t thing_is_weapon_hit_effect_fast (thingp t)
+static inline uint8_t thing_is_weapon_swing_effect_fast (thingp t)
 {
-    return (t->thing_template->is_weapon_hit_effect);
+    return (t->thing_template->is_weapon_swing_effect);
 }
 
 static inline uint8_t thing_is_key2_fast (thingp t)
@@ -1196,7 +1197,10 @@ extern thingp thing_client_ids[THING_ID_MAX];
  */
 void thing_unwield(thingp t);
 void thing_wield(thingp t, thing_templatep tmp);
-thingp thing_weapon_anim(thingp t);
+void thing_swing(thingp t);
+void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
+thingp thing_weapon_carry_anim(thingp t);
+thingp thing_weapon_swing_anim(thingp t);
 thing_templatep thing_weapon(thingp t);
 
 /*

@@ -9,7 +9,8 @@
  is_animated
  is_valid_for_shortcut_key
  failure_chance=20000
- weapon_anim="data/things/axe1_anim"
+ weapon_carry_anim="data/things/axe1_anim"
+weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
    tile="axe1"
