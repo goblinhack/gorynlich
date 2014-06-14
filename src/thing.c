@@ -212,6 +212,11 @@ void thing_fini (void)
 
 void thing_update (thingp t)
 {
+    if (!t->on_server) {
+        DIE("cannot update a thing %s for sending to the client on the client",
+            thing_logname(t));
+    }
+
     if (t->updated) {
         return;
     }
@@ -681,7 +686,10 @@ thingp thing_server_new (levelp level, const char *name,
         DIE("sanity check, ID 0 never used min %u max %u", min, max);
     }
 
-    *next = id;
+    *next = id + 1;
+    if (*next >= max) {
+        *next = min;
+    }
 
     t->thing_template = thing_template;
     t->health = thing_template_get_health(thing_template);
@@ -719,7 +727,8 @@ thingp thing_server_new (levelp level, const char *name,
         thing_set_level(t, level);
     }
 
-    t->logname = dynprintf("%s[%p] (server)", thing_short_name(t), t);
+    t->logname = dynprintf("%s[%p, id %u] (server)", thing_short_name(t), t,
+                           t->thing_id);
     thing_update(t);
 
     /*
@@ -813,7 +822,13 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
         t->on_active_list = true;
     }
 
-    t->logname = dynprintf("%s[%p] (client)", thing_short_name(t), t);
+    /*
+     * Mirror the thing id of the server on the client.
+     */
+    t->thing_id = id;
+
+    t->logname = dynprintf("%s[%p, id %u] (client)", thing_short_name(t), t,
+                           t->thing_id);
 
     if (thing_is_player(t)) {
         THING_LOG(t, "created on client");
@@ -1200,7 +1215,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Move the thing from the boring list to the active list and update it so 
      * that it gets sent to the client.
      */
-    thing_update(t);
+    if (t->on_server) {
+        thing_update(t);
+    }
 
     if (!t->on_active_list) {
         if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
@@ -2081,9 +2098,15 @@ void thing_set_is_dir_down (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_DOWN) {
         t->dir = THING_DIR_DOWN;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2098,9 +2121,15 @@ void thing_set_is_dir_up (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_UP) {
         t->dir = THING_DIR_UP;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2115,9 +2144,15 @@ void thing_set_is_dir_left (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_LEFT) {
         t->dir = THING_DIR_LEFT;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2132,9 +2167,15 @@ void thing_set_is_dir_right (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_RIGHT) {
         t->dir = THING_DIR_RIGHT;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2149,9 +2190,15 @@ void thing_set_is_dir_tl (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_TL) {
         t->dir = THING_DIR_TL;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2166,9 +2213,15 @@ void thing_set_is_dir_bl (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_BL) {
         t->dir = THING_DIR_BL;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2183,9 +2236,15 @@ void thing_set_is_dir_tr (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_TR) {
         t->dir = THING_DIR_TR;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2200,9 +2259,15 @@ void thing_set_is_dir_br (thingp t)
 {
     verify(t);
 
+    if (thing_is_animated_no_dir(t)) {
+        return;
+    }
+
     if (t->dir != THING_DIR_BR) {
         t->dir = THING_DIR_BR;
-        thing_update(t);
+        if (t->on_server) {
+            thing_update(t);
+        }
     }
 }
 
@@ -2657,16 +2722,21 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
         thing_templatep thing_template = t->thing_template;
 
+//CON("tx %s",thing_logname(t));
         /*
          * As an optimization do not send dead events for explosions. Let the
          * client destroy those on its own to save sending loads of events.
          */
         if (thing_is_dead(t)) {
             if (thing_template_is_explosion(thing_template)) {
+//CON("tx skip %s",thing_logname(t));
+                t->updated--;
                 continue;
             }
 
             if (thing_template_is_weapon_swing_effect(thing_template)) {
+//CON("tx skip %s",thing_logname(t));
+                t->updated--;
                 continue;
             }
         }
@@ -2680,6 +2750,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
              * No change to the thing? Nothing to send.
              */
             if (!t->updated) {
+//CON("tx no upd %s",thing_logname(t));
                 continue;
             }
 
@@ -2695,6 +2766,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
                     thing_template_get_tx_map_update_delay_thousandths(
                                                             thing_template),
                     t->timestamp_tx_map_update)) {
+//CON("tx no delay %s",thing_logname(t));
                 continue;
             }
 
@@ -3022,11 +3094,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         t->dir = state & 0x7;
 
         /*
-         * Mirror the thing id of the server on the client.
-         */
-        t->thing_id = id;
-
-        /*
          * Move the thing?
          */
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
@@ -3083,6 +3150,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                     /*
                      * Thing has no wid. Make one.
                      */
+//CON("rx %s no wid id %u",thing_logname(t),id);
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
                                             x, y, t);
@@ -3101,6 +3169,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
             thing_dead(t, 0, "server killed");
         }
+//CON("rx %s",thing_logname(t));
     }
 
     if (need_fixup) {
@@ -3300,8 +3369,10 @@ void thing_client_move (thingp t,
         thing_common_move(weapon_carry_anim, &x, &y, up, down, left, right);
     }
 
+CON("move %s %f %f id %d",thing_logname(t),x,y,t->weapon_swing_anim_id);
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
+CON("move %s %f %f",thing_logname(weapon_swing_anim),x,y);
         thing_common_move(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 

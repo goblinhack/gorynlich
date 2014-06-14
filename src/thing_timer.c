@@ -123,6 +123,25 @@ void thing_timer_place_and_destroy_callback (void *context)
             0 /* jitter */);
 }
 
+void thing_timer_destroy (thingp t, uint32_t destroy_in)
+{
+    thing_place_context_t *context;
+
+    context = (typeof(context)) myzalloc(sizeof(*context), "destroy thing");
+    memcpy(context, context, sizeof(*context));
+
+    context->thing_id = t->thing_id;
+
+    t->timer_dead = action_timer_create(
+            &thing_timers,
+            (action_timer_callback)thing_action_timer_callback_dead,
+            (action_timer_callback)thing_action_timer_destroy_callback_dead,
+            context,
+            "kill thing",
+            destroy_in,
+            0 /* jitter */);
+}
+
 void thing_timer_place_and_destroy_destroy_callback (void *context)
 {
     thing_place_context_t *place;

@@ -222,7 +222,7 @@ static void wid_intro2_buttons_tick (widp wid)
     thing_templatep t = wid_get_thing_template(wid);
     const char *tn = thing_template_short_name(t);
 
-    char tilename[20];
+    char tilename[40];
 
     switch (which) {
     case 0: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-right", tn); break;
