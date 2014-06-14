@@ -227,6 +227,5 @@ void thing_swing (thingp t)
          */
         thingp weapon_swing_anim = wid_get_thing(weapon_swing_anim_wid);
         t->weapon_swing_anim_id = weapon_swing_anim->thing_id;
-        weapon_swing_anim->dir = t->dir;
     }
 }
