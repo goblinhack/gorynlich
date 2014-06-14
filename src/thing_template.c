@@ -259,8 +259,12 @@ static void thing_template_destroy_internal (thing_templatep t)
         myfree(t->spawn_on_death);
     }
 
-    if (t->weapon_anim) {
-        myfree(t->weapon_anim);
+    if (t->weapon_carry_anim) {
+        myfree(t->weapon_carry_anim);
+    }
+
+    if (t->weapon_swing_anim) {
+        myfree(t->weapon_swing_anim);
     }
 
     if (t->message_on_use) {
@@ -433,7 +437,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
 
         GET_OPT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
         GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
-        GET_OPT_NAMED_STRING(ctx, "weapon_anim", t->weapon_anim);
+        GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
+        GET_OPT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
         GET_OPT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
         GET_OPT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
@@ -485,7 +490,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_fragile", t->is_fragile);
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_weapon_hit_effect", t->is_weapon_hit_effect);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_weapon_swing_effect", t->is_weapon_swing_effect);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
@@ -551,7 +556,8 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
 
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
     PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
-    PUT_NAMED_STRING(ctx, "weapon_anim", t->weapon_anim);
+    PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
+    PUT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
     PUT_NAMED_STRING(ctx, "message_on_use", t->message_on_use);
     PUT_NAMED_STRING(ctx, "mob_spawn", t->mob_spawn);
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
@@ -603,7 +609,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_fragile", t->is_fragile);
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_xxx5", t->is_xxx5);
-    PUT_NAMED_BITFIELD(ctx, "is_weapon_hit_effect", t->is_weapon_hit_effect);
+    PUT_NAMED_BITFIELD(ctx, "is_weapon_swing_effect", t->is_weapon_swing_effect);
     PUT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
     PUT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
     PUT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
@@ -668,9 +674,14 @@ const char *thing_template_spawn_on_death (thing_templatep t)
     return (t->spawn_on_death);
 }
 
-const char *thing_template_weapon_anim (thing_templatep t)
+const char *thing_template_weapon_carry_anim (thing_templatep t)
 {
-    return (t->weapon_anim);
+    return (t->weapon_carry_anim);
+}
+
+const char *thing_template_weapon_swing_anim (thing_templatep t)
+{
+    return (t->weapon_swing_anim);
 }
 
 const char *thing_template_message_on_use (thing_templatep t)

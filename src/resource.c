@@ -1704,14 +1704,14 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // row 47
-        "weapon_hit1.1",
-        "weapon_hit1.2",
-        "weapon_hit1.3",
-        "weapon_hit1.4",
-        "weapon_hit1.5",
-        "weapon_hit1.6",
-        "weapon_hit1.7",
-        "weapon_hit1.8",
+        "weapon_swing1.1",
+        "weapon_swing1.2",
+        "weapon_swing1.3",
+        "weapon_swing1.4",
+        "weapon_swing1.5",
+        "weapon_swing1.6",
+        "weapon_swing1.7",
+        "weapon_swing1.8",
         0,
         0,
         0,
@@ -1782,7 +1782,7 @@ static uint8_t resource_init_23 (void *context)
     /*
      * Explosions
      */
-    thing_template_load(&THING_WEAPON_HIT1, "data/things/weapon_hit1");
+    thing_template_load(&THING_WEAPON_HIT1, "data/things/weapon_swing1");
     thing_template_load(&THING_EXPLOSION1, "data/things/explosion1");
     thing_template_load(&THING_EXPLOSION2, "data/things/explosion2");
     thing_template_load(&THING_EXPLOSION3, "data/things/explosion3");
