@@ -6,14 +6,13 @@
  z_order=2
  is_weapon
  is_fragile
- is_collision_map_medium
  is_combustable
  is_wearable
  is_animated
  is_valid_for_shortcut_key
  failure_chance=1000
  weapon_carry_anim="data/things/wand1_anim"
-weapon_swing_anim="data/things/weapon_swing1"
+ weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
    tile="wand-fire1"

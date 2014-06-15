@@ -10,8 +10,6 @@
  health=100
  is_player
  spawn_on_death="data/things/generator3"
- is_carryable
- is_collision_map_medium
  is_animated
  tiles={
   tile={

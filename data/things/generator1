@@ -6,7 +6,6 @@
  is_mob_spawner
  bonus_score_on_death=200
  is_monst
- is_collision_map_medium
  mob_spawn_delay_tenths=100
  tiles={
   tile={

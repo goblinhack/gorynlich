@@ -7,7 +7,6 @@
  speed=15
  damage=1
  hit_delay_tenths=1
- is_collision_map_tiny
  is_projectile
  is_animated
  tiles={
