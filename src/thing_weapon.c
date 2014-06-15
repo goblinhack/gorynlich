@@ -35,40 +35,48 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
     *dx = 0.0;
     *dy = 0.0;
 
-    if (thing_is_dir_down(t)) {
-        *dy = dist_from_player;
-    }
-
-    if (thing_is_dir_up(t)) {
-        *dy = -dist_from_player;
-    }
-
-    if (thing_is_dir_right(t)) {
-        *dx = dist_from_player;
-    }
-
-    if (thing_is_dir_left(t)) {
-        *dx = -dist_from_player;
-    }
-
     if (thing_is_dir_tl(t)) {
         *dx = -dist_from_player;
         *dy = -dist_from_player;
+        return;
     }
 
     if (thing_is_dir_tr(t)) {
         *dx = dist_from_player;
         *dy = -dist_from_player;
+        return;
     }
 
     if (thing_is_dir_bl(t)) {
         *dx = -dist_from_player;
         *dy = dist_from_player;
+        return;
     }
 
     if (thing_is_dir_br(t)) {
         *dx = dist_from_player;
         *dy = dist_from_player;
+        return;
+    }
+
+    if (thing_is_dir_down(t)) {
+        *dy = dist_from_player;
+        return;
+    }
+
+    if (thing_is_dir_up(t)) {
+        *dy = -dist_from_player;
+        return;
+    }
+
+    if (thing_is_dir_right(t)) {
+        *dx = dist_from_player;
+        return;
+    }
+
+    if (thing_is_dir_left(t)) {
+        *dx = -dist_from_player;
+        return;
     }
 }
 
@@ -234,8 +242,6 @@ void thing_swing (thingp parent)
          * to run.
          */
         thing_timer_destroy(child, 100);
-LOG("swung %s id %d",thing_logname(child), child->thing_id);
-LOG("swung %s id weapon_swing_anim_id %d",thing_logname(parent), parent->weapon_swing_anim_id);
 
         parent->needs_tx_player_update = true;
     }

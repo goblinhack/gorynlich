@@ -199,7 +199,6 @@ typedef struct thing_template_ {
     uint8_t is_ring:1;
     uint8_t is_animation:1;
     uint8_t is_xxx10:1;
-    uint8_t is_xxx11:1;
     uint8_t is_poison:1;
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
@@ -213,8 +212,9 @@ typedef struct thing_template_ {
     uint8_t is_explosion:1;
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
-    uint8_t is_collision_map_medium:1;
     uint8_t is_collision_map_large:1;
+    uint8_t is_collision_map_small:1;
+    uint8_t is_collision_map_medium:1;
     uint8_t is_collision_map_tiny:1;
     uint8_t is_combustable:1;
     uint8_t is_projectile:1;
@@ -414,9 +414,9 @@ static inline uint8_t thing_template_is_xxx10 (thing_templatep t)
     return (t->is_xxx10);
 }
 
-static inline uint8_t thing_template_is_xxx11 (thing_templatep t)
+static inline uint8_t thing_template_is_collision_map_large (thing_templatep t)
 {
-    return (t->is_xxx11);
+    return (t->is_collision_map_large);
 }
 
 static inline uint8_t thing_template_is_poison (thing_templatep t)
@@ -489,14 +489,14 @@ static inline uint8_t thing_template_is_collision_map_tiny (thing_templatep t)
     return (t->is_collision_map_tiny);
 }
 
-static inline uint8_t thing_template_is_collision_map_large (thing_templatep t)
-{
-    return (t->is_collision_map_large);
-}
-
 static inline uint8_t thing_template_is_collision_map_medium (thing_templatep t)
 {
     return (t->is_collision_map_medium);
+}
+
+static inline uint8_t thing_template_is_collision_map_small (thing_templatep t)
+{
+    return (t->is_collision_map_small);
 }
 
 static inline uint8_t thing_template_is_combustable (thing_templatep t)

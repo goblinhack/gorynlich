@@ -479,8 +479,9 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
         GET_OPT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_medium", t->is_collision_map_medium);
         GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_large", t->is_collision_map_large);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_small", t->is_collision_map_small);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_medium", t->is_collision_map_medium);
         GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_tiny", t->is_collision_map_tiny);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
@@ -598,9 +599,10 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_plant", t->is_plant);
     PUT_NAMED_BITFIELD(ctx, "is_player", t->is_player);
     PUT_NAMED_BITFIELD(ctx, "is_key", t->is_key);
-    PUT_NAMED_BITFIELD(ctx, "is_collision_map_tiny", t->is_collision_map_tiny);
     PUT_NAMED_BITFIELD(ctx, "is_collision_map_large", t->is_collision_map_large);
+    PUT_NAMED_BITFIELD(ctx, "is_collision_map_tiny", t->is_collision_map_tiny);
     PUT_NAMED_BITFIELD(ctx, "is_collision_map_medium", t->is_collision_map_medium);
+    PUT_NAMED_BITFIELD(ctx, "is_collision_map_small", t->is_collision_map_small);
     PUT_NAMED_BITFIELD(ctx, "is_xxx3", t->is_xxx3);
     PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
     PUT_NAMED_BITFIELD(ctx, "is_weapon", t->is_weapon);
