@@ -8,7 +8,6 @@
  vision_distance=20
  z_order=4
  is_monst
- is_collision_map_medium
  is_animated
  is_scarable
  tiles={

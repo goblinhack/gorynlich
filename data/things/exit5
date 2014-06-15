@@ -5,7 +5,6 @@
  z_order=2
  is_exit
  is_animated
- is_collision_map_medium
  tiles={
   tile={
    tile="exit5.1"

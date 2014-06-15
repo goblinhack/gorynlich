@@ -137,7 +137,7 @@ static uint8_t resource_init_22 (void *context)
 static uint8_t resource_init_23 (void *context)
 {
     static const char *small_tiles[] = {
-        // row 0 floor tiles
+        // --------------------------------------------------------------------
         "space",
         "large-collision-map",
         "medium-collision-map",
@@ -170,7 +170,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 1 items
+        // --------------------------------------------------------------------
         "key",
         "keys2",
         "keys3",
@@ -203,7 +203,7 @@ static uint8_t resource_init_23 (void *context)
         "generator6",
         "generator7",
         0,
-        // row 2
+        // --------------------------------------------------------------------
         "wand-fire1",
         "wand-fire2",
         "wand-fire3",
@@ -236,7 +236,7 @@ static uint8_t resource_init_23 (void *context)
         "exit6.1",
         "exit7.1",
         0,
-        // row 3
+        // --------------------------------------------------------------------
         "sword1",
         "sword2",
         "sword3",
@@ -269,7 +269,7 @@ static uint8_t resource_init_23 (void *context)
         "exit6.2",
         "exit7.2",
         0,
-        // row 4
+        // --------------------------------------------------------------------
         0,
         0,
         0,
@@ -302,7 +302,7 @@ static uint8_t resource_init_23 (void *context)
         "exit6.3",
         "exit7.3",
         0,
-        // row 5
+        // --------------------------------------------------------------------
         "plant1",
         "plant2",
         "plant3",
@@ -335,139 +335,7 @@ static uint8_t resource_init_23 (void *context)
         "exit6.4",
         "exit7.4",
         0,
-        // row 6
-        "door_0_0",
-        "door_0_is_join_node",
-        "door_0_is_join_left",
-        "door_0_is_join_bot",
-        "door_0_is_join_right",
-        "door_0_is_join_top",
-        "door_0_is_join_horiz",
-        "door_0_is_join_vert",
-        "door_0_is_join_tl2",
-        "door_0_is_join_bl2",
-        "door_0_is_join_br2",
-        "door_0_is_join_tr2",
-        "door_0_is_join_tl",
-        "door_0_is_join_bl",
-        "door_0_is_join_br",
-        "door_0_is_join_tr",
-        "door_0_is_join_t270_3",
-        "door_0_is_join_t180_3",
-        "door_0_is_join_t90_3",
-        "door_0_is_join_t_3",
-        "door_0_is_join_t270",
-        "door_0_is_join_t180",
-        "door_0_is_join_t90",
-        "door_0_is_join_t",
-        "door_0_is_join_t270_2",
-        "door_0_is_join_t180_2",
-        "door_0_is_join_t90_2",
-        "door_0_is_join_t_2",
-        "door_0_is_join_t270_1",
-        "door_0_is_join_t180_1",
-        "door_0_is_join_t90_1",
-        "door_0_is_join_t_1",
-        // row 7
-        "door_0_is_join_x",
-        "door_0_is_join_x1",
-        "door_0_is_join_x1_270",
-        "door_0_is_join_x1_180",
-        "door_0_is_join_x1_90",
-        "door_0_is_join_x2",
-        "door_0_is_join_x2_270",
-        "door_0_is_join_x2_180",
-        "door_0_is_join_x2_90",
-        "door_0_is_join_x3",
-        "door_0_is_join_x3_180",
-        "door_0_is_join_x4",
-        "door_0_is_join_x4_270",
-        "door_0_is_join_x4_180",
-        "door_0_is_join_x4_90",
-        "door_0_is_join_vert2",
-        "door_0_is_join_horiz2",
-        "pipe-bot",
-        "pipe-left",
-        "pipe-bl",
-        "pipe-top",
-        "pipe-vert",
-        "pipe-tl",
-        "pipe-t270",
-        "pipe-right",
-        "pipe-br",
-        "pipe-horiz",
-        "pipe-t180",
-        "pipe-tr",
-        "pipe-t90",
-        "pipe-t",
-        "pipe-x",
-        // row 8
-        "wall_0_0",
-        "wall_0_is_join_node",
-        "wall_0_is_join_left",
-        "wall_0_is_join_bot",
-        "wall_0_is_join_right",
-        "wall_0_is_join_top",
-        "wall_0_is_join_horiz",
-        "wall_0_is_join_vert",
-        "wall_0_is_join_tl2",
-        "wall_0_is_join_bl2",
-        "wall_0_is_join_br2",
-        "wall_0_is_join_tr2",
-        "wall_0_is_join_tl",
-        "wall_0_is_join_bl",
-        "wall_0_is_join_br",
-        "wall_0_is_join_tr",
-        "wall_0_is_join_t270_3",
-        "wall_0_is_join_t180_3",
-        "wall_0_is_join_t90_3",
-        "wall_0_is_join_t_3",
-        "wall_0_is_join_t270",
-        "wall_0_is_join_t180",
-        "wall_0_is_join_t90",
-        "wall_0_is_join_t",
-        "wall_0_is_join_t270_2",
-        "wall_0_is_join_t180_2",
-        "wall_0_is_join_t90_2",
-        "wall_0_is_join_t_2",
-        "wall_0_is_join_t270_1",
-        "wall_0_is_join_t180_1",
-        "wall_0_is_join_t90_1",
-        "wall_0_is_join_t_1",
-        // row 9
-        "wall_0_is_join_x",
-        "wall_0_is_join_x1",
-        "wall_0_is_join_x1_270",
-        "wall_0_is_join_x1_180",
-        "wall_0_is_join_x1_90",
-        "wall_0_is_join_x2",
-        "wall_0_is_join_x2_270",
-        "wall_0_is_join_x2_180",
-        "wall_0_is_join_x2_90",
-        "wall_0_is_join_x3",
-        "wall_0_is_join_x3_180",
-        "wall_0_is_join_x4",
-        "wall_0_is_join_x4_270",
-        "wall_0_is_join_x4_180",
-        "wall_0_is_join_x4_90",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        // row 10
+        // --------------------------------------------------------------------
         "floor1a",
         "floor1b",
         "floor1c",
@@ -500,7 +368,139 @@ static uint8_t resource_init_23 (void *context)
         "floor6d",
         "floor6e",
         "floor6f",
-        // row 11
+        // --------------------------------------------------------------------
+        "door_0_0",
+        "door_0_is_join_node",
+        "door_0_is_join_left",
+        "door_0_is_join_bot",
+        "door_0_is_join_right",
+        "door_0_is_join_top",
+        "door_0_is_join_horiz",
+        "door_0_is_join_vert",
+        "door_0_is_join_tl2",
+        "door_0_is_join_bl2",
+        "door_0_is_join_br2",
+        "door_0_is_join_tr2",
+        "door_0_is_join_tl",
+        "door_0_is_join_bl",
+        "door_0_is_join_br",
+        "door_0_is_join_tr",
+        "door_0_is_join_t270_3",
+        "door_0_is_join_t180_3",
+        "door_0_is_join_t90_3",
+        "door_0_is_join_t_3",
+        "door_0_is_join_t270",
+        "door_0_is_join_t180",
+        "door_0_is_join_t90",
+        "door_0_is_join_t",
+        "door_0_is_join_t270_2",
+        "door_0_is_join_t180_2",
+        "door_0_is_join_t90_2",
+        "door_0_is_join_t_2",
+        "door_0_is_join_t270_1",
+        "door_0_is_join_t180_1",
+        "door_0_is_join_t90_1",
+        "door_0_is_join_t_1",
+        // --------------------------------------------------------------------
+        "door_0_is_join_x",
+        "door_0_is_join_x1",
+        "door_0_is_join_x1_270",
+        "door_0_is_join_x1_180",
+        "door_0_is_join_x1_90",
+        "door_0_is_join_x2",
+        "door_0_is_join_x2_270",
+        "door_0_is_join_x2_180",
+        "door_0_is_join_x2_90",
+        "door_0_is_join_x3",
+        "door_0_is_join_x3_180",
+        "door_0_is_join_x4",
+        "door_0_is_join_x4_270",
+        "door_0_is_join_x4_180",
+        "door_0_is_join_x4_90",
+        "door_0_is_join_vert2",
+        "door_0_is_join_horiz2",
+        "pipe-bot",
+        "pipe-left",
+        "pipe-bl",
+        "pipe-top",
+        "pipe-vert",
+        "pipe-tl",
+        "pipe-t270",
+        "pipe-right",
+        "pipe-br",
+        "pipe-horiz",
+        "pipe-t180",
+        "pipe-tr",
+        "pipe-t90",
+        "pipe-t",
+        "pipe-x",
+        // --------------------------------------------------------------------
+        "wall_0_0",
+        "wall_0_is_join_node",
+        "wall_0_is_join_left",
+        "wall_0_is_join_bot",
+        "wall_0_is_join_right",
+        "wall_0_is_join_top",
+        "wall_0_is_join_horiz",
+        "wall_0_is_join_vert",
+        "wall_0_is_join_tl2",
+        "wall_0_is_join_bl2",
+        "wall_0_is_join_br2",
+        "wall_0_is_join_tr2",
+        "wall_0_is_join_tl",
+        "wall_0_is_join_bl",
+        "wall_0_is_join_br",
+        "wall_0_is_join_tr",
+        "wall_0_is_join_t270_3",
+        "wall_0_is_join_t180_3",
+        "wall_0_is_join_t90_3",
+        "wall_0_is_join_t_3",
+        "wall_0_is_join_t270",
+        "wall_0_is_join_t180",
+        "wall_0_is_join_t90",
+        "wall_0_is_join_t",
+        "wall_0_is_join_t270_2",
+        "wall_0_is_join_t180_2",
+        "wall_0_is_join_t90_2",
+        "wall_0_is_join_t_2",
+        "wall_0_is_join_t270_1",
+        "wall_0_is_join_t180_1",
+        "wall_0_is_join_t90_1",
+        "wall_0_is_join_t_1",
+        // --------------------------------------------------------------------
+        "wall_0_is_join_x",
+        "wall_0_is_join_x1",
+        "wall_0_is_join_x1_270",
+        "wall_0_is_join_x1_180",
+        "wall_0_is_join_x1_90",
+        "wall_0_is_join_x2",
+        "wall_0_is_join_x2_270",
+        "wall_0_is_join_x2_180",
+        "wall_0_is_join_x2_90",
+        "wall_0_is_join_x3",
+        "wall_0_is_join_x3_180",
+        "wall_0_is_join_x4",
+        "wall_0_is_join_x4_270",
+        "wall_0_is_join_x4_180",
+        "wall_0_is_join_x4_90",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        // --------------------------------------------------------------------
         "wall2_0_0",
         "wall2_0_is_join_node",
         "wall2_0_is_join_left",
@@ -533,7 +533,7 @@ static uint8_t resource_init_23 (void *context)
         "wall2_0_is_join_t180_1",
         "wall2_0_is_join_t90_1",
         "wall2_0_is_join_t_1",
-        // row 12
+        // --------------------------------------------------------------------
         "wall2_0_is_join_x",
         "wall2_0_is_join_x1",
         "wall2_0_is_join_x1_270",
@@ -566,7 +566,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 13
+        // --------------------------------------------------------------------
         "wall3_0_0",
         "wall3_0_is_join_node",
         "wall3_0_is_join_left",
@@ -599,7 +599,7 @@ static uint8_t resource_init_23 (void *context)
         "wall3_0_is_join_t180_1",
         "wall3_0_is_join_t90_1",
         "wall3_0_is_join_t_1",
-        // row 14
+        // --------------------------------------------------------------------
         "wall3_0_is_join_x",
         "wall3_0_is_join_x1",
         "wall3_0_is_join_x1_270",
@@ -632,7 +632,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 15
+        // --------------------------------------------------------------------
         "wall4_0_0",
         "wall4_0_is_join_node",
         "wall4_0_is_join_left",
@@ -665,7 +665,7 @@ static uint8_t resource_init_23 (void *context)
         "wall4_0_is_join_t180_1",
         "wall4_0_is_join_t90_1",
         "wall4_0_is_join_t_1",
-        // row 16
+        // --------------------------------------------------------------------
         "wall4_0_is_join_x",
         "wall4_0_is_join_x1",
         "wall4_0_is_join_x1_270",
@@ -698,7 +698,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 17
+        // --------------------------------------------------------------------
         "wall5_0_0",
         "wall5_0_is_join_node",
         "wall5_0_is_join_left",
@@ -731,7 +731,7 @@ static uint8_t resource_init_23 (void *context)
         "wall5_0_is_join_t180_1",
         "wall5_0_is_join_t90_1",
         "wall5_0_is_join_t_1",
-        // row 18
+        // --------------------------------------------------------------------
         "wall5_0_is_join_x",
         "wall5_0_is_join_x1",
         "wall5_0_is_join_x1_270",
@@ -764,7 +764,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 19
+        // --------------------------------------------------------------------
         "fireball1a-tr",
         "fireball1a-right",
         "fireball1a-br",
@@ -798,7 +798,7 @@ static uint8_t resource_init_23 (void *context)
         "fireball1d-tl",
         "fireball1d-up",
 
-        // row 20
+        // --------------------------------------------------------------------
         
         "ghost1a-right",
         "ghost1a-br",
@@ -836,7 +836,7 @@ static uint8_t resource_init_23 (void *context)
         "ghost1d-up",
         "ghost1d-tr",
 
-        // row 21
+        // --------------------------------------------------------------------
         
         "ghost2a-right",
         "ghost2a-br",
@@ -874,7 +874,7 @@ static uint8_t resource_init_23 (void *context)
         "ghost2d-up",
         "ghost2d-tr",
 
-        // row 22
+        // --------------------------------------------------------------------
         "ghost3a-right",
         "ghost3a-br",
         "ghost3a-down",
@@ -911,7 +911,7 @@ static uint8_t resource_init_23 (void *context)
         "ghost3d-up",
         "ghost3d-tr",
 
-        // row 23
+        // --------------------------------------------------------------------
         "monk1-demo-right",
         "monk1-demo-br",
         "monk1-demo-down",
@@ -944,7 +944,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 24
+        // --------------------------------------------------------------------
         "demon1-demo-right",
         "demon1-demo-br",
         "demon1-demo-down",
@@ -977,7 +977,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 25
+        // --------------------------------------------------------------------
         "lizard1-demo-right",
         "lizard1-demo-br",
         "lizard1-demo-down",
@@ -1010,7 +1010,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 26
+        // --------------------------------------------------------------------
         "warrior-demo-right",
         "warrior-demo-br",
         "warrior-demo-down",
@@ -1043,7 +1043,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 27
+        // --------------------------------------------------------------------
         "valkyrie-demo-right",
         "valkyrie-demo-br",
         "valkyrie-demo-down",
@@ -1076,7 +1076,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 28
+        // --------------------------------------------------------------------
         "death1-demo-right",
         "death1-demo-br",
         "death1-demo-down",
@@ -1109,7 +1109,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 29
+        // --------------------------------------------------------------------
         "wizard-demo-right",
         "wizard-demo-br",
         "wizard-demo-down",
@@ -1142,7 +1142,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 30
+        // --------------------------------------------------------------------
         "elf-demo-right",
         "elf-demo-br",
         "elf-demo-down",
@@ -1175,7 +1175,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 31
+        // --------------------------------------------------------------------
         "dwarf-demo-right",
         "dwarf-demo-br",
         "dwarf-demo-down",
@@ -1208,7 +1208,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 32
+        // --------------------------------------------------------------------
         "explosion1.1",
         "explosion2.1",
         "explosion3.1",
@@ -1241,7 +1241,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 33
+        // --------------------------------------------------------------------
         "explosion1.2",
         "explosion2.2",
         "explosion3.2",
@@ -1274,7 +1274,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 34
+        // --------------------------------------------------------------------
         "explosion1.3",
         "explosion2.3",
         "explosion3.3",
@@ -1307,7 +1307,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 35
+        // --------------------------------------------------------------------
         "explosion1.4",
         "explosion2.4",
         "explosion3.4",
@@ -1340,7 +1340,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 36
+        // --------------------------------------------------------------------
         "explosion1.5",
         "explosion2.5",
         "explosion3.5",
@@ -1373,7 +1373,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 37
+        // --------------------------------------------------------------------
         "explosion1.6",
         "explosion2.6",
         "explosion3.6",
@@ -1406,7 +1406,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 38
+        // --------------------------------------------------------------------
         "explosion1.7",
         "explosion2.7",
         "explosion3.7",
@@ -1439,7 +1439,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 39
+        // --------------------------------------------------------------------
         "sword3.1",
         "sword3.2",
         "sword3.3",
@@ -1472,7 +1472,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 40
+        // --------------------------------------------------------------------
         "sword2.1",
         "sword2.2",
         "sword2.3",
@@ -1505,7 +1505,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 41
+        // --------------------------------------------------------------------
         "sword1.1",
         "sword1.2",
         "sword1.3",
@@ -1538,7 +1538,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 42
+        // --------------------------------------------------------------------
         "scythe1.1",
         "scythe1.2",
         "scythe1.3",
@@ -1571,7 +1571,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 43
+        // --------------------------------------------------------------------
         "wand1.1",
         "wand1.2",
         "wand1.3",
@@ -1604,7 +1604,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 44
+        // --------------------------------------------------------------------
         "bow1.1",
         "bow1.2",
         "bow1.3",
@@ -1637,7 +1637,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 45
+        // --------------------------------------------------------------------
         "axe2.1",
         "axe2.2",
         "axe2.3",
@@ -1670,7 +1670,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 46
+        // --------------------------------------------------------------------
         "axe1.1",
         "axe1.2",
         "axe1.3",
@@ -1703,7 +1703,7 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         0,
-        // row 47
+        // --------------------------------------------------------------------
         "weapon_swing1.1",
         "weapon_swing1.2",
         "weapon_swing1.3",

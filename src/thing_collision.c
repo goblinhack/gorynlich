@@ -237,8 +237,12 @@ static uint8_t things_overlap (const thingp A,
     double Bbrx = Bx + Bpx2;
     double Btly = By + Bpy1;
     double Bbry = By + Bpy2;
-    if ((thing_is_monst(A) || thing_is_monst(B)) &&
-        (thing_is_weapon_swing_effect(A) || thing_is_weapon_swing_effect(B))) {
+
+#ifdef DEBUG
+    if ((thing_is_monst(A) || 
+         thing_is_monst(B)) &&
+        (thing_is_weapon_swing_effect(A) || 
+         thing_is_weapon_swing_effect(B))) {
 CON("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
 CON("    %f %f",Ax,Ay);
 CON("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
@@ -246,6 +250,7 @@ CON("  B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
 CON("    %f %f",Bx,By);
 CON("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
     }
+#endif
 
     /*
      * The rectangles don't overlap if one rectangle's minimum in some 
@@ -283,16 +288,20 @@ static void thing_handle_collision (thingp me, thingp it,
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
+#ifdef DEBUG
 if ((thing_is_monst(me) || thing_is_monst(it)) &&
     (thing_is_weapon_swing_effect(me) || thing_is_weapon_swing_effect(it))) {
 CON("no overlap %s %s",thing_logname(me),thing_logname(it));
 }
+#endif
         return;
     }
+#ifdef DEBUG
 if ((thing_is_monst(me) || thing_is_monst(it)) &&
     (thing_is_weapon_swing_effect(me) || thing_is_weapon_swing_effect(it))) {
 CON("HIT %s %s",thing_logname(me),thing_logname(it));
 }
+#endif
 
     if (thing_is_player(me)) {
         /*
