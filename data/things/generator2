@@ -6,7 +6,7 @@
  is_mob_spawner
  is_monst
  bonus_score_on_death=100
- is_collision_map_large
+ is_collision_map_medium
  mob_spawn_delay_tenths=50
  mob_spawn="data/things/ghost1"
  tiles={

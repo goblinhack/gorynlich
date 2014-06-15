@@ -5,7 +5,7 @@
  z_order=2
  is_mob_spawner
  is_monst
- is_collision_map_large
+ is_collision_map_medium
  bonus_score_on_death=50
  mob_spawn_delay_tenths=20
  polymorph_on_death="data/things/generator2"

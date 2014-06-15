@@ -56,14 +56,18 @@ static uint8_t things_overlap (const thingp A,
     static double collision_map_large_x2;
     static double collision_map_large_y1;
     static double collision_map_large_y2;
-    static double collision_map_monst_x1;
-    static double collision_map_monst_x2;
-    static double collision_map_monst_y1;
-    static double collision_map_monst_y2;
-    static double collision_map_weapon_x1;
-    static double collision_map_weapon_x2;
-    static double collision_map_weapon_y1;
-    static double collision_map_weapon_y2;
+    static double collision_map_medium_x1;
+    static double collision_map_medium_x2;
+    static double collision_map_medium_y1;
+    static double collision_map_medium_y2;
+    static double collision_map_small_x1;
+    static double collision_map_small_x2;
+    static double collision_map_small_y1;
+    static double collision_map_small_y2;
+    static double collision_map_tiny_x1;
+    static double collision_map_tiny_x2;
+    static double collision_map_tiny_y1;
+    static double collision_map_tiny_y2;
 
     /*
      * The tiles are considered to be 1 unit wide. However the actual pixels
@@ -80,35 +84,45 @@ static uint8_t things_overlap (const thingp A,
         xscale = 1.0 / (wall->px2 - wall->px1);
         yscale = 1.0 / (wall->py2 - wall->py1);
 
-        tilep player = tile_find("player-collision-map");
-        if (!player) {
-            DIE("no player for collisions");
+        tilep tile = tile_find("large-collision-map");
+        if (!tile) {
+            DIE("no tile for collisions");
         }
 
-        collision_map_large_x1 = player->px1 * xscale;
-        collision_map_large_x2 = player->px2 * xscale;
-        collision_map_large_y1 = player->py1 * yscale;
-        collision_map_large_y2 = player->py2 * yscale;
+        collision_map_large_x1 = tile->px1 * xscale;
+        collision_map_large_x2 = tile->px2 * xscale;
+        collision_map_large_y1 = tile->py1 * yscale;
+        collision_map_large_y2 = tile->py2 * yscale;
 
-        tilep monst = tile_find("monst-collision-map");
-        if (!monst) {
-            DIE("no monst for collisions");
+        tile = tile_find("medium-collision-map");
+        if (!tile) {
+            DIE("no tile for collisions");
         }
 
-        collision_map_monst_x1 = monst->px1 * xscale;
-        collision_map_monst_x2 = monst->px2 * xscale;
-        collision_map_monst_y1 = monst->py1 * yscale;
-        collision_map_monst_y2 = monst->py2 * yscale;
+        collision_map_medium_x1 = tile->px1 * xscale;
+        collision_map_medium_x2 = tile->px2 * xscale;
+        collision_map_medium_y1 = tile->py1 * yscale;
+        collision_map_medium_y2 = tile->py2 * yscale;
 
-        tilep weapon = tile_find("weapon-collision-map");
-        if (!weapon) {
-            DIE("no weapon for collisions");
+        tile = tile_find("small-collision-map");
+        if (!tile) {
+            DIE("no tile for collisions");
         }
 
-        collision_map_weapon_x1 = weapon->px1 * xscale;
-        collision_map_weapon_x2 = weapon->px2 * xscale;
-        collision_map_weapon_y1 = weapon->py1 * yscale;
-        collision_map_weapon_y2 = weapon->py2 * yscale;
+        collision_map_small_x1 = tile->px1 * xscale;
+        collision_map_small_x2 = tile->px2 * xscale;
+        collision_map_small_y1 = tile->py1 * yscale;
+        collision_map_small_y2 = tile->py2 * yscale;
+
+        tile = tile_find("tiny-collision-map");
+        if (!tile) {
+            DIE("no tile for collisions");
+        }
+
+        collision_map_tiny_x1 = tile->px1 * xscale;
+        collision_map_tiny_x2 = tile->px2 * xscale;
+        collision_map_tiny_y1 = tile->py1 * yscale;
+        collision_map_tiny_y2 = tile->py2 * yscale;
     }
 
     /*
@@ -147,33 +161,26 @@ static uint8_t things_overlap (const thingp A,
     double Bpy1;
     double Bpy2;
 
-    if (thing_is_collision_map_medium(A)) {
-        Apx1 = collision_map_monst_x1;
-        Apx2 = collision_map_monst_x2;
-        Apy1 = collision_map_monst_y1;
-        Apy2 = collision_map_monst_y2;
-    } else if (thing_is_collision_map_tiny(A)) {
-        if (thing_is_collision_map_large(B)) {
-            Apx1 = collision_map_large_x1;
-            Apx2 = collision_map_large_x2;
-            Apy1 = collision_map_large_y1;
-            Apy2 = collision_map_large_y2;
-        } else if (thing_is_collision_map_large(B)) {
-            Apx1 = collision_map_monst_x1;
-            Apx2 = collision_map_monst_x2;
-            Apy1 = collision_map_monst_y1;
-            Apy2 = collision_map_monst_y2;
-        } else {
-            Apx1 = collision_map_weapon_x1;
-            Apx2 = collision_map_weapon_x2;
-            Apy1 = collision_map_weapon_y1;
-            Apy2 = collision_map_weapon_y2;
-        }
-    } else if (thing_is_collision_map_large(A)) {
+    if (thing_is_collision_map_large(A)) {
         Apx1 = collision_map_large_x1;
         Apx2 = collision_map_large_x2;
         Apy1 = collision_map_large_y1;
         Apy2 = collision_map_large_y2;
+    } else if (thing_is_collision_map_medium(A)) {
+        Apx1 = collision_map_medium_x1;
+        Apx2 = collision_map_medium_x2;
+        Apy1 = collision_map_medium_y1;
+        Apy2 = collision_map_medium_y2;
+    } else if (thing_is_collision_map_small(A)) {
+        Apx1 = collision_map_small_x1;
+        Apx2 = collision_map_small_x2;
+        Apy1 = collision_map_small_y1;
+        Apy2 = collision_map_small_y2;
+    } else if (thing_is_collision_map_tiny(A)) {
+        Apx1 = collision_map_tiny_x1;
+        Apx2 = collision_map_tiny_x2;
+        Apy1 = collision_map_tiny_y1;
+        Apy2 = collision_map_tiny_y2;
     } else {
         /*
          * Just use pixel and alpha values.
@@ -186,33 +193,26 @@ static uint8_t things_overlap (const thingp A,
         Apy2 = tileA->py2 * yscale;
     }
 
-    if (thing_is_collision_map_medium(B)) {
-        Bpx1 = collision_map_monst_x1;
-        Bpx2 = collision_map_monst_x2;
-        Bpy1 = collision_map_monst_y1;
-        Bpy2 = collision_map_monst_y2;
-    } else if (thing_is_collision_map_tiny(B)) {
-        if (thing_is_collision_map_large(A)) {
-            Bpx1 = collision_map_large_x1;
-            Bpx2 = collision_map_large_x2;
-            Bpy1 = collision_map_large_y1;
-            Bpy2 = collision_map_large_y2;
-        } else if (thing_is_collision_map_large(A)) {
-            Bpx1 = collision_map_monst_x1;
-            Bpx2 = collision_map_monst_x2;
-            Bpy1 = collision_map_monst_y1;
-            Bpy2 = collision_map_monst_y2;
-        } else {
-            Bpx1 = collision_map_weapon_x1;
-            Bpx2 = collision_map_weapon_x2;
-            Bpy1 = collision_map_weapon_y1;
-            Bpy2 = collision_map_weapon_y2;
-        }
-    } else if (thing_is_collision_map_large(B)) {
+    if (thing_is_collision_map_large(B)) {
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
         Bpy1 = collision_map_large_y1;
         Bpy2 = collision_map_large_y2;
+    } else if (thing_is_collision_map_medium(B)) {
+        Bpx1 = collision_map_medium_x1;
+        Bpx2 = collision_map_medium_x2;
+        Bpy1 = collision_map_medium_y1;
+        Bpy2 = collision_map_medium_y2;
+    } else if (thing_is_collision_map_small(B)) {
+        Bpx1 = collision_map_small_x1;
+        Bpx2 = collision_map_small_x2;
+        Bpy1 = collision_map_small_y1;
+        Bpy2 = collision_map_small_y2;
+    } else if (thing_is_collision_map_tiny(B)) {
+        Bpx1 = collision_map_tiny_x1;
+        Bpx2 = collision_map_tiny_x2;
+        Bpy1 = collision_map_tiny_y1;
+        Bpy2 = collision_map_tiny_y2;
     } else {
         /*
          * Just use pixel and alpha values.
@@ -237,17 +237,28 @@ static uint8_t things_overlap (const thingp A,
     double Bbrx = Bx + Bpx2;
     double Btly = By + Bpy1;
     double Bbry = By + Bpy2;
+    if ((thing_is_monst(A) || thing_is_monst(B)) &&
+        (thing_is_weapon_swing_effect(A) || thing_is_weapon_swing_effect(B))) {
+CON("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
+CON("    %f %f",Ax,Ay);
+CON("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
+CON("  B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
+CON("    %f %f",Bx,By);
+CON("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+    }
 
     /*
      * The rectangles don't overlap if one rectangle's minimum in some 
      * dimension is greater than the other's maximum in that dimension.
      */
-    uint8_t no_overlap = (Atlx > Bbrx) ||
-                         (Btlx > Abrx) ||
-                         (Atly > Bbry) ||
-                         (Btly > Abry);
+    if ((Atlx < Bbrx) && 
+        (Abrx > Btlx) &&
+        (Atly < Bbry) && 
+        (Abry > Btly)) {
+        return (true);
+    }
 
-    return (!no_overlap);
+    return (false);
 }
 
 /*
@@ -272,8 +283,16 @@ static void thing_handle_collision (thingp me, thingp it,
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
+if ((thing_is_monst(me) || thing_is_monst(it)) &&
+    (thing_is_weapon_swing_effect(me) || thing_is_weapon_swing_effect(it))) {
+CON("no overlap %s %s",thing_logname(me),thing_logname(it));
+}
         return;
     }
+if ((thing_is_monst(me) || thing_is_monst(it)) &&
+    (thing_is_weapon_swing_effect(me) || thing_is_weapon_swing_effect(it))) {
+CON("HIT %s %s",thing_logname(me),thing_logname(it));
+}
 
     if (thing_is_player(me)) {
         /*
@@ -304,9 +323,24 @@ static void thing_handle_collision (thingp me, thingp it,
         /*
          * Player bumped into something.
          */
-        if (thing_is_monst(it) || 
-            thing_is_poison(it) ||
-            thing_is_weapon_swing_effect(it) ||
+        if (thing_is_monst(it)                  || 
+            thing_is_poison(it)                 ||
+            thing_is_weapon_swing_effect(it)    ||
+            thing_is_explosion(it)) {
+            /*
+             * I'm hit!
+             */
+            thing_hit(me, it, 0, "monst");
+            return;
+        }
+    }
+
+    if (thing_is_monst(me)) {
+        /*
+         * Monster bumped into something.
+         */
+        if (thing_is_poison(it)                 ||
+            thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
             /*
              * I'm hit!
@@ -319,9 +353,8 @@ static void thing_handle_collision (thingp me, thingp it,
     /*
      * Weapon or explosion hit something?
      */
-    if (thing_is_projectile(me) || 
-        thing_is_poison(me) ||
-        thing_is_weapon_swing_effect(me) ||
+    if (thing_is_projectile(me)                 || 
+        thing_is_poison(me)                     ||
         thing_is_explosion(me)) {
 
         if (thing_is_monst(it) || thing_is_mob_spawner(it)) {
@@ -459,22 +492,22 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow monsters to walk into these things:
                  */
-                if (thing_is_player(it)             ||
-                    thing_is_key(it)                ||
-                    thing_is_weapon_swing_effect(it)  ||
-                    thing_is_explosion(it)          ||
-                    thing_is_poison(it)             ||
-                    thing_is_projectile(it)         ||
-                    thing_is_treasure(it)           ||
-                    thing_is_weapon(it)             ||
+                if (thing_is_player(it)                 ||
+                    thing_is_key(it)                    ||
+                    thing_is_weapon_swing_effect(it)    ||
+                    thing_is_explosion(it)              ||
+                    thing_is_poison(it)                 ||
+                    thing_is_projectile(it)             ||
+                    thing_is_treasure(it)               ||
+                    thing_is_weapon(it)                 ||
                     thing_is_food(it)) {
                     continue;
                 }
             }
 
-            if (thing_is_explosion(me)              ||
-                thing_is_projectile(me)             ||
-                thing_is_poison(me)                 ||
+            if (thing_is_explosion(me)                  ||
+                thing_is_projectile(me)                 ||
+                thing_is_poison(me)                     ||
                 thing_is_weapon_swing_effect(me)) {
                 /*
                  * Allow these to pass through anything.
@@ -512,7 +545,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                      */
                     thing_is_projectile(it)             ||
                     thing_is_poison(it)                 ||
-                    thing_is_weapon_swing_effect(it)      ||
+                    thing_is_weapon_swing_effect(it)    ||
                     thing_is_explosion(it)) {
                     continue;
                 }

@@ -197,8 +197,13 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
 			MIN.y = min(at.y, MIN.y);
 			MAX.x = max(at.x, MAX.x);
 			MAX.y = max(at.y, MAX.y);
+#define DEBUG_TILE
 #ifdef DEBUG_TILE
                         printf("X");
+#endif
+                    } else if (p.a > 0) {
+#ifdef DEBUG_TILE
+                        printf(".");
 #endif
 		    } else {
 #ifdef DEBUG_TILE
@@ -217,7 +222,7 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
             t->py2 = ((double) (MAX.y - AT.y)) / (double) pixel_size.height;
 
 #ifdef DEBUG_TILE
-            printf("%s %f %f %f %f min x %d %d min y %d %d\n",name,t->px1,t->py1,t->px2,t->py2, MIN.x,MAX.x,MIN.y,MAX.y);
+            printf("^^^  %s %f %f %f %f min x %d %d min y %d %d\n",name,t->px1,t->py1,t->px2,t->py2, MIN.x,MAX.x,MIN.y,MAX.y);
 #endif
         }
 
