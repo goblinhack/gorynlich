@@ -13,7 +13,7 @@
  hit_delay_tenths=1
  z_order=4
  is_monst
- is_collision_map_large
+ is_collision_map_medium
  is_combustable
  is_animated
  is_scarable

@@ -695,6 +695,13 @@ static inline uint8_t thing_is_collision_map_medium (thingp t)
     return (thing_template_is_collision_map_medium(thing_get_template(t)));
 }
 
+static inline uint8_t thing_is_collision_map_small (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_collision_map_small(thing_get_template(t)));
+}
+
 static inline uint8_t thing_is_collision_map_tiny (thingp t)
 {
     verify(t);
@@ -985,14 +992,14 @@ static inline uint8_t thing_is_key_fast (thingp t)
     return (t->thing_template->is_key);
 }
 
-static inline uint8_t thing_is_collision_map_large_fast (thingp t)
-{
-    return (t->thing_template->is_collision_map_large);
-}
-
 static inline uint8_t thing_is_collision_map_medium_fast (thingp t)
 {
     return (t->thing_template->is_collision_map_medium);
+}
+
+static inline uint8_t thing_is_collision_map_small_fast (thingp t)
+{
+    return (t->thing_template->is_collision_map_small);
 }
 
 static inline uint8_t thing_is_collision_map_tiny_fast (thingp t)

@@ -6,7 +6,7 @@
  z_order=2
  is_weapon
  is_fragile
- is_collision_map_large
+ is_collision_map_medium
  is_valid_for_shortcut_key
  is_fragile
  is_wearable

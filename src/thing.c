@@ -2475,27 +2475,9 @@ static void thing_move (thingp t, double x, double y)
     t->y = y;
 }
 
-void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
+static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
 {
     thing_move(t, x, y);
-
-    /*
-     * Make the weapon follow the thing.
-     */
-    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
-    if (weapon_carry_anim) {
-        thing_move(weapon_carry_anim, x, y);
-    }
-
-    /*
-     * Make the weapon being swung follow the thing.
-     */
-    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
-    if (weapon_swing_anim) {
-        double dx, dy;
-        thing_weapon_swing_offset(t, &dx, &dy);
-        thing_move(weapon_swing_anim, x + dx, y + dy);
-    }
 
     x *= server_tile_width;
     y *= server_tile_height;
@@ -2535,44 +2517,41 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
     tl.y -= base_tile_height / 4.0;
     br.y -= base_tile_width / 4.0;
 
-    if (is_new || thing_is_player(t)) {
+    if (is_new || 
+        thing_is_player(t) ||
+        thing_is_weapon(t) ||
+        thing_is_weapon_swing_effect(t)) {
         wid_set_tl_br(t->wid, tl, br);
-
-        if (weapon_carry_anim) {
-            wid_set_tl_br(weapon_carry_anim->wid, tl, br);
-        }
-
-        if (weapon_swing_anim) {
-            double dx, dy;
-            thing_weapon_swing_offset(t, &dx, &dy);
-            tl.x += dx;
-            tl.y += dy;
-            br.x += dx;
-            br.y += dy;
-
-            wid_set_tl_br(weapon_swing_anim->wid, tl, br);
-        }
     } else {
         wid_move_to_abs_in(t->wid, tl.x, tl.y, 1000.0 / thing_speed(t));
-
-        if (weapon_carry_anim) {
-            wid_move_to_abs_in(weapon_carry_anim->wid, tl.x, tl.y, 
-                               1000.0 / thing_speed(t));
-        }
-
-        if (weapon_swing_anim) {
-            double dx, dy;
-            thing_weapon_swing_offset(t, &dx, &dy);
-            tl.x += dx;
-            tl.y += dy;
-
-            wid_move_to_abs_in(weapon_swing_anim->wid, tl.x, tl.y, 
-                               1000.0 / thing_speed(t));
-        }
     }
 }
 
-void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
+void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
+{
+    thing_server_wid_move(t, x, y, is_new);
+
+    /*
+     * Make the weapon follow the thing.
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_server_wid_move(weapon_carry_anim, x, y, is_new);
+    }
+
+    /*
+     * Make the weapon being swung follow the thing.
+     */
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        double dx, dy;
+        thing_weapon_swing_offset(t, &dx, &dy);
+        thing_server_wid_move(weapon_swing_anim, x + dx, y + dy, is_new);
+    }
+}
+
+static void thing_client_wid_move (thingp t, double x, double y, 
+                                   uint8_t smooth)
 {
     double dist = DISTANCE(t->x, t->y, x, y);
 
@@ -2583,24 +2562,6 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     }
 
     thing_move(t, x, y);
-
-    /*
-     * Update the weapon being carried.
-     */
-    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
-    if (weapon_carry_anim) {
-        thing_move(weapon_carry_anim, x, y);
-    }
-
-    /*
-     * Update the weapon being swung.
-     */
-    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
-    if (weapon_swing_anim) {
-        double dx, dy;
-        thing_weapon_swing_offset(t, &dx, &dy);
-        thing_move(weapon_swing_anim, x + dx, y + dy);
-    }
 
     x *= client_tile_width;
     y *= client_tile_height;
@@ -2648,32 +2609,31 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
         double ms = (1000.0 / thing_speed(t)) / (1.0 / time_step);
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
-        if (weapon_carry_anim) {
-            wid_move_to_abs_in(weapon_carry_anim->wid, tl.x, tl.y, ms);
-        }
-
-        if (weapon_swing_anim) {
-            double dx, dy;
-            thing_weapon_swing_offset(t, &dx, &dy);
-            wid_move_to_abs_in(weapon_swing_anim->wid, 
-                               tl.x + dx, tl.y + dy, ms);
-        }
     } else {
         wid_set_tl_br(t->wid, tl, br);
+    }
+}
 
-        if (weapon_carry_anim) {
-            wid_set_tl_br(weapon_carry_anim->wid, tl, br);
-        }
+void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
+{
+    thing_client_wid_move(t, x, y, smooth);
 
-        if (weapon_swing_anim) {
-            double dx, dy;
-            thing_weapon_swing_offset(t, &dx, &dy);
-            tl.x += dx;
-            tl.y += dy;
-            br.x += dx;
-            br.y += dy;
-            wid_set_tl_br(weapon_swing_anim->wid, tl, br);
-        }
+    /*
+     * Update the weapon being carried.
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_client_wid_move(weapon_carry_anim, x, y, smooth);
+    }
+
+    /*
+     * Update the weapon being swung.
+     */
+    thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+    if (weapon_swing_anim) {
+        double dx, dy;
+        thing_weapon_swing_offset(t, &dx, &dy);
+        thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, smooth);
     }
 }
 
@@ -3269,13 +3229,13 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
     }
 }
 
-static void thing_common_move (thingp t,
-                               double *x,
-                               double *y,
-                               uint8_t up,
-                               uint8_t down,
-                               uint8_t left,
-                               uint8_t right)
+static void thing_move_set_dir (thingp t,
+                                double *x,
+                                double *y,
+                                uint8_t up,
+                                uint8_t down,
+                                uint8_t left,
+                                uint8_t right)
 {
     double ox = t->x;
     double oy = t->y;
@@ -3359,21 +3319,19 @@ void thing_client_move (thingp t,
         }
     }
 
-    thing_common_move(t, &x, &y, up, down, left, right);
+    thing_move_set_dir(t, &x, &y, up, down, left, right);
 
     /*
      * Move the weapon too.
      */
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
-        thing_common_move(weapon_carry_anim, &x, &y, up, down, left, right);
+        thing_move_set_dir(weapon_carry_anim, &x, &y, up, down, left, right);
     }
 
-CON("move %s %f %f id %d",thing_logname(t),x,y,t->weapon_swing_anim_id);
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
-CON("move %s %f %f",thing_logname(weapon_swing_anim),x,y);
-        thing_common_move(weapon_swing_anim, &x, &y, up, down, left, right);
+        thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
     /*
@@ -3561,19 +3519,19 @@ uint8_t thing_server_move (thingp t,
 {
     widp grid = wid_game_map_server_grid_container;
 
-    thing_common_move(t, &x, &y, up, down, left, right);
+    thing_move_set_dir(t, &x, &y, up, down, left, right);
 
     /*
      * Move the weapon too.
      */
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
-        thing_common_move(weapon_carry_anim, &x, &y, up, down, left, right);
+        thing_move_set_dir(weapon_carry_anim, &x, &y, up, down, left, right);
     }
 
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
-        thing_common_move(weapon_swing_anim, &x, &y, up, down, left, right);
+        thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
     if (thing_hit_solid_obstacle(grid, t, x, y)) {
@@ -3611,17 +3569,17 @@ uint8_t thing_server_move (thingp t,
         }
     }
 
-    thing_common_move(t, &x, &y, up, down, left, right);
+    thing_move_set_dir(t, &x, &y, up, down, left, right);
 
     /*
      * Move the weapon too.
      */
     if (weapon_carry_anim) {
-        thing_common_move(weapon_carry_anim, &x, &y, up, down, left, right);
+        thing_move_set_dir(weapon_carry_anim, &x, &y, up, down, left, right);
     }
 
     if (weapon_swing_anim) {
-        thing_common_move(weapon_swing_anim, &x, &y, up, down, left, right);
+        thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
     thing_server_wid_update(t, x, y, false /* is_new */);
