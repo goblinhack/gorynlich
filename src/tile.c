@@ -197,7 +197,6 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
 			MIN.y = min(at.y, MIN.y);
 			MAX.x = max(at.x, MAX.x);
 			MAX.y = max(at.y, MAX.y);
-#define DEBUG_TILE
 #ifdef DEBUG_TILE
                         printf("X");
 #endif
