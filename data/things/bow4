@@ -6,13 +6,12 @@
  z_order=2
  is_weapon
  is_fragile
- is_collision_map_medium
  is_fragile
  is_valid_for_shortcut_key
  is_wearable
  failure_chance=10000
  weapon_carry_anim="data/things/bow1_anim"
-weapon_swing_anim="data/things/weapon_swing1"
+ weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
    tile="bow4"
