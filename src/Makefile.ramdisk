@@ -121,6 +121,9 @@
 .o/ramdisk_data_things__banana_session.o: asm/ramdisk_data_things__banana_session.S ../data/things/.banana.session
 	gcc -c asm/ramdisk_data_things__banana_session.S -o .o/ramdisk_data_things__banana_session.o
 
+.o/ramdisk_data_things__bonepile2_session.o: asm/ramdisk_data_things__bonepile2_session.S ../data/things/.bonepile2.session
+	gcc -c asm/ramdisk_data_things__bonepile2_session.S -o .o/ramdisk_data_things__bonepile2_session.o
+
 .o/ramdisk_data_things__bow_session.o: asm/ramdisk_data_things__bow_session.S ../data/things/.bow.session
 	gcc -c asm/ramdisk_data_things__bow_session.S -o .o/ramdisk_data_things__bow_session.o
 
@@ -166,8 +169,20 @@
 .o/ramdisk_data_things__food_session.o: asm/ramdisk_data_things__food_session.S ../data/things/.food.session
 	gcc -c asm/ramdisk_data_things__food_session.S -o .o/ramdisk_data_things__food_session.o
 
-.o/ramdisk_data_things__generator3_session.o: asm/ramdisk_data_things__generator3_session.S ../data/things/.generator3.session
-	gcc -c asm/ramdisk_data_things__generator3_session.S -o .o/ramdisk_data_things__generator3_session.o
+.o/ramdisk_data_things__generator1_session.o: asm/ramdisk_data_things__generator1_session.S ../data/things/.generator1.session
+	gcc -c asm/ramdisk_data_things__generator1_session.S -o .o/ramdisk_data_things__generator1_session.o
+
+.o/ramdisk_data_things__generator7_session.o: asm/ramdisk_data_things__generator7_session.S ../data/things/.generator7.session
+	gcc -c asm/ramdisk_data_things__generator7_session.S -o .o/ramdisk_data_things__generator7_session.o
+
+.o/ramdisk_data_things__ghost1_session.o: asm/ramdisk_data_things__ghost1_session.S ../data/things/.ghost1.session
+	gcc -c asm/ramdisk_data_things__ghost1_session.S -o .o/ramdisk_data_things__ghost1_session.o
+
+.o/ramdisk_data_things__ghost2_session.o: asm/ramdisk_data_things__ghost2_session.S ../data/things/.ghost2.session
+	gcc -c asm/ramdisk_data_things__ghost2_session.S -o .o/ramdisk_data_things__ghost2_session.o
+
+.o/ramdisk_data_things__ghost3_session.o: asm/ramdisk_data_things__ghost3_session.S ../data/things/.ghost3.session
+	gcc -c asm/ramdisk_data_things__ghost3_session.S -o .o/ramdisk_data_things__ghost3_session.o
 
 .o/ramdisk_data_things__monk_session.o: asm/ramdisk_data_things__monk_session.S ../data/things/.monk.session
 	gcc -c asm/ramdisk_data_things__monk_session.S -o .o/ramdisk_data_things__monk_session.o
@@ -246,6 +261,15 @@
 
 .o/ramdisk_data_things_banana.o: asm/ramdisk_data_things_banana.S ../data/things/banana
 	gcc -c asm/ramdisk_data_things_banana.S -o .o/ramdisk_data_things_banana.o
+
+.o/ramdisk_data_things_bonepile1.o: asm/ramdisk_data_things_bonepile1.S ../data/things/bonepile1
+	gcc -c asm/ramdisk_data_things_bonepile1.S -o .o/ramdisk_data_things_bonepile1.o
+
+.o/ramdisk_data_things_bonepile2.o: asm/ramdisk_data_things_bonepile2.S ../data/things/bonepile2
+	gcc -c asm/ramdisk_data_things_bonepile2.S -o .o/ramdisk_data_things_bonepile2.o
+
+.o/ramdisk_data_things_bonepile3.o: asm/ramdisk_data_things_bonepile3.S ../data/things/bonepile3
+	gcc -c asm/ramdisk_data_things_bonepile3.S -o .o/ramdisk_data_things_bonepile3.o
 
 .o/ramdisk_data_things_bow1.o: asm/ramdisk_data_things_bow1.S ../data/things/bow1
 	gcc -c asm/ramdisk_data_things_bow1.S -o .o/ramdisk_data_things_bow1.o
@@ -402,15 +426,6 @@
 
 .o/ramdisk_data_things_generator1.o: asm/ramdisk_data_things_generator1.S ../data/things/generator1
 	gcc -c asm/ramdisk_data_things_generator1.S -o .o/ramdisk_data_things_generator1.o
-
-.o/ramdisk_data_things_generator2.o: asm/ramdisk_data_things_generator2.S ../data/things/generator2
-	gcc -c asm/ramdisk_data_things_generator2.S -o .o/ramdisk_data_things_generator2.o
-
-.o/ramdisk_data_things_generator3.o: asm/ramdisk_data_things_generator3.S ../data/things/generator3
-	gcc -c asm/ramdisk_data_things_generator3.S -o .o/ramdisk_data_things_generator3.o
-
-.o/ramdisk_data_things_generator4.o: asm/ramdisk_data_things_generator4.S ../data/things/generator4
-	gcc -c asm/ramdisk_data_things_generator4.S -o .o/ramdisk_data_things_generator4.o
 
 .o/ramdisk_data_things_generator5.o: asm/ramdisk_data_things_generator5.S ../data/things/generator5
 	gcc -c asm/ramdisk_data_things_generator5.S -o .o/ramdisk_data_things_generator5.o

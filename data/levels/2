@@ -348,7 +348,7 @@
   } {   
    x=18 
    y=1 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=18 
    y=1 
@@ -800,7 +800,7 @@
   } {   
    x=12 
    y=4 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=12 
    y=4 
@@ -1364,7 +1364,7 @@
   } {   
    x=21 
    y=7 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=21 
    y=7 
@@ -1404,7 +1404,7 @@
   } {   
    x=28 
    y=7 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=28 
    y=7 
@@ -1860,7 +1860,7 @@
   } {   
    x=13 
    y=10 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=13 
    y=10 
@@ -2060,7 +2060,7 @@
   } {   
    x=12 
    y=11 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=12 
    y=11 
@@ -2216,7 +2216,7 @@
   } {   
    x=10 
    y=12 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=10 
    y=12 
@@ -3244,7 +3244,7 @@
   } {   
    x=19 
    y=18 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=19 
    y=18 
@@ -3320,7 +3320,7 @@
   } {   
    x=1 
    y=19 
-   t="data/things/generator3" 
+   t="data/things/bonepile2" 
   } {   
    x=1 
    y=19 
@@ -3352,7 +3352,7 @@
   } {   
    x=7 
    y=19 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=7 
    y=19 
@@ -3436,7 +3436,7 @@
   } {   
    x=23 
    y=19 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=23 
    y=19 
@@ -3588,7 +3588,7 @@
   } {   
    x=20 
    y=20 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=20 
    y=20 
@@ -3936,7 +3936,7 @@
   } {   
    x=22 
    y=22 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=22 
    y=22 
@@ -4028,7 +4028,7 @@
   } {   
    x=8 
    y=23 
-   t="data/things/generator3" 
+   t="data/things/bonepile2" 
   } {   
    x=8 
    y=23 
@@ -4756,7 +4756,7 @@
   } {   
    x=17 
    y=27 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=17 
    y=27 
@@ -5216,7 +5216,7 @@
   } {   
    x=21 
    y=30 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=21 
    y=30 
@@ -5260,7 +5260,7 @@
   } {   
    x=30 
    y=30 
-   t="data/things/generator4" 
+   t="data/things/bonepile3" 
   } {   
    x=30 
    y=30 
