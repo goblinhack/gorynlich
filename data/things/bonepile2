@@ -8,11 +8,11 @@
  damage=1
  bonus_score_on_death=50
  mob_spawn_delay_tenths=20
- polymorph_on_death="data/things/generator2"
+ polymorph_on_death="data/things/bonepile1"
  mob_spawn="data/things/ghost2"
  tiles={
   tile={
-   tile="generator3"
+   tile="bonepile2"
   }
  }
 }

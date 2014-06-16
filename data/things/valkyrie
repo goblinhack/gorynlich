@@ -9,7 +9,7 @@
  speed=8
  health=120
  is_player
- spawn_on_death="data/things/generator3"
+ spawn_on_death="data/things/bonepile2"
  is_carryable
  is_animated
  tiles={
