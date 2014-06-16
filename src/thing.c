@@ -1105,6 +1105,14 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 t->health = thing_template_get_health(what);
                 thing_update(t);
 
+                /*
+                 * Update the name to reflect the new thing type.
+                 */
+                myfree(t->logname);
+                t->logname = dynprintf("%s[%p, id %u] (server)", 
+                                       thing_short_name(t), t,
+                                       t->thing_id);
+
                 socket_server_tx_map_update(0, server_boring_things);
                 return;
             }
@@ -1266,11 +1274,16 @@ static void thing_hit_ (thingp t,
      * Keep hitting until all damage is used up or the thing is dead.
      */
     while (damage > 0) {
+CON("  damage %u health %u",damage, t->health);
         if (t->health <= damage) {
+            damage -= t->health;
+            t->health = 0;
+
             /*
              * Record who dun it.
              */
             if (hitter) {
+CON("dead");
                 thing_dead(t, hitter, "%s",
                            thing_template_short_name(hitter->thing_template));
             } else {
@@ -1285,9 +1298,6 @@ static void thing_hit_ (thingp t,
                                             0, // owner
                                             t->x, t->y);
             }
-
-            t->health = 0;
-            damage -= t->health;
 
             /*
              * If polymorphed, hit again?
@@ -1336,9 +1346,14 @@ void thing_hit (thingp t,
                 uint32_t damage,
                 const char *reason, ...)
 {
+    thingp orig_hitter = hitter;
+
     va_list args;
 
     verify(t);
+    if (hitter) {
+        verify(hitter);
+    }
 
     if (god_mode) {
         if (thing_is_player(t)) {
@@ -1348,6 +1363,21 @@ void thing_hit (thingp t,
 
     if (t->is_dead) {
         return;
+    }
+
+    /*
+     * Sanity check.
+     */
+    if (!t->on_server) {
+        DIE("hits can only happen on the server");
+        return;
+    }
+
+    if (hitter) {
+        if (!hitter->on_server) {
+            DIE("hits can only happen from hitter on the server");
+            return;
+        }
     }
 
     /*
@@ -1365,16 +1395,42 @@ void thing_hit (thingp t,
      * Check to see if this is a thing that can be damaged by the hitter.
      */
     if (hitter) {
+        if (thing_is_weapon_swing_effect(hitter)) {
+            /*
+             * Get the player swinging the weapon as the hitter.
+             */
+            hitter = thing_server_ids[hitter->owner_id];
+            verify(hitter);
+            if (!hitter) {
+                return;
+            }
+
+            /*
+             * Don't let our own sword swing hit ourselves!
+             */
+            if (hitter == t) {
+                return;
+            }
+
+            /*
+             * Get the damage from the weapon being used to swing.
+             */
+            thing_templatep weapon = hitter->weapon;
+            if (!weapon) {
+                return;
+            }
+
+            damage = thing_template_get_damage(weapon);
+        }
+
         /*
          * Walls and doors and other solid object are not damaged by poison
          * or similar effects. Limit it to explosions and the like.
          */
         if (thing_is_door(t)            || 
-            thing_is_mob_spawner(t)     || 
             thing_is_wall(t)) {
 
             if (!thing_is_explosion(hitter) &&
-                !thing_is_weapon_swing_effect(hitter) &&
                 !thing_is_projectile(hitter)) {
                 return;
             }
@@ -1447,6 +1503,7 @@ void thing_hit (thingp t,
 
             hitter->timestamp_hit = time_get_time_cached();
         }
+CON("%s hits %s via %s",thing_logname(hitter), thing_logname(t), thing_logname(orig_hitter));
 
         /*
          * No killer to avoid giving a bonus to monsters!

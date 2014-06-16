@@ -7,6 +7,7 @@
  damage=2
  bonus_score_on_death=5
  vision_distance=20
+ hit_delay_tenths=5
  z_order=4
  is_monst
  is_animated
