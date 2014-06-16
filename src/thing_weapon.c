@@ -27,14 +27,17 @@
 
 void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 {
-    double dist_from_player = 0.7;
+    thing_templatep weapon = t->weapon;
+    if (!weapon) {
+        return;
+    }
+
+    double dist_from_player = 
+        ((double)thing_template_get_swing_distance_from_player(weapon)) / 10.0;
 
     /*
      * Try current direction.
      */
-    *dx = 0.0;
-    *dy = 0.0;
-
     if (thing_is_dir_tl(t)) {
         *dx = -dist_from_player;
         *dy = -dist_from_player;
@@ -49,18 +52,18 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 
     if (thing_is_dir_bl(t)) {
         *dx = -dist_from_player;
-        *dy = dist_from_player;
+        *dy = dist_from_player + 0.3;
         return;
     }
 
     if (thing_is_dir_br(t)) {
         *dx = dist_from_player;
-        *dy = dist_from_player;
+        *dy = dist_from_player + 0.3;
         return;
     }
 
     if (thing_is_dir_down(t)) {
-        *dy = dist_from_player;
+        *dy = dist_from_player + 0.3;
         return;
     }
 

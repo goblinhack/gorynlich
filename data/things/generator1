@@ -1,11 +1,12 @@
 {
  short_name="mob spawner"
- tooltip="Mob spawner"
+ tooltip="mob spawner"
  z_depth=2
  z_order=2
  is_mob_spawner
  bonus_score_on_death=200
  is_monst
+ damage=1
  mob_spawn_delay_tenths=100
  tiles={
   tile={
