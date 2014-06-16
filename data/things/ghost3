@@ -8,6 +8,7 @@
  polymorph_on_death="data/things/ghost2"
  bonus_score_on_death=25
  vision_distance=20
+ hit_delay_tenths=5
  z_order=4
  is_monst
  is_animated

@@ -1008,6 +1008,10 @@
   } {   
    x=9 
    y=6 
+   t="data/things/generator4" 
+  } {   
+   x=9 
+   y=6 
    t="data/things/floor6" 
   } {   
    x=10 

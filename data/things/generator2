@@ -1,10 +1,11 @@
 {
- short_name="mob spawner"
- tooltip="Mob spawner"
+ short_name="small bone pile"
+ tooltip="small bone pile"
  z_depth=2
  z_order=2
  is_mob_spawner
  is_monst
+ damage=1
  bonus_score_on_death=100
  mob_spawn_delay_tenths=50
  mob_spawn="data/things/ghost1"
