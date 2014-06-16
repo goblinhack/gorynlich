@@ -11,7 +11,7 @@
  mob_spawn="data/things/ghost1"
  tiles={
   tile={
-   tile="generator2"
+   tile="bonepile1"
   }
  }
 }

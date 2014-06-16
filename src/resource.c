@@ -196,9 +196,9 @@ static uint8_t resource_init_23 (void *context)
         "gem6",
         "gem7",
         "generator1",
-        "generator4",
-        "generator3",
-        "generator2",
+        "bonepile3",
+        "bonepile2",
+        "bonepile1",
         "generator5",
         "generator6",
         "generator7",
@@ -1766,9 +1766,9 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_EXIT6, "data/things/exit6");
     thing_template_load(&THING_EXIT7, "data/things/exit7");
     thing_template_load(&THING_GENERATOR1, "data/things/generator1");
-    thing_template_load(&THING_GENERATOR2, "data/things/generator2");
-    thing_template_load(&THING_GENERATOR3, "data/things/generator3");
-    thing_template_load(&THING_GENERATOR4, "data/things/generator4");
+    thing_template_load(&THING_BONEPILE1, "data/things/bonepile1");
+    thing_template_load(&THING_BONEPILE2, "data/things/bonepile2");
+    thing_template_load(&THING_BONEPILE3, "data/things/bonepile3");
     thing_template_load(&THING_GENERATOR5, "data/things/generator5");
     thing_template_load(&THING_GENERATOR6, "data/things/generator6");
     thing_template_load(&THING_GENERATOR7, "data/things/generator7");

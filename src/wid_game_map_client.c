@@ -219,7 +219,16 @@ uint8_t wid_game_map_client_player_move (void)
         return (false);
     }
 
-    if (fire) {
+    if (player->weapon &&
+        thing_template_get_swing_distance_from_player(player->weapon)) {
+        /*
+         * Allow firing as often as we can unless swinging already.
+         */
+        if (player->weapon_swing_anim_id) {
+CON("too soon weapon_swing_anim_id %d", player->weapon_swing_anim_id);
+            fire = 0;
+        }
+    } else if (fire) {
         /*
          * Don't fire too often.
          */

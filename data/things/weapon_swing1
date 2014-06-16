@@ -37,10 +37,6 @@
   tile={
    tile="weapon_swing1.7"
    delay=1
-  }
-  tile={
-   tile="space"
-   delay=1
    is_end_of_anim
    is_dead_on_end_of_anim
   }

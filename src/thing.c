@@ -118,9 +118,9 @@ uint16_t THING_EXIT5;
 uint16_t THING_EXIT6;
 uint16_t THING_EXIT7;
 uint16_t THING_GENERATOR1;
-uint16_t THING_GENERATOR2;
-uint16_t THING_GENERATOR3;
-uint16_t THING_GENERATOR4;
+uint16_t THING_BONEPILE1;
+uint16_t THING_BONEPILE2;
+uint16_t THING_BONEPILE3;
 uint16_t THING_GENERATOR5;
 uint16_t THING_GENERATOR6;
 uint16_t THING_GENERATOR7;
@@ -1274,7 +1274,6 @@ static void thing_hit_ (thingp t,
      * Keep hitting until all damage is used up or the thing is dead.
      */
     while (damage > 0) {
-CON("  damage %u health %u",damage, t->health);
         if (t->health <= damage) {
             damage -= t->health;
             t->health = 0;
@@ -1283,7 +1282,6 @@ CON("  damage %u health %u",damage, t->health);
              * Record who dun it.
              */
             if (hitter) {
-CON("dead");
                 thing_dead(t, hitter, "%s",
                            thing_template_short_name(hitter->thing_template));
             } else {
@@ -1365,6 +1363,7 @@ void thing_hit (thingp t,
         return;
     }
 
+LOG("%s hit",thing_logname(t));
     /*
      * Sanity check.
      */
@@ -1503,7 +1502,7 @@ void thing_hit (thingp t,
 
             hitter->timestamp_hit = time_get_time_cached();
         }
-CON("%s hits %s via %s",thing_logname(hitter), thing_logname(t), thing_logname(orig_hitter));
+LOG("%s hits %s via %s",thing_logname(hitter), thing_logname(t), thing_logname(orig_hitter));
 
         /*
          * No killer to avoid giving a bonus to monsters!
