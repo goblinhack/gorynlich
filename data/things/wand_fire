@@ -5,6 +5,7 @@
  z_depth=2
  z_order=2
  is_weapon
+ weapon_fire_delay_tenths=3
  is_fragile
  is_combustable
  is_wearable

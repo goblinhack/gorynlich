@@ -244,7 +244,7 @@ void thing_swing (thingp parent)
          * Destroy the thing quickly. Allow enough time for the client anim
          * to run.
          */
-        thing_timer_destroy(child, 100);
+        thing_timer_destroy(child, 200);
 
         parent->needs_tx_player_update = true;
     }
