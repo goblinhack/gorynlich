@@ -429,6 +429,9 @@ static void wid_intro_bg_create (void)
 
 static void wid_intro_create (void)
 {
+    extern void wid_dead_visible(void);
+    wid_dead_visible();
+    return;
     if (wid_intro) {
         return;
     }
