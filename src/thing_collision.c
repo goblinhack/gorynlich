@@ -558,6 +558,14 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_explosion(it)) {
                     continue;
                 }
+
+                /*
+                 * Allow players to walk through other players. Else thay
+                 * can spawn on top of each other and get stuck.
+                 */
+                if (thing_is_player(it)) {
+                    continue;
+                }
             }
 
             if (!things_overlap(me, nx, ny, it)) {
