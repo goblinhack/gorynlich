@@ -219,28 +219,27 @@ uint8_t wid_game_map_client_player_move (void)
         return (false);
     }
 
-    if (player->weapon &&
-        thing_template_get_swing_distance_from_player(player->weapon)) {
-        /*
-         * Allow firing as often as we can unless swinging already.
-         */
-        if (player->weapon_swing_anim_id) {
-CON("too soon weapon_swing_anim_id %d", player->weapon_swing_anim_id);
-            fire = 0;
-        }
-    } else if (fire) {
-        /*
-         * Don't fire too often.
-         */
-        static uint32_t last_fired = 0;
-
-        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_FIRE,
-                                             last_fired)) {
+    /*
+     * Check if we are allowed to fire our gun again so soon.
+     */
+    if (fire) {
+        if (!player->weapon) {
             fire = 0;
         }
 
         if (fire) {
-            last_fired = time_get_time_cached();
+            static uint32_t last_fired = 0;
+
+            uint32_t delay = 
+                thing_template_get_weapon_fire_delay_tenths(player->weapon);
+            
+            if (!time_have_x_tenths_passed_since(delay, last_fired)) {
+                fire = 0;
+            }
+
+            if (fire) {
+                last_fired = time_get_time_cached();
+            }
         }
     }
 

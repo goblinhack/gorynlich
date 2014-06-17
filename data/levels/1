@@ -548,11 +548,19 @@
   } {   
    x=9 
    y=3 
+   t="data/things/sword3" 
+  } {   
+   x=9 
+   y=3 
    t="data/things/floor6" 
   } {   
    x=10 
    y=3 
    t="data/things/floor6" 
+  } {   
+   x=11 
+   y=3 
+   t="data/things/wand_fire" 
   } {   
    x=11 
    y=3 
