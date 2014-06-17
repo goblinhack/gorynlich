@@ -78,6 +78,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_game_map_client.o 	\
     $(OBJDIR)/wid_game_map_server.o 	\
     $(OBJDIR)/wid_splash.o 		\
+    $(OBJDIR)/wid_dead.o 		\
     $(OBJDIR)/wid_intro.o 		\
     $(OBJDIR)/wid_intro2.o 		\
     $(OBJDIR)/wid_intro3.o 		\
