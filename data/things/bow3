@@ -5,6 +5,7 @@
  z_depth=2
  z_order=2
  is_weapon
+ weapon_fire_delay_tenths=4
  is_fragile
  is_fragile
  is_valid_for_shortcut_key

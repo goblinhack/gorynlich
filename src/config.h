@@ -152,7 +152,6 @@
  */
 #define DELAY_TENTHS_THING_AI                   2
 #define DELAY_TENTHS_THING_COLLISION_TEST       1
-#define DELAY_TENTHS_THING_FIRE                 3
 #define DELAY_TENTHS_PING                       5
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
 #define DELAY_TENTHS_CURSOR_VISIBLE             5

@@ -4,6 +4,7 @@
  z_depth=2
  z_order=2
  is_weapon
+ weapon_fire_delay_tenths=2
  damage=2
  swing_distance_from_player=6
  is_wearable
