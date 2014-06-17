@@ -720,6 +720,10 @@
   } {   
    x=10 
    y=4 
+   t="data/things/warrior" 
+  } {   
+   x=10 
+   y=4 
    t="data/things/floor6" 
   } {   
    x=11 
