@@ -430,7 +430,6 @@ static void wid_intro_bg_create (void)
 
 static void wid_intro_create (void)
 {
-wid_dead_visible("abcdef","xxx");
     if (wid_intro) {
         return;
     }
