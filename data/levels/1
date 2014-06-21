@@ -864,7 +864,15 @@
   } {   
    x=8 
    y=5 
+   t="data/things/coins1" 
+  } {   
+   x=8 
+   y=5 
    t="data/things/floor6" 
+  } {   
+   x=9 
+   y=5 
+   t="data/things/coins1" 
   } {   
    x=9 
    y=5 
@@ -1024,11 +1032,19 @@
   } {   
    x=9 
    y=6 
+   t="data/things/coins1" 
+  } {   
+   x=9 
+   y=6 
    t="data/things/floor6" 
   } {   
    x=10 
    y=6 
    t="data/things/warrior" 
+  } {   
+   x=10 
+   y=6 
+   t="data/things/coins1" 
   } {   
    x=10 
    y=6 

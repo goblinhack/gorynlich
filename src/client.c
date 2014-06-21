@@ -806,8 +806,8 @@ static void client_poll (void)
 
                 socket_rx_server_hiscore(s, packet, data, &latest_hiscores);
 
-                wid_dead_visible(latest_hiscores.players[0].name,
-                                 "pointless");
+                wid_dead_visible(latest_hiscores.players[0].player_name,
+                                 latest_hiscores.players[0].death_reason);
                 break;
             }
 
