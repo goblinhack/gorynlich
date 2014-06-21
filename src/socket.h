@@ -25,6 +25,7 @@ typedef enum {
     MSG_CLIENT_CLOSE,
     MSG_SERVER_CLOSE,
     MSG_SERVER_STATUS,
+    MSG_SERVER_HISCORE,
     MSG_SERVER_MAP_UPDATE,
     MSG_SERVER_PLAYER_UPDATE,
     MSG_CLIENT_PLAYER_MOVE,
@@ -118,6 +119,17 @@ typedef struct {
     uint8_t server_max_players;
     uint8_t server_current_players;
 } __attribute__ ((packed)) msg_server_status;
+
+typedef struct msg_player_hiscore_ {
+    char name[SMALL_STRING_LEN_MAX];
+    char reason[SMALL_STRING_LEN_MAX];
+    uint32_t score;
+} __attribute__ ((packed)) msg_player_hiscore;
+
+typedef struct {
+    uint8_t type;
+    msg_player_hiscore players[MAX_HISCORES+1];
+} __attribute__ ((packed)) msg_server_hiscores;
 
 typedef struct {
     /*
@@ -310,6 +322,11 @@ extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_status(void);
 extern void socket_rx_server_status(socketp s, UDPpacket *packet, 
                                     uint8_t *data, msg_server_status *);
+extern void socket_tx_server_hiscore(socketp only,
+                                     const char *name,
+                                     const uint32_t score);
+extern void socket_rx_server_hiscore(socketp s, UDPpacket *packet, 
+                                    uint8_t *data, msg_server_hiscores *);
 extern void sockets_quality_check(void);
 extern uint32_t socket_get_quality(socketp s);
 extern uint32_t socket_get_avg_latency(socketp s);

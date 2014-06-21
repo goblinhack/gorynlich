@@ -13,11 +13,13 @@
 #include "wid_popup.h"
 #include "wid_dead.h"
 #include "thing.h"
+#include "wid_notify.h"
+#include "timer.h"
 
 static widp wid_dead;
 static widp wid_dead_credits;
 static uint8_t wid_dead_init_done;
-static void wid_dead_create(void);
+static void wid_dead_create(const char *name, const char *reason);
 static void wid_dead_destroy(void);
 static void wid_dead_finished(widp wid);
 
@@ -47,9 +49,9 @@ void wid_dead_hide (void)
     wid_dead_destroy();
 }
 
-void wid_dead_visible (void)
+void wid_dead_visible (const char *name, const char *reason)
 {
-    wid_dead_create();
+    wid_dead_create(name, reason);
 }
 
 static void wid_dead_destroy (void)
@@ -69,53 +71,88 @@ static void wid_dead_finished (widp wid)
     wid_intro_visible();
 }
 
-static void wid_dead_create (void)
+static void wid_dead_flush_logs (void *context)
+{
+    wid_notify_flush();
+}
+
+static void wid_dead_create (const char *name, const char *reason)
 {
     if (sdl_is_exiting()) {
         return;
     }
 
     widp w = wid_new_window("dead");
-    fpoint tl = { 0, 0 };
-    fpoint br = { 1, 1 };
+    fpoint tl = { 0.0, 0.3 };
+    fpoint br = { 0.4, 1.0 };
 
     wid_set_tl_br_pct(w, tl, br);
 
     wid_set_mode(w, WID_MODE_NORMAL);
-    wid_set_color(w, WID_COLOR_TL, RED);
-    wid_set_color(w, WID_COLOR_BR, WHITE);
+    wid_set_color(w, WID_COLOR_TL, WHITE);
+    wid_set_color(w, WID_COLOR_BR, RED);
     wid_set_color(w, WID_COLOR_BG, WHITE);
+    wid_set_font(w, vsmall_font);
+    wid_set_bevelled(w, 10);
     wid_set_tex(w, 0, "gravestone");
 
     wid_destroy_in(w, 110000);
     wid_set_on_destroy(w, wid_dead_finished);
-    wid_move_to_pct_centered(w, 0.5f, 0.5f);
 
-    wid_dead_credits = wid_popup(
-          "A piece of cheese!"
-          ,
-          0,
-          0.5, 0.5,                 /* x,y postition in percent */
-          large_font,               /* title font */
-          large_font,               /* body font */
-          med_font,                 /* button font */
-          0);
+    {
+        widp w2 = wid_new_square_button(w, "dead");
+        wid_set_mode(w2, WID_MODE_NORMAL);
+        color c = RED;
+        c.a = 0;
+        wid_set_color(w2, WID_COLOR_TL, c);
+        wid_set_color(w2, WID_COLOR_BR, c);
+        wid_set_color(w2, WID_COLOR_BG, c);
+        wid_set_color(w2, WID_COLOR_TEXT, GREEN);
+        wid_set_text(w2, name);
+        wid_set_font(w2, vsmall_font);
 
-    wid_move_to_pct_centered(wid_dead_credits, 0.5, 2.5);
-    wid_move_to_pct_centered_in(wid_dead_credits, 0.5, 0.9, 2000);
+        {
+            fpoint tl = { 0.0, 0.5 };
+            fpoint br = { 1.0, 0.6 };
+            wid_set_tl_br_pct(w2, tl, br);
+        }
+    }
 
-    color c = WHITE;
-    c.a = 0;
-    wid_set_color(wid_dead_credits, WID_COLOR_BG, c);
+    {
+        widp w2 = wid_new_square_button(w, "dead");
+        wid_set_mode(w2, WID_MODE_NORMAL);
+        color c = BLACK;
+        c.a = 0;
+        wid_set_color(w2, WID_COLOR_TL, c);
+        wid_set_color(w2, WID_COLOR_BR, c);
+        wid_set_color(w2, WID_COLOR_BG, c);
+        wid_set_color(w2, WID_COLOR_TEXT, GREEN);
+        wid_set_text(w2, reason);
+        wid_set_font(w2, vsmall_font);
 
-    c = WHITE;
-    c.a = 30;
-    wid_set_color(wid_dead_credits, WID_COLOR_TL, c);
-    wid_set_color(wid_dead_credits, WID_COLOR_BR, c);
-    wid_set_color(wid_dead_credits, WID_COLOR_TEXT, GREEN);
+        {
+            fpoint tl = { 0.0, 0.8 };
+            fpoint br = { 1.0, 0.9 };
+            wid_set_tl_br_pct(w2, tl, br);
+        }
+    }
 
     wid_raise(w);
-    wid_raise(wid_dead_credits);
 
     wid_update(w);
+    wid_move_to_pct(w, 0.6, 1.5);
+
+    static uint32_t gravestone_appear_delay = 3000;
+
+    wid_move_to_pct_in(w, 0.6, 0.3, gravestone_appear_delay);
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_dead_flush_logs,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "wid dead timer",
+            gravestone_appear_delay,
+            0 /* jitter */);
+
 }

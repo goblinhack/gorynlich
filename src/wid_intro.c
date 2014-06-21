@@ -27,6 +27,7 @@
 #include "level.h"
 #include "timer.h"
 #include "wid_notify.h"
+#include "wid_dead.h"
 
 static widp wid_intro;
 static widp wid_intro_background;
@@ -429,9 +430,7 @@ static void wid_intro_bg_create (void)
 
 static void wid_intro_create (void)
 {
-    extern void wid_dead_visible(void);
-    wid_dead_visible();
-    return;
+wid_dead_visible("abcdef","xxx");
     if (wid_intro) {
         return;
     }

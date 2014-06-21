@@ -69,23 +69,23 @@ typedef struct {
 
 typedef struct {
     tree_node node;
-    int32_t qqq2;
-    int32_t qqq3;
+    int32_t key2;
+    int32_t key3;
 } tree_key_two_int;
 
 typedef struct {
     tree_node node;
-    int32_t qqq2;
-    int32_t qqq3;
-    int32_t qqq4;
+    int32_t key2;
+    int32_t key3;
+    int32_t key4;
 } tree_key_three_int;
 
 typedef struct {
     tree_node node;
-    int32_t qqq2;
-    int32_t qqq3;
-    int32_t qqq4;
-    int32_t qqq5;
+    int32_t key2;
+    int32_t key3;
+    int32_t key4;
+    int32_t key5;
 } tree_key_four_int;
 
 tree_root *tree_alloc(tree_key_type, const char *name);
@@ -330,19 +330,19 @@ tree_key_two_int32_compare_func (const tree_node *a, const tree_node *b)
     tree_key_two_int *A = (typeof(A))a;
     tree_key_two_int *B = (typeof(B))b;
 
-    if (A->qqq2 < B->qqq2) {
+    if (A->key2 < B->key2) {
         return (-1);
     }
 
-    if (A->qqq2 > B->qqq2) {
+    if (A->key2 > B->key2) {
         return (1);
     }
 
-    if (A->qqq3 < B->qqq3) {
+    if (A->key3 < B->key3) {
         return (-1);
     }
 
-    if (A->qqq3 > B->qqq3) {
+    if (A->key3 > B->key3) {
         return (1);
     }
 
@@ -355,27 +355,27 @@ tree_key_three_int32_compare_func (const tree_node *a, const tree_node *b)
     tree_key_three_int *A = (typeof(A))a;
     tree_key_three_int *B = (typeof(B))b;
 
-    if (A->qqq2 < B->qqq2) {
+    if (A->key2 < B->key2) {
         return (-1);
     }
 
-    if (A->qqq2 > B->qqq2) {
+    if (A->key2 > B->key2) {
         return (1);
     }
 
-    if (A->qqq3 > B->qqq3) {
+    if (A->key3 > B->key3) {
         return (1);
     }
 
-    if (A->qqq3 < B->qqq3) {
+    if (A->key3 < B->key3) {
         return (-1);
     }
 
-    if (A->qqq4 > B->qqq4) {
+    if (A->key4 > B->key4) {
         return (1);
     }
 
-    if (A->qqq4 < B->qqq4) {
+    if (A->key4 < B->key4) {
         return (-1);
     }
 
@@ -388,35 +388,35 @@ tree_key_four_int32_compare_func (const tree_node *a, const tree_node *b)
     tree_key_four_int *A = (typeof(A))a;
     tree_key_four_int *B = (typeof(B))b;
 
-    if (A->qqq2 < B->qqq2) {
+    if (A->key2 < B->key2) {
         return (-1);
     }
 
-    if (A->qqq2 > B->qqq2) {
+    if (A->key2 > B->key2) {
         return (1);
     }
 
-    if (A->qqq3 > B->qqq3) {
+    if (A->key3 > B->key3) {
         return (1);
     }
 
-    if (A->qqq3 < B->qqq3) {
+    if (A->key3 < B->key3) {
         return (-1);
     }
 
-    if (A->qqq4 > B->qqq4) {
+    if (A->key4 > B->key4) {
         return (1);
     }
 
-    if (A->qqq4 < B->qqq4) {
+    if (A->key4 < B->key4) {
         return (-1);
     }
 
-    if (A->qqq5 > B->qqq5) {
+    if (A->key5 > B->key5) {
         return (1);
     }
 
-    if (A->qqq5 < B->qqq5) {
+    if (A->key5 < B->key5) {
         return (-1);
     }
 

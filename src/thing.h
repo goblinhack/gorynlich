@@ -88,14 +88,14 @@ void thing_dec_powerup_rocket_count(thingp t, uint8_t val);
 uint8_t thing_has_powerup_rocket_count(thingp t);
 void thing_set_is_qqq1(thingp t, uint8_t val);
 uint8_t thing_is_qqq1(thingp t);
-void thing_set_is_qqq2(thingp t, uint8_t val);
-uint8_t thing_is_qqq2(thingp t);
-void thing_set_is_qqq3(thingp t, uint8_t val);
-uint8_t thing_is_qqq3(thingp t);
-void thing_set_is_qqq4(thingp t, uint8_t val);
-uint8_t thing_is_qqq4(thingp t);
-void thing_set_is_qqq5(thingp t, uint8_t val);
-uint8_t thing_is_qqq5(thingp t);
+void thing_set_is_key2(thingp t, uint8_t val);
+uint8_t thing_is_key2(thingp t);
+void thing_set_is_key3(thingp t, uint8_t val);
+uint8_t thing_is_key3(thingp t);
+void thing_set_is_key4(thingp t, uint8_t val);
+uint8_t thing_is_key4(thingp t);
+void thing_set_is_key5(thingp t, uint8_t val);
+uint8_t thing_is_key5(thingp t);
 void thing_set_qqq6(thingp t, uint8_t val);
 uint8_t thing_qqq6(thingp t);
 void thing_set_is_collected(thingp t, uint8_t val);
@@ -130,8 +130,8 @@ uint8_t thing_opened_exit(thingp t);
 void thing_set_is_open(thingp t, uint8_t val);
 void thing_set_is_projectile(thingp t, uint8_t val);
 void thing_set_is_dead(thingp t, uint8_t val);
-void thing_set_qqq20(thingp t, uint8_t val);
-uint8_t thing_qqq20(thingp t);
+void thing_set_key20(thingp t, uint8_t val);
+uint8_t thing_key20(thingp t);
 const char *thing_name(thingp);
 const char *thing_short_name(thingp);
 const char *thing_tooltip(thingp);
@@ -579,11 +579,8 @@ typedef struct thing_ {
      */
     uint32_t first_update:1;
 
-    uint32_t is_qqq1:1;
-    uint32_t is_qqq2:1;
-    uint32_t is_qqq3:1;
-    uint32_t is_qqq4:1;
-    uint32_t is_qqq5:1;
+    uint32_t is_key2:1;
+    uint32_t is_key3:1;
     uint32_t qqq6:1;
     uint32_t is_collected:1;
     uint32_t got_to_exit_first:1;
@@ -770,20 +767,6 @@ static inline uint8_t thing_is_weapon_swing_effect (thingp t)
     verify(t);
 
     return (thing_template_is_weapon_swing_effect(thing_get_template(t)));
-}
-
-static inline uint8_t thing_is_key2 (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_key2(thing_get_template(t)));
-}
-
-static inline uint8_t thing_is_key3 (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_key3(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_fire (thingp t)

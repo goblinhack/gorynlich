@@ -8,8 +8,8 @@
 
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
@@ -95,6 +95,7 @@
  * Messages.
  */
 #define MAX_PLAYERS                 4
+#define MAX_HISCORES                10
 #define SMALL_STRING_LEN_MAX        30
 #define PLAYER_MSG_MAX              100
 
