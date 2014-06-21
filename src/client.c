@@ -18,6 +18,7 @@
 #include "wid.h"
 #include "thing.h"
 #include "mzip_lib.h"
+#include "wid_dead.h"
 
 /*
  * Which socket we have actually joined on.
@@ -792,6 +793,21 @@ static void client_poll (void)
                 memcpy(&server_status, &latest_status, sizeof(server_status));
 
                 wid_game_map_client_score_update(client_level, redo);
+                break;
+            }
+
+            case MSG_SERVER_HISCORE: {
+                /*
+                 * This is an update of all players in the game.
+                 */
+                msg_server_hiscores latest_hiscores;
+
+                memset(&latest_hiscores, 0, sizeof(latest_hiscores));
+
+                socket_rx_server_hiscore(s, packet, data, &latest_hiscores);
+
+                wid_dead_visible(latest_hiscores.players[0].name,
+                                 "pointless");
                 break;
             }
 

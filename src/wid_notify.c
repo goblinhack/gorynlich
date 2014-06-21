@@ -301,3 +301,10 @@ void wid_notify_tick (void)
 
     wid_notify_scroll();
 }
+
+void wid_notify_flush (void)
+{
+    while (nelems) {
+        wid_notify_scroll();
+    }
+}

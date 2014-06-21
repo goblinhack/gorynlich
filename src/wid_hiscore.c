@@ -15,7 +15,6 @@
 #include "marshal.h"
 
 static const char *hiscore_dir_and_file = "gorynlich-hiscore.txt";
-static const uint32_t MAX_HISCORES = 10;
 
 static widp wid_hiscore;
 static widp wid_hiscore_container;
@@ -23,12 +22,6 @@ static uint8_t wid_hiscore_init_done;
 
 static void wid_hiscore_create(void);
 static void wid_hiscore_destroy(void);
-
-typedef struct hiscore_ {
-    tree_key_two_int tree;
-
-    char *name;
-} hiscore;
 
 tree_rootp hiscores;
 
@@ -38,17 +31,17 @@ void hiscore_add (const char *name, uint32_t score)
     hiscore *h;
 
     if (!hiscores) {
-        hiscores = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: hiscores");
+        hiscores = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: hiscore");
     }
 
     h = (typeof(h)) myzalloc(sizeof(*h), "TREE NODE: hiscore");
 
     h->name = dupstr(name, "name");
-    h->tree.qqq2 = score;
-    h->tree.qqq3 = tiebreak++;
+    h->tree.key2 = score;
+    h->tree.key3 = tiebreak++;
 
     while (!tree_insert(hiscores, &h->tree.node)) {
-        h->tree.qqq3 = tiebreak++;
+        h->tree.key3 = tiebreak++;
     }
 }
 
@@ -263,7 +256,7 @@ static void wid_hiscore_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            char *tmp = dynprintf("%08d", h->tree.qqq2);
+            char *tmp = dynprintf("%08d", h->tree.key2);
             wid_set_text(w, tmp);
             myfree(tmp);
 
@@ -305,8 +298,8 @@ static uint8_t demarshal_hiscore (demarshal_p ctx, hiscore *p)
     rc = true;
 
     rc = rc && GET_OPT_NAMED_STRING(ctx, "name", p->name);
-    rc = rc && GET_OPT_NAMED_INT32(ctx, "score", p->tree.qqq2);
-    rc = rc && GET_OPT_NAMED_INT32(ctx, "tiebreak", p->tree.qqq3);
+    rc = rc && GET_OPT_NAMED_INT32(ctx, "score", p->tree.key2);
+    rc = rc && GET_OPT_NAMED_INT32(ctx, "tiebreak", p->tree.key3);
 
     return (rc);
 }
@@ -314,8 +307,8 @@ static uint8_t demarshal_hiscore (demarshal_p ctx, hiscore *p)
 static void marshal_hiscore (marshal_p ctx, hiscore *p)
 {
     PUT_NAMED_STRING(ctx, "name", p->name);
-    PUT_NAMED_INT32(ctx, "score", p->tree.qqq2);
-    PUT_NAMED_INT32(ctx, "tiebreak", p->tree.qqq3);
+    PUT_NAMED_INT32(ctx, "score", p->tree.key2);
+    PUT_NAMED_INT32(ctx, "tiebreak", p->tree.key3);
 }
 
 uint8_t hiscore_save (void)
@@ -369,7 +362,7 @@ uint8_t hiscore_load (void)
 
     if ((ctx = demarshal(file))) {
         while (demarshal_hiscore(ctx, &h)) {
-            hiscore_add(h.name, h.tree.qqq2);
+            hiscore_add(h.name, h.tree.key2);
             myfree(h.name);
 
             if (count++ > MAX_HISCORES) {
@@ -435,7 +428,7 @@ widp hiscore_try_to_add (uint32_t score_in)
             return (0);
         }
 
-        if (score_in > (uint32_t) h->tree.qqq2) {
+        if (score_in > (uint32_t) h->tree.key2) {
             break;
         }
 
