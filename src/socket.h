@@ -121,13 +121,14 @@ typedef struct {
 } __attribute__ ((packed)) msg_server_status;
 
 typedef struct msg_player_hiscore_ {
-    char name[SMALL_STRING_LEN_MAX];
-    char reason[SMALL_STRING_LEN_MAX];
+    char player_name[SMALL_STRING_LEN_MAX];
+    char death_reason[SMALL_STRING_LEN_MAX];
     uint32_t score;
 } __attribute__ ((packed)) msg_player_hiscore;
 
 typedef struct {
     uint8_t type;
+    uint8_t rejoin_allowed;
     msg_player_hiscore players[MAX_HISCORES+1];
 } __attribute__ ((packed)) msg_server_hiscores;
 
@@ -324,6 +325,7 @@ extern void socket_rx_server_status(socketp s, UDPpacket *packet,
                                     uint8_t *data, msg_server_status *);
 extern void socket_tx_server_hiscore(socketp only,
                                      const char *name,
+                                     const char *reason,
                                      const uint32_t score);
 extern void socket_rx_server_hiscore(socketp s, UDPpacket *packet, 
                                     uint8_t *data, msg_server_hiscores *);

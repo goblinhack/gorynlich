@@ -24,6 +24,7 @@
 #include "client.h"
 #include "timer.h"
 #include "math.h"
+#include "wid_hiscore.h"
 
 uint16_t THING_WALL;
 uint16_t THING_WALL2;
@@ -1230,8 +1231,13 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
          * Tell the poor player they've croaked it.
          */
         if (t->player && t->player->socket) {
+            hiscore_try_to_add(t->player->name,
+                               reason,
+                               t->score);
+
             socket_tx_server_hiscore(t->player->socket, 
                                      t->player->name,
+                                     reason,
                                      t->score);
         }
     }

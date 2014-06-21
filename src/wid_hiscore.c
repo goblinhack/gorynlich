@@ -13,6 +13,7 @@
 #include "string.h"
 #include "wid_text_input.h"
 #include "marshal.h"
+#include "wid_popup.h"
 
 static const char *hiscore_dir_and_file = "gorynlich-hiscore.txt";
 
@@ -25,7 +26,9 @@ static void wid_hiscore_destroy(void);
 
 tree_rootp hiscores;
 
-void hiscore_add (const char *name, uint32_t score)
+void hiscore_add (const char *player_name, 
+                  const char *death_reason, 
+                  uint32_t score)
 {
     static uint32_t tiebreak;
     hiscore *h;
@@ -36,7 +39,9 @@ void hiscore_add (const char *name, uint32_t score)
 
     h = (typeof(h)) myzalloc(sizeof(*h), "TREE NODE: hiscore");
 
-    h->name = dupstr(name, "name");
+    h->player_name = dupstr(player_name, "player name");
+    h->death_reason = dupstr(death_reason, "death reason");
+
     h->tree.key2 = score;
     h->tree.key3 = tiebreak++;
 
@@ -58,7 +63,8 @@ uint8_t wid_hiscore_init (void)
 
 static void hiscore_destroy (hiscore *node)
 {
-    myfree(node->name);
+    myfree(node->player_name);
+    myfree(node->death_reason);
 }
 
 void wid_hiscore_fini (void)
@@ -207,7 +213,7 @@ static void wid_hiscore_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            wid_set_text(w, h->name);
+            wid_set_text(w, h->player_name);
 
             color c = BLACK;
 
@@ -224,6 +230,59 @@ static void wid_hiscore_create (void)
             wid_set_no_shape(w);
             wid_set_text_outline(w, true);
             wid_set_font(w, large_font);
+            wid_set_text_lhs(w, true);
+
+            i++;
+        }
+    }
+
+    {
+        uint32_t i = 0;
+        hiscore *h;
+
+        TREE_WALK_REVERSE(hiscores, h) {
+            widp w = wid_new_square_button(wid_hiscore_container,
+                                           "hiscore killed by");
+
+            fpoint tl = {0.3, 0.1};
+            fpoint br = {0.8, 0.2};
+
+            float height = 0.08;
+
+            if (i < 1) {
+                wid_set_color(w, WID_COLOR_TEXT, YELLOW);
+            } else if (i < 4) {
+                wid_set_color(w, WID_COLOR_TEXT, GREEN);
+            } else {
+                wid_set_color(w, WID_COLOR_TEXT, SKYBLUE);
+            }
+
+            br.y += (float)i * height;
+            tl.y += (float)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+
+            if (h->death_reason && h->death_reason[0]) {
+                char *tmp = dynprintf("killed by %s", h->death_reason);
+                wid_set_text(w, tmp);
+                myfree(tmp);
+            }
+
+            color c = BLACK;
+
+            c.a = 100;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_bevel(w,0);
+            wid_set_no_shape(w);
+            wid_set_text_outline(w, true);
+            wid_set_font(w, vsmall_font);
             wid_set_text_lhs(w, true);
 
             i++;
@@ -297,7 +356,8 @@ static uint8_t demarshal_hiscore (demarshal_p ctx, hiscore *p)
 
     rc = true;
 
-    rc = rc && GET_OPT_NAMED_STRING(ctx, "name", p->name);
+    rc = rc && GET_OPT_NAMED_STRING(ctx, "name", p->player_name);
+    rc = rc && GET_OPT_NAMED_STRING(ctx, "death_reason", p->death_reason);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "score", p->tree.key2);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "tiebreak", p->tree.key3);
 
@@ -306,7 +366,8 @@ static uint8_t demarshal_hiscore (demarshal_p ctx, hiscore *p)
 
 static void marshal_hiscore (marshal_p ctx, hiscore *p)
 {
-    PUT_NAMED_STRING(ctx, "name", p->name);
+    PUT_NAMED_STRING(ctx, "name", p->player_name);
+    PUT_NAMED_STRING(ctx, "death_reason", p->death_reason);
     PUT_NAMED_INT32(ctx, "score", p->tree.key2);
     PUT_NAMED_INT32(ctx, "tiebreak", p->tree.key3);
 }
@@ -362,8 +423,9 @@ uint8_t hiscore_load (void)
 
     if ((ctx = demarshal(file))) {
         while (demarshal_hiscore(ctx, &h)) {
-            hiscore_add(h.name, h.tree.key2);
-            myfree(h.name);
+            hiscore_add(h.player_name, h.death_reason, h.tree.key2);
+            myfree(h.player_name);
+            myfree(h.death_reason);
 
             if (count++ > MAX_HISCORES) {
                 break;
@@ -374,7 +436,7 @@ uint8_t hiscore_load (void)
     }
 
     while (count++ < MAX_HISCORES - 1) {
-        hiscore_add("No one", 0);
+        hiscore_add("No one", "", 0);
     }
 
     myfree(file);
@@ -385,47 +447,23 @@ uint8_t hiscore_load (void)
 static widp wid_hiscore_name_popup;
 static uint32_t score;
 
-static void wid_hiscore_name_ok (widp w)
-{
-    widp top;
-
-    /*
-     * We're given the ok or cancel button, so must name the text box.
-     */
-    const char *name = wid_get_text(w);
-
-    hiscore_add(name, score);
-
-    /*
-     * Destroy the name dialog.
-     */
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_hiscore_name_popup = 0;
-
-    hiscore_save();
-}
-
-static void wid_hiscore_name_cancel (widp w)
-{
-    widp top;
-
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_hiscore_name_popup = 0;
-}
-
-widp hiscore_try_to_add (uint32_t score_in)
+void hiscore_try_to_add (const char *player_name,
+                         const char *death_reason,
+                         uint32_t score_in)
 {
     uint32_t count = 0;
 
     score = score_in;
     hiscore *h;
 
+    if (!score_in) {
+        return;
+    }
+
     TREE_WALK_REVERSE(hiscores, h) {
 
         if (count >= MAX_HISCORES) {
-            return (0);
+            return;
         }
 
         if (score_in > (uint32_t) h->tree.key2) {
@@ -448,19 +486,14 @@ widp hiscore_try_to_add (uint32_t score_in)
     };
 
     if (count >= ARRAY_SIZE(which)) {
-        return (0);
+        return;
     }
 
-    char *place_str = dynprintf("%s place!", which[count]);
+    char *place_str = dynprintf("New Hi Score, %s place!", which[count]);
 
-    wid_hiscore_name_popup = wid_large_text_input(
-          place_str,
-          0.5, 0.5,                 /* position */
-          2,                        /* buttons */
-          "Ok", wid_hiscore_name_ok,
-          "Cancel", wid_hiscore_name_cancel);
+    LOG("%s", place_str);
+
+    hiscore_add(player_name, death_reason, score);
 
     myfree(place_str);
-
-    return (wid_hiscore_name_popup);
 }

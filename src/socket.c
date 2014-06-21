@@ -2176,11 +2176,13 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
  * Send an array of all current players to all clients.
  */
 void socket_tx_server_hiscore (socketp only,
-                               const char *name,
+                               const char *player_name,
+                               const char *death_reason,
                                uint32_t score)
 {
     msg_server_hiscores msg = {0};
     msg.type = MSG_SERVER_HISCORE;
+    msg.rejoin_allowed = global_config.server_current_players > 1;
 
     hiscore *hi[MAX_HISCORES+1] = {0};
     uint32_t hi_index = 0;
@@ -2213,8 +2215,13 @@ void socket_tx_server_hiscore (socketp only,
 
             msg_player_hiscore *msg_tx = &msg.players[i + 1];
 
-            strncpy(msg_tx->name, h->name, min(sizeof(msg_tx->name), 
-                                                      strlen(h->name))); 
+            strncpy(msg_tx->player_name, h->player_name, 
+                    min(sizeof(msg_tx->player_name),
+                        strlen(h->player_name))); 
+
+            strncpy(msg_tx->death_reason, h->death_reason, 
+                    min(sizeof(msg_tx->death_reason),
+                        strlen(h->death_reason))); 
 
             SDLNet_Write32(h->tree.key2, &msg_tx->score);
         }
@@ -2226,7 +2233,12 @@ void socket_tx_server_hiscore (socketp only,
     {
         msg_player_hiscore *msg_tx = &msg.players[0];
 
-        strncpy(msg_tx->name, name, min(sizeof(msg_tx->name), strlen(name))); 
+        strncpy(msg_tx->player_name, player_name, 
+                min(sizeof(msg_tx->player_name), strlen(player_name))); 
+
+        strncpy(msg_tx->death_reason, death_reason, 
+                min(sizeof(msg_tx->death_reason), strlen(death_reason))); 
+
         SDLNet_Write32(score, &msg_tx->score);
     }
 
@@ -2262,7 +2274,8 @@ void socket_tx_server_hiscore (socketp only,
 /*
  * Receive an array of all current players from the server.
  */
-void socket_rx_server_hiscore (socketp s, UDPpacket *packet, uint8_t *data,
+void socket_rx_server_hiscore (socketp s, UDPpacket *packet, 
+                               uint8_t *data,
                                msg_server_hiscores *hiscore)
 {
     verify(s);
@@ -2278,21 +2291,25 @@ void socket_rx_server_hiscore (socketp s, UDPpacket *packet, uint8_t *data,
 
     msg = (typeof(msg)) packet->data;
 
+    hiscore->rejoin_allowed = msg->rejoin_allowed;
+
     for (pi = 0; pi < MAX_HISCORES + 1; pi++) {
         msg_player_hiscore *p = &hiscore->players[pi];
         msg_player_hiscore *msg_rx = &msg->players[pi];
 
-        memcpy(p->name, msg_rx->name, SMALL_STRING_LEN_MAX);
+        memcpy(p->player_name, msg_rx->player_name, SMALL_STRING_LEN_MAX);
+
+        memcpy(p->death_reason, msg_rx->death_reason, SMALL_STRING_LEN_MAX);
 
         p->score = SDLNet_Read32(&msg_rx->score);
 
-        if (!p->name[0]) {
+        if (!p->player_name[0]) {
             continue;
         }
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, p->name);
+            LOG("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, p->player_name);
             myfree(tmp);
         }
     }
