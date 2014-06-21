@@ -8,3 +8,4 @@
 
 widp wid_notify(uint32_t level, const char *text);
 void wid_notify_tick(void);
+void wid_notify_flush(void);

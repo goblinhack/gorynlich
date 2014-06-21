@@ -96,8 +96,8 @@ timerp action_timer_create (tree_rootp *root,
     t->context = context;
     t->callback = callback;
     t->destroy_callback = destroy_callback;
-    t->tree.qqq2 = t->expires_when;
-    t->tree.qqq3 = tiebreak++;
+    t->tree.key2 = t->expires_when;
+    t->tree.key3 = tiebreak++;
 
     if (!tree_insert(*root, &t->tree.node)) {
         DIE("collect timer [%s] failed", action_timer_logname(t));

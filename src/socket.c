@@ -23,6 +23,7 @@
 #include "wid_game_map_server.h"
 #include "thing.h"
 #include "mzip_lib.h"
+#include "wid_hiscore.h"
 
 tree_rootp sockets;
 
@@ -107,8 +108,8 @@ static socketp socket_create (IPaddress address)
      */
     s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: socket");
 
-    s->tree.qqq2 = address.host;
-    s->tree.qqq3 = address.port;
+    s->tree.key2 = address.host;
+    s->tree.key3 = address.port;
 
     if (!tree_insert(sockets, &s->tree.node)) {
         ERR("failed to add socket");
@@ -197,8 +198,8 @@ socketp socket_find (IPaddress address)
     socket *s;
 
     memset(&findme, 0, sizeof(findme));
-    findme.tree.qqq2 = address.host;
-    findme.tree.qqq3 = address.port;
+    findme.tree.key2 = address.host;
+    findme.tree.key3 = address.port;
 
     s = (typeof(s)) tree_find(sockets, &findme.tree.node);
 
@@ -2169,6 +2170,132 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
     memcpy(status->server_name, msg->server_name, sizeof(status->server_name));
 
     memcpy(&s->server_status, status, sizeof(s->server_status));
+}
+
+/*
+ * Send an array of all current players to all clients.
+ */
+void socket_tx_server_hiscore (socketp only,
+                               const char *name,
+                               uint32_t score)
+{
+    msg_server_hiscores msg = {0};
+    msg.type = MSG_SERVER_HISCORE;
+
+    hiscore *hi[MAX_HISCORES+1] = {0};
+    uint32_t hi_index = 0;
+    hiscore *h;
+
+    { TREE_WALK_REVERSE(hiscores, h) {
+        hi[hi_index++] = h;
+        if (hi_index >= MAX_HISCORES) {
+            break;
+        }
+    } }
+
+    /*
+     * Add all current players.
+     */
+    socketp s;
+    TREE_WALK(sockets, s) {
+        if (only) {
+            if (only != s) {
+                continue;
+            }
+        }
+
+        int i;
+        for (i = 0; i < hi_index; i++) {
+            h = hi[i];
+            if (!h) {
+                break;
+            }
+
+            msg_player_hiscore *msg_tx = &msg.players[i + 1];
+
+            strncpy(msg_tx->name, h->name, min(sizeof(msg_tx->name), 
+                                                      strlen(h->name))); 
+
+            SDLNet_Write32(h->tree.key2, &msg_tx->score);
+        }
+    }
+
+    /*
+     * Now put the currently croaked it player in first place.
+     */
+    {
+        msg_player_hiscore *msg_tx = &msg.players[0];
+
+        strncpy(msg_tx->name, name, min(sizeof(msg_tx->name), strlen(name))); 
+        SDLNet_Write32(score, &msg_tx->score);
+    }
+
+    UDPpacket *packet = socket_alloc_msg();
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    {
+        TREE_WALK(sockets, s) {
+            if (!s->connected) {
+                continue;
+            }
+
+            if (!s->server_side_client) {
+                continue;
+            }
+
+            if (debug_socket_players_enabled) {
+                LOG("Server: Tx hiscore [to %s]",
+                    socket_get_remote_logname(s));
+            }
+
+            packet->len = sizeof(msg);
+            write_address(packet, socket_get_remote_ip(s));
+
+            socket_tx_msg(s, packet);
+        }
+    }
+            
+    socket_free_msg(packet);
+}
+
+/*
+ * Receive an array of all current players from the server.
+ */
+void socket_rx_server_hiscore (socketp s, UDPpacket *packet, uint8_t *data,
+                               msg_server_hiscores *hiscore)
+{
+    verify(s);
+
+    msg_server_hiscores *msg;
+
+    if (packet->len != sizeof(*msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    uint32_t pi;
+
+    msg = (typeof(msg)) packet->data;
+
+    for (pi = 0; pi < MAX_HISCORES + 1; pi++) {
+        msg_player_hiscore *p = &hiscore->players[pi];
+        msg_player_hiscore *msg_rx = &msg->players[pi];
+
+        memcpy(p->name, msg_rx->name, SMALL_STRING_LEN_MAX);
+
+        p->score = SDLNet_Read32(&msg_rx->score);
+
+        if (!p->name[0]) {
+            continue;
+        }
+
+        if (debug_socket_players_enabled) {
+            char *tmp = iptodynstr(read_address(packet));
+            LOG("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, p->name);
+            myfree(tmp);
+        }
+    }
 }
 
 /*

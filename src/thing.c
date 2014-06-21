@@ -1225,6 +1225,15 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      */
     if (t->on_server) {
         thing_update(t);
+
+        /*
+         * Tell the poor player they've croaked it.
+         */
+        if (t->player && t->player->socket) {
+            socket_tx_server_hiscore(t->player->socket, 
+                                     t->player->name,
+                                     t->score);
+        }
     }
 
     if (!t->on_active_list) {
@@ -1344,8 +1353,6 @@ void thing_hit (thingp t,
                 uint32_t damage,
                 const char *reason, ...)
 {
-    thingp orig_hitter = hitter;
-
     va_list args;
 
     verify(t);
@@ -1363,7 +1370,6 @@ void thing_hit (thingp t,
         return;
     }
 
-LOG("%s hit",thing_logname(t));
     /*
      * Sanity check.
      */
@@ -1502,7 +1508,6 @@ LOG("%s hit",thing_logname(t));
 
             hitter->timestamp_hit = time_get_time_cached();
         }
-LOG("%s hits %s via %s",thing_logname(hitter), thing_logname(t), thing_logname(orig_hitter));
 
         /*
          * No killer to avoid giving a bonus to monsters!
@@ -2038,74 +2043,32 @@ uint8_t thing_has_powerup_rocket_count (thingp t)
     return (t->powerup_rocket_count);
 }
 
-void thing_set_is_qqq1 (thingp t, uint8_t val)
+void thing_set_is_key2 (thingp t, uint8_t val)
 {
     verify(t);
 
-    t->is_qqq1 = val;
+    t->is_key2 = val;
 }
 
-uint8_t thing_is_qqq1 (thingp t)
+uint8_t thing_is_key2 (thingp t)
 {
     verify(t);
 
-    return (t->is_qqq1);
+    return (t->is_key2);
 }
 
-void thing_set_is_qqq2 (thingp t, uint8_t val)
+void thing_set_is_key3 (thingp t, uint8_t val)
 {
     verify(t);
 
-    t->is_qqq2 = val;
+    t->is_key3 = val;
 }
 
-uint8_t thing_is_qqq2 (thingp t)
+uint8_t thing_is_key3 (thingp t)
 {
     verify(t);
 
-    return (t->is_qqq2);
-}
-
-void thing_set_is_qqq3 (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->is_qqq3 = val;
-}
-
-uint8_t thing_is_qqq3 (thingp t)
-{
-    verify(t);
-
-    return (t->is_qqq3);
-}
-
-void thing_set_is_qqq4 (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->is_qqq4 = val;
-}
-
-uint8_t thing_is_qqq4 (thingp t)
-{
-    verify(t);
-
-    return (t->is_qqq4);
-}
-
-void thing_set_is_qqq5 (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->is_qqq5 = val;
-}
-
-uint8_t thing_is_qqq5 (thingp t)
-{
-    verify(t);
-
-    return (t->is_qqq5);
+    return (t->is_key3);
 }
 
 void thing_set_qqq6 (thingp t, uint8_t val)
