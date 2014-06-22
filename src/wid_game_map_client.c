@@ -78,7 +78,9 @@ void wid_game_map_client_hide (void)
 
         wid_destroy_grid(wid_game_map_client_grid_container);
 
-        LOG("Destroyed client map container");
+        wid_destroy(&wid_game_map_client_grid_container);
+
+        LOG("Client: Destroyed map container");
     }
 
     wid_intro_visible();
@@ -504,7 +506,7 @@ void wid_game_map_client_wid_create (void)
         return;
     }
 
-    LOG("Create client map");
+    LOG("Client: Create map");
 
     {
         fpoint tl = {0.0f, 0.0f};
@@ -558,7 +560,7 @@ void wid_game_map_client_wid_create (void)
         wid_set_on_key_down(wid_game_map_client_grid_container, 
                             wid_game_map_key_event);
 
-        LOG("Created client map container window");
+        LOG("Client: Created map container window");
     }
 
     {
@@ -593,13 +595,13 @@ void wid_game_map_client_wid_create (void)
                      MAP_WIDTH,
                      MAP_HEIGHT, client_tile_width, client_tile_height);
 
-        LOG("Created client map container window grid");
+        LOG("Client: Created map container window grid");
     }
 
     client_level = level_new(wid_game_map_client_grid_container, 
                              0, false /* is_editor */);
 
-    LOG("Created client level");
+    LOG("Client: Created level");
 
     if (!client_level) {
         WARN("failed to load level");

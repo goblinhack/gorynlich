@@ -1339,7 +1339,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     socket_set_name(s, msg.name);
     socket_set_pclass(s, msg.pclass);
 
-    /*
+    /* 
      * Update the player structure.
      */
     aplayer *p = s->player;
@@ -2248,6 +2248,12 @@ void socket_tx_server_hiscore (socketp only,
 
     {
         TREE_WALK(sockets, s) {
+            if (only) {
+                if (only != s) {
+                    continue;
+                }
+            }
+
             if (!s->connected) {
                 continue;
             }

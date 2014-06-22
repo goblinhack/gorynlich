@@ -139,12 +139,14 @@ static void server_rx_client_join (socketp s)
 
     global_config.server_current_players++;
 
-    LOG("Server: \"%s\" joined the game from %s", p->name,
-        socket_get_remote_logname(s));
+    LOG("Server: \"%s\" (ID %u) joined from %s", p->name,
+        p->key, socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s joined the game", p->name);
     socket_tx_server_shout_except_to(WARNING, tmp, s);
     myfree(tmp);
+
+    LOG("Server: total players now %u", global_config.server_current_players);
 
     socket_server_tx_map_update(s, server_active_things);
     socket_server_tx_map_update(s, server_boring_things);
@@ -177,8 +179,8 @@ static void server_rx_client_leave (socketp s)
         return;
     }
 
-    LOG("Server: \"%s\" left the game from %s", p->name,
-        socket_get_remote_logname(s));
+    LOG("Server: \"%s\" (ID %u) left from %s", p->name,
+        p->key, socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s left the game", p->name);
     socket_tx_server_shout(WARNING, tmp);
@@ -197,8 +199,8 @@ static void server_rx_client_close (socketp s)
         return;
     }
 
-    LOG("Server: \"%s\" suddenly left of the game from %s", p->name,
-        socket_get_remote_logname(s));
+    LOG("Server: \"%s\" (ID %u) suddenly left from %s", p->name,
+        p->key, socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s suddenly left the game", p->name);
     socket_tx_server_shout(WARNING, tmp);
