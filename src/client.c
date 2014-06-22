@@ -47,6 +47,12 @@ static void client_check_still_in_game(void);
 static msg_server_status server_status;
 static uint8_t server_connection_confirmed;
 
+/*
+ * Saved state for rejoins.
+ */
+static uint16_t last_portno;
+static char *last_host;
+
 uint8_t client_init (void)
 {
     if (client_init_done) {
@@ -338,6 +344,22 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
     if (client_joined_server) {
         WARN("Leave the current server first before trying to join again");
         return (false);
+    }
+
+    if (portno) {
+        last_portno = portno;
+    }
+
+    if (!portno) {
+        portno = last_portno;
+    }
+
+    if (host) {
+        last_host = dupstr(host, "last host");;
+    }
+
+    if (!host) {
+        host = last_host;
     }
 
     socketp s = 0;
@@ -798,7 +820,7 @@ static void client_poll (void)
 
             case MSG_SERVER_HISCORE: {
                 /*
-                 * This is an update of all players in the game.
+                 * This is an update of the hiscores as the player has died.
                  */
                 msg_server_hiscores latest_hiscores;
 
@@ -806,9 +828,10 @@ static void client_poll (void)
 
                 socket_rx_server_hiscore(s, packet, data, &latest_hiscores);
 
+LOG("XXX");
                 wid_dead_visible(latest_hiscores.players[0].player_name,
                                  latest_hiscores.players[0].death_reason,
-                                 latest_hiscores.rejoin_allowed);
+                                 1 || latest_hiscores.rejoin_allowed);
 
                 break;
             }
@@ -924,7 +947,16 @@ static void client_check_still_in_game (void)
             MSG(GENINFO, "Welcome %s, %s", p->pclass, p->name);
 
             player = thing_client_find(p->thing_id);
+            if (!player) {
+                ERR("failed to find player in map update");
+                continue;
+            }
 
+            if (!wid_game_map_client_window) {
+                ERR("Client: no game map window");
+                continue;
+
+            }
             wid_visible(wid_game_map_client_window, 0);
         }
 

@@ -563,7 +563,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
         /*
          * We're hosed.
          */
-        ERR("out of map slots trying to add %s", t->logname);
+        ERR("Server: out of map slots trying to add %s", t->logname);
 
         for (i = 0; i < cell->count; i++) {
             uint16_t m = cell->id[i];
@@ -990,7 +990,7 @@ void thing_destroy (thingp t, const char *why)
         if (t->on_server) {
             p->thing = 0;
 
-            LOG("\"%s\" player died", p->name);
+            LOG("Server: \"%s\" player died", p->name);
 
             char *tmp = dynprintf("%s died", p->name);
             socket_tx_server_shout(CRITICAL, tmp);
@@ -1074,9 +1074,9 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
                                 t->score);
 
                 socket_tx_server_hiscore(t->player->socket, 
-                                        t->player->name,
-                                        reason,
-                                        t->score);
+                                         t->player->name,
+                                         reason,
+                                         t->score);
             }
         }
     }
@@ -1363,6 +1363,7 @@ void thing_hit (thingp t,
                 uint32_t damage,
                 const char *reason, ...)
 {
+    thingp orig_hitter = hitter;
     va_list args;
 
     verify(t);
@@ -1411,21 +1412,22 @@ void thing_hit (thingp t,
      */
     if (hitter) {
         if (thing_is_weapon_swing_effect(hitter)) {
-            /*
-             * Get the player swinging the weapon as the hitter.
-             */
-            hitter = thing_server_ids[hitter->owner_id];
-            verify(hitter);
-            if (!hitter) {
+            if (!hitter->owner_id) {
+                ERR("swung weapon %s has no owner ID", thing_logname(hitter));
                 return;
             }
 
             /*
-             * Don't let our own sword swing hit ourselves!
+             * Get the player swinging the weapon as the hitter.
              */
-            if (hitter == t) {
+            hitter = thing_server_ids[hitter->owner_id];
+            if (!hitter) {
+                ERR("weapon hitter %s owner id %u has no thing",
+                    thing_logname(orig_hitter), orig_hitter->owner_id);
                 return;
             }
+
+            verify(hitter);
 
             /*
              * Get the damage from the weapon being used to swing.
@@ -1436,6 +1438,33 @@ void thing_hit (thingp t,
             }
 
             damage = thing_template_get_damage(weapon);
+
+        } else if (hitter->owner_id) {
+            /*
+             * Get the player firing the weapon as the hitter.
+             */
+            hitter = thing_server_ids[hitter->owner_id];
+            if (!hitter) {
+                ERR("hitter %s owner id %u has no thing",
+                    thing_logname(orig_hitter), orig_hitter->owner_id);
+                return;
+            }
+
+            verify(hitter);
+        }
+
+        /*
+         * Don't let our own potion hit ourselves!
+         */
+        if (hitter == t) {
+            return;
+        }
+
+        /*
+         * Don't allow one player's potion effect to kill another player.
+         */
+        if (thing_is_player(hitter) && thing_is_player(t)) {
+            return;
         }
 
         /*
@@ -1500,13 +1529,6 @@ void thing_hit (thingp t,
      * Allow no more hits than x per second by the hitter.
      */
     if (hitter) {
-        /*
-         * Have we ran into our own spell effect? Cast no damage on ourselves.
-         */
-        if (hitter->owner_id == t->thing_id) {
-            return;
-        }
-
         uint32_t delay = 
             thing_template_get_hit_delay_tenths(hitter->thing_template);
 
@@ -2930,6 +2952,14 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
 void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 {
+    /*
+     * Check we don't receive an update before we're ready for it. This can
+     * happen on rejoins.
+     */
+    if (!wid_game_map_client_grid_container) {
+        return;
+    }
+
     uint8_t need_fixup = false;
     verify(s);
 

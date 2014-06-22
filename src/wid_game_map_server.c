@@ -12,7 +12,6 @@
 #include "tile.h"
 #include "thing_tile.h"
 #include "wid_game_map_server.h"
-#include "wid_intro.h"
 #include "wid_editor.h"
 #include "thing.h"
 #include "map.h"
@@ -43,6 +42,8 @@ void wid_game_map_server_fini (void)
 
 void wid_game_map_server_hide (void)
 {
+    LOG("Server: destroy map");
+
     if (wid_game_map_server_window) {
         wid_hide(wid_game_map_server_window, wid_swipe_delay);
 
@@ -50,8 +51,6 @@ void wid_game_map_server_hide (void)
 
         wid_destroy_grid(wid_game_map_server_grid_container);
     }
-
-    wid_intro_visible();
 }
 
 void wid_game_map_server_visible (void)
@@ -60,13 +59,13 @@ void wid_game_map_server_visible (void)
 
     server_start(server_address);
 
-    if (wid_game_map_server_window) {
-        wid_hide(wid_game_map_server_window, 0);
-    } else {
+    if (!wid_game_map_server_window) {
+        LOG("Server: create new map");
+
         wid_game_map_server_wid_create();
     }
 
-    wid_raise(wid_game_map_server_window);
+    wid_hide(wid_game_map_server_window, 0);
 }
 
 /*

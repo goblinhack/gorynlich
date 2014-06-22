@@ -239,8 +239,6 @@ void level_destroy (levelp *plevel)
         DIE("no level");
     }
 
-    *plevel = 0;
-
     /*
      * Perhaps another thread is still using this level for map generation?
      */
@@ -248,6 +246,8 @@ void level_destroy (levelp *plevel)
         LOG("Level locked... waiting");
         sleep(1);
     }
+
+    *plevel = 0;
 
     /*
      * Ensure no stale pointers.

@@ -7045,8 +7045,11 @@ static void wid_gc (widp w)
         /*
          * If being destroyed, is it done fading ? We only do this for the top
          * level widgets. The childen inherit the fading from the parent.
+         *
+         * Only do this for signle shot fade count widgets, not those that 
+         * pulse in and out.
          */
-        if (wid_is_fading(w)) {
+        if (wid_is_fading(w) && !w->fade_count) {
             double fade = wid_get_fade_amount(w);
 
             if (fade == 0.0) {
