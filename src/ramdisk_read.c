@@ -45,24 +45,32 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
      * preference.
      */
     if (file_exists(filename)) {
-        if (file_exists_and_is_newer_than(filename,
-                                          EXEC_FULL_PATH_AND_NAME)) {
-            out = file_read_if_exists(filename, outlen);
-            if (out) {
-                DBG("Locdisk %s", filename);
-                return (out);
+        if (strstr(filename, "/data")) {
+            if (file_exists_and_is_newer_than(filename,
+                                            EXEC_FULL_PATH_AND_NAME)) {
+                out = file_read_if_exists(filename, outlen);
+                if (out) {
+                    DBG("Locdisk %s", filename);
+                    return (out);
+                }
             }
-        }
 
-        if (file_exists_and_is_newer_than(filename, ".o/ramdisk_data.o")) {
-            out = file_read_if_exists(filename, outlen);
-            if (out) {
-                DBG("Locdisk %s", filename);
-                return (out);
+            if (file_exists_and_is_newer_than(filename, ".o/ramdisk_data.o")) {
+                out = file_read_if_exists(filename, outlen);
+                if (out) {
+                    DBG("Locdisk %s", filename);
+                    return (out);
+                }
             }
-        }
 
-        if (file_exists_and_is_newer_than(filename, "src/.o/ramdisk_data.o")) {
+            if (file_exists_and_is_newer_than(filename, "src/.o/ramdisk_data.o")) {
+                out = file_read_if_exists(filename, outlen);
+                if (out) {
+                    DBG("Locdisk %s", filename);
+                    return (out);
+                }
+            }
+        } else {
             out = file_read_if_exists(filename, outlen);
             if (out) {
                 DBG("Locdisk %s", filename);
