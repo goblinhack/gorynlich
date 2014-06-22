@@ -257,7 +257,7 @@ uint8_t thing_template_get_z_order(thing_templatep);
 uint32_t thing_template_get_speed(thing_templatep);
 uint32_t thing_template_get_lifespan(thing_templatep);
 int16_t thing_template_get_health(thing_templatep);
-uint32_t thing_template_get_damage(thing_templatep);
+uint16_t thing_template_get_damage(thing_templatep);
 int32_t thing_template_get_bonus_score_on_death(thing_templatep);
 uint32_t thing_template_get_vision_distance(thing_templatep);
 int32_t thing_template_get_bonus_score_on_collect(thing_templatep);
