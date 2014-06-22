@@ -77,6 +77,8 @@ static uint8_t wid_dead_quit_mouse_event (widp w, int32_t x, int32_t y,
 
     wid_game_map_client_hide();
 
+    wid_game_map_client_wid_destroy();
+
     wid_dead_destroy();
 
     return (true);
