@@ -15,13 +15,18 @@
 #include "thing.h"
 #include "wid_notify.h"
 #include "timer.h"
+#include "client.h"
+#include "wid_game_map_client.h"
+#include "wid_intro.h"
 
 static widp wid_dead;
-static widp wid_dead_credits;
+static widp wid_quit;
+
 static uint8_t wid_dead_init_done;
-static void wid_dead_create(const char *name, const char *reason);
+static void wid_dead_create(const char *name, 
+                            const char *reason,
+                            uint8_t rejoin_allowed);
 static void wid_dead_destroy(void);
-static void wid_dead_finished(widp wid);
 
 uint8_t wid_dead_init (void)
 {
@@ -49,40 +54,81 @@ void wid_dead_hide (void)
     wid_dead_destroy();
 }
 
-void wid_dead_visible (const char *name, const char *reason)
+void wid_dead_visible (const char *name, 
+                       const char *reason,
+                       uint8_t rejoin_allowed)
 {
-    wid_dead_create(name, reason);
+    wid_dead_create(name, reason, rejoin_allowed);
 }
 
 static void wid_dead_destroy (void)
 {
     wid_destroy(&wid_dead);
-    wid_destroy(&wid_dead_credits);
+    wid_destroy(&wid_quit);
 }
 
-static void wid_dead_finished (widp wid)
+static uint8_t wid_dead_quit_mouse_event (widp w, int32_t x, int32_t y,
+                                          uint32_t button)
 {
-    if (sdl_is_exiting()) {
-        return;
-    }
+    client_socket_leave();
 
-    wid_dead_hide();
+    wid_game_map_client_hide();
 
-    wid_intro_visible();
+    wid_dead_destroy();
+
+    return (true);
 }
 
-static void wid_dead_flush_logs (void *context)
+static uint8_t is_rejoin_allowed;
+
+static void wid_dead_gravestone_appeared (void *context)
 {
     wid_notify_flush();
+
+    {
+        widp w = wid_quit = wid_new_rounded_window("quit");
+        wid_set_font(w, med_font);
+        wid_set_no_shape(w);
+
+        fpoint tl = {0.0f, 0.00f};
+        fpoint br = {1.0f, 1.00f};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_text(w, "Click to continue");
+        wid_fade_in_out(w, 1000, 1000, false /* fade out first */);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        color c = WHITE;
+        c.a = 200;
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        wid_set_mode(w, WID_MODE_OVER);
+        c.a = 200;
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        wid_set_mode(w, WID_MODE_FOCUS);
+        c.a = 100;
+        wid_set_color(w, WID_COLOR_TEXT, c);
+        wid_set_text_outline(w, true);
+        wid_set_text_centerx(w, true);
+        wid_set_text_centery(w, true);
+
+        wid_set_on_mouse_down(w, wid_dead_quit_mouse_event);
+
+        wid_raise(w);
+        wid_update(w);
+    }
 }
 
-static void wid_dead_create (const char *name, const char *reason)
+static void wid_dead_create (const char *name, 
+                             const char *reason,
+                             uint8_t rejoin_allowed)
 {
     if (sdl_is_exiting()) {
         return;
     }
 
-    widp w = wid_new_window("dead");
+    widp w = wid_dead = wid_new_window("dead");
     fpoint tl = { 0.0, 0.3 };
     fpoint br = { 0.4, 1.0 };
 
@@ -95,9 +141,9 @@ static void wid_dead_create (const char *name, const char *reason)
     wid_set_font(w, vsmall_font);
     wid_set_bevelled(w, 10);
     wid_set_tex(w, 0, "gravestone");
+    wid_set_ignore_events(w, true);
 
     wid_destroy_in(w, 110000);
-    wid_set_on_destroy(w, wid_dead_finished);
 
     {
         widp w2 = wid_new_square_button(w, "dead");
@@ -110,6 +156,7 @@ static void wid_dead_create (const char *name, const char *reason)
         wid_set_color(w2, WID_COLOR_TEXT, GREEN);
         wid_set_text(w2, name);
         wid_set_font(w2, vsmall_font);
+        wid_set_ignore_events(w2, true);
 
         {
             fpoint tl = { 0.0, 0.5 };
@@ -129,6 +176,7 @@ static void wid_dead_create (const char *name, const char *reason)
         wid_set_color(w2, WID_COLOR_TEXT, GREEN);
         wid_set_text(w2, reason);
         wid_set_font(w2, vsmall_font);
+        wid_set_ignore_events(w2, true);
 
         {
             fpoint tl = { 0.0, 0.8 };
@@ -140,19 +188,20 @@ static void wid_dead_create (const char *name, const char *reason)
     wid_raise(w);
 
     wid_update(w);
-    wid_move_to_pct(w, 0.6, 1.5);
+    wid_move_to_pct(w, 0.6, 1.3);
 
-    static uint32_t gravestone_appear_delay = 5000;
+    static uint32_t gravestone_appear_delay = 3000;
 
     wid_move_to_pct_in(w, 0.6, 0.3, gravestone_appear_delay);
 
     action_timer_create(
             &wid_timers,
-            (action_timer_callback)wid_dead_flush_logs,
+            (action_timer_callback)wid_dead_gravestone_appeared,
             (action_timer_destroy_callback)0,
             0, /* context */
             "wid dead timer",
             gravestone_appear_delay,
             0 /* jitter */);
 
+    is_rejoin_allowed = rejoin_allowed;
 }
