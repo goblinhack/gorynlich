@@ -138,26 +138,22 @@ static void wid_hiscore_create (void)
         return;
     }
 
-    widp w = wid_hiscore = wid_new_rounded_window("wid settings");
+    widp w = wid_hiscore = wid_new_window("wid settings");
 
-    fpoint tl = {0.05, 0.1};
-    fpoint br = {0.95, 0.9};
+    fpoint tl = {0.0, 0.0};
+    fpoint br = {1.0, 1.0};
 
     wid_set_tl_br_pct(w, tl, br);
     wid_set_font(w, med_font);
+    wid_set_tex(w, 0, "gravestone2");
 
     wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
-    color c = BLACK;
-    c.a = 200;
+    color c = WHITE;
     wid_set_color(w, WID_COLOR_BG, c);
-
-    c = STEELBLUE;
-    c.a = 200;
     wid_set_color(w, WID_COLOR_TL, c);
     wid_set_color(w, WID_COLOR_BR, c);
-    wid_set_bevel(w, 4);
-    wid_set_on_mouse_up(w, wid_hiscore_mouse_event);
+    wid_set_on_mouse_down(w, wid_hiscore_mouse_event);
     wid_set_on_key_down(w, wid_hiscore_key_event);
 
     wid_set_on_mouse_motion(w, wid_hiscore_receive_mouse_motion);
@@ -181,6 +177,7 @@ static void wid_hiscore_create (void)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "High Scores");
+        wid_set_text_outline(w, true);
         wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
 
@@ -231,6 +228,7 @@ static void wid_hiscore_create (void)
             wid_set_text_outline(w, true);
             wid_set_font(w, large_font);
             wid_set_text_lhs(w, true);
+            wid_set_text_outline(w, true);
 
             i++;
         }
@@ -284,6 +282,7 @@ static void wid_hiscore_create (void)
             wid_set_text_outline(w, true);
             wid_set_font(w, vsmall_font);
             wid_set_text_lhs(w, true);
+            wid_set_text_outline(w, true);
 
             i++;
         }
@@ -297,7 +296,7 @@ static void wid_hiscore_create (void)
             widp w = wid_new_square_button(wid_hiscore_container,
                                            "hiscore value");
 
-            fpoint tl = {0.52, 0.1};
+            fpoint tl = {0.72, 0.1};
             fpoint br = {0.95, 0.2};
 
             float height = 0.08;
@@ -335,6 +334,7 @@ static void wid_hiscore_create (void)
             wid_set_text_outline(w, true);
             wid_set_text_fixed_width(w, true);
             wid_set_font(w, large_font);
+            wid_set_text_outline(w, true);
 
             i++;
         }
@@ -444,16 +444,12 @@ uint8_t hiscore_load (void)
     return (true);
 }
 
-static widp wid_hiscore_name_popup;
-static uint32_t score;
-
 void hiscore_try_to_add (const char *player_name,
                          const char *death_reason,
                          uint32_t score_in)
 {
     uint32_t count = 0;
 
-    score = score_in;
     hiscore *h;
 
     if (!score_in) {
@@ -490,10 +486,8 @@ void hiscore_try_to_add (const char *player_name,
     }
 
     char *place_str = dynprintf("New Hi Score, %s place!", which[count]);
-
     LOG("%s", place_str);
-
-    hiscore_add(player_name, death_reason, score);
-
     myfree(place_str);
+
+    hiscore_add(player_name, death_reason, score_in);
 }

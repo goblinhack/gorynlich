@@ -1197,7 +1197,8 @@ thing_templatep thing_weapon(thingp t);
 /*
  * thing_item.h
  */
-void thing_collect(thingp t, thingp it, thing_templatep tmp);
+void thing_auto_collect(thingp t, thingp it, thing_templatep tmp);
+void thing_item_collect(thingp t, thingp it, thing_templatep tmp);
 void thing_used(thingp t, thing_templatep tmp);
 void thing_item_destroyed(thingp t, thing_templatep tmp);
 void thing_drop(thingp t, thing_templatep tmp);

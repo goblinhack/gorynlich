@@ -142,7 +142,7 @@ static void wid_dead_create (const char *name, const char *reason)
     wid_update(w);
     wid_move_to_pct(w, 0.6, 1.5);
 
-    static uint32_t gravestone_appear_delay = 3000;
+    static uint32_t gravestone_appear_delay = 5000;
 
     wid_move_to_pct_in(w, 0.6, 0.3, gravestone_appear_delay);
 

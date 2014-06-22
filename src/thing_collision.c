@@ -312,7 +312,7 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
             thing_is_weapon(it) ||
             thing_is_food(it)) {
 
-            thing_collect(me, it, thing_get_template(it));
+            thing_item_collect(me, it, thing_get_template(it));
 
             thing_dead(it, me, "collected");
             return;
