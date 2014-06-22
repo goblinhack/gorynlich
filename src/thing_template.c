@@ -721,7 +721,7 @@ int16_t thing_template_get_health (thing_templatep t)
     return (t->health);
 }
 
-uint32_t thing_template_get_damage (thing_templatep t)
+uint16_t thing_template_get_damage (thing_templatep t)
 {
     return (t->damage);
 }
