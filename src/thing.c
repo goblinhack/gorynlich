@@ -1437,7 +1437,9 @@ void thing_hit (thingp t,
                 return;
             }
 
-            damage = thing_template_get_damage(weapon);
+            if (!damage) {
+                damage = thing_template_get_damage(weapon);
+            }
 
         } else if (hitter->owner_id) {
             /*
@@ -1465,6 +1467,26 @@ void thing_hit (thingp t,
          */
         if (thing_is_player(hitter) && thing_is_player(t)) {
             return;
+        }
+
+        /*
+         * Take the damage from the weapon that hits first.
+         */
+        if (!damage) {
+            damage = orig_hitter->damage;
+            if (!damage) {
+                damage = thing_template_get_damage(orig_hitter->thing_template);
+            }
+        }
+
+        /*
+         * If still no damage, use the thing that did the hitting.
+         */
+        if (!damage) {
+            damage = hitter->damage;
+            if (!damage) {
+                damage = thing_template_get_damage(hitter->thing_template);
+            }
         }
 
         /*
