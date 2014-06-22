@@ -10,6 +10,7 @@
  is_fragile
  is_valid_for_shortcut_key
  is_wearable
+is_collision_map_medium
  failure_chance=10000
  weapon_carry_anim="data/things/bow1_anim"
  weapon_swing_anim="data/things/weapon_swing1"

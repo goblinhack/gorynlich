@@ -747,7 +747,7 @@ thingp thing_server_new (levelp level, const char *name,
 
         for (i = 0; i < THING_MAX; i++) {
             if (thing_template->carrying[i]) {
-                thing_collect(t, 0 /* it */, id_to_thing_template(i));
+                thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
             }
         }
     }
@@ -1061,6 +1061,24 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         THING_LOG(t, "dead (%s)", reason);
 
         THING_SHOUT_AT(t, CRITICAL, "Killed by %s", reason);
+
+        /*
+         * Tell the poor player they've croaked it.
+         */
+        if (t->on_server) {
+            if (!t->player) {
+                ERR("no player socket to send hiscores too");
+            } else if (t->player->socket) {
+                hiscore_try_to_add(t->player->name,
+                                reason,
+                                t->score);
+
+                socket_tx_server_hiscore(t->player->socket, 
+                                        t->player->name,
+                                        reason,
+                                        t->score);
+            }
+        }
     }
 }
 
@@ -1226,20 +1244,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      */
     if (t->on_server) {
         thing_update(t);
-
-        /*
-         * Tell the poor player they've croaked it.
-         */
-        if (t->player && t->player->socket) {
-            hiscore_try_to_add(t->player->name,
-                               reason,
-                               t->score);
-
-            socket_tx_server_hiscore(t->player->socket, 
-                                     t->player->name,
-                                     reason,
-                                     t->score);
-        }
     }
 
     if (!t->on_active_list) {
