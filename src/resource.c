@@ -75,7 +75,8 @@ static uint8_t resource_init_10 (void *context)
 
 static uint8_t resource_init_11 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/gravestone2.png",
+                     "gravestone2") != 0);
 }
 
 static uint8_t resource_init_12 (void *context)

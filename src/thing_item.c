@@ -25,7 +25,8 @@
 #include "timer.h"
 #include "math.h"
 
-void thing_collect (thingp t, thingp it, thing_templatep tmp)
+static void thing_collect (thingp t, thingp it, thing_templatep tmp,
+                           uint8_t auto_collect)
 {
     uint32_t item;
     uint32_t quantity;
@@ -50,11 +51,13 @@ void thing_collect (thingp t, thingp it, thing_templatep tmp)
         quantity = 3;
     }
 
-    if (quantity > 1) {
-        THING_LOG(t, "collects %u %s", quantity,
-                  thing_template_short_name(tmp));
-    } else {
-        THING_LOG(t, "collects %s", thing_template_short_name(tmp));
+    if (!auto_collect) {
+        if (quantity > 1) {
+            THING_LOG(t, "collects %u %s", quantity,
+                    thing_template_short_name(tmp));
+        } else {
+            THING_LOG(t, "collects %s", thing_template_short_name(tmp));
+        }
     }
 
     /*
@@ -78,8 +81,11 @@ void thing_collect (thingp t, thingp it, thing_templatep tmp)
         t->carrying[THING_WATER] = 0;
     }
 
-    if (thing_is_player(t)) {
-        THING_SHOUT_AT(t, INFO, "%s added", thing_template_short_name(tmp));
+    if (!auto_collect) {
+        if (thing_is_player(t)) {
+            THING_SHOUT_AT(t, INFO, "%s added", 
+                           thing_template_short_name(tmp));
+        }
     }
 
     t->carrying[item] += quantity;
@@ -99,6 +105,16 @@ void thing_collect (thingp t, thingp it, thing_templatep tmp)
     if (it) {
         it->is_collected = true;
     }
+}
+
+void thing_item_collect (thingp t, thingp it, thing_templatep tmp)
+{
+    thing_collect(t, it, tmp, false);
+}
+
+void thing_auto_collect (thingp t, thingp it, thing_templatep tmp)
+{
+    thing_collect(t, it, tmp, true);
 }
 
 void thing_used (thingp t, thing_templatep tmp)

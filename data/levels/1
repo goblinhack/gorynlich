@@ -1040,14 +1040,6 @@
   } {   
    x=10 
    y=6 
-   t="data/things/warrior" 
-  } {   
-   x=10 
-   y=6 
-   t="data/things/coins1" 
-  } {   
-   x=10 
-   y=6 
    t="data/things/floor6" 
   } {   
    x=11 
@@ -1085,6 +1077,10 @@
    x=17 
    y=6 
    t="data/things/floor6" 
+  } {   
+   x=18 
+   y=6 
+   t="data/things/wall" 
   } {   
    x=18 
    y=6 

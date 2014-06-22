@@ -10,6 +10,9 @@
 .o/ramdisk_data_gfx_gravestone_png.o: asm/ramdisk_data_gfx_gravestone_png.S ../data/gfx/gravestone.png
 	gcc -c asm/ramdisk_data_gfx_gravestone_png.S -o .o/ramdisk_data_gfx_gravestone_png.o
 
+.o/ramdisk_data_gfx_gravestone2_png.o: asm/ramdisk_data_gfx_gravestone2_png.S ../data/gfx/gravestone2.png
+	gcc -c asm/ramdisk_data_gfx_gravestone2_png.S -o .o/ramdisk_data_gfx_gravestone2_png.o
+
 .o/ramdisk_data_gfx_help1_png.o: asm/ramdisk_data_gfx_help1_png.S ../data/gfx/help1.png
 	gcc -c asm/ramdisk_data_gfx_help1_png.S -o .o/ramdisk_data_gfx_help1_png.o
 

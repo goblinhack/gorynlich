@@ -5,6 +5,7 @@
  z_order=2
  is_boring
  is_wearable
+is_collision_map_medium
  is_valid_for_shortcut_key
  bonus_score_on_collect=15000
  tiles={
