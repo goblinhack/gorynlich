@@ -1041,6 +1041,7 @@ void map_fixup (levelp level)
     if (!fp) {
         fp = fopen("map.txt","w");
     }
+
     if (level == server_level) {
         fprintf(fp,"update server level %p\n", level);
     } else {

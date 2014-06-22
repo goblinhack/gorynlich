@@ -63,13 +63,16 @@ void wid_dead_visible (const char *name,
 
 static void wid_dead_destroy (void)
 {
-    wid_destroy(&wid_dead);
+LOG("wid quit close %p",wid_quit);
     wid_destroy(&wid_quit);
+    wid_destroy(&wid_dead);
 }
 
 static uint8_t wid_dead_quit_mouse_event (widp w, int32_t x, int32_t y,
                                           uint32_t button)
 {
+    LOG("Gravestone raised, player quit");
+
     client_socket_leave();
 
     wid_game_map_client_hide();
@@ -83,10 +86,13 @@ static uint8_t is_rejoin_allowed;
 
 static void wid_dead_gravestone_appeared (void *context)
 {
+    LOG("Gravestone raised");
+
     wid_notify_flush();
 
     {
-        widp w = wid_quit = wid_new_rounded_window("quit");
+        widp w = wid_quit = wid_new_window("quit");
+LOG("wid quit %p",wid_quit);
         wid_set_font(w, med_font);
         wid_set_no_shape(w);
 
@@ -117,6 +123,7 @@ static void wid_dead_gravestone_appeared (void *context)
 
         wid_raise(w);
         wid_update(w);
+    wid_set_focus(w);
     }
 }
 
@@ -127,6 +134,8 @@ static void wid_dead_create (const char *name,
     if (sdl_is_exiting()) {
         return;
     }
+
+    LOG("Player died, raise gravestone");
 
     widp w = wid_dead = wid_new_window("dead");
     fpoint tl = { 0.0, 0.3 };
