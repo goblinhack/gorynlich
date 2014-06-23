@@ -19,6 +19,7 @@
 #include "thing.h"
 #include "mzip_lib.h"
 #include "wid_dead.h"
+#include "level.h"
 
 /*
  * Which socket we have actually joined on.
@@ -456,7 +457,7 @@ uint8_t client_socket_leave (void)
 
     verify(client_joined_server);
 
-    LOG("Client: leaving %s", 
+    LOG("Client: Leaving %s", 
         socket_get_remote_logname(client_joined_server));
 
     socket_tx_client_leave(client_joined_server);
@@ -809,6 +810,13 @@ static void client_poll (void)
                     LOG("Client: Number of players in game now %u", 
                         latest_status.server_current_players);
 
+                    redo = true;
+                }
+
+                if (server_status.level_no != latest_status.level_no) {
+                    level_set_level_no(client_level, latest_status.level_no);
+
+                    LOG("Client: Level no %u", latest_status.level_no);
                     redo = true;
                 }
 

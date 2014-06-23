@@ -45,7 +45,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
      * preference.
      */
     if (file_exists(filename)) {
-        if (strstr(filename, "/data")) {
+        if (strstr(filename, "data/")) {
             if (file_exists_and_is_newer_than(filename,
                                             EXEC_FULL_PATH_AND_NAME)) {
                 out = file_read_if_exists(filename, outlen);
