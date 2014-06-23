@@ -1007,7 +1007,7 @@ void wid_editor_map_wid_create (void)
 
     level_ed = level_new(wid_editor_map_grid_container, 0, 
                          true, /* is_editor */
-                         false /* is_server */);
+                         false /* on_server */);
 
     wid_editor_map_vert_scroll =
         wid_new_vert_scroll_bar(wid_editor_map_window,

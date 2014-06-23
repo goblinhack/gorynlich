@@ -30,7 +30,7 @@ static uint8_t server_shout(tokens_t *tokens, void *context);
 
 uint8_t server_start (IPaddress address)
 {
-    if (!is_server) {
+    if (!on_server) {
         return (true);
     }
 
@@ -102,7 +102,7 @@ uint8_t server_init (void)
         return (false);
     }
 
-    if (is_server) {
+    if (on_server) {
         if (!server_start(server_address)) {
             ERR("Server failed to listen");
         }
@@ -373,8 +373,8 @@ static void server_alive_check (void)
                 socket_tx_client_shout(s, CRITICAL, tmp);
                 myfree(tmp);
 
-                LOG("Server: \"%s\" dropped out of the game from %s", 
-                    p->name, socket_get_remote_logname(s));
+                LOG("Server: \"%s\" (ID %u) dropped out from %s", 
+                    p->name, p->key, socket_get_remote_logname(s));
             }
 
             server_rx_client_leave_implicit(s);
@@ -426,7 +426,7 @@ static void server_socket_tx_ping (void)
 
 void server_tick (void)
 {
-    if (!is_server) {
+    if (!on_server) {
         return;
     }
 

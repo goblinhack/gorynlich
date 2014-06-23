@@ -25,7 +25,6 @@ void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_hit(thingp, thingp hitter, uint32_t damage,
                const char *fmt, ...) __attribute__ ((format (printf, 4, 5)));
-void things_level_start(levelp);
 void things_level_destroyed(levelp);
 void demarshal_thing(demarshal_p ctx, thingp);
 void marshal_thing(marshal_p ctx, thingp);
@@ -46,10 +45,6 @@ uint8_t thing_z_depth(thingp);
 uint8_t thing_z_order(thingp);
 tree_rootp thing_tile_tiles(thingp);
 tree_rootp thing_tile_tiles2(thingp);
-uint32_t thing_level_no(thingp);
-void thing_set_level_no(thingp, uint32_t level);
-levelp thing_level(thingp);
-void thing_set_level(thingp, levelp level);
 uint32_t thing_score(thingp);
 void thing_set_score(thingp, uint32_t score);
 widp thing_message(thingp t, const char *message);
@@ -397,11 +392,6 @@ typedef struct thing_ {
      * Who created this thing? e.g. who cast a spell?
      */
     uint16_t owner_id;
-
-    /*
-     * Player current level or level of monster.
-     */
-    uint16_t level_no;
 
     /*
      * Scoring

@@ -31,7 +31,7 @@ uint8_t debug_socket_ping_enabled = 0;
 uint8_t debug_socket_connect_enabled = 0;
 uint8_t debug_socket_players_enabled = 0;
 
-uint8_t is_server;
+uint8_t on_server;
 uint8_t is_client;
 uint8_t is_headless;
 
@@ -2028,9 +2028,9 @@ void socket_tx_server_status (void)
     msg.server_current_players = global_config.server_current_players;
 
     if (server_level) {
-        msg.level_no = 0;
-    } else {
         msg.level_no = server_level->level_no;
+    } else {
+        msg.level_no = 0;
     }
 
     socketp s;

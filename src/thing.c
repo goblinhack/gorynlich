@@ -724,10 +724,6 @@ thingp thing_server_new (levelp level, const char *name,
         t->client_or_server_tree = server_active_things;
     }
 
-    if (level) {
-        thing_set_level(t, level);
-    }
-
     t->logname = dynprintf("%s[%p, id %u] (server)", thing_short_name(t), t,
                            t->thing_id);
     thing_update(t);
@@ -884,8 +880,6 @@ void thing_restarted (thingp t, levelp level)
 {
     verify(t);
 
-    thing_set_level(t, level);
-
     t->current_tile = 0;
 
     if (!thing_is_dead(t)) {
@@ -990,7 +984,7 @@ void thing_destroy (thingp t, const char *why)
         if (t->on_server) {
             p->thing = 0;
 
-            LOG("Server: \"%s\" player died", p->name);
+            LOG("Server: \"%s\" (ID %u) player died", p->name, p->key);
 
             char *tmp = dynprintf("%s died", p->name);
             socket_tx_server_shout(CRITICAL, tmp);
@@ -1608,18 +1602,13 @@ static void thing_effect_hit_miss (thingp t)
 
 void thing_reached_exit (thingp t)
 {
-    levelp level;
-
     verify(t);
-
-    level = thing_level(t);
-    verify(level);
 
     /*
      * First to the exit?
      */
-    if (!level_exit_reached_when_open(level)) {
-        level_set_exit_reached_when_open(level, true);
+    if (!level_exit_reached_when_open(server_level)) {
+        level_set_exit_reached_when_open(server_level, true);
 
         thing_set_got_to_exit_first(t, true);
 
@@ -1634,23 +1623,6 @@ void thing_reached_exit (thingp t)
     thing_set_wid(t, 0);
 
     sound_play_level_end();
-}
-
-void things_level_start (levelp level)
-{
-    thingp t;
-
-    {
-        TREE_WALK_UNSAFE(server_active_things, t) {
-            thing_set_level(t, level);
-        }
-    }
-
-    {
-        TREE_WALK_UNSAFE(server_boring_things, t) {
-            thing_set_level(t, level);
-        }
-    }
 }
 
 void things_level_destroyed (levelp level)
@@ -1722,34 +1694,6 @@ uint8_t thing_z_order (thingp t)
     verify(t);
 
     return (thing_template_get_z_order(t->thing_template));
-}
-
-uint32_t thing_level_no (thingp t)
-{
-    verify(t);
-
-    return (t->level_no);
-}
-
-void thing_set_level_no (thingp t, uint32_t level)
-{
-    verify(t);
-
-    t->level_no = level;
-}
-
-levelp thing_level (thingp t)
-{
-    verify(t);
-
-    return (t->level);
-}
-
-void thing_set_level (thingp t, levelp level)
-{
-    verify(t);
-
-    t->level = level;
 }
 
 uint32_t thing_score (thingp t)

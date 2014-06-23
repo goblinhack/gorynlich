@@ -439,7 +439,7 @@ int32_t map_jigsaw_test(int32_t argc, char **argv);
 /*
  * net.h
  */
-extern uint8_t is_server;
+extern uint8_t on_server;
 extern uint8_t is_client;
 extern uint8_t is_headless;
 

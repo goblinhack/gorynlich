@@ -61,33 +61,6 @@ static uint8_t level_command_lives (tokens_t *tokens, void *context)
     return (true);
 }
 
-static uint8_t level_command_play (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[1];
-
-    if (!s || (*s == '\0')) {
-        start_level = 1;
-    } else {
-        start_level = strtol(s, 0, 10);
-    }
-
-    CON("Start level set to %u", start_level);
-
-    if (player) {
-        levelp level = thing_level(player);
-
-        thing_set_level_no(player, start_level);
-
-        CON("Player level set to %u", start_level);
-
-        if (level) {
-            wid_hide(wid_console_window, 0);
-        }
-    }
-
-    return (true);
-}
-
 static uint8_t level_command_god_mode (tokens_t *tokens, void *context)
 {
     char *s = tokens->args[2];
@@ -112,9 +85,6 @@ uint8_t level_init (void)
     level_init_done = true;
 
     if (0) {
-        command_add(level_command_play, 
-                    "play [123456789]+", "TBD play level x");
-
         command_add(level_command_lives, 
                     "set lives [123456789]+", "TBD set player number of lives");
     }
@@ -133,7 +103,7 @@ static uint8_t level_server_init (void)
     command_add(level_command_dead, 
                 "dead", "internal command for thing suicide");
 
-    if (is_server) {
+    if (on_server) {
         command_add(level_command_god_mode, 
                     "set godmode [01]", "TBD enable/disable god mode");
     }
@@ -209,7 +179,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     return (true);
 }
 
-levelp level_new (widp map, uint32_t level_no, int is_editor, int is_server)
+levelp level_new (widp map, uint32_t level_no, int is_editor, int on_server)
 {
     levelp level;
 
@@ -219,13 +189,13 @@ levelp level_new (widp map, uint32_t level_no, int is_editor, int is_server)
     level_set_level_no(level, level_no);
     level_set_is_editor(level, is_editor);
 
-    if (is_server) {
+    if (on_server) {
         level->logname = dynprintf("%u[%p] (server)", level_no, level);
     } else {
         level->logname = dynprintf("%u[%p] (client)", level_no, level);
     }
 
-    level->is_server = is_server;
+    level->on_server = on_server;
 
     LEVEL_LOG(level, "created");
 
@@ -320,13 +290,13 @@ void level_update (levelp level)
 levelp level_load (uint32_t level_no, 
                    widp wid, 
                    int is_editor,
-                   int is_server)
+                   int on_server)
 {
     levelp level;
 
     srand(level_no);
 
-    level = level_new(wid, level_no, is_editor, is_server);
+    level = level_new(wid, level_no, is_editor, on_server);
 
     level_set_is_paused(level, true);
     level_set_timestamp_started(level, time_get_time_cached());

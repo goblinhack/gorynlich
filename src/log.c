@@ -426,7 +426,13 @@ static void thing_shout_at_ (thingp t,
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
-    snprintf(buf + len, sizeof(buf) - len, "Thing %s: ", thing_logname(t));
+    if (t->on_server) {
+        snprintf(buf + len, sizeof(buf) - len, "Server: Thing %s: ", 
+                 thing_logname(t));
+    } else {
+        snprintf(buf + len, sizeof(buf) - len, "Client: Thing %s: ", 
+                 thing_logname(t));
+    }
 
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
@@ -467,7 +473,13 @@ static void thing_log_ (thingp t, const char *fmt, va_list args)
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
-    snprintf(buf + len, sizeof(buf) - len, "Thing %s: ", thing_logname(t));
+    if (t->on_server) {
+        snprintf(buf + len, sizeof(buf) - len, "Server: Thing %s: ", 
+                 thing_logname(t));
+    } else {
+        snprintf(buf + len, sizeof(buf) - len, "Client: Thing %s: ", 
+                 thing_logname(t));
+    }
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
@@ -509,7 +521,14 @@ static void level_log_ (levelp l, const char *fmt, va_list args)
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
-    snprintf(buf + len, sizeof(buf) - len, "Level %s: ", level_get_logname(l));
+
+    if (l->on_server) {
+        snprintf(buf + len, sizeof(buf) - len, "Server: Level %s: ", 
+                 level_get_logname(l));
+    } else {
+        snprintf(buf + len, sizeof(buf) - len, "Client: Level %s: ", 
+                 level_get_logname(l));
+    }
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
