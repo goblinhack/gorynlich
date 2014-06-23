@@ -601,7 +601,7 @@ void wid_game_map_client_wid_create (void)
     client_level = level_new(wid_game_map_client_grid_container, 
                              0, 
                              false /* is_editor */,
-                             false /* is_server */);
+                             false /* on_server */);
 
     LOG("Client: Created level");
 

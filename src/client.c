@@ -112,7 +112,7 @@ uint8_t client_init (void)
 
     client_init_done = true;
 
-    if (!is_server) {
+    if (!on_server) {
         if (!wid_server_join_init()) {
             DIE("wid server join init");
         }
@@ -456,9 +456,6 @@ uint8_t client_socket_leave (void)
     }
 
     verify(client_joined_server);
-
-    LOG("Client: Leaving %s", 
-        socket_get_remote_logname(client_joined_server));
 
     socket_tx_client_leave(client_joined_server);
 
@@ -813,8 +810,11 @@ static void client_poll (void)
                     redo = true;
                 }
 
-                if (server_status.level_no != latest_status.level_no) {
+                if (client_level) {
                     level_set_level_no(client_level, latest_status.level_no);
+                }
+
+                if (server_status.level_no != latest_status.level_no) {
 
                     LOG("Client: Level no %u", latest_status.level_no);
                     redo = true;

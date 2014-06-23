@@ -82,7 +82,7 @@ void quit (void)
 
     wid_server_save_remote_server_list();
 
-    if (is_server) {
+    if (on_server) {
         hiscore_save();
     }
 
@@ -435,7 +435,7 @@ static void parse_args (int32_t argc, char *argv[])
 
     LOG("Hello");
 
-    is_server = false;
+    on_server = false;
     is_client = true;
 
     /*
@@ -449,7 +449,7 @@ static void parse_args (int32_t argc, char *argv[])
             !strcmp(argv[i], "-server") ||
             !strcmp(argv[i], "-s")) {
 
-            is_server = true;
+            on_server = true;
             is_client = false;
             is_headless = true;
             LOG_STDOUT = fopen("stdout.server.txt", "w+");
