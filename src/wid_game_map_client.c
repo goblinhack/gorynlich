@@ -599,7 +599,9 @@ void wid_game_map_client_wid_create (void)
     }
 
     client_level = level_new(wid_game_map_client_grid_container, 
-                             0, false /* is_editor */);
+                             0, 
+                             false /* is_editor */,
+                             false /* is_server */);
 
     LOG("Client: Created level");
 
@@ -1210,8 +1212,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     /*
      * Print the level.
      */
-    {
-        char *tmp = dynprintf("Level %u", thing_level_no(player));
+    if (client_level) {
+        char *tmp = dynprintf("Level %u", level_get_level_no(client_level));
         widp wid_level_container;
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,
