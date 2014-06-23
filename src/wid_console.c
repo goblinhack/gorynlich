@@ -86,7 +86,7 @@ uint8_t wid_console_init (void)
  */
 void wid_console_hello (void)
 {
-    if (!is_server) {
+    if (!on_server) {
         return;
     }
 

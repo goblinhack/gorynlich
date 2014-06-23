@@ -485,7 +485,8 @@ void hiscore_try_to_add (const char *player_name,
         return;
     }
 
-    char *place_str = dynprintf("New Hi Score, %s place!", which[count]);
+    char *place_str = dynprintf("Server: New Hiscore, %s place!", 
+                                which[count]);
     LOG("%s", place_str);
     myfree(place_str);
 

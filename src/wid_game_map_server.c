@@ -55,7 +55,7 @@ void wid_game_map_server_hide (void)
 
 void wid_game_map_server_visible (void)
 {
-    is_server = true;
+    on_server = true;
 
     server_start(server_address);
 
@@ -176,8 +176,6 @@ void wid_game_map_server_wid_create (void)
     wid_editor_map_loading = false;
 
     level_update_now(server_level);
-
-    things_level_start(server_level);
 }
 
 void wid_game_map_server_wid_destroy (void)
