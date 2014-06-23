@@ -209,7 +209,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     return (true);
 }
 
-levelp level_new (widp map, uint32_t level_no, int is_editor)
+levelp level_new (widp map, uint32_t level_no, int is_editor, int is_server)
 {
     levelp level;
 
@@ -219,7 +219,13 @@ levelp level_new (widp map, uint32_t level_no, int is_editor)
     level_set_level_no(level, level_no);
     level_set_is_editor(level, is_editor);
 
-    level->logname = dynprintf("%u[%p]", level_no, level);
+    if (is_server) {
+        level->logname = dynprintf("%u[%p] (server)", level_no, level);
+    } else {
+        level->logname = dynprintf("%u[%p] (client)", level_no, level);
+    }
+
+    level->is_server = is_server;
 
     LEVEL_LOG(level, "created");
 
@@ -311,13 +317,16 @@ void level_update (levelp level)
     level->need_map_update = 1;
 }
 
-levelp level_load (uint32_t level_no, widp wid, int is_editor)
+levelp level_load (uint32_t level_no, 
+                   widp wid, 
+                   int is_editor,
+                   int is_server)
 {
     levelp level;
 
     srand(level_no);
 
-    level = level_new(wid, level_no, is_editor);
+    level = level_new(wid, level_no, is_editor, is_server);
 
     level_set_is_paused(level, true);
     level_set_timestamp_started(level, time_get_time_cached());

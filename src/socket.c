@@ -2027,6 +2027,12 @@ void socket_tx_server_status (void)
     msg.server_max_players = global_config.server_max_players;
     msg.server_current_players = global_config.server_current_players;
 
+    if (server_level) {
+        msg.level_no = 0;
+    } else {
+        msg.level_no = server_level->level_no;
+    }
+
     socketp s;
     uint32_t si = 0;
 
@@ -2167,6 +2173,8 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
     status->server_max_players = msg->server_max_players;
     status->server_current_players = msg->server_current_players;
+    status->level_no = msg->level_no;
+
     memcpy(status->server_name, msg->server_name, sizeof(status->server_name));
 
     memcpy(&s->server_status, status, sizeof(s->server_status));

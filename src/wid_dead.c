@@ -71,7 +71,7 @@ static void wid_dead_destroy (void)
 
 static void wid_dead_ (void)
 {
-    LOG("Gravestone raised, player quit");
+    LOG("Client: Gravestone raised, player quit");
 
     client_socket_leave();
 
