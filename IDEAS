@@ -7,6 +7,7 @@ exit level
 game end
 boss baddy
 intro guide pics
+if sword hits through a wall or door it should get damaged.
 level ed, fill with potion failed
 level ed, first select of a thing does not choose it
 

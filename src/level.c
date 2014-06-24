@@ -241,7 +241,7 @@ void level_destroy (levelp *plevel)
      */
     things_level_destroyed(level);
 
-    LEVEL_LOG(level, "destroy now {");
+    LEVEL_LOG(level, "destroy");
 
     if (level->title) {
         myfree((void*) level->title);
@@ -253,13 +253,11 @@ void level_destroy (levelp *plevel)
 
     action_timers_destroy(&timers);
 
-    LEVEL_LOG(level, "} destroy finished");
+    LEVEL_LOG(level, "destroyed");
 
     if (level->logname) {
         myfree((void*) level->logname);
     }
-
-    wid_game_map_server_wid_destroy();
 
     myfree(level);
 }
@@ -307,7 +305,7 @@ levelp level_load (uint32_t level_no,
 
     demarshal_p in;
 
-    LOG("Level %s: loading", dir_and_file);
+    LEVEL_LOG(level, "Level %s: loading", dir_and_file);
 
     if (!(in = demarshal(dir_and_file))) {
         /*
@@ -351,7 +349,7 @@ levelp level_load (uint32_t level_no,
 
     level_server_init();
 
-    LOG("Level loaded");
+    LEVEL_LOG(level, "Level loaded");
 
     return (level);
 }

@@ -563,7 +563,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
         /*
          * We're hosed.
          */
-        ERR("Server: out of map slots trying to add %s", t->logname);
+        ERR("Server: Out of map slots trying to add %s", t->logname);
 
         for (i = 0; i < cell->count; i++) {
             uint16_t m = cell->id[i];
@@ -987,7 +987,7 @@ void thing_destroy (thingp t, const char *why)
             LOG("Server: \"%s\" (ID %u) player died", p->name, p->key);
 
             char *tmp = dynprintf("%s died", p->name);
-            socket_tx_server_shout(CRITICAL, tmp);
+            socket_tx_server_shout_except_to(CRITICAL, tmp, p->socket);
             myfree(tmp);
 
             break;
@@ -1020,6 +1020,9 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
      * Detach from the owner
      */
     if (t->on_server) {
+        /*
+         * We are owned by something. i.e. we are a sword.
+         */
         if (t->owner_id) {
             thingp owner = thing_server_ids[t->owner_id];
 
@@ -1032,11 +1035,15 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
             }
         }
 
+        /*
+         * We own things like a sword. i.e. we are a player.
+         */
         if (t->weapon_carry_anim_id) {
             thingp item = thing_server_ids[t->weapon_carry_anim_id];
             t->weapon_carry_anim_id = 0;
             verify(item);
             item->owner_id = 0;
+            thing_dead(item, 0, "weapon carry anim owner killed");
         }
 
         if (t->weapon_swing_anim_id) {
@@ -1044,6 +1051,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
             t->weapon_swing_anim_id = 0;
             verify(item);
             item->owner_id = 0;
+            thing_dead(item, 0, "weapon swing anim owner killed");
         }
     }
 
@@ -1054,7 +1062,17 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     if (thing_is_player(t)) {
         THING_LOG(t, "dead (%s)", reason);
 
+        /*
+         * We have the gravestone now, I don't think we need this.
+         *
         THING_SHOUT_AT(t, CRITICAL, "Killed by %s", reason);
+         */
+        aplayer *p = t->player;
+        if (p) {
+            char *tmp = dynprintf("%s killed by %s", p->name, reason);
+            socket_tx_server_shout_except_to(CRITICAL, tmp, p->socket);
+            myfree(tmp);
+        }
 
         /*
          * Tell the poor player they've croaked it.
@@ -1063,9 +1081,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
             if (!t->player) {
                 ERR("no player socket to send hiscores too");
             } else if (t->player->socket) {
-                hiscore_try_to_add(t->player->name,
-                                reason,
-                                t->score);
+                hiscore_try_to_add(t->player->name, reason, t->score);
 
                 socket_tx_server_hiscore(t->player->socket, 
                                          t->player->name,
@@ -1333,7 +1349,7 @@ static void thing_hit_ (thingp t,
             t->health -= damage;
 
             if (thing_is_player(t)) {
-                THING_LOG(t, "hit (%s) for %u", reason, damage);
+                THING_LOG(t, "hit by (%s) for %u", reason, damage);
             }
 
             damage = 0;
