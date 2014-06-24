@@ -55,6 +55,15 @@ uint8_t thing_mob_spawn (thingp t)
         }
 
         /*
+         * Round down so mob spawners on an in between position will not
+         * get mixed up. This can happen when we place a mob spawner where
+         * a player died, overlapping a wall and we then try to spawn into
+         * a cell we cannot move in.
+         */
+        x = floor(x);
+        y = floor(y);
+
+        /*
          * Things not to spawn onto.
          */
         if (map_is_wall_at(server_level, x, y)          ||
