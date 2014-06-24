@@ -7184,15 +7184,27 @@ static void wid_display (widp w,
     color col = wid_get_color(w, WID_COLOR_BG);
     color col_tile = wid_get_color(w, WID_COLOR_BLIT);
 
+    /*
+     * This fades out other widgets in the background when a popup appears.
+     */
     if (wid_focus_locked) {
         if (wid_get_top_parent(w) != wid_focus_locked) {
-            double fade = 0.6;
+            double fade = 0.8;
 
-            if (col.r && col.g && col.b) {
-                col_tl.a *= fade;
-                col.a *= fade;
-                col_br.a *= fade;
-            }
+            /*
+             * Darken the colours.
+             */
+            col_tl.r *= fade;
+            col_tl.g *= fade;
+            col_tl.b *= fade;
+
+            col_br.r *= fade;
+            col_br.g *= fade;
+            col_br.b *= fade;
+
+            col.r *= fade;
+            col.g *= fade;
+            col.b *= fade;
 
             col_text.a *= fade;
             col_text_outline.a *= fade;

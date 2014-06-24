@@ -134,6 +134,11 @@ void client_fini (void)
             socket_tx_client_close(client_joined_server);
         }
     }
+
+    if (last_host) {
+        myfree(last_host);
+        last_host = 0;
+    }
 }
 
 static void client_alive_check (void)
@@ -330,7 +335,7 @@ static uint8_t client_socket_close (char *host, char *port)
         client_socket_leave();
     }
 
-    LOG("Client: disconnecting %s", socket_get_remote_logname(s));
+    LOG("Client: Disconnecting %s", socket_get_remote_logname(s));
 
     socket_tx_client_close(s);
 
@@ -836,10 +841,9 @@ static void client_poll (void)
 
                 socket_rx_server_hiscore(s, packet, data, &latest_hiscores);
 
-LOG("XXX");
                 wid_dead_visible(latest_hiscores.players[0].player_name,
                                  latest_hiscores.players[0].death_reason,
-                                 1 || latest_hiscores.rejoin_allowed);
+                                 latest_hiscores.rejoin_allowed);
 
                 break;
             }
@@ -961,7 +965,7 @@ static void client_check_still_in_game (void)
             }
 
             if (!wid_game_map_client_window) {
-                ERR("Client: no game map window");
+                ERR("Client: No game map window");
                 continue;
 
             }

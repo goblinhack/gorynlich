@@ -42,9 +42,9 @@ void wid_game_map_server_fini (void)
 
 void wid_game_map_server_hide (void)
 {
-    LOG("Server: destroy map");
-
     if (wid_game_map_server_window) {
+        LOG("Server: Hide map");
+
         wid_hide(wid_game_map_server_window, wid_swipe_delay);
 
         wid_detach_from_grid(wid_game_map_server_grid_container);
@@ -60,7 +60,7 @@ void wid_game_map_server_visible (void)
     server_start(server_address);
 
     if (!wid_game_map_server_window) {
-        LOG("Server: create new map");
+        LOG("Server: Create new map");
 
         wid_game_map_server_wid_create();
     }
@@ -180,13 +180,17 @@ void wid_game_map_server_wid_create (void)
 
 void wid_game_map_server_wid_destroy (void)
 {
-    FINI_LOG("Destroy game map");
+    LOG("Server: Destroy game map");
 
     if (server_level) {
+        LOG("Server: Destroy game level");
+
         level_destroy(&server_level);
     }
 
     if (wid_game_map_server_window) {
+        wid_game_map_server_hide();
+
         wid_destroy(&wid_game_map_server_window);
     }
 }

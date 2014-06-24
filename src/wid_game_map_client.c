@@ -72,6 +72,8 @@ void wid_game_map_client_fini (void)
 void wid_game_map_client_hide (void)
 {
     if (wid_game_map_client_window) {
+        LOG("Client: Map hide");
+
         wid_hide(wid_game_map_client_window, 0);
 
         wid_detach_from_grid(wid_game_map_client_grid_container);
@@ -79,8 +81,6 @@ void wid_game_map_client_hide (void)
         wid_destroy_grid(wid_game_map_client_grid_container);
 
         wid_destroy(&wid_game_map_client_grid_container);
-
-        LOG("Client: Destroyed map container");
     }
 
     wid_intro_visible();
@@ -631,10 +631,10 @@ void wid_game_map_client_wid_create (void)
 
 void wid_game_map_client_wid_destroy (void)
 {
-    FINI_LOG("Destroy game map");
+    LOG("Client: Destroy game map");
 
     if (client_level) {
-        FINI_LOG("Destroy game level");
+        LOG("Client: Destroy game level");
 
         level_destroy(&client_level);
     }
