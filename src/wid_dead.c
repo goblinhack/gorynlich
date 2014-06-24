@@ -18,10 +18,12 @@
 #include "client.h"
 #include "wid_game_map_client.h"
 #include "wid_intro.h"
+#include "player.h"
 
 static widp wid_gravestone;
 static widp wid_click_to_continue;
 static widp wid_rejoin_game_yes_no;
+static widp wid_replay_game_yes_no;
 
 static uint8_t wid_dead_init_done;
 static void wid_dead_create(const char *name, 
@@ -67,6 +69,7 @@ static void wid_dead_destroy (void)
     wid_destroy(&wid_gravestone);
     wid_destroy(&wid_click_to_continue);
     wid_destroy(&wid_rejoin_game_yes_no);
+    wid_destroy(&wid_replay_game_yes_no);
 }
 
 static void wid_dead_ (void)
@@ -80,14 +83,6 @@ static void wid_dead_ (void)
     wid_game_map_client_wid_destroy();
 
     wid_dead_destroy();
-}
-
-static uint8_t wid_dead_quit_mouse_event (widp w, int32_t x, int32_t y,
-                                          uint32_t button)
-{
-    wid_dead_();
-
-    return (true);
 }
 
 static void wid_dead_rejoin_callback_yes (widp wid)
@@ -104,6 +99,24 @@ static void wid_dead_rejoin_callback_yes (widp wid)
 static void wid_dead_rejoin_callback_no (widp wid)
 {
     wid_destroy(&wid_rejoin_game_yes_no);
+
+    wid_dead_();
+}
+
+static void wid_dead_replay_callback_yes (widp wid)
+{
+    wid_destroy(&wid_replay_game_yes_no);
+
+    wid_dead_();
+
+    client_socket_join(0, 0, 0, true /* quiet */);
+
+    wid_game_map_client_visible();
+}
+
+static void wid_dead_replay_callback_no (widp wid)
+{
+    wid_destroy(&wid_replay_game_yes_no);
 
     wid_dead_();
 }
@@ -129,38 +142,16 @@ static void wid_dead_gravestone_appeared (void *context)
                       "No", wid_dead_rejoin_callback_no);
 
     } else {
-        widp w = wid_click_to_continue = wid_new_window("quit");
-        wid_set_font(w, med_font);
-        wid_set_no_shape(w);
-
-        fpoint tl = {0.0f, 0.00f};
-        fpoint br = {1.0f, 1.00f};
-
-        wid_set_tl_br_pct(w, tl, br);
-        wid_set_text(w, "Click to continue");
-        wid_fade_in_out(w, 1000, 1000, false /* fade out first */);
-
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(w, WID_COLOR_TEXT, c);
-
-        wid_set_mode(w, WID_MODE_OVER);
-        c.a = 200;
-        wid_set_color(w, WID_COLOR_TEXT, c);
-
-        wid_set_mode(w, WID_MODE_FOCUS);
-        c.a = 100;
-        wid_set_color(w, WID_COLOR_TEXT, c);
-        wid_set_text_outline(w, true);
-        wid_set_text_centerx(w, true);
-        wid_set_text_centery(w, true);
-
-        wid_set_on_mouse_down(w, wid_dead_quit_mouse_event);
-
-        wid_raise(w);
-        wid_update(w);
-        wid_set_focus(w);
+        wid_replay_game_yes_no =
+            wid_popup("%%fg=red$Replay?",
+                      0                 /* title */,
+                      0.5f, 0.5f,       /* x,y postition in percent */
+                      large_font,       /* title font */
+                      large_font,       /* body font */
+                      large_font,       /* button font */
+                      2,                /* number buttons */
+                      "Yes", wid_dead_replay_callback_yes,
+                      "No", wid_dead_replay_callback_no);
     }
 }
 
@@ -172,7 +163,12 @@ static void wid_dead_create (const char *name,
         return;
     }
 
-    LOG("Client: Player died, raise gravestone");
+    if (player && player->player) {
+        LOG("Client: Player \"%s\" (Id %u) died, raise gravestone",
+            player->player->name, player->player->key);
+    } else {
+        LOG("Client: Player died, raise gravestone");
+    }
 
     widp w = wid_gravestone = wid_new_window("dead");
     fpoint tl = { 0.0, 0.3 };

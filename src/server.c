@@ -50,7 +50,7 @@ uint8_t server_start (IPaddress address)
         return (false);
     }
 
-    LOG("Server: listening on %s", socket_get_local_logname(s));
+    LOG("Server: Listening on %s", socket_get_local_logname(s));
 
     server_socket = s;
 
@@ -146,7 +146,7 @@ static void server_rx_client_join (socketp s)
     socket_tx_server_shout_except_to(WARNING, tmp, s);
     myfree(tmp);
 
-    LOG("Server: total players now %u", global_config.server_current_players);
+    LOG("Server: Total players now %u", global_config.server_current_players);
 
     socket_server_tx_map_update(s, server_active_things);
     socket_server_tx_map_update(s, server_boring_things);
@@ -164,7 +164,12 @@ static void server_rx_client_leave_implicit (socketp s)
     global_config.server_current_players--;
 
     if (!global_config.server_current_players) {
+        LOG("Server: Last player left the game, destroy the map");
+
         wid_game_map_server_wid_destroy();
+    } else {
+        LOG("Server: %u player(s) left, do not destroy the map",
+            global_config.server_current_players);
     }
 
     socket_set_player(s, 0);
@@ -249,7 +254,7 @@ static void server_poll (void)
         socketp s = socket_find_remote_ip(read_address(packet));
         if (!s) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Server: new client from %s", tmp);
+            LOG("Server: New client from %s", tmp);
             myfree(tmp);
 
             s = socket_connect_from_server(read_address(packet));
