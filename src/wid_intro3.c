@@ -119,6 +119,8 @@ static void wid_intro3_play_selected_cb (void *context)
 
     wid_game_map_server_visible();
     wid_game_map_client_visible();
+
+    wid_intro_hide();
 }
 
 static void wid_intro3_multi_play_selected_cb (void *context)

@@ -223,19 +223,6 @@ void level_destroy (levelp *plevel)
         sleep(1);
     }
 
-    *plevel = 0;
-
-    /*
-     * Ensure no stale pointers.
-     */
-    if (level == client_level) {
-        client_level = 0;
-    }
-
-    if (level == server_level) {
-        server_level = 0;
-    }
-
     /*
      * Kill all humans!
      */
@@ -258,6 +245,19 @@ void level_destroy (levelp *plevel)
     if (level->logname) {
         myfree((void*) level->logname);
     }
+
+    /*
+     * Ensure no stale pointers.
+     */
+    if (level == client_level) {
+        client_level = 0;
+    }
+
+    if (level == server_level) {
+        server_level = 0;
+    }
+
+    *plevel = 0;
 
     myfree(level);
 }

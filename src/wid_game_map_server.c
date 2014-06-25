@@ -87,6 +87,7 @@ void wid_game_map_server_wid_create (void)
 
         wid_game_map_server_window = 
                         wid_new_square_window("wid_game_map_server");
+        wid_always_hidden(wid_game_map_server_window, true);
         wid_set_movable(wid_game_map_server_window, false);
         wid_set_do_not_raise(wid_game_map_server_window, true);
 
@@ -116,6 +117,7 @@ void wid_game_map_server_wid_create (void)
                         wid_new_container(wid_game_map_server_window,
                                           "wid game grid container");
 
+        wid_always_hidden(wid_game_map_server_grid_container, true);
         wid_set_color(wid_game_map_server_grid_container, WID_COLOR_TL, BLACK);
         wid_set_color(wid_game_map_server_grid_container, WID_COLOR_BG, BLACK);
         wid_set_color(wid_game_map_server_grid_container, WID_COLOR_BR, BLACK);

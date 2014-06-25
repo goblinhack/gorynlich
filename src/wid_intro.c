@@ -83,6 +83,8 @@ void wid_intro_hide (void)
         return;
     }
 
+    LOG("Client: Intro screen hide");
+
     wid_intro_is_hidden = true;
     wid_intro_is_visible = false;
 
@@ -106,6 +108,8 @@ void wid_intro_visible (void)
     if (wid_intro_is_visible) {
         return;
     }
+
+    LOG("Client: Intro screen show");
 
     wid_intro_is_visible = true;
     wid_intro_is_hidden = false;
@@ -189,6 +193,8 @@ static void wid_intro_single_play_selected_cb (void *context)
 
     wid_game_map_server_visible();
     wid_game_map_client_visible();
+
+    wid_intro_hide();
 }
 
 static void wid_intro_single_play_selected (void)

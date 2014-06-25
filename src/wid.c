@@ -303,6 +303,7 @@ typedef struct wid_ {
     uint8_t tex_tl_set:1;
     uint8_t tex_br_set:1;
     uint8_t hidden:1;
+    uint8_t always_hidden:1;
     uint8_t visible:1;
     uint8_t received_input:1;
     uint8_t movable:1;
@@ -4914,6 +4915,13 @@ widp wid_find (widp w, const char *name)
     return (0);
 }
 
+void wid_always_hidden (widp w, uint8_t value)
+{
+    fast_verify(w);
+
+    w->always_hidden = value;
+}
+
 void wid_visible (widp w, uint32_t delay)
 {
     fast_verify(w);
@@ -7088,6 +7096,7 @@ static void wid_display (widp w,
     int32_t clip_width;
     uint8_t fading;
     uint8_t hidden;
+    uint8_t always_hidden;
     int32_t owidth;
     uint8_t scaling;
     int32_t oheight;
@@ -7127,9 +7136,15 @@ static void wid_display (widp w,
 
     fading = wid_is_fading(w);
     hidden = wid_is_hidden(w);
+    always_hidden = wid_is_always_hidden(w);
     scaling = wid_is_scaling(w);
 
-    if (fading) {
+    if (always_hidden) {
+        /*
+         * Always render. Not hidden yet.
+         */
+        return;
+    } else if (fading) {
         /*
          * Always render. Not hidden yet.
          */
@@ -7701,6 +7716,17 @@ uint8_t wid_is_hidden (widp w)
         if (w->hidden) {
             return (true);
         }
+    }
+
+    return (false);
+}
+
+uint8_t wid_is_always_hidden (widp w)
+{
+    fast_verify(w);
+
+    if (w->always_hidden) {
+        return (true);
     }
 
     return (false);

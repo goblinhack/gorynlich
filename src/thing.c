@@ -1645,28 +1645,39 @@ void things_level_destroyed (levelp level)
 {
     thingp t;
 
-    {
-        TREE_WALK(server_active_things, t) {
-            thing_destroy(t, "level destroyed");
+    /*
+     * Ensure no stale pointers.
+     */
+    if (level == server_level) {
+        {
+            TREE_WALK(server_active_things, t) {
+                thing_destroy(t, "level destroyed");
+            }
         }
+
+        {
+            TREE_WALK(server_boring_things, t) {
+                thing_destroy(t, "level destroyed");
+            }
+        }
+
+        LOG("Server: destroyed things");
     }
 
-    {
-        TREE_WALK(server_boring_things, t) {
-            thing_destroy(t, "level destroyed");
+    if (level == client_level) {
+        {
+            TREE_WALK(client_active_things, t) {
+                thing_destroy(t, "level destroyed");
+            }
         }
-    }
 
-    {
-        TREE_WALK(client_active_things, t) {
-            thing_destroy(t, "level destroyed");
+        {
+            TREE_WALK(client_boring_things, t) {
+                thing_destroy(t, "level destroyed");
+            }
         }
-    }
 
-    {
-        TREE_WALK(client_boring_things, t) {
-            thing_destroy(t, "level destroyed");
-        }
+        LOG("Client: destroyed things");
     }
 }
 
@@ -1819,10 +1830,6 @@ void thing_set_wid (thingp t, widp w)
     }
 
     t->wid = w;
-
-    if (w) {
-        THING_DBG(t, "set wid %p/%s", w, wid_logname(w));
-    }
 }
 
 void thing_inc_powerup_spam_count (thingp t, uint8_t val)
@@ -2672,6 +2679,7 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 
 void socket_server_tx_map_update (socketp p, tree_rootp tree)
 {
+//LOG("tx update");
     /*
      * If no players, then send nothing.
      */
@@ -2715,7 +2723,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
 
         thing_templatep thing_template = t->thing_template;
 
-//CON("tx %s",thing_logname(t));
         /*
          * As an optimization do not send dead events for explosions. Let the
          * client destroy those on its own to save sending loads of events.
@@ -2776,6 +2783,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         uint8_t tx;
         uint8_t ty;
 
+//LOG("tx %s",thing_logname(t));
         widp w = thing_wid(t);
         if (w) {
             tx = (uint8_t)(int)((t->x * ((double)256)) / MAP_WIDTH);
@@ -3040,7 +3048,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                  * to rebuild the thing without a resend. Need a way to ask
                  * for a resync.
                  */
-                ERR("received unknown thing %u, need resync", id);
+                ERR("Client: received unknown thing %u, need resync", id);
                 continue;
             }
 
