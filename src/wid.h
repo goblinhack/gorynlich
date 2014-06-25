@@ -91,6 +91,7 @@ void wid_lower(widp);
 void wid_hide(widp, uint32_t delay);
 void wid_visible(widp, uint32_t delay);
 void wid_toggle_hidden(widp, uint32_t delay);
+void wid_always_hidden(widp, uint8_t value);
 
 /*
  * Location
@@ -366,6 +367,7 @@ void wid_move_resume(widp w);
 uint8_t wid_is_hidden(widp w);
 uint8_t wid_is_scaling(widp w);
 uint8_t wid_is_fading(widp w);
+uint8_t wid_is_always_hidden(widp w);
 void wid_get_grid_coord(widp w, int32_t *x, int32_t *y,
                         uint8_t *aligned_x,
                         uint8_t *aligned_y);

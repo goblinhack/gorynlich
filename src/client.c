@@ -361,6 +361,9 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
     }
 
     if (host) {
+        if (last_host) {
+            myfree(last_host);
+        }
         last_host = dupstr(host, "last host");;
     }
 

@@ -94,6 +94,8 @@ static void wid_dead_rejoin_callback_yes (widp wid)
     client_socket_join(0, 0, 0, true /* quiet */);
 
     wid_game_map_client_visible();
+
+    wid_intro_hide();
 }
 
 static void wid_dead_rejoin_callback_no (widp wid)
@@ -101,6 +103,8 @@ static void wid_dead_rejoin_callback_no (widp wid)
     wid_destroy(&wid_rejoin_game_yes_no);
 
     wid_dead_();
+
+    wid_intro_visible();
 }
 
 static void wid_dead_replay_callback_yes (widp wid)
@@ -112,6 +116,8 @@ static void wid_dead_replay_callback_yes (widp wid)
     client_socket_join(0, 0, 0, true /* quiet */);
 
     wid_game_map_client_visible();
+
+    wid_intro_hide();
 }
 
 static void wid_dead_replay_callback_no (widp wid)
@@ -119,6 +125,8 @@ static void wid_dead_replay_callback_no (widp wid)
     wid_destroy(&wid_replay_game_yes_no);
 
     wid_dead_();
+
+    wid_intro_visible();
 }
 
 static uint8_t is_rejoin_allowed;
