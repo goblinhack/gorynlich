@@ -82,8 +82,6 @@ void wid_game_map_client_hide (void)
 
         wid_destroy(&wid_game_map_client_grid_container);
     }
-
-    wid_intro_visible();
 }
 
 static void wid_game_map_client_start_cb (void *context)
@@ -124,7 +122,6 @@ void wid_game_map_client_visible (void)
     }
 
     wid_game_map_client_wid_create();
-    wid_intro_hide();
 }
 
 static uint8_t wid_game_map_client_receive_mouse_motion (
