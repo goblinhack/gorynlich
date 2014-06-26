@@ -208,7 +208,6 @@ void CON(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 enum {
     CHAT,
     INFO,
-    GENINFO,
     WARNING,
     CRITICAL
 };

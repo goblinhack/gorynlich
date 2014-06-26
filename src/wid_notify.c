@@ -100,14 +100,10 @@ wid_notify_internal (const char *text, uint32_t level)
             bg = BLUE;
             fg = WHITE;
             break;
-        case GENINFO:
+        case INFO:
             bg = BLUE;
             bg.a = 100;
             fg = YELLOW;
-            break;
-        case INFO:
-            bg = WHITE;
-            bg.a = 20;
             break;
         case WARNING:
             bg = ORANGE;
