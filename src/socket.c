@@ -1371,10 +1371,19 @@ uint8_t socket_tx_client_join (socketp s, uint32_t *key)
         return (false);
     }
 
+    /*
+     * Complain if it takes too long to connect and looks like an issue.
+     */
+    static int failed = 0;
+
     if (!s->connected) {
-        WARN("Server is not present, cannot join yet. Retrying...");
+        if (failed++ > 10) {
+            WARN("Server is not present, cannot join yet. Retrying...");
+        }
         return (false);
     }
+
+    failed = 0;
 
     UDPpacket *packet = socket_alloc_msg();
 
