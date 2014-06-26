@@ -19,6 +19,7 @@
 #include "wid_game_map_client.h"
 #include "wid_intro.h"
 #include "player.h"
+#include "string.h"
 
 static widp wid_gravestone;
 static widp wid_click_to_continue;
@@ -72,60 +73,47 @@ static void wid_dead_destroy (void)
     wid_destroy(&wid_replay_game_yes_no);
 }
 
-static void wid_dead_ (void)
+static void wid_dead_disconnect_with_server (void)
 {
-    LOG("Client: Gravestone raised, player quit");
+    LOG("Client: Disconnect with server");
 
-    client_socket_leave();
-
+    client_socket_close(0, 0);
     wid_game_map_client_hide();
-
     wid_game_map_client_wid_destroy();
-
     wid_dead_destroy();
 }
 
 static void wid_dead_rejoin_callback_yes (widp wid)
 {
+    LOG("Client: Rejoin, yes");
     wid_destroy(&wid_rejoin_game_yes_no);
-
-    wid_dead_();
-
+    wid_dead_disconnect_with_server();
     client_socket_join(0, 0, 0, true /* quiet */);
-
     wid_game_map_client_visible();
-
-    wid_intro_hide();
 }
 
 static void wid_dead_rejoin_callback_no (widp wid)
 {
+    LOG("Client: Rejoin, no");
     wid_destroy(&wid_rejoin_game_yes_no);
-
-    wid_dead_();
-
+    wid_dead_disconnect_with_server();
     wid_intro_visible();
 }
 
 static void wid_dead_replay_callback_yes (widp wid)
 {
+    LOG("Client: Replay, yes");
     wid_destroy(&wid_replay_game_yes_no);
-
-    wid_dead_();
-
+    wid_dead_disconnect_with_server();
     client_socket_join(0, 0, 0, true /* quiet */);
-
     wid_game_map_client_visible();
-
-    wid_intro_hide();
 }
 
 static void wid_dead_replay_callback_no (widp wid)
 {
+    LOG("Client: Replay, no");
     wid_destroy(&wid_replay_game_yes_no);
-
-    wid_dead_();
-
+    wid_dead_disconnect_with_server();
     wid_intro_visible();
 }
 
@@ -135,31 +123,79 @@ static void wid_dead_gravestone_appeared (void *context)
 {
     LOG("Client: Gravestone raised");
 
+    static const char *messages[] = {
+        "You bit the dust",
+        "You snuffed it",
+        "You croaked it",
+        "You left the mortal coil",
+        "You died horribly",
+        "You find yourself sadly departed",
+        "You seem to be suddenly expired",
+        "Hmm you seem to be dead",
+        "You passed on",
+        "You are in a better place",
+        "You are at rest, sort of",
+        "You bought the farm",
+        "You checked out",
+        "You slipped away",
+        "You kicked the bucket",
+        "You are pushing up daisies",
+        "You gave up the ghost",
+        "You had your final summons",
+        "You have gone to a better place",
+        "You paid the piper",
+        "You reached your final destination",
+        "You number was up",
+        "You bade farewell to life",
+        "You crossed the great divide",
+        "You went to the spirit in the sky",
+        "You went to the ranch in the sky",
+        "You went to the restaurant at the end of the universe",
+        "You came to a sticky end",
+        "You popped your clogs",
+        "You went off to make your maker",
+        "You joined the choir invisible",
+        "Your god told you to slow down",
+        "You are six feet under",
+        "You are  off to the happy hunting ground",
+        "You fell off the perch",
+        "You are as lifeless as a norweigian blue",
+        "Goodbye cruel world",
+    };
+
     wid_notify_flush();
 
     if (is_rejoin_allowed) {
+        char *message = dynprintf("%s\n%%%%fg=red$Rejoin game?",
+                messages[rand() % ARRAY_SIZE(message)]);
+
         wid_rejoin_game_yes_no =
-            wid_popup("%%fg=red$Rejoin?",
+            wid_popup(message,
                       0                 /* title */,
-                      0.5f, 0.5f,       /* x,y postition in percent */
-                      large_font,       /* title font */
-                      large_font,       /* body font */
-                      large_font,       /* button font */
+                      0.5f, 0.2f,       /* x,y postition in percent */
+                      med_font,       /* title font */
+                      med_font,       /* body font */
+                      med_font,       /* button font */
                       2,                /* number buttons */
                       "Yes", wid_dead_rejoin_callback_yes,
                       "No", wid_dead_rejoin_callback_no);
+        myfree(message);
 
     } else {
+        char *message = dynprintf("%s\n%%%%fg=red$Play again?",
+                messages[rand() % ARRAY_SIZE(message)]);
+
         wid_replay_game_yes_no =
-            wid_popup("%%fg=red$Replay?",
+            wid_popup(message,
                       0                 /* title */,
-                      0.5f, 0.5f,       /* x,y postition in percent */
-                      large_font,       /* title font */
-                      large_font,       /* body font */
-                      large_font,       /* button font */
+                      0.5f, 0.2f,       /* x,y postition in percent */
+                      med_font,       /* title font */
+                      med_font,       /* body font */
+                      med_font,       /* button font */
                       2,                /* number buttons */
                       "Yes", wid_dead_replay_callback_yes,
                       "No", wid_dead_replay_callback_no);
+        myfree(message);
     }
 }
 

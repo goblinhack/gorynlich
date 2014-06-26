@@ -287,7 +287,7 @@ static uint8_t client_socket_open (char *host, char *port)
     return (true);
 }
 
-static uint8_t client_socket_close (char *host, char *port)
+uint8_t client_socket_close (char *host, char *port)
 {
     uint32_t portno;
     socketp s = 0;
