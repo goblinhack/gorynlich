@@ -188,7 +188,7 @@ static void server_rx_client_leave (socketp s)
         p->key, socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s left the game", p->name);
-    socket_tx_server_shout(WARNING, tmp);
+    socket_tx_server_shout(CHAT, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);

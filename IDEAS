@@ -1,10 +1,10 @@
 bugs
 ---
 
-unknown ID phantom on thing death
+need to remove disconnected players
+need player names not "elf"``
+server shout ": xxx"
 if sword hits through a wall or door it should get damaged.
-hover over item, change key, print log
-generators seem to spawn over walls
 need quit level option
 on exit level, bonus countdown timer
 exit level
