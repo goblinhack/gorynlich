@@ -959,7 +959,7 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG(GENINFO, "Welcome %s, %s", p->pclass, p->name);
+            MSG(CHAT, "%s, joined the game", p->name);
 
             player = thing_client_find(p->thing_id);
             if (!player) {

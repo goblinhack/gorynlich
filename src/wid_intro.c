@@ -440,8 +440,8 @@ static void wid_intro_create (void)
         return;
     }
 
-    wid_notify(GENINFO, "Press h for help");
-    wid_notify(GENINFO, "Press s for quick start single player");
+    wid_notify(INFO, "Press h for help");
+    wid_notify(INFO, "Press s for quick start single player");
 
     music_play_intro();
 

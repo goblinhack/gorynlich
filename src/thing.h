@@ -21,6 +21,7 @@ void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
 uint8_t thing_mob_spawn(thingp);
+uint8_t thing_mob_spawn_on_death(thingp);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_hit(thingp, thingp hitter, uint32_t damage,

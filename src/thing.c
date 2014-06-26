@@ -1153,17 +1153,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
             const char *spawn = 
                     thing_template_spawn_on_death(t->thing_template);
             if (spawn) {
-                thing_templatep what = thing_template_find(spawn);
-                if (!what) {
-                    DIE("could now find %s to spawn on %s death",
-                        spawn, thing_logname(t));
-                }
-
-                wid_game_map_server_replace_tile(
-                                        wid_game_map_server_grid_container,
-                                        t->x,
-                                        t->y,
-                                        what);
+                thing_mob_spawn_on_death(t);
             }
         }
     }

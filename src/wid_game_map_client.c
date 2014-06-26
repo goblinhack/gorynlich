@@ -420,6 +420,7 @@ wid_game_map_item_shortcut_key_event_common (const SDL_KEYSYM *key,
          */
         wid_game_map_client_score_update(client_level, true /* redo */);
 
+        MSG(INFO, "Shortcut key changed to %u", shortcut);
         return (true);
 
     default:
