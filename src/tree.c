@@ -1288,6 +1288,7 @@ uint8_t tree_remove_found_node (tree_root *root, tree_node *node)
     node->left = 0;
     node->right = 0;
     node->parent = 0;
+    root->size--;
 
     tree_verify(root);
 
