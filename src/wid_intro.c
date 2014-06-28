@@ -109,6 +109,8 @@ void wid_intro_visible (void)
         return;
     }
 
+    wid_notify_flush();
+
     LOG("Client: Intro screen show");
 
     wid_intro_is_visible = true;

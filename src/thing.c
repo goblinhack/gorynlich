@@ -1430,6 +1430,20 @@ void thing_hit (thingp t,
             verify(hitter);
 
             /*
+             * Don't let a sword hit too far away else we end up hitting
+             * through walls! Actually I now like the effect. Keep it.
+             */
+#if 0
+            double dist = DISTANCE(hitter->x, hitter->y, t->x, t->y);
+            if (dist > 1.0) {
+                /*
+                 * Too far.
+                 */
+                return;
+            }
+#endif
+
+            /*
              * Get the damage from the weapon being used to swing.
              */
             thing_templatep weapon = hitter->weapon;

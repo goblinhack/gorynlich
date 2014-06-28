@@ -10,6 +10,8 @@ void wid_chat_fini(void);
 uint8_t wid_chat_init(void);
 void wid_chat_log(const char *s);
 void wid_chat_hello(void);
+void wid_chat_hide(void);
+void wid_chat_visible(void);
 
 /*
  * Global widgets.

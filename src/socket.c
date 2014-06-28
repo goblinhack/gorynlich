@@ -1648,6 +1648,9 @@ static void socket_tx_client_shout_relay (socketp s,
     if (from && from->name) {
         char *name = from->name;
         strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
+    } else {
+        char *name = "server";
+        strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
     }
 
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1719,7 +1722,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (from[0]) {
-        MSG(msg.level, "%s says %s", from, txt);
+        MSG(msg.level, "%s says, %s", from, txt);
     } else {
         /*
          * This is on the server receiving from the client.
@@ -1734,6 +1737,8 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
      * This is for relaying the shout from the server to clients.
      */
     socketp sp;
+
+    int sent = 0;
 
     TREE_WALK(sockets, sp) {
         if (sp == s) {
@@ -1759,6 +1764,57 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
          * Include the source of the spammer.
          */
         socket_tx_client_shout_relay(sp, msg.level, txt, s);
+
+        sent++;
+    }
+
+    if (sent == 0) {
+        static const char *messages[] = {
+            "But no one else is here",
+            "The void echoes back",
+            "No one is listening",
+            "I'll talk to you if no one else will",
+            "I have no friends either",
+            "It's quite here",
+            "I'm lonely",
+            "Crickets",
+            "The sound of silence",
+            "Do you always talk to yourself?",
+            "Never mind, I talk to myself too",
+            "I watch you when you sleep",
+            "I'm behind you. Watching",
+            "You can talk to me",
+            "Tell me about your mother",
+            "I see. Interesting",
+            "I never knew that about you",
+            "You need a diary",
+            "Eh? You talkin to me?",
+            "I told you to stop talking to me",
+            "Give it up dude, there's no one here",
+            "Have you heard of the internet? It has people",
+            "Never mind, we're together at least",
+            "You're never alone with a computer",
+            "Finally, you talk to just me",
+            "Finally, you open your heart to me",
+            "Say again?",
+            "I don't follow?",
+            "I see",
+            "Well, that's understandable",
+            "I disagree. Have you considered not doing that?",
+            "Pull yourself together",
+            "Hmm. Interesting.",
+            "Interesting viewpoint. Wrong of course, but interesting",
+            "I hear voices",
+            "Are you real?",
+            "Strange words echo through the dungeon",
+            "I hear voices in my head",
+            "Have you considered talking to someone",
+            "I love you",
+        };
+
+        socket_tx_client_shout_relay(s, msg.level, 
+                                     messages[rand() % ARRAY_SIZE(messages)],
+                                     0 /* from */);
     }
 }
 
@@ -1993,7 +2049,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (!socket_get_server(s)) {
-        MSG(CHAT, "%s: says \"%s\"", from, txt);
+        MSG(CHAT, "%s, says %s", from, txt);
         return;
     }
 
