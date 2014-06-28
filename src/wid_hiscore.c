@@ -379,7 +379,7 @@ uint8_t hiscore_save (void)
 
     ctx = marshal(file);
     if (!ctx) {
-        MSGERR("Failed to save: %s", file);
+        MSG_BOX("Failed to save: %s", file);
         myfree(file);
         return (false);
     }

@@ -97,7 +97,8 @@ wid_notify_internal (const char *text, uint32_t level)
 
         switch (level) {
         case CHAT:
-            bg = BLUE;
+            bg = MEDIUMPURPLE4;
+            bg.a = 150;
             fg = WHITE;
             break;
         case INFO:
@@ -106,7 +107,8 @@ wid_notify_internal (const char *text, uint32_t level)
             fg = YELLOW;
             break;
         case WARNING:
-            bg = ORANGE;
+            bg = ORANGE3;
+            bg.a = 200;
             fg = BLACK;
             break;
         case CRITICAL:
@@ -203,7 +205,7 @@ static void wid_notify_move_wids (void)
      */
     uint32_t i;
 
-    double h = 1.0;
+    double h = 0.97;
 
     for (i = 0; i < nelems; i++) {
         wid_notify_elem *elem = &elems[i];

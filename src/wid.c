@@ -19,11 +19,13 @@
 #include "command.h"
 #include "time.h"
 #include "wid_console.h"
+#include "wid_chat.h"
 #include "wid_tooltip.h"
 #include "marshal.h"
 #include "string.h"
 #include "sound.h"
 #include "timer.h"
+#include "client.h"
 
 typedef struct {
     /*
@@ -5507,11 +5509,12 @@ uint8_t wid_receive_input (widp w, const SDL_KEYSYM *key)
                 return (true);
 
             case SDLK_RETURN:
-                if (w != wid_console_input_line) {
+                if ((w != wid_console_input_line) &&
+                    (w != wid_chat_input_line)) {
                     return (false);
                 }
 
-                if (origlen) {
+                if (origlen && (w == wid_console_input_line)) {
                     strlcpy(entered, wid_get_text(w), sizeof(entered));
                     wid_scroll_text(w);
                     snprintf(tmp, sizeof(tmp), "> %s", entered);
@@ -5541,7 +5544,16 @@ uint8_t wid_receive_input (widp w, const SDL_KEYSYM *key)
 
                     wid_set_text(w, "");
                     w->cursor = 0;
-                } else {
+                } else if (origlen && (w == wid_chat_input_line)) {
+                    strlcpy(entered, wid_get_text(w), sizeof(entered));
+
+                    MSG(CHAT, "you say, %s", entered);
+
+                    client_socket_shout(entered);
+
+                    wid_set_text(w, "");
+                    w->cursor = 0;
+                } else if (w == wid_console_input_line) {
                     wid_scroll_text(w);
                 }
                 return (true);

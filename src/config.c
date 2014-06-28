@@ -159,7 +159,7 @@ uint8_t config_load (void)
     }
 
     if (!demarshal_config(ctx, &global_config)) {
-        MSGERR("Failed to parse: %s", file);
+        MSG_BOX("Failed to parse: %s", file);
     }
 
     myfree(file);

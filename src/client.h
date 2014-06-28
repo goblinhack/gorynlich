@@ -17,6 +17,7 @@ uint8_t client_socket_close(char *host, char *port);
 uint8_t client_socket_leave(void);
 uint8_t client_socket_set_name(const char *name);
 uint8_t client_socket_set_pclass(const char *name);
+uint8_t client_socket_shout(char *shout);
 msg_player_statep client_get_player(int n);
 
 extern socketp client_joined_server;

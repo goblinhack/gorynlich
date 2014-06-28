@@ -138,14 +138,14 @@ void wid_editor_undo_save_point (void)
     demarshal_p ctx;
 
     if (!(ctx = demarshal(dir_and_file))) {
-        MSGERR("Undo fail");
+        MSG_BOX("Undo fail");
     } else {
         wid_empty_grid(wid_editor_map_grid_container);
 
         wid_editor_add_grid();
 
         if (!wid_editor_demarshal(ctx)) {
-            MSGERR("Undo fail");
+            MSG_BOX("Undo fail");
         }
 
         demarshal_fini(ctx);
@@ -163,14 +163,14 @@ void wid_editor_redo_save_point (void)
     demarshal_p ctx;
 
     if (!(ctx = demarshal(dir_and_file))) {
-        MSGERR("Undo fail");
+        MSG_BOX("Undo fail");
     } else {
         wid_empty_grid(wid_editor_map_grid_container);
 
         wid_editor_add_grid();
 
         if (!wid_editor_demarshal(ctx)) {
-            MSGERR("Undo fail");
+            MSG_BOX("Undo fail");
         }
 
         demarshal_fini(ctx);
@@ -211,7 +211,7 @@ static void wid_editor_save_ok (widp w)
         char *popup_str = dynprintf("Failed to save %s: %s", dir_and_file,
                                   strerror(errno));
 
-        MSGERR("%s", popup_str);
+        MSG_BOX("%s", popup_str);
         myfree(popup_str);
     } else {
         /*
@@ -336,7 +336,7 @@ static void wid_editor_load_ok (widp w)
         char *popup_str = dynprintf("Failed to load %s: %s", dir_and_file,
                                     strerror(errno));
 
-        MSGERR("%s", popup_str);
+        MSG_BOX("%s", popup_str);
         myfree(popup_str);
     } else {
         /*
@@ -355,7 +355,7 @@ static void wid_editor_load_ok (widp w)
                                         "while loading %s: %s", dir_and_file,
                                         strerror(errno));
 
-            MSGERR("%s", popup_str);
+            MSG_BOX("%s", popup_str);
             myfree(popup_str);
         }
 

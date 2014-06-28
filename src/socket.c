@@ -1716,14 +1716,20 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    MSG(msg.level, "%s: \"%s\"", from, txt);
+    if (from[0]) {
+        MSG(msg.level, "%s says %s", from, txt);
+    } else {
+        /*
+         * This is on the server receiving from the client.
+         */
+    }
 
     if (socket_get_client(s)) {
         return;
     }
 
     /*
-     * This is for relaying the shout from the server to clietns.
+     * This is for relaying the shout from the server to clients.
      */
     socketp sp;
 

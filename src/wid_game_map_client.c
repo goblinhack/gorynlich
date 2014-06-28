@@ -22,6 +22,7 @@
 #include "timer.h"
 #include "time.h"
 #include "thing_tile.h"
+#include "wid_chat.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -625,6 +626,9 @@ void wid_game_map_client_wid_create (void)
     wid_game_map_client_score_update(client_level, true /* redo */);
 
     wid_hide(wid_game_map_client_window, 0);
+
+    wid_raise(wid_chat_window);
+    wid_visible(wid_chat_window, 0);
 }
 
 void wid_game_map_client_wid_destroy (void)
@@ -862,11 +866,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             continue;
         }
 
-        char *name_title = p->pclass;
-        if (!p->pclass[0]) {
-            name_title = "No player";
-        }
-
         color c;
         switch (y) {
         case 0:
@@ -916,13 +915,27 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
          */
         widp wid_name_title_container;
 
+        char *name_title;
+        if (p->pclass[0] && p->name[0]) {
+            name_title = dynprintf("%s, %s", p->name, p->pclass);
+        } else if (p->pclass[0]) {
+            name_title = dynprintf("%s", p->pclass);
+        } else if (p->name[0]) {
+            name_title = dynprintf("%s", p->name);
+        } else {
+            name_title = 0;
+        }
+
         wid_name_title_container = wid_textbox_fixed_width(
                                     wid_scoreline_container_top,
                                     &wid_name_title,
-                                    name_title,
+                                    name_title ? name_title : "No player",
                                     (score_x + health_x) / 2,
                                     player_y_offset - score_and_health_value_offset,
                                     vsmall_font);
+        if (name_title) {
+            myfree(name_title);
+        }
 
         wid_set_no_shape(wid_name_title_container);
 
@@ -1184,6 +1197,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     }
 
     if (update) {
+        wid_raise(wid_chat_window);
+        wid_visible(wid_chat_window, 0);
         return;
     }
 
@@ -1249,4 +1264,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     wid_update_mouse();
 
     wid_set_focus(wid_game_map_client_grid_container);
+
+    wid_raise(wid_chat_window);
+    wid_visible(wid_chat_window, 0);
 }

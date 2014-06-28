@@ -12,6 +12,7 @@
 #include "main.h"
 #include "gl.h"
 #include "wid_console.h"
+#include "wid_chat.h"
 #include "wid_editor.h"
 #include "command.h"
 #include "color.h"
@@ -98,6 +99,7 @@ void quit (void)
     thing_fini();
 
     wid_console_fini();
+    wid_chat_fini();
     wid_intro_fini();
     wid_intro2_fini();
     wid_intro3_fini();
@@ -652,6 +654,10 @@ int32_t main (int32_t argc, char *argv[])
 #ifndef WID_TEST
     if (!wid_console_init()) {
 	DIE("wid_console init");
+    }
+
+    if (!wid_chat_init()) {
+	DIE("wid_chat init");
     }
 
     if (!command_init()) {

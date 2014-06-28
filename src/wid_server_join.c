@@ -624,7 +624,7 @@ static uint8_t wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                MSGERR("Failed to parse IP address, not in A.B.C.D format");
+                MSG_BOX("Failed to parse IP address, not in A.B.C.D format");
                 return (true);
             }
 
@@ -632,7 +632,7 @@ static uint8_t wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                MSGERR("Failed to parse IP address, "
+                MSG_BOX("Failed to parse IP address, "
                        "Each number must be in the 0 to 255 range");
 
                 return (true);
@@ -652,7 +652,7 @@ static uint8_t wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
                 /*
                  * Fail
                  */
-                MSGERR("Failed to resolve IP address to a hostname");
+                MSG_BOX("Failed to resolve IP address to a hostname");
 
                 return (true);
             }
@@ -728,7 +728,7 @@ static uint8_t wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
                 /*
                  * Fail
                  */
-                MSGERR("Failed to parse port number");
+                MSG_BOX("Failed to parse port number");
 
                 return (true);
             }
@@ -737,7 +737,7 @@ static uint8_t wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
                 /*
                  * Fail
                  */
-                MSGERR("Failed to parse port number, "
+                MSG_BOX("Failed to parse port number, "
                        "must be in the 1024 to 65535 range");
 
                 return (true);
@@ -1420,7 +1420,7 @@ uint8_t wid_server_save_remote_server_list (void)
 
     ctx = marshal(file);
     if (!ctx) {
-        MSGERR("Failed to save: %s", file);
+        MSG_BOX("Failed to save: %s", file);
         myfree(file);
         return (false);
     }
