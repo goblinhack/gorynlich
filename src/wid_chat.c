@@ -300,3 +300,13 @@ static void wid_chat_wid_create (void)
     wid_update(wid_chat_window);
     wid_chat_reset_scroll();
 }
+
+void wid_chat_hide (void)
+{
+    wid_hide(wid_chat_window, 0);
+}
+
+void wid_chat_visible (void)
+{
+    wid_visible(wid_chat_window, 0);
+}

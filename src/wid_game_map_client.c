@@ -23,6 +23,8 @@
 #include "time.h"
 #include "thing_tile.h"
 #include "wid_chat.h"
+#include "wid_game_quit.h"
+#include "wid_notify.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -82,6 +84,8 @@ void wid_game_map_client_hide (void)
         wid_destroy_grid(wid_game_map_client_grid_container);
 
         wid_destroy(&wid_game_map_client_grid_container);
+
+        wid_chat_hide();
     }
 }
 
@@ -199,6 +203,7 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = state[SDLK_UP] ? 1 : 0;
     uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
     uint8_t fire  = state[SDLK_SPACE] ? 1 : 0;
+    uint8_t quit  = state[SDLK_Q] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
@@ -207,6 +212,7 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
     uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
     uint8_t fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
+    uint8_t quit  = state[SDL_SCANCODE_Q] ? 1 : 0;
 #endif /* } */
 
     if (!player) {
@@ -215,6 +221,10 @@ uint8_t wid_game_map_client_player_move (void)
 
     if (!client_joined_server) {
         return (false);
+    }
+
+    if (quit) {
+        wid_game_quit_visible();
     }
 
     if (!up && !down && !left && !right && !fire) {
@@ -504,6 +514,8 @@ void wid_game_map_client_wid_create (void)
     if (wid_game_map_client_window) {
         return;
     }
+
+    wid_notify_flush();
 
     LOG("Client: Create map");
 
