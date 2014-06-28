@@ -365,6 +365,7 @@ uint8_t wid_is_moving(widp w);
 void wid_move_stop(widp w);
 void wid_move_resume(widp w);
 uint8_t wid_is_hidden(widp w);
+uint8_t wid_this_is_hidden(widp w);
 uint8_t wid_is_scaling(widp w);
 uint8_t wid_is_fading(widp w);
 uint8_t wid_is_always_hidden(widp w);

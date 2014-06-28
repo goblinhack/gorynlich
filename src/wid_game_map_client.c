@@ -232,6 +232,14 @@ uint8_t wid_game_map_client_player_move (void)
     }
 
     /*
+     * If no longer visible it may mean we have finished the level and are 
+     * waiting for others to finish.
+     */
+    if (!thing_is_visible(player)) {
+        return (false);
+    }
+
+    /*
      * Check if we are allowed to fire our gun again so soon.
      */
     if (fire) {
