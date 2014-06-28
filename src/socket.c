@@ -1436,7 +1436,8 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("  max     players %u", global_config.server_max_players);
         myfree(tmp);
 
-        socket_tx_tell(s, "Join rejected:", msg.name, "Too many players");
+        socket_tx_tell(s, "Server", msg.name, 
+                       "Join rejected, too many players");
         return (false);
     }
 
@@ -1449,8 +1450,8 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
                 tmp, msg.name, msg.pclass);
             myfree(tmp);
 
-            socket_tx_tell(s, "Join rejected:", 
-                           msg.name, "Unknown player class");
+            socket_tx_tell(s, "Server", msg.name,
+                           "Join rejected, unknown player class");
             return (false);
         }
     }
@@ -1555,7 +1556,8 @@ uint8_t socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("Server: Rx bad leave from %s", tmp);
         myfree(tmp);
 
-        socket_tx_tell(s, "Leave rejected:", "Unknown player", "Not in game");
+        socket_tx_tell(s, "Server", "Unknown player", 
+                       "Join rejected, not in game");
         return (false);
     }
 
