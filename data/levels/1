@@ -1040,6 +1040,10 @@
   } {   
    x=10 
    y=6 
+   t="data/things/exit7" 
+  } {   
+   x=10 
+   y=6 
    t="data/things/floor6" 
   } {   
    x=11 

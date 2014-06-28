@@ -276,6 +276,10 @@ static void thing_handle_collision (thingp me, thingp it,
         return;
     }
 
+    if (thing_has_left_level(it)) {
+        return;
+    }
+
     /*
      * Filter out boring things.
      */
@@ -340,6 +344,11 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
              * I'm hit!
              */
             thing_hit(me, it, 0, "monst");
+            return;
+        }
+
+        if (thing_is_exit(it)) {
+            thing_leave_level(me);
             return;
         }
     }
@@ -548,6 +557,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     thing_is_food(it)                   ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||
+                    thing_is_exit(it)                   ||
                     thing_is_monst(it)                  ||
                     /*
                      * Walk through friendly fire.

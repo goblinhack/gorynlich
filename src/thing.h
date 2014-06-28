@@ -26,6 +26,11 @@ void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_hit(thingp, thingp hitter, uint32_t damage,
                const char *fmt, ...) __attribute__ ((format (printf, 4, 5)));
+void thing_hide(thingp);
+uint8_t thing_is_visible(thingp);
+void thing_leave_level(thingp);
+void thing_join_level(thingp);
+void thing_visible(thingp);
 void things_level_destroyed(levelp);
 void demarshal_thing(demarshal_p ctx, thingp);
 void marshal_thing(marshal_p ctx, thingp);
@@ -227,6 +232,7 @@ enum {
 
 enum {
     THING_STATE_BIT_SHIFT_EXT_IS_DEAD,
+    THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS,
 };
@@ -578,6 +584,7 @@ typedef struct thing_ {
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_dead:1;
+    uint32_t has_left_level:1;
     uint32_t is_hit_success:1;
     uint32_t is_hit_miss:1;
     uint32_t on_active_list:1;
@@ -611,6 +618,13 @@ static inline uint8_t thing_is_dead (thingp t)
     verify(t);
 
     return (t->is_dead);
+}
+
+static inline uint8_t thing_has_left_level (thingp t)
+{
+    verify(t);
+
+    return (t->has_left_level);
 }
 
 static inline uint8_t thing_is_exit (thingp t)
