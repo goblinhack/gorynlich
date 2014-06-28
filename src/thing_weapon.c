@@ -27,6 +27,9 @@
 
 void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 {
+    *dx = 0;
+    *dy = 0;
+
     thing_templatep weapon = t->weapon;
     if (!weapon) {
         return;
