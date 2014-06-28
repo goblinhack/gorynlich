@@ -68,6 +68,14 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
 
     rc = rc && GET_OPT_NAMED_UINT16(ctx, "server_port", p->server_port);
 
+    if (!p->server_max_players) {
+        p->server_max_players = 4;
+    }
+
+    if (!p->server_port) {
+        p->server_port = SERVER_DEFAULT_PORT;
+    }
+
     return (rc);
 }
 
