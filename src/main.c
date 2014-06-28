@@ -412,22 +412,22 @@ static void find_file_locations (void)
 
 static void usage (void)
 {
-    LOG("Gorynlich, options:");
-    LOG(" ");
-    LOG("        --server      run as a server");
-    LOG("        -server");
-    LOG("        -s");
-    LOG(" ");
-    LOG("        --port        port of server, default %d",
+    CON("Gorynlich, options:");
+    CON(" ");
+    CON("        --server      run as a server");
+    CON("        -server");
+    CON("        -s");
+    CON(" ");
+    CON("        --port        port of server, default %d",
             SERVER_DEFAULT_PORT);
-    LOG("        -port");
-    LOG("        -p");
-    LOG(" ");
-    LOG("        --name        optional name of server");
-    LOG("        -name");
-    LOG("        -n");
-    LOG(" ");
-    LOG("Written by Neil McGill, goblinhack@gmail.com");
+    CON("        -port");
+    CON("        -p");
+    CON(" ");
+    CON("        --name        optional name of server");
+    CON("        -name");
+    CON("        -n");
+    CON(" ");
+    CON("Written by Neil McGill, goblinhack@gmail.com");
 }
 
 static void parse_args (int32_t argc, char *argv[])
