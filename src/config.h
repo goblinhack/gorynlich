@@ -83,6 +83,14 @@
 #define CONSOLE_HEIGHT              100
 
 /*
+ * Chat window
+ */
+#define CHAT_CURSOR_COLOR           PURPLE
+#define CHAT_CURSOR_OTHER_COLOR     PURPLE
+#define CHAT_TEXT_COLOR             PLUM
+#define CHAT_HEIGHT                 20
+
+/*
  * Fonts
  */
 #define VSMALL_FONT                 "data/ttf/emulogic.ttf"
@@ -155,8 +163,6 @@
 #define DELAY_TENTHS_THING_COLLISION_TEST       1
 #define DELAY_TENTHS_PING                       5
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
-#define DELAY_TENTHS_CURSOR_VISIBLE             5
-#define DELAY_TENTHS_CURSOR_INVISIBLE           1
 #define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     5
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST    50
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW    200

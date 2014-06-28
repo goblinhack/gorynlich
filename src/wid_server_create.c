@@ -449,7 +449,7 @@ static uint8_t wid_server_create_port_receive_input (widp w,
                 /*
                  * Fail
                  */
-                MSGERR("Failed to parse port number");
+                MSG_BOX("Failed to parse port number");
 
                 return (true);
             }
@@ -458,7 +458,7 @@ static uint8_t wid_server_create_port_receive_input (widp w,
                 /*
                  * Fail
                  */
-                MSGERR("Failed to parse port number, "
+                MSG_BOX("Failed to parse port number, "
                        "must be in the 1024 to 65535 range");
 
                 return (true);
@@ -527,7 +527,7 @@ static uint8_t wid_server_create_max_players_receive_input (widp w,
                 /*
                  * Fail
                  */
-                MSGERR("Failed to parse max players number");
+                MSG_BOX("Failed to parse max players number");
 
                 return (true);
             }

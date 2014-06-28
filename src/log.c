@@ -24,6 +24,7 @@
 #include "player.h"
 #include "socket.h"
 #include "wid_notify.h"
+#include "wid_chat.h"
 
 static char buf[MAXSTR];
 uint8_t debug_enabled = 0;
@@ -695,6 +696,13 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
 
     if (wid_notify(level, buf + len)) {
         wid_console_log(buf + len);
+
+#if 0
+        if (level == CHAT) {
+            wid_chat_log(buf + len);
+        }
+#endif
+
         term_log(buf + len);
     }
 
@@ -753,7 +761,7 @@ static void msgerr_ (const char *fmt, va_list args)
     fflush(MY_STDOUT);
 }
 
-void MSGERR (const char *fmt, ...)
+void MSG_BOX (const char *fmt, ...)
 {
     va_list args;
 

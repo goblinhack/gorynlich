@@ -261,7 +261,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
     char *popup_str = dynprintf("Filename was not found on ramdisk or "
                                 "on the local disk, %s", filename);
 
-    MSGERR("%s", popup_str);
+    MSG_BOX("%s", popup_str);
     myfree(popup_str);
      */
     WARN("File not found \"%s\"", filename);

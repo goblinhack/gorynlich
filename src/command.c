@@ -17,7 +17,7 @@
 #include "wid.h"
 
 /*
- * Simple wid_console expanding code, takes a comand input and expands it as
+ * Simple console expanding code, takes a comand input and expands it as
  * much as possible to installed commands.
  *
  * Ambigious command : []

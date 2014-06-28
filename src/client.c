@@ -41,7 +41,6 @@ static uint8_t client_join(tokens_t *tokens, void *context);
 static uint8_t client_leave(tokens_t *tokens, void *context);
 static uint8_t client_open(tokens_t *tokens, void *context);
 static uint8_t client_close(tokens_t *tokens, void *context);
-static uint8_t client_socket_shout(char *shout);
 static uint8_t client_socket_tell(char *from, char *to, char *msg);
 static void client_check_still_in_game(void);
 
@@ -269,7 +268,7 @@ static uint8_t client_socket_open (char *host, char *port)
     LOG("Client: Trying to resolve server address %s:%u", host, portno);
 
     if (SDLNet_ResolveHost(&server_address, host, portno)) {
-        MSGERR("Open socket, cannot resolve %s:%u", host, portno);
+        MSG_BOX("Open socket, cannot resolve %s:%u", host, portno);
         return (false);
     }
 
@@ -401,7 +400,7 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
             if (quiet) {
                 WARN("Cannot join %s:%u", host, portno);
             } else {
-                MSGERR("Cannot join %s:%u", host, portno);
+                MSG_BOX("Cannot join %s:%u", host, portno);
             }
             return (false);
         }
@@ -414,7 +413,7 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
             if (quiet) {
                 WARN("Join, failed to connect");
             } else {
-                MSGERR("Join, failed to connect");
+                MSG_BOX("Join, failed to connect");
             }
             return (false);
         }
@@ -446,7 +445,7 @@ static uint8_t client_socket_leave_implicit (void)
         return (false);
     }
 
-    MSGERR("YOU WERE DROPPED FROM THE SERVER");
+    MSG_BOX("YOU WERE DROPPED FROM THE SERVER");
 
     client_joined_server = 0;
 
@@ -475,7 +474,7 @@ uint8_t client_socket_leave (void)
     return (true);
 }
 
-static uint8_t client_socket_shout (char *shout)
+uint8_t client_socket_shout (char *shout)
 {
     if (!client_joined_server) {
         WARN("Join a server first before trying to shout");
@@ -959,7 +958,7 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG(CHAT, "%s, joined the game", p->name);
+            MSG(INFO, "%s, joined the game", p->name);
 
             player = thing_client_find(p->thing_id);
             if (!player) {

@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 2011 Neil McGill
+ *
+ * See the README file.
+ */
+
+#pragma once
+
+void wid_chat_fini(void);
+uint8_t wid_chat_init(void);
+void wid_chat_log(const char *s);
+void wid_chat_hello(void);
+
+/*
+ * Global widgets.
+ */
+extern widp wid_chat_input_line;
+
+extern widp wid_chat_window;

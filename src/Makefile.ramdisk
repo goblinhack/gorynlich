@@ -208,6 +208,9 @@
 .o/ramdisk_data_things__sword2_session.o: asm/ramdisk_data_things__sword2_session.S ../data/things/.sword2.session
 	gcc -c asm/ramdisk_data_things__sword2_session.S -o .o/ramdisk_data_things__sword2_session.o
 
+.o/ramdisk_data_things__sword2_anim_session.o: asm/ramdisk_data_things__sword2_anim_session.S ../data/things/.sword2_anim.session
+	gcc -c asm/ramdisk_data_things__sword2_anim_session.S -o .o/ramdisk_data_things__sword2_anim_session.o
+
 .o/ramdisk_data_things__sword3_session.o: asm/ramdisk_data_things__sword3_session.S ../data/things/.sword3.session
 	gcc -c asm/ramdisk_data_things__sword3_session.S -o .o/ramdisk_data_things__sword3_session.o
 
