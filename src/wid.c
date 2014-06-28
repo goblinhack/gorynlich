@@ -7733,6 +7733,21 @@ uint8_t wid_is_hidden (widp w)
     return (false);
 }
 
+uint8_t wid_this_is_hidden (widp w)
+{
+    fast_verify(w);
+
+    if (!w) {
+        return (false);
+    }
+
+    if (w->hidden) {
+        return (true);
+    }
+
+    return (false);
+}
+
 uint8_t wid_is_always_hidden (widp w)
 {
     fast_verify(w);

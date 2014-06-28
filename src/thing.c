@@ -1598,6 +1598,105 @@ void thing_hit (thingp t,
     }
 }
 
+void thing_hide (thingp t)
+{
+    verify(t);
+
+    widp w = t->wid;
+    if (!w) {
+        return;
+    }
+
+    if (wid_this_is_hidden(w)) {
+        return;
+    }
+
+    wid_hide(w, 0);
+
+    /*
+     * Hide the weapon too or it just floats in the air.
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_hide(weapon_carry_anim);
+    }
+}
+
+void thing_visible (thingp t)
+{
+    verify(t);
+
+    widp w = t->wid;
+    if (!w) {
+        return;
+    }
+
+    if (!wid_this_is_hidden(w)) {
+        return;
+    }
+
+    /*
+     * Reveal the thing.
+     */
+    wid_visible(w, wid_hide_delay);
+
+    /*
+     * Reveal the weapon again too.
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_hide(weapon_carry_anim);
+    }
+}
+
+uint8_t thing_is_visible (thingp t)
+{
+    verify(t);
+
+    widp w = t->wid;
+    if (w) {
+        return (!wid_is_hidden(w));
+    }
+
+    return (false);
+}
+
+void thing_leave_level (thingp t)
+{
+    if (t->has_left_level) {
+        return;
+    }
+
+    t->has_left_level = true;
+    t->needs_tx_player_update = true;
+
+    /*
+     * Make the weapon leave to
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_leave_level(weapon_carry_anim);
+    }
+}
+
+void thing_join_level (thingp t)
+{
+    if (!t->has_left_level) {
+        return;
+    }
+
+    t->has_left_level = false;
+    t->needs_tx_player_update = true;
+
+    /*
+     * Make the weapon leave to
+     */
+    thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+    if (weapon_carry_anim) {
+        thing_join_level(weapon_carry_anim);
+    }
+}
+
 static void thing_effect_hit_success (thingp t)
 {
     verify(t);
@@ -2802,6 +2901,8 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
                 THING_STATE_BIT_SHIFT_RESYNC) |
             ((t->is_dead        ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
+            ((t->has_left_level ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->is_hit_miss    ? 1 : 0) << 
@@ -2810,6 +2911,8 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         const uint8_t ext =
             ((t->is_dead        ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
+            ((t->has_left_level ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL) |
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS) |
             ((t->is_hit_miss    ? 1 : 0) << 
@@ -3182,6 +3285,13 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
             thing_dead(t, 0, "server killed");
         }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
+            thing_hide(t);
+        } else {
+            thing_visible(t);
+        }
+
 //CON("rx %s",thing_logname(t));
     }
 
