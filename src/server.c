@@ -45,7 +45,7 @@ uint8_t server_start (IPaddress address)
     s = socket_listen(address);
     if (!s) {
         char *tmp = iptodynstr(address);
-        MSGERR("Failed to start server on %s", tmp);
+        MSG_BOX("Failed to start server on %s", tmp);
         myfree(tmp);
         return (false);
     }
@@ -97,7 +97,7 @@ uint8_t server_init (void)
         SERVER_DEFAULT_HOST, portno);
 
     if (SDLNet_ResolveHost(&server_address, SERVER_DEFAULT_HOST, portno)) {
-        MSGERR("Open socket, cannot resolve %s:%u",
+        MSG_BOX("Open socket, cannot resolve %s:%u",
                SERVER_DEFAULT_HOST, portno);
         return (false);
     }
@@ -188,7 +188,7 @@ static void server_rx_client_leave (socketp s)
         p->key, socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s left the game", p->name);
-    socket_tx_server_shout(CHAT, tmp);
+    socket_tx_server_shout(INFO, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);

@@ -301,7 +301,7 @@ static void wid_intro3_create (void)
         fpoint br = {0.5f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "single player");
+        wid_set_text(child, "start game");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
@@ -332,7 +332,7 @@ static void wid_intro3_create (void)
         fpoint br = {1.0f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "multi player");
+        wid_set_text(child, "join game");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;

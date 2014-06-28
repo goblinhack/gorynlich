@@ -145,6 +145,7 @@ typedef struct socket_ *socketp;
 typedef struct net_ *netp;
 typedef struct font *fontp;
 typedef struct wid_console *wid_consolep;
+typedef struct wid_chat *wid_chatp;
 typedef struct config *configp;
 typedef struct wid_ *widp;
 typedef struct tree_root_ *tree_rootp;
@@ -174,6 +175,7 @@ extern fontp med_font;
 extern fontp large_font;
 extern fontp vlarge_font;
 extern wid_consolep wid_console;
+extern wid_chatp wid_chat;
 extern configp config;
 
 typedef uint8_t (*thing_template_is_callback)(thing_templatep);
@@ -215,7 +217,7 @@ enum {
 void MSG(uint32_t level, const char *fmt, ...) 
     __attribute__ ((format (printf, 2, 3)));
 
-void MSGERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+void MSG_BOX(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void HOST_LOG(hostp, const char *fmt, ...)

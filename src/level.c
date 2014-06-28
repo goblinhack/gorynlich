@@ -317,7 +317,7 @@ levelp level_load (uint32_t level_no,
                                     dir_and_file,
                                     strerror(errno));
 
-        MSGERR("%s", popup_str);
+        MSG_BOX("%s", popup_str);
         myfree(popup_str);
          */
         myfree(dir_and_file);
@@ -333,7 +333,7 @@ levelp level_load (uint32_t level_no,
                                         dir_and_file,
                                         strerror(errno));
 
-            MSGERR("%s", popup_str);
+            MSG_BOX("%s", popup_str);
             myfree(popup_str);
         }
 

@@ -73,6 +73,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/util.o 			\
     $(OBJDIR)/wid.o 			\
     $(OBJDIR)/wid_console.o 		\
+    $(OBJDIR)/wid_chat.o 		\
     $(OBJDIR)/wid_dirlist.o 		\
     $(OBJDIR)/wid_text_input.o 		\
     $(OBJDIR)/wid_game_map_client.o 	\
