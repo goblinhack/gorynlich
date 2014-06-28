@@ -86,10 +86,6 @@ uint8_t wid_console_init (void)
  */
 void wid_console_hello (void)
 {
-    if (!on_server) {
-        return;
-    }
-
     CON(" ");
     CON("%%%%fg=red$          Welcome to the gorynlich Console!%%%%fg=reset$");
     CON(" ");
@@ -300,7 +296,7 @@ static void wid_console_wid_create (void)
                 wid_set_text_bot(prefix, true);
                 wid_set_text_fixed_width(prefix, true);
                 wid_set_font(prefix, font);
-                wid_set_text(prefix,">");
+                wid_set_text(prefix, ">");
 
             } else {
                 wid_set_color(child, WID_COLOR_TEXT, CONSOLE_TEXT_COLOR);
