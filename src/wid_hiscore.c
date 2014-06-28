@@ -242,7 +242,7 @@ static void wid_hiscore_create (void)
             widp w = wid_new_square_button(wid_hiscore_container,
                                            "hiscore killed by");
 
-            fpoint tl = {0.3, 0.1};
+            fpoint tl = {0.35, 0.1};
             fpoint br = {0.8, 0.2};
 
             float height = 0.08;
