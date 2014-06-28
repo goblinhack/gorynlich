@@ -172,6 +172,10 @@ static void server_rx_client_leave_implicit (socketp s)
             global_config.server_current_players);
     }
 
+    if (p->thing) {
+        thing_dead(p->thing, 0, "the network");
+    }
+
     socket_set_player(s, 0);
 }
 
