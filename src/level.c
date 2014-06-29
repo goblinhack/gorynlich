@@ -887,12 +887,12 @@ void level_tick (levelp level)
                 thing_update(t);
             } }
 
-            wid_game_map_server_wid_destroy(true /* keep players */);
-
             socket_server_tx_map_update(0, server_boring_things,
                                         "level destroy boring things");
             socket_server_tx_map_update(0, server_active_things,
                                         "level destroy active things");
+
+            wid_game_map_server_wid_destroy(true /* keep players */);
 
             { TREE_WALK(server_active_things, t) {
                 if (!thing_is_player(t)) {
