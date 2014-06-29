@@ -37,7 +37,7 @@ void wid_game_map_server_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    wid_game_map_server_wid_destroy();
+    wid_game_map_server_wid_destroy(false /* keep players */);
 }
 
 void wid_game_map_server_hide (void)
@@ -165,7 +165,7 @@ void wid_game_map_server_wid_create (void)
      */
     wid_hide(wid_game_map_server_window, 0);
 
-    wid_editor_map_loading = true;
+    server_level_is_being_loaded = true;
 
     server_level = level_load(1, wid_game_map_server_grid_container, 
                               false /* is_editor */,
@@ -175,19 +175,23 @@ void wid_game_map_server_wid_create (void)
         return;
     }
 
-    wid_editor_map_loading = false;
+    server_level_is_being_loaded = false;
 
     level_update_now(server_level);
 }
 
-void wid_game_map_server_wid_destroy (void)
+void wid_game_map_server_wid_destroy (uint8_t keep_players)
 {
     LOG("Server: Destroy game map");
 
     if (server_level) {
-        LOG("Server: Destroy game level");
+        if (keep_players) {
+            LOG("Server: Destroy level but keep players");
+        } else {
+            LOG("Server: Destroy level");
+        }
 
-        level_destroy(&server_level);
+        level_destroy(&server_level, keep_players);
     }
 
     if (wid_game_map_server_window) {
@@ -203,6 +207,7 @@ void wid_game_map_server_wid_destroy (void)
 widp
 wid_game_map_server_replace_tile (widp w,
                                   double x, double y,
+                                  thingp thing,
                                   thing_templatep thing_template)
 {
     tree_rootp thing_tiles;
@@ -314,9 +319,12 @@ wid_game_map_server_replace_tile (widp w,
      */
     wid_set_thing_template(child, thing_template);
 
-    thingp thing = thing_server_new(level, 
-                                    thing_template_name(thing_template),
-                                    x, y);
+    if (!thing) {
+        thing = thing_server_new(level, 
+                                 thing_template_name(thing_template),
+                                 x, y);
+    }
+
     wid_set_thing(child, thing);
 
     thing_server_wid_update(thing, x, y, true /* is_new */);
@@ -326,7 +334,7 @@ wid_game_map_server_replace_tile (widp w,
      */
     wid_update(child);
 
-    if (wid_editor_map_loading) {
+    if (server_level_is_being_loaded) {
         return (child);
     }
 

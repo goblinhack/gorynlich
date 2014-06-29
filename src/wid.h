@@ -138,7 +138,7 @@ typedef void(*on_tick_t)(widp);
 typedef widp (*grid_wid_replace_t)(widp,
                                    double x,
                                    double y,
-                                   thing_templatep thing_template);
+                                   thingp, thing_templatep);
 
 /*
  * Client.

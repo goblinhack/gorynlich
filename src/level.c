@@ -168,6 +168,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          thing_grid_x(t),
                                          thing_grid_y(t),
+                                         0, /* thing */
                                          thing_template);
 
         sound_play_slime();
@@ -202,7 +203,7 @@ levelp level_new (widp map, uint32_t level_no, int is_editor, int on_server)
     return (level);
 }
 
-void level_destroy (levelp *plevel)
+void level_destroy (levelp *plevel, uint8_t keep_players)
 {
     levelp level;
 
@@ -226,7 +227,7 @@ void level_destroy (levelp *plevel)
     /*
      * Kill all humans!
      */
-    things_level_destroyed(level);
+    things_level_destroyed(level, keep_players);
 
     LEVEL_LOG(level, "destroy");
 
@@ -652,6 +653,7 @@ void level_place_plant_pod (levelp level)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
+                                         0, /* thing */
                                          thing_template);
 
         sound_play_slime();
@@ -860,6 +862,55 @@ void level_tick (levelp level)
             level->need_map_update = 0;
 
             level_update_now(level);
+
+            socket_server_tx_map_update(0, server_active_things);
+            socket_server_tx_map_update(0, server_boring_things);
+        }
+
+        if (level_is_completed(level)) {
+            thingp t;
+
+            { TREE_WALK(server_active_things, t) {
+                if (!thing_is_player(t)) {
+                    thing_dead(t, 0, "end of level");
+                    continue;
+                }
+            } }
+
+            { TREE_WALK(server_boring_things, t) {
+                thing_dead(t, 0, "end of level");
+            } }
+
+            socket_server_tx_map_update(0, server_active_things);
+            socket_server_tx_map_update(0, server_boring_things);
+
+            wid_game_map_server_wid_destroy(true /* keep players */);
+
+            { TREE_WALK(server_active_things, t) {
+                if (!thing_is_player(t)) {
+                    ERR("players should be all that is left by now "
+                        "but we have %s", thing_logname(t));
+                    continue;
+                }
+            } }
+
+            wid_game_map_server_wid_create();
+
+            { TREE_WALK(server_active_things, t) {
+                if (!thing_is_player(t)) {
+                    continue;
+                }
+
+                thing_map_remove(t);
+
+                wid_game_map_server_replace_tile(
+                        wid_game_map_server_grid_container,
+                        0, 0,
+                        t,
+                        t->thing_template);
+            } }
+
+            level_update_now(server_level);
 
             socket_server_tx_map_update(0, server_active_things);
             socket_server_tx_map_update(0, server_boring_things);
@@ -1217,18 +1268,18 @@ void level_set_is_paused (levelp level, uint8_t val)
     level->is_paused = val;
 }
 
-uint8_t level_is_frozen (levelp level)
+uint8_t level_is_completed (levelp level)
 {
     verify(level);
 
-    return (level->is_frozen);
+    return (level->is_completed);
 }
 
-void level_set_is_frozen (levelp level, uint8_t val)
+void level_set_is_completed (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_frozen = val;
+    level->is_completed = val;
 }
 
 const char *level_get_logname (levelp l)
@@ -1320,7 +1371,7 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
                                level->exit_reached_when_open);
     } while (demarshal_gotone(ctx));
 
-    wid_editor_map_loading = true;
+    server_level_is_being_loaded = true;
 
     if (level_is_editor(level)) {
         rc = demarshal_wid_grid(ctx, wid,
@@ -1330,7 +1381,7 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
                                 wid_game_map_server_replace_tile);
     }
 
-    wid_editor_map_loading = false;
+    server_level_is_being_loaded = false;
 
     map_fixup(level);
 

@@ -89,6 +89,7 @@ void thing_timer_place_and_destroy_callback (void *context)
                                     wid_game_map_server_grid_container,
                                     place->x,
                                     place->y,
+                                    0, /* thing */
                                     place->thing_template);
 
     /*
@@ -161,6 +162,7 @@ void thing_timer_place_callback (void *context)
                                     wid_game_map_server_grid_container,
                                     place->x,
                                     place->y,
+                                    0, /* thing */
                                     place->thing_template);
 
     thingp t = wid_get_thing(w);

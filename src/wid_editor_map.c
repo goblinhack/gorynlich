@@ -31,7 +31,7 @@ static float tile_height_pct = 1.0f / TILES_SCREEN_HEIGHT;
 static uint32_t tile_width;
 static uint32_t tile_height;
 levelp level_ed;
-uint8_t wid_editor_map_loading;
+uint8_t server_level_is_being_loaded;
 uint8_t wid_editor_got_line_start;
 
 static uint8_t wid_editor_ignore_events (widp w)
@@ -49,6 +49,7 @@ static uint8_t wid_editor_ignore_events (widp w)
 widp wid_editor_map_thing_replace_template (widp w,
                                             double x,
                                             double y,
+                                            thingp t,
                                             thing_templatep thing_template)
 {
     tree_rootp thing_tiles;
@@ -110,6 +111,7 @@ widp wid_editor_map_thing_replace_template (widp w,
 
     tl.y -= base_tile_height / 4.0;
     br.y -= base_tile_width / 4.0;
+
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
@@ -155,7 +157,7 @@ widp wid_editor_map_thing_replace_template (widp w,
         /*
          * Do the fixup at the end as it is slow.
          */
-        if (wid_editor_map_loading) {
+        if (server_level_is_being_loaded) {
             return (child);
         }
 
@@ -197,7 +199,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     /*
      * Do the fixup at the end as it is slow.
      */
-    if (wid_editor_map_loading) {
+    if (server_level_is_being_loaded) {
         return (child);
     }
 
@@ -274,7 +276,9 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     }
 
     wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
-                                          xin, yin, thing_template);
+                                          xin, yin, 
+                                          0, /* thing */
+                                          thing_template);
 
     wid_editor_map_thing_flood_fill_template(xin + 1, yin, thing_template);
     wid_editor_map_thing_flood_fill_template(xin - 1, yin, thing_template);
@@ -366,6 +370,7 @@ static uint8_t wid_editor_map_thing_replace (widp w,
 
     (void) wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
                                                  x, y,
+                                                 0, /* thing */
                                                  thing_template);
 
     return (true);
@@ -533,9 +538,9 @@ static uint8_t wid_editor_map_thing_replace_wrap (widp w,
     if (wid_editor_mode_fill) {
         wid_editor_save_point();
 
-        wid_editor_map_loading = true;
+        server_level_is_being_loaded = true;
         wid_editor_map_thing_flood_fill(w, x, y);
-        wid_editor_map_loading = false;
+        server_level_is_being_loaded = false;
 
         map_fixup(level_ed);
         wid_raise(wid_editor_filename_and_title);
@@ -569,9 +574,9 @@ static uint8_t wid_editor_map_thing_replace_wrap (widp w,
         x /= tile_width;
         y /= tile_height;
 
-        wid_editor_map_loading = true;
+        server_level_is_being_loaded = true;
         wid_editor_draw_line(w, line_start_x, line_start_y, x, y);
-        wid_editor_map_loading = false;
+        server_level_is_being_loaded = false;
         
         map_fixup(level_ed);
         wid_raise(wid_editor_filename_and_title);
@@ -1036,7 +1041,7 @@ void wid_editor_map_wid_destroy (void)
     }
 
     if (level_ed) {
-        level_destroy(&level_ed);
+        level_destroy(&level_ed, false /* keep players */);
     }
 }
 

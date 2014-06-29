@@ -166,7 +166,7 @@ static void server_rx_client_leave_implicit (socketp s)
     if (!global_config.server_current_players) {
         LOG("Server: Last player left the game, destroy the map");
 
-        wid_game_map_server_wid_destroy();
+        wid_game_map_server_wid_destroy(false /* keep players*/);
     } else {
         LOG("Server: %u player(s) left, do not destroy the map",
             global_config.server_current_players);
