@@ -88,6 +88,7 @@ uint8_t thing_mob_spawn (thingp t)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
+                                         0, /* thing */
                                          what);
         return (true);
     }
@@ -155,6 +156,7 @@ uint8_t thing_mob_spawn_on_death (thingp t)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
+                                         0, /* thing */
                                          what);
         return (true);
     }

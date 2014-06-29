@@ -199,6 +199,7 @@ void thing_wield (thingp parent, thing_templatep tmp)
                                 wid_game_map_server_grid_container,
                                 parent->x,
                                 parent->y,
+                                0, /* thing */
                                 what);
         /*
          * Save the thing id so the client wid can keep track of the weapon.
@@ -230,6 +231,7 @@ void thing_swing (thingp parent)
                                 wid_game_map_server_grid_container,
                                 parent->x,
                                 parent->y,
+                                0, /* thing */
                                 what);
 
         /*

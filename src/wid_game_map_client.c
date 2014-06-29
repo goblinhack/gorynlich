@@ -658,7 +658,7 @@ void wid_game_map_client_wid_destroy (void)
     if (client_level) {
         LOG("Client: Destroy game level");
 
-        level_destroy(&client_level);
+        level_destroy(&client_level, false /* keep players */);
     }
 
     if (wid_game_map_client_window) {
