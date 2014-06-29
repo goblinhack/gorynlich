@@ -82,7 +82,7 @@ typedef struct level_t_ {
     /*
      * Things cannot move at all.
      */
-    uint8_t is_frozen:1;
+    uint8_t is_completed:1;
 
     /*
      * Being used in level editor.

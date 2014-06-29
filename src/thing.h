@@ -31,7 +31,7 @@ uint8_t thing_is_visible(thingp);
 void thing_leave_level(thingp);
 void thing_join_level(thingp);
 void thing_visible(thingp);
-void things_level_destroyed(levelp);
+void things_level_destroyed(levelp, uint8_t keep_players);
 void demarshal_thing(demarshal_p ctx, thingp);
 void marshal_thing(marshal_p ctx, thingp);
 void thing_templates_marshal(marshal_p out);

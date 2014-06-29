@@ -57,6 +57,8 @@ static void thing_tick_server_all (void)
         w = t->wid;
         if (w) {
             verify(w);
+        } else {
+            ERR("thing %s has no widget", thing_logname(t));
         }
 
         /*

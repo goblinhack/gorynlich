@@ -757,6 +757,7 @@ thingp thing_server_new (levelp level, const char *name,
         THING_LOG(t, "created on server");
     }
 
+THING_LOG(t, "new");
     return (t);
 }
 
@@ -907,6 +908,7 @@ static void thing_destroy_implicit (thingp t)
 
 void thing_destroy (thingp t, const char *why)
 {
+THING_LOG(t, "dest");
     verify(t);
 
     if (thing_is_player(t)) {
@@ -1668,7 +1670,12 @@ void thing_leave_level (thingp t)
     }
 
     t->has_left_level = true;
-    t->needs_tx_player_update = true;
+
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
+
+    level_set_is_completed(server_level, true);
 
     /*
      * Make the weapon leave to
@@ -1744,7 +1751,7 @@ void thing_reached_exit (thingp t)
     sound_play_level_end();
 }
 
-void things_level_destroyed (levelp level)
+void things_level_destroyed (levelp level, uint8_t keep_players)
 {
     thingp t;
 
@@ -1754,6 +1761,10 @@ void things_level_destroyed (levelp level)
     if (level == server_level) {
         {
             TREE_WALK(server_active_things, t) {
+                if (keep_players && thing_is_player(t)) {
+                    continue;
+                }
+
                 thing_destroy(t, "level destroyed");
             }
         }
@@ -2782,7 +2793,7 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 
 void socket_server_tx_map_update (socketp p, tree_rootp tree)
 {
-//LOG("tx update");
+LOG("tx update");
     /*
      * If no players, then send nothing.
      */
@@ -2886,7 +2897,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree)
         uint8_t tx;
         uint8_t ty;
 
-//LOG("tx %s",thing_logname(t));
+LOG("tx %s",thing_logname(t));
         widp w = thing_wid(t);
         if (w) {
             tx = (uint8_t)(int)((t->x * ((double)256)) / MAP_WIDTH);
@@ -3283,6 +3294,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
+CON("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
 
@@ -3291,8 +3303,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         } else {
             thing_visible(t);
         }
-
-//CON("rx %s",thing_logname(t));
     }
 
     if (need_fixup) {
@@ -3637,6 +3647,7 @@ void thing_fire (thingp t,
                                     wid_game_map_server_grid_container,
                                     x,
                                     y,
+                                    0, /* thing */
                                     projectile);
 
     thingp p = wid_get_thing(w);
@@ -3874,7 +3885,9 @@ void thing_server_action (thingp t,
          * Try to place in front of the player.
          */
         if (!thing_hit_any_obstacle(grid, t, x, y)) {
-            if (wid_game_map_server_replace_tile(grid, x, y, thing_template)) {
+            if (wid_game_map_server_replace_tile(grid, x, y,
+                                                 0, /* thing */
+                                                 thing_template)) {
                 socket_server_tx_map_update(0, server_boring_things);
                 break;
             }
@@ -3894,6 +3907,7 @@ void thing_server_action (thingp t,
 
                 if (!thing_hit_any_obstacle(grid, t, x, y)) {
                     if (wid_game_map_server_replace_tile(grid, x, y, 
+                                                         0, /* thing */
                                                          thing_template)) {
                         socket_server_tx_map_update(0, server_boring_things);
                         goto done;
