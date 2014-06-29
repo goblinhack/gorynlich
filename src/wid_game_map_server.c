@@ -320,9 +320,9 @@ wid_game_map_server_replace_tile (widp w,
     wid_set_thing_template(child, thing_template);
 
     if (!thing) {
-        thing = thing_server_new(level, 
-                                 thing_template_name(thing_template),
-                                 x, y);
+        thing = thing_server_new(thing_template_name(thing_template), x, y);
+    } else {
+        thing_server_init(thing, x, y);
     }
 
     wid_set_thing(child, thing);

@@ -340,7 +340,7 @@ extern uint32_t socket_get_tx(socketp s);
 extern uint32_t socket_get_rx_error(socketp s);
 extern uint32_t socket_get_tx_error(socketp s);
 extern uint32_t socket_get_rx_bad_msg(socketp s);
-extern void socket_server_tx_map_update(socketp, tree_rootp);
+extern void socket_server_tx_map_update(socketp, tree_rootp, const char *type);
 extern void socket_client_rx_map_update(socketp s, 
                                         UDPpacket *packet, uint8_t *data);
 extern void socket_server_tx_player_update(thingp);
