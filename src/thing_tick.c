@@ -347,9 +347,9 @@ void thing_tick_all (void)
         static uint32_t ts;
 
         if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI, ts)) {
-            ts = time_get_time_cached();
-
             thing_generate_dmaps();
+
+            ts = time_get_time_cached();
         }
     }
 
@@ -364,23 +364,26 @@ void thing_tick_all (void)
 
         if (time_have_x_thousandths_passed_since(
                             DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST, ts)) {
-            ts = time_get_time_cached();
 
             socket_server_tx_map_update(0 /* all clients */, 
-                                        server_active_things);
+                                        server_active_things,
+                                        "level tick active");
+
+            ts = time_get_time_cached();
         }
     }
 
     if (player) {
         static uint32_t ts;
 
-        if (time_have_x_thousandths_passed_since(DELAY_THOUSANDTHS_PLAYER_POLL, 
-                                                 ts)) {
-            ts = time_get_time_cached();
+        if (time_have_x_thousandths_passed_since(
+                            DELAY_THOUSANDTHS_PLAYER_POLL, ts)) {
 
             wid_game_map_client_player_move();
 
             wid_game_map_client_scroll_adjust();
+
+            ts = time_get_time_cached();
         }
     }
 

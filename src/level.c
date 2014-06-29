@@ -863,28 +863,36 @@ void level_tick (levelp level)
 
             level_update_now(level);
 
-            socket_server_tx_map_update(0, server_active_things);
-            socket_server_tx_map_update(0, server_boring_things);
+            socket_server_tx_map_update(0, server_active_things,
+                                        "level map update active things");
+            socket_server_tx_map_update(0, server_boring_things,
+                                        "level map update boring things");
         }
 
         if (level_is_completed(level)) {
             thingp t;
 
+            /*
+             * Force the death of all things on the level.
+             */
             { TREE_WALK(server_active_things, t) {
                 if (!thing_is_player(t)) {
-                    thing_dead(t, 0, "end of level");
-                    continue;
+                    t->is_dead = true;
+                    thing_update(t);
                 }
             } }
 
             { TREE_WALK(server_boring_things, t) {
-                thing_dead(t, 0, "end of level");
+                t->is_dead = true;
+                thing_update(t);
             } }
 
-            socket_server_tx_map_update(0, server_active_things);
-            socket_server_tx_map_update(0, server_boring_things);
-
             wid_game_map_server_wid_destroy(true /* keep players */);
+
+            socket_server_tx_map_update(0, server_boring_things,
+                                        "level destroy boring things");
+            socket_server_tx_map_update(0, server_active_things,
+                                        "level destroy active things");
 
             { TREE_WALK(server_active_things, t) {
                 if (!thing_is_player(t)) {
@@ -908,12 +916,16 @@ void level_tick (levelp level)
                         0, 0,
                         t,
                         t->thing_template);
+
+                thing_join_level(t);
             } }
 
-            level_update_now(server_level);
+            socket_server_tx_map_update(0, server_boring_things,
+                                        "new level boring things");
+            socket_server_tx_map_update(0, server_active_things,
+                                        "new level active things");
 
-            socket_server_tx_map_update(0, server_active_things);
-            socket_server_tx_map_update(0, server_boring_things);
+            level_update_now(server_level);
         }
     }
 }

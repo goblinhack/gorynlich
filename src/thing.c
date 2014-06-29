@@ -585,9 +585,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
 /*
  * Create a new thing.
  */
-thingp thing_server_new (levelp level, const char *name,
-                         double x,
-                         double y)
+thingp thing_server_new (const char *name, double x, double y)
 {
     thingp t;
     thing_templatep thing_template;
@@ -616,16 +614,6 @@ thingp thing_server_new (levelp level, const char *name,
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
     t->on_server = true;
-
-    /*
-     * Start out not on the map.
-     */
-    t->last_x = -1.0;
-    t->last_y = -1.0;
-    t->map_x = -1.0;
-    t->map_y = -1.0;
-    t->x = x;
-    t->y = y;
 
     /*
      * Use a different base for monsters so that the IDs we create are going
@@ -726,14 +714,6 @@ thingp thing_server_new (levelp level, const char *name,
 
     t->logname = dynprintf("%s[%p, id %u] (server)", thing_short_name(t), t,
                            t->thing_id);
-    thing_update(t);
-
-    /*
-     * So we send a move update to the client.
-     */
-    t->last_tx = -1;
-    t->last_ty = -1;
-    t->first_update = true;
 
     /*
      * Start out with the items carried on the template if any.
@@ -748,17 +728,42 @@ thingp thing_server_new (levelp level, const char *name,
         }
     }
 
+    thing_server_init(t, x, y);
+
+//THING_LOG(t, "new");
+    return (t);
+}
+
+/*
+ * Reinit this player on a new level
+ */
+void thing_server_init (thingp t, double x, double y)
+{
+    /*
+     * Start out not on the map.
+     */
+    t->last_x = -1.0;
+    t->last_y = -1.0;
+    t->map_x = -1.0;
+    t->map_y = -1.0;
+    t->x = x;
+    t->y = y;
+
+    thing_update(t);
+
+    /*
+     * So we send a move update to the client.
+     */
+    t->last_tx = -1;
+    t->last_ty = -1;
+    t->first_update = true;
+
     if (thing_is_player(t)) {
         /*
          * So the client sees any carried weapons at start.
          */
         t->needs_tx_player_update = true;
-
-        THING_LOG(t, "created on server");
     }
-
-THING_LOG(t, "new");
-    return (t);
 }
 
 /*
@@ -908,7 +913,6 @@ static void thing_destroy_implicit (thingp t)
 
 void thing_destroy (thingp t, const char *why)
 {
-THING_LOG(t, "dest");
     verify(t);
 
     if (thing_is_player(t)) {
@@ -1144,7 +1148,12 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                                        thing_short_name(t), t,
                                        t->thing_id);
 
-                socket_server_tx_map_update(0, server_boring_things);
+                /*
+                 * No need to update active things they do it automatically
+                 * in the ticker.
+                 */
+                socket_server_tx_map_update(0, server_boring_things, 
+                                            "polymorph dead thing boring");
                 return;
             }
 
@@ -1693,6 +1702,12 @@ void thing_join_level (thingp t)
     }
 
     t->has_left_level = false;
+
+    /*
+     * To force the client to move to the new start position.
+     */
+    t->resync = 1;
+
     t->needs_tx_player_update = true;
 
     /*
@@ -2791,9 +2806,9 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     }
 }
 
-void socket_server_tx_map_update (socketp p, tree_rootp tree)
+void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 {
-LOG("tx update");
+//LOG("tx update %s", type);
     /*
      * If no players, then send nothing.
      */
@@ -2897,7 +2912,7 @@ LOG("tx update");
         uint8_t tx;
         uint8_t ty;
 
-LOG("tx %s",thing_logname(t));
+//LOG("tx %s is dead %d",thing_logname(t),t->is_dead);
         widp w = thing_wid(t);
         if (w) {
             tx = (uint8_t)(int)((t->x * ((double)256)) / MAP_WIDTH);
@@ -3182,10 +3197,12 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
             t = thing_client_new(id, thing_template);
 
-            need_fixup = need_fixup ||
-                thing_template_is_wall(thing_template) ||
-                thing_template_is_pipe(thing_template) ||
-                thing_template_is_door(thing_template);
+            if (!need_fixup) {
+                need_fixup = 
+                    thing_template_is_wall(thing_template) ||
+                    thing_template_is_pipe(thing_template) ||
+                    thing_template_is_door(thing_template);
+            }
         } else {
             if (template_id != (uint8_t)-1) {
                 /*
@@ -3241,7 +3258,14 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-                        thing_client_wid_update(t, x, y, true /* smooth */);
+                        thing_client_wid_update(t, x, y, false /* smooth */);
+
+                        /*
+                         * If this is a new level we want to update the map
+                         * to and it seems reasonable to do this if there is
+                         * a network error too.
+                         */
+                        need_fixup = true;
                     } else 
                         if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
                             (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
@@ -3254,7 +3278,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-                        thing_client_wid_update(t, x, y, true /* smooth */);
+                        thing_client_wid_update(t, x, y, false /* smooth */);
                     }
                 } else if (on_map) {
                     /*
@@ -3294,7 +3318,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
-CON("rx %s dead",thing_logname(t));
+//CON("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
 
@@ -3888,7 +3912,8 @@ void thing_server_action (thingp t,
             if (wid_game_map_server_replace_tile(grid, x, y,
                                                  0, /* thing */
                                                  thing_template)) {
-                socket_server_tx_map_update(0, server_boring_things);
+                socket_server_tx_map_update(0, server_boring_things,
+                                            "item drop");
                 break;
             }
         }
@@ -3909,7 +3934,8 @@ void thing_server_action (thingp t,
                     if (wid_game_map_server_replace_tile(grid, x, y, 
                                                          0, /* thing */
                                                          thing_template)) {
-                        socket_server_tx_map_update(0, server_boring_things);
+                        socket_server_tx_map_update(0, server_boring_things,
+                                                    "item dropped");
                         goto done;
                     }
                 }

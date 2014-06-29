@@ -1428,7 +1428,8 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
      * tick. The doors should be on the active list now anyway as they were
      * killed above.
      */
-    socket_server_tx_map_update(0 /* all clients */, server_active_things);
+    socket_server_tx_map_update(0 /* all clients */, server_active_things,
+                                "open door");
 }
 
 uint32_t level_count_is_player (levelp level)
