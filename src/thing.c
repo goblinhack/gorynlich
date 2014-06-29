@@ -2891,6 +2891,10 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                  * Send thing animation changes all the time so that weapons
                  * stay close to the player.
                  */
+            } else if (thing_is_dead(t)) {
+                /*
+                 * Send dead changes all the time as we use that on level end
+                 */
             } else if (!time_have_x_thousandths_passed_since(
                     thing_template_get_tx_map_update_delay_thousandths(
                                                             thing_template),
@@ -2912,6 +2916,9 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         uint8_t tx;
         uint8_t ty;
 
+if ((t->x == 10) && (t->y == 4)) {
+CON("tx %s x %f y %f",thing_logname(t),t->x,t->y);
+}
 //LOG("tx %s is dead %d",thing_logname(t),t->is_dead);
         widp w = thing_wid(t);
         if (w) {
@@ -3301,7 +3308,9 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                     /*
                      * Thing has no wid. Make one.
                      */
-//CON("rx %s no wid id %u",thing_logname(t),id);
+if ((t->x == 10) && (t->y == 4)) {
+CON("rx %s x %f y %f",thing_logname(t),t->x,t->y);
+}
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
                                             x, y, t);
@@ -3318,7 +3327,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
-//CON("rx %s dead",thing_logname(t));
+//LOG("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
 

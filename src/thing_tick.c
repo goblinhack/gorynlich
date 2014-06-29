@@ -29,6 +29,7 @@ TREE_GET_NEXT_INLINE(tree_key_two_int32_compare_func)
 
 static void thing_tick_server_all (void)
 {
+//    int count = 0;
     levelp level = server_level;
     if (!level) {
         return;
@@ -54,6 +55,8 @@ static void thing_tick_server_all (void)
         verify(t);
         thing_template = thing_get_template(t);
 
+//    count++;
+//LOG("  %s",thing_logname(t));
         w = t->wid;
         if (w) {
             verify(w);
@@ -222,6 +225,8 @@ static void thing_tick_server_all (void)
             }
         }
     }
+
+//    LOG("server count %d",count);
 }
 
 static void thing_tick_client_all (void)
@@ -231,10 +236,12 @@ static void thing_tick_client_all (void)
     if (!level) {
         return;
     }
+//    int count = 0;
 
     TREE_WALK_INLINE(client_active_things, t,
                      tree_get_next_tree_key_two_int32_compare_func) {
         thing_templatep thing_template;
+//count++;
         widp w;
 
         /*
@@ -255,6 +262,7 @@ static void thing_tick_client_all (void)
             thing_destroy(t, "died");
             continue;
         }
+//        LOG("  %s",thing_logname(t));
 
         /*
          * If on the map.
@@ -334,6 +342,7 @@ static void thing_tick_client_all (void)
             }
         }
     }
+//LOG("%d",count);
 }
 
 void thing_tick_all (void)
