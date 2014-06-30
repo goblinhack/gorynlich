@@ -88,9 +88,6 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 
 thingp thing_weapon_carry_anim (thingp t)
 {
-    /*
-     * If this weapon_carry_anim has its own thing id for animations then destroy that.
-     */
     thingp weapon_carry_anim = 0;
 
     if (t->on_server) {
@@ -208,6 +205,11 @@ void thing_wield (thingp parent, thing_templatep tmp)
         parent->weapon_carry_anim_id = child->thing_id;
 
         child->dir = parent->dir;
+
+        /*
+         * Attach to the parent thing.
+         */
+        child->owner_id = parent->thing_id;
 
         parent->needs_tx_player_update = true;
     }
