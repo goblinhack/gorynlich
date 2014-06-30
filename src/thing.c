@@ -1238,7 +1238,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         widp w = t->wid;
         if (w) {
             wid_set_mode(w, WID_MODE_ACTIVE);
-            wid_set_color(w, WID_COLOR_BLIT, RED);
+            if (!wid_is_hidden(w)) {
+                wid_set_color(w, WID_COLOR_BLIT, RED);
+            }
         }
     }
 
@@ -2771,8 +2773,7 @@ static void thing_client_wid_move (thingp t, double x, double y,
     br.x += base_tile_width;
     br.y += base_tile_height;
 
-    br.x += base_tile_width / 4.0;
-    br.y += base_tile_height / 4.0;
+    br.x += base_tile_width / 8.0;
 
     br.x += base_tile_width / 6.0;
     br.y += base_tile_height / 4.0;
@@ -3344,15 +3345,15 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             thing_effect_hit_success(t);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
-//LOG("rx %s dead",thing_logname(t));
-            thing_dead(t, 0, "server killed");
-        }
-
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
             thing_hide(t);
         } else {
             thing_visible(t);
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
+//LOG("rx %s dead",thing_logname(t));
+            thing_dead(t, 0, "server killed");
         }
     }
 
