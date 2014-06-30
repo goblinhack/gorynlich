@@ -4945,6 +4945,23 @@ void wid_visible (widp w, uint32_t delay)
     wid_find_top_focus();
 }
 
+void wid_this_visible (widp w, uint32_t delay)
+{
+    fast_verify(w);
+
+    if (!w) {
+        return;
+    }
+
+    if (!delay) {
+        w->visible = true;
+    }
+
+    wid_fade_in(w, delay);
+
+    w->hidden = false;
+}
+
 void wid_hide (widp w, uint32_t delay)
 {
     fast_verify(w);
@@ -4978,6 +4995,23 @@ void wid_hide (widp w, uint32_t delay)
     }
 
     wid_find_top_focus();
+}
+
+void wid_this_hide (widp w, uint32_t delay)
+{
+    fast_verify(w);
+
+    if (!w) {
+        return;
+    }
+
+    if (!delay) {
+        w->hidden = true;
+    }
+
+    wid_fade_out(w, delay);
+
+    w->visible = false;
 }
 
 static uint8_t wid_scroll_trough_mouse_down (widp w,

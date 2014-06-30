@@ -1641,7 +1641,7 @@ void thing_hide (thingp t)
         return;
     }
 
-    wid_hide(w, 0);
+    wid_this_hide(w, 0);
 
     /*
      * Hide the weapon too or it just floats in the air.
@@ -1668,7 +1668,7 @@ void thing_visible (thingp t)
     /*
      * Reveal the thing.
      */
-    wid_visible(w, wid_hide_delay);
+    wid_this_visible(w, wid_hide_delay);
 
     /*
      * Reveal the weapon again too.
@@ -3254,10 +3254,17 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                     }
                 }
 
-                need_fixup = need_fixup ||
-                    thing_template_is_wall(thing_template) ||
-                    thing_template_is_pipe(thing_template) ||
-                    thing_template_is_door(thing_template);
+                if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
+                    /*
+                     * IF this thing is leaving the level, no need to update
+                     * the map if it is a wall as all walls are leaving.
+                     */
+                } else {
+                    need_fixup = need_fixup ||
+                        thing_template_is_wall(thing_template) ||
+                        thing_template_is_pipe(thing_template) ||
+                        thing_template_is_door(thing_template);
+                }
             }
         }
 
@@ -3358,6 +3365,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (need_fixup) {
+CON("need fixup");
         levelp level;
 
         level = 

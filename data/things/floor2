@@ -5,6 +5,7 @@
  z_order=0
  is_boring
  is_floor
+ is_animated
  tiles={
   tile={
    tile="floor2a"
