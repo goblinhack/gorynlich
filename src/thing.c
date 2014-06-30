@@ -906,6 +906,52 @@ void thing_restarted (thingp t, levelp level)
     thing_set_got_to_exit_first(t, false);
 }
 
+/*
+ * Get rid of all the hooks to other things that this thing has. e.g. the
+ * weapons it carries etc.
+ */
+static void thing_remove_hooks (thingp t)
+{
+    /*
+     * Detach from the owner
+     */
+    if (t->on_server) {
+        /*
+         * We are owned by something. i.e. we are a sword.
+         */
+        if (t->owner_id) {
+            thingp owner = thing_server_ids[t->owner_id];
+
+            if (t->thing_id == owner->weapon_carry_anim_id) {
+                owner->weapon_carry_anim_id = 0;
+            }
+
+            if (t->thing_id == owner->weapon_swing_anim_id) {
+                owner->weapon_swing_anim_id = 0;
+            }
+        }
+
+        /*
+         * We own things like a sword. i.e. we are a player.
+         */
+        if (t->weapon_carry_anim_id) {
+            thingp item = thing_server_ids[t->weapon_carry_anim_id];
+            t->weapon_carry_anim_id = 0;
+            verify(item);
+            item->owner_id = 0;
+            thing_dead(item, 0, "weapon carry anim owner killed");
+        }
+
+        if (t->weapon_swing_anim_id) {
+            thingp item = thing_server_ids[t->weapon_swing_anim_id];
+            t->weapon_swing_anim_id = 0;
+            verify(item);
+            item->owner_id = 0;
+            thing_dead(item, 0, "weapon swing anim owner killed");
+        }
+    }
+}
+
 static void thing_destroy_implicit (thingp t)
 {
     thing_destroy(t, "end of game");
@@ -939,6 +985,11 @@ void thing_destroy (thingp t, const char *why)
             DIE("thing template destroy name [%s] failed", thing_name(t));
         }
     }
+
+    /*
+     * Detach from the owner
+     */
+    thing_remove_hooks(t);
 
     /*
      * Destroy the things weapon. Eventually drop a backpack.
@@ -1025,41 +1076,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     /*
      * Detach from the owner
      */
-    if (t->on_server) {
-        /*
-         * We are owned by something. i.e. we are a sword.
-         */
-        if (t->owner_id) {
-            thingp owner = thing_server_ids[t->owner_id];
-
-            if (t->thing_id == owner->weapon_carry_anim_id) {
-                owner->weapon_carry_anim_id = 0;
-            }
-
-            if (t->thing_id == owner->weapon_swing_anim_id) {
-                owner->weapon_swing_anim_id = 0;
-            }
-        }
-
-        /*
-         * We own things like a sword. i.e. we are a player.
-         */
-        if (t->weapon_carry_anim_id) {
-            thingp item = thing_server_ids[t->weapon_carry_anim_id];
-            t->weapon_carry_anim_id = 0;
-            verify(item);
-            item->owner_id = 0;
-            thing_dead(item, 0, "weapon carry anim owner killed");
-        }
-
-        if (t->weapon_swing_anim_id) {
-            thingp item = thing_server_ids[t->weapon_swing_anim_id];
-            t->weapon_swing_anim_id = 0;
-            verify(item);
-            item->owner_id = 0;
-            thing_dead(item, 0, "weapon swing anim owner killed");
-        }
-    }
+    thing_remove_hooks(t);
 
     if (reason) {
         t->dead_reason = reason;
@@ -2713,8 +2730,10 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
      */
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
-        double dx, dy;
-        thing_weapon_swing_offset(t, &dx, &dy);
+        double dx = 0;
+        double dy = 0;
+
+        thing_weapon_swing_offset(weapon_swing_anim, &dx, &dy);
         thing_server_wid_move(weapon_swing_anim, x + dx, y + dy, is_new);
     }
 }
@@ -2800,7 +2819,9 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
      */
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
-        double dx, dy;
+        double dx = 0;
+        double dy = 0;
+
         thing_weapon_swing_offset(t, &dx, &dy);
         thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, smooth);
     }
@@ -2917,7 +2938,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         uint8_t ty;
 
 if ((t->x == 10) && (t->y == 4)) {
-CON("tx %s x %f y %f",thing_logname(t),t->x,t->y);
+LOG("tx %s x %f y %f",thing_logname(t),t->x,t->y);
 }
 //LOG("tx %s is dead %d",thing_logname(t),t->is_dead);
         widp w = thing_wid(t);
@@ -3308,9 +3329,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                     /*
                      * Thing has no wid. Make one.
                      */
-if ((t->x == 10) && (t->y == 4)) {
-CON("rx %s x %f y %f",thing_logname(t),t->x,t->y);
-}
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
                                             x, y, t);
