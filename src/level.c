@@ -877,12 +877,14 @@ void level_tick (levelp level)
              */
             { TREE_WALK(server_active_things, t) {
                 if (!thing_is_player(t)) {
+                    thing_leave_level(t);
                     t->is_dead = true;
                     thing_update(t);
                 }
             } }
 
             { TREE_WALK(server_boring_things, t) {
+                thing_leave_level(t);
                 t->is_dead = true;
                 thing_update(t);
             } }
