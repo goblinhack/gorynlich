@@ -90,6 +90,8 @@ void wid_raise(widp);
 void wid_lower(widp);
 void wid_hide(widp, uint32_t delay);
 void wid_visible(widp, uint32_t delay);
+void wid_this_hide(widp, uint32_t delay);
+void wid_this_visible(widp, uint32_t delay);
 void wid_toggle_hidden(widp, uint32_t delay);
 void wid_always_hidden(widp, uint8_t value);
 
