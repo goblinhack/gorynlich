@@ -711,7 +711,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
     /*
      * Get the first anim tile.
      */
-    thing_tile = (typeof(thing_tile)) tree_root_first(thing_tiles);
+    thing_tile = (typeof(thing_tile)) thing_tile_random(thing_tiles);
 
     /*
      * Find the real tile that corresponds to this name.
@@ -747,6 +747,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
     wid_game_map_client_set_thing_template(child, thing_template);
 
     wid_set_thing(child, thing);
+    wid_set_tile(child, tile);
 
     thing_client_wid_update(thing, x, y, false /* smooth */);
 

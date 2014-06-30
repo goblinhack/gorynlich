@@ -736,6 +736,19 @@ thing_tilep thing_tile_find (thing_templatep t, uint32_t index, tilep *tile)
     return (t->tilep_join[index][which]);
 }
 
+thing_tilep thing_tile_random (tree_rootp root)
+{
+    thing_tilep thing_tile;
+
+    thing_tile = (typeof(thing_tile)) tree_root_get_random(root);
+
+    if (thing_tile) {
+        verify(thing_tile);
+    }
+
+    return (thing_tile);
+}
+
 thing_tilep thing_tile_first (tree_rootp root)
 {
     thing_tilep thing_tile;
