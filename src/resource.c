@@ -1751,7 +1751,7 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_WALL3, "data/things/wall3");
     thing_template_load(&THING_WALL4, "data/things/wall4");
     thing_template_load(&THING_WALL5, "data/things/wall5");
-    thing_template_load(&THING_FLOOR, "data/things/floor");
+    thing_template_load(&THING_FLOOR1, "data/things/floor1");
     thing_template_load(&THING_FLOOR2, "data/things/floor2");
     thing_template_load(&THING_FLOOR3, "data/things/floor3");
     thing_template_load(&THING_FLOOR4, "data/things/floor4");

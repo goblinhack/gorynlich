@@ -272,7 +272,7 @@ extern uint16_t THING_APPLE_POISON;
 extern uint16_t THING_BANANA;
 extern uint16_t THING_CHEESE;
 extern uint16_t THING_BREAD;
-extern uint16_t THING_FLOOR;
+extern uint16_t THING_FLOOR1;
 extern uint16_t THING_FLOOR2;
 extern uint16_t THING_FLOOR3;
 extern uint16_t THING_FLOOR4;
