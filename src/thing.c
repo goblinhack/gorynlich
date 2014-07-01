@@ -3226,11 +3226,12 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
             t = thing_client_new(id, thing_template);
 
-            if (!need_fixup) {
-                need_fixup = 
-                    thing_template_is_wall(thing_template) ||
-                    thing_template_is_pipe(thing_template) ||
-                    thing_template_is_door(thing_template);
+            if (!need_fixup &&
+                (thing_template_is_wall(thing_template) ||
+                 thing_template_is_pipe(thing_template) ||
+                 thing_template_is_door(thing_template))) {
+CON("need 1 for %s",thing_template_short_name(thing_template));
+                need_fixup = true;
             }
         } else {
             if (template_id != (uint8_t)-1) {
@@ -3260,10 +3261,13 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                      * the map if it is a wall as all walls are leaving.
                      */
                 } else {
-                    need_fixup = need_fixup ||
-                        thing_template_is_wall(thing_template) ||
-                        thing_template_is_pipe(thing_template) ||
-                        thing_template_is_door(thing_template);
+                    if (!need_fixup &&
+                        (thing_template_is_wall(thing_template) ||
+                         thing_template_is_pipe(thing_template) ||
+                         thing_template_is_door(thing_template))) {
+CON("need 2 for %s",thing_template_short_name(thing_template));
+                        need_fixup = true;
+                    }
                 }
             }
         }
@@ -3295,13 +3299,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  client %f %f", x, y);
 
                         thing_client_wid_update(t, x, y, false /* smooth */);
-
-                        /*
-                         * If this is a new level we want to update the map
-                         * to and it seems reasonable to do this if there is
-                         * a network error too.
-                         */
-                        need_fixup = true;
                     } else 
                         if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
                             (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
