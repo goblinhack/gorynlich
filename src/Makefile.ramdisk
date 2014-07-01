@@ -400,8 +400,8 @@
 .o/ramdisk_data_things_fireball.o: asm/ramdisk_data_things_fireball.S ../data/things/fireball
 	gcc -c asm/ramdisk_data_things_fireball.S -o .o/ramdisk_data_things_fireball.o
 
-.o/ramdisk_data_things_floor.o: asm/ramdisk_data_things_floor.S ../data/things/floor
-	gcc -c asm/ramdisk_data_things_floor.S -o .o/ramdisk_data_things_floor.o
+.o/ramdisk_data_things_floor1.o: asm/ramdisk_data_things_floor1.S ../data/things/floor1
+	gcc -c asm/ramdisk_data_things_floor1.S -o .o/ramdisk_data_things_floor1.o
 
 .o/ramdisk_data_things_floor2.o: asm/ramdisk_data_things_floor2.S ../data/things/floor2
 	gcc -c asm/ramdisk_data_things_floor2.S -o .o/ramdisk_data_things_floor2.o

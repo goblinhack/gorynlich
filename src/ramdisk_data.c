@@ -939,12 +939,12 @@ static const unsigned char *const data_things_fireball_start =
 static const unsigned char *const data_things_fireball_end   =
     (const unsigned char *const) (char*)&data_things_fireball_end_;
 
-extern unsigned char *data_things_floor_start_ asm("data_things_floor_start_");
-extern unsigned char *data_things_floor_end_ asm("data_things_floor_end_");
-static const unsigned char *const data_things_floor_start =
-    (const unsigned char *const) (char*)&data_things_floor_start_;
-static const unsigned char *const data_things_floor_end   =
-    (const unsigned char *const) (char*)&data_things_floor_end_;
+extern unsigned char *data_things_floor1_start_ asm("data_things_floor1_start_");
+extern unsigned char *data_things_floor1_end_ asm("data_things_floor1_end_");
+static const unsigned char *const data_things_floor1_start =
+    (const unsigned char *const) (char*)&data_things_floor1_start_;
+static const unsigned char *const data_things_floor1_end   =
+    (const unsigned char *const) (char*)&data_things_floor1_end_;
 
 extern unsigned char *data_things_floor2_start_ asm("data_things_floor2_start_");
 extern unsigned char *data_things_floor2_end_ asm("data_things_floor2_end_");
@@ -2169,7 +2169,7 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/things/fireball",
 },
 {
-    /* filename */ "data/things/floor",
+    /* filename */ "data/things/floor1",
 },
 {
     /* filename */ "data/things/floor2",
@@ -2795,8 +2795,8 @@ void ramdisk_init (void)
     ramdisk_data[132].len = data_things_explosion8_end - data_things_explosion8_start;
     ramdisk_data[133].data = data_things_fireball_start;
     ramdisk_data[133].len = data_things_fireball_end - data_things_fireball_start;
-    ramdisk_data[134].data = data_things_floor_start;
-    ramdisk_data[134].len = data_things_floor_end - data_things_floor_start;
+    ramdisk_data[134].data = data_things_floor1_start;
+    ramdisk_data[134].len = data_things_floor1_end - data_things_floor1_start;
     ramdisk_data[135].data = data_things_floor2_start;
     ramdisk_data[135].len = data_things_floor2_end - data_things_floor2_start;
     ramdisk_data[136].data = data_things_floor3_start;
