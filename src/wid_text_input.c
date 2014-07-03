@@ -12,8 +12,6 @@
 #include "color.h"
 #include "ttf.h"
 
-static const int32_t LINE_WIDTH = 25;
-static const uint32_t MAX_ROWS = 6;
 static const int32_t PAD_X = 80;
 static const int32_t PAD_Y = 25;
 static const int32_t BUTTON_PAD_X = 20;
@@ -22,8 +20,6 @@ static const char wid_text_input_filename_input_str[] =
     "wid text_input filename input";
 static const char wid_text_input_filelist_container_str[] =
     "wid text_input filelist container";
-static const char wid_text_input_file_str[] =
-    "wid text_input file";
 
 typedef void (*wid_text_input_callback)(widp);
 
@@ -225,6 +221,7 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
     uint32_t maxh;
 
     wid_text_input_callback button_callback[args];
+    memset(button_callback, 0, sizeof(button_callback));
 
     {
         uint32_t w;
@@ -511,6 +508,7 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
     uint32_t maxh;
 
     wid_text_input_callback button_callback[args];
+    memset(button_callback, 0, sizeof(button_callback));
 
     {
         uint32_t w;

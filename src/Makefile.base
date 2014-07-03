@@ -13,8 +13,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/config.o			\
     $(OBJDIR)/demarshal.o 		\
     $(OBJDIR)/dir.o 			\
-    $(OBJDIR)/dir_test.o 		\
-    $(OBJDIR)/enum_test.o 		\
     $(OBJDIR)/file.o 			\
     $(OBJDIR)/font.o 			\
     $(OBJDIR)/geo.o 			\
@@ -26,19 +24,15 @@ GAME_OBJECTS=				\
     $(OBJDIR)/main.o 			\
     $(OBJDIR)/map.o 			\
     $(OBJDIR)/marshal.o 		\
-    $(OBJDIR)/marshal_test.o 		\
     $(OBJDIR)/math.o 			\
     $(OBJDIR)/miniz.o 			\
-    $(OBJDIR)/miniz_test.o 		\
     $(OBJDIR)/music.o 			\
     $(OBJDIR)/mzip_file.o 		\
-    $(OBJDIR)/mzip_file_test.o 		\
     $(OBJDIR)/mzip_lib.o 		\
     $(OBJDIR)/pixel.o 			\
     $(OBJDIR)/player.o 			\
     $(OBJDIR)/point.o 			\
     $(OBJDIR)/ptrcheck.o 		\
-    $(OBJDIR)/ptrcheck_test.o 		\
     $(OBJDIR)/ramdisk_read.o 		\
     $(OBJDIR)/resource.o 		\
     $(OBJDIR)/sdl.o 			\
@@ -49,7 +43,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/stb_image.o 		\
     $(OBJDIR)/string.o 			\
     $(OBJDIR)/string_ext.o 		\
-    $(OBJDIR)/string_test.o 		\
     $(OBJDIR)/term.o 			\
     $(OBJDIR)/tex.o 			\
     $(OBJDIR)/thing.o 			\
@@ -68,7 +61,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/timer.o 			\
     $(OBJDIR)/token.o 			\
     $(OBJDIR)/tree.o 			\
-    $(OBJDIR)/tree_test.o 		\
     $(OBJDIR)/ttf.o 			\
     $(OBJDIR)/util.o 			\
     $(OBJDIR)/wid.o 			\
@@ -97,7 +89,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_server_create.o 	\
     $(OBJDIR)/wid_server_join.o 	\
     $(OBJDIR)/wid_splash.o 		\
-    $(OBJDIR)/wid_test.o 		\
     $(OBJDIR)/wid_text_input.o 		\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\

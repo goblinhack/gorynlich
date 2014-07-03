@@ -211,6 +211,7 @@ static void hash_add (hash_t *hash_table, ptrcheck *context)
     }
 
     if (!hash_table) {
+        local_free(context);
         return;
     }
 

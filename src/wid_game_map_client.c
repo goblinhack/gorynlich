@@ -203,7 +203,7 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = state[SDLK_UP] ? 1 : 0;
     uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
     uint8_t fire  = state[SDLK_SPACE] ? 1 : 0;
-    uint8_t quit  = state[SDLK_Q] ? 1 : 0;
+    uint8_t quit  = state[SDLK_q] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
@@ -1103,7 +1103,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     wid_set_tilename(w, thing_tile_name(tile));
                     wid_set_do_not_raise(w, true);
 
-                    color col;
+                    color col = {0};
 
                     if (thing_template_is_item_unusable(temp)) {
                         col = BLACK;

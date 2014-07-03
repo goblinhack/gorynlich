@@ -175,9 +175,5 @@ void thing_timer_place_callback (void *context)
 
 void thing_timer_place_destroy_callback (void *context)
 {
-    thing_place_context_t *place;
-
-    place = (typeof(place)) context;
-
     myfree(context);
 }
