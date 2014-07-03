@@ -24,5 +24,11 @@
   tile={
    tile="floor6f"
   }
+  tile={
+   tile="floor6g"
+  }
+  tile={
+   tile="floor6h"
+  }
  }
 }
