@@ -106,8 +106,6 @@ static const uint32_t NUMBER_BYTES_PER_VERTICE =
 /*
  * Two arrays, xy and uv.
  */
-static const uint32_t NUMBER_ARRAY_ELEM_ARRAYS = 2;
-
 static float *gl_array_buf;
 static float *gl_array_buf_end;
 

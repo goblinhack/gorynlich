@@ -212,7 +212,6 @@ static void wid_intro2_bg_create (void)
 
 static thing_templatep first_thing_template;
 static const int32_t TILES_ACROSS = 2;
-static const int32_t TILES_DOWN = 3;
 
 static void wid_intro2_buttons_tick (widp wid)
 {

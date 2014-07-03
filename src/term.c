@@ -232,28 +232,6 @@ static inline void term_core_fg (unsigned char a)
     term_core_puts(data[a]);
 }
 
-static inline void term_core_bg (unsigned char a)
-{
-    static char *data[] = {
-        "[40m", "[41m", "[42m", "[43m",
-        "[44m", "[45m", "[46m", "[47m",
-        "\033[m",
-    };
-
-    if (a == 0) {
-        /*
-         * Allow the default color to be 0, that of the terminal.
-         */
-        return;
-    }
-
-    if (a >= ARRAY_SIZE(data)) {
-        DIE("overflow");
-    }
-
-    term_core_puts(data[a]);
-}
-
 static void term_core_fgbg (unsigned char fg, unsigned char bg)
 {
     static const char *data[] = {
@@ -293,28 +271,6 @@ static inline void term_puts_fg (unsigned char a)
         "[34m", "[35m", "[36m", "[37m",
         "\033[m",
     };
-
-    if (a >= ARRAY_SIZE(data)) {
-        DIE("overflow");
-    }
-
-    fputs(data[a], stdout);
-}
-
-static inline void term_puts_bg (unsigned char a)
-{
-    static char *data[] = {
-        "[40m", "[41m", "[42m", "[43m",
-        "[44m", "[45m", "[46m", "[47m",
-        "\033[m",
-    };
-
-    if (a == 0) {
-        /*
-         * Allow the default color to be 0, that of the terminal.
-         */
-        return;
-    }
 
     if (a >= ARRAY_SIZE(data)) {
         DIE("overflow");
@@ -835,10 +791,10 @@ get_term_size (int fd, int *x, int *y)
 #ifdef TIOCGSIZE
     if (!ioctl(fd, TIOCGSIZE, &win)) {
         if (y) {
-            *y=win.ts_lines;
+            *y = win.ts_lines;
         }
         if (x) {
-            *x=win.ts_cols;
+            *x = win.ts_cols;
         }
     }
 #elif defined TIOCGWINSZ
@@ -847,32 +803,40 @@ get_term_size (int fd, int *x, int *y)
     }
 
     if (y) {
-        *y=win.ws_row;
+        *y = win.ws_row;
     }
 
     if (x) {
-        *x=win.ws_col;
+        *x = win.ws_col;
     }
 #else
     {
         const char *s;
         s=getenv("LINES");
         if (s) {
-            *y=strtol(s,NULL,10);
+            if (y) {
+                *y = strtol(s,NULL,10);
+            }
         }
         s=getenv("COLUMNS");
         if (s) {
-            *x=strtol(s,NULL,10);
+            if (x) {
+                *x = strtol(s,NULL,10);
+            }
         }
     }
 #endif
 
-    if (!*x) {
-        *x = 80;
+    if (x) {
+        if (!*x) {
+            *x = 80;
+        }
     }
 
-    if (!*y) {
-        *y = 25;
+    if (y) {
+        if (!*y) {
+            *y = 25;
+        }
     }
 
     return (1);

@@ -207,8 +207,6 @@ void wid_server_create_redo (void)
         s->walked = true;
 
         socketp sp = socket_find(s->ip);
-
-        sp = socket_find(s->ip);
         if (!sp) {
             continue;
         }
@@ -887,8 +885,6 @@ static void wid_server_create_create (uint8_t redo)
             i++;
         }
     }
-
-    width_at += width7;
 
     {
         fpoint tl = {0.7, 0.7};

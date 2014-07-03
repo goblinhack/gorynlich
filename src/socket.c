@@ -1247,7 +1247,6 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
     uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
-    data += sizeof(uint32_t);
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
@@ -1266,7 +1265,6 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
-    data += sizeof(uint32_t);
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));

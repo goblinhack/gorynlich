@@ -89,7 +89,9 @@ char *dupstr_ (const char *in,
                const uint32_t line)
 {
     char *ptr = strdup(in);
+#ifdef ENABLE_LEAKCHECK
     uint32_t size = (typeof(size)) strlen(in);
+#endif
 
     if (!ptr) {
         DIE("No memory, %s:%s():%u", file, func, line);

@@ -323,7 +323,7 @@ texp tex_from_surface (SDL_Surface *surface,
     /*
      * Create the tex
      */
-    GLuint gl_surface_binding;
+    GLuint gl_surface_binding = 0;
 
     if (!HEADLESS) {
         glGenTextures(1, &gl_surface_binding);
@@ -433,7 +433,7 @@ texp tex_from_tiled_surface (SDL_Surface *in,
      * Omit every grid pixel between tiles.
      */
     ox = 0;
-    oy = 0;
+
     for (ix = 0; ix < (int32_t) iwidth; ix++) {
 
         oy = 0;
