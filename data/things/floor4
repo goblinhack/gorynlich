@@ -15,5 +15,20 @@
   tile={
    tile="floor4c"
   }
+  tile={
+   tile="floor4d"
+  }
+  tile={
+   tile="floor4e"
+  }
+  tile={
+   tile="floor4f"
+  }
+  tile={
+   tile="floor4g"
+  }
+  tile={
+   tile="floor4h"
+  }
  }
 }
