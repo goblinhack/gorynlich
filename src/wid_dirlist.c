@@ -15,12 +15,10 @@
 #include "dir.h"
 #include "string.h"
 
-static const int32_t LINE_WIDTH = 25;
 static const uint32_t MAX_ROWS = 6;
 static const int32_t PAD_X = 80;
 static const int32_t PAD_Y = 25;
 static const int32_t BUTTON_PAD_X = 20;
-static const int32_t BUTTON_PAD_Y = 10;
 static const char wid_dirlist_filename_input_str[] =
     "wid dirlist filename input";
 static const char wid_dirlist_filelist_container_str[] =
@@ -562,6 +560,7 @@ widp wid_dirlist (const char *dir,
     context->dir = dupstr(dir, __FUNCTION__);
 
     wid_dirlist_callback button_callback[args];
+    memset(button_callback, 0, sizeof(button_callback));
 
     d = dirlist(context->dir,
                 context->include_suffix,

@@ -212,7 +212,7 @@ enum_fmt string2fmt (const char **s)
 
     enum_fmt val = enum_fmt_str2val(tmp);
 
-    if (val == -1) {
+    if ((int) val == -1) {
         DIE("unknown fmt [%s]", tmp);
     }
 

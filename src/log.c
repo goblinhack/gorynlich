@@ -31,33 +31,6 @@ uint8_t debug_enabled = 0;
 uint8_t croaked;
 
 /*
- * putfgbg
- */
-static inline void putfgbg (uint8_t fg, uint8_t bg)
-{
-    static const char *data[] = {
-            "\033[40;30m", "\033[40;31m", "\033[40;32m", "\033[40;33m",
-            "\033[40;34m", "\033[40;35m", "\033[40;36m", "\033[40;37m",
-            "\033[41;30m", "\033[41;31m", "\033[41;32m", "\033[41;33m",
-            "\033[41;34m", "\033[41;35m", "\033[41;36m", "\033[41;37m",
-            "\033[42;30m", "\033[42;31m", "\033[42;32m", "\033[42;33m",
-            "\033[42;34m", "\033[42;35m", "\033[42;36m", "\033[42;37m",
-            "\033[43;30m", "\033[43;31m", "\033[43;32m", "\033[43;33m",
-            "\033[43;34m", "\033[43;35m", "\033[43;36m", "\033[43;37m",
-            "\033[44;30m", "\033[44;31m", "\033[44;32m", "\033[44;33m",
-            "\033[44;34m", "\033[44;35m", "\033[44;36m", "\033[44;37m",
-            "\033[45;30m", "\033[45;31m", "\033[45;32m", "\033[45;33m",
-            "\033[45;34m", "\033[45;35m", "\033[45;36m", "\033[45;37m",
-            "\033[46;30m", "\033[46;31m", "\033[46;32m", "\033[46;33m",
-            "\033[46;34m", "\033[46;35m", "\033[46;36m", "\033[46;37m",
-            "\033[47;30m", "\033[47;31m", "\033[47;32m", "\033[47;33m",
-            "\033[47;34m", "\033[47;35m", "\033[47;36m", "\033[47;37m",
-    };
-
-    printf("%s", data[(bg & 7) * 8 + (fg & 7)]);
-}
-
-/*
  * putfg
  */
 static void putfg (uint8_t fg, FILE *fp)
@@ -279,8 +252,6 @@ static void con_ (const char *fmt, va_list args)
 
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
-
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
@@ -686,8 +657,6 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
 
     buf[0] = '\0';
     timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
-
     len = (uint32_t)strlen(buf);
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 

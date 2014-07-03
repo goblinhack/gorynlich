@@ -167,6 +167,10 @@ uint8_t wid_server_join_init (void)
 
 static void wid_server_join_destroy_internal (server *node)
 {
+    if (!node) {
+        return;
+    }
+
     if (node->host) {
         myfree(node->host);
         node->host= 0;
@@ -1323,8 +1327,6 @@ static void wid_server_join_create (uint8_t redo)
             i++;
         }
     }
-
-    width_at += width7;
 
     {
         fpoint tl = {0.7, 0.90};

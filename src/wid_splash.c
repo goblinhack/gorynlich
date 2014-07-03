@@ -72,8 +72,6 @@ void sdl_splashscreen_update (void)
     if (tex) {
         wid_icon = wid_new_window("splash icon");
 
-        tex = tex_find("gorynlich");
-
         fpoint tl = { 0.3, 0.15 };
         fpoint br = { 0.7, 0.7 };
 

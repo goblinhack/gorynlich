@@ -357,7 +357,6 @@ static void thing_map_sanity_ (thing_map *map, thingp *ids)
         for (x = 0; x < MAP_WIDTH; x++) {
             thing_map_cell *cell = &map->cells[x][y];
 
-            uint8_t found_start = 0;
             uint8_t found_end = 0;
 
             for (i = 0; i < MAP_THINGS_PER_CELL; i++) {
@@ -373,8 +372,6 @@ static void thing_map_sanity_ (thing_map *map, thingp *ids)
 
                     DIE("map elements are not contiguous at %d,%d", x, y);
                 }
-
-                found_start = true;
 
                 thingp t = ids[m];
 

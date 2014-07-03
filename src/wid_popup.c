@@ -16,7 +16,6 @@
 static const int32_t PAD_X = 80;
 static const int32_t PAD_Y = 45;
 static const int32_t BUTTON_PAD_X = 30;
-static const int32_t BUTTON_PAD_Y = 10;
 
 typedef void (*wid_popup_callback)(widp);
 
@@ -175,6 +174,7 @@ widp wid_popup (const char *text, const char *title,
     d = split(text, chars_per_line);
 
     wid_popup_callback button_callback[args];
+    memset(button_callback, 0, sizeof(button_callback));
 
     /*
      * Get some rough sizes for the title font.

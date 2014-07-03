@@ -1277,7 +1277,7 @@ static char wid_event_to_char (const struct SDL_KEYSYM *evt)
                 case SDLK_x: return ('X');
                 case SDLK_y: return ('Y');
                 case SDLK_z: return ('Z');
-                case SDLK_QUOTE: return ('¬');
+                case SDLK_QUOTE: return ('\'');
                 case SDLK_COMMA: return ('<');
                 case SDLK_MINUS: return ('_');
                 case SDLK_PERIOD: return ('>');
@@ -1286,7 +1286,7 @@ static char wid_event_to_char (const struct SDL_KEYSYM *evt)
                 case SDLK_0: return (')');
                 case SDLK_1: return ('!');
                 case SDLK_2: return ('"');
-                case SDLK_3: return ('£');
+                case SDLK_3: return ('#');
                 case SDLK_4: return ('$');
                 case SDLK_5: return ('%');
                 case SDLK_6: return ('^');
@@ -2787,7 +2787,6 @@ tree_wid_compare_func (const tree_node *a, const tree_node *b)
     return (0);
 }
 
-TREE_NEXT_INLINE(tree_wid_compare_func) 
 TREE_PREV_INLINE(tree_wid_compare_func) 
 
 /*
@@ -3978,7 +3977,7 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
 
         rc = rc && GET_BRA(ctx);
 
-        char *name;
+        char *name = 0;
 
         rc = rc && GET_NAMED_UINT32(ctx, "x", x);
         rc = rc && GET_NAMED_UINT32(ctx, "y", y);
@@ -6582,8 +6581,6 @@ void wid_mouse_motion (int32_t x, int32_t y,
         /*
          * Over a new wid.
          */
-        widp orig_wid = w;
-
         while (w && !wid_mouse_over_begin(w, x, y)) {
             w = w->parent;
         }
@@ -6594,7 +6591,6 @@ void wid_mouse_motion (int32_t x, int32_t y,
             /*
              * Allow scrollbar to grab.
              */
-            w = orig_wid;
         } else {
             /*
              * This widget reacted somehow when we went over it. i.e. popup ot 
