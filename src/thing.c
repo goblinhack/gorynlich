@@ -2674,33 +2674,43 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
     fpoint br = { x, y };
 
     double base_tile_width =
-            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_SERVER_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
                 (double)global_config.video_gl_width);
 
     double base_tile_height =
-            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_SERVER_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
                 (double)global_config.video_gl_height);
 
+    /*
+     * Work out the tile size in a percentage of the screen.
+     */
     br.x += base_tile_width;
     br.y += base_tile_height;
 
-    br.x += base_tile_width / 4.0;
-    br.y += base_tile_height / 4.0;
-
-    br.x += base_tile_width / 6.0;
-    br.y += base_tile_height / 4.0;
-
+    /*
+     * Now center the tile.
+     */
     tl.x -= base_tile_height / 2.0;
     br.x -= base_tile_width / 2.0;
-
-    tl.x += base_tile_height / 8.0;
-    br.x += base_tile_width / 8.0;
 
     tl.y -= base_tile_height / 2.0;
     br.y -= base_tile_width / 2.0;
 
-    tl.y -= base_tile_height / 4.0;
-    br.y -= base_tile_width / 4.0;
+    /*
+     * Now the tile itself has a shadow that is 1/4 of the pixels.
+     * The center is 24x24 and with shadow it is 32x32. We need to
+     * stretch the tile so it overlaps so the inner 24x24 if seamless.
+     */
+    double tile_width = ((br.x - tl.x) / 
+                         (double)TILE_PIX_WIDTH) * 
+                            (double)TILE_PIX_WITH_SHADOW_WIDTH;
+
+    double tile_height = ((br.y - tl.y) / 
+                         (double)TILE_PIX_HEIGHT) * 
+                            (double)TILE_PIX_WITH_SHADOW_HEIGHT;
+
+    tl.y -= tile_height / 4.0;
+    br.x += tile_width / 4.0;
 
     if (is_new || 
         thing_is_player(t) ||
@@ -2767,25 +2777,36 @@ static void thing_client_wid_move (thingp t, double x, double y,
             ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
                 (double)global_config.video_gl_height);
 
+    /*
+     * Work out the tile size in a percentage of the screen.
+     */
     br.x += base_tile_width;
     br.y += base_tile_height;
 
-    br.x += base_tile_width / 8.0;
-
-    br.x += base_tile_width / 6.0;
-    br.y += base_tile_height / 4.0;
-
+    /*
+     * Now center the tile.
+     */
     tl.x -= base_tile_height / 2.0;
     br.x -= base_tile_width / 2.0;
-
-    tl.x += base_tile_height / 8.0;
-    br.x += base_tile_width / 8.0;
 
     tl.y -= base_tile_height / 2.0;
     br.y -= base_tile_width / 2.0;
 
-    tl.y -= base_tile_height / 4.0;
-    br.y -= base_tile_width / 4.0;
+    /*
+     * Now the tile itself has a shadow that is 1/4 of the pixels.
+     * The center is 24x24 and with shadow it is 32x32. We need to
+     * stretch the tile so it overlaps so the inner 24x24 if seamless.
+     */
+    double tile_width = ((br.x - tl.x) / 
+                         (double)TILE_PIX_WIDTH) * 
+                            (double)TILE_PIX_WITH_SHADOW_WIDTH;
+
+    double tile_height = ((br.y - tl.y) / 
+                         (double)TILE_PIX_HEIGHT) * 
+                            (double)TILE_PIX_WITH_SHADOW_HEIGHT;
+
+    tl.y -= tile_height / 4.0;
+    br.x += tile_width / 4.0;
 
     /*
      * Make the weapon follow the thing.
