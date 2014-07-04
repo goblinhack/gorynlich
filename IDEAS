@@ -1,7 +1,9 @@
 bugs
 ---
 
-speccy loading
+24x24 pixels
+on walk through level fade out
+slow level reload
 on exit level, bonus countdown timer
 exit level
 game end
@@ -13,6 +15,7 @@ level ed, first select of a thing does not choose it
 ideas
 -----
 
+- speccy loading for end game?
 - chat box
 - backpack drop on death
 - ben wants to combine cheese and bread for more health

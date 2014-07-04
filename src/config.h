@@ -43,8 +43,8 @@
 /*
  * Screen sizes.
  */
-#define DEFAULT_VIDEO_WIDTH         1080 // See gl.h for more
-#define DEFAULT_VIDEO_HEIGHT        720
+#define DEFAULT_VIDEO_WIDTH         1008 // See gl.h for more
+#define DEFAULT_VIDEO_HEIGHT        672
 
 /*
  * This is multiplied by jigsaw piece size.
@@ -55,21 +55,36 @@
 #define JIGPIECE_WIDTH              13
 #define JIGPIECE_HEIGHT             13
 
-#define TILE_WIDTH                  32
-#define TILE_HEIGHT                 32
-
 /*
- * Tiles
+ * Map
  */
 #define MAP_WIDTH                   32
 #define MAP_HEIGHT                  32
 #define MAP_THINGS_PER_CELL         32
 
 /*
+ * Tile pixel width.
+ */
+#define TILE_WIDTH                  32
+#define TILE_HEIGHT                 32
+
+/*
  * The number of tiles per screen.
  */
 #define TILES_SCREEN_WIDTH          21
 #define TILES_SCREEN_HEIGHT         14
+
+/*
+ * The width of wall blocks and floor tiles not counting shadow pixels
+ */
+#define TILE_PIX_WIDTH              24
+#define TILE_PIX_HEIGHT             24
+
+/*
+ * The width including shadow pixels.
+ */
+#define TILE_PIX_WITH_SHADOW_WIDTH  TILE_WIDTH
+#define TILE_PIX_WITH_SHADOW_HEIGHT TILE_HEIGHT
 
 #define TILES_SERVER_SCALE          4
 #define TILES_CLIENT_SCALE          1
