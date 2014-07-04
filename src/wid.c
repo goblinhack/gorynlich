@@ -7394,8 +7394,8 @@ static void wid_display (widp w,
 
     tl.x = otlx;
     tl.y = otly;
-    br.x = obrx;
-    br.y = obry;
+    br.x = otlx + wid_get_width(w);
+    br.y = otly + wid_get_height(w);
 
     if (tex) {
         /*
