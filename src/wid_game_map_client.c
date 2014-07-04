@@ -203,7 +203,6 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = state[SDLK_UP] ? 1 : 0;
     uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
     uint8_t fire  = state[SDLK_SPACE] ? 1 : 0;
-    uint8_t quit  = state[SDLK_q] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
@@ -212,7 +211,6 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
     uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
     uint8_t fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
-    uint8_t quit  = state[SDL_SCANCODE_Q] ? 1 : 0;
 #endif /* } */
 
     if (!player) {
@@ -221,10 +219,6 @@ uint8_t wid_game_map_client_player_move (void)
 
     if (!client_joined_server) {
         return (false);
-    }
-
-    if (quit) {
-        wid_game_quit_visible();
     }
 
     if (!up && !down && !left && !right && !fire) {
@@ -309,6 +303,10 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
         MSG(WARNING, "No carried item is using that key");
         break;
+
+    case 'q':
+        wid_game_quit_visible();
+        return (true);
 
     default:
         break;
