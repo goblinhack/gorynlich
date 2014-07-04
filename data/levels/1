@@ -1400,6 +1400,10 @@
   } {   
    x=7 
    y=10 
+   t="data/things/bonepile3" 
+  } {   
+   x=7 
+   y=10 
    t="data/things/floor3" 
   } {   
    x=8 
