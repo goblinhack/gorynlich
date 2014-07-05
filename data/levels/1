@@ -276,6 +276,10 @@
   } {   
    x=2 
    y=1 
+   t="data/things/bonepile1" 
+  } {   
+   x=2 
+   y=1 
    t="data/things/floor3" 
   } {   
    x=3 
@@ -309,6 +313,10 @@
    x=10 
    y=1 
    t="data/things/floor3" 
+  } {   
+   x=11 
+   y=1 
+   t="data/things/bonepile1" 
   } {   
    x=11 
    y=1 
@@ -412,7 +420,7 @@
   } {   
    x=30 
    y=1 
-   t="data/things/bonepile3" 
+   t="data/things/bonepile1" 
   } {   
    x=30 
    y=1 
@@ -433,6 +441,10 @@
    x=0 
    y=2 
    t="data/things/floor3" 
+  } {   
+   x=1 
+   y=2 
+   t="data/things/bonepile1" 
   } {   
    x=1 
    y=2 
@@ -509,6 +521,10 @@
    x=11 
    y=2 
    t="data/things/floor3" 
+  } {   
+   x=12 
+   y=2 
+   t="data/things/bonepile1" 
   } {   
    x=12 
    y=2 
@@ -632,6 +648,10 @@
   } {   
    x=4 
    y=3 
+   t="data/things/bonepile1" 
+  } {   
+   x=4 
+   y=3 
    t="data/things/floor3" 
   } {   
    x=5 
@@ -673,6 +693,10 @@
    x=12 
    y=3 
    t="data/things/floor3" 
+  } {   
+   x=13 
+   y=3 
+   t="data/things/bonepile1" 
   } {   
    x=13 
    y=3 
@@ -1804,15 +1828,15 @@
   } {   
    x=7 
    y=10 
-   t="data/things/bonepile3" 
-  } {   
-   x=7 
-   y=10 
    t="data/things/floor3" 
   } {   
    x=8 
    y=10 
    t="data/things/floor3" 
+  } {   
+   x=9 
+   y=10 
+   t="data/things/bonepile2" 
   } {   
    x=9 
    y=10 
@@ -2005,10 +2029,6 @@
    x=12 
    y=11 
    t="data/things/floor3" 
-  } {   
-   x=13 
-   y=11 
-   t="data/things/bonepile3" 
   } {   
    x=13 
    y=11 
@@ -2872,7 +2892,7 @@
   } {   
    x=15 
    y=16 
-   t="data/things/bonepile3" 
+   t="data/things/bonepile2" 
   } {   
    x=15 
    y=16 
@@ -3220,7 +3240,7 @@
   } {   
    x=13 
    y=18 
-   t="data/things/bonepile3" 
+   t="data/things/bonepile2" 
   } {   
    x=13 
    y=18 
@@ -3708,10 +3728,6 @@
   } {   
    x=19 
    y=21 
-   t="data/things/bonepile3" 
-  } {   
-   x=19 
-   y=21 
    t="data/things/floor3" 
   } {   
    x=20 
@@ -3721,6 +3737,10 @@
    x=20 
    y=21 
    t="data/things/floor3" 
+  } {   
+   x=21 
+   y=21 
+   t="data/things/bonepile2" 
   } {   
    x=21 
    y=21 
@@ -3781,10 +3801,6 @@
    x=0 
    y=22 
    t="data/things/floor3" 
-  } {   
-   x=1 
-   y=22 
-   t="data/things/bonepile3" 
   } {   
    x=1 
    y=22 
@@ -4036,6 +4052,10 @@
   } {   
    x=19 
    y=23 
+   t="data/things/bonepile2" 
+  } {   
+   x=19 
+   y=23 
    t="data/things/floor3" 
   } {   
    x=20 
@@ -4045,10 +4065,6 @@
    x=20 
    y=23 
    t="data/things/floor3" 
-  } {   
-   x=21 
-   y=23 
-   t="data/things/bonepile3" 
   } {   
    x=21 
    y=23 
@@ -4561,10 +4577,6 @@
    x=1 
    y=27 
    t="data/things/floor3" 
-  } {   
-   x=2 
-   y=27 
-   t="data/things/bonepile3" 
   } {   
    x=2 
    y=27 
