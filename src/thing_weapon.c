@@ -179,8 +179,6 @@ void thing_wield (thingp parent, thing_templatep tmp)
     if (thing_is_player(parent)) {
         THING_SHOUT_AT(parent, INFO,
                        "You wield the %s", thing_template_short_name(tmp));
-
-        parent->needs_tx_player_update = true;
     }
 
     const char *child = thing_template_weapon_carry_anim(tmp);
@@ -210,6 +208,8 @@ void thing_wield (thingp parent, thing_templatep tmp)
          * Attach to the parent thing.
          */
         child->owner_id = parent->thing_id;
+
+        thing_update(child);
 
         parent->needs_tx_player_update = true;
     }
@@ -252,6 +252,8 @@ void thing_swing (thingp parent)
          * to run.
          */
         thing_timer_destroy(child, 200);
+
+        thing_update(child);
 
         parent->needs_tx_player_update = true;
     }
