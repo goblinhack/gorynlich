@@ -65,15 +65,6 @@ static void thing_tick_server_all (void)
         }
 
         /*
-         * If something changed in the player that we need to update the 
-         * client, do so now.
-         */
-        if (t->needs_tx_player_update) {
-            t->needs_tx_player_update = false;
-            socket_server_tx_player_update(t);
-        }
-
-        /*
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {
@@ -225,8 +216,29 @@ static void thing_tick_server_all (void)
             }
         }
     }
-
 //    LOG("server count %d",count);
+}
+
+static void thing_tick_server_player_all (void)
+{
+    thingp t;
+
+    TREE_OFFSET_WALK_UNSAFE(server_player_things, t) {
+
+        /*
+         * Sanity checks.
+         */
+        verify(t);
+
+        /*
+         * If something changed in the player that we need to update the 
+         * client, do so now.
+         */
+        if (t->needs_tx_player_update) {
+            t->needs_tx_player_update = false;
+            socket_server_tx_player_update(t);
+        }
+    }
 }
 
 static void thing_tick_client_all (void)
@@ -377,6 +389,13 @@ void thing_tick_all (void)
             socket_server_tx_map_update(0 /* all clients */, 
                                         server_active_things,
                                         "level tick active");
+
+            /*
+             * We must send the player update after a general update as the
+             * player may now be carrying some things created in the update
+             * above.
+             */
+            thing_tick_server_player_all();
 
             ts = time_get_time_cached();
         }
