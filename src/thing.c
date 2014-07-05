@@ -834,6 +834,9 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
         THING_LOG(t, "created on client");
     }
 
+if (thing_is_weapon_swing_effect(t)) {
+LOG("new %s %f %f",thing_logname(t),t->x,t->y);
+}
     return (t);
 }
 
@@ -2791,7 +2794,10 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
         double dx = 0;
         double dy = 0;
 
-        thing_weapon_swing_offset(weapon_swing_anim, &dx, &dy);
+        thing_weapon_swing_offset(t, &dx, &dy);
+if (t && thing_is_weapon_swing_effect(t)) {
+LOG("%s %f %f d %f %f final %f %f",thing_logname(t),x,y,dx,dy,x+dx,x+dy);
+}
         thing_server_wid_move(weapon_swing_anim, x + dx, y + dy, is_new);
     }
 }
@@ -2807,6 +2813,9 @@ static void thing_client_wid_move (thingp t, double x, double y,
         }
     }
 
+if (thing_is_weapon_swing_effect(t)) {
+LOG("client move %s %f %f",thing_logname(t),x,y);
+}
     thing_move(t, x, y);
 
     x *= client_tile_width;
@@ -2866,12 +2875,18 @@ static void thing_client_wid_move (thingp t, double x, double y,
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
     } else {
+if (thing_is_weapon_swing_effect(t)) {
+LOG("   set tl br %f %f %f %f",tl.x,tl.y,br.x,br.y);
+}
         wid_set_tl_br(t->wid, tl, br);
     }
 }
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
+if (thing_is_weapon_swing_effect(t)) {
+LOG(" wid update %s x %f y %f ",thing_logname(t), x, y);
+}
     thing_client_wid_move(t, x, y, smooth);
 
     /*
@@ -2891,7 +2906,10 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
         double dy = 0;
 
         thing_weapon_swing_offset(t, &dx, &dy);
-        thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, smooth);
+if (thing_is_weapon_swing_effect(t)) {
+    LOG("  wid client swing update %s x %f y %f ",thing_logname(t), x + dx, y + dy);
+}
+        thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, false);
     }
 }
 
@@ -2941,17 +2959,22 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 
         thing_templatep thing_template = t->thing_template;
 
-        /*
-         * As an optimization do not send dead events for explosions. Let the
-         * client destroy those on its own to save sending loads of events.
-         */
-        if (thing_is_dead(t)) {
+        if (!t->first_update) {
+            /*
+             * As an optimization do not send dead events for explosions. Let 
+             * the client destroy those on its own to save sending loads of 
+             * events.
+             */
             if (thing_template_is_explosion(thing_template)) {
 //CON("tx skip dead %s",thing_logname(t));
                 t->updated--;
                 continue;
             }
 
+            /*
+             * Only send animations at the start. Let them time out on the 
+             * client.
+             */
             if (thing_template_is_weapon_swing_effect(thing_template)) {
 //CON("tx skip dead %s",thing_logname(t));
                 t->updated--;
@@ -3363,6 +3386,9 @@ CON("need fixup 2 for %s",thing_template_short_name(thing_template));
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
+if (thing_is_weapon_swing_effect(t)) {
+LOG("wid update 4 %s x %f y %f ",thing_logname(t), x, y);
+}
                         thing_client_wid_update(t, x, y, false /* smooth */);
                     } else 
                         if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
@@ -3376,6 +3402,9 @@ CON("need fixup 2 for %s",thing_template_short_name(thing_template));
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
+if (thing_is_weapon_swing_effect(t)) {
+LOG("wid update 3 %s x %f y %f ",thing_logname(t), x, y);
+}
                         thing_client_wid_update(t, x, y, false /* smooth */);
                     }
                 } else if (on_map) {
@@ -3383,6 +3412,9 @@ CON("need fixup 2 for %s",thing_template_short_name(thing_template));
                      * Move something which is not the local player. Could
                      * be another player or monster etc...
                      */
+if (thing_is_weapon_swing_effect(t)) {
+LOG("wid update 2 %s x %f y %f ",thing_logname(t), x, y);
+}
                     thing_client_wid_update(t, x, y, true /* smooth */);
                 }
             } else {
@@ -3399,6 +3431,9 @@ CON("need fixup 2 for %s",thing_template_short_name(thing_template));
                     /*
                      * Thing has no wid. Make one.
                      */
+if (t && thing_is_weapon_swing_effect(t)) {
+LOG("rx new wid %s x %f y %f ",thing_logname(t), x, y);
+}
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
                                             x, y, t);
@@ -3414,7 +3449,9 @@ CON("need fixup 2 for %s",thing_template_short_name(thing_template));
             thing_effect_hit_success(t);
         }
 
-LOG("rx %s ",thing_logname(t));
+if (t && thing_is_weapon_swing_effect(t)) {
+LOG("rx %s x %f y %f ",thing_logname(t), x, y);
+}
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
             thing_hide(t);
         } else {
@@ -3672,6 +3709,9 @@ void thing_client_move (thingp t,
     /*
      * Oddly doing smooth moving makes it more jumpy when scrolling.
      */
+if (thing_is_weapon_swing_effect(t)) {
+LOG("wid update 1 %s x %f y %f ",thing_logname(t), x, y);
+}
     thing_client_wid_update(t, x, y, false);
 
     socket_tx_player_move(client_joined_server, t, up, down, left, right, 
@@ -3910,14 +3950,14 @@ uint8_t thing_server_move (thingp t,
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
+    if (fire) {
+        thing_fire(t, up, down, left, right);
+    }
+
     thing_server_wid_update(t, x, y, false /* is_new */);
     thing_update(t);
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
-
-    if (fire) {
-        thing_fire(t, up, down, left, right);
-    }
 
     return (true);
 }

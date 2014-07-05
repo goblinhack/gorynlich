@@ -676,7 +676,7 @@ void wid_game_map_client_wid_destroy (void)
  * Replace or place a tile.
  */
 widp
-wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
+wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -688,7 +688,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_templatep thing_template = thing_get_template(thing);
+    thing_templatep thing_template = thing_get_template(t);
     if (!thing_template) {
         DIE("no thing template");
     }
@@ -744,10 +744,13 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp thing)
      */
     wid_game_map_client_set_thing_template(child, thing_template);
 
-    wid_set_thing(child, thing);
+    wid_set_thing(child, t);
     wid_set_tile(child, tile);
 
-    thing_client_wid_update(thing, x, y, false /* smooth */);
+if (thing_is_weapon_swing_effect(t)) {
+LOG("wid replace %s x %f y %f ",thing_logname(t), x, y);
+}
+    thing_client_wid_update(t, x, y, false /* smooth */);
 
     /*
      * This adds it to the grid wid.
