@@ -727,7 +727,7 @@ thingp thing_server_new (const char *name, double x, double y)
 
     thing_server_init(t, x, y);
 
-//THING_LOG(t, "new");
+THING_LOG(t, "new");
     return (t);
 }
 
@@ -910,29 +910,36 @@ void thing_restarted (thingp t, levelp level)
 static void thing_remove_hooks (thingp t)
 {
     /*
+     * We are owned by something. i.e. we are a sword.
+     */
+    if (t->owner_id) {
+        thingp owner = thing_owner(t);
+
+        if (t->thing_id == owner->weapon_carry_anim_id) {
+            owner->weapon_carry_anim_id = 0;
+        }
+
+        if (t->thing_id == owner->weapon_swing_anim_id) {
+            owner->weapon_swing_anim_id = 0;
+
+            thingp carry = thing_weapon_carry_anim(owner);
+            if (carry) {
+                if (!t->on_server) {
+                    thing_visible(carry);
+                }
+            }
+        }
+    }
+
+    /*
      * Detach from the owner
      */
     if (t->on_server) {
         /*
-         * We are owned by something. i.e. we are a sword.
-         */
-        if (t->owner_id) {
-            thingp owner = thing_server_ids[t->owner_id];
-
-            if (t->thing_id == owner->weapon_carry_anim_id) {
-                owner->weapon_carry_anim_id = 0;
-            }
-
-            if (t->thing_id == owner->weapon_swing_anim_id) {
-                owner->weapon_swing_anim_id = 0;
-            }
-        }
-
-        /*
          * We own things like a sword. i.e. we are a player.
          */
         if (t->weapon_carry_anim_id) {
-            thingp item = thing_server_ids[t->weapon_carry_anim_id];
+            thingp item = thing_weapon_carry_anim(t);
             t->weapon_carry_anim_id = 0;
             verify(item);
             item->owner_id = 0;
@@ -940,7 +947,7 @@ static void thing_remove_hooks (thingp t)
         }
 
         if (t->weapon_swing_anim_id) {
-            thingp item = thing_server_ids[t->weapon_swing_anim_id];
+            thingp item = thing_weapon_swing_anim(t);
             t->weapon_swing_anim_id = 0;
             verify(item);
             item->owner_id = 0;
@@ -1216,7 +1223,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              * Did someone throw this weapon and gets the score?
              */
             if (killer->owner_id) {
-                recipient = thing_server_ids[killer->owner_id];
+                recipient = thing_owner(killer);
                 verify(recipient);
             }
 
@@ -1447,7 +1454,7 @@ void thing_hit (thingp t,
             /*
              * Get the player swinging the weapon as the hitter.
              */
-            hitter = thing_server_ids[hitter->owner_id];
+            hitter = thing_owner(hitter);
             if (!hitter) {
                 ERR("weapon hitter %s owner id %u has no thing",
                     thing_logname(orig_hitter), orig_hitter->owner_id);
@@ -1486,7 +1493,7 @@ void thing_hit (thingp t,
             /*
              * Get the player firing the weapon as the hitter.
              */
-            hitter = thing_server_ids[hitter->owner_id];
+            hitter = thing_owner(hitter);
             if (!hitter) {
                 ERR("hitter %s owner id %u has no thing",
                     thing_logname(orig_hitter), orig_hitter->owner_id);
@@ -1625,12 +1632,35 @@ void thing_hit (thingp t,
     }
 }
 
+thingp thing_owner (thingp t)
+{
+    if (t->on_server) {
+        if (t->owner_id) {
+            t = thing_server_ids[t->owner_id];
+            verify(t);
+            return (t);
+        }
+    } else {
+        if (t->owner_id) {
+            t = thing_client_ids[t->owner_id];
+            verify(t);
+            return (t);
+        }
+    }
+
+    return (0);
+}
+
 void thing_hide (thingp t)
 {
     verify(t);
 
     widp w = t->wid;
     if (!w) {
+        return;
+    }
+
+    if (t->on_server) {
         return;
     }
 
@@ -1658,21 +1688,40 @@ void thing_visible (thingp t)
         return;
     }
 
+    if (t->on_server) {
+        return;
+    }
+
     if (!wid_this_is_hidden(w)) {
         return;
     }
 
     /*
+     * If this thing has an owner, should the thing stay hidden?
+     */
+    thingp owner = thing_owner(t);
+    if (owner) {
+        if (t == thing_weapon_carry_anim(owner)) {
+            if (thing_weapon_swing_anim(owner)) {
+                /*
+                 * Stay hidden until the weapon swing is done.
+                 */
+                return;
+            }
+        }
+    }
+
+    /*
      * Reveal the thing.
      */
-    wid_this_visible(w, wid_hide_delay);
+    wid_this_visible(w, 0);
 
     /*
      * Reveal the weapon again too.
      */
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
-        thing_hide(weapon_carry_anim);
+        thing_visible(weapon_carry_anim);
     }
 }
 
@@ -2898,13 +2947,13 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
          */
         if (thing_is_dead(t)) {
             if (thing_template_is_explosion(thing_template)) {
-//CON("tx skip %s",thing_logname(t));
+//CON("tx skip dead %s",thing_logname(t));
                 t->updated--;
                 continue;
             }
 
             if (thing_template_is_weapon_swing_effect(thing_template)) {
-//CON("tx skip %s",thing_logname(t));
+//CON("tx skip dead %s",thing_logname(t));
                 t->updated--;
                 continue;
             }
@@ -2947,6 +2996,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 
             t->updated--;
         }
+//CON("tx %s",thing_logname(t));
 
         /*
          * Work out what we are going to send.
@@ -2956,9 +3006,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         uint8_t tx;
         uint8_t ty;
 
-if ((t->x == 10) && (t->y == 4)) {
-LOG("tx %s x %f y %f",thing_logname(t),t->x,t->y);
-}
 //LOG("tx %s is dead %d",thing_logname(t),t->is_dead);
         widp w = thing_wid(t);
         if (w) {
@@ -3248,7 +3295,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 (thing_template_is_wall(thing_template) ||
                  thing_template_is_pipe(thing_template) ||
                  thing_template_is_door(thing_template))) {
-CON("need 1 for %s",thing_template_short_name(thing_template));
+CON("need fixup for %s",thing_template_short_name(thing_template));
                 need_fixup = true;
             }
         } else {
@@ -3283,7 +3330,7 @@ CON("need 1 for %s",thing_template_short_name(thing_template));
                         (thing_template_is_wall(thing_template) ||
                          thing_template_is_pipe(thing_template) ||
                          thing_template_is_door(thing_template))) {
-CON("need 2 for %s",thing_template_short_name(thing_template));
+CON("need fixup 2 for %s",thing_template_short_name(thing_template));
                         need_fixup = true;
                     }
                 }
@@ -3367,6 +3414,7 @@ CON("need 2 for %s",thing_template_short_name(thing_template));
             thing_effect_hit_success(t);
         }
 
+LOG("rx %s ",thing_logname(t));
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
             thing_hide(t);
         } else {
@@ -3374,7 +3422,6 @@ CON("need 2 for %s",thing_template_short_name(thing_template));
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
-//LOG("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
     }
@@ -3466,6 +3513,27 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
     t->weapon_swing_anim_id = SDLNet_Read16(data);
     data += sizeof(uint16_t);
 
+    if (t->weapon_carry_anim_id) {
+        thingp item = thing_weapon_carry_anim(t);
+        if (item) {
+            item->dir = t->dir;
+            item->owner_id = t->thing_id;
+
+            LOG("%s is carrying %s", 
+                thing_logname(t), thing_logname(thing_weapon_carry_anim(t)));
+        }
+    }
+    if (t->weapon_swing_anim_id) {
+        thingp item = thing_weapon_swing_anim(t);
+        if (item) {
+            item->dir = t->dir;
+            item->owner_id = t->thing_id;
+
+            LOG("%s is swinging %s", 
+                thing_logname(t), thing_logname(thing_weapon_swing_anim(t)));
+        }
+    }
+
     memcpy(t->carrying, data, sizeof(t->carrying));
     data += sizeof(t->carrying);
 
@@ -3474,6 +3542,17 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         t->weapon = id_to_thing_template(id);
     } else {
         t->weapon = 0;
+    }
+
+    /*
+     * If swinging a weapon now, hide the carrie weapon until the swing is 
+     * over.
+     */
+    if (t->weapon_swing_anim_id) {
+        thingp carry = thing_weapon_carry_anim(t);
+        if (carry) {
+            thing_hide(carry);
+        }
     }
 }
 

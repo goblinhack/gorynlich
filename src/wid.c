@@ -297,6 +297,7 @@ typedef struct wid_ {
     /*
      * Flags.
      */
+    uint8_t debug:1;
     uint8_t bevelled:1;
     uint8_t rounded:1;
     uint8_t square:1;
