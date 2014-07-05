@@ -239,10 +239,8 @@ static uint8_t things_overlap (const thingp A,
     double Bbry = By + Bpy2;
 
 #ifdef DEBUG
-    if ((thing_is_monst(A) || 
-         thing_is_monst(B)) &&
-        (thing_is_weapon_swing_effect(A) || 
-         thing_is_weapon_swing_effect(B))) {
+    if ((thing_is_player(A) || 
+         thing_is_player(B))) {
 CON("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
 CON("    %f %f",Ax,Ay);
 CON("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
@@ -293,16 +291,14 @@ static void thing_handle_collision (thingp me, thingp it,
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
 #ifdef DEBUG
-if ((thing_is_monst(me) || thing_is_monst(it)) &&
-    (thing_is_weapon_swing_effect(me) || thing_is_weapon_swing_effect(it))) {
+if (thing_is_player(me) || thing_is_player(it)) {
 CON("no overlap %s %s",thing_logname(me),thing_logname(it));
 }
 #endif
         return;
     }
 #ifdef DEBUG
-if ((thing_is_monst(me) || thing_is_monst(it)) &&
-    (thing_is_weapon_swing_effect(me) || thing_is_weapon_swing_effect(it))) {
+if (thing_is_player(me) || thing_is_player(it)) {
 CON("HIT %s %s",thing_logname(me),thing_logname(it));
 }
 #endif

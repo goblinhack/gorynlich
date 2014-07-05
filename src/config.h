@@ -60,7 +60,7 @@
  */
 #define MAP_WIDTH                   32
 #define MAP_HEIGHT                  32
-#define MAP_THINGS_PER_CELL         32
+#define MAP_THINGS_PER_CELL         64
 
 /*
  * Tile pixel width.

@@ -192,7 +192,7 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
                     /*
                      * If solid...
                      */
-		    if (p.a >= 0xff) {
+		    if (p.a >= 0xef) {
 			MIN.x = min(at.x, MIN.x);
 			MIN.y = min(at.y, MIN.y);
 			MAX.x = max(at.x, MAX.x);
