@@ -84,6 +84,8 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
         *dx = -dist_from_player;
         return;
     }
+
+    *dy = dist_from_player + 0.3;
 }
 
 thingp thing_weapon_carry_anim (thingp t)
