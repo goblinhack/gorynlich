@@ -645,7 +645,6 @@ void wid_game_map_client_wid_create (void)
 
     wid_hide(wid_game_map_client_window, 0);
 
-    wid_raise(wid_chat_window);
     wid_visible(wid_chat_window, 0);
 }
 
