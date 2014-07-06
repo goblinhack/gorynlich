@@ -8,8 +8,8 @@
 
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
@@ -60,7 +60,7 @@
  */
 #define MAP_WIDTH                   32
 #define MAP_HEIGHT                  32
-#define MAP_THINGS_PER_CELL         64
+#define MAP_THINGS_PER_CELL         32
 
 /*
  * Tile pixel width.

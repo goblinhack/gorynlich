@@ -241,6 +241,10 @@ static void thing_tick_server_player_all (void)
          * If something changed in the player that we need to update the 
          * client, do so now.
          */
+        if (thing_is_dead(t)) {
+            continue;
+        }
+
         if (t->needs_tx_player_update) {
             t->needs_tx_player_update = false;
             socket_server_tx_player_update(t);
