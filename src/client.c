@@ -961,6 +961,13 @@ static void client_check_still_in_game (void)
             MSG(INFO, "%s, joined the game", p->name);
 
             player = thing_client_find(p->thing_id);
+
+            /*
+             * Needed twice for some reason to adjust the scrollbar.
+             */
+            wid_game_map_client_scroll_adjust(true /* adjust */);
+            wid_game_map_client_scroll_adjust(true /* adjust */);
+
             if (!player) {
                 ERR("failed to find player in map update");
                 continue;

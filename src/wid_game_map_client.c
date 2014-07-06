@@ -148,7 +148,7 @@ static uint8_t wid_game_map_client_receive_mouse_motion (
     return (true);
 }
 
-void wid_game_map_client_scroll_adjust (void) 
+void wid_game_map_client_scroll_adjust (uint8_t adjust) 
 {
     widp w = player->wid;
     if (!w) {
@@ -181,11 +181,12 @@ void wid_game_map_client_scroll_adjust (void)
     static double last_playery;
     static double last_playerx;
 
-    if (last_playery != playery) {
+    if (adjust || (last_playery != playery)) {
+LOG("redo scroll");
         wid_move_to_vert_pct(wid_game_map_client_vert_scroll, playery);
     }
 
-    if (last_playerx != playerx) {
+    if (adjust || (last_playerx != playerx)) {
         wid_move_to_horiz_pct(wid_game_map_client_horiz_scroll, playerx);
     }
 
@@ -746,9 +747,6 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     wid_set_thing(child, t);
     wid_set_tile(child, tile);
 
-if (thing_is_weapon_swing_effect(t)) {
-LOG("wid replace %s x %f y %f ",thing_logname(t), x, y);
-}
     thing_client_wid_update(t, x, y, false /* smooth */);
 
     /*

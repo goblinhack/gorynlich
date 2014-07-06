@@ -14,7 +14,7 @@ void wid_game_map_client_load(void);
 void wid_game_map_client_wid_create(void);
 void wid_game_map_client_wid_destroy(void);
 void wid_game_map_client_score_update(levelp, uint8_t redo);
-void wid_game_map_client_scroll_adjust(void);
+void wid_game_map_client_scroll_adjust(uint8_t adjust);
 uint8_t wid_game_map_client_player_move(void);
 
 extern widp
