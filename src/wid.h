@@ -59,6 +59,7 @@ void wid_destroy(widp *);
 void wid_destroy_nodelay(widp *);
 void wid_destroy_in(widp w, uint32_t ms);
 void wid_set_ignore_events(widp, uint8_t);
+void wid_set_debug(widp, uint8_t);
 
 /*
  * Accessors.

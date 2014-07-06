@@ -420,7 +420,7 @@ void thing_tick_all (void)
 
             wid_game_map_client_player_move();
 
-            wid_game_map_client_scroll_adjust();
+            wid_game_map_client_scroll_adjust(0);
 
             ts = time_get_time_cached();
         }

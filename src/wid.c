@@ -1564,6 +1564,11 @@ void wid_set_name (widp w, const char *string)
     w->name = dupstr(string, "wid name");
 }
 
+void wid_set_debug (widp w, uint8_t val)
+{
+    w->debug = val;
+}
+
 void wid_set_text (widp w, const char *string)
 {
     fast_verify(w);

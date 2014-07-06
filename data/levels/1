@@ -2448,6 +2448,10 @@
   } {   
    x=23 
    y=12 
+   t="data/things/wizard" 
+  } {   
+   x=23 
+   y=12 
    t="data/things/floor3" 
   } {   
    x=24 
@@ -4901,10 +4905,6 @@
    x=10 
    y=31 
    t="data/things/floor3" 
-  } {   
-   x=11 
-   y=31 
-   t="data/things/valkyrie" 
   } {   
    x=11 
    y=31 
