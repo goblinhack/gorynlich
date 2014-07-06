@@ -177,8 +177,6 @@ static widp wid_textbox_internal (widp parent,
 
     wid_move_to_pct_centered(wid_textbox_window, x, y);
 
-    wid_raise(wid_textbox_window);
-
     wid_update(wid_textbox_window);
 
     if (textbox) {

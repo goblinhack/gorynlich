@@ -728,7 +728,7 @@ thingp thing_server_new (const char *name, double x, double y)
 
     thing_server_init(t, x, y);
 
-THING_LOG(t, "new");
+//THING_LOG(t, "new");
     return (t);
 }
 
@@ -835,9 +835,6 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
         THING_LOG(t, "created on client");
     }
 
-if (thing_is_weapon_swing_effect(t)) {
-LOG("new %s %f %f",thing_logname(t),t->x,t->y);
-}
     return (t);
 }
 
@@ -914,7 +911,6 @@ void thing_restarted (thingp t, levelp level)
 static void thing_remove_hooks (thingp t)
 {
     verify(t);
-LOG("remove hook for %s owner %u",thing_logname(t), t->owner_id);
 
     /*
      * We are owned by something. i.e. we are a sword.
@@ -978,8 +974,12 @@ void thing_destroy (thingp t, const char *why)
 {
     verify(t);
 
-LOG("destroy %s (%s) { ", thing_logname(t), why);
     if (thing_is_player(t)) {
+        if (t->on_server) {
+            LOG("Server: destroy %s (%s)", thing_logname(t), why);
+        } else {
+            LOG("Client: destroy %s (%s)", thing_logname(t), why);
+        }
     }
  
     /*
@@ -988,7 +988,6 @@ LOG("destroy %s (%s) { ", thing_logname(t), why);
     thing_timers_destroy(t);
 
     if (t->timers) {
-LOG("  destroy timer %p",t->timers);
         action_timers_destroy(&t->timers);
     }
 
@@ -1083,7 +1082,6 @@ LOG("  destroy timer %p",t->timers);
     }
 
     myfree(t);
-LOG("destroy }");
 }
 
 static void thing_dead_ (thingp t, thingp killer, char *reason)
@@ -1473,7 +1471,6 @@ void thing_hit (thingp t,
             /*
              * Get the player swinging the weapon as the hitter.
              */
-LOG("hit %s hitter ID %u",thing_logname(t),hitter->owner_id);
             hitter = thing_owner(hitter);
             if (!hitter) {
                 ERR("weapon hitter %s owner id %u has no thing",
@@ -1513,7 +1510,6 @@ LOG("hit %s hitter ID %u",thing_logname(t),hitter->owner_id);
             /*
              * Get the player firing the weapon as the hitter.
              */
-LOG("hit %s hitter 2 %s owner ID %u",thing_logname(t), thing_logname(hitter),hitter->owner_id);
             hitter = thing_owner(hitter);
             if (!hitter) {
                 ERR("hitter %s owner id %u has no thing",
@@ -2682,7 +2678,6 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
 
     if (owner) {
         context->owner_id = owner->thing_id;
-LOG(" context %p owner %s",context,thing_logname(owner));
 
         action_timer_create(
                 &owner->timers,
@@ -2694,7 +2689,6 @@ LOG(" context %p owner %s",context,thing_logname(owner));
                 "place and destroy thing",
                 ms,
                 jitter);
-LOG("  create thing timer %p",owner->timers);
     } else {
         action_timer_create(
                 &timers,
@@ -2836,9 +2830,6 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
         double dy = 0;
 
         thing_weapon_swing_offset(t, &dx, &dy);
-if (t && thing_is_weapon_swing_effect(t)) {
-LOG("%s %f %f d %f %f final %f %f",thing_logname(t),x,y,dx,dy,x+dx,x+dy);
-}
         thing_server_wid_move(weapon_swing_anim, x + dx, y + dy, is_new);
     }
 }
@@ -2854,9 +2845,6 @@ static void thing_client_wid_move (thingp t, double x, double y,
         }
     }
 
-if (thing_is_weapon_swing_effect(t)) {
-LOG("client move %s %f %f",thing_logname(t),x,y);
-}
     thing_move(t, x, y);
 
     x *= client_tile_width;
@@ -2916,18 +2904,12 @@ LOG("client move %s %f %f",thing_logname(t),x,y);
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
     } else {
-if (thing_is_weapon_swing_effect(t)) {
-LOG("   set tl br %f %f %f %f",tl.x,tl.y,br.x,br.y);
-}
         wid_set_tl_br(t->wid, tl, br);
     }
 }
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
-if (thing_is_weapon_swing_effect(t)) {
-LOG(" wid update %s x %f y %f ",thing_logname(t), x, y);
-}
     thing_client_wid_move(t, x, y, smooth);
 
     /*
@@ -3048,6 +3030,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                 /*
                  * Send dead changes all the time as we use that on level end
                  */
+//LOG("tx %s",thing_logname(t));
             } else if (!time_have_x_thousandths_passed_since(
                     thing_template_get_tx_map_update_delay_thousandths(
                                                             thing_template),
@@ -3060,7 +3043,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 
             t->updated--;
         }
-//CON("tx %s",thing_logname(t));
 
         /*
          * Work out what we are going to send.
@@ -3427,9 +3409,6 @@ CON("need fixup 2 for %s",thing_template_short_name(thing_template));
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-if (thing_is_weapon_swing_effect(t)) {
-LOG("wid update 4 %s x %f y %f ",thing_logname(t), x, y);
-}
                         thing_client_wid_update(t, x, y, false /* smooth */);
                     } else 
                         if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
@@ -3443,9 +3422,6 @@ LOG("wid update 4 %s x %f y %f ",thing_logname(t), x, y);
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-if (thing_is_weapon_swing_effect(t)) {
-LOG("wid update 3 %s x %f y %f ",thing_logname(t), x, y);
-}
                         thing_client_wid_update(t, x, y, false /* smooth */);
                     }
                 } else if (on_map) {
@@ -3453,9 +3429,6 @@ LOG("wid update 3 %s x %f y %f ",thing_logname(t), x, y);
                      * Move something which is not the local player. Could
                      * be another player or monster etc...
                      */
-if (thing_is_weapon_swing_effect(t)) {
-LOG("wid update 2 %s x %f y %f ",thing_logname(t), x, y);
-}
                     thing_client_wid_update(t, x, y, true /* smooth */);
                 }
             } else {
@@ -3472,9 +3445,6 @@ LOG("wid update 2 %s x %f y %f ",thing_logname(t), x, y);
                     /*
                      * Thing has no wid. Make one.
                      */
-if (t && thing_is_weapon_swing_effect(t)) {
-LOG("rx new wid %s x %f y %f ",thing_logname(t), x, y);
-}
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
                                             x, y, t);
@@ -3490,9 +3460,6 @@ LOG("rx new wid %s x %f y %f ",thing_logname(t), x, y);
             thing_effect_hit_success(t);
         }
 
-if (t && thing_is_weapon_swing_effect(t)) {
-LOG("rx %s x %f y %f ",thing_logname(t), x, y);
-}
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
             thing_hide(t);
         } else {
@@ -3500,6 +3467,7 @@ LOG("rx %s x %f y %f ",thing_logname(t), x, y);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
+//LOG("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
     }
@@ -3750,9 +3718,6 @@ void thing_client_move (thingp t,
     /*
      * Oddly doing smooth moving makes it more jumpy when scrolling.
      */
-if (thing_is_weapon_swing_effect(t)) {
-LOG("wid update 1 %s x %f y %f ",thing_logname(t), x, y);
-}
     thing_client_wid_update(t, x, y, false);
 
     socket_tx_player_move(client_joined_server, t, up, down, left, right, 
