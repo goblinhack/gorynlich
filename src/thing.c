@@ -214,8 +214,9 @@ void thing_fini (void)
 void thing_update (thingp t)
 {
     if (!t->on_server) {
-        DIE("cannot update a thing %s for sending to the client on the client",
+        ERR("cannot update a thing %s for sending to the client on the client",
             thing_logname(t));
+        return;
     }
 
     if (t->updated) {
@@ -912,11 +913,17 @@ void thing_restarted (thingp t, levelp level)
  */
 static void thing_remove_hooks (thingp t)
 {
+    verify(t);
+
     /*
      * We are owned by something. i.e. we are a sword.
      */
     if (t->owner_id) {
         thingp owner = thing_owner(t);
+        if (!owner) {
+            ERR("no owner for thing id %u", t->owner_id);
+            return;
+        }
 
         if (t->thing_id == owner->weapon_carry_anim_id) {
             owner->weapon_carry_anim_id = 0;
@@ -968,10 +975,20 @@ void thing_destroy (thingp t, const char *why)
 {
     verify(t);
 
+LOG("destroy %s (%s) { ", thing_logname(t), why);
     if (thing_is_player(t)) {
-        THING_LOG(t, "destroy (%s)", why);
     }
  
+    /*
+     * Stop all timers.
+     */
+    thing_timers_destroy(t);
+
+    if (t->timers) {
+LOG("  destroy timer %p",t->timers);
+        action_timers_destroy(&t->timers);
+    }
+
     if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
         DIE("thing template destroy name [%s] failed", thing_name(t));
     }
@@ -1002,11 +1019,6 @@ void thing_destroy (thingp t, const char *why)
      * Destroy the things weapon. Eventually drop a backpack.
      */
     thing_unwield(t);
-
-    /*
-     * Stop all timers.
-     */
-    thing_timers_destroy(t);
 
     if (t->dead_reason) {
         myfree(t->dead_reason);
@@ -1068,6 +1080,7 @@ void thing_destroy (thingp t, const char *why)
     }
 
     myfree(t);
+LOG("destroy }");
 }
 
 static void thing_dead_ (thingp t, thingp killer, char *reason)
@@ -1457,6 +1470,7 @@ void thing_hit (thingp t,
             /*
              * Get the player swinging the weapon as the hitter.
              */
+LOG("hit %s hitter ID %u",thing_logname(t),hitter->owner_id);
             hitter = thing_owner(hitter);
             if (!hitter) {
                 ERR("weapon hitter %s owner id %u has no thing",
@@ -1496,6 +1510,7 @@ void thing_hit (thingp t,
             /*
              * Get the player firing the weapon as the hitter.
              */
+LOG("hit %s hitter 2 %s owner ID %u",thing_logname(t), thing_logname(hitter),hitter->owner_id);
             hitter = thing_owner(hitter);
             if (!hitter) {
                 ERR("hitter %s owner id %u has no thing",
@@ -1637,17 +1652,27 @@ void thing_hit (thingp t,
 
 thingp thing_owner (thingp t)
 {
+    verify(t);
+
     if (t->on_server) {
         if (t->owner_id) {
-            t = thing_server_ids[t->owner_id];
-            verify(t);
-            return (t);
+            thingp n = thing_server_ids[t->owner_id];
+            if (!n) {
+                DIE("no server thing for id %u", t->owner_id);
+            }
+
+            verify(n);
+            return (n);
         }
     } else {
         if (t->owner_id) {
-            t = thing_client_ids[t->owner_id];
-            verify(t);
-            return (t);
+            thingp n = thing_client_ids[t->owner_id];
+            if (!n) {
+                DIE("no client thing for id %u", t->owner_id);
+            }
+
+            verify(n);
+            return (n);
         }
     }
 
@@ -2651,22 +2676,35 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
     context->level = server_level;
     context->destroy_in = destroy_in;
     context->thing_template = thing_template;
+
     if (owner) {
         context->owner_id = owner->thing_id;
+LOG(" context %p owner %s",context,thing_logname(owner));
+
+        action_timer_create(
+                &owner->timers,
+                (action_timer_callback)
+                    thing_timer_place_and_destroy_callback,
+                (action_timer_callback)
+                    thing_timer_place_and_destroy_destroy_callback,
+                context,
+                "place and destroy thing",
+                ms,
+                jitter);
+LOG("  create thing timer %p",owner->timers);
+    } else {
+        action_timer_create(
+                &timers,
+                (action_timer_callback)
+                    thing_timer_place_and_destroy_callback,
+                (action_timer_callback)
+                    thing_timer_place_and_destroy_destroy_callback,
+                context,
+                "place and destroy thing",
+                ms,
+                jitter);
     }
-
-    action_timer_create(
-            &timers,
-            (action_timer_callback)
-                thing_timer_place_and_destroy_callback,
-            (action_timer_callback)
-                thing_timer_place_and_destroy_destroy_callback,
-            context,
-            "place and destroy thing",
-            ms,
-            jitter);
 }
-
 void thing_teleport (thingp t, int32_t x, int32_t y)
 {
     if (time_get_time_cached() - t->timestamp_teleport < 500) {

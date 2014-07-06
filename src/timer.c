@@ -52,13 +52,15 @@ void action_timer_destroy (tree_rootp *t, timerp p)
         return;
     }
 
+    tree_rootp tree = *t;
+
     TIMER_LOG(p, "destroy");
 
-    if (!*t) {
+    if (!tree) {
         DIE("no timer tree");
     }
 
-    if (!tree_remove(*t, &p->tree.node)) {
+    if (!tree_remove(tree, &p->tree.node)) {
         DIE("timer remove [%s] failed", action_timer_logname(p));
     }
 
@@ -66,7 +68,7 @@ void action_timer_destroy (tree_rootp *t, timerp p)
 
     action_timer_free(p);
 
-    if (!tree_root_size(*t)) {
+    if (!tree_root_size(tree)) {
         tree_destroy(t, 0);
     }
 }

@@ -58,6 +58,9 @@
 .o/ramdisk_data_levels_4.o: asm/ramdisk_data_levels_4.S ../data/levels/4
 	gcc -c asm/ramdisk_data_levels_4.S -o .o/ramdisk_data_levels_4.o
 
+.o/ramdisk_data_levels_5.o: asm/ramdisk_data_levels_5.S ../data/levels/5
+	gcc -c asm/ramdisk_data_levels_5.S -o .o/ramdisk_data_levels_5.o
+
 .o/ramdisk_data_levels_ben.o: asm/ramdisk_data_levels_ben.S ../data/levels/ben
 	gcc -c asm/ramdisk_data_levels_ben.S -o .o/ramdisk_data_levels_ben.o
 
