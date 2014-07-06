@@ -914,6 +914,7 @@ void thing_restarted (thingp t, levelp level)
 static void thing_remove_hooks (thingp t)
 {
     verify(t);
+LOG("remove hook for %s owner %u",thing_logname(t), t->owner_id);
 
     /*
      * We are owned by something. i.e. we are a sword.
@@ -939,6 +940,8 @@ static void thing_remove_hooks (thingp t)
                 }
             }
         }
+
+        t->owner_id = 0;
     }
 
     /*
