@@ -65,6 +65,13 @@ static void thing_tick_server_all (void)
         }
 
         /*
+         * Timer running on this thing? Like an explosion.
+         */
+        if (t->timers) {
+            action_timers_tick(t->timers);
+        }
+
+        /*
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {

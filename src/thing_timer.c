@@ -23,22 +23,26 @@ tree_rootp thing_timers;
 
 void thing_timers_destroy (thingp thing)
 {
-    if (!thing_timers) {
+    if (!thing->timer_dead_tree) {
         if (thing->timer_dead) {
-            DIE("dead timer still running but no tree?");
+            ERR("dead timer still running but no tree?");
+            thing->timer_dead = 0;
+            thing->timer_dead_tree = 0;
+            return;
         }
-
-        return;
     }
 
     if (thing->timer_dead) {
-        action_timer_destroy(&thing_timers, thing->timer_dead);
-
-        thing->timer_dead = 0;
-
-        if (!thing_timers) {
+        if (!thing->timer_dead_tree) {
+            ERR("timer dead is set but has no tree");
+            thing->timer_dead = 0;
+            thing->timer_dead_tree = 0;
             return;
         }
+
+        action_timer_destroy(&thing->timer_dead_tree, thing->timer_dead);
+        thing->timer_dead = 0;
+        thing->timer_dead_tree = 0;
     }
 }
 
@@ -52,6 +56,8 @@ static void thing_action_timer_callback_dead (void *context)
     if (thing) {
         verify(thing);
         thing->timer_dead = 0;
+        thing->timer_dead_tree = 0;
+
         thing_dead(thing, 0, "callback");
     }
 
@@ -60,6 +66,7 @@ static void thing_action_timer_callback_dead (void *context)
 
 static void thing_action_timer_destroy_callback_dead (void *context)
 {
+LOG("%s",__FUNCTION__);
     thing_place_context_t *place;
 
     place = (typeof(place)) context;
@@ -69,6 +76,11 @@ static void thing_action_timer_destroy_callback_dead (void *context)
         if (thing) {
             verify(thing);
             thing->timer_dead = 0;
+            thing->timer_dead_tree = 0;
+
+            thing_dead(thing, 0, "timer aborted");
+        } else {
+            ERR("timer cleanup, thing ID %u is gone", place->thing_id);
         }
     }
 
@@ -77,6 +89,7 @@ static void thing_action_timer_destroy_callback_dead (void *context)
 
 void thing_timer_place_and_destroy_callback (void *context)
 {
+LOG("%s",__FUNCTION__);
     thing_place_context_t *place;
 
     place = (typeof(place)) context;
@@ -114,14 +127,36 @@ void thing_timer_place_and_destroy_callback (void *context)
                                            "place and destroy thing");
     memcpy(context2, context, sizeof(*context2));
 
-    t->timer_dead = action_timer_create(
-            &thing_timers,
-            (action_timer_callback)thing_action_timer_callback_dead,
-            (action_timer_callback)thing_action_timer_destroy_callback_dead,
-            context2,
-            "kill thing",
-            place->destroy_in,
-            0 /* jitter */);
+    if (place->owner_id) {
+        thingp owner = thing_server_ids[place->owner_id];
+        if (!owner) {
+            ERR("no owner id %d for explosion", place->owner_id);
+        }
+
+LOG(" create clean up explosion for %s",thing_logname(owner));
+        t->timer_dead = action_timer_create(
+                &owner->timers,
+                (action_timer_callback)thing_action_timer_callback_dead,
+                (action_timer_callback)thing_action_timer_destroy_callback_dead,
+                context2,
+                "kill thing",
+                place->destroy_in,
+                0 /* jitter */);
+
+        t->timer_dead_tree = owner->timers;
+LOG("  create thing 2 timer %p for %s owner timer root %p timer %p",t->timers, thing_logname(t),owner->timers, t->timer_dead);
+    } else {
+        t->timer_dead = action_timer_create(
+                &thing_timers,
+                (action_timer_callback)thing_action_timer_callback_dead,
+                (action_timer_callback)thing_action_timer_destroy_callback_dead,
+                context2,
+                "kill thing",
+                place->destroy_in,
+                0 /* jitter */);
+
+        t->timer_dead_tree = thing_timers;
+    }
 }
 
 void thing_timer_destroy (thingp t, uint32_t destroy_in)
@@ -133,18 +168,20 @@ void thing_timer_destroy (thingp t, uint32_t destroy_in)
 
     context->thing_id = t->thing_id;
 
-    t->timer_dead = action_timer_create(
-            &thing_timers,
+    action_timer_create(
+            &t->timers,
             (action_timer_callback)thing_action_timer_callback_dead,
             (action_timer_callback)thing_action_timer_destroy_callback_dead,
             context,
             "kill thing",
             destroy_in,
             0 /* jitter */);
+LOG("create thing 3 timer %p",t->timers);
 }
 
 void thing_timer_place_and_destroy_destroy_callback (void *context)
 {
+LOG("%s",__FUNCTION__);
     thing_place_context_t *place;
 
     place = (typeof(place)) context;
@@ -154,6 +191,7 @@ void thing_timer_place_and_destroy_destroy_callback (void *context)
 
 void thing_timer_place_callback (void *context)
 {
+LOG("%s",__FUNCTION__);
     thing_place_context_t *place;
 
     place = (typeof(place)) context;
@@ -175,5 +213,6 @@ void thing_timer_place_callback (void *context)
 
 void thing_timer_place_destroy_callback (void *context)
 {
+LOG("%s",__FUNCTION__);
     myfree(context);
 }

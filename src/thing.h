@@ -466,9 +466,15 @@ typedef struct thing_ {
     char *dead_reason;
 
     /*
-     * Thing dead in x ms.
+     * Thing dead in x ms. The tree can be the global tree or an owner tree.
      */
     timerp timer_dead;
+    tree_rootp timer_dead_tree;
+    
+    /*
+     * If this thing is involved in any timed activities like an explosion.
+     */
+    tree_rootp timers;
 
     /*
      * Powerups
