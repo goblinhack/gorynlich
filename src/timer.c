@@ -21,8 +21,7 @@ tree_rootp server_timers;
 
 void action_timers_destroy (tree_rootp *root)
 {
-LOG("destroy timers %p",root);
-    verify(root);
+    verify(*root);
 
     timerp p;
 
@@ -60,11 +59,12 @@ static void action_timer_free (timerp p)
 void action_timer_destroy (tree_rootp *t, timerp p)
 {
     verify(p);
-    verify(t);
 
     if (!t) {
         return;
     }
+
+    verify(*t);
 
     tree_rootp tree = *t;
 
@@ -102,6 +102,8 @@ timerp action_timer_create (tree_rootp *root,
         *root = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: timers");
     }
 
+    verify(*root);
+
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: timer");
 
     t->expires_when = time_get_time_cached() + duration_ms;
@@ -135,18 +137,18 @@ const char *action_timer_logname (timerp t)
     return (t->logname);
 }
 
-void action_timers_tick (tree_rootp root)
+void action_timers_tick (tree_rootp *root)
 {
     timer *t;
 
-    if (!root) {
+    if (!*root) {
         return;
     }
 
     for (;;) {
-        verify(root);
+        verify(*root);
 
-        t = (typeof(t)) tree_root_first(root);
+        t = (typeof(t)) tree_root_first(*root);
         if (!t) {
             return;
         }
@@ -161,10 +163,17 @@ void action_timers_tick (tree_rootp root)
 
         (t->callback)(t->context);
 
-        verify(t);
-        verify(root);
+        if (!*root) {
+            /*
+             * Destroyed in callback?
+             */
+            break;
+        }
 
-        tree_remove_found_node(root, &t->tree.node);
+        verify(t);
+        verify(*root);
+
+        tree_remove_found_node(*root, &t->tree.node);
 
         action_timer_free(t);
     }

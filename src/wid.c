@@ -7680,7 +7680,7 @@ void wid_tick_all (void)
         (w->on_tick)(w);
     } }
 
-    action_timers_tick(wid_timers);
+    action_timers_tick(&wid_timers);
 }
 
 /*

@@ -880,11 +880,11 @@ void sdl_loop (void)
          * Fire global timers.
          */
         if (server_timers) {
-            action_timers_tick(server_timers);
+            action_timers_tick(&server_timers);
         }
 
         if (client_timers) {
-            action_timers_tick(client_timers);
+            action_timers_tick(&client_timers);
         }
 
         /*

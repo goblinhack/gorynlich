@@ -33,7 +33,7 @@ static void thing_tick_server_all (void)
      * Any timers waiting to fire?
      */
     if (thing_timers) {
-        action_timers_tick(thing_timers);
+        action_timers_tick(&thing_timers);
     }
 
     TREE_WALK_INLINE(server_active_things, t,
@@ -60,7 +60,7 @@ static void thing_tick_server_all (void)
          * Timer running on this thing? Like an explosion.
          */
         if (t->timers) {
-            action_timers_tick(t->timers);
+            action_timers_tick(&t->timers);
         }
 
         /*
