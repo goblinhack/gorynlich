@@ -7,17 +7,17 @@
 #include <SDL.h>
 
 #include "main.h"
-#include "tree.h"
+// REMOVED #include "tree.h"
 #include "thing.h"
 #include "tile.h"
-#include "tile_private.h"
+// REMOVED #include "tile_private.h"
 #include "wid.h"
 #include "map.h"
-#include "wid_tooltip.h"
+// REMOVED #include "wid_tooltip.h"
 #include "wid_game_map_server.h"
-#include "wid_game_map_client.h"
-#include "sound.h"
-#include "timer.h"
+// REMOVED #include "wid_game_map_client.h"
+// REMOVED #include "sound.h"
+// REMOVED #include "timer.h"
 
 /*
  * On the server, things move in jumps. Find the real position the client
@@ -278,6 +278,10 @@ static void thing_handle_collision (thingp me, thingp it,
         return;
     }
 
+    if (thing_has_left_level(me)) {
+        return;
+    }
+
     /*
      * Filter out boring things.
      */
@@ -344,7 +348,6 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
         }
 
         if (thing_is_exit(it)) {
-CON("leave==============");
             thing_leave_level(me);
             return;
         }

@@ -5,24 +5,24 @@
  */
 
 #include <SDL.h>
-#include <math.h>
+// REMOVED // REMOVED #include <math.h>
 
 #include "main.h"
 #include "thing.h"
-#include "thing_timer.h"
+// REMOVED #include "thing_timer.h"
 #include "wid.h"
-#include "wid_game_map_client.h"
+// REMOVED #include "wid_game_map_client.h"
 #include "wid_game_map_server.h"
-#include "map.h"
-#include "level.h"
-#include "time.h"
-#include "string.h"
-#include "wid_textbox.h"
-#include "color.h"
-#include "sound.h"
-#include "socket.h"
-#include "client.h"
-#include "timer.h"
+// REMOVED #include "map.h"
+// REMOVED #include "level.h"
+// REMOVED #include "time.h"
+// REMOVED #include "string.h"
+// REMOVED #include "wid_textbox.h"
+// REMOVED #include "color.h"
+// REMOVED #include "sound.h"
+// REMOVED #include "socket.h"
+// REMOVED #include "client.h"
+// REMOVED #include "timer.h"
 #include "math.h"
 
 void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
