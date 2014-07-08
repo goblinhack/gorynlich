@@ -5,6 +5,7 @@
  */
 
 #include <SDL.h>
+#include <math.h>
 
 #include "main.h"
 // REMOVED #include "tree.h"
