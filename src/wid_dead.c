@@ -9,7 +9,6 @@
 #include "main.h"
 #include "wid.h"
 #include "color.h"
-// REMOVED // REMOVED #include "wid_intro.h"
 #include "wid_popup.h"
 #include "wid_dead.h"
 #include "thing.h"

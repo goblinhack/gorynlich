@@ -7,13 +7,10 @@
 #include <SDL.h>
 
 #include "main.h"
-// REMOVED #include "tree.h"
 #include "thing.h"
 #include "thing_timer.h"
-// REMOVED #include "level.h"
 #include "timer.h"
 #include "wid.h"
-// REMOVED #include "color.h"
 #include "wid_game_map_server.h"
 
 /*

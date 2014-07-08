@@ -8,11 +8,9 @@
 #include "slre.h"
 
 #include "main.h"
-// REMOVED #include "tree.h"
 #include "thing.h"
 #include "thing_tile.h"
 #include "wid.h"
-// REMOVED #include "marshal.h"
 #include "time.h"
 #include "command.h"
 
