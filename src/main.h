@@ -211,7 +211,8 @@ enum {
     CHAT,
     INFO,
     WARNING,
-    CRITICAL
+    CRITICAL,
+    POPUP,
 };
 
 void MSG(uint32_t level, const char *fmt, ...) 

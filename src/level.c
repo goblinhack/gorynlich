@@ -630,8 +630,7 @@ static void level_action_timer_end_level (void *context)
     level = (typeof(level)) context;
     verify(level);
 
-    widp w = wid_popup_simple("Level complete. Get ready...");
-    wid_destroy_in(w, ONESEC * 5);
+    socket_tx_server_shout(POPUP, "Level complete. Get ready...");
 
     level->end_level_timer = 0;
 
