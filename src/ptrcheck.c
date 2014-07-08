@@ -98,7 +98,7 @@ static ptrcheck *ringbuf_base;
  * How many old/freed pointers do we keep track of. We use this when we find
  * an unknown pointer to find when it last lived.
  */
-static uint32_t ringbuf_max_size = 10000;
+static uint32_t ringbuf_max_size = 100000;
 static uint32_t ringbuf_current_size;
 
 /*

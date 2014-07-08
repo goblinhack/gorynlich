@@ -68,6 +68,7 @@ typedef struct level_t_ {
      * Timers
      */
     timerp end_level_timer;
+    timerp pause_timer;
 
     /*
      * When the level began being played.
@@ -85,9 +86,14 @@ typedef struct level_t_ {
     uint8_t is_paused:1;
 
     /*
-     * Things cannot move at all.
+     * Exit has been reached.
      */
     uint8_t is_completed:1;
+
+    /*
+     * Exit has been reached and a suitabel delay has passed.
+     */
+    uint8_t is_finished:1;
 
     /*
      * Being used in level editor.

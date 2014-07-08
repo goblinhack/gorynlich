@@ -363,17 +363,29 @@ static void thing_tick_client_all (void)
 void thing_tick_all (void)
 {
     /*
-     * Allow level timers to fire.
+     * Do per tick stuff for the level
      */
     if (server_level) {
         level_tick(server_level);
+    }
 
+    /*
+     * If the level is still around, check for AI?
+     */
+    if (server_level) {
         static uint32_t ts;
 
         if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI, ts)) {
             thing_generate_dmaps();
 
             ts = time_get_time_cached();
+        }
+
+        /*
+         * No moving of monsters yet?
+         */
+        if (level_is_paused(server_level)) {
+            return;
         }
     }
 
