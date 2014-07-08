@@ -14,6 +14,7 @@
 #include "time.h"
 #include "tree.h"
 #include "string_ext.h"
+#include "wid_popup.h"
 
 typedef struct {
     uint32_t created;
@@ -115,6 +116,14 @@ wid_notify_internal (const char *text, uint32_t level)
             bg = DARKRED;
             fg = RED;
             break;
+        case POPUP:
+            bg = DARKRED;
+            fg = RED;
+
+            widp w = wid_popup_simple(text);
+            wid_destroy_in(w, ONESEC * 5);
+            break;
+
         }
 
         wid_set_color(wid_notify_window, WID_COLOR_BG, bg);
