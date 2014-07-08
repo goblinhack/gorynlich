@@ -8,23 +8,9 @@
 #include <math.h>
 
 #include "main.h"
-// REMOVED #include "tree.h"
 #include "thing.h"
-// REMOVED #include "thing_timer.h"
-// REMOVED #include "timer.h"
-// REMOVED #include "wid.h"
-// REMOVED #include "wid_game_map_client.h"
 #include "wid_game_map_server.h"
-// REMOVED #include "marshal.h"
 #include "map.h"
-// REMOVED #include "level.h"
-// REMOVED #include "wid_console.h"
-// REMOVED #include "time.h"
-// REMOVED #include "string.h"
-// REMOVED #include "color.h"
-// REMOVED #include "sound.h"
-// REMOVED #include "socket.h"
-// REMOVED #include "math.h"
 
 uint8_t thing_mob_spawn (thingp t)
 {

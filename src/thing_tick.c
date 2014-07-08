@@ -7,23 +7,15 @@
 #include <SDL.h>
 
 #include "main.h"
-// REMOVED #include "tree.h"
 #include "thing.h"
 #include "thing_timer.h"
 #include "timer.h"
 #include "wid.h"
 #include "wid_game_map_client.h"
 #include "wid_game_map_server.h"
-// REMOVED #include "marshal.h"
-// REMOVED #include "map.h"
 #include "level.h"
-// REMOVED #include "wid_console.h"
 #include "time.h"
-// REMOVED #include "string.h"
-// REMOVED #include "color.h"
-// REMOVED #include "sound.h"
 #include "socket.h"
-// REMOVED #include "math.h"
 
 TREE_GET_NEXT_INLINE(tree_key_two_int32_compare_func)
 

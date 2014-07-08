@@ -5,7 +5,6 @@
  */
 
 #include <SDL.h>
-// REMOVED // REMOVED #include <math.h>
 
 #include "main.h"
 #include "thing.h"
