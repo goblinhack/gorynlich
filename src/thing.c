@@ -1757,7 +1757,6 @@ void thing_leave_level (thingp t)
         return;
     }
 
-CON("leave %s ==============",thing_logname(t));
     t->has_left_level = true;
 
     if (thing_is_player(t)) {
@@ -3329,7 +3328,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 (thing_template_is_wall(thing_template) ||
                  thing_template_is_pipe(thing_template) ||
                  thing_template_is_door(thing_template))) {
-CON("need fixup for %s",thing_template_short_name(thing_template));
                 need_fixup = true;
             }
         } else {
@@ -3364,7 +3362,6 @@ CON("need fixup for %s",thing_template_short_name(thing_template));
                         (thing_template_is_wall(thing_template) ||
                          thing_template_is_pipe(thing_template) ||
                          thing_template_is_door(thing_template))) {
-CON("need fixup 2 for %s",thing_template_short_name(thing_template));
                         need_fixup = true;
                     }
                 }
@@ -3461,7 +3458,6 @@ CON("need fixup 2 for %s",thing_template_short_name(thing_template));
     }
 
     if (need_fixup) {
-CON("need fixup");
         levelp level;
 
         level = 
