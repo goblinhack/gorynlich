@@ -182,7 +182,6 @@ void wid_game_map_client_scroll_adjust (uint8_t adjust)
     static double last_playerx;
 
     if (adjust || (last_playery != playery)) {
-LOG("redo scroll");
         wid_move_to_vert_pct(wid_game_map_client_vert_scroll, playery);
     }
 

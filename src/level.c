@@ -198,13 +198,11 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
      * Ensure no stale pointers.
      */
     if (level == client_level) {
-LOG("XXX destroy client %p",client_timers);
         action_timers_destroy(&client_timers);
         client_level = 0;
     }
 
     if (level == server_level) {
-LOG("XXX destroy server %p",server_timers);
         action_timers_destroy(&server_timers);
         server_level = 0;
     }
@@ -622,7 +620,6 @@ void level_start_timers (levelp level)
 
 static void level_action_timer_end_level (void *context)
 {
-CON("end level");
     levelp level;
     level = (typeof(level)) context;
     verify(level);
@@ -697,7 +694,6 @@ CON("end level");
  */
 void level_tick (levelp level)
 {
-CON("tick %p", level);
     if (level) {
         if (level->need_map_update) {
             level->need_map_update = 0;
@@ -712,7 +708,6 @@ CON("tick %p", level);
 
         if (level_is_completed(level)) {
             if (!level->end_level_timer) {
-CON("end level %p", level);
                 level->end_level_timer = 
                             action_timer_create(&server_timers,
                                                 level_action_timer_end_level,

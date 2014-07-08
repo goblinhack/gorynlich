@@ -17,7 +17,7 @@ timerp action_timer_create(tree_rootp *root,
                     uint32_t duration_ms,
                     uint32_t jitter);
 const char *action_timer_logname(timerp t);
-void action_timers_tick(tree_rootp root);
+void action_timers_tick(tree_rootp *root);
 
 extern tree_rootp client_timers;
 extern tree_rootp server_timers;
