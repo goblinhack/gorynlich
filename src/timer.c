@@ -21,13 +21,13 @@ tree_rootp server_timers;
 
 void action_timers_destroy (tree_rootp *root)
 {
+    if (!*root) {
+        return;
+    }
+
     verify(*root);
 
     timerp p;
-
-    if (!root) {
-        DIE("no timers to destroy");
-    }
 
     TREE_WALK((*root), p) {
         action_timer_destroy(root, p);

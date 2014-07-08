@@ -198,12 +198,18 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
      * Ensure no stale pointers.
      */
     if (level == client_level) {
-        action_timers_destroy(&client_timers);
+        if (client_timers) {
+            action_timers_destroy(&client_timers);
+        }
+
         client_level = 0;
     }
 
     if (level == server_level) {
-        action_timers_destroy(&server_timers);
+        if (server_timers) {
+            action_timers_destroy(&server_timers);
+        }
+
         server_level = 0;
     }
 
