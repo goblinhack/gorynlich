@@ -11,7 +11,7 @@
 #include "color.h"
 #include "wid_editor.h"
 #include "wid_editor_buttons.h"
-#include "tree.h"
+// REMOVED #include "tree.h"
 #include "thing.h"
 
 widp wid_editor_buttons_window;
