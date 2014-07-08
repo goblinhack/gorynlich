@@ -8,12 +8,12 @@ uint8_t level_init(void);
 void level_fini(void);
 
 levelp level_new(widp, uint32_t, int is_editor, int on_server);
-void level_completed(levelp);
 void level_destroy(levelp *, uint8_t keep_players);
 void level_tick(levelp);
 void level_update(levelp level);
 void level_update_now(levelp level);
 levelp level_load(uint32_t level, widp, int is_editor, int on_server);
+void level_pause(levelp level);
 void marshal_level(marshal_p ctx, levelp level);
 uint8_t demarshal_level(demarshal_p ctx, levelp l);
 const char *level_get_title(levelp level);
@@ -83,6 +83,8 @@ void level_set_is_editor(levelp level, uint8_t val);
 uint8_t level_is_paused(levelp level);
 void level_set_is_completed(levelp level, uint8_t val);
 uint8_t level_is_completed(levelp level);
+void level_set_is_finished(levelp level, uint8_t val);
+uint8_t level_is_finished(levelp level);
 void level_set_is_paused(levelp level, uint8_t val);
 void level_place_plant_pod(levelp);
 void level_place_explosion(levelp level, 

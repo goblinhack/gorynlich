@@ -178,6 +178,8 @@ void wid_game_map_server_wid_create (void)
     server_level_is_being_loaded = false;
 
     level_update_now(server_level);
+
+    level_pause(server_level);
 }
 
 void wid_game_map_server_wid_destroy (uint8_t keep_players)

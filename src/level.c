@@ -624,12 +624,54 @@ void level_start_timers (levelp level)
 {
 }
 
+static void level_action_timer_unpause_level (void *context)
+{
+    levelp level;
+    level = (typeof(level)) context;
+    verify(level);
+
+    level->pause_timer = 0;
+
+    level_set_is_paused(level, false);
+}
+
+/*
+ * Freeze all things for a short delay
+ */
+void level_pause (levelp level)
+{
+    if (!level->pause_timer) {
+        level->pause_timer = 
+                    action_timer_create(&server_timers,
+                                        level_action_timer_unpause_level,
+                                        0,
+                                        level,
+                                        "unpause level",
+                                        ONESEC * 2, /* duration */
+                                        0);
+
+        level_set_is_paused(level, true);
+    }
+}
+
+/*
+ * Timer has fired indicating end the level now.
+ */
 static void level_action_timer_end_level (void *context)
 {
     levelp level;
     level = (typeof(level)) context;
     verify(level);
 
+    level_set_is_finished(level, true);
+}
+
+/*
+ * Clean up the level. It's over! the exit was reached and a delay passed to 
+ * warn the other players.
+ */
+static void level_finished (levelp level)
+{
     socket_tx_server_shout(POPUP, "Level complete. Get ready...");
 
     level->end_level_timer = 0;
@@ -699,30 +741,47 @@ static void level_action_timer_end_level (void *context)
  */
 void level_tick (levelp level)
 {
-    if (level) {
-        if (level->need_map_update) {
-            level->need_map_update = 0;
+    if (!level) {
+        return;
+    }
 
-            level_update_now(level);
+    /*
+     * Did some walls get zapped and we need to rebuild connectors?
+     */
+    if (level->need_map_update) {
+        level->need_map_update = 0;
 
-            socket_server_tx_map_update(0, server_active_things,
-                                        "level map update active things");
-            socket_server_tx_map_update(0, server_boring_things,
-                                        "level map update boring things");
+        level_update_now(level);
+
+        socket_server_tx_map_update(0, server_active_things,
+                                    "level map update active things");
+        socket_server_tx_map_update(0, server_boring_things,
+                                    "level map update boring things");
+    }
+
+    /*
+     * If the player has finished the level then popup a notice so all players 
+     * know the end is nigh!
+     */
+    if (level_is_completed(level)) {
+        if (!level->end_level_timer) {
+            level->end_level_timer = 
+                action_timer_create(&server_timers,
+                                    level_action_timer_end_level,
+                                    0,
+                                    level,
+                                    "end level",
+                                    ONESEC * 1, /* duration */
+                                    ONESEC);
         }
+    }
 
-        if (level_is_completed(level)) {
-            if (!level->end_level_timer) {
-                level->end_level_timer = 
-                            action_timer_create(&server_timers,
-                                                level_action_timer_end_level,
-                                                0,
-                                                level,
-                                                "end level",
-                                                ONESEC * 1, /* duration */
-                                                ONESEC);
-            }
-        }
+    /*
+     * If the level is completely done, i.e. we popped up a notice and timed 
+     * out and are ready to delete it, zap it now.
+     */
+    if (level_is_finished(level)) {
+        level_finished(level);
     }
 }
 
@@ -1088,6 +1147,20 @@ void level_set_is_completed (levelp level, uint8_t val)
     verify(level);
 
     level->is_completed = val;
+}
+
+uint8_t level_is_finished (levelp level)
+{
+    verify(level);
+
+    return (level->is_finished);
+}
+
+void level_set_is_finished (levelp level, uint8_t val)
+{
+    verify(level);
+
+    level->is_finished = val;
 }
 
 const char *level_get_logname (levelp l)
