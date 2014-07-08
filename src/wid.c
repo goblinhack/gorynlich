@@ -8,9 +8,7 @@
 #include "slre.h"
 
 #include "main.h"
-// REMOVED #include "gl.h"
 #include "wid.h"
-// REMOVED #include "color.h"
 #include "ttf.h"
 #include "tex.h"
 #include "tile.h"

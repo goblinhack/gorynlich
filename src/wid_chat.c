@@ -5,7 +5,6 @@
  */
 
 #include <SDL.h>
-// REMOVED #include "slre.h"
 
 #include "main.h"
 #include "wid_chat.h"

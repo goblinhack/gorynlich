@@ -7,17 +7,11 @@
 #include <SDL.h>
 
 #include "main.h"
-// REMOVED #include "tree.h"
 #include "thing.h"
 #include "tile.h"
-// REMOVED #include "tile_private.h"
 #include "wid.h"
 #include "map.h"
-// REMOVED #include "wid_tooltip.h"
 #include "wid_game_map_server.h"
-// REMOVED #include "wid_game_map_client.h"
-// REMOVED #include "sound.h"
-// REMOVED #include "timer.h"
 
 /*
  * On the server, things move in jumps. Find the real position the client
