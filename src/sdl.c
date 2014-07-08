@@ -28,6 +28,7 @@
 #include "server.h"
 #include "client.h"
 #include "term.h"
+#include "timer.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -873,6 +874,17 @@ void sdl_loop (void)
             if (!sdl_main_loop_running) {
                 break;
             }
+        }
+
+        /*
+         * Fire global timers.
+         */
+        if (server_timers) {
+            action_timers_tick(server_timers);
+        }
+
+        if (client_timers) {
+            action_timers_tick(client_timers);
         }
 
         /*

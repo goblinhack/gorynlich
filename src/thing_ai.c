@@ -5,13 +5,13 @@
  */
 
 #define __STDC_LIMIT_MACROS
-#include <SDL.h>
+// REMOVED #include <SDL.h>
 #include <pthread.h>
 #include <unistd.h>
 
 #include "main.h"
 #include "thing.h"
-#include "level_private.h"
+// REMOVED #include "level_private.h"
 #include "wid_game_map_server.h"
 #include "map.h"
 

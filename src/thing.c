@@ -5,7 +5,7 @@
  */
 
 #include <SDL.h>
-#include <math.h>
+// REMOVED // REMOVED #include <math.h>
 
 #include "main.h"
 #include "thing.h"
@@ -1142,12 +1142,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
     verify(t);
 
-    if (god_mode) {
-        if (thing_is_player(t)) {
-            return;
-        }
-    }
-
     /*
      * Pre death server events.
      */
@@ -1420,12 +1414,6 @@ void thing_hit (thingp t,
     verify(t);
     if (hitter) {
         verify(hitter);
-    }
-
-    if (god_mode) {
-        if (thing_is_player(t)) {
-            return;
-        }
     }
 
     if (t->is_dead) {
@@ -1770,6 +1758,7 @@ void thing_leave_level (thingp t)
         return;
     }
 
+CON("leave %s ==============",thing_logname(t));
     t->has_left_level = true;
 
     if (thing_is_player(t)) {
@@ -2646,7 +2635,7 @@ void thing_place_timed (thing_templatep thing_template,
     context->thing_template = thing_template;
 
     action_timer_create(
-            &timers,
+            &server_timers,
             (action_timer_callback) thing_timer_place_callback,
             (action_timer_callback) thing_timer_place_destroy_callback,
             context,
@@ -2691,7 +2680,7 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
                 jitter);
     } else {
         action_timer_create(
-                &timers,
+                &server_timers,
                 (action_timer_callback)
                     thing_timer_place_and_destroy_callback,
                 (action_timer_callback)

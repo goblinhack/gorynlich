@@ -4,7 +4,7 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
+// REMOVED #include <SDL.h>
 
 #include "main.h"
 #include "tree.h"

@@ -102,6 +102,4 @@ void level_place_potion_effect_cloudkill(levelp level,
                                 double x, double y);
 extern uint8_t game_over;
 
-extern uint8_t god_mode;
-extern uint32_t start_level;
 extern uint32_t start_lives;

@@ -27,54 +27,13 @@
 #include "wid_editor.h"
 #include "socket.h"
 #include "level_private.h"
+#include "wid_popup.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
 static uint8_t level_server_init_done;
 static void level_start_timers(levelp level);
 uint8_t game_over;
-
-uint8_t god_mode = false;
-uint32_t start_level = 1;
-uint32_t start_lives = 3;
-
-/*
- * Various level timers.
- */
-tree_rootp timers;
-
-/*
- * Used so we only do the slow countdown first time on each level.
- */
-static uint8_t level_command_lives (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[2];
-
-    if (!s || (*s == '\0')) {
-        start_lives = 1;
-    } else {
-        start_lives = strtol(s, 0, 10);
-    }
-
-    CON("Start lives set to %u", start_lives);
-
-    return (true);
-}
-
-static uint8_t level_command_god_mode (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[2];
-
-    if (!s || (*s == '\0')) {
-        god_mode = 1;
-    } else {
-        god_mode = strtol(s, 0, 10) ? 1 : 0;
-    }
-
-    CON("God mode set to %u", god_mode);
-
-    return (true);
-}
 
 uint8_t level_init (void)
 {
@@ -83,11 +42,6 @@ uint8_t level_init (void)
     }
 
     level_init_done = true;
-
-    if (0) {
-        command_add(level_command_lives, 
-                    "set lives [123456789]+", "TBD set player number of lives");
-    }
 
     return (true);
 }
@@ -102,11 +56,6 @@ static uint8_t level_server_init (void)
 
     command_add(level_command_dead, 
                 "dead", "internal command for thing suicide");
-
-    if (on_server) {
-        command_add(level_command_god_mode, 
-                    "set godmode [01]", "TBD enable/disable god mode");
-    }
 
     return (true);
 }
@@ -239,8 +188,6 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
         myfree((void*) level->destroy_reason);
     }
 
-    action_timers_destroy(&timers);
-
     LEVEL_LOG(level, "destroyed");
 
     if (level->logname) {
@@ -251,10 +198,14 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
      * Ensure no stale pointers.
      */
     if (level == client_level) {
+LOG("XXX destroy client %p",client_timers);
+        action_timers_destroy(&client_timers);
         client_level = 0;
     }
 
     if (level == server_level) {
+LOG("XXX destroy server %p",server_timers);
+        action_timers_destroy(&server_timers);
         server_level = 0;
     }
 
@@ -669,15 +620,84 @@ void level_start_timers (levelp level)
 {
 }
 
+static void level_action_timer_end_level (void *context)
+{
+CON("end level");
+    levelp level;
+    level = (typeof(level)) context;
+    verify(level);
+
+    widp w = wid_popup_simple("Level complete. Get ready...");
+    wid_destroy_in(w, ONESEC * 5);
+
+    level->end_level_timer = 0;
+
+    thingp t;
+
+    /*
+     * Force the death of all things on the level.
+     */
+    { TREE_WALK(server_active_things, t) {
+        if (!thing_is_player(t)) {
+            thing_leave_level(t);
+            t->is_dead = true;
+            thing_update(t);
+        }
+    } }
+
+    { TREE_WALK(server_boring_things, t) {
+        thing_leave_level(t);
+        t->is_dead = true;
+        thing_update(t);
+    } }
+
+    socket_server_tx_map_update(0, server_boring_things,
+                                "level destroy boring things");
+    socket_server_tx_map_update(0, server_active_things,
+                                "level destroy active things");
+
+    wid_game_map_server_wid_destroy(true /* keep players */);
+
+    { TREE_WALK(server_active_things, t) {
+        if (!thing_is_player(t)) {
+            ERR("players should be all that is left by now "
+                "but we have %s", thing_logname(t));
+            continue;
+        }
+    } }
+
+    wid_game_map_server_wid_create();
+
+    { TREE_WALK(server_active_things, t) {
+        if (!thing_is_player(t)) {
+            continue;
+        }
+
+        thing_map_remove(t);
+
+        wid_game_map_server_replace_tile(
+                wid_game_map_server_grid_container,
+                0, 0,
+                t,
+                t->thing_template);
+
+        thing_join_level(t);
+    } }
+
+    socket_server_tx_map_update(0, server_boring_things,
+                                "new level boring things");
+    socket_server_tx_map_update(0, server_active_things,
+                                "new level active things");
+
+    level_update_now(server_level);
+}
+
 /*
  * Check for expired timers. We fire one per loop.
  */
 void level_tick (levelp level)
 {
-    if (timers) {
-        action_timers_tick(timers);
-    }
-
+CON("tick %p", level);
     if (level) {
         if (level->need_map_update) {
             level->need_map_update = 0;
@@ -691,64 +711,17 @@ void level_tick (levelp level)
         }
 
         if (level_is_completed(level)) {
-            thingp t;
-
-            /*
-             * Force the death of all things on the level.
-             */
-            { TREE_WALK(server_active_things, t) {
-                if (!thing_is_player(t)) {
-                    thing_leave_level(t);
-                    t->is_dead = true;
-                    thing_update(t);
-                }
-            } }
-
-            { TREE_WALK(server_boring_things, t) {
-                thing_leave_level(t);
-                t->is_dead = true;
-                thing_update(t);
-            } }
-
-            socket_server_tx_map_update(0, server_boring_things,
-                                        "level destroy boring things");
-            socket_server_tx_map_update(0, server_active_things,
-                                        "level destroy active things");
-
-            wid_game_map_server_wid_destroy(true /* keep players */);
-
-            { TREE_WALK(server_active_things, t) {
-                if (!thing_is_player(t)) {
-                    ERR("players should be all that is left by now "
-                        "but we have %s", thing_logname(t));
-                    continue;
-                }
-            } }
-
-            wid_game_map_server_wid_create();
-
-            { TREE_WALK(server_active_things, t) {
-                if (!thing_is_player(t)) {
-                    continue;
-                }
-
-                thing_map_remove(t);
-
-                wid_game_map_server_replace_tile(
-                        wid_game_map_server_grid_container,
-                        0, 0,
-                        t,
-                        t->thing_template);
-
-                thing_join_level(t);
-            } }
-
-            socket_server_tx_map_update(0, server_boring_things,
-                                        "new level boring things");
-            socket_server_tx_map_update(0, server_active_things,
-                                        "new level active things");
-
-            level_update_now(server_level);
+            if (!level->end_level_timer) {
+CON("end level %p", level);
+                level->end_level_timer = 
+                            action_timer_create(&server_timers,
+                                                level_action_timer_end_level,
+                                                0,
+                                                level,
+                                                "end level",
+                                                ONESEC * 1, /* duration */
+                                                ONESEC);
+            }
         }
     }
 }

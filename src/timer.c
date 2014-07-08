@@ -13,8 +13,17 @@
 #include "string.h"
 #include "time.h"
 
+/*
+ * Various global timers.
+ */
+tree_rootp client_timers;
+tree_rootp server_timers;
+
 void action_timers_destroy (tree_rootp *root)
 {
+LOG("destroy timers %p",root);
+    verify(root);
+
     timerp p;
 
     if (!root) {
@@ -35,6 +44,8 @@ void action_timers_destroy (tree_rootp *root)
 
 static void action_timer_free (timerp p)
 {
+    verify(p);
+
     if (p->destroy_callback) {
         (p->destroy_callback)(p->context);
     }
@@ -48,6 +59,9 @@ static void action_timer_free (timerp p)
 
 void action_timer_destroy (tree_rootp *t, timerp p)
 {
+    verify(p);
+    verify(t);
+
     if (!t) {
         return;
     }
@@ -130,10 +144,14 @@ void action_timers_tick (tree_rootp root)
     }
 
     for (;;) {
+        verify(root);
+
         t = (typeof(t)) tree_root_first(root);
         if (!t) {
             return;
         }
+
+        verify(t);
 
         if (t->expires_when > time_get_time_cached()) {
             return;
@@ -142,6 +160,9 @@ void action_timers_tick (tree_rootp root)
         TIMER_LOG(t, "fired");
 
         (t->callback)(t->context);
+
+        verify(t);
+        verify(root);
 
         tree_remove_found_node(root, &t->tree.node);
 

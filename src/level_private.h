@@ -65,6 +65,11 @@ typedef struct level_t_ {
     widp map;
 
     /*
+     * Timers
+     */
+    timerp end_level_timer;
+
+    /*
      * When the level began being played.
      */
     int32_t timestamp_started;
