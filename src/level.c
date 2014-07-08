@@ -649,7 +649,7 @@ void level_pause (levelp level)
                                         0,
                                         level,
                                         "unpause level",
-                                        ONESEC * 3, /* duration */
+                                        ONESEC * 2, /* duration */
                                         0);
 
         level_set_is_paused(level, true);

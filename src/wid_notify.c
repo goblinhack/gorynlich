@@ -122,8 +122,8 @@ wid_notify_internal (const char *text, uint32_t level)
 
             widp w = wid_popup_simple(text);
             wid_move_to_pct_centered(w, 0.5, -1);
-            wid_move_to_pct_centered_in(w, 0.5, 0.2, 2);
-            wid_destroy_in(w, ONESEC * 5);
+            wid_move_to_pct_centered_in(w, 0.5, 0.2, 2 * ONESEC);
+            wid_destroy_in(w, ONESEC * 3);
             break;
 
         }
