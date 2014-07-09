@@ -57,7 +57,6 @@ void wid_game_map_server_visible (void)
 {
     on_server = true;
 
-CON("%s",__FUNCTION__);
     server_start(server_address);
 
     if (!wid_game_map_server_window) {
@@ -78,7 +77,6 @@ void wid_game_map_server_wid_create (void)
         return;
     }
 
-CON("%s",__FUNCTION__);
     if (wid_game_map_server_window) {
         return;
     }
