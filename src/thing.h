@@ -740,6 +740,13 @@ static inline uint8_t thing_is_weapon (thingp t)
     return (thing_template_is_weapon(thing_get_template(t)));
 }
 
+static inline uint8_t thing_is_carryable (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_carryable(thing_get_template(t)));
+}
+
 static inline uint8_t thing_is_treasure (thingp t)
 {
     verify(t);
