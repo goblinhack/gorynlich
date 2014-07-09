@@ -5,11 +5,12 @@
  z_depth=2
  z_order=2
  is_weapon
+ is_carryable
  weapon_fire_delay_tenths=3
  is_fragile
  is_combustable
  is_wearable
-is_collision_map_medium
+ is_collision_map_medium
  is_animated
  is_valid_for_shortcut_key
  failure_chance=1000

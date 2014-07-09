@@ -963,7 +963,8 @@ static void client_check_still_in_game (void)
             player = thing_client_find(p->thing_id);
 
             /*
-             * Needed twice for some reason to adjust the scrollbar.
+             * Needed twice for some reason to adjust the scrollbar as the
+             * level is filled with tiles.
              */
             wid_game_map_client_scroll_adjust(true /* adjust */);
             wid_game_map_client_scroll_adjust(true /* adjust */);

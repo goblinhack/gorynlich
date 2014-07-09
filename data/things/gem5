@@ -5,6 +5,7 @@
  z_order=2
  is_boring
  is_treasure
+ is_carryable
  bonus_score_on_collect=15000
  tiles={
   tile={

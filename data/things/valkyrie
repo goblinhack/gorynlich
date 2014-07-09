@@ -9,9 +9,8 @@
  speed=8
  health=10
  is_player
-is_collision_map_medium
+ is_collision_map_medium
  spawn_on_death="data/things/bonepile2"
- is_carryable
  is_animated
  tiles={
   tile={
