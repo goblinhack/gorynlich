@@ -5,7 +5,9 @@
  z_order=2
  is_boring
  is_key
+ is_carryable
  is_key3
+ is_carryable
  tiles={
   tile={
    tile="keys3"

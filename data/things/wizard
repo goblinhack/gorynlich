@@ -3,13 +3,14 @@
  tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
  carrying={
     "data/things/wand_fire"
+    "data/things/bow1"
  }
  z_depth=3
  z_order=10
  speed=5
  health=100
  is_player
-is_collision_map_medium
+ is_collision_map_medium
  spawn_on_death="data/things/bonepile2"
  is_animated
  tiles={

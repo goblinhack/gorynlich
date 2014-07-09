@@ -715,13 +715,11 @@ thingp thing_server_new (const char *name, double x, double y)
     /*
      * Start out with the items carried on the template if any.
      */
-    if (thing_template_is_carryable(thing_template)) {
-        uint32_t i;
+    uint32_t i;
 
-        for (i = 0; i < THING_MAX; i++) {
-            if (thing_template->carrying[i]) {
-                thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
-            }
+    for (i = 0; i < THING_MAX; i++) {
+        if (thing_template->carrying[i]) {
+            thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
         }
     }
 
@@ -3395,6 +3393,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  client %f %f", x, y);
 
                         thing_client_wid_update(t, x, y, false /* smooth */);
+
+                        wid_game_map_client_scroll_adjust (1);
                     } else 
                         if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
                             (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
@@ -3408,6 +3408,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  client %f %f", x, y);
 
                         thing_client_wid_update(t, x, y, false /* smooth */);
+
+                        wid_game_map_client_scroll_adjust (1);
                     }
                 } else if (on_map) {
                     /*
