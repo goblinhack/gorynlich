@@ -976,8 +976,8 @@ static void client_check_still_in_game (void)
             if (!wid_game_map_client_window) {
                 ERR("Client: No game map window");
                 continue;
-
             }
+
             wid_visible(wid_game_map_client_window, 0);
         }
 

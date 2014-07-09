@@ -28,6 +28,8 @@
 #include "timer.h"
 #include "wid_notify.h"
 #include "wid_dead.h"
+#include "socket.h"
+#include "server.h"
 
 static widp wid_intro;
 static widp wid_intro_background;
@@ -193,7 +195,12 @@ static void wid_intro_single_play_selected_cb (void *context)
     wid_server_join_hide();
     wid_server_create_hide();
 
+    /*
+     * Let the server map load itself when the client connects.
     wid_game_map_server_visible();
+     */
+    server_start(server_address);
+
     wid_game_map_client_visible();
 
     wid_intro_hide();

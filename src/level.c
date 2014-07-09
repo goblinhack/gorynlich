@@ -633,8 +633,6 @@ static void level_action_timer_unpause_level (void *context)
     level->pause_timer = 0;
 
     level_set_is_paused(level, false);
-
-    socket_tx_server_shout(INFO, "Go!");
 }
 
 /*
@@ -643,13 +641,16 @@ static void level_action_timer_unpause_level (void *context)
 void level_pause (levelp level)
 {
     if (!level->pause_timer) {
+
+        socket_tx_server_shout(POPUP, "Get ready!");
+
         level->pause_timer = 
                     action_timer_create(&server_timers,
                                         level_action_timer_unpause_level,
                                         0,
                                         level,
                                         "unpause level",
-                                        ONESEC * 2, /* duration */
+                                        ONESEC * 3, /* duration */
                                         0);
 
         level_set_is_paused(level, true);
@@ -764,9 +765,9 @@ void level_tick (levelp level)
      * know the end is nigh!
      */
     if (level_is_completed(level)) {
-        socket_tx_server_shout(POPUP, "Exit closing... Get ready.");
-
         if (!level->end_level_timer) {
+            socket_tx_server_shout(POPUP, "Level completed");
+
             level->end_level_timer = 
                 action_timer_create(&server_timers,
                                     level_action_timer_end_level,

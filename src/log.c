@@ -663,7 +663,22 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
 
-    if (wid_notify(level, buf + len)) {
+    if (level == POPUP) {
+        widp w;
+
+        w = wid_popup(buf + len,        /* body text */
+                      0,                /* title */
+                      0.5f, 0.5f,       /* x,y postition in percent */
+                      0,                /* title font */
+                      large_font,       /* body font */
+                      0,                /* button font */
+                      0);
+        wid_move_to_pct_centered(w, 0.5, -0.5);
+        wid_move_to_pct_centered_in(w, 0.5, 0.2, 2 * ONESEC);
+        wid_set_no_shape(w);
+        wid_set_text_outline(w, true);
+        wid_destroy_in(w, ONESEC * 3);
+    } else if (wid_notify(level, buf + len)) {
         wid_console_log(buf + len);
 
 #if 0
