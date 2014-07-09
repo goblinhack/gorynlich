@@ -308,6 +308,7 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
         if (thing_is_key(it) ||
             thing_is_treasure(it) ||
             thing_is_weapon(it) ||
+            thing_is_carryable(it) ||
             thing_is_food(it)) {
 
             thing_item_collect(me, it, thing_get_template(it));
