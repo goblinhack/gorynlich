@@ -264,7 +264,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
     MSG_BOX("%s", popup_str);
     myfree(popup_str);
      */
-    WARN("File not found \"%s\"", filename);
+    LOG("File not found \"%s\"", filename);
 
     if (alt_filename) {
         myfree(alt_filename);
