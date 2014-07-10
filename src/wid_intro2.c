@@ -362,6 +362,11 @@ static uint8_t wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
     client_socket_set_name(name);
     wid_intro2_set_name = true;
 
+    if (!strlen(name)) {
+        wid_intro2_set_name = false;
+        client_socket_set_name(name_random(global_config.pclass));
+    }
+
     return (r);
 }
 
