@@ -90,19 +90,15 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
     } }
 
     {
-        wid_tooltip_window = wid_new_rounded_window("wid_tooltip");
+        wid_tooltip_window = wid_new_square_window("wid_tooltip");
 
         wid_set_color(wid_tooltip_window, WID_COLOR_TEXT, WHITE);
 
         color c = BLACK;
-        c.a = 170;
+        c.a = 190;
         wid_set_color(wid_tooltip_window, WID_COLOR_BG, c);
-
-        c = STEELBLUE;
-        c.a = 150;
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, c);
-        wid_set_bevel(wid_tooltip_window, 4);
 
         fpoint tl = {0, 0};
         fpoint br = {0, 0};

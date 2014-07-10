@@ -20,6 +20,7 @@
 #include "mzip_lib.h"
 #include "wid_dead.h"
 #include "level.h"
+#include "name.h"
 
 /*
  * Which socket we have actually joined on.
@@ -99,14 +100,14 @@ uint8_t client_init (void)
     command_add(client_players_show, "show players", 
                 "show all players state");
 
-    if (!global_config.name[0]) {
-        strncpy(global_config.name, "nameless", 
-                sizeof(global_config.name) - 1);
-    }
-
     if (!global_config.pclass[0]) {
         strncpy(global_config.pclass, "warrior", 
                 sizeof(global_config.pclass) - 1);
+    }
+
+    if (!global_config.name[0]) {
+        strncpy(global_config.name, name_random(global_config.pclass),
+                sizeof(global_config.name) - 1);
     }
 
     client_init_done = true;
