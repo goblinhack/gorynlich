@@ -23,6 +23,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/explosion.o 		\
     $(OBJDIR)/log.o 			\
     $(OBJDIR)/main.o 			\
+    $(OBJDIR)/name.o 			\
     $(OBJDIR)/map.o 			\
     $(OBJDIR)/marshal.o 		\
     $(OBJDIR)/math.o 			\

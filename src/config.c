@@ -7,6 +7,7 @@
 #include "main.h"
 #include "marshal.h"
 #include "string.h"
+#include "name.h"
 
 struct config global_config;
 
@@ -143,14 +144,14 @@ uint8_t config_load (void)
     global_config.sound_volume = SOUND_MAX;
     global_config.music_volume = SOUND_MAX;
 
-    if (!global_config.name[0]) {
-        strncpy(global_config.name, "nameless", 
-                sizeof(global_config.name) - 1);
-    }
-
     if (!global_config.pclass[0]) {
         strncpy(global_config.pclass, "warrior", 
                 sizeof(global_config.pclass) - 1);
+    }
+
+    if (!global_config.name[0]) {
+        strncpy(global_config.name, name_random(global_config.pclass),
+                sizeof(global_config.name) - 1);
     }
 
     if (!global_config.server_name[0]) {
