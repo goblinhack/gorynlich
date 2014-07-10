@@ -17,10 +17,13 @@
 #include "time.h"
 #include "client.h"
 #include "thing.h"
+#include "wid_notify.h"
+#include "name.h"
 
 static widp wid_intro2;
 static widp wid_intro2_background;
 static widp wid_intro_player_container;
+static int wid_intro2_set_name;
 
 static void wid_intro2_play_selected(void);
 
@@ -84,6 +87,8 @@ void wid_intro2_visible (void)
         return;
     }
 
+    wid_notify_flush();
+
     wid_intro2_create();
 
     wid_intro2_is_visible = true;
@@ -131,6 +136,10 @@ static uint8_t wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
     thing_templatep t = (typeof(t)) wid_get_client_context(w);
 
     client_socket_set_pclass((char*) thing_template_short_name(t));
+
+    if (!wid_intro2_set_name) {
+        client_socket_set_name(name_random(global_config.pclass));
+    }
 
     wid_destroy(&wid_intro2);
     wid_destroy(&wid_intro_player_container);
@@ -335,6 +344,7 @@ static uint8_t wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
             wid_set_on_key_down(w, 0);
 
             client_socket_set_name(name);
+            wid_intro2_set_name = true;
             break;
         }
 
@@ -350,6 +360,7 @@ static uint8_t wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
     name = (char*) wid_get_text(w);
 
     client_socket_set_name(name);
+    wid_intro2_set_name = true;
 
     return (r);
 }
@@ -426,8 +437,8 @@ static void wid_intro2_create (void)
     }
 
     {
-        fpoint tl = {0.4, 0.45};
-        fpoint br = {0.5, 0.5};
+        fpoint tl = {0.2, 0.45};
+        fpoint br = {0.3, 0.5};
 
         widp w = wid_new_container(wid_intro2, "wid intro name container");
 
@@ -445,12 +456,19 @@ static void wid_intro2_create (void)
     }
 
     {
-        fpoint tl = {0.5, 0.45};
+        fpoint tl = {0.3, 0.45};
         fpoint br = {0.7, 0.5};
 
         widp w = wid_new_container(wid_intro2, "wid intro name value");
 
         wid_set_tl_br_pct(w, tl, br);
+
+        if (!strcmp(global_config.name, "nameless") ||
+            !global_config.name[0]) {
+
+            strncpy(global_config.name, name_random(global_config.pclass),
+                    sizeof(global_config.name) - 1);
+        }
 
         wid_set_text(w, global_config.name);
         wid_set_font(w, small_font);
@@ -467,8 +485,8 @@ static void wid_intro2_create (void)
     }
 
     {
-        fpoint tl = {0.4, 0.51};
-        fpoint br = {0.5, 0.56};
+        fpoint tl = {0.2, 0.51};
+        fpoint br = {0.3, 0.56};
 
         widp w = wid_new_container(wid_intro2, "wid intro pclass container");
 
@@ -486,7 +504,7 @@ static void wid_intro2_create (void)
     }
 
     {
-        fpoint tl = {0.5, 0.51};
+        fpoint tl = {0.3, 0.51};
         fpoint br = {0.7, 0.56};
 
         widp w = wid_new_container(wid_intro2, "wid intro pclass value");
