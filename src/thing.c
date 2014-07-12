@@ -2984,15 +2984,6 @@ static void thing_client_wid_move (thingp t, double x, double y,
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
-widp w = t->wid;
-if (w) {
-    if (wid_is_hidden(w)) {
-        if (thing_is_animation(t)) {
-        CON("update for hidden %s",t->logname);
-        }
-    }
-}
-
     thing_client_wid_move(t, x, y, smooth);
 
     /*
@@ -3012,9 +3003,6 @@ if (w) {
         double dy = 0;
 
         thing_weapon_swing_offset(t, &dx, &dy);
-if (thing_is_weapon_swing_effect(t)) {
-    LOG("  wid client swing update %s x %f y %f ",thing_logname(t), x + dx, y + dy);
-}
         thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, false);
     }
 }

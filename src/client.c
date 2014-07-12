@@ -840,7 +840,7 @@ static void client_poll (void)
                         LOG("Client: Hide level");
 
                         wid_hide(wid_game_map_client_grid_container, 
-                                 wid_hide_delay * 1000);
+                                 wid_hide_delay);
                     } else {
                         /*
                          * Reveal the level and re-equip players.
