@@ -22,6 +22,12 @@
 #undef MORE_SPEED_LESS_VISUALS    // Go for max fps over loops
 
 /*
+ * Effects.
+ */
+#define ENABNLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
+#define ENABLE_BIG_RETRO_TEXT_OUTLINE
+
+/*
  * So we don't hog all the CPU
  */
 #ifdef MORE_SPEED_LESS_VISUALS

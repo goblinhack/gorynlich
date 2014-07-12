@@ -7263,6 +7263,7 @@ static void wid_display (widp w,
     color col = wid_get_color(w, WID_COLOR_BG);
     color col_tile = wid_get_color(w, WID_COLOR_BLIT);
 
+#ifdef ENABNLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
     /*
      * This fades out other widgets in the background when a popup appears.
      */
@@ -7290,6 +7291,7 @@ static void wid_display (widp w,
             col_blit_outline.a *= fade;
         }
     }
+#endif
 
     /*
      * Apply fade in/out effects.
@@ -7574,50 +7576,58 @@ static void wid_display (widp w,
                             x - 2.0f * scaling,
                             y + 2.0f * scaling, scaling, advance,
                             fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x - 3.0f * scaling,
-                            y + 3.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x - 4.0f * scaling,
-                            y + 4.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x + 2.0f * scaling,
-                            y + 2.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x + 3.0f * scaling,
-                            y + 3.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x + 4.0f * scaling,
-                            y + 4.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x - 2.0f * scaling,
-                            y - 2.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x - 3.0f * scaling,
-                            y - 3.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x - 4.0f * scaling,
-                            y - 4.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x + 2.0f * scaling,
-                            y - 2.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x + 3.0f * scaling,
-                            y - 3.0f * scaling, scaling, advance,
-                            fixed_width);
-            ttf_puts_no_fmt(font, text,
-                            x + 4.0f * scaling,
-                            y - 4.0f * scaling, scaling, advance,
-                            fixed_width);
+#ifdef ENABLE_BIG_RETRO_TEXT_OUTLINE
+                ttf_puts_no_fmt(font, text,
+                                x + 2.0f * scaling,
+                                y + 2.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x - 2.0f * scaling,
+                                y - 2.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 2.0f * scaling,
+                                y - 2.0f * scaling, scaling, advance,
+                                fixed_width);
+
+            if (font == med_font) {
+                ttf_puts_no_fmt(font, text,
+                                x - 3.0f * scaling,
+                                y + 3.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 3.0f * scaling,
+                                y + 3.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x - 3.0f * scaling,
+                                y - 3.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 3.0f * scaling,
+                                y - 3.0f * scaling, scaling, advance,
+                                fixed_width);
+            }
+
+            if (font == large_font) {
+                ttf_puts_no_fmt(font, text,
+                                x - 4.0f * scaling,
+                                y + 4.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 4.0f * scaling,
+                                y + 4.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x - 4.0f * scaling,
+                                y - 4.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 4.0f * scaling,
+                                y - 4.0f * scaling, scaling, advance,
+                                fixed_width);
+            }
+#endif
         }
 
         /*

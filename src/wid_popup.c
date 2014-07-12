@@ -475,7 +475,14 @@ widp wid_popup (const char *text, const char *title,
     wid_raise(wid_popup_window);
 
     wid_set_do_not_lower(wid_popup_window, true);
-    wid_focus_lock(wid_popup_window);
+
+    /*
+     * If there are some buttons then lock the focus and this then makes stuff 
+     * fade out in the background.
+     */
+    if (args) {
+        wid_focus_lock(wid_popup_window);
+    }
 
     return (wid_popup_window);
 }
