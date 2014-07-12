@@ -749,6 +749,14 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     thing_client_wid_update(t, x, y, false /* smooth */);
 
     /*
+     * If this is a pre-existing thing perhaps being recreated ona new level
+     * then it will have a direction already. Update it.
+     */
+    if (thing_is_animated(t)) {
+        thing_animate(t);
+    }
+
+    /*
      * This adds it to the grid wid.
      */
 #ifdef DEBUG_CLIENT_THING
