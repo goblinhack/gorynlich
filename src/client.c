@@ -832,7 +832,7 @@ static void client_poll (void)
                     if (latest_status.level_hide) {
                         LOG("Client: Hide level");
 
-                        wid_hide(wid_game_map_client_window, 
+                        wid_hide(wid_game_map_client_grid_container, 
                                  wid_hide_delay);
 
                         if (client_level) {
@@ -845,7 +845,7 @@ static void client_poll (void)
                          */
                         LOG("Client: Reveal level");
 
-                        wid_visible(wid_game_map_client_window, 
+                        wid_visible(wid_game_map_client_grid_container, 
                                     wid_visible_delay);
 
                         wid_game_map_client_scroll_adjust(1);

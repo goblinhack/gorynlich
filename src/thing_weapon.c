@@ -166,9 +166,12 @@ void thing_wield (thingp parent, thing_templatep tmp)
     if (parent->weapon != tmp) {
         parent->weapon = tmp;
 
-        if (thing_is_player(parent)) {
-            THING_SHOUT_AT(parent, INFO,
-                           "You wield the %s", thing_template_short_name(tmp));
+        if (!parent->weapon) {
+            if (thing_is_player(parent)) {
+                THING_SHOUT_AT(parent, INFO,
+                            "You switch to the %s", 
+                            thing_template_short_name(tmp));
+            }
         }
     }
 

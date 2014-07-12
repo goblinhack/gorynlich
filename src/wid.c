@@ -1219,11 +1219,12 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
     }
 
     if (w->tooltip) {
-        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.5, vsmall_font);
+        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, vsmall_font);
 
         /*
          * Move just above and to the left of the widget.
          */
+#ifdef TOOLTIP_OVER_MOUSE
         double px = x - wid_get_width(wid_popup_tooltip) - wid_get_width(w);
         double py = y - wid_get_height(wid_popup_tooltip) - wid_get_height(w);
 
@@ -1236,6 +1237,15 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         }
 
         wid_move_to_abs(wid_popup_tooltip, px, py);
+
+#else
+        /*
+         * Looks better for it to swipe down I think. Do I think? God only 
+         * knows. Why am I talking to myself!?
+         */
+        wid_move_to_pct_centered(wid_popup_tooltip, 0.5, -0.5);
+        wid_move_to_pct_centered_in(wid_popup_tooltip, 0.5, 0.2, 100);
+#endif
     }
 
     return (true);
@@ -7563,6 +7573,50 @@ static void wid_display (widp w,
             ttf_puts_no_fmt(font, text,
                             x - 2.0f * scaling,
                             y + 2.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x - 3.0f * scaling,
+                            y + 3.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x - 4.0f * scaling,
+                            y + 4.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x + 2.0f * scaling,
+                            y + 2.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x + 3.0f * scaling,
+                            y + 3.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x + 4.0f * scaling,
+                            y + 4.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x - 2.0f * scaling,
+                            y - 2.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x - 3.0f * scaling,
+                            y - 3.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x - 4.0f * scaling,
+                            y - 4.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x + 2.0f * scaling,
+                            y - 2.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x + 3.0f * scaling,
+                            y - 3.0f * scaling, scaling, advance,
+                            fixed_width);
+            ttf_puts_no_fmt(font, text,
+                            x + 4.0f * scaling,
+                            y - 4.0f * scaling, scaling, advance,
                             fixed_width);
         }
 
