@@ -3034,7 +3034,7 @@ static void wid_tree_remove (widp w)
     }
 
     if (!tree_remove(root, &w->tree.node)) {
-        DIE("remove from display sorted tree");
+        DIE("remove %s from display sorted tree", w->logname);
     }
 }
 
@@ -3161,6 +3161,12 @@ static void wid_destroy_immediate_internal (widp w)
     wid_tree3_remove(w);
     wid_tree4_remove(w);
     wid_tree5_remove(w);
+
+    if (w->thing) {
+        ERR("thing still set");
+        verify(w->thing);
+        DIE("thing %s still set", thing_logname(w->thing));
+    }
 
     if (w->on_destroy) {
         (w->on_destroy)(w);
