@@ -831,6 +831,12 @@ static void client_poll (void)
                 if (server_status.level_hide != latest_status.level_hide) {
                     if (latest_status.level_hide) {
                         wid_hide(wid_game_map_client_window, wid_hide_delay);
+    /*
+     * Kill all humans!
+     */
+                        if (client_level) {
+    things_level_destroyed(client_level, true /* keep players */);
+                        }
                     } else {
                         wid_visible(wid_game_map_client_window, wid_hide_delay);
                     }
