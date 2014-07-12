@@ -667,6 +667,11 @@ static void level_action_timer_end_level_first_phase_fade_out (void *context)
     verify(level);
 
     level_set_is_ready_to_fade_out(level, true);
+
+    /*
+     * Kill all monsters!
+     */
+    things_level_dead(level, true /* keep players */);
 }
 
 /*

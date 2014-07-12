@@ -830,15 +830,11 @@ static void client_poll (void)
 
                 if (server_status.level_hide != latest_status.level_hide) {
                     if (latest_status.level_hide) {
-                        wid_hide(wid_game_map_client_window, wid_hide_delay);
-    /*
-     * Kill all humans!
-     */
-                        if (client_level) {
-    things_level_destroyed(client_level, true /* keep players */);
-                        }
+                        wid_hide(wid_game_map_client_window, 
+                                 wid_hide_delay);
                     } else {
-                        wid_visible(wid_game_map_client_window, wid_hide_delay);
+                        wid_visible(wid_game_map_client_window, 
+                                    wid_visible_delay);
                     }
                 }
 
@@ -994,7 +990,7 @@ static void client_check_still_in_game (void)
                 continue;
             }
 
-            wid_visible(wid_game_map_client_window, wid_hide_delay);
+            wid_visible(wid_game_map_client_window, wid_visible_delay);
         }
 
         return;
