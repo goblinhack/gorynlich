@@ -1843,6 +1843,51 @@ void thing_reached_exit (thingp t)
     sound_play_level_end();
 }
 
+void things_level_dead (levelp level, uint8_t keep_players)
+{
+    thingp t;
+
+    if (level == server_level) {
+        {
+            TREE_WALK(server_active_things, t) {
+                if (keep_players && thing_is_player(t)) {
+                    continue;
+                }
+
+                thing_dead(t, 0, "level end");
+            }
+        }
+
+        {
+            TREE_WALK(server_boring_things, t) {
+                thing_dead(t, 0, "level end");
+            }
+        }
+
+        LOG("Server: killed all things");
+    }
+
+    if (level == client_level) {
+        {
+            TREE_WALK(client_active_things, t) {
+                if (keep_players && thing_is_player(t)) {
+                    continue;
+                }
+
+                thing_dead(t, 0, "level end");
+            }
+        }
+
+        {
+            TREE_WALK(client_boring_things, t) {
+                thing_dead(t, 0, "level end");
+            }
+        }
+
+        LOG("Client: killed all things");
+    }
+}
+
 void things_level_destroyed (levelp level, uint8_t keep_players)
 {
     thingp t;
@@ -1873,6 +1918,10 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
     if (level == client_level) {
         {
             TREE_WALK(client_active_things, t) {
+                if (keep_players && thing_is_player(t)) {
+                    continue;
+                }
+
                 thing_destroy(t, "level destroyed");
             }
         }
