@@ -717,7 +717,7 @@ static void level_finished (levelp level)
     wid_game_map_server_wid_destroy(true /* keep players */);
 
     { TREE_WALK(server_active_things, t) {
-        if (!thing_is_player(t)) {
+        if (!thing_is_player_or_owned_by_player(t)) {
             ERR("players should be all that is left by now "
                 "but we have %s", thing_logname(t));
             continue;
