@@ -189,3 +189,5 @@
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW    200
 #define DELAY_THOUSANDTHS_PLAYER_POLL           15
 
+#define DELAY_LEVEL_END_HIDE                    (ONESEC * 2)
+#define DELAY_LEVEL_END_DESTROY                 (ONESEC * 5)
