@@ -24,6 +24,7 @@
 #include "thing.h"
 #include "mzip_lib.h"
 #include "wid_hiscore.h"
+#include "level.h"
 
 tree_rootp sockets;
 
@@ -2101,8 +2102,10 @@ void socket_tx_server_status (void)
 
     if (server_level) {
         msg.level_no = server_level->level_no;
+        msg.level_hide = level_is_ready_to_fade_out(server_level);
     } else {
         msg.level_no = 0;
+        msg.level_hide = 0;
     }
 
     socketp s;
@@ -2246,6 +2249,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
     status->server_max_players = msg->server_max_players;
     status->server_current_players = msg->server_current_players;
     status->level_no = msg->level_no;
+    status->level_hide = msg->level_hide;
 
     memcpy(status->server_name, msg->server_name, sizeof(status->server_name));
 

@@ -828,6 +828,14 @@ static void client_poll (void)
                     redo = true;
                 }
 
+                if (server_status.level_hide != latest_status.level_hide) {
+                    if (latest_status.level_hide) {
+                        wid_hide(wid_game_map_client_window, wid_hide_delay);
+                    } else {
+                        wid_visible(wid_game_map_client_window, wid_hide_delay);
+                    }
+                }
+
                 memcpy(&server_status, &latest_status, sizeof(server_status));
 
                 wid_game_map_client_score_update(client_level, redo);
@@ -980,7 +988,7 @@ static void client_check_still_in_game (void)
                 continue;
             }
 
-            wid_visible(wid_game_map_client_window, 0);
+            wid_visible(wid_game_map_client_window, wid_hide_delay);
         }
 
         return;
