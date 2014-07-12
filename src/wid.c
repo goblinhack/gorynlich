@@ -7572,11 +7572,12 @@ static void wid_display (widp w,
         if (wid_get_text_outline(w)) {
             glcolor(col_text_outline);
 
-            ttf_puts_no_fmt(font, text,
-                            x - 2.0f * scaling,
-                            y + 2.0f * scaling, scaling, advance,
-                            fixed_width);
 #ifdef ENABLE_BIG_RETRO_TEXT_OUTLINE
+            if (font == small_font) {
+                ttf_puts_no_fmt(font, text,
+                                x - 2.0f * scaling,
+                                y + 2.0f * scaling, scaling, advance,
+                                fixed_width);
                 ttf_puts_no_fmt(font, text,
                                 x + 2.0f * scaling,
                                 y + 2.0f * scaling, scaling, advance,
@@ -7589,6 +7590,7 @@ static void wid_display (widp w,
                                 x + 2.0f * scaling,
                                 y - 2.0f * scaling, scaling, advance,
                                 fixed_width);
+            }
 
             if (font == med_font) {
                 ttf_puts_no_fmt(font, text,
@@ -7627,6 +7629,11 @@ static void wid_display (widp w,
                                 y - 4.0f * scaling, scaling, advance,
                                 fixed_width);
             }
+#else
+            ttf_puts_no_fmt(font, text,
+                            x - 2.0f * scaling,
+                            y + 2.0f * scaling, scaling, advance,
+                            fixed_width);
 #endif
         }
 
