@@ -1873,7 +1873,11 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
     if (level == server_level) {
         {
             TREE_WALK(server_active_things, t) {
-                if (keep_players && thing_is_player(t)) {
+                if (keep_players && 
+                    thing_is_player_or_owned_by_player(t) &&
+                    !thing_is_animation(t) &&
+                    !thing_is_weapon_swing_effect(t)) {
+
                     thing_map_remove(t);
                     thing_set_wid(t, 0);
                     continue;
@@ -1891,9 +1895,11 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
 
         {
             TREE_WALK(server_active_things, t) {
-                if (keep_players && thing_is_player(t)) {
+                if (keep_players && 
+                    thing_is_player_or_owned_by_player(t)) {
                     continue;
                 }
+
                 DIE("thing still exists %s", thing_logname(t));
             }
         }
@@ -1903,14 +1909,16 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                 DIE("thing still exists %s", thing_logname(t));
             }
         }
-
-        LOG("Server: destroyed things");
     }
 
     if (level == client_level) {
         {
             TREE_WALK(client_active_things, t) {
-                if (keep_players && thing_is_player(t)) {
+                if (keep_players && 
+                    thing_is_player_or_owned_by_player(t) &&
+                    !thing_is_animation(t) &&
+                    !thing_is_weapon_swing_effect(t)) {
+
                     thing_map_remove(t);
                     thing_set_wid(t, 0);
                     continue;
@@ -1928,9 +1936,11 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
 
         {
             TREE_WALK(client_active_things, t) {
-                if (keep_players && thing_is_player(t)) {
+                if (keep_players && 
+                    thing_is_player_or_owned_by_player(t)) {
                     continue;
                 }
+
                 DIE("thing still exists %s", thing_logname(t));
             }
         }
@@ -1940,8 +1950,6 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                 DIE("thing still exists %s", thing_logname(t));
             }
         }
-
-        LOG("Client: destroyed things");
     }
 }
 

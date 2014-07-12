@@ -622,6 +622,16 @@ void level_place_plant_pod (levelp level)
  */
 void level_start_timers (levelp level)
 {
+    thingp t;
+
+    /*
+     * Rewield weapons at start.
+     */
+    TREE_WALK(server_active_things, t) {
+        if (thing_is_player(t)) {
+            thing_wield(t, t->weapon);
+        }
+    }
 }
 
 static void level_action_timer_unpause_level (void *context)
@@ -796,7 +806,7 @@ void level_tick (levelp level)
                                     0,
                                     level,
                                     "end level",
-                                    ONESEC * 3, /* duration */
+                                    ONESEC * 4, /* duration */
                                     ONESEC);
         }
     }

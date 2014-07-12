@@ -828,17 +828,19 @@ static void client_poll (void)
                     redo = true;
                 }
 
+                if (latest_status.level_hide) {
+                    if (client_level) {
+                        things_level_destroyed(client_level,
+                                               true /* keep players */);
+                    }
+                }
+
                 if (server_status.level_hide != latest_status.level_hide) {
                     if (latest_status.level_hide) {
                         LOG("Client: Hide level");
 
                         wid_hide(wid_game_map_client_grid_container, 
                                  wid_hide_delay);
-
-                        if (client_level) {
-                            things_level_destroyed(client_level, 
-                                                   true /* keep players */);
-                        }
                     } else {
                         /*
                          * Reveal the level and re-equip players.
@@ -849,14 +851,6 @@ static void client_poll (void)
                                     wid_visible_delay);
 
                         wid_game_map_client_scroll_adjust(1);
-
-                        thingp t;
-
-                        TREE_WALK(server_active_things, t) {
-                            if (thing_is_player(t)) {
-                                thing_wield(t, t->weapon);
-                            }
-                        }
                     }
                 }
 
