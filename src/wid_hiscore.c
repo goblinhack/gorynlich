@@ -192,7 +192,7 @@ static void wid_hiscore_create (void)
             widp w = wid_new_square_button(wid_hiscore_container,
                                            "hiscore name");
 
-            fpoint tl = {0.05, 0.1};
+            fpoint tl = {0.01, 0.1};
             fpoint br = {0.51, 0.2};
 
             float height = 0.08;
@@ -296,8 +296,8 @@ static void wid_hiscore_create (void)
             widp w = wid_new_square_button(wid_hiscore_container,
                                            "hiscore value");
 
-            fpoint tl = {0.72, 0.1};
-            fpoint br = {0.95, 0.2};
+            fpoint tl = {0.76, 0.1};
+            fpoint br = {0.99, 0.2};
 
             float height = 0.08;
 
