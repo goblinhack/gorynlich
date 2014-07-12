@@ -832,6 +832,11 @@ static void client_poll (void)
                     if (latest_status.level_hide) {
                         wid_hide(wid_game_map_client_window, 
                                  wid_hide_delay);
+
+                        if (client_level) {
+                            things_level_destroyed(client_level, 
+                                                   true /* keep players */);
+                        }
                     } else {
                         wid_visible(wid_game_map_client_window, 
                                     wid_visible_delay);

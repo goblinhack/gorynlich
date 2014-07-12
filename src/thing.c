@@ -2973,6 +2973,13 @@ if (thing_is_weapon_swing_effect(t)) {
 void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 {
 //LOG("tx update %s", type);
+
+    if (server_level) {
+        if (level_is_ready_to_fade_out(server_level)) {
+            return;
+        }
+    }
+
     /*
      * If no players, then send nothing.
      */
