@@ -3071,7 +3071,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
              * events.
              */
             if (thing_template_is_explosion(thing_template)) {
-//CON("tx skip dead %s",thing_logname(t));
                 t->updated--;
                 continue;
             }
@@ -3081,7 +3080,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
              * client.
              */
             if (thing_template_is_weapon_swing_effect(thing_template)) {
-//CON("tx skip dead %s",thing_logname(t));
                 t->updated--;
                 continue;
             }
@@ -3096,7 +3094,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
              * No change to the thing? Nothing to send.
              */
             if (!t->updated) {
-//CON("tx no upd %s",thing_logname(t));
                 continue;
             }
 
@@ -3112,12 +3109,10 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                 /*
                  * Send dead changes all the time as we use that on level end
                  */
-//LOG("tx %s",thing_logname(t));
             } else if (!time_have_x_thousandths_passed_since(
                     thing_template_get_tx_map_update_delay_thousandths(
                                                             thing_template),
                     t->timestamp_tx_map_update)) {
-//CON("tx no delay %s",thing_logname(t));
                 continue;
             }
 
@@ -3134,7 +3129,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         uint8_t tx;
         uint8_t ty;
 
-//LOG("tx %s is dead %d",thing_logname(t),t->is_dead);
         widp w = thing_wid(t);
         if (w) {
             tx = (uint8_t)(int)((t->x * ((double)256)) / MAP_WIDTH);
@@ -3489,7 +3483,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-LOG("update %s",thing_logname(t));
                         thing_client_wid_update(t, x, y, false /* smooth */);
 
                         wid_game_map_client_scroll_adjust(1);
@@ -3505,7 +3498,6 @@ LOG("update %s",thing_logname(t));
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
-LOG("update %s",thing_logname(t));
                         thing_client_wid_update(t, x, y, false /* smooth */);
 
                         wid_game_map_client_scroll_adjust(1);
@@ -3654,6 +3646,7 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
                 thing_logname(t), thing_logname(thing_weapon_carry_anim(t)));
         }
     }
+
     if (t->weapon_swing_anim_id) {
         thingp item = thing_weapon_swing_anim(t);
         if (item) {
