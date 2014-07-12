@@ -130,6 +130,9 @@
 .o/ramdisk_data_things__arrow_session.o: asm/ramdisk_data_things__arrow_session.S ../data/things/.arrow.session
 	gcc -c asm/ramdisk_data_things__arrow_session.S -o .o/ramdisk_data_things__arrow_session.o
 
+.o/ramdisk_data_things__axe1_session.o: asm/ramdisk_data_things__axe1_session.S ../data/things/.axe1.session
+	gcc -c asm/ramdisk_data_things__axe1_session.S -o .o/ramdisk_data_things__axe1_session.o
+
 .o/ramdisk_data_things__axe2_session.o: asm/ramdisk_data_things__axe2_session.S ../data/things/.axe2.session
 	gcc -c asm/ramdisk_data_things__axe2_session.S -o .o/ramdisk_data_things__axe2_session.o
 
