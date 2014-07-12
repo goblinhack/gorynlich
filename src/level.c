@@ -658,15 +658,27 @@ void level_pause (levelp level)
 }
 
 /*
- * Timer has fired indicating end the level now.
+ * Timer has fired indicating we should fade the level out.
  */
-static void level_action_timer_end_level (void *context)
+static void level_action_timer_end_level_first_phase_fade_out (void *context)
 {
     levelp level;
     level = (typeof(level)) context;
     verify(level);
 
-    level_set_is_finished(level, true);
+    level_set_is_ready_to_fade_out(level, true);
+}
+
+/*
+ * Timer has fired indicating end the level now.
+ */
+static void level_action_timer_end_level_second_phase_destroy (void *context)
+{
+    levelp level;
+    level = (typeof(level)) context;
+    verify(level);
+
+    level_set_is_ready_to_be_destroyed(level, true);
 }
 
 /*
@@ -675,7 +687,8 @@ static void level_action_timer_end_level (void *context)
  */
 static void level_finished (levelp level)
 {
-    level->end_level_timer = 0;
+    level->end_level_second_phase_destroy_timer = 0;
+    level->end_level_first_phase_fade_out_timer = 0;
 
     thingp t;
 
@@ -764,17 +777,26 @@ void level_tick (levelp level)
      * If the player has finished the level then popup a notice so all players 
      * know the end is nigh!
      */
-    if (level_is_completed(level)) {
-        if (!level->end_level_timer) {
+    if (level_exit_has_been_reached(level)) {
+        if (!level->end_level_first_phase_fade_out_timer) {
             socket_tx_server_shout(POPUP, "Level completed");
 
-            level->end_level_timer = 
+            level->end_level_first_phase_fade_out_timer = 
                 action_timer_create(&server_timers,
-                                    level_action_timer_end_level,
+                                    level_action_timer_end_level_first_phase_fade_out,
                                     0,
                                     level,
                                     "end level",
                                     ONESEC * 2, /* duration */
+                                    ONESEC);
+
+            level->end_level_second_phase_destroy_timer = 
+                action_timer_create(&server_timers,
+                                    level_action_timer_end_level_second_phase_destroy,
+                                    0,
+                                    level,
+                                    "end level",
+                                    ONESEC * 3, /* duration */
                                     ONESEC);
         }
     }
@@ -783,7 +805,7 @@ void level_tick (levelp level)
      * If the level is completely done, i.e. we popped up a notice and timed 
      * out and are ready to delete it, zap it now.
      */
-    if (level_is_finished(level)) {
+    if (level_is_ready_to_be_destroyed(level)) {
         level_finished(level);
     }
 }
@@ -1138,32 +1160,46 @@ void level_set_is_paused (levelp level, uint8_t val)
     level->is_paused = val;
 }
 
-uint8_t level_is_completed (levelp level)
+uint8_t level_exit_has_been_reached (levelp level)
 {
     verify(level);
 
-    return (level->is_completed);
+    return (level->exit_has_been_reached);
 }
 
-void level_set_is_completed (levelp level, uint8_t val)
+void level_set_exit_has_been_reached (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_completed = val;
+    level->exit_has_been_reached = val;
 }
 
-uint8_t level_is_finished (levelp level)
+uint8_t level_is_ready_to_be_destroyed (levelp level)
 {
     verify(level);
 
-    return (level->is_finished);
+    return (level->is_ready_to_be_destroyed);
 }
 
-void level_set_is_finished (levelp level, uint8_t val)
+void level_set_is_ready_to_be_destroyed (levelp level, uint8_t val)
 {
     verify(level);
 
-    level->is_finished = val;
+    level->is_ready_to_be_destroyed = val;
+}
+
+uint8_t level_is_ready_to_fade_out (levelp level)
+{
+    verify(level);
+
+    return (level->is_ready_to_fade_out);
+}
+
+void level_set_is_ready_to_fade_out (levelp level, uint8_t val)
+{
+    verify(level);
+
+    level->is_ready_to_fade_out = val;
 }
 
 const char *level_get_logname (levelp l)

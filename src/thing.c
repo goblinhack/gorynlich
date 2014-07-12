@@ -1761,7 +1761,7 @@ void thing_leave_level (thingp t)
         t->needs_tx_player_update = true;
     }
 
-    level_set_is_completed(server_level, true);
+    level_set_exit_has_been_reached(server_level, true);
 
     /*
      * Make the weapon leave to
