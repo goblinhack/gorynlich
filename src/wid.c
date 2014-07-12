@@ -7794,6 +7794,7 @@ void wid_fade_in (widp w, uint32_t delay)
     w->timestamp_fading_end = w->timestamp_fading_begin + delay;
     w->fade_out = false;
     w->fade_in = true;
+    w->hidden = false;
 }
 
 void wid_fade_out (widp w, uint32_t delay)
