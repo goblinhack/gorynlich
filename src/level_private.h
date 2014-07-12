@@ -67,7 +67,8 @@ typedef struct level_t_ {
     /*
      * Timers
      */
-    timerp end_level_timer;
+    timerp end_level_first_phase_fade_out_timer;
+    timerp end_level_second_phase_destroy_timer;
     timerp pause_timer;
 
     /*
@@ -88,12 +89,19 @@ typedef struct level_t_ {
     /*
      * Exit has been reached.
      */
-    uint8_t is_completed:1;
+    uint8_t exit_has_been_reached:1;
 
     /*
-     * Exit has been reached and a suitabel delay has passed.
+     * Exit has been reached and a long delay has passed. The level will be 
+     * destoyed now.
      */
-    uint8_t is_finished:1;
+    uint8_t is_ready_to_be_destroyed:1;
+
+    /*
+     * Exit has been reached and a small delay has passed. Hide the level from 
+     * the client.
+     */
+    uint8_t is_ready_to_fade_out:1;
 
     /*
      * Being used in level editor.
