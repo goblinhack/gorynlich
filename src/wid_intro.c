@@ -49,7 +49,7 @@ static void wid_intro_guide_selected(void);
 static uint8_t wid_intro_init_done;
 static void wid_intro_create(void);
 
-static int intro_effect_delay = 200;
+static int intro_effect_delay = 500;
 
 uint8_t wid_intro_init (void)
 {
