@@ -402,7 +402,7 @@ static int32_t wid_moving_last_y;
 const int32_t wid_fade_delay = 200;
 const int32_t wid_destroy_delay_ms = 300;
 const int32_t wid_visible_delay = 100;
-const int32_t wid_hide_delay = 200;
+const int32_t wid_hide_delay = 500;
 const int32_t wid_swipe_delay = 200;
 const int32_t wid_pulse_delay = 300;
 
@@ -5740,7 +5740,7 @@ static uint8_t wid_receive_unhandled_input (const SDL_KEYSYM *key)
 
             case SDLK_ESCAPE:
                 if (w->visible) {
-                    wid_hide(w, wid_hide_delay);
+                    wid_hide(w, wid_visible_delay);
                 }
                 break;
 
