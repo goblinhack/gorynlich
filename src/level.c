@@ -797,7 +797,7 @@ void level_tick (levelp level)
                                     0,
                                     level,
                                     "end level",
-                                    ONESEC * 2, /* duration */
+                                    DELAY_LEVEL_END_HIDE,
                                     ONESEC);
 
             level->end_level_second_phase_destroy_timer = 
@@ -806,7 +806,7 @@ void level_tick (levelp level)
                                     0,
                                     level,
                                     "end level",
-                                    ONESEC * 4, /* duration */
+                                    DELAY_LEVEL_END_DESTROY,
                                     ONESEC);
         }
     }

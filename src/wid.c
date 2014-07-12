@@ -5013,7 +5013,9 @@ void wid_hide (widp w, uint32_t delay)
         wid_mouse_motion_end();
     }
 
-    wid_find_top_focus();
+    if (w == wid_focus) {
+        wid_find_top_focus();
+    }
 }
 
 void wid_this_hide (widp w, uint32_t delay)
@@ -7877,6 +7879,13 @@ uint8_t wid_is_fading (widp w)
     fast_verify(w);
 
     if (!w) {
+        return (false);
+    }
+
+    /*
+     * I may be hidden already in a parent that is fading. Just keep hidden.
+     */
+    if (w->hidden) {
         return (false);
     }
 

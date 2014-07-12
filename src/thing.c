@@ -927,10 +927,19 @@ static void thing_remove_hooks (thingp t)
         if (t->thing_id == owner->weapon_swing_anim_id) {
             owner->weapon_swing_anim_id = 0;
 
+            /*
+             * End of the swing animation, make the sword visible again.
+             */
             thingp carry = thing_weapon_carry_anim(owner);
             if (carry) {
-                if (!t->on_server) {
-                    thing_visible(carry);
+                /*
+                 * But only if the owner is visible. They may have reached the 
+                 * level.
+                 */
+                if (thing_is_visible(owner)) {
+                    if (!t->on_server) {
+                        thing_visible(carry);
+                    }
                 }
             }
         }
@@ -2975,6 +2984,15 @@ static void thing_client_wid_move (thingp t, double x, double y,
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
+widp w = t->wid;
+if (w) {
+    if (wid_is_hidden(w)) {
+        if (thing_is_animation(t)) {
+        CON("update for hidden %s",t->logname);
+        }
+    }
+}
+
     thing_client_wid_move(t, x, y, smooth);
 
     /*
@@ -3443,7 +3461,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
                 if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
                     /*
-                     * IF this thing is leaving the level, no need to update
+                     * If this thing is leaving the level, no need to update
                      * the map if it is a wall as all walls are leaving.
                      */
                 } else {
@@ -3483,6 +3501,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
+LOG("update %s",thing_logname(t));
                         thing_client_wid_update(t, x, y, false /* smooth */);
 
                         wid_game_map_client_scroll_adjust(1);
@@ -3498,6 +3517,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                         THING_LOG(t, "  server %f %f", t->x, t->y);
                         THING_LOG(t, "  client %f %f", x, y);
 
+LOG("update %s",thing_logname(t));
                         thing_client_wid_update(t, x, y, false /* smooth */);
 
                         wid_game_map_client_scroll_adjust(1);
@@ -3668,7 +3688,7 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
     }
 
     /*
-     * If swinging a weapon now, hide the carrie weapon until the swing is 
+     * If swinging a weapon now, hide the carried weapon until the swing is 
      * over.
      */
     if (t->weapon_swing_anim_id) {
@@ -3807,6 +3827,13 @@ void thing_fire (thingp t,
                  const uint8_t left,
                  const uint8_t right)
 {
+    /*
+     * Cannot fire if we've reached a level.
+     */
+    if (!t->wid) {
+        return;
+    }
+
     /*
      * Use the currently wielded weapon. Or perhaps the thing has an
      * intrinsic weapon ability?
