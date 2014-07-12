@@ -163,11 +163,13 @@ void thing_wield (thingp parent, thing_templatep tmp)
 {
     thing_unwield(parent);
 
-    parent->weapon = tmp;
+    if (parent->weapon != tmp) {
+        parent->weapon = tmp;
 
-    if (thing_is_player(parent)) {
-        THING_SHOUT_AT(parent, INFO,
-                       "You wield the %s", thing_template_short_name(tmp));
+        if (thing_is_player(parent)) {
+            THING_SHOUT_AT(parent, INFO,
+                           "You wield the %s", thing_template_short_name(tmp));
+        }
     }
 
     const char *child = thing_template_weapon_carry_anim(tmp);

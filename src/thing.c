@@ -831,6 +831,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
     if (thing_is_player(t)) {
         THING_LOG(t, "created on client");
     }
+//LOG("created %s", thing_logname(t));
 
     return (t);
 }
@@ -1843,49 +1844,23 @@ void thing_reached_exit (thingp t)
     sound_play_level_end();
 }
 
-void things_level_dead (levelp level, uint8_t keep_players)
+int thing_is_player_or_owned_by_player (thingp t)
 {
-    thingp t;
-
-    if (level == server_level) {
-        {
-            TREE_WALK(server_active_things, t) {
-                if (keep_players && thing_is_player(t)) {
-                    continue;
-                }
-
-                thing_dead(t, 0, "level end");
-            }
-        }
-
-        {
-            TREE_WALK(server_boring_things, t) {
-                thing_dead(t, 0, "level end");
-            }
-        }
-
-        LOG("Server: killed all things");
+    if (thing_is_player(t)) {
+        return (true);
     }
 
-    if (level == client_level) {
-        {
-            TREE_WALK(client_active_things, t) {
-                if (keep_players && thing_is_player(t)) {
-                    continue;
-                }
-
-                thing_dead(t, 0, "level end");
-            }
+    /*
+     * Keep owned weapons too.
+     */
+    thingp owner = thing_owner(t);
+    if (owner) {
+        if (thing_is_player(owner)) {
+            return (true);
         }
-
-        {
-            TREE_WALK(client_boring_things, t) {
-                thing_dead(t, 0, "level end");
-            }
-        }
-
-        LOG("Client: killed all things");
     }
+
+    return (false);
 }
 
 void things_level_destroyed (levelp level, uint8_t keep_players)
@@ -1899,6 +1874,8 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
         {
             TREE_WALK(server_active_things, t) {
                 if (keep_players && thing_is_player(t)) {
+                    thing_map_remove(t);
+                    thing_set_wid(t, 0);
                     continue;
                 }
 
@@ -1912,6 +1889,21 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
             }
         }
 
+        {
+            TREE_WALK(server_active_things, t) {
+                if (keep_players && thing_is_player(t)) {
+                    continue;
+                }
+                DIE("thing still exists %s", thing_logname(t));
+            }
+        }
+
+        {
+            TREE_WALK(server_boring_things, t) {
+                DIE("thing still exists %s", thing_logname(t));
+            }
+        }
+
         LOG("Server: destroyed things");
     }
 
@@ -1919,6 +1911,8 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
         {
             TREE_WALK(client_active_things, t) {
                 if (keep_players && thing_is_player(t)) {
+                    thing_map_remove(t);
+                    thing_set_wid(t, 0);
                     continue;
                 }
 
@@ -1929,6 +1923,21 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
         {
             TREE_WALK(client_boring_things, t) {
                 thing_destroy(t, "level destroyed");
+            }
+        }
+
+        {
+            TREE_WALK(client_active_things, t) {
+                if (keep_players && thing_is_player(t)) {
+                    continue;
+                }
+                DIE("thing still exists %s", thing_logname(t));
+            }
+        }
+
+        {
+            TREE_WALK(client_boring_things, t) {
+                DIE("thing still exists %s", thing_logname(t));
             }
         }
 
@@ -2833,6 +2842,13 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
     tl.y -= tile_height / 4.0;
     br.x += tile_width / 4.0;
 
+    /*
+     * Off the map? Perhaps between levels.
+     */
+    if (!t->wid) {
+        return;
+    }
+
     if (is_new || 
         thing_is_player(t) ||
         thing_is_weapon(t) ||
@@ -2930,6 +2946,13 @@ static void thing_client_wid_move (thingp t, double x, double y,
     br.x += tile_width / 4.0;
 
     /*
+     * Off the map? Perhaps between levels.
+     */
+    if (!t->wid) {
+        return;
+    }
+
+    /*
      * Make the weapon follow the thing.
      */
     if (smooth) {
@@ -2974,6 +2997,10 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 {
 //LOG("tx update %s", type);
 
+    /*
+     * The client should be told when the level is hidden and will destroy
+     * all things on its end to save us sending a cleanup.
+     */
     if (server_level) {
         if (level_is_ready_to_fade_out(server_level)) {
             return;
@@ -3450,7 +3477,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
                         thing_client_wid_update(t, x, y, false /* smooth */);
 
-                        wid_game_map_client_scroll_adjust (1);
+                        wid_game_map_client_scroll_adjust(1);
                     } else 
                         if ((fabs(x-t->x) > THING_MAX_SERVER_DISCREPANCY * 2) ||
                             (fabs(y-t->y) > THING_MAX_SERVER_DISCREPANCY * 2)) {
@@ -3465,7 +3492,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
                         thing_client_wid_update(t, x, y, false /* smooth */);
 
-                        wid_game_map_client_scroll_adjust (1);
+                        wid_game_map_client_scroll_adjust(1);
                     }
                 } else if (on_map) {
                     /*

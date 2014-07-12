@@ -48,12 +48,12 @@ static void thing_tick_server_all (void)
         thing_template = thing_get_template(t);
 
 //    count++;
-//LOG("  %s",thing_logname(t));
         w = t->wid;
         if (w) {
             verify(w);
         } else {
             ERR("thing %s has no widget", thing_logname(t));
+            continue;
         }
 
         /*
