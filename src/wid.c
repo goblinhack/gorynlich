@@ -404,7 +404,7 @@ const int32_t wid_destroy_delay_ms = 300;
 const int32_t wid_visible_delay = 100;
 const int32_t wid_hide_delay = 500;
 const int32_t wid_swipe_delay = 200;
-const int32_t wid_pulse_delay = 300;
+const int32_t wid_pulse_delay = 100;
 
 /*
  * Prototypes.
@@ -7120,7 +7120,7 @@ static void wid_gc (widp w)
          * If being destroyed, is it done fading ? We only do this for the top
          * level widgets. The childen inherit the fading from the parent.
          *
-         * Only do this for signle shot fade count widgets, not those that 
+         * Only do this for single shot fade count widgets, not those that 
          * pulse in and out.
          */
         if (wid_is_fading(w) && !w->fade_count) {
@@ -7205,6 +7205,12 @@ static void wid_display (widp w,
     always_hidden = wid_is_always_hidden(w);
     scaling = wid_is_scaling(w);
 
+    double fade = 0;
+
+    if (fading) {
+        fade = wid_get_fade_amount(w);
+    }
+
     if (always_hidden) {
         /*
          * Always render. Not hidden yet.
@@ -7271,8 +7277,6 @@ static void wid_display (widp w,
      */
     if (wid_focus_locked) {
         if (wid_get_top_parent(w) != wid_focus_locked) {
-            double fade = 0.8;
-
             /*
              * Darken the colours.
              */
@@ -7886,8 +7890,10 @@ uint8_t wid_is_fading (widp w)
     /*
      * I may be hidden already in a parent that is fading. Just keep hidden.
      */
-    if (w->hidden) {
-        return (false);
+    if (!w->fade_count) {
+        if (w->hidden) {
+            return (false);
+        }
     }
 
     if (w->fade_out || w->fade_in) {
@@ -8315,7 +8321,7 @@ void wid_effect_pulses (widp w)
     fast_verify(w);
 
     if (wid_get_height(w) > 100) {
-        wid_scaling_to_pct_in(w, 1.0, 1.01, wid_pulse_delay, 1);
+        wid_scaling_to_pct_in(w, 1.0, 1.11, wid_pulse_delay, 1);
     } else {
         wid_scaling_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 1);
     }

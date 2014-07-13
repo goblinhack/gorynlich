@@ -148,6 +148,17 @@ static uint8_t wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
+static uint8_t wid_intro2_select_class_motion (
+                    widp w,
+                    int32_t x, int32_t y,
+                    int32_t relx, int32_t rely,
+                    int32_t wheelx, int32_t wheely)
+{
+    wid_effect_pulses(w);
+
+    return (true);
+}
+
 static uint8_t wid_intro2_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
@@ -281,6 +292,11 @@ static uint8_t wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     br.x -= 0.04;
     br.y -= 0.04;
 
+    tl.x += 0.01;
+    tl.y += 0.01;
+    br.x += 0.01;
+    br.y += 0.01;
+
     child = wid_new_square_button(wid_intro_player_container,
                                   "possible players");
 
@@ -315,6 +331,7 @@ static uint8_t wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_on_tick(child, wid_intro2_buttons_tick);
 
     wid_set_on_mouse_down(child, wid_intro2_select_class_event);
+    wid_set_on_mouse_motion(child, wid_intro2_select_class_motion);
     wid_set_client_context(child, thing_template);
 
     x++;
@@ -431,7 +448,7 @@ static void wid_intro2_create (void)
         wid_intro_player_container = wid_new_container(wid_intro2, 
                                                            "intro2 players");
 
-        fpoint tl = {0.75f, 0.43f};
+        fpoint tl = {0.70f, 0.40f};
         fpoint br = {1.0, 1.0f};
         wid_set_tl_br_pct(wid_intro_player_container, tl, br);
 
