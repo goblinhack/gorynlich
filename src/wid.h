@@ -196,8 +196,6 @@ double wid_get_br_y(widp);
 double wid_get_height(widp);
 void wid_get_mxy(widp w, double *x, double *y);
 double wid_get_mode_bevel(widp);
-double wid_get_scaling_w(widp);
-double wid_get_scaling_h(widp);
 double wid_get_rotate(widp);
 double wid_get_text_advance(widp);
 double wid_get_text_scaling(widp);
@@ -252,10 +250,23 @@ void wid_move_to_horiz_pct(widp w, double pct);
 void wid_move_to_vert_pct_in(widp w, double pct, double in);
 void wid_move_to_horiz_pct_in(widp w, double pct, double in);
 void wid_get_move_interpolated_progress(widp w, double *dx, double *dy);
+
+double wid_get_scaling_w(widp);
+double wid_get_scaling_h(widp);
 void wid_scale_immediate(widp, double val);
 void wid_scale_w_immediate(widp, double val);
 void wid_scale_h_immediate(widp, double val);
 void wid_scaling_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t bounce_count);
+void wid_effect_pulses(widp);
+
+double wid_get_blit_scaling_w(widp);
+double wid_get_blit_scaling_h(widp);
+void wid_blit_scale_immediate(widp, double val);
+void wid_blit_scale_w_immediate(widp, double val);
+void wid_blit_scale_h_immediate(widp, double val);
+void wid_blit_scaling_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t bounce_count);
+void wid_blit_effect_pulses(widp);
+
 void wid_rotate_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t bounce_count);
 void wid_rotate_immediate(widp, double val);
 void wid_flip_horiz(widp, uint8_t);

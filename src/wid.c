@@ -262,22 +262,39 @@ typedef struct wid_ {
     uint32_t timestamp_scaling_w_end;
     uint32_t timestamp_scaling_h_begin;
     uint32_t timestamp_scaling_h_end;
+
+    uint32_t timestamp_blit_scaling_w_begin;
+    uint32_t timestamp_blit_scaling_w_end;
+    uint32_t timestamp_blit_scaling_h_begin;
+    uint32_t timestamp_blit_scaling_h_end;
+
     uint32_t timestamp_rotate_begin;
     uint32_t timestamp_rotate_end;
     uint32_t destroy_when;
     fpoint moving_start;
     fpoint moving_end;
+
     double scale_w_base;
     double scaling_w_start;
     double scaling_w_end;
     double scale_h_base;
     double scaling_h_start;
     double scaling_h_end;
+    uint32_t scaling_w_bounce_count;
+    uint32_t scaling_h_bounce_count;
+
+    double blit_scale_w_base;
+    double blit_scaling_w_start;
+    double blit_scaling_w_end;
+    double blit_scale_h_base;
+    double blit_scaling_h_start;
+    double blit_scaling_h_end;
+    uint32_t blit_scaling_w_bounce_count;
+    uint32_t blit_scaling_h_bounce_count;
+
     double rotate_base;
     double rotate_start;
     double rotate_end;
-    uint32_t scaling_w_bounce_count;
-    uint32_t scaling_h_bounce_count;
     uint32_t rotate_sways_count;
     uint32_t fade_count;
     uint32_t fade_delay;
@@ -320,10 +337,17 @@ typedef struct wid_ {
     uint8_t moving:1;
     uint8_t ignore_for_events:1;
     uint8_t paused:1;
+
     uint8_t scaled_w:1;
     uint8_t scaled_h:1;
     uint8_t scaling_w:1;
     uint8_t scaling_h:1;
+
+    uint8_t blit_scaled_w:1;
+    uint8_t blit_scaled_h:1;
+    uint8_t blit_scaling_w:1;
+    uint8_t blit_scaling_h:1;
+
     uint8_t rotated:1;
     uint8_t rotating:1;
     uint8_t flip_vert:1;
@@ -7487,8 +7511,33 @@ static void wid_display (widp w,
         }
 
         glcolor(col_tile);
-        tile_blit_fat(tile, 0, tl, br);
-        glBindTexture(GL_TEXTURE_2D, 0);
+
+        if (w->blit_scaled_w || w->blit_scaled_h ||
+            w->blit_scaling_w || w->blit_scaling_h) {
+
+            double scale_width = wid_get_blit_scaling_w(w) - 1;
+            double scale_height = wid_get_blit_scaling_h(w) - 1;
+
+            double blit_width = owidth;
+            double blit_height = oheight;
+
+            blit_width /= 2.0;
+            blit_height /= 2.0;
+
+            blit_width *= scale_width;
+            blit_height *= scale_height;
+
+            tl.x -= blit_width;
+            br.x += blit_width;
+            tl.y -= blit_height;
+            br.y += blit_height;
+
+            tile_blit_fat(tile, 0, tl, br);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        } else {
+            tile_blit_fat(tile, 0, tl, br);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
 
         if (tile2) {
             glcolor(col_tile);
@@ -8399,6 +8448,153 @@ double wid_get_scaling_h (widp w)
                     w->scaling_h_start;
 
     return (scaling + w->scale_h_base);
+}
+
+void wid_blit_scaling_to_pct_in (widp w,
+                            double blit_scaling_start,
+                            double blit_scaling_end,
+                            uint32_t ms,
+                            uint32_t blit_scaling_bounce_count)
+{
+    fast_verify(w);
+
+    w->timestamp_blit_scaling_w_begin = time_get_time_cached();
+    w->timestamp_blit_scaling_h_begin = time_get_time_cached();
+
+    w->timestamp_blit_scaling_w_end = w->timestamp_blit_scaling_w_begin + ms;
+    w->timestamp_blit_scaling_h_end = w->timestamp_blit_scaling_h_begin + ms;
+
+    w->blit_scaling_w_start = blit_scaling_start;
+    w->blit_scaling_h_start = blit_scaling_start;
+
+    w->blit_scaling_w_end = blit_scaling_end;
+    w->blit_scaling_h_end = blit_scaling_end;
+
+    w->blit_scaling_w_bounce_count = blit_scaling_bounce_count;
+    w->blit_scaling_h_bounce_count = blit_scaling_bounce_count;
+
+    w->blit_scaling_w = true;
+    w->blit_scaling_h = true;
+}
+
+void wid_blit_scale_immediate (widp w, double val)
+{
+    fast_verify(w);
+
+    w->blit_scale_w_base = val;
+    w->blit_scale_h_base = val;
+    w->blit_scaled_w = true;
+    w->blit_scaled_h = true;
+
+    if (val == 0.0) {
+        w->blit_scaled_w = false;
+        w->blit_scaled_h = false;
+    }
+}
+
+void wid_blit_scale_w_immediate (widp w, double val)
+{
+    fast_verify(w);
+
+    w->blit_scale_w_base = val;
+    w->blit_scaled_w = true;
+
+    if (val == 0.0) {
+        w->blit_scaled_w = false;
+    }
+}
+
+void wid_blit_scale_h_immediate (widp w, double val)
+{
+    fast_verify(w);
+
+    w->blit_scale_h_base = val;
+    w->blit_scaled_h = true;
+
+    if (val == 0.0) {
+        w->blit_scaled_h = false;
+    }
+}
+
+void wid_blit_effect_pulses (widp w)
+{
+    fast_verify(w);
+
+    wid_blit_scaling_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 1);
+}
+
+double wid_get_blit_scaling_w (widp w)
+{
+    double blit_scaling;
+
+    if (!w->blit_scaling_w && !w->blit_scaled_w) {
+        return (1.0);
+    }
+
+    w->text_size_cached = false;
+
+    if (time_get_time_cached() >= w->timestamp_blit_scaling_w_end) {
+
+        blit_scaling = w->blit_scaling_w_end;
+        w->blit_scaling_w = false;
+
+        if (w->blit_scaling_w_bounce_count) {
+            wid_blit_scaling_to_pct_in(w,
+                                  w->blit_scaling_w_end,
+                                  w->blit_scaling_w_start,
+                                  w->timestamp_blit_scaling_w_end -
+                                  w->timestamp_blit_scaling_w_begin,
+                                  w->blit_scaling_w_bounce_count - 1);
+        }
+
+        return (blit_scaling + w->blit_scale_w_base);
+    }
+
+    double time_step =
+        (double)(time_get_time_cached() - w->timestamp_blit_scaling_w_begin) /
+        (double)(w->timestamp_blit_scaling_w_end - w->timestamp_blit_scaling_w_begin);
+
+    blit_scaling = (time_step * (double)(w->blit_scaling_w_end - w->blit_scaling_w_start)) +
+                    w->blit_scaling_w_start;
+
+    return (blit_scaling + w->blit_scale_w_base);
+}
+
+double wid_get_blit_scaling_h (widp w)
+{
+    double blit_scaling;
+
+    if (!w->blit_scaling_h && !w->blit_scaled_h) {
+        return (1.0);
+    }
+
+    w->text_size_cached = false;
+
+    if (time_get_time_cached() >= w->timestamp_blit_scaling_h_end) {
+
+        blit_scaling = w->blit_scaling_h_end;
+        w->blit_scaling_h = false;
+
+        if (w->blit_scaling_h_bounce_count) {
+            wid_blit_scaling_to_pct_in(w,
+                                  w->blit_scaling_h_end,
+                                  w->blit_scaling_h_start,
+                                  w->timestamp_blit_scaling_h_end -
+                                  w->timestamp_blit_scaling_h_begin,
+                                  w->blit_scaling_h_bounce_count - 1);
+        }
+
+        return (blit_scaling + w->blit_scale_h_base);
+    }
+
+    double time_step =
+        (double)(time_get_time_cached() - w->timestamp_blit_scaling_h_begin) /
+        (double)(w->timestamp_blit_scaling_h_end - w->timestamp_blit_scaling_h_begin);
+
+    blit_scaling = (time_step * (double)(w->blit_scaling_h_end - w->blit_scaling_h_start)) +
+                    w->blit_scaling_h_start;
+
+    return (blit_scaling + w->blit_scale_h_base);
 }
 
 void wid_rotate_to_pct_in (widp w,

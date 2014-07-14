@@ -55,11 +55,11 @@
 /*
  * This is multiplied by jigsaw piece size.
  */
-#define MAP_JIGSAW_PIECE_WIDTH      5
-#define MAP_JIGSAW_PIECE_HEIGHT     3
+#define MAP_JIGSAW_PIECE_WIDTH      4
+#define MAP_JIGSAW_PIECE_HEIGHT     4
 
-#define JIGPIECE_WIDTH              13
-#define JIGPIECE_HEIGHT             13
+#define JIGPIECE_WIDTH              8
+#define JIGPIECE_HEIGHT             8
 
 /*
  * Map
