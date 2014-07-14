@@ -13,6 +13,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/config.o			\
     $(OBJDIR)/demarshal.o 		\
     $(OBJDIR)/dir.o 			\
+    $(OBJDIR)/explosion.o 		\
     $(OBJDIR)/file.o 			\
     $(OBJDIR)/font.o 			\
     $(OBJDIR)/geo.o 			\
@@ -20,17 +21,17 @@ GAME_OBJECTS=				\
     $(OBJDIR)/glshapes.o 		\
     $(OBJDIR)/init_fn.o 		\
     $(OBJDIR)/level.o 			\
-    $(OBJDIR)/explosion.o 		\
     $(OBJDIR)/log.o 			\
     $(OBJDIR)/main.o 			\
-    $(OBJDIR)/name.o 			\
     $(OBJDIR)/map.o 			\
+    $(OBJDIR)/map_jigsaw.o 		\
     $(OBJDIR)/marshal.o 		\
     $(OBJDIR)/math.o 			\
     $(OBJDIR)/miniz.o 			\
     $(OBJDIR)/music.o 			\
     $(OBJDIR)/mzip_file.o 		\
     $(OBJDIR)/mzip_lib.o 		\
+    $(OBJDIR)/name.o 			\
     $(OBJDIR)/pixel.o 			\
     $(OBJDIR)/player.o 			\
     $(OBJDIR)/point.o 			\
@@ -94,8 +95,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_text_input.o 		\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\
-
-#    $(OBJDIR)/map_jigsaw.o 		\
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\

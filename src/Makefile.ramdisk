@@ -70,9 +70,6 @@
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
 
-.o/ramdisk_data_map_map_light_data.o: asm/ramdisk_data_map_map_light_data.S ../data/map/map_light.data
-	gcc -c asm/ramdisk_data_map_map_light_data.S -o .o/ramdisk_data_map_map_light_data.o
-
 .o/ramdisk_data_music_hiscore_wav.o: asm/ramdisk_data_music_hiscore_wav.S ../data/music/hiscore.wav
 	gcc -c asm/ramdisk_data_music_hiscore_wav.S -o .o/ramdisk_data_music_hiscore_wav.o
 
