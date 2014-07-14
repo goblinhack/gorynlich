@@ -16,6 +16,13 @@
  * goblinhack@gmail.com
  */
 
+#include <SDL.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "main.h"
+#include "map_jigsaw.h"
+#include "ramdisk.h"
 
 /*
  * Creates a map somewhat like this
@@ -61,12 +68,13 @@
  *                                                                     
  */
 
-#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        95
+#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 1000
-#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           5
+#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           2
+#undef MAZE_DEBUG_PRINT_EXITS
+#undef MAZE_DEBUG_SHOW_AS_GENERATING
 #define MAZE_DEBUG_SHOW
-#define MAZE_DEBUG_SHOW_AS_GENERATING
-#define MAZE_DEBUG_PRINT_EXITS
+
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
 
@@ -75,9 +83,9 @@ static int maze_seed;
 /*
  * This is the buffer we print the jigsaw too.
  */
-char map_jigsaw_buffer[MAP_JIGSAW_BUFFER_WIDTH][MAP_JIGSAW_BUFFER_HEIGHT];
-static uint8_t map_jigsaw_buffer_fg[MAP_JIGSAW_BUFFER_WIDTH][MAP_JIGSAW_BUFFER_HEIGHT];
-static uint8_t map_jigsaw_buffer_bg[MAP_JIGSAW_BUFFER_WIDTH][MAP_JIGSAW_BUFFER_HEIGHT];
+char map_jigsaw_buffer[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_jigsaw_buffer_fg[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_jigsaw_buffer_bg[MAP_WIDTH][MAP_HEIGHT];
 static int32_t map_jigsaw_buffer_at_x;
 static int32_t map_jigsaw_buffer_at_y;
 
@@ -382,11 +390,11 @@ static void map_jigsaw_buffer_putchar (int32_t m)
         return;
     }
 
-    if (map_jigsaw_buffer_at_x >= MAP_JIGSAW_BUFFER_WIDTH) {
+    if (map_jigsaw_buffer_at_x >= MAP_WIDTH) {
         return;
     }
 
-    if (map_jigsaw_buffer_at_y >= MAP_JIGSAW_BUFFER_HEIGHT) {
+    if (map_jigsaw_buffer_at_y >= MAP_HEIGHT) {
         return;
     }
 
@@ -408,11 +416,11 @@ uint8_t map_jigsaw_buffer_getchar (int32_t x, int32_t y)
         return (MAP_EMPTY);
     }
 
-    if (x >= MAP_JIGSAW_BUFFER_WIDTH) {
+    if (x >= MAP_WIDTH) {
         return (MAP_EMPTY);
     }
 
-    if (y >= MAP_JIGSAW_BUFFER_HEIGHT) {
+    if (y >= MAP_HEIGHT) {
         return (MAP_EMPTY);
     }
 
@@ -461,8 +469,8 @@ static void map_jigsaw_buffer_print (void)
 
     tcup(0,0);
 
-    for (y = 0; y < MAP_JIGSAW_BUFFER_HEIGHT; y++) {
-        for (x = 0; x < MAP_JIGSAW_BUFFER_WIDTH; x++) {
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
             char c;
 
             c = map_jigsaw_buffer[x][y];
@@ -513,8 +521,8 @@ static void map_jigsaw_buffer_print_file (FILE *fpin)
 
     need_nl = 0;
 
-    for (y = 0; y < MAP_JIGSAW_BUFFER_HEIGHT; y++) {
-        for (x = 0; x < MAP_JIGSAW_BUFFER_WIDTH; x++) {
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
             char c;
 
             c = map_jigsaw_buffer[x][y];
@@ -1285,10 +1293,10 @@ static void jigpiece_add_frag (dungeon_t *dg)
                  * Try and place the frag.
                  */
                 tries = 0;
-                while (tries++ < MAP_JIGSAW_BUFFER_WIDTH * MAP_JIGSAW_BUFFER_HEIGHT) {
+                while (tries++ < MAP_WIDTH * MAP_HEIGHT) {
 
-                    ax = rand() % (MAP_JIGSAW_BUFFER_WIDTH + JIGPIECE_WIDTH);
-                    ay = rand() % (MAP_JIGSAW_BUFFER_HEIGHT + JIGPIECE_HEIGHT);
+                    ax = rand() % (MAP_WIDTH + JIGPIECE_WIDTH);
+                    ay = rand() % (MAP_HEIGHT + JIGPIECE_HEIGHT);
                     ax -= JIGPIECE_WIDTH;
                     ay -= JIGPIECE_HEIGHT;
 
@@ -1308,8 +1316,8 @@ static void jigpiece_add_frag (dungeon_t *dg)
                             /*
                              * It's ok to be off map but only if a space.
                              */
-                            if ((cx < 0) || (cx >= MAP_JIGSAW_BUFFER_WIDTH) ||
-                                (cy < 0) || (cy >= MAP_JIGSAW_BUFFER_HEIGHT)) {
+                            if ((cx < 0) || (cx >= MAP_WIDTH) ||
+                                (cy < 0) || (cy >= MAP_HEIGHT)) {
                                 goto next;
                             }
 
@@ -1355,8 +1363,8 @@ static void jigpiece_add_frag (dungeon_t *dg)
                             /*
                              * Skip off map.
                              */
-                            if ((cx < 0) || (cx >= MAP_JIGSAW_BUFFER_WIDTH) ||
-                                (cy < 0) || (cy >= MAP_JIGSAW_BUFFER_HEIGHT)) {
+                            if ((cx < 0) || (cx >= MAP_WIDTH) ||
+                                (cy < 0) || (cy >= MAP_HEIGHT)) {
                                 continue;
                             }
 
@@ -1857,8 +1865,22 @@ static void maze_add_corridor_walls (void)
     int32_t dx;
     int32_t dy;
 
-    for (x = 1; x < MAP_JIGSAW_BUFFER_WIDTH - 1; x++) {
-        for (y = 1; y < MAP_JIGSAW_BUFFER_HEIGHT - 1; y++) {
+    for (x = 0; x < MAP_WIDTH; x++) {
+        map_jigsaw_buffer_goto(x, 0);
+        map_jigsaw_buffer_putchar(MAP_WALL);
+        map_jigsaw_buffer_goto(x, MAP_HEIGHT - 1);
+        map_jigsaw_buffer_putchar(MAP_WALL);
+    }
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        map_jigsaw_buffer_goto(0, y);
+        map_jigsaw_buffer_putchar(MAP_WALL);
+        map_jigsaw_buffer_goto(MAP_WIDTH - 1, y);
+        map_jigsaw_buffer_putchar(MAP_WALL);
+    }
+
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
 
             if ((map_jigsaw_buffer_getchar(x, y) != MAP_CORRIDOR)) {
                 continue;
@@ -1886,8 +1908,8 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
     int32_t y;
     int32_t x;
 
-    for (y = 0; y < MAP_JIGSAW_BUFFER_HEIGHT; y++) {
-        for (x = 0; x < MAP_JIGSAW_BUFFER_WIDTH; x++) {
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
             map_jigsaw_buffer_goto(x, y);
             map_jigsaw_buffer_putchar(MAP_EMPTY);
         }
@@ -1899,8 +1921,8 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
             maze_cell_t *c = MAZE_CELL(dg->maze, x, y);
 
             jigpiece_printat(dg,
-                             (JIGPIECE_WIDTH) * x+1,
-                             (JIGPIECE_HEIGHT) * y+1, c->jigpiece);
+                             (JIGPIECE_WIDTH) * x,
+                             (JIGPIECE_HEIGHT) * y, c->jigpiece);
         }
     }
 }
@@ -2181,6 +2203,7 @@ static int32_t maze_jigsaw_solve (dungeon_t *dg)
     mcell = MAZE_CELL(dg->maze, x, y);
 
     for (c = 1; c < mcell->possible_jigpieces_size; c++) {
+
         /*
          * Reset the maze.
          */
@@ -2422,29 +2445,39 @@ static int32_t generate_level (const char *jigsaw_map,
 
     for (;;) {
         if (!maze_generate_and_solve(dg)) {
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
             printf("seed %u, maze create failed\n", maze_seed);
+#endif
             goto reseed;
         }
 
         if (!maze_jigsaw_generate_all_possible_pieces(dg)) {
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
             printf("seed %u, maze connections failed\n", maze_seed);
+#endif
             goto reseed;
         }
 
         if (!maze_jigsaw_solve(dg)) {
-            printf("seed %u, maze generate failed\n", maze_seed);
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
+            printf("seed %u, maze solve failed\n", maze_seed);
+#endif
             goto reseed;
         }
 
         maze_convert_to_map(dg);
 
         if (!maze_replace_room_char(dg->sx, dg->sy, MAP_START)) {
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
             printf("seed %u, maze failed to place start\n", maze_seed);
+#endif
             goto reseed;
         }
 
         if (!maze_replace_room_char(dg->ex, dg->ey, MAP_END)) {
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
             printf("seed %u, maze failed to place end\n", maze_seed);
+#endif
             goto reseed;
         }
 
@@ -2453,7 +2486,9 @@ reseed:
         fflush(MY_STDOUT);
         maze_seed = rand();
         srand(maze_seed);
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
         printf(", try seed %u\n", maze_seed);
+#endif
         memset(dg->maze, 0, sizeof(dg->maze));
     }
 

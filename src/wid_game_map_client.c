@@ -728,14 +728,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     child = wid_new_square_button(wid_game_map_client_grid_container,
                                   "map tile");
 
-    wid_set_text_lhs(child, true);
-    wid_set_text_top(child, true);
     wid_set_mode(child, WID_MODE_NORMAL);
-    wid_set_color(child, WID_COLOR_TEXT, STEELBLUE);
-    wid_set_color(child, WID_COLOR_TL, BLACK);
-    wid_set_color(child, WID_COLOR_BG, BLACK);
-    wid_set_color(child, WID_COLOR_BR, BLACK);
-    wid_set_font(child, small_font);
     wid_set_no_shape(child);
 
     /*
@@ -747,6 +740,14 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     wid_set_tile(child, tile);
 
     thing_client_wid_update(t, x, y, false /* smooth */);
+
+    if (thing_is_explosion(t)) {
+        wid_blit_scale_immediate(child, 2);
+    }
+
+    if (thing_is_mob_spawner(t)) {
+        wid_blit_scaling_to_pct_in(child, 1.0, 1.1, 1000, 10000);
+    }
 
     /*
      * If this is a pre-existing thing perhaps being recreated ona new level
