@@ -30,15 +30,15 @@
   }
   tile={
    tile="explosion1.5"
-   delay=50
+   delay=200
   }
   tile={
    tile="explosion1.6"
-   delay=50
+   delay=200
   }
   tile={
    tile="explosion1.7"
-   delay=50
+   delay=200
   }
   tile={
    tile="space"

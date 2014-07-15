@@ -368,36 +368,37 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
      */
     if (thing_is_projectile(me)                 || 
         thing_is_poison(me)                     ||
+        thing_is_weapon_swing_effect(me)        ||
         thing_is_explosion(me)) {
 
         if (thing_is_monst(it) || thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
              */
-            thing_hit(it, me, 0, "hit");
-
-            thing_dead(me, 0, "hit monst");
-            return;
+            if (thing_hit(it, me, 0, "hit")) {
+                thing_dead(me, 0, "hit monst");
+                return;
+            }
         }
 
         if (thing_is_fragile(it)) {
             /*
              * Weapon hits food or similar?
              */
-            thing_hit(it, me, 0, "hit");
-
-            thing_dead(me, 0, "hit item");
-            return;
+            if (thing_hit(it, me, 0, "hit")) {
+                thing_dead(me, 0, "hit item");
+                return;
+            }
         }
 
         if (thing_is_door(it) || thing_is_wall(it)) {
             /*
              * Weapon hits a wall. Slim chance of wall being destroyed.
              */
-            thing_hit(it, me, 0, "hit");
-
-            thing_dead(me, 0, "hit wall");
-            return;
+            if (thing_hit(it, me, 0, "hit")) {
+                thing_dead(me, 0, "hit wall");
+                return;
+            }
         }
     }
 }
