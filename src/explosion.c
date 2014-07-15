@@ -167,7 +167,7 @@ void level_place_potion_effect_fireball (levelp level,
                            owner,
                            x, y,
                            7, // radius
-                           2, // nargs
+                           7, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
                            "data/things/explosion3",
@@ -185,7 +185,7 @@ void level_place_potion_effect_poison (levelp level,
                            owner,
                            x, y,
                            9, // radius
-                           2, // nargs
+                           7, // nargs
                            "data/things/poison1",
                            "data/things/poison2",
                            "data/things/poison3",
