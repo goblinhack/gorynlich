@@ -549,7 +549,8 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
                 DIE("expected to find a thing on the map here");
             }
 
-            if (thing_is_explosion(p)) {
+            if (thing_is_explosion(p) ||
+                thing_is_weapon_swing_effect(p)) {
                 thing_map_remove(p);
                 break;
             }
@@ -1247,13 +1248,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
             thing_set_score(recipient, thing_score(recipient) + score);
         }
-
-        /*
-         * Destroying one door opens all doors.
-         */
-        if (thing_is_door(t)) {
-            level_open_door(server_level, t->x, t->y);
-        }
     }
 
     /*
@@ -1409,6 +1403,18 @@ static int thing_hit_ (thingp t,
      * If a thing that modifies the level dies, update it.
      */
     if (thing_is_dead(t)) {
+        /*
+         * Destroying one door opens all doors.
+         */
+        if (t->on_server) {
+            if (thing_is_door(t)) {
+                level_open_door(server_level, t->x-1, t->y);
+                level_open_door(server_level, t->x+1, t->y);
+                level_open_door(server_level, t->x, t->y-1);
+                level_open_door(server_level, t->x, t->y+1);
+            }
+        }
+
         if (thing_is_wall(t) || 
             thing_is_door(t) || 
             thing_is_pipe(t)) {
@@ -1618,7 +1624,6 @@ int thing_hit (thingp t,
         uint32_t chance = rand() % can_be_hit_chance;
 
         if (chance > damage) {
-CON("no hit");
             return (false);
         }
     }
