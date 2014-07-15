@@ -1247,6 +1247,13 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
             thing_set_score(recipient, thing_score(recipient) + score);
         }
+
+        /*
+         * Destroying one door opens all doors.
+         */
+        if (thing_is_door(t)) {
+            level_open_door(server_level, t->x, t->y);
+        }
     }
 
     /*
@@ -1323,15 +1330,15 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 }
 
-static void thing_hit_ (thingp t, 
-                        thingp hitter, 
-                        uint32_t damage, 
-                        char *reason)
+static int thing_hit_ (thingp t, 
+                       thingp hitter, 
+                       uint32_t damage, 
+                       char *reason)
 {
     verify(t);
 
     if (t->is_dead) {
-        return;
+        return (false);
     }
 
     /*
@@ -1408,12 +1415,14 @@ static void thing_hit_ (thingp t,
             level_update(server_level);
         }
     }
+
+    return (true);
 }
 
-void thing_hit (thingp t, 
-                thingp hitter, 
-                uint32_t damage,
-                const char *reason, ...)
+int thing_hit (thingp t, 
+               thingp hitter, 
+               uint32_t damage,
+               const char *reason, ...)
 {
     thingp orig_hitter = hitter;
     va_list args;
@@ -1424,7 +1433,7 @@ void thing_hit (thingp t,
     }
 
     if (t->is_dead) {
-        return;
+        return (false);
     }
 
     /*
@@ -1432,24 +1441,24 @@ void thing_hit (thingp t,
      */
     if (!t->on_server) {
         DIE("hits can only happen on the server");
-        return;
+        return (false);
     }
 
     if (hitter) {
         if (!hitter->on_server) {
             DIE("hits can only happen from hitter on the server");
-            return;
+            return (false);
         }
     }
 
     /*
-     * If this is a thing on the edge of the level acting as a indestrucatble
+     * If this is a thing on the edge of the level acting as a indestructable
      * wall, then don't allow it to be destroyed.
      */
     if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
         if ((t->x <= 0) || (t->x >= MAP_WIDTH - 1) ||
             (t->y <= 0) || (t->y >= MAP_HEIGHT - 1)) {
-            return;
+            return (false);
         }
     }
 
@@ -1457,10 +1466,29 @@ void thing_hit (thingp t,
      * Check to see if this is a thing that can be damaged by the hitter.
      */
     if (hitter) {
+        /*
+         * Walls and doors and other solid object are not damaged by poison
+         * or similar effects. Limit it to explosions and the like.
+         */
+        if (thing_is_door(t)            || 
+            thing_is_wall(t)) {
+
+            if (!thing_is_explosion(hitter) &&
+                !thing_is_projectile(hitter) &&
+                !thing_is_weapon_swing_effect(hitter)) {
+                return (false);
+            }
+        }
+
         if (thing_is_weapon_swing_effect(hitter)) {
             if (!hitter->owner_id) {
+                /*
+                 * Happens with rapid swings as we only allow one active swing 
+                 * per owner.
+                 *
                 ERR("swung weapon %s has no owner ID", thing_logname(hitter));
-                return;
+                 */
+                return (false);
             }
 
             /*
@@ -1470,7 +1498,7 @@ void thing_hit (thingp t,
             if (!hitter) {
                 ERR("weapon hitter %s owner id %u has no thing",
                     thing_logname(orig_hitter), orig_hitter->owner_id);
-                return;
+                return (false);
             }
 
             verify(hitter);
@@ -1485,7 +1513,7 @@ void thing_hit (thingp t,
                 /*
                  * Too far.
                  */
-                return;
+                return (false);
             }
 #endif
 
@@ -1494,7 +1522,7 @@ void thing_hit (thingp t,
              */
             thing_templatep weapon = hitter->weapon;
             if (!weapon) {
-                return;
+                return (false);
             }
 
             if (!damage) {
@@ -1509,7 +1537,7 @@ void thing_hit (thingp t,
             if (!hitter) {
                 ERR("hitter %s owner id %u has no thing",
                     thing_logname(orig_hitter), orig_hitter->owner_id);
-                return;
+                return (false);
             }
 
             verify(hitter);
@@ -1519,14 +1547,14 @@ void thing_hit (thingp t,
          * Don't let our own potion hit ourselves!
          */
         if (hitter == t) {
-            return;
+            return (false);
         }
 
         /*
          * Don't allow one player's potion effect to kill another player.
          */
         if (thing_is_player(hitter) && thing_is_player(t)) {
-            return;
+            return (false);
         }
 
         /*
@@ -1546,19 +1574,6 @@ void thing_hit (thingp t,
             damage = hitter->damage;
             if (!damage) {
                 damage = thing_template_get_damage(hitter->thing_template);
-            }
-        }
-
-        /*
-         * Walls and doors and other solid object are not damaged by poison
-         * or similar effects. Limit it to explosions and the like.
-         */
-        if (thing_is_door(t)            || 
-            thing_is_wall(t)) {
-
-            if (!thing_is_explosion(hitter) &&
-                !thing_is_projectile(hitter)) {
-                return;
             }
         }
     }
@@ -1603,7 +1618,8 @@ void thing_hit (thingp t,
         uint32_t chance = rand() % can_be_hit_chance;
 
         if (chance > damage) {
-            return;
+CON("no hit");
+            return (false);
         }
     }
 
@@ -1617,7 +1633,7 @@ void thing_hit (thingp t,
         if (delay) {
             if (!time_have_x_tenths_passed_since(delay, 
                                                  hitter->timestamp_hit)) {
-                return;
+                return (false);
             }
 
             hitter->timestamp_hit = time_get_time_cached();
@@ -1631,17 +1647,21 @@ void thing_hit (thingp t,
         }
     }
 
+    int r;
+
     if (reason) {
         char *tmp = dynvprintf(reason, args);
 
         va_start(args, reason);
-        thing_hit_(t, hitter, damage, tmp);
+        r = thing_hit_(t, hitter, damage, tmp);
         va_end(args);
 
         myfree(tmp);
     } else {
-        thing_hit_(t, hitter, damage, 0);
+        r = thing_hit_(t, hitter, damage, 0);
     }
+
+    return (r);
 }
 
 thingp thing_owner (thingp t)

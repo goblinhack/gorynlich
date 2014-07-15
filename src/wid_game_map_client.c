@@ -742,7 +742,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     thing_client_wid_update(t, x, y, false /* smooth */);
 
     if (thing_is_explosion(t)) {
-        wid_blit_scale_immediate(child, 2);
+        wid_blit_scaling_to_pct_in(child, 1.0, 3.0, 1000, 1);
     }
 
     if (thing_is_mob_spawner(t)) {
