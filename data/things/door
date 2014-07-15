@@ -6,7 +6,7 @@
  is_boring
  is_door
  is_joinable
- can_be_hit_chance=20
+ can_be_hit_chance=200
  tiles={
   tile={
    tile="door_0_0"

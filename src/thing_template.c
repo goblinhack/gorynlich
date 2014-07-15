@@ -497,7 +497,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
         GET_OPT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
         GET_OPT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_item_unusable", t->is_item_unusable);
@@ -616,7 +615,6 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
     PUT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
     PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
-    PUT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
     PUT_NAMED_BITFIELD(ctx, "is_animation", t->is_animation);
     PUT_NAMED_BITFIELD(ctx, "is_poison", t->is_poison);
     PUT_NAMED_BITFIELD(ctx, "is_carryable", t->is_carryable);
