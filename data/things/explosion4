@@ -38,11 +38,11 @@
   }
   tile={
    tile="explosion4.7"
-   delay=50
+   delay=200
   }
   tile={
    tile="space"
-   delay=50
+   delay=200
    is_end_of_anim
    is_dead_on_end_of_anim
   }
