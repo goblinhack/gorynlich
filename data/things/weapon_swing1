@@ -8,35 +8,35 @@
  is_hidden_from_editor
  is_weapon_swing_effect
  is_collision_map_large
- hit_delay_tenths=1
+ hit_delay_tenths=0
  tiles={
   tile={
    tile="weapon_swing1.1"
-   delay=1
+   delay=0
   }
   tile={
    tile="weapon_swing1.2"
-   delay=1
+   delay=0
   }
   tile={
    tile="weapon_swing1.3"
-   delay=1
+   delay=0
   }
   tile={
    tile="weapon_swing1.4"
-   delay=1
+   delay=0
   }
   tile={
    tile="weapon_swing1.5"
-   delay=1
+   delay=0
   }
   tile={
    tile="weapon_swing1.6"
-   delay=1
+   delay=0
   }
   tile={
    tile="weapon_swing1.7"
-   delay=1
+   delay=0
    is_end_of_anim
    is_dead_on_end_of_anim
   }
