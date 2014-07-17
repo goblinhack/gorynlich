@@ -95,18 +95,21 @@ void level_place_explosion(levelp level,
 void level_place_small_explosion(levelp level, 
                                  thingp owner,
                                  double x, double y);
+void level_place_sparks(levelp level, 
+                        thingp owner,
+                        double x, double y);
 void level_place_fireball(levelp level, 
-                                thingp owner,
-                                double x, double y);
+                          thingp owner,
+                          double x, double y);
 void level_place_poison(levelp level, 
-                                thingp owner,
-                                double x, double y);
+                        thingp owner,
+                        double x, double y);
 void level_place_cloudkill(levelp level, 
-                                thingp owner,
-                                double x, double y);
+                           thingp owner,
+                           double x, double y);
 void level_place_small_cloudkill(levelp level, 
-                                    thingp owner,
-                                    double x, double y);
+                                 thingp owner,
+                                 double x, double y);
 extern uint8_t game_over;
 
 extern uint32_t start_lives;
