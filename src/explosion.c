@@ -131,14 +131,15 @@ void level_place_explosion (levelp level,
                            owner,
                            x, y,
                            6, // radius
-                           7, // nargs
+                           8, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
                            "data/things/explosion3",
                            "data/things/explosion4",
                            "data/things/explosion5",
                            "data/things/explosion6",
-                           "data/things/explosion7");
+                           "data/things/explosion7",
+                           "data/things/explosion8");
 }
 
 void level_place_small_explosion (levelp level, 
@@ -148,61 +149,82 @@ void level_place_small_explosion (levelp level,
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           3, // radius
-                           7, // nargs
+                           1, // radius
+                           8, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
                            "data/things/explosion3",
                            "data/things/explosion4",
                            "data/things/explosion5",
                            "data/things/explosion6",
-                           "data/things/explosion7");
+                           "data/things/explosion7",
+                           "data/things/explosion8");
 }
 
-void level_place_potion_effect_fireball (levelp level, 
-                                         thingp owner,
-                                         double x, double y)
+void level_place_fireball (levelp level, 
+                           thingp owner,
+                           double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
                            x, y,
                            7, // radius
-                           7, // nargs
+                           8, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
                            "data/things/explosion3",
                            "data/things/explosion4",
                            "data/things/explosion5",
                            "data/things/explosion6",
-                           "data/things/explosion7");
+                           "data/things/explosion7",
+                           "data/things/explosion8");
 }
 
-void level_place_potion_effect_poison (levelp level, 
-                                       thingp owner,
-                                       double x, double y)
+void level_place_poison (levelp level, 
+                         thingp owner,
+                         double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
                            x, y,
                            9, // radius
-                           7, // nargs
+                           8, // nargs
                            "data/things/poison1",
                            "data/things/poison2",
                            "data/things/poison3",
                            "data/things/poison4",
                            "data/things/poison5",
                            "data/things/poison6",
-                           "data/things/poison7");
+                           "data/things/poison7",
+                           "data/things/poison8");
 }
 
-void level_place_potion_effect_cloudkill (levelp level, 
-                                       thingp owner,
-                                       double x, double y)
+void level_place_cloudkill (levelp level, 
+                            thingp owner,
+                            double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
                            x, y,
                            12, // radius
+                           2, // nargs
+                           "data/things/cloudkill1",
+                           "data/things/cloudkill2",
+                           "data/things/cloudkill3",
+                           "data/things/cloudkill4",
+                           "data/things/cloudkill5",
+                           "data/things/cloudkill6",
+                           "data/things/cloudkill7");
+}
+
+void level_place_small_cloudkill (levelp level, 
+                                  thingp owner,
+                                  double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           2, // radius
                            2, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
