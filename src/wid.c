@@ -151,7 +151,6 @@ typedef struct wid_ {
      */
     texp tex;
     tilep tile;
-    tilep tile2;
     thingp thing;
     thing_templatep thing_template;
     fsize texuv;
@@ -2231,11 +2230,6 @@ tilep wid_get_tile (widp w)
     return (w->tile);
 }
 
-tilep wid_get_tile2 (widp w)
-{
-    return (w->tile2);
-}
-
 thingp wid_get_thing (widp w)
 {
     return (w->thing);
@@ -2258,30 +2252,11 @@ void wid_set_tilename (widp w, const char *name)
     w->tile = t;
 }
 
-void wid_set_tile2name (widp w, const char *name)
-{
-    fast_verify(w);
-
-    tilep t = tile_find(name);
-    if (!t) {
-        DIE("failed to set wid tile %s", name);
-    }
-
-    w->tile2 = t;
-}
-
 void wid_set_tile (widp w, tilep tile)
 {
     fast_verify(w);
 
     w->tile = tile;
-}
-
-void wid_set_tile2 (widp w, tilep tile)
-{
-    fast_verify(w);
-
-    w->tile2 = tile;
 }
 
 void wid_set_z_depth (widp w, uint8_t z_depth)
@@ -2319,7 +2294,6 @@ uint8_t wid_get_z_order (widp w)
 void wid_set_thing (widp w, thingp t)
 {
     tree_rootp tiles;
-    tree_rootp tiles2;
     thing_tilep tile;
 
     fast_verify(w);
@@ -2345,23 +2319,12 @@ void wid_set_thing (widp w, thingp t)
     wid_set_tilename(w, thing_tile_name(tile));
     wid_set_name(w, thing_name(t));
 
-    tiles2 = thing_tile_tiles2(t);
-    if (tiles2) {
-        tile = (typeof(tile)) tree_root_first(tiles2);
-        if (!tile) {
-            return;
-        }
-
-        wid_set_tile2name(w, thing_tile_name(tile));
-    }
-
     thing_set_wid(t, w);
 }
 
 void wid_set_thing_template (widp w, thing_templatep t)
 {
     tree_rootp tiles;
-    tree_rootp tiles2;
     thing_tilep tile;
 
     fast_verify(w);
@@ -2389,16 +2352,6 @@ void wid_set_thing_template (widp w, thing_templatep t)
     }
 
     wid_set_tilename(w, thing_tile_name(tile));
-
-    tiles2 = thing_template_get_tiles2(t);
-    if (tiles2) {
-        tile = (typeof(tile)) tree_root_get_random(tiles2);
-        if (!tile) {
-            return;
-        }
-
-        wid_set_tile2name(w, thing_tile_name(tile));
-    }
 
     wid_set_name(w, thing_template_name(t));
 }
@@ -7422,7 +7375,6 @@ static void wid_display (widp w,
      * Widget tiles and textures.
      */
     tilep tile = wid_get_tile(w);
-    tilep tile2 = wid_get_tile2(w);
 
     texp tex;
 
@@ -7533,18 +7485,11 @@ static void wid_display (widp w,
             br.y += blit_height;
 
             tile_blit_fat(tile, 0, tl, br);
-            glBindTexture(GL_TEXTURE_2D, 0);
         } else {
             tile_blit_fat(tile, 0, tl, br);
-            glBindTexture(GL_TEXTURE_2D, 0);
         }
 
-        if (tile2) {
-            glcolor(col_tile);
-
-            tile_blit_fat(tile2, 0, tl, br);
-            glBindTexture(GL_TEXTURE_2D, 0);
-        }
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         /*
          * If we are just blitting the occasional tile and this is not part of 

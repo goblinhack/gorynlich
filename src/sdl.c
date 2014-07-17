@@ -4,6 +4,7 @@
  * See the README file for license.
  */
 
+extern int client_pause;
 #include <SDL.h>
 #include <unistd.h>
 #include "glapi.h"
