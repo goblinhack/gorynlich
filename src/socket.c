@@ -2609,6 +2609,11 @@ void socket_tx_player_action (socketp s,
                               const uint8_t action,
                               const uint16_t item)
 {
+    if (!s) {
+        ERR("no socket");
+        return;
+    }
+
     if (!socket_get_udp_socket(s)) {
         return;
     }

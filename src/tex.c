@@ -222,7 +222,11 @@ texp tex_load_tiled (const char *file,
         DIE("could not make surface from file, %s", file);
     }
 
+#ifdef TILES_WITH_PIXEL_BOUNDARIES_BETWEEN_TILES
     t = tex_from_tiled_surface(surface, tile_width, tile_height, file, name);
+#else
+    t = tex_from_surface(surface, file, name);
+#endif
 
     t->tile_width = tile_width;
     t->tile_height = tile_height;
