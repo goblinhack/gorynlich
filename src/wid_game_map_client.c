@@ -295,6 +295,11 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
         thing_template = wid_key_shortcuts[shortcut];
         if (thing_template) {
+            if (!client_joined_server) {
+                MSG(WARNING, "Not connected to server");
+                return (true);
+            }
+
             socket_tx_player_action(client_joined_server, player, 
                                     PLAYER_ACTION_USE,
                                     thing_template_to_id(thing_template));
@@ -302,7 +307,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         }
 
         MSG(WARNING, "No carried item is using that key");
-        break;
+        return (true);
 
     case 'q':
         wid_game_quit_visible();
@@ -451,6 +456,11 @@ static uint8_t
 wid_game_map_item_mouse_event_common (uint32_t button,
                                       thing_templatep thing_template)
 {
+    if (!client_joined_server) {
+        MSG(WARNING, "Not connected to server");
+        return (true);
+    }
+
     if (button == 1) {
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_USE,
@@ -739,15 +749,20 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     wid_set_thing(child, t);
     wid_set_tile(child, tile);
 
-    thing_client_wid_update(t, x, y, false /* smooth */);
+    double dx = 0;
+    double dy = 0;
 
     if (thing_is_explosion(t)) {
-        wid_blit_scaling_to_pct_in(child, 1.0, 3.0, 1000, 1);
+        wid_blit_scaling_to_pct_in(child, 1.0, 2.0, 200, 1);
+        dx = ((double)((rand() % 100) - 50)) / 100.0;
+        dy = ((double)((rand() % 100) - 50)) / 100.0;
     }
 
     if (thing_is_mob_spawner(t)) {
         wid_blit_scaling_to_pct_in(child, 1.0, 1.1, 1000, 10000);
     }
+
+    thing_client_wid_update(t, x + dx, y + dy, false /* smooth */);
 
     /*
      * If this is a pre-existing thing perhaps being recreated ona new level

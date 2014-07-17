@@ -14,35 +14,35 @@
  tiles={
   tile={
    tile="explosion6.1"
-   delay=50
+   delay=20
   }
   tile={
    tile="explosion6.2"
-   delay=50
+   delay=20
   }
   tile={
    tile="explosion6.3"
-   delay=50
+   delay=20
   }
   tile={
    tile="explosion6.4"
-   delay=50
+   delay=20
   }
   tile={
    tile="explosion6.5"
-   delay=50
+   delay=20
   }
   tile={
    tile="explosion6.6"
-   delay=50
+   delay=20
   }
   tile={
    tile="explosion6.7"
-   delay=200
+   delay=20
   }
   tile={
    tile="space"
-   delay=200
+   delay=20
    is_end_of_anim
    is_dead_on_end_of_anim
   }
