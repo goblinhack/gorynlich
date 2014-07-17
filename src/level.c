@@ -81,35 +81,6 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     t = (typeof(t)) context;
     verify(t);
 
-    if ((t->thing_template->id == THING_WEAPON_HIT1) ||
-        (t->thing_template->id == THING_EXPLOSION1) ||
-        (t->thing_template->id == THING_EXPLOSION2) ||
-        (t->thing_template->id == THING_EXPLOSION3) ||
-        (t->thing_template->id == THING_EXPLOSION4) ||
-        (t->thing_template->id == THING_EXPLOSION5) ||
-        (t->thing_template->id == THING_EXPLOSION6) ||
-        (t->thing_template->id == THING_EXPLOSION7) ||
-        (t->thing_template->id == THING_EXPLOSION8) ||
-        (t->thing_template->id == THING_POISON1) ||
-        (t->thing_template->id == THING_POISON2) ||
-        (t->thing_template->id == THING_POISON3) ||
-        (t->thing_template->id == THING_POISON4) ||
-        (t->thing_template->id == THING_POISON5) ||
-        (t->thing_template->id == THING_POISON6) ||
-        (t->thing_template->id == THING_POISON7) ||
-        (t->thing_template->id == THING_POISON8) ||
-        (t->thing_template->id == THING_CLOUDKILL1) ||
-        (t->thing_template->id == THING_CLOUDKILL2) ||
-        (t->thing_template->id == THING_CLOUDKILL3) ||
-        (t->thing_template->id == THING_CLOUDKILL4) ||
-        (t->thing_template->id == THING_CLOUDKILL5) ||
-        (t->thing_template->id == THING_CLOUDKILL6) ||
-        (t->thing_template->id == THING_CLOUDKILL7) ||
-        (t->thing_template->id == THING_CLOUDKILL8)) {
-        thing_dead(t, 0 /* killer */, "finished blowing up");
-        return (true);
-    }
-
     if (thing_is_seedpod(t)) {
         thing_templatep thing_template = 
                 thing_template_find("data/things/plant");

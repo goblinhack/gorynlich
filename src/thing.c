@@ -75,6 +75,9 @@ uint16_t THING_EXPLOSION5;
 uint16_t THING_EXPLOSION6;
 uint16_t THING_EXPLOSION7;
 uint16_t THING_EXPLOSION8;
+uint16_t THING_SPARKS1;
+uint16_t THING_SPARKS2;
+uint16_t THING_SPARKS3;
 uint16_t THING_POISON1;
 uint16_t THING_POISON2;
 uint16_t THING_POISON3;
@@ -1845,6 +1848,9 @@ static void thing_effect_hit_success (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
+        level_place_sparks(t->level,
+                           0, // owner
+                           t->x, t->y);
     }
 }
 

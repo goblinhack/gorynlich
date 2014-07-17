@@ -161,6 +161,20 @@ void level_place_small_explosion (levelp level,
                            "data/things/explosion8");
 }
 
+void level_place_sparks (levelp level, 
+                         thingp owner,
+                         double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           1, // radius
+                           3, // nargs
+                           "data/things/sparks1",
+                           "data/things/sparks2",
+                           "data/things/sparks3");
+}
+
 void level_place_fireball (levelp level, 
                            thingp owner,
                            double x, double y)
