@@ -1247,7 +1247,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         /*
          * Move just above and to the left of the widget.
          */
-#ifdef TOOLTIP_OVER_MOUSE
+#ifdef ENABLE_TOOLTIP_OVER_MOUSE
         double px = x - wid_get_width(wid_popup_tooltip) - wid_get_width(w);
         double py = y - wid_get_height(wid_popup_tooltip) - wid_get_height(w);
 
@@ -1267,7 +1267,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
          * knows. Why am I talking to myself!?
          */
         wid_move_to_pct_centered(wid_popup_tooltip, 0.5, -0.5);
-        wid_move_to_pct_centered_in(wid_popup_tooltip, 0.5, 0.2, 100);
+        wid_move_to_pct_centered_in(wid_popup_tooltip, 0.5, 0.2, 200);
 #endif
     }
 
@@ -7248,12 +7248,14 @@ static void wid_display (widp w,
     color col = wid_get_color(w, WID_COLOR_BG);
     color col_tile = wid_get_color(w, WID_COLOR_BLIT);
 
-#ifdef ENABNLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
+#ifdef ENABLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
     /*
      * This fades out other widgets in the background when a popup appears.
      */
     if (wid_focus_locked) {
         if (wid_get_top_parent(w) != wid_focus_locked) {
+            double fade = 0.5;
+
             /*
              * Darken the colours.
              */

@@ -1364,9 +1364,15 @@ static int thing_hit_ (thingp t,
              * Explodes on death ala Sith Lord? Only a lesser one, mind.
              */
             if (thing_template_is_combustable(t->thing_template)) {
-                level_place_small_explosion(t->level, 
-                                            0, // owner
-                                            t->x, t->y);
+                if (thing_is_monst(t)) {
+                    level_place_small_cloudkill(t->level,
+                                                0, // owner
+                                                t->x, t->y);
+                } else {
+                    level_place_small_explosion(t->level, 
+                                                0, // owner
+                                                t->x, t->y);
+                }
             }
 
             /*
@@ -4117,13 +4123,13 @@ void thing_server_action (thingp t,
         }
 
         if (item == THING_POTION_FIRE) {
-            level_place_potion_effect_fireball(server_level, t, t->x, t->y);
+            level_place_fireball(server_level, t, t->x, t->y);
             break;
         } else if (item == THING_POTION_MONSTICIDE) {
-            level_place_potion_effect_poison(server_level, t, t->x, t->y);
+            level_place_poison(server_level, t, t->x, t->y);
             break;
         } else if (item == THING_POTION_CLOUDKILL) {
-            level_place_potion_effect_cloudkill(server_level, t, t->x, t->y);
+            level_place_cloudkill(server_level, t, t->x, t->y);
             break;
         }
 
