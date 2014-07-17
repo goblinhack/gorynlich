@@ -22,10 +22,24 @@
 #undef MORE_SPEED_LESS_VISUALS    // Go for max fps over loops
 
 /*
- * Effects.
+ * Other windows are darker when popups appear
  */
-#define ENABNLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
+#define ENABLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
+
+/*
+ * Retro text
+ */
 #define ENABLE_BIG_RETRO_TEXT_OUTLINE
+
+/*
+ * Tooltip appears above mouse. I prefer it to zoom into the top
+ */
+#undef ENABLE_TOOLTIP_OVER_MOUSE
+
+/*
+ * Tries to batch calls to draw arrays for more speed.
+ */
+#define ENABLE_GL_BULK_DRAW_ARRAYS 
 
 /*
  * So we don't hog all the CPU
@@ -35,11 +49,6 @@
 #else
 #define MAIN_LOOP_DELAY            5
 #endif
-
-/*
- * Tries to batch calls to draw arrays for more speed.
- */
-#define ENABLE_GL_BULK_DRAW_ARRAYS 
 
 /*
  * Frames per sec counter.

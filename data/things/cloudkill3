@@ -14,35 +14,35 @@
  tiles={
   tile={
    tile="cloudkill3.1"
-   delay=50
+   delay=20
   }
   tile={
    tile="cloudkill3.2"
-   delay=50
+   delay=20
   }
   tile={
    tile="cloudkill3.3"
-   delay=50
+   delay=20
   }
   tile={
    tile="cloudkill3.4"
-   delay=50
+   delay=20
   }
   tile={
    tile="cloudkill3.5"
-   delay=50
+   delay=20
   }
   tile={
    tile="cloudkill3.6"
-   delay=50
+   delay=100
   }
   tile={
    tile="cloudkill3.7"
-   delay=50
+   delay=100
   }
   tile={
    tile="space"
-   delay=50
+   delay=100
    is_end_of_anim
    is_dead_on_end_of_anim
   }
