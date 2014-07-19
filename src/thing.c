@@ -30,7 +30,8 @@ uint16_t THING_WALL2;
 uint16_t THING_WALL3;
 uint16_t THING_WALL4;
 uint16_t THING_WALL5;
-uint16_t THING_DOOR;
+uint16_t THING_DOOR1;
+uint16_t THING_DOOR2;
 uint16_t THING_NOENTRY;
 uint16_t THING_APPLE;
 uint16_t THING_APPLE_POISON;
@@ -71,10 +72,6 @@ uint16_t THING_EXPLOSION1;
 uint16_t THING_EXPLOSION2;
 uint16_t THING_EXPLOSION3;
 uint16_t THING_EXPLOSION4;
-uint16_t THING_EXPLOSION5;
-uint16_t THING_EXPLOSION6;
-uint16_t THING_EXPLOSION7;
-uint16_t THING_EXPLOSION8;
 uint16_t THING_SPARKS1;
 uint16_t THING_SPARKS2;
 uint16_t THING_SPARKS3;
@@ -279,6 +276,7 @@ static void thing_try_to_flush_ids_ (thingp *ids)
 
 static void thing_try_to_flush_ids (void)
 {
+CON("flush");
     thing_try_to_flush_ids_(thing_server_ids);
     thing_try_to_flush_ids_(thing_client_ids);
 }

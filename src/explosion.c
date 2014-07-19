@@ -131,15 +131,11 @@ void level_place_explosion (levelp level,
                            owner,
                            x, y,
                            6, // radius
-                           8, // nargs
+                           4, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
                            "data/things/explosion3",
-                           "data/things/explosion4",
-                           "data/things/explosion5",
-                           "data/things/explosion6",
-                           "data/things/explosion7",
-                           "data/things/explosion8");
+                           "data/things/explosion4");
 }
 
 void level_place_small_explosion (levelp level, 
@@ -150,15 +146,11 @@ void level_place_small_explosion (levelp level,
                            owner,
                            x, y,
                            1, // radius
-                           8, // nargs
+                           4, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
                            "data/things/explosion3",
-                           "data/things/explosion4",
-                           "data/things/explosion5",
-                           "data/things/explosion6",
-                           "data/things/explosion7",
-                           "data/things/explosion8");
+                           "data/things/explosion4");
 }
 
 void level_place_sparks (levelp level, 
@@ -183,15 +175,11 @@ void level_place_fireball (levelp level,
                            owner,
                            x, y,
                            7, // radius
-                           8, // nargs
+                           4, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
                            "data/things/explosion3",
-                           "data/things/explosion4",
-                           "data/things/explosion5",
-                           "data/things/explosion6",
-                           "data/things/explosion7",
-                           "data/things/explosion8");
+                           "data/things/explosion4");
 }
 
 void level_place_poison (levelp level, 
@@ -221,7 +209,7 @@ void level_place_cloudkill (levelp level,
                            owner,
                            x, y,
                            12, // radius
-                           2, // nargs
+                           8, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
                            "data/things/cloudkill3",
@@ -239,7 +227,7 @@ void level_place_small_cloudkill (levelp level,
                            owner,
                            x, y,
                            2, // radius
-                           2, // nargs
+                           8, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
                            "data/things/cloudkill3",

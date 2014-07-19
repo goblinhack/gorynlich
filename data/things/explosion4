@@ -33,12 +33,40 @@
    delay=20
   }
   tile={
-   tile="explosion4.6"
-   delay=100
+   tile="explosion4.8"
+   delay=20
   }
   tile={
-   tile="explosion4.7"
-   delay=100
+   tile="explosion4.9"
+   delay=20
+  }
+  tile={
+   tile="explosion4.10"
+   delay=20
+  }
+  tile={
+   tile="explosion4.11"
+   delay=20
+  }
+  tile={
+   tile="explosion4.12"
+   delay=20
+  }
+  tile={
+   tile="explosion4.13"
+   delay=20
+  }
+  tile={
+   tile="explosion4.14"
+   delay=20
+  }
+  tile={
+   tile="explosion4.15"
+   delay=20
+  }
+  tile={
+   tile="explosion4.16"
+   delay=20
   }
   tile={
    tile="space"
