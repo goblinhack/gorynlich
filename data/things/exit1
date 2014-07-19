@@ -15,10 +15,6 @@
    delay=1000
   }
   tile={
-   tile="tunnel1.3"
-   delay=1000
-  }
-  tile={
    tile="tunnel1.1"
    delay=1000
   }
@@ -27,7 +23,31 @@
    delay=1000
   }
   tile={
-   tile="tunnel1.2"
+   tile="tunnel1.1"
+   delay=1000
+  }
+  tile={
+   tile="tunnel1.1"
+   delay=1000
+  }
+  tile={
+   tile="tunnel1.4"
+   delay=1000
+  }
+  tile={
+   tile="tunnel1.1"
+   delay=1000
+  }
+  tile={
+   tile="tunnel1.5"
+   delay=1000
+  }
+  tile={
+   tile="tunnel1.6"
+   delay=1000
+  }
+  tile={
+   tile="tunnel1.1"
    delay=1000
   }
  }
