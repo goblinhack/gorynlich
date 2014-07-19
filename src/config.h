@@ -80,26 +80,26 @@
 /*
  * Tile pixel width.
  */
-#define TILE_WIDTH                  32
-#define TILE_HEIGHT                 32
-
-/*
- * The number of tiles per screen.
- */
-#define TILES_SCREEN_WIDTH          21
-#define TILES_SCREEN_HEIGHT         14
+#define TILE_WIDTH                  64
+#define TILE_HEIGHT                 64
 
 /*
  * The width of wall blocks and floor tiles not counting shadow pixels
  */
-#define TILE_PIX_WIDTH              24
-#define TILE_PIX_HEIGHT             24
+#define TILE_PIX_WIDTH              48
+#define TILE_PIX_HEIGHT             48
 
 /*
  * The width including shadow pixels.
  */
 #define TILE_PIX_WITH_SHADOW_WIDTH  TILE_WIDTH
 #define TILE_PIX_WITH_SHADOW_HEIGHT TILE_HEIGHT
+
+/*
+ * The number of tiles per screen.
+ */
+#define TILES_SCREEN_WIDTH          21
+#define TILES_SCREEN_HEIGHT         14
 
 #define TILES_SERVER_SCALE          4
 #define TILES_CLIENT_SCALE          1

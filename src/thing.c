@@ -221,6 +221,19 @@ void thing_update (thingp t)
         return;
     }
 
+    /*
+     * Need an explicit update for boring things as we send them only on 
+     * demand.
+     */
+    if (server_level) {
+        /*
+         * Can be called during level load, hence the check.
+         */
+        if (thing_template_is_boring(t->thing_template)) {
+            server_level->need_boring_update = true;
+        }
+    }
+
     if (t->updated) {
         return;
     }
@@ -1594,6 +1607,43 @@ int thing_hit (thingp t,
     }
 
     /*
+     * Does the thing do damage?
+     */
+    if (!damage) {
+        if (hitter) {
+            damage = thing_get_template(hitter)->damage;
+        }
+    }
+    
+    /*
+     * Allow no more hits than x per second by the hitter.
+     */
+    if (orig_hitter) {
+        /*
+         * We want the orig hitter, i.e. the sword and not the playet.
+         */
+        uint32_t delay = 
+            thing_template_get_hit_delay_tenths(orig_hitter->thing_template);
+
+        if (delay) {
+            if (!time_have_x_tenths_passed_since(delay, 
+                                                 orig_hitter->timestamp_hit)) {
+
+                return (false);
+            }
+
+            orig_hitter->timestamp_hit = time_get_time_cached();
+        }
+
+        /*
+         * No killer to avoid giving a bonus to monsters!
+         */
+        if (thing_is_fragile(orig_hitter)) {
+            thing_dead(orig_hitter, 0, "self destruct on hitting");
+        }
+    }
+
+    /*
      * Flash briefly red on attempted hits.
      */
     if (thing_is_monst(t)               || 
@@ -1606,22 +1656,6 @@ int thing_hit (thingp t,
          */
         t->is_hit_miss = true;
         thing_update(t);
-    }
-
-    /*
-     * Does the thing do damage?
-     */
-    if (!damage) {
-        if (hitter) {
-            damage = thing_get_template(hitter)->damage;
-        }
-    }
-    
-    /*
-     * Update the map for destruction of the scenery.
-     */
-    if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
-        level_update(server_level);
     }
 
     /*
@@ -1638,27 +1672,10 @@ int thing_hit (thingp t,
     }
 
     /*
-     * Allow no more hits than x per second by the hitter.
+     * Update the map for destruction of the scenery.
      */
-    if (hitter) {
-        uint32_t delay = 
-            thing_template_get_hit_delay_tenths(hitter->thing_template);
-
-        if (delay) {
-            if (!time_have_x_tenths_passed_since(delay, 
-                                                 hitter->timestamp_hit)) {
-                return (false);
-            }
-
-            hitter->timestamp_hit = time_get_time_cached();
-        }
-
-        /*
-         * No killer to avoid giving a bonus to monsters!
-         */
-        if (thing_is_fragile(hitter)) {
-            thing_dead(hitter, 0, "self destruct on hitting");
-        }
+    if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
+        level_update(server_level);
     }
 
     int r;
@@ -1848,9 +1865,6 @@ static void thing_effect_hit_success (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
-        level_place_sparks(t->level,
-                           0, // owner
-                           t->x, t->y);
     }
 }
 
@@ -1862,6 +1876,9 @@ static void thing_effect_hit_miss (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, GRAY);
+        level_place_sparks(t->level,
+                           0, // owner
+                           t->x, t->y);
     }
 }
 

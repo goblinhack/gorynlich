@@ -160,6 +160,9 @@
 .o/ramdisk_data_things__cloudkill3_session.o: asm/ramdisk_data_things__cloudkill3_session.S ../data/things/.cloudkill3.session
 	gcc -c asm/ramdisk_data_things__cloudkill3_session.S -o .o/ramdisk_data_things__cloudkill3_session.o
 
+.o/ramdisk_data_things__cloudkill8_session.o: asm/ramdisk_data_things__cloudkill8_session.S ../data/things/.cloudkill8.session
+	gcc -c asm/ramdisk_data_things__cloudkill8_session.S -o .o/ramdisk_data_things__cloudkill8_session.o
+
 .o/ramdisk_data_things__door_session.o: asm/ramdisk_data_things__door_session.S ../data/things/.door.session
 	gcc -c asm/ramdisk_data_things__door_session.S -o .o/ramdisk_data_things__door_session.o
 
@@ -177,6 +180,12 @@
 
 .o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
 	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
+
+.o/ramdisk_data_things__explosion7_session.o: asm/ramdisk_data_things__explosion7_session.S ../data/things/.explosion7.session
+	gcc -c asm/ramdisk_data_things__explosion7_session.S -o .o/ramdisk_data_things__explosion7_session.o
+
+.o/ramdisk_data_things__explosion8_session.o: asm/ramdisk_data_things__explosion8_session.S ../data/things/.explosion8.session
+	gcc -c asm/ramdisk_data_things__explosion8_session.S -o .o/ramdisk_data_things__explosion8_session.o
 
 .o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
 	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
@@ -202,11 +211,17 @@
 .o/ramdisk_data_things__monk_session.o: asm/ramdisk_data_things__monk_session.S ../data/things/.monk.session
 	gcc -c asm/ramdisk_data_things__monk_session.S -o .o/ramdisk_data_things__monk_session.o
 
+.o/ramdisk_data_things__poison2_session.o: asm/ramdisk_data_things__poison2_session.S ../data/things/.poison2.session
+	gcc -c asm/ramdisk_data_things__poison2_session.S -o .o/ramdisk_data_things__poison2_session.o
+
 .o/ramdisk_data_things__poison8_session.o: asm/ramdisk_data_things__poison8_session.S ../data/things/.poison8.session
 	gcc -c asm/ramdisk_data_things__poison8_session.S -o .o/ramdisk_data_things__poison8_session.o
 
 .o/ramdisk_data_things__scythe1_session.o: asm/ramdisk_data_things__scythe1_session.S ../data/things/.scythe1.session
 	gcc -c asm/ramdisk_data_things__scythe1_session.S -o .o/ramdisk_data_things__scythe1_session.o
+
+.o/ramdisk_data_things__sparks1_session.o: asm/ramdisk_data_things__sparks1_session.S ../data/things/.sparks1.session
+	gcc -c asm/ramdisk_data_things__sparks1_session.S -o .o/ramdisk_data_things__sparks1_session.o
 
 .o/ramdisk_data_things__sword1_session.o: asm/ramdisk_data_things__sword1_session.S ../data/things/.sword1.session
 	gcc -c asm/ramdisk_data_things__sword1_session.S -o .o/ramdisk_data_things__sword1_session.o
@@ -546,6 +561,15 @@
 
 .o/ramdisk_data_things_spam.o: asm/ramdisk_data_things_spam.S ../data/things/spam
 	gcc -c asm/ramdisk_data_things_spam.S -o .o/ramdisk_data_things_spam.o
+
+.o/ramdisk_data_things_sparks1.o: asm/ramdisk_data_things_sparks1.S ../data/things/sparks1
+	gcc -c asm/ramdisk_data_things_sparks1.S -o .o/ramdisk_data_things_sparks1.o
+
+.o/ramdisk_data_things_sparks2.o: asm/ramdisk_data_things_sparks2.S ../data/things/sparks2
+	gcc -c asm/ramdisk_data_things_sparks2.S -o .o/ramdisk_data_things_sparks2.o
+
+.o/ramdisk_data_things_sparks3.o: asm/ramdisk_data_things_sparks3.S ../data/things/sparks3
+	gcc -c asm/ramdisk_data_things_sparks3.S -o .o/ramdisk_data_things_sparks3.o
 
 .o/ramdisk_data_things_sword1.o: asm/ramdisk_data_things_sword1.S ../data/things/sword1
 	gcc -c asm/ramdisk_data_things_sword1.S -o .o/ramdisk_data_things_sword1.o

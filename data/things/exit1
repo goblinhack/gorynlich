@@ -7,28 +7,28 @@
  is_animated
  tiles={
   tile={
-   tile="exit1.1"
-   delay=100
+   tile="tunnel1.1"
+   delay=1000
   }
   tile={
-   tile="exit1.2"
-   delay=100
+   tile="tunnel1.2"
+   delay=1000
   }
   tile={
-   tile="exit1.3"
-   delay=100
+   tile="tunnel1.3"
+   delay=1000
   }
   tile={
-   tile="exit1.4"
-   delay=100
+   tile="tunnel1.1"
+   delay=1000
   }
   tile={
-   tile="exit1.3"
-   delay=100
+   tile="tunnel1.3"
+   delay=1000
   }
   tile={
-   tile="exit1.2"
-   delay=100
+   tile="tunnel1.2"
+   delay=1000
   }
  }
 }
