@@ -276,7 +276,6 @@ static void thing_try_to_flush_ids_ (thingp *ids)
 
 static void thing_try_to_flush_ids (void)
 {
-CON("flush");
     thing_try_to_flush_ids_(thing_server_ids);
     thing_try_to_flush_ids_(thing_client_ids);
 }
