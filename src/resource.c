@@ -81,7 +81,9 @@ static uint8_t resource_init_11 (void *context)
 
 static uint8_t resource_init_12 (void *context)
 {
-    return (true);
+    return (tex_load_tiled("data/gfx/floor.png",
+                           "floor",
+                           512, 512) != 0);
 }
 
 static uint8_t resource_init_13 (void *context)
@@ -1908,8 +1910,31 @@ static uint8_t resource_init_23 (void *context)
         0,
     };
 
+    static const char *floor_tiles[] = {
+        // --------------------------------------------------------------------
+        "floor1.1",
+        "floor1.2",
+        "floor1.3",
+        "floor1.4",
+        "floor1.5",
+        "floor1.6",
+        "floor1.7",
+        "floor1.8",
+        "floor1.9",
+        "floor1.10",
+        "floor1.11",
+        "floor1.12",
+        "floor1.13",
+        "floor1.14",
+        "floor1.15",
+        "floor1.16",
+    };
+
     tile_load_arr("sprites_small", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(small_tiles), small_tiles);
+
+    tile_load_arr("floor", 512, 512,
+                  ARRAY_SIZE(floor_tiles), floor_tiles);
 
     /*
      * Walls

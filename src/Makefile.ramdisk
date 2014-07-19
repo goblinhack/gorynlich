@@ -10,6 +10,9 @@
 .o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
 	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
 
+.o/ramdisk_data_gfx_floor_png.o: asm/ramdisk_data_gfx_floor_png.S ../data/gfx/floor.png
+	gcc -c asm/ramdisk_data_gfx_floor_png.S -o .o/ramdisk_data_gfx_floor_png.o
+
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
 
@@ -198,6 +201,9 @@
 
 .o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
 	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
+
+.o/ramdisk_data_things__floor1_swp.o: asm/ramdisk_data_things__floor1_swp.S ../data/things/.floor1.swp
+	gcc -c asm/ramdisk_data_things__floor1_swp.S -o .o/ramdisk_data_things__floor1_swp.o
 
 .o/ramdisk_data_things__food_session.o: asm/ramdisk_data_things__food_session.S ../data/things/.food.session
 	gcc -c asm/ramdisk_data_things__food_session.S -o .o/ramdisk_data_things__food_session.o
