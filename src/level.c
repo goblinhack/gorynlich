@@ -745,6 +745,7 @@ void level_tick (levelp level)
      */
     if (level->need_map_update) {
         level->need_map_update = 0;
+        level->need_boring_update = 0;
 
         level_update_now(level);
 
@@ -752,6 +753,15 @@ void level_tick (levelp level)
                                     "level map update active things");
         socket_server_tx_map_update(0, server_boring_things,
                                     "level map update boring things");
+    }
+
+    /*
+     * Sparks on a wall?
+     */
+    if (level->need_boring_update) {
+        level->need_boring_update = 0;
+        socket_server_tx_map_update(0, server_boring_things,
+                                    "boring update needed");
     }
 
     /*

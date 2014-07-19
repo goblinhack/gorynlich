@@ -82,6 +82,11 @@ typedef struct level_t_ {
     uint8_t need_map_update:1;
 
     /*
+     * Sparks on a wall?
+     */
+    uint8_t need_boring_update:1;
+
+    /*
      * Things cannot move but can be animated.
      */
     uint8_t is_paused:1;
