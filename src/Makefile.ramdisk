@@ -166,6 +166,12 @@
 .o/ramdisk_data_things__door_session.o: asm/ramdisk_data_things__door_session.S ../data/things/.door.session
 	gcc -c asm/ramdisk_data_things__door_session.S -o .o/ramdisk_data_things__door_session.o
 
+.o/ramdisk_data_things__door1_session.o: asm/ramdisk_data_things__door1_session.S ../data/things/.door1.session
+	gcc -c asm/ramdisk_data_things__door1_session.S -o .o/ramdisk_data_things__door1_session.o
+
+.o/ramdisk_data_things__door2_session.o: asm/ramdisk_data_things__door2_session.S ../data/things/.door2.session
+	gcc -c asm/ramdisk_data_things__door2_session.S -o .o/ramdisk_data_things__door2_session.o
+
 .o/ramdisk_data_things__dwarf_session.o: asm/ramdisk_data_things__dwarf_session.S ../data/things/.dwarf.session
 	gcc -c asm/ramdisk_data_things__dwarf_session.S -o .o/ramdisk_data_things__dwarf_session.o
 
@@ -180,6 +186,9 @@
 
 .o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
 	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
+
+.o/ramdisk_data_things__explosion4_session.o: asm/ramdisk_data_things__explosion4_session.S ../data/things/.explosion4.session
+	gcc -c asm/ramdisk_data_things__explosion4_session.S -o .o/ramdisk_data_things__explosion4_session.o
 
 .o/ramdisk_data_things__explosion7_session.o: asm/ramdisk_data_things__explosion7_session.S ../data/things/.explosion7.session
 	gcc -c asm/ramdisk_data_things__explosion7_session.S -o .o/ramdisk_data_things__explosion7_session.o
@@ -361,8 +370,11 @@
 .o/ramdisk_data_things_demon.o: asm/ramdisk_data_things_demon.S ../data/things/demon
 	gcc -c asm/ramdisk_data_things_demon.S -o .o/ramdisk_data_things_demon.o
 
-.o/ramdisk_data_things_door.o: asm/ramdisk_data_things_door.S ../data/things/door
-	gcc -c asm/ramdisk_data_things_door.S -o .o/ramdisk_data_things_door.o
+.o/ramdisk_data_things_door1.o: asm/ramdisk_data_things_door1.S ../data/things/door1
+	gcc -c asm/ramdisk_data_things_door1.S -o .o/ramdisk_data_things_door1.o
+
+.o/ramdisk_data_things_door2.o: asm/ramdisk_data_things_door2.S ../data/things/door2
+	gcc -c asm/ramdisk_data_things_door2.S -o .o/ramdisk_data_things_door2.o
 
 .o/ramdisk_data_things_dwarf.o: asm/ramdisk_data_things_dwarf.S ../data/things/dwarf
 	gcc -c asm/ramdisk_data_things_dwarf.S -o .o/ramdisk_data_things_dwarf.o
@@ -402,18 +414,6 @@
 
 .o/ramdisk_data_things_explosion4.o: asm/ramdisk_data_things_explosion4.S ../data/things/explosion4
 	gcc -c asm/ramdisk_data_things_explosion4.S -o .o/ramdisk_data_things_explosion4.o
-
-.o/ramdisk_data_things_explosion5.o: asm/ramdisk_data_things_explosion5.S ../data/things/explosion5
-	gcc -c asm/ramdisk_data_things_explosion5.S -o .o/ramdisk_data_things_explosion5.o
-
-.o/ramdisk_data_things_explosion6.o: asm/ramdisk_data_things_explosion6.S ../data/things/explosion6
-	gcc -c asm/ramdisk_data_things_explosion6.S -o .o/ramdisk_data_things_explosion6.o
-
-.o/ramdisk_data_things_explosion7.o: asm/ramdisk_data_things_explosion7.S ../data/things/explosion7
-	gcc -c asm/ramdisk_data_things_explosion7.S -o .o/ramdisk_data_things_explosion7.o
-
-.o/ramdisk_data_things_explosion8.o: asm/ramdisk_data_things_explosion8.S ../data/things/explosion8
-	gcc -c asm/ramdisk_data_things_explosion8.S -o .o/ramdisk_data_things_explosion8.o
 
 .o/ramdisk_data_things_fireball.o: asm/ramdisk_data_things_fireball.S ../data/things/fireball
 	gcc -c asm/ramdisk_data_things_fireball.S -o .o/ramdisk_data_things_fireball.o
