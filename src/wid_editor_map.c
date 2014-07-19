@@ -72,6 +72,33 @@ widp wid_editor_map_thing_replace_template (widp w,
     }
 
     /*
+     * Grow tl and br to fit the template thing. Use the first tile.
+     */
+    thing_tiles = thing_template_get_tiles(thing_template);
+    if (!thing_tiles) {
+        DIE("thing template [%s] has no tiles",
+            thing_template_short_name(thing_template));
+    }
+
+    /*
+     * Get the first anim tile.
+     */
+    thing_tilep thing_tile = (typeof(thing_tile))
+                    tree_root_first(thing_tiles);
+
+    /*
+     * Find the real tile that corresponds to this name.
+     */
+    tilename = thing_tile_name(thing_tile);
+    tile = tile_find(tilename);
+
+    if (!tile) {
+        DIE("tile name %s from thing %s not found",
+            tilename,
+            thing_template_short_name(thing_template));
+    }
+
+    /*
      * Find the midpoint of the tile.
      */
     x *= tile_width;
@@ -90,6 +117,14 @@ widp wid_editor_map_thing_replace_template (widp w,
     double base_tile_height =
             ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
                 (double)global_config.video_gl_height);
+
+    double tw = tile_get_width(tile);
+    double th = tile_get_height(tile);
+    double scale_x = tw / TILE_WIDTH; 
+    double scale_y = th / TILE_HEIGHT; 
+
+    base_tile_width *= scale_x;
+    base_tile_height *= scale_y;
 
     /*
      * Work out the tile size in a percentage of the screen.
@@ -121,35 +156,6 @@ widp wid_editor_map_thing_replace_template (widp w,
 
     tl.y -= tile_height / 4.0;
     br.x += tile_width / 4.0;
-
-    /*
-     * Grow tl and br to fit the template thing. Use the first tile.
-     */
-    thing_tiles = thing_template_get_tiles(thing_template);
-    if (!thing_tiles) {
-        DIE("thing template [%s] has no tiles",
-            thing_template_short_name(thing_template));
-    }
-
-    thing_tilep thing_tile;
-
-    /*
-     * Get the first anim tile.
-     */
-    thing_tile = (typeof(thing_tile))
-                    tree_root_first(thing_tiles);
-
-    /*
-     * Find the real tile that corresponds to this name.
-     */
-    tilename = thing_tile_name(thing_tile);
-    tile = tile_find(tilename);
-
-    if (!tile) {
-        DIE("tile name %s from thing %s not found",
-            tilename,
-            thing_template_short_name(thing_template));
-    }
 
     z_depth = thing_template_get_z_depth(thing_template);
     z_order = thing_template_get_z_order(thing_template);
