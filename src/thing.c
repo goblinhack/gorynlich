@@ -2897,11 +2897,11 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
     /*
      * Now center the tile.
      */
-    tl.x -= base_tile_height / 2.0;
-    br.x -= base_tile_width / 2.0;
-
+    tl.x -= base_tile_width / 2.0;
     tl.y -= base_tile_height / 2.0;
-    br.y -= base_tile_width / 2.0;
+
+    br.x -= base_tile_width / 2.0;
+    br.y -= base_tile_height / 2.0;
 
     /*
      * Now the tile itself has a shadow that is 1/4 of the pixels.
@@ -2984,32 +2984,22 @@ static void thing_client_wid_move (thingp t, double x, double y,
             ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
                 (double)global_config.video_gl_height);
 
-    tilep tile = wid_get_tile(t->wid);
 
+    tilep tile = wid_get_tile(t->wid);
     double tw = tile_get_width(tile);
     double th = tile_get_height(tile);
     double scale_x = tw / TILE_WIDTH; 
     double scale_y = th / TILE_HEIGHT; 
 
     if (scale_x > 1) {
-    base_tile_width *= scale_x;
-    base_tile_height *= scale_y;
+        base_tile_width *= scale_x / TILES_CLIENT_SCALE;
+        base_tile_height *= scale_y / TILES_CLIENT_SCALE;
     }
 
-    /*
-     * Work out the tile size in a percentage of the screen.
-     */
-    br.x += base_tile_width;
-    br.y += base_tile_height;
-
-    /*
-     * Now center the tile.
-     */
-    tl.x -= base_tile_height / 2.0;
-    br.x -= base_tile_width / 2.0;
-
+    br.x += base_tile_width / 2.0;
+    br.y += base_tile_height / 2.0;
+    tl.x -= base_tile_width / 2.0;
     tl.y -= base_tile_height / 2.0;
-    br.y -= base_tile_width / 2.0;
 
     /*
      * Now the tile itself has a shadow that is 1/4 of the pixels.
@@ -3024,8 +3014,10 @@ static void thing_client_wid_move (thingp t, double x, double y,
                          (double)TILE_PIX_HEIGHT) * 
                             (double)TILE_PIX_WITH_SHADOW_HEIGHT;
 
-    tl.y -= tile_height / 4.0;
-    br.x += tile_width / 4.0;
+    if (scale_x == 1) {
+        tl.y -= tile_height / 4.0;
+        br.x += tile_width / 4.0;
+    }
 
     /*
      * Off the map? Perhaps between levels.
