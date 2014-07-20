@@ -65,13 +65,6 @@ uint8_t thing_mob_spawn (thingp t)
             continue;
         }
 
-        /*
-         * Must have a floor tile to spawn onto
-         */
-        if (!map_is_floor_at(server_level, x, y)) {
-            continue;
-        }
-
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
@@ -130,13 +123,6 @@ uint8_t thing_mob_spawn_on_death (thingp t)
             map_is_pipe_at(server_level, x, y)          ||
             map_is_door_at(server_level, x, y)          ||
             map_is_exit_at(server_level, x, y)) {
-            continue;
-        }
-
-        /*
-         * Must have a floor tile to spawn onto
-         */
-        if (!map_is_floor_at(server_level, x, y)) {
             continue;
         }
 
