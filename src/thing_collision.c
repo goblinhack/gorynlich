@@ -70,7 +70,7 @@ static uint8_t things_overlap (const thingp A,
      * shadow pixels were not there.
      */
     if (!wall) {
-        wall = tile_find("wall_0_0");
+        wall = tile_find("wall1_0_0");
         if (!wall) {
             DIE("no wall for collisions");
         }

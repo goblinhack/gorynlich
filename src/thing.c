@@ -22,14 +22,16 @@
 #include "socket.h"
 #include "client.h"
 #include "timer.h"
+#include "tile.h"
 #include "math.h"
 #include "wid_hiscore.h"
 
-uint16_t THING_WALL;
+uint16_t THING_WALL1;
 uint16_t THING_WALL2;
 uint16_t THING_WALL3;
 uint16_t THING_WALL4;
 uint16_t THING_WALL5;
+uint16_t THING_WALL6;
 uint16_t THING_DOOR1;
 uint16_t THING_DOOR2;
 uint16_t THING_NOENTRY;
@@ -2862,6 +2864,13 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
 {
     thing_move(t, x, y);
 
+    /*
+     * Off the map? Perhaps between levels.
+     */
+    if (!t->wid) {
+        return;
+    }
+
     x *= server_tile_width;
     y *= server_tile_height;
 
@@ -2909,13 +2918,6 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
 
     tl.y -= tile_height / 4.0;
     br.x += tile_width / 4.0;
-
-    /*
-     * Off the map? Perhaps between levels.
-     */
-    if (!t->wid) {
-        return;
-    }
 
     if (is_new || 
         thing_is_player(t) ||
@@ -2981,6 +2983,18 @@ static void thing_client_wid_move (thingp t, double x, double y,
     double base_tile_height =
             ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
                 (double)global_config.video_gl_height);
+
+    tilep tile = wid_get_tile(t->wid);
+
+    double tw = tile_get_width(tile);
+    double th = tile_get_height(tile);
+    double scale_x = tw / TILE_WIDTH; 
+    double scale_y = th / TILE_HEIGHT; 
+
+    if (scale_x > 1) {
+    base_tile_width *= scale_x;
+    base_tile_height *= scale_y;
+    }
 
     /*
      * Work out the tile size in a percentage of the screen.
