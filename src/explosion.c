@@ -58,7 +58,7 @@ static uint8_t level_place_explosion_at (levelp level,
 
     thing_templatep thing_template = thing_template_find(name);
     if (!thing_template) {
-        DIE("no explosion");
+        DIE("no explosion for name %s", name);
     }
 
     double delay = DISTANCE(ox, oy, x, y);
@@ -216,7 +216,8 @@ void level_place_cloudkill (levelp level,
                            "data/things/cloudkill4",
                            "data/things/cloudkill5",
                            "data/things/cloudkill6",
-                           "data/things/cloudkill7");
+                           "data/things/cloudkill7",
+                           "data/things/cloudkill8");
 }
 
 void level_place_small_cloudkill (levelp level, 
@@ -234,5 +235,6 @@ void level_place_small_cloudkill (levelp level,
                            "data/things/cloudkill4",
                            "data/things/cloudkill5",
                            "data/things/cloudkill6",
-                           "data/things/cloudkill7");
+                           "data/things/cloudkill7",
+                           "data/things/cloudkill8");
 }

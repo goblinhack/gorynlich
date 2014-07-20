@@ -343,8 +343,7 @@ void level_set_walls (levelp level)
 
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
-            if (map_is_wall_at(level, x, y) ||
-                !map_is_floor_at(level, x, y)) {
+            if (map_is_wall_at(level, x, y)) {
                 level->walls.walls[x][y] = '+';
             } else {
                 level->walls.walls[x][y] = ' ';
@@ -366,8 +365,7 @@ void level_set_monst_map_treat_doors_as_passable (levelp level)
             if (map_is_wall_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
-                map_is_mob_spawner_at(level, x, y)  ||
-                !map_is_floor_at(level, x, y)) {
+                map_is_mob_spawner_at(level, x, y)) {
                 /*
                  * Obstacle.
                  */
@@ -396,8 +394,7 @@ void level_set_monst_map_treat_doors_as_walls (levelp level)
                 map_is_door_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
                 map_is_spam_at(level, x, y)         ||
-                map_is_mob_spawner_at(level, x, y)  ||
-                !map_is_floor_at(level, x, y)) {
+                map_is_mob_spawner_at(level, x, y)) {
 
                 /*
                  * Considered as walls.
@@ -423,8 +420,7 @@ void level_set_player_map_treat_doors_as_walls (levelp level)
             if (map_is_wall_at(level, x, y)         ||
                 map_is_door_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
-                map_is_spam_at(level, x, y)         ||
-                !map_is_floor_at(level, x, y)) {
+                map_is_spam_at(level, x, y)) {
 
                 /*
                  * Considered as walls for explosions.
@@ -567,10 +563,6 @@ void level_place_plant_pod (levelp level)
         }
 
         if (map_is_exit_at(level, x, y)) {
-            continue;
-        }
-
-        if (!map_is_floor_at(level, x, y)) {
             continue;
         }
 
