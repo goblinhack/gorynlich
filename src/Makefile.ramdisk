@@ -202,8 +202,8 @@
 .o/ramdisk_data_things__fireball_session.o: asm/ramdisk_data_things__fireball_session.S ../data/things/.fireball.session
 	gcc -c asm/ramdisk_data_things__fireball_session.S -o .o/ramdisk_data_things__fireball_session.o
 
-.o/ramdisk_data_things__floor1_swp.o: asm/ramdisk_data_things__floor1_swp.S ../data/things/.floor1.swp
-	gcc -c asm/ramdisk_data_things__floor1_swp.S -o .o/ramdisk_data_things__floor1_swp.o
+.o/ramdisk_data_things__floor1_session.o: asm/ramdisk_data_things__floor1_session.S ../data/things/.floor1.session
+	gcc -c asm/ramdisk_data_things__floor1_session.S -o .o/ramdisk_data_things__floor1_session.o
 
 .o/ramdisk_data_things__food_session.o: asm/ramdisk_data_things__food_session.S ../data/things/.food.session
 	gcc -c asm/ramdisk_data_things__food_session.S -o .o/ramdisk_data_things__food_session.o
@@ -258,6 +258,9 @@
 
 .o/ramdisk_data_things__wa_session.o: asm/ramdisk_data_things__wa_session.S ../data/things/.wa.session
 	gcc -c asm/ramdisk_data_things__wa_session.S -o .o/ramdisk_data_things__wa_session.o
+
+.o/ramdisk_data_things__wall6_session.o: asm/ramdisk_data_things__wall6_session.S ../data/things/.wall6.session
+	gcc -c asm/ramdisk_data_things__wall6_session.S -o .o/ramdisk_data_things__wall6_session.o
 
 .o/ramdisk_data_things__wand1_anim_session.o: asm/ramdisk_data_things__wand1_anim_session.S ../data/things/.wand1_anim.session
 	gcc -c asm/ramdisk_data_things__wand1_anim_session.S -o .o/ramdisk_data_things__wand1_anim_session.o
@@ -598,8 +601,8 @@
 .o/ramdisk_data_things_valkyrie.o: asm/ramdisk_data_things_valkyrie.S ../data/things/valkyrie
 	gcc -c asm/ramdisk_data_things_valkyrie.S -o .o/ramdisk_data_things_valkyrie.o
 
-.o/ramdisk_data_things_wall.o: asm/ramdisk_data_things_wall.S ../data/things/wall
-	gcc -c asm/ramdisk_data_things_wall.S -o .o/ramdisk_data_things_wall.o
+.o/ramdisk_data_things_wall1.o: asm/ramdisk_data_things_wall1.S ../data/things/wall1
+	gcc -c asm/ramdisk_data_things_wall1.S -o .o/ramdisk_data_things_wall1.o
 
 .o/ramdisk_data_things_wall2.o: asm/ramdisk_data_things_wall2.S ../data/things/wall2
 	gcc -c asm/ramdisk_data_things_wall2.S -o .o/ramdisk_data_things_wall2.o
@@ -612,6 +615,9 @@
 
 .o/ramdisk_data_things_wall5.o: asm/ramdisk_data_things_wall5.S ../data/things/wall5
 	gcc -c asm/ramdisk_data_things_wall5.S -o .o/ramdisk_data_things_wall5.o
+
+.o/ramdisk_data_things_wall6.o: asm/ramdisk_data_things_wall6.S ../data/things/wall6
+	gcc -c asm/ramdisk_data_things_wall6.S -o .o/ramdisk_data_things_wall6.o
 
 .o/ramdisk_data_things_wand1_anim.o: asm/ramdisk_data_things_wand1_anim.S ../data/things/wand1_anim
 	gcc -c asm/ramdisk_data_things_wand1_anim.S -o .o/ramdisk_data_things_wand1_anim.o

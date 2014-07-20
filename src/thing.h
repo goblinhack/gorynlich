@@ -262,11 +262,12 @@ void thing_client_move(thingp t,
                        const uint8_t right,
                        const uint8_t fire);
 
-extern uint16_t THING_WALL;
+extern uint16_t THING_WALL1;
 extern uint16_t THING_WALL2;
 extern uint16_t THING_WALL3;
 extern uint16_t THING_WALL4;
 extern uint16_t THING_WALL5;
+extern uint16_t THING_WALL6;
 extern uint16_t THING_DOOR1;
 extern uint16_t THING_DOOR2;
 extern uint16_t THING_NOENTRY;

@@ -98,6 +98,22 @@ widp wid_editor_map_thing_replace_template (widp w,
             thing_template_short_name(thing_template));
     }
 
+    double tw = tile_get_width(tile);
+    double th = tile_get_height(tile);
+    double scale_x = tw / TILE_WIDTH; 
+    double scale_y = th / TILE_HEIGHT; 
+
+    /*
+     * Need adjustments for multi-tile things.
+     */
+    if (scale_x > 1) {
+        x += ((scale_x-1) / 2);
+    }
+
+    if (scale_y > 1) {
+        y += ((scale_y-1) / 2);
+    }
+
     /*
      * Find the midpoint of the tile.
      */
@@ -117,11 +133,6 @@ widp wid_editor_map_thing_replace_template (widp w,
     double base_tile_height =
             ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
                 (double)global_config.video_gl_height);
-
-    double tw = tile_get_width(tile);
-    double th = tile_get_height(tile);
-    double scale_x = tw / TILE_WIDTH; 
-    double scale_y = th / TILE_HEIGHT; 
 
     base_tile_width *= scale_x;
     base_tile_height *= scale_y;
@@ -154,8 +165,13 @@ widp wid_editor_map_thing_replace_template (widp w,
                          (double)TILE_PIX_HEIGHT) * 
                             (double)TILE_PIX_WITH_SHADOW_HEIGHT;
 
-    tl.y -= tile_height / 4.0;
-    br.x += tile_width / 4.0;
+    if (scale_x == 1) {
+        br.x += tile_width / 4.0;
+    }
+
+    if (scale_y == 1) {
+        tl.y -= tile_height / 4.0;
+    }
 
     z_depth = thing_template_get_z_depth(thing_template);
     z_order = thing_template_get_z_order(thing_template);
