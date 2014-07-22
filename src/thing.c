@@ -1702,7 +1702,8 @@ thingp thing_owner (thingp t)
         if (t->owner_id) {
             thingp n = thing_server_ids[t->owner_id];
             if (!n) {
-                DIE("no server thing for id %u", t->owner_id);
+                DIE("no server thing for id %u for %s", t->owner_id,
+                    thing_logname(t));
             }
 
             verify(n);
@@ -1712,7 +1713,8 @@ thingp thing_owner (thingp t)
         if (t->owner_id) {
             thingp n = thing_client_ids[t->owner_id];
             if (!n) {
-                DIE("no client thing for id %u", t->owner_id);
+                DIE("no client thing for id %u for %s", t->owner_id,
+                    thing_logname(t));
             }
 
             verify(n);
@@ -1875,9 +1877,11 @@ static void thing_effect_hit_miss (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, GRAY);
+#if 0
         level_place_sparks(t->level,
                            0, // owner
                            t->x, t->y);
+#endif
     }
 }
 
