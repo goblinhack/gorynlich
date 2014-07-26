@@ -96,14 +96,14 @@ static uint8_t resource_init_13 (void *context)
 static uint8_t resource_init_14 (void *context)
 {
     return (tex_load_tiled("data/gfx/cloudkill.png",
-                           "explosion",
+                           "cloudkill",
                            1024, 1024) != 0);
 }
 
 static uint8_t resource_init_15 (void *context)
 {
     return (tex_load_tiled("data/gfx/poison.png",
-                           "explosion",
+                           "poison",
                            1024, 1024) != 0);
 }
 
@@ -1364,22 +1364,22 @@ static uint8_t resource_init_23 (void *context)
         0,
         "magic1.1",
         "magic2.1",
-        "poison1.1",
-        "poison2.1",
-        "poison3.1",
-        "poison4.1",
-        "poison5.1",
-        "poison6.1",
-        "poison7.1",
-        "poison8.1",
-        "cloudkill1.1",
-        "cloudkill2.1",
-        "cloudkill3.1",
-        "cloudkill4.1",
-        "cloudkill5.1",
-        "cloudkill6.1",
-        "cloudkill7.1",
-        "cloudkill8.1",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         "sparks1.1",
         "sparks2.1",
         "sparks3.1",
