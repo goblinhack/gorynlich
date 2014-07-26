@@ -95,12 +95,16 @@ static uint8_t resource_init_13 (void *context)
 
 static uint8_t resource_init_14 (void *context)
 {
-    return (true);
+    return (tex_load_tiled("data/gfx/cloudkill.png",
+                           "explosion",
+                           1024, 1024) != 0);
 }
 
 static uint8_t resource_init_15 (void *context)
 {
-    return (true);
+    return (tex_load_tiled("data/gfx/poison.png",
+                           "explosion",
+                           1024, 1024) != 0);
 }
 
 static uint8_t resource_init_16 (void *context)
@@ -1393,22 +1397,22 @@ static uint8_t resource_init_23 (void *context)
         0,
         "magic1.2",
         "magic2.2",
-        "poison1.2",
-        "poison2.2",
-        "poison3.2",
-        "poison4.2",
-        "poison5.2",
-        "poison6.2",
-        "poison7.2",
-        "poison8.2",
-        "cloudkill1.2",
-        "cloudkill2.2",
-        "cloudkill3.2",
-        "cloudkill4.2",
-        "cloudkill5.2",
-        "cloudkill6.2",
-        "cloudkill7.2",
-        "cloudkill8.2",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         "sparks1.2",
         "sparks2.2",
         "sparks3.2",
@@ -1426,22 +1430,22 @@ static uint8_t resource_init_23 (void *context)
         0,
         "magic1.3",
         "magic2.3",
-        "poison1.3",
-        "poison2.3",
-        "poison3.3",
-        "poison4.3",
-        "poison5.3",
-        "poison6.3",
-        "poison7.3",
-        "poison8.3",
-        "cloudkill1.3",
-        "cloudkill2.3",
-        "cloudkill3.3",
-        "cloudkill4.3",
-        "cloudkill5.3",
-        "cloudkill6.3",
-        "cloudkill7.3",
-        "cloudkill8.3",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         "sparks1.3",
         "sparks2.3",
         "sparks3.3",
@@ -1459,22 +1463,22 @@ static uint8_t resource_init_23 (void *context)
         0,
         "magic1.4",
         "magic2.4",
-        "poison1.4",
-        "poison2.4",
-        "poison3.4",
-        "poison4.4",
-        "poison5.4",
-        "poison6.4",
-        "poison7.4",
-        "poison8.4",
-        "cloudkill1.4",
-        "cloudkill2.4",
-        "cloudkill3.4",
-        "cloudkill4.4",
-        "cloudkill5.4",
-        "cloudkill6.4",
-        "cloudkill7.4",
-        "cloudkill8.4",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         "sparks1.4",
         "sparks2.4",
         "sparks3.4",
@@ -1492,22 +1496,22 @@ static uint8_t resource_init_23 (void *context)
         0,
         "magic1.5",
         "magic2.5",
-        "poison1.5",
-        "poison2.5",
-        "poison3.5",
-        "poison4.5",
-        "poison5.5",
-        "poison6.5",
-        "poison7.5",
-        "poison8.5",
-        "cloudkill1.5",
-        "cloudkill2.5",
-        "cloudkill3.5",
-        "cloudkill4.5",
-        "cloudkill5.5",
-        "cloudkill6.5",
-        "cloudkill7.5",
-        "cloudkill8.5",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         "sparks1.5",
         "sparks2.5",
         "sparks3.5",
@@ -1525,22 +1529,22 @@ static uint8_t resource_init_23 (void *context)
         0,
         "magic1.6",
         "magic2.6",
-        "poison1.6",
-        "poison2.6",
-        "poison3.6",
-        "poison4.6",
-        "poison5.6",
-        "poison6.6",
-        "poison7.6",
-        "poison8.6",
-        "cloudkill1.6",
-        "cloudkill2.6",
-        "cloudkill3.6",
-        "cloudkill4.6",
-        "cloudkill5.6",
-        "cloudkill6.6",
-        "cloudkill7.6",
-        "cloudkill8.6",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         "sparks1.6",
         "sparks2.6",
         "sparks3.6",
@@ -1558,22 +1562,22 @@ static uint8_t resource_init_23 (void *context)
         0,
         "magic1.7",
         "magic2.7",
-        "poison1.7",
-        "poison2.7",
-        "poison3.7",
-        "poison4.7",
-        "poison5.7",
-        "poison6.7",
-        "poison7.7",
-        "poison8.7",
-        "cloudkill1.7",
-        "cloudkill2.7",
-        "cloudkill3.7",
-        "cloudkill4.7",
-        "cloudkill5.7",
-        "cloudkill6.7",
-        "cloudkill7.7",
-        "cloudkill8.7",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         "sparks1.7",
         "sparks2.7",
         "sparks3.7",
@@ -2001,6 +2005,162 @@ static uint8_t resource_init_23 (void *context)
     tile_load_arr("explosion", 128, 128,
                   ARRAY_SIZE(explosion_tiles), explosion_tiles);
 
+    static const char *cloudkill_tiles[] = {
+        // --------------------------------------------------------------------
+        "cloudkill1.1",
+        "cloudkill1.2",
+        "cloudkill1.3",
+        "cloudkill1.4",
+        "cloudkill2.1",
+        "cloudkill2.2",
+        "cloudkill2.3",
+        "cloudkill2.4",
+        // --------------------------------------------------------------------
+        "cloudkill1.5",
+        "cloudkill1.6",
+        "cloudkill1.7",
+        "cloudkill1.8",
+        "cloudkill2.5",
+        "cloudkill2.6",
+        "cloudkill2.7",
+        "cloudkill2.8",
+        // --------------------------------------------------------------------
+        "cloudkill1.9",
+        "cloudkill1.10",
+        "cloudkill1.11",
+        "cloudkill1.12",
+        "cloudkill2.9",
+        "cloudkill2.10",
+        "cloudkill2.11",
+        "cloudkill2.12",
+        // --------------------------------------------------------------------
+        "cloudkill1.13",
+        "cloudkill1.14",
+        "cloudkill1.15",
+        "cloudkill1.16",
+        "cloudkill2.13",
+        "cloudkill2.14",
+        "cloudkill2.15",
+        "cloudkill2.16",
+        // --------------------------------------------------------------------
+        "cloudkill3.1",
+        "cloudkill3.2",
+        "cloudkill3.3",
+        "cloudkill3.4",
+        "cloudkill4.1",
+        "cloudkill4.2",
+        "cloudkill4.3",
+        "cloudkill4.4",
+        // --------------------------------------------------------------------
+        "cloudkill3.5",
+        "cloudkill3.6",
+        "cloudkill3.7",
+        "cloudkill3.8",
+        "cloudkill4.5",
+        "cloudkill4.6",
+        "cloudkill4.7",
+        "cloudkill4.8",
+        // --------------------------------------------------------------------
+        "cloudkill3.9",
+        "cloudkill3.10",
+        "cloudkill3.11",
+        "cloudkill3.12",
+        "cloudkill4.9",
+        "cloudkill4.10",
+        "cloudkill4.11",
+        "cloudkill4.12",
+        // --------------------------------------------------------------------
+        "cloudkill3.13",
+        "cloudkill3.14",
+        "cloudkill3.15",
+        "cloudkill3.16",
+        "cloudkill4.13",
+        "cloudkill4.14",
+        "cloudkill4.15",
+        "cloudkill4.16",
+    };
+
+    tile_load_arr("cloudkill", 128, 128,
+                  ARRAY_SIZE(cloudkill_tiles), cloudkill_tiles);
+
+    static const char *poison_tiles[] = {
+        // --------------------------------------------------------------------
+        "poison1.1",
+        "poison1.2",
+        "poison1.3",
+        "poison1.4",
+        "poison2.1",
+        "poison2.2",
+        "poison2.3",
+        "poison2.4",
+        // --------------------------------------------------------------------
+        "poison1.5",
+        "poison1.6",
+        "poison1.7",
+        "poison1.8",
+        "poison2.5",
+        "poison2.6",
+        "poison2.7",
+        "poison2.8",
+        // --------------------------------------------------------------------
+        "poison1.9",
+        "poison1.10",
+        "poison1.11",
+        "poison1.12",
+        "poison2.9",
+        "poison2.10",
+        "poison2.11",
+        "poison2.12",
+        // --------------------------------------------------------------------
+        "poison1.13",
+        "poison1.14",
+        "poison1.15",
+        "poison1.16",
+        "poison2.13",
+        "poison2.14",
+        "poison2.15",
+        "poison2.16",
+        // --------------------------------------------------------------------
+        "poison3.1",
+        "poison3.2",
+        "poison3.3",
+        "poison3.4",
+        "poison4.1",
+        "poison4.2",
+        "poison4.3",
+        "poison4.4",
+        // --------------------------------------------------------------------
+        "poison3.5",
+        "poison3.6",
+        "poison3.7",
+        "poison3.8",
+        "poison4.5",
+        "poison4.6",
+        "poison4.7",
+        "poison4.8",
+        // --------------------------------------------------------------------
+        "poison3.9",
+        "poison3.10",
+        "poison3.11",
+        "poison3.12",
+        "poison4.9",
+        "poison4.10",
+        "poison4.11",
+        "poison4.12",
+        // --------------------------------------------------------------------
+        "poison3.13",
+        "poison3.14",
+        "poison3.15",
+        "poison3.16",
+        "poison4.13",
+        "poison4.14",
+        "poison4.15",
+        "poison4.16",
+    };
+
+    tile_load_arr("poison", 128, 128,
+                  ARRAY_SIZE(poison_tiles), poison_tiles);
+
     /*
      * Walls
      */
@@ -2045,32 +2205,25 @@ static uint8_t resource_init_23 (void *context)
      * Explosions
      */
     thing_template_load(&THING_WEAPON_HIT1, "data/things/weapon_swing1");
+
     thing_template_load(&THING_EXPLOSION1, "data/things/explosion1");
     thing_template_load(&THING_EXPLOSION2, "data/things/explosion2");
     thing_template_load(&THING_EXPLOSION3, "data/things/explosion3");
     thing_template_load(&THING_EXPLOSION4, "data/things/explosion4");
 
-    thing_template_load(&THING_SPARKS1, "data/things/sparks1");
-    thing_template_load(&THING_SPARKS2, "data/things/sparks2");
-    thing_template_load(&THING_SPARKS3, "data/things/sparks3");
-
     thing_template_load(&THING_POISON1, "data/things/poison1");
     thing_template_load(&THING_POISON2, "data/things/poison2");
     thing_template_load(&THING_POISON3, "data/things/poison3");
     thing_template_load(&THING_POISON4, "data/things/poison4");
-    thing_template_load(&THING_POISON5, "data/things/poison5");
-    thing_template_load(&THING_POISON6, "data/things/poison6");
-    thing_template_load(&THING_POISON7, "data/things/poison7");
-    thing_template_load(&THING_POISON8, "data/things/poison8");
 
     thing_template_load(&THING_CLOUDKILL1, "data/things/cloudkill1");
     thing_template_load(&THING_CLOUDKILL2, "data/things/cloudkill2");
     thing_template_load(&THING_CLOUDKILL3, "data/things/cloudkill3");
     thing_template_load(&THING_CLOUDKILL4, "data/things/cloudkill4");
-    thing_template_load(&THING_CLOUDKILL5, "data/things/cloudkill5");
-    thing_template_load(&THING_CLOUDKILL6, "data/things/cloudkill6");
-    thing_template_load(&THING_CLOUDKILL7, "data/things/cloudkill7");
-    thing_template_load(&THING_CLOUDKILL8, "data/things/cloudkill8");
+
+    thing_template_load(&THING_SPARKS1, "data/things/sparks1");
+    thing_template_load(&THING_SPARKS2, "data/things/sparks2");
+    thing_template_load(&THING_SPARKS3, "data/things/sparks3");
 
     /*
      * Important stuff that cannot be used by clicking on.
