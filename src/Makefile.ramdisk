@@ -7,8 +7,8 @@
 .o/ramdisk_data__sword3_session.o: asm/ramdisk_data__sword3_session.S ../data/.sword3.session
 	gcc -c asm/ramdisk_data__sword3_session.S -o .o/ramdisk_data__sword3_session.o
 
-.o/ramdisk_data_gfx_1_png.o: asm/ramdisk_data_gfx_1_png.S ../data/gfx/1.png
-	gcc -c asm/ramdisk_data_gfx_1_png.S -o .o/ramdisk_data_gfx_1_png.o
+.o/ramdisk_data_gfx_cloudkill_png.o: asm/ramdisk_data_gfx_cloudkill_png.S ../data/gfx/cloudkill.png
+	gcc -c asm/ramdisk_data_gfx_cloudkill_png.S -o .o/ramdisk_data_gfx_cloudkill_png.o
 
 .o/ramdisk_data_gfx_dragon_png.o: asm/ramdisk_data_gfx_dragon_png.S ../data/gfx/dragon.png
 	gcc -c asm/ramdisk_data_gfx_dragon_png.S -o .o/ramdisk_data_gfx_dragon_png.o
@@ -36,6 +36,9 @@
 
 .o/ramdisk_data_gfx_help3_png.o: asm/ramdisk_data_gfx_help3_png.S ../data/gfx/help3.png
 	gcc -c asm/ramdisk_data_gfx_help3_png.S -o .o/ramdisk_data_gfx_help3_png.o
+
+.o/ramdisk_data_gfx_poison_png.o: asm/ramdisk_data_gfx_poison_png.S ../data/gfx/poison.png
+	gcc -c asm/ramdisk_data_gfx_poison_png.S -o .o/ramdisk_data_gfx_poison_png.o
 
 .o/ramdisk_data_gfx_rat_png.o: asm/ramdisk_data_gfx_rat_png.S ../data/gfx/rat.png
 	gcc -c asm/ramdisk_data_gfx_rat_png.S -o .o/ramdisk_data_gfx_rat_png.o
@@ -147,6 +150,9 @@
 
 .o/ramdisk_data_things__bonepile2_session.o: asm/ramdisk_data_things__bonepile2_session.S ../data/things/.bonepile2.session
 	gcc -c asm/ramdisk_data_things__bonepile2_session.S -o .o/ramdisk_data_things__bonepile2_session.o
+
+.o/ramdisk_data_things__bonepile3_session.o: asm/ramdisk_data_things__bonepile3_session.S ../data/things/.bonepile3.session
+	gcc -c asm/ramdisk_data_things__bonepile3_session.S -o .o/ramdisk_data_things__bonepile3_session.o
 
 .o/ramdisk_data_things__bow_session.o: asm/ramdisk_data_things__bow_session.S ../data/things/.bow.session
 	gcc -c asm/ramdisk_data_things__bow_session.S -o .o/ramdisk_data_things__bow_session.o
@@ -364,18 +370,6 @@
 .o/ramdisk_data_things_cloudkill4.o: asm/ramdisk_data_things_cloudkill4.S ../data/things/cloudkill4
 	gcc -c asm/ramdisk_data_things_cloudkill4.S -o .o/ramdisk_data_things_cloudkill4.o
 
-.o/ramdisk_data_things_cloudkill5.o: asm/ramdisk_data_things_cloudkill5.S ../data/things/cloudkill5
-	gcc -c asm/ramdisk_data_things_cloudkill5.S -o .o/ramdisk_data_things_cloudkill5.o
-
-.o/ramdisk_data_things_cloudkill6.o: asm/ramdisk_data_things_cloudkill6.S ../data/things/cloudkill6
-	gcc -c asm/ramdisk_data_things_cloudkill6.S -o .o/ramdisk_data_things_cloudkill6.o
-
-.o/ramdisk_data_things_cloudkill7.o: asm/ramdisk_data_things_cloudkill7.S ../data/things/cloudkill7
-	gcc -c asm/ramdisk_data_things_cloudkill7.S -o .o/ramdisk_data_things_cloudkill7.o
-
-.o/ramdisk_data_things_cloudkill8.o: asm/ramdisk_data_things_cloudkill8.S ../data/things/cloudkill8
-	gcc -c asm/ramdisk_data_things_cloudkill8.S -o .o/ramdisk_data_things_cloudkill8.o
-
 .o/ramdisk_data_things_coins1.o: asm/ramdisk_data_things_coins1.S ../data/things/coins1
 	gcc -c asm/ramdisk_data_things_coins1.S -o .o/ramdisk_data_things_coins1.o
 
@@ -528,18 +522,6 @@
 
 .o/ramdisk_data_things_poison4.o: asm/ramdisk_data_things_poison4.S ../data/things/poison4
 	gcc -c asm/ramdisk_data_things_poison4.S -o .o/ramdisk_data_things_poison4.o
-
-.o/ramdisk_data_things_poison5.o: asm/ramdisk_data_things_poison5.S ../data/things/poison5
-	gcc -c asm/ramdisk_data_things_poison5.S -o .o/ramdisk_data_things_poison5.o
-
-.o/ramdisk_data_things_poison6.o: asm/ramdisk_data_things_poison6.S ../data/things/poison6
-	gcc -c asm/ramdisk_data_things_poison6.S -o .o/ramdisk_data_things_poison6.o
-
-.o/ramdisk_data_things_poison7.o: asm/ramdisk_data_things_poison7.S ../data/things/poison7
-	gcc -c asm/ramdisk_data_things_poison7.S -o .o/ramdisk_data_things_poison7.o
-
-.o/ramdisk_data_things_poison8.o: asm/ramdisk_data_things_poison8.S ../data/things/poison8
-	gcc -c asm/ramdisk_data_things_poison8.S -o .o/ramdisk_data_things_poison8.o
 
 .o/ramdisk_data_things_potion_cloudkill.o: asm/ramdisk_data_things_potion_cloudkill.S ../data/things/potion_cloudkill
 	gcc -c asm/ramdisk_data_things_potion_cloudkill.S -o .o/ramdisk_data_things_potion_cloudkill.o

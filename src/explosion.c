@@ -67,8 +67,8 @@ static uint8_t level_place_explosion_at (levelp level,
                                   owner,
                                   x,
                                   y,
-                                  delay * 100,
-                                  500,     // destroy in
+                                  delay * 20,
+                                  200,     // destroy in
                                   10);     // jitter
 
     return (true);
@@ -190,15 +190,11 @@ void level_place_poison (levelp level,
                            owner,
                            x, y,
                            9, // radius
-                           8, // nargs
+                           4, // nargs
                            "data/things/poison1",
                            "data/things/poison2",
                            "data/things/poison3",
-                           "data/things/poison4",
-                           "data/things/poison5",
-                           "data/things/poison6",
-                           "data/things/poison7",
-                           "data/things/poison8");
+                           "data/things/poison4");
 }
 
 void level_place_cloudkill (levelp level, 
@@ -209,15 +205,11 @@ void level_place_cloudkill (levelp level,
                            owner,
                            x, y,
                            12, // radius
-                           8, // nargs
+                           4, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
                            "data/things/cloudkill3",
-                           "data/things/cloudkill4",
-                           "data/things/cloudkill5",
-                           "data/things/cloudkill6",
-                           "data/things/cloudkill7",
-                           "data/things/cloudkill8");
+                           "data/things/cloudkill4");
 }
 
 void level_place_small_cloudkill (levelp level, 
@@ -228,13 +220,9 @@ void level_place_small_cloudkill (levelp level,
                            owner,
                            x, y,
                            2, // radius
-                           8, // nargs
+                           4, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
                            "data/things/cloudkill3",
-                           "data/things/cloudkill4",
-                           "data/things/cloudkill5",
-                           "data/things/cloudkill6",
-                           "data/things/cloudkill7",
-                           "data/things/cloudkill8");
+                           "data/things/cloudkill4");
 }
