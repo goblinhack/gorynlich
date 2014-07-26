@@ -168,7 +168,7 @@ typedef struct thing_template_ {
     uint32_t ppp9;
     uint32_t ppp10;
     uint32_t ppp11;
-    uint32_t ppp12;
+    uint32_t hit_priority;
     uint32_t weapon_fire_delay_tenths;
     uint32_t swing_distance_from_player;
     uint32_t tx_map_update_delay_thousandths;
@@ -272,7 +272,7 @@ uint32_t thing_template_get_ppp8(thing_templatep);
 uint32_t thing_template_get_ppp9(thing_templatep);
 uint32_t thing_template_get_ppp10(thing_templatep);
 uint32_t thing_template_get_ppp11(thing_templatep);
-uint32_t thing_template_get_ppp12(thing_templatep);
+uint32_t thing_template_get_hit_priority(thing_templatep);
 uint32_t thing_template_get_weapon_fire_delay_tenths(thing_templatep);
 uint32_t thing_template_get_swing_distance_from_player(thing_templatep);
 int16_t thing_template_get_bonus_health_on_use(thing_templatep);

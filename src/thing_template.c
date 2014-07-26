@@ -462,7 +462,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
         GET_OPT_NAMED_UINT32(ctx, "ppp10", t->ppp10);
         GET_OPT_NAMED_UINT32(ctx, "ppp11", t->ppp11);
-        GET_OPT_NAMED_UINT32(ctx, "ppp12", t->ppp12);
+        GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
         GET_OPT_NAMED_UINT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
         GET_OPT_NAMED_UINT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
@@ -580,7 +580,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
     PUT_NAMED_INT32(ctx, "ppp10", t->ppp10);
     PUT_NAMED_INT32(ctx, "ppp11", t->ppp11);
-    PUT_NAMED_INT32(ctx, "ppp12", t->ppp12);
+    PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
     PUT_NAMED_INT32(ctx, "bonus_health_on_use", t->bonus_health_on_use);
@@ -799,9 +799,9 @@ uint32_t thing_template_get_ppp11 (thing_templatep t)
     return (t->ppp11);
 }
 
-uint32_t thing_template_get_ppp12 (thing_templatep t)
+uint32_t thing_template_get_hit_priority (thing_templatep t)
 {
-    return (t->ppp12);
+    return (t->hit_priority);
 }
 
 uint32_t thing_template_get_weapon_fire_delay_tenths (thing_templatep t)
