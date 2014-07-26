@@ -5,6 +5,7 @@
  z_order=2
  is_boring
  is_food
+ hit_priority=5
  is_carryable
  is_valid_for_shortcut_key
  is_combustable

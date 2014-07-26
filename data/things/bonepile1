@@ -5,6 +5,7 @@
  z_order=2
  is_mob_spawner
  is_monst
+ hit_priority=20
  is_collision_map_medium
  damage=1
  bonus_score_on_death=100

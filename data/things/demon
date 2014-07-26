@@ -8,6 +8,7 @@
  vision_distance=20
  z_order=4
  is_monst
+ hit_priority=10
  is_animated
  is_scarable
  tiles={
