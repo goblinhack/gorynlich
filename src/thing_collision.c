@@ -123,7 +123,7 @@ static void thing_possible_hit_do (thingp hitter)
     }
 
     if (best) {
-LOG("best %s %u",thing_logname(best->target),best->priority);
+LOG("hitter %s best %s %u",thing_logname(hitter),thing_logname(best->target),best->priority);
         if (thing_hit(best->target, hitter, 0)) {
             if (best->hitter_killed_on_hitting) {
                 thing_dead(hitter, 0, "hit");
@@ -473,7 +473,8 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
         /*
          * Monster bumped into something.
          */
-        if (thing_is_poison(it)                 ||
+        if (thing_is_player(it)                 ||
+            thing_is_poison(it)                 ||
             thing_is_weapon_swing_effect(it)    ||
             thing_is_explosion(it)) {
             /*

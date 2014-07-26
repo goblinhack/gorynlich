@@ -971,7 +971,9 @@ void sdl_loop (void)
             SDL_GL_SwapBuffers();
 #endif /* } */
 
+#ifndef ENABLE_VIDEO_SYNC
             SDL_Delay(MAIN_LOOP_DELAY);
+#endif
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
