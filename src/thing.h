@@ -25,8 +25,7 @@ uint8_t thing_mob_spawn(thingp);
 uint8_t thing_mob_spawn_on_death(thingp);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
-int thing_hit(thingp, thingp hitter, uint32_t damage,
-               const char *fmt, ...) __attribute__ ((format (printf, 4, 5)));
+int thing_hit(thingp, thingp hitter, uint32_t damage);
 void thing_hide(thingp);
 thingp thing_owner(thingp t);
 uint8_t thing_is_visible(thingp);

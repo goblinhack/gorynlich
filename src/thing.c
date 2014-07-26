@@ -1341,8 +1341,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
 static int thing_hit_ (thingp t, 
                        thingp hitter, 
-                       uint32_t damage, 
-                       char *reason)
+                       uint32_t damage)
 {
     verify(t);
 
@@ -1413,7 +1412,8 @@ static int thing_hit_ (thingp t,
             t->health -= damage;
 
             if (thing_is_player(t)) {
-                THING_LOG(t, "hit by (%s) for %u", reason, damage);
+                THING_LOG(t, "hit by (%s) for %u", 
+                          thing_logname(hitter), damage);
             }
 
             damage = 0;
@@ -1448,11 +1448,9 @@ static int thing_hit_ (thingp t,
 
 int thing_hit (thingp t, 
                thingp hitter, 
-               uint32_t damage,
-               const char *reason, ...)
+               uint32_t damage)
 {
     thingp orig_hitter = hitter;
-    va_list args;
 
     verify(t);
     if (hitter) {
@@ -1679,17 +1677,7 @@ int thing_hit (thingp t,
 
     int r;
 
-    if (reason) {
-        char *tmp = dynvprintf(reason, args);
-
-        va_start(args, reason);
-        r = thing_hit_(t, hitter, damage, tmp);
-        va_end(args);
-
-        myfree(tmp);
-    } else {
-        r = thing_hit_(t, hitter, damage, 0);
-    }
+    r = thing_hit_(t, hitter, damage);
 
     return (r);
 }

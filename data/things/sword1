@@ -4,6 +4,7 @@
  z_depth=2
  z_order=2
  is_weapon
+hit_priority=0
  is_carryable
  weapon_fire_delay_tenths=1
  damage=3

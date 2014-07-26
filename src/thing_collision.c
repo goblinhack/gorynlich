@@ -11,7 +11,128 @@
 #include "tile.h"
 #include "wid.h"
 #include "map.h"
+#include "math.h"
 #include "wid_game_map_server.h"
+
+typedef struct {
+    thingp target;
+    const char *reason;
+    uint16_t priority;
+    uint8_t hitter_killed_on_hitting:1;
+} thing_possible_hit;
+
+#define MAX_THING_POSSIBLE_HIT 16
+
+static thing_possible_hit thing_possible_hits[MAX_THING_POSSIBLE_HIT];
+static uint32_t thing_possible_hit_size;
+
+/*
+ * Add a thing to the list of things that could be hit on this attack.
+ */
+static void 
+thing_possible_hit_add_hitter_killed_on_hitting_ (thingp target,
+                                                  const char *reason,
+                                                  int hitter_killed_on_hitting)
+{
+    if (thing_possible_hit_size >= MAX_THING_POSSIBLE_HIT) {
+        return;
+    }
+
+    thing_possible_hit *h = &thing_possible_hits[thing_possible_hit_size++];
+    memset(h, 0, sizeof(*h));
+    h->target = target;
+    h->priority = thing_template_get_hit_priority(target->thing_template);
+    h->hitter_killed_on_hitting = hitter_killed_on_hitting;
+}
+
+static void 
+thing_possible_hit_add (thingp target, const char *reason)
+{
+    thing_possible_hit_add_hitter_killed_on_hitting_(target,
+                                                     reason,
+                                                     false);
+}
+
+static void 
+thing_possible_hit_add_hitter_killed_on_hitting (thingp target,
+                                                 const char *reason)
+{
+    thing_possible_hit_add_hitter_killed_on_hitting_(target,
+                                                     reason,
+                                                     true);
+}
+
+/*
+ * Reset the list of things we can possibly hit.
+ */
+static void thing_possible_init (void)
+{
+    thing_possible_hit_size = 0;
+}
+
+/*
+ * Find the thing with the highest priority to hit.
+ */
+static void thing_possible_hit_do (thingp hitter)
+{
+    thing_possible_hit *best = 0;
+    uint32_t i;
+
+    for (i = 0; i < thing_possible_hit_size; i++) {
+        thing_possible_hit *cand = &thing_possible_hits[i];
+
+        /*
+         * Don't be silly and hit yourself.
+         */
+        if (cand->target == hitter) {
+            continue;
+        }
+
+        /*
+         * Skip things that aren't really hitable.
+         */
+        if (thing_is_animation(cand->target) ||
+            thing_is_explosion(cand->target) ||
+            thing_is_weapon_swing_effect(cand->target)) {
+            continue;
+        }
+
+        if (!best) {
+            best = cand;
+            continue;
+        }
+
+        if (cand->priority > best->priority) {
+            /*
+             * If this target is higher prio, prefer it.
+             */
+            best = cand;
+        } else if (cand->priority == best->priority) {
+            /*
+             * If this target is closer, prefer it.
+             */
+            double dist_best = DISTANCE(hitter->x, hitter->y,
+                                        best->target->x, best->target->y);
+            double dist_cand = DISTANCE(hitter->x, hitter->y,
+                                        cand->target->x, cand->target->y);
+
+            if (dist_cand < dist_best) {
+                best = cand;
+            }
+        }
+    }
+
+    if (best) {
+LOG("best %s %u",thing_logname(best->target),best->priority);
+        if (thing_hit(best->target, hitter, 0)) {
+            if (best->hitter_killed_on_hitting) {
+                thing_dead(hitter, 0, "hit");
+            }
+        }
+    }
+
+    thing_possible_init();
+}
 
 /*
  * On the server, things move in jumps. Find the real position the client
@@ -338,7 +459,7 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
             /*
              * I'm hit!
              */
-            thing_hit(me, it, 0, "monst");
+            thing_possible_hit_add(it, "player hit thing");
             return;
         }
 
@@ -358,47 +479,45 @@ CON("HIT %s %s",thing_logname(me),thing_logname(it));
             /*
              * I'm hit!
              */
-            thing_hit(me, it, 0, "monst");
+            thing_possible_hit_add(it, "monst hit thing");
             return;
         }
     }
 
     /*
-     * Weapon or explosion hit something?
+     * Explosion hit something?
      */
     if (thing_is_projectile(me)                 || 
         thing_is_poison(me)                     ||
-        thing_is_weapon_swing_effect(me)        ||
         thing_is_explosion(me)) {
 
-        if (thing_is_monst(it) || thing_is_mob_spawner(it)) {
+        if (thing_is_monst(it) || 
+            thing_is_fragile(it) ||
+            thing_is_door(it) ||
+            thing_is_wall(it) ||
+            thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.
              */
-            if (thing_hit(it, me, 0, "hit")) {
-                thing_dead(me, 0, "hit monst");
-                return;
-            }
+            thing_possible_hit_add_hitter_killed_on_hitting(
+                                            it, "projection hit thing");
         }
+    }
 
-        if (thing_is_fragile(it)) {
-            /*
-             * Weapon hits food or similar?
-             */
-            if (thing_hit(it, me, 0, "hit")) {
-                thing_dead(me, 0, "hit item");
-                return;
-            }
-        }
+    /*
+     * Sword swing hits?
+     */
+    if (thing_is_weapon_swing_effect(me)) {
 
-        if (thing_is_door(it) || thing_is_wall(it)) {
+        if (thing_is_monst(it) || 
+            thing_is_door(it) ||
+            thing_is_wall(it) ||
+            thing_is_mob_spawner(it)) {
             /*
-             * Weapon hits a wall. Slim chance of wall being destroyed.
+             * Weapon hits monster or generator.
              */
-            if (thing_hit(it, me, 0, "hit")) {
-                thing_dead(me, 0, "hit wall");
-                return;
-            }
+            thing_possible_hit_add_hitter_killed_on_hitting(
+                                            it, "sword hit thing");
         }
     }
 }
@@ -439,6 +558,8 @@ void thing_handle_collisions (widp grid, thingp me)
             thing_handle_collision(me, it, x, y);
         }
     }
+
+    thing_possible_hit_do(me);
 }
 
 /*
