@@ -3690,9 +3690,6 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         if (item) {
             item->dir = t->dir;
             item->owner_id = t->thing_id;
-
-            LOG("%s is carrying %s", 
-                thing_logname(t), thing_logname(thing_weapon_carry_anim(t)));
         }
     }
 
@@ -3701,9 +3698,6 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         if (item) {
             item->dir = t->dir;
             item->owner_id = t->thing_id;
-
-            LOG("%s is swinging %s", 
-                thing_logname(t), thing_logname(thing_weapon_swing_anim(t)));
         }
     }
 
