@@ -1,7 +1,7 @@
 {
  short_name="explosion"
  tooltip="flames!"
- z_depth=2
+ z_depth=4
  z_order=2
  is_animated
  is_hidden_from_editor
@@ -14,63 +14,63 @@
  tiles={
   tile={
    tile="explosion4.1"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.2"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.3"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.4"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.5"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.8"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.9"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.10"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.11"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.12"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.13"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.14"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.15"
-   delay=5
+   delay=20
   }
   tile={
    tile="explosion4.16"
-   delay=5
+   delay=20
   }
   tile={
    tile="space"
-   delay=5
+   delay=20
    is_end_of_anim
    is_dead_on_end_of_anim
   }
