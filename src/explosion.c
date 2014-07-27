@@ -67,8 +67,8 @@ static uint8_t level_place_explosion_at (levelp level,
                                   owner,
                                   x,
                                   y,
-                                  delay * 20,
-                                  200,     // destroy in
+                                  delay * 100,
+                                  1000,     // destroy in
                                   10);     // jitter
 
     return (true);

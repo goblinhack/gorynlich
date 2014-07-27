@@ -1643,8 +1643,14 @@ int thing_hit (thingp t,
         /*
          * Assume missed due to the logic below where we detect chance.
          */
-        t->is_hit_miss = true;
-        thing_update(t);
+        if (orig_hitter && thing_is_explosion(orig_hitter)) {
+            /*
+             * No flashing
+             */
+        } else {
+            t->is_hit_miss = true;
+            thing_update(t);
+        }
     }
 
     /*
