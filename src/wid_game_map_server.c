@@ -26,8 +26,6 @@ widp wid_game_map_server_grid_container;
 uint32_t server_tile_width;
 uint32_t server_tile_height;
 
-static float tile_scale = 4.0;
-
 uint8_t wid_game_map_server_init (void)
 {
     return (true);
@@ -129,11 +127,11 @@ void wid_game_map_server_wid_create (void)
 
     {
         float base_tile_width =
-                ((1.0f / ((float)TILES_SCREEN_WIDTH) / (tile_scale)) *
+                ((1.0f / ((float)TILES_SCREEN_WIDTH)) *
                     (float)global_config.video_gl_width);
 
         float base_tile_height =
-                ((1.0f / ((float)TILES_SCREEN_HEIGHT) / (tile_scale)) *
+                ((1.0f / ((float)TILES_SCREEN_HEIGHT)) *
                     (float)global_config.video_gl_height);
 
         fpoint tl = { 0, 0 };

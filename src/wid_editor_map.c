@@ -127,11 +127,11 @@ widp wid_editor_map_thing_replace_template (widp w,
     fpoint br = { x, y };
 
     double base_tile_width =
-            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
                 (double)global_config.video_gl_width);
 
     double base_tile_height =
-            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
     base_tile_width *= scale_x;
@@ -870,9 +870,15 @@ void wid_editor_add_grid (void)
                 wid_set_color(child, WID_COLOR_TEXT, c);
                 wid_set_font(child, vsmall_font);
 
-                if (!(x % 10) || !(y % 10)) {
+                if (!(x % 8)) {
                     char tmp[20];
-                    sprintf(tmp, "%u,%u",x,y);
+                    sprintf(tmp, "%u",x);
+                    wid_set_text(child, tmp);
+                }
+
+                if (!(y % 10)) {
+                    char tmp[20];
+                    sprintf(tmp, "%u",y);
                     wid_set_text(child, tmp);
                 }
 
@@ -1012,11 +1018,11 @@ void wid_editor_map_wid_create (void)
     wid_editor_add_grid();
 
     double base_tile_width =
-            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
                 (double)global_config.video_gl_width);
 
     double base_tile_height =
-            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
     fpoint tl = { 0, 0 };

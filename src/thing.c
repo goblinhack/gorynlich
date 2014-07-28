@@ -2871,11 +2871,11 @@ static void thing_server_wid_move (thingp t, double x, double y, uint8_t is_new)
     fpoint br = { x, y };
 
     double base_tile_width =
-            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_SERVER_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
                 (double)global_config.video_gl_width);
 
     double base_tile_height =
-            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_SERVER_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
     /*
@@ -2967,11 +2967,11 @@ static void thing_client_wid_move (thingp t, double x, double y,
     fpoint br = { x, y };
 
     double base_tile_width =
-            ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
                 (double)global_config.video_gl_width);
 
     double base_tile_height =
-            ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+            ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
 
@@ -2982,8 +2982,8 @@ static void thing_client_wid_move (thingp t, double x, double y,
     double scale_y = th / TILE_HEIGHT; 
 
     if (scale_x > 1) {
-        base_tile_width *= scale_x / TILES_CLIENT_SCALE;
-        base_tile_height *= scale_y / TILES_CLIENT_SCALE;
+        base_tile_width *= scale_x;
+        base_tile_height *= scale_y;
     }
 
     br.x += base_tile_width / 2.0;

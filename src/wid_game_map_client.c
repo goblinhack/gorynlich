@@ -163,7 +163,7 @@ void wid_game_map_client_scroll_adjust (uint8_t adjust)
     double fgridw = (double)gridw;
     double fgridh = (double)gridh;
 
-    double winw = wid_get_width(wid_game_map_client_window) * 0.75;
+    double winw = wid_get_width(wid_game_map_client_window) * MAP_WINDOW_WIDTH;
     double winh = wid_get_height(wid_game_map_client_window);
 
     gridw -= winw;
@@ -592,11 +592,11 @@ void wid_game_map_client_wid_create (void)
 
     {
         double base_tile_width =
-                ((1.0f / ((double)TILES_SCREEN_WIDTH) / TILES_CLIENT_SCALE) *
+                ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
                     (double)global_config.video_gl_width);
 
         double base_tile_height =
-                ((1.0f / ((double)TILES_SCREEN_HEIGHT) / TILES_CLIENT_SCALE) *
+                ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                     (double)global_config.video_gl_height);
 
         fpoint tl = { 0, 0 };
@@ -753,10 +753,10 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     double dy = 0;
 
     if (thing_is_explosion(t)) {
-        wid_blit_scaling_to_pct_in(child, 1.0, 2.0, 1000, 0);
+        wid_blit_scaling_to_pct_in(child, 1.0, 2.0, 500, 0);
         dx = ((double)((rand() % 100) - 50)) / 100.0;
         dy = ((double)((rand() % 100) - 50)) / 100.0;
-        wid_fade_out(child, 2000);
+        wid_fade_out(child, 1000);
     }
 
     if (thing_is_mob_spawner(t)) {
