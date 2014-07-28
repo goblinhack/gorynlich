@@ -1,3 +1,6 @@
+.o/ramdisk_data_gfx_1_png.o: asm/ramdisk_data_gfx_1_png.S ../data/gfx/1.png
+	gcc -c asm/ramdisk_data_gfx_1_png.S -o .o/ramdisk_data_gfx_1_png.o
+
 .o/ramdisk_data_gfx_cloudkill_png.o: asm/ramdisk_data_gfx_cloudkill_png.S ../data/gfx/cloudkill.png
 	gcc -c asm/ramdisk_data_gfx_cloudkill_png.S -o .o/ramdisk_data_gfx_cloudkill_png.o
 
@@ -6,9 +9,6 @@
 
 .o/ramdisk_data_gfx_explosion_png.o: asm/ramdisk_data_gfx_explosion_png.S ../data/gfx/explosion.png
 	gcc -c asm/ramdisk_data_gfx_explosion_png.S -o .o/ramdisk_data_gfx_explosion_png.o
-
-.o/ramdisk_data_gfx_floor_png.o: asm/ramdisk_data_gfx_floor_png.S ../data/gfx/floor.png
-	gcc -c asm/ramdisk_data_gfx_floor_png.S -o .o/ramdisk_data_gfx_floor_png.o
 
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
@@ -108,6 +108,15 @@
 
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
+
+.o/ramdisk_data_things__explosion4_session.o: asm/ramdisk_data_things__explosion4_session.S ../data/things/.explosion4.session
+	gcc -c asm/ramdisk_data_things__explosion4_session.S -o .o/ramdisk_data_things__explosion4_session.o
+
+.o/ramdisk_data_things__floor1_session.o: asm/ramdisk_data_things__floor1_session.S ../data/things/.floor1.session
+	gcc -c asm/ramdisk_data_things__floor1_session.S -o .o/ramdisk_data_things__floor1_session.o
+
+.o/ramdisk_data_things__rock1_session.o: asm/ramdisk_data_things__rock1_session.S ../data/things/.rock1.session
+	gcc -c asm/ramdisk_data_things__rock1_session.S -o .o/ramdisk_data_things__rock1_session.o
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
@@ -357,6 +366,9 @@
 
 .o/ramdisk_data_things_ring3.o: asm/ramdisk_data_things_ring3.S ../data/things/ring3
 	gcc -c asm/ramdisk_data_things_ring3.S -o .o/ramdisk_data_things_ring3.o
+
+.o/ramdisk_data_things_rock1.o: asm/ramdisk_data_things_rock1.S ../data/things/rock1
+	gcc -c asm/ramdisk_data_things_rock1.S -o .o/ramdisk_data_things_rock1.o
 
 .o/ramdisk_data_things_scythe1.o: asm/ramdisk_data_things_scythe1.S ../data/things/scythe1
 	gcc -c asm/ramdisk_data_things_scythe1.S -o .o/ramdisk_data_things_scythe1.o
