@@ -262,6 +262,7 @@ void thing_client_move(thingp t,
                        const uint8_t fire);
 
 extern uint16_t THING_WALL1;
+extern uint16_t THING_ROCK1;
 extern uint16_t THING_WALL2;
 extern uint16_t THING_WALL3;
 extern uint16_t THING_WALL4;

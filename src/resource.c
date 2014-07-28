@@ -81,9 +81,7 @@ static uint8_t resource_init_11 (void *context)
 
 static uint8_t resource_init_12 (void *context)
 {
-    return (tex_load_tiled("data/gfx/floor.png",
-                           "floor",
-                           2048, 2048) != 0);
+    return (true);
 }
 
 static uint8_t resource_init_13 (void *context)
@@ -562,6 +560,72 @@ static uint8_t resource_init_23 (void *context)
         "wall1_0_is_join_x4_270",
         "wall1_0_is_join_x4_180",
         "wall1_0_is_join_x4_90",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        // --------------------------------------------------------------------
+        "rock1_0_0",
+        "rock1_0_is_join_node",
+        "rock1_0_is_join_left",
+        "rock1_0_is_join_bot",
+        "rock1_0_is_join_right",
+        "rock1_0_is_join_top",
+        "rock1_0_is_join_horiz",
+        "rock1_0_is_join_vert",
+        "rock1_0_is_join_tl2",
+        "rock1_0_is_join_bl2",
+        "rock1_0_is_join_br2",
+        "rock1_0_is_join_tr2",
+        "rock1_0_is_join_tl",
+        "rock1_0_is_join_bl",
+        "rock1_0_is_join_br",
+        "rock1_0_is_join_tr",
+        "rock1_0_is_join_t270_3",
+        "rock1_0_is_join_t180_3",
+        "rock1_0_is_join_t90_3",
+        "rock1_0_is_join_t_3",
+        "rock1_0_is_join_t270",
+        "rock1_0_is_join_t180",
+        "rock1_0_is_join_t90",
+        "rock1_0_is_join_t",
+        "rock1_0_is_join_t270_2",
+        "rock1_0_is_join_t180_2",
+        "rock1_0_is_join_t90_2",
+        "rock1_0_is_join_t_2",
+        "rock1_0_is_join_t270_1",
+        "rock1_0_is_join_t180_1",
+        "rock1_0_is_join_t90_1",
+        "rock1_0_is_join_t_1",
+        // --------------------------------------------------------------------
+        "rock1_0_is_join_x",
+        "rock1_0_is_join_x1",
+        "rock1_0_is_join_x1_270",
+        "rock1_0_is_join_x1_180",
+        "rock1_0_is_join_x1_90",
+        "rock1_0_is_join_x2",
+        "rock1_0_is_join_x2_270",
+        "rock1_0_is_join_x2_180",
+        "rock1_0_is_join_x2_90",
+        "rock1_0_is_join_x3",
+        "rock1_0_is_join_x3_180",
+        "rock1_0_is_join_x4",
+        "rock1_0_is_join_x4_270",
+        "rock1_0_is_join_x4_180",
+        "rock1_0_is_join_x4_90",
         0,
         0,
         0,
@@ -1919,14 +1983,6 @@ static uint8_t resource_init_23 (void *context)
     tile_load_arr("sprites_small", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(small_tiles), small_tiles);
 
-    static const char *floor_tiles[] = {
-        // --------------------------------------------------------------------
-        "floor1.1",
-    };
-
-    tile_load_arr("floor", 2048, 2048,
-                  ARRAY_SIZE(floor_tiles), floor_tiles);
-
     static const char *explosion_tiles[] = {
         // --------------------------------------------------------------------
         "explosion1.1",
@@ -2165,6 +2221,7 @@ static uint8_t resource_init_23 (void *context)
      * Walls
      */
     thing_template_load(&THING_WALL1, "data/things/wall1");
+    thing_template_load(&THING_ROCK1, "data/things/rock1");
     thing_template_load(&THING_WALL2, "data/things/wall2");
     thing_template_load(&THING_WALL3, "data/things/wall3");
     thing_template_load(&THING_WALL4, "data/things/wall4");

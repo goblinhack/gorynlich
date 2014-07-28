@@ -27,6 +27,7 @@
 #include "wid_hiscore.h"
 
 uint16_t THING_WALL1;
+uint16_t THING_ROCK1;
 uint16_t THING_WALL2;
 uint16_t THING_WALL3;
 uint16_t THING_WALL4;
