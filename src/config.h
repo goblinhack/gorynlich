@@ -74,8 +74,8 @@
 /*
  * Map
  */
-#define MAP_WIDTH                   32
-#define MAP_HEIGHT                  32
+#define MAP_WIDTH                   64
+#define MAP_HEIGHT                  64
 #define MAP_THINGS_PER_CELL         32
 
 /*
@@ -101,9 +101,6 @@
  */
 #define TILES_SCREEN_WIDTH          21
 #define TILES_SCREEN_HEIGHT         14
-
-#define TILES_SERVER_SCALE          4
-#define TILES_CLIENT_SCALE          1
 
 /*
  * Console

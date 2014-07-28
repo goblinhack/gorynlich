@@ -123,7 +123,6 @@ static void thing_possible_hit_do (thingp hitter)
     }
 
     if (best) {
-LOG("hitter %s best %s %u",thing_logname(hitter),thing_logname(best->target),best->priority);
         if (thing_hit(best->target, hitter, 0)) {
             if (best->hitter_killed_on_hitting) {
                 thing_dead(hitter, 0, "hit");
