@@ -1,13 +1,35 @@
 {
  short_name="floor"
- tooltip="Floor tile"
+ tooltip="Floor"
  z_depth=1
  z_order=0
  is_boring
  is_floor
+ is_animated
  tiles={
   tile={
-   tile="floor1.1"
+   tile="floor1a"
+  }
+  tile={
+   tile="floor1b"
+  }
+  tile={
+   tile="floor1c"
+  }
+  tile={
+   tile="floor1d"
+  }
+  tile={
+   tile="floor1e"
+  }
+  tile={
+   tile="floor1f"
+  }
+  tile={
+   tile="floor1g"
+  }
+  tile={
+   tile="floor1h"
   }
  }
 }
