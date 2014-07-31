@@ -618,7 +618,7 @@ static uint8_t wid_grid_tree_detach (widp w)
     }
 
     if (!tree_remove(w->gridtree, &w->gridnode->tree.node)) {
-        DIE("wid remove from grid");
+        DIE("wid remove from grid for wid %s", w->logname);
     }
 
     myfree(w->gridnode);
@@ -6253,10 +6253,6 @@ static void wid_move_delta_internal (widp w, double dx, double dy)
 
 void wid_move_delta (widp w, double dx, double dy)
 {
-    if ((dx == 0.0) && (dy == 0.0)) {
-        return;
-    }
-
     wid_move_delta_internal(w, dx, dy);
 
     wid_update_internal(w);

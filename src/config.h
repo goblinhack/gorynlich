@@ -6,6 +6,8 @@
 
 #pragma once
 
+#define MORE_SPEED_LESS_VISUALS    // Go for max fps over loops
+
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 #undef ENABLE_LEAKCHECK           // Memory leak check
@@ -19,8 +21,13 @@
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
-#undef MORE_SPEED_LESS_VISUALS    // Go for max fps over loops
+
+/*
+ * We don't always need this. Like on a laptop.
+ */
+#ifndef MORE_SPEED_LESS_VISUALS
 #define ENABLE_VIDEO_SYNC
+#endif
 
 /*
  * Other windows are darker when popups appear
