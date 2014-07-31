@@ -4,7 +4,6 @@
  z_depth=2
  z_order=2
  is_mob_spawner
- is_monst
  hit_priority=20
  damage=1
  mob_spawn_delay_tenths=100

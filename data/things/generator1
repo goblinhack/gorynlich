@@ -5,7 +5,6 @@
  z_order=2
  is_mob_spawner
  bonus_score_on_death=200
- is_monst
  hit_priority=20
  damage=1
  mob_spawn_delay_tenths=100
