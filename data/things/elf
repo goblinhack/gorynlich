@@ -5,7 +5,6 @@
     "data/things/bow1"
  }
  z_depth=3
- z_order=10
  speed=9
  health=150
  is_player

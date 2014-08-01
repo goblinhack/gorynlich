@@ -203,6 +203,8 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = state[SDLK_UP] ? 1 : 0;
     uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
     uint8_t fire  = state[SDLK_SPACE] ? 1 : 0;
+
+    debug = state[SDLK_d] ? 1 : 0;
 #else /* } { */
     const uint8_t *state = SDL_GetKeyboardState(0);
 
@@ -211,6 +213,8 @@ uint8_t wid_game_map_client_player_move (void)
     uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
     uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
     uint8_t fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
+
+    debug = state[SDL_SCANCODE_D] ? 1 : 0;
 #endif /* } */
 
     if (!player) {

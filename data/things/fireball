@@ -3,7 +3,6 @@
  tooltip="fireball"
  is_hidden_from_editor
  z_depth=2
- z_order=2
  speed=10
  damage=2
  hit_delay_tenths=1

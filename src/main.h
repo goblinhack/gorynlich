@@ -446,7 +446,9 @@ extern uint8_t is_client;
 extern uint8_t is_headless;
 
 /*
- * Server with no displa.
+ * Server with no display.
  */
 #define HEADLESS is_headless
+
+extern int debug;
 

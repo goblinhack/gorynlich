@@ -58,6 +58,7 @@ char *DATA_PATH;
 char *LEVELS_PATH;
 char *TTF_PATH;
 char *GFX_PATH;
+int debug;
 
 FILE *LOG_STDOUT;
 FILE *LOG_STDERR;

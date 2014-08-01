@@ -1,8 +1,7 @@
 {
  short_name="tasty water"
  tooltip="Poisoned water"
- z_depth=2
- z_order=2
+ z_depth=3
  is_boring
  is_food
  hit_priority=5

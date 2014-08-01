@@ -52,7 +52,6 @@ typedef struct tree_wid_key_ {
      */
     int32_t priority;
     uint8_t z_depth;
-    uint8_t z_order;
 
     /*
      * The real position on the screen initially.
@@ -571,7 +570,6 @@ static void wid_grid_tree_attach (widp w)
         w->gridnode->tree.priority = w->tree.priority;
         w->gridnode->tree.br = w->tree.br;
         w->gridnode->tree.z_depth = w->tree.z_depth;
-        w->gridnode->tree.z_order = w->tree.z_order;
         w->gridnode->tree.key = w->tree.key;
 
         /*
@@ -2275,22 +2273,6 @@ uint8_t wid_get_z_depth (widp w)
     return (w->tree.z_depth);
 }
 
-void wid_set_z_order (widp w, uint8_t z_order)
-{
-    fast_verify(w);
-
-    wid_tree_detach(w);
-    w->tree.z_order = z_order;
-    wid_tree_attach(w);
-}
-
-uint8_t wid_get_z_order (widp w)
-{
-    fast_verify(w);
-
-    return (w->tree.z_order);
-}
-
 void wid_set_thing (widp w, thingp t)
 {
     tree_rootp tiles;
@@ -2304,7 +2286,6 @@ void wid_set_thing (widp w, thingp t)
     }
 
     wid_set_z_depth(w, thing_z_depth(t));
-    wid_set_z_order(w, thing_z_order(t));
 
     tiles = thing_tile_tiles(t);
     if (!tiles) {
@@ -2333,13 +2314,11 @@ void wid_set_thing_template (widp w, thing_templatep t)
 
     if (!t) {
         wid_set_z_depth(w, 0);
-        wid_set_z_order(w, 0);
         wid_set_tile(w, 0);
         return;
     }
 
     wid_set_z_depth(w, thing_template_get_z_depth(t));
-    wid_set_z_order(w, thing_template_get_z_order(t));
 
     tiles = thing_template_get_tiles(t);
     if (!tiles) {
@@ -2750,14 +2729,6 @@ tree_wid_compare_func (const tree_node *a, const tree_node *b)
         return (1);
     }
 #endif
-
-    if (A->tree.z_order > B->tree.z_order) {
-        return (-1);
-    }
-
-    if (A->tree.z_order < B->tree.z_order) {
-        return (1);
-    }
 
     if (A->tree.br.y > B->tree.br.y) {
         return (-1);
@@ -4017,8 +3988,7 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
  * Fast find in a 2d array of trees.
  */
 widp wid_grid_find (widp parent, fpoint tl, fpoint br,
-                    uint8_t z_depth,
-                    uint8_t z_order)
+                    uint8_t z_depth)
 {
     widgridnode *node;
     widgrid *grid;
@@ -4080,10 +4050,6 @@ widp wid_grid_find (widp parent, fpoint tl, fpoint br,
         }
 
         if (w->tree.z_depth != z_depth) {
-            continue;
-        }
-
-        if (w->tree.z_order != z_order) {
             continue;
         }
 
@@ -4318,7 +4284,6 @@ widp wid_grid_find_top (widp parent, fpoint tl, fpoint br)
 {
     widgridnode *node;
     int32_t z_depth;
-    int32_t z_order;
     widgrid *grid;
     widp best;
     widp w;
@@ -4326,7 +4291,6 @@ widp wid_grid_find_top (widp parent, fpoint tl, fpoint br)
     grid = parent->grid;
     best = 0;
     z_depth = 0;
-    z_order = 0;
 
     /*
      * Get the midpoint of the tile and find out which grid cell it
@@ -4371,12 +4335,7 @@ widp wid_grid_find_top (widp parent, fpoint tl, fpoint br)
             continue;
         }
 
-        if (w->tree.z_order < z_order) {
-            continue;
-        }
-
         z_depth = w->tree.z_depth;
-        z_order = w->tree.z_depth;
         best = w;
     }
 
@@ -4384,15 +4343,14 @@ widp wid_grid_find_top (widp parent, fpoint tl, fpoint br)
 }
 
 widp wid_find_matching (widp parent, fpoint tl, fpoint br,
-                        uint8_t z_depth,
-                        uint8_t z_order)
+                        uint8_t z_depth)
 {
     widp child;
 
     fast_verify(parent);
 
     if (parent->grid) {
-        return (wid_grid_find(parent, tl, br, z_depth, z_order));
+        return (wid_grid_find(parent, tl, br, z_depth));
     }
 
     TREE_WALK(parent->children_display_sorted, child) {
@@ -4417,10 +4375,6 @@ widp wid_find_matching (widp parent, fpoint tl, fpoint br,
             continue;
         }
 
-        if (child->tree.z_order != z_order) {
-            continue;
-        }
-
         return (child);
     }
 
@@ -4430,12 +4384,10 @@ widp wid_find_matching (widp parent, fpoint tl, fpoint br,
 widp wid_find_matching_top (widp parent, fpoint tl, fpoint br)
 {
     int32_t z_depth;
-    int32_t z_order;
     widp child;
     widp best;
 
     z_depth = 0;
-    z_order = 0;
     best = 0;
 
     fast_verify(parent);
@@ -4471,12 +4423,7 @@ widp wid_find_matching_top (widp parent, fpoint tl, fpoint br)
             continue;
         }
 
-        if (child->tree.z_order < z_order) {
-            continue;
-        }
-
         z_depth = child->tree.z_depth;
-        z_order = child->tree.z_order;
 
         best = child;
     }
@@ -7644,26 +7591,87 @@ static void wid_display (widp w,
         blit_flush();
     }
 
-    /*
-     * If this is a grid wid, draw the elements in y sorted order.
-     */
-    TREE_WALK_REVERSE_UNSAFE_INLINE(w->children_display_sorted, child,
-                                    tree_prev_tree_wid_compare_func) {
-        uint8_t child_updated_scissors = false;
+    extern widp wid_game_map_client_grid_container;
 
-        wid_display(child, disable_scissor, &child_updated_scissors);
+    if (debug && (w == wid_game_map_client_grid_container) && player) {
 
+        static widp render[MAP_DEPTH][MAP_WIDTH*MAP_HEIGHT*2];
+        uint16_t render_size[MAP_DEPTH] = {0};
+
+        const uint32_t visible_width = TILES_SCREEN_WIDTH / 2 + 3;
+        const uint32_t visible_height = TILES_SCREEN_HEIGHT / 2 + 3;
+
+        int32_t maxx = player->x + visible_width;
+        int32_t minx = player->x - visible_width;
+        int32_t maxy = player->y + visible_height;
+        int32_t miny = player->y - visible_height;
+
+        if (minx < 0) {
+            minx = 0;
+        }
+        if (maxx > MAP_WIDTH) {
+            maxx = MAP_WIDTH;
+        }
+
+        if (miny < 0) {
+            miny = 0;
+        }
+        if (maxy > MAP_HEIGHT) {
+            maxy = MAP_HEIGHT;
+        }
+
+        int32_t x, y;
+
+        for (x = maxx; x >= minx; x--) {
+            for (y = miny; y <= maxy; y++) {
+                tree_root **tree = w->grid->trees + (y * w->grid->width) + x;
+                widgridnode *node;
+
+                TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
+                                                tree_prev_tree_wid_compare_func) {
+
+                    uint8_t depth = node->tree.z_depth;
+                    render[depth][render_size[depth]] = node->wid;
+                    render_size[depth]++;
+                }
+            }
+        }
+
+        uint8_t depth;
+
+        for (depth = 0; depth < MAP_DEPTH; depth++) {
+            uint16_t size = render_size[depth];
+            uint16_t i;
+
+            for (i = 0; i < size; i++) {
+                uint8_t child_updated_scissors = false;
+
+                wid_display(render[depth][i], disable_scissor, 
+                            &child_updated_scissors);
+            }
+        }
+    } else {
         /*
-         * Need to re-enforce the parent's scissors if the child did
-         * their own bit of scissoring?
+         * If this is a grid wid, draw the elements in y sorted order.
          */
-        if (!disable_scissor && child_updated_scissors) {
-            glScissor(
-                tlx / global_config.xscale,
-                global_config.video_pix_height -
-                    ((tly + clip_height) / global_config.yscale),
-                clip_width,
-                clip_height);
+        TREE_WALK_REVERSE_UNSAFE_INLINE(w->children_display_sorted, child,
+                                        tree_prev_tree_wid_compare_func) {
+            uint8_t child_updated_scissors = false;
+
+            wid_display(child, disable_scissor, &child_updated_scissors);
+
+            /*
+             * Need to re-enforce the parent's scissors if the child did
+             * their own bit of scissoring?
+             */
+            if (!disable_scissor && child_updated_scissors) {
+                glScissor(
+                    tlx / global_config.xscale,
+                    global_config.video_pix_height -
+                        ((tly + clip_height) / global_config.yscale),
+                    clip_width,
+                    clip_height);
+            }
         }
     }
 
