@@ -2,7 +2,6 @@
  short_name="two headed axe"
  tooltip="two headed axe"
  z_depth=2
- z_order=2
  is_weapon
 hit_priority=0
  is_carryable

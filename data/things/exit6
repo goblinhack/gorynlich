@@ -2,7 +2,6 @@
  short_name="exit"
  tooltip="Level exit"
  z_depth=2
- z_order=2
  is_exit
  is_animated
  tiles={

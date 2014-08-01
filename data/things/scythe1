@@ -2,7 +2,6 @@
  short_name="scythe"
  tooltip="scythe"
  z_depth=2
- z_order=2
  is_weapon
 hit_priority=0
  is_carryable

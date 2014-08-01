@@ -2,7 +2,6 @@
  short_name="noentry"
  tooltip="No stuff here"
  z_depth=2
- z_order=5
  is_boring
  is_hidden_from_editor
  tiles={

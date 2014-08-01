@@ -1,8 +1,7 @@
 {
  short_name="poison"
  tooltip="flames!"
- z_depth=2
- z_order=2
+ z_depth=3
  is_animated
  is_hidden_from_editor
  is_poison

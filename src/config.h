@@ -6,7 +6,15 @@
 
 #pragma once
 
-#define MORE_SPEED_LESS_VISUALS    // Go for max fps over loops
+/*
+ * We don't always need this. Like on a laptop.
+ */
+#undef ENABLE_VIDEO_SYNC
+
+/*
+ * More speed, less fancy stuff
+ */
+#undef MORE_SPEED_LESS_VISUALS
 
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
@@ -22,12 +30,6 @@
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
-/*
- * We don't always need this. Like on a laptop.
- */
-#ifndef MORE_SPEED_LESS_VISUALS
-#define ENABLE_VIDEO_SYNC
-#endif
 
 /*
  * Other windows are darker when popups appear
@@ -52,11 +54,7 @@
 /*
  * So we don't hog all the CPU
  */
-#ifdef MORE_SPEED_LESS_VISUALS
 #define MAIN_LOOP_DELAY            2
-#else
-#define MAIN_LOOP_DELAY            5
-#endif
 
 /*
  * Frames per sec counter.
@@ -83,6 +81,15 @@
  */
 #define MAP_WIDTH                   64
 #define MAP_HEIGHT                  64
+
+/*
+ * 0 for floors
+ * 1 for walls
+ * 2 for items
+ * 3 for player and explosions
+ */
+#define MAP_DEPTH                   4
+
 #define MAP_THINGS_PER_CELL         32
 
 /*

@@ -5,7 +5,6 @@
     "data/things/sword2"
  }
  z_depth=3
- z_order=10
  speed=7
  health=200
  is_player

@@ -3,7 +3,6 @@
  tooltip="arrow"
  is_hidden_from_editor
  z_depth=2
- z_order=2
  speed=15
  damage=1
  hit_delay_tenths=1
