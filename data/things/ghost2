@@ -9,7 +9,6 @@
  bonus_score_on_death=15
  vision_distance=20
  hit_delay_tenths=5
- z_order=4
  is_monst
  hit_priority=10
  is_collision_map_medium

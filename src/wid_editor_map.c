@@ -55,7 +55,6 @@ widp wid_editor_map_thing_replace_template (widp w,
     tree_rootp thing_tiles;
     const char *tilename;
     uint8_t z_depth;
-    uint8_t z_order;
     widp existing;
     tilep tile;
     widp child;
@@ -174,10 +173,9 @@ widp wid_editor_map_thing_replace_template (widp w,
     }
 
     z_depth = thing_template_get_z_depth(thing_template);
-    z_order = thing_template_get_z_order(thing_template);
 
     existing = wid_find_matching(wid_editor_map_grid_container,
-                                 tl, br, z_depth, z_order);
+                                 tl, br, z_depth);
     if (existing)  {
         child = existing;
 
@@ -902,7 +900,6 @@ void wid_editor_add_grid (void)
                 }
 
                 wid_set_z_depth(child, 0);
-                wid_set_z_order(child, 0);
 
                 wid_set_tl_br_pct(child, tl, br);
             }

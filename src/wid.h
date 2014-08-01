@@ -340,8 +340,6 @@ void wid_set_tile(widp, tilep);
 void wid_set_tile2(widp, tilep);
 void wid_set_z_depth(widp, uint8_t);
 uint8_t wid_get_z_depth(widp);
-void wid_set_z_order(widp, uint8_t);
-uint8_t wid_get_z_order(widp);
 void wid_set_thing(widp, thingp);
 void wid_set_thing_template(widp, thing_templatep);
 void wid_set_tl_br(widp, fpoint tl, fpoint br);
@@ -356,11 +354,9 @@ widp wid_get_prev(widp);
 widp wid_get_current_focus(void);
 void wid_effect_pulses(widp);
 void wid_effect_sways(widp);
-widp wid_find_matching(widp, fpoint tl, fpoint br, uint8_t z_depth,
-                       uint8_t z_order);
+widp wid_find_matching(widp, fpoint tl, fpoint br, uint8_t z_depth);
 widp wid_find_matching_top(widp, fpoint tl, fpoint br);
-widp wid_grid_find(widp, fpoint tl, fpoint br, uint8_t z_depth,
-                   uint8_t z_order);
+widp wid_grid_find(widp, fpoint tl, fpoint br, uint8_t z_depth);
 widp wid_grid_find_first(widp parent, uint32_t x, uint32_t y);
 widp wid_grid_find_next(widp parent, widp w, uint32_t x, uint32_t y);
 widp wid_grid_find_top(widp, fpoint tl, fpoint br);

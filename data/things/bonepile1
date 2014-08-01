@@ -2,7 +2,6 @@
  short_name="small bone pile"
  tooltip="small bone pile"
  z_depth=2
- z_order=2
  is_mob_spawner
  is_monst
  hit_priority=20

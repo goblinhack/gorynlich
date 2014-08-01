@@ -1,7 +1,6 @@
 {
  short_name="sword1 anim"
- z_depth=3
- z_order=9
+ z_depth=2
  is_animated
  is_hidden_from_editor
  is_animation

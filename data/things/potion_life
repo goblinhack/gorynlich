@@ -2,7 +2,6 @@
  short_name="lifeforce potion"
  tooltip="Magic potion"
  z_depth=2
- z_order=2
  is_boring
  is_food
  hit_priority=5

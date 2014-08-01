@@ -9,7 +9,6 @@
  health=20
  bonus_score_on_death=250
  vision_distance=15
- z_order=4
  is_monst
  hit_priority=10
  is_animated
