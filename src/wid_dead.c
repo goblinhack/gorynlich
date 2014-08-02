@@ -187,7 +187,7 @@ static void wid_dead_gravestone_appeared (void *context)
 
     if (is_rejoin_allowed) {
         char *message = dynprintf("%s\n%%%%fg=red$Rejoin game?",
-                messages[rand() % ARRAY_SIZE(message)]);
+                messages[rand() % ARRAY_SIZE(messages)]);
 
         wid_rejoin_game_yes_no =
             wid_popup(message,
@@ -203,7 +203,7 @@ static void wid_dead_gravestone_appeared (void *context)
 
     } else {
         char *message = dynprintf("%s\n%%%%fg=red$Play again?",
-                messages[rand() % ARRAY_SIZE(message)]);
+                messages[rand() % ARRAY_SIZE(messages)]);
 
         wid_replay_game_yes_no =
             wid_popup(message,

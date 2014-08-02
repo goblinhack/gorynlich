@@ -727,48 +727,52 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
 
     me = wid_get_thing(wid_me);
 
-    for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
-        int32_t x = (int32_t)nx + dx;
-        int32_t y = (int32_t)ny + dy;
+    uint8_t z;
 
-        wid_it = wid_grid_find_first(grid, x, y);
-        while (wid_it) {
-            verify(wid_it);
+    for (z = 1; z < MAP_DEPTH; z++) {
+        for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
+            int32_t x = (int32_t)nx + dx;
+            int32_t y = (int32_t)ny + dy;
 
-            wid_next = wid_grid_find_next(grid, wid_it, x, y);
-            if (wid_me == wid_it) {
-                wid_it = wid_next;
-                continue;
+            wid_it = wid_grid_find_first(grid, x, y, z);
+            while (wid_it) {
+                verify(wid_it);
+
+                wid_next = wid_grid_find_next(grid, wid_it, x, y, z);
+                if (wid_me == wid_it) {
+                    wid_it = wid_next;
+                    continue;
+                }
+
+                it = wid_get_thing(wid_it);
+                if (!it) {
+                    wid_it = wid_next;
+                    continue;
+                }
+
+                /*
+                * No collisions with the floor!
+                */
+                if (thing_is_floor(it)) {
+                    wid_it = wid_next;
+                    continue;
+                }
+
+                /*
+                * Allow dead ghosts to walk over each other!
+                */
+                if (thing_is_dead(it)) {
+                    wid_it = wid_next;
+                    continue;
+                }
+
+                if (!things_overlap(me, nx, ny, it)) {
+                    wid_it = wid_next;
+                    continue;
+                }
+
+                return (true);
             }
-
-            it = wid_get_thing(wid_it);
-            if (!it) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            /*
-             * No collisions with the floor!
-             */
-            if (thing_is_floor(it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            /*
-             * Allow dead ghosts to walk over each other!
-             */
-            if (thing_is_dead(it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            if (!things_overlap(me, nx, ny, it)) {
-                wid_it = wid_next;
-                continue;
-            }
-
-            return (true);
         }
     }
 
