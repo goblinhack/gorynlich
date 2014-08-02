@@ -139,10 +139,12 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
     /*
      * Perhaps another thread is still using this level for map generation?
      */
+    level->exit_request = 1;
     while (level->locked) {
-        LOG("Level locked... waiting");
+        LOG("Level locked... waiting on AI thread to finish");
         sleep(1);
     }
+    level->exit_request = 0;
 
     /*
      * Kill all humans!

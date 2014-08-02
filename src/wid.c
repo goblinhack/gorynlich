@@ -366,6 +366,7 @@ typedef struct wid_ {
     uint8_t being_destroyed:1;
     uint8_t do_not_raise:1;
     uint8_t do_not_lower:1;
+    uint8_t in_tree:1;
     uint8_t in_tree3:1;
     uint8_t in_tree4:1;
     uint8_t in_tree5:1;
@@ -591,7 +592,7 @@ static void wid_grid_tree_attach (widp w)
      * Now add to the new tree.
      */
     if (!tree_insert(w->gridtree, &w->gridnode->tree.node)) {
-        DIE("wid insert to grid");
+        DIE("wid insert %s to grid", w->logname);
     }
 
     w->gridnode->x = x;
@@ -602,6 +603,12 @@ static void wid_grid_tree_attach (widp w)
     if (w->thing) {
         thing_map_add(w->thing, x, y);
     }
+
+    /*
+     * Optimization do not keep grid wids which are numerous on the big
+     * parent tree where it is slow to add/remove.
+     */
+    wid_tree_remove(w);
 }
 
 static uint8_t wid_grid_tree_detach (widp w)
@@ -2756,9 +2763,12 @@ TREE_PREV_INLINE(tree_wid_compare_func)
  */
 static void wid_tree_detach (widp w)
 {
-    wid_tree_remove(w);
+    if (w->parent && w->parent->grid) {
+        wid_grid_tree_detach(w);
+        return;
+    }
 
-    wid_grid_tree_detach(w);
+    wid_tree_remove(w);
 }
 
 /*
@@ -2767,6 +2777,11 @@ static void wid_tree_detach (widp w)
 static void wid_tree_attach (widp w)
 {
     fast_verify(w);
+
+    if (w->parent && w->parent->grid) {
+        wid_grid_tree_attach(w);
+        return;
+    }
 
     tree_root *root;
 
@@ -2780,7 +2795,7 @@ static void wid_tree_attach (widp w)
         DIE("wid set z depth tree insert");
     }
 
-    wid_grid_tree_attach(w);
+    w->in_tree = true;
 }
 
 static void wid_tree_insert (widp w)
@@ -2790,6 +2805,18 @@ static void wid_tree_insert (widp w)
     static int32_t key;
 
     tree_root *root;
+
+    /*
+     * Get a wid sort ID.
+     */
+    w->tree.key = ++key;
+
+    /*
+     * If we're going to put it on the grid don't put it on the big tree.
+     */
+    if (w->parent && w->parent->grid) {
+        return;
+    }
 
     if (!w->parent) {
         root = wid_top_level;
@@ -2806,14 +2833,11 @@ static void wid_tree_insert (widp w)
         }
     }
 
-    /*
-     * Get a wid sort ID.
-     */
-    w->tree.key = ++key;
-
     if (!tree_insert(root, &w->tree.node)) {
         DIE("widget tree insert");
     }
+
+    w->in_tree = true;
 }
 
 static void wid_tree2_insert (widp w)
@@ -2983,6 +3007,11 @@ static void wid_tree_remove (widp w)
 {
     fast_verify(w);
 
+    if (!w->in_tree) {
+        return;
+    }
+    w->in_tree = false;
+
     tree_root *root;
 
     if (!w->parent) {
@@ -3009,7 +3038,7 @@ static void wid_tree2_remove (widp w)
     }
 
     if (!tree_remove(root, &w->tree2.node)) {
-        DIE("remove from unsorted tree");
+        DIE("remove %s from unsorted tree", w->logname);
     }
 }
 
@@ -3164,10 +3193,6 @@ static void wid_destroy_immediate_internal (widp w)
         }
     }
 
-    tree_destroy(&w->children_unsorted, (tree_destroy_func)0);
-    tree_destroy(&w->children_display_sorted,
-                 (tree_destroy_func)wid_destroy_immediate_internal);
-
     /*
      * If on the grid, take us off.
      */
@@ -3177,6 +3202,10 @@ static void wid_destroy_immediate_internal (widp w)
      * If a grid owner, destroy all nodes.
      */
     wid_destroy_grid(w);
+
+    tree_destroy(&w->children_unsorted, (tree_destroy_func)0);
+    tree_destroy(&w->children_display_sorted,
+                 (tree_destroy_func)wid_destroy_immediate_internal);
 
     if (w->name) {
         myfree(w->name);
@@ -3274,8 +3303,6 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
 
         wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
     }
-
-    wid_grid_tree_detach(w);
 }
 
 void wid_destroy (widp *wp)
@@ -3770,10 +3797,40 @@ void wid_destroy_grid (widp w)
         return;
     }
 
+        int16_t maxx;
+        int16_t minx;
+        int16_t maxy;
+        int16_t miny;
+
+            minx = 0;
+            maxx = MAP_WIDTH;
+            miny = 0;
+            maxy = MAP_HEIGHT;
+
+        int32_t x, y;
+
+        for (x = maxx - 1; x >= minx; x--) {
+            for (y = miny; y < maxy; y++) {
+
+                tree_root **tree;
+retry:
+                tree = grid->trees + (y * grid->width) + x;
+                widgridnode *node;
+
+                TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
+                                                tree_prev_tree_wid_compare_func) {
+
+                    wid_destroy_immediate(node->wid);
+                    goto retry;
+                }
+            }
+        }
+
     w->grid = 0;
 
     for (i = 0; i < grid->nelems; i++) {
-        tree_destroy(&grid->trees[i], 0);
+        tree_destroy(&grid->trees[i],
+                     (tree_destroy_func)0);
     }
 
     myfree(grid->trees);
@@ -7294,7 +7351,8 @@ static void wid_display (widp w,
         /*
          * Text box needs clipping when the text gets too wide.
          */
-       if (w->children_display_sorted || !w->parent || w->show_cursor) {
+       if (w->grid || w->children_display_sorted || 
+           !w->parent || w->show_cursor) {
             /*
              * Tell the parent we are doing scissors so they can re-do
              * their own scissors.
@@ -7591,39 +7649,51 @@ static void wid_display (widp w,
         blit_flush();
     }
 
-    extern widp wid_game_map_client_grid_container;
-
-    if (debug && (w == wid_game_map_client_grid_container) && player) {
-
-        static widp render[MAP_DEPTH][MAP_WIDTH*MAP_HEIGHT*2];
+    if (w->grid) {
+        static const uint16_t max_size = MAP_WIDTH*MAP_HEIGHT*2;
+        static widp render[MAP_DEPTH][max_size];
         uint16_t render_size[MAP_DEPTH] = {0};
+        
+        int16_t maxx;
+        int16_t minx;
+        int16_t maxy;
+        int16_t miny;
 
-        const uint32_t visible_width = TILES_SCREEN_WIDTH / 2 + 3;
-        const uint32_t visible_height = TILES_SCREEN_HEIGHT / 2 + 3;
+        if (player) {
+            const uint32_t visible_width = 
+                TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 5);
+            const uint32_t visible_height = 
+                TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 5);
 
-        int32_t maxx = player->x + visible_width;
-        int32_t minx = player->x - visible_width;
-        int32_t maxy = player->y + visible_height;
-        int32_t miny = player->y - visible_height;
+            maxx = player->x + visible_width;
+            minx = player->x - visible_width;
+            maxy = player->y + visible_height;
+            miny = player->y - visible_height;
 
-        if (minx < 0) {
+            if (minx < 0) {
+                minx = 0;
+            }
+            if (maxx > MAP_WIDTH) {
+                maxx = MAP_WIDTH;
+            }
+
+            if (miny < 0) {
+                miny = 0;
+            }
+            if (maxy > MAP_HEIGHT) {
+                maxy = MAP_HEIGHT;
+            }
+        } else {
             minx = 0;
-        }
-        if (maxx > MAP_WIDTH) {
             maxx = MAP_WIDTH;
-        }
-
-        if (miny < 0) {
             miny = 0;
-        }
-        if (maxy > MAP_HEIGHT) {
             maxy = MAP_HEIGHT;
         }
 
         int32_t x, y;
 
-        for (x = maxx; x >= minx; x--) {
-            for (y = miny; y <= maxy; y++) {
+        for (x = maxx - 1; x >= minx; x--) {
+            for (y = miny; y < maxy; y++) {
                 tree_root **tree = w->grid->trees + (y * w->grid->width) + x;
                 widgridnode *node;
 
@@ -7631,6 +7701,11 @@ static void wid_display (widp w,
                                                 tree_prev_tree_wid_compare_func) {
 
                     uint8_t depth = node->tree.z_depth;
+                    if (render_size[depth] >= max_size) {
+                        ERR("out of wid blit space");
+                        break;
+                    }
+
                     render[depth][render_size[depth]] = node->wid;
                     render_size[depth]++;
                 }
@@ -7638,18 +7713,19 @@ static void wid_display (widp w,
         }
 
         uint8_t depth;
+        uint8_t child_updated_scissors = false;
 
         for (depth = 0; depth < MAP_DEPTH; depth++) {
             uint16_t size = render_size[depth];
             uint16_t i;
 
             for (i = 0; i < size; i++) {
-                uint8_t child_updated_scissors = false;
-
                 wid_display(render[depth][i], disable_scissor, 
                             &child_updated_scissors);
             }
         }
+
+        blit_flush();
     } else {
         /*
          * If this is a grid wid, draw the elements in y sorted order.
@@ -7673,10 +7749,10 @@ static void wid_display (widp w,
                     clip_height);
             }
         }
-    }
 
-    if (w->children_display_sorted) {
-        blit_flush();
+        if (w->children_display_sorted) {
+            blit_flush();
+        }
     }
 
     /*
