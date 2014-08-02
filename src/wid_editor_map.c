@@ -295,14 +295,16 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     /*
      * Check to see there is nothing here blocking us.
      */
-    existing = wid_grid_find_first(wid_editor_map_grid_container, xin, yin);
+    existing = wid_grid_find_first(wid_editor_map_grid_container, xin, yin,
+                                   thing_template_get_z_depth(thing_template));
     while (existing) {
         if (wid_get_thing_template(existing)) {
             return;
         }
 
         existing = wid_grid_find_next(wid_editor_map_grid_container,
-                                      existing, xin, yin);
+                                      existing, xin, yin,
+                                      thing_template_get_z_depth(thing_template));
     }
 
     wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
