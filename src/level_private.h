@@ -14,11 +14,6 @@ typedef struct level_t_ {
     uint32_t level_no;
 
     /*
-     * Someone is still using this level.
-     */
-    uint8_t locked;
-
-    /*
      * This is for monsters. One map where they try to go through doors and 
      * another where they give up. This way in a closed room with a door the
      * monster will wait by the door. If there is an open wall it will hit the
@@ -138,6 +133,16 @@ typedef struct level_t_ {
     uint8_t exit_reached_when_open:1;
     uint8_t warned_exit_not_open:1;
     uint8_t is_exit_open:1;
+
+    /*
+     * Someone is still using this level.
+     */
+    uint8_t locked:1;
+
+    /*
+     * Ask the AI thread to finish.
+     */
+    uint8_t exit_request:1;
 
 } level_t;
 
