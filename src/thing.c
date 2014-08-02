@@ -2806,6 +2806,7 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
                 jitter);
     }
 }
+
 void thing_teleport (thingp t, int32_t x, int32_t y)
 {
     if (time_get_time_cached() - t->timestamp_teleport < 500) {

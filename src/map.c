@@ -37,33 +37,37 @@ static uint8_t map_is_x_at (levelp level,
     /*
      * Look for a floor tile where we can place stuff.
      */
-    w = wid_grid_find_first(grid_wid, x, y);
-    while (w) {
-        thingp thing_it = wid_get_thing(w);
+    uint8_t z;
 
-        /*
-         * No things on level editor, just templates.
-         */
-        if (!level_is_editor(level)) {
-            if (!thing_it) {
-                w = wid_grid_find_next(grid_wid, w, x, y);
-                continue;
+    for (z = 0; z < MAP_DEPTH; z++) {
+    w = wid_grid_find_first(grid_wid, x, y, z);
+        while (w) {
+            thingp thing_it = wid_get_thing(w);
+
+            /*
+             * No things on level editor, just templates.
+             */
+            if (!level_is_editor(level)) {
+                if (!thing_it) {
+                    w = wid_grid_find_next(grid_wid, w, x, y, z);
+                    continue;
+                }
+
+                if (thing_is_dead(thing_it)) {
+                    w = wid_grid_find_next(grid_wid, w, x, y, z);
+                    continue;
+                }
             }
 
-            if (thing_is_dead(thing_it)) {
-                w = wid_grid_find_next(grid_wid, w, x, y);
-                continue;
+            thing_template = wid_get_thing_template(w);
+            if (thing_template) {
+                if ((*callback)(thing_template)) {
+                    return (true);
+                }
             }
+
+            w = wid_grid_find_next(grid_wid, w, x, y, z);
         }
-
-        thing_template = wid_get_thing_template(w);
-        if (thing_template) {
-            if ((*callback)(thing_template)) {
-                return (true);
-            }
-        }
-
-        w = wid_grid_find_next(grid_wid, w, x, y);
     }
 
     return (false);
@@ -88,16 +92,20 @@ static uint8_t map_count_x_at (levelp level,
     /*
      * Look for a floor tile where we can place stuff.
      */
-    w = wid_grid_find_first(grid_wid, x, y);
-    while (w) {
-        thing_template = wid_get_thing_template(w);
-        if (thing_template) {
-            if ((*callback)(thing_template)) {
-                count++;
-            }
-        }
+    uint8_t z;
 
-        w = wid_grid_find_next(grid_wid, w, x, y);
+    for (z = 0; z < MAP_DEPTH; z++) {
+        w = wid_grid_find_first(grid_wid, x, y, z);
+        while (w) {
+            thing_template = wid_get_thing_template(w);
+            if (thing_template) {
+                if ((*callback)(thing_template)) {
+                    count++;
+                }
+            }
+
+            w = wid_grid_find_next(grid_wid, w, x, y, z);
+        }
     }
 
     return (count);
@@ -294,28 +302,32 @@ static thingp map_thing_is_x_at (levelp level,
     /*
      * Look for a floor tile where we can place stuff.
      */
-    w = wid_grid_find_first(grid_wid, x, y);
-    while (w) {
-        thingp thing_it = wid_get_thing(w);
+    uint8_t z;
 
-        if (!thing_it) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
+    for (z = 0; z < MAP_DEPTH; z++) {
+        w = wid_grid_find_first(grid_wid, x, y, z);
+        while (w) {
+            thingp thing_it = wid_get_thing(w);
 
-        if (thing_is_dead(thing_it)) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
-
-        thing_template = wid_get_thing_template(w);
-        if (thing_template) {
-            if ((*callback)(thing_template)) {
-                return (thing_it);
+            if (!thing_it) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
             }
-        }
 
-        w = wid_grid_find_next(grid_wid, w, x, y);
+            if (thing_is_dead(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
+
+            thing_template = wid_get_thing_template(w);
+            if (thing_template) {
+                if ((*callback)(thing_template)) {
+                    return (thing_it);
+                }
+            }
+
+            w = wid_grid_find_next(grid_wid, w, x, y, z);
+        }
     }
 
     return (0);
@@ -526,40 +538,44 @@ static tree_rootp map_all_things_is_x_at (levelp level,
     /*
      * Look for a floor tile where we can place stuff.
      */
-    w = wid_grid_find_first(grid_wid, x, y);
-    while (w) {
-        thingp thing_it = wid_get_thing(w);
+    uint8_t z;
 
-        if (!thing_it) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
+    for (z = 0; z < MAP_DEPTH; z++) {
+        w = wid_grid_find_first(grid_wid, x, y, z);
+        while (w) {
+            thingp thing_it = wid_get_thing(w);
 
-        if (thing_is_dead(thing_it)) {
-            w = wid_grid_find_next(grid_wid, w, x, y);
-            continue;
-        }
+            if (!thing_it) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
 
-        thing_template = wid_get_thing_template(w);
-        if (thing_template) {
-            if ((*callback)(thing_template)) {
-                if (!root) {
-                    root = tree_alloc(TREE_KEY_POINTER,
-                                      "TREE ROOT: map find things");
-                }
+            if (thing_is_dead(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
 
-                node = (typeof(node))
-                    myzalloc(sizeof(*node), "TREE NODE: map find thing");
+            thing_template = wid_get_thing_template(w);
+            if (thing_template) {
+                if ((*callback)(thing_template)) {
+                    if (!root) {
+                        root = tree_alloc(TREE_KEY_POINTER,
+                                        "TREE ROOT: map find things");
+                    }
 
-                node->tree.key = (void*)thing_it;
+                    node = (typeof(node))
+                        myzalloc(sizeof(*node), "TREE NODE: map find thing");
 
-                if (!tree_insert(root, &node->tree.node)) {
-                    DIE("insert thingp %p", thing_it);
+                    node->tree.key = (void*)thing_it;
+
+                    if (!tree_insert(root, &node->tree.node)) {
+                        DIE("insert thingp %p", thing_it);
+                    }
                 }
             }
-        }
 
-        w = wid_grid_find_next(grid_wid, w, x, y);
+            w = wid_grid_find_next(grid_wid, w, x, y, z);
+        }
     }
 
     return (root);
@@ -764,41 +780,45 @@ static thing_templatep map_find_x_at (levelp level,
         DIE("no grid wid");
     }
 
-    w = wid_grid_find_first(grid_wid, x, y);
-    while (w) {
-        thingp thing_it = wid_get_thing(w);
+    uint8_t z;
 
-        /*
-         * No things on level editor, just templates.
-         */
-        if (!level_is_editor(level)) {
+    for (z = 0; z < MAP_DEPTH; z++) {
+        w = wid_grid_find_first(grid_wid, x, y, z);
+        while (w) {
+            thingp thing_it = wid_get_thing(w);
+
             /*
-             * Need to filter dead things so map fixup can no longer see wall
-             * tiles that are in the process of being destroyed.
-             */
-            if (!thing_it) {
-                w = wid_grid_find_next(grid_wid, w, x, y);
-                continue;
-            }
-
-            if (thing_is_dead(thing_it)) {
-                w = wid_grid_find_next(grid_wid, w, x, y);
-                continue;
-            }
-        }
-
-        thing_template = wid_get_thing_template(w);
-        if (thing_template) {
-            if ((*callback)(thing_template)) {
-                if (wout) {
-                    *wout = w;
+            * No things on level editor, just templates.
+            */
+            if (!level_is_editor(level)) {
+                /*
+                * Need to filter dead things so map fixup can no longer see wall
+                * tiles that are in the process of being destroyed.
+                */
+                if (!thing_it) {
+                    w = wid_grid_find_next(grid_wid, w, x, y, z);
+                    continue;
                 }
 
-                return (thing_template);
+                if (thing_is_dead(thing_it)) {
+                    w = wid_grid_find_next(grid_wid, w, x, y, z);
+                    continue;
+                }
             }
-        }
 
-        w = wid_grid_find_next(grid_wid, w, x, y);
+            thing_template = wid_get_thing_template(w);
+            if (thing_template) {
+                if ((*callback)(thing_template)) {
+                    if (wout) {
+                        *wout = w;
+                    }
+
+                    return (thing_template);
+                }
+            }
+
+            w = wid_grid_find_next(grid_wid, w, x, y, z);
+        }
     }
 
     return (0);
@@ -1635,48 +1655,51 @@ static tree_rootp map_all_things_is_x (levelp level,
         DIE("no grid wid");
     }
 
-    for (y = 0; y < MAP_HEIGHT; y++) {
-        for (x = 0; x < MAP_WIDTH; x++) {
+    uint8_t z;
 
-            /*
-             * Look for a floor tile where we can place stuff.
-             */
-            w = wid_grid_find_first(grid_wid, x, y);
-            while (w) {
-                thingp thing_it = wid_get_thing(w);
+    for (z = 0; z < MAP_DEPTH; z++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            for (x = 0; x < MAP_WIDTH; x++) {
 
-                if (!thing_it) {
-                    w = wid_grid_find_next(grid_wid, w, x, y);
-                    continue;
-                }
+                /*
+                * Look for a floor tile where we can place stuff.
+                */
+                w = wid_grid_find_first(grid_wid, x, y, z);
+                while (w) {
+                    thingp thing_it = wid_get_thing(w);
 
-                if (thing_is_dead(thing_it)) {
-                    w = wid_grid_find_next(grid_wid, w, x, y);
-                    continue;
-                }
+                    if (!thing_it) {
+                        w = wid_grid_find_next(grid_wid, w, x, y, z);
+                        continue;
+                    }
 
-                thing_template = wid_get_thing_template(w);
-                if (thing_template) {
-                    if ((*callback)(thing_template)) {
-                        if (!root) {
-                            root = tree_alloc(TREE_KEY_POINTER,
-                                            "TREE ROOT: map find things");
-                        }
+                    if (thing_is_dead(thing_it)) {
+                        w = wid_grid_find_next(grid_wid, w, x, y, z);
+                        continue;
+                    }
 
-                        node = (typeof(node))
-                            myzalloc(sizeof(*node), "TREE NODE: map find thing");
+                    thing_template = wid_get_thing_template(w);
+                    if (thing_template) {
+                        if ((*callback)(thing_template)) {
+                            if (!root) {
+                                root = tree_alloc(TREE_KEY_POINTER,
+                                                "TREE ROOT: map find things");
+                            }
 
-                        node->tree.key = (void*)thing_it;
+                            node = (typeof(node))
+                                myzalloc(sizeof(*node), "TREE NODE: map find thing");
 
-                        if (!tree_insert(root, &node->tree.node)) {
-                            DIE("insert thingp %p", thing_it);
+                            node->tree.key = (void*)thing_it;
+
+                            if (!tree_insert(root, &node->tree.node)) {
+                                DIE("insert thingp %p", thing_it);
+                            }
                         }
                     }
+
+                    w = wid_grid_find_next(grid_wid, w, x, y, z);
                 }
-
-                w = wid_grid_find_next(grid_wid, w, x, y);
             }
-
         }
     }
 

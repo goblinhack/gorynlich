@@ -135,7 +135,7 @@ static void wid_game_quit_create (void)
     }
 
     char *message = dynprintf("%s\n%%%%fg=red$Quit game?",
-            messages[rand() % ARRAY_SIZE(message)]);
+            messages[rand() % ARRAY_SIZE(messages)]);
 
     wid_really_quit_game_yes_no =
         wid_popup(message,

@@ -76,7 +76,7 @@ typedef struct widgridnode_ {
 } widgridnode;
 
 typedef struct widgrid_ {
-    tree_root **trees;
+    tree_root **grid_of_trees[MAP_DEPTH];
     uint32_t nelems;
     uint32_t width;
     uint32_t height;
@@ -93,22 +93,22 @@ typedef struct wid_ {
     /*
      * A second tree, unsorted.
      */
-    tree_key_int tree2;
+    tree_key_int tree2_unsorted;
 
     /*
      * A tree for moving things
      */
-    tree_key_int tree3;
+    tree_key_int tree3_moving_wids;
     
     /*
      * A tree for things being destroyed.
      */
-    tree_key_int tree4;
+    tree_key_int tree4_wids_being_destroyed;
 
     /*
      * A tree for ticking things
      */
-    tree_key_int tree5;
+    tree_key_int tree5_ticking_wids;
 
     /*
      * Widget internal name.
@@ -367,9 +367,10 @@ typedef struct wid_ {
     uint8_t do_not_raise:1;
     uint8_t do_not_lower:1;
     uint8_t in_tree:1;
-    uint8_t in_tree3:1;
-    uint8_t in_tree4:1;
-    uint8_t in_tree5:1;
+    uint8_t in_tree2_unsorted:1;
+    uint8_t in_tree3_moving_wids:1;
+    uint8_t in_tree4_wids_being_destroyed:1;
+    uint8_t in_tree5_ticking_wids:1;
     uint8_t can_be_atteched_now:1;
 } wid;
 
@@ -449,15 +450,13 @@ static void wid_update_internal(widp w);
 static void wid_tree_detach(widp w);
 static void wid_tree_attach(widp w);
 static void wid_tree_remove(widp w);
-static void wid_tree2_remove(widp w);
-static void wid_tree3_remove(widp w);
-static void wid_tree3_insert(widp w);
-static void wid_tree4_remove(widp w);
-static void wid_tree4_insert(widp w);
-static void wid_tree4_remove(widp w);
-static void wid_tree4_insert(widp w);
-static void wid_tree5_remove(widp w);
-static void wid_tree5_insert(widp w);
+static void wid_tree2_unsorted_remove(widp w);
+static void wid_tree3_moving_wids_remove(widp w);
+static void wid_tree3_moving_wids_insert(widp w);
+static void wid_tree4_wids_being_destroyed_remove(widp w);
+static void wid_tree4_wids_being_destroyed_insert(widp w);
+static void wid_tree5_ticking_wids_remove(widp w);
+static void wid_tree5_ticking_wids_insert(widp w);
 
 /*
  * Child sort priority
@@ -492,6 +491,8 @@ void wid_fini (void)
     if (wid_init_done) {
         wid_init_done = false;
         wid_exiting = true;
+
+        wid_gc_all();
 
         tree_destroy(&wid_top_level5, (tree_destroy_func)0);
         tree_destroy(&wid_top_level4, (tree_destroy_func)0);
@@ -550,7 +551,9 @@ static void wid_grid_tree_attach (widp w)
         return;
     }
 
-    tree_root **newtree = grid->trees + (y * grid->width) + x;
+    uint8_t depth = w->tree.z_depth;
+
+    tree_root **newtree = grid->grid_of_trees[depth] + (y * grid->width) + x;
 
     /*
      * Still on the same tree? i.e. no real move?
@@ -2693,7 +2696,7 @@ void wid_set_on_tick (widp w, on_tick_t fn)
 
     w->on_tick = fn;
 
-    wid_tree5_insert(w);
+    wid_tree5_ticking_wids_insert(w);
 }
 
 static inline int8_t 
@@ -2840,7 +2843,7 @@ static void wid_tree_insert (widp w)
     w->in_tree = true;
 }
 
-static void wid_tree2_insert (widp w)
+static void wid_tree2_unsorted_insert (widp w)
 {
     fast_verify(w);
 
@@ -2862,29 +2865,30 @@ static void wid_tree2_insert (widp w)
             w->parent->children_unsorted = root;
         }
 
-        root->offset = STRUCT_OFFSET(struct wid_, tree2);
+        root->offset = STRUCT_OFFSET(struct wid_, tree2_unsorted);
     }
 
     /*
      * Get a wid sort ID.
      */
-    w->tree2.key = ++key;
+    w->tree2_unsorted.key = ++key;
 
-    if (!tree_insert(root, &w->tree2.node)) {
-        DIE("widget tree2 insert");
+    if (!tree_insert(root, &w->tree2_unsorted.node)) {
+        DIE("widget tree2_unsorted insert");
     }
 
     /*
      * The other tree will do the actual node free.
      */
-    w->tree2.node.is_static_mem = true;
+    w->tree2_unsorted.node.is_static_mem = true;
+    w->in_tree2_unsorted = true;
 }
 
-static void wid_tree3_insert (widp w)
+static void wid_tree3_moving_wids_insert (widp w)
 {
     fast_verify(w);
 
-    if (w->in_tree3) {
+    if (w->in_tree3_moving_wids) {
         return;
     }
 
@@ -2902,30 +2906,30 @@ static void wid_tree3_insert (widp w)
         root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT3: wid");
         wid_top_level3 = root;
 
-        root->offset = STRUCT_OFFSET(struct wid_, tree3);
+        root->offset = STRUCT_OFFSET(struct wid_, tree3_moving_wids);
     }
 
     /*
      * Get a wid sort ID.
      */
-    w->tree3.key = ++key;
+    w->tree3_moving_wids.key = ++key;
 
-    if (!tree_insert(root, &w->tree3.node)) {
-        DIE("widget tree3 insert");
+    if (!tree_insert(root, &w->tree3_moving_wids.node)) {
+        DIE("widget tree3_moving_wids insert");
     }
 
     /*
      * The other tree will do the actual node free.
      */
-    w->tree3.node.is_static_mem = true;
-    w->in_tree3 = true;
+    w->tree3_moving_wids.node.is_static_mem = true;
+    w->in_tree3_moving_wids = true;
 }
 
-static void wid_tree4_insert (widp w)
+static void wid_tree4_wids_being_destroyed_insert (widp w)
 {
     fast_verify(w);
 
-    if (w->in_tree4) {
+    if (w->in_tree4_wids_being_destroyed) {
         return;
     }
 
@@ -2943,30 +2947,30 @@ static void wid_tree4_insert (widp w)
         root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT4: wid");
         wid_top_level4 = root;
 
-        root->offset = STRUCT_OFFSET(struct wid_, tree4);
+        root->offset = STRUCT_OFFSET(struct wid_, tree4_wids_being_destroyed);
     }
 
     /*
      * Get a wid sort ID.
      */
-    w->tree4.key = ++key;
+    w->tree4_wids_being_destroyed.key = ++key;
 
-    if (!tree_insert(root, &w->tree4.node)) {
-        DIE("widget tree4 insert");
+    if (!tree_insert(root, &w->tree4_wids_being_destroyed.node)) {
+        DIE("widget tree4_wids_being_destroyed insert");
     }
 
     /*
      * The other tree will do the actual node free.
      */
-    w->tree4.node.is_static_mem = true;
-    w->in_tree4 = true;
+    w->tree4_wids_being_destroyed.node.is_static_mem = true;
+    w->in_tree4_wids_being_destroyed = true;
 }
 
-static void wid_tree5_insert (widp w)
+static void wid_tree5_ticking_wids_insert (widp w)
 {
     fast_verify(w);
 
-    if (w->in_tree5) {
+    if (w->in_tree5_ticking_wids) {
         return;
     }
 
@@ -2984,23 +2988,23 @@ static void wid_tree5_insert (widp w)
         root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT5: wid");
         wid_top_level5 = root;
 
-        root->offset = STRUCT_OFFSET(struct wid_, tree5);
+        root->offset = STRUCT_OFFSET(struct wid_, tree5_ticking_wids);
     }
 
     /*
      * Get a wid sort ID.
      */
-    w->tree5.key = ++key;
+    w->tree5_ticking_wids.key = ++key;
 
-    if (!tree_insert(root, &w->tree5.node)) {
-        DIE("widget tree5 insert");
+    if (!tree_insert(root, &w->tree5_ticking_wids.node)) {
+        DIE("widget tree5_ticking_wids insert");
     }
 
     /*
      * The other tree will do the actual node free.
      */
-    w->tree5.node.is_static_mem = true;
-    w->in_tree5 = true;
+    w->tree5_ticking_wids.node.is_static_mem = true;
+    w->in_tree5_ticking_wids = true;
 }
 
 static void wid_tree_remove (widp w)
@@ -3025,28 +3029,38 @@ static void wid_tree_remove (widp w)
     }
 }
 
-static void wid_tree2_remove (widp w)
+static void wid_tree2_unsorted_remove (widp w)
 {
     fast_verify(w);
+
+    if (!w->in_tree2_unsorted) {
+        return;
+    }
 
     tree_root *root;
 
     if (!w->parent) {
         root = wid_top_level2;
     } else {
+        verify(w->parent);
+
         root = w->parent->children_unsorted;
     }
 
-    if (!tree_remove(root, &w->tree2.node)) {
+    verify(root);
+
+    if (!tree_remove(root, &w->tree2_unsorted.node)) {
         DIE("remove %s from unsorted tree", w->logname);
     }
+
+    w->in_tree2_unsorted = false;
 }
 
-static void wid_tree3_remove (widp w)
+static void wid_tree3_moving_wids_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree3) {
+    if (!w->in_tree3_moving_wids) {
         return;
     }
 
@@ -3058,18 +3072,18 @@ static void wid_tree3_remove (widp w)
         return;
     }
 
-    if (!tree_remove(root, &w->tree3.node)) {
+    if (!tree_remove(root, &w->tree3_moving_wids.node)) {
         DIE("remove from move tree");
     }
 
-    w->in_tree3 = false;
+    w->in_tree3_moving_wids = false;
 }
 
-static void wid_tree4_remove (widp w)
+static void wid_tree4_wids_being_destroyed_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree4) {
+    if (!w->in_tree4_wids_being_destroyed) {
         return;
     }
 
@@ -3081,18 +3095,18 @@ static void wid_tree4_remove (widp w)
         return;
     }
 
-    if (!tree_remove(root, &w->tree4.node)) {
+    if (!tree_remove(root, &w->tree4_wids_being_destroyed.node)) {
         DIE("remove from gc tree");
     }
 
-    w->in_tree4 = false;
+    w->in_tree4_wids_being_destroyed = false;
 }
 
-static void wid_tree5_remove (widp w)
+static void wid_tree5_ticking_wids_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree5) {
+    if (!w->in_tree5_ticking_wids) {
         return;
     }
 
@@ -3104,11 +3118,11 @@ static void wid_tree5_remove (widp w)
         return;
     }
 
-    if (!tree_remove(root, &w->tree5.node)) {
+    if (!tree_remove(root, &w->tree5_ticking_wids.node)) {
         DIE("remove from tick tree");
     }
 
-    w->in_tree5 = false;
+    w->in_tree5_ticking_wids = false;
 }
 
 /*
@@ -3122,7 +3136,7 @@ static widp wid_new (widp parent)
     w->parent = parent;
 
     wid_tree_insert(w);
-    wid_tree2_insert(w);
+    wid_tree2_unsorted_insert(w);
 
     /*
      * Give some lame 3d to the wid
@@ -3145,9 +3159,9 @@ static void wid_destroy_immediate_internal (widp w)
 {
     fast_verify(w);
 
-    wid_tree3_remove(w);
-    wid_tree4_remove(w);
-    wid_tree5_remove(w);
+    wid_tree3_moving_wids_remove(w);
+    wid_tree4_wids_being_destroyed_remove(w);
+    wid_tree5_ticking_wids_remove(w);
 
     if (w->thing) {
         ERR("thing still set");
@@ -3236,7 +3250,7 @@ static void wid_destroy_immediate (widp w)
 
     wid_tree_detach(w);
 
-    wid_tree2_remove(w);
+    wid_tree2_unsorted_remove(w);
 
     wid_destroy_immediate_internal(w);
 
@@ -3275,7 +3289,7 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
     }
 
     w->being_destroyed = true;
-    wid_tree4_insert(w);
+    wid_tree4_wids_being_destroyed_insert(w);
 
     if (wid_focus == w) {
         wid_mouse_focus_end();
@@ -3289,7 +3303,7 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
         wid_mouse_motion_end();
     }
 
-    TREE_OFFSET_WALK(w->children_unsorted, child, tree2) {
+    TREE_OFFSET_WALK(w->children_unsorted, child, tree2_unsorted) {
         widp c;
 
         fast_verify(child);
@@ -3321,7 +3335,7 @@ void wid_destroy_in (widp w, uint32_t ms)
 
     w->destroy_when = time_get_time_cached() + ms;
 
-    wid_tree4_insert(w);
+    wid_tree4_wids_being_destroyed_insert(w);
 }
 
 /*
@@ -3778,12 +3792,16 @@ void wid_new_grid (widp w, uint32_t width, uint32_t height,
     grid->pixheight = pixheight;
     grid->nelems = width * height;
 
-    grid->trees = (tree_root **)
-        myzalloc(sizeof(tree_root *) * grid->nelems, "widgrid tree ptrs");
+    uint8_t z;
 
-    for (i = 0; i < width * height; i++) {
-        grid->trees[i] =
-            tree_alloc_custom(tree_wid_compare_func, "TREE ROOT: widgrid");
+    for (z = 0; z < MAP_DEPTH; z++) {
+        grid->grid_of_trees[z] = (tree_root **)
+            myzalloc(sizeof(tree_root *) * grid->nelems, "widgrid tree ptrs");
+
+        for (i = 0; i < width * height; i++) {
+            grid->grid_of_trees[z][i] =
+                tree_alloc_custom(tree_wid_compare_func, "TREE ROOT: widgrid");
+        }
     }
 }
 
@@ -3797,24 +3815,15 @@ void wid_destroy_grid (widp w)
         return;
     }
 
-        int16_t maxx;
-        int16_t minx;
-        int16_t maxy;
-        int16_t miny;
+    int32_t x, y, z;
 
-            minx = 0;
-            maxx = MAP_WIDTH;
-            miny = 0;
-            maxy = MAP_HEIGHT;
-
-        int32_t x, y;
-
-        for (x = maxx - 1; x >= minx; x--) {
-            for (y = miny; y < maxy; y++) {
+    for (z = 0; z < MAP_DEPTH; z++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            for (y = 0; y < MAP_HEIGHT; y++) {
 
                 tree_root **tree;
 retry:
-                tree = grid->trees + (y * grid->width) + x;
+                tree = grid->grid_of_trees[z] + (y * grid->width) + x;
                 widgridnode *node;
 
                 TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
@@ -3825,15 +3834,18 @@ retry:
                 }
             }
         }
+    }
 
     w->grid = 0;
 
-    for (i = 0; i < grid->nelems; i++) {
-        tree_destroy(&grid->trees[i],
-                     (tree_destroy_func)0);
+    for (z = 0; z < MAP_DEPTH; z++) {
+        for (i = 0; i < grid->nelems; i++) {
+            tree_destroy(&grid->grid_of_trees[z][i], (tree_destroy_func)0);
+        }
+
+        myfree(grid->grid_of_trees[z]);
     }
 
-    myfree(grid->trees);
     myfree(grid);
 }
 
@@ -3849,19 +3861,23 @@ void wid_empty_grid (widp w)
         return;
     }
 
-    for (i = 0; i < grid->nelems; i++) {
-        TREE_WALK(grid->trees[i], node) {
-            child = node->wid;
+    uint8_t z;
 
-            wid_destroy_nodelay(&child);
+    for (z = 0; z < MAP_DEPTH; z++) {
+        for (i = 0; i < grid->nelems; i++) {
+            TREE_WALK(grid->grid_of_trees[z][i], node) {
+                child = node->wid;
+
+                wid_destroy_nodelay(&child);
+            }
         }
-    }
 
-    for (i = 0; i < grid->nelems; i++) {
-        TREE_WALK(grid->trees[i], node) {
-            child = node->wid;
+        for (i = 0; i < grid->nelems; i++) {
+            TREE_WALK(grid->grid_of_trees[z][i], node) {
+                child = node->wid;
 
-            ERR("%s exists after empty grid",child->name);
+                ERR("%s exists after empty grid",child->name);
+            }
         }
     }
 }
@@ -3879,21 +3895,37 @@ void wid_detach_from_grid (widp w)
         return;
     }
 
-    for (i = 0; i < grid->nelems; i++) {
-        TREE_WALK(grid->trees[i], node) {
-            child = node->wid;
+    uint8_t z;
 
-            wid_move_stop(child);
+    for (z = 0; z < MAP_DEPTH; z++) {
+        for (i = 0; i < grid->nelems; i++) {
+retry:
+            {
+                TREE_WALK(grid->grid_of_trees[z][i], node) {
+                    child = node->wid;
 
-            wid_grid_tree_detach(child);
+                    wid_move_stop(child);
+
+                    wid_tree_remove(child);
+                    wid_tree2_unsorted_remove(child);
+                    wid_tree3_moving_wids_remove(child);
+                    wid_tree4_wids_being_destroyed_remove(child);
+                    wid_tree5_ticking_wids_remove(child);
+
+                    wid_grid_tree_detach(child);
+
+                    wid_destroy_nodelay(&child);
+                    goto retry;
+                }
+            }
         }
-    }
 
-    for (i = 0; i < grid->nelems; i++) {
-        TREE_WALK(grid->trees[i], node) {
-            child = node->wid;
+        for (i = 0; i < grid->nelems; i++) {
+            TREE_WALK(grid->grid_of_trees[z][i], node) {
+                child = node->wid;
 
-            DIE("%s exists after clear grid",child->name);
+                DIE("%s exists after clear grid",child->name);
+            }
         }
     }
 }
@@ -3902,7 +3934,7 @@ static void wid_attach_to_grid_internal (widp w)
 {
     widp child;
 
-    { TREE_OFFSET_WALK(w->children_unsorted, child, tree2) {
+    { TREE_OFFSET_WALK(w->children_unsorted, child, tree2_unsorted) {
         wid_attach_to_grid_internal(child);
     } }
 
@@ -3936,35 +3968,39 @@ void marshal_wid_grid (marshal_p ctx, widp w)
     PUT_NAMED_UINT32(ctx, "width", grid->width);
     PUT_NAMED_UINT32(ctx, "height", grid->height);
 
-    for (i = 0; i < grid->nelems; i++) {
-        TREE_WALK(grid->trees[i], node) {
-            child = node->wid;
+    uint8_t z;
 
-            x = i % grid->width;
-            y = i / grid->height;
+    for (z = 0; z < MAP_DEPTH; z++) {
+        for (i = 0; i < grid->nelems; i++) {
+            TREE_WALK(grid->grid_of_trees[z][i], node) {
+                child = node->wid;
 
-            if (!child->thing_template) {
-                continue;
+                x = i % grid->width;
+                y = i / grid->height;
+
+                if (!child->thing_template) {
+                    continue;
+                }
+
+                if (thing_template_is_hidden_from_editor(child->thing_template)) {
+                    continue;
+                }
+
+                PUT_BRA(ctx);
+
+                PUT_NAMED_UINT32(ctx, "x", x);
+                PUT_NAMED_UINT32(ctx, "y", y);
+                PUT_NAMED_STRING(ctx, "t",
+                                thing_template_name(child->thing_template));
+
+                count = (uintptr_t) wid_get_client_context(child);
+
+                if (count > 0) {
+                    PUT_NAMED_UINT32(ctx, "count", count);
+                }
+
+                PUT_KET(ctx);
             }
-
-            if (thing_template_is_hidden_from_editor(child->thing_template)) {
-                continue;
-            }
-
-            PUT_BRA(ctx);
-
-            PUT_NAMED_UINT32(ctx, "x", x);
-            PUT_NAMED_UINT32(ctx, "y", y);
-            PUT_NAMED_STRING(ctx, "t",
-                             thing_template_name(child->thing_template));
-
-            count = (uintptr_t) wid_get_client_context(child);
-
-            if (count > 0) {
-                PUT_NAMED_UINT32(ctx, "count", count);
-            }
-
-            PUT_KET(ctx);
         }
     }
 
@@ -4078,7 +4114,8 @@ widp wid_grid_find (widp parent, fpoint tl, fpoint br,
     /*
      * Now find the node in the (hopefully small) tree.
      */
-    tree_root **gridtree = grid->trees + (y * grid->width) + x;
+    tree_root **gridtree = grid->grid_of_trees[z_depth] + 
+                    (y * grid->width) + x;
 
     /*
      * Trees should be already allocated.
@@ -4149,26 +4186,30 @@ widp wid_grid_find_thing_template (widp parent,
     /*
      * Now find the node in the (hopefully small) tree.
      */
-    tree_root **gridtree = grid->trees + (y * grid->width) + x;
+    uint8_t z;
 
-    /*
-     * Trees should be already allocated.
-     */
-    if (!*gridtree) {
-        DIE("no gridtree");
-    }
+    for (z = 0; z < MAP_DEPTH; z++) {
+        tree_root **gridtree = grid->grid_of_trees[z] + (y * grid->width) + x;
 
-    TREE_WALK(*gridtree, node) {
-        w = node->wid;
-
-        if (!w->thing_template) {
-            continue;
+        /*
+         * Trees should be already allocated.
+         */
+        if (!*gridtree) {
+            DIE("no gridtree");
         }
 
-        if ((*func)(w->thing_template)) {
-            fast_verify(w);
+        TREE_WALK(*gridtree, node) {
+            w = node->wid;
 
-            return (w);
+            if (!w->thing_template) {
+                continue;
+            }
+
+            if ((*func)(w->thing_template)) {
+                fast_verify(w);
+
+                return (w);
+            }
         }
     }
 
@@ -4207,20 +4248,24 @@ widp wid_grid_find_thing_template_is (widp parent,
     /*
      * Now find the node in the (hopefully small) tree.
      */
-    tree_root **gridtree = grid->trees + (y * grid->width) + x;
+    uint8_t z;
 
-    /*
-     * Trees should be already allocated.
-     */
-    if (!*gridtree) {
-        DIE("no gridtree");
-    }
+    for (z = 0; z < MAP_DEPTH; z++) {
+        tree_root **gridtree = grid->grid_of_trees[z] + (y * grid->width) + x;
 
-    TREE_WALK(*gridtree, node) {
-        w = node->wid;
+        /*
+         * Trees should be already allocated.
+         */
+        if (!*gridtree) {
+            DIE("no gridtree");
+        }
 
-        if (w->thing_template == thing_template) {
-            return (w);
+        TREE_WALK(*gridtree, node) {
+            w = node->wid;
+
+            if (w->thing_template == thing_template) {
+                return (w);
+            }
         }
     }
 
@@ -4230,7 +4275,8 @@ widp wid_grid_find_thing_template_is (widp parent,
 /*
  * Find the first widget in the grid at this tile co-ordinate.
  */
-widp wid_grid_find_first (widp parent, uint32_t x, uint32_t y)
+widp wid_grid_find_first (widp parent, uint32_t x, uint32_t y,
+                          uint8_t depth)
 {
     widgridnode *node;
     widgrid *grid;
@@ -4252,7 +4298,7 @@ widp wid_grid_find_first (widp parent, uint32_t x, uint32_t y)
     /*
      * Now find the node in the (hopefully small) tree.
      */
-    tree_root **gridtree = grid->trees + (y * grid->width) + x;
+    tree_root **gridtree = grid->grid_of_trees[depth] + (y * grid->width) + x;
 
     /*
      * Trees should be already allocated.
@@ -4280,7 +4326,8 @@ widp wid_grid_find_first (widp parent, uint32_t x, uint32_t y)
 /*
  * Find the next widget in the grid at this tile co-ordinate.
  */
-widp wid_grid_find_next (widp parent, widp w, uint32_t x, uint32_t y)
+widp wid_grid_find_next (widp parent, widp w, uint32_t x, uint32_t y,
+                         uint8_t depth)
 {
     widgridnode *node;
     widgrid *grid;
@@ -4300,9 +4347,10 @@ widp wid_grid_find_next (widp parent, widp w, uint32_t x, uint32_t y)
 
     for (;;) {
         /*
-        * Now find the node in the (hopefully small) tree.
-        */
-        tree_root **gridtree = grid->trees + (y * grid->width) + x;
+         * Now find the node in the (hopefully small) tree.
+         */
+        tree_root **gridtree = 
+                        grid->grid_of_trees[depth] + (y * grid->width) + x;
 
         /*
          * Trees should be already allocated.
@@ -4371,32 +4419,38 @@ widp wid_grid_find_top (widp parent, fpoint tl, fpoint br)
     /*
      * Now find the node in the (hopefully small) tree.
      */
-    tree_root **gridtree = grid->trees + (y * grid->width) + x;
+    uint8_t z;
 
-    /*
-     * Trees should be already allocated.
-     */
-    if (!*gridtree) {
-        DIE("no gridtree");
-    }
+    for (z = MAP_DEPTH - 1; z >= 0; z--) {
+        tree_root **gridtree = grid->grid_of_trees[z] + (y * grid->width) + x;
 
-    TREE_WALK(*gridtree, node) {
-        w = node->wid;
-
-        thing_templatep t = wid_get_thing_template(w);
-        if (!t) {
-            continue;
+        /*
+         * Trees should be already allocated.
+         */
+        if (!*gridtree) {
+            DIE("no gridtree");
         }
 
-        if (w->tree.z_depth < z_depth) {
-            continue;
+        TREE_WALK(*gridtree, node) {
+            w = node->wid;
+
+            thing_templatep t = wid_get_thing_template(w);
+            if (!t) {
+                continue;
+            }
+
+            if (w->tree.z_depth < z_depth) {
+                continue;
+            }
+
+            z_depth = w->tree.z_depth;
+            best = w;
         }
 
-        z_depth = w->tree.z_depth;
-        best = w;
+        return (best);
     }
 
-    return (best);
+    return (0);
 }
 
 widp wid_find_matching (widp parent, fpoint tl, fpoint br,
@@ -7084,7 +7138,7 @@ void wid_move_end (widp w)
 
     w->moving = false;
 
-    wid_tree3_remove(w);
+    wid_tree3_moving_wids_remove(w);
 }
 
 /*
@@ -7100,7 +7154,7 @@ static void wid_gc (widp w)
          * Only do this for single shot fade count widgets, not those that 
          * pulse in and out.
          */
-        if (wid_is_fading(w) && !w->fade_count) {
+        if (!wid_exiting && wid_is_fading(w) && !w->fade_count) {
             double fade = wid_get_fade_amount(w);
 
             if (fade == 0.0) {
@@ -7650,10 +7704,6 @@ static void wid_display (widp w,
     }
 
     if (w->grid) {
-        static const uint16_t max_size = MAP_WIDTH*MAP_HEIGHT*2;
-        static widp render[MAP_DEPTH][max_size];
-        uint16_t render_size[MAP_DEPTH] = {0};
-        
         int16_t maxx;
         int16_t minx;
         int16_t maxy;
@@ -7661,9 +7711,9 @@ static void wid_display (widp w,
 
         if (player) {
             const uint32_t visible_width = 
-                TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 5);
+                TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 4);
             const uint32_t visible_height = 
-                TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 5);
+                TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 3);
 
             maxx = player->x + visible_width;
             minx = player->x - visible_width;
@@ -7690,38 +7740,23 @@ static void wid_display (widp w,
             maxy = MAP_HEIGHT;
         }
 
-        int32_t x, y;
-
-        for (x = maxx - 1; x >= minx; x--) {
-            for (y = miny; y < maxy; y++) {
-                tree_root **tree = w->grid->trees + (y * w->grid->width) + x;
-                widgridnode *node;
-
-                TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
-                                                tree_prev_tree_wid_compare_func) {
-
-                    uint8_t depth = node->tree.z_depth;
-                    if (render_size[depth] >= max_size) {
-                        ERR("out of wid blit space");
-                        break;
-                    }
-
-                    render[depth][render_size[depth]] = node->wid;
-                    render_size[depth]++;
-                }
-            }
-        }
-
-        uint8_t depth;
         uint8_t child_updated_scissors = false;
+        int32_t x, y;
+        uint8_t z;
 
-        for (depth = 0; depth < MAP_DEPTH; depth++) {
-            uint16_t size = render_size[depth];
-            uint16_t i;
+        for (z = 0; z < MAP_DEPTH; z++) {
+            for (x = maxx - 1; x >= minx; x--) {
+                for (y = miny; y < maxy; y++) {
+                    tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                    widgridnode *node;
 
-            for (i = 0; i < size; i++) {
-                wid_display(render[depth][i], disable_scissor, 
-                            &child_updated_scissors);
+                    TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
+                                                    tree_prev_tree_wid_compare_func) {
+
+                        wid_display(node->wid, disable_scissor, 
+                                    &child_updated_scissors);
+                    }
+                }
             }
         }
 
@@ -7794,7 +7829,7 @@ void wid_move_all (void)
 
             w->moving = false;
 
-            wid_tree3_remove(w);
+            wid_tree3_moving_wids_remove(w);
         } else {
             double time_step =
                 (double)(time_get_time_cached() - w->timestamp_moving_begin) /
@@ -7817,7 +7852,7 @@ void wid_gc_all (void)
 {
     widp w;
 
-    { TREE_OFFSET_WALK(wid_top_level4, w, tree4) {
+    { TREE_OFFSET_WALK(wid_top_level4, w, tree4_wids_being_destroyed) {
         wid_gc(w);
     } }
 }
@@ -8183,7 +8218,7 @@ void wid_move_to_pct_in (widp w, double x, double y, uint32_t ms)
     w->moving_end.y = y;
     w->moving = true;
 
-    wid_tree3_insert(w);
+    wid_tree3_moving_wids_insert(w);
 }
 
 /*
@@ -8233,7 +8268,7 @@ void wid_move_stop (widp w)
     w->moving = false;
     w->paused = true;
 
-    wid_tree3_remove(w);
+    wid_tree3_moving_wids_remove(w);
 }
 
 void wid_move_resume (widp w)
@@ -8247,7 +8282,7 @@ void wid_move_resume (widp w)
     w->moving = true;
     w->paused = false;
 
-    wid_tree3_insert(w);
+    wid_tree3_moving_wids_insert(w);
 }
 
 void wid_move_to_abs_in (widp w, double x, double y, uint32_t ms)
@@ -8263,7 +8298,7 @@ void wid_move_to_abs_in (widp w, double x, double y, uint32_t ms)
     w->moving_end.y = y;
     w->moving = true;
 
-    wid_tree3_insert(w);
+    wid_tree3_moving_wids_insert(w);
 }
 
 void wid_move_to_pct_centered_in (widp w, double x, double y, uint32_t ms)
@@ -8285,7 +8320,7 @@ void wid_move_to_pct_centered_in (widp w, double x, double y, uint32_t ms)
     w->moving_end.y = y;
     w->moving = true;
 
-    wid_tree3_insert(w);
+    wid_tree3_moving_wids_insert(w);
 }
 
 void wid_move_delta_pct_in (widp w, double x, double y, uint32_t ms)
@@ -8304,7 +8339,7 @@ void wid_move_delta_pct_in (widp w, double x, double y, uint32_t ms)
     w->moving_end.y = w->moving_start.y + y;
     w->moving = true;
 
-    wid_tree3_insert(w);
+    wid_tree3_moving_wids_insert(w);
 }
 
 void wid_move_to_abs_centered_in (widp w, double x, double y, uint32_t ms)
@@ -8323,7 +8358,7 @@ void wid_move_to_abs_centered_in (widp w, double x, double y, uint32_t ms)
     w->moving_end.y = y;
     w->moving = true;
 
-    wid_tree3_insert(w);
+    wid_tree3_moving_wids_insert(w);
 }
 
 void wid_scaling_to_pct_in (widp w,
