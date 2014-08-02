@@ -405,6 +405,10 @@ static void *dmap_thread2_func (void *context)
 
                 dmap_process(&tmp, &dmap_monst_map_wander[x][y]);
             }
+
+            if (server_level->exit_request) {
+                break;
+            }
         }
 
         server_level->locked--;
