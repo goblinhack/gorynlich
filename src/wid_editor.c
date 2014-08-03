@@ -140,7 +140,7 @@ void wid_editor_undo_save_point (void)
     if (!(ctx = demarshal(dir_and_file))) {
         MSG_BOX("Undo fail");
     } else {
-        wid_empty_grid(wid_editor_map_grid_container);
+        wid_detach_from_grid(wid_editor_map_grid_container);
 
         wid_editor_add_grid();
 
@@ -165,7 +165,7 @@ void wid_editor_redo_save_point (void)
     if (!(ctx = demarshal(dir_and_file))) {
         MSG_BOX("Undo fail");
     } else {
-        wid_empty_grid(wid_editor_map_grid_container);
+        wid_detach_from_grid(wid_editor_map_grid_container);
 
         wid_editor_add_grid();
 
@@ -462,7 +462,7 @@ static void wid_editor_clear_callback_yes (widp wid)
 {
     wid_destroy(&wid_editor_clear_popup);
 
-    wid_empty_grid(wid_editor_map_grid_container);
+    wid_detach_from_grid(wid_editor_map_grid_container);
 
     wid_editor_add_grid();
 
