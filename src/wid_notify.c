@@ -109,7 +109,7 @@ wid_notify_internal (const char *text, uint32_t level)
             break;
         case WARNING:
             bg = ORANGE3;
-            bg.a = 200;
+            bg.a = 50;
             fg = BLACK;
             break;
         case CRITICAL:
