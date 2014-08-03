@@ -1,7 +1,7 @@
 {
  short_name="amulet of protection"
  tooltip="amulet of protection"
- z_depth=2
+ z_depth=3
  is_boring
  is_wearable
  is_collision_map_medium

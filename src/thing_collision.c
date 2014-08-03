@@ -729,7 +729,7 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
 
     uint8_t z;
 
-    for (z = 1; z < MAP_DEPTH; z++) {
+    for (z = MAP_DEPTH_WALL; z < MAP_DEPTH; z++) {
         for (dx = -1; dx <= 1; dx++) for (dy = -1; dy <= 1; dy++) {
             int32_t x = (int32_t)nx + dx;
             int32_t y = (int32_t)ny + dy;

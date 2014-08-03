@@ -1,7 +1,7 @@
 {
  short_name="minor phantom"
  tooltip="minor phantom"
- z_depth=2
+ z_depth=3
  speed=3
  health=1
  damage=2

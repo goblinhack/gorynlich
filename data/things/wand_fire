@@ -2,7 +2,7 @@
  short_name="fire wand"
  tooltip="wand of fire"
  fires="data/things/fireball"
- z_depth=2
+ z_depth=3
  is_weapon
 hit_priority=0
  is_carryable
