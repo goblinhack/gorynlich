@@ -1,7 +1,7 @@
 {
  short_name="wall"
  tooltip="wall"
- z_depth=1
+ z_depth=2
  is_boring
  is_wall
  hit_priority=10

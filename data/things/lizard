@@ -4,7 +4,7 @@
  carrying={
     "data/things/sword2"
  }
- z_depth=2
+ z_depth=3
  speed=2
  health=20
  bonus_score_on_death=250

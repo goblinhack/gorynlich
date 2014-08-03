@@ -355,7 +355,6 @@ widp wid_get_current_focus(void);
 void wid_effect_pulses(widp);
 void wid_effect_sways(widp);
 widp wid_find_matching(widp, fpoint tl, fpoint br, uint8_t z_depth);
-widp wid_find_matching_top(widp, fpoint tl, fpoint br);
 widp wid_grid_find(widp, fpoint tl, fpoint br, uint8_t z_depth);
 widp wid_grid_find_first(widp parent, uint32_t x, uint32_t y, uint8_t depth);
 widp wid_grid_find_next(widp parent, widp w, uint32_t x, uint32_t y, uint8_t depth);

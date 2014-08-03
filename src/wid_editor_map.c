@@ -97,22 +97,6 @@ widp wid_editor_map_thing_replace_template (widp w,
             thing_template_short_name(thing_template));
     }
 
-    double tw = tile_get_width(tile);
-    double th = tile_get_height(tile);
-    double scale_x = tw / TILE_WIDTH; 
-    double scale_y = th / TILE_HEIGHT; 
-
-    /*
-     * Need adjustments for multi-tile things.
-     */
-    if (scale_x > 1) {
-        x += ((scale_x-1) / 2);
-    }
-
-    if (scale_y > 1) {
-        y += ((scale_y-1) / 2);
-    }
-
     /*
      * Find the midpoint of the tile.
      */
@@ -133,23 +117,20 @@ widp wid_editor_map_thing_replace_template (widp w,
             ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
-    base_tile_width *= scale_x;
-    base_tile_height *= scale_y;
+    double tw = tile_get_width(tile);
+    double th = tile_get_height(tile);
+    double scale_x = tw / TILE_WIDTH; 
+    double scale_y = th / TILE_HEIGHT; 
 
-    /*
-     * Work out the tile size in a percentage of the screen.
-     */
-    br.x += base_tile_width;
-    br.y += base_tile_height;
+    if (scale_x > 1) {
+        base_tile_width *= scale_x;
+        base_tile_height *= scale_y;
+    }
 
-    /*
-     * Now center the tile.
-     */
-    tl.x -= base_tile_height / 2.0;
-    br.x -= base_tile_width / 2.0;
-
+    br.x += base_tile_width / 2.0;
+    br.y += base_tile_height / 2.0;
+    tl.x -= base_tile_width / 2.0;
     tl.y -= base_tile_height / 2.0;
-    br.y -= base_tile_width / 2.0;
 
     /*
      * Now the tile itself has a shadow that is 1/4 of the pixels.
@@ -165,11 +146,8 @@ widp wid_editor_map_thing_replace_template (widp w,
                             (double)TILE_PIX_WITH_SHADOW_HEIGHT;
 
     if (scale_x == 1) {
-        br.x += tile_width / 4.0;
-    }
-
-    if (scale_y == 1) {
         tl.y -= tile_height / 4.0;
+        br.x += tile_width / 4.0;
     }
 
     z_depth = thing_template_get_z_depth(thing_template);
@@ -295,16 +273,45 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     /*
      * Check to see there is nothing here blocking us.
      */
-    existing = wid_grid_find_first(wid_editor_map_grid_container, xin, yin,
-                                   thing_template_get_z_depth(thing_template));
-    while (existing) {
-        if (wid_get_thing_template(existing)) {
-            return;
-        }
+    uint8_t min_z;
+    uint8_t z;
 
-        existing = wid_grid_find_next(wid_editor_map_grid_container,
-                                      existing, xin, yin,
-                                      thing_template_get_z_depth(thing_template));
+    /*
+     * Bound certain things by others. e.g. flood fill ghosts limited by 
+     * walls.
+     */
+    switch (thing_template_get_z_depth(thing_template)) {
+        case MAP_DEPTH_EDITOR: 
+            min_z = 0; 
+            break;
+        case MAP_DEPTH_FLOOR: 
+            min_z = MAP_DEPTH_FLOOR; 
+            break;
+        case MAP_DEPTH_WALL: 
+            min_z = MAP_DEPTH_WALL; 
+            break;
+        case MAP_DEPTH_MONST: 
+            min_z = MAP_DEPTH_WALL; 
+            break;
+        case MAP_DEPTH_PLAYER: 
+            min_z = MAP_DEPTH_WALL; 
+            break;
+        default:
+            z = 0;
+            break;
+
+    }
+    for (z = min_z; z < MAP_DEPTH; z++) {
+        existing = wid_grid_find_first(
+                        wid_editor_map_grid_container, xin, yin, z);
+        while (existing) {
+            if (wid_get_thing_template(existing)) {
+                return;
+            }
+
+            existing = wid_grid_find_next(wid_editor_map_grid_container,
+                                        existing, xin, yin, z);
+        }
     }
 
     wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
@@ -344,7 +351,7 @@ static uint8_t wid_editor_map_thing_remove_template (
         (float) x, (float) y
     };
 
-    existing = wid_find_matching_top(wid_editor_map_grid_container, tl, br);
+    existing = wid_grid_find_top(wid_editor_map_grid_container, tl, br);
     if (existing)  {
         thing_templatep t = wid_get_thing_template(existing);
         if (!t) {
@@ -630,11 +637,11 @@ static uint8_t wid_editor_map_receive_mouse_down (widp w,
                                                   int32_t y,
                                                   uint32_t button)
 {
-    if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
+    if (mouse_down & (1 << SDL_BUTTON_LEFT)) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
 
-    if (SDL_BUTTON(SDL_BUTTON_RIGHT) & SDL_GetMouseState(0, 0)) {
+    if (mouse_down & (1 << SDL_BUTTON_RIGHT)) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
@@ -654,11 +661,11 @@ static uint8_t wid_editor_map_receive_mouse_motion (
         return (false);
     }
 
-    if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
+    if (mouse_down & (1 << SDL_BUTTON_LEFT)) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
 
-    if (SDL_BUTTON(SDL_BUTTON_RIGHT) & SDL_GetMouseState(0, 0)) {
+    if (mouse_down & (1 << SDL_BUTTON_RIGHT)) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
@@ -793,11 +800,11 @@ static uint8_t wid_editor_map_tile_mouse_motion (widp w,
         return (false);
     }
 
-    if (SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) {
+    if (mouse_down & (1 << SDL_BUTTON_LEFT)) {
         return (wid_editor_map_thing_replace(w, x, y, false /* scaled */));
     }
 
-    if (SDL_BUTTON(SDL_BUTTON_RIGHT) & SDL_GetMouseState(0, 0)) {
+    if (mouse_down & (1 << SDL_BUTTON_RIGHT)) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
@@ -901,7 +908,7 @@ void wid_editor_add_grid (void)
                     wid_set_thing_template(child, noentry);
                 }
 
-                wid_set_z_depth(child, 0);
+                wid_set_z_depth(child, MAP_DEPTH_EDITOR);
 
                 wid_set_tl_br_pct(child, tl, br);
             }
@@ -973,8 +980,6 @@ void wid_editor_map_wid_create (void)
                               wid_editor_map_receive_mouse_down);
         wid_set_on_mouse_motion(wid_editor_map_window,
                                 wid_editor_map_receive_mouse_motion);
-        wid_set_on_mouse_motion(wid_editor_map_window,
-                                wid_editor_map_tile_mouse_motion);
         wid_set_on_mouse_up(wid_editor_map_window,
                             wid_editor_map_receive_mouse_up);
         wid_set_on_key_down(wid_editor_map_window,

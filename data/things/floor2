@@ -1,7 +1,7 @@
 {
  short_name="floor"
  tooltip="Floor"
- z_depth=0
+ z_depth=1
  is_boring
  is_floor
  is_animated

@@ -1,7 +1,7 @@
 {
  short_name="large bone pile"
  tooltip="large bone pile"
- z_depth=2
+ z_depth=3
  is_mob_spawner
  is_monst
  hit_priority=22

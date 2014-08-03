@@ -25,3 +25,5 @@ extern uint8_t sdl_exiting;
 
 struct tokens_t_;
 uint8_t sdl_user_exit(struct tokens_t_ *tokens, void *context);
+
+extern uint32_t mouse_down;

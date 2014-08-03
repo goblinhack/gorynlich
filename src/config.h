@@ -82,13 +82,12 @@
 #define MAP_WIDTH                   64
 #define MAP_HEIGHT                  64
 
-/*
- * 0 for floors
- * 1 for walls
- * 2 for items
- * 3 for player and explosions
- */
-#define MAP_DEPTH                   4
+#define MAP_DEPTH_EDITOR            0
+#define MAP_DEPTH_FLOOR             1
+#define MAP_DEPTH_WALL              2
+#define MAP_DEPTH_MONST             3
+#define MAP_DEPTH_PLAYER            4
+#define MAP_DEPTH                   5
 
 #define MAP_THINGS_PER_CELL         32
 
