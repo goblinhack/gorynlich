@@ -197,6 +197,21 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
                 h =  dmap->walls[x  ][y+1];
                 i =  dmap->walls[x+1][y+1] * 2;
 
+#define THIS_IS_FASTER
+#ifdef THIS_IS_FASTER
+                if (a < b) {
+                    lowest = a;
+                } else {
+                    lowest = b;
+                }
+
+                if (c < lowest) { lowest = c; }
+                if (d < lowest) { lowest = d; }
+                if (f < lowest) { lowest = f; }
+                if (g < lowest) { lowest = g; }
+                if (h < lowest) { lowest = h; }
+                if (i < lowest) { lowest = i; }
+#else
                 lowest = min(a, 
                              min(b, 
                                  min(c, 
@@ -204,6 +219,7 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
                                          min(f, 
                                              min(g, 
                                                  min(h,i)))))));
+#endif
 
                 if (*e - lowest >= 2) {
                     *e = lowest + 1;
@@ -212,6 +228,24 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
             }
         }
     } while (changed);
+
+#ifdef DEBUG
+    do {
+        for (x = 1; x < MAP_WIDTH - 1; x++) {
+            for (y = 1; y < MAP_HEIGHT - 1; y++) {
+                e = &dmap->walls[x  ][y];
+                if (*e == is_a_wall) {
+                    printf("  XX");
+                    continue;
+                }
+
+                printf("%4d", *e);
+            }
+            printf("\n");
+        }
+        printf("\n");
+    } while (changed);
+#endif
 
     /*
      * Only update the map when done so the monsters never see a map work
