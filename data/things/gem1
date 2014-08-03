@@ -1,7 +1,7 @@
 {
  short_name="tourmaline gem"
  tooltip="tourmaline gem"
- z_depth=2
+ z_depth=3
  is_boring
  is_treasure
 hit_priority=1

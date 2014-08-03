@@ -1,7 +1,7 @@
 {
  short_name="coins"
  tooltip="Pile of coins"
- z_depth=2
+ z_depth=3
  is_boring
  is_treasure
 hit_priority=1

@@ -2,7 +2,7 @@
  short_name="simple bow"
  tooltip="simple bow"
  fires="data/things/arrow"
- z_depth=2
+ z_depth=3
  is_weapon
 hit_priority=0
  is_carryable

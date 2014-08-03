@@ -38,7 +38,7 @@ static const int32_t TILES_DOWN = 10;
 /*
  * Mouse up etc...
  */
-static uint8_t wid_editor_buttons_receive_mouse_up (widp w,
+static uint8_t wid_editor_buttons_receive_mouse_down (widp w,
                                                     int32_t x,
                                                     int32_t y,
                                                     uint32_t button)
@@ -50,7 +50,7 @@ static uint8_t wid_editor_buttons_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_tile_receive_mouse_up (widp w,
+wid_editor_buttons_tile_receive_mouse_down (widp w,
                                           int32_t x,
                                           int32_t y,
                                           uint32_t button)
@@ -77,7 +77,7 @@ wid_editor_buttons_tile_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_recent_tile_receive_mouse_up (widp w,
+wid_editor_buttons_recent_tile_receive_mouse_down (widp w,
                                                  int32_t x,
                                                  int32_t y,
                                                  uint32_t button)
@@ -91,7 +91,7 @@ wid_editor_buttons_recent_tile_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_back_receive_mouse_up (widp w,
+wid_editor_buttons_icon_back_receive_mouse_down (widp w,
                                                int32_t x,
                                                int32_t y,
                                                uint32_t button)
@@ -105,7 +105,7 @@ wid_editor_buttons_icon_back_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_save_receive_mouse_up (widp w,
+wid_editor_buttons_icon_save_receive_mouse_down (widp w,
                                                int32_t x,
                                                int32_t y,
                                                uint32_t button)
@@ -119,7 +119,7 @@ wid_editor_buttons_icon_save_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_title_receive_mouse_up (widp w,
+wid_editor_buttons_icon_title_receive_mouse_down (widp w,
                                                int32_t x,
                                                int32_t y,
                                                uint32_t button)
@@ -133,7 +133,7 @@ wid_editor_buttons_icon_title_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_load_receive_mouse_up (widp w,
+wid_editor_buttons_icon_load_receive_mouse_down (widp w,
                                                int32_t x,
                                                int32_t y,
                                                uint32_t button)
@@ -147,7 +147,7 @@ wid_editor_buttons_icon_load_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_draw_receive_mouse_up (widp w,
+wid_editor_buttons_icon_draw_receive_mouse_down (widp w,
                                                int32_t x,
                                                int32_t y,
                                                uint32_t button)
@@ -161,7 +161,7 @@ wid_editor_buttons_icon_draw_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_line_receive_mouse_up (widp w,
+wid_editor_buttons_icon_line_receive_mouse_down (widp w,
                                                int32_t x,
                                                int32_t y,
                                                uint32_t button)
@@ -175,7 +175,7 @@ wid_editor_buttons_icon_line_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_fill_receive_mouse_up (widp w,
+wid_editor_buttons_icon_fill_receive_mouse_down (widp w,
                                                int32_t x,
                                                int32_t y,
                                                uint32_t button)
@@ -189,7 +189,7 @@ wid_editor_buttons_icon_fill_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_clear_receive_mouse_up (widp w,
+wid_editor_buttons_icon_clear_receive_mouse_down (widp w,
                                                 int32_t x,
                                                 int32_t y,
                                                 uint32_t button)
@@ -203,7 +203,7 @@ wid_editor_buttons_icon_clear_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_erase_receive_mouse_up (widp w,
+wid_editor_buttons_icon_erase_receive_mouse_down (widp w,
                                                 int32_t x,
                                                 int32_t y,
                                                 uint32_t button)
@@ -217,7 +217,7 @@ wid_editor_buttons_icon_erase_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_undo_receive_mouse_up (widp w,
+wid_editor_buttons_icon_undo_receive_mouse_down (widp w,
                                                 int32_t x,
                                                 int32_t y,
                                                 uint32_t button)
@@ -232,7 +232,7 @@ wid_editor_buttons_icon_undo_receive_mouse_up (widp w,
  * Mouse up etc...
  */
 static uint8_t
-wid_editor_buttons_icon_redo_receive_mouse_up (widp w,
+wid_editor_buttons_icon_redo_receive_mouse_down (widp w,
                                                 int32_t x,
                                                 int32_t y,
                                                 uint32_t button)
@@ -292,7 +292,7 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_thing_template(child, thing_template);
     wid_set_tooltip(child, thing_template_get_tooltip(thing_template));
     wid_set_tl_br_pct(child, tl, br);
-    wid_set_on_mouse_up(child, wid_editor_buttons_tile_receive_mouse_up);
+    wid_set_on_mouse_down(child, wid_editor_buttons_tile_receive_mouse_down);
 
     x++;
 
@@ -332,8 +332,8 @@ void wid_editor_buttons_wid_create (void)
         wid_set_text_pos(wid_editor_buttons_window, true, 0.5f, 0.10f);
         wid_set_text_outline(wid_editor_buttons_window, true);
 
-        wid_set_on_mouse_up(wid_editor_buttons_window,
-                            wid_editor_buttons_receive_mouse_up);
+        wid_set_on_mouse_down(wid_editor_buttons_window,
+                            wid_editor_buttons_receive_mouse_down);
 
         wid_set_text_bot(wid_editor_buttons_window, true);
         wid_set_text_lhs(wid_editor_buttons_window, true);
@@ -420,8 +420,8 @@ void wid_editor_buttons_wid_create (void)
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
             wid_set_tl_br_pct(child, tl, br);
             wid_set_focusable(child, i+1);
-            wid_set_on_mouse_up(child,
-                                wid_editor_buttons_recent_tile_receive_mouse_up);
+            wid_set_on_mouse_down(child,
+                                wid_editor_buttons_recent_tile_receive_mouse_down);
 
             if (i == 0) {
                 wid_set_thing_template(child, first_thing_template);
@@ -465,9 +465,9 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Draw single tiles");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                                 child,
-                                wid_editor_buttons_icon_draw_receive_mouse_up);
+                                wid_editor_buttons_icon_draw_receive_mouse_down);
                 break;
 
             case 1:
@@ -476,9 +476,9 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Fill area with tiles");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                             child,
-                            wid_editor_buttons_icon_fill_receive_mouse_up);
+                            wid_editor_buttons_icon_fill_receive_mouse_down);
                 break;
 
             case 2:
@@ -486,42 +486,42 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Clear ALL tiles");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                             child,
-                            wid_editor_buttons_icon_clear_receive_mouse_up);
+                            wid_editor_buttons_icon_clear_receive_mouse_down);
                 break;
 
             case 3:
                 wid_set_text(child, "Eraser");
-                wid_editor_wid_undo = child;
+                wid_editor_wid_eraser = child;
 
                 wid_set_tooltip(child, "Erase selected tiles");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                             child,
-                            wid_editor_buttons_icon_erase_receive_mouse_up);
+                            wid_editor_buttons_icon_erase_receive_mouse_down);
                 break;
 
             case 4:
                 wid_set_text(child, "Undo");
-                wid_editor_wid_redo = child;
+                wid_editor_wid_undo = child;
 
                 wid_set_tooltip(child, "Undo last change");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                             child,
-                            wid_editor_buttons_icon_undo_receive_mouse_up);
+                            wid_editor_buttons_icon_undo_receive_mouse_down);
                 break;
 
             case 5:
                 wid_set_text(child, "Redo");
-                wid_editor_wid_eraser = child;
+                wid_editor_wid_redo = child;
 
                 wid_set_tooltip(child, "Undo an undo");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                             child,
-                            wid_editor_buttons_icon_redo_receive_mouse_up);
+                            wid_editor_buttons_icon_redo_receive_mouse_down);
                 break;
 
             case 6:
@@ -530,9 +530,9 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Click on the start and then end of a line");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                                 child,
-                                wid_editor_buttons_icon_line_receive_mouse_up);
+                                wid_editor_buttons_icon_line_receive_mouse_down);
                 break;
 
             case 7:
@@ -540,9 +540,9 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Name this level");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                                 child,
-                                wid_editor_buttons_icon_title_receive_mouse_up);
+                                wid_editor_buttons_icon_title_receive_mouse_down);
                 break;
 
             case 8:
@@ -550,9 +550,9 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Save level");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                                 child,
-                                wid_editor_buttons_icon_save_receive_mouse_up);
+                                wid_editor_buttons_icon_save_receive_mouse_down);
                 break;
 
             case 9:
@@ -560,9 +560,9 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Load level");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                                 child,
-                                wid_editor_buttons_icon_load_receive_mouse_up);
+                                wid_editor_buttons_icon_load_receive_mouse_down);
                 break;
 
             case 10:
@@ -570,9 +570,9 @@ void wid_editor_buttons_wid_create (void)
 
                 wid_set_tooltip(child, "Back to main menu");
 
-                wid_set_on_mouse_up(
+                wid_set_on_mouse_down(
                                 child,
-                                wid_editor_buttons_icon_back_receive_mouse_up);
+                                wid_editor_buttons_icon_back_receive_mouse_down);
                 break;
 
             case 11:

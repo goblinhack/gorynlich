@@ -2271,6 +2271,10 @@ void wid_set_z_depth (widp w, uint8_t z_depth)
 {
     fast_verify(w);
 
+    if (z_depth >= MAP_DEPTH) {
+        DIE("setting depth for %s to %u", w->logname, z_depth);
+    }
+
     wid_tree_detach(w);
     w->tree.z_depth = z_depth;
     wid_tree_attach(w);
@@ -4434,20 +4438,8 @@ widp wid_grid_find_top (widp parent, fpoint tl, fpoint br)
         TREE_WALK(*gridtree, node) {
             w = node->wid;
 
-            thing_templatep t = wid_get_thing_template(w);
-            if (!t) {
-                continue;
-            }
-
-            if (w->tree.z_depth < z_depth) {
-                continue;
-            }
-
-            z_depth = w->tree.z_depth;
-            best = w;
+            return (w);
         }
-
-        return (best);
     }
 
     return (0);
@@ -4490,56 +4482,6 @@ widp wid_find_matching (widp parent, fpoint tl, fpoint br,
     }
 
     return (0);
-}
-
-widp wid_find_matching_top (widp parent, fpoint tl, fpoint br)
-{
-    int32_t z_depth;
-    widp child;
-    widp best;
-
-    z_depth = 0;
-    best = 0;
-
-    fast_verify(parent);
-
-    if (parent->grid) {
-        return (wid_grid_find_top(parent, tl, br));
-    }
-
-    TREE_WALK(parent->children_display_sorted, child) {
-
-        thing_templatep t = wid_get_thing_template(child);
-        if (!t) {
-            continue;
-        }
-
-        if (child->tree.tl.x != tl.x) {
-            continue;
-        }
-
-        if (child->tree.tl.y != tl.y) {
-            continue;
-        }
-
-        if (child->tree.br.x != br.x) {
-            continue;
-        }
-
-        if (child->tree.br.y != br.y) {
-            continue;
-        }
-
-        if (child->tree.z_depth < z_depth) {
-            continue;
-        }
-
-        z_depth = child->tree.z_depth;
-
-        best = child;
-    }
-
-    return (best);
 }
 
 static void wid_raise_internal (widp w)

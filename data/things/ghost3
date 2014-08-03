@@ -1,7 +1,7 @@
 {
  short_name="greater phantom"
  tooltip="greater phantom"
- z_depth=2
+ z_depth=3
  speed=1
  health=1
  damage=3

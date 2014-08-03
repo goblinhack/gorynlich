@@ -1,7 +1,7 @@
 {
  short_name="cloudkill potion"
  tooltip="Magic potion"
- z_depth=3
+ z_depth=4
  is_boring
  is_food
  hit_priority=5

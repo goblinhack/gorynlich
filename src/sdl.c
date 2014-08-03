@@ -419,6 +419,8 @@ static int32_t sdl_filter_events (void *userdata, SDL_Event *event)
 }
 #endif /* } */
 
+uint32_t mouse_down;
+
 static void sdl_event (SDL_Event * event)
 {
     static int32_t mouse_x;
@@ -570,7 +572,10 @@ static void sdl_event (SDL_Event * event)
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
+        mouse_down |= (1 << event->button.button);
+
         wid_mouse_down(event->button.button, mouse_x, mouse_y);
+
         break;
 
     case SDL_MOUSEBUTTONUP:
@@ -582,6 +587,8 @@ static void sdl_event (SDL_Event * event)
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
+        mouse_down &= ~(1 << event->button.button);
+        
         wid_mouse_up(event->button.button, mouse_x, mouse_y);
         break;
 

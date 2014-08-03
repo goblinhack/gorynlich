@@ -4,7 +4,7 @@
  carrying={
     "data/things/axe1"
  }
- z_depth=3
+ z_depth=4
  speed=7
  health=250
  is_player

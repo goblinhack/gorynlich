@@ -1,7 +1,7 @@
 {
  short_name="pipe"
  tooltip="Pipe"
- z_depth=2
+ z_depth=3
  is_boring
  is_pipe
  tiles={
