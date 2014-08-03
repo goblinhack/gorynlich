@@ -82,6 +82,11 @@ typedef struct widgrid_ {
     uint32_t height;
     uint32_t pixwidth;
     uint32_t pixheight;
+    uint8_t bounds_valid;
+    double tl_x;
+    double tl_y;
+    double br_x;
+    double br_y;
 } widgrid;
 
 typedef struct wid_ {
@@ -598,6 +603,7 @@ static void wid_grid_tree_attach (widp w)
         DIE("wid insert %s to grid", w->logname);
     }
 
+    grid->bounds_valid = false;
     w->gridnode->x = x;
     w->gridnode->y = y;
     w->gridnode->aligned_x = !((mx + (grid->pixwidth/2)) % grid->pixwidth);
@@ -5123,45 +5129,59 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
      * Find out the space that the children take up then use this to
      * adjust the scrollbar dimensions.
      */
-    TREE_OFFSET_WALK_UNSAFE(owner->children_unsorted, child) {
+    if (owner->grid && owner->grid->bounds_valid) {
+        minx = owner->grid->tl_x;
+        miny = owner->grid->tl_y;
+        maxx = owner->grid->br_x;
+        maxy = owner->grid->br_y;
+    } else {
+        TREE_OFFSET_WALK_UNSAFE(owner->children_unsorted, child) {
+            double tl_x, tl_y, br_x, br_y;
 
-        double tl_x, tl_y, br_x, br_y;
-        wid_get_tl_x_tl_y_br_x_br_y(child, &tl_x, &tl_y, &br_x, &br_y);
+            wid_get_tl_x_tl_y_br_x_br_y(child, &tl_x, &tl_y, &br_x, &br_y);
 
-        double ptl_x, ptl_y, pbr_x, pbr_y;
-        wid_get_tl_x_tl_y_br_x_br_y(child->parent, 
-                                    &ptl_x, &ptl_y, &pbr_x, &pbr_y);
+            if (first) {
+                minx = tl_x;
+                miny = tl_y;
+                maxx = br_x;
+                maxy = br_y;
+                first = false;
+                continue;
+            }
 
-        double tminx = tl_x - ptl_x;
-        double tminy = tl_y - ptl_y;
-        double tmaxx = br_x - ptl_x;
-        double tmaxy = br_y - ptl_y;
+            if (tl_x < minx) {
+                minx = tl_x;
+            }
 
-        if (first) {
-            minx = tminx;
-            miny = tminy;
-            maxx = tmaxx;
-            maxy = tmaxy;
-            first = false;
-            continue;
+            if (tl_y < miny) {
+                miny = tl_y;
+            }
+
+            if (br_x > maxx) {
+                maxx = br_x;
+            }
+
+            if (br_y > maxy) {
+                maxy = br_y;
+            }
         }
 
-        if (tminx < minx) {
-            minx = tminx;
-        }
-
-        if (tminy < miny) {
-            miny = tminy;
-        }
-
-        if (tmaxx > maxx) {
-            maxx = tmaxx;
-        }
-
-        if (tmaxy > maxy) {
-            maxy = tmaxy;
+        if (owner->grid) {
+            owner->grid->tl_x = minx;
+            owner->grid->tl_y = miny;
+            owner->grid->br_x = maxx;
+            owner->grid->br_y = maxy;
+            owner->grid->bounds_valid = true;
         }
     }
+
+    double ptl_x, ptl_y, pbr_x, pbr_y;
+    wid_get_tl_x_tl_y_br_x_br_y(owner, &ptl_x, &ptl_y, &pbr_x, &pbr_y);
+
+    minx -= ptl_x;
+    miny -= ptl_y;
+    maxx -= ptl_x;
+    maxy -= ptl_y;
 
     child_width = maxx - minx;
     child_height = maxy - miny;
@@ -5341,8 +5361,10 @@ static void wid_update_internal (widp w)
     /*
      * Clip all the children
      */
-    TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
-        wid_update_internal(child);
+    if (!w->grid) {
+        TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
+            wid_update_internal(child);
+        }
     }
 
     /*
@@ -6243,9 +6265,39 @@ static void wid_move_delta_internal (widp w, double dx, double dy)
 
     widp child;
 
-    { TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
-        wid_children_move_delta_internal(child, dx, dy);
-    } }
+    if (w->grid) {
+        uint8_t z;
+        uint16_t x, y;
+
+        for (z = 0; z < MAP_DEPTH; z++) {
+            for (x = 0; x < MAP_WIDTH; x++) {
+                for (y = 0; y < MAP_HEIGHT; y++) {
+                    tree_root **tree = w->grid->grid_of_trees[z] + 
+                                    (y * w->grid->width) + x;
+                    widgridnode *node;
+
+                    TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
+                                                    tree_prev_tree_wid_compare_func) {
+                        w->tree.tl.x += dx;
+                        w->tree.tl.y += dy;
+                        w->tree.br.x += dx;
+                        w->tree.br.y += dy;
+                    }
+                }
+            }
+        }
+
+        if (w->grid->bounds_valid) {
+            w->grid->tl_x += dx;
+            w->grid->tl_y += dy;
+            w->grid->br_x += dx;
+            w->grid->br_y += dy;
+        }
+    } else {
+        { TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
+            wid_children_move_delta_internal(child, dx, dy);
+        } }
+    }
 
     w->can_be_atteched_now = true;
     wid_tree_attach(w);
@@ -6255,7 +6307,9 @@ void wid_move_delta (widp w, double dx, double dy)
 {
     wid_move_delta_internal(w, dx, dy);
 
-    wid_update_internal(w);
+    if (!w->grid) {
+        wid_update_internal(w);
+    }
 }
 
 void wid_move_to_bottom (widp w)

@@ -186,7 +186,6 @@ typedef uint8_t (*thing_template_is_callback)(thing_templatep);
  */
 #define DIE(args...)                                                          \
     DYING("Died at %s:%s():%u", __FILE__, __FUNCTION__, __LINE__);            \
-    assert(0);                                                                \
     CROAK(args);                                                              \
     exit(1);
 

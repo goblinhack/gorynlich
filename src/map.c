@@ -40,7 +40,7 @@ static uint8_t map_is_x_at (levelp level,
     uint8_t z;
 
     for (z = 0; z < MAP_DEPTH; z++) {
-    w = wid_grid_find_first(grid_wid, x, y, z);
+        w = wid_grid_find_first(grid_wid, x, y, z);
         while (w) {
             thingp thing_it = wid_get_thing(w);
 

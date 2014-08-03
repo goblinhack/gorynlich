@@ -19,12 +19,6 @@ static const int32_t BUTTON_PAD_X = 30;
 
 typedef void (*wid_popup_callback)(widp);
 
-static
-uint8_t wid_popup_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
-{
-    return (true);
-}
-
 static uint8_t wid_popup_button_selected (widp w)
 {
     wid_popup_callback callback;
@@ -442,8 +436,7 @@ widp wid_popup (const char *text, const char *title,
             wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_focusable(child, focus_order--);
 
-            wid_set_on_mouse_down(child, wid_popup_wid_noop);
-            wid_set_on_mouse_up(child, wid_popup_wid_mouse_event);
+            wid_set_on_mouse_down(child, wid_popup_wid_mouse_event);
             wid_set_on_key_down(child, wid_popup_wid_key_event);
 
             wid_set_client_context(child, (void*)button_callback[n]);
