@@ -55,16 +55,16 @@ static const char *wid_intro_button_col3[WID_INTRO_MAX_SETTINGS] = {
 static const char *wid_intro_button_col4
                         [WID_INTRO_MAX_SETTINGS][WID_INTRO_MAX_VAL] = {
     { 
-        "1008x672",
-        "1512x1008",
-        "1280x1024",
         "640x480",
         "800x600",
+        "1008x672",
         "1024x768",
         "1152x864",
+        "1512x1008",
         "1280x960",
-        "1600x1200",
+        "1280x1024",
         "1400x1050",
+        "1600x1200",
         0 
     },
     { "Off", "Min", "Normal", "Max", 0 },
