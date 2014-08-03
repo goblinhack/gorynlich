@@ -7,6 +7,7 @@
 #pragma once
 
 #include "sdl.h"
+#include "enum.h"
 
 typedef enum {
     WID_COLOR_BG,
@@ -370,7 +371,6 @@ widp wid_grid_find_thing_template_is(widp parent,
 uint8_t wid_remove_from_grid(widp);
 void marshal_wid_grid(marshal_p ctx, widp);
 uint8_t demarshal_wid_grid(demarshal_p ctx, widp, grid_wid_replace_t);
-uint8_t wid_is_moving(widp w);
 void wid_move_stop(widp w);
 void wid_move_resume(widp w);
 uint8_t wid_is_hidden(widp w);
@@ -398,3 +398,369 @@ extern uint32_t history_at;
 extern uint32_t history_walk;
 
 extern tree_rootp wid_timers;
+
+typedef struct {
+    /*
+     * Widget display settings
+     */
+    fontp font;
+
+    /*
+     * Colors
+     */
+    color colors[WID_COLOR_MAX];
+    uint8_t color_set [WID_COLOR_MAX];
+} wid_cfg;
+
+typedef struct tree_wid_key_ {
+    tree_node node;
+
+    /*
+     * Higher number == most raised/frontmost wid
+     *
+     * Higher numbers are first in the event tree.
+     * Higher numbers are drawn last and hence in the foreground.
+     *
+     * Lower numbers are last in the event tree.
+     * Lower numbers are drawn first and hence in the background.
+     */
+    int32_t priority;
+    uint8_t z_depth;
+
+    /*
+     * The real position on the screen initially.
+     */
+    fpoint tl;
+    fpoint br;
+
+    /*
+     * Unique wid ID.
+     */
+    uint64_t key;
+} tree_wid_key;
+
+typedef struct widgridnode_ {
+    tree_wid_key tree;
+ 
+    widp wid;
+    uint32_t x;
+    uint32_t y;
+    uint8_t aligned_x:1;
+    uint8_t aligned_y:1;
+} widgridnode;
+
+typedef struct widgrid_ {
+    tree_root **grid_of_trees[MAP_DEPTH];
+    uint32_t nelems;
+    uint32_t width;
+    uint32_t height;
+    uint32_t pixwidth;
+    uint32_t pixheight;
+    uint8_t bounds_valid;
+    double tl_x;
+    double tl_y;
+    double br_x;
+    double br_y;
+} widgrid;
+
+typedef struct wid_ {
+    /*
+     * Sorted for display order.
+     */
+    tree_wid_key tree;
+
+    /*
+     * A second tree, unsorted.
+     */
+    tree_key_int tree2_unsorted;
+
+    /*
+     * A tree for moving things
+     */
+    tree_key_int tree3_moving_wids;
+    
+    /*
+     * A tree for things being destroyed.
+     */
+    tree_key_int tree4_wids_being_destroyed;
+
+    /*
+     * A tree for ticking things
+     */
+    tree_key_int tree5_ticking_wids;
+
+    /*
+     * Widget internal name.
+     */
+    char *name;
+
+    /*
+     * For debugging.
+     */
+    char *logname;
+
+    /*
+     * Text that appears on the wid.
+     */
+    char text[MAXSTR];
+
+    /*
+     * Text that appears as a tooltip.
+     */
+    char *tooltip;
+
+    /*
+     * The wid shape
+     */
+    double bevel;
+    fsize radius;
+    uint8_t sides;
+
+    /*
+     * Cache of text size as this is expensive to work out if there are colors
+     * in the strings.
+     */
+    int16_t ttf_width;
+    int16_t ttf_height;
+    enum_fmt fmt;
+
+    /*
+     * The wid tex and tex scaling
+     */
+    texp tex;
+    tilep tile;
+    thingp thing;
+    thing_templatep thing_template;
+    fsize texuv;
+    fsize tex_tl;
+    fsize tex_br;
+
+    /*
+     * WID_MODE_NORMAL ...
+     */
+    wid_mode mode;
+    int32_t timestamp_last_mode_change;
+
+    /*
+     * Fast lookup for grid widgets. The parent has a grid pointer.
+     */
+    widgrid *grid;
+
+    /*
+     * The children have node pointers.
+     */
+    widgridnode *gridnode;
+
+    /*
+     * And a pointer back to the tree they are on.
+     */
+    tree_rootp gridtree;
+
+    /*
+     * The real position after scrollbar adjustments.
+     */
+    fpoint abs_tl;
+    fpoint abs_br;
+
+    /*
+     * Offset of child widgets in the parent window.
+     */
+    fpoint offset;
+
+    /*
+     * Config layers:
+     */
+    wid_cfg cfg[WID_MODE_LAST];
+
+    /*
+     * The wids children
+     */
+    widp parent;
+
+    /*
+     * Sorted for display onto the screen.
+     */
+    tree_root *children_display_sorted;
+
+    /*
+     * No particular sort order.
+     */
+    tree_root *children_unsorted;
+
+    /*
+     * Optionally set to the previous wid in a list
+     */
+    widp prev;
+    widp next;
+    widp scrollbar_horiz;
+    widp scrollbar_vert;
+    widp scrollbar_owner;
+
+    /*
+     * Client context
+     */
+    void *client_context;
+
+    /*
+     * Text input
+     */
+    uint32_t cursor;
+
+    /*
+     * Text placement.
+     */
+    double text_scaling;
+    double text_advance;
+    fpoint text_pos;
+
+    /*
+     * Action handlers
+     */
+    on_key_down_t on_key_down;
+    on_key_up_t on_key_up;
+    on_mouse_down_t on_mouse_down;
+    on_mouse_up_t on_mouse_up;
+    on_mouse_motion_t on_mouse_motion;
+    on_mouse_focus_begin_t on_mouse_focus_begin;
+    on_mouse_focus_end_t on_mouse_focus_end;
+    on_mouse_over_begin_t on_mouse_over_begin;
+    on_mouse_over_end_t on_mouse_over_end;
+    on_destroy_t on_destroy;
+    on_tick_t on_tick;
+
+    /*
+     * Fade in/out/... effects.
+     */
+    uint32_t timestamp_fading_begin;
+    uint32_t timestamp_fading_end;
+    uint32_t timestamp_moving_begin;
+    uint32_t timestamp_moving_end;
+    uint32_t timestamp_scaling_w_begin;
+    uint32_t timestamp_scaling_w_end;
+    uint32_t timestamp_scaling_h_begin;
+    uint32_t timestamp_scaling_h_end;
+
+    uint32_t timestamp_blit_scaling_w_begin;
+    uint32_t timestamp_blit_scaling_w_end;
+    uint32_t timestamp_blit_scaling_h_begin;
+    uint32_t timestamp_blit_scaling_h_end;
+
+    uint32_t timestamp_rotate_begin;
+    uint32_t timestamp_rotate_end;
+    uint32_t destroy_when;
+    fpoint moving_start;
+    fpoint moving_end;
+
+    double scale_w_base;
+    double scaling_w_start;
+    double scaling_w_end;
+    double scale_h_base;
+    double scaling_h_start;
+    double scaling_h_end;
+    uint32_t scaling_w_bounce_count;
+    uint32_t scaling_h_bounce_count;
+
+    double blit_scale_w_base;
+    double blit_scaling_w_start;
+    double blit_scaling_w_end;
+    double blit_scale_h_base;
+    double blit_scaling_h_start;
+    double blit_scaling_h_end;
+    uint32_t blit_scaling_w_bounce_count;
+    uint32_t blit_scaling_h_bounce_count;
+
+    double rotate_base;
+    double rotate_start;
+    double rotate_end;
+    uint32_t rotate_sways_count;
+    uint32_t fade_count;
+    uint32_t fade_delay;
+
+    /*
+     * Order of this wid amongst other focusable widgets.
+     */
+    uint8_t focus_order;
+
+    /*
+     * Who had it last ? Used when raising this wid again.
+     */
+    uint8_t focus_last;
+
+    /*
+     * Flags.
+     */
+    uint8_t debug:1;
+    uint8_t bevelled:1;
+    uint8_t rounded:1;
+    uint8_t square:1;
+    uint8_t square_outline:1;
+    uint8_t radius_set:1;
+    uint8_t tex_tl_set:1;
+    uint8_t tex_br_set:1;
+    uint8_t hidden:1;
+    uint8_t always_hidden:1;
+    uint8_t visible:1;
+    uint8_t received_input:1;
+    uint8_t movable:1;
+    uint8_t movable_set:1;
+    uint8_t movable_horiz:1;
+    uint8_t movable_horiz_set:1;
+    uint8_t movable_vert:1;
+    uint8_t movable_vert_set:1;
+    uint8_t movable_bounded:1;
+    uint8_t movable_bounded_set:1;
+    uint8_t fade_in:1;
+    uint8_t fade_out:1;
+    uint8_t moving:1;
+    uint8_t ignore_for_events:1;
+    uint8_t paused:1;
+
+    uint8_t scaled_w:1;
+    uint8_t scaled_h:1;
+    uint8_t scaling_w:1;
+    uint8_t scaling_h:1;
+
+    uint8_t blit_scaled_w:1;
+    uint8_t blit_scaled_h:1;
+    uint8_t blit_scaling_w:1;
+    uint8_t blit_scaling_h:1;
+
+    uint8_t rotated:1;
+    uint8_t rotating:1;
+    uint8_t flip_vert:1;
+    uint8_t flip_horiz:1;
+    uint8_t first_update:1;
+    uint8_t show_cursor:1;
+    uint8_t text_size_cached:1;
+    uint8_t text_pos_set:1;
+    uint8_t text_fixed_width;
+    uint8_t text_lhs:1;
+    uint8_t text_rhs:1;
+    uint8_t text_centerx:1;
+    uint8_t text_top:1;
+    uint8_t text_bot:1;
+    uint8_t text_centery:1;
+    uint8_t text_outline:1;
+    uint8_t blit_outline:1;
+    uint8_t being_destroyed:1;
+    uint8_t do_not_raise:1;
+    uint8_t do_not_lower:1;
+    uint8_t in_tree:1;
+    uint8_t in_tree2_unsorted:1;
+    uint8_t in_tree3_moving_wids:1;
+    uint8_t in_tree4_wids_being_destroyed:1;
+    uint8_t in_tree5_ticking_wids:1;
+    uint8_t can_be_atteched_now:1;
+} wid;
+
+static inline uint8_t wid_is_moving (widp w)
+{
+    fast_verify(w);
+
+    if (w->moving) {
+        return (true);
+    }
+
+    return (false);
+}
+
