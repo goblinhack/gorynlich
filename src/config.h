@@ -34,7 +34,7 @@
 /*
  * Other windows are darker when popups appear
  */
-#define ENABLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
+#undef ENABLE_FADE_OUT_OTHER_WIDGETS_WHEN_FOCUS_LOCKED
 
 /*
  * Retro text
@@ -88,6 +88,7 @@
 #define MAP_DEPTH_MONST             3
 #define MAP_DEPTH_PLAYER            4
 #define MAP_DEPTH                   5
+#define MAP_BORDER                  3
 
 #define MAP_THINGS_PER_CELL         32
 

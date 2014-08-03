@@ -366,8 +366,7 @@ void level_set_monst_map_treat_doors_as_passable (levelp level)
         for (y = 0; y < MAP_HEIGHT; y++) {
             if (map_is_wall_at(level, x, y)         ||
                 map_is_exit_at(level, x, y)         ||
-                map_is_spam_at(level, x, y)         ||
-                map_is_mob_spawner_at(level, x, y)) {
+                map_is_spam_at(level, x, y)) {
                 /*
                  * Obstacle.
                  */
