@@ -24,6 +24,7 @@
 #include "sound.h"
 #include "timer.h"
 #include "client.h"
+#include "wid_game_map_client.h"
 
 /*
  * Display sorted.
@@ -6826,6 +6827,146 @@ static void wid_gc (widp w)
 /*
  * Display one wid and its children
  */
+static void wid_display_fast (widp w)
+{
+    uint8_t fading;
+    int32_t owidth;
+    int32_t oheight;
+    int32_t otlx;
+    int32_t otly;
+    int32_t obrx;
+    int32_t obry;
+    int32_t tlx;
+    int32_t tly;
+    int32_t brx;
+    int32_t bry;
+    widp p;
+
+    /*
+     * Bounding box for drawing the wid. Co-ords are negative as we
+     * flipped the screen
+     */
+    tlx = w->abs_tl.x;
+    tly = w->abs_tl.y;
+    brx = w->abs_br.x;
+    bry = w->abs_br.y;
+
+    double fade = 0;
+
+    if (fading) {
+        fade = wid_get_fade_amount(w);
+    }
+
+    /*
+     * Record the original pre clip sizes for text centering.
+     */
+    otlx = wid_get_tl_x(w);
+    otly = wid_get_tl_y(w);
+    obrx = wid_get_br_x(w);
+    obry = wid_get_br_y(w);
+
+    p = w->parent;
+    if (p) {
+        otlx += p->offset.x;
+        otly += p->offset.y;
+        obrx += p->offset.x;
+        obry += p->offset.y;
+    }
+
+    owidth = obrx - otlx;
+    oheight = obry - otly;
+
+    /*
+     * If this widget was active and the time has elapsed, make it normal.
+     */
+    if (wid_get_mode(w) == WID_MODE_ACTIVE) {
+        if ((time_get_time_cached() - w->timestamp_last_mode_change) > 250) {
+            wid_set_mode(w, WID_MODE_NORMAL);
+        }
+    }
+
+    /*
+     * Draw the wid frame
+     */
+    color col_text = wid_get_color(w, WID_COLOR_TEXT);
+    color col_text_outline = BLACK;
+
+    color col_tl = wid_get_color(w, WID_COLOR_TL);
+    color col_br = wid_get_color(w, WID_COLOR_BR);
+    color col = wid_get_color(w, WID_COLOR_BG);
+    color col_tile = wid_get_color(w, WID_COLOR_BLIT);
+
+    /*
+     * Apply fade in/out effects.
+     */
+    if (fading) {
+        double fade = wid_get_fade_amount(w);
+
+        /*
+         * So hidden scrolbars stay hidden in a fading parent. I'm drunk.
+         */
+        if (!w->fade_out && !w->fade_in && w->hidden) {
+            fade = 0.0;
+        }
+
+        col_tl.a *= fade;
+        col.a *= fade;
+        col_br.a *= fade;
+        col_text.a *= fade;
+        col_text_outline.a *= fade;
+        col_tile.a *= fade;
+    }
+
+    /*
+     * Widget tiles and textures.
+     */
+    tilep tile = wid_get_tile(w);
+
+    /*
+     * Only care about tex scaling here.
+     */
+    fsize texuv;
+    (void) wid_get_tex(w, &texuv);
+
+    fpoint tl;
+    fpoint br;
+
+    tl.x = otlx;
+    tl.y = otly;
+    br.x = otlx + wid_get_width(w);
+    br.y = otly + wid_get_height(w);
+
+    glcolor(col_tile);
+
+    if (w->blit_scaled_w || w->blit_scaled_h ||
+        w->blit_scaling_w || w->blit_scaling_h) {
+
+        double scale_width = wid_get_blit_scaling_w(w) - 1;
+        double scale_height = wid_get_blit_scaling_h(w) - 1;
+
+        double blit_width = owidth;
+        double blit_height = oheight;
+
+        blit_width /= 2.0;
+        blit_height /= 2.0;
+
+        blit_width *= scale_width;
+        blit_height *= scale_height;
+
+        tl.x -= blit_width;
+        br.x += blit_width;
+        tl.y -= blit_height;
+        br.y += blit_height;
+
+        tile_blit_fat(tile, 0, tl, br);
+    } else {
+        tile_blit_fat(tile, 0, tl, br);
+    }
+}
+
+/*
+ * Display one wid and its children
+ */
 static void wid_display (widp w,
                          uint8_t disable_scissor,
                          uint8_t *updated_scissors)
@@ -7382,7 +7523,6 @@ static void wid_display (widp w,
             maxy = MAP_HEIGHT;
         }
 
-        uint8_t child_updated_scissors = false;
         int32_t x, y;
         uint8_t z;
 
@@ -7395,15 +7535,16 @@ static void wid_display (widp w,
                     TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
                                                     tree_prev_tree_wid_compare_func) {
 
-                        wid_display(node->wid, disable_scissor, 
-                                    &child_updated_scissors);
+                        wid_display_fast(node->wid);
                     }
                 }
             }
         }
 
         blit_flush();
-    } else {
+    }
+    
+    if (w != wid_game_map_client_grid_container) {
         /*
          * If this is a grid wid, draw the elements in y sorted order.
          */

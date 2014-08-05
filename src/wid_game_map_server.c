@@ -113,7 +113,7 @@ void wid_game_map_server_wid_create (void)
 
         wid_game_map_server_grid_container =
                         wid_new_container(wid_game_map_server_window,
-                                          "wid game grid container");
+                                          "wid game server grid container");
 
         wid_always_hidden(wid_game_map_server_grid_container, true);
         wid_set_color(wid_game_map_server_grid_container, WID_COLOR_TL, BLACK);
