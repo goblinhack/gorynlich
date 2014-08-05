@@ -18,6 +18,7 @@ void thing_map_dump(void);
 thingp thing_server_new(const char *name, double x, double y);
 void thing_server_init(thingp, double x, double y);
 thingp thing_client_new(uint32_t, thing_templatep);
+thingp thing_client_local_new(thing_templatep thing_template);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
@@ -153,14 +154,16 @@ void thing_place_timed(thing_templatep t,
                        double x,
                        double y,
                        uint32_t ms, 
-                       uint32_t jitter);
+                       uint32_t jitter,
+                       uint8_t server_side);
 void thing_place_and_destroy_timed(thing_templatep t, 
                                    thingp owner,
                                    double x,
                                    double y,
                                    uint32_t ms, 
                                    uint32_t destroy_in, 
-                                   uint32_t jitter);
+                                   uint32_t jitter,
+                                   uint8_t server_side);
 void thing_timer_destroy(thingp t, uint32_t destroy_in);
 void thing_timer_place_and_destroy_callback(void *context);
 void thing_timer_place_and_destroy_destroy_callback(void *context);
@@ -195,6 +198,7 @@ typedef struct {
     uint32_t destroy_in;
     uint32_t owner_id;
     uint32_t thing_id;
+    uint8_t server_side:1;
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);
