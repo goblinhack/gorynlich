@@ -12,6 +12,7 @@
 #include "timer.h"
 #include "wid.h"
 #include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 
 /*
  * Various thing timers.
@@ -93,12 +94,24 @@ void thing_timer_place_and_destroy_callback (void *context)
         DIE("no thing to place");
     }
 
-    widp w = wid_game_map_server_replace_tile(
-                                    wid_game_map_server_grid_container,
-                                    place->x,
-                                    place->y,
-                                    0, /* thing */
-                                    place->thing_template);
+    widp w;
+
+    if (place->server_side) {
+        w = wid_game_map_server_replace_tile(
+                                        wid_game_map_server_grid_container,
+                                        place->x,
+                                        place->y,
+                                        0, /* thing */
+                                        place->thing_template);
+    } else {
+        thingp t = thing_client_local_new(place->thing_template);
+
+        w = wid_game_map_client_replace_tile(
+                                        wid_game_map_client_grid_container,
+                                        place->x,
+                                        place->y,
+                                        t);
+    }
 
     /*
      * Just pass the same context along as it has the expire time but add
@@ -186,12 +199,24 @@ void thing_timer_place_callback (void *context)
 
     place = (typeof(place)) context;
 
-    widp w = wid_game_map_server_replace_tile(
-                                    wid_game_map_server_grid_container,
-                                    place->x,
-                                    place->y,
-                                    0, /* thing */
-                                    place->thing_template);
+    widp w;
+
+    if (place->server_side) {
+        w = wid_game_map_server_replace_tile(
+                                        wid_game_map_server_grid_container,
+                                        place->x,
+                                        place->y,
+                                        0, /* thing */
+                                        place->thing_template);
+    } else {
+        thingp t = thing_client_local_new(place->thing_template);
+
+        w = wid_game_map_client_replace_tile(
+                                        wid_game_map_client_grid_container,
+                                        place->x,
+                                        place->y,
+                                        t);
+    }
 
     thingp t = wid_get_thing(w);
 

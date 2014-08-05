@@ -154,6 +154,11 @@ static uint32_t next_monst_thing_id;
 thingp thing_server_ids[THING_ID_MAX];
 thingp thing_client_ids[THING_ID_MAX];
 
+/*
+ * We reserve client things for local side explosion effects.
+ */
+static uint32_t next_client_thing_id = THING_ID_MAX;
+
 static uint8_t thing_init_done;
 static void thing_destroy_implicit(thingp t);
 static void thing_map_check_empty(void);
@@ -843,6 +848,26 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 //LOG("created %s", thing_logname(t));
 
     return (t);
+}
+
+/*
+ * Create a new thing that only lives on this client.
+ */
+thingp thing_client_local_new (thing_templatep thing_template)
+{
+    uint32_t id;
+
+    id = next_client_thing_id++;
+
+    /*
+     * Will it ever loop? We don't check for old collisions. Seems a tad 
+     * unlikely.
+     */
+    if (next_client_thing_id >= (uint32_t) -1) {
+        next_client_thing_id = THING_ID_MAX;
+    }
+
+    return (thing_client_new(id, thing_template));
 }
 
 /*
@@ -2738,7 +2763,8 @@ void thing_place_timed (thing_templatep thing_template,
                         double x,
                         double y,
                         uint32_t ms, 
-                        uint32_t jitter)
+                        uint32_t jitter,
+                        uint8_t server_side)
 {
     thing_place_context_t *context;
 
@@ -2748,6 +2774,7 @@ void thing_place_timed (thing_templatep thing_template,
     context->y = y;
     context->level = server_level;
     context->thing_template = thing_template;
+    context->server_side = server_side ? 1 : 0;
 
     action_timer_create(
             &server_timers,
@@ -2768,7 +2795,8 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
                                     double y,
                                     uint32_t ms, 
                                     uint32_t destroy_in, 
-                                    uint32_t jitter)
+                                    uint32_t jitter,
+                                    uint8_t server_side)
 {
     thing_place_context_t *context;
 
@@ -2779,6 +2807,7 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
     context->level = server_level;
     context->destroy_in = destroy_in;
     context->thing_template = thing_template;
+    context->server_side = server_side ? 1 : 0;
 
     if (owner) {
         context->owner_id = owner->thing_id;

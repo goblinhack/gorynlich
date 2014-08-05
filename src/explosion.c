@@ -69,7 +69,8 @@ static uint8_t level_place_explosion_at (levelp level,
                                   y,
                                   delay * 100,
                                   2000,     // destroy in
-                                  10);     // jitter
+                                  10, // jitter
+                                  level == server_level ? 1 : 0);
 
     return (true);
 }

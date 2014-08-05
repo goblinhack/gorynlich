@@ -271,6 +271,12 @@ uint8_t wid_game_map_client_player_move (void)
     y -= (double)up * delta;
     y += (double)down * delta;
 
+#if 0
+    if (fire) {
+        level_place_fireball(client_level, player, player->x, player->y);
+        fire = 0;
+    }
+#endif
     thing_client_move(player, x, y, up, down, left, right, fire);
 
     /*
@@ -575,7 +581,7 @@ void wid_game_map_client_wid_create (void)
 
         wid_game_map_client_grid_container =
                         wid_new_container(wid_game_map_client_window,
-                                          "wid game grid container");
+                                          "wid game client grid container");
 
         wid_set_no_shape(wid_game_map_client_grid_container);
 
