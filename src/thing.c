@@ -467,23 +467,23 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
     verify(t);
 
     if (!t->thing_id) {
-        DIE("cannot add ID of 0");
+        DIE("cannot add thing %s ID of 0", t->logname);
     }
 
     if (x < 0) {
-        DIE("map underflow");
+        DIE("map underflow for thing %s", t->logname);
     }
 
     if (y < 0) {
-        DIE("map y underflow");
+        DIE("map y underflow for thing %s", t->logname);
     }
 
     if (x >= MAP_WIDTH) {
-        DIE("map x overflow");
+        DIE("map x overflow for thing %s", t->logname);
     }
 
     if (y >= MAP_HEIGHT) {
-        DIE("map y overflow");
+        DIE("map y overflow for thing %s", t->logname);
     }
 
     thingp *ids;
@@ -1397,11 +1397,11 @@ static int thing_hit_ (thingp t,
              */
             if (thing_template_is_combustable(t->thing_template)) {
                 if (thing_is_monst(t)) {
-                    level_place_small_cloudkill(t->level,
+                    level_place_small_cloudkill(thing_level(t),
                                                 0, // owner
                                                 t->x, t->y);
                 } else {
-                    level_place_small_explosion(t->level, 
+                    level_place_small_explosion(thing_level(t),
                                                 0, // owner
                                                 t->x, t->y);
                 }
@@ -3202,7 +3202,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
          * Work out what we are going to send.
          */
         uint8_t template_id = thing_template_to_id(thing_template);
-        uint16_t id = t->thing_id;
+        uint32_t id = t->thing_id;
         uint8_t tx;
         uint8_t ty;
 

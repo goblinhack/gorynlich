@@ -271,12 +271,6 @@ uint8_t wid_game_map_client_player_move (void)
     y -= (double)up * delta;
     y += (double)down * delta;
 
-#if 0
-    if (fire) {
-        level_place_fireball(client_level, player, player->x, player->y);
-        fire = 0;
-    }
-#endif
     thing_client_move(player, x, y, up, down, left, right, fire);
 
     /*
@@ -746,7 +740,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
      * Make a new thing.
      */
     child = wid_new_square_button(wid_game_map_client_grid_container,
-                                  "map tile");
+                                  "client map tile");
 
     wid_set_mode(child, WID_MODE_NORMAL);
     wid_set_no_shape(child);
@@ -766,7 +760,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
         wid_blit_scaling_to_pct_in(child, 1.0, 2.0, 500, 0);
         dx = ((double)((rand() % 100) - 50)) / 100.0;
         dy = ((double)((rand() % 100) - 50)) / 100.0;
-        wid_fade_out(child, 1000);
+        wid_fade_out(child, 2000);
     }
 
     if (thing_is_mob_spawner(t)) {

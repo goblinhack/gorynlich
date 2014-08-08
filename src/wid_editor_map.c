@@ -180,7 +180,7 @@ widp wid_editor_map_thing_replace_template (widp w,
      * Make a new thing.
      */
     child = wid_new_square_button(wid_editor_map_grid_container,
-                                  "map tile");
+                                  "editor map tile");
 
     wid_set_tl_br(child, tl, br);
     wid_set_text_lhs(child, true);
@@ -637,11 +637,11 @@ static uint8_t wid_editor_map_receive_mouse_down (widp w,
                                                   int32_t y,
                                                   uint32_t button)
 {
-    if (mouse_down & (1 << SDL_BUTTON_LEFT)) {
+    if (mouse_down & SDL_BUTTON_LEFT) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
 
-    if (mouse_down & (1 << SDL_BUTTON_RIGHT)) {
+    if (mouse_down & SDL_BUTTON_RIGHT) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
@@ -661,11 +661,11 @@ static uint8_t wid_editor_map_receive_mouse_motion (
         return (false);
     }
 
-    if (mouse_down & (1 << SDL_BUTTON_LEFT)) {
+    if (mouse_down & SDL_BUTTON_LEFT) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
 
-    if (mouse_down & (1 << SDL_BUTTON_RIGHT)) {
+    if (mouse_down & SDL_BUTTON_RIGHT) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
@@ -800,11 +800,11 @@ static uint8_t wid_editor_map_tile_mouse_motion (widp w,
         return (false);
     }
 
-    if (mouse_down & (1 << SDL_BUTTON_LEFT)) {
+    if (mouse_down & SDL_BUTTON_LEFT) {
         return (wid_editor_map_thing_replace(w, x, y, false /* scaled */));
     }
 
-    if (mouse_down & (1 << SDL_BUTTON_RIGHT)) {
+    if (mouse_down & SDL_BUTTON_RIGHT) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
@@ -868,7 +868,7 @@ void wid_editor_add_grid (void)
                 br.y = tl.y + tile_height_pct;
 
                 child = wid_new_square_button(wid_editor_map_grid_container,
-                                              "map tile");
+                                              "editor grid map tile");
 
                 wid_set_color(child, WID_COLOR_BG, BLACK);
                 color c = WHITE;

@@ -99,7 +99,7 @@ static void level_place_explosion_ (levelp level,
                 continue;
             }
 
-            double density = 0.5;
+            double density = 1.0;
             double dx, dy;
 
             for (dx = -0.5; dx < 0.5; dx += density) {

@@ -355,12 +355,12 @@ static uint8_t things_overlap (const thingp A,
 #ifdef DEBUG
     if ((thing_is_player(A) || 
          thing_is_player(B))) {
-CON("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
-CON("    %f %f",Ax,Ay);
-CON("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
-CON("  B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
-CON("    %f %f",Bx,By);
-CON("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
+LOG("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
+LOG("    %f %f",Ax,Ay);
+LOG("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
+LOG("  B %s %f %f %f %f",thing_logname(B),Btlx,Btly,Bbrx,Bbry);
+LOG("    %f %f",Bx,By);
+LOG("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
     }
 #endif
 
@@ -410,14 +410,14 @@ static void thing_handle_collision (thingp me, thingp it,
     if (!things_overlap(me, -1.0, -1.0, it)) {
 #ifdef DEBUG
 if (thing_is_player(me) || thing_is_player(it)) {
-CON("no overlap %s %s",thing_logname(me),thing_logname(it));
+LOG("no overlap %s %s",thing_logname(me),thing_logname(it));
 }
 #endif
         return;
     }
 #ifdef DEBUG
 if (thing_is_player(me) || thing_is_player(it)) {
-CON("HIT %s %s",thing_logname(me),thing_logname(it));
+LOG("HIT %s %s",thing_logname(me),thing_logname(it));
 }
 #endif
 
