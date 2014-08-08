@@ -301,7 +301,7 @@ wid_game_map_server_replace_tile (widp w,
      * Make a new thing.
      */
     child = wid_new_square_button(wid_game_map_server_grid_container,
-                                  "map tile");
+                                  "server map tile");
 
     wid_set_text_lhs(child, true);
     wid_set_text_top(child, true);
