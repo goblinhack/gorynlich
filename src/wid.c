@@ -6827,7 +6827,7 @@ static void wid_gc (widp w)
 /*
  * Display one wid and its children
  */
-static void wid_display_fast (widp w)
+static inline void wid_display_fast (widp w)
 {
     uint8_t fading;
     int32_t owidth;
@@ -6853,6 +6853,7 @@ static void wid_display_fast (widp w)
 
     double fade = 0;
 
+    fading = (w->fade_out || w->fade_in);
     if (fading) {
         fade = wid_get_fade_amount(w);
     }
@@ -6921,6 +6922,9 @@ static void wid_display_fast (widp w)
      * Widget tiles and textures.
      */
     tilep tile = wid_get_tile(w);
+    if (!tile) {
+        return;
+    }
 
     /*
      * Only care about tex scaling here.
@@ -7486,6 +7490,35 @@ static void wid_display (widp w,
         blit_flush();
     }
 
+    if (w != wid_game_map_client_grid_container) {
+        /*
+         * If this is a grid wid, draw the elements in y sorted order.
+         */
+        TREE_WALK_REVERSE_UNSAFE_INLINE(w->children_display_sorted, child,
+                                        tree_prev_tree_wid_compare_func) {
+            uint8_t child_updated_scissors = false;
+
+            wid_display(child, disable_scissor, &child_updated_scissors);
+
+            /*
+             * Need to re-enforce the parent's scissors if the child did
+             * their own bit of scissoring?
+             */
+            if (!disable_scissor && child_updated_scissors) {
+                glScissor(
+                    tlx / global_config.xscale,
+                    global_config.video_pix_height -
+                        ((tly + clip_height) / global_config.yscale),
+                    clip_width,
+                    clip_height);
+            }
+        }
+
+        if (w->children_display_sorted) {
+            blit_flush();
+        }
+    }
+
     if (w->grid) {
         int16_t maxx;
         int16_t minx;
@@ -7544,35 +7577,6 @@ static void wid_display (widp w,
         blit_flush();
     }
     
-    if (w != wid_game_map_client_grid_container) {
-        /*
-         * If this is a grid wid, draw the elements in y sorted order.
-         */
-        TREE_WALK_REVERSE_UNSAFE_INLINE(w->children_display_sorted, child,
-                                        tree_prev_tree_wid_compare_func) {
-            uint8_t child_updated_scissors = false;
-
-            wid_display(child, disable_scissor, &child_updated_scissors);
-
-            /*
-             * Need to re-enforce the parent's scissors if the child did
-             * their own bit of scissoring?
-             */
-            if (!disable_scissor && child_updated_scissors) {
-                glScissor(
-                    tlx / global_config.xscale,
-                    global_config.video_pix_height -
-                        ((tly + clip_height) / global_config.yscale),
-                    clip_width,
-                    clip_height);
-            }
-        }
-
-        if (w->children_display_sorted) {
-            blit_flush();
-        }
-    }
-
     /*
      * Undo any push we did earlier.
      */

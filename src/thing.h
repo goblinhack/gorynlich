@@ -195,10 +195,10 @@ typedef struct {
     levelp level;
     double x;
     double y;
-    uint32_t destroy_in;
+    uint16_t destroy_in;
+    uint8_t server_side;
     uint32_t owner_id;
     uint32_t thing_id;
-    uint8_t server_side:1;
 } thing_place_context_t;
 
 void thing_teleport(thingp t, int32_t x, int32_t y);
@@ -393,7 +393,7 @@ typedef struct thing_ {
     /*
      * Unique id per thing.
      */
-    uint16_t thing_id;
+    uint32_t thing_id;
 
     /*
      * Who created this thing? e.g. who cast a spell?
@@ -452,11 +452,6 @@ typedef struct thing_ {
      * But this is the actual weapon.
      */
     thing_templatep weapon;
-
-    /*
-     * What level is the thing on?
-     */
-    levelp level;
 
     /*
      * Last death reason.
@@ -1200,6 +1195,25 @@ static inline thing_map *thing_get_map (thingp t)
 
 extern thingp thing_server_ids[THING_ID_MAX];
 extern thingp thing_client_ids[THING_ID_MAX];
+
+static inline levelp thing_level (thingp t)
+{
+    extern levelp server_level;
+    extern levelp client_level;
+
+    if (t->on_server) {
+        if (!server_level) {
+            DIE("server level not found for thing on server");
+        }
+        return (server_level);
+    }
+
+    if (!client_level) {
+        DIE("client level not found for thing on client");
+    }
+
+    return (client_level);
+}
 
 /*
  * thing_weapon.h

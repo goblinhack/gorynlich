@@ -529,11 +529,11 @@ static void sdl_event (SDL_Event * event)
 #endif /* } */
 
     case SDL_MOUSEMOTION:
-        DBG("Mouse: moved to %d,%d (%d,%d)",
-            event->motion.x, event->motion.y,
-            event->motion.xrel, event->motion.yrel);
+        mouse_down = SDL_GetMouseState(&mouse_x, &mouse_y);
 
-        SDL_GetMouseState(&mouse_x, &mouse_y);
+        DBG("Mouse: moved to %d,%d (%d,%d) state %d",
+            event->motion.x, event->motion.y,
+            event->motion.xrel, event->motion.yrel, mouse_down);
 
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
@@ -544,10 +544,11 @@ static void sdl_event (SDL_Event * event)
         break;
 
     case SDL_MOUSEBUTTONDOWN:
-        DBG("Mouse DOWN: button %d pressed at %d,%d",
-            event->button.button, event->button.x, event->button.y);
+        mouse_down = SDL_GetMouseState(&mouse_x, &mouse_y);
 
-        SDL_GetMouseState(&mouse_x, &mouse_y);
+        DBG("Mouse DOWN: button %d pressed at %d,%d state %x",
+            event->button.button, event->button.x, event->button.y, 
+            mouse_down);
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
         if (event->button.button == SDL_BUTTON_WHEELUP) {
@@ -572,23 +573,20 @@ static void sdl_event (SDL_Event * event)
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
-        mouse_down |= (1 << event->button.button);
-
         wid_mouse_down(event->button.button, mouse_x, mouse_y);
 
         break;
 
     case SDL_MOUSEBUTTONUP:
-        DBG("Mouse UP: button %d released at %d,%d",
-            event->button.button, event->button.x, event->button.y);
+        mouse_down = SDL_GetMouseState(&mouse_x, &mouse_y);
 
-        SDL_GetMouseState(&mouse_x, &mouse_y);
+        DBG("Mouse UP: button %d released at %d,%d state %d",
+            event->button.button, event->button.x, event->button.y, 
+            mouse_down);
 
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
-        mouse_down &= ~(1 << event->button.button);
-        
         wid_mouse_up(event->button.button, mouse_x, mouse_y);
         break;
 
@@ -698,7 +696,7 @@ uint8_t fps_enable (tokens_t *tokens, void *context)
         fps_enabled = strtol(s, 0, 10) ? 1 : 0;
     }
 
-    CON("FPS mode set to %u", fps_enabled);
+    DBG("FPS mode set to %u", fps_enabled);
 
     return (true);
 }
