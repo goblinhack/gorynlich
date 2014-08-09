@@ -1,6 +1,6 @@
 {
  short_name="poison"
- tooltip="flames!"
+ tooltip="poison!"
  z_depth=4
  is_animated
  is_hidden_from_editor
@@ -13,64 +13,64 @@ is_explosion
  hit_delay_tenths=1
  tiles={
   tile={
-   tile="poison4.1"
-   delay=20
+   tile="poison3.1"
+   delay=50
   }
   tile={
-   tile="poison4.2"
-   delay=20
+   tile="poison3.2"
+   delay=50
   }
   tile={
-   tile="poison4.3"
-   delay=20
+   tile="poison3.3"
+   delay=50
   }
   tile={
-   tile="poison4.4"
-   delay=20
+   tile="poison3.4"
+   delay=50
   }
   tile={
-   tile="poison4.5"
-   delay=20
+   tile="poison3.5"
+   delay=50
   }
   tile={
-   tile="poison4.8"
-   delay=20
+   tile="poison3.8"
+   delay=50
   }
   tile={
-   tile="poison4.9"
-   delay=20
+   tile="poison3.9"
+   delay=50
   }
   tile={
-   tile="poison4.10"
-   delay=20
+   tile="poison3.10"
+   delay=50
   }
   tile={
-   tile="poison4.11"
-   delay=20
+   tile="poison3.11"
+   delay=50
   }
   tile={
-   tile="poison4.12"
-   delay=20
+   tile="poison3.12"
+   delay=50
   }
   tile={
-   tile="poison4.13"
-   delay=20
+   tile="poison3.13"
+   delay=50
   }
   tile={
-   tile="poison4.14"
-   delay=20
+   tile="poison3.14"
+   delay=50
   }
   tile={
-   tile="poison4.15"
-   delay=20
+   tile="poison3.15"
+   delay=50
   }
   tile={
-   tile="poison4.16"
-   delay=20
+   tile="poison3.16"
+   delay=50
   }
   tile={
    tile="space"
-   delay=20
+   delay=50
    is_end_of_anim
    is_dead_on_end_of_anim
   }
