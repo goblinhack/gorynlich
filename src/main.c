@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <SDL.h>
 #include "slre.h"
+#include <time.h>
 
 #include "main.h"
 #include "gl.h"
@@ -70,6 +71,8 @@ void quit (void)
     if (quitting) {
         return;
     }
+
+    srand(time(0));
 
     quitting = true;
 
