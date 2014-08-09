@@ -787,6 +787,38 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     wid_set_text(child,name);
 #endif
 
+    /*
+     * We've been told about the epicenter of an explsion, now emulate the 
+     * blast.
+     */
+    if (t->is_epicenter && thing_is_explosion(t) ) {
+        if ((thing_template->id == THING_EXPLOSION1) ||
+            (thing_template->id == THING_EXPLOSION2) ||
+            (thing_template->id == THING_EXPLOSION3) ||
+            (thing_template->id == THING_EXPLOSION4)) {
+
+            level_place_fireball(client_level, 0, t->x, t->y);
+
+        } else if ((thing_template->id == THING_POISON1) ||
+                   (thing_template->id == THING_POISON2) ||
+                   (thing_template->id == THING_POISON3) ||
+                   (thing_template->id == THING_POISON4)) {
+
+            level_place_poison(client_level, 0, t->x, t->y);
+
+        } else if ((thing_template->id == THING_CLOUDKILL1) ||
+                   (thing_template->id == THING_CLOUDKILL2) ||
+                   (thing_template->id == THING_CLOUDKILL3) ||
+                   (thing_template->id == THING_CLOUDKILL4)) {
+
+            level_place_cloudkill(client_level, 0, t->x, t->y);
+
+        } else {
+ERR("unknown explosion %s", thing_logname(t));
+            level_place_explosion(client_level, 0, t->x, t->y);
+        }
+    }
+
     return (child);
 }
 

@@ -29,13 +29,6 @@ static void thing_tick_server_all (void)
 
     thingp t;
 
-    /*
-     * Any timers waiting to fire?
-     */
-    if (thing_timers) {
-        action_timers_tick(&thing_timers);
-    }
-
     TREE_WALK_INLINE(server_active_things, t,
                      tree_get_next_tree_key_two_int32_compare_func) {
         thing_templatep thing_template;
@@ -271,6 +264,13 @@ static void thing_tick_client_all (void)
         }
 
         /*
+         * Timer running on this thing? Like an explosion.
+         */
+        if (t->timers) {
+            action_timers_tick(&t->timers);
+        }
+
+        /*
          * Thing has croaked it?
          */
         if (thing_is_dead(t)) {
@@ -392,6 +392,13 @@ void thing_tick_all (void)
 #ifdef ENABLE_MAP_SANITY
     thing_map_sanity();
 #endif
+
+    /*
+     * Any timers waiting to fire?
+     */
+    if (thing_timers) {
+        action_timers_tick(&thing_timers);
+    }
 
     thing_tick_server_all();
 

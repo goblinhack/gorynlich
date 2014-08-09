@@ -149,10 +149,11 @@ tree_root *server_boring_things;
 tree_root *client_boring_things;
 
 static uint32_t next_thing_id;
+static uint32_t next_client_thing_id;
 static uint32_t next_monst_thing_id;
 
 thingp thing_server_ids[THING_ID_MAX];
-thingp thing_client_ids[THING_ID_MAX];
+thingp thing_client_ids[THING_CLIENT_ID_MAX];
 
 /*
  * We reserve client things for local side explosion effects.
@@ -280,6 +281,31 @@ static void thing_try_to_flush_ids (void)
     thing_try_to_flush_ids_(thing_client_ids);
 }
 
+/*
+ * Create a new thing.
+ */
+static void thing_try_to_flush_client_ids_ (thingp *ids)
+{
+    uint32_t i;
+
+    for (i = THING_CLIENT_ID_MIN; i < THING_CLIENT_ID_MAX; i++) {
+        thingp t = ids[i];
+
+        if (!t) {
+            continue;
+        }
+
+        if (thing_is_explosion(t)) {
+            thing_destroy(t, "too many things");
+        }
+    }
+}
+
+static void thing_try_to_flush_client_ids (void)
+{
+    thing_try_to_flush_client_ids_(thing_client_ids);
+}
+
 static void thing_map_check_empty_ (thing_map *map, thingp *ids)
 {
     uint32_t i;
@@ -292,7 +318,7 @@ static void thing_map_check_empty_ (thing_map *map, thingp *ids)
 
             for (i = 0; i < cell->count; i++) {
 
-                uint16_t m = cell->id[i];
+                uint32_t m = cell->id[i];
                 if (!m) {
                     continue;
                 }
@@ -338,7 +364,7 @@ static void thing_map_dump_ (thing_map *map, const char *name)
             thing_map_cell *cell = &map->cells[x][y];
 
             for (i = 0; i < width; i++) {
-                uint16_t m = cell->id[i];
+                uint32_t m = cell->id[i];
 
                 if (!m) {
                     fprintf(fp, "----- ");
@@ -373,7 +399,7 @@ static void thing_map_sanity_ (thing_map *map, thingp *ids)
             uint8_t found_end = 0;
 
             for (i = 0; i < MAP_THINGS_PER_CELL; i++) {
-                uint16_t m = cell->id[i];
+                uint32_t m = cell->id[i];
 
                 if (!m) {
                     found_end = true;
@@ -432,7 +458,7 @@ void thing_map_remove (thingp t)
      * Remove from the map.
      */
     for (i = 0; i < cell->count; i++) {
-        uint16_t m = cell->id[i];
+        uint32_t m = cell->id[i];
         if (m != t->thing_id) {
             continue;
         }
@@ -513,7 +539,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
 
 #ifdef ENABLE_MAP_SANITY
     for (i = 0; i < cell->count; i++) {
-        uint16_t m = cell->id[i];
+        uint32_t m = cell->id[i];
 
         if (!m) {
             continue;
@@ -552,7 +578,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
          * important.
          */
         for (i = 0; i < cell->count; i++) {
-            uint16_t m = cell->id[i];
+            uint32_t m = cell->id[i];
             if (!m) {
                 DIE("expected to find a map id on the map here");
             }
@@ -577,7 +603,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
         ERR("Server: Out of map slots trying to add %s", t->logname);
 
         for (i = 0; i < cell->count; i++) {
-            uint16_t m = cell->id[i];
+            uint32_t m = cell->id[i];
             thingp p = ids[m];
 
             LOG("  slot [%d] id %d %s", i, m, p->logname);
@@ -855,16 +881,56 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
  */
 thingp thing_client_local_new (thing_templatep thing_template)
 {
+    /*
+     * Use a different base for monsters so that the IDs we create are going
+     * to be contiguous and allows us to optimize when sending map updates.
+     */
+    uint32_t *next;
     uint32_t id;
+    uint32_t min;
+    uint32_t max;
 
-    id = next_client_thing_id++;
+    min = THING_CLIENT_ID_MIN / 2;
+    max = THING_CLIENT_ID_MAX;
+
+    next = &next_client_thing_id;
+    id = next_client_thing_id;
+
+    if (!id) {
+        id = min;
+    }
 
     /*
-     * Will it ever loop? We don't check for old collisions. Seems a tad 
-     * unlikely.
+     * Find a free thing slot
      */
-    if (next_client_thing_id >= (uint32_t) -1) {
-        next_client_thing_id = THING_ID_MAX;
+    int looped = 0;
+
+    while (thing_client_ids[id]) {
+        id++;
+        if (id >= max) {
+            id = min;
+            looped++;
+
+            /*
+             * Try hard to reclaim space.
+             */
+            if (looped == 2) {
+                thing_try_to_flush_client_ids();
+            }
+
+            if (looped == 3) {
+                DIE("out of thing ids, min %u max %u!", min, max);
+            }
+        }
+    }
+
+    if (!id) {
+        DIE("sanity check, ID 0 never used min %u max %u", min, max);
+    }
+
+    *next = id + 1;
+    if (*next >= max) {
+        *next = min;
     }
 
     return (thing_client_new(id, thing_template));
@@ -2764,7 +2830,7 @@ void thing_place_timed (thing_templatep thing_template,
                         double y,
                         uint32_t ms, 
                         uint32_t jitter,
-                        uint8_t server_side)
+                        uint8_t is_server_side)
 {
     thing_place_context_t *context;
 
@@ -2774,7 +2840,7 @@ void thing_place_timed (thing_templatep thing_template,
     context->y = y;
     context->level = server_level;
     context->thing_template = thing_template;
-    context->server_side = server_side ? 1 : 0;
+    context->is_server_side = is_server_side ? 1 : 0;
 
     action_timer_create(
             &server_timers,
@@ -2796,7 +2862,8 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
                                     uint32_t ms, 
                                     uint32_t destroy_in, 
                                     uint32_t jitter,
-                                    uint8_t server_side)
+                                    uint8_t is_server_side,
+                                    uint8_t is_epicenter)
 {
     thing_place_context_t *context;
 
@@ -2807,7 +2874,8 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
     context->level = server_level;
     context->destroy_in = destroy_in;
     context->thing_template = thing_template;
-    context->server_side = server_side ? 1 : 0;
+    context->is_server_side = is_server_side ? 1 : 0;
+    context->is_epicenter = is_epicenter ? 1 : 0;
 
     if (owner) {
         context->owner_id = owner->thing_id;
@@ -3131,7 +3199,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
     *data++ = MSG_SERVER_MAP_UPDATE;
     thingp t;
 
-    uint16_t last_id;
+    uint32_t last_id;
 
     last_id = 0;
 
@@ -3141,17 +3209,27 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 
         thing_templatep thing_template = t->thing_template;
 
-        if (!t->first_update) {
-            /*
-             * As an optimization do not send dead events for explosions. Let 
-             * the client destroy those on its own to save sending loads of 
-             * events.
-             */
-            if (thing_template_is_explosion(thing_template)) {
+        /*
+         * As an optimization do not send dead events for explosions. Let the 
+         * client destroy those on its own to save sending loads of events.
+         */
+        if (thing_template_is_explosion(thing_template)) {
+            if (!t->first_update) {
                 t->updated--;
                 continue;
             }
 
+            /*
+             * Only send the center of a location, the client will then 
+             * emulate the blast without us needing to send lots of thing IDs.
+             */
+            if (!t->is_epicenter) {
+                t->updated--;
+                continue;
+            }
+        }
+
+        if (!t->first_update) {
             /*
              * Only send animations at the start. Let them time out on the 
              * client.
@@ -3597,6 +3675,14 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                      * Popped off the map.
                      */
                 } else {
+                    /*
+                     * We are only ever told about epicenters of explosions 
+                     * for efficency.
+                     */
+                    if (thing_is_explosion(t)) {
+                        t->is_epicenter = true;
+                    }
+                    
                     /*
                      * Thing has no wid. Make one.
                      */

@@ -50,7 +50,13 @@ static void thing_action_timer_callback_dead (void *context)
 
     place = (typeof(place)) context;
 
-    thingp thing = thing_server_find(place->thing_id);
+    thingp thing;
+    if (place->is_server_side) {
+        thing = thing_server_find(place->thing_id);
+    } else {
+        thing = thing_client_find(place->thing_id);
+    }
+
     if (thing) {
         verify(thing);
         thing->timer_dead = 0;
@@ -69,16 +75,25 @@ static void thing_action_timer_destroy_callback_dead (void *context)
     place = (typeof(place)) context;
 
     if (place->thing_id) {
-        thingp thing = thing_server_find(place->thing_id);
-        if (thing) {
-            verify(thing);
-            thing->timer_dead = 0;
-            thing->timer_dead_tree = 0;
+        thingp thing;
 
-            thing_dead(thing, 0, "timer aborted");
-        } else {
-            ERR("timer cleanup, thing ID %u is gone", place->thing_id);
+        if (place->is_server_side) {
+            thing = thing_server_find(place->thing_id);
+            if (!thing) {
+                ERR("timer cleanup, server thing ID %u is gone", place->thing_id);
+            }
+        } else{
+            thing = thing_client_find(place->thing_id);
+            if (!thing) {
+                ERR("timer cleanup, client thing ID %u is gone", place->thing_id);
+            }
         }
+
+        verify(thing);
+        thing->timer_dead = 0;
+        thing->timer_dead_tree = 0;
+
+        thing_dead(thing, 0, "timer aborted");
     }
 
     myfree(context);
@@ -96,7 +111,7 @@ void thing_timer_place_and_destroy_callback (void *context)
 
     widp w;
 
-    if (place->server_side) {
+    if (place->is_server_side) {
         w = wid_game_map_server_replace_tile(
                                         wid_game_map_server_grid_container,
                                         place->x,
@@ -119,6 +134,10 @@ void thing_timer_place_and_destroy_callback (void *context)
      */
     thingp t = wid_get_thing(w);
 
+    if (place->is_epicenter) {
+        t->is_epicenter = 1;
+    }
+
     place->thing_id = t->thing_id;
 
     /*
@@ -136,7 +155,7 @@ void thing_timer_place_and_destroy_callback (void *context)
     memcpy(context2, context, sizeof(*context2));
 
     if (place->owner_id) {
-        thingp owner = thing_server_ids[place->owner_id];
+        thingp owner = thing_server_id(place->owner_id);
         if (!owner) {
             ERR("no owner id %d for explosion", place->owner_id);
         }
@@ -201,7 +220,7 @@ void thing_timer_place_callback (void *context)
 
     widp w;
 
-    if (place->server_side) {
+    if (place->is_server_side) {
         w = wid_game_map_server_replace_tile(
                                         wid_game_map_server_grid_container,
                                         place->x,

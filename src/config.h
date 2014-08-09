@@ -182,6 +182,13 @@
 #define THING_ID_MAX                (64*1024)
 
 /*
+ * Local client things like explosions we use a separate space beyond the 
+ * above.
+ */
+#define THING_CLIENT_ID_MIN         (THING_ID_MAX + 1)
+#define THING_CLIENT_ID_MAX         (THING_ID_MAX * 2)
+
+/*
  * When converting from thing co-ords where 1.0 is one grid, we must convert
  * to int when sending over the network. This is the granularity.
  */
