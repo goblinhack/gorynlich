@@ -1685,7 +1685,7 @@ int thing_hit (thingp t,
     uint32_t can_be_hit_chance = 
                     thing_template_get_can_be_hit_chance(t->thing_template);
     if (can_be_hit_chance) {
-        uint32_t chance = rand() % can_be_hit_chance;
+        uint32_t chance = rand() % (can_be_hit_chance + 1);
 
         if (chance > damage) {
             return (false);
