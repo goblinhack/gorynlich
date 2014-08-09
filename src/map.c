@@ -18,6 +18,7 @@
 
 typedef uint8_t (*map_is_at_callback)(thing_templatep);
 
+#define DEBUG
 #ifdef DEBUG
 FILE *fp = 0;
 #endif
@@ -131,9 +132,9 @@ uint8_t map_is_key_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_key));
 }
 
-uint8_t map_is_xxx3_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx3));
+    return (map_is_x_at(level, x, y, thing_template_is_rock));
 }
 
 uint8_t map_is_xxx4_at (levelp level, int32_t x, int32_t y)
@@ -348,14 +349,14 @@ thingp map_thing_is_wall_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_wall));
 }
 
+thingp map_thing_is_rock_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, thing_template_is_rock));
+}
+
 thingp map_thing_is_key_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_key));
-}
-
-thingp map_thing_is_xxx3_at (levelp level, int32_t x, int32_t y)
-{
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx3));
 }
 
 thingp map_thing_is_xxx4_at (levelp level, int32_t x, int32_t y)
@@ -601,9 +602,9 @@ tree_rootp map_all_things_is_key_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_key));
 }
 
-tree_rootp map_all_things_is_xxx3_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx3));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_rock));
 }
 
 tree_rootp map_all_things_is_xxx4_at (levelp level, int32_t x, int32_t y)
@@ -766,6 +767,61 @@ tree_rootp map_all_things_is_exit_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_exit));
 }
 
+static thing_templatep map_find_x_at_depth (levelp level,
+                                            int32_t x, int32_t y,
+                                            map_is_at_callback callback,
+                                            uint8_t z,
+                                            widp *wout)
+{
+    thing_templatep thing_template;
+    widp grid_wid;
+    widp w;
+
+    grid_wid = level_get_map(level);
+    if (!grid_wid) {
+        DIE("no grid wid");
+    }
+
+    w = wid_grid_find_first(grid_wid, x, y, z);
+    while (w) {
+        thingp thing_it = wid_get_thing(w);
+
+        /*
+         * No things on level editor, just templates.
+         */
+        if (!level_is_editor(level)) {
+            /*
+             * Need to filter dead things so map fixup can no longer see wall 
+             * tiles that are in the process of being destroyed.
+             */
+            if (!thing_it) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
+
+            if (thing_is_dead(thing_it)) {
+                w = wid_grid_find_next(grid_wid, w, x, y, z);
+                continue;
+            }
+        }
+
+        thing_template = wid_get_thing_template(w);
+        if (thing_template) {
+            if ((*callback)(thing_template)) {
+                if (wout) {
+                    *wout = w;
+                }
+
+                return (thing_template);
+            }
+        }
+
+        w = wid_grid_find_next(grid_wid, w, x, y, z);
+    }
+
+    return (0);
+}
+
 static thing_templatep map_find_x_at (levelp level,
                                       int32_t x, int32_t y,
                                       map_is_at_callback callback,
@@ -788,13 +844,13 @@ static thing_templatep map_find_x_at (levelp level,
             thingp thing_it = wid_get_thing(w);
 
             /*
-            * No things on level editor, just templates.
-            */
+             * No things on level editor, just templates.
+             */
             if (!level_is_editor(level)) {
                 /*
-                * Need to filter dead things so map fixup can no longer see wall
-                * tiles that are in the process of being destroyed.
-                */
+                 * Need to filter dead things so map fixup can no longer see 
+                 * wall tiles that are in the process of being destroyed.
+                 */
                 if (!thing_it) {
                     w = wid_grid_find_next(grid_wid, w, x, y, z);
                     continue;
@@ -839,7 +895,17 @@ thing_templatep map_find_monst_at (levelp level,
 thing_templatep map_find_wall_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_wall, w));
+    return (map_find_x_at_depth(level, x, y, 
+                                thing_template_is_wall, 
+                                MAP_DEPTH_WALL, w));
+}
+
+thing_templatep map_find_rock_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at_depth(level, x, y, 
+                                thing_template_is_rock, 
+                                MAP_DEPTH_WALL, w));
 }
 
 thing_templatep map_find_key_at (levelp level,
@@ -851,7 +917,7 @@ thing_templatep map_find_key_at (levelp level,
 thing_templatep map_find_xxx3_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx3, w));
+    return (map_find_x_at(level, x, y, thing_template_is_rock, w));
 }
 
 thing_templatep map_find_xxx4_at (levelp level,
@@ -1472,9 +1538,9 @@ uint32_t level_count_is_key (levelp level)
     return (level_count_is_x(level, thing_template_is_key));
 }
 
-uint32_t level_count_is_xxx3 (levelp level)
+uint32_t level_count_is_rock (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx3));
+    return (level_count_is_x(level, thing_template_is_rock));
 }
 
 uint32_t level_count_is_xxx4 (levelp level)
@@ -1726,9 +1792,9 @@ tree_rootp map_all_things_is_key (levelp level)
     return (map_all_things_is_x(level, thing_template_is_key));
 }
 
-tree_rootp map_all_things_is_xxx3 (levelp level)
+tree_rootp map_all_things_is_rock (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx3));
+    return (map_all_things_is_x(level, thing_template_is_rock));
 }
 
 tree_rootp map_all_things_is_xxx4 (levelp level)
