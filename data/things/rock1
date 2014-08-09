@@ -4,6 +4,7 @@
  z_depth=2
  is_boring
  is_wall
+ is_rock
  hit_priority=20
  is_joinable
  can_be_hit_chance=10000000

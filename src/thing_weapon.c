@@ -81,11 +81,11 @@ thingp thing_weapon_carry_anim (thingp t)
 
     if (t->on_server) {
         if (t->weapon_carry_anim_id) {
-            weapon_carry_anim = thing_server_ids[t->weapon_carry_anim_id];
+            weapon_carry_anim = thing_server_id(t->weapon_carry_anim_id);
         }
     } else {
         if (t->weapon_carry_anim_id) {
-            weapon_carry_anim = thing_client_ids[t->weapon_carry_anim_id];
+            weapon_carry_anim = thing_client_id(t->weapon_carry_anim_id);
         }
     }
 
@@ -101,11 +101,11 @@ thingp thing_weapon_swing_anim (thingp t)
 
     if (t->on_server) {
         if (t->weapon_swing_anim_id) {
-            weapon_swing_anim = thing_server_ids[t->weapon_swing_anim_id];
+            weapon_swing_anim = thing_server_id(t->weapon_swing_anim_id);
         }
     } else {
         if (t->weapon_swing_anim_id) {
-            weapon_swing_anim = thing_client_ids[t->weapon_swing_anim_id];
+            weapon_swing_anim = thing_client_id(t->weapon_swing_anim_id);
         }
     }
 

@@ -163,7 +163,8 @@ void thing_place_and_destroy_timed(thing_templatep t,
                                    uint32_t ms, 
                                    uint32_t destroy_in, 
                                    uint32_t jitter,
-                                   uint8_t server_side);
+                                   uint8_t server_side,
+                                   uint8_t is_epicenter);
 void thing_timer_destroy(thingp t, uint32_t destroy_in);
 void thing_timer_place_and_destroy_callback(void *context);
 void thing_timer_place_and_destroy_destroy_callback(void *context);
@@ -196,7 +197,17 @@ typedef struct {
     double x;
     double y;
     uint16_t destroy_in;
-    uint8_t server_side;
+
+    /*
+     * Server or client local thing?
+     */
+    uint8_t is_server_side:1;
+
+    /*
+     * Center of an explosion.
+     */
+    uint8_t is_epicenter:1;
+
     uint32_t owner_id;
     uint32_t thing_id;
 } thing_place_context_t;
@@ -376,6 +387,8 @@ extern uint16_t THING_AMULET1;
 extern uint16_t THING_CHEST1;
 extern uint16_t THING_ARROW;
 extern uint16_t THING_FIREBALL;
+extern uint16_t THING_xxx3;
+extern uint16_t THING_xxx4;
 
 typedef struct thing_ {
     tree_key_int tree;
@@ -398,7 +411,7 @@ typedef struct thing_ {
     /*
      * Who created this thing? e.g. who cast a spell?
      */
-    uint16_t owner_id;
+    uint32_t owner_id;
 
     /*
      * Scoring
@@ -445,8 +458,8 @@ typedef struct thing_ {
      * The animation of this weapon that is wielded. This thing fires and
      * does nothing.
      */
-    uint16_t weapon_carry_anim_id;
-    uint16_t weapon_swing_anim_id;
+    uint32_t weapon_carry_anim_id;
+    uint32_t weapon_swing_anim_id;
 
     /*
      * But this is the actual weapon.
@@ -585,6 +598,12 @@ typedef struct thing_ {
     uint32_t opened_exit:1;
     uint32_t is_open:1;
     uint32_t is_dead:1;
+
+    /*
+     * Center of an explosion.
+     */
+    uint32_t is_epicenter:1;
+
     uint32_t has_left_level:1;
     uint32_t is_hit_success:1;
     uint32_t is_hit_miss:1;
@@ -619,6 +638,13 @@ static inline uint8_t thing_is_dead (thingp t)
     verify(t);
 
     return (t->is_dead);
+}
+
+static inline uint8_t thing_is_epicenter (thingp t)
+{
+    verify(t);
+
+    return (t->is_epicenter);
 }
 
 static inline uint8_t thing_has_left_level (thingp t)
@@ -712,11 +738,11 @@ static inline uint8_t thing_is_collision_map_tiny (thingp t)
     return (thing_template_is_collision_map_tiny(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx3 (thingp t)
+static inline uint8_t thing_is_rock (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx3(thing_get_template(t)));
+    return (thing_template_is_rock(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_xxx4 (thingp t)
@@ -1003,9 +1029,9 @@ static inline uint8_t thing_is_collision_map_tiny_fast (thingp t)
     return (t->thing_template->is_collision_map_tiny);
 }
 
-static inline uint8_t thing_is_xxx3_fast (thingp t)
+static inline uint8_t thing_is_rock_fast (thingp t)
 {
-    return (t->thing_template->is_xxx3);
+    return (t->thing_template->is_rock);
 }
 
 static inline uint8_t thing_is_xxx4_fast (thingp t)
@@ -1175,7 +1201,7 @@ static inline uint8_t thing_is_effect_rotate_2way_fast (thingp t)
 
 typedef struct {
     uint8_t count;
-    uint16_t id[MAP_THINGS_PER_CELL];
+    uint32_t id[MAP_THINGS_PER_CELL];
 } thing_map_cell;
 
 typedef struct {
@@ -1193,8 +1219,31 @@ static inline thing_map *thing_get_map (thingp t)
     return (&thing_client_map);
 }
 
-extern thingp thing_server_ids[THING_ID_MAX];
-extern thingp thing_client_ids[THING_ID_MAX];
+static inline thingp thing_server_id (uint32_t id) 
+{
+    extern thingp thing_server_ids[THING_ID_MAX];
+
+    if (id > THING_ID_MAX) {
+        DIE("overflow in looking up server IDs, ID %u", id);
+    }
+
+    verify(thing_server_ids[id]);
+
+    return (thing_server_ids[id]);
+}
+
+static inline thingp thing_client_id (uint32_t id) 
+{
+    extern thingp thing_client_ids[THING_CLIENT_ID_MAX];
+
+    if (id > THING_CLIENT_ID_MAX) {
+        DIE("overflow in looking up client IDs, ID %u", id);
+    }
+
+    verify(thing_client_ids[id]);
+
+    return (thing_client_ids[id]);
+}
 
 static inline levelp thing_level (thingp t)
 {

@@ -546,9 +546,9 @@ void thing_handle_collisions (widp grid, thingp me)
             thingp it;
             
             if (me->on_server) {
-                it = thing_server_ids[cell->id[i]];
+                it = thing_server_id(cell->id[i]);
             } else {
-                it = thing_client_ids[cell->id[i]];
+                it = thing_client_id(cell->id[i]);
             }
 
             if (me == it) {
@@ -597,9 +597,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             thingp it;
             
             if (t->on_server) {
-                it = thing_server_ids[cell->id[i]];
+                it = thing_server_id(cell->id[i]);
             } else {
-                it = thing_client_ids[cell->id[i]];
+                it = thing_client_id(cell->id[i]);
             }
 
             if (it == t) {
