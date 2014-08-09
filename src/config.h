@@ -87,7 +87,9 @@
 #define MAP_DEPTH_WALL              2
 #define MAP_DEPTH_MONST             3
 #define MAP_DEPTH_PLAYER            4
-#define MAP_DEPTH                   5
+#define MAP_DEPTH_EXPLOSION         4
+#define MAP_DEPTH_EXPLOSION_TOP     5
+#define MAP_DEPTH                   6
 #define MAP_BORDER                  3
 
 #define MAP_THINGS_PER_CELL         32

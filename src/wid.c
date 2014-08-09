@@ -6842,6 +6842,10 @@ static inline void wid_display_fast (widp w)
     int32_t bry;
     widp p;
 
+    if (wid_this_is_hidden(w)) {
+        return;
+    }
+
     /*
      * Bounding box for drawing the wid. Co-ords are negative as we
      * flipped the screen
@@ -6850,13 +6854,6 @@ static inline void wid_display_fast (widp w)
     tly = w->abs_tl.y;
     brx = w->abs_br.x;
     bry = w->abs_br.y;
-
-    double fade = 0;
-
-    fading = (w->fade_out || w->fade_in);
-    if (fading) {
-        fade = wid_get_fade_amount(w);
-    }
 
     /*
      * Record the original pre clip sizes for text centering.
@@ -6889,32 +6886,15 @@ static inline void wid_display_fast (widp w)
     /*
      * Draw the wid frame
      */
-    color col_text = wid_get_color(w, WID_COLOR_TEXT);
-    color col_text_outline = BLACK;
-
-    color col_tl = wid_get_color(w, WID_COLOR_TL);
-    color col_br = wid_get_color(w, WID_COLOR_BR);
-    color col = wid_get_color(w, WID_COLOR_BG);
     color col_tile = wid_get_color(w, WID_COLOR_BLIT);
 
     /*
      * Apply fade in/out effects.
      */
+    fading = (w->fade_out || w->fade_in);
     if (fading) {
         double fade = wid_get_fade_amount(w);
 
-        /*
-         * So hidden scrolbars stay hidden in a fading parent. I'm drunk.
-         */
-        if (!w->fade_out && !w->fade_in && w->hidden) {
-            fade = 0.0;
-        }
-
-        col_tl.a *= fade;
-        col.a *= fade;
-        col_br.a *= fade;
-        col_text.a *= fade;
-        col_text_outline.a *= fade;
         col_tile.a *= fade;
     }
 

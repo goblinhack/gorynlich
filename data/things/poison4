@@ -1,7 +1,7 @@
 {
  short_name="poison"
- tooltip="flames!"
- z_depth=4
+ tooltip="poison!"
+ z_depth=3
  is_animated
  is_hidden_from_editor
  is_poison
@@ -14,63 +14,63 @@ is_explosion
  tiles={
   tile={
    tile="poison4.1"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.2"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.3"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.4"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.5"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.8"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.9"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.10"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.11"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.12"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.13"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.14"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.15"
-   delay=20
+   delay=50
   }
   tile={
    tile="poison4.16"
-   delay=20
+   delay=50
   }
   tile={
    tile="space"
-   delay=20
+   delay=50
    is_end_of_anim
    is_dead_on_end_of_anim
   }
