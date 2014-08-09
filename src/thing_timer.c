@@ -136,6 +136,7 @@ void thing_timer_place_and_destroy_callback (void *context)
 
     if (place->is_epicenter) {
         t->is_epicenter = 1;
+CON("place server side epicenter %f %f %s",t->x,t->y, thing_logname(t));
     }
 
     place->thing_id = t->thing_id;

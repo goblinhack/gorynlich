@@ -84,6 +84,136 @@ static uint8_t level_place_explosion_at (levelp level,
     return (true);
 }
 
+static int can_see_obstacle (levelp level, int32_t x, int32_t y)
+{
+    if (map_find_wall_at(level, x, y, 0) ||
+        map_find_door_at(level, x, y, 0) ||
+        map_find_rock_at(level, x, y, 0)) {
+
+        return (true);
+    }
+
+    return (false);
+}
+
+static int can_see_ (levelp level,
+                     int32_t x0_in, 
+                     int32_t y0_in, 
+                     int32_t x1_in, 
+                     int32_t y1_in, 
+                     int32_t flag)
+{
+    double temp;
+    double dx;
+    double dy;
+    double tdy;
+    double dydx;
+    double p;
+    double x;
+    double y;
+    double i;
+
+    double x0 = x0_in;
+    double y0 = y0_in;
+    double x1 = x1_in;
+    double y1 = y1_in;
+
+    if (x0 > x1) {
+        temp = x0;
+        x0 = x1;
+        x1 = temp;
+
+        temp = y0;
+        y0 = y1;
+        y1 = temp;
+    }
+
+    dx = x1 - x0;
+    dy = y1 - y0;
+
+    tdy = 2.0 * dy;
+    dydx = tdy - (2.0 * dx);
+
+    p = tdy - dx;
+    x = x0;
+    y = y0;
+
+    if (flag == 0) {
+        if (can_see_obstacle(level, (int32_t)x, (int32_t)y)) {
+            return (true);
+        }
+    } else if (flag == 1) {
+        if (can_see_obstacle(level, (int32_t)y, (int32_t)x)) {
+            return (true);
+        }
+    } else if (flag == 2) {
+        if (can_see_obstacle(level, (int32_t)y, (int32_t)-x)) {
+            return (true);
+        }
+    } else if (flag == 3) {
+        if (can_see_obstacle(level, (int32_t)x, (int32_t)-y)) {
+            return (true);
+        }
+    }
+
+    for (i = 1; i <= dx; i++){
+        x++;
+
+        if (p < 0) {
+            p += tdy;
+        } else {
+            p += dydx;
+            y++;
+        }
+
+        if (flag == 0) {
+            if (can_see_obstacle(level, (int32_t)x, (int32_t)y)) {
+                return (true);
+            }
+        } else if (flag == 1) {
+            if (can_see_obstacle(level, (int32_t)y, (int32_t)x)) {
+                return (true);
+            }
+        } else if (flag == 2) {
+            if (can_see_obstacle(level, (int32_t)y, (int32_t)-x)) {
+                return (true);
+            }
+        } else if (flag == 3) {
+            if (can_see_obstacle(level, (int32_t)x, (int32_t)-y)) {
+                return (true);
+            }
+        }
+    }
+
+    return (false);
+}
+
+/*
+ * Can A see B unimpeded?
+ */
+static int can_see (levelp level, int32_t x0, int32_t y0, int32_t x1, int32_t y1)
+{
+    double slope = 100.0;
+
+    if (x0 != x1) {
+        slope = (y1 - y0) * (1.0 / (x1 - x0));
+    }
+
+    int r;
+
+    if ((0 <= slope) && (slope <= 1)) {
+        r = can_see_(level, x0, y0, x1, y1, 0);
+    } else if ((-1 <= slope) && (slope <= 0)) {
+        r = can_see_(level, x0, -y0, x1, -y1, 3);
+    } else if (slope > 1) {
+        r = can_see_(level, y0, x0, y1, x1, 1);
+    } else {
+        r = can_see_(level, -y0, x0, -y1, x1, 2);
+    }
+
+    return (!r);
+}
+
 static uint8_t this_explosion[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t this_explosion_x;
 static uint8_t this_explosion_y;
@@ -111,6 +241,10 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
         return;
     }
 
+    if (!can_see(level, x, y, this_explosion_x, this_explosion_y)) {
+        return;
+    }
+
     uint8_t distance = DISTANCE(x, y, this_explosion_x, this_explosion_y);
 
     if (distance > this_explosion_radius) {
@@ -118,6 +252,7 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
     }
 
     if (map_find_wall_at(level, x, y, 0) ||
+        map_find_door_at(level, x, y, 0) ||
         map_find_rock_at(level, x, y, 0)) {
         this_explosion[x][y] = (uint8_t)-1;
         return;
@@ -188,6 +323,60 @@ static void level_place_explosion_ (levelp level,
 {
     va_list args;
 
+    x += 0.5;
+    y += 0.5;
+
+    /*
+     * However, as the player can move close to walls, the current tile might 
+     * end up being a wall. If this is the case, look around for a closer tile 
+     * that has no wall.
+     */
+    if (map_find_wall_at(level, x, y, 0) ||
+        map_find_door_at(level, x, y, 0) ||
+        map_find_rock_at(level, x, y, 0)) {
+
+        int32_t dx, dy;
+        double best_x, best_y;
+        double best_distance;
+        int gotone = false;
+
+        best_x = -1;
+        best_y = -1;
+        best_distance = 999;
+
+        for (dx = -1; dx <= 1; dx++) {
+            for (dy = -1; dy <= 1; dy++) {
+                double tx, ty;
+
+                tx = x + (double)dx;
+                ty = y + (double)dy;
+
+                if (map_find_wall_at(level, tx, ty, 0) ||
+                    map_find_door_at(level, tx, ty, 0) ||
+                    map_find_rock_at(level, tx, ty, 0)) {
+                    continue;
+                }
+
+                double distance = DISTANCE(x, y, tx, ty);
+                if (!gotone || (distance < best_distance)) {
+                    best_distance = distance;
+                    best_x = tx;
+                    best_y = ty;
+                    gotone = true;
+                }
+            }
+        }
+
+        if (gotone) {
+            x = best_x;
+            y = best_y;
+        }
+    }
+
+    /*
+     * Record the start of this explosion. We will do a map flood fill to find 
+     * out the extent of the detonation.
+     */
     memset(this_explosion, 0, sizeof(this_explosion));
     this_explosion_x = x;
     this_explosion_y = y;
@@ -218,7 +407,10 @@ static void level_place_explosion_ (levelp level,
             printf("\n");
     }
 #endif
-
+    /*
+     * Place the epicenter. This is what on the server gets sent to the 
+     * client.
+     */
     va_start(args, nargs);
 
     (void) level_place_explosion_at(level, 
