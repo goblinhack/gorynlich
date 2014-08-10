@@ -18,7 +18,6 @@
 
 typedef uint8_t (*map_is_at_callback)(thing_templatep);
 
-#define DEBUG
 #ifdef DEBUG
 FILE *fp = 0;
 #endif
