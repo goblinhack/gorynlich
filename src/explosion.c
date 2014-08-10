@@ -112,10 +112,6 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
         return;
     }
 
-    if (!can_see(level, x, y, this_explosion_x, this_explosion_y)) {
-        this_explosion[x][y] = (uint8_t)-1;
-        return;
-    }
 
     uint8_t distance = DISTANCE(x, y, this_explosion_x, this_explosion_y);
 
@@ -126,7 +122,20 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
     if (map_find_wall_at(level, x, y, 0) ||
         map_find_door_at(level, x, y, 0) ||
         map_find_rock_at(level, x, y, 0)) {
-        this_explosion[x][y] = (uint8_t)-1;
+        /*
+         * Don't go any further but allow the explosion to overlap into this 
+         * tile.
+         */
+        this_explosion[x][y] = distance;
+        return;
+    }
+
+    if (!can_see(level, x, y, this_explosion_x, this_explosion_y)) {
+        /*
+         * Don't go any further but allow the explosion to overlap into this 
+         * tile.
+         */
+        this_explosion[x][y] = distance;
         return;
     }
 
@@ -247,9 +256,6 @@ static void level_place_explosion_ (levelp level,
 
     x = (int)x;
     y = (int)y;
-
-    x += 0.5;
-    y += 0.5;
 
     /*
      * Record the start of this explosion. We will do a map flood fill to find 
