@@ -511,7 +511,9 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
 
         if (thing_is_monst(it) || 
             thing_is_door(it) ||
-            thing_is_wall(it) ||
+            /*
+             * Don't hit walls. It's daft.
+             */
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.

@@ -7,7 +7,7 @@
  is_rock
  hit_priority=20
  is_joinable
- can_be_hit_chance=10000000
+ can_be_hit_chance=50000000
  tiles={
   tile={
    tile="rock1_0_0"

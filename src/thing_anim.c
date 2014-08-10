@@ -150,8 +150,7 @@ void thing_animate (thingp t)
      * When does this tile expire ?
      */
     t->timestamp_change_to_next_frame =
-                    time_get_time_cached() + thing_tile_delay(tile) +
-                    rand() % 100;
+                    time_get_time_cached() + thing_tile_delay(tile);
 
     command = thing_tile_command(tile);
     if (command) {

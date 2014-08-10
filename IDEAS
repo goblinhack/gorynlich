@@ -1,37 +1,8 @@
 todo
 ----
 
-00:02:49.725: ERROR: FATAL ERROR: no client thing for id 32973
-0   gorynlich                           0x000000010cb82812 backtrace_print + 34
-1   gorynlich                           0x000000010cb9ede3 ERR + 419
-2   gorynlich                           0x000000010cb9ef3e CROAK + 302
-3   gorynlich                           0x000000010cbd77a8 thing_owner + 104
-4   gorynlich                           0x000000010cbd6ab1 thing_remove_hooks + 33
-5   gorynlich                           0x000000010cbd7878 thing_dead_ + 72
-6   gorynlich                           0x000000010cbd70af thing_dead + 703
-7   gorynlich                           0x000000010cbe10e1 thing_tick_all + 1601
-8   gorynlich                           0x000000010cbbd900 sdl_loop + 1952
-9   gorynlich                           0x000000010cba10b2 main + 4034
-00:02:49.725: ERROR: FATAL ERROR: no client thing for id 32973
-0   gorynlich                           0x000000010cb82812 backtrace_print + 34
-1   gorynlich                           0x000000010cb9ede3 ERR + 419
-2   gorynlich                           0x000000010cb9ef3e CROAK + 302
-3   gorynlich                           0x000000010cbd77a8 thing_owner + 104
-4   gorynlich                           0x000000010cbd6ab1 thing_remove_hooks + 33
-5   gorynlich                           0x000000010cbd682a thing_destroy + 362
-6   gorynlich                           0x000000010cbd8727 things_level_destroyed + 1191
-7   gorynlich                           0x000000010cb9c296 level_destroy + 150
-8   gorynlich                           0x000000010cc01b4b wid_game_map_client_wid_destroy + 59
-9   gorynlich                           0x000000010cb9fe89 quit + 105
-
-level modify, floor vanished 
-weapon not hitting bone pile
-bone piles attacking is too annoying
-exploding potions on being hit is annoying
-weapon swing should be 360
 fix sparks
 death wander scythe
-rocks crumble
 get ready, hit space to preempt
 sparks on hitting door/wall
 random levels
@@ -55,6 +26,7 @@ make graphics less like gauntlet ? exit into mine shaft ?
 ideas
 -----
 
+- rocks crumble
 - speccy loading for end game?
 - chat box
 - backpack drop on death
