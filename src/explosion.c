@@ -248,6 +248,9 @@ static void level_place_explosion_ (levelp level,
     x = (int)x;
     y = (int)y;
 
+    x += 0.5;
+    y += 0.5;
+
     /*
      * Record the start of this explosion. We will do a map flood fill to find 
      * out the extent of the detonation.
@@ -309,7 +312,7 @@ static void level_place_explosion_ (levelp level,
                 continue;
             }
 
-            double density = 1.0;
+            double density = 0.5;
             double dx, dy;
 
             for (dx = -0.5; dx < 0.5; dx += density) {

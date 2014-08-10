@@ -14,63 +14,63 @@
  tiles={
   tile={
    tile="poison1.1"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.2"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.3"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.4"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.5"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.8"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.9"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.10"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.11"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.12"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.13"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.14"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.15"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison1.16"
-   delay=50
+   delay=150
   }
   tile={
    tile="space"
-   delay=50
+   delay=150
    is_end_of_anim
    is_dead_on_end_of_anim
   }
