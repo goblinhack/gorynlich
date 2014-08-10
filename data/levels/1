@@ -20366,6 +20366,10 @@
    y=7 
    t="data/things/potion_fire" 
   } {   
+   x=43 
+   y=8 
+   t="data/things/ghost3" 
+  } {   
    x=3 
    y=9 
    t="data/things/bonepile3" 

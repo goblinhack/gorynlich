@@ -201,7 +201,7 @@ typedef struct {
     /*
      * Server or client local thing?
      */
-    uint8_t is_server_side:1;
+    uint8_t on_server:1;
 
     /*
      * Center of an explosion.

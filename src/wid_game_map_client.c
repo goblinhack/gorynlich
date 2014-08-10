@@ -794,7 +794,6 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
      * blast.
      */
     if (t->is_epicenter && thing_is_explosion(t) ) {
-CON("client side epicenter %f %f",t->x,t->y);
         if ((thing_template->id == THING_EXPLOSION1) ||
             (thing_template->id == THING_EXPLOSION2) ||
             (thing_template->id == THING_EXPLOSION3) ||

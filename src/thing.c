@@ -2830,7 +2830,7 @@ void thing_place_timed (thing_templatep thing_template,
                         double y,
                         uint32_t ms, 
                         uint32_t jitter,
-                        uint8_t is_server_side)
+                        uint8_t on_server)
 {
     thing_place_context_t *context;
 
@@ -2840,7 +2840,7 @@ void thing_place_timed (thing_templatep thing_template,
     context->y = y;
     context->level = server_level;
     context->thing_template = thing_template;
-    context->is_server_side = is_server_side ? 1 : 0;
+    context->on_server = on_server ? 1 : 0;
 
     action_timer_create(
             &server_timers,
@@ -2862,7 +2862,7 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
                                     uint32_t ms, 
                                     uint32_t destroy_in, 
                                     uint32_t jitter,
-                                    uint8_t is_server_side,
+                                    uint8_t on_server,
                                     uint8_t is_epicenter)
 {
     thing_place_context_t *context;
@@ -2874,7 +2874,7 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
     context->level = server_level;
     context->destroy_in = destroy_in;
     context->thing_template = thing_template;
-    context->is_server_side = is_server_side ? 1 : 0;
+    context->on_server = on_server ? 1 : 0;
     context->is_epicenter = is_epicenter ? 1 : 0;
 
     if (owner) {
