@@ -4,6 +4,8 @@
  * See the LICENSE file.
  */
 
+#pragma once
+
 #define IS_JOIN_ALT_MAX 10
 
 enum {
