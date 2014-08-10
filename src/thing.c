@@ -3154,8 +3154,6 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 
 void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 {
-//LOG("tx update %s", type);
-
     /*
      * The client should be told when the level is hidden and will destroy
      * all things on its end to save us sending a cleanup.
@@ -3214,16 +3212,16 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
          * client destroy those on its own to save sending loads of events.
          */
         if (thing_template_is_explosion(thing_template)) {
-            if (!t->first_update) {
-                t->updated--;
-                continue;
-            }
-
             /*
              * Only send the center of a location, the client will then 
              * emulate the blast without us needing to send lots of thing IDs.
              */
             if (!t->is_epicenter) {
+                t->updated--;
+                continue;
+            }
+
+            if (!t->first_update) {
                 t->updated--;
                 continue;
             }
@@ -3556,13 +3554,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 continue;
             }
 
-            if ((ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD))) {
-                /*
-                 * Don't create the thing if already dead.
-                 */
-                continue;
-            }
-
             thing_templatep thing_template = 
                     id_to_thing_template(template_id);
 
@@ -3665,12 +3656,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                     thing_client_wid_update(t, x, y, true /* smooth */);
                 }
             } else {
-                if (t->is_dead || 
-                    (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD))) {
-                    /*
-                     * Already dead? No new tile.
-                     */
-                } else if (!on_map) {
+                if (!on_map) {
                     /*
                      * Popped off the map.
                      */
