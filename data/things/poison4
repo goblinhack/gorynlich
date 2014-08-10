@@ -14,63 +14,63 @@ is_explosion
  tiles={
   tile={
    tile="poison4.1"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.2"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.3"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.4"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.5"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.8"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.9"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.10"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.11"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.12"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.13"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.14"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.15"
-   delay=50
+   delay=150
   }
   tile={
    tile="poison4.16"
-   delay=50
+   delay=150
   }
   tile={
    tile="space"
-   delay=50
+   delay=150
    is_end_of_anim
    is_dead_on_end_of_anim
   }

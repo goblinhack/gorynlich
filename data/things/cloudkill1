@@ -13,63 +13,63 @@
  tiles={
   tile={
    tile="cloudkill1.1"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.2"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.3"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.4"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.5"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.8"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.9"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.10"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.11"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.12"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.13"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.14"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.15"
-   delay=20
+   delay=200
   }
   tile={
    tile="cloudkill1.16"
-   delay=20
+   delay=200
   }
   tile={
    tile="space"
-   delay=20
+   delay=200
    is_end_of_anim
    is_dead_on_end_of_anim
   }
