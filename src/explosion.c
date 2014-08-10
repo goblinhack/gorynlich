@@ -242,6 +242,7 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
     }
 
     if (!can_see(level, x, y, this_explosion_x, this_explosion_y)) {
+        this_explosion[x][y] = (uint8_t)-1;
         return;
     }
 

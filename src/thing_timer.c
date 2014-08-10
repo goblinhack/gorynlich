@@ -51,7 +51,7 @@ static void thing_action_timer_callback_dead (void *context)
     place = (typeof(place)) context;
 
     thingp thing;
-    if (place->is_server_side) {
+    if (place->on_server) {
         thing = thing_server_find(place->thing_id);
     } else {
         thing = thing_client_find(place->thing_id);
@@ -77,15 +77,17 @@ static void thing_action_timer_destroy_callback_dead (void *context)
     if (place->thing_id) {
         thingp thing;
 
-        if (place->is_server_side) {
+        if (place->on_server) {
             thing = thing_server_find(place->thing_id);
             if (!thing) {
                 ERR("timer cleanup, server thing ID %u is gone", place->thing_id);
+                return;
             }
         } else{
             thing = thing_client_find(place->thing_id);
             if (!thing) {
                 ERR("timer cleanup, client thing ID %u is gone", place->thing_id);
+                return;
             }
         }
 
@@ -111,7 +113,7 @@ void thing_timer_place_and_destroy_callback (void *context)
 
     widp w;
 
-    if (place->is_server_side) {
+    if (place->on_server) {
         w = wid_game_map_server_replace_tile(
                                         wid_game_map_server_grid_container,
                                         place->x,
@@ -136,7 +138,6 @@ void thing_timer_place_and_destroy_callback (void *context)
 
     if (place->is_epicenter) {
         t->is_epicenter = 1;
-CON("place server side epicenter %f %f %s",t->x,t->y, thing_logname(t));
     }
 
     place->thing_id = t->thing_id;
@@ -193,6 +194,7 @@ void thing_timer_destroy (thingp t, uint32_t destroy_in)
     memcpy(context, context, sizeof(*context));
 
     context->thing_id = t->thing_id;
+    context->on_server = t->on_server ? 1 : 0;
 
     action_timer_create(
             &t->timers,
@@ -221,7 +223,7 @@ void thing_timer_place_callback (void *context)
 
     widp w;
 
-    if (place->is_server_side) {
+    if (place->on_server) {
         w = wid_game_map_server_replace_tile(
                                         wid_game_map_server_grid_container,
                                         place->x,
