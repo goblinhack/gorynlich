@@ -3,7 +3,6 @@
  tooltip="bone pile"
  z_depth=3
  is_mob_spawner
- is_monst
  hit_priority=21
  is_collision_map_medium
  damage=1
