@@ -208,6 +208,38 @@ void blit_flush (void)
     blit_init();
 }
 
+void blit_flush_triangles (void)
+{
+    if (gl_array_buf == bufp) {
+        return;
+    }
+
+    /*
+     * Display all the tiles selected above in one blast.
+     */
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    static uint32_t number_bytes_per_vertice =
+                    sizeof(GLfloat) * NUMBER_DIMENSIONS_PER_COORD;
+
+    uint32_t nvertices = ((char*)bufp - (char*)gl_array_buf) /
+                    number_bytes_per_vertice;
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glVertexPointer(
+        NUMBER_DIMENSIONS_PER_COORD, // (x,y)
+        GL_FLOAT,
+        0,
+        ((char*)gl_array_buf));
+
+    glDrawArrays(GL_TRIANGLES, 0, nvertices);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+
+    blit_init();
+}
+
 void gl_blitquad (float left, float top, float right, float bottom)
 {
     GLfloat xy[4*2];
@@ -240,6 +272,22 @@ void gl_blitsquare (float left, float top, float right, float bottom)
 
     glVertexPointer(2, GL_FLOAT, 0, xy);
     glDrawArrays(GL_LINE_LOOP, 0, 4);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void gl_blitline (float left, float top, float right, float bottom)
+{
+    GLfloat xy[2*2];
+    GLfloat *xyp = xy;
+
+    Vertex2f(left, top);
+    Vertex2f(right, bottom);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    glVertexPointer(2, GL_FLOAT, 0, xy);
+    glDrawArrays(GL_LINES, 0, 2);
 
     glDisableClientState(GL_VERTEX_ARRAY);
 }
