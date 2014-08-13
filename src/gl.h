@@ -55,9 +55,11 @@ void gl_enter_2d_mode(void);
 void gl_leave_2d_mode(void);
 
 void blit_flush(void);
+void blit_flush_triangles(void);
 void blit_fini(void);
 void gl_blitquad(float tlx, float tly, float brx, float bry);
 void gl_blitsquare(float tlx, float tly, float brx, float bry);
+void gl_blitline(float tlx, float tly, float brx, float bry);
 
 /*
  * glshapes.c
@@ -309,4 +311,35 @@ void blit (int tex,
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif
+}
+
+/*
+ * gl_push_triangle
+ */
+static inline void
+gl_push_triangle (float **p,
+                  float *p_end,
+                  float x1, float y1,
+                  float x2, float y2,
+                  float x3, float y3)
+{
+    if (*p + 24 >= p_end) {
+        DIE("overflow on gl bug");
+    }
+
+    gl_push_vertex(p, x1, y1);
+    gl_push_vertex(p, x2, y2);
+    gl_push_vertex(p, x3, y3);
+}
+
+static inline
+void triangle (float x1, float y1,
+               float x2, float y2,
+               float x3, float y3)
+{
+    gl_push_triangle(&bufp,
+                     bufp_end,
+                     x1, y1,
+                     x2, y2,
+                     x3, y3);
 }
