@@ -420,12 +420,11 @@ static int32_t sdl_filter_events (void *userdata, SDL_Event *event)
 #endif /* } */
 
 uint32_t mouse_down;
+int32_t mouse_x;
+int32_t mouse_y;
 
 static void sdl_event (SDL_Event * event)
 {
-    static int32_t mouse_x;
-    static int32_t mouse_y;
-
     SDL_KEYSYM *key;
 
     switch (event->type) {

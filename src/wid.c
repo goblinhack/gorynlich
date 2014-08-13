@@ -25,6 +25,7 @@
 #include "timer.h"
 #include "client.h"
 #include "wid_game_map_client.h"
+#include "math.h"
 
 /*
  * Display sorted.
@@ -6949,6 +6950,201 @@ static inline void wid_display_fast (widp w)
 }
 
 /*
+ * Project a line via a light source into two triangular shadows.
+ */
+static inline void line_project (float light_x, float light_y,
+                                 float x1, float y1,
+                                 float x2, float y2)
+{
+    float dx1 = x1 - light_x;
+    float dy1 = y1 - light_y;
+    float dx2 = x2 - light_x;
+    float dy2 = y2 - light_y;
+
+    static const float ray_length = 10;
+
+    float x3 = x1 + dx1 * ray_length;
+    float y3 = y1 + dy1 * ray_length;
+    float x4 = x2 + dx2 * ray_length;
+    float y4 = y2 + dy2 * ray_length;
+
+    triangle(x1, y1, x2, y2, x3, y3);
+    triangle(x2, y2, x3, y3, x4, y4);
+}
+
+/*
+ * Display one wid and its children
+ */
+static inline void wid_display_shadow (widp w)
+{
+    uint8_t fading;
+    int32_t owidth;
+    int32_t oheight;
+    int32_t otlx;
+    int32_t otly;
+    int32_t obrx;
+    int32_t obry;
+    int32_t tlx;
+    int32_t tly;
+    int32_t brx;
+    int32_t bry;
+    widp p;
+
+    if (wid_this_is_hidden(w)) {
+        return;
+    }
+
+    /*
+     * Bounding box for drawing the wid. Co-ords are negative as we
+     * flipped the screen
+     */
+    tlx = w->abs_tl.x;
+    tly = w->abs_tl.y;
+    brx = w->abs_br.x;
+    bry = w->abs_br.y;
+
+    /*
+     * Record the original pre clip sizes for text centering.
+     */
+    otlx = wid_get_tl_x(w);
+    otly = wid_get_tl_y(w);
+    obrx = wid_get_br_x(w);
+    obry = wid_get_br_y(w);
+
+    p = w->parent;
+    if (p) {
+        otlx += p->offset.x;
+        otly += p->offset.y;
+        obrx += p->offset.x;
+        obry += p->offset.y;
+    }
+
+    owidth = obrx - otlx;
+    oheight = obry - otly;
+
+    /*
+     * If this widget was active and the time has elapsed, make it normal.
+     */
+    if (wid_get_mode(w) == WID_MODE_ACTIVE) {
+        if ((time_get_time_cached() - w->timestamp_last_mode_change) > 250) {
+            wid_set_mode(w, WID_MODE_NORMAL);
+        }
+    }
+
+    /*
+     * Draw the wid frame
+     */
+    color col_tile = wid_get_color(w, WID_COLOR_BLIT);
+
+    /*
+     * Apply fade in/out effects.
+     */
+    fading = (w->fade_out || w->fade_in);
+    if (fading) {
+        double fade = wid_get_fade_amount(w);
+
+        col_tile.a *= fade;
+    }
+
+    /*
+     * Widget tiles and textures.
+     */
+    tilep tile = wid_get_tile(w);
+    if (!tile) {
+        return;
+    }
+
+    /*
+     * Only care about tex scaling here.
+     */
+    fsize texuv;
+    (void) wid_get_tex(w, &texuv);
+
+    fpoint tl;
+    fpoint br;
+
+    tl.x = otlx;
+    tl.y = otly;
+    br.x = otlx + wid_get_width(w);
+    br.y = otly + wid_get_height(w);
+
+    if (w->blit_scaled_w || w->blit_scaled_h ||
+        w->blit_scaling_w || w->blit_scaling_h) {
+
+        double scale_width = wid_get_blit_scaling_w(w) - 1;
+        double scale_height = wid_get_blit_scaling_h(w) - 1;
+
+        double blit_width = owidth;
+        double blit_height = oheight;
+
+        blit_width /= 2.0;
+        blit_height /= 2.0;
+
+        blit_width *= scale_width;
+        blit_height *= scale_height;
+
+        tl.x -= blit_width;
+        br.x += blit_width;
+        tl.y -= blit_height;
+        br.y += blit_height;
+    }
+
+    extern int32_t mouse_x;
+    extern int32_t mouse_y;
+
+    fpoint P[4];
+    P[0].x = tl.x;
+    P[0].y = tl.y;
+    P[1].x = br.x;
+    P[1].y = tl.y;
+    P[2].x = br.x;
+    P[2].y = br.y;
+    P[3].x = tl.x;
+    P[3].y = br.y;
+
+    fpoint edge[4];
+    edge[0] = fsub(P[1], P[0]);
+    edge[1] = fsub(P[2], P[1]);
+    edge[2] = fsub(P[3], P[2]);
+    edge[3] = fsub(P[0], P[3]);
+
+    fpoint normal[4];
+    normal[0].x = edge[0].y;
+    normal[0].y = -edge[0].x;
+    normal[1].x = edge[1].y;
+    normal[1].y = -edge[1].x;
+    normal[2].x = edge[2].y;
+    normal[2].y = -edge[2].x;
+    normal[3].x = edge[3].y;
+    normal[3].y = -edge[3].x;
+
+    fpoint light_pos;
+    light_pos.x = mouse_x;
+    light_pos.y = mouse_y;
+
+    for (int k = 0; k<4; k++) {
+
+        fpoint light_dir = fsub(light_pos, P[k]);
+
+        float dot = normal[k].x * light_dir.x + normal[k].y * light_dir.y;   
+                
+        if ( dot > 0.0f ) {
+            // facing light
+        } else {
+            // not facing light
+            int l = (k + 1) % 4;
+
+            line_project(light_pos.x, light_pos.y, P[k].x, P[k].y, P[l].x, P[l].y);
+        }
+    }
+#if 0
+    line_project(lx, ly, br.x, tl.y, br.x, br.y);
+    line_project(lx, ly, br.x, br.y, tl.x, br.y);
+    line_project(lx, ly, tl.x, br.y, tl.x, tl.y);
+#endif
+}
+
+/*
  * Display one wid and its children
  */
 static void wid_display (widp w,
@@ -7555,6 +7751,25 @@ static void wid_display (widp w,
         }
 
         blit_flush();
+
+        blit_init();
+        glcolor(BLACK);
+
+            z = MAP_DEPTH_WALL;
+            for (x = maxx - 1; x >= minx; x--) {
+                for (y = miny; y < maxy; y++) {
+                    tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                    widgridnode *node;
+
+                    TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
+                                                    tree_prev_tree_wid_compare_func) {
+
+                        wid_display_shadow(node->wid);
+                    }
+                }
+            }
+
+        blit_flush_triangles();
     }
     
     /*
