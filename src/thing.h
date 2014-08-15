@@ -1213,7 +1213,7 @@ static inline thing_map *thing_get_map (thingp t)
     extern thing_map thing_server_map;
     extern thing_map thing_client_map;
 
-    if (t->on_server) {
+    if (t && t->on_server) {
         return (&thing_server_map);
     }
     return (&thing_client_map);
