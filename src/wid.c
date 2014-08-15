@@ -7127,16 +7127,27 @@ static inline void wid_display_shadow (widp w)
     int32_t x = me->x;
     int32_t y = me->y;
 
+    /*
+     * For each clockwise side of the tile.
+     */
     for (int k = 0; k<4; k++) {
-
-        static const int32_t ox[4] = { 0, 1, 0, -1 };
-        static const int32_t oy[4] = { -1, 0, 1, 0 };
+        /*
+         * Indicates which direction we should look in, x, y to filter out 
+         * other adjacent tiles that if they are casting a shadow, we need to 
+         * make sure we don't cast a shadow sideways onto them.
+         */
+        static const int8_t ox[4] = { 0, 1, 0, -1 };
+        static const int8_t oy[4] = { -1, 0, 1, 0 };
 
         int32_t cx = x + ox[k];
         int32_t cy = y + oy[k];
 
         if (cy < 1) {
             if (k != 0) {
+                /*
+                 * Ensure border rock tiles do not cast shadows sideways; only 
+                 * towards the edge of the map.
+                 */
                 continue;
             }
         } else if (cx < 1) {
@@ -7152,10 +7163,13 @@ static inline void wid_display_shadow (widp w)
                 continue;
             }
         } else {
-
             thing_map_cell *cell = &map->cells[cx][cy];
 
-            uint32_t i;
+            /*
+             * If a tile is adjoining another tile that casts shadows, don't 
+             * cast a shadow onto it.
+             */
+            uint8_t i;
             uint8_t adjoining_shadow = false;
 
             for (i = 0; i < cell->count; i++) {
@@ -7163,15 +7177,9 @@ static inline void wid_display_shadow (widp w)
 
                 it = thing_client_id(cell->id[i]);
                 
-                if (thing_is_wall(it)) {
-                    adjoining_shadow = true;
-                    break;
-                }
-                if (thing_is_rock(it)) {
-                    adjoining_shadow = true;
-                    break;
-                }
-                if (thing_is_door(it)) {
+                if (thing_is_wall(it) ||
+                    thing_is_rock(it) ||
+                    thing_is_door(it)) {
                     adjoining_shadow = true;
                     break;
                 }
@@ -7187,19 +7195,18 @@ static inline void wid_display_shadow (widp w)
         float dot = normal[k].x * light_dir.x + normal[k].y * light_dir.y;   
                 
         if ( dot > 0.0f ) {
-            // facing light
+            /*
+             * Facing the light source. No shadow.
+             */
         } else {
-            // not facing light
+            /*
+             * Facing away from the light source. Shadow.
+             */
             int l = (k + 1) % 4;
 
             line_project(light_pos.x, light_pos.y, P[k].x, P[k].y, P[l].x, P[l].y);
         }
     }
-#if 0
-    line_project(lx, ly, br.x, tl.y, br.x, br.y);
-    line_project(lx, ly, br.x, br.y, tl.x, br.y);
-    line_project(lx, ly, tl.x, br.y, tl.x, tl.y);
-#endif
 }
 
 /*
