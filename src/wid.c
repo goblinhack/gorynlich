@@ -6961,7 +6961,7 @@ static inline void line_project (float light_x, float light_y,
     float dx2 = x2 - light_x;
     float dy2 = y2 - light_y;
 
-    static const float ray_length = 10;
+    static const float ray_length = 100;
 
     float x3 = x1 + dx1 * ray_length;
     float y3 = y1 + dy1 * ray_length;
@@ -7122,7 +7122,65 @@ static inline void wid_display_shadow (widp w)
     light_pos.x = mouse_x;
     light_pos.y = mouse_y;
 
+    thingp me = wid_get_thing(w);
+    thing_map *map = thing_get_map(me);
+    int32_t x = me->x;
+    int32_t y = me->y;
+
     for (int k = 0; k<4; k++) {
+
+        static const int32_t ox[4] = { 0, 1, 0, -1 };
+        static const int32_t oy[4] = { -1, 0, 1, 0 };
+
+        int32_t cx = x + ox[k];
+        int32_t cy = y + oy[k];
+
+        if (cy < 1) {
+            if (k != 0) {
+                continue;
+            }
+        } else if (cx < 1) {
+            if (k != 3) {
+                continue;
+            }
+        } else if (cx > MAP_WIDTH - 2) {
+            if (k != 1) {
+                continue;
+            }
+        } else if (cy > MAP_HEIGHT - 2) {
+            if (k != 2) {
+                continue;
+            }
+        } else {
+
+            thing_map_cell *cell = &map->cells[cx][cy];
+
+            uint32_t i;
+            uint8_t adjoining_shadow = false;
+
+            for (i = 0; i < cell->count; i++) {
+                thingp it;
+
+                it = thing_client_id(cell->id[i]);
+                
+                if (thing_is_wall(it)) {
+                    adjoining_shadow = true;
+                    break;
+                }
+                if (thing_is_rock(it)) {
+                    adjoining_shadow = true;
+                    break;
+                }
+                if (thing_is_door(it)) {
+                    adjoining_shadow = true;
+                    break;
+                }
+            }
+
+            if (adjoining_shadow) {
+                continue;
+            }
+        }
 
         fpoint light_dir = fsub(light_pos, P[k]);
 
@@ -7752,8 +7810,9 @@ static void wid_display (widp w,
 
         blit_flush();
 
-        blit_init();
-        glcolor(BLACK);
+        if (w == wid_game_map_client_grid_container) {
+            blit_init();
+            glcolor(BLACK);
 
             z = MAP_DEPTH_WALL;
             for (x = maxx - 1; x >= minx; x--) {
@@ -7769,7 +7828,8 @@ static void wid_display (widp w,
                 }
             }
 
-        blit_flush_triangles();
+            blit_flush_triangles();
+        }
     }
     
     /*
