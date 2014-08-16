@@ -6975,7 +6975,7 @@ static inline void line_project (float light_x, float light_y,
 /*
  * Display one wid and its children
  */
-static inline void wid_display_shadow (widp w)
+static inline void wid_display_shadow (widp w, uint8_t z)
 {
     uint8_t fading;
     int32_t owidth;
@@ -6984,24 +6984,11 @@ static inline void wid_display_shadow (widp w)
     int32_t otly;
     int32_t obrx;
     int32_t obry;
-    int32_t tlx;
-    int32_t tly;
-    int32_t brx;
-    int32_t bry;
     widp p;
 
     if (wid_this_is_hidden(w)) {
         return;
     }
-
-    /*
-     * Bounding box for drawing the wid. Co-ords are negative as we
-     * flipped the screen
-     */
-    tlx = w->abs_tl.x;
-    tly = w->abs_tl.y;
-    brx = w->abs_br.x;
-    bry = w->abs_br.y;
 
     /*
      * Record the original pre clip sizes for text centering.
@@ -7054,53 +7041,32 @@ static inline void wid_display_shadow (widp w)
         return;
     }
 
-    /*
-     * Only care about tex scaling here.
-     */
-    fsize texuv;
-    (void) wid_get_tex(w, &texuv);
-
     fpoint tl;
     fpoint br;
 
     tl.x = otlx;
     tl.y = otly;
-    br.x = otlx + wid_get_width(w);
-    br.y = otly + wid_get_height(w);
-
-    if (w->blit_scaled_w || w->blit_scaled_h ||
-        w->blit_scaling_w || w->blit_scaling_h) {
-
-        double scale_width = wid_get_blit_scaling_w(w) - 1;
-        double scale_height = wid_get_blit_scaling_h(w) - 1;
-
-        double blit_width = owidth;
-        double blit_height = oheight;
-
-        blit_width /= 2.0;
-        blit_height /= 2.0;
-
-        blit_width *= scale_width;
-        blit_height *= scale_height;
-
-        tl.x -= blit_width;
-        br.x += blit_width;
-        tl.y -= blit_height;
-        br.y += blit_height;
-    }
+    br.x = otlx + owidth;
+    br.y = otly + oheight;
 
     extern int32_t mouse_x;
     extern int32_t mouse_y;
 
+    double fudge = 0.05;
+    double etlx = (double)tl.x + ((tile->px1-fudge) * (double)owidth);
+    double etly = (double)tl.y + ((tile->py1-fudge) * (double)oheight);
+    double ebrx = (double)tl.x + ((tile->px2+fudge) * (double)owidth);
+    double ebry = (double)tl.y + ((tile->py2+fudge) * (double)oheight);
+
     fpoint P[4];
-    P[0].x = tl.x;
-    P[0].y = tl.y;
-    P[1].x = br.x;
-    P[1].y = tl.y;
-    P[2].x = br.x;
-    P[2].y = br.y;
-    P[3].x = tl.x;
-    P[3].y = br.y;
+    P[0].x = etlx;
+    P[0].y = etly;
+    P[1].x = ebrx;
+    P[1].y = etly;
+    P[2].x = ebrx;
+    P[2].y = ebry;
+    P[3].x = etlx;
+    P[3].y = ebry;
 
     fpoint edge[4];
     edge[0] = fsub(P[1], P[0]);
@@ -7178,8 +7144,8 @@ static inline void wid_display_shadow (widp w)
                 it = thing_client_id(cell->id[i]);
                 
                 if (thing_is_wall(it) ||
-                    thing_is_rock(it) ||
-                    thing_is_door(it)) {
+                    thing_is_door(it) ||
+                    thing_is_rock(it)) {
                     adjoining_shadow = true;
                     break;
                 }
@@ -7819,18 +7785,22 @@ static void wid_display (widp w,
 
         if (w == wid_game_map_client_grid_container) {
             blit_init();
-            glcolor(BLACK);
 
-            z = MAP_DEPTH_WALL;
-            for (x = maxx - 1; x >= minx; x--) {
-                for (y = miny; y < maxy; y++) {
-                    tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
-                    widgridnode *node;
+            color c = BLACK;
 
-                    TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
-                                                    tree_prev_tree_wid_compare_func) {
+            glcolor(c);
 
-                        wid_display_shadow(node->wid);
+            z = MAP_DEPTH_WALL; {
+                for (x = maxx - 1; x >= minx; x--) {
+                    for (y = miny; y < maxy; y++) {
+                        tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                        widgridnode *node;
+
+                        TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
+                                                        tree_prev_tree_wid_compare_func) {
+
+                            wid_display_shadow(node->wid, z);
+                        }
                     }
                 }
             }
