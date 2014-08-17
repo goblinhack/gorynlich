@@ -3083,7 +3083,7 @@ widp wid_new_rounded_window (const char *name)
 
     wid_set_rounded_large(w);
     wid_set_bevelled(w, true);
-    wid_set_bevel(w, 20);
+    wid_set_bevel(w, 8);
     wid_set_text_outline(w, false);
     wid_set_blit_outline(w, false);
     wid_set_font(w, large_font);
