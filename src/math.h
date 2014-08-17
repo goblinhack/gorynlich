@@ -268,6 +268,11 @@ uint8_t get_line_intersection(fpoint p0,
                               fpoint p2,
                               fpoint p3,
                               fpoint *intersect);
+uint8_t get_line_known_intersection(fpoint p0,
+                              fpoint p1,
+                              fpoint p2,
+                              fpoint p3,
+                              fpoint *intersect);
 
 double gauss(const double m, const double s);
 

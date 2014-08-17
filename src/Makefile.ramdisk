@@ -55,8 +55,53 @@
 .o/ramdisk_data_levels_2.o: asm/ramdisk_data_levels_2.S ../data/levels/2
 	gcc -c asm/ramdisk_data_levels_2.S -o .o/ramdisk_data_levels_2.o
 
+.o/ramdisk_data_levels_3.o: asm/ramdisk_data_levels_3.S ../data/levels/3
+	gcc -c asm/ramdisk_data_levels_3.S -o .o/ramdisk_data_levels_3.o
+
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
+
+.o/ramdisk_data_music_charlotte-8bit_mp3.o: asm/ramdisk_data_music_charlotte-8bit_mp3.S ../data/music/charlotte-8bit.mp3
+	gcc -c asm/ramdisk_data_music_charlotte-8bit_mp3.S -o .o/ramdisk_data_music_charlotte-8bit_mp3.o
+
+.o/ramdisk_data_music_charlotte_mp3.o: asm/ramdisk_data_music_charlotte_mp3.S ../data/music/charlotte.mp3
+	gcc -c asm/ramdisk_data_music_charlotte_mp3.S -o .o/ramdisk_data_music_charlotte_mp3.o
+
+.o/ramdisk_data_music_DST-BlackRiver_mp3.o: asm/ramdisk_data_music_DST-BlackRiver_mp3.S ../data/music/DST-BlackRiver.mp3
+	gcc -c asm/ramdisk_data_music_DST-BlackRiver_mp3.S -o .o/ramdisk_data_music_DST-BlackRiver_mp3.o
+
+.o/ramdisk_data_music_DST-BlazeOn_mp3.o: asm/ramdisk_data_music_DST-BlazeOn_mp3.S ../data/music/DST-BlazeOn.mp3
+	gcc -c asm/ramdisk_data_music_DST-BlazeOn_mp3.S -o .o/ramdisk_data_music_DST-BlazeOn_mp3.o
+
+.o/ramdisk_data_music_DST-BoneTower_mp3.o: asm/ramdisk_data_music_DST-BoneTower_mp3.S ../data/music/DST-BoneTower.mp3
+	gcc -c asm/ramdisk_data_music_DST-BoneTower_mp3.S -o .o/ramdisk_data_music_DST-BoneTower_mp3.o
+
+.o/ramdisk_data_music_DST-Cathedral_mp3.o: asm/ramdisk_data_music_DST-Cathedral_mp3.S ../data/music/DST-Cathedral.mp3
+	gcc -c asm/ramdisk_data_music_DST-Cathedral_mp3.S -o .o/ramdisk_data_music_DST-Cathedral_mp3.o
+
+.o/ramdisk_data_music_DST-ClickThenAction_mp3.o: asm/ramdisk_data_music_DST-ClickThenAction_mp3.S ../data/music/DST-ClickThenAction.mp3
+	gcc -c asm/ramdisk_data_music_DST-ClickThenAction_mp3.S -o .o/ramdisk_data_music_DST-ClickThenAction_mp3.o
+
+.o/ramdisk_data_music_DST-ClockTower_mp3.o: asm/ramdisk_data_music_DST-ClockTower_mp3.S ../data/music/DST-ClockTower.mp3
+	gcc -c asm/ramdisk_data_music_DST-ClockTower_mp3.S -o .o/ramdisk_data_music_DST-ClockTower_mp3.o
+
+.o/ramdisk_data_music_DST-DaysOfRealms_mp3.o: asm/ramdisk_data_music_DST-DaysOfRealms_mp3.S ../data/music/DST-DaysOfRealms.mp3
+	gcc -c asm/ramdisk_data_music_DST-DaysOfRealms_mp3.S -o .o/ramdisk_data_music_DST-DaysOfRealms_mp3.o
+
+.o/ramdisk_data_music_DST-DoomCity_mp3.o: asm/ramdisk_data_music_DST-DoomCity_mp3.S ../data/music/DST-DoomCity.mp3
+	gcc -c asm/ramdisk_data_music_DST-DoomCity_mp3.S -o .o/ramdisk_data_music_DST-DoomCity_mp3.o
+
+.o/ramdisk_data_music_DST-Drogs_mp3.o: asm/ramdisk_data_music_DST-Drogs_mp3.S ../data/music/DST-Drogs.mp3
+	gcc -c asm/ramdisk_data_music_DST-Drogs_mp3.S -o .o/ramdisk_data_music_DST-Drogs_mp3.o
+
+.o/ramdisk_data_music_DST-Echorex_mp3.o: asm/ramdisk_data_music_DST-Echorex_mp3.S ../data/music/DST-Echorex.mp3
+	gcc -c asm/ramdisk_data_music_DST-Echorex_mp3.S -o .o/ramdisk_data_music_DST-Echorex_mp3.o
+
+.o/ramdisk_data_music_DST-Legends_mp3.o: asm/ramdisk_data_music_DST-Legends_mp3.S ../data/music/DST-Legends.mp3
+	gcc -c asm/ramdisk_data_music_DST-Legends_mp3.S -o .o/ramdisk_data_music_DST-Legends_mp3.o
+
+.o/ramdisk_data_music_DST-SuperWin!_mp3.o: asm/ramdisk_data_music_DST-SuperWin!_mp3.S ../data/music/DST-SuperWin!.mp3
+	gcc -c asm/ramdisk_data_music_DST-SuperWin!_mp3.S -o .o/ramdisk_data_music_DST-SuperWin!_mp3.o
 
 .o/ramdisk_data_music_hiscore_wav.o: asm/ramdisk_data_music_hiscore_wav.S ../data/music/hiscore.wav
 	gcc -c asm/ramdisk_data_music_hiscore_wav.S -o .o/ramdisk_data_music_hiscore_wav.o
