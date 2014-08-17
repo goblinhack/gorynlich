@@ -139,7 +139,7 @@ uint8_t get_line_intersection (fpoint p0,
     intersect->y = p0.y + (a * (p1.y - p0.y));
 
     // if line1 is a segment and line2 is infinite, they intersect if:
-    if ((a >= 0) && (a <= 1.2) && (b >= 0) && (b <= 1.2)) {
+    if ((a >= 0) && (a <= 1.0) && (b >= 0) && (b <= 1.0)) {
         return (true);
     }
 CON("line miss %.20f %.20f",a,b);

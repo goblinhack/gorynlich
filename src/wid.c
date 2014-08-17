@@ -7054,7 +7054,7 @@ static inline void wid_display_shadow (widp w, uint8_t z)
     br.x = otlx + owidth;
     br.y = otly + oheight;
 
-    double fudge = 0;
+    double fudge = 0.05;
     double etlx = (double)tl.x + ((tile->px1-fudge) * (double)owidth);
     double etly = (double)tl.y + ((tile->py1-fudge) * (double)oheight);
     double ebrx = (double)tl.x + ((tile->px2+fudge) * (double)owidth);
@@ -7769,14 +7769,16 @@ static void wid_display (widp w,
 
         blit_flush();
 
+
         if (w == wid_game_map_client_grid_container) {
             blit_init();
 
             memset(ray_depth, 0, sizeof(ray_depth));
 
-            color c = BLACK;
+            color c = RED;
 
             glcolor(c);
+            c.a = 100;
 
             extern int32_t mouse_x;
             extern int32_t mouse_y;
@@ -7805,28 +7807,30 @@ static void wid_display (widp w,
             int i;
             for (i = 0; i < MAX_RAYS; i++, r += dr) {
 
-                if (ray_depth[i] == 0) {
-                    continue;
-                }
-
                 double p1_len = ray_depth[i];
                 double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
+                if (p1_len == 0) {
+                    p1_len = 1000;
+                }
                 if (p2_len == 0) {
-                    continue;
+                    p2_len = 1000;
                 }
 
-                p1_len += 20.15;
-                p2_len += 20.15;
+//                p1_len -= 20.15;
+//                p2_len -= 20.15;
 
                 double p1x = light_pos.x + cos(r) * p1_len;
                 double p1y = light_pos.y + sin(r) * p1_len;
 
-                double fudge = 0.10;
+//                double fudge = 0.10;
+                double fudge = 0.0;
                 double p2x = light_pos.x + cos(r + dr + fudge) * p2_len;
                 double p2y = light_pos.y + sin(r + dr + fudge) * p2_len;
 
-                line_project(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
+                triangle(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
+
+//                line_project(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
             }
 
             blit_flush_triangles();
