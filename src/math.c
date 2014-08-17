@@ -142,7 +142,6 @@ uint8_t get_line_intersection (fpoint p0,
     if ((a >= 0) && (a <= 1.0) && (b >= 0) && (b <= 1.0)) {
         return (true);
     }
-CON("line miss %.20f %.20f",a,b);
 
     return (false);
 }

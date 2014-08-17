@@ -7771,6 +7771,13 @@ static void wid_display (widp w,
 
 
         if (w == wid_game_map_client_grid_container) {
+
+            // set rendering destination to FBO
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
+
+            // clear buffers
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             blit_init();
 
             memset(ray_depth, 0, sizeof(ray_depth));
@@ -7834,6 +7841,17 @@ static void wid_display (widp w,
             }
 
             blit_flush_triangles();
+
+            // unbind FBO
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+blit_init();
+glBindTexture(GL_TEXTURE_2D, fbo_tex_id);
+blit(fbo_tex_id,
+0,1,1,0,
+0,0,200,200);
+blit_flush();
+
         }
     }
     
