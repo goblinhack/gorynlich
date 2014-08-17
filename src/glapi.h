@@ -6,6 +6,8 @@
 
 #pragma once
 
+#define GL_GLEXT_PROTOTYPES
+
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 #define __IPHONEOS__
 #include "SDL_opengles.h"

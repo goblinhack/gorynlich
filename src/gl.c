@@ -10,6 +10,8 @@
 #include "gl.h"
 #include "color.h"
 
+static void gl_init_fbo(void);
+
 void gl_enter_2d_mode (void)
 {
     if (HEADLESS) {
@@ -49,8 +51,8 @@ void gl_enter_2d_mode (void)
      * 2D projection
      */
     glOrthof(0, 
-            global_config.video_gl_width, global_config.video_gl_height,
-            0, -1200.0, 1200.0);
+             global_config.video_gl_width, global_config.video_gl_height,
+             0, -1200.0, 1200.0);
 
     /*
      * Make sure we're changing the model view and not the projection
@@ -62,6 +64,8 @@ void gl_enter_2d_mode (void)
      * Reset the view
      */
     glLoadIdentity();
+
+    gl_init_fbo();
 }
 
 void
@@ -76,6 +80,71 @@ gl_leave_2d_mode (void)
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
+}
+
+GLuint render_buf_id;
+GLuint fbo_id;
+GLuint fbo_tex_id;
+
+static void gl_init_fbo (void)
+{
+    GLuint tex_width = 512;
+    GLuint tex_height = 512;
+
+    glGenTextures(1, &fbo_tex_id);
+    glBindTexture(GL_TEXTURE_2D, fbo_tex_id);
+//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
+                 tex_width, tex_height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    /*
+     * Create a render buffer object.
+     */
+    glGenRenderbuffersEXT(1, &render_buf_id);
+    glBindRenderbuffer(GL_RENDERBUFFER, render_buf_id);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                          tex_width, tex_height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    /*
+     * Create a frame buffer object.
+     */
+    glGenFramebuffers(1, &fbo_id);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
+
+    /*
+     * Attach the texture to FBO color attachment point
+     */
+    glFramebufferTexture2D(GL_FRAMEBUFFER,        // 1. fbo target: GL_FRAMEBUFFER 
+                           GL_COLOR_ATTACHMENT0,  // 2. attachment point
+                           GL_TEXTURE_2D,         // 3. tex target: GL_TEXTURE_2D
+                           fbo_tex_id,            // 4. tex ID
+                           0);                    // 5. mipmap level: 0(base)
+
+    /*
+     * Attach the renderbuffer to depth attachment point
+     */
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER,      // 1. fbo target: GL_FRAMEBUFFER
+                              GL_DEPTH_ATTACHMENT, // 2. attachment point
+                              GL_RENDERBUFFER,     // 3. rbo target: GL_RENDERBUFFER
+                              render_buf_id);      // 4. rbo ID
+
+    /*
+     * Check FBO status
+     */
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        ERR("Failed to create framebuffer");
+    }
+
+    // switch back to window-system-provided framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 /*
