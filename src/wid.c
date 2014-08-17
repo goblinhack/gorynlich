@@ -6972,6 +6972,11 @@ static inline void line_project (float light_x, float light_y,
     triangle(x2, y2, x3, y3, x4, y4);
 }
 
+#define MAX_RAYS 360
+static double ray_depth[MAX_RAYS];
+
+static fpoint light_pos;
+
 /*
  * Display one wid and its children
  */
@@ -7049,10 +7054,7 @@ static inline void wid_display_shadow (widp w, uint8_t z)
     br.x = otlx + owidth;
     br.y = otly + oheight;
 
-    extern int32_t mouse_x;
-    extern int32_t mouse_y;
-
-    double fudge = 0.05;
+    double fudge = 0;
     double etlx = (double)tl.x + ((tile->px1-fudge) * (double)owidth);
     double etly = (double)tl.y + ((tile->py1-fudge) * (double)oheight);
     double ebrx = (double)tl.x + ((tile->px2+fudge) * (double)owidth);
@@ -7084,93 +7086,77 @@ static inline void wid_display_shadow (widp w, uint8_t z)
     normal[3].x = edge[3].y;
     normal[3].y = -edge[3].x;
 
-    fpoint light_pos;
-    light_pos.x = mouse_x;
-    light_pos.y = mouse_y;
-
-    thingp me = wid_get_thing(w);
-    thing_map *map = thing_get_map(me);
-    int32_t x = me->x;
-    int32_t y = me->y;
-
     /*
      * For each clockwise side of the tile.
      */
     for (int k = 0; k<4; k++) {
-        /*
-         * Indicates which direction we should look in, x, y to filter out 
-         * other adjacent tiles that if they are casting a shadow, we need to 
-         * make sure we don't cast a shadow sideways onto them.
-         */
-        static const int8_t ox[4] = { 0, 1, 0, -1 };
-        static const int8_t oy[4] = { -1, 0, 1, 0 };
-
-        int32_t cx = x + ox[k];
-        int32_t cy = y + oy[k];
-
-        if (cy < 1) {
-            if (k != 0) {
-                /*
-                 * Ensure border rock tiles do not cast shadows sideways; only 
-                 * towards the edge of the map.
-                 */
-                continue;
-            }
-        } else if (cx < 1) {
-            if (k != 3) {
-                continue;
-            }
-        } else if (cx > MAP_WIDTH - 2) {
-            if (k != 1) {
-                continue;
-            }
-        } else if (cy > MAP_HEIGHT - 2) {
-            if (k != 2) {
-                continue;
-            }
-        } else {
-            thing_map_cell *cell = &map->cells[cx][cy];
-
-            /*
-             * If a tile is adjoining another tile that casts shadows, don't 
-             * cast a shadow onto it.
-             */
-            uint8_t i;
-            uint8_t adjoining_shadow = false;
-
-            for (i = 0; i < cell->count; i++) {
-                thingp it;
-
-                it = thing_client_id(cell->id[i]);
-                
-                if (thing_is_wall(it) ||
-                    thing_is_door(it) ||
-                    thing_is_rock(it)) {
-                    adjoining_shadow = true;
-                    break;
-                }
-            }
-
-            if (adjoining_shadow) {
-                continue;
-            }
-        }
 
         fpoint light_dir = fsub(light_pos, P[k]);
 
         float dot = normal[k].x * light_dir.x + normal[k].y * light_dir.y;   
                 
-        if ( dot > 0.0f ) {
+        if (dot > 0.0f) {
             /*
-             * Facing the light source. No shadow.
-             */
-        } else {
-            /*
-             * Facing away from the light source. Shadow.
+             * Facing the light source. Blocks light.
              */
             int l = (k + 1) % 4;
 
-            line_project(light_pos.x, light_pos.y, P[k].x, P[k].y, P[l].x, P[l].y);
+            fpoint p1 = fsub(P[k], light_pos);
+            fpoint p2 = fsub(P[l], light_pos);
+
+            double p1_rad = anglerot(p1);
+            double p2_rad = anglerot(p2);
+            if (p1_rad == RAD_360) {
+                p1_rad = 0;
+            }
+            if (p2_rad == RAD_360) {
+                p2_rad = 0;
+            }
+
+            int32_t p1_deg = p1_rad * ((double)MAX_RAYS / RAD_360);
+            int32_t p2_deg = p2_rad * ((double)MAX_RAYS / RAD_360);
+
+            double tot_rad = p1_rad - p2_rad;
+            int32_t tot_deg = p1_deg - p2_deg;
+            if (tot_deg < 0) {
+                tot_deg += 360;
+                tot_rad += RAD_360;
+            }
+
+            double dr = tot_rad / tot_deg;
+            int32_t deg = p2_deg;
+            double rad = p2_rad;
+
+            while (tot_deg-- > 0) {
+
+                fpoint light_end;
+                double light_len = 100;
+                light_end.x = light_pos.x + cos(rad) * light_len;
+                light_end.y = light_pos.y + sin(rad) * light_len;
+
+                fpoint intersect;
+                if (get_line_known_intersection(P[k], P[l], light_pos, light_end, &intersect)) {
+                    double len = DISTANCE(light_pos.x, light_pos.y, intersect.x, intersect.y);
+if ((deg < 0) || (deg >= MAX_RAYS)) {
+    DIE("%d",deg);
+}
+                    if (!ray_depth[deg]) {
+                        ray_depth[deg] = len;
+                    } if (len < ray_depth[deg]) {
+                        ray_depth[deg] = len;
+                    }
+                }
+
+                rad += dr;
+                if (rad >= RAD_360) {
+                    rad = 0;
+                }
+
+                deg++;
+                if (deg >= MAX_RAYS) {
+                    deg = 0;
+                }
+            }
         }
     }
 }
@@ -7786,9 +7772,17 @@ static void wid_display (widp w,
         if (w == wid_game_map_client_grid_container) {
             blit_init();
 
+            memset(ray_depth, 0, sizeof(ray_depth));
+
             color c = BLACK;
 
             glcolor(c);
+
+            extern int32_t mouse_x;
+            extern int32_t mouse_y;
+
+            light_pos.x = mouse_x;
+            light_pos.y = mouse_y;
 
             z = MAP_DEPTH_WALL; {
                 for (x = maxx - 1; x >= minx; x--) {
@@ -7803,6 +7797,36 @@ static void wid_display (widp w,
                         }
                     }
                 }
+            }
+
+            double r = 0;
+            double dr = RAD_360 / (double)MAX_RAYS;
+
+            int i;
+            for (i = 0; i < MAX_RAYS; i++, r += dr) {
+
+                if (ray_depth[i] == 0) {
+                    continue;
+                }
+
+                double p1_len = ray_depth[i];
+                double p2_len = ray_depth[(i + 1) % MAX_RAYS];
+
+                if (p2_len == 0) {
+                    continue;
+                }
+
+                p1_len += 20.15;
+                p2_len += 20.15;
+
+                double p1x = light_pos.x + cos(r) * p1_len;
+                double p1y = light_pos.y + sin(r) * p1_len;
+
+                double fudge = 0.10;
+                double p2x = light_pos.x + cos(r + dr + fudge) * p2_len;
+                double p2y = light_pos.y + sin(r + dr + fudge) * p2_len;
+
+                line_project(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
             }
 
             blit_flush_triangles();
