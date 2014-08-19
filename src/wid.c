@@ -7015,15 +7015,6 @@ static inline void wid_display_shadow (widp w, uint8_t z)
     oheight = obry - otly;
 
     /*
-     * If this widget was active and the time has elapsed, make it normal.
-     */
-    if (wid_get_mode(w) == WID_MODE_ACTIVE) {
-        if ((time_get_time_cached() - w->timestamp_last_mode_change) > 250) {
-            wid_set_mode(w, WID_MODE_NORMAL);
-        }
-    }
-
-    /*
      * Draw the wid frame
      */
     color col_tile = wid_get_color(w, WID_COLOR_BLIT);
@@ -7846,11 +7837,13 @@ static void wid_display (widp w,
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 blit_init();
+    glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
 glBindTexture(GL_TEXTURE_2D, fbo_tex_id);
 blit(fbo_tex_id,
 0,1,1,0,
-0,0,200,200);
+0,0,(double) global_config.video_pix_width * (double)MAP_WINDOW_WIDTH,global_config.video_pix_height);
 blit_flush();
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         }
     }
