@@ -9,6 +9,7 @@
 #include "main.h"
 #include "gl.h"
 #include "color.h"
+#include "math.h"
 
 static void gl_init_fbo(void);
 
@@ -88,16 +89,17 @@ GLuint fbo_tex_id;
 
 static void gl_init_fbo (void)
 {
-    GLuint tex_width = 512;
-    GLuint tex_height = 512;
+    GLuint tex_width = 
+        global_config.video_pix_width * MAP_WINDOW_WIDTH;
+    GLuint tex_height = 
+        global_config.video_pix_height;
 
     glGenTextures(1, &fbo_tex_id);
     glBindTexture(GL_TEXTURE_2D, fbo_tex_id);
-//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
                  tex_width, tex_height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, 0);
