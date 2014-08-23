@@ -56,6 +56,7 @@ void gl_leave_2d_mode(void);
 
 void blit_flush(void);
 void blit_flush_triangles(void);
+void blit_flush_colored_triangles(void);
 void blit_fini(void);
 void gl_blitquad(float tlx, float tly, float brx, float bry);
 void gl_blitsquare(float tlx, float tly, float brx, float bry);
@@ -311,6 +312,50 @@ void blit (int tex,
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif
+}
+
+
+/*
+ * gl_push_triangle
+ */
+static inline void
+gl_push_triangle_colored (float **p,
+                          float *p_end,
+                          float x1, float y1,
+                          float x2, float y2,
+                          float x3, float y3,
+                          float r1, float g1, float b1, float a1,
+                          float r2, float g2, float b2, float a2,
+                          float r3, float g3, float b3, float a3)
+{
+    if (*p + 24 >= p_end) {
+        DIE("overflow on gl bug");
+    }
+
+    gl_push_vertex(p, x1, y1);
+    gl_push_rgba(p, r1, g1, b1, a1);
+    gl_push_vertex(p, x2, y2);
+    gl_push_rgba(p, r2, g2, b2, a2);
+    gl_push_vertex(p, x3, y3);
+    gl_push_rgba(p, r2, g3, b3, a3);
+}
+
+static inline
+void triangle_colored (float x1, float y1,
+                       float x2, float y2,
+                       float x3, float y3,
+                       float r1, float g1, float b1, float a1,
+                       float r2, float g2, float b2, float a2,
+                       float r3, float g3, float b3, float a3)
+{
+    gl_push_triangle_colored(&bufp,
+                             bufp_end,
+                             x1, y1,
+                             x2, y2,
+                             x3, y3,
+                             r1, g1, b1, a1,
+                             r2, g2, b2, a2,
+                             r3, g3, b3, a3);
 }
 
 /*
