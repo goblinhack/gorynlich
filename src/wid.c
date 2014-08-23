@@ -7861,6 +7861,14 @@ if (1)
                 double dr = RAD_360 / (double)MAX_RAYS;
                 int i;
 
+                static double fuzz;
+                static double red;
+                
+                if (!(rand() % 20)) {
+                    fuzz = 100 + rand() % 50;
+                    red = rand() % 255;
+                }
+
                 /*
                  * Walk the light rays in a circle.
                  */
@@ -7874,8 +7882,6 @@ if (1)
                     if (p2_len == 0) {
                         p2_len = 1000;
                     }
-
-                    double fuzz = 150;
 
                     double p3_len = p1_len + fuzz;
                     double p4_len = p2_len + fuzz;
@@ -7899,15 +7905,16 @@ if (1)
                                      p1x, p1y, 
                                      p2x, p2y,
                                      255,0,0,0,
-                                     255,0,0,255,
-                                     255,0,0,255);
+                                     255,red,red,255,
+                                     255,red,red,255);
                     triangle_colored(p3x, p3y,
                                      p4x, p4y, 
                                      p2x, p2y,
                                      255,0,0,0,
                                      255,0,0,0,
-                                     255,0,0,255);
+                                     255,red,red,255);
                 }
+
 
                 /*
                  * Flush non shaded triangles.
@@ -8007,8 +8014,18 @@ if (1)
              */
             {
 if (1) {
-                glBlendFunc(GL_ZERO, GL_SRC_ALPHA);
-                glBlendFunc(a, b);
+                glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+                extern int explosion_effect;
+                if (explosion_effect > 0) {
+                    explosion_effect--;
+                    glBlendFunc(0x304, 0x302);
+                }
+//302 300
+//304 302
+
+//304 0
+//306 308
+//0 300
 
                 blit_init();
                 blit(fbo_tex_id2,
