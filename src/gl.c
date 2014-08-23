@@ -297,6 +297,50 @@ void blit_flush (void)
     blit_init();
 }
 
+void blit_flush_colored_triangles (void)
+{
+    if (gl_array_buf == bufp) {
+        return;
+    }
+
+    /*
+     * Display all the tiles selected above in one blast.
+     */
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+    static uint32_t nvertices;
+
+    static const GLsizei stride = 
+                        sizeof(GLfloat) *
+                        NUMBER_DIMENSIONS_PER_COORD +
+                        sizeof(GLfloat) *
+                        NUMBER_COMPONENTS_PER_COLOR;
+
+    nvertices = ((char*)bufp - (char*)gl_array_buf) / stride;
+
+    glVertexPointer(
+        NUMBER_DIMENSIONS_PER_COORD, // (x,y)
+        GL_FLOAT,
+        stride,
+        gl_array_buf);
+
+    glColorPointer(
+        NUMBER_COMPONENTS_PER_COLOR, // (r,g,b,a)
+        GL_FLOAT,
+        stride,
+        ((char*)gl_array_buf) +
+            sizeof(GLfloat) *        // skip (x,y)
+            NUMBER_DIMENSIONS_PER_COORD);
+
+    glDrawArrays(GL_TRIANGLES, 0, nvertices);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+    blit_init();
+}
+
 void blit_flush_triangles (void)
 {
     if (gl_array_buf == bufp) {
@@ -319,7 +363,7 @@ void blit_flush_triangles (void)
     glVertexPointer(
         NUMBER_DIMENSIONS_PER_COORD, // (x,y)
         GL_FLOAT,
-        0,
+        0, // stride
         ((char*)gl_array_buf));
 
     glDrawArrays(GL_TRIANGLES, 0, nvertices);
