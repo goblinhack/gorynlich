@@ -7743,6 +7743,7 @@ static void wid_display (widp w,
         int32_t x, y;
         uint8_t z;
 
+#if 1
         for (z = 0; z < MAP_DEPTH; z++) {
             for (x = maxx - 1; x >= minx; x--) {
                 for (y = miny; y < maxy; y++) {
@@ -7760,23 +7761,11 @@ static void wid_display (widp w,
 
         blit_flush();
 
+#endif
 
         if (w == wid_game_map_client_grid_container) {
 
-            // set rendering destination to FBO
-            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
-
-            // clear buffers
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            blit_init();
-
             memset(ray_depth, 0, sizeof(ray_depth));
-
-            color c = RED;
-
-            glcolor(c);
-            c.a = 100;
 
             extern int32_t mouse_x;
             extern int32_t mouse_y;
@@ -7798,6 +7787,22 @@ static void wid_display (widp w,
                     }
                 }
             }
+
+            // set rendering destination to FBO
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
+
+            // clear buffers
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0,0,0,0);
+
+            color c;
+            c = WHITE;
+            c.a = 255;
+            glcolor(c);
+
+if (1)
+        {
+            blit_init();
 
             double r = 0;
             double dr = RAD_360 / (double)MAX_RAYS;
@@ -7832,18 +7837,165 @@ static void wid_display (widp w,
             }
 
             blit_flush_triangles();
+        }
+
+#if 0
+c = BLUE;
+glcolor(c);
+blit_init();
+triangle(MAP_WINDOW_WIDTH, 0, 
+         global_config.video_pix_width, 0,
+         global_config.video_pix_width, global_config.video_pix_height);
+triangle(MAP_WINDOW_WIDTH, 0, 
+         MAP_WINDOW_WIDTH, global_config.video_pix_height,
+         global_config.video_pix_width, global_config.video_pix_height);
+blit_flush_triangles();
+#endif
+            // unbind FBO
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+
+            // set rendering destination to FBO
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id2);
+
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+            // clear buffers
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0,0,0,0);
+
+            c = WHITE;
+            glcolor(c);
+
+            /*
+             * Blit the light gradient
+             */
+            static texp tex;
+            static int gradient_tex_id;
+            uint32_t tw = global_config.video_pix_width;
+            uint32_t th = global_config.video_pix_width;
+
+            if (!tex) {
+                tex = tex_find("gradient");
+                gradient_tex_id = tex_get_gl_binding(tex);
+            }
+
+            tw = global_config.video_pix_width;
+            th = global_config.video_pix_height;
+
+            /*
+             * Blit the light map.
+             */
+            double w = global_config.video_pix_width * (double)MAP_WINDOW_WIDTH;
+            double h = global_config.video_pix_height;
+            blit_init();
+
+            int soft;
+
+            for (soft = 0; soft < 10; soft++) {
+                c = WHITE;
+                c.a = 255 - 21 * soft;
+                glcolor(c);
+
+                int fuzz = soft * 15;
+
+                double new_width = w + (fuzz * 2);
+                double new_height = h + (fuzz * 2);
+                double old_lx = (double) light_pos.x;
+                double old_ly = (double) light_pos.y;
+                double old_lx_pc = old_lx / w;
+                double old_ly_pc = old_ly / h;
+                double new_lx = (new_width * old_lx_pc) - (fuzz );
+                double new_ly = (new_height * old_ly_pc) - (fuzz );
+                double del_lx = old_lx - new_lx;
+                double del_ly = old_ly - new_ly;
+
+                blit(fbo_tex_id1,
+                     0.0, 1.0, 1.0, 0.0,
+                     - fuzz + del_lx,
+                     - fuzz + del_ly,
+                     w + fuzz + del_lx,
+                     h + fuzz + del_ly);
+            }
+
+                c = GREEN;
+                c.a = 50;
+                glcolor(c);
+
+                blit(fbo_tex_id1,
+                     0.0, 1.0, 1.0, 0.0,
+                     100, 100, 800, 800);
+                blit_flush();
+
+                c = ORANGE;
+                c.a = 50;
+                glcolor(c);
+
+                blit(fbo_tex_id1,
+                     0.0, 1.0, 1.0, 0.0,
+                     300, 300, 800, 800);
+                blit_flush();
 
             // unbind FBO
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-blit_init();
-    glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-glBindTexture(GL_TEXTURE_2D, fbo_tex_id);
-blit(fbo_tex_id,
-0,1,1,0,
-0,0,(double) global_config.video_pix_width * (double)MAP_WINDOW_WIDTH,global_config.video_pix_height);
-blit_flush();
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+static int s = GL_SRC_COLOR - 2;
+static int j = GL_SRC_COLOR - 2;
+static int x;
+x++;
+if (x == 500) {
+    x = 0;
+    s++;
+    if (s > GL_SRC_ALPHA_SATURATE) {
+        j++;
+        if (j > GL_SRC_ALPHA_SATURATE) {
+            j = GL_SRC_COLOR - 2;
+        }
+        s = GL_SRC_COLOR - 2;
+    }
+}
+int a, b;
+a = s;
+b = j;
+if (s == GL_SRC_COLOR - 2) {
+a = GL_ZERO;
+}
+if (j == GL_SRC_COLOR - 2) {
+b = GL_ZERO;
+}
+if (s == GL_SRC_COLOR - 1) {
+a = GL_ONE;
+}
+if (j == GL_SRC_COLOR - 1) {
+b = GL_ONE;
+}
+if (x == 0) {
+CON("%x %x",a,b);
+}
+            glcolor(WHITE);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            blit_init();
+            blit(gradient_tex_id,
+                 0.0, 1.0, 1.0, 0.0,
+                 light_pos.x - th,
+                 light_pos.y - th,
+                 light_pos.x + th,
+                 light_pos.y + th);
+            blit_flush();
+
+            glBlendFunc(0x0, 0x302);
+//            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+
+            blit_init();
+            blit(fbo_tex_id2,
+                 0.0, 1.0, 1.0, 0.0,
+                 0, 0, w, h);
+            blit_flush();
+
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         }
     }
