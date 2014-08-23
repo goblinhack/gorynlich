@@ -7126,11 +7126,16 @@ static inline void wid_display_shadow (widp w, uint8_t z)
                 light_end.y = light_pos.y + sin(rad) * light_len;
 
                 fpoint intersect;
-                if (get_line_known_intersection(P[k], P[l], light_pos, light_end, &intersect)) {
-                    double len = DISTANCE(light_pos.x, light_pos.y, intersect.x, intersect.y);
-if ((deg < 0) || (deg >= MAX_RAYS)) {
-    DIE("%d",deg);
-}
+
+                if (get_line_known_intersection(P[k], P[l], 
+                                                light_pos, light_end, 
+                                                &intersect)) {
+                    double len = DISTANCE(light_pos.x, light_pos.y, 
+                                          intersect.x, intersect.y);
+                    if ((deg < 0) || (deg >= MAX_RAYS)) {
+                        DIE("%d",deg);
+                    }
+
                     if (!ray_depth[deg]) {
                         ray_depth[deg] = len;
                     } if (len < ray_depth[deg]) {
@@ -7743,6 +7748,7 @@ static void wid_display (widp w,
         int32_t x, y;
         uint8_t z;
 
+if (1) {
         for (z = 0; z < MAP_DEPTH; z++) {
             for (x = maxx - 1; x >= minx; x--) {
                 for (y = miny; y < maxy; y++) {
@@ -7757,6 +7763,7 @@ static void wid_display (widp w,
                 }
             }
         }
+}
 
         blit_flush();
 
@@ -7795,6 +7802,7 @@ static void wid_display (widp w,
             /*
              * Now blit to the FBO, drawing the rays
              */
+if (1)
             {
                 glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
 
@@ -7845,6 +7853,7 @@ static void wid_display (widp w,
              * Now do the same,  using the same FBO to stretch the light 
              * a bit and make it fuzzy.
              */
+if (1)
             {
                 blit_init();
 
@@ -7866,6 +7875,11 @@ static void wid_display (widp w,
                         p2_len = 1000;
                     }
 
+                    double fuzz = 150;
+
+                    double p3_len = p1_len + fuzz;
+                    double p4_len = p2_len + fuzz;
+
                     /*
                      * End points of the light ray. Start is the light source.
                      */
@@ -7875,13 +7889,30 @@ static void wid_display (widp w,
                     double p2x = light_pos.x + cos(r + dr) * p2_len;
                     double p2y = light_pos.y + sin(r + dr) * p2_len;
 
-                    triangle(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
+                    double p3x = light_pos.x + cos(r) * p3_len;
+                    double p3y = light_pos.y + sin(r) * p3_len;
+
+                    double p4x = light_pos.x + cos(r + dr) * p4_len;
+                    double p4y = light_pos.y + sin(r + dr) * p4_len;
+
+                    triangle_colored(p3x, p3y,
+                                     p1x, p1y, 
+                                     p2x, p2y,
+                                     255,0,0,0,
+                                     255,0,0,255,
+                                     255,0,0,255);
+                    triangle_colored(p3x, p3y,
+                                     p4x, p4y, 
+                                     p2x, p2y,
+                                     255,0,0,0,
+                                     255,0,0,0,
+                                     255,0,0,255);
                 }
 
                 /*
                  * Flush non shaded triangles.
                  */
-                blit_flush_triangles();
+                blit_flush_colored_triangles();
 
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
@@ -7910,6 +7941,7 @@ static void wid_display (widp w,
                 glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
 
+#if 1
 static int s = GL_SRC_COLOR - 2;
 static int j = GL_SRC_COLOR - 2;
 static int x;
@@ -7943,9 +7975,12 @@ b = GL_ONE;
 if (x == 0) {
 CON("%x %x",a,b);
 }
+#endif
+
             /*
              * Blit the light gradient
              */
+if (1)
             {
                 static texp tex;
                 static int gradient_tex_id;
@@ -7971,15 +8006,43 @@ CON("%x %x",a,b);
              * Blit the light map FBO to mask out what we cannot see.
              */
             {
+if (1) {
                 glBlendFunc(GL_ZERO, GL_SRC_ALPHA);
+                glBlendFunc(a, b);
 
                 blit_init();
                 blit(fbo_tex_id2,
                      0.0, 1.0, 1.0, 0.0,
                      0, 0, w, h);
                 blit_flush();
+}
+
+if (0) {
+
+                blit_init();
+                blit(fbo_tex_id1,
+                     0.0, 1.0, 1.0, 0.0,
+                     0, 0, w, h);
+                blit_flush();
+}
 
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+if (0) {
+                blit_init();
+                triangle_colored(0,0,
+                                 500, 0, 
+                                 0, 500,
+                                 255,0,0,255,
+                                 0,255,0,255,
+                                 0,0,255,255);
+                triangle_colored(300+0,300+0,
+                                 300+500, 300+0, 
+                                 300+0, 300+500,
+                                 255,0,0,255,
+                                 0,255,0,255,
+                                 0,0,255,255);
+                blit_flush_colored_triangles();
+}
             }
         }
     }
