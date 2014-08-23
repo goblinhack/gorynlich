@@ -7743,7 +7743,6 @@ static void wid_display (widp w,
         int32_t x, y;
         uint8_t z;
 
-#if 1
         for (z = 0; z < MAP_DEPTH; z++) {
             for (x = maxx - 1; x >= minx; x--) {
                 for (y = miny; y < maxy; y++) {
@@ -7761,185 +7760,155 @@ static void wid_display (widp w,
 
         blit_flush();
 
-#endif
-
         if (w == wid_game_map_client_grid_container) {
-
-            memset(ray_depth, 0, sizeof(ray_depth));
-
+            /*
+             * Light soure.
+             */
             extern int32_t mouse_x;
             extern int32_t mouse_y;
 
             light_pos.x = mouse_x;
             light_pos.y = mouse_y;
 
-            z = MAP_DEPTH_WALL; {
-                for (x = maxx - 1; x >= minx; x--) {
-                    for (y = miny; y < maxy; y++) {
-                        tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
-                        widgridnode *node;
+            /*
+             * Blit the light map to a FBO. First generate the right ray lengths.
+             */
+            {
+                memset(ray_depth, 0, sizeof(ray_depth));
 
-                        TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
-                                                        tree_prev_tree_wid_compare_func) {
+                z = MAP_DEPTH_WALL; {
+                    for (x = maxx - 1; x >= minx; x--) {
+                        for (y = miny; y < maxy; y++) {
+                            tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                            widgridnode *node;
 
-                            wid_display_shadow(node->wid, z);
+                            TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
+                                                            tree_prev_tree_wid_compare_func) {
+
+                                wid_display_shadow(node->wid, z);
+                            }
                         }
                     }
                 }
             }
 
-            // set rendering destination to FBO
-            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
+            /*
+             * Now blit to the FBO, drawing the rays
+             */
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
 
-            // clear buffers
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glClearColor(0,0,0,0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClearColor(0,0,0,0);
 
-            color c;
-            c = WHITE;
-            c.a = 255;
-            glcolor(c);
+                glcolor(WHITE);
 
-if (1)
-        {
-            blit_init();
+                blit_init();
 
-            double r = 0;
-            double dr = RAD_360 / (double)MAX_RAYS;
+                double r = 0;
+                double dr = RAD_360 / (double)MAX_RAYS;
+                int i;
 
-            int i;
-            for (i = 0; i < MAX_RAYS; i++, r += dr) {
+                /*
+                 * Walk the light rays in a circle.
+                 */
+                for (i = 0; i < MAX_RAYS; i++, r += dr) {
+                    double p1_len = ray_depth[i];
+                    double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
-                double p1_len = ray_depth[i];
-                double p2_len = ray_depth[(i + 1) % MAX_RAYS];
+                    if (p1_len == 0) {
+                        p1_len = 1000;
+                    }
+                    if (p2_len == 0) {
+                        p2_len = 1000;
+                    }
 
-                if (p1_len == 0) {
-                    p1_len = 1000;
+                    /*
+                     * End points of the light ray. Start is the light source.
+                     */
+                    double p1x = light_pos.x + cos(r) * p1_len;
+                    double p1y = light_pos.y + sin(r) * p1_len;
+
+                    double p2x = light_pos.x + cos(r + dr) * p2_len;
+                    double p2y = light_pos.y + sin(r + dr) * p2_len;
+
+                    triangle(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
                 }
-                if (p2_len == 0) {
-                    p2_len = 1000;
-                }
 
-//                p1_len -= 20.15;
-//                p2_len -= 20.15;
-
-                double p1x = light_pos.x + cos(r) * p1_len;
-                double p1y = light_pos.y + sin(r) * p1_len;
-
-//                double fudge = 0.10;
-                double fudge = 0.0;
-                double p2x = light_pos.x + cos(r + dr + fudge) * p2_len;
-                double p2y = light_pos.y + sin(r + dr + fudge) * p2_len;
-
-                triangle(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
-
-//                line_project(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
+                /*
+                 * Flush non shaded triangles.
+                 */
+                blit_flush_triangles();
             }
-
-            blit_flush_triangles();
-        }
-
-#if 0
-c = BLUE;
-glcolor(c);
-blit_init();
-triangle(MAP_WINDOW_WIDTH, 0, 
-         global_config.video_pix_width, 0,
-         global_config.video_pix_width, global_config.video_pix_height);
-triangle(MAP_WINDOW_WIDTH, 0, 
-         MAP_WINDOW_WIDTH, global_config.video_pix_height,
-         global_config.video_pix_width, global_config.video_pix_height);
-blit_flush_triangles();
-#endif
-            // unbind FBO
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-
-
-            // set rendering destination to FBO
-            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id2);
-
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-            // clear buffers
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glClearColor(0,0,0,0);
-
-            c = WHITE;
-            glcolor(c);
 
             /*
-             * Blit the light gradient
+             * Now do the same,  using the same FBO to stretch the light 
+             * a bit and make it fuzzy.
              */
-            static texp tex;
-            static int gradient_tex_id;
-            uint32_t tw = global_config.video_pix_width;
-            uint32_t th = global_config.video_pix_width;
+            {
+                blit_init();
 
-            if (!tex) {
-                tex = tex_find("gradient");
-                gradient_tex_id = tex_get_gl_binding(tex);
+                double r = 0;
+                double dr = RAD_360 / (double)MAX_RAYS;
+                int i;
+
+                /*
+                 * Walk the light rays in a circle.
+                 */
+                for (i = 0; i < MAX_RAYS; i++, r += dr) {
+                    double p1_len = ray_depth[i];
+                    double p2_len = ray_depth[(i + 1) % MAX_RAYS];
+
+                    if (p1_len == 0) {
+                        p1_len = 1000;
+                    }
+                    if (p2_len == 0) {
+                        p2_len = 1000;
+                    }
+
+                    /*
+                     * End points of the light ray. Start is the light source.
+                     */
+                    double p1x = light_pos.x + cos(r) * p1_len;
+                    double p1y = light_pos.y + sin(r) * p1_len;
+
+                    double p2x = light_pos.x + cos(r + dr) * p2_len;
+                    double p2y = light_pos.y + sin(r + dr) * p2_len;
+
+                    triangle(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
+                }
+
+                /*
+                 * Flush non shaded triangles.
+                 */
+                blit_flush_triangles();
+
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
 
-            tw = global_config.video_pix_width;
-            th = global_config.video_pix_height;
+            uint32_t tw = global_config.video_pix_width;
+            uint32_t th = global_config.video_pix_height;
+
+            double w = tw * (double)MAP_WINDOW_WIDTH;
+            double h = th;
 
             /*
              * Blit the light map.
              */
-            double w = global_config.video_pix_width * (double)MAP_WINDOW_WIDTH;
-            double h = global_config.video_pix_height;
-            blit_init();
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo_id2);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClearColor(0,0,0,0);
 
-            int soft;
+                glcolor(WHITE);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-            for (soft = 0; soft < 10; soft++) {
-                c = WHITE;
-                c.a = 255 - 21 * soft;
-                glcolor(c);
+                blit_init();
+                blit(fbo_tex_id1, 0.0, 1.0, 1.0, 0.0, 0, 0, w, h);
+                blit_flush();
 
-                int fuzz = soft * 15;
-
-                double new_width = w + (fuzz * 2);
-                double new_height = h + (fuzz * 2);
-                double old_lx = (double) light_pos.x;
-                double old_ly = (double) light_pos.y;
-                double old_lx_pc = old_lx / w;
-                double old_ly_pc = old_ly / h;
-                double new_lx = (new_width * old_lx_pc) - (fuzz );
-                double new_ly = (new_height * old_ly_pc) - (fuzz );
-                double del_lx = old_lx - new_lx;
-                double del_ly = old_ly - new_ly;
-
-                blit(fbo_tex_id1,
-                     0.0, 1.0, 1.0, 0.0,
-                     - fuzz + del_lx,
-                     - fuzz + del_ly,
-                     w + fuzz + del_lx,
-                     h + fuzz + del_ly);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
             }
-
-                c = GREEN;
-                c.a = 50;
-                glcolor(c);
-
-                blit(fbo_tex_id1,
-                     0.0, 1.0, 1.0, 0.0,
-                     100, 100, 800, 800);
-                blit_flush();
-
-                c = ORANGE;
-                c.a = 50;
-                glcolor(c);
-
-                blit(fbo_tex_id1,
-                     0.0, 1.0, 1.0, 0.0,
-                     300, 300, 800, 800);
-                blit_flush();
-
-            // unbind FBO
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 static int s = GL_SRC_COLOR - 2;
 static int j = GL_SRC_COLOR - 2;
@@ -7974,29 +7943,44 @@ b = GL_ONE;
 if (x == 0) {
 CON("%x %x",a,b);
 }
-            glcolor(WHITE);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            /*
+             * Blit the light gradient
+             */
+            {
+                static texp tex;
+                static int gradient_tex_id;
 
-            blit_init();
-            blit(gradient_tex_id,
-                 0.0, 1.0, 1.0, 0.0,
-                 light_pos.x - th,
-                 light_pos.y - th,
-                 light_pos.x + th,
-                 light_pos.y + th);
-            blit_flush();
+                if (!tex) {
+                    tex = tex_find("gradient");
+                    gradient_tex_id = tex_get_gl_binding(tex);
+                }
 
-            glBlendFunc(0x0, 0x302);
-//            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            blit_init();
-            blit(fbo_tex_id2,
-                 0.0, 1.0, 1.0, 0.0,
-                 0, 0, w, h);
-            blit_flush();
+                blit_init();
+                blit(gradient_tex_id,
+                     0.0, 1.0, 1.0, 0.0,
+                     light_pos.x - th,
+                     light_pos.y - th,
+                     light_pos.x + th,
+                     light_pos.y + th);
+                blit_flush();
+            }
 
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            /*
+             * Blit the light map FBO to mask out what we cannot see.
+             */
+            {
+                glBlendFunc(GL_ZERO, GL_SRC_ALPHA);
 
+                blit_init();
+                blit(fbo_tex_id2,
+                     0.0, 1.0, 1.0, 0.0,
+                     0, 0, w, h);
+                blit_flush();
+
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            }
         }
     }
     
