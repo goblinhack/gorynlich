@@ -29,6 +29,7 @@
 #include "level_private.h"
 #include "vision.h"
 
+int explosion_effect;
 /*
  * Place an explosion
  */
@@ -42,6 +43,7 @@ static uint8_t level_place_explosion_at (levelp level,
                                          uint32_t nargs,
                                          va_list args)
 {
+explosion_effect = 50;
 
     /*
      * Choose one of the things in the args list to place.
