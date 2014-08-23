@@ -344,6 +344,14 @@ void triangle (float x1, float y1,
                      x3, y3);
 }
 
-extern GLuint render_buf_id;
-extern GLuint fbo_id;
-extern GLuint fbo_tex_id;
+extern GLuint render_buf_id1;
+extern GLuint fbo_id1;
+extern GLuint fbo_tex_id1;
+
+extern GLuint render_buf_id2;
+extern GLuint fbo_id2;
+extern GLuint fbo_tex_id2;
+
+extern GLuint render_buf_id3;
+extern GLuint fbo_id3;
+extern GLuint fbo_tex_id3;
