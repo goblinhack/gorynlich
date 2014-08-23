@@ -83,19 +83,18 @@ gl_leave_2d_mode (void)
     glPopMatrix();
 }
 
-GLuint render_buf_id;
-GLuint fbo_id;
-GLuint fbo_tex_id;
-
-static void gl_init_fbo (void)
+static void gl_init_fbo_ (
+    GLuint *render_buf_id,
+    GLuint *fbo_id,
+    GLuint *fbo_tex_id)
 {
     GLuint tex_width = 
         global_config.video_pix_width * MAP_WINDOW_WIDTH;
     GLuint tex_height = 
         global_config.video_pix_height;
 
-    glGenTextures(1, &fbo_tex_id);
-    glBindTexture(GL_TEXTURE_2D, fbo_tex_id);
+    glGenTextures(1, fbo_tex_id);
+    glBindTexture(GL_TEXTURE_2D, *fbo_tex_id);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -108,8 +107,8 @@ static void gl_init_fbo (void)
     /*
      * Create a render buffer object.
      */
-    glGenRenderbuffersEXT(1, &render_buf_id);
-    glBindRenderbuffer(GL_RENDERBUFFER, render_buf_id);
+    glGenRenderbuffersEXT(1, render_buf_id);
+    glBindRenderbuffer(GL_RENDERBUFFER, *render_buf_id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
                           tex_width, tex_height);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -117,8 +116,8 @@ static void gl_init_fbo (void)
     /*
      * Create a frame buffer object.
      */
-    glGenFramebuffers(1, &fbo_id);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id);
+    glGenFramebuffers(1, fbo_id);
+    glBindFramebuffer(GL_FRAMEBUFFER, *fbo_id);
 
     /*
      * Attach the texture to FBO color attachment point
@@ -126,7 +125,7 @@ static void gl_init_fbo (void)
     glFramebufferTexture2D(GL_FRAMEBUFFER,        // 1. fbo target: GL_FRAMEBUFFER 
                            GL_COLOR_ATTACHMENT0,  // 2. attachment point
                            GL_TEXTURE_2D,         // 3. tex target: GL_TEXTURE_2D
-                           fbo_tex_id,            // 4. tex ID
+                           *fbo_tex_id,           // 4. tex ID
                            0);                    // 5. mipmap level: 0(base)
 
     /*
@@ -135,7 +134,7 @@ static void gl_init_fbo (void)
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,      // 1. fbo target: GL_FRAMEBUFFER
                               GL_DEPTH_ATTACHMENT, // 2. attachment point
                               GL_RENDERBUFFER,     // 3. rbo target: GL_RENDERBUFFER
-                              render_buf_id);      // 4. rbo ID
+                              *render_buf_id);     // 4. rbo ID
 
     /*
      * Check FBO status
@@ -147,6 +146,25 @@ static void gl_init_fbo (void)
 
     // switch back to window-system-provided framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+GLuint render_buf_id1;
+GLuint fbo_id1;
+GLuint fbo_tex_id1;
+
+GLuint render_buf_id2;
+GLuint fbo_id2;
+GLuint fbo_tex_id2;
+
+GLuint render_buf_id3;
+GLuint fbo_id3;
+GLuint fbo_tex_id3;
+
+static void gl_init_fbo (void)
+{
+    gl_init_fbo_(&render_buf_id1, &fbo_id1, &fbo_tex_id1);
+    gl_init_fbo_(&render_buf_id2, &fbo_id2, &fbo_tex_id2);
+    gl_init_fbo_(&render_buf_id3, &fbo_id3, &fbo_tex_id3);
 }
 
 /*
