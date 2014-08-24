@@ -29,7 +29,8 @@
 #include "level_private.h"
 #include "vision.h"
 
-int explosion_effect;
+int level_explosion_flash_effect;
+
 /*
  * Place an explosion
  */
@@ -43,8 +44,6 @@ static uint8_t level_place_explosion_at (levelp level,
                                          uint32_t nargs,
                                          va_list args)
 {
-explosion_effect = 50;
-
     /*
      * Choose one of the things in the args list to place.
      */
@@ -64,7 +63,7 @@ explosion_effect = 50;
         DIE("no explosion for name %s", name);
     }
 
-    double delay = DISTANCE(ox, oy, x, y) * 50;
+    double delay = DISTANCE(ox, oy, x, y) * 150;
 
     /*
      * Make the delay on the server a lot smaller so we don't see things die 
@@ -79,8 +78,8 @@ explosion_effect = 50;
                                   x,
                                   y,
                                   delay,
-                                  2000, // destroy in
-                                  10, // jitter
+                                  3000, // destroy in
+                                  100, // jitter
                                   level == server_level ? 1 : 0,
                                   dist == 0 ? 1 : 0);
 
@@ -349,6 +348,8 @@ void level_place_explosion (levelp level,
                             thingp owner,
                             double x, double y)
 {
+    level_explosion_flash_effect = 20;
+
     level_place_explosion_(level, 
                            owner,
                            x, y,
@@ -364,6 +365,8 @@ void level_place_small_explosion (levelp level,
                                   thingp owner,
                                   double x, double y)
 {
+    level_explosion_flash_effect = 5;
+
     level_place_explosion_(level, 
                            owner,
                            x, y,
@@ -393,6 +396,8 @@ void level_place_fireball (levelp level,
                            thingp owner,
                            double x, double y)
 {
+    level_explosion_flash_effect = 20;
+
     level_place_explosion_(level, 
                            owner,
                            x, y,

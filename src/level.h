@@ -89,6 +89,9 @@ void level_set_is_ready_to_fade_out(levelp level, uint8_t val);
 uint8_t level_is_ready_to_fade_out(levelp level);
 void level_set_is_paused(levelp level, uint8_t val);
 void level_place_plant_pod(levelp);
+
+extern int level_explosion_flash_effect;
+
 void level_place_explosion(levelp level, 
                            thingp owner,
                            double x, double y);
