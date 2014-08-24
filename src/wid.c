@@ -6978,20 +6978,26 @@ static inline void line_project (float light_x, float light_y,
 static const double MAX_LIGHT_STRENGTH = 1000.0;
 static double ray_depth[MAX_RAYS];
 static fpoint light_pos[MAX_LIGHTS];
+static double light_strength[MAX_LIGHTS];
+static double light_fuzz[MAX_LIGHTS];
+static double light_red[MAX_LIGHTS];
+        
 
-static double wid_light_strength (void)
+static double wid_light_strength (uint8_t light_index)
 {
     if (level_explosion_flash_effect) {
         return (MAX_LIGHT_STRENGTH);
     }
 
-    return (200);
+    return (light_strength[light_index]);
 }
 
 /*
  * Display one wid and its children
  */
-static void wid_light_calculate (widp w, uint8_t z, fpoint light_pos)
+static void wid_light_calculate (widp w, uint8_t z, 
+                                 fpoint light_pos, 
+                                 uint8_t light_index)
 {
     uint8_t fading;
     int32_t owidth;
@@ -7001,6 +7007,7 @@ static void wid_light_calculate (widp w, uint8_t z, fpoint light_pos)
     int32_t obrx;
     int32_t obry;
     widp p;
+    double strength = wid_light_strength(light_index);
 
     if (wid_this_is_hidden(w)) {
         return;
@@ -7146,8 +7153,8 @@ static void wid_light_calculate (widp w, uint8_t z, fpoint light_pos)
                         DIE("%d",deg);
                     }
 
-                    if (len > wid_light_strength()) {
-                        len = wid_light_strength();
+                    if (len > strength) {
+                        len = strength;
                     }
 
                     if (!ray_depth[deg]) {
@@ -7174,16 +7181,16 @@ static void wid_light_calculate (widp w, uint8_t z, fpoint light_pos)
 /*
  * Display one wid and its children
  */
-static void wid_lighting (widp w, fpoint light_pos)
+static void wid_lighting (widp w, 
+                          const fpoint light_pos, 
+                          const uint8_t light_index)
 {
     int16_t maxx;
     int16_t minx;
     int16_t maxy;
     int16_t miny;
 
-    if (!player) {
-        return;
-    }
+    double strength = wid_light_strength(light_index);
 
     uint32_t tw = global_config.video_pix_width;
     uint32_t th = global_config.video_pix_height;
@@ -7194,6 +7201,10 @@ static void wid_lighting (widp w, fpoint light_pos)
         TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 4);
     const uint32_t visible_height = 
         TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 3);
+
+    if (!player) {
+        return;
+    }
 
     maxx = player->x + visible_width;
     minx = player->x - visible_width;
@@ -7236,7 +7247,7 @@ static void wid_lighting (widp w, fpoint light_pos)
                                         *tree, node,
                                         tree_prev_tree_wid_compare_func) {
 
-                    wid_light_calculate(node->wid, z, light_pos);
+                    wid_light_calculate(node->wid, z, light_pos, light_index);
                 }
             }
         }
@@ -7266,11 +7277,11 @@ static void wid_lighting (widp w, fpoint light_pos)
             double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
             if (p1_len == 0) {
-                p1_len = wid_light_strength();
+                p1_len = strength;
             }
 
             if (p2_len == 0) {
-                p2_len = wid_light_strength();
+                p2_len = strength;
             }
 
             /*
@@ -7302,13 +7313,13 @@ static void wid_lighting (widp w, fpoint light_pos)
         double dr = RAD_360 / (double)MAX_RAYS;
         int i;
 
-        static double fuzz;
-        static double red;
-        
-        if (!(rand() % 20)) {
-            fuzz = 100 + rand() % 50;
-            red = rand() % 255;
+        if (!(rand() % 10)) {
+            light_fuzz[light_index] = 100 + rand() % 50;
+            light_red[light_index] = rand() % 255;
         }
+
+        double fuzz = light_fuzz[light_index];
+        double red = light_red[light_index];
 
         /*
          * Walk the light rays in a circle.
@@ -7318,10 +7329,10 @@ static void wid_lighting (widp w, fpoint light_pos)
             double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
             if (p1_len == 0) {
-                p1_len = wid_light_strength();;
+                p1_len = strength;
             }
             if (p2_len == 0) {
-                p2_len = wid_light_strength();;
+                p2_len = strength;
             }
 
             double p3_len = p1_len + fuzz;
@@ -8051,22 +8062,23 @@ static void wid_display (widp w,
         int32_t x, y;
         uint8_t z;
 
-if (1) {
         for (z = 0; z < MAP_DEPTH; z++) {
             for (x = maxx - 1; x >= minx; x--) {
                 for (y = miny; y < maxy; y++) {
-                    tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                    tree_root **tree = 
+                        w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
                     widgridnode *node;
 
-                    TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
-                                                    tree_prev_tree_wid_compare_func) {
+                    TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                        *tree, 
+                                        node,
+                                        tree_prev_tree_wid_compare_func) {
 
                         wid_display_fast(node->wid);
                     }
                 }
             }
         }
-}
 
         blit_flush();
 
@@ -8079,8 +8091,19 @@ if (1) {
 
             light_pos[0].x = mouse_x;
             light_pos[0].y = mouse_y;
+            light_strength[0] = 100;
+
             light_pos[1].x = 600;
             light_pos[1].y = 300;
+            light_strength[1] = 20;
+
+            light_pos[2].x = 400;
+            light_pos[2].y = 700;
+            light_strength[2] = 200;
+
+            light_pos[3].x = 100;
+            light_pos[3].y = 700;
+            light_strength[3] = 50;
 
             glBindFramebuffer(GL_FRAMEBUFFER, fbo_id3);
 
@@ -8094,7 +8117,7 @@ if (1) {
             int i;
             for (i = 0; i < MAX_LIGHTS; i++) {
                 if ((light_pos[i].x != 0) && (light_pos[i].y != 0)) {
-                    wid_lighting(w, light_pos[i]);
+                    wid_lighting(w, light_pos[i], i);
                 }
             }
 
