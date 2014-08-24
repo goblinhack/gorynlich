@@ -6974,12 +6974,12 @@ static inline void line_project (float light_x, float light_y,
 }
 
 #define MAX_RAYS 360
+#define MAX_LIGHTS 10
 static const double MAX_LIGHT_STRENGTH = 1000.0;
 static double ray_depth[MAX_RAYS];
+static fpoint light_pos[MAX_LIGHTS];
 
-static fpoint light_pos;
-
-static inline double light_strength (void)
+static double wid_light_strength (void)
 {
     if (level_explosion_flash_effect) {
         return (MAX_LIGHT_STRENGTH);
@@ -6991,7 +6991,7 @@ static inline double light_strength (void)
 /*
  * Display one wid and its children
  */
-static inline void wid_display_shadow (widp w, uint8_t z)
+static void wid_light_calculate (widp w, uint8_t z, fpoint light_pos)
 {
     uint8_t fading;
     int32_t owidth;
@@ -7146,8 +7146,8 @@ static inline void wid_display_shadow (widp w, uint8_t z)
                         DIE("%d",deg);
                     }
 
-                    if (len > light_strength()) {
-                        len = light_strength();
+                    if (len > wid_light_strength()) {
+                        len = wid_light_strength();
                     }
 
                     if (!ray_depth[deg]) {
@@ -7174,41 +7174,43 @@ static inline void wid_display_shadow (widp w, uint8_t z)
 /*
  * Display one wid and its children
  */
-static void wid_lighting (widp w)
+static void wid_lighting (widp w, fpoint light_pos)
 {
     int16_t maxx;
     int16_t minx;
     int16_t maxy;
     int16_t miny;
 
-    if (player) {
-        const uint32_t visible_width = 
-            TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 4);
-        const uint32_t visible_height = 
-            TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 3);
+    if (!player) {
+        return;
+    }
 
-        maxx = player->x + visible_width;
-        minx = player->x - visible_width;
-        maxy = player->y + visible_height;
-        miny = player->y - visible_height;
+    uint32_t tw = global_config.video_pix_width;
+    uint32_t th = global_config.video_pix_height;
+    double window_w = tw * (double)MAP_WINDOW_WIDTH;
+    double window_h = th;
 
-        if (minx < 0) {
-            minx = 0;
-        }
-        if (maxx > MAP_WIDTH) {
-            maxx = MAP_WIDTH;
-        }
+    const uint32_t visible_width = 
+        TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 4);
+    const uint32_t visible_height = 
+        TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 3);
 
-        if (miny < 0) {
-            miny = 0;
-        }
-        if (maxy > MAP_HEIGHT) {
-            maxy = MAP_HEIGHT;
-        }
-    } else {
+    maxx = player->x + visible_width;
+    minx = player->x - visible_width;
+    maxy = player->y + visible_height;
+    miny = player->y - visible_height;
+
+    if (minx < 0) {
         minx = 0;
+    }
+    if (maxx > MAP_WIDTH) {
         maxx = MAP_WIDTH;
+    }
+
+    if (miny < 0) {
         miny = 0;
+    }
+    if (maxy > MAP_HEIGHT) {
         maxy = MAP_HEIGHT;
     }
 
@@ -7216,45 +7218,37 @@ static void wid_lighting (widp w)
     uint8_t z;
 
     /*
-     * Light soure.
-     */
-    extern int32_t mouse_x;
-    extern int32_t mouse_y;
-
-    light_pos.x = mouse_x;
-    light_pos.y = mouse_y;
-
-    /*
      * Blit the light map to a FBO. First generate the right ray lengths.
      */
     {
         memset(ray_depth, 0, sizeof(ray_depth));
 
-        z = MAP_DEPTH_WALL; {
-            for (x = maxx - 1; x >= minx; x--) {
-                for (y = miny; y < maxy; y++) {
-                    tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
-                    widgridnode *node;
+        z = MAP_DEPTH_WALL; 
+        
+        for (x = maxx - 1; x >= minx; x--) {
+            for (y = miny; y < maxy; y++) {
+                tree_root **tree = 
+                    w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
 
-                    TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
-                                                    tree_prev_tree_wid_compare_func) {
+                widgridnode *node;
 
-                        wid_display_shadow(node->wid, z);
-                    }
+                TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                        *tree, node,
+                                        tree_prev_tree_wid_compare_func) {
+
+                    wid_light_calculate(node->wid, z, light_pos);
                 }
             }
         }
     }
 
     /*
-        * Now blit to the FBO, drawing the rays
-        */
-if (1)
+     * Now blit to the FBO, drawing the rays
+     */
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0,0,0,0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glcolor(WHITE);
 
@@ -7265,23 +7259,23 @@ if (1)
         int i;
 
         /*
-            * Walk the light rays in a circle.
-            */
+         * Walk the light rays in a circle.
+         */
         for (i = 0; i < MAX_RAYS; i++, r += dr) {
             double p1_len = ray_depth[i];
             double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
             if (p1_len == 0) {
-                p1_len = light_strength();
+                p1_len = wid_light_strength();
             }
 
             if (p2_len == 0) {
-                p2_len = light_strength();
+                p2_len = wid_light_strength();
             }
 
             /*
-                * End points of the light ray. Start is the light source.
-                */
+             * End points of the light ray. Start is the light source.
+             */
             double p1x = light_pos.x + cos(r) * p1_len;
             double p1y = light_pos.y + sin(r) * p1_len;
 
@@ -7292,16 +7286,15 @@ if (1)
         }
 
         /*
-            * Flush non shaded triangles.
-            */
+         * Flush non shaded triangles.
+         */
         blit_flush_triangles();
     }
 
     /*
-        * Now do the same,  using the same FBO to stretch the light 
-        * a bit and make it fuzzy.
-        */
-if (1)
+     * Now do the same,  using the same FBO to stretch the light a bit and 
+     * make it fuzzy.
+     */
     {
         blit_init();
 
@@ -7318,25 +7311,25 @@ if (1)
         }
 
         /*
-            * Walk the light rays in a circle.
-            */
+         * Walk the light rays in a circle.
+         */
         for (i = 0; i < MAX_RAYS; i++, r += dr) {
             double p1_len = ray_depth[i];
             double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
             if (p1_len == 0) {
-                p1_len = light_strength();;
+                p1_len = wid_light_strength();;
             }
             if (p2_len == 0) {
-                p2_len = light_strength();;
+                p2_len = wid_light_strength();;
             }
 
             double p3_len = p1_len + fuzz;
             double p4_len = p2_len + fuzz;
 
             /*
-                * End points of the light ray. Start is the light source.
-                */
+             * End points of the light ray. Start is the light source.
+             */
             double p1x = light_pos.x + cos(r) * p1_len;
             double p1y = light_pos.y + sin(r) * p1_len;
 
@@ -7350,41 +7343,34 @@ if (1)
             double p4y = light_pos.y + sin(r + dr) * p4_len;
 
             triangle_colored(p3x, p3y,
-                                p1x, p1y, 
-                                p2x, p2y,
-                                255,0,0,0,
-                                255,red,red,255,
-                                255,red,red,255);
-            triangle_colored(p3x, p3y,
-                                p4x, p4y, 
-                                p2x, p2y,
-                                255,0,0,0,
-                                255,0,0,0,
-                                255,red,red,255);
-        }
+                             p1x, p1y, 
+                             p2x, p2y,
+                             255,0,0,0,
+                             255,red,red,255,
+                             255,red,red,255);
 
+            triangle_colored(p3x, p3y,
+                             p4x, p4y, 
+                             p2x, p2y,
+                             255,0,0,0,
+                             255,0,0,0,
+                             255,red,red,255);
+        }
 
         /*
          * Flush non shaded triangles.
          */
         blit_flush_colored_triangles();
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-
-    uint32_t tw = global_config.video_pix_width;
-    uint32_t th = global_config.video_pix_height;
-
-    double window_w = tw * (double)MAP_WINDOW_WIDTH;
-    double window_h = th;
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     /*
      * Blit the light map.
      */
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id2);
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo_id2);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0,0,0,0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glcolor(WHITE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -7392,11 +7378,9 @@ if (1)
         blit_init();
         blit(fbo_tex_id1, 0.0, 1.0, 1.0, 0.0, 0, 0, window_w, window_h);
         blit_flush();
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-#if 0
+#if 1
 static int s = GL_SRC_COLOR - 2;
 static int j = GL_SRC_COLOR - 2;
 static int xxx;
@@ -7435,7 +7419,6 @@ CON("%x %x",a,b);
     /*
      * Blit the light gradient
      */
-if (1)
     {
         static texp tex;
         static int gradient_tex_id;
@@ -7457,39 +7440,24 @@ if (1)
         blit_flush();
     }
 
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     /*
      * Blit the light map FBO to mask out what we cannot see.
      */
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id3);
+
     {
-if (1) {
-        if (level_explosion_flash_effect > 0) {
-            level_explosion_flash_effect--;
-            /*
-             * God light effect.
-             */
-            glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
-        } else {
-            glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-        }
+        glBlendFunc(GL_ONE, GL_ONE);
 
         blit_init();
         blit(fbo_tex_id2,
-                0.0, 1.0, 1.0, 0.0,
-                0, 0, window_w, window_h);
+             0.0, 1.0, 1.0, 0.0,
+             0, 0, window_w, window_h);
         blit_flush();
-}
-
-if (0) {
-
-        blit_init();
-        blit(fbo_tex_id1,
-                0.0, 1.0, 1.0, 0.0,
-                0, 0, window_w, window_h);
-        blit_flush();
-}
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 /*
@@ -8109,32 +8077,49 @@ if (1) {
             extern int32_t mouse_x;
             extern int32_t mouse_y;
 
-            light_pos.x = mouse_x;
-            light_pos.y = mouse_y;
+            light_pos[0].x = mouse_x;
+            light_pos[0].y = mouse_y;
+            light_pos[1].x = 600;
+            light_pos[1].y = 300;
 
-            /*
-             * Blit the light map to a FBO. First generate the right ray lengths.
-             */
-            {
-                memset(ray_depth, 0, sizeof(ray_depth));
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id3);
 
-                z = MAP_DEPTH_WALL; {
-                    for (x = maxx - 1; x >= minx; x--) {
-                        for (y = miny; y < maxy; y++) {
-                            tree_root **tree = w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
-                            widgridnode *node;
+                glClearColor(0,0,0,0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                            TREE_WALK_REVERSE_UNSAFE_INLINE(*tree, node,
-                                                            tree_prev_tree_wid_compare_func) {
+                glcolor(WHITE);
 
-                                wid_display_shadow(node->wid, z);
-                            }
-                        }
-                    }
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            int i;
+            for (i = 0; i < MAX_LIGHTS; i++) {
+                if ((light_pos[i].x != 0) && (light_pos[i].y != 0)) {
+                    wid_lighting(w, light_pos[i]);
                 }
             }
 
-            wid_lighting(w);
+            if (level_explosion_flash_effect > 0) {
+                level_explosion_flash_effect--;
+                /*
+                 * God light effect.
+                 */
+                glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
+            } else {
+                glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+            }
+
+            uint32_t tw = global_config.video_pix_width;
+            uint32_t th = global_config.video_pix_height;
+            double window_w = tw * (double)MAP_WINDOW_WIDTH;
+            double window_h = th;
+
+            blit_init();
+            blit(fbo_tex_id3,
+                 0.0, 1.0, 1.0, 0.0,
+                 0, 0, window_w, window_h);
+            blit_flush();
+
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
     }
     
