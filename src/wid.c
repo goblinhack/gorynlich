@@ -7315,7 +7315,7 @@ static void wid_lighting (widp w,
 
         if (!(rand() % 10)) {
             light_fuzz[light_index] = 100 + rand() % 50;
-            light_red[light_index] = rand() % 255;
+            light_red[light_index] = 1 + (rand() % 255);
         }
 
         double fuzz = light_fuzz[light_index];
@@ -7459,7 +7459,7 @@ CON("%x %x",a,b);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo_id3);
 
     {
-        glBlendFunc(GL_ONE, GL_ONE);
+        glBlendFunc(GL_SRC_COLOR, GL_ONE);
 
         blit_init();
         blit(fbo_tex_id2,
