@@ -441,8 +441,9 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
          * Open doors if you have a key.
          */
         if (thing_is_door(it)) {
-            if (thing_is_carrying(me, THING_KEY)) {
-                thing_used(me, id_to_thing_template(THING_KEY));
+            thing_templatep tp;
+            if ((tp = thing_is_carrying_thing(me, thing_template_is_key))) {
+                thing_used(me, tp);
                 level_open_door(server_level, x, y);
                 return;
             }
@@ -658,7 +659,8 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * Allow to walk through doors so we can open them later.
                  */
                 if (thing_is_door(it)) {
-                    if (thing_is_carrying(me, THING_KEY)) {
+                    if (thing_is_carrying_thing(me, thing_template_is_key)) {
+CON("carrying key");
                         continue;
                     } else {
                         if (!me->message_open_door_need_key) {

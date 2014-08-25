@@ -176,9 +176,9 @@ uint8_t map_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_weapon_swing_effect));
 }
 
-uint8_t map_is_key2_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_key2));
+    return (map_is_x_at(level, x, y, thing_template_is_light_source));
 }
 
 uint8_t map_is_key3_at (levelp level, int32_t x, int32_t y)
@@ -398,9 +398,9 @@ thingp map_thing_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_weapon_swing_effect));
 }
 
-thingp map_thing_is_key2_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_key2));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_light_source));
 }
 
 thingp map_thing_is_key3_at (levelp level, int32_t x, int32_t y)
@@ -646,9 +646,9 @@ tree_rootp map_all_things_is_weapon_swing_effect_at (levelp level, int32_t x, in
     return (map_all_things_is_x_at(level, x, y, thing_template_is_weapon_swing_effect));
 }
 
-tree_rootp map_all_things_is_key2_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_key2));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_light_source));
 }
 
 tree_rootp map_all_things_is_key3_at (levelp level, int32_t x, int32_t y)
@@ -970,7 +970,7 @@ thing_templatep map_find_key1_at (levelp level,
 thing_templatep map_find_car_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_key2, w));
+    return (map_find_x_at(level, x, y, thing_template_is_light_source, w));
 }
 
 thing_templatep map_find_star_green_at (levelp level,
@@ -1582,9 +1582,9 @@ uint32_t level_count_is_weapon_swing_effect (levelp level)
     return (level_count_is_x(level, thing_template_is_weapon_swing_effect));
 }
 
-uint32_t level_count_is_key2 (levelp level)
+uint32_t level_count_is_light_source (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_key2));
+    return (level_count_is_x(level, thing_template_is_light_source));
 }
 
 uint32_t level_count_is_key3 (levelp level)
@@ -1836,9 +1836,9 @@ tree_rootp map_all_things_is_weapon_swing_effect (levelp level)
     return (map_all_things_is_x(level, thing_template_is_weapon_swing_effect));
 }
 
-tree_rootp map_all_things_is_key2 (levelp level)
+tree_rootp map_all_things_is_light_source (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_key2));
+    return (map_all_things_is_x(level, thing_template_is_light_source));
 }
 
 tree_rootp map_all_things_is_key3 (levelp level)
