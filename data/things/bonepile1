@@ -3,6 +3,7 @@
  tooltip="small bone pile"
  z_depth=3
  is_mob_spawner
+ is_light_source
  hit_priority=20
  is_collision_map_medium
  damage=1

@@ -461,7 +461,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
         GET_OPT_NAMED_UINT32(ctx, "ppp10", t->ppp10);
-        GET_OPT_NAMED_UINT32(ctx, "ppp11", t->ppp11);
+        GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
         GET_OPT_NAMED_UINT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
@@ -492,7 +492,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animated_no_dir", t->is_animated_no_dir);
         GET_OPT_NAMED_BITFIELD(ctx, "is_weapon_swing_effect", t->is_weapon_swing_effect);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_light_source", t->is_light_source);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
@@ -579,7 +579,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
     PUT_NAMED_INT32(ctx, "ppp10", t->ppp10);
-    PUT_NAMED_INT32(ctx, "ppp11", t->ppp11);
+    PUT_NAMED_INT32(ctx, "quantity", t->quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
@@ -611,7 +611,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_star", t->is_star);
     PUT_NAMED_BITFIELD(ctx, "is_animated_no_dir", t->is_animated_no_dir);
     PUT_NAMED_BITFIELD(ctx, "is_weapon_swing_effect", t->is_weapon_swing_effect);
-    PUT_NAMED_BITFIELD(ctx, "is_key2", t->is_key2);
+    PUT_NAMED_BITFIELD(ctx, "is_light_source", t->is_light_source);
     PUT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
     PUT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
     PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
@@ -794,9 +794,9 @@ uint32_t thing_template_get_ppp10 (thing_templatep t)
     return (t->ppp10);
 }
 
-uint32_t thing_template_get_ppp11 (thing_templatep t)
+uint32_t thing_template_get_quantity (thing_templatep t)
 {
-    return (t->ppp11);
+    return (t->quantity);
 }
 
 uint32_t thing_template_get_hit_priority (thing_templatep t)

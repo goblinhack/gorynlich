@@ -23,17 +23,8 @@ static void thing_collect (thingp t, thingp it, thing_templatep tmp,
     item = thing_template_to_id(tmp);
     quantity = 1;
 
-    /*
-     * Collect bundles of keys as the key item.
-     */
-    if (thing_template_is_key2(tmp)) {
-        item = THING_KEY;
-        quantity = 2;
-    }
-
-    if (thing_template_is_key3(tmp)) {
-        item = THING_KEY;
-        quantity = 3;
+    if (thing_template_get_quantity(tmp)) {
+        quantity += thing_template_get_quantity(tmp) - 1;
     }
 
     if (!auto_collect) {
@@ -199,11 +190,25 @@ void thing_drop (thingp t, thing_templatep tmp)
     }
 }
 
-uint8_t thing_is_carrying (thingp t, uint32_t item)
+uint8_t thing_is_carrying_specific_item (thingp t, uint32_t item)
 {
     if (!t->carrying[item]) {
         return (false);
     }
 
     return (true);
+}
+
+thing_templatep thing_is_carrying_thing (thingp t, thing_template_is fn)
+{
+    FOR_ALL_IN_ARRAY(i, t->carrying) {
+CON("%d",*i);
+        thing_templatep tp = id_to_thing_template(*i);
+        if ((fn)(tp)) {
+CON("%d yes",*i);
+            return (tp);
+        }
+    }
+
+    return (0);
 }

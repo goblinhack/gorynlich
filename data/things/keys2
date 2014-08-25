@@ -3,9 +3,8 @@
  tooltip="Keys to open doors"
  z_depth=3
  is_boring
+ quantity=2
  is_key
- is_carryable
- is_key2
  is_carryable
  tiles={
   tile={

@@ -13,6 +13,9 @@
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
 
+.o/ramdisk_data_gfx_gradient_png.o: asm/ramdisk_data_gfx_gradient_png.S ../data/gfx/gradient.png
+	gcc -c asm/ramdisk_data_gfx_gradient_png.S -o .o/ramdisk_data_gfx_gradient_png.o
+
 .o/ramdisk_data_gfx_gravestone_png.o: asm/ramdisk_data_gfx_gravestone_png.S ../data/gfx/gravestone.png
 	gcc -c asm/ramdisk_data_gfx_gravestone_png.S -o .o/ramdisk_data_gfx_gravestone_png.o
 
@@ -135,6 +138,15 @@
 
 .o/ramdisk_data_things__floor6_session.o: asm/ramdisk_data_things__floor6_session.S ../data/things/.floor6.session
 	gcc -c asm/ramdisk_data_things__floor6_session.S -o .o/ramdisk_data_things__floor6_session.o
+
+.o/ramdisk_data_things__key1_session.o: asm/ramdisk_data_things__key1_session.S ../data/things/.key1.session
+	gcc -c asm/ramdisk_data_things__key1_session.S -o .o/ramdisk_data_things__key1_session.o
+
+.o/ramdisk_data_things__keys2_session.o: asm/ramdisk_data_things__keys2_session.S ../data/things/.keys2.session
+	gcc -c asm/ramdisk_data_things__keys2_session.S -o .o/ramdisk_data_things__keys2_session.o
+
+.o/ramdisk_data_things__keys3_session.o: asm/ramdisk_data_things__keys3_session.S ../data/things/.keys3.session
+	gcc -c asm/ramdisk_data_things__keys3_session.S -o .o/ramdisk_data_things__keys3_session.o
 
 .o/ramdisk_data_things__poison1_session.o: asm/ramdisk_data_things__poison1_session.S ../data/things/.poison1.session
 	gcc -c asm/ramdisk_data_things__poison1_session.S -o .o/ramdisk_data_things__poison1_session.o
