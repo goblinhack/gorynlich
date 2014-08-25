@@ -92,8 +92,8 @@ void thing_dec_powerup_rocket_count(thingp t, uint8_t val);
 uint8_t thing_has_powerup_rocket_count(thingp t);
 void thing_set_is_qqq1(thingp t, uint8_t val);
 uint8_t thing_is_qqq1(thingp t);
-void thing_set_is_key2(thingp t, uint8_t val);
-uint8_t thing_is_key2(thingp t);
+void thing_set_is_light_source(thingp t, uint8_t val);
+uint8_t thing_is_light_source(thingp t);
 void thing_set_is_key3(thingp t, uint8_t val);
 uint8_t thing_is_key3(thingp t);
 void thing_set_is_key4(thingp t, uint8_t val);
@@ -179,7 +179,10 @@ void thing_fire(thingp t,
                 const uint8_t left,
                 const uint8_t right);
 uint8_t thing_use(thingp t, uint32_t id);
-uint8_t thing_is_carrying(thingp t, uint32_t id);
+
+uint8_t thing_is_carrying_specific_item(thingp, uint32_t id);
+typedef uint8_t (*thing_template_is)(thing_templatep);
+thing_templatep thing_is_carrying_thing(thingp, thing_template_is);
 
 /*
  * thing_ai.c
@@ -590,7 +593,7 @@ typedef struct thing_ {
      */
     uint32_t first_update:1;
 
-    uint32_t is_key2:1;
+    uint32_t is_light_source:1;
     uint32_t is_key3:1;
     uint32_t qqq6:1;
     uint32_t is_collected:1;
@@ -1074,9 +1077,9 @@ static inline uint8_t thing_is_weapon_swing_effect_fast (thingp t)
     return (t->thing_template->is_weapon_swing_effect);
 }
 
-static inline uint8_t thing_is_key2_fast (thingp t)
+static inline uint8_t thing_is_light_source_fast (thingp t)
 {
-    return (t->thing_template->is_key2);
+    return (t->thing_template->is_light_source);
 }
 
 static inline uint8_t thing_is_key3_fast (thingp t)

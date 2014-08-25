@@ -2480,18 +2480,18 @@ uint8_t thing_has_powerup_rocket_count (thingp t)
     return (t->powerup_rocket_count);
 }
 
-void thing_set_is_key2 (thingp t, uint8_t val)
+void thing_set_is_light_source (thingp t, uint8_t val)
 {
     verify(t);
 
-    t->is_key2 = val;
+    t->is_light_source = val;
 }
 
-uint8_t thing_is_key2 (thingp t)
+uint8_t thing_is_light_source (thingp t)
 {
     verify(t);
 
-    return (t->is_key2);
+    return (t->is_light_source);
 }
 
 void thing_set_is_key3 (thingp t, uint8_t val)
@@ -4221,7 +4221,7 @@ void thing_server_action (thingp t,
 
     switch (action) {
     case PLAYER_ACTION_USE:
-        if (!thing_is_carrying(t, item)) {
+        if (!thing_is_carrying_specific_item(t, item)) {
             /*
              * Sneaky.
              */
