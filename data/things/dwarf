@@ -8,7 +8,8 @@
  speed=7
  health=250
  is_player
-is_light_source
+ is_light_source
+ light_strength=300
  is_collision_map_medium
  spawn_on_death="data/things/bonepile2"
  is_animated

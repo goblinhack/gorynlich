@@ -442,7 +442,8 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
          */
         if (thing_is_door(it)) {
             thing_templatep tp;
-            if ((tp = thing_is_carrying_thing(me, thing_template_is_key))) {
+            tp = thing_is_carrying_thing(me, thing_template_is_key);
+            if (tp) {
                 thing_used(me, tp);
                 level_open_door(server_level, x, y);
                 return;
@@ -660,7 +661,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  */
                 if (thing_is_door(it)) {
                     if (thing_is_carrying_thing(me, thing_template_is_key)) {
-CON("carrying key");
                         continue;
                     } else {
                         if (!me->message_open_door_need_key) {

@@ -10,6 +10,8 @@
  is_projectile
  is_animated
  is_wearable
+ is_light_source
+ light_strength=50
  is_collision_map_medium
  tiles={
   tile={
