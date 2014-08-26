@@ -9,6 +9,8 @@
  is_valid_for_shortcut_key
  is_combustable
  is_fragile
+ is_light_source
+ light_strength=5
  is_valid_for_shortcut_key
  tiles={
   tile={

@@ -27,6 +27,13 @@ static void thing_collect (thingp t, thingp it, thing_templatep tmp,
         quantity += thing_template_get_quantity(tmp) - 1;
     }
 
+    /*
+     * Bit of a hack to make the collected item appear as an another.
+     */
+    if ((item == THING_KEYS2) || (item == THING_KEYS3)) {
+        item = THING_KEY;
+    }
+
     if (!auto_collect) {
         if (quantity > 1) {
             THING_LOG(t, "collects %u %s", quantity,
@@ -202,10 +209,8 @@ uint8_t thing_is_carrying_specific_item (thingp t, uint32_t item)
 thing_templatep thing_is_carrying_thing (thingp t, thing_template_is fn)
 {
     FOR_ALL_IN_ARRAY(i, t->carrying) {
-CON("%d",*i);
-        thing_templatep tp = id_to_thing_template(*i);
-        if ((fn)(tp)) {
-CON("%d yes",*i);
+        thing_templatep tp = id_to_thing_template(i - t->carrying);
+        if ((*fn)(tp)) {
             return (tp);
         }
     }

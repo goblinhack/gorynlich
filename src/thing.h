@@ -46,7 +46,6 @@ int32_t thing_grid_x(thingp);
 int32_t thing_grid_y(thingp);
 widp thing_wid(thingp);
 const char *thing_dead_reason(thingp);
-thing_templatep thing_get_template(thingp t);
 const char *thing_name(thingp);
 const char *thing_logname(thingp);
 const char *thing_short_name(thingp);
@@ -655,6 +654,13 @@ static inline uint8_t thing_has_left_level (thingp t)
     verify(t);
 
     return (t->has_left_level);
+}
+
+static inline thing_templatep thing_get_template (thingp t)
+{
+    verify(t);
+
+    return (t->thing_template);
 }
 
 static inline uint8_t thing_is_exit (thingp t)
