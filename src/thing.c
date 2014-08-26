@@ -2097,13 +2097,6 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
     }
 }
 
-thing_templatep thing_get_template (thingp t)
-{
-    verify(t);
-
-    return (t->thing_template);
-}
-
 const char *thing_logname (thingp t)
 {
     verify(t);

@@ -6954,7 +6954,16 @@ static inline void wid_display_fast (widp w)
         light_pos.x = otlx + wid_get_width(w) / 2;
         light_pos.y = otly + wid_get_height(w) / 2;
 
-        wid_light_add(light_pos, 100);
+        thing_template *tp = thing_get_template(t);
+        double light_strength = thing_template_get_light_strength(tp);
+
+        if (thing_is_explosion(t) && !t->is_epicenter) {
+            /*
+             * No light source for explosion edges. Too high a cpu drain.
+             */
+        } else {
+            wid_light_add(light_pos, light_strength);
+        }
     }
 
     /*
@@ -7421,7 +7430,7 @@ static void wid_lighting (widp w,
         blit_flush();
     }
 
-#if 1
+#if 0
 static int s = GL_SRC_COLOR - 2;
 static int j = GL_SRC_COLOR - 2;
 static int xxx;

@@ -168,7 +168,7 @@ typedef struct thing_template_ {
     uint32_t ppp7;
     uint32_t ppp8;
     uint32_t ppp9;
-    uint32_t ppp10;
+    uint32_t light_strength;
     uint32_t quantity;
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_tenths;
@@ -272,7 +272,7 @@ uint32_t thing_template_get_ppp6(thing_templatep);
 uint32_t thing_template_get_ppp7(thing_templatep);
 uint32_t thing_template_get_ppp8(thing_templatep);
 uint32_t thing_template_get_ppp9(thing_templatep);
-uint32_t thing_template_get_ppp10(thing_templatep);
+uint32_t thing_template_get_light_strength(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
 uint32_t thing_template_get_hit_priority(thing_templatep);
 uint32_t thing_template_get_weapon_fire_delay_tenths(thing_templatep);

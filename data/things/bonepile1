@@ -4,6 +4,7 @@
  z_depth=3
  is_mob_spawner
  is_light_source
+ light_strength=10
  hit_priority=20
  is_collision_map_medium
  damage=1

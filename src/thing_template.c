@@ -460,7 +460,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp7", t->ppp7);
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
-        GET_OPT_NAMED_UINT32(ctx, "ppp10", t->ppp10);
+        GET_OPT_NAMED_UINT32(ctx, "light_strength", t->light_strength);
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
@@ -578,7 +578,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "ppp7", t->ppp7);
     PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
-    PUT_NAMED_INT32(ctx, "ppp10", t->ppp10);
+    PUT_NAMED_INT32(ctx, "light_strength", t->light_strength);
     PUT_NAMED_INT32(ctx, "quantity", t->quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
@@ -789,9 +789,9 @@ uint32_t thing_template_get_ppp9 (thing_templatep t)
     return (t->ppp9);
 }
 
-uint32_t thing_template_get_ppp10 (thing_templatep t)
+uint32_t thing_template_get_light_strength (thing_templatep t)
 {
-    return (t->ppp10);
+    return (t->light_strength);
 }
 
 uint32_t thing_template_get_quantity (thing_templatep t)
