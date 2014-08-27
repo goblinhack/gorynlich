@@ -461,6 +461,13 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
         GET_OPT_NAMED_UINT32(ctx, "light_strength", t->light_strength);
+
+        /*
+         * Divide the light strenght in two as it is really a radius and not
+         * a diameter.
+         */
+        t->light_strength /= 2.0;
+
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
