@@ -20018,22 +20018,6 @@
    y=3 
    t="data/things/keys3" 
   } {   
-   x=43 
-   y=3 
-   t="data/things/potion_fire" 
-  } {   
-   x=44 
-   y=3 
-   t="data/things/potion_fire" 
-  } {   
-   x=45 
-   y=3 
-   t="data/things/potion_fire" 
-  } {   
-   x=46 
-   y=3 
-   t="data/things/potion_fire" 
-  } {   
    x=56 
    y=3 
    t="data/things/water" 
@@ -20046,19 +20030,27 @@
    y=3 
    t="data/things/exit1" 
   } {   
+   x=36 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=37 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=38 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=42 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
    x=43 
    y=4 
    t="data/things/potion_fire" 
   } {   
    x=44 
-   y=4 
-   t="data/things/potion_fire" 
-  } {   
-   x=45 
-   y=4 
-   t="data/things/potion_fire" 
-  } {   
-   x=46 
    y=4 
    t="data/things/potion_fire" 
   } {   
@@ -20066,19 +20058,31 @@
    y=4 
    t="data/things/water" 
   } {   
+   x=36 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=37 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=38 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=40 
+   y=5 
+   t="data/things/potion_monsticide" 
+  } {   
+   x=42 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
    x=43 
    y=5 
    t="data/things/potion_fire" 
   } {   
    x=44 
-   y=5 
-   t="data/things/potion_fire" 
-  } {   
-   x=45 
-   y=5 
-   t="data/things/potion_fire" 
-  } {   
-   x=46 
    y=5 
    t="data/things/potion_fire" 
   } {   
@@ -20094,8 +20098,28 @@
    y=6 
    t="data/things/potion_fire" 
   } {   
-   x=54 
-   y=7 
+   x=36 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=37 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=38 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=42 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=43 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=44 
+   y=6 
    t="data/things/potion_fire" 
   } {   
    x=3 
@@ -20344,7 +20368,7 @@
   } {   
    x=48 
    y=3 
-   t="data/things/warrior" 
+   t="data/things/valkyrie" 
   } {   
    x=8 
    y=15 

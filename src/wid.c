@@ -6828,37 +6828,38 @@ static void wid_gc (widp w)
 
 #define MAX_RAYS 360
 #define MAX_LIGHTS 100
-static uint8_t max_lights;
+
 static const double MAX_LIGHT_STRENGTH = 1000.0;
 static double ray_depth[MAX_RAYS];
-static fpoint light_pos[MAX_LIGHTS];
-static double light_strength[MAX_LIGHTS];
-static double light_fuzz[MAX_LIGHTS];
-static uint8_t light_red[MAX_LIGHTS];
+
+static uint8_t wid_light_count;
+
+typedef struct wid_light_ {
+    fpoint at;
+    double strength;
+    double fuzz;
+    widp w;
+    uint8_t red;
+} wid_light;
         
+static wid_light wid_lights[MAX_LIGHTS];
+
 static void wid_light_init (void)
 {
-    max_lights = 0;
+    wid_light_count = 0;
 }
 
-static void wid_light_add (fpoint at, double strength)
+static void wid_light_add (widp w, fpoint at, double strength)
 {
-    if (max_lights >= MAX_LIGHTS) {
+    if (wid_light_count >= MAX_LIGHTS) {
         return;
     }
 
-    light_strength[max_lights] = strength;
-    light_pos[max_lights] = at;
-    max_lights++;
-}
+    wid_lights[wid_light_count].at = at;
+    wid_lights[wid_light_count].strength = strength;
+    wid_lights[wid_light_count].w = w;
 
-static double wid_light_strength (uint8_t light_index)
-{
-    if (level_explosion_flash_effect) {
-        return (MAX_LIGHT_STRENGTH);
-    }
-
-    return (light_strength[light_index]);
+    wid_light_count++;
 }
 
 /*
@@ -6962,7 +6963,7 @@ static inline void wid_display_fast (widp w)
              * No light source for explosion edges. Too high a cpu drain.
              */
         } else {
-            wid_light_add(light_pos, light_strength);
+            wid_light_add(w, light_pos, light_strength);
         }
     }
 
@@ -7034,10 +7035,11 @@ static inline void line_project (float light_x, float light_y,
 /*
  * Display one wid and its children
  */
-static void wid_light_calculate (widp w, uint8_t z, 
-                                 fpoint light_pos, 
+static void wid_light_calculate (widp w, 
+                                 uint8_t z, 
                                  uint8_t light_index)
 {
+    const wid_light *light = &wid_lights[light_index];
     uint8_t fading;
     int32_t owidth;
     int32_t oheight;
@@ -7046,7 +7048,6 @@ static void wid_light_calculate (widp w, uint8_t z,
     int32_t obrx;
     int32_t obry;
     widp p;
-    double strength = wid_light_strength(light_index);
 
     if (wid_this_is_hidden(w)) {
         return;
@@ -7137,6 +7138,9 @@ static void wid_light_calculate (widp w, uint8_t z,
     /*
      * For each clockwise side of the tile.
      */
+    fpoint light_pos = light->at;
+    double light_strength = light->strength;
+
     for (int k = 0; k<4; k++) {
 
         fpoint light_dir = fsub(light_pos, P[k]);
@@ -7192,8 +7196,8 @@ static void wid_light_calculate (widp w, uint8_t z,
                         DIE("%d",deg);
                     }
 
-                    if (len > strength) {
-                        len = strength;
+                    if (len > light_strength) {
+                        len = light_strength;
                     }
 
                     if (!ray_depth[deg]) {
@@ -7218,37 +7222,42 @@ static void wid_light_calculate (widp w, uint8_t z,
 }
 
 /*
- * Display one wid and its children
+ * Walk all widgets next to this light source and find light intersections.
  */
-static void wid_lighting (widp w, 
-                          const fpoint light_pos, 
-                          const uint8_t light_index)
+static void wid_lighting (widp w, const uint8_t light_index)
 {
+    wid_light *light = &wid_lights[light_index];
+    fpoint light_pos = light->at;
+    double light_strength = light->strength;
+
     int16_t maxx;
     int16_t minx;
     int16_t maxy;
     int16_t miny;
 
-    double strength = wid_light_strength(light_index);
-
+#if 0
     uint32_t tw = global_config.video_pix_width;
     uint32_t th = global_config.video_pix_height;
     double window_w = tw * (double)MAP_WINDOW_WIDTH;
     double window_h = th;
+#endif
 
-    const uint32_t visible_width = 
-        TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 4);
-    const uint32_t visible_height = 
-        TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 3);
-
-    if (!player) {
+    widp light_wid = light->w;
+    thingp t = wid_get_thing(light_wid);
+    if (!t) {
         return;
     }
 
-    maxx = player->x + visible_width;
-    minx = player->x - visible_width;
-    maxy = player->y + visible_height;
-    miny = player->y - visible_height;
+    double visible_width = light_strength + 3;
+    double visible_height = light_strength + 3;
+
+    light_strength *= wid_get_width(light_wid);
+    light->strength *= wid_get_width(light_wid);
+
+    maxx = t->x + visible_width;
+    minx = t->x - visible_width;
+    maxy = t->y + visible_height;
+    miny = t->y - visible_height;
 
     if (minx < 0) {
         minx = 0;
@@ -7286,7 +7295,7 @@ static void wid_lighting (widp w,
                                         *tree, node,
                                         tree_prev_tree_wid_compare_func) {
 
-                    wid_light_calculate(node->wid, z, light_pos, light_index);
+                    wid_light_calculate(node->wid, z, light_index);
                 }
             }
         }
@@ -7295,10 +7304,14 @@ static void wid_lighting (widp w,
     /*
      * Now blit to the FBO, drawing the rays
      */
+#if 0
     glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
+#endif
     {
+#if 0
         glClearColor(0,0,0,0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+#endif
 
         glcolor(WHITE);
 
@@ -7316,11 +7329,11 @@ static void wid_lighting (widp w,
             double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
             if (p1_len == 0) {
-                p1_len = strength;
+                p1_len = light_strength;
             }
 
             if (p2_len == 0) {
-                p2_len = strength;
+                p2_len = light_strength;
             }
 
             /*
@@ -7352,13 +7365,15 @@ static void wid_lighting (widp w,
         double dr = RAD_360 / (double)MAX_RAYS;
         int i;
 
-        if (!light_red[light_index] || !(rand() % 10)) {
-            light_fuzz[light_index] = 100 + rand() % 50;
-            light_red[light_index] = 1 + (rand() % 255);
+        if (!light->red || !(rand() % 10)) {
+            light->fuzz = 100 + rand() % 50;
+            light->red = 1 + (rand() % 255);
         }
 
-        double fuzz = light_fuzz[light_index];
-        uint8_t red = light_red[light_index];
+        double fuzz = light->fuzz;
+        uint8_t red = light->red;
+
+        red = 255;
 
         /*
          * Walk the light rays in a circle.
@@ -7368,10 +7383,10 @@ static void wid_lighting (widp w,
             double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
             if (p1_len == 0) {
-                p1_len = strength;
+                p1_len = light_strength;
             }
             if (p2_len == 0) {
-                p2_len = strength;
+                p2_len = light_strength;
             }
 
             double p3_len = p1_len + fuzz;
@@ -7412,6 +7427,7 @@ static void wid_lighting (widp w,
          */
         blit_flush_colored_triangles();
     }
+#if 0
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     /*
@@ -7508,6 +7524,7 @@ CON("%x %x",a,b);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
 }
 
 /*
@@ -8133,13 +8150,49 @@ static void wid_display (widp w,
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 glcolor(WHITE);
-
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#if 1
+static int s = GL_SRC_COLOR - 2;
+static int j = GL_SRC_COLOR - 2;
+static int xxx;
+xxx++;
+if (xxx == 200) {
+xxx = 0;
+s++;
+if (s > GL_SRC_ALPHA_SATURATE) {
+j++;
+if (j > GL_SRC_ALPHA_SATURATE) {
+    j = GL_SRC_COLOR - 2;
+}
+s = GL_SRC_COLOR - 2;
+}
+}
+int a, b;
+a = s;
+b = j;
+if (s == GL_SRC_COLOR - 2) {
+a = GL_ZERO;
+}
+if (j == GL_SRC_COLOR - 2) {
+b = GL_ZERO;
+}
+if (s == GL_SRC_COLOR - 1) {
+a = GL_ONE;
+}
+if (j == GL_SRC_COLOR - 1) {
+b = GL_ONE;
+}
+if (xxx == 0) {
+CON("%x %x",a,b);
+}
+#endif
+glBlendFunc(0x302, 1);
 
             int i;
-            for (i = 0; i < max_lights; i++) {
-                wid_lighting(w, light_pos[i], i);
+            for (i = 0; i < wid_light_count; i++) {
+                wid_lighting(w, i);
             }
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
             if (level_explosion_flash_effect > 0) {
                 level_explosion_flash_effect--;
