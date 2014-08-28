@@ -1,6 +1,3 @@
-.o/ramdisk_data_gfx_1_png.o: asm/ramdisk_data_gfx_1_png.S ../data/gfx/1.png
-	gcc -c asm/ramdisk_data_gfx_1_png.S -o .o/ramdisk_data_gfx_1_png.o
-
 .o/ramdisk_data_gfx_cloudkill_png.o: asm/ramdisk_data_gfx_cloudkill_png.S ../data/gfx/cloudkill.png
 	gcc -c asm/ramdisk_data_gfx_cloudkill_png.S -o .o/ramdisk_data_gfx_cloudkill_png.o
 
@@ -12,9 +9,6 @@
 
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
-
-.o/ramdisk_data_gfx_gradient_png.o: asm/ramdisk_data_gfx_gradient_png.S ../data/gfx/gradient.png
-	gcc -c asm/ramdisk_data_gfx_gradient_png.S -o .o/ramdisk_data_gfx_gradient_png.o
 
 .o/ramdisk_data_gfx_gravestone_png.o: asm/ramdisk_data_gfx_gravestone_png.S ../data/gfx/gravestone.png
 	gcc -c asm/ramdisk_data_gfx_gravestone_png.S -o .o/ramdisk_data_gfx_gravestone_png.o
@@ -129,6 +123,9 @@
 
 .o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
 	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
+
+.o/ramdisk_data_things__explosion3_session.o: asm/ramdisk_data_things__explosion3_session.S ../data/things/.explosion3.session
+	gcc -c asm/ramdisk_data_things__explosion3_session.S -o .o/ramdisk_data_things__explosion3_session.o
 
 .o/ramdisk_data_things__explosion4_session.o: asm/ramdisk_data_things__explosion4_session.S ../data/things/.explosion4.session
 	gcc -c asm/ramdisk_data_things__explosion4_session.S -o .o/ramdisk_data_things__explosion4_session.o

@@ -107,8 +107,7 @@ static uint8_t resource_init_15 (void *context)
 
 static uint8_t resource_init_16 (void *context)
 {
-    return (tex_load("data/gfx/gradient.png",
-                     "gradient") != 0);
+    return (true);
 }
 
 static uint8_t resource_init_17 (void *context)

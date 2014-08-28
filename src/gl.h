@@ -57,6 +57,8 @@ void gl_leave_2d_mode(void);
 void blit_flush(void);
 void blit_flush_triangles(void);
 void blit_flush_colored_triangles(void);
+void blit_flush_triangle_fan(void);
+void blit_flush_triangle_strip(void);
 void blit_fini(void);
 void gl_blitquad(float tlx, float tly, float brx, float bry);
 void gl_blitsquare(float tlx, float tly, float brx, float bry);
@@ -130,10 +132,12 @@ gl_push_vertex (float **p, float x, float y)
 static inline void 
 gl_push_rgba (float **p, float r, float g, float b, float a)
 {
-    *(*p)++ = r;
-    *(*p)++ = g;
-    *(*p)++ = b;
-    *(*p)++ = a;
+    float *P = *p;
+    *P++ = r;
+    *P++ = g;
+    *P++ = b;
+    *P++ = a;
+    *p = P;
 }
 
 #define Vertex2f(x, y)                          \
@@ -314,7 +318,6 @@ void blit (int tex,
 #endif
 }
 
-
 /*
  * gl_push_triangle
  */
@@ -340,6 +343,23 @@ gl_push_triangle_colored (float **p,
     gl_push_rgba(p, r2, g3, b3, a3);
 }
 
+/*
+ * gl_push_point
+ */
+static inline void
+gl_push_point (float **p,
+               float *p_end,
+               float x1, float y1,
+               float r1, float g1, float b1, float a1)
+{
+    if (*p + 24 >= p_end) {
+        DIE("overflow on gl bug");
+    }
+
+    gl_push_vertex(p, x1, y1);
+    gl_push_rgba(p, r1, g1, b1, a1);
+}
+
 static inline
 void triangle_colored (float x1, float y1,
                        float x2, float y2,
@@ -356,6 +376,16 @@ void triangle_colored (float x1, float y1,
                              r1, g1, b1, a1,
                              r2, g2, b2, a2,
                              r3, g3, b3, a3);
+}
+
+static inline
+void push_point (float x1, float y1,
+                 float r1, float g1, float b1, float a1)
+{
+    gl_push_point(&bufp,
+                  bufp_end,
+                  x1, y1,
+                  r1, g1, b1, a1);
 }
 
 /*
@@ -392,11 +422,3 @@ void triangle (float x1, float y1,
 extern GLuint render_buf_id1;
 extern GLuint fbo_id1;
 extern GLuint fbo_tex_id1;
-
-extern GLuint render_buf_id2;
-extern GLuint fbo_id2;
-extern GLuint fbo_tex_id2;
-
-extern GLuint render_buf_id3;
-extern GLuint fbo_id3;
-extern GLuint fbo_tex_id3;
