@@ -297,7 +297,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
             min_z = MAP_DEPTH_WALL; 
             break;
         default:
-            z = 0;
+            min_z = 0;
             break;
 
     }
