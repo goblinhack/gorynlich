@@ -17,6 +17,7 @@
 #include "wid_game_map_client.h"
 #include "level.h"
 #include "timer.h"
+#include "glapi.h"
 
 static widp wid_intro3;
 static widp wid_intro3_background;

@@ -10,7 +10,7 @@ extern int client_pause;
 #include "glapi.h"
 
 #include "main.h"
-#include "gl.h"
+#include "glapi.h"
 #include "wid.h"
 #include "wid_console.h"
 #include "wid_notify.h"

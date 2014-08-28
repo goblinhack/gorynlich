@@ -19,6 +19,7 @@
 #include "thing.h"
 #include "wid_notify.h"
 #include "name.h"
+#include "glapi.h"
 
 static widp wid_intro2;
 static widp wid_intro2_background;
