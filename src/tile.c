@@ -8,7 +8,7 @@
 #include "glapi.h"
 
 #include "main.h"
-#include "gl.h"
+#include "glapi.h"
 #include "tile.h"
 #include "tree.h"
 #include "tex.h"

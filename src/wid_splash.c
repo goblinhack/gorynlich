@@ -13,6 +13,7 @@
 #include "init_fn.h"
 #include "tree.h"
 #include "wid_splash.h"
+#include "glapi.h"
 
 void sdl_splashscreen_update (void)
 {

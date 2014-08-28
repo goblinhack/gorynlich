@@ -9,6 +9,7 @@
 #include "main.h"
 #include "color.h"
 #include "tree.h"
+#include "glapi.h"
 
 color ALICE_BLUE;
 color ALICEBLUE;

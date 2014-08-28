@@ -30,6 +30,7 @@
 #include "wid_dead.h"
 #include "socket.h"
 #include "server.h"
+#include "glapi.h"
 
 static widp wid_intro;
 static widp wid_intro_background;
