@@ -7182,8 +7182,8 @@ static void wid_light_calculate (widp w,
             while (tot_deg-- > 0) {
 
                 fpoint light_end;
-                light_end.x = light_pos.x + cos(rad) * MAX_LIGHT_STRENGTH;
-                light_end.y = light_pos.y + sin(rad) * MAX_LIGHT_STRENGTH;
+                light_end.x = light_pos.x + fcos(rad) * MAX_LIGHT_STRENGTH;
+                light_end.y = light_pos.y + fsin(rad) * MAX_LIGHT_STRENGTH;
 
                 fpoint intersect;
 
@@ -7234,13 +7234,6 @@ static void wid_lighting (widp w, const uint8_t light_index)
     int16_t minx;
     int16_t maxy;
     int16_t miny;
-
-#if 0
-    uint32_t tw = global_config.video_pix_width;
-    uint32_t th = global_config.video_pix_height;
-    double window_w = tw * (double)MAP_WINDOW_WIDTH;
-    double window_h = th;
-#endif
 
     widp light_wid = light->w;
     thingp t = wid_get_thing(light_wid);
@@ -7304,19 +7297,9 @@ static void wid_lighting (widp w, const uint8_t light_index)
     /*
      * Now blit to the FBO, drawing the rays
      */
-#if 0
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
-#endif
+    blit_init();
+
     {
-#if 0
-        glClearColor(0,0,0,0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-#endif
-
-        glcolor(WHITE);
-
-        blit_init();
-
         double r = 0;
         double dr = RAD_360 / (double)MAX_RAYS;
         int i;
@@ -7324,43 +7307,50 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Walk the light rays in a circle.
          */
+        push_point(light_pos.x, light_pos.y, 255,255,0,50);
+
         for (i = 0; i < MAX_RAYS; i++, r += dr) {
             double p1_len = ray_depth[i];
-            double p2_len = ray_depth[(i + 1) % MAX_RAYS];
-
             if (p1_len == 0) {
                 p1_len = light_strength;
             }
 
-            if (p2_len == 0) {
-                p2_len = light_strength;
-            }
+            double cosr = fcos(r);
+            double sinr = fsin(r);
+            double p1x = light_pos.x + cosr * p1_len;
+            double p1y = light_pos.y + sinr * p1_len;
 
-            /*
-             * End points of the light ray. Start is the light source.
-             */
-            double p1x = light_pos.x + cos(r) * p1_len;
-            double p1y = light_pos.y + sin(r) * p1_len;
-
-            double p2x = light_pos.x + cos(r + dr) * p2_len;
-            double p2y = light_pos.y + sin(r + dr) * p2_len;
-
-            triangle(light_pos.x, light_pos.y, p1x, p1y, p2x, p2y);
+            push_point(p1x, p1y, 255,255,255,255);
         }
 
         /*
-         * Flush non shaded triangles.
+         * Complete the circle with the first point again.
          */
-        blit_flush_triangles();
+        i = 0;
+        {
+            double p1_len = ray_depth[i];
+            if (p1_len == 0) {
+                p1_len = light_strength;
+            }
+
+            double cosr = fcos(r);
+            double sinr = fsin(r);
+            double p1x = light_pos.x + cosr * p1_len;
+            double p1y = light_pos.y + sinr * p1_len;
+
+            push_point(p1x, p1y, 255,255,255,255);
+        }
     }
+
+    blit_flush_triangle_fan();
 
     /*
      * Now do the same,  using the same FBO to stretch the light a bit and 
      * make it fuzzy.
      */
-    {
-        blit_init();
+    blit_init();
 
+    {
         double r = 0;
         double dr = RAD_360 / (double)MAX_RAYS;
         int i;
@@ -7380,151 +7370,60 @@ static void wid_lighting (widp w, const uint8_t light_index)
          */
         for (i = 0; i < MAX_RAYS; i++, r += dr) {
             double p1_len = ray_depth[i];
-            double p2_len = ray_depth[(i + 1) % MAX_RAYS];
 
             if (p1_len == 0) {
                 p1_len = light_strength;
             }
-            if (p2_len == 0) {
-                p2_len = light_strength;
-            }
 
             double p3_len = p1_len + fuzz;
-            double p4_len = p2_len + fuzz;
 
             /*
              * End points of the light ray. Start is the light source.
              */
-            double p1x = light_pos.x + cos(r) * p1_len;
-            double p1y = light_pos.y + sin(r) * p1_len;
+            double cosr = fcos(r);
+            double sinr = fsin(r);
 
-            double p2x = light_pos.x + cos(r + dr) * p2_len;
-            double p2y = light_pos.y + sin(r + dr) * p2_len;
+            double p1x = light_pos.x + cosr * p1_len;
+            double p1y = light_pos.y + sinr * p1_len;
 
-            double p3x = light_pos.x + cos(r) * p3_len;
-            double p3y = light_pos.y + sin(r) * p3_len;
+            double p3x = light_pos.x + cosr * p3_len;
+            double p3y = light_pos.y + sinr * p3_len;
 
-            double p4x = light_pos.x + cos(r + dr) * p4_len;
-            double p4y = light_pos.y + sin(r + dr) * p4_len;
-
-            triangle_colored(p3x, p3y,
-                             p1x, p1y, 
-                             p2x, p2y,
-                             255,0,0,0,
-                             255,red,red,255,
-                             255,red,red,255);
-
-            triangle_colored(p3x, p3y,
-                             p4x, p4y, 
-                             p2x, p2y,
-                             255,0,0,0,
-                             255,0,0,0,
-                             255,red,red,255);
+            push_point(p1x, p1y, 255,red,red,255);
+            push_point(p3x, p3y, 255,0,0,0);
         }
 
-        /*
-         * Flush non shaded triangles.
-         */
-        blit_flush_colored_triangles();
-    }
-#if 0
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        i = 0; {
+            double p1_len = ray_depth[i];
 
-    /*
-     * Blit the light map.
-     */
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id2);
-    {
-        glClearColor(0,0,0,0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if (p1_len == 0) {
+                p1_len = light_strength;
+            }
 
-        glcolor(WHITE);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            double p3_len = p1_len + fuzz;
 
-        blit_init();
-        blit(fbo_tex_id1, 0.0, 1.0, 1.0, 0.0, 0, 0, window_w, window_h);
-        blit_flush();
-    }
+            /*
+             * End points of the light ray. Start is the light source.
+             */
+            double cosr = fcos(r);
+            double sinr = fsin(r);
 
-#if 0
-static int s = GL_SRC_COLOR - 2;
-static int j = GL_SRC_COLOR - 2;
-static int xxx;
-xxx++;
-if (xxx == 500) {
-xxx = 0;
-s++;
-if (s > GL_SRC_ALPHA_SATURATE) {
-j++;
-if (j > GL_SRC_ALPHA_SATURATE) {
-    j = GL_SRC_COLOR - 2;
-}
-s = GL_SRC_COLOR - 2;
-}
-}
-int a, b;
-a = s;
-b = j;
-if (s == GL_SRC_COLOR - 2) {
-a = GL_ZERO;
-}
-if (j == GL_SRC_COLOR - 2) {
-b = GL_ZERO;
-}
-if (s == GL_SRC_COLOR - 1) {
-a = GL_ONE;
-}
-if (j == GL_SRC_COLOR - 1) {
-b = GL_ONE;
-}
-if (xxx == 0) {
-CON("%x %x",a,b);
-}
-#endif
+            double p1x = light_pos.x + cosr * p1_len;
+            double p1y = light_pos.y + sinr * p1_len;
 
-    /*
-     * Blit the light gradient
-     */
-    {
-        static texp tex;
-        static int gradient_tex_id;
+            double p3x = light_pos.x + cosr * p3_len;
+            double p3y = light_pos.y + sinr * p3_len;
 
-        if (!tex) {
-            tex = tex_find("gradient");
-            gradient_tex_id = tex_get_gl_binding(tex);
+            push_point(p1x, p1y, 255,red,red,255);
+            push_point(p3x, p3y, 255,0,0,0);
         }
 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        blit_init();
-        blit(gradient_tex_id,
-                0.0, 1.0, 1.0, 0.0,
-                light_pos.x - th,
-                light_pos.y - th,
-                light_pos.x + th,
-                light_pos.y + th);
-        blit_flush();
     }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     /*
-     * Blit the light map FBO to mask out what we cannot see.
+     * Flush non shaded triangles.
      */
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id3);
-
-    {
-        glBlendFunc(GL_SRC_COLOR, GL_ONE);
-
-        blit_init();
-        blit(fbo_tex_id2,
-             0.0, 1.0, 1.0, 0.0,
-             0, 0, window_w, window_h);
-        blit_flush();
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
+    blit_flush_triangle_strip();
 }
 
 /*
@@ -8144,13 +8043,13 @@ static void wid_display (widp w,
             /*
              * Light soure.
              */
-            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id3);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
 
                 glClearColor(0,0,0,0);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 glcolor(WHITE);
-#if 1
+#if 0
 static int s = GL_SRC_COLOR - 2;
 static int j = GL_SRC_COLOR - 2;
 static int xxx;
@@ -8185,7 +8084,12 @@ if (xxx == 0) {
 CON("%x %x",a,b);
 }
 #endif
-glBlendFunc(0x302, 1);
+            /*
+             * We want to merge successive light sources together.
+             */
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            blit_init();
 
             int i;
             for (i = 0; i < wid_light_count; i++) {
@@ -8210,7 +8114,7 @@ glBlendFunc(0x302, 1);
             double window_h = th;
 
             blit_init();
-            blit(fbo_tex_id3,
+            blit(fbo_tex_id1,
                  0.0, 1.0, 1.0, 0.0,
                  0, 0, window_w, window_h);
             blit_flush();
