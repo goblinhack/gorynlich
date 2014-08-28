@@ -15,12 +15,10 @@
 #define CreateVertexBuffers(nobuf, bufptr) glGenBuffers(nobuf, bufptr)
 #define DeleteVertexBuffers(nobuf, bufptr) glDeleteBuffers(nobuf, bufptr)
 #else
-#include "SDL_opengl.h"
-
-#define CreateVertexBuffers(nobuf, bufptr) glGenBuffersARB(nobuf, bufptr)
-#define DeleteVertexBuffers(nobuf, bufptr) glDeleteBuffersARB(nobuf, bufptr)
+//#include "SDL_opengl.h"
 
 #define glOrthof glOrtho
-#define glDepthRangef glDepthRange
-#define glFrustumf glFrustum
 #endif
+
+#include "GL/gl.h"
+#include "GL/glext.h"

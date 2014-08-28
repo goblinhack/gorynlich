@@ -8,6 +8,7 @@
 
 #include "main.h"
 #include "gl.h"
+#include "glapi.h"
 #include "color.h"
 #include "math.h"
 

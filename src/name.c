@@ -7,8 +7,8 @@
 #include <SDL.h>
 #include <string.h>
 
-#include "Main.h"
-#include "Name.h"
+#include "main.h"
+#include "name.h"
 
 const char *name_random (const char *pclass)
 {
