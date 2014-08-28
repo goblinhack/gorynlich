@@ -9,7 +9,7 @@
 #include "stb_image.h"
 
 #include "main.h"
-#include "gl.h"
+#include "glapi.h"
 #include "tex.h"
 #include "ramdisk.h"
 #include "tree.h"

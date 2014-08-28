@@ -11,7 +11,7 @@
 #include <time.h>
 
 #include "main.h"
-#include "gl.h"
+#include "glapi.h"
 #include "wid_console.h"
 #include "wid_chat.h"
 #include "wid_editor.h"

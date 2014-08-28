@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "glapi.h"
+#include "main.h"
 
 void color_init(void);
 void glcolor_save(void);
@@ -766,20 +766,6 @@ extern color YELLOW;
 
 extern color gl_save_color;
 extern color gl_last_color;
-
-/*
- * Set the current GL color
- */
-static inline void glcolor (color s)
-{
-    gl_last_color = s;
-
-    if (HEADLESS) {
-        return;
-    }
-
-    glColor4ub(s.r, s.g, s.b, s.a);
-}
 
 static inline color gl_color_current (void)
 {

@@ -7,7 +7,7 @@
 #pragma once
 
 #include "tile_private.h"
-#include "gl.h"
+#include "glapi.h"
 
 uint8_t tile_init(void);
 void tile_fini(void);

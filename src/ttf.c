@@ -10,7 +10,7 @@
 
 #include "main.h"
 #include "math.h"
-#include "gl.h"
+#include "glapi.h"
 #include "pixel.h"
 #include "color.h"
 #include "bits.h"
