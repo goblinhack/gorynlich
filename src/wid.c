@@ -4047,14 +4047,10 @@ widp wid_grid_find_next (widp parent, widp w, uint32_t x, uint32_t y,
 widp wid_grid_find_top (widp parent, fpoint tl, fpoint br)
 {
     widgridnode *node;
-    int32_t z_depth;
     widgrid *grid;
-    widp best;
     widp w;
 
     grid = parent->grid;
-    best = 0;
-    z_depth = 0;
 
     /*
      * Get the midpoint of the tile and find out which grid cell it
@@ -6874,24 +6870,11 @@ static inline void wid_display_fast (widp w)
     int32_t otly;
     int32_t obrx;
     int32_t obry;
-    int32_t tlx;
-    int32_t tly;
-    int32_t brx;
-    int32_t bry;
     widp p;
 
     if (wid_this_is_hidden(w)) {
         return;
     }
-
-    /*
-     * Bounding box for drawing the wid. Co-ords are negative as we
-     * flipped the screen
-     */
-    tlx = w->abs_tl.x;
-    tly = w->abs_tl.y;
-    brx = w->abs_br.x;
-    bry = w->abs_br.y;
 
     /*
      * Record the original pre clip sizes for text centering.
@@ -7009,12 +6992,13 @@ static inline void wid_display_fast (widp w)
     }
 }
 
+#if 0
 /*
  * Project a line via a light source into two triangular shadows.
  */
-static inline void line_project (float light_x, float light_y,
-                                 float x1, float y1,
-                                 float x2, float y2)
+void line_project (float light_x, float light_y,
+                   float x1, float y1,
+                   float x2, float y2)
 {
     float dx1 = x1 - light_x;
     float dy1 = y1 - light_y;
@@ -7031,6 +7015,7 @@ static inline void line_project (float light_x, float light_y,
     triangle(x1, y1, x2, y2, x3, y3);
     triangle(x2, y2, x3, y3, x4, y4);
 }
+#endif
 
 /*
  * Display one wid and its children
@@ -7096,12 +7081,9 @@ static void wid_light_calculate (widp w,
     }
 
     fpoint tl;
-    fpoint br;
 
     tl.x = otlx;
     tl.y = otly;
-    br.x = otlx + owidth;
-    br.y = otly + oheight;
 
     double fudge = 0.05;
     double etlx = (double)tl.x + ((tile->px1-fudge) * (double)owidth);
@@ -7141,7 +7123,8 @@ static void wid_light_calculate (widp w,
     fpoint light_pos = light->at;
     double light_strength = light->strength;
 
-    for (int k = 0; k<4; k++) {
+    uint8_t k;
+    for (k = 0; k<4; k++) {
 
         fpoint light_dir = fsub(light_pos, P[k]);
 
@@ -7480,12 +7463,6 @@ static void wid_display (widp w,
     hidden = wid_is_hidden(w);
     always_hidden = wid_is_always_hidden(w);
     scaling = wid_is_scaling(w);
-
-    double fade = 0;
-
-    if (fading) {
-        fade = wid_get_fade_amount(w);
-    }
 
     if (always_hidden) {
         /*

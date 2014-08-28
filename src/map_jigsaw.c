@@ -947,7 +947,8 @@ static void jigpiece_create_exits (dungeon_t *dg)
 /*
  * jigpiece_print
  */
-static inline void jigpiece_print (dungeon_t *dg, int32_t which)
+void jigpiece_print(dungeon_t *dg, int32_t which);
+void jigpiece_print (dungeon_t *dg, int32_t which)
 {
     int32_t x;
     int32_t y;
@@ -992,7 +993,8 @@ static inline void jigpiece_print (dungeon_t *dg, int32_t which)
 /*
  * frag_print
  */
-static inline void frag_print (dungeon_t *dg, int32_t dir, int32_t which)
+void frag_print(dungeon_t *dg, int32_t dir, int32_t which);
+void frag_print (dungeon_t *dg, int32_t dir, int32_t which)
 {
     int32_t x;
     int32_t y;
@@ -1056,7 +1058,8 @@ static void jigpiece_printat (dungeon_t *dg,
 /*
  * jigpiece_printat_with_border
  */
-static inline void jigpiece_printat_with_border (dungeon_t *dg, int32_t atx, int32_t aty, int32_t which)
+void jigpiece_printat_with_border(dungeon_t *dg, int32_t atx, int32_t aty, int32_t which);
+void jigpiece_printat_with_border (dungeon_t *dg, int32_t atx, int32_t aty, int32_t which)
 {
     int32_t x;
     int32_t y;
@@ -1550,13 +1553,11 @@ static void jigpiece_create_mirrored_frag (dungeon_t *dg)
     int32_t x;
     int32_t y;
     int32_t dir;
-    int32_t prev;
 
     for (c = 0; c < dg->frag_cnt; c++) {
         /*
          * Generate 3 rotations
          */
-        prev = c;
         for (dir=1; dir<4; dir++) {
             /*
              * Rotate 90 degrees
@@ -1666,7 +1667,6 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
     int32_t x;
     int32_t y;
     int32_t dir;
-    int32_t prev;
 
     for (c = 0; c < dg->frag_alt_cnt; c++) {
 
@@ -1694,7 +1694,6 @@ static void jigpiece_create_mirrored_frag_alt (dungeon_t *dg)
         /*
          * Generate 3 rotations
          */
-        prev = c;
         for (dir=1; dir<4; dir++) {
             /*
              * Rotate 90 degrees
@@ -1930,7 +1929,8 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
 /*
  * maze_debug
  */
-static inline void maze_debug (dungeon_t *dg)
+void maze_debug(dungeon_t *dg);
+void maze_debug (dungeon_t *dg)
 {
     dump_jigpieces_to_map(dg);
 

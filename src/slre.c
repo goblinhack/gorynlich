@@ -409,7 +409,7 @@ static int match(const struct slre *, int,
 static void
 loop_greedy(const struct slre *r, int pc, const char *s, int len, int *ofs)
 {
-	int	saved_offset, matched_offset;
+	int	saved_offset, matched_offset = 0;
 
 	while (match(r, pc + 2, s, len, ofs, NULL)) {
 		saved_offset = *ofs;
