@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-
 #include "color.h"
 #include "tree.h"
 #include "glapi.h"

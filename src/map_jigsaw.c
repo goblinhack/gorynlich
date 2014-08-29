@@ -75,7 +75,6 @@
 #undef MAZE_DEBUG_SHOW_AS_GENERATING
 #define MAZE_DEBUG_SHOW
 
-
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
 
 static int maze_seed;
@@ -694,7 +693,6 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
          */
         col = 0;
         y = 0;
-
 
         for (y = 0; y < JIGPIECE_HEIGHT; y++) {
             for (n = 0; n < cnt_cells_per_line; n++) {

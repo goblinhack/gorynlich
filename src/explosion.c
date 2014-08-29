@@ -99,7 +99,6 @@ static void explosion_flood (levelp level, uint8_t x, uint8_t y)
         return;
     }
 
-
     uint8_t distance = DISTANCE(x, y, this_explosion_x, this_explosion_y);
 
     if (distance > this_explosion_radius) {

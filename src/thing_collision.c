@@ -654,7 +654,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
-
             if (thing_is_player(me)) {
                 /*
                  * Allow to walk through doors so we can open them later.

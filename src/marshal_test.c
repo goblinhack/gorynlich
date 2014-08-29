@@ -4,8 +4,6 @@
  * See the README file for license.
  */
 
-
-
 #define ENUM_EXAMPLE(list_macro)                                \
     list_macro(ENUM_EXAMPLE_STEELBLUE = 0,    "red"),                 \
     list_macro(ENUM_EXAMPLE_GREEN,      "green"),               \

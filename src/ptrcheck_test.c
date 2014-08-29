@@ -6,7 +6,6 @@
  * A useful hack to help debug stale/free/bad pointers.
  */
 
-
 #include "main.h"
 
 uint8_t ptrcheck_test (int32_t argc, char *argv[])
