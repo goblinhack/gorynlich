@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-
 #include "main.h"
 #include "ttf.h"
 #include "font.h"

@@ -314,7 +314,6 @@ static int32_t command_matches (const char *input,
                         strlcat(cand_expand_to, " ", sizeof(cand_expand_to));
                     }
 
-
                     if (expands_to[0] != '\0') {
                         common_len = strcommon(expands_to, cand_expand_to);
                         expands_to[common_len] = '\0';

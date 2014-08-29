@@ -452,7 +452,6 @@ texp tex_from_tiled_surface (SDL_Surface *in,
                 continue;
             }
 
-
             color c;
 
             c = getPixel(in, ix, iy);

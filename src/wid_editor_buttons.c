@@ -227,7 +227,6 @@ wid_editor_buttons_icon_undo_receive_mouse_down (widp w,
     return (true);
 }
 
-
 /*
  * Mouse up etc...
  */
@@ -264,7 +263,6 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
 
     float w = 1.0 / TILES_ACROSS;
     float h = 1.0 / TILES_DOWN;
-
 
     fpoint tl = {
         (w * (float)(x)),
