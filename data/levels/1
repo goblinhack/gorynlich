@@ -17226,6 +17226,10 @@
    y=5 
    t="data/things/wall1" 
   } {   
+   x=33 
+   y=5 
+   t="data/things/wall3" 
+  } {   
    x=49 
    y=5 
    t="data/things/wall1" 
@@ -17269,6 +17273,10 @@
    x=15 
    y=6 
    t="data/things/wall1" 
+  } {   
+   x=34 
+   y=6 
+   t="data/things/wall2" 
   } {   
    x=49 
    y=6 
@@ -17333,6 +17341,14 @@
    x=15 
    y=7 
    t="data/things/wall1" 
+  } {   
+   x=35 
+   y=7 
+   t="data/things/wall5" 
+  } {   
+   x=40 
+   y=7 
+   t="data/things/wall5" 
   } {   
    x=49 
    y=7 

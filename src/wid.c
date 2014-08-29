@@ -7025,7 +7025,6 @@ static void wid_light_calculate (widp w,
                                  uint8_t light_index)
 {
     const wid_light *light = &wid_lights[light_index];
-    uint8_t fading;
     int32_t owidth;
     int32_t oheight;
     int32_t otlx;
@@ -7056,21 +7055,6 @@ static void wid_light_calculate (widp w,
 
     owidth = obrx - otlx;
     oheight = obry - otly;
-
-    /*
-     * Draw the wid frame
-     */
-    color col_tile = wid_get_color(w, WID_COLOR_BLIT);
-
-    /*
-     * Apply fade in/out effects.
-     */
-    fading = (w->fade_out || w->fade_in);
-    if (fading) {
-        double fade = wid_get_fade_amount(w);
-
-        col_tile.a *= fade;
-    }
 
     /*
      * Widget tiles and textures.
@@ -7309,8 +7293,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Complete the circle with the first point again.
          */
-        i = 0;
-        {
+        for (i = 0; i <= 1; i++, r += dr) {
             double p1_len = ray_depth[i];
             if (p1_len == 0) {
                 p1_len = light_strength;
