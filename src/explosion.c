@@ -5,28 +5,14 @@
  */
 
 #include <SDL.h>
-#include <errno.h>
 #include "slre.h"
 
 #include "main.h"
 #include "math.h"
-#include "string.h"
-#include "wid.h"
 #include "level.h"
 #include "thing.h"
-#include "command.h"
-#include "time.h"
-#include "marshal.h"
 #include "wid_game_map_server.h"
-#include "wid_game_map_client.h"
-#include "wid_editor_map.h"
 #include "map.h"
-#include "timer.h"
-#include "sound.h"
-#include "wid_console.h"
-#include "wid_editor.h"
-#include "socket.h"
-#include "level_private.h"
 #include "vision.h"
 
 int level_explosion_flash_effect;

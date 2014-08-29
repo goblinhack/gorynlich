@@ -10,13 +10,11 @@
 #include "slre.h"
 #include <time.h>
 
-#include "main.h"
 #include "glapi.h"
 #include "wid_console.h"
 #include "wid_chat.h"
 #include "wid_editor.h"
 #include "command.h"
-#include "color.h"
 #include "ttf.h"
 #include "font.h"
 #include "math.h"

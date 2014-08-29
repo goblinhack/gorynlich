@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-#include <math.h>
 #include <stdlib.h>
 
 #include "main.h"

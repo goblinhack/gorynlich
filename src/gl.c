@@ -4,13 +4,8 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
 
-#include "main.h"
 #include "glapi.h"
-#include "glapi.h"
-#include "color.h"
-#include "math.h"
 
 static void gl_init_fbo(void);
 

@@ -18,13 +18,9 @@
 #include "init_fn.h"
 #include "wid.h"
 #include "term.h"
-#include "wid_button.h"
 #include "wid_popup.h"
-#include "color.h"
-#include "player.h"
 #include "socket.h"
 #include "wid_notify.h"
-#include "wid_chat.h"
 
 static char buf[MAXSTR];
 uint8_t debug_enabled = 0;

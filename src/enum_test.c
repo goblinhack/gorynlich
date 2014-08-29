@@ -4,10 +4,7 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
 
-#include "main.h"
-#include "enum.h"
 
 #define ENUM_TESTVAL(list_macro)                                \
     list_macro(ENUM_TESTVAL_STEELBLUE = 0,    "red"),                 \

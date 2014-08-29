@@ -8,12 +8,10 @@
 
 #include "main.h"
 #include "wid.h"
-#include "color.h"
 #include "tile.h"
 #include "string.h"
 #include "wid_textbox.h"
 #include "wid_game_map_client.h"
-#include "wid_intro.h"
 #include "thing.h"
 #include "level.h"
 #include "server.h"
