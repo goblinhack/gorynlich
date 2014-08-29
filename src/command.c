@@ -11,7 +11,6 @@
 
 #include "main.h"
 #include "command.h"
-#include "tree.h"
 #include "string.h"
 #include "term.h"
 #include "wid.h"

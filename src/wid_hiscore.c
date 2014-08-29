@@ -11,9 +11,7 @@
 #include "color.h"
 #include "wid_hiscore.h"
 #include "string.h"
-#include "wid_text_input.h"
 #include "marshal.h"
-#include "wid_popup.h"
 
 static const char *hiscore_dir_and_file = "gorynlich-hiscore.txt";
 

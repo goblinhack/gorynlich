@@ -9,7 +9,6 @@
 #include "slre.h"
 
 #include "main.h"
-#include "math.h"
 #include "string.h"
 #include "wid.h"
 #include "level.h"
@@ -23,11 +22,8 @@
 #include "map.h"
 #include "timer.h"
 #include "sound.h"
-#include "wid_console.h"
 #include "wid_editor.h"
 #include "socket.h"
-#include "level_private.h"
-#include "wid_popup.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;

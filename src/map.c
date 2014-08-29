@@ -14,7 +14,6 @@
 #include "level.h"
 #include "bits.h"
 #include "socket.h"
-#include "wid_game_map_server.h"
 
 typedef uint8_t (*map_is_at_callback)(thing_templatep);
 

@@ -17,7 +17,6 @@
 #include "time.h"
 #include "string.h"
 #include "wid_textbox.h"
-#include "color.h"
 #include "sound.h"
 #include "socket.h"
 #include "client.h"

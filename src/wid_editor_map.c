@@ -8,7 +8,6 @@
 
 #include "main.h"
 #include "wid.h"
-#include "color.h"
 #include "tile.h"
 #include "thing_tile.h"
 #include "wid_editor.h"

@@ -8,7 +8,6 @@
 
 #include "main.h"
 #include "wid.h"
-#include "color.h"
 #include "wid_intro3.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
