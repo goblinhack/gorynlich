@@ -8,10 +8,8 @@
 
 #include "main.h"
 #include "wid.h"
-#include "color.h"
 #include "tex.h"
 #include "init_fn.h"
-#include "tree.h"
 #include "wid_splash.h"
 #include "glapi.h"
 

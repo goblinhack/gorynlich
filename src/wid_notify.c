@@ -12,9 +12,7 @@
 #include "ttf.h"
 #include "wid_notify.h"
 #include "time.h"
-#include "tree.h"
 #include "string_ext.h"
-#include "wid_popup.h"
 
 typedef struct {
     uint32_t created;

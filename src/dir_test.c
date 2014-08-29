@@ -4,11 +4,7 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
 
-#include "main.h"
-#include "dir.h"
-#include "string.h"
 
 uint8_t dir_test (int32_t argc, char *argv[])
 {

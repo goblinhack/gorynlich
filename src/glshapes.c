@@ -6,9 +6,7 @@
 
 #include <string.h>
 
-#include "main.h"
 #include "glapi.h"
-#include "color.h"
 #include "math.h"
 
 #define GL_MAX_BUFFER_SIZE 1024

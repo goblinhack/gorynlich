@@ -8,7 +8,6 @@
 
 #include "main.h"
 #include "wid.h"
-#include "color.h"
 #include "wid_intro.h"
 #include "wid_intro2.h"
 #include "wid_popup.h"
@@ -18,7 +17,6 @@
 #include "wid_intro_help.h"
 #include "wid_intro_guide.h"
 #include "wid_game_over.h"
-#include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
 #include "wid_hiscore.h"
 #include "wid_server_join.h"
@@ -27,7 +25,6 @@
 #include "level.h"
 #include "timer.h"
 #include "wid_notify.h"
-#include "wid_dead.h"
 #include "socket.h"
 #include "server.h"
 #include "glapi.h"

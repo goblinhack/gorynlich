@@ -4,11 +4,7 @@
  * See the README file for license.
  */
 
-#include <stdlib.h>
 
-#include "main.h"
-#include "marshal.h"
-#include "enum.h"
 
 #define ENUM_EXAMPLE(list_macro)                                \
     list_macro(ENUM_EXAMPLE_STEELBLUE = 0,    "red"),                 \

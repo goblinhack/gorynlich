@@ -4,11 +4,9 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
-#include "math.h"
 
 static void thing_collect (thingp t, thingp it, thing_templatep tmp,
                            uint8_t auto_collect)
