@@ -4,8 +4,6 @@
  * See the README file for license.
  */
 
-
-
 void wid_test_wid_create(void);
 
 static widp wid_test_window;

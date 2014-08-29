@@ -160,7 +160,6 @@ widp wid_editor_map_thing_replace_template (widp w,
 
         wid_update(child);
 
-
         /*
          * Do the fixup at the end as it is slow.
          */
@@ -715,7 +714,6 @@ static uint8_t wid_editor_map_tile_key_down_event (widp w,
             rc = wid_editor_map_thing_replace_wrap(wid_editor_map_grid_container, x, y);
 
             return (rc);
-
 
         case SDLK_BACKSPACE:
         case SDLK_DELETE:

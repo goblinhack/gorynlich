@@ -6,7 +6,6 @@
  * A useful hack to help debug stale/free/bad pointers.
  */
 
-
 #include "SDL_timer.h"
 
 #include "main.h"

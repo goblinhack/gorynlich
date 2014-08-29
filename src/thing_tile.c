@@ -4,7 +4,6 @@
  * See the LICENSE file for license.
  */
 
-
 #include "main.h"
 #include "tree.h"
 #include "thing_tile_private.h"

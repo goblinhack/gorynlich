@@ -7278,7 +7278,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
     }
 
     /*
-     * Now blit to the FBO, drawing the rays
+     * Now blit to the FBO, drawing the central core of the light rays
      */
     blit_init();
 
@@ -7328,8 +7328,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
     blit_flush_triangle_fan();
 
     /*
-     * Now do the same,  using the same FBO to stretch the light a bit and 
-     * make it fuzzy.
+     * Now draw the fuzzy edge of the light as a trigangle strip.
      */
     blit_init();
 
@@ -7360,9 +7359,6 @@ static void wid_lighting (widp w, const uint8_t light_index)
 
             double p3_len = p1_len + fuzz;
 
-            /*
-             * End points of the light ray. Start is the light source.
-             */
             double cosr = fcos(r);
             double sinr = fsin(r);
 
@@ -7376,6 +7372,9 @@ static void wid_lighting (widp w, const uint8_t light_index)
             push_point(p3x, p3y, 255,0,0,0);
         }
 
+        /*
+         * Complete the strip with 1.5 triangles.
+         */
         i = 0; {
             double p1_len = ray_depth[i];
 
@@ -7385,9 +7384,6 @@ static void wid_lighting (widp w, const uint8_t light_index)
 
             double p3_len = p1_len + fuzz;
 
-            /*
-             * End points of the light ray. Start is the light source.
-             */
             double cosr = fcos(r);
             double sinr = fsin(r);
 
@@ -7401,6 +7397,28 @@ static void wid_lighting (widp w, const uint8_t light_index)
             push_point(p3x, p3y, 255,0,0,0);
         }
 
+        /*
+         * Last triangle endpoint completes the loop.
+         */
+        r += dr;
+        i = 1; {
+            double p1_len = ray_depth[i];
+
+            if (p1_len == 0) {
+                p1_len = light_strength;
+            }
+
+            /*
+             * End points of the light ray. Start is the light source.
+             */
+            double cosr = fcos(r);
+            double sinr = fsin(r);
+
+            double p1x = light_pos.x + cosr * p1_len;
+            double p1y = light_pos.y + sinr * p1_len;
+
+            push_point(p1x, p1y, 255,red,red,255);
+        }
     }
 
     /*

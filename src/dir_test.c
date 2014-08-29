@@ -4,8 +4,6 @@
  * See the README file for license.
  */
 
-
-
 uint8_t dir_test (int32_t argc, char *argv[])
 {
     tree_root *d;
