@@ -4,10 +4,10 @@
  * See the README file for license.
  */
 
-#define ENUM_EXAMPLE(list_macro)                                \
-    list_macro(ENUM_EXAMPLE_STEELBLUE = 0,    "red"),                 \
-    list_macro(ENUM_EXAMPLE_GREEN,      "green"),               \
-    list_macro(ENUM_EXAMPLE_BLUE,       "blue"),                \
+#define ENUM_EXAMPLE(list_macro)                     \
+    list_macro(ENUM_EXAMPLE_STEELBLUE = 0, "red"),   \
+    list_macro(ENUM_EXAMPLE_GREEN,         "green"), \
+    list_macro(ENUM_EXAMPLE_BLUE,          "blue"),  \
 
 ENUM_DEF_H(ENUM_EXAMPLE, enum_example)
 ENUM_DEF_C(ENUM_EXAMPLE, enum_example)
