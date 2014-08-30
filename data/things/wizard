@@ -10,7 +10,7 @@
  is_player
  is_light_source
  is_candle_light
- light_tint="purple"
+ light_tint="thistle"
  light_strength=12.0
  is_collision_map_medium
  spawn_on_death="data/things/bonepile2"

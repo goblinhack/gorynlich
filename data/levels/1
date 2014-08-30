@@ -20074,6 +20074,10 @@
    y=4 
    t="data/things/water" 
   } {   
+   x=22 
+   y=5 
+   t="data/things/lantern" 
+  } {   
    x=36 
    y=5 
    t="data/things/potion_fire" 
@@ -20165,6 +20169,10 @@
    x=22 
    y=14 
    t="data/things/bonepile3" 
+  } {   
+   x=31 
+   y=14 
+   t="data/things/lantern" 
   } {   
    x=9 
    y=15 

@@ -11,7 +11,7 @@
  is_light_source
  is_candle_light
  light_tint="white"
- light_strength=16.0
+ light_strength=15.0
  is_collision_map_medium
  spawn_on_death="data/things/bonepile2"
  is_animated

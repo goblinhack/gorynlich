@@ -141,6 +141,8 @@ static uint8_t wid_chat_receive_input (widp w, const SDL_KEYSYM *key)
 {
     wid_chat_reset_scroll();
 
+extern int xxx;
+xxx++;
     switch (key->sym) {
         case SDLK_RETURN: {
             break;

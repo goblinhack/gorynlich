@@ -27,6 +27,7 @@
 #include "wid_game_map_client.h"
 #include "math.h"
 #include "level.h"
+int xxx = 0;
 
 /*
  * Display sorted.
@@ -6833,7 +6834,6 @@ typedef struct wid_light_ {
     double fuzz;
     widp w;
     uint16_t max_light_rays;
-    uint8_t red;
     color color;
 } wid_light;
         
@@ -7280,6 +7280,12 @@ static void wid_lighting (widp w, const uint8_t light_index)
         }
     }
 
+    color c = light->color;
+
+    float red   = ((float)c.r) / 255.0;
+    float green = ((float)c.g) / 255.0;
+    float blue  = ((float)c.b) / 255.0;
+
     /*
      * Now blit to the FBO, drawing the central core of the light rays
      */
@@ -7293,8 +7299,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Walk the light rays in a circle.
          */
-        color c = light->color;
-        push_point(light_pos.x, light_pos.y, c.r, c.g, c.b, 255);
+        push_point(light_pos.x, light_pos.y, red, green, blue, 1.0);
 
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i];
@@ -7307,7 +7312,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, 255, 255, 255, 255);
+            push_point(p1x, p1y, red, green, blue, 0.9);
         }
 
         /*
@@ -7325,7 +7330,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, 255, 255, 255, 255);
+            push_point(p1x, p1y, red, green, blue, 0.9);
         }
     }
 
@@ -7341,19 +7346,16 @@ static void wid_lighting (widp w, const uint8_t light_index)
         double dr = RAD_360 / (double)max_light_rays;
         int i;
 
-        if (!light->red || !(rand() % 10)) {
+        if (!light->fuzz || !(rand() % 10)) {
 
             if (thing_is_candle_light_fast(t)) {
-                light->fuzz = 70 + rand() % 50;
-                light->red = 1 + (rand() % 255);
+                light->fuzz = 50 + rand() % 20;
             } else {
-                light->fuzz = 70;
-                light->red = 100;
+                light->fuzz = 50;
             }
         }
 
         double fuzz = light->fuzz;
-        uint8_t red = light->red;
 
         /*
          * Walk the light rays in a circle.
@@ -7376,8 +7378,8 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, 255,red,red,255);
-            push_point(p3x, p3y, 255,0,0,0);
+            push_point(p1x, p1y, red, green, blue, 1.0);
+            push_point(p3x, p3y, red, green, blue, 0);
         }
 
         /*
@@ -7402,8 +7404,8 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, 255,red,red,255);
-            push_point(p3x, p3y, 255,0,0,0);
+            push_point(p1x, p1y, red, green, blue, 1.0);
+            push_point(p3x, p3y, red, green, blue, 0);
         }
     }
 
@@ -8033,9 +8035,7 @@ static void wid_display (widp w,
 #if 0
 static int s = GL_SRC_COLOR - 2;
 static int j = GL_SRC_COLOR - 2;
-static int xxx;
-xxx++;
-if (xxx == 200) {
+if (xxx > 1) {
 xxx = 0;
 s++;
 if (s > GL_SRC_ALPHA_SATURATE) {
@@ -8068,7 +8068,7 @@ CON("%x %x",a,b);
             /*
              * We want to merge successive light sources together.
              */
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
             blit_init();
 
