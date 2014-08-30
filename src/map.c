@@ -180,6 +180,11 @@ uint8_t map_is_light_source_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_light_source));
 }
 
+uint8_t map_is_candle_light_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, thing_template_is_candle_light));
+}
+
 uint8_t map_is_key3_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_key3));
@@ -400,6 +405,11 @@ thingp map_thing_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, thing_template_is_light_source));
+}
+
+thingp map_thing_is_candle_light_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, thing_template_is_candle_light));
 }
 
 thingp map_thing_is_key3_at (levelp level, int32_t x, int32_t y)
@@ -648,6 +658,11 @@ tree_rootp map_all_things_is_weapon_swing_effect_at (levelp level, int32_t x, in
 tree_rootp map_all_things_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, thing_template_is_light_source));
+}
+
+tree_rootp map_all_things_is_candle_light_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_candle_light));
 }
 
 tree_rootp map_all_things_is_key3_at (levelp level, int32_t x, int32_t y)
@@ -966,10 +981,16 @@ thing_templatep map_find_key1_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_weapon_swing_effect, w));
 }
 
-thing_templatep map_find_car_at (levelp level,
+thing_templatep map_find_light_source_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, thing_template_is_light_source, w));
+}
+
+thing_templatep map_find_candle_light_at (levelp level,
+                                  int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, thing_template_is_candle_light, w));
 }
 
 thing_templatep map_find_star_green_at (levelp level,
@@ -1586,6 +1607,11 @@ uint32_t level_count_is_light_source (levelp level)
     return (level_count_is_x(level, thing_template_is_light_source));
 }
 
+uint32_t level_count_is_candle_light (levelp level)
+{
+    return (level_count_is_x(level, thing_template_is_candle_light));
+}
+
 uint32_t level_count_is_key3 (levelp level)
 {
     return (level_count_is_x(level, thing_template_is_key3));
@@ -1838,6 +1864,11 @@ tree_rootp map_all_things_is_weapon_swing_effect (levelp level)
 tree_rootp map_all_things_is_light_source (levelp level)
 {
     return (map_all_things_is_x(level, thing_template_is_light_source));
+}
+
+tree_rootp map_all_things_is_candle_light (levelp level)
+{
+    return (map_all_things_is_x(level, thing_template_is_candle_light));
 }
 
 tree_rootp map_all_things_is_key3 (levelp level)

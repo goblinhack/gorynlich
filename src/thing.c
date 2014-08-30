@@ -2486,6 +2486,20 @@ uint8_t thing_is_light_source (thingp t)
     return (t->is_light_source);
 }
 
+void thing_set_is_candle_light (thingp t, uint8_t val)
+{
+    verify(t);
+
+    t->is_candle_light = val;
+}
+
+uint8_t thing_is_candle_light (thingp t)
+{
+    verify(t);
+
+    return (t->is_candle_light);
+}
+
 void thing_set_is_key3 (thingp t, uint8_t val)
 {
     verify(t);
