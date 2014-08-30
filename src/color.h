@@ -12,6 +12,7 @@ void color_init(void);
 void glcolor_save(void);
 void glcolor_restore(void);
 color string2color(const char **s);
+color color_find(const char *s);
 
 extern color ALICE_BLUE;
 extern color ALICEBLUE;

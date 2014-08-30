@@ -6834,6 +6834,7 @@ typedef struct wid_light_ {
     widp w;
     uint16_t max_light_rays;
     uint8_t red;
+    color color;
 } wid_light;
         
 static wid_light wid_lights[MAX_LIGHTS];
@@ -6843,7 +6844,7 @@ static void wid_light_init (void)
     wid_light_count = 0;
 }
 
-static void wid_light_add (widp w, fpoint at, double strength)
+static void wid_light_add (widp w, fpoint at, double strength, color c)
 {
     if (wid_light_count >= MAX_LIGHTS) {
         return;
@@ -6852,6 +6853,7 @@ static void wid_light_add (widp w, fpoint at, double strength)
     wid_lights[wid_light_count].at = at;
     wid_lights[wid_light_count].strength = strength;
     wid_lights[wid_light_count].w = w;
+    wid_lights[wid_light_count].color = c;
 
     uint16_t max_light_rays;
 
@@ -6962,7 +6964,8 @@ static inline void wid_display_fast (widp w)
              * No light source for explosion edges. Too high a cpu drain.
              */
         } else {
-            wid_light_add(w, light_pos, light_strength);
+            wid_light_add(w, light_pos, light_strength,
+                          thing_template_light_color(tp));
         }
     }
 
@@ -7290,7 +7293,8 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Walk the light rays in a circle.
          */
-        push_point(light_pos.x, light_pos.y, 255,255,0,50);
+        color c = light->color;
+        push_point(light_pos.x, light_pos.y, c.r, c.g, c.b, 255);
 
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i];
@@ -7303,7 +7307,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, 255,255,255,255);
+            push_point(p1x, p1y, 255, 255, 255, 255);
         }
 
         /*
@@ -7321,7 +7325,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, 255,255,255,255);
+            push_point(p1x, p1y, 255, 255, 255, 255);
         }
     }
 
@@ -7340,7 +7344,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
         if (!light->red || !(rand() % 10)) {
 
             if (thing_is_candle_light_fast(t)) {
-                light->fuzz = 70 + rand() % 20;
+                light->fuzz = 70 + rand() % 50;
                 light->red = 1 + (rand() % 255);
             } else {
                 light->fuzz = 70;

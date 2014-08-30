@@ -255,6 +255,10 @@ static void thing_template_destroy_internal (thing_templatep t)
         myfree(t->polymorph_on_death);
     }
 
+    if (t->light_tint) {
+        myfree(t->light_tint);
+    }
+
     if (t->spawn_on_death) {
         myfree(t->spawn_on_death);
     }
@@ -436,6 +440,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         }
 
         GET_OPT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
+        GET_OPT_NAMED_STRING(ctx, "light_tint", t->light_tint);
         GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
         GET_OPT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
@@ -461,13 +466,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
         GET_OPT_NAMED_FLOAT(ctx, "light_strength", t->light_strength);
-
-        /*
-         * Divide the light strenght in two as it is really a radius and not
-         * a diameter.
-         */
-        t->light_strength /= 2.0;
-
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
@@ -531,6 +529,18 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
 
     } while (demarshal_gotone(ctx));
 
+    /*
+     * Divide the light strenght in two as it is really a radius and not
+     * a diameter.
+     */
+    t->light_strength /= 4.0;
+
+    if (t->light_tint) {
+        t->light_color = color_find(t->light_tint);
+    } else {
+        t->light_color = WHITE;
+    }
+
     if (t->is_player || t->is_projectile) {
         t->tx_map_update_delay_thousandths = 
                         DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST;
@@ -563,6 +573,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     }
 
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
+    PUT_NAMED_STRING(ctx, "light_tint", t->light_tint);
     PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
     PUT_NAMED_STRING(ctx, "weapon_swing_anim", t->weapon_swing_anim);
@@ -676,6 +687,16 @@ thing_templatep thing_template_fires (thing_templatep t)
 const char *thing_template_polymorph_on_death (thing_templatep t)
 {
     return (t->polymorph_on_death);
+}
+
+const char *thing_template_light_tint (thing_templatep t)
+{
+    return (t->light_tint);
+}
+
+const color thing_template_light_color (thing_templatep t)
+{
+    return (t->light_color);
 }
 
 const char *thing_template_spawn_on_death (thing_templatep t)
