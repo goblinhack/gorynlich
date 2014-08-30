@@ -256,7 +256,7 @@ const char *thing_template_short_name(thing_templatep);
 thing_templatep thing_template_fires(thing_templatep);
 const char *thing_template_polymorph_on_death(thing_templatep);
 const char *thing_template_light_tint(thing_templatep);
-const color thing_template_light_color(thing_templatep);
+color thing_template_light_color(thing_templatep);
 const char *thing_template_spawn_on_death(thing_templatep);
 const char *thing_template_weapon_carry_anim(thing_templatep);
 const char *thing_template_weapon_swing_anim(thing_templatep);
