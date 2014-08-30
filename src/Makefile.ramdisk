@@ -121,6 +121,9 @@
 .o/ramdisk_data_things__axe2_anim_session.o: asm/ramdisk_data_things__axe2_anim_session.S ../data/things/.axe2_anim.session
 	gcc -c asm/ramdisk_data_things__axe2_anim_session.S -o .o/ramdisk_data_things__axe2_anim_session.o
 
+.o/ramdisk_data_things__bonepile1_session.o: asm/ramdisk_data_things__bonepile1_session.S ../data/things/.bonepile1.session
+	gcc -c asm/ramdisk_data_things__bonepile1_session.S -o .o/ramdisk_data_things__bonepile1_session.o
+
 .o/ramdisk_data_things__explosion1_session.o: asm/ramdisk_data_things__explosion1_session.S ../data/things/.explosion1.session
 	gcc -c asm/ramdisk_data_things__explosion1_session.S -o .o/ramdisk_data_things__explosion1_session.o
 

@@ -6822,11 +6822,8 @@ static void wid_gc (widp w)
     }
 }
 
-#define MAX_RAYS 360
-#define MAX_LIGHTS 100
-
 static const double MAX_LIGHT_STRENGTH = 1000.0;
-static double ray_depth[MAX_RAYS];
+static double ray_depth[MAX_LIGHT_RAYS];
 
 static uint8_t wid_light_count;
 
@@ -6835,6 +6832,7 @@ typedef struct wid_light_ {
     double strength;
     double fuzz;
     widp w;
+    uint16_t max_light_rays;
     uint8_t red;
 } wid_light;
         
@@ -6854,6 +6852,24 @@ static void wid_light_add (widp w, fpoint at, double strength)
     wid_lights[wid_light_count].at = at;
     wid_lights[wid_light_count].strength = strength;
     wid_lights[wid_light_count].w = w;
+
+    uint16_t max_light_rays;
+
+    thingp t = wid_get_thing(w);
+
+    if (thing_is_player(t)) {
+        max_light_rays = MAX_LIGHT_RAYS;
+    } else {
+        if (strength >= 10) {
+            max_light_rays = MAX_LIGHT_RAYS;
+        } else if (strength > 5) {
+            max_light_rays = MAX_LIGHT_RAYS / 2;
+        } else {
+            max_light_rays = MAX_LIGHT_RAYS / 8;
+        }
+    }
+
+    wid_lights[wid_light_count].max_light_rays = max_light_rays;
 
     wid_light_count++;
 }
@@ -7116,8 +7132,9 @@ static void wid_light_calculate (widp w,
             p2_rad = 0;
         }
 
-        int32_t p1_deg = p1_rad * ((double)MAX_RAYS / RAD_360);
-        int32_t p2_deg = p2_rad * ((double)MAX_RAYS / RAD_360);
+        uint16_t max_light_rays = light->max_light_rays;
+        int32_t p1_deg = p1_rad * ((double)max_light_rays / RAD_360);
+        int32_t p2_deg = p2_rad * ((double)max_light_rays / RAD_360);
 
         /*
          * How many radians does this obstacle block?
@@ -7125,7 +7142,7 @@ static void wid_light_calculate (widp w,
         double tot_rad = p1_rad - p2_rad;
         int32_t tot_deg = p1_deg - p2_deg;
         if (tot_deg < 0) {
-            tot_deg += MAX_RAYS;
+            tot_deg += max_light_rays;
             tot_rad += RAD_360;
         }
 
@@ -7158,7 +7175,7 @@ static void wid_light_calculate (widp w,
                 double len = DISTANCE(light_pos.x, light_pos.y, 
                                         intersect.x, intersect.y);
 
-                if ((deg < 0) || (deg >= MAX_RAYS)) {
+                if ((deg < 0) || (deg >= max_light_rays)) {
                     DIE("%d",deg);
                 }
 
@@ -7179,7 +7196,7 @@ static void wid_light_calculate (widp w,
             }
 
             deg++;
-            if (deg >= MAX_RAYS) {
+            if (deg >= max_light_rays) {
                 deg = 0;
             }
         }
@@ -7211,6 +7228,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
 
     light_strength *= wid_get_width(light_wid);
     light->strength *= wid_get_width(light_wid);
+    uint16_t max_light_rays = light->max_light_rays;
 
     maxx = t->x + visible_width;
     minx = t->x - visible_width;
@@ -7266,7 +7284,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
 
     {
         double r = 0;
-        double dr = RAD_360 / (double)MAX_RAYS;
+        double dr = RAD_360 / (double)max_light_rays;
         int i;
 
         /*
@@ -7274,7 +7292,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
          */
         push_point(light_pos.x, light_pos.y, 255,255,0,50);
 
-        for (i = 0; i < MAX_RAYS; i++, r += dr) {
+        for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i];
             if (p1_len == 0) {
                 p1_len = light_strength;
@@ -7291,7 +7309,8 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Complete the circle with the first point again.
          */
-        for (i = 0; i <= 1; i++, r += dr) {
+        r = 0;
+        i = 0; {
             double p1_len = ray_depth[i];
             if (p1_len == 0) {
                 p1_len = light_strength;
@@ -7315,23 +7334,27 @@ static void wid_lighting (widp w, const uint8_t light_index)
 
     {
         double r = 0;
-        double dr = RAD_360 / (double)MAX_RAYS;
+        double dr = RAD_360 / (double)max_light_rays;
         int i;
 
         if (!light->red || !(rand() % 10)) {
-            light->fuzz = 100 + rand() % 50;
-            light->red = 1 + (rand() % 255);
+
+            if (thing_is_candle_light_fast(t)) {
+                light->fuzz = 70 + rand() % 20;
+                light->red = 1 + (rand() % 255);
+            } else {
+                light->fuzz = 70;
+                light->red = 100;
+            }
         }
 
         double fuzz = light->fuzz;
         uint8_t red = light->red;
 
-        red = 255;
-
         /*
          * Walk the light rays in a circle.
          */
-        for (i = 0; i < MAX_RAYS; i++, r += dr) {
+        for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i];
 
             if (p1_len == 0) {
@@ -7356,6 +7379,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Complete the strip with 1.5 triangles.
          */
+        r = 0;
         i = 0; {
             double p1_len = ray_depth[i];
 
@@ -7376,29 +7400,6 @@ static void wid_lighting (widp w, const uint8_t light_index)
 
             push_point(p1x, p1y, 255,red,red,255);
             push_point(p3x, p3y, 255,0,0,0);
-        }
-
-        /*
-         * Last triangle endpoint completes the loop.
-         */
-        r += dr;
-        i = 1; {
-            double p1_len = ray_depth[i];
-
-            if (p1_len == 0) {
-                p1_len = light_strength;
-            }
-
-            /*
-             * End points of the light ray. Start is the light source.
-             */
-            double cosr = fcos(r);
-            double sinr = fsin(r);
-
-            double p1x = light_pos.x + cosr * p1_len;
-            double p1y = light_pos.y + sinr * p1_len;
-
-            push_point(p1x, p1y, 255,red,red,255);
         }
     }
 

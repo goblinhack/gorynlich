@@ -11,7 +11,7 @@
  is_animated
  is_wearable
  is_light_source
- light_strength=3
+ light_strength=3.0
  is_collision_map_medium
  tiles={
   tile={
