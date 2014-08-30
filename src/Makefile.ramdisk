@@ -127,6 +127,9 @@
 .o/ramdisk_data_things__bonepile1_session.o: asm/ramdisk_data_things__bonepile1_session.S ../data/things/.bonepile1.session
 	gcc -c asm/ramdisk_data_things__bonepile1_session.S -o .o/ramdisk_data_things__bonepile1_session.o
 
+.o/ramdisk_data_things__dwarf_session.o: asm/ramdisk_data_things__dwarf_session.S ../data/things/.dwarf.session
+	gcc -c asm/ramdisk_data_things__dwarf_session.S -o .o/ramdisk_data_things__dwarf_session.o
+
 .o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
 	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
 
