@@ -1603,3 +1603,20 @@ color string2color (const char **s)
 
     return (target->c);
 }
+
+color color_find (const char *s)
+{
+    tree_color_val find;
+    tree_color_val *target;
+
+    memset(&find, 0, sizeof(find));
+    find.tree.key = (char*)s;
+
+    target = (typeof(target)) tree_find(colors, &find.tree.node);
+    if (!target) {
+        ERR("Unknown color [%s]", s);
+        return (WHITE);
+    }
+
+    return (target->c);
+}
