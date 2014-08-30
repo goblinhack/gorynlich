@@ -694,7 +694,7 @@ const char *thing_template_light_tint (thing_templatep t)
     return (t->light_tint);
 }
 
-const color thing_template_light_color (thing_templatep t)
+color thing_template_light_color (thing_templatep t)
 {
     return (t->light_color);
 }
