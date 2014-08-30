@@ -460,7 +460,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp7", t->ppp7);
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
-        GET_OPT_NAMED_UINT32(ctx, "light_strength", t->light_strength);
+        GET_OPT_NAMED_FLOAT(ctx, "light_strength", t->light_strength);
 
         /*
          * Divide the light strenght in two as it is really a radius and not
@@ -500,6 +500,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_animated_no_dir", t->is_animated_no_dir);
         GET_OPT_NAMED_BITFIELD(ctx, "is_weapon_swing_effect", t->is_weapon_swing_effect);
         GET_OPT_NAMED_BITFIELD(ctx, "is_light_source", t->is_light_source);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_candle_light", t->is_candle_light);
         GET_OPT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
         GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
@@ -619,6 +620,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_animated_no_dir", t->is_animated_no_dir);
     PUT_NAMED_BITFIELD(ctx, "is_weapon_swing_effect", t->is_weapon_swing_effect);
     PUT_NAMED_BITFIELD(ctx, "is_light_source", t->is_light_source);
+    PUT_NAMED_BITFIELD(ctx, "is_candle_light", t->is_candle_light);
     PUT_NAMED_BITFIELD(ctx, "is_key3", t->is_key3);
     PUT_NAMED_BITFIELD(ctx, "is_fire", t->is_fire);
     PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
@@ -796,7 +798,7 @@ uint32_t thing_template_get_ppp9 (thing_templatep t)
     return (t->ppp9);
 }
 
-uint32_t thing_template_get_light_strength (thing_templatep t)
+float thing_template_get_light_strength (thing_templatep t)
 {
     return (t->light_strength);
 }

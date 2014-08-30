@@ -168,7 +168,7 @@ typedef struct thing_template_ {
     uint32_t ppp7;
     uint32_t ppp8;
     uint32_t ppp9;
-    uint32_t light_strength;
+    float light_strength;
     uint32_t quantity;
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_tenths;
@@ -196,6 +196,7 @@ typedef struct thing_template_ {
     uint8_t is_animated_no_dir:1;
     uint8_t is_weapon_swing_effect:1;
     uint8_t is_light_source:1;
+    uint8_t is_candle_light:1;
     uint8_t is_key3:1;
     uint8_t is_fire:1;
     uint8_t is_ring:1;
@@ -272,7 +273,7 @@ uint32_t thing_template_get_ppp6(thing_templatep);
 uint32_t thing_template_get_ppp7(thing_templatep);
 uint32_t thing_template_get_ppp8(thing_templatep);
 uint32_t thing_template_get_ppp9(thing_templatep);
-uint32_t thing_template_get_light_strength(thing_templatep);
+float thing_template_get_light_strength(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
 uint32_t thing_template_get_hit_priority(thing_templatep);
 uint32_t thing_template_get_weapon_fire_delay_tenths(thing_templatep);
@@ -389,6 +390,11 @@ static inline uint8_t thing_template_is_weapon_swing_effect (thing_templatep t)
 static inline uint8_t thing_template_is_light_source (thing_templatep t)
 {
     return (t->is_light_source);
+}
+
+static inline uint8_t thing_template_is_candle_light (thing_templatep t)
+{
+    return (t->is_candle_light);
 }
 
 static inline uint8_t thing_template_is_key3 (thing_templatep t)

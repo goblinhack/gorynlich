@@ -16,6 +16,12 @@
  */
 #undef MORE_SPEED_LESS_VISUALS
 
+/*
+ * Light sources
+ */
+#define MAX_LIGHT_RAYS          360
+#define MAX_LIGHTS              100
+
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 #undef ENABLE_LEAKCHECK           // Memory leak check
@@ -29,7 +35,6 @@
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
-
 
 /*
  * Other windows are darker when popups appear
