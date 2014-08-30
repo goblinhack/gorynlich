@@ -6992,31 +6992,6 @@ static inline void wid_display_fast (widp w)
     }
 }
 
-#if 0
-/*
- * Project a line via a light source into two triangular shadows.
- */
-void line_project (float light_x, float light_y,
-                   float x1, float y1,
-                   float x2, float y2)
-{
-    float dx1 = x1 - light_x;
-    float dy1 = y1 - light_y;
-    float dx2 = x2 - light_x;
-    float dy2 = y2 - light_y;
-
-    static const float ray_length = 100;
-
-    float x3 = x1 + dx1 * ray_length;
-    float y3 = y1 + dy1 * ray_length;
-    float x4 = x2 + dx2 * ray_length;
-    float y4 = y2 + dy2 * ray_length;
-
-    triangle(x1, y1, x2, y2, x3, y3);
-    triangle(x2, y2, x3, y3, x4, y4);
-}
-#endif
-
 /*
  * Display one wid and its children
  */
@@ -7107,6 +7082,9 @@ static void wid_light_calculate (widp w,
     fpoint light_pos = light->at;
     double light_strength = light->strength;
 
+    /*
+     * For each clockwise quadrant.
+     */
     uint8_t k;
     for (k = 0; k<4; k++) {
 
@@ -7114,75 +7092,95 @@ static void wid_light_calculate (widp w,
 
         float dot = normal[k].x * light_dir.x + normal[k].y * light_dir.y;   
                 
-        if (dot > 0.0f) {
+        if (dot <= 0.0f) {
+            continue;
+        }
+
+        /*
+         * Facing the light source. Blocks light.
+         */
+        int l = (k + 1) % 4;
+
+        fpoint p1 = fsub(P[k], light_pos);
+        fpoint p2 = fsub(P[l], light_pos);
+
+        /*
+         * Start and end points of the face blocking the light.
+         */
+        double p1_rad = anglerot(p1);
+        double p2_rad = anglerot(p2);
+        if (p1_rad == RAD_360) {
+            p1_rad = 0;
+        }
+        if (p2_rad == RAD_360) {
+            p2_rad = 0;
+        }
+
+        int32_t p1_deg = p1_rad * ((double)MAX_RAYS / RAD_360);
+        int32_t p2_deg = p2_rad * ((double)MAX_RAYS / RAD_360);
+
+        /*
+         * How many radians does this obstacle block?
+         */
+        double tot_rad = p1_rad - p2_rad;
+        int32_t tot_deg = p1_deg - p2_deg;
+        if (tot_deg < 0) {
+            tot_deg += MAX_RAYS;
+            tot_rad += RAD_360;
+        }
+
+        double dr = tot_rad / tot_deg;
+        int32_t deg = p2_deg;
+        double rad = p2_rad;
+
+        /*
+         * For each blocking radian, look at the distance to the light.
+         * If closer than what is blocking that radian currently, then use 
+         * this value.
+         *
+         * In essence, this is a depth buffer.
+         */
+        while (tot_deg-- > 0) {
+
+            fpoint light_end;
+            light_end.x = light_pos.x + fcos(rad) * MAX_LIGHT_STRENGTH;
+            light_end.y = light_pos.y + fsin(rad) * MAX_LIGHT_STRENGTH;
+
+            fpoint intersect;
+
             /*
-             * Facing the light source. Blocks light.
+             * Check the light ray really does hit this obstacle and where
+             * so we can work out distance.
              */
-            int l = (k + 1) % 4;
+            if (get_line_known_intersection(P[k], P[l], 
+                                            light_pos, light_end, 
+                                            &intersect)) {
+                double len = DISTANCE(light_pos.x, light_pos.y, 
+                                        intersect.x, intersect.y);
 
-            fpoint p1 = fsub(P[k], light_pos);
-            fpoint p2 = fsub(P[l], light_pos);
-
-            double p1_rad = anglerot(p1);
-            double p2_rad = anglerot(p2);
-            if (p1_rad == RAD_360) {
-                p1_rad = 0;
-            }
-            if (p2_rad == RAD_360) {
-                p2_rad = 0;
-            }
-
-            int32_t p1_deg = p1_rad * ((double)MAX_RAYS / RAD_360);
-            int32_t p2_deg = p2_rad * ((double)MAX_RAYS / RAD_360);
-
-            double tot_rad = p1_rad - p2_rad;
-            int32_t tot_deg = p1_deg - p2_deg;
-            if (tot_deg < 0) {
-                tot_deg += 360;
-                tot_rad += RAD_360;
-            }
-
-            double dr = tot_rad / tot_deg;
-            int32_t deg = p2_deg;
-            double rad = p2_rad;
-
-            while (tot_deg-- > 0) {
-
-                fpoint light_end;
-                light_end.x = light_pos.x + fcos(rad) * MAX_LIGHT_STRENGTH;
-                light_end.y = light_pos.y + fsin(rad) * MAX_LIGHT_STRENGTH;
-
-                fpoint intersect;
-
-                if (get_line_known_intersection(P[k], P[l], 
-                                                light_pos, light_end, 
-                                                &intersect)) {
-                    double len = DISTANCE(light_pos.x, light_pos.y, 
-                                          intersect.x, intersect.y);
-                    if ((deg < 0) || (deg >= MAX_RAYS)) {
-                        DIE("%d",deg);
-                    }
-
-                    if (len > light_strength) {
-                        len = light_strength;
-                    }
-
-                    if (!ray_depth[deg]) {
-                        ray_depth[deg] = len;
-                    } if (len < ray_depth[deg]) {
-                        ray_depth[deg] = len;
-                    }
+                if ((deg < 0) || (deg >= MAX_RAYS)) {
+                    DIE("%d",deg);
                 }
 
-                rad += dr;
-                if (rad >= RAD_360) {
-                    rad = 0;
+                if (len > light_strength) {
+                    len = light_strength;
                 }
 
-                deg++;
-                if (deg >= MAX_RAYS) {
-                    deg = 0;
+                if (!ray_depth[deg]) {
+                    ray_depth[deg] = len;
+                } if (len < ray_depth[deg]) {
+                    ray_depth[deg] = len;
                 }
+            }
+
+            rad += dr;
+            if (rad >= RAD_360) {
+                rad = 0;
+            }
+
+            deg++;
+            if (deg >= MAX_RAYS) {
+                deg = 0;
             }
         }
     }
