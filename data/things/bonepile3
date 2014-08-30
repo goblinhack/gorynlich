@@ -5,7 +5,7 @@
  is_mob_spawner
  is_light_source
  light_strength=1.0
- light_tint="cyan"
+ light_tint="red"
  hit_priority=22
  is_collision_map_medium
  damage=1

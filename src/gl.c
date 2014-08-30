@@ -22,7 +22,6 @@ void gl_enter_2d_mode (void)
     /*
      * Enable alpha blending for sprites
      */
-    glAlphaFunc(GL_GREATER, 0.1f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
