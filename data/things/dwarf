@@ -9,8 +9,8 @@
  health=250
  is_player
  is_light_source
- light_tint="white"
  is_candle_light
+ light_tint="white"
  light_strength=18.0
  is_collision_map_medium
  spawn_on_death="data/things/bonepile2"

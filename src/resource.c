@@ -107,7 +107,8 @@ static uint8_t resource_init_15 (void *context)
 
 static uint8_t resource_init_16 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/lantern.png",
+                     "lantern") != 0);
 }
 
 static uint8_t resource_init_17 (void *context)
@@ -2316,6 +2317,13 @@ static uint8_t resource_init_23 (void *context)
     tile_load_arr("poison", 128, 128,
                   ARRAY_SIZE(poison_tiles), poison_tiles);
 
+    static const char *lantern_tiles[] = {
+        "lantern",
+    };
+
+    tile_load_arr("lantern", 128, 128,
+                  ARRAY_SIZE(lantern_tiles), lantern_tiles);
+
     /*
      * Walls
      */
@@ -2336,6 +2344,7 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_DOOR2, "data/things/door2");
     thing_template_load(&THING_NOENTRY, "data/things/noentry");
     thing_template_load(&THING_PIPE, "data/things/pipe");
+    thing_template_load(&THING_LANTERN, "data/things/lantern");
     thing_template_load(&THING_EXIT1, "data/things/exit1");
     thing_template_load(&THING_EXIT2, "data/things/exit2");
     thing_template_load(&THING_EXIT3, "data/things/exit3");
