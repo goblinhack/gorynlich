@@ -7,6 +7,7 @@
  bonus_score_on_death=250
  vision_distance=20
  is_monst
+is_blocks_light
  hit_priority=10
  is_animated
  is_scarable

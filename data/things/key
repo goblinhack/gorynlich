@@ -2,7 +2,6 @@
  short_name="key"
  tooltip="Keys to open doors"
  z_depth=3
- is_boring
  is_key
  is_carryable
  tiles={

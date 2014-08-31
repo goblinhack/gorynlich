@@ -6825,6 +6825,7 @@ static void wid_gc (widp w)
 
 static const double MAX_LIGHT_STRENGTH = 1000.0;
 static double ray_depth[MAX_LIGHT_RAYS];
+static thingp ray_thing[MAX_LIGHT_RAYS];
 
 static uint8_t wid_light_count;
 
@@ -6879,7 +6880,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
 /*
  * Display one wid and its children
  */
-static inline void wid_display_fast (widp w)
+static void wid_display_fast (widp w)
 {
     uint8_t fading;
     int32_t owidth;
@@ -6949,6 +6950,12 @@ static inline void wid_display_fast (widp w)
      * Does this thing light up its environment?
      */
     thingp t = wid_get_thing(w);
+    if (t) {
+        /*
+         * Reset lighting for this thing before it is lit.
+         */
+        t->lit = 0;
+    }
 
     if (t && thing_is_light_source_fast(t)) {
         fpoint light_pos;
@@ -7027,6 +7034,15 @@ static void wid_light_calculate (widp w,
     int32_t obry;
     widp p;
 
+    thingp t = wid_get_thing(w);
+    if (!t) {
+        return;
+    }
+
+    if (!thing_is_blocks_light_fast(t)) {
+        return;
+    }
+
     if (wid_this_is_hidden(w)) {
         return;
     }
@@ -7064,6 +7080,10 @@ static void wid_light_calculate (widp w,
     tl.y = otly;
 
     double fudge = 0.05;
+    if (!thing_is_boring_fast(t)) {
+        fudge = -0.2;
+    }
+
     double etlx = (double)tl.x + ((tile->px1-fudge) * (double)owidth);
     double etly = (double)tl.y + ((tile->py1-fudge) * (double)oheight);
     double ebrx = (double)tl.x + ((tile->px2+fudge) * (double)owidth);
@@ -7175,8 +7195,9 @@ static void wid_light_calculate (widp w,
             if (get_line_known_intersection(P[k], P[l], 
                                             light_pos, light_end, 
                                             &intersect)) {
+
                 double len = DISTANCE(light_pos.x, light_pos.y, 
-                                        intersect.x, intersect.y);
+                                      intersect.x, intersect.y);
 
                 if ((deg < 0) || (deg >= max_light_rays)) {
                     DIE("%d",deg);
@@ -7188,8 +7209,10 @@ static void wid_light_calculate (widp w,
 
                 if (!ray_depth[deg]) {
                     ray_depth[deg] = len;
+                    ray_thing[deg] = t;
                 } if (len < ray_depth[deg]) {
                     ray_depth[deg] = len;
+                    ray_thing[deg] = t;
                 }
             }
 
@@ -7261,7 +7284,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
     {
         memset(ray_depth, 0, sizeof(ray_depth));
 
-        z = MAP_DEPTH_WALL; 
+        for (z = MAP_DEPTH_WALL; z <= MAP_DEPTH_MONST; z++)
         
         for (x = maxx - 1; x >= minx; x--) {
             for (y = miny; y < maxy; y++) {
@@ -7313,6 +7336,11 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1y = light_pos.y + sinr * p1_len;
 
             push_point(p1x, p1y, red, green, blue, 0.7);
+
+            thingp t = ray_thing[i];
+            if (t) {
+                t->lit++;
+            }
         }
 
         /*
@@ -8072,6 +8100,11 @@ CON("%x %x",a,b);
 
             blit_init();
 
+            /*
+             * Keep a track of which things are lit by any light.
+             */
+            memset(ray_thing, 0, sizeof(ray_thing));
+
             int i;
             for (i = 0; i < wid_light_count; i++) {
                 wid_lighting(w, i);
@@ -8107,7 +8140,7 @@ CON("%x %x",a,b);
              */
             blit_init();
 
-            for (z = 0; z < MAP_DEPTH; z++) {
+            for (z = MAP_DEPTH_MONST; z < MAP_DEPTH; z++) {
                 for (x = maxx - 1; x >= minx; x--) {
                     for (y = miny; y < maxy; y++) {
                         tree_root **tree = 
@@ -8120,12 +8153,33 @@ CON("%x %x",a,b);
                                             tree_prev_tree_wid_compare_func) {
 
                             thingp t = wid_get_thing(node->wid);
-
-                            if (!t || !thing_is_light_source_fast(t)) {
+                            if (!t) {
                                 continue;
                             }
 
-                            wid_display_fast(node->wid);
+                            uint8_t lit = 0;
+
+                            if (t->lit) {
+                                if (thing_is_boring_fast(t)) {
+                                    continue;
+                                }
+                                if (thing_is_monst(t)) {
+                                    continue;
+                                }
+
+                                lit = 1;
+                            }
+
+                            if (thing_is_light_source_fast(t)) {
+                                lit = 1;
+                            }
+
+                            if (lit) {
+                            if (thing_is_key(t)) {
+                                CON("T");
+                            }
+                                wid_display_fast(node->wid);
+                            }
                         }
                     }
                 }

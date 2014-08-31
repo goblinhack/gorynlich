@@ -135,9 +135,9 @@ uint8_t map_is_rock_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_rock));
 }
 
-uint8_t map_is_xxx4_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_blocks_light_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_xxx4));
+    return (map_is_x_at(level, x, y, thing_template_is_blocks_light));
 }
 
 uint8_t map_is_weapon_at (levelp level, int32_t x, int32_t y)
@@ -362,9 +362,9 @@ thingp map_thing_is_key_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_key));
 }
 
-thingp map_thing_is_xxx4_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_blocks_light_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_xxx4));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_blocks_light));
 }
 
 thingp map_thing_is_weapon_at (levelp level, int32_t x, int32_t y)
@@ -615,9 +615,9 @@ tree_rootp map_all_things_is_rock_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_rock));
 }
 
-tree_rootp map_all_things_is_xxx4_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_blocks_light_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_xxx4));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_blocks_light));
 }
 
 tree_rootp map_all_things_is_weapon_at (levelp level, int32_t x, int32_t y)
@@ -933,10 +933,10 @@ thing_templatep map_find_xxx3_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_rock, w));
 }
 
-thing_templatep map_find_xxx4_at (levelp level,
+thing_templatep map_find_blocks_light_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_xxx4, w));
+    return (map_find_x_at(level, x, y, thing_template_is_blocks_light, w));
 }
 
 thing_templatep map_find_xxx5_at (levelp level,
@@ -1562,9 +1562,9 @@ uint32_t level_count_is_rock (levelp level)
     return (level_count_is_x(level, thing_template_is_rock));
 }
 
-uint32_t level_count_is_xxx4 (levelp level)
+uint32_t level_count_is_blocks_light (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_xxx4));
+    return (level_count_is_x(level, thing_template_is_blocks_light));
 }
 
 uint32_t level_count_is_weapon (levelp level)
@@ -1821,9 +1821,9 @@ tree_rootp map_all_things_is_rock (levelp level)
     return (map_all_things_is_x(level, thing_template_is_rock));
 }
 
-tree_rootp map_all_things_is_xxx4 (levelp level)
+tree_rootp map_all_things_is_blocks_light (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_xxx4));
+    return (map_all_things_is_x(level, thing_template_is_blocks_light));
 }
 
 tree_rootp map_all_things_is_weapon (levelp level)

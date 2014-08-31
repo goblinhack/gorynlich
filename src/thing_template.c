@@ -489,7 +489,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_medium", t->is_collision_map_medium);
         GET_OPT_NAMED_BITFIELD(ctx, "is_collision_map_tiny", t->is_collision_map_tiny);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_blocks_light", t->is_blocks_light);
         GET_OPT_NAMED_BITFIELD(ctx, "is_weapon", t->is_weapon);
         GET_OPT_NAMED_BITFIELD(ctx, "is_treasure", t->is_treasure);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wearable", t->is_wearable);
@@ -622,7 +622,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_collision_map_medium", t->is_collision_map_medium);
     PUT_NAMED_BITFIELD(ctx, "is_collision_map_small", t->is_collision_map_small);
     PUT_NAMED_BITFIELD(ctx, "is_rock", t->is_rock);
-    PUT_NAMED_BITFIELD(ctx, "is_xxx4", t->is_xxx4);
+    PUT_NAMED_BITFIELD(ctx, "is_blocks_light", t->is_blocks_light);
     PUT_NAMED_BITFIELD(ctx, "is_weapon", t->is_weapon);
     PUT_NAMED_BITFIELD(ctx, "is_treasure", t->is_treasure);
     PUT_NAMED_BITFIELD(ctx, "is_wearable", t->is_wearable);
