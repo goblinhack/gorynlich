@@ -358,7 +358,7 @@ extern uint16_t THING_GEM4;
 extern uint16_t THING_GEM5;
 extern uint16_t THING_GEM6;
 extern uint16_t THING_GEM7;
-extern uint16_t THING_LANTERN;
+extern uint16_t THING_BRAZIER;
 extern uint16_t THING_EXIT1;
 extern uint16_t THING_EXIT2;
 extern uint16_t THING_EXIT3;

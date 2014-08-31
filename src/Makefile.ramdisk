@@ -25,8 +25,8 @@
 .o/ramdisk_data_gfx_help3_png.o: asm/ramdisk_data_gfx_help3_png.S ../data/gfx/help3.png
 	gcc -c asm/ramdisk_data_gfx_help3_png.S -o .o/ramdisk_data_gfx_help3_png.o
 
-.o/ramdisk_data_gfx_lantern_png.o: asm/ramdisk_data_gfx_lantern_png.S ../data/gfx/lantern.png
-	gcc -c asm/ramdisk_data_gfx_lantern_png.S -o .o/ramdisk_data_gfx_lantern_png.o
+.o/ramdisk_data_gfx_brazier_png.o: asm/ramdisk_data_gfx_brazier_png.S ../data/gfx/brazier.png
+	gcc -c asm/ramdisk_data_gfx_brazier_png.S -o .o/ramdisk_data_gfx_brazier_png.o
 
 .o/ramdisk_data_gfx_poison_png.o: asm/ramdisk_data_gfx_poison_png.S ../data/gfx/poison.png
 	gcc -c asm/ramdisk_data_gfx_poison_png.S -o .o/ramdisk_data_gfx_poison_png.o
@@ -160,8 +160,8 @@
 .o/ramdisk_data_things__keys3_session.o: asm/ramdisk_data_things__keys3_session.S ../data/things/.keys3.session
 	gcc -c asm/ramdisk_data_things__keys3_session.S -o .o/ramdisk_data_things__keys3_session.o
 
-.o/ramdisk_data_things__lantern_session.o: asm/ramdisk_data_things__lantern_session.S ../data/things/.lantern.session
-	gcc -c asm/ramdisk_data_things__lantern_session.S -o .o/ramdisk_data_things__lantern_session.o
+.o/ramdisk_data_things__brazier_session.o: asm/ramdisk_data_things__brazier_session.S ../data/things/.brazier.session
+	gcc -c asm/ramdisk_data_things__brazier_session.S -o .o/ramdisk_data_things__brazier_session.o
 
 .o/ramdisk_data_things__poison1_session.o: asm/ramdisk_data_things__poison1_session.S ../data/things/.poison1.session
 	gcc -c asm/ramdisk_data_things__poison1_session.S -o .o/ramdisk_data_things__poison1_session.o
@@ -385,8 +385,8 @@
 .o/ramdisk_data_things_keys3.o: asm/ramdisk_data_things_keys3.S ../data/things/keys3
 	gcc -c asm/ramdisk_data_things_keys3.S -o .o/ramdisk_data_things_keys3.o
 
-.o/ramdisk_data_things_lantern.o: asm/ramdisk_data_things_lantern.S ../data/things/lantern
-	gcc -c asm/ramdisk_data_things_lantern.S -o .o/ramdisk_data_things_lantern.o
+.o/ramdisk_data_things_brazier.o: asm/ramdisk_data_things_brazier.S ../data/things/brazier
+	gcc -c asm/ramdisk_data_things_brazier.S -o .o/ramdisk_data_things_brazier.o
 
 .o/ramdisk_data_things_lizard.o: asm/ramdisk_data_things_lizard.S ../data/things/lizard
 	gcc -c asm/ramdisk_data_things_lizard.S -o .o/ramdisk_data_things_lizard.o

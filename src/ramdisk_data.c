@@ -64,12 +64,12 @@ static const unsigned char *const data_gfx_help3_png_start =
 static const unsigned char *const data_gfx_help3_png_end   =
     (const unsigned char *const) (char*)&data_gfx_help3_png_end_;
 
-extern unsigned char *data_gfx_lantern_png_start_ asm("data_gfx_lantern_png_start_");
-extern unsigned char *data_gfx_lantern_png_end_ asm("data_gfx_lantern_png_end_");
-static const unsigned char *const data_gfx_lantern_png_start =
-    (const unsigned char *const) (char*)&data_gfx_lantern_png_start_;
-static const unsigned char *const data_gfx_lantern_png_end   =
-    (const unsigned char *const) (char*)&data_gfx_lantern_png_end_;
+extern unsigned char *data_gfx_brazier_png_start_ asm("data_gfx_brazier_png_start_");
+extern unsigned char *data_gfx_brazier_png_end_ asm("data_gfx_brazier_png_end_");
+static const unsigned char *const data_gfx_brazier_png_start =
+    (const unsigned char *const) (char*)&data_gfx_brazier_png_start_;
+static const unsigned char *const data_gfx_brazier_png_end   =
+    (const unsigned char *const) (char*)&data_gfx_brazier_png_end_;
 
 extern unsigned char *data_gfx_poison_png_start_ asm("data_gfx_poison_png_start_");
 extern unsigned char *data_gfx_poison_png_end_ asm("data_gfx_poison_png_end_");
@@ -379,12 +379,12 @@ static const unsigned char *const data_things__keys3_session_start =
 static const unsigned char *const data_things__keys3_session_end   =
     (const unsigned char *const) (char*)&data_things__keys3_session_end_;
 
-extern unsigned char *data_things__lantern_session_start_ asm("data_things__lantern_session_start_");
-extern unsigned char *data_things__lantern_session_end_ asm("data_things__lantern_session_end_");
-static const unsigned char *const data_things__lantern_session_start =
-    (const unsigned char *const) (char*)&data_things__lantern_session_start_;
-static const unsigned char *const data_things__lantern_session_end   =
-    (const unsigned char *const) (char*)&data_things__lantern_session_end_;
+extern unsigned char *data_things__brazier_session_start_ asm("data_things__brazier_session_start_");
+extern unsigned char *data_things__brazier_session_end_ asm("data_things__brazier_session_end_");
+static const unsigned char *const data_things__brazier_session_start =
+    (const unsigned char *const) (char*)&data_things__brazier_session_start_;
+static const unsigned char *const data_things__brazier_session_end   =
+    (const unsigned char *const) (char*)&data_things__brazier_session_end_;
 
 extern unsigned char *data_things__poison1_session_start_ asm("data_things__poison1_session_start_");
 extern unsigned char *data_things__poison1_session_end_ asm("data_things__poison1_session_end_");
@@ -904,12 +904,12 @@ static const unsigned char *const data_things_keys3_start =
 static const unsigned char *const data_things_keys3_end   =
     (const unsigned char *const) (char*)&data_things_keys3_end_;
 
-extern unsigned char *data_things_lantern_start_ asm("data_things_lantern_start_");
-extern unsigned char *data_things_lantern_end_ asm("data_things_lantern_end_");
-static const unsigned char *const data_things_lantern_start =
-    (const unsigned char *const) (char*)&data_things_lantern_start_;
-static const unsigned char *const data_things_lantern_end   =
-    (const unsigned char *const) (char*)&data_things_lantern_end_;
+extern unsigned char *data_things_brazier_start_ asm("data_things_brazier_start_");
+extern unsigned char *data_things_brazier_end_ asm("data_things_brazier_end_");
+static const unsigned char *const data_things_brazier_start =
+    (const unsigned char *const) (char*)&data_things_brazier_start_;
+static const unsigned char *const data_things_brazier_end   =
+    (const unsigned char *const) (char*)&data_things_brazier_end_;
 
 extern unsigned char *data_things_lizard_start_ asm("data_things_lizard_start_");
 extern unsigned char *data_things_lizard_end_ asm("data_things_lizard_end_");
@@ -1612,7 +1612,7 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/gfx/help3.png",
 },
 {
-    /* filename */ "data/gfx/lantern.png",
+    /* filename */ "data/gfx/brazier.png",
 },
 {
     /* filename */ "data/gfx/poison.png",
@@ -1747,7 +1747,7 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/things/.keys3.session",
 },
 {
-    /* filename */ "data/things/.lantern.session",
+    /* filename */ "data/things/.brazier.session",
 },
 {
     /* filename */ "data/things/.poison1.session",
@@ -1972,7 +1972,7 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/things/keys3",
 },
 {
-    /* filename */ "data/things/lantern",
+    /* filename */ "data/things/brazier",
 },
 {
     /* filename */ "data/things/lizard",
@@ -2285,8 +2285,8 @@ void ramdisk_init (void)
     ramdisk_data[7].len = data_gfx_help2_png_end - data_gfx_help2_png_start;
     ramdisk_data[8].data = data_gfx_help3_png_start;
     ramdisk_data[8].len = data_gfx_help3_png_end - data_gfx_help3_png_start;
-    ramdisk_data[9].data = data_gfx_lantern_png_start;
-    ramdisk_data[9].len = data_gfx_lantern_png_end - data_gfx_lantern_png_start;
+    ramdisk_data[9].data = data_gfx_brazier_png_start;
+    ramdisk_data[9].len = data_gfx_brazier_png_end - data_gfx_brazier_png_start;
     ramdisk_data[10].data = data_gfx_poison_png_start;
     ramdisk_data[10].len = data_gfx_poison_png_end - data_gfx_poison_png_start;
     ramdisk_data[11].data = data_gfx_rat_png_start;
@@ -2375,8 +2375,8 @@ void ramdisk_init (void)
     ramdisk_data[52].len = data_things__keys2_session_end - data_things__keys2_session_start;
     ramdisk_data[53].data = data_things__keys3_session_start;
     ramdisk_data[53].len = data_things__keys3_session_end - data_things__keys3_session_start;
-    ramdisk_data[54].data = data_things__lantern_session_start;
-    ramdisk_data[54].len = data_things__lantern_session_end - data_things__lantern_session_start;
+    ramdisk_data[54].data = data_things__brazier_session_start;
+    ramdisk_data[54].len = data_things__brazier_session_end - data_things__brazier_session_start;
     ramdisk_data[55].data = data_things__poison1_session_start;
     ramdisk_data[55].len = data_things__poison1_session_end - data_things__poison1_session_start;
     ramdisk_data[56].data = data_things__poison4_session_start;
@@ -2525,8 +2525,8 @@ void ramdisk_init (void)
     ramdisk_data[127].len = data_things_keys2_end - data_things_keys2_start;
     ramdisk_data[128].data = data_things_keys3_start;
     ramdisk_data[128].len = data_things_keys3_end - data_things_keys3_start;
-    ramdisk_data[129].data = data_things_lantern_start;
-    ramdisk_data[129].len = data_things_lantern_end - data_things_lantern_start;
+    ramdisk_data[129].data = data_things_brazier_start;
+    ramdisk_data[129].len = data_things_brazier_end - data_things_brazier_start;
     ramdisk_data[130].data = data_things_lizard_start;
     ramdisk_data[130].len = data_things_lizard_end - data_things_lizard_start;
     ramdisk_data[131].data = data_things_monk_start;

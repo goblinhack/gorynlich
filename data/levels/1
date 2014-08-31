@@ -1338,10 +1338,6 @@
    y=5 
    t="data/things/floor3" 
   } {   
-   x=24 
-   y=5 
-   t="data/things/floor3" 
-  } {   
    x=25 
    y=5 
    t="data/things/floor3" 
@@ -2966,23 +2962,11 @@
    y=11 
    t="data/things/floor3" 
   } {   
-   x=47 
-   y=11 
-   t="data/things/floor3" 
-  } {   
-   x=48 
-   y=11 
-   t="data/things/floor3" 
-  } {   
    x=49 
    y=11 
    t="data/things/floor3" 
   } {   
    x=50 
-   y=11 
-   t="data/things/floor3" 
-  } {   
-   x=51 
    y=11 
    t="data/things/floor3" 
   } {   
@@ -3214,19 +3198,11 @@
    y=12 
    t="data/things/floor3" 
   } {   
-   x=45 
-   y=12 
-   t="data/things/floor3" 
-  } {   
    x=46 
    y=12 
    t="data/things/floor3" 
   } {   
    x=47 
-   y=12 
-   t="data/things/floor3" 
-  } {   
-   x=48 
    y=12 
    t="data/things/floor3" 
   } {   
@@ -17226,10 +17202,6 @@
    y=5 
    t="data/things/wall1" 
   } {   
-   x=33 
-   y=5 
-   t="data/things/wall3" 
-  } {   
    x=49 
    y=5 
    t="data/things/wall1" 
@@ -17273,10 +17245,6 @@
    x=15 
    y=6 
    t="data/things/wall1" 
-  } {   
-   x=34 
-   y=6 
-   t="data/things/wall2" 
   } {   
    x=49 
    y=6 
@@ -17341,14 +17309,6 @@
    x=15 
    y=7 
    t="data/things/wall1" 
-  } {   
-   x=35 
-   y=7 
-   t="data/things/wall5" 
-  } {   
-   x=40 
-   y=7 
-   t="data/things/wall5" 
   } {   
    x=49 
    y=7 
@@ -20034,6 +19994,86 @@
    y=3 
    t="data/things/keys3" 
   } {   
+   x=19 
+   y=3 
+   t="data/things/wand_fire" 
+  } {   
+   x=29 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=30 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=31 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=32 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=33 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=34 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=35 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=36 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=37 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=38 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=39 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=40 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=41 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=42 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=43 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=44 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=45 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=46 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
+   x=47 
+   y=3 
+   t="data/things/potion_fire" 
+  } {   
    x=56 
    y=3 
    t="data/things/water" 
@@ -20046,6 +20086,34 @@
    y=3 
    t="data/things/exit1" 
   } {   
+   x=29 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=30 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=31 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=32 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=33 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=34 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=35 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
    x=36 
    y=4 
    t="data/things/potion_fire" 
@@ -20058,6 +20126,18 @@
    y=4 
    t="data/things/potion_fire" 
   } {   
+   x=39 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=40 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=41 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
    x=42 
    y=4 
    t="data/things/potion_fire" 
@@ -20067,6 +20147,22 @@
    t="data/things/potion_fire" 
   } {   
    x=44 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=45 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=46 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=47 
+   y=4 
+   t="data/things/potion_fire" 
+  } {   
+   x=48 
    y=4 
    t="data/things/potion_fire" 
   } {   
@@ -20074,9 +20170,33 @@
    y=4 
    t="data/things/water" 
   } {   
-   x=22 
+   x=17 
    y=5 
-   t="data/things/lantern" 
+   t="data/things/wand_fire" 
+  } {   
+   x=29 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=30 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=31 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=32 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=34 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=35 
+   y=5 
+   t="data/things/potion_fire" 
   } {   
    x=36 
    y=5 
@@ -20090,9 +20210,17 @@
    y=5 
    t="data/things/potion_fire" 
   } {   
+   x=39 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
    x=40 
    y=5 
    t="data/things/potion_monsticide" 
+  } {   
+   x=41 
+   y=5 
+   t="data/things/potion_fire" 
   } {   
    x=42 
    y=5 
@@ -20103,6 +20231,38 @@
    t="data/things/potion_fire" 
   } {   
    x=44 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=45 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=46 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=47 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=48 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=50 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=51 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=52 
+   y=5 
+   t="data/things/potion_fire" 
+  } {   
+   x=53 
    y=5 
    t="data/things/potion_fire" 
   } {   
@@ -20118,6 +20278,26 @@
    y=6 
    t="data/things/potion_fire" 
   } {   
+   x=30 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=31 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=32 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=33 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=35 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
    x=36 
    y=6 
    t="data/things/potion_fire" 
@@ -20127,6 +20307,18 @@
    t="data/things/potion_fire" 
   } {   
    x=38 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=39 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=40 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=41 
    y=6 
    t="data/things/potion_fire" 
   } {   
@@ -20142,17 +20334,305 @@
    y=6 
    t="data/things/potion_fire" 
   } {   
+   x=45 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=46 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=47 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=48 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=50 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=51 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=52 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=53 
+   y=6 
+   t="data/things/potion_fire" 
+  } {   
+   x=22 
+   y=7 
+   t="data/things/bow3" 
+  } {   
+   x=24 
+   y=7 
+   t="data/things/bow2" 
+  } {   
+   x=27 
+   y=7 
+   t="data/things/sword3" 
+  } {   
+   x=30 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=31 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=32 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=33 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=34 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=36 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=37 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=38 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=39 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=41 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=42 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=43 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=44 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=45 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=46 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=47 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=48 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=49 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=50 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=51 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=52 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=53 
+   y=7 
+   t="data/things/potion_fire" 
+  } {   
+   x=30 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=31 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=32 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=33 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=34 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=35 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=36 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=37 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=38 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=39 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=40 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=41 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=42 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=43 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=44 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=45 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=46 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=47 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=48 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=51 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=52 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
+   x=53 
+   y=8 
+   t="data/things/potion_fire" 
+  } {   
    x=3 
    y=9 
    t="data/things/bonepile3" 
+  } {   
+   x=29 
+   y=10 
+   t="data/things/potion_fire" 
+  } {   
+   x=30 
+   y=10 
+   t="data/things/potion_fire" 
+  } {   
+   x=54 
+   y=10 
+   t="data/things/potion_fire" 
+  } {   
+   x=55 
+   y=10 
+   t="data/things/potion_fire" 
+  } {   
+   x=56 
+   y=10 
+   t="data/things/potion_fire" 
+  } {   
+   x=57 
+   y=10 
+   t="data/things/potion_fire" 
   } {   
    x=19 
    y=11 
    t="data/things/bonepile3" 
   } {   
+   x=29 
+   y=11 
+   t="data/things/potion_fire" 
+  } {   
+   x=30 
+   y=11 
+   t="data/things/potion_fire" 
+  } {   
+   x=50 
+   y=11 
+   t="data/things/potion_fire" 
+  } {   
+   x=55 
+   y=11 
+   t="data/things/potion_fire" 
+  } {   
+   x=56 
+   y=11 
+   t="data/things/potion_fire" 
+  } {   
+   x=58 
+   y=11 
+   t="data/things/potion_fire" 
+  } {   
    x=20 
    y=12 
    t="data/things/bonepile3" 
+  } {   
+   x=29 
+   y=12 
+   t="data/things/potion_fire" 
+  } {   
+   x=51 
+   y=12 
+   t="data/things/potion_fire" 
+  } {   
+   x=52 
+   y=12 
+   t="data/things/potion_fire" 
+  } {   
+   x=55 
+   y=12 
+   t="data/things/potion_fire" 
+  } {   
+   x=58 
+   y=12 
+   t="data/things/potion_fire" 
   } {   
    x=5 
    y=13 
@@ -20166,13 +20646,37 @@
    y=13 
    t="data/things/bonepile3" 
   } {   
+   x=51 
+   y=13 
+   t="data/things/potion_fire" 
+  } {   
+   x=52 
+   y=13 
+   t="data/things/potion_fire" 
+  } {   
+   x=53 
+   y=13 
+   t="data/things/potion_fire" 
+  } {   
+   x=56 
+   y=13 
+   t="data/things/potion_fire" 
+  } {   
    x=22 
    y=14 
    t="data/things/bonepile3" 
   } {   
-   x=31 
+   x=51 
    y=14 
-   t="data/things/lantern" 
+   t="data/things/potion_fire" 
+  } {   
+   x=52 
+   y=14 
+   t="data/things/potion_fire" 
+  } {   
+   x=54 
+   y=14 
+   t="data/things/potion_fire" 
   } {   
    x=9 
    y=15 
@@ -20182,9 +20686,29 @@
    y=15 
    t="data/things/bonepile3" 
   } {   
+   x=50 
+   y=15 
+   t="data/things/potion_fire" 
+  } {   
+   x=51 
+   y=15 
+   t="data/things/potion_fire" 
+  } {   
+   x=54 
+   y=15 
+   t="data/things/potion_fire" 
+  } {   
    x=23 
    y=16 
    t="data/things/bonepile3" 
+  } {   
+   x=50 
+   y=16 
+   t="data/things/potion_fire" 
+  } {   
+   x=51 
+   y=16 
+   t="data/things/potion_fire" 
   } {   
    x=5 
    y=17 
@@ -20393,6 +20917,38 @@
    x=48 
    y=3 
    t="data/things/valkyrie" 
+  } {   
+   x=51 
+   y=3 
+   t="data/things/water_poison" 
+  } {   
+   x=52 
+   y=3 
+   t="data/things/water_poison" 
+  } {   
+   x=53 
+   y=3 
+   t="data/things/water_poison" 
+  } {   
+   x=54 
+   y=3 
+   t="data/things/water_poison" 
+  } {   
+   x=51 
+   y=4 
+   t="data/things/water_poison" 
+  } {   
+   x=52 
+   y=4 
+   t="data/things/water_poison" 
+  } {   
+   x=22 
+   y=5 
+   t="data/things/lantern" 
+  } {   
+   x=31 
+   y=14 
+   t="data/things/lantern" 
   } {   
    x=8 
    y=15 
