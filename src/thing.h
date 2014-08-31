@@ -393,7 +393,7 @@ extern uint16_t THING_CHEST1;
 extern uint16_t THING_ARROW;
 extern uint16_t THING_FIREBALL;
 extern uint16_t THING_xxx3;
-extern uint16_t THING_xxx4;
+extern uint16_t THING_blocks_light;
 
 typedef struct thing_ {
     tree_key_int tree;
@@ -591,6 +591,11 @@ typedef struct thing_ {
     uint8_t dir:3;
 
     /*
+     * How many rays of light are hitting this thing?
+     */
+    uint16_t lit;
+
+    /*
      * First time sent to a client?
      */
     uint32_t first_update:1;
@@ -758,11 +763,11 @@ static inline uint8_t thing_is_rock (thingp t)
     return (thing_template_is_rock(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_xxx4 (thingp t)
+static inline uint8_t thing_is_blocks_light (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_xxx4(thing_get_template(t)));
+    return (thing_template_is_blocks_light(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_weapon (thingp t)
@@ -1047,9 +1052,9 @@ static inline uint8_t thing_is_rock_fast (thingp t)
     return (t->thing_template->is_rock);
 }
 
-static inline uint8_t thing_is_xxx4_fast (thingp t)
+static inline uint8_t thing_is_blocks_light_fast (thingp t)
 {
-    return (t->thing_template->is_xxx4);
+    return (t->thing_template->is_blocks_light);
 }
 
 static inline uint8_t thing_is_weapon_fast (thingp t)
@@ -1090,6 +1095,11 @@ static inline uint8_t thing_is_weapon_swing_effect_fast (thingp t)
 static inline uint8_t thing_is_light_source_fast (thingp t)
 {
     return (t->thing_template->is_light_source);
+}
+
+static inline uint8_t thing_is_boring_fast (thingp t)
+{
+    return (t->thing_template->is_boring);
 }
 
 static inline uint8_t thing_is_candle_light_fast (thingp t)

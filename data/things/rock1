@@ -4,6 +4,7 @@
  z_depth=2
  is_boring
  is_wall
+is_blocks_light
  is_rock
  hit_priority=20
  is_joinable
