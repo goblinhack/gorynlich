@@ -7299,7 +7299,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Walk the light rays in a circle.
          */
-        push_point(light_pos.x, light_pos.y, red, green, blue, 1.0);
+        push_point(light_pos.x, light_pos.y, red, green, blue, 0.5);
 
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i];
@@ -8101,6 +8101,37 @@ CON("%x %x",a,b);
             blit_flush();
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            /*
+             * Redraw light sources on top of the light they cast.
+             */
+            blit_init();
+
+            for (z = 0; z < MAP_DEPTH; z++) {
+                for (x = maxx - 1; x >= minx; x--) {
+                    for (y = miny; y < maxy; y++) {
+                        tree_root **tree = 
+                            w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                        widgridnode *node;
+
+                        TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                            *tree, 
+                                            node,
+                                            tree_prev_tree_wid_compare_func) {
+
+                            thingp t = wid_get_thing(node->wid);
+
+                            if (!t || !thing_is_light_source_fast(t)) {
+                                continue;
+                            }
+
+                            wid_display_fast(node->wid);
+                        }
+                    }
+                }
+            }
+
+            blit_flush();
         }
     }
     

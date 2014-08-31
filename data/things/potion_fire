@@ -10,7 +10,7 @@
  is_combustable
  is_fragile
  is_light_source
- light_tint="white"
+ light_tint="orange"
  light_strength=0.1
  is_candle_light
  is_valid_for_shortcut_key
