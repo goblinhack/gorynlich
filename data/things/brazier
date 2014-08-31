@@ -5,8 +5,9 @@
  is_light_source
  is_candle_light
  is_collision_map_small
+ light_tint="orange"
  is_animated
- light_strength=3.0
+ light_strength=2.0
  tiles={
   tile={
    tile="brazier1"

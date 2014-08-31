@@ -206,6 +206,10 @@ uint8_t thing_is_carrying_specific_item (thingp t, uint32_t item)
 thing_templatep thing_is_carrying_thing (thingp t, thing_template_is fn)
 {
     FOR_ALL_IN_ARRAY(i, t->carrying) {
+        if (!thing_is_carrying_specific_item(t, i  - t->carrying)) {
+            continue;
+        }
+
         thing_templatep tp = id_to_thing_template(i - t->carrying);
         if ((*fn)(tp)) {
             return (tp);
