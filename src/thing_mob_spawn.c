@@ -87,7 +87,7 @@ uint8_t thing_mob_spawn_on_death (thingp t)
         return (false);
     }
 
-    uint32_t tries = 10;
+    uint32_t tries = 20;
 
     while (tries-- > 0) {
         double x = t->x;
@@ -103,7 +103,7 @@ uint8_t thing_mob_spawn_on_death (thingp t)
         } else if (r < 100) {
             y += 1.0;
         } else {
-            // centered overl player
+            // centered over player
         }
 
         /*
