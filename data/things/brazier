@@ -5,7 +5,7 @@
  is_light_source
  is_candle_light
  is_collision_map_small
- light_tint="orange"
+ light_tint="purple"
  is_animated
  light_strength=2.0
  tiles={
