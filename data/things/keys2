@@ -4,8 +4,6 @@
  z_depth=3
  is_boring
  quantity=2
- light_tint="yellow"
- light_strength=0.1
  is_key
  is_carryable
  tiles={
