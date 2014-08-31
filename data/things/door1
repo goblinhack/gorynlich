@@ -4,6 +4,7 @@
  z_depth=2
  is_boring
  is_door
+is_blocks_light
  hit_priority=11
  is_joinable
  can_be_hit_chance=200

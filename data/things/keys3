@@ -2,7 +2,6 @@
  short_name="key chain"
  tooltip="Keys to open doors"
  z_depth=3
- is_boring
  quantity=3
  is_key
  is_carryable
