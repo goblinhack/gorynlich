@@ -6,6 +6,7 @@
  is_light_source
  light_strength=0.2
  light_tint="cyan"
+ is_candle_light
  hit_priority=20
  is_collision_map_medium
  damage=1
