@@ -1,6 +1,6 @@
 {
- short_name="lantern"
- tooltip="lantern"
+ short_name="brazier"
+ tooltip="brazier"
  z_depth=4
  is_light_source
  is_candle_light
@@ -9,47 +9,47 @@
  light_strength=3.0
  tiles={
   tile={
-   tile="lantern1"
+   tile="brazier1"
    delay=50
   }
   tile={
-   tile="lantern2"
+   tile="brazier2"
    delay=50
   }
   tile={
-   tile="lantern1"
+   tile="brazier1"
    delay=50
   }
   tile={
-   tile="lantern3"
+   tile="brazier3"
    delay=50
   }
   tile={
-   tile="lantern4"
+   tile="brazier4"
    delay=50
   }
   tile={
-   tile="lantern5"
+   tile="brazier5"
    delay=50
   }
   tile={
-   tile="lantern5"
+   tile="brazier5"
    delay=50
   }
   tile={
-   tile="lantern6"
+   tile="brazier6"
    delay=50
   }
   tile={
-   tile="lantern3"
+   tile="brazier3"
    delay=50
   }
   tile={
-   tile="lantern2"
+   tile="brazier2"
    delay=50
   }
   tile={
-   tile="lantern5"
+   tile="brazier5"
    delay=50
   }
  }
