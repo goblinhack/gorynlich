@@ -20,7 +20,7 @@
  * Light sources
  */
 #define MAX_LIGHT_RAYS          360
-#define MAX_LIGHTS              100
+#define MAX_LIGHTS              200
 
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
