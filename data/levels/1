@@ -20944,11 +20944,11 @@
   } {   
    x=22 
    y=5 
-   t="data/things/lantern" 
+   t="data/things/brazier" 
   } {   
    x=31 
    y=14 
-   t="data/things/lantern" 
+   t="data/things/brazier" 
   } {   
    x=8 
    y=15 
