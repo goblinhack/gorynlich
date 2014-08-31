@@ -7299,7 +7299,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Walk the light rays in a circle.
          */
-        push_point(light_pos.x, light_pos.y, red, green, blue, 0.5);
+        push_point(light_pos.x, light_pos.y, red, green, blue, 1.0);
 
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i];
@@ -7349,7 +7349,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
         if (!light->fuzz || !(rand() % 10)) {
 
             if (thing_is_candle_light_fast(t)) {
-                light->fuzz = 50 + rand() % 20;
+                light->fuzz = 50 + rand() % 30;
             } else {
                 light->fuzz = 50;
             }
