@@ -7312,7 +7312,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.9);
+            push_point(p1x, p1y, red, green, blue, 0.7);
         }
 
         /*
@@ -7330,7 +7330,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.9);
+            push_point(p1x, p1y, red, green, blue, 0.7);
         }
     }
 
@@ -7378,7 +7378,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 1.0);
+            push_point(p1x, p1y, red, green, blue, 0.7);
             push_point(p3x, p3y, red, green, blue, 0);
         }
 
@@ -7404,7 +7404,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 1.0);
+            push_point(p1x, p1y, red, green, blue, 0.7);
             push_point(p3x, p3y, red, green, blue, 0);
         }
     }

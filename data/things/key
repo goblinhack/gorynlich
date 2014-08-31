@@ -3,6 +3,9 @@
  tooltip="Keys to open doors"
  z_depth=3
  is_boring
+ light_tint="yellow"
+ light_strength=0.1
+ is_light_source
  is_key
  is_carryable
  tiles={
