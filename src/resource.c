@@ -107,8 +107,7 @@ static uint8_t resource_init_15 (void *context)
 
 static uint8_t resource_init_16 (void *context)
 {
-    return (tex_load("data/gfx/brazier.png",
-                     "brazier") != 0);
+    return (true);
 }
 
 static uint8_t resource_init_17 (void *context)
@@ -2316,13 +2315,6 @@ static uint8_t resource_init_23 (void *context)
 
     tile_load_arr("poison", 128, 128,
                   ARRAY_SIZE(poison_tiles), poison_tiles);
-
-    static const char *brazier_tiles[] = {
-        "brazierx",
-    };
-
-    tile_load_arr("brazier", 128, 128,
-                  ARRAY_SIZE(brazier_tiles), brazier_tiles);
 
     /*
      * Walls
