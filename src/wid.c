@@ -6823,9 +6823,9 @@ static void wid_gc (widp w)
     }
 }
 
+#define LIGHT_LEVELS 2
 static const double MAX_LIGHT_STRENGTH = 1000.0;
-static double ray_depth[MAX_LIGHT_RAYS];
-static thingp ray_thing[MAX_LIGHT_RAYS];
+static double ray_depth[MAX_LIGHT_RAYS][LIGHT_LEVELS];
 
 static uint8_t wid_light_count;
 
@@ -7040,9 +7040,15 @@ static void wid_light_calculate (widp w,
         return;
     }
 
+    uint8_t soft_shadow = 0;
+
     if (pass == 1) {
         if (!thing_is_blocks_light_fast(t)) {
             return;
+        }
+
+        if (thing_is_blocks_light_soft_fast(t)) {
+            soft_shadow = 1;
         }
     }
 
@@ -7082,9 +7088,16 @@ static void wid_light_calculate (widp w,
     tl.x = otlx;
     tl.y = otly;
 
+    /*
+     * So no little breaks between walls allow light through.
+     */
     double fudge = 0.05;
-    if (!thing_is_boring_fast(t)) {
-        fudge = -0.2;
+
+    /*
+     * Make soft shadow things block less light.
+     */
+    if (thing_is_blocks_light_soft_fast(t)) {
+        fudge = -0.1;
     }
 
     double etlx = (double)tl.x + ((tile->px1-fudge) * (double)owidth);
@@ -7211,13 +7224,23 @@ static void wid_light_calculate (widp w,
                 }
 
                 if (pass == 1) {
-                    if (!ray_depth[deg]) {
-                        ray_depth[deg] = len;
-                    } if (len < ray_depth[deg]) {
-                        ray_depth[deg] = len;
+                    if (soft_shadow) {
+                        if (!ray_depth[deg][0]) {
+                            ray_depth[deg][1] = len;
+                        } if (len < ray_depth[deg][1]) {
+                            ray_depth[deg][1] = len;
+                        }
+                    } else {
+                        if (!ray_depth[deg][0]) {
+                            ray_depth[deg][0] = len;
+                            ray_depth[deg][1] = len;
+                        } if (len < ray_depth[deg][0]) {
+                            ray_depth[deg][0] = len;
+                            ray_depth[deg][1] = len;
+                        }
                     }
                 } else {
-                    if (len < ray_depth[deg]) {
+                    if (len < ray_depth[deg][0]) {
                         t->lit++;
                     }
                 }
@@ -7239,10 +7262,10 @@ static void wid_light_calculate (widp w,
 /*
  * Walk all widgets next to this light source and find light intersections.
  */
-static void wid_lighting (widp w, const uint8_t light_index)
+static void wid_lighting_calculate (widp w, 
+                                    const uint8_t light_index)
 {
     wid_light *light = &wid_lights[light_index];
-    fpoint light_pos = light->at;
     double light_strength = light->strength;
 
     int16_t maxx;
@@ -7261,7 +7284,6 @@ static void wid_lighting (widp w, const uint8_t light_index)
 
     light_strength *= wid_get_width(light_wid);
     light->strength *= wid_get_width(light_wid);
-    uint16_t max_light_rays = light->max_light_rays;
 
     maxx = t->x + visible_width;
     minx = t->x - visible_width;
@@ -7312,6 +7334,53 @@ static void wid_lighting (widp w, const uint8_t light_index)
             }
         }
     }
+}
+
+/*
+ * Walk all widgets next to this light source and find light intersections.
+ */
+static void wid_lighting (widp w, 
+                          const uint8_t light_index,
+                          const uint8_t light_level)
+{
+    wid_light *light = &wid_lights[light_index];
+    fpoint light_pos = light->at;
+    double light_strength = light->strength;
+
+    int16_t maxx;
+    int16_t minx;
+    int16_t maxy;
+    int16_t miny;
+
+    widp light_wid = light->w;
+    thingp t = wid_get_thing(light_wid);
+    if (!t) {
+        return;
+    }
+
+    double visible_width = light_strength + 3;
+    double visible_height = light_strength + 3;
+
+    uint16_t max_light_rays = light->max_light_rays;
+
+    maxx = t->x + visible_width;
+    minx = t->x - visible_width;
+    maxy = t->y + visible_height;
+    miny = t->y - visible_height;
+
+    if (minx < 0) {
+        minx = 0;
+    }
+    if (maxx > MAP_WIDTH) {
+        maxx = MAP_WIDTH;
+    }
+
+    if (miny < 0) {
+        miny = 0;
+    }
+    if (maxy > MAP_HEIGHT) {
+        maxy = MAP_HEIGHT;
+    }
 
     color c = light->color;
 
@@ -7332,10 +7401,10 @@ static void wid_lighting (widp w, const uint8_t light_index)
         /*
          * Walk the light rays in a circle.
          */
-        push_point(light_pos.x, light_pos.y, red, green, blue, 1.0);
+        push_point(light_pos.x, light_pos.y, red, green, blue, 0.35);
 
         for (i = 0; i < max_light_rays; i++, r += dr) {
-            double p1_len = ray_depth[i];
+            double p1_len = ray_depth[i][light_level];
             if (p1_len == 0) {
                 p1_len = light_strength;
             }
@@ -7345,12 +7414,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.7);
-
-            thingp t = ray_thing[i];
-            if (t) {
-                t->lit++;
-            }
+            push_point(p1x, p1y, red, green, blue, 0.35);
         }
 
         /*
@@ -7358,7 +7422,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
          */
         r = 0;
         i = 0; {
-            double p1_len = ray_depth[i];
+            double p1_len = ray_depth[i][light_level];
             if (p1_len == 0) {
                 p1_len = light_strength;
             }
@@ -7368,7 +7432,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p1x = light_pos.x + cosr * p1_len;
             double p1y = light_pos.y + sinr * p1_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.7);
+            push_point(p1x, p1y, red, green, blue, 0.35);
         }
     }
 
@@ -7399,7 +7463,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
          * Walk the light rays in a circle.
          */
         for (i = 0; i < max_light_rays; i++, r += dr) {
-            double p1_len = ray_depth[i];
+            double p1_len = ray_depth[i][light_level];
 
             if (p1_len == 0) {
                 p1_len = light_strength;
@@ -7416,7 +7480,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.7);
+            push_point(p1x, p1y, red, green, blue, 0.35);
             push_point(p3x, p3y, red, green, blue, 0);
         }
 
@@ -7425,7 +7489,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
          */
         r = 0;
         i = 0; {
-            double p1_len = ray_depth[i];
+            double p1_len = ray_depth[i][light_level];
 
             if (p1_len == 0) {
                 p1_len = light_strength;
@@ -7442,7 +7506,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
             double p3x = light_pos.x + cosr * p3_len;
             double p3y = light_pos.y + sinr * p3_len;
 
-            push_point(p1x, p1y, red, green, blue, 0.7);
+            push_point(p1x, p1y, red, green, blue, 0.35);
             push_point(p3x, p3y, red, green, blue, 0);
         }
     }
@@ -8110,14 +8174,11 @@ CON("%x %x",a,b);
 
             blit_init();
 
-            /*
-             * Keep a track of which things are lit by any light.
-             */
-            memset(ray_thing, 0, sizeof(ray_thing));
-
             int i;
             for (i = 0; i < wid_light_count; i++) {
-                wid_lighting(w, i);
+                wid_lighting_calculate(w, i);
+                wid_lighting(w, i, 0);
+                wid_lighting(w, i, 1);
             }
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
