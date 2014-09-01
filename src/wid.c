@@ -6880,7 +6880,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
 /*
  * Display one wid and its children
  */
-static void wid_display_fast (widp w)
+static void wid_display_fast (widp w, uint8_t pass)
 {
     uint8_t fading;
     int32_t owidth;
@@ -6954,25 +6954,39 @@ static void wid_display_fast (widp w)
         /*
          * Reset lighting for this thing before it is lit.
          */
-        t->lit = 0;
+        if (pass == 0) {
+            t->lit = 0;
+        } else {
+            if ((t->lit == 0) && thing_is_monst(t)) {
+                static tilep eyes;
+
+                if (!eyes) {
+                    eyes = tile_find("eyes");
+                }
+
+                tile = eyes;
+            }
+        }
     }
 
-    if (t && thing_is_light_source_fast(t)) {
-        fpoint light_pos;
+    if (pass == 0) {
+        if (t && thing_is_light_source_fast(t)) {
+            fpoint light_pos;
 
-        light_pos.x = otlx + wid_get_width(w) / 2;
-        light_pos.y = otly + wid_get_height(w) / 2;
+            light_pos.x = otlx + wid_get_width(w) / 2;
+            light_pos.y = otly + wid_get_height(w) / 2;
 
-        thing_template *tp = thing_get_template(t);
-        double light_strength = thing_template_get_light_strength(tp);
+            thing_template *tp = thing_get_template(t);
+            double light_strength = thing_template_get_light_strength(tp);
 
-        if (thing_is_explosion(t) && !t->is_epicenter) {
-            /*
-             * No light source for explosion edges. Too high a cpu drain.
-             */
-        } else {
-            wid_light_add(w, light_pos, light_strength,
-                          thing_template_light_color(tp));
+            if (thing_is_explosion(t) && !t->is_epicenter) {
+                /*
+                 * No light source for explosion edges. Too high a cpu drain.
+                 */
+            } else {
+                wid_light_add(w, light_pos, light_strength,
+                            thing_template_light_color(tp));
+            }
         }
     }
 
@@ -8174,7 +8188,7 @@ static void wid_display (widp w,
                                         node,
                                         tree_prev_tree_wid_compare_func) {
 
-                        wid_display_fast(node->wid);
+                        wid_display_fast(node->wid, 0);
                     }
                 }
             }
@@ -8309,6 +8323,10 @@ CON("%x %x",a,b);
                                 }
 
                                 lit = 1;
+                            } else {
+                                if (thing_is_monst(t)) {
+                                    lit = 1;
+                                }
                             }
 
                             if (thing_is_light_source_fast(t)) {
@@ -8316,7 +8334,7 @@ CON("%x %x",a,b);
                             }
 
                             if (lit) {
-                                wid_display_fast(node->wid);
+                                wid_display_fast(node->wid, 1);
                             }
                         }
                     }
