@@ -7083,27 +7083,33 @@ static void wid_light_calculate_for_single_obstacle (widp w,
         return;
     }
 
-    fpoint tl;
+    double etlx;
+    double etly;
+    double ebrx;
+    double ebry;
 
-    tl.x = otlx;
-    tl.y = otly;
-
-    /*
-     * So no little breaks between walls allow light through.
-     */
-    double fudge = 0.05;
-
-    /*
-     * Make soft shadow things block less light.
-     */
     if (thing_is_blocks_light_soft_fast(t)) {
-        fudge = -0.1;
-    }
+        /*
+         * Make soft shadow things block less light.
+         */
+        double fudge = owidth / 4.0;
+        double mx = (otlx + obrx) / 2.0;
+        double my = (otly + obry) / 2.0;
 
-    double etlx = (double)tl.x + ((tile->px1-fudge) * (double)owidth);
-    double etly = (double)tl.y + ((tile->py1-fudge) * (double)oheight);
-    double ebrx = (double)tl.x + ((tile->px2+fudge) * (double)owidth);
-    double ebry = (double)tl.y + ((tile->py2+fudge) * (double)oheight);
+        etlx = mx - fudge;
+        etly = my - fudge;
+        ebrx = mx + fudge;
+        ebry = my + fudge;
+    } else {
+        /*
+         * So no little breaks between walls allow light through.
+         */
+        double fudge = 0.05;
+        etlx = (double)otlx + ((tile->px1-fudge) * (double)owidth);
+        etly = (double)otly + ((tile->py1-fudge) * (double)oheight);
+        ebrx = (double)otlx + ((tile->px2+fudge) * (double)owidth);
+        ebry = (double)otly + ((tile->py2+fudge) * (double)oheight);
+    }
 
     fpoint P[4];
     P[0].x = etlx;
@@ -7475,6 +7481,9 @@ static void wid_lighting_render (widp w,
         r = 0;
         i = 0; {
             double p1_len = ray_depth[i][light_level];
+            if (p1_len == 0) {
+                p1_len = light_strength;
+            }
 
             double cosr = fcos(r);
             double sinr = fsin(r);
