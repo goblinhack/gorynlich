@@ -34,7 +34,7 @@ uint8_t map_is_key3_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_fire_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_ring_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_animation_at(levelp, int32_t x, int32_t y);
-uint8_t map_is_xxx10_at(levelp, int32_t x, int32_t y);
+uint8_t map_is_blocks_light_soft_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_poison_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_item_unusable_at(levelp, int32_t x, int32_t y);
 uint8_t map_is_item_unusable_at(levelp, int32_t x, int32_t y);

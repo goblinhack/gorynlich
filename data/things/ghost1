@@ -10,6 +10,7 @@
  hit_delay_tenths=5
  is_monst
  is_blocks_light
+ is_blocks_light_soft
  hit_priority=10
  is_collision_map_medium
  is_animated

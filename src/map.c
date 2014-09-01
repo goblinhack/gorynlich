@@ -140,6 +140,11 @@ uint8_t map_is_blocks_light_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_blocks_light));
 }
 
+uint8_t map_is_blocks_light_soft_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, thing_template_is_blocks_light_soft));
+}
+
 uint8_t map_is_weapon_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, thing_template_is_weapon));
