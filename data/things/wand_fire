@@ -4,10 +4,13 @@
  fires="data/things/fireball"
  z_depth=3
  is_weapon
-hit_priority=0
+ hit_priority=0
  is_carryable
  weapon_fire_delay_tenths=3
  is_fragile
+ is_light_source
+ light_tint="orange"
+ light_strength=0.1
  is_combustable
  is_wearable
  is_collision_map_medium
