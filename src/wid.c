@@ -7023,7 +7023,8 @@ static void wid_display_fast (widp w)
  */
 static void wid_light_calculate (widp w, 
                                  uint8_t z, 
-                                 uint8_t light_index)
+                                 uint8_t light_index,
+                                 uint8_t pass)
 {
     const wid_light *light = &wid_lights[light_index];
     int32_t owidth;
@@ -7039,8 +7040,10 @@ static void wid_light_calculate (widp w,
         return;
     }
 
-    if (!thing_is_blocks_light_fast(t)) {
-        return;
+    if (pass == 1) {
+        if (!thing_is_blocks_light_fast(t)) {
+            return;
+        }
     }
 
     if (wid_this_is_hidden(w)) {
@@ -7207,12 +7210,16 @@ static void wid_light_calculate (widp w,
                     len = light_strength;
                 }
 
-                if (!ray_depth[deg]) {
-                    ray_depth[deg] = len;
-                    ray_thing[deg] = t;
-                } if (len < ray_depth[deg]) {
-                    ray_depth[deg] = len;
-                    ray_thing[deg] = t;
+                if (pass == 1) {
+                    if (!ray_depth[deg]) {
+                        ray_depth[deg] = len;
+                    } if (len < ray_depth[deg]) {
+                        ray_depth[deg] = len;
+                    }
+                } else {
+                    if (len < ray_depth[deg]) {
+                        t->lit++;
+                    }
                 }
             }
 
@@ -7276,7 +7283,7 @@ static void wid_lighting (widp w, const uint8_t light_index)
     }
 
     int32_t x, y;
-    uint8_t z;
+    uint8_t z, pass;
 
     /*
      * Blit the light map to a FBO. First generate the right ray lengths.
@@ -7284,20 +7291,23 @@ static void wid_lighting (widp w, const uint8_t light_index)
     {
         memset(ray_depth, 0, sizeof(ray_depth));
 
-        for (z = MAP_DEPTH_WALL; z <= MAP_DEPTH_MONST; z++)
-        
-        for (x = maxx - 1; x >= minx; x--) {
-            for (y = miny; y < maxy; y++) {
-                tree_root **tree = 
-                    w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+        for (pass = 1; pass <= 2; pass++) {
+            for (z = MAP_DEPTH_WALL; z <= MAP_DEPTH_MONST; z++) {
+                for (x = maxx - 1; x >= minx; x--) {
+                    for (y = miny; y < maxy; y++) {
+                        tree_root **tree = 
+                            w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
 
-                widgridnode *node;
+                        widgridnode *node;
 
-                TREE_WALK_REVERSE_UNSAFE_INLINE(
-                                        *tree, node,
-                                        tree_prev_tree_wid_compare_func) {
+                        TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                    *tree, node,
+                                    tree_prev_tree_wid_compare_func) {
 
-                    wid_light_calculate(node->wid, z, light_index);
+                            wid_light_calculate(node->wid, z, light_index,
+                                                pass);
+                        }
+                    }
                 }
             }
         }
@@ -8163,6 +8173,7 @@ CON("%x %x",a,b);
                                 if (thing_is_boring_fast(t)) {
                                     continue;
                                 }
+
                                 if (thing_is_monst(t)) {
                                     continue;
                                 }
@@ -8175,9 +8186,6 @@ CON("%x %x",a,b);
                             }
 
                             if (lit) {
-                            if (thing_is_key(t)) {
-                                CON("T");
-                            }
                                 wid_display_fast(node->wid);
                             }
                         }
