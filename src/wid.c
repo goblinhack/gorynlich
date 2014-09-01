@@ -7021,10 +7021,10 @@ static void wid_display_fast (widp w)
 /*
  * Display one wid and its children
  */
-static void wid_light_calculate (widp w, 
-                                 uint8_t z, 
-                                 uint8_t light_index,
-                                 uint8_t pass)
+static void wid_light_calculate_for_single_obstacle (widp w, 
+                                                     uint8_t z, 
+                                                     uint8_t light_index,
+                                                     uint8_t pass)
 {
     const wid_light *light = &wid_lights[light_index];
     int32_t owidth;
@@ -7042,7 +7042,7 @@ static void wid_light_calculate (widp w,
 
     uint8_t soft_shadow = 0;
 
-    if (pass == 1) {
+    if (pass == 0) {
         if (!thing_is_blocks_light_fast(t)) {
             return;
         }
@@ -7223,7 +7223,7 @@ static void wid_light_calculate (widp w,
                     len = light_strength;
                 }
 
-                if (pass == 1) {
+                if (pass == 0) {
                     if (soft_shadow) {
                         if (!ray_depth[deg][0]) {
                             ray_depth[deg][1] = len;
@@ -7257,6 +7257,53 @@ static void wid_light_calculate (widp w,
             }
         }
     }
+}
+
+/*
+ * Smooth out the ray lenghts to avoid jagged jumps in distance.
+ */
+static void wid_lighting_smooth (wid_light *light)
+{
+    double ray_depth_tmp[MAX_LIGHT_RAYS][LIGHT_LEVELS];
+    uint8_t pass;
+
+    for (pass = 0; pass <= 1; pass++) {
+        uint16_t i;
+        uint16_t max_light_rays = light->max_light_rays;
+        uint16_t before;
+        uint16_t after;
+
+        for (i = 0; i < max_light_rays; i++) {
+
+            if (i == 0) {
+                before = max_light_rays - 1;
+                after = i + 1;
+            } else if (i == max_light_rays - 1) {
+                before = i - 1;
+                after = 0;
+            } else {
+                before = i - 1;
+                after = i + 1;
+            }
+
+            double a = ray_depth[before][pass];
+            double b = ray_depth[i][pass];
+            double c = ray_depth[after][pass];
+
+            if (a == 0) {
+                a = light->strength;
+            }
+            if (b == 0) {
+                b = light->strength;
+            }
+            if (c == 0) {
+                c = light->strength;
+            }
+            ray_depth_tmp[i][pass] = (a + b + c) / 3.0;
+        }
+    }
+
+    memcpy(ray_depth, ray_depth_tmp, sizeof(ray_depth));
 }
 
 /*
@@ -7310,38 +7357,43 @@ static void wid_lighting_calculate (widp w,
     /*
      * Blit the light map to a FBO. First generate the right ray lengths.
      */
-    {
-        memset(ray_depth, 0, sizeof(ray_depth));
+    memset(ray_depth, 0, sizeof(ray_depth));
 
-        for (pass = 1; pass <= 2; pass++) {
-            for (z = MAP_DEPTH_WALL; z <= MAP_DEPTH_MONST; z++) {
-                for (x = maxx - 1; x >= minx; x--) {
-                    for (y = miny; y < maxy; y++) {
-                        tree_root **tree = 
-                            w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+    for (pass = 0; pass <= 1; pass++) {
+        for (z = MAP_DEPTH_WALL; z <= MAP_DEPTH_MONST; z++) {
+            for (x = maxx - 1; x >= minx; x--) {
+                for (y = miny; y < maxy; y++) {
+                    tree_root **tree = 
+                        w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
 
-                        widgridnode *node;
+                    widgridnode *node;
 
-                        TREE_WALK_REVERSE_UNSAFE_INLINE(
-                                    *tree, node,
-                                    tree_prev_tree_wid_compare_func) {
+                    TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                *tree, node,
+                                tree_prev_tree_wid_compare_func) {
 
-                            wid_light_calculate(node->wid, z, light_index,
-                                                pass);
-                        }
+                        wid_light_calculate_for_single_obstacle(
+                                    node->wid, z, light_index, pass);
                     }
                 }
             }
         }
+    }
+
+    /*
+     * Seems to add nothing.
+     */
+    if (0) {
+        wid_lighting_smooth(light);
     }
 }
 
 /*
  * Walk all widgets next to this light source and find light intersections.
  */
-static void wid_lighting (widp w, 
-                          const uint8_t light_index,
-                          const uint8_t light_level)
+static void wid_lighting_render (widp w, 
+                                 const uint8_t light_index,
+                                 const uint8_t light_level)
 {
     wid_light *light = &wid_lights[light_index];
     fpoint light_pos = light->at;
@@ -7423,9 +7475,6 @@ static void wid_lighting (widp w,
         r = 0;
         i = 0; {
             double p1_len = ray_depth[i][light_level];
-            if (p1_len == 0) {
-                p1_len = light_strength;
-            }
 
             double cosr = fcos(r);
             double sinr = fsin(r);
@@ -8176,9 +8225,20 @@ CON("%x %x",a,b);
 
             int i;
             for (i = 0; i < wid_light_count; i++) {
+                /*
+                 * Calculate ray lengths for all passes.
+                 */
                 wid_lighting_calculate(w, i);
-                wid_lighting(w, i, 0);
-                wid_lighting(w, i, 1);
+
+                /*
+                 * Draw the light sources. First pass is for solid obstacles.
+                 */
+                wid_lighting_render(w, i, 0);
+
+                /*
+                 * This for soft shadows.
+                 */
+                wid_lighting_render(w, i, 1);
             }
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
