@@ -392,8 +392,6 @@ extern uint16_t THING_AMULET1;
 extern uint16_t THING_CHEST1;
 extern uint16_t THING_ARROW;
 extern uint16_t THING_FIREBALL;
-extern uint16_t THING_xxx3;
-extern uint16_t THING_blocks_light;
 
 typedef struct thing_ {
     tree_key_int tree;
@@ -770,6 +768,13 @@ static inline uint8_t thing_is_blocks_light (thingp t)
     return (thing_template_is_blocks_light(thing_get_template(t)));
 }
 
+static inline uint8_t thing_is_blocks_light_soft (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_blocks_light_soft(thing_get_template(t)));
+}
+
 static inline uint8_t thing_is_weapon (thingp t)
 {
     verify(t);
@@ -845,13 +850,6 @@ static inline uint8_t thing_is_animation (thingp t)
     verify(t);
 
     return (thing_template_is_animation(thing_get_template(t)));
-}
-
-static inline uint8_t thing_is_xxx10 (thingp t)
-{
-    verify(t);
-
-    return (thing_template_is_xxx10(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_poison (thingp t)
@@ -1057,6 +1055,11 @@ static inline uint8_t thing_is_blocks_light_fast (thingp t)
     return (t->thing_template->is_blocks_light);
 }
 
+static inline uint8_t thing_is_blocks_light_soft_fast (thingp t)
+{
+    return (t->thing_template->is_blocks_light_soft);
+}
+
 static inline uint8_t thing_is_weapon_fast (thingp t)
 {
     return (t->thing_template->is_weapon);
@@ -1125,11 +1128,6 @@ static inline uint8_t thing_is_ring_fast (thingp t)
 static inline uint8_t thing_is_animation_fast (thingp t)
 {
     return (t->thing_template->is_animation);
-}
-
-static inline uint8_t thing_is_xxx10_fast (thingp t)
-{
-    return (t->thing_template->is_xxx10);
 }
 
 static inline uint8_t thing_is_poison_fast (thingp t)
