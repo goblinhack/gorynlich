@@ -520,7 +520,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_combustable", t->is_combustable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
         GET_OPT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
         GET_OPT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);

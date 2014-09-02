@@ -2501,20 +2501,6 @@ uint8_t thing_is_candle_light (thingp t)
     return (t->is_candle_light);
 }
 
-void thing_set_has_eyes_in_the_darkness (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->has_eyes_in_the_darkness = val;
-}
-
-uint8_t thing_has_eyes_in_the_darkness (thingp t)
-{
-    verify(t);
-
-    return (t->has_eyes_in_the_darkness);
-}
-
 void thing_set_qqq6 (thingp t, uint8_t val)
 {
     verify(t);
