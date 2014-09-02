@@ -1893,6 +1893,13 @@ tilep wid_get_tile (widp w)
 {
     return (w->tile);
 }
+/*
+ * Look at all the wid modes and return the most relevent setting
+ */
+static tilep wid_get_tile_eyes (widp w)
+{
+    return (w->tile_eyes);
+}
 
 thingp wid_get_thing (widp w)
 {
@@ -1908,12 +1915,27 @@ void wid_set_tilename (widp w, const char *name)
 {
     fast_verify(w);
 
-    tilep t = tile_find(name);
-    if (!t) {
+    tilep tile = tile_find(name);
+    if (!tile) {
         DIE("failed to set wid tile %s", name);
     }
 
-    w->tile = t;
+    w->tile = tile;
+
+    thingp t = wid_get_thing(w);
+
+    if (t && thing_has_eyes_in_the_darkness(t)) {
+        char tmp[SMALL_STRING_LEN_MAX];
+
+        snprintf(tmp, sizeof(tmp), "%s-eyes", name);
+
+        tilep tile = tile_find(tmp);
+        if (!tile) {
+            DIE("failed to set wid tile %s for eyes", tmp);
+        }
+
+        w->tile_eyes = tile;
+    }
 }
 
 void wid_set_tile (widp w, tilep tile)
@@ -1921,6 +1943,21 @@ void wid_set_tile (widp w, tilep tile)
     fast_verify(w);
 
     w->tile = tile;
+
+    thingp t = wid_get_thing(w);
+
+    if (t && thing_has_eyes_in_the_darkness(t)) {
+        char tmp[SMALL_STRING_LEN_MAX];
+
+        snprintf(tmp, sizeof(tmp), "%s-eyes", tile_name(tile));
+
+        tilep tile = tile_find(tmp);
+        if (!tile) {
+            DIE("failed to set wid tile %s for eyes", tmp);
+        }
+
+        w->tile_eyes = tile;
+    }
 }
 
 void wid_set_z_depth (widp w, uint8_t z_depth)
@@ -6957,14 +6994,14 @@ static void wid_display_fast (widp w, uint8_t pass)
         if (pass == 0) {
             t->lit = 0;
         } else {
-            if ((t->lit == 0) && thing_is_monst(t)) {
-                static tilep eyes;
+            if ((t->lit == 0) && 
+                thing_has_eyes_in_the_darkness_fast(t)) {
 
-                if (!eyes) {
-                    eyes = tile_find("eyes");
+                tile = wid_get_tile_eyes(w);
+                if (!tile) {
+                    DIE("thing %s has no eyes for the darkness",
+                        thing_logname(t));
                 }
-
-                tile = eyes;
             }
         }
     }

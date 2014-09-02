@@ -95,8 +95,8 @@ void thing_set_is_light_source(thingp t, uint8_t val);
 uint8_t thing_is_light_source(thingp t);
 void thing_set_is_candle_light(thingp t, uint8_t val);
 uint8_t thing_is_candle_light(thingp t);
-void thing_set_is_key3(thingp t, uint8_t val);
-uint8_t thing_is_key3(thingp t);
+void thing_set_has_eyes_in_the_darkness(thingp t, uint8_t val);
+uint8_t thing_has_eyes_in_the_darkness(thingp t);
 void thing_set_is_key4(thingp t, uint8_t val);
 uint8_t thing_is_key4(thingp t);
 void thing_set_is_key5(thingp t, uint8_t val);
@@ -600,7 +600,7 @@ typedef struct thing_ {
 
     uint32_t is_light_source:1;
     uint32_t is_candle_light:1;
-    uint32_t is_key3:1;
+    uint32_t has_eyes_in_the_darkness:1;
     uint32_t qqq6:1;
     uint32_t is_collected:1;
     uint32_t got_to_exit_first:1;
@@ -1110,9 +1110,9 @@ static inline uint8_t thing_is_candle_light_fast (thingp t)
     return (t->thing_template->is_candle_light);
 }
 
-static inline uint8_t thing_is_key3_fast (thingp t)
+static inline uint8_t thing_has_eyes_in_the_darkness_fast (thingp t)
 {
-    return (t->thing_template->is_key3);
+    return (t->thing_template->has_eyes_in_the_darkness);
 }
 
 static inline uint8_t thing_is_fire_fast (thingp t)
