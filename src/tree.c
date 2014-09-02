@@ -321,7 +321,7 @@ int tree_walk (tree_root *root, tree_walker_func walker_func, void *arg)
         return (1);
     }
 
-    node = tree_first_fast(top);
+    node = tree_first_noverify(top);
 
     while (node) {
         next = tree_get_next(root, top, node);
@@ -350,7 +350,7 @@ tree_node *tree_next (tree_root *root, tree_node *node)
     }
 
     if (node->right) {
-        next = tree_first_fast(node->right);
+        next = tree_first_noverify(node->right);
     } else if (node->parent) {
         next = node;
         do {
@@ -457,7 +457,7 @@ tree_node *tree_root_get_nth (tree_root *root, uint32_t n)
         return (0);
     }
 
-    node = tree_first_fast(top);
+    node = tree_first_noverify(top);
     count = 0;
 
     while (node) {
@@ -466,7 +466,7 @@ tree_node *tree_root_get_nth (tree_root *root, uint32_t n)
         }
 
         if (node->right) {
-            next = tree_first_fast(node->right);
+            next = tree_first_noverify(node->right);
         } else if (node->parent) {
             next = node;
             do {
