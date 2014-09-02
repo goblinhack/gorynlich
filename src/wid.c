@@ -1924,7 +1924,7 @@ void wid_set_tilename (widp w, const char *name)
 
     thingp t = wid_get_thing(w);
 
-    if (t && thing_has_eyes_in_the_darkness(t)) {
+    if (t && thing_is_cats_eyes(t)) {
         char tmp[SMALL_STRING_LEN_MAX];
 
         snprintf(tmp, sizeof(tmp), "%s-eyes", name);
@@ -1946,7 +1946,7 @@ void wid_set_tile (widp w, tilep tile)
 
     thingp t = wid_get_thing(w);
 
-    if (t && thing_has_eyes_in_the_darkness(t)) {
+    if (t && thing_is_cats_eyes(t)) {
         char tmp[SMALL_STRING_LEN_MAX];
 
         snprintf(tmp, sizeof(tmp), "%s-eyes", tile_name(tile));
@@ -6995,7 +6995,7 @@ static void wid_display_noverify (widp w, uint8_t pass)
             t->lit = 0;
         } else {
             if ((t->lit == 0) && 
-                thing_has_eyes_in_the_darkness_noverify(t)) {
+                thing_is_cats_eyes_noverify(t)) {
 
                 tile = wid_get_tile_eyes(w);
                 if (!tile) {
@@ -7094,11 +7094,11 @@ static void wid_light_calculate_for_single_obstacle (widp w,
     uint8_t soft_shadow = 0;
 
     if (pass == 0) {
-        if (!thing_is_blocks_light_noverify(t)) {
+        if (!thing_is_shadow_caster_noverify(t)) {
             return;
         }
 
-        if (thing_is_blocks_light_soft_noverify(t)) {
+        if (thing_is_shadow_caster_soft_noverify(t)) {
             soft_shadow = 1;
         }
     }
@@ -7139,7 +7139,7 @@ static void wid_light_calculate_for_single_obstacle (widp w,
     double ebrx;
     double ebry;
 
-    if (thing_is_blocks_light_soft_noverify(t)) {
+    if (thing_is_shadow_caster_soft_noverify(t)) {
         /*
          * Make soft shadow things block less light.
          */

@@ -765,7 +765,8 @@ thingp thing_server_new (const char *name, double x, double y)
 
     thing_server_init(t, x, y);
 
-//THING_LOG(t, "new");
+    THING_LOG(t, "created");
+
     return (t);
 }
 
@@ -868,10 +869,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
     t->logname = dynprintf("%s[%p, id %u] (client)", thing_short_name(t), t,
                            t->thing_id);
 
-    if (thing_is_player(t)) {
-        THING_LOG(t, "created on client");
-    }
-//LOG("created %s", thing_logname(t));
+    THING_LOG(t, "created");
 
     return (t);
 }
