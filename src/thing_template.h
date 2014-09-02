@@ -193,7 +193,7 @@ typedef struct thing_template_ {
     uint8_t is_player:1;
     uint8_t is_key:1;
     uint8_t is_rock:1;
-    uint8_t is_blocks_light:1;
+    uint8_t is_shadow_caster:1;
     uint8_t is_weapon:1;
     uint8_t is_treasure:1;
     uint8_t is_wearable:1;
@@ -203,11 +203,11 @@ typedef struct thing_template_ {
     uint8_t is_weapon_swing_effect:1;
     uint8_t is_light_source:1;
     uint8_t is_candle_light:1;
-    uint8_t has_eyes_in_the_darkness:1;
+    uint8_t is_cats_eyes:1;
     uint8_t is_fire:1;
     uint8_t is_ring:1;
     uint8_t is_animation:1;
-    uint8_t is_blocks_light_soft:1;
+    uint8_t is_shadow_caster_soft:1;
     uint8_t is_poison:1;
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
@@ -217,7 +217,26 @@ typedef struct thing_template_ {
     uint8_t is_door:1;
     uint8_t is_pipe:1;
     uint8_t is_mob_spawner:1;
-    uint8_t is_scarable:1;
+    uint8_t is_rrr1:1;
+    uint8_t is_rrr2:1;
+    uint8_t is_rrr3:1;
+    uint8_t is_rrr4:1;
+    uint8_t is_rrr5:1;
+    uint8_t is_rrr6:1;
+    uint8_t is_rrr7:1;
+    uint8_t is_rrr8:1;
+    uint8_t is_rrr9:1;
+    uint8_t is_rrr10:1;
+    uint8_t is_rrr11:1;
+    uint8_t is_rrr12:1;
+    uint8_t is_rrr13:1;
+    uint8_t is_rrr14:1;
+    uint8_t is_rrr15:1;
+    uint8_t is_rrr16:1;
+    uint8_t is_rrr17:1;
+    uint8_t is_rrr18:1;
+    uint8_t is_rrr19:1;
+    uint8_t is_torch:1;
     uint8_t is_explosion:1;
     uint8_t is_hidden_from_editor:1;
     uint8_t is_animated:1;
@@ -355,9 +374,9 @@ static inline uint8_t thing_template_is_rock (thing_templatep t)
     return (t->is_rock);
 }
 
-static inline uint8_t thing_template_is_blocks_light (thing_templatep t)
+static inline uint8_t thing_template_is_shadow_caster (thing_templatep t)
 {
-    return (t->is_blocks_light);
+    return (t->is_shadow_caster);
 }
 
 static inline uint8_t thing_template_is_weapon (thing_templatep t)
@@ -405,9 +424,9 @@ static inline uint8_t thing_template_is_candle_light (thing_templatep t)
     return (t->is_candle_light);
 }
 
-static inline uint8_t thing_template_has_eyes_in_the_darkness (thing_templatep t)
+static inline uint8_t thing_template_is_cats_eyes (thing_templatep t)
 {
-    return (t->has_eyes_in_the_darkness);
+    return (t->is_cats_eyes);
 }
 
 static inline uint8_t thing_template_is_fire (thing_templatep t)
@@ -425,9 +444,9 @@ static inline uint8_t thing_template_is_animation (thing_templatep t)
     return (t->is_animation);
 }
 
-static inline uint8_t thing_template_is_blocks_light_soft (thing_templatep t)
+static inline uint8_t thing_template_is_shadow_caster_soft (thing_templatep t)
 {
-    return (t->is_blocks_light_soft);
+    return (t->is_shadow_caster_soft);
 }
 
 static inline uint8_t thing_template_is_collision_map_large (thing_templatep t)
@@ -480,9 +499,104 @@ static inline uint8_t thing_template_is_mob_spawner (thing_templatep t)
     return (t->is_mob_spawner);
 }
 
-static inline uint8_t thing_template_is_scarable (thing_templatep t)
+static inline uint8_t thing_template_is_rrr1 (thing_templatep t)
 {
-    return (t->is_scarable);
+    return (t->is_rrr1);
+}
+
+static inline uint8_t thing_template_is_rrr2 (thing_templatep t)
+{
+    return (t->is_rrr2);
+}
+
+static inline uint8_t thing_template_is_rrr3 (thing_templatep t)
+{
+    return (t->is_rrr3);
+}
+
+static inline uint8_t thing_template_is_rrr4 (thing_templatep t)
+{
+    return (t->is_rrr4);
+}
+
+static inline uint8_t thing_template_is_rrr5 (thing_templatep t)
+{
+    return (t->is_rrr5);
+}
+
+static inline uint8_t thing_template_is_rrr6 (thing_templatep t)
+{
+    return (t->is_rrr6);
+}
+
+static inline uint8_t thing_template_is_rrr7 (thing_templatep t)
+{
+    return (t->is_rrr7);
+}
+
+static inline uint8_t thing_template_is_rrr8 (thing_templatep t)
+{
+    return (t->is_rrr8);
+}
+
+static inline uint8_t thing_template_is_rrr9 (thing_templatep t)
+{
+    return (t->is_rrr9);
+}
+
+static inline uint8_t thing_template_is_rrr10 (thing_templatep t)
+{
+    return (t->is_rrr10);
+}
+
+static inline uint8_t thing_template_is_rrr11 (thing_templatep t)
+{
+    return (t->is_rrr11);
+}
+
+static inline uint8_t thing_template_is_rrr12 (thing_templatep t)
+{
+    return (t->is_rrr12);
+}
+
+static inline uint8_t thing_template_is_rrr13 (thing_templatep t)
+{
+    return (t->is_rrr13);
+}
+
+static inline uint8_t thing_template_is_rrr14 (thing_templatep t)
+{
+    return (t->is_rrr14);
+}
+
+static inline uint8_t thing_template_is_rrr15 (thing_templatep t)
+{
+    return (t->is_rrr15);
+}
+
+static inline uint8_t thing_template_is_rrr16 (thing_templatep t)
+{
+    return (t->is_rrr16);
+}
+
+static inline uint8_t thing_template_is_rrr17 (thing_templatep t)
+{
+    return (t->is_rrr17);
+}
+
+static inline uint8_t thing_template_is_rrr18 (thing_templatep t)
+{
+    return (t->is_rrr18);
+}
+
+static inline uint8_t thing_template_is_rrr19 (thing_templatep t)
+{
+    return (t->is_rrr19);
+}
+
+static inline uint8_t thing_template_is_torch (thing_templatep t)
+{
+    return (t->is_torch);
 }
 
 static inline uint8_t thing_template_is_explosion (thing_templatep t)

@@ -758,18 +758,18 @@ static inline uint8_t thing_is_rock (thingp t)
     return (thing_template_is_rock(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_blocks_light (thingp t)
+static inline uint8_t thing_is_shadow_caster (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_blocks_light(thing_get_template(t)));
+    return (thing_template_is_shadow_caster(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_blocks_light_soft (thingp t)
+static inline uint8_t thing_is_shadow_caster_soft (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_blocks_light_soft(thing_get_template(t)));
+    return (thing_template_is_shadow_caster_soft(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_weapon (thingp t)
@@ -835,11 +835,11 @@ static inline uint8_t thing_is_fire (thingp t)
     return (thing_template_is_fire(thing_get_template(t)));
 }
 
-static inline uint8_t thing_has_eyes_in_the_darkness (thingp t)
+static inline uint8_t thing_is_cats_eyes (thingp t)
 {
     verify(t);
 
-    return (thing_template_has_eyes_in_the_darkness(thing_get_template(t)));
+    return (thing_template_is_cats_eyes(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_ring (thingp t)
@@ -905,11 +905,144 @@ static inline uint8_t thing_is_pipe (thingp t)
     return (thing_template_is_pipe(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_scarable (thingp t)
+static inline uint8_t thing_is_rrr1 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_scarable(thing_get_template(t)));
+    return (thing_template_is_rrr1(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr2 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr2(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr3 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr3(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr4 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr4(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr5 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr5(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr6 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr6(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr7 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr7(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr8 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr8(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr9 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr9(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr10 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr10(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr11 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr11(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr12 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr12(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr13 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr13(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr14 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr14(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr15 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr15(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr16 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr16(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr17 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr17(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr18 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr18(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_rrr19 (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_rrr19(thing_get_template(t)));
+}
+
+static inline uint8_t thing_is_torch (thingp t)
+{
+    verify(t);
+
+    return (thing_template_is_torch(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_explosion (thingp t)
@@ -1054,14 +1187,14 @@ static inline uint8_t thing_is_rock_noverify (thingp t)
     return (t->thing_template->is_rock);
 }
 
-static inline uint8_t thing_is_blocks_light_noverify (thingp t)
+static inline uint8_t thing_is_shadow_caster_noverify (thingp t)
 {
-    return (t->thing_template->is_blocks_light);
+    return (t->thing_template->is_shadow_caster);
 }
 
-static inline uint8_t thing_is_blocks_light_soft_noverify (thingp t)
+static inline uint8_t thing_is_shadow_caster_soft_noverify (thingp t)
 {
-    return (t->thing_template->is_blocks_light_soft);
+    return (t->thing_template->is_shadow_caster_soft);
 }
 
 static inline uint8_t thing_is_weapon_noverify (thingp t)
@@ -1114,9 +1247,9 @@ static inline uint8_t thing_is_candle_light_noverify (thingp t)
     return (t->thing_template->is_candle_light);
 }
 
-static inline uint8_t thing_has_eyes_in_the_darkness_noverify (thingp t)
+static inline uint8_t thing_is_cats_eyes_noverify (thingp t)
 {
-    return (t->thing_template->has_eyes_in_the_darkness);
+    return (t->thing_template->is_cats_eyes);
 }
 
 static inline uint8_t thing_is_fire_noverify (thingp t)
@@ -1169,9 +1302,104 @@ static inline uint8_t thing_is_pipe_noverify (thingp t)
     return (t->thing_template->is_pipe);
 }
 
-static inline uint8_t thing_is_scarable_noverify (thingp t)
+static inline uint8_t thing_is_rrr1_noverify (thingp t)
 {
-    return (t->thing_template->is_scarable);
+    return (t->thing_template->is_rrr1);
+}
+
+static inline uint8_t thing_is_rrr2_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr2);
+}
+
+static inline uint8_t thing_is_rrr3_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr3);
+}
+
+static inline uint8_t thing_is_rrr4_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr4);
+}
+
+static inline uint8_t thing_is_rrr5_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr5);
+}
+
+static inline uint8_t thing_is_rrr6_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr6);
+}
+
+static inline uint8_t thing_is_rrr7_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr7);
+}
+
+static inline uint8_t thing_is_rrr8_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr8);
+}
+
+static inline uint8_t thing_is_rrr9_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr9);
+}
+
+static inline uint8_t thing_is_rrr10_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr10);
+}
+
+static inline uint8_t thing_is_rrr11_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr11);
+}
+
+static inline uint8_t thing_is_rrr12_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr12);
+}
+
+static inline uint8_t thing_is_rrr13_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr13);
+}
+
+static inline uint8_t thing_is_rrr14_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr14);
+}
+
+static inline uint8_t thing_is_rrr15_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr15);
+}
+
+static inline uint8_t thing_is_rrr16_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr16);
+}
+
+static inline uint8_t thing_is_rrr17_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr17);
+}
+
+static inline uint8_t thing_is_rrr18_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr18);
+}
+
+static inline uint8_t thing_is_rrr19_noverify (thingp t)
+{
+    return (t->thing_template->is_rrr19);
+}
+
+static inline uint8_t thing_is_torch_noverify (thingp t)
+{
+    return (t->thing_template->is_torch);
 }
 
 static inline uint8_t thing_is_explosion_noverify (thingp t)
