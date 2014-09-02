@@ -989,242 +989,242 @@ static inline uint8_t thing_is_effect_rotate_2way (thingp t)
     return (thing_template_is_effect_rotate_2way(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_open_fast (thingp t)
+static inline uint8_t thing_is_open_noverify (thingp t)
 {
     return (t->is_open);
 }
 
-static inline uint8_t thing_is_dead_fast (thingp t)
+static inline uint8_t thing_is_dead_noverify (thingp t)
 {
     return (t->is_dead);
 }
 
-static inline uint8_t thing_is_exit_fast (thingp t)
+static inline uint8_t thing_is_exit_noverify (thingp t)
 {
     return (t->thing_template->is_exit);
 }
 
-static inline uint8_t thing_is_floor_fast (thingp t)
+static inline uint8_t thing_is_floor_noverify (thingp t)
 {
     return (t->thing_template->is_floor);
 }
 
-static inline uint8_t thing_is_food_fast (thingp t)
+static inline uint8_t thing_is_food_noverify (thingp t)
 {
     return (t->thing_template->is_food);
 }
 
-static inline uint8_t thing_is_monst_fast (thingp t)
+static inline uint8_t thing_is_monst_noverify (thingp t)
 {
     return (t->thing_template->is_monst);
 }
 
-static inline uint8_t thing_is_plant_fast (thingp t)
+static inline uint8_t thing_is_plant_noverify (thingp t)
 {
     return (t->thing_template->is_plant);
 }
 
-static inline uint8_t thing_is_player_fast (thingp t)
+static inline uint8_t thing_is_player_noverify (thingp t)
 {
     return (t->thing_template->is_player);
 }
 
-static inline uint8_t thing_is_key_fast (thingp t)
+static inline uint8_t thing_is_key_noverify (thingp t)
 {
     return (t->thing_template->is_key);
 }
 
-static inline uint8_t thing_is_collision_map_medium_fast (thingp t)
+static inline uint8_t thing_is_collision_map_medium_noverify (thingp t)
 {
     return (t->thing_template->is_collision_map_medium);
 }
 
-static inline uint8_t thing_is_collision_map_small_fast (thingp t)
+static inline uint8_t thing_is_collision_map_small_noverify (thingp t)
 {
     return (t->thing_template->is_collision_map_small);
 }
 
-static inline uint8_t thing_is_collision_map_tiny_fast (thingp t)
+static inline uint8_t thing_is_collision_map_tiny_noverify (thingp t)
 {
     return (t->thing_template->is_collision_map_tiny);
 }
 
-static inline uint8_t thing_is_rock_fast (thingp t)
+static inline uint8_t thing_is_rock_noverify (thingp t)
 {
     return (t->thing_template->is_rock);
 }
 
-static inline uint8_t thing_is_blocks_light_fast (thingp t)
+static inline uint8_t thing_is_blocks_light_noverify (thingp t)
 {
     return (t->thing_template->is_blocks_light);
 }
 
-static inline uint8_t thing_is_blocks_light_soft_fast (thingp t)
+static inline uint8_t thing_is_blocks_light_soft_noverify (thingp t)
 {
     return (t->thing_template->is_blocks_light_soft);
 }
 
-static inline uint8_t thing_is_weapon_fast (thingp t)
+static inline uint8_t thing_is_weapon_noverify (thingp t)
 {
     return (t->thing_template->is_weapon);
 }
 
-static inline uint8_t thing_is_treasure_fast (thingp t)
+static inline uint8_t thing_is_treasure_noverify (thingp t)
 {
     return (t->thing_template->is_treasure);
 }
 
-static inline uint8_t thing_is_wearable_fast (thingp t)
+static inline uint8_t thing_is_wearable_noverify (thingp t)
 {
     return (t->thing_template->is_wearable);
 }
 
-static inline uint8_t thing_is_fragile_fast (thingp t)
+static inline uint8_t thing_is_fragile_noverify (thingp t)
 {
     return (t->thing_template->is_fragile);
 }
 
-static inline uint8_t thing_is_star_fast (thingp t)
+static inline uint8_t thing_is_star_noverify (thingp t)
 {
     return (t->thing_template->is_star);
 }
 
-static inline uint8_t thing_is_animated_no_dir_fast (thingp t)
+static inline uint8_t thing_is_animated_no_dir_noverify (thingp t)
 {
     return (t->thing_template->is_animated_no_dir);
 }
 
-static inline uint8_t thing_is_weapon_swing_effect_fast (thingp t)
+static inline uint8_t thing_is_weapon_swing_effect_noverify (thingp t)
 {
     return (t->thing_template->is_weapon_swing_effect);
 }
 
-static inline uint8_t thing_is_light_source_fast (thingp t)
+static inline uint8_t thing_is_light_source_noverify (thingp t)
 {
     return (t->thing_template->is_light_source);
 }
 
-static inline uint8_t thing_is_boring_fast (thingp t)
+static inline uint8_t thing_is_boring_noverify (thingp t)
 {
     return (t->thing_template->is_boring);
 }
 
-static inline uint8_t thing_is_candle_light_fast (thingp t)
+static inline uint8_t thing_is_candle_light_noverify (thingp t)
 {
     return (t->thing_template->is_candle_light);
 }
 
-static inline uint8_t thing_has_eyes_in_the_darkness_fast (thingp t)
+static inline uint8_t thing_has_eyes_in_the_darkness_noverify (thingp t)
 {
     return (t->thing_template->has_eyes_in_the_darkness);
 }
 
-static inline uint8_t thing_is_fire_fast (thingp t)
+static inline uint8_t thing_is_fire_noverify (thingp t)
 {
     return (t->thing_template->is_fire);
 }
 
-static inline uint8_t thing_is_ring_fast (thingp t)
+static inline uint8_t thing_is_ring_noverify (thingp t)
 {
     return (t->thing_template->is_ring);
 }
 
-static inline uint8_t thing_is_animation_fast (thingp t)
+static inline uint8_t thing_is_animation_noverify (thingp t)
 {
     return (t->thing_template->is_animation);
 }
 
-static inline uint8_t thing_is_poison_fast (thingp t)
+static inline uint8_t thing_is_poison_noverify (thingp t)
 {
     return (t->thing_template->is_poison);
 }
 
-static inline uint8_t thing_is_item_unusable_fast (thingp t)
+static inline uint8_t thing_is_item_unusable_noverify (thingp t)
 {
     return (t->thing_template->is_item_unusable);
 }
 
-static inline uint8_t thing_is_valid_for_shortcut_key_fast (thingp t)
+static inline uint8_t thing_is_valid_for_shortcut_key_noverify (thingp t)
 {
     return (t->thing_template->is_valid_for_shortcut_key);
 }
 
-static inline uint8_t thing_is_seedpod_fast (thingp t)
+static inline uint8_t thing_is_seedpod_noverify (thingp t)
 {
     return (t->thing_template->is_seedpod);
 }
 
-static inline uint8_t thing_is_spam_fast (thingp t)
+static inline uint8_t thing_is_spam_noverify (thingp t)
 {
     return (t->thing_template->is_spam);
 }
 
-static inline uint8_t thing_is_door_fast (thingp t)
+static inline uint8_t thing_is_door_noverify (thingp t)
 {
     return (t->thing_template->is_door);
 }
 
-static inline uint8_t thing_is_pipe_fast (thingp t)
+static inline uint8_t thing_is_pipe_noverify (thingp t)
 {
     return (t->thing_template->is_pipe);
 }
 
-static inline uint8_t thing_is_scarable_fast (thingp t)
+static inline uint8_t thing_is_scarable_noverify (thingp t)
 {
     return (t->thing_template->is_scarable);
 }
 
-static inline uint8_t thing_is_explosion_fast (thingp t)
+static inline uint8_t thing_is_explosion_noverify (thingp t)
 {
     return (t->thing_template->is_explosion);
 }
 
-static inline uint8_t thing_is_hidden_from_editor_fast (thingp t)
+static inline uint8_t thing_is_hidden_from_editor_noverify (thingp t)
 {
     return (t->thing_template->is_hidden_from_editor);
 }
 
-static inline uint8_t thing_is_animated_fast (thingp t)
+static inline uint8_t thing_is_animated_noverify (thingp t)
 {
     return (t->thing_template->is_animated);
 }
 
-static inline uint8_t thing_is_combustable_fast (thingp t)
+static inline uint8_t thing_is_combustable_noverify (thingp t)
 {
     return (t->thing_template->is_combustable);
 }
 
-static inline uint8_t thing_is_projectile_fast (thingp t)
+static inline uint8_t thing_is_projectile_noverify (thingp t)
 {
     return (t->thing_template->is_projectile);
 }
 
-static inline uint8_t thing_is_joinable_fast (thingp t)
+static inline uint8_t thing_is_joinable_noverify (thingp t)
 {
     return (t->thing_template->is_joinable);
 }
 
-static inline uint8_t thing_is_wall_fast (thingp t)
+static inline uint8_t thing_is_wall_noverify (thingp t)
 {
     return (t->thing_template->is_wall);
 }
 
-static inline uint8_t thing_is_effect_sway_fast (thingp t)
+static inline uint8_t thing_is_effect_sway_noverify (thingp t)
 {
     return (t->thing_template->is_effect_sway);
 }
 
-static inline uint8_t thing_is_effect_pulse_fast (thingp t)
+static inline uint8_t thing_is_effect_pulse_noverify (thingp t)
 {
     return (t->thing_template->is_effect_pulse);
 }
 
-static inline uint8_t thing_is_effect_rotate_4way_fast (thingp t)
+static inline uint8_t thing_is_effect_rotate_4way_noverify (thingp t)
 {
     return (t->thing_template->is_effect_rotate_4way);
 }
 
-static inline uint8_t thing_is_effect_rotate_2way_fast (thingp t)
+static inline uint8_t thing_is_effect_rotate_2way_noverify (thingp t)
 {
     return (t->thing_template->is_effect_rotate_2way);
 }

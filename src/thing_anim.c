@@ -145,10 +145,6 @@ void thing_animate (thingp t)
     t->current_tile = tile;
 
     wid_set_tilename(t->wid, thing_tile_name(tile));
-CON("%s",thing_logname(t));
-    if (t && thing_has_eyes_in_the_darkness(t)) {
-        CON("x");
-    }
 
     /*
      * When does this tile expire ?
