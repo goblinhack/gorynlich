@@ -268,14 +268,14 @@ static uint32_t dmap_monst_goals_set (uint8_t test, level_walls *dmap)
         /*
          * Only chase players.
          */
-        if (!thing_is_player_fast(thing_it)) {
+        if (!thing_is_player_noverify(thing_it)) {
             continue;
         }
 
         /*
          * Ignore dead players.
          */
-        if (thing_is_dead_fast(thing_it)) {
+        if (thing_is_dead_noverify(thing_it)) {
             continue;
         }
 

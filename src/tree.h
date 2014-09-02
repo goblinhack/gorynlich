@@ -157,7 +157,7 @@ tree_node *tree_next_ ## compare_func (tree_root *root, tree_node *node)    \
     }                                                                       \
                                                                             \
     if (node->right) {                                                      \
-        next = tree_first_fast(node->right);                                \
+        next = tree_first_noverify(node->right);                                \
     } else if (node->parent) {                                              \
         next = node;                                                        \
         do {                                                                \
@@ -476,7 +476,7 @@ static inline int8_t tree_node_compare_func (const tree_root *root,
 /*
  * Get the least node in the subtree.
  */
-static inline tree_node *tree_first_fast (tree_node *top)
+static inline tree_node *tree_first_noverify (tree_node *top)
 {
     while (top->left) {
         top = top->left;
@@ -517,7 +517,7 @@ static inline tree_node *tree_get_next (tree_root *root,
             return (0);
         }
 
-	return (tree_first_fast(top->right));
+	return (tree_first_noverify(top->right));
     }
 
     if (compare < 0) {
@@ -598,7 +598,7 @@ static inline tree_node *tree_get_next_ ## compare_func (tree_root *root, \
             return (0);							\
         }								\
 									\
-	return (tree_first_fast(top->right));				\
+	return (tree_first_noverify(top->right));				\
     }									\
 									\
     if (compare < 0) {							\

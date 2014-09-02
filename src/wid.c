@@ -6917,7 +6917,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
 /*
  * Display one wid and its children
  */
-static void wid_display_fast (widp w, uint8_t pass)
+static void wid_display_noverify (widp w, uint8_t pass)
 {
     uint8_t fading;
     int32_t owidth;
@@ -6995,7 +6995,7 @@ static void wid_display_fast (widp w, uint8_t pass)
             t->lit = 0;
         } else {
             if ((t->lit == 0) && 
-                thing_has_eyes_in_the_darkness_fast(t)) {
+                thing_has_eyes_in_the_darkness_noverify(t)) {
 
                 tile = wid_get_tile_eyes(w);
                 if (!tile) {
@@ -7007,7 +7007,7 @@ static void wid_display_fast (widp w, uint8_t pass)
     }
 
     if (pass == 0) {
-        if (t && thing_is_light_source_fast(t)) {
+        if (t && thing_is_light_source_noverify(t)) {
             fpoint light_pos;
 
             light_pos.x = otlx + wid_get_width(w) / 2;
@@ -7094,11 +7094,11 @@ static void wid_light_calculate_for_single_obstacle (widp w,
     uint8_t soft_shadow = 0;
 
     if (pass == 0) {
-        if (!thing_is_blocks_light_fast(t)) {
+        if (!thing_is_blocks_light_noverify(t)) {
             return;
         }
 
-        if (thing_is_blocks_light_soft_fast(t)) {
+        if (thing_is_blocks_light_soft_noverify(t)) {
             soft_shadow = 1;
         }
     }
@@ -7139,7 +7139,7 @@ static void wid_light_calculate_for_single_obstacle (widp w,
     double ebrx;
     double ebry;
 
-    if (thing_is_blocks_light_soft_fast(t)) {
+    if (thing_is_blocks_light_soft_noverify(t)) {
         /*
          * Make soft shadow things block less light.
          */
@@ -7559,7 +7559,7 @@ static void wid_lighting_render (widp w,
 
         if (!light->fuzz || !(rand() % 10)) {
 
-            if (thing_is_candle_light_fast(t)) {
+            if (thing_is_candle_light_noverify(t)) {
                 light->fuzz = 50 + rand() % 30;
             } else {
                 light->fuzz = 50;
@@ -8225,7 +8225,7 @@ static void wid_display (widp w,
                                         node,
                                         tree_prev_tree_wid_compare_func) {
 
-                        wid_display_fast(node->wid, 0);
+                        wid_display_noverify(node->wid, 0);
                     }
                 }
             }
@@ -8351,7 +8351,7 @@ CON("%x %x",a,b);
                             uint8_t lit = 0;
 
                             if (t->lit) {
-                                if (thing_is_boring_fast(t)) {
+                                if (thing_is_boring_noverify(t)) {
                                     continue;
                                 }
 
@@ -8366,12 +8366,12 @@ CON("%x %x",a,b);
                                 }
                             }
 
-                            if (thing_is_light_source_fast(t)) {
+                            if (thing_is_light_source_noverify(t)) {
                                 lit = 1;
                             }
 
                             if (lit) {
-                                wid_display_fast(node->wid, 1);
+                                wid_display_noverify(node->wid, 1);
                             }
                         }
                     }

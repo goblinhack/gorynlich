@@ -2241,7 +2241,7 @@ static __forceinline void tdefl_find_match(tdefl_compressor *d, mz_uint lookahea
 #endif // #if MINIZ_USE_UNALIGNED_LOADS_AND_STORES
 
 #if MINIZ_USE_UNALIGNED_LOADS_AND_STORES && MINIZ_LITTLE_ENDIAN
-static mz_bool tdefl_compress_fast(tdefl_compressor *d)
+static mz_bool tdefl_compress_noverify(tdefl_compressor *d)
 {
   // Faster, minimally featured LZRW1-style match+parse loop with better register utilization. Intended for applications where raw throughput is valued more highly than ratio.
   mz_uint lookahead_pos = d->m_lookahead_pos, lookahead_size = d->m_lookahead_size, dict_size = d->m_dict_size, total_lz_bytes = d->m_total_lz_bytes, num_flags_left = d->m_num_flags_left;
@@ -2582,7 +2582,7 @@ tdefl_status tdefl_compress(tdefl_compressor *d, const void *pIn_buf, size_t *pI
       ((d->m_flags & TDEFL_GREEDY_PARSING_FLAG) != 0) &&
       ((d->m_flags & (TDEFL_FILTER_MATCHES | TDEFL_FORCE_ALL_RAW_BLOCKS | TDEFL_RLE_MATCHES)) == 0))
   {
-    if (!tdefl_compress_fast(d))
+    if (!tdefl_compress_noverify(d))
       return d->m_prev_return_status;
   }
   else
