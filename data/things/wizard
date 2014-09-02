@@ -3,6 +3,7 @@
  tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
  carrying={
     "data/things/wand_fire"
+    "data/things/torch"
  }
  z_depth=4
  speed=5

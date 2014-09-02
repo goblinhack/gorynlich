@@ -12,7 +12,7 @@
  vision_distance=60
  hit_delay_tenths=1
  is_monst
-is_blocks_light
+is_shadow_caster
  hit_priority=10
  is_combustable
  is_animated
