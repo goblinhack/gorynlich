@@ -154,6 +154,12 @@
 .o/ramdisk_data_things__floor6_session.o: asm/ramdisk_data_things__floor6_session.S ../data/things/.floor6.session
 	gcc -c asm/ramdisk_data_things__floor6_session.S -o .o/ramdisk_data_things__floor6_session.o
 
+.o/ramdisk_data_things__ghost1_session.o: asm/ramdisk_data_things__ghost1_session.S ../data/things/.ghost1.session
+	gcc -c asm/ramdisk_data_things__ghost1_session.S -o .o/ramdisk_data_things__ghost1_session.o
+
+.o/ramdisk_data_things__ghost2_session.o: asm/ramdisk_data_things__ghost2_session.S ../data/things/.ghost2.session
+	gcc -c asm/ramdisk_data_things__ghost2_session.S -o .o/ramdisk_data_things__ghost2_session.o
+
 .o/ramdisk_data_things__key1_session.o: asm/ramdisk_data_things__key1_session.S ../data/things/.key1.session
 	gcc -c asm/ramdisk_data_things__key1_session.S -o .o/ramdisk_data_things__key1_session.o
 

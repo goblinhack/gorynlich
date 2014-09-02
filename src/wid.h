@@ -529,6 +529,7 @@ typedef struct wid_ {
      */
     texp tex;
     tilep tile;
+    tilep tile_eyes;
     thingp thing;
     thing_templatep thing_template;
     fsize texuv;

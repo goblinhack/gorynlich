@@ -190,9 +190,9 @@ uint8_t map_is_candle_light_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_candle_light));
 }
 
-uint8_t map_is_key3_at (levelp level, int32_t x, int32_t y)
+uint8_t map_has_eyes_in_the_darkness_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_key3));
+    return (map_is_x_at(level, x, y, thing_template_has_eyes_in_the_darkness));
 }
 
 uint8_t map_is_fire_at (levelp level, int32_t x, int32_t y)
@@ -417,9 +417,9 @@ thingp map_thing_is_candle_light_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_candle_light));
 }
 
-thingp map_thing_is_key3_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_has_eyes_in_the_darkness_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_key3));
+    return (map_thing_is_x_at(level, x, y, thing_template_has_eyes_in_the_darkness));
 }
 
 thingp map_thing_is_fire_at (levelp level, int32_t x, int32_t y)
@@ -670,9 +670,9 @@ tree_rootp map_all_things_is_candle_light_at (levelp level, int32_t x, int32_t y
     return (map_all_things_is_x_at(level, x, y, thing_template_is_candle_light));
 }
 
-tree_rootp map_all_things_is_key3_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_has_eyes_in_the_darkness_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_key3));
+    return (map_all_things_is_x_at(level, x, y, thing_template_has_eyes_in_the_darkness));
 }
 
 tree_rootp map_all_things_is_fire_at (levelp level, int32_t x, int32_t y)
@@ -1001,7 +1001,7 @@ thing_templatep map_find_candle_light_at (levelp level,
 thing_templatep map_find_star_green_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_key3, w));
+    return (map_find_x_at(level, x, y, thing_template_has_eyes_in_the_darkness, w));
 }
 
 thing_templatep map_find_star_cyan_at (levelp level,
@@ -1617,9 +1617,9 @@ uint32_t level_count_is_candle_light (levelp level)
     return (level_count_is_x(level, thing_template_is_candle_light));
 }
 
-uint32_t level_count_is_key3 (levelp level)
+uint32_t level_count_has_eyes_in_the_darkness (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_key3));
+    return (level_count_is_x(level, thing_template_has_eyes_in_the_darkness));
 }
 
 uint32_t level_count_is_fire (levelp level)
@@ -1876,9 +1876,9 @@ tree_rootp map_all_things_is_candle_light (levelp level)
     return (map_all_things_is_x(level, thing_template_is_candle_light));
 }
 
-tree_rootp map_all_things_is_key3 (levelp level)
+tree_rootp map_all_things_has_eyes_in_the_darkness (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_key3));
+    return (map_all_things_is_x(level, thing_template_has_eyes_in_the_darkness));
 }
 
 tree_rootp map_all_things_is_fire (levelp level)
