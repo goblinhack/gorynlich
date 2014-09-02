@@ -12,6 +12,7 @@
  is_blocks_light
  is_blocks_light_soft
  hit_priority=10
+ has_eyes_in_the_darkness
  is_collision_map_medium
  is_animated
  is_scarable
