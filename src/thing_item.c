@@ -31,6 +31,10 @@ static void thing_collect (thingp t, thingp it, thing_templatep tmp,
         item = THING_KEY;
     }
 
+    if (item == THING_TORCHES) {
+        item = THING_TORCH;
+    }
+
     if (!auto_collect) {
         if (quantity > 1) {
             THING_LOG(t, "collects %u %s", quantity,
@@ -217,4 +221,25 @@ thing_templatep thing_is_carrying_thing (thingp t, thing_template_is fn)
     }
 
     return (0);
+}
+
+uint32_t thing_is_carrying_thing_count (thingp t, thing_template_is fn)
+{
+    uint32_t count = 0;
+    uint32_t index;
+
+    FOR_ALL_IN_ARRAY(i, t->carrying) {
+        index = i - t->carrying;
+
+        if (!thing_is_carrying_specific_item(t, index)) {
+            continue;
+        }
+
+        thing_templatep tp = id_to_thing_template(index);
+        if ((*fn)(tp)) {
+            count += t->carrying[index];
+        }
+    }
+
+    return (count);
 }

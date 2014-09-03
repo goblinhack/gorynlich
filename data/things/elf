@@ -3,7 +3,7 @@
  tooltip="Fast, strong.\n\n%%fg=yellow$Awesome teeth.\n\nUses weapons made of twigs."
  carrying={
     "data/things/bow1"
-    "data/things/torch"
+    "data/things/torches"
  }
  z_depth=4
  speed=9

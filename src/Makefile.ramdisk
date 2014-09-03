@@ -112,8 +112,14 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
+	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
+
 .o/ramdisk_data_things__torch_session.o: asm/ramdisk_data_things__torch_session.S ../data/things/.torch.session
 	gcc -c asm/ramdisk_data_things__torch_session.S -o .o/ramdisk_data_things__torch_session.o
+
+.o/ramdisk_data_things__torches_session.o: asm/ramdisk_data_things__torches_session.S ../data/things/.torches.session
+	gcc -c asm/ramdisk_data_things__torches_session.S -o .o/ramdisk_data_things__torches_session.o
 
 .o/ramdisk_data_things__wand_f_session.o: asm/ramdisk_data_things__wand_f_session.S ../data/things/.wand_f.session
 	gcc -c asm/ramdisk_data_things__wand_f_session.S -o .o/ramdisk_data_things__wand_f_session.o
@@ -417,6 +423,9 @@
 
 .o/ramdisk_data_things_torch.o: asm/ramdisk_data_things_torch.S ../data/things/torch
 	gcc -c asm/ramdisk_data_things_torch.S -o .o/ramdisk_data_things_torch.o
+
+.o/ramdisk_data_things_torches.o: asm/ramdisk_data_things_torches.S ../data/things/torches
+	gcc -c asm/ramdisk_data_things_torches.S -o .o/ramdisk_data_things_torches.o
 
 .o/ramdisk_data_things_valkyrie.o: asm/ramdisk_data_things_valkyrie.S ../data/things/valkyrie
 	gcc -c asm/ramdisk_data_things_valkyrie.S -o .o/ramdisk_data_things_valkyrie.o

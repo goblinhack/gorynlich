@@ -3,7 +3,7 @@
  tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo."
  carrying={
     "data/things/axe1"
-    "data/things/torch"
+    "data/things/torches"
  }
  z_depth=4
  speed=7
