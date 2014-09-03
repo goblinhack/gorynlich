@@ -15,7 +15,6 @@
  is_cats_eyes
  is_collision_map_medium
  is_animated
- is_scarable
  is_fragile
  tiles={
   tile={

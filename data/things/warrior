@@ -3,7 +3,7 @@
  tooltip="Good health, big muscles.\n\n%%fg=red$Make good looking corpse."
  carrying={
     "data/things/sword2"
-    "data/things/torch"
+    "data/things/torches"
  }
  z_depth=4
  speed=7
