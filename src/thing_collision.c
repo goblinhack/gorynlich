@@ -425,10 +425,9 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
         /*
          * Player collects keys and other items
          */
-        if (thing_is_key(it) ||
-            thing_is_treasure(it) ||
-            thing_is_weapon(it) ||
-            thing_is_carryable(it) ||
+        if (thing_is_treasure(it)   ||
+            thing_is_weapon(it)     ||
+            thing_is_carryable(it)  ||
             thing_is_food(it)) {
 
             thing_item_collect(me, it, thing_get_template(it));
@@ -633,7 +632,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * Allow monsters to walk into these things:
                  */
                 if (thing_is_player(it)                 ||
-                    thing_is_key(it)                    ||
+                    thing_is_carryable(it)              ||
                     thing_is_weapon_swing_effect(it)    ||
                     thing_is_explosion(it)              ||
                     thing_is_poison(it)                 ||
@@ -674,7 +673,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow players to collect keys and other junk.
                  */
-                if (thing_is_key(it)                    ||
+                if (thing_is_carryable(it)              ||
                     thing_is_food(it)                   ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||

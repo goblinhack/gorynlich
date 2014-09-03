@@ -1,18 +1,13 @@
 {
  short_name="torch"
  tooltip="torch"
- failure_chance=10000
  z_depth=3
- hit_priority=0
+ is_torch
  is_carryable
  is_light_source
- is_torch
  light_tint="orange"
  light_strength=0.1
- is_wearable
- is_collision_map_medium
  is_animated
- failure_chance=1000
  tiles={
   tile={
    tile="torch1"

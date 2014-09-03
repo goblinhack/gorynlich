@@ -1,0 +1,30 @@
+{
+ short_name="bundle of torches"
+ tooltip="ten pack of torches"
+ z_depth=3
+ quantity=10
+ is_torch
+ is_carryable
+ is_light_source
+ light_tint="orange"
+ light_strength=0.1
+ is_animated
+ tiles={
+  tile={
+   tile="torch1"
+   delay=50
+  }
+  tile={
+   tile="torch2"
+   delay=50
+  }
+  tile={
+   tile="torch3"
+   delay=50
+  }
+  tile={
+   tile="torch4"
+   delay=50
+  }
+ }
+}

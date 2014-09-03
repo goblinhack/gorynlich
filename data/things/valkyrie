@@ -3,7 +3,7 @@
  tooltip="Deadly mix of good health and speed.\n\n%%fg=cyan$Fast swordplay."
  carrying={
     "data/things/sword1"
-    "data/things/torch"
+    "data/things/torches"
  }
  z_depth=4
  speed=8

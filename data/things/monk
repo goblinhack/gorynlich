@@ -9,7 +9,6 @@
 is_shadow_caster
  hit_priority=10
  is_animated
- is_scarable
  tiles={
   tile={
    tile="monk1-right"

@@ -7016,7 +7016,12 @@ static void wid_display_noverify (widp w, uint8_t pass)
             thing_template *tp = thing_get_template(t);
             double light_strength = thing_template_get_light_strength(tp);
 
-            if (thing_is_explosion(t) && !t->is_epicenter) {
+            if (thing_is_player(t)) {
+                /*
+                 * Player light is limited by the number of torches.
+                 */
+                light_strength = t->torch_strength;
+            } else if (thing_is_explosion(t) && !t->is_epicenter) {
                 /*
                  * No light source for explosion edges. Too high a cpu drain.
                  */

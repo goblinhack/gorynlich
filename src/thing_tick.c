@@ -237,6 +237,67 @@ static void thing_tick_server_player_all (void)
     }
 }
 
+static void thing_tick_server_player_slow_all (void)
+{
+    thingp t;
+
+    TREE_OFFSET_WALK_UNSAFE(server_player_things, t) {
+
+        /*
+         * Sanity checks.
+         */
+        verify(t);
+
+        /*
+         * If something changed in the player that we need to update the 
+         * server, do so now.
+         */
+        if (thing_is_dead(t)) {
+            continue;
+        }
+
+        /*
+         * Use up one torch unit.
+         */
+        thing_templatep tp = thing_is_carrying_thing(t, thing_template_is_torch);
+        if (tp) {
+            thing_used(t, tp);
+        }
+    }
+}
+
+static void thing_tick_client_player_slow_all (void)
+{
+    thingp t;
+
+    TREE_OFFSET_WALK_UNSAFE(client_player_things, t) {
+
+        /*
+         * Sanity checks.
+         */
+        verify(t);
+
+        /*
+         * If something changed in the player that we need to update the 
+         * client, do so now.
+         */
+        if (thing_is_dead(t)) {
+            continue;
+        }
+
+        /*
+         * Decrease the torch light strenght.
+         */
+        t->torch_strength = 
+                        thing_is_carrying_thing_count(t, thing_template_is_torch);
+        if (t->torch_strength > 
+            thing_template_get_light_strength(t->thing_template)) {
+            t->torch_strength =
+                thing_template_get_light_strength(t->thing_template);
+        }
+    }
+}
+
 static void thing_tick_client_all (void)
 {
     thingp t;
@@ -434,6 +495,20 @@ void thing_tick_all (void)
             wid_game_map_client_scroll_adjust(0);
 
             ts = time_get_time_cached();
+        }
+    }
+
+    /*
+     * Slow tick.
+     */
+    if (server_level) {
+        static uint32_t ts;
+
+        if (time_have_x_secs_passed_since(60, ts)) {
+            ts = time_get_time_cached();
+
+            thing_tick_client_player_slow_all();
+            thing_tick_server_player_slow_all();
         }
     }
 

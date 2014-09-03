@@ -2501,6 +2501,8 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_KEY, "data/things/key");
     thing_template_load(&THING_KEYS2, "data/things/keys2");
     thing_template_load(&THING_KEYS3, "data/things/keys3");
+    thing_template_load(&THING_TORCH, "data/things/torch");
+    thing_template_load(&THING_TORCHES, "data/things/torches");
 
     /*
      * Wearable items that are used as weapons. Shown first on list of player 

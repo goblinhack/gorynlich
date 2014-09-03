@@ -182,6 +182,7 @@ uint8_t thing_use(thingp t, uint32_t id);
 uint8_t thing_is_carrying_specific_item(thingp, uint32_t id);
 typedef uint8_t (*thing_template_is)(thing_templatep);
 thing_templatep thing_is_carrying_thing(thingp, thing_template_is);
+uint32_t thing_is_carrying_thing_count(thingp, thing_template_is);
 
 /*
  * thing_ai.c
@@ -385,6 +386,8 @@ extern uint16_t THING_SCYTHE1;
 extern uint16_t THING_KEY;
 extern uint16_t THING_KEYS2;
 extern uint16_t THING_KEYS3;
+extern uint16_t THING_TORCH;
+extern uint16_t THING_TORCHES;
 extern uint16_t THING_COINS1;
 extern uint16_t THING_AMULET1;
 extern uint16_t THING_CHEST1;
@@ -590,6 +593,13 @@ typedef struct thing_ {
      * How many rays of light are hitting this thing?
      */
     uint16_t lit;
+
+    /*
+     * How much light is this thing emitting. This cannot exceed the light 
+     * strength of the template. This is used for torches and the like to see 
+     * how much we can really see.
+     */
+    uint16_t torch_strength;
 
     /*
      * First time sent to a client?
