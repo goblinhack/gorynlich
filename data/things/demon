@@ -1,13 +1,13 @@
 {
- short_name="demon"
- tooltip="demon!"
+ short_name="fire demon"
+ tooltip="fire demon"
  z_depth=3
  speed=2
  health=50
  bonus_score_on_death=250
  vision_distance=20
  is_monst
-is_shadow_caster
+ is_shadow_caster
  hit_priority=10
  is_animated
  tiles={

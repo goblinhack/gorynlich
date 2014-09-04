@@ -4,7 +4,7 @@
  z_depth=3
  is_boring
  is_treasure
-hit_priority=1
+ hit_priority=1
  is_carryable
  is_ring
  bonus_score_on_collect=5000

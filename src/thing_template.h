@@ -174,7 +174,7 @@ typedef struct thing_template_ {
     uint32_t ppp7;
     uint32_t ppp8;
     uint32_t ppp9;
-    float light_strength;
+    float light_radius;
     uint32_t quantity;
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_tenths;
@@ -234,8 +234,8 @@ typedef struct thing_template_ {
     uint8_t is_rrr15:1;
     uint8_t is_rrr16:1;
     uint8_t is_rrr17:1;
-    uint8_t is_rrr18:1;
-    uint8_t is_rrr19:1;
+    uint8_t is_click_to_drop:1;
+    uint8_t is_click_to_use:1;
     uint8_t is_torch:1;
     uint8_t is_explosion:1;
     uint8_t is_hidden_from_editor:1;
@@ -300,7 +300,7 @@ uint32_t thing_template_get_ppp6(thing_templatep);
 uint32_t thing_template_get_ppp7(thing_templatep);
 uint32_t thing_template_get_ppp8(thing_templatep);
 uint32_t thing_template_get_ppp9(thing_templatep);
-float thing_template_get_light_strength(thing_templatep);
+float thing_template_get_light_radius(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
 uint32_t thing_template_get_hit_priority(thing_templatep);
 uint32_t thing_template_get_weapon_fire_delay_tenths(thing_templatep);
@@ -584,14 +584,14 @@ static inline uint8_t thing_template_is_rrr17 (thing_templatep t)
     return (t->is_rrr17);
 }
 
-static inline uint8_t thing_template_is_rrr18 (thing_templatep t)
+static inline uint8_t thing_template_is_click_to_drop (thing_templatep t)
 {
-    return (t->is_rrr18);
+    return (t->is_click_to_drop);
 }
 
-static inline uint8_t thing_template_is_rrr19 (thing_templatep t)
+static inline uint8_t thing_template_is_click_to_use (thing_templatep t)
 {
-    return (t->is_rrr19);
+    return (t->is_click_to_use);
 }
 
 static inline uint8_t thing_template_is_torch (thing_templatep t)

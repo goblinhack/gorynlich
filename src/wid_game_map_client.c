@@ -812,7 +812,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
             level_place_cloudkill(client_level, 0, t->x, t->y);
 
         } else {
-ERR("unknown explosion %s", thing_logname(t));
+            ERR("unknown explosion %s", thing_logname(t));
             level_place_explosion(client_level, 0, t->x, t->y);
         }
     }
@@ -863,12 +863,12 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
     }
 
-    double score_x = 0.75;
-    double health_x = 0.90;
+    double score_x = 0.76;
+    double health_x = 0.91;
     double player_y_offset = 0.24; // player start y
     double next_player_y_delta = 0.1;
     double score_and_health_title_offset = 0.03;
-    double score_and_health_value_offset = 0.05;
+    double score_and_health_value_offset = 0.055;
 
     double items_x = 0.01; // items x
     double items_y = 0.31; // items y
@@ -876,6 +876,11 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     uint32_t item_columns = 6;
     double item_width = 0.15;
     double item_height = 0.08;
+
+    /*
+     * Update all the player side things with the new item counts.
+     */
+    thing_tick_client_player_slow_all();
 
     /*
      * Print the score.
@@ -1119,11 +1124,25 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                             thing_template_name(temp));
                     } else {
                         char *full_tooltip;
+                        char *tmp = strappend(tooltip, "\n\n");
 
-                        full_tooltip = strappend(
-                                tooltip,
-                                "\n\n%%fg=green$left click to use%%fg=reset$\n"
-                                "%%fg=red$right click to drop%%fg=reset$\n");
+                        if (thing_template_is_click_to_use(temp)) {
+                            char *old = tmp;
+                            tmp = strappend(
+                                    old,
+                                    "%%fg=green$left click to use%%fg=reset$\n");
+                            myfree(old);
+                        }
+
+                        if (thing_template_is_click_to_drop(temp)) {
+                            char *old = tmp;
+                            tmp = strappend(
+                                    old,
+                                    "%%fg=red$right click to drop%%fg=reset$\n");
+                            myfree(old);
+                        }
+
+                        full_tooltip = tmp;
 
                         /*
                          * Add on the shortcut key if one exists fo r this 

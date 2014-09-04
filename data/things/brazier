@@ -7,51 +7,51 @@
  is_collision_map_small
  light_tint="purple"
  is_animated
- light_strength=2.0
+ light_radius=1.0
  tiles={
   tile={
    tile="brazier1"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier2"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier1"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier3"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier4"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier5"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier5"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier6"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier3"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier2"
-   delay=50
+   delay=100
   }
   tile={
    tile="brazier5"
-   delay=50
+   delay=100
   }
  }
 }

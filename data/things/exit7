@@ -4,7 +4,7 @@
  z_depth=3
  is_exit
  is_light_source
- light_strength=2.0
+ light_radius=1.0
  is_animated
  tiles={
   tile={

@@ -1,29 +1,46 @@
 {
  short_name="torch"
- tooltip="torch"
+ tooltip="Torch to see the monsters better"
  z_depth=3
  is_torch
+ is_click_to_drop
  is_carryable
  is_light_source
  light_tint="orange"
- light_strength=0.1
+ light_radius=0.1
  is_animated
  tiles={
   tile={
    tile="torch1"
-   delay=50
-  }
-  tile={
-   tile="torch2"
-   delay=50
+   delay=100
   }
   tile={
    tile="torch3"
-   delay=50
+   delay=100
+  }
+  tile={
+   tile="torch2"
+   delay=100
+  }
+  tile={
+   tile="torch1"
+   delay=100
+  }
+  tile={
+   tile="torch3"
+   delay=100
+  }
+  tile={
+   tile="torch1"
+   delay=100
   }
   tile={
    tile="torch4"
-   delay=50
+   delay=100
+  }
+  tile={
+   tile="torch3"
+   delay=100
   }
  }
 }

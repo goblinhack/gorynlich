@@ -1,9 +1,11 @@
 {
  short_name="monsticide"
- tooltip="Magic potion"
+ tooltip="Monsticide"
  z_depth=3
  is_boring
  is_food
+ is_click_to_drop
+ is_click_to_use
  hit_priority=5
  is_carryable
  is_valid_for_shortcut_key

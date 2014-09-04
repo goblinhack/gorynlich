@@ -1,10 +1,12 @@
 {
  short_name="craftsman double bow"
- tooltip="craftsman double bow"
+ tooltip="serious double bow"
  fires="data/things/arrow"
  z_depth=3
  is_weapon
-hit_priority=0
+ is_click_to_drop
+ is_click_to_use
+ hit_priority=0
  is_carryable
  weapon_fire_delay_tenths=4
  is_fragile

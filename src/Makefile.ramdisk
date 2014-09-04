@@ -112,8 +112,20 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__brazier_session.o: asm/ramdisk_data_things__brazier_session.S ../data/things/.brazier.session
+	gcc -c asm/ramdisk_data_things__brazier_session.S -o .o/ramdisk_data_things__brazier_session.o
+
 .o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
 	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
+
+.o/ramdisk_data_things__key_session.o: asm/ramdisk_data_things__key_session.S ../data/things/.key.session
+	gcc -c asm/ramdisk_data_things__key_session.S -o .o/ramdisk_data_things__key_session.o
+
+.o/ramdisk_data_things__keys_session.o: asm/ramdisk_data_things__keys_session.S ../data/things/.keys.session
+	gcc -c asm/ramdisk_data_things__keys_session.S -o .o/ramdisk_data_things__keys_session.o
+
+.o/ramdisk_data_things__spam_session.o: asm/ramdisk_data_things__spam_session.S ../data/things/.spam.session
+	gcc -c asm/ramdisk_data_things__spam_session.S -o .o/ramdisk_data_things__spam_session.o
 
 .o/ramdisk_data_things__torch_session.o: asm/ramdisk_data_things__torch_session.S ../data/things/.torch.session
 	gcc -c asm/ramdisk_data_things__torch_session.S -o .o/ramdisk_data_things__torch_session.o

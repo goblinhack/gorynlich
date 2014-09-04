@@ -68,6 +68,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/ttf.o 			\
     $(OBJDIR)/util.o 			\
     $(OBJDIR)/wid.o 			\
+    $(OBJDIR)/wid_anim.o 		\
     $(OBJDIR)/wid_button.o 		\
     $(OBJDIR)/wid_chat.o 		\
     $(OBJDIR)/wid_console.o 		\
