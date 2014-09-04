@@ -22,6 +22,9 @@ thingp thing_client_local_new(thing_templatep thing_template);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
+void thing_tick_server_player_all(void);
+void thing_tick_client_player_slow_all(void);
+void thing_tick_server_player_slow_all(void);
 uint8_t thing_mob_spawn(thingp);
 uint8_t thing_mob_spawn_on_death(thingp);
 void thing_dead(thingp, thingp killer,
@@ -599,7 +602,8 @@ typedef struct thing_ {
      * strength of the template. This is used for torches and the like to see 
      * how much we can really see.
      */
-    uint16_t torch_strength;
+    float torch_light_radius;
+    uint32_t timestamp_torch;
 
     /*
      * First time sent to a client?
@@ -1034,18 +1038,18 @@ static inline uint8_t thing_is_rrr17 (thingp t)
     return (thing_template_is_rrr17(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr18 (thingp t)
+static inline uint8_t thing_is_click_to_drop (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr18(thing_get_template(t)));
+    return (thing_template_is_click_to_drop(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr19 (thingp t)
+static inline uint8_t thing_is_click_to_use (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr19(thing_get_template(t)));
+    return (thing_template_is_click_to_use(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_torch (thingp t)
@@ -1397,14 +1401,14 @@ static inline uint8_t thing_is_rrr17_noverify (thingp t)
     return (t->thing_template->is_rrr17);
 }
 
-static inline uint8_t thing_is_rrr18_noverify (thingp t)
+static inline uint8_t thing_is_click_to_drop_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr18);
+    return (t->thing_template->is_click_to_drop);
 }
 
-static inline uint8_t thing_is_rrr19_noverify (thingp t)
+static inline uint8_t thing_is_click_to_use_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr19);
+    return (t->thing_template->is_click_to_use);
 }
 
 static inline uint8_t thing_is_torch_noverify (thingp t)

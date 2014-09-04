@@ -1,6 +1,6 @@
 {
  short_name="dwarf"
- tooltip="Get now.\n\n%%fg=brown$In short supply.\n\nBest health and axe combo."
+ tooltip="Get now.\n\n%%fg=brown$In -short- supply.\n\nBest health and axe combo."
  carrying={
     "data/things/axe1"
     "data/things/torches"
@@ -9,10 +9,11 @@
  speed=7
  health=250
  is_player
+ is_cats_eyes
  is_light_source
  is_candle_light
  light_tint="white"
- light_strength=18.0
+ light_radius=9.0
  is_collision_map_medium
  spawn_on_death="data/things/bonepile2"
  is_animated

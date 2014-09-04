@@ -203,6 +203,11 @@ void level_update_now (levelp level)
      * One time generate of expensive wander map
      */
     dmap_generate_monst_map_wander(level);
+
+    /*
+     * Ensure things are updated at the start of the new level.
+     */
+    thing_tick_server_player_slow_all();
 }
 
 void level_update (levelp level)
@@ -738,6 +743,11 @@ void level_tick (levelp level)
 
         socket_server_tx_map_update(0, server_active_things,
                                     "level map update active things");
+        /*
+         * Let the players know their item lists.
+         */
+        thing_tick_server_player_all();
+
         socket_server_tx_map_update(0, server_boring_things,
                                     "level map update boring things");
     }

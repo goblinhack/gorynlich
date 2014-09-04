@@ -6917,7 +6917,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
 /*
  * Display one wid and its children
  */
-static void wid_display_noverify (widp w, uint8_t pass)
+static void wid_display_fast (widp w, uint8_t pass)
 {
     uint8_t fading;
     int32_t owidth;
@@ -6995,6 +6995,7 @@ static void wid_display_noverify (widp w, uint8_t pass)
             t->lit = 0;
         } else {
             if ((t->lit == 0) && 
+                (t->torch_light_radius == 0) &&
                 thing_is_cats_eyes_noverify(t)) {
 
                 tile = wid_get_tile_eyes(w);
@@ -7014,20 +7015,23 @@ static void wid_display_noverify (widp w, uint8_t pass)
             light_pos.y = otly + wid_get_height(w) / 2;
 
             thing_template *tp = thing_get_template(t);
-            double light_strength = thing_template_get_light_strength(tp);
+            double light_radius = thing_template_get_light_radius(tp);
 
             if (thing_is_player(t)) {
                 /*
                  * Player light is limited by the number of torches.
                  */
-                light_strength = t->torch_strength;
+                light_radius = t->torch_light_radius;
             } else if (thing_is_explosion(t) && !t->is_epicenter) {
                 /*
                  * No light source for explosion edges. Too high a cpu drain.
                  */
-            } else {
-                wid_light_add(w, light_pos, light_strength,
-                            thing_template_light_color(tp));
+                light_radius = 0.0;
+            }
+
+            if (light_radius > 0.0) {
+                wid_light_add(w, light_pos, light_radius,
+                              thing_template_light_color(tp));
             }
         }
     }
@@ -7197,7 +7201,7 @@ static void wid_light_calculate_for_single_obstacle (widp w,
      * For each clockwise side of the tile.
      */
     fpoint light_pos = light->at;
-    double light_strength = light->strength;
+    double light_radius = light->strength;
 
     /*
      * For each clockwise quadrant.
@@ -7281,8 +7285,8 @@ static void wid_light_calculate_for_single_obstacle (widp w,
                     DIE("%d",deg);
                 }
 
-                if (len > light_strength) {
-                    len = light_strength;
+                if (len > light_radius) {
+                    len = light_radius;
                 }
 
                 if (pass == 0) {
@@ -7375,7 +7379,7 @@ static void wid_lighting_calculate (widp w,
                                     const uint8_t light_index)
 {
     wid_light *light = &wid_lights[light_index];
-    double light_strength = light->strength;
+    double light_radius = light->strength;
 
     int16_t maxx;
     int16_t minx;
@@ -7388,10 +7392,10 @@ static void wid_lighting_calculate (widp w,
         return;
     }
 
-    double visible_width = light_strength + 3;
-    double visible_height = light_strength + 3;
+    double visible_width = light_radius + 3;
+    double visible_height = light_radius + 3;
 
-    light_strength *= wid_get_width(light_wid);
+    light_radius *= wid_get_width(light_wid);
     light->strength *= wid_get_width(light_wid);
 
     maxx = t->x + visible_width;
@@ -7459,7 +7463,7 @@ static void wid_lighting_render (widp w,
 {
     wid_light *light = &wid_lights[light_index];
     fpoint light_pos = light->at;
-    double light_strength = light->strength;
+    double light_radius = light->strength;
 
     int16_t maxx;
     int16_t minx;
@@ -7472,8 +7476,8 @@ static void wid_lighting_render (widp w,
         return;
     }
 
-    double visible_width = light_strength + 3;
-    double visible_height = light_strength + 3;
+    double visible_width = light_radius + 3;
+    double visible_height = light_radius + 3;
 
     uint16_t max_light_rays = light->max_light_rays;
 
@@ -7520,7 +7524,7 @@ static void wid_lighting_render (widp w,
         for (i = 0; i < max_light_rays; i++, r += dr) {
             double p1_len = ray_depth[i][light_level];
             if (p1_len == 0) {
-                p1_len = light_strength;
+                p1_len = light_radius;
             }
 
             double cosr = fcos(r);
@@ -7538,7 +7542,7 @@ static void wid_lighting_render (widp w,
         i = 0; {
             double p1_len = ray_depth[i][light_level];
             if (p1_len == 0) {
-                p1_len = light_strength;
+                p1_len = light_radius;
             }
 
             double cosr = fcos(r);
@@ -7580,7 +7584,7 @@ static void wid_lighting_render (widp w,
             double p1_len = ray_depth[i][light_level];
 
             if (p1_len == 0) {
-                p1_len = light_strength;
+                p1_len = light_radius;
             }
 
             double p3_len = p1_len + fuzz;
@@ -7606,7 +7610,7 @@ static void wid_lighting_render (widp w,
             double p1_len = ray_depth[i][light_level];
 
             if (p1_len == 0) {
-                p1_len = light_strength;
+                p1_len = light_radius;
             }
 
             double p3_len = p1_len + fuzz;
@@ -7875,6 +7879,8 @@ static void wid_display (widp w,
     /*
      * Widget tiles and textures.
      */
+    wid_animate(w);
+
     tilep tile = wid_get_tile(w);
 
     texp tex;
@@ -8230,7 +8236,7 @@ static void wid_display (widp w,
                                         node,
                                         tree_prev_tree_wid_compare_func) {
 
-                        wid_display_noverify(node->wid, 0);
+                        wid_display_fast(node->wid, 0);
                     }
                 }
             }
@@ -8376,7 +8382,7 @@ CON("%x %x",a,b);
                             }
 
                             if (lit) {
-                                wid_display_noverify(node->wid, 1);
+                                wid_display_fast(node->wid, 1);
                             }
                         }
                     }

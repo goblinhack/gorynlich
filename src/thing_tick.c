@@ -211,7 +211,7 @@ static void thing_tick_server_all (void)
 //    LOG("server count %d",count);
 }
 
-static void thing_tick_server_player_all (void)
+void thing_tick_server_player_all (void)
 {
     thingp t;
 
@@ -237,7 +237,7 @@ static void thing_tick_server_player_all (void)
     }
 }
 
-static void thing_tick_server_player_slow_all (void)
+void thing_tick_server_player_slow_all (void)
 {
     thingp t;
 
@@ -256,17 +256,26 @@ static void thing_tick_server_player_slow_all (void)
             continue;
         }
 
-        /*
-         * Use up one torch unit.
-         */
-        thing_templatep tp = thing_is_carrying_thing(t, thing_template_is_torch);
-        if (tp) {
-            thing_used(t, tp);
+        if (time_have_x_secs_passed_since(60, t->timestamp_torch)) {
+            t->timestamp_torch = time_get_time_cached();
+
+            /*
+             * Use up one torch unit.
+             */
+            thing_templatep tp = 
+                    thing_is_carrying_thing(t, thing_template_is_torch);
+            if (tp) {
+                thing_used(t, tp);
+                tp = thing_is_carrying_thing(t, thing_template_is_torch);
+                if (!tp) {
+                    THING_SHOUT_AT(t, INFO, "Your light fizzles out");
+                }
+            }
         }
     }
 }
 
-static void thing_tick_client_player_slow_all (void)
+void thing_tick_client_player_slow_all (void)
 {
     thingp t;
 
@@ -286,14 +295,16 @@ static void thing_tick_client_player_slow_all (void)
         }
 
         /*
-         * Decrease the torch light strenght.
+         * Work out the torch light radius. Each torch lights 0.5 radius 
+         * units.
          */
-        t->torch_strength = 
-                        thing_is_carrying_thing_count(t, thing_template_is_torch);
-        if (t->torch_strength > 
-            thing_template_get_light_strength(t->thing_template)) {
-            t->torch_strength =
-                thing_template_get_light_strength(t->thing_template);
+        t->torch_light_radius = 
+            (double) thing_is_carrying_thing_count(
+                            t, thing_template_is_torch) / 2.0;
+        if (t->torch_light_radius > 
+            thing_template_get_light_radius(t->thing_template)) {
+            t->torch_light_radius =
+                thing_template_get_light_radius(t->thing_template);
         }
     }
 }
@@ -505,9 +516,9 @@ void thing_tick_all (void)
         static uint32_t ts;
 
         if (time_have_x_secs_passed_since(60, ts)) {
+
             ts = time_get_time_cached();
 
-            thing_tick_client_player_slow_all();
             thing_tick_server_player_slow_all();
         }
     }

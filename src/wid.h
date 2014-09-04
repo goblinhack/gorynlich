@@ -383,6 +383,7 @@ void wid_get_grid_coord(widp w, int32_t *x, int32_t *y,
                         uint8_t *aligned_y);
 void wid_get_grid_dim(widp w, uint32_t *x, uint32_t *y);
 uint8_t wids_overlap(widp A, widp B);
+void wid_animate(widp);
 
 extern const int32_t wid_fade_delay;
 extern const int32_t wid_hide_delay;
@@ -529,6 +530,17 @@ typedef struct wid_ {
      */
     texp tex;
     tilep tile;
+
+    /*
+     * For animation.
+     */
+    thing_tilep current_tile;
+
+    /*
+     * When to change frame for animation.
+     */
+    uint32_t timestamp_change_to_next_frame;
+
     tilep tile_eyes;
     thingp thing;
     thing_templatep thing_template;

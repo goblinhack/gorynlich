@@ -8,7 +8,7 @@
  is_animated_no_dir
  is_fire
  is_light_source
- light_strength=20.0
+ light_radius=10.0
  is_collision_map_large
  damage=150
  hit_delay_tenths=1

@@ -9,10 +9,11 @@
  speed=9
  health=150
  is_player
+ is_cats_eyes
  is_light_source
  is_candle_light
  light_tint="white"
- light_strength=20.0
+ light_radius=10.0
  is_collision_map_medium
  spawn_on_death="data/things/bonepile2"
  is_animated
