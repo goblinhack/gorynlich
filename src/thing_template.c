@@ -465,7 +465,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "ppp7", t->ppp7);
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
-        GET_OPT_NAMED_FLOAT(ctx, "light_strength", t->light_strength);
+        GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
@@ -530,8 +530,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_click_to_drop", t->is_click_to_drop);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_click_to_use", t->is_click_to_use);
         GET_OPT_NAMED_BITFIELD(ctx, "is_torch", t->is_torch);
         GET_OPT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
@@ -547,12 +547,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_rotate_2way", t->is_effect_rotate_2way);
 
     } while (demarshal_gotone(ctx));
-
-    /*
-     * Divide the light strenght in two as it is really a radius and not
-     * a diameter.
-     */
-    t->light_strength /= 4.0;
 
     if (t->light_tint) {
         t->light_color = color_find(t->light_tint);
@@ -616,7 +610,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "ppp7", t->ppp7);
     PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
-    PUT_NAMED_INT32(ctx, "light_strength", t->light_strength);
+    PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
     PUT_NAMED_INT32(ctx, "quantity", t->quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
@@ -682,8 +676,8 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
     PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr18", t->is_rrr18);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr19", t->is_rrr19);
+    PUT_NAMED_BITFIELD(ctx, "is_click_to_drop", t->is_click_to_drop);
+    PUT_NAMED_BITFIELD(ctx, "is_click_to_use", t->is_click_to_use);
     PUT_NAMED_BITFIELD(ctx, "is_torch", t->is_torch);
     PUT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
     PUT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
@@ -858,9 +852,9 @@ uint32_t thing_template_get_ppp9 (thing_templatep t)
     return (t->ppp9);
 }
 
-float thing_template_get_light_strength (thing_templatep t)
+float thing_template_get_light_radius (thing_templatep t)
 {
-    return (t->light_strength);
+    return (t->light_radius);
 }
 
 uint32_t thing_template_get_quantity (thing_templatep t)

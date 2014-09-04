@@ -147,10 +147,16 @@ static void server_rx_client_join (socketp s)
 
     LOG("Server: Total players now %u", global_config.server_current_players);
 
-    socket_server_tx_map_update(s, server_boring_things,
-                                "rx client join boring things");
     socket_server_tx_map_update(s, server_active_things,
                                 "rx client join active things");
+    /*
+     * Send players their items lists
+     */
+    thing_tick_server_player_all();
+
+    socket_server_tx_map_update(s, server_boring_things,
+                                "rx client join boring things");
+
 
     wid_game_map_server_visible();
 }

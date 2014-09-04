@@ -3,7 +3,9 @@
  tooltip="medium sword"
  z_depth=3
  is_weapon
-hit_priority=0
+ is_click_to_drop
+ is_click_to_use
+ hit_priority=0
  is_carryable
  weapon_fire_delay_tenths=1
  damage=1

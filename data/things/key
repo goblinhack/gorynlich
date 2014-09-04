@@ -1,8 +1,9 @@
 {
  short_name="key"
- tooltip="Keys to open doors"
+ tooltip="it's a key"
  z_depth=3
  is_key
+ is_click_to_drop
  is_carryable
  tiles={
   tile={

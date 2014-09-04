@@ -1,6 +1,6 @@
 {
  short_name="reaper"
- tooltip="the reaper!"
+ tooltip="the reaper"
  carrying={
     "data/things/scythe1"
  }
@@ -12,7 +12,7 @@
  vision_distance=60
  hit_delay_tenths=1
  is_monst
-is_shadow_caster
+ is_shadow_caster
  hit_priority=10
  is_combustable
  is_animated

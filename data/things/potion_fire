@@ -1,9 +1,11 @@
 {
  short_name="fire potion"
- tooltip="Magic potion"
+ tooltip="Burny fire fire potion"
  z_depth=3
  is_boring
  is_food
+ is_click_to_drop
+ is_click_to_use
  hit_priority=5
  is_carryable
  is_valid_for_shortcut_key
@@ -11,7 +13,7 @@
  is_fragile
  is_light_source
  light_tint="orange"
- light_strength=0.1
+ light_radius=0.1
  is_candle_light
  is_valid_for_shortcut_key
  tiles={
