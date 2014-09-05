@@ -1582,8 +1582,8 @@ int thing_hit (thingp t,
         if (thing_is_door(t)            || 
             thing_is_wall(t)) {
 
-            if (!thing_is_explosion(hitter) &&
-                !thing_is_projectile(hitter) &&
+            if (!thing_is_explosion(hitter)     &&
+                !thing_is_projectile(hitter)    &&
                 !thing_is_weapon_swing_effect(hitter)) {
                 return (false);
             }
@@ -1754,6 +1754,9 @@ int thing_hit (thingp t,
         uint32_t chance = rand() % (can_be_hit_chance + 1);
 
         if (chance > damage) {
+CON("chance %u",chance);
+CON("can_be_hit_chance %u",can_be_hit_chance);
+CON("hitter %s hit fail %s %d %d/%d can_be_hit_chance %u",thing_logname(hitter),thing_logname(t),__LINE__,chance,damage, can_be_hit_chance);
             return (false);
         }
     }

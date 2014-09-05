@@ -492,11 +492,11 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
         thing_is_poison(me)                     ||
         thing_is_explosion(me)) {
 
-        if (thing_is_monst(it) || 
-            thing_is_fragile(it) ||
-            thing_is_door(it) ||
-            thing_is_wall(it) ||
-            thing_is_player(it) ||
+        if (thing_is_monst(it)          || 
+            thing_is_fragile(it)        ||
+            thing_is_door(it)           ||
+            thing_is_wall(it)           ||
+            thing_is_player(it)         ||
             thing_is_mob_spawner(it)) {
             /*
              * Weapon hits monster or generator.

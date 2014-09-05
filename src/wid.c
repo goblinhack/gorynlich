@@ -6994,6 +6994,16 @@ static void wid_display_fast (widp w, uint8_t pass)
         if (pass == 0) {
             t->lit = 0;
         } else {
+            /*
+             * If the thing is not lit and it has cats eyes, let them shine.
+             *
+             * Another case is if you are a light source yet emit no light,
+             * like a player. Let the eyes shine in that case. But don't let 
+             * them shine when the torch light is on else you have glowing 
+             * eyes over the player and they look like a zombie! But don't let 
+             * them shine when the torch light is on else you have glowing 
+             * eyes over the player and they look like a zombie!
+             */
             if ((t->lit == 0) && 
                 (t->torch_light_radius == 0) &&
                 thing_is_cats_eyes_noverify(t)) {
