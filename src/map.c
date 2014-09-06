@@ -320,9 +320,9 @@ uint8_t map_is_rrr16_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_rrr16));
 }
 
-uint8_t map_is_rrr17_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr17));
+    return (map_is_x_at(level, x, y, thing_template_is_warm_blooded));
 }
 
 uint8_t map_is_click_to_drop_at (levelp level, int32_t x, int32_t y)
@@ -652,9 +652,9 @@ thingp map_thing_is_rrr16_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_rrr16));
 }
 
-thingp map_thing_is_rrr17_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr17));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_warm_blooded));
 }
 
 thingp map_thing_is_click_to_drop_at (levelp level, int32_t x, int32_t y)
@@ -1000,9 +1000,9 @@ tree_rootp map_all_things_is_rrr16_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr16));
 }
 
-tree_rootp map_all_things_is_rrr17_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr17));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_warm_blooded));
 }
 
 tree_rootp map_all_things_is_click_to_drop_at (levelp level, int32_t x, int32_t y)
@@ -1460,7 +1460,7 @@ thing_templatep map_find_rrr16_at (levelp level,
 thing_templatep map_find_rrr17_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr17, w));
+    return (map_find_x_at(level, x, y, thing_template_is_warm_blooded, w));
 }
 
 thing_templatep map_find_rrr18_at (levelp level,
@@ -2156,9 +2156,9 @@ uint32_t level_count_is_rrr16 (levelp level)
     return (level_count_is_x(level, thing_template_is_rrr16));
 }
 
-uint32_t level_count_is_rrr17 (levelp level)
+uint32_t level_count_is_warm_blooded (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr17));
+    return (level_count_is_x(level, thing_template_is_warm_blooded));
 }
 
 uint32_t level_count_is_click_to_drop (levelp level)
@@ -2510,9 +2510,9 @@ tree_rootp map_all_things_is_rrr16 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_rrr16));
 }
 
-tree_rootp map_all_things_is_rrr17 (levelp level)
+tree_rootp map_all_things_is_warm_blooded (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr17));
+    return (map_all_things_is_x(level, thing_template_is_warm_blooded));
 }
 
 tree_rootp map_all_things_is_click_to_drop (levelp level)

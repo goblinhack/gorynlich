@@ -74,8 +74,9 @@ uint16_t THING_EXPLOSION1;
 uint16_t THING_EXPLOSION2;
 uint16_t THING_EXPLOSION3;
 uint16_t THING_EXPLOSION4;
-uint16_t THING_SPARKS1;
-uint16_t THING_SPARKS2;
+uint16_t THING_HIT_SUCCESS;
+uint16_t THING_HIT_MISS;
+uint16_t THING_BLOOD;
 uint16_t THING_POISON1;
 uint16_t THING_POISON2;
 uint16_t THING_POISON3;
@@ -1435,8 +1436,12 @@ static int thing_hit_ (thingp t,
     /*
      * Take note of the hit so we can send an event to the client.
      */
-    t->is_hit_success = true;
     t->is_hit_miss = false;
+    t->is_hit_success = true;
+    if (damage > t->health / 10) {
+        t->is_hit_crit = true;
+    }
+
     thing_update(t);
 
     /*
@@ -1935,6 +1940,26 @@ void thing_join_level (thingp t)
     }
 }
 
+static void thing_effect_hit_crit (thingp t)
+{
+    verify(t);
+
+    widp w = t->wid;
+    if (w) {
+        wid_set_mode(w, WID_MODE_ACTIVE);
+        wid_set_color(w, WID_COLOR_BLIT, RED);
+        if (thing_is_warm_blooded(t)) {
+            level_place_blood(client_level,
+                              0, // owner
+                              t->x, t->y);
+        } else {
+            level_place_hit_success(client_level,
+                                    0, // owner
+                                    t->x, t->y);
+        }
+    }
+}
+
 static void thing_effect_hit_success (thingp t)
 {
     verify(t);
@@ -1943,7 +1968,7 @@ static void thing_effect_hit_success (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
-        level_place_sparks2(client_level,
+        level_place_hit_miss(client_level,
                            0, // owner
                            t->x, t->y);
     }
@@ -1956,7 +1981,7 @@ static void thing_effect_hit_miss (thingp t)
     widp w = t->wid;
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
-        level_place_sparks1(client_level,
+        level_place_hit_success(client_level,
                            0, // owner
                            t->x, t->y);
     }
@@ -3307,7 +3332,9 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->has_left_level ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
-            ((t->owner_id ?     1 : 0) << 
+            ((t->owner_id       ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
+            ((t->is_hit_crit    ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
@@ -3324,11 +3351,14 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL) |
             ((t->owner_id       ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT) |
+            ((t->is_hit_crit ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT) |
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS) |
             ((t->is_hit_miss    ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS);
 
+        t->is_hit_crit = 0;
         t->is_hit_success = 0;
         t->is_hit_miss = 0;
 
@@ -3716,6 +3746,10 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS)) {
             thing_effect_hit_success(t);
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT)) {
+            thing_effect_hit_crit(t);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {

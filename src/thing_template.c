@@ -529,7 +529,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_warm_blooded", t->is_warm_blooded);
         GET_OPT_NAMED_BITFIELD(ctx, "is_click_to_drop", t->is_click_to_drop);
         GET_OPT_NAMED_BITFIELD(ctx, "is_click_to_use", t->is_click_to_use);
         GET_OPT_NAMED_BITFIELD(ctx, "is_torch", t->is_torch);
@@ -675,7 +675,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_rrr16", t->is_rrr16);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr17", t->is_rrr17);
+    PUT_NAMED_BITFIELD(ctx, "is_warm_blooded", t->is_warm_blooded);
     PUT_NAMED_BITFIELD(ctx, "is_click_to_drop", t->is_click_to_drop);
     PUT_NAMED_BITFIELD(ctx, "is_click_to_use", t->is_click_to_use);
     PUT_NAMED_BITFIELD(ctx, "is_torch", t->is_torch);
