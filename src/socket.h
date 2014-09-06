@@ -154,6 +154,7 @@ typedef struct {
     uint16_t id;                // optional
     uint8_t x;                  // optional
     uint8_t y;                  // optional
+    uint16_t owner_id;          // optional
 } __attribute__ ((packed)) msg_map_update;
 
 typedef struct {
