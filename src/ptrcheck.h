@@ -2,11 +2,9 @@
  * Copyright (C) 2011 Neil McGill
  *
  * See the README file for license.
- *
  * A useful hack to help debug stale/free/bad pointers.
- * #pragma once
- *
  */
+#pragma once
 
 #ifndef __PTRCHECK_H__
 #define __PTRCHECK_H__

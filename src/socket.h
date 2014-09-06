@@ -3,10 +3,9 @@
  *
  * See the README file for license.
  *
- * A useful hack to help debug stale/free/bad pointers.
- * #pragma once
- *
  */
+
+#pragma once
 
 #include <SDL_net.h>
 #include "tree.h"

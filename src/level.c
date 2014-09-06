@@ -615,7 +615,19 @@ void level_pause (levelp level)
 {
     if (!level->pause_timer) {
 
-        socket_tx_server_shout(POPUP, "Get ready!");
+        static const char *messages[] = {
+            "Go my little one!",
+            "Meet your doom...",
+            "Prepare for the end...",
+            "Your end is nigh...",
+            "Go forth!",
+            "Make it so!",
+            "Get ready!",
+            "Meep!",
+        };
+
+        socket_tx_server_shout(POPUP,
+                               messages[rand() % ARRAY_SIZE(messages)]);
 
         level->pause_timer = 
                     action_timer_create(&server_timers,
@@ -623,7 +635,7 @@ void level_pause (levelp level)
                                         0,
                                         level,
                                         "unpause level",
-                                        ONESEC * 3, /* duration */
+                                        ONESEC * 2, /* duration */
                                         0);
 
         level_set_is_paused(level, true);
