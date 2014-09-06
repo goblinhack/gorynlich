@@ -309,6 +309,7 @@ static void level_place_explosion_ (levelp level,
 
             for (dx = -0.5; dx < 0.5; dx += density) {
                 for (dy = -0.5; dy < 0.5; dy += density) {
+                    dx = 0;dy = 0;
                     double ex = ix + dx;
                     double ey = iy + dy;
 
@@ -323,6 +324,7 @@ static void level_place_explosion_ (levelp level,
                                                     distance,
                                                     nargs, args);
                     va_end(args);
+                    break;
                 }
             }
         }
@@ -363,18 +365,28 @@ void level_place_small_explosion (levelp level,
                            "data/things/explosion4");
 }
 
-void level_place_sparks (levelp level, 
+void level_place_sparks1 (levelp level, 
                          thingp owner,
                          double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
                            x, y,
-                           1, // radius
-                           3, // nargs
-                           "data/things/sparks1",
-                           "data/things/sparks2",
-                           "data/things/sparks3");
+                           0, // radius
+                           1, // nargs
+                           "data/things/sparks1");
+}
+
+void level_place_sparks2 (levelp level, 
+                         thingp owner,
+                         double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           0, // radius
+                           1, // nargs
+                           "data/things/sparks2");
 }
 
 void level_place_fireball (levelp level, 

@@ -76,7 +76,6 @@ uint16_t THING_EXPLOSION3;
 uint16_t THING_EXPLOSION4;
 uint16_t THING_SPARKS1;
 uint16_t THING_SPARKS2;
-uint16_t THING_SPARKS3;
 uint16_t THING_POISON1;
 uint16_t THING_POISON2;
 uint16_t THING_POISON3;
@@ -1754,9 +1753,6 @@ int thing_hit (thingp t,
         uint32_t chance = rand() % (can_be_hit_chance + 1);
 
         if (chance > damage) {
-CON("chance %u",chance);
-CON("can_be_hit_chance %u",can_be_hit_chance);
-CON("hitter %s hit fail %s %d %d/%d can_be_hit_chance %u",thing_logname(hitter),thing_logname(t),__LINE__,chance,damage, can_be_hit_chance);
             return (false);
         }
     }
@@ -1947,6 +1943,9 @@ static void thing_effect_hit_success (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
+        level_place_sparks2(client_level,
+                           0, // owner
+                           t->x, t->y);
     }
 }
 
@@ -1957,12 +1956,9 @@ static void thing_effect_hit_miss (thingp t)
     widp w = t->wid;
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
-        wid_set_color(w, WID_COLOR_BLIT, GRAY);
-#if 0
-        level_place_sparks(t->level,
+        level_place_sparks1(client_level,
                            0, // owner
                            t->x, t->y);
-#endif
     }
 }
 
