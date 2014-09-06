@@ -366,8 +366,8 @@ void level_place_small_explosion (levelp level,
 }
 
 void level_place_hit_success (levelp level, 
-                          thingp owner,
-                          double x, double y)
+                              thingp owner,
+                              double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
@@ -399,6 +399,18 @@ void level_place_blood (levelp level,
                            0, // radius
                            1, // nargs
                            "data/things/blood1");
+}
+
+void level_place_blood_crit (levelp level, 
+                             thingp owner,
+                             double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           0, // radius
+                           1, // nargs
+                           "data/things/blood2");
 }
 
 void level_place_fireball (levelp level, 

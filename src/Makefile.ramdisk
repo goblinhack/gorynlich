@@ -115,6 +115,9 @@
 .o/ramdisk_data_things__blood1_session.o: asm/ramdisk_data_things__blood1_session.S ../data/things/.blood1.session
 	gcc -c asm/ramdisk_data_things__blood1_session.S -o .o/ramdisk_data_things__blood1_session.o
 
+.o/ramdisk_data_things__blood2_session.o: asm/ramdisk_data_things__blood2_session.S ../data/things/.blood2.session
+	gcc -c asm/ramdisk_data_things__blood2_session.S -o .o/ramdisk_data_things__blood2_session.o
+
 .o/ramdisk_data_things__brazier_session.o: asm/ramdisk_data_things__brazier_session.S ../data/things/.brazier.session
 	gcc -c asm/ramdisk_data_things__brazier_session.S -o .o/ramdisk_data_things__brazier_session.o
 
@@ -186,6 +189,9 @@
 
 .o/ramdisk_data_things_blood1.o: asm/ramdisk_data_things_blood1.S ../data/things/blood1
 	gcc -c asm/ramdisk_data_things_blood1.S -o .o/ramdisk_data_things_blood1.o
+
+.o/ramdisk_data_things_blood2.o: asm/ramdisk_data_things_blood2.S ../data/things/blood2
+	gcc -c asm/ramdisk_data_things_blood2.S -o .o/ramdisk_data_things_blood2.o
 
 .o/ramdisk_data_things_bonepile1.o: asm/ramdisk_data_things_bonepile1.S ../data/things/bonepile1
 	gcc -c asm/ramdisk_data_things_bonepile1.S -o .o/ramdisk_data_things_bonepile1.o
