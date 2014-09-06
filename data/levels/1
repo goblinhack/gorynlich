@@ -20038,6 +20038,10 @@
    y=5 
    t="data/things/bonepile3" 
   } {   
+   x=43 
+   y=5 
+   t="data/things/death" 
+  } {   
    x=56 
    y=5 
    t="data/things/water" 
@@ -20049,6 +20053,10 @@
    x=7 
    y=6 
    t="data/things/potion_fire" 
+  } {   
+   x=43 
+   y=7 
+   t="data/things/wand_fire" 
   } {   
    x=48 
    y=8 
