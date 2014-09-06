@@ -365,28 +365,40 @@ void level_place_small_explosion (levelp level,
                            "data/things/explosion4");
 }
 
-void level_place_sparks1 (levelp level, 
-                         thingp owner,
-                         double x, double y)
+void level_place_hit_success (levelp level, 
+                          thingp owner,
+                          double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
                            x, y,
                            0, // radius
                            1, // nargs
-                           "data/things/sparks1");
+                           "data/things/hit_success");
 }
 
-void level_place_sparks2 (levelp level, 
-                         thingp owner,
-                         double x, double y)
+void level_place_hit_miss (levelp level, 
+                          thingp owner,
+                          double x, double y)
 {
     level_place_explosion_(level, 
                            owner,
                            x, y,
                            0, // radius
                            1, // nargs
-                           "data/things/sparks2");
+                           "data/things/hit_miss");
+}
+
+void level_place_blood (levelp level, 
+                        thingp owner,
+                        double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           0, // radius
+                           1, // nargs
+                           "data/things/blood1");
 }
 
 void level_place_fireball (levelp level, 

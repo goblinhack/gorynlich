@@ -2191,11 +2191,11 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // --------------------------------------------------------------------
-        "sparks2.1",
-        "sparks2.2",
-        "sparks2.3",
-        "sparks2.4",
-        "sparks2.5",
+        "hit_miss.1",
+        "hit_miss.2",
+        "hit_miss.3",
+        "hit_miss.4",
+        "hit_miss.5",
         0,
         0,
         0,
@@ -2224,12 +2224,45 @@ static uint8_t resource_init_23 (void *context)
         0,
         0,
         // --------------------------------------------------------------------
-        "sparks1.1",
-        "sparks1.2",
-        "sparks1.3",
-        "sparks1.4",
-        "sparks1.5",
+        "hit_success.1",
+        "hit_success.2",
+        "hit_success.3",
+        "hit_success.4",
+        "hit_success.5",
         0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        // --------------------------------------------------------------------
+        "blood1.1",
+        "blood1.2",
+        "blood1.3",
+        "blood1.4",
+        "blood1.5",
         0,
         0,
         0,
@@ -2557,8 +2590,9 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_CLOUDKILL3, "data/things/cloudkill3");
     thing_template_load(&THING_CLOUDKILL4, "data/things/cloudkill4");
 
-    thing_template_load(&THING_SPARKS1, "data/things/sparks1");
-    thing_template_load(&THING_SPARKS2, "data/things/sparks2");
+    thing_template_load(&THING_HIT_SUCCESS, "data/things/hit_success");
+    thing_template_load(&THING_HIT_MISS, "data/things/hit_miss");
+    thing_template_load(&THING_BLOOD, "data/things/blood1");
 
     /*
      * Wearable items that are used as weapons. Shown first on list of player 

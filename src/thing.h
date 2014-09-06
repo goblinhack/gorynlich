@@ -258,6 +258,7 @@ enum {
     THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL,
     THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS,
+    THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS,
 };
 
@@ -332,8 +333,9 @@ extern uint16_t THING_EXPLOSION1;
 extern uint16_t THING_EXPLOSION2;
 extern uint16_t THING_EXPLOSION3;
 extern uint16_t THING_EXPLOSION4;
-extern uint16_t THING_SPARKS1;
-extern uint16_t THING_SPARKS2;
+extern uint16_t THING_HIT_SUCCESS;
+extern uint16_t THING_HIT_MISS;
+extern uint16_t THING_BLOOD;
 extern uint16_t THING_POISON1;
 extern uint16_t THING_POISON2;
 extern uint16_t THING_POISON3;
@@ -626,6 +628,7 @@ typedef struct thing_ {
 
     uint32_t has_left_level:1;
     uint32_t is_hit_success:1;
+    uint32_t is_hit_crit:1;
     uint32_t is_hit_miss:1;
     uint32_t on_active_list:1;
     uint32_t on_server:1;
@@ -1031,11 +1034,11 @@ static inline uint8_t thing_is_rrr16 (thingp t)
     return (thing_template_is_rrr16(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr17 (thingp t)
+static inline uint8_t thing_is_warm_blooded (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr17(thing_get_template(t)));
+    return (thing_template_is_warm_blooded(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_click_to_drop (thingp t)
@@ -1396,9 +1399,9 @@ static inline uint8_t thing_is_rrr16_noverify (thingp t)
     return (t->thing_template->is_rrr16);
 }
 
-static inline uint8_t thing_is_rrr17_noverify (thingp t)
+static inline uint8_t thing_is_warm_blooded_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr17);
+    return (t->thing_template->is_warm_blooded);
 }
 
 static inline uint8_t thing_is_click_to_drop_noverify (thingp t)
