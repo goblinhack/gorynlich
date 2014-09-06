@@ -4,7 +4,6 @@
  z_depth=1
  is_boring
  is_floor
- is_animated
  tiles={
   tile={
    tile="floor2a"

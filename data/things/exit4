@@ -9,31 +9,31 @@
  tiles={
   tile={
    tile="exit4.1"
-   delay=50
+   delay=200
   }
   tile={
    tile="exit4.2"
-   delay=50
+   delay=200
   }
   tile={
    tile="exit4.3"
-   delay=50
+   delay=200
   }
   tile={
    tile="exit4.4"
-   delay=50
+   delay=200
   }
   tile={
    tile="exit4.3"
-   delay=50
+   delay=200
   }
   tile={
    tile="exit4.2"
-   delay=50
+   delay=200
   }
   tile={
    tile="exit4.1"
-   delay=50
+   delay=200
   }
  }
 }

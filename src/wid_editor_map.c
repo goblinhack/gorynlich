@@ -659,13 +659,25 @@ static uint8_t wid_editor_map_receive_mouse_motion (
         return (false);
     }
 
+#if 0
+    /*
+     * MACOS is bugged here and randomly leaves the mouse stuck down.
+     */
+    int mouse_x;
+    int mouse_y;
+    mouse_down = SDL_GetMouseState(&mouse_x, &mouse_y);
+
     if (mouse_down & SDL_BUTTON_LEFT) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
 
+    /*
+     * MACOS seems bugged in SDL with this
+     */
     if (mouse_down & SDL_BUTTON_RIGHT) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
+#endif
 
     /*
      * Block moving the window.

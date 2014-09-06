@@ -138,7 +138,7 @@ static void server_rx_client_join (socketp s)
 
     global_config.server_current_players++;
 
-    LOG("Server: \"%s\" (ID %u) joined from %s", p->name,
+    LOG("Server: Player \"%s\" (ID %u) joined from %s", p->name,
         p->key, socket_get_remote_logname(s));
 
     char *tmp = dynprintf("%s joined the game", p->name);

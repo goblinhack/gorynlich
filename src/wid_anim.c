@@ -21,7 +21,12 @@ void wid_animate (widp w)
         return;
     }
 
+    if (!thing_template_is_animated(tp)) {
+        return;
+    }
+
     thingp t = wid_get_thing(w);
+
     thing_tilep tile;
     tree_rootp tiles;
 
