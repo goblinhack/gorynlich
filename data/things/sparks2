@@ -29,14 +29,6 @@
    delay=20
   }
   tile={
-   tile="sparks2.6"
-   delay=100
-  }
-  tile={
-   tile="sparks2.7"
-   delay=100
-  }
-  tile={
    tile="space"
    delay=100
    is_end_of_anim

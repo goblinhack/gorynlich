@@ -115,6 +115,9 @@
 .o/ramdisk_data_things__brazier_session.o: asm/ramdisk_data_things__brazier_session.S ../data/things/.brazier.session
 	gcc -c asm/ramdisk_data_things__brazier_session.S -o .o/ramdisk_data_things__brazier_session.o
 
+.o/ramdisk_data_things__door1_session.o: asm/ramdisk_data_things__door1_session.S ../data/things/.door1.session
+	gcc -c asm/ramdisk_data_things__door1_session.S -o .o/ramdisk_data_things__door1_session.o
+
 .o/ramdisk_data_things__elf_session.o: asm/ramdisk_data_things__elf_session.S ../data/things/.elf.session
 	gcc -c asm/ramdisk_data_things__elf_session.S -o .o/ramdisk_data_things__elf_session.o
 
@@ -126,6 +129,9 @@
 
 .o/ramdisk_data_things__spam_session.o: asm/ramdisk_data_things__spam_session.S ../data/things/.spam.session
 	gcc -c asm/ramdisk_data_things__spam_session.S -o .o/ramdisk_data_things__spam_session.o
+
+.o/ramdisk_data_things__sparks1_session.o: asm/ramdisk_data_things__sparks1_session.S ../data/things/.sparks1.session
+	gcc -c asm/ramdisk_data_things__sparks1_session.S -o .o/ramdisk_data_things__sparks1_session.o
 
 .o/ramdisk_data_things__torch_session.o: asm/ramdisk_data_things__torch_session.S ../data/things/.torch.session
 	gcc -c asm/ramdisk_data_things__torch_session.S -o .o/ramdisk_data_things__torch_session.o
@@ -408,12 +414,6 @@
 
 .o/ramdisk_data_things_sparks1.o: asm/ramdisk_data_things_sparks1.S ../data/things/sparks1
 	gcc -c asm/ramdisk_data_things_sparks1.S -o .o/ramdisk_data_things_sparks1.o
-
-.o/ramdisk_data_things_sparks2.o: asm/ramdisk_data_things_sparks2.S ../data/things/sparks2
-	gcc -c asm/ramdisk_data_things_sparks2.S -o .o/ramdisk_data_things_sparks2.o
-
-.o/ramdisk_data_things_sparks3.o: asm/ramdisk_data_things_sparks3.S ../data/things/sparks3
-	gcc -c asm/ramdisk_data_things_sparks3.S -o .o/ramdisk_data_things_sparks3.o
 
 .o/ramdisk_data_things_sword1.o: asm/ramdisk_data_things_sword1.S ../data/things/sword1
 	gcc -c asm/ramdisk_data_things_sword1.S -o .o/ramdisk_data_things_sword1.o
