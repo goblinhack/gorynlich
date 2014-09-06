@@ -76,7 +76,8 @@ uint16_t THING_EXPLOSION3;
 uint16_t THING_EXPLOSION4;
 uint16_t THING_HIT_SUCCESS;
 uint16_t THING_HIT_MISS;
-uint16_t THING_BLOOD;
+uint16_t THING_BLOOD1;
+uint16_t THING_BLOOD2;
 uint16_t THING_POISON1;
 uint16_t THING_POISON2;
 uint16_t THING_POISON3;
@@ -1949,9 +1950,9 @@ static void thing_effect_hit_crit (thingp t)
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
         if (thing_is_warm_blooded(t)) {
-            level_place_blood(client_level,
-                              0, // owner
-                              t->x, t->y);
+            level_place_blood_crit(client_level,
+                                   0, // owner
+                                   t->x, t->y);
         } else {
             level_place_hit_success(client_level,
                                     0, // owner
@@ -1968,9 +1969,15 @@ static void thing_effect_hit_success (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
-        level_place_hit_miss(client_level,
-                           0, // owner
-                           t->x, t->y);
+        if (thing_is_warm_blooded(t)) {
+            level_place_blood(client_level,
+                              0, // owner
+                              t->x, t->y);
+        } else {
+            level_place_hit_success(client_level,
+                                    0, // owner
+                                    t->x, t->y);
+        }
     }
 }
 
@@ -1981,9 +1988,9 @@ static void thing_effect_hit_miss (thingp t)
     widp w = t->wid;
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
-        level_place_hit_success(client_level,
-                           0, // owner
-                           t->x, t->y);
+        level_place_hit_miss(client_level,
+                             0, // owner
+                             t->x, t->y);
     }
 }
 

@@ -2263,11 +2263,11 @@ static uint8_t resource_init_23 (void *context)
         "blood1.3",
         "blood1.4",
         "blood1.5",
-        0,
-        0,
-        0,
-        0,
-        0,
+        "blood2.1",
+        "blood2.2",
+        "blood2.3",
+        "blood2.4",
+        "blood2.5",
         0,
         0,
         0,
@@ -2592,7 +2592,8 @@ static uint8_t resource_init_23 (void *context)
 
     thing_template_load(&THING_HIT_SUCCESS, "data/things/hit_success");
     thing_template_load(&THING_HIT_MISS, "data/things/hit_miss");
-    thing_template_load(&THING_BLOOD, "data/things/blood1");
+    thing_template_load(&THING_BLOOD1, "data/things/blood1");
+    thing_template_load(&THING_BLOOD2, "data/things/blood2");
 
     /*
      * Wearable items that are used as weapons. Shown first on list of player 
