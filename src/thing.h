@@ -333,7 +333,6 @@ extern uint16_t THING_EXPLOSION3;
 extern uint16_t THING_EXPLOSION4;
 extern uint16_t THING_SPARKS1;
 extern uint16_t THING_SPARKS2;
-extern uint16_t THING_SPARKS3;
 extern uint16_t THING_POISON1;
 extern uint16_t THING_POISON2;
 extern uint16_t THING_POISON3;

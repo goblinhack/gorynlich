@@ -3,13 +3,12 @@
  tooltip="fireball"
  is_hidden_from_editor
  z_depth=3
- speed=10
+ speed=15
  damage=5
  hit_delay_tenths=1
  is_fragile
  is_projectile
  is_animated
- is_wearable
  is_light_source
  light_radius=1.5
  is_collision_map_medium
