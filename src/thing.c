@@ -3117,22 +3117,15 @@ static void thing_client_wid_move (thingp t, double x, double y,
          * If a weapon is being carried, it has no speed. Move at the same 
          * speed as the carrier.
          */
-thingp owner = thing_owner(t);
         if (!speed) {
+            thingp owner = thing_owner(t);
             if (owner) {
                 speed = thing_speed(owner);
             }
         }
 
-#if 0
         if (!speed) {
             speed = 1;
-        }
-#endif
-        if(owner) {
-LOG("%s speed %f to %f %f owner %u owner %s",thing_logname(t),speed,x,y,t->owner_id, thing_logname(owner));
-        } else {
-LOG("%s speed %f to %f %f owner %u",thing_logname(t),speed,x,y,t->owner_id);
         }
 
         double ms = (1000.0 / speed) / (1.0 / time_step);
@@ -3314,22 +3307,25 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->has_left_level ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
+            ((t->owner_id ?     1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->is_hit_miss    ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT);
 
+        /*
+         * WARING: Keep the above and below in sync.
+         */
         const uint8_t ext =
             ((t->is_dead        ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
             ((t->has_left_level ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL) |
-            ((t->owner_id ? 1 : 0) << 
+            ((t->owner_id       ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT) |
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS) |
-            ((t->owner_id ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT) |
             ((t->is_hit_miss    ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS);
 
@@ -3383,11 +3379,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
             data += sizeof(uint16_t);
         }
 
-        if (state & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
-            SDLNet_Write16(t->owner_id, data);               
-            data += sizeof(uint16_t);
-        }
-
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT)) {
             *data++ = template_id;
         }
@@ -3405,6 +3396,11 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         t->last_ty = ty;
         t->resync = 0;
         t->first_update = false;
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
+            SDLNet_Write16(t->owner_id, data);               
+            data += sizeof(uint16_t);
+        }
 
         if (data + sizeof(msg_map_update) < eodata) {
             /*
@@ -3528,14 +3524,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         }
         last_id = id;
 
-        if (state & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
-            /*
-             * Full ID update.
-             */
-            owner_id = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
-        }
-
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT)) {
             /*
              * Full template ID update.
@@ -3547,7 +3535,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
 
         if (state & (1 << THING_STATE_BIT_SHIFT_EXT_PRESENT)) {
             /*
-             * Full template ID update.
+             * Extensions present.
              */
             ext = *data++;
         } else {
@@ -3574,6 +3562,14 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             on_map = false;
         } else {
             on_map = true;
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
+            /*
+             * Owner ID present
+             */
+            owner_id = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
         }
 
         t = thing_client_find(id);

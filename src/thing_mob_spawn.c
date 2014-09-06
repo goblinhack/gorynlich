@@ -88,11 +88,12 @@ uint8_t thing_mob_spawn_on_death (thingp t)
     }
 
     uint32_t tries = 20;
+    uint8_t first = 1;
 
     while (tries-- > 0) {
         double x = t->x;
         double y = t->y;
-        uint32_t r = rand() % 200;
+        uint32_t r = rand() % 100;
 
         if (r < 25) {
             x -= 1.0;
@@ -104,6 +105,12 @@ uint8_t thing_mob_spawn_on_death (thingp t)
             y += 1.0;
         } else {
             // centered over player
+        }
+
+        if (first) {
+            x = 0;
+            y = 0;
+            first = 0;
         }
 
         /*

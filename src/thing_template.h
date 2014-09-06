@@ -328,7 +328,7 @@ static inline thing_templatep id_to_thing_template (uint16_t id)
     extern thing_template thing_templates_chunk[THING_MAX];
 
     if (id >= THING_MAX) {
-        DIE("overflow, id %u", id);
+        DIE("overflow, bad template id %u", id);
     }
 
     return (&thing_templates_chunk[id]);
