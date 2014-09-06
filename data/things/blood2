@@ -1,6 +1,6 @@
 {
- short_name="blood1"
- tooltip="blood1!"
+ short_name="blood2"
+ tooltip="blood2!"
  z_depth=3
  is_animated
  is_hidden_from_editor
@@ -9,23 +9,23 @@
  hit_delay_tenths=1
  tiles={
   tile={
-   tile="blood1.1"
+   tile="blood2.1"
    delay=100
   }
   tile={
-   tile="blood1.2"
+   tile="blood2.2"
    delay=100
   }
   tile={
-   tile="blood1.3"
+   tile="blood2.3"
    delay=100
   }
   tile={
-   tile="blood1.4"
+   tile="blood2.4"
    delay=100
   }
   tile={
-   tile="blood1.5"
+   tile="blood2.5"
    delay=100
   }
   tile={

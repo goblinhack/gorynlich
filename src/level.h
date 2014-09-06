@@ -107,6 +107,9 @@ void level_place_hit_miss(levelp level,
 void level_place_blood(levelp level, 
                        thingp owner,
                        double x, double y);
+void level_place_blood_crit(levelp level, 
+                            thingp owner,
+                            double x, double y);
 void level_place_fireball(levelp level, 
                           thingp owner,
                           double x, double y);

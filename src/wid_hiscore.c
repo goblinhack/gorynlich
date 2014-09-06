@@ -143,11 +143,27 @@ static void wid_hiscore_create (void)
 
     wid_set_tl_br_pct(w, tl, br);
     wid_set_font(w, med_font);
-    wid_set_tex(w, 0, "gravestone2");
 
     wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
-    color c = WHITE;
+    widp w2 = wid_new_container(wid_hiscore, "wid settings");
+
+    {
+
+        fpoint tl = {0.1, 0.0};
+        fpoint br = {0.9, 1.0};
+
+        wid_set_tl_br_pct(w2, tl, br);
+        wid_set_tex(w2, 0, "gravestone2");
+        color c = WHITE;
+        wid_set_color(w2, WID_COLOR_BG, c);
+        wid_set_color(w2, WID_COLOR_TL, c);
+        wid_set_color(w2, WID_COLOR_BR, c);
+    }
+
+    wid_set_color(w, WID_COLOR_TEXT, WHITE);
+
+    color c = BLACK;
     wid_set_color(w, WID_COLOR_BG, c);
     wid_set_color(w, WID_COLOR_TL, c);
     wid_set_color(w, WID_COLOR_BR, c);
@@ -256,6 +272,9 @@ static void wid_hiscore_create (void)
             br.y += (float)i * height;
             tl.y += (float)i * height;
 
+            br.y -= height / 2.0;
+            tl.y -= height / 2.0;
+
             wid_set_tl_br_pct(w, tl, br);
 
             if (h->death_reason && h->death_reason[0]) {
@@ -337,6 +356,8 @@ static void wid_hiscore_create (void)
             i++;
         }
     }
+
+    wid_lower(w2);
 
     wid_raise(wid_hiscore);
 
