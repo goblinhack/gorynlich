@@ -9,23 +9,23 @@
  hit_delay_tenths=1
  tiles={
   tile={
-   tile="sparks1.1"
+   tile="hit_miss.1"
    delay=20
   }
   tile={
-   tile="sparks1.2"
+   tile="hit_miss.2"
    delay=20
   }
   tile={
-   tile="sparks1.3"
+   tile="hit_miss.3"
    delay=20
   }
   tile={
-   tile="sparks1.4"
+   tile="hit_miss.4"
    delay=20
   }
   tile={
-   tile="sparks1.5"
+   tile="hit_miss.5"
    delay=20
   }
   tile={

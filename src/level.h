@@ -98,12 +98,15 @@ void level_place_explosion(levelp level,
 void level_place_small_explosion(levelp level, 
                                  thingp owner,
                                  double x, double y);
-void level_place_sparks1(levelp level, 
-                        thingp owner,
-                        double x, double y);
-void level_place_sparks2(levelp level, 
-                        thingp owner,
-                        double x, double y);
+void level_place_hit_success(levelp level, 
+                         thingp owner,
+                         double x, double y);
+void level_place_hit_miss(levelp level, 
+                         thingp owner,
+                         double x, double y);
+void level_place_blood(levelp level, 
+                       thingp owner,
+                       double x, double y);
 void level_place_fireball(levelp level, 
                           thingp owner,
                           double x, double y);

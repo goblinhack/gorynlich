@@ -3,13 +3,13 @@
  tooltip="Get now.\n\n%%fg=brown$In -short- supply.\n\nBest health and axe combo."
  carrying={
     "data/things/axe1"
-    "data/things/axe2"
     "data/things/torches"
  }
  z_depth=4
  speed=7
  health=250
  is_player
+is_warm_blooded
  is_cats_eyes
  is_light_source
  is_candle_light
