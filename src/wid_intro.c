@@ -31,6 +31,7 @@
 
 static widp wid_intro;
 static widp wid_intro_background;
+static widp wid_intro_title;
 
 static uint8_t wid_intro_quit_selected(void);
 static void wid_intro_editor_selected(void);
@@ -48,6 +49,7 @@ static uint8_t wid_intro_init_done;
 static void wid_intro_create(void);
 
 static int intro_effect_delay = 500;
+static int intro_effect_delay_zoom = 1000;
 
 uint8_t wid_intro_init (void)
 {
@@ -70,6 +72,7 @@ void wid_intro_fini (void)
         if (wid_intro) {
             wid_destroy(&wid_intro);
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
+            wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
         }
     }
 }
@@ -95,8 +98,14 @@ void wid_intro_hide (void)
     }
 
     wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 
-                          intro_effect_delay, 0);
-    wid_fade_out(wid_intro_background, intro_effect_delay);
+                          intro_effect_delay_zoom, 0);
+    wid_fade_out(wid_intro_background, intro_effect_delay_zoom);
+
+    wid_scaling_to_pct_in(wid_intro_title, 1.0, 5.01, 
+                          intro_effect_delay_zoom, 0);
+    wid_fade_out(wid_intro_title, intro_effect_delay_zoom);
+    wid_move_delta_pct_in(wid_intro_title, -2.0f, -4.0f,
+                                intro_effect_delay_zoom);
 
     wid_hide(wid_intro, 0);
     wid_raise(wid_intro);
@@ -133,6 +142,7 @@ void wid_intro_visible (void)
     wid_update(wid_intro);
 
     wid_fade_in(wid_intro_background, intro_effect_delay);
+    wid_fade_in(wid_intro_title, intro_effect_delay);
 }
 
 static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
@@ -408,36 +418,63 @@ static uint8_t wid_intro_quit_receive_mouse_down (widp w,
 
 static void wid_intro_bg_create (void)
 {
-    widp wid;
-
     if (wid_intro_background) {
         return;
     }
 
     {
-        wid = wid_intro_background = wid_new_window("bg");
+        {
+            widp wid = wid_intro_title = wid_new_window("bg");
+            float f;
 
-        float f;
+            f = (512.0 / 200.0);
 
-        f = (1024.0 / 680.0);
+            fpoint tl = { 0.0, 0.0 };
+            fpoint br = { 1.0, 0.76 };
 
-        fpoint tl = { 0.0, 0.0 };
-        fpoint br = { 1.0, f };
+            wid_set_tl_br_pct(wid, tl, br);
 
-        wid_set_tl_br_pct(wid, tl, br);
+            wid_set_tex(wid, 0, "main_title");
 
-        wid_set_tex(wid, 0, "title");
+            wid_lower(wid);
 
-        wid_lower(wid);
+            color c;
+            c = WHITE;
+            wid_set_mode(wid, WID_MODE_NORMAL);
+            wid_set_color(wid, WID_COLOR_TL, c);
+            wid_set_color(wid, WID_COLOR_BR, c);
+            wid_set_color(wid, WID_COLOR_BG, c);
 
-        color c;
-        c = WHITE;
-        wid_set_mode(wid, WID_MODE_NORMAL);
-        wid_set_color(wid, WID_COLOR_TL, c);
-        wid_set_color(wid, WID_COLOR_BR, c);
-        wid_set_color(wid, WID_COLOR_BG, c);
+            wid_update(wid);
+            wid_move_to_pct_centered(wid_intro_title, 0.5f, -4.1f);
+            wid_move_to_pct_centered_in(wid_intro_title, 0.5f, 0.38f, 800);
+        }
 
-        wid_update(wid);
+        {
+            widp wid = wid_intro_background = wid_new_window("bg");
+
+            float f;
+
+            f = (1024.0 / 680.0);
+
+            fpoint tl = { 0.0, 0.0 };
+            fpoint br = { 1.0, f };
+
+            wid_set_tl_br_pct(wid, tl, br);
+
+            wid_set_tex(wid, 0, "title");
+
+            wid_lower(wid);
+
+            color c;
+            c = WHITE;
+            wid_set_mode(wid, WID_MODE_NORMAL);
+            wid_set_color(wid, WID_COLOR_TL, c);
+            wid_set_color(wid, WID_COLOR_BR, c);
+            wid_set_color(wid, WID_COLOR_BG, c);
+
+            wid_update(wid);
+        }
     }
 }
 
@@ -720,4 +757,5 @@ static void wid_intro_create (void)
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
     wid_fade_in(wid_intro_background, intro_effect_delay*2);
+    wid_fade_in(wid_intro_title, intro_effect_delay*2);
 }
