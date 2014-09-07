@@ -32,6 +32,7 @@
 static widp wid_intro;
 static widp wid_intro_background;
 static widp wid_intro_title;
+static widp wid_intro_man;
 
 static uint8_t wid_intro_quit_selected(void);
 static void wid_intro_editor_selected(void);
@@ -73,6 +74,7 @@ void wid_intro_fini (void)
             wid_destroy(&wid_intro);
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
+            wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
         }
     }
 }
@@ -105,6 +107,10 @@ void wid_intro_hide (void)
                           intro_effect_delay_zoom, 0);
     wid_fade_out(wid_intro_title, intro_effect_delay_zoom);
     wid_move_delta_pct_in(wid_intro_title, -2.0f, -4.0f,
+                                intro_effect_delay_zoom);
+
+    wid_fade_out(wid_intro_man, intro_effect_delay_zoom);
+    wid_move_delta_pct_in(wid_intro_man, -2.0f, -0.0f,
                                 intro_effect_delay_zoom);
 
     wid_hide(wid_intro, 0);
@@ -143,6 +149,7 @@ void wid_intro_visible (void)
 
     wid_fade_in(wid_intro_background, intro_effect_delay);
     wid_fade_in(wid_intro_title, intro_effect_delay);
+    wid_fade_in(wid_intro_man, intro_effect_delay);
 }
 
 static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
@@ -448,6 +455,33 @@ static void wid_intro_bg_create (void)
             wid_update(wid);
             wid_move_to_pct_centered(wid_intro_title, 0.5f, -4.1f);
             wid_move_to_pct_centered_in(wid_intro_title, 0.5f, 0.38f, 800);
+        }
+
+        {
+            widp wid = wid_intro_man = wid_new_window("bg");
+            float f;
+
+            f = (512.0 / 200.0);
+
+            fpoint tl = { 0.0, 0.56 };
+            fpoint br = { 0.3, 1.0 };
+
+            wid_set_tl_br_pct(wid, tl, br);
+
+            wid_set_tex(wid, 0, "man");
+
+            wid_raise(wid);
+
+            color c;
+            c = WHITE;
+            wid_set_mode(wid, WID_MODE_NORMAL);
+            wid_set_color(wid, WID_COLOR_TL, c);
+            wid_set_color(wid, WID_COLOR_BR, c);
+            wid_set_color(wid, WID_COLOR_BG, c);
+
+            wid_update(wid);
+            wid_move_to_pct_centered(wid_intro_man, -0.5f, 0.7f);
+            wid_move_to_pct_centered_in(wid_intro_man, 0.1f, 0.7f, 8000);
         }
 
         {
@@ -758,4 +792,5 @@ static void wid_intro_create (void)
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
     wid_fade_in(wid_intro_background, intro_effect_delay*2);
     wid_fade_in(wid_intro_title, intro_effect_delay*2);
+    wid_fade_in(wid_intro_man, intro_effect_delay*2);
 }
