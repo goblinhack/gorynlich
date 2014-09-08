@@ -21,6 +21,7 @@
 #include "wid_hiscore.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
+#include "thing_template.h"
 #include "music.h"
 #include "level.h"
 #include "timer.h"
@@ -468,20 +469,16 @@ static void wid_intro_bg_create (void)
 
             wid_set_tl_br_pct(wid, tl, br);
 
-            wid_set_tex(wid, 0, "man");
+            thing_templatep tp = thing_template_find("data/things/anim_man");
+            wid_set_thing_template(wid, tp);
 
             wid_raise(wid);
 
-            color c;
-            c = WHITE;
             wid_set_mode(wid, WID_MODE_NORMAL);
-            wid_set_color(wid, WID_COLOR_TL, c);
-            wid_set_color(wid, WID_COLOR_BR, c);
-            wid_set_color(wid, WID_COLOR_BG, c);
 
             wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_man, -0.5f, 0.7f);
-            wid_move_to_pct_centered_in(wid_intro_man, 0.1f, 0.7f, 8000);
+            wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.75f);
+            wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.75f, 1000);
         }
 
         {
