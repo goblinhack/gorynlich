@@ -1,3 +1,6 @@
+.o/ramdisk_data_gfx_anim_man_png.o: asm/ramdisk_data_gfx_anim_man_png.S ../data/gfx/anim_man.png
+	gcc -c asm/ramdisk_data_gfx_anim_man_png.S -o .o/ramdisk_data_gfx_anim_man_png.o
+
 .o/ramdisk_data_gfx_cloudkill_png.o: asm/ramdisk_data_gfx_cloudkill_png.S ../data/gfx/cloudkill.png
 	gcc -c asm/ramdisk_data_gfx_cloudkill_png.S -o .o/ramdisk_data_gfx_cloudkill_png.o
 
@@ -24,6 +27,9 @@
 
 .o/ramdisk_data_gfx_help3_png.o: asm/ramdisk_data_gfx_help3_png.S ../data/gfx/help3.png
 	gcc -c asm/ramdisk_data_gfx_help3_png.S -o .o/ramdisk_data_gfx_help3_png.o
+
+.o/ramdisk_data_gfx_main_title_png.o: asm/ramdisk_data_gfx_main_title_png.S ../data/gfx/main_title.png
+	gcc -c asm/ramdisk_data_gfx_main_title_png.S -o .o/ramdisk_data_gfx_main_title_png.o
 
 .o/ramdisk_data_gfx_poison_png.o: asm/ramdisk_data_gfx_poison_png.S ../data/gfx/poison.png
 	gcc -c asm/ramdisk_data_gfx_poison_png.S -o .o/ramdisk_data_gfx_poison_png.o
@@ -112,6 +118,9 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__anim_man_session.o: asm/ramdisk_data_things__anim_man_session.S ../data/things/.anim_man.session
+	gcc -c asm/ramdisk_data_things__anim_man_session.S -o .o/ramdisk_data_things__anim_man_session.o
+
 .o/ramdisk_data_things__blood1_session.o: asm/ramdisk_data_things__blood1_session.S ../data/things/.blood1.session
 	gcc -c asm/ramdisk_data_things__blood1_session.S -o .o/ramdisk_data_things__blood1_session.o
 
@@ -162,6 +171,9 @@
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
+
+.o/ramdisk_data_things_anim_man.o: asm/ramdisk_data_things_anim_man.S ../data/things/anim_man
+	gcc -c asm/ramdisk_data_things_anim_man.S -o .o/ramdisk_data_things_anim_man.o
 
 .o/ramdisk_data_things_apple.o: asm/ramdisk_data_things_apple.S ../data/things/apple
 	gcc -c asm/ramdisk_data_things_apple.S -o .o/ramdisk_data_things_apple.o

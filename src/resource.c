@@ -108,8 +108,9 @@ static uint8_t resource_init_15 (void *context)
 
 static uint8_t resource_init_16 (void *context)
 {
-    return (tex_load("data/gfx/man.png",
-                     "man") != 0);
+    return (tex_load_tiled("data/gfx/anim_man.png",
+                           "anim_man",
+                           1024, 1024) != 0);
 }
 
 static uint8_t resource_init_17 (void *context)
@@ -2530,6 +2531,29 @@ static uint8_t resource_init_23 (void *context)
     tile_load_arr("poison", 128, 128,
                   ARRAY_SIZE(poison_tiles), poison_tiles);
 
+    static const char *anim_man_tiles[] = {
+        // --------------------------------------------------------------------
+        "anim_man1.1",
+        "anim_man1.2",
+        "anim_man1.3",
+        "anim_man1.4",
+        "anim_man1.5",
+        "anim_man1.6",
+        "anim_man1.7",
+        "anim_man1.8",
+        "anim_man1.9",
+        "anim_man1.10",
+        "anim_man1.11",
+        "anim_man1.12",
+        "anim_man1.13",
+        "anim_man1.14",
+        "anim_man1.15",
+        "anim_man1.16",
+    };
+
+    tile_load_arr("anim_man", 256, 256,
+                  ARRAY_SIZE(anim_man_tiles), anim_man_tiles);
+
     /*
      * Walls
      */
@@ -2702,6 +2726,7 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_AXE2_ANIM, "data/things/axe2_anim");
     thing_template_load(&THING_BOW1_ANIM, "data/things/bow1_anim");
     thing_template_load(&THING_SCYTHE1_ANIM, "data/things/scythe1_anim");
+    thing_template_load(&THING_MAN_ANIM, "data/things/anim_man");
 
     return (true);
 }
