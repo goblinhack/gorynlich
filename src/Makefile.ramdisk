@@ -52,6 +52,9 @@
 .o/ramdisk_data_gfx_title_small_png.o: asm/ramdisk_data_gfx_title_small_png.S ../data/gfx/title_small.png
 	gcc -c asm/ramdisk_data_gfx_title_small_png.S -o .o/ramdisk_data_gfx_title_small_png.o
 
+.o/ramdisk_data_gfx_treasure_chest_png.o: asm/ramdisk_data_gfx_treasure_chest_png.S ../data/gfx/treasure_chest.png
+	gcc -c asm/ramdisk_data_gfx_treasure_chest_png.S -o .o/ramdisk_data_gfx_treasure_chest_png.o
+
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o
 
