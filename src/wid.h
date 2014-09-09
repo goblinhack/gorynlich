@@ -61,6 +61,7 @@ void wid_destroy_nodelay(widp *);
 void wid_destroy_in(widp w, uint32_t ms);
 void wid_set_ignore_events(widp, uint8_t);
 void wid_set_debug(widp, uint8_t);
+void wid_set_animate(widp, uint8_t);
 
 /*
  * Accessors.
@@ -764,6 +765,7 @@ typedef struct wid_ {
     uint8_t in_tree4_wids_being_destroyed:1;
     uint8_t in_tree5_ticking_wids:1;
     uint8_t can_be_atteched_now:1;
+    uint8_t animate:1;
 } wid;
 
 static inline uint8_t wid_is_moving (widp w)
