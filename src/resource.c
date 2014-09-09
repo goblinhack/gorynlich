@@ -115,7 +115,9 @@ static uint8_t resource_init_16 (void *context)
 
 static uint8_t resource_init_17 (void *context)
 {
-    return (true);
+    return (tex_load_tiled("data/gfx/anim_treasure_chest.png",
+                           "anim_treasure_chest",
+                           1024, 1024) != 0);
 }
 
 static uint8_t resource_init_18 (void *context)
@@ -2554,6 +2556,29 @@ static uint8_t resource_init_23 (void *context)
     tile_load_arr("anim_man", 256, 256,
                   ARRAY_SIZE(anim_man_tiles), anim_man_tiles);
 
+    static const char *anim_treasure_chest_tiles[] = {
+        // --------------------------------------------------------------------
+        "anim_treasure_chest1.1",
+        "anim_treasure_chest1.2",
+        "anim_treasure_chest1.3",
+        "anim_treasure_chest1.4",
+        "anim_treasure_chest1.5",
+        "anim_treasure_chest1.6",
+        "anim_treasure_chest1.7",
+        "anim_treasure_chest1.8",
+        "anim_treasure_chest1.9",
+        "anim_treasure_chest1.10",
+        "anim_treasure_chest1.11",
+        "anim_treasure_chest1.12",
+        "anim_treasure_chest1.13",
+        "anim_treasure_chest1.14",
+        "anim_treasure_chest1.15",
+        "anim_treasure_chest1.16",
+    };
+
+    tile_load_arr("anim_treasure_chest", 256, 256,
+                  ARRAY_SIZE(anim_treasure_chest_tiles), anim_treasure_chest_tiles);
+
     /*
      * Walls
      */
@@ -2726,7 +2751,12 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_AXE2_ANIM, "data/things/axe2_anim");
     thing_template_load(&THING_BOW1_ANIM, "data/things/bow1_anim");
     thing_template_load(&THING_SCYTHE1_ANIM, "data/things/scythe1_anim");
-    thing_template_load(&THING_MAN_ANIM, "data/things/anim_man");
+
+    /*
+     * Intro animations.
+     */
+    thing_template_load(&THING_ANIM_MAN, "data/things/anim_man");
+    thing_template_load(&THING_ANIM_TREASURE_CHEST, "data/things/anim_treasure_chest");
 
     return (true);
 }

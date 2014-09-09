@@ -34,6 +34,7 @@ static widp wid_intro;
 static widp wid_intro_background;
 static widp wid_intro_title;
 static widp wid_intro_man;
+static widp wid_intro_treasure_chest;
 
 static uint8_t wid_intro_quit_selected(void);
 static void wid_intro_editor_selected(void);
@@ -76,6 +77,7 @@ void wid_intro_fini (void)
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
+            wid_destroy_in(wid_intro_treasure_chest, wid_hide_delay * 2);
         }
     }
 }
@@ -114,6 +116,10 @@ void wid_intro_hide (void)
     wid_move_delta_pct_in(wid_intro_man, -2.0f, -0.0f,
                                 intro_effect_delay_zoom);
 
+    wid_fade_out(wid_intro_treasure_chest, intro_effect_delay_zoom);
+    wid_move_delta_pct_in(wid_intro_treasure_chest, -2.0f, -0.0f,
+                                intro_effect_delay_zoom);
+
     wid_hide(wid_intro, 0);
     wid_raise(wid_intro);
     wid_update(wid_intro);
@@ -130,6 +136,7 @@ void wid_intro_visible (void)
         wid_destroy(&wid_intro_background);
         wid_destroy(&wid_intro_title);
         wid_destroy(&wid_intro_man);
+        wid_destroy(&wid_intro_treasure_chest);
         wid_intro_create();
     }
 
@@ -159,6 +166,7 @@ void wid_intro_visible (void)
     wid_fade_in(wid_intro_background, intro_effect_delay);
     wid_fade_in(wid_intro_title, intro_effect_delay);
     wid_fade_in(wid_intro_man, intro_effect_delay);
+    wid_fade_in(wid_intro_treasure_chest, intro_effect_delay);
 }
 
 static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
@@ -490,6 +498,28 @@ static void wid_intro_bg_create (void)
         }
 
         {
+            widp wid = wid_intro_treasure_chest = wid_new_window("bg");
+            float f;
+
+            f = (512.0 / 200.0);
+
+            fpoint tl = { 0.0, 0.56 };
+            fpoint br = { 0.3, 1.0 };
+
+            wid_set_tl_br_pct(wid, tl, br);
+
+            thing_templatep tp = thing_template_find("data/things/anim_treasure_chest");
+            wid_set_thing_template(wid, tp);
+
+            wid_raise(wid);
+
+            wid_set_mode(wid, WID_MODE_NORMAL);
+
+            wid_update(wid);
+            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.8f, 0.75f);
+        }
+
+        {
             widp wid = wid_intro_background = wid_new_window("bg");
 
             float f;
@@ -798,4 +828,5 @@ static void wid_intro_create (void)
     wid_fade_in(wid_intro_background, intro_effect_delay*2);
     wid_fade_in(wid_intro_title, intro_effect_delay*2);
     wid_fade_in(wid_intro_man, intro_effect_delay*2);
+    wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
 }
