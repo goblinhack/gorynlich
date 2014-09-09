@@ -5,10 +5,10 @@
  tiles={
   tile={
    tile="anim_treasure_chest1.1"
-   delay=100
+   delay=3000
   }
   tile={
-   tile="anim_treasure_chest1.2"
+   tile="anim_treasure_chest1.10"
    delay=100
   }
   tile={
@@ -16,39 +16,19 @@
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.4"
+   tile="anim_treasure_chest1.1"
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.11"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.12"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.13"
-   delay=100
+   tile="anim_treasure_chest1.1"
+   delay=3000
   }
   tile={
    tile="anim_treasure_chest1.14"
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.15"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.16"
+   tile="anim_treasure_chest1.5"
    delay=100
   }
   tile={
@@ -56,39 +36,15 @@
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.2"
+   tile="anim_treasure_chest1.1"
+   delay=3000
+  }
+  tile={
+   tile="anim_treasure_chest1.6"
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.3"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.4"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.11"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.12"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.15"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.16"
+   tile="anim_treasure_chest1.7"
    delay=100
   }
   tile={
@@ -96,39 +52,11 @@
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.2"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.3"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.4"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
+   tile="anim_treasure_chest1.1"
+   delay=3000
   }
   tile={
    tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.11"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.12"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.15"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.16"
    delay=100
   }
   tile={
@@ -136,116 +64,12 @@
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.2"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.3"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.4"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.11"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.12"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.15"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.13"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.14"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.16"
-   delay=100
-  }
-  tile={
    tile="anim_treasure_chest1.1"
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.2"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.3"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.4"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.11"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.12"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.15"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.16"
-   delay=100
-  }
-  tile={
    tile="anim_treasure_chest1.1"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.2"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.3"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.4"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.9"
-   delay=100
+   delay=3000
   }
   tile={
    tile="anim_treasure_chest1.10"
@@ -256,15 +80,19 @@
    delay=100
   }
   tile={
+   tile="anim_treasure_chest1.1"
+   delay=100
+  }
+  tile={
+   tile="anim_treasure_chest1.1"
+   delay=3000
+  }
+  tile={
    tile="anim_treasure_chest1.12"
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.15"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.16"
+   tile="anim_treasure_chest1.13"
    delay=100
   }
   tile={
@@ -272,39 +100,15 @@
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.2"
-   delay=100
+   tile="anim_treasure_chest1.1"
+   delay=3000
   }
   tile={
-   tile="anim_treasure_chest1.3"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.4"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.11"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.12"
+   tile="anim_treasure_chest1.14"
    delay=100
   }
   tile={
    tile="anim_treasure_chest1.15"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.16"
    delay=100
   }
   tile={
@@ -312,31 +116,11 @@
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.2"
-   delay=100
+   tile="anim_treasure_chest1.1"
+   delay=3000
   }
   tile={
-   tile="anim_treasure_chest1.3"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.4"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.5"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.8"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.11"
-   delay=100
-  }
-  tile={
-   tile="anim_treasure_chest1.12"
+   tile="anim_treasure_chest1.14"
    delay=100
   }
   tile={
@@ -344,7 +128,7 @@
    delay=100
   }
   tile={
-   tile="anim_treasure_chest1.16"
+   tile="anim_treasure_chest1.1"
    delay=100
   }
  }
