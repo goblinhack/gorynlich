@@ -440,6 +440,45 @@ static uint8_t wid_intro_quit_receive_mouse_down (widp w,
     return (wid_intro_quit_selected());
 }
 
+static double y;
+static double dy;
+
+static void wid_intro_tick_reset (void)
+{
+    y = -0.20;
+    dy = 0.00001;
+}
+
+static void wid_intro_tick (widp wid)
+{
+    wid_move_to_pct_centered(wid_intro_title, 0.5f, y);
+
+    y += dy;
+
+    static const double wall_start = 0.38;
+    static const double accell_down = 1.03;
+    static const double friction_up = 0.97;
+    static const double elasticity = 0.2;
+
+    if (y > wall_start) {
+        y = wall_start;
+        dy = -dy * elasticity;
+        y += dy;
+
+        wid_rotate_to_pct_in(wid, 0.1, 1.2, 100, 1);
+    }
+
+    if (dy < 0) {
+        dy *= friction_up;
+
+        if (dy > -0.0001) {
+            dy = 0.0001;
+        }
+    } else {
+        dy *= accell_down;
+    }
+}
+
 static void wid_intro_bg_create (void)
 {
     if (wid_intro_background) {
@@ -471,7 +510,8 @@ static void wid_intro_bg_create (void)
 
             wid_update(wid);
             wid_move_to_pct_centered(wid_intro_title, 0.5f, -4.1f);
-            wid_move_to_pct_centered_in(wid_intro_title, 0.5f, 0.38f, 800);
+            wid_set_on_tick(wid, wid_intro_tick);
+            wid_intro_tick_reset();
         }
 
         {
@@ -516,7 +556,7 @@ static void wid_intro_bg_create (void)
             wid_set_mode(wid, WID_MODE_NORMAL);
 
             wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.9f, 0.74f);
+            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.96f, 0.74f);
         }
 
         {
@@ -739,7 +779,7 @@ static void wid_intro_create (void)
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.00f, 0.87f};
+        fpoint tl = {0.00f, 0.90f};
         fpoint br = {0.33f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
@@ -768,7 +808,7 @@ static void wid_intro_create (void)
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.66f, 0.87f};
+        fpoint tl = {0.66f, 0.90f};
         fpoint br = {1.00f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
