@@ -1,6 +1,9 @@
 .o/ramdisk_data_gfx_anim_man_png.o: asm/ramdisk_data_gfx_anim_man_png.S ../data/gfx/anim_man.png
 	gcc -c asm/ramdisk_data_gfx_anim_man_png.S -o .o/ramdisk_data_gfx_anim_man_png.o
 
+.o/ramdisk_data_gfx_anim_treasure_chest_png.o: asm/ramdisk_data_gfx_anim_treasure_chest_png.S ../data/gfx/anim_treasure_chest.png
+	gcc -c asm/ramdisk_data_gfx_anim_treasure_chest_png.S -o .o/ramdisk_data_gfx_anim_treasure_chest_png.o
+
 .o/ramdisk_data_gfx_cloudkill_png.o: asm/ramdisk_data_gfx_cloudkill_png.S ../data/gfx/cloudkill.png
 	gcc -c asm/ramdisk_data_gfx_cloudkill_png.S -o .o/ramdisk_data_gfx_cloudkill_png.o
 
@@ -51,9 +54,6 @@
 
 .o/ramdisk_data_gfx_title_small_png.o: asm/ramdisk_data_gfx_title_small_png.S ../data/gfx/title_small.png
 	gcc -c asm/ramdisk_data_gfx_title_small_png.S -o .o/ramdisk_data_gfx_title_small_png.o
-
-.o/ramdisk_data_gfx_treasure_chest_png.o: asm/ramdisk_data_gfx_treasure_chest_png.S ../data/gfx/treasure_chest.png
-	gcc -c asm/ramdisk_data_gfx_treasure_chest_png.S -o .o/ramdisk_data_gfx_treasure_chest_png.o
 
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o
@@ -124,6 +124,9 @@
 .o/ramdisk_data_things__anim_man_session.o: asm/ramdisk_data_things__anim_man_session.S ../data/things/.anim_man.session
 	gcc -c asm/ramdisk_data_things__anim_man_session.S -o .o/ramdisk_data_things__anim_man_session.o
 
+.o/ramdisk_data_things__anim_treasure_chest_session.o: asm/ramdisk_data_things__anim_treasure_chest_session.S ../data/things/.anim_treasure_chest.session
+	gcc -c asm/ramdisk_data_things__anim_treasure_chest_session.S -o .o/ramdisk_data_things__anim_treasure_chest_session.o
+
 .o/ramdisk_data_things__blood1_session.o: asm/ramdisk_data_things__blood1_session.S ../data/things/.blood1.session
 	gcc -c asm/ramdisk_data_things__blood1_session.S -o .o/ramdisk_data_things__blood1_session.o
 
@@ -177,6 +180,9 @@
 
 .o/ramdisk_data_things_anim_man.o: asm/ramdisk_data_things_anim_man.S ../data/things/anim_man
 	gcc -c asm/ramdisk_data_things_anim_man.S -o .o/ramdisk_data_things_anim_man.o
+
+.o/ramdisk_data_things_anim_treasure_chest.o: asm/ramdisk_data_things_anim_treasure_chest.S ../data/things/anim_treasure_chest
+	gcc -c asm/ramdisk_data_things_anim_treasure_chest.S -o .o/ramdisk_data_things_anim_treasure_chest.o
 
 .o/ramdisk_data_things_apple.o: asm/ramdisk_data_things_apple.S ../data/things/apple
 	gcc -c asm/ramdisk_data_things_apple.S -o .o/ramdisk_data_things_apple.o
