@@ -255,6 +255,7 @@ static void wid_intro2_buttons_tick (widp wid)
     }
 
     wid_set_tilename(wid, tilename);
+    wid_set_animate(wid, false);
 }
 
 static int32_t x;
