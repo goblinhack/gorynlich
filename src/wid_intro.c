@@ -117,7 +117,7 @@ void wid_intro_hide (void)
                                 intro_effect_delay_zoom);
 
     wid_fade_out(wid_intro_treasure_chest, intro_effect_delay_zoom);
-    wid_move_delta_pct_in(wid_intro_treasure_chest, -2.0f, -0.0f,
+    wid_move_delta_pct_in(wid_intro_treasure_chest, 2.0f, -0.0f,
                                 intro_effect_delay_zoom);
 
     wid_hide(wid_intro, 0);
@@ -494,7 +494,7 @@ static void wid_intro_bg_create (void)
 
             wid_update(wid);
             wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.75f);
-            wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.75f, 1000);
+            wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.74f, 1000);
         }
 
         {
@@ -516,7 +516,7 @@ static void wid_intro_bg_create (void)
             wid_set_mode(wid, WID_MODE_NORMAL);
 
             wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.8f, 0.75f);
+            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.9f, 0.74f);
         }
 
         {
