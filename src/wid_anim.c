@@ -16,6 +16,10 @@
 
 void wid_animate (widp w)
 {
+    if (!w->animate) {
+        return;
+    }
+
     thing_templatep tp = wid_get_thing_template(w);
     if (!tp) {
         return;

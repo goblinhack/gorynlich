@@ -983,7 +983,7 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG(INFO, "%s, joined the game", p->name);
+            MSG(INFO, "%s joined the game", p->name);
 
             player = thing_client_find(p->thing_id);
 

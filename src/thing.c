@@ -769,7 +769,13 @@ thingp thing_server_new (const char *name, double x, double y)
 
     thing_server_init(t, x, y);
 
-    THING_LOG(t, "created");
+    if (!thing_is_boring_noverify(t)) {
+        if (t->on_server) {
+            LOG("Server: created %s", thing_logname(t));
+        } else {
+            LOG("Client: created %s", thing_logname(t));
+        }
+    }
 
     return (t);
 }
@@ -873,7 +879,13 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
     t->logname = dynprintf("%s[%p, id %u] (client)", thing_short_name(t), t,
                            t->thing_id);
 
-    THING_LOG(t, "created");
+    if (!thing_is_boring_noverify(t)) {
+        if (t->on_server) {
+            LOG("Server: created %s", thing_logname(t));
+        } else {
+            LOG("Client: created %s", thing_logname(t));
+        }
+    }
 
     return (t);
 }
@@ -1083,7 +1095,7 @@ void thing_destroy (thingp t, const char *why)
 {
     verify(t);
 
-    if (thing_is_player(t)) {
+    if (!thing_is_boring_noverify(t)) {
         if (t->on_server) {
             LOG("Server: destroy %s (%s)", thing_logname(t), why);
         } else {

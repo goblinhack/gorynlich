@@ -125,6 +125,14 @@ void wid_intro_visible (void)
         return;
     }
 
+    if (wid_intro) {
+        wid_destroy(&wid_intro);
+        wid_destroy(&wid_intro_background);
+        wid_destroy(&wid_intro_title);
+        wid_destroy(&wid_intro_man);
+        wid_intro_create();
+    }
+
     wid_notify_flush();
 
     LOG("Client: Intro screen show");
