@@ -1,3 +1,6 @@
+.o/ramdisk_data_gfx_anim_eyes_png.o: asm/ramdisk_data_gfx_anim_eyes_png.S ../data/gfx/anim_eyes.png
+	gcc -c asm/ramdisk_data_gfx_anim_eyes_png.S -o .o/ramdisk_data_gfx_anim_eyes_png.o
+
 .o/ramdisk_data_gfx_anim_man_png.o: asm/ramdisk_data_gfx_anim_man_png.S ../data/gfx/anim_man.png
 	gcc -c asm/ramdisk_data_gfx_anim_man_png.S -o .o/ramdisk_data_gfx_anim_man_png.o
 
@@ -121,6 +124,9 @@
 .o/ramdisk_data_sound_thief_wav.o: asm/ramdisk_data_sound_thief_wav.S ../data/sound/thief.wav
 	gcc -c asm/ramdisk_data_sound_thief_wav.S -o .o/ramdisk_data_sound_thief_wav.o
 
+.o/ramdisk_data_things__anim_eyes_session.o: asm/ramdisk_data_things__anim_eyes_session.S ../data/things/.anim_eyes.session
+	gcc -c asm/ramdisk_data_things__anim_eyes_session.S -o .o/ramdisk_data_things__anim_eyes_session.o
+
 .o/ramdisk_data_things__anim_man_session.o: asm/ramdisk_data_things__anim_man_session.S ../data/things/.anim_man.session
 	gcc -c asm/ramdisk_data_things__anim_man_session.S -o .o/ramdisk_data_things__anim_man_session.o
 
@@ -177,6 +183,9 @@
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
+
+.o/ramdisk_data_things_anim_eyes.o: asm/ramdisk_data_things_anim_eyes.S ../data/things/anim_eyes
+	gcc -c asm/ramdisk_data_things_anim_eyes.S -o .o/ramdisk_data_things_anim_eyes.o
 
 .o/ramdisk_data_things_anim_man.o: asm/ramdisk_data_things_anim_man.S ../data/things/anim_man
 	gcc -c asm/ramdisk_data_things_anim_man.S -o .o/ramdisk_data_things_anim_man.o
