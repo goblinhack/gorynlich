@@ -329,6 +329,7 @@ extern uint16_t THING_AXE2_ANIM;
 extern uint16_t THING_SCYTHE1_ANIM;
 extern uint16_t THING_ANIM_MAN;
 extern uint16_t THING_ANIM_TREASURE_CHEST;
+extern uint16_t THING_ANIM_EYES;
 extern uint16_t THING_PIPE;
 extern uint16_t THING_WEAPON_HIT1;
 extern uint16_t THING_EXPLOSION1;
