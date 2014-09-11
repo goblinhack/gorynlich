@@ -16,6 +16,9 @@
 .o/ramdisk_data_gfx_explosion_png.o: asm/ramdisk_data_gfx_explosion_png.S ../data/gfx/explosion.png
 	gcc -c asm/ramdisk_data_gfx_explosion_png.S -o .o/ramdisk_data_gfx_explosion_png.o
 
+.o/ramdisk_data_gfx_giant_rock_png.o: asm/ramdisk_data_gfx_giant_rock_png.S ../data/gfx/giant_rock.png
+	gcc -c asm/ramdisk_data_gfx_giant_rock_png.S -o .o/ramdisk_data_gfx_giant_rock_png.o
+
 .o/ramdisk_data_gfx_gorynlich_png.o: asm/ramdisk_data_gfx_gorynlich_png.S ../data/gfx/gorynlich.png
 	gcc -c asm/ramdisk_data_gfx_gorynlich_png.S -o .o/ramdisk_data_gfx_gorynlich_png.o
 
