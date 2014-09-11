@@ -135,7 +135,8 @@ static uint8_t resource_init_19 (void *context)
 
 static uint8_t resource_init_20 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/wall_floor.png",
+                     "wall_floor") != 0);
 }
 
 static uint8_t resource_init_21 (void *context)
