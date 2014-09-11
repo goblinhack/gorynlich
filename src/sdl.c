@@ -763,11 +763,6 @@ void sdl_loop (void)
         /*
          * Let widgets move.
          */
-        wid_tick_all();
-
-        /*
-         * Let widgets move.
-         */
         wid_move_all();
 
         /*
