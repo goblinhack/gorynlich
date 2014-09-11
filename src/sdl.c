@@ -750,12 +750,24 @@ void sdl_loop (void)
             glClear(GL_COLOR_BUFFER_BIT);
         }
 
+        time_update_time_milli();
+
         /*
          * Splash screen loading bar for init functions.
          */
         init_done = !action_init_fns_tick(&init_fns);
 
         sdl_splashscreen_update();
+
+        /*
+         * Let widgets move.
+         */
+        wid_tick_all();
+
+        /*
+         * Let widgets move.
+         */
+        wid_move_all();
 
         /*
          * Display windows.

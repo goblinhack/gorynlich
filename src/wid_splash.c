@@ -15,6 +15,7 @@
 
 void sdl_splashscreen_update (void)
 {
+    static widp wid_production;
     static widp wid_splash;
     static widp wid_icon;
     static uint32_t maxsize;
@@ -26,6 +27,10 @@ void sdl_splashscreen_update (void)
 
     if (wid_icon) {
         wid_destroy_nodelay(&wid_icon);
+    }
+
+    if (wid_production) {
+        wid_destroy_nodelay(&wid_production);
     }
 
     if (!init_fns) {
@@ -85,7 +90,6 @@ void sdl_splashscreen_update (void)
 
         wid_set_mode(wid_icon, WID_MODE_NORMAL);
         color c = WHITE;
-        c.a = ((255.0 / (float)maxsize) * (float)(maxsize - size));
 
         wid_set_color(wid_icon, WID_COLOR_TL, c);
         wid_set_color(wid_icon, WID_COLOR_BR, c);
@@ -93,5 +97,33 @@ void sdl_splashscreen_update (void)
 
         wid_raise(wid_icon);
         wid_update(wid_icon);
+    }
+
+    if (!wid_production) {
+        wid_production = wid_new_square_window("urk");
+        wid_set_font(wid_production, med_font);
+        wid_set_no_shape(wid_production);
+
+        fpoint tl = {0.2f, 0.70f};
+        fpoint br = {0.8f, 0.90f};
+
+        wid_set_tl_br_pct(wid_production, tl, br);
+        wid_set_text(wid_production, "A goblinhack production");
+
+        wid_set_color(wid_production, WID_COLOR_TEXT, WHITE);
+        color c = WHITE;
+        c.a = 200;
+        wid_set_color(wid_production, WID_COLOR_TEXT, c);
+
+        wid_set_mode(wid_production, WID_MODE_OVER);
+        c.a = 200;
+        wid_set_color(wid_production, WID_COLOR_TEXT, c);
+
+        wid_set_mode(wid_production, WID_MODE_FOCUS);
+        c.a = 100;
+        wid_set_color(wid_production, WID_COLOR_TEXT, c);
+        wid_set_text_outline(wid_production, true);
+
+        wid_update(wid_production);
     }
 }
