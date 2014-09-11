@@ -713,10 +713,6 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_about_init");
 
     action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_intro_init,
-                          0, "wid_intro_init");
-
-    action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_intro2_init,
                           0, "wid_intro2_init");
 
