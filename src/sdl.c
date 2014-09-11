@@ -784,6 +784,12 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
+
+#ifndef ENABLE_VIDEO_SYNC
+//            SDL_Delay(MAIN_LOOP_DELAY);
+#endif
+        } else {
+            usleep(MAIN_LOOP_DELAY);
         }
     }
 
@@ -825,6 +831,12 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
+
+#ifndef ENABLE_VIDEO_SYNC
+//            SDL_Delay(MAIN_LOOP_DELAY);
+#endif
+        } else {
+            usleep(MAIN_LOOP_DELAY);
         }
     }
 
