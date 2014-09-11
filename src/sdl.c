@@ -20,6 +20,7 @@ extern int client_pause;
 #include "sdl.h"
 #include "init_fn.h"
 #include "wid_splash.h"
+#include "wid_intro_demo.h"
 #include "config.h"
 #include "tex.h"
 #include "ttf.h"
@@ -758,6 +759,47 @@ void sdl_loop (void)
         init_done = !action_init_fns_tick(&init_fns);
 
         sdl_splashscreen_update();
+
+        /*
+         * Let widgets move.
+         */
+        wid_tick_all();
+
+        /*
+         * Let widgets move.
+         */
+        wid_move_all();
+
+        /*
+         * Display windows.
+         */
+        wid_display_all();
+
+        /*
+         * Flip
+         */
+        if (!HEADLESS) {
+#ifdef ENABLE_SDL_WINDOW /* { */
+            SDL_GL_SwapWindow(window);
+#else /* } { */
+            SDL_GL_SwapBuffers();
+#endif /* } */
+        }
+    }
+
+    for (;;) {
+        /*
+         * Clear the screen
+         */
+        if (!HEADLESS) {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+
+        time_update_time_milli();
+
+        if (!sdl_intro_demo_update()) {
+            break;
+        }
 
         /*
          * Let widgets move.
