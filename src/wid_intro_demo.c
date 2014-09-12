@@ -150,7 +150,7 @@ static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *ar
     wid_set_tl_br_pct(child, tl, br);
     wid_set_on_tick(child, wid_intro_demo_buttons_tick);
 
-    wid_set_client_context(child, (void*) demo_player_count++);
+    wid_set_client_context(child, (void*) (uintptr_t) demo_player_count++);
 
     return (true);
 }
