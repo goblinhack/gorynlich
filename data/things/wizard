@@ -63,5 +63,49 @@ is_warm_blooded
    is_dir_right
    tile="wizard-br"
   }
+  tile={
+   delay=200
+   is_dir_up
+   tile="wizard-up3"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="wizard-down3"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="wizard-left3"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="wizard-right3"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="wizard-tl3"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="wizard-bl3"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="wizard-tr3"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="wizard-br3"
+  }
  }
 }

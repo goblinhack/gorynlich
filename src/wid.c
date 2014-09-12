@@ -1922,7 +1922,7 @@ void wid_set_tilename (widp w, const char *name)
 
     tilep tile = tile_find(name);
     if (!tile) {
-        DIE("failed to set wid tile %s", name);
+        DIE("failed to find wid tile %s", name);
     }
 
     w->tile = tile;
