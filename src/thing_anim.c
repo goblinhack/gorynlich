@@ -27,6 +27,7 @@ void thing_animate (thingp t)
          * If within the animate time of this frame, keep with it.
          */
         if (t->timestamp_change_to_next_frame > time_get_time_cached()) {
+
             return;
         }
 
@@ -51,6 +52,12 @@ void thing_animate (thingp t)
      * Get the next tile.
      */
     if (tile) {
+#if 0
+    if (thing_is_animate_only_when_moving_noverify(t) &&
+        !wid_is_moving(t->wid)) {
+    } else {
+    }
+#endif
         tile = thing_tile_next(tiles, tile);
     }
 
