@@ -793,6 +793,38 @@ void sdl_loop (void)
         }
     }
 
+    if (!HEADLESS) {
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    }
+
+    /*
+     * Don't use this. It seemed to mess up graphics on FireGL.
+     *
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+     */
+
+    if (!HEADLESS) {
+
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+
+#    ifdef ENABLE_VIDEO_SYNC /* { */
+        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+#    else
+        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
+#    endif /* } */
+
+#else /* } { */
+
+#    ifdef ENABLE_VIDEO_SYNC /* { */
+        SDL_GL_SetSwapInterval(1);
+#    else
+        SDL_GL_SetSwapInterval(0);
+#    endif /* } */
+
+#endif /* } */
+
+    }
+
     for (;;) {
         /*
          * Clear the screen
@@ -832,44 +864,10 @@ void sdl_loop (void)
             SDL_GL_SwapBuffers();
 #endif /* } */
 
-#ifndef ENABLE_VIDEO_SYNC
-            SDL_Delay(MAIN_LOOP_DELAY);
-#endif
+//            SDL_Delay(MAIN_LOOP_DELAY * 4);
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
-    }
-
-    if (!HEADLESS) {
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    }
-
-    /*
-     * Don't use this. It seemed to mess up graphics on FireGL.
-     *
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-     */
-
-    if (!HEADLESS) {
-
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-
-#    ifdef ENABLE_VIDEO_SYNC /* { */
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-#    else
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
-#    endif /* } */
-
-#else /* } { */
-
-#    ifdef ENABLE_VIDEO_SYNC /* { */
-        SDL_GL_SetSwapInterval(1);
-#    else
-        SDL_GL_SetSwapInterval(0);
-#    endif /* } */
-
-#endif /* } */
-
     }
 
     wid_console_hello();

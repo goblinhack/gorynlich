@@ -9,7 +9,8 @@
  speed=9
  health=150
  is_player
-is_warm_blooded
+ is_animate_only_when_moving
+ is_warm_blooded
  is_cats_eyes
  is_light_source
  is_candle_light
@@ -150,6 +151,94 @@ is_warm_blooded
    is_dir_down
    is_dir_right
    tile="elf-br3"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="elf-up4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="elf-down4"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="elf-left4"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="elf-right4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="elf-tl4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="elf-bl4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="elf-tr4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="elf-br4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="elf-up5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="elf-down5"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="elf-left5"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="elf-right5"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="elf-tl5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="elf-bl5"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="elf-tr5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="elf-br5"
   }
  }
 }

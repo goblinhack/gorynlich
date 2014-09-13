@@ -9,7 +9,8 @@
  speed=5
  health=100
  is_player
-is_warm_blooded
+ is_animate_only_when_moving
+ is_warm_blooded
  is_cats_eyes
  is_light_source
  is_candle_light
@@ -66,6 +67,50 @@ is_warm_blooded
   tile={
    delay=200
    is_dir_up
+   tile="wizard-up2"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="wizard-down2"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="wizard-left2"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="wizard-right2"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="wizard-tl2"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="wizard-bl2"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="wizard-tr2"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="wizard-br2"
+  }
+  tile={
+   delay=200
+   is_dir_up
    tile="wizard-up3"
   }
   tile={
@@ -106,6 +151,94 @@ is_warm_blooded
    is_dir_down
    is_dir_right
    tile="wizard-br3"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="wizard-up4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="wizard-down4"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="wizard-left4"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="wizard-right4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="wizard-tl4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="wizard-bl4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="wizard-tr4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="wizard-br4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="wizard-up5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="wizard-down5"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="wizard-left5"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="wizard-right5"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="wizard-tl5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="wizard-bl5"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="wizard-tr5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="wizard-br5"
   }
  }
 }

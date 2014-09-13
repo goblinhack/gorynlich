@@ -1031,11 +1031,11 @@ static inline uint8_t thing_is_rrr15 (thingp t)
     return (thing_template_is_rrr15(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr16 (thingp t)
+static inline uint8_t thing_is_animate_only_when_moving (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr16(thing_get_template(t)));
+    return (thing_template_is_animate_only_when_moving(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_warm_blooded (thingp t)
@@ -1398,9 +1398,9 @@ static inline uint8_t thing_is_rrr15_noverify (thingp t)
     return (t->thing_template->is_rrr15);
 }
 
-static inline uint8_t thing_is_rrr16_noverify (thingp t)
+static inline uint8_t thing_is_animate_only_when_moving_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr16);
+    return (t->thing_template->is_animate_only_when_moving);
 }
 
 static inline uint8_t thing_is_warm_blooded_noverify (thingp t)
