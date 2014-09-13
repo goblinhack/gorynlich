@@ -1936,7 +1936,16 @@ void wid_set_tilename (widp w, const char *name)
 
         tilep tile = tile_find(tmp);
         if (!tile) {
-            DIE("failed to set wid tile %s for eyes", tmp);
+            /*
+             * knock off the last char off of the name so things like 
+             * warrior-right3 becomes warrior-right-eyes which might exist if 
+             * we do not need eyes for every tile.
+             */
+            snprintf(tmp + strlen(name) - 1, sizeof(tmp), "-eyes");
+            tile = tile_find(tmp);
+            if (!tile) {
+                DIE("failed to set wid tile %s for eyes", tmp);
+            }
         }
 
         w->tile_eyes = tile;
@@ -1953,12 +1962,17 @@ void wid_set_tile (widp w, tilep tile)
 
     if (t && thing_is_cats_eyes(t)) {
         char tmp[SMALL_STRING_LEN_MAX];
+        const char *name = tile_name(tile);
 
-        snprintf(tmp, sizeof(tmp), "%s-eyes", tile_name(tile));
+        snprintf(tmp, sizeof(tmp), "%s-eyes", name);
 
         tilep tile = tile_find(tmp);
         if (!tile) {
-            DIE("failed to set wid tile %s for eyes", tmp);
+            snprintf(tmp + strlen(name) - 1, sizeof(tmp), "-eyes");
+            tile = tile_find(tmp);
+            if (!tile) {
+                DIE("failed to set wid tile %s for eyes", tmp);
+            }
         }
 
         w->tile_eyes = tile;
