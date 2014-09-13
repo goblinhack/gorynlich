@@ -9,7 +9,8 @@
  speed=8
  health=10
  is_player
-is_warm_blooded
+ is_animate_only_when_moving
+ is_warm_blooded
  is_cats_eyes
  is_light_source
  is_candle_light
@@ -150,6 +151,94 @@ is_warm_blooded
    is_dir_down
    is_dir_right
    tile="valkyrie-br3"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="valkyrie-up4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="valkyrie-down4"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="valkyrie-left4"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="valkyrie-right4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="valkyrie-tl4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="valkyrie-bl4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="valkyrie-tr4"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="valkyrie-br4"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   tile="valkyrie-up5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   tile="valkyrie-down5"
+  }
+  tile={
+   delay=200
+   is_dir_left
+   tile="valkyrie-left5"
+  }
+  tile={
+   delay=200
+   is_dir_right
+   tile="valkyrie-right5"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_left
+   tile="valkyrie-tl5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_left
+   tile="valkyrie-bl5"
+  }
+  tile={
+   delay=200
+   is_dir_up
+   is_dir_right
+   tile="valkyrie-tr5"
+  }
+  tile={
+   delay=200
+   is_dir_down
+   is_dir_right
+   tile="valkyrie-br5"
   }
  }
 }

@@ -232,7 +232,7 @@ typedef struct thing_template_ {
     uint8_t is_rrr13:1;
     uint8_t is_rrr14:1;
     uint8_t is_rrr15:1;
-    uint8_t is_rrr16:1;
+    uint8_t is_animate_only_when_moving:1;
     uint8_t is_warm_blooded:1;
     uint8_t is_click_to_drop:1;
     uint8_t is_click_to_use:1;
@@ -574,9 +574,9 @@ static inline uint8_t thing_template_is_rrr15 (thing_templatep t)
     return (t->is_rrr15);
 }
 
-static inline uint8_t thing_template_is_rrr16 (thing_templatep t)
+static inline uint8_t thing_template_is_animate_only_when_moving (thing_templatep t)
 {
-    return (t->is_rrr16);
+    return (t->is_animate_only_when_moving);
 }
 
 static inline uint8_t thing_template_is_warm_blooded (thing_templatep t)
