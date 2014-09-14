@@ -57,6 +57,7 @@ void thing_animate (thingp t)
         !wid_is_moving(t->wid)) {
     } else {
     }
+    }
 #endif
         tile = thing_tile_next(tiles, tile);
     }
