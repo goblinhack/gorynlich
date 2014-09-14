@@ -520,6 +520,12 @@ typedef struct thing_ {
     double y;
 
     /*
+     * Last anim frame position. To be able to detect moving things.
+     */
+    double anim_x;
+    double anim_y;
+
+    /*
      * Map grid co-ordinates.
      */
     int16_t map_x;
@@ -631,6 +637,7 @@ typedef struct thing_ {
     uint32_t is_epicenter:1;
 
     uint32_t has_left_level:1;
+    uint32_t is_moving:1;
     uint32_t is_hit_success:1;
     uint32_t is_hit_crit:1;
     uint32_t is_hit_miss:1;

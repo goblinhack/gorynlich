@@ -52,14 +52,22 @@ void thing_animate (thingp t)
      * Get the next tile.
      */
     if (tile) {
-#if 0
-    if (thing_is_animate_only_when_moving_noverify(t) &&
-        !wid_is_moving(t->wid)) {
-    } else {
-    }
-    }
-#endif
-        tile = thing_tile_next(tiles, tile);
+        if ((t->anim_x != t->x) || (t->anim_y != t->y)) {
+            t->anim_x = t->x;
+            t->anim_y = t->y;
+            t->is_moving = true;
+        } else {
+            t->is_moving = false;
+        }
+
+        if (thing_is_animate_only_when_moving_noverify(t) &&
+            !t->is_moving) {
+            /*
+             * Same tile.
+             */
+        } else {
+            tile = thing_tile_next(tiles, tile);
+        }
     }
 
     /*
