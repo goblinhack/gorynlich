@@ -235,14 +235,14 @@ static void wid_dead_create (const char *name,
     }
 
     widp w = wid_gravestone = wid_new_window("dead");
-    fpoint tl = { 0.0, 0.3 };
+    fpoint tl = { 0.0, 0.2 };
     fpoint br = { 0.4, 1.0 };
 
     wid_set_tl_br_pct(w, tl, br);
 
     wid_set_mode(w, WID_MODE_NORMAL);
     wid_set_color(w, WID_COLOR_TL, WHITE);
-    wid_set_color(w, WID_COLOR_BR, RED);
+    wid_set_color(w, WID_COLOR_BR, WHITE);
     wid_set_color(w, WID_COLOR_BG, WHITE);
     wid_set_font(w, vsmall_font);
     wid_set_bevelled(w, 10);
@@ -254,12 +254,12 @@ static void wid_dead_create (const char *name,
     {
         widp w2 = wid_new_square_button(w, "dead");
         wid_set_mode(w2, WID_MODE_NORMAL);
-        color c = RED;
+        color c = GRAY;
         c.a = 0;
         wid_set_color(w2, WID_COLOR_TL, c);
         wid_set_color(w2, WID_COLOR_BR, c);
         wid_set_color(w2, WID_COLOR_BG, c);
-        wid_set_color(w2, WID_COLOR_TEXT, GREEN);
+        wid_set_color(w2, WID_COLOR_TEXT, GRAY);
         wid_set_text(w2, name);
         wid_set_font(w2, vsmall_font);
         wid_set_ignore_events(w2, true);
@@ -279,14 +279,14 @@ static void wid_dead_create (const char *name,
         wid_set_color(w2, WID_COLOR_TL, c);
         wid_set_color(w2, WID_COLOR_BR, c);
         wid_set_color(w2, WID_COLOR_BG, c);
-        wid_set_color(w2, WID_COLOR_TEXT, GREEN);
+        wid_set_color(w2, WID_COLOR_TEXT, GRAY);
         wid_set_text(w2, reason);
         wid_set_font(w2, vsmall_font);
         wid_set_ignore_events(w2, true);
 
         {
-            fpoint tl = { 0.0, 0.8 };
-            fpoint br = { 1.0, 0.9 };
+            fpoint tl = { 0.0, 0.7 };
+            fpoint br = { 1.0, 0.8 };
             wid_set_tl_br_pct(w2, tl, br);
         }
     }
