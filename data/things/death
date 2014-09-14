@@ -7,7 +7,7 @@
  z_depth=3
  speed=2
  health=100
- damage=20
+ damage=5
  bonus_score_on_death=1000
  vision_distance=60
  hit_delay_tenths=1
