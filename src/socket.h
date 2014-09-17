@@ -37,6 +37,7 @@ typedef struct {
     uint8_t type;
     char name[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
+    player_stats_t player_stats;
     uint32_t key;
 } __attribute__ ((packed)) msg_client_join;
 
@@ -56,6 +57,7 @@ typedef struct {
     uint8_t type;
     char name[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
+    player_stats_t player_stats;
 } __attribute__ ((packed)) msg_name;
 
 typedef struct {
@@ -99,6 +101,7 @@ typedef struct {
 typedef struct msg_player_state_ {
     char name[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
+    player_stats_t player_stats;
     IPaddress local_ip;
     IPaddress remote_ip;
     uint8_t quality;
@@ -207,6 +210,7 @@ typedef struct socket_ {
      */
     char name[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
+    player_stats_t player_stats;
 
     /*
      * Last status from this server.
@@ -242,6 +246,7 @@ extern IPaddress socket_get_remote_ip(socketp);
 
 extern const char *socket_get_player_name(const socketp);
 extern const char *socket_get_player_pclass(const socketp);
+extern player_stats_t *socket_get_player_player_stats(const socketp);
 
 extern const char *socket_get_local_logname(const socketp);
 extern const char *socket_get_remote_logname(const socketp);
@@ -269,8 +274,10 @@ extern void socket_count_inc_pak_rx_bad_msg(const socketp);
 
 extern const char *socket_get_name(const socketp s);
 extern const char *socket_get_pclass(const socketp s);
+extern const player_stats_t *socket_get_player_stats(const socketp s);
 extern void socket_set_name(socketp s, const char *name);
 extern void socket_set_pclass(socketp s, const char *pclass);
+extern void socket_set_player_stats(socketp s, const player_stats_t *player_stats);
 
 extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);
 extern void socket_tx_pong(socketp s, uint8_t seq, uint32_t ts);

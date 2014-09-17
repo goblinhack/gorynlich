@@ -317,8 +317,6 @@ extern uint16_t THING_DEMON;
 extern uint16_t THING_MONK;
 extern uint16_t THING_LIZARD;
 extern uint16_t THING_DEATH;
-extern uint16_t THING_PLANT;
-extern uint16_t THING_SEEDPOD;
 extern uint16_t THING_WAND1_ANIM;
 extern uint16_t THING_SWORD1_ANIM;
 extern uint16_t THING_SWORD2_ANIM;
