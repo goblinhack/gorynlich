@@ -2760,12 +2760,12 @@ static uint8_t resource_init_23 (void *context)
     thing_template_load(&THING_GHOST1, "data/things/ghost1");
     thing_template_load(&THING_GHOST2, "data/things/ghost2");
     thing_template_load(&THING_GHOST3, "data/things/ghost3");
+#if 0
     thing_template_load(&THING_DEMON, "data/things/demon");
     thing_template_load(&THING_MONK, "data/things/monk");
     thing_template_load(&THING_LIZARD, "data/things/lizard");
+#endif
     thing_template_load(&THING_DEATH, "data/things/death");
-    thing_template_load(&THING_PLANT, "data/things/plant");
-    thing_template_load(&THING_SEEDPOD, "data/things/seedpod");
 
     /*
      * Weapon animations.

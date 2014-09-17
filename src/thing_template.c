@@ -458,11 +458,11 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_INT16(ctx, "bonus_health_on_use", t->bonus_health_on_use);
         GET_OPT_NAMED_UINT32(ctx, "ppp1", t->ppp1);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
-        GET_OPT_NAMED_UINT32(ctx, "ppp3", t->ppp3);
-        GET_OPT_NAMED_UINT32(ctx, "ppp4", t->ppp4);
-        GET_OPT_NAMED_UINT32(ctx, "ppp5", t->ppp5);
-        GET_OPT_NAMED_UINT32(ctx, "ppp6", t->ppp6);
-        GET_OPT_NAMED_UINT32(ctx, "ppp7", t->ppp7);
+        GET_OPT_NAMED_UINT32(ctx, "stats_melee", t->stats_melee);
+        GET_OPT_NAMED_UINT32(ctx, "stats_ranged", t->stats_ranged);
+        GET_OPT_NAMED_UINT32(ctx, "stats_speed", t->stats_speed);
+        GET_OPT_NAMED_UINT32(ctx, "stats_vision", t->stats_vision);
+        GET_OPT_NAMED_UINT32(ctx, "stats_healing", t->stats_healing);
         GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
@@ -603,11 +603,11 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
     PUT_NAMED_INT32(ctx, "ppp1", t->ppp1);
     PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
-    PUT_NAMED_INT32(ctx, "ppp3", t->ppp3);
-    PUT_NAMED_INT32(ctx, "ppp4", t->ppp4);
-    PUT_NAMED_INT32(ctx, "ppp5", t->ppp5);
-    PUT_NAMED_INT32(ctx, "ppp6", t->ppp6);
-    PUT_NAMED_INT32(ctx, "ppp7", t->ppp7);
+    PUT_NAMED_INT32(ctx, "stats_melee", t->stats_melee);
+    PUT_NAMED_INT32(ctx, "stats_ranged", t->stats_ranged);
+    PUT_NAMED_INT32(ctx, "stats_speed", t->stats_speed);
+    PUT_NAMED_INT32(ctx, "stats_vision", t->stats_vision);
+    PUT_NAMED_INT32(ctx, "stats_healing", t->stats_healing);
     PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
     PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
@@ -817,29 +817,29 @@ uint32_t thing_template_get_ppp2 (thing_templatep t)
     return (t->ppp2);
 }
 
-uint32_t thing_template_get_ppp3 (thing_templatep t)
+uint32_t thing_template_get_stats_melee (thing_templatep t)
 {
-    return (t->ppp3);
+    return (t->stats_melee);
 }
 
-uint32_t thing_template_get_ppp4 (thing_templatep t)
+uint32_t thing_template_get_stats_ranged (thing_templatep t)
 {
-    return (t->ppp4);
+    return (t->stats_ranged);
 }
 
-uint32_t thing_template_get_ppp5 (thing_templatep t)
+uint32_t thing_template_get_stats_speed (thing_templatep t)
 {
-    return (t->ppp5);
+    return (t->stats_speed);
 }
 
-uint32_t thing_template_get_ppp6 (thing_templatep t)
+uint32_t thing_template_get_stats_vision (thing_templatep t)
 {
-    return (t->ppp6);
+    return (t->stats_vision);
 }
 
-uint32_t thing_template_get_ppp7 (thing_templatep t)
+uint32_t thing_template_get_stats_healing (thing_templatep t)
 {
-    return (t->ppp7);
+    return (t->stats_healing);
 }
 
 uint32_t thing_template_get_ppp8 (thing_templatep t)

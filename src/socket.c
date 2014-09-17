@@ -946,6 +946,13 @@ const char *socket_get_pclass (const socketp s)
     return (s->pclass);
 }
 
+const player_stats_t *socket_get_player_stats (const socketp s)
+{
+    verify(s);
+
+    return (&s->player_stats);
+}
+
 void socket_set_name (socketp s, const char *name)
 {
     verify(s);
@@ -965,6 +972,17 @@ void socket_set_pclass (socketp s, const char *pclass)
         memset(s->pclass, 0, sizeof(s->pclass));
     } else {
         strncpy(s->pclass, pclass, sizeof(s->pclass) - 1);
+    }
+}
+
+void socket_set_player_stats (socketp s, const player_stats_t *player_stats)
+{
+    verify(s);
+
+    if (!player_stats) {
+        memset(&s->player_stats, 0, sizeof(player_stats_t));
+    } else {
+        memcpy(&s->player_stats, player_stats, sizeof(player_stats_t));
     }
 }
 
@@ -1304,6 +1322,7 @@ void socket_tx_name (socketp s)
 
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
     strncpy(msg.pclass, s->pclass, min(sizeof(msg.pclass) - 1, strlen(s->pclass))); 
+    memcpy(&msg.player_stats, &s->player_stats, sizeof(player_stats_t));
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -1337,6 +1356,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
 
     socket_set_name(s, msg.name);
     socket_set_pclass(s, msg.pclass);
+    socket_set_player_stats(s, &msg.player_stats);
 
     /* 
      * Update the player structure.
@@ -1394,6 +1414,7 @@ uint8_t socket_tx_client_join (socketp s, uint32_t *key)
 
     strncpy(msg.name, s->name, min(sizeof(msg.name) - 1, strlen(s->name))); 
     strncpy(msg.pclass, s->pclass, min(sizeof(msg.pclass) - 1, strlen(s->pclass))); 
+    memcpy(&msg.player_stats, &s->player_stats, sizeof(player_stats_t));
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -1461,6 +1482,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 
     socket_set_name(s, msg.name);
     socket_set_pclass(s, msg.pclass);
+    socket_set_player_stats(s, &msg.player_stats);
 
     /*
      * Update the player structure.
@@ -1474,6 +1496,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
 
     memcpy(p->name, msg.name, SMALL_STRING_LEN_MAX);
     memcpy(p->pclass, msg.pclass, SMALL_STRING_LEN_MAX);
+    memcpy(&p->player_stats, &msg.player_stats, sizeof(player_stats_t));
 
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
@@ -1529,6 +1552,7 @@ void socket_tx_client_leave (socketp s)
 
     socket_set_name(s, 0);
     socket_set_pclass(s, 0);
+    socket_set_player_stats(s, 0);
 
     socket_tx_msg(s, packet);
         
@@ -2142,6 +2166,8 @@ void socket_tx_server_status (void)
         strncpy(msg_tx->pclass, p->pclass, min(sizeof(msg_tx->pclass), 
                                            strlen(p->pclass))); 
 
+        memcpy(&msg_tx->player_stats, &p->player_stats, sizeof(player_stats_t));
+
         SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
         SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
 
@@ -2216,6 +2242,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
         memcpy(p->name, msg_rx->name, SMALL_STRING_LEN_MAX);
         memcpy(p->pclass, msg_rx->pclass, SMALL_STRING_LEN_MAX);
+        memcpy(&p->player_stats, &msg_rx->player_stats, sizeof(player_stats_t));
 
         p->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
         p->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);

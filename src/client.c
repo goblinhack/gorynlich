@@ -420,6 +420,7 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
 
     socket_set_name(s, global_config.name);
     socket_set_pclass(s, global_config.pclass);
+    socket_set_player_stats(s, &global_config.player_stats);
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
         if (!quiet) {

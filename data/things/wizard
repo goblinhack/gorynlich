@@ -9,6 +9,11 @@
  speed=5
  health=100
  is_player
+ stats_melee=10
+ stats_ranged=10
+ stats_speed=10
+ stats_vision=10
+ stats_healing=10
  is_animate_only_when_moving
  is_warm_blooded
  is_cats_eyes
