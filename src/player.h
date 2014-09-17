@@ -30,6 +30,7 @@ typedef struct aplayer_ {
     uint32_t key;
     char name[SMALL_STRING_LEN_MAX + 1];
     char pclass[SMALL_STRING_LEN_MAX + 1];
+    player_stats_t player_stats;
     thingp thing;
 } aplayer;
 

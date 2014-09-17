@@ -17,6 +17,7 @@
 #include "client.h"
 #include "thing.h"
 #include "wid_notify.h"
+#include "wid_player_stats.h"
 #include "name.h"
 #include "glapi.h"
 
@@ -491,6 +492,14 @@ static void wid_intro2_create (void)
 
             strncpy(global_config.name, name_random(global_config.pclass),
                     sizeof(global_config.name) - 1);
+
+            player_stats_t player_stats;
+
+            player_stats_generate_random(&player_stats);
+
+            memcpy(&global_config.player_stats,
+                   &player_stats,
+                   sizeof(player_stats));
         }
 
         wid_set_text(w, global_config.name);

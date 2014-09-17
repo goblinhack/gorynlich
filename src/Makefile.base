@@ -35,6 +35,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/name.o 			\
     $(OBJDIR)/pixel.o 			\
     $(OBJDIR)/player.o 			\
+    $(OBJDIR)/player_stats.o 		\
     $(OBJDIR)/point.o 			\
     $(OBJDIR)/ptrcheck.o 		\
     $(OBJDIR)/ramdisk_read.o 		\
@@ -89,6 +90,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_intro_guide.o 	\
     $(OBJDIR)/wid_intro_help.o 		\
     $(OBJDIR)/wid_intro_settings.o 	\
+    $(OBJDIR)/wid_player_stats.o 	\
     $(OBJDIR)/wid_intro_demo.o 		\
     $(OBJDIR)/wid_notify.o 		\
     $(OBJDIR)/wid_popup.o 		\

@@ -358,6 +358,8 @@ uint8_t config_init(void);
 uint8_t config_save(void);
 uint8_t config_load(void);
 
+#include "player_stats.h"
+
 struct config {
     int32_t video_pix_width;
     int32_t video_pix_height;
@@ -375,6 +377,7 @@ struct config {
     uint16_t user_server_port;
     uint8_t server_max_players;
     uint8_t server_current_players;
+    player_stats_t player_stats;
 };
 
 extern struct config global_config;
