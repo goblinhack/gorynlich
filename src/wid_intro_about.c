@@ -10,6 +10,7 @@
 #include "wid.h"
 #include "wid_popup.h"
 #include "wid_intro_about.h"
+#include "color.h"
 
 static widp wid_intro_about;
 static uint8_t wid_intro_about_init_done;
@@ -118,6 +119,16 @@ static void wid_intro_about_create (void)
           "Close", wid_intro_about_callback_close);
 
     wid_set_on_key_down(wid_intro_about, wid_intro_about_key_event);
+wid_set_tex(wid_intro_about, 0, "window");
+color c = WHITE;
+c.a  = 250;
+c.r  = 250;
+c.g  = 250;
+c.b  = 250;
+wid_set_color(wid_intro_about, WID_COLOR_BG, c);
+wid_set_color(wid_intro_about, WID_COLOR_TL, c);
+wid_set_color(wid_intro_about, WID_COLOR_BR, c);
+wid_set_square(wid_intro_about);
 }
 
 static void wid_intro_about_destroy (void)
