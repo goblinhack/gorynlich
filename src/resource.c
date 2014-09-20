@@ -148,14 +148,12 @@ static uint8_t resource_init_21 (void *context)
 
 static uint8_t resource_init_22 (void *context)
 {
-    return (tex_load("data/gfx/window2.png",
-                     "window_rock") != 0);
+    return (true);
 }
 
 static uint8_t resource_init_23 (void *context)
 {
-    return (tex_load("data/gfx/window.png",
-                     "window_gothic") != 0);
+    return (true);
 }
 
 static uint8_t resource_init_24 (void *context)
@@ -2798,6 +2796,18 @@ static uint8_t resource_init_24 (void *context)
 
 uint8_t resource_init (void)
 {
+    if (tex_load("data/gfx/window2.png", "window_rock") == 0) {
+        DIE("tex init");
+    }
+
+    if (tex_load("data/gfx/window.png", "window_gothic") == 0) {
+        DIE("tex init");
+    }
+
+    if (tex_load("data/gfx/gothic_wide.png", "gothic_wide") == 0) {
+        DIE("tex init");
+    }
+
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_1,
                           0, "resource_init_1");

@@ -212,12 +212,6 @@ static void wid_console_wid_create (void)
         wid_set_text_bot(wid_console_window, true);
         wid_set_text_lhs(wid_console_window, true);
         wid_set_tl_br_pct(wid_console_window, tl, br);
-
-        fsize sz = {0.0f, 0.0f};
-        wid_set_tex_tl(wid_console_window, sz);
-
-        fsize sz2 = {1.32f, 1.0f};
-        wid_set_tex_br(wid_console_window, sz2);
     }
 
     {
@@ -318,4 +312,11 @@ static void wid_console_wid_create (void)
     wid_visible(wid_console_horiz_scroll, 0);
 
     wid_hide(wid_console_window, 0);
+
+    wid_set_tex(wid_console_window, 0, "gothic_wide");
+    color c = WHITE;
+    wid_set_color(wid_console_window, WID_COLOR_BG, c);
+    wid_set_color(wid_console_window, WID_COLOR_TL, c);
+    wid_set_color(wid_console_window, WID_COLOR_BR, c);
+    wid_set_square(wid_console_window);
 }

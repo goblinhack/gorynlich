@@ -656,6 +656,10 @@ int32_t main (int32_t argc, char *argv[])
     ptrcheck_leak_snapshot();
 #endif
 
+    if (!resource_init()) {
+	DIE("resource init");
+    }
+
 #ifndef WID_TEST
     if (!wid_console_init()) {
 	DIE("wid_console init");
@@ -675,10 +679,6 @@ int32_t main (int32_t argc, char *argv[])
 	DIE("ptrcheck init");
     }
 #endif
-
-    if (!resource_init()) {
-	DIE("resource init");
-    }
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)level_init,
