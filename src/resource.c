@@ -148,7 +148,8 @@ static uint8_t resource_init_21 (void *context)
 
 static uint8_t resource_init_22 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/window2.png",
+                     "window") != 0);
 }
 
 static uint8_t resource_init_23 (void *context)

@@ -162,7 +162,7 @@ widp wid_popup (const char *text, const char *title,
         max_rows = 8;
     } else {
         chars_per_line = 50;
-        max_rows = 22;
+        max_rows = 32;
     }
 
     d = split(text, chars_per_line);
