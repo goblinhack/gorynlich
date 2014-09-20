@@ -149,10 +149,16 @@ static uint8_t resource_init_21 (void *context)
 static uint8_t resource_init_22 (void *context)
 {
     return (tex_load("data/gfx/window2.png",
-                     "window") != 0);
+                     "window_rock") != 0);
 }
 
 static uint8_t resource_init_23 (void *context)
+{
+    return (tex_load("data/gfx/window.png",
+                     "window_gothic") != 0);
+}
+
+static uint8_t resource_init_24 (void *context)
 {
     static const char *small_tiles[] = {
         // --------------------------------------------------------------------
@@ -2861,6 +2867,9 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_23,
                           0, "resource_init_23");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_24,
+                          0, "resource_init_24");
 
     return (true);
 }

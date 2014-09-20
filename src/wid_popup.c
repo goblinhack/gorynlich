@@ -338,6 +338,15 @@ widp wid_popup (const char *text, const char *title,
         wid_popup_container = wid_new_container(wid_popup_window,
                                                 "wid popup container2");
         wid_set_tl_br(wid_popup_container, tl, br);
+
+        color c = WHITE;
+        c.a  = 150;
+        c.r  = 0;
+        c.g  = 0;
+        c.b  = 0;
+        wid_set_color(wid_popup_container, WID_COLOR_BG, c);
+        wid_set_color(wid_popup_container, WID_COLOR_TL, c);
+        wid_set_color(wid_popup_container, WID_COLOR_BR, c);
     }
 
     {

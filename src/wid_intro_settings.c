@@ -372,8 +372,8 @@ static void wid_intro_settings_create (void)
 
         widp w = wid_intro_settings = wid_new_rounded_window("wid settings");
 
-        fpoint tl = {0.1, 0.2};
-        fpoint br = {0.9, 0.8};
+        fpoint tl = {0.1, 0.05};
+        fpoint br = {0.9, 0.95};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, med_font);
@@ -405,7 +405,7 @@ static void wid_intro_settings_create (void)
 
     {
         fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 0.2};
+        fpoint br = {1.0, 0.15};
 
         widp w = wid_new_container(wid_intro_settings, "wid settings title");
 
@@ -615,6 +615,13 @@ static void wid_intro_settings_create (void)
     wid_raise(wid_intro_settings);
 
     wid_update(wid_intro_settings);
+
+    wid_set_tex(wid_intro_settings, 0, "window_gothic");
+    color c = WHITE;
+    wid_set_color(wid_intro_settings, WID_COLOR_BG, c);
+    wid_set_color(wid_intro_settings, WID_COLOR_TL, c);
+    wid_set_color(wid_intro_settings, WID_COLOR_BR, c);
+    wid_set_square(wid_intro_settings);
 }
 
 static void wid_intro_settings_destroy (void)
