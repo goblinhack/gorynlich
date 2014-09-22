@@ -192,7 +192,7 @@ static void wid_console_wid_create (void)
 
     {
         fpoint tl = {0.0f, 0.0f};
-        fpoint br = {1.0f, 0.5f};
+        fpoint br = {0.7f, 0.5f};
         color c;
 
         wid_console_window = wid_new_square_window("wid_console");

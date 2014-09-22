@@ -428,10 +428,17 @@ static uint8_t wid_intro_quit_selected (void)
                   0.5f, 0.5f,       /* x,y postition in percent */
                   large_font,       /* title font */
                   large_font,         /* body font */
-                  large_font,         /* button font */
+                  small_font,         /* button font */
                   2,                /* number buttons */
-                  "Yes", wid_intro_quit_callback_yes,
-                  "No", wid_intro_quit_callback_no);
+                  " Yes ", wid_intro_quit_callback_yes,
+                  " No ", wid_intro_quit_callback_no);
+
+    wid_set_tex(wid_intro_quit_popup, 0, "gothic_wide");
+    color c = WHITE;
+    wid_set_color(wid_intro_quit_popup, WID_COLOR_BG, c);
+    wid_set_color(wid_intro_quit_popup, WID_COLOR_TL, c);
+    wid_set_color(wid_intro_quit_popup, WID_COLOR_BR, c);
+    wid_set_square(wid_intro_quit_popup);
 
     return (true);
 }

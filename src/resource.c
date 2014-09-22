@@ -148,12 +148,14 @@ static uint8_t resource_init_21 (void *context)
 
 static uint8_t resource_init_22 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/red_button.png",
+                     "red_button") != 0);
 }
 
 static uint8_t resource_init_23 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/green_button.png",
+                     "green_button") != 0);
 }
 
 static uint8_t resource_init_24 (void *context)
