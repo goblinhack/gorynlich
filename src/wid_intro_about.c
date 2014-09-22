@@ -112,11 +112,11 @@ static void wid_intro_about_create (void)
           ,
           "%%fg=red$Stuffs.",       /* title */
           0.5, 0.5,                 /* x,y postition in percent */
-          small_font,              /* title font */
+          small_font,               /* title font */
           vsmall_font,              /* body font */
-          small_font,              /* button font */
+          vsmall_font,              /* button font */
           1,                        /* number buttons */
-          "Close", wid_intro_about_callback_close);
+          "  Close  ", wid_intro_about_callback_close);
 
     wid_set_on_key_down(wid_intro_about, wid_intro_about_key_event);
 
