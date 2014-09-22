@@ -161,8 +161,8 @@ widp wid_popup (const char *text, const char *title,
         chars_per_line = 40;
         max_rows = 8;
     } else {
-        chars_per_line = 50;
-        max_rows = 32;
+        chars_per_line = 40;
+        max_rows = 28;
     }
 
     d = split(text, chars_per_line);
@@ -431,11 +431,12 @@ widp wid_popup (const char *text, const char *title,
                 c = GRAY;
             }
 
-            c.a = 100;
+c = WHITE;
+            c.a = 200;
             wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_color(child, WID_COLOR_BG, c);
 
-            c.a = 250;
+            c.a = 255;
             wid_set_mode(child, WID_MODE_OVER);
             wid_set_color(child, WID_COLOR_BG, c);
 
@@ -448,6 +449,9 @@ widp wid_popup (const char *text, const char *title,
             wid_set_on_key_down(child, wid_popup_wid_key_event);
 
             wid_set_client_context(child, (void*)button_callback[n]);
+
+            wid_set_tex(child, 0, "red_button");
+            wid_set_square(child);
         }
     }
 
