@@ -120,12 +120,12 @@ static const unsigned char *const data_gfx_rat_png_start =
 static const unsigned char *const data_gfx_rat_png_end   =
     (const unsigned char *const) (char*)&data_gfx_rat_png_end_;
 
-extern unsigned char *data_gfx_red_button_png_start_ asm("data_gfx_red_button_png_start_");
-extern unsigned char *data_gfx_red_button_png_end_ asm("data_gfx_red_button_png_end_");
-static const unsigned char *const data_gfx_red_button_png_start =
-    (const unsigned char *const) (char*)&data_gfx_red_button_png_start_;
-static const unsigned char *const data_gfx_red_button_png_end   =
-    (const unsigned char *const) (char*)&data_gfx_red_button_png_end_;
+extern unsigned char *data_gfx_button_red_png_start_ asm("data_gfx_button_red_png_start_");
+extern unsigned char *data_gfx_button_red_png_end_ asm("data_gfx_button_red_png_end_");
+static const unsigned char *const data_gfx_button_red_png_start =
+    (const unsigned char *const) (char*)&data_gfx_button_red_png_start_;
+static const unsigned char *const data_gfx_button_red_png_end   =
+    (const unsigned char *const) (char*)&data_gfx_button_red_png_end_;
 
 extern unsigned char *data_gfx_sprites_small_png_start_ asm("data_gfx_sprites_small_png_start_");
 extern unsigned char *data_gfx_sprites_small_png_end_ asm("data_gfx_sprites_small_png_end_");
@@ -1699,7 +1699,7 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/gfx/rat.png",
 },
 {
-    /* filename */ "data/gfx/red_button.png",
+    /* filename */ "data/gfx/button_red.png",
 },
 {
     /* filename */ "data/gfx/sprites_small.png",
@@ -2391,8 +2391,8 @@ void ramdisk_init (void)
     ramdisk_data[15].len = data_gfx_poison_png_end - data_gfx_poison_png_start;
     ramdisk_data[16].data = data_gfx_rat_png_start;
     ramdisk_data[16].len = data_gfx_rat_png_end - data_gfx_rat_png_start;
-    ramdisk_data[17].data = data_gfx_red_button_png_start;
-    ramdisk_data[17].len = data_gfx_red_button_png_end - data_gfx_red_button_png_start;
+    ramdisk_data[17].data = data_gfx_button_red_png_start;
+    ramdisk_data[17].len = data_gfx_button_red_png_end - data_gfx_button_red_png_start;
     ramdisk_data[18].data = data_gfx_sprites_small_png_start;
     ramdisk_data[18].len = data_gfx_sprites_small_png_end - data_gfx_sprites_small_png_start;
     ramdisk_data[19].data = data_gfx_title_png_start;
