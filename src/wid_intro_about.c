@@ -120,7 +120,7 @@ static void wid_intro_about_create (void)
 
     wid_set_on_key_down(wid_intro_about, wid_intro_about_key_event);
 
-    wid_set_tex(wid_intro_about, 0, "window_rock");
+    wid_set_tex(wid_intro_about, 0, "window_gothic");
     color c = WHITE;
     wid_set_color(wid_intro_about, WID_COLOR_BG, c);
     wid_set_color(wid_intro_about, WID_COLOR_TL, c);

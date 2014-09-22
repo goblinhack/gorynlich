@@ -372,23 +372,13 @@ static void wid_intro_settings_create (void)
 
         widp w = wid_intro_settings = wid_new_rounded_window("wid settings");
 
-        fpoint tl = {0.1, 0.05};
-        fpoint br = {0.9, 0.95};
+        fpoint tl = {0.2, 0.05};
+        fpoint br = {0.8, 0.95};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_font(w, med_font);
+        wid_set_font(w, small_font);
 
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-        color c = BLACK;
-        c.a = 200;
-        wid_set_color(w, WID_COLOR_BG, c);
-
-        c = STEELBLUE;
-        c.a = 150;
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_set_bevel(w, 4);
 
         wid_set_on_mouse_motion(w, wid_intro_settings_receive_mouse_motion);
     }
@@ -412,8 +402,8 @@ static void wid_intro_settings_create (void)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Settings");
-        wid_set_font(w, large_font);
-        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_TEXT, GOLD);
 
         wid_set_text_outline(w, true);
     }
@@ -436,7 +426,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col1[i]);
-            wid_set_font(w, med_font);
+            wid_set_font(w, small_font);
 
             color c = BLACK;
 
@@ -477,11 +467,11 @@ static void wid_intro_settings_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col2[i]);
-            wid_set_font(w, med_font);
+            wid_set_font(w, small_font);
 
-            color c = LIME;
+            color c = WHITE;
 
-            c.a = 150;
+            c.a = 200;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -494,6 +484,9 @@ static void wid_intro_settings_create (void)
             wid_set_on_mouse_up(w, wid_intro_settings_col2_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "green_button");
+            wid_set_square(w);
         }
     }
 
@@ -519,11 +512,11 @@ static void wid_intro_settings_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col3[i]);
-            wid_set_font(w, med_font);
+            wid_set_font(w, small_font);
 
-            color c = STEELBLUE;
+            color c = WHITE;
 
-            c.a = 150;
+            c.a = 200;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -536,6 +529,9 @@ static void wid_intro_settings_create (void)
             wid_set_on_mouse_up(w, wid_intro_settings_col3_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "red_button");
+            wid_set_square(w);
         }
     }
 
@@ -562,9 +558,9 @@ static void wid_intro_settings_create (void)
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w,
                          wid_intro_button_col4[i][wid_intro_button_val[i]]);
-            wid_set_font(w, med_font);
+            wid_set_font(w, small_font);
 
-            color c = BLUE;
+            color c = WHITE;
 
             c.a = 100;
             wid_set_mode(w, WID_MODE_NORMAL);
@@ -587,20 +583,20 @@ static void wid_intro_settings_create (void)
         widp w = wid_new_rounded_small_button(wid_intro_settings_container,
                                               button_name);
 
-        fpoint tl = {0.7, 0.85};
-        fpoint br = {0.95, 0.98};
+        fpoint tl = {0.60, 0.80};
+        fpoint br = {0.90, 0.90};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, button_name);
-        wid_set_font(w, med_font);
+        wid_set_font(w, vsmall_font);
 
-        color c = STEELBLUE;
+        color c = WHITE;
 
-        c.a = 100;
+        c.a = 200;
         wid_set_mode(w, WID_MODE_NORMAL);
         wid_set_color(w, WID_COLOR_BG, c);
 
-        c.a = 250;
+        c.a = 255;
         wid_set_mode(w, WID_MODE_OVER);
         wid_set_color(w, WID_COLOR_BG, c);
 
@@ -610,6 +606,10 @@ static void wid_intro_settings_create (void)
 
         wid_set_on_mouse_up(w, wid_intro_settings_mouse_event);
         wid_set_on_key_down(w, wid_intro_settings_key_event);
+
+        wid_set_tex(w, 0, "green_button");
+        wid_set_square(w);
+
     }
 
     wid_raise(wid_intro_settings);
@@ -617,10 +617,6 @@ static void wid_intro_settings_create (void)
     wid_update(wid_intro_settings);
 
     wid_set_tex(wid_intro_settings, 0, "window_gothic");
-    color c = WHITE;
-    wid_set_color(wid_intro_settings, WID_COLOR_BG, c);
-    wid_set_color(wid_intro_settings, WID_COLOR_TL, c);
-    wid_set_color(wid_intro_settings, WID_COLOR_BR, c);
     wid_set_square(wid_intro_settings);
 }
 

@@ -10,6 +10,7 @@
 #include "wid.h"
 #include "wid_popup.h"
 #include "wid_intro_help.h"
+#include "color.h"
 
 static widp wid_intro_help;
 static uint8_t wid_intro_help_init_done;
@@ -91,6 +92,14 @@ static void wid_intro_help_create (void)
                   "Close", wid_intro_help_callback_close);
 
     wid_set_on_key_down(wid_intro_help, wid_intro_help_key_event);
+
+    wid_set_tex(wid_intro_help, 0, "gothic_wide");
+    color c = WHITE;
+    wid_set_color(wid_intro_help, WID_COLOR_BG, c);
+    wid_set_color(wid_intro_help, WID_COLOR_TL, c);
+    wid_set_color(wid_intro_help, WID_COLOR_BR, c);
+    wid_set_square(wid_intro_help);
+
 }
 
 static void wid_intro_help_destroy (void)

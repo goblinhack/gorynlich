@@ -137,7 +137,7 @@ static void wid_game_quit_create (void)
                     0.5f, 0.2f,       /* x,y postition in percent */
                     med_font,       /* title font */
                     med_font,       /* body font */
-                    med_font,       /* button font */
+                    small_font,       /* button font */
                     2,                /* number buttons */
                     "Yes", wid_game_quit_really_quit_callback_yes,
                     "No", wid_game_quit_really_quit_callback_no);
