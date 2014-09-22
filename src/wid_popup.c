@@ -246,6 +246,7 @@ widp wid_popup (const char *text, const char *title,
 
             maxbuttonw = max(w, maxbuttonw);
             maxbuttonh = max(h, maxbuttonh);
+            maxbuttonh += maxbuttonh / 2;
         }
     }
 

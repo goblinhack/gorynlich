@@ -306,12 +306,12 @@ static uint8_t wid_intro_restart_selected (void)
         wid_popup("%%fg=red$Restart game?",
                   0                 /* title */,
                   0.5f, 0.5f,       /* x,y postition in percent */
-                  large_font,       /* title font */
-                  large_font,         /* body font */
-                  large_font,         /* button font */
+                  small_font,       /* title font */
+                  vsmall_font,      /* body font */
+                  vsmall_font,      /* button font */
                   2,                /* number buttons */
-                  "Yes", wid_intro_restart_callback_yes,
-                  "No", wid_intro_restart_callback_no);
+                  "  Yes  ", wid_intro_restart_callback_yes,
+                  "  No  ", wid_intro_restart_callback_no);
 
     return (true);
 }
@@ -581,7 +581,7 @@ static void wid_intro_settings_create (void)
     }
 
     {
-        const char *button_name = "All Done";
+        const char *button_name = "  close  ";
 
         widp w = wid_new_rounded_small_button(wid_intro_settings_container,
                                               button_name);

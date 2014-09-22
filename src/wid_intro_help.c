@@ -75,29 +75,25 @@ static void wid_intro_help_create (void)
     }
 
     wid_intro_help =
-        wid_popup("%%fmt=left$%%fg=red$space\t%%fg=green$Play game\n"
+        wid_popup("%%fmt=left$%%fg=red$space\t\t%%fg=green$Play game\n"
                   "%%fmt=left$%%fg=red$s\t\t%%fg=green$Single player\n"
                   "%%fmt=left$%%fg=red$m\t\t%%fg=green$Multi player\n"
                   "%%fmt=left$%%fg=red$e\t\t%%fg=green$Level editor\n"
-                  "%%fmt=left$%%fg=red$c\t\t%%fg=green$config cettings\n"
+                  "%%fmt=left$%%fg=red$c\t\t%%fg=green$Config settings\n"
                   "%%fmt=left$%%fg=red$i\t\t%%fg=green$Hi-scores\n"
                   "%%fmt=left$%%fg=red$q\t\t%%fg=green$Quit\n"
                   ,
                   "Keys",         /* title */
                   0.5f, 0.5f,
-                  med_font,       /* title font */
-                  med_font,       /* body font */
-                  med_font,       /* button font */
+                  small_font,       /* title font */
+                  vsmall_font,     /* body font */
+                  vsmall_font,     /* button font */
                   1,              /* number args */
-                  "Close", wid_intro_help_callback_close);
+                  "  Close  ", wid_intro_help_callback_close);
 
     wid_set_on_key_down(wid_intro_help, wid_intro_help_key_event);
 
     wid_set_tex(wid_intro_help, 0, "gothic_wide");
-    color c = WHITE;
-    wid_set_color(wid_intro_help, WID_COLOR_BG, c);
-    wid_set_color(wid_intro_help, WID_COLOR_TL, c);
-    wid_set_color(wid_intro_help, WID_COLOR_BR, c);
     wid_set_square(wid_intro_help);
 
 }

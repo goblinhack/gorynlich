@@ -422,16 +422,19 @@ static uint8_t wid_intro_quit_selected (void)
         return (false);
     }
 
-    wid_intro_quit_popup =
-        wid_popup("%%fg=red$Quit?",
-                  0                 /* title */,
-                  0.5f, 0.5f,       /* x,y postition in percent */
-                  large_font,       /* title font */
-                  large_font,         /* body font */
-                  small_font,         /* button font */
-                  2,                /* number buttons */
-                  " Yes ", wid_intro_quit_callback_yes,
-                  " No ", wid_intro_quit_callback_no);
+    wid_intro_quit_popup = wid_popup(
+          "\n"
+          ".\n"
+          "x\n"
+          ,
+          "%%fg=red$Quit game?",    /* title */
+          0.5, 0.5,                 /* x,y postition in percent */
+          small_font,               /* title font */
+          vsmall_font,              /* body font */
+          vsmall_font,              /* button font */
+          2,                        /* number buttons */
+          " Yes ", wid_intro_quit_callback_yes,
+          " No ", wid_intro_quit_callback_no);
 
     wid_set_tex(wid_intro_quit_popup, 0, "gothic_wide");
     color c = WHITE;
@@ -650,7 +653,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "Editor");
-        wid_set_font(child, med_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.1f, 0.0f};
@@ -681,7 +684,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "About");
-        wid_set_font(child, med_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.3f, 0.0f};
@@ -712,7 +715,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "Settings");
-        wid_set_font(child, med_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.5f, 0.0f};
@@ -743,7 +746,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "Hiscore");
-        wid_set_font(child, med_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.7f, 0.0f};
@@ -774,7 +777,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "servers");
-        wid_set_font(child, med_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.7f, 0.2f};
@@ -805,7 +808,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "help");
-        wid_set_font(child, large_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.00f, 0.90f};
@@ -834,7 +837,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "quit");
-        wid_set_font(child, large_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.66f, 0.90f};
@@ -863,7 +866,7 @@ static void wid_intro_create (void)
         widp child;
 
         child = wid_new_square_button(wid_intro, "play");
-        wid_set_font(child, med_font);
+        wid_set_font(child, small_font);
         wid_set_no_shape(child);
 
         fpoint tl = {0.2f, 0.70f};
