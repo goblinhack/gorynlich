@@ -7,6 +7,15 @@
 .o/ramdisk_data_gfx_anim_treasure_chest_png.o: asm/ramdisk_data_gfx_anim_treasure_chest_png.S ../data/gfx/anim_treasure_chest.png
 	gcc -c asm/ramdisk_data_gfx_anim_treasure_chest_png.S -o .o/ramdisk_data_gfx_anim_treasure_chest_png.o
 
+.o/ramdisk_data_gfx_button_black_png.o: asm/ramdisk_data_gfx_button_black_png.S ../data/gfx/button_black.png
+	gcc -c asm/ramdisk_data_gfx_button_black_png.S -o .o/ramdisk_data_gfx_button_black_png.o
+
+.o/ramdisk_data_gfx_button_green_png.o: asm/ramdisk_data_gfx_button_green_png.S ../data/gfx/button_green.png
+	gcc -c asm/ramdisk_data_gfx_button_green_png.S -o .o/ramdisk_data_gfx_button_green_png.o
+
+.o/ramdisk_data_gfx_button_red_png.o: asm/ramdisk_data_gfx_button_red_png.S ../data/gfx/button_red.png
+	gcc -c asm/ramdisk_data_gfx_button_red_png.S -o .o/ramdisk_data_gfx_button_red_png.o
+
 .o/ramdisk_data_gfx_cloudkill_png.o: asm/ramdisk_data_gfx_cloudkill_png.S ../data/gfx/cloudkill.png
 	gcc -c asm/ramdisk_data_gfx_cloudkill_png.S -o .o/ramdisk_data_gfx_cloudkill_png.o
 
@@ -49,9 +58,6 @@
 .o/ramdisk_data_gfx_rat_png.o: asm/ramdisk_data_gfx_rat_png.S ../data/gfx/rat.png
 	gcc -c asm/ramdisk_data_gfx_rat_png.S -o .o/ramdisk_data_gfx_rat_png.o
 
-.o/ramdisk_data_gfx_button_red_png.o: asm/ramdisk_data_gfx_button_red_png.S ../data/gfx/button_red.png
-	gcc -c asm/ramdisk_data_gfx_button_red_png.S -o .o/ramdisk_data_gfx_button_red_png.o
-
 .o/ramdisk_data_gfx_sprites_small_png.o: asm/ramdisk_data_gfx_sprites_small_png.S ../data/gfx/sprites_small.png
 	gcc -c asm/ramdisk_data_gfx_sprites_small_png.S -o .o/ramdisk_data_gfx_sprites_small_png.o
 
@@ -70,11 +76,14 @@
 .o/ramdisk_data_gfx_wall_floor_png.o: asm/ramdisk_data_gfx_wall_floor_png.S ../data/gfx/wall_floor.png
 	gcc -c asm/ramdisk_data_gfx_wall_floor_png.S -o .o/ramdisk_data_gfx_wall_floor_png.o
 
-.o/ramdisk_data_gfx_window_png.o: asm/ramdisk_data_gfx_window_png.S ../data/gfx/window.png
-	gcc -c asm/ramdisk_data_gfx_window_png.S -o .o/ramdisk_data_gfx_window_png.o
+.o/ramdisk_data_gfx_window_gothic_png.o: asm/ramdisk_data_gfx_window_gothic_png.S ../data/gfx/window_gothic.png
+	gcc -c asm/ramdisk_data_gfx_window_gothic_png.S -o .o/ramdisk_data_gfx_window_gothic_png.o
 
-.o/ramdisk_data_gfx_window2_png.o: asm/ramdisk_data_gfx_window2_png.S ../data/gfx/window2.png
-	gcc -c asm/ramdisk_data_gfx_window2_png.S -o .o/ramdisk_data_gfx_window2_png.o
+.o/ramdisk_data_gfx_window_gothic_wide_png.o: asm/ramdisk_data_gfx_window_gothic_wide_png.S ../data/gfx/window_gothic_wide.png
+	gcc -c asm/ramdisk_data_gfx_window_gothic_wide_png.S -o .o/ramdisk_data_gfx_window_gothic_wide_png.o
+
+.o/ramdisk_data_gfx_window_rock_png.o: asm/ramdisk_data_gfx_window_rock_png.S ../data/gfx/window_rock.png
+	gcc -c asm/ramdisk_data_gfx_window_rock_png.S -o .o/ramdisk_data_gfx_window_rock_png.o
 
 .o/ramdisk_data_levels_1.o: asm/ramdisk_data_levels_1.S ../data/levels/1
 	gcc -c asm/ramdisk_data_levels_1.S -o .o/ramdisk_data_levels_1.o
