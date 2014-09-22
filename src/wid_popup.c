@@ -450,7 +450,7 @@ c = WHITE;
 
             wid_set_client_context(child, (void*)button_callback[n]);
 
-            wid_set_tex(child, 0, "red_button");
+            wid_set_tex(child, 0, "button_red");
             wid_set_square(child);
         }
     }

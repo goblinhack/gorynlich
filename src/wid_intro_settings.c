@@ -485,7 +485,7 @@ static void wid_intro_settings_create (void)
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
 
-            wid_set_tex(w, 0, "green_button");
+            wid_set_tex(w, 0, "button_green");
             wid_set_square(w);
         }
     }
@@ -530,7 +530,7 @@ static void wid_intro_settings_create (void)
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
 
-            wid_set_tex(w, 0, "red_button");
+            wid_set_tex(w, 0, "button_red");
             wid_set_square(w);
         }
     }
@@ -607,7 +607,7 @@ static void wid_intro_settings_create (void)
         wid_set_on_mouse_up(w, wid_intro_settings_mouse_event);
         wid_set_on_key_down(w, wid_intro_settings_key_event);
 
-        wid_set_tex(w, 0, "green_button");
+        wid_set_tex(w, 0, "button_green");
         wid_set_square(w);
 
     }
