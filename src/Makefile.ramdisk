@@ -49,8 +49,8 @@
 .o/ramdisk_data_gfx_rat_png.o: asm/ramdisk_data_gfx_rat_png.S ../data/gfx/rat.png
 	gcc -c asm/ramdisk_data_gfx_rat_png.S -o .o/ramdisk_data_gfx_rat_png.o
 
-.o/ramdisk_data_gfx_red_button_png.o: asm/ramdisk_data_gfx_red_button_png.S ../data/gfx/red_button.png
-	gcc -c asm/ramdisk_data_gfx_red_button_png.S -o .o/ramdisk_data_gfx_red_button_png.o
+.o/ramdisk_data_gfx_button_red_png.o: asm/ramdisk_data_gfx_button_red_png.S ../data/gfx/button_red.png
+	gcc -c asm/ramdisk_data_gfx_button_red_png.S -o .o/ramdisk_data_gfx_button_red_png.o
 
 .o/ramdisk_data_gfx_sprites_small_png.o: asm/ramdisk_data_gfx_sprites_small_png.S ../data/gfx/sprites_small.png
 	gcc -c asm/ramdisk_data_gfx_sprites_small_png.S -o .o/ramdisk_data_gfx_sprites_small_png.o

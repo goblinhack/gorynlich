@@ -148,14 +148,20 @@ static uint8_t resource_init_21 (void *context)
 
 static uint8_t resource_init_22 (void *context)
 {
-    return (tex_load("data/gfx/red_button.png",
-                     "red_button") != 0);
+    return (tex_load("data/gfx/button_red.png",
+                     "button_red") != 0);
 }
 
 static uint8_t resource_init_23 (void *context)
 {
-    return (tex_load("data/gfx/green_button.png",
-                     "green_button") != 0);
+    return (tex_load("data/gfx/button_green.png",
+                     "button_green") != 0);
+}
+
+static uint8_t resource_init_25 (void *context)
+{
+    return (tex_load("data/gfx/button_black.png",
+                     "button_black") != 0);
 }
 
 static uint8_t resource_init_24 (void *context)
@@ -2798,15 +2804,15 @@ static uint8_t resource_init_24 (void *context)
 
 uint8_t resource_init (void)
 {
-    if (tex_load("data/gfx/window2.png", "window_rock") == 0) {
+    if (tex_load("data/gfx/window_rogk.png", "window_rock") == 0) {
         DIE("tex init");
     }
 
-    if (tex_load("data/gfx/window.png", "window_gothic") == 0) {
+    if (tex_load("data/gfx/window_gothic.png", "window_gothic") == 0) {
         DIE("tex init");
     }
 
-    if (tex_load("data/gfx/gothic_wide.png", "gothic_wide") == 0) {
+    if (tex_load("data/gfx/window_gothic_wide.png", "gothic_wide") == 0) {
         DIE("tex init");
     }
 
@@ -2882,6 +2888,10 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_24,
                           0, "resource_init_24");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_25,
+                          0, "resource_init_25");
+
 
     return (true);
 }
