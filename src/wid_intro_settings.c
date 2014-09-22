@@ -574,6 +574,9 @@ static void wid_intro_settings_create (void)
             wid_set_on_mouse_up(w, wid_intro_settings_col4_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "button_black");
+            wid_set_square(w);
         }
     }
 
