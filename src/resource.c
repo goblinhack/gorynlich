@@ -2804,9 +2804,11 @@ static uint8_t resource_init_24 (void *context)
 
 uint8_t resource_init (void)
 {
-    if (tex_load("data/gfx/window_rogk.png", "window_rock") == 0) {
+#if 0
+    if (tex_load("data/gfx/window_roxk.png", "window_rock") == 0) {
         DIE("tex init");
     }
+#endif
 
     if (tex_load("data/gfx/window_gothic.png", "window_gothic") == 0) {
         DIE("tex init");

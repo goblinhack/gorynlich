@@ -77,54 +77,50 @@ static void wid_intro_about_create (void)
     wid_intro_about = wid_popup(
           "\n"
           "\n"
-          "Version 0.0.0\n"
           "\n"
+          "\n"
+          "Version 0.0.1\n"
           "\n"
           "%%fg=green$Copyright Neil McGill\n"
           "%%fg=green$goblinhack@gmail.com\n"
           "\n"
           "\n"
+          "Coding         Neil McGill\n"
+          "\n"
+          "Game Music     Charlotte McGill\n"
           "\n"
           "\n"
           "\n"
-          "For my little minions.\n"
           "\n"
-          "Game Music: Charlotte McGill\n"
-          "\n"
-          "Intro Music: www.nosoapradio.us\n"
-          "\n"
-          "Sound effects: Psychentist\n"
           "\n"
           "This game is free software; you can redistribute it and/or "
           "modify it under the terms of the GNU Library General Public "
           "License as published by the Free Software Foundation; either "
           "version 2 of the License, or (at your option) any later version."
           "\n"
+          "\n"
           "This game is distributed in the hope that it will be fun, "
           "but WITHOUT ANY WARRANTY; without even the implied warranty of "
           "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU "
           "Library General Public License for more details."
+          "\n"
           "\n"
           "You should have received a copy of the GNU Library General Public "
           "License along with this game; if not, write to the Free "
           "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA "
           "\n"
           ,
-          "%%fg=red$Licenses and stuffs. Srsly.",   /* title */
+          "%%fg=red$Stuffs.",       /* title */
           0.5, 0.5,                 /* x,y postition in percent */
-          med_font,               /* title font */
-          vsmall_font,               /* body font */
-          med_font,                 /* button font */
+          small_font,              /* title font */
+          vsmall_font,              /* body font */
+          small_font,              /* button font */
           1,                        /* number buttons */
           "Close", wid_intro_about_callback_close);
 
     wid_set_on_key_down(wid_intro_about, wid_intro_about_key_event);
 
     wid_set_tex(wid_intro_about, 0, "window_gothic");
-    color c = WHITE;
-    wid_set_color(wid_intro_about, WID_COLOR_BG, c);
-    wid_set_color(wid_intro_about, WID_COLOR_TL, c);
-    wid_set_color(wid_intro_about, WID_COLOR_BR, c);
     wid_set_square(wid_intro_about);
 }
 

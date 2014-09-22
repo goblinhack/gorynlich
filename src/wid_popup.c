@@ -161,8 +161,8 @@ widp wid_popup (const char *text, const char *title,
         chars_per_line = 40;
         max_rows = 8;
     } else {
-        chars_per_line = 40;
-        max_rows = 28;
+        chars_per_line = 38;
+        max_rows = 25;
     }
 
     d = split(text, chars_per_line);
@@ -258,11 +258,11 @@ widp wid_popup (const char *text, const char *title,
 
         wid_set_color(wid_popup_window, WID_COLOR_TEXT, WHITE);
 
-        color c = BLACK;
-        c.a = 200;
+        color c = WHITE;
+        c.a = 255;
         wid_set_color(wid_popup_window, WID_COLOR_BG, c);
 
-        c = STEELBLUE;
+        c = WHITE;
         c.a = 150;
         wid_set_color(wid_popup_window, WID_COLOR_TL, c);
         wid_set_color(wid_popup_window, WID_COLOR_BR, c);
@@ -280,10 +280,10 @@ widp wid_popup (const char *text, const char *title,
         }
 
         br.x += PAD_X;
-        br.y += PAD_Y/2;
+        br.y += PAD_Y;
         button_y = br.y;
         br.y += maxbuttonh;
-        br.y += PAD_Y/2;
+        br.y += PAD_Y * 1.5;
 
         if (title) {
             /*
@@ -302,8 +302,8 @@ widp wid_popup (const char *text, const char *title,
 
         br.x += maxw + PAD_X;
         br.y += titleh;
-            tl.y += maxh / 2;
-            br.y += maxh / 2;
+        tl.y += PAD_Y * 0.8;
+        br.y += PAD_Y * 0.8;
 
         wid_popup_title = wid_new_container(wid_popup_window,
                                             "wid popup container");
@@ -327,7 +327,7 @@ widp wid_popup (const char *text, const char *title,
         }
 
         tl.x += PAD_X/2;
-        tl.y += PAD_Y/4;
+        tl.y += PAD_Y/2;
         br.x += PAD_X/2;
         br.y += PAD_Y/4;
 
@@ -407,7 +407,7 @@ widp wid_popup (const char *text, const char *title,
             fpoint br;
 
             tl.y = button_y;
-            tl.y += PAD_Y/4;
+            tl.y += PAD_Y / 3;
 
             br.y = tl.y + maxbuttonh;
             br.x = x;
@@ -423,15 +423,20 @@ widp wid_popup (const char *text, const char *title,
             color c;
             if (focus_order == 1) {
                 c = DARKGREEN;
+                wid_set_tex(child, 0, "button_red");
             } else if (focus_order == 2) {
                 c = STEELBLUE2;
+                wid_set_tex(child, 0, "button_green");
             } else if (focus_order == 3) {
                 c = STEELBLUE;
+                wid_set_tex(child, 0, "button_black");
             } else {
                 c = GRAY;
             }
 
-c = WHITE;
+            wid_set_square(child);
+
+            c = WHITE;
             c.a = 200;
             wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_color(child, WID_COLOR_BG, c);
@@ -450,8 +455,6 @@ c = WHITE;
 
             wid_set_client_context(child, (void*)button_callback[n]);
 
-            wid_set_tex(child, 0, "button_red");
-            wid_set_square(child);
         }
     }
 
