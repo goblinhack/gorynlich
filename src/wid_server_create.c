@@ -363,7 +363,7 @@ static uint8_t wid_server_create_name_receive_input (widp w,
             break;
     }
 
-    s = wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }
@@ -424,7 +424,7 @@ static uint8_t wid_server_create_port_receive_input (widp w,
             break;
     }
 
-    s = wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }
@@ -502,7 +502,7 @@ static uint8_t wid_server_create_max_players_receive_input (widp w,
             break;
     }
 
-    s = wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }

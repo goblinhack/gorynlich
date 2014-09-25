@@ -192,6 +192,13 @@ widp wid_popup (const char *text, const char *title,
          * .5 line spacing for single newlines.
          */
         if (!strlen(n->line)) {
+            if (!maxh) {
+                ttf_text_size(body_font, "test", &w, &h, 0, 1.0f, 1.0f,
+                              false /* fixed width */);
+
+                maxh = h;
+            }
+
             h = maxh/2;
         }
 
@@ -424,14 +431,15 @@ widp wid_popup (const char *text, const char *title,
             color c;
             if (focus_order == 1) {
                 c = DARKGREEN;
-                wid_set_tex(child, 0, "button_red");
+                wid_set_tex(child, 0, "button_black");
             } else if (focus_order == 2) {
                 c = STEELBLUE2;
                 wid_set_tex(child, 0, "button_green");
             } else if (focus_order == 3) {
                 c = STEELBLUE;
-                wid_set_tex(child, 0, "button_black");
+                wid_set_tex(child, 0, "button_red");
             } else {
+                wid_set_tex(child, 0, "button_black");
                 c = GRAY;
             }
 

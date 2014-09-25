@@ -6892,7 +6892,7 @@ typedef struct wid_light_ {
     double fuzz;
     widp w;
     uint16_t max_light_rays;
-    color color;
+    color col;
 } wid_light;
         
 static wid_light wid_lights[MAX_LIGHTS];
@@ -6911,7 +6911,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
     wid_lights[wid_light_count].at = at;
     wid_lights[wid_light_count].strength = strength;
     wid_lights[wid_light_count].w = w;
-    wid_lights[wid_light_count].color = c;
+    wid_lights[wid_light_count].col = c;
 
     uint16_t max_light_rays;
 
@@ -7530,7 +7530,7 @@ static void wid_lighting_render (widp w,
         maxy = MAP_HEIGHT;
     }
 
-    color c = light->color;
+    color c = light->col;
 
     float red   = ((float)c.r) / 255.0;
     float green = ((float)c.g) / 255.0;
@@ -8073,7 +8073,7 @@ static void wid_display (widp w,
             /*
              * Position the text
              */
-            if ((width > owidth) && w->show_cursor) {
+            if (((int)width > owidth) && w->show_cursor) {
                 /*
                  * If the text is too big, center it on the cursor.
                  */

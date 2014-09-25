@@ -219,7 +219,7 @@ static void term_core_refresh (void)
 
 static inline void term_core_fg (unsigned char a)
 {
-    static char *data[] = {
+    static const char *data[] = {
         "[30m", "[31m", "[32m", "[33m",
         "[34m", "[35m", "[36m", "[37m",
         "\033[m",
@@ -266,7 +266,7 @@ static void term_core_fgbg (unsigned char fg, unsigned char bg)
 
 static inline void term_puts_fg (unsigned char a)
 {
-    static char *data[] = {
+    static const char *data[] = {
         "[30m", "[31m", "[32m", "[33m",
         "[34m", "[35m", "[36m", "[37m",
         "\033[m",
@@ -709,8 +709,8 @@ int term_test (int32_t argc, char *argv[])
                     int d = (x + y + r);
 
                     term_putc('a' + (d % 26));
-                    term_fg(d % 8);
-                    term_bg((d+1) % 8);
+                    term_fg((term_color)(d % 8));
+                    term_bg((term_color)((d+1) % 8));
                 }
             }
 

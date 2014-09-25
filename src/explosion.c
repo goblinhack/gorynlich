@@ -185,7 +185,7 @@ static void level_place_explosion_ (levelp level,
                                     thingp owner,
                                     double x, 
                                     double y,
-                                    uint32_t radius,
+                                    int radius,
                                     uint32_t nargs, ...)
 {
     va_list args;

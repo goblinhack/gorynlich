@@ -153,16 +153,15 @@ tree_root *server_boring_things;
 tree_root *client_boring_things;
 
 static uint32_t next_thing_id;
-static uint32_t next_client_thing_id;
 static uint32_t next_monst_thing_id;
-
-thingp thing_server_ids[THING_ID_MAX];
-thingp thing_client_ids[THING_CLIENT_ID_MAX];
 
 /*
  * We reserve client things for local side explosion effects.
  */
 static uint32_t next_client_thing_id = THING_ID_MAX;
+
+thingp thing_server_ids[THING_ID_MAX];
+thingp thing_client_ids[THING_CLIENT_ID_MAX];
 
 static uint8_t thing_init_done;
 static void thing_destroy_implicit(thingp t);
@@ -436,7 +435,7 @@ void thing_map_sanity (void)
 
 void thing_map_remove (thingp t)
 {
-    uint32_t i;
+    int i;
 
     verify(t);
 
@@ -1439,7 +1438,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
 static int thing_hit_ (thingp t, 
                        thingp hitter, 
-                       uint32_t damage)
+                       int32_t damage)
 {
     verify(t);
 
@@ -4305,7 +4304,7 @@ void thing_server_action (thingp t,
     }
 
     switch (action) {
-    case PLAYER_ACTION_USE:
+    case PLAYER_ACTION_USE: {
         if (!thing_is_carrying_specific_item(t, item)) {
             /*
              * Sneaky.
@@ -4342,6 +4341,7 @@ void thing_server_action (thingp t,
         THING_SHOUT_AT(t, WARNING, "Failed to use the %s", 
                        thing_template_short_name(thing_template));
         return;
+    }
 
     case PLAYER_ACTION_DROP: {
         double dx = 0;
