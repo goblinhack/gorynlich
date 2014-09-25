@@ -450,7 +450,7 @@ static uint8_t wid_server_join_add (widp w, int32_t x, int32_t y,
 
     memset(&s, 0, sizeof(s));
 
-    s.host = SERVER_DEFAULT_HOST; 
+    s.host = (char*) SERVER_DEFAULT_HOST; 
     s.port = global_config.server_port; 
 
     server_add(&s);
@@ -542,7 +542,7 @@ static uint8_t wid_server_join_hostname_receive_input (widp w,
             break;
     }
 
-    s = wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }
@@ -604,7 +604,7 @@ static uint8_t wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
             break;
     }
 
-    s = wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }
@@ -708,7 +708,7 @@ static uint8_t wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
             break;
     }
 
-    s = wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }
