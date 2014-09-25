@@ -655,19 +655,19 @@ static void wid_intro_create (void)
         fpoint br = {0.3f, 0.05};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Editor");
+        wid_set_text(child, "%%tile=button_e$Editor");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
+        color c = WHITE;
         c.a = 200;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 255;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 255;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
@@ -689,16 +689,16 @@ static void wid_intro_create (void)
         wid_set_text(child, "About");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
+        color c = WHITE;
         c.a = 200;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 255;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 225;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
@@ -720,16 +720,16 @@ static void wid_intro_create (void)
         wid_set_text(child, "Settings");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
+        color c = WHITE;
         c.a = 200;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 255;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 225;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
@@ -751,16 +751,16 @@ static void wid_intro_create (void)
         wid_set_text(child, "Hiscore");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
+        color c = WHITE;
         c.a = 200;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 255;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 225;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
@@ -782,16 +782,16 @@ static void wid_intro_create (void)
         wid_set_text(child, "server");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
+        color c = WHITE;
         c.a = 200;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 255;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 225;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_NORMAL);
@@ -813,16 +813,16 @@ static void wid_intro_create (void)
         wid_set_text(child, "Help");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
+        color c = WHITE;
         c.a = 200;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 255;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 225;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_on_mouse_down(child, wid_intro_help_mouse_event);
@@ -842,16 +842,16 @@ static void wid_intro_create (void)
         wid_set_text(child, "Quit");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        c.a = 50;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
+        color c = WHITE;
         c.a = 200;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
+        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 255;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 225;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_on_mouse_down(child, wid_intro_quit_receive_mouse_down);
@@ -877,11 +877,11 @@ static void wid_intro_create (void)
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_OVER);
-        c.a = 200;
+        c.a = 255;
         wid_set_color(child, WID_COLOR_TEXT, c);
 
         wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 100;
+        c.a = 225;
         wid_set_color(child, WID_COLOR_TEXT, c);
         wid_set_text_outline(child, true);
 
