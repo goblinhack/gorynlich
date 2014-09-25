@@ -253,9 +253,11 @@ static uint8_t client_socket_open (char *host, char *port)
 {
     uint32_t portno;
     socketp s = 0;
+    const char *h;
 
-    if (!host || !*host) {
-        host = SERVER_DEFAULT_HOST;
+    h = host;
+    if (!h || !*h) {
+        h = SERVER_DEFAULT_HOST;
     }
 
     if (port && *port) {
@@ -264,14 +266,14 @@ static uint8_t client_socket_open (char *host, char *port)
         portno = global_config.server_port;
     }
 
-    LOG("Client: Trying to resolve server address %s:%u", host, portno);
+    LOG("Client: Trying to resolve server address %s:%u", h, portno);
 
-    if (SDLNet_ResolveHost(&server_address, host, portno)) {
-        MSG_BOX("Open socket, cannot resolve %s:%u", host, portno);
+    if (SDLNet_ResolveHost(&server_address, h, portno)) {
+        MSG_BOX("Open socket, cannot resolve %s:%u", h, portno);
         return (false);
     }
 
-    LOG("Client: Connecting to server address %s:%u", host, portno);
+    LOG("Client: Connecting to server address %s:%u", h, portno);
 
     /*
      * Connector.
@@ -289,8 +291,11 @@ uint8_t client_socket_close (char *host, char *port)
 {
     uint32_t portno;
     socketp s = 0;
+    const char *h;
 
-    if (!host && !port) {
+    h = host;
+
+    if (!h && !port) {
         TREE_WALK(sockets, s) {
             if (socket_get_client(s)) {
                 break;
@@ -302,8 +307,8 @@ uint8_t client_socket_close (char *host, char *port)
             return (false);
         }
     } else {
-        if (!host || !*host) {
-            host = SERVER_DEFAULT_HOST;
+        if (!h || !*h) {
+            h = SERVER_DEFAULT_HOST;
         }
 
         if (port && *port) {
@@ -312,8 +317,8 @@ uint8_t client_socket_close (char *host, char *port)
             portno = global_config.server_port;
         }
 
-        if (SDLNet_ResolveHost(&server_address, host, portno)) {
-            ERR("Close socket, cannot resolve %s:%u", host, portno);
+        if (SDLNet_ResolveHost(&server_address, h, portno)) {
+            ERR("Close socket, cannot resolve %s:%u", h, portno);
             return (false);
         }
 
@@ -342,9 +347,14 @@ uint8_t client_socket_close (char *host, char *port)
     return (true);
 }
 
-uint8_t client_socket_join (char *host, char *port, uint16_t portno,
+uint8_t client_socket_join (const char *host, 
+                            const char *port, uint16_t portno,
                             uint8_t quiet)
 {
+    const char *h;
+
+    h = host;
+
     if (client_joined_server) {
         WARN("Leave the current server first before trying to join again");
         return (false);
@@ -358,20 +368,20 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
         portno = last_portno;
     }
 
-    if (host) {
+    if (h) {
         if (last_host) {
             myfree(last_host);
         }
-        last_host = dupstr(host, "last host");;
+        last_host = dupstr(h, "last host");;
     }
 
-    if (!host) {
-        host = last_host;
+    if (!h) {
+        h = last_host;
     }
 
     socketp s = 0;
 
-    if (!host && !port) {
+    if (!h && !port) {
         TREE_WALK(sockets, s) {
             if (socket_get_client(s)) {
                 break;
@@ -383,8 +393,8 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
             return (false);
         }
     } else {
-        if (!host || !*host) {
-            host = SERVER_DEFAULT_HOST;
+        if (!h || !*h) {
+            h = SERVER_DEFAULT_HOST;
         }
 
         if (!portno) {
@@ -395,11 +405,11 @@ uint8_t client_socket_join (char *host, char *port, uint16_t portno,
             }
         }
 
-        if (SDLNet_ResolveHost(&server_address, host, portno)) {
+        if (SDLNet_ResolveHost(&server_address, h, portno)) {
             if (quiet) {
-                WARN("Cannot join %s:%u", host, portno);
+                WARN("Cannot join %s:%u", h, portno);
             } else {
-                MSG_BOX("Cannot join %s:%u", host, portno);
+                MSG_BOX("Cannot join %s:%u", h, portno);
             }
             return (false);
         }
@@ -768,7 +778,7 @@ static void client_poll (void)
                 pdata = data;
             }
 
-            msg_type type = *data++;
+            msg_type type = (msg_type) *data++;
 
             socket_count_inc_pak_rx(s, type);
 

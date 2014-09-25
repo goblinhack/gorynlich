@@ -479,7 +479,8 @@ wid_game_map_item_mouse_event_common (uint32_t button,
 static uint8_t wid_game_map_item_shortcut_key_event (widp w, 
                                                      const SDL_KEYSYM *key)
 {
-    thing_templatep thing_template = wid_get_client_context(w);
+    thing_templatep thing_template = 
+                    (typeof(thing_template)) wid_get_client_context(w);
 
     if (wid_get_mode(w) != WID_MODE_OVER) {
         return (false);
@@ -492,7 +493,8 @@ static uint8_t wid_game_map_item_shortcut_mouse_event (widp w,
                                                        int32_t x, int32_t y,
                                                        uint32_t button)
 {
-    thing_templatep thing_template = wid_get_client_context(w);
+    thing_templatep thing_template = 
+                    (typeof(thing_template)) wid_get_client_context(w);
 
     return (wid_game_map_item_mouse_event_common(button, thing_template));
 }

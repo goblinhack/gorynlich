@@ -1895,7 +1895,7 @@ static void door_flood (levelp level, int32_t x, int32_t y)
     }
 
     if (!(this_door[x][y] = map_thing_is_door_at(level, x, y))) {
-        this_door[x][y] = (void*)-1;
+        this_door[x][y] = (thingp) (void*)-1;
         return;
     }
 

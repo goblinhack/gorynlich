@@ -209,7 +209,8 @@ void blit_init (void)
      */
     gl_array_size_required = 16 * 1024 * 1024;
 
-    gl_array_buf = myzalloc(gl_array_size_required, "GL xy buffer");
+    gl_array_buf = (typeof(gl_array_buf))
+                    myzalloc(gl_array_size_required, "GL xy buffer");
     gl_array_buf_end =
             (typeof(gl_array_buf_end))
                 ((char *)gl_array_buf) + gl_array_size_required;

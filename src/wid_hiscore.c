@@ -192,7 +192,7 @@ static void wid_hiscore_create (void)
 
         wid_set_text(w, "High Scores");
         wid_set_text_outline(w, true);
-        wid_set_font(w, large_font);
+        wid_set_font(w, med_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
 
         wid_set_text_outline(w, true);
@@ -240,7 +240,7 @@ static void wid_hiscore_create (void)
             wid_set_bevel(w,0);
             wid_set_no_shape(w);
             wid_set_text_outline(w, true);
-            wid_set_font(w, large_font);
+            wid_set_font(w, med_font);
             wid_set_text_lhs(w, true);
             wid_set_text_outline(w, true);
 
@@ -350,7 +350,7 @@ static void wid_hiscore_create (void)
             wid_set_no_shape(w);
             wid_set_text_outline(w, true);
             wid_set_text_fixed_width(w, true);
-            wid_set_font(w, large_font);
+            wid_set_font(w, med_font);
             wid_set_text_outline(w, true);
 
             i++;

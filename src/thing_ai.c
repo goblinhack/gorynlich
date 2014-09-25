@@ -585,7 +585,7 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
     int8_t g;
     int8_t h;
     int8_t i;
-    int8_t lowest;
+    int lowest;
 
     a = dmap->walls[x-1][y-1];
     b = dmap->walls[x  ][y-1];
@@ -644,7 +644,7 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
 
     thing_template = thing_get_template(t);
 
-    if (lowest > thing_template_get_vision_distance(thing_template)) {
+    if (lowest > (int) thing_template_get_vision_distance(thing_template)) {
         return (false);
     }
 

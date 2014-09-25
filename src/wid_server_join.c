@@ -374,7 +374,7 @@ static uint8_t wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t b
 
 static uint8_t wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
 {
-    server *s = wid_get_client_context(w);
+    server *s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }
@@ -406,7 +406,7 @@ static uint8_t wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
 static uint8_t wid_server_join_leave (widp w, int32_t x, int32_t y, 
                                       uint32_t button)
 {
-    server *s = wid_get_client_context(w);
+    server *s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }
@@ -430,7 +430,7 @@ static uint8_t wid_server_join_leave (widp w, int32_t x, int32_t y,
 static uint8_t wid_server_join_delete (widp w, int32_t x, int32_t y, 
                                        uint32_t button)
 {
-    server *s = wid_get_client_context(w);
+    server *s = (typeof(s)) wid_get_client_context(w);
     if (!s) {
         return (false);
     }

@@ -403,7 +403,7 @@ uint8_t command_handle (const char *input,
 
 static char wid_text[MAXSTR];
 
-static void console_set_text (char *s)
+static void console_set_text (const char *s)
 {
     strcpy(wid_text, s);
 }
@@ -478,8 +478,8 @@ void console_tick (void)
     char aftercursor[MAXSTR];
     char entered[MAXSTR];
     char newchar[2];
-    uint32_t origlen;
-    uint32_t cnt;
+    int origlen;
+    int cnt;
 
     newchar[0] = '\0';
     newchar[0] = c;
@@ -584,7 +584,6 @@ void console_tick (void)
             if (read(fd,seq,2) == -1) break;
 
             if (seq[0] == 91 && seq[1] == 68) {
-
                 if (cursor_x > 0) {
                     cursor_x--;
                 }
@@ -668,7 +667,7 @@ void console_tick (void)
             return;
 
         default: {
-            if (origlen >= sizeof(updatedtext) - 1) {
+            if (origlen >= (typeof(origlen)) sizeof(updatedtext) - 1) {
                 break;
             }
 
