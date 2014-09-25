@@ -89,7 +89,7 @@ static void wid_rock_tick (void)
 
 static void wid_intro_demo_buttons_tick (widp wid)
 {
-    uint32_t index = (uint32_t) (void*) wid_get_client_context(wid);
+    uint32_t index = (uint32_t) (uintptr_t) wid_get_client_context(wid);
     float *x = &demo_player_x[index];
 
     thing_templatep t = demo_player_tp[index];

@@ -340,7 +340,7 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
 {
     msg_type type;
 
-    type = *(packet->data);
+    type = (typeof(type)) *(packet->data);
 
     if (type != MSG_COMPRESSED) {
         s->tx_msg[type]++;
@@ -668,7 +668,7 @@ static uint8_t sockets_show_all (tokens_t *tokens, void *context)
         uint32_t min_latency = (uint32_t) -1;
 
         FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
-            if (*latency == -1) {
+            if (*latency == (typeof(*latency)) -1) {
                 ++no_response;
                 continue;
             }
@@ -737,7 +737,7 @@ static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
         uint32_t min_latency = (uint32_t) -1;
 
         FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
-            if (*latency == -1) {
+            if (*latency == (typeof(*latency)) -1) {
                 ++no_response;
                 continue;
             }
@@ -835,7 +835,7 @@ void sockets_quality_check (void)
         uint32_t min_latency = (uint32_t) -1;
 
         FOR_ALL_IN_ARRAY(latency, s->ping_responses) {
-            if (*latency == -1) {
+            if (*latency == (typeof(*latency)) -1) {
                 ++no_response;
                 continue;
             }
@@ -1363,7 +1363,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
      */
     aplayer *p = s->player;
     if (!p) {
-        p = myzalloc(sizeof(*p), "player");
+        p = (typeof(p)) myzalloc(sizeof(*p), "player");
 
         socket_set_player(s, p);
     }
@@ -1489,7 +1489,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
      */
     aplayer *p = s->player;
     if (!p) {
-        p = myzalloc(sizeof(*p), "player");
+        p = (typeof(p)) myzalloc(sizeof(*p), "player");
 
         socket_set_player(s, p);
     }
@@ -1673,7 +1673,7 @@ static void socket_tx_client_shout_relay (socketp s,
         char *name = from->name;
         strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
     } else {
-        char *name = "server";
+        const char *name = "server";
         strncpy(msg.from, name, min(sizeof(msg.from) - 1, strlen(name))); 
     }
 
@@ -2317,7 +2317,8 @@ void socket_tx_server_hiscore (socketp only,
             }
         }
 
-        int i;
+        uint32_t i;
+
         for (i = 0; i < hi_index; i++) {
             h = hi[i];
             if (!h) {

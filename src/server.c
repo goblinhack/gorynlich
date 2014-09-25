@@ -293,7 +293,7 @@ static void server_poll (void)
             pdata = data;
         }
 
-        msg_type type = *data++;
+        msg_type type = (typeof(type)) *data++;
 
         socket_count_inc_pak_rx(s, type);
 

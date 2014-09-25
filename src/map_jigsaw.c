@@ -106,125 +106,10 @@ enum {
     TERM_COLOR_WHITE,
 };
 
-static uint8_t map_fg[] = {
-    [MAP_EMPTY]          = TERM_COLOR_BLACK,
-    [MAP_SPACE]          = TERM_COLOR_WHITE,
-    [MAP_WATER]          = TERM_COLOR_BLACK,
-    [MAP_FLOOR]          = TERM_COLOR_WHITE,
-    [MAP_ROCK]           = TERM_COLOR_STEELBLUE,
-    [MAP_WALL]           = TERM_COLOR_WHITE,
-    [MAP_CORRIDOR]       = TERM_COLOR_YELLOW,
-    [MAP_CORRIDOR_WALL]  = TERM_COLOR_BLUE,
-    [MAP_CORRIDOR_DEAD]  = TERM_COLOR_STEELBLUE,
-    [MAP_CORRIDOR_POSS]  = TERM_COLOR_CYAN,
-    [MAP_CORRIDOR_OK]    = TERM_COLOR_GREEN,
-    [MAP_CORRIDOR_FORK]  = TERM_COLOR_CYAN,
-    [MAP_LADDER]         = TERM_COLOR_GREEN,
-    [MAP_MONST]          = TERM_COLOR_STEELBLUE,
-    [MAP_MAJ_MONST]      = TERM_COLOR_STEELBLUE,
-    [MAP_TRAP]           = TERM_COLOR_STEELBLUE,
-    [MAP_TRAPDOOR]       = TERM_COLOR_STEELBLUE,
-    [MAP_TREASURE]       = TERM_COLOR_YELLOW,
-    [MAP_FOOD]           = TERM_COLOR_GREEN,
-    [MAP_LAVA]           = TERM_COLOR_YELLOW,
-    [MAP_EXIT_WEST]      = TERM_COLOR_STEELBLUE,
-    [MAP_EXIT_EAST]      = TERM_COLOR_STEELBLUE,
-    [MAP_EXIT_SOUTH]     = TERM_COLOR_STEELBLUE,
-    [MAP_EXIT_NORTH]     = TERM_COLOR_STEELBLUE,
-    [MAP_END]            = TERM_COLOR_STEELBLUE,
-    [MAP_START]          = TERM_COLOR_STEELBLUE,
-    [MAP_PADDING]        = TERM_COLOR_WHITE,
-};
-
-static uint8_t map_bg[] = {
-    [MAP_EMPTY]          = TERM_COLOR_BLACK,
-    [MAP_SPACE]          = TERM_COLOR_BLACK,
-    [MAP_WATER]          = TERM_COLOR_CYAN,
-    [MAP_FLOOR]          = TERM_COLOR_BLACK,
-    [MAP_ROCK]           = TERM_COLOR_BLACK,
-    [MAP_WALL]           = TERM_COLOR_BLUE,
-    [MAP_CORRIDOR]       = TERM_COLOR_BLACK,
-    [MAP_CORRIDOR_WALL]  = TERM_COLOR_BLACK,
-    [MAP_CORRIDOR_DEAD]  = TERM_COLOR_BLACK,
-    [MAP_CORRIDOR_POSS]  = TERM_COLOR_BLACK,
-    [MAP_CORRIDOR_OK]    = TERM_COLOR_BLACK,
-    [MAP_CORRIDOR_FORK]  = TERM_COLOR_BLACK,
-    [MAP_LADDER]         = TERM_COLOR_BLACK,
-    [MAP_MONST]          = TERM_COLOR_BLACK,
-    [MAP_MAJ_MONST]      = TERM_COLOR_BLACK,
-    [MAP_TRAP]           = TERM_COLOR_BLACK,
-    [MAP_TRAPDOOR]       = TERM_COLOR_BLACK,
-    [MAP_TREASURE]       = TERM_COLOR_BLACK,
-    [MAP_FOOD]           = TERM_COLOR_BLACK,
-    [MAP_LAVA]           = TERM_COLOR_STEELBLUE,
-    [MAP_EXIT_WEST]      = TERM_COLOR_BLACK,
-    [MAP_EXIT_EAST]      = TERM_COLOR_BLACK,
-    [MAP_EXIT_SOUTH]     = TERM_COLOR_BLACK,
-    [MAP_EXIT_NORTH]     = TERM_COLOR_BLACK,
-    [MAP_END]            = TERM_COLOR_BLACK,
-    [MAP_START]          = TERM_COLOR_BLACK,
-    [MAP_PADDING]        = TERM_COLOR_BLACK,
-};
-
-static uint8_t valid_frag_char[] = {
-    [MAP_EMPTY]          = true,
-    [MAP_SPACE]          = true,
-    [MAP_WATER]          = true,
-    [MAP_FLOOR]          = true,
-    [MAP_ROCK]           = true,
-    [MAP_WALL]           = true,
-    [MAP_CORRIDOR]       = true,
-    [MAP_CORRIDOR_WALL]  = false,
-    [MAP_CORRIDOR_DEAD]  = false,
-    [MAP_CORRIDOR_POSS]  = false,
-    [MAP_CORRIDOR_OK]    = false,
-    [MAP_CORRIDOR_FORK]  = false,
-    [MAP_LADDER]         = true,
-    [MAP_MONST]          = true,
-    [MAP_MAJ_MONST]      = true,
-    [MAP_TRAP]           = true,
-    [MAP_TRAPDOOR]       = true,
-    [MAP_TREASURE]       = true,
-    [MAP_FOOD]           = true,
-    [MAP_LAVA]           = true,
-    [MAP_EXIT_WEST]      = false,
-    [MAP_EXIT_EAST]      = false,
-    [MAP_EXIT_SOUTH]     = false,
-    [MAP_EXIT_NORTH]     = false,
-    [MAP_END]            = false,
-    [MAP_START]          = false,
-    [MAP_PADDING]        = false,
-};
-
-static uint8_t valid_frag_alt_char[] = {
-    [MAP_EMPTY]          = true,
-    [MAP_SPACE]          = false,
-    [MAP_WATER]          = true,
-    [MAP_FLOOR]          = true,
-    [MAP_ROCK]           = true,
-    [MAP_WALL]           = true,
-    [MAP_CORRIDOR]       = true,
-    [MAP_CORRIDOR_WALL]  = true,
-    [MAP_CORRIDOR_DEAD]  = false,
-    [MAP_CORRIDOR_POSS]  = false,
-    [MAP_CORRIDOR_OK]    = false,
-    [MAP_CORRIDOR_FORK]  = false,
-    [MAP_LADDER]         = true,
-    [MAP_MONST]          = true,
-    [MAP_MAJ_MONST]      = true,
-    [MAP_TRAP]           = true,
-    [MAP_TRAPDOOR]       = true,
-    [MAP_TREASURE]       = true,
-    [MAP_FOOD]           = true,
-    [MAP_LAVA]           = true,
-    [MAP_EXIT_WEST]      = false,
-    [MAP_EXIT_EAST]      = false,
-    [MAP_EXIT_SOUTH]     = false,
-    [MAP_EXIT_NORTH]     = false,
-    [MAP_END]            = false,
-    [MAP_START]          = false,
-    [MAP_PADDING]        = false,
-};
+static uint8_t map_fg[MAP_MAX];
+static uint8_t map_bg[MAP_MAX];
+static uint8_t valid_frag_char[MAP_MAX];
+static uint8_t valid_frag_alt_char[MAP_MAX];
 
 enum {
     /*
@@ -344,7 +229,7 @@ typedef struct {
  */
 static int32_t opt_seed;
 
-static char *dieat (int32_t line, int32_t col, char *why)
+static char *dieat (int32_t line, int32_t col, const char *why)
 {
     DIE("Died at line %u, col %i: %s", line, col, why);
 }
@@ -2282,7 +2167,7 @@ static int32_t maze_solve_search (dungeon_t *dg, maze_cell_t *c)
  * Find "old" in a room and replace with "new"
  */
 static uint8_t 
-maze_replace_room_char (uint32_t rx, uint32_t ry, char new)
+maze_replace_room_char (uint32_t rx, uint32_t ry, char new_char)
 {
     uint32_t tries = JIGPIECE_WIDTH * JIGPIECE_HEIGHT * 100;
 
@@ -2301,7 +2186,7 @@ maze_replace_room_char (uint32_t rx, uint32_t ry, char new)
             !jigpiece_char_is_monst((map_jigsaw_buffer_getchar(cx+2, cy)))) {
 
             map_jigsaw_buffer_goto(cx, cy);
-            map_jigsaw_buffer_putchar(new);
+            map_jigsaw_buffer_putchar(new_char);
 
             return (true);
         }
@@ -2413,7 +2298,7 @@ static int32_t generate_level (const char *jigsaw_map,
 
     char *buf;
 
-    dg = myzalloc(sizeof(*dg), __FUNCTION__);
+    dg = (typeof(dg)) myzalloc(sizeof(*dg), __FUNCTION__);
 
     if (opt_seed) {
         maze_seed = opt_seed;
@@ -2501,14 +2386,131 @@ reseed:
     return (1);
 }
 
+static void init (void)
+{
+    map_fg[MAP_EMPTY]          = TERM_COLOR_BLACK;
+    map_fg[MAP_SPACE]          = TERM_COLOR_WHITE;
+    map_fg[MAP_WATER]          = TERM_COLOR_BLACK;
+    map_fg[MAP_FLOOR]          = TERM_COLOR_WHITE;
+    map_fg[MAP_ROCK]           = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_WALL]           = TERM_COLOR_WHITE;
+    map_fg[MAP_CORRIDOR]       = TERM_COLOR_YELLOW;
+    map_fg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLUE;
+    map_fg[MAP_CORRIDOR_DEAD]  = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_CORRIDOR_POSS]  = TERM_COLOR_CYAN;
+    map_fg[MAP_CORRIDOR_OK]    = TERM_COLOR_GREEN;
+    map_fg[MAP_CORRIDOR_FORK]  = TERM_COLOR_CYAN;
+    map_fg[MAP_LADDER]         = TERM_COLOR_GREEN;
+    map_fg[MAP_MONST]          = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_MAJ_MONST]      = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_TRAP]           = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_TRAPDOOR]       = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_TREASURE]       = TERM_COLOR_YELLOW;
+    map_fg[MAP_FOOD]           = TERM_COLOR_GREEN;
+    map_fg[MAP_LAVA]           = TERM_COLOR_YELLOW;
+    map_fg[MAP_EXIT_WEST]      = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_EXIT_EAST]      = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_EXIT_SOUTH]     = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_EXIT_NORTH]     = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_END]            = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_START]          = TERM_COLOR_STEELBLUE;
+    map_fg[MAP_PADDING]        = TERM_COLOR_WHITE;
+
+    map_bg[MAP_EMPTY]          = TERM_COLOR_BLACK;
+    map_bg[MAP_SPACE]          = TERM_COLOR_BLACK;
+    map_bg[MAP_WATER]          = TERM_COLOR_CYAN;
+    map_bg[MAP_FLOOR]          = TERM_COLOR_BLACK;
+    map_bg[MAP_ROCK]           = TERM_COLOR_BLACK;
+    map_bg[MAP_WALL]           = TERM_COLOR_BLUE;
+    map_bg[MAP_CORRIDOR]       = TERM_COLOR_BLACK;
+    map_bg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLACK;
+    map_bg[MAP_CORRIDOR_DEAD]  = TERM_COLOR_BLACK;
+    map_bg[MAP_CORRIDOR_POSS]  = TERM_COLOR_BLACK;
+    map_bg[MAP_CORRIDOR_OK]    = TERM_COLOR_BLACK;
+    map_bg[MAP_CORRIDOR_FORK]  = TERM_COLOR_BLACK;
+    map_bg[MAP_LADDER]         = TERM_COLOR_BLACK;
+    map_bg[MAP_MONST]          = TERM_COLOR_BLACK;
+    map_bg[MAP_MAJ_MONST]      = TERM_COLOR_BLACK;
+    map_bg[MAP_TRAP]           = TERM_COLOR_BLACK;
+    map_bg[MAP_TRAPDOOR]       = TERM_COLOR_BLACK;
+    map_bg[MAP_TREASURE]       = TERM_COLOR_BLACK;
+    map_bg[MAP_FOOD]           = TERM_COLOR_BLACK;
+    map_bg[MAP_LAVA]           = TERM_COLOR_STEELBLUE;
+    map_bg[MAP_EXIT_WEST]      = TERM_COLOR_BLACK;
+    map_bg[MAP_EXIT_EAST]      = TERM_COLOR_BLACK;
+    map_bg[MAP_EXIT_SOUTH]     = TERM_COLOR_BLACK;
+    map_bg[MAP_EXIT_NORTH]     = TERM_COLOR_BLACK;
+    map_bg[MAP_END]            = TERM_COLOR_BLACK;
+    map_bg[MAP_START]          = TERM_COLOR_BLACK;
+    map_bg[MAP_PADDING]        = TERM_COLOR_BLACK;
+
+    valid_frag_char[MAP_EMPTY]          = true;
+    valid_frag_char[MAP_SPACE]          = true;
+    valid_frag_char[MAP_WATER]          = true;
+    valid_frag_char[MAP_FLOOR]          = true;
+    valid_frag_char[MAP_ROCK]           = true;
+    valid_frag_char[MAP_WALL]           = true;
+    valid_frag_char[MAP_CORRIDOR]       = true;
+    valid_frag_char[MAP_CORRIDOR_WALL]  = false;
+    valid_frag_char[MAP_CORRIDOR_DEAD]  = false;
+    valid_frag_char[MAP_CORRIDOR_POSS]  = false;
+    valid_frag_char[MAP_CORRIDOR_OK]    = false;
+    valid_frag_char[MAP_CORRIDOR_FORK]  = false;
+    valid_frag_char[MAP_LADDER]         = true;
+    valid_frag_char[MAP_MONST]          = true;
+    valid_frag_char[MAP_MAJ_MONST]      = true;
+    valid_frag_char[MAP_TRAP]           = true;
+    valid_frag_char[MAP_TRAPDOOR]       = true;
+    valid_frag_char[MAP_TREASURE]       = true;
+    valid_frag_char[MAP_FOOD]           = true;
+    valid_frag_char[MAP_LAVA]           = true;
+    valid_frag_char[MAP_EXIT_WEST]      = false;
+    valid_frag_char[MAP_EXIT_EAST]      = false;
+    valid_frag_char[MAP_EXIT_SOUTH]     = false;
+    valid_frag_char[MAP_EXIT_NORTH]     = false;
+    valid_frag_char[MAP_END]            = false;
+    valid_frag_char[MAP_START]          = false;
+    valid_frag_char[MAP_PADDING]        = false;
+
+    valid_frag_alt_char[MAP_EMPTY]          = true;
+    valid_frag_alt_char[MAP_SPACE]          = false;
+    valid_frag_alt_char[MAP_WATER]          = true;
+    valid_frag_alt_char[MAP_FLOOR]          = true;
+    valid_frag_alt_char[MAP_ROCK]           = true;
+    valid_frag_alt_char[MAP_WALL]           = true;
+    valid_frag_alt_char[MAP_CORRIDOR]       = true;
+    valid_frag_alt_char[MAP_CORRIDOR_WALL]  = true;
+    valid_frag_alt_char[MAP_CORRIDOR_DEAD]  = false;
+    valid_frag_alt_char[MAP_CORRIDOR_POSS]  = false;
+    valid_frag_alt_char[MAP_CORRIDOR_OK]    = false;
+    valid_frag_alt_char[MAP_CORRIDOR_FORK]  = false;
+    valid_frag_alt_char[MAP_LADDER]         = true;
+    valid_frag_alt_char[MAP_MONST]          = true;
+    valid_frag_alt_char[MAP_MAJ_MONST]      = true;
+    valid_frag_alt_char[MAP_TRAP]           = true;
+    valid_frag_alt_char[MAP_TRAPDOOR]       = true;
+    valid_frag_alt_char[MAP_TREASURE]       = true;
+    valid_frag_alt_char[MAP_FOOD]           = true;
+    valid_frag_alt_char[MAP_LAVA]           = true;
+    valid_frag_alt_char[MAP_EXIT_WEST]      = false;
+    valid_frag_alt_char[MAP_EXIT_EAST]      = false;
+    valid_frag_alt_char[MAP_EXIT_SOUTH]     = false;
+    valid_frag_alt_char[MAP_EXIT_NORTH]     = false;
+    valid_frag_alt_char[MAP_END]            = false;
+    valid_frag_alt_char[MAP_START]          = false;
+    valid_frag_alt_char[MAP_PADDING]        = false;
+}
+
 /*
  * main
  */
 int32_t map_jigsaw_test (int32_t argc, char **argv)
 {
-    char *jigsaw_map;
+    const char *jigsaw_map;
     int32_t rc;
     char c;
+
+    init();
 
     jigsaw_map = "data/map/jigsaw.map";
     opt_seed = 0;

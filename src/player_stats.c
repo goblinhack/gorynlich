@@ -45,60 +45,65 @@ static int player_stats_generate_single_random (void)
 
 int player_stats_get_modifier (int value) 
 {
-    static const int modifiers[] = {
-        [0] =               -5,
-        [1] =               -5,
-        [2] =               -4,
-        [3] =               -4,
-        [4] =               -3,
-        [5] =               -3,
-        [6] =               -2,
-        [7] =               -2,
-        [8] =               -1,
-        [9] =               0,
-        [10] =              0,
-        [11] =              0,
-        [12] =              +1,
-        [13] =              +1,
-        [14] =              +2,
-        [15] =              +2,
-        [16] =              +3,
-        [17] =              +3,
-        [18] =              +4,
-        [19] =              +5,
-        [20] =              +5,
-        [21] =              +5,
-        [22] =              +6,
-        [23] =              +7,
-        [24] =              +7,
-        [25] =              +8,
-        [26] =              +8,
-        [27] =              +9,
-        [28] =              +9,
-        [29] =              +10,
-        [30] =              +10,
-        [31] =              +10,
-        [32] =              +11,
-        [33] =              +12,
-        [34] =              +12,
-        [35] =              +12,
-        [36] =              +13,
-        [37] =              +13,
-        [38] =              +14,
-        [39] =              +14,
-        [40] =              +15,
-        [41] =              +15,
-        [42] =              +16,
-        [43] =              +16,
-        [44] =              +17,
-    };
+    static int modifiers[45];
+    static int init;
+
+    if (!init) {
+        init = 1;
+
+        modifiers[0] =               -5;
+        modifiers[1] =               -5;
+        modifiers[2] =               -4;
+        modifiers[3] =               -4;
+        modifiers[4] =               -3;
+        modifiers[5] =               -3;
+        modifiers[6] =               -2;
+        modifiers[7] =               -2;
+        modifiers[8] =               -1;
+        modifiers[9] =               0;
+        modifiers[10] =              0;
+        modifiers[11] =              0;
+        modifiers[12] =              +1;
+        modifiers[13] =              +1;
+        modifiers[14] =              +2;
+        modifiers[15] =              +2;
+        modifiers[16] =              +3;
+        modifiers[17] =              +3;
+        modifiers[18] =              +4;
+        modifiers[19] =              +5;
+        modifiers[20] =              +5;
+        modifiers[21] =              +5;
+        modifiers[22] =              +6;
+        modifiers[23] =              +7;
+        modifiers[24] =              +7;
+        modifiers[25] =              +8;
+        modifiers[26] =              +8;
+        modifiers[27] =              +9;
+        modifiers[28] =              +9;
+        modifiers[29] =              +10;
+        modifiers[30] =              +10;
+        modifiers[31] =              +10;
+        modifiers[32] =              +11;
+        modifiers[33] =              +12;
+        modifiers[34] =              +12;
+        modifiers[35] =              +12;
+        modifiers[36] =              +13;
+        modifiers[37] =              +13;
+        modifiers[38] =              +14;
+        modifiers[39] =              +14;
+        modifiers[40] =              +15;
+        modifiers[41] =              +15;
+        modifiers[42] =              +16;
+        modifiers[43] =              +16;
+        modifiers[44] =              +17;
+    }
 
     if (value < 0) {
         return (0);
     }
 
-    if (value >= ARRAY_SIZE(modifiers)) {
-        value = ARRAY_SIZE(modifiers);
+    if (value >= (int) ARRAY_SIZE(modifiers)) {
+        value = (int) ARRAY_SIZE(modifiers);
     }
 
     return (modifiers[value]);
