@@ -13,7 +13,7 @@ musicp music_find(const char *name);
 void music_play(const char *file, const char *alias, uint32_t rate);
 void music_play_intro(void);
 void music_play_game(void);
-void music_play_hiscore(void);
+void music_play_dead(void);
 void music_halt(void);
 void music_update_volume(void);
 

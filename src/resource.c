@@ -33,20 +33,17 @@ static uint8_t resource_init_3 (void *context)
 
 static uint8_t resource_init_4 (void *context)
 {
-    return (tex_load("data/gfx/help1.png",
-                     "help1") != 0);
+    return (true);
 }
 
 static uint8_t resource_init_5 (void *context)
 {
-    return (tex_load("data/gfx/help2.png",
-                     "help2") != 0);
+    return (true);
 }
 
 static uint8_t resource_init_6 (void *context)
 {
-    return (tex_load("data/gfx/help3.png",
-                     "help3") != 0);
+    return (true);
 }
 
 static uint8_t resource_init_7 (void *context)

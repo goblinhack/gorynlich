@@ -40,15 +40,6 @@
 .o/ramdisk_data_gfx_gravestone2_png.o: asm/ramdisk_data_gfx_gravestone2_png.S ../data/gfx/gravestone2.png
 	gcc -c asm/ramdisk_data_gfx_gravestone2_png.S -o .o/ramdisk_data_gfx_gravestone2_png.o
 
-.o/ramdisk_data_gfx_help1_png.o: asm/ramdisk_data_gfx_help1_png.S ../data/gfx/help1.png
-	gcc -c asm/ramdisk_data_gfx_help1_png.S -o .o/ramdisk_data_gfx_help1_png.o
-
-.o/ramdisk_data_gfx_help2_png.o: asm/ramdisk_data_gfx_help2_png.S ../data/gfx/help2.png
-	gcc -c asm/ramdisk_data_gfx_help2_png.S -o .o/ramdisk_data_gfx_help2_png.o
-
-.o/ramdisk_data_gfx_help3_png.o: asm/ramdisk_data_gfx_help3_png.S ../data/gfx/help3.png
-	gcc -c asm/ramdisk_data_gfx_help3_png.S -o .o/ramdisk_data_gfx_help3_png.o
-
 .o/ramdisk_data_gfx_main_title_png.o: asm/ramdisk_data_gfx_main_title_png.S ../data/gfx/main_title.png
 	gcc -c asm/ramdisk_data_gfx_main_title_png.S -o .o/ramdisk_data_gfx_main_title_png.o
 
@@ -94,14 +85,14 @@
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
 
-.o/ramdisk_data_music_charlotte_mp3.o: asm/ramdisk_data_music_charlotte_mp3.S ../data/music/charlotte.mp3
-	gcc -c asm/ramdisk_data_music_charlotte_mp3.S -o .o/ramdisk_data_music_charlotte_mp3.o
+.o/ramdisk_data_music_DST_AncientCurse_II_wav.o: asm/ramdisk_data_music_DST_AncientCurse_II_wav.S ../data/music/DST_AncientCurse_II.wav
+	gcc -c asm/ramdisk_data_music_DST_AncientCurse_II_wav.S -o .o/ramdisk_data_music_DST_AncientCurse_II_wav.o
 
-.o/ramdisk_data_music_charlotte8bit_mp3.o: asm/ramdisk_data_music_charlotte8bit_mp3.S ../data/music/charlotte8bit.mp3
-	gcc -c asm/ramdisk_data_music_charlotte8bit_mp3.S -o .o/ramdisk_data_music_charlotte8bit_mp3.o
+.o/ramdisk_data_music_DST_Arch_Delerium_wav.o: asm/ramdisk_data_music_DST_Arch_Delerium_wav.S ../data/music/DST_Arch_Delerium.wav
+	gcc -c asm/ramdisk_data_music_DST_Arch_Delerium_wav.S -o .o/ramdisk_data_music_DST_Arch_Delerium_wav.o
 
-.o/ramdisk_data_music_hiscore_wav.o: asm/ramdisk_data_music_hiscore_wav.S ../data/music/hiscore.wav
-	gcc -c asm/ramdisk_data_music_hiscore_wav.S -o .o/ramdisk_data_music_hiscore_wav.o
+.o/ramdisk_data_music_DST_Arches_wav.o: asm/ramdisk_data_music_DST_Arches_wav.S ../data/music/DST_Arches.wav
+	gcc -c asm/ramdisk_data_music_DST_Arches_wav.S -o .o/ramdisk_data_music_DST_Arches_wav.o
 
 .o/ramdisk_data_music_intro_wav.o: asm/ramdisk_data_music_intro_wav.S ../data/music/intro.wav
 	gcc -c asm/ramdisk_data_music_intro_wav.S -o .o/ramdisk_data_music_intro_wav.o

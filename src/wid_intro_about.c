@@ -89,6 +89,8 @@ static void wid_intro_about_create (void)
           "\n"
           "Game Music     Charlotte McGill\n"
           "\n"
+          "Game Music     nosoapradio.us\n"
+          "\n"
           "\n"
           "\n"
           "\n"
