@@ -15,7 +15,6 @@
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_help.h"
-#include "wid_intro_guide.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
 #include "wid_hiscore.h"
@@ -47,7 +46,6 @@ static void wid_intro_hiscore_selected(void);
 static void wid_server_join_selected(void);
 static void wid_server_create_selected(void);
 static void wid_intro_help_selected(void);
-static void wid_intro_guide_selected(void);
 
 static uint8_t wid_intro_init_done;
 static void wid_intro_create(void);
@@ -103,6 +101,8 @@ void wid_intro_hide (void)
     if (!wid_intro) {
         DIE("no wid intro");
     }
+
+    music_play_dead();
 
     wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 
                           intro_effect_delay_zoom, 0);
@@ -208,10 +208,6 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_editor_selected();
             return (true);
 
-        case 'h':
-            wid_intro_guide_selected();
-            return (true);
-
         case '`':
         case SDLK_LEFT:
         case SDLK_RIGHT:
@@ -313,33 +309,6 @@ static void wid_server_create_selected (void)
 static void wid_intro_help_selected (void)
 {
     wid_intro_help_visible();
-}
-
-static void wid_intro_guide_selected_cb (void *context)
-{
-    wid_intro_guide_visible();
-}
-
-static void wid_intro_guide_selected (void)
-{
-    action_timer_create(
-            &wid_timers,
-            (action_timer_callback)wid_intro_guide_selected_cb,
-            (action_timer_destroy_callback)0,
-            0, /* context */
-            "start guide",
-            intro_effect_delay,
-            0 /* jitter */);
-
-    wid_intro_hide();
-}
-
-static uint8_t wid_intro_help_mouse_event (widp w, int32_t x, int32_t y,
-                                           uint32_t button)
-{
-    wid_intro_guide_selected();
-
-    return (true);
 }
 
 static uint8_t wid_intro_about_mouse_event (widp w, int32_t x, int32_t y,
@@ -620,7 +589,6 @@ static void wid_intro_create (void)
         return;
     }
 
-    wid_notify(INFO, "Press h for help");
     wid_notify(INFO, "Press s for quick start single player");
 
     music_play_intro();
@@ -797,35 +765,6 @@ static void wid_intro_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_server_join_mouse_event);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro, "help");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.00f, 0.90f};
-        fpoint br = {0.33f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Help");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_on_mouse_down(child, wid_intro_help_mouse_event);
     }
 
     {

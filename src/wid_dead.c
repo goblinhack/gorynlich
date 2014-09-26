@@ -19,6 +19,7 @@
 #include "wid_intro.h"
 #include "player.h"
 #include "string.h"
+#include "music.h"
 
 static widp wid_gravestone;
 static widp wid_click_to_continue;
@@ -295,6 +296,8 @@ static void wid_dead_create (const char *name,
 
     wid_update(w);
     wid_move_to_pct(w, 0.6, 1.3);
+
+    music_play_dead();
 
     static uint32_t gravestone_appear_delay = 3000;
 
