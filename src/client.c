@@ -19,6 +19,7 @@
 #include "wid_dead.h"
 #include "level.h"
 #include "name.h"
+#include "music.h"
 
 /*
  * Which socket we have actually joined on.
@@ -995,6 +996,8 @@ static void client_check_still_in_game (void)
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
             MSG(INFO, "%s joined the game", p->name);
+
+            music_play_game();
 
             player = thing_client_find(p->thing_id);
 

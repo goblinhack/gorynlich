@@ -172,17 +172,34 @@ void music_play (const char *file,
 
 void music_play_game (void)
 {
-    music_play("data/music/music.wav", "game", 22050);
+    switch (rand() % 10) {
+    case 0:
+    case 1:
+    case 2:
+        music_play("data/music/music.wav", "game", 22050);
+        break;
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+        music_play("data/music/DST_Arch_Delerium.wav", "game", 22050);
+        break;
+    case 7:
+    case 8:
+    case 9:
+        music_play("data/music/DST_Arches.wav", "game", 22050);
+        break;
+    }
 }
 
 void music_play_intro (void)
 {
-    music_play("data/music/intro.wav", "intro", 16000);
+    music_play("data/music/intro.wav", "intro", 22050);
 }
 
-void music_play_hiscore (void)
+void music_play_dead (void)
 {
-    music_play("data/music/hiscore.wav", "hiscore", 22050);
+    music_play("data/music/DST_AncientCurse_II.wav", "dead", 22050);
 }
 
 void music_halt (void)
