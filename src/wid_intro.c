@@ -102,8 +102,6 @@ void wid_intro_hide (void)
         DIE("no wid intro");
     }
 
-    music_play_dead();
-
     wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 
                           intro_effect_delay_zoom, 0);
     wid_fade_out(wid_intro_background, intro_effect_delay_zoom);

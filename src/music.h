@@ -14,6 +14,7 @@ void music_play(const char *file, const char *alias, uint32_t rate);
 void music_play_intro(void);
 void music_play_game(void);
 void music_play_dead(void);
+void music_play_game_over(void);
 void music_halt(void);
 void music_update_volume(void);
 
