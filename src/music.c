@@ -172,34 +172,65 @@ void music_play (const char *file,
 
 void music_play_game (void)
 {
-    switch (rand() % 10) {
+    switch (rand() % 14) {
     case 0:
-    case 1:
-    case 2:
-        music_play("data/music/music.wav", "game", 22050);
+        music_play("data/music/charlotte.wav", "game", 22050 );
         break;
-    case 3:
-    case 4:
-    case 5:
-    case 6:
+    case 1:
+        music_play("data/music/DST_Alters.wav", "game", 22050);
+        break;
+    case 2:
         music_play("data/music/DST_Arch_Delerium.wav", "game", 22050);
         break;
+    case 3:
+        music_play("data/music/DST_Legends.wav", "game", 22050);
+        break;
+    case 4:
+        music_play("data/music/DST_LeDanse.wav", "game", 22050);
+        break;
+    case 5:
+        music_play("data/music/DST_ExInfernus.wav", "game", 22050);
+        break;
+    case 6:
+        music_play("data/music/DST_DoomCity.wav", "game", 22050);
+        break;
     case 7:
-    case 8:
-    case 9:
         music_play("data/music/DST_Arches.wav", "game", 22050);
+        break;
+    case 8:
+        music_play("data/music/DST_BattleLands.wav", "game", 22050);
+        break;
+    case 9:
+        music_play("data/music/DST_ClockTower.wav", "game", 22050);
+        break;
+    case 10:
+        music_play("data/music/DST_BoneTower.wav", "game", 22050);
+        break;
+    case 11:
+        music_play("data/music/DST_BlackRiver.wav", "game", 22050);
+        break;
+    case 12:
+        music_play("data/music/DST_DarkestKnight.wav", "game", 22050);
+        break;
+    case 13:
+        music_play("data/music/charlotte_slow.wav", "game", 22050 );
         break;
     }
 }
 
 void music_play_intro (void)
 {
-    music_play("data/music/intro.wav", "intro", 22050);
+    music_play("data/music/charlotte8bit.wav", "intro", 22050 );
 }
 
 void music_play_dead (void)
 {
-    music_play("data/music/DST_AncientCurse_II.wav", "dead", 22050);
+    music_play("data/music/DST_AncientCurse_II.wav", "dead", 22050 / 2);
+}
+
+void music_play_game_over (void)
+{
+    music_play("data/music/DST_SuperWin.wav", "game over", 22050 / 2);
 }
 
 void music_halt (void)

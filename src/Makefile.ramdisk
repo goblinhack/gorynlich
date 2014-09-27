@@ -85,6 +85,18 @@
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
 
+.o/ramdisk_data_music__1_session.o: asm/ramdisk_data_music__1_session.S ../data/music/.1.session
+	gcc -c asm/ramdisk_data_music__1_session.S -o .o/ramdisk_data_music__1_session.o
+
+.o/ramdisk_data_music_charlotte_wav.o: asm/ramdisk_data_music_charlotte_wav.S ../data/music/charlotte.wav
+	gcc -c asm/ramdisk_data_music_charlotte_wav.S -o .o/ramdisk_data_music_charlotte_wav.o
+
+.o/ramdisk_data_music_charlotte8bit_wav.o: asm/ramdisk_data_music_charlotte8bit_wav.S ../data/music/charlotte8bit.wav
+	gcc -c asm/ramdisk_data_music_charlotte8bit_wav.S -o .o/ramdisk_data_music_charlotte8bit_wav.o
+
+.o/ramdisk_data_music_DST_Alters_wav.o: asm/ramdisk_data_music_DST_Alters_wav.S ../data/music/DST_Alters.wav
+	gcc -c asm/ramdisk_data_music_DST_Alters_wav.S -o .o/ramdisk_data_music_DST_Alters_wav.o
+
 .o/ramdisk_data_music_DST_AncientCurse_II_wav.o: asm/ramdisk_data_music_DST_AncientCurse_II_wav.S ../data/music/DST_AncientCurse_II.wav
 	gcc -c asm/ramdisk_data_music_DST_AncientCurse_II_wav.S -o .o/ramdisk_data_music_DST_AncientCurse_II_wav.o
 
@@ -94,11 +106,38 @@
 .o/ramdisk_data_music_DST_Arches_wav.o: asm/ramdisk_data_music_DST_Arches_wav.S ../data/music/DST_Arches.wav
 	gcc -c asm/ramdisk_data_music_DST_Arches_wav.S -o .o/ramdisk_data_music_DST_Arches_wav.o
 
-.o/ramdisk_data_music_intro_wav.o: asm/ramdisk_data_music_intro_wav.S ../data/music/intro.wav
-	gcc -c asm/ramdisk_data_music_intro_wav.S -o .o/ramdisk_data_music_intro_wav.o
+.o/ramdisk_data_music_DST_BattleLands_wav.o: asm/ramdisk_data_music_DST_BattleLands_wav.S ../data/music/DST_BattleLands.wav
+	gcc -c asm/ramdisk_data_music_DST_BattleLands_wav.S -o .o/ramdisk_data_music_DST_BattleLands_wav.o
 
-.o/ramdisk_data_music_music_wav.o: asm/ramdisk_data_music_music_wav.S ../data/music/music.wav
-	gcc -c asm/ramdisk_data_music_music_wav.S -o .o/ramdisk_data_music_music_wav.o
+.o/ramdisk_data_music_DST_BlackRiver_wav.o: asm/ramdisk_data_music_DST_BlackRiver_wav.S ../data/music/DST_BlackRiver.wav
+	gcc -c asm/ramdisk_data_music_DST_BlackRiver_wav.S -o .o/ramdisk_data_music_DST_BlackRiver_wav.o
+
+.o/ramdisk_data_music_DST_BoneTower_wav.o: asm/ramdisk_data_music_DST_BoneTower_wav.S ../data/music/DST_BoneTower.wav
+	gcc -c asm/ramdisk_data_music_DST_BoneTower_wav.S -o .o/ramdisk_data_music_DST_BoneTower_wav.o
+
+.o/ramdisk_data_music_DST_ClockTower_wav.o: asm/ramdisk_data_music_DST_ClockTower_wav.S ../data/music/DST_ClockTower.wav
+	gcc -c asm/ramdisk_data_music_DST_ClockTower_wav.S -o .o/ramdisk_data_music_DST_ClockTower_wav.o
+
+.o/ramdisk_data_music_DST_DarkestKnight_wav.o: asm/ramdisk_data_music_DST_DarkestKnight_wav.S ../data/music/DST_DarkestKnight.wav
+	gcc -c asm/ramdisk_data_music_DST_DarkestKnight_wav.S -o .o/ramdisk_data_music_DST_DarkestKnight_wav.o
+
+.o/ramdisk_data_music_DST_DoomCity_wav.o: asm/ramdisk_data_music_DST_DoomCity_wav.S ../data/music/DST_DoomCity.wav
+	gcc -c asm/ramdisk_data_music_DST_DoomCity_wav.S -o .o/ramdisk_data_music_DST_DoomCity_wav.o
+
+.o/ramdisk_data_music_DST_ExInfernus_wav.o: asm/ramdisk_data_music_DST_ExInfernus_wav.S ../data/music/DST_ExInfernus.wav
+	gcc -c asm/ramdisk_data_music_DST_ExInfernus_wav.S -o .o/ramdisk_data_music_DST_ExInfernus_wav.o
+
+.o/ramdisk_data_music_DST_LeDanse_wav.o: asm/ramdisk_data_music_DST_LeDanse_wav.S ../data/music/DST_LeDanse.wav
+	gcc -c asm/ramdisk_data_music_DST_LeDanse_wav.S -o .o/ramdisk_data_music_DST_LeDanse_wav.o
+
+.o/ramdisk_data_music_DST_Legends_wav.o: asm/ramdisk_data_music_DST_Legends_wav.S ../data/music/DST_Legends.wav
+	gcc -c asm/ramdisk_data_music_DST_Legends_wav.S -o .o/ramdisk_data_music_DST_Legends_wav.o
+
+.o/ramdisk_data_music_DST_SuperWin_wav.o: asm/ramdisk_data_music_DST_SuperWin_wav.S ../data/music/DST_SuperWin.wav
+	gcc -c asm/ramdisk_data_music_DST_SuperWin_wav.S -o .o/ramdisk_data_music_DST_SuperWin_wav.o
+
+.o/ramdisk_data_music_resample_sh.o: asm/ramdisk_data_music_resample_sh.S ../data/music/resample.sh
+	gcc -c asm/ramdisk_data_music_resample_sh.S -o .o/ramdisk_data_music_resample_sh.o
 
 .o/ramdisk_data_sound_chomp_wav.o: asm/ramdisk_data_sound_chomp_wav.S ../data/sound/chomp.wav
 	gcc -c asm/ramdisk_data_sound_chomp_wav.S -o .o/ramdisk_data_sound_chomp_wav.o
