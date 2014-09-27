@@ -172,50 +172,26 @@ void music_play (const char *file,
 
 void music_play_game (void)
 {
-    switch (rand() % 14) {
-    case 0:
-        music_play("data/music/charlotte.wav", "game", 22050 );
-        break;
-    case 1:
-        music_play("data/music/DST_Alters.wav", "game", 22050);
-        break;
-    case 2:
-        music_play("data/music/DST_Arch_Delerium.wav", "game", 22050);
-        break;
-    case 3:
-        music_play("data/music/DST_Legends.wav", "game", 22050);
-        break;
-    case 4:
-        music_play("data/music/DST_LeDanse.wav", "game", 22050);
-        break;
-    case 5:
-        music_play("data/music/DST_ExInfernus.wav", "game", 22050);
-        break;
-    case 6:
-        music_play("data/music/DST_DoomCity.wav", "game", 22050);
-        break;
-    case 7:
-        music_play("data/music/DST_Arches.wav", "game", 22050);
-        break;
-    case 8:
-        music_play("data/music/DST_BattleLands.wav", "game", 22050);
-        break;
-    case 9:
-        music_play("data/music/DST_ClockTower.wav", "game", 22050);
-        break;
-    case 10:
-        music_play("data/music/DST_BoneTower.wav", "game", 22050);
-        break;
-    case 11:
-        music_play("data/music/DST_BlackRiver.wav", "game", 22050);
-        break;
-    case 12:
-        music_play("data/music/DST_DarkestKnight.wav", "game", 22050);
-        break;
-    case 13:
-        music_play("data/music/charlotte_slow.wav", "game", 22050 );
-        break;
-    }
+    static const char *music[] = {
+        "data/music/charlotte.wav",
+        "data/music/DST_Alters.wav",
+        "data/music/DST_Arch_Delerium.wav",
+        "data/music/DST_Legends.wav",
+        "data/music/DST_LeDanse.wav",
+        "data/music/DST_ExInfernus.wav",
+        "data/music/DST_DoomCity.wav",
+        "data/music/DST_Arches.wav",
+        "data/music/DST_BattleLands.wav",
+        "data/music/DST_ClockTower.wav",
+        "data/music/DST_BoneTower.wav",
+        "data/music/DST_BlackRiver.wav",
+        "data/music/DST_DarkestKnight.wav",
+        "data/music/charlotte_slow.wav",
+    };
+
+    int x = rand() % ARRAY_SIZE(music);
+    CON("x %d",x);
+    music_play(music[x], "game", 22050 );
 }
 
 void music_play_intro (void)
