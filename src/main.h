@@ -383,6 +383,8 @@ struct config {
 extern struct config global_config;
 
 #define SOUND_MIN 0
+#define SOUND_LOW 1
+#define SOUND_MED 1
 #define SOUND_MAX 3
 
 /*

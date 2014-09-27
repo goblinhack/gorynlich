@@ -142,7 +142,7 @@ uint8_t config_load (void)
     global_config.video_pix_width = 0;
     global_config.video_pix_height = 0;
     global_config.sound_volume = SOUND_MAX;
-    global_config.music_volume = SOUND_MAX;
+    global_config.music_volume = SOUND_MED;
 
     if (!global_config.pclass[0]) {
         strncpy(global_config.pclass, "warrior", 
