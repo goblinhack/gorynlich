@@ -12,6 +12,7 @@
 #include "wid_intro.h"
 #include "wid_popup.h"
 #include "wid_game_over.h"
+#include "music.h"
 
 static widp wid_game_over;
 static widp wid_game_over_credits;
@@ -88,6 +89,8 @@ static void wid_game_over_create (void)
     wid_destroy_in(w, 110000);
     wid_set_on_destroy(w, wid_game_over_finished);
     wid_move_to_pct_centered(w, 0.5f, 0.5f);
+
+    music_play_game_over();
 
     wid_game_over_credits = wid_popup(
           "Game Over!\n"
