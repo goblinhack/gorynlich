@@ -145,23 +145,62 @@
 .o/ramdisk_data_music_resample_sh.o: asm/ramdisk_data_music_resample_sh.S ../data/music/resample.sh
 	gcc -c asm/ramdisk_data_music_resample_sh.S -o .o/ramdisk_data_music_resample_sh.o
 
+.o/ramdisk_data_sound_boom_wav.o: asm/ramdisk_data_sound_boom_wav.S ../data/sound/boom.wav
+	gcc -c asm/ramdisk_data_sound_boom_wav.S -o .o/ramdisk_data_sound_boom_wav.o
+
+.o/ramdisk_data_sound_cash_register_wav.o: asm/ramdisk_data_sound_cash_register_wav.S ../data/sound/cash_register.wav
+	gcc -c asm/ramdisk_data_sound_cash_register_wav.S -o .o/ramdisk_data_sound_cash_register_wav.o
+
 .o/ramdisk_data_sound_click_wav.o: asm/ramdisk_data_sound_click_wav.S ../data/sound/click.wav
 	gcc -c asm/ramdisk_data_sound_click_wav.S -o .o/ramdisk_data_sound_click_wav.o
+
+.o/ramdisk_data_sound_demon_wav.o: asm/ramdisk_data_sound_demon_wav.S ../data/sound/demon.wav
+	gcc -c asm/ramdisk_data_sound_demon_wav.S -o .o/ramdisk_data_sound_demon_wav.o
+
+.o/ramdisk_data_sound_dinosaur_wav.o: asm/ramdisk_data_sound_dinosaur_wav.S ../data/sound/dinosaur.wav
+	gcc -c asm/ramdisk_data_sound_dinosaur_wav.S -o .o/ramdisk_data_sound_dinosaur_wav.o
+
+.o/ramdisk_data_sound_drop_wav.o: asm/ramdisk_data_sound_drop_wav.S ../data/sound/drop.wav
+	gcc -c asm/ramdisk_data_sound_drop_wav.S -o .o/ramdisk_data_sound_drop_wav.o
 
 .o/ramdisk_data_sound_explosion_wav.o: asm/ramdisk_data_sound_explosion_wav.S ../data/sound/explosion.wav
 	gcc -c asm/ramdisk_data_sound_explosion_wav.S -o .o/ramdisk_data_sound_explosion_wav.o
 
+.o/ramdisk_data_sound_explosion_big_wav.o: asm/ramdisk_data_sound_explosion_big_wav.S ../data/sound/explosion_big.wav
+	gcc -c asm/ramdisk_data_sound_explosion_big_wav.S -o .o/ramdisk_data_sound_explosion_big_wav.o
+
+.o/ramdisk_data_sound_kick_wav.o: asm/ramdisk_data_sound_kick_wav.S ../data/sound/kick.wav
+	gcc -c asm/ramdisk_data_sound_kick_wav.S -o .o/ramdisk_data_sound_kick_wav.o
+
+.o/ramdisk_data_sound_laugh_wav.o: asm/ramdisk_data_sound_laugh_wav.S ../data/sound/laugh.wav
+	gcc -c asm/ramdisk_data_sound_laugh_wav.S -o .o/ramdisk_data_sound_laugh_wav.o
+
 .o/ramdisk_data_sound_level_end_wav.o: asm/ramdisk_data_sound_level_end_wav.S ../data/sound/level_end.wav
 	gcc -c asm/ramdisk_data_sound_level_end_wav.S -o .o/ramdisk_data_sound_level_end_wav.o
+
+.o/ramdisk_data_sound_magic_tinkle_wav.o: asm/ramdisk_data_sound_magic_tinkle_wav.S ../data/sound/magic_tinkle.wav
+	gcc -c asm/ramdisk_data_sound_magic_tinkle_wav.S -o .o/ramdisk_data_sound_magic_tinkle_wav.o
 
 .o/ramdisk_data_sound_powerup_wav.o: asm/ramdisk_data_sound_powerup_wav.S ../data/sound/powerup.wav
 	gcc -c asm/ramdisk_data_sound_powerup_wav.S -o .o/ramdisk_data_sound_powerup_wav.o
 
-.o/ramdisk_data_sound_ratdeath_wav.o: asm/ramdisk_data_sound_ratdeath_wav.S ../data/sound/ratdeath.wav
-	gcc -c asm/ramdisk_data_sound_ratdeath_wav.S -o .o/ramdisk_data_sound_ratdeath_wav.o
+.o/ramdisk_data_sound_scream_male_wav.o: asm/ramdisk_data_sound_scream_male_wav.S ../data/sound/scream_male.wav
+	gcc -c asm/ramdisk_data_sound_scream_male_wav.S -o .o/ramdisk_data_sound_scream_male_wav.o
+
+.o/ramdisk_data_sound_shriek_wav.o: asm/ramdisk_data_sound_shriek_wav.S ../data/sound/shriek.wav
+	gcc -c asm/ramdisk_data_sound_shriek_wav.S -o .o/ramdisk_data_sound_shriek_wav.o
 
 .o/ramdisk_data_sound_slime_wav.o: asm/ramdisk_data_sound_slime_wav.S ../data/sound/slime.wav
 	gcc -c asm/ramdisk_data_sound_slime_wav.S -o .o/ramdisk_data_sound_slime_wav.o
+
+.o/ramdisk_data_sound_sword_wav.o: asm/ramdisk_data_sound_sword_wav.S ../data/sound/sword.wav
+	gcc -c asm/ramdisk_data_sound_sword_wav.S -o .o/ramdisk_data_sound_sword_wav.o
+
+.o/ramdisk_data_sound_treasure_wav.o: asm/ramdisk_data_sound_treasure_wav.S ../data/sound/treasure.wav
+	gcc -c asm/ramdisk_data_sound_treasure_wav.S -o .o/ramdisk_data_sound_treasure_wav.o
+
+.o/ramdisk_data_sound_wand_dead_wav.o: asm/ramdisk_data_sound_wand_dead_wav.S ../data/sound/wand_dead.wav
+	gcc -c asm/ramdisk_data_sound_wand_dead_wav.S -o .o/ramdisk_data_sound_wand_dead_wav.o
 
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
