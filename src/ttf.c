@@ -403,10 +403,29 @@ static void ttf_puts_internal (font *f, const char *text,
                      */
                     x += (tile_get_width(tile) * scaling * advance)/2;
 
-                    point at;
-                    at.x = x;
-                    at.y = y + (tile_get_height(tile) * scaling * advance)/2;
-                    tile_blit(tile, 0, at);
+                    point tl;
+                    point br;
+
+                    tl.x = (x);
+                    tl.y = (y);
+                    br.x = (x + f->glyphs['a'].width * scaling);
+                    br.y = (y + f->glyphs['a'].height * (scaling));
+
+                    int width = br.x - tl.x;
+                    int height = br.y - tl.y;
+
+                    tl.x -= width / 2;
+                    tl.y -= height / 2;
+
+                    br.x += width / 2;
+                    br.y += height / 2;
+
+                    tl.x -= width / 2;
+                    br.x += width / 2;
+
+                    swap(br.y, tl.y);
+
+                    tile_blit_at(tile, 0, tl, br);
 
                     /*
                      * Now the other half.

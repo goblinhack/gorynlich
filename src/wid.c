@@ -4604,7 +4604,7 @@ widp wid_find (widp w, const char *name)
         return (0);
     }
 
-    if (!strcasecmp(w->name, name)) {
+    if (strcasestr(w->name, name)) {
         return (w);
     }
 
