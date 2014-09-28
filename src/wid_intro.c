@@ -11,20 +11,21 @@
 #include "wid_intro.h"
 #include "wid_intro2.h"
 #include "wid_popup.h"
-#include "wid_editor.h"
+#include "wid_intro_extra.h"
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_help.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
 #include "wid_hiscore.h"
+#include "wid_hiscore.h"
+#include "wid_notify.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
 #include "thing_template.h"
 #include "music.h"
 #include "level.h"
 #include "timer.h"
-#include "wid_notify.h"
 #include "socket.h"
 #include "server.h"
 #include "glapi.h"
@@ -37,12 +38,9 @@ static widp wid_intro_treasure_chest;
 static widp wid_intro_eyes;
 
 static uint8_t wid_intro_quit_selected(void);
-static void wid_intro_editor_selected(void);
+static void wid_intro_intro_extra_selected(void);
 static void wid_intro_play_selected(void);
 static void wid_intro_single_play_selected(void);
-static void wid_intro_about_selected(void);
-static void wid_intro_settings_selected(void);
-static void wid_intro_hiscore_selected(void);
 static void wid_server_join_selected(void);
 static void wid_server_create_selected(void);
 static void wid_intro_help_selected(void);
@@ -189,13 +187,6 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_quit_selected();
             return (true);
 
-        case 'c':
-            wid_intro_settings_selected();
-            return (true);
-
-        case 'H':
-            wid_intro_hiscore_selected();
-            return (true);
 
         case 'm':
             wid_server_create_selected();
@@ -203,7 +194,7 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             return (true);
 
         case 'e':
-            wid_intro_editor_selected();
+            wid_intro_intro_extra_selected();
             return (true);
 
         case '`':
@@ -279,21 +270,6 @@ static uint8_t wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static void wid_intro_about_selected (void)
-{
-    wid_intro_about_visible();
-}
-
-static void wid_intro_settings_selected (void)
-{
-    wid_intro_settings_visible();
-}
-
-static void wid_intro_hiscore_selected (void)
-{
-    wid_hiscore_visible();
-}
-
 static void wid_server_join_selected (void)
 {
     wid_server_join_visible();
@@ -309,61 +285,17 @@ static void wid_intro_help_selected (void)
     wid_intro_help_visible();
 }
 
-static uint8_t wid_intro_about_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
+static void wid_intro_intro_extra_selected (void)
 {
-    wid_intro_about_selected();
-
-    return (true);
-}
-
-static uint8_t wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
-{
-    wid_intro_settings_selected();
-
-    return (true);
-}
-
-static uint8_t wid_intro_hiscore_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
-{
-    wid_intro_hiscore_selected();
-
-    return (true);
-}
-
-static uint8_t wid_server_join_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
-{
-    wid_server_join_selected();
-
-    return (true);
-}
-
-static void wid_intro_editor_selected_cb (void *context)
-{
-    wid_editor_visible();
-}
-
-static void wid_intro_editor_selected (void)
-{
-    action_timer_create(
-            &wid_timers,
-            (action_timer_callback)wid_intro_editor_selected_cb,
-            (action_timer_destroy_callback)0,
-            0, /* context */
-            "start editor",
-            intro_effect_delay,
-            0 /* jitter */);
+    wid_intro_extra_visible();
 
     wid_intro_hide();
 }
 
-static uint8_t wid_intro_editor_mouse_event (widp w, int32_t x, int32_t y,
-                                             uint32_t button)
+static uint8_t wid_intro_intro_extra_mouse_event (widp w, int32_t x, int32_t y,
+                                                  uint32_t button)
 {
-    wid_intro_editor_selected();
+    wid_intro_intro_extra_selected();
 
     return (true);
 }
@@ -399,8 +331,8 @@ static uint8_t wid_intro_quit_selected (void)
           vsmall_font,              /* body font */
           vsmall_font,              /* button font */
           2,                        /* number buttons */
-          "   Yes   ", wid_intro_quit_callback_yes,
-          "    No    ", wid_intro_quit_callback_no);
+          "%%tile=button_y$Yes       ", wid_intro_quit_callback_yes,
+          "%%tile=button_n$No       ",  wid_intro_quit_callback_no);
 
     wid_set_tex(wid_intro_quit_popup, 0, "gothic_wide");
     wid_set_square(wid_intro_quit_popup);
@@ -511,8 +443,8 @@ static void wid_intro_bg_create (void)
             wid_set_mode(wid, WID_MODE_NORMAL);
 
             wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.75f);
-            wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.74f, 1000);
+            wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.70f);
+            wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.70f, 1000);
         }
 
         {
@@ -531,7 +463,7 @@ static void wid_intro_bg_create (void)
             wid_set_mode(wid, WID_MODE_NORMAL);
 
             wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.96f, 0.80f);
+            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.96f, 0.75f);
         }
 
         {
@@ -587,8 +519,6 @@ static void wid_intro_create (void)
         return;
     }
 
-    wid_notify(INFO, "Press s for quick start single player");
-
     music_play_intro();
 
     wid_intro = wid_new_window("intro buttons");
@@ -610,188 +540,69 @@ static void wid_intro_create (void)
     wid_set_color(wid_intro, WID_COLOR_BR, col);
     wid_set_color(wid_intro, WID_COLOR_BG, col);
 
+    wid_intro_bg_create();
+    wid_update(wid_intro);
+
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro, "Editor");
+        child = wid_new_square_button(wid_intro, "Extra");
         wid_set_font(child, small_font);
-        wid_set_no_shape(child);
 
-        fpoint tl = {0.1f, 0.0f};
-        fpoint br = {0.3f, 0.05};
+        fpoint tl = {0.0f, 0.90f};
+        fpoint br = {0.3f, 0.95f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%tile=button_e$Editor");
+        wid_set_text(child, "%%fmt=left$%%tile=button_x$Xtra stuff");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+        wid_set_color(child, WID_COLOR_TL, GRAY10);
+        wid_set_color(child, WID_COLOR_BR, GRAY10);
+        wid_set_color(child, WID_COLOR_BG, GRAY10);
 
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_intro_editor_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
     }
 
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro, "About");
+        child = wid_new_square_button(wid_intro, "Quick start");
         wid_set_font(child, small_font);
-        wid_set_no_shape(child);
 
-        fpoint tl = {0.3f, 0.0f};
-        fpoint br = {0.5f, 0.05};
+        fpoint tl = {0.0f, 0.95f};
+        fpoint br = {0.3f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "About");
+        wid_set_text(child, "%%fmt=left$%%tile=button_s$Quick start");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+        wid_set_color(child, WID_COLOR_TL, GRAY10);
+        wid_set_color(child, WID_COLOR_BR, GRAY10);
+        wid_set_color(child, WID_COLOR_BG, GRAY10);
 
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_intro_about_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
     }
 
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro, "Settings");
+        child = wid_new_square_button(wid_intro, "Quit");
         wid_set_font(child, small_font);
-        wid_set_no_shape(child);
 
-        fpoint tl = {0.5f, 0.0f};
-        fpoint br = {0.7f, 0.05};
+        fpoint tl = {0.7f, 0.95f};
+        fpoint br = {1.0f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Settings");
+        wid_set_text(child, "%%fmt=left$%%tile=button_b$Quit");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_intro_settings_mouse_event);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro, "Hiscore");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.7f, 0.0f};
-        fpoint br = {0.9f, 0.05};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Hiscore");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_intro_hiscore_mouse_event);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro, "servers");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.7f, 0.2f};
-        fpoint br = {0.9f, 0.05};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "server");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_server_join_mouse_event);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro, "quit");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.66f, 0.90f};
-        fpoint br = {1.00f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Quit");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+        wid_set_color(child, WID_COLOR_TL, GRAY10);
+        wid_set_color(child, WID_COLOR_BR, GRAY10);
+        wid_set_color(child, WID_COLOR_BG, GRAY10);
 
         wid_set_on_mouse_down(child, wid_intro_quit_receive_mouse_down);
+        wid_raise(child);
+        wid_set_do_not_lower(child, true);
     }
 
     {
@@ -825,7 +636,6 @@ static void wid_intro_create (void)
         wid_set_on_mouse_down(child, wid_intro_play_mouse_event);
     }
 
-    wid_intro_bg_create();
     wid_update(wid_intro);
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
