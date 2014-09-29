@@ -295,6 +295,7 @@ static void wid_intro_extra_create (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
+            wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_on_mouse_down(w, wid_intro_button_event);
             wid_set_bevel(w,0);
 

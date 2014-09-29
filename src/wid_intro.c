@@ -15,7 +15,6 @@
 #include "wid_intro_about.h"
 #include "wid_intro_buttons.h"
 #include "wid_intro_settings.h"
-#include "wid_intro_help.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
 #include "wid_hiscore.h"
@@ -44,7 +43,6 @@ static uint8_t wid_intro_is_visible;
 
 static void wid_intro_play_selected(void);
 static void wid_intro_single_play_selected(void);
-static void wid_intro_help_selected(void);
 
 static uint8_t wid_intro_init_done;
 static void wid_intro_create(void);
@@ -205,7 +203,6 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             break;
 
         default:
-            wid_intro_help_selected();
             return (true);
     }
 
@@ -269,11 +266,6 @@ static uint8_t wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
     wid_intro_play_selected();
 
     return (true);
-}
-
-static void wid_intro_help_selected (void)
-{
-    wid_intro_help_visible();
 }
 
 static double y;
