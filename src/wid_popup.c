@@ -435,10 +435,10 @@ widp wid_popup (const char *text, const char *title,
                 wid_set_tex(child, 0, "button_black");
             } else if (focus_order == 2) {
                 c = STEELBLUE2;
-                wid_set_tex(child, 0, "button_green");
+                wid_set_tex(child, 0, "button_black");
             } else if (focus_order == 3) {
                 c = STEELBLUE;
-                wid_set_tex(child, 0, "button_red");
+                wid_set_tex(child, 0, "button_black");
             } else {
                 wid_set_tex(child, 0, "button_black");
                 c = GRAY;
