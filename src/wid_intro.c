@@ -31,7 +31,6 @@
 #include "glapi.h"
 
 static widp wid_intro;
-static widp wid_intro_buttons;
 static widp wid_intro_background;
 static widp wid_intro_title;
 static widp wid_intro_man;
@@ -70,12 +69,13 @@ void wid_intro_fini (void)
 
         if (wid_intro) {
             wid_destroy(&wid_intro);
-            wid_destroy(&wid_intro_buttons);
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_treasure_chest, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_eyes, wid_hide_delay * 2);
+
+            wid_intro_buttons_hide();
         }
     }
 }
@@ -121,9 +121,7 @@ void wid_intro_hide (void)
     wid_raise(wid_intro);
     wid_update(wid_intro);
 
-    wid_hide(wid_intro_buttons, 0);
-    wid_raise(wid_intro_buttons);
-    wid_update(wid_intro_buttons);
+    wid_intro_buttons_hide();
 }
 
 void wid_intro_visible (void)
@@ -165,9 +163,7 @@ void wid_intro_visible (void)
     wid_raise(wid_intro);
     wid_update(wid_intro);
 
-    wid_visible(wid_intro_buttons, 0);
-    wid_raise(wid_intro_buttons);
-    wid_update(wid_intro_buttons);
+    wid_intro_buttons_visible();
 
     wid_fade_in(wid_intro_background, intro_effect_delay);
     wid_fade_in(wid_intro_title, intro_effect_delay);

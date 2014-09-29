@@ -136,15 +136,10 @@ void wid_intro_buttons_visible (void)
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "%%fmt=left$%%tile=button_x$Xtra stuff");
 
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_color(child, WID_COLOR_TL, GRAY10);
-        wid_set_color(child, WID_COLOR_BR, GRAY10);
-        wid_set_color(child, WID_COLOR_BG, GRAY10);
-
+        wid_set_no_shape(child);
+        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
         wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TL, GRAY20);
-        wid_set_color(child, WID_COLOR_BR, GRAY20);
-        wid_set_color(child, WID_COLOR_BG, GRAY20);
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
@@ -162,15 +157,10 @@ void wid_intro_buttons_visible (void)
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "%%fmt=left$%%tile=button_s$Quick start");
 
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_color(child, WID_COLOR_TL, GRAY10);
-        wid_set_color(child, WID_COLOR_BR, GRAY10);
-        wid_set_color(child, WID_COLOR_BG, GRAY10);
-
+        wid_set_no_shape(child);
+        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
         wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TL, GRAY20);
-        wid_set_color(child, WID_COLOR_BR, GRAY20);
-        wid_set_color(child, WID_COLOR_BG, GRAY20);
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
@@ -188,15 +178,10 @@ void wid_intro_buttons_visible (void)
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "%%fmt=left$%%tile=button_q$Quit");
 
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_color(child, WID_COLOR_TL, GRAY10);
-        wid_set_color(child, WID_COLOR_BR, GRAY10);
-        wid_set_color(child, WID_COLOR_BG, GRAY10);
-
+        wid_set_no_shape(child);
+        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
         wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TL, GRAY20);
-        wid_set_color(child, WID_COLOR_BR, GRAY20);
-        wid_set_color(child, WID_COLOR_BG, GRAY20);
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_quit_receive_mouse_down);
