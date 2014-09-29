@@ -13,6 +13,7 @@
 #include "wid_popup.h"
 #include "wid_intro_extra.h"
 #include "wid_intro_about.h"
+#include "wid_intro_buttons.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_help.h"
 #include "wid_game_over.h"
@@ -31,18 +32,18 @@
 #include "glapi.h"
 
 static widp wid_intro;
+static widp wid_intro_buttons;
 static widp wid_intro_background;
 static widp wid_intro_title;
 static widp wid_intro_man;
 static widp wid_intro_treasure_chest;
 static widp wid_intro_eyes;
 
-static uint8_t wid_intro_quit_selected(void);
-static void wid_intro_intro_extra_selected(void);
+static uint8_t wid_intro_is_hidden;
+static uint8_t wid_intro_is_visible;
+
 static void wid_intro_play_selected(void);
 static void wid_intro_single_play_selected(void);
-static void wid_server_join_selected(void);
-static void wid_server_create_selected(void);
 static void wid_intro_help_selected(void);
 
 static uint8_t wid_intro_init_done;
@@ -71,6 +72,7 @@ void wid_intro_fini (void)
 
         if (wid_intro) {
             wid_destroy(&wid_intro);
+            wid_destroy(&wid_intro_buttons);
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
@@ -79,9 +81,6 @@ void wid_intro_fini (void)
         }
     }
 }
-
-static uint8_t wid_intro_is_hidden;
-static uint8_t wid_intro_is_visible;
 
 void wid_intro_hide (void)
 {
@@ -123,6 +122,10 @@ void wid_intro_hide (void)
     wid_hide(wid_intro, 0);
     wid_raise(wid_intro);
     wid_update(wid_intro);
+
+    wid_hide(wid_intro_buttons, 0);
+    wid_raise(wid_intro_buttons);
+    wid_update(wid_intro_buttons);
 }
 
 void wid_intro_visible (void)
@@ -164,6 +167,10 @@ void wid_intro_visible (void)
     wid_raise(wid_intro);
     wid_update(wid_intro);
 
+    wid_visible(wid_intro_buttons, 0);
+    wid_raise(wid_intro_buttons);
+    wid_update(wid_intro_buttons);
+
     wid_fade_in(wid_intro_background, intro_effect_delay);
     wid_fade_in(wid_intro_title, intro_effect_delay);
     wid_fade_in(wid_intro_man, intro_effect_delay);
@@ -187,13 +194,7 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_quit_selected();
             return (true);
 
-
-        case 'm':
-            wid_server_create_selected();
-            wid_server_join_selected();
-            return (true);
-
-        case 'e':
+        case 'x':
             wid_intro_intro_extra_selected();
             return (true);
 
@@ -270,84 +271,9 @@ static uint8_t wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static void wid_server_join_selected (void)
-{
-    wid_server_join_visible();
-}
-
-static void wid_server_create_selected (void)
-{
-    wid_server_create_visible();
-}
-
 static void wid_intro_help_selected (void)
 {
     wid_intro_help_visible();
-}
-
-static void wid_intro_intro_extra_selected (void)
-{
-    wid_intro_extra_visible();
-
-    wid_intro_hide();
-}
-
-static uint8_t wid_intro_intro_extra_mouse_event (widp w, int32_t x, int32_t y,
-                                                  uint32_t button)
-{
-    wid_intro_intro_extra_selected();
-
-    return (true);
-}
-
-static widp wid_intro_quit_popup;
-
-static void wid_intro_quit_callback_yes (widp wid)
-{
-    wid_destroy(&wid_intro_quit_popup);
-
-    FINI_LOG("quit yes selected");
-    sdl_exit();
-}
-
-static void wid_intro_quit_callback_no (widp wid)
-{
-    wid_destroy(&wid_intro_quit_popup);
-}
-
-static uint8_t wid_intro_quit_selected (void)
-{
-    if (wid_intro_quit_popup) {
-        return (false);
-    }
-
-    wid_intro_quit_popup = wid_popup(
-          "\n"
-          "\n"
-          ,
-          "%%fg=red$Quit game?",    /* title */
-          0.5, 0.5,                 /* x,y postition in percent */
-          small_font,               /* title font */
-          vsmall_font,              /* body font */
-          vsmall_font,              /* button font */
-          2,                        /* number buttons */
-          "%%tile=button_y$Yes       ", wid_intro_quit_callback_yes,
-          "%%tile=button_n$No       ",  wid_intro_quit_callback_no);
-
-    wid_set_tex(wid_intro_quit_popup, 0, "gothic_wide");
-    wid_set_square(wid_intro_quit_popup);
-
-    return (true);
-}
-
-/*
- * Mouse up etc...
- */
-static uint8_t wid_intro_quit_receive_mouse_down (widp w,
-                                                int32_t x, int32_t y,
-                                                uint32_t button)
-{
-    return (wid_intro_quit_selected());
 }
 
 static double y;
@@ -546,68 +472,6 @@ static void wid_intro_create (void)
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro, "Extra");
-        wid_set_font(child, small_font);
-
-        fpoint tl = {0.0f, 0.90f};
-        fpoint br = {0.3f, 0.95f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%fmt=left$%%tile=button_x$Xtra stuff");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_color(child, WID_COLOR_TL, GRAY10);
-        wid_set_color(child, WID_COLOR_BR, GRAY10);
-        wid_set_color(child, WID_COLOR_BG, GRAY10);
-
-        wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro, "Quick start");
-        wid_set_font(child, small_font);
-
-        fpoint tl = {0.0f, 0.95f};
-        fpoint br = {0.3f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%fmt=left$%%tile=button_s$Quick start");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_color(child, WID_COLOR_TL, GRAY10);
-        wid_set_color(child, WID_COLOR_BR, GRAY10);
-        wid_set_color(child, WID_COLOR_BG, GRAY10);
-
-        wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro, "Quit");
-        wid_set_font(child, small_font);
-
-        fpoint tl = {0.7f, 0.95f};
-        fpoint br = {1.0f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%fmt=left$%%tile=button_b$Quit");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_color(child, WID_COLOR_TL, GRAY10);
-        wid_set_color(child, WID_COLOR_BR, GRAY10);
-        wid_set_color(child, WID_COLOR_BG, GRAY10);
-
-        wid_set_on_mouse_down(child, wid_intro_quit_receive_mouse_down);
-        wid_raise(child);
-        wid_set_do_not_lower(child, true);
-    }
-
-    {
-        widp child;
-
         child = wid_new_square_button(wid_intro, "play");
         wid_set_font(child, small_font);
         wid_set_no_shape(child);
@@ -637,6 +501,8 @@ static void wid_intro_create (void)
     }
 
     wid_update(wid_intro);
+
+    wid_intro_buttons_visible();
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
     wid_fade_in(wid_intro_background, intro_effect_delay*2);
