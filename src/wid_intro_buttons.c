@@ -186,7 +186,7 @@ void wid_intro_buttons_visible (void)
         fpoint br = {1.0f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%fmt=left$%%tile=button_b$Quit");
+        wid_set_text(child, "%%fmt=left$%%tile=button_q$Quit");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_color(child, WID_COLOR_TL, GRAY10);
