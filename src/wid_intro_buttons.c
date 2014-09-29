@@ -15,7 +15,6 @@
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_buttons.h"
-#include "wid_intro_help.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
 #include "wid_hiscore.h"

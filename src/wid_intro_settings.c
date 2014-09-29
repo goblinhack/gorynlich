@@ -182,6 +182,7 @@ static uint8_t wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
+        case 'b':
         case SDLK_ESCAPE:
             wid_intro_settings_hide();
             return (true);
