@@ -316,10 +316,6 @@ static void wid_intro_bg_create (void)
     {
         {
             widp wid = wid_intro_title = wid_new_window("bg");
-            float f;
-
-            f = (512.0 / 200.0);
-
             fpoint tl = { 0.0, 0.0 };
             fpoint br = { 1.0, 0.76 };
 
@@ -344,10 +340,6 @@ static void wid_intro_bg_create (void)
 
         {
             widp wid = wid_intro_man = wid_new_window("bg");
-            float f;
-
-            f = (512.0 / 200.0);
-
             fpoint tl = { 0.0, 0.56 };
             fpoint br = { 0.3, 1.0 };
 
