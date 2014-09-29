@@ -190,8 +190,8 @@ void music_play_game (void)
     };
 
     int x = rand() % ARRAY_SIZE(music);
-    CON("x %d",x);
-    music_play(music[x], "game", 22050 );
+
+    music_play(music[x], music[x], 22050);
 }
 
 void music_play_intro (void)
