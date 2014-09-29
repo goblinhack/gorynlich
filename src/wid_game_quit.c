@@ -131,15 +131,18 @@ static void wid_game_quit_create (void)
     char *message = dynprintf("%s\n%%%%fg=red$Quit game?",
             messages[rand() % ARRAY_SIZE(messages)]);
 
-    wid_really_quit_game_yes_no =
-        wid_popup(message,
-                    0                 /* title */,
-                    0.5f, 0.2f,       /* x,y postition in percent */
-                    med_font,       /* title font */
-                    med_font,       /* body font */
-                    small_font,       /* button font */
-                    2,                /* number buttons */
-                    "Yes", wid_game_quit_really_quit_callback_yes,
-                    "No", wid_game_quit_really_quit_callback_no);
+    wid_really_quit_game_yes_no = wid_popup(message,
+            0,
+            0.5, 0.2f,                /* x,y postition in percent */
+            small_font,               /* title font */
+            vsmall_font,              /* body font */
+            vsmall_font,              /* button font */
+            2,                        /* number buttons */
+            "%%tile=button_y$Yes       ", wid_game_quit_really_quit_callback_yes,
+            "%%tile=button_n$No       ",  wid_game_quit_really_quit_callback_no);
+
+    wid_set_tex(wid_really_quit_game_yes_no, 0, "gothic_wide");
+    wid_set_square(wid_really_quit_game_yes_no);
+
     myfree(message);
 }
