@@ -79,17 +79,26 @@ static void wid_intro_about_create (void)
           "\n"
           "\n"
           "\n"
+          "\n"
           "Version 0.0.1\n"
+          "\n"
           "\n"
           "%%fg=green$Copyright Neil McGill\n"
           "%%fg=green$goblinhack@gmail.com\n"
           "\n"
           "\n"
-          "Coding         Neil McGill\n"
           "\n"
-          "Game Music     Charlotte McGill\n"
           "\n"
-          "Additional Music by DST. nosoapradio.us\n"
+          "\n"
+          "\n"
+          "Game Music by the talented and amazing. Charlotte McGill\n"
+          "\n"
+          "Additional Music by the frankly awesome, Deceased Senior Technician, DST. AKA nosoapradio.us\n"
+          "\n"
+          "Coding by Me\n"
+          "\n"
+          "\n"
+          "\n"
           "\n"
           "\n"
           "\n"
@@ -112,13 +121,13 @@ static void wid_intro_about_create (void)
           "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA "
           "\n"
           ,
-          "%%fg=gold$Stuffs.",       /* title */
+          "%%fg=gold$Credits",      /* title */
           0.5, 0.5,                 /* x,y postition in percent */
           small_font,               /* title font */
           vsmall_font,              /* body font */
           vsmall_font,              /* button font */
           1,                        /* number buttons */
-          "  Close  ", wid_intro_about_callback_close);
+          "%%tile=button_b$back      ", wid_intro_about_callback_close);
 
     wid_set_on_key_down(wid_intro_about, wid_intro_about_key_event);
 
