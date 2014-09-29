@@ -482,16 +482,18 @@ void wid_editor_clear (void)
         return;
     }
 
-    wid_editor_clear_popup =
-        wid_popup("%%fg=red$Clear level?",
-                  0                 /* title */,
-                  0.5f, 0.5f,       /* x,y postition in percent */
-                  large_font,       /* title font */
-                  large_font,       /* body font */
-                  large_font,       /* button font */
-                  2,                /* number buttons */
-                  "Yes", wid_editor_clear_callback_yes,
-                  "No", wid_editor_clear_callback_no);
+    wid_editor_clear_popup = wid_popup("Clear level?",
+        0,
+        0.5, 0.2f,                /* x,y postition in percent */
+        small_font,               /* title font */
+        vsmall_font,              /* body font */
+        vsmall_font,              /* button font */
+        2,                        /* number buttons */
+        "%%tile=button_y$Yes       ", wid_editor_clear_callback_yes,
+        "%%tile=button_n$No       ",  wid_editor_clear_callback_no);
+
+    wid_set_tex(wid_editor_clear_popup, 0, "gothic_wide");
+    wid_set_square(wid_editor_clear_popup);
 }
 
 void wid_editor_reset_buttons (void)

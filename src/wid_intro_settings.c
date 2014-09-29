@@ -305,14 +305,17 @@ static uint8_t wid_intro_restart_selected (void)
 
     wid_intro_restart_popup =
         wid_popup("%%fg=red$Restart game?",
-                  0                 /* title */,
-                  0.5f, 0.5f,       /* x,y postition in percent */
-                  small_font,       /* title font */
-                  vsmall_font,      /* body font */
-                  vsmall_font,      /* button font */
-                  2,                /* number buttons */
-                  "  Yes  ", wid_intro_restart_callback_yes,
-                  "  No  ", wid_intro_restart_callback_no);
+            0,
+            0.5, 0.2f,                /* x,y postition in percent */
+            small_font,               /* title font */
+            vsmall_font,              /* body font */
+            vsmall_font,              /* button font */
+            2,                        /* number buttons */
+            "%%tile=button_y$Yes       ", wid_intro_restart_callback_yes,
+            "%%tile=button_n$No       ",  wid_intro_restart_callback_no);
+
+    wid_set_tex(wid_intro_restart_popup, 0, "gothic_wide");
+    wid_set_square(wid_intro_restart_popup);
 
     return (true);
 }
