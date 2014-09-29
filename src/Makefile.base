@@ -85,6 +85,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_hiscore.o 		\
     $(OBJDIR)/wid_intro.o 		\
     $(OBJDIR)/wid_intro_extra.o 	\
+    $(OBJDIR)/wid_intro_buttons.o 	\
     $(OBJDIR)/wid_intro2.o 		\
     $(OBJDIR)/wid_intro3.o 		\
     $(OBJDIR)/wid_intro_about.o 	\

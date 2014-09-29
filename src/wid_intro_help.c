@@ -89,7 +89,7 @@ static void wid_intro_help_create (void)
                   vsmall_font,     /* body font */
                   vsmall_font,     /* button font */
                   1,              /* number args */
-                  "  Close  ", wid_intro_help_callback_close);
+                  "%%tile=button_b$back       ", wid_intro_help_callback_close);
 
     wid_set_on_key_down(wid_intro_help, wid_intro_help_key_event);
 

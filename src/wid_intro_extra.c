@@ -9,17 +9,18 @@
 #include "main.h"
 #include "wid.h"
 #include "wid_intro_extra.h"
+#include "wid_intro.h"
 #include "wid_popup.h"
 #include "wid_editor.h"
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
+#include "wid_intro_buttons.h"
 #include "wid_hiscore.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
 #include "thing_template.h"
-#include "music.h"
 #include "level.h"
 #include "timer.h"
 #include "socket.h"
@@ -27,18 +28,31 @@
 #include "glapi.h"
 
 static widp wid_intro_extra;
+static widp wid_intro_extra_container;
+static uint8_t wid_intro_extra_init_done;
+static void wid_intro_extra_create(void);
+static int intro_effect_delay = 500;
 
-static uint8_t wid_intro_extra_quit_selected(void);
+static const char *wid_intro_button_names[] = {
+    "Settings",
+    "Level editor",
+    "High scores",
+    "Credits",
+};
+
+typedef void (*on_event_t)(void);
+
 static void wid_intro_extra_editor_selected(void);
 static void wid_intro_extra_about_selected(void);
 static void wid_intro_extra_settings_selected(void);
 static void wid_intro_extra_hiscore_selected(void);
-static void wid_server_join_selected(void);
 
-static uint8_t wid_intro_extra_init_done;
-static void wid_intro_extra_create(void);
-
-static int intro_effect_delay = 500;
+static on_event_t wid_intro_button_mouse_down[] = {
+    wid_intro_extra_settings_selected,
+    wid_intro_extra_editor_selected,
+    wid_intro_extra_hiscore_selected,
+    wid_intro_extra_about_selected,
+};
 
 uint8_t wid_intro_extra_init (void)
 {
@@ -78,29 +92,28 @@ void wid_intro_extra_hide (void)
     wid_intro_extra_is_hidden = true;
     wid_intro_extra_is_visible = false;
 
-    music_halt();
-
     if (!wid_intro_extra) {
         DIE("no wid intro");
     }
 
     wid_hide(wid_intro_extra, 0);
+
+    wid_intro_buttons_visible();
 }
 
 void wid_intro_extra_visible (void)
 {
+    wid_intro_buttons_hide();
+
     if (wid_intro_extra_is_visible) {
         return;
     }
 
     if (wid_intro_extra) {
         wid_destroy(&wid_intro_extra);
-        wid_intro_extra_create();
     }
 
-    wid_notify_flush();
-
-    LOG("Client: Intro screen show");
+    wid_intro_extra_create();
 
     wid_intro_extra_is_visible = true;
     wid_intro_extra_is_hidden = false;
@@ -110,6 +123,8 @@ void wid_intro_extra_visible (void)
     }
 
     wid_visible(wid_intro_extra, 0);
+
+    wid_intro_buttons_hide();
 }
 
 static void wid_intro_extra_about_selected (void)
@@ -125,43 +140,6 @@ static void wid_intro_extra_settings_selected (void)
 static void wid_intro_extra_hiscore_selected (void)
 {
     wid_hiscore_visible();
-}
-
-static void wid_server_join_selected (void)
-{
-    wid_server_join_visible();
-}
-
-static uint8_t wid_intro_extra_about_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
-{
-    wid_intro_extra_about_selected();
-
-    return (true);
-}
-
-static uint8_t wid_intro_extra_settings_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
-{
-    wid_intro_extra_settings_selected();
-
-    return (true);
-}
-
-static uint8_t wid_intro_extra_hiscore_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
-{
-    wid_intro_extra_hiscore_selected();
-
-    return (true);
-}
-
-static uint8_t wid_server_join_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
-{
-    wid_server_join_selected();
-
-    return (true);
 }
 
 static void wid_intro_extra_editor_selected_cb (void *context)
@@ -181,276 +159,187 @@ static void wid_intro_extra_editor_selected (void)
             0 /* jitter */);
 
     wid_intro_extra_hide();
+    wid_intro_hide();
 }
 
-static uint8_t wid_intro_extra_editor_mouse_event (widp w, int32_t x, int32_t y,
-                                             uint32_t button)
+static uint8_t wid_intro_button_event (widp w, int32_t x, int32_t y,
+                                       uint32_t button)
 {
-    wid_intro_extra_editor_selected();
+    /*
+     * Increment.
+     */
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+
+    (wid_intro_button_mouse_down[row])();
 
     return (true);
 }
 
-static widp wid_intro_extra_quit_popup;
-
-static void wid_intro_extra_quit_callback_yes (widp wid)
+static uint8_t wid_intro_extra_mouse_event (widp w, int32_t x, int32_t y,
+                                            uint32_t button)
 {
-    wid_destroy(&wid_intro_extra_quit_popup);
+    wid_intro_extra_hide();
 
-    FINI_LOG("quit yes selected");
-    sdl_exit();
+    return (true);
 }
 
-static void wid_intro_extra_quit_callback_no (widp wid)
+static uint8_t wid_intro_extra_key_event (widp w, const SDL_KEYSYM *key)
 {
-    wid_destroy(&wid_intro_extra_quit_popup);
+    switch (key->sym) {
+        case 'b':
+        case 'q':
+        case SDLK_ESCAPE:
+            wid_intro_extra_hide();
+            return (true);
+
+        default:
+            break;
+    }
+
+    return (false);
 }
 
-static uint8_t wid_intro_extra_quit_selected (void)
+static uint8_t wid_intro_extra_receive_mouse_motion (
+                    widp w,
+                    int32_t x, int32_t y,
+                    int32_t relx, int32_t rely,
+                    int32_t wheelx, int32_t wheely)
 {
-    if (wid_intro_extra_quit_popup) {
+    if (wheelx || wheely) {
+        /*
+         * Allow scrolling.
+         */
         return (false);
     }
 
-    wid_intro_extra_quit_popup = wid_popup(
-          "\n"
-          "\n"
-          ,
-          "%%fg=red$Quit game?",    /* title */
-          0.5, 0.5,                 /* x,y postition in percent */
-          small_font,               /* title font */
-          vsmall_font,              /* body font */
-          vsmall_font,              /* button font */
-          2,                        /* number buttons */
-          "   Yes   ", wid_intro_extra_quit_callback_yes,
-          "    No    ", wid_intro_extra_quit_callback_no);
-
-    wid_set_tex(wid_intro_extra_quit_popup, 0, "gothic_wide");
-    wid_set_square(wid_intro_extra_quit_popup);
-
+    /*
+     * Block moving the window.
+     */
     return (true);
-}
-
-/*
- * Mouse up etc...
- */
-static uint8_t wid_intro_extra_quit_receive_mouse_down (widp w,
-                                                int32_t x, int32_t y,
-                                                uint32_t button)
-{
-    return (wid_intro_extra_quit_selected());
 }
 
 static void wid_intro_extra_create (void)
 {
-    if (wid_intro_extra) {
-        return;
-    }
+    if (!wid_intro_extra) {
+        widp w = wid_intro_extra = wid_new_rounded_window("wid extra");
 
-    music_play_intro();
+        fpoint tl = {0.2, 0.05};
+        fpoint br = {0.8, 0.95};
 
-    wid_intro_extra = wid_new_window("intro buttons");
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_font(w, small_font);
 
-    wid_set_no_shape(wid_intro_extra);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
-    fpoint tl = {0.0f, 0.0f};
-    fpoint br = {1.0f, 1.0f};
-    wid_set_tl_br_pct(wid_intro_extra, tl, br);
-
-    color col = BLACK;
-    col.a = 0;
-    glcolor(col);
-
-    wid_set_mode(wid_intro_extra, WID_MODE_NORMAL);
-    wid_set_color(wid_intro_extra, WID_COLOR_TL, col);
-    wid_set_color(wid_intro_extra, WID_COLOR_BR, col);
-    wid_set_color(wid_intro_extra, WID_COLOR_BG, col);
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro_extra, "Editor");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.1f, 0.0f};
-        fpoint br = {0.3f, 0.05};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%tile=button_e$Editor");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_intro_extra_editor_mouse_event);
+        wid_set_on_mouse_motion(w, wid_intro_extra_receive_mouse_motion);
     }
 
     {
-        widp child;
+        widp w = wid_intro_extra_container =
+            wid_new_container(wid_intro_extra, "wid extra container");
 
-        child = wid_new_square_button(wid_intro_extra, "About");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {1.0, 1.0};
 
-        fpoint tl = {0.3f, 0.0f};
-        fpoint br = {0.5f, 0.05};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "About");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_intro_extra_about_mouse_event);
+        wid_set_tl_br_pct(w, tl, br);
     }
 
     {
-        widp child;
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {1.0, 0.15};
 
-        child = wid_new_square_button(wid_intro_extra, "Settings");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
+        widp w = wid_new_container(wid_intro_extra, "wid extra title");
 
-        fpoint tl = {0.5f, 0.0f};
-        fpoint br = {0.7f, 0.05};
+        wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Settings");
+        wid_set_text(w, "Stuffs");
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_TEXT, GOLD);
 
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_intro_extra_settings_mouse_event);
+        wid_set_text_outline(w, true);
     }
 
     {
-        widp child;
+        uint32_t i;
 
-        child = wid_new_square_button(wid_intro_extra, "Hiscore");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
+        for (i=0; i<ARRAY_SIZE(wid_intro_button_names); i++) {
 
-        fpoint tl = {0.7f, 0.0f};
-        fpoint br = {0.9f, 0.05};
+            if (!wid_intro_button_names[i]) {
+                continue;
+            }
 
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Hiscore");
+            widp w = wid_new_square_button(wid_intro_extra_container,
+                                           wid_intro_button_names[i]);
 
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+            fpoint tl = {0.2, 0.2};
+            fpoint br = {0.8, 0.3};
 
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+            double height = 0.12;
 
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
 
-        wid_set_mode(child, WID_MODE_NORMAL);
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_text(w, wid_intro_button_names[i]);
+            wid_set_font(w, small_font);
 
-        wid_set_on_mouse_down(child, wid_intro_extra_hiscore_mouse_event);
+            color c = WHITE;
+
+            c.a = 200;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            c.a = 250;
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_on_mouse_down(w, wid_intro_button_event);
+            wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "button_green");
+            wid_set_square(w);
+        }
     }
 
     {
-        widp child;
+        widp w = wid_new_rounded_small_button(wid_intro_extra_container,
+                                              "back");
 
-        child = wid_new_square_button(wid_intro_extra, "servers");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
+        fpoint tl = {0.40, 0.80};
+        fpoint br = {0.90, 0.90};
 
-        fpoint tl = {0.7f, 0.2f};
-        fpoint br = {0.9f, 0.05};
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_text(w, "%%tile=button_b$back      ");
+        wid_set_font(w, vsmall_font);
 
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "server");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
 
-        wid_set_mode(child, WID_MODE_OVER);
+        c.a = 220;
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_BG, c);
+
         c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_BG, c);
 
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
+        wid_set_mode(w, WID_MODE_FOCUS);
 
-        wid_set_mode(child, WID_MODE_NORMAL);
+        wid_set_mode(w, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_server_join_mouse_event);
+        wid_set_on_mouse_down(w, wid_intro_extra_mouse_event);
+        wid_set_on_key_down(w, wid_intro_extra_key_event);
+
+        wid_set_tex(w, 0, "button_black");
+        wid_set_square(w);
+
     }
 
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro_extra, "quit");
-        wid_set_font(child, small_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.66f, 0.90f};
-        fpoint br = {1.00f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Quit");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_on_mouse_down(child, wid_intro_extra_quit_receive_mouse_down);
-    }
+    wid_raise(wid_intro_extra);
 
     wid_update(wid_intro_extra);
 
-    wid_move_to_pct_centered(wid_intro_extra, 0.5f, 0.5f);
+    wid_set_tex(wid_intro_extra, 0, "window_gothic");
+    wid_set_square(wid_intro_extra);
 }
