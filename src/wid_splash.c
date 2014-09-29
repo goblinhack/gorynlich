@@ -101,7 +101,7 @@ void sdl_splashscreen_update (void)
 
     if (!wid_production) {
         wid_production = wid_new_square_window("urk");
-        wid_set_font(wid_production, med_font);
+        wid_set_font(wid_production, vsmall_font);
         wid_set_no_shape(wid_production);
 
         fpoint tl = {0.2f, 0.70f};

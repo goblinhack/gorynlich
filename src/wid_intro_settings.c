@@ -439,7 +439,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_up(w, wid_intro_settings_col1_mouse_event);
+            wid_set_on_mouse_down(w, wid_intro_settings_col1_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
         }
@@ -481,7 +481,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_up(w, wid_intro_settings_col2_mouse_event);
+            wid_set_on_mouse_down(w, wid_intro_settings_col2_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
 
@@ -526,7 +526,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_up(w, wid_intro_settings_col3_mouse_event);
+            wid_set_on_mouse_down(w, wid_intro_settings_col3_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
 
@@ -571,7 +571,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_up(w, wid_intro_settings_col4_mouse_event);
+            wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
 
@@ -581,21 +581,19 @@ static void wid_intro_settings_create (void)
     }
 
     {
-        const char *button_name = "  close  ";
-
         widp w = wid_new_rounded_small_button(wid_intro_settings_container,
-                                              button_name);
+                                              "back");
 
-        fpoint tl = {0.60, 0.80};
+        fpoint tl = {0.40, 0.80};
         fpoint br = {0.90, 0.90};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_text(w, button_name);
+        wid_set_text(w, "%%tile=button_b$back      ");
         wid_set_font(w, vsmall_font);
 
         color c = WHITE;
 
-        c.a = 200;
+        c.a = 220;
         wid_set_mode(w, WID_MODE_NORMAL);
         wid_set_color(w, WID_COLOR_BG, c);
 
@@ -607,10 +605,10 @@ static void wid_intro_settings_create (void)
 
         wid_set_mode(w, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_up(w, wid_intro_settings_mouse_event);
+        wid_set_on_mouse_down(w, wid_intro_settings_mouse_event);
         wid_set_on_key_down(w, wid_intro_settings_key_event);
 
-        wid_set_tex(w, 0, "button_green");
+        wid_set_tex(w, 0, "button_black");
         wid_set_square(w);
 
     }

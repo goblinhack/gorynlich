@@ -80,7 +80,7 @@ static uint8_t wid_popup_wid_key_event (widp w, const SDL_KEYSYM *key)
 
         case SDLK_ESCAPE:
         case 'n':
-CON("n");
+        case 'b':
             button = wid_find(wid_get_top_parent(w), "cancel");
             if (button) {
                 wid_popup_button_selected(button);
