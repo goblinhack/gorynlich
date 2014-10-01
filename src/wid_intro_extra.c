@@ -97,8 +97,6 @@ void wid_intro_extra_hide (void)
     }
 
     wid_hide(wid_intro_extra, 0);
-
-    wid_intro_buttons_visible();
 }
 
 void wid_intro_extra_visible (void)
@@ -129,21 +127,29 @@ void wid_intro_extra_visible (void)
 
 static void wid_intro_extra_about_selected (void)
 {
+    wid_intro_extra_hide();
+
     wid_intro_about_visible();
 }
 
 static void wid_intro_extra_settings_selected (void)
 {
+    wid_intro_extra_hide();
+
     wid_intro_settings_visible();
 }
 
 static void wid_intro_extra_hiscore_selected (void)
 {
+    wid_intro_extra_hide();
+
     wid_hiscore_visible();
 }
 
 static void wid_intro_extra_editor_selected_cb (void *context)
 {
+    wid_intro_extra_hide();
+
     wid_editor_visible();
 }
 
@@ -190,6 +196,8 @@ static uint8_t wid_intro_extra_key_event (widp w, const SDL_KEYSYM *key)
         case 'q':
         case SDLK_ESCAPE:
             wid_intro_extra_hide();
+
+            wid_intro_buttons_visible();
             return (true);
 
         default:
@@ -343,4 +351,7 @@ static void wid_intro_extra_create (void)
 
     wid_set_tex(wid_intro_extra, 0, "window_gothic");
     wid_set_square(wid_intro_extra);
+
+    wid_move_to_pct_centered(wid_intro_extra, 0.5, 0.5 - 1.0);
+    wid_move_to_pct_centered_in(wid_intro_extra, 0.5, 0.5, 200);
 }

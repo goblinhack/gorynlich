@@ -11,6 +11,7 @@
 #include "color.h"
 #include "wid_popup.h"
 #include "wid_intro_settings.h"
+#include "wid_intro_extra.h"
 #include "string.h"
 #include "music.h"
 
@@ -97,6 +98,8 @@ void wid_intro_settings_fini (void)
 void wid_intro_settings_hide (void)
 {
     wid_intro_settings_destroy();
+
+    wid_intro_extra_visible();
 }
 
 void wid_intro_settings_visible (void)
@@ -304,8 +307,7 @@ static uint8_t wid_intro_restart_selected (void)
     }
 
     wid_intro_restart_popup =
-        wid_popup("%%fg=red$Restart game?",
-            0,
+        wid_popup("%%fg=red$Restart game?", "",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
@@ -614,7 +616,6 @@ static void wid_intro_settings_create (void)
 
         wid_set_tex(w, 0, "button_black");
         wid_set_square(w);
-
     }
 
     wid_raise(wid_intro_settings);
@@ -623,6 +624,10 @@ static void wid_intro_settings_create (void)
 
     wid_set_tex(wid_intro_settings, 0, "window_gothic");
     wid_set_square(wid_intro_settings);
+
+    wid_move_to_pct_centered(wid_intro_settings, 0.5, 0.5 - 1.0);
+    wid_move_to_pct_centered_in(wid_intro_settings, 0.5, 0.5, 200);
+    wid_raise(wid_intro_settings);
 }
 
 static void wid_intro_settings_destroy (void)

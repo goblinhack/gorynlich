@@ -53,10 +53,8 @@ uint8_t wid_intro_quit_selected (void)
     }
 
     wid_intro_quit_popup = wid_popup(
-          "\n"
-          "\n"
-          ,
-          "%%fg=red$Quit game?",    /* title */
+          "",
+          "%%fg=red$Quit game?", 
           0.5, 0.5,                 /* x,y postition in percent */
           small_font,               /* title font */
           vsmall_font,              /* body font */

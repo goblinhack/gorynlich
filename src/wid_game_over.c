@@ -93,6 +93,7 @@ static void wid_game_over_create (void)
     music_play_game_over();
 
     wid_game_over_credits = wid_popup(
+          "",
           "Game Over!\n"
           "\n"
           "\n"
@@ -113,7 +114,6 @@ static void wid_game_over_create (void)
           "\n"
           "Bye!\n"
           ,
-          0,
           0.5, 0.5,                 /* x,y postition in percent */
           large_font,               /* title font */
           large_font,               /* body font */

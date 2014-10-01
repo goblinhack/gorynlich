@@ -103,6 +103,7 @@ static void wid_game_quit_create (void)
         "Look I'll be nice, keep playing",
         "When the going gets tough",
         "Ho hum",
+        "What? Wait",
         "Why? Why? Why?",
         "What did I ever do to you?\nExcept all the monster attacks",
         "Don't do this to me",
@@ -131,8 +132,7 @@ static void wid_game_quit_create (void)
     char *message = dynprintf("%s\n%%%%fg=red$Quit game?",
             messages[rand() % ARRAY_SIZE(messages)]);
 
-    wid_really_quit_game_yes_no = wid_popup(message,
-            0,
+    wid_really_quit_game_yes_no = wid_popup(message, "",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */

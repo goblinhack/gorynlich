@@ -38,7 +38,7 @@ tree_root *split (const char *text, uint32_t max_line_len)
     const char *const text_start = text;
 
     if (!text) {
-        DIE("no text");
+        return (0);
     }
 
     root = tree_alloc(TREE_KEY_INTEGER, "TREE ROOT: split");
