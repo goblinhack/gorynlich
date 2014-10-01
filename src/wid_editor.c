@@ -482,8 +482,7 @@ void wid_editor_clear (void)
         return;
     }
 
-    wid_editor_clear_popup = wid_popup("Clear level?",
-        0,
+    wid_editor_clear_popup = wid_popup("", "Clear level?",
         0.5, 0.2f,                /* x,y postition in percent */
         small_font,               /* title font */
         vsmall_font,              /* body font */

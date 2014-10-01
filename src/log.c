@@ -662,8 +662,8 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     if (level == POPUP) {
         widp w;
 
-        w = wid_popup(buf + len,        /* body text */
-                      0,                /* title */
+        w = wid_popup(0,                /* title */
+                      buf + len,        /* body text */
                       0.5f, 0.5f,       /* x,y postition in percent */
                       0,                /* title font */
                       large_font,       /* body font */

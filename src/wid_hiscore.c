@@ -10,6 +10,7 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_hiscore.h"
+#include "wid_intro_extra.h"
 #include "string.h"
 #include "marshal.h"
 
@@ -81,6 +82,8 @@ void wid_hiscore_fini (void)
 void wid_hiscore_hide (void)
 {
     wid_hiscore_destroy();
+
+    wid_intro_extra_visible();
 }
 
 void wid_hiscore_visible (void)

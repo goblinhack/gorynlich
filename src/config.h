@@ -36,6 +36,8 @@
 #undef ENABLE_WID_DEBUG           // Widget debug
 #undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
+#define ENABLE_SLIDING_TOOLTIP
+
 /*
  * Other windows are darker when popups appear
  */
