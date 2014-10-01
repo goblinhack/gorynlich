@@ -10,6 +10,7 @@
 #include "wid.h"
 #include "wid_popup.h"
 #include "wid_intro_about.h"
+#include "wid_intro_extra.h"
 #include "color.h"
 
 static widp wid_intro_about;
@@ -41,6 +42,8 @@ void wid_intro_about_fini (void)
 void wid_intro_about_hide (void)
 {
     wid_intro_about_destroy();
+
+    wid_intro_extra_visible();
 }
 
 void wid_intro_about_visible (void)
@@ -133,6 +136,9 @@ static void wid_intro_about_create (void)
 
     wid_set_tex(wid_intro_about, 0, "window_gothic");
     wid_set_square(wid_intro_about);
+
+    wid_move_to_pct_centered(wid_intro_about, 0.5, 0.5 - 1.0);
+    wid_move_to_pct_centered_in(wid_intro_about, 0.5, 0.5, 200);
 }
 
 static void wid_intro_about_destroy (void)

@@ -12,6 +12,7 @@
 #include "string_ext.h"
 #include "ttf.h"
 #include "wid_tooltip.h"
+#include "wid.h"
 
 static const int32_t PAD_X = 80;
 static const int32_t PAD_Y = 25;
@@ -94,8 +95,8 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
 
         wid_set_color(wid_tooltip_window, WID_COLOR_TEXT, WHITE);
 
-        color c = BLACK;
-        c.a = 230;
+        color c = WHITE;
+        c.a = 150;
         wid_set_color(wid_tooltip_window, WID_COLOR_BG, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, c);
@@ -116,9 +117,11 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
 
         wid_set_tl_br(wid_tooltip_window, tl, br);
 
+#if 0
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, STEELBLUE);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, STEELBLUE);
         wid_set_bevel(wid_tooltip_window, 2);
+#endif
     }
 
     {
@@ -179,10 +182,10 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         split_free(&d);
     }
 
-#ifdef SLIDING_TOOLTIP
+#ifdef ENABLE_SLIDING_TOOLTIP
     wid_move_to_pct_centered(wid_tooltip_window, -2.5, y);
     wid_fade_in(wid_tooltip_window, wid_fade_delay);
-    wid_move_to_pct_centered(wid_tooltip_window, x, y, wid_swipe_delay);
+    wid_move_to_pct_centered_in(wid_tooltip_window, x, y, wid_swipe_delay);
 #else
     wid_fade_in(wid_tooltip_window, wid_fade_delay);
     wid_move_to_pct_centered(wid_tooltip_window, x, y);

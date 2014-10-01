@@ -488,7 +488,8 @@ widp wid_popup (const char *text, const char *title,
     wid_hide(wid_get_parent(wid_popup_horiz_scroll), 0);
     wid_hide(wid_popup_horiz_scroll, 0);
 
-    wid_move_to_pct_centered(wid_popup_window, x, y);
+    wid_move_to_pct_centered(wid_popup_window, x, y - 1.0);
+    wid_move_to_pct_centered_in(wid_popup_window, x, y, 500);
 
     wid_raise(wid_popup_window);
 
@@ -509,8 +510,8 @@ widp wid_popup_simple (const char *text)
 {
     widp w;
 
-    w = wid_popup(text,             /* body text */
-                  0,                /* title */
+    w = wid_popup(text ? text : "", /* body text */
+                  "",               /* title */
                   0.5f, 0.5f,       /* x,y postition in percent */
                   0,                /* title font */
                   0,                /* body font */
@@ -550,8 +551,8 @@ widp wid_popup_ok (const char *text)
 
     widp w;
 
-    w = wid_popup(text,             /* body text */
-                  0,                /* title */
+    w = wid_popup(text ? text : "", /* body text */
+                  "",               /* title */
                   0.5f, 0.5f,       /* x,y postition in percent */
                   0,                /* title font */
                   0,                /* body font */
@@ -597,8 +598,8 @@ widp wid_popup_error (const char *text)
         return (0);
     }
 
-    w = wid_popup(text,             /* body text */
-                  0,                /* title */
+    w = wid_popup(text ? text : "", /* body text */
+                  "",               /* title */
                   0.5f, 0.5f,       /* x,y postition in percent */
                   0,                /* title font */
                   0,                /* body font */

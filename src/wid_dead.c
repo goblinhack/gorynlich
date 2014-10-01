@@ -190,8 +190,8 @@ static void wid_dead_gravestone_appeared (void *context)
         char *message = dynprintf("%s\n%%%%fg=red$Rejoin game?",
                 messages[rand() % ARRAY_SIZE(messages)]);
 
-        wid_rejoin_game_yes_no = wid_popup(message,
-            0,
+        wid_rejoin_game_yes_no = wid_popup(
+            "", message,
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
@@ -209,8 +209,8 @@ static void wid_dead_gravestone_appeared (void *context)
         char *message = dynprintf("%s\n%%%%fg=red$Play again?",
                 messages[rand() % ARRAY_SIZE(messages)]);
 
-        wid_replay_game_yes_no = wid_popup(message,
-            0,
+        wid_replay_game_yes_no = wid_popup(
+            "", message,
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
