@@ -196,6 +196,9 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
 
     wid_set_do_not_lower(wid_tooltip_window, true);
 
+    wid_set_tex(wid_tooltip_window, 0, "gothic_wide");
+    wid_set_square(wid_tooltip_window);
+
     return (wid_tooltip_window);
 }
 

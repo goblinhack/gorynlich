@@ -616,14 +616,14 @@ void level_pause (levelp level)
     if (!level->pause_timer) {
 
         static const char *messages[] = {
-            "Go my little one!",
-            "Meet your doom...",
-            "Prepare for the end...",
-            "Your end is nigh...",
-            "Go forth!",
-            "Make it so!",
-            "Get ready!",
-            "Meep!",
+            "Go my little one!\n",
+            "Meet your doom...\n",
+            "Prepare for the end...\n",
+            "Your end is nigh...\n",
+            "Go forth!\n",
+            "Make it so!\n",
+            "Get ready!\n",
+            "Meep!\n",
         };
 
         socket_tx_server_shout(POPUP,

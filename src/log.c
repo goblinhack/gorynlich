@@ -19,10 +19,10 @@
 #include "wid.h"
 #include "term.h"
 #include "wid_popup.h"
+#include "wid_tooltip.h"
 #include "socket.h"
 #include "wid_notify.h"
 
-static char buf[MAXSTR];
 uint8_t debug_enabled = 0;
 uint8_t croaked;
 
@@ -137,6 +137,7 @@ static void putf (FILE *fp, const char *s)
 
 static void log_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -159,6 +160,7 @@ void LOG (const char *fmt, ...)
 
 static void warn_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -184,6 +186,7 @@ void WARN (const char *fmt, ...)
 
 static void init_log_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -214,6 +217,7 @@ void INIT_LOG (const char *fmt, ...)
 
 static void fini_log_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -244,6 +248,7 @@ void FINI_LOG (const char *fmt, ...)
 
 static void con_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -260,6 +265,7 @@ static void con_ (const char *fmt, va_list args)
 
 static void dying_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -277,6 +283,7 @@ static void dying_ (const char *fmt, va_list args)
 
 static void err_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -306,7 +313,7 @@ static void err_ (const char *fmt, va_list args)
 
 static void croak_ (const char *fmt, va_list args)
 {
-    static char buf[MAXSTR];
+    char buf[MAXSTR];
     uint32_t len;
     uint32_t tslen;
 
@@ -388,7 +395,7 @@ static void thing_shout_at_ (thingp t,
                              uint32_t level,
                              const char *fmt, va_list args)
 {
-    static char buf[MAXSTR];
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -435,7 +442,7 @@ void THING_SHOUT_AT (thingp t,
 
 static void thing_log_ (thingp t, const char *fmt, va_list args)
 {
-    static char buf[MAXSTR];
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -483,7 +490,7 @@ void THING_DBG (thingp t, const char *fmt, ...)
 
 static void level_log_ (levelp l, const char *fmt, va_list args)
 {
-    static char buf[MAXSTR];
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -542,7 +549,7 @@ uint8_t debug_enable (tokens_t *tokens, void *context)
 
 static void action_timer_log_ (timerp t, const char *fmt, va_list args)
 {
-    static char buf[MAXSTR];
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -573,7 +580,7 @@ void TIMER_LOG (timerp t, const char *fmt, ...)
 
 static void action_init_fn_log_ (init_fnp t, const char *fmt, va_list args)
 {
-    static char buf[MAXSTR];
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -606,7 +613,7 @@ void INIT_FN_LOG (init_fnp t, const char *fmt, ...)
 #ifdef ENABLE_WID_DEBUG
 static void wid_log_ (widp t, const char *fmt, va_list args)
 {
-    static char buf[MAXSTR];
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -649,6 +656,7 @@ void WID_DBG (widp t, const char *fmt, ...)
 
 static void msg_ (uint32_t level, const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t len;
 
     buf[0] = '\0';
@@ -662,18 +670,10 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     if (level == POPUP) {
         widp w;
 
-        w = wid_popup(0,                /* title */
-                      buf + len,        /* body text */
-                      0.5f, 0.5f,       /* x,y postition in percent */
-                      0,                /* title font */
-                      large_font,       /* body font */
-                      0,                /* button font */
-                      0);
+        w = wid_tooltip_transient(buf + len, 5);
         wid_move_to_pct_centered(w, 0.5, -0.5);
         wid_move_to_pct_centered_in(w, 0.5, 0.2, 2 * ONESEC);
-        wid_set_no_shape(w);
-        wid_set_text_outline(w, true);
-        wid_destroy_in(w, ONESEC * 3);
+
     } else if (wid_notify(level, buf + len)) {
         wid_console_log(buf + len);
 
@@ -709,6 +709,7 @@ void MSG (uint32_t level, const char *fmt, ...)
 
 static void msgerr_ (const char *fmt, va_list args)
 {
+    char buf[MAXSTR];
     uint32_t ts_len;
     uint32_t len;
 

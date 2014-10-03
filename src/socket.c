@@ -2001,6 +2001,7 @@ void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
+printf("msg txt %s\n",txt);
     MSG(msg.level, "%s", txt);
 }
 

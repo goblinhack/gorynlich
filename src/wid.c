@@ -932,9 +932,6 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
          */
         wid_move_to_pct_centered(wid_popup_tooltip, 0.5, -0.5);
         wid_move_to_pct_centered_in(wid_popup_tooltip, 0.5, 0.2, 200);
-
-        wid_set_tex(wid_popup_tooltip, 0, "gothic_wide");
-        wid_set_square(wid_popup_tooltip);
 #endif
     }
 
