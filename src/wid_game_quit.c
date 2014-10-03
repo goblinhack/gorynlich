@@ -129,10 +129,9 @@ static void wid_game_quit_create (void)
         return;
     }
 
-    char *message = dynprintf("%s\n%%%%fg=red$Quit game?",
-            messages[rand() % ARRAY_SIZE(messages)]);
-
-    wid_really_quit_game_yes_no = wid_popup(message, "",
+    wid_really_quit_game_yes_no = wid_popup(
+            "%%fg=red$Quit game?\n",
+            messages[rand() % ARRAY_SIZE(messages)],
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
@@ -143,6 +142,4 @@ static void wid_game_quit_create (void)
 
     wid_set_tex(wid_really_quit_game_yes_no, 0, "gothic_wide");
     wid_set_square(wid_really_quit_game_yes_no);
-
-    myfree(message);
 }

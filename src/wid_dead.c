@@ -173,7 +173,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "My son plays better than that",
         "Let your mum play next time instead",
         "Let your mom play next time instead",
-        "Let your pet pidgeon play next time instead",
+        "Let your pet pigeon play next time instead",
         "I have a goat plays better than you",
         "My pet pigeon ccould do better",
         "Worst game ever",
@@ -187,11 +187,10 @@ static void wid_dead_gravestone_appeared (void *context)
     wid_notify_flush();
 
     if (is_rejoin_allowed) {
-        char *message = dynprintf("%s\n%%%%fg=red$Rejoin game?",
-                messages[rand() % ARRAY_SIZE(messages)]);
 
         wid_rejoin_game_yes_no = wid_popup(
-            "", message,
+            "%%fg=red$Rejoin game?\n",
+            messages[rand() % ARRAY_SIZE(messages)],
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
@@ -202,15 +201,10 @@ static void wid_dead_gravestone_appeared (void *context)
 
         wid_set_tex(wid_rejoin_game_yes_no, 0, "gothic_wide");
         wid_set_square(wid_rejoin_game_yes_no);
-
-        myfree(message);
-
     } else {
-        char *message = dynprintf("%s\n%%%%fg=red$Play again?",
-                messages[rand() % ARRAY_SIZE(messages)]);
-
         wid_replay_game_yes_no = wid_popup(
-            "", message,
+            "%%fg=red$Play again?\n",
+            messages[rand() % ARRAY_SIZE(messages)],
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
@@ -221,8 +215,6 @@ static void wid_dead_gravestone_appeared (void *context)
 
         wid_set_tex(wid_replay_game_yes_no, 0, "gothic_wide");
         wid_set_square(wid_replay_game_yes_no);
-
-        myfree(message);
     }
 }
 
