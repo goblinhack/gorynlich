@@ -7,6 +7,7 @@
 #include "main.h"
 #include "ttf.h"
 #include "font.h"
+#include "string.h"
 
 static int32_t font_inited;
 
@@ -61,8 +62,8 @@ uint8_t font_init (void)
 
     font_inited = true;
 
-    VSMALL_FONT_SIZE = 14;
-    SMALL_FONT_SIZE  = 16;
+    VSMALL_FONT_SIZE = 12;
+    SMALL_FONT_SIZE  = 14;
     MED_FONT_SIZE    = 22;
     VLARGE_FONT_SIZE = 24;
     LARGE_FONT_SIZE  = 28;
