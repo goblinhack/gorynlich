@@ -30,11 +30,10 @@
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
 #undef ENABLE_DEBUG               // More debugs
-#undef ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
+#define ENABLE_GENERATE_TTF        // Edit RUNME to add -lSDL_ttf
 #undef ENABLE_DEMARSHAL_DEBUG     // Demarshalling, prints structures
 #undef ENABLE_MAP_DEBUG           // Debug AI by printing the map
 #undef ENABLE_WID_DEBUG           // Widget debug
-#undef ENABLE_GENERATE_TTF        // Remake TTF TGA files
 
 #define ENABLE_SLIDING_TOOLTIP
 
@@ -144,11 +143,11 @@
 /*
  * Fonts
  */
-#define VSMALL_FONT                 "data/ttf/emulogic.ttf"
-#define SMALL_FONT                  "data/ttf/emulogic.ttf"
-#define MED_FONT                    "data/ttf/emulogic.ttf"
-#define LARGE_FONT                  "data/ttf/emulogic.ttf"
-#define VLARGE_FONT                 "data/ttf/emulogic.ttf"
+#define VSMALL_FONT                 "data/ttf/Metamorphous_Regular.ttf"
+#define SMALL_FONT                  "data/ttf/Metamorphous_Regular.ttf"
+#define MED_FONT                    "data/ttf/Metamorphous_Regular.ttf"
+#define LARGE_FONT                  "data/ttf/Metamorphous_Regular.ttf"
+#define VLARGE_FONT                 "data/ttf/Metamorphous_Regular.ttf"
 
 /*
  * Messages.
