@@ -259,6 +259,13 @@ static void wid_intro_play_selected (void)
 static uint8_t wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
+    /*
+     * Race condition whilst other windows slide in
+     */
+    if (!wid_intro_buttons) {
+        return (false);
+    }
+
     wid_intro_play_selected();
 
     return (true);
@@ -490,4 +497,6 @@ static void wid_intro_create (void)
     wid_fade_in(wid_intro_man, intro_effect_delay*2);
     wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
     wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
+    extern void wid_player_stats_visible(void);
+    wid_player_stats_visible();
 }

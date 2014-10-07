@@ -207,13 +207,17 @@ void ttf_text_size (font *f, const char *text_in,
 		    text += 4;
                     tex = string2tex(&text);
 		    found_format_string = false;
-                    *w += tex_get_width(tex) * scaling * advance;
+                    x += tex_get_width(tex) * scaling * advance;
 		    continue;
 		} else if (!strncmp(text, "tile=", 5)) {
 		    text += 5;
                     tile = string2tile(&text);
 		    found_format_string = false;
-                    *w += tile_get_width(tile) * scaling * advance;
+
+                    x += f->glyphs['a'].width * scaling * advance;
+                    x += f->glyphs['a'].width * scaling * advance;
+                    x += f->glyphs['a'].width * scaling * advance;
+                    x += f->glyphs['a'].width * scaling * advance;
 		    continue;
 		}
 	    }
@@ -400,10 +404,8 @@ static void ttf_puts_internal (font *f, const char *text,
 		    text += 5;
                     tile = string2tile(&text);
 
-                    /*
-                     * Move forward half the tile size so it is centered.
-                     */
-                    x += (tile_get_width(tile) * scaling * advance)/2;
+                    x += f->glyphs['a'].width * scaling * advance;
+                    x += f->glyphs['a'].width * scaling * advance;
 
                     point tl;
                     point br;
@@ -416,23 +418,18 @@ static void ttf_puts_internal (font *f, const char *text,
                     int width = br.x - tl.x;
                     int height = br.y - tl.y;
 
-                    tl.x -= width / 2;
+                    tl.x -= width;
                     tl.y -= height / 2;
 
-                    br.x += width / 2;
+                    br.x += width;
                     br.y += height / 2;
-
-                    tl.x -= width / 2;
-                    br.x += width / 2;
 
                     swap(br.y, tl.y);
 
                     tile_blit_at(tile, 0, tl, br);
 
-                    /*
-                     * Now the other half.
-                     */
-                    x += (tile_get_width(tile) * scaling * advance)/2;
+                    x += f->glyphs['a'].width * scaling * advance;
+                    x += f->glyphs['a'].width * scaling * advance;
 
 		    found_format_string = false;
 		    continue;

@@ -257,7 +257,7 @@ static void wid_hiscore_create (void)
 
         TREE_WALK_REVERSE(hiscores, h) {
             widp w = wid_new_square_button(wid_hiscore_container,
-                                           "hiscore killed by");
+                                           "hiscore Killed by");
 
             fpoint tl = {0.35, 0.1};
             fpoint br = {0.8, 0.2};
@@ -275,13 +275,10 @@ static void wid_hiscore_create (void)
             br.y += (float)i * height;
             tl.y += (float)i * height;
 
-            br.y -= height / 2.0;
-            tl.y -= height / 2.0;
-
             wid_set_tl_br_pct(w, tl, br);
 
             if (h->death_reason && h->death_reason[0]) {
-                char *tmp = dynprintf("killed by %s", h->death_reason);
+                char *tmp = dynprintf("Killed by %s", h->death_reason);
                 wid_set_text(w, tmp);
                 myfree(tmp);
             }
@@ -300,7 +297,7 @@ static void wid_hiscore_create (void)
             wid_set_bevel(w,0);
             wid_set_no_shape(w);
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, med_font);
             wid_set_text_lhs(w, true);
             wid_set_text_outline(w, true);
 

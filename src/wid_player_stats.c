@@ -22,13 +22,14 @@ static void wid_player_stats_create(player_stats_t);
 static void wid_player_stats_destroy(void);
 static player_stats_t player_stats;
 
-#define WID_INTRO_MAX_SETTINGS  5
+#define WID_INTRO_MAX_SETTINGS  6
 #define WID_INTRO_MAX_VAL      30 
 
 enum {
     WID_INTRO_SETTINGS_ROW_MELEE,
     WID_INTRO_SETTINGS_ROW_RANGED,
     WID_INTRO_SETTINGS_ROW_SPEED,
+    WID_INTRO_SETTINGS_ROW_DEFENSE,
     WID_INTRO_SETTINGS_ROW_VISION,
     WID_INTRO_SETTINGS_ROW_HEALING,
 };
@@ -36,12 +37,14 @@ enum {
 static const char *wid_player_stats_col1[WID_INTRO_MAX_SETTINGS] = {
     "Melee",
     "Ranged",
+    "Defense",
     "Speed",
     "Vision",
     "Healing",
 };
 
 static const char *wid_player_stats_col2[WID_INTRO_MAX_SETTINGS] = {
+    "+",
     "+",
     "+",
     "+",
@@ -171,23 +174,16 @@ static void wid_player_stats_create (player_stats_t s)
     if (!wid_player_stats) {
         widp w = wid_player_stats = wid_new_rounded_window("wid player_stats");
 
-        fpoint tl = {0.1, 0.2};
-        fpoint br = {0.9, 0.8};
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {0.3, 0.9};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_font(w, med_font);
+        wid_set_font(w, small_font);
 
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-        color c = BLACK;
-        c.a = 200;
-        wid_set_color(w, WID_COLOR_BG, c);
-
-        c = STEELBLUE;
-        c.a = 150;
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_set_bevel(w, 4);
+        wid_set_color(w, WID_COLOR_BG, WHITE);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
 
         wid_set_on_mouse_motion(w, wid_player_stats_receive_mouse_motion);
     }
@@ -211,7 +207,7 @@ static void wid_player_stats_create (player_stats_t s)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Settings");
-        wid_set_font(w, large_font);
+        wid_set_font(w, small_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
 
         wid_set_text_outline(w, true);
@@ -228,14 +224,14 @@ static void wid_player_stats_create (player_stats_t s)
             fpoint tl = {0.05, 0.2};
             fpoint br = {0.48, 0.3};
 
-            double height = 0.12;
+            double height = 0.08;
 
             br.y += (double)i * height;
             tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_player_stats_col1[i]);
-            wid_set_font(w, med_font);
+            wid_set_font(w, small_font);
 
             color c = BLACK;
 
@@ -248,7 +244,7 @@ static void wid_player_stats_create (player_stats_t s)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_up(w, wid_player_stats_col1_name_mouse_event);
+            wid_set_on_mouse_down(w, wid_player_stats_col1_name_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
         }
@@ -269,30 +265,33 @@ static void wid_player_stats_create (player_stats_t s)
             fpoint tl = {0.49, 0.2};
             fpoint br = {0.595, 0.3};
 
-            double height = 0.12;
+            double height = 0.08;
 
             br.y += (double)i * height;
             tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_player_stats_col2[i]);
-            wid_set_font(w, med_font);
+            wid_set_font(w, small_font);
 
-            color c = LIME;
+            color c = WHITE;
 
-            c.a = 150;
+            c.a = 200;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
-            c.a = 250;
+            c.a = 255;
             wid_set_mode(w, WID_MODE_OVER);
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_up(w, wid_player_stats_col2_mouse_event);
+            wid_set_on_mouse_down(w, wid_player_stats_col2_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
-            wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "button_black");
+            wid_set_square(w);
+
         }
     }
 
@@ -311,7 +310,7 @@ static void wid_player_stats_create (player_stats_t s)
             fpoint tl = {0.72, 0.2};
             fpoint br = {0.95, 0.3};
 
-            double height = 0.12;
+            double height = 0.08;
 
             br.y += (double)i * height;
             tl.y += (double)i * height;
@@ -343,22 +342,25 @@ static void wid_player_stats_create (player_stats_t s)
 
                 myfree(text);
             }
-            wid_set_font(w, med_font);
+            wid_set_font(w, small_font);
 
-            color c = BLUE;
+            color c = WHITE;
 
-            c.a = 100;
+            c.a = 250;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
+            c.a = 255;
             wid_set_mode(w, WID_MODE_OVER);
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_up(w, wid_player_stats_col3_mouse_event);
+            wid_set_on_mouse_down(w, wid_player_stats_col3_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
-            wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "button_black");
+            wid_set_square(w);
         }
     }
 
@@ -369,33 +371,40 @@ static void wid_player_stats_create (player_stats_t s)
                                               button_name);
 
         fpoint tl = {0.7, 0.85};
-        fpoint br = {0.95, 0.98};
+        fpoint br = {0.95, 0.90};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, button_name);
-        wid_set_font(w, med_font);
+        wid_set_font(w, small_font);
 
-        color c = STEELBLUE;
+        color c = WHITE;
 
-        c.a = 100;
+        c.a = 200;
         wid_set_mode(w, WID_MODE_NORMAL);
         wid_set_color(w, WID_COLOR_BG, c);
 
-        c.a = 250;
+        c.a = 255;
         wid_set_mode(w, WID_MODE_OVER);
         wid_set_color(w, WID_COLOR_BG, c);
 
-        wid_set_mode(w, WID_MODE_FOCUS);
-
         wid_set_mode(w, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_up(w, wid_player_stats_all_done_mouse_event);
+        wid_set_on_mouse_down(w, wid_player_stats_all_done_mouse_event);
         wid_set_on_key_down(w, wid_player_stats_all_done_key_event);
+
+        wid_set_tex(w, 0, "button_black");
+        wid_set_square(w);
     }
 
     wid_raise(wid_player_stats);
 
     wid_update(wid_player_stats);
+
+    wid_set_tex(wid_player_stats, 0, "window_gothic");
+    wid_set_square(wid_player_stats);
+
+    wid_move_to_pct_centered_in(wid_player_stats, 0.15, 0.45, wid_swipe_delay);
+    wid_raise(wid_player_stats);
 }
 
 static void wid_player_stats_destroy (void)

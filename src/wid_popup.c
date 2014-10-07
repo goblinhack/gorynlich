@@ -464,7 +464,6 @@ widp wid_popup (const char *text, const char *title,
             wid_set_on_key_down(child, wid_popup_wid_key_event);
 
             wid_set_client_context(child, (void*)button_callback[n]);
-
         }
     }
 
