@@ -721,7 +721,7 @@ thingp thing_server_new (const char *name, double x, double y)
     }
 
     t->thing_template = thing_template;
-    t->health = thing_template_get_health(thing_template);
+    t->hp = t->max_hp = thing_template_get_max_hp(thing_template);
 
     if (thing_template_is_player(thing_template)) {
         t->tree2.key = id;
@@ -1285,11 +1285,11 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 }
 
                 /*
-                 * It doth.
+                 * It doth polymorph.
                  */
                 t->resync = 1;
                 t->thing_template = what;
-                t->health = thing_template_get_health(what);
+                t->hp = t->max_hp = thing_template_get_max_hp(what);
                 thing_update(t);
 
                 /*
@@ -1451,7 +1451,7 @@ static int thing_hit_ (thingp t,
      */
     t->is_hit_miss = false;
     t->is_hit_success = true;
-    if (damage > t->health / 10) {
+    if (damage > t->hp / 10) {
         t->is_hit_crit = true;
     }
 
@@ -1461,9 +1461,9 @@ static int thing_hit_ (thingp t,
      * Keep hitting until all damage is used up or the thing is dead.
      */
     while (damage > 0) {
-        if (t->health <= damage) {
-            damage -= t->health;
-            t->health = 0;
+        if (t->hp <= damage) {
+            damage -= t->hp;
+            t->hp = 0;
 
             /*
              * Record who dun it.
@@ -1493,7 +1493,7 @@ static int thing_hit_ (thingp t,
             /*
              * If polymorphed, hit again?
              */
-            if (!t->health) {
+            if (!t->hp) {
                 /*
                  * No it really died.
                  */
@@ -1510,7 +1510,7 @@ static int thing_hit_ (thingp t,
             /*
              * A hit, but not enough to kill the thing.
              */
-            t->health -= damage;
+            t->hp -= damage;
 
             if (thing_is_player(t)) {
                 THING_LOG(t, "hit by (%s) for %u", 

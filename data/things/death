@@ -6,7 +6,7 @@
  }
  z_depth=3
  speed=2
- health=100
+ max_hp=100
  damage=5
  bonus_score_on_death=1000
  vision_distance=60
@@ -17,6 +17,7 @@
  stats_speed=10
  stats_vision=10
  stats_healing=10
+ stats_defense=10
  is_shadow_caster
  hit_priority=10
  is_combustable

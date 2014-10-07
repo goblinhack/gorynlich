@@ -226,6 +226,15 @@
 .o/ramdisk_data_sound_wand_dead_wav.o: asm/ramdisk_data_sound_wand_dead_wav.S ../data/sound/wand_dead.wav
 	gcc -c asm/ramdisk_data_sound_wand_dead_wav.S -o .o/ramdisk_data_sound_wand_dead_wav.o
 
+.o/ramdisk_data_things__death_session.o: asm/ramdisk_data_things__death_session.S ../data/things/.death.session
+	gcc -c asm/ramdisk_data_things__death_session.S -o .o/ramdisk_data_things__death_session.o
+
+.o/ramdisk_data_things__dwarf_session.o: asm/ramdisk_data_things__dwarf_session.S ../data/things/.dwarf.session
+	gcc -c asm/ramdisk_data_things__dwarf_session.S -o .o/ramdisk_data_things__dwarf_session.o
+
+.o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
+	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
+
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
 
@@ -565,12 +574,6 @@
 .o/ramdisk_data_things_wizard.o: asm/ramdisk_data_things_wizard.S ../data/things/wizard
 	gcc -c asm/ramdisk_data_things_wizard.S -o .o/ramdisk_data_things_wizard.o
 
-.o/ramdisk_data_ttf__LICENSE_txt_session.o: asm/ramdisk_data_ttf__LICENSE_txt_session.S ../data/ttf/.LICENSE.txt.session
-	gcc -c asm/ramdisk_data_ttf__LICENSE_txt_session.S -o .o/ramdisk_data_ttf__LICENSE_txt_session.o
-
-.o/ramdisk_data_ttf__Readme_txt_session.o: asm/ramdisk_data_ttf__Readme_txt_session.S ../data/ttf/.Readme.txt.session
-	gcc -c asm/ramdisk_data_ttf__Readme_txt_session.S -o .o/ramdisk_data_ttf__Readme_txt_session.o
-
 .o/ramdisk_data_ttf_emulogic_gif.o: asm/ramdisk_data_ttf_emulogic_gif.S ../data/ttf/emulogic.gif
 	gcc -c asm/ramdisk_data_ttf_emulogic_gif.S -o .o/ramdisk_data_ttf_emulogic_gif.o
 
@@ -720,6 +723,36 @@
 
 .o/ramdisk_data_ttf_LICENSE_txt.o: asm/ramdisk_data_ttf_LICENSE_txt.S ../data/ttf/LICENSE.txt
 	gcc -c asm/ramdisk_data_ttf_LICENSE_txt.S -o .o/ramdisk_data_ttf_LICENSE_txt.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.S ../data/ttf/Metamorphous_Regular.ttf_pointsize14.data
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_tga.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_tga.S ../data/ttf/Metamorphous_Regular.ttf_pointsize14.tga
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_tga.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_tga.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_data.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_data.S ../data/ttf/Metamorphous_Regular.ttf_pointsize16.data
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_data.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_data.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_tga.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_tga.S ../data/ttf/Metamorphous_Regular.ttf_pointsize16.tga
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_tga.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize16_tga.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_data.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_data.S ../data/ttf/Metamorphous_Regular.ttf_pointsize22.data
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_data.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_data.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_tga.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_tga.S ../data/ttf/Metamorphous_Regular.ttf_pointsize22.tga
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_tga.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize22_tga.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_data.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_data.S ../data/ttf/Metamorphous_Regular.ttf_pointsize24.data
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_data.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_data.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_tga.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_tga.S ../data/ttf/Metamorphous_Regular.ttf_pointsize24.tga
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_tga.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize24_tga.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_data.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_data.S ../data/ttf/Metamorphous_Regular.ttf_pointsize28.data
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_data.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_data.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_tga.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_tga.S ../data/ttf/Metamorphous_Regular.ttf_pointsize28.tga
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_tga.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize28_tga.o
 
 .o/ramdisk_data_ttf_OFL_txt.o: asm/ramdisk_data_ttf_OFL_txt.S ../data/ttf/OFL.txt
 	gcc -c asm/ramdisk_data_ttf_OFL_txt.S -o .o/ramdisk_data_ttf_OFL_txt.o

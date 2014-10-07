@@ -449,13 +449,13 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
         GET_OPT_NAMED_UINT16(ctx, "speed", t->speed);
-        GET_OPT_NAMED_INT16(ctx, "health", t->health);
+        GET_OPT_NAMED_INT16(ctx, "max_hp", t->max_hp);
         GET_OPT_NAMED_UINT16(ctx, "damage", t->damage);
         GET_OPT_NAMED_UINT16(ctx, "lifespan", t->lifespan);
         GET_OPT_NAMED_UINT8(ctx, "vision_distance", t->vision_distance);
         GET_OPT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
         GET_OPT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
-        GET_OPT_NAMED_INT16(ctx, "bonus_health_on_use", t->bonus_health_on_use);
+        GET_OPT_NAMED_INT16(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
         GET_OPT_NAMED_UINT32(ctx, "ppp1", t->ppp1);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
         GET_OPT_NAMED_UINT32(ctx, "stats_melee", t->stats_melee);
@@ -463,7 +463,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "stats_speed", t->stats_speed);
         GET_OPT_NAMED_UINT32(ctx, "stats_vision", t->stats_vision);
         GET_OPT_NAMED_UINT32(ctx, "stats_healing", t->stats_healing);
-        GET_OPT_NAMED_UINT32(ctx, "ppp8", t->ppp8);
+        GET_OPT_NAMED_UINT32(ctx, "stats_defense", t->stats_defense);
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
@@ -595,7 +595,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
     PUT_NAMED_INT32(ctx, "speed", t->speed);
-    PUT_NAMED_INT32(ctx, "health", t->health);
+    PUT_NAMED_INT32(ctx, "max_hp", t->max_hp);
     PUT_NAMED_INT32(ctx, "damage", t->damage);
     PUT_NAMED_INT32(ctx, "lifespan", t->lifespan);
     PUT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
@@ -608,14 +608,14 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "stats_speed", t->stats_speed);
     PUT_NAMED_INT32(ctx, "stats_vision", t->stats_vision);
     PUT_NAMED_INT32(ctx, "stats_healing", t->stats_healing);
-    PUT_NAMED_INT32(ctx, "ppp8", t->ppp8);
+    PUT_NAMED_INT32(ctx, "stats_defense", t->stats_defense);
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
     PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
     PUT_NAMED_INT32(ctx, "quantity", t->quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
-    PUT_NAMED_INT32(ctx, "bonus_health_on_use", t->bonus_health_on_use);
+    PUT_NAMED_INT32(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
     PUT_NAMED_INT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
     PUT_NAMED_INT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
     PUT_NAMED_INT32(ctx, "failure_chance", t->failure_chance);
@@ -777,9 +777,9 @@ uint32_t thing_template_get_speed (thing_templatep t)
     return (t->speed);
 }
 
-int16_t thing_template_get_health (thing_templatep t)
+int16_t thing_template_get_max_hp (thing_templatep t)
 {
-    return (t->health);
+    return (t->max_hp);
 }
 
 uint16_t thing_template_get_damage (thing_templatep t)
@@ -842,9 +842,9 @@ uint32_t thing_template_get_stats_healing (thing_templatep t)
     return (t->stats_healing);
 }
 
-uint32_t thing_template_get_ppp8 (thing_templatep t)
+uint32_t thing_template_get_stats_defense (thing_templatep t)
 {
-    return (t->ppp8);
+    return (t->stats_defense);
 }
 
 uint32_t thing_template_get_ppp9 (thing_templatep t)
@@ -877,9 +877,9 @@ uint32_t thing_template_get_swing_distance_from_player (thing_templatep t)
     return (t->swing_distance_from_player);
 }
 
-int16_t thing_template_get_bonus_health_on_use (thing_templatep t)
+int16_t thing_template_get_bonus_hp_on_use (thing_templatep t)
 {
-    return (t->bonus_health_on_use);
+    return (t->bonus_hp_on_use);
 }
 
 uint32_t thing_template_get_tx_map_update_delay_thousandths (thing_templatep t)
