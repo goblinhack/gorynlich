@@ -3,7 +3,7 @@
  tooltip="greater phantom"
  z_depth=3
  speed=1
- health=1
+ max_hp=1
  damage=3
  polymorph_on_death="data/things/ghost2"
  bonus_score_on_death=25
@@ -15,6 +15,7 @@
  stats_speed=10
  stats_vision=10
  stats_healing=10
+ stats_defense=10
  is_shadow_caster
  is_shadow_caster_soft
  hit_priority=10

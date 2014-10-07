@@ -435,9 +435,10 @@ typedef struct thing_ {
     uint16_t damage;
 
     /*
-     * Thing health.
+     * Thing health. Bounded by max hp.
      */
-    int16_t health;
+    int16_t hp;
+    int16_t max_hp;
 
     /*
      * Which djkstra map this thing is using.

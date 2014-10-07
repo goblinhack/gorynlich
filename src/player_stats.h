@@ -5,6 +5,8 @@
  */
 
 typedef struct player_stats_ {
+    int16_t hp;
+    int16_t max_hp;
     uint8_t spending_points;
     uint8_t melee;
     uint8_t ranged;

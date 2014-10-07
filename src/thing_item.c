@@ -122,9 +122,8 @@ void thing_used (thingp t, thing_templatep tmp)
         return;
     }
 
-    t->health += thing_template_get_bonus_health_on_use(tmp);
-
-    if (t->health < 0) {
+    t->hp += thing_template_get_bonus_hp_on_use(tmp);
+    if (t->hp < 0) {
         const char *name = thing_template_short_name(tmp);
 
         thing_dead(t, 0, "%s", name);

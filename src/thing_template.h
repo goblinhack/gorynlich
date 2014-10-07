@@ -141,7 +141,7 @@ typedef struct thing_template_ {
     /*
      * Vitality.
      */
-    int16_t health;
+    int16_t max_hp;
 
     /*
      * Damage on hits.
@@ -163,7 +163,7 @@ typedef struct thing_template_ {
      */
     int32_t bonus_score_on_death;
     int32_t bonus_score_on_collect;
-    int16_t bonus_health_on_use;
+    int16_t bonus_hp_on_use;
 
     uint32_t ppp1;
     uint32_t ppp2;
@@ -172,7 +172,7 @@ typedef struct thing_template_ {
     uint32_t stats_speed;
     uint32_t stats_vision;
     uint32_t stats_healing;
-    uint32_t ppp8;
+    uint32_t stats_defense;
     uint32_t ppp9;
     float light_radius;
     uint32_t quantity;
@@ -286,7 +286,7 @@ uint8_t thing_template_get_z_depth(thing_templatep);
 uint8_t thing_template_get_z_order(thing_templatep);
 uint32_t thing_template_get_speed(thing_templatep);
 uint32_t thing_template_get_lifespan(thing_templatep);
-int16_t thing_template_get_health(thing_templatep);
+int16_t thing_template_get_max_hp(thing_templatep);
 uint16_t thing_template_get_damage(thing_templatep);
 int32_t thing_template_get_bonus_score_on_death(thing_templatep);
 uint32_t thing_template_get_vision_distance(thing_templatep);
@@ -298,14 +298,14 @@ uint32_t thing_template_get_stats_ranged(thing_templatep);
 uint32_t thing_template_get_stats_speed(thing_templatep);
 uint32_t thing_template_get_stats_vision(thing_templatep);
 uint32_t thing_template_get_stats_healing(thing_templatep);
-uint32_t thing_template_get_ppp8(thing_templatep);
+uint32_t thing_template_get_stats_defense(thing_templatep);
 uint32_t thing_template_get_ppp9(thing_templatep);
 float thing_template_get_light_radius(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
 uint32_t thing_template_get_hit_priority(thing_templatep);
 uint32_t thing_template_get_weapon_fire_delay_tenths(thing_templatep);
 uint32_t thing_template_get_swing_distance_from_player(thing_templatep);
-int16_t thing_template_get_bonus_health_on_use(thing_templatep);
+int16_t thing_template_get_bonus_hp_on_use(thing_templatep);
 uint32_t thing_template_get_tx_map_update_delay_thousandths(thing_templatep);
 uint32_t thing_template_get_can_be_hit_chance(thing_templatep);
 uint32_t thing_template_get_failure_chance(thing_templatep);
