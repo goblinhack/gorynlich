@@ -108,7 +108,7 @@ void sdl_splashscreen_update (void)
         fpoint br = {0.8f, 0.90f};
 
         wid_set_tl_br_pct(wid_production, tl, br);
-        wid_set_text(wid_production, "A goblinhack production");
+        wid_set_text(wid_production, "A GoblinHack production");
 
         wid_set_color(wid_production, WID_COLOR_TEXT, WHITE);
         color c = WHITE;

@@ -114,6 +114,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
 {
     player_stats->melee = player_stats_generate_single_random();
     player_stats->ranged = player_stats_generate_single_random();
+    player_stats->defense = player_stats_generate_single_random();
     player_stats->speed = player_stats_generate_single_random();
     player_stats->vision = player_stats_generate_single_random();
     player_stats->healing = player_stats_generate_single_random();

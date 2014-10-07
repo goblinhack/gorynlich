@@ -30,7 +30,7 @@
 #include "server.h"
 #include "glapi.h"
 
-static widp wid_intro_buttons;
+widp wid_intro_buttons;
 static widp wid_intro_quit_popup;
 
 static void wid_intro_quit_callback_yes (widp wid)

@@ -1233,7 +1233,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
          */
         aplayer *p = t->player;
         if (p) {
-            char *tmp = dynprintf("%s killed by %s", p->name, reason);
+            char *tmp = dynprintf("%s Killed by %s", p->name, reason);
             socket_tx_server_shout_except_to(CRITICAL, tmp, p->socket);
             myfree(tmp);
         }

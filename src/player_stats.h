@@ -8,6 +8,7 @@ typedef struct player_stats_ {
     uint8_t spending_points;
     uint8_t melee;
     uint8_t ranged;
+    uint8_t defense;
     uint8_t speed;
     uint8_t vision;
     uint8_t healing;
