@@ -913,7 +913,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         /*
          * Health
          */
-        snprintf(tmp, sizeof(tmp), "%06u", p->health);
+        snprintf(tmp, sizeof(tmp), "%06u", p->player_stats.hp);
 
         /*
          * If we see a drop in health, flash the widget.
@@ -922,7 +922,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         if (t) {
             widp w = t->wid;
 
-            if (w && t->health && (p->health < t->health)) {
+            if (w && t->hp && (p->player_stats.hp < t->hp)) {
                 /*
                  * Flash briefly red.
                  */
@@ -930,7 +930,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                 wid_set_color(w, WID_COLOR_BLIT, RED);
             }
 
-            t->health = p->health;
+            t->hp = p->player_stats.hp;
+            t->max_hp = p->player_stats.max_hp;
         }
 
         static widp wid_health_container[MAX_PLAYERS];

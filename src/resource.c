@@ -33,17 +33,20 @@ static uint8_t resource_init_3 (void *context)
 
 static uint8_t resource_init_4 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/gothic_tall_axe.png",
+                     "gothic_tall_axe") != 0);
 }
 
 static uint8_t resource_init_5 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/gothic_tall_chest.png",
+                     "gothic_tall_chest") != 0);
 }
 
 static uint8_t resource_init_6 (void *context)
 {
-    return (true);
+    return (tex_load("data/gfx/gothic_tall_skull.png",
+                     "gothic_tall_skull") != 0);
 }
 
 static uint8_t resource_init_7 (void *context)
@@ -2802,7 +2805,7 @@ static uint8_t resource_init_24 (void *context)
 uint8_t resource_init (void)
 {
 #if 0
-    if (tex_load("data/gfx/window_roxk.png", "window_rock") == 0) {
+    if (tex_load("data/gfx/window_rock.png", "window_rock") == 0) {
         DIE("tex init");
     }
 #endif
