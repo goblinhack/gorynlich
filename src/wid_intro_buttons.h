@@ -8,3 +8,5 @@ void wid_intro_buttons_hide(void);
 void wid_intro_buttons_visible(void);
 void wid_intro_intro_extra_selected(void);
 uint8_t wid_intro_quit_selected(void);
+
+extern widp wid_intro_buttons;

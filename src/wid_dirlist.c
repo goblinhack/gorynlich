@@ -450,6 +450,36 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
     widp child;
 
     TREE_WALK(d, n) {
+
+        if (!strcmp(n->tree.key, ".")) {
+#ifndef ENABLE_DIR_TRAVERSAL_IN_WIDGETS
+            if (1) {
+                continue;
+            }
+#endif
+            wid_set_tooltip(child, dir);
+        }
+
+        if (!strcmp(n->tree.key, "..")) {
+#ifndef ENABLE_DIR_TRAVERSAL_IN_WIDGETS
+            if (1) {
+                continue;
+            }
+#endif
+            /*
+             * Get the parent directory, ending in a single /
+             */
+            tmp = dupstr(dir, __FUNCTION__);
+            parent_dir = dynprintf("%s" DSEP, dir_dotdot(tmp));
+            myfree(tmp);
+
+            tmp = strsub(parent_dir, DSEP DSEP, DSEP);
+            myfree(parent_dir);
+            parent_dir = tmp;
+
+            wid_set_tooltip(child, parent_dir);
+            myfree(parent_dir);
+        }
         fpoint tl = {0.0f, 0.0f};
         fpoint br = {0.0f, 0.0f};
 
@@ -496,32 +526,12 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
         wid_set_on_mouse_down(child, wid_dirlist_wid_noop);
 
         if (n->is_file) {
-            wid_set_on_mouse_up(child, wid_dirlist_file_event);
+            wid_set_on_mouse_down(child, wid_dirlist_file_event);
         } else {
             wid_set_mode(child, WID_MODE_NORMAL);
             c = GRAY50;
             wid_set_color(child, WID_COLOR_TEXT, c);
-            wid_set_on_mouse_up(child, wid_dirlist_dir_event);
-        }
-
-        if (!strcmp(n->tree.key, ".")) {
-            wid_set_tooltip(child, dir);
-        }
-
-        if (!strcmp(n->tree.key, "..")) {
-            /*
-             * Get the parent directory, ending in a single /
-             */
-            tmp = dupstr(dir, __FUNCTION__);
-            parent_dir = dynprintf("%s" DSEP, dir_dotdot(tmp));
-            myfree(tmp);
-
-            tmp = strsub(parent_dir, DSEP DSEP, DSEP);
-            myfree(parent_dir);
-            parent_dir = tmp;
-
-            wid_set_tooltip(child, parent_dir);
-            myfree(parent_dir);
+            wid_set_on_mouse_down(child, wid_dirlist_dir_event);
         }
     }
 }
@@ -865,29 +875,36 @@ widp wid_dirlist (const char *dir,
 
             color c;
             if (focus_order == 1) {
-                c = GREEN;
+                c = DARKGREEN;
+                wid_set_tex(child, 0, "button_black");
             } else if (focus_order == 2) {
                 c = STEELBLUE2;
+                wid_set_tex(child, 0, "button_black");
             } else if (focus_order == 3) {
-                c = CYAN;
+                c = STEELBLUE;
+                wid_set_tex(child, 0, "button_black");
             } else {
+                wid_set_tex(child, 0, "button_black");
                 c = GRAY;
             }
 
+            wid_set_square(child);
+
+            c = WHITE;
+            c.a = 200;
             wid_set_mode(child, WID_MODE_NORMAL);
-            c.a = 100;
             wid_set_color(child, WID_COLOR_BG, c);
 
+            c.a = 255;
             wid_set_mode(child, WID_MODE_OVER);
-            c.a = 250;
             wid_set_color(child, WID_COLOR_BG, c);
 
-            wid_set_mode(child, WID_MODE_NORMAL);
+            wid_set_mode(child, WID_MODE_FOCUS);
 
+            wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_focusable(child, focus_order--);
 
-            wid_set_on_mouse_down(child, wid_dirlist_wid_noop);
-            wid_set_on_mouse_up(child, wid_dirlist_button_event);
+            wid_set_on_mouse_down(child, wid_dirlist_button_event);
 
             wid_set_client_context(child, (void*)button_callback[n]);
         }
@@ -922,6 +939,12 @@ widp wid_dirlist (const char *dir,
 
     wid_update(wid_dirlist_window);
     wid_focus_lock(wid_dirlist_window);
+
+    wid_set_tex(wid_dirlist_window, 0, "window_gothic");
+    wid_set_square(wid_dirlist_window);
+
+    wid_move_to_pct_centered(wid_dirlist_window, 0.5, 0.5 - 1.0);
+    wid_move_to_pct_centered_in(wid_dirlist_window, 0.5, 0.5, 200);
 
     return (wid_dirlist_textbox);
 }

@@ -181,10 +181,12 @@ static uint8_t wid_intro_button_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static uint8_t wid_intro_extra_mouse_event (widp w, int32_t x, int32_t y,
-                                            uint32_t button)
+static uint8_t wid_intro_extra_mouse_back_event (widp w, int32_t x, int32_t y,
+                                                 uint32_t button)
 {
     wid_intro_extra_hide();
+
+    wid_intro_buttons_visible();
 
     return (true);
 }
@@ -316,11 +318,11 @@ static void wid_intro_extra_create (void)
         widp w = wid_new_rounded_small_button(wid_intro_extra_container,
                                               "back");
 
-        fpoint tl = {0.40, 0.80};
+        fpoint tl = {0.70, 0.80};
         fpoint br = {0.90, 0.90};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_text(w, "%%tile=button_b$back      ");
+        wid_set_text(w, "%%tile=button_b$Back");
         wid_set_font(w, vsmall_font);
 
         color c = WHITE;
@@ -337,7 +339,7 @@ static void wid_intro_extra_create (void)
 
         wid_set_mode(w, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(w, wid_intro_extra_mouse_event);
+        wid_set_on_mouse_down(w, wid_intro_extra_mouse_back_event);
         wid_set_on_key_down(w, wid_intro_extra_key_event);
 
         wid_set_tex(w, 0, "button_black");

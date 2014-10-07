@@ -23,12 +23,6 @@ static const char wid_text_input_filelist_container_str[] =
 
 typedef void (*wid_text_input_callback)(widp);
 
-static
-uint8_t wid_text_input_wid_noop (widp w, int32_t x, int32_t y, uint32_t button)
-{
-    return (true);
-}
-
 static uint8_t wid_text_input_button_selected (widp w)
 {
     wid_text_input_callback callback;
@@ -450,29 +444,36 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
 
             color c;
             if (focus_order == 1) {
-                c = GREEN;
+                c = DARKGREEN;
+                wid_set_tex(child, 0, "button_black");
             } else if (focus_order == 2) {
                 c = STEELBLUE2;
+                wid_set_tex(child, 0, "button_black");
             } else if (focus_order == 3) {
-                c = CYAN;
+                c = STEELBLUE;
+                wid_set_tex(child, 0, "button_black");
             } else {
+                wid_set_tex(child, 0, "button_black");
                 c = GRAY;
             }
 
+            wid_set_square(child);
+
+            c = WHITE;
+            c.a = 200;
             wid_set_mode(child, WID_MODE_NORMAL);
-            c.a = 100;
             wid_set_color(child, WID_COLOR_BG, c);
 
+            c.a = 255;
             wid_set_mode(child, WID_MODE_OVER);
-            c.a = 250;
             wid_set_color(child, WID_COLOR_BG, c);
 
-            wid_set_mode(child, WID_MODE_NORMAL);
+            wid_set_mode(child, WID_MODE_FOCUS);
 
+            wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_focusable(child, focus_order--);
 
-            wid_set_on_mouse_down(child, wid_text_input_wid_noop);
-            wid_set_on_mouse_up(child, wid_text_input_button_event);
+            wid_set_on_mouse_down(child, wid_text_input_button_event);
 
             wid_set_client_context(child, (void*)button_callback[n]);
         }
@@ -484,6 +485,12 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
     wid_focus_lock(wid_text_input_window);
 
     wid_update(wid_text_input_window);
+
+    wid_set_tex(wid_text_input_window, 0, "gothic_wide");
+    wid_set_square(wid_text_input_window);
+
+    wid_move_to_pct_centered(wid_text_input_window, 0.5, 0.5 - 1.0);
+    wid_move_to_pct_centered_in(wid_text_input_window, 0.5, 0.5, 200);
 
     return (wid_text_input_textbox);
 }
@@ -756,8 +763,7 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
 
             wid_set_focusable(child, focus_order--);
 
-            wid_set_on_mouse_down(child, wid_text_input_wid_noop);
-            wid_set_on_mouse_up(child, wid_text_input_button_event);
+            wid_set_on_mouse_down(child, wid_text_input_button_event);
 
             wid_set_client_context(child, (void*)button_callback[n]);
         }

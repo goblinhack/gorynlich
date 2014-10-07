@@ -307,7 +307,7 @@ static uint8_t wid_intro_restart_selected (void)
     }
 
     wid_intro_restart_popup =
-        wid_popup("%%fg=red$Restart game?", "",
+        wid_popup("", "%%fg=red$Settings changed, restart now?",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
@@ -590,11 +590,11 @@ static void wid_intro_settings_create (void)
         widp w = wid_new_rounded_small_button(wid_intro_settings_container,
                                               "back");
 
-        fpoint tl = {0.40, 0.80};
+        fpoint tl = {0.70, 0.80};
         fpoint br = {0.90, 0.90};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_text(w, "%%tile=button_b$back      ");
+        wid_set_text(w, "%%tile=button_b$Back      ");
         wid_set_font(w, vsmall_font);
 
         color c = WHITE;
@@ -625,8 +625,7 @@ static void wid_intro_settings_create (void)
     wid_set_tex(wid_intro_settings, 0, "window_gothic");
     wid_set_square(wid_intro_settings);
 
-    wid_move_to_pct_centered(wid_intro_settings, 0.5, 0.5 - 1.0);
-    wid_move_to_pct_centered_in(wid_intro_settings, 0.5, 0.5, 200);
+    wid_move_to_pct_centered(wid_intro_settings, 0.5, 0.5);
     wid_raise(wid_intro_settings);
 }
 

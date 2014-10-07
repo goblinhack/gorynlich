@@ -1345,7 +1345,7 @@ static void wid_server_join_create (uint8_t redo)
 
         wid_set_text_outline(w, true);
 
-        wid_set_on_mouse_up(w, wid_server_join_go_back);
+        wid_set_on_mouse_down(w, wid_server_join_go_back);
     }
 
     {
@@ -1366,7 +1366,7 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_text_outline(w, true);
         wid_raise(w);
 
-        wid_set_on_mouse_up(w, wid_server_join_add);
+        wid_set_on_mouse_down(w, wid_server_join_add);
     }
 
     wid_server_join_container_vert_scroll =
