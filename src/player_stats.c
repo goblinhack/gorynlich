@@ -14,7 +14,7 @@
 #include "string.h"
 #include "music.h"
 
-static int player_stats_generate_single_random (void) 
+static int player_stats_generate_spending_stat (void) 
 {
     /*
      * A slightly generous bell curve.
@@ -38,6 +38,25 @@ static int player_stats_generate_single_random (void)
         3,  3,
         2,  
         1,  
+    };
+
+    return (possible[rand() % ARRAY_SIZE(possible)]);
+}
+
+static int player_stats_generate_spending_points (void) 
+{
+    /*
+     * A slightly generous bell curve.
+     */
+    int possible[] = {
+        8,
+        7,  7,
+        6,  6,
+        5,  5,  5, 
+        4,  4,  4,  4,  4,
+        3,  3,  3,  3,  3,  3,  3,  3,
+        2,  2,  2,  2,  2,  2,
+        1,  1,  1,  1,
     };
 
     return (possible[rand() % ARRAY_SIZE(possible)]);
@@ -114,15 +133,13 @@ void player_stats_generate_random (player_stats_t *player_stats)
 {
     memset(player_stats, 0, sizeof(*player_stats));
 
-    player_stats->experience = 0;
-    player_stats->max_hp = 0;
-
-    player_stats->attack_melee = player_stats_generate_single_random();
-    player_stats->attack_ranged = player_stats_generate_single_random();
-    player_stats->defense = player_stats_generate_single_random();
-    player_stats->speed = player_stats_generate_single_random();
-    player_stats->vision = player_stats_generate_single_random();
-    player_stats->healing = player_stats_generate_single_random();
+    player_stats->spending_points = player_stats_generate_spending_points();
+    player_stats->attack_melee = player_stats_generate_spending_stat();
+    player_stats->attack_ranged = player_stats_generate_spending_stat();
+    player_stats->defense = player_stats_generate_spending_stat();
+    player_stats->speed = player_stats_generate_spending_stat();
+    player_stats->vision = player_stats_generate_spending_stat();
+    player_stats->healing = player_stats_generate_spending_stat();
 
     player_stats_init(player_stats);
 }

@@ -354,6 +354,7 @@ widp wid_popup (const char *text, const char *title,
 
         wid_set_color(wid_popup_container, WID_COLOR_TEXT, WHITE);
 
+#ifdef OUTLINE_FOR_TEXT
         color c;
         c = WHITE;
         c.a = 0;
@@ -371,12 +372,35 @@ widp wid_popup (const char *text, const char *title,
         wid_set_square(wid_popup_container);
         wid_set_bevel(wid_popup_container, 2);
         wid_set_bevelled(wid_popup_container, true);
+#endif
     }
 
     {
         int32_t row = 0;
         widp child;
         int32_t h = 0;
+
+        {
+
+            fpoint tl = {0.0f, 0.0f};
+            fpoint br = {0.0f, 0.0f};
+
+            tl.x = 0;
+            tl.y = h;
+            row++;
+            br.x = maxw;
+            br.y = maxh / 2;
+                h += maxh/2;
+
+            child = wid_new_container(wid_popup_container,
+                                          "wid popup container3");
+
+            wid_set_no_shape(child);
+            wid_set_tl_br(child, tl, br);
+            wid_set_text(child, "");
+            wid_set_font(child, body_font);
+            wid_set_text_outline(child, true);
+        }
 
         TREE_WALK(d, n) {
             fpoint tl = {0.0f, 0.0f};
@@ -387,7 +411,6 @@ widp wid_popup (const char *text, const char *title,
             row++;
             br.x = maxw;
             br.y = h + maxh;
-
 
             child = wid_new_container(wid_popup_container,
                                           "wid popup container3");
@@ -511,8 +534,6 @@ widp wid_popup (const char *text, const char *title,
     wid_move_to_pct_centered_in(wid_popup_window, x, y, 500);
 
     wid_raise(wid_popup_window);
-
-    wid_set_do_not_lower(wid_popup_window, true);
 
     /*
      * If there are some buttons then lock the focus and this then makes stuff 
