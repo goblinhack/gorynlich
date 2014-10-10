@@ -139,7 +139,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "You checked out",
         "You slipped away",
         "You kicked the bucket",
-        "You are pushing up daisies",
+        "You are pushing up ze daisies now",
         "You gave up the ghost",
         "You had your final summons",
         "You have gone to a better place",
@@ -196,8 +196,8 @@ static void wid_dead_gravestone_appeared (void *context)
             vsmall_font,              /* body font */
             vsmall_font,              /* button font */
             2,                        /* number buttons */
-            "%%tile=button_y$Yes       ", wid_dead_rejoin_callback_yes,
-            "%%tile=button_n$No       ",  wid_dead_rejoin_callback_no);
+            "%%tile=button_y$Yes    ", wid_dead_rejoin_callback_yes,
+            "%%tile=button_n$No    ",  wid_dead_rejoin_callback_no);
 
         wid_set_tex(wid_rejoin_game_yes_no, 0, "gothic_wide");
         wid_set_square(wid_rejoin_game_yes_no);
@@ -210,8 +210,8 @@ static void wid_dead_gravestone_appeared (void *context)
             vsmall_font,              /* body font */
             vsmall_font,              /* button font */
             2,                        /* number buttons */
-            "%%tile=button_y$Yes       ", wid_dead_replay_callback_yes,
-            "%%tile=button_n$No       ",  wid_dead_replay_callback_no);
+            "%%tile=button_y$Yes    ", wid_dead_replay_callback_yes,
+            "%%tile=button_n$No    ",  wid_dead_replay_callback_no);
 
         wid_set_tex(wid_replay_game_yes_no, 0, "gothic_wide");
         wid_set_square(wid_replay_game_yes_no);
