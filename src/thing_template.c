@@ -449,7 +449,6 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
         GET_OPT_NAMED_UINT8(ctx, "z_order", t->z_order);
         GET_OPT_NAMED_UINT16(ctx, "speed", t->speed);
-        GET_OPT_NAMED_INT16(ctx, "max_hp", t->max_hp);
         GET_OPT_NAMED_UINT16(ctx, "damage", t->damage);
         GET_OPT_NAMED_UINT16(ctx, "lifespan", t->lifespan);
         GET_OPT_NAMED_UINT8(ctx, "vision_distance", t->vision_distance);
@@ -458,12 +457,38 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_INT16(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
         GET_OPT_NAMED_UINT32(ctx, "ppp1", t->ppp1);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
-        GET_OPT_NAMED_UINT32(ctx, "stats_melee", t->stats_melee);
-        GET_OPT_NAMED_UINT32(ctx, "stats_ranged", t->stats_ranged);
-        GET_OPT_NAMED_UINT32(ctx, "stats_speed", t->stats_speed);
-        GET_OPT_NAMED_UINT32(ctx, "stats_vision", t->stats_vision);
-        GET_OPT_NAMED_UINT32(ctx, "stats_healing", t->stats_healing);
-        GET_OPT_NAMED_UINT32(ctx, "stats_defense", t->stats_defense);
+
+        int16_t tmp_int16 = 0;
+        uint32_t tmp_uint32 = 0;
+
+        if (GET_OPT_NAMED_INT16(ctx, "max_hp", tmp_int16)) {
+            t->stats.max_hp = tmp_int16;
+        }
+
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_melee", tmp_uint32)) {
+            t->stats.attack_melee = tmp_uint32;
+        }
+
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_ranged", tmp_uint32)) {
+            t->stats.attack_ranged = tmp_uint32;
+        }
+
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_speed", tmp_uint32)) {
+            t->stats.speed = tmp_uint32;
+        }
+
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_vision", tmp_uint32)) {
+            t->stats.vision = tmp_uint32;
+        }
+
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_healing", tmp_uint32)) {
+            t->stats.healing = tmp_uint32;
+        }
+
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_defense", tmp_uint32)) {
+            t->stats.defense = tmp_uint32;
+        }
+
         GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
@@ -525,7 +550,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_magical", t->is_magical);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animate_only_when_moving", t->is_animate_only_when_moving);
@@ -563,6 +588,11 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
     }
 
     /*
+     * Set up any stats not populated.
+     */
+    player_stats_init(&t->stats);
+
+    /*
      * Read the tiles tree.
      */
     demarshal_thing_tiles(ctx, t);
@@ -595,7 +625,6 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_UINT8(ctx, "z_depth", t->z_depth);
     PUT_NAMED_UINT8(ctx, "z_order", t->z_order);
     PUT_NAMED_INT32(ctx, "speed", t->speed);
-    PUT_NAMED_INT32(ctx, "max_hp", t->max_hp);
     PUT_NAMED_INT32(ctx, "damage", t->damage);
     PUT_NAMED_INT32(ctx, "lifespan", t->lifespan);
     PUT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
@@ -603,12 +632,13 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
     PUT_NAMED_INT32(ctx, "ppp1", t->ppp1);
     PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
-    PUT_NAMED_INT32(ctx, "stats_melee", t->stats_melee);
-    PUT_NAMED_INT32(ctx, "stats_ranged", t->stats_ranged);
-    PUT_NAMED_INT32(ctx, "stats_speed", t->stats_speed);
-    PUT_NAMED_INT32(ctx, "stats_vision", t->stats_vision);
-    PUT_NAMED_INT32(ctx, "stats_healing", t->stats_healing);
-    PUT_NAMED_INT32(ctx, "stats_defense", t->stats_defense);
+    PUT_NAMED_INT32(ctx, "max_hp", t->stats.max_hp);
+    PUT_NAMED_INT32(ctx, "stats_attack_melee", t->stats.attack_melee);
+    PUT_NAMED_INT32(ctx, "stats_attack_ranged", t->stats.attack_ranged);
+    PUT_NAMED_INT32(ctx, "stats_speed", t->stats.speed);
+    PUT_NAMED_INT32(ctx, "stats_vision", t->stats.vision);
+    PUT_NAMED_INT32(ctx, "stats_healing", t->stats.healing);
+    PUT_NAMED_INT32(ctx, "stats_defense", t->stats.defense);
     PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
     PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
     PUT_NAMED_INT32(ctx, "quantity", t->quantity);
@@ -671,7 +701,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr10", t->is_rrr10);
     PUT_NAMED_BITFIELD(ctx, "is_rrr11", t->is_rrr11);
     PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr13", t->is_rrr13);
+    PUT_NAMED_BITFIELD(ctx, "is_magical", t->is_magical);
     PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
     PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
     PUT_NAMED_BITFIELD(ctx, "is_animate_only_when_moving", t->is_animate_only_when_moving);
@@ -777,11 +807,6 @@ uint32_t thing_template_get_speed (thing_templatep t)
     return (t->speed);
 }
 
-int16_t thing_template_get_max_hp (thing_templatep t)
-{
-    return (t->max_hp);
-}
-
 uint16_t thing_template_get_damage (thing_templatep t)
 {
     return (t->damage);
@@ -817,34 +842,39 @@ uint32_t thing_template_get_ppp2 (thing_templatep t)
     return (t->ppp2);
 }
 
-uint32_t thing_template_get_stats_melee (thing_templatep t)
+int16_t thing_template_get_stats_max_hp (thing_templatep t)
 {
-    return (t->stats_melee);
+    return (t->stats.max_hp);
 }
 
-uint32_t thing_template_get_stats_ranged (thing_templatep t)
+uint32_t thing_template_get_stats_attack_melee (thing_templatep t)
 {
-    return (t->stats_ranged);
+    return (t->stats.attack_melee);
+}
+
+uint32_t thing_template_get_stats_attack_ranged (thing_templatep t)
+{
+    return (t->stats.attack_ranged);
 }
 
 uint32_t thing_template_get_stats_speed (thing_templatep t)
 {
-    return (t->stats_speed);
+    return (t->stats.speed);
 }
 
 uint32_t thing_template_get_stats_vision (thing_templatep t)
 {
-    return (t->stats_vision);
+    return (t->stats.vision);
 }
 
 uint32_t thing_template_get_stats_healing (thing_templatep t)
 {
-    return (t->stats_healing);
+    return (t->stats.healing);
 }
 
 uint32_t thing_template_get_stats_defense (thing_templatep t)
 {
-    return (t->stats_defense);
+    return (t->stats.defense);
 }
 
 uint32_t thing_template_get_ppp9 (thing_templatep t)

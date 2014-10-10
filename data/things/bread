@@ -10,7 +10,7 @@
  is_carryable
  is_valid_for_shortcut_key
  is_fragile
- bonus_hp_on_use=80
+ bonus_hp_on_use=30
  message_on_use="munch"
  tiles={
   tile={

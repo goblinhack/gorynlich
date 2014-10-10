@@ -17,6 +17,8 @@
 #include "wid_intro_settings.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
+#include "wid_player_stats.h"
+#include "wid_dead.h"
 #include "wid_hiscore.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
@@ -497,6 +499,69 @@ static void wid_intro_create (void)
     wid_fade_in(wid_intro_man, intro_effect_delay*2);
     wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
     wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
-    extern void wid_player_stats_visible(void);
-    wid_player_stats_visible();
+
+    player_stats_t s;
+    player_stats_generate_random(&s);
+    wid_player_stats_visible(&s);
+
+#if 0
+    {
+        widp w;
+        w = wid_popup(
+            "eooi iofoiuoofs ofsoi fsoi ofsoiuo sfuo o message mdkjghkldhlkh\n"
+            "message",
+            "title",
+            0.5, 0.2f,                /* x,y postition in percent */
+            small_font,               /* title font */
+            vsmall_font,              /* body font */
+            vsmall_font,              /* button font */
+            2,                        /* number buttons */
+            "%%tile=button_y$Yes       ", 0,
+            "%%tile=button_n$No       ",  0);
+        wid_set_tex(w, 0, "gothic_wide");
+        wid_set_square(w);
+    }
+#endif
+#if 0
+    wid_dead_visible("blargl blargelb largs", "hefhefwhfohwoghwo", 1);
+
+    {
+        widp w;
+        w = wid_popup(
+            "blargle blargle blargle blargle blargle blargle blargle blargle blargle message",
+            "title",
+            0.5, 0.2f,                /* x,y postition in percent */
+            small_font,               /* title font */
+            vsmall_font,              /* body font */
+            vsmall_font,              /* button font */
+            2,                        /* number buttons */
+            "%%tile=button_y$Yes       ", 0,
+            "%%tile=button_n$No       ",  0);
+        wid_set_tex(w, 0, "gothic_wide");
+        wid_set_square(w);
+    }
+#endif
+#if 0
+    {
+        widp w;
+        w = wid_popup(
+            "long longkldglklk sjlkgkls gmessage\n"
+            "message\n"
+            "message\n"
+            "message\n"
+            "message\n"
+            "message\n",
+            "title",
+            0.5, 0.2f,                /* x,y postition in percent */
+            small_font,               /* title font */
+            vsmall_font,              /* body font */
+            vsmall_font,              /* button font */
+            2,                        /* number buttons */
+            "%%tile=button_y$Yes       ", 0,
+            "%%tile=button_n$No       ",  0);
+        wid_set_tex(w, 0, "gothic_wide");
+        wid_set_square(w);
+    }
+#endif
+
 }

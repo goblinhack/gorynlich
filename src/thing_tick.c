@@ -272,6 +272,18 @@ void thing_tick_server_player_slow_all (void)
                 }
             }
         }
+
+        /*
+         * If health went over the max, tick it down.
+         */
+        if (time_have_x_secs_passed_since(1, t->timestamp_health)) {
+            t->timestamp_health = time_get_time_cached();
+
+            int delta = thing_get_stats_max_hp(t) - thing_get_stats_hp(t);
+            if (delta > 0) {
+                t->stats.hp -= delta / 10;
+            }
+        }
     }
 }
 
