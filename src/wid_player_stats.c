@@ -22,21 +22,29 @@ static void wid_player_stats_create(player_stats_t *);
 static void wid_player_stats_destroy(void);
 static player_stats_t *player_stats;
 
-#define WID_INTRO_MAX_SETTINGS  6
+#define WID_INTRO_MAX_SETTINGS 10 
 #define WID_INTRO_MAX_VAL      30 
 
 enum {
+    WID_INTRO_SETTINGS_ROW_EXPERIENCE,
+    WID_INTRO_SETTINGS_ROW_LEVEL,
+    WID_INTRO_SETTINGS_ROW_SPENDING_POINTS,
+    WID_INTRO_SETTINGS_ROW_MAX_HEALTH,
     WID_INTRO_SETTINGS_ROW_MELEE,
     WID_INTRO_SETTINGS_ROW_RANGED,
-    WID_INTRO_SETTINGS_ROW_SPEED,
     WID_INTRO_SETTINGS_ROW_DEFENSE,
+    WID_INTRO_SETTINGS_ROW_SPEED,
     WID_INTRO_SETTINGS_ROW_VISION,
     WID_INTRO_SETTINGS_ROW_HEALING,
 };
 
 static const char *wid_player_stats_col1[WID_INTRO_MAX_SETTINGS] = {
-    "Melee",
-    "Ranged",
+    "Experience",
+    "Level",
+    "Spending points",
+    "Max Health",
+    "Attack, Melee",
+    "Attack, Ranged",
     "Defense",
     "Speed",
     "Vision",
@@ -44,6 +52,10 @@ static const char *wid_player_stats_col1[WID_INTRO_MAX_SETTINGS] = {
 };
 
 static const char *wid_player_stats_col2[WID_INTRO_MAX_SETTINGS] = {
+    0,
+    0,
+    0,
+    "+",
     "+",
     "+",
     "+",
@@ -289,21 +301,36 @@ static void wid_player_stats_create (player_stats_t *s)
                 wid_set_text(w,
                             wid_player_stats_col3[i][wid_player_stats_val[i]]);
             } else {
-                char *text;
-                uint8_t stat;
+                char *text = 0;
+                int stat;
 
                 switch (i) {
+                case WID_INTRO_SETTINGS_ROW_EXPERIENCE:
+                    stat = s->experience;
+                    text = dynprintf("%u", stat);
+                    break;
+                case WID_INTRO_SETTINGS_ROW_LEVEL:
+                    stat = s->experience / 1000;
+                    text = dynprintf("%u", stat);
+                    break;
+                case WID_INTRO_SETTINGS_ROW_SPENDING_POINTS:
+                    stat = s->spending_points;
+                    text = dynprintf("%u", stat);
+                    break;
+                case WID_INTRO_SETTINGS_ROW_MAX_HEALTH:
+                    text = dynprintf("%u", s->hp, s->max_hp);
+                    break;
                 case WID_INTRO_SETTINGS_ROW_MELEE:
-                    stat = s->melee;
+                    stat = s->attack_melee;
                     break;
                 case WID_INTRO_SETTINGS_ROW_RANGED:
-                    stat = s->ranged;
-                    break;
-                case WID_INTRO_SETTINGS_ROW_SPEED:
-                    stat = s->speed;
+                    stat = s->attack_ranged;
                     break;
                 case WID_INTRO_SETTINGS_ROW_DEFENSE:
                     stat = s->defense;
+                    break;
+                case WID_INTRO_SETTINGS_ROW_SPEED:
+                    stat = s->speed;
                     break;
                 case WID_INTRO_SETTINGS_ROW_VISION:
                     stat = s->vision;
@@ -313,14 +340,16 @@ static void wid_player_stats_create (player_stats_t *s)
                     break;
                 }
 
-                int modifier = player_stats_get_modifier(stat);
+                if (!text) {
+                    int modifier = player_stats_get_modifier(stat);
 
-                if (modifier > 0) {
-                    text = dynprintf("%u / +%d", stat, modifier);
-                } else if (modifier < 0) {
-                    text = dynprintf("%u", stat);
-                } else {
-                    text = dynprintf("%u / %d", stat, modifier);
+                    if (modifier > 0) {
+                        text = dynprintf("%u / +%d", stat, modifier);
+                    } else if (modifier < 0) {
+                        text = dynprintf("%u", stat);
+                    } else {
+                        text = dynprintf("%u / %d", stat, modifier);
+                    }
                 }
 
                 wid_set_text(w, text);

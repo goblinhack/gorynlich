@@ -435,10 +435,9 @@ typedef struct thing_ {
     uint16_t damage;
 
     /*
-     * Thing health. Bounded by max hp.
+     * Max health, attack bpnuses etc...
      */
-    int16_t hp;
-    int16_t max_hp;
+    player_stats_t stats;
 
     /*
      * Which djkstra map this thing is using.
@@ -615,6 +614,11 @@ typedef struct thing_ {
      */
     float torch_light_radius;
     uint32_t timestamp_torch;
+
+    /*
+     * For auto decrementing health if over max due to magical boost.
+     */
+    uint32_t timestamp_health;
 
     /*
      * First time sent to a client?
@@ -1016,11 +1020,11 @@ static inline uint8_t thing_is_rrr12 (thingp t)
     return (thing_template_is_rrr12(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr13 (thingp t)
+static inline uint8_t thing_is_magical (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr13(thing_get_template(t)));
+    return (thing_template_is_magical(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_rrr14 (thingp t)
@@ -1389,9 +1393,9 @@ static inline uint8_t thing_is_rrr12_noverify (thingp t)
     return (t->thing_template->is_rrr12);
 }
 
-static inline uint8_t thing_is_rrr13_noverify (thingp t)
+static inline uint8_t thing_is_magical_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr13);
+    return (t->thing_template->is_magical);
 }
 
 static inline uint8_t thing_is_rrr14_noverify (thingp t)
@@ -1482,6 +1486,113 @@ static inline uint8_t thing_is_effect_rotate_4way_noverify (thingp t)
 static inline uint8_t thing_is_effect_rotate_2way_noverify (thingp t)
 {
     return (t->thing_template->is_effect_rotate_2way);
+}
+
+static inline int32_t thing_get_stats_hp (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.hp;
+    return (val);
+}
+
+static inline int32_t thing_get_stats_max_hp (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.max_hp;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_max_hp(t->thing_template);
+    return (val);
+}
+
+static inline uint32_t thing_get_stats_experience (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.experience;
+    return (val);
+}
+
+static inline uint32_t thing_get_stats_attack_melee (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.attack_melee;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_attack_melee(t->thing_template);
+    return (val);
+}
+
+static inline uint32_t thing_get_stats_attack_ranged (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.attack_ranged;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_attack_ranged(t->thing_template);
+    return (val);
+}
+
+static inline uint32_t thing_get_stats_speed (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.speed;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_speed(t->thing_template);
+    return (val);
+}
+
+static inline uint32_t thing_get_stats_vision (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.vision;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_vision(t->thing_template);
+    return (val);
+}
+
+static inline uint32_t thing_get_stats_healing (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.healing;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_healing(t->thing_template);
+    return (val);
+}
+
+static inline uint32_t thing_get_stats_defense (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.defense;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_defense(t->thing_template);
+    return (val);
 }
 
 typedef struct {

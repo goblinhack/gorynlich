@@ -922,7 +922,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         if (t) {
             widp w = t->wid;
 
-            if (w && t->hp && (p->player_stats.hp < t->hp)) {
+            if (w && (p->player_stats.hp < t->stats.hp)) {
                 /*
                  * Flash briefly red.
                  */
@@ -930,8 +930,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                 wid_set_color(w, WID_COLOR_BLIT, RED);
             }
 
-            t->hp = p->player_stats.hp;
-            t->max_hp = p->player_stats.max_hp;
+            memcpy(&t->stats, &p->player_stats, sizeof(t->stats));
         }
 
         static widp wid_health_container[MAX_PLAYERS];

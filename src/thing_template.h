@@ -139,11 +139,6 @@ typedef struct thing_template_ {
     uint16_t speed;
 
     /*
-     * Vitality.
-     */
-    int16_t max_hp;
-
-    /*
      * Damage on hits.
      */
     uint16_t damage;
@@ -165,14 +160,14 @@ typedef struct thing_template_ {
     int32_t bonus_score_on_collect;
     int16_t bonus_hp_on_use;
 
+    /*
+     * Max hp, attack bonuses etc... Is overriden by thing values that can 
+     * change. This is the base value however.
+     */
+    player_stats_t stats;
+
     uint32_t ppp1;
     uint32_t ppp2;
-    uint32_t stats_melee;
-    uint32_t stats_ranged;
-    uint32_t stats_speed;
-    uint32_t stats_vision;
-    uint32_t stats_healing;
-    uint32_t stats_defense;
     uint32_t ppp9;
     float light_radius;
     uint32_t quantity;
@@ -229,7 +224,7 @@ typedef struct thing_template_ {
     uint8_t is_rrr10:1;
     uint8_t is_rrr11:1;
     uint8_t is_rrr12:1;
-    uint8_t is_rrr13:1;
+    uint8_t is_magical:1;
     uint8_t is_rrr14:1;
     uint8_t is_rrr15:1;
     uint8_t is_animate_only_when_moving:1;
@@ -286,19 +281,21 @@ uint8_t thing_template_get_z_depth(thing_templatep);
 uint8_t thing_template_get_z_order(thing_templatep);
 uint32_t thing_template_get_speed(thing_templatep);
 uint32_t thing_template_get_lifespan(thing_templatep);
-int16_t thing_template_get_max_hp(thing_templatep);
 uint16_t thing_template_get_damage(thing_templatep);
 int32_t thing_template_get_bonus_score_on_death(thing_templatep);
 uint32_t thing_template_get_vision_distance(thing_templatep);
 int32_t thing_template_get_bonus_score_on_collect(thing_templatep);
-uint32_t thing_template_get_ppp1(thing_templatep);
-uint32_t thing_template_get_ppp2(thing_templatep);
-uint32_t thing_template_get_stats_melee(thing_templatep);
-uint32_t thing_template_get_stats_ranged(thing_templatep);
+
+int16_t thing_template_get_stats_max_hp(thing_templatep);
+uint32_t thing_template_get_stats_attack_melee(thing_templatep);
+uint32_t thing_template_get_stats_attack_ranged(thing_templatep);
 uint32_t thing_template_get_stats_speed(thing_templatep);
 uint32_t thing_template_get_stats_vision(thing_templatep);
 uint32_t thing_template_get_stats_healing(thing_templatep);
 uint32_t thing_template_get_stats_defense(thing_templatep);
+
+uint32_t thing_template_get_ppp1(thing_templatep);
+uint32_t thing_template_get_ppp2(thing_templatep);
 uint32_t thing_template_get_ppp9(thing_templatep);
 float thing_template_get_light_radius(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
@@ -559,9 +556,9 @@ static inline uint8_t thing_template_is_rrr12 (thing_templatep t)
     return (t->is_rrr12);
 }
 
-static inline uint8_t thing_template_is_rrr13 (thing_templatep t)
+static inline uint8_t thing_template_is_magical (thing_templatep t)
 {
-    return (t->is_rrr13);
+    return (t->is_magical);
 }
 
 static inline uint8_t thing_template_is_rrr14 (thing_templatep t)

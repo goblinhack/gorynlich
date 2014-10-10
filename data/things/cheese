@@ -10,7 +10,7 @@
  is_carryable
  is_valid_for_shortcut_key
  is_fragile
- bonus_hp_on_use=100
+ bonus_hp_on_use=40
  message_on_use="%%fg=yellow$more cheese Gromit?"
  tiles={
   tile={

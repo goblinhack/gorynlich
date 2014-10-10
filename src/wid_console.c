@@ -87,7 +87,7 @@ uint8_t wid_console_init (void)
 void wid_console_hello (void)
 {
     CON(" ");
-    CON("%%%%fg=red$          Welcome to the gorynlich Console!%%%%fg=reset$");
+    CON("%%%%fg=red$          Welcome to the Gorynlich console!%%%%fg=reset$");
     CON(" ");
     CON("Press %%%%fg=red$<tab>%%%%fg=reset$ to complete commands.");
 

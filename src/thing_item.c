@@ -122,11 +122,24 @@ void thing_used (thingp t, thing_templatep tmp)
         return;
     }
 
-    t->hp += thing_template_get_bonus_hp_on_use(tmp);
-    if (t->hp < 0) {
+    t->stats.hp += thing_template_get_bonus_hp_on_use(tmp);
+    if (thing_get_stats_hp(t) < 0) {
         const char *name = thing_template_short_name(tmp);
 
         thing_dead(t, 0, "%s", name);
+    }
+
+    /*
+     * Need to allow magic items to override this.
+     */
+    if (thing_get_stats_hp(t) > thing_get_stats_max_hp(t)) {
+        if (thing_template_is_magical(tmp)) {
+            /*
+             * Allow temorary over max.
+             */
+        } else {
+            t->stats.hp = thing_get_stats_max_hp(t);
+        }
     }
 
     THING_LOG(t, "used %s", thing_template_short_name(tmp));

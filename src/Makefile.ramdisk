@@ -724,6 +724,12 @@
 .o/ramdisk_data_ttf_LICENSE_txt.o: asm/ramdisk_data_ttf_LICENSE_txt.S ../data/ttf/LICENSE.txt
 	gcc -c asm/ramdisk_data_ttf_LICENSE_txt.S -o .o/ramdisk_data_ttf_LICENSE_txt.o
 
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_data.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_data.S ../data/ttf/Metamorphous_Regular.ttf_pointsize12.data
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_data.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_data.o
+
+.o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_tga.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_tga.S ../data/ttf/Metamorphous_Regular.ttf_pointsize12.tga
+	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_tga.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize12_tga.o
+
 .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.o: asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.S ../data/ttf/Metamorphous_Regular.ttf_pointsize14.data
 	gcc -c asm/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.S -o .o/ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_data.o
 
