@@ -488,8 +488,8 @@ void wid_editor_clear (void)
         vsmall_font,              /* body font */
         vsmall_font,              /* button font */
         2,                        /* number buttons */
-        "%%tile=button_y$Yes       ", wid_editor_clear_callback_yes,
-        "%%tile=button_n$No       ",  wid_editor_clear_callback_no);
+        "%%tile=button_y$Yes    ", wid_editor_clear_callback_yes,
+        "%%tile=button_n$No    ",  wid_editor_clear_callback_no);
 
     wid_set_tex(wid_editor_clear_popup, 0, "gothic_wide");
     wid_set_square(wid_editor_clear_popup);

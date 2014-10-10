@@ -90,8 +90,8 @@ static void wid_game_quit_create (void)
     static const char *messages[] = {
         "You a quitter, boy?",
         "You a quitter, girl?",
-        "You a mommies boy?",
-        "You a mommies girl?",
+        "You a politically correct mommies boy?",
+        "You a politically correct mommies girl?",
         "I thought you were made of the right stuff",
         "I thought you were tougher",
         "Cluck cluck!",
@@ -99,10 +99,10 @@ static void wid_game_quit_create (void)
         "You a chicken, girl?",
         "You gonna bail on me?",
         "Cmon, this is no fun?",
-        "Keep going you coward?",
+        "Keep going you coward",
         "Look I'll be nice, keep playing",
-        "When the going gets tough",
-        "Ho hum",
+        "When the going gets tough, you just leave, right?",
+        "Ho hum. Such High hopes...",
         "What? Wait",
         "Why? Why? Why?",
         "What did I ever do to you?\nExcept all the monster attacks",
@@ -130,15 +130,15 @@ static void wid_game_quit_create (void)
     }
 
     wid_really_quit_game_yes_no = wid_popup(
-            "%%fg=red$Quit game?\n",
             messages[rand() % ARRAY_SIZE(messages)],
+            "%%fg=red$Quit game?\n",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
             vsmall_font,              /* body font */
             vsmall_font,              /* button font */
             2,                        /* number buttons */
-            "%%tile=button_y$Yes       ", wid_game_quit_really_quit_callback_yes,
-            "%%tile=button_n$No       ",  wid_game_quit_really_quit_callback_no);
+            "%%tile=button_y$Yes    ", wid_game_quit_really_quit_callback_yes,
+            "%%tile=button_n$No    ",  wid_game_quit_really_quit_callback_no);
 
     wid_set_tex(wid_really_quit_game_yes_no, 0, "gothic_wide");
     wid_set_square(wid_really_quit_game_yes_no);

@@ -60,8 +60,8 @@ uint8_t wid_intro_quit_selected (void)
           vsmall_font,              /* body font */
           vsmall_font,              /* button font */
           2,                        /* number buttons */
-          "%%tile=button_y$Yes       ", wid_intro_quit_callback_yes,
-          "%%tile=button_n$No       ",  wid_intro_quit_callback_no);
+          "%%tile=button_y$Yes    ", wid_intro_quit_callback_yes,
+          "%%tile=button_n$No    ",  wid_intro_quit_callback_no);
 
     wid_set_tex(wid_intro_quit_popup, 0, "gothic_wide");
     wid_set_square(wid_intro_quit_popup);
