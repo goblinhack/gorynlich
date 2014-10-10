@@ -9,7 +9,7 @@
  hit_priority=5
  is_carryable
  is_valid_for_shortcut_key
- bonus_hp_on_use=-50
+ bonus_hp_on_use=-30
  is_poison
  is_fragile
  message_on_use="%%fg=red$urgh, tastes horrible"

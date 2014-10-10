@@ -159,10 +159,10 @@ widp wid_popup (const char *text, const char *title,
         chars_per_line = 18;
         max_rows = 100;
     } else if (body_font == med_font) {
-        chars_per_line = 40;
+        chars_per_line = 50;
         max_rows = 8;
     } else {
-        chars_per_line = 38;
+        chars_per_line = 60;
         max_rows = 25;
     }
 
@@ -194,7 +194,7 @@ widp wid_popup (const char *text, const char *title,
          */
         if (!strlen(n->line)) {
             if (!maxh) {
-                ttf_text_size(body_font, "test", &w, &h, 0, 1.0f, 1.0f,
+                ttf_text_size(body_font, "Test", &w, &h, 0, 1.0f, 1.0f,
                               false /* fixed width */);
 
                 maxh = h;
@@ -270,12 +270,8 @@ widp wid_popup (const char *text, const char *title,
         color c = WHITE;
         c.a = 255;
         wid_set_color(wid_popup_window, WID_COLOR_BG, c);
-
-        c = WHITE;
-        c.a = 150;
         wid_set_color(wid_popup_window, WID_COLOR_TL, c);
         wid_set_color(wid_popup_window, WID_COLOR_BR, c);
-        wid_set_bevel(wid_popup_window, 4);
 
         fpoint tl = {0, 0};
         fpoint br = {0, 0};
@@ -292,7 +288,7 @@ widp wid_popup (const char *text, const char *title,
         br.y += PAD_Y;
         button_y = br.y;
         br.y += maxbuttonh;
-        br.y += PAD_Y * 1.5;
+        br.y += PAD_Y;
 
         if (title) {
             /*
@@ -311,8 +307,9 @@ widp wid_popup (const char *text, const char *title,
 
         br.x += maxw + PAD_X;
         br.y += titleh;
-        tl.y += PAD_Y * 0.8;
-        br.y += PAD_Y * 0.8;
+
+        tl.y += PAD_Y * 0.5;
+        br.y += PAD_Y * 0.5;
 
         wid_popup_title = wid_new_container(wid_popup_window,
                                             "wid popup container");
@@ -338,6 +335,7 @@ widp wid_popup (const char *text, const char *title,
         tl.x += PAD_X/2;
         tl.y += PAD_Y/2;
         br.x += PAD_X/2;
+        br.y += PAD_Y/2;
         br.y += PAD_Y/4;
 
         if (title) {
@@ -348,13 +346,31 @@ widp wid_popup (const char *text, const char *title,
             br.y += maxh;
             tl.y += maxh;
             br.y += maxh;
-            tl.y += maxh;
-            br.y += maxh;
         }
 
         wid_popup_container = wid_new_container(wid_popup_window,
                                                 "wid popup container2");
         wid_set_tl_br(wid_popup_container, tl, br);
+
+        wid_set_color(wid_popup_container, WID_COLOR_TEXT, WHITE);
+
+        color c;
+        c = WHITE;
+        c.a = 0;
+        wid_set_color(wid_popup_container, WID_COLOR_BG, c);
+
+        c = WHITE;
+        c.a = 50;
+        wid_set_color(wid_popup_container, WID_COLOR_TL, c);
+
+        c = WHITE;
+        c.a = 10;
+        wid_set_color(wid_popup_container, WID_COLOR_BR, c);
+
+        wid_set_font(wid_popup_container, body_font);
+        wid_set_square(wid_popup_container);
+        wid_set_bevel(wid_popup_container, 2);
+        wid_set_bevelled(wid_popup_container, true);
     }
 
     {
@@ -372,6 +388,16 @@ widp wid_popup (const char *text, const char *title,
             br.x = maxw;
             br.y = h + maxh;
 
+
+            child = wid_new_container(wid_popup_container,
+                                          "wid popup container3");
+
+            wid_set_no_shape(child);
+            wid_set_tl_br(child, tl, br);
+            wid_set_text(child, n->line);
+            wid_set_font(child, body_font);
+            wid_set_text_outline(child, true);
+
             /*
              * .5 line spacing for single newlines.
              */
@@ -380,18 +406,12 @@ widp wid_popup (const char *text, const char *title,
             } else {
                 h += maxh;
             }
-
-            child = wid_new_container(wid_popup_container,
-                                      "wid popup container3");
-            wid_set_tl_br(child, tl, br);
-            wid_set_text(child, n->line);
-            wid_set_font(child, body_font);
-            wid_set_text_outline(child, true);
         }
 
         split_free(&d);
     }
 
+    if (1)
     {
         int32_t x = 0;
         int32_t n = args;

@@ -112,10 +112,39 @@ int player_stats_get_modifier (int value)
 
 void player_stats_generate_random (player_stats_t *player_stats) 
 {
-    player_stats->melee = player_stats_generate_single_random();
-    player_stats->ranged = player_stats_generate_single_random();
+    memset(player_stats, 0, sizeof(*player_stats));
+
+    player_stats->experience = 0;
+    player_stats->max_hp = 0;
+
+    player_stats->attack_melee = player_stats_generate_single_random();
+    player_stats->attack_ranged = player_stats_generate_single_random();
     player_stats->defense = player_stats_generate_single_random();
     player_stats->speed = player_stats_generate_single_random();
     player_stats->vision = player_stats_generate_single_random();
     player_stats->healing = player_stats_generate_single_random();
+
+    player_stats_init(player_stats);
+}
+
+void player_stats_init (player_stats_t *player_stats) 
+{
+    if (!player_stats->attack_melee) {
+        player_stats->attack_melee = 10;
+    }
+    if (!player_stats->attack_ranged) {
+        player_stats->attack_ranged = 10;
+    }
+    if (!player_stats->defense) {
+        player_stats->defense = 10;
+    }
+    if (!player_stats->speed) {
+        player_stats->speed = 10;
+    }
+    if (!player_stats->vision) {
+        player_stats->vision = 10;
+    }
+    if (!player_stats->healing) {
+        player_stats->healing = 10;
+    }
 }
