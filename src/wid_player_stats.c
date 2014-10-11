@@ -104,7 +104,8 @@ static void wid_player_stats_reroll (void)
     wid_player_stats_redraw();
 }
 
-static uint8_t wid_player_stats_all_done_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_player_stats_all_done_mouse_event (widp w, 
+                                                      int32_t x, int32_t y,
                                                       uint32_t button)
 {
     wid_player_stats_hide();
@@ -112,7 +113,8 @@ static uint8_t wid_player_stats_all_done_mouse_event (widp w, int32_t x, int32_t
     return (true);
 }
 
-static uint8_t wid_player_stats_all_done_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_player_stats_all_done_key_event (widp w, 
+                                                    const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
@@ -127,15 +129,17 @@ static uint8_t wid_player_stats_all_done_key_event (widp w, const SDL_KEYSYM *ke
     return (false);
 }
 
-static uint8_t wid_player_stats_reroll_mouse_event (widp w, int32_t x, int32_t y,
-                                                      uint32_t button)
+static uint8_t wid_player_stats_reroll_mouse_event (widp w, 
+                                                    int32_t x, int32_t y,
+                                                    uint32_t button)
 {
     wid_player_stats_reroll();
 
     return (true);
 }
 
-static uint8_t wid_player_stats_reroll_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_player_stats_reroll_key_event (widp w, 
+                                                  const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
@@ -173,6 +177,7 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
     case STAT_SPENDING_POINTS:
         break;
     case STAT_MAX_HP:
+        player_stats->hp +=
         player_stats->max_hp += rows[row].increment;
         player_stats->spending_points--;
         break;
