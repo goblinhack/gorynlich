@@ -9,15 +9,15 @@
 #include "main.h"
 #include "wid.h"
 #include "color.h"
-#include "wid_player_stats.h"
+#include "wid_player_info.h"
 #include "string.h"
 
-static widp wid_player_stats;
-static widp wid_player_stats_container;
-static uint8_t wid_player_stats_init_done;
+static widp wid_player_info;
+static widp wid_player_info_container;
+static uint8_t wid_player_info_init_done;
 
-static void wid_player_stats_create(player_stats_t *);
-static void wid_player_stats_destroy(void);
+static void wid_player_info_create(player_stats_t *);
+static void wid_player_info_destroy(void);
 static player_stats_t *player_stats;
 
 typedef struct row_ {
@@ -59,65 +59,65 @@ static row rows[WID_INTRO_MAX_SETTINGS] = {
     { /* STAT_HEALING         */ "Healing",         "+", 1 },
 };
 
-uint8_t wid_player_stats_init (void)
+uint8_t wid_player_info_init (void)
 {
-    if (!wid_player_stats_init_done) {
+    if (!wid_player_info_init_done) {
     }
 
-    wid_player_stats_init_done = true;
+    wid_player_info_init_done = true;
 
     return (true);
 }
 
-void wid_player_stats_fini (void)
+void wid_player_info_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    if (wid_player_stats_init_done) {
-        wid_player_stats_init_done = false;
+    if (wid_player_info_init_done) {
+        wid_player_info_init_done = false;
 
-        wid_player_stats_destroy();
+        wid_player_info_destroy();
     }
 }
 
-void wid_player_stats_hide (void)
+void wid_player_info_hide (void)
 {
-    wid_player_stats_destroy();
+    wid_player_info_destroy();
 }
 
-void wid_player_stats_visible (player_stats_t *s)
+void wid_player_info_visible (player_stats_t *s)
 {
-    wid_player_stats_create(s);
+    wid_player_info_create(s);
 }
 
-static void wid_player_stats_redraw (void)
+static void wid_player_info_redraw (void)
 {
-    wid_destroy_nodelay(&wid_player_stats_container);
-    wid_player_stats_create(player_stats);
+    wid_destroy_nodelay(&wid_player_info_container);
+    wid_player_info_create(player_stats);
 }
 
-static void wid_player_stats_reroll (void)
+static void wid_player_info_reroll (void)
 {
     player_stats_generate_random(player_stats);
-    wid_player_stats_redraw();
+    wid_player_info_redraw();
 }
 
-static uint8_t wid_player_stats_all_done_mouse_event (widp w, 
+static uint8_t wid_player_info_all_done_mouse_event (widp w, 
                                                       int32_t x, int32_t y,
                                                       uint32_t button)
 {
-    wid_player_stats_hide();
+    wid_player_info_hide();
 
     return (true);
 }
 
-static uint8_t wid_player_stats_all_done_key_event (widp w, 
+static uint8_t wid_player_info_all_done_key_event (widp w, 
                                                     const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
         case SDLK_ESCAPE:
-            wid_player_stats_hide();
+            wid_player_info_hide();
             return (true);
 
         default:
@@ -127,34 +127,34 @@ static uint8_t wid_player_stats_all_done_key_event (widp w,
     return (false);
 }
 
-static uint8_t wid_player_stats_reroll_mouse_event (widp w, 
+static uint8_t wid_player_info_reroll_mouse_event (widp w, 
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
-    wid_player_stats_reroll();
+    wid_player_info_reroll();
 
     return (true);
 }
 
-static uint8_t wid_player_stats_reroll_key_event (widp w, 
+static uint8_t wid_player_info_reroll_key_event (widp w, 
                                                   const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
         case SDLK_ESCAPE:
-            wid_player_stats_hide();
+            wid_player_info_hide();
             return (true);
 
         default:
             break;
     }
 
-    wid_player_stats_reroll();
+    wid_player_info_reroll();
 
     return (false);
 }
 
-static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
+static uint8_t wid_player_info_col1_name_mouse_event (widp w,
                                                        int32_t x, int32_t y,
                                                        uint32_t button)
 {
@@ -205,26 +205,26 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
         break;
     }
 
-    wid_player_stats_redraw();
+    wid_player_info_redraw();
 
     return (true);
 }
 
-static uint8_t wid_player_stats_col2_mouse_event (widp w,
+static uint8_t wid_player_info_col2_mouse_event (widp w,
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
 {
-    wid_player_stats_col1_name_mouse_event(w, x, y, button);
+    wid_player_info_col1_name_mouse_event(w, x, y, button);
 
     return (true);
 }
 
-static void wid_player_stats_create (player_stats_t *s)
+static void wid_player_info_create (player_stats_t *s)
 {
     player_stats = s;
 
-    if (!wid_player_stats) {
-        widp w = wid_player_stats = wid_new_rounded_window("wid player_stats");
+    if (!wid_player_info) {
+        widp w = wid_player_info = wid_new_rounded_window("wid player_stats");
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {0.3, 0.9};
@@ -237,13 +237,13 @@ static void wid_player_stats_create (player_stats_t *s)
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
 
-        wid_set_tex(wid_player_stats, 0, "gothic_tall_axe");
-        wid_set_square(wid_player_stats);
+        wid_set_tex(wid_player_info, 0, "gothic_tall_skull");
+        wid_set_square(wid_player_info);
     }
 
     {
-        widp w = wid_player_stats_container =
-            wid_new_container(wid_player_stats, "wid player_stats container");
+        widp w = wid_player_info_container =
+            wid_new_container(wid_player_info, "wid player_stats container");
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {1.0, 1.0};
@@ -263,7 +263,7 @@ static void wid_player_stats_create (player_stats_t *s)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_player_stats_container,
+            widp w = wid_new_square_button(wid_player_info_container,
                                            rows[i].col1);
 
             fpoint tl = {0.05, 0.2};
@@ -317,7 +317,7 @@ static void wid_player_stats_create (player_stats_t *s)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_down(w, wid_player_stats_col1_name_mouse_event);
+            wid_set_on_mouse_down(w, wid_player_info_col1_name_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
 
             wid_set_tex(w, 0, "button_black");
@@ -348,7 +348,7 @@ static void wid_player_stats_create (player_stats_t *s)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_player_stats_container,
+            widp w = wid_new_square_button(wid_player_info_container,
                                            rows[i].col2);
 
             fpoint tl = {0.48, 0.2};
@@ -378,7 +378,7 @@ static void wid_player_stats_create (player_stats_t *s)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_down(w, wid_player_stats_col2_mouse_event);
+            wid_set_on_mouse_down(w, wid_player_info_col2_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
 
             wid_set_tex(w, 0, "button_black");
@@ -409,7 +409,7 @@ static void wid_player_stats_create (player_stats_t *s)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_player_stats_container,
+            widp w = wid_new_square_button(wid_player_info_container,
                                            rows[i].col1);
 
             fpoint tl = {0.82, 0.2};
@@ -490,7 +490,7 @@ static void wid_player_stats_create (player_stats_t *s)
     {
         const char *button_name = "All Done";
 
-        widp w = wid_new_rounded_small_button(wid_player_stats_container,
+        widp w = wid_new_rounded_small_button(wid_player_info_container,
                                               button_name);
 
         fpoint tl = {0.7, 0.85};
@@ -512,8 +512,8 @@ static void wid_player_stats_create (player_stats_t *s)
 
         wid_set_mode(w, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(w, wid_player_stats_all_done_mouse_event);
-        wid_set_on_key_down(w, wid_player_stats_all_done_key_event);
+        wid_set_on_mouse_down(w, wid_player_info_all_done_mouse_event);
+        wid_set_on_key_down(w, wid_player_info_all_done_key_event);
 
         wid_set_tex(w, 0, "button_black");
         wid_set_square(w);
@@ -522,7 +522,7 @@ static void wid_player_stats_create (player_stats_t *s)
     {
         const char *button_name = "Re-roll";
 
-        widp w = wid_new_rounded_small_button(wid_player_stats_container,
+        widp w = wid_new_rounded_small_button(wid_player_info_container,
                                               button_name);
 
         fpoint tl = {0.1, 0.85};
@@ -544,18 +544,18 @@ static void wid_player_stats_create (player_stats_t *s)
 
         wid_set_mode(w, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(w, wid_player_stats_reroll_mouse_event);
-        wid_set_on_key_down(w, wid_player_stats_reroll_key_event);
+        wid_set_on_mouse_down(w, wid_player_info_reroll_mouse_event);
+        wid_set_on_key_down(w, wid_player_info_reroll_key_event);
 
         wid_set_tex(w, 0, "button_black");
         wid_set_square(w);
     }
 
-    wid_raise(wid_player_stats);
-    wid_update(wid_player_stats);
+    wid_raise(wid_player_info);
+    wid_update(wid_player_info);
 }
 
-static void wid_player_stats_destroy (void)
+static void wid_player_info_destroy (void)
 {
-    wid_destroy(&wid_player_stats);
+    wid_destroy(&wid_player_info);
 }
