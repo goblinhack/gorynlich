@@ -139,7 +139,7 @@ static uint8_t wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
     client_socket_set_pclass((char*) thing_template_short_name(t));
 
     if (!wid_intro2_set_name) {
-        client_socket_set_name(name_random(global_config.pclass));
+        client_socket_set_name(name_random(global_config.player_stats.pclass));
     }
 
     wid_destroy(&wid_intro2);
@@ -314,7 +314,7 @@ static uint8_t wid_intro2_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_color(child, WID_COLOR_BR, RED);
 
     if (!strcmp(thing_template_short_name(thing_template), 
-                global_config.pclass)) {
+                global_config.player_stats.pclass)) {
         color c = RED;
         c.a = 100;
         wid_set_color(child, WID_COLOR_TL, RED);
@@ -383,7 +383,7 @@ static uint8_t wid_intro2_name_receive_input (widp w, const SDL_KEYSYM *key)
 
     if (!strlen(name)) {
         wid_intro2_set_name = false;
-        client_socket_set_name(name_random(global_config.pclass));
+        client_socket_set_name(name_random(global_config.player_stats.pclass));
     }
 
     return (r);
@@ -487,11 +487,12 @@ static void wid_intro2_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        if (!strcmp(global_config.name, "nameless") ||
-            !global_config.name[0]) {
+        if (!strcmp(global_config.player_stats.name, "nameless") ||
+            !global_config.player_stats.name[0]) {
 
-            strncpy(global_config.name, name_random(global_config.pclass),
-                    sizeof(global_config.name) - 1);
+            strncpy(global_config.player_stats.name, 
+                    name_random(global_config.player_stats.pclass),
+                    sizeof(global_config.player_stats.name) - 1);
 
             player_stats_t player_stats;
 
@@ -502,7 +503,7 @@ static void wid_intro2_create (void)
                    sizeof(player_stats));
         }
 
-        wid_set_text(w, global_config.name);
+        wid_set_text(w, global_config.player_stats.name);
         wid_set_font(w, small_font);
 
         wid_set_color(w, WID_COLOR_BG, BLACK);
@@ -543,7 +544,7 @@ static void wid_intro2_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, global_config.pclass);
+        wid_set_text(w, global_config.player_stats.pclass);
         wid_set_font(w, small_font);
         wid_set_no_shape(w);
 
