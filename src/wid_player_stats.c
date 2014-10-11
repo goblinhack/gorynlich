@@ -161,6 +161,10 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
      */
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
 
+    if (!player_stats->spending_points) {
+        return (true);
+    }
+
     switch (row) {
     case STAT_EXPERIENCE:
         break;
@@ -209,13 +213,6 @@ static uint8_t wid_player_stats_col2_mouse_event (widp w,
 {
     wid_player_stats_col1_name_mouse_event(w, x, y, button);
 
-    return (true);
-}
-
-static uint8_t wid_player_stats_col3_mouse_event (widp w,
-                                                  int32_t x, int32_t y,
-                                                  uint32_t button)
-{
     return (true);
 }
 
@@ -282,7 +279,6 @@ static void wid_player_stats_create (player_stats_t *s)
             case STAT_LEVEL:
                 break;
             case STAT_SPENDING_POINTS:
-
                 if (s->spending_points > 0) {
                     wid_set_color(w, WID_COLOR_TEXT, RED);
                 }
@@ -442,7 +438,7 @@ static void wid_player_stats_create (player_stats_t *s)
                 }
                 break;
             case STAT_MAX_HP:
-                text = dynprintf("%u", s->hp, s->max_hp);
+                text = dynprintf("%u (%u)", s->hp, s->max_hp);
                 break;
             case STAT_ATTACK_MELEE:
                 stat = s->attack_melee;
@@ -481,24 +477,7 @@ static void wid_player_stats_create (player_stats_t *s)
             myfree(text);
 
             wid_set_font(w, small_font);
-
-            color c = DARKGRAY;
-
-            c.a = 100;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_bevel(w, 2);
             wid_set_no_shape(w);
-
-            if (s->spending_points > 0) {
-                wid_set_on_mouse_down(w, wid_player_stats_col3_mouse_event);
-                wid_set_client_context(w, (void*)(uintptr_t)i);
-            }
         }
     }
 
