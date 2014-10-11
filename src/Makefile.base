@@ -43,7 +43,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/sdl.o 			\
     $(OBJDIR)/server.o 			\
     $(OBJDIR)/slre.o 			\
-    $(OBJDIR)/stb_vorbis.o 		\
     $(OBJDIR)/socket.o 			\
     $(OBJDIR)/sound.o 			\
     $(OBJDIR)/stb_image.o 		\
