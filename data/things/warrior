@@ -8,6 +8,7 @@
  z_depth=4
  speed=7
  max_hp=200
+ hp_per_level=10
  is_player
  stats_attack_melee=10
  stats_attack_ranged=10
