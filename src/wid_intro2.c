@@ -487,23 +487,7 @@ static void wid_intro2_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        if (!strcmp(global_config.player_stats.name, "nameless") ||
-            !global_config.player_stats.name[0]) {
-
-            strncpy(global_config.player_stats.name, 
-                    name_random(global_config.player_stats.pclass),
-                    sizeof(global_config.player_stats.name) - 1);
-
-            player_stats_t player_stats;
-
-            player_stats_generate_random(&player_stats);
-
-            memcpy(&global_config.player_stats,
-                   &player_stats,
-                   sizeof(player_stats));
-        }
-
-        wid_set_text(w, global_config.player_stats.name);
+        wid_set_text(w, global_config.player_stats.pname);
         wid_set_font(w, small_font);
 
         wid_set_color(w, WID_COLOR_BG, BLACK);

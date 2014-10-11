@@ -168,7 +168,7 @@ typedef struct thing_template_ {
 
     uint32_t ppp1;
     uint32_t ppp2;
-    uint32_t ppp9;
+    uint32_t hp_per_level;
     float light_radius;
     uint32_t quantity;
     uint32_t hit_priority;
@@ -296,7 +296,7 @@ uint32_t thing_template_get_stats_defense(thing_templatep);
 
 uint32_t thing_template_get_ppp1(thing_templatep);
 uint32_t thing_template_get_ppp2(thing_templatep);
-uint32_t thing_template_get_ppp9(thing_templatep);
+uint32_t thing_template_get_hp_per_level(thing_templatep);
 float thing_template_get_light_radius(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
 uint32_t thing_template_get_hit_priority(thing_templatep);

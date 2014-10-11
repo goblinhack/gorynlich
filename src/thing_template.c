@@ -489,7 +489,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
             t->stats.defense = tmp_uint32;
         }
 
-        GET_OPT_NAMED_UINT32(ctx, "ppp9", t->ppp9);
+        GET_OPT_NAMED_UINT32(ctx, "hp_per_level", t->hp_per_level);
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
@@ -639,7 +639,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "stats_vision", t->stats.vision);
     PUT_NAMED_INT32(ctx, "stats_healing", t->stats.healing);
     PUT_NAMED_INT32(ctx, "stats_defense", t->stats.defense);
-    PUT_NAMED_INT32(ctx, "ppp9", t->ppp9);
+    PUT_NAMED_INT32(ctx, "hp_per_level", t->hp_per_level);
     PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
     PUT_NAMED_INT32(ctx, "quantity", t->quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
@@ -877,9 +877,9 @@ uint32_t thing_template_get_stats_defense (thing_templatep t)
     return (t->stats.defense);
 }
 
-uint32_t thing_template_get_ppp9 (thing_templatep t)
+uint32_t thing_template_get_hp_per_level (thing_templatep t)
 {
-    return (t->ppp9);
+    return (t->hp_per_level);
 }
 
 float thing_template_get_light_radius (thing_templatep t)
