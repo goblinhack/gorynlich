@@ -238,6 +238,9 @@
 .o/ramdisk_data_things__potion_life_session.o: asm/ramdisk_data_things__potion_life_session.S ../data/things/.potion_life.session
 	gcc -c asm/ramdisk_data_things__potion_life_session.S -o .o/ramdisk_data_things__potion_life_session.o
 
+.o/ramdisk_data_things__valkyrie_session.o: asm/ramdisk_data_things__valkyrie_session.S ../data/things/.valkyrie.session
+	gcc -c asm/ramdisk_data_things__valkyrie_session.S -o .o/ramdisk_data_things__valkyrie_session.o
+
 .o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
 	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
 
