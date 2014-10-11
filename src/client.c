@@ -99,17 +99,6 @@ uint8_t client_init (void)
     command_add(client_players_show, "show players", 
                 "show all players state");
 
-    if (!global_config.player_stats.pclass[0]) {
-        strncpy(global_config.player_stats.pclass, "warrior", 
-                sizeof(global_config.player_stats.pclass) - 1);
-    }
-
-    if (!global_config.player_stats.name[0]) {
-        strncpy(global_config.player_stats.name, 
-                name_random(global_config.player_stats.pclass),
-                sizeof(global_config.player_stats.name) - 1);
-    }
-
     client_init_done = true;
 
     if (!on_server) {
@@ -430,7 +419,7 @@ uint8_t client_socket_join (const char *host,
         }
     }
 
-    socket_set_name(s, global_config.player_stats.name);
+    socket_set_name(s, global_config.player_stats.pname);
     socket_set_pclass(s, global_config.player_stats.pclass);
     socket_set_player_stats(s, &global_config.player_stats);
 
@@ -544,8 +533,8 @@ uint8_t client_socket_set_name (const char *name)
         return (false);
     }
 
-    strncpy(global_config.player_stats.name, name, 
-            sizeof(global_config.player_stats.name) - 1);
+    strncpy(global_config.player_stats.pname, name, 
+            sizeof(global_config.player_stats.pname) - 1);
 
     CON("Client name set to \"%s\"", name);
 
@@ -711,7 +700,7 @@ uint8_t client_tell (tokens_t *tokens, void *context)
         return (false);
     }
 
-    uint8_t r = client_socket_tell(global_config.player_stats.name, to, tmp);
+    uint8_t r = client_socket_tell(global_config.player_stats.pname, to, tmp);
 
     myfree(tmp);
 
@@ -992,7 +981,7 @@ static void client_check_still_in_game (void)
             continue;
         }
 
-        if (strcmp(p->name, global_config.player_stats.name)) {
+        if (strcmp(p->name, global_config.player_stats.pname)) {
             continue;
         }
 
@@ -1042,7 +1031,7 @@ static void client_check_still_in_game (void)
     MSG(CRITICAL, "Server does not report you in the game!");
 
     LOG("Client:  You are player: \"%s\", ID %u", 
-        global_config.player_stats.name, 
+        global_config.player_stats.pname, 
         client_joined_server_key);
 
     server_connection_confirmed = false;

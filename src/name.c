@@ -10,6 +10,19 @@
 #include "main.h"
 #include "name.h"
 
+const char *pclass_random (void)
+{
+    static const char *classes[] = {
+        "wizard",
+        "dwarf",
+        "warrior",
+        "valkyrie",
+        "elf",
+    };
+
+    return (classes[rand() % ARRAY_SIZE(classes)]);
+}
+
 const char *name_random (const char *pclass)
 {
     if (!strcmp(pclass, "wizard")) {

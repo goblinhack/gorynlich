@@ -13,6 +13,7 @@
 #include "wid_player_stats.h"
 #include "string.h"
 #include "music.h"
+#include "name.h"
 
 static int player_stats_generate_spending_stat (void) 
 {
@@ -142,6 +143,12 @@ void player_stats_generate_random (player_stats_t *player_stats)
     player_stats->healing = player_stats_generate_spending_stat();
 
     player_stats_init(player_stats);
+
+    strncpy(player_stats->pclass, pclass_random(),
+            sizeof(player_stats->pclass) - 1);
+
+    strncpy(player_stats->pname, name_random(player_stats->pclass),
+            sizeof(player_stats->pname) - 1);
 }
 
 void player_stats_init (player_stats_t *player_stats) 
