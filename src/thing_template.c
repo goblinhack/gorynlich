@@ -335,6 +335,8 @@ thing_templatep thing_template_find_short_name (const char *name)
         }
     }
 
+    DIE("did not find short template name %s", name);
+
     return (0);
 }
 
