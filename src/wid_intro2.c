@@ -139,7 +139,8 @@ static uint8_t wid_intro2_select_class_event (widp w, int32_t x, int32_t y,
     client_socket_set_pclass((char*) thing_template_short_name(t));
 
     if (!wid_intro2_set_name) {
-        client_socket_set_name(name_random(global_config.player_stats.pclass));
+        client_socket_set_name(
+                    name_random(global_config.player_stats.pclass));
     }
 
     wid_destroy(&wid_intro2);

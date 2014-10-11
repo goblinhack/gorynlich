@@ -12,8 +12,8 @@
 #include "wid_popup.h"
 #include "wid_player_stats.h"
 #include "string.h"
-#include "music.h"
 #include "name.h"
+#include "thing_template.h"
 
 static int player_stats_generate_spending_stat (void) 
 {
@@ -149,6 +149,12 @@ void player_stats_generate_random (player_stats_t *player_stats)
 
     strncpy(player_stats->pname, name_random(player_stats->pclass),
             sizeof(player_stats->pname) - 1);
+
+    thing_templatep thing_template = 
+                    player_stats_to_thing_template(player_stats);
+
+    player_stats->hp =
+    player_stats->max_hp = thing_template_get_stats_max_hp(thing_template);
 }
 
 void player_stats_init (player_stats_t *player_stats) 
@@ -171,4 +177,10 @@ void player_stats_init (player_stats_t *player_stats)
     if (!player_stats->healing) {
         player_stats->healing = 10;
     }
+}
+
+thing_templatep
+player_stats_to_thing_template (player_stats_t *player_stats)
+{
+    return (thing_template_find_short_name(player_stats->pclass));
 }
