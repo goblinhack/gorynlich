@@ -49,6 +49,16 @@ void music_fini (void)
     Mix_CloseAudio();
 }
 
+extern int stb_vorbis_decode_memory(uint8_t *in, int len, 
+                                    int *channels, short **out);
+
+static void stb_vorbis_decode (uint8_t *in, int *len, int16_t **out)
+{
+    int channels;
+
+    *len = stb_vorbis_decode_memory(in, *len, &channels, out);
+}
+
 musicp music_load (const char *file, const char *name_alias)
 {
     if (name_alias) {
@@ -82,9 +92,21 @@ musicp music_load (const char *file, const char *name_alias)
         DIE("cannot load music %s", file);
     }
 
-    SDL_RWops *rw = SDL_RWFromMem(m->data, m->len);
-    if (!rw) {
-        DIE("cannot make RW music %s", file);
+    SDL_RWops *rw;
+
+    if (0 && strstr(file, ".ogg")) {
+        int len;
+        int16_t *out;
+
+        len = m->len;
+        stb_vorbis_decode(m->data, &len, &out);
+
+        rw = SDL_RWFromMem(out, len);
+    } else {
+        rw = SDL_RWFromMem(m->data, m->len);
+        if (!rw) {
+            DIE("cannot make RW music %s", file);
+        }
     }
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
@@ -173,20 +195,20 @@ void music_play (const char *file,
 void music_play_game (void)
 {
     static const char *music[] = {
-        "data/music/charlotte.wav",
-        "data/music/DST_Alters.wav",
-        "data/music/DST_Arch_Delerium.wav",
-        "data/music/DST_Legends.wav",
-        "data/music/DST_LeDanse.wav",
-        "data/music/DST_ExInfernus.wav",
-        "data/music/DST_DoomCity.wav",
-        "data/music/DST_Arches.wav",
-        "data/music/DST_BattleLands.wav",
-        "data/music/DST_ClockTower.wav",
-        "data/music/DST_BoneTower.wav",
-        "data/music/DST_BlackRiver.wav",
-        "data/music/DST_DarkestKnight.wav",
-        "data/music/charlotte_slow.wav",
+        "data/music/charlotte.ogg",
+        "data/music/DST_Alters.ogg",
+        "data/music/DST_Arch_Delerium.ogg",
+        "data/music/DST_Legends.ogg",
+        "data/music/DST_LeDanse.ogg",
+        "data/music/DST_ExInfernus.ogg",
+        "data/music/DST_DoomCity.ogg",
+        "data/music/DST_Arches.ogg",
+        "data/music/DST_BattleLands.ogg",
+        "data/music/DST_ClockTower.ogg",
+        "data/music/DST_BoneTower.ogg",
+        "data/music/DST_BlackRiver.ogg",
+        "data/music/DST_DarkestKnight.ogg",
+        "data/music/charlotte_slow.ogg",
     };
 
     int x = rand() % ARRAY_SIZE(music);
@@ -196,17 +218,17 @@ void music_play_game (void)
 
 void music_play_intro (void)
 {
-    music_play("data/music/charlotte8bit.wav", "intro", 22050 );
+    music_play("data/music/charlotte8bit.ogg", "intro", 22050 );
 }
 
 void music_play_dead (void)
 {
-    music_play("data/music/DST_AncientCurse_II.wav", "dead", 22050 / 2);
+    music_play("data/music/DST_AncientCurse_II.ogg", "dead", 22050 / 2);
 }
 
 void music_play_game_over (void)
 {
-    music_play("data/music/DST_SuperWin.wav", "game over", 22050 / 2);
+    music_play("data/music/DST_SuperWin.ogg", "game over", 22050 / 2);
 }
 
 void music_halt (void)
