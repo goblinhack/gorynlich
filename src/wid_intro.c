@@ -18,6 +18,7 @@
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
 #include "wid_player_stats.h"
+#include "wid_player_info.h"
 #include "wid_hiscore.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
@@ -502,4 +503,5 @@ static void wid_intro_create (void)
     static player_stats_t s;
     player_stats_generate_random(&s);
     wid_player_stats_visible(&s);
+    wid_player_info_visible(&s);
 }
