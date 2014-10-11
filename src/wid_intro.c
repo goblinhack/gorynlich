@@ -19,6 +19,7 @@
 #include "wid_game_map_client.h"
 #include "wid_player_stats.h"
 #include "wid_player_info.h"
+#include "wid_player_inventory.h"
 #include "wid_hiscore.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
@@ -124,6 +125,9 @@ void wid_intro_hide (void)
     wid_update(wid_intro);
 
     wid_intro_buttons_hide();
+    wid_player_stats_hide();
+    wid_player_info_hide();
+    wid_player_inventory_hide();
 }
 
 void wid_intro_visible (void)
@@ -504,4 +508,5 @@ static void wid_intro_create (void)
     player_stats_generate_random(&s);
     wid_player_stats_visible(&s);
     wid_player_info_visible(&s);
+    wid_player_inventory_visible(&s);
 }
