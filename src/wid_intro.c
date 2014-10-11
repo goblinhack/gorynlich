@@ -499,7 +499,7 @@ static void wid_intro_create (void)
     wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
     wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
 
-    player_stats_t s;
+    static player_stats_t s;
     player_stats_generate_random(&s);
     wid_player_stats_visible(&s);
 }
