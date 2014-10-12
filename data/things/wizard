@@ -8,6 +8,7 @@
  z_depth=4
  speed=5
  max_hp=100
+ max_id=100
  hp_per_level=4
  is_player
  stats_attack_melee=10

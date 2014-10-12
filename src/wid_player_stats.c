@@ -33,6 +33,7 @@ enum {
     STAT_LEVEL,
     STAT_GAP2,
     STAT_MAX_HP,
+    STAT_MAX_ID,
     STAT_ATTACK_MELEE,
     STAT_ATTACK_RANGED,
     STAT_DEFENSE,
@@ -41,7 +42,7 @@ enum {
     STAT_HEALING,
 };
 
-#define WID_INTRO_MAX_SETTINGS 12 
+#define WID_INTRO_MAX_SETTINGS 13 
 
 static row rows[WID_INTRO_MAX_SETTINGS] = {
       /*                         Column 1     Column 2 Increm */
@@ -51,6 +52,7 @@ static row rows[WID_INTRO_MAX_SETTINGS] = {
     { /* STAT_LEVEL           */ "Level",           0,   0 },
     { /* STAT_GAP2            */ "",                0,   0 },
     { /* STAT_MAX_HP          */ "Max Health",      "+", 5 },
+    { /* STAT_MAX_ID          */ "Max ID",          "+", 5 },
     { /* STAT_ATTACK_MELEE    */ "Attack, Melee",   "+", 1 },
     { /* STAT_ATTACK_RANGED   */ "Attack, Ranged",  "+", 1 },
     { /* STAT_DEFENSE         */ "Defense",         "+", 1 },
@@ -179,6 +181,11 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
         player_stats->max_hp += rows[row].increment;
         player_stats->spending_points--;
         break;
+    case STAT_MAX_ID:
+        player_stats->id +=
+        player_stats->max_id += rows[row].increment;
+        player_stats->spending_points--;
+        break;
     case STAT_ATTACK_MELEE:
         player_stats->attack_melee += rows[row].increment;
         player_stats->spending_points--;
@@ -275,9 +282,9 @@ static void wid_player_stats_create (player_stats_t *s)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, rows[i].col1);
-            wid_set_font(w, small_font);
 
             wid_set_color(w, WID_COLOR_TEXT, WHITE);
+            wid_set_font(w, vsmall_font);
 
             switch (i) {
             case STAT_EXPERIENCE:
@@ -285,6 +292,8 @@ static void wid_player_stats_create (player_stats_t *s)
             case STAT_LEVEL:
                 break;
             case STAT_SPENDING_POINTS:
+                wid_set_font(w, small_font);
+
                 if (s->spending_points > 0) {
                     wid_set_color(w, WID_COLOR_TEXT, RED);
                 }
@@ -445,6 +454,9 @@ static void wid_player_stats_create (player_stats_t *s)
                 break;
             case STAT_MAX_HP:
                 text = dynprintf("%u (%u)", s->hp, s->max_hp);
+                break;
+            case STAT_MAX_ID:
+                text = dynprintf("%u (%u)", s->id, s->max_id);
                 break;
             case STAT_ATTACK_MELEE:
                 stat = s->attack_melee;

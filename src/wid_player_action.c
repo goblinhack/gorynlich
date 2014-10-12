@@ -113,6 +113,9 @@ static void wid_player_action_create (player_stats_t *s)
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_square(w);
+        wid_set_text(w, "Health");
+        wid_set_text_bot(w, true);
+        wid_set_font(w, vsmall_font);
     }
 
     {
@@ -133,6 +136,9 @@ static void wid_player_action_create (player_stats_t *s)
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_square(w);
+        wid_set_text(w, "ID");
+        wid_set_text_bot(w, true);
+        wid_set_font(w, vsmall_font);
     }
 
     {
@@ -156,7 +162,8 @@ static void wid_player_action_create (player_stats_t *s)
     }
 
     wid_move_to_pct_centered(wid_player_action, 0.5, 2.0);
-    wid_move_to_pct_centered_in(wid_player_action, 0.5, 0.905, 5*wid_swipe_delay);
+    wid_move_to_pct_centered_in(wid_player_action, 0.5, 0.905, 
+                                5*wid_swipe_delay);
 
     wid_raise(wid_player_action);
     wid_update(wid_player_action);

@@ -1294,6 +1294,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 t->resync = 1;
                 t->thing_template = what;
                 t->stats.hp = thing_template_get_stats_max_hp(what);
+                t->stats.id = thing_template_get_stats_max_id(what);
                 thing_update(t);
 
                 /*
