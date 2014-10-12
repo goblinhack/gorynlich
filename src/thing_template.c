@@ -457,6 +457,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
         GET_OPT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
         GET_OPT_NAMED_INT16(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
+        GET_OPT_NAMED_INT16(ctx, "bonus_id_on_use", t->bonus_id_on_use);
         GET_OPT_NAMED_UINT32(ctx, "ppp1", t->ppp1);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
 
@@ -465,6 +466,10 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
 
         if (GET_OPT_NAMED_INT16(ctx, "max_hp", tmp_int16)) {
             t->stats.max_hp = tmp_int16;
+        }
+
+        if (GET_OPT_NAMED_INT16(ctx, "max_id", tmp_int16)) {
+            t->stats.max_id = tmp_int16;
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_melee", tmp_uint32)) {
@@ -492,6 +497,8 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         }
 
         GET_OPT_NAMED_UINT32(ctx, "hp_per_level", t->hp_per_level);
+        GET_OPT_NAMED_UINT32(ctx, "id_per_level", t->id_per_level);
+
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
         GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
@@ -635,6 +642,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "ppp1", t->ppp1);
     PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
     PUT_NAMED_INT32(ctx, "max_hp", t->stats.max_hp);
+    PUT_NAMED_INT32(ctx, "max_id", t->stats.max_id);
     PUT_NAMED_INT32(ctx, "stats_attack_melee", t->stats.attack_melee);
     PUT_NAMED_INT32(ctx, "stats_attack_ranged", t->stats.attack_ranged);
     PUT_NAMED_INT32(ctx, "stats_speed", t->stats.speed);
@@ -642,12 +650,14 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "stats_healing", t->stats.healing);
     PUT_NAMED_INT32(ctx, "stats_defense", t->stats.defense);
     PUT_NAMED_INT32(ctx, "hp_per_level", t->hp_per_level);
+    PUT_NAMED_INT32(ctx, "id_per_level", t->id_per_level);
     PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
     PUT_NAMED_INT32(ctx, "quantity", t->quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
     PUT_NAMED_INT32(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
+    PUT_NAMED_INT32(ctx, "bonus_id_on_use", t->bonus_id_on_use);
     PUT_NAMED_INT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
     PUT_NAMED_INT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
     PUT_NAMED_INT32(ctx, "failure_chance", t->failure_chance);
@@ -849,6 +859,11 @@ int16_t thing_template_get_stats_max_hp (thing_templatep t)
     return (t->stats.max_hp);
 }
 
+int16_t thing_template_get_stats_max_id (thing_templatep t)
+{
+    return (t->stats.max_id);
+}
+
 uint32_t thing_template_get_stats_attack_melee (thing_templatep t)
 {
     return (t->stats.attack_melee);
@@ -884,6 +899,11 @@ uint32_t thing_template_get_hp_per_level (thing_templatep t)
     return (t->hp_per_level);
 }
 
+uint32_t thing_template_get_id_per_level (thing_templatep t)
+{
+    return (t->id_per_level);
+}
+
 float thing_template_get_light_radius (thing_templatep t)
 {
     return (t->light_radius);
@@ -912,6 +932,11 @@ uint32_t thing_template_get_swing_distance_from_player (thing_templatep t)
 int16_t thing_template_get_bonus_hp_on_use (thing_templatep t)
 {
     return (t->bonus_hp_on_use);
+}
+
+int16_t thing_template_get_bonus_id_on_use (thing_templatep t)
+{
+    return (t->bonus_id_on_use);
 }
 
 uint32_t thing_template_get_tx_map_update_delay_thousandths (thing_templatep t)

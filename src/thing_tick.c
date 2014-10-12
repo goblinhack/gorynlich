@@ -283,6 +283,11 @@ void thing_tick_server_player_slow_all (void)
             if (delta > 0) {
                 t->stats.hp -= delta / 10;
             }
+
+            delta = thing_get_stats_max_id(t) - thing_get_stats_id(t);
+            if (delta > 0) {
+                t->stats.id -= delta / 10;
+            }
         }
     }
 }

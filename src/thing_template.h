@@ -159,6 +159,7 @@ typedef struct thing_template_ {
     int32_t bonus_score_on_death;
     int32_t bonus_score_on_collect;
     int16_t bonus_hp_on_use;
+    int16_t bonus_id_on_use;
 
     /*
      * Max hp, attack bonuses etc... Is overriden by thing values that can 
@@ -169,6 +170,7 @@ typedef struct thing_template_ {
     uint32_t ppp1;
     uint32_t ppp2;
     uint32_t hp_per_level;
+    uint32_t id_per_level;
     float light_radius;
     uint32_t quantity;
     uint32_t hit_priority;
@@ -286,7 +288,6 @@ int32_t thing_template_get_bonus_score_on_death(thing_templatep);
 uint32_t thing_template_get_vision_distance(thing_templatep);
 int32_t thing_template_get_bonus_score_on_collect(thing_templatep);
 
-int16_t thing_template_get_stats_max_hp(thing_templatep);
 uint32_t thing_template_get_stats_attack_melee(thing_templatep);
 uint32_t thing_template_get_stats_attack_ranged(thing_templatep);
 uint32_t thing_template_get_stats_speed(thing_templatep);
@@ -296,13 +297,20 @@ uint32_t thing_template_get_stats_defense(thing_templatep);
 
 uint32_t thing_template_get_ppp1(thing_templatep);
 uint32_t thing_template_get_ppp2(thing_templatep);
-uint32_t thing_template_get_hp_per_level(thing_templatep);
 float thing_template_get_light_radius(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
 uint32_t thing_template_get_hit_priority(thing_templatep);
 uint32_t thing_template_get_weapon_fire_delay_tenths(thing_templatep);
 uint32_t thing_template_get_swing_distance_from_player(thing_templatep);
+
+int16_t thing_template_get_stats_max_hp(thing_templatep);
+uint32_t thing_template_get_hp_per_level(thing_templatep);
 int16_t thing_template_get_bonus_hp_on_use(thing_templatep);
+
+int16_t thing_template_get_stats_max_id(thing_templatep);
+uint32_t thing_template_get_id_per_level(thing_templatep);
+int16_t thing_template_get_bonus_id_on_use(thing_templatep);
+
 uint32_t thing_template_get_tx_map_update_delay_thousandths(thing_templatep);
 uint32_t thing_template_get_can_be_hit_chance(thing_templatep);
 uint32_t thing_template_get_failure_chance(thing_templatep);

@@ -53,20 +53,14 @@ void font_fini (void)
 
 uint8_t font_init (void)
 {
-    int32_t VSMALL_FONT_SIZE = 0;
-    int32_t SMALL_FONT_SIZE = 0;
-    int32_t MED_FONT_SIZE = 0;
-    int32_t VLARGE_FONT_SIZE = 0;
-    int32_t LARGE_FONT_SIZE = 0;
+    int32_t vsmall_font_size = VSMALL_FONT_SIZE;
+    int32_t small_font_size = SMALL_FONT_SIZE;
+    int32_t med_font_size = MED_FONT_SIZE;
+    int32_t vlarge_font_size = VLARGE_FONT_SIZE;
+    int32_t large_font_size = LARGE_FONT_SIZE;
     int32_t delta;
 
     font_inited = true;
-
-    VSMALL_FONT_SIZE = 12;
-    SMALL_FONT_SIZE  = 14;
-    MED_FONT_SIZE    = 22;
-    VLARGE_FONT_SIZE = 24;
-    LARGE_FONT_SIZE  = 28;
 
     delta = 0;
     if (global_config.video_pix_width <= 640) {
@@ -78,11 +72,11 @@ uint8_t font_init (void)
         delta = +2;
     }
 
-    VSMALL_FONT_SIZE += delta;
-    SMALL_FONT_SIZE  += delta;
-    MED_FONT_SIZE    += delta;
-    VLARGE_FONT_SIZE += delta;
-    LARGE_FONT_SIZE  += delta;
+    vsmall_font_size += delta;
+    small_font_size  += delta;
+    med_font_size    += delta;
+    vlarge_font_size += delta;
+    large_font_size  += delta;
 
 #ifdef ENABLE_GENERATE_TTF
     /*
