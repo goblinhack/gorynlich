@@ -176,12 +176,12 @@ static const unsigned char *const data_gfx_sprites_small_png_start =
 static const unsigned char *const data_gfx_sprites_small_png_end   =
     (const unsigned char *const) (char*)&data_gfx_sprites_small_png_end_;
 
-extern unsigned char *data_gfx_sqiggles_png_start_ asm("data_gfx_sqiggles_png_start_");
-extern unsigned char *data_gfx_sqiggles_png_end_ asm("data_gfx_sqiggles_png_end_");
-static const unsigned char *const data_gfx_sqiggles_png_start =
-    (const unsigned char *const) (char*)&data_gfx_sqiggles_png_start_;
-static const unsigned char *const data_gfx_sqiggles_png_end   =
-    (const unsigned char *const) (char*)&data_gfx_sqiggles_png_end_;
+extern unsigned char *data_gfx_squiggles_png_start_ asm("data_gfx_squiggles_png_start_");
+extern unsigned char *data_gfx_squiggles_png_end_ asm("data_gfx_squiggles_png_end_");
+static const unsigned char *const data_gfx_squiggles_png_start =
+    (const unsigned char *const) (char*)&data_gfx_squiggles_png_start_;
+static const unsigned char *const data_gfx_squiggles_png_end   =
+    (const unsigned char *const) (char*)&data_gfx_squiggles_png_end_;
 
 extern unsigned char *data_gfx_title_png_start_ asm("data_gfx_title_png_start_");
 extern unsigned char *data_gfx_title_png_end_ asm("data_gfx_title_png_end_");
@@ -1891,7 +1891,7 @@ ramdisk_t ramdisk_data[] = {
     /* filename */ "data/gfx/sprites_small.png",
 },
 {
-    /* filename */ "data/gfx/sqiggles.png",
+    /* filename */ "data/gfx/squiggles.png",
 },
 {
     /* filename */ "data/gfx/title.png",
@@ -2647,8 +2647,8 @@ void ramdisk_init (void)
     ramdisk_data[23].len = data_gfx_rat_png_end - data_gfx_rat_png_start;
     ramdisk_data[24].data = data_gfx_sprites_small_png_start;
     ramdisk_data[24].len = data_gfx_sprites_small_png_end - data_gfx_sprites_small_png_start;
-    ramdisk_data[25].data = data_gfx_sqiggles_png_start;
-    ramdisk_data[25].len = data_gfx_sqiggles_png_end - data_gfx_sqiggles_png_start;
+    ramdisk_data[25].data = data_gfx_squiggles_png_start;
+    ramdisk_data[25].len = data_gfx_squiggles_png_end - data_gfx_squiggles_png_start;
     ramdisk_data[26].data = data_gfx_title_png_start;
     ramdisk_data[26].len = data_gfx_title_png_end - data_gfx_title_png_start;
     ramdisk_data[27].data = data_gfx_title2_png_start;
