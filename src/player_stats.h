@@ -9,6 +9,8 @@ typedef struct player_stats_ {
     char pclass[SMALL_STRING_LEN_MAX];
     int16_t hp;
     int16_t max_hp;
+    int16_t id;
+    int16_t max_id;
     uint16_t experience;
     uint8_t spending_points;
     uint8_t attack_melee;

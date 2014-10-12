@@ -1509,6 +1509,27 @@ static inline int32_t thing_get_stats_max_hp (thingp t)
     return (val);
 }
 
+static inline int32_t thing_get_stats_id (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.id;
+    return (val);
+}
+
+static inline int32_t thing_get_stats_max_id (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.max_id;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_max_id(t->thing_template);
+    return (val);
+}
+
 static inline uint32_t thing_get_stats_experience (thingp t)
 {
     uint32_t val;
