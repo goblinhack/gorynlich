@@ -158,6 +158,11 @@ static uint8_t resource_init_23 (void *context)
                      "button_green") != 0);
 }
 
+static uint8_t resource_init_24 (void *context)
+{
+    return (true);
+}
+
 static uint8_t resource_init_25 (void *context)
 {
     return (tex_load("data/gfx/button_black.png",
@@ -170,8 +175,25 @@ static uint8_t resource_init_26 (void *context)
                      "squiggles") != 0);
 }
 
+static uint8_t resource_init_27 (void *context)
+{
+    return (tex_load("data/gfx/itembar.png",
+                     "itembar") != 0);
+}
 
-static uint8_t resource_init_24 (void *context)
+static uint8_t resource_init_28 (void *context)
+{
+    return (tex_load("data/gfx/crystalball.png",
+                     "crystalball") != 0);
+}
+
+static uint8_t resource_init_29 (void *context)
+{
+    return (tex_load("data/gfx/crystalball_purple.png",
+                     "crystalball_purple") != 0);
+}
+
+static uint8_t resource_init_last (void *context)
 {
     static const char *small_tiles[] = {
         // --------------------------------------------------------------------
@@ -2626,6 +2648,54 @@ static uint8_t resource_init_24 (void *context)
     tile_load_arr("anim_eyes", 128, 128,
                   ARRAY_SIZE(anim_eyes_tiles), anim_eyes_tiles);
 
+    static const char *crystalball_tiles[] = {
+        // --------------------------------------------------------------------
+        "crystalball.1",
+        "crystalball.2",
+        "crystalball.3",
+        "crystalball.4",
+        "crystalball.5",
+        "crystalball.6",
+        "crystalball.7",
+        "crystalball.8",
+        "crystalball.9",
+        "crystalball.10",
+        "crystalball.11",
+        "crystalball.12",
+        "crystalball.13",
+        "crystalball.14",
+        "crystalball.15",
+        "crystalball.16",
+    };
+
+    tile_load_arr("crystalball", 256, 256,
+                  ARRAY_SIZE(crystalball_tiles), 
+                  crystalball_tiles);
+
+    static const char *crystalball_purple_tiles[] = {
+        // --------------------------------------------------------------------
+        "crystalball_purple.1",
+        "crystalball_purple.2",
+        "crystalball_purple.3",
+        "crystalball_purple.4",
+        "crystalball_purple.5",
+        "crystalball_purple.6",
+        "crystalball_purple.7",
+        "crystalball_purple.8",
+        "crystalball_purple.9",
+        "crystalball_purple.10",
+        "crystalball_purple.11",
+        "crystalball_purple.12",
+        "crystalball_purple.13",
+        "crystalball_purple.14",
+        "crystalball_purple.15",
+        "crystalball_purple.16",
+    };
+
+    tile_load_arr("crystalball_purple", 256, 256,
+                  ARRAY_SIZE(crystalball_purple_tiles), 
+                  crystalball_purple_tiles);
+
     /*
      * Walls
      */
@@ -2903,6 +2973,18 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_26,
                           0, "resource_init_26");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_27,
+                          0, "resource_init_27");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_28,
+                          0, "resource_init_28");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_29,
+                          0, "resource_init_29");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_last,
+                          0, "resource_init_last");
 
 
     return (true);

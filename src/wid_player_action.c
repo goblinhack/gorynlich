@@ -86,8 +86,47 @@ static void wid_player_action_create (player_stats_t *s)
         wid_set_square(w);
     }
 
+    {
+        widp w =
+            wid_new_container(wid_player_action, 
+                              "wid player_stats container");
+
+        fpoint tl = {0.6, 0.0};
+        fpoint br = {0.9, 1.0};
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, WHITE);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
+
+        wid_set_tex(w, 0, "squiggles");
+        wid_set_square(w);
+    }
+
+    {
+        widp w =
+            wid_new_container(wid_player_action, 
+                              "wid player_stats container");
+
+        fpoint tl = {0.3, 0.4};
+        fpoint br = {0.8, 1.0};
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, WHITE);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
+
+        wid_set_tex(w, 0, "itembar");
+        wid_set_square(w);
+        wid_raise(w);
+    }
+
     wid_move_to_pct_centered(wid_player_action, 0.5, 2.0);
-    wid_move_to_pct_centered_in(wid_player_action, 0.5, 0.8, wid_swipe_delay);
+    wid_move_to_pct_centered_in(wid_player_action, 0.5, 0.9, wid_swipe_delay);
 
     wid_raise(wid_player_action);
     wid_update(wid_player_action);
