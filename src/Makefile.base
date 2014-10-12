@@ -92,6 +92,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_intro_settings.o 	\
     $(OBJDIR)/wid_player_stats.o 	\
     $(OBJDIR)/wid_player_info.o 	\
+    $(OBJDIR)/wid_player_action.o 	\
     $(OBJDIR)/wid_player_inventory.o 	\
     $(OBJDIR)/wid_intro_demo.o 		\
     $(OBJDIR)/wid_notify.o 		\

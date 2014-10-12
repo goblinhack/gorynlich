@@ -20,6 +20,7 @@
 #include "wid_player_stats.h"
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
+#include "wid_player_action.h"
 #include "wid_hiscore.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
@@ -128,6 +129,7 @@ void wid_intro_hide (void)
     wid_player_stats_hide();
     wid_player_info_hide();
     wid_player_inventory_hide();
+    wid_player_action_hide();
 }
 
 void wid_intro_visible (void)
@@ -509,4 +511,5 @@ static void wid_intro_create (void)
     wid_player_stats_visible(&s);
     wid_player_info_visible(&s);
     wid_player_inventory_visible(&s);
+    wid_player_action_visible(&s);
 }

@@ -73,8 +73,8 @@
 .o/ramdisk_data_gfx_sprites_small_png.o: asm/ramdisk_data_gfx_sprites_small_png.S ../data/gfx/sprites_small.png
 	gcc -c asm/ramdisk_data_gfx_sprites_small_png.S -o .o/ramdisk_data_gfx_sprites_small_png.o
 
-.o/ramdisk_data_gfx_sqiggles_png.o: asm/ramdisk_data_gfx_sqiggles_png.S ../data/gfx/sqiggles.png
-	gcc -c asm/ramdisk_data_gfx_sqiggles_png.S -o .o/ramdisk_data_gfx_sqiggles_png.o
+.o/ramdisk_data_gfx_squiggles_png.o: asm/ramdisk_data_gfx_squiggles_png.S ../data/gfx/squiggles.png
+	gcc -c asm/ramdisk_data_gfx_squiggles_png.S -o .o/ramdisk_data_gfx_squiggles_png.o
 
 .o/ramdisk_data_gfx_title_png.o: asm/ramdisk_data_gfx_title_png.S ../data/gfx/title.png
 	gcc -c asm/ramdisk_data_gfx_title_png.S -o .o/ramdisk_data_gfx_title_png.o

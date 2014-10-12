@@ -164,6 +164,13 @@ static uint8_t resource_init_25 (void *context)
                      "button_black") != 0);
 }
 
+static uint8_t resource_init_26 (void *context)
+{
+    return (tex_load("data/gfx/squiggles.png",
+                     "squiggles") != 0);
+}
+
+
 static uint8_t resource_init_24 (void *context)
 {
     static const char *small_tiles[] = {
@@ -2893,6 +2900,9 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_25,
                           0, "resource_init_25");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_26,
+                          0, "resource_init_26");
 
 
     return (true);
