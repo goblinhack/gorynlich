@@ -12,9 +12,12 @@
 #include "wid_player_info.h"
 #include "string.h"
 #include "time.h"
+#include "client.h"
+#include "name.h"
 
 static widp wid_player_info;
 static uint8_t wid_player_info_init_done;
+static int wid_player_info_set_name;
 
 static void wid_player_info_create(player_stats_t *);
 static void wid_player_info_destroy(void);
@@ -75,13 +78,67 @@ static void wid_player_info_buttons_tick (widp wid)
     wid_set_animate(wid, false);
 }
 
+/*
+ * Key down etc...
+ */
+static uint8_t wid_player_info_name_receive_input (widp w, 
+                                                   const SDL_KEYSYM *key)
+{
+    int r;
+    char *name = (char*) wid_get_text(w);
+
+    switch (key->sym) {
+        case SDLK_RETURN: {
+            /*
+             * Change name.
+             */
+            wid_set_show_cursor(w, false);
+            wid_set_on_key_down(w, 0);
+
+            wid_player_info_set_name = true;
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    /*
+     * Feed to the general input handler
+     */
+    r = (wid_receive_input(w, key));
+
+    name = (char*) wid_get_text(w);
+
+    wid_player_info_set_name = true;
+
+    if (!strlen(name)) {
+        wid_player_info_set_name = false;
+
+        strncpy(player_stats->pname, name_random(player_stats->pclass),
+                sizeof(player_stats->pname) - 1);
+    }
+
+    return (r);
+}
+
+static uint8_t wid_player_info_select_name_event (widp w, int32_t x, int32_t y,
+                                             uint32_t button)
+{
+    wid_set_on_key_down(w, wid_player_info_name_receive_input);
+
+    wid_set_show_cursor(w, true);
+
+    return (true);
+}
 
 static void wid_player_info_create (player_stats_t *s)
 {
     player_stats = s;
 
     if (!wid_player_info) {
-        widp w = wid_player_info = wid_new_rounded_window("wid player_stats");
+        widp w = wid_player_info = 
+                        wid_new_rounded_window("wid player_stats");
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {0.3, 0.9};
@@ -100,7 +157,8 @@ static void wid_player_info_create (player_stats_t *s)
 
     {
         widp w = 
-            wid_new_square_button(wid_player_info, "wid player_stats player");
+            wid_new_square_button(wid_player_info, 
+                                  "wid player_stats player");
 
         fpoint tl = {0.3, 0.2};
         fpoint br = {0.7, 0.4};
@@ -111,9 +169,90 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_no_shape(w);
     }
 
-    wid_move_to_pct_centered(wid_player_info, 0.5, -1.0);
-    wid_move_to_pct_centered_in(wid_player_info, 0.5, 0.45, 
-                                wid_swipe_delay * 2);
+    {
+        fpoint tl = {0.05, 0.45};
+        fpoint br = {0.25, 0.5};
+
+        widp w = wid_new_container(wid_player_info, 
+                                   "wid intro name container");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Title");
+        wid_set_font(w, small_font);
+        wid_set_no_shape(w);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+    }
+
+    {
+        fpoint tl = {0.26, 0.45};
+        fpoint br = {0.9, 0.5};
+
+        widp w = wid_new_container(wid_player_info, 
+                                   "wid intro name value");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, player_stats->pname);
+        wid_set_font(w, small_font);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_square(w);
+        wid_set_bevelled(w, true);
+        wid_set_bevel(w, 2);
+        wid_set_text_outline(w, true);
+        wid_set_on_mouse_down(w, wid_player_info_select_name_event);
+        wid_raise(w);
+    }
+
+    {
+        fpoint tl = {0.05, 0.51};
+        fpoint br = {0.24, 0.56};
+
+        widp w = wid_new_container(wid_player_info, 
+                                   "wid intro pclass container");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "class");
+        wid_set_font(w, small_font);
+        wid_set_no_shape(w);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+    }
+
+    {
+        fpoint tl = {0.26, 0.51};
+        fpoint br = {0.9, 0.56};
+
+        widp w = wid_new_container(wid_player_info, 
+                                   "wid intro pclass value");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, player_stats->pclass);
+        wid_set_font(w, small_font);
+        wid_set_no_shape(w);
+
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+    }
+
+    wid_move_to_pct_centered(wid_player_info, 0.5, 0.45);
 
     wid_raise(wid_player_info);
     wid_update(wid_player_info);

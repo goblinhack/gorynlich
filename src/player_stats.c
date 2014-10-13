@@ -154,9 +154,12 @@ void player_stats_generate_random (player_stats_t *player_stats)
                     player_stats_to_thing_template(player_stats);
 
     player_stats->hp =
-    player_stats->max_hp = thing_template_get_stats_max_hp(thing_template);
+        player_stats->max_hp = 
+            thing_template_get_stats_max_hp(thing_template);
+
     player_stats->id =
-    player_stats->max_id = thing_template_get_stats_max_id(thing_template);
+        player_stats->max_id = 
+            thing_template_get_stats_max_id(thing_template);
 }
 
 void player_stats_init (player_stats_t *player_stats) 
