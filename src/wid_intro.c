@@ -9,7 +9,6 @@
 #include "main.h"
 #include "wid.h"
 #include "wid_intro.h"
-#include "wid_intro2.h"
 #include "wid_popup.h"
 #include "wid_intro_extra.h"
 #include "wid_intro_about.h"
@@ -17,11 +16,7 @@
 #include "wid_intro_settings.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
-#include "wid_player_stats.h"
-#include "wid_player_info.h"
-#include "wid_player_inventory.h"
-#include "wid_player_action.h"
-#include "wid_hiscore.h"
+#include "wid_intro2.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
 #include "wid_server_join.h"
@@ -124,12 +119,6 @@ void wid_intro_hide (void)
     wid_hide(wid_intro, 0);
     wid_raise(wid_intro);
     wid_update(wid_intro);
-
-    wid_intro_buttons_hide();
-    wid_player_stats_hide();
-    wid_player_info_hide();
-    wid_player_inventory_hide();
-    wid_player_action_hide();
 }
 
 void wid_intro_visible (void)
@@ -248,6 +237,7 @@ static void wid_intro_single_play_selected (void)
 static void wid_intro_play_selected_cb (void *context)
 {
     wid_intro2_visible();
+    wid_intro_buttons_hide();
 }
 
 static void wid_intro_play_selected (void)
@@ -505,11 +495,4 @@ static void wid_intro_create (void)
     wid_fade_in(wid_intro_man, intro_effect_delay*2);
     wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
     wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
-
-    static player_stats_t s;
-    player_stats_generate_random(&s);
-    wid_player_stats_visible(&s);
-    wid_player_info_visible(&s);
-    wid_player_inventory_visible(&s);
-    wid_player_action_visible(&s);
 }
