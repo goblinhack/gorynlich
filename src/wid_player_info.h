@@ -8,3 +8,4 @@ uint8_t wid_player_info_init(void);
 void wid_player_info_fini(void);
 void wid_player_info_hide(void);
 void wid_player_info_visible(player_stats_t *);
+extern int wid_player_info_set_name;

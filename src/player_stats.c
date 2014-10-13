@@ -14,6 +14,7 @@
 #include "string.h"
 #include "name.h"
 #include "thing_template.h"
+#include "wid_player_info.h"
 
 static int player_stats_generate_spending_stat (void) 
 {
@@ -132,8 +133,6 @@ int player_stats_get_modifier (int value)
 
 void player_stats_generate_random (player_stats_t *player_stats) 
 {
-    memset(player_stats, 0, sizeof(*player_stats));
-
     player_stats->spending_points = player_stats_generate_spending_points();
     player_stats->attack_melee = player_stats_generate_spending_stat();
     player_stats->attack_ranged = player_stats_generate_spending_stat();
@@ -147,8 +146,10 @@ void player_stats_generate_random (player_stats_t *player_stats)
     strncpy(player_stats->pclass, pclass_random(),
             sizeof(player_stats->pclass) - 1);
 
-    strncpy(player_stats->pname, name_random(player_stats->pclass),
-            sizeof(player_stats->pname) - 1);
+    if (!wid_player_info_set_name) {
+        strncpy(player_stats->pname, name_random(player_stats->pclass),
+                sizeof(player_stats->pname) - 1);
+    }
 
     thing_templatep thing_template = 
                     player_stats_to_thing_template(player_stats);
