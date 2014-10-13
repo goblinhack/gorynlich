@@ -134,8 +134,8 @@ static void wid_game_quit_create (void)
             "%%fg=red$Quit game?\n",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
-            vsmall_font,              /* body font */
-            vsmall_font,              /* button font */
+            small_font,              /* body font */
+            small_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_game_quit_really_quit_callback_yes,
             "%%tile=button_n$No    ",  wid_game_quit_really_quit_callback_no);

@@ -193,8 +193,8 @@ static void wid_dead_gravestone_appeared (void *context)
             "%%fg=red$Rejoin game?",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
-            vsmall_font,              /* body font */
-            vsmall_font,              /* button font */
+            small_font,              /* body font */
+            small_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_dead_rejoin_callback_yes,
             "%%tile=button_n$No    ",  wid_dead_rejoin_callback_no);
@@ -207,8 +207,8 @@ static void wid_dead_gravestone_appeared (void *context)
             "%%fg=red$Play again?",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
-            vsmall_font,              /* body font */
-            vsmall_font,              /* button font */
+            small_font,              /* body font */
+            small_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_dead_replay_callback_yes,
             "%%tile=button_n$No    ",  wid_dead_replay_callback_no);
@@ -243,7 +243,7 @@ static void wid_dead_create (const char *name,
     wid_set_color(w, WID_COLOR_TL, WHITE);
     wid_set_color(w, WID_COLOR_BR, WHITE);
     wid_set_color(w, WID_COLOR_BG, WHITE);
-    wid_set_font(w, vsmall_font);
+    wid_set_font(w, small_font);
     wid_set_bevelled(w, 10);
     wid_set_tex(w, 0, "gravestone");
     wid_set_ignore_events(w, true);
@@ -260,7 +260,7 @@ static void wid_dead_create (const char *name,
         wid_set_color(w2, WID_COLOR_BG, c);
         wid_set_color(w2, WID_COLOR_TEXT, GRAY);
         wid_set_text(w2, name);
-        wid_set_font(w2, vsmall_font);
+        wid_set_font(w2, small_font);
         wid_set_ignore_events(w2, true);
 
         {
@@ -280,7 +280,7 @@ static void wid_dead_create (const char *name,
         wid_set_color(w2, WID_COLOR_BG, c);
         wid_set_color(w2, WID_COLOR_TEXT, GRAY);
         wid_set_text(w2, reason);
-        wid_set_font(w2, vsmall_font);
+        wid_set_font(w2, small_font);
         wid_set_ignore_events(w2, true);
 
         {

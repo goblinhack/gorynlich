@@ -694,7 +694,7 @@ static void wid_server_create_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
             wid_set_on_mouse_down(w, wid_server_create_name_mouse_down);
@@ -758,7 +758,7 @@ static void wid_server_create_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_centerx(w, true);
 
             wid_set_on_mouse_down(w, wid_server_create_max_players_mouse_down);
@@ -822,7 +822,7 @@ static void wid_server_create_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
             wid_set_on_mouse_down(w, wid_server_create_port_mouse_down);
@@ -866,7 +866,7 @@ static void wid_server_create_create (uint8_t redo)
                 wid_set_on_mouse_down(w, wid_server_start);
             }
 
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             color c = STEELBLUE;
 
             c.a = 100;
