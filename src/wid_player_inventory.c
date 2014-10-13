@@ -85,8 +85,7 @@ static void wid_player_inventory_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
     }
 
-    wid_move_to_pct_centered(wid_player_inventory, 0.8, -1.0);
-    wid_move_to_pct_centered_in(wid_player_inventory, 0.8, 0.45, wid_swipe_delay);
+    wid_move_to_pct_centered(wid_player_inventory, 0.8, 0.45);
 
     wid_raise(wid_player_inventory);
     wid_update(wid_player_inventory);

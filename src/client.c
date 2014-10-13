@@ -214,7 +214,7 @@ static uint8_t client_set_name (tokens_t *tokens, void *context)
     char *s = tokens->args[2];
 
     if (!s || !*s) {
-        WARN("need to set a name");
+        DIE("need to set a name for client");
         return (false);
     }
 
@@ -529,7 +529,7 @@ static uint8_t client_socket_tell (char *from, char *to, char *msg)
 uint8_t client_socket_set_name (const char *name)
 {
     if (!name || !*name) {
-        WARN("need to set a name");
+        DIE("need to set a pname");
         return (false);
     }
 
@@ -553,7 +553,7 @@ uint8_t client_socket_set_name (const char *name)
 uint8_t client_socket_set_pclass (const char *pclass)
 {
     if (!pclass || !*pclass) {
-        WARN("need to set a pclass");
+        DIE("need to set a pclass");
         return (false);
     }
 

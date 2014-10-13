@@ -10,7 +10,12 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_player_stats.h"
+#include "wid_player_info.h"
+#include "wid_player_inventory.h"
+#include "wid_intro3.h"
+#include "timer.h"
 #include "string.h"
+#include "client.h"
 
 static widp wid_player_stats;
 static widp wid_player_stats_container;
@@ -85,6 +90,15 @@ void wid_player_stats_fini (void)
 void wid_player_stats_hide (void)
 {
     wid_player_stats_destroy();
+
+    /*
+     * May not be set yet if first time making the windows visible we also 
+     * call hide.
+     */
+    if (player_stats) {
+        client_socket_set_name(player_stats->pname);
+        client_socket_set_pclass(player_stats->pclass);
+    }
 }
 
 void wid_player_stats_visible (player_stats_t *s)
@@ -94,8 +108,14 @@ void wid_player_stats_visible (player_stats_t *s)
 
 static void wid_player_stats_redraw (void)
 {
-    wid_destroy_nodelay(&wid_player_stats_container);
+    wid_player_stats_hide();
     wid_player_stats_create(player_stats);
+
+    wid_player_info_hide();
+    wid_player_info_visible(player_stats);
+
+    wid_player_inventory_hide();
+    wid_player_inventory_visible(player_stats);
 }
 
 static void wid_player_stats_reroll (void)
@@ -104,11 +124,30 @@ static void wid_player_stats_reroll (void)
     wid_player_stats_redraw();
 }
 
+static void wid_player_stats_play_selected_cb (void *context)
+{
+    wid_intro3_visible();
+}
+
+static void wid_player_stats_play_selected (void)
+{
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_player_stats_play_selected_cb,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "start game",
+            wid_swipe_delay,
+            0 /* jitter */);
+
+    wid_player_stats_hide();
+}
+
 static uint8_t wid_player_stats_all_done_mouse_event (widp w, 
                                                       int32_t x, int32_t y,
                                                       uint32_t button)
 {
-    wid_player_stats_hide();
+    wid_player_stats_play_selected();
 
     return (true);
 }
@@ -119,7 +158,7 @@ static uint8_t wid_player_stats_all_done_key_event (widp w,
     switch (key->sym) {
         case 'q':
         case SDLK_ESCAPE:
-            wid_player_stats_hide();
+            wid_player_stats_play_selected();
             return (true);
 
         default:
@@ -563,8 +602,7 @@ static void wid_player_stats_create (player_stats_t *s)
         wid_set_square(w);
     }
 
-    wid_move_to_pct_centered(wid_player_stats, 0.2, -1.0);
-    wid_move_to_pct_centered_in(wid_player_stats, 0.2, 0.45, wid_swipe_delay);
+    wid_move_to_pct_centered(wid_player_stats, 0.2, 0.45);
 
     wid_raise(wid_player_stats);
     wid_update(wid_player_stats);
