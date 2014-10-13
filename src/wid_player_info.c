@@ -17,7 +17,7 @@
 
 static widp wid_player_info;
 static uint8_t wid_player_info_init_done;
-static int wid_player_info_set_name;
+int wid_player_info_set_name;
 
 static void wid_player_info_create(player_stats_t *);
 static void wid_player_info_destroy(void);
@@ -170,8 +170,8 @@ static void wid_player_info_create (player_stats_t *s)
     }
 
     {
-        fpoint tl = {0.05, 0.45};
-        fpoint br = {0.25, 0.5};
+        fpoint tl = {0.05, 0.4};
+        fpoint br = {0.25, 0.45};
 
         widp w = wid_new_container(wid_player_info, 
                                    "wid intro name container");
@@ -190,8 +190,8 @@ static void wid_player_info_create (player_stats_t *s)
     }
 
     {
-        fpoint tl = {0.26, 0.45};
-        fpoint br = {0.9, 0.5};
+        fpoint tl = {0.26, 0.4};
+        fpoint br = {0.9, 0.45};
 
         widp w = wid_new_container(wid_player_info, 
                                    "wid intro name value");
@@ -213,15 +213,15 @@ static void wid_player_info_create (player_stats_t *s)
     }
 
     {
-        fpoint tl = {0.05, 0.51};
-        fpoint br = {0.24, 0.56};
+        fpoint tl = {0.05, 0.46};
+        fpoint br = {0.24, 0.51};
 
         widp w = wid_new_container(wid_player_info, 
                                    "wid intro pclass container");
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "class");
+        wid_set_text(w, "Pedigree");
         wid_set_font(w, small_font);
         wid_set_no_shape(w);
 
@@ -233,8 +233,8 @@ static void wid_player_info_create (player_stats_t *s)
     }
 
     {
-        fpoint tl = {0.26, 0.51};
-        fpoint br = {0.9, 0.56};
+        fpoint tl = {0.26, 0.46};
+        fpoint br = {0.9, 0.51};
 
         widp w = wid_new_container(wid_player_info, 
                                    "wid intro pclass value");
