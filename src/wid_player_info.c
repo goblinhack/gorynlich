@@ -11,9 +11,9 @@
 #include "color.h"
 #include "wid_player_info.h"
 #include "string.h"
+#include "time.h"
 
 static widp wid_player_info;
-static widp wid_player_info_container;
 static uint8_t wid_player_info_init_done;
 
 static void wid_player_info_create(player_stats_t *);
@@ -51,6 +51,31 @@ void wid_player_info_visible (player_stats_t *s)
     wid_player_info_create(s);
 }
 
+static void wid_player_info_buttons_tick (widp wid)
+{
+    int tick = time_get_time_milli() / 100;
+    int which = tick % 8;
+
+    const char *tn = player_stats->pclass;
+
+    char tilename[40];
+
+    switch (which) {
+    case 0: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-right", tn); break;
+    case 1: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-br", tn); break;
+    case 2: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-down", tn); break;
+    case 3: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-bl", tn); break;
+    case 4: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-left", tn); break;
+    case 5: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-tl", tn); break;
+    case 6: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-up", tn); break;
+    case 7: snprintf(tilename, sizeof(tilename) - 1, "%s-demo-tr", tn); break;
+    }
+
+    wid_set_tilename(wid, tilename);
+    wid_set_animate(wid, false);
+}
+
+
 static void wid_player_info_create (player_stats_t *s)
 {
     player_stats = s;
@@ -74,13 +99,16 @@ static void wid_player_info_create (player_stats_t *s)
     }
 
     {
-        widp w = wid_player_info_container =
-            wid_new_container(wid_player_info, "wid player_stats container");
+        widp w = 
+            wid_new_square_button(wid_player_info, "wid player_stats player");
 
-        fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 1.0};
+        fpoint tl = {0.3, 0.2};
+        fpoint br = {0.7, 0.4};
 
         wid_set_tl_br_pct(w, tl, br);
+        wid_set_on_tick(w, wid_player_info_buttons_tick);
+
+        wid_set_no_shape(w);
     }
 
     wid_move_to_pct_centered(wid_player_info, 0.5, -1.0);
