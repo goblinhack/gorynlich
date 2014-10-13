@@ -593,7 +593,7 @@ void wid_editor_buttons_wid_create (void)
                 break;
             }
 
-            wid_set_font(child, vsmall_font);
+            wid_set_font(child, small_font);
 
             wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_color(child, WID_COLOR_BG, BLACK);

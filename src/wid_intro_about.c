@@ -127,8 +127,8 @@ static void wid_intro_about_create (void)
           "%%fg=gold$Credits",      /* title */
           0.5, 0.5,                 /* x,y postition in percent */
           small_font,               /* title font */
-          vsmall_font,              /* body font */
-          vsmall_font,              /* button font */
+          small_font,              /* body font */
+          small_font,              /* button font */
           1,                        /* number buttons */
           "%%tile=button_b$Back", wid_intro_about_callback_close);
 

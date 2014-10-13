@@ -976,7 +976,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                     &wid_score_title,
                                     "SCORE", 
                                     score_x, player_y_offset - score_and_health_title_offset,
-                                    vsmall_font);
+                                    small_font);
 
         wid_set_no_shape(wid_score_title_container);
 
@@ -990,7 +990,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                     &wid_health_title,
                                     "HEALTH",  
                                     health_x, player_y_offset - score_and_health_title_offset,
-                                    vsmall_font);
+                                    small_font);
 
         wid_set_no_shape(wid_health_title_container);
 
@@ -1016,7 +1016,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                     name_title ? name_title : "No player",
                                     (score_x + health_x) / 2,
                                     player_y_offset - score_and_health_value_offset,
-                                    vsmall_font);
+                                    small_font);
         if (name_title) {
             myfree(name_title);
         }
@@ -1238,7 +1238,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                         snprintf(tmp, sizeof(tmp) - 1, "%d", t->carrying[c]);
 
                         wid_set_text(w, tmp);
-                        wid_set_font(w, vsmall_font);
+                        wid_set_font(w, small_font);
                         wid_set_text_rhs(w, true);
                         wid_set_text_bot(w, true);
                     }
@@ -1277,7 +1277,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                         snprintf(tmp, sizeof(tmp) - 1, "%d", shortcut);
 
                         wid_set_text(w, tmp);
-                        wid_set_font(w, vsmall_font);
+                        wid_set_font(w, small_font);
                         wid_raise(w);
 
                         wid_set_on_mouse_down(w, 
@@ -1329,7 +1329,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,
                                             &wid_level,
-                                            tmp, score_x, 0.15, vsmall_font);
+                                            tmp, score_x, 0.15, small_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);

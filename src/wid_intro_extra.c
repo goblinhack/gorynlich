@@ -323,7 +323,7 @@ static void wid_intro_extra_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, "%%tile=button_b$Back");
-        wid_set_font(w, vsmall_font);
+        wid_set_font(w, small_font);
 
         color c = WHITE;
 

@@ -284,7 +284,7 @@ static void wid_player_stats_create (player_stats_t *s)
             wid_set_text(w, rows[i].col1);
 
             wid_set_color(w, WID_COLOR_TEXT, WHITE);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
 
             switch (i) {
             case STAT_EXPERIENCE:

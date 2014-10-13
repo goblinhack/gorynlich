@@ -163,7 +163,7 @@ xxx++;
  */
 static void wid_chat_wid_create (void)
 {
-    fontp font = vsmall_font;
+    fontp font = small_font;
 
     {
         fpoint tl = {0.675, 0.7f};

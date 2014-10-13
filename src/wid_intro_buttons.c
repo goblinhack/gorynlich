@@ -57,8 +57,8 @@ uint8_t wid_intro_quit_selected (void)
           "%%fg=red$Quit game?", 
           0.5, 0.5,                 /* x,y postition in percent */
           small_font,               /* title font */
-          vsmall_font,              /* body font */
-          vsmall_font,              /* button font */
+          small_font,              /* body font */
+          small_font,              /* button font */
           2,                        /* number buttons */
           "%%tile=button_y$Yes    ", wid_intro_quit_callback_yes,
           "%%tile=button_n$No    ",  wid_intro_quit_callback_no);

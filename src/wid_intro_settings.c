@@ -310,8 +310,8 @@ static uint8_t wid_intro_restart_selected (void)
         wid_popup("", "%%fg=red$Settings changed, restart now?",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
-            vsmall_font,              /* body font */
-            vsmall_font,              /* button font */
+            small_font,              /* body font */
+            small_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_intro_restart_callback_yes,
             "%%tile=button_n$No    ",  wid_intro_restart_callback_no);
@@ -595,7 +595,7 @@ static void wid_intro_settings_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, "%%tile=button_b$Back      ");
-        wid_set_font(w, vsmall_font);
+        wid_set_font(w, small_font);
 
         color c = WHITE;
 

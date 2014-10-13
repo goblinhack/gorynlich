@@ -935,7 +935,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
             wid_set_on_mouse_down(w, wid_server_join_hostname_mouse_down);
@@ -1005,7 +1005,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
             wid_set_on_mouse_down(w, wid_server_join_ip_mouse_down);
@@ -1075,7 +1075,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
             wid_set_on_mouse_down(w, wid_server_join_port_mouse_down);
@@ -1145,7 +1145,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
             i++;
@@ -1212,7 +1212,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_text_outline(w, true);
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             wid_set_text_centerx(w, true);
 
             i++;
@@ -1251,7 +1251,7 @@ static void wid_server_join_create (uint8_t redo)
                 wid_set_tooltip(w, "Remove this server from the list");
             }
 
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             color c = STEELBLUE;
 
             c.a = 100;
@@ -1308,7 +1308,7 @@ static void wid_server_join_create (uint8_t redo)
                 wid_set_on_mouse_down(w, wid_server_join);
             }
 
-            wid_set_font(w, vsmall_font);
+            wid_set_font(w, small_font);
             color c = STEELBLUE;
 
             c.a = 100;
