@@ -177,7 +177,7 @@ wid_notify_internal (const char *text, uint32_t level)
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, n->line);
             wid_set_text_lhs(child, true);
-            wid_set_font(child, vsmall_font);
+            wid_set_font(child, small_font);
             wid_set_text_outline(child, true);
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
         }

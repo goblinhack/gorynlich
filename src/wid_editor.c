@@ -485,8 +485,8 @@ void wid_editor_clear (void)
     wid_editor_clear_popup = wid_popup("", "Clear level?",
         0.5, 0.2f,                /* x,y postition in percent */
         small_font,               /* title font */
-        vsmall_font,              /* body font */
-        vsmall_font,              /* button font */
+        small_font,              /* body font */
+        small_font,              /* button font */
         2,                        /* number buttons */
         "%%tile=button_y$Yes    ", wid_editor_clear_callback_yes,
         "%%tile=button_n$No    ",  wid_editor_clear_callback_no);

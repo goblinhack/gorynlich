@@ -188,7 +188,7 @@ static uint8_t wid_console_receive_input (widp w, const SDL_KEYSYM *key)
  */
 static void wid_console_wid_create (void)
 {
-    fontp font = vsmall_font;
+    fontp font = small_font;
 
     {
         fpoint tl = {0.0f, 0.0f};

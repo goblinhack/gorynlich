@@ -906,7 +906,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
     }
 
     if (w->tooltip) {
-        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, vsmall_font);
+        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, med_font);
 
         /*
          * Move just above and to the left of the widget.
