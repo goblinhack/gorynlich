@@ -353,35 +353,26 @@ static void wid_intro3_create (void)
     }
 
     {
-        fpoint tl = {0.0, 0.9};
-        fpoint br = {0.2, 0.99};
+        widp child;
 
-        widp w = wid_new_rounded_small_button(wid_intro3,
-                                              "wid go back");
-        wid_raise(w);
+        child = wid_new_square_button(wid_intro3, "Go back");
+        wid_set_font(child, small_font);
 
-        wid_set_tl_br_pct(w, tl, br);
+        fpoint tl = {0.9f, 0.95f};
+        fpoint br = {1.0f, 1.00f};
 
-        wid_set_text(w, "Go back");
-        wid_set_no_shape(w);
-        wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");
 
-        color c = STEELBLUE;
-        wid_set_color(w, WID_COLOR_TEXT, c);
+        wid_set_no_shape(child);
+        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
+        wid_set_mode(child, WID_MODE_OVER);
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_mode(w, WID_MODE_OVER);
-        c.a = 200;
-        wid_set_color(w, WID_COLOR_TEXT, c);
-
-        wid_set_mode(w, WID_MODE_FOCUS);
-        c.a = 100;
-        wid_set_color(w, WID_COLOR_TEXT, c);
-
-        wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_text_outline(w, true);
-
-        wid_set_on_mouse_down(w, wid_intro3_go_back_mouse_event);
+        wid_set_on_mouse_down(child, wid_intro3_go_back_mouse_event);
+        wid_raise(child);
+        wid_set_do_not_lower(child, true);
     }
 
     wid_intro3_bg_create();

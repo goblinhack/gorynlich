@@ -167,6 +167,9 @@ static void wid_player_action_create (player_stats_t *s)
 
     wid_raise(wid_player_action);
     wid_update(wid_player_action);
+
+    wid_raise(wid_player_action);
+    wid_set_do_not_lower(wid_player_action, true);
 }
 
 static void wid_player_action_destroy (void)
