@@ -113,6 +113,16 @@ void wid_intro2_visible (void)
     wid_update(wid_intro2);
 
     wid_fade_in(wid_intro2_background, intro_effect_delay);
+
+    player_stats_t *s;
+
+    s = &global_config.player_stats;
+
+    player_stats_generate_random(s);
+    wid_player_stats_visible(s);
+    wid_player_info_visible(s);
+    wid_player_inventory_visible(s);
+    wid_player_action_visible(s);
 }
 
 static void wid_intro2_play_selected_cb (void *context)
@@ -308,14 +318,4 @@ static void wid_intro2_create (void)
     wid_update(wid_intro2);
 
     wid_move_to_pct_centered(wid_intro2, 0.5f, 0.5f);
-
-    player_stats_t *s;
-
-    s = &global_config.player_stats;
-
-    player_stats_generate_random(s);
-    wid_player_stats_visible(s);
-    wid_player_info_visible(s);
-    wid_player_inventory_visible(s);
-    wid_player_action_visible(s);
 }

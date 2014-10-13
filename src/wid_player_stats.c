@@ -124,50 +124,6 @@ static void wid_player_stats_reroll (void)
     wid_player_stats_redraw();
 }
 
-static void wid_player_stats_play_selected_cb (void *context)
-{
-    wid_intro3_visible();
-}
-
-static void wid_player_stats_play_selected (void)
-{
-    action_timer_create(
-            &wid_timers,
-            (action_timer_callback)wid_player_stats_play_selected_cb,
-            (action_timer_destroy_callback)0,
-            0, /* context */
-            "start game",
-            wid_swipe_delay,
-            0 /* jitter */);
-
-    wid_player_stats_hide();
-}
-
-static uint8_t wid_player_stats_all_done_mouse_event (widp w, 
-                                                      int32_t x, int32_t y,
-                                                      uint32_t button)
-{
-    wid_player_stats_play_selected();
-
-    return (true);
-}
-
-static uint8_t wid_player_stats_all_done_key_event (widp w, 
-                                                    const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case 'q':
-        case SDLK_ESCAPE:
-            wid_player_stats_play_selected();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static uint8_t wid_player_stats_reroll_mouse_event (widp w, 
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
@@ -536,38 +492,6 @@ static void wid_player_stats_create (player_stats_t *s)
             wid_set_font(w, small_font);
             wid_set_no_shape(w);
         }
-    }
-
-    {
-        const char *button_name = "All Done";
-
-        widp w = wid_new_rounded_small_button(wid_player_stats_container,
-                                              button_name);
-
-        fpoint tl = {0.7, 0.85};
-        fpoint br = {0.95, 0.90};
-
-        wid_set_tl_br_pct(w, tl, br);
-        wid_set_text(w, button_name);
-        wid_set_font(w, small_font);
-
-        color c = WHITE;
-
-        c.a = 200;
-        wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_color(w, WID_COLOR_BG, c);
-
-        c.a = 255;
-        wid_set_mode(w, WID_MODE_OVER);
-        wid_set_color(w, WID_COLOR_BG, c);
-
-        wid_set_mode(w, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(w, wid_player_stats_all_done_mouse_event);
-        wid_set_on_key_down(w, wid_player_stats_all_done_key_event);
-
-        wid_set_tex(w, 0, "button_black");
-        wid_set_square(w);
     }
 
     {
