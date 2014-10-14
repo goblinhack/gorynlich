@@ -34,10 +34,8 @@ typedef struct row_ {
 
 enum {
     STAT_SPENDING_POINTS,
-    STAT_GAP1,
     STAT_EXPERIENCE,
     STAT_LEVEL,
-    STAT_GAP2,
     STAT_MAX_HP,
     STAT_MAX_ID,
     STAT_ATTACK_MELEE,
@@ -49,49 +47,45 @@ enum {
     STAT_HEALING,
 };
 
-#define WID_INTRO_MAX_SETTINGS 14 
+#define WID_INTRO_MAX_SETTINGS 12 
 
 static row rows[WID_INTRO_MAX_SETTINGS] = {
       /*                         Column 1     Column 2 Increm */
     { /* STAT_SPENDING_POINTS */ "Spending points", 0,   0,
-    "Click on a statistic below to spend points." },
-
-    { /* STAT_GAP1,           */ "",                0,   0 },
+    "Click on a statistic below to spend your hard earned points." },
 
     { /* STAT_EXPERIENCE      */ "Experience",      0,   0,
-    "Experience points earned on defeating bad guys," },
+    "Experience points earned on defeating Bad Guys." },
 
     { /* STAT_LEVEL           */ "Level",           0,   0,
     "Your current experience level" },
 
-    { /* STAT_GAP2            */ "",                0,   0 },
-
     { /* STAT_MAX_HP          */ "Max Health",      "+", 5,
-    "Health points. This is the max you can recover to." },
+    "Health points. This is the max you can recover to with your healing ability." },
 
     { /* STAT_MAX_ID          */ "Max ID",          "+", 5,
-    "ID is your life force used for magic." },
+    "ID is your life force used for magic and life changing events." },
 
     { /* STAT_ATTACK_MELEE    */ "Attack, Melee",   "+", 1,
-    "Modifier is the percentage gain you get in physical attacks." },
+    "This modifier is the percentage damage gain you get in physical attacks." },
 
     { /* STAT_ATTACK_RANGED   */ "Attack, Ranged",  "+", 1,
-    "Modifier is the percentage gain you get in missile attacks." },
+    "This modifier is the percentage damage gain you get in missile attacks." },
 
     { /* STAT_ATTACK_MAGIC   */ "Attack, Magical",  "+", 1,
-    "Modifier is the percentage gain you get in magical attacks." },
+    "This modifier is the percentage damage gain you get in magical attacks." },
 
     { /* STAT_DEFENSE         */ "Defense",         "+", 1,
-    "Modifier is the percentage gain you get in defense against attacks" },
+    "This modifier is the percentage gain you get in defense against attacks" },
 
     { /* STAT_SPEED           */ "Speed",           "+", 1,
-    "Modifier is the percentage gain you get in running around like a nutter" },
+    "This modifier is the percentage gain you get in running around like a nutter." },
 
     { /* STAT_VISION          */ "Vision",          "+", 1,
-    "Modifier is the percentage gain you get in seeing stuffs" },
+    "This modifier is the percentage gain you get in seeing bad stuffs." },
 
     { /* STAT_HEALING         */ "Healing",         "+", 1,
-    "Modifier is the percentage gain you get in recovering health points" },
+    "This modifier is the percentage gain you get in recovering health points." },
 };
 
 uint8_t wid_player_stats_init (void)
@@ -292,11 +286,6 @@ static void wid_player_stats_create (player_stats_t *s)
 
         for (i=0; i<ARRAY_SIZE(rows); i++)
         {
-            if ((i == STAT_GAP1) ||
-                (i == STAT_GAP2)) {
-                continue;
-            }
-
             widp w = wid_new_square_button(wid_player_stats_container,
                                            rows[i].col1);
             if (rows[i].tooltip) {
@@ -362,7 +351,7 @@ static void wid_player_stats_create (player_stats_t *s)
             wid_set_tex(w, 0, "button_black");
 
             if (s->spending_points > 0) {
-                if (i < STAT_GAP2) {
+                if (i < STAT_MAX_HP) {
                     wid_set_no_shape(w);
                 } else {
                     wid_set_square(w);
@@ -379,11 +368,6 @@ static void wid_player_stats_create (player_stats_t *s)
         for (i=0; i<ARRAY_SIZE(rows); i++) {
 
             if (!rows[i].col2) {
-                continue;
-            }
-
-            if ((i == STAT_GAP1) ||
-                (i == STAT_GAP2)) {
                 continue;
             }
 
@@ -426,7 +410,7 @@ static void wid_player_stats_create (player_stats_t *s)
             wid_set_tex(w, 0, "button_black");
 
             if (s->spending_points > 0) {
-                if (i < STAT_GAP2) {
+                if (i < STAT_MAX_HP) {
                     wid_set_no_shape(w);
                 } else {
                     wid_set_square(w);
@@ -443,11 +427,6 @@ static void wid_player_stats_create (player_stats_t *s)
         for (i=0; i<ARRAY_SIZE(rows); i++) {
 
             if (!rows[i].col1) {
-                continue;
-            }
-
-            if ((i == STAT_GAP1) ||
-                (i == STAT_GAP2)) {
                 continue;
             }
 
@@ -489,10 +468,20 @@ static void wid_player_stats_create (player_stats_t *s)
                 }
                 break;
             case STAT_MAX_HP:
-                text = dynprintf("%u (%u)", s->hp, s->max_hp);
+                stat = s->hp;
+                if (s->hp != s->max_hp) {
+                    text = dynprintf("%u (%u)", s->hp, s->max_hp);
+                } else {
+                    text = dynprintf("%u", s->max_hp);
+                }
                 break;
             case STAT_MAX_ID:
-                text = dynprintf("%u (%u)", s->id, s->max_id);
+                stat = s->id;
+                if (s->id != s->max_id) {
+                    text = dynprintf("%u (%u)", s->id, s->max_id);
+                } else {
+                    text = dynprintf("%u", s->max_id);
+                }
                 break;
             case STAT_ATTACK_MELEE:
                 stat = s->attack_melee;
@@ -517,9 +506,23 @@ static void wid_player_stats_create (player_stats_t *s)
                 break;
             }
 
-            if (!text) {
-                int modifier = player_stats_get_modifier(stat);
+            int modifier = player_stats_get_modifier(stat);
 
+            if (rows[i].increment == 1) {
+                if (modifier <= -3) {
+                    wid_set_color(w, WID_COLOR_TEXT, DARKGRAY);
+                } else if (modifier <= -2) {
+                    wid_set_color(w, WID_COLOR_TEXT, GRAY);
+                } else if (modifier >= 3) {
+                    wid_set_color(w, WID_COLOR_TEXT, GOLD);
+                } else if (modifier >= 2) {
+                    wid_set_color(w, WID_COLOR_TEXT, GREEN);
+                } else {
+                    wid_set_color(w, WID_COLOR_TEXT, WHITE);
+                }
+            }
+
+            if (!text) {
                 if (modifier > 0) {
                     text = dynprintf("%u / +%d", stat, modifier);
                 } else if (modifier < 0) {
@@ -545,7 +548,7 @@ static void wid_player_stats_create (player_stats_t *s)
                                               button_name);
 
         fpoint tl = {0.1, 0.85};
-        fpoint br = {0.5, 0.90};
+        fpoint br = {0.9, 0.90};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, button_name);
@@ -566,10 +569,10 @@ static void wid_player_stats_create (player_stats_t *s)
         wid_set_on_mouse_down(w, wid_player_stats_reroll_mouse_event);
         wid_set_on_key_down(w, wid_player_stats_reroll_key_event);
 
-        wid_set_tooltip(w, "Select this to try a differnet charactar. "
+        wid_set_tooltip(w, "Select this to try a differnet character. "
                         "But be certain, there is no undo...");
 
-        wid_set_tex(w, 0, "button_black");
+        wid_set_tex(w, 0, "button_red");
         wid_set_square(w);
     }
 

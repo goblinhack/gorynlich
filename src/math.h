@@ -277,3 +277,5 @@ uint8_t get_line_known_intersection(fpoint p0,
 double gauss(const double m, const double s);
 
 double fpoint_project_onto_line(fpoint P0, fpoint L0, fpoint L1);
+
+double gaussrand(double mean, double stddev);
