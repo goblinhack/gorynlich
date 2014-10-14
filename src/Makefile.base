@@ -28,6 +28,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/map_jigsaw.o 		\
     $(OBJDIR)/marshal.o 		\
     $(OBJDIR)/math.o 			\
+    $(OBJDIR)/rand.o 			\
     $(OBJDIR)/miniz.o 			\
     $(OBJDIR)/music.o 			\
     $(OBJDIR)/mzip_file.o 		\

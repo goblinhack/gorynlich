@@ -15,35 +15,7 @@
 #include "name.h"
 #include "thing_template.h"
 #include "wid_player_info.h"
-
-static int player_stats_generate_spending_stat (void) 
-{
-    /*
-     * A slightly generous bell curve.
-     */
-    int possible[] = {
-        18, 
-        17, 
-        16, 16, 
-        15, 15, 15, 
-        14, 14, 14, 14, 
-        13, 13, 13, 13, 13, 
-        12, 12, 12, 12, 12, 
-        11, 11, 11, 11, 11, 11,
-        10, 10, 10, 10, 10, 10,
-        9,  9,  9,  9,  9, 
-        8,  8,  8,  8,  8, 
-        7,  7,  7,  7, 
-        6,  6,  6,  6, 
-        5,  5,  5, 
-        4,  4,  
-        3,  3,
-        2,  
-        1,  
-    };
-
-    return (possible[rand() % ARRAY_SIZE(possible)]);
-}
+#include "math.h"
 
 static int player_stats_generate_spending_points (void) 
 {
@@ -133,35 +105,88 @@ int player_stats_get_modifier (int value)
 
 void player_stats_generate_random (player_stats_t *player_stats) 
 {
-    player_stats->spending_points = player_stats_generate_spending_points();
-    player_stats->attack_melee = player_stats_generate_spending_stat();
-    player_stats->attack_ranged = player_stats_generate_spending_stat();
-    player_stats->attack_magical = player_stats_generate_spending_stat();
-    player_stats->defense = player_stats_generate_spending_stat();
-    player_stats->speed = player_stats_generate_spending_stat();
-    player_stats->vision = player_stats_generate_spending_stat();
-    player_stats->healing = player_stats_generate_spending_stat();
-
-    player_stats_init(player_stats);
-
     strncpy(player_stats->pclass, pclass_random(),
             sizeof(player_stats->pclass) - 1);
+
+    thing_templatep thing_template = 
+                    player_stats_to_thing_template(player_stats);
+
+    player_stats_init(player_stats);
 
     if (!wid_player_info_set_name) {
         strncpy(player_stats->pname, name_random(player_stats->pclass),
                 sizeof(player_stats->pname) - 1);
     }
 
-    thing_templatep thing_template = 
-                    player_stats_to_thing_template(player_stats);
+    player_stats->spending_points = player_stats_generate_spending_points();
 
-    player_stats->hp =
-        player_stats->max_hp = 
-            thing_template_get_stats_max_hp(thing_template);
+    /*
+     * attack_melee
+     */
+    player_stats->attack_melee = 
+                    thing_template_get_stats_attack_melee(thing_template);
+    player_stats->attack_melee = gaussrand(player_stats->attack_melee, 2);
 
-    player_stats->id =
-        player_stats->max_id = 
-            thing_template_get_stats_max_id(thing_template);
+    /*
+     * attack_ranged
+     */
+    player_stats->attack_ranged = 
+                    thing_template_get_stats_attack_ranged(thing_template);
+    player_stats->attack_ranged = gaussrand(player_stats->attack_ranged, 2);
+
+    /*
+     * attack_magical
+     */
+    player_stats->attack_magical = 
+                    thing_template_get_stats_attack_magical(thing_template);
+    player_stats->attack_magical = gaussrand(player_stats->attack_magical, 2);
+
+
+    /*
+     * defense
+     */
+    player_stats->defense = 
+                    thing_template_get_stats_defense(thing_template);
+    player_stats->defense = gaussrand(player_stats->defense, 2);
+
+
+    /*
+     * speed
+     */
+    player_stats->speed = 
+                    thing_template_get_stats_speed(thing_template);
+    player_stats->speed = gaussrand(player_stats->speed, 2);
+
+
+    /*
+     * vision
+     */
+    player_stats->vision = 
+                    thing_template_get_stats_vision(thing_template);
+    player_stats->vision = gaussrand(player_stats->vision, 2);
+
+    /*
+     * healing
+     */
+    player_stats->healing = 
+                    thing_template_get_stats_healing(thing_template);
+    player_stats->healing = gaussrand(player_stats->healing, 2);
+
+    /*
+     * hp
+     */
+    player_stats->hp = thing_template_get_stats_max_hp(thing_template);
+    player_stats->max_hp = 
+        player_stats->hp = gaussrand(player_stats->hp, 
+                                    player_stats->hp / 10);
+
+    /*
+     * id
+     */
+    player_stats->id = thing_template_get_stats_max_id(thing_template);
+    player_stats->max_id = 
+        player_stats->id = gaussrand(player_stats->id, 
+                                    player_stats->id / 10);
 }
 
 void player_stats_init (player_stats_t *player_stats) 
