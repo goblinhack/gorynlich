@@ -136,6 +136,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
     player_stats->spending_points = player_stats_generate_spending_points();
     player_stats->attack_melee = player_stats_generate_spending_stat();
     player_stats->attack_ranged = player_stats_generate_spending_stat();
+    player_stats->attack_magical = player_stats_generate_spending_stat();
     player_stats->defense = player_stats_generate_spending_stat();
     player_stats->speed = player_stats_generate_spending_stat();
     player_stats->vision = player_stats_generate_spending_stat();
@@ -170,6 +171,9 @@ void player_stats_init (player_stats_t *player_stats)
     }
     if (!player_stats->attack_ranged) {
         player_stats->attack_ranged = 10;
+    }
+    if (!player_stats->attack_magical) {
+        player_stats->attack_magical = 10;
     }
     if (!player_stats->defense) {
         player_stats->defense = 10;
