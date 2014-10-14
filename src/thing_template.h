@@ -290,6 +290,7 @@ int32_t thing_template_get_bonus_score_on_collect(thing_templatep);
 
 uint32_t thing_template_get_stats_attack_melee(thing_templatep);
 uint32_t thing_template_get_stats_attack_ranged(thing_templatep);
+uint32_t thing_template_get_stats_attack_magical(thing_templatep);
 uint32_t thing_template_get_stats_speed(thing_templatep);
 uint32_t thing_template_get_stats_vision(thing_templatep);
 uint32_t thing_template_get_stats_healing(thing_templatep);

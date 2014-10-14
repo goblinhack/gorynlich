@@ -252,6 +252,145 @@ static void wid_player_info_create (player_stats_t *s)
         wid_raise(w);
     }
 
+    {
+        widp w = wid_new_square_button(wid_player_info, 
+                                       "wid intro item helmet");
+
+        fpoint tl = {0.3, 0.55};
+        fpoint br = {0.45, 0.70};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_tooltip(w, "Your helmet");
+
+        color c = WHITE;
+
+        c.a = 200;
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        c.a = 255;
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+
+//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_bevel(w,0);
+        wid_set_tex(w, 0, "button_black");
+        wid_set_square(w);
+    }
+
+    {
+        widp w = wid_new_square_button(wid_player_info, 
+                                       "wid intro item armor");
+
+        fpoint tl = {0.8, 0.55};
+        fpoint br = {0.95, 0.70};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_tooltip(w, "Your armor");
+
+        color c = WHITE;
+
+        c.a = 200;
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        c.a = 255;
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+
+//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_bevel(w,0);
+        wid_set_tex(w, 0, "button_black");
+        wid_set_square(w);
+    }
+
+    {
+        widp w = wid_new_square_button(wid_player_info, 
+                                       "wid intro item boots");
+
+        fpoint tl = {0.3, 0.71};
+        fpoint br = {0.45, 0.86};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_tooltip(w, "Your boots");
+
+        color c = WHITE;
+
+        c.a = 200;
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        c.a = 255;
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+
+//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_bevel(w,0);
+        wid_set_tex(w, 0, "button_black");
+        wid_set_square(w);
+    }
+
+    {
+        widp w = wid_new_square_button(wid_player_info, 
+                                       "wid intro item left arm");
+
+        fpoint tl = {0.8, 0.71};
+        fpoint br = {0.95, 0.79};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_tooltip(w, "Left arm");
+
+        color c = WHITE;
+
+        c.a = 200;
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        c.a = 255;
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+
+//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_bevel(w,0);
+        wid_set_tex(w, 0, "button_black");
+        wid_set_square(w);
+    }
+    {
+        widp w = wid_new_square_button(wid_player_info, 
+                                       "wid intro item right arm");
+
+        fpoint tl = {0.8, 0.80};
+        fpoint br = {0.95, 0.88};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_tooltip(w, "Right arm");
+
+        color c = WHITE;
+
+        c.a = 200;
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        c.a = 255;
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_BG, c);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+
+//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_bevel(w,0);
+        wid_set_tex(w, 0, "button_black");
+        wid_set_square(w);
+    }
+
     wid_move_to_pct_centered(wid_player_info, 0.5, 0.45);
 
     wid_raise(wid_player_info);

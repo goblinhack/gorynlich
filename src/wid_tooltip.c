@@ -74,7 +74,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         uint32_t h;
 
         ttf_text_size(font, n->line, &w, &h, 0, 1.0f, 1.0f,
-                      true /* fixed width */);
+                      false /* fixed width */);
 
         /*
          * .5 line spacing for single newlines.
@@ -175,7 +175,6 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, n->line);
             wid_set_font(child, font);
-            wid_set_text_fixed_width(child, true);
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
         }
 
