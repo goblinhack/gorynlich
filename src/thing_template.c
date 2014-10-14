@@ -480,6 +480,10 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
             t->stats.attack_ranged = tmp_uint32;
         }
 
+        if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_magical", tmp_uint32)) {
+            t->stats.attack_magical = tmp_uint32;
+        }
+
         if (GET_OPT_NAMED_UINT32(ctx, "stats_speed", tmp_uint32)) {
             t->stats.speed = tmp_uint32;
         }
@@ -645,6 +649,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "max_id", t->stats.max_id);
     PUT_NAMED_INT32(ctx, "stats_attack_melee", t->stats.attack_melee);
     PUT_NAMED_INT32(ctx, "stats_attack_ranged", t->stats.attack_ranged);
+    PUT_NAMED_INT32(ctx, "stats_attack_magical", t->stats.attack_magical);
     PUT_NAMED_INT32(ctx, "stats_speed", t->stats.speed);
     PUT_NAMED_INT32(ctx, "stats_vision", t->stats.vision);
     PUT_NAMED_INT32(ctx, "stats_healing", t->stats.healing);
@@ -872,6 +877,11 @@ uint32_t thing_template_get_stats_attack_melee (thing_templatep t)
 uint32_t thing_template_get_stats_attack_ranged (thing_templatep t)
 {
     return (t->stats.attack_ranged);
+}
+
+uint32_t thing_template_get_stats_attack_magical (thing_templatep t)
+{
+    return (t->stats.attack_magical);
 }
 
 uint32_t thing_template_get_stats_speed (thing_templatep t)

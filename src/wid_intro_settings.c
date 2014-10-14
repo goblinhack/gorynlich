@@ -436,10 +436,11 @@ static void wid_intro_settings_create (void)
 
             color c = BLACK;
 
-            c.a = 100;
+            c.a = 200;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
+            c.a = 255;
             wid_set_mode(w, WID_MODE_OVER);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -568,10 +569,11 @@ static void wid_intro_settings_create (void)
 
             color c = WHITE;
 
-            c.a = 100;
+            c.a = 200;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
+            c.a = 255;
             wid_set_mode(w, WID_MODE_OVER);
             wid_set_color(w, WID_COLOR_BG, c);
 

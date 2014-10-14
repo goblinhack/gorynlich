@@ -29,6 +29,7 @@ typedef struct row_ {
     const char *col1;
     const char *col2;
     uint32_t increment;
+    const char *tooltip;
 } row;
 
 enum {
@@ -41,29 +42,56 @@ enum {
     STAT_MAX_ID,
     STAT_ATTACK_MELEE,
     STAT_ATTACK_RANGED,
+    STAT_ATTACK_MAGICAL,
     STAT_DEFENSE,
     STAT_SPEED,
     STAT_VISION,
     STAT_HEALING,
 };
 
-#define WID_INTRO_MAX_SETTINGS 13 
+#define WID_INTRO_MAX_SETTINGS 14 
 
 static row rows[WID_INTRO_MAX_SETTINGS] = {
       /*                         Column 1     Column 2 Increm */
-    { /* STAT_SPENDING_POINTS */ "Spending points", 0,   0 },
+    { /* STAT_SPENDING_POINTS */ "Spending points", 0,   0,
+    "Click on a statistic below to spend points." },
+
     { /* STAT_GAP1,           */ "",                0,   0 },
-    { /* STAT_EXPERIENCE      */ "Experience",      0,   0 },
-    { /* STAT_LEVEL           */ "Level",           0,   0 },
+
+    { /* STAT_EXPERIENCE      */ "Experience",      0,   0,
+    "Experience points earned on defeating bad guys," },
+
+    { /* STAT_LEVEL           */ "Level",           0,   0,
+    "Your current experience level" },
+
     { /* STAT_GAP2            */ "",                0,   0 },
-    { /* STAT_MAX_HP          */ "Max Health",      "+", 5 },
-    { /* STAT_MAX_ID          */ "Max ID",          "+", 5 },
-    { /* STAT_ATTACK_MELEE    */ "Attack, Melee",   "+", 1 },
-    { /* STAT_ATTACK_RANGED   */ "Attack, Ranged",  "+", 1 },
-    { /* STAT_DEFENSE         */ "Defense",         "+", 1 },
-    { /* STAT_SPEED           */ "Speed",           "+", 1 },
-    { /* STAT_VISION          */ "Vision",          "+", 1 },
-    { /* STAT_HEALING         */ "Healing",         "+", 1 },
+
+    { /* STAT_MAX_HP          */ "Max Health",      "+", 5,
+    "Health points. This is the max you can recover to." },
+
+    { /* STAT_MAX_ID          */ "Max ID",          "+", 5,
+    "ID is your life force used for magic." },
+
+    { /* STAT_ATTACK_MELEE    */ "Attack, Melee",   "+", 1,
+    "Modifier is the percentage gain you get in physical attacks." },
+
+    { /* STAT_ATTACK_RANGED   */ "Attack, Ranged",  "+", 1,
+    "Modifier is the percentage gain you get in missile attacks." },
+
+    { /* STAT_ATTACK_MAGIC   */ "Attack, Magical",  "+", 1,
+    "Modifier is the percentage gain you get in magical attacks." },
+
+    { /* STAT_DEFENSE         */ "Defense",         "+", 1,
+    "Modifier is the percentage gain you get in defense against attacks" },
+
+    { /* STAT_SPEED           */ "Speed",           "+", 1,
+    "Modifier is the percentage gain you get in running around like a nutter" },
+
+    { /* STAT_VISION          */ "Vision",          "+", 1,
+    "Modifier is the percentage gain you get in seeing stuffs" },
+
+    { /* STAT_HEALING         */ "Healing",         "+", 1,
+    "Modifier is the percentage gain you get in recovering health points" },
 };
 
 uint8_t wid_player_stats_init (void)
@@ -189,6 +217,10 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
         player_stats->attack_ranged += rows[row].increment;
         player_stats->spending_points--;
         break;
+    case STAT_ATTACK_MAGICAL:
+        player_stats->attack_magical += rows[row].increment;
+        player_stats->spending_points--;
+        break;
     case STAT_DEFENSE:
         player_stats->defense += rows[row].increment;
         player_stats->spending_points--;
@@ -267,6 +299,9 @@ static void wid_player_stats_create (player_stats_t *s)
 
             widp w = wid_new_square_button(wid_player_stats_container,
                                            rows[i].col1);
+            if (rows[i].tooltip) {
+                wid_set_tooltip(w, rows[i].tooltip);
+            }
 
             fpoint tl = {0.05, 0.2};
             fpoint br = {0.48, 0.2};
@@ -354,6 +389,9 @@ static void wid_player_stats_create (player_stats_t *s)
 
             widp w = wid_new_square_button(wid_player_stats_container,
                                            rows[i].col2);
+            if (rows[i].tooltip) {
+                wid_set_tooltip(w, rows[i].tooltip);
+            }
 
             fpoint tl = {0.48, 0.2};
             fpoint br = {0.595, 0.2};
@@ -415,6 +453,9 @@ static void wid_player_stats_create (player_stats_t *s)
 
             widp w = wid_new_square_button(wid_player_stats_container,
                                            rows[i].col1);
+            if (rows[i].tooltip) {
+                wid_set_tooltip(w, rows[i].tooltip);
+            }
 
             fpoint tl = {0.82, 0.2};
             fpoint br = {0.95, 0.2};
@@ -458,6 +499,9 @@ static void wid_player_stats_create (player_stats_t *s)
                 break;
             case STAT_ATTACK_RANGED:
                 stat = s->attack_ranged;
+                break;
+            case STAT_ATTACK_MAGICAL:
+                stat = s->attack_magical;
                 break;
             case STAT_DEFENSE:
                 stat = s->defense;
@@ -521,6 +565,9 @@ static void wid_player_stats_create (player_stats_t *s)
 
         wid_set_on_mouse_down(w, wid_player_stats_reroll_mouse_event);
         wid_set_on_key_down(w, wid_player_stats_reroll_key_event);
+
+        wid_set_tooltip(w, "Select this to try a differnet charactar. "
+                        "But be certain, there is no undo...");
 
         wid_set_tex(w, 0, "button_black");
         wid_set_square(w);

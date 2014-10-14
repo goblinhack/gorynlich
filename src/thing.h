@@ -1564,6 +1564,19 @@ static inline uint32_t thing_get_stats_attack_ranged (thingp t)
     return (val);
 }
 
+static inline uint32_t thing_get_stats_attack_magical (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.attack_magical;
+    if (val) {
+        return (val);
+    }
+
+    val = thing_template_get_stats_attack_magical(t->thing_template);
+    return (val);
+}
+
 static inline uint32_t thing_get_stats_speed (thingp t)
 {
     uint32_t val;
