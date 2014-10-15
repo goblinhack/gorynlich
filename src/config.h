@@ -147,7 +147,7 @@
 /*
  * Fonts
  */
-#define ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
+#undef ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
 
 #define VSMALL_FONT                 "data/ttf/Metamorphous_Regular.ttf"
 #define SMALL_FONT                  "data/ttf/Metamorphous_Regular.ttf"
