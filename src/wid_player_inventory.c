@@ -11,6 +11,7 @@
 #include "color.h"
 #include "wid_player_inventory.h"
 #include "string.h"
+#include "thing_template.h"
 
 static widp wid_player_inventory;
 static widp wid_player_inventory_container;
@@ -51,6 +52,41 @@ void wid_player_inventory_visible (player_stats_t *s)
     wid_player_inventory_create(s);
 }
 
+void wid_player_inventory_button_style (widp w)
+{
+    color c;
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+
+    c = BLACK;
+    c.a = 0;
+    wid_set_color(w, WID_COLOR_BG, c);
+
+    c = STEELBLUE;
+    c.a = 30;
+    wid_set_color(w, WID_COLOR_TL, c);
+
+    c = GRAY;
+    c.a = 30;
+    wid_set_color(w, WID_COLOR_BR, c);
+
+    wid_set_mode(w, WID_MODE_OVER);
+
+    c = WHITE;
+    c.a = 50;
+    wid_set_color(w, WID_COLOR_BG, c);
+
+    c = STEELBLUE;
+    c.a = 30;
+    wid_set_color(w, WID_COLOR_TL, c);
+
+    c = GRAY;
+    c.a = 30;
+    wid_set_color(w, WID_COLOR_BR, c);
+
+    wid_set_mode(w, WID_MODE_NORMAL);
+}
+
 static void wid_player_inventory_create (player_stats_t *s)
 {
     player_stats = s;
@@ -83,6 +119,51 @@ static void wid_player_inventory_create (player_stats_t *s)
         fpoint br = {1.0, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
+    }
+
+    double x;
+    double max_across = 10.0;
+    double border_left = 0.05;
+    double border_right = 0.05;
+    double dx = (1.0 - (border_left + border_right)) / max_across;
+
+    double y;
+    double max_down = 10.0;
+    double border_top = 0.15;
+    double border_bottom = 0.15;
+    double dy = (1.0 - (border_top + border_bottom)) / max_down;
+    
+    for (x = 0; x < max_across; x++) 
+    for (y = 0; y < max_down; y++) 
+    {
+        widp w = wid_new_square_button(wid_player_inventory_container, 
+                                       "wid player_stats inventory item");
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {0.0, 0.8};
+
+        tl.x = border_left + (x * dx);
+        tl.y = border_top + (y * dy);
+
+        br.x = tl.x + dx;
+        br.y = tl.y + dy;
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_player_inventory_button_style(w);
+
+//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+
+        if (1)
+        if ((rand() % 10) < 3) {
+        thing_templatep noentry;
+
+        noentry = thing_template_find("data/things/noentry");
+        if (!noentry) {
+            DIE("noentry icon not found");
+        }
+
+        wid_set_thing_template(w, noentry);
+        }
     }
 
     wid_move_to_pct_centered(wid_player_inventory, 0.8, 0.45);

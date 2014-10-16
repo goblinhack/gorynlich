@@ -194,13 +194,13 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
     case STAT_SPENDING_POINTS:
         break;
     case STAT_MAX_HP:
-        player_stats->hp +=
         player_stats->max_hp += rows[row].increment;
+        player_stats->hp = player_stats->max_hp;
         player_stats->spending_points--;
         break;
     case STAT_MAX_ID:
-        player_stats->id +=
         player_stats->max_id += rows[row].increment;
+        player_stats->id = player_stats->max_id;
         player_stats->spending_points--;
         break;
     case STAT_ATTACK_MELEE:
