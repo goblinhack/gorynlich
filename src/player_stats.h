@@ -4,6 +4,18 @@
  * See the LICENSE file for license.
  */
 
+#define THING_INVENTORY_MAX     100
+#define THING_ACTION_BAR_MAX    10
+#define THING_WORN_MAX          5
+
+enum {
+    THING_WORN_ARMOR,
+    THING_WORN_HELMET,
+    THING_WORN_BOOTS,
+    THING_WORN_ARM_LEFT,
+    THING_WORN_ARM_RIGHT,
+};
+
 typedef struct player_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
@@ -20,6 +32,14 @@ typedef struct player_stats_ {
     uint8_t speed;
     uint8_t vision;
     uint8_t healing;
+
+    /*
+     * These contain thing template IDs that refer back to the carrying
+     * array. Things are either in the inventory or the action bar.
+     */
+    uint8_t inventory[THING_INVENTORY_MAX];
+    uint8_t action_bar[THING_ACTION_BAR_MAX];
+    uint8_t worn[THING_ACTION_BAR_MAX];
 } player_stats_t;
 
 int player_stats_get_modifier(int value);

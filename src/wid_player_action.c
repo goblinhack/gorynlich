@@ -10,6 +10,8 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_player_action.h"
+#include "wid_player_inventory.h"
+#include "thing_template.h"
 #include "string.h"
 
 static widp wid_player_action;
@@ -141,8 +143,10 @@ static void wid_player_action_create (player_stats_t *s)
         wid_set_font(w, small_font);
     }
 
+    widp wid_item_bar;
+
     {
-        widp w =
+        widp w = wid_item_bar = 
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
@@ -159,6 +163,54 @@ static void wid_player_action_create (player_stats_t *s)
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_square(w);
+    }
+
+    {
+        double x;
+        double max_across = 10.0;
+        double border_left = 0.06;
+        double border_right = 0.25;
+        double dx = (1.0 - (border_left + border_right)) / max_across;
+
+        double y;
+        double max_down = 1.0;
+        double border_top = 0.06;
+        double border_bottom = 0.25;
+        double dy = (1.0 - (border_top + border_bottom)) / max_down;
+        
+        for (x = 0; x < max_across; x++) 
+        for (y = 0; y < max_down; y++) 
+        {
+            widp w = wid_new_square_button(wid_item_bar, 
+                                        "wid player_stats inventory item");
+            fpoint tl = {0.0, 0.0};
+            fpoint br = {0.0, 0.8};
+
+            tl.x = border_left + (x * dx);
+            tl.y = border_top + (y * dy);
+
+            br.x = tl.x + dx;
+            br.y = tl.y + dy;
+
+            wid_set_tl_br_pct(w, tl, br);
+
+            wid_player_inventory_button_style(w);
+            wid_set_rounded_small(w);
+
+    //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+
+            if (1)
+            if ((rand() % 10) < 3) {
+            thing_templatep noentry;
+
+            noentry = thing_template_find("data/things/noentry");
+            if (!noentry) {
+                DIE("noentry icon not found");
+            }
+
+            wid_set_thing_template(w, noentry);
+            }
+        }
     }
 
     wid_move_to_pct_centered(wid_player_action, 0.5, 2.0);
