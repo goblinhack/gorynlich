@@ -177,9 +177,11 @@ static void wid_player_action_create (player_stats_t *s)
         double border_top = 0.06;
         double border_bottom = 0.25;
         double dy = (1.0 - (border_top + border_bottom)) / max_down;
+
+        int item = 0;
         
+        y = 0;
         for (x = 0; x < max_across; x++) 
-        for (y = 0; y < max_down; y++) 
         {
             widp w = wid_new_square_button(wid_item_bar, 
                                         "wid player_stats inventory item");
@@ -194,16 +196,13 @@ static void wid_player_action_create (player_stats_t *s)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            wid_player_inventory_button_style(w);
+            int id = s->action_bar[item];
+
+            wid_player_inventory_button_style(w, s, id);
             wid_set_rounded_small(w);
 
     //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-
-            int id = s->action_bar[(int)x];
-            if (id) {
-                thing_templatep t = id_to_thing_template(id);
-                wid_set_thing_template(w, t);
-            }
+            item++;
         }
     }
 

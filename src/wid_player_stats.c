@@ -12,6 +12,7 @@
 #include "wid_player_stats.h"
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
+#include "wid_player_action.h"
 #include "wid_intro3.h"
 #include "timer.h"
 #include "string.h"
@@ -138,6 +139,9 @@ static void wid_player_stats_redraw (void)
 
     wid_player_inventory_hide();
     wid_player_inventory_visible(player_stats);
+
+    wid_player_action_hide();
+    wid_player_action_visible(player_stats);
 }
 
 static void wid_player_stats_reroll (void)
