@@ -116,12 +116,6 @@ typedef struct thing_template_ {
     char *mob_spawn;
 
     /*
-     * How many and of what we are carrying. This is the base items a thing
-     * starts out with.
-     */
-    uint8_t carrying[THING_MAX];
-
-    /*
      * In relation to other widgets, where are we.
      */
     uint8_t z_depth;
@@ -167,7 +161,7 @@ typedef struct thing_template_ {
      */
     player_stats_t stats;
 
-    uint32_t ppp1;
+    uint32_t chance_of_appearing;
     uint32_t ppp2;
     uint32_t hp_per_level;
     uint32_t id_per_level;
@@ -208,7 +202,7 @@ typedef struct thing_template_ {
     uint8_t is_poison:1;
     uint8_t is_carryable:1;
     uint8_t is_item_unusable:1;
-    uint8_t is_valid_for_shortcut_key:1;
+    uint8_t is_valid_for_action_bar:1;
     uint8_t is_seedpod:1;
     uint8_t is_spam:1;
     uint8_t is_door:1;
@@ -296,7 +290,7 @@ uint32_t thing_template_get_stats_vision(thing_templatep);
 uint32_t thing_template_get_stats_healing(thing_templatep);
 uint32_t thing_template_get_stats_defense(thing_templatep);
 
-uint32_t thing_template_get_ppp1(thing_templatep);
+uint32_t thing_template_get_chance_of_appearing(thing_templatep);
 uint32_t thing_template_get_ppp2(thing_templatep);
 float thing_template_get_light_radius(thing_templatep);
 uint32_t thing_template_get_quantity(thing_templatep);
@@ -475,9 +469,9 @@ static inline uint8_t thing_template_is_carryable (thing_templatep t)
     return (t->is_carryable);
 }
 
-static inline uint8_t thing_template_is_valid_for_shortcut_key (thing_templatep t)
+static inline uint8_t thing_template_is_valid_for_action_bar (thing_templatep t)
 {
-    return (t->is_valid_for_shortcut_key);
+    return (t->is_valid_for_action_bar);
 }
 
 static inline uint8_t thing_template_is_seedpod (thing_templatep t)

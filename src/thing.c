@@ -760,7 +760,7 @@ thingp thing_server_new (const char *name, double x, double y)
     uint32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
-        if (thing_template->carrying[i]) {
+        if (thing_template->stats.carrying[i]) {
             thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
         }
     }
@@ -3826,8 +3826,8 @@ void socket_server_tx_player_update (thingp t)
     SDLNet_Write16(t->weapon_swing_anim_id, data);               
     data += sizeof(uint16_t);
 
-    memcpy(data, t->carrying, sizeof(t->carrying));
-    data += sizeof(t->carrying);
+    memcpy(data, t->stats.carrying, sizeof(t->stats.carrying));
+    data += sizeof(t->stats.carrying);
 
     if (t->weapon) {
         *data++ = thing_template_to_id(t->weapon);
@@ -3890,8 +3890,8 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         }
     }
 
-    memcpy(t->carrying, data, sizeof(t->carrying));
-    data += sizeof(t->carrying);
+    memcpy(t->stats.carrying, data, sizeof(t->stats.carrying));
+    data += sizeof(t->stats.carrying);
 
     id = *data++;
     if (id) {

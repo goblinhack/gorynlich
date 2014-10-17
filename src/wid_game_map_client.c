@@ -351,7 +351,7 @@ wid_game_map_update_shortcuts (void)
 
     shortcut = 0;
     for (i = 0; i < THING_MAX; i++) {
-        if (!player->carrying[i]) {
+        if (!player->stats.carrying[i]) {
             continue;
         }
 
@@ -359,7 +359,7 @@ wid_game_map_update_shortcuts (void)
          * Is this thing used with a shortcut key?
          */
         thing_templatep temp = id_to_thing_template(i);
-        if (!thing_template_is_valid_for_shortcut_key(temp)) {
+        if (!thing_template_is_valid_for_action_bar(temp)) {
             continue;
         }
 
@@ -1073,7 +1073,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                 wid_game_map_update_shortcuts();
 
                 for (c = 0; c < THING_MAX; c++) {
-                    if (!t->carrying[c]) {
+                    if (!t->stats.carrying[c]) {
                         continue;
                     }
 
@@ -1233,9 +1233,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
                     wid_set_mode(w, WID_MODE_NORMAL);
 
-                    if (t->carrying[c] > 1) {
+                    if (t->stats.carrying[c] > 1) {
                         char tmp[20];
-                        snprintf(tmp, sizeof(tmp) - 1, "%d", t->carrying[c]);
+                        snprintf(tmp, sizeof(tmp) - 1, "%d", t->stats.carrying[c]);
 
                         wid_set_text(w, tmp);
                         wid_set_font(w, small_font);

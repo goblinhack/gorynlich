@@ -8,10 +8,10 @@
  is_click_to_use
  hit_priority=5
  is_carryable
- is_valid_for_shortcut_key
+ is_valid_for_action_bar
+ chance_of_appearing=20
  is_combustable
  is_fragile
- is_valid_for_shortcut_key
  tiles={
   tile={
    tile="potion_shield"

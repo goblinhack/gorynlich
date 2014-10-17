@@ -36,7 +36,7 @@ static int intro_effect_delay = 500;
 static const char *wid_intro_button_names[] = {
     "Settings",
     "Level editor",
-    "High scores",
+    "Legends of old",
     "Credits",
 };
 
