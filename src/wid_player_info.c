@@ -264,14 +264,11 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your helmet");
 
-        wid_player_inventory_button_style(w);
+        int id = s->worn[THING_WORN_ARMOR];
+
+        wid_player_inventory_button_style(w, s, id);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-        int id = s->worn[THING_WORN_ARMOR];
-        if (id) {
-            thing_templatep t = id_to_thing_template(id);
-            wid_set_thing_template(w, t);
-        }
     }
 
     {
@@ -284,14 +281,11 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your armor");
 
-        wid_player_inventory_button_style(w);
+        int id = s->worn[THING_WORN_HELMET];
+
+        wid_player_inventory_button_style(w, s, id);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-        int id = s->worn[THING_WORN_HELMET];
-        if (id) {
-            thing_templatep t = id_to_thing_template(id);
-            wid_set_thing_template(w, t);
-        }
     }
 
     {
@@ -304,14 +298,11 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your boots");
 
-        wid_player_inventory_button_style(w);
+        int id = s->worn[THING_WORN_BOOTS];
+
+        wid_player_inventory_button_style(w, s, id);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-        int id = s->worn[THING_WORN_BOOTS];
-        if (id) {
-            thing_templatep t = id_to_thing_template(id);
-            wid_set_thing_template(w, t);
-        }
     }
 
     {
@@ -324,14 +315,11 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Left hand");
 
-        wid_player_inventory_button_style(w);
+        int id = s->worn[THING_WORN_ARM_LEFT];
+
+        wid_player_inventory_button_style(w, s, id);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-        int id = s->worn[THING_WORN_ARM_LEFT];
-        if (id) {
-            thing_templatep t = id_to_thing_template(id);
-            wid_set_thing_template(w, t);
-        }
     }
 
     {
@@ -344,15 +332,12 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Right hand");
 
-        wid_player_inventory_button_style(w);
+        int id = s->worn[THING_WORN_ARM_RIGHT];
+
+        wid_player_inventory_button_style(w, s, id);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
 //
-        int id = s->worn[THING_WORN_ARM_RIGHT];
-        if (id) {
-            thing_templatep t = id_to_thing_template(id);
-            wid_set_thing_template(w, t);
-        }
     }
 
     wid_move_to_pct_centered(wid_player_info, 0.5, 0.45);

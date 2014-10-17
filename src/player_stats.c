@@ -117,13 +117,14 @@ static int player_stats_item_add (player_stats_t *player_stats,
      * Add to the inventory.
      */
     int i;
-    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+    for (i = 0; i < THING_INVENTORY_MAX; i++) {
         if (!player_stats->inventory[i]) {
             player_stats->inventory[i] = id;
+            break;
         }
     }
 
-    if (i == THING_ACTION_BAR_MAX) {
+    if (i == THING_INVENTORY_MAX) {
         MSG_BOX("Trying to carry too many items to add %s",
                 thing_template_short_name(t));
         return (false);
@@ -143,6 +144,7 @@ static int player_stats_item_add (player_stats_t *player_stats,
         for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
             if (!player_stats->action_bar[i]) {
                 player_stats->action_bar[i] = id;
+                break;
             }
         }
     }
@@ -152,7 +154,7 @@ static int player_stats_item_add (player_stats_t *player_stats,
 
 static void player_stats_generate_random_items (player_stats_t *player_stats) 
 {
-    int count = gaussrand(3, 2);
+    int count = gaussrand(2, 1) + 1;
 
     while (count--) {
         thing_templatep t = 0;
@@ -270,6 +272,11 @@ void player_stats_generate_random (player_stats_t *player_stats)
 
 void player_stats_init (player_stats_t *player_stats) 
 {
+    memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
+    memset(player_stats->action_bar, 0, sizeof(player_stats->action_bar));
+    memset(player_stats->carrying, 0, sizeof(player_stats->carrying));
+    memset(player_stats->worn, 0, sizeof(player_stats->worn));
+
     if (!player_stats->attack_melee) {
         player_stats->attack_melee = 10;
     }

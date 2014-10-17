@@ -61,8 +61,9 @@ static void thing_collect (thingp t, thingp it, thing_templatep tmp,
      * Collecting poisoned water poisons other water being carried.
      */
     if (item == THING_WATER_POISON) {
-        t->stats.carrying[item] += t->stats.carrying[THING_WATER];
-        t->stats.carrying[THING_WATER] = 0;
+        t->stats.carrying[item].quantity = 
+                        t->stats.carrying[THING_WATER].quantity;
+        t->stats.carrying[THING_WATER].quantity = 0;
 ERR("XXX need to fix action bar");
     }
 
@@ -73,7 +74,7 @@ ERR("XXX need to fix action bar");
         }
     }
 
-    t->stats.carrying[item] += quantity;
+    t->stats.carrying[item].quantity += quantity;
 
     /*
      * Auto use a weapon if carrying none.
@@ -106,7 +107,7 @@ void thing_used (thingp t, thing_templatep tmp)
     uint32_t item;
 
     item = thing_template_to_id(tmp);
-    if (!t->stats.carrying[item]) {
+    if (!t->stats.carrying[item].quantity) {
         ERR("tried to use %s not carried", thing_template_short_name(tmp));
         return;
     }
@@ -171,7 +172,7 @@ void thing_used (thingp t, thing_templatep tmp)
 
     THING_LOG(t, "used %s", thing_template_short_name(tmp));
 
-    t->stats.carrying[item]--;
+    t->stats.carrying[item].quantity--;
 }
 
 void thing_item_destroyed (thingp t, thing_templatep tmp)
@@ -179,13 +180,13 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
     uint32_t item;
 
     item = thing_template_to_id(tmp);
-    if (!t->stats.carrying[item]) {
+    if (!t->stats.carrying[item].quantity) {
         ERR("tried to item destroy %s not carried", 
             thing_template_short_name(tmp));
         return;
     }
 
-    t->stats.carrying[item]--;
+    t->stats.carrying[item].quantity--;
 
     THING_LOG(t, "item destroyed %s", thing_template_short_name(tmp));
 
@@ -208,7 +209,7 @@ void thing_drop (thingp t, thing_templatep tmp)
     uint8_t auto_wield = false;
 
     item = thing_template_to_id(tmp);
-    if (!t->stats.carrying[item]) {
+    if (!t->stats.carrying[item].quantity) {
         ERR("tried to drop %s not carried", thing_template_short_name(tmp));
         return;
     }
@@ -223,7 +224,7 @@ void thing_drop (thingp t, thing_templatep tmp)
 
     THING_LOG(t, "drop %s", thing_template_short_name(tmp));
 
-    t->stats.carrying[item]--;
+    t->stats.carrying[item].quantity--;
 
     /*
      * Wield the next weapon we have.
@@ -239,7 +240,7 @@ void thing_drop (thingp t, thing_templatep tmp)
 
 uint8_t thing_is_carrying_specific_item (thingp t, uint32_t item)
 {
-    if (!t->stats.carrying[item]) {
+    if (!t->stats.carrying[item].quantity) {
         return (false);
     }
 
@@ -276,7 +277,7 @@ uint32_t thing_is_carrying_thing_count (thingp t, thing_template_is fn)
 
         thing_templatep tp = id_to_thing_template(index);
         if ((*fn)(tp)) {
-            count += t->stats.carrying[index];
+            count += t->stats.carrying[index].quantity;
         }
     }
 
