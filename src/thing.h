@@ -507,11 +507,6 @@ typedef struct thing_ {
     uint8_t powerup_rocket_count;
 
     /*
-     * How many and of what we are carrying.
-     */
-    uint8_t carrying[THING_MAX];
-
-    /*
      * Grid coordinates.
      */
     double x;
@@ -901,11 +896,11 @@ static inline uint8_t thing_is_item_unusable (thingp t)
     return (thing_template_is_item_unusable(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_valid_for_shortcut_key (thingp t)
+static inline uint8_t thing_is_valid_for_action_bar (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_valid_for_shortcut_key(thing_get_template(t)));
+    return (thing_template_is_valid_for_action_bar(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_seedpod (thingp t)
@@ -1308,9 +1303,9 @@ static inline uint8_t thing_is_item_unusable_noverify (thingp t)
     return (t->thing_template->is_item_unusable);
 }
 
-static inline uint8_t thing_is_valid_for_shortcut_key_noverify (thingp t)
+static inline uint8_t thing_is_valid_for_action_bar_noverify (thingp t)
 {
-    return (t->thing_template->is_valid_for_shortcut_key);
+    return (t->thing_template->is_valid_for_action_bar);
 }
 
 static inline uint8_t thing_is_seedpod_noverify (thingp t)

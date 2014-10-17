@@ -8,7 +8,8 @@
  is_click_to_use
  hit_priority=5
  is_carryable
- is_valid_for_shortcut_key
+ is_valid_for_action_bar
+ chance_of_appearing=30
  polymorph_on_death="data/things/water_poison"
  message_on_use="%%fg=lightblue$refreshing"
  bonus_hp_on_use=20

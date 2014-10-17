@@ -11,6 +11,7 @@
 #include "tree.h"
 
 #include "player.h"
+#include "player_stats.h"
 
 typedef enum {
     MSG_PING,
@@ -163,7 +164,7 @@ typedef struct {
     uint16_t thing_id;
     uint16_t weapon_carry_anim_id;
     uint16_t weapon_swing_anim_id;
-    uint8_t swinging[THING_MAX];
+    player_stats_t stats;
     uint8_t weapon;
 } __attribute__ ((packed)) msg_player_update;
 
