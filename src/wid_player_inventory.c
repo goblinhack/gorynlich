@@ -12,6 +12,8 @@
 #include "wid_player_inventory.h"
 #include "string.h"
 #include "thing_template.h"
+#include "color.h"
+#include "glapi.h"
 
 static widp wid_player_inventory;
 static widp wid_player_inventory_container;
@@ -52,7 +54,9 @@ void wid_player_inventory_visible (player_stats_t *s)
     wid_player_inventory_create(s);
 }
 
-void wid_player_inventory_button_style (widp w)
+void wid_player_inventory_button_style (widp w,
+                                        player_stats_t *s,
+                                        int id)
 {
     color c;
 
@@ -85,6 +89,51 @@ void wid_player_inventory_button_style (widp w)
     wid_set_color(w, WID_COLOR_BR, c);
 
     wid_set_mode(w, WID_MODE_NORMAL);
+
+    if (id) {
+        thing_templatep t = id_to_thing_template(id);
+        wid_set_thing_template(w, t);
+
+        uint8_t quantity = s->carrying[id].quantity;
+//        uint8_t cursed = s->carrying[id].cursed;
+        uint8_t quality = s->carrying[id].quality;
+
+        if (1 || quantity) {
+            char tmp[20];
+            snprintf(tmp, sizeof(tmp) - 1, "%u", quantity);
+
+            wid_set_text(w, tmp);
+            wid_set_font(w, small_font);
+            wid_set_text_rhs(w, true);
+            wid_set_text_bot(w, true);
+        }
+
+        /*
+         * Quality bar.
+         */
+        if (1 || quality) {
+            quality = rand() % 8;
+
+            widp wid_bar = wid_new_square_button(w, "quality bar");
+
+            wid_set_bevelled(wid_bar, true);
+            wid_set_bevel(wid_bar, 2);
+
+            fpoint tl = {0.2f, 0.8f};
+            fpoint br = {0.8f, 0.9f};
+
+            br.x = (0.6 / ((float)THING_ITEM_QUALITY_MAX + 1) )
+                     * ((double)quality);
+
+            wid_set_tl_br_pct(wid_bar, tl, br);
+
+            color col = STEELBLUE;
+            glcolor(col);
+
+            wid_set_mode(wid_bar, WID_MODE_NORMAL);
+            wid_set_color(wid_bar, WID_COLOR_BG, col);
+        }
+    }
 }
 
 static void wid_player_inventory_create (player_stats_t *s)
@@ -134,8 +183,9 @@ static void wid_player_inventory_create (player_stats_t *s)
     double dy = (1.0 - (border_top + border_bottom)) / max_down;
     
     int item = 0;
-    for (x = 0; x < max_across; x++) 
+
     for (y = 0; y < max_down; y++) 
+    for (x = 0; x < max_across; x++) 
     {
         widp w = wid_new_square_button(wid_player_inventory_container, 
                                        "wid player_stats inventory item");
@@ -150,15 +200,12 @@ static void wid_player_inventory_create (player_stats_t *s)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_player_inventory_button_style(w);
+        int id = s->inventory[item];
+
+        wid_player_inventory_button_style(w, s, id);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
 //
-        int id = s->inventory[item];
-        if (id) {
-            thing_templatep t = id_to_thing_template(id);
-            wid_set_thing_template(w, t);
-        }
 
         item++;
     }

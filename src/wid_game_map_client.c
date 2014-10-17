@@ -351,7 +351,7 @@ wid_game_map_update_shortcuts (void)
 
     shortcut = 0;
     for (i = 0; i < THING_MAX; i++) {
-        if (!player->stats.carrying[i]) {
+        if (!player->stats.carrying[i].quantity) {
             continue;
         }
 
@@ -1073,7 +1073,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                 wid_game_map_update_shortcuts();
 
                 for (c = 0; c < THING_MAX; c++) {
-                    if (!t->stats.carrying[c]) {
+                    if (!t->stats.carrying[c].quantity) {
                         continue;
                     }
 
@@ -1233,9 +1233,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
                     wid_set_mode(w, WID_MODE_NORMAL);
 
-                    if (t->stats.carrying[c] > 1) {
+                    if (t->stats.carrying[c].quantity > 1) {
                         char tmp[20];
-                        snprintf(tmp, sizeof(tmp) - 1, "%d", t->stats.carrying[c]);
+                        snprintf(tmp, sizeof(tmp) - 1, "%d", 
+                                 t->stats.carrying[c].quantity);
 
                         wid_set_text(w, tmp);
                         wid_set_font(w, small_font);

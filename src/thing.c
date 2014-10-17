@@ -760,7 +760,7 @@ thingp thing_server_new (const char *name, double x, double y)
     uint32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
-        if (thing_template->stats.carrying[i]) {
+        if (thing_template->stats.carrying[i].quantity) {
             thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
         }
     }
