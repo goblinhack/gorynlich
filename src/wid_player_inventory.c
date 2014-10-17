@@ -133,6 +133,7 @@ static void wid_player_inventory_create (player_stats_t *s)
     double border_bottom = 0.15;
     double dy = (1.0 - (border_top + border_bottom)) / max_down;
     
+    int item = 0;
     for (x = 0; x < max_across; x++) 
     for (y = 0; y < max_down; y++) 
     {
@@ -152,18 +153,14 @@ static void wid_player_inventory_create (player_stats_t *s)
         wid_player_inventory_button_style(w);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-
-        if (1)
-        if ((rand() % 10) < 3) {
-        thing_templatep noentry;
-
-        noentry = thing_template_find("data/things/noentry");
-        if (!noentry) {
-            DIE("noentry icon not found");
+//
+        int id = s->inventory[item];
+        if (id) {
+            thing_templatep t = id_to_thing_template(id);
+            wid_set_thing_template(w, t);
         }
 
-        wid_set_thing_template(w, noentry);
-        }
+        item++;
     }
 
     wid_move_to_pct_centered(wid_player_inventory, 0.8, 0.45);

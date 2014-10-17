@@ -210,9 +210,9 @@ uint8_t map_is_item_unusable_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_item_unusable));
 }
 
-uint8_t map_is_valid_for_shortcut_key_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_valid_for_shortcut_key));
+    return (map_is_x_at(level, x, y, thing_template_is_valid_for_action_bar));
 }
 
 uint8_t map_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -542,9 +542,9 @@ thingp map_thing_is_item_unusable_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_item_unusable));
 }
 
-thingp map_thing_is_valid_for_shortcut_key_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_valid_for_shortcut_key));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_valid_for_action_bar));
 }
 
 thingp map_thing_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -890,9 +890,9 @@ tree_rootp map_all_things_is_item_unusable_at (levelp level, int32_t x, int32_t 
     return (map_all_things_is_x_at(level, x, y, thing_template_is_item_unusable));
 }
 
-tree_rootp map_all_things_is_valid_for_shortcut_key_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_valid_for_shortcut_key));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_valid_for_action_bar));
 }
 
 tree_rootp map_all_things_is_seedpod_at (levelp level, int32_t x, int32_t y)
@@ -1325,10 +1325,10 @@ thing_templatep map_find_is_item_unusable_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_item_unusable, w));
 }
 
-thing_templatep map_find_is_valid_for_shortcut_key_at (levelp level,
+thing_templatep map_find_is_valid_for_action_bar_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_valid_for_shortcut_key, w));
+    return (map_find_x_at(level, x, y, thing_template_is_valid_for_action_bar, w));
 }
 
 thing_templatep map_find_seedpod_at (levelp level,
@@ -2046,9 +2046,9 @@ uint32_t level_count_is_item_unusable (levelp level)
     return (level_count_is_x(level, thing_template_is_item_unusable));
 }
 
-uint32_t level_count_is_valid_for_shortcut_key (levelp level)
+uint32_t level_count_is_valid_for_action_bar (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_valid_for_shortcut_key));
+    return (level_count_is_x(level, thing_template_is_valid_for_action_bar));
 }
 
 uint32_t level_count_is_seedpod (levelp level)
@@ -2400,9 +2400,9 @@ tree_rootp map_all_things_is_item_unusable (levelp level)
     return (map_all_things_is_x(level, thing_template_is_item_unusable));
 }
 
-tree_rootp map_all_things_is_valid_for_shortcut_key (levelp level)
+tree_rootp map_all_things_is_valid_for_action_bar (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_valid_for_shortcut_key));
+    return (map_all_things_is_x(level, thing_template_is_valid_for_action_bar));
 }
 
 tree_rootp map_all_things_is_seedpod (levelp level)

@@ -4,6 +4,8 @@
  * See the LICENSE file for license.
  */
 
+#pragma once
+
 #define THING_INVENTORY_MAX     100
 #define THING_ACTION_BAR_MAX    10
 #define THING_WORN_MAX          5
@@ -15,6 +17,15 @@ enum {
     THING_WORN_ARM_LEFT,
     THING_WORN_ARM_RIGHT,
 };
+
+#define THING_ITEM_CARRY_MAX    15
+#define THING_ITEM_QUALITY_MAX  7
+
+typedef struct item_t_ {
+    uint8_t quantity:4;
+    uint8_t quality:3;
+    uint8_t cursed:1;
+} item_t;
 
 typedef struct player_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
@@ -34,13 +45,18 @@ typedef struct player_stats_ {
     uint8_t healing;
 
     /*
+     * How many and of what we are carrying.
+     */
+    item_t carrying[THING_MAX];
+
+    /*
      * These contain thing template IDs that refer back to the carrying
      * array. Things are either in the inventory or the action bar.
      */
     uint8_t inventory[THING_INVENTORY_MAX];
     uint8_t action_bar[THING_ACTION_BAR_MAX];
     uint8_t worn[THING_ACTION_BAR_MAX];
-} player_stats_t;
+} __attribute__ ((packed)) player_stats_t;
 
 int player_stats_get_modifier(int value);
 void player_stats_generate_random(player_stats_t *);

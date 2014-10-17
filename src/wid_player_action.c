@@ -199,16 +199,10 @@ static void wid_player_action_create (player_stats_t *s)
 
     //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
 
-            if (1)
-            if ((rand() % 10) < 3) {
-            thing_templatep noentry;
-
-            noentry = thing_template_find("data/things/noentry");
-            if (!noentry) {
-                DIE("noentry icon not found");
-            }
-
-            wid_set_thing_template(w, noentry);
+            int id = s->action_bar[(int)x];
+            if (id) {
+                thing_templatep t = id_to_thing_template(id);
+                wid_set_thing_template(w, t);
             }
         }
     }

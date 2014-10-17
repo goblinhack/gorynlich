@@ -13,7 +13,8 @@
  is_wearable
  is_collision_map_medium
  is_animated
- is_valid_for_shortcut_key
+ is_valid_for_action_bar
+ chance_of_appearing=30
  failure_chance=10000
  weapon_carry_anim="data/things/sword1_anim"
  weapon_swing_anim="data/things/weapon_swing1"

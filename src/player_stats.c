@@ -102,6 +102,80 @@ int player_stats_get_modifier (int value)
     return (modifiers[value]);
 }
 
+static int player_stats_item_add (player_stats_t *player_stats,
+                                  const thing_templatep t) 
+{
+    const int id = thing_template_to_id(t);
+
+    if (player_stats->carrying[id].quantity == THING_ITEM_CARRY_MAX) {
+        MSG_BOX("Trying to carry too many of %s", 
+                thing_template_short_name(t));
+        return (false);
+    }
+
+    /*
+     * Add to the inventory.
+     */
+    int i;
+    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+        if (!player_stats->inventory[i]) {
+            player_stats->inventory[i] = id;
+        }
+    }
+
+    if (i == THING_ACTION_BAR_MAX) {
+        MSG_BOX("Trying to carry too many items to add %s",
+                thing_template_short_name(t));
+        return (false);
+    }
+
+    player_stats->carrying[id].quantity++;
+
+    /*
+     * Allow quality to carry onto the top item. Only once we pop off the
+     * stack do we reset quality. Cursed we never pop.
+     */
+
+    /*
+     * If there is space on the action bar, add it.
+     */
+    if (thing_template_is_valid_for_action_bar(t)) {
+        for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+            if (!player_stats->action_bar[i]) {
+                player_stats->action_bar[i] = id;
+            }
+        }
+    }
+
+    return (true);
+}
+
+static void player_stats_generate_random_items (player_stats_t *player_stats) 
+{
+    int count = gaussrand(3, 2);
+
+    while (count--) {
+        thing_templatep t = 0;
+
+        for (;;) {
+            t = id_to_thing_template(rand() % THING_MAX);
+
+            if (!thing_template_is_carryable(t)) {
+                continue;
+            }
+
+            int chance = rand() % 1000;
+            if (thing_template_get_chance_of_appearing(t) > chance) {
+                continue;
+            }
+
+CON("ADD %s ",thing_template_short_name(t));
+            break;
+        }
+
+        player_stats_item_add(player_stats, t);
+    }
+}
 
 void player_stats_generate_random (player_stats_t *player_stats) 
 {
@@ -187,6 +261,11 @@ void player_stats_generate_random (player_stats_t *player_stats)
     player_stats->max_id = 
         player_stats->id = gaussrand(player_stats->id, 
                                     player_stats->id / 10);
+
+    /*
+     * Be generous and give some items at startup.
+     */
+    player_stats_generate_random_items(player_stats);
 }
 
 void player_stats_init (player_stats_t *player_stats) 

@@ -193,7 +193,7 @@ static void wid_hiscore_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "High Scores");
+        wid_set_text(w, "Heroes of Legend");
         wid_set_text_outline(w, true);
         wid_set_font(w, med_font);
         wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
