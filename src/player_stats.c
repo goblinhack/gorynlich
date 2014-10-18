@@ -102,14 +102,21 @@ int player_stats_get_modifier (int value)
     return (modifiers[value]);
 }
 
-static int player_stats_item_add (player_stats_t *player_stats,
-                                  const thing_templatep t) 
+int player_stats_item_add (thingp t,
+                           player_stats_t *player_stats,
+                           const thing_templatep it,
+                           uint8_t quantity,
+                           uint8_t cursed,
+                           uint8_t quality) 
 {
-    const int id = thing_template_to_id(t);
+    const int id = thing_template_to_id(it);
 
-    if (player_stats->carrying[id].quantity == THING_ITEM_CARRY_MAX) {
-        MSG_BOX("Trying to carry too many of %s", 
-                thing_template_short_name(t));
+    if ((((int) player_stats->carrying[id].quantity) + quantity) > 
+            THING_ITEM_CARRY_MAX) {
+        if (t) {
+            THING_SHOUT_AT(t, INFO, "carrying too many of %s",
+                           thing_template_short_name(it));
+        }
         return (false);
     }
 
@@ -118,6 +125,13 @@ static int player_stats_item_add (player_stats_t *player_stats,
      */
     int i;
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
+        /*
+         * Already in the inventory?
+         */
+        if (player_stats->inventory[i] == id) {
+            break;
+        }
+
         if (!player_stats->inventory[i]) {
             player_stats->inventory[i] = id;
             break;
@@ -125,23 +139,41 @@ static int player_stats_item_add (player_stats_t *player_stats,
     }
 
     if (i == THING_INVENTORY_MAX) {
-        MSG_BOX("Trying to carry too many items to add %s",
-                thing_template_short_name(t));
+        if (t) {
+            THING_SHOUT_AT(t, INFO, "carrying too many items");
+        }
         return (false);
     }
 
-    player_stats->carrying[id].quantity++;
+    /*
+     * New items on the top have the least quality. The bug here is we have
+     * just fixed the stacked item.
+     */
+    if (player_stats->carrying[id].quantity) {
+        player_stats->carrying[id].quality =
+                        min(quality,
+                            player_stats->carrying[id].quality);
+    }
+
+    player_stats->carrying[id].quantity += quantity;
 
     /*
-     * Allow quality to carry onto the top item. Only once we pop off the
-     * stack do we reset quality. Cursed we never pop.
+     * One cursed item curses the whole stack.
      */
+    player_stats->carrying[id].cursed = cursed;
 
     /*
      * If there is space on the action bar, add it.
      */
-    if (thing_template_is_valid_for_action_bar(t)) {
+    if (thing_template_is_valid_for_action_bar(it)) {
         for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+            /*
+             * Already in the bar?
+             */
+            if (player_stats->action_bar[i] == id) {
+                break;
+            }
+
             if (!player_stats->action_bar[i]) {
                 player_stats->action_bar[i] = id;
                 break;
@@ -171,16 +203,27 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
                 continue;
             }
 
-CON("ADD %s ",thing_template_short_name(t));
             break;
         }
 
-        player_stats_item_add(player_stats, t);
+        int quality = (rand() % (THING_ITEM_QUALITY_MAX - 1)) + 1;
+
+        LOG("  Auto provision %s, quality %u",thing_template_short_name(t),
+            quality);
+
+        player_stats_item_add(0 /* thing */,
+                              player_stats, 
+                              t,
+                              1, /* quantity */
+                              0, /* cursed */
+                              quality);
     }
 }
 
 void player_stats_generate_random (player_stats_t *player_stats) 
 {
+    LOG("Generate random character");
+
     strncpy(player_stats->pclass, pclass_random(),
             sizeof(player_stats->pclass) - 1);
 
@@ -253,16 +296,52 @@ void player_stats_generate_random (player_stats_t *player_stats)
      */
     player_stats->hp = thing_template_get_stats_max_hp(thing_template);
     player_stats->max_hp = 
-        player_stats->hp = gaussrand(player_stats->hp, 
-                                    player_stats->hp / 10);
+        player_stats->hp = gaussrand(player_stats->hp,
+                                     player_stats->hp / 10);
 
     /*
      * id
      */
     player_stats->id = thing_template_get_stats_max_id(thing_template);
     player_stats->max_id = 
-        player_stats->id = gaussrand(player_stats->id, 
-                                    player_stats->id / 10);
+        player_stats->id = gaussrand(player_stats->id,
+                                     player_stats->id / 10);
+
+    LOG(" %20s %s", "Name", player_stats->pname);
+    LOG(" %20s %s", "Class", player_stats->pclass);
+    LOG(" %20s %d", "Points", player_stats->spending_points);
+    LOG(" %20s %d", "Hp", player_stats->hp);
+    LOG(" %20s %d", "Max Hp", player_stats->max_hp);
+    LOG(" %20s %d", "ID", player_stats->id);
+    LOG(" %20s %d", "Max ID", player_stats->max_id);
+    LOG(" %20s %d", "Experience", player_stats->experience);
+    LOG(" %20s %d", "Spending Points", player_stats->spending_points);
+    LOG(" %20s %d", "Attack Melee", player_stats->attack_melee);
+    LOG(" %20s %d", "Attack Ranged", player_stats->attack_ranged);
+    LOG(" %20s %d", "Attack Magical", player_stats->attack_magical);
+    LOG(" %20s %d", "Defense", player_stats->defense);
+    LOG(" %20s %d", "Speed", player_stats->speed);
+    LOG(" %20s %d", "Vision", player_stats->vision);
+    LOG(" %20s %d", "Healing", player_stats->healing);
+
+    /*
+     * Start with items defined for this base class.
+     */
+    uint32_t i;
+
+    for (i = 0; i < THING_MAX; i++) {
+        /*
+         * Only top quality items to start.
+         */
+        if (thing_template->stats.carrying[i].quantity) {
+            player_stats_item_add(0 /* thing */,
+                                  player_stats, 
+                                  thing_template,
+                                  1, /* quantity */
+                                  0, /* cursed */
+                                  THING_ITEM_QUALITY_MAX);
+        }
+    }
 
     /*
      * Be generous and give some items at startup.

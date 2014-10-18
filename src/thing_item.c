@@ -6,8 +6,11 @@
 
 #include "main.h"
 #include "thing.h"
+#include "player_stats.h"
 
-static void thing_collect (thingp t, thingp it, thing_templatep tmp,
+static void thing_collect (thingp t, 
+                           thingp it, 
+                           thing_templatep tmp,
                            uint8_t auto_collect)
 {
     uint32_t item;
@@ -35,37 +38,48 @@ static void thing_collect (thingp t, thingp it, thing_templatep tmp,
         item = THING_TORCH;
     }
 
-    if (!auto_collect) {
-        if (quantity > 1) {
-            THING_LOG(t, "collects %u %s", quantity,
-                    thing_template_short_name(tmp));
-        } else {
-            THING_LOG(t, "collects %s", thing_template_short_name(tmp));
-        }
+    if (item == THING_WATER_POISON) {
+        item = THING_WATER;
+    }
+
+    if (item == THING_APPLE_POISON) {
+        item = THING_APPLE;
+    }
+
+    /*
+     * If treasure, just add it to the score. Don't carry it.
+     */
+    if (thing_template_is_treasure(tmp)) {
+        /*
+         * Bonus for collecting?
+         */
+        thing_set_score(t, thing_score(t) +
+                        thing_template_get_bonus_score_on_collect(tmp) *
+                        quantity);
+        return;
+    }
+
+    /*
+     * Can it fit in the backpack?
+     */
+    if (!player_stats_item_add(t,
+                               &t->stats, 
+                               tmp, 
+                               quantity,
+                               thing_template_is_cursed(tmp),
+                               it ? it->quality : THING_ITEM_QUALITY_MAX)) {
+
+        THING_SHOUT_AT(t, INFO, "You could not collect %s",
+                       thing_template_short_name(tmp));
+        return;
     }
 
     /*
      * Bonus for collecting?
      */
     thing_set_score(t, thing_score(t) +
-                thing_template_get_bonus_score_on_collect(tmp) * quantity);
-
-    /*
-     * If treasure, just add it to the score. Don't carry it.
-     */
-    if (thing_template_is_treasure(tmp)) {
-        return;
-    }
-
-    /*
-     * Collecting poisoned water poisons other water being carried.
-     */
-    if (item == THING_WATER_POISON) {
-        t->stats.carrying[item].quantity = 
-                        t->stats.carrying[THING_WATER].quantity;
-        t->stats.carrying[THING_WATER].quantity = 0;
-ERR("XXX need to fix action bar");
-    }
+                    thing_template_get_bonus_score_on_collect(tmp) *
+                    quantity);
 
     if (!auto_collect) {
         if (thing_is_player(t)) {
@@ -73,8 +87,6 @@ ERR("XXX need to fix action bar");
                            thing_template_short_name(tmp));
         }
     }
-
-    t->stats.carrying[item].quantity += quantity;
 
     /*
      * Auto use a weapon if carrying none.
@@ -127,12 +139,13 @@ void thing_used (thingp t, thing_templatep tmp)
     /*
      * HP modifications.
      */
-    t->stats.hp += thing_template_get_bonus_hp_on_use(tmp);
-    if (thing_get_stats_hp(t) < 0) {
-        const char *name = thing_template_short_name(tmp);
-
-        thing_dead(t, 0, "%s", name);
+    int bonus_hp = thing_template_get_bonus_hp_on_use(tmp);
+    if (t->stats.carrying[item].cursed) {
+        THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d health",
+                       thing_template_short_name(tmp), bonus_hp);
+        bonus_hp = -bonus_hp;
     }
+    t->stats.hp += bonus_hp;
 
     /*
      * Need to allow magic items to override this.
@@ -150,12 +163,14 @@ void thing_used (thingp t, thing_templatep tmp)
     /*
      * id modifications.
      */
-    t->stats.id += thing_template_get_bonus_id_on_use(tmp);
-    if (thing_get_stats_id(t) < 0) {
-        const char *name = thing_template_short_name(tmp);
+    int bonus_id = thing_template_get_bonus_id_on_use(tmp);
+    if (t->stats.carrying[item].cursed) {
+        THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d of ID",
+                       thing_template_short_name(tmp), bonus_hp);
 
-        thing_dead(t, 0, "%s", name);
+        bonus_id = -bonus_id;
     }
+    t->stats.id += bonus_id;
 
     /*
      * Need to allow magic items to override this.
@@ -173,6 +188,16 @@ void thing_used (thingp t, thing_templatep tmp)
     THING_LOG(t, "used %s", thing_template_short_name(tmp));
 
     t->stats.carrying[item].quantity--;
+
+    /*
+     * Check HP did not go too low.
+     */
+    if (thing_get_stats_hp(t) < 0) {
+        const char *name = thing_template_short_name(tmp);
+
+        thing_dead(t, 0, "cursed %s", name);
+        return;
+    }
 }
 
 void thing_item_destroyed (thingp t, thing_templatep tmp)
