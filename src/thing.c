@@ -755,18 +755,26 @@ thingp thing_server_new (const char *name, double x, double y)
                            t->thing_id);
 
     /*
-     * Start out with the items carried on the template if any.
+     * New items are top quality.
+     */
+    t->quality = THING_ITEM_QUALITY_MAX;
+
+    /*
+     * Start out with the items carried on the template if any. This is not 
+     * done for players as they do this in the provisioning screen.
      */
     uint32_t i;
 
-    for (i = 0; i < THING_MAX; i++) {
-        if (thing_template->stats.carrying[i].quantity) {
-            thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
+    if (!thing_is_player(t)) {
+        for (i = 0; i < THING_MAX; i++) {
+            if (thing_template->stats.carrying[i].quantity) {
+                thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
+            }
         }
     }
 
     /*
-     * Start out with stats from teh template.
+     * Start out with stats from the template.
      */
     memcpy(&t->stats, &thing_template->stats, sizeof(player_stats_t));
 

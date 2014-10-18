@@ -310,9 +310,9 @@ uint8_t map_is_rrr14_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_rrr14));
 }
 
-uint8_t map_is_rrr15_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_cursed_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr15));
+    return (map_is_x_at(level, x, y, thing_template_is_cursed));
 }
 
 uint8_t map_is_animate_only_when_moving_at (levelp level, int32_t x, int32_t y)
@@ -642,9 +642,9 @@ thingp map_thing_is_rrr14_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_rrr14));
 }
 
-thingp map_thing_is_rrr15_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_cursed_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr15));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_cursed));
 }
 
 thingp map_thing_is_animate_only_when_moving_at (levelp level, int32_t x, int32_t y)
@@ -990,9 +990,9 @@ tree_rootp map_all_things_is_rrr14_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr14));
 }
 
-tree_rootp map_all_things_is_rrr15_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_cursed_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr15));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_cursed));
 }
 
 tree_rootp map_all_things_is_animate_only_when_moving_at (levelp level, int32_t x, int32_t y)
@@ -1445,10 +1445,10 @@ thing_templatep map_find_rrr14_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_rrr14, w));
 }
 
-thing_templatep map_find_rrr15_at (levelp level,
+thing_templatep map_find_cursed_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr15, w));
+    return (map_find_x_at(level, x, y, thing_template_is_cursed, w));
 }
 
 thing_templatep map_find_animate_only_when_moving_at (levelp level,
@@ -2146,9 +2146,9 @@ uint32_t level_count_is_rrr14 (levelp level)
     return (level_count_is_x(level, thing_template_is_rrr14));
 }
 
-uint32_t level_count_is_rrr15 (levelp level)
+uint32_t level_count_is_cursed (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr15));
+    return (level_count_is_x(level, thing_template_is_cursed));
 }
 
 uint32_t level_count_is_animate_only_when_moving (levelp level)
@@ -2500,9 +2500,9 @@ tree_rootp map_all_things_is_rrr14 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_rrr14));
 }
 
-tree_rootp map_all_things_is_rrr15 (levelp level)
+tree_rootp map_all_things_is_cursed (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr15));
+    return (map_all_things_is_x(level, thing_template_is_cursed));
 }
 
 tree_rootp map_all_things_is_animate_only_when_moving (levelp level)

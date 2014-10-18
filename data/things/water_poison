@@ -12,6 +12,7 @@
  chance_of_appearing=20
  bonus_hp_on_use=-30
  is_poison
+ is_cursed
  is_fragile
  message_on_use="%%fg=red$urgh, tastes horrible"
  tiles={
