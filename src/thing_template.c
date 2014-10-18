@@ -565,7 +565,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
         GET_OPT_NAMED_BITFIELD(ctx, "is_magical", t->is_magical);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_cursed", t->is_cursed);
         GET_OPT_NAMED_BITFIELD(ctx, "is_animate_only_when_moving", t->is_animate_only_when_moving);
         GET_OPT_NAMED_BITFIELD(ctx, "is_warm_blooded", t->is_warm_blooded);
         GET_OPT_NAMED_BITFIELD(ctx, "is_click_to_drop", t->is_click_to_drop);
@@ -720,7 +720,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr12", t->is_rrr12);
     PUT_NAMED_BITFIELD(ctx, "is_magical", t->is_magical);
     PUT_NAMED_BITFIELD(ctx, "is_rrr14", t->is_rrr14);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr15", t->is_rrr15);
+    PUT_NAMED_BITFIELD(ctx, "is_cursed", t->is_cursed);
     PUT_NAMED_BITFIELD(ctx, "is_animate_only_when_moving", t->is_animate_only_when_moving);
     PUT_NAMED_BITFIELD(ctx, "is_warm_blooded", t->is_warm_blooded);
     PUT_NAMED_BITFIELD(ctx, "is_click_to_drop", t->is_click_to_drop);

@@ -435,6 +435,11 @@ typedef struct thing_ {
     uint16_t damage;
 
     /*
+     * How broken is this item?
+     */
+    uint8_t quality;
+
+    /*
      * Max health, attack bpnuses etc...
      */
     player_stats_t stats;
@@ -1029,11 +1034,11 @@ static inline uint8_t thing_is_rrr14 (thingp t)
     return (thing_template_is_rrr14(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr15 (thingp t)
+static inline uint8_t thing_is_cursed (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr15(thing_get_template(t)));
+    return (thing_template_is_cursed(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_animate_only_when_moving (thingp t)
@@ -1398,9 +1403,9 @@ static inline uint8_t thing_is_rrr14_noverify (thingp t)
     return (t->thing_template->is_rrr14);
 }
 
-static inline uint8_t thing_is_rrr15_noverify (thingp t)
+static inline uint8_t thing_is_cursed_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr15);
+    return (t->thing_template->is_cursed);
 }
 
 static inline uint8_t thing_is_animate_only_when_moving_noverify (thingp t)
