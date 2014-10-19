@@ -4,10 +4,9 @@
  z_depth=4
  is_boring
  is_food
- is_click_to_drop
- is_click_to_use
  hit_priority=5
  is_carryable
+ is_given_randomly_at_start
  is_valid_for_action_bar
  chance_of_appearing=10
  is_combustable
