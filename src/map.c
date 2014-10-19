@@ -295,9 +295,9 @@ uint8_t map_is_rrr11_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_rrr11));
 }
 
-uint8_t map_is_rrr12_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr12));
+    return (map_is_x_at(level, x, y, thing_template_is_given_randomly_at_start));
 }
 
 uint8_t map_is_magical_at (levelp level, int32_t x, int32_t y)
@@ -305,9 +305,9 @@ uint8_t map_is_magical_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_magical));
 }
 
-uint8_t map_is_rrr14_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_degradable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr14));
+    return (map_is_x_at(level, x, y, thing_template_is_degradable));
 }
 
 uint8_t map_is_cursed_at (levelp level, int32_t x, int32_t y)
@@ -325,14 +325,14 @@ uint8_t map_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, thing_template_is_warm_blooded));
 }
 
-uint8_t map_is_click_to_drop_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_rrr23_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_click_to_drop));
+    return (map_is_x_at(level, x, y, thing_template_is_rrr23));
 }
 
-uint8_t map_is_click_to_use_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_rrr22_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_click_to_use));
+    return (map_is_x_at(level, x, y, thing_template_is_rrr22));
 }
 
 uint8_t map_is_torch_at (levelp level, int32_t x, int32_t y)
@@ -627,9 +627,9 @@ thingp map_thing_is_rrr11_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_rrr11));
 }
 
-thingp map_thing_is_rrr12_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr12));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_given_randomly_at_start));
 }
 
 thingp map_thing_is_magical_at (levelp level, int32_t x, int32_t y)
@@ -637,9 +637,9 @@ thingp map_thing_is_magical_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_magical));
 }
 
-thingp map_thing_is_rrr14_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_degradable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr14));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_degradable));
 }
 
 thingp map_thing_is_cursed_at (levelp level, int32_t x, int32_t y)
@@ -657,14 +657,14 @@ thingp map_thing_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, thing_template_is_warm_blooded));
 }
 
-thingp map_thing_is_click_to_drop_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_rrr23_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_click_to_drop));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr23));
 }
 
-thingp map_thing_is_click_to_use_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_rrr22_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_click_to_use));
+    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr22));
 }
 
 thingp map_thing_is_torch_at (levelp level, int32_t x, int32_t y)
@@ -975,9 +975,9 @@ tree_rootp map_all_things_is_rrr11_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr11));
 }
 
-tree_rootp map_all_things_is_rrr12_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr12));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_given_randomly_at_start));
 }
 
 tree_rootp map_all_things_is_magical_at (levelp level, int32_t x, int32_t y)
@@ -985,9 +985,9 @@ tree_rootp map_all_things_is_magical_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, thing_template_is_magical));
 }
 
-tree_rootp map_all_things_is_rrr14_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_degradable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr14));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_degradable));
 }
 
 tree_rootp map_all_things_is_cursed_at (levelp level, int32_t x, int32_t y)
@@ -1005,14 +1005,14 @@ tree_rootp map_all_things_is_warm_blooded_at (levelp level, int32_t x, int32_t y
     return (map_all_things_is_x_at(level, x, y, thing_template_is_warm_blooded));
 }
 
-tree_rootp map_all_things_is_click_to_drop_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_rrr23_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_click_to_drop));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr23));
 }
 
-tree_rootp map_all_things_is_click_to_use_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_rrr22_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_click_to_use));
+    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr22));
 }
 
 tree_rootp map_all_things_is_torch_at (levelp level, int32_t x, int32_t y)
@@ -1427,10 +1427,10 @@ thing_templatep map_find_rrr11_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_rrr11, w));
 }
 
-thing_templatep map_find_rrr12_at (levelp level,
+thing_templatep map_find_given_randomly_at_start_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr12, w));
+    return (map_find_x_at(level, x, y, thing_template_is_given_randomly_at_start, w));
 }
 
 thing_templatep map_find_magical_at (levelp level,
@@ -1439,10 +1439,10 @@ thing_templatep map_find_magical_at (levelp level,
     return (map_find_x_at(level, x, y, thing_template_is_magical, w));
 }
 
-thing_templatep map_find_rrr14_at (levelp level,
+thing_templatep map_find_degradable_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr14, w));
+    return (map_find_x_at(level, x, y, thing_template_is_degradable, w));
 }
 
 thing_templatep map_find_cursed_at (levelp level,
@@ -1466,13 +1466,13 @@ thing_templatep map_find_rrr17_at (levelp level,
 thing_templatep map_find_rrr18_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_click_to_drop, w));
+    return (map_find_x_at(level, x, y, thing_template_is_rrr23, w));
 }
 
 thing_templatep map_find_rrr19_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_click_to_use, w));
+    return (map_find_x_at(level, x, y, thing_template_is_rrr22, w));
 }
 
 thing_templatep map_find_torch_at (levelp level,
@@ -2131,9 +2131,9 @@ uint32_t level_count_is_rrr11 (levelp level)
     return (level_count_is_x(level, thing_template_is_rrr11));
 }
 
-uint32_t level_count_is_rrr12 (levelp level)
+uint32_t level_count_is_given_randomly_at_start (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr12));
+    return (level_count_is_x(level, thing_template_is_given_randomly_at_start));
 }
 
 uint32_t level_count_is_magical (levelp level)
@@ -2141,9 +2141,9 @@ uint32_t level_count_is_magical (levelp level)
     return (level_count_is_x(level, thing_template_is_magical));
 }
 
-uint32_t level_count_is_rrr14 (levelp level)
+uint32_t level_count_is_degradable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr14));
+    return (level_count_is_x(level, thing_template_is_degradable));
 }
 
 uint32_t level_count_is_cursed (levelp level)
@@ -2161,14 +2161,14 @@ uint32_t level_count_is_warm_blooded (levelp level)
     return (level_count_is_x(level, thing_template_is_warm_blooded));
 }
 
-uint32_t level_count_is_click_to_drop (levelp level)
+uint32_t level_count_is_rrr23 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_click_to_drop));
+    return (level_count_is_x(level, thing_template_is_rrr23));
 }
 
-uint32_t level_count_is_click_to_use (levelp level)
+uint32_t level_count_is_rrr22 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_click_to_use));
+    return (level_count_is_x(level, thing_template_is_rrr22));
 }
 
 uint32_t level_count_is_torch (levelp level)
@@ -2485,9 +2485,9 @@ tree_rootp map_all_things_is_rrr11 (levelp level)
     return (map_all_things_is_x(level, thing_template_is_rrr11));
 }
 
-tree_rootp map_all_things_is_rrr12 (levelp level)
+tree_rootp map_all_things_is_given_randomly_at_start (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr12));
+    return (map_all_things_is_x(level, thing_template_is_given_randomly_at_start));
 }
 
 tree_rootp map_all_things_is_magical (levelp level)
@@ -2495,9 +2495,9 @@ tree_rootp map_all_things_is_magical (levelp level)
     return (map_all_things_is_x(level, thing_template_is_magical));
 }
 
-tree_rootp map_all_things_is_rrr14 (levelp level)
+tree_rootp map_all_things_is_degradable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr14));
+    return (map_all_things_is_x(level, thing_template_is_degradable));
 }
 
 tree_rootp map_all_things_is_cursed (levelp level)
@@ -2515,14 +2515,14 @@ tree_rootp map_all_things_is_warm_blooded (levelp level)
     return (map_all_things_is_x(level, thing_template_is_warm_blooded));
 }
 
-tree_rootp map_all_things_is_click_to_drop (levelp level)
+tree_rootp map_all_things_is_rrr23 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_click_to_drop));
+    return (map_all_things_is_x(level, thing_template_is_rrr23));
 }
 
-tree_rootp map_all_things_is_click_to_use (levelp level)
+tree_rootp map_all_things_is_rrr22 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_click_to_use));
+    return (map_all_things_is_x(level, thing_template_is_rrr22));
 }
 
 tree_rootp map_all_things_is_torch (levelp level)

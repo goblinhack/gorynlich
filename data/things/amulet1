@@ -5,7 +5,6 @@
  is_boring
  is_wearable
  is_collision_map_medium
- is_valid_for_action_bar
  chance_of_appearing=1
  bonus_score_on_collect=15000
  tiles={

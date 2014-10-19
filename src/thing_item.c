@@ -40,6 +40,12 @@ static void thing_collect (thingp t,
 
     if (item == THING_WATER_POISON) {
         item = THING_WATER;
+        /*
+         * Convert any existing items.
+         */
+        player_stats_item_polymorph(&t->stats,
+                                    THING_WATER,
+                                    THING_WATER_POISON);
     }
 
     /*
@@ -116,7 +122,8 @@ void thing_used (thingp t, thing_templatep tmp)
 
     item = thing_template_to_id(tmp);
     if (!t->stats.carrying[item].quantity) {
-        ERR("tried to use %s not carried", thing_template_short_name(tmp));
+        ERR("Tried to use item which is %s not carried", 
+            thing_template_short_name(tmp));
         return;
     }
 
@@ -183,7 +190,10 @@ void thing_used (thingp t, thing_templatep tmp)
 
     THING_LOG(t, "used %s", thing_template_short_name(tmp));
 
-    t->stats.carrying[item].quantity--;
+    /*
+     * Remove from the inventory and other places.
+     */
+    player_stats_item_remove(t, &t->stats, tmp);
 
     /*
      * Check HP did not go too low.
@@ -191,25 +201,34 @@ void thing_used (thingp t, thing_templatep tmp)
     if (thing_get_stats_hp(t) < 0) {
         const char *name = thing_template_short_name(tmp);
 
-        thing_dead(t, 0, "cursed %s", name);
+        thing_dead(t, 0, "%s", name);
         return;
     }
 }
 
-void thing_item_destroyed (thingp t, thing_templatep tmp)
+void thing_degrade (thingp t, thing_templatep tmp)
 {
     uint32_t item;
 
     item = thing_template_to_id(tmp);
     if (!t->stats.carrying[item].quantity) {
-        ERR("tried to item destroy %s not carried", 
+        ERR("Tried to degrade item which is %s not carried", 
             thing_template_short_name(tmp));
         return;
     }
 
-    t->stats.carrying[item].quantity--;
+    if (thing_is_player(t)) {
+        t->needs_tx_player_update = true;
+    }
 
-    THING_LOG(t, "item destroyed %s", thing_template_short_name(tmp));
+    if (t->stats.carrying[item].quality--) {
+        return;
+    }
+
+    /*
+     * Remove from the inventory and other places.
+     */
+    player_stats_item_remove(t, &t->stats, tmp);
 
     if (thing_template_is_weapon(tmp)) {
         thing_unwield(t);
@@ -217,10 +236,6 @@ void thing_item_destroyed (thingp t, thing_templatep tmp)
         THING_SHOUT_AT(t, WARNING, "Your weapon crumbles to dust");
 
         thing_wield_next_weapon(t);
-    }
-
-    if (thing_is_player(t)) {
-        t->needs_tx_player_update = true;
     }
 }
 

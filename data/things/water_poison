@@ -4,11 +4,8 @@
  z_depth=4
  is_boring
  is_food
- is_click_to_drop
- is_click_to_use
  hit_priority=5
  is_carryable
- is_valid_for_action_bar
  chance_of_appearing=20
  bonus_hp_on_use=-30
  is_poison

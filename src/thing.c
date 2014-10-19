@@ -4073,7 +4073,7 @@ void thing_fire (thingp t,
 
         if (failure_chance) {
             if ((rand() % failure_chance) == 0) {
-                thing_item_destroyed(t, weapon);
+                thing_degrade(t, weapon);
                 return;
             }
         }
