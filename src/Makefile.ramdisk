@@ -229,6 +229,12 @@
 .o/ramdisk_data_sound_wand_dead_wav.o: asm/ramdisk_data_sound_wand_dead_wav.S ../data/sound/wand_dead.wav
 	gcc -c asm/ramdisk_data_sound_wand_dead_wav.S -o .o/ramdisk_data_sound_wand_dead_wav.o
 
+.o/ramdisk_data_things__apple1_session.o: asm/ramdisk_data_things__apple1_session.S ../data/things/.apple1.session
+	gcc -c asm/ramdisk_data_things__apple1_session.S -o .o/ramdisk_data_things__apple1_session.o
+
+.o/ramdisk_data_things__apple_poison_session.o: asm/ramdisk_data_things__apple_poison_session.S ../data/things/.apple_poison.session
+	gcc -c asm/ramdisk_data_things__apple_poison_session.S -o .o/ramdisk_data_things__apple_poison_session.o
+
 .o/ramdisk_data_things__death_session.o: asm/ramdisk_data_things__death_session.S ../data/things/.death.session
 	gcc -c asm/ramdisk_data_things__death_session.S -o .o/ramdisk_data_things__death_session.o
 
@@ -244,6 +250,12 @@
 .o/ramdisk_data_things__warrior_session.o: asm/ramdisk_data_things__warrior_session.S ../data/things/.warrior.session
 	gcc -c asm/ramdisk_data_things__warrior_session.S -o .o/ramdisk_data_things__warrior_session.o
 
+.o/ramdisk_data_things__water_session.o: asm/ramdisk_data_things__water_session.S ../data/things/.water.session
+	gcc -c asm/ramdisk_data_things__water_session.S -o .o/ramdisk_data_things__water_session.o
+
+.o/ramdisk_data_things__water_poison_session.o: asm/ramdisk_data_things__water_poison_session.S ../data/things/.water_poison.session
+	gcc -c asm/ramdisk_data_things__water_poison_session.S -o .o/ramdisk_data_things__water_poison_session.o
+
 .o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
 	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
 
@@ -256,11 +268,11 @@
 .o/ramdisk_data_things_anim_treasure_chest.o: asm/ramdisk_data_things_anim_treasure_chest.S ../data/things/anim_treasure_chest
 	gcc -c asm/ramdisk_data_things_anim_treasure_chest.S -o .o/ramdisk_data_things_anim_treasure_chest.o
 
-.o/ramdisk_data_things_apple.o: asm/ramdisk_data_things_apple.S ../data/things/apple
-	gcc -c asm/ramdisk_data_things_apple.S -o .o/ramdisk_data_things_apple.o
+.o/ramdisk_data_things_apple1.o: asm/ramdisk_data_things_apple1.S ../data/things/apple1
+	gcc -c asm/ramdisk_data_things_apple1.S -o .o/ramdisk_data_things_apple1.o
 
-.o/ramdisk_data_things_apple_poison.o: asm/ramdisk_data_things_apple_poison.S ../data/things/apple_poison
-	gcc -c asm/ramdisk_data_things_apple_poison.S -o .o/ramdisk_data_things_apple_poison.o
+.o/ramdisk_data_things_apple2.o: asm/ramdisk_data_things_apple2.S ../data/things/apple2
+	gcc -c asm/ramdisk_data_things_apple2.S -o .o/ramdisk_data_things_apple2.o
 
 .o/ramdisk_data_things_arrow.o: asm/ramdisk_data_things_arrow.S ../data/things/arrow
 	gcc -c asm/ramdisk_data_things_arrow.S -o .o/ramdisk_data_things_arrow.o

@@ -105,13 +105,11 @@ int player_stats_get_modifier (int value)
 int player_stats_item_add (thingp t,
                            player_stats_t *player_stats,
                            const thing_templatep it,
-                           uint8_t quantity,
-                           uint8_t cursed,
-                           uint8_t quality) 
+                           item_t item)
 {
     const int id = thing_template_to_id(it);
 
-    if ((((int) player_stats->carrying[id].quantity) + quantity) > 
+    if ((((int) player_stats->carrying[id].quantity) + item.quantity) > 
             THING_ITEM_CARRY_MAX) {
         if (t) {
             THING_SHOUT_AT(t, INFO, "carrying too many of %s",
@@ -151,16 +149,16 @@ int player_stats_item_add (thingp t,
      */
     if (player_stats->carrying[id].quantity) {
         player_stats->carrying[id].quality =
-                        min(quality,
+                        min(item.quality,
                             player_stats->carrying[id].quality);
     }
 
-    player_stats->carrying[id].quantity += quantity;
+    player_stats->carrying[id].quantity += item.quantity;
 
     /*
      * One cursed item curses the whole stack.
      */
-    player_stats->carrying[id].cursed = cursed;
+    player_stats->carrying[id].cursed = item.cursed;
 
     /*
      * If there is space on the action bar, add it.
@@ -211,12 +209,11 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
         LOG("  Auto provision %s, quality %u",thing_template_short_name(t),
             quality);
 
-        player_stats_item_add(0 /* thing */,
-                              player_stats, 
-                              t,
-                              1, /* quantity */
-                              0, /* cursed */
-                              quality);
+        item_t i = { 0 };
+        i.quantity = 1;
+        i.quality = quality;
+
+        player_stats_item_add(0 /* thing */, player_stats, t, i);
     }
 }
 
@@ -333,13 +330,15 @@ void player_stats_generate_random (player_stats_t *player_stats)
         /*
          * Only top quality items to start.
          */
+        item_t item = {0};
+
+        item.quantity = 1;
+        item.quality = THING_ITEM_QUALITY_MAX;
+
         if (thing_template->stats.carrying[i].quantity) {
             player_stats_item_add(0 /* thing */,
                                   player_stats, 
-                                  thing_template,
-                                  1, /* quantity */
-                                  0, /* cursed */
-                                  THING_ITEM_QUALITY_MAX);
+                                  thing_template, item);
         }
     }
 

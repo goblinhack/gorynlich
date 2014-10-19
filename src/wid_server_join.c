@@ -312,21 +312,16 @@ void wid_server_join_redo (uint8_t soft_refresh)
             snprintf_realloc(&tmp, &size, &used, 
                              "%%%%fmt=left$   ----           -------\n");
 
-            uint32_t pi;
             uint32_t idx = 0;
 
-            for (pi = 0; pi < MAX_PLAYERS; pi++) {
-                msg_player_state *p = &server_status->players[pi];
+            msg_player_state *p = &server_status->player;
 
-                if (!p->name[0]) {
-                    continue;
-                }
-
+            if (p->name[0]) {
                 snprintf_realloc(&tmp, &size, &used, 
-                                 "%%%%fmt=left$[%d] %-10s %07d\n",
-                                 idx++,
-                                 p->name,
-                                 p->score);
+                                "%%%%fmt=left$[%d] %-10s %07d\n",
+                                idx++,
+                                p->name,
+                                p->score);
             }
 
             snprintf_realloc(&tmp, &size, &used, "\n");

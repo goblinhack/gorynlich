@@ -42,10 +42,6 @@ static void thing_collect (thingp t,
         item = THING_WATER;
     }
 
-    if (item == THING_APPLE_POISON) {
-        item = THING_APPLE;
-    }
-
     /*
      * If treasure, just add it to the score. Don't carry it.
      */
@@ -62,13 +58,13 @@ static void thing_collect (thingp t,
     /*
      * Can it fit in the backpack?
      */
-    if (!player_stats_item_add(t,
-                               &t->stats, 
-                               tmp, 
-                               quantity,
-                               thing_template_is_cursed(tmp),
-                               it ? it->quality : THING_ITEM_QUALITY_MAX)) {
+    item_t i = {0};
 
+    i.quality = it->quality ? it->quality : THING_ITEM_QUALITY_MAX;
+    i.quantity = quantity;
+    i.cursed = thing_template_is_cursed(tmp);
+
+    if (!player_stats_item_add(t, &t->stats, tmp, i)) {
         THING_SHOUT_AT(t, INFO, "You could not collect %s",
                        thing_template_short_name(tmp));
         return;
