@@ -1,6 +1,6 @@
 {
  short_name="cheddar cheese"
- tooltip="is this cheese?"
+ tooltip="Is this cheese?"
  z_depth=3
  is_boring
  is_food

@@ -1,6 +1,6 @@
 {
  short_name="minor phantom"
- tooltip="minor phantom"
+ tooltip="Minor phantom"
  z_depth=3
  speed=3
  max_hp=1

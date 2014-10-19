@@ -1,6 +1,6 @@
 {
  short_name="mob spawner"
- tooltip="mob spawner"
+ tooltip="Mob spawner"
  z_depth=3
  is_mob_spawner
  hit_priority=20

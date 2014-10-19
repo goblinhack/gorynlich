@@ -169,6 +169,13 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_on_tick(w, wid_player_info_buttons_tick);
 
         wid_set_no_shape(w);
+
+        thing_templatep thing_template = 
+                        player_stats_to_thing_template(player_stats);
+
+        const char *tooltip = thing_template_get_tooltip(thing_template);
+
+        wid_set_tooltip(w, tooltip);
     }
 
     {

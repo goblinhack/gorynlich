@@ -533,8 +533,9 @@ void player_stats_generate_random (player_stats_t *player_stats)
 
         if (thing_template->stats.carrying[i].quantity) {
             player_stats_item_add(0 /* thing */,
-                                  player_stats, 
-                                  thing_template, item);
+                                  player_stats,
+                                  id_to_thing_template(i),
+                                  item);
         }
     }
 
@@ -548,8 +549,11 @@ void player_stats_init (player_stats_t *player_stats)
 {
     memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
     memset(player_stats->action_bar, 0, sizeof(player_stats->action_bar));
-    memset(player_stats->carrying, 0, sizeof(player_stats->carrying));
     memset(player_stats->worn, 0, sizeof(player_stats->worn));
+
+    /*
+     * Do not memset carrying as that removes base class items.
+     */
 
     if (!player_stats->attack_melee) {
         player_stats->attack_melee = 10;

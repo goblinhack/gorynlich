@@ -1,6 +1,6 @@
 {
  short_name="arrow"
- tooltip="arrow"
+ tooltip="A banana"
  is_hidden_from_editor
  z_depth=3
  speed=20

@@ -1,6 +1,6 @@
 {
  short_name="wall"
- tooltip="wall"
+ tooltip="Wall"
  z_depth=2
  is_boring
  is_wall

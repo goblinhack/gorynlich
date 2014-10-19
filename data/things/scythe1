@@ -1,6 +1,6 @@
 {
  short_name="scythe"
- tooltip="scythe"
+ tooltip="Scythe"
  z_depth=3
  is_weapon
  is_degradable

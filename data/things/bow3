@@ -1,6 +1,6 @@
 {
  short_name="craftsman double bow"
- tooltip="serious double bow"
+ tooltip="Serious double bow"
  fires="data/things/arrow"
  z_depth=3
  is_weapon

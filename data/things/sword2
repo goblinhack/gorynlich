@@ -1,6 +1,6 @@
 {
  short_name="medium sword"
- tooltip="medium sword"
+ tooltip="Medium sword"
  z_depth=3
  is_weapon
  is_degradable
