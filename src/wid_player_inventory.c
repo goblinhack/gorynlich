@@ -14,6 +14,7 @@
 #include "thing_template.h"
 #include "color.h"
 #include "glapi.h"
+#include "thing.h"
 
 static widp wid_player_inventory;
 static widp wid_player_inventory_container;
@@ -90,49 +91,95 @@ void wid_player_inventory_button_style (widp w,
 
     wid_set_mode(w, WID_MODE_NORMAL);
 
-    if (id) {
-        thing_templatep t = id_to_thing_template(id);
-        wid_set_thing_template(w, t);
+    if (!id) {
+        return;
+    }
 
-        uint8_t quantity = s->carrying[id].quantity;
+    thing_templatep temp = id_to_thing_template(id);
+
+    if (player && player->weapon && (temp == player->weapon)) {
+        wid_set_color(w, WID_COLOR_TL, RED);
+        wid_set_color(w, WID_COLOR_BR, RED);
+    }
+
+    wid_set_thing_template(w, temp);
+
+    uint8_t quantity = s->carrying[id].quantity;
 //        uint8_t cursed = s->carrying[id].cursed;
-        uint8_t quality = s->carrying[id].quality;
+    uint8_t quality = s->carrying[id].quality;
 
-        if (1 || quantity) {
-            char tmp[20];
-            snprintf(tmp, sizeof(tmp) - 1, "%u", quantity);
+    if (quantity > 1) {
+        char tmp[20];
+        snprintf(tmp, sizeof(tmp) - 1, "%u", quantity);
 
-            wid_set_text(w, tmp);
-            wid_set_font(w, small_font);
-            wid_set_text_rhs(w, true);
-            wid_set_text_bot(w, true);
+        wid_set_text(w, tmp);
+        wid_set_font(w, small_font);
+        wid_set_text_rhs(w, true);
+        wid_set_text_bot(w, true);
+    }
+
+    /*
+     * Quality bar.
+     */
+    if (thing_template_is_degradable(temp)) {
+        quality = rand() % 8;
+
+        widp wid_bar = wid_new_square_button(w, "quality bar");
+
+        wid_set_bevelled(wid_bar, true);
+        wid_set_bevel(wid_bar, 2);
+
+        fpoint tl = {0.2f, 0.8f};
+        fpoint br = {0.8f, 0.9f};
+
+        br.x = (0.6 / ((float)THING_ITEM_QUALITY_MAX + 1) )
+                    * ((double)quality);
+
+        wid_set_tl_br_pct(wid_bar, tl, br);
+
+        color col;
+
+        switch (quality) {
+            case 7: col = GREEN; break;
+            case 6: col = YELLOW; break;
+            case 5: col = ORANGE; break;
+            case 4: col = ORANGE; break;
+            case 3: col = BROWN; break;
+            case 2: col = BROWN; break;
+            case 1: col = RED; break;
+            default:
+            case 0: col = RED; break;
         }
 
-        /*
-         * Quality bar.
-         */
-        if (1 || quality) {
-            quality = rand() % 8;
+        glcolor(col);
 
-            widp wid_bar = wid_new_square_button(w, "quality bar");
+        wid_set_mode(wid_bar, WID_MODE_NORMAL);
+        wid_set_color(wid_bar, WID_COLOR_BG, col);
+    }
 
-            wid_set_bevelled(wid_bar, true);
-            wid_set_bevel(wid_bar, 2);
+    /*
+     * Tooltip
+     */
+    const char *tooltip = thing_template_get_tooltip(temp);
+    if (!tooltip) {
+        ERR("need a tooltip defined for %s", 
+            thing_template_name(temp));
+    } else {
+        char *full_tooltip;
+        char *tmp = strappend(tooltip, "\n\n");
 
-            fpoint tl = {0.2f, 0.8f};
-            fpoint br = {0.8f, 0.9f};
-
-            br.x = (0.6 / ((float)THING_ITEM_QUALITY_MAX + 1) )
-                     * ((double)quality);
-
-            wid_set_tl_br_pct(wid_bar, tl, br);
-
-            color col = STEELBLUE;
-            glcolor(col);
-
-            wid_set_mode(wid_bar, WID_MODE_NORMAL);
-            wid_set_color(wid_bar, WID_COLOR_BG, col);
+        if (thing_template_is_weapon(temp)) {
+            char *old = tmp;
+            tmp = strappend(
+                    old,
+                    dynprintf("%d damage\n",
+                              thing_template_get_damage(temp)));
+            myfree(old);
         }
+
+        full_tooltip = tmp;
+        wid_set_tooltip(w, full_tooltip);
+        myfree(full_tooltip);
     }
 }
 

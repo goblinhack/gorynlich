@@ -55,7 +55,7 @@ typedef struct player_stats_ {
      */
     uint8_t inventory[THING_INVENTORY_MAX];
     uint8_t action_bar[THING_ACTION_BAR_MAX];
-    uint8_t worn[THING_ACTION_BAR_MAX];
+    uint8_t worn[THING_WORN_MAX];
 } __attribute__ ((packed)) player_stats_t;
 
 int player_stats_get_modifier(int value);
@@ -63,7 +63,32 @@ void player_stats_generate_random(player_stats_t *);
 void player_stats_init(player_stats_t *);
 thing_templatep player_stats_to_thing_template(player_stats_t *);
 
+int player_stats_has_inventory_item(const player_stats_t *player_stats,
+                                    uint32_t item,
+                                    uint32_t *index);
+
+int player_stats_has_action_bar_item(const player_stats_t *player_stats,
+                                     uint32_t item,
+                                     uint32_t *index);
+
+int player_stats_has_worn_item(const player_stats_t *player_stats,
+                               uint32_t item,
+                               uint32_t *index);
+
 int player_stats_item_add(thingp t,
                           player_stats_t *player_stats,
                           const thing_templatep it,
                           item_t item);
+
+int player_stats_item_remove(thingp t,
+                             player_stats_t *player_stats,
+                             const thing_templatep it);
+
+int player_stats_item_degrade(thingp t,
+                              player_stats_t *player_stats,
+                              const thing_templatep it);
+
+int player_stats_item_polymorph(player_stats_t *player_stats,
+                                const uint32_t from,
+                                const uint32_t to);
+

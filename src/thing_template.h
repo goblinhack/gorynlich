@@ -219,14 +219,14 @@ typedef struct thing_template_ {
     uint8_t is_rrr9:1;
     uint8_t is_rrr10:1;
     uint8_t is_rrr11:1;
-    uint8_t is_rrr12:1;
+    uint8_t is_given_randomly_at_start:1;
     uint8_t is_magical:1;
-    uint8_t is_rrr14:1;
+    uint8_t is_degradable:1;
     uint8_t is_cursed:1;
     uint8_t is_animate_only_when_moving:1;
     uint8_t is_warm_blooded:1;
-    uint8_t is_click_to_drop:1;
-    uint8_t is_click_to_use:1;
+    uint8_t is_rrr23:1;
+    uint8_t is_rrr22:1;
     uint8_t is_torch:1;
     uint8_t is_explosion:1;
     uint8_t is_hidden_from_editor:1;
@@ -554,9 +554,9 @@ static inline uint8_t thing_template_is_rrr11 (thing_templatep t)
     return (t->is_rrr11);
 }
 
-static inline uint8_t thing_template_is_rrr12 (thing_templatep t)
+static inline uint8_t thing_template_is_given_randomly_at_start (thing_templatep t)
 {
-    return (t->is_rrr12);
+    return (t->is_given_randomly_at_start);
 }
 
 static inline uint8_t thing_template_is_magical (thing_templatep t)
@@ -564,9 +564,9 @@ static inline uint8_t thing_template_is_magical (thing_templatep t)
     return (t->is_magical);
 }
 
-static inline uint8_t thing_template_is_rrr14 (thing_templatep t)
+static inline uint8_t thing_template_is_degradable (thing_templatep t)
 {
-    return (t->is_rrr14);
+    return (t->is_degradable);
 }
 
 static inline uint8_t thing_template_is_cursed (thing_templatep t)
@@ -584,14 +584,14 @@ static inline uint8_t thing_template_is_warm_blooded (thing_templatep t)
     return (t->is_warm_blooded);
 }
 
-static inline uint8_t thing_template_is_click_to_drop (thing_templatep t)
+static inline uint8_t thing_template_is_rrr23 (thing_templatep t)
 {
-    return (t->is_click_to_drop);
+    return (t->is_rrr23);
 }
 
-static inline uint8_t thing_template_is_click_to_use (thing_templatep t)
+static inline uint8_t thing_template_is_rrr22 (thing_templatep t)
 {
-    return (t->is_click_to_use);
+    return (t->is_rrr22);
 }
 
 static inline uint8_t thing_template_is_torch (thing_templatep t)

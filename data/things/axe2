@@ -3,10 +3,10 @@
  tooltip="two headed, serious axe"
  z_depth=3
  is_weapon
- is_click_to_drop
- is_click_to_use
+ is_degradable
  hit_priority=0
  is_carryable
+ is_given_randomly_at_start
  weapon_fire_delay_tenths=2
  damage=2
  swing_distance_from_player=6

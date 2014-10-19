@@ -1013,11 +1013,11 @@ static inline uint8_t thing_is_rrr11 (thingp t)
     return (thing_template_is_rrr11(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr12 (thingp t)
+static inline uint8_t thing_is_given_randomly_at_start (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr12(thing_get_template(t)));
+    return (thing_template_is_given_randomly_at_start(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_magical (thingp t)
@@ -1027,11 +1027,11 @@ static inline uint8_t thing_is_magical (thingp t)
     return (thing_template_is_magical(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr14 (thingp t)
+static inline uint8_t thing_is_degradable (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr14(thing_get_template(t)));
+    return (thing_template_is_degradable(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_cursed (thingp t)
@@ -1055,18 +1055,18 @@ static inline uint8_t thing_is_warm_blooded (thingp t)
     return (thing_template_is_warm_blooded(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_click_to_drop (thingp t)
+static inline uint8_t thing_is_rrr23 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_click_to_drop(thing_get_template(t)));
+    return (thing_template_is_rrr23(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_click_to_use (thingp t)
+static inline uint8_t thing_is_rrr22 (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_click_to_use(thing_get_template(t)));
+    return (thing_template_is_rrr22(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_torch (thingp t)
@@ -1388,9 +1388,9 @@ static inline uint8_t thing_is_rrr11_noverify (thingp t)
     return (t->thing_template->is_rrr11);
 }
 
-static inline uint8_t thing_is_rrr12_noverify (thingp t)
+static inline uint8_t thing_is_given_randomly_at_start_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr12);
+    return (t->thing_template->is_given_randomly_at_start);
 }
 
 static inline uint8_t thing_is_magical_noverify (thingp t)
@@ -1398,9 +1398,9 @@ static inline uint8_t thing_is_magical_noverify (thingp t)
     return (t->thing_template->is_magical);
 }
 
-static inline uint8_t thing_is_rrr14_noverify (thingp t)
+static inline uint8_t thing_is_degradable_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr14);
+    return (t->thing_template->is_degradable);
 }
 
 static inline uint8_t thing_is_cursed_noverify (thingp t)
@@ -1418,14 +1418,14 @@ static inline uint8_t thing_is_warm_blooded_noverify (thingp t)
     return (t->thing_template->is_warm_blooded);
 }
 
-static inline uint8_t thing_is_click_to_drop_noverify (thingp t)
+static inline uint8_t thing_is_rrr23_noverify (thingp t)
 {
-    return (t->thing_template->is_click_to_drop);
+    return (t->thing_template->is_rrr23);
 }
 
-static inline uint8_t thing_is_click_to_use_noverify (thingp t)
+static inline uint8_t thing_is_rrr22_noverify (thingp t)
 {
-    return (t->thing_template->is_click_to_use);
+    return (t->thing_template->is_rrr22);
 }
 
 static inline uint8_t thing_is_torch_noverify (thingp t)
@@ -1711,6 +1711,7 @@ thing_templatep thing_weapon(thingp t);
 void thing_auto_collect(thingp t, thingp it, thing_templatep tmp);
 void thing_item_collect(thingp t, thingp it, thing_templatep tmp);
 void thing_used(thingp t, thing_templatep tmp);
+void thing_degrade(thingp t, thing_templatep tmp);
 void thing_item_destroyed(thingp t, thing_templatep tmp);
 void thing_drop(thingp t, thing_templatep tmp);
 void thing_wield_next_weapon(thingp t);

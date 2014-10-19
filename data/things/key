@@ -3,8 +3,8 @@
  tooltip="it's a key"
  z_depth=3
  is_key
- is_click_to_drop
  is_carryable
+ is_given_randomly_at_start
  tiles={
   tile={
    tile="key"
