@@ -2133,10 +2133,9 @@ void socket_tx_server_status (void)
     }
 
     socketp s;
-    uint32_t si = 0;
 
     /*
-     * Add all current players.
+     * Walk all players and send them their updates.
      */
     TREE_WALK(sockets, s) {
         if (!s->server_side_client) {
@@ -2153,12 +2152,7 @@ void socket_tx_server_status (void)
             continue;
         }
 
-        if (si >= MAX_PLAYERS) {
-            ERR("too many players to send all in message");
-            continue;
-        }
-
-        msg_player_state *msg_tx = &msg.players[si];
+        msg_player_state *msg_tx = &msg.player;
 
         strncpy(msg_tx->name, p->name, min(sizeof(msg_tx->name), 
                                            strlen(p->name))); 
@@ -2166,7 +2160,8 @@ void socket_tx_server_status (void)
         strncpy(msg_tx->pclass, p->pclass, min(sizeof(msg_tx->pclass), 
                                            strlen(p->pclass))); 
 
-        memcpy(&msg_tx->player_stats, &p->player_stats, sizeof(player_stats_t));
+        memcpy(&msg_tx->player_stats, &p->player_stats, 
+               sizeof(player_stats_t));
 
         SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
         SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
@@ -2184,36 +2179,22 @@ void socket_tx_server_status (void)
 
         SDLNet_Write32(p->key, &msg_tx->key);
 
-        si++;
-    }
+        UDPpacket *packet = socket_alloc_msg();
 
-    UDPpacket *packet = socket_alloc_msg();
+        memcpy(packet->data, &msg, sizeof(msg));
 
-    memcpy(packet->data, &msg, sizeof(msg));
-
-    {
-        TREE_WALK(sockets, s) {
-            if (!s->connected) {
-                continue;
-            }
-
-            if (!s->server_side_client) {
-                continue;
-            }
-
-            if (debug_socket_players_enabled) {
-                LOG("Server: Tx Status [to %s]",
-                    socket_get_remote_logname(s));
-            }
-
-            packet->len = sizeof(msg);
-            write_address(packet, socket_get_remote_ip(s));
-
-            socket_tx_msg(s, packet);
+        if (debug_socket_players_enabled) {
+            LOG("Server: Tx Status [to %s]",
+                socket_get_remote_logname(s));
         }
+
+        packet->len = sizeof(msg);
+        write_address(packet, socket_get_remote_ip(s));
+
+        socket_tx_msg(s, packet);
+                
+        socket_free_msg(packet);
     }
-            
-    socket_free_msg(packet);
 }
 
 /*
@@ -2231,44 +2212,36 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
         return;
     }
 
-    uint32_t pi;
-
     msg = (typeof(msg)) packet->data;
 
-    for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player_state *p = &status->players[pi];
-        msg_player_state *msg_rx = &msg->players[pi];
+    msg_player_state *p = &status->player;
+    msg_player_state *msg_rx = &msg->player;
 
-        memcpy(p->name, msg_rx->name, SMALL_STRING_LEN_MAX);
-        memcpy(p->pclass, msg_rx->pclass, SMALL_STRING_LEN_MAX);
-        memcpy(&p->player_stats, &msg_rx->player_stats, sizeof(player_stats_t));
+    memcpy(p->name, msg_rx->name, SMALL_STRING_LEN_MAX);
+    memcpy(p->pclass, msg_rx->pclass, SMALL_STRING_LEN_MAX);
+    memcpy(&p->player_stats, &msg_rx->player_stats, sizeof(player_stats_t));
 
-        p->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
-        p->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);
+    p->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
+    p->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);
 
-        p->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
-        p->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
+    p->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
+    p->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
 
-        p->quality = msg_rx->quality;
+    p->quality = msg_rx->quality;
 
-        p->avg_latency = SDLNet_Read16(&msg_rx->avg_latency);
-        p->min_latency = SDLNet_Read16(&msg_rx->min_latency);
-        p->max_latency = SDLNet_Read16(&msg_rx->max_latency);
+    p->avg_latency = SDLNet_Read16(&msg_rx->avg_latency);
+    p->min_latency = SDLNet_Read16(&msg_rx->min_latency);
+    p->max_latency = SDLNet_Read16(&msg_rx->max_latency);
 
-        p->score = SDLNet_Read32(&msg_rx->score);
-        p->thing_id = SDLNet_Read16(&msg_rx->thing_id);
+    p->score = SDLNet_Read32(&msg_rx->score);
+    p->thing_id = SDLNet_Read16(&msg_rx->thing_id);
 
-        p->key = SDLNet_Read32(&msg_rx->key);
+    p->key = SDLNet_Read32(&msg_rx->key);
 
-        if (!p->name[0]) {
-            continue;
-        }
-
-        if (debug_socket_players_enabled) {
-            char *tmp = iptodynstr(read_address(packet));
-            LOG("Client: Rx Status from %s %u:\"%s\"", tmp, pi, p->name);
-            myfree(tmp);
-        }
+    if (debug_socket_players_enabled) {
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Client: Rx Status from %s \"%s\"", tmp, p->name);
+        myfree(tmp);
     }
 
     status->server_max_players = msg->server_max_players;

@@ -203,8 +203,8 @@ static uint8_t resource_init_last (void *context)
         "small-collision-map",
         "tiny-collision-map",
         "noentry",
-        "apple_poison",
-        "apple",
+        "apple1",
+        "apple2",
         "bread",
         "banana",
         "cheese",
@@ -2783,10 +2783,10 @@ static uint8_t resource_init_last (void *context)
     /*
      * Lesser items like food.
      */
-    thing_template_load(&THING_APPLE, 
-                        "data/things/apple");
-    thing_template_load(&THING_APPLE_POISON, 
-                        "data/things/apple_poison");
+    thing_template_load(&THING_APPLE1, 
+                        "data/things/apple1");
+    thing_template_load(&THING_APPLE2, 
+                        "data/things/apple2");
     thing_template_load(&THING_BREAD, 
                         "data/things/bread");
     thing_template_load(&THING_CHEESE, 

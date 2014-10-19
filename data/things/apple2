@@ -1,7 +1,7 @@
 {
  short_name="apple"
- tooltip="very ripe apple"
- z_depth=4
+ tooltip="ripe apple"
+ z_depth=3
  is_boring
  is_food
  is_click_to_drop
@@ -9,15 +9,13 @@
  hit_priority=5
  is_carryable
  is_valid_for_action_bar
- chance_of_appearing=10
+ chance_of_appearing=50
  is_fragile
  bonus_hp_on_use=-30
- message_on_use="%%fg=red$urgh choke, poison"
- is_poison
- is_cursed
+ message_on_use="%%fg=green$crunch"
  tiles={
   tile={
-   tile="apple_poison"
+   tile="apple2"
   }
  }
 }

@@ -887,9 +887,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     /*
      * Print the score.
      */
-    int32_t y;
-    for (y = 0; y < 4; y++) {
-        msg_player_state *p = client_get_player(y);
+    for (;;) {
+        msg_player_state *p = client_get_player();
 
         /*
          * Score
@@ -897,7 +896,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         char tmp[20];
         snprintf(tmp, sizeof(tmp), "%06u", p->score);
 
-        static widp wid_score_container[MAX_PLAYERS];
+        static widp wid_score_container;
 
         if (!update) {
             wid_set_no_shape(
@@ -905,9 +904,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                         &wid_score, tmp,
                                         score_x, player_y_offset, small_font));
 
-            wid_score_container[y] = wid_score;
+            wid_score_container = wid_score;
         } else {
-            wid_set_text(wid_score_container[y], tmp);
+            wid_set_text(wid_score_container, tmp);
         }
 
         /*
@@ -933,7 +932,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             memcpy(&t->stats, &p->player_stats, sizeof(t->stats));
         }
 
-        static widp wid_health_container[MAX_PLAYERS];
+        static widp wid_health_container;
 
         if (!update) {
             wid_set_no_shape(
@@ -941,30 +940,17 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                         &wid_health, tmp,
                                         health_x, player_y_offset, small_font));
 
-            wid_health_container[y] = wid_health;
+            wid_health_container = wid_health;
         } else {
-            wid_set_text(wid_health_container[y], tmp);
+            wid_set_text(wid_health_container, tmp);
         }
 
         if (update) {
-            continue;
+            break;
         }
 
         color c;
-        switch (y) {
-        case 0:
-            c = RED;
-            break;
-        case 1:
-            c = SKYBLUE;
-            break;
-        case 2:
-            c = YELLOW;
-            break;
-        case 3:
-            c = GREEN;
-            break;
-        }
+        c = RED;
 
         /*
          * Score title
@@ -1023,32 +1009,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
         wid_set_no_shape(wid_name_title_container);
 
-        switch (y) {
-        case 0:
-            wid_set_color(wid_score, WID_COLOR_TEXT, RED);
-            wid_set_color(wid_health, WID_COLOR_TEXT, RED);
-            wid_set_color(wid_score_title, WID_COLOR_TEXT, RED);
-            wid_set_color(wid_health_title, WID_COLOR_TEXT, RED);
-            break;
-        case 1:
-            wid_set_color(wid_score, WID_COLOR_TEXT, SKYBLUE);
-            wid_set_color(wid_health, WID_COLOR_TEXT, SKYBLUE);
-            wid_set_color(wid_score_title, WID_COLOR_TEXT, SKYBLUE);
-            wid_set_color(wid_health_title, WID_COLOR_TEXT, SKYBLUE);
-            break;
-        case 2:
-            wid_set_color(wid_score, WID_COLOR_TEXT, YELLOW);
-            wid_set_color(wid_health, WID_COLOR_TEXT, YELLOW);
-            wid_set_color(wid_score_title, WID_COLOR_TEXT, YELLOW);
-            wid_set_color(wid_health_title, WID_COLOR_TEXT, YELLOW);
-            break;
-        case 3:
-            wid_set_color(wid_score, WID_COLOR_TEXT, GREEN);
-            wid_set_color(wid_health, WID_COLOR_TEXT, GREEN);
-            wid_set_color(wid_score_title, WID_COLOR_TEXT, GREEN);
-            wid_set_color(wid_health_title, WID_COLOR_TEXT, GREEN);
-            break;
-        }
+        wid_set_color(wid_score, WID_COLOR_TEXT, RED);
+        wid_set_color(wid_health, WID_COLOR_TEXT, RED);
+        wid_set_color(wid_score_title, WID_COLOR_TEXT, RED);
+        wid_set_color(wid_health_title, WID_COLOR_TEXT, RED);
 
         wid_set_color(wid_score, WID_COLOR_TEXT, c);
         wid_set_color(wid_health, WID_COLOR_TEXT, c);
@@ -1063,7 +1027,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             thingp t = thing_client_find(p->thing_id);
             if (!t) {
                 player_y_offset += next_player_y_delta;
-                continue;
+                break;
             }
 
             /*
@@ -1074,7 +1038,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
                 for (c = 0; c < THING_MAX; c++) {
                     if (!t->stats.carrying[c].quantity) {
-                        continue;
+                        break;
                     }
 
                     widp w;
@@ -1097,7 +1061,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                     tl.x = items_x + 
                         (item_width * (count % item_columns));
                     tl.y = items_y + 
-                        next_player_y_delta*(double)y - items_y_offset + 
+                        next_player_y_delta*(double)0 - items_y_offset + 
                         (item_height * (count / item_columns));
 
                     br.x = tl.x + item_width * 0.9;

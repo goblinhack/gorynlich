@@ -920,41 +920,34 @@ static uint8_t client_players_show (tokens_t *tokens, void *context)
     CON("Name                    Quality  Latency      Local IP       Remote IP    Score ");
     CON("----                    -------  ------- --------------- --------------- -------");
 
-    uint32_t pi;
+    msg_player_state *p = &server_status.player;
 
-    for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player_state *p = &server_status.players[pi];
+    char *tmp = iptodynstr(p->local_ip);
+    char *tmp2 = iptodynstr(p->remote_ip);
 
-        char *tmp = iptodynstr(p->local_ip);
-        char *tmp2 = iptodynstr(p->remote_ip);
+    CON("%-10s/%8s %3d pct %5d ms %-15s %-15s %07d", 
+        p->name,
+        p->pclass,
+        p->quality,
+        p->avg_latency,
+        tmp2,
+        tmp,
+        p->score);
 
-        CON("[%d] %-10s/%8s %3d pct %5d ms %-15s %-15s %07d", 
-            pi, 
-            p->name,
-            p->pclass,
-            p->quality,
-            p->avg_latency,
-            tmp2,
-            tmp,
-            p->score);
-
-        myfree(tmp);
-        myfree(tmp2);
-    }
+    myfree(tmp);
+    myfree(tmp2);
 
     return (true);
 }
 
-msg_player_statep client_get_player (int n)
+msg_player_statep client_get_player (void)
 {
-    msg_player_state *p = &server_status.players[n];
+    msg_player_state *p = &server_status.player;
     return (p);
 }
 
 static void client_check_still_in_game (void)
 {
-    uint32_t pi;
-
     if (!client_joined_server) {
         return;
     }
@@ -970,19 +963,19 @@ static void client_check_still_in_game (void)
         return;
     }
 
-    for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player_state *p = &server_status.players[pi];
+    for (;;) {
+        msg_player_state *p = &server_status.player;
 
         if (!p->name[0]) {
-            continue;
+            break;
         }
 
         if (p->key != client_joined_server_key) {
-            continue;
+            break;
         }
 
         if (strcmp(p->name, global_config.player_stats.pname)) {
-            continue;
+            break;
         }
 
         if (!server_connection_confirmed) {
@@ -1002,12 +995,12 @@ static void client_check_still_in_game (void)
 
             if (!player) {
                 ERR("failed to find player in map update");
-                continue;
+                break;
             }
 
             if (!wid_game_map_client_window) {
                 ERR("Client: No game map window");
-                continue;
+                break;
             }
 
             wid_visible(wid_game_map_client_window, wid_visible_delay);
@@ -1035,11 +1028,4 @@ static void client_check_still_in_game (void)
         client_joined_server_key);
 
     server_connection_confirmed = false;
-
-    for (pi = 0; pi < MAX_PLAYERS; pi++) {
-        msg_player_state *p = &server_status.players[pi];
-
-        LOG("Client:  Player %u is \"%s\", ID %u ", pi+1, p->name, p->key);
-    }
 }
-
