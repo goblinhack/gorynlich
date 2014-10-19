@@ -1,6 +1,6 @@
 {
  short_name="double bow"
- tooltip="double bow"
+ tooltip="Double bow"
  fires="data/things/arrow"
  z_depth=3
  is_weapon

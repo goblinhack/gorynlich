@@ -1,6 +1,6 @@
 {
  short_name="tasty water"
- tooltip="Poisoned water"
+ tooltip="Water..."
  z_depth=4
  is_boring
  is_food

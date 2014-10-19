@@ -1,6 +1,6 @@
 {
  short_name="key chain"
- tooltip="it's a key chain"
+ tooltip="It's a key chain"
  z_depth=3
  quantity=3
  is_key

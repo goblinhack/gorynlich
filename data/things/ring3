@@ -1,6 +1,6 @@
 {
  short_name="ring"
- tooltip="magical ring major"
+ tooltip="Generic magical ring tm"
  z_depth=3
  is_boring
  is_treasure

@@ -1,6 +1,6 @@
 {
  short_name="floor"
- tooltip="Floor tile"
+ tooltip="Floor"
  z_depth=1
  is_boring
  is_floor

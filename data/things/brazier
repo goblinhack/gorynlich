@@ -1,6 +1,6 @@
 {
  short_name="brazier"
- tooltip="brazier"
+ tooltip="Fire lighty thing"
  z_depth=4
  is_light_source
  is_candle_light

@@ -1,6 +1,6 @@
 {
  short_name="door"
- tooltip="door"
+ tooltip="Door"
  z_depth=2
  is_boring
  is_door

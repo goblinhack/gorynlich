@@ -1,6 +1,6 @@
 {
  short_name="apple"
- tooltip="ripe apple"
+ tooltip="Ripe apple"
  z_depth=3
  is_boring
  is_food

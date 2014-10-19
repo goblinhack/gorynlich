@@ -1,6 +1,5 @@
 {
  short_name="weapon_swing1"
- tooltip="weapon_swing1"
  z_depth=3
  is_animated
  is_animated_no_dir

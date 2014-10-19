@@ -1,6 +1,5 @@
 {
  short_name="blood2"
- tooltip="blood2!"
  z_depth=3
  is_animated
  is_hidden_from_editor

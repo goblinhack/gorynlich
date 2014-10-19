@@ -1,6 +1,6 @@
 {
  short_name="key"
- tooltip="it's a key"
+ tooltip="It's a key..."
  z_depth=3
  is_key
  is_carryable
