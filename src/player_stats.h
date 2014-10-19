@@ -66,6 +66,4 @@ thing_templatep player_stats_to_thing_template(player_stats_t *);
 int player_stats_item_add(thingp t,
                           player_stats_t *player_stats,
                           const thing_templatep it,
-                          uint8_t quantity,
-                          uint8_t cursed,
-                          uint8_t quality);
+                          item_t item);

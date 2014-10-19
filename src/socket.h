@@ -116,7 +116,7 @@ typedef struct msg_player_state_ {
 
 typedef struct {
     uint8_t type;
-    msg_player_state players[MAX_PLAYERS];
+    msg_player_state player;
     char server_name[SMALL_STRING_LEN_MAX];
     uint8_t server_max_players;
     uint8_t server_current_players;
