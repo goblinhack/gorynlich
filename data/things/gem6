@@ -1,6 +1,6 @@
 {
  short_name="deathstone"
- tooltip="deathstone"
+ tooltip="Deathstone"
  z_depth=3
  is_boring
  is_treasure

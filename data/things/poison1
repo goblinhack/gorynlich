@@ -1,6 +1,5 @@
 {
  short_name="poison"
- tooltip="poison"
  z_depth=5
  is_animated
  is_hidden_from_editor

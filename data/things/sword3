@@ -1,6 +1,6 @@
 {
  short_name="heavy sword"
- tooltip="heavy sword"
+ tooltip="Heavy duty sword"
  z_depth=3
  is_weapon
  is_degradable

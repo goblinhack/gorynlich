@@ -1,6 +1,6 @@
 {
  short_name="starstone"
- tooltip="starstone"
+ tooltip="Starstone"
  z_depth=3
  is_boring
  is_treasure
