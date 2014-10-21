@@ -4,7 +4,7 @@
  z_depth=3
  speed=1
  max_hp=1
- damage=3
+ damage=6
  polymorph_on_death="data/things/ghost2"
  bonus_score_on_death=25
  vision_distance=20
