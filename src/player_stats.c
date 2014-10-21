@@ -201,6 +201,8 @@ int player_stats_item_add (thingp t,
         player_stats->carrying[id].quality =
                         min(item.quality,
                             player_stats->carrying[id].quality);
+    } else {
+        player_stats->carrying[id].quality = item.quality;
     }
 
     /*
@@ -550,6 +552,7 @@ void player_stats_init (player_stats_t *player_stats)
     memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
     memset(player_stats->action_bar, 0, sizeof(player_stats->action_bar));
     memset(player_stats->worn, 0, sizeof(player_stats->worn));
+    memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
 
     /*
      * Do not memset carrying as that removes base class items.

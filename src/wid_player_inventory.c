@@ -104,35 +104,33 @@ void wid_player_inventory_button_style (widp w,
 
     wid_set_thing_template(w, temp);
 
-    uint8_t quantity = s->carrying[id].quantity;
+    int quantity = s->carrying[id].quantity;
 //        uint8_t cursed = s->carrying[id].cursed;
-    uint8_t quality = s->carrying[id].quality;
+    int quality = s->carrying[id].quality;
 
     if (quantity > 1) {
         char tmp[20];
-        snprintf(tmp, sizeof(tmp) - 1, "%u", quantity);
+        snprintf(tmp, sizeof(tmp) - 1, "x%u", quantity);
 
         wid_set_text(w, tmp);
-        wid_set_font(w, small_font);
-        wid_set_text_rhs(w, true);
-        wid_set_text_bot(w, true);
+        wid_set_font(w, vsmall_font);
+        wid_set_text_lhs(w, true);
+        wid_set_text_top(w, true);
     }
 
     /*
      * Quality bar.
      */
     if (thing_template_is_degradable(temp)) {
-        quality = rand() % 8;
-
         widp wid_bar = wid_new_square_button(w, "quality bar");
 
         wid_set_bevelled(wid_bar, true);
         wid_set_bevel(wid_bar, 2);
 
-        fpoint tl = {0.2f, 0.8f};
-        fpoint br = {0.8f, 0.9f};
+        fpoint tl = {0.1f, 0.8f};
+        fpoint br = {0.9f, 0.9f};
 
-        br.x = (0.6 / ((float)THING_ITEM_QUALITY_MAX + 1) )
+        br.x = (0.9 / ((float)THING_ITEM_QUALITY_MAX) )
                     * ((double)quality);
 
         wid_set_tl_br_pct(wid_bar, tl, br);
@@ -144,8 +142,8 @@ void wid_player_inventory_button_style (widp w,
             case 6: col = YELLOW; break;
             case 5: col = ORANGE; break;
             case 4: col = ORANGE; break;
-            case 3: col = BROWN; break;
-            case 2: col = BROWN; break;
+            case 3: col = RED; break;
+            case 2: col = RED; break;
             case 1: col = RED; break;
             default:
             case 0: col = RED; break;
@@ -166,21 +164,165 @@ void wid_player_inventory_button_style (widp w,
             thing_template_name(temp));
     } else {
         char *full_tooltip;
-        char *tmp = strappend(tooltip, "\n\n");
+        char *tmp = strappend(tooltip, "\n\n%%fmt=left$");
 
         if (thing_template_is_weapon(temp)) {
+            int damage = thing_template_get_damage(temp);
+            if (!damage) {
+                thing_templatep projectile = thing_template_fires(temp);
+                if (projectile) {
+                    damage = thing_template_get_damage(projectile);
+                }
+            }
+
+            if (damage) {
+                char *tmp2 = dynprintf("%%%%fmt=left$"
+                                       "Damage\t\t1d%d\n", damage);
+
+                char *old = tmp;
+                tmp = strappend(old, tmp2);
+                myfree(old);
+                myfree(tmp2);
+            }
+        }
+
+        /*
+         * Current quality
+         */
+        if (thing_template_is_degradable(temp)) {
+            const char *str;
+            if (quality >= THING_ITEM_QUALITY_MAX) {
+                str = "mint condition";
+            } else if (quality >= THING_ITEM_QUALITY_MAX - 2) {
+                str = "second hand condition";
+            } else if (quality >= THING_ITEM_QUALITY_MAX / 2) {
+                str = "damaged";
+            } else {
+                str = "heavily damaged";
+            }
+
+            char *tmp2 = dynprintf(
+                        "%%%%fmt=left$"
+                        "Quality\t\t%d%%%%, %s\n", 
+                        (int) ((((double) quality) /
+                        ((double) THING_ITEM_QUALITY_MAX)) * 100.0),
+                        str);
+
             char *old = tmp;
-            tmp = strappend(
-                    old,
-                    dynprintf("%d damage\n",
-                              thing_template_get_damage(temp)));
+            tmp = strappend(old, tmp2); 
             myfree(old);
+            myfree(tmp2);
+        }
+
+        /*
+         * HP bonus
+         */
+        if (thing_template_get_bonus_hp_on_use(temp)) {
+            char *tmp2 = dynprintf(
+                            "%%%%fmt=left$"
+                            "HP gain on use\t\t%d\n", 
+                            thing_template_get_bonus_hp_on_use(temp));
+
+            char *old = tmp;
+            tmp = strappend(old, tmp2);
+            myfree(old);
+            myfree(tmp2);
+        }
+
+        /*
+         * ID bonus
+         */
+        if (thing_template_get_bonus_id_on_use(temp)) {
+            char *tmp2 = dynprintf(
+                            "%%%%fmt=left$"
+                            "ID gain on use\t\t%d\n", 
+                            thing_template_get_bonus_id_on_use(temp));
+
+            char *old = tmp;
+            tmp = strappend(old, tmp2);
+            myfree(old);
+            myfree(tmp2);
+        }
+
+        /*
+         * Failure rate
+         */
+        uint32_t val = thing_template_get_failure_chance(temp);
+        if (val) {
+            const char *str;
+            if (val >= 10000) {
+                str = "enchanted, extremely low";
+            } else if (val >= 5000) {
+                str = "masterwork, very low";
+            } else if (val >= 4000) {
+                str = "low";
+            } else if (val >= 3000) {
+                str = "fair";
+            } else if (val >= 2000) {
+                str = "moderate";
+            } else if (val >= 1000) {
+                str = "high";
+            } else if (val >= 500) {
+                str = "very high";
+            } else {
+                str = "very very high, made by orcs?";
+            }
+
+            char *tmp2 = dynprintf("%%%%fmt=left$"
+                                   "Failure rate\t%s\n", str);
+
+            char *old = tmp;
+            tmp = strappend(old, tmp2);
+            myfree(old);
+            myfree(tmp2);
+        }
+
+        /*
+         * Rarity
+         */
+        val = thing_template_get_chance_of_appearing(temp);
+        if (val) {
+            const char *str;
+            if (val >= 50) {
+                str = "commonplace";
+            } else if (val >= 20) {
+                str = "common";
+            } else if (val >= 10) {
+                str = "uncommon";
+            } else if (val >= 5) {
+                str = "rare";
+            } else if (val >= 1) {
+                str = "very rare";
+            } else {
+                str = "unique";
+            }
+
+            char *tmp2 = dynprintf("%%%%fmt=left$"
+                                   "Rarity\t\t%s\n", str);
+
+            char *old = tmp;
+            tmp = strappend(old, tmp2);
+            myfree(old);
+            myfree(tmp2);
         }
 
         full_tooltip = tmp;
         wid_set_tooltip(w, full_tooltip);
         myfree(full_tooltip);
     }
+}
+
+static uint8_t 
+wid_player_inventory_button_style_mouse_down (widp w, 
+                                              int32_t x, int32_t y,
+                                              uint32_t button)
+{
+    thing_templatep thing_template;
+    uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
+
+    thing_template = wid_get_thing_template(w);
+
+    return (true);
 }
 
 static void wid_player_inventory_create (player_stats_t *s)
@@ -226,7 +368,7 @@ static void wid_player_inventory_create (player_stats_t *s)
     double y;
     double max_down = 10.0;
     double border_top = 0.15;
-    double border_bottom = 0.15;
+    double border_bottom = 0.20;
     double dy = (1.0 - (border_top + border_bottom)) / max_down;
     
     int item = 0;
@@ -251,8 +393,10 @@ static void wid_player_inventory_create (player_stats_t *s)
 
         wid_player_inventory_button_style(w, s, id);
 
-//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-//
+        wid_set_client_context(w, (void*) id);
+
+        wid_set_on_mouse_down(w, 
+                              wid_player_inventory_button_style_mouse_down);
 
         item++;
     }
