@@ -12,6 +12,7 @@
 #include "wid_player_inventory.h"
 #include "string.h"
 #include "thing_template.h"
+#include "wid_player_stats.h"
 #include "color.h"
 #include "glapi.h"
 #include "thing.h"
@@ -312,6 +313,8 @@ void wid_player_inventory_button_style (widp w,
     }
 }
 
+int mouse_item;
+
 static uint8_t 
 wid_player_inventory_button_style_mouse_down (widp w, 
                                               int32_t x, int32_t y,
@@ -321,6 +324,59 @@ wid_player_inventory_button_style_mouse_down (widp w,
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
 
     thing_template = wid_get_thing_template(w);
+
+    if (!wid_mouse_template) {
+        widp w = wid_mouse_template = wid_new_square_window("moues");
+
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {0.04, 0.06};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_font(w, small_font);
+
+        color c;
+        c = WHITE;
+        c.a = 0;
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, c);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
+
+        wid_set_thing_template(w, thing_template);
+
+        wid_set_bevelled(w, true);
+        wid_set_bevel(w, 2);
+
+        wid_raise(w);
+        wid_move_to_abs_centered_in(w, mouse_x, mouse_y, 10);
+        wid_set_do_not_lower(w, true);
+
+        wid_raise(w);
+        wid_update(w);
+
+        mouse_item = player_stats->inventory[id];
+        player_stats->inventory[id] = 0;
+    } else {
+
+        if (player_stats->inventory[id]) {
+            int i;
+
+            for (i = 0; i < THING_INVENTORY_MAX; i++) {
+                if (!player_stats->inventory[i]) {
+                    player_stats->inventory[i] = player_stats->inventory[id];
+                    player_stats->inventory[id] = 0;
+                    break;
+                }
+            }
+        }
+
+        player_stats->inventory[id] = mouse_item;
+        mouse_item = 0;
+
+        wid_destroy(&wid_mouse_template);
+    }
+
+    wid_player_stats_redraw();
 
     return (true);
 }
@@ -393,7 +449,7 @@ static void wid_player_inventory_create (player_stats_t *s)
 
         wid_player_inventory_button_style(w, s, id);
 
-        wid_set_client_context(w, (void*) id);
+        wid_set_client_context(w, (void*) item);
 
         wid_set_on_mouse_down(w, 
                               wid_player_inventory_button_style_mouse_down);

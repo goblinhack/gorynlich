@@ -779,3 +779,4 @@ static inline uint8_t wid_is_moving (widp w)
     return (false);
 }
 
+extern widp wid_mouse_template;
