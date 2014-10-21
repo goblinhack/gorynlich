@@ -6,8 +6,8 @@
  }
  z_depth=3
  speed=2
- max_hp=100
- damage=5
+ max_hp=200
+ damage=8
  bonus_score_on_death=1000
  vision_distance=60
  hit_delay_tenths=1

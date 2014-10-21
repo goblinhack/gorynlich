@@ -266,7 +266,7 @@ static void wid_player_info_create (player_stats_t *s)
                                        "wid intro item helmet");
 
         fpoint tl = {0.3, 0.55};
-        fpoint br = {0.45, 0.70};
+        fpoint br = {0.45, 0.63};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your helmet");
@@ -283,7 +283,7 @@ static void wid_player_info_create (player_stats_t *s)
                                        "wid intro item armor");
 
         fpoint tl = {0.8, 0.55};
-        fpoint br = {0.95, 0.70};
+        fpoint br = {0.95, 0.63};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your armor");
@@ -300,7 +300,7 @@ static void wid_player_info_create (player_stats_t *s)
                                        "wid intro item boots");
 
         fpoint tl = {0.3, 0.71};
-        fpoint br = {0.45, 0.86};
+        fpoint br = {0.45, 0.79};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your boots");
