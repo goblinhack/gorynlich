@@ -129,7 +129,7 @@ void wid_player_stats_visible (player_stats_t *s)
     wid_player_stats_create(s);
 }
 
-static void wid_player_stats_redraw (void)
+void wid_player_stats_redraw (void)
 {
     wid_player_stats_hide();
     wid_player_stats_create(player_stats);
@@ -148,6 +148,16 @@ static void wid_player_stats_reroll (void)
 {
     player_stats_generate_random(player_stats);
     wid_player_stats_redraw();
+
+    /*
+     * No carrying of mouse items from old screen
+     */
+    if ((rand() % 10) < 5) {
+        MSG(INFO, "Sneak. Ok you can carry this item");
+    } else {
+        mouse_item = 0;
+        wid_destroy(&wid_mouse_template);
+    }
 }
 
 static uint8_t wid_player_stats_reroll_mouse_event (widp w, 

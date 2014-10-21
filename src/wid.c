@@ -127,6 +127,11 @@ char history[HISTORY_MAX][MAXSTR];
 uint32_t history_at;
 uint32_t history_walk;
 
+/*
+ * A tile over the mouse pointer
+ */
+widp wid_mouse_template;
+
 static uint8_t wid_init_done;
 static uint8_t wid_exiting;
 
@@ -1899,6 +1904,7 @@ tilep wid_get_tile (widp w)
 {
     return (w->tile);
 }
+
 /*
  * Look at all the wid modes and return the most relevent setting
  */
@@ -6254,6 +6260,11 @@ void wid_mouse_motion (int32_t x, int32_t y,
                        int32_t wheelx, int32_t wheely)
 {
     widp w;
+
+    if (wid_mouse_template) {
+        wid_move_to_abs_centered_in(wid_mouse_template, mouse_x, mouse_y, 10);
+        wid_raise(wid_mouse_template);
+    }
 
     if (wid_moving) {
         int32_t dx = x - wid_moving_last_x;
