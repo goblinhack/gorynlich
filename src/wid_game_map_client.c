@@ -1092,7 +1092,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                         char *full_tooltip;
                         char *tmp = strappend(tooltip, "\n\n");
 
-                        if (thing_template_is_rrr22(temp)) {
+                        if (thing_template_is_stackable(temp)) {
                             char *old = tmp;
                             tmp = strappend(
                                     old,

@@ -1062,11 +1062,11 @@ static inline uint8_t thing_is_rrr23 (thingp t)
     return (thing_template_is_rrr23(thing_get_template(t)));
 }
 
-static inline uint8_t thing_is_rrr22 (thingp t)
+static inline uint8_t thing_is_stackable (thingp t)
 {
     verify(t);
 
-    return (thing_template_is_rrr22(thing_get_template(t)));
+    return (thing_template_is_stackable(thing_get_template(t)));
 }
 
 static inline uint8_t thing_is_torch (thingp t)
@@ -1423,9 +1423,9 @@ static inline uint8_t thing_is_rrr23_noverify (thingp t)
     return (t->thing_template->is_rrr23);
 }
 
-static inline uint8_t thing_is_rrr22_noverify (thingp t)
+static inline uint8_t thing_is_stackable_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr22);
+    return (t->thing_template->is_stackable);
 }
 
 static inline uint8_t thing_is_torch_noverify (thingp t)

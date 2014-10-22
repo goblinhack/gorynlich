@@ -4,6 +4,7 @@
  z_depth=4
  is_boring
  is_food
+is_stackable
  hit_priority=5
  is_carryable
  chance_of_appearing=20

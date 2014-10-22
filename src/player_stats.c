@@ -102,58 +102,85 @@ int player_stats_get_modifier (int value)
     return (modifiers[value]);
 }
 
-int player_stats_has_inventory_item (const player_stats_t *player_stats,
-                                     uint32_t id,
-                                     uint32_t *index)
+item_t *player_stats_has_item (player_stats_t *player_stats,
+                               uint32_t id,
+                               uint32_t *index)
+{
+    item_t *i;
+    
+    i = player_stats_has_action_bar_item(player_stats, id, index);
+    if (i) {
+        return (i);
+    }
+
+    i = player_stats_has_worn_item(player_stats, id, index);
+    if (i) {
+        return (i);
+    }
+
+    i = player_stats_has_inventory_item(player_stats, id, index);
+    if (i) {
+        return (i);
+    }
+
+    return (0);
+}
+
+item_t *player_stats_has_inventory_item (player_stats_t *player_stats,
+                                         uint32_t id,
+                                         uint32_t *index)
 {
     uint32_t i;
 
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
-        if (player_stats->inventory[i] == id) {
+        if (player_stats->inventory[i].id == id) {
             if (index) {
                 *index = i;
             }
-            return (true);
+
+            return (&player_stats->inventory[i]);
         }
     }
 
-    return (false);
+    return (0);
 }
 
-int player_stats_has_action_bar_item (const player_stats_t *player_stats,
-                                      uint32_t id,
-                                      uint32_t *index)
+item_t *player_stats_has_action_bar_item (player_stats_t *player_stats,
+                                          uint32_t id,
+                                          uint32_t *index)
 {
     uint32_t i;
 
     for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-        if (player_stats->action_bar[i] == id) {
+        if (player_stats->action_bar[i].id == id) {
             if (index) {
                 *index = i;
             }
-            return (true);
+
+            return (&player_stats->action_bar[i]);
         }
     }
 
-    return (false);
+    return (0);
 }
 
-int player_stats_has_worn_item (const player_stats_t *player_stats,
-                                uint32_t id,
-                                uint32_t *index)
+item_t *player_stats_has_worn_item (player_stats_t *player_stats,
+                                    uint32_t id,
+                                    uint32_t *index)
 {
     uint32_t i;
 
     for (i = 0; i < THING_WORN_MAX; i++) {
-        if (player_stats->worn[i] == id) {
+        if (player_stats->worn[i].id == id) {
             if (index) {
                 *index = i;
             }
-            return (true);
+
+            return (&player_stats->worn[i]);
         }
     }
 
-    return (false);
+    return (0);
 }
 
 int player_stats_item_add (thingp t,
@@ -163,75 +190,66 @@ int player_stats_item_add (thingp t,
 {
     const int id = thing_template_to_id(it);
 
-    if ((((int) player_stats->carrying[id].quantity) + item.quantity) > 
-            THING_ITEM_CARRY_MAX) {
-        if (t) {
-            THING_SHOUT_AT(t, INFO, "Carrying too many of %s",
-                           thing_template_short_name(it));
-        }
-        return (false);
+    if (!item.quantity) {
+        DIE("Bad quantity for item add %s", thing_template_short_name(it));
+    }
+
+    if (!id) {
+        DIE("Bad ID for item add %s", thing_template_short_name(it));
     }
 
     /*
-     * Add to the inventory.
+     * Can we stack this item?
      */
-    if (!player_stats_has_inventory_item(player_stats, id, 0)) {
-        uint32_t i;
+    if (thing_template_is_stackable(it)) {
+        /*
+         * If space to stack, stack it.
+         */
+        item_t *oitem = player_stats_has_item(player_stats, id, 0);
+        if (oitem->quantity + item.quantity < THING_ITEM_CARRY_MAX) {
+            oitem->quantity += item.quantity;
 
-        for (i = 0; i < THING_INVENTORY_MAX; i++) {
-            if (!player_stats->inventory[i]) {
-                player_stats->inventory[i] = id;
-                break;
-            }
-        }
-
-        if (i == THING_INVENTORY_MAX) {
-            if (t) {
-                THING_SHOUT_AT(t, INFO, "Carrying too many items");
-            }
-            return (false);
+            /*
+             * Copy attributes.
+             */
+            oitem->quality = item.quality;
+            oitem->enchanted = item.enchanted;
+            oitem->cursed = item.cursed;
+            return (true);
         }
     }
-
-    /*
-     * New items on the top have the least quality. The bug here is we have
-     * just fixed the quality of the stacked item.
-     */
-    if (player_stats->carrying[id].quantity) {
-        player_stats->carrying[id].quality =
-                        min(item.quality,
-                            player_stats->carrying[id].quality);
-    } else {
-        player_stats->carrying[id].quality = item.quality;
-    }
-
-    /*
-     * Increment the carried count.
-     */
-    player_stats->carrying[id].quantity += item.quantity;
-
-    /*
-     * One cursed item curses the whole stack.
-     */
-    player_stats->carrying[id].cursed = item.cursed;
 
     /*
      * If there is space on the action bar, add it.
      */
-    if (thing_template_is_valid_for_action_bar(it) &&
-        !player_stats_has_action_bar_item(player_stats, id, 0)) {
-
+    if (thing_template_is_valid_for_action_bar(it)) {
         uint32_t i;
 
         for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-            if (!player_stats->action_bar[i]) {
-                player_stats->action_bar[i] = id;
-                break;
+            if (!player_stats->action_bar[i].id) {
+                player_stats->action_bar[i] = item;
+                return (true);
             }
         }
     }
 
-    return (true);
+    /*
+     * Else just find a free slot in the inventory.
+     */
+    uint32_t i;
+
+    for (i = 0; i < THING_INVENTORY_MAX; i++) {
+        if (!player_stats->inventory[i].id) {
+            player_stats->inventory[i] = item;
+            return (true);
+        }
+    }
+
+    if (t) {
+        THING_SHOUT_AT(t, INFO, "Carrying too many items");
+    }
+
+    return (false);
 }
 
 int player_stats_item_remove (thingp t,
@@ -240,7 +258,8 @@ int player_stats_item_remove (thingp t,
 {
     const int id = thing_template_to_id(it);
 
-    if (!player_stats->carrying[id].quantity) {
+    item_t *item = player_stats_has_item(player_stats, id, 0);
+    if (!item) {
         if (t) {
             THING_SHOUT_AT(t, INFO, "Not carrying the %s",
                            thing_template_short_name(it));
@@ -248,30 +267,19 @@ int player_stats_item_remove (thingp t,
         return (false);
     }
 
-    player_stats->carrying[id].quantity--;
-    player_stats->carrying[id].quality = THING_ITEM_QUALITY_MAX;
-
-    if (player_stats->carrying[id].quantity) {
-        return (true);
-    }
-
-    player_stats->carrying[id].cursed = 0;
-
-    /*
-     * Remove from inventory.
-     */
-    uint32_t i;
-
-    if (!player_stats_has_inventory_item(player_stats, id, &i)) {
-        player_stats->inventory[i] = 0;
-    }
-
-    if (!player_stats_has_action_bar_item(player_stats, id, &i)) {
-        player_stats->action_bar[i] = 0;
-    }
-
-    if (!player_stats_has_worn_item(player_stats, id, &i)) {
-        player_stats->worn[i] = 0;
+    item->quantity--;
+    if (item->quantity) {
+        /*
+         * Remove top of stack. Pop attributes.
+         */
+        item->quantity = THING_ITEM_QUALITY_MAX;
+        item->enchanted = 0;
+        item->cursed = 0;
+    } else {
+        /*
+         * Remove from inventory.
+         */
+        memset(item, 0, sizeof(item_t));
     }
 
     return (true);

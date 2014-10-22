@@ -569,7 +569,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_animate_only_when_moving", t->is_animate_only_when_moving);
         GET_OPT_NAMED_BITFIELD(ctx, "is_warm_blooded", t->is_warm_blooded);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_stackable", t->is_stackable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_torch", t->is_torch);
         GET_OPT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
@@ -724,7 +724,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_BITFIELD(ctx, "is_animate_only_when_moving", t->is_animate_only_when_moving);
     PUT_NAMED_BITFIELD(ctx, "is_warm_blooded", t->is_warm_blooded);
     PUT_NAMED_BITFIELD(ctx, "is_rrr23", t->is_rrr23);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr22", t->is_rrr22);
+    PUT_NAMED_BITFIELD(ctx, "is_stackable", t->is_stackable);
     PUT_NAMED_BITFIELD(ctx, "is_torch", t->is_torch);
     PUT_NAMED_BITFIELD(ctx, "is_explosion", t->is_explosion);
     PUT_NAMED_BITFIELD(ctx, "is_hidden_from_editor", t->is_hidden_from_editor);
