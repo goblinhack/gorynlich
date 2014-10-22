@@ -18,14 +18,19 @@ enum {
     THING_WORN_ARM_RIGHT,
 };
 
-#define THING_ITEM_CARRY_MAX    15
+#define THING_ITEM_CARRY_MAX    32
 #define THING_ITEM_QUALITY_MAX  7
 
 typedef struct item_t_ {
-    uint8_t quantity:4;
+    uint8_t id;
+
+    uint8_t quantity:5;
     uint8_t quality:3;
+
+    uint8_t enchanted:3;
     uint8_t cursed:1;
-} item_t;
+    uint8_t pad:4;
+} __attribute__ ((packed)) item_t;
 
 typedef struct player_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
@@ -45,17 +50,11 @@ typedef struct player_stats_ {
     uint8_t healing;
 
     /*
-     * How many and of what we are carrying.
+     * What we are carrying and where.
      */
-    item_t carrying[THING_MAX];
-
-    /*
-     * These contain thing template IDs that refer back to the carrying
-     * array. Things are either in the inventory or the action bar.
-     */
-    uint8_t inventory[THING_INVENTORY_MAX];
-    uint8_t action_bar[THING_ACTION_BAR_MAX];
-    uint8_t worn[THING_WORN_MAX];
+    item_t inventory[THING_INVENTORY_MAX];
+    item_t action_bar[THING_ACTION_BAR_MAX];
+    item_t worn[THING_WORN_MAX];
 } __attribute__ ((packed)) player_stats_t;
 
 int player_stats_get_modifier(int value);
@@ -63,17 +62,21 @@ void player_stats_generate_random(player_stats_t *);
 void player_stats_init(player_stats_t *);
 thing_templatep player_stats_to_thing_template(player_stats_t *);
 
-int player_stats_has_inventory_item(const player_stats_t *player_stats,
-                                    uint32_t item,
-                                    uint32_t *index);
+item_t *player_stats_has_item(player_stats_t *player_stats,
+                              uint32_t id,
+                              uint32_t *index);
 
-int player_stats_has_action_bar_item(const player_stats_t *player_stats,
-                                     uint32_t item,
-                                     uint32_t *index);
+item_t *player_stats_has_inventory_item(player_stats_t *player_stats,
+                                        uint32_t item,
+                                        uint32_t *index);
 
-int player_stats_has_worn_item(const player_stats_t *player_stats,
-                               uint32_t item,
-                               uint32_t *index);
+item_t *player_stats_has_action_bar_item(player_stats_t *player_stats,
+                                         uint32_t item,
+                                         uint32_t *index);
+
+item_t *player_stats_has_worn_item(player_stats_t *player_stats,
+                                   uint32_t item,
+                                   uint32_t *index);
 
 int player_stats_item_add(thingp t,
                           player_stats_t *player_stats,

@@ -4,6 +4,7 @@
  z_depth=3
  quantity=2
  is_key
+is_stackable
  is_carryable
  tiles={
   tile={

@@ -153,9 +153,8 @@ static void wid_player_stats_reroll (void)
      * No carrying of mouse items from old screen
      */
     if ((rand() % 10) < 5) {
-        MSG(INFO, "Sneak. Ok you can carry this item");
+        MSG(INFO, "Sneaky. Ok you can carry this item on.");
     } else {
-        mouse_item = 0;
         wid_destroy(&wid_mouse_template);
     }
 }

@@ -226,7 +226,7 @@ typedef struct thing_template_ {
     uint8_t is_animate_only_when_moving:1;
     uint8_t is_warm_blooded:1;
     uint8_t is_rrr23:1;
-    uint8_t is_rrr22:1;
+    uint8_t is_stackable:1;
     uint8_t is_torch:1;
     uint8_t is_explosion:1;
     uint8_t is_hidden_from_editor:1;
@@ -589,9 +589,9 @@ static inline uint8_t thing_template_is_rrr23 (thing_templatep t)
     return (t->is_rrr23);
 }
 
-static inline uint8_t thing_template_is_rrr22 (thing_templatep t)
+static inline uint8_t thing_template_is_stackable (thing_templatep t)
 {
-    return (t->is_rrr22);
+    return (t->is_stackable);
 }
 
 static inline uint8_t thing_template_is_torch (thing_templatep t)
