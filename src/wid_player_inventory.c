@@ -354,7 +354,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
         wid_raise(w);
         wid_update(w);
 
-        mouse_item = player_stats->inventory[id];
+        wid_set_client_context(w, (void*) player_stats->inventory[id]);
         player_stats->inventory[id] = 0;
     } else {
 
@@ -370,8 +370,10 @@ wid_player_inventory_button_style_mouse_down (widp w,
             }
         }
 
+        int mouse_item = (int) (uintptr_t) 
+                        wid_get_client_context(wid_mouse_template);
+
         player_stats->inventory[id] = mouse_item;
-        mouse_item = 0;
 
         wid_destroy(&wid_mouse_template);
     }

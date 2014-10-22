@@ -4,6 +4,7 @@
  z_depth=3
  is_boring
  is_food
+is_stackable
  hit_priority=5
  is_carryable
  is_given_randomly_at_start

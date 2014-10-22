@@ -6,6 +6,7 @@
  is_torch
  is_carryable
  is_light_source
+ is_stackable
  light_tint="orange"
  light_radius=0.1
  is_animated
