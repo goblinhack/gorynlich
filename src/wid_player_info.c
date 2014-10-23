@@ -271,9 +271,9 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your helmet");
 
-        int id = s->worn[THING_WORN_ARMOR];
+        item_t item = s->worn[THING_WORN_ARMOR];
 
-        wid_player_inventory_button_style(w, s, id);
+        wid_player_inventory_button_style(w, s, item);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
     }
@@ -288,9 +288,9 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your armor");
 
-        int id = s->worn[THING_WORN_HELMET];
+        item_t item = s->worn[THING_WORN_HELMET];
 
-        wid_player_inventory_button_style(w, s, id);
+        wid_player_inventory_button_style(w, s, item);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
     }
@@ -305,9 +305,9 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Your boots");
 
-        int id = s->worn[THING_WORN_BOOTS];
+        item_t item = s->worn[THING_WORN_BOOTS];
 
-        wid_player_inventory_button_style(w, s, id);
+        wid_player_inventory_button_style(w, s, item);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
     }
@@ -322,9 +322,9 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Left hand");
 
-        int id = s->worn[THING_WORN_ARM_LEFT];
+        item_t item = s->worn[THING_WORN_ARM_LEFT];
 
-        wid_player_inventory_button_style(w, s, id);
+        wid_player_inventory_button_style(w, s, item);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
     }
@@ -339,9 +339,9 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_tooltip(w, "Right hand");
 
-        int id = s->worn[THING_WORN_ARM_RIGHT];
+        item_t item = s->worn[THING_WORN_ARM_RIGHT];
 
-        wid_player_inventory_button_style(w, s, id);
+        wid_player_inventory_button_style(w, s, item);
 
 //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
 //

@@ -32,6 +32,9 @@ typedef struct item_t_ {
     uint8_t pad:4;
 } __attribute__ ((packed)) item_t;
 
+int item_push(item_t *dst, item_t src);
+int item_pop(item_t *dst, item_t *new);
+
 typedef struct player_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
