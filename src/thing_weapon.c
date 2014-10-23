@@ -114,9 +114,13 @@ thingp thing_weapon_swing_anim (thingp t)
 
 void thing_wield_next_weapon (thingp t)
 {
-    FOR_ALL_IN_ARRAY(i, t->stats.carrying) {
-        
-        uint32_t id = i - t->stats.carrying;
+    uint32_t i;
+
+    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+        uint32_t id = t->stats.action_bar[i].id;
+        if (!id) {
+            continue;
+        }
 
         thing_templatep tmp = id_to_thing_template(id);
         if (!thing_template_is_weapon(tmp)) {

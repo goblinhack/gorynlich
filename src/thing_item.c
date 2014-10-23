@@ -118,10 +118,12 @@ void thing_auto_collect (thingp t, thingp it, thing_templatep tmp)
 
 void thing_used (thingp t, thing_templatep tmp)
 {
-    uint32_t item;
+    uint32_t id;
+    item_t *item;
 
-    item = thing_template_to_id(tmp);
-    if (!t->stats.carrying[item].quantity) {
+    id = thing_template_to_id(tmp);
+    item = player_stats_has_item(&t->stats, id, 0);
+    if (!item) {
         ERR("Tried to use item which is %s not carried", 
             thing_template_short_name(tmp));
         return;
@@ -143,7 +145,7 @@ void thing_used (thingp t, thing_templatep tmp)
      * HP modifications.
      */
     int bonus_hp = thing_template_get_bonus_hp_on_use(tmp);
-    if (t->stats.carrying[item].cursed) {
+    if (item->cursed) {
         THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d health",
                        thing_template_short_name(tmp), bonus_hp);
         bonus_hp = -bonus_hp;
@@ -167,7 +169,7 @@ void thing_used (thingp t, thing_templatep tmp)
      * id modifications.
      */
     int bonus_id = thing_template_get_bonus_id_on_use(tmp);
-    if (t->stats.carrying[item].cursed) {
+    if (item->cursed) {
         THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d of ID",
                        thing_template_short_name(tmp), bonus_hp);
 
@@ -208,10 +210,12 @@ void thing_used (thingp t, thing_templatep tmp)
 
 void thing_degrade (thingp t, thing_templatep tmp)
 {
-    uint32_t item;
+    uint32_t id;
+    item_t *item;
 
-    item = thing_template_to_id(tmp);
-    if (!t->stats.carrying[item].quantity) {
+    id = thing_template_to_id(tmp);
+    item = player_stats_has_item(&t->stats, id, 0);
+    if (!item) {
         ERR("Tried to degrade item which is %s not carried", 
             thing_template_short_name(tmp));
         return;
@@ -221,7 +225,8 @@ void thing_degrade (thingp t, thing_templatep tmp)
         t->needs_tx_player_update = true;
     }
 
-    if (t->stats.carrying[item].quality--) {
+    if (item->quality) {
+        item->quality--;
         return;
     }
 
@@ -241,11 +246,13 @@ void thing_degrade (thingp t, thing_templatep tmp)
 
 void thing_drop (thingp t, thing_templatep tmp)
 {
-    uint32_t item;
     uint8_t auto_wield = false;
+    uint32_t id;
+    item_t *item;
 
-    item = thing_template_to_id(tmp);
-    if (!t->stats.carrying[item].quantity) {
+    id = thing_template_to_id(tmp);
+    item = player_stats_has_item(&t->stats, id, 0);
+    if (!item) {
         ERR("tried to drop %s not carried", thing_template_short_name(tmp));
         return;
     }
@@ -260,7 +267,10 @@ void thing_drop (thingp t, thing_templatep tmp)
 
     THING_LOG(t, "drop %s", thing_template_short_name(tmp));
 
-    t->stats.carrying[item].quantity--;
+    /*
+     * Remove from the inventory and other places.
+     */
+    player_stats_item_remove(t, &t->stats, tmp);
 
     /*
      * Wield the next weapon we have.
@@ -274,24 +284,31 @@ void thing_drop (thingp t, thing_templatep tmp)
     }
 }
 
-uint8_t thing_is_carrying_specific_item (thingp t, uint32_t item)
+item_t *thing_is_carrying_specific_item (thingp t, uint32_t id)
 {
-    if (!t->stats.carrying[item].quantity) {
-        return (false);
+    item_t *item;
+
+    item = player_stats_has_item(&t->stats, id, 0);
+    if (!item) {
+        return (0);
     }
 
-    return (true);
+    return (item);
 }
 
 thing_templatep thing_is_carrying_thing (thingp t, thing_template_is fn)
 {
-    FOR_ALL_IN_ARRAY(i, t->stats.carrying) {
-        if (!thing_is_carrying_specific_item(t, i  - t->stats.carrying)) {
+    uint32_t i;
+
+    for (i = 0; i < THING_MAX; i++) {
+        thing_templatep tp = id_to_thing_template(i);
+
+        if (!(*fn)(tp)) {
             continue;
         }
 
-        thing_templatep tp = id_to_thing_template(i - t->stats.carrying);
-        if ((*fn)(tp)) {
+        item_t *item = thing_is_carrying_specific_item(t, i);
+        if (item) {
             return (tp);
         }
     }
@@ -302,18 +319,18 @@ thing_templatep thing_is_carrying_thing (thingp t, thing_template_is fn)
 uint32_t thing_is_carrying_thing_count (thingp t, thing_template_is fn)
 {
     uint32_t count = 0;
-    uint32_t index;
+    uint32_t i;
 
-    FOR_ALL_IN_ARRAY(i, t->stats.carrying) {
-        index = i - t->stats.carrying;
+    for (i = 0; i < THING_MAX; i++) {
+        thing_templatep tp = id_to_thing_template(i);
 
-        if (!thing_is_carrying_specific_item(t, index)) {
+        if (!(*fn)(tp)) {
             continue;
         }
 
-        thing_templatep tp = id_to_thing_template(index);
-        if ((*fn)(tp)) {
-            count += t->stats.carrying[index].quantity;
+        item_t *item = thing_is_carrying_specific_item(t, i);
+        if (item) {
+            count += item->quantity;
         }
     }
 

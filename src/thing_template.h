@@ -116,6 +116,12 @@ typedef struct thing_template_ {
     char *mob_spawn;
 
     /*
+     * How many and of what we are carrying. This is the base items a thing
+     * starts out with.
+     */
+    item_t carrying[THING_MAX];
+
+    /*
      * In relation to other widgets, where are we.
      */
     uint8_t z_depth;

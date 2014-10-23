@@ -58,7 +58,7 @@ void wid_player_inventory_visible (player_stats_t *s)
 
 void wid_player_inventory_button_style (widp w,
                                         player_stats_t *s,
-                                        int id)
+                                        item_t item)
 {
     color c;
 
@@ -92,11 +92,11 @@ void wid_player_inventory_button_style (widp w,
 
     wid_set_mode(w, WID_MODE_NORMAL);
 
-    if (!id) {
+    if (!item.id) {
         return;
     }
 
-    thing_templatep temp = id_to_thing_template(id);
+    thing_templatep temp = id_to_thing_template(item.id);
 
     if (player && player->weapon && (temp == player->weapon)) {
         wid_set_color(w, WID_COLOR_TL, RED);
@@ -105,9 +105,8 @@ void wid_player_inventory_button_style (widp w,
 
     wid_set_thing_template(w, temp);
 
-    int quantity = s->carrying[id].quantity;
-//        uint8_t cursed = s->carrying[id].cursed;
-    int quality = s->carrying[id].quality;
+    int quantity = item.quantity;
+    int quality = item.quality;
 
     if (quantity > 1) {
         char tmp[20];
@@ -319,13 +318,17 @@ static uint8_t
 wid_player_inventory_button_style_mouse_down (widp w, 
                                               int32_t x, int32_t y,
                                               uint32_t button)
-{
+
+    static item_t item;
     thing_templatep thing_template;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
 
     thing_template = wid_get_thing_template(w);
 
     if (!wid_mouse_template) {
+        /*
+         * Pick up an item.
+         */
         widp w = wid_mouse_template = wid_new_square_window("moues");
 
         fpoint tl = {0.0, 0.0};
@@ -354,9 +357,15 @@ wid_player_inventory_button_style_mouse_down (widp w,
         wid_raise(w);
         wid_update(w);
 
-        wid_set_client_context(w, (void*) player_stats->inventory[id]);
-        player_stats->inventory[id] = 0;
+        wid_set_client_context(w, (void*) &item);
+
+        memcpy(&item, &player_stats->inventory[id], sizeof(item));
+        memcpy(&player_stats->inventory[id], 0, sizeof(item));
     } else {
+        /*
+         * Drop the current item.
+         */
+        player_stats_item_add(0, player_stats, it, &item)
 
         if (player_stats->inventory[id]) {
             int i;
