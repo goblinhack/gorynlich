@@ -17,6 +17,90 @@
 #include "wid_player_info.h"
 #include "math.h"
 
+int item_push (item_t *dst, item_t src)
+{
+    if (!dst->id) {
+        /*
+         * No item at the destination. Just copy.
+         */
+        memcpy(dst, src, sizeof(item_t));
+        return (true);
+    }
+
+    if (!dst->quantity) {
+        DIE("bug, dst should have quantity");
+    }
+
+    if (dst->id != src.id) {
+        /*
+         * Cannot push onto different item.
+         */
+        return (false);
+    }
+
+    if (dst->quantity + src.quantity >= THING_ITEM_CARRY_MAX) {
+        /*
+         * Cannot push this many.
+         */
+        return (false);
+    }
+
+    thing_templatep = id_to_thing_template(dst->id);
+
+    if (!thing_template_is_stackable(it)) {
+        /*
+         * Cannot stack this item.
+         */
+        return (false);
+    }
+
+    if ((dst->quality != src.quality)     &&
+        (dst->enchanted != src.enchanted) &&
+        (dst->cursed != src.cursed)) {
+        /*
+         * Cannot stack different qualities of item.
+         */
+        return (false);
+    }
+
+    dst->quantity += src.quantity;
+
+    /*
+     * Copy attributes.
+     */
+    dst->quality = src.quality;
+    dst->enchanted = src.enchanted;
+    dst->cursed = src.cursed;
+
+    return (true);
+}
+
+int item_pop (item_t *dst, item_t *new)
+{
+    if (!dst->id) {
+        return (false);
+    }
+
+    if (!dst->quantity) {
+        DIE("bug, cannot pop, no quantity");
+    }
+
+    dst->quantity--;
+
+    if (new) {
+        memcpy(new, dst, sizeof(item_t));
+    }
+
+    /*
+     * Popped items should all be identical. So no need to turn off enchanted 
+     * or cursing. But do it just in case.
+     */
+    dst->cursed = false;
+    dst->enchanted = false;
+
+    return (true);
+}
+
 static int player_stats_generate_spending_points (void) 
 {
     /*
@@ -189,6 +273,8 @@ int player_stats_item_add (thingp t,
                            item_t item)
 {
     const int id = thing_template_to_id(it);
+    item_t *oitem;
+    uint32_t i;
 
     if (!item.quantity) {
         DIE("Bad quantity for item add %s", thing_template_short_name(it));
@@ -197,24 +283,23 @@ int player_stats_item_add (thingp t,
     if (!id) {
         DIE("Bad ID for item add %s", thing_template_short_name(it));
     }
+ 
+    /*
+     * If the item is already on the action bar, try and push onto it.
+     */
+    oitem = player_stats_has_action_bar_item(player_stats, id, 0);
+    if (oitem) {
+        if (item_push(oitem, &item)) {
+            return (true);
+        }
+    }
 
     /*
-     * Can we stack this item?
+     * If the item is already on the inventor, try and push onto it.
      */
-    if (thing_template_is_stackable(it)) {
-        /*
-         * If space to stack, stack it.
-         */
-        item_t *oitem = player_stats_has_item(player_stats, id, 0);
-        if (oitem->quantity + item.quantity < THING_ITEM_CARRY_MAX) {
-            oitem->quantity += item.quantity;
-
-            /*
-             * Copy attributes.
-             */
-            oitem->quality = item.quality;
-            oitem->enchanted = item.enchanted;
-            oitem->cursed = item.cursed;
+    oitem = player_stats_has_inventory_item(player_stats, id, 0);
+    if (oitem) {
+        if (item_push(oitem, &item)) {
             return (true);
         }
     }
@@ -223,11 +308,9 @@ int player_stats_item_add (thingp t,
      * If there is space on the action bar, add it.
      */
     if (thing_template_is_valid_for_action_bar(it)) {
-        uint32_t i;
-
         for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-            if (!player_stats->action_bar[i].id) {
-                player_stats->action_bar[i] = item;
+            oitem = &player_stats->action_bar[i];
+            if (item_push(oitem, &item)) {
                 return (true);
             }
         }
@@ -236,11 +319,9 @@ int player_stats_item_add (thingp t,
     /*
      * Else just find a free slot in the inventory.
      */
-    uint32_t i;
-
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
-        if (!player_stats->inventory[i].id) {
-            player_stats->inventory[i] = item;
+        oitem = &player_stats->inventory[i];
+        if (item_push(oitem, &item)) {
             return (true);
         }
     }
@@ -267,19 +348,8 @@ int player_stats_item_remove (thingp t,
         return (false);
     }
 
-    item->quantity--;
-    if (item->quantity) {
-        /*
-         * Remove top of stack. Pop attributes.
-         */
-        item->quantity = THING_ITEM_QUALITY_MAX;
-        item->enchanted = 0;
-        item->cursed = 0;
-    } else {
-        /*
-         * Remove from inventory.
-         */
-        memset(item, 0, sizeof(item_t));
+    if (!item_pop(item, 0)) {
+        return (false);
     }
 
     return (true);
@@ -293,95 +363,16 @@ int player_stats_item_polymorph (player_stats_t *player_stats,
                                  const uint32_t from,
                                  const uint32_t to)
 {
+    item_t *from_item = player_stats_has_item(player_stats, from, 0);
+
     /*
      * If not carrying, nothing to change.
      */
-    if (!player_stats->carrying[from].quantity) {
+    if (!from_item) {
         return (false);
     }
 
-    /*
-     * Add the from and to quantites together.
-     */
-    int quantity_from = player_stats->carrying[from].quantity;
-    int quantity_to = player_stats->carrying[to].quantity;
-    quantity_to = quantity_to + quantity_from;
-    quantity_to = min(THING_ITEM_QUALITY_MAX, quantity_to);
-    player_stats->carrying[to].quantity = quantity_to;
-
-    uint32_t i;
-
-    /*
-     * Update the inventory bar.
-     */
-    if (player_stats_has_inventory_item(player_stats, to, 0)) {
-        /*
-         * Remove the old item.
-         */
-        for (i = 0; i < THING_INVENTORY_MAX; i++) {
-            if (player_stats->inventory[i] == from) {
-                player_stats->inventory[i] = 0;
-            }
-        }
-    } else {
-        /*
-         * Replace the item at the same position.
-         */
-        for (i = 0; i < THING_INVENTORY_MAX; i++) {
-            if (player_stats->inventory[i] == from) {
-                player_stats->inventory[i] = to;
-                break;
-            }
-        }
-    }
-
-    /*
-     * Update the action_bar bar.
-     */
-    if (player_stats_has_action_bar_item(player_stats, to, 0)) {
-        /*
-         * Remove the old item.
-         */
-        for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-            if (player_stats->action_bar[i] == from) {
-                player_stats->action_bar[i] = 0;
-            }
-        }
-    } else {
-        /*
-         * Replace the item at the same position.
-         */
-        for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-            if (player_stats->action_bar[i] == from) {
-                player_stats->action_bar[i] = to;
-                break;
-            }
-        }
-    }
-
-    /*
-     * Update the worn bar.
-     */
-    if (player_stats_has_worn_item(player_stats, to, 0)) {
-        /*
-         * Remove the old item.
-         */
-        for (i = 0; i < THING_WORN_MAX; i++) {
-            if (player_stats->worn[i] == from) {
-                player_stats->worn[i] = 0;
-            }
-        }
-    } else {
-        /*
-         * Replace the item at the same position.
-         */
-        for (i = 0; i < THING_WORN_MAX; i++) {
-            if (player_stats->worn[i] == from) {
-                player_stats->worn[i] = to;
-                break;
-            }
-        }
-    }
+    from_item->id = to;
 
     return (true);
 }
@@ -541,7 +532,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
         item.quantity = 1;
         item.quality = THING_ITEM_QUALITY_MAX;
 
-        if (thing_template->stats.carrying[i].quantity) {
+        if (thing_template->carrying[i].quantity) {
             player_stats_item_add(0 /* thing */,
                                   player_stats,
                                   id_to_thing_template(i),
@@ -560,7 +551,6 @@ void player_stats_init (player_stats_t *player_stats)
     memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
     memset(player_stats->action_bar, 0, sizeof(player_stats->action_bar));
     memset(player_stats->worn, 0, sizeof(player_stats->worn));
-    memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
 
     /*
      * Do not memset carrying as that removes base class items.

@@ -763,11 +763,11 @@ thingp thing_server_new (const char *name, double x, double y)
      * Start out with the items carried on the template if any. This is not 
      * done for players as they do this in the provisioning screen.
      */
-    uint32_t i;
+    uint32_t i, j;
 
     if (!thing_is_player(t)) {
         for (i = 0; i < THING_MAX; i++) {
-            if (thing_template->stats.carrying[i].quantity) {
+            for (j = 0; j < thing_template->carrying[i].quantity; j++) {
                 thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
             }
         }
@@ -3834,8 +3834,8 @@ void socket_server_tx_player_update (thingp t)
     SDLNet_Write16(t->weapon_swing_anim_id, data);               
     data += sizeof(uint16_t);
 
-    memcpy(data, t->stats.carrying, sizeof(t->stats.carrying));
-    data += sizeof(t->stats.carrying);
+    memcpy(data, &t->stats, sizeof(t->stats));
+    data += sizeof(t->stats);
 
     if (t->weapon) {
         *data++ = thing_template_to_id(t->weapon);
@@ -3898,8 +3898,8 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         }
     }
 
-    memcpy(t->stats.carrying, data, sizeof(t->stats.carrying));
-    data += sizeof(t->stats.carrying);
+    memcpy(&t->stats, data, sizeof(t->stats));
+    data += sizeof(t->stats);
 
     id = *data++;
     if (id) {

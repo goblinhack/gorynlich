@@ -182,7 +182,7 @@ void thing_fire(thingp t,
                 const uint8_t right);
 uint8_t thing_use(thingp t, uint32_t id);
 
-uint8_t thing_is_carrying_specific_item(thingp, uint32_t id);
+item_t *thing_is_carrying_specific_item(thingp, uint32_t id);
 typedef uint8_t (*thing_template_is)(thing_templatep);
 thing_templatep thing_is_carrying_thing(thingp, thing_template_is);
 uint32_t thing_is_carrying_thing_count(thingp, thing_template_is);
