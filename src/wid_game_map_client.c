@@ -276,7 +276,7 @@ uint8_t wid_game_map_client_player_move (void)
 
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     uint32_t shortcut;
 
     switch (key->sym) {
@@ -297,8 +297,8 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
             return (true);
         }
 
-        thing_template = id_to_thing_template(id);
-        if (thing_template) {
+        tp = id_to_thing_template(id);
+        if (tp) {
             if (!client_joined_server) {
                 MSG(WARNING, "Not connected to server");
                 return (true);
@@ -306,11 +306,11 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
             socket_tx_player_action(client_joined_server, player, 
                                     PLAYER_ACTION_USE,
-                                    thing_template_to_id(thing_template));
+                                    thing_template_to_id(tp));
 #if 0
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_DROP,
-                                thing_template_to_id(thing_template));
+                                thing_template_to_id(tp));
 #endif
             return (true);
         }
@@ -509,20 +509,20 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_templatep thing_template = thing_get_template(t);
-    if (!thing_template) {
+    thing_templatep tp = thing_get_template(t);
+    if (!tp) {
         DIE("no thing template");
     }
 
     if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
         DIE("thing template [%s] cannot be placed at %f %f",
-            thing_template_short_name(thing_template), x, y);
+            thing_template_short_name(tp), x, y);
     }
 
-    thing_tiles = thing_template_get_tiles(thing_template);
+    thing_tiles = thing_template_get_tiles(tp);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     thing_tilep thing_tile;
@@ -541,7 +541,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     /*
@@ -556,7 +556,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     /*
      * "paint" the thing.
      */
-    wid_game_map_client_set_thing_template(child, thing_template);
+    wid_game_map_client_set_thing_template(child, tp);
 
     wid_set_thing(child, t);
     wid_set_tile(child, tile);
@@ -600,24 +600,24 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
      * blast.
      */
     if (t->is_epicenter && thing_is_explosion(t) ) {
-        if ((thing_template->id == THING_EXPLOSION1) ||
-            (thing_template->id == THING_EXPLOSION2) ||
-            (thing_template->id == THING_EXPLOSION3) ||
-            (thing_template->id == THING_EXPLOSION4)) {
+        if ((tp->id == THING_EXPLOSION1) ||
+            (tp->id == THING_EXPLOSION2) ||
+            (tp->id == THING_EXPLOSION3) ||
+            (tp->id == THING_EXPLOSION4)) {
 
             level_place_fireball(client_level, 0, t->x, t->y);
 
-        } else if ((thing_template->id == THING_POISON1) ||
-                   (thing_template->id == THING_POISON2) ||
-                   (thing_template->id == THING_POISON3) ||
-                   (thing_template->id == THING_POISON4)) {
+        } else if ((tp->id == THING_POISON1) ||
+                   (tp->id == THING_POISON2) ||
+                   (tp->id == THING_POISON3) ||
+                   (tp->id == THING_POISON4)) {
 
             level_place_poison(client_level, 0, t->x, t->y);
 
-        } else if ((thing_template->id == THING_CLOUDKILL1) ||
-                   (thing_template->id == THING_CLOUDKILL2) ||
-                   (thing_template->id == THING_CLOUDKILL3) ||
-                   (thing_template->id == THING_CLOUDKILL4)) {
+        } else if ((tp->id == THING_CLOUDKILL1) ||
+                   (tp->id == THING_CLOUDKILL2) ||
+                   (tp->id == THING_CLOUDKILL3) ||
+                   (tp->id == THING_CLOUDKILL4)) {
 
             level_place_cloudkill(client_level, 0, t->x, t->y);
 

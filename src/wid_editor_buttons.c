@@ -56,19 +56,19 @@ wid_editor_buttons_tile_receive_mouse_down (widp w,
                                           uint32_t button)
 {
     widp focus;
-    thing_templatep thing_template;
+    thing_templatep tp;
 
     focus = wid_get_focus(wid_editor_buttons_container2);
     if (!focus) {
         return (false);
     }
 
-    thing_template = wid_get_thing_template(w);
-    if (!thing_template) {
+    tp = wid_get_thing_template(w);
+    if (!tp) {
         return (false);
     }
 
-    wid_set_thing_template(focus, thing_template);
+    wid_set_thing_template(focus, tp);
 
     return (true);
 }
@@ -247,18 +247,18 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
 {
     static int32_t x;
     static int32_t y;
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp child;
 
-    thing_template = (typeof(thing_template)) 
+    tp = (typeof(tp)) 
             (((char*) node) - STRUCT_OFFSET(struct thing_template_, tree2));
 
-    if (thing_template_is_hidden_from_editor(thing_template)) {
+    if (thing_template_is_hidden_from_editor(tp)) {
         return (true);
     }
 
     if (!first_thing_template) {
-        first_thing_template = thing_template;
+        first_thing_template = tp;
     }
 
     float w = 1.0 / TILES_ACROSS;
@@ -287,8 +287,8 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
 
     wid_set_mode(child, WID_MODE_NORMAL);
 
-    wid_set_thing_template(child, thing_template);
-    wid_set_tooltip(child, thing_template_get_tooltip(thing_template));
+    wid_set_thing_template(child, tp);
+    wid_set_tooltip(child, thing_template_get_tooltip(tp));
     wid_set_tl_br_pct(child, tl, br);
     wid_set_on_mouse_down(child, wid_editor_buttons_tile_receive_mouse_down);
 

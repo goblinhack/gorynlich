@@ -18,7 +18,7 @@ void thing_map_dump(void);
 thingp thing_server_new(const char *name, double x, double y);
 void thing_server_init(thingp, double x, double y);
 thingp thing_client_new(uint32_t, thing_templatep);
-thingp thing_client_local_new(thing_templatep thing_template);
+thingp thing_client_local_new(thing_templatep tp);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
@@ -198,7 +198,7 @@ void dmap_process_fini(void);
 void dmap_generate_player_map(double x, double y);
 
 typedef struct {
-    thing_templatep thing_template;
+    thing_templatep tp;
     levelp level;
     double x;
     double y;
@@ -453,7 +453,7 @@ typedef struct thing_ {
     /*
      * Pointer to common settings for this thing.
      */
-    thing_templatep thing_template;
+    thing_templatep tp;
 
     /*
      * Name for debugging.
@@ -695,7 +695,7 @@ static inline thing_templatep thing_get_template (thingp t)
 {
     verify(t);
 
-    return (t->thing_template);
+    return (t->tp);
 }
 
 static inline uint8_t thing_is_exit (thingp t)
@@ -1165,327 +1165,327 @@ static inline uint8_t thing_is_dead_noverify (thingp t)
 
 static inline uint8_t thing_is_exit_noverify (thingp t)
 {
-    return (t->thing_template->is_exit);
+    return (t->tp->is_exit);
 }
 
 static inline uint8_t thing_is_floor_noverify (thingp t)
 {
-    return (t->thing_template->is_floor);
+    return (t->tp->is_floor);
 }
 
 static inline uint8_t thing_is_food_noverify (thingp t)
 {
-    return (t->thing_template->is_food);
+    return (t->tp->is_food);
 }
 
 static inline uint8_t thing_is_monst_noverify (thingp t)
 {
-    return (t->thing_template->is_monst);
+    return (t->tp->is_monst);
 }
 
 static inline uint8_t thing_is_plant_noverify (thingp t)
 {
-    return (t->thing_template->is_plant);
+    return (t->tp->is_plant);
 }
 
 static inline uint8_t thing_is_player_noverify (thingp t)
 {
-    return (t->thing_template->is_player);
+    return (t->tp->is_player);
 }
 
 static inline uint8_t thing_is_key_noverify (thingp t)
 {
-    return (t->thing_template->is_key);
+    return (t->tp->is_key);
 }
 
 static inline uint8_t thing_is_collision_map_medium_noverify (thingp t)
 {
-    return (t->thing_template->is_collision_map_medium);
+    return (t->tp->is_collision_map_medium);
 }
 
 static inline uint8_t thing_is_collision_map_small_noverify (thingp t)
 {
-    return (t->thing_template->is_collision_map_small);
+    return (t->tp->is_collision_map_small);
 }
 
 static inline uint8_t thing_is_collision_map_tiny_noverify (thingp t)
 {
-    return (t->thing_template->is_collision_map_tiny);
+    return (t->tp->is_collision_map_tiny);
 }
 
 static inline uint8_t thing_is_rock_noverify (thingp t)
 {
-    return (t->thing_template->is_rock);
+    return (t->tp->is_rock);
 }
 
 static inline uint8_t thing_is_shadow_caster_noverify (thingp t)
 {
-    return (t->thing_template->is_shadow_caster);
+    return (t->tp->is_shadow_caster);
 }
 
 static inline uint8_t thing_is_shadow_caster_soft_noverify (thingp t)
 {
-    return (t->thing_template->is_shadow_caster_soft);
+    return (t->tp->is_shadow_caster_soft);
 }
 
 static inline uint8_t thing_is_weapon_noverify (thingp t)
 {
-    return (t->thing_template->is_weapon);
+    return (t->tp->is_weapon);
 }
 
 static inline uint8_t thing_is_treasure_noverify (thingp t)
 {
-    return (t->thing_template->is_treasure);
+    return (t->tp->is_treasure);
 }
 
 static inline uint8_t thing_is_wearable_noverify (thingp t)
 {
-    return (t->thing_template->is_wearable);
+    return (t->tp->is_wearable);
 }
 
 static inline uint8_t thing_is_fragile_noverify (thingp t)
 {
-    return (t->thing_template->is_fragile);
+    return (t->tp->is_fragile);
 }
 
 static inline uint8_t thing_is_star_noverify (thingp t)
 {
-    return (t->thing_template->is_star);
+    return (t->tp->is_star);
 }
 
 static inline uint8_t thing_is_animated_no_dir_noverify (thingp t)
 {
-    return (t->thing_template->is_animated_no_dir);
+    return (t->tp->is_animated_no_dir);
 }
 
 static inline uint8_t thing_is_weapon_swing_effect_noverify (thingp t)
 {
-    return (t->thing_template->is_weapon_swing_effect);
+    return (t->tp->is_weapon_swing_effect);
 }
 
 static inline uint8_t thing_is_light_source_noverify (thingp t)
 {
-    return (t->thing_template->is_light_source);
+    return (t->tp->is_light_source);
 }
 
 static inline uint8_t thing_is_boring_noverify (thingp t)
 {
-    return (t->thing_template->is_boring);
+    return (t->tp->is_boring);
 }
 
 static inline uint8_t thing_is_candle_light_noverify (thingp t)
 {
-    return (t->thing_template->is_candle_light);
+    return (t->tp->is_candle_light);
 }
 
 static inline uint8_t thing_is_cats_eyes_noverify (thingp t)
 {
-    return (t->thing_template->is_cats_eyes);
+    return (t->tp->is_cats_eyes);
 }
 
 static inline uint8_t thing_is_fire_noverify (thingp t)
 {
-    return (t->thing_template->is_fire);
+    return (t->tp->is_fire);
 }
 
 static inline uint8_t thing_is_ring_noverify (thingp t)
 {
-    return (t->thing_template->is_ring);
+    return (t->tp->is_ring);
 }
 
 static inline uint8_t thing_is_animation_noverify (thingp t)
 {
-    return (t->thing_template->is_animation);
+    return (t->tp->is_animation);
 }
 
 static inline uint8_t thing_is_poison_noverify (thingp t)
 {
-    return (t->thing_template->is_poison);
+    return (t->tp->is_poison);
 }
 
 static inline uint8_t thing_is_item_unusable_noverify (thingp t)
 {
-    return (t->thing_template->is_item_unusable);
+    return (t->tp->is_item_unusable);
 }
 
 static inline uint8_t thing_is_valid_for_action_bar_noverify (thingp t)
 {
-    return (t->thing_template->is_valid_for_action_bar);
+    return (t->tp->is_valid_for_action_bar);
 }
 
 static inline uint8_t thing_is_seedpod_noverify (thingp t)
 {
-    return (t->thing_template->is_seedpod);
+    return (t->tp->is_seedpod);
 }
 
 static inline uint8_t thing_is_spam_noverify (thingp t)
 {
-    return (t->thing_template->is_spam);
+    return (t->tp->is_spam);
 }
 
 static inline uint8_t thing_is_door_noverify (thingp t)
 {
-    return (t->thing_template->is_door);
+    return (t->tp->is_door);
 }
 
 static inline uint8_t thing_is_pipe_noverify (thingp t)
 {
-    return (t->thing_template->is_pipe);
+    return (t->tp->is_pipe);
 }
 
 static inline uint8_t thing_is_rrr1_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr1);
+    return (t->tp->is_rrr1);
 }
 
 static inline uint8_t thing_is_rrr2_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr2);
+    return (t->tp->is_rrr2);
 }
 
 static inline uint8_t thing_is_rrr3_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr3);
+    return (t->tp->is_rrr3);
 }
 
 static inline uint8_t thing_is_rrr4_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr4);
+    return (t->tp->is_rrr4);
 }
 
 static inline uint8_t thing_is_rrr5_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr5);
+    return (t->tp->is_rrr5);
 }
 
 static inline uint8_t thing_is_rrr6_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr6);
+    return (t->tp->is_rrr6);
 }
 
 static inline uint8_t thing_is_rrr7_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr7);
+    return (t->tp->is_rrr7);
 }
 
 static inline uint8_t thing_is_rrr8_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr8);
+    return (t->tp->is_rrr8);
 }
 
 static inline uint8_t thing_is_rrr9_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr9);
+    return (t->tp->is_rrr9);
 }
 
 static inline uint8_t thing_is_rrr10_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr10);
+    return (t->tp->is_rrr10);
 }
 
 static inline uint8_t thing_is_rrr11_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr11);
+    return (t->tp->is_rrr11);
 }
 
 static inline uint8_t thing_is_given_randomly_at_start_noverify (thingp t)
 {
-    return (t->thing_template->is_given_randomly_at_start);
+    return (t->tp->is_given_randomly_at_start);
 }
 
 static inline uint8_t thing_is_magical_noverify (thingp t)
 {
-    return (t->thing_template->is_magical);
+    return (t->tp->is_magical);
 }
 
 static inline uint8_t thing_is_degradable_noverify (thingp t)
 {
-    return (t->thing_template->is_degradable);
+    return (t->tp->is_degradable);
 }
 
 static inline uint8_t thing_is_cursed_noverify (thingp t)
 {
-    return (t->thing_template->is_cursed);
+    return (t->tp->is_cursed);
 }
 
 static inline uint8_t thing_is_animate_only_when_moving_noverify (thingp t)
 {
-    return (t->thing_template->is_animate_only_when_moving);
+    return (t->tp->is_animate_only_when_moving);
 }
 
 static inline uint8_t thing_is_warm_blooded_noverify (thingp t)
 {
-    return (t->thing_template->is_warm_blooded);
+    return (t->tp->is_warm_blooded);
 }
 
 static inline uint8_t thing_is_rrr23_noverify (thingp t)
 {
-    return (t->thing_template->is_rrr23);
+    return (t->tp->is_rrr23);
 }
 
 static inline uint8_t thing_is_stackable_noverify (thingp t)
 {
-    return (t->thing_template->is_stackable);
+    return (t->tp->is_stackable);
 }
 
 static inline uint8_t thing_is_torch_noverify (thingp t)
 {
-    return (t->thing_template->is_torch);
+    return (t->tp->is_torch);
 }
 
 static inline uint8_t thing_is_explosion_noverify (thingp t)
 {
-    return (t->thing_template->is_explosion);
+    return (t->tp->is_explosion);
 }
 
 static inline uint8_t thing_is_hidden_from_editor_noverify (thingp t)
 {
-    return (t->thing_template->is_hidden_from_editor);
+    return (t->tp->is_hidden_from_editor);
 }
 
 static inline uint8_t thing_is_animated_noverify (thingp t)
 {
-    return (t->thing_template->is_animated);
+    return (t->tp->is_animated);
 }
 
 static inline uint8_t thing_is_combustable_noverify (thingp t)
 {
-    return (t->thing_template->is_combustable);
+    return (t->tp->is_combustable);
 }
 
 static inline uint8_t thing_is_projectile_noverify (thingp t)
 {
-    return (t->thing_template->is_projectile);
+    return (t->tp->is_projectile);
 }
 
 static inline uint8_t thing_is_joinable_noverify (thingp t)
 {
-    return (t->thing_template->is_joinable);
+    return (t->tp->is_joinable);
 }
 
 static inline uint8_t thing_is_wall_noverify (thingp t)
 {
-    return (t->thing_template->is_wall);
+    return (t->tp->is_wall);
 }
 
 static inline uint8_t thing_is_effect_sway_noverify (thingp t)
 {
-    return (t->thing_template->is_effect_sway);
+    return (t->tp->is_effect_sway);
 }
 
 static inline uint8_t thing_is_effect_pulse_noverify (thingp t)
 {
-    return (t->thing_template->is_effect_pulse);
+    return (t->tp->is_effect_pulse);
 }
 
 static inline uint8_t thing_is_effect_rotate_4way_noverify (thingp t)
 {
-    return (t->thing_template->is_effect_rotate_4way);
+    return (t->tp->is_effect_rotate_4way);
 }
 
 static inline uint8_t thing_is_effect_rotate_2way_noverify (thingp t)
 {
-    return (t->thing_template->is_effect_rotate_2way);
+    return (t->tp->is_effect_rotate_2way);
 }
 
 static inline int32_t thing_get_stats_hp (thingp t)
@@ -1505,7 +1505,7 @@ static inline int32_t thing_get_stats_max_hp (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_max_hp(t->thing_template);
+    val = thing_template_get_stats_max_hp(t->tp);
     return (val);
 }
 
@@ -1526,7 +1526,7 @@ static inline int32_t thing_get_stats_max_id (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_max_id(t->thing_template);
+    val = thing_template_get_stats_max_id(t->tp);
     return (val);
 }
 
@@ -1547,7 +1547,7 @@ static inline uint32_t thing_get_stats_attack_melee (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_attack_melee(t->thing_template);
+    val = thing_template_get_stats_attack_melee(t->tp);
     return (val);
 }
 
@@ -1560,7 +1560,7 @@ static inline uint32_t thing_get_stats_attack_ranged (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_attack_ranged(t->thing_template);
+    val = thing_template_get_stats_attack_ranged(t->tp);
     return (val);
 }
 
@@ -1573,7 +1573,7 @@ static inline uint32_t thing_get_stats_attack_magical (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_attack_magical(t->thing_template);
+    val = thing_template_get_stats_attack_magical(t->tp);
     return (val);
 }
 
@@ -1586,7 +1586,7 @@ static inline uint32_t thing_get_stats_speed (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_speed(t->thing_template);
+    val = thing_template_get_stats_speed(t->tp);
     return (val);
 }
 
@@ -1599,7 +1599,7 @@ static inline uint32_t thing_get_stats_vision (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_vision(t->thing_template);
+    val = thing_template_get_stats_vision(t->tp);
     return (val);
 }
 
@@ -1612,7 +1612,7 @@ static inline uint32_t thing_get_stats_healing (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_healing(t->thing_template);
+    val = thing_template_get_stats_healing(t->tp);
     return (val);
 }
 
@@ -1625,7 +1625,7 @@ static inline uint32_t thing_get_stats_defense (thingp t)
         return (val);
     }
 
-    val = thing_template_get_stats_defense(t->thing_template);
+    val = thing_template_get_stats_defense(t->tp);
     return (val);
 }
 
@@ -1698,7 +1698,7 @@ static inline levelp thing_level (thingp t)
  * thing_weapon.h
  */
 void thing_unwield(thingp t);
-void thing_wield(thingp t, thing_templatep tmp);
+void thing_wield(thingp t, thing_templatep tp);
 void thing_swing(thingp t);
 void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
 thingp thing_weapon_carry_anim(thingp t);
@@ -1708,10 +1708,10 @@ thing_templatep thing_weapon(thingp t);
 /*
  * thing_item.h
  */
-void thing_auto_collect(thingp t, thingp it, thing_templatep tmp);
-void thing_item_collect(thingp t, thingp it, thing_templatep tmp);
-void thing_used(thingp t, thing_templatep tmp);
-void thing_degrade(thingp t, thing_templatep tmp);
-void thing_item_destroyed(thingp t, thing_templatep tmp);
-void thing_drop(thingp t, thing_templatep tmp);
+void thing_auto_collect(thingp t, thingp it, thing_templatep tp);
+void thing_item_collect(thingp t, thingp it, thing_templatep tp);
+void thing_used(thingp t, thing_templatep tp);
+void thing_degrade(thingp t, thing_templatep tp);
+void thing_item_destroyed(thingp t, thing_templatep tp);
+void thing_drop(thingp t, thing_templatep tp);
 void thing_wield_next_weapon(thingp t);

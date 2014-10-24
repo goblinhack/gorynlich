@@ -49,7 +49,7 @@ widp wid_editor_map_thing_replace_template (widp w,
                                             double x,
                                             double y,
                                             thingp t,
-                                            thing_templatep thing_template)
+                                            thing_templatep tp)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -72,10 +72,10 @@ widp wid_editor_map_thing_replace_template (widp w,
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_tiles = thing_template_get_tiles(thing_template);
+    thing_tiles = thing_template_get_tiles(tp);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     /*
@@ -93,7 +93,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     /*
@@ -149,14 +149,14 @@ widp wid_editor_map_thing_replace_template (widp w,
         br.x += tile_width / 4.0;
     }
 
-    z_depth = thing_template_get_z_depth(thing_template);
+    z_depth = thing_template_get_z_depth(tp);
 
     existing = wid_find_matching(wid_editor_map_grid_container,
                                  tl, br, z_depth);
     if (existing)  {
         child = existing;
 
-        wid_set_thing_template(child, thing_template);
+        wid_set_thing_template(child, tp);
 
         wid_update(child);
 
@@ -195,7 +195,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     /*
      * "paint" the thing.
      */
-    wid_set_thing_template(child, thing_template);
+    wid_set_thing_template(child, tp);
 
     /*
      * This adds it to the grid wid.
@@ -220,7 +220,7 @@ widp wid_editor_map_thing_replace_template (widp w,
  * Flood file.
  */
 void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
-                                               thing_templatep thing_template)
+                                               thing_templatep tp)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -242,10 +242,10 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_tiles = thing_template_get_tiles(thing_template);
+    thing_tiles = thing_template_get_tiles(tp);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     thing_tilep thing_tile;
@@ -265,7 +265,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     /*
@@ -278,7 +278,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
      * Bound certain things by others. e.g. flood fill ghosts limited by 
      * walls.
      */
-    switch (thing_template_get_z_depth(thing_template)) {
+    switch (thing_template_get_z_depth(tp)) {
         case MAP_DEPTH_EDITOR: 
             min_z = 0; 
             break;
@@ -315,12 +315,12 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
                                           xin, yin, 
                                           0, /* thing */
-                                          thing_template);
+                                          tp);
 
-    wid_editor_map_thing_flood_fill_template(xin + 1, yin, thing_template);
-    wid_editor_map_thing_flood_fill_template(xin - 1, yin, thing_template);
-    wid_editor_map_thing_flood_fill_template(xin, yin + 1, thing_template);
-    wid_editor_map_thing_flood_fill_template(xin, yin - 1, thing_template);
+    wid_editor_map_thing_flood_fill_template(xin + 1, yin, tp);
+    wid_editor_map_thing_flood_fill_template(xin - 1, yin, tp);
+    wid_editor_map_thing_flood_fill_template(xin, yin + 1, tp);
+    wid_editor_map_thing_flood_fill_template(xin, yin - 1, tp);
 }
 
 /*
@@ -372,7 +372,7 @@ static uint8_t wid_editor_map_thing_replace (widp w,
                                              int32_t y,
                                              uint8_t scaled)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp focus;
 
     if (!scaled) {
@@ -400,15 +400,15 @@ static uint8_t wid_editor_map_thing_replace (widp w,
         return (false);
     }
 
-    thing_template = wid_get_thing_template(focus);
-    if (!thing_template) {
+    tp = wid_get_thing_template(focus);
+    if (!tp) {
         return (false);
     }
 
     (void) wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
                                                  x, y,
                                                  0, /* thing */
-                                                 thing_template);
+                                                 tp);
 
     return (true);
 }
@@ -418,7 +418,7 @@ static uint8_t wid_editor_map_thing_replace (widp w,
  */
 static uint8_t wid_editor_map_thing_flood_fill (widp w, int32_t x, int32_t y)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     fpoint offset;
     widp focus;
 
@@ -438,12 +438,12 @@ static uint8_t wid_editor_map_thing_flood_fill (widp w, int32_t x, int32_t y)
         return (false);
     }
 
-    thing_template = wid_get_thing_template(focus);
-    if (!thing_template) {
+    tp = wid_get_thing_template(focus);
+    if (!tp) {
         return (false);
     }
 
-    (void) wid_editor_map_thing_flood_fill_template(x, y, thing_template);
+    (void) wid_editor_map_thing_flood_fill_template(x, y, tp);
 
     return (true);
 }

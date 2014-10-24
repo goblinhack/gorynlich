@@ -176,8 +176,16 @@ void wid_player_inventory_button_style (widp w,
             }
 
             if (damage) {
-                char *tmp2 = dynprintf("%%%%fmt=left$"
-                                       "Damage\t\t1d%d\n", damage);
+                char *tmp2;
+
+                if (item.enchanted) {
+                    tmp2 = dynprintf("%%%%fmt=left$Damage\t\t1d%d (+%d)\n",
+                                     damage, 
+                                     item.enchanted);
+                } else {
+                    tmp2 = dynprintf("%%%%fmt=left$Damage\t\t1d%d\n",
+                                     damage);
+                }
 
                 char *old = tmp;
                 tmp = strappend(old, tmp2);
@@ -251,9 +259,9 @@ void wid_player_inventory_button_style (widp w,
         if (val) {
             const char *str;
             if (val >= 10000) {
-                str = "enchanted, extremely low";
+                str = "masterwork";
             } else if (val >= 5000) {
-                str = "masterwork, very low";
+                str = "very low";
             } else if (val >= 4000) {
                 str = "low";
             } else if (val >= 3000) {
@@ -318,11 +326,11 @@ wid_player_inventory_button_style_mouse_down (widp w,
                                               uint32_t button)
 {
     static item_t item;
-    thing_templatep thing_template;
+    thing_templatep tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
     item_t *over_item = &player_stats->inventory[id];
 
-    thing_template = wid_get_thing_template(w);
+    tp = wid_get_thing_template(w);
 
     if (!wid_mouse_template) {
         /*
@@ -348,7 +356,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
 
-        wid_set_thing_template(w, thing_template);
+        wid_set_thing_template(w, tp);
 
         wid_set_bevelled(w, true);
         wid_set_bevel(w, 2);
@@ -394,9 +402,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
             /*
              * Can we add this anywhere at all ?
              */
-            if (player_stats_item_add(0, player_stats, 
-                                      id_to_thing_template(item.id),
-                                      item)) {
+            if (player_stats_item_add(0, player_stats, item)) {
                 dropped = true;
             }
         }

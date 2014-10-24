@@ -24,7 +24,7 @@ FILE *fp = 0;
 static uint8_t map_is_x_at (levelp level,
                             int32_t x, int32_t y, map_is_at_callback callback)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp grid_wid;
     widp w;
 
@@ -58,9 +58,9 @@ static uint8_t map_is_x_at (levelp level,
                 }
             }
 
-            thing_template = wid_get_thing_template(w);
-            if (thing_template) {
-                if ((*callback)(thing_template)) {
+            tp = wid_get_thing_template(w);
+            if (tp) {
+                if ((*callback)(tp)) {
                     return (true);
                 }
             }
@@ -76,7 +76,7 @@ static uint8_t map_count_x_at (levelp level,
                                int32_t x, int32_t y,
                                map_is_at_callback callback)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp grid_wid;
     widp w;
     uint32_t count;
@@ -96,9 +96,9 @@ static uint8_t map_count_x_at (levelp level,
     for (z = 0; z < MAP_DEPTH; z++) {
         w = wid_grid_find_first(grid_wid, x, y, z);
         while (w) {
-            thing_template = wid_get_thing_template(w);
-            if (thing_template) {
-                if ((*callback)(thing_template)) {
+            tp = wid_get_thing_template(w);
+            if (tp) {
+                if ((*callback)(tp)) {
                     count++;
                 }
             }
@@ -394,7 +394,7 @@ static thingp map_thing_is_x_at (levelp level,
                                  int32_t x, int32_t y,
                                  map_is_at_callback callback)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp grid_wid;
     widp w;
 
@@ -423,9 +423,9 @@ static thingp map_thing_is_x_at (levelp level,
                 continue;
             }
 
-            thing_template = wid_get_thing_template(w);
-            if (thing_template) {
-                if ((*callback)(thing_template)) {
+            tp = wid_get_thing_template(w);
+            if (tp) {
+                if ((*callback)(tp)) {
                     return (thing_it);
                 }
             }
@@ -726,7 +726,7 @@ static tree_rootp map_all_things_is_x_at (levelp level,
                                           int32_t x, int32_t y,
                                           map_is_at_callback callback)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     tree_thing_node *node;
     tree_rootp root;
     widp grid_wid;
@@ -759,9 +759,9 @@ static tree_rootp map_all_things_is_x_at (levelp level,
                 continue;
             }
 
-            thing_template = wid_get_thing_template(w);
-            if (thing_template) {
-                if ((*callback)(thing_template)) {
+            tp = wid_get_thing_template(w);
+            if (tp) {
+                if ((*callback)(tp)) {
                     if (!root) {
                         root = tree_alloc(TREE_KEY_POINTER,
                                         "TREE ROOT: map find things");
@@ -1076,7 +1076,7 @@ static thing_templatep map_find_x_at_depth (levelp level,
                                             uint8_t z,
                                             widp *wout)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp grid_wid;
     widp w;
 
@@ -1108,14 +1108,14 @@ static thing_templatep map_find_x_at_depth (levelp level,
             }
         }
 
-        thing_template = wid_get_thing_template(w);
-        if (thing_template) {
-            if ((*callback)(thing_template)) {
+        tp = wid_get_thing_template(w);
+        if (tp) {
+            if ((*callback)(tp)) {
                 if (wout) {
                     *wout = w;
                 }
 
-                return (thing_template);
+                return (tp);
             }
         }
 
@@ -1130,7 +1130,7 @@ static thing_templatep map_find_x_at (levelp level,
                                       map_is_at_callback callback,
                                       widp *wout)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp grid_wid;
     widp w;
 
@@ -1165,14 +1165,14 @@ static thing_templatep map_find_x_at (levelp level,
                 }
             }
 
-            thing_template = wid_get_thing_template(w);
-            if (thing_template) {
-                if ((*callback)(thing_template)) {
+            tp = wid_get_thing_template(w);
+            if (tp) {
+                if ((*callback)(tp)) {
                     if (wout) {
                         *wout = w;
                     }
 
-                    return (thing_template);
+                    return (tp);
                 }
             }
 
@@ -2229,7 +2229,7 @@ uint32_t level_count_is_exit (levelp level)
 static tree_rootp map_all_things_is_x (levelp level,
                                        map_is_at_callback callback)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     tree_thing_node *node;
     tree_rootp root;
     widp grid_wid;
@@ -2267,9 +2267,9 @@ static tree_rootp map_all_things_is_x (levelp level,
                         continue;
                     }
 
-                    thing_template = wid_get_thing_template(w);
-                    if (thing_template) {
-                        if ((*callback)(thing_template)) {
+                    tp = wid_get_thing_template(w);
+                    if (tp) {
+                        if ((*callback)(tp)) {
                             if (!root) {
                                 root = tree_alloc(TREE_KEY_POINTER,
                                                 "TREE ROOT: map find things");

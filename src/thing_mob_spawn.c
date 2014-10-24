@@ -14,7 +14,7 @@
 
 uint8_t thing_mob_spawn (thingp t)
 {
-    const char *mob_spawn = thing_template_mob_spawn(t->thing_template);
+    const char *mob_spawn = thing_template_mob_spawn(t->tp);
     if (!mob_spawn) {
         return (false);
     }
@@ -78,7 +78,7 @@ uint8_t thing_mob_spawn (thingp t)
 
 uint8_t thing_mob_spawn_on_death (thingp t)
 {
-    const char *mob_spawn = thing_template_spawn_on_death(t->thing_template);
+    const char *mob_spawn = thing_template_spawn_on_death(t->tp);
     if (!mob_spawn) {
         return (false);
     }

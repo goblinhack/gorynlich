@@ -207,7 +207,7 @@ widp
 wid_game_map_server_replace_tile (widp w,
                                   double x, double y,
                                   thingp thing,
-                                  thing_templatep thing_template)
+                                  thing_templatep tp)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -217,7 +217,7 @@ wid_game_map_server_replace_tile (widp w,
 
     if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
         DIE("thing template [%s] cannot be placed at %f %f",
-            thing_template_short_name(thing_template), x, y);
+            thing_template_short_name(tp), x, y);
     }
 
     verify(w);
@@ -229,7 +229,7 @@ wid_game_map_server_replace_tile (widp w,
      * If we find a player, it is really a placeholder of where to put a 
      * future player who joins.
      */
-    if (thing_template_is_player(thing_template)) {
+    if (thing_template_is_player(tp)) {
         if ((x == 0) && (y == 0)) {
             /*
              * Grab a position from the list loaded.
@@ -267,14 +267,14 @@ wid_game_map_server_replace_tile (widp w,
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    if (!thing_template) {
+    if (!tp) {
         DIE("no thing template to place on server map");
     }
 
-    thing_tiles = thing_template_get_tiles(thing_template);
+    thing_tiles = thing_template_get_tiles(tp);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     thing_tilep thing_tile;
@@ -293,7 +293,7 @@ wid_game_map_server_replace_tile (widp w,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_short_name(thing_template));
+            thing_template_short_name(tp));
     }
 
     /*
@@ -316,10 +316,10 @@ wid_game_map_server_replace_tile (widp w,
     /*
      * "paint" the thing.
      */
-    wid_set_thing_template(child, thing_template);
+    wid_set_thing_template(child, tp);
 
     if (!thing) {
-        thing = thing_server_new(thing_template_name(thing_template), x, y);
+        thing = thing_server_new(thing_template_name(tp), x, y);
     } else {
         thing_server_init(thing, x, y);
     }

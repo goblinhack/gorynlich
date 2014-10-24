@@ -88,6 +88,11 @@ typedef struct thing_template_ {
     char *polymorph_on_death;
 
     /*
+     * When you collect a bundle of items it as carried as x of this.
+     */
+    char *carried_as;
+
+    /*
      * What shade of light does this thing emit
      */
     char *light_tint;
@@ -271,6 +276,7 @@ const char *thing_template_name(thing_templatep);
 const char *thing_template_short_name(thing_templatep);
 thing_templatep thing_template_fires(thing_templatep);
 const char *thing_template_polymorph_on_death(thing_templatep);
+const char *thing_template_carried_as(thing_templatep);
 const char *thing_template_light_tint(thing_templatep);
 color thing_template_light_color(thing_templatep);
 const char *thing_template_spawn_on_death(thing_templatep);

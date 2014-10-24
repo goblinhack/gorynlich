@@ -118,13 +118,13 @@ static void wid_intro_demo_buttons_tick (widp wid)
 
 static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *arg)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     widp child;
 
-    thing_template = (typeof(thing_template)) 
+    tp = (typeof(tp)) 
             (((char*) node) - STRUCT_OFFSET(struct thing_template_, tree2));
 
-    if (!thing_template_is_player(thing_template)) {
+    if (!thing_template_is_player(tp)) {
         return (true);
     }
 
@@ -142,11 +142,11 @@ static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *ar
     };
 
     demo_players[demo_player_count] = child = wid_new_window("player");
-    demo_player_tp[demo_player_count] = thing_template;
+    demo_player_tp[demo_player_count] = tp;
     demo_player_speed[demo_player_count] = 
-                rand() % (thing_template_get_speed(thing_template) / 2);
+                rand() % (thing_template_get_speed(tp) / 2);
 
-    wid_set_thing_template(child, thing_template);
+    wid_set_thing_template(child, tp);
     wid_set_tl_br_pct(child, tl, br);
     wid_set_on_tick(child, wid_intro_demo_buttons_tick);
 
