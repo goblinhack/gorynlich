@@ -58,7 +58,7 @@ void wid_player_inventory_visible (player_stats_t *s)
 
 void wid_player_inventory_button_style (widp w,
                                         player_stats_t *s,
-                                        item_t item)
+                                        const item_t item)
 {
     color c;
 
@@ -312,16 +312,15 @@ void wid_player_inventory_button_style (widp w,
     }
 }
 
-int mouse_item;
-
 static uint8_t 
 wid_player_inventory_button_style_mouse_down (widp w, 
                                               int32_t x, int32_t y,
                                               uint32_t button)
-
+{
     static item_t item;
     thing_templatep thing_template;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
+    item_t *over_item = &player_stats->inventory[id];
 
     thing_template = wid_get_thing_template(w);
 
@@ -329,6 +328,10 @@ wid_player_inventory_button_style_mouse_down (widp w,
         /*
          * Pick up an item.
          */
+        if (!item_pop(over_item, &item)) {
+            return (true);
+        }
+
         widp w = wid_mouse_template = wid_new_square_window("moues");
 
         fpoint tl = {0.0, 0.0};
@@ -358,33 +361,53 @@ wid_player_inventory_button_style_mouse_down (widp w,
         wid_update(w);
 
         wid_set_client_context(w, (void*) &item);
-
-        memcpy(&item, &player_stats->inventory[id], sizeof(item));
-        memcpy(&player_stats->inventory[id], 0, sizeof(item));
     } else {
         /*
          * Drop the current item.
          */
-        player_stats_item_add(0, player_stats, it, &item)
+        int dropped = false;
 
-        if (player_stats->inventory[id]) {
+        if (item_push(over_item, item)) {
+            /*
+             * Success
+             */
+            dropped = true;
+        }
+
+        if (!dropped) {
+            /*
+             * If we failed to drop, is there an item in our way to move?
+             */
             int i;
 
             for (i = 0; i < THING_INVENTORY_MAX; i++) {
-                if (!player_stats->inventory[i]) {
-                    player_stats->inventory[i] = player_stats->inventory[id];
-                    player_stats->inventory[id] = 0;
+                item_t *freeitem = &player_stats->inventory[i];
+                if (!freeitem->id) {
+                    memcpy(freeitem, &item, sizeof(item_t));
+                    dropped = true;
                     break;
                 }
             }
         }
 
-        int mouse_item = (int) (uintptr_t) 
-                        wid_get_client_context(wid_mouse_template);
+        if (!dropped) {
+            /*
+             * Can we add this anywhere at all ?
+             */
+            if (player_stats_item_add(0, player_stats, 
+                                      id_to_thing_template(item.id),
+                                      item)) {
+                dropped = true;
+            }
+        }
 
-        player_stats->inventory[id] = mouse_item;
+        if (dropped) {
+            memset(&item, 0, sizeof(item_t));
 
-        wid_destroy(&wid_mouse_template);
+            wid_destroy(&wid_mouse_template);
+
+            wid_set_client_context(w, 0);
+        }
     }
 
     wid_player_stats_redraw();
@@ -456,11 +479,9 @@ static void wid_player_inventory_create (player_stats_t *s)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        int id = s->inventory[item];
+        wid_player_inventory_button_style(w, s, s->inventory[item]);
 
-        wid_player_inventory_button_style(w, s, id);
-
-        wid_set_client_context(w, (void*) item);
+        wid_set_client_context(w, (void*) (uintptr_t) item);
 
         wid_set_on_mouse_down(w, 
                               wid_player_inventory_button_style_mouse_down);

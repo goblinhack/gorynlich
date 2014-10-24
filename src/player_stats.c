@@ -23,7 +23,7 @@ int item_push (item_t *dst, item_t src)
         /*
          * No item at the destination. Just copy.
          */
-        memcpy(dst, src, sizeof(item_t));
+        memcpy(dst, &src, sizeof(item_t));
         return (true);
     }
 
@@ -45,9 +45,9 @@ int item_push (item_t *dst, item_t src)
         return (false);
     }
 
-    thing_templatep = id_to_thing_template(dst->id);
+    thing_templatep tp = id_to_thing_template(dst->id);
 
-    if (!thing_template_is_stackable(it)) {
+    if (!thing_template_is_stackable(tp)) {
         /*
          * Cannot stack this item.
          */
@@ -75,7 +75,7 @@ int item_push (item_t *dst, item_t src)
     return (true);
 }
 
-int item_pop (item_t *dst, item_t *new)
+int item_pop (item_t *dst, item_t *popped)
 {
     if (!dst->id) {
         return (false);
@@ -87,8 +87,8 @@ int item_pop (item_t *dst, item_t *new)
 
     dst->quantity--;
 
-    if (new) {
-        memcpy(new, dst, sizeof(item_t));
+    if (popped) {
+        memcpy(popped, dst, sizeof(item_t));
     }
 
     /*
@@ -289,7 +289,7 @@ int player_stats_item_add (thingp t,
      */
     oitem = player_stats_has_action_bar_item(player_stats, id, 0);
     if (oitem) {
-        if (item_push(oitem, &item)) {
+        if (item_push(oitem, item)) {
             return (true);
         }
     }
@@ -299,7 +299,7 @@ int player_stats_item_add (thingp t,
      */
     oitem = player_stats_has_inventory_item(player_stats, id, 0);
     if (oitem) {
-        if (item_push(oitem, &item)) {
+        if (item_push(oitem, item)) {
             return (true);
         }
     }
@@ -310,7 +310,7 @@ int player_stats_item_add (thingp t,
     if (thing_template_is_valid_for_action_bar(it)) {
         for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
             oitem = &player_stats->action_bar[i];
-            if (item_push(oitem, &item)) {
+            if (item_push(oitem, item)) {
                 return (true);
             }
         }
@@ -321,7 +321,7 @@ int player_stats_item_add (thingp t,
      */
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
         oitem = &player_stats->inventory[i];
-        if (item_push(oitem, &item)) {
+        if (item_push(oitem, item)) {
             return (true);
         }
     }
@@ -395,7 +395,8 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
                 continue;
             }
 
-            int chance = rand() % 1000;
+            uint32_t chance = rand() % 1000;
+
             if (thing_template_get_chance_of_appearing(t) > chance) {
                 continue;
             }
