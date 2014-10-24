@@ -640,11 +640,11 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
         return (false);
     }
 
-    thing_templatep thing_template;
+    thing_templatep tp;
 
-    thing_template = thing_get_template(t);
+    tp = thing_get_template(t);
 
-    if (lowest > (int) thing_template_get_vision_distance(thing_template)) {
+    if (lowest > (int) thing_template_get_vision_distance(tp)) {
         return (false);
     }
 

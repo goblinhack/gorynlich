@@ -10,36 +10,24 @@
 
 static void thing_collect (thingp t, 
                            thingp it, 
-                           thing_templatep tmp,
+                           thing_templatep tp,
                            uint8_t auto_collect)
 {
-    uint32_t item;
+    uint32_t id;
     uint32_t quantity;
 
     if (thing_is_player(t)) {
         t->needs_tx_player_update = true;
     }
 
-    item = thing_template_to_id(tmp);
+    id = thing_template_to_id(tp);
     quantity = 1;
 
-    if (thing_template_get_quantity(tmp)) {
-        quantity += thing_template_get_quantity(tmp) - 1;
+    if (thing_template_get_quantity(tp)) {
+        quantity += thing_template_get_quantity(tp) - 1;
     }
 
-    /*
-     * Bit of a hack to make the collected item appear as an another.
-     */
-    if ((item == THING_KEYS2) || (item == THING_KEYS3)) {
-        item = THING_KEY;
-    }
-
-    if (item == THING_TORCHES) {
-        item = THING_TORCH;
-    }
-
-    if (item == THING_WATER_POISON) {
-        item = THING_WATER;
+    if (id == THING_WATER_POISON) {
         /*
          * Convert any existing items.
          */
@@ -49,14 +37,28 @@ static void thing_collect (thingp t,
     }
 
     /*
+     * Keys are carried as individual keys.
+     */
+    const char *carried_as = thing_template_carried_as(tp);
+    if (carried_as) {
+        thing_templatep what = thing_template_find(carried_as);
+        if (!what) {
+            DIE("could now find %s to carry item as for %s",
+                thing_template_name(what), thing_logname(t));
+        }
+
+        id = thing_template_to_id(what);
+    }
+
+    /*
      * If treasure, just add it to the score. Don't carry it.
      */
-    if (thing_template_is_treasure(tmp)) {
+    if (thing_template_is_treasure(tp)) {
         /*
          * Bonus for collecting?
          */
         thing_set_score(t, thing_score(t) +
-                        thing_template_get_bonus_score_on_collect(tmp) *
+                        thing_template_get_bonus_score_on_collect(tp) *
                         quantity);
         return;
     }
@@ -66,13 +68,14 @@ static void thing_collect (thingp t,
      */
     item_t i = {0};
 
+    i.id = id;
     i.quality = it->quality ? it->quality : THING_ITEM_QUALITY_MAX;
     i.quantity = quantity;
-    i.cursed = thing_template_is_cursed(tmp);
+    i.cursed = thing_template_is_cursed(tp);
 
-    if (!player_stats_item_add(t, &t->stats, tmp, i)) {
+    if (!player_stats_item_add(t, &t->stats, i)) {
         THING_SHOUT_AT(t, INFO, "You could not collect %s",
-                       thing_template_short_name(tmp));
+                       thing_template_short_name(tp));
         return;
     }
 
@@ -80,24 +83,24 @@ static void thing_collect (thingp t,
      * Bonus for collecting?
      */
     thing_set_score(t, thing_score(t) +
-                    thing_template_get_bonus_score_on_collect(tmp) *
+                    thing_template_get_bonus_score_on_collect(tp) *
                     quantity);
 
     if (!auto_collect) {
         if (thing_is_player(t)) {
             THING_SHOUT_AT(t, INFO, "%s added", 
-                           thing_template_short_name(tmp));
+                           thing_template_short_name(tp));
         }
     }
 
     /*
      * Auto use a weapon if carrying none.
      */
-    if (thing_template_is_weapon(tmp)) {
+    if (thing_template_is_weapon(tp)) {
         if (!t->weapon) {
-            THING_LOG(t, "auto wield %s", thing_template_short_name(tmp));
+            THING_LOG(t, "auto wield %s", thing_template_short_name(tp));
 
-            thing_wield(t, tmp);
+            thing_wield(t, tp);
         }
     }
 
@@ -106,26 +109,26 @@ static void thing_collect (thingp t,
     }
 }
 
-void thing_item_collect (thingp t, thingp it, thing_templatep tmp)
+void thing_item_collect (thingp t, thingp it, thing_templatep tp)
 {
-    thing_collect(t, it, tmp, false);
+    thing_collect(t, it, tp, false);
 }
 
-void thing_auto_collect (thingp t, thingp it, thing_templatep tmp)
+void thing_auto_collect (thingp t, thingp it, thing_templatep tp)
 {
-    thing_collect(t, it, tmp, true);
+    thing_collect(t, it, tp, true);
 }
 
-void thing_used (thingp t, thing_templatep tmp)
+void thing_used (thingp t, thing_templatep tp)
 {
     uint32_t id;
     item_t *item;
 
-    id = thing_template_to_id(tmp);
+    id = thing_template_to_id(tp);
     item = player_stats_has_item(&t->stats, id, 0);
     if (!item) {
         ERR("Tried to use item which is %s not carried", 
-            thing_template_short_name(tmp));
+            thing_template_short_name(tp));
         return;
     }
 
@@ -136,18 +139,18 @@ void thing_used (thingp t, thing_templatep tmp)
     /*
      * Switch of weapons.
      */
-    if (thing_template_is_weapon(tmp)) {
-        thing_wield(t, tmp);
+    if (thing_template_is_weapon(tp)) {
+        thing_wield(t, tp);
         return;
     }
 
     /*
      * HP modifications.
      */
-    int bonus_hp = thing_template_get_bonus_hp_on_use(tmp);
+    int bonus_hp = thing_template_get_bonus_hp_on_use(tp);
     if (item->cursed) {
         THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d health",
-                       thing_template_short_name(tmp), bonus_hp);
+                       thing_template_short_name(tp), bonus_hp);
         bonus_hp = -bonus_hp;
     }
     t->stats.hp += bonus_hp;
@@ -156,7 +159,7 @@ void thing_used (thingp t, thing_templatep tmp)
      * Need to allow magic items to override this.
      */
     if (thing_get_stats_hp(t) > thing_get_stats_max_hp(t)) {
-        if (thing_template_is_magical(tmp)) {
+        if (thing_template_is_magical(tp)) {
             /*
              * Allow temorary over max.
              */
@@ -168,10 +171,10 @@ void thing_used (thingp t, thing_templatep tmp)
     /*
      * id modifications.
      */
-    int bonus_id = thing_template_get_bonus_id_on_use(tmp);
+    int bonus_id = thing_template_get_bonus_id_on_use(tp);
     if (item->cursed) {
         THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d of ID",
-                       thing_template_short_name(tmp), bonus_hp);
+                       thing_template_short_name(tp), bonus_hp);
 
         bonus_id = -bonus_id;
     }
@@ -181,7 +184,7 @@ void thing_used (thingp t, thing_templatep tmp)
      * Need to allow magic items to override this.
      */
     if (thing_get_stats_id(t) > thing_get_stats_max_id(t)) {
-        if (thing_template_is_magical(tmp)) {
+        if (thing_template_is_magical(tp)) {
             /*
              * Allow temorary over max.
              */
@@ -190,34 +193,34 @@ void thing_used (thingp t, thing_templatep tmp)
         }
     }
 
-    THING_LOG(t, "used %s", thing_template_short_name(tmp));
+    THING_LOG(t, "used %s", thing_template_short_name(tp));
 
     /*
      * Remove from the inventory and other places.
      */
-    player_stats_item_remove(t, &t->stats, tmp);
+    player_stats_item_remove(t, &t->stats, tp);
 
     /*
      * Check HP did not go too low.
      */
     if (thing_get_stats_hp(t) < 0) {
-        const char *name = thing_template_short_name(tmp);
+        const char *name = thing_template_short_name(tp);
 
         thing_dead(t, 0, "%s", name);
         return;
     }
 }
 
-void thing_degrade (thingp t, thing_templatep tmp)
+void thing_degrade (thingp t, thing_templatep tp)
 {
     uint32_t id;
     item_t *item;
 
-    id = thing_template_to_id(tmp);
+    id = thing_template_to_id(tp);
     item = player_stats_has_item(&t->stats, id, 0);
     if (!item) {
         ERR("Tried to degrade item which is %s not carried", 
-            thing_template_short_name(tmp));
+            thing_template_short_name(tp));
         return;
     }
 
@@ -233,9 +236,9 @@ void thing_degrade (thingp t, thing_templatep tmp)
     /*
      * Remove from the inventory and other places.
      */
-    player_stats_item_remove(t, &t->stats, tmp);
+    player_stats_item_remove(t, &t->stats, tp);
 
-    if (thing_template_is_weapon(tmp)) {
+    if (thing_template_is_weapon(tp)) {
         thing_unwield(t);
 
         THING_SHOUT_AT(t, WARNING, "Your weapon crumbles to dust");
@@ -244,33 +247,33 @@ void thing_degrade (thingp t, thing_templatep tmp)
     }
 }
 
-void thing_drop (thingp t, thing_templatep tmp)
+void thing_drop (thingp t, thing_templatep tp)
 {
     uint8_t auto_wield = false;
     uint32_t id;
     item_t *item;
 
-    id = thing_template_to_id(tmp);
+    id = thing_template_to_id(tp);
     item = player_stats_has_item(&t->stats, id, 0);
     if (!item) {
-        ERR("tried to drop %s not carried", thing_template_short_name(tmp));
+        ERR("tried to drop %s not carried", thing_template_short_name(tp));
         return;
     }
 
     /*
      * Dropping the current weapon.
      */
-    if (tmp == t->weapon) {
+    if (tp == t->weapon) {
         thing_unwield(t);
         auto_wield = true;
     }
 
-    THING_LOG(t, "drop %s", thing_template_short_name(tmp));
+    THING_LOG(t, "drop %s", thing_template_short_name(tp));
 
     /*
      * Remove from the inventory and other places.
      */
-    player_stats_item_remove(t, &t->stats, tmp);
+    player_stats_item_remove(t, &t->stats, tp);
 
     /*
      * Wield the next weapon we have.

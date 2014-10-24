@@ -107,7 +107,7 @@ void thing_timer_place_and_destroy_callback (void *context)
 
     place = (typeof(place)) context;
 
-    if (!place->thing_template) {
+    if (!place->tp) {
         DIE("no thing to place");
     }
 
@@ -119,9 +119,9 @@ void thing_timer_place_and_destroy_callback (void *context)
                                         place->x,
                                         place->y,
                                         0, /* thing */
-                                        place->thing_template);
+                                        place->tp);
     } else {
-        thingp t = thing_client_local_new(place->thing_template);
+        thingp t = thing_client_local_new(place->tp);
 
         w = wid_game_map_client_replace_tile(
                                         wid_game_map_client_grid_container,
@@ -229,9 +229,9 @@ void thing_timer_place_callback (void *context)
                                         place->x,
                                         place->y,
                                         0, /* thing */
-                                        place->thing_template);
+                                        place->tp);
     } else {
-        thingp t = thing_client_local_new(place->thing_template);
+        thingp t = thing_client_local_new(place->tp);
 
         w = wid_game_map_client_replace_tile(
                                         wid_game_map_client_grid_container,

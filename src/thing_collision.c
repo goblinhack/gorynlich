@@ -41,7 +41,7 @@ thing_possible_hit_add_hitter_killed_on_hitting_ (thingp target,
     thing_possible_hit *h = &thing_possible_hits[thing_possible_hit_size++];
     memset(h, 0, sizeof(*h));
     h->target = target;
-    h->priority = thing_template_get_hit_priority(target->thing_template);
+    h->priority = thing_template_get_hit_priority(target->tp);
     h->hitter_killed_on_hitting = hitter_killed_on_hitting;
 }
 

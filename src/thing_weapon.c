@@ -122,12 +122,12 @@ void thing_wield_next_weapon (thingp t)
             continue;
         }
 
-        thing_templatep tmp = id_to_thing_template(id);
-        if (!thing_template_is_weapon(tmp)) {
+        thing_templatep tp = id_to_thing_template(id);
+        if (!thing_template_is_weapon(tp)) {
             continue;
         }
 
-        thing_wield(t, tmp);
+        thing_wield(t, tp);
         break;
     }
 }
@@ -160,23 +160,23 @@ void thing_unwield (thingp t)
     }
 }
 
-void thing_wield (thingp parent, thing_templatep tmp)
+void thing_wield (thingp parent, thing_templatep tp)
 {
     thing_unwield(parent);
 
-    if (parent->weapon != tmp) {
-        parent->weapon = tmp;
+    if (parent->weapon != tp) {
+        parent->weapon = tp;
 
         if (!parent->weapon) {
             if (thing_is_player(parent)) {
                 THING_SHOUT_AT(parent, INFO,
                             "You switch to the %s", 
-                            thing_template_short_name(tmp));
+                            thing_template_short_name(tp));
             }
         }
     }
 
-    const char *child = thing_template_weapon_carry_anim(tmp);
+    const char *child = thing_template_weapon_carry_anim(tp);
 
     if (child) {
         thing_templatep what = thing_template_find(child);

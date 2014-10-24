@@ -7,6 +7,7 @@
  is_carryable
  is_light_source
  is_stackable
+ carried_as="data/things/torch"
  light_tint="orange"
  light_radius=0.1
  is_animated

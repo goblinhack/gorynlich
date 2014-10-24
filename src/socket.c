@@ -1461,10 +1461,10 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         return (false);
     }
 
-    thing_templatep thing_template = thing_template_find(msg.pclass);
-    if (!thing_template) {
-        thing_template = thing_template_find_short_name(msg.pclass);
-        if (!thing_template) {
+    thing_templatep tp = thing_template_find(msg.pclass);
+    if (!tp) {
+        tp = thing_template_find_short_name(msg.pclass);
+        if (!tp) {
             char *tmp = iptodynstr(read_address(packet));
             LOG("Server: Rx Join (rejected) from %s \"%s\" unknown class %s", 
                 tmp, msg.name, msg.pclass);
@@ -1508,7 +1508,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          0, 0, 
                                          0, /* thing */
-                                         thing_template);
+                                         tp);
     thingp t = wid_get_thing(w);
     verify(t);
 
