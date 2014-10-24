@@ -33,7 +33,7 @@ typedef struct item_t_ {
 } __attribute__ ((packed)) item_t;
 
 int item_push(item_t *dst, item_t src);
-int item_pop(item_t *dst, item_t *new);
+int item_pop(item_t *dst, item_t *popped);
 
 typedef struct player_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
