@@ -289,7 +289,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     case SDLK_6:
     case SDLK_7:
     case SDLK_8:
-    case SDLK_9:
+    case SDLK_9: {
         shortcut = ((uint32_t)key->sym) - SDLK_0;
 
         uint32_t id = player->stats.action_bar[shortcut].id;
@@ -317,6 +317,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
         MSG(WARNING, "No carried item is using that key");
         return (true);
+    }
 
     case 'q':
         wid_game_quit_visible();
