@@ -83,7 +83,6 @@ item_t *player_stats_has_worn_item(player_stats_t *player_stats,
 
 int player_stats_item_add(thingp t,
                           player_stats_t *player_stats,
-                          const thing_templatep it,
                           item_t item);
 
 int player_stats_item_remove(thingp t,

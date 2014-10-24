@@ -78,14 +78,14 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     verify(t);
 
     if (thing_is_seedpod(t)) {
-        thing_templatep thing_template = 
+        thing_templatep tp = 
                 thing_template_find("data/things/plant");
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          thing_grid_x(t),
                                          thing_grid_y(t),
                                          0, /* thing */
-                                         thing_template);
+                                         tp);
 
         sound_play_slime();
 
@@ -539,7 +539,7 @@ void level_pipe_find_ends (levelp level)
  */
 void level_place_plant_pod (levelp level)
 {
-    thing_templatep thing_template = 0;
+    thing_templatep tp = 0;
     uint32_t i;
     int32_t x;
     int32_t y;
@@ -566,13 +566,13 @@ void level_place_plant_pod (levelp level)
             continue;
         }
 
-        thing_template = thing_template_find("data/things/seedpod");
+        tp = thing_template_find("data/things/seedpod");
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,
                                          y,
                                          0, /* thing */
-                                         thing_template);
+                                         tp);
 
         sound_play_slime();
 
@@ -722,7 +722,7 @@ static void level_finished (levelp level)
                 wid_game_map_server_grid_container,
                 0, 0,
                 t,
-                t->thing_template);
+                t->tp);
 
         thing_join_level(t);
     } }

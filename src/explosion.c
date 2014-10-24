@@ -44,8 +44,8 @@ static uint8_t level_place_explosion_at (levelp level,
         DIE("cannot place explosion thing");
     }
 
-    thing_templatep thing_template = thing_template_find(name);
-    if (!thing_template) {
+    thing_templatep tp = thing_template_find(name);
+    if (!tp) {
         DIE("no explosion for name %s", name);
     }
 
@@ -59,7 +59,7 @@ static uint8_t level_place_explosion_at (levelp level,
         delay *= 0.75;
     }
 
-    thing_place_and_destroy_timed(thing_template,
+    thing_place_and_destroy_timed(tp,
                                   owner,
                                   x,
                                   y,

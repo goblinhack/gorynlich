@@ -1920,7 +1920,7 @@ thingp wid_get_thing (widp w)
 
 thing_templatep wid_get_thing_template (widp w)
 {
-    return (w->thing_template);
+    return (w->tp);
 }
 
 void wid_set_tilename (widp w, const char *name)
@@ -2043,7 +2043,7 @@ void wid_set_thing_template (widp w, thing_templatep t)
 
     fast_verify(w);
 
-    w->thing_template = t;
+    w->tp = t;
 
     if (!t) {
         wid_set_z_depth(w, 0);
@@ -3702,11 +3702,11 @@ void marshal_wid_grid (marshal_p ctx, widp w)
                 x = i % grid->width;
                 y = i / grid->height;
 
-                if (!child->thing_template) {
+                if (!child->tp) {
                     continue;
                 }
 
-                if (thing_template_is_hidden_from_editor(child->thing_template)) {
+                if (thing_template_is_hidden_from_editor(child->tp)) {
                     continue;
                 }
 
@@ -3715,7 +3715,7 @@ void marshal_wid_grid (marshal_p ctx, widp w)
                 PUT_NAMED_UINT32(ctx, "x", x);
                 PUT_NAMED_UINT32(ctx, "y", y);
                 PUT_NAMED_STRING(ctx, "t",
-                                thing_template_name(child->thing_template));
+                                thing_template_name(child->tp));
 
                 count = (uintptr_t) wid_get_client_context(child);
 
@@ -3734,7 +3734,7 @@ void marshal_wid_grid (marshal_p ctx, widp w)
 uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
                             grid_wid_replace_t callback)
 {
-    thing_templatep thing_template;
+    thing_templatep tp;
     uint32_t width;
     uint32_t height;
     widgrid *grid;
@@ -3768,8 +3768,8 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
         rc = rc && GET_NAMED_UINT32(ctx, "y", y);
         rc = rc && GET_NAMED_STRING(ctx, "t", name);
 
-        thing_template = thing_template_find(name);
-        if (!thing_template) {
+        tp = thing_template_find(name);
+        if (!tp) {
             ERR("thing %s not found", name);
             rc = false;
             continue;
@@ -3777,7 +3777,7 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
 
         child = (*callback)(w, x, y, 
                             0, /* thing */
-                            thing_template);
+                            tp);
 
         if (!child) {
             ERR("Loading thing %s failed to replace at (%u,%u)", name, x, y);
@@ -3925,11 +3925,11 @@ widp wid_grid_find_thing_template (widp parent,
         TREE_WALK(*gridtree, node) {
             w = node->wid;
 
-            if (!w->thing_template) {
+            if (!w->tp) {
                 continue;
             }
 
-            if ((*func)(w->thing_template)) {
+            if ((*func)(w->tp)) {
                 fast_verify(w);
 
                 return (w);
@@ -3946,7 +3946,7 @@ widp wid_grid_find_thing_template (widp parent,
 widp wid_grid_find_thing_template_is (widp parent,
                                       uint32_t x,
                                       uint32_t y,
-                                      thing_templatep thing_template)
+                                      thing_templatep tp)
 {
     widgridnode *node;
     widgrid *grid;
@@ -3987,7 +3987,7 @@ widp wid_grid_find_thing_template_is (widp parent,
         TREE_WALK(*gridtree, node) {
             w = node->wid;
 
-            if (w->thing_template == thing_template) {
+            if (w->tp == tp) {
                 return (w);
             }
         }

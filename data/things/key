@@ -3,7 +3,7 @@
  tooltip="It's a key..."
  z_depth=3
  is_key
-is_stackable
+ is_stackable
  is_carryable
  is_given_randomly_at_start
  tiles={

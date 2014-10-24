@@ -230,7 +230,7 @@ void thing_update (thingp t)
         /*
          * Can be called during level load, hence the check.
          */
-        if (thing_template_is_boring(t->thing_template)) {
+        if (thing_template_is_boring(t->tp)) {
             server_level->need_boring_update = true;
         }
     }
@@ -628,10 +628,10 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
 thingp thing_server_new (const char *name, double x, double y)
 {
     thingp t;
-    thing_templatep thing_template;
+    thing_templatep tp;
 
-    thing_template = thing_template_find(name);
-    if (!thing_template) {
+    tp = thing_template_find(name);
+    if (!tp) {
         DIE("thing [%s] has no template", name);
     }
 
@@ -664,8 +664,8 @@ thingp thing_server_new (const char *name, double x, double y)
     uint32_t min;
     uint32_t max;
 
-    if (thing_template_is_monst(thing_template) ||
-        thing_template_is_player(thing_template)) {
+    if (thing_template_is_monst(tp) ||
+        thing_template_is_player(tp)) {
         next = &next_monst_thing_id;
         id = next_monst_thing_id;
         min = THING_ID_MAX / 2;
@@ -720,9 +720,9 @@ thingp thing_server_new (const char *name, double x, double y)
         *next = min;
     }
 
-    t->thing_template = thing_template;
+    t->tp = tp;
 
-    if (thing_template_is_player(thing_template)) {
+    if (thing_template_is_player(tp)) {
         t->tree2.key = id;
 
         if (!tree_insert(server_player_things, &t->tree2.node)) {
@@ -734,7 +734,7 @@ thingp thing_server_new (const char *name, double x, double y)
         t->tree2.node.is_static_mem = true;
     }
 
-    if (thing_template_is_boring(thing_template)) {
+    if (thing_template_is_boring(tp)) {
         if (!tree_insert(server_boring_things, &t->tree.node)) {
             DIE("thing insert name [%s, %u] into server_boring_things failed", 
                 name, id);
@@ -767,7 +767,7 @@ thingp thing_server_new (const char *name, double x, double y)
 
     if (!thing_is_player(t)) {
         for (i = 0; i < THING_MAX; i++) {
-            for (j = 0; j < thing_template->carrying[i].quantity; j++) {
+            for (j = 0; j < tp->carrying[i].quantity; j++) {
                 thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
             }
         }
@@ -776,7 +776,7 @@ thingp thing_server_new (const char *name, double x, double y)
     /*
      * Start out with stats from the template.
      */
-    memcpy(&t->stats, &thing_template->stats, sizeof(player_stats_t));
+    memcpy(&t->stats, &tp->stats, sizeof(player_stats_t));
 
     thing_server_init(t, x, y);
 
@@ -826,7 +826,7 @@ void thing_server_init (thingp t, double x, double y)
 /*
  * Create a new thing.
  */
-thingp thing_client_new (uint32_t id, thing_templatep thing_template)
+thingp thing_client_new (uint32_t id, thing_templatep tp)
 {
     thingp t;
 
@@ -853,10 +853,10 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 
     t->tree.key = id;
     thing_client_ids[id] = t;
-    t->thing_template = thing_template;
+    t->tp = tp;
     t->on_server = false;
 
-    if (thing_template_is_player(thing_template)) {
+    if (thing_template_is_player(tp)) {
         t->tree2.key = id;
 
         if (!tree_insert(client_player_things, &t->tree2.node)) {
@@ -867,7 +867,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
         t->tree2.node.is_static_mem = true;
     }
 
-    if (thing_template_is_boring(thing_template)) {
+    if (thing_template_is_boring(tp)) {
         if (!tree_insert(client_boring_things, &t->tree.node)) {
             DIE("thing insert id [%u] failed into client_boring_things", id);
         }
@@ -904,7 +904,7 @@ thingp thing_client_new (uint32_t id, thing_templatep thing_template)
 /*
  * Create a new thing that only lives on this client.
  */
-thingp thing_client_local_new (thing_templatep thing_template)
+thingp thing_client_local_new (thing_templatep tp)
 {
     /*
      * Use a different base for monsters so that the IDs we create are going
@@ -958,7 +958,7 @@ thingp thing_client_local_new (thing_templatep thing_template)
         *next = min;
     }
 
-    return (thing_client_new(id, thing_template));
+    return (thing_client_new(id, tp));
 }
 
 /*
@@ -1288,7 +1288,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              * e.g. a mob spawner dying and creating a smaller one.
              */
             const char *polymorph = 
-                    thing_template_polymorph_on_death(t->thing_template);
+                    thing_template_polymorph_on_death(t->tp);
             if (polymorph) {
                 thing_templatep what = thing_template_find(polymorph);
                 if (!what) {
@@ -1300,7 +1300,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                  * It doth polymorph.
                  */
                 t->resync = 1;
-                t->thing_template = what;
+                t->tp = what;
                 t->stats.hp = thing_template_get_stats_max_hp(what);
                 t->stats.id = thing_template_get_stats_max_id(what);
                 thing_update(t);
@@ -1327,7 +1327,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              * player dying and creating a mob spawner.
              */
             const char *spawn = 
-                    thing_template_spawn_on_death(t->thing_template);
+                    thing_template_spawn_on_death(t->tp);
             if (spawn) {
                 thing_mob_spawn_on_death(t);
             }
@@ -1396,11 +1396,11 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Stop bouncing or swaying.
      */
     if (t->wid) {
-        if (thing_template_is_effect_pulse(t->thing_template)) {
+        if (thing_template_is_effect_pulse(t->tp)) {
             wid_scaling_to_pct_in(t->wid, 1.0, 1.0, 0, 0);
         }
 
-        if (thing_template_is_effect_sway(t->thing_template)) {
+        if (thing_template_is_effect_sway(t->tp)) {
             wid_rotate_to_pct_in(t->wid, 0, 0, 0, 0);
         }
     }
@@ -1483,7 +1483,7 @@ static int thing_hit_ (thingp t,
              */
             if (hitter) {
                 thing_dead(t, hitter, "%s",
-                           thing_template_short_name(hitter->thing_template));
+                           thing_template_short_name(hitter->tp));
             } else {
                 thing_dead(t, hitter, "hit");
             }
@@ -1491,7 +1491,7 @@ static int thing_hit_ (thingp t,
             /*
              * Explodes on death ala Sith Lord? Only a lesser one, mind.
              */
-            if (thing_template_is_combustable(t->thing_template)) {
+            if (thing_template_is_combustable(t->tp)) {
                 if (thing_is_monst(t)) {
                     level_place_small_cloudkill(thing_level(t),
                                                 0, // owner
@@ -1702,7 +1702,7 @@ int thing_hit (thingp t,
         if (!damage) {
             damage = orig_hitter->damage;
             if (!damage) {
-                damage = thing_template_get_damage(orig_hitter->thing_template);
+                damage = thing_template_get_damage(orig_hitter->tp);
             }
         }
 
@@ -1712,7 +1712,7 @@ int thing_hit (thingp t,
         if (!damage) {
             damage = hitter->damage;
             if (!damage) {
-                damage = thing_template_get_damage(hitter->thing_template);
+                damage = thing_template_get_damage(hitter->tp);
             }
         }
     }
@@ -1734,7 +1734,7 @@ int thing_hit (thingp t,
          * We want the orig hitter, i.e. the sword and not the playet.
          */
         uint32_t delay = 
-            thing_template_get_hit_delay_tenths(orig_hitter->thing_template);
+            thing_template_get_hit_delay_tenths(orig_hitter->tp);
 
         if (delay) {
             if (!time_have_x_tenths_passed_since(delay, 
@@ -1779,7 +1779,7 @@ int thing_hit (thingp t,
      * Does the thing get off being hit.
      */
     uint32_t can_be_hit_chance = 
-                    thing_template_get_can_be_hit_chance(t->thing_template);
+                    thing_template_get_can_be_hit_chance(t->tp);
     if (can_be_hit_chance) {
         uint32_t chance = rand() % (can_be_hit_chance + 1);
 
@@ -2164,7 +2164,7 @@ const char *thing_short_name (thingp t)
 {
     verify(t);
 
-    return (thing_template_short_name(t->thing_template));
+    return (thing_template_short_name(t->tp));
 }
 
 const char *thing_dead_reason (thingp t)
@@ -2178,14 +2178,14 @@ uint8_t thing_z_depth (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_z_depth(t->thing_template));
+    return (thing_template_get_z_depth(t->tp));
 }
 
 uint8_t thing_z_order (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_z_order(t->thing_template));
+    return (thing_template_get_z_order(t->tp));
 }
 
 uint32_t thing_score (thingp t)
@@ -2262,14 +2262,14 @@ tree_rootp thing_tile_tiles (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_tiles(t->thing_template));
+    return (thing_template_get_tiles(t->tp));
 }
 
 tree_rootp thing_tile_tiles2 (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_tiles2(t->thing_template));
+    return (thing_template_get_tiles2(t->tp));
 }
 
 widp thing_wid (thingp t)
@@ -2819,35 +2819,35 @@ const char *thing_name (thingp t)
 {
     verify(t);
 
-    return (thing_template_short_name(t->thing_template));
+    return (thing_template_short_name(t->tp));
 }
 
 const char * thing_tooltip (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_tooltip(t->thing_template));
+    return (thing_template_get_tooltip(t->tp));
 }
 
 double thing_speed (thingp t)
 {
     verify(t);
 
-    return (((double)thing_template_get_speed(t->thing_template)));
+    return (((double)thing_template_get_speed(t->tp)));
 }
 
 tree_rootp thing_tiles (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_tiles(t->thing_template));
+    return (thing_template_get_tiles(t->tp));
 }
 
 tree_rootp thing_tiles2 (thingp t)
 {
     verify(t);
 
-    return (thing_template_get_tiles2(t->thing_template));
+    return (thing_template_get_tiles2(t->tp));
 }
 
 int32_t thing_grid_x (thingp t)
@@ -2874,7 +2874,7 @@ thing_tilep thing_current_tile (thingp t)
 /*
  * Place a thing after a delay.
  */
-void thing_place_timed (thing_templatep thing_template, 
+void thing_place_timed (thing_templatep tp, 
                         double x,
                         double y,
                         uint32_t ms, 
@@ -2888,7 +2888,7 @@ void thing_place_timed (thing_templatep thing_template,
     context->x = x;
     context->y = y;
     context->level = server_level;
-    context->thing_template = thing_template;
+    context->tp = tp;
     context->on_server = on_server ? 1 : 0;
 
     action_timer_create(
@@ -2904,7 +2904,7 @@ void thing_place_timed (thing_templatep thing_template,
 /*
  * Place a thing after a delay.
  */
-void thing_place_and_destroy_timed (thing_templatep thing_template, 
+void thing_place_and_destroy_timed (thing_templatep tp, 
                                     thingp owner,
                                     double x,
                                     double y,
@@ -2922,7 +2922,7 @@ void thing_place_and_destroy_timed (thing_templatep thing_template,
     context->y = y;
     context->level = server_level;
     context->destroy_in = destroy_in;
-    context->thing_template = thing_template;
+    context->tp = tp;
     context->on_server = on_server ? 1 : 0;
     context->is_epicenter = is_epicenter ? 1 : 0;
 
@@ -3271,13 +3271,13 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 
         verify(t);
 
-        thing_templatep thing_template = t->thing_template;
+        thing_templatep tp = t->tp;
 
         /*
          * As an optimization do not send dead events for explosions. Let the 
          * client destroy those on its own to save sending loads of events.
          */
-        if (thing_template_is_explosion(thing_template)) {
+        if (thing_template_is_explosion(tp)) {
             /*
              * Only send the center of a location, the client will then 
              * emulate the blast without us needing to send lots of thing IDs.
@@ -3298,7 +3298,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
              * Only send animations at the start. Let them time out on the 
              * client.
              */
-            if (thing_template_is_weapon_swing_effect(thing_template)) {
+            if (thing_template_is_weapon_swing_effect(tp)) {
                 t->updated--;
                 continue;
             }
@@ -3330,7 +3330,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                  */
             } else if (!time_have_x_thousandths_passed_since(
                     thing_template_get_tx_map_update_delay_thousandths(
-                                                            thing_template),
+                                                            tp),
                     t->timestamp_tx_map_update)) {
                 continue;
             }
@@ -3343,7 +3343,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         /*
          * Work out what we are going to send.
          */
-        uint8_t template_id = thing_template_to_id(thing_template);
+        uint8_t template_id = thing_template_to_id(tp);
         uint32_t id = t->thing_id;
         uint8_t tx;
         uint8_t ty;
@@ -3646,15 +3646,15 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 continue;
             }
 
-            thing_templatep thing_template = 
+            thing_templatep tp = 
                     id_to_thing_template(template_id);
 
-            t = thing_client_new(id, thing_template);
+            t = thing_client_new(id, tp);
 
             if (!need_fixup &&
-                (thing_template_is_wall(thing_template) ||
-                 thing_template_is_pipe(thing_template) ||
-                 thing_template_is_door(thing_template))) {
+                (thing_template_is_wall(tp) ||
+                 thing_template_is_pipe(tp) ||
+                 thing_template_is_door(tp))) {
                 need_fixup = true;
             }
         } else {
@@ -3662,10 +3662,10 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 /*
                  * Update the template ID so things can polymorph.
                  */
-                thing_templatep thing_template = 
+                thing_templatep tp = 
                         id_to_thing_template(template_id);
 
-                t->thing_template = thing_template;
+                t->tp = tp;
 
                 /*
                  * Polymorph the thing. This is not needed if the thing is
@@ -3675,7 +3675,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                     widp w = thing_wid(t);
 
                     if (w) {
-                        wid_set_thing_template(w, thing_template);
+                        wid_set_thing_template(w, tp);
                     }
                 }
 
@@ -3686,9 +3686,9 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                      */
                 } else {
                     if (!need_fixup &&
-                        (thing_template_is_wall(thing_template) ||
-                         thing_template_is_pipe(thing_template) ||
-                         thing_template_is_door(thing_template))) {
+                        (thing_template_is_wall(tp) ||
+                         thing_template_is_pipe(tp) ||
+                         thing_template_is_door(tp))) {
                         need_fixup = true;
                     }
                 }
@@ -4299,8 +4299,8 @@ void thing_server_action (thingp t,
 {
     widp grid = wid_game_map_server_grid_container;
 
-    thing_templatep thing_template = id_to_thing_template(item);
-    if (!thing_template) {
+    thing_templatep tp = id_to_thing_template(item);
+    if (!tp) {
         ERR("Unkown item use request, id %u", item);
         return;
     }
@@ -4326,8 +4326,8 @@ void thing_server_action (thingp t,
             return;
         }
 
-        if (thing_template_is_weapon(thing_template)) {
-            thing_wield(t, thing_template);
+        if (thing_template_is_weapon(tp)) {
+            thing_wield(t, tp);
             return;
         }
 
@@ -4342,7 +4342,7 @@ void thing_server_action (thingp t,
             break;
         }
 
-        const char *message = thing_template_message_on_use(thing_template);
+        const char *message = thing_template_message_on_use(tp);
         if (message) {
             THING_SHOUT_AT(t, INFO, "%s", message);
             break;
@@ -4352,7 +4352,7 @@ void thing_server_action (thingp t,
          * Failed to use.
          */
         THING_SHOUT_AT(t, WARNING, "Failed to use the %s", 
-                       thing_template_short_name(thing_template));
+                       thing_template_short_name(tp));
         return;
     }
 
@@ -4413,7 +4413,7 @@ void thing_server_action (thingp t,
         if (!thing_hit_any_obstacle(grid, t, x, y)) {
             if (wid_game_map_server_replace_tile(grid, x, y,
                                                  0, /* thing */
-                                                 thing_template)) {
+                                                 tp)) {
                 socket_server_tx_map_update(0, server_boring_things,
                                             "item drop");
                 break;
@@ -4435,7 +4435,7 @@ void thing_server_action (thingp t,
                 if (!thing_hit_any_obstacle(grid, t, x, y)) {
                     if (wid_game_map_server_replace_tile(grid, x, y, 
                                                          0, /* thing */
-                                                         thing_template)) {
+                                                         tp)) {
                         socket_server_tx_map_update(0, server_boring_things,
                                                     "item dropped");
                         goto done;
@@ -4465,11 +4465,11 @@ done:
 
     switch (action) {
     case PLAYER_ACTION_USE:
-        thing_used(t, thing_template);
+        thing_used(t, tp);
         break;
 
     case PLAYER_ACTION_DROP:
-        thing_drop(t, thing_template);
+        thing_drop(t, tp);
         break;
     }
 }

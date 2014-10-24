@@ -255,6 +255,10 @@ static void thing_template_destroy_internal (thing_templatep t)
         myfree(t->polymorph_on_death);
     }
 
+    if (t->carried_as) {
+        myfree(t->carried_as);
+    }
+
     if (t->light_tint) {
         myfree(t->light_tint);
     }
@@ -442,6 +446,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         }
 
         GET_OPT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
+        GET_OPT_NAMED_STRING(ctx, "carried_as", t->carried_as);
         GET_OPT_NAMED_STRING(ctx, "light_tint", t->light_tint);
         GET_OPT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
         GET_OPT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
@@ -629,6 +634,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     }
 
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
+    PUT_NAMED_STRING(ctx, "carried_as", t->carried_as);
     PUT_NAMED_STRING(ctx, "light_tint", t->light_tint);
     PUT_NAMED_STRING(ctx, "spawn_on_death", t->spawn_on_death);
     PUT_NAMED_STRING(ctx, "weapon_carry_anim", t->weapon_carry_anim);
@@ -767,6 +773,11 @@ thing_templatep thing_template_fires (thing_templatep t)
 const char *thing_template_polymorph_on_death (thing_templatep t)
 {
     return (t->polymorph_on_death);
+}
+
+const char *thing_template_carried_as (thing_templatep t)
+{
+    return (t->carried_as);
 }
 
 const char *thing_template_light_tint (thing_templatep t)
@@ -983,4 +994,3 @@ tree_rootp thing_template_get_tiles2 (thing_templatep t)
 {
     return (t->tiles2);
 }
-
