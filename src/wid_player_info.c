@@ -173,7 +173,7 @@ static void wid_player_info_create (player_stats_t *s)
         thing_templatep tp = 
                         player_stats_to_thing_template(player_stats);
 
-        const char *tooltip = thing_template_get_tooltip(tp);
+        const char *tooltip = tp_get_tooltip(tp);
 
         wid_set_tooltip(w, tooltip);
     }

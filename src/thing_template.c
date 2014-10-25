@@ -23,25 +23,25 @@ static uint32_t thing_templates_chunk_count;
 tree_root *thing_templates;
 tree_root *thing_templates_create_order;
 
-static uint8_t thing_template_init_done;
-static void thing_template_destroy_internal(thing_templatep t);
+static uint8_t tp_init_done;
+static void tp_destroy_internal(thing_templatep t);
 
-uint8_t thing_template_init (void)
+uint8_t tp_init (void)
 {
-    thing_template_init_done = true;
+    tp_init_done = true;
 
     return (true);
 }
 
-void thing_template_fini (void)
+void tp_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    if (thing_template_init_done) {
-        thing_template_init_done = false;
+    if (tp_init_done) {
+        tp_init_done = false;
 
         tree_destroy(&thing_templates,
-            (tree_destroy_func)thing_template_destroy_internal);
+            (tree_destroy_func)tp_destroy_internal);
 
         tree_destroy(&thing_templates_create_order,
             (tree_destroy_func)0);
@@ -51,7 +51,7 @@ void thing_template_fini (void)
 /*
  * Fill up the tile cache for future fast finds of tile types.
  */
-static void thing_template_fill_cache (thing_templatep t)
+static void tp_fill_cache (thing_templatep t)
 {
     thing_tilep thing_tile;
     uint32_t index;
@@ -181,12 +181,12 @@ static void thing_template_fill_cache (thing_templatep t)
     }
 }
 
-thing_templatep thing_template_load (uint16_t *id, const char *name)
+thing_templatep tp_load (uint16_t *id, const char *name)
 {
     thing_templatep t;
     demarshal_p in;
 
-    if (thing_template_find(name)) {
+    if (tp_find(name)) {
         DIE("thing template name [%s] already used", name);
     }
 
@@ -231,14 +231,14 @@ thing_templatep thing_template_load (uint16_t *id, const char *name)
         DIE("thing template insert create order [%s] failed", name);
     }
 
-    thing_template_fill_cache(t);
+    tp_fill_cache(t);
 
     DBG("thing template: %s", name);
 
     return (t);
 }
 
-static void thing_template_destroy_internal (thing_templatep t)
+static void tp_destroy_internal (thing_templatep t)
 {
     tree_destroy(&t->tiles, (tree_destroy_func)thing_tile_free);
     tree_destroy(&t->tiles2, (tree_destroy_func)thing_tile_free);
@@ -306,7 +306,7 @@ void thing_templates_marshal (marshal_p out)
 /*
  * Find an existing thing.
  */
-thing_templatep thing_template_find (const char *name)
+thing_templatep tp_find (const char *name)
 {
     thing_template target;
     thing_templatep result;
@@ -326,7 +326,7 @@ thing_templatep thing_template_find (const char *name)
     return (result);
 }
 
-thing_templatep thing_template_find_short_name (const char *name)
+thing_templatep tp_find_short_name (const char *name)
 {
     tree_root *tree;
     thing_templatep t;
@@ -383,7 +383,7 @@ thing_templatep string2thing_template (const char **s)
     return (target);
 }
 
-static void demarshal_thing_carrying (demarshal_p ctx, thing_template *t)
+static void demarshal_thing_carrying (demarshal_p ctx, thing_templatep t)
 {
     if (!GET_PEEK_NAME(ctx, "carrying")) {
         return;
@@ -400,13 +400,13 @@ static void demarshal_thing_carrying (demarshal_p ctx, thing_template *t)
     while (GET_PEEK_STRING(ctx, val)) {
         GET_STRING(ctx, val);
 
-        thing_templatep c = thing_template_find(val);
+        thing_templatep c = tp_find(val);
         if (!c) {
             DIE("carried thing %s not found", val);
             continue;
         }
 
-        uint32_t id = thing_template_to_id(c);
+        uint32_t id = tp_to_id(c);
         if (!id) {
             DIE("carried thing %s not in database", val);
         }
@@ -437,7 +437,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         
         char *val;
         if (GET_OPT_NAMED_STRING(ctx, "fires", val)) {
-            t->fires = thing_template_find(val);
+            t->fires = tp_find(val);
             if (!t->fires) {
                 DIE("cannot find %s for %s to fire",
                     val, t->short_name);
@@ -630,7 +630,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_STRING(ctx, "tooltip", t->tooltip);
 
     if (t->fires) {
-        PUT_NAMED_STRING(ctx, "fires", thing_template_name(t->fires));
+        PUT_NAMED_STRING(ctx, "fires", tp_name(t->fires));
     }
 
     PUT_NAMED_STRING(ctx, "polymorph_on_death", t->polymorph_on_death);
@@ -755,242 +755,242 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_KET(ctx);
 }
 
-const char *thing_template_name (thing_templatep t)
+const char *tp_name (thing_templatep t)
 {
     return (t->tree.key);
 }
 
-const char *thing_template_short_name (thing_templatep t)
+const char *tp_short_name (thing_templatep t)
 {
     return (t->short_name);
 }
 
-thing_templatep thing_template_fires (thing_templatep t)
+thing_templatep tp_fires (thing_templatep t)
 {
     return (t->fires);
 }
 
-const char *thing_template_polymorph_on_death (thing_templatep t)
+const char *tp_polymorph_on_death (thing_templatep t)
 {
     return (t->polymorph_on_death);
 }
 
-const char *thing_template_carried_as (thing_templatep t)
+const char *tp_carried_as (thing_templatep t)
 {
     return (t->carried_as);
 }
 
-const char *thing_template_light_tint (thing_templatep t)
+const char *tp_light_tint (thing_templatep t)
 {
     return (t->light_tint);
 }
 
-color thing_template_light_color (thing_templatep t)
+color tp_light_color (thing_templatep t)
 {
     return (t->light_color);
 }
 
-const char *thing_template_spawn_on_death (thing_templatep t)
+const char *tp_spawn_on_death (thing_templatep t)
 {
     return (t->spawn_on_death);
 }
 
-const char *thing_template_weapon_carry_anim (thing_templatep t)
+const char *tp_weapon_carry_anim (thing_templatep t)
 {
     return (t->weapon_carry_anim);
 }
 
-const char *thing_template_weapon_swing_anim (thing_templatep t)
+const char *tp_weapon_swing_anim (thing_templatep t)
 {
     return (t->weapon_swing_anim);
 }
 
-const char *thing_template_message_on_use (thing_templatep t)
+const char *tp_message_on_use (thing_templatep t)
 {
     return (t->message_on_use);
 }
 
-const char *thing_template_mob_spawn (thing_templatep t)
+const char *tp_mob_spawn (thing_templatep t)
 {
     return (t->mob_spawn);
 }
 
-const char *thing_template_get_tooltip (thing_templatep t)
+const char *tp_get_tooltip (thing_templatep t)
 {
     return (t->tooltip);
 }
 
-uint8_t thing_template_get_z_depth (thing_templatep t)
+uint8_t tp_get_z_depth (thing_templatep t)
 {
     return (t->z_depth);
 }
 
-uint8_t thing_template_get_z_order (thing_templatep t)
+uint8_t tp_get_z_order (thing_templatep t)
 {
     return (t->z_order);
 }
 
-uint32_t thing_template_get_speed (thing_templatep t)
+uint32_t tp_get_speed (thing_templatep t)
 {
     return (t->speed);
 }
 
-uint16_t thing_template_get_damage (thing_templatep t)
+uint16_t tp_get_damage (thing_templatep t)
 {
     return (t->damage);
 }
 
-uint32_t thing_template_get_lifespan (thing_templatep t)
+uint32_t tp_get_lifespan (thing_templatep t)
 {
     return (t->lifespan);
 }
 
-int32_t thing_template_get_bonus_score_on_death (thing_templatep t)
+int32_t tp_get_bonus_score_on_death (thing_templatep t)
 {
     return (t->bonus_score_on_death);
 }
 
-uint32_t thing_template_get_vision_distance (thing_templatep t)
+uint32_t tp_get_vision_distance (thing_templatep t)
 {
     return (t->vision_distance);
 }
 
-int32_t thing_template_get_bonus_score_on_collect (thing_templatep t)
+int32_t tp_get_bonus_score_on_collect (thing_templatep t)
 {
     return (t->bonus_score_on_collect);
 }
 
-uint32_t thing_template_get_chance_of_appearing (thing_templatep t)
+uint32_t tp_get_chance_of_appearing (thing_templatep t)
 {
     return (t->chance_of_appearing);
 }
 
-uint32_t thing_template_get_ppp2 (thing_templatep t)
+uint32_t tp_get_ppp2 (thing_templatep t)
 {
     return (t->ppp2);
 }
 
-int16_t thing_template_get_stats_max_hp (thing_templatep t)
+int16_t tp_get_stats_max_hp (thing_templatep t)
 {
     return (t->stats.max_hp);
 }
 
-int16_t thing_template_get_stats_max_id (thing_templatep t)
+int16_t tp_get_stats_max_id (thing_templatep t)
 {
     return (t->stats.max_id);
 }
 
-uint32_t thing_template_get_stats_attack_melee (thing_templatep t)
+uint32_t tp_get_stats_attack_melee (thing_templatep t)
 {
     return (t->stats.attack_melee);
 }
 
-uint32_t thing_template_get_stats_attack_ranged (thing_templatep t)
+uint32_t tp_get_stats_attack_ranged (thing_templatep t)
 {
     return (t->stats.attack_ranged);
 }
 
-uint32_t thing_template_get_stats_attack_magical (thing_templatep t)
+uint32_t tp_get_stats_attack_magical (thing_templatep t)
 {
     return (t->stats.attack_magical);
 }
 
-uint32_t thing_template_get_stats_speed (thing_templatep t)
+uint32_t tp_get_stats_speed (thing_templatep t)
 {
     return (t->stats.speed);
 }
 
-uint32_t thing_template_get_stats_vision (thing_templatep t)
+uint32_t tp_get_stats_vision (thing_templatep t)
 {
     return (t->stats.vision);
 }
 
-uint32_t thing_template_get_stats_healing (thing_templatep t)
+uint32_t tp_get_stats_healing (thing_templatep t)
 {
     return (t->stats.healing);
 }
 
-uint32_t thing_template_get_stats_defense (thing_templatep t)
+uint32_t tp_get_stats_defense (thing_templatep t)
 {
     return (t->stats.defense);
 }
 
-uint32_t thing_template_get_hp_per_level (thing_templatep t)
+uint32_t tp_get_hp_per_level (thing_templatep t)
 {
     return (t->hp_per_level);
 }
 
-uint32_t thing_template_get_id_per_level (thing_templatep t)
+uint32_t tp_get_id_per_level (thing_templatep t)
 {
     return (t->id_per_level);
 }
 
-float thing_template_get_light_radius (thing_templatep t)
+float tp_get_light_radius (thing_templatep t)
 {
     return (t->light_radius);
 }
 
-uint32_t thing_template_get_quantity (thing_templatep t)
+uint32_t tp_get_quantity (thing_templatep t)
 {
     return (t->quantity);
 }
 
-uint32_t thing_template_get_hit_priority (thing_templatep t)
+uint32_t tp_get_hit_priority (thing_templatep t)
 {
     return (t->hit_priority);
 }
 
-uint32_t thing_template_get_weapon_fire_delay_tenths (thing_templatep t)
+uint32_t tp_get_weapon_fire_delay_tenths (thing_templatep t)
 {
     return (t->weapon_fire_delay_tenths);
 }
 
-uint32_t thing_template_get_swing_distance_from_player (thing_templatep t)
+uint32_t tp_get_swing_distance_from_player (thing_templatep t)
 {
     return (t->swing_distance_from_player);
 }
 
-int16_t thing_template_get_bonus_hp_on_use (thing_templatep t)
+int16_t tp_get_bonus_hp_on_use (thing_templatep t)
 {
     return (t->bonus_hp_on_use);
 }
 
-int16_t thing_template_get_bonus_id_on_use (thing_templatep t)
+int16_t tp_get_bonus_id_on_use (thing_templatep t)
 {
     return (t->bonus_id_on_use);
 }
 
-uint32_t thing_template_get_tx_map_update_delay_thousandths (thing_templatep t)
+uint32_t tp_get_tx_map_update_delay_thousandths (thing_templatep t)
 {
     return (t->tx_map_update_delay_thousandths);
 }
 
-uint32_t thing_template_get_can_be_hit_chance (thing_templatep t)
+uint32_t tp_get_can_be_hit_chance (thing_templatep t)
 {
     return (t->can_be_hit_chance);
 }
 
-uint32_t thing_template_get_failure_chance (thing_templatep t)
+uint32_t tp_get_failure_chance (thing_templatep t)
 {
     return (t->failure_chance);
 }
 
-uint32_t thing_template_get_hit_delay_tenths (thing_templatep t)
+uint32_t tp_get_hit_delay_tenths (thing_templatep t)
 {
     return (t->hit_delay_tenths);
 }
 
-uint32_t thing_template_get_mob_spawn_delay_tenths (thing_templatep t)
+uint32_t tp_get_mob_spawn_delay_tenths (thing_templatep t)
 {
     return (t->mob_spawn_delay_tenths);
 }
 
-tree_rootp thing_template_get_tiles (thing_templatep t)
+tree_rootp tp_get_tiles (thing_templatep t)
 {
     return (t->tiles);
 }
 
-tree_rootp thing_template_get_tiles2 (thing_templatep t)
+tree_rootp tp_get_tiles2 (thing_templatep t)
 {
     return (t->tiles2);
 }

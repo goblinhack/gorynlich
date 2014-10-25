@@ -25,7 +25,7 @@ void wid_animate (widp w)
         return;
     }
 
-    if (!thing_template_is_animated(tp)) {
+    if (!tp_is_animated(tp)) {
         return;
     }
 
@@ -55,7 +55,7 @@ void wid_animate (widp w)
         }
     }
 
-    tiles = thing_template_get_tiles(tp);
+    tiles = tp_get_tiles(tp);
     if (!tiles) {
         return;
     }

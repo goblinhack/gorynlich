@@ -23,7 +23,7 @@ void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
     }
 
     double dist_from_player = 
-        ((double)thing_template_get_swing_distance_from_player(weapon)) / 10.0;
+        ((double)tp_get_swing_distance_from_player(weapon)) / 10.0;
 
     /*
      * Try current direction.
@@ -123,7 +123,7 @@ void thing_wield_next_weapon (thingp t)
         }
 
         thing_templatep tp = id_to_thing_template(id);
-        if (!thing_template_is_weapon(tp)) {
+        if (!tp_is_weapon(tp)) {
             continue;
         }
 
@@ -139,7 +139,7 @@ void thing_unwield (thingp t)
     }
 
     if (thing_is_player(t)) {
-        THING_LOG(t, "unwield %s", thing_template_short_name(t->weapon));
+        THING_LOG(t, "unwield %s", tp_short_name(t->weapon));
     }
 
     t->weapon = 0;
@@ -171,15 +171,15 @@ void thing_wield (thingp parent, thing_templatep tp)
             if (thing_is_player(parent)) {
                 THING_SHOUT_AT(parent, INFO,
                             "You switch to the %s", 
-                            thing_template_short_name(tp));
+                            tp_short_name(tp));
             }
         }
     }
 
-    const char *child = thing_template_weapon_carry_anim(tp);
+    const char *child = tp_weapon_carry_anim(tp);
 
     if (child) {
-        thing_templatep what = thing_template_find(child);
+        thing_templatep what = tp_find(child);
         if (!what) {
             DIE("could now find %s to wield for %s",
                 child, thing_logname(parent));
@@ -216,9 +216,9 @@ void thing_swing (thingp parent)
         return;
     }
 
-    const char *child = thing_template_weapon_swing_anim(parent->weapon);
+    const char *child = tp_weapon_swing_anim(parent->weapon);
     if (child) {
-        thing_templatep what = thing_template_find(child);
+        thing_templatep what = tp_find(child);
         if (!what) {
             DIE("could now find %s to wield for %s",
                 child, thing_logname(parent));
