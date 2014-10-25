@@ -38,7 +38,7 @@ static void thing_tick_server_all (void)
          * Sanity checks.
          */
         verify(t);
-        tp = thing_get_template(t);
+        tp = thing_tp(t);
 
 //    count++;
         w = t->wid;
@@ -73,14 +73,14 @@ static void thing_tick_server_all (void)
         /*
          * Thing is out of life?
          */
-        if (thing_template_get_lifespan(tp)) {
+        if (tp_get_lifespan(tp)) {
             if (!t->timestamp_lifestamp) {
                 /*
                  * When does this thing expire ?
                  */
                 t->timestamp_lifestamp =
                         time_get_time_cached() +
-                        thing_template_get_lifespan(tp);
+                        tp_get_lifespan(tp);
 
                 THING_LOG(t, "set end of life to %u", t->timestamp_lifestamp);
 
@@ -168,7 +168,7 @@ static void thing_tick_server_all (void)
             /*
              * Make things go faster if taking too long.
              */
-            float speed = thing_template_get_speed(tp);
+            float speed = tp_get_speed(tp);
 
             /*
              * Look for a new hpp.
@@ -191,7 +191,7 @@ static void thing_tick_server_all (void)
          */
         if (thing_is_mob_spawner(t)) {
             uint32_t delay = 
-                    thing_template_get_mob_spawn_delay_tenths(tp);
+                    tp_get_mob_spawn_delay_tenths(tp);
 
             if (time_have_x_tenths_passed_since(delay,
                                                 t->timestamp_mob_spawn)) {
@@ -263,10 +263,10 @@ void thing_tick_server_player_slow_all (void)
              * Use up one torch unit.
              */
             thing_templatep tp = 
-                    thing_is_carrying_thing(t, thing_template_is_torch);
+                    thing_is_carrying_thing(t, tp_is_torch);
             if (tp) {
                 thing_used(t, tp);
-                tp = thing_is_carrying_thing(t, thing_template_is_torch);
+                tp = thing_is_carrying_thing(t, tp_is_torch);
                 if (!tp) {
                     THING_SHOUT_AT(t, INFO, "Your light fizzles out");
                 }
@@ -317,11 +317,11 @@ void thing_tick_client_player_slow_all (void)
          */
         t->torch_light_radius = 
             (double) thing_is_carrying_thing_count(
-                            t, thing_template_is_torch) / 2.0;
+                            t, tp_is_torch) / 2.0;
         if (t->torch_light_radius > 
-            thing_template_get_light_radius(t->tp)) {
+            tp_get_light_radius(t->tp)) {
             t->torch_light_radius =
-                thing_template_get_light_radius(t->tp);
+                tp_get_light_radius(t->tp);
         }
     }
 }
@@ -345,7 +345,7 @@ static void thing_tick_client_all (void)
          * Sanity checks.
          */
         verify(t);
-        tp = thing_get_template(t);
+        tp = thing_tp(t);
 
         w = t->wid;
         if (w) {
@@ -386,60 +386,60 @@ static void thing_tick_client_all (void)
         if (w) {
             switch (t->dir) {
             case THING_DIR_LEFT:
-                if (thing_template_is_effect_rotate_2way(tp)) {
+                if (tp_is_effect_rotate_2way(tp)) {
                     wid_rotate_immediate(w, 180);
                     wid_flip_vert(w, true);
                 }
                 break;
             case THING_DIR_RIGHT:
-                if (thing_template_is_effect_rotate_2way(tp)) {
+                if (tp_is_effect_rotate_2way(tp)) {
                     wid_rotate_immediate(w, 0);
                     wid_flip_vert(w, false);
                 }
                 break;
             case THING_DIR_UP:
-                if (thing_template_is_effect_rotate_4way(tp)) {
+                if (tp_is_effect_rotate_4way(tp)) {
                     wid_rotate_immediate(w, 270);
                 }
                 break;
             case THING_DIR_DOWN:
-                if (thing_template_is_effect_rotate_4way(tp)) {
+                if (tp_is_effect_rotate_4way(tp)) {
                     wid_rotate_immediate(w, 90);
                 }
                 break;
             case THING_DIR_TL:
-                if (thing_template_is_effect_rotate_2way(tp)) {
+                if (tp_is_effect_rotate_2way(tp)) {
                     wid_rotate_immediate(w, 180);
                     wid_flip_vert(w, true);
                 }
-                if (thing_template_is_effect_rotate_4way(tp)) {
+                if (tp_is_effect_rotate_4way(tp)) {
                     wid_rotate_immediate(w, 270);
                 }
                 break;
             case THING_DIR_BL:
-                if (thing_template_is_effect_rotate_2way(tp)) {
+                if (tp_is_effect_rotate_2way(tp)) {
                     wid_rotate_immediate(w, 180);
                     wid_flip_vert(w, true);
                 }
-                if (thing_template_is_effect_rotate_4way(tp)) {
+                if (tp_is_effect_rotate_4way(tp)) {
                     wid_rotate_immediate(w, 90);
                 }
                 break;
             case THING_DIR_TR:
-                if (thing_template_is_effect_rotate_2way(tp)) {
+                if (tp_is_effect_rotate_2way(tp)) {
                     wid_rotate_immediate(w, 0);
                     wid_flip_vert(w, false);
                 }
-                if (thing_template_is_effect_rotate_4way(tp)) {
+                if (tp_is_effect_rotate_4way(tp)) {
                     wid_rotate_immediate(w, 270);
                 }
                 break;
             case THING_DIR_BR:
-                if (thing_template_is_effect_rotate_2way(tp)) {
+                if (tp_is_effect_rotate_2way(tp)) {
                     wid_rotate_immediate(w, 0);
                     wid_flip_vert(w, false);
                 }
-                if (thing_template_is_effect_rotate_4way(tp)) {
+                if (tp_is_effect_rotate_4way(tp)) {
                     wid_rotate_immediate(w, 90);
                 }
                 break;

@@ -346,7 +346,7 @@ static void wid_intro_bg_create (void)
 
             wid_set_tl_br_pct(wid, tl, br);
 
-            thing_templatep tp = thing_template_find("data/things/anim_man");
+            thing_templatep tp = tp_find("data/things/anim_man");
             wid_set_thing_template(wid, tp);
 
             wid_raise(wid);
@@ -366,7 +366,7 @@ static void wid_intro_bg_create (void)
 
             wid_set_tl_br_pct(wid, tl, br);
 
-            thing_templatep tp = thing_template_find("data/things/anim_treasure_chest");
+            thing_templatep tp = tp_find("data/things/anim_treasure_chest");
             wid_set_thing_template(wid, tp);
 
             wid_raise(wid);
@@ -385,7 +385,7 @@ static void wid_intro_bg_create (void)
 
             wid_set_tl_br_pct(wid, tl, br);
 
-            thing_templatep tp = thing_template_find("data/things/anim_eyes");
+            thing_templatep tp = tp_find("data/things/anim_eyes");
             wid_set_thing_template(wid, tp);
 
             wid_raise(wid);

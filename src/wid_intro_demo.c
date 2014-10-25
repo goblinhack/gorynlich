@@ -54,7 +54,7 @@ static void wid_rock_tick (void)
                 widp wid = demo_players[i];
 
                 if ((demo_player_x[i] > 0.25) && (demo_player_x[i] < 0.4)) {
-                    thing_templatep tp = thing_template_find("data/things/blood2");
+                    thing_templatep tp = tp_find("data/things/blood2");
                     wid_set_thing_template(wid, tp);
                     demo_player_dead[i] = true;
                     wid_set_animate(wid, true);
@@ -67,7 +67,7 @@ static void wid_rock_tick (void)
                 widp wid = demo_players[i];
 
                 if ((demo_player_x[i] > 0.9) && (demo_player_x[i] < 1.0)) {
-                    thing_templatep tp = thing_template_find("data/things/blood2");
+                    thing_templatep tp = tp_find("data/things/blood2");
                     wid_set_thing_template(wid, tp);
                     demo_player_dead[i] = true;
                     wid_set_animate(wid, true);
@@ -95,7 +95,7 @@ static void wid_intro_demo_buttons_tick (widp wid)
     thing_templatep t = demo_player_tp[index];
 
     if (!demo_player_dead[index]) {
-        const char *tn = thing_template_short_name(t);
+        const char *tn = tp_short_name(t);
 
         char tilename[40];
 
@@ -104,7 +104,7 @@ static void wid_intro_demo_buttons_tick (widp wid)
         wid_set_tilename(wid, tilename);
 
         *x += 0.001 * 
-            (double) (rand() % (demo_player_speed[index] + thing_template_get_speed(t)));
+            (double) (rand() % (demo_player_speed[index] + tp_get_speed(t)));
 
         wid_set_animate(wid, false);
     }
@@ -122,9 +122,9 @@ static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *ar
     widp child;
 
     tp = (typeof(tp)) 
-            (((char*) node) - STRUCT_OFFSET(struct thing_template_, tree2));
+            (((char*) node) - STRUCT_OFFSET(struct tp_, tree2));
 
-    if (!thing_template_is_player(tp)) {
+    if (!tp_is_player(tp)) {
         return (true);
     }
 
@@ -144,7 +144,7 @@ static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *ar
     demo_players[demo_player_count] = child = wid_new_window("player");
     demo_player_tp[demo_player_count] = tp;
     demo_player_speed[demo_player_count] = 
-                rand() % (thing_template_get_speed(tp) / 2);
+                rand() % (tp_get_speed(tp) / 2);
 
     wid_set_thing_template(child, tp);
     wid_set_tl_br_pct(child, tl, br);

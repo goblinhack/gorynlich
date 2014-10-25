@@ -41,7 +41,7 @@ thing_possible_hit_add_hitter_killed_on_hitting_ (thingp target,
     thing_possible_hit *h = &thing_possible_hits[thing_possible_hit_size++];
     memset(h, 0, sizeof(*h));
     h->target = target;
-    h->priority = thing_template_get_hit_priority(target->tp);
+    h->priority = tp_get_hit_priority(target->tp);
     h->hitter_killed_on_hitting = hitter_killed_on_hitting;
 }
 
@@ -430,7 +430,7 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
             thing_is_carryable(it)  ||
             thing_is_food(it)) {
 
-            thing_item_collect(me, it, thing_get_template(it));
+            thing_item_collect(me, it, thing_tp(it));
 
             thing_dead(it, me, "collected");
             return;
@@ -441,7 +441,7 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
          */
         if (thing_is_door(it)) {
             thing_templatep tp;
-            tp = thing_is_carrying_thing(me, thing_template_is_key);
+            tp = thing_is_carrying_thing(me, tp_is_key);
             if (tp) {
                 thing_used(me, tp);
                 level_open_door(server_level, x, y);
@@ -659,7 +659,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * Allow to walk through doors so we can open them later.
                  */
                 if (thing_is_door(it)) {
-                    if (thing_is_carrying_thing(me, thing_template_is_key)) {
+                    if (thing_is_carrying_thing(me, tp_is_key)) {
                         continue;
                     } else {
                         if (!me->message_open_door_need_key) {

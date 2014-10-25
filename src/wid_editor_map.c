@@ -72,10 +72,10 @@ widp wid_editor_map_thing_replace_template (widp w,
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_tiles = thing_template_get_tiles(tp);
+    thing_tiles = tp_get_tiles(tp);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_short_name(tp));
+            tp_short_name(tp));
     }
 
     /*
@@ -93,7 +93,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_short_name(tp));
+            tp_short_name(tp));
     }
 
     /*
@@ -149,7 +149,7 @@ widp wid_editor_map_thing_replace_template (widp w,
         br.x += tile_width / 4.0;
     }
 
-    z_depth = thing_template_get_z_depth(tp);
+    z_depth = tp_get_z_depth(tp);
 
     existing = wid_find_matching(wid_editor_map_grid_container,
                                  tl, br, z_depth);
@@ -242,10 +242,10 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_tiles = thing_template_get_tiles(tp);
+    thing_tiles = tp_get_tiles(tp);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_short_name(tp));
+            tp_short_name(tp));
     }
 
     thing_tilep thing_tile;
@@ -265,7 +265,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_short_name(tp));
+            tp_short_name(tp));
     }
 
     /*
@@ -278,7 +278,7 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
      * Bound certain things by others. e.g. flood fill ghosts limited by 
      * walls.
      */
-    switch (thing_template_get_z_depth(tp)) {
+    switch (tp_get_z_depth(tp)) {
         case MAP_DEPTH_EDITOR: 
             min_z = 0; 
             break;
@@ -909,7 +909,7 @@ void wid_editor_add_grid (void)
                 } else {
                     thing_templatep noentry;
 
-                    noentry = thing_template_find("data/things/noentry");
+                    noentry = tp_find("data/things/noentry");
                     if (!noentry) {
                         DIE("noentry icon not found");
                     }

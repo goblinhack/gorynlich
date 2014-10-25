@@ -44,7 +44,7 @@ static uint8_t level_place_explosion_at (levelp level,
         DIE("cannot place explosion thing");
     }
 
-    thing_templatep tp = thing_template_find(name);
+    thing_templatep tp = tp_find(name);
     if (!tp) {
         DIE("no explosion for name %s", name);
     }

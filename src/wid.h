@@ -364,8 +364,8 @@ widp wid_grid_find_top(widp, fpoint tl, fpoint br);
 widp wid_grid_find_thing_template(widp parent,
                                   uint32_t x,
                                   uint32_t y,
-                                  thing_template_is_callback func);
-widp wid_grid_find_thing_template_is(widp parent,
+                                  tp_is_callback func);
+widp wid_grid_find_tp_is(widp parent,
                                   uint32_t x,
                                   uint32_t y,
                                   thing_templatep);
