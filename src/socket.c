@@ -1461,9 +1461,9 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         return (false);
     }
 
-    thing_templatep tp = thing_template_find(msg.pclass);
+    thing_templatep tp = tp_find(msg.pclass);
     if (!tp) {
-        tp = thing_template_find_short_name(msg.pclass);
+        tp = tp_find_short_name(msg.pclass);
         if (!tp) {
             char *tmp = iptodynstr(read_address(packet));
             LOG("Server: Rx Join (rejected) from %s \"%s\" unknown class %s", 

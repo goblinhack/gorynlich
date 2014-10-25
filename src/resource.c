@@ -2699,182 +2699,182 @@ static uint8_t resource_init_last (void *context)
     /*
      * Walls
      */
-    thing_template_load(&THING_WALL1, "data/things/wall1");
-    thing_template_load(&THING_ROCK1, "data/things/rock1");
-    thing_template_load(&THING_WALL2, "data/things/wall2");
-    thing_template_load(&THING_WALL3, "data/things/wall3");
-    thing_template_load(&THING_WALL4, "data/things/wall4");
-    thing_template_load(&THING_WALL5, "data/things/wall5");
-    thing_template_load(&THING_WALL6, "data/things/wall6");
-    thing_template_load(&THING_FLOOR1, "data/things/floor1");
-    thing_template_load(&THING_FLOOR2, "data/things/floor2");
-    thing_template_load(&THING_FLOOR3, "data/things/floor3");
-    thing_template_load(&THING_FLOOR4, "data/things/floor4");
-    thing_template_load(&THING_FLOOR5, "data/things/floor5");
-    thing_template_load(&THING_FLOOR6, "data/things/floor6");
-    thing_template_load(&THING_DOOR1, "data/things/door1");
-    thing_template_load(&THING_DOOR2, "data/things/door2");
-    thing_template_load(&THING_NOENTRY, "data/things/noentry");
-    thing_template_load(&THING_PIPE, "data/things/pipe");
-    thing_template_load(&THING_BRAZIER, "data/things/brazier");
-    thing_template_load(&THING_EXIT1, "data/things/exit1");
-    thing_template_load(&THING_EXIT2, "data/things/exit2");
-    thing_template_load(&THING_EXIT3, "data/things/exit3");
-    thing_template_load(&THING_EXIT4, "data/things/exit4");
-    thing_template_load(&THING_EXIT5, "data/things/exit5");
-    thing_template_load(&THING_EXIT6, "data/things/exit6");
-    thing_template_load(&THING_EXIT7, "data/things/exit7");
-    thing_template_load(&THING_GENERATOR1, "data/things/generator1");
-    thing_template_load(&THING_BONEPILE1, "data/things/bonepile1");
-    thing_template_load(&THING_BONEPILE2, "data/things/bonepile2");
-    thing_template_load(&THING_BONEPILE3, "data/things/bonepile3");
-    thing_template_load(&THING_GENERATOR5, "data/things/generator5");
-    thing_template_load(&THING_GENERATOR6, "data/things/generator6");
-    thing_template_load(&THING_GENERATOR7, "data/things/generator7");
+    tp_load(&THING_WALL1, "data/things/wall1");
+    tp_load(&THING_ROCK1, "data/things/rock1");
+    tp_load(&THING_WALL2, "data/things/wall2");
+    tp_load(&THING_WALL3, "data/things/wall3");
+    tp_load(&THING_WALL4, "data/things/wall4");
+    tp_load(&THING_WALL5, "data/things/wall5");
+    tp_load(&THING_WALL6, "data/things/wall6");
+    tp_load(&THING_FLOOR1, "data/things/floor1");
+    tp_load(&THING_FLOOR2, "data/things/floor2");
+    tp_load(&THING_FLOOR3, "data/things/floor3");
+    tp_load(&THING_FLOOR4, "data/things/floor4");
+    tp_load(&THING_FLOOR5, "data/things/floor5");
+    tp_load(&THING_FLOOR6, "data/things/floor6");
+    tp_load(&THING_DOOR1, "data/things/door1");
+    tp_load(&THING_DOOR2, "data/things/door2");
+    tp_load(&THING_NOENTRY, "data/things/noentry");
+    tp_load(&THING_PIPE, "data/things/pipe");
+    tp_load(&THING_BRAZIER, "data/things/brazier");
+    tp_load(&THING_EXIT1, "data/things/exit1");
+    tp_load(&THING_EXIT2, "data/things/exit2");
+    tp_load(&THING_EXIT3, "data/things/exit3");
+    tp_load(&THING_EXIT4, "data/things/exit4");
+    tp_load(&THING_EXIT5, "data/things/exit5");
+    tp_load(&THING_EXIT6, "data/things/exit6");
+    tp_load(&THING_EXIT7, "data/things/exit7");
+    tp_load(&THING_GENERATOR1, "data/things/generator1");
+    tp_load(&THING_BONEPILE1, "data/things/bonepile1");
+    tp_load(&THING_BONEPILE2, "data/things/bonepile2");
+    tp_load(&THING_BONEPILE3, "data/things/bonepile3");
+    tp_load(&THING_GENERATOR5, "data/things/generator5");
+    tp_load(&THING_GENERATOR6, "data/things/generator6");
+    tp_load(&THING_GENERATOR7, "data/things/generator7");
 
     /*
      * Projectiles
      */
-    thing_template_load(&THING_ARROW, "data/things/arrow");
-    thing_template_load(&THING_FIREBALL, "data/things/fireball");
+    tp_load(&THING_ARROW, "data/things/arrow");
+    tp_load(&THING_FIREBALL, "data/things/fireball");
 
     /*
      * Explosions
      */
-    thing_template_load(&THING_WEAPON_HIT1, "data/things/weapon_swing1");
+    tp_load(&THING_WEAPON_HIT1, "data/things/weapon_swing1");
 
-    thing_template_load(&THING_EXPLOSION1, "data/things/explosion1");
-    thing_template_load(&THING_EXPLOSION2, "data/things/explosion2");
-    thing_template_load(&THING_EXPLOSION3, "data/things/explosion3");
-    thing_template_load(&THING_EXPLOSION4, "data/things/explosion4");
+    tp_load(&THING_EXPLOSION1, "data/things/explosion1");
+    tp_load(&THING_EXPLOSION2, "data/things/explosion2");
+    tp_load(&THING_EXPLOSION3, "data/things/explosion3");
+    tp_load(&THING_EXPLOSION4, "data/things/explosion4");
 
-    thing_template_load(&THING_POISON1, "data/things/poison1");
-    thing_template_load(&THING_POISON2, "data/things/poison2");
-    thing_template_load(&THING_POISON3, "data/things/poison3");
-    thing_template_load(&THING_POISON4, "data/things/poison4");
+    tp_load(&THING_POISON1, "data/things/poison1");
+    tp_load(&THING_POISON2, "data/things/poison2");
+    tp_load(&THING_POISON3, "data/things/poison3");
+    tp_load(&THING_POISON4, "data/things/poison4");
 
-    thing_template_load(&THING_CLOUDKILL1, "data/things/cloudkill1");
-    thing_template_load(&THING_CLOUDKILL2, "data/things/cloudkill2");
-    thing_template_load(&THING_CLOUDKILL3, "data/things/cloudkill3");
-    thing_template_load(&THING_CLOUDKILL4, "data/things/cloudkill4");
+    tp_load(&THING_CLOUDKILL1, "data/things/cloudkill1");
+    tp_load(&THING_CLOUDKILL2, "data/things/cloudkill2");
+    tp_load(&THING_CLOUDKILL3, "data/things/cloudkill3");
+    tp_load(&THING_CLOUDKILL4, "data/things/cloudkill4");
 
-    thing_template_load(&THING_HIT_SUCCESS, "data/things/hit_success");
-    thing_template_load(&THING_HIT_MISS, "data/things/hit_miss");
-    thing_template_load(&THING_BLOOD1, "data/things/blood1");
-    thing_template_load(&THING_BLOOD2, "data/things/blood2");
+    tp_load(&THING_HIT_SUCCESS, "data/things/hit_success");
+    tp_load(&THING_HIT_MISS, "data/things/hit_miss");
+    tp_load(&THING_BLOOD1, "data/things/blood1");
+    tp_load(&THING_BLOOD2, "data/things/blood2");
 
     /*
      * Wearable items that are used as weapons. Shown first on list of player 
      * items.
      */
-    thing_template_load(&THING_WAND_FIRE, "data/things/wand_fire");
-    thing_template_load(&THING_SWORD1, "data/things/sword1");
-    thing_template_load(&THING_SWORD2, "data/things/sword2");
-    thing_template_load(&THING_SWORD3, "data/things/sword3");
-    thing_template_load(&THING_AXE1, "data/things/axe1");
-    thing_template_load(&THING_AXE2, "data/things/axe2");
-    thing_template_load(&THING_SCYTHE1, "data/things/scythe1");
-    thing_template_load(&THING_BOW1, "data/things/bow1");
-    thing_template_load(&THING_BOW2, "data/things/bow2");
-    thing_template_load(&THING_BOW3, "data/things/bow3");
-    thing_template_load(&THING_BOW4, "data/things/bow4");
-    thing_template_load(&THING_AMULET1, "data/things/amulet1");
+    tp_load(&THING_WAND_FIRE, "data/things/wand_fire");
+    tp_load(&THING_SWORD1, "data/things/sword1");
+    tp_load(&THING_SWORD2, "data/things/sword2");
+    tp_load(&THING_SWORD3, "data/things/sword3");
+    tp_load(&THING_AXE1, "data/things/axe1");
+    tp_load(&THING_AXE2, "data/things/axe2");
+    tp_load(&THING_SCYTHE1, "data/things/scythe1");
+    tp_load(&THING_BOW1, "data/things/bow1");
+    tp_load(&THING_BOW2, "data/things/bow2");
+    tp_load(&THING_BOW3, "data/things/bow3");
+    tp_load(&THING_BOW4, "data/things/bow4");
+    tp_load(&THING_AMULET1, "data/things/amulet1");
 
     /*
      * Lesser items like food.
      */
-    thing_template_load(&THING_APPLE1, 
+    tp_load(&THING_APPLE1, 
                         "data/things/apple1");
-    thing_template_load(&THING_APPLE2, 
+    tp_load(&THING_APPLE2, 
                         "data/things/apple2");
-    thing_template_load(&THING_BREAD, 
+    tp_load(&THING_BREAD, 
                         "data/things/bread");
-    thing_template_load(&THING_CHEESE, 
+    tp_load(&THING_CHEESE, 
                         "data/things/cheese");
-    thing_template_load(&THING_BANANA, 
+    tp_load(&THING_BANANA, 
                         "data/things/banana");
 
-    thing_template_load(&THING_POTION_MONSTICIDE, 
+    tp_load(&THING_POTION_MONSTICIDE, 
                         "data/things/potion_monsticide");
-    thing_template_load(&THING_POTION_FIRE, 
+    tp_load(&THING_POTION_FIRE, 
                         "data/things/potion_fire");
-    thing_template_load(&THING_POTION_CLOUDKILL, 
+    tp_load(&THING_POTION_CLOUDKILL, 
                         "data/things/potion_cloudkill");
-    thing_template_load(&THING_POTION_LIFE, 
+    tp_load(&THING_POTION_LIFE, 
                         "data/things/potion_life");
-    thing_template_load(&THING_POTION_SHIELD, 
+    tp_load(&THING_POTION_SHIELD, 
                         "data/things/potion_shield");
-    thing_template_load(&THING_WATER, 
+    tp_load(&THING_WATER, 
                         "data/things/water");
-    thing_template_load(&THING_WATER_POISON, 
+    tp_load(&THING_WATER_POISON, 
                         "data/things/water_poison");
 
     /*
      * Lower priority junk that cannot be used by clicking on.
      */
-    thing_template_load(&THING_KEY, "data/things/key");
-    thing_template_load(&THING_KEYS2, "data/things/keys2");
-    thing_template_load(&THING_KEYS3, "data/things/keys3");
-    thing_template_load(&THING_TORCH, "data/things/torch");
-    thing_template_load(&THING_TORCHES, "data/things/torches");
+    tp_load(&THING_KEY, "data/things/key");
+    tp_load(&THING_KEYS2, "data/things/keys2");
+    tp_load(&THING_KEYS3, "data/things/keys3");
+    tp_load(&THING_TORCH, "data/things/torch");
+    tp_load(&THING_TORCHES, "data/things/torches");
 
     /*
      * Lowest priority junk
      */
-    thing_template_load(&THING_MASK1, "data/things/ring1");
-    thing_template_load(&THING_RING2, "data/things/ring2");
-    thing_template_load(&THING_RING3, "data/things/ring3");
-    thing_template_load(&THING_GEM1, "data/things/gem1");
-    thing_template_load(&THING_GEM2, "data/things/gem2");
-    thing_template_load(&THING_GEM3, "data/things/gem3");
-    thing_template_load(&THING_GEM4, "data/things/gem4");
-    thing_template_load(&THING_GEM5, "data/things/gem5");
-    thing_template_load(&THING_GEM6, "data/things/gem6");
-    thing_template_load(&THING_GEM7, "data/things/gem7");
-    thing_template_load(&THING_COINS1, "data/things/coins1");
-    thing_template_load(&THING_CHEST1, "data/things/chest1");
-    thing_template_load(&THING_SPAM, "data/things/spam");
+    tp_load(&THING_MASK1, "data/things/ring1");
+    tp_load(&THING_RING2, "data/things/ring2");
+    tp_load(&THING_RING3, "data/things/ring3");
+    tp_load(&THING_GEM1, "data/things/gem1");
+    tp_load(&THING_GEM2, "data/things/gem2");
+    tp_load(&THING_GEM3, "data/things/gem3");
+    tp_load(&THING_GEM4, "data/things/gem4");
+    tp_load(&THING_GEM5, "data/things/gem5");
+    tp_load(&THING_GEM6, "data/things/gem6");
+    tp_load(&THING_GEM7, "data/things/gem7");
+    tp_load(&THING_COINS1, "data/things/coins1");
+    tp_load(&THING_CHEST1, "data/things/chest1");
+    tp_load(&THING_SPAM, "data/things/spam");
 
     /*
      * Heroes. Must come after items they can carry.
      */
-    thing_template_load(&THING_WARRIOR, "data/things/warrior");
-    thing_template_load(&THING_VALKYRIE, "data/things/valkyrie");
-    thing_template_load(&THING_WIZARD, "data/things/wizard");
-    thing_template_load(&THING_ELF, "data/things/elf");
-    thing_template_load(&THING_DWARF, "data/things/dwarf");
+    tp_load(&THING_WARRIOR, "data/things/warrior");
+    tp_load(&THING_VALKYRIE, "data/things/valkyrie");
+    tp_load(&THING_WIZARD, "data/things/wizard");
+    tp_load(&THING_ELF, "data/things/elf");
+    tp_load(&THING_DWARF, "data/things/dwarf");
 
     /*
      * Monsters
      */
-    thing_template_load(&THING_GHOST1, "data/things/ghost1");
-    thing_template_load(&THING_GHOST2, "data/things/ghost2");
-    thing_template_load(&THING_GHOST3, "data/things/ghost3");
+    tp_load(&THING_GHOST1, "data/things/ghost1");
+    tp_load(&THING_GHOST2, "data/things/ghost2");
+    tp_load(&THING_GHOST3, "data/things/ghost3");
 #if 0
-    thing_template_load(&THING_DEMON, "data/things/demon");
-    thing_template_load(&THING_MONK, "data/things/monk");
-    thing_template_load(&THING_LIZARD, "data/things/lizard");
+    tp_load(&THING_DEMON, "data/things/demon");
+    tp_load(&THING_MONK, "data/things/monk");
+    tp_load(&THING_LIZARD, "data/things/lizard");
 #endif
-    thing_template_load(&THING_DEATH, "data/things/death");
+    tp_load(&THING_DEATH, "data/things/death");
 
     /*
      * Weapon animations.
      */
-    thing_template_load(&THING_WAND1_ANIM, "data/things/wand1_anim");
-    thing_template_load(&THING_SWORD1_ANIM, "data/things/sword1_anim");
-    thing_template_load(&THING_SWORD2_ANIM, "data/things/sword2_anim");
-    thing_template_load(&THING_SWORD3_ANIM, "data/things/sword3_anim");
-    thing_template_load(&THING_AXE1_ANIM, "data/things/axe1_anim");
-    thing_template_load(&THING_AXE2_ANIM, "data/things/axe2_anim");
-    thing_template_load(&THING_BOW1_ANIM, "data/things/bow1_anim");
-    thing_template_load(&THING_SCYTHE1_ANIM, "data/things/scythe1_anim");
+    tp_load(&THING_WAND1_ANIM, "data/things/wand1_anim");
+    tp_load(&THING_SWORD1_ANIM, "data/things/sword1_anim");
+    tp_load(&THING_SWORD2_ANIM, "data/things/sword2_anim");
+    tp_load(&THING_SWORD3_ANIM, "data/things/sword3_anim");
+    tp_load(&THING_AXE1_ANIM, "data/things/axe1_anim");
+    tp_load(&THING_AXE2_ANIM, "data/things/axe2_anim");
+    tp_load(&THING_BOW1_ANIM, "data/things/bow1_anim");
+    tp_load(&THING_SCYTHE1_ANIM, "data/things/scythe1_anim");
 
     /*
      * Intro animations.
      */
-    thing_template_load(&THING_ANIM_MAN, "data/things/anim_man");
-    thing_template_load(&THING_ANIM_TREASURE_CHEST, "data/things/anim_treasure_chest");
-    thing_template_load(&THING_ANIM_EYES, "data/things/anim_eyes");
+    tp_load(&THING_ANIM_MAN, "data/things/anim_man");
+    tp_load(&THING_ANIM_TREASURE_CHEST, "data/things/anim_treasure_chest");
+    tp_load(&THING_ANIM_EYES, "data/things/anim_eyes");
 
     return (true);
 }

@@ -79,7 +79,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
 
     if (thing_is_seedpod(t)) {
         thing_templatep tp = 
-                thing_template_find("data/things/plant");
+                tp_find("data/things/plant");
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          thing_grid_x(t),
@@ -566,7 +566,7 @@ void level_place_plant_pod (levelp level)
             continue;
         }
 
-        tp = thing_template_find("data/things/seedpod");
+        tp = tp_find("data/things/seedpod");
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          x,

@@ -251,9 +251,9 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
     widp child;
 
     tp = (typeof(tp)) 
-            (((char*) node) - STRUCT_OFFSET(struct thing_template_, tree2));
+            (((char*) node) - STRUCT_OFFSET(struct tp_, tree2));
 
-    if (thing_template_is_hidden_from_editor(tp)) {
+    if (tp_is_hidden_from_editor(tp)) {
         return (true);
     }
 
@@ -288,7 +288,7 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_mode(child, WID_MODE_NORMAL);
 
     wid_set_thing_template(child, tp);
-    wid_set_tooltip(child, thing_template_get_tooltip(tp));
+    wid_set_tooltip(child, tp_get_tooltip(tp));
     wid_set_tl_br_pct(child, tl, br);
     wid_set_on_mouse_down(child, wid_editor_buttons_tile_receive_mouse_down);
 

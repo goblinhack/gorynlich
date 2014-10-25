@@ -2051,9 +2051,9 @@ void wid_set_thing_template (widp w, thing_templatep t)
         return;
     }
 
-    wid_set_z_depth(w, thing_template_get_z_depth(t));
+    wid_set_z_depth(w, tp_get_z_depth(t));
 
-    tiles = thing_template_get_tiles(t);
+    tiles = tp_get_tiles(t);
     if (!tiles) {
         return;
     }
@@ -2065,7 +2065,7 @@ void wid_set_thing_template (widp w, thing_templatep t)
 
     wid_set_tilename(w, thing_tile_name(tile));
 
-    wid_set_name(w, thing_template_name(t));
+    wid_set_name(w, tp_name(t));
 }
 
 /*
@@ -3706,7 +3706,7 @@ void marshal_wid_grid (marshal_p ctx, widp w)
                     continue;
                 }
 
-                if (thing_template_is_hidden_from_editor(child->tp)) {
+                if (tp_is_hidden_from_editor(child->tp)) {
                     continue;
                 }
 
@@ -3715,7 +3715,7 @@ void marshal_wid_grid (marshal_p ctx, widp w)
                 PUT_NAMED_UINT32(ctx, "x", x);
                 PUT_NAMED_UINT32(ctx, "y", y);
                 PUT_NAMED_STRING(ctx, "t",
-                                thing_template_name(child->tp));
+                                tp_name(child->tp));
 
                 count = (uintptr_t) wid_get_client_context(child);
 
@@ -3768,7 +3768,7 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
         rc = rc && GET_NAMED_UINT32(ctx, "y", y);
         rc = rc && GET_NAMED_STRING(ctx, "t", name);
 
-        tp = thing_template_find(name);
+        tp = tp_find(name);
         if (!tp) {
             ERR("thing %s not found", name);
             rc = false;
@@ -3884,7 +3884,7 @@ widp wid_grid_find (widp parent, fpoint tl, fpoint br,
 widp wid_grid_find_thing_template (widp parent,
                                    uint32_t x,
                                    uint32_t y,
-                                   thing_template_is_callback func)
+                                   tp_is_callback func)
 {
     widgridnode *node;
     widgrid *grid;
@@ -3943,7 +3943,7 @@ widp wid_grid_find_thing_template (widp parent,
 /*
  * Fast find in a 2d array of trees.
  */
-widp wid_grid_find_thing_template_is (widp parent,
+widp wid_grid_find_tp_is (widp parent,
                                       uint32_t x,
                                       uint32_t y,
                                       thing_templatep tp)
@@ -7056,8 +7056,8 @@ static void wid_display_fast (widp w, uint8_t pass)
             light_pos.x = otlx + wid_get_width(w) / 2;
             light_pos.y = otly + wid_get_height(w) / 2;
 
-            thing_template *tp = thing_get_template(t);
-            double light_radius = thing_template_get_light_radius(tp);
+            thing_templatep tp = thing_tp(t);
+            double light_radius = tp_get_light_radius(tp);
 
             if (thing_is_player(t)) {
                 /*
@@ -7073,7 +7073,7 @@ static void wid_display_fast (widp w, uint8_t pass)
 
             if (light_radius > 0.0) {
                 wid_light_add(w, light_pos, light_radius,
-                              thing_template_light_color(tp));
+                              tp_light_color(tp));
             }
         }
     }

@@ -19,7 +19,7 @@
 
 int item_push (item_t *dst, item_t src)
 {
-CON("push %s",thing_template_short_name(id_to_thing_template(dst->id)));
+CON("push %s",tp_short_name(id_to_thing_template(dst->id)));
     if (!dst->id) {
         /*
          * No item at the destination. Just copy.
@@ -48,7 +48,7 @@ CON("push %s",thing_template_short_name(id_to_thing_template(dst->id)));
 
     thing_templatep tp = id_to_thing_template(dst->id);
 
-    if (!thing_template_is_stackable(tp)) {
+    if (!tp_is_stackable(tp)) {
         /*
          * Cannot stack this item.
          */
@@ -303,11 +303,11 @@ int player_stats_item_add (thingp t,
     uint32_t i;
 
     if (!item.quantity) {
-        DIE("Bad quantity for item add %s", thing_template_short_name(it));
+        DIE("Bad quantity for item add %s", tp_short_name(it));
     }
 
     if (!item.id) {
-        DIE("Bad ID for item add %s", thing_template_short_name(it));
+        DIE("Bad ID for item add %s", tp_short_name(it));
     }
  
     /*
@@ -333,7 +333,7 @@ int player_stats_item_add (thingp t,
     /*
      * If there is space on the action bar, add it.
      */
-    if (thing_template_is_valid_for_action_bar(it)) {
+    if (tp_is_valid_for_action_bar(it)) {
         for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
             oitem = &player_stats->action_bar[i];
             if (item_push(oitem, item)) {
@@ -363,13 +363,13 @@ int player_stats_item_remove (thingp t,
                               player_stats_t *player_stats,
                               const thing_templatep it)
 {
-    const int id = thing_template_to_id(it);
+    const int id = tp_to_id(it);
 
     item_t *item = player_stats_has_item(player_stats, id, 0);
     if (!item) {
         if (t) {
             THING_SHOUT_AT(t, INFO, "Not carrying the %s",
-                           thing_template_short_name(it));
+                           tp_short_name(it));
         }
         return (false);
     }
@@ -413,17 +413,17 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
         for (;;) {
             t = id_to_thing_template(rand() % THING_MAX);
 
-            if (!thing_template_is_carryable(t)) {
+            if (!tp_is_carryable(t)) {
                 continue;
             }
 
-            if (!thing_template_is_given_randomly_at_start(t)) {
+            if (!tp_is_given_randomly_at_start(t)) {
                 continue;
             }
 
             uint32_t chance = rand() % 1000;
 
-            if (thing_template_get_chance_of_appearing(t) > chance) {
+            if (tp_get_chance_of_appearing(t) > chance) {
                 continue;
             }
 
@@ -432,11 +432,11 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
 
         int quality = (rand() % (THING_ITEM_QUALITY_MAX - 1)) + 1;
 
-        LOG("  Auto provision %s, quality %u",thing_template_short_name(t),
+        LOG("  Auto provision %s, quality %u",tp_short_name(t),
             quality);
 
         item_t i = { 0 };
-        i.id = thing_template_to_id(t);
+        i.id = tp_to_id(t);
         i.quantity = 1;
         i.quality = quality;
         i.enchanted = item_enchant_randomly();
@@ -468,21 +468,21 @@ void player_stats_generate_random (player_stats_t *player_stats)
      * attack_melee
      */
     player_stats->attack_melee = 
-                    thing_template_get_stats_attack_melee(tp);
+                    tp_get_stats_attack_melee(tp);
     player_stats->attack_melee = gaussrand(player_stats->attack_melee, 2);
 
     /*
      * attack_ranged
      */
     player_stats->attack_ranged = 
-                    thing_template_get_stats_attack_ranged(tp);
+                    tp_get_stats_attack_ranged(tp);
     player_stats->attack_ranged = gaussrand(player_stats->attack_ranged, 2);
 
     /*
      * attack_magical
      */
     player_stats->attack_magical = 
-                    thing_template_get_stats_attack_magical(tp);
+                    tp_get_stats_attack_magical(tp);
     player_stats->attack_magical = gaussrand(player_stats->attack_magical, 2);
 
 
@@ -490,34 +490,34 @@ void player_stats_generate_random (player_stats_t *player_stats)
      * defense
      */
     player_stats->defense = 
-                    thing_template_get_stats_defense(tp);
+                    tp_get_stats_defense(tp);
     player_stats->defense = gaussrand(player_stats->defense, 2);
 
     /*
      * speed
      */
     player_stats->speed = 
-                    thing_template_get_stats_speed(tp);
+                    tp_get_stats_speed(tp);
     player_stats->speed = gaussrand(player_stats->speed, 2);
 
     /*
      * vision
      */
     player_stats->vision = 
-                    thing_template_get_stats_vision(tp);
+                    tp_get_stats_vision(tp);
     player_stats->vision = gaussrand(player_stats->vision, 2);
 
     /*
      * healing
      */
     player_stats->healing = 
-                    thing_template_get_stats_healing(tp);
+                    tp_get_stats_healing(tp);
     player_stats->healing = gaussrand(player_stats->healing, 2);
 
     /*
      * hp
      */
-    player_stats->hp = thing_template_get_stats_max_hp(tp);
+    player_stats->hp = tp_get_stats_max_hp(tp);
     player_stats->max_hp = 
         player_stats->hp = gaussrand(player_stats->hp,
                                      player_stats->hp / 10);
@@ -525,7 +525,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
     /*
      * id
      */
-    player_stats->id = thing_template_get_stats_max_id(tp);
+    player_stats->id = tp_get_stats_max_id(tp);
     player_stats->max_id = 
         player_stats->id = gaussrand(player_stats->id,
                                      player_stats->id / 10);
@@ -570,15 +570,15 @@ void player_stats_generate_random (player_stats_t *player_stats)
         item.quality = THING_ITEM_QUALITY_MAX;
         item.enchanted = item_enchant_randomly();
 
-        const char *carried_as = thing_template_carried_as(tp);
+        const char *carried_as = tp_carried_as(tp);
         if (carried_as) {
-            thing_templatep what = thing_template_find(carried_as);
+            thing_templatep what = tp_find(carried_as);
             if (!what) {
                 DIE("could now find %s to auto carry item as", 
-                    thing_template_name(what));
+                    tp_name(what));
             }
 
-            item.id = thing_template_to_id(what);
+            item.id = tp_to_id(what);
         }
 
         player_stats_item_add(0 /* thing */, player_stats, item);
@@ -626,5 +626,5 @@ void player_stats_init (player_stats_t *player_stats)
 thing_templatep
 player_stats_to_thing_template (player_stats_t *player_stats)
 {
-    return (thing_template_find_short_name(player_stats->pclass));
+    return (tp_find_short_name(player_stats->pclass));
 }

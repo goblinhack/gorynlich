@@ -159,7 +159,7 @@ typedef struct host_ *hostp;
 typedef struct action_timer_ *timerp;
 typedef struct action_init_fn_ *init_fnp;
 typedef struct item_ *itemp;
-typedef struct thing_template_ *thing_templatep;
+typedef struct tp_ *thing_templatep;
 typedef struct thing_tile_ *thing_tilep;
 typedef struct tokens_t_ *tokenp;
 typedef struct tree_demarshal_ *demarshal_p;
@@ -179,7 +179,7 @@ extern wid_consolep wid_console;
 extern wid_chatp wid_chat;
 extern configp config;
 
-typedef uint8_t (*thing_template_is_callback)(thing_templatep);
+typedef uint8_t (*tp_is_callback)(thing_templatep);
 
 /*
  * log.c

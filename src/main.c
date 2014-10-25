@@ -96,7 +96,7 @@ void quit (void)
 
     level_fini();
     player_fini();
-    thing_template_fini();
+    tp_fini();
     thing_fini();
 
     wid_console_fini();
@@ -685,8 +685,8 @@ int32_t main (int32_t argc, char *argv[])
                           0, "player_init");
 
     action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)thing_template_init,
-                          0, "thing_template_init");
+                          (action_init_fn_callback)tp_init,
+                          0, "tp_init");
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)thing_init,

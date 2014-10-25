@@ -46,11 +46,11 @@ static void wid_game_map_client_set_thing_template (widp w, thing_templatep t)
 {
     wid_set_thing_template(w, t);
 
-    if (thing_template_is_effect_pulse(t)) {
+    if (tp_is_effect_pulse(t)) {
         wid_scaling_to_pct_in(w, 1.0, 1.2, 500, 9999999);
     }
 
-    if (thing_template_is_effect_sway(t)) {
+    if (tp_is_effect_sway(t)) {
         wid_rotate_to_pct_in(w, -2, 2, 500, 9999999);
     }
 }
@@ -244,7 +244,7 @@ uint8_t wid_game_map_client_player_move (void)
             static uint32_t last_fired = 0;
 
             uint32_t delay = 
-                thing_template_get_weapon_fire_delay_tenths(player->weapon);
+                tp_get_weapon_fire_delay_tenths(player->weapon);
             
             if (!time_have_x_tenths_passed_since(delay, last_fired)) {
                 fire = 0;
@@ -306,11 +306,11 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
             socket_tx_player_action(client_joined_server, player, 
                                     PLAYER_ACTION_USE,
-                                    thing_template_to_id(tp));
+                                    tp_to_id(tp));
 #if 0
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_DROP,
-                                thing_template_to_id(tp));
+                                tp_to_id(tp));
 #endif
             return (true);
         }
@@ -509,20 +509,20 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_templatep tp = thing_get_template(t);
+    thing_templatep tp = thing_tp(t);
     if (!tp) {
         DIE("no thing template");
     }
 
     if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
         DIE("thing template [%s] cannot be placed at %f %f",
-            thing_template_short_name(tp), x, y);
+            tp_short_name(tp), x, y);
     }
 
-    thing_tiles = thing_template_get_tiles(tp);
+    thing_tiles = tp_get_tiles(tp);
     if (!thing_tiles) {
         DIE("thing template [%s] has no tiles",
-            thing_template_short_name(tp));
+            tp_short_name(tp));
     }
 
     thing_tilep thing_tile;
@@ -541,7 +541,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     if (!tile) {
         DIE("tile name %s from thing %s not found",
             tilename,
-            thing_template_short_name(tp));
+            tp_short_name(tp));
     }
 
     /*

@@ -112,282 +112,282 @@ static uint8_t map_count_x_at (levelp level,
 
 uint8_t map_is_player_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_player));
+    return (map_is_x_at(level, x, y, tp_is_player));
 }
 
 uint8_t map_is_monst_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_monst));
+    return (map_is_x_at(level, x, y, tp_is_monst));
 }
 
 uint8_t map_is_wall_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_wall));
+    return (map_is_x_at(level, x, y, tp_is_wall));
 }
 
 uint8_t map_is_key_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_key));
+    return (map_is_x_at(level, x, y, tp_is_key));
 }
 
 uint8_t map_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rock));
+    return (map_is_x_at(level, x, y, tp_is_rock));
 }
 
 uint8_t map_is_shadow_caster_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_shadow_caster));
+    return (map_is_x_at(level, x, y, tp_is_shadow_caster));
 }
 
 uint8_t map_is_shadow_caster_soft_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_shadow_caster_soft));
+    return (map_is_x_at(level, x, y, tp_is_shadow_caster_soft));
 }
 
 uint8_t map_is_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_weapon));
+    return (map_is_x_at(level, x, y, tp_is_weapon));
 }
 
 uint8_t map_is_treasure_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_treasure));
+    return (map_is_x_at(level, x, y, tp_is_treasure));
 }
 
 uint8_t map_is_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_wearable));
+    return (map_is_x_at(level, x, y, tp_is_wearable));
 }
 
 uint8_t map_is_fragile_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_fragile));
+    return (map_is_x_at(level, x, y, tp_is_fragile));
 }
 
 uint8_t map_is_star_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_star));
+    return (map_is_x_at(level, x, y, tp_is_star));
 }
 
 uint8_t map_is_animated_no_dir_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_animated_no_dir));
+    return (map_is_x_at(level, x, y, tp_is_animated_no_dir));
 }
 
 uint8_t map_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_weapon_swing_effect));
+    return (map_is_x_at(level, x, y, tp_is_weapon_swing_effect));
 }
 
 uint8_t map_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_light_source));
+    return (map_is_x_at(level, x, y, tp_is_light_source));
 }
 
 uint8_t map_is_candle_light_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_candle_light));
+    return (map_is_x_at(level, x, y, tp_is_candle_light));
 }
 
 uint8_t map_is_cats_eyes_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_cats_eyes));
+    return (map_is_x_at(level, x, y, tp_is_cats_eyes));
 }
 
 uint8_t map_is_fire_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_fire));
+    return (map_is_x_at(level, x, y, tp_is_fire));
 }
 
 uint8_t map_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_poison));
+    return (map_is_x_at(level, x, y, tp_is_poison));
 }
 
 uint8_t map_is_item_unusable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_item_unusable));
+    return (map_is_x_at(level, x, y, tp_is_item_unusable));
 }
 
 uint8_t map_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_valid_for_action_bar));
+    return (map_is_x_at(level, x, y, tp_is_valid_for_action_bar));
 }
 
 uint8_t map_is_seedpod_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_seedpod));
+    return (map_is_x_at(level, x, y, tp_is_seedpod));
 }
 
 uint8_t map_is_spam_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_spam));
+    return (map_is_x_at(level, x, y, tp_is_spam));
 }
 
 uint8_t map_is_door_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_door));
+    return (map_is_x_at(level, x, y, tp_is_door));
 }
 
 uint8_t map_is_pipe_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_pipe));
+    return (map_is_x_at(level, x, y, tp_is_pipe));
 }
 
 uint8_t map_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_mob_spawner));
+    return (map_is_x_at(level, x, y, tp_is_mob_spawner));
 }
 
 uint8_t map_is_rrr1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr1));
+    return (map_is_x_at(level, x, y, tp_is_rrr1));
 }
 
 uint8_t map_is_rrr2_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr2));
+    return (map_is_x_at(level, x, y, tp_is_rrr2));
 }
 
 uint8_t map_is_rrr3_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr3));
+    return (map_is_x_at(level, x, y, tp_is_rrr3));
 }
 
 uint8_t map_is_rrr4_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr4));
+    return (map_is_x_at(level, x, y, tp_is_rrr4));
 }
 
 uint8_t map_is_rrr5_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr5));
+    return (map_is_x_at(level, x, y, tp_is_rrr5));
 }
 
 uint8_t map_is_rrr6_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr6));
+    return (map_is_x_at(level, x, y, tp_is_rrr6));
 }
 
 uint8_t map_is_rrr7_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr7));
+    return (map_is_x_at(level, x, y, tp_is_rrr7));
 }
 
 uint8_t map_is_rrr8_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr8));
+    return (map_is_x_at(level, x, y, tp_is_rrr8));
 }
 
 uint8_t map_is_rrr9_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr9));
+    return (map_is_x_at(level, x, y, tp_is_rrr9));
 }
 
 uint8_t map_is_rrr10_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr10));
+    return (map_is_x_at(level, x, y, tp_is_rrr10));
 }
 
 uint8_t map_is_rrr11_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr11));
+    return (map_is_x_at(level, x, y, tp_is_rrr11));
 }
 
 uint8_t map_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_given_randomly_at_start));
+    return (map_is_x_at(level, x, y, tp_is_given_randomly_at_start));
 }
 
 uint8_t map_is_magical_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_magical));
+    return (map_is_x_at(level, x, y, tp_is_magical));
 }
 
 uint8_t map_is_degradable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_degradable));
+    return (map_is_x_at(level, x, y, tp_is_degradable));
 }
 
 uint8_t map_is_cursed_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_cursed));
+    return (map_is_x_at(level, x, y, tp_is_cursed));
 }
 
 uint8_t map_is_animate_only_when_moving_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_animate_only_when_moving));
+    return (map_is_x_at(level, x, y, tp_is_animate_only_when_moving));
 }
 
 uint8_t map_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_warm_blooded));
+    return (map_is_x_at(level, x, y, tp_is_warm_blooded));
 }
 
 uint8_t map_is_rrr23_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_rrr23));
+    return (map_is_x_at(level, x, y, tp_is_rrr23));
 }
 
 uint8_t map_is_stackable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_stackable));
+    return (map_is_x_at(level, x, y, tp_is_stackable));
 }
 
 uint8_t map_is_torch_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_torch));
+    return (map_is_x_at(level, x, y, tp_is_torch));
 }
 
 uint8_t map_is_explosion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_explosion));
+    return (map_is_x_at(level, x, y, tp_is_explosion));
 }
 
 uint8_t map_is_hidden_from_editor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_hidden_from_editor));
+    return (map_is_x_at(level, x, y, tp_is_hidden_from_editor));
 }
 
 uint8_t map_is_animated_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_animated));
+    return (map_is_x_at(level, x, y, tp_is_animated));
 }
 
 uint8_t map_is_combustable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_combustable));
+    return (map_is_x_at(level, x, y, tp_is_combustable));
 }
 
 uint8_t map_is_projectile_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_projectile));
+    return (map_is_x_at(level, x, y, tp_is_projectile));
 }
 
 uint8_t map_is_boring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_boring));
+    return (map_is_x_at(level, x, y, tp_is_boring));
 }
 
 uint8_t map_is_plant_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_plant));
+    return (map_is_x_at(level, x, y, tp_is_plant));
 }
 
 uint8_t map_is_food_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_food));
+    return (map_is_x_at(level, x, y, tp_is_food));
 }
 
 uint8_t map_is_floor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_floor));
+    return (map_is_x_at(level, x, y, tp_is_floor));
 }
 
 uint8_t map_is_exit_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, thing_template_is_exit));
+    return (map_is_x_at(level, x, y, tp_is_exit));
 }
 
 static thingp map_thing_is_x_at (levelp level,
@@ -439,287 +439,287 @@ static thingp map_thing_is_x_at (levelp level,
 
 thingp map_thing_is_player_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_player));
+    return (map_thing_is_x_at(level, x, y, tp_is_player));
 }
 
 thingp map_thing_is_monst_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_monst));
+    return (map_thing_is_x_at(level, x, y, tp_is_monst));
 }
 
 thingp map_thing_is_wall_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_wall));
+    return (map_thing_is_x_at(level, x, y, tp_is_wall));
 }
 
 thingp map_thing_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rock));
+    return (map_thing_is_x_at(level, x, y, tp_is_rock));
 }
 
 thingp map_thing_is_key_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_key));
+    return (map_thing_is_x_at(level, x, y, tp_is_key));
 }
 
 thingp map_thing_is_shadow_caster_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_shadow_caster));
+    return (map_thing_is_x_at(level, x, y, tp_is_shadow_caster));
 }
 
 thingp map_thing_is_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_weapon));
+    return (map_thing_is_x_at(level, x, y, tp_is_weapon));
 }
 
 thingp map_thing_is_treasure_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_treasure));
+    return (map_thing_is_x_at(level, x, y, tp_is_treasure));
 }
 
 thingp map_thing_is_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_wearable));
+    return (map_thing_is_x_at(level, x, y, tp_is_wearable));
 }
 
 thingp map_thing_is_fragile_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_fragile));
+    return (map_thing_is_x_at(level, x, y, tp_is_fragile));
 }
 
 thingp map_thing_is_star_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_star));
+    return (map_thing_is_x_at(level, x, y, tp_is_star));
 }
 
 thingp map_thing_is_animated_no_dir_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_animated_no_dir));
+    return (map_thing_is_x_at(level, x, y, tp_is_animated_no_dir));
 }
 
 thingp map_thing_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_weapon_swing_effect));
+    return (map_thing_is_x_at(level, x, y, tp_is_weapon_swing_effect));
 }
 
 thingp map_thing_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_light_source));
+    return (map_thing_is_x_at(level, x, y, tp_is_light_source));
 }
 
 thingp map_thing_is_candle_light_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_candle_light));
+    return (map_thing_is_x_at(level, x, y, tp_is_candle_light));
 }
 
 thingp map_thing_is_cats_eyes_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_cats_eyes));
+    return (map_thing_is_x_at(level, x, y, tp_is_cats_eyes));
 }
 
 thingp map_thing_is_fire_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_fire));
+    return (map_thing_is_x_at(level, x, y, tp_is_fire));
 }
 
 thingp map_thing_is_ring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_ring));
+    return (map_thing_is_x_at(level, x, y, tp_is_ring));
 }
 
 thingp map_thing_is_animation_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_animation));
+    return (map_thing_is_x_at(level, x, y, tp_is_animation));
 }
 
 thingp map_thing_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_poison));
+    return (map_thing_is_x_at(level, x, y, tp_is_poison));
 }
 
 thingp map_thing_is_item_unusable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_item_unusable));
+    return (map_thing_is_x_at(level, x, y, tp_is_item_unusable));
 }
 
 thingp map_thing_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_valid_for_action_bar));
+    return (map_thing_is_x_at(level, x, y, tp_is_valid_for_action_bar));
 }
 
 thingp map_thing_is_seedpod_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_seedpod));
+    return (map_thing_is_x_at(level, x, y, tp_is_seedpod));
 }
 
 thingp map_thing_is_spam_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_spam));
+    return (map_thing_is_x_at(level, x, y, tp_is_spam));
 }
 
 thingp map_thing_is_door_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_door));
+    return (map_thing_is_x_at(level, x, y, tp_is_door));
 }
 
 thingp map_thing_is_pipe_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_pipe));
+    return (map_thing_is_x_at(level, x, y, tp_is_pipe));
 }
 
 thingp map_thing_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_mob_spawner));
+    return (map_thing_is_x_at(level, x, y, tp_is_mob_spawner));
 }
 
 thingp map_thing_is_rrr1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr1));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr1));
 }
 
 thingp map_thing_is_rrr2_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr2));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr2));
 }
 
 thingp map_thing_is_rrr3_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr3));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr3));
 }
 
 thingp map_thing_is_rrr4_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr4));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr4));
 }
 
 thingp map_thing_is_rrr5_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr5));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr5));
 }
 
 thingp map_thing_is_rrr6_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr6));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr6));
 }
 
 thingp map_thing_is_rrr7_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr7));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr7));
 }
 
 thingp map_thing_is_rrr8_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr8));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr8));
 }
 
 thingp map_thing_is_rrr9_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr9));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr9));
 }
 
 thingp map_thing_is_rrr10_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr10));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr10));
 }
 
 thingp map_thing_is_rrr11_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr11));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr11));
 }
 
 thingp map_thing_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_given_randomly_at_start));
+    return (map_thing_is_x_at(level, x, y, tp_is_given_randomly_at_start));
 }
 
 thingp map_thing_is_magical_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_magical));
+    return (map_thing_is_x_at(level, x, y, tp_is_magical));
 }
 
 thingp map_thing_is_degradable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_degradable));
+    return (map_thing_is_x_at(level, x, y, tp_is_degradable));
 }
 
 thingp map_thing_is_cursed_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_cursed));
+    return (map_thing_is_x_at(level, x, y, tp_is_cursed));
 }
 
 thingp map_thing_is_animate_only_when_moving_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_animate_only_when_moving));
+    return (map_thing_is_x_at(level, x, y, tp_is_animate_only_when_moving));
 }
 
 thingp map_thing_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_warm_blooded));
+    return (map_thing_is_x_at(level, x, y, tp_is_warm_blooded));
 }
 
 thingp map_thing_is_rrr23_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_rrr23));
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr23));
 }
 
 thingp map_thing_is_stackable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_stackable));
+    return (map_thing_is_x_at(level, x, y, tp_is_stackable));
 }
 
 thingp map_thing_is_torch_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_torch));
+    return (map_thing_is_x_at(level, x, y, tp_is_torch));
 }
 
 thingp map_thing_is_explosion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_explosion));
+    return (map_thing_is_x_at(level, x, y, tp_is_explosion));
 }
 
 thingp map_thing_is_hidden_from_editor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_hidden_from_editor));
+    return (map_thing_is_x_at(level, x, y, tp_is_hidden_from_editor));
 }
 
 thingp map_thing_is_animated_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_animated));
+    return (map_thing_is_x_at(level, x, y, tp_is_animated));
 }
 
 thingp map_thing_is_combustable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_combustable));
+    return (map_thing_is_x_at(level, x, y, tp_is_combustable));
 }
 
 thingp map_thing_is_projectile_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_projectile));
+    return (map_thing_is_x_at(level, x, y, tp_is_projectile));
 }
 
 thingp map_thing_is_boring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_boring));
+    return (map_thing_is_x_at(level, x, y, tp_is_boring));
 }
 
 thingp map_thing_is_plant_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_plant));
+    return (map_thing_is_x_at(level, x, y, tp_is_plant));
 }
 
 thingp map_thing_is_food_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_food));
+    return (map_thing_is_x_at(level, x, y, tp_is_food));
 }
 
 thingp map_thing_is_floor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_floor));
+    return (map_thing_is_x_at(level, x, y, tp_is_floor));
 }
 
 thingp map_thing_is_exit_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, thing_template_is_exit));
+    return (map_thing_is_x_at(level, x, y, tp_is_exit));
 }
 
 static tree_rootp map_all_things_is_x_at (levelp level,
@@ -787,287 +787,287 @@ static tree_rootp map_all_things_is_x_at (levelp level,
 
 tree_rootp map_all_things_is_player_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_player));
+    return (map_all_things_is_x_at(level, x, y, tp_is_player));
 }
 
 tree_rootp map_all_things_is_monst_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_monst));
+    return (map_all_things_is_x_at(level, x, y, tp_is_monst));
 }
 
 tree_rootp map_all_things_is_wall_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_wall));
+    return (map_all_things_is_x_at(level, x, y, tp_is_wall));
 }
 
 tree_rootp map_all_things_is_key_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_key));
+    return (map_all_things_is_x_at(level, x, y, tp_is_key));
 }
 
 tree_rootp map_all_things_is_rock_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rock));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rock));
 }
 
 tree_rootp map_all_things_is_shadow_caster_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_shadow_caster));
+    return (map_all_things_is_x_at(level, x, y, tp_is_shadow_caster));
 }
 
 tree_rootp map_all_things_is_weapon_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_weapon));
+    return (map_all_things_is_x_at(level, x, y, tp_is_weapon));
 }
 
 tree_rootp map_all_things_is_treasure_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_treasure));
+    return (map_all_things_is_x_at(level, x, y, tp_is_treasure));
 }
 
 tree_rootp map_all_things_is_wearable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_wearable));
+    return (map_all_things_is_x_at(level, x, y, tp_is_wearable));
 }
 
 tree_rootp map_all_things_is_fragile_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_fragile));
+    return (map_all_things_is_x_at(level, x, y, tp_is_fragile));
 }
 
 tree_rootp map_all_things_is_star_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_star));
+    return (map_all_things_is_x_at(level, x, y, tp_is_star));
 }
 
 tree_rootp map_all_things_is_animated_no_dir_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_animated_no_dir));
+    return (map_all_things_is_x_at(level, x, y, tp_is_animated_no_dir));
 }
 
 tree_rootp map_all_things_is_weapon_swing_effect_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_weapon_swing_effect));
+    return (map_all_things_is_x_at(level, x, y, tp_is_weapon_swing_effect));
 }
 
 tree_rootp map_all_things_is_light_source_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_light_source));
+    return (map_all_things_is_x_at(level, x, y, tp_is_light_source));
 }
 
 tree_rootp map_all_things_is_candle_light_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_candle_light));
+    return (map_all_things_is_x_at(level, x, y, tp_is_candle_light));
 }
 
 tree_rootp map_all_things_is_cats_eyes_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_cats_eyes));
+    return (map_all_things_is_x_at(level, x, y, tp_is_cats_eyes));
 }
 
 tree_rootp map_all_things_is_fire_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_fire));
+    return (map_all_things_is_x_at(level, x, y, tp_is_fire));
 }
 
 tree_rootp map_all_things_is_ring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_ring));
+    return (map_all_things_is_x_at(level, x, y, tp_is_ring));
 }
 
 tree_rootp map_all_things_is_animation_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_animation));
+    return (map_all_things_is_x_at(level, x, y, tp_is_animation));
 }
 
 tree_rootp map_all_things_is_poison_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_poison));
+    return (map_all_things_is_x_at(level, x, y, tp_is_poison));
 }
 
 tree_rootp map_all_things_is_item_unusable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_item_unusable));
+    return (map_all_things_is_x_at(level, x, y, tp_is_item_unusable));
 }
 
 tree_rootp map_all_things_is_valid_for_action_bar_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_valid_for_action_bar));
+    return (map_all_things_is_x_at(level, x, y, tp_is_valid_for_action_bar));
 }
 
 tree_rootp map_all_things_is_seedpod_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_seedpod));
+    return (map_all_things_is_x_at(level, x, y, tp_is_seedpod));
 }
 
 tree_rootp map_all_things_is_spam_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_spam));
+    return (map_all_things_is_x_at(level, x, y, tp_is_spam));
 }
 
 tree_rootp map_all_things_is_door_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_door));
+    return (map_all_things_is_x_at(level, x, y, tp_is_door));
 }
 
 tree_rootp map_all_things_is_pipe_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_pipe));
+    return (map_all_things_is_x_at(level, x, y, tp_is_pipe));
 }
 
 tree_rootp map_all_things_is_mob_spawner_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_mob_spawner));
+    return (map_all_things_is_x_at(level, x, y, tp_is_mob_spawner));
 }
 
 tree_rootp map_all_things_is_rrr1_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr1));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr1));
 }
 
 tree_rootp map_all_things_is_rrr2_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr2));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr2));
 }
 
 tree_rootp map_all_things_is_rrr3_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr3));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr3));
 }
 
 tree_rootp map_all_things_is_rrr4_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr4));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr4));
 }
 
 tree_rootp map_all_things_is_rrr5_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr5));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr5));
 }
 
 tree_rootp map_all_things_is_rrr6_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr6));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr6));
 }
 
 tree_rootp map_all_things_is_rrr7_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr7));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr7));
 }
 
 tree_rootp map_all_things_is_rrr8_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr8));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr8));
 }
 
 tree_rootp map_all_things_is_rrr9_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr9));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr9));
 }
 
 tree_rootp map_all_things_is_rrr10_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr10));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr10));
 }
 
 tree_rootp map_all_things_is_rrr11_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr11));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr11));
 }
 
 tree_rootp map_all_things_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_given_randomly_at_start));
+    return (map_all_things_is_x_at(level, x, y, tp_is_given_randomly_at_start));
 }
 
 tree_rootp map_all_things_is_magical_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_magical));
+    return (map_all_things_is_x_at(level, x, y, tp_is_magical));
 }
 
 tree_rootp map_all_things_is_degradable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_degradable));
+    return (map_all_things_is_x_at(level, x, y, tp_is_degradable));
 }
 
 tree_rootp map_all_things_is_cursed_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_cursed));
+    return (map_all_things_is_x_at(level, x, y, tp_is_cursed));
 }
 
 tree_rootp map_all_things_is_animate_only_when_moving_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_animate_only_when_moving));
+    return (map_all_things_is_x_at(level, x, y, tp_is_animate_only_when_moving));
 }
 
 tree_rootp map_all_things_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_warm_blooded));
+    return (map_all_things_is_x_at(level, x, y, tp_is_warm_blooded));
 }
 
 tree_rootp map_all_things_is_rrr23_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_rrr23));
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr23));
 }
 
 tree_rootp map_all_things_is_stackable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_stackable));
+    return (map_all_things_is_x_at(level, x, y, tp_is_stackable));
 }
 
 tree_rootp map_all_things_is_torch_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_torch));
+    return (map_all_things_is_x_at(level, x, y, tp_is_torch));
 }
 
 tree_rootp map_all_things_is_explosion_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_explosion));
+    return (map_all_things_is_x_at(level, x, y, tp_is_explosion));
 }
 
 tree_rootp map_all_things_is_hidden_from_editor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_hidden_from_editor));
+    return (map_all_things_is_x_at(level, x, y, tp_is_hidden_from_editor));
 }
 
 tree_rootp map_all_things_is_animated_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_animated));
+    return (map_all_things_is_x_at(level, x, y, tp_is_animated));
 }
 
 tree_rootp map_all_things_is_combustable_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_combustable));
+    return (map_all_things_is_x_at(level, x, y, tp_is_combustable));
 }
 
 tree_rootp map_all_things_is_projectile_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_projectile));
+    return (map_all_things_is_x_at(level, x, y, tp_is_projectile));
 }
 
 tree_rootp map_all_things_is_boring_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_boring));
+    return (map_all_things_is_x_at(level, x, y, tp_is_boring));
 }
 
 tree_rootp map_all_things_is_plant_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_plant));
+    return (map_all_things_is_x_at(level, x, y, tp_is_plant));
 }
 
 tree_rootp map_all_things_is_food_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_food));
+    return (map_all_things_is_x_at(level, x, y, tp_is_food));
 }
 
 tree_rootp map_all_things_is_floor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_floor));
+    return (map_all_things_is_x_at(level, x, y, tp_is_floor));
 }
 
 tree_rootp map_all_things_is_exit_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, thing_template_is_exit));
+    return (map_all_things_is_x_at(level, x, y, tp_is_exit));
 }
 
 static thing_templatep map_find_x_at_depth (levelp level,
@@ -1186,20 +1186,20 @@ static thing_templatep map_find_x_at (levelp level,
 thing_templatep map_find_player_at (levelp level,
                                     int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_player, w));
+    return (map_find_x_at(level, x, y, tp_is_player, w));
 }
 
 thing_templatep map_find_monst_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_monst, w));
+    return (map_find_x_at(level, x, y, tp_is_monst, w));
 }
 
 thing_templatep map_find_wall_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at_depth(level, x, y, 
-                                thing_template_is_wall, 
+                                tp_is_wall, 
                                 MAP_DEPTH_WALL, w));
 }
 
@@ -1207,332 +1207,332 @@ thing_templatep map_find_rock_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at_depth(level, x, y, 
-                                thing_template_is_rock, 
+                                tp_is_rock, 
                                 MAP_DEPTH_WALL, w));
 }
 
 thing_templatep map_find_key_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_key, w));
+    return (map_find_x_at(level, x, y, tp_is_key, w));
 }
 
 thing_templatep map_find_xxx3_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rock, w));
+    return (map_find_x_at(level, x, y, tp_is_rock, w));
 }
 
 thing_templatep map_find_blocks_light_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_shadow_caster, w));
+    return (map_find_x_at(level, x, y, tp_is_shadow_caster, w));
 }
 
 thing_templatep map_find_xxx5_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_weapon, w));
+    return (map_find_x_at(level, x, y, tp_is_weapon, w));
 }
 
 thing_templatep map_find_xxx6_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_treasure, w));
+    return (map_find_x_at(level, x, y, tp_is_treasure, w));
 }
 
 thing_templatep map_find_xxx7_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_wearable, w));
+    return (map_find_x_at(level, x, y, tp_is_wearable, w));
 }
 
 thing_templatep map_find_is_fragile_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_fragile, w));
+    return (map_find_x_at(level, x, y, tp_is_fragile, w));
 }
 
 thing_templatep map_find_is_star_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_star, w));
+    return (map_find_x_at(level, x, y, tp_is_star, w));
 }
 
 thing_templatep map_find_powerup_spam_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_animated_no_dir, w));
+    return (map_find_x_at(level, x, y, tp_is_animated_no_dir, w));
 }
 
 thing_templatep map_find_key1_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_weapon_swing_effect, w));
+    return (map_find_x_at(level, x, y, tp_is_weapon_swing_effect, w));
 }
 
 thing_templatep map_find_light_source_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_light_source, w));
+    return (map_find_x_at(level, x, y, tp_is_light_source, w));
 }
 
 thing_templatep map_find_candle_light_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_candle_light, w));
+    return (map_find_x_at(level, x, y, tp_is_candle_light, w));
 }
 
 thing_templatep map_find_star_green_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_cats_eyes, w));
+    return (map_find_x_at(level, x, y, tp_is_cats_eyes, w));
 }
 
 thing_templatep map_find_star_cyan_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_fire, w));
+    return (map_find_x_at(level, x, y, tp_is_fire, w));
 }
 
 thing_templatep map_find_star_black_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_ring, w));
+    return (map_find_x_at(level, x, y, tp_is_ring, w));
 }
 
 thing_templatep map_find_star_purple_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_animation, w));
+    return (map_find_x_at(level, x, y, tp_is_animation, w));
 }
 
 thing_templatep map_find_explosion_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_animation, w));
+    return (map_find_x_at(level, x, y, tp_is_animation, w));
 }
 
 thing_templatep map_find_spikes_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_poison, w));
+    return (map_find_x_at(level, x, y, tp_is_poison, w));
 }
 
 thing_templatep map_find_is_item_unusable_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_item_unusable, w));
+    return (map_find_x_at(level, x, y, tp_is_item_unusable, w));
 }
 
 thing_templatep map_find_is_valid_for_action_bar_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_valid_for_action_bar, w));
+    return (map_find_x_at(level, x, y, tp_is_valid_for_action_bar, w));
 }
 
 thing_templatep map_find_seedpod_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_seedpod, w));
+    return (map_find_x_at(level, x, y, tp_is_seedpod, w));
 }
 
 thing_templatep map_find_spam_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_spam, w));
+    return (map_find_x_at(level, x, y, tp_is_spam, w));
 }
 
 thing_templatep map_find_door_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_door, w));
+    return (map_find_x_at(level, x, y, tp_is_door, w));
 }
 
 thing_templatep map_find_pipe_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_pipe, w));
+    return (map_find_x_at(level, x, y, tp_is_pipe, w));
 }
 
 thing_templatep map_find_generator_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_mob_spawner, w));
+    return (map_find_x_at(level, x, y, tp_is_mob_spawner, w));
 }
 
 thing_templatep map_find_rrr1_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr1, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr1, w));
 }
 
 thing_templatep map_find_rrr2_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr2, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr2, w));
 }
 
 thing_templatep map_find_rrr3_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr3, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr3, w));
 }
 
 thing_templatep map_find_rrr4_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr4, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr4, w));
 }
 
 thing_templatep map_find_rrr5_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr5, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr5, w));
 }
 
 thing_templatep map_find_rrr6_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr6, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr6, w));
 }
 
 thing_templatep map_find_rrr7_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr7, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr7, w));
 }
 
 thing_templatep map_find_rrr8_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr8, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr8, w));
 }
 
 thing_templatep map_find_rrr9_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr9, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr9, w));
 }
 
 thing_templatep map_find_rrr10_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr10, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr10, w));
 }
 
 thing_templatep map_find_rrr11_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr11, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr11, w));
 }
 
 thing_templatep map_find_given_randomly_at_start_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_given_randomly_at_start, w));
+    return (map_find_x_at(level, x, y, tp_is_given_randomly_at_start, w));
 }
 
 thing_templatep map_find_magical_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_magical, w));
+    return (map_find_x_at(level, x, y, tp_is_magical, w));
 }
 
 thing_templatep map_find_degradable_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_degradable, w));
+    return (map_find_x_at(level, x, y, tp_is_degradable, w));
 }
 
 thing_templatep map_find_cursed_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_cursed, w));
+    return (map_find_x_at(level, x, y, tp_is_cursed, w));
 }
 
 thing_templatep map_find_animate_only_when_moving_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_animate_only_when_moving, w));
+    return (map_find_x_at(level, x, y, tp_is_animate_only_when_moving, w));
 }
 
 thing_templatep map_find_rrr17_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_warm_blooded, w));
+    return (map_find_x_at(level, x, y, tp_is_warm_blooded, w));
 }
 
 thing_templatep map_find_rrr18_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_rrr23, w));
+    return (map_find_x_at(level, x, y, tp_is_rrr23, w));
 }
 
 thing_templatep map_find_rrr19_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_stackable, w));
+    return (map_find_x_at(level, x, y, tp_is_stackable, w));
 }
 
 thing_templatep map_find_torch_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_torch, w));
+    return (map_find_x_at(level, x, y, tp_is_torch, w));
 }
 
 thing_templatep map_find_is_explosion_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_explosion, w));
+    return (map_find_x_at(level, x, y, tp_is_explosion, w));
 }
 
 thing_templatep map_find_hidden_from_editor_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_hidden_from_editor, w));
+    return (map_find_x_at(level, x, y, tp_is_hidden_from_editor, w));
 }
 
 thing_templatep map_find_is_projectile_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_projectile, w));
+    return (map_find_x_at(level, x, y, tp_is_projectile, w));
 }
 
 thing_templatep map_find_item_perma_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_boring, w));
+    return (map_find_x_at(level, x, y, tp_is_boring, w));
 }
 
 thing_templatep map_find_is_ring_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_ring, w));
+    return (map_find_x_at(level, x, y, tp_is_ring, w));
 }
 
 thing_templatep map_find_plant_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_plant, w));
+    return (map_find_x_at(level, x, y, tp_is_plant, w));
 }
 
 thing_templatep map_find_food_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_food, w));
+    return (map_find_x_at(level, x, y, tp_is_food, w));
 }
 
 thing_templatep map_find_floor_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_floor, w));
+    return (map_find_x_at(level, x, y, tp_is_floor, w));
 }
 
 thing_templatep map_find_exit_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, thing_template_is_exit, w));
+    return (map_find_x_at(level, x, y, tp_is_exit, w));
 }
 
 void map_fixup (levelp level)
@@ -1758,19 +1758,19 @@ if (level != server_level)
 
                     thing_tile = thing_tile_find(t, index, &tile);
                     if (!thing_tile) {
-                        DIE("no joinable tile for %s", thing_template_name(t));
+                        DIE("no joinable tile for %s", tp_name(t));
                     }
                 }
             }
 
             if (!tile) {
-                DIE("no tile for %s", thing_template_name(t));
+                DIE("no tile for %s", tp_name(t));
             }
 
             const char *tilename = thing_tile_name(thing_tile);
 
             if (!tilename) {
-                DIE("no tilename for %s", thing_template_name(e));
+                DIE("no tilename for %s", tp_name(e));
             }
 
             /*
@@ -1943,287 +1943,287 @@ void level_open_door (levelp level, int32_t ix, int32_t iy)
 
 uint32_t level_count_is_player (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_player));
+    return (level_count_is_x(level, tp_is_player));
 }
 
 uint32_t level_count_is_monst (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_monst));
+    return (level_count_is_x(level, tp_is_monst));
 }
 
 uint32_t level_count_is_wall (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_wall));
+    return (level_count_is_x(level, tp_is_wall));
 }
 
 uint32_t level_count_is_key (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_key));
+    return (level_count_is_x(level, tp_is_key));
 }
 
 uint32_t level_count_is_rock (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rock));
+    return (level_count_is_x(level, tp_is_rock));
 }
 
 uint32_t level_count_is_shadow_caster (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_shadow_caster));
+    return (level_count_is_x(level, tp_is_shadow_caster));
 }
 
 uint32_t level_count_is_weapon (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_weapon));
+    return (level_count_is_x(level, tp_is_weapon));
 }
 
 uint32_t level_count_is_treasure (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_treasure));
+    return (level_count_is_x(level, tp_is_treasure));
 }
 
 uint32_t level_count_is_wearable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_wearable));
+    return (level_count_is_x(level, tp_is_wearable));
 }
 
 uint32_t level_count_is_fragile (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_fragile));
+    return (level_count_is_x(level, tp_is_fragile));
 }
 
 uint32_t level_count_is_star (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_star));
+    return (level_count_is_x(level, tp_is_star));
 }
 
 uint32_t level_count_is_animated_no_dir (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_animated_no_dir));
+    return (level_count_is_x(level, tp_is_animated_no_dir));
 }
 
 uint32_t level_count_is_weapon_swing_effect (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_weapon_swing_effect));
+    return (level_count_is_x(level, tp_is_weapon_swing_effect));
 }
 
 uint32_t level_count_is_light_source (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_light_source));
+    return (level_count_is_x(level, tp_is_light_source));
 }
 
 uint32_t level_count_is_candle_light (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_candle_light));
+    return (level_count_is_x(level, tp_is_candle_light));
 }
 
 uint32_t level_count_is_cats_eyes (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_cats_eyes));
+    return (level_count_is_x(level, tp_is_cats_eyes));
 }
 
 uint32_t level_count_is_fire (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_fire));
+    return (level_count_is_x(level, tp_is_fire));
 }
 
 uint32_t level_count_is_ring (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_ring));
+    return (level_count_is_x(level, tp_is_ring));
 }
 
 uint32_t level_count_is_animation (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_animation));
+    return (level_count_is_x(level, tp_is_animation));
 }
 
 uint32_t level_count_is_poison (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_poison));
+    return (level_count_is_x(level, tp_is_poison));
 }
 
 uint32_t level_count_is_item_unusable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_item_unusable));
+    return (level_count_is_x(level, tp_is_item_unusable));
 }
 
 uint32_t level_count_is_valid_for_action_bar (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_valid_for_action_bar));
+    return (level_count_is_x(level, tp_is_valid_for_action_bar));
 }
 
 uint32_t level_count_is_seedpod (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_seedpod));
+    return (level_count_is_x(level, tp_is_seedpod));
 }
 
 uint32_t level_count_is_spam (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_spam));
+    return (level_count_is_x(level, tp_is_spam));
 }
 
 uint32_t level_count_is_door (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_door));
+    return (level_count_is_x(level, tp_is_door));
 }
 
 uint32_t level_count_is_pipe (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_pipe));
+    return (level_count_is_x(level, tp_is_pipe));
 }
 
 uint32_t level_count_is_mob_spawner (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_mob_spawner));
+    return (level_count_is_x(level, tp_is_mob_spawner));
 }
 
 uint32_t level_count_is_rrr1 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr1));
+    return (level_count_is_x(level, tp_is_rrr1));
 }
 
 uint32_t level_count_is_rrr2 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr2));
+    return (level_count_is_x(level, tp_is_rrr2));
 }
 
 uint32_t level_count_is_rrr3 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr3));
+    return (level_count_is_x(level, tp_is_rrr3));
 }
 
 uint32_t level_count_is_rrr4 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr4));
+    return (level_count_is_x(level, tp_is_rrr4));
 }
 
 uint32_t level_count_is_rrr5 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr5));
+    return (level_count_is_x(level, tp_is_rrr5));
 }
 
 uint32_t level_count_is_rrr6 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr6));
+    return (level_count_is_x(level, tp_is_rrr6));
 }
 
 uint32_t level_count_is_rrr7 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr7));
+    return (level_count_is_x(level, tp_is_rrr7));
 }
 
 uint32_t level_count_is_rrr8 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr8));
+    return (level_count_is_x(level, tp_is_rrr8));
 }
 
 uint32_t level_count_is_rrr9 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr9));
+    return (level_count_is_x(level, tp_is_rrr9));
 }
 
 uint32_t level_count_is_rrr10 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr10));
+    return (level_count_is_x(level, tp_is_rrr10));
 }
 
 uint32_t level_count_is_rrr11 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr11));
+    return (level_count_is_x(level, tp_is_rrr11));
 }
 
 uint32_t level_count_is_given_randomly_at_start (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_given_randomly_at_start));
+    return (level_count_is_x(level, tp_is_given_randomly_at_start));
 }
 
 uint32_t level_count_is_magical (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_magical));
+    return (level_count_is_x(level, tp_is_magical));
 }
 
 uint32_t level_count_is_degradable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_degradable));
+    return (level_count_is_x(level, tp_is_degradable));
 }
 
 uint32_t level_count_is_cursed (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_cursed));
+    return (level_count_is_x(level, tp_is_cursed));
 }
 
 uint32_t level_count_is_animate_only_when_moving (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_animate_only_when_moving));
+    return (level_count_is_x(level, tp_is_animate_only_when_moving));
 }
 
 uint32_t level_count_is_warm_blooded (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_warm_blooded));
+    return (level_count_is_x(level, tp_is_warm_blooded));
 }
 
 uint32_t level_count_is_rrr23 (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_rrr23));
+    return (level_count_is_x(level, tp_is_rrr23));
 }
 
 uint32_t level_count_is_stackable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_stackable));
+    return (level_count_is_x(level, tp_is_stackable));
 }
 
 uint32_t level_count_is_torch (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_torch));
+    return (level_count_is_x(level, tp_is_torch));
 }
 
 uint32_t level_count_is_explosion (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_explosion));
+    return (level_count_is_x(level, tp_is_explosion));
 }
 
 uint32_t level_count_is_hidden_from_editor (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_hidden_from_editor));
+    return (level_count_is_x(level, tp_is_hidden_from_editor));
 }
 
 uint32_t level_count_is_combustable (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_combustable));
+    return (level_count_is_x(level, tp_is_combustable));
 }
 
 uint32_t level_count_is_projectile (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_projectile));
+    return (level_count_is_x(level, tp_is_projectile));
 }
 
 uint32_t level_count_is_boring (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_boring));
+    return (level_count_is_x(level, tp_is_boring));
 }
 
 uint32_t level_count_is_item_is_hidden (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_ring));
+    return (level_count_is_x(level, tp_is_ring));
 }
 
 uint32_t level_count_is_plant (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_plant));
+    return (level_count_is_x(level, tp_is_plant));
 }
 
 uint32_t level_count_is_food (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_food));
+    return (level_count_is_x(level, tp_is_food));
 }
 
 uint32_t level_count_is_floor (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_floor));
+    return (level_count_is_x(level, tp_is_floor));
 }
 
 uint32_t level_count_is_exit (levelp level)
 {
-    return (level_count_is_x(level, thing_template_is_exit));
+    return (level_count_is_x(level, tp_is_exit));
 }
 
 static tree_rootp map_all_things_is_x (levelp level,
@@ -2297,285 +2297,285 @@ static tree_rootp map_all_things_is_x (levelp level,
 
 tree_rootp map_all_things_is_player (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_player));
+    return (map_all_things_is_x(level, tp_is_player));
 }
 
 tree_rootp map_all_things_is_monst (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_monst));
+    return (map_all_things_is_x(level, tp_is_monst));
 }
 
 tree_rootp map_all_things_is_wall (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_wall));
+    return (map_all_things_is_x(level, tp_is_wall));
 }
 
 tree_rootp map_all_things_is_key (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_key));
+    return (map_all_things_is_x(level, tp_is_key));
 }
 
 tree_rootp map_all_things_is_rock (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rock));
+    return (map_all_things_is_x(level, tp_is_rock));
 }
 
 tree_rootp map_all_things_is_shadow_caster (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_shadow_caster));
+    return (map_all_things_is_x(level, tp_is_shadow_caster));
 }
 
 tree_rootp map_all_things_is_weapon (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_weapon));
+    return (map_all_things_is_x(level, tp_is_weapon));
 }
 
 tree_rootp map_all_things_is_treasure (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_treasure));
+    return (map_all_things_is_x(level, tp_is_treasure));
 }
 
 tree_rootp map_all_things_is_wearable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_wearable));
+    return (map_all_things_is_x(level, tp_is_wearable));
 }
 
 tree_rootp map_all_things_is_fragile (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_fragile));
+    return (map_all_things_is_x(level, tp_is_fragile));
 }
 
 tree_rootp map_all_things_is_star (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_star));
+    return (map_all_things_is_x(level, tp_is_star));
 }
 
 tree_rootp map_all_things_is_animated_no_dir (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_animated_no_dir));
+    return (map_all_things_is_x(level, tp_is_animated_no_dir));
 }
 
 tree_rootp map_all_things_is_weapon_swing_effect (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_weapon_swing_effect));
+    return (map_all_things_is_x(level, tp_is_weapon_swing_effect));
 }
 
 tree_rootp map_all_things_is_light_source (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_light_source));
+    return (map_all_things_is_x(level, tp_is_light_source));
 }
 
 tree_rootp map_all_things_is_candle_light (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_candle_light));
+    return (map_all_things_is_x(level, tp_is_candle_light));
 }
 
 tree_rootp map_all_things_is_cats_eyes (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_cats_eyes));
+    return (map_all_things_is_x(level, tp_is_cats_eyes));
 }
 
 tree_rootp map_all_things_is_fire (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_fire));
+    return (map_all_things_is_x(level, tp_is_fire));
 }
 
 tree_rootp map_all_things_is_ring (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_ring));
+    return (map_all_things_is_x(level, tp_is_ring));
 }
 
 tree_rootp map_all_things_is_animation (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_animation));
+    return (map_all_things_is_x(level, tp_is_animation));
 }
 
 tree_rootp map_all_things_is_poison (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_poison));
+    return (map_all_things_is_x(level, tp_is_poison));
 }
 
 tree_rootp map_all_things_is_item_unusable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_item_unusable));
+    return (map_all_things_is_x(level, tp_is_item_unusable));
 }
 
 tree_rootp map_all_things_is_valid_for_action_bar (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_valid_for_action_bar));
+    return (map_all_things_is_x(level, tp_is_valid_for_action_bar));
 }
 
 tree_rootp map_all_things_is_seedpod (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_seedpod));
+    return (map_all_things_is_x(level, tp_is_seedpod));
 }
 
 tree_rootp map_all_things_is_spam (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_spam));
+    return (map_all_things_is_x(level, tp_is_spam));
 }
 
 tree_rootp map_all_things_is_door (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_door));
+    return (map_all_things_is_x(level, tp_is_door));
 }
 
 tree_rootp map_all_things_is_pipe (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_pipe));
+    return (map_all_things_is_x(level, tp_is_pipe));
 }
 
 tree_rootp map_all_things_is_mob_spawner (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_mob_spawner));
+    return (map_all_things_is_x(level, tp_is_mob_spawner));
 }
 
 tree_rootp map_all_things_is_rrr1 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr1));
+    return (map_all_things_is_x(level, tp_is_rrr1));
 }
 
 tree_rootp map_all_things_is_rrr2 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr2));
+    return (map_all_things_is_x(level, tp_is_rrr2));
 }
 
 tree_rootp map_all_things_is_rrr3 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr3));
+    return (map_all_things_is_x(level, tp_is_rrr3));
 }
 
 tree_rootp map_all_things_is_rrr4 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr4));
+    return (map_all_things_is_x(level, tp_is_rrr4));
 }
 
 tree_rootp map_all_things_is_rrr5 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr5));
+    return (map_all_things_is_x(level, tp_is_rrr5));
 }
 
 tree_rootp map_all_things_is_rrr6 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr6));
+    return (map_all_things_is_x(level, tp_is_rrr6));
 }
 
 tree_rootp map_all_things_is_rrr7 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr7));
+    return (map_all_things_is_x(level, tp_is_rrr7));
 }
 
 tree_rootp map_all_things_is_rrr8 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr8));
+    return (map_all_things_is_x(level, tp_is_rrr8));
 }
 
 tree_rootp map_all_things_is_rrr9 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr9));
+    return (map_all_things_is_x(level, tp_is_rrr9));
 }
 
 tree_rootp map_all_things_is_rrr10 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr10));
+    return (map_all_things_is_x(level, tp_is_rrr10));
 }
 
 tree_rootp map_all_things_is_rrr11 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr11));
+    return (map_all_things_is_x(level, tp_is_rrr11));
 }
 
 tree_rootp map_all_things_is_given_randomly_at_start (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_given_randomly_at_start));
+    return (map_all_things_is_x(level, tp_is_given_randomly_at_start));
 }
 
 tree_rootp map_all_things_is_magical (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_magical));
+    return (map_all_things_is_x(level, tp_is_magical));
 }
 
 tree_rootp map_all_things_is_degradable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_degradable));
+    return (map_all_things_is_x(level, tp_is_degradable));
 }
 
 tree_rootp map_all_things_is_cursed (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_cursed));
+    return (map_all_things_is_x(level, tp_is_cursed));
 }
 
 tree_rootp map_all_things_is_animate_only_when_moving (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_animate_only_when_moving));
+    return (map_all_things_is_x(level, tp_is_animate_only_when_moving));
 }
 
 tree_rootp map_all_things_is_warm_blooded (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_warm_blooded));
+    return (map_all_things_is_x(level, tp_is_warm_blooded));
 }
 
 tree_rootp map_all_things_is_rrr23 (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_rrr23));
+    return (map_all_things_is_x(level, tp_is_rrr23));
 }
 
 tree_rootp map_all_things_is_stackable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_stackable));
+    return (map_all_things_is_x(level, tp_is_stackable));
 }
 
 tree_rootp map_all_things_is_torch (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_torch));
+    return (map_all_things_is_x(level, tp_is_torch));
 }
 
 tree_rootp map_all_things_is_explosion (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_explosion));
+    return (map_all_things_is_x(level, tp_is_explosion));
 }
 
 tree_rootp map_all_things_is_hidden_from_editor (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_hidden_from_editor));
+    return (map_all_things_is_x(level, tp_is_hidden_from_editor));
 }
 
 tree_rootp map_all_things_is_animated (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_animated));
+    return (map_all_things_is_x(level, tp_is_animated));
 }
 
 tree_rootp map_all_things_is_combustable (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_combustable));
+    return (map_all_things_is_x(level, tp_is_combustable));
 }
 
 tree_rootp map_all_things_is_projectile (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_projectile));
+    return (map_all_things_is_x(level, tp_is_projectile));
 }
 
 tree_rootp map_all_things_is_boring (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_boring));
+    return (map_all_things_is_x(level, tp_is_boring));
 }
 
 tree_rootp map_all_things_is_plant (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_plant));
+    return (map_all_things_is_x(level, tp_is_plant));
 }
 
 tree_rootp map_all_things_is_food (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_food));
+    return (map_all_things_is_x(level, tp_is_food));
 }
 
 tree_rootp map_all_things_is_floor (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_floor));
+    return (map_all_things_is_x(level, tp_is_floor));
 }
 
 tree_rootp map_all_things_is_exit (levelp level)
 {
-    return (map_all_things_is_x(level, thing_template_is_exit));
+    return (map_all_things_is_x(level, tp_is_exit));
 }

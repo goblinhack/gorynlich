@@ -96,14 +96,14 @@ void wid_player_inventory_button_style (widp w,
         return;
     }
 
-    thing_templatep temp = id_to_thing_template(item.id);
+    thing_templatep tp = id_to_thing_template(item.id);
 
-    if (player && player->weapon && (temp == player->weapon)) {
+    if (player && player->weapon && (tp == player->weapon)) {
         wid_set_color(w, WID_COLOR_TL, RED);
         wid_set_color(w, WID_COLOR_BR, RED);
     }
 
-    wid_set_thing_template(w, temp);
+    wid_set_thing_template(w, tp);
 
     int quantity = item.quantity;
     int quality = item.quality;
@@ -121,7 +121,7 @@ void wid_player_inventory_button_style (widp w,
     /*
      * Quality bar.
      */
-    if (thing_template_is_degradable(temp)) {
+    if (tp_is_degradable(tp)) {
         widp wid_bar = wid_new_square_button(w, "quality bar");
 
         wid_set_bevelled(wid_bar, true);
@@ -158,20 +158,20 @@ void wid_player_inventory_button_style (widp w,
     /*
      * Tooltip
      */
-    const char *tooltip = thing_template_get_tooltip(temp);
+    const char *tooltip = tp_get_tooltip(tp);
     if (!tooltip) {
         ERR("need a tooltip defined for %s", 
-            thing_template_name(temp));
+            tp_name(tp));
     } else {
         char *full_tooltip;
         char *tmp = strappend(tooltip, "\n\n%%fmt=left$");
 
-        if (thing_template_is_weapon(temp)) {
-            int damage = thing_template_get_damage(temp);
+        if (tp_is_weapon(tp)) {
+            int damage = tp_get_damage(tp);
             if (!damage) {
-                thing_templatep projectile = thing_template_fires(temp);
+                thing_templatep projectile = tp_fires(tp);
                 if (projectile) {
-                    damage = thing_template_get_damage(projectile);
+                    damage = tp_get_damage(projectile);
                 }
             }
 
@@ -197,7 +197,7 @@ void wid_player_inventory_button_style (widp w,
         /*
          * Current quality
          */
-        if (thing_template_is_degradable(temp)) {
+        if (tp_is_degradable(tp)) {
             const char *str;
             if (quality >= THING_ITEM_QUALITY_MAX) {
                 str = "mint condition";
@@ -225,11 +225,11 @@ void wid_player_inventory_button_style (widp w,
         /*
          * HP bonus
          */
-        if (thing_template_get_bonus_hp_on_use(temp)) {
+        if (tp_get_bonus_hp_on_use(tp)) {
             char *tmp2 = dynprintf(
                             "%%%%fmt=left$"
                             "HP gain on use\t\t%d\n", 
-                            thing_template_get_bonus_hp_on_use(temp));
+                            tp_get_bonus_hp_on_use(tp));
 
             char *old = tmp;
             tmp = strappend(old, tmp2);
@@ -240,11 +240,11 @@ void wid_player_inventory_button_style (widp w,
         /*
          * ID bonus
          */
-        if (thing_template_get_bonus_id_on_use(temp)) {
+        if (tp_get_bonus_id_on_use(tp)) {
             char *tmp2 = dynprintf(
                             "%%%%fmt=left$"
                             "ID gain on use\t\t%d\n", 
-                            thing_template_get_bonus_id_on_use(temp));
+                            tp_get_bonus_id_on_use(tp));
 
             char *old = tmp;
             tmp = strappend(old, tmp2);
@@ -255,7 +255,7 @@ void wid_player_inventory_button_style (widp w,
         /*
          * Failure rate
          */
-        uint32_t val = thing_template_get_failure_chance(temp);
+        uint32_t val = tp_get_failure_chance(tp);
         if (val) {
             const char *str;
             if (val >= 10000) {
@@ -288,7 +288,7 @@ void wid_player_inventory_button_style (widp w,
         /*
          * Rarity
          */
-        val = thing_template_get_chance_of_appearing(temp);
+        val = tp_get_chance_of_appearing(tp);
         if (val) {
             const char *str;
             if (val >= 50) {
