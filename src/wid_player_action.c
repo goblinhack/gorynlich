@@ -81,15 +81,53 @@ wid_player_action_button_style_mouse_down (widp w,
 
         if (!dropped) {
             /*
-             * If we failed to drop, is there an item in our way to move?
+             * If we failed to drop, can we move the item that we are over
+             * somewhere else in the action bat?
              */
             int i;
 
             for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
                 item_t *freeitem = &player_stats->action_bar[i];
                 if (!freeitem->id) {
-                    memcpy(freeitem, &wid_item, sizeof(item_t));
-                    dropped = true;
+                    memcpy(freeitem, over_item, sizeof(item_t));
+                    memset(over_item, 0, sizeof(item_t));
+
+                    /*
+                     * Try again
+                     */
+                    if (item_push(over_item, wid_item)) {
+                        /*
+                         * Success
+                         */
+                        dropped = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (!dropped) {
+            /*
+             * Still not dropped into the action bar. Can we move the 
+             * conflicting item to the inventory?
+             */
+            int i;
+
+            for (i = 0; i < THING_INVENTORY_MAX; i++) {
+                item_t *freeitem = &player_stats->inventory[i];
+                if (!freeitem->id) {
+                    memcpy(freeitem, over_item, sizeof(item_t));
+                    memset(over_item, 0, sizeof(item_t));
+
+                    /*
+                     * Try again
+                     */
+                    if (item_push(over_item, wid_item)) {
+                        /*
+                         * Success
+                         */
+                        dropped = true;
+                    }
                     break;
                 }
             }

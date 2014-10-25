@@ -396,7 +396,6 @@ extern uint16_t THING_KEYS3;
 extern uint16_t THING_TORCH;
 extern uint16_t THING_TORCHES;
 extern uint16_t THING_COINS1;
-extern uint16_t THING_AMULET1;
 extern uint16_t THING_CHEST1;
 extern uint16_t THING_ARROW;
 extern uint16_t THING_FIREBALL;
@@ -985,32 +984,32 @@ static inline uint8_t thing_is_rrr7 (thingp t)
     return (tp_is_rrr7(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr8 (thingp t)
+static inline uint8_t thing_is_hand_item (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr8(thing_tp(t)));
+    return (tp_is_hand_item(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr9 (thingp t)
+static inline uint8_t thing_is_boots (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr9(thing_tp(t)));
+    return (tp_is_boots(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr10 (thingp t)
+static inline uint8_t thing_is_helmet (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr10(thing_tp(t)));
+    return (tp_is_helmet(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr11 (thingp t)
+static inline uint8_t thing_is_armor (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr11(thing_tp(t)));
+    return (tp_is_armor(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_given_randomly_at_start (thingp t)
@@ -1368,24 +1367,24 @@ static inline uint8_t thing_is_rrr7_noverify (thingp t)
     return (t->tp->is_rrr7);
 }
 
-static inline uint8_t thing_is_rrr8_noverify (thingp t)
+static inline uint8_t thing_is_hand_item_noverify (thingp t)
 {
-    return (t->tp->is_rrr8);
+    return (t->tp->is_hand_item);
 }
 
-static inline uint8_t thing_is_rrr9_noverify (thingp t)
+static inline uint8_t thing_is_boots_noverify (thingp t)
 {
-    return (t->tp->is_rrr9);
+    return (t->tp->is_boots);
 }
 
-static inline uint8_t thing_is_rrr10_noverify (thingp t)
+static inline uint8_t thing_is_helmet_noverify (thingp t)
 {
-    return (t->tp->is_rrr10);
+    return (t->tp->is_helmet);
 }
 
-static inline uint8_t thing_is_rrr11_noverify (thingp t)
+static inline uint8_t thing_is_armor_noverify (thingp t)
 {
-    return (t->tp->is_rrr11);
+    return (t->tp->is_armor);
 }
 
 static inline uint8_t thing_is_given_randomly_at_start_noverify (thingp t)
