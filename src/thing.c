@@ -767,7 +767,7 @@ thingp thing_server_new (const char *name, double x, double y)
 
     if (!thing_is_player(t)) {
         for (i = 0; i < THING_MAX; i++) {
-            for (j = 0; j < tp->carrying[i].quantity; j++) {
+            for (j = 0; j < tp->base_items[i].quantity; j++) {
                 thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
             }
         }

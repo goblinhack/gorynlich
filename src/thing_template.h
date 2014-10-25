@@ -124,7 +124,7 @@ typedef struct tp_ {
      * How many and of what we are carrying. This is the base items a thing
      * starts out with.
      */
-    item_t carrying[THING_MAX];
+    item_t base_items[THING_MAX];
 
     /*
      * In relation to other widgets, where are we.
