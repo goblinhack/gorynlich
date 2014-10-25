@@ -341,6 +341,42 @@ int player_stats_item_add (thingp t,
     }
 
     /*
+     * Can it be worn?
+     */
+    if (tp_is_armor(it)) {
+        oitem = &player_stats->worn[THING_WORN_ARMOR];
+        if (item_push(oitem, item)) {
+            return (true);
+        }
+    }
+
+    if (tp_is_helmet(it)) {
+        oitem = &player_stats->worn[THING_WORN_HELMET];
+        if (item_push(oitem, item)) {
+            return (true);
+        }
+    }
+
+    if (tp_is_boots(it)) {
+        oitem = &player_stats->worn[THING_WORN_BOOTS];
+        if (item_push(oitem, item)) {
+            return (true);
+        }
+    }
+
+    if (tp_is_hand_item(it)) {
+        oitem = &player_stats->worn[THING_WORN_ARM_LEFT];
+        if (item_push(oitem, item)) {
+            return (true);
+        }
+
+        oitem = &player_stats->worn[THING_WORN_ARM_RIGHT];
+        if (item_push(oitem, item)) {
+            return (true);
+        }
+    }
+
+    /*
      * Else just find a free slot in the inventory.
      */
     for (i = 0; i < THING_INVENTORY_MAX; i++) {

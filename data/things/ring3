@@ -9,6 +9,7 @@
  is_carryable
  is_given_randomly_at_start
  is_ring
+is_hand_item
  bonus_score_on_collect=20000
  tiles={
   tile={

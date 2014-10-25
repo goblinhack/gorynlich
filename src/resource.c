@@ -2778,7 +2778,6 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_BOW2, "data/things/bow2");
     tp_load(&THING_BOW3, "data/things/bow3");
     tp_load(&THING_BOW4, "data/things/bow4");
-    tp_load(&THING_AMULET1, "data/things/amulet1");
 
     /*
      * Lesser items like food.

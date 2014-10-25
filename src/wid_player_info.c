@@ -11,6 +11,7 @@
 #include "color.h"
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
+#include "wid_player_stats.h"
 #include "string.h"
 #include "thing_template.h"
 #include "time.h"
@@ -130,6 +131,124 @@ static uint8_t wid_player_info_select_name_event (widp w, int32_t x, int32_t y,
     wid_set_on_key_down(w, wid_player_info_name_receive_input);
 
     wid_set_show_cursor(w, true);
+
+    return (true);
+}
+
+static uint8_t 
+wid_player_info_button_style_mouse_down (widp w,
+                                         int32_t x, int32_t y,
+                                         uint32_t button)
+{
+    thing_templatep tp;
+    uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
+    item_t *over_item = &player_stats->worn[id];
+
+    tp = wid_get_thing_template(w);
+
+    if (!wid_mouse_template) {
+        wid_player_item_pick_up(w, over_item);
+    } else {
+        int valid = true;
+
+        switch (id) {
+        case THING_WORN_ARMOR:
+            if (!tp_is_armor(tp)) {
+                valid = false;
+                MSG(WARNING, "This item wont work as armor");
+                break;
+            }
+            break;
+
+        case THING_WORN_HELMET:
+            if (!tp_is_armor(tp)) {
+                valid = false;
+                MSG(WARNING, "This item wont work as a helmet");
+                break;
+            }
+            break;
+
+        case THING_WORN_BOOTS:
+            if (!tp_is_armor(tp)) {
+                valid = false;
+                MSG(WARNING, "This item wont work as a boots");
+                break;
+            }
+            break;
+
+        case THING_WORN_ARM_RIGHT:
+        case THING_WORN_ARM_LEFT:
+            if (!tp_is_hand_item(tp)) {
+                valid = false;
+                MSG(WARNING, "This item can't be worn on the hand. "
+                    "This slot is for things like rings.");
+                break;
+            }
+            break;
+        }
+
+        if (!valid) {
+            return (true);
+        }
+
+        /*
+         * Drop the current item.
+         */
+        int dropped = false;
+
+        if (item_push(over_item, wid_item)) {
+            /*
+             * Success
+             */
+            dropped = true;
+        }
+
+        if (!dropped) {
+            /*
+             * If we failed to drop, can we move the item that we are over
+             * somewhere else in the inventory?
+             */
+            int i;
+
+            for (i = 0; i < THING_INVENTORY_MAX; i++) {
+                item_t *freeitem = &player_stats->inventory[i];
+                if (!freeitem->id) {
+                    memcpy(freeitem, over_item, sizeof(item_t));
+                    memset(over_item, 0, sizeof(item_t));
+
+                    /*
+                     * Try again
+                     */
+                    if (item_push(over_item, wid_item)) {
+                        /*
+                         * Success
+                         */
+                        dropped = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (!dropped) {
+            /*
+             * Can we add this anywhere at all ?
+             */
+            if (player_stats_item_add(0, player_stats, wid_item)) {
+                dropped = true;
+            }
+        }
+
+        if (dropped) {
+            memset(&wid_item, 0, sizeof(item_t));
+
+            wid_destroy(&wid_mouse_template);
+
+            wid_set_client_context(w, 0);
+        }
+    }
+
+    wid_player_stats_redraw();
 
     return (true);
 }
@@ -275,7 +394,9 @@ static void wid_player_info_create (player_stats_t *s)
 
         wid_player_inventory_button_style(w, s, item);
 
-//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
+
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARMOR);
     }
 
     {
@@ -292,7 +413,9 @@ static void wid_player_info_create (player_stats_t *s)
 
         wid_player_inventory_button_style(w, s, item);
 
-//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
+
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_HELMET);
     }
 
     {
@@ -309,7 +432,9 @@ static void wid_player_info_create (player_stats_t *s)
 
         wid_player_inventory_button_style(w, s, item);
 
-//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
+
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_BOOTS);
     }
 
     {
@@ -326,7 +451,9 @@ static void wid_player_info_create (player_stats_t *s)
 
         wid_player_inventory_button_style(w, s, item);
 
-//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+        wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
+
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARM_LEFT);
     }
 
     {
@@ -343,8 +470,9 @@ static void wid_player_info_create (player_stats_t *s)
 
         wid_player_inventory_button_style(w, s, item);
 
-//        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-//
+        wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
+
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARM_RIGHT);
     }
 
     wid_move_to_pct_centered(wid_player_info, 0.5, 0.45);
