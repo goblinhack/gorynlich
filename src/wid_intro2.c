@@ -122,7 +122,7 @@ void wid_intro2_visible (void)
     wid_player_stats_visible(s);
     wid_player_info_visible(s);
     wid_player_inventory_visible(s);
-    wid_player_action_visible(s);
+    wid_player_action_visible(s, false);
 }
 
 static void wid_intro2_play_selected_cb (void *context)
