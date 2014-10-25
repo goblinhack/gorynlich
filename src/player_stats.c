@@ -19,7 +19,6 @@
 
 int item_push (item_t *dst, item_t src)
 {
-CON("push %s",tp_short_name(id_to_thing_template(dst->id)));
     if (!dst->id) {
         /*
          * No item at the destination. Just copy.
@@ -87,7 +86,6 @@ int item_pop (item_t *dst, item_t *popped)
     }
 
     dst->quantity--;
-CON("pop %d quant %d",dst->id,dst->quantity);
 
     if (popped) {
         memcpy(popped, dst, sizeof(item_t));

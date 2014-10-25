@@ -320,27 +320,32 @@ void wid_player_inventory_button_style (widp w,
     }
 }
 
-static uint8_t 
-wid_player_inventory_button_style_mouse_down (widp w, 
-                                              int32_t x, int32_t y,
-                                              uint32_t button)
+item_t wid_item;
+
+uint8_t 
+wid_player_item_pick_up (widp w, item_t *over_item)
 {
-    static item_t item;
     thing_templatep tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
-    item_t *over_item = &player_stats->inventory[id];
 
     tp = wid_get_thing_template(w);
 
-    if (!wid_mouse_template) {
-        /*
-         * Pick up an item.
-         */
-        if (!item_pop(over_item, &item)) {
-            return (true);
-        }
+    if (wid_mouse_template) {
+        DIE("already carrying an item");
+    }
 
-        widp w = wid_mouse_template = wid_new_square_window("moues");
+    /*
+     * Pick up an item.
+     */
+    if (!item_pop(over_item, &wid_item)) {
+        /*
+         * Failed.
+         */
+        return (true);
+    }
+
+    {
+        widp w = wid_mouse_template = wid_new_square_window("mouse");
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {0.04, 0.06};
@@ -368,14 +373,32 @@ wid_player_inventory_button_style_mouse_down (widp w,
         wid_raise(w);
         wid_update(w);
 
-        wid_set_client_context(w, (void*) &item);
+        wid_set_client_context(w, (void*) &wid_item);
+    }
+
+    return (true);
+}
+
+static uint8_t 
+wid_player_inventory_button_style_mouse_down (widp w, 
+                                              int32_t x, int32_t y,
+                                              uint32_t button)
+{
+    thing_templatep tp;
+    uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
+    item_t *over_item = &player_stats->inventory[id];
+
+    tp = wid_get_thing_template(w);
+
+    if (!wid_mouse_template) {
+        wid_player_item_pick_up(w, over_item);
     } else {
         /*
          * Drop the current item.
          */
         int dropped = false;
 
-        if (item_push(over_item, item)) {
+        if (item_push(over_item, wid_item)) {
             /*
              * Success
              */
@@ -391,7 +414,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
             for (i = 0; i < THING_INVENTORY_MAX; i++) {
                 item_t *freeitem = &player_stats->inventory[i];
                 if (!freeitem->id) {
-                    memcpy(freeitem, &item, sizeof(item_t));
+                    memcpy(freeitem, &wid_item, sizeof(item_t));
                     dropped = true;
                     break;
                 }
@@ -402,13 +425,13 @@ wid_player_inventory_button_style_mouse_down (widp w,
             /*
              * Can we add this anywhere at all ?
              */
-            if (player_stats_item_add(0, player_stats, item)) {
+            if (player_stats_item_add(0, player_stats, wid_item)) {
                 dropped = true;
             }
         }
 
         if (dropped) {
-            memset(&item, 0, sizeof(item_t));
+            memset(&wid_item, 0, sizeof(item_t));
 
             wid_destroy(&wid_mouse_template);
 
@@ -499,6 +522,8 @@ static void wid_player_inventory_create (player_stats_t *s)
 
     wid_raise(wid_player_inventory);
     wid_update(wid_player_inventory);
+
+    wid_set_movable(wid_player_inventory, false);
 }
 
 static void wid_player_inventory_destroy (void)

@@ -351,6 +351,8 @@ static void wid_player_info_create (player_stats_t *s)
 
     wid_raise(wid_player_info);
     wid_update(wid_player_info);
+
+    wid_set_movable(wid_player_info, false);
 }
 
 static void wid_player_info_destroy (void)
