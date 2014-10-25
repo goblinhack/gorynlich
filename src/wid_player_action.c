@@ -11,13 +11,14 @@
 #include "color.h"
 #include "wid_player_action.h"
 #include "wid_player_inventory.h"
+#include "wid_player_stats.h"
 #include "thing_template.h"
 #include "string.h"
 
 static widp wid_player_action;
 static uint8_t wid_player_action_init_done;
 
-static void wid_player_action_create(player_stats_t *);
+static void wid_player_action_create(player_stats_t *, int fast);
 static void wid_player_action_destroy(void);
 static player_stats_t *player_stats;
 
@@ -47,12 +48,77 @@ void wid_player_action_hide (void)
     wid_player_action_destroy();
 }
 
-void wid_player_action_visible (player_stats_t *s)
+void wid_player_action_visible (player_stats_t *s, int fast)
 {
-    wid_player_action_create(s);
+    wid_player_action_create(s, fast);
 }
 
-static void wid_player_action_create (player_stats_t *s)
+static uint8_t 
+wid_player_action_button_style_mouse_down (widp w,
+                                           int32_t x, int32_t y,
+                                           uint32_t button)
+{
+    thing_templatep tp;
+    uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
+    item_t *over_item = &player_stats->action_bar[id];
+
+    tp = wid_get_thing_template(w);
+
+    if (!wid_mouse_template) {
+        wid_player_item_pick_up(w, over_item);
+    } else {
+        /*
+         * Drop the current item.
+         */
+        int dropped = false;
+
+        if (item_push(over_item, wid_item)) {
+            /*
+             * Success
+             */
+            dropped = true;
+        }
+
+        if (!dropped) {
+            /*
+             * If we failed to drop, is there an item in our way to move?
+             */
+            int i;
+
+            for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+                item_t *freeitem = &player_stats->action_bar[i];
+                if (!freeitem->id) {
+                    memcpy(freeitem, &wid_item, sizeof(item_t));
+                    dropped = true;
+                    break;
+                }
+            }
+        }
+
+        if (!dropped) {
+            /*
+             * Can we add this anywhere at all ?
+             */
+            if (player_stats_item_add(0, player_stats, wid_item)) {
+                dropped = true;
+            }
+        }
+
+        if (dropped) {
+            memset(&wid_item, 0, sizeof(item_t));
+
+            wid_destroy(&wid_mouse_template);
+
+            wid_set_client_context(w, 0);
+        }
+    }
+
+    wid_player_stats_redraw();
+
+    return (true);
+}
+
+static void wid_player_action_create (player_stats_t *s, int fast)
 {
     player_stats = s;
 
@@ -201,20 +267,29 @@ static void wid_player_action_create (player_stats_t *s)
             wid_player_inventory_button_style(w, s, item);
             wid_set_rounded_small(w);
 
-    //        wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
+            wid_set_on_mouse_down(w, 
+                                  wid_player_action_button_style_mouse_down);
+
+            wid_set_client_context(w, (void*) (uintptr_t) i);
+
             i++;
         }
     }
 
-    wid_move_to_pct_centered(wid_player_action, 0.5, 2.0);
-    wid_move_to_pct_centered_in(wid_player_action, 0.5, 0.905, 
-                                5*wid_swipe_delay);
+    if (fast) {
+        wid_move_to_pct_centered(wid_player_action, 0.5, 0.905);
+    } else {
+        wid_move_to_pct_centered(wid_player_action, 0.5, 2.0);
+        wid_move_to_pct_centered_in(wid_player_action, 0.5, 0.905,
+                                    5*wid_swipe_delay);
+    }
 
     wid_raise(wid_player_action);
     wid_update(wid_player_action);
 
     wid_raise(wid_player_action);
-    wid_set_do_not_lower(wid_player_action, true);
+
+    wid_set_movable(wid_player_action, false);
 }
 
 static void wid_player_action_destroy (void)

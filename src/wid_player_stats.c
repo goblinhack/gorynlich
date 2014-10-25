@@ -141,7 +141,9 @@ void wid_player_stats_redraw (void)
     wid_player_inventory_visible(player_stats);
 
     wid_player_action_hide();
-    wid_player_action_visible(player_stats);
+    wid_player_action_visible(player_stats, true);
+
+    wid_raise(wid_mouse_template);
 }
 
 static void wid_player_stats_reroll (void)
@@ -589,6 +591,8 @@ static void wid_player_stats_create (player_stats_t *s)
 
     wid_raise(wid_player_stats);
     wid_update(wid_player_stats);
+
+    wid_set_movable(wid_player_stats, false);
 }
 
 static void wid_player_stats_destroy (void)
