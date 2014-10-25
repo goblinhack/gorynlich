@@ -452,7 +452,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
     strncpy(player_stats->pclass, pclass_random(),
             sizeof(player_stats->pclass) - 1);
 
-    thing_templatep tp = 
+    const thing_templatep tp = 
                     player_stats_to_thing_template(player_stats);
 
     player_stats_init(player_stats);
@@ -553,12 +553,14 @@ void player_stats_generate_random (player_stats_t *player_stats)
     uint32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
-        thing_templatep tp;
 
-        tp = id_to_thing_template(i);
-        if (!tp->carrying[i].id) {
+        if (!tp->base_items[i].quantity) {
             continue;
         }
+
+        thing_templatep tp_item;
+
+        tp_item = id_to_thing_template(i);
 
         /*
          * Only top quality items to start.
@@ -566,11 +568,16 @@ void player_stats_generate_random (player_stats_t *player_stats)
         item_t item = {0};
 
         item.id = i;
-        item.quantity = tp->quantity;
+        item.quantity = tp_item->quantity;
+
+        if (!item.quantity) {
+            item.quantity = 1;
+        }
+
         item.quality = THING_ITEM_QUALITY_MAX;
         item.enchanted = item_enchant_randomly();
 
-        const char *carried_as = tp_carried_as(tp);
+        const char *carried_as = tp_carried_as(tp_item);
         if (carried_as) {
             thing_templatep what = tp_find(carried_as);
             if (!what) {

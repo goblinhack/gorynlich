@@ -411,7 +411,8 @@ static void demarshal_thing_carrying (demarshal_p ctx, thing_templatep t)
             DIE("carried thing %s not in database", val);
         }
 
-        t->carrying[id].quantity++;
+        t->base_items[id].quantity++;
+        t->base_items[id].id = id;
 
         myfree(val);
     } while (demarshal_gotone(ctx));
