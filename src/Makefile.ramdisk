@@ -229,6 +229,9 @@
 .o/ramdisk_data_sound_wand_dead_wav.o: asm/ramdisk_data_sound_wand_dead_wav.S ../data/sound/wand_dead.wav
 	gcc -c asm/ramdisk_data_sound_wand_dead_wav.S -o .o/ramdisk_data_sound_wand_dead_wav.o
 
+.o/ramdisk_data_things__amulet1_session.o: asm/ramdisk_data_things__amulet1_session.S ../data/things/.amulet1.session
+	gcc -c asm/ramdisk_data_things__amulet1_session.S -o .o/ramdisk_data_things__amulet1_session.o
+
 .o/ramdisk_data_things__apple1_session.o: asm/ramdisk_data_things__apple1_session.S ../data/things/.apple1.session
 	gcc -c asm/ramdisk_data_things__apple1_session.S -o .o/ramdisk_data_things__apple1_session.o
 
@@ -259,6 +262,12 @@
 .o/ramdisk_data_things__sword2_session.o: asm/ramdisk_data_things__sword2_session.S ../data/things/.sword2.session
 	gcc -c asm/ramdisk_data_things__sword2_session.S -o .o/ramdisk_data_things__sword2_session.o
 
+.o/ramdisk_data_things__thing_h_session.o: asm/ramdisk_data_things__thing_h_session.S ../data/things/.thing.h.session
+	gcc -c asm/ramdisk_data_things__thing_h_session.S -o .o/ramdisk_data_things__thing_h_session.o
+
+.o/ramdisk_data_things__thing_template_h_session.o: asm/ramdisk_data_things__thing_template_h_session.S ../data/things/.thing_template.h.session
+	gcc -c asm/ramdisk_data_things__thing_template_h_session.S -o .o/ramdisk_data_things__thing_template_h_session.o
+
 .o/ramdisk_data_things__torches_session.o: asm/ramdisk_data_things__torches_session.S ../data/things/.torches.session
 	gcc -c asm/ramdisk_data_things__torches_session.S -o .o/ramdisk_data_things__torches_session.o
 
@@ -282,9 +291,6 @@
 
 .o/ramdisk_data_things__wizard_session.o: asm/ramdisk_data_things__wizard_session.S ../data/things/.wizard.session
 	gcc -c asm/ramdisk_data_things__wizard_session.S -o .o/ramdisk_data_things__wizard_session.o
-
-.o/ramdisk_data_things_amulet1.o: asm/ramdisk_data_things_amulet1.S ../data/things/amulet1
-	gcc -c asm/ramdisk_data_things_amulet1.S -o .o/ramdisk_data_things_amulet1.o
 
 .o/ramdisk_data_things_anim_eyes.o: asm/ramdisk_data_things_anim_eyes.S ../data/things/anim_eyes
 	gcc -c asm/ramdisk_data_things_anim_eyes.S -o .o/ramdisk_data_things_anim_eyes.o

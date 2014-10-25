@@ -275,24 +275,24 @@ uint8_t map_is_rrr7_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr7));
 }
 
-uint8_t map_is_rrr8_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_hand_item_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr8));
+    return (map_is_x_at(level, x, y, tp_is_hand_item));
 }
 
-uint8_t map_is_rrr9_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_boots_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr9));
+    return (map_is_x_at(level, x, y, tp_is_boots));
 }
 
-uint8_t map_is_rrr10_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_helmet_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr10));
+    return (map_is_x_at(level, x, y, tp_is_helmet));
 }
 
-uint8_t map_is_rrr11_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_armor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr11));
+    return (map_is_x_at(level, x, y, tp_is_armor));
 }
 
 uint8_t map_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
@@ -607,24 +607,24 @@ thingp map_thing_is_rrr7_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr7));
 }
 
-thingp map_thing_is_rrr8_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_hand_item_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr8));
+    return (map_thing_is_x_at(level, x, y, tp_is_hand_item));
 }
 
-thingp map_thing_is_rrr9_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_boots_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr9));
+    return (map_thing_is_x_at(level, x, y, tp_is_boots));
 }
 
-thingp map_thing_is_rrr10_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_helmet_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr10));
+    return (map_thing_is_x_at(level, x, y, tp_is_helmet));
 }
 
-thingp map_thing_is_rrr11_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_armor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr11));
+    return (map_thing_is_x_at(level, x, y, tp_is_armor));
 }
 
 thingp map_thing_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
@@ -955,24 +955,24 @@ tree_rootp map_all_things_is_rrr7_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr7));
 }
 
-tree_rootp map_all_things_is_rrr8_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_hand_item_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr8));
+    return (map_all_things_is_x_at(level, x, y, tp_is_hand_item));
 }
 
-tree_rootp map_all_things_is_rrr9_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_boots_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr9));
+    return (map_all_things_is_x_at(level, x, y, tp_is_boots));
 }
 
-tree_rootp map_all_things_is_rrr10_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_helmet_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr10));
+    return (map_all_things_is_x_at(level, x, y, tp_is_helmet));
 }
 
-tree_rootp map_all_things_is_rrr11_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_armor_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr11));
+    return (map_all_things_is_x_at(level, x, y, tp_is_armor));
 }
 
 tree_rootp map_all_things_is_given_randomly_at_start_at (levelp level, int32_t x, int32_t y)
@@ -1406,25 +1406,25 @@ thing_templatep map_find_rrr7_at (levelp level,
 thing_templatep map_find_rrr8_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr8, w));
+    return (map_find_x_at(level, x, y, tp_is_hand_item, w));
 }
 
 thing_templatep map_find_rrr9_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr9, w));
+    return (map_find_x_at(level, x, y, tp_is_boots, w));
 }
 
 thing_templatep map_find_rrr10_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr10, w));
+    return (map_find_x_at(level, x, y, tp_is_helmet, w));
 }
 
 thing_templatep map_find_rrr11_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr11, w));
+    return (map_find_x_at(level, x, y, tp_is_armor, w));
 }
 
 thing_templatep map_find_given_randomly_at_start_at (levelp level,
@@ -2111,24 +2111,24 @@ uint32_t level_count_is_rrr7 (levelp level)
     return (level_count_is_x(level, tp_is_rrr7));
 }
 
-uint32_t level_count_is_rrr8 (levelp level)
+uint32_t level_count_is_hand_item (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr8));
+    return (level_count_is_x(level, tp_is_hand_item));
 }
 
-uint32_t level_count_is_rrr9 (levelp level)
+uint32_t level_count_is_boots (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr9));
+    return (level_count_is_x(level, tp_is_boots));
 }
 
-uint32_t level_count_is_rrr10 (levelp level)
+uint32_t level_count_is_helmet (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr10));
+    return (level_count_is_x(level, tp_is_helmet));
 }
 
-uint32_t level_count_is_rrr11 (levelp level)
+uint32_t level_count_is_armor (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr11));
+    return (level_count_is_x(level, tp_is_armor));
 }
 
 uint32_t level_count_is_given_randomly_at_start (levelp level)
@@ -2465,24 +2465,24 @@ tree_rootp map_all_things_is_rrr7 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr7));
 }
 
-tree_rootp map_all_things_is_rrr8 (levelp level)
+tree_rootp map_all_things_is_hand_item (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr8));
+    return (map_all_things_is_x(level, tp_is_hand_item));
 }
 
-tree_rootp map_all_things_is_rrr9 (levelp level)
+tree_rootp map_all_things_is_boots (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr9));
+    return (map_all_things_is_x(level, tp_is_boots));
 }
 
-tree_rootp map_all_things_is_rrr10 (levelp level)
+tree_rootp map_all_things_is_helmet (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr10));
+    return (map_all_things_is_x(level, tp_is_helmet));
 }
 
-tree_rootp map_all_things_is_rrr11 (levelp level)
+tree_rootp map_all_things_is_armor (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr11));
+    return (map_all_things_is_x(level, tp_is_armor));
 }
 
 tree_rootp map_all_things_is_given_randomly_at_start (levelp level)

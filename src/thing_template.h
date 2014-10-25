@@ -226,10 +226,10 @@ typedef struct tp_ {
     uint8_t is_rrr5:1;
     uint8_t is_rrr6:1;
     uint8_t is_rrr7:1;
-    uint8_t is_rrr8:1;
-    uint8_t is_rrr9:1;
-    uint8_t is_rrr10:1;
-    uint8_t is_rrr11:1;
+    uint8_t is_hand_item:1;
+    uint8_t is_boots:1;
+    uint8_t is_helmet:1;
+    uint8_t is_armor:1;
     uint8_t is_given_randomly_at_start:1;
     uint8_t is_magical:1;
     uint8_t is_degradable:1;
@@ -546,24 +546,24 @@ static inline uint8_t tp_is_rrr7 (thing_templatep t)
     return (t->is_rrr7);
 }
 
-static inline uint8_t tp_is_rrr8 (thing_templatep t)
+static inline uint8_t tp_is_hand_item (thing_templatep t)
 {
-    return (t->is_rrr8);
+    return (t->is_hand_item);
 }
 
-static inline uint8_t tp_is_rrr9 (thing_templatep t)
+static inline uint8_t tp_is_boots (thing_templatep t)
 {
-    return (t->is_rrr9);
+    return (t->is_boots);
 }
 
-static inline uint8_t tp_is_rrr10 (thing_templatep t)
+static inline uint8_t tp_is_helmet (thing_templatep t)
 {
-    return (t->is_rrr10);
+    return (t->is_helmet);
 }
 
-static inline uint8_t tp_is_rrr11 (thing_templatep t)
+static inline uint8_t tp_is_armor (thing_templatep t)
 {
-    return (t->is_rrr11);
+    return (t->is_armor);
 }
 
 static inline uint8_t tp_is_given_randomly_at_start (thing_templatep t)
