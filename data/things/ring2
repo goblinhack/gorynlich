@@ -9,6 +9,7 @@
  is_carryable
  is_given_randomly_at_start
  is_ring
+can_be_enchanted
 is_hand_item
  bonus_score_on_collect=10000
  tiles={

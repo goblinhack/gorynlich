@@ -472,7 +472,12 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
         i.id = tp_to_id(t);
         i.quantity = 1;
         i.quality = quality;
-        i.enchanted = item_enchant_randomly();
+
+        const thing_templatep item_tp = id_to_tp(i.id);
+
+        if (tp_can_be_enchanted(item_tp)) {
+            i.enchanted = item_enchant_randomly();
+        }
 
         player_stats_item_add(0 /* thing */, player_stats, i);
     }
@@ -480,8 +485,7 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
 
 static void player_stats_generate_fixed_items (player_stats_t *player_stats) 
 {
-    const thing_templatep tp = 
-                    player_stats_to_tp(player_stats);
+    const thing_templatep tp = player_stats_to_tp(player_stats);
 
     /*
      * Start with items defined for this base class.
@@ -535,8 +539,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
     strncpy(player_stats->pclass, pclass_random(),
             sizeof(player_stats->pclass) - 1);
 
-    const thing_templatep tp = 
-                    player_stats_to_tp(player_stats);
+    const thing_templatep tp = player_stats_to_tp(player_stats);
 
     player_stats_init(player_stats);
 
@@ -550,51 +553,44 @@ void player_stats_generate_random (player_stats_t *player_stats)
     /*
      * attack_melee
      */
-    player_stats->attack_melee = 
-                    tp_get_stats_attack_melee(tp);
+    player_stats->attack_melee = tp_get_stats_attack_melee(tp);
     player_stats->attack_melee = gaussrand(player_stats->attack_melee, 2);
 
     /*
      * attack_ranged
      */
-    player_stats->attack_ranged = 
-                    tp_get_stats_attack_ranged(tp);
+    player_stats->attack_ranged = tp_get_stats_attack_ranged(tp);
     player_stats->attack_ranged = gaussrand(player_stats->attack_ranged, 2);
 
     /*
      * attack_magical
      */
-    player_stats->attack_magical = 
-                    tp_get_stats_attack_magical(tp);
+    player_stats->attack_magical = tp_get_stats_attack_magical(tp);
     player_stats->attack_magical = gaussrand(player_stats->attack_magical, 2);
 
 
     /*
      * defense
      */
-    player_stats->defense = 
-                    tp_get_stats_defense(tp);
+    player_stats->defense = tp_get_stats_defense(tp);
     player_stats->defense = gaussrand(player_stats->defense, 2);
 
     /*
      * speed
      */
-    player_stats->speed = 
-                    tp_get_stats_speed(tp);
+    player_stats->speed = tp_get_stats_speed(tp);
     player_stats->speed = gaussrand(player_stats->speed, 2);
 
     /*
      * vision
      */
-    player_stats->vision = 
-                    tp_get_stats_vision(tp);
+    player_stats->vision = tp_get_stats_vision(tp);
     player_stats->vision = gaussrand(player_stats->vision, 2);
 
     /*
      * healing
      */
-    player_stats->healing = 
-                    tp_get_stats_healing(tp);
+    player_stats->healing = tp_get_stats_healing(tp);
     player_stats->healing = gaussrand(player_stats->healing, 2);
 
     /*

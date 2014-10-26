@@ -241,6 +241,12 @@
 .o/ramdisk_data_things__axe1_session.o: asm/ramdisk_data_things__axe1_session.S ../data/things/.axe1.session
 	gcc -c asm/ramdisk_data_things__axe1_session.S -o .o/ramdisk_data_things__axe1_session.o
 
+.o/ramdisk_data_things__axe3_session.o: asm/ramdisk_data_things__axe3_session.S ../data/things/.axe3.session
+	gcc -c asm/ramdisk_data_things__axe3_session.S -o .o/ramdisk_data_things__axe3_session.o
+
+.o/ramdisk_data_things__axe4_session.o: asm/ramdisk_data_things__axe4_session.S ../data/things/.axe4.session
+	gcc -c asm/ramdisk_data_things__axe4_session.S -o .o/ramdisk_data_things__axe4_session.o
+
 .o/ramdisk_data_things__axe5_session.o: asm/ramdisk_data_things__axe5_session.S ../data/things/.axe5.session
 	gcc -c asm/ramdisk_data_things__axe5_session.S -o .o/ramdisk_data_things__axe5_session.o
 
