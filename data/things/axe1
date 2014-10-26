@@ -1,6 +1,6 @@
 {
- short_name="light axe"
- tooltip="Might-as-well-be-foam axe"
+ short_name="axe1"
+ tooltip="Wooden axe"
  z_depth=3
  is_weapon
  is_degradable
@@ -8,13 +8,13 @@
  is_carryable
  is_given_randomly_at_start
  weapon_fire_delay_tenths=1
- damage=8
+ damage=6
  swing_distance_from_player=5
  is_wearable
  is_collision_map_medium
  is_valid_for_action_bar
- chance_of_appearing=40
- failure_chance=2000
+ chance_of_appearing=60
+ reliability=2000
  weapon_carry_anim="data/things/axe1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

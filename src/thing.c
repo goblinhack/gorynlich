@@ -129,8 +129,14 @@ uint16_t THING_WAND_FIRE;
 uint16_t THING_SWORD1;
 uint16_t THING_SWORD2;
 uint16_t THING_SWORD3;
+uint16_t THING_SWORD4;
+uint16_t THING_SWORD5;
+uint16_t THING_SWORD6;
 uint16_t THING_AXE1;
 uint16_t THING_AXE2;
+uint16_t THING_AXE3;
+uint16_t THING_AXE4;
+uint16_t THING_AXE5;
 uint16_t THING_SCYTHE1;
 uint16_t THING_KEY;
 uint16_t THING_KEYS2;
@@ -4071,10 +4077,10 @@ void thing_fire (thingp t,
      * Check if the weapon reaches its end of warranty.
      */
     if (weapon == t->weapon) {
-        uint32_t failure_chance = tp_get_failure_chance(weapon);
+        uint32_t reliability = tp_get_reliability(weapon);
 
-        if (failure_chance) {
-            if ((rand() % failure_chance) == 0) {
+        if (reliability) {
+            if ((rand() % reliability) == 0) {
                 thing_degrade(t, weapon, 0);
                 return;
             }

@@ -1,6 +1,6 @@
 {
- short_name="sword1"
- tooltip="Very Very Short sword"
+ short_name="sword6"
+ tooltip="Diamond Sword"
  z_depth=3
  is_weapon
  is_degradable
@@ -8,19 +8,19 @@
  is_carryable
  is_given_randomly_at_start
  weapon_fire_delay_tenths=1
- damage=4
+ damage=14
  swing_distance_from_player=5
  is_wearable
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- chance_of_appearing=50
- reliability=2000
- weapon_carry_anim="data/things/sword1_anim"
+ chance_of_appearing=2
+ reliability=1000
+ weapon_carry_anim="data/things/sword3_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
-   tile="sword1"
+   tile="sword6"
    delay=50
   }
  }

@@ -266,7 +266,7 @@ void wid_player_inventory_button_style (widp w,
         /*
          * Failure rate
          */
-        uint32_t val = tp_get_failure_chance(tp);
+        uint32_t val = tp_get_reliability(tp);
         if (val) {
             const char *str;
             if (val >= 10000) {
