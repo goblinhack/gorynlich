@@ -183,7 +183,7 @@ typedef struct tp_ {
     uint32_t swing_distance_from_player;
     uint32_t tx_map_update_delay_thousandths;
     uint32_t can_be_hit_chance;
-    uint32_t failure_chance;
+    uint32_t reliability;
     uint32_t hit_delay_tenths;
     uint32_t mob_spawn_delay_tenths;
 
@@ -320,7 +320,7 @@ int16_t tp_get_bonus_id_on_use(thing_templatep);
 
 uint32_t tp_get_tx_map_update_delay_thousandths(thing_templatep);
 uint32_t tp_get_can_be_hit_chance(thing_templatep);
-uint32_t tp_get_failure_chance(thing_templatep);
+uint32_t tp_get_reliability(thing_templatep);
 uint32_t tp_get_hit_delay_tenths(thing_templatep);
 uint32_t tp_get_mob_spawn_delay_tenths(thing_templatep);
 

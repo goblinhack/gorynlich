@@ -15,7 +15,7 @@
  is_fragile
  is_wearable
  is_collision_map_medium
- failure_chance=2000
+ reliability=2000
  weapon_carry_anim="data/things/bow1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

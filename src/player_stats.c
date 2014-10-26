@@ -487,7 +487,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
             sizeof(player_stats->pclass) - 1);
 
     const thing_templatep tp = 
-                    player_stats_to_thing_template(player_stats);
+                    player_stats_to_tp(player_stats);
 
     player_stats_init(player_stats);
 
@@ -665,7 +665,7 @@ void player_stats_init (player_stats_t *player_stats)
 }
 
 thing_templatep
-player_stats_to_thing_template (player_stats_t *player_stats)
+player_stats_to_tp (player_stats_t *player_stats)
 {
     return (tp_find_short_name(player_stats->pclass));
 }

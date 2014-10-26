@@ -1,26 +1,25 @@
 {
- short_name="sword1"
- tooltip="Very Very Short sword"
+ short_name="axe3"
+ tooltip="Professional Axe"
  z_depth=3
  is_weapon
  is_degradable
  hit_priority=0
  is_carryable
  is_given_randomly_at_start
- weapon_fire_delay_tenths=1
- damage=4
- swing_distance_from_player=5
+ weapon_fire_delay_tenths=2
+ damage=12
+ swing_distance_from_player=6
  is_wearable
  is_collision_map_medium
- is_animated
  is_valid_for_action_bar
- chance_of_appearing=50
- reliability=2000
- weapon_carry_anim="data/things/sword1_anim"
+ chance_of_appearing=20
+ reliability=3000
+ weapon_carry_anim="data/things/axe1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={
   tile={
-   tile="sword1"
+   tile="axe3"
    delay=50
   }
  }

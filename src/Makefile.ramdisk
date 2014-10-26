@@ -238,6 +238,12 @@
 .o/ramdisk_data_things__apple_poison_session.o: asm/ramdisk_data_things__apple_poison_session.S ../data/things/.apple_poison.session
 	gcc -c asm/ramdisk_data_things__apple_poison_session.S -o .o/ramdisk_data_things__apple_poison_session.o
 
+.o/ramdisk_data_things__axe1_session.o: asm/ramdisk_data_things__axe1_session.S ../data/things/.axe1.session
+	gcc -c asm/ramdisk_data_things__axe1_session.S -o .o/ramdisk_data_things__axe1_session.o
+
+.o/ramdisk_data_things__axe5_session.o: asm/ramdisk_data_things__axe5_session.S ../data/things/.axe5.session
+	gcc -c asm/ramdisk_data_things__axe5_session.S -o .o/ramdisk_data_things__axe5_session.o
+
 .o/ramdisk_data_things__bread_session.o: asm/ramdisk_data_things__bread_session.S ../data/things/.bread.session
 	gcc -c asm/ramdisk_data_things__bread_session.S -o .o/ramdisk_data_things__bread_session.o
 
@@ -259,8 +265,14 @@
 .o/ramdisk_data_things__sword1_session.o: asm/ramdisk_data_things__sword1_session.S ../data/things/.sword1.session
 	gcc -c asm/ramdisk_data_things__sword1_session.S -o .o/ramdisk_data_things__sword1_session.o
 
+.o/ramdisk_data_things__sword1_anim_session.o: asm/ramdisk_data_things__sword1_anim_session.S ../data/things/.sword1_anim.session
+	gcc -c asm/ramdisk_data_things__sword1_anim_session.S -o .o/ramdisk_data_things__sword1_anim_session.o
+
 .o/ramdisk_data_things__sword2_session.o: asm/ramdisk_data_things__sword2_session.S ../data/things/.sword2.session
 	gcc -c asm/ramdisk_data_things__sword2_session.S -o .o/ramdisk_data_things__sword2_session.o
+
+.o/ramdisk_data_things__sword4_session.o: asm/ramdisk_data_things__sword4_session.S ../data/things/.sword4.session
+	gcc -c asm/ramdisk_data_things__sword4_session.S -o .o/ramdisk_data_things__sword4_session.o
 
 .o/ramdisk_data_things__thing_h_session.o: asm/ramdisk_data_things__thing_h_session.S ../data/things/.thing.h.session
 	gcc -c asm/ramdisk_data_things__thing_h_session.S -o .o/ramdisk_data_things__thing_h_session.o
@@ -321,6 +333,15 @@
 
 .o/ramdisk_data_things_axe2_anim.o: asm/ramdisk_data_things_axe2_anim.S ../data/things/axe2_anim
 	gcc -c asm/ramdisk_data_things_axe2_anim.S -o .o/ramdisk_data_things_axe2_anim.o
+
+.o/ramdisk_data_things_axe3.o: asm/ramdisk_data_things_axe3.S ../data/things/axe3
+	gcc -c asm/ramdisk_data_things_axe3.S -o .o/ramdisk_data_things_axe3.o
+
+.o/ramdisk_data_things_axe4.o: asm/ramdisk_data_things_axe4.S ../data/things/axe4
+	gcc -c asm/ramdisk_data_things_axe4.S -o .o/ramdisk_data_things_axe4.o
+
+.o/ramdisk_data_things_axe5.o: asm/ramdisk_data_things_axe5.S ../data/things/axe5
+	gcc -c asm/ramdisk_data_things_axe5.S -o .o/ramdisk_data_things_axe5.o
 
 .o/ramdisk_data_things_banana.o: asm/ramdisk_data_things_banana.S ../data/things/banana
 	gcc -c asm/ramdisk_data_things_banana.S -o .o/ramdisk_data_things_banana.o
@@ -579,6 +600,15 @@
 
 .o/ramdisk_data_things_sword3_anim.o: asm/ramdisk_data_things_sword3_anim.S ../data/things/sword3_anim
 	gcc -c asm/ramdisk_data_things_sword3_anim.S -o .o/ramdisk_data_things_sword3_anim.o
+
+.o/ramdisk_data_things_sword4.o: asm/ramdisk_data_things_sword4.S ../data/things/sword4
+	gcc -c asm/ramdisk_data_things_sword4.S -o .o/ramdisk_data_things_sword4.o
+
+.o/ramdisk_data_things_sword5.o: asm/ramdisk_data_things_sword5.S ../data/things/sword5
+	gcc -c asm/ramdisk_data_things_sword5.S -o .o/ramdisk_data_things_sword5.o
+
+.o/ramdisk_data_things_sword6.o: asm/ramdisk_data_things_sword6.S ../data/things/sword6
+	gcc -c asm/ramdisk_data_things_sword6.S -o .o/ramdisk_data_things_sword6.o
 
 .o/ramdisk_data_things_torch.o: asm/ramdisk_data_things_torch.S ../data/things/torch
 	gcc -c asm/ramdisk_data_things_torch.S -o .o/ramdisk_data_things_torch.o
