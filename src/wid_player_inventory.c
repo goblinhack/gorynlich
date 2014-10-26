@@ -524,7 +524,7 @@ static void wid_player_inventory_create (player_stats_t *s)
     {
         if (!(item % N_PER_CLASS)) {
             widp w = wid_new_square_button(wid_player_inventory_container, 
-                                          "wid player_stats inventory item");
+                                           "wid player_stats inventory item");
 
             fpoint tl = {0.0, 0.0};
             fpoint br = {1.0, 0.0};

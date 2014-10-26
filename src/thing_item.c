@@ -45,33 +45,35 @@ static void thing_collect (thingp t,
     }
 
     /*
-     * If treasure, just add it to the score. Don't carry it.
+     * Can it fit in the backpack?
      */
-    if (tp_is_treasure(tp)) {
+    if (thing_is_player(t) && it) {
+        /*
+         * If treasure, just add it to the score. Don't carry it.
+         */
+        if (tp_is_treasure(tp)) {
+            /*
+            * Bonus for collecting?
+            */
+            thing_set_score(t, thing_score(t) +
+                            tp_get_bonus_score_on_collect(tp) *
+                            it->item.quantity);
+            return;
+        }
+
+        if (!player_stats_item_add(t, &t->stats, it->item)) {
+            THING_SHOUT_AT(t, INFO, "You could not collect %s",
+                        tp_short_name(tp));
+            return;
+        }
+
         /*
          * Bonus for collecting?
          */
         thing_set_score(t, thing_score(t) +
                         tp_get_bonus_score_on_collect(tp) *
                         it->item.quantity);
-        return;
     }
-
-    /*
-     * Can it fit in the backpack?
-     */
-    if (!player_stats_item_add(t, &t->stats, it->item)) {
-        THING_SHOUT_AT(t, INFO, "You could not collect %s",
-                       tp_short_name(tp));
-        return;
-    }
-
-    /*
-     * Bonus for collecting?
-     */
-    thing_set_score(t, thing_score(t) +
-                    tp_get_bonus_score_on_collect(tp) *
-                    it->item.quantity);
 
     if (!auto_collect) {
         if (thing_is_player(t)) {
