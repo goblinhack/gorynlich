@@ -270,9 +270,9 @@ uint8_t map_is_rrr6_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr6));
 }
 
-uint8_t map_is_rrr7_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_spell_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr7));
+    return (map_is_x_at(level, x, y, tp_is_spell));
 }
 
 uint8_t map_is_hand_item_at (levelp level, int32_t x, int32_t y)
@@ -602,9 +602,9 @@ thingp map_thing_is_rrr6_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr6));
 }
 
-thingp map_thing_is_rrr7_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_spell_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr7));
+    return (map_thing_is_x_at(level, x, y, tp_is_spell));
 }
 
 thingp map_thing_is_hand_item_at (levelp level, int32_t x, int32_t y)
@@ -950,9 +950,9 @@ tree_rootp map_all_things_is_rrr6_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr6));
 }
 
-tree_rootp map_all_things_is_rrr7_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_spell_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr7));
+    return (map_all_things_is_x_at(level, x, y, tp_is_spell));
 }
 
 tree_rootp map_all_things_is_hand_item_at (levelp level, int32_t x, int32_t y)
@@ -1397,10 +1397,10 @@ thing_templatep map_find_rrr6_at (levelp level,
     return (map_find_x_at(level, x, y, tp_is_rrr6, w));
 }
 
-thing_templatep map_find_rrr7_at (levelp level,
+thing_templatep map_find_spell_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr7, w));
+    return (map_find_x_at(level, x, y, tp_is_spell, w));
 }
 
 thing_templatep map_find_rrr8_at (levelp level,
@@ -2106,9 +2106,9 @@ uint32_t level_count_is_rrr6 (levelp level)
     return (level_count_is_x(level, tp_is_rrr6));
 }
 
-uint32_t level_count_is_rrr7 (levelp level)
+uint32_t level_count_is_spell (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr7));
+    return (level_count_is_x(level, tp_is_spell));
 }
 
 uint32_t level_count_is_hand_item (levelp level)
@@ -2460,9 +2460,9 @@ tree_rootp map_all_things_is_rrr6 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr6));
 }
 
-tree_rootp map_all_things_is_rrr7 (levelp level)
+tree_rootp map_all_things_is_spell (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr7));
+    return (map_all_things_is_x(level, tp_is_spell));
 }
 
 tree_rootp map_all_things_is_hand_item (levelp level)

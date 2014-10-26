@@ -513,18 +513,78 @@ static void wid_player_inventory_create (player_stats_t *s)
     double dy = (1.0 - (border_top + border_bottom)) / max_down;
     
     int item = 0;
+    int which = 0;
+    double dy2 = 0.0;
+
+    static const uint32_t N_PER_CLASS = 
+                    THING_INVENTORY_MAX / THING_INVENTORY_CLASSES;
 
     for (y = 0; y < max_down; y++) 
     for (x = 0; x < max_across; x++) 
     {
+        if (!(item % N_PER_CLASS)) {
+            widp w = wid_new_square_button(wid_player_inventory_container, 
+                                          "wid player_stats inventory item");
+
+            fpoint tl = {0.0, 0.0};
+            fpoint br = {1.0, 0.0};
+
+            tl.x = border_left;
+            tl.y = border_top + (y * dy) + dy2;
+            br.x = 1.0 - border_right;
+            br.y = tl.y + 0.02;
+
+            dy2 += 0.02;
+
+            switch (which) {
+            case 0:
+                wid_set_text(w, "Food");
+                break;
+            case 1:
+                wid_set_text(w, "Weapons");
+                break;
+            case 2:
+                wid_set_text(w, "Magical Items");
+                break;
+            case 3:
+                wid_set_text(w, "Spells");
+                break;
+            case 4:
+                wid_set_text(w, "Other stuffs");
+                break;
+            }
+
+            color c = WHITE;
+            c.a = 0;
+
+            wid_set_tl_br_pct(w, tl, br);
+
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_TEXT, RED);
+            wid_set_color(w, WID_COLOR_BG, c);
+            wid_set_color(w, WID_COLOR_TL, c);
+            wid_set_color(w, WID_COLOR_BR, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_TEXT, WHITE);
+            wid_set_color(w, WID_COLOR_BG, c);
+            wid_set_color(w, WID_COLOR_TL, c);
+            wid_set_color(w, WID_COLOR_BR, c);
+
+            wid_set_font(w, vsmall_font);
+            wid_set_text_lhs(w, true);
+            wid_set_text_top(w, true);
+
+            which++;
+        }
+
         widp w = wid_new_square_button(wid_player_inventory_container, 
                                        "wid player_stats inventory item");
         fpoint tl = {0.0, 0.0};
-        fpoint br = {0.0, 0.8};
+        fpoint br = {0.0, 0.0};
 
         tl.x = border_left + (x * dx);
-        tl.y = border_top + (y * dy);
-
+        tl.y = border_top + (y * dy) + dy2;
         br.x = tl.x + dx;
         br.y = tl.y + dy;
 
