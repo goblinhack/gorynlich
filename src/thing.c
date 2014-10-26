@@ -756,7 +756,10 @@ thingp thing_server_new (const char *name, double x, double y)
     /*
      * New items are top quality.
      */
-    t->quality = THING_ITEM_QUALITY_MAX;
+    t->item.id = tp_to_id(tp);
+    t->item.quality = THING_ITEM_QUALITY_MAX;
+    t->item.quantity = tp_get_quantity(tp);
+    t->item.cursed = tp_is_cursed(tp);
 
     /*
      * Start out with the items carried on the template if any. This is not 
@@ -767,7 +770,7 @@ thingp thing_server_new (const char *name, double x, double y)
     if (!thing_is_player(t)) {
         for (i = 0; i < THING_MAX; i++) {
             for (j = 0; j < tp->base_items[i].quantity; j++) {
-                thing_auto_collect(t, 0 /* it */, id_to_thing_template(i));
+                thing_auto_collect(t, 0 /* it */, id_to_tp(i));
             }
         }
     }
@@ -3646,7 +3649,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             }
 
             thing_templatep tp = 
-                    id_to_thing_template(template_id);
+                    id_to_tp(template_id);
 
             t = thing_client_new(id, tp);
 
@@ -3662,7 +3665,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                  * Update the template ID so things can polymorph.
                  */
                 thing_templatep tp = 
-                        id_to_thing_template(template_id);
+                        id_to_tp(template_id);
 
                 t->tp = tp;
 
@@ -3902,7 +3905,7 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
 
     id = *data++;
     if (id) {
-        t->weapon = id_to_thing_template(id);
+        t->weapon = id_to_tp(id);
     } else {
         t->weapon = 0;
     }
@@ -4072,7 +4075,7 @@ void thing_fire (thingp t,
 
         if (failure_chance) {
             if ((rand() % failure_chance) == 0) {
-                thing_degrade(t, weapon);
+                thing_degrade(t, weapon, 0);
                 return;
             }
         }
@@ -4172,7 +4175,8 @@ void thing_fire (thingp t,
                                     x,
                                     y,
                                     0, /* thing */
-                                    projectile);
+                                    projectile,
+                                    0 /* item */);
 
     thingp p = wid_get_thing(w);
 
@@ -4294,13 +4298,19 @@ uint8_t thing_server_move (thingp t,
 
 void thing_server_action (thingp t,
                           uint8_t action,
-                          uint16_t item)
+                          uint16_t id)
 {
     widp grid = wid_game_map_server_grid_container;
 
-    thing_templatep tp = id_to_thing_template(item);
+    itemp item = &t->stats.action_bar[id];
+    if (!item->id) {
+        THING_SHOUT_AT(t, WARNING, "No item in that slot to use");
+        return;
+    }
+
+    thing_templatep tp = id_to_tp(id);
     if (!tp) {
-        ERR("Unkown item use request, id %u", item);
+        ERR("Unkown item use request, id %u", id);
         return;
     }
 
@@ -4317,26 +4327,18 @@ void thing_server_action (thingp t,
 
     switch (action) {
     case PLAYER_ACTION_USE: {
-        if (!thing_is_carrying_specific_item(t, item)) {
-            /*
-             * Sneaky.
-             */
-            THING_SHOUT_AT(t, WARNING, "You do not have that item");
-            return;
-        }
-
         if (tp_is_weapon(tp)) {
             thing_wield(t, tp);
             return;
         }
 
-        if (item == THING_POTION_FIRE) {
+        if (item->id == THING_POTION_FIRE) {
             level_place_fireball(server_level, t, t->x, t->y);
             break;
-        } else if (item == THING_POTION_MONSTICIDE) {
+        } else if (item->id == THING_POTION_MONSTICIDE) {
             level_place_poison(server_level, t, t->x, t->y);
             break;
-        } else if (item == THING_POTION_CLOUDKILL) {
+        } else if (item->id == THING_POTION_CLOUDKILL) {
             level_place_cloudkill(server_level, t, t->x, t->y);
             break;
         }
@@ -4412,7 +4414,8 @@ void thing_server_action (thingp t,
         if (!thing_hit_any_obstacle(grid, t, x, y)) {
             if (wid_game_map_server_replace_tile(grid, x, y,
                                                  0, /* thing */
-                                                 tp)) {
+                                                 tp,
+                                                 item)) {
                 socket_server_tx_map_update(0, server_boring_things,
                                             "item drop");
                 break;
@@ -4434,7 +4437,8 @@ void thing_server_action (thingp t,
                 if (!thing_hit_any_obstacle(grid, t, x, y)) {
                     if (wid_game_map_server_replace_tile(grid, x, y, 
                                                          0, /* thing */
-                                                         tp)) {
+                                                         tp,
+                                                         item)) {
                         socket_server_tx_map_update(0, server_boring_things,
                                                     "item dropped");
                         goto done;
@@ -4456,7 +4460,7 @@ void thing_server_action (thingp t,
         return;
 
     default:
-        ERR("Unkown player action %u on item id %u", action, item);
+        ERR("Unkown player action %u on item id %u", action, id);
         return;
     }
 
@@ -4464,11 +4468,11 @@ done:
 
     switch (action) {
     case PLAYER_ACTION_USE:
-        thing_used(t, tp);
+        thing_used(t, tp, item);
         break;
 
     case PLAYER_ACTION_DROP:
-        thing_drop(t, tp);
+        thing_drop(t, tp, item);
         break;
     }
 }

@@ -96,7 +96,7 @@ void wid_player_inventory_button_style (widp w,
         return;
     }
 
-    thing_templatep tp = id_to_thing_template(item.id);
+    thing_templatep tp = id_to_tp(item.id);
 
     if (player && player->weapon && (tp == player->weapon)) {
         wid_set_color(w, WID_COLOR_TL, RED);
@@ -116,6 +116,17 @@ void wid_player_inventory_button_style (widp w,
         wid_set_font(w, vsmall_font);
         wid_set_text_lhs(w, true);
         wid_set_text_top(w, true);
+    }
+
+    if (item.enchanted) {
+        char tmp[20];
+        snprintf(tmp, sizeof(tmp) - 1, "+%u", item.enchanted);
+
+        wid_set_text(w, tmp);
+        wid_set_font(w, vsmall_font);
+        wid_set_text_rhs(w, true);
+        wid_set_text_bot(w, true);
+        wid_set_color(w, WID_COLOR_TEXT, GOLD);
     }
 
     /*
@@ -323,7 +334,7 @@ void wid_player_inventory_button_style (widp w,
 item_t wid_item;
 
 uint8_t 
-wid_player_item_pick_up (widp w, item_t *over_item)
+wid_player_item_pick_up (widp w, itemp over_item)
 {
     thing_templatep tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
@@ -386,7 +397,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
 {
     thing_templatep tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
-    item_t *over_item = &player_stats->inventory[id];
+    itemp over_item = &player_stats->inventory[id];
 
     tp = wid_get_thing_template(w);
 
@@ -413,7 +424,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
             int i;
 
             for (i = 0; i < THING_INVENTORY_MAX; i++) {
-                item_t *freeitem = &player_stats->inventory[i];
+                itemp freeitem = &player_stats->inventory[i];
                 if (!freeitem->id) {
                     memcpy(freeitem, over_item, sizeof(item_t));
                     memset(over_item, 0, sizeof(item_t));

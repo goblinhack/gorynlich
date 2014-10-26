@@ -17,7 +17,7 @@
 #include "wid_player_info.h"
 #include "math.h"
 
-int item_push (item_t *dst, item_t src)
+int item_push (itemp dst, item_t src)
 {
     if (!dst->id) {
         /*
@@ -45,7 +45,7 @@ int item_push (item_t *dst, item_t src)
         return (false);
     }
 
-    thing_templatep tp = id_to_thing_template(dst->id);
+    thing_templatep tp = id_to_tp(dst->id);
 
     if (!tp_is_stackable(tp)) {
         /*
@@ -75,7 +75,7 @@ int item_push (item_t *dst, item_t src)
     return (true);
 }
 
-int item_pop (item_t *dst, item_t *popped)
+int item_pop (itemp dst, itemp popped)
 {
     if (!dst->id) {
         return (false);
@@ -211,11 +211,11 @@ int player_stats_get_modifier (int value)
     return (modifiers[value]);
 }
 
-item_t *player_stats_has_item (player_stats_t *player_stats,
+itemp player_stats_has_item (player_stats_t *player_stats,
                                uint32_t id,
                                uint32_t *index)
 {
-    item_t *i;
+    itemp i;
     
     i = player_stats_has_action_bar_item(player_stats, id, index);
     if (i) {
@@ -235,7 +235,7 @@ item_t *player_stats_has_item (player_stats_t *player_stats,
     return (0);
 }
 
-item_t *player_stats_has_inventory_item (player_stats_t *player_stats,
+itemp player_stats_has_inventory_item (player_stats_t *player_stats,
                                          uint32_t id,
                                          uint32_t *index)
 {
@@ -254,7 +254,7 @@ item_t *player_stats_has_inventory_item (player_stats_t *player_stats,
     return (0);
 }
 
-item_t *player_stats_has_action_bar_item (player_stats_t *player_stats,
+itemp player_stats_has_action_bar_item (player_stats_t *player_stats,
                                           uint32_t id,
                                           uint32_t *index)
 {
@@ -273,7 +273,7 @@ item_t *player_stats_has_action_bar_item (player_stats_t *player_stats,
     return (0);
 }
 
-item_t *player_stats_has_worn_item (player_stats_t *player_stats,
+itemp player_stats_has_worn_item (player_stats_t *player_stats,
                                     uint32_t id,
                                     uint32_t *index)
 {
@@ -296,8 +296,8 @@ int player_stats_item_add (thingp t,
                            player_stats_t *player_stats,
                            item_t item)
 {
-    thing_templatep it = id_to_thing_template(item.id);
-    item_t *oitem;
+    thing_templatep it = id_to_tp(item.id);
+    itemp oitem;
     uint32_t i;
 
     if (!item.quantity) {
@@ -399,7 +399,7 @@ int player_stats_item_remove (thingp t,
 {
     const int id = tp_to_id(it);
 
-    item_t *item = player_stats_has_item(player_stats, id, 0);
+    itemp item = player_stats_has_item(player_stats, id, 0);
     if (!item) {
         if (t) {
             THING_SHOUT_AT(t, INFO, "Not carrying the %s",
@@ -423,7 +423,7 @@ int player_stats_item_polymorph (player_stats_t *player_stats,
                                  const uint32_t from,
                                  const uint32_t to)
 {
-    item_t *from_item = player_stats_has_item(player_stats, from, 0);
+    itemp from_item = player_stats_has_item(player_stats, from, 0);
 
     /*
      * If not carrying, nothing to change.
@@ -445,7 +445,7 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
         thing_templatep t = 0;
 
         for (;;) {
-            t = id_to_thing_template(rand() % THING_MAX);
+            t = id_to_tp(rand() % THING_MAX);
 
             if (!tp_is_carryable(t)) {
                 continue;
@@ -594,7 +594,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
 
         thing_templatep tp_item;
 
-        tp_item = id_to_thing_template(i);
+        tp_item = id_to_tp(i);
 
         /*
          * Only top quality items to start.

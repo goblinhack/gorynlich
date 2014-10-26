@@ -335,7 +335,7 @@ static inline int16_t tp_to_id (thing_templatep t)
     return (t->id);
 }
 
-static inline thing_templatep id_to_thing_template (uint16_t id) 
+static inline thing_templatep id_to_tp (uint16_t id) 
 {
     extern thing_template thing_templates_chunk[THING_MAX];
 

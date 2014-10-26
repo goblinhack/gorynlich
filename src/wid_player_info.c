@@ -142,7 +142,7 @@ wid_player_info_button_style_mouse_down (widp w,
 {
     thing_templatep tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
-    item_t *over_item = &player_stats->worn[id];
+    itemp over_item = &player_stats->worn[id];
 
     tp = wid_get_thing_template(w);
 
@@ -211,7 +211,7 @@ wid_player_info_button_style_mouse_down (widp w,
             int i;
 
             for (i = 0; i < THING_INVENTORY_MAX; i++) {
-                item_t *freeitem = &player_stats->inventory[i];
+                itemp freeitem = &player_stats->inventory[i];
                 if (!freeitem->id) {
                     memcpy(freeitem, over_item, sizeof(item_t));
                     memset(over_item, 0, sizeof(item_t));

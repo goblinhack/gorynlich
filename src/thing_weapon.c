@@ -122,7 +122,7 @@ void thing_wield_next_weapon (thingp t)
             continue;
         }
 
-        thing_templatep tp = id_to_thing_template(id);
+        thing_templatep tp = id_to_tp(id);
         if (!tp_is_weapon(tp)) {
             continue;
         }
@@ -190,7 +190,8 @@ void thing_wield (thingp parent, thing_templatep tp)
                                 parent->x,
                                 parent->y,
                                 0, /* thing */
-                                what);
+                                what,
+                                0 /* item */);
         /*
          * Save the thing id so the client wid can keep track of the weapon.
          */
@@ -229,7 +230,8 @@ void thing_swing (thingp parent)
                                 parent->x,
                                 parent->y,
                                 0, /* thing */
-                                what);
+                                what,
+                                0 /* item */);
 
         /*
          * Save the thing id so the client wid can keep track of the weapon.
