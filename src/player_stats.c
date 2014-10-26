@@ -455,9 +455,9 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
                 continue;
             }
 
-            uint32_t chance = rand() % 1000;
+            uint32_t chance = rand() % 10000;
 
-            if (tp_get_d1000_chance_of_appearing(t) < chance) {
+            if (tp_get_d10000_chance_of_appearing(t) < chance) {
                 continue;
             }
 
