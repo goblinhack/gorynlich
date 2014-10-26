@@ -8,11 +8,11 @@
  hit_priority=5
  is_carryable
  is_given_randomly_at_start
+ is_magical
  is_valid_for_action_bar
  d10000_chance_of_appearing=75
  is_combustable
  is_fragile
- is_magical
  bonus_hp_on_use=50
  tiles={
   tile={

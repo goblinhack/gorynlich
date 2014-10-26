@@ -211,6 +211,81 @@ int player_stats_get_modifier (int value)
     return (modifiers[value]);
 }
 
+void player_inventory_sort (player_stats_t *player_stats)
+{
+    static const uint32_t NCLASSES = 
+                    THING_INVENTORY_CLASSES;
+    static const uint32_t N_PER_CLASS = 
+                    THING_INVENTORY_MAX / THING_INVENTORY_CLASSES;
+
+    item_t inv_new[THING_INVENTORY_MAX];
+    item_t inv_old[THING_INVENTORY_MAX];
+    uint32_t count_per_class[THING_INVENTORY_CLASSES];
+
+    memcpy(inv_old, &player_stats->inventory, sizeof(inv_old));
+    memset(inv_new, 0, sizeof(inv_new));
+    memset(count_per_class, 0, sizeof(count_per_class));
+
+    uint32_t i;
+
+    for (i = 0; i < THING_INVENTORY_MAX; i++) {
+        uint32_t id;
+
+        id = inv_old[i].id;
+        if (!id) {
+            continue;
+        }
+
+        uint32_t base = THING_INVENTORY_MISC_BASE;
+
+        thing_templatep tp = id_to_tp(id);
+
+        if (tp_is_magical(tp)) {
+            base = THING_INVENTORY_MAGICAL_BASE;
+        } else if (tp_is_weapon(tp)) {
+            base = THING_INVENTORY_WEAPON_BASE;
+        } else if (tp_is_spell(tp)) {
+            base = THING_INVENTORY_MAGICAL_BASE;
+        } else if (tp_is_food(tp)) {
+            base = THING_INVENTORY_FOOD_BASE;
+        }
+
+        if (count_per_class[base] >= N_PER_CLASS) {
+            base = THING_INVENTORY_MISC_BASE;
+
+            int which;
+
+            for (which = 0; which < NCLASSES; which++) {
+                if (count_per_class[which] < N_PER_CLASS) { 
+                    base = N_PER_CLASS * which;
+                    break;
+                }
+            }
+        }
+
+        int which = base / N_PER_CLASS;
+
+        if (count_per_class[which] >= N_PER_CLASS) {
+            /*
+             * Should never happen.
+             */
+            ERR("could not fit item for sorting");
+            continue;
+        }
+
+        uint32_t new_i = base + count_per_class[which];
+        if (new_i >= THING_INVENTORY_MAX) {
+            ERR("overflow in item sorting");
+            continue;
+        }
+
+        inv_new[new_i] = inv_old[i];
+        count_per_class[which]++;
+    }
+
+    memcpy(&player_stats->inventory, inv_new, sizeof(inv_new));
+}
+
 itemp player_stats_has_item (player_stats_t *player_stats,
                              uint32_t id,
                              uint32_t *index)

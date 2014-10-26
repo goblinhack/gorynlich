@@ -131,6 +131,8 @@ void wid_player_stats_visible (player_stats_t *s)
 
 void wid_player_stats_redraw (void)
 {
+    player_inventory_sort(player_stats);
+
     wid_player_stats_hide();
     wid_player_stats_create(player_stats);
 
