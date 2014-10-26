@@ -1060,11 +1060,11 @@ static inline uint8_t thing_is_warm_blooded (thingp t)
     return (tp_is_warm_blooded(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr23 (thingp t)
+static inline uint8_t thing_can_be_enchanted (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr23(thing_tp(t)));
+    return (tp_can_be_enchanted(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_stackable (thingp t)
@@ -1423,9 +1423,9 @@ static inline uint8_t thing_is_warm_blooded_noverify (thingp t)
     return (t->tp->is_warm_blooded);
 }
 
-static inline uint8_t thing_is_rrr23_noverify (thingp t)
+static inline uint8_t thing_can_be_enchanted_noverify (thingp t)
 {
-    return (t->tp->is_rrr23);
+    return (t->tp->can_be_enchanted);
 }
 
 static inline uint8_t thing_is_stackable_noverify (thingp t)

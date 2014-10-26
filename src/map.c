@@ -325,9 +325,9 @@ uint8_t map_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_warm_blooded));
 }
 
-uint8_t map_is_rrr23_at (levelp level, int32_t x, int32_t y)
+uint8_t map_can_be_enchanted_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr23));
+    return (map_is_x_at(level, x, y, tp_can_be_enchanted));
 }
 
 uint8_t map_is_stackable_at (levelp level, int32_t x, int32_t y)
@@ -657,9 +657,9 @@ thingp map_thing_is_warm_blooded_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_warm_blooded));
 }
 
-thingp map_thing_is_rrr23_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_can_be_enchanted_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr23));
+    return (map_thing_is_x_at(level, x, y, tp_can_be_enchanted));
 }
 
 thingp map_thing_is_stackable_at (levelp level, int32_t x, int32_t y)
@@ -1005,9 +1005,9 @@ tree_rootp map_all_things_is_warm_blooded_at (levelp level, int32_t x, int32_t y
     return (map_all_things_is_x_at(level, x, y, tp_is_warm_blooded));
 }
 
-tree_rootp map_all_things_is_rrr23_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_can_be_enchanted_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr23));
+    return (map_all_things_is_x_at(level, x, y, tp_can_be_enchanted));
 }
 
 tree_rootp map_all_things_is_stackable_at (levelp level, int32_t x, int32_t y)
@@ -1466,7 +1466,7 @@ thing_templatep map_find_rrr17_at (levelp level,
 thing_templatep map_find_rrr18_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr23, w));
+    return (map_find_x_at(level, x, y, tp_can_be_enchanted, w));
 }
 
 thing_templatep map_find_rrr19_at (levelp level,
@@ -2161,9 +2161,9 @@ uint32_t level_count_is_warm_blooded (levelp level)
     return (level_count_is_x(level, tp_is_warm_blooded));
 }
 
-uint32_t level_count_is_rrr23 (levelp level)
+uint32_t level_count_can_be_enchanted (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr23));
+    return (level_count_is_x(level, tp_can_be_enchanted));
 }
 
 uint32_t level_count_is_stackable (levelp level)
@@ -2515,9 +2515,9 @@ tree_rootp map_all_things_is_warm_blooded (levelp level)
     return (map_all_things_is_x(level, tp_is_warm_blooded));
 }
 
-tree_rootp map_all_things_is_rrr23 (levelp level)
+tree_rootp map_all_things_can_be_enchanted (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr23));
+    return (map_all_things_is_x(level, tp_can_be_enchanted));
 }
 
 tree_rootp map_all_things_is_stackable (levelp level)
