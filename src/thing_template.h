@@ -236,7 +236,7 @@ typedef struct tp_ {
     uint8_t is_cursed:1;
     uint8_t is_animate_only_when_moving:1;
     uint8_t is_warm_blooded:1;
-    uint8_t is_rrr23:1;
+    uint8_t can_be_enchanted:1;
     uint8_t is_stackable:1;
     uint8_t is_torch:1;
     uint8_t is_explosion:1;
@@ -596,9 +596,9 @@ static inline uint8_t tp_is_warm_blooded (thing_templatep t)
     return (t->is_warm_blooded);
 }
 
-static inline uint8_t tp_is_rrr23 (thing_templatep t)
+static inline uint8_t tp_can_be_enchanted (thing_templatep t)
 {
-    return (t->is_rrr23);
+    return (t->can_be_enchanted);
 }
 
 static inline uint8_t tp_is_stackable (thing_templatep t)

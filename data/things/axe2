@@ -3,6 +3,7 @@
  tooltip="Learner Axe"
  z_depth=3
  is_weapon
+can_be_enchanted
  is_degradable
  hit_priority=0
  is_carryable
