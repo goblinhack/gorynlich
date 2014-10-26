@@ -168,24 +168,6 @@ static uint8_t wid_player_stats_reroll_mouse_event (widp w,
     return (true);
 }
 
-static uint8_t wid_player_stats_reroll_key_event (widp w, 
-                                                  const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case 'q':
-        case SDLK_ESCAPE:
-            wid_player_stats_hide();
-            return (true);
-
-        default:
-            break;
-    }
-
-    wid_player_stats_reroll();
-
-    return (false);
-}
-
 static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
                                                        int32_t x, int32_t y,
                                                        uint32_t button)
@@ -580,7 +562,6 @@ static void wid_player_stats_create (player_stats_t *s)
         wid_set_mode(w, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(w, wid_player_stats_reroll_mouse_event);
-        wid_set_on_key_down(w, wid_player_stats_reroll_key_event);
 
         wid_set_tooltip(w, "Select this to try a differnet character. "
                         "But be certain, there is no undo...");
