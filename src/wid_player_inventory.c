@@ -266,7 +266,7 @@ void wid_player_inventory_button_style (widp w,
         /*
          * Failure rate
          */
-        uint32_t val = tp_get_reliability(tp);
+        uint32_t val = tp_get_d10000_chance_of_breaking(tp);
         if (val) {
             const char *str;
             if (val >= 10000) {
@@ -299,7 +299,7 @@ void wid_player_inventory_button_style (widp w,
         /*
          * Rarity
          */
-        val = tp_get_d1000_chance_of_appearing(tp);
+        val = tp_get_d10000_chance_of_appearing(tp);
         if (val) {
             const char *str;
             if (val >= 50) {

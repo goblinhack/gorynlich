@@ -8,7 +8,7 @@
  hit_priority=5
  is_carryable
  is_given_randomly_at_start
- d1000_chance_of_appearing=55
+ d10000_chance_of_appearing=250
  is_fragile
  bonus_hp_on_use=40
  message_on_use="%%fg=yellow$more cheese Gromit?"
