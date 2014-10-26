@@ -983,11 +983,11 @@ static inline uint8_t thing_is_rrr6 (thingp t)
     return (tp_is_rrr6(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr7 (thingp t)
+static inline uint8_t thing_is_spell (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr7(thing_tp(t)));
+    return (tp_is_spell(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_hand_item (thingp t)
@@ -1368,9 +1368,9 @@ static inline uint8_t thing_is_rrr6_noverify (thingp t)
     return (t->tp->is_rrr6);
 }
 
-static inline uint8_t thing_is_rrr7_noverify (thingp t)
+static inline uint8_t thing_is_spell_noverify (thingp t)
 {
-    return (t->tp->is_rrr7);
+    return (t->tp->is_spell);
 }
 
 static inline uint8_t thing_is_hand_item_noverify (thingp t)

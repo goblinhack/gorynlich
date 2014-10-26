@@ -6,9 +6,17 @@
 
 #pragma once
 
-#define THING_INVENTORY_MAX     100
-#define THING_ACTION_BAR_MAX    10
-#define THING_WORN_MAX          5
+#define THING_INVENTORY_MAX             100
+
+#define THING_INVENTORY_FOOD_BASE       0
+#define THING_INVENTORY_WEAPON_BASE     20
+#define THING_INVENTORY_MAGICAL_BASE    40
+#define THING_INVENTORY_SPELL_BASE      60
+#define THING_INVENTORY_MISC_BASE       80
+#define THING_INVENTORY_CLASSES         5
+
+#define THING_ACTION_BAR_MAX            10
+#define THING_WORN_MAX                  5
 
 enum {
     THING_WORN_ARMOR,
@@ -97,3 +105,4 @@ int player_stats_item_polymorph(player_stats_t *player_stats,
                                 const uint32_t from,
                                 const uint32_t to);
 
+void player_inventory_sort(player_stats_t *player_stats);
