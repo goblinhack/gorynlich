@@ -8,7 +8,7 @@
  hit_priority=5
  is_carryable
  is_given_randomly_at_start
- chance_of_appearing=30
+ d1000_chance_of_appearing=80
  polymorph_on_death="data/things/water_poison"
  message_on_use="%%fg=lightblue$refreshing"
  bonus_hp_on_use=20

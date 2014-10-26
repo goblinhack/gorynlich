@@ -1,6 +1,6 @@
 {
- short_name="craftsman double bow"
- tooltip="Serious double bow"
+ short_name="bow3"
+ tooltip="Loner Bow"
  fires="data/things/arrow"
  z_depth=3
  is_weapon
@@ -12,7 +12,7 @@
  is_fragile
  is_fragile
  is_valid_for_action_bar
- chance_of_appearing=10
+ d1000_chance_of_appearing=50
  is_wearable
  is_collision_map_medium
  reliability=5000

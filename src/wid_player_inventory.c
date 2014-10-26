@@ -299,7 +299,7 @@ void wid_player_inventory_button_style (widp w,
         /*
          * Rarity
          */
-        val = tp_get_chance_of_appearing(tp);
+        val = tp_get_d1000_chance_of_appearing(tp);
         if (val) {
             const char *str;
             if (val >= 50) {

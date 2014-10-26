@@ -212,8 +212,8 @@ int player_stats_get_modifier (int value)
 }
 
 itemp player_stats_has_item (player_stats_t *player_stats,
-                               uint32_t id,
-                               uint32_t *index)
+                             uint32_t id,
+                             uint32_t *index)
 {
     itemp i;
     
@@ -236,8 +236,8 @@ itemp player_stats_has_item (player_stats_t *player_stats,
 }
 
 itemp player_stats_has_inventory_item (player_stats_t *player_stats,
-                                         uint32_t id,
-                                         uint32_t *index)
+                                       uint32_t id,
+                                       uint32_t *index)
 {
     uint32_t i;
 
@@ -255,8 +255,8 @@ itemp player_stats_has_inventory_item (player_stats_t *player_stats,
 }
 
 itemp player_stats_has_action_bar_item (player_stats_t *player_stats,
-                                          uint32_t id,
-                                          uint32_t *index)
+                                        uint32_t id,
+                                        uint32_t *index)
 {
     uint32_t i;
 
@@ -274,8 +274,8 @@ itemp player_stats_has_action_bar_item (player_stats_t *player_stats,
 }
 
 itemp player_stats_has_worn_item (player_stats_t *player_stats,
-                                    uint32_t id,
-                                    uint32_t *index)
+                                  uint32_t id,
+                                  uint32_t *index)
 {
     uint32_t i;
 
@@ -457,7 +457,7 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
 
             uint32_t chance = rand() % 1000;
 
-            if (tp_get_chance_of_appearing(t) > chance) {
+            if (tp_get_d1000_chance_of_appearing(t) < chance) {
                 continue;
             }
 
@@ -466,8 +466,7 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
 
         int quality = (rand() % (THING_ITEM_QUALITY_MAX - 1)) + 1;
 
-        LOG("  Auto provision %s, quality %u",tp_short_name(t),
-            quality);
+        LOG("  Auto provision %s, quality %u", tp_short_name(t), quality);
 
         item_t i = { 0 };
         i.id = tp_to_id(t);
@@ -476,6 +475,56 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
         i.enchanted = item_enchant_randomly();
 
         player_stats_item_add(0 /* thing */, player_stats, i);
+    }
+}
+
+static void player_stats_generate_fixed_items (player_stats_t *player_stats) 
+{
+    const thing_templatep tp = 
+                    player_stats_to_tp(player_stats);
+
+    /*
+     * Start with items defined for this base class.
+     */
+    uint32_t i;
+
+    for (i = 0; i < THING_MAX; i++) {
+
+        if (!tp->base_items[i].quantity) {
+            continue;
+        }
+
+        thing_templatep tp_item;
+
+        tp_item = id_to_tp(i);
+
+        /*
+         * Only top quality items to start.
+         */
+        item_t item = {0};
+
+        item.id = i;
+        item.quantity = tp_item->quantity;
+
+        if (!item.quantity) {
+            item.quantity = 1;
+        }
+
+        item.quality = THING_ITEM_QUALITY_MAX;
+        item.enchanted = item_enchant_randomly();
+
+        const char *carried_as = tp_carried_as(tp_item);
+        if (carried_as) {
+            thing_templatep what = tp_find(carried_as);
+            if (!what) {
+                DIE("could now find %s to auto carry item as", 
+                    tp_name(what));
+            }
+
+            item.id = tp_to_id(what);
+        }
+
+        player_stats_item_add(0 /* thing */, player_stats, item);
     }
 }
 
@@ -582,48 +631,9 @@ void player_stats_generate_random (player_stats_t *player_stats)
     LOG(" %20s %d", "Healing", player_stats->healing);
 
     /*
-     * Start with items defined for this base class.
+     * Be generous and give some items at startup.
      */
-    uint32_t i;
-
-    for (i = 0; i < THING_MAX; i++) {
-
-        if (!tp->base_items[i].quantity) {
-            continue;
-        }
-
-        thing_templatep tp_item;
-
-        tp_item = id_to_tp(i);
-
-        /*
-         * Only top quality items to start.
-         */
-        item_t item = {0};
-
-        item.id = i;
-        item.quantity = tp_item->quantity;
-
-        if (!item.quantity) {
-            item.quantity = 1;
-        }
-
-        item.quality = THING_ITEM_QUALITY_MAX;
-        item.enchanted = item_enchant_randomly();
-
-        const char *carried_as = tp_carried_as(tp_item);
-        if (carried_as) {
-            thing_templatep what = tp_find(carried_as);
-            if (!what) {
-                DIE("could now find %s to auto carry item as", 
-                    tp_name(what));
-            }
-
-            item.id = tp_to_id(what);
-        }
-
-        player_stats_item_add(0 /* thing */, player_stats, item);
-    }
+    player_stats_generate_fixed_items(player_stats);
 
     /*
      * Be generous and give some items at startup.
