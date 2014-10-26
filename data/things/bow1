@@ -1,6 +1,6 @@
 {
- short_name="simple bow"
- tooltip="Boring little bow"
+ short_name="bow1"
+ tooltip="Plastic Bow"
  fires="data/things/arrow"
  z_depth=3
  is_weapon
@@ -11,10 +11,10 @@
  weapon_fire_delay_tenths=3
  is_fragile
  is_valid_for_action_bar
- chance_of_appearing=35
+ d1000_chance_of_appearing=150
  is_wearable
  is_collision_map_medium
- reliability=1000
+ reliability=500
  weapon_carry_anim="data/things/bow1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

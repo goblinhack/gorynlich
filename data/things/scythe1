@@ -13,7 +13,7 @@
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- chance_of_appearing=5
+ d1000_chance_of_appearing=5
  reliability=5000
  weapon_carry_anim="data/things/scythe1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
