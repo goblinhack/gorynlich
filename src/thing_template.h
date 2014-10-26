@@ -172,7 +172,7 @@ typedef struct tp_ {
      */
     player_stats_t stats;
 
-    uint32_t chance_of_appearing;
+    uint32_t d1000_chance_of_appearing;
     uint32_t ppp2;
     uint32_t hp_per_level;
     uint32_t id_per_level;
@@ -302,7 +302,7 @@ uint32_t tp_get_stats_vision(thing_templatep);
 uint32_t tp_get_stats_healing(thing_templatep);
 uint32_t tp_get_stats_defense(thing_templatep);
 
-uint32_t tp_get_chance_of_appearing(thing_templatep);
+uint32_t tp_get_d1000_chance_of_appearing(thing_templatep);
 uint32_t tp_get_ppp2(thing_templatep);
 float tp_get_light_radius(thing_templatep);
 uint32_t tp_get_quantity(thing_templatep);
