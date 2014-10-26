@@ -443,7 +443,7 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
             thing_templatep tp;
             tp = thing_is_carrying_thing(me, tp_is_key);
             if (tp) {
-                thing_used(me, tp);
+                thing_used(me, tp, 0);
                 level_open_door(server_level, x, y);
                 return;
             }

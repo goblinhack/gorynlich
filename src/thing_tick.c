@@ -265,7 +265,7 @@ void thing_tick_server_player_slow_all (void)
             thing_templatep tp = 
                     thing_is_carrying_thing(t, tp_is_torch);
             if (tp) {
-                thing_used(t, tp);
+                thing_used(t, tp, 0);
                 tp = thing_is_carrying_thing(t, tp_is_torch);
                 if (!tp) {
                     THING_SHOUT_AT(t, INFO, "Your light fizzles out");

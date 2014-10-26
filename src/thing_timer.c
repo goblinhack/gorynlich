@@ -119,7 +119,8 @@ void thing_timer_place_and_destroy_callback (void *context)
                                         place->x,
                                         place->y,
                                         0, /* thing */
-                                        place->tp);
+                                        place->tp,
+                                        0 /* item */);
     } else {
         thingp t = thing_client_local_new(place->tp);
 
@@ -229,7 +230,8 @@ void thing_timer_place_callback (void *context)
                                         place->x,
                                         place->y,
                                         0, /* thing */
-                                        place->tp);
+                                        place->tp,
+                                        0 /* item */);
     } else {
         thingp t = thing_client_local_new(place->tp);
 

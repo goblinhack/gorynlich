@@ -182,7 +182,7 @@ void thing_fire(thingp t,
                 const uint8_t right);
 uint8_t thing_use(thingp t, uint32_t id);
 
-item_t *thing_is_carrying_specific_item(thingp, uint32_t id);
+itemp thing_is_carrying_specific_item(thingp, uint32_t id);
 typedef uint8_t (*tp_is)(thing_templatep);
 thing_templatep thing_is_carrying_thing(thingp, tp_is);
 uint32_t thing_is_carrying_thing_count(thingp, tp_is);
@@ -414,6 +414,26 @@ typedef struct thing_ {
     aplayerp player;
 
     /*
+     * Max health, attack bpnuses etc...
+     */
+    player_stats_t stats;
+
+    /*
+     * Pointer to common settings for this thing.
+     */
+    thing_templatep tp;
+
+    /*
+     * Item attrivutes that override template settings, like enchanted.
+     */
+    item_t item;
+
+    /*
+     * Name for debugging.
+     */
+    char *logname;
+
+    /*
      * Unique id per thing.
      */
     uint32_t thing_id;
@@ -434,30 +454,10 @@ typedef struct thing_ {
     uint16_t damage;
 
     /*
-     * How broken is this item?
-     */
-    uint8_t quality;
-
-    /*
-     * Max health, attack bpnuses etc...
-     */
-    player_stats_t stats;
-
-    /*
      * Which djkstra map this thing is using.
      */
     level_walls *dmap;
     level_walls *dmap_wander;
-
-    /*
-     * Pointer to common settings for this thing.
-     */
-    thing_templatep tp;
-
-    /*
-     * Name for debugging.
-     */
-    char *logname;
 
     /*
      * Which tree are we on, server active? client boring? etc...
@@ -1404,7 +1404,7 @@ static inline uint8_t thing_is_degradable_noverify (thingp t)
 
 static inline uint8_t thing_is_cursed_noverify (thingp t)
 {
-    return (t->tp->is_cursed);
+    return (t->item.cursed);
 }
 
 static inline uint8_t thing_is_animate_only_when_moving_noverify (thingp t)
@@ -1709,8 +1709,8 @@ thing_templatep thing_weapon(thingp t);
  */
 void thing_auto_collect(thingp t, thingp it, thing_templatep tp);
 void thing_item_collect(thingp t, thingp it, thing_templatep tp);
-void thing_used(thingp t, thing_templatep tp);
-void thing_degrade(thingp t, thing_templatep tp);
+void thing_used(thingp t, thing_templatep tp, itemp);
+void thing_degrade(thingp t, thing_templatep tp, itemp);
 void thing_item_destroyed(thingp t, thing_templatep tp);
-void thing_drop(thingp t, thing_templatep tp);
+void thing_drop(thingp t, thing_templatep tp, itemp);
 void thing_wield_next_weapon(thingp t);

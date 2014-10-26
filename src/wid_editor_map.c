@@ -49,7 +49,8 @@ widp wid_editor_map_thing_replace_template (widp w,
                                             double x,
                                             double y,
                                             thingp t,
-                                            thing_templatep tp)
+                                            thing_templatep tp,
+                                            itemp item)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -315,7 +316,8 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
     wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
                                           xin, yin, 
                                           0, /* thing */
-                                          tp);
+                                          tp,
+                                          0 /* item */);
 
     wid_editor_map_thing_flood_fill_template(xin + 1, yin, tp);
     wid_editor_map_thing_flood_fill_template(xin - 1, yin, tp);
@@ -405,10 +407,12 @@ static uint8_t wid_editor_map_thing_replace (widp w,
         return (false);
     }
 
-    (void) wid_editor_map_thing_replace_template(wid_editor_map_grid_container,
-                                                 x, y,
-                                                 0, /* thing */
-                                                 tp);
+    (void) wid_editor_map_thing_replace_template(
+                                            wid_editor_map_grid_container,
+                                            x, y,
+                                            0, /* thing */
+                                            tp,
+                                            0 /* item */);
 
     return (true);
 }
