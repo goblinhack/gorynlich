@@ -4,7 +4,7 @@
  fires="data/things/arrow"
  z_depth=3
  is_weapon
-can_be_enchanted
+ can_be_enchanted
  is_degradable
  hit_priority=0
  is_carryable
@@ -12,10 +12,10 @@ can_be_enchanted
  weapon_fire_delay_tenths=3
  is_fragile
  is_valid_for_action_bar
- d1000_chance_of_appearing=150
+ d10000_chance_of_appearing=150
  is_wearable
  is_collision_map_medium
- reliability=500
+ d10000_chance_of_breaking=100
  weapon_carry_anim="data/things/bow1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

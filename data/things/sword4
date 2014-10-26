@@ -1,9 +1,9 @@
 {
  short_name="sword4"
- tooltip="Long sword"
+ tooltip="Longish sword"
  z_depth=3
  is_weapon
-can_be_enchanted
+ can_be_enchanted
  is_degradable
  hit_priority=0
  is_carryable
@@ -15,8 +15,8 @@ can_be_enchanted
  is_collision_map_medium
  is_animated
  is_valid_for_action_bar
- d1000_chance_of_appearing=20
- reliability=4000
+ d10000_chance_of_appearing=20
+ d10000_chance_of_breaking=50
  weapon_carry_anim="data/things/sword2_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

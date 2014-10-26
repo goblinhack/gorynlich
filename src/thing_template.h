@@ -172,7 +172,7 @@ typedef struct tp_ {
      */
     player_stats_t stats;
 
-    uint32_t d1000_chance_of_appearing;
+    uint32_t d10000_chance_of_appearing;
     uint32_t ppp2;
     uint32_t hp_per_level;
     uint32_t id_per_level;
@@ -183,7 +183,7 @@ typedef struct tp_ {
     uint32_t swing_distance_from_player;
     uint32_t tx_map_update_delay_thousandths;
     uint32_t can_be_hit_chance;
-    uint32_t reliability;
+    uint32_t d10000_chance_of_breaking;
     uint32_t hit_delay_tenths;
     uint32_t mob_spawn_delay_tenths;
 
@@ -302,7 +302,7 @@ uint32_t tp_get_stats_vision(thing_templatep);
 uint32_t tp_get_stats_healing(thing_templatep);
 uint32_t tp_get_stats_defense(thing_templatep);
 
-uint32_t tp_get_d1000_chance_of_appearing(thing_templatep);
+uint32_t tp_get_d10000_chance_of_appearing(thing_templatep);
 uint32_t tp_get_ppp2(thing_templatep);
 float tp_get_light_radius(thing_templatep);
 uint32_t tp_get_quantity(thing_templatep);
@@ -320,7 +320,7 @@ int16_t tp_get_bonus_id_on_use(thing_templatep);
 
 uint32_t tp_get_tx_map_update_delay_thousandths(thing_templatep);
 uint32_t tp_get_can_be_hit_chance(thing_templatep);
-uint32_t tp_get_reliability(thing_templatep);
+uint32_t tp_get_d10000_chance_of_breaking(thing_templatep);
 uint32_t tp_get_hit_delay_tenths(thing_templatep);
 uint32_t tp_get_mob_spawn_delay_tenths(thing_templatep);
 

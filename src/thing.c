@@ -4077,10 +4077,11 @@ void thing_fire (thingp t,
      * Check if the weapon reaches its end of warranty.
      */
     if (weapon == t->weapon) {
-        uint32_t reliability = tp_get_reliability(weapon);
+        uint32_t d10000_chance_of_breaking = 
+                        tp_get_d10000_chance_of_breaking(weapon);
 
-        if (reliability) {
-            if ((rand() % reliability) == 0) {
+        if (d10000_chance_of_breaking) {
+            if ((rand() % 10000) <= d10000_chance_of_breaking) {
                 thing_degrade(t, weapon, 0);
                 return;
             }
