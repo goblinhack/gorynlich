@@ -299,19 +299,19 @@ static uint8_t resource_init_last (void *context)
         "sword1",
         "sword2",
         "sword3",
+        "sword4",
+        "sword5",
+        "sword6",
         "axe1",
         "axe2",
+        "axe3",
+        "axe4",
+        "axe5",
         "scythe1",
         "wand-fire1",
         "wand-fire2",
         "wand-fire3",
         "wand-fire4",
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         0,
         0,
         0,
@@ -2771,8 +2771,14 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_SWORD1, "data/things/sword1");
     tp_load(&THING_SWORD2, "data/things/sword2");
     tp_load(&THING_SWORD3, "data/things/sword3");
+    tp_load(&THING_SWORD4, "data/things/sword4");
+    tp_load(&THING_SWORD5, "data/things/sword5");
+    tp_load(&THING_SWORD6, "data/things/sword6");
     tp_load(&THING_AXE1, "data/things/axe1");
     tp_load(&THING_AXE2, "data/things/axe2");
+    tp_load(&THING_AXE3, "data/things/axe3");
+    tp_load(&THING_AXE4, "data/things/axe4");
+    tp_load(&THING_AXE5, "data/things/axe5");
     tp_load(&THING_SCYTHE1, "data/things/scythe1");
     tp_load(&THING_BOW1, "data/things/bow1");
     tp_load(&THING_BOW2, "data/things/bow2");

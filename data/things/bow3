@@ -15,7 +15,7 @@
  chance_of_appearing=10
  is_wearable
  is_collision_map_medium
- failure_chance=5000
+ reliability=5000
  weapon_carry_anim="data/things/bow1_anim"
  weapon_swing_anim="data/things/weapon_swing1"
  tiles={

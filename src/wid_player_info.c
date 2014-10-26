@@ -140,20 +140,23 @@ wid_player_info_button_style_mouse_down (widp w,
                                          int32_t x, int32_t y,
                                          uint32_t button)
 {
-    thing_templatep tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
-    itemp over_item = &player_stats->worn[id];
 
-    tp = wid_get_thing_template(w);
+    itemp over_item = &player_stats->worn[id];
 
     if (!wid_mouse_template) {
         wid_player_item_pick_up(w, over_item);
     } else {
         int valid = true;
 
+        thing_templatep item_tp = id_to_tp(over_item->id);
+        if (!item_tp) {
+            DIE("no item to place");
+        }
+
         switch (id) {
         case THING_WORN_ARMOR:
-            if (!tp_is_armor(tp)) {
+            if (!tp_is_armor(item_tp)) {
                 valid = false;
                 MSG(WARNING, "This item wont work as armor");
                 break;
@@ -161,7 +164,7 @@ wid_player_info_button_style_mouse_down (widp w,
             break;
 
         case THING_WORN_HELMET:
-            if (!tp_is_armor(tp)) {
+            if (!tp_is_armor(item_tp)) {
                 valid = false;
                 MSG(WARNING, "This item wont work as a helmet");
                 break;
@@ -169,7 +172,7 @@ wid_player_info_button_style_mouse_down (widp w,
             break;
 
         case THING_WORN_BOOTS:
-            if (!tp_is_armor(tp)) {
+            if (!tp_is_armor(item_tp)) {
                 valid = false;
                 MSG(WARNING, "This item wont work as a boots");
                 break;
@@ -178,7 +181,7 @@ wid_player_info_button_style_mouse_down (widp w,
 
         case THING_WORN_ARM_RIGHT:
         case THING_WORN_ARM_LEFT:
-            if (!tp_is_hand_item(tp)) {
+            if (!tp_is_hand_item(item_tp)) {
                 valid = false;
                 MSG(WARNING, "This item can't be worn on the hand. "
                     "This slot is for things like rings.");
@@ -290,7 +293,7 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_no_shape(w);
 
         thing_templatep tp = 
-                        player_stats_to_thing_template(player_stats);
+                        player_stats_to_tp(player_stats);
 
         const char *tooltip = tp_get_tooltip(tp);
 

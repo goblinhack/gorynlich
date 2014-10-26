@@ -516,7 +516,7 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
         GET_OPT_NAMED_UINT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
         GET_OPT_NAMED_UINT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
-        GET_OPT_NAMED_UINT32(ctx, "failure_chance", t->failure_chance);
+        GET_OPT_NAMED_UINT32(ctx, "reliability", t->reliability);
         GET_OPT_NAMED_UINT32(ctx, "hit_delay_tenths", t->hit_delay_tenths);
         GET_OPT_NAMED_UINT32(ctx, "mob_spawn_delay_tenths", t->mob_spawn_delay_tenths);
 
@@ -672,7 +672,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "bonus_id_on_use", t->bonus_id_on_use);
     PUT_NAMED_INT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
     PUT_NAMED_INT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
-    PUT_NAMED_INT32(ctx, "failure_chance", t->failure_chance);
+    PUT_NAMED_INT32(ctx, "reliability", t->reliability);
     PUT_NAMED_INT32(ctx, "hit_delay_tenths", t->hit_delay_tenths);
     PUT_NAMED_INT32(ctx, "mob_spawn_delay_tenths", t->mob_spawn_delay_tenths);
 
@@ -971,9 +971,9 @@ uint32_t tp_get_can_be_hit_chance (thing_templatep t)
     return (t->can_be_hit_chance);
 }
 
-uint32_t tp_get_failure_chance (thing_templatep t)
+uint32_t tp_get_reliability (thing_templatep t)
 {
-    return (t->failure_chance);
+    return (t->reliability);
 }
 
 uint32_t tp_get_hit_delay_tenths (thing_templatep t)
