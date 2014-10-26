@@ -13,7 +13,9 @@ extern uint8_t wid_editor_got_line_start;
 
 widp wid_editor_map_thing_replace_template(widp,
                                            double x, double y,
-                                           thingp, thing_templatep);
+                                           thingp, 
+                                           thing_templatep,
+                                           itemp );
 
 void wid_editor_map_thing_flood_fill_template(int32_t x, int32_t y,
                                               thing_templatep);

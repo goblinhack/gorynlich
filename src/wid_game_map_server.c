@@ -207,7 +207,8 @@ widp
 wid_game_map_server_replace_tile (widp w,
                                   double x, double y,
                                   thingp thing,
-                                  thing_templatep tp)
+                                  thing_templatep tp,
+                                  itemp item)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -322,6 +323,10 @@ wid_game_map_server_replace_tile (widp w,
         thing = thing_server_new(tp_name(tp), x, y);
     } else {
         thing_server_init(thing, x, y);
+    }
+
+    if (item) {
+        memcpy(&thing->item, &item, sizeof(item_t));
     }
 
     wid_set_thing(child, thing);

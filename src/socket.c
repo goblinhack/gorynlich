@@ -1508,7 +1508,8 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          0, 0, 
                                          0, /* thing */
-                                         tp);
+                                         tp,
+                                         0 /* item */);
     thingp t = wid_get_thing(w);
     verify(t);
 

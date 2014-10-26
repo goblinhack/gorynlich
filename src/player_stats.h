@@ -32,8 +32,8 @@ typedef struct item_t_ {
     uint8_t pad:4;
 } __attribute__ ((packed)) item_t;
 
-int item_push(item_t *dst, item_t src);
-int item_pop(item_t *dst, item_t *popped);
+int item_push(itemp dst, item_t src);
+int item_pop(itemp dst, itemp popped);
 
 typedef struct player_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
@@ -65,19 +65,19 @@ void player_stats_generate_random(player_stats_t *);
 void player_stats_init(player_stats_t *);
 thing_templatep player_stats_to_thing_template(player_stats_t *);
 
-item_t *player_stats_has_item(player_stats_t *player_stats,
+itemp player_stats_has_item(player_stats_t *player_stats,
                               uint32_t id,
                               uint32_t *index);
 
-item_t *player_stats_has_inventory_item(player_stats_t *player_stats,
+itemp player_stats_has_inventory_item(player_stats_t *player_stats,
                                         uint32_t item,
                                         uint32_t *index);
 
-item_t *player_stats_has_action_bar_item(player_stats_t *player_stats,
+itemp player_stats_has_action_bar_item(player_stats_t *player_stats,
                                          uint32_t item,
                                          uint32_t *index);
 
-item_t *player_stats_has_worn_item(player_stats_t *player_stats,
+itemp player_stats_has_worn_item(player_stats_t *player_stats,
                                    uint32_t item,
                                    uint32_t *index);
 

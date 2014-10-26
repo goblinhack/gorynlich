@@ -14,18 +14,12 @@ static void thing_collect (thingp t,
                            uint8_t auto_collect)
 {
     uint32_t id;
-    uint32_t quantity;
 
     if (thing_is_player(t)) {
         t->needs_tx_player_update = true;
     }
 
     id = tp_to_id(tp);
-    quantity = 1;
-
-    if (tp_get_quantity(tp)) {
-        quantity += tp_get_quantity(tp) - 1;
-    }
 
     if (id == THING_WATER_POISON) {
         /*
@@ -59,21 +53,14 @@ static void thing_collect (thingp t,
          */
         thing_set_score(t, thing_score(t) +
                         tp_get_bonus_score_on_collect(tp) *
-                        quantity);
+                        it->item.quantity);
         return;
     }
 
     /*
      * Can it fit in the backpack?
      */
-    item_t i = {0};
-
-    i.id = id;
-    i.quality = it->quality ? it->quality : THING_ITEM_QUALITY_MAX;
-    i.quantity = quantity;
-    i.cursed = tp_is_cursed(tp);
-
-    if (!player_stats_item_add(t, &t->stats, i)) {
+    if (!player_stats_item_add(t, &t->stats, it->item)) {
         THING_SHOUT_AT(t, INFO, "You could not collect %s",
                        tp_short_name(tp));
         return;
@@ -84,12 +71,11 @@ static void thing_collect (thingp t,
      */
     thing_set_score(t, thing_score(t) +
                     tp_get_bonus_score_on_collect(tp) *
-                    quantity);
+                    it->item.quantity);
 
     if (!auto_collect) {
         if (thing_is_player(t)) {
-            THING_SHOUT_AT(t, INFO, "%s added", 
-                           tp_short_name(tp));
+            THING_SHOUT_AT(t, INFO, "%s added", tp_short_name(tp));
         }
     }
 
@@ -119,17 +105,23 @@ void thing_auto_collect (thingp t, thingp it, thing_templatep tp)
     thing_collect(t, it, tp, true);
 }
 
-void thing_used (thingp t, thing_templatep tp)
+void thing_used (thingp t, thing_templatep tp, itemp item)
 {
     uint32_t id;
-    item_t *item;
 
-    id = tp_to_id(tp);
-    item = player_stats_has_item(&t->stats, id, 0);
     if (!item) {
-        ERR("Tried to use item which is %s not carried", 
-            tp_short_name(tp));
-        return;
+        id = tp_to_id(tp);
+        item = player_stats_has_item(&t->stats, id, 0);
+        if (!item) {
+            ERR("Tried to use item which is %s not carried", 
+                tp_short_name(tp));
+            return;
+        }
+    } else {
+        id = item->id;
+        if (!id) {
+            DIE("no item used");
+        }
     }
 
     if (thing_is_player(t)) {
@@ -211,17 +203,23 @@ void thing_used (thingp t, thing_templatep tp)
     }
 }
 
-void thing_degrade (thingp t, thing_templatep tp)
+void thing_degrade (thingp t, thing_templatep tp, itemp item)
 {
     uint32_t id;
-    item_t *item;
 
-    id = tp_to_id(tp);
-    item = player_stats_has_item(&t->stats, id, 0);
     if (!item) {
-        ERR("Tried to degrade item which is %s not carried", 
-            tp_short_name(tp));
-        return;
+        id = tp_to_id(tp);
+        item = player_stats_has_item(&t->stats, id, 0);
+        if (!item) {
+            ERR("Tried to use item which is %s not carried", 
+                tp_short_name(tp));
+            return;
+        }
+    } else {
+        id = item->id;
+        if (!id) {
+            DIE("no item used");
+        }
     }
 
     if (thing_is_player(t)) {
@@ -247,17 +245,24 @@ void thing_degrade (thingp t, thing_templatep tp)
     }
 }
 
-void thing_drop (thingp t, thing_templatep tp)
+void thing_drop (thingp t, thing_templatep tp, itemp item)
 {
     uint8_t auto_wield = false;
     uint32_t id;
-    item_t *item;
 
-    id = tp_to_id(tp);
-    item = player_stats_has_item(&t->stats, id, 0);
     if (!item) {
-        ERR("tried to drop %s not carried", tp_short_name(tp));
-        return;
+        id = tp_to_id(tp);
+        item = player_stats_has_item(&t->stats, id, 0);
+        if (!item) {
+            ERR("Tried to use item which is %s not carried", 
+                tp_short_name(tp));
+            return;
+        }
+    } else {
+        id = item->id;
+        if (!id) {
+            DIE("no item used");
+        }
     }
 
     /*
@@ -287,9 +292,9 @@ void thing_drop (thingp t, thing_templatep tp)
     }
 }
 
-item_t *thing_is_carrying_specific_item (thingp t, uint32_t id)
+itemp thing_is_carrying_specific_item (thingp t, uint32_t id)
 {
-    item_t *item;
+    itemp item;
 
     item = player_stats_has_item(&t->stats, id, 0);
     if (!item) {
@@ -304,13 +309,13 @@ thing_templatep thing_is_carrying_thing (thingp t, tp_is fn)
     uint32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
-        thing_templatep tp = id_to_thing_template(i);
+        thing_templatep tp = id_to_tp(i);
 
         if (!(*fn)(tp)) {
             continue;
         }
 
-        item_t *item = thing_is_carrying_specific_item(t, i);
+        itemp item = thing_is_carrying_specific_item(t, i);
         if (item) {
             return (tp);
         }
@@ -325,13 +330,13 @@ uint32_t thing_is_carrying_thing_count (thingp t, tp_is fn)
     uint32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
-        thing_templatep tp = id_to_thing_template(i);
+        thing_templatep tp = id_to_tp(i);
 
         if (!(*fn)(tp)) {
             continue;
         }
 
-        item_t *item = thing_is_carrying_specific_item(t, i);
+        itemp item = thing_is_carrying_specific_item(t, i);
         if (item) {
             count += item->quantity;
         }
