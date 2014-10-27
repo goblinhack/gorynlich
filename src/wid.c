@@ -8369,7 +8369,7 @@ CON("%x %x",a,b);
 
             uint32_t tw = global_config.video_pix_width;
             uint32_t th = global_config.video_pix_height;
-            double window_w = tw * (double)MAP_WINDOW_WIDTH;
+            double window_w = tw;
             double window_h = th;
 
             blit_init();
