@@ -71,7 +71,7 @@ typedef struct player_stats_ {
 int player_stats_get_modifier(int value);
 void player_stats_generate_random(player_stats_t *);
 void player_stats_init(player_stats_t *);
-thing_templatep player_stats_to_tp(player_stats_t *);
+tpp player_stats_to_tp(player_stats_t *);
 
 itemp player_stats_has_item(player_stats_t *player_stats,
                               uint32_t id,
@@ -95,11 +95,11 @@ int player_stats_item_add(thingp t,
 
 int player_stats_item_remove(thingp t,
                              player_stats_t *player_stats,
-                             const thing_templatep it);
+                             const tpp it);
 
 int player_stats_item_degrade(thingp t,
                               player_stats_t *player_stats,
-                              const thing_templatep it);
+                              const tpp it);
 
 int player_stats_item_polymorph(player_stats_t *player_stats,
                                 const uint32_t from,

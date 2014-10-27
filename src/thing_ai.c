@@ -640,7 +640,7 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
         return (false);
     }
 
-    thing_templatep tp;
+    tpp tp;
 
     tp = thing_tp(t);
 

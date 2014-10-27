@@ -4,10 +4,10 @@
  * See the LICENSE file.
  */
 
-void demarshal_thing_tiles(demarshal_p, thing_templatep);
-void marshal_thing_tiles(marshal_p, thing_templatep);
-void demarshal_thing_tiles2(demarshal_p, thing_templatep);
-void marshal_thing_tiles2(marshal_p, thing_templatep);
+void demarshal_thing_tiles(demarshal_p, tpp);
+void marshal_thing_tiles(marshal_p, tpp);
+void demarshal_thing_tiles2(demarshal_p, tpp);
+void marshal_thing_tiles2(marshal_p, tpp);
 void thing_tile_free(thing_tilep);
 
 const char *thing_tile_name(thing_tilep);
@@ -89,7 +89,7 @@ uint8_t thing_tile_is_dead(thing_tilep);
 uint8_t thing_tile_is_end_of_anim(thing_tilep);
 uint8_t thing_tile_is_dead_on_end_of_anim(thing_tilep);
 
-thing_tilep thing_tile_find(thing_templatep, uint32_t index,
+thing_tilep thing_tile_find(tpp, uint32_t index,
                             tilep *tile);
 thing_tilep thing_tile_first(tree_rootp root);
 thing_tilep thing_tile_next(tree_rootp root, thing_tilep in);

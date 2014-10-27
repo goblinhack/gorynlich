@@ -222,6 +222,13 @@ static void wid_intro_single_play_selected_cb (void *context)
 
 static void wid_intro_single_play_selected (void)
 {
+    /*
+     * Start with some random junk.
+     */
+    player_stats_t *s;
+    s = &global_config.player_stats;
+    player_stats_generate_random(s);
+
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro_single_play_selected_cb,
@@ -346,7 +353,7 @@ static void wid_intro_bg_create (void)
 
             wid_set_tl_br_pct(wid, tl, br);
 
-            thing_templatep tp = tp_find("data/things/anim_man");
+            tpp tp = tp_find("data/things/anim_man");
             wid_set_thing_template(wid, tp);
 
             wid_raise(wid);
@@ -366,7 +373,7 @@ static void wid_intro_bg_create (void)
 
             wid_set_tl_br_pct(wid, tl, br);
 
-            thing_templatep tp = tp_find("data/things/anim_treasure_chest");
+            tpp tp = tp_find("data/things/anim_treasure_chest");
             wid_set_thing_template(wid, tp);
 
             wid_raise(wid);
@@ -385,7 +392,7 @@ static void wid_intro_bg_create (void)
 
             wid_set_tl_br_pct(wid, tl, br);
 
-            thing_templatep tp = tp_find("data/things/anim_eyes");
+            tpp tp = tp_find("data/things/anim_eyes");
             wid_set_thing_template(wid, tp);
 
             wid_raise(wid);

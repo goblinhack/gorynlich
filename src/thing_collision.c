@@ -440,7 +440,7 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
          * Open doors if you have a key.
          */
         if (thing_is_door(it)) {
-            thing_templatep tp;
+            tpp tp;
             tp = thing_is_carrying_thing(me, tp_is_key);
             if (tp) {
                 thing_used(me, tp, 0);

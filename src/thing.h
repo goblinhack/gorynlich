@@ -17,8 +17,8 @@ void thing_map_sanity(void);
 void thing_map_dump(void);
 thingp thing_server_new(const char *name, double x, double y);
 void thing_server_init(thingp, double x, double y);
-thingp thing_client_new(uint32_t, thing_templatep);
-thingp thing_client_local_new(thing_templatep tp);
+thingp thing_client_new(uint32_t, tpp);
+thingp thing_client_local_new(tpp tp);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
@@ -152,13 +152,13 @@ tree_rootp thing_tiles2(thingp);
 thing_tilep thing_current_tile(thingp t);
 void thing_reached_exit(thingp t);
 void thing_place(void *);
-void thing_place_timed(thing_templatep t, 
+void thing_place_timed(tpp t, 
                        double x,
                        double y,
                        uint32_t ms, 
                        uint32_t jitter,
                        uint8_t server_side);
-void thing_place_and_destroy_timed(thing_templatep t, 
+void thing_place_and_destroy_timed(tpp t, 
                                    thingp owner,
                                    double x,
                                    double y,
@@ -183,8 +183,8 @@ void thing_fire(thingp t,
 uint8_t thing_use(thingp t, uint32_t id);
 
 itemp thing_is_carrying_specific_item(thingp, uint32_t id);
-typedef uint8_t (*tp_is)(thing_templatep);
-thing_templatep thing_is_carrying_thing(thingp, tp_is);
+typedef uint8_t (*tp_is)(tpp);
+tpp thing_is_carrying_thing(thingp, tp_is);
 uint32_t thing_is_carrying_thing_count(thingp, tp_is);
 
 /*
@@ -198,7 +198,7 @@ void dmap_process_fini(void);
 void dmap_generate_player_map(double x, double y);
 
 typedef struct {
-    thing_templatep tp;
+    tpp tp;
     levelp level;
     double x;
     double y;
@@ -427,7 +427,7 @@ typedef struct thing_ {
     /*
      * Pointer to common settings for this thing.
      */
-    thing_templatep tp;
+    tpp tp;
 
     /*
      * Item attrivutes that override template settings, like enchanted.
@@ -485,7 +485,7 @@ typedef struct thing_ {
     /*
      * But this is the actual weapon.
      */
-    thing_templatep weapon;
+    tpp weapon;
 
     /*
      * Last death reason.
@@ -696,7 +696,7 @@ static inline uint8_t thing_has_left_level (thingp t)
     return (t->has_left_level);
 }
 
-static inline thing_templatep thing_tp (thingp t)
+static inline tpp thing_tp (thingp t)
 {
     verify(t);
 
@@ -1703,20 +1703,20 @@ static inline levelp thing_level (thingp t)
  * thing_weapon.h
  */
 void thing_unwield(thingp t);
-void thing_wield(thingp t, thing_templatep tp);
+void thing_wield(thingp t, tpp tp);
 void thing_swing(thingp t);
 void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
 thingp thing_weapon_carry_anim(thingp t);
 thingp thing_weapon_swing_anim(thingp t);
-thing_templatep thing_weapon(thingp t);
+tpp thing_weapon(thingp t);
 
 /*
  * thing_item.h
  */
-void thing_auto_collect(thingp t, thingp it, thing_templatep tp);
-void thing_item_collect(thingp t, thingp it, thing_templatep tp);
-void thing_used(thingp t, thing_templatep tp, itemp);
-void thing_degrade(thingp t, thing_templatep tp, itemp);
-void thing_item_destroyed(thingp t, thing_templatep tp);
-void thing_drop(thingp t, thing_templatep tp, itemp);
+void thing_auto_collect(thingp t, thingp it, tpp tp);
+void thing_item_collect(thingp t, thingp it, tpp tp);
+void thing_used(thingp t, tpp tp, itemp);
+void thing_degrade(thingp t, tpp tp, itemp);
+void thing_item_destroyed(thingp t, tpp tp);
+void thing_drop(thingp t, tpp tp, itemp);
 void thing_wield_next_weapon(thingp t);

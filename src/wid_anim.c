@@ -20,7 +20,7 @@ void wid_animate (widp w)
         return;
     }
 
-    thing_templatep tp = wid_get_thing_template(w);
+    tpp tp = wid_get_thing_template(w);
     if (!tp) {
         return;
     }

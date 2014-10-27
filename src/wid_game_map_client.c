@@ -23,6 +23,7 @@
 #include "wid_chat.h"
 #include "wid_game_quit.h"
 #include "wid_notify.h"
+#include "wid_player_action.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
@@ -42,7 +43,7 @@ widp wid_level;
 uint32_t client_tile_width;
 uint32_t client_tile_height;
 
-static void wid_game_map_client_set_thing_template (widp w, thing_templatep t)
+static void wid_game_map_client_set_thing_template (widp w, tpp t)
 {
     wid_set_thing_template(w, t);
 
@@ -79,6 +80,8 @@ void wid_game_map_client_hide (void)
         wid_destroy_grid(wid_game_map_client_grid_container);
 
         wid_destroy(&wid_game_map_client_grid_container);
+
+        wid_player_action_hide();
 
         wid_chat_hide();
     }
@@ -276,7 +279,7 @@ uint8_t wid_game_map_client_player_move (void)
 
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-    thing_templatep tp;
+    tpp tp;
     uint32_t shortcut;
 
     switch (key->sym) {
@@ -509,7 +512,7 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    thing_templatep tp = thing_tp(t);
+    tpp tp = thing_tp(t);
     if (!tp) {
         DIE("no thing template");
     }
@@ -635,6 +638,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     if (!player) {
         return;
     }
+
+    wid_player_action_visible(&player->stats, true);
 
     if (redo) {
         if (wid_scoreline_container_top) {
@@ -871,25 +876,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
     wid_raise(wid_scoreline_container_top);
     wid_update(wid_scoreline_container_top);
-
-    {
-        widp wid = wid_new_container(wid_scoreline_container_top, "title");
-
-        fpoint tl = { 0.0, 0.0 };
-        fpoint br = { 1.0, 0.20 };
-
-        wid_set_tl_br_pct(wid, tl, br);
-
-        wid_set_tex(wid, 0, "title_small");
-
-        wid_set_mode(wid, WID_MODE_NORMAL);
-        wid_set_color(wid, WID_COLOR_TL, WHITE);
-        wid_set_color(wid, WID_COLOR_BR, WHITE);
-        wid_set_color(wid, WID_COLOR_BG, WHITE);
-
-        wid_update(wid);
-        wid_raise(wid);
-    }
 
     wid_update_mouse();
 

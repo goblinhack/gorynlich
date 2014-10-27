@@ -232,7 +232,7 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
     PUT_KET(ctx);
 }
 
-void demarshal_thing_tiles (demarshal_p ctx, thing_templatep t)
+void demarshal_thing_tiles (demarshal_p ctx, tpp t)
 {
     static uint32_t id;
 
@@ -264,7 +264,7 @@ void demarshal_thing_tiles (demarshal_p ctx, thing_templatep t)
     GET_KET(ctx);
 }
 
-void marshal_thing_tiles (marshal_p ctx, thing_templatep t)
+void marshal_thing_tiles (marshal_p ctx, tpp t)
 {
     thing_tile *tile;
 
@@ -283,7 +283,7 @@ void marshal_thing_tiles (marshal_p ctx, thing_templatep t)
     PUT_KET(ctx);
 }
 
-void demarshal_thing_tiles2 (demarshal_p ctx, thing_templatep t)
+void demarshal_thing_tiles2 (demarshal_p ctx, tpp t)
 {
     static uint32_t id;
 
@@ -315,7 +315,7 @@ void demarshal_thing_tiles2 (demarshal_p ctx, thing_templatep t)
     GET_KET(ctx);
 }
 
-void marshal_thing_tiles2 (marshal_p ctx, thing_templatep t)
+void marshal_thing_tiles2 (marshal_p ctx, tpp t)
 {
     thing_tile *tile;
 
@@ -719,7 +719,7 @@ uint8_t thing_tile_is_dead_on_end_of_anim (thing_tilep t)
     return (t->is_dead_on_end_of_anim);
 }
 
-thing_tilep thing_tile_find (thing_templatep t, uint32_t index, tilep *tile)
+thing_tilep thing_tile_find (tpp t, uint32_t index, tilep *tile)
 {
     uint32_t which;
     

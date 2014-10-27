@@ -21,7 +21,7 @@ static int demo_player_count;
 static widp demo_players[MAX_DEMO_PLAYERS];
 static float demo_player_x[MAX_DEMO_PLAYERS];
 static int demo_player_dead[MAX_DEMO_PLAYERS];
-static thing_templatep demo_player_tp[MAX_DEMO_PLAYERS];
+static tpp demo_player_tp[MAX_DEMO_PLAYERS];
 static int demo_player_speed[MAX_DEMO_PLAYERS];
 
 static float x = -1.0;
@@ -54,7 +54,7 @@ static void wid_rock_tick (void)
                 widp wid = demo_players[i];
 
                 if ((demo_player_x[i] > 0.25) && (demo_player_x[i] < 0.4)) {
-                    thing_templatep tp = tp_find("data/things/blood2");
+                    tpp tp = tp_find("data/things/blood2");
                     wid_set_thing_template(wid, tp);
                     demo_player_dead[i] = true;
                     wid_set_animate(wid, true);
@@ -67,7 +67,7 @@ static void wid_rock_tick (void)
                 widp wid = demo_players[i];
 
                 if ((demo_player_x[i] > 0.9) && (demo_player_x[i] < 1.0)) {
-                    thing_templatep tp = tp_find("data/things/blood2");
+                    tpp tp = tp_find("data/things/blood2");
                     wid_set_thing_template(wid, tp);
                     demo_player_dead[i] = true;
                     wid_set_animate(wid, true);
@@ -92,7 +92,7 @@ static void wid_intro_demo_buttons_tick (widp wid)
     uint32_t index = (uint32_t) (uintptr_t) wid_get_client_context(wid);
     float *x = &demo_player_x[index];
 
-    thing_templatep t = demo_player_tp[index];
+    tpp t = demo_player_tp[index];
 
     if (!demo_player_dead[index]) {
         const char *tn = tp_short_name(t);
@@ -118,7 +118,7 @@ static void wid_intro_demo_buttons_tick (widp wid)
 
 static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *arg)
 {
-    thing_templatep tp;
+    tpp tp;
     widp child;
 
     tp = (typeof(tp)) 

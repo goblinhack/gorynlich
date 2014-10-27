@@ -56,7 +56,7 @@ wid_editor_buttons_tile_receive_mouse_down (widp w,
                                           uint32_t button)
 {
     widp focus;
-    thing_templatep tp;
+    tpp tp;
 
     focus = wid_get_focus(wid_editor_buttons_container2);
     if (!focus) {
@@ -241,13 +241,13 @@ wid_editor_buttons_icon_redo_receive_mouse_down (widp w,
     return (true);
 }
 
-static thing_templatep first_thing_template;
+static tpp first_thing_template;
 
 static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
 {
     static int32_t x;
     static int32_t y;
-    thing_templatep tp;
+    tpp tp;
     widp child;
 
     tp = (typeof(tp)) 

@@ -49,7 +49,7 @@ widp wid_editor_map_thing_replace_template (widp w,
                                             double x,
                                             double y,
                                             thingp t,
-                                            thing_templatep tp,
+                                            tpp tp,
                                             itemp item)
 {
     tree_rootp thing_tiles;
@@ -221,7 +221,7 @@ widp wid_editor_map_thing_replace_template (widp w,
  * Flood file.
  */
 void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
-                                               thing_templatep tp)
+                                               tpp tp)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -353,7 +353,7 @@ static uint8_t wid_editor_map_thing_remove_template (
 
     existing = wid_grid_find_top(wid_editor_map_grid_container, tl, br);
     if (existing)  {
-        thing_templatep t = wid_get_thing_template(existing);
+        tpp t = wid_get_thing_template(existing);
         if (!t) {
             return (true);
         }
@@ -374,7 +374,7 @@ static uint8_t wid_editor_map_thing_replace (widp w,
                                              int32_t y,
                                              uint8_t scaled)
 {
-    thing_templatep tp;
+    tpp tp;
     widp focus;
 
     if (!scaled) {
@@ -422,7 +422,7 @@ static uint8_t wid_editor_map_thing_replace (widp w,
  */
 static uint8_t wid_editor_map_thing_flood_fill (widp w, int32_t x, int32_t y)
 {
-    thing_templatep tp;
+    tpp tp;
     fpoint offset;
     widp focus;
 
@@ -911,7 +911,7 @@ void wid_editor_add_grid (void)
                     wid_set_on_mouse_motion(child,
                                             wid_editor_map_tile_mouse_motion);
                 } else {
-                    thing_templatep noentry;
+                    tpp noentry;
 
                     noentry = tp_find("data/things/noentry");
                     if (!noentry) {

@@ -207,7 +207,7 @@ widp
 wid_game_map_server_replace_tile (widp w,
                                   double x, double y,
                                   thingp thing,
-                                  thing_templatep tp,
+                                  tpp tp,
                                   itemp item)
 {
     tree_rootp thing_tiles;
