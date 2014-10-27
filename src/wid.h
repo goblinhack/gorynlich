@@ -143,7 +143,7 @@ typedef void(*on_tick_t)(widp);
 typedef widp (*grid_wid_replace_t)(widp,
                                    double x,
                                    double y,
-                                   thingp, thing_templatep, 
+                                   thingp, tpp, 
                                    itemp item);
 
 /*
@@ -219,7 +219,7 @@ texp wid_get_tex(widp, fsize *size);
 tilep wid_get_tile(widp);
 tilep wid_get_tile2(widp);
 thingp wid_get_thing(widp);
-thing_templatep wid_get_thing_template(widp);
+tpp wid_get_thing_template(widp);
 thingp wid_get_thing(widp);
 uint32_t wid_get_cursor(widp);
 uint32_t wid_get_gllist(widp);
@@ -344,7 +344,7 @@ void wid_set_tile2(widp, tilep);
 void wid_set_z_depth(widp, uint8_t);
 uint8_t wid_get_z_depth(widp);
 void wid_set_thing(widp, thingp);
-void wid_set_thing_template(widp, thing_templatep);
+void wid_set_thing_template(widp, tpp);
 void wid_set_tl_br(widp, fpoint tl, fpoint br);
 void wid_set_tl_br_pct(widp, fpoint tl, fpoint br);
 void wid_set_top(widp, uint8_t val);
@@ -369,7 +369,7 @@ widp wid_grid_find_thing_template(widp parent,
 widp wid_grid_find_tp_is(widp parent,
                                   uint32_t x,
                                   uint32_t y,
-                                  thing_templatep);
+                                  tpp);
 uint8_t wid_remove_from_grid(widp);
 void marshal_wid_grid(marshal_p ctx, widp);
 uint8_t demarshal_wid_grid(demarshal_p ctx, widp, grid_wid_replace_t);
@@ -545,7 +545,7 @@ typedef struct wid_ {
 
     tilep tile_eyes;
     thingp thing;
-    thing_templatep tp;
+    tpp tp;
     fsize texuv;
     fsize tex_tl;
     fsize tex_br;

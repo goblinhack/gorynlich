@@ -159,7 +159,7 @@ typedef struct item_t_ *itemp;
 typedef struct host_ *hostp;
 typedef struct action_timer_ *timerp;
 typedef struct action_init_fn_ *init_fnp;
-typedef struct tp_ *thing_templatep;
+typedef struct tp_ *tpp;
 typedef struct thing_tile_ *thing_tilep;
 typedef struct tokens_t_ *tokenp;
 typedef struct tree_demarshal_ *demarshal_p;
@@ -179,7 +179,7 @@ extern wid_consolep wid_console;
 extern wid_chatp wid_chat;
 extern configp config;
 
-typedef uint8_t (*tp_is_callback)(thing_templatep);
+typedef uint8_t (*tp_is_callback)(tpp);
 
 /*
  * log.c
@@ -395,46 +395,46 @@ typedef struct {
 /*
  * resource.c
  */
-extern thing_templatep PLAYER_0;
+extern tpp PLAYER_0;
 extern uint16_t PLAYER_0_ID;
 
-extern thing_templatep BRICK_0;
+extern tpp BRICK_0;
 extern uint16_t BRICK_0_ID;
 
-extern thing_templatep BRICK_1;
+extern tpp BRICK_1;
 extern uint16_t BRICK_1_ID;
 
-extern thing_templatep BRICK_2;
+extern tpp BRICK_2;
 extern uint16_t BRICK_2_ID;
 
-extern thing_templatep BRICK_3;
+extern tpp BRICK_3;
 extern uint16_t BRICK_3_ID;
 
-extern thing_templatep BRICK_4;
+extern tpp BRICK_4;
 extern uint16_t BRICK_4_ID;
 
-extern thing_templatep BRICK_5;
+extern tpp BRICK_5;
 extern uint16_t BRICK_5_ID;
 
-extern thing_templatep BRICK_6;
+extern tpp BRICK_6;
 extern uint16_t BRICK_6_ID;
 
-extern thing_templatep BRICK_7;
+extern tpp BRICK_7;
 extern uint16_t BRICK_7_ID;
 
-extern thing_templatep BRICK_8;
+extern tpp BRICK_8;
 extern uint16_t BRICK_8_ID;
 
-extern thing_templatep ROCK_0;
+extern tpp ROCK_0;
 extern uint16_t ROCK_0_ID;
 
-extern thing_templatep ROCK_1;
+extern tpp ROCK_1;
 extern uint16_t ROCK_1_ID;
 
-extern thing_templatep LAVA_0;
+extern tpp LAVA_0;
 extern uint16_t LAVA_0_ID;
 
-extern thing_templatep WATER_0;
+extern tpp WATER_0;
 extern uint16_t WATER_0_ID;
 
 /*

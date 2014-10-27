@@ -10,7 +10,7 @@
 
 static void thing_collect (thingp t, 
                            thingp it, 
-                           thing_templatep tp,
+                           tpp tp,
                            uint8_t auto_collect)
 {
     uint32_t id;
@@ -35,7 +35,7 @@ static void thing_collect (thingp t,
      */
     const char *carried_as = tp_carried_as(tp);
     if (carried_as) {
-        thing_templatep what = tp_find(carried_as);
+        tpp what = tp_find(carried_as);
         if (!what) {
             DIE("could now find %s to carry item as for %s",
                 tp_name(what), thing_logname(t));
@@ -97,17 +97,17 @@ static void thing_collect (thingp t,
     }
 }
 
-void thing_item_collect (thingp t, thingp it, thing_templatep tp)
+void thing_item_collect (thingp t, thingp it, tpp tp)
 {
     thing_collect(t, it, tp, false);
 }
 
-void thing_auto_collect (thingp t, thingp it, thing_templatep tp)
+void thing_auto_collect (thingp t, thingp it, tpp tp)
 {
     thing_collect(t, it, tp, true);
 }
 
-void thing_used (thingp t, thing_templatep tp, itemp item)
+void thing_used (thingp t, tpp tp, itemp item)
 {
     uint32_t id;
 
@@ -205,7 +205,7 @@ void thing_used (thingp t, thing_templatep tp, itemp item)
     }
 }
 
-void thing_degrade (thingp t, thing_templatep tp, itemp item)
+void thing_degrade (thingp t, tpp tp, itemp item)
 {
     uint32_t id;
 
@@ -247,7 +247,7 @@ void thing_degrade (thingp t, thing_templatep tp, itemp item)
     }
 }
 
-void thing_drop (thingp t, thing_templatep tp, itemp item)
+void thing_drop (thingp t, tpp tp, itemp item)
 {
     uint8_t auto_wield = false;
     uint32_t id;
@@ -306,12 +306,12 @@ itemp thing_is_carrying_specific_item (thingp t, uint32_t id)
     return (item);
 }
 
-thing_templatep thing_is_carrying_thing (thingp t, tp_is fn)
+tpp thing_is_carrying_thing (thingp t, tp_is fn)
 {
     uint32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
-        thing_templatep tp = id_to_tp(i);
+        tpp tp = id_to_tp(i);
 
         if (!(*fn)(tp)) {
             continue;
@@ -332,7 +332,7 @@ uint32_t thing_is_carrying_thing_count (thingp t, tp_is fn)
     uint32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
-        thing_templatep tp = id_to_tp(i);
+        tpp tp = id_to_tp(i);
 
         if (!(*fn)(tp)) {
             continue;

@@ -96,7 +96,7 @@ void wid_player_inventory_button_style (widp w,
         return;
     }
 
-    thing_templatep tp = id_to_tp(item.id);
+    tpp tp = id_to_tp(item.id);
 
     if (player && player->weapon && (tp == player->weapon)) {
         wid_set_color(w, WID_COLOR_TL, RED);
@@ -180,7 +180,7 @@ void wid_player_inventory_button_style (widp w,
         if (tp_is_weapon(tp)) {
             int damage = tp_get_damage(tp);
             if (!damage) {
-                thing_templatep projectile = tp_fires(tp);
+                tpp projectile = tp_fires(tp);
                 if (projectile) {
                     damage = tp_get_damage(projectile);
                 }
@@ -336,7 +336,7 @@ item_t wid_item;
 uint8_t 
 wid_player_item_pick_up (widp w, itemp over_item)
 {
-    thing_templatep tp;
+    tpp tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
 
     tp = wid_get_thing_template(w);
@@ -395,7 +395,7 @@ wid_player_inventory_button_style_mouse_down (widp w,
                                               int32_t x, int32_t y,
                                               uint32_t button)
 {
-    thing_templatep tp;
+    tpp tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
     itemp over_item = &player_stats->inventory[id];
 

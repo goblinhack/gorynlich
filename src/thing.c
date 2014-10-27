@@ -633,7 +633,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
 thingp thing_server_new (const char *name, double x, double y)
 {
     thingp t;
-    thing_templatep tp;
+    tpp tp;
 
     tp = tp_find(name);
     if (!tp) {
@@ -834,7 +834,7 @@ void thing_server_init (thingp t, double x, double y)
 /*
  * Create a new thing.
  */
-thingp thing_client_new (uint32_t id, thing_templatep tp)
+thingp thing_client_new (uint32_t id, tpp tp)
 {
     thingp t;
 
@@ -913,7 +913,7 @@ LOG("new %s %d",t->logname,id);
 /*
  * Create a new thing that only lives on this client.
  */
-thingp thing_client_local_new (thing_templatep tp)
+thingp thing_client_local_new (tpp tp)
 {
     /*
      * Use a different base for monsters so that the IDs we create are going
@@ -1302,7 +1302,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
             const char *polymorph = 
                     tp_polymorph_on_death(t->tp);
             if (polymorph) {
-                thing_templatep what = tp_find(polymorph);
+                tpp what = tp_find(polymorph);
                 if (!what) {
                     DIE("could now find %s to polymorph into on %s death",
                         polymorph, thing_logname(t));
@@ -1671,7 +1671,7 @@ int thing_hit (thingp t,
             /*
              * Get the damage from the weapon being used to swing.
              */
-            thing_templatep weapon = hitter->weapon;
+            tpp weapon = hitter->weapon;
             if (!weapon) {
                 return (false);
             }
@@ -2886,7 +2886,7 @@ thing_tilep thing_current_tile (thingp t)
 /*
  * Place a thing after a delay.
  */
-void thing_place_timed (thing_templatep tp, 
+void thing_place_timed (tpp tp, 
                         double x,
                         double y,
                         uint32_t ms, 
@@ -2916,7 +2916,7 @@ void thing_place_timed (thing_templatep tp,
 /*
  * Place a thing after a delay.
  */
-void thing_place_and_destroy_timed (thing_templatep tp, 
+void thing_place_and_destroy_timed (tpp tp, 
                                     thingp owner,
                                     double x,
                                     double y,
@@ -3283,7 +3283,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
 
         verify(t);
 
-        thing_templatep tp = t->tp;
+        tpp tp = t->tp;
 
         /*
          * As an optimization do not send dead events for explosions. Let the 
@@ -3658,7 +3658,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 continue;
             }
 
-            thing_templatep tp = 
+            tpp tp = 
                     id_to_tp(template_id);
 
             t = thing_client_new(id, tp);
@@ -3674,7 +3674,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 /*
                  * Update the template ID so things can polymorph.
                  */
-                thing_templatep tp = 
+                tpp tp = 
                         id_to_tp(template_id);
 
                 t->tp = tp;
@@ -4071,7 +4071,7 @@ void thing_fire (thingp t,
      * Use the currently wielded weapon. Or perhaps the thing has an
      * intrinsic weapon ability?
      */
-    thing_templatep weapon = t->weapon;
+    tpp weapon = t->weapon;
     if (!weapon) {
         THING_SHOUT_AT(t, WARNING, "You have no weapon");
         return;
@@ -4172,7 +4172,7 @@ void thing_fire (thingp t,
     x += dx;
     y += dy;
 
-    thing_templatep projectile = tp_fires(weapon);
+    tpp projectile = tp_fires(weapon);
     if (!projectile) {
         /*
          * Might be a sword.
@@ -4319,7 +4319,7 @@ void thing_server_action (thingp t,
         return;
     }
 
-    thing_templatep tp = id_to_tp(id);
+    tpp tp = id_to_tp(id);
     if (!tp) {
         ERR("Unkown item use request, id %u", id);
         return;
