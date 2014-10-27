@@ -19,7 +19,7 @@ uint8_t thing_mob_spawn (thingp t)
         return (false);
     }
 
-    thing_templatep what = tp_find(mob_spawn);
+    tpp what = tp_find(mob_spawn);
     if (!what) {
         return (false);
     }
@@ -84,7 +84,7 @@ uint8_t thing_mob_spawn_on_death (thingp t)
         return (false);
     }
 
-    thing_templatep what = tp_find(mob_spawn);
+    tpp what = tp_find(mob_spawn);
     if (!what) {
         return (false);
     }

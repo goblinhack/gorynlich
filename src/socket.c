@@ -1461,7 +1461,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         return (false);
     }
 
-    thing_templatep tp = tp_find(msg.pclass);
+    tpp tp = tp_find(msg.pclass);
     if (!tp) {
         tp = tp_find_short_name(msg.pclass);
         if (!tp) {

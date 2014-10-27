@@ -45,7 +45,7 @@ int item_push (itemp dst, item_t src)
         return (false);
     }
 
-    thing_templatep tp = id_to_tp(dst->id);
+    tpp tp = id_to_tp(dst->id);
 
     if (!tp_is_stackable(tp)) {
         /*
@@ -238,7 +238,7 @@ void player_inventory_sort (player_stats_t *player_stats)
 
         uint32_t base = THING_INVENTORY_MISC_BASE;
 
-        thing_templatep tp = id_to_tp(id);
+        tpp tp = id_to_tp(id);
 
         if (tp_is_magical(tp)) {
             base = THING_INVENTORY_MAGICAL_BASE;
@@ -371,7 +371,7 @@ int player_stats_item_add (thingp t,
                            player_stats_t *player_stats,
                            item_t item)
 {
-    thing_templatep it = id_to_tp(item.id);
+    tpp it = id_to_tp(item.id);
     itemp oitem;
     uint32_t i;
 
@@ -470,7 +470,7 @@ int player_stats_item_add (thingp t,
 
 int player_stats_item_remove (thingp t,
                               player_stats_t *player_stats,
-                              const thing_templatep it)
+                              const tpp it)
 {
     const int id = tp_to_id(it);
 
@@ -517,7 +517,7 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
     int count = gaussrand(2, 1) + 1;
 
     while (count--) {
-        thing_templatep t = 0;
+        tpp t = 0;
 
         for (;;) {
             t = id_to_tp(rand() % THING_MAX);
@@ -548,7 +548,7 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
         i.quantity = 1;
         i.quality = quality;
 
-        const thing_templatep item_tp = id_to_tp(i.id);
+        const tpp item_tp = id_to_tp(i.id);
 
         if (tp_can_be_enchanted(item_tp)) {
             i.enchanted = item_enchant_randomly();
@@ -560,7 +560,7 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
 
 static void player_stats_generate_fixed_items (player_stats_t *player_stats) 
 {
-    const thing_templatep tp = player_stats_to_tp(player_stats);
+    const tpp tp = player_stats_to_tp(player_stats);
 
     /*
      * Start with items defined for this base class.
@@ -573,7 +573,7 @@ static void player_stats_generate_fixed_items (player_stats_t *player_stats)
             continue;
         }
 
-        thing_templatep tp_item;
+        tpp tp_item;
 
         tp_item = id_to_tp(i);
 
@@ -589,7 +589,7 @@ static void player_stats_generate_fixed_items (player_stats_t *player_stats)
 
         const char *carried_as = tp_carried_as(tp_item);
         if (carried_as) {
-            thing_templatep what = tp_find(carried_as);
+            tpp what = tp_find(carried_as);
             if (!what) {
                 DIE("could now find %s to auto carry item as", 
                     tp_name(what));
@@ -609,7 +609,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
     strncpy(player_stats->pclass, pclass_random(),
             sizeof(player_stats->pclass) - 1);
 
-    const thing_templatep tp = player_stats_to_tp(player_stats);
+    const tpp tp = player_stats_to_tp(player_stats);
 
     player_stats_init(player_stats);
 
@@ -740,7 +740,7 @@ void player_stats_init (player_stats_t *player_stats)
     }
 }
 
-thing_templatep
+tpp
 player_stats_to_tp (player_stats_t *player_stats)
 {
     return (tp_find_short_name(player_stats->pclass));

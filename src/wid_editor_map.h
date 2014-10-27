@@ -14,11 +14,11 @@ extern uint8_t wid_editor_got_line_start;
 widp wid_editor_map_thing_replace_template(widp,
                                            double x, double y,
                                            thingp, 
-                                           thing_templatep,
+                                           tpp,
                                            itemp );
 
 void wid_editor_map_thing_flood_fill_template(int32_t x, int32_t y,
-                                              thing_templatep);
+                                              tpp);
 void wid_game_set_count(widp, uint32_t count);
 
 void wid_editor_add_grid(void);

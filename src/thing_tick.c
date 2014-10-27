@@ -31,7 +31,7 @@ static void thing_tick_server_all (void)
 
     TREE_WALK_INLINE(server_active_things, t,
                      tree_get_next_tree_key_two_int32_compare_func) {
-        thing_templatep tp;
+        tpp tp;
         widp w;
 
         /*
@@ -262,7 +262,7 @@ void thing_tick_server_player_slow_all (void)
             /*
              * Use up one torch unit.
              */
-            thing_templatep tp = 
+            tpp tp = 
                     thing_is_carrying_thing(t, tp_is_torch);
             if (tp) {
                 thing_used(t, tp, 0);
@@ -335,7 +335,7 @@ static void thing_tick_client_all (void)
 
     TREE_WALK_INLINE(client_active_things, t,
                      tree_get_next_tree_key_two_int32_compare_func) {
-        thing_templatep tp;
+        tpp tp;
 //count++;
         widp w;
 

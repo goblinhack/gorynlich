@@ -149,7 +149,7 @@ wid_player_info_button_style_mouse_down (widp w,
     } else {
         int valid = true;
 
-        thing_templatep item_tp = id_to_tp(over_item->id);
+        tpp item_tp = id_to_tp(over_item->id);
         if (!item_tp) {
             DIE("no item to place");
         }
@@ -292,7 +292,7 @@ static void wid_player_info_create (player_stats_t *s)
 
         wid_set_no_shape(w);
 
-        thing_templatep tp = 
+        tpp tp = 
                         player_stats_to_tp(player_stats);
 
         const char *tooltip = tp_get_tooltip(tp);
