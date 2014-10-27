@@ -82,10 +82,8 @@ static void gl_init_fbo_ (
     GLuint *fbo_id,
     GLuint *fbo_tex_id)
 {
-    GLuint tex_width = 
-        global_config.video_pix_width * MAP_WINDOW_WIDTH;
-    GLuint tex_height = 
-        global_config.video_pix_height;
+    GLuint tex_width = global_config.video_pix_width;
+    GLuint tex_height = global_config.video_pix_height;
 
     glGenTextures(1, fbo_tex_id);
     glBindTexture(GL_TEXTURE_2D, *fbo_tex_id);

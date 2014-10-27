@@ -24,8 +24,8 @@
 
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
 #undef ENABLE_TREE_SANITY         // Slow tree sanity
@@ -165,7 +165,7 @@
 /*
  * Messages.
  */
-#define MAX_PLAYERS                 4
+#define MAX_PLAYERS                 16
 #define MAX_HISCORES                10
 #define SMALL_STRING_LEN_MAX        30
 #define PLAYER_MSG_MAX              100
@@ -212,11 +212,6 @@
  * to int when sending over the network. This is the granularity.
  */
 #define THING_COORD_SCALE           100.0
-
-/*
- * Map on screen percent width.
- */
-#define MAP_WINDOW_WIDTH             0.67
 
 /*
  * How many tiles difference between the client and server do we allow.

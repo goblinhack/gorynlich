@@ -158,7 +158,7 @@ void wid_game_map_client_scroll_adjust (uint8_t adjust)
     double fgridw = (double)gridw;
     double fgridh = (double)gridh;
 
-    double winw = wid_get_width(wid_game_map_client_window) * MAP_WINDOW_WIDTH;
+    double winw = wid_get_width(wid_game_map_client_window);
     double winh = wid_get_height(wid_game_map_client_window);
 
     gridw -= winw;
@@ -379,7 +379,7 @@ void wid_game_map_client_wid_create (void)
 
     {
         fpoint tl = {0.00f, 0.00f};
-        fpoint br = {MAP_WINDOW_WIDTH, 1.00f};
+        fpoint br = {1.00f, 1.00f};
 
         wid_game_map_client_grid_container =
                         wid_new_container(wid_game_map_client_window,
@@ -657,7 +657,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         fpoint tl;
         fpoint br;
 
-        tl.x = MAP_WINDOW_WIDTH;
+        tl.x = 0.7;
         tl.y = 0.0;
         br.x = 1.0;
         br.y = 1.0;
@@ -822,6 +822,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_set_color(wid_name_title, WID_COLOR_TEXT, c);
 
         player_y_offset += next_player_y_delta;
+
+        break;
     }
 
     if (update) {

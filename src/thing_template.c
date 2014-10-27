@@ -510,7 +510,13 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         GET_OPT_NAMED_UINT32(ctx, "id_per_level", t->id_per_level);
 
         GET_OPT_NAMED_FLOAT(ctx, "light_radius", t->light_radius);
-        GET_OPT_NAMED_UINT32(ctx, "quantity", t->quantity);
+
+        uint32_t quantity;
+
+        if (GET_OPT_NAMED_UINT32(ctx, "quantity", quantity)) {
+            t->item.quantity = quantity;
+        }
+
         GET_OPT_NAMED_UINT32(ctx, "hit_priority", t->hit_priority);
         GET_OPT_NAMED_UINT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
         GET_OPT_NAMED_UINT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
@@ -598,6 +604,10 @@ void demarshal_thing_template (demarshal_p ctx, thing_templatep t)
         t->light_color = WHITE;
     }
 
+    if (!t->item.quantity) {
+        t->item.quantity = 1;
+    }
+
     if (t->is_player || t->is_projectile) {
         t->tx_map_update_delay_thousandths = 
                         DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST;
@@ -664,7 +674,7 @@ void marshal_thing_template (marshal_p ctx, thing_templatep t)
     PUT_NAMED_INT32(ctx, "hp_per_level", t->hp_per_level);
     PUT_NAMED_INT32(ctx, "id_per_level", t->id_per_level);
     PUT_NAMED_INT32(ctx, "light_radius", t->light_radius);
-    PUT_NAMED_INT32(ctx, "quantity", t->quantity);
+    PUT_NAMED_INT32(ctx, "quantity", t->item.quantity);
     PUT_NAMED_INT32(ctx, "hit_priority", t->hit_priority);
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
@@ -933,7 +943,7 @@ float tp_get_light_radius (thing_templatep t)
 
 uint32_t tp_get_quantity (thing_templatep t)
 {
-    return (t->quantity);
+    return (t->item.quantity);
 }
 
 uint32_t tp_get_hit_priority (thing_templatep t)

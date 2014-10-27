@@ -1013,7 +1013,7 @@ void wid_editor_map_wid_create (void)
 
     {
         fpoint tl = {0.00f, 0.00f};
-        fpoint br = {MAP_WINDOW_WIDTH, 1.00f};
+        fpoint br = {1.00f, 1.00f};
 
         wid_editor_map_grid_container =
                         wid_new_container(wid_editor_map_window,

@@ -316,12 +316,10 @@ void thing_tick_client_player_slow_all (void)
          * units.
          */
         t->torch_light_radius = 
-            (double) thing_is_carrying_thing_count(
-                            t, tp_is_torch) / 2.0;
+            (double) thing_is_carrying_thing_count(t, tp_is_torch) / 2.0;
         if (t->torch_light_radius > 
             tp_get_light_radius(t->tp)) {
-            t->torch_light_radius =
-                tp_get_light_radius(t->tp);
+            t->torch_light_radius = tp_get_light_radius(t->tp);
         }
     }
 }

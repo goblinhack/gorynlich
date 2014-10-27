@@ -2105,10 +2105,6 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
  */
 void socket_tx_server_status (void)
 {
-    aplayer players[MAX_PLAYERS];
-
-    memset(&players, 0, sizeof(players));
-
     msg_server_status msg = {0};
     msg.type = MSG_SERVER_STATUS;
 
