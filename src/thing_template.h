@@ -172,12 +172,13 @@ typedef struct tp_ {
      */
     player_stats_t stats;
 
+    item_t item;
+
     uint32_t d10000_chance_of_appearing;
     uint32_t ppp2;
     uint32_t hp_per_level;
     uint32_t id_per_level;
     float light_radius;
-    uint32_t quantity;
     uint32_t hit_priority;
     uint32_t weapon_fire_delay_tenths;
     uint32_t swing_distance_from_player;

@@ -583,12 +583,7 @@ static void player_stats_generate_fixed_items (player_stats_t *player_stats)
         item_t item = {0};
 
         item.id = i;
-        item.quantity = tp_item->quantity;
-
-        if (!item.quantity) {
-            item.quantity = 1;
-        }
-
+        item.quantity = tp_item->item.quantity;
         item.quality = THING_ITEM_QUALITY_MAX;
         item.enchanted = item_enchant_randomly();
 
