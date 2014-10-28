@@ -129,6 +129,12 @@
 #define TILES_SCREEN_HEIGHT         14
 
 /*
+ * Padding for tiles on the edge of the smooth scroll.
+ */
+#define TILES_SCREEN_WIDTH_PAD      2
+#define TILES_SCREEN_HEIGHT_PAD     1
+
+/*
  * Console
  */
 #define CONSOLE_CURSOR_COLOR        GREEN

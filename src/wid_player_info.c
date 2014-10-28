@@ -258,6 +258,10 @@ wid_player_info_button_style_mouse_down (widp w,
 
 static void wid_player_info_create (player_stats_t *s)
 {
+    if (wid_player_info) {
+        return;
+    }
+
     player_stats = s;
 
     if (!wid_player_info) {
