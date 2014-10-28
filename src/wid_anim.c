@@ -162,7 +162,10 @@ void wid_animate (widp w)
     /*
      * When does this tile expire ?
      */
-    w->timestamp_change_to_next_frame =
-                    time_get_time_cached() + 
-                    rand() % thing_tile_delay(tile);
+    uint32_t delay = thing_tile_delay(tile);
+    if (delay) {
+        delay = rand() % delay;
+    }
+
+    w->timestamp_change_to_next_frame = time_get_time_cached() + delay;
 }
