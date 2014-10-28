@@ -8233,9 +8233,9 @@ static void wid_display (widp w,
 
         if (player) {
             const uint32_t visible_width = 
-                TILES_SCREEN_WIDTH / 2 + (TILES_SCREEN_WIDTH / 4);
+                    TILES_SCREEN_WIDTH / 2 + TILES_SCREEN_WIDTH_PAD;
             const uint32_t visible_height = 
-                TILES_SCREEN_HEIGHT / 2 + (TILES_SCREEN_WIDTH / 3);
+                    TILES_SCREEN_HEIGHT / 2 + TILES_SCREEN_HEIGHT_PAD;
 
             maxx = player->x + visible_width;
             minx = player->x - visible_width;

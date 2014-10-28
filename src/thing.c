@@ -157,6 +157,9 @@ tree_root *client_active_things;
 tree_root *server_boring_things;
 tree_root *client_boring_things;
 
+static int server_things_total;
+static int client_things_total;
+
 static uint32_t next_thing_id;
 static uint32_t next_monst_thing_id;
 
@@ -788,11 +791,19 @@ thingp thing_server_new (const char *name, double x, double y)
 
     thing_server_init(t, x, y);
 
+    if (t->on_server) {
+        server_things_total++;
+    } else {
+        server_things_total++;
+    }
+
     if (!thing_is_boring_noverify(t)) {
         if (t->on_server) {
-            LOG("Server: created %s", thing_logname(t));
+            LOG("Server: created %s (%d)",
+                thing_logname(t), server_things_total);
         } else {
-            LOG("Client: created %s", thing_logname(t));
+            LOG("Client: created %s (%d)",
+                thing_logname(t), client_things_total);
         }
     }
 
@@ -1223,6 +1234,12 @@ LOG("old %s %d",t->logname,t->thing_id);
         player = 0;
 
         client_player_died = true;
+    }
+
+    if (t->on_server) {
+        server_things_total--;
+    } else {
+        client_things_total--;
     }
 
     myfree(t);

@@ -158,11 +158,15 @@ wid_player_action_button_style_mouse_down (widp w,
 
 static void wid_player_action_create (player_stats_t *s, int fast)
 {
+    if (wid_player_action) {
+        return;
+    }
+
     player_stats = s;
 
     if (!wid_player_action) {
         widp w = wid_player_action = 
-                        wid_new_rounded_window("wid player_stats");
+                        wid_new_square_window("wid player_stats");
 
         fpoint tl = {0.0, 0.8};
         fpoint br = {1.0, 1.0};
@@ -303,7 +307,6 @@ static void wid_player_action_create (player_stats_t *s, int fast)
             item_t item = s->action_bar[i];
 
             wid_player_inventory_button_style(w, s, item);
-            wid_set_rounded_small(w);
 
             wid_set_on_mouse_down(w, 
                                   wid_player_action_button_style_mouse_down);

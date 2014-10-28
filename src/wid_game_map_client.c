@@ -40,6 +40,9 @@ widp wid_name_title;
 widp wid_title;
 widp wid_level;
 
+double last_playery;
+double last_playerx;
+
 uint32_t client_tile_width;
 uint32_t client_tile_height;
 
@@ -175,9 +178,6 @@ void wid_game_map_client_scroll_adjust (uint8_t adjust)
 
     playerx /= fgridw;
     playery /= fgridh;
-
-    static double last_playery;
-    static double last_playerx;
 
     if (adjust || (last_playery != playery)) {
         wid_move_to_vert_pct(wid_game_map_client_vert_scroll, playery);
