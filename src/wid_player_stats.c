@@ -244,6 +244,10 @@ static uint8_t wid_player_stats_col2_mouse_event (widp w,
 
 static void wid_player_stats_create (player_stats_t *s)
 {
+    if (wid_player_stats) {
+        return;
+    }
+
     player_stats = s;
 
     if (!wid_player_stats) {

@@ -30,3 +30,6 @@ extern levelp client_level;
 
 extern uint32_t client_tile_width;
 extern uint32_t client_tile_height;
+
+extern double last_playery;
+extern double last_playerx;
