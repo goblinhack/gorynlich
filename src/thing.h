@@ -1654,10 +1654,11 @@ static inline thing_map *thing_get_map (thingp t)
     return (&thing_client_map);
 }
 
+extern thingp thing_server_ids[THING_ID_MAX];
+extern thingp thing_client_ids[THING_CLIENT_ID_MAX];
+
 static inline thingp thing_server_id (uint32_t id) 
 {
-    extern thingp thing_server_ids[THING_ID_MAX];
-
     if (id > THING_ID_MAX) {
         DIE("overflow in looking up server IDs, ID %u", id);
     }
@@ -1669,7 +1670,6 @@ static inline thingp thing_server_id (uint32_t id)
 
 static inline thingp thing_client_id (uint32_t id) 
 {
-    extern thingp thing_client_ids[THING_CLIENT_ID_MAX];
 
     if (id > THING_CLIENT_ID_MAX) {
         DIE("overflow in looking up client IDs, ID %u", id);

@@ -8610,13 +8610,9 @@ uint8_t wid_is_hidden (widp w)
     return (false);
 }
 
-uint8_t wid_this_is_hidden (widp w)
+uint8_t inline wid_this_is_hidden (widp w)
 {
     fast_verify(w);
-
-    if (!w) {
-        return (false);
-    }
 
     if (w->hidden) {
         return (true);

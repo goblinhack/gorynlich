@@ -493,70 +493,6 @@ typedef struct wid_ {
     tree_key_int tree5_ticking_wids;
 
     /*
-     * Widget internal name.
-     */
-    char *name;
-
-    /*
-     * For debugging.
-     */
-    char *logname;
-
-    /*
-     * Text that appears on the wid.
-     */
-    char text[MAXSTR];
-
-    /*
-     * Text that appears as a tooltip.
-     */
-    char *tooltip;
-
-    /*
-     * The wid shape
-     */
-    double bevel;
-    fsize radius;
-    uint8_t sides;
-
-    /*
-     * Cache of text size as this is expensive to work out if there are colors
-     * in the strings.
-     */
-    int16_t ttf_width;
-    int16_t ttf_height;
-    enum_fmt fmt;
-
-    /*
-     * The wid tex and tex scaling
-     */
-    texp tex;
-    tilep tile;
-
-    /*
-     * For animation.
-     */
-    thing_tilep current_tile;
-
-    /*
-     * When to change frame for animation.
-     */
-    uint32_t timestamp_change_to_next_frame;
-
-    tilep tile_eyes;
-    thingp thing;
-    tpp tp;
-    fsize texuv;
-    fsize tex_tl;
-    fsize tex_br;
-
-    /*
-     * WID_MODE_NORMAL ...
-     */
-    wid_mode mode;
-    int32_t timestamp_last_mode_change;
-
-    /*
      * Fast lookup for grid widgets. The parent has a grid pointer.
      */
     widgrid *grid;
@@ -570,27 +506,6 @@ typedef struct wid_ {
      * And a pointer back to the tree they are on.
      */
     tree_rootp gridtree;
-
-    /*
-     * The real position after scrollbar adjustments.
-     */
-    fpoint abs_tl;
-    fpoint abs_br;
-
-    /*
-     * Offset of child widgets in the parent window.
-     */
-    fpoint offset;
-
-    /*
-     * Config layers:
-     */
-    wid_cfg cfg[WID_MODE_LAST];
-
-    /*
-     * The wids children
-     */
-    widp parent;
 
     /*
      * Sorted for display onto the screen.
@@ -610,6 +525,134 @@ typedef struct wid_ {
     widp scrollbar_horiz;
     widp scrollbar_vert;
     widp scrollbar_owner;
+
+    /*
+     * Flags.
+     */
+    uint8_t hidden:1;
+    uint8_t debug:1;
+    uint8_t bevelled:1;
+    uint8_t rounded:1;
+    uint8_t square:1;
+    uint8_t square_outline:1;
+    uint8_t radius_set:1;
+    uint8_t tex_tl_set:1;
+    uint8_t tex_br_set:1;
+    uint8_t always_hidden:1;
+    uint8_t visible:1;
+    uint8_t received_input:1;
+    uint8_t movable:1;
+    uint8_t movable_set:1;
+    uint8_t movable_horiz:1;
+    uint8_t movable_horiz_set:1;
+    uint8_t movable_vert:1;
+    uint8_t movable_vert_set:1;
+    uint8_t movable_bounded:1;
+    uint8_t movable_bounded_set:1;
+    uint8_t fade_in:1;
+    uint8_t fade_out:1;
+    uint8_t moving:1;
+    uint8_t ignore_for_events:1;
+    uint8_t paused:1;
+    uint8_t scaled_w:1;
+    uint8_t scaled_h:1;
+    uint8_t scaling_w:1;
+    uint8_t scaling_h:1;
+    uint8_t blit_scaled_w:1;
+    uint8_t blit_scaled_h:1;
+    uint8_t blit_scaling_w:1;
+    uint8_t blit_scaling_h:1;
+    uint8_t rotated:1;
+    uint8_t rotating:1;
+    uint8_t flip_vert:1;
+    uint8_t flip_horiz:1;
+    uint8_t first_update:1;
+    uint8_t show_cursor:1;
+    uint8_t text_size_cached:1;
+    uint8_t text_pos_set:1;
+    uint8_t text_fixed_width;
+    uint8_t text_lhs:1;
+    uint8_t text_rhs:1;
+    uint8_t text_centerx:1;
+    uint8_t text_top:1;
+    uint8_t text_bot:1;
+    uint8_t text_centery:1;
+    uint8_t text_outline:1;
+    uint8_t blit_outline:1;
+    uint8_t being_destroyed:1;
+    uint8_t do_not_raise:1;
+    uint8_t do_not_lower:1;
+    uint8_t in_tree:1;
+    uint8_t in_tree2_unsorted:1;
+    uint8_t in_tree3_moving_wids:1;
+    uint8_t in_tree4_wids_being_destroyed:1;
+    uint8_t in_tree5_ticking_wids:1;
+    uint8_t can_be_atteched_now:1;
+    uint8_t animate:1;
+
+    /*
+     * Thing related.
+     */
+    thingp thing;
+    tilep tile_eyes;
+    tpp tp;
+
+    /*
+     * The real position after scrollbar adjustments.
+     */
+    fpoint abs_tl;
+    fpoint abs_br;
+
+    /*
+     * The wid tex and tex scaling
+     */
+    texp tex;
+    tilep tile;
+
+    /*
+     * The wid shape
+     */
+    double bevel;
+    fsize radius;
+    uint8_t sides;
+
+    /*
+     * Cache of text size as this is expensive to work out if there are colors
+     * in the strings.
+     */
+    int16_t ttf_width;
+    int16_t ttf_height;
+    enum_fmt fmt;
+
+    /*
+     * For animation.
+     */
+    thing_tilep current_tile;
+
+    /*
+     * When to change frame for animation.
+     */
+    uint32_t timestamp_change_to_next_frame;
+
+    fsize texuv;
+    fsize tex_tl;
+    fsize tex_br;
+
+    /*
+     * WID_MODE_NORMAL ...
+     */
+    wid_mode mode;
+    int32_t timestamp_last_mode_change;
+
+    /*
+     * Offset of child widgets in the parent window.
+     */
+    fpoint offset;
+
+    /*
+     * Config layers:
+     */
+    wid_cfg cfg[WID_MODE_LAST];
 
     /*
      * Client context
@@ -702,71 +745,30 @@ typedef struct wid_ {
     uint8_t focus_last;
 
     /*
-     * Flags.
+     * The wids children
      */
-    uint8_t debug:1;
-    uint8_t bevelled:1;
-    uint8_t rounded:1;
-    uint8_t square:1;
-    uint8_t square_outline:1;
-    uint8_t radius_set:1;
-    uint8_t tex_tl_set:1;
-    uint8_t tex_br_set:1;
-    uint8_t hidden:1;
-    uint8_t always_hidden:1;
-    uint8_t visible:1;
-    uint8_t received_input:1;
-    uint8_t movable:1;
-    uint8_t movable_set:1;
-    uint8_t movable_horiz:1;
-    uint8_t movable_horiz_set:1;
-    uint8_t movable_vert:1;
-    uint8_t movable_vert_set:1;
-    uint8_t movable_bounded:1;
-    uint8_t movable_bounded_set:1;
-    uint8_t fade_in:1;
-    uint8_t fade_out:1;
-    uint8_t moving:1;
-    uint8_t ignore_for_events:1;
-    uint8_t paused:1;
+    widp parent;
 
-    uint8_t scaled_w:1;
-    uint8_t scaled_h:1;
-    uint8_t scaling_w:1;
-    uint8_t scaling_h:1;
+    /*
+     * Widget internal name.
+     */
+    char *name;
 
-    uint8_t blit_scaled_w:1;
-    uint8_t blit_scaled_h:1;
-    uint8_t blit_scaling_w:1;
-    uint8_t blit_scaling_h:1;
+    /*
+     * For debugging.
+     */
+    char *logname;
 
-    uint8_t rotated:1;
-    uint8_t rotating:1;
-    uint8_t flip_vert:1;
-    uint8_t flip_horiz:1;
-    uint8_t first_update:1;
-    uint8_t show_cursor:1;
-    uint8_t text_size_cached:1;
-    uint8_t text_pos_set:1;
-    uint8_t text_fixed_width;
-    uint8_t text_lhs:1;
-    uint8_t text_rhs:1;
-    uint8_t text_centerx:1;
-    uint8_t text_top:1;
-    uint8_t text_bot:1;
-    uint8_t text_centery:1;
-    uint8_t text_outline:1;
-    uint8_t blit_outline:1;
-    uint8_t being_destroyed:1;
-    uint8_t do_not_raise:1;
-    uint8_t do_not_lower:1;
-    uint8_t in_tree:1;
-    uint8_t in_tree2_unsorted:1;
-    uint8_t in_tree3_moving_wids:1;
-    uint8_t in_tree4_wids_being_destroyed:1;
-    uint8_t in_tree5_ticking_wids:1;
-    uint8_t can_be_atteched_now:1;
-    uint8_t animate:1;
+    /*
+     * Text that appears on the wid.
+     */
+    char text[MAXSTR];
+
+    /*
+     * Text that appears as a tooltip.
+     */
+    char *tooltip;
+
 } wid;
 
 static inline uint8_t wid_is_moving (widp w)
