@@ -5314,7 +5314,7 @@ uint8_t wid_receive_input (widp w, const SDL_KEYSYM *key)
                 } else if (origlen && (w == wid_chat_input_line)) {
                     strlcpy(entered, wid_get_text(w), sizeof(entered));
 
-                    MSG(CHAT, "you say, %s", entered);
+                    MSG(CHAT, "You say, %s", entered);
 
                     client_socket_shout(entered);
 

@@ -1,5 +1,5 @@
 {
- short_name="valkyrie"
+ short_name="Valkyrie"
  tooltip="Deadly mix of good health and speed.\n\n%%fg=cyan$Fast swordplay."
  carrying={
     "data/things/sword1"

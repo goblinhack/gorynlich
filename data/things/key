@@ -1,5 +1,5 @@
 {
- short_name="key"
+ short_name="Key"
  tooltip="It's a key..."
  z_depth=3
  is_key

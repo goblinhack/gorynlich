@@ -1,5 +1,5 @@
 {
- short_name="lifeforce potion"
+ short_name="Lifeforce potion"
  tooltip="Potion of make you live longer"
  z_depth=3
  is_boring

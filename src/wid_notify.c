@@ -20,12 +20,12 @@ typedef struct {
     char text[200];
 } wid_notify_elem;
 
-#define MAX_ELEMS 10
+#define MAX_ELEMS 20
 static uint32_t nelems;
 static wid_notify_elem elems[MAX_ELEMS];
 
-static double X = 0.675;
-static uint32_t DELAY = 5000;
+static double X = 0.80;
+static uint32_t DELAY = 10000;
 
 /*
  * Create the wid_notify
@@ -44,7 +44,7 @@ wid_notify_internal (const char *text, uint32_t level)
     uint32_t chars_per_line;
     uint32_t max_rows;
 
-    chars_per_line = 40;
+    chars_per_line = 26;
     max_rows = 22;
 
     d = split(text, chars_per_line);
@@ -113,7 +113,6 @@ wid_notify_internal (const char *text, uint32_t level)
         case CRITICAL:
             bg = DARKRED;
             fg = RED;
-            break;
             break;
 
         }

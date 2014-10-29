@@ -1,5 +1,5 @@
 {
- short_name="ring"
+ short_name="Ring"
  tooltip="Generic magical ring tm"
  z_depth=3
  is_boring
