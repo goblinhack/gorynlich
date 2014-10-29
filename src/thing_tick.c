@@ -17,7 +17,7 @@
 #include "time.h"
 #include "socket.h"
 
-TREE_GET_NEXT_INLINE(tree_key_two_int32_compare_func)
+TREE_GET_NEXT_INLINE(tree_key_int32_compare_func)
 
 static void thing_tick_server_all (void)
 {
@@ -28,9 +28,8 @@ static void thing_tick_server_all (void)
     }
 
     thingp t;
-
     TREE_WALK_INLINE(server_active_things, t,
-                     tree_get_next_tree_key_two_int32_compare_func) {
+                     tree_get_next_tree_key_int32_compare_func) {
         tpp tp;
         widp w;
 
@@ -334,7 +333,7 @@ static void thing_tick_client_all (void)
 //    int count = 0;
 
     TREE_WALK_INLINE(client_active_things, t,
-                     tree_get_next_tree_key_two_int32_compare_func) {
+                     tree_get_next_tree_key_int32_compare_func) {
         tpp tp;
 //count++;
         widp w;

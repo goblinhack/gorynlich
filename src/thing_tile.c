@@ -13,7 +13,7 @@
 
 void thing_tile_free (thing_tile *t)
 {
-    myfree(t->tile);
+    myfree(t->tilename);
 
     if (t->command) {
         myfree(t->command);
@@ -34,7 +34,7 @@ static void demarshal_thing_tile (demarshal_p ctx, thing_tile *t)
     do {
 
         GET_OPT_NAMED_UINT32(ctx, "delay", t->delay);
-        GET_OPT_NAMED_STRING(ctx, "tile", t->tile);
+        GET_OPT_NAMED_STRING(ctx, "tile", t->tilename);
         GET_OPT_NAMED_STRING(ctx, "command", t->command);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_block", t->is_join_block);
         GET_OPT_NAMED_BITFIELD(ctx, "is_join_horiz", t->is_join_horiz);
@@ -138,7 +138,7 @@ static void marshal_thing_tile (marshal_p ctx, thing_tile *t)
 {
     PUT_BRA(ctx);
 
-    PUT_NAMED_STRING(ctx,  "tile", t->tile);
+    PUT_NAMED_STRING(ctx,  "tile", t->tilename);
 
     if (t->command) {
         PUT_NAMED_STRING(ctx,  "tile", t->command);
@@ -336,7 +336,7 @@ void marshal_thing_tiles2 (marshal_p ctx, tpp t)
 
 const char *thing_tile_name (thing_tile *t)
 {
-    return (t->tile);
+    return (t->tilename);
 }
 
 const char *thing_tile_command (thing_tile *t)
