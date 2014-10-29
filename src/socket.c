@@ -1456,7 +1456,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         LOG("  max     players %u", global_config.server_max_players);
         myfree(tmp);
 
-        socket_tx_tell(s, "Server", msg.name, 
+        socket_tx_tell(s, "Server god", msg.name, 
                        "Join rejected, too many players");
         return (false);
     }
@@ -1470,7 +1470,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
                 tmp, msg.name, msg.pclass);
             myfree(tmp);
 
-            socket_tx_tell(s, "Server", msg.name,
+            socket_tx_tell(s, "Server god", msg.name,
                            "Join rejected, unknown player class");
             return (false);
         }

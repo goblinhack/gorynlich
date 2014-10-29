@@ -1,5 +1,5 @@
 {
- short_name="warrior"
+ short_name="Warrior"
  tooltip="Good health, big muscles.\n\n%%fg=red$Make good looking corpse."
  carrying={
     "data/things/sword2"

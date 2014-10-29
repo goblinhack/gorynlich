@@ -1,5 +1,5 @@
 {
- short_name="small bone pile"
+ short_name="Small bone pile"
  tooltip="Small bone pile"
  z_depth=3
  is_mob_spawner

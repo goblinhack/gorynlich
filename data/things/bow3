@@ -1,6 +1,6 @@
 {
- short_name="bow3"
- tooltip="Loner Bow"
+ short_name="Bowmaster"
+ tooltip="Longer Bow"
  fires="data/things/arrow"
  z_depth=3
  is_weapon

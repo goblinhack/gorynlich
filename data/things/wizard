@@ -1,5 +1,5 @@
 {
- short_name="wizard"
+ short_name="Wizard"
  tooltip="Strong mind. Weak body.\n\n%%fg=purple$Let the evil juices flow!"
  carrying={
     "data/things/wand_fire"

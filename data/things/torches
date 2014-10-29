@@ -1,5 +1,5 @@
 {
- short_name="bundle of torches"
+ short_name="Bundle of torches"
  tooltip="Torch to see the monsters better"
  z_depth=3
  quantity=10
