@@ -10,8 +10,9 @@
 typedef struct thing_tile_ {
     tree_key_int tree;
 
-    char *tile;
+    char *tilename;
     char *command;
+    tilep tile;
 
     /*
      * Delay in ms between frames.

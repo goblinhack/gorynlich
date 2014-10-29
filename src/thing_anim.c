@@ -10,6 +10,8 @@
 #include "main.h"
 #include "thing.h"
 #include "thing_tile.h"
+#include "thing_tile_private.h"
+#include "tile.h"
 #include "wid.h"
 #include "time.h"
 #include "command.h"
@@ -160,7 +162,11 @@ void thing_animate (thingp t)
      */
     t->current_tile = tile;
 
-    wid_set_tilename(t->wid, thing_tile_name(tile));
+    if (!tile->tile) {
+        tile->tile = tile_find(thing_tile_name(tile));
+    }
+
+    wid_set_tile(t->wid, tile->tile);
 
     /*
      * When does this tile expire ?
