@@ -1,5 +1,5 @@
 {
- short_name="wall"
+ short_name="Wall"
  tooltip="Wall"
  z_depth=2
  is_boring

@@ -1,5 +1,5 @@
 {
- short_name="mob spawner"
+ short_name="Mob spawner"
  tooltip="Mob spawner"
  z_depth=3
  is_mob_spawner

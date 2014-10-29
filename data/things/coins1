@@ -1,5 +1,5 @@
 {
- short_name="coins"
+ short_name="Loose change"
  tooltip="Pile of coins"
  z_depth=3
  is_boring

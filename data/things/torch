@@ -1,5 +1,5 @@
 {
- short_name="torch"
+ short_name="Torch"
  tooltip="Torch to see the monsters better"
  z_depth=3
  is_torch

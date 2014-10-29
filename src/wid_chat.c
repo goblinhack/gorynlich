@@ -141,8 +141,6 @@ static uint8_t wid_chat_receive_input (widp w, const SDL_KEYSYM *key)
 {
     wid_chat_reset_scroll();
 
-extern int xxx;
-xxx++;
     switch (key->sym) {
         case SDLK_RETURN: {
             break;
@@ -166,21 +164,21 @@ static void wid_chat_wid_create (void)
     fontp font = small_font;
 
     {
-        fpoint tl = {0.675, 0.7f};
+        fpoint tl = {0.8, 0.3f};
         fpoint br = {1.0f, 1.0f};
         color c;
 
         wid_chat_window = wid_new_square_window("wid_chat");
 
         c = BLACK;
-        c.a = 200;
+        c.a = 0;
+        wid_set_no_shape(wid_chat_window);
 
         wid_set_mode(wid_chat_window, WID_MODE_NORMAL);
         wid_set_color(wid_chat_window, WID_COLOR_TL, c);
         wid_set_color(wid_chat_window, WID_COLOR_BG, c);
         wid_set_color(wid_chat_window, WID_COLOR_BR, c);
-        wid_set_color(wid_chat_window, WID_COLOR_TEXT,
-                         CHAT_CURSOR_COLOR);
+        wid_set_color(wid_chat_window, WID_COLOR_TEXT, CHAT_CURSOR_COLOR);
         wid_set_font(wid_chat_window, font);
         wid_set_name(wid_chat_window, "wid_chat window");
 
