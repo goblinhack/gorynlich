@@ -259,6 +259,9 @@
 .o/ramdisk_data_things__death_session.o: asm/ramdisk_data_things__death_session.S ../data/things/.death.session
 	gcc -c asm/ramdisk_data_things__death_session.S -o .o/ramdisk_data_things__death_session.o
 
+.o/ramdisk_data_things__door2_session.o: asm/ramdisk_data_things__door2_session.S ../data/things/.door2.session
+	gcc -c asm/ramdisk_data_things__door2_session.S -o .o/ramdisk_data_things__door2_session.o
+
 .o/ramdisk_data_things__dwarf_session.o: asm/ramdisk_data_things__dwarf_session.S ../data/things/.dwarf.session
 	gcc -c asm/ramdisk_data_things__dwarf_session.S -o .o/ramdisk_data_things__dwarf_session.o
 

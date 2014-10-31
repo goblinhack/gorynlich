@@ -2094,7 +2094,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
             continue;
         }
 
-        if (!strcmp(socket_get_name(sp), to)) {
+        if (!strcasecmp(socket_get_name(sp), to)) {
             socket_tx_tell(sp, from, to, txt);
         }
     }

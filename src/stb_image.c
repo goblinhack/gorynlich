@@ -3711,14 +3711,14 @@ static float *hdr_load(stbi *s, int *x, int *y, int *comp, int req_comp)
 
 
 	// Check identifier
-	if (strcmp(hdr_gettoken(s,buffer), "#?RADIANCE") != 0)
+	if (strcasecmp(hdr_gettoken(s,buffer), "#?RADIANCE") != 0)
 		return epf((char*)"not HDR", (char*)"Corrupt HDR image");
 	
 	// Parse header
 	while(1) {
 		token = hdr_gettoken(s,buffer);
       if (token[0] == 0) break;
-		if (strcmp(token, "FORMAT=32-bit_rle_rgbe") == 0) valid = 1;
+		if (strcasecmp(token, "FORMAT=32-bit_rle_rgbe") == 0) valid = 1;
    }
 
 	if (!valid)    return epf((char*)"unsupported format", (char*)"Unsupported HDR format");

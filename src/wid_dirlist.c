@@ -144,12 +144,12 @@ static uint8_t wid_dirlist_dir_event (widp w, int32_t x, int32_t y,
     /*
      * No change in directory ?
      */
-    if (!strcmp(new_dir, ".")) {
+    if (!strcasecmp(new_dir, ".")) {
         myfree(new_dir);
         return (true);
     }
 
-    if (!strcmp(new_dir, "..")) {
+    if (!strcasecmp(new_dir, "..")) {
         myfree(new_dir);
         new_dir = dupstr(context->dir, __FUNCTION__);
 
@@ -451,7 +451,7 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
 
     TREE_WALK(d, n) {
 
-        if (!strcmp(n->tree.key, ".")) {
+        if (!strcasecmp(n->tree.key, ".")) {
 #ifndef ENABLE_DIR_TRAVERSAL_IN_WIDGETS
             if (1) {
                 continue;
@@ -460,7 +460,7 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
             wid_set_tooltip(child, dir);
         }
 
-        if (!strcmp(n->tree.key, "..")) {
+        if (!strcasecmp(n->tree.key, "..")) {
 #ifndef ENABLE_DIR_TRAVERSAL_IN_WIDGETS
             if (1) {
                 continue;

@@ -374,7 +374,7 @@ uint8_t command_handle (const char *input,
 
         if (!show_ambiguous) {
             if (expandedtext) {
-                if (!strcmp(input, expandedtext)) {
+                if (!strcasecmp(input, expandedtext)) {
                     CON("> %%%%fg=red$Incomplete command, "
                         "\"%s\"%%%%fg=reset$. Try:", input);
 

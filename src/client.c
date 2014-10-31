@@ -974,7 +974,7 @@ static void client_check_still_in_game (void)
             break;
         }
 
-        if (strcmp(p->name, global_config.player_stats.pname)) {
+        if (strcasecmp(p->name, global_config.player_stats.pname)) {
             break;
         }
 

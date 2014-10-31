@@ -1282,7 +1282,7 @@ void wid_set_text (widp w, const char *string)
     if (!string) {
         w->text[0] = '\0';
     } else {
-        if (!strcmp(string, w->text)) {
+        if (!strcasecmp(string, w->text)) {
             return;
         }
 

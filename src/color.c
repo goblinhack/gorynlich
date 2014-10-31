@@ -1584,7 +1584,7 @@ color string2color (const char **s)
     *t++ = '\0';
     *s += (t - tmp);
 
-    if (!strcmp(tmp, "reset")) {
+    if (!strcasecmp(tmp, "reset")) {
         color c = gl_save_color;
 	return (c);
     }

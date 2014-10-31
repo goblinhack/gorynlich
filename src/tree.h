@@ -429,7 +429,7 @@ static inline int8_t tree_key_string_compare_func (const tree_node *a,
     tree_key_string *A = (typeof(A))a;
     tree_key_string *B = (typeof(B))b;
 
-    return (strcmp(A->key, B->key));
+    return (strcasecmp(A->key, B->key));
 }
 
 static inline int8_t tree_key_pointer_compare_func (const tree_node *a,
