@@ -936,7 +936,7 @@ static void wid_editor_title_set (const char *title)
     wid_destroy(&wid_editor_filename_and_title);
 
     if (level_get_title(level_ed) &&
-        strcmp(level_get_title(level_ed), "(null)")) {
+        strcasecmp(level_get_title(level_ed), "(null)")) {
 
         LOG("Level titled as: %s", title);
 

@@ -42,7 +42,7 @@ int32_t main (int32_t argc, char *argv[])
             exit(1);
         }
 
-        if (!strcmp(new_filename, filename)) {
+        if (!strcasecmp(new_filename, filename)) {
             fprintf(MY_STDERR, "old \"%s\" and new \"%s\" names the same\n",
                     filename, new_filename);
             exit(1);

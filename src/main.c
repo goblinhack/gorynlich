@@ -447,9 +447,9 @@ static void parse_args (int32_t argc, char *argv[])
         /*
          * -server
          */
-        if (!strcmp(argv[i], "--server") ||
-            !strcmp(argv[i], "-server") ||
-            !strcmp(argv[i], "-s")) {
+        if (!strcasecmp(argv[i], "--server") ||
+            !strcasecmp(argv[i], "-server") ||
+            !strcasecmp(argv[i], "-s")) {
 
             on_server = true;
             is_client = false;
@@ -462,9 +462,9 @@ static void parse_args (int32_t argc, char *argv[])
         /*
          * -name
          */
-        if (!strcmp(argv[i], "--name") ||
-            !strcmp(argv[i], "-name") ||
-            !strcmp(argv[i], "-n")) {
+        if (!strcasecmp(argv[i], "--name") ||
+            !strcasecmp(argv[i], "-name") ||
+            !strcasecmp(argv[i], "-n")) {
 
             const char *name = argv[i + 1];
             if (!name) {
@@ -480,9 +480,9 @@ static void parse_args (int32_t argc, char *argv[])
         /*
          * -port
          */
-        if (!strcmp(argv[i], "--port") ||
-            !strcmp(argv[i], "-port") ||
-            !strcmp(argv[i], "-p")) {
+        if (!strcasecmp(argv[i], "--port") ||
+            !strcasecmp(argv[i], "-port") ||
+            !strcasecmp(argv[i], "-p")) {
 
             port = atoi(argv[i + 1]);
             global_config.user_server_port = port;
@@ -585,7 +585,7 @@ int32_t main (int32_t argc, char *argv[])
     exit(0);
 #endif
 
-#define nMAP_TEST
+#define MAP_TEST
 #ifdef MAP_TEST
     extern int32_t map_jigsaw_test(int32_t argc, char **argv);
     map_jigsaw_test(argc, argv);

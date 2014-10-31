@@ -334,7 +334,7 @@ tpp tp_find_short_name (const char *name)
     tree = thing_templates;
 
     TREE_WALK(tree, t) {
-        if (!strcmp(name, t->short_name)) {
+        if (!strcasecmp(name, t->short_name)) {
             return (t);
         }
     }

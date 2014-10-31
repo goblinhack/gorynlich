@@ -25,7 +25,7 @@ const char *pclass_random (void)
 
 const char *name_random (const char *pclass)
 {
-    if (!strcmp(pclass, "wizard")) {
+    if (!strcasecmp(pclass, "wizard")) {
         static const char *names[] = {
             "Leynilegur",
             "Azazel",
@@ -75,7 +75,7 @@ const char *name_random (const char *pclass)
         };
 
         return (names[rand() % ARRAY_SIZE(names)]);
-    } else if (!strcmp(pclass, "warrior")) {
+    } else if (!strcasecmp(pclass, "warrior")) {
         static const char *names[] = {
             "Ser Applespice",
             "Ser Ben",
@@ -144,7 +144,7 @@ const char *name_random (const char *pclass)
         };
 
         return (names[rand() % ARRAY_SIZE(names)]);
-    } else if (!strcmp(pclass, "elf")) {
+    } else if (!strcasecmp(pclass, "elf")) {
         static const char *names[] = {
             "Elgal",
             "Gaysprig",
@@ -391,7 +391,7 @@ const char *name_random (const char *pclass)
         };
 
         return (names[rand() % ARRAY_SIZE(names)]);
-    } else if (!strcmp(pclass, "dwarf")) {
+    } else if (!strcasecmp(pclass, "dwarf")) {
         static const char *names[] = {
             "Aderanuel",
             "Greatsailor",
@@ -526,7 +526,7 @@ const char *name_random (const char *pclass)
         };
 
         return (names[rand() % ARRAY_SIZE(names)]);
-    } else if (!strcmp(pclass, "valkyrie")) {
+    } else if (!strcasecmp(pclass, "valkyrie")) {
         static const char *names[] = {
             "Lady Applespice",
             "Lady Boy",

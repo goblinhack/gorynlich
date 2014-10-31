@@ -119,7 +119,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
     }
 
     while (ramfile->filename) {
-        if (strcmp(ramfile->filename, filename)) {
+        if (strcasecmp(ramfile->filename, filename)) {
             ramfile++;
             continue;
         }

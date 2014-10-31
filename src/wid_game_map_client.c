@@ -841,7 +841,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
      * Print the level title.
      */
     if (level_get_title(level) &&
-        strcmp(level_get_title(level), "(null)")) {
+        strcasecmp(level_get_title(level), "(null)")) {
 
         widp wid_title_container;
 

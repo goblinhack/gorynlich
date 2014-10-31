@@ -236,7 +236,7 @@ static void wid_intro_settings_read (void)
             continue;
         }
 
-        if (!strcmp(val_str, cmp_str)) {
+        if (!strcasecmp(val_str, cmp_str)) {
             break;
         }
     }
