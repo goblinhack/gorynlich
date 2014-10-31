@@ -68,10 +68,10 @@ tree_root *dirlist (const char *dir,
 
         name = e->d_name;
 
-        if (!strcmp(name, ".")) {
+        if (!strcasecmp(name, ".")) {
             name = ".";
             dir_and_file = dupstr(name, "dirlist .");
-        } else if (!strcmp(name, "..")) {
+        } else if (!strcasecmp(name, "..")) {
             name = "..";
             dir_and_file = dupstr(name, "dirlist ..");
         } else if (*name == '.') {

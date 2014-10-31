@@ -855,7 +855,7 @@ static uint8_t demarshal_internal_name (tree_demarshal *ctx, const char *want)
         return (0);
     }
 
-    if (strcmp(name, want)) {
+    if (strcasecmp(name, want)) {
         if (ctx->peek) {
             return (0);
         }
