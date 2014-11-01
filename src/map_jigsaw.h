@@ -78,6 +78,7 @@ enum {
     MAP_WATER           = 'W',
     MAP_SPACE           = 's',
     MAP_FLOOR           = '.',
+    MAP_DUSTY_FLOOR     = ',',
     MAP_ROCK            = 'r',
     MAP_WALL            = 'x',
     MAP_CONCRETE        = 'O',
@@ -102,7 +103,7 @@ enum {
     MAP_END             = 'E',
     MAP_START           = 'S',
     MAP_PADDING         = 'Z',
-    MAP_GRASS           = 'g',
+    MAP_DOOR            = 'D',
     MAP_MAX             = 255,
 };
 
