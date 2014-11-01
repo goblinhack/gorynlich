@@ -73,8 +73,8 @@
 
 #define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 100000
-#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           20
-#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   20
+#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           50
+#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   10
 #undef MAZE_DEBUG_PRINT_EXITS
 #define MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
@@ -1910,6 +1910,11 @@ static uint8_t maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
             }
 
             if (!mcell->possible_jigpieces_size) {
+                printf("cell %d %d\n",x,y);
+                maze_print_cells(dg);
+                sleep(1);
+                exit(0);
+
                 return (false);
             }
         }
@@ -2390,7 +2395,6 @@ static int32_t generate_level (const char *jigsaw_map,
 #ifdef MAZE_DEBUG_SHOW_AS_GENERATING
             printf("seed %u, maze solve failed\n", maze_seed);
 #endif
-            exit (0);
             goto reseed;
         }
 
