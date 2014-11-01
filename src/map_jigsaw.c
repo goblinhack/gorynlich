@@ -73,10 +73,11 @@
 
 #define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 100000
-#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           90
-#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   20 
+#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           20
+#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   20
 #undef MAZE_DEBUG_PRINT_EXITS
 #define MAZE_DEBUG_SHOW_AS_GENERATING
+#undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
 #define MAZE_DEBUG_SHOW
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
@@ -195,6 +196,7 @@ typedef struct maze_cell_t_ {
     int32_t y;
     uint8_t exits:4;
     uint8_t walked:1;
+    uint8_t dead:1;
     uint8_t start:1;
     uint8_t end:1;
     uint8_t solved:1;
@@ -1064,7 +1066,7 @@ static void jigpiece_count_char_types (dungeon_t *dg, int32_t which)
 /*
  * maze_print_cells
  */
-static void maze_print_cells (dungeon_t *dg)
+static inline void maze_print_cells (dungeon_t *dg)
 {
     int32_t w = MAP_JIGSAW_PIECE_WIDTH;
     int32_t h = MAP_JIGSAW_PIECE_HEIGHT;
@@ -1086,7 +1088,9 @@ static void maze_print_cells (dungeon_t *dg)
 
             which = ' ';
 
-            if (c->start) {
+            if (c->dead) {
+                which = 'D';
+            } else if (c->start) {
                 which = 'S';
             } else if (c->end) {
                 which = 'E';
@@ -1177,7 +1181,7 @@ static void jigpiece_add_frag (dungeon_t *dg)
              * For each orientation of a frag.
              */
             for (c = 0; c < dg->frag_cnt_alts[f]; c++) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
                 maze_print_cells(dg);
                 map_jigsaw_buffer_print();
 #endif
@@ -1728,10 +1732,12 @@ static void maze_generate_all_random_directions (dungeon_t *dg, maze_cell_t * c,
         } while (!MAZE_CAN_GO(c, new_dir));
 
 
-        if ((rand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS * depth) {
+        if ((depth > 2) &&
+            (rand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS * depth) {
             if (!c->exit[new_dir]->walked &&
                 !c->exit[new_dir]->exits) {
                 c->exit[new_dir]->walked = 1;
+                c->exit[new_dir]->dead = 1;
                 return;
             }
         }
@@ -1748,7 +1754,7 @@ static void maze_generate_all_random_directions (dungeon_t *dg, maze_cell_t * c,
             c->exit[new_dir]->exits |= (1 << (3 - new_dir));
         }
 
-        maze_generate_all_random_directions(dg, c->exit[new_dir], depth++);
+        maze_generate_all_random_directions(dg, c->exit[new_dir], depth + 1);
     }
 }
 
@@ -1942,6 +1948,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
 
 #ifdef MAZE_DEBUG_SHOW_AS_GENERATING
     maze_debug(dg);
+//    system("sleep 0.5");
 #endif
 
     /*
@@ -2101,9 +2108,17 @@ static int32_t maze_jigsaw_solve (dungeon_t *dg)
     int32_t dir;
     int32_t c;
 
-    x = 0;
-    y = 0;
-    mcell = MAZE_CELL(dg->maze, x, y);
+    for (;;) {
+        x = rand() % MAP_JIGSAW_PIECE_WIDTH;
+        y = rand() % MAP_JIGSAW_PIECE_HEIGHT;
+
+        mcell = MAZE_CELL(dg->maze, x, y);
+        if (!mcell->dead) {
+            if (mcell->exits) {
+                break;
+            }
+        }
+    }
 
     for (c = 1; c < mcell->possible_jigpieces_size; c++) {
 
@@ -2304,7 +2319,10 @@ static uint8_t maze_generate_and_solve (dungeon_t *dg)
         }
     }
 
-    maze_generate_all_random_directions(dg, MAZE_CELL(dg->maze, 0, 0), 0);
+    x = MAP_JIGSAW_PIECE_WIDTH / 2;
+    y = MAP_JIGSAW_PIECE_HEIGHT / 2;
+
+    maze_generate_all_random_directions(dg, MAZE_CELL(dg->maze, x, y), 0);
 
     if (!maze_solve(dg, w, h)) {
         return (false);
@@ -2420,6 +2438,7 @@ static void init (void)
     map_fg[MAP_SPACE]          = TERM_COLOR_WHITE;
     map_fg[MAP_WATER]          = TERM_COLOR_BLACK;
     map_fg[MAP_FLOOR]          = TERM_COLOR_WHITE;
+    map_fg[MAP_DUSTY_FLOOR]    = TERM_COLOR_GREEN;
     map_fg[MAP_ROCK]           = TERM_COLOR_BLUE;
     map_fg[MAP_WALL]           = TERM_COLOR_WHITE;
     map_fg[MAP_CONCRETE]       = TERM_COLOR_WHITE;
@@ -2444,11 +2463,13 @@ static void init (void)
     map_fg[MAP_END]            = TERM_COLOR_BLUE;
     map_fg[MAP_START]          = TERM_COLOR_BLUE;
     map_fg[MAP_PADDING]        = TERM_COLOR_WHITE;
+    map_fg[MAP_DOOR]           = TERM_COLOR_CYAN;
 
     map_bg[MAP_EMPTY]          = TERM_COLOR_BLACK;
     map_bg[MAP_SPACE]          = TERM_COLOR_BLACK;
     map_bg[MAP_WATER]          = TERM_COLOR_CYAN;
     map_bg[MAP_FLOOR]          = TERM_COLOR_BLACK;
+    map_bg[MAP_DUSTY_FLOOR]    = TERM_COLOR_BLACK;
     map_bg[MAP_ROCK]           = TERM_COLOR_BLACK;
     map_bg[MAP_WALL]           = TERM_COLOR_BLUE;
     map_bg[MAP_CONCRETE]       = TERM_COLOR_RED;
@@ -2473,11 +2494,13 @@ static void init (void)
     map_bg[MAP_END]            = TERM_COLOR_BLACK;
     map_bg[MAP_START]          = TERM_COLOR_BLACK;
     map_bg[MAP_PADDING]        = TERM_COLOR_BLACK;
+    map_bg[MAP_DOOR]           = TERM_COLOR_CYAN;
 
     valid_frag_char[MAP_EMPTY]          = true;
     valid_frag_char[MAP_SPACE]          = true;
     valid_frag_char[MAP_WATER]          = true;
     valid_frag_char[MAP_FLOOR]          = true;
+    valid_frag_char[MAP_DUSTY_FLOOR]    = true;
     valid_frag_char[MAP_ROCK]           = true;
     valid_frag_char[MAP_WALL]           = true;
     valid_frag_char[MAP_CONCRETE]       = true;
@@ -2502,11 +2525,13 @@ static void init (void)
     valid_frag_char[MAP_END]            = false;
     valid_frag_char[MAP_START]          = false;
     valid_frag_char[MAP_PADDING]        = false;
+    valid_frag_char[MAP_DOOR]           = true;
 
     valid_frag_alt_char[MAP_EMPTY]          = true;
     valid_frag_alt_char[MAP_SPACE]          = false;
     valid_frag_alt_char[MAP_WATER]          = true;
     valid_frag_alt_char[MAP_FLOOR]          = true;
+    valid_frag_alt_char[MAP_DUSTY_FLOOR]    = true;
     valid_frag_alt_char[MAP_ROCK]           = true;
     valid_frag_alt_char[MAP_WALL]           = true;
     valid_frag_alt_char[MAP_CONCRETE]       = true;
@@ -2531,6 +2556,7 @@ static void init (void)
     valid_frag_alt_char[MAP_END]            = false;
     valid_frag_alt_char[MAP_START]          = false;
     valid_frag_alt_char[MAP_PADDING]        = false;
+    valid_frag_alt_char[MAP_DOOR]           = true;
 }
 
 /*
