@@ -2597,3 +2597,79 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
     exit (0);
     return (rc);
 }
+
+#include "tree.h"
+#include "thing_template.h"
+#include "wid_game_map_server.h"
+
+/*
+ * map_jigsaw_generate
+ */
+void map_jigsaw_generate (widp wid)
+{
+    const char *jigsaw_map;
+
+    init();
+
+    jigsaw_map = "data/map/jigsaw.map";
+
+    int rc = generate_level(jigsaw_map, opt_seed);
+
+    if (!rc) {
+        DIE("failed to generate a maze!");
+    }
+
+    int32_t x;
+    int32_t y;
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            tpp tp;
+
+            char c = map_jigsaw_buffer[x][y];
+
+            if (c != ' ') {
+                tp = tp_find("data/things/floor3");
+
+                wid_game_map_server_replace_tile(wid, x, y, 
+                                                0, /* thing */
+                                                tp,
+                                                0 /* item */);
+            }
+
+            tp = 0;
+
+            switch (c) {
+            case 'x': tp = tp_find("data/things/wall1"); break;
+            case 'S': tp = tp_find("data/things/warrior"); break;
+            case 'E': tp = tp_find("data/things/exit1"); break;
+            case 'O': tp = tp_find("data/things/rock1"); break;
+            case 'r': tp = tp_find("data/things/rock1"); break;
+
+            case '$':
+                if ((rand() % 100) < 20) {
+                    tp = tp_find("data/things/bonepile3");
+                }
+                break;
+
+            case 'M': 
+                if ((rand() % 100) < 20) {
+                    tp = tp_find("data/things/bonepile3");
+                }
+                break;
+
+            default:
+                break;
+            }
+
+            if (!tp) {
+                continue;
+            }
+
+            wid_game_map_server_replace_tile(wid, x, y, 
+                                             0, /* thing */
+                                             tp,
+                                             0 /* item */);
+        }
+    }
+}
