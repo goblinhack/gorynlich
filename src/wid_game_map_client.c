@@ -298,9 +298,11 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     case SDLK_8:
     case SDLK_9: {
         shortcut = ((uint32_t)key->sym) - SDLK_0;
+CON("button %d",shortcut);
 
         uint32_t id = player->stats.action_bar[shortcut].id;
         if (!id) {
+            MSG(WARNING, "Nothing in that slot");
             return (true);
         }
 
@@ -313,7 +315,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
             socket_tx_player_action(client_joined_server, player, 
                                     PLAYER_ACTION_USE,
-                                    tp_to_id(tp));
+                                    shortcut);
 #if 0
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_DROP,
