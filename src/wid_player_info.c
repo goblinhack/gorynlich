@@ -343,7 +343,11 @@ static void wid_player_info_create (player_stats_t *s)
         wid_set_bevelled(w, true);
         wid_set_bevel(w, 2);
         wid_set_text_outline(w, true);
-        wid_set_on_mouse_down(w, wid_player_info_select_name_event);
+
+        if (!player) {
+            wid_set_on_mouse_down(w, wid_player_info_select_name_event);
+        }
+
         wid_raise(w);
     }
 
