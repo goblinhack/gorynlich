@@ -4328,6 +4328,7 @@ void thing_server_action (thingp t,
 {
     widp grid = wid_game_map_server_grid_container;
 
+CON("server action id %d, id", id);
     itemp item = &t->stats.action_bar[id];
     if (!item->id) {
         THING_SHOUT_AT(t, WARNING, "No item in that slot to use");
@@ -4335,6 +4336,7 @@ void thing_server_action (thingp t,
     }
 
     tpp tp = id_to_tp(id);
+CON("tp %s", tp_short_name(tp));
     if (!tp) {
         ERR("Unkown item use request, id %u", id);
         return;
