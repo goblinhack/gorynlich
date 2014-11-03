@@ -18,7 +18,7 @@
 #include "string.h"
 #include "client.h"
 
-static widp wid_player_stats;
+widp wid_player_stats;
 static widp wid_player_stats_container;
 static uint8_t wid_player_stats_init_done;
 
@@ -131,6 +131,10 @@ void wid_player_stats_visible (player_stats_t *s)
 
 void wid_player_stats_redraw (void)
 {
+    if (!player_stats) {
+        DIE("no player stats to redraw");
+    }
+
     player_inventory_sort(player_stats);
 
     wid_player_stats_hide();
@@ -540,7 +544,7 @@ static void wid_player_stats_create (player_stats_t *s)
         }
     }
 
-    {
+    if (!player) {
         const char *button_name = "Re-roll";
 
         widp w = wid_new_rounded_small_button(wid_player_stats_container,

@@ -182,7 +182,7 @@ static void wid_player_action_create (player_stats_t *s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.2, 0.3};
+        fpoint tl = {0.2, 0.2};
         fpoint br = {0.3, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
@@ -200,7 +200,7 @@ static void wid_player_action_create (player_stats_t *s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.7, 0.3};
+        fpoint tl = {0.7, 0.2};
         fpoint br = {0.8, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);

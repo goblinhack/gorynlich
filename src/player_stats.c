@@ -213,6 +213,10 @@ int player_stats_get_modifier (int value)
 
 void player_inventory_sort (player_stats_t *player_stats)
 {
+    if (!player_stats) {
+        DIE("no player stats");
+    }
+
     static const uint32_t NCLASSES = 
                     THING_INVENTORY_CLASSES;
     static const uint32_t N_PER_CLASS = 
