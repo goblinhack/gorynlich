@@ -2645,12 +2645,20 @@ void map_jigsaw_generate (widp wid)
             case 'E': tp = tp_find("data/things/exit1"); break;
             case 'O': tp = tp_find("data/things/rock1"); break;
             case 'r': tp = tp_find("data/things/rock1"); break;
+            case 'D': tp = tp_find("data/things/door2"); break;
 
-            case '$':
-                if ((rand() % 100) < 20) {
-                    tp = tp_find("data/things/bonepile3");
+            case '$': {
+                int r = rand() % 100;
+
+                if (r < 30) {
+                    tp = tp_find("data/things/brazier");
+                } else if (r < 50) {
+                    tp = tp_find("data/things/potion_fire");
+                } else {
+                    tp = tp_find("data/things/coins1");
                 }
                 break;
+            }
 
             case 'M': 
                 if ((rand() % 100) < 20) {
