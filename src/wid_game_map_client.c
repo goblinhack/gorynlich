@@ -12,6 +12,10 @@
 #include "string.h"
 #include "wid_textbox.h"
 #include "wid_game_map_client.h"
+#include "wid_player_stats.h"
+#include "wid_player_info.h"
+#include "wid_player_inventory.h"
+#include "wid_player_action.h"
 #include "thing.h"
 #include "level.h"
 #include "server.h"
@@ -319,6 +323,23 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         }
 
         MSG(WARNING, "No carried item is using that key");
+        return (true);
+    }
+
+    case '\t': {
+        player_stats_t *s;
+
+        s = &player->stats;
+
+        if (!wid_player_stats || wid_is_hidden(wid_player_stats)) {
+            wid_player_stats_visible(s);
+            wid_player_info_visible(s);
+            wid_player_inventory_visible(s);
+        } else {
+            wid_player_stats_hide();
+            wid_player_info_hide();
+            wid_player_inventory_hide();
+        }
         return (true);
     }
 
@@ -639,7 +660,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         return;
     }
 
-    wid_player_action_visible(&player->stats, true);
+    if (player->stats.pclass[0]) {
+        wid_player_action_visible(&player->stats, true);
+    }
 
     if (redo) {
         if (wid_scoreline_container_top) {

@@ -23,6 +23,16 @@
 #define MAP_JIGSAW_PIECE_WIDTH      8
 #define MAP_JIGSAW_PIECE_HEIGHT     8
 
+#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
+#define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 100000
+#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           50
+#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   10
+
+#undef MAZE_DEBUG_PRINT_EXITS
+#undef MAZE_DEBUG_SHOW_AS_GENERATING
+#undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
+#define MAZE_DEBUG_SHOW
+
 #include "main.h"
 #include "map_jigsaw.h"
 #include "ramdisk.h"
@@ -70,15 +80,6 @@
  *                                ++++++++                             
  *                                                                     
  */
-
-#define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
-#define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 100000
-#define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           50
-#define MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS   10
-#undef MAZE_DEBUG_PRINT_EXITS
-#define MAZE_DEBUG_SHOW_AS_GENERATING
-#undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
-#define MAZE_DEBUG_SHOW
 
 #define tcup(x,y)           printf("\033[%d;%dH", y + 1, x + 1);
 
@@ -686,8 +687,6 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
 static int32_t jigpiece_char_is_occupiable (char c)
 {
     return (c == MAP_FLOOR) ||
-           (c == MAP_CORRIDOR) ||
-           (c == MAP_LADDER) ||
            (c == MAP_MONST) ||
            (c == MAP_TRAPDOOR) ||
            (c == MAP_MOB_SPAWN) ||
@@ -718,9 +717,7 @@ static int32_t jigpiece_char_is_monst (char c)
 static int32_t jigpiece_char_is_floor_or_corridor (char c)
 {
     return (c == MAP_FLOOR) ||
-           (c == MAP_ROCK) ||
-           (c == MAP_LADDER) ||
-           (c == MAP_CORRIDOR);
+           (c == MAP_ROCK);
 }
 
 /*
@@ -2448,11 +2445,6 @@ static void init (void)
     map_fg[MAP_CONCRETE]       = TERM_COLOR_WHITE;
     map_fg[MAP_CORRIDOR]       = TERM_COLOR_YELLOW;
     map_fg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLUE;
-    map_fg[MAP_CORRIDOR_DEAD]  = TERM_COLOR_BLUE;
-    map_fg[MAP_CORRIDOR_POSS]  = TERM_COLOR_CYAN;
-    map_fg[MAP_CORRIDOR_OK]    = TERM_COLOR_GREEN;
-    map_fg[MAP_CORRIDOR_FORK]  = TERM_COLOR_CYAN;
-    map_fg[MAP_LADDER]         = TERM_COLOR_GREEN;
     map_fg[MAP_MONST]          = TERM_COLOR_BLUE;
     map_fg[MAP_MOB_SPAWN]      = TERM_COLOR_BLACK;
     map_fg[MAP_TRAP]           = TERM_COLOR_BLUE;
@@ -2479,11 +2471,6 @@ static void init (void)
     map_bg[MAP_CONCRETE]       = TERM_COLOR_RED;
     map_bg[MAP_CORRIDOR]       = TERM_COLOR_BLACK;
     map_bg[MAP_CORRIDOR_WALL]  = TERM_COLOR_BLACK;
-    map_bg[MAP_CORRIDOR_DEAD]  = TERM_COLOR_BLACK;
-    map_bg[MAP_CORRIDOR_POSS]  = TERM_COLOR_BLACK;
-    map_bg[MAP_CORRIDOR_OK]    = TERM_COLOR_BLACK;
-    map_bg[MAP_CORRIDOR_FORK]  = TERM_COLOR_BLACK;
-    map_bg[MAP_LADDER]         = TERM_COLOR_BLACK;
     map_bg[MAP_MONST]          = TERM_COLOR_BLACK;
     map_bg[MAP_MOB_SPAWN]      = TERM_COLOR_RED;
     map_bg[MAP_TRAP]           = TERM_COLOR_BLACK;
@@ -2510,11 +2497,6 @@ static void init (void)
     valid_frag_char[MAP_CONCRETE]       = true;
     valid_frag_char[MAP_CORRIDOR]       = true;
     valid_frag_char[MAP_CORRIDOR_WALL]  = false;
-    valid_frag_char[MAP_CORRIDOR_DEAD]  = false;
-    valid_frag_char[MAP_CORRIDOR_POSS]  = false;
-    valid_frag_char[MAP_CORRIDOR_OK]    = false;
-    valid_frag_char[MAP_CORRIDOR_FORK]  = false;
-    valid_frag_char[MAP_LADDER]         = true;
     valid_frag_char[MAP_MONST]          = true;
     valid_frag_char[MAP_MOB_SPAWN]      = true;
     valid_frag_char[MAP_TRAP]           = true;
@@ -2541,11 +2523,6 @@ static void init (void)
     valid_frag_alt_char[MAP_CONCRETE]       = true;
     valid_frag_alt_char[MAP_CORRIDOR]       = true;
     valid_frag_alt_char[MAP_CORRIDOR_WALL]  = true;
-    valid_frag_alt_char[MAP_CORRIDOR_DEAD]  = false;
-    valid_frag_alt_char[MAP_CORRIDOR_POSS]  = false;
-    valid_frag_alt_char[MAP_CORRIDOR_OK]    = false;
-    valid_frag_alt_char[MAP_CORRIDOR_FORK]  = false;
-    valid_frag_alt_char[MAP_LADDER]         = true;
     valid_frag_alt_char[MAP_MONST]          = true;
     valid_frag_alt_char[MAP_MOB_SPAWN]      = true;
     valid_frag_alt_char[MAP_TRAP]           = true;
@@ -2650,8 +2627,10 @@ void map_jigsaw_generate (widp wid)
             case '$': {
                 int r = rand() % 100;
 
-                if (r < 30) {
+                if (r < 20) {
                     tp = tp_find("data/things/brazier");
+                } else if (r < 40) {
+                    tp = tp_find("data/things/key");
                 } else if (r < 50) {
                     tp = tp_find("data/things/potion_fire");
                 } else {

@@ -872,7 +872,6 @@ thingp thing_client_new (uint32_t id, tpp tp)
 
     t->tree.key = id;
     thing_client_ids[id] = t;
-LOG("new %s %d",t->logname,id);
     t->tp = tp;
     t->on_server = false;
 
@@ -1195,7 +1194,6 @@ void thing_destroy (thingp t, const char *why)
         thing_server_ids[t->thing_id] = 0;
     } else {
         thing_client_ids[t->thing_id] = 0;
-LOG("old %s %d",t->logname,t->thing_id);
     }
 
     /*
