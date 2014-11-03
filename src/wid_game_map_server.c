@@ -164,9 +164,15 @@ void wid_game_map_server_wid_create (void)
 
     server_level_is_being_loaded = true;
 
+#if 1
+    server_level = level_load_random(1, wid_game_map_server_grid_container, 
+                                     false /* is_editor */,
+                                     true /* server */);
+#else
     server_level = level_load(1, wid_game_map_server_grid_container, 
                               false /* is_editor */,
                               true /* server */);
+#endif
     if (!server_level) {
         WARN("failed to load level");
         return;

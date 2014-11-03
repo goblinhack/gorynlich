@@ -24,6 +24,7 @@
 #include "sound.h"
 #include "wid_editor.h"
 #include "socket.h"
+#include "map_jigsaw.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
@@ -78,8 +79,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     verify(t);
 
     if (thing_is_seedpod(t)) {
-        tpp tp = 
-                tp_find("data/things/plant");
+        tpp tp = tp_find("data/things/plant");
 
         wid_game_map_server_replace_tile(wid_game_map_server_grid_container,
                                          thing_grid_x(t),
@@ -270,6 +270,34 @@ levelp level_load (uint32_t level_no,
     }
 
     myfree(dir_and_file);
+
+    level_update_now(level);
+
+    level_set_is_paused(level, false);
+    level_start_timers(level);
+
+    level_server_init();
+
+    LEVEL_LOG(level, "Level loaded");
+
+    return (level);
+}
+
+levelp level_load_random (uint32_t level_no, 
+                          widp wid, 
+                          int is_editor,
+                          int on_server)
+{
+    levelp level;
+
+    level = level_new(wid, level_no, is_editor, on_server);
+
+    level_set_is_paused(level, true);
+    level_set_timestamp_started(level, time_get_time_cached());
+
+    LEVEL_LOG(level, "Level generating");
+
+    map_jigsaw_generate(wid);
 
     level_update_now(level);
 
