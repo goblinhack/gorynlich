@@ -798,9 +798,10 @@ static void client_poll (void)
 
             case MSG_SERVER_STATUS: {
                 /*
-                 * This is an update of all players in the game.
+                 * This is an update our player state on the server.
                  */
                 msg_server_status latest_status;
+LOG("rx MSG_SERVER_STATUS");
 
                 memset(&latest_status, 0, sizeof(latest_status));
 
@@ -857,7 +858,7 @@ static void client_poll (void)
                 }
 
                 if (player) {
-                    player_stats_t *new_stats = &latest_status.player.stats;
+                    thing_statsp new_stats = &latest_status.player.stats;
 
                     if (new_stats->weapon_carry_anim_id) {
                         thingp item = thing_weapon_carry_anim(player);
@@ -888,15 +889,12 @@ static void client_poll (void)
                 }
 
                 memcpy(&server_status, &latest_status, sizeof(server_status));
-LOG("rx %s", server_status.player.stats.pname);
 
                 msg_player_state *p = &server_status.player;
-LOG("rx id %d",p->stats.thing_id);
                 if (player &&
-                    memcmp(&player->stats, &p->stats, sizeof(player_stats_t))) {
+                    memcmp(&player->stats, &p->stats, sizeof(thing_stats))) {
                     wid_game_map_client_score_update(client_level, redo);
-                    memcpy(&player->stats, &p->stats, sizeof(player_stats_t));
-LOG("rx player id %d",player->stats.thing_id);
+                    memcpy(&player->stats, &p->stats, sizeof(thing_stats));
                 }
 
                 break;
@@ -1008,18 +1006,14 @@ static void client_check_still_in_game (void)
         msg_player_state *p = &server_status.player;
 
         if (!p->stats.pname[0]) {
-LOG("no name");
             break;
         }
 
-LOG("check id %d key %d",p->stats.thing_id, p->key);
         if (p->key != client_joined_server_key) {
-LOG(" key mismatch");
             break;
         }
 
         if (strcasecmp(p->stats.pname, global_config.player_stats.pname)) {
-LOG(" name mismatch");
             break;
         }
 

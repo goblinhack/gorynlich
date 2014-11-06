@@ -17,7 +17,7 @@ void thing_map_sanity(void);
 void thing_map_dump(void);
 thingp thing_server_new(const char *name, 
                         double x, double y,
-                        player_stats_t *stats);
+                        thing_statsp stats);
 void thing_server_init(thingp, double x, double y);
 thingp thing_client_new(uint32_t, tpp);
 thingp thing_client_local_new(tpp tp);
@@ -426,7 +426,7 @@ typedef struct thing_ {
     /*
      * Max health, attack bpnuses etc...
      */
-    player_stats_t stats;
+    thing_stats stats;
 
     /*
      * Pointer to common settings for this thing.
@@ -1697,25 +1697,25 @@ static inline levelp thing_level (thingp t)
 static inline itemp thing_has_inventory_item (const thingp t, 
                                               const uint32_t id)
 {
-    return (player_stats_has_inventory_item(&t->stats, id, 0));
+    return (thing_stats_has_inventory_item(&t->stats, id, 0));
 }
 
 static inline itemp thing_has_action_bar_item (const thingp t,
                                                const uint32_t id) 
 {
-    return (player_stats_has_action_bar_item(&t->stats, id, 0));
+    return (thing_stats_has_action_bar_item(&t->stats, id, 0));
 }
 
 static inline itemp thing_has_worn_item (const thingp t, 
                                          const uint32_t id)
 {
-    return (player_stats_has_worn_item(&t->stats, id, 0));
+    return (thing_stats_has_worn_item(&t->stats, id, 0));
 }
 
 static inline itemp thing_has_item (const thingp t,
                                     const uint32_t id)
 {
-    return (player_stats_has_item(&t->stats, id, 0));
+    return (thing_stats_has_item(&t->stats, id, 0));
 }
 
 static inline itemp thing_weapon_item (const thingp t)

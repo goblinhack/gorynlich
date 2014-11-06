@@ -18,9 +18,9 @@
 static widp wid_player_action;
 static uint8_t wid_player_action_init_done;
 
-static void wid_player_action_create(player_stats_t *, int fast);
+static void wid_player_action_create(thing_statsp , int fast);
 static void wid_player_action_destroy(void);
-static player_stats_t *player_stats;
+static thing_statsp player_stats;
 
 uint8_t wid_player_action_init (void)
 {
@@ -48,7 +48,7 @@ void wid_player_action_hide (void)
     wid_player_action_destroy();
 }
 
-void wid_player_action_visible (player_stats_t *s, int fast)
+void wid_player_action_visible (thing_statsp s, int fast)
 {
     wid_player_action_create(s, fast);
 }
@@ -137,7 +137,7 @@ wid_player_action_button_style_mouse_down (widp w,
             /*
              * Can we add this anywhere at all ?
              */
-            if (player_stats_item_add(0, player_stats, wid_item)) {
+            if (thing_stats_item_add(0, player_stats, wid_item)) {
                 dropped = true;
             }
         }
@@ -156,7 +156,7 @@ wid_player_action_button_style_mouse_down (widp w,
     return (true);
 }
 
-static void wid_player_action_create (player_stats_t *s, int fast)
+static void wid_player_action_create (thing_statsp s, int fast)
 {
     if (wid_player_action) {
         return;

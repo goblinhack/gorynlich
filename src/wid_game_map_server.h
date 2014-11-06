@@ -21,7 +21,7 @@ wid_game_map_server_replace_tile(widp, double x, double y,
                                  thingp, 
                                  tpp,
                                  itemp,
-                                 player_stats_t *);
+                                 thing_statsp );
 
 extern widp wid_game_map_server_window;
 extern widp wid_game_map_server_grid_container;

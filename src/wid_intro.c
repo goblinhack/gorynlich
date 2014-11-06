@@ -225,9 +225,9 @@ static void wid_intro_single_play_selected (void)
     /*
      * Start with some random junk.
      */
-    player_stats_t *s;
+    thing_statsp s;
     s = &global_config.player_stats;
-    player_stats_generate_random(s);
+    thing_stats_get_random(s);
 
     action_timer_create(
             &wid_timers,

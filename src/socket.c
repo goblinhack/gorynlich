@@ -948,7 +948,7 @@ const char *socket_get_pclass (const socketp s)
     return (s->stats.pclass);
 }
 
-const player_stats_t *socket_get_player_stats (const socketp s)
+const thing_statsp socket_get_player_stats (const socketp s)
 {
     verify(s);
 
@@ -977,14 +977,14 @@ void socket_set_pclass (socketp s, const char *pclass)
     }
 }
 
-void socket_set_player_stats (socketp s, const player_stats_t *stats)
+void socket_set_player_stats (socketp s, const thing_statsp stats)
 {
     verify(s);
 
     if (!stats) {
-        memset(&s->stats, 0, sizeof(player_stats_t));
+        memset(&s->stats, 0, sizeof(thing_stats));
     } else {
-        memcpy(&s->stats, stats, sizeof(player_stats_t));
+        memcpy(&s->stats, stats, sizeof(thing_stats));
     }
 }
 
@@ -1322,7 +1322,7 @@ void socket_tx_name (socketp s)
     msg_name msg = {0};
     msg.type = MSG_NAME;
 
-    memcpy(&msg.stats, &s->stats, sizeof(player_stats_t));
+    memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
     memcpy(packet->data, &msg, sizeof(msg));
 
     LOG("Client: Tx Name [to %s] \"%s\"", 
@@ -1408,7 +1408,7 @@ uint8_t socket_tx_client_join (socketp s, uint32_t *key)
     *key = time_get_time_cached();
     SDLNet_Write32(*key, &msg.key);
 
-    memcpy(&msg.stats, &s->stats, sizeof(player_stats_t));
+    memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
 
     memcpy(packet->data, &msg, sizeof(msg));
 
@@ -1486,7 +1486,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
         socket_set_player(s, p);
     }
 
-    memcpy(&p->stats_from_client, &msg.stats, sizeof(player_stats_t));
+    memcpy(&p->stats_from_client, &msg.stats, sizeof(thing_stats));
 
     p->local_ip = s->local_ip;
     p->remote_ip = s->remote_ip;
@@ -2141,7 +2141,7 @@ void socket_tx_server_status (void)
         }
 
         msg_player_state *msg_tx = &msg.player;
-        memcpy(&msg_tx->stats, &t->stats, sizeof(player_stats_t));
+        memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
 
         SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
         SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
@@ -2194,7 +2194,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
     msg_player_state *p = &status->player;
     msg_player_state *msg_rx = &msg->player;
 
-    memcpy(&p->stats, &msg_rx->stats, sizeof(player_stats_t));
+    memcpy(&p->stats, &msg_rx->stats, sizeof(thing_stats));
 
     p->local_ip.host = SDLNet_Read32(&msg_rx->local_ip.host);
     p->local_ip.port = SDLNet_Read16(&msg_rx->local_ip.port);

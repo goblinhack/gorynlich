@@ -81,41 +81,41 @@ typedef struct thing_stats_ {
 
 } __attribute__ ((packed)) thing_stats;
 
-int player_stats_get_modifier(int value);
-void player_stats_generate_random(player_stats_t *);
-void player_stats_init(player_stats_t *);
-tpp player_stats_to_tp(player_stats_t *);
+int thing_stats_val_to_modifier(int value);
+void thing_stats_get_random(thing_statsp );
+void thing_stats_init(thing_statsp );
+tpp player_stats_to_tp(thing_statsp );
 
-itemp player_stats_has_item(player_stats_t *player_stats,
+itemp thing_stats_has_item(thing_statsp player_stats,
                             uint32_t id,
                             uint32_t *index);
 
-itemp player_stats_has_inventory_item(player_stats_t *player_stats,
-                                        uint32_t item,
-                                        uint32_t *index);
+itemp thing_stats_has_inventory_item(thing_statsp player_stats,
+                                      uint32_t item,
+                                      uint32_t *index);
 
-itemp player_stats_has_action_bar_item(player_stats_t *player_stats,
+itemp thing_stats_has_action_bar_item(thing_statsp player_stats,
                                        uint32_t item,
                                        uint32_t *index);
 
-itemp player_stats_has_worn_item(player_stats_t *player_stats,
-                                   uint32_t item,
-                                   uint32_t *index);
+itemp thing_stats_has_worn_item(thing_statsp player_stats,
+                                 uint32_t item,
+                                 uint32_t *index);
 
-int player_stats_item_add(thingp t,
-                          player_stats_t *player_stats,
+int thing_stats_item_add(thingp t,
+                          thing_statsp player_stats,
                           item_t item);
 
-int player_stats_item_remove(thingp t,
-                             player_stats_t *player_stats,
+int thing_stats_item_remove(thingp t,
+                             thing_statsp player_stats,
                              const tpp it);
 
-int player_stats_item_degrade(thingp t,
-                              player_stats_t *player_stats,
+int thing_stats_item_degrade(thingp t,
+                              thing_statsp player_stats,
                               const tpp it);
 
-int player_stats_item_polymorph(player_stats_t *player_stats,
+int thing_stats_item_polymorph(thing_statsp player_stats,
                                 const uint32_t from,
                                 const uint32_t to);
 
-void player_inventory_sort(player_stats_t *player_stats);
+void player_inventory_sort(thing_statsp player_stats);

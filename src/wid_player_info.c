@@ -22,9 +22,9 @@ static widp wid_player_info;
 static uint8_t wid_player_info_init_done;
 int wid_player_info_set_name;
 
-static void wid_player_info_create(player_stats_t *);
+static void wid_player_info_create(thing_statsp );
 static void wid_player_info_destroy(void);
-static player_stats_t *player_stats;
+static thing_statsp player_stats;
 
 uint8_t wid_player_info_init (void)
 {
@@ -52,7 +52,7 @@ void wid_player_info_hide (void)
     wid_player_info_destroy();
 }
 
-void wid_player_info_visible (player_stats_t *s)
+void wid_player_info_visible (thing_statsp s)
 {
     wid_player_info_create(s);
 }
@@ -237,7 +237,7 @@ wid_player_info_button_style_mouse_down (widp w,
             /*
              * Can we add this anywhere at all ?
              */
-            if (player_stats_item_add(0, player_stats, wid_item)) {
+            if (thing_stats_item_add(0, player_stats, wid_item)) {
                 dropped = true;
             }
         }
@@ -256,7 +256,7 @@ wid_player_info_button_style_mouse_down (widp w,
     return (true);
 }
 
-static void wid_player_info_create (player_stats_t *s)
+static void wid_player_info_create (thing_statsp s)
 {
     if (wid_player_info) {
         return;

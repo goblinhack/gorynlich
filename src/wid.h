@@ -145,7 +145,7 @@ typedef widp (*grid_wid_replace_t)(widp,
                                    double y,
                                    thingp, tpp, 
                                    itemp item,
-                                   player_stats_t *stats);
+                                   thing_statsp stats);
 
 /*
  * Client.

@@ -338,7 +338,7 @@ CON("button %d",action_bar_index);
     }
 
     case '\t': {
-        player_stats_t *s;
+        thing_statsp s;
 
         s = &player->stats;
 

@@ -619,7 +619,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
     /*
      * Set up any stats not populated.
      */
-    player_stats_init(&t->stats);
+    thing_stats_init(&t->stats);
 
     /*
      * Read the tiles tree.
