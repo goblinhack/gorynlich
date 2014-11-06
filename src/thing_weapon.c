@@ -14,13 +14,13 @@
 
 void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 {
-    *dx = 0;
-    *dy = 0;
-
-    tpp weapon = t->weapon;
+    tpp weapon = thing_weapon(t);
     if (!weapon) {
         return;
     }
+
+    *dx = 0;
+    *dy = 0;
 
     double dist_from_player = 
         ((double)tp_get_swing_distance_from_player(weapon)) / 10.0;
@@ -80,12 +80,12 @@ thingp thing_weapon_carry_anim (thingp t)
     thingp weapon_carry_anim = 0;
 
     if (t->on_server) {
-        if (t->weapon_carry_anim_id) {
-            weapon_carry_anim = thing_server_id(t->weapon_carry_anim_id);
+        if (t->stats.weapon_carry_anim_id) {
+            weapon_carry_anim = thing_server_id(t->stats.weapon_carry_anim_id);
         }
     } else {
-        if (t->weapon_carry_anim_id) {
-            weapon_carry_anim = thing_client_id(t->weapon_carry_anim_id);
+        if (t->stats.weapon_carry_anim_id) {
+            weapon_carry_anim = thing_client_id(t->stats.weapon_carry_anim_id);
         }
     }
 
@@ -100,12 +100,12 @@ thingp thing_weapon_swing_anim (thingp t)
     thingp weapon_swing_anim = 0;
 
     if (t->on_server) {
-        if (t->weapon_swing_anim_id) {
-            weapon_swing_anim = thing_server_id(t->weapon_swing_anim_id);
+        if (t->stats.weapon_swing_anim_id) {
+            weapon_swing_anim = thing_server_id(t->stats.weapon_swing_anim_id);
         }
     } else {
-        if (t->weapon_swing_anim_id) {
-            weapon_swing_anim = thing_client_id(t->weapon_swing_anim_id);
+        if (t->stats.weapon_swing_anim_id) {
+            weapon_swing_anim = thing_client_id(t->stats.weapon_swing_anim_id);
         }
     }
 
@@ -134,15 +134,14 @@ void thing_wield_next_weapon (thingp t)
 
 void thing_unwield (thingp t)
 {
-    if (!t->weapon) {
+    tpp weapon = thing_weapon(t);
+    if (!weapon) {
         return;
     }
 
     if (thing_is_player(t)) {
-        THING_LOG(t, "unwield %s", tp_short_name(t->weapon));
+        THING_LOG(t, "unwield %s", tp_short_name(weapon));
     }
-
-    t->weapon = 0;
 
     /*
      * If this weapon has its own thing id for animations then destroy that.
@@ -150,108 +149,111 @@ void thing_unwield (thingp t)
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
         thing_dead(weapon_carry_anim, 0, "owner weapon");
-        t->weapon_carry_anim_id = 0;
+        t->stats.weapon_carry_anim_id = 0;
     }
 
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
         thing_dead(weapon_swing_anim, 0, "owner weapon");
-        t->weapon_swing_anim_id = 0;
+        t->stats.weapon_swing_anim_id = 0;
     }
 }
 
 void thing_wield (thingp parent, tpp tp)
 {
-    thing_unwield(parent);
+    const char *carry_as = tp_weapon_carry_anim(tp);
 
-    if (parent->weapon != tp) {
-        parent->weapon = tp;
-
-        if (!parent->weapon) {
-            if (thing_is_player(parent)) {
-                THING_SHOUT_AT(parent, INFO,
-                            "You switch to the %s", 
-                            tp_short_name(tp));
-            }
-        }
+    if (!carry_as) {
+        ERR("Could not wield %s", thing_logname(parent));
+        return;
     }
 
-    const char *child = tp_weapon_carry_anim(tp);
-
-    if (child) {
-        tpp what = tp_find(child);
-        if (!what) {
-            DIE("could now find %s to wield for %s",
-                child, thing_logname(parent));
-        }
-
-        widp weapon_carry_anim_wid = wid_game_map_server_replace_tile(
-                                wid_game_map_server_grid_container,
-                                parent->x,
-                                parent->y,
-                                0, /* thing */
-                                what,
-                                0 /* item */);
-        /*
-         * Save the thing id so the client wid can keep track of the weapon.
-         */
-        thingp child = wid_get_thing(weapon_carry_anim_wid);
-        parent->weapon_carry_anim_id = child->thing_id;
-
-        child->dir = parent->dir;
-
-        /*
-         * Attach to the parent thing.
-         */
-        child->owner_id = parent->thing_id;
-
-        thing_update(child);
-
-        parent->needs_tx_player_update = true;
+    tpp what = tp_find(carry_as);
+    if (!what) {
+        ERR("Could not find %s to wield for %s",
+            carry_as, thing_logname(parent));
+        return;
     }
+
+    widp weapon_carry_anim_wid = wid_game_map_server_replace_tile(
+                            wid_game_map_server_grid_container,
+                            parent->x,
+                            parent->y,
+                            0, /* thing */
+                            what,
+                            0 /* item */);
+    /*
+     * Save the thing id so the client wid can keep track of the weapon.
+     */
+    thingp child = wid_get_thing(weapon_carry_anim_wid);
+    parent->stats.weapon_carry_anim_id = child->thing_id;
+
+    child->dir = parent->dir;
+
+    /*
+     * Attach to the parent thing.
+     */
+    child->owner_id = parent->thing_id;
+
+    thing_update(child);
+
+    parent->needs_tx_player_update = true;
 }
 
 void thing_swing (thingp parent)
 {
-    if (parent->weapon_swing_anim_id) {
+    if (parent->stats.weapon_swing_anim_id) {
+        /*
+         * Still swinging.
+         */
         return;
     }
 
-    const char *child = tp_weapon_swing_anim(parent->weapon);
-    if (child) {
-        tpp what = tp_find(child);
-        if (!what) {
-            DIE("could now find %s to wield for %s",
-                child, thing_logname(parent));
-        }
-
-        widp weapon_swing_anim_wid = wid_game_map_server_replace_tile(
-                                wid_game_map_server_grid_container,
-                                parent->x,
-                                parent->y,
-                                0, /* thing */
-                                what,
-                                0 /* item */);
-
-        /*
-         * Save the thing id so the client wid can keep track of the weapon.
-         */
-        thingp child = wid_get_thing(weapon_swing_anim_wid);
-
-        /*
-         * Attach to the parent thing.
-         */
-        child->owner_id = parent->thing_id;
-        parent->weapon_swing_anim_id = child->thing_id;
-
-        /*
-         * Destroy the thing quickly. Allow enough time for the client anim
-         * to run.
-         */
-        thing_timer_destroy(child, 200);
-
-        thing_update(child);
-
-        parent->needs_tx_player_update = true;
+    tpp weapon = thing_weapon(parent);
+    if (!weapon) {
+        ERR("No weapon to swing");
+        return;
     }
+
+    const char *swung_as = tp_weapon_swing_anim(weapon);
+    if (!swung_as) {
+        ERR("Could not swing %s", thing_logname(parent));
+        return;
+    }
+
+    tpp what = tp_find(swung_as);
+    if (!what) {
+        ERR("Could not find %s to wield for %s",
+            swung_as, thing_logname(parent));
+        return;
+    }
+
+    widp weapon_swing_anim_wid = wid_game_map_server_replace_tile(
+                            wid_game_map_server_grid_container,
+                            parent->x,
+                            parent->y,
+                            0, /* thing */
+                            what,
+                            0 /* item */);
+
+    /*
+     * Save the thing id so the client wid can keep track of the weapon.
+     */
+    thingp child = wid_get_thing(weapon_swing_anim_wid);
+
+    /*
+     * Attach to the parent thing.
+     */
+    child->owner_id = parent->thing_id;
+    parent->stats.weapon_swing_anim_id = child->thing_id;
+
+    /*
+     * Destroy the thing quickly. Allow enough time for the client anim
+     * to run.
+     */
+    thing_timer_destroy(child, 200);
+
+    thing_update(child);
+
+    parent->needs_tx_player_update = true;
 }

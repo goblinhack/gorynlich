@@ -771,6 +771,13 @@ thingp thing_server_new (const char *name, double x, double y)
     t->item.cursed = tp_is_cursed(tp);
 
     /*
+     * Start out with stats from the template.
+     */
+    memcpy(&t->stats, &tp->stats, sizeof(player_stats_t));
+
+    t->stats.thing_id = id;
+
+    /*
      * Start out with the items carried on the template if any. This is not 
      * done for players as they do this in the provisioning screen.
      */
@@ -783,11 +790,6 @@ thingp thing_server_new (const char *name, double x, double y)
             }
         }
     }
-
-    /*
-     * Start out with stats from the template.
-     */
-    memcpy(&t->stats, &tp->stats, sizeof(player_stats_t));
 
     thing_server_init(t, x, y);
 
@@ -834,12 +836,14 @@ void thing_server_init (thingp t, double x, double y)
     t->last_ty = -1;
     t->first_update = true;
 
+#if 0
     if (thing_is_player(t)) {
         /*
          * So the client sees any carried weapons at start.
          */
         t->needs_tx_player_update = true;
     }
+#endif
 }
 
 /*
@@ -1064,12 +1068,12 @@ static void thing_remove_hooks (thingp t)
             return;
         }
 
-        if (t->thing_id == owner->weapon_carry_anim_id) {
-            owner->weapon_carry_anim_id = 0;
+        if (t->thing_id == owner->stats.weapon_carry_anim_id) {
+            owner->stats.weapon_carry_anim_id = 0;
         }
 
-        if (t->thing_id == owner->weapon_swing_anim_id) {
-            owner->weapon_swing_anim_id = 0;
+        if (t->thing_id == owner->stats.weapon_swing_anim_id) {
+            owner->stats.weapon_swing_anim_id = 0;
 
             /*
              * End of the swing animation, make the sword visible again.
@@ -1098,17 +1102,17 @@ static void thing_remove_hooks (thingp t)
         /*
          * We own things like a sword. i.e. we are a player.
          */
-        if (t->weapon_carry_anim_id) {
+        if (t->stats.weapon_carry_anim_id) {
             thingp item = thing_weapon_carry_anim(t);
-            t->weapon_carry_anim_id = 0;
+            t->stats.weapon_carry_anim_id = 0;
             verify(item);
             item->owner_id = 0;
             thing_dead(item, 0, "weapon carry anim owner killed");
         }
 
-        if (t->weapon_swing_anim_id) {
+        if (t->stats.weapon_swing_anim_id) {
             thingp item = thing_weapon_swing_anim(t);
-            t->weapon_swing_anim_id = 0;
+            t->stats.weapon_swing_anim_id = 0;
             verify(item);
             item->owner_id = 0;
             thing_dead(item, 0, "weapon swing anim owner killed");
@@ -1215,9 +1219,9 @@ void thing_destroy (thingp t, const char *why)
         if (t->on_server) {
             p->thing = 0;
 
-            LOG("Server: \"%s\" (ID %u) player died", p->name, p->key);
+            LOG("Server: \"%s\" (ID %u) player died", t->stats.pname, p->key);
 
-            char *tmp = dynprintf("%s died", p->name);
+            char *tmp = dynprintf("%s died", t->stats.pname);
             socket_tx_server_shout_except_to(CRITICAL, tmp, p->socket);
             myfree(tmp);
 
@@ -1272,7 +1276,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
          */
         aplayer *p = t->player;
         if (p) {
-            char *tmp = dynprintf("%s Killed by %s", p->name, reason);
+            char *tmp = dynprintf("%s Killed by %s", t->stats.pname, reason);
             socket_tx_server_shout_except_to(CRITICAL, tmp, p->socket);
             myfree(tmp);
         }
@@ -1284,10 +1288,10 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
             if (!t->player) {
                 ERR("no player socket to send hiscores too");
             } else if (t->player->socket) {
-                hiscore_try_to_add(t->player->name, reason, t->score);
+                hiscore_try_to_add(t->stats.pname, reason, t->score);
 
                 socket_tx_server_hiscore(t->player->socket, 
-                                         t->player->name,
+                                         t->stats.pname,
                                          reason,
                                          t->score);
             }
@@ -1686,7 +1690,7 @@ int thing_hit (thingp t,
             /*
              * Get the damage from the weapon being used to swing.
              */
-            tpp weapon = hitter->weapon;
+            tpp weapon = thing_weapon(hitter);
             if (!weapon) {
                 return (false);
             }
@@ -1954,9 +1958,11 @@ void thing_leave_level (thingp t)
 
     t->has_left_level = true;
 
+#if 0
     if (thing_is_player(t)) {
         t->needs_tx_player_update = true;
     }
+#endif
 
     level_set_exit_has_been_reached(server_level, true);
 
@@ -3835,6 +3841,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
     }
 }
 
+#if 0
 void socket_server_tx_player_update (thingp t)
 {
     if (!thing_is_player(t)) {
@@ -3946,6 +3953,7 @@ void socket_client_rx_player_update (socketp s, UDPpacket *packet,
         }
     }
 }
+#endif
 
 static void thing_move_set_dir (thingp t,
                                 double *x,
@@ -4083,27 +4091,23 @@ void thing_fire (thingp t,
     }
 
     /*
-     * Use the currently wielded weapon. Or perhaps the thing has an
-     * intrinsic weapon ability?
+     * Use the currently wielded weapon.
      */
-    tpp weapon = t->weapon;
+    tpp weapon = thing_weapon(t);
     if (!weapon) {
-        THING_SHOUT_AT(t, WARNING, "You have no weapon");
         return;
     }
 
     /*
      * Check if the weapon reaches its end of warranty.
      */
-    if (weapon == t->weapon) {
-        uint32_t d10000_chance_of_breaking = 
-                        tp_get_d10000_chance_of_breaking(weapon);
+    uint32_t d10000_chance_of_breaking = 
+                    tp_get_d10000_chance_of_breaking(weapon);
 
-        if (d10000_chance_of_breaking) {
-            if ((rand() % 10000) <= d10000_chance_of_breaking) {
-                thing_degrade(t, weapon, 0);
-                return;
-            }
+    if (d10000_chance_of_breaking) {
+        if ((rand() % 10000) <= d10000_chance_of_breaking) {
+            thing_wear_out(t, weapon);
+            return;
         }
     }
 
@@ -4324,21 +4328,21 @@ uint8_t thing_server_move (thingp t,
 
 void thing_server_action (thingp t,
                           uint8_t action,
-                          uint16_t id)
+                          uint32_t action_bar_index)
 {
     widp grid = wid_game_map_server_grid_container;
 
-CON("server action id %d, id", id);
-    itemp item = &t->stats.action_bar[id];
+CON("server action action_bar_index %d, id", action_bar_index);
+    itemp item = &t->stats.action_bar[action_bar_index];
     if (!item->id) {
         THING_SHOUT_AT(t, WARNING, "No item in that slot to use");
         return;
     }
 
-    tpp tp = id_to_tp(id);
+    tpp tp = id_to_tp(item->id);
 CON("tp %s", tp_short_name(tp));
     if (!tp) {
-        ERR("Unkown item use request, id %u", id);
+        ERR("Unkown item use request, id %u", item->id);
         return;
     }
 
@@ -4488,7 +4492,9 @@ CON("tp %s", tp_short_name(tp));
         return;
 
     default:
-        ERR("Unkown player action %u on item id %u", action, id);
+        ERR("Unkown player action %u on action bar item %u", 
+            action, 
+            action_bar_index);
         return;
     }
 
@@ -4496,11 +4502,11 @@ done:
 
     switch (action) {
     case PLAYER_ACTION_USE:
-        thing_used(t, tp, item);
+        thing_used(t, tp);
         break;
 
     case PLAYER_ACTION_DROP:
-        thing_drop(t, tp, item);
+        thing_drop(t, tp);
         break;
     }
 }

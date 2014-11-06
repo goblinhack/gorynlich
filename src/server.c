@@ -136,10 +136,12 @@ static void server_rx_client_join (socketp s)
 
     global_config.server_current_players++;
 
-    LOG("Server: Player \"%s\" (ID %u) joined from %s", p->name,
+    LOG("Server: Player \"%s\" (ID %u) joined from %s", 
+        p->stats_from_client.pname, 
         p->key, socket_get_remote_logname(s));
 
-    char *tmp = dynprintf("%s joined the game", p->name);
+    char *tmp = dynprintf("%s joined the game", 
+                          p->stats_from_client.pname);
     socket_tx_server_shout_except_to(WARNING, tmp, s);
     myfree(tmp);
 
@@ -150,7 +152,7 @@ static void server_rx_client_join (socketp s)
     /*
      * Send players their items lists
      */
-    thing_tick_server_player_all();
+    socket_tx_server_status();
 
     socket_server_tx_map_update(s, server_boring_things,
                                 "rx client join boring things");
@@ -193,10 +195,12 @@ static void server_rx_client_leave (socketp s)
         return;
     }
 
-    LOG("Server: \"%s\" (ID %u) left from %s", p->name,
+    LOG("Server: \"%s\" (ID %u) left from %s", 
+        p->stats_from_client.pname,
         p->key, socket_get_remote_logname(s));
 
-    char *tmp = dynprintf("%s left the game", p->name);
+    char *tmp = dynprintf("%s left the game", 
+                          p->stats_from_client.pname);
     socket_tx_server_shout(INFO, tmp);
     myfree(tmp);
 
@@ -213,10 +217,12 @@ static void server_rx_client_close (socketp s)
         return;
     }
 
-    LOG("Server: \"%s\" (ID %u) suddenly left from %s", p->name,
+    LOG("Server: \"%s\" (ID %u) suddenly left from %s", 
+        p->stats_from_client.pname,
         p->key, socket_get_remote_logname(s));
 
-    char *tmp = dynprintf("%s suddenly left the game", p->name);
+    char *tmp = dynprintf("%s suddenly left the game", 
+                          p->stats_from_client.pname);
     socket_tx_server_shout(WARNING, tmp);
     myfree(tmp);
 
@@ -300,8 +306,6 @@ static void server_poll (void)
         switch (type) {
         case MSG_PING:
             socket_rx_ping(s, packet, data);
-
-            socket_tx_server_status();
             break;
 
         case MSG_PONG:
@@ -383,12 +387,14 @@ static void server_alive_check (void)
             aplayerp p = socket_get_player(s);
 
             if (p) {
-                char *tmp = dynprintf("%s connection dropped", p->name);
+                char *tmp = dynprintf("%s connection dropped", 
+                                      p->stats_from_client.pname);
                 socket_tx_client_shout(s, CRITICAL, tmp);
                 myfree(tmp);
 
                 LOG("Server: \"%s\" (ID %u) dropped out from %s", 
-                    p->name, p->key, socket_get_remote_logname(s));
+                    p->stats_from_client.pname, 
+                    p->key, socket_get_remote_logname(s));
             }
 
             server_rx_client_leave_implicit(s);
@@ -446,6 +452,7 @@ void server_tick (void)
 
     server_poll();
     server_socket_tx_ping();
+    socket_tx_server_status();
 }
 
 /*
@@ -468,7 +475,7 @@ static uint8_t server_players_show (tokens_t *tokens, void *context)
             continue;
         }
 
-        if (!p->name[0]) {
+        if (!p->stats_from_client.pname[0]) {
             continue;
         }
 
@@ -479,7 +486,7 @@ static uint8_t server_players_show (tokens_t *tokens, void *context)
 
         CON("[%d] %-10s %3d pct %5d ms %-15s %-15s", 
             pi,
-            p->name,
+            p->stats_from_client.pname,
             p->quality,
             p->avg_latency,
             tmp,

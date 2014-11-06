@@ -316,12 +316,12 @@ void wid_server_join_redo (uint8_t soft_refresh)
 
             msg_player_state *p = &server_status->player;
 
-            if (p->name[0]) {
+            if (p->stats.pname[0]) {
                 snprintf_realloc(&tmp, &size, &used, 
                                 "%%%%fmt=left$[%d] %-10s %07d\n",
                                 idx++,
-                                p->name,
-                                p->score);
+                                p->stats.pname,
+                                p->stats.score);
             }
 
             snprintf_realloc(&tmp, &size, &used, "\n");
