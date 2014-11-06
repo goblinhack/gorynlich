@@ -442,6 +442,11 @@ static void server_socket_tx_ping (void)
     }
 
     seq++;
+
+    /*
+     * Send a regular status update too.
+     */
+    socket_tx_server_status();
 }
 
 void server_tick (void)
@@ -452,7 +457,6 @@ void server_tick (void)
 
     server_poll();
     server_socket_tx_ping();
-    socket_tx_server_status();
 }
 
 /*

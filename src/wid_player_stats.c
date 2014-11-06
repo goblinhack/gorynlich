@@ -20,11 +20,11 @@
 
 widp wid_player_stats;
 static widp wid_player_stats_container;
-static uint8_t wid_player_stats_init_done;
+static uint8_t wid_thing_stats_init_done;
 
-static void wid_player_stats_create(player_stats_t *);
+static void wid_player_stats_create(thing_statsp );
 static void wid_player_stats_destroy(void);
-static player_stats_t *player_stats;
+static thing_statsp player_stats;
 
 typedef struct row_ {
     const char *col1;
@@ -89,12 +89,12 @@ static row rows[WID_INTRO_MAX_SETTINGS] = {
     "This modifier is the percentage gain you get in recovering health points." },
 };
 
-uint8_t wid_player_stats_init (void)
+uint8_t wid_thing_stats_init (void)
 {
-    if (!wid_player_stats_init_done) {
+    if (!wid_thing_stats_init_done) {
     }
 
-    wid_player_stats_init_done = true;
+    wid_thing_stats_init_done = true;
 
     return (true);
 }
@@ -103,8 +103,8 @@ void wid_player_stats_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    if (wid_player_stats_init_done) {
-        wid_player_stats_init_done = false;
+    if (wid_thing_stats_init_done) {
+        wid_thing_stats_init_done = false;
 
         wid_player_stats_destroy();
     }
@@ -124,7 +124,7 @@ void wid_player_stats_hide (void)
     }
 }
 
-void wid_player_stats_visible (player_stats_t *s)
+void wid_player_stats_visible (thing_statsp s)
 {
     wid_player_stats_create(s);
 }
@@ -154,7 +154,7 @@ void wid_player_stats_redraw (void)
 
 static void wid_player_stats_reroll (void)
 {
-    player_stats_generate_random(player_stats);
+    thing_stats_get_random(player_stats);
     wid_player_stats_redraw();
 
     /*
@@ -246,7 +246,7 @@ static uint8_t wid_player_stats_col2_mouse_event (widp w,
     return (true);
 }
 
-static void wid_player_stats_create (player_stats_t *s)
+static void wid_player_stats_create (thing_statsp s)
 {
     if (wid_player_stats) {
         return;
@@ -509,7 +509,7 @@ static void wid_player_stats_create (player_stats_t *s)
                 break;
             }
 
-            int modifier = player_stats_get_modifier(stat);
+            int modifier = thing_stats_val_to_modifier(stat);
 
             if (rows[i].increment == 1) {
                 if (modifier <= -3) {

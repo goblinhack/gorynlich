@@ -28,7 +28,7 @@ typedef struct aplayer_ {
     uint16_t min_latency;
     uint16_t max_latency;
     uint32_t key;
-    player_stats_t stats_from_client;
+    thing_stats stats_from_client;
     thingp thing;
 } aplayer;
 

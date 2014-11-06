@@ -635,7 +635,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
  */
 thingp thing_server_new (const char *name, 
                          double x, double y,
-                         player_stats_t *stats)
+                         thing_statsp stats)
 {
     thingp t;
     tpp tp;
@@ -776,9 +776,9 @@ thingp thing_server_new (const char *name,
      * Start out with stats from the template.
      */
     if (stats) {
-        memcpy(&t->stats, stats, sizeof(player_stats_t));
+        memcpy(&t->stats, stats, sizeof(thing_stats));
     } else {
-        memcpy(&t->stats, &tp->stats, sizeof(player_stats_t));
+        memcpy(&t->stats, &tp->stats, sizeof(thing_stats));
     }
 
     t->stats.thing_id = id;

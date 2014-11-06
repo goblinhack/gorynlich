@@ -25,7 +25,7 @@ static void thing_collect (thingp t,
         /*
          * Convert any existing items.
          */
-        player_stats_item_polymorph(&t->stats,
+        thing_stats_item_polymorph(&t->stats,
                                     THING_WATER,
                                     THING_WATER_POISON);
     }
@@ -61,7 +61,7 @@ static void thing_collect (thingp t,
             return;
         }
 
-        if (!player_stats_item_add(t, &t->stats, it->item)) {
+        if (!thing_stats_item_add(t, &t->stats, it->item)) {
             THING_SHOUT_AT(t, INFO, "You could not collect %s",
                         tp_short_name(tp));
             return;
@@ -189,7 +189,7 @@ void thing_used (thingp t, tpp tp)
     /*
      * Remove from the inventory and other places.
      */
-    player_stats_item_remove(t, &t->stats, tp);
+    thing_stats_item_remove(t, &t->stats, tp);
 
     /*
      * Check HP did not go too low.
@@ -232,7 +232,7 @@ void thing_wear_out (thingp t, tpp tp)
     /*
      * Remove from the inventory and other places.
      */
-    player_stats_item_remove(t, &t->stats, tp);
+    thing_stats_item_remove(t, &t->stats, tp);
 
     if (tp_is_weapon(tp)) {
         thing_unwield(t);
@@ -275,7 +275,7 @@ void thing_drop (thingp t, tpp tp)
     /*
      * Remove from the inventory and other places.
      */
-    player_stats_item_remove(t, &t->stats, tp);
+    thing_stats_item_remove(t, &t->stats, tp);
 
     /*
      * Wield the next weapon we have.
@@ -293,7 +293,7 @@ itemp thing_is_carrying_specific_item (thingp t, uint32_t id)
 {
     itemp item;
 
-    item = player_stats_has_item(&t->stats, id, 0);
+    item = thing_stats_has_item(&t->stats, id, 0);
     if (!item) {
         return (0);
     }

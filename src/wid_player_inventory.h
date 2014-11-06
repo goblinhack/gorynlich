@@ -7,8 +7,8 @@
 uint8_t wid_player_inventory_init(void);
 void wid_player_inventory_fini(void);
 void wid_player_inventory_hide(void);
-void wid_player_inventory_visible(player_stats_t *);
-void wid_player_inventory_button_style(widp w, player_stats_t *, const item_t);
+void wid_player_inventory_visible(thing_statsp );
+void wid_player_inventory_button_style(widp w, thing_statsp , const item_t);
 
 extern item_t wid_item;
 

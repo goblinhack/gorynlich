@@ -155,7 +155,7 @@ typedef struct music_ *musicp;
 typedef struct sound_ *soundp;
 typedef struct tile_ *tilep;
 typedef struct thing_ *thingp;
-typedef struct thing_stats *thing_statsp;
+typedef struct thing_stats_ *thing_statsp;
 typedef struct item_t_ *itemp;
 typedef struct host_ *hostp;
 typedef struct action_timer_ *timerp;
@@ -376,7 +376,7 @@ struct config {
     uint16_t user_server_port;
     uint8_t server_max_players;
     uint8_t server_current_players;
-    player_stats_t player_stats;
+    thing_stats player_stats;
 };
 
 extern struct config global_config;
