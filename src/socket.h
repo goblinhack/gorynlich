@@ -27,7 +27,6 @@ typedef enum {
     MSG_SERVER_STATUS,
     MSG_SERVER_HISCORE,
     MSG_SERVER_MAP_UPDATE,
-    MSG_SERVER_PLAYER_UPDATE,
     MSG_CLIENT_PLAYER_MOVE,
     MSG_CLIENT_PLAYER_ACTION,
     MSG_MAX,
@@ -36,9 +35,7 @@ typedef enum {
 
 typedef struct {
     uint8_t type;
-    char name[SMALL_STRING_LEN_MAX];
-    char pclass[SMALL_STRING_LEN_MAX];
-    player_stats_t player_stats;
+    player_stats_t stats;
     uint32_t key;
 } __attribute__ ((packed)) msg_client_join;
 
@@ -56,9 +53,7 @@ typedef struct {
 
 typedef struct {
     uint8_t type;
-    char name[SMALL_STRING_LEN_MAX];
-    char pclass[SMALL_STRING_LEN_MAX];
-    player_stats_t player_stats;
+    player_stats_t stats;
 } __attribute__ ((packed)) msg_name;
 
 typedef struct {
@@ -83,7 +78,7 @@ enum {
 typedef struct {
     uint8_t type;
     uint8_t action;
-    uint16_t item;
+    uint8_t action_bar_index;
 } __attribute__ ((packed)) msg_player_action;
 
 typedef struct {
@@ -100,18 +95,14 @@ typedef struct {
 } __attribute__ ((packed)) msg_tell;
 
 typedef struct msg_player_state_ {
-    char name[SMALL_STRING_LEN_MAX];
-    char pclass[SMALL_STRING_LEN_MAX];
-    player_stats_t player_stats;
+    player_stats_t stats;
     IPaddress local_ip;
     IPaddress remote_ip;
     uint8_t quality;
     uint16_t avg_latency;
     uint16_t min_latency;
     uint16_t max_latency;
-    uint32_t score;
     uint32_t key;
-    uint16_t thing_id;
 } __attribute__ ((packed)) msg_player_state;
 
 typedef struct {
@@ -159,15 +150,6 @@ typedef struct {
     uint16_t owner_id;          // optional
 } __attribute__ ((packed)) msg_map_update;
 
-typedef struct {
-    uint8_t type;
-    uint16_t thing_id;
-    uint16_t weapon_carry_anim_id;
-    uint16_t weapon_swing_anim_id;
-    player_stats_t stats;
-    uint8_t weapon;
-} __attribute__ ((packed)) msg_player_update;
-
 typedef struct socket_ {
     tree_key_two_int tree;
 
@@ -208,9 +190,7 @@ typedef struct socket_ {
     /*
      * Player name.
      */
-    char name[SMALL_STRING_LEN_MAX];
-    char pclass[SMALL_STRING_LEN_MAX];
-    player_stats_t player_stats;
+    player_stats_t stats;
 
     /*
      * Last status from this server.
@@ -277,7 +257,7 @@ extern const char *socket_get_pclass(const socketp s);
 extern const player_stats_t *socket_get_player_stats(const socketp s);
 extern void socket_set_name(socketp s, const char *name);
 extern void socket_set_pclass(socketp s, const char *pclass);
-extern void socket_set_player_stats(socketp s, const player_stats_t *player_stats);
+extern void socket_set_player_stats(socketp s, const player_stats_t *stats);
 
 extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);
 extern void socket_tx_pong(socketp s, uint8_t seq, uint32_t ts);
@@ -312,7 +292,7 @@ extern void socket_tx_player_move(socketp s,
 extern void socket_tx_player_action(socketp s, 
                                     thingp t,
                                     const uint8_t action,
-                                    const uint16_t item);
+                                    const uint32_t action_bar_index);
 extern void socket_server_rx_player_move(socketp s, UDPpacket *packet, 
                                          uint8_t *data);
 extern void socket_server_rx_player_action(socketp s, UDPpacket *packet, 

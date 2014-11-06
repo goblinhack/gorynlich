@@ -53,8 +53,8 @@ static void thing_collect (thingp t,
          */
         if (tp_is_treasure(tp)) {
             /*
-            * Bonus for collecting?
-            */
+             * Bonus for collecting?
+             */
             thing_set_score(t, thing_score(t) +
                             tp_get_bonus_score_on_collect(tp) *
                             it->item.quantity);
@@ -85,11 +85,9 @@ static void thing_collect (thingp t,
      * Auto use a weapon if carrying none.
      */
     if (tp_is_weapon(tp)) {
-        if (!t->weapon) {
-            THING_LOG(t, "auto wield %s", tp_short_name(tp));
+        THING_LOG(t, "auto wield %s", tp_short_name(tp));
 
-            thing_wield(t, tp);
-        }
+        thing_wield(t, tp);
     }
 
     if (it) {
@@ -107,23 +105,22 @@ void thing_auto_collect (thingp t, thingp it, tpp tp)
     thing_collect(t, it, tp, true);
 }
 
-void thing_used (thingp t, tpp tp, itemp item)
+void thing_used (thingp t, tpp tp)
 {
     uint32_t id;
+    itemp item;
 
+    id = tp_to_id(tp);
+    if (!id) {
+        ERR("No such item %s", tp_short_name(tp));
+        return;
+    }
+
+    item = thing_has_item(t, id);
     if (!item) {
-        id = tp_to_id(tp);
-        item = player_stats_has_item(&t->stats, id, 0);
-        if (!item) {
-            ERR("Tried to use item which is %s not carried", 
-                tp_short_name(tp));
-            return;
-        }
-    } else {
-        id = item->id;
-        if (!id) {
-            DIE("no item used");
-        }
+        ERR("Tried to use item which is %s not carried", 
+            tp_short_name(tp));
+        return;
     }
 
     if (thing_is_player(t)) {
@@ -205,23 +202,22 @@ void thing_used (thingp t, tpp tp, itemp item)
     }
 }
 
-void thing_degrade (thingp t, tpp tp, itemp item)
+void thing_wear_out (thingp t, tpp tp)
 {
     uint32_t id;
+    itemp item;
 
+    id = tp_to_id(tp);
+    if (!id) {
+        ERR("No such item %s", tp_short_name(tp));
+        return;
+    }
+
+    item = thing_has_item(t, id);
     if (!item) {
-        id = tp_to_id(tp);
-        item = player_stats_has_item(&t->stats, id, 0);
-        if (!item) {
-            ERR("Tried to use item which is %s not carried", 
-                tp_short_name(tp));
-            return;
-        }
-    } else {
-        id = item->id;
-        if (!id) {
-            DIE("no item used");
-        }
+        ERR("Tried to use item which is %s not carried", 
+            tp_short_name(tp));
+        return;
     }
 
     if (thing_is_player(t)) {
@@ -247,30 +243,29 @@ void thing_degrade (thingp t, tpp tp, itemp item)
     }
 }
 
-void thing_drop (thingp t, tpp tp, itemp item)
+void thing_drop (thingp t, tpp tp)
 {
     uint8_t auto_wield = false;
     uint32_t id;
+    itemp item;
 
+    id = tp_to_id(tp);
+    if (!id) {
+        ERR("No such item %s", tp_short_name(tp));
+        return;
+    }
+
+    item = thing_has_item(t, id);
     if (!item) {
-        id = tp_to_id(tp);
-        item = player_stats_has_item(&t->stats, id, 0);
-        if (!item) {
-            ERR("Tried to use item which is %s not carried", 
-                tp_short_name(tp));
-            return;
-        }
-    } else {
-        id = item->id;
-        if (!id) {
-            DIE("no item used");
-        }
+        ERR("Tried to drop item which is %s not carried", 
+            tp_short_name(tp));
+        return;
     }
 
     /*
      * Dropping the current weapon.
      */
-    if (tp == t->weapon) {
+    if (tp == thing_weapon(t)) {
         thing_unwield(t);
         auto_wield = true;
     }

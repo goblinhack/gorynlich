@@ -622,7 +622,10 @@ void level_start_timers (levelp level)
      */
     TREE_WALK(server_active_things, t) {
         if (thing_is_player(t)) {
-            thing_wield(t, t->weapon);
+            tpp weapon = thing_weapon(t);
+            if (weapon) {
+                thing_wield(t, weapon);
+            }
         }
     }
 }
@@ -646,14 +649,14 @@ void level_pause (levelp level)
     if (!level->pause_timer) {
 
         static const char *messages[] = {
-            "Go my little one!\n",
-            "Meet your doom...\n",
-            "Prepare for the end...\n",
-            "Your end is nigh...\n",
-            "Go forth!\n",
-            "Make it so!\n",
-            "Get ready!\n",
-            "Meep!\n",
+            "Go my little one!",
+            "Meet your doom...",
+            "Prepare for the end...",
+            "Your end is nigh...",
+            "Go forth!",
+            "Make it so!",
+            "Get ready!",
+            "Meep!",
         };
 
         socket_tx_server_shout(POPUP,
@@ -789,7 +792,7 @@ void level_tick (levelp level)
         /*
          * Let the players know their item lists.
          */
-        thing_tick_server_player_all();
+        socket_tx_server_status();
 
         socket_server_tx_map_update(0, server_boring_things,
                                     "level map update boring things");

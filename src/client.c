@@ -856,9 +856,49 @@ static void client_poll (void)
                     }
                 }
 
-                memcpy(&server_status, &latest_status, sizeof(server_status));
+                if (player) {
+                    player_stats_t *new_stats = &latest_status.player.stats;
 
-                wid_game_map_client_score_update(client_level, redo);
+                    if (new_stats->weapon_carry_anim_id) {
+                        thingp item = thing_weapon_carry_anim(player);
+                        if (item) {
+                            item->dir = player->dir;
+                            item->owner_id = player->thing_id;
+                        }
+                    }
+
+                    if (new_stats->weapon_swing_anim_id) {
+                        thingp item = thing_weapon_swing_anim(player);
+                        if (item) {
+                            item->dir = player->dir;
+                            item->owner_id = player->thing_id;
+                        }
+                    }
+
+                    /*
+                     * If swinging a weapon now, hide the carried weapon 
+                     * until the swing is over.
+                     */
+                    if (new_stats->weapon_swing_anim_id) {
+                        thingp carry = thing_weapon_carry_anim(player);
+                        if (carry) {
+                            thing_hide(carry);
+                        }
+                    }
+                }
+
+                memcpy(&server_status, &latest_status, sizeof(server_status));
+LOG("rx %s", server_status.player.stats.pname);
+
+                msg_player_state *p = &server_status.player;
+LOG("rx id %d",p->stats.thing_id);
+                if (player &&
+                    memcmp(&player->stats, &p->stats, sizeof(player_stats_t))) {
+                    wid_game_map_client_score_update(client_level, redo);
+                    memcpy(&player->stats, &p->stats, sizeof(player_stats_t));
+LOG("rx player id %d",player->stats.thing_id);
+                }
+
                 break;
             }
 
@@ -883,6 +923,7 @@ static void client_poll (void)
                 socket_client_rx_map_update(s, packet, data);
                 break;
 
+#if 0
             case MSG_SERVER_PLAYER_UPDATE:
                 /*
                  * This is an update of a single players carried items.
@@ -891,6 +932,7 @@ static void client_poll (void)
 
                 wid_game_map_client_score_update(client_level, true /* redo */);
                 break;
+#endif
 
             case MSG_SERVER_CLOSE:
                 socket_rx_server_close(s, packet, data);
@@ -917,22 +959,21 @@ static void client_poll (void)
  */
 static uint8_t client_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name                    Quality  Latency      Local IP       Remote IP    Score ");
-    CON("----                    -------  ------- --------------- --------------- -------");
+    CON("Name                    Quality  Latency      Local IP       Remote IP  ");
+    CON("----                    -------  ------- --------------- ---------------");
 
     msg_player_state *p = &server_status.player;
 
     char *tmp = iptodynstr(p->local_ip);
     char *tmp2 = iptodynstr(p->remote_ip);
 
-    CON("%-10s/%8s %3d pct %5d ms %-15s %-15s %07d", 
-        p->name,
-        p->pclass,
+    CON("%-10s/%8s %3d pct %5d ms %-15s %-15s", 
+        p->stats.pname,
+        p->stats.pclass,
         p->quality,
         p->avg_latency,
         tmp2,
-        tmp,
-        p->score);
+        tmp);
 
     myfree(tmp);
     myfree(tmp2);
@@ -966,25 +1007,32 @@ static void client_check_still_in_game (void)
     for (;;) {
         msg_player_state *p = &server_status.player;
 
-        if (!p->name[0]) {
+        if (!p->stats.pname[0]) {
+LOG("no name");
             break;
         }
 
+LOG("check id %d key %d",p->stats.thing_id, p->key);
         if (p->key != client_joined_server_key) {
+LOG(" key mismatch");
             break;
         }
 
-        if (strcasecmp(p->name, global_config.player_stats.pname)) {
+        if (strcasecmp(p->stats.pname, global_config.player_stats.pname)) {
+LOG(" name mismatch");
             break;
         }
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG(INFO, "%s joined the game", p->name);
+            MSG(INFO, "%s joined the game", p->stats.pname);
+
+            LOG("%s joined the game, ID %d", 
+                p->stats.pname, p->stats.thing_id);
 
             music_play_game();
 
-            player = thing_client_find(p->thing_id);
+            player = thing_client_find(p->stats.thing_id);
 
             /*
              * Needed twice for some reason to adjust the scrollbar as the

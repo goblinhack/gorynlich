@@ -155,6 +155,10 @@ static uint8_t wid_game_map_client_receive_mouse_motion (
 
 void wid_game_map_client_scroll_adjust (uint8_t adjust) 
 {
+    if (!player) {
+        return;
+    }
+
     widp w = player->wid;
     if (!w) {
         return;
@@ -243,15 +247,16 @@ uint8_t wid_game_map_client_player_move (void)
      * Check if we are allowed to fire our gun again so soon.
      */
     if (fire) {
-        if (!player->weapon) {
+        tpp weapon = thing_weapon(player);
+
+        if (!weapon) {
             fire = 0;
         }
 
         if (fire) {
             static uint32_t last_fired = 0;
 
-            uint32_t delay = 
-                tp_get_weapon_fire_delay_tenths(player->weapon);
+            uint32_t delay = tp_get_weapon_fire_delay_tenths(weapon);
             
             if (!time_have_x_tenths_passed_since(delay, last_fired)) {
                 fire = 0;
@@ -284,7 +289,7 @@ uint8_t wid_game_map_client_player_move (void)
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
     tpp tp;
-    uint32_t shortcut;
+    uint32_t action_bar_index;
 
     switch (key->sym) {
     case SDLK_0:
@@ -297,10 +302,14 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     case SDLK_7:
     case SDLK_8:
     case SDLK_9: {
-        shortcut = ((uint32_t)key->sym) - SDLK_0;
-CON("button %d",shortcut);
+        action_bar_index = ((uint32_t)key->sym) - SDLK_1;
 
-        uint32_t id = player->stats.action_bar[shortcut].id;
+        if (key->sym == SDLK_0) {
+            action_bar_index = 9;
+        }
+CON("button %d",action_bar_index);
+
+        uint32_t id = player->stats.action_bar[action_bar_index].id;
         if (!id) {
             MSG(WARNING, "Nothing in that slot");
             return (true);
@@ -315,7 +324,7 @@ CON("button %d",shortcut);
 
             socket_tx_player_action(client_joined_server, player, 
                                     PLAYER_ACTION_USE,
-                                    shortcut);
+                                    action_bar_index);
 #if 0
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_DROP,
@@ -725,7 +734,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
          * Score
          */
         char tmp[20];
-        snprintf(tmp, sizeof(tmp), "%06u", p->score);
+        snprintf(tmp, sizeof(tmp), "%06u", p->stats.score);
 
         static widp wid_score_container;
 
@@ -743,24 +752,22 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         /*
          * Health
          */
-        snprintf(tmp, sizeof(tmp), "%06u", p->player_stats.hp);
+        snprintf(tmp, sizeof(tmp), "%06u", p->stats.hp);
 
         /*
          * If we see a drop in health, flash the widget.
          */
-        thingp t = thing_client_find(p->thing_id);
+        thingp t = thing_client_find(p->stats.thing_id);
         if (t) {
             widp w = t->wid;
 
-            if (w && (p->player_stats.hp < t->stats.hp)) {
+            if (w && (p->stats.hp < t->stats.hp)) {
                 /*
                  * Flash briefly red.
                  */
                 wid_set_mode(w, WID_MODE_ACTIVE);
                 wid_set_color(w, WID_COLOR_BLIT, RED);
             }
-
-            memcpy(&t->stats, &p->player_stats, sizeof(t->stats));
         }
 
         static widp wid_health_container;
@@ -817,12 +824,12 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         widp wid_name_title_container;
 
         char *name_title;
-        if (p->pclass[0] && p->name[0]) {
-            name_title = dynprintf("%s, %s", p->name, p->pclass);
-        } else if (p->pclass[0]) {
-            name_title = dynprintf("%s", p->pclass);
-        } else if (p->name[0]) {
-            name_title = dynprintf("%s", p->name);
+        if (p->stats.pclass[0] && p->stats.pname[0]) {
+            name_title = dynprintf("%s, %s", p->stats.pname, p->stats.pclass);
+        } else if (p->stats.pclass[0]) {
+            name_title = dynprintf("%s", p->stats.pclass);
+        } else if (p->stats.pname[0]) {
+            name_title = dynprintf("%s", p->stats.pname);
         } else {
             name_title = 0;
         }

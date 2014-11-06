@@ -226,12 +226,7 @@ static void wid_dead_create (const char *name,
         return;
     }
 
-    if (player && player->player) {
-        LOG("Client: Player \"%s\" (Id %u) died, raise gravestone",
-            player->player->name, player->player->key);
-    } else {
-        LOG("Client: Player died, raise gravestone");
-    }
+    LOG("Client: Player died, raise gravestone");
 
     widp w = wid_gravestone = wid_new_window("dead");
     fpoint tl = { 0.0, 0.2 };
