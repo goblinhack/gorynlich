@@ -2611,7 +2611,8 @@ void map_jigsaw_generate (widp wid)
                 wid_game_map_server_replace_tile(wid, x, y, 
                                                 0, /* thing */
                                                 tp,
-                                                0 /* item */);
+                                                0 /* item */,
+                                                0 /* stats */);
             }
 
             tp = 0;
@@ -2656,7 +2657,8 @@ void map_jigsaw_generate (widp wid)
             wid_game_map_server_replace_tile(wid, x, y, 
                                              0, /* thing */
                                              tp,
-                                             0 /* item */);
+                                             0 /* item */,
+                                             0 /* stats */);
         }
     }
 }

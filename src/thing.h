@@ -15,7 +15,9 @@ void thing_fini(void);
 void thing_update(thingp t);
 void thing_map_sanity(void);
 void thing_map_dump(void);
-thingp thing_server_new(const char *name, double x, double y);
+thingp thing_server_new(const char *name, 
+                        double x, double y,
+                        player_stats_t *stats);
 void thing_server_init(thingp, double x, double y);
 thingp thing_client_new(uint32_t, tpp);
 thingp thing_client_local_new(tpp tp);
