@@ -15,7 +15,8 @@ widp wid_editor_map_thing_replace_template(widp,
                                            double x, double y,
                                            thingp, 
                                            tpp,
-                                           itemp );
+                                           itemp,
+                                           player_stats_t *);
 
 void wid_editor_map_thing_flood_fill_template(int32_t x, int32_t y,
                                               tpp);

@@ -86,7 +86,8 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
                                          thing_grid_y(t),
                                          0, /* thing */
                                          tp,
-                                         0 /* item */);
+                                         0 /* item */,
+                                         0 /* stats */);
 
         sound_play_slime();
 
@@ -602,7 +603,8 @@ void level_place_plant_pod (levelp level)
                                          y,
                                          0, /* thing */
                                          tp,
-                                         0 /* item */);
+                                         0 /* item */,
+                                         0 /* stats */);
 
         sound_play_slime();
 
@@ -756,7 +758,8 @@ static void level_finished (levelp level)
                 0, 0,
                 t,
                 t->tp,
-                0 /* item */);
+                0 /* item */,
+                0 /* stats */);
 
         thing_join_level(t);
     } }

@@ -70,7 +70,8 @@ uint8_t thing_mob_spawn (thingp t)
                                          y,
                                          0, /* thing */
                                          what,
-                                         0 /* item */);
+                                         0 /* item */,
+                                         0 /* stats */);
         return (true);
     }
 
@@ -139,7 +140,8 @@ uint8_t thing_mob_spawn_on_death (thingp t)
                                          y,
                                          0, /* thing */
                                          what,
-                                         0 /* item */);
+                                         0 /* item */,
+                                         0 /* stats */);
         return (true);
     }
 
