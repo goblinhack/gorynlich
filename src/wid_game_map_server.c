@@ -215,7 +215,7 @@ wid_game_map_server_replace_tile (widp w,
                                   thingp thing,
                                   tpp tp,
                                   itemp item,
-                                  player_stats_t *stats)
+                                  thing_statsp stats)
 {
     tree_rootp thing_tiles;
     const char *tilename;

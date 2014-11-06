@@ -145,7 +145,7 @@ static int player_stats_generate_spending_points (void)
     return (possible[rand() % ARRAY_SIZE(possible)]);
 }
 
-int player_stats_get_modifier (int value) 
+int thing_stats_val_to_modifier (int value) 
 {
     static int modifiers[45];
     static int init;
@@ -211,7 +211,7 @@ int player_stats_get_modifier (int value)
     return (modifiers[value]);
 }
 
-void player_inventory_sort (player_stats_t *player_stats)
+void player_inventory_sort (thing_statsp player_stats)
 {
     if (!player_stats) {
         DIE("no player stats");
@@ -290,23 +290,23 @@ void player_inventory_sort (player_stats_t *player_stats)
     memcpy(&player_stats->inventory, inv_new, sizeof(inv_new));
 }
 
-itemp player_stats_has_item (player_stats_t *player_stats,
+itemp thing_stats_has_item (thing_statsp player_stats,
                              uint32_t id,
                              uint32_t *index)
 {
     itemp i;
     
-    i = player_stats_has_action_bar_item(player_stats, id, index);
+    i = thing_stats_has_action_bar_item(player_stats, id, index);
     if (i) {
         return (i);
     }
 
-    i = player_stats_has_worn_item(player_stats, id, index);
+    i = thing_stats_has_worn_item(player_stats, id, index);
     if (i) {
         return (i);
     }
 
-    i = player_stats_has_inventory_item(player_stats, id, index);
+    i = thing_stats_has_inventory_item(player_stats, id, index);
     if (i) {
         return (i);
     }
@@ -314,7 +314,7 @@ itemp player_stats_has_item (player_stats_t *player_stats,
     return (0);
 }
 
-itemp player_stats_has_inventory_item (player_stats_t *player_stats,
+itemp thing_stats_has_inventory_item (thing_statsp player_stats,
                                        uint32_t id,
                                        uint32_t *index)
 {
@@ -333,7 +333,7 @@ itemp player_stats_has_inventory_item (player_stats_t *player_stats,
     return (0);
 }
 
-itemp player_stats_has_action_bar_item (player_stats_t *player_stats,
+itemp thing_stats_has_action_bar_item (thing_statsp player_stats,
                                         uint32_t id,
                                         uint32_t *index)
 {
@@ -352,7 +352,7 @@ itemp player_stats_has_action_bar_item (player_stats_t *player_stats,
     return (0);
 }
 
-itemp player_stats_has_worn_item (player_stats_t *player_stats,
+itemp thing_stats_has_worn_item (thing_statsp player_stats,
                                   uint32_t id,
                                   uint32_t *index)
 {
@@ -371,8 +371,8 @@ itemp player_stats_has_worn_item (player_stats_t *player_stats,
     return (0);
 }
 
-int player_stats_item_add (thingp t,
-                           player_stats_t *player_stats,
+int thing_stats_item_add (thingp t,
+                           thing_statsp player_stats,
                            item_t item)
 {
     tpp it = id_to_tp(item.id);
@@ -390,7 +390,7 @@ int player_stats_item_add (thingp t,
     /*
      * If the item is already on the action bar, try and push onto it.
      */
-    oitem = player_stats_has_action_bar_item(player_stats, item.id, 0);
+    oitem = thing_stats_has_action_bar_item(player_stats, item.id, 0);
     if (oitem) {
         if (item_push(oitem, item)) {
             return (true);
@@ -400,7 +400,7 @@ int player_stats_item_add (thingp t,
     /*
      * If the item is already on the inventor, try and push onto it.
      */
-    oitem = player_stats_has_inventory_item(player_stats, item.id, 0);
+    oitem = thing_stats_has_inventory_item(player_stats, item.id, 0);
     if (oitem) {
         if (item_push(oitem, item)) {
             return (true);
@@ -472,13 +472,13 @@ int player_stats_item_add (thingp t,
     return (false);
 }
 
-int player_stats_item_remove (thingp t,
-                              player_stats_t *player_stats,
+int thing_stats_item_remove (thingp t,
+                              thing_statsp player_stats,
                               const tpp it)
 {
     const int id = tp_to_id(it);
 
-    itemp item = player_stats_has_item(player_stats, id, 0);
+    itemp item = thing_stats_has_item(player_stats, id, 0);
     if (!item) {
         if (t) {
             THING_SHOUT_AT(t, INFO, "Not carrying the %s",
@@ -498,11 +498,11 @@ int player_stats_item_remove (thingp t,
  * Change all items the player is carrying of "from" into "to". e.g. change
  * all water to poisoned water.
  */
-int player_stats_item_polymorph (player_stats_t *player_stats,
+int thing_stats_item_polymorph (thing_statsp player_stats,
                                  const uint32_t from,
                                  const uint32_t to)
 {
-    itemp from_item = player_stats_has_item(player_stats, from, 0);
+    itemp from_item = thing_stats_has_item(player_stats, from, 0);
 
     /*
      * If not carrying, nothing to change.
@@ -516,7 +516,7 @@ int player_stats_item_polymorph (player_stats_t *player_stats,
     return (true);
 }
 
-static void player_stats_generate_random_items (player_stats_t *player_stats) 
+static void thing_stats_get_random_items (thing_statsp player_stats) 
 {
     int count = gaussrand(2, 1) + 1;
 
@@ -558,11 +558,11 @@ static void player_stats_generate_random_items (player_stats_t *player_stats)
             i.enchanted = item_enchant_randomly();
         }
 
-        player_stats_item_add(0 /* thing */, player_stats, i);
+        thing_stats_item_add(0 /* thing */, player_stats, i);
     }
 }
 
-static void player_stats_generate_fixed_items (player_stats_t *player_stats) 
+static void player_stats_generate_fixed_items (thing_statsp player_stats) 
 {
     const tpp tp = player_stats_to_tp(player_stats);
 
@@ -602,11 +602,11 @@ static void player_stats_generate_fixed_items (player_stats_t *player_stats)
             item.id = tp_to_id(what);
         }
 
-        player_stats_item_add(0 /* thing */, player_stats, item);
+        thing_stats_item_add(0 /* thing */, player_stats, item);
     }
 }
 
-void player_stats_generate_random (player_stats_t *player_stats) 
+void thing_stats_get_random (thing_statsp player_stats) 
 {
     LOG("Generate random character");
 
@@ -615,7 +615,7 @@ void player_stats_generate_random (player_stats_t *player_stats)
 
     const tpp tp = player_stats_to_tp(player_stats);
 
-    player_stats_init(player_stats);
+    thing_stats_init(player_stats);
 
     if (!wid_player_info_set_name) {
         strncpy(player_stats->pname, name_random(player_stats->pclass),
@@ -708,10 +708,10 @@ void player_stats_generate_random (player_stats_t *player_stats)
     /*
      * Be generous and give some items at startup.
      */
-    player_stats_generate_random_items(player_stats);
+    thing_stats_get_random_items(player_stats);
 }
 
-void player_stats_init (player_stats_t *player_stats) 
+void thing_stats_init (thing_statsp player_stats) 
 {
     memset(player_stats->inventory, 0, sizeof(player_stats->inventory));
     memset(player_stats->action_bar, 0, sizeof(player_stats->action_bar));
@@ -745,7 +745,7 @@ void player_stats_init (player_stats_t *player_stats)
 }
 
 tpp
-player_stats_to_tp (player_stats_t *player_stats)
+player_stats_to_tp (thing_statsp player_stats)
 {
     return (tp_find_short_name(player_stats->pclass));
 }

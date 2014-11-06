@@ -722,8 +722,8 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_settings_init");
 
     action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_player_stats_init,
-                          0, "wid_player_stats_init");
+                          (action_init_fn_callback)wid_thing_stats_init,
+                          0, "wid_thing_stats_init");
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_game_map_server_init,

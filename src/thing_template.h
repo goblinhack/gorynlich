@@ -170,7 +170,7 @@ typedef struct tp_ {
      * Max hp, attack bonuses etc... Is overriden by thing values that can 
      * change. This is the base value however.
      */
-    player_stats_t stats;
+    thing_stats stats;
 
     item_t item;
 

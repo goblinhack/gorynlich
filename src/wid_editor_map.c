@@ -51,7 +51,7 @@ widp wid_editor_map_thing_replace_template (widp w,
                                             thingp t,
                                             tpp tp,
                                             itemp item,
-                                            player_stats_t *stats)
+                                            thing_statsp stats)
 {
     tree_rootp thing_tiles;
     const char *tilename;

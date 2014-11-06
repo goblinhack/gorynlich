@@ -117,9 +117,9 @@ void wid_intro2_visible (void)
     /*
      * Start with some random junk.
      */
-    player_stats_t *s;
+    thing_statsp s;
     s = &global_config.player_stats;
-    player_stats_generate_random(s);
+    thing_stats_get_random(s);
 
     wid_player_stats_visible(s);
     wid_player_info_visible(s);
