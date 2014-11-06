@@ -633,7 +633,9 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
 /*
  * Create a new thing.
  */
-thingp thing_server_new (const char *name, double x, double y)
+thingp thing_server_new (const char *name, 
+                         double x, double y,
+                         player_stats_t *stats)
 {
     thingp t;
     tpp tp;
@@ -773,7 +775,11 @@ thingp thing_server_new (const char *name, double x, double y)
     /*
      * Start out with stats from the template.
      */
-    memcpy(&t->stats, &tp->stats, sizeof(player_stats_t));
+    if (stats) {
+        memcpy(&t->stats, stats, sizeof(player_stats_t));
+    } else {
+        memcpy(&t->stats, &tp->stats, sizeof(player_stats_t));
+    }
 
     t->stats.thing_id = id;
 
@@ -4206,7 +4212,8 @@ void thing_fire (thingp t,
                                     y,
                                     0, /* thing */
                                     projectile,
-                                    0 /* item */);
+                                    0 /* item */,
+                                    0 /* stats */);
 
     thingp p = wid_get_thing(w);
 
@@ -4447,7 +4454,8 @@ CON("tp %s", tp_short_name(tp));
             if (wid_game_map_server_replace_tile(grid, x, y,
                                                  0, /* thing */
                                                  tp,
-                                                 item)) {
+                                                 item,
+                                                 0 /* stats */)) {
                 socket_server_tx_map_update(0, server_boring_things,
                                             "item drop");
                 break;
@@ -4470,7 +4478,8 @@ CON("tp %s", tp_short_name(tp));
                     if (wid_game_map_server_replace_tile(grid, x, y, 
                                                          0, /* thing */
                                                          tp,
-                                                         item)) {
+                                                         item,
+                                                         0 /* stats */)) {
                         socket_server_tx_map_update(0, server_boring_things,
                                                     "item dropped");
                         goto done;

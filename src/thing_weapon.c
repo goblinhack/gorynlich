@@ -181,7 +181,8 @@ void thing_wield (thingp parent, tpp tp)
                             parent->y,
                             0, /* thing */
                             what,
-                            0 /* item */);
+                            0 /* item */,
+                            0 /* stats */);
     /*
      * Save the thing id so the client wid can keep track of the weapon.
      */
@@ -234,7 +235,8 @@ void thing_swing (thingp parent)
                             parent->y,
                             0, /* thing */
                             what,
-                            0 /* item */);
+                            0 /* item */,
+                            0 /* stats */);
 
     /*
      * Save the thing id so the client wid can keep track of the weapon.

@@ -50,7 +50,8 @@ widp wid_editor_map_thing_replace_template (widp w,
                                             double y,
                                             thingp t,
                                             tpp tp,
-                                            itemp item)
+                                            itemp item,
+                                            player_stats_t *stats)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -317,7 +318,8 @@ void wid_editor_map_thing_flood_fill_template (int32_t x, int32_t y,
                                           xin, yin, 
                                           0, /* thing */
                                           tp,
-                                          0 /* item */);
+                                          0 /* item */,
+                                          0 /* stats */);
 
     wid_editor_map_thing_flood_fill_template(xin + 1, yin, tp);
     wid_editor_map_thing_flood_fill_template(xin - 1, yin, tp);
@@ -412,7 +414,8 @@ static uint8_t wid_editor_map_thing_replace (widp w,
                                             x, y,
                                             0, /* thing */
                                             tp,
-                                            0 /* item */);
+                                            0 /* item */,
+                                            0 /* stats */);
 
     return (true);
 }

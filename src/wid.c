@@ -3778,7 +3778,8 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
         child = (*callback)(w, x, y, 
                             0, /* thing */
                             tp,
-                            0 /* item */);
+                            0 /* item */,
+                            0 /* stats */);
 
         if (!child) {
             ERR("Loading thing %s failed to replace at (%u,%u)", name, x, y);

@@ -155,6 +155,7 @@ typedef struct music_ *musicp;
 typedef struct sound_ *soundp;
 typedef struct tile_ *tilep;
 typedef struct thing_ *thingp;
+typedef struct thing_stats *thing_statsp;
 typedef struct item_t_ *itemp;
 typedef struct host_ *hostp;
 typedef struct action_timer_ *timerp;
