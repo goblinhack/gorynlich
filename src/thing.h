@@ -22,7 +22,9 @@ thingp thing_client_local_new(tpp tp);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
+#if 0
 void thing_tick_server_player_all(void);
+#endif
 void thing_tick_client_player_slow_all(void);
 void thing_tick_server_player_slow_all(void);
 uint8_t thing_mob_spawn(thingp);
@@ -273,7 +275,7 @@ uint8_t thing_server_move(thingp t,
 
 void thing_server_action(thingp t,
                          uint8_t action,
-                         uint16_t item);
+                         uint32_t action_bar_index);
 
 void thing_client_move(thingp t,
                        double x,
@@ -474,18 +476,6 @@ typedef struct thing_ {
      * Widget for displaying thing.
      */
     widp wid;
-
-    /*
-     * The animation of this weapon that is wielded. This thing fires and
-     * does nothing.
-     */
-    uint32_t weapon_carry_anim_id;
-    uint32_t weapon_swing_anim_id;
-
-    /*
-     * But this is the actual weapon.
-     */
-    tpp weapon;
 
     /*
      * Last death reason.
@@ -1702,21 +1692,61 @@ static inline levelp thing_level (thingp t)
 /*
  * thing_weapon.h
  */
+static inline itemp thing_has_inventory_item (const thingp t, 
+                                              const uint32_t id)
+{
+    return (player_stats_has_inventory_item(&t->stats, id, 0));
+}
+
+static inline itemp thing_has_action_bar_item (const thingp t,
+                                               const uint32_t id) 
+{
+    return (player_stats_has_action_bar_item(&t->stats, id, 0));
+}
+
+static inline itemp thing_has_worn_item (const thingp t, 
+                                         const uint32_t id)
+{
+    return (player_stats_has_worn_item(&t->stats, id, 0));
+}
+
+static inline itemp thing_has_item (const thingp t,
+                                    const uint32_t id)
+{
+    return (player_stats_has_item(&t->stats, id, 0));
+}
+
+static inline itemp thing_weapon_item (const thingp t)
+{
+    itemp item = thing_has_action_bar_item(t, t->stats.weapon);
+
+    return (item);
+}
+
+static inline tpp thing_weapon (const thingp t)
+{
+    itemp item = thing_weapon_item(t);
+    if (!item) {
+        return (0);
+    }
+
+    return (id_to_tp(item->id));
+}
+
 void thing_unwield(thingp t);
 void thing_wield(thingp t, tpp tp);
 void thing_swing(thingp t);
 void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
 thingp thing_weapon_carry_anim(thingp t);
 thingp thing_weapon_swing_anim(thingp t);
-tpp thing_weapon(thingp t);
 
 /*
  * thing_item.h
  */
 void thing_auto_collect(thingp t, thingp it, tpp tp);
 void thing_item_collect(thingp t, thingp it, tpp tp);
-void thing_used(thingp t, tpp tp, itemp);
-void thing_degrade(thingp t, tpp tp, itemp);
+void thing_used(thingp t, tpp tp);
+void thing_drop(thingp t, tpp tp);
+void thing_wear_out(thingp t, tpp tp);
 void thing_item_destroyed(thingp t, tpp tp);
-void thing_drop(thingp t, tpp tp, itemp);
 void thing_wield_next_weapon(thingp t);

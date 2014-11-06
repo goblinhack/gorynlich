@@ -46,11 +46,22 @@ int item_pop(itemp dst, itemp popped);
 typedef struct player_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
+
+    /*
+     * The animation of this weapon that is wielded. This thing fires and
+     * does nothing.
+     */
+    uint16_t thing_id;
+    uint16_t weapon_carry_anim_id;
+    uint16_t weapon_swing_anim_id;
+
     int16_t hp;
     int16_t max_hp;
     int16_t id;
     int16_t max_id;
-    uint16_t experience;
+
+    uint32_t experience;
+    uint32_t score;
     uint8_t spending_points;
     uint8_t attack_melee;
     uint8_t attack_ranged;
@@ -66,6 +77,8 @@ typedef struct player_stats_ {
     item_t inventory[THING_INVENTORY_MAX];
     item_t action_bar[THING_ACTION_BAR_MAX];
     item_t worn[THING_WORN_MAX];
+    uint8_t weapon;
+
 } __attribute__ ((packed)) player_stats_t;
 
 int player_stats_get_modifier(int value);
@@ -74,16 +87,16 @@ void player_stats_init(player_stats_t *);
 tpp player_stats_to_tp(player_stats_t *);
 
 itemp player_stats_has_item(player_stats_t *player_stats,
-                              uint32_t id,
-                              uint32_t *index);
+                            uint32_t id,
+                            uint32_t *index);
 
 itemp player_stats_has_inventory_item(player_stats_t *player_stats,
                                         uint32_t item,
                                         uint32_t *index);
 
 itemp player_stats_has_action_bar_item(player_stats_t *player_stats,
-                                         uint32_t item,
-                                         uint32_t *index);
+                                       uint32_t item,
+                                       uint32_t *index);
 
 itemp player_stats_has_worn_item(player_stats_t *player_stats,
                                    uint32_t item,

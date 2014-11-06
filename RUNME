@@ -141,6 +141,7 @@ then
     log_warn "   sudo port install libsdl2"
     log_warn "   sudo port install libsdl2_image"
     log_warn "   sudo port install libsdl2_mixer"
+    log_warn "   sudo port install libsdl2_net"
     log_warn "  Or:"
     log_warn "   Grab SDL from:"
     log_warn "   svn co https://svn.sourceforge.net/svnroot/goblinhack/trunk goblinhack"

@@ -210,6 +210,7 @@ static void thing_tick_server_all (void)
 //    LOG("server count %d",count);
 }
 
+#if 0
 void thing_tick_server_player_all (void)
 {
     thingp t;
@@ -235,6 +236,7 @@ void thing_tick_server_player_all (void)
         }
     }
 }
+#endif
 
 void thing_tick_server_player_slow_all (void)
 {
@@ -261,10 +263,9 @@ void thing_tick_server_player_slow_all (void)
             /*
              * Use up one torch unit.
              */
-            tpp tp = 
-                    thing_is_carrying_thing(t, tp_is_torch);
+            tpp tp = thing_is_carrying_thing(t, tp_is_torch);
             if (tp) {
-                thing_used(t, tp, 0);
+                thing_used(t, tp);
                 tp = thing_is_carrying_thing(t, tp_is_torch);
                 if (!tp) {
                     THING_SHOUT_AT(t, INFO, "Your light fizzles out");
@@ -517,7 +518,9 @@ void thing_tick_all (void)
              * player may now be carrying some things created in the update
              * above.
              */
+#if 0
             thing_tick_server_player_all();
+#endif
 
             ts = time_get_time_cached();
         }

@@ -28,9 +28,7 @@ typedef struct aplayer_ {
     uint16_t min_latency;
     uint16_t max_latency;
     uint32_t key;
-    char name[SMALL_STRING_LEN_MAX + 1];
-    char pclass[SMALL_STRING_LEN_MAX + 1];
-    player_stats_t player_stats;
+    player_stats_t stats_from_client;
     thingp thing;
 } aplayer;
 

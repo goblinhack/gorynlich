@@ -106,8 +106,14 @@
 .o/ramdisk_data_levels_1_old.o: asm/ramdisk_data_levels_1_old.S ../data/levels/1.old
 	gcc -c asm/ramdisk_data_levels_1_old.S -o .o/ramdisk_data_levels_1_old.o
 
+.o/ramdisk_data_map__jigsaw_map_session.o: asm/ramdisk_data_map__jigsaw_map_session.S ../data/map/.jigsaw.map.session
+	gcc -c asm/ramdisk_data_map__jigsaw_map_session.S -o .o/ramdisk_data_map__jigsaw_map_session.o
+
 .o/ramdisk_data_map_jigsaw_map.o: asm/ramdisk_data_map_jigsaw_map.S ../data/map/jigsaw.map
 	gcc -c asm/ramdisk_data_map_jigsaw_map.S -o .o/ramdisk_data_map_jigsaw_map.o
+
+.o/ramdisk_data_map_jigsaw1_map.o: asm/ramdisk_data_map_jigsaw1_map.S ../data/map/jigsaw1.map
+	gcc -c asm/ramdisk_data_map_jigsaw1_map.S -o .o/ramdisk_data_map_jigsaw1_map.o
 
 .o/ramdisk_data_music__1_session.o: asm/ramdisk_data_music__1_session.S ../data/music/.1.session
 	gcc -c asm/ramdisk_data_music__1_session.S -o .o/ramdisk_data_music__1_session.o
