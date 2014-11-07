@@ -161,7 +161,7 @@ void thing_timer_place_and_destroy_callback (void *context)
     if (place->owner_id) {
         thingp owner = thing_server_id(place->owner_id);
         if (!owner) {
-            ERR("no owner id %d for explosion", place->owner_id);
+            ERR("no owner ID %u for explosion", place->owner_id);
         }
 
         t->timer_dead = action_timer_create(

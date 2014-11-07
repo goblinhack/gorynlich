@@ -88,12 +88,12 @@
 |x......x|  x.x   |  x.x   |  x.x   |  x.x   |x......x|  x..x  |  x..x  |.....x  |  x.....|
 |xxx.xxxx|  x.x   |  x.x   |  x.x   |  x.x   |xxx.xxxx|  x.xx  |  x.xx  |.....x  |  x.....|
 |  x.x   |  x.xxxx|xxx.x   |xxx.x   |xxx.xxxx|xxx.x   |  x.x   |xxx.x   |....xx  |xxxx.xx.|
-|  x.x   |  x....x|....x   |....x   |........|..x.x   | xx.x   |....x   |...xxx  |........|
+|  x.x   |  x....x|....x   |....x   |........|  x.x   | xx.x   |....x   |...xxx  |........|
 |  x.x   |  x....x|....x   |....x   |....xxxx|xxx.xxx | x..x   |....xx  |..xxxx  |xxx.....|
 |  x.x   |  x.xxxx|xxx.x   |xxxxx   |xxx.xxx |  x.x   | x..xxxx|....x   |xxxxxx  |  x.xxxx|
 |  x.xx  |  x.xx  |  x.x   |        |  x.xxx |xxx.xxxx| x......|....xx  |        |  x.xx  |
 |  x..x  |  x..x  |  x.x   |        |  x.x   |x......x| xx.....|....x   |        |  x...  |
-+----- --+--------+--------+--------+--------+--------+--------+--------+--------+--------+
++--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |x......x|        |  x.....|  x.x   |  x.....|x......x|  x..x  |  x..x  |.....x  |  x.....|
 |xxx.xxxx|        | xx.....| xx.xx  |  x.....|xxx.xxxx|  x.xx  |  x.xx  |.....x  |  x.....|
 |  x.xxxx| xx     |xxxx....|xxx.xx  |xxx.....|xxx.x   |  x.x   |xxx.xxxx|.....x  |xxxx.xxx|

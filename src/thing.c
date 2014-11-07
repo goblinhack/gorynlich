@@ -336,9 +336,9 @@ static void thing_map_check_empty_ (thing_map *map, thingp *ids)
 
                 thingp t = ids[m];
 
-                ERR("thing id %d still on map at %d,%d [%d]", m, x, y, i);
+                ERR("thing ID %u still on map at %d,%d [%d]", m, x, y, i);
 
-                ERR("thing id %d %s still on map", m, thing_logname(t));
+                ERR("thing ID %u %s still on map", m, thing_logname(t));
             }
         }
     }
@@ -426,7 +426,7 @@ static void thing_map_sanity_ (thing_map *map, thingp *ids)
                 thingp t = ids[m];
 
                 if (!t) {
-                    DIE("thing %p id %d is invalid and on map", t, m);
+                    DIE("thing %p ID %u is invalid and on map", t, m);
                 }
 
                 verify(t);
@@ -617,7 +617,7 @@ void thing_map_add (thingp t, int32_t x, int32_t y)
             uint32_t m = cell->id[i];
             thingp p = ids[m];
 
-            LOG("  slot [%d] id %d %s", i, m, p->logname);
+            LOG("  slot [%d] ID %u %s", i, m, p->logname);
         }
 
         return;
@@ -807,10 +807,10 @@ thingp thing_server_new (const char *name,
 
     if (!thing_is_boring_noverify(t)) {
         if (t->on_server) {
-            LOG("Server: created %s (%d)",
+            LOG("Server: created %s (total %d)",
                 thing_logname(t), server_things_total);
         } else {
-            LOG("Client: created %s (%d)",
+            LOG("Client: created %s (total %d)",
                 thing_logname(t), client_things_total);
         }
     }
@@ -1354,8 +1354,10 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                  * No need to update active things they do it automatically
                  * in the ticker.
                  */
+#if 0
                 socket_server_tx_map_update(0, server_boring_things, 
                                             "polymorph dead thing boring");
+#endif
                 return;
             }
 
@@ -3701,8 +3703,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
                 /*
                  * Update the template ID so things can polymorph.
                  */
-                tpp tp = 
-                        id_to_tp(template_id);
+                tpp tp = id_to_tp(template_id);
 
                 t->tp = tp;
 
@@ -3829,8 +3830,10 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             thing_visible(t);
         }
 
+LOG("rx ID %d",id);
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
 //LOG("rx %s dead",thing_logname(t));
+LOG("rx ID %d dead",id);
             thing_dead(t, 0, "server killed");
         }
     }
@@ -4090,9 +4093,10 @@ void thing_fire (thingp t,
                  const uint8_t right)
 {
     /*
-     * Cannot fire if we've reached a level.
+     * Cannot fire until we're on a level.
      */
     if (!t->wid) {
+        THING_LOG(t, "cannot fire yet, not on the level");
         return;
     }
 
@@ -4101,6 +4105,7 @@ void thing_fire (thingp t,
      */
     tpp weapon = thing_weapon(t);
     if (!weapon) {
+        THING_LOG(t, "has no weapon, cannot fire");
         return;
     }
 
@@ -4113,6 +4118,7 @@ void thing_fire (thingp t,
     if (d10000_chance_of_breaking) {
         if ((rand() % 10000) <= d10000_chance_of_breaking) {
             thing_wear_out(t, weapon);
+            THING_LOG(t, "damage weapon");
             return;
         }
     }
@@ -4339,7 +4345,11 @@ void thing_server_action (thingp t,
 {
     widp grid = wid_game_map_server_grid_container;
 
-CON("server action action_bar_index %d, id", action_bar_index);
+    if (action_bar_index >= THING_ACTION_BAR_MAX) {
+        ERR("invalid action bar slot %u", action_bar_index);
+        return;
+    }
+
     itemp item = &t->stats.action_bar[action_bar_index];
     if (!item->id) {
         THING_SHOUT_AT(t, WARNING, "No item in that slot to use");
@@ -4347,7 +4357,6 @@ CON("server action action_bar_index %d, id", action_bar_index);
     }
 
     tpp tp = id_to_tp(item->id);
-CON("tp %s", tp_short_name(tp));
     if (!tp) {
         ERR("Unkown item use request, id %u", item->id);
         return;
@@ -4456,8 +4465,10 @@ CON("tp %s", tp_short_name(tp));
                                                  tp,
                                                  item,
                                                  0 /* stats */)) {
+#if 0
                 socket_server_tx_map_update(0, server_boring_things,
                                             "item drop");
+#endif
                 break;
             }
         }
@@ -4480,8 +4491,10 @@ CON("tp %s", tp_short_name(tp));
                                                          tp,
                                                          item,
                                                          0 /* stats */)) {
+#if 0
                         socket_server_tx_map_update(0, server_boring_things,
                                                     "item dropped");
+#endif
                         goto done;
                     }
                 }

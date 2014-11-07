@@ -147,6 +147,7 @@ static void server_rx_client_join (socketp s)
 
     LOG("Server: Total players now %u", global_config.server_current_players);
 
+#if 0
     socket_server_tx_map_update(s, server_active_things,
                                 "rx client join active things");
     /*
@@ -156,7 +157,7 @@ static void server_rx_client_join (socketp s)
 
     socket_server_tx_map_update(s, server_boring_things,
                                 "rx client join boring things");
-
+#endif
 
     wid_game_map_server_visible();
 }
@@ -443,8 +444,13 @@ static void server_socket_tx_ping (void)
 
     seq++;
 
+    socket_server_tx_map_update(0, server_active_things,
+                                "rx client join active things");
+
+    socket_server_tx_map_update(0, server_boring_things,
+                                "rx client join boring things");
     /*
-     * Send a regular status update too.
+     * Send players their items lists
      */
     socket_tx_server_status();
 }

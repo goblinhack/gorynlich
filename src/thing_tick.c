@@ -503,6 +503,7 @@ void thing_tick_all (void)
 
     thing_tick_server_all();
 
+#if 0
     if (server_level) {
         static uint32_t ts;
 
@@ -518,13 +519,12 @@ void thing_tick_all (void)
              * player may now be carrying some things created in the update
              * above.
              */
-#if 0
             thing_tick_server_player_all();
-#endif
 
             ts = time_get_time_cached();
         }
     }
+#endif
 
     /*
      * Slow tick.
