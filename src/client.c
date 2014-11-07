@@ -801,7 +801,6 @@ static void client_poll (void)
                  * This is an update our player state on the server.
                  */
                 msg_server_status latest_status;
-LOG("rx MSG_SERVER_STATUS");
 
                 memset(&latest_status, 0, sizeof(latest_status));
 
@@ -893,8 +892,13 @@ LOG("rx MSG_SERVER_STATUS");
                 msg_player_state *p = &server_status.player;
                 if (player &&
                     memcmp(&player->stats, &p->stats, sizeof(thing_stats))) {
-                    wid_game_map_client_score_update(client_level, redo);
+
+                    /*
+                     * If the stats change, update the inventory
+                     */
                     memcpy(&player->stats, &p->stats, sizeof(thing_stats));
+
+                    wid_game_map_client_score_update(client_level, redo);
                 }
 
                 break;
@@ -1027,6 +1031,10 @@ static void client_check_still_in_game (void)
             music_play_game();
 
             player = thing_client_find(p->stats.thing_id);
+            if (!player) {
+                ERR("failed to find player in map update");
+                break;
+            }
 
             /*
              * Needed twice for some reason to adjust the scrollbar as the
@@ -1034,11 +1042,6 @@ static void client_check_still_in_game (void)
              */
             wid_game_map_client_scroll_adjust(true /* adjust */);
             wid_game_map_client_scroll_adjust(true /* adjust */);
-
-            if (!player) {
-                ERR("failed to find player in map update");
-                break;
-            }
 
             if (!wid_game_map_client_window) {
                 ERR("Client: No game map window");

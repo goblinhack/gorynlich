@@ -2592,7 +2592,7 @@ void socket_tx_player_action (socketp s,
     msg_player_action msg = {0};
     msg.type = MSG_CLIENT_PLAYER_ACTION;
     msg.action = action;
-    msg.action_bar_index = action_bar_index;
+    msg.action_bar_index = (uint8_t) action_bar_index;
 
     UDPpacket *packet = socket_alloc_msg();
 
@@ -2634,7 +2634,7 @@ void socket_server_rx_player_action (socketp s, UDPpacket *packet,
     }
 
     uint8_t action = msg.action;
-    uint32_t action_bar_index = SDLNet_Read16(&msg.action_bar_index);
+    uint32_t action_bar_index = msg.action_bar_index;
 
     thing_server_action(t, action, action_bar_index);
 }

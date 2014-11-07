@@ -191,8 +191,19 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_BG, WHITE);
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
-        wid_set_tilename(w, "crystalball.1");
         wid_set_no_shape(w);
+
+        int which = (int)(((double)s->hp / (double)s->max_hp) * 16) + 1;
+        if (which > 16) {
+            which = 16;
+        }
+        if (which < 1) {
+            which = 1;
+        }
+
+        char tmp[40];
+        snprintf(tmp, sizeof(tmp)-1, "crystalball.%d", which);
+        wid_set_tilename(w, tmp);
     }
 
     {
@@ -209,8 +220,19 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_BG, WHITE);
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
-        wid_set_tilename(w, "crystalball_purple.1");
         wid_set_no_shape(w);
+
+        int which = (int)(((double)s->id / (double)s->max_id) * 16) + 1;
+        if (which > 16) {
+            which = 16;
+        }
+        if (which < 1) {
+            which = 1;
+        }
+
+        char tmp[40];
+        snprintf(tmp, sizeof(tmp)-1, "crystalball_purple.%d", which);
+        wid_set_tilename(w, tmp);
     }
 
     {
@@ -218,7 +240,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.15, 0.3};
+        fpoint tl = {0.15, 0.2};
         fpoint br = {0.35, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
@@ -241,7 +263,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.65, 0.3};
+        fpoint tl = {0.65, 0.2};
         fpoint br = {0.85, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);

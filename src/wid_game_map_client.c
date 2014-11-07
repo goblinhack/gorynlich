@@ -250,6 +250,7 @@ uint8_t wid_game_map_client_player_move (void)
         tpp weapon = thing_weapon(player);
 
         if (!weapon) {
+            THING_LOG(player, "tried to fire but no weapon");
             fire = 0;
         }
 
@@ -289,55 +290,24 @@ uint8_t wid_game_map_client_player_move (void)
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
     tpp tp;
-    uint32_t action_bar_index;
+    uint32_t action_bar_index = 0;
 
     switch (key->sym) {
-    case SDLK_0:
-    case SDLK_1:
-    case SDLK_2:
-    case SDLK_3:
-    case SDLK_4:
-    case SDLK_5:
-    case SDLK_6:
-    case SDLK_7:
-    case SDLK_8:
-    case SDLK_9: {
-        action_bar_index = ((uint32_t)key->sym) - SDLK_1;
-
-        if (key->sym == SDLK_0) {
-            action_bar_index = 9;
-        }
-CON("button %d",action_bar_index);
-
-        uint32_t id = player->stats.action_bar[action_bar_index].id;
-        if (!id) {
-            MSG(WARNING, "Nothing in that slot");
-            return (true);
-        }
-
-        tp = id_to_tp(id);
-        if (tp) {
-            if (!client_joined_server) {
-                MSG(WARNING, "Not connected to server");
-                return (true);
-            }
-
-            socket_tx_player_action(client_joined_server, player, 
-                                    PLAYER_ACTION_USE,
-                                    action_bar_index);
-#if 0
-        socket_tx_player_action(client_joined_server, player, 
-                                PLAYER_ACTION_DROP,
-                                tp_to_id(tp));
-#endif
-            return (true);
-        }
-
-        MSG(WARNING, "No carried item is using that key");
-        return (true);
-    }
+    case SDLK_1: action_bar_index = 0; break;
+    case SDLK_2: action_bar_index = 1; break;
+    case SDLK_3: action_bar_index = 2; break;
+    case SDLK_4: action_bar_index = 3; break;
+    case SDLK_5: action_bar_index = 4; break;
+    case SDLK_6: action_bar_index = 5; break;
+    case SDLK_7: action_bar_index = 6; break;
+    case SDLK_8: action_bar_index = 7; break;
+    case SDLK_9: action_bar_index = 8; break;
+    case SDLK_0: action_bar_index = 9; break;
 
     case '\t': {
+        /*
+         * Show the inventory.
+         */
         thing_statsp s;
 
         s = &player->stats;
@@ -359,10 +329,30 @@ CON("button %d",action_bar_index);
         return (true);
 
     default:
-        break;
+        return (false);
     }
 
-    return (false);
+    uint32_t id = player->stats.action_bar[action_bar_index].id;
+    if (!id) {
+        MSG(WARNING, "Nothing in that slot");
+        return (true);
+    }
+
+    tp = id_to_tp(id);
+    if (tp) {
+        if (!client_joined_server) {
+            MSG(WARNING, "Not connected to server");
+            return (true);
+        }
+
+        socket_tx_player_action(client_joined_server, player, 
+                                PLAYER_ACTION_USE,
+                                action_bar_index);
+        return (true);
+    }
+
+    MSG(WARNING, "No carried item is using that key");
+    return (true);
 }
 
 /*
@@ -671,7 +661,13 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         return;
     }
 
+    /*
+     * Update all the player side things with the new item counts.
+     */
+    thing_tick_client_player_slow_all();
+
     if (player->stats.pclass[0]) {
+        wid_player_action_hide();
         wid_player_action_visible(&player->stats, true);
     }
 
@@ -720,11 +716,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     double score_and_health_value_offset = 0.055;
 
     /*
-     * Update all the player side things with the new item counts.
-     */
-    thing_tick_client_player_slow_all();
-
-    /*
      * Print the score.
      */
     for (;;) {
@@ -753,22 +744,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
          * Health
          */
         snprintf(tmp, sizeof(tmp), "%06u", p->stats.hp);
-
-        /*
-         * If we see a drop in health, flash the widget.
-         */
-        thingp t = thing_client_find(p->stats.thing_id);
-        if (t) {
-            widp w = t->wid;
-
-            if (w && (p->stats.hp < t->stats.hp)) {
-                /*
-                 * Flash briefly red.
-                 */
-                wid_set_mode(w, WID_MODE_ACTIVE);
-                wid_set_color(w, WID_COLOR_BLIT, RED);
-            }
-        }
 
         static widp wid_health_container;
 

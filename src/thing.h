@@ -1655,6 +1655,10 @@ static inline thingp thing_server_id (uint32_t id)
         DIE("overflow in looking up server IDs, ID %u", id);
     }
 
+    if (!thing_server_ids[id]) {
+        DIE("looking for client thing ID %u, not found", id);
+    }
+
     verify(thing_server_ids[id]);
 
     return (thing_server_ids[id]);
@@ -1662,9 +1666,12 @@ static inline thingp thing_server_id (uint32_t id)
 
 static inline thingp thing_client_id (uint32_t id) 
 {
-
     if (id > THING_CLIENT_ID_MAX) {
         DIE("overflow in looking up client IDs, ID %u", id);
+    }
+
+    if (!thing_client_ids[id]) {
+        DIE("looking for client thing ID %u, not found", id);
     }
 
     verify(thing_client_ids[id]);
@@ -1720,7 +1727,8 @@ static inline itemp thing_has_item (const thingp t,
 
 static inline itemp thing_weapon_item (const thingp t)
 {
-    itemp item = thing_has_action_bar_item(t, t->stats.weapon);
+    itemp item = 
+        thing_has_action_bar_item(t, t->stats.action_bar[t->stats.weapon].id);
 
     return (item);
 }
@@ -1729,6 +1737,10 @@ static inline tpp thing_weapon (const thingp t)
 {
     itemp item = thing_weapon_item(t);
     if (!item) {
+        return (0);
+    }
+
+    if (!item->id) {
         return (0);
     }
 
