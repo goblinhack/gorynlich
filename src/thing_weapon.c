@@ -122,12 +122,12 @@ void thing_wield_next_weapon (thingp t)
             continue;
         }
 
-        tpp tp = id_to_tp(id);
-        if (!tp_is_weapon(tp)) {
+        tpp weapon = id_to_tp(id);
+        if (!tp_is_weapon(weapon)) {
             continue;
         }
 
-        thing_wield(t, tp);
+        thing_wield(t, weapon);
         break;
     }
 }
@@ -159,26 +159,31 @@ void thing_unwield (thingp t)
     }
 }
 
-void thing_wield (thingp parent, tpp tp)
+void thing_wield (thingp t, tpp weapon)
 {
-    const char *carry_as = tp_weapon_carry_anim(tp);
+    thing_unwield(t);
+
+    if (thing_is_player(t)) {
+        THING_LOG(t, "unwield %s", tp_short_name(weapon));
+    }
+
+    const char *carry_as = tp_weapon_carry_anim(weapon);
 
     if (!carry_as) {
-        ERR("Could not wield %s", thing_logname(parent));
+        ERR("%s could not wield %s", thing_logname(t), tp_short_name(weapon));
         return;
     }
 
     tpp what = tp_find(carry_as);
     if (!what) {
-        ERR("Could not find %s to wield for %s",
-            carry_as, thing_logname(parent));
+        ERR("Could not find %s to wield for %s", carry_as, thing_logname(t));
         return;
     }
 
     widp weapon_carry_anim_wid = wid_game_map_server_replace_tile(
                             wid_game_map_server_grid_container,
-                            parent->x,
-                            parent->y,
+                            t->x,
+                            t->y,
                             0, /* thing */
                             what,
                             0 /* item */,
@@ -187,30 +192,31 @@ void thing_wield (thingp parent, tpp tp)
      * Save the thing id so the client wid can keep track of the weapon.
      */
     thingp child = wid_get_thing(weapon_carry_anim_wid);
-    parent->stats.weapon_carry_anim_id = child->thing_id;
+    t->stats.weapon_carry_anim_id = child->thing_id;
 
-    child->dir = parent->dir;
+    child->dir = t->dir;
 
     /*
-     * Attach to the parent thing.
+     * Attach to the t thing.
      */
-    child->owner_id = parent->thing_id;
+    child->owner_id = t->thing_id;
 
     thing_update(child);
 
-    parent->needs_tx_player_update = true;
+    t->needs_tx_player_update = true;
 }
 
-void thing_swing (thingp parent)
+void thing_swing (thingp t)
 {
-    if (parent->stats.weapon_swing_anim_id) {
+    if (t->stats.weapon_swing_anim_id) {
         /*
          * Still swinging.
          */
+LOG("XXX still swinging");
         return;
     }
 
-    tpp weapon = thing_weapon(parent);
+    tpp weapon = thing_weapon(t);
     if (!weapon) {
         ERR("No weapon to swing");
         return;
@@ -218,21 +224,22 @@ void thing_swing (thingp parent)
 
     const char *swung_as = tp_weapon_swing_anim(weapon);
     if (!swung_as) {
-        ERR("Could not swing %s", thing_logname(parent));
+        ERR("%s could not swing %s", thing_logname(t),
+            tp_short_name(weapon));
         return;
     }
 
     tpp what = tp_find(swung_as);
     if (!what) {
         ERR("Could not find %s to wield for %s",
-            swung_as, thing_logname(parent));
+            swung_as, thing_logname(t));
         return;
     }
 
     widp weapon_swing_anim_wid = wid_game_map_server_replace_tile(
                             wid_game_map_server_grid_container,
-                            parent->x,
-                            parent->y,
+                            t->x,
+                            t->y,
                             0, /* thing */
                             what,
                             0 /* item */,
@@ -246,8 +253,8 @@ void thing_swing (thingp parent)
     /*
      * Attach to the parent thing.
      */
-    child->owner_id = parent->thing_id;
-    parent->stats.weapon_swing_anim_id = child->thing_id;
+    child->owner_id = t->thing_id;
+    t->stats.weapon_swing_anim_id = child->thing_id;
 
     /*
      * Destroy the thing quickly. Allow enough time for the client anim
@@ -255,7 +262,8 @@ void thing_swing (thingp parent)
      */
     thing_timer_destroy(child, 200);
 
+LOG("XXX swing");
     thing_update(child);
 
-    parent->needs_tx_player_update = true;
+    t->needs_tx_player_update = true;
 }
