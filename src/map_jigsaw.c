@@ -1835,7 +1835,6 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
 void maze_debug(dungeon_t *dg);
 void maze_debug (dungeon_t *dg)
 {
-    system("clear");
     dump_jigpieces_to_map(dg);
 
     map_jigsaw_buffer_print();
