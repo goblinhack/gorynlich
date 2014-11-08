@@ -2,7 +2,7 @@
  short_name="Phantom"
  tooltip="Phantom"
  z_depth=3
- speed=2
+ speed=4
  max_hp=1
  damage=4
  polymorph_on_death="data/things/ghost1"

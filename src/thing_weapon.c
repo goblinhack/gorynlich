@@ -80,12 +80,12 @@ thingp thing_weapon_carry_anim (thingp t)
     thingp weapon_carry_anim = 0;
 
     if (t->on_server) {
-        if (t->stats.weapon_carry_anim_id) {
-            weapon_carry_anim = thing_server_id(t->stats.weapon_carry_anim_id);
+        if (t->weapon_carry_anim_id) {
+            weapon_carry_anim = thing_server_id(t->weapon_carry_anim_id);
         }
     } else {
-        if (t->stats.weapon_carry_anim_id) {
-            weapon_carry_anim = thing_client_id(t->stats.weapon_carry_anim_id);
+        if (t->weapon_carry_anim_id) {
+            weapon_carry_anim = thing_client_id(t->weapon_carry_anim_id);
         }
     }
 
@@ -100,12 +100,12 @@ thingp thing_weapon_swing_anim (thingp t)
     thingp weapon_swing_anim = 0;
 
     if (t->on_server) {
-        if (t->stats.weapon_swing_anim_id) {
-            weapon_swing_anim = thing_server_id(t->stats.weapon_swing_anim_id);
+        if (t->weapon_swing_anim_id) {
+            weapon_swing_anim = thing_server_id(t->weapon_swing_anim_id);
         }
     } else {
-        if (t->stats.weapon_swing_anim_id) {
-            weapon_swing_anim = thing_client_id(t->stats.weapon_swing_anim_id);
+        if (t->weapon_swing_anim_id) {
+            weapon_swing_anim = thing_client_id(t->weapon_swing_anim_id);
         }
     }
 
@@ -149,13 +149,13 @@ void thing_unwield (thingp t)
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
         thing_dead(weapon_carry_anim, 0, "owner weapon");
-        t->stats.weapon_carry_anim_id = 0;
+        t->weapon_carry_anim_id = 0;
     }
 
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
         thing_dead(weapon_swing_anim, 0, "owner weapon");
-        t->stats.weapon_swing_anim_id = 0;
+        t->weapon_swing_anim_id = 0;
     }
 }
 
@@ -192,7 +192,7 @@ void thing_wield (thingp t, tpp weapon)
      * Save the thing id so the client wid can keep track of the weapon.
      */
     thingp child = wid_get_thing(weapon_carry_anim_wid);
-    t->stats.weapon_carry_anim_id = child->thing_id;
+    t->weapon_carry_anim_id = child->thing_id;
 
     child->dir = t->dir;
 
@@ -208,11 +208,10 @@ void thing_wield (thingp t, tpp weapon)
 
 void thing_swing (thingp t)
 {
-    if (t->stats.weapon_swing_anim_id) {
+    if (t->weapon_swing_anim_id) {
         /*
          * Still swinging.
          */
-LOG("XXX still swinging");
         return;
     }
 
@@ -254,7 +253,7 @@ LOG("XXX still swinging");
      * Attach to the parent thing.
      */
     child->owner_id = t->thing_id;
-    t->stats.weapon_swing_anim_id = child->thing_id;
+    t->weapon_swing_anim_id = child->thing_id;
 
     /*
      * Destroy the thing quickly. Allow enough time for the client anim
@@ -262,7 +261,6 @@ LOG("XXX still swinging");
      */
     thing_timer_destroy(child, 200);
 
-LOG("XXX swing");
     thing_update(child);
 
     t->needs_tx_player_update = true;

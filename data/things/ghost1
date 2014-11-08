@@ -2,7 +2,7 @@
  short_name="Weak spirit"
  tooltip="Minor phantom"
  z_depth=3
- speed=3
+ speed=5
  max_hp=1
  damage=2
  bonus_score_on_death=5

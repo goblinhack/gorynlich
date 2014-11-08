@@ -564,7 +564,7 @@ static void thing_stats_get_random_items (thing_stats *player_stats)
 
 static void player_stats_generate_fixed_items (thing_stats *player_stats) 
 {
-    const tpp tp = thing_statso_tp(player_stats);
+    const tpp tp = thing_stats_to_tp(player_stats);
 
     /*
      * Start with items defined for this base class.
@@ -613,7 +613,7 @@ void thing_stats_get_random (thing_stats *player_stats)
     strncpy(player_stats->pclass, pclass_random(),
             sizeof(player_stats->pclass) - 1);
 
-    const tpp tp = thing_statso_tp(player_stats);
+    const tpp tp = thing_stats_to_tp(player_stats);
 
     thing_stats_init(player_stats);
 
@@ -745,7 +745,7 @@ void thing_stats_init (thing_stats *player_stats)
 }
 
 tpp
-thing_statso_tp (thing_stats *player_stats)
+thing_stats_to_tp (thing_stats *player_stats)
 {
     return (tp_find_short_name(player_stats->pclass));
 }
