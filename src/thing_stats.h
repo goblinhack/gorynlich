@@ -47,13 +47,10 @@ typedef struct thing_stats_ {
     char pname[SMALL_STRING_LEN_MAX];
     char pclass[SMALL_STRING_LEN_MAX];
 
-    /*
-     * The animation of this weapon that is wielded. This thing fires and
-     * does nothing.
-     */
     uint16_t thing_id;
-    uint16_t weapon_carry_anim_id;
-    uint16_t weapon_swing_anim_id;
+
+    uint16_t weapon_carry_anim_id_latest;
+    uint16_t weapon_swing_anim_id_latest;
 
     int16_t hp;
     int16_t max_hp;
@@ -84,7 +81,7 @@ typedef struct thing_stats_ {
 int thing_stats_val_to_modifier(int value);
 void thing_stats_get_random(thing_stats *);
 void thing_stats_init(thing_stats *);
-tpp thing_statso_tp(thing_stats *);
+tpp thing_stats_to_tp(thing_stats *);
 
 itemp thing_stats_has_item(thing_stats *thing_stats,
                             uint32_t id,

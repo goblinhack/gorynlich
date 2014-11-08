@@ -359,7 +359,7 @@ uint8_t config_init(void);
 uint8_t config_save(void);
 uint8_t config_load(void);
 
-#include "player_stats.h"
+#include "thing_stats.h"
 
 struct config {
     int32_t video_pix_width;

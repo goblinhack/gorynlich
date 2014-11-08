@@ -856,37 +856,6 @@ static void client_poll (void)
                     }
                 }
 
-                if (player) {
-                    thing_statsp new_stats = &latest_status.player.stats;
-
-                    if (new_stats->weapon_carry_anim_id) {
-                        thingp item = thing_weapon_carry_anim(player);
-                        if (item) {
-                            item->dir = player->dir;
-                            item->owner_id = player->thing_id;
-                        }
-                    }
-
-                    if (new_stats->weapon_swing_anim_id) {
-                        thingp item = thing_weapon_swing_anim(player);
-                        if (item) {
-                            item->dir = player->dir;
-                            item->owner_id = player->thing_id;
-                        }
-                    }
-
-                    /*
-                     * If swinging a weapon now, hide the carried weapon 
-                     * until the swing is over.
-                     */
-                    if (new_stats->weapon_swing_anim_id) {
-                        thingp carry = thing_weapon_carry_anim(player);
-                        if (carry) {
-                            thing_hide(carry);
-                        }
-                    }
-                }
-
                 memcpy(&server_status, &latest_status, sizeof(server_status));
 
                 msg_player_state *p = &server_status.player;
@@ -899,6 +868,51 @@ static void client_poll (void)
                     memcpy(&player->stats, &p->stats, sizeof(thing_stats));
 
                     wid_game_map_client_score_update(client_level, redo);
+                }
+
+                if (player) {
+                    /*
+                     * If we're carrying a weapon now, update the direction.  
+                     * However if it is no longer a valid thing (perhaps the
+                     * weapon swing finished) then ignore this update for this
+                     * ID.
+                     */
+                    if (p->stats.weapon_carry_anim_id_latest) {
+                        if (thing_client_find(p->stats.weapon_carry_anim_id_latest)) {
+                            player->weapon_carry_anim_id =
+                                            p->stats.weapon_carry_anim_id_latest;
+                        }
+
+                        thingp item = thing_weapon_carry_anim(player);
+                        if (item) {
+                            item->dir = player->dir;
+                            item->owner_id = player->thing_id;
+                        }
+                    }
+
+                    if (p->stats.weapon_swing_anim_id_latest) {
+                        if (thing_client_find(p->stats.weapon_swing_anim_id_latest)) {
+                            player->weapon_swing_anim_id =
+                                            p->stats.weapon_swing_anim_id_latest;
+                        }
+
+                        thingp item = thing_weapon_swing_anim(player);
+                        if (item) {
+                            item->dir = player->dir;
+                            item->owner_id = player->thing_id;
+                        }
+                    }
+
+                    /*
+                     * If swinging a weapon now, hide the carried weapon 
+                     * until the swing is over.
+                     */
+                    if (player->weapon_swing_anim_id) {
+                        thingp carry = thing_weapon_carry_anim(player);
+                        if (carry) {
+                            thing_hide(carry);
+                        }
+                    }
                 }
 
                 break;

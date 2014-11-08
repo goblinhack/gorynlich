@@ -428,6 +428,9 @@ typedef struct thing_ {
      */
     thing_stats stats;
 
+    uint16_t weapon_carry_anim_id;
+    uint16_t weapon_swing_anim_id;
+
     /*
      * Pointer to common settings for this thing.
      */

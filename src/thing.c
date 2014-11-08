@@ -797,6 +797,8 @@ thingp thing_server_new (const char *name,
         }
     }
 
+    thing_wield_next_weapon(t);
+
     thing_server_init(t, x, y);
 
     if (t->on_server) {
@@ -1074,12 +1076,12 @@ static void thing_remove_hooks (thingp t)
             return;
         }
 
-        if (t->thing_id == owner->stats.weapon_carry_anim_id) {
-            owner->stats.weapon_carry_anim_id = 0;
+        if (t->thing_id == owner->weapon_carry_anim_id) {
+            owner->weapon_carry_anim_id = 0;
         }
 
-        if (t->thing_id == owner->stats.weapon_swing_anim_id) {
-            owner->stats.weapon_swing_anim_id = 0;
+        if (t->thing_id == owner->weapon_swing_anim_id) {
+            owner->weapon_swing_anim_id = 0;
 
             /*
              * End of the swing animation, make the sword visible again.
@@ -1108,17 +1110,17 @@ static void thing_remove_hooks (thingp t)
         /*
          * We own things like a sword. i.e. we are a player.
          */
-        if (t->stats.weapon_carry_anim_id) {
+        if (t->weapon_carry_anim_id) {
             thingp item = thing_weapon_carry_anim(t);
-            t->stats.weapon_carry_anim_id = 0;
+            t->weapon_carry_anim_id = 0;
             verify(item);
             item->owner_id = 0;
             thing_dead(item, 0, "weapon carry anim owner killed");
         }
 
-        if (t->stats.weapon_swing_anim_id) {
+        if (t->weapon_swing_anim_id) {
             thingp item = thing_weapon_swing_anim(t);
-            t->stats.weapon_swing_anim_id = 0;
+            t->weapon_swing_anim_id = 0;
             verify(item);
             item->owner_id = 0;
             thing_dead(item, 0, "weapon swing anim owner killed");
@@ -3830,10 +3832,8 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             thing_visible(t);
         }
 
-LOG("rx ID %d",id);
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
 //LOG("rx %s dead",thing_logname(t));
-LOG("rx ID %d dead",id);
             thing_dead(t, 0, "server killed");
         }
     }

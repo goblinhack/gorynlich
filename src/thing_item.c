@@ -6,7 +6,7 @@
 
 #include "main.h"
 #include "thing.h"
-#include "player_stats.h"
+#include "thing_stats.h"
 
 static void thing_collect (thingp t, 
                            thingp it, 
