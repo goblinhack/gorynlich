@@ -3,6 +3,4 @@ Gorynlich is a top-down dungeon romp with single and multiplayer options.
 
 Should work on windows/linux/macos. Uses SDL. Code is pure C.
 
-<code>
-echo "Just run ./RUNME to build. That's it."
-</code>
+Just run ./RUNME to build. That's it.
