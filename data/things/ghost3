@@ -6,7 +6,7 @@
  max_hp=1
  damage=6
  polymorph_on_death="data/things/ghost2"
- bonus_score_on_death=25
+ bonus_xp_on_death=25
  vision_distance=20
  hit_delay_tenths=5
  is_monst

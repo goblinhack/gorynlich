@@ -460,8 +460,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_UINT16(ctx, "damage", t->damage);
         GET_OPT_NAMED_UINT16(ctx, "lifespan", t->lifespan);
         GET_OPT_NAMED_UINT8(ctx, "vision_distance", t->vision_distance);
-        GET_OPT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
-        GET_OPT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
+        GET_OPT_NAMED_INT32(ctx, "bonus_xp_on_death", t->bonus_xp_on_death);
+        GET_OPT_NAMED_INT32(ctx, "bonus_cash_on_collect", t->bonus_cash_on_collect);
         GET_OPT_NAMED_INT16(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
         GET_OPT_NAMED_INT16(ctx, "bonus_id_on_use", t->bonus_id_on_use);
         GET_OPT_NAMED_UINT32(ctx, "d10000_chance_of_appearing", t->d10000_chance_of_appearing);
@@ -657,9 +657,9 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "speed", t->speed);
     PUT_NAMED_INT32(ctx, "damage", t->damage);
     PUT_NAMED_INT32(ctx, "lifespan", t->lifespan);
-    PUT_NAMED_INT32(ctx, "bonus_score_on_death", t->bonus_score_on_death);
+    PUT_NAMED_INT32(ctx, "bonus_xp_on_death", t->bonus_xp_on_death);
     PUT_NAMED_INT32(ctx, "vision_distance", t->vision_distance);
-    PUT_NAMED_INT32(ctx, "bonus_score_on_collect", t->bonus_score_on_collect);
+    PUT_NAMED_INT32(ctx, "bonus_cash_on_collect", t->bonus_cash_on_collect);
     PUT_NAMED_INT32(ctx, "d10000_chance_of_appearing", t->d10000_chance_of_appearing);
     PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
     PUT_NAMED_INT32(ctx, "max_hp", t->stats.max_hp);
@@ -856,9 +856,9 @@ uint32_t tp_get_lifespan (tpp t)
     return (t->lifespan);
 }
 
-int32_t tp_get_bonus_score_on_death (tpp t)
+int32_t tp_get_bonus_xp_on_death (tpp t)
 {
-    return (t->bonus_score_on_death);
+    return (t->bonus_xp_on_death);
 }
 
 uint32_t tp_get_vision_distance (tpp t)
@@ -866,9 +866,9 @@ uint32_t tp_get_vision_distance (tpp t)
     return (t->vision_distance);
 }
 
-int32_t tp_get_bonus_score_on_collect (tpp t)
+int32_t tp_get_bonus_cash_on_collect (tpp t)
 {
-    return (t->bonus_score_on_collect);
+    return (t->bonus_cash_on_collect);
 }
 
 uint32_t tp_get_d10000_chance_of_appearing (tpp t)
@@ -919,6 +919,11 @@ uint32_t tp_get_stats_vision (tpp t)
 uint32_t tp_get_stats_healing (tpp t)
 {
     return (t->stats.healing);
+}
+
+uint32_t tp_get_stats_cash (tpp t)
+{
+    return (t->stats.cash);
 }
 
 uint32_t tp_get_stats_defense (tpp t)

@@ -8,7 +8,7 @@
  speed=2
  max_hp=200
  damage=8
- bonus_score_on_death=1000
+ bonus_xp_on_death=1000
  vision_distance=60
  hit_delay_tenths=1
  is_monst

@@ -2640,7 +2640,7 @@ void map_jigsaw_generate (widp wid)
             }
 
             case 'M': 
-                if ((rand() % 100) < 20) {
+                if ((rand() % 100) < 90) {
                     tp = tp_find("data/things/bonepile3");
                 }
                 break;
