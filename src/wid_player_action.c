@@ -252,6 +252,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_square(w);
         wid_set_text(w, "Health");
         wid_set_text_bot(w, true);
+        wid_set_text_outline(w, true);
         wid_set_font(w, small_font);
     }
 
@@ -275,6 +276,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_square(w);
         wid_set_text(w, "ID");
         wid_set_text_bot(w, true);
+        wid_set_text_outline(w, true);
         wid_set_font(w, small_font);
     }
 

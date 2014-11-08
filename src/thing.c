@@ -1399,7 +1399,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         /*
          * Bounty for the killer?
          */
-        uint32_t score = tp_get_bonus_score_on_death(
+        uint32_t score = tp_get_bonus_xp_on_death(
                                                 thing_tp(t));
         if (score && killer) {
             thingp recipient = killer;
@@ -2247,58 +2247,6 @@ void thing_set_score (thingp t, uint32_t score)
     if (thing_is_player(t)) {
         t->needs_tx_player_update = true;
     }
-}
-
-widp thing_message (thingp t, const char *message)
-{
-    verify(t);
-
-    if (!thing_is_player(t)) {
-        return (0);
-    }
-    
-    if (!t->wid) {
-        return (0);
-    }
-
-    widp w = wid_textbox(wid_game_map_client_window,
-                         &wid_score, message, 0.5, 0.03, med_font);
-
-    wid_set_no_shape(w);
-    wid_set_color(wid_score, WID_COLOR_TEXT, YELLOW);
-
-    /*
-     * Move the text over the thing.
-     */
-    double mx, my;
-    wid_get_mxy(t->wid, &mx, &my);
-
-    uint32_t lifespan = ONESEC * 3;
-
-    /*
-     * Fade out.
-     */
-    wid_fade_out(w, lifespan);
-
-    /*
-     * Self destroy.
-     */
-    wid_destroy_in(w, lifespan / 4);
-
-    /*
-     * Float up from the thing.
-     */
-    double floater = global_config.video_gl_height / TILES_SCREEN_HEIGHT;
-
-    wid_move_to_abs_centered(w, mx, my - floater / 2.0);
-    wid_move_to_abs_centered_in(w, mx, my - floater * 1.5, lifespan);
-
-    /*
-     * And stay in front.
-     */
-    wid_set_z_depth(w, 100);
-
-    return (wid_score);
 }
 
 tree_rootp thing_tile_tiles (thingp t)

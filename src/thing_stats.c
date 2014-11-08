@@ -668,6 +668,11 @@ void thing_stats_get_random (thing_stats *player_stats)
     player_stats->healing = gaussrand(player_stats->healing, 2);
 
     /*
+     * cash
+     */
+    player_stats->cash = tp_get_stats_cash(tp);
+
+    /*
      * hp
      */
     player_stats->hp = tp_get_stats_max_hp(tp);
@@ -687,6 +692,7 @@ void thing_stats_get_random (thing_stats *player_stats)
     LOG(" %20s %s", "Class", player_stats->pclass);
     LOG(" %20s %d", "Points", player_stats->spending_points);
     LOG(" %20s %d", "Hp", player_stats->hp);
+    LOG(" %20s %d", "Cash", player_stats->cash);
     LOG(" %20s %d", "Max Hp", player_stats->max_hp);
     LOG(" %20s %d", "ID", player_stats->id);
     LOG(" %20s %d", "Max ID", player_stats->max_id);

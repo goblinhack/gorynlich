@@ -37,9 +37,9 @@ static widp wid_game_map_client_vert_scroll;
 widp wid_scoreline_container_top;
 widp wid_scoreline_container_bot;
 widp wid_score;
-widp wid_health;
+widp wid_cash;
 widp wid_score_title;
-widp wid_health_title;
+widp wid_cash_title;
 widp wid_name_title;
 widp wid_title;
 widp wid_level;
@@ -708,12 +708,12 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_set_color(wid_scoreline_container_top, WID_COLOR_BR, BLACK);
     }
 
-    double score_x = 0.76;
-    double health_x = 0.91;
-    double player_y_offset = 0.24; // player start y
+    double score_x = 0.84;
+    double cash_x = 0.94;
+    double player_y_offset = 0.14; // player start y
     double next_player_y_delta = 0.1;
-    double score_and_health_title_offset = 0.03;
-    double score_and_health_value_offset = 0.055;
+    double score_and_cash_title_offset = 0.025;
+    double score_and_cash_value_offset = 0.055;
 
     /*
      * Print the score.
@@ -725,15 +725,15 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
          * Score
          */
         char tmp[20];
-        snprintf(tmp, sizeof(tmp), "%06u", p->stats.score);
+        snprintf(tmp, sizeof(tmp), "%05u", p->stats.score);
 
         static widp wid_score_container;
 
         if (!update) {
             wid_set_no_shape(
-                wid_textbox_fixed_width(wid_scoreline_container_top,
-                                        &wid_score, tmp,
-                                        score_x, player_y_offset, small_font));
+                wid_textbox(wid_scoreline_container_top,
+                            &wid_score, tmp,
+                            score_x, player_y_offset, small_font));
 
             wid_score_container = wid_score;
         } else {
@@ -741,21 +741,21 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         }
 
         /*
-         * Health
+         * cash
          */
-        snprintf(tmp, sizeof(tmp), "%06u", p->stats.hp);
+        snprintf(tmp, sizeof(tmp), "%05u", p->stats.cash);
 
-        static widp wid_health_container;
+        static widp wid_cash_container;
 
         if (!update) {
             wid_set_no_shape(
-                wid_textbox_fixed_width(wid_scoreline_container_top,
-                                        &wid_health, tmp,
-                                        health_x, player_y_offset, small_font));
+                wid_textbox(wid_scoreline_container_top,
+                            &wid_cash, tmp,
+                            cash_x, player_y_offset, small_font));
 
-            wid_health_container = wid_health;
+            wid_cash_container = wid_cash;
         } else {
-            wid_set_text(wid_health_container, tmp);
+            wid_set_text(wid_cash_container, tmp);
         }
 
         if (update) {
@@ -770,28 +770,28 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
          */
         widp wid_score_title_container;
 
-        wid_score_title_container = wid_textbox_fixed_width(
+        wid_score_title_container = wid_textbox(
                                     wid_scoreline_container_top,
                                     &wid_score_title,
-                                    "SCORE", 
-                                    score_x, player_y_offset - score_and_health_title_offset,
+                                    "XP", 
+                                    score_x, player_y_offset - score_and_cash_title_offset,
                                     small_font);
 
         wid_set_no_shape(wid_score_title_container);
 
         /*
-         * Health title
+         * cash title
          */
-        widp wid_health_title_container;
+        widp wid_cash_title_container;
 
-        wid_health_title_container = wid_textbox_fixed_width(
+        wid_cash_title_container = wid_textbox(
                                     wid_scoreline_container_top,
-                                    &wid_health_title,
-                                    "HEALTH",  
-                                    health_x, player_y_offset - score_and_health_title_offset,
+                                    &wid_cash_title,
+                                    "$$$",  
+                                    cash_x, player_y_offset - score_and_cash_title_offset,
                                     small_font);
 
-        wid_set_no_shape(wid_health_title_container);
+        wid_set_no_shape(wid_cash_title_container);
 
         /*
          * Score title
@@ -809,12 +809,12 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             name_title = 0;
         }
 
-        wid_name_title_container = wid_textbox_fixed_width(
+        wid_name_title_container = wid_textbox(
                                     wid_scoreline_container_top,
                                     &wid_name_title,
                                     name_title ? name_title : "No player",
-                                    (score_x + health_x) / 2,
-                                    player_y_offset - score_and_health_value_offset,
+                                    (score_x + cash_x) / 2,
+                                    player_y_offset - score_and_cash_value_offset,
                                     small_font);
         if (name_title) {
             myfree(name_title);
@@ -823,15 +823,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_set_no_shape(wid_name_title_container);
 
         wid_set_color(wid_score, WID_COLOR_TEXT, RED);
-        wid_set_color(wid_health, WID_COLOR_TEXT, RED);
+        wid_set_color(wid_cash, WID_COLOR_TEXT, GOLD);
         wid_set_color(wid_score_title, WID_COLOR_TEXT, RED);
-        wid_set_color(wid_health_title, WID_COLOR_TEXT, RED);
-
-        wid_set_color(wid_score, WID_COLOR_TEXT, c);
-        wid_set_color(wid_health, WID_COLOR_TEXT, c);
-        wid_set_color(wid_score_title, WID_COLOR_TEXT, c);
-        wid_set_color(wid_health_title, WID_COLOR_TEXT, c);
-        wid_set_color(wid_name_title, WID_COLOR_TEXT, c);
+        wid_set_color(wid_cash_title, WID_COLOR_TEXT, GOLD);
 
         player_y_offset += next_player_y_delta;
 
@@ -873,7 +867,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,
                                             &wid_level,
-                                            tmp, score_x, 0.15, small_font);
+                                            tmp, 
+                                            (score_x + cash_x) / 2.0, 0.05, small_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);

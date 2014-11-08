@@ -52,6 +52,7 @@ typedef struct thing_stats_ {
     uint16_t weapon_carry_anim_id_latest;
     uint16_t weapon_swing_anim_id_latest;
 
+    int16_t cash;
     int16_t hp;
     int16_t max_hp;
     int16_t id;
