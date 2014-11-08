@@ -56,7 +56,7 @@ static void thing_collect (thingp t,
              * Bonus for collecting?
              */
             thing_set_score(t, thing_score(t) +
-                            tp_get_bonus_score_on_collect(tp) *
+                            tp_get_bonus_cash_on_collect(tp) *
                             it->item.quantity);
             return;
         }
@@ -71,7 +71,7 @@ static void thing_collect (thingp t,
          * Bonus for collecting?
          */
         thing_set_score(t, thing_score(t) +
-                        tp_get_bonus_score_on_collect(tp) *
+                        tp_get_bonus_cash_on_collect(tp) *
                         it->item.quantity);
     }
 

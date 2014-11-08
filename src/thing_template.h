@@ -161,8 +161,9 @@ typedef struct tp_ {
     /*
      * Various bounties.
      */
-    int32_t bonus_score_on_death;
-    int32_t bonus_score_on_collect;
+    int32_t bonus_xp_on_death;
+    int32_t bonus_cash_on_collect;
+    int16_t bonus_cash_on_use;
     int16_t bonus_hp_on_use;
     int16_t bonus_id_on_use;
 
@@ -291,9 +292,9 @@ uint8_t tp_get_z_order(tpp);
 uint32_t tp_get_speed(tpp);
 uint32_t tp_get_lifespan(tpp);
 uint16_t tp_get_damage(tpp);
-int32_t tp_get_bonus_score_on_death(tpp);
+int32_t tp_get_bonus_xp_on_death(tpp);
 uint32_t tp_get_vision_distance(tpp);
-int32_t tp_get_bonus_score_on_collect(tpp);
+int32_t tp_get_bonus_cash_on_collect(tpp);
 
 uint32_t tp_get_stats_attack_melee(tpp);
 uint32_t tp_get_stats_attack_ranged(tpp);
@@ -301,6 +302,7 @@ uint32_t tp_get_stats_attack_magical(tpp);
 uint32_t tp_get_stats_speed(tpp);
 uint32_t tp_get_stats_vision(tpp);
 uint32_t tp_get_stats_healing(tpp);
+uint32_t tp_get_stats_cash(tpp);
 uint32_t tp_get_stats_defense(tpp);
 
 uint32_t tp_get_d10000_chance_of_appearing(tpp);

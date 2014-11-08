@@ -62,7 +62,6 @@ tree_rootp thing_tile_tiles(thingp);
 tree_rootp thing_tile_tiles2(thingp);
 uint32_t thing_score(thingp);
 void thing_set_score(thingp, uint32_t score);
-widp thing_message(thingp t, const char *message);
 void thing_animate(thingp);
 void thing_handle_collisions(widp grid, thingp t);
 uint8_t thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
@@ -1486,6 +1485,14 @@ static inline uint8_t thing_is_effect_rotate_4way_noverify (thingp t)
 static inline uint8_t thing_is_effect_rotate_2way_noverify (thingp t)
 {
     return (t->tp->is_effect_rotate_2way);
+}
+
+static inline int32_t thing_get_stats_cash (thingp t)
+{
+    uint32_t val;
+
+    val = t->stats.cash;
+    return (val);
 }
 
 static inline int32_t thing_get_stats_hp (thingp t)

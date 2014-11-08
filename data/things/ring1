@@ -11,7 +11,6 @@
  is_ring
  can_be_enchanted
  is_hand_item
- bonus_score_on_collect=5000
  tiles={
   tile={
    tile="ring2"

@@ -13,11 +13,11 @@
 const char *pclass_random (void)
 {
     static const char *classes[] = {
-        "wizard",
-        "dwarf",
-        "warrior",
-        "valkyrie",
-        "elf",
+        "Wizard",
+        "Dwarf",
+        "Warrior",
+        "Valkyrie",
+        "Elf",
     };
 
     return (classes[rand() % ARRAY_SIZE(classes)]);

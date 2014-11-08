@@ -98,10 +98,12 @@ void wid_player_inventory_button_style (widp w,
 
     tpp tp = id_to_tp(item.id);
 
-    tpp weapon = thing_weapon(player);
-    if (player && weapon && (tp == weapon)) {
-        wid_set_color(w, WID_COLOR_TL, RED);
-        wid_set_color(w, WID_COLOR_BR, RED);
+    if (player) {
+        tpp weapon = thing_weapon(player);
+        if (weapon && (tp == weapon)) {
+            wid_set_color(w, WID_COLOR_TL, RED);
+            wid_set_color(w, WID_COLOR_BR, RED);
+        }
     }
 
     wid_set_thing_template(w, tp);
