@@ -58,11 +58,8 @@ wid_player_action_button_style_mouse_down (widp w,
                                            int32_t x, int32_t y,
                                            uint32_t button)
 {
-    tpp tp;
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
     itemp over_item = &player_stats->action_bar[id];
-
-    tp = wid_get_thing_template(w);
 
     if (!wid_mouse_template) {
         wid_player_item_pick_up(w, over_item);
