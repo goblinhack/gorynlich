@@ -162,7 +162,6 @@ void ttf_text_size (font *f, const char *text_in,
     uint8_t found_format_string = false;
     int32_t c;
     texp tex;
-    tilep tile;
     int32_t x_start = 0;
     int32_t x;
     enum_fmt _fmt;
@@ -211,7 +210,6 @@ void ttf_text_size (font *f, const char *text_in,
 		    continue;
 		} else if (!strncmp(text, "tile=", 5)) {
 		    text += 5;
-                    tile = string2tile(&text);
 		    found_format_string = false;
 
                     x += f->glyphs['a'].width * scaling * advance;
