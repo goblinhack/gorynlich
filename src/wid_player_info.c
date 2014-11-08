@@ -12,6 +12,7 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_stats.h"
+#include "thing_stats.h"
 #include "string.h"
 #include "thing_template.h"
 #include "time.h"
@@ -296,8 +297,7 @@ static void wid_player_info_create (thing_statsp s)
 
         wid_set_no_shape(w);
 
-        tpp tp = 
-                        player_stats_to_tp(player_stats);
+        tpp tp = thing_stats_to_tp(player_stats);
 
         const char *tooltip = tp_get_tooltip(tp);
 

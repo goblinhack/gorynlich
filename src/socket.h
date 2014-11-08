@@ -11,7 +11,7 @@
 #include "tree.h"
 
 #include "player.h"
-#include "player_stats.h"
+#include "thing_stats.h"
 
 typedef enum {
     MSG_PING,

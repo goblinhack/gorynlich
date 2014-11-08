@@ -2,7 +2,7 @@
  short_name="Mighty phantom"
  tooltip="Greater phantom"
  z_depth=3
- speed=1
+ speed=3
  max_hp=1
  damage=6
  polymorph_on_death="data/things/ghost2"

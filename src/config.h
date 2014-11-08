@@ -25,8 +25,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -235,7 +235,7 @@
  */
 #define DELAY_TENTHS_THING_AI                   2
 #define DELAY_TENTHS_THING_COLLISION_TEST       1
-#define DELAY_TENTHS_PING                       2
+#define DELAY_TENTHS_PING                       1
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
 #define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     5
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST    50
