@@ -722,10 +722,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         msg_player_state *p = client_get_player();
 
         /*
-         * Score
+         * Experience
          */
         char tmp[20];
-        snprintf(tmp, sizeof(tmp), "%05u", p->stats.score);
+        snprintf(tmp, sizeof(tmp), "%05u", p->stats.xp);
 
         static widp wid_score_container;
 
@@ -738,6 +738,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             wid_score_container = wid_score;
         } else {
             wid_set_text(wid_score_container, tmp);
+            wid_set_text_outline(wid_score_container, true);
         }
 
         /*
@@ -756,6 +757,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             wid_cash_container = wid_cash;
         } else {
             wid_set_text(wid_cash_container, tmp);
+            wid_set_text_outline(wid_cash_container, true);
         }
 
         if (update) {

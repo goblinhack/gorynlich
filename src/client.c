@@ -825,7 +825,6 @@ static void client_poll (void)
                 }
 
                 if (server_status.level_no != latest_status.level_no) {
-
                     LOG("Client: Level no %u", latest_status.level_no);
                     redo = true;
                 }
@@ -858,29 +857,52 @@ static void client_poll (void)
 
                 memcpy(&server_status, &latest_status, sizeof(server_status));
 
-                msg_player_state *p = &server_status.player;
-                if (player &&
-                    memcmp(&player->stats, &p->stats, sizeof(thing_stats))) {
-
-                    /*
-                     * If the stats change, update the inventory
-                     */
-                    memcpy(&player->stats, &p->stats, sizeof(thing_stats));
-
-                    wid_game_map_client_score_update(client_level, redo);
-                }
+                msg_player_state *server_stats = &server_status.player;
+                thing_statsp new_stats = &server_stats->stats;
+                thing_statsp old_stats = &player->stats;
 
                 if (player) {
+                    thing_stats changed_stats;
+
+                    /*
+                     * Some fields we don't care too much if they change.
+                     */
+                    memcpy(&changed_stats, new_stats, sizeof(changed_stats));
+                    changed_stats.thing_id = 
+                                    old_stats->thing_id;
+                    changed_stats.weapon_carry_anim_id_latest = 
+                                    old_stats->weapon_carry_anim_id_latest;
+                    changed_stats.weapon_swing_anim_id_latest = 
+                                    old_stats->weapon_swing_anim_id_latest;
+                    new_stats = &changed_stats;
+
+                    /*
+                     * Now see what really changed and if we need to update 
+                     * scores.
+                     */
+                    if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
+
+                        /*
+                         * If the stats change, update the inventory
+                         */
+                        memcpy(old_stats, new_stats, sizeof(thing_stats));
+
+                        wid_game_map_client_score_update(client_level, redo);
+                    }
+
+                    new_stats = &server_stats->stats;
+                    memcpy(old_stats, new_stats, sizeof(thing_stats));
+
                     /*
                      * If we're carrying a weapon now, update the direction.  
                      * However if it is no longer a valid thing (perhaps the
                      * weapon swing finished) then ignore this update for this
                      * ID.
                      */
-                    if (p->stats.weapon_carry_anim_id_latest) {
-                        if (thing_client_find(p->stats.weapon_carry_anim_id_latest)) {
+                    if (new_stats->weapon_carry_anim_id_latest) {
+                        if (thing_client_find(new_stats->weapon_carry_anim_id_latest)) {
                             player->weapon_carry_anim_id =
-                                            p->stats.weapon_carry_anim_id_latest;
+                                            new_stats->weapon_carry_anim_id_latest;
                         }
 
                         thingp item = thing_weapon_carry_anim(player);
@@ -890,10 +912,10 @@ static void client_poll (void)
                         }
                     }
 
-                    if (p->stats.weapon_swing_anim_id_latest) {
-                        if (thing_client_find(p->stats.weapon_swing_anim_id_latest)) {
+                    if (new_stats->weapon_swing_anim_id_latest) {
+                        if (thing_client_find(new_stats->weapon_swing_anim_id_latest)) {
                             player->weapon_swing_anim_id =
-                                            p->stats.weapon_swing_anim_id_latest;
+                                            new_stats->weapon_swing_anim_id_latest;
                         }
 
                         thingp item = thing_weapon_swing_anim(player);

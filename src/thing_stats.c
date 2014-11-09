@@ -696,7 +696,7 @@ void thing_stats_get_random (thing_stats *player_stats)
     LOG(" %20s %d", "Max Hp", player_stats->max_hp);
     LOG(" %20s %d", "ID", player_stats->id);
     LOG(" %20s %d", "Max ID", player_stats->max_id);
-    LOG(" %20s %d", "Experience", player_stats->experience);
+    LOG(" %20s %d", "Experience", player_stats->xp);
     LOG(" %20s %d", "Spending Points", player_stats->spending_points);
     LOG(" %20s %d", "Attack Melee", player_stats->attack_melee);
     LOG(" %20s %d", "Attack Ranged", player_stats->attack_ranged);

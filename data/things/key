@@ -5,6 +5,7 @@
  is_key
  is_stackable
  is_carryable
+ is_valid_for_action_bar
  is_given_randomly_at_start
  tiles={
   tile={
