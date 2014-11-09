@@ -1541,7 +1541,7 @@ static inline uint32_t thing_get_stats_experience (thingp t)
 {
     uint32_t val;
 
-    val = t->stats.experience;
+    val = t->stats.xp;
     return (val);
 }
 

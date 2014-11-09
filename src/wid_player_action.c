@@ -280,6 +280,33 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_font(w, small_font);
     }
 
+    if (player) {
+        widp w =
+            wid_new_container(wid_player_action, 
+                              "wid player_stats container");
+
+        fpoint tl = {0.55, 0.2};
+        fpoint br = {0.65, 1.0};
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_tex(w, 0, "squiggles");
+        wid_raise(w);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, WHITE);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
+        wid_set_square(w);
+        wid_set_text_bot(w, true);
+        wid_set_text_outline(w, true);
+        wid_set_font(w, small_font);
+
+        char tmp[40];
+        snprintf(tmp, sizeof(tmp) - 1, "%d", s->id);
+        wid_set_text(w, tmp);
+    }
+
     widp wid_item_bar;
 
     {
@@ -311,7 +338,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         double y;
         double max_down = 1.0;
-        double border_top = 0.06;
+        double border_top = 0.01;
         double border_bottom = 0.25;
         double dy = (1.0 - (border_top + border_bottom)) / max_down;
 

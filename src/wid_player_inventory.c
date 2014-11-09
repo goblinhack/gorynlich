@@ -103,6 +103,7 @@ void wid_player_inventory_button_style (widp w,
         if (weapon && (tp == weapon)) {
             wid_set_color(w, WID_COLOR_TL, RED);
             wid_set_color(w, WID_COLOR_BR, RED);
+            wid_set_rounded_small(w);
         }
     }
 

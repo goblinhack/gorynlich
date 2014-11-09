@@ -455,11 +455,11 @@ static void wid_player_stats_create (thing_statsp s)
 
             switch (i) {
             case STAT_EXPERIENCE:
-                stat = s->experience;
+                stat = s->xp;
                 text = dynprintf("%u", stat);
                 break;
             case STAT_LEVEL:
-                stat = s->experience / 1000;
+                stat = s->xp / 1000;
                 text = dynprintf("%u", stat);
                 break;
             case STAT_SPENDING_POINTS:

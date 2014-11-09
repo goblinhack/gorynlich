@@ -44,22 +44,18 @@ int item_push(itemp dst, item_t src);
 int item_pop(itemp dst, itemp popped);
 
 typedef struct thing_stats_ {
-    char pname[SMALL_STRING_LEN_MAX];
-    char pclass[SMALL_STRING_LEN_MAX];
-
     uint16_t thing_id;
-
     uint16_t weapon_carry_anim_id_latest;
     uint16_t weapon_swing_anim_id_latest;
 
-    int16_t cash;
     int16_t hp;
     int16_t max_hp;
     int16_t id;
     int16_t max_id;
 
-    uint32_t experience;
-    uint32_t score;
+    uint32_t xp;
+    uint32_t cash;
+
     uint8_t spending_points;
     uint8_t attack_melee;
     uint8_t attack_ranged;
@@ -68,6 +64,7 @@ typedef struct thing_stats_ {
     uint8_t speed;
     uint8_t vision;
     uint8_t healing;
+    uint8_t weapon;
 
     /*
      * What we are carrying and where.
@@ -75,7 +72,9 @@ typedef struct thing_stats_ {
     item_t inventory[THING_INVENTORY_MAX];
     item_t action_bar[THING_ACTION_BAR_MAX];
     item_t worn[THING_WORN_MAX];
-    uint8_t weapon;
+
+    char pname[SMALL_STRING_LEN_MAX];
+    char pclass[SMALL_STRING_LEN_MAX];
 
 } __attribute__ ((packed)) thing_stats;
 

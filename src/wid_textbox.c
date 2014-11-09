@@ -164,7 +164,7 @@ static widp wid_textbox_internal (widp parent,
             wid_set_text_fixed_width(child, fixed_width);
             wid_set_text(child, n->line);
             wid_set_font(child, font);
-            wid_set_text_outline(child, false);
+            wid_set_text_outline(child, true);
             wid_set_no_shape(child);
 
             if (!firstchild) {
