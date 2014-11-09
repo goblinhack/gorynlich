@@ -308,7 +308,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
             size = 1024;
 
             snprintf_realloc(&tmp, &size, &used, 
-                             "%%%%fmt=left$   Name            Score\n");
+                             "%%%%fmt=left$   Name              XP\n");
             snprintf_realloc(&tmp, &size, &used, 
                              "%%%%fmt=left$   ----           -------\n");
 
@@ -321,7 +321,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
                                 "%%%%fmt=left$[%d] %-10s %07d\n",
                                 idx++,
                                 p->stats.pname,
-                                p->stats.score);
+                                p->stats.xp);
             }
 
             snprintf_realloc(&tmp, &size, &used, "\n");

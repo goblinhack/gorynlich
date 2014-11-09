@@ -270,7 +270,7 @@ static void wid_console_wid_create (void)
             wid_set_tl_br_pct(child, tl, br);
             wid_set_text_lhs(child, true);
             wid_set_text_bot(child, true);
-            wid_set_text_fixed_width(child, true);
+            wid_set_text_fixed_width(child, false);
             wid_set_font(child, font);
 
             wid_set_prev(child, prev);
@@ -288,7 +288,7 @@ static void wid_console_wid_create (void)
                 wid_set_tl_br_pct(prefix, tl, br);
                 wid_set_text_lhs(prefix, true);
                 wid_set_text_bot(prefix, true);
-                wid_set_text_fixed_width(prefix, true);
+                wid_set_text_fixed_width(prefix, false);
                 wid_set_font(prefix, font);
                 wid_set_text(prefix, ">");
 
