@@ -162,25 +162,25 @@ void thing_used (thingp t, tpp tp)
     /*
      * id modifications.
      */
-    int bonus_id = tp_get_bonus_id_on_use(tp);
+    int bonus_magic = tp_get_bonus_magic_on_use(tp);
     if (item->cursed) {
         THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d of ID",
                        tp_short_name(tp), bonus_hp);
 
-        bonus_id = -bonus_id;
+        bonus_magic = -bonus_magic;
     }
-    t->stats.id += bonus_id;
+    t->stats.magic += bonus_magic;
 
     /*
      * Need to allow magic items to override this.
      */
-    if (thing_get_stats_id(t) > thing_get_stats_max_id(t)) {
+    if (thing_get_stats_magic(t) > thing_get_stats_max_magic(t)) {
         if (tp_is_magical(tp)) {
             /*
              * Allow temorary over max.
              */
         } else {
-            t->stats.id = thing_get_stats_max_id(t);
+            t->stats.magic = thing_get_stats_max_magic(t);
         }
     }
 

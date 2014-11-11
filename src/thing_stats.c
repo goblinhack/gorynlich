@@ -683,10 +683,10 @@ void thing_stats_get_random (thing_stats *player_stats)
     /*
      * id
      */
-    player_stats->id = tp_get_stats_max_id(tp);
-    player_stats->max_id = 
-        player_stats->id = gaussrand(player_stats->id,
-                                     player_stats->id / 10);
+    player_stats->magic = tp_get_stats_max_magic(tp);
+    player_stats->max_magic = 
+        player_stats->magic = gaussrand(player_stats->magic,
+                                     player_stats->magic / 10);
 
     LOG(" %20s %s", "Name", player_stats->pname);
     LOG(" %20s %s", "Class", player_stats->pclass);
@@ -694,8 +694,8 @@ void thing_stats_get_random (thing_stats *player_stats)
     LOG(" %20s %d", "Hp", player_stats->hp);
     LOG(" %20s %d", "Cash", player_stats->cash);
     LOG(" %20s %d", "Max Hp", player_stats->max_hp);
-    LOG(" %20s %d", "ID", player_stats->id);
-    LOG(" %20s %d", "Max ID", player_stats->max_id);
+    LOG(" %20s %d", "Magic", player_stats->magic);
+    LOG(" %20s %d", "Max Magic", player_stats->max_magic);
     LOG(" %20s %d", "Experience", player_stats->xp);
     LOG(" %20s %d", "Spending Points", player_stats->spending_points);
     LOG(" %20s %d", "Attack Melee", player_stats->attack_melee);

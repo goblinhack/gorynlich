@@ -255,11 +255,11 @@ void wid_player_inventory_button_style (widp w,
         /*
          * ID bonus
          */
-        if (tp_get_bonus_id_on_use(tp)) {
+        if (tp_get_bonus_magic_on_use(tp)) {
             char *tmp2 = dynprintf(
                             "%%%%fmt=left$"
                             "ID gain on use\t\t%d\n", 
-                            tp_get_bonus_id_on_use(tp));
+                            tp_get_bonus_magic_on_use(tp));
 
             char *old = tmp;
             tmp = strappend(old, tmp2);

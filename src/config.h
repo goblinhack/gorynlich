@@ -54,7 +54,7 @@
 /*
  * Retro text
  */
-#define ENABLE_BIG_RETRO_TEXT_OUTLINE
+#define ENABLE_LARGE_TEXT_OUTLINE
 
 /*
  * Tooltip appears above mouse. I prefer it to zoom into the top
@@ -69,7 +69,7 @@
 /*
  * So we don't hog all the CPU
  */
-#define MAIN_LOOP_DELAY            2
+#define MAIN_LOOP_DELAY             2
 
 /*
  * Frames per sec counter.
@@ -170,7 +170,6 @@
 #define VLARGE_FONT_SIZE            20
 #define LARGE_FONT_SIZE             28
 
-
 /*
  * Messages.
  */
@@ -231,12 +230,22 @@
 #define THING_MAX_SERVER_DISCREPANCY 3.0
 
 /*
+ * When things are moving on the client, we need to move them a bit slower
+ * to allow for a possibility that the next move update will be delayed.
+ * We will catch up if this is the case, but if this is too slow then the
+ * thing moves on the client will appear jerky as they reach their destination 
+ * and then wait for their next move.
+ */
+#define THING_MOVE_NETWORK_LATENCY_FUDGE  1.5
+
+/*
  * Timers
  */
 #define DELAY_TENTHS_THING_AI                   2
 #define DELAY_TENTHS_THING_COLLISION_TEST       1
 #define DELAY_TENTHS_PING                       1
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
+
 #define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     5
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST    50
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW    200

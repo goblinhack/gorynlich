@@ -463,7 +463,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_INT32(ctx, "bonus_xp_on_death", t->bonus_xp_on_death);
         GET_OPT_NAMED_INT32(ctx, "bonus_cash_on_collect", t->bonus_cash_on_collect);
         GET_OPT_NAMED_INT16(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
-        GET_OPT_NAMED_INT16(ctx, "bonus_id_on_use", t->bonus_id_on_use);
+        GET_OPT_NAMED_INT16(ctx, "bonus_magic_on_use", t->bonus_magic_on_use);
         GET_OPT_NAMED_UINT32(ctx, "d10000_chance_of_appearing", t->d10000_chance_of_appearing);
         GET_OPT_NAMED_UINT32(ctx, "ppp2", t->ppp2);
 
@@ -474,8 +474,8 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
             t->stats.max_hp = tmp_int16;
         }
 
-        if (GET_OPT_NAMED_INT16(ctx, "max_id", tmp_int16)) {
-            t->stats.max_id = tmp_int16;
+        if (GET_OPT_NAMED_INT16(ctx, "max_magic", tmp_int16)) {
+            t->stats.max_magic = tmp_int16;
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_melee", tmp_uint32)) {
@@ -663,7 +663,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "d10000_chance_of_appearing", t->d10000_chance_of_appearing);
     PUT_NAMED_INT32(ctx, "ppp2", t->ppp2);
     PUT_NAMED_INT32(ctx, "max_hp", t->stats.max_hp);
-    PUT_NAMED_INT32(ctx, "max_id", t->stats.max_id);
+    PUT_NAMED_INT32(ctx, "max_magic", t->stats.max_magic);
     PUT_NAMED_INT32(ctx, "stats_attack_melee", t->stats.attack_melee);
     PUT_NAMED_INT32(ctx, "stats_attack_ranged", t->stats.attack_ranged);
     PUT_NAMED_INT32(ctx, "stats_attack_magical", t->stats.attack_magical);
@@ -679,7 +679,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_INT32(ctx, "weapon_fire_delay_tenths", t->weapon_fire_delay_tenths);
     PUT_NAMED_INT32(ctx, "swing_distance_from_player", t->swing_distance_from_player);
     PUT_NAMED_INT32(ctx, "bonus_hp_on_use", t->bonus_hp_on_use);
-    PUT_NAMED_INT32(ctx, "bonus_id_on_use", t->bonus_id_on_use);
+    PUT_NAMED_INT32(ctx, "bonus_magic_on_use", t->bonus_magic_on_use);
     PUT_NAMED_INT32(ctx, "tx_map_update_delay_thousandths", t->tx_map_update_delay_thousandths);
     PUT_NAMED_INT32(ctx, "can_be_hit_chance", t->can_be_hit_chance);
     PUT_NAMED_INT32(ctx, "d10000_chance_of_breaking", t->d10000_chance_of_breaking);
@@ -886,9 +886,9 @@ int16_t tp_get_stats_max_hp (tpp t)
     return (t->stats.max_hp);
 }
 
-int16_t tp_get_stats_max_id (tpp t)
+int16_t tp_get_stats_max_magic (tpp t)
 {
-    return (t->stats.max_id);
+    return (t->stats.max_magic);
 }
 
 uint32_t tp_get_stats_attack_melee (tpp t)
@@ -971,9 +971,9 @@ int16_t tp_get_bonus_hp_on_use (tpp t)
     return (t->bonus_hp_on_use);
 }
 
-int16_t tp_get_bonus_id_on_use (tpp t)
+int16_t tp_get_bonus_magic_on_use (tpp t)
 {
-    return (t->bonus_id_on_use);
+    return (t->bonus_magic_on_use);
 }
 
 uint32_t tp_get_tx_map_update_delay_thousandths (tpp t)
