@@ -165,7 +165,7 @@ typedef struct tp_ {
     int32_t bonus_cash_on_collect;
     int16_t bonus_cash_on_use;
     int16_t bonus_hp_on_use;
-    int16_t bonus_id_on_use;
+    int16_t bonus_magic_on_use;
 
     /*
      * Max hp, attack bonuses etc... Is overriden by thing values that can 
@@ -317,9 +317,9 @@ int16_t tp_get_stats_max_hp(tpp);
 uint32_t tp_get_hp_per_level(tpp);
 int16_t tp_get_bonus_hp_on_use(tpp);
 
-int16_t tp_get_stats_max_id(tpp);
+int16_t tp_get_stats_max_magic(tpp);
 uint32_t tp_get_id_per_level(tpp);
-int16_t tp_get_bonus_id_on_use(tpp);
+int16_t tp_get_bonus_magic_on_use(tpp);
 
 uint32_t tp_get_tx_map_update_delay_thousandths(tpp);
 uint32_t tp_get_can_be_hit_chance(tpp);

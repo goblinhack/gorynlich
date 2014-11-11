@@ -50,8 +50,8 @@ typedef struct thing_stats_ {
 
     int16_t hp;
     int16_t max_hp;
-    int16_t id;
-    int16_t max_id;
+    int16_t magic;
+    int16_t max_magic;
 
     uint32_t xp;
     uint32_t cash;

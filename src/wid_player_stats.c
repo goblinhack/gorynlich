@@ -198,8 +198,8 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
         player_stats->spending_points--;
         break;
     case STAT_MAX_ID:
-        player_stats->max_id += rows[row].increment;
-        player_stats->id = player_stats->max_id;
+        player_stats->max_magic += rows[row].increment;
+        player_stats->magic = player_stats->max_magic;
         player_stats->spending_points--;
         break;
     case STAT_ATTACK_MELEE:
@@ -479,11 +479,11 @@ static void wid_player_stats_create (thing_statsp s)
                 }
                 break;
             case STAT_MAX_ID:
-                stat = s->id;
-                if (s->id != s->max_id) {
-                    text = dynprintf("%u (%u)", s->id, s->max_id);
+                stat = s->magic;
+                if (s->magic != s->max_magic) {
+                    text = dynprintf("%u (%u)", s->magic, s->max_magic);
                 } else {
-                    text = dynprintf("%u", s->max_id);
+                    text = dynprintf("%u", s->max_magic);
                 }
                 break;
             case STAT_ATTACK_MELEE:

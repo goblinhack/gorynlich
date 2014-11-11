@@ -284,9 +284,9 @@ void thing_tick_server_player_slow_all (void)
                 t->stats.hp -= delta / 10;
             }
 
-            delta = thing_get_stats_max_id(t) - thing_get_stats_id(t);
+            delta = thing_get_stats_max_magic(t) - thing_get_stats_magic(t);
             if (delta > 0) {
-                t->stats.id -= delta / 10;
+                t->stats.magic -= delta / 10;
             }
         }
     }
