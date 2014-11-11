@@ -8123,7 +8123,7 @@ static void wid_display (widp w,
         if (wid_get_text_outline(w)) {
             glcolor(col_text_outline);
 
-#ifdef ENABLE_BIG_RETRO_TEXT_OUTLINE
+#ifdef ENABLE_LARGE_TEXT_OUTLINE
             if (font == small_font) {
                 ttf_puts_no_fmt(font, text,
                                 x - 2.0f * scaling,

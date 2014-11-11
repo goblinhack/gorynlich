@@ -1093,7 +1093,7 @@ static void client_check_still_in_game (void)
     /*
      * Only if no report for a long time, whinge.
      */
-    if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING * 5,
+    if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING * 10,
                                          client_joined_server_when)) {
         return;
     }

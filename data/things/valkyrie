@@ -8,7 +8,7 @@
  z_depth=4
  speed=8
  max_hp=150
- max_id=15
+ max_magic=15
  hp_per_level=8
  is_player
  stats_attack_melee=11

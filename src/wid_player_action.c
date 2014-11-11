@@ -219,7 +219,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_no_shape(w);
 
-        int which = (int)(((double)s->id / (double)s->max_id) * 16) + 1;
+        int which = (int)(((double)s->magic / (double)s->max_magic) * 16) + 1;
         if (which > 16) {
             which = 16;
         }
@@ -274,7 +274,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_square(w);
-        wid_set_text(w, "ID");
+        wid_set_text(w, "Magic");
         wid_set_text_bot(w, true);
         wid_set_text_outline(w, true);
         wid_set_font(w, small_font);
@@ -290,7 +290,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_tex(w, 0, "squiggles");
         wid_raise(w);
 
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
@@ -303,7 +302,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_font(w, small_font);
 
         char tmp[40];
-        snprintf(tmp, sizeof(tmp) - 1, "%d", s->id);
+        snprintf(tmp, sizeof(tmp) - 1, "%d", s->magic);
         wid_set_text(w, tmp);
     }
 

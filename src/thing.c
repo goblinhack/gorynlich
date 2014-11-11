@@ -1341,7 +1341,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 t->resync = 1;
                 t->tp = what;
                 t->stats.hp = tp_get_stats_max_hp(what);
-                t->stats.id = tp_get_stats_max_id(what);
+                t->stats.magic = tp_get_stats_max_magic(what);
                 thing_update(t);
 
                 /*
@@ -3177,6 +3177,8 @@ static void thing_client_wid_move (thingp t, double x, double y,
         }
 
         double ms = (1000.0 / speed) / (1.0 / time_step);
+
+        ms *= THING_MOVE_NETWORK_LATENCY_FUDGE;
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
     } else {

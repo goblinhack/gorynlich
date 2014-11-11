@@ -1516,24 +1516,24 @@ static inline int32_t thing_get_stats_max_hp (thingp t)
     return (val);
 }
 
-static inline int32_t thing_get_stats_id (thingp t)
+static inline int32_t thing_get_stats_magic (thingp t)
 {
     uint32_t val;
 
-    val = t->stats.id;
+    val = t->stats.magic;
     return (val);
 }
 
-static inline int32_t thing_get_stats_max_id (thingp t)
+static inline int32_t thing_get_stats_max_magic (thingp t)
 {
     uint32_t val;
 
-    val = t->stats.max_id;
+    val = t->stats.max_magic;
     if (val) {
         return (val);
     }
 
-    val = tp_get_stats_max_id(t->tp);
+    val = tp_get_stats_max_magic(t->tp);
     return (val);
 }
 
