@@ -901,27 +901,27 @@ static void client_poll (void)
                      */
                     if (new_stats->weapon_carry_anim_id_latest) {
                         if (thing_client_find(new_stats->weapon_carry_anim_id_latest)) {
-                            player->weapon_carry_anim_id =
-                                            new_stats->weapon_carry_anim_id_latest;
+                            thing_set_weapon_carry_anim_id(
+                                player, new_stats->weapon_carry_anim_id_latest);
                         }
 
                         thingp item = thing_weapon_carry_anim(player);
                         if (item) {
                             item->dir = player->dir;
-                            item->owner_id = player->thing_id;
+                            thing_set_owner(item, player);
                         }
                     }
 
                     if (new_stats->weapon_swing_anim_id_latest) {
                         if (thing_client_find(new_stats->weapon_swing_anim_id_latest)) {
-                            player->weapon_swing_anim_id =
-                                            new_stats->weapon_swing_anim_id_latest;
+                            thing_set_weapon_swing_anim_id(player,
+                                                           new_stats->weapon_swing_anim_id_latest);
                         }
 
                         thingp item = thing_weapon_swing_anim(player);
                         if (item) {
                             item->dir = player->dir;
-                            item->owner_id = player->thing_id;
+                            thing_set_owner(item, player);
                         }
                     }
 
@@ -929,7 +929,7 @@ static void client_poll (void)
                      * If swinging a weapon now, hide the carried weapon 
                      * until the swing is over.
                      */
-                    if (player->weapon_swing_anim_id) {
+                    if (player->weapon_swing_anim_thing_id) {
                         thingp carry = thing_weapon_carry_anim(player);
                         if (carry) {
                             thing_hide(carry);

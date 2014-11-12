@@ -36,7 +36,7 @@ static void thing_tick_server_all (void)
         /*
          * Sanity checks.
          */
-        verify(t);
+        thing_sanity(t);
         tp = thing_tp(t);
 
 //    count++;
@@ -220,7 +220,7 @@ void thing_tick_server_player_all (void)
         /*
          * Sanity checks.
          */
-        verify(t);
+        thing_sanity(t);
 
         /*
          * If something changed in the player that we need to update the 
@@ -247,7 +247,7 @@ void thing_tick_server_player_slow_all (void)
         /*
          * Sanity checks.
          */
-        verify(t);
+        thing_sanity(t);
 
         /*
          * If something changed in the player that we need to update the 
@@ -301,7 +301,7 @@ void thing_tick_client_player_slow_all (void)
         /*
          * Sanity checks.
          */
-        verify(t);
+        thing_sanity(t);
 
         /*
          * If something changed in the player that we need to update the 
@@ -342,7 +342,7 @@ static void thing_tick_client_all (void)
         /*
          * Sanity checks.
          */
-        verify(t);
+        thing_sanity(t);
         tp = thing_tp(t);
 
         w = t->wid;
