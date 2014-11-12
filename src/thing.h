@@ -14,6 +14,7 @@ uint8_t thing_init(void);
 void thing_fini(void);
 void thing_update(thingp t);
 void thing_map_sanity(void);
+void thing_sanity(thingp);
 void thing_map_dump(void);
 thingp thing_server_new(const char *name, 
                         double x, double y,
@@ -287,6 +288,15 @@ void thing_client_move(thingp t,
                        const uint8_t right,
                        const uint8_t fire);
 
+void thing_set_owner_id(thingp t, uint32_t owner_id);
+void thing_set_owner(thingp t, thingp owner);
+
+void thing_set_weapon_carry_anim_id(thingp t, uint32_t weapon_carry_anim_id);
+void thing_set_weapon_carry_anim(thingp t, thingp weapon_carry_anim);
+
+void thing_set_weapon_swing_anim_id(thingp t, uint32_t weapon_swing_anim_id);
+void thing_set_weapon_swing_anim(thingp t, thingp weapon_swing_anim);
+
 extern uint16_t THING_WALL1;
 extern uint16_t THING_ROCK1;
 extern uint16_t THING_WALL2;
@@ -427,8 +437,8 @@ typedef struct thing_ {
      */
     thing_stats stats;
 
-    uint16_t weapon_carry_anim_id;
-    uint16_t weapon_swing_anim_id;
+    uint16_t weapon_carry_anim_thing_id;
+    uint16_t weapon_swing_anim_thing_id;
 
     /*
      * Pointer to common settings for this thing.
@@ -453,7 +463,7 @@ typedef struct thing_ {
     /*
      * Who created this thing? e.g. who cast a spell?
      */
-    uint32_t owner_id;
+    uint32_t owner_thing_id;
 
     /*
      * Scoring

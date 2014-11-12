@@ -147,7 +147,7 @@ void thing_timer_place_and_destroy_callback (void *context)
     /*
      * Save the owner of this new thing. This could be who cast a spell.
      */
-    t->owner_id = place->owner_id;
+    thing_set_owner_id(t, place->owner_id);
 
     /*
      * Make a copy of the original context that is used in the next timer.
@@ -249,7 +249,7 @@ void thing_timer_place_callback (void *context)
     /*
      * Save the owner of this new thing. This could be who cast a spell.
      */
-    t->owner_id = place->owner_id;
+    thing_set_owner_id(t, place->owner_id);
 }
 
 void thing_timer_place_destroy_callback (void *context)
