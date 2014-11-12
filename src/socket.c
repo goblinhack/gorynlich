@@ -2140,8 +2140,8 @@ void socket_tx_server_status (void)
             continue;
         }
 
-        t->stats.weapon_carry_anim_id_latest = t->weapon_carry_anim_id;
-        t->stats.weapon_swing_anim_id_latest = t->weapon_swing_anim_id;
+        t->stats.weapon_carry_anim_id_latest = t->weapon_carry_anim_thing_id;
+        t->stats.weapon_swing_anim_id_latest = t->weapon_swing_anim_thing_id;
 
         msg_player_state *msg_tx = &msg.player;
         memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));

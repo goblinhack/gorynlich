@@ -280,13 +280,13 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_font(w, small_font);
     }
 
-    if (player) {
+    {
         widp w =
             wid_new_container(wid_player_action, 
                               "wid player_stats container");
 
-        fpoint tl = {0.55, 0.2};
-        fpoint br = {0.65, 1.0};
+        fpoint tl = {0.65, 0.2};
+        fpoint br = {0.85, 0.88};
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -297,13 +297,82 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_square(w);
-        wid_set_text_bot(w, true);
-        wid_set_text_outline(w, true);
-        wid_set_font(w, small_font);
 
         char tmp[40];
-        snprintf(tmp, sizeof(tmp) - 1, "%d", s->magic);
+
+        if (s->magic == s->max_magic) {
+            snprintf(tmp, sizeof(tmp) - 1, "%d", s->magic);
+        } else {
+            snprintf(tmp, sizeof(tmp) - 1, "%d/%d", s->magic, s->max_magic);
+        }
         wid_set_text(w, tmp);
+
+        wid_set_text_bot(w, true);
+        wid_set_text_outline(w, true);
+        wid_set_font(w, vsmall_font);
+        wid_set_no_shape(w);
+    }
+
+    {
+        widp w =
+            wid_new_container(wid_player_action, 
+                              "wid player_stats container");
+
+        fpoint tl = {0.15, 0.2};
+        fpoint br = {0.35, 0.88};
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_raise(w);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, WHITE);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
+        wid_set_square(w);
+
+        char tmp[40];
+
+        if (s->hp == s->max_hp) {
+            snprintf(tmp, sizeof(tmp) - 1, "%d", s->hp);
+        } else {
+            snprintf(tmp, sizeof(tmp) - 1, "%d/%d", s->hp, s->max_hp);
+        }
+        wid_set_text(w, tmp);
+
+        wid_set_text_bot(w, true);
+        wid_set_text_outline(w, true);
+        wid_set_font(w, vsmall_font);
+        wid_set_no_shape(w);
+    }
+
+    {
+        widp w =
+            wid_new_container(wid_player_action, 
+                              "wid player_stats container");
+
+        fpoint tl = {0.2, 0.2};
+        fpoint br = {0.3, 1.0};
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, WHITE);
+        wid_set_color(w, WID_COLOR_TL, WHITE);
+        wid_set_color(w, WID_COLOR_BR, WHITE);
+        wid_set_no_shape(w);
+
+        int which = (int)(((double)s->hp / (double)s->max_hp) * 16) + 1;
+        if (which > 16) {
+            which = 16;
+        }
+        if (which < 1) {
+            which = 1;
+        }
+
+        char tmp[40];
+        snprintf(tmp, sizeof(tmp)-1, "crystalball.%d", which);
+        wid_set_tilename(w, tmp);
     }
 
     widp wid_item_bar;
