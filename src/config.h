@@ -25,8 +25,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -247,9 +247,13 @@
 #define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
 
 #define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     5
+#define DELAY_THOUSANDTHS_PLAYER_POLL           15
+
+/*
+ * How frequently certain things get updated to the client.
+ */
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST    50
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW    200
-#define DELAY_THOUSANDTHS_PLAYER_POLL           15
 
 #define DELAY_LEVEL_END_HIDE                    (ONESEC * 1)
 #define DELAY_LEVEL_END_DESTROY                 (ONESEC * 4)

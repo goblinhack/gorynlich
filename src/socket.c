@@ -632,15 +632,6 @@ static uint8_t sockets_show_all (tokens_t *tokens, void *context)
                 s->rx_msg[MSG_SERVER_MAP_UPDATE]);
         }
 
-#if 0
-        if (s->tx_msg[MSG_SERVER_PLAYER_UPDATE] || 
-            s->rx_msg[MSG_SERVER_PLAYER_UPDATE]) {
-            CON("  Player update  : tx %u, rx %u",
-                s->tx_msg[MSG_SERVER_PLAYER_UPDATE], 
-                s->rx_msg[MSG_SERVER_PLAYER_UPDATE]);
-        }
-#endif
-
         if (s->tx_msg[MSG_CLIENT_PLAYER_MOVE] || 
             s->rx_msg[MSG_CLIENT_PLAYER_MOVE]) {
             CON("  Client move    : tx %u, rx %u",

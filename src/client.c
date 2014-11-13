@@ -961,17 +961,6 @@ static void client_poll (void)
                 socket_client_rx_map_update(s, packet, data);
                 break;
 
-#if 0
-            case MSG_SERVER_PLAYER_UPDATE:
-                /*
-                 * This is an update of a single players carried items.
-                 */
-                socket_client_rx_player_update(s, packet, data);
-
-                wid_game_map_client_score_update(client_level, true /* redo */);
-                break;
-#endif
-
             case MSG_SERVER_CLOSE:
                 socket_rx_server_close(s, packet, data);
 
