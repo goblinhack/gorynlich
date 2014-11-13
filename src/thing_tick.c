@@ -210,34 +210,6 @@ static void thing_tick_server_all (void)
 //    LOG("server count %d",count);
 }
 
-#if 0
-void thing_tick_server_player_all (void)
-{
-    thingp t;
-
-    TREE_OFFSET_WALK_UNSAFE(server_player_things, t) {
-
-        /*
-         * Sanity checks.
-         */
-        thing_sanity(t);
-
-        /*
-         * If something changed in the player that we need to update the 
-         * client, do so now.
-         */
-        if (thing_is_dead(t)) {
-            continue;
-        }
-
-        if (t->needs_tx_player_update) {
-            t->needs_tx_player_update = false;
-            socket_server_tx_player_update(t);
-        }
-    }
-}
-#endif
-
 void thing_tick_server_player_slow_all (void)
 {
     thingp t;
@@ -502,29 +474,6 @@ void thing_tick_all (void)
     }
 
     thing_tick_server_all();
-
-#if 0
-    if (server_level) {
-        static uint32_t ts;
-
-        if (time_have_x_thousandths_passed_since(
-                            DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST, ts)) {
-
-            socket_server_tx_map_update(0 /* all clients */, 
-                                        server_active_things,
-                                        "level tick active");
-
-            /*
-             * We must send the player update after a general update as the
-             * player may now be carrying some things created in the update
-             * above.
-             */
-            thing_tick_server_player_all();
-
-            ts = time_get_time_cached();
-        }
-    }
-#endif
 
     /*
      * Slow tick.

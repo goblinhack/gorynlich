@@ -25,9 +25,6 @@ thingp thing_client_local_new(tpp tp);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
-#if 0
-void thing_tick_server_player_all(void);
-#endif
 void thing_tick_client_player_slow_all(void);
 void thing_tick_server_player_slow_all(void);
 uint8_t thing_mob_spawn(thingp);
@@ -260,7 +257,6 @@ enum {
 enum {
     THING_STATE_BIT_SHIFT_EXT_IS_DEAD,
     THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL,
-    THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS,

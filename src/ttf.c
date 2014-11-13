@@ -122,14 +122,6 @@ font *ttf_new (const char *name, int32_t pointSize, int32_t style)
 
     TTF_SetFontStyle(ttf, style);
 
-#if 0
-    if (pointSize > 40) {
-        TTF_SetFontOutline(ttf, 1.5);
-    } else {
-        TTF_SetFontOutline(ttf, 0.5);
-    }
-#endif
-
     for (c = TTF_GLYPH_MIN; c < TTF_GLYPH_MAX; c++) {
         ttf_create_tex_from_char(ttf, name, f, c);
     }
