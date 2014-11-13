@@ -190,7 +190,15 @@ static void client_socket_tx_ping (void)
         client_alive_check();
     }
 
-    wid_server_join_redo(true /* soft refresh */);
+    {
+        static uint32_t ts;
+
+        if (time_have_x_tenths_passed_since(10, ts)) {
+            wid_server_join_redo(true /* soft refresh */);
+
+            ts = time_get_time_cached();
+        }
+    }
 
     seq++;
 }

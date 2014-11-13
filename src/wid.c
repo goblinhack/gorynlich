@@ -58,6 +58,8 @@ static tree_root *wid_top_level5;
  * Mouse movement
  */
 static widp wid_popup_tooltip;
+static int wid_popup_tooltip_mouse_x;
+static int wid_popup_tooltip_mouse_y;
 
 /*
  * Scope the focus to children of this widget and do not change it.
@@ -867,7 +869,16 @@ static void wid_mouse_over_end (void)
     }
 
     if (wid_popup_tooltip) {
-        wid_destroy(&wid_popup_tooltip);
+        /*
+         * If the users attention has moved and we're no longer over this 
+         * widget (could be a redraw) then zap the tooltip
+         */
+        if ((abs(mouse_x - wid_popup_tooltip_mouse_x) > 10) ||
+            (abs(mouse_y - wid_popup_tooltip_mouse_y) > 10)) {
+            fast_verify(wid_popup_tooltip);
+
+            wid_destroy(&wid_popup_tooltip);
+        }
     }
 }
 
@@ -911,7 +922,14 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
     }
 
     if (w->tooltip) {
-        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, med_font);
+        if (wid_popup_tooltip) {
+            wid_destroy_immediate(wid_popup_tooltip);
+        }
+
+        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, small_font);
+
+        wid_popup_tooltip_mouse_x = mouse_x;
+        wid_popup_tooltip_mouse_y = mouse_y;
 
         /*
          * Move just above and to the left of the widget.
@@ -937,7 +955,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         wid_move_to_pct_centered(wid_popup_tooltip, 0.5, -0.5);
         wid_move_to_pct_centered_in(wid_popup_tooltip, 0.5, 0.2, 200);
 
-        wid_destroy_in(wid_popup_tooltip, 3000);
+        wid_destroy_ptr_in(&wid_popup_tooltip, 3000);
 #endif
     }
 
@@ -3041,6 +3059,16 @@ void wid_destroy_in (widp w, uint32_t ms)
     w->destroy_when = time_get_time_cached() + ms;
 
     wid_tree4_wids_being_destroyed_insert(w);
+}
+
+void wid_destroy_ptr_in (widp *w, uint32_t ms)
+{
+    fast_verify(*w);
+
+    (*w)->destroy_when = time_get_time_cached() + ms;
+    (*w)->destroy_ptr = w;
+
+    wid_tree4_wids_being_destroyed_insert(*w);
 }
 
 /*
@@ -6840,6 +6868,8 @@ void wid_move_end (widp w)
  */
 static void wid_gc (widp w)
 {
+    verify(w);
+
     if (w->being_destroyed) {
         /*
          * If being destroyed, is it done fading ? We only do this for the top
@@ -6871,6 +6901,13 @@ static void wid_gc (widp w)
      * Delayed destroy?
      */
     if (w->destroy_when && (time_get_time_cached() >= w->destroy_when)) {
+        fast_verify(w);
+
+        if (w->destroy_ptr) {
+            *(w->destroy_ptr) = 0;
+            w->destroy_ptr = 0;
+        }
+
         wid_destroy(&w);
     }
 }
