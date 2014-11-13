@@ -59,6 +59,7 @@ void wid_empty_grid(widp);
 void wid_destroy(widp *);
 void wid_destroy_nodelay(widp *);
 void wid_destroy_in(widp w, uint32_t ms);
+void wid_destroy_ptr_in(widp *w, uint32_t ms);
 void wid_set_ignore_events(widp, uint8_t);
 void wid_set_debug(widp, uint8_t);
 void wid_set_animate(widp, uint8_t);
@@ -707,6 +708,7 @@ typedef struct wid_ {
     uint32_t timestamp_rotate_begin;
     uint32_t timestamp_rotate_end;
     uint32_t destroy_when;
+    widp *destroy_ptr;
     fpoint moving_start;
     fpoint moving_end;
 
