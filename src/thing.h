@@ -58,8 +58,6 @@ uint8_t thing_z_depth(thingp);
 uint8_t thing_z_order(thingp);
 tree_rootp thing_tile_tiles(thingp);
 tree_rootp thing_tile_tiles2(thingp);
-uint32_t thing_score(thingp);
-void thing_set_score(thingp, uint32_t score);
 void thing_animate(thingp);
 void thing_handle_collisions(widp grid, thingp t);
 uint8_t thing_hit_solid_obstacle(widp grid, thingp t, double nx, double ny);
@@ -462,11 +460,6 @@ typedef struct thing_ {
     uint32_t owner_thing_id;
 
     /*
-     * Scoring
-     */
-    uint32_t score;
-
-    /*
      * How much damage per hit?
      */
     uint16_t damage;
@@ -502,19 +495,6 @@ typedef struct thing_ {
      * If this thing is involved in any timed activities like an explosion.
      */
     tree_rootp timers;
-
-    /*
-     * Powerups
-     */
-    uint8_t powerup_spam_count;
-    uint8_t powerup2_count;
-    uint8_t powerup3_count;
-    uint8_t powerup4_count;
-    uint8_t powerup5_count;
-    uint8_t powerup6_count;
-    uint8_t powerup7_count;
-    uint8_t powerup8_count;
-    uint8_t powerup_rocket_count;
 
     /*
      * Grid coordinates.
