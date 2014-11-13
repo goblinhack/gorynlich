@@ -91,6 +91,7 @@ static int maze_seed;
 char map_jigsaw_buffer[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_fg[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_bg[MAP_WIDTH][MAP_HEIGHT];
+static uint8_t map_jigsaw_buffer_solved[MAP_WIDTH][MAP_HEIGHT];
 static int32_t map_jigsaw_buffer_at_x;
 static int32_t map_jigsaw_buffer_at_y;
 
@@ -374,6 +375,12 @@ static void map_jigsaw_buffer_print (void)
                 fg = TERM_COLOR_WHITE;
                 bg = TERM_COLOR_BLACK;
                 c = ' ';
+            }
+
+            if (c == MAP_FLOOR) {
+                if (map_jigsaw_buffer_solved[x][y]) {
+                    c = '*';
+                }
             }
 
             if (x == 0) {
@@ -690,6 +697,16 @@ static int32_t jigpiece_char_is_occupiable (char c)
            (c == MAP_MONST) ||
            (c == MAP_TRAPDOOR) ||
            (c == MAP_MOB_SPAWN) ||
+           (c == MAP_TREASURE);
+}
+
+static int32_t jigpiece_char_is_passable (char c)
+{
+    return (c == MAP_FLOOR) ||
+           (c == MAP_MONST) ||
+           (c == MAP_TRAPDOOR) ||
+           (c == MAP_MOB_SPAWN) ||
+           (c == MAP_DOOR) ||
            (c == MAP_TREASURE);
 }
 
@@ -1758,7 +1775,7 @@ static void maze_generate_all_random_directions (dungeon_t *dg, maze_cell_t * c,
 /*
  * Wrap all corridors in walls
  */
-static void maze_add_corridor_walls (void)
+static void maze_add_decorations (void)
 {
     int32_t x;
     int32_t y;
@@ -1797,6 +1814,9 @@ static void maze_add_corridor_walls (void)
         }
     }
 
+    /*
+     * Make sure all floor tiles have a wall around them.
+     */
     for (x = 1; x < MAP_WIDTH - 1; x++) {
         for (y = 1; y < MAP_HEIGHT - 1; y++) {
 
@@ -1840,6 +1860,110 @@ static void maze_add_corridor_walls (void)
             }
         }
     }
+}
+
+static int maze_flood_find (int32_t x, int32_t y, char find, int depth)
+{
+    static char walked[MAP_WIDTH][MAP_HEIGHT];
+
+    if (!depth) {
+        memset(walked, ' ', sizeof(walked));
+        memset(map_jigsaw_buffer_solved, 0, sizeof(map_jigsaw_buffer_solved));
+    }
+
+    if (walked[x][y] != ' ') {
+        return (false);
+    }
+
+    if (map_jigsaw_buffer_getchar(x, y) == find) {
+        map_jigsaw_buffer_solved[x][y] = 1;
+        return (true);
+    }
+
+    walked[x][y] = '.';
+
+    if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x-1, y))) {
+        if (maze_flood_find(x-1, y, find, depth + 1)) {
+            map_jigsaw_buffer_solved[x][y] = 1;
+            return (true);
+        }
+    }
+
+    if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x+1, y))) {
+        if (maze_flood_find(x+1, y, find, depth + 1)) {
+            map_jigsaw_buffer_solved[x][y] = 1;
+            return (true);
+        }
+    }
+
+    if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x, y-1))) {
+        if (maze_flood_find(x, y-1, find, depth + 1)) {
+            map_jigsaw_buffer_solved[x][y] = 1;
+            return (true);
+        }
+    }
+
+    if (jigpiece_char_is_passable(map_jigsaw_buffer_getchar(x, y+1))) {
+        if (maze_flood_find(x, y+1, find, depth + 1)) {
+            map_jigsaw_buffer_solved[x][y] = 1;
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+static int maze_check_exit_can_be_reached (void)
+{
+    int32_t x;
+    int32_t y;
+    int32_t ex;
+    int32_t ey;
+    int32_t sx;
+    int32_t sy;
+    int found_start = 0;
+
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
+
+            if ((map_jigsaw_buffer_getchar(x, y) == MAP_START)) {
+                found_start = 1;
+                break;
+            }
+        }
+    }
+
+    if (!found_start) {
+        return (false);
+    }
+
+    sx = x;
+    sy = y;
+
+    int found_end = 0;
+
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
+
+            if ((map_jigsaw_buffer_getchar(x, y) == MAP_END)) {
+                found_end = 1;
+                break;
+            }
+        }
+    }
+
+    if (!found_end) {
+        return (false);
+    }
+
+    ex = x;
+    ey = y;
+
+    if (!maze_flood_find(sx, sy, MAP_END, 0)) {
+        return (false);
+    }
+
+    return (true);
 }
 
 /*
@@ -1905,7 +2029,7 @@ static void maze_convert_to_map (dungeon_t *dg)
     map_jigsaw_buffer_print_file(MY_STDOUT);
     jigpiece_add_frag(dg);
     map_jigsaw_buffer_print_file(MY_STDOUT);
-    maze_add_corridor_walls();
+    maze_add_decorations();
 }
 
 /*
@@ -2474,6 +2598,17 @@ reseed:
 #endif
 
     map_jigsaw_buffer_print_file(MY_STDOUT);
+
+    if (!maze_check_exit_can_be_reached()) {
+#ifdef MAZE_DEBUG_SHOW
+map_jigsaw_buffer_print();
+#endif
+#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
+        printf("seed %u, maze failed to solve\n", maze_seed);
+#endif
+DIE("x");
+        goto reseed;
+    }
 
     myfree(dg);
 
