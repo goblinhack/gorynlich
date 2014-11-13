@@ -1259,12 +1259,6 @@ tpp map_find_is_star_at (levelp level,
     return (map_find_x_at(level, x, y, tp_is_star, w));
 }
 
-tpp map_find_powerup_spam_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_animated_no_dir, w));
-}
-
 tpp map_find_key1_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {

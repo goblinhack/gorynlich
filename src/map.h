@@ -90,7 +90,6 @@ tpp map_find_xxx6_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_xxx7_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_is_fragile_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_is_star_at(levelp, int32_t x, int32_t y, widp *);
-tpp map_find_powerup_spam_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_key1_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_light_source_at(levelp, int32_t x, int32_t y, widp *);
 tpp map_find_candle_light_at(levelp, int32_t x, int32_t y, widp *);

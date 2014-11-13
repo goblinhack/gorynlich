@@ -13,6 +13,10 @@
 #include "string.h"
 #include "wid_server_join.h"
 #include "wid_game_map_client.h"
+#include "wid_player_stats.h"
+#include "wid_player_info.h"
+#include "wid_player_inventory.h"
+#include "wid_player_action.h"
 #include "wid.h"
 #include "thing.h"
 #include "mzip_lib.h"
@@ -961,6 +965,15 @@ static void client_poll (void)
                 wid_dead_visible(latest_hiscores.players[0].player_name,
                                  latest_hiscores.players[0].death_reason,
                                  latest_hiscores.rejoin_allowed);
+
+                /*
+                 * Make sure the player isn't sitting at any inventory screen 
+                 * while dead.
+                 */
+                wid_player_stats_hide();
+                wid_player_info_hide();
+                wid_player_inventory_hide();
+                wid_player_action_hide();
 
                 break;
             }

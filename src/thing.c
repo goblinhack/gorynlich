@@ -1284,12 +1284,12 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
             if (!t->player) {
                 ERR("no player socket to send hiscores too");
             } else if (t->player->socket) {
-                hiscore_try_to_add(t->stats.pname, reason, t->score);
+                hiscore_try_to_add(t->stats.pname, reason, t->stats.xp);
 
                 socket_tx_server_hiscore(t->player->socket, 
                                          t->stats.pname,
                                          reason,
-                                         t->score);
+                                         t->stats.xp);
             }
         }
     }
@@ -1300,6 +1300,8 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     va_list args;
 
     verify(t);
+
+    tpp tp = thing_tp(t);
 
     /*
      * Pre death server events.
@@ -1314,8 +1316,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              * When it dies, doth it polymorph and thus avoid the reaper?
              * e.g. a mob spawner dying and creating a smaller one.
              */
-            const char *polymorph = 
-                    tp_polymorph_on_death(t->tp);
+            const char *polymorph = tp_polymorph_on_death(tp);
             if (polymorph) {
                 tpp what = tp_find(polymorph);
                 if (!what) {
@@ -1346,8 +1347,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              * Or perhaps it does die, but spawns something else, like the
              * player dying and creating a mob spawner.
              */
-            const char *spawn = 
-                    tp_spawn_on_death(t->tp);
+            const char *spawn = tp_spawn_on_death(tp);
             if (spawn) {
                 thing_mob_spawn_on_death(t);
             }
@@ -1378,8 +1378,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         /*
          * Bounty for the killer?
          */
-        uint32_t score = tp_get_bonus_xp_on_death(
-                                                thing_tp(t));
+        uint32_t score = tp_get_bonus_xp_on_death(tp);
         if (score && killer) {
             thingp recipient = killer;
 
@@ -1391,7 +1390,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 verify(recipient);
             }
 
-            thing_set_score(recipient, thing_score(recipient) + score);
+            recipient->stats.xp += tp_get_bonus_xp_on_death(tp);
         }
     }
 
@@ -1416,11 +1415,11 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      * Stop bouncing or swaying.
      */
     if (t->wid) {
-        if (tp_is_effect_pulse(t->tp)) {
+        if (tp_is_effect_pulse(tp)) {
             wid_scaling_to_pct_in(t->wid, 1.0, 1.0, 0, 0);
         }
 
-        if (tp_is_effect_sway(t->tp)) {
+        if (tp_is_effect_sway(tp)) {
             wid_rotate_to_pct_in(t->wid, 0, 0, 0, 0);
         }
     }
@@ -2191,24 +2190,6 @@ uint8_t thing_z_order (thingp t)
     return (tp_get_z_order(t->tp));
 }
 
-uint32_t thing_score (thingp t)
-{
-    verify(t);
-
-    return (t->score);
-}
-
-void thing_set_score (thingp t, uint32_t score)
-{
-    verify(t);
-
-    t->score = score;
-
-    if (thing_is_player(t)) {
-        t->needs_tx_player_update = true;
-    }
-}
-
 tree_rootp thing_tile_tiles (thingp t)
 {
     verify(t);
@@ -2246,238 +2227,6 @@ void thing_set_wid (thingp t, widp w)
     }
 
     t->wid = w;
-}
-
-void thing_inc_powerup_spam_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup_spam_count += val;
-}
-
-void thing_dec_powerup_spam_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup_spam_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup_spam_count -= val;
-}
-
-uint8_t thing_has_powerup_spam_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup_spam_count);
-}
-
-void thing_inc_powerup2_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup2_count += val;
-}
-
-void thing_dec_powerup2_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup2_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup2_count -= val;
-}
-
-uint8_t thing_has_powerup2_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup2_count);
-}
-
-void thing_inc_powerup3_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup3_count += val;
-}
-
-void thing_dec_powerup3_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup3_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup3_count -= val;
-}
-
-uint8_t thing_has_powerup3_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup3_count);
-}
-
-void thing_inc_powerup4_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup4_count += val;
-}
-
-void thing_dec_powerup4_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup4_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup4_count -= val;
-}
-
-uint8_t thing_has_powerup4_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup4_count);
-}
-
-void thing_inc_powerup5_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup5_count += val;
-}
-
-void thing_dec_powerup5_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup5_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup5_count -= val;
-}
-
-uint8_t thing_has_powerup5_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup5_count);
-}
-
-void thing_inc_powerup6_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup6_count += val;
-}
-
-void thing_dec_powerup6_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup6_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup6_count -= val;
-}
-
-uint8_t thing_has_powerup6_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup6_count);
-}
-
-void thing_inc_powerup7_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup7_count += val;
-}
-
-void thing_dec_powerup7_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup7_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup7_count -= val;
-}
-
-uint8_t thing_has_powerup7_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup7_count);
-}
-
-void thing_inc_powerup8_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup8_count += val;
-}
-
-void thing_dec_powerup8_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup8_count) {
-        DIE("powerup decreemnt");
-    }
-
-    t->powerup8_count -= val;
-}
-
-uint8_t thing_has_powerup8_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup8_count);
-}
-
-void thing_inc_powerup_rocket_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    t->powerup_rocket_count += val;
-
-    THING_DBG(t, "powerup inc, rocket now %d", t->powerup_rocket_count);
-
-    sound_play_rocket();
-}
-
-void thing_dec_powerup_rocket_count (thingp t, uint8_t val)
-{
-    verify(t);
-
-    if (!t->powerup_rocket_count) {
-        DIE("%s, powerup dec, rocket now %d", t->logname,
-            t->powerup_rocket_count);
-    }
-
-    t->powerup_rocket_count -= val;
-
-    THING_DBG(t, "powerup dec, rocket now %d", t->powerup_rocket_count);
-}
-
-uint8_t thing_has_powerup_rocket_count (thingp t)
-{
-    verify(t);
-
-    return (t->powerup_rocket_count);
 }
 
 void thing_set_is_light_source (thingp t, uint8_t val)

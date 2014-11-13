@@ -26,8 +26,8 @@ static void thing_collect (thingp t,
          * Convert any existing items.
          */
         thing_stats_item_polymorph(&t->stats,
-                                    THING_WATER,
-                                    THING_WATER_POISON);
+                                   THING_WATER,
+                                   THING_WATER_POISON);
     }
 
     /*
@@ -55,9 +55,8 @@ static void thing_collect (thingp t,
             /*
              * Bonus for collecting?
              */
-            thing_set_score(t, thing_score(t) +
-                            tp_get_bonus_cash_on_collect(tp) *
-                            it->item.quantity);
+            t->stats.cash += tp_get_bonus_cash_on_collect(tp) *
+                            it->item.quantity;
             return;
         }
 
@@ -70,9 +69,8 @@ static void thing_collect (thingp t,
         /*
          * Bonus for collecting?
          */
-        thing_set_score(t, thing_score(t) +
-                        tp_get_bonus_cash_on_collect(tp) *
-                        it->item.quantity);
+        t->stats.cash += tp_get_bonus_cash_on_collect(tp) *
+                        it->item.quantity;
     }
 
     if (!auto_collect) {

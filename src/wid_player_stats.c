@@ -122,6 +122,8 @@ void wid_player_stats_hide (void)
         client_socket_set_name(player_stats->pname);
         client_socket_set_pclass(player_stats->pclass);
     }
+
+    player_stats = 0;
 }
 
 void wid_player_stats_visible (thing_statsp s)
