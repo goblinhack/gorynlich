@@ -470,6 +470,7 @@ widp wid_popup (const char *text, const char *title,
 
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, button_name);
+            wid_set_text_centerx(child, true);
             wid_set_font(child, button_font);
 
             color c;
