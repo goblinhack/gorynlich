@@ -81,6 +81,8 @@ static void server_add (const server *s_in)
         s->host_and_port_str = iptodynstr(s->ip);
     }
 
+    LOG("Add server %s",s->host_and_port_str);
+
     /*
      * Connector.
      */
@@ -334,7 +336,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
                 "%%%%fmt=left$Maxumum latency %u ms\n\n"
                 "%%%%fmt=left$Maxumum players %u\n"
                 "%%%%fmt=left$Current players %u\n\n"
-                "%s",
+                "%s\n\n",
                 server_status->server_name,
                 s->avg_latency,
                 s->min_latency,
@@ -929,7 +931,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, true);
+            wid_set_text_outline(w, false);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
@@ -999,7 +1001,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, true);
+            wid_set_text_outline(w, false);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
@@ -1069,7 +1071,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, true);
+            wid_set_text_outline(w, false);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
@@ -1139,7 +1141,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, true);
+            wid_set_text_outline(w, false);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
@@ -1206,7 +1208,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, true);
+            wid_set_text_outline(w, false);
             wid_set_font(w, small_font);
             wid_set_text_centerx(w, true);
 
@@ -1449,7 +1451,9 @@ static uint8_t wid_server_load_remote_server_list (void)
         tree_destroy(&remote_servers, 0);
     }
 
-    DBG("Load %s", file);
+    LOG("Load %s", file);
+
+    int added = 0;
 
     server s;
 
@@ -1459,12 +1463,55 @@ static uint8_t wid_server_load_remote_server_list (void)
         while (demarshal_servers(ctx, &s)) {
             server_add(&s);
             myfree(s.host);
+            added++;
         }
 
         demarshal_fini(ctx);
     }
 
     myfree(file);
+
+    if (!added) {
+        LOG("No servers found, add defaults");
+
+        static const char *common_ips[] = {
+            "192.168.0.1",
+            "192.168.0.2",
+            "192.168.0.3",
+            "192.168.0.4",
+            "192.168.0.5",
+            "192.168.1.1",
+            "192.168.1.2",
+            "192.168.1.3",
+            "192.168.1.4",
+            "192.168.1.5",
+            "192.168.100.1",
+            "192.168.100.2",
+            "192.168.100.3",
+            "192.168.100.4",
+            "192.168.100.5",
+            "10.0.0.1",
+            "10.0.0.2",
+            "10.0.0.3",
+            "10.0.0.4",
+            "10.0.0.5",
+            "10.0.1.1",
+            "10.0.1.2",
+            "10.0.1.3",
+            "10.0.1.4",
+            "10.0.1.5",
+        };
+
+        int i;
+        for (i = 0; i < ARRAY_SIZE(common_ips); i++) {
+            server s;
+
+            memset(&s, 0, sizeof(s));
+            s.host = dupstr(common_ips[i], "an ip");
+            s.port = global_config.server_port; 
+            server_add(&s);
+        }
+    }
 
     return (true);
 }

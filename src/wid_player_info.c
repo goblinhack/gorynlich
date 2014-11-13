@@ -64,6 +64,9 @@ static void wid_player_info_buttons_tick (widp wid)
     int which = tick % 8;
 
     const char *tn = player_stats->pclass;
+    if (!*tn) {
+        return;
+    }
 
     char tilename[40];
 
