@@ -212,11 +212,6 @@ void level_update_now (levelp level)
     thing_tick_server_player_slow_all();
 }
 
-void level_update (levelp level)
-{
-    level->need_map_update = 1;
-}
-
 levelp level_load (uint32_t level_no, 
                    widp wid, 
                    int is_editor,
@@ -779,39 +774,6 @@ void level_tick (levelp level)
 {
     if (!level) {
         return;
-    }
-
-    /*
-     * Did some walls get zapped and we need to rebuild connectors?
-     */
-    if (level->need_map_update) {
-        level->need_map_update = 0;
-        level->need_boring_update = 0;
-
-        level_update_now(level);
-
-#if 0
-        socket_server_tx_map_update(0, server_active_things,
-                                    "level map update active things");
-        /*
-         * Let the players know their item lists.
-         */
-        socket_tx_server_status();
-
-        socket_server_tx_map_update(0, server_boring_things,
-                                    "level map update boring things");
-#endif
-    }
-
-    /*
-     * Sparks on a wall?
-     */
-    if (level->need_boring_update) {
-        level->need_boring_update = 0;
-#if 0
-        socket_server_tx_map_update(0, server_boring_things,
-                                    "boring update needed");
-#endif
     }
 
     /*

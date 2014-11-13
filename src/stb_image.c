@@ -401,17 +401,6 @@ char *stbi_failure_reason(void)
    return failure_reason;
 }
 
-#if 0
-static int e(const char *str)
-{
-    if (str) {
-        DIE("%s", str);
-    }
-   failure_reason = str;
-   return 0;
-}
-#endif
-
 #define STBI_NO_FAILURE_STRINGS
 #ifdef STBI_NO_FAILURE_STRINGS
    #define e(x,y)  0

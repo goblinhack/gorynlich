@@ -2444,25 +2444,6 @@ tree_wid_compare_func (const tree_node *a, const tree_node *b)
         return (1);
     }
 
-#if 0
-    int32_t Ax = (A->tree.tl.x + A->tree.br.x) / 2;
-    int32_t Ay = (A->tree.tl.y + A->tree.br.y) / 2;
-
-    int32_t Bx = (B->tree.tl.x + B->tree.br.x) / 2;
-    int32_t By = (B->tree.tl.y + B->tree.br.y) / 2;
-
-    int32_t Aval = Ax + Ay;
-    int32_t Bval = Bx + By;
-
-    if (Aval > Bval) {
-        return (-1);
-    }
-
-    if (Aval < Bval) {
-        return (1);
-    }
-#endif
-
     if (A->tree.br.y > B->tree.br.y) {
         return (-1);
     }

@@ -685,17 +685,6 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
 
         term_log(buf + len);
     }
-
-#if 0
-    widp w = wid_button_transient(buf + len, 0);
-    color c = BLACK;
-    c.a = 150;
-    wid_set_color(w, WID_COLOR_BG, c);
-    wid_set_color(w, WID_COLOR_TL, c);
-    wid_set_color(w, WID_COLOR_BR, c);
-    wid_move_to_pct_centered(w, 0.5, 0.1);
-    wid_set_text_outline(w, true);
-#endif
 }
 
 void MSG (uint32_t level, const char *fmt, ...)

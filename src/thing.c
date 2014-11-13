@@ -230,19 +230,6 @@ void thing_update (thingp t)
         return;
     }
 
-    /*
-     * Need an explicit update for boring things as we send them only on 
-     * demand.
-     */
-    if (server_level) {
-        /*
-         * Can be called during level load, hence the check.
-         */
-        if (tp_is_boring(t->tp)) {
-            server_level->need_boring_update = true;
-        }
-    }
-
     if (t->updated) {
         return;
     }
@@ -862,15 +849,6 @@ void thing_server_init (thingp t, double x, double y)
     t->last_tx = -1;
     t->last_ty = -1;
     t->first_update = true;
-
-#if 0
-    if (thing_is_player(t)) {
-        /*
-         * So the client sees any carried weapons at start.
-         */
-        t->needs_tx_player_update = true;
-    }
-#endif
 }
 
 /*
@@ -1361,15 +1339,6 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 t->logname = dynprintf("%s[%p, id %u] (server)", 
                                        thing_short_name(t), t,
                                        t->thing_id);
-
-                /*
-                 * No need to update active things they do it automatically
-                 * in the ticker.
-                 */
-#if 0
-                socket_server_tx_map_update(0, server_boring_things, 
-                                            "polymorph dead thing boring");
-#endif
                 return;
             }
 
@@ -1599,12 +1568,6 @@ static int thing_hit_ (thingp t,
                 level_open_door(server_level, t->x, t->y-1);
                 level_open_door(server_level, t->x, t->y+1);
             }
-        }
-
-        if (thing_is_wall(t) || 
-            thing_is_door(t) || 
-            thing_is_pipe(t)) {
-            level_update(server_level);
         }
     }
 
@@ -1839,13 +1802,6 @@ int thing_hit (thingp t,
         }
     }
 
-    /*
-     * Update the map for destruction of the scenery.
-     */
-    if (thing_is_wall(t) || thing_is_door(t) || thing_is_pipe(t)) {
-        level_update(server_level);
-    }
-
     int r;
 
     r = thing_hit_(t, hitter, damage);
@@ -1977,12 +1933,6 @@ void thing_leave_level (thingp t)
     }
 
     t->has_left_level = true;
-
-#if 0
-    if (thing_is_player(t)) {
-        t->needs_tx_player_update = true;
-    }
-#endif
 
     level_set_exit_has_been_reached(server_level, true);
 
@@ -3384,8 +3334,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
                 THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
             ((t->has_left_level ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL) |
-            ((t->owner_thing_id ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT) |
             ((t->is_hit_crit ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT) |
             ((t->is_hit_success ? 1 : 0) << 
@@ -3461,11 +3409,6 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         t->last_ty = ty;
         t->resync = 0;
         t->first_update = false;
-
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
-            SDLNet_Write16(t->owner_thing_id, data);               
-            data += sizeof(uint16_t);
-        }
 
         if (data + sizeof(msg_map_update) < eodata) {
             /*
@@ -3567,7 +3510,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         uint8_t ext;
         uint8_t template_id;
         uint16_t id;
-        uint16_t owner_id = 0;
         uint8_t on_map;
         thingp t;
         double x;
@@ -3627,14 +3569,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             on_map = false;
         } else {
             on_map = true;
-        }
-
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
-            /*
-             * Owner ID present
-             */
-            owner_id = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
         }
 
         t = thing_client_find(id);
@@ -3701,7 +3635,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
          * Get the thing direction.
          */
         t->dir = state & 0x7;
-        thing_set_owner_id(t, owner_id);
 
         /*
          * Move the thing?
@@ -3809,120 +3742,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
         map_fixup(level);
     }
 }
-
-#if 0
-void socket_server_tx_player_update (thingp t)
-{
-    if (!thing_is_player(t)) {
-        ERR("trying to send player update from not player thing %s",
-            thing_logname(t));
-        return;
-    }
-
-    /*
-     * Allocate a fresh packet.
-     */
-    UDPpacket *packet = socket_alloc_msg();
-    uint8_t *odata = packet->data;
-    uint8_t *data = packet->data;
-
-    *data++ = MSG_SERVER_PLAYER_UPDATE;
-
-    SDLNet_Write16(t->thing_id, data);               
-    data += sizeof(uint16_t);
-
-    SDLNet_Write16(t->weapon_carry_anim_id, data);               
-    data += sizeof(uint16_t);
-
-    SDLNet_Write16(t->weapon_swing_anim_id, data);               
-    data += sizeof(uint16_t);
-
-    memcpy(data, &t->stats, sizeof(t->stats));
-    data += sizeof(t->stats);
-
-    if (t->weapon) {
-        *data++ = tp_to_id(t->weapon);
-    } else {
-        *data++ = 0;
-    }
-
-    packet->len = data - odata;
-
-    /*
-     * Broadcast to all clients.
-     */
-    socketp sp;
-
-    TREE_WALK_UNSAFE(sockets, sp) {
-        if (!sp->player) {
-            continue;
-        }
-
-        write_address(packet, socket_get_remote_ip(sp));
-        socket_tx_msg(sp, packet);
-    }
-        
-    socket_free_msg(packet);
-}
-
-void socket_client_rx_player_update (socketp s, UDPpacket *packet, 
-                                     uint8_t *data)
-{
-    verify(s);
-
-    uint16_t id = SDLNet_Read16(data);
-    data += sizeof(uint16_t);
-
-    thingp t = thing_client_find(id);
-    if (!t) {
-        ERR("thing id from server, id %u not found", id);
-        return;
-    }
-
-    t->weapon_carry_anim_id = SDLNet_Read16(data);
-    data += sizeof(uint16_t);
-
-    t->weapon_swing_anim_id = SDLNet_Read16(data);
-    data += sizeof(uint16_t);
-
-    if (t->weapon_carry_anim_id) {
-        thingp item = thing_weapon_carry_anim(t);
-        if (item) {
-            item->dir = t->dir;
-            item->owner_id = t->thing_id;
-        }
-    }
-
-    if (t->weapon_swing_anim_id) {
-        thingp item = thing_weapon_swing_anim(t);
-        if (item) {
-            item->dir = t->dir;
-            item->owner_id = t->thing_id;
-        }
-    }
-
-    memcpy(&t->stats, data, sizeof(t->stats));
-    data += sizeof(t->stats);
-
-    id = *data++;
-    if (id) {
-        t->weapon = id_to_tp(id);
-    } else {
-        t->weapon = 0;
-    }
-
-    /*
-     * If swinging a weapon now, hide the carried weapon until the swing is 
-     * over.
-     */
-    if (t->weapon_swing_anim_id) {
-        thingp carry = thing_weapon_carry_anim(t);
-        if (carry) {
-            thing_hide(carry);
-        }
-    }
-}
-#endif
 
 static void thing_move_set_dir (thingp t,
                                 double *x,
@@ -4425,10 +4244,6 @@ void thing_server_action (thingp t,
                                                  tp,
                                                  item,
                                                  0 /* stats */)) {
-#if 0
-                socket_server_tx_map_update(0, server_boring_things,
-                                            "item drop");
-#endif
                 break;
             }
         }
@@ -4451,10 +4266,6 @@ void thing_server_action (thingp t,
                                                          tp,
                                                          item,
                                                          0 /* stats */)) {
-#if 0
-                        socket_server_tx_map_update(0, server_boring_things,
-                                                    "item dropped");
-#endif
                         goto done;
                     }
                 }

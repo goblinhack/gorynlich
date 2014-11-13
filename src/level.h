@@ -10,7 +10,6 @@ void level_fini(void);
 levelp level_new(widp, uint32_t, int is_editor, int on_server);
 void level_destroy(levelp *, uint8_t keep_players);
 void level_tick(levelp);
-void level_update(levelp level);
 void level_update_now(levelp level);
 levelp level_load(uint32_t level, widp, int is_editor, int on_server);
 levelp level_load_random(uint32_t level, widp, int is_editor, int on_server);
