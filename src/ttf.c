@@ -204,6 +204,11 @@ void ttf_text_size (font *f, const char *text_in,
 		    text += 5;
 		    found_format_string = false;
 
+                    /*
+                     * Skip the formatting text
+                     */
+                    (void) string2tile(&text);
+
                     x += f->glyphs['a'].width * scaling * advance;
                     x += f->glyphs['a'].width * scaling * advance;
                     x += f->glyphs['a'].width * scaling * advance;
