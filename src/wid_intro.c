@@ -180,6 +180,20 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             wid_intro_single_play_selected();
             return (true);
 
+        case 'j':
+            wid_intro_hide();
+
+            /*
+             * Start with some random junk.
+             */
+            thing_statsp s;
+            s = &global_config.player_stats;
+            thing_stats_get_random(s);
+
+            wid_server_create_visible();
+            wid_server_join_visible();
+            return (true);
+
         case 'q':
         case SDLK_ESCAPE:
             wid_intro_quit_selected();

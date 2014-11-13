@@ -966,15 +966,6 @@ static void client_poll (void)
                                  latest_hiscores.players[0].death_reason,
                                  latest_hiscores.rejoin_allowed);
 
-                /*
-                 * Make sure the player isn't sitting at any inventory screen 
-                 * while dead.
-                 */
-                wid_player_stats_hide();
-                wid_player_info_hide();
-                wid_player_inventory_hide();
-                wid_player_action_hide();
-
                 break;
             }
 
