@@ -288,13 +288,13 @@ static void wid_dead_create (const char *name,
     wid_raise(w);
 
     wid_update(w);
-    wid_move_to_pct(w, 0.6, 1.3);
+    wid_move_to_pct(w, 0.1, 1.3);
 
     music_play_dead();
 
     static uint32_t gravestone_appear_delay = 3000;
 
-    wid_move_to_pct_in(w, 0.6, 0.3, gravestone_appear_delay);
+    wid_move_to_pct_in(w, 0.1, 0.35, gravestone_appear_delay);
 
     action_timer_create(
             &wid_timers,

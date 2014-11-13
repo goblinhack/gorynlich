@@ -1796,6 +1796,50 @@ static void maze_add_corridor_walls (void)
             }
         }
     }
+
+    for (x = 1; x < MAP_WIDTH - 1; x++) {
+        for (y = 1; y < MAP_HEIGHT - 1; y++) {
+
+            if ((map_jigsaw_buffer_getchar(x, y) != MAP_FLOOR)) {
+                continue;
+            }
+
+            for (dx = -1; dx <=1; dx++) {
+                for (dy = -1; dy <=1; dy++) {
+                    if (map_jigsaw_buffer_getchar(x+dx, y+dy) == MAP_EMPTY) {
+                        map_jigsaw_buffer_goto(x+dx, y+dy);
+                        map_jigsaw_buffer_putchar(MAP_WALL);
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+     * Extra thick walls.
+     */
+    int thick;
+    int depth = rand() % 4;
+
+    for (thick = 0; thick < depth; thick++) {
+        for (x = 1; x < MAP_WIDTH - 1; x++) {
+            for (y = 1; y < MAP_HEIGHT - 1; y++) {
+
+                if ((map_jigsaw_buffer_getchar(x, y) != MAP_WALL)) {
+                    continue;
+                }
+
+                for (dx = -1; dx <=1; dx++) {
+                    for (dy = -1; dy <=1; dy++) {
+                        if (map_jigsaw_buffer_getchar(x+dx, y+dy) == MAP_EMPTY) {
+                            map_jigsaw_buffer_goto(x+dx, y+dy);
+                            map_jigsaw_buffer_putchar(MAP_WALL);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 /*
@@ -1854,9 +1898,13 @@ static void maze_convert_to_map (dungeon_t *dg)
 {
     dump_jigpieces_to_map(dg);
 
+    map_jigsaw_buffer_print_file(MY_STDOUT);
     jigpiece_create_mirrored_frag(dg);
+    map_jigsaw_buffer_print_file(MY_STDOUT);
     jigpiece_create_mirrored_frag_alt(dg);
+    map_jigsaw_buffer_print_file(MY_STDOUT);
     jigpiece_add_frag(dg);
+    map_jigsaw_buffer_print_file(MY_STDOUT);
     maze_add_corridor_walls();
 }
 
