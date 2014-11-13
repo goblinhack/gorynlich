@@ -88,6 +88,9 @@ void wid_game_map_client_hide (void)
 
         wid_destroy(&wid_game_map_client_grid_container);
 
+        wid_player_stats_hide();
+        wid_player_info_hide();
+        wid_player_inventory_hide();
         wid_player_action_hide();
 
         wid_chat_hide();

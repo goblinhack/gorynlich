@@ -46,6 +46,8 @@ void wid_player_action_fini (void)
 void wid_player_action_hide (void)
 {
     wid_player_action_destroy();
+
+    player_stats = 0;
 }
 
 void wid_player_action_visible (thing_statsp s, int fast)
