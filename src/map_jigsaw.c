@@ -239,6 +239,8 @@ typedef struct {
  */
 static int32_t opt_seed;
 
+static void maze_debug(dungeon_t *dg);
+
 static char *dieat (int32_t line, int32_t col, const char *why)
 {
     DIE("Died at line %u, col %i: %s", line, col, why);
@@ -704,6 +706,8 @@ static int32_t jigpiece_char_is_passable (char c)
 {
     return (c == MAP_FLOOR) ||
            (c == MAP_MONST) ||
+           (c == MAP_START) ||
+           (c == MAP_END) ||
            (c == MAP_TRAPDOOR) ||
            (c == MAP_MOB_SPAWN) ||
            (c == MAP_DOOR) ||
@@ -733,8 +737,7 @@ static int32_t jigpiece_char_is_monst (char c)
  */
 static int32_t jigpiece_char_is_floor_or_corridor (char c)
 {
-    return (c == MAP_FLOOR) ||
-           (c == MAP_ROCK);
+    return (c == MAP_FLOOR) || (c == MAP_CORRIDOR);
 }
 
 /*
@@ -1796,6 +1799,9 @@ static void maze_add_decorations (void)
         map_jigsaw_buffer_putchar(MAP_CONCRETE);
     }
 
+    LOG("Added borders:");
+    map_jigsaw_buffer_print_file(MY_STDOUT);
+
     for (x = 1; x < MAP_WIDTH - 1; x++) {
         for (y = 1; y < MAP_HEIGHT - 1; y++) {
 
@@ -1813,6 +1819,9 @@ static void maze_add_decorations (void)
             }
         }
     }
+
+    LOG("Added corridor walls:");
+    map_jigsaw_buffer_print_file(MY_STDOUT);
 
     /*
      * Make sure all floor tiles have a wall around them.
@@ -1835,11 +1844,14 @@ static void maze_add_decorations (void)
         }
     }
 
+    LOG("Added walls around floor tiles:");
+    map_jigsaw_buffer_print_file(MY_STDOUT);
+
     /*
      * Extra thick walls.
      */
     int thick;
-    int depth = rand() % 4;
+    int depth = rand() % 3;
 
     for (thick = 0; thick < depth; thick++) {
         for (x = 1; x < MAP_WIDTH - 1; x++) {
@@ -1859,6 +1871,11 @@ static void maze_add_decorations (void)
                 }
             }
         }
+    }
+
+    if (depth) {
+        LOG("Added thick walls:");
+        map_jigsaw_buffer_print_file(MY_STDOUT);
     }
 }
 
@@ -1931,6 +1948,10 @@ static int maze_check_exit_can_be_reached (void)
                 break;
             }
         }
+
+        if (found_start) {
+            break;
+        }
     }
 
     if (!found_start) {
@@ -1949,6 +1970,10 @@ static int maze_check_exit_can_be_reached (void)
                 found_end = 1;
                 break;
             }
+        }
+
+        if (found_end) {
+            break;
         }
     }
 
@@ -2000,13 +2025,11 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
 /*
  * maze_debug
  */
-void maze_debug(dungeon_t *dg);
-void maze_debug (dungeon_t *dg)
+static void maze_debug (dungeon_t *dg)
 {
     dump_jigpieces_to_map(dg);
 
     map_jigsaw_buffer_print();
-    map_jigsaw_buffer_print_file(MY_STDOUT);
 
     memset(map_jigsaw_buffer, 0, sizeof(map_jigsaw_buffer));
     putchar('\n');
@@ -2021,14 +2044,17 @@ void maze_debug (dungeon_t *dg)
 static void maze_convert_to_map (dungeon_t *dg)
 {
     dump_jigpieces_to_map(dg);
+    LOG("Added jigpieces:");
+    map_jigsaw_buffer_print_file(MY_STDOUT);
 
-    map_jigsaw_buffer_print_file(MY_STDOUT);
     jigpiece_create_mirrored_frag(dg);
-    map_jigsaw_buffer_print_file(MY_STDOUT);
+
     jigpiece_create_mirrored_frag_alt(dg);
-    map_jigsaw_buffer_print_file(MY_STDOUT);
+
     jigpiece_add_frag(dg);
+    LOG("Added fragments:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
+
     maze_add_decorations();
 }
 
@@ -2120,9 +2146,13 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
     }
 
 #ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-    maze_debug(dg);
-//    system("sleep 0.5");
+    if (1) 
+#else
+    if (0) 
 #endif
+    {
+        maze_debug(dg);
+    }
 
     /*
      * Already solved this cell?
@@ -2559,7 +2589,6 @@ static int32_t generate_level (const char *jigsaw_map,
         }
 
         if (!maze_jigsaw_solve(dg)) {
-            maze_debug(dg);
 #ifdef MAZE_DEBUG_SHOW_AS_GENERATING
             printf("seed %u, maze solve failed\n", maze_seed);
 #endif
@@ -2582,6 +2611,9 @@ static int32_t generate_level (const char *jigsaw_map,
             goto reseed;
         }
 
+        LOG("Added start and exit::");
+        map_jigsaw_buffer_print_file(MY_STDOUT);
+
         break;
 reseed:
         fflush(MY_STDOUT);
@@ -2593,22 +2625,21 @@ reseed:
         memset(dg->maze, 0, sizeof(dg->maze));
     }
 
-#ifdef MAZE_DEBUG_SHOW
-    map_jigsaw_buffer_print();
-#endif
-
-    map_jigsaw_buffer_print_file(MY_STDOUT);
-
     if (!maze_check_exit_can_be_reached()) {
-#ifdef MAZE_DEBUG_SHOW
-map_jigsaw_buffer_print();
-#endif
 #ifdef MAZE_DEBUG_SHOW_AS_GENERATING
         printf("seed %u, maze failed to solve\n", maze_seed);
 #endif
-DIE("x");
+map_jigsaw_buffer_print();
+        DIE("Unsolved maze");
         goto reseed;
     }
+
+    LOG("Maze created:");
+    map_jigsaw_buffer_print_file(MY_STDOUT);
+
+#ifdef MAZE_DEBUG_SHOW
+    map_jigsaw_buffer_print();
+#endif
 
     myfree(dg);
 
@@ -2753,7 +2784,7 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
         DIE("failed to generate a maze!");
     }
 
-    exit (0);
+    exit(0);
     return (rc);
 }
 
@@ -2771,8 +2802,10 @@ void map_jigsaw_generate (widp wid)
     init();
 
     jigsaw_map = "data/map/jigsaw.map";
-
-    int rc = generate_level(jigsaw_map, opt_seed);
+    int rc;
+    while (true) {
+    rc = generate_level(jigsaw_map, opt_seed);
+    }
 
     if (!rc) {
         DIE("failed to generate a maze!");
