@@ -88,7 +88,14 @@ void wid_intro2_hide (void)
     thing_statsp s;
     s = &global_config.player_stats;
 
-LOG("hie set name %s",s->pname);
+    /*
+     * If no name was chosen by the user and they removed the default, then 
+     * add one back.
+     */
+    if (!strlen(s->pname)) {
+        strncpy(s->pname, name_random(s->pclass), sizeof(s->pname) - 1);
+    }
+
     client_socket_set_name(s->pname);
     client_socket_set_pclass(s->pclass);
 }
