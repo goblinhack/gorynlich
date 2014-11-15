@@ -124,6 +124,7 @@ static void wid_dead_gravestone_appeared (void *context)
     LOG("Client: Gravestone raised");
 
     static const char *messages[] = {
+        "I hate to inquire, but are you dead?",
         "You bit the dust",
         "You snuffed it",
         "You croaked it",
@@ -148,18 +149,18 @@ static void wid_dead_gravestone_appeared (void *context)
         "You number was up",
         "You bade farewell to life",
         "You crossed the great divide",
-        "You went to the spirit in the sky",
-        "You went to the ranch in the sky",
+        "You went to the funky spirit in the sky",
+        "You went to the ranch dressing in the sky",
         "You went to the restaurant at the end of the universe",
-        "You came to a sticky end",
+        "You came to a sticky and pointless end",
         "You popped your clogs",
-        "You went off to make your maker",
+        "You went off to make your maker.\nIt was not impressed.",
         "You joined the choir invisible",
         "Your god told you to slow down",
         "You are six feet under",
-        "You are  off to the happy hunting ground",
+        "You are off to the happy hunting ground",
         "You fell off the perch",
-        "You are as lifeless as a norweigian blue",
+        "You are as lifeless as a Norweigian blue",
         "I had such high hopes for you",
         "You dissapoint me",
         "Pathetic",
@@ -170,9 +171,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "Are you paid to play this?\nYou shouldn't be",
         "Is that the best you could do?",
         "Awful. Just awful.",
-        "My son plays better than that",
-        "Let your mum play next time instead",
-        "Let your mom play next time instead",
+        "My pet kakapo plays better than that",
         "Let your pet pigeon play next time instead",
         "I have a goat plays better than you",
         "My pet pigeon ccould do better",
@@ -180,7 +179,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "Epic fail",
         "Just stop playing. You'll never win",
         "Believe in yourself more\nSomeone has to",
-        "Don't give up\nIn general. But give up on this game",
+        "Don't give up\nIn general. But please give up on this game",
         "Goodbye cruel world",
     };
 
@@ -288,13 +287,13 @@ static void wid_dead_create (const char *name,
     wid_raise(w);
 
     wid_update(w);
-    wid_move_to_pct(w, 0.1, 1.3);
+    wid_move_to_pct(w, -0.05, 1.3);
 
     music_play_dead();
 
     static uint32_t gravestone_appear_delay = 3000;
 
-    wid_move_to_pct_in(w, 0.1, 0.35, gravestone_appear_delay);
+    wid_move_to_pct_in(w, -0.05, 0.35, gravestone_appear_delay);
 
     action_timer_create(
             &wid_timers,

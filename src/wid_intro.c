@@ -236,6 +236,8 @@ static void wid_intro_single_play_selected_cb (void *context)
 
 static void wid_intro_single_play_selected (void)
 {
+    LOG("Play selected, choose random stats");
+
     /*
      * Start with some random junk.
      */
@@ -263,6 +265,8 @@ static void wid_intro_play_selected_cb (void *context)
 
 static void wid_intro_play_selected (void)
 {
+    LOG("Quick play selected, start game");
+
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro_play_selected_cb,

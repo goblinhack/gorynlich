@@ -114,15 +114,6 @@ void wid_player_stats_hide (void)
 {
     wid_player_stats_destroy();
 
-    /*
-     * May not be set yet if first time making the windows visible we also 
-     * call hide.
-     */
-    if (player_stats) {
-        client_socket_set_name(player_stats->pname);
-        client_socket_set_pclass(player_stats->pclass);
-    }
-
     player_stats = 0;
 }
 
@@ -156,7 +147,10 @@ void wid_player_stats_redraw (void)
 
 static void wid_player_stats_reroll (void)
 {
+    LOG("Reroll stats");
+
     thing_stats_get_random(player_stats);
+
     wid_player_stats_redraw();
 
     /*

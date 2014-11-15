@@ -84,6 +84,13 @@ void wid_intro2_hide (void)
     wid_player_info_hide();
     wid_player_inventory_hide();
     wid_player_action_hide();
+
+    thing_statsp s;
+    s = &global_config.player_stats;
+
+LOG("hie set name %s",s->pname);
+    client_socket_set_name(s->pname);
+    client_socket_set_pclass(s->pclass);
 }
 
 void wid_intro2_visible (void)
@@ -120,6 +127,7 @@ void wid_intro2_visible (void)
     thing_statsp s;
     s = &global_config.player_stats;
     thing_stats_get_random(s);
+LOG("widget init name %s",s->pname);
 
     wid_player_stats_visible(s);
     wid_player_info_visible(s);
@@ -134,6 +142,8 @@ static void wid_intro2_play_selected_cb (void *context)
 
 static void wid_intro2_play_selected (void)
 {
+    LOG("Play from stats selection");
+
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro2_play_selected_cb,
@@ -156,11 +166,15 @@ static uint8_t wid_intro2_play_mouse_event (widp w, int32_t x, int32_t y,
 
 static void wid_intro_intro_all_done_selected (void)
 {
+    LOG("All done on stats selection");
+
     wid_intro2_play_selected();
 }
 
 static uint8_t wid_intro_go_back_selected (void)
 {
+    LOG("Go back from intro");
+
     wid_intro2_hide();
     wid_intro_visible();
 

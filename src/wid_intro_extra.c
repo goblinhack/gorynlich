@@ -16,7 +16,6 @@
 #include "wid_intro_settings.h"
 #include "wid_intro_buttons.h"
 #include "wid_hiscore.h"
-#include "wid_hiscore.h"
 #include "wid_notify.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
@@ -127,6 +126,8 @@ void wid_intro_extra_visible (void)
 
 static void wid_intro_extra_about_selected (void)
 {
+    LOG("Intro about selected");
+
     wid_intro_extra_hide();
 
     wid_intro_about_visible();
@@ -134,6 +135,8 @@ static void wid_intro_extra_about_selected (void)
 
 static void wid_intro_extra_settings_selected (void)
 {
+    LOG("Intro settings selected");
+
     wid_intro_extra_hide();
 
     wid_intro_settings_visible();
@@ -141,6 +144,8 @@ static void wid_intro_extra_settings_selected (void)
 
 static void wid_intro_extra_hiscore_selected (void)
 {
+    LOG("Intro hiscore selected");
+
     wid_intro_extra_hide();
 
     wid_hiscore_visible();
@@ -155,6 +160,8 @@ static void wid_intro_extra_editor_selected_cb (void *context)
 
 static void wid_intro_extra_editor_selected (void)
 {
+    LOG("Editor selected");
+
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro_extra_editor_selected_cb,

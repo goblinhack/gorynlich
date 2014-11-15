@@ -3569,8 +3569,14 @@ void thing_client_move (thingp t,
 {
     widp grid = wid_game_map_client_grid_container;
 
+if (thing_is_player(t)) {
+LOG("XXX x %f y %f",x,y);
+}
     if (t->wid) {
         if (thing_hit_solid_obstacle(grid, t, x, y)) {
+if (thing_is_player(t)) {
+LOG("XXX hit obs");
+}
             if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
                 y = t->y;
             } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
