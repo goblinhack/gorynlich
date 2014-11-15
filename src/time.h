@@ -59,8 +59,9 @@ static inline uint32_t time_update_time_milli (void)
 
     return (time_now);
 #endif
+    extern uint8_t sdl_main_loop_running;
 
-    if (!sdl_init_video || HEADLESS) {
+    if (!sdl_main_loop_running || !sdl_init_video || HEADLESS) {
         struct timeval  tv;
 
         gettimeofday(&tv, NULL);
@@ -84,5 +85,11 @@ static inline uint32_t time_update_time_milli (void)
 
 static inline uint32_t time_get_time_milli (void)
 {
+    /*
+     * Do we really need to cache this? As it messes up timestamps when things 
+     * are blocking, like maze generation.
+     */
+    time_update_time_milli();
+
     return (time_get_time_cached());
 }

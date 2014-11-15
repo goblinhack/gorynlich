@@ -61,7 +61,7 @@
 |x......x|        |  x.....|  x..x  |  x.....|x......x|  x..x  |  x..x  |.....x  |  x.....|
 |xxx..xxx|        |  x.....|  x..x  |  x.....|xxx..xxx|  x..x  |  x..x  |.....x  |  x.....|
 |  x..x  |        |xxx.....|xxx..x  |xxx.....|  x..x  |  x..x  |xxx..xxx|.....x  |xxx..xxx|
-|  x..x  |  xxxx  |....... |.....x  |........|  x..x  |xxx..x  |..x..x..|.....x  |........|
+|  x..x  |  xxxx  |........|.....x  |........|  x..x  |xxx..x  |..x..x..|.....x  |........|
 |  x..x  |  x..x  |........|.....xxx|........|  x..xxx|.....x  |..x..x..|.....x  |........|
 |  x..xxx|  x..x  |xxx.....|xxx.....|.....xxx|  x.....|.....xxx|.....x..|xxxx.xxx|xxx..xxx|
 |  x.....|  x..x  |  x.....|  x.....|.....x  |xxx.....|........|........|   x....|  x..x  |
@@ -79,7 +79,7 @@
 |x......x| xxxxxxx|  x.....|  x.x   |  x.....|x......x|  x.x   |  x.x   |.....x  |  x.....|
 |xxx.xxxx| x.....x|  x.....|  x.x   |  x.....|xxx.xxxx|  x.x   |  x.x   |.....x  |  x.....|
 |  x.xx  | xxxxx.x|xxx.....|xxx.x   |xxx.....|  x.x   |  x.x   |xxx.xxxx|.....x  |xxx..xxx|
-|  x..x  |  xxxx.x|....... |....x   |........|  x.x   |xxx.x   |....xx..|.....x  |.....x..|
+|  x..x  |  xxxx.x|........|....x   |........|  x.x   |xxx.x   |....xx..|.....x  |.....x..|
 |  x..x  | xx.xx.x|........|....xxxx|........|  x.xxxx|....x   |........|.....x  |..x.....|
 |  x.xxxx| x.....x|xxx.....|xxx.....|.....xxx|  x.....|....xxxx|........|xxxx.xxx|xxx..xxx|
 |  x.....| xx.xxxx|  x.....|  x.....|.....x  |xxx.....|........|........|   x....| xx..xx |
@@ -91,13 +91,13 @@
 |  x.x   |  x....x|....x   |....x   |........|  x.x   | xx.x   |....x   |...xxx  |........|
 |  x.x   |  x....x|....x   |....x   |....xxxx|xxx.xxx | x..x   |....xx  |..xxxx  |xxx.....|
 |  x.x   |  x.xxxx|xxx.x   |xxxxx   |xxx.xxx |  x.x   | x..xxxx|....x   |xxxxxx  |  x.xxxx|
-|  x.xx  |  x.xx  |  x.x   |        |  x.xxx |xxx.xxxx| x......|....xx  |        |  x.xx  |
-|  x..x  |  x..x  |  x.x   |        |  x.x   |x......x| xx.....|....x   |        |  x...  |
+|  x.xx  |  x.xx  |  x.x   |        |  x.xxx |xxx.xxxx| x......|....xx  |        |  x.xxx |
+|  x..x  |  x..x  |  x.x   |        |  x.x   |x......x| xx.....|....x   |        |  x...x |
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |x......x|        |  x.....|  x.x   |  x.....|x......x|  x..x  |  x..x  |.....x  |  x.....|
 |xxx.xxxx|        | xx.....| xx.xx  |  x.....|xxx.xxxx|  x.xx  |  x.xx  |.....x  |  x.....|
 |  x.xxxx| xx     |xxxx....|xxx.xx  |xxx.....|xxx.x   |  x.x   |xxx.xxxx|.....x  |xxxx.xxx|
-|  x.....| xxxxxx |..xx... |....xx  |........|....x   |xxx.x   |....xx..|.....x  |........|
+|  x.....| xxxxxx |..xx....|....xx  |........|....x   |xxx.x   |....xx..|.....x  |........|
 |  x.x...|  x...x |........|x...xxxx|........|..x.xxxx|....x   |........|.....x  |........|
 |  x.xxxx|  x.xxx |xxx.....|xxx.....|.....xxx|xxx.....|....xxxx|........|xxxx.xxx|xxx.xxxx|
 |  x.....|  x.xx  |  x.....|  x.....|.....x  |xxx.....|........|........|   x....|  x..x  |
@@ -106,7 +106,7 @@
 |x......x|        |  x.....|  x..x  |  x.....|x......x|  x..x  |  x..x  |.....x  |  x.....|
 |xxx..xxx|    x   |  x.....| xx..xx | xx.....|xxx..xxx|  x..x  |  x..x  |.....x  |  x.....|
 |  x..xx |   xxx  |xxx.....|xxx..xx |xxx.....|  x..x  |  x..x  |xxx..xxx|.....x  |xxx..xxx|
-|  x..xx | xxxxxx |....... |.....xx |........|  x..x  |xxx..x  |........|.....x  |........|
+|  x..xx | xxxxxx |........|.....xx |........|  x..x  |xxx..x  |........|.....x  |........|
 |  x..x  | x...xx |........|.x...xxx|........|  x..xxx|.....x  |........|.....x  |........|
 |  x..xxx| x...xx |xxx.....|xxx.....|..x..xxx|  x.....|.....xxx|........|xxxx.xxx|xxx..xxx|
 |  x.....| xx..x  |  x.....| xx..xx.|.....x  |xxx.....|........|........|   x....|  x..x  |
@@ -119,12 +119,12 @@
 |   $    |     xx.|     xx |.x    x.|.x    x.|.x   xx.|
 | x xx x |  x xxx.|    xxx |.xx  xx.|.xx   x.|.xx  xx.|
 |xxxxxxxx| xxxxxx.|xxxxxx  |..xxxx..|..xxxxx.|.xxxxxx.|
-|x......x|x.......|x      x|x......x|x.......|...... .|
+|x......x|x.......|x      x|x......x|x.......|........|
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
-|    xx..|     xx.|   x.x .|        |   xxx..|        |xx      |    xx..|    xxx.|     x..|        |   xxx..|        |xx      |
+|    xx..|     xx.|   x.x  |        |   xxx..|        |xx      |    xx..|    xxx.|     x..|        |   xxx..|        |xx      |
 |  xx...x|    x...|   x.x  |        | xxx...x|xx      |.xxxx   |  xxx...|   xx...|    x...|        | xxx....|xx      |.xxxx   |
 | xx..xx |   x..xx|   x.x  |xx      |xx...xxx|.xxxx   |....x   |xxx...xx|xxxx..xx|   x..xx|xx      |xx....xx|.xxxx   |....x   |
-| x..xx  |  x...x |  x..x  |..xxx   |x... x  |....xx  |....xxx |x...xx  |x.....x |  x..x  |.xxxx   |.... .. |....xx  |....xxx |
+| x..xx  |  x...x |  x..x  |..xxx   |x....x  |....xx  |....xxx |x...xx  |x.....x |  x..x  |.xxxx   |......x |....xx  |....xxx |
 | x..x   | x..xx  |  x.xx  |x....x  |..xxxx  |.xx..xxx|......x |..xxx   |.....xx |  x.x   |.....x  |.xxxx.x |.....xxx|.x....x |
 |xx.xx   |xx..x   |  x.x   |xxxx..x |xxx     |.xxx...x|.xxxx.xx|xxx     |xx...xxx|  x.x   |xxxx..xx|xx  x.x |.......x|.x.xx.xx|
 |x..x    |x..x    |  x.x   |   xx..x|        |xx xx...|.x  x..x|        | xx.....|  x.x   |   xx...|    xxx |x.......|.......x|
@@ -133,14 +133,14 @@
 |    xx..|    xx..|     x..|        |   xxx..|        |xx      |    xx..|    xxx.|     x..|        |   xxx..|        |xx      |
 |  xx...x|    x..x|    x..x|        | xxx...x|xx      |.xxxx   |  xxx...|   xx...|    x...|        | xxx...x|xx      |.xxxx   |
 |xxx..xx |xxxx..xx|   x..x |        |xx...xxx|.xxxx   |....x   |xxx...xx|xxxx..xx|   x..xx|        |xx....x |.xxxx   |....x   |
-|....xx  |..x...x |  x..x  |xxxxx   |.... x  |....xx  |....xxx |....xx  |......x |  x..x  |xxxxx   |.... .x |....xx  |....xxx |
+|....xx  |..x...x |  x..x  |xxxxx   |.....x  |....xx  |....xxx |....xx  |......x |  x..x  |xxxxx   |......x |....xx  |....xxx |
 |xxxxx   |x...xx  |  x.x   |.....x  |.xxxxx  |.xx..xxx|......x |xxxxx   |x....xx |  x.x   |.....x  |.xxxx.x |.....xxx|.x....x |
 |        |xxx.xxx |  x.x   |xxxx..x |xx      |.xxx...x|.xxxx.xx|        |xx...xxx|  x.x   |xxxx..xx|xx  x.x |.......x|.x.xx.xx|
 |        |  x....x|  x.x   |   xx..x|        |xx xx..x|.x  x...|        | xx.....|  x.x   |   xx...|    xxx |x......x|........|
 |        |  xxxx..|  x.x   |    xx..|        |    xx..|xx  xxx.|        |  xxxxx.|  x..x  |    xx..|        | xxxxx..|xxxxxxx.|
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |xx....xx|xxx.x   |       x|  x..x  | x....x |  x..x  |xxxxxx  | xxxxxx |  x.xx  |  x.xx  |   xxxxx|  x.xx  | x....x |  x.x   |xxxxxx  | xxxxxx |
-| xx.. xx|xxx.x   |      xx|  x..x  |  x.xx  |x x.xx  |xM...x x|xxM..$.x| xx.xxxx|xx...x  |   xM..x|  x..xxx| x... x |  x.xx  |x...Mxxx| x$...x |
+| xx...xx|xxx.x   |      xx|  x..x  |  x.xx  |x x.xx  |xM...x x|xxM..$.x| xx.xxxx|xx...x  |   xM..x|  x..xxx| x....x |  x.xx  |x...Mxxx| x$...x |
 |x...xx  |.xx.x   |  xxxxx.|xxx..xxx| xx.xxx |.xx.xxxx|x....xx.|........| xx...$x|......x |  xxxx.x|xxx..x..| x...xx |xxx..xxx|x..xx...|xxx...xx|
 |x...x   |....xxx |  xM....|....M...|xx....x |.......x|x.......|........|  x.M..x|.......x|  x.....|........| x....x |.......x|x.......|x......x|
 | x...x  |......x |  x.....|x......x| x...Mx |..x....x|xxx..xx.|..x.....|  x...xx|.......x|  x....x|x.......| x..x.x |xx..x..x| xx.xx..|x......x|
@@ -213,7 +213,7 @@
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |  x..x  |  x..x  |        |  x..x  |  x..x  |  x..x  |xxxxxx  | xxxxxx |  x..x  |  x..x  |   xxxxx|  x..x  |  x..x  |  x..x  |xxxxxx  | xxxxxx |
 | xxM.x  |  x..x  |        |  x..x  |  x..x  | x...x  |xM...x  | x..M$x |  x..xxx|  x..x  |   xM..x|  x..x  |  x..x  |  x..x  |x...Mx  | x$...x |
-| x.M.xx |xx...x  |  .xxxxx|xx...xxx| xx..xx |x....xxx|x....xxx|xx....xx|  xx...x|xxxx..x |  xxxx.x|xxM...xx| xxxMxx |xx...xxx|x..xxxxx|xxx...xx|
+| x.M.xx |xx...x  |   xxxxx|xx...xxx| xx..xx |x....xxx|x....xxx|xx....xx|  xx...x|xxxx..x |  xxxx.x|xxM...xx| xxxMxx |xx...xxx|x..xxxxx|xxx...xx|
 | x...x  |..M..x  |  x..M..|........| x....x |.......x|x.......|....x...|   x.M.x|.xxx...x|  x.....|...M....| x....$x|.....xMx|x.......|........|
 | xM..x  |..M..x  |  x.....|........|x....Mx |.......x|xx......|...x....|   x.xxx|.......x|  x.....|....M...| x.....x|.....x.x|xxx.....|........|
 | x.M.xx |xx...x  |  x...xx|xx...Mxx| x...xx |xxx...Mx| xx..xxx|x.x..xxx|  xx.x  |xxx....x|  x..xxx|xx...Mxx| xxMxxx |xxx....x|  x..xxx|xxx..xxx|
@@ -222,7 +222,7 @@
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |  x..x  |  x..x  |        |  x..x  |  x..x  |  x..x  |xxxxxx  | xxxxxx |  x..x  |  x..x  |   xxxxx|  x..x  |  x..x  |  x..x  |xxxxxx  | xxxxxx |
 | xxM.x  |  x..x  |        |  x..x  |  x..x  | x...x  |xM...x  | x..M$x |  x..xxx|  x..x  |   xM..x|  x..x  |  x..x  |  x..x  |x...Mx  | x$...x |
-| x.M.xx |xx...x  |  .xxxxx|xx...xxx| xx..xx |x....xxx|x....xxx|xx....xx|  xx...x|xxxx..x |  xxxx.x|xxM...xx| xxxMxx |xx...xxx|x..xxxxx|xxx...xx|
+| x.M.xx |xx...x  |   xxxxx|xx...xxx| xx..xx |x....xxx|x....xxx|xx....xx|  xx...x|xxxx..x |  xxxx.x|xxM...xx| xxxMxx |xx...xxx|x..xxxxx|xxx...xx|
 | x...x  |..M..x  |  x..M..|........| x....x |.......x|x.......|....x...|   x.M.x|.xxx...x|  x.....|...M....| x....$x|.....xMx|x.......|........|
 | xM..x  |..M..x  |  x.....|........|x....Mx |.......x|xx......|...x....|   x.xxx|.......x|  x.....|....M...| x.....x|.....x.x|xxx.....|........|
 | x.M.xx |xx...x  |  x...xx|xx...Mxx| x...xx |xxx...Mx| xx..xxx|x.x..xxx|  xx.x  |xxx...xx|  x..xxx|xx...Mxx| xxMxxx |xxx....x|  x..xxx|xxx..xxx|
@@ -231,7 +231,7 @@
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |        |  x..x  |        |  x..x  |  x..x  |  x..x  |xxxxxx  | xxxxxx |  x..x  |  x..x  |   xxxxx|  x..x  |  x..x  |  x..x  |xxxxxx  | xxxxxx |
 |  x     |  x..x  |        |  x..x  |xxx..xxx|  x..x  |x...Mx  | xM$$Mx |  x..xxx|  x..x  |   xM..x|  x..x  | x...xx | xx..x  |x...Mx  | x$...x |
-|  xx    |xx...x  |  xxxxxx|xxx.xxxx|xx.M..xx|xx....xx|x ....xx|x......x|  x..xMx|xxxx..x |  xxxx.x|xxx...xx|x.....x |xxx..xxx|x..x.xxx|x.....xx|
+|  xx    |xx...x  |  xxxxxx|xxx.xxxx|xx.M..xx|xx....xx|x.....xx|x......x|  x..xMx|xxxx..x |  xxxx.x|xxx...xx|x.....x |xxx..xxx|x..x.xxx|x.....xx|
 |  x.x   |.....x  |  xM....|..x.M...|x...M..x|.......x|x.......|........|xx.....x|.xx....x|  x.....|........|x.....x |.xx...xx|x.......|........|
 |  x.x   |.....x  |  x.xMx.|.....x..|x....M.x|.......x|xx......|........|x...xxxx|.......x|  x.....|........|xx....x |......Mx|xxx.....|........|
 |  x.x   |xx...x  |  x.xxxx|xxxx.xxx|x.....xx|xx....Mx|  x...xx|xx....xx|x....x  |xx.....x|  x...xx|xx...xxx| x...xx |xx....xx|  x..xxx|xx...xxx|
@@ -249,7 +249,7 @@
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |  x.....|  x..x  |        |  x..x  |  x..x  |  x..x  |xxxxxx  | xxxxxx |  x..x  |.....x  |   xxxxx|  x.....|.....x  |.....x  |xxxxxx  | xxxxxx |
 |  x.....|  x..x  |        |  x..x  |  x..x  |  x..x  |xM...x  | xM..Mx |  x..xxx|.....x  |   xM..x|  x.....|.....x  |.....x  |x...Mx  | x$...x |
-|  x.....|xxx..x  |  xxxxxx|xxx..xxx| xx..xxx|xxx..xxx|x ...xxx|xx....xx|xxx....x|.xxx..x |  xxxx.x|xxx.....|.....xx |.....xxx|x..xxxxx|x.....xx|
+|  x.....|xxx..x  |  xxxxxx|xxx..xxx| xx..xxx|xxx..xxx|x....xxx|xx....xx|xxx....x|.xxx..x |  xxxx.x|xxx.....|.....xx |.....xxx|x..xxxxx|x.....xx|
 |  x..x..|.....x  |  xM....|....M...| x....x.|.......x|x..M....|........|.......x|.xxx...x|  x.....|........|......x |........|x.......|........|
 |  x..x..|....xx  |  x.x...|.xx.....| x...M..|.......x|xxx.....|........|.....xxx|.......x|  x.....|........|......x |........|xxx.....|........|
 |  x..xxx|.....x  |  x.....|..x..xxx| xx.....|......Mx|  x.....|.....xxx|.....x  |xxx....x|  x.....|.....xxx|xxx..xx |xxx...M.|  x.....|........|
@@ -258,7 +258,7 @@
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |  x.....|  x..x  |        |  x.....|.....x  |.....x  |xxxxxx  | xxxxxx |  x..x  |........|   xxxxx|  x.....|.....x  |.....x  |xxxxxx  | xxxxxx |
 |  x.....|  x..x  |   xx   | xx.....|.....x  |.....x  |xM...x  | xM..$x |  x..xxx|........|   x$.Mx|  xx....|.xx..x  |.xx..x  |x...Mx  | x$...x |
-| xx.....|xxx..xxx|  xxxxxx|xxx.....|.xxxxxxx|.....xxx|x ...xxx|xx....xx|xxx....x|.xxx... |  xxxx.x|xxx.....|..x..xx |.xx..xxx|x .xxxxx|xxx...xx|
+| xx.....|xxx..xxx|  xxxxxx|xxx.....|.xxxxxxx|.....xxx|x....xxx|xx....xx|xxx....x|.xxx....|  xxxx.x|xxx.....|..x..xx |.xx..xxx|x..xxxxx|xxx...xx|
 | xxx....|.x......| xxM....|.x..M...|......x.|........|x....x..|........|.......x|.xxx....|xxx.....|.x....x.|......x |........|x....x..|.x....x.|
 | xxx....|........| xx.....|......x.|.....Mx.|........|xxx..x..|........|..x..xxx|........|x.x.....|.x....x.|......x |........|xxx..x..|.x....x.|
 |  xx....|....x...|  x.....|...xxxxx|xxx...x.|......M.|  x..x..|.......x|..x..x  |xxx....x|x.x.....|.....xxx|xxx..xx |xxx...M.|  x.....|.x......|
@@ -267,17 +267,17 @@
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
 |        |  x..x  |        |  xxxx  |  xxxx  |  xxxx  |xxxxxx  | xxxxxx |  xxxx  |  xxxx  |   xxxxx|  xxxx  |  x..x  |  xxxx  |xxxxxx  | xxxxxx |
 |xxxxxxxx|  x..x  |        |  x..x  |  x..x  |  x..x  |xM...x  | xM..Mx | x...xxx|  x..x  |   xM..x|  x..x  |  xx..x |  x..x  |x...Mx  | x$...x |
-|x$....Mx|xxx..x  |xxxxxxxx|xxx..xxx| xxx.xx |xxx..xxx|x ...xxx|xx....xx|x...x.Mx|xxxx..x |  xxxx.x|xxx..xxx| xxx..x |xxx..xxx|x .xxxxx|xxx...xx|
+|x$....Mx|xxx..x  |xxxxxxxx|xxx..xxx| xxx.xx |xxx..xxx|x....xxx|xx....xx|x...x.Mx|xxxx..x |  xxxx.x|xxx..xxx| xxx..x |xxx..xxx|x..xxxxx|xxx...xx|
 | x....xx|.....x  |xM.....x|x...M..x| x$...x |x......x|x......x|x......x|x...x..x|.xxx...x|  x.....|........| xx...x |.......x|x.......|........|
 | xx.xxx |.....x  |x......x|x......x| x....x |x......x|xxx....x|x......x| x....xx|.......x|  x.....|........| xx...x |.......x|xxx.....|........|
 |  x..x  |xxx..x  |xxx..xxx|xxx..xxx| xx..Mx |xx....Mx| x...xxx|xxx..xxx|  xx..x |xxx....x|  x..xxx|xxx..xxx| xx..xx |xxx...Mx|  x..xxx|xxx..xxx|
 |  x..x  |  x..x  |  x..x  |  x..x  |  x.xxx | x..xxxx| x..xx  |  x..x  |  x..xx |  x...Mx|  x..x  |  x..x  |  x..x  |  x..xxx|  x..x  |  x..x  |
 |  x..x  |  x..x  |  x..x  |  x..x  |  x..x  |  x..x  |  x..x  |  x..x  |  x..x  |  xxxxx |  x..x  |  x..x  |  x..x  |  x..x  |  x..x  |  x..x  |
 +--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
-|x......x|x......x|       x|x..... x|x..... x|x .... x|xxxxxx x| xxxxxx |x......x|x......x|   xxxxx|  x.....|.....x  |.....x  |xxxxxx  | xxxxxx |
-|x ....x | xx..xx |      x.| x....x | x....x | x....x |x....xx.| xM..$x |x.x..xxx| xx..xx |   xM..x|  x.....|.....x  |.....x  |x...Mx  | x$...x |
-| xx...x |xxx..x  |  xxxxx.|xxx..xxx| xx..xx |xxx..xxx|x....xx.|xx....xx|x.x....x|xxxx..x |  xxxx.x|xxx.....|.....xx |.....xxx|x .xxxxx|xxx...xx|
-| xx..xx |.....x  |  xM....|....M...| x....x |.......x|x.......|........|x.x... x|.xxx...x|  x.....|........|......x |.......x|x.......|........|
+|x......x|x......x|       x|x......x|x......x|x......x|xxxxxx x| xxxxxx |x......x|x......x|   xxxxx|  x.....|.....x  |.....x  |xxxxxx  | xxxxxx |
+|x.....x | xx..xx |      x.| x....x | x....x | x....x |x....xx.| xM..$x |x.x..xxx| xx..xx |   xM..x|  x.....|.....x  |.....x  |x...Mx  | x$...x |
+| xx...x |xxx..x  |  xxxxx.|xxx..xxx| xx..xx |xxx..xxx|x....xx.|xx....xx|x.x....x|xxxx..x |  xxxx.x|xxx.....|.....xx |.....xxx|x..xxxxx|xxx...xx|
+| xx..xx |.....x  |  xM....|....M...| x....x |.......x|x.......|........|x.x....x|.xxx...x|  x.....|........|......x |.......x|x.......|........|
 |  x..x  |.....x  |  x.....|........| x...Mx |.......x|xxx.....|........|xxx..xxx|.......x|  x.....|........|......x |.......x|xxx.....|........|
 |  x..x  |xxx..x  |  x..x..|xxx..xxx| xx..xx |xxx...Mx|  x..xx.|xxx..xxx|  x..x  |xxx....x|  x..xxx|xxx..xxx|xxx..xx |xxx...Mx|  x.....|........|
 |  x..x  | xx..xx |  x..xx.|  x..x  |  x..x  |  x..xxx|  x..xx.|x.x..x.x|  x..x  |  x...Mx|  x..x  |  x..x  |  x..x  |  x..xxx|  x.....|........|
