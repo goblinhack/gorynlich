@@ -122,6 +122,8 @@ void wid_player_inventory_button_style (widp w,
         wid_set_font(w, vsmall_font);
         wid_set_text_lhs(w, true);
         wid_set_text_top(w, true);
+        wid_set_color(w, WID_COLOR_TEXT, GREEN);
+        wid_set_text_outline(w, true);
     }
 
     if (item.enchanted) {
@@ -131,8 +133,9 @@ void wid_player_inventory_button_style (widp w,
         wid_set_text(w, tmp);
         wid_set_font(w, vsmall_font);
         wid_set_text_rhs(w, true);
-        wid_set_text_bot(w, true);
+        wid_set_text_top(w, true);
         wid_set_color(w, WID_COLOR_TEXT, GOLD);
+        wid_set_text_outline(w, true);
     }
 
     /*

@@ -58,6 +58,7 @@ static tree_root *wid_top_level5;
  * Mouse movement
  */
 static widp wid_popup_tooltip;
+static widp last_wid_tooltip;
 static int wid_popup_tooltip_mouse_x;
 static int wid_popup_tooltip_mouse_y;
 
@@ -878,6 +879,7 @@ static void wid_mouse_over_end (void)
             fast_verify(wid_popup_tooltip);
 
             wid_destroy(&wid_popup_tooltip);
+            last_wid_tooltip = 0;
         }
     }
 }
@@ -921,7 +923,9 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         w->on_mouse_over_begin(w);
     }
 
-    if (w->tooltip) {
+    if (w->tooltip && (w != last_wid_tooltip)) {
+        last_wid_tooltip = w;
+
         if (wid_popup_tooltip) {
             wid_destroy_immediate(wid_popup_tooltip);
         }
@@ -8142,7 +8146,24 @@ static void wid_display (widp w,
             glcolor(col_text_outline);
 
 #ifdef ENABLE_LARGE_TEXT_OUTLINE
-            if (font == small_font) {
+            if (font == vsmall_font) {
+                ttf_puts_no_fmt(font, text,
+                                x - 1.0f * scaling,
+                                y + 1.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 1.0f * scaling,
+                                y + 1.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x - 1.0f * scaling,
+                                y - 1.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 1.0f * scaling,
+                                y - 1.0f * scaling, scaling, advance,
+                                fixed_width);
+            } else if (font == small_font) {
                 ttf_puts_no_fmt(font, text,
                                 x - 2.0f * scaling,
                                 y + 2.0f * scaling, scaling, advance,
@@ -8159,9 +8180,7 @@ static void wid_display (widp w,
                                 x + 2.0f * scaling,
                                 y - 2.0f * scaling, scaling, advance,
                                 fixed_width);
-            }
-
-            if (font == med_font) {
+            } else if (font == med_font) {
                 ttf_puts_no_fmt(font, text,
                                 x - 3.0f * scaling,
                                 y + 3.0f * scaling, scaling, advance,
@@ -8178,9 +8197,7 @@ static void wid_display (widp w,
                                 x + 3.0f * scaling,
                                 y - 3.0f * scaling, scaling, advance,
                                 fixed_width);
-            }
-
-            if (font == large_font) {
+            } else if (font == large_font) {
                 ttf_puts_no_fmt(font, text,
                                 x - 4.0f * scaling,
                                 y + 4.0f * scaling, scaling, advance,
@@ -8197,6 +8214,8 @@ static void wid_display (widp w,
                                 x + 4.0f * scaling,
                                 y - 4.0f * scaling, scaling, advance,
                                 fixed_width);
+            } else {
+                DIE("unhandled text outline case");
             }
 #else
             ttf_puts_no_fmt(font, text,

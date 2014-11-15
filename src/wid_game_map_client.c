@@ -80,6 +80,11 @@ void wid_game_map_client_hide (void)
     if (wid_game_map_client_window) {
         LOG("Client: Map hide");
 
+        wid_player_stats_hide();
+        wid_player_info_hide();
+        wid_player_inventory_hide();
+        wid_player_action_hide();
+
         wid_hide(wid_game_map_client_window, 0);
 
         wid_detach_from_grid(wid_game_map_client_grid_container);
@@ -87,11 +92,6 @@ void wid_game_map_client_hide (void)
         wid_destroy_grid(wid_game_map_client_grid_container);
 
         wid_destroy(&wid_game_map_client_grid_container);
-
-        wid_player_stats_hide();
-        wid_player_info_hide();
-        wid_player_inventory_hide();
-        wid_player_action_hide();
 
         wid_chat_hide();
     }

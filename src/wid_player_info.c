@@ -62,6 +62,10 @@ void wid_player_info_visible (thing_statsp s)
 
 static void wid_player_info_buttons_tick (widp wid)
 {
+    if (!player_stats) {
+        return;
+    }
+
     int tick = time_get_time_milli() / 100;
     int which = tick % 8;
 
