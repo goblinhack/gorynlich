@@ -89,6 +89,7 @@ static int maze_seed;
  * This is the buffer we print the jigsaw too.
  */
 char map_jigsaw_buffer[MAP_WIDTH][MAP_HEIGHT];
+static char map_jigsaw_buffer_old[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_fg[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_bg[MAP_WIDTH][MAP_HEIGHT];
 static uint8_t map_jigsaw_buffer_solved[MAP_WIDTH][MAP_HEIGHT];
@@ -321,6 +322,27 @@ uint8_t map_jigsaw_buffer_getchar (int32_t x, int32_t y)
     }
 
     return (map_jigsaw_buffer[x][y]);
+}
+
+static uint8_t map_jigsaw_buffer_old_getchar (int32_t x, int32_t y)
+{
+    if (x < 0) {
+        return (MAP_EMPTY);
+    }
+
+    if (y < 0) {
+        return (MAP_EMPTY);
+    }
+
+    if (x >= MAP_WIDTH) {
+        return (MAP_EMPTY);
+    }
+
+    if (y >= MAP_HEIGHT) {
+        return (MAP_EMPTY);
+    }
+
+    return (map_jigsaw_buffer_old[x][y]);
 }
 
 /*
@@ -1850,32 +1872,68 @@ static void maze_add_decorations (void)
     /*
      * Extra thick walls.
      */
-    int thick;
-    int depth = rand() % 3;
+    {
+        int thick;
+        int depth = rand() % 3;
 
-    for (thick = 0; thick < depth; thick++) {
-        for (x = 1; x < MAP_WIDTH - 1; x++) {
-            for (y = 1; y < MAP_HEIGHT - 1; y++) {
+        for (thick = 0; thick < depth; thick++) {
+            memcpy(map_jigsaw_buffer_old,
+                map_jigsaw_buffer, sizeof(map_jigsaw_buffer));
 
-                if ((map_jigsaw_buffer_getchar(x, y) != MAP_WALL)) {
-                    continue;
-                }
+            for (x = 1; x < MAP_WIDTH - 1; x++) {
+                for (y = 1; y < MAP_HEIGHT - 1; y++) {
 
-                for (dx = -1; dx <=1; dx++) {
-                    for (dy = -1; dy <=1; dy++) {
-                        if (map_jigsaw_buffer_getchar(x+dx, y+dy) == MAP_EMPTY) {
-                            map_jigsaw_buffer_goto(x+dx, y+dy);
-                            map_jigsaw_buffer_putchar(MAP_WALL);
+                    if (map_jigsaw_buffer_old_getchar(x, y) != MAP_WALL) {
+                        continue;
+                    }
+
+                    for (dx = -1; dx <=1; dx++) {
+                        for (dy = -1; dy <=1; dy++) {
+                            if (map_jigsaw_buffer_old_getchar(x+dx, y+dy) == MAP_EMPTY) {
+                                map_jigsaw_buffer_goto(x+dx, y+dy);
+                                map_jigsaw_buffer_putchar(MAP_WALL);
+                            }
                         }
                     }
                 }
             }
+
+            if (depth) {
+                LOG("Maze: Added thick walls:");
+                map_jigsaw_buffer_print_file(MY_STDOUT);
+            }
         }
     }
 
-    if (depth) {
-        LOG("Maze: Added thick walls:");
-        map_jigsaw_buffer_print_file(MY_STDOUT);
+    /*
+     * Random thick walls.
+     */
+    {
+        int count;
+        int depth = rand() % 3;
+
+        for (count = 0; count < MAP_WIDTH * MAP_HEIGHT * depth; count++) {
+            x = rand() % MAP_WIDTH;
+            y = rand() % MAP_HEIGHT;
+
+            if (map_jigsaw_buffer_getchar(x, y) != MAP_WALL) {
+                continue;
+            }
+
+            for (dx = -1; dx <=1; dx++) {
+                for (dy = -1; dy <=1; dy++) {
+                    if (map_jigsaw_buffer_getchar(x+dx, y+dy) == MAP_EMPTY) {
+                        map_jigsaw_buffer_goto(x+dx, y+dy);
+                        map_jigsaw_buffer_putchar(MAP_WALL);
+                    }
+                }
+            }
+        }
+
+        if (depth) {
+            LOG("Maze: Added thick random walls:");
+            map_jigsaw_buffer_print_file(MY_STDOUT);
+        }
     }
 }
 
@@ -2407,14 +2465,11 @@ static int32_t maze_solve_search (dungeon_t *dg, maze_cell_t *c)
 static uint8_t 
 maze_replace_room_char (uint32_t rx, uint32_t ry, char new_char)
 {
-    uint32_t tries = JIGPIECE_WIDTH * JIGPIECE_HEIGHT * 100;
+    uint32_t tries = MAP_WIDTH * MAP_HEIGHT * 10;
 
     while (tries--) {
-        uint32_t cx = rx * JIGPIECE_WIDTH;
-        uint32_t cy = ry * JIGPIECE_HEIGHT;
-
-        cx += rand() % JIGPIECE_WIDTH;
-        cy += rand() % JIGPIECE_HEIGHT;
+        uint32_t cx = rand() % MAP_WIDTH;
+        uint32_t cy = rand() % MAP_HEIGHT;
         
         if (jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx, cy)) &&
             jigpiece_char_is_ground((map_jigsaw_buffer_getchar(cx, cy+1))) &&
@@ -2798,9 +2853,7 @@ void map_jigsaw_generate (widp wid)
 
     jigsaw_map = "data/map/jigsaw.map";
     int rc;
-    while (true) {
     rc = generate_level(jigsaw_map, opt_seed);
-    }
 
     if (!rc) {
         DIE("failed to generate a maze!");
