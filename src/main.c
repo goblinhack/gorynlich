@@ -48,6 +48,7 @@
 #include "term.h"
 #include "server.h"
 #include "mzip_lib.h"
+#include "map_jigsaw.h"
 
 static char **ARGV;
 char *EXEC_FULL_PATH_AND_NAME;
@@ -427,6 +428,9 @@ static void usage (void)
     CON("        -name");
     CON("        -n");
     CON(" ");
+    CON("        --seed        dungeon random seed");
+    CON("        -seed");
+    CON(" ");
     CON("Written by Neil McGill, goblinhack@gmail.com");
 }
 
@@ -486,6 +490,17 @@ static void parse_args (int32_t argc, char *argv[])
 
             port = atoi(argv[i + 1]);
             global_config.user_server_port = port;
+            i++;
+            continue;
+        }
+
+        /*
+         * -seed
+         */
+        if (!strcasecmp(argv[i], "--seed") ||
+            !strcasecmp(argv[i], "-seed")) {
+
+            opt_seed = atoi(argv[i + 1]);
             i++;
             continue;
         }

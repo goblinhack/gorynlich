@@ -105,3 +105,5 @@ enum {
 uint8_t map_jigsaw_buffer_getchar(int32_t x, int32_t y);
 uint8_t map_jigsaw_buffer2_getchar(int32_t x, int32_t y);
 void map_jigsaw_generate(widp wid);
+
+extern int32_t opt_seed;

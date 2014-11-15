@@ -237,7 +237,7 @@ typedef struct {
 /*
  * Globals:
  */
-static int32_t opt_seed;
+int32_t opt_seed;
 
 static void maze_debug(dungeon_t *dg);
 
@@ -1799,7 +1799,7 @@ static void maze_add_decorations (void)
         map_jigsaw_buffer_putchar(MAP_CONCRETE);
     }
 
-    LOG("Added borders:");
+    LOG("Maze: Added borders:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
     for (x = 1; x < MAP_WIDTH - 1; x++) {
@@ -1820,7 +1820,7 @@ static void maze_add_decorations (void)
         }
     }
 
-    LOG("Added corridor walls:");
+    LOG("Maze: Added corridor walls:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
     /*
@@ -1844,7 +1844,7 @@ static void maze_add_decorations (void)
         }
     }
 
-    LOG("Added walls around floor tiles:");
+    LOG("Maze: Added walls around floor tiles:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
     /*
@@ -1874,7 +1874,7 @@ static void maze_add_decorations (void)
     }
 
     if (depth) {
-        LOG("Added thick walls:");
+        LOG("Maze: Added thick walls:");
         map_jigsaw_buffer_print_file(MY_STDOUT);
     }
 }
@@ -2044,7 +2044,7 @@ static void maze_debug (dungeon_t *dg)
 static void maze_convert_to_map (dungeon_t *dg)
 {
     dump_jigpieces_to_map(dg);
-    LOG("Added jigpieces:");
+    LOG("Maze: Added maze pieces:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
     jigpiece_create_mirrored_frag(dg);
@@ -2052,7 +2052,7 @@ static void maze_convert_to_map (dungeon_t *dg)
     jigpiece_create_mirrored_frag_alt(dg);
 
     jigpiece_add_frag(dg);
-    LOG("Added fragments:");
+    LOG("Maze: Replaced maze fragments:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
     maze_add_decorations();
@@ -2555,6 +2555,8 @@ static int32_t generate_level (const char *jigsaw_map,
 
     srand(maze_seed);
 
+    LOG("Maze: Seed %d", maze_seed);
+
     /*
      * Read in the jigsaw pieces.
      */
@@ -2575,43 +2577,37 @@ static int32_t generate_level (const char *jigsaw_map,
 
     for (;;) {
         if (!maze_generate_and_solve(dg)) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-            printf("seed %u, maze create failed\n", maze_seed);
-#endif
+            LOG("Maze: Generate failed, cannot generate:");
             goto reseed;
         }
 
         if (!maze_jigsaw_generate_all_possible_pieces(dg)) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-            printf("seed %u, maze connections failed\n", maze_seed);
-#endif
+            LOG("Maze: Generate failed, cannot generate maze pieces:");
+            map_jigsaw_buffer_print_file(MY_STDOUT);
             goto reseed;
         }
 
         if (!maze_jigsaw_solve(dg)) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-            printf("seed %u, maze solve failed\n", maze_seed);
-#endif
+            LOG("Maze: Generate failed, cannot solve maze:");
+            map_jigsaw_buffer_print_file(MY_STDOUT);
             goto reseed;
         }
 
         maze_convert_to_map(dg);
 
         if (!maze_replace_room_char(dg->sx, dg->sy, MAP_START)) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-            printf("seed %u, maze failed to place start\n", maze_seed);
-#endif
+            LOG("Maze: Generate failed, cannot place start:");
+            map_jigsaw_buffer_print_file(MY_STDOUT);
             goto reseed;
         }
 
         if (!maze_replace_room_char(dg->ex, dg->ey, MAP_END)) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-            printf("seed %u, maze failed to place end\n", maze_seed);
-#endif
+            LOG("Maze: Generate failed, cannot place exit:");
+            map_jigsaw_buffer_print_file(MY_STDOUT);
             goto reseed;
         }
 
-        LOG("Added start and exit::");
+        LOG("Maze: Added start and exit:");
         map_jigsaw_buffer_print_file(MY_STDOUT);
 
         break;
@@ -2619,27 +2615,26 @@ reseed:
         fflush(MY_STDOUT);
         maze_seed = rand();
         srand(maze_seed);
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-        printf(", try seed %u\n", maze_seed);
-#endif
+
+        LOG("Maze: Try new seed");
+
         memset(dg->maze, 0, sizeof(dg->maze));
     }
 
     if (!maze_check_exit_can_be_reached()) {
-#ifdef MAZE_DEBUG_SHOW_AS_GENERATING
-        printf("seed %u, maze failed to solve\n", maze_seed);
-#endif
-map_jigsaw_buffer_print();
-        DIE("Unsolved maze");
+        LOG("Maze: Generate failed, exit cannot be reached:");
+        map_jigsaw_buffer_print_file(MY_STDOUT);
         goto reseed;
     }
 
-    LOG("Maze created:");
+    LOG("Maze: Final maze:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
 #ifdef MAZE_DEBUG_SHOW
     map_jigsaw_buffer_print();
 #endif
+
+    LOG("Maze: Created");
 
     myfree(dg);
 

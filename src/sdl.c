@@ -67,7 +67,7 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 #endif
 #endif /* } */
 
-static uint8_t sdl_main_loop_running;
+uint8_t sdl_main_loop_running;
 int32_t sdl_init_video;
 
 #ifdef ENABLE_SDL_WINDOW /* { */
