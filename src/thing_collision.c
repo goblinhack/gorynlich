@@ -702,6 +702,9 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
+if (thing_is_player(me)) {
+LOG("XXX hit obst %s",it->logname);
+}
             return (true);
         }
     }
@@ -755,16 +758,16 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
                 }
 
                 /*
-                * No collisions with the floor!
-                */
+                 * No collisions with the floor!
+                 */
                 if (thing_is_floor(it)) {
                     wid_it = wid_next;
                     continue;
                 }
 
                 /*
-                * Allow dead ghosts to walk over each other!
-                */
+                 * Allow dead ghosts to walk over each other!
+                 */
                 if (thing_is_dead(it)) {
                     wid_it = wid_next;
                     continue;

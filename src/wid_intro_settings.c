@@ -298,6 +298,8 @@ static void wid_intro_restart_callback_no (widp wid)
 
 static uint8_t wid_intro_restart_selected (void)
 {
+    LOG("Restart selected");
+
     if (wid_intro_restart_popup) {
         return (false);
     }

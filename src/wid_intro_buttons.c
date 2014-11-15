@@ -48,6 +48,8 @@ static void wid_intro_quit_callback_no (widp wid)
 
 uint8_t wid_intro_quit_selected (void)
 {
+    LOG("Intro quit selected");
+
     if (wid_intro_quit_popup) {
         return (false);
     }
@@ -81,6 +83,8 @@ static uint8_t wid_intro_quit_receive_mouse_down (widp w,
 
 void wid_intro_intro_extra_selected (void)
 {
+    LOG("Intro extra options selected");
+
     wid_intro_extra_visible();
 }
 

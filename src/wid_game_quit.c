@@ -88,15 +88,9 @@ static void wid_game_quit_create (void)
     }
 
     static const char *messages[] = {
-        "You a quitter, boy?",
-        "You a quitter, girl?",
-        "You a politically correct mommies boy?",
-        "You a politically correct mommies girl?",
         "I thought you were made of the right stuff",
         "I thought you were tougher",
         "Cluck cluck!",
-        "You a chicken, boy?",
-        "You a chicken, girl?",
         "You gonna bail on me?",
         "Cmon, this is no fun?",
         "Keep going you coward",

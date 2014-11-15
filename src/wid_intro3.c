@@ -104,11 +104,15 @@ void wid_intro3_visible (void)
 
 static void wid_server_join_selected (void)
 {
+    LOG("Server join selected");
+
     wid_server_join_visible();
 }
 
 static void wid_server_create_selected (void)
 {
+    LOG("Server create selected");
+
     wid_server_create_visible();
 }
 
@@ -131,6 +135,8 @@ static void wid_intro3_multi_play_selected_cb (void *context)
 
 static void wid_intro3_multi_play_selected (void)
 {
+    LOG("Multiplayer selected");
+
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro3_multi_play_selected_cb,
@@ -145,6 +151,8 @@ static void wid_intro3_multi_play_selected (void)
 
 static void wid_intro3_play_selected (void)
 {
+    LOG("Single player selected");
+
     action_timer_create(
             &wid_timers,
             (action_timer_callback)wid_intro3_play_selected_cb,

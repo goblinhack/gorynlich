@@ -299,7 +299,6 @@ static void wid_hiscore_create (void)
             wid_set_text_outline(w, true);
             wid_set_font(w, med_font);
             wid_set_text_lhs(w, true);
-            wid_set_text_outline(w, true);
 
             i++;
         }
