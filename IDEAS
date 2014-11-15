@@ -1,26 +1,20 @@
+
+bugs
+----
+diagonal fire does not work for wizard
+key counts not shown
+
 todo
 ----
 
 experience on non linear scale
-max hp
 health max hp needs to tick down back to max if you take a magical bonus
-player selection does not work first click
 scrolling intro
 dwarf and elf have infravision
-make floors all gray?
 man with floating head mob spawner
-hide flashing exits from editor
-hide plants for now?
 death drops scythe on death
-weapon slots
-weapons less crumbly
-CONsole said lightblue$refreshing
 on exit level, bonus 
-random levels
-split intro 2 into 2/3 and make diablo style
-add charlotte game music
 boss baddy, 1st boss giant ghost spawns skull piles
-intro guide pics
 backpack drop on death
 double fire double arrows
 take too long, large reaper like spelunky wanders the level?
@@ -30,8 +24,6 @@ zombies
 screaming skulls
 floating heads
 rocks crumble
-treasure rooms
-money
 money/score doubler for a level
 shop
 dart traps 
