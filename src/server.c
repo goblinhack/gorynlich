@@ -142,7 +142,7 @@ static void server_rx_client_join (socketp s)
 
     char *tmp = dynprintf("%s joined the game", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_except_to(WARNING, tmp, s);
+    socket_tx_server_shout_except_to(s, WARNING, tmp);
     myfree(tmp);
 
     LOG("Server: Total players now %u", global_config.server_current_players);
@@ -365,7 +365,7 @@ static void server_alive_check (void)
         /*
          * Don't kill off new born connections.
          */
-        if (socket_get_tx(s) < 50) {
+        if (socket_get_tx(s) < 200) {
             continue;
         }
 
@@ -375,15 +375,19 @@ static void server_alive_check (void)
              */
             aplayerp p = socket_get_player(s);
 
-            if (p) {
-                char *tmp = dynprintf("%s connection dropped", 
-                                      p->stats_from_client.pname);
-                socket_tx_client_shout(s, CRITICAL, tmp);
+            if (s->server_side_client) {
+                char *tmp = dynprintf("Connection lost");
+                socket_tx_server_shout_only_to(s, POPUP, tmp);
                 myfree(tmp);
 
                 LOG("Server: \"%s\" (ID %u) dropped out from %s", 
                     p->stats_from_client.pname, 
                     p->key, socket_get_remote_logname(s));
+            } else {
+                MSG(POPUP, "Connection at %d%% quality", 
+                    socket_get_quality(s));
+
+                continue;
             }
 
             server_rx_client_leave_implicit(s);

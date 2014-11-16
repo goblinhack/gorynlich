@@ -424,7 +424,7 @@ static void thing_shout_at_ (thingp t,
         return;
     }
 
-    socket_tx_server_shout_only_to(level, buf + len, s);
+    socket_tx_server_shout_only_to(s, level, buf + len);
 }
 
 void THING_SHOUT_AT (thingp t, 
@@ -670,11 +670,12 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     if (level == POPUP) {
         widp w;
 
-        w = wid_tooltip_transient(buf + len, 5);
+        w = wid_tooltip_transient(buf + len, 5 * ONESEC);
         wid_move_to_pct_centered(w, 0.5, -0.5);
-        wid_move_to_pct_centered_in(w, 0.5, 0.2, 2 * ONESEC);
-
-    } else if (wid_notify(level, buf + len)) {
+        wid_move_to_pct_centered_in(w, 0.5, 0.1, 2 * ONESEC);
+    } 
+    
+    if (wid_notify(level, buf + len)) {
         wid_console_log(buf + len);
 
 #if 0

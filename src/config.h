@@ -25,8 +25,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -55,6 +55,11 @@
  * Retro text
  */
 #define ENABLE_LARGE_TEXT_OUTLINE
+
+/*
+ * How much the wheel mouse moves.
+ */
+#define ENABLE_WHEEL_SCROLL_SPEED_SCALE 3
 
 /*
  * Tooltip appears above mouse. I prefer it to zoom into the top
@@ -194,7 +199,7 @@
 /* 
  * 90 percent of ping fails means down
  */
-#define SOCKET_PING_FAIL_THRESHOLD  10
+#define SOCKET_PING_FAIL_THRESHOLD  5
 
 /*
  * Maximum number of thing types. This cannot be exceeded without changing
