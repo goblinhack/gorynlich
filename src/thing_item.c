@@ -76,7 +76,7 @@ static void thing_collect (thingp t,
     /*
      * Can it fit in the backpack?
      */
-    if (thing_is_player(t) && it) {
+    if (thing_is_player(t)) {
         /*
          * If treasure, just add it to the score. Don't carry it.
          */
