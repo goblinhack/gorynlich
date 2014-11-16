@@ -340,6 +340,17 @@ static uint8_t things_overlap (const thingp A,
     }
 
     /*
+     * Bit of a hack. We need bonepiles to be passable by ghosts, but easy to 
+     * hit by missiles.
+     */
+    if (thing_is_projectile(A)) {
+        Bpx1 = collision_map_large_x1;
+        Bpx2 = collision_map_large_x2;
+        Bpy1 = collision_map_large_y1;
+        Bpy2 = collision_map_large_y2;
+    }
+
+    /*
      * Find the start of pixels in the tile.
      */
     double Atlx = Ax + Apx1;
@@ -361,7 +372,7 @@ static uint8_t things_overlap (const thingp A,
         (Atly < Bbry) && 
         (Abry > Btly)) {
 
-#if 1
+#if 0
     if ((thing_is_projectile(A) || 
          thing_is_projectile(B))) {
 LOG("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);

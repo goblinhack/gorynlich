@@ -140,7 +140,7 @@ static void server_rx_client_join (socketp s)
         p->stats_from_client.pname, 
         p->key, socket_get_remote_logname(s));
 
-    char *tmp = dynprintf("%s joined the game", 
+    char *tmp = dynprintf("%s joined", 
                           p->stats_from_client.pname);
     socket_tx_server_shout_except_to(s, WARNING, tmp);
     myfree(tmp);

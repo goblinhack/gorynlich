@@ -9,7 +9,8 @@
 #include "thing_stats.h"
 
 static void thing_collect (thingp t, 
-                           thingp it, 
+                           thingp it,
+                           item_t i,
                            tpp tp,
                            uint8_t auto_collect)
 {
@@ -36,13 +37,41 @@ static void thing_collect (thingp t,
     const char *carried_as = tp_carried_as(tp);
     if (carried_as) {
         tpp what = tp_find(carried_as);
+
         if (!what) {
             DIE("could now find %s to carry item as for %s",
                 tp_name(what), thing_logname(t));
         }
 
-        id = tp_to_id(what);
+        int count;
+        int quantity = tp_get_quantity(tp);
+
+        if (quantity > 1) {
+            THING_LOG(t, "collect %s as %u %ss", 
+                      tp_short_name(tp), quantity, tp_short_name(what));
+        } else {
+            THING_LOG(t, "collect %s as %s", 
+                      tp_short_name(tp), tp_short_name(what));
+        }
+
+        i.quantity = 1;
+        i.id = tp_to_id(what);
+
+        for (count = 0; count < quantity; count++) {
+            thing_collect(t, 
+                          0,
+                          i, 
+                          what,
+                          true /* auto_collect */);
+        }
+
+        if (thing_is_player(t)) {
+            THING_SHOUT_AT(t, INFO, "%s added", tp_short_name(tp));
+        }
+        return;
     }
+
+    THING_LOG(t, "collect %s", tp_short_name(tp));
 
     /*
      * Can it fit in the backpack?
@@ -56,11 +85,11 @@ static void thing_collect (thingp t,
              * Bonus for collecting?
              */
             t->stats.cash += tp_get_bonus_cash_on_collect(tp) *
-                            it->item.quantity;
+                            i.quantity;
             return;
         }
 
-        if (!thing_stats_item_add(t, &t->stats, it->item)) {
+        if (!thing_stats_item_add(t, &t->stats, i)) {
             THING_SHOUT_AT(t, INFO, "You could not collect %s",
                         tp_short_name(tp));
             return;
@@ -70,7 +99,7 @@ static void thing_collect (thingp t,
          * Bonus for collecting?
          */
         t->stats.cash += tp_get_bonus_cash_on_collect(tp) *
-                        it->item.quantity;
+                        i.quantity;
     }
 
     if (!auto_collect) {
@@ -95,12 +124,12 @@ static void thing_collect (thingp t,
 
 void thing_item_collect (thingp t, thingp it, tpp tp)
 {
-    thing_collect(t, it, tp, false);
+    thing_collect(t, it, it->item, tp, false);
 }
 
 void thing_auto_collect (thingp t, thingp it, tpp tp)
 {
-    thing_collect(t, it, tp, true);
+    thing_collect(t, it, it->item, tp, true);
 }
 
 void thing_used (thingp t, tpp tp)

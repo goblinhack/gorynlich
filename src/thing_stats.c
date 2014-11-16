@@ -545,8 +545,6 @@ static void thing_stats_get_random_items (thing_stats *player_stats)
 
         int quality = (rand() % (THING_ITEM_QUALITY_MAX - 1)) + 1;
 
-        LOG("  Auto provision %s, quality %u", tp_short_name(t), quality);
-
         item_t i = { 0 };
         i.id = tp_to_id(t);
         i.quantity = 1;
@@ -556,6 +554,16 @@ static void thing_stats_get_random_items (thing_stats *player_stats)
 
         if (tp_can_be_enchanted(item_tp)) {
             i.enchanted = item_enchant_randomly();
+        }
+
+        if (i.enchanted) {
+            /*
+             * Lucky.
+             */
+            LOG("  Auto provision %s, quality %u, +%u", 
+                tp_short_name(t), quality, i.enchanted);
+        } else {
+            LOG("  Auto provision %s, quality %u", tp_short_name(t), quality);
         }
 
         thing_stats_item_add(0 /* thing */, player_stats, i);

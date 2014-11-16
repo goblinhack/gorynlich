@@ -3060,6 +3060,9 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
         uint32_t id = t->thing_id;
         uint8_t tx;
         uint8_t ty;
+#if 0
+LOG("tx %s", thing_logname(t));
+#endif
 
         widp w = thing_wid(t);
         if (w) {
@@ -3874,6 +3877,11 @@ uint8_t thing_server_move (thingp t,
     thing_update(t);
 
     thing_handle_collisions(wid_game_map_server_grid_container, t);
+
+    if (thing_is_projectile(t)) {
+        socket_server_tx_map_update(0, server_active_things,
+                                    "rx client join active things");
+    }
 
     return (true);
 }
