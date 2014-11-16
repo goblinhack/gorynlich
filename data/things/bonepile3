@@ -8,7 +8,7 @@
  light_tint="red"
  is_candle_light
  hit_priority=22
- is_collision_map_large
+ is_collision_map_medium
  damage=1
  mob_spawn_delay_tenths=50
  polymorph_on_death="data/things/bonepile2"
