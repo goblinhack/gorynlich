@@ -24,6 +24,10 @@
 #include "tile.h"
 #include "math.h"
 #include "wid_hiscore.h"
+#include "wid_player_stats.h"
+#include "wid_player_info.h"
+#include "wid_player_inventory.h"
+#include "wid_player_action.h"
 
 uint16_t THING_WALL1;
 uint16_t THING_ROCK1;
@@ -1116,6 +1120,26 @@ static void thing_remove_hooks (thingp t)
         verify(item);
         thing_set_owner(item, 0);
         thing_dead(item, 0, "weapon swing anim owner killed");
+    }
+
+    /*
+     * If the inventory is being shown, we need to remove it and make a copy 
+     * of the contents as the thing that holds this information is about to
+     * be destroyed.
+     */
+    if (!t->on_server) {
+        if (thing_is_player(t)) {
+            wid_player_stats_hide();
+            wid_player_info_hide();
+            wid_player_inventory_hide();
+            wid_player_action_hide();
+
+            memcpy(&global_config.player_stats, &t->stats, 
+                   sizeof(thing_stats));
+
+            wid_player_action_visible(&global_config.player_stats, 
+                                      true /* fast */);
+        }
     }
 }
 
