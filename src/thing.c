@@ -1065,7 +1065,6 @@ static void thing_remove_hooks (thingp t)
     if (t->owner_thing_id) {
         thingp owner = thing_owner(t);
         if (!owner) {
-            ERR("no owner for thing id %u", t->owner_thing_id);
             return;
         }
 
@@ -1218,7 +1217,7 @@ void thing_destroy (thingp t, const char *why)
             THING_LOG(t, "player died: \"%s\"", t->stats.pname);
 
             char *tmp = dynprintf("%s died", t->stats.pname);
-            socket_tx_server_shout_except_to(CRITICAL, tmp, p->socket);
+            socket_tx_server_shout_except_to(p->socket, CRITICAL, tmp);
             myfree(tmp);
 
             break;
@@ -1273,7 +1272,7 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         aplayer *p = t->player;
         if (p) {
             char *tmp = dynprintf("%s Killed by %s", t->stats.pname, reason);
-            socket_tx_server_shout_except_to(CRITICAL, tmp, p->socket);
+            socket_tx_server_shout_except_to(p->socket, CRITICAL, tmp);
             myfree(tmp);
         }
 
@@ -1386,9 +1385,13 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
              * Did someone throw this weapon and gets the score?
              */
             if (killer->owner_thing_id) {
-                recipient = thing_owner(killer);
-                verify(recipient);
+                thingp real_recipient = thing_owner(killer);
+                if (real_recipient) {
+                    recipient = real_recipient;
+                }
             }
+
+            verify(recipient);
 
             recipient->stats.xp += tp_get_bonus_xp_on_death(tp);
         }
@@ -1648,8 +1651,6 @@ int thing_hit (thingp t,
              */
             hitter = thing_owner(hitter);
             if (!hitter) {
-                ERR("weapon hitter %s owner id %u has no thing",
-                    thing_logname(orig_hitter), orig_hitter->owner_thing_id);
                 return (false);
             }
 
@@ -1687,8 +1688,6 @@ int thing_hit (thingp t,
              */
             hitter = thing_owner(hitter);
             if (!hitter) {
-                ERR("hitter %s owner id %u has no thing",
-                    thing_logname(orig_hitter), orig_hitter->owner_thing_id);
                 return (false);
             }
 
@@ -1816,8 +1815,20 @@ thingp thing_owner (thingp t)
         if (t->owner_thing_id) {
             thingp n = thing_server_ids[t->owner_thing_id];
             if (!n) {
-                DIE("no server owner thing found for owner id %u for %s", 
-                    t->owner_thing_id, thing_logname(t));
+                /*
+                 * for things like missiles, it is accepted that the owner may
+                 * be dead but the missile keeps on going.
+                 */
+                if (thing_is_projectile(t)) {
+                    t->owner_thing_id = 0;
+
+                    THING_LOG(t, "no server owner thing found for owner id %u for %s",
+                              t->owner_thing_id, thing_logname(t));
+                    return (0);
+                } else {
+                    DIE("no server owner thing found for owner id %u for %s", 
+                        t->owner_thing_id, thing_logname(t));
+                }
             }
 
             verify(n);
@@ -3569,14 +3580,8 @@ void thing_client_move (thingp t,
 {
     widp grid = wid_game_map_client_grid_container;
 
-if (thing_is_player(t)) {
-LOG("XXX x %f y %f",x,y);
-}
     if (t->wid) {
         if (thing_hit_solid_obstacle(grid, t, x, y)) {
-if (thing_is_player(t)) {
-LOG("XXX hit obs");
-}
             if (!thing_hit_solid_obstacle(grid, t, x, t->y)) {
                 y = t->y;
             } else if (!thing_hit_solid_obstacle(grid, t, t->x, y)) {
@@ -4084,8 +4089,11 @@ void thing_set_owner (thingp t, thingp owner)
     }
 
     thingp old_owner = thing_owner(t);
-
     if (old_owner) {
+        if (old_owner == owner) {
+            return;
+        }
+
         if (owner) {
             THING_LOG(t, "owner change %s->%s", 
                       thing_logname(old_owner), thing_logname(owner));
@@ -4134,6 +4142,10 @@ void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
     thingp old_weapon_carry_anim = thing_weapon_carry_anim(t);
 
     if (old_weapon_carry_anim) {
+        if (old_weapon_carry_anim == weapon_carry_anim) {
+            return;
+        }
+
         if (weapon_carry_anim) {
             THING_LOG(t, "weapon_carry_anim change %s->%s", 
                       thing_logname(old_weapon_carry_anim), thing_logname(weapon_carry_anim));
@@ -4182,6 +4194,10 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
     thingp old_weapon_swing_anim = thing_weapon_swing_anim(t);
 
     if (old_weapon_swing_anim) {
+        if (old_weapon_swing_anim == weapon_swing_anim) {
+            return;
+        }
+
         if (weapon_swing_anim) {
             THING_LOG(t, "weapon_swing_anim change %s->%s", 
                       thing_logname(old_weapon_swing_anim), thing_logname(weapon_swing_anim));

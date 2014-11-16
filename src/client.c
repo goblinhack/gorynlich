@@ -479,6 +479,9 @@ uint8_t client_socket_leave (void)
 
     socket_tx_client_leave(client_joined_server);
 
+    LOG("Client: Leaving server %s", 
+        socket_get_remote_logname(client_joined_server));
+
     client_joined_server = 0;
 
     memset(&server_status, 0, sizeof(server_status));
@@ -1105,7 +1108,7 @@ static void client_check_still_in_game (void)
 
     MSG(CRITICAL, "Server does not report you in the game!");
 
-    LOG("Client:  You are player: \"%s\", ID %u", 
+    LOG("Client: You are player: \"%s\", ID %u", 
         global_config.player_stats.pname, 
         client_joined_server_key);
 

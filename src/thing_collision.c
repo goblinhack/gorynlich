@@ -352,9 +352,18 @@ static uint8_t things_overlap (const thingp A,
     double Btly = By + Bpy1;
     double Bbry = By + Bpy2;
 
-#ifdef DEBUG
-    if ((thing_is_player(A) || 
-         thing_is_player(B))) {
+    /*
+     * The rectangles don't overlap if one rectangle's minimum in some 
+     * dimension is greater than the other's maximum in that dimension.
+     */
+    if ((Atlx < Bbrx) && 
+        (Abrx > Btlx) &&
+        (Atly < Bbry) && 
+        (Abry > Btly)) {
+
+#if 1
+    if ((thing_is_projectile(A) || 
+         thing_is_projectile(B))) {
 LOG("  A %s %f %f %f %f",thing_logname(A),Atlx,Atly,Abrx,Abry);
 LOG("    %f %f",Ax,Ay);
 LOG("    %f %f %f %f",Apx1,Apy1,Apx2,Apy2);
@@ -364,14 +373,6 @@ LOG("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
     }
 #endif
 
-    /*
-     * The rectangles don't overlap if one rectangle's minimum in some 
-     * dimension is greater than the other's maximum in that dimension.
-     */
-    if ((Atlx < Bbrx) && 
-        (Abrx > Btlx) &&
-        (Atly < Bbry) && 
-        (Abry > Btly)) {
         return (true);
     }
 
@@ -702,9 +703,6 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                 continue;
             }
 
-if (thing_is_player(me)) {
-LOG("XXX hit obst %s",it->logname);
-}
             return (true);
         }
     }

@@ -653,7 +653,6 @@ void level_pause (levelp level)
             "Go forth!",
             "Make it so!",
             "Get ready!",
-            "Meep!",
         };
 
         socket_tx_server_shout(POPUP,

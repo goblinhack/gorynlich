@@ -299,10 +299,12 @@ extern void socket_server_rx_player_action(socketp s, UDPpacket *packet,
                                          uint8_t *data);
 extern void socket_tx_server_shout(uint32_t level,
                                    const char *shout);
-extern void socket_tx_server_shout_except_to(uint32_t level,
-                                             const char *shout, socketp s);
-extern void socket_tx_server_shout_only_to(uint32_t level,
-                                           const char *shout, socketp s);
+extern void socket_tx_server_shout_except_to(socketp,
+                                             uint32_t level,
+                                             const char *shout);
+extern void socket_tx_server_shout_only_to(socketp,
+                                           uint32_t level,
+                                           const char *shout);
 extern void socket_rx_server_shout(socketp s, UDPpacket *packet, 
                                    uint8_t *data);
 extern void socket_tx_tell(socketp s, 
