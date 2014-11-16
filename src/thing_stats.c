@@ -473,8 +473,8 @@ int thing_stats_item_add (thingp t,
 }
 
 int thing_stats_item_remove (thingp t,
-                              thing_stats *player_stats,
-                              const tpp it)
+                             thing_stats *player_stats,
+                             const tpp it)
 {
     const int id = tp_to_id(it);
 
