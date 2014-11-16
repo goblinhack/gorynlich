@@ -1063,9 +1063,9 @@ static void client_check_still_in_game (void)
 
         if (!server_connection_confirmed) {
             server_connection_confirmed = true;
-            MSG(INFO, "%s joined the game", p->stats.pname);
+            MSG(INFO, "%s joined", p->stats.pname);
 
-            LOG("%s joined the game, ID %d", 
+            LOG("%s joined, ID %d", 
                 p->stats.pname, p->stats.thing_id);
 
             music_play_game();

@@ -402,10 +402,10 @@ static void thing_shout_at_ (thingp t,
     timestamp(buf, sizeof(buf));
     len = (uint32_t)strlen(buf);
     if (t->on_server) {
-        snprintf(buf + len, sizeof(buf) - len, "Server: Thing %s: ", 
+        snprintf(buf + len, sizeof(buf) - len, "Server: Thing %s: Shout: ", 
                  thing_logname(t));
     } else {
-        snprintf(buf + len, sizeof(buf) - len, "Client: Thing %s: ", 
+        snprintf(buf + len, sizeof(buf) - len, "Client: Thing %s: Shout: ", 
                  thing_logname(t));
     }
 
