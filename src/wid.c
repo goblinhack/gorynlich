@@ -81,8 +81,8 @@ static int32_t wid_moving_last_y;
 /*
  * Widget effects
  */
-const int32_t wid_fade_delay = 200;
-const int32_t wid_destroy_delay_ms = 300;
+const int32_t wid_fade_delay = 500;
+const int32_t wid_destroy_delay_ms = 500;
 const int32_t wid_visible_delay = 100;
 const int32_t wid_hide_delay = 500;
 const int32_t wid_swipe_delay = 200;
@@ -4804,9 +4804,9 @@ static uint8_t wid_scroll_trough_mouse_motion (widp w,
     if ((SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) ||
         wheely || wheelx) {
 
-        dy = rely ? rely : -wheely;
+        dy = rely ? rely : -wheely * ENABLE_WHEEL_SCROLL_SPEED_SCALE;
 
-        dx = relx ? relx : -wheelx;
+        dx = relx ? relx : -wheelx * ENABLE_WHEEL_SCROLL_SPEED_SCALE;
     } else {
         return (false);
     }

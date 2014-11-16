@@ -1868,8 +1868,8 @@ void socket_tx_server_shout (uint32_t level, const char *txt)
     socket_free_msg(packet);
 }
 
-void socket_tx_server_shout_except_to (uint32_t level, const char *txt, 
-                                       socketp except)
+void socket_tx_server_shout_except_to (socketp except,
+                                       uint32_t level, const char *txt)
 {
     UDPpacket *packet = socket_alloc_msg();
 
@@ -1915,8 +1915,9 @@ void socket_tx_server_shout_except_to (uint32_t level, const char *txt,
     socket_free_msg(packet);
 }
 
-void socket_tx_server_shout_only_to (uint32_t level, const char *txt, 
-                                     socketp target)
+void socket_tx_server_shout_only_to (socketp target, 
+                                     uint32_t level, 
+                                     const char *txt)
 {
     UDPpacket *packet = socket_alloc_msg();
 
