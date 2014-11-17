@@ -229,8 +229,8 @@ static void wid_dead_create (const char *name,
     LOG("Client: Player died, raise gravestone");
 
     widp w = wid_gravestone = wid_new_window("dead");
-    fpoint tl = { 0.0, 0.1 };
-    fpoint br = { 0.6, 1.0 };
+    fpoint tl = { 0.0, 0.0 };
+    fpoint br = { 0.25, 0.5 };
 
     wid_set_tl_br_pct(w, tl, br);
 
@@ -288,13 +288,13 @@ static void wid_dead_create (const char *name,
     wid_raise(w);
 
     wid_update(w);
-    wid_move_to_pct(w, -0.05, 1.3);
+    wid_move_to_pct(w, -0.02, 1.3);
 
     music_play_dead();
 
     static uint32_t gravestone_appear_delay = 3000;
 
-    wid_move_to_pct_in(w, -0.05, 0.35, gravestone_appear_delay);
+    wid_move_to_pct_in(w, -0.02, 0.55, gravestone_appear_delay);
 
     action_timer_create(
             &wid_timers,
