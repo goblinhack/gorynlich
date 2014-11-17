@@ -343,7 +343,10 @@ static uint8_t things_overlap (const thingp A,
      * Bit of a hack. We need bonepiles to be passable by ghosts, but easy to 
      * hit by missiles.
      */
-    if (thing_is_projectile(A)) {
+    if (thing_is_projectile(A) &&
+        (thing_is_monst(B) ||
+         thing_is_mob_spawner(B))) {
+
         Bpx1 = collision_map_large_x1;
         Bpx2 = collision_map_large_x2;
         Bpy1 = collision_map_large_y1;
