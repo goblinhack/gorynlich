@@ -5077,8 +5077,10 @@ static void wid_update_internal (widp w)
 
         /*
          * Set back to normal to undo any settings when creating.
+         *
+         * No, make the clients fix their code.
          */
-        wid_set_mode(w, WID_MODE_NORMAL);
+//        wid_set_mode(w, WID_MODE_NORMAL);
     }
 
     widp child;
