@@ -86,7 +86,7 @@ void wid_intro2_hide (void)
     wid_player_action_hide();
 
     thing_statsp s;
-    s = &global_config.player_stats;
+    s = &global_config.stats;
 
     /*
      * If no name was chosen by the user and they removed the default, then 
@@ -132,9 +132,8 @@ void wid_intro2_visible (void)
      * Start with some random junk.
      */
     thing_statsp s;
-    s = &global_config.player_stats;
+    s = &global_config.stats;
     thing_stats_get_random(s);
-LOG("widget init name %s",s->pname);
 
     wid_player_stats_visible(s);
     wid_player_info_visible(s);

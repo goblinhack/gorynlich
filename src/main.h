@@ -376,7 +376,19 @@ struct config {
     uint16_t user_server_port;
     uint8_t server_max_players;
     uint8_t server_current_players;
-    thing_stats player_stats;
+
+    /*
+     * These are the stats we start out with.
+     */
+    thing_stats stats;
+
+    /*
+     * Where we hold onto the stats once the player is dead and has no thing 
+     * so we can keep on showing their score.
+     */
+    thing_stats dead_stats;
+
+    uint8_t starting_stats_inited;
 };
 
 extern struct config global_config;

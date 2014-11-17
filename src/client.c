@@ -431,9 +431,9 @@ uint8_t client_socket_join (const char *host,
         }
     }
 
-    socket_set_name(s, global_config.player_stats.pname);
-    socket_set_pclass(s, global_config.player_stats.pclass);
-    socket_set_player_stats(s, &global_config.player_stats);
+    socket_set_name(s, global_config.stats.pname);
+    socket_set_pclass(s, global_config.stats.pclass);
+    socket_set_player_stats(s, &global_config.stats);
 
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
         if (!quiet) {
@@ -548,8 +548,8 @@ uint8_t client_socket_set_name (const char *name)
         return (false);
     }
 
-    strncpy(global_config.player_stats.pname, name, 
-            sizeof(global_config.player_stats.pname) - 1);
+    strncpy(global_config.stats.pname, name, 
+            sizeof(global_config.stats.pname) - 1);
 
     CON("Client name set to \"%s\"", name);
 
@@ -572,8 +572,8 @@ uint8_t client_socket_set_pclass (const char *pclass)
         return (false);
     }
 
-    strncpy(global_config.player_stats.pclass, pclass, 
-            sizeof(global_config.player_stats.pclass) - 1);
+    strncpy(global_config.stats.pclass, pclass, 
+            sizeof(global_config.stats.pclass) - 1);
 
     CON("Client pclass set to \"%s\"", pclass);
 
@@ -715,7 +715,7 @@ uint8_t client_tell (tokens_t *tokens, void *context)
         return (false);
     }
 
-    uint8_t r = client_socket_tell(global_config.player_stats.pname, to, tmp);
+    uint8_t r = client_socket_tell(global_config.stats.pname, to, tmp);
 
     myfree(tmp);
 
@@ -1057,7 +1057,7 @@ static void client_check_still_in_game (void)
             break;
         }
 
-        if (strcasecmp(p->stats.pname, global_config.player_stats.pname)) {
+        if (strcasecmp(p->stats.pname, global_config.stats.pname)) {
             break;
         }
 
@@ -1109,7 +1109,7 @@ static void client_check_still_in_game (void)
     MSG(CRITICAL, "Server does not report you in the game!");
 
     LOG("Client: You are player: \"%s\", ID %u", 
-        global_config.player_stats.pname, 
+        global_config.stats.pname, 
         client_joined_server_key);
 
     server_connection_confirmed = false;
