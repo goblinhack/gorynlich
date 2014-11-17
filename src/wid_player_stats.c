@@ -113,8 +113,6 @@ void wid_player_stats_fini (void)
 void wid_player_stats_hide (void)
 {
     wid_player_stats_destroy();
-
-    player_stats = 0;
 }
 
 void wid_player_stats_visible (thing_statsp s)
