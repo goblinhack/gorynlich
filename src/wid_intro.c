@@ -187,7 +187,7 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
              * Start with some random junk.
              */
             thing_statsp s;
-            s = &global_config.player_stats;
+            s = &global_config.stats;
             thing_stats_get_random(s);
 
             wid_server_create_visible();
@@ -242,7 +242,7 @@ static void wid_intro_single_play_selected (void)
      * Start with some random junk.
      */
     thing_statsp s;
-    s = &global_config.player_stats;
+    s = &global_config.stats;
     thing_stats_get_random(s);
 
     action_timer_create(

@@ -44,7 +44,7 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
     char *tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "name", tmp);
     if (tmp) {
-        strncpy(p->player_stats.pname, tmp, sizeof(p->player_stats.pname) - 1);
+        strncpy(p->stats.pname, tmp, sizeof(p->stats.pname) - 1);
         myfree(tmp);
         tmp = 0;
     }
@@ -52,8 +52,7 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
     tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "class", tmp);
     if (tmp) {
-        strncpy(p->player_stats.pclass, tmp, 
-                sizeof(p->player_stats.pclass) - 1);
+        strncpy(p->stats.pclass, tmp, sizeof(p->stats.pclass) - 1);
         myfree(tmp);
         tmp = 0;
     }
@@ -88,12 +87,12 @@ static void marshal_config (marshal_p ctx, struct config *p)
     PUT_NAMED_INT32(ctx, "sound_volume", p->sound_volume);
     PUT_NAMED_INT32(ctx, "music_volume", p->music_volume);
 
-    if (p->player_stats.pname[0]) {
-        PUT_NAMED_STRING(ctx, "name", p->player_stats.pname);
+    if (p->stats.pname[0]) {
+        PUT_NAMED_STRING(ctx, "name", p->stats.pname);
     }
 
-    if (p->player_stats.pclass[0]) {
-        PUT_NAMED_STRING(ctx, "class", p->player_stats.pclass);
+    if (p->stats.pclass[0]) {
+        PUT_NAMED_STRING(ctx, "class", p->stats.pclass);
     }
 
     if (p->server_name[0]) {
