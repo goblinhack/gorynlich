@@ -468,6 +468,12 @@ void wid_game_map_client_wid_create (void)
         LOG("Client: Created map container window grid");
     }
 
+    /*
+     * Mark that we want to learn the starting stats so we can use those
+     * when starting again with this player type.
+     */
+    global_config.starting_stats_inited = false;
+
     client_level = level_new(wid_game_map_client_grid_container, 
                              0, 
                              false /* is_editor */,

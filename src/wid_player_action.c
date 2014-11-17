@@ -432,12 +432,16 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
             item_t item = s->action_bar[i];
 
-            wid_player_inventory_button_style(w, s, item);
+            wid_set_client_context(w, (void*) (uintptr_t) i);
+
+            wid_player_inventory_button_style(w, s, item,
+                                              true, /* action bar item */
+                                              false, /* worn item */
+                                              false, /* inventory item */
+                                              x);
 
             wid_set_on_mouse_down(w, 
                                   wid_player_action_button_style_mouse_down);
-
-            wid_set_client_context(w, (void*) (uintptr_t) i);
 
             i++;
         }

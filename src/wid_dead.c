@@ -105,6 +105,7 @@ static void wid_dead_replay_callback_yes (widp wid)
     LOG("Client: Replay, yes");
     wid_destroy(&wid_replay_game_yes_no);
     wid_dead_disconnect_with_server();
+
     client_socket_join(0, 0, 0, true /* quiet */);
     wid_game_map_client_visible();
 }
@@ -228,8 +229,8 @@ static void wid_dead_create (const char *name,
     LOG("Client: Player died, raise gravestone");
 
     widp w = wid_gravestone = wid_new_window("dead");
-    fpoint tl = { 0.0, 0.2 };
-    fpoint br = { 0.4, 1.0 };
+    fpoint tl = { 0.0, 0.1 };
+    fpoint br = { 0.6, 1.0 };
 
     wid_set_tl_br_pct(w, tl, br);
 

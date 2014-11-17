@@ -1134,11 +1134,9 @@ static void thing_remove_hooks (thingp t)
             wid_player_inventory_hide();
             wid_player_action_hide();
 
-            memcpy(&global_config.player_stats, &t->stats, 
-                   sizeof(thing_stats));
+            memcpy(&global_config.dead_stats, &t->stats, sizeof(thing_stats));
 
-            wid_player_action_visible(&global_config.player_stats, 
-                                      true /* fast */);
+            wid_player_action_visible(&global_config.dead_stats, true /* fast */);
         }
     }
 }
@@ -3948,6 +3946,8 @@ void thing_server_action (thingp t,
     case PLAYER_ACTION_USE: {
         if (tp_is_weapon(tp)) {
             thing_wield(t, tp);
+
+            t->stats.weapon = action_bar_index;
             return;
         }
 
@@ -3971,8 +3971,7 @@ void thing_server_action (thingp t,
         /*
          * Failed to use.
          */
-        THING_SHOUT_AT(t, WARNING, "Failed to use the %s", 
-                       tp_short_name(tp));
+        THING_SHOUT_AT(t, WARNING, "Failed to use the %s", tp_short_name(tp));
         return;
     }
 

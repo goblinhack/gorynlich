@@ -60,7 +60,11 @@ void wid_player_inventory_visible (thing_statsp s)
 
 void wid_player_inventory_button_style (widp w,
                                         thing_statsp s,
-                                        const item_t item)
+                                        const item_t item,
+                                        const int action_bar_item,
+                                        const int worn_item,
+                                        const int inventory_item,
+                                        const int index)
 {
     color c;
 
@@ -100,13 +104,10 @@ void wid_player_inventory_button_style (widp w,
 
     tpp tp = id_to_tp(item.id);
 
-    if (player) {
-        tpp weapon = thing_weapon(player);
-        if (weapon && (tp == weapon)) {
-            wid_set_color(w, WID_COLOR_TL, RED);
-            wid_set_color(w, WID_COLOR_BR, RED);
-            wid_set_rounded_small(w);
-        }
+    if (player && action_bar_item && (index == s->weapon)) {
+        wid_set_color(w, WID_COLOR_TL, RED);
+        wid_set_color(w, WID_COLOR_BR, RED);
+        wid_set_rounded_small(w);
     }
 
     wid_set_thing_template(w, tp);
@@ -600,9 +601,13 @@ static void wid_player_inventory_create (thing_statsp s)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_player_inventory_button_style(w, s, s->inventory[item]);
-
         wid_set_client_context(w, (void*) (uintptr_t) item);
+
+        wid_player_inventory_button_style(w, s, s->inventory[item],
+                                          false, /* action bar item */
+                                          false, /* worn item */
+                                          true, /* inventory item */
+                                          item);
 
         wid_set_on_mouse_down(w, 
                               wid_player_inventory_button_style_mouse_down);

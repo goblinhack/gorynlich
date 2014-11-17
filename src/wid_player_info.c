@@ -410,11 +410,15 @@ static void wid_player_info_create (thing_statsp s)
 
         item_t item = s->worn[THING_WORN_ARMOR];
 
-        wid_player_inventory_button_style(w, s, item);
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARMOR);
+
+        wid_player_inventory_button_style(w, s, item,
+                                          false, /* action bar item */
+                                          true, /* worn item */
+                                          false, /* inventory item */
+                                          THING_WORN_ARMOR);
 
         wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
-
-        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARMOR);
     }
 
     {
@@ -429,11 +433,15 @@ static void wid_player_info_create (thing_statsp s)
 
         item_t item = s->worn[THING_WORN_HELMET];
 
-        wid_player_inventory_button_style(w, s, item);
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_HELMET);
+
+        wid_player_inventory_button_style(w, s, item,
+                                          false, /* action bar item */
+                                          true, /* worn item */
+                                          false, /* inventory item */
+                                          THING_WORN_HELMET);
 
         wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
-
-        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_HELMET);
     }
 
     {
@@ -448,11 +456,15 @@ static void wid_player_info_create (thing_statsp s)
 
         item_t item = s->worn[THING_WORN_BOOTS];
 
-        wid_player_inventory_button_style(w, s, item);
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_BOOTS);
+
+        wid_player_inventory_button_style(w, s, item,
+                                          false, /* action bar item */
+                                          true, /* worn item */
+                                          false, /* inventory item */
+                                          THING_WORN_BOOTS);
 
         wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
-
-        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_BOOTS);
     }
 
     {
@@ -467,11 +479,15 @@ static void wid_player_info_create (thing_statsp s)
 
         item_t item = s->worn[THING_WORN_ARM_LEFT];
 
-        wid_player_inventory_button_style(w, s, item);
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARM_LEFT);
+
+        wid_player_inventory_button_style(w, s, item,
+                                          false, /* action bar item */
+                                          true, /* worn item */
+                                          false, /* inventory item */
+                                          THING_WORN_ARM_LEFT);
 
         wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
-
-        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARM_LEFT);
     }
 
     {
@@ -486,11 +502,15 @@ static void wid_player_info_create (thing_statsp s)
 
         item_t item = s->worn[THING_WORN_ARM_RIGHT];
 
-        wid_player_inventory_button_style(w, s, item);
+        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARM_RIGHT);
+
+        wid_player_inventory_button_style(w, s, item,
+                                          false, /* action bar item */
+                                          true, /* worn item */
+                                          false, /* inventory item */
+                                          THING_WORN_ARM_RIGHT);
 
         wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
-
-        wid_set_client_context(w, (void*) (uintptr_t) THING_WORN_ARM_RIGHT);
     }
 
     wid_move_to_pct_centered(wid_player_info, 0.5, 0.45);

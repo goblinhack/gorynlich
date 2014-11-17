@@ -207,16 +207,6 @@ void thing_wield (thingp t, tpp weapon)
     thing_update(child);
 
     t->needs_tx_player_update = true;
-
-    const int id = tp_to_id(weapon);
-    uint32_t action_bar_index;
-
-    if (thing_stats_has_action_bar_item(&t->stats, 
-                                        id,
-                                        &action_bar_index)) {
-
-        t->stats.weapon = action_bar_index;
-    }
 }
 
 void thing_swing (thingp t)
