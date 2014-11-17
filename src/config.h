@@ -140,7 +140,7 @@
  * Padding for tiles on the edge of the smooth scroll.
  */
 #define TILES_SCREEN_WIDTH_PAD      2
-#define TILES_SCREEN_HEIGHT_PAD     1
+#define TILES_SCREEN_HEIGHT_PAD     5
 
 /*
  * Console

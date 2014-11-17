@@ -49,8 +49,6 @@ void wid_player_inventory_fini (void)
 void wid_player_inventory_hide (void)
 {
     wid_player_inventory_destroy();
-
-    player_stats = 0;
 }
 
 void wid_player_inventory_visible (thing_statsp s)
