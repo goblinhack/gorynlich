@@ -12,6 +12,7 @@
 #include "sdl.h"
 
 uint32_t time_now;
+uint32_t base_time_in_mill;
 
 const char *time2str (uint32_t ms, char *buf, int32_t len)
 {

@@ -380,9 +380,19 @@ static void server_alive_check (void)
                 socket_tx_server_shout_only_to(s, POPUP, tmp);
                 myfree(tmp);
 
-                LOG("Server: \"%s\" (ID %u) dropped out from %s", 
-                    p->stats_from_client.pname, 
-                    p->key, socket_get_remote_logname(s));
+                if (p) {
+                    LOG("Server: \"%s\" (ID %u) dropped out from %s", 
+                        p->stats_from_client.pname, 
+                        p->key, 
+                        socket_get_remote_logname(s));
+                } else {
+                    LOG("Server: Dropped connection to %s", 
+                        socket_get_remote_logname(s));
+                }
+
+                LOG("Server: Sent %d packets, quality %u",
+                    socket_get_tx(s),
+                    (socket_get_quality(s) < SOCKET_PING_FAIL_THRESHOLD));
             } else {
                 MSG(POPUP, "Connection at %d%% quality", 
                     socket_get_quality(s));
@@ -406,14 +416,14 @@ static void server_socket_tx_ping (void)
         return;
     }
 
+    ts = time_get_time_cached();
+
     /*
      * Every few seconds check for dead peers.
      */
     if (ts && (!(seq % 3))) {
         server_alive_check();
     }
-
-    ts = time_get_time_cached();
 
     socketp s;
 
@@ -430,8 +440,7 @@ static void server_socket_tx_ping (void)
             continue;
         }
 
-        ts = time_get_time_cached();
-        socket_tx_ping(s, seq, ts);
+        socket_tx_ping(s, seq, time_get_time_cached());
     }
 
     seq++;

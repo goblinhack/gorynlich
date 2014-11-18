@@ -774,6 +774,10 @@ static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
             sock = "none";
         }
 
+        if (!name) {
+            name = "noname";
+        }
+
         if (total_attempts) {
             avg_latency /= total_attempts;
 
@@ -791,6 +795,7 @@ static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
                 socket_get_remote_logname(s));
             CON("%-20s", sock);
         }
+        CON(" ");
     }
 
     return (true);
@@ -1209,7 +1214,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = (uint32_t) -1;
 
     if (debug_socket_ping_enabled) {
-        LOG("Tx Ping [to %s] seq %u, ts %u", 
+        CON("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 

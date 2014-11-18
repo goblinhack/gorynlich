@@ -30,17 +30,24 @@ timeval_diff(struct timeval *difference,
              struct timeval *start_time);
 
 extern uint32_t time_now;
+extern uint32_t base_time_in_mill;
+
 extern uint32_t SDL_GetTicks(void);
+static uint32_t time_update_time_milli(void);
 
 static inline uint32_t time_get_time_cached (void)
 {
+    /*
+     * Do we really need to cache this? As it messes up timestamps when things 
+     * are blocking, like maze generation.
+     */
+    time_update_time_milli();
+
     return (time_now);
 }
 
 static inline uint32_t time_update_time_milli (void)
 {
-    static uint32_t base_time_in_mill;
-
 #if 0
     //
     // Some macos specific way of getting the time that looks like it could
@@ -85,11 +92,5 @@ static inline uint32_t time_update_time_milli (void)
 
 static inline uint32_t time_get_time_milli (void)
 {
-    /*
-     * Do we really need to cache this? As it messes up timestamps when things 
-     * are blocking, like maze generation.
-     */
-    time_update_time_milli();
-
     return (time_get_time_cached());
 }
