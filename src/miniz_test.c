@@ -52,11 +52,11 @@ uint8_t miniz_test (int32_t argc, char *argv[])
     if (step)
     {
       // Purposely corrupt the compressed data if fuzzy testing (this is a very crude fuzzy test).
-      uint32_t n = 1 + (rand() % 3);
+      uint32_t n = 1 + (myrand() % 3);
       while (n--)
       {
-        unsigned long i = rand() % cmp_len;
-        pCmp[i] ^= (rand() & 0xFF);
+        unsigned long i = myrand() % cmp_len;
+        pCmp[i] ^= (myrand() & 0xFF);
       }
     }
 

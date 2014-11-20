@@ -515,7 +515,7 @@ tree_node *tree_root_get_random (tree_root *root)
         return (0);
     }
 
-    r = rand() % size;
+    r = myrand() % size;
 
     return (tree_root_get_nth(root, r));
 }

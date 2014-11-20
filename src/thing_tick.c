@@ -133,7 +133,7 @@ static void thing_tick_server_all (void)
 
             thing_handle_collisions(wid_game_map_server_grid_container, t);
 
-            t->timestamp_collision = time_get_time_cached() + (rand() % 100);
+            t->timestamp_collision = time_get_time_cached() + (myrand() % 100);
 
             /*
              * Died in a collision ? 8( Handle it next time around.
@@ -180,7 +180,7 @@ static void thing_tick_server_all (void)
                     /*
                      * Add some jitter.
                      */
-                    t->timestamp_ai = time_get_time_cached() + (rand() % 100);
+                    t->timestamp_ai = time_get_time_cached() + (myrand() % 100);
                 }
             }
         }
@@ -203,7 +203,7 @@ static void thing_tick_server_all (void)
                  * Add some jitter.
                  */
                 t->timestamp_mob_spawn = time_get_time_cached() +
-                                (rand() % (delay * 100));
+                                (myrand() % (delay * 100));
             }
         }
     }

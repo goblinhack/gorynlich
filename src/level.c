@@ -572,8 +572,8 @@ void level_place_plant_pod (levelp level)
     for (i = 0;
          i < MAP_HEIGHT * MAP_WIDTH; i++) {
 
-        x = rand() % MAP_WIDTH;
-        y = rand() % MAP_HEIGHT;
+        x = myrand() % MAP_WIDTH;
+        y = myrand() % MAP_HEIGHT;
 
         if (map_is_wall_at(level, x, y)) {
             continue;
@@ -656,7 +656,7 @@ void level_pause (levelp level)
         };
 
         socket_tx_server_shout(POPUP,
-                               messages[rand() % ARRAY_SIZE(messages)]);
+                               messages[myrand() % ARRAY_SIZE(messages)]);
 
         level->pause_timer = 
                     action_timer_create(&server_timers,

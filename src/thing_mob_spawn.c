@@ -29,7 +29,7 @@ uint8_t thing_mob_spawn (thingp t)
     while (tries-- > 0) {
         double x = t->x;
         double y = t->y;
-        uint32_t r = rand() % 100;
+        uint32_t r = myrand() % 100;
 
         if (r < 25) {
             x -= 1.0;
@@ -96,7 +96,7 @@ uint8_t thing_mob_spawn_on_death (thingp t)
     while (tries-- > 0) {
         double x = t->x;
         double y = t->y;
-        uint32_t r = rand() % 100;
+        uint32_t r = myrand() % 100;
 
         if (r < 25) {
             x -= 1.0;

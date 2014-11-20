@@ -1815,7 +1815,7 @@ int thing_hit (thingp t,
     uint32_t can_be_hit_chance = 
                     tp_get_can_be_hit_chance(t->tp);
     if (can_be_hit_chance) {
-        uint32_t chance = rand() % (can_be_hit_chance + 1);
+        uint32_t chance = myrand() % (can_be_hit_chance + 1);
 
         if (chance > damage) {
             return (false);
@@ -3680,7 +3680,7 @@ void thing_fire (thingp t,
                     tp_get_d10000_chance_of_breaking(weapon);
 
     if (d10000_chance_of_breaking) {
-        if ((rand() % 10000) <= d10000_chance_of_breaking) {
+        if ((myrand() % 10000) <= d10000_chance_of_breaking) {
             thing_wear_out(t, weapon);
             THING_LOG(t, "damage weapon");
             return;

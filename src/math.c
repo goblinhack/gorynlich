@@ -59,8 +59,8 @@ double gauss (const double m, const double s)
         y1 = y2;
     } else {
         do { // ming don't have random
-            x1 = 2.0 * ((double)rand() / (double)RAND_MAX) - 1.0;
-            x2 = 2.0 * ((double)rand() / (double)RAND_MAX) - 1.0;
+            x1 = 2.0 * ((double)myrand() / (double)RAND_MAX) - 1.0;
+            x2 = 2.0 * ((double)myrand() / (double)RAND_MAX) - 1.0;
             w = x1 * x1 + x2 * x2;
         } while (w >= 1.0);
 

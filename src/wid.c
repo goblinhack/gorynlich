@@ -7634,10 +7634,10 @@ static void wid_lighting_render (widp w,
         double dr = RAD_360 / (double)max_light_rays;
         int i;
 
-        if (!light->fuzz || !(rand() % 10)) {
+        if (!light->fuzz || !(myrand() % 10)) {
 
             if (thing_is_candle_light_noverify(t)) {
-                light->fuzz = 50 + rand() % 30;
+                light->fuzz = 50 + myrand() % 30;
             } else {
                 light->fuzz = 50;
             }

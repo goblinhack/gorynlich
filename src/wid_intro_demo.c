@@ -104,14 +104,14 @@ static void wid_intro_demo_buttons_tick (widp wid)
         wid_set_tilename(wid, tilename);
 
         *x += 0.001 * 
-            (double) (rand() % (demo_player_speed[index] + tp_get_speed(t)));
+            (double) (myrand() % (demo_player_speed[index] + tp_get_speed(t)));
 
         wid_set_animate(wid, false);
     }
 
     double y = 0.66;
 
-    y -= ((double)(rand() % 10)) * 0.001;
+    y -= ((double)(myrand() % 10)) * 0.001;
 
     wid_move_to_pct(wid, *x, y);
 }
@@ -144,7 +144,7 @@ static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *ar
     demo_players[demo_player_count] = child = wid_new_window("player");
     demo_player_tp[demo_player_count] = tp;
     demo_player_speed[demo_player_count] = 
-                rand() % (tp_get_speed(tp) / 2);
+                myrand() % (tp_get_speed(tp) / 2);
 
     wid_set_thing_template(child, tp);
     wid_set_tl_br_pct(child, tl, br);

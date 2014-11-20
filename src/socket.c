@@ -1825,7 +1825,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
         };
 
         socket_tx_client_shout_relay(s, msg.level, 
-                                     messages[rand() % ARRAY_SIZE(messages)],
+                                     messages[myrand() % ARRAY_SIZE(messages)],
                                      0 /* from */);
     }
 }

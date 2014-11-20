@@ -518,7 +518,7 @@ static void parse_args (int32_t argc, char *argv[])
 
 int32_t main (int32_t argc, char *argv[])
 {
-    srand(time(0));
+    mysrand(time(0));
 
     LOG_STDOUT = fopen("stdout.txt", "w+");
     LOG_STDERR = fopen("stderr.txt", "w+");
