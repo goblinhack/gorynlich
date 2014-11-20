@@ -124,7 +124,7 @@ static void wid_game_quit_create (void)
     }
 
     wid_really_quit_game_yes_no = wid_popup(
-            messages[rand() % ARRAY_SIZE(messages)],
+            messages[myrand() % ARRAY_SIZE(messages)],
             "%%fg=red$Quit game?\n",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */

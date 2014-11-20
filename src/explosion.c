@@ -33,7 +33,7 @@ static uint8_t level_place_explosion_at (levelp level,
     /*
      * Choose one of the things in the args list to place.
      */
-    uint32_t r = (rand() % nargs) + 1;
+    uint32_t r = (myrand() % nargs) + 1;
 
     const char *name = 0;
     while (r--) {

@@ -727,7 +727,7 @@ thing_tilep thing_tile_find (tpp t, uint32_t index, tilep *tile)
         return (0);
     }
 
-    which = rand() % t->tilep_join_count[index];
+    which = myrand() % t->tilep_join_count[index];
 
     *tile = t->tilep_join_tile[index][which];
 

@@ -211,7 +211,7 @@ void music_play_game (void)
         "data/music/charlotte_slow.ogg",
     };
 
-    int x = rand() % ARRAY_SIZE(music);
+    int x = myrand() % ARRAY_SIZE(music);
 
     music_play(music[x], music[x], 22050);
 }

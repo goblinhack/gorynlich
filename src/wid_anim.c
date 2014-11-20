@@ -164,7 +164,7 @@ void wid_animate (widp w)
      */
     uint32_t delay = thing_tile_delay(tile);
     if (delay) {
-        delay = rand() % delay;
+        delay = myrand() % delay;
     }
 
     w->timestamp_change_to_next_frame = time_get_time_cached() + delay;

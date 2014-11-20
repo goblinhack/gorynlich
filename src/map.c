@@ -1872,7 +1872,7 @@ uint8_t level_pipe_find_exit (levelp level,
         return (false);
     }
 
-    int32_t exit = rand() % nexits;
+    int32_t exit = myrand() % nexits;
 
     *exit_x = exits_x[exit];
     *exit_y = exits_y[exit];

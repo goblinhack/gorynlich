@@ -108,7 +108,7 @@ timerp action_timer_create (tree_rootp *root,
 
     t->expires_when = time_get_time_cached() + duration_ms;
     if (jitter) {
-        t->expires_when += rand() % jitter;
+        t->expires_when += myrand() % jitter;
     }
 
     t->context = context;
