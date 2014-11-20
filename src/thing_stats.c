@@ -101,7 +101,7 @@ int item_pop (itemp dst, itemp popped)
 
 static int item_enchant_randomly (void)
 {
-    int r = rand() % 1000;
+    int r = myrand() % 1000;
 
     if (r <= 1) {
         return (5);
@@ -142,7 +142,7 @@ static int player_stats_generate_spending_points (void)
         1,  1,  1,  1,
     };
 
-    return (possible[rand() % ARRAY_SIZE(possible)]);
+    return (possible[myrand() % ARRAY_SIZE(possible)]);
 }
 
 int thing_stats_val_to_modifier (int value) 
@@ -524,7 +524,7 @@ static void thing_stats_get_random_items (thing_stats *player_stats)
         tpp t = 0;
 
         for (;;) {
-            t = id_to_tp(rand() % THING_MAX);
+            t = id_to_tp(myrand() % THING_MAX);
 
             if (!tp_is_carryable(t)) {
                 continue;
@@ -534,7 +534,7 @@ static void thing_stats_get_random_items (thing_stats *player_stats)
                 continue;
             }
 
-            uint32_t chance = rand() % 10000;
+            uint32_t chance = myrand() % 10000;
 
             if (tp_get_d10000_chance_of_appearing(t) < chance) {
                 continue;
@@ -543,7 +543,7 @@ static void thing_stats_get_random_items (thing_stats *player_stats)
             break;
         }
 
-        int quality = (rand() % (THING_ITEM_QUALITY_MAX - 1)) + 1;
+        int quality = (myrand() % (THING_ITEM_QUALITY_MAX - 1)) + 1;
 
         item_t i = { 0 };
         i.id = tp_to_id(t);

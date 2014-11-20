@@ -18,8 +18,8 @@ double gaussrand (double mean, double stddev)
 
     if (phase == 0) {
         do {
-            double U1 = (double)rand() / RAND_MAX;
-            double U2 = (double)rand() / RAND_MAX;
+            double U1 = (double)myrand() / RAND_MAX;
+            double U2 = (double)myrand() / RAND_MAX;
 
             V1 = 2 * U1 - 1;
             V2 = 2 * U2 - 1;

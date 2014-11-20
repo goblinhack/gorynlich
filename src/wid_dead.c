@@ -189,7 +189,7 @@ static void wid_dead_gravestone_appeared (void *context)
     if (is_rejoin_allowed) {
 
         wid_rejoin_game_yes_no = wid_popup(
-            messages[rand() % ARRAY_SIZE(messages)],
+            messages[myrand() % ARRAY_SIZE(messages)],
             "%%fg=red$Rejoin game?",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */
@@ -203,7 +203,7 @@ static void wid_dead_gravestone_appeared (void *context)
         wid_set_square(wid_rejoin_game_yes_no);
     } else {
         wid_replay_game_yes_no = wid_popup(
-            messages[rand() % ARRAY_SIZE(messages)],
+            messages[myrand() % ARRAY_SIZE(messages)],
             "%%fg=red$Play again?",
             0.5, 0.2f,                /* x,y postition in percent */
             small_font,               /* title font */

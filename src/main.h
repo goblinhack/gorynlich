@@ -14,6 +14,15 @@
 #include "config.h"
 
 /*
+ * Enhanced random number generator.
+ */
+#include "pcg_basic.h"
+#define myrand() pcg32_random()
+#define mysrand(a) pcg32_srandom(a,a)
+//#define myrand() rand()
+//#define mysrand(a) srand(a)
+
+/*
  * Misc
  */
 #undef ONESEC

@@ -1230,8 +1230,8 @@ static void jigpiece_add_frag (dungeon_t *dg)
                 tries = 0;
                 while (tries++ < MAP_WIDTH * MAP_HEIGHT) {
 
-                    ax = rand() % (MAP_WIDTH + JIGPIECE_WIDTH);
-                    ay = rand() % (MAP_HEIGHT + JIGPIECE_HEIGHT);
+                    ax = myrand() % (MAP_WIDTH + JIGPIECE_WIDTH);
+                    ay = myrand() % (MAP_HEIGHT + JIGPIECE_HEIGHT);
                     ax -= JIGPIECE_WIDTH;
                     ay -= JIGPIECE_HEIGHT;
 
@@ -1279,7 +1279,7 @@ static void jigpiece_add_frag (dungeon_t *dg)
                      * Choose something to replace the frag.
                      */
                     do {
-                        i = rand() % dg->frag_cnt_alts[f];
+                        i = myrand() % dg->frag_cnt_alts[f];
                         i += dg->frag_to_alt_base[f];
 
                     } while (dg->frag_alt[dir][i].empty);
@@ -1767,12 +1767,12 @@ static void maze_generate_all_random_directions (dungeon_t *dg, maze_cell_t * c,
          * Choose a random dir to walk.
          */
         do {
-            new_dir = rand() % 4;
+            new_dir = myrand() % 4;
         } while (!MAZE_CAN_GO(c, new_dir));
 
 
         if ((depth > 2) &&
-            (rand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS * depth) {
+            (myrand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_END_CORRIDORS * depth) {
             if (!c->exit[new_dir]->walked &&
                 !c->exit[new_dir]->exits) {
                 c->exit[new_dir]->walked = 1;
@@ -1784,9 +1784,9 @@ static void maze_generate_all_random_directions (dungeon_t *dg, maze_cell_t * c,
         c->exits |= (1 << new_dir);
         c->exit[new_dir]->exits |= (1 << (3 - new_dir));
 
-        if ((rand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_FORKS) {
+        if ((myrand() % 100) < MAZE_HOW_LIKELY_PERCENT_ARE_FORKS) {
             do {
-                new_dir = rand() % 4;
+                new_dir = myrand() % 4;
             } while (!MAZE_CAN_GO(c, new_dir));
 
             c->exits |= (1 << new_dir);
@@ -1874,7 +1874,7 @@ static void maze_add_decorations (void)
      */
     {
         int thick;
-        int depth = rand() % 3;
+        int depth = myrand() % 3;
 
         for (thick = 0; thick < depth; thick++) {
             memcpy(map_jigsaw_buffer_old,
@@ -1910,11 +1910,11 @@ static void maze_add_decorations (void)
      */
     {
         int count;
-        int depth = rand() % 3;
+        int depth = myrand() % 3;
 
         for (count = 0; count < MAP_WIDTH * MAP_HEIGHT * depth; count++) {
-            x = rand() % MAP_WIDTH;
-            y = rand() % MAP_HEIGHT;
+            x = myrand() % MAP_WIDTH;
+            y = myrand() % MAP_HEIGHT;
 
             if (map_jigsaw_buffer_getchar(x, y) != MAP_WALL) {
                 continue;
@@ -2270,7 +2270,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
              */
             if (dg->jigpiece[c].has[MAP_FLOOR]) {
                 if (dg->jigpiece[ocell->jigpiece].has[MAP_FLOOR]) {
-                    if ((rand() % 100) > MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE) {
+                    if ((myrand() % 100) > MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE) {
                         break;
                     }
                 }
@@ -2297,8 +2297,8 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
     /*
      * Choose a random jigsaw piece. 
      */
-    for (i=0; i < 1 + (rand() % 3); i++) {
-        mcell->jigpiece = intersect_list[rand() % intersect_list_size];
+    for (i=0; i < 1 + (myrand() % 3); i++) {
+        mcell->jigpiece = intersect_list[myrand() % intersect_list_size];
 
         exits = 0;
         ok = 1;
@@ -2370,8 +2370,8 @@ static int32_t maze_jigsaw_solve (dungeon_t *dg)
     int32_t c;
 
     for (;;) {
-        x = rand() % MAP_JIGSAW_PIECE_WIDTH;
-        y = rand() % MAP_JIGSAW_PIECE_HEIGHT;
+        x = myrand() % MAP_JIGSAW_PIECE_WIDTH;
+        y = myrand() % MAP_JIGSAW_PIECE_HEIGHT;
 
         mcell = MAZE_CELL(dg->maze, x, y);
         if (!mcell->dead) {
@@ -2396,7 +2396,7 @@ static int32_t maze_jigsaw_solve (dungeon_t *dg)
         x = 0;
         y = 0;
         mcell->jigpiece =
-            mcell->possible_jigpieces[rand() % mcell->possible_jigpieces_size];
+            mcell->possible_jigpieces[myrand() % mcell->possible_jigpieces_size];
 
         for (dir = 0; dir < DIR_MAX; dir++) {
             if (!(mcell->exits & (1 << dir))) {
@@ -2468,8 +2468,8 @@ maze_replace_room_char (uint32_t rx, uint32_t ry, char new_char)
     uint32_t tries = MAP_WIDTH * MAP_HEIGHT * 10;
 
     while (tries--) {
-        uint32_t cx = rand() % MAP_WIDTH;
-        uint32_t cy = rand() % MAP_HEIGHT;
+        uint32_t cx = myrand() % MAP_WIDTH;
+        uint32_t cy = myrand() % MAP_HEIGHT;
         
         if (jigpiece_char_is_floor_or_corridor(map_jigsaw_buffer_getchar(cx, cy)) &&
             jigpiece_char_is_ground((map_jigsaw_buffer_getchar(cx, cy+1))) &&
@@ -2503,8 +2503,8 @@ static int32_t maze_solve (dungeon_t *dg, int32_t w, int32_t h)
      * Assign a random start and exit.
      */
     while (1) {
-        x = rand() % w;
-        y = rand() % h;
+        x = myrand() % w;
+        y = myrand() % h;
 
         if (count++ > 10000) {
             return (0);
@@ -2608,7 +2608,7 @@ static int32_t generate_level (const char *jigsaw_map,
         maze_seed = time(0);
     }
 
-    srand(maze_seed);
+    mysrand(maze_seed);
 
     LOG("Maze: Seed %d", maze_seed);
 
@@ -2668,8 +2668,8 @@ static int32_t generate_level (const char *jigsaw_map,
         break;
 reseed:
         fflush(MY_STDOUT);
-        maze_seed = rand();
-        srand(maze_seed);
+        maze_seed = myrand();
+        mysrand(maze_seed);
 
         LOG("Maze: Try new seed");
 
@@ -2889,7 +2889,7 @@ void map_jigsaw_generate (widp wid)
             case 'D': tp = tp_find("data/things/door2"); break;
 
             case '$': {
-                int r = rand() % 100;
+                int r = myrand() % 100;
 
                 if (r < 20) {
                     tp = tp_find("data/things/brazier");
@@ -2904,7 +2904,7 @@ void map_jigsaw_generate (widp wid)
             }
 
             case 'M': 
-                if ((rand() % 100) < 90) {
+                if ((myrand() % 100) < 90) {
                     tp = tp_find("data/things/bonepile3");
                 }
                 break;

@@ -603,8 +603,8 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
 
     if (thing_is_explosion(t)) {
         wid_blit_scaling_to_pct_in(child, 1.0, 3.0, 500, 0);
-        dx = ((double)((rand() % 100) - 50)) / 100.0;
-        dy = ((double)((rand() % 100) - 50)) / 100.0;
+        dx = ((double)(((int)(rand() % 100)) - 50)) / 100.0;
+        dy = ((double)(((int)(rand() % 100)) - 50)) / 100.0;
         wid_fade_out(child, 500);
     }
 

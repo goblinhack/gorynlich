@@ -104,6 +104,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_text_input.o 		\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\
+    $(OBJDIR)/pcg_basic.o 		\
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\

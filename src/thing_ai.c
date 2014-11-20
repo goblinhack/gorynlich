@@ -732,8 +732,8 @@ uint8_t thing_find_nexthop (thingp t, int32_t *nexthop_x, int32_t *nexthop_y)
         }
     }
 
-    uint32_t x = rand() % MAP_WIDTH;
-    uint32_t y = rand() % MAP_HEIGHT;
+    uint32_t x = myrand() % MAP_WIDTH;
+    uint32_t y = myrand() % MAP_HEIGHT;
 
     if (!t->dmap_wander) {
         t->dmap_wander = &dmap_monst_map_wander[x][y];
