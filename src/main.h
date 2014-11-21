@@ -181,6 +181,7 @@ typedef struct msg_player_state_ *msg_player_statep;
 
 extern thingp player;
 extern fontp vsmall_font;
+extern fontp fixed_font;
 extern fontp small_font;
 extern fontp med_font;
 extern fontp large_font;

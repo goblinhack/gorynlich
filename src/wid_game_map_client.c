@@ -869,7 +869,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
         wid_raise(wid_title_container);
         wid_set_do_not_lower(wid_title_container, true);
-        wid_set_color(wid_title, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(wid_title, WID_COLOR_TEXT, WHITE);
     }
 
     /*

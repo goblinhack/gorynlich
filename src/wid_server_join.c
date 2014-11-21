@@ -228,6 +228,49 @@ void wid_server_join_hide (void)
 
 void wid_server_join_visible (void)
 {
+    if (!remote_servers || !tree_root_size(remote_servers)) {
+        LOG("No servers found, add defaults");
+
+        static const char *common_ips[] = {
+            "0.0.0.0",
+            "192.168.0.1",
+            "192.168.0.2",
+            "192.168.0.3",
+            "192.168.0.4",
+            "192.168.0.5",
+            "192.168.1.1",
+            "192.168.1.2",
+            "192.168.1.3",
+            "192.168.1.4",
+            "192.168.1.5",
+            "192.168.100.1",
+            "192.168.100.2",
+            "192.168.100.3",
+            "192.168.100.4",
+            "192.168.100.5",
+            "10.0.0.1",
+            "10.0.0.2",
+            "10.0.0.3",
+            "10.0.0.4",
+            "10.0.0.5",
+            "10.0.1.1",
+            "10.0.1.2",
+            "10.0.1.3",
+            "10.0.1.4",
+            "10.0.1.5",
+        };
+
+        int i;
+        for (i = 0; i < ARRAY_SIZE(common_ips); i++) {
+            server s;
+
+            memset(&s, 0, sizeof(s));
+            s.host = dupstr(common_ips[i], "an ip");
+            s.port = global_config.server_port; 
+            server_add(&s);
+        }
+    }
+
     wid_server_join_create(false);
 }
 
@@ -328,27 +371,44 @@ void wid_server_join_redo (uint8_t soft_refresh)
 
             snprintf_realloc(&tmp, &size, &used, "\n");
 
-            char *tmp2 = dynprintf(
-                "%%%%fmt=centerx$%s\n"
-                "\n"
-                "%%%%fmt=left$Average latency %u ms\n"
-                "%%%%fmt=left$Minimum latency %u ms\n"
-                "%%%%fmt=left$Maxumum latency %u ms\n\n"
-                "%%%%fmt=left$Maxumum players %u\n"
-                "%%%%fmt=left$Current players %u\n\n"
-                "%s\n\n",
-                server_status->server_name,
-                s->avg_latency,
-                s->min_latency,
-                s->max_latency,
-                server_status->server_max_players,
-                server_status->server_current_players,
-                tmp);
+            char *tmp2;
+            if (server_status->server_current_players > 0) {
+                tmp2 = dynprintf(
+                    "%%%%fmt=centerx$%s\n"
+                    "%%%%fmt=left$Average latency %u ms\n"
+                    "%%%%fmt=left$Minimum latency %u ms\n"
+                    "%%%%fmt=left$Maxumum latency %u ms\n"
+                    "%%%%fmt=left$Maxumum players %u\n"
+                    "%%%%fmt=left$Current players %u\n",
+                    server_status->server_name,
+                    s->avg_latency,
+                    s->min_latency,
+                    s->max_latency,
+                    server_status->server_max_players,
+                    server_status->server_current_players,
+                    tmp);
+            } else {
+                tmp2 = dynprintf(
+                    "%%%%fmt=centerx$%s\n"
+                    "%%%%fmt=left$Average latency %u ms\n"
+                    "%%%%fmt=left$Minimum latency %u ms\n"
+                    "%%%%fmt=left$Maxumum latency %u ms\n"
+                    "%%%%fmt=left$Maxumum players %u\n"
+                    "%%%%fmt=left$Current players %u\n"
+                    "%s\n",
+                    server_status->server_name,
+                    s->avg_latency,
+                    s->min_latency,
+                    s->max_latency,
+                    server_status->server_max_players,
+                    server_status->server_current_players,
+                    tmp);
+            }
 
             s->tooltip = tmp2;
             myfree(tmp);
         } else {
-            s->tooltip = dynprintf("server is down");
+            s->tooltip = dynprintf("Server is down");
         }
     }
 
@@ -781,9 +841,9 @@ static void wid_server_join_set_color (widp w, server *s)
     }
 
     if (s->tooltip) {
-        wid_set_tooltip(w, s->tooltip);
+        wid_set_tooltip(w, s->tooltip, fixed_font);
     } else {
-        wid_set_tooltip(w, "Cick to edit");
+        wid_set_tooltip(w, "Cick to edit", 0);
     }
 }
 
@@ -817,7 +877,7 @@ static void wid_server_join_create (uint8_t redo)
         color c = BLACK;
         wid_set_color(w, WID_COLOR_BG, c);
 
-        c = STEELBLUE;
+        c = BLACK;
         wid_set_color(w, WID_COLOR_TL, c);
         wid_set_color(w, WID_COLOR_BR, c);
         wid_set_bevel(w, 4);
@@ -854,7 +914,7 @@ static void wid_server_join_create (uint8_t redo)
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server name");
 
-        wid_set_tooltip(w, "Click on a server to edit it");
+        wid_set_tooltip(w, "Click on a server to edit it", 0 /* font */);
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Join a game");
@@ -927,7 +987,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+            wid_set_color(w, WID_COLOR_BG, RED);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
@@ -997,7 +1057,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+            wid_set_color(w, WID_COLOR_BG, RED);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
@@ -1067,7 +1127,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+            wid_set_color(w, WID_COLOR_BG, RED);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
@@ -1160,7 +1220,7 @@ static void wid_server_join_create (uint8_t redo)
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "Qual");
+        wid_set_text(w, "Quality");
         wid_set_font(w, small_font);
 
         wid_set_color(w, WID_COLOR_BG, BLACK);
@@ -1193,7 +1253,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            char *tmp = dynprintf("%u/%u", s->quality, s->avg_latency);
+            char *tmp = dynprintf("%u%%", s->quality);
             wid_set_text(w, tmp);
             myfree(tmp);
 
@@ -1245,11 +1305,11 @@ static void wid_server_join_create (uint8_t redo)
             } else {
                 wid_set_on_mouse_down(w, wid_server_join_delete);
                 wid_set_text(w, "Del");
-                wid_set_tooltip(w, "Remove this server from the list");
+                wid_set_tooltip(w, "Remove this server from the list", 0 /* font */);
             }
 
             wid_set_font(w, small_font);
-            color c = STEELBLUE;
+            color c = BLACK;
 
             c.a = 100;
             wid_set_mode(w, WID_MODE_NORMAL);
@@ -1297,16 +1357,16 @@ static void wid_server_join_create (uint8_t redo)
             socketp sp = socket_find(s->ip);
             if (sp && (sp == client_joined_server)) {
                 wid_set_text(w, "Leave");
-                wid_set_tooltip(w, "Exit this game");
+                wid_set_tooltip(w, "Exit this game", 0 /* font */);
                 wid_set_on_mouse_down(w, wid_server_join_leave);
             } else {
                 wid_set_text(w, "Join");
-                wid_set_tooltip(w, "Try to join the game on this server");
+                wid_set_tooltip(w, "Try to join the game on this server", 0 /* font */);
                 wid_set_on_mouse_down(w, wid_server_join);
             }
 
             wid_set_font(w, small_font);
-            color c = STEELBLUE;
+            color c = BLACK;
 
             c.a = 100;
             wid_set_mode(w, WID_MODE_NORMAL);
@@ -1337,7 +1397,7 @@ static void wid_server_join_create (uint8_t redo)
 
         wid_set_text(w, "Go back");
         wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
 
         wid_set_text_outline(w, true);
@@ -1355,9 +1415,9 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Add");
-        wid_set_tooltip(w, "Add a new server to the list");
+        wid_set_tooltip(w, "Add a new server to the list", 0 /* font */);
         wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
 
         wid_set_text_outline(w, true);
@@ -1470,48 +1530,6 @@ static uint8_t wid_server_load_remote_server_list (void)
     }
 
     myfree(file);
-
-    if (!added) {
-        LOG("No servers found, add defaults");
-
-        static const char *common_ips[] = {
-            "192.168.0.1",
-            "192.168.0.2",
-            "192.168.0.3",
-            "192.168.0.4",
-            "192.168.0.5",
-            "192.168.1.1",
-            "192.168.1.2",
-            "192.168.1.3",
-            "192.168.1.4",
-            "192.168.1.5",
-            "192.168.100.1",
-            "192.168.100.2",
-            "192.168.100.3",
-            "192.168.100.4",
-            "192.168.100.5",
-            "10.0.0.1",
-            "10.0.0.2",
-            "10.0.0.3",
-            "10.0.0.4",
-            "10.0.0.5",
-            "10.0.1.1",
-            "10.0.1.2",
-            "10.0.1.3",
-            "10.0.1.4",
-            "10.0.1.5",
-        };
-
-        int i;
-        for (i = 0; i < ARRAY_SIZE(common_ips); i++) {
-            server s;
-
-            memset(&s, 0, sizeof(s));
-            s.host = dupstr(common_ips[i], "an ip");
-            s.port = global_config.server_port; 
-            server_add(&s);
-        }
-    }
 
     return (true);
 }

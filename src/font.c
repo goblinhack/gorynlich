@@ -11,6 +11,7 @@
 
 static int32_t font_inited;
 
+fontp fixed_font;
 fontp vsmall_font;
 fontp small_font;
 fontp med_font;
@@ -23,6 +24,11 @@ void font_fini (void)
 
     if (font_inited) {
         font_inited = false;
+
+        if (fixed_font) {
+            ttf_free(fixed_font);
+            fixed_font = 0;
+        }
 
         if (vsmall_font) {
             ttf_free(vsmall_font);
@@ -53,6 +59,7 @@ void font_fini (void)
 
 uint8_t font_init (void)
 {
+    int32_t fixed_font_size = FIXED_FONT_SIZE;
     int32_t vsmall_font_size = VSMALL_FONT_SIZE;
     int32_t small_font_size = SMALL_FONT_SIZE;
     int32_t med_font_size = MED_FONT_SIZE;
@@ -72,6 +79,7 @@ uint8_t font_init (void)
         delta = +2;
     }
 
+    fixed_font_size += delta;
     vsmall_font_size += delta;
     small_font_size  += delta;
     med_font_size    += delta;
@@ -83,6 +91,11 @@ uint8_t font_init (void)
      * Generate bitmaps from TTF.
      */
     char *tmp;
+
+    tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
+    fixedfont  = ttf_write_tga((char*) tmp, FIXED_FONT_SIZE);
+    myfree(tmp);
+
     tmp = strprepend(mybasename(VSMALL_FONT, __FUNCTION__), TTF_PATH);
     vsmall_font  = ttf_write_tga((char*) tmp, VSMALL_FONT_SIZE);
     myfree(tmp);
@@ -104,6 +117,7 @@ uint8_t font_init (void)
     myfree(tmp);
 #endif
 
+    fixed_font = ttf_read_tga((char*)FIXED_FONT, FIXED_FONT_SIZE);
     vsmall_font = ttf_read_tga((char*)VSMALL_FONT, VSMALL_FONT_SIZE);
     small_font  = ttf_read_tga((char*)SMALL_FONT, SMALL_FONT_SIZE);
     med_font    = ttf_read_tga((char*)MED_FONT, MED_FONT_SIZE);

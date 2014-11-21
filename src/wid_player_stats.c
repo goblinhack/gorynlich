@@ -286,7 +286,7 @@ static void wid_player_stats_create (thing_statsp s)
             widp w = wid_new_square_button(wid_player_stats_container,
                                            rows[i].col1);
             if (rows[i].tooltip) {
-                wid_set_tooltip(w, rows[i].tooltip);
+                wid_set_tooltip(w, rows[i].tooltip, 0 /* font */);
             }
 
             fpoint tl = {0.05, 0.2};
@@ -371,7 +371,7 @@ static void wid_player_stats_create (thing_statsp s)
             widp w = wid_new_square_button(wid_player_stats_container,
                                            rows[i].col2);
             if (rows[i].tooltip) {
-                wid_set_tooltip(w, rows[i].tooltip);
+                wid_set_tooltip(w, rows[i].tooltip, 0 /* font */);
             }
 
             fpoint tl = {0.48, 0.2};
@@ -430,7 +430,7 @@ static void wid_player_stats_create (thing_statsp s)
             widp w = wid_new_square_button(wid_player_stats_container,
                                            rows[i].col1);
             if (rows[i].tooltip) {
-                wid_set_tooltip(w, rows[i].tooltip);
+                wid_set_tooltip(w, rows[i].tooltip, 0 /* font */);
             }
 
             fpoint tl = {0.82, 0.2};
@@ -565,8 +565,10 @@ static void wid_player_stats_create (thing_statsp s)
 
         wid_set_on_mouse_down(w, wid_player_stats_reroll_mouse_event);
 
-        wid_set_tooltip(w, "Select this to try a differnet character. "
-                        "But be certain, there is no undo...");
+        wid_set_tooltip(w, 
+                        "Select this to try a different character. "
+                        "But be certain, there is no undo...", 
+                        0 /* font */);
 
         wid_set_tex(w, 0, "button_red");
         wid_set_square(w);

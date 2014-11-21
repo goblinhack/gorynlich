@@ -96,7 +96,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         wid_set_color(wid_tooltip_window, WID_COLOR_TEXT, WHITE);
 
         color c = WHITE;
-        c.a = 150;
+        c.a = 255;
         wid_set_color(wid_tooltip_window, WID_COLOR_BG, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_TL, c);
         wid_set_color(wid_tooltip_window, WID_COLOR_BR, c);
@@ -176,6 +176,8 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
             wid_set_text(child, n->line);
             wid_set_font(child, font);
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
+
+            wid_set_name(wid_tooltip_window, n->line);
         }
 
         split_free(&d);
