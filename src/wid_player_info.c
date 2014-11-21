@@ -306,7 +306,7 @@ static void wid_player_info_create (thing_statsp s)
 
         const char *tooltip = tp_get_tooltip(tp);
 
-        wid_set_tooltip(w, tooltip);
+        wid_set_tooltip(w, tooltip, 0 /* font */);
     }
 
     {
@@ -404,7 +404,7 @@ static void wid_player_info_create (thing_statsp s)
         fpoint br = {0.45, 0.63};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_tooltip(w, "Your helmet");
+        wid_set_tooltip(w, "Your helmet", 0 /* font */);
 
         item_t item = s->worn[THING_WORN_ARMOR];
 
@@ -427,7 +427,7 @@ static void wid_player_info_create (thing_statsp s)
         fpoint br = {0.95, 0.63};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_tooltip(w, "Your armor");
+        wid_set_tooltip(w, "Your armor", 0 /* font */);
 
         item_t item = s->worn[THING_WORN_HELMET];
 
@@ -450,7 +450,7 @@ static void wid_player_info_create (thing_statsp s)
         fpoint br = {0.45, 0.79};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_tooltip(w, "Your boots");
+        wid_set_tooltip(w, "Your boots", 0 /* font */);
 
         item_t item = s->worn[THING_WORN_BOOTS];
 
@@ -473,7 +473,7 @@ static void wid_player_info_create (thing_statsp s)
         fpoint br = {0.95, 0.79};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_tooltip(w, "Left hand");
+        wid_set_tooltip(w, "Left hand", 0 /* font */);
 
         item_t item = s->worn[THING_WORN_ARM_LEFT];
 
@@ -496,7 +496,7 @@ static void wid_player_info_create (thing_statsp s)
         fpoint br = {0.95, 0.88};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_tooltip(w, "Right hand");
+        wid_set_tooltip(w, "Right hand", 0 /* font */);
 
         item_t item = s->worn[THING_WORN_ARM_RIGHT];
 

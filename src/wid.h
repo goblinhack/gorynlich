@@ -193,6 +193,7 @@ color wid_get_mode_color(widp, wid_color which);
 const char *wid_name(widp);
 const char *wid_logname(widp);
 const char *wid_get_text(widp);
+const char *wid_get_name(widp);
 const char *wid_get_tooltip(widp);
 const char *wid_get_text_with_cursor(widp);
 double wid_get_bevel(widp);
@@ -326,7 +327,7 @@ void wid_set_tex_br(widp, fsize val);
 void wid_set_tex_sz(widp, fsize uv);
 void wid_set_tex_tl(widp, fsize val);
 void wid_set_text(widp, const char *string);
-void wid_set_tooltip(widp, const char *string);
+void wid_set_tooltip(widp, const char *string, fontp);
 void wid_set_text_advance(widp, double val);
 void wid_set_text_bot(widp, uint8_t val);
 void wid_set_text_centerx(widp, uint8_t val);
@@ -771,6 +772,7 @@ typedef struct wid_ {
      * Text that appears as a tooltip.
      */
     char *tooltip;
+    fontp tooltip_font;
 
 } wid;
 

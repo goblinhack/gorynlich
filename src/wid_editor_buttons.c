@@ -288,7 +288,7 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
     wid_set_mode(child, WID_MODE_NORMAL);
 
     wid_set_thing_template(child, tp);
-    wid_set_tooltip(child, tp_get_tooltip(tp));
+    wid_set_tooltip(child, tp_get_tooltip(tp), 0 /* font */);
     wid_set_tl_br_pct(child, tl, br);
     wid_set_on_mouse_down(child, wid_editor_buttons_tile_receive_mouse_down);
 
@@ -461,7 +461,7 @@ void wid_editor_buttons_wid_create (void)
                 wid_set_text(child, "Draw");
                 wid_editor_wid_draw = child;
 
-                wid_set_tooltip(child, "Draw single tiles");
+                wid_set_tooltip(child, "Draw single tiles", 0 /* font */);
 
                 wid_set_on_mouse_down(
                                 child,
@@ -472,7 +472,7 @@ void wid_editor_buttons_wid_create (void)
                 wid_set_text(child, "Fill");
                 wid_editor_wid_fill = child;
 
-                wid_set_tooltip(child, "Fill area with tiles");
+                wid_set_tooltip(child, "Fill area with tiles", 0 /* font */);
 
                 wid_set_on_mouse_down(
                             child,
@@ -482,7 +482,7 @@ void wid_editor_buttons_wid_create (void)
             case 2:
                 wid_set_text(child, "Clear");
 
-                wid_set_tooltip(child, "Clear ALL tiles");
+                wid_set_tooltip(child, "Clear ALL tiles", 0 /* font */);
 
                 wid_set_on_mouse_down(
                             child,
@@ -493,7 +493,7 @@ void wid_editor_buttons_wid_create (void)
                 wid_set_text(child, "Eraser");
                 wid_editor_wid_eraser = child;
 
-                wid_set_tooltip(child, "Erase selected tiles");
+                wid_set_tooltip(child, "Erase selected tiles", 0 /* font */);
 
                 wid_set_on_mouse_down(
                             child,
@@ -504,7 +504,7 @@ void wid_editor_buttons_wid_create (void)
                 wid_set_text(child, "Undo");
                 wid_editor_wid_undo = child;
 
-                wid_set_tooltip(child, "Undo last change");
+                wid_set_tooltip(child, "Undo last change", 0 /* font */);
 
                 wid_set_on_mouse_down(
                             child,
@@ -515,7 +515,7 @@ void wid_editor_buttons_wid_create (void)
                 wid_set_text(child, "Redo");
                 wid_editor_wid_redo = child;
 
-                wid_set_tooltip(child, "Undo an undo");
+                wid_set_tooltip(child, "Undo an undo", 0 /* font */);
 
                 wid_set_on_mouse_down(
                             child,
@@ -526,7 +526,7 @@ void wid_editor_buttons_wid_create (void)
                 wid_set_text(child, "Line");
                 wid_editor_wid_line = child;
 
-                wid_set_tooltip(child, "Click on the start and then end of a line");
+                wid_set_tooltip(child, "Click on the start and then end of a line", 0 /* font */);
 
                 wid_set_on_mouse_down(
                                 child,
@@ -536,7 +536,7 @@ void wid_editor_buttons_wid_create (void)
             case 7:
                 wid_set_text(child, "Title");
 
-                wid_set_tooltip(child, "Name this level");
+                wid_set_tooltip(child, "Name this level", 0 /* font */);
 
                 wid_set_on_mouse_down(
                                 child,
@@ -546,7 +546,7 @@ void wid_editor_buttons_wid_create (void)
             case 8:
                 wid_set_text(child, "Save");
 
-                wid_set_tooltip(child, "Save level");
+                wid_set_tooltip(child, "Save level", 0 /* font */);
 
                 wid_set_on_mouse_down(
                                 child,
@@ -556,7 +556,7 @@ void wid_editor_buttons_wid_create (void)
             case 9:
                 wid_set_text(child, "Load");
 
-                wid_set_tooltip(child, "Load level");
+                wid_set_tooltip(child, "Load level", 0 /* font */);
 
                 wid_set_on_mouse_down(
                                 child,
@@ -566,7 +566,7 @@ void wid_editor_buttons_wid_create (void)
             case 10:
                 wid_set_text(child, "Back");
 
-                wid_set_tooltip(child, "Back to main menu");
+                wid_set_tooltip(child, "Back to main menu", 0 /* font */);
 
                 wid_set_on_mouse_down(
                                 child,
@@ -588,7 +588,8 @@ void wid_editor_buttons_wid_create (void)
                   "%%fmt=left$%%fg=white$c\t\t\t\t%%fg=green$Clear level\n"
                   "%%fmt=left$%%fg=white$s\t\t\t\t%%fg=green$Save level\n"
                   "%%fmt=left$%%fg=white$l\t\t\t\t%%fg=green$Load level\n"
-                  "%%fmt=left$%%fg=white$b,ESC\t\t\t\t%%fg=green$Main menu");
+                  "%%fmt=left$%%fg=white$b,ESC\t\t\t\t%%fg=green$Main menu",
+                  fixed_font);
 
                 break;
             }

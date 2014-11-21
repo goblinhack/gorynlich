@@ -457,7 +457,7 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
                 continue;
             }
 #endif
-            wid_set_tooltip(child, dir);
+            wid_set_tooltip(child, dir, 0 /* font */);
         }
 
         if (!strcasecmp(n->tree.key, "..")) {
@@ -477,7 +477,7 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
             myfree(parent_dir);
             parent_dir = tmp;
 
-            wid_set_tooltip(child, parent_dir);
+            wid_set_tooltip(child, parent_dir, 0 /* font */);
             myfree(parent_dir);
         }
         fpoint tl = {0.0f, 0.0f};

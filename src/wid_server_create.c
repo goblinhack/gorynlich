@@ -560,9 +560,9 @@ static void wid_server_create_set_color (widp w, server *s)
     }
 
     if (s->tooltip) {
-        wid_set_tooltip(w, s->tooltip);
+        wid_set_tooltip(w, s->tooltip, fixed_font);
     } else {
-        wid_set_tooltip(w, "Cick to edit");
+        wid_set_tooltip(w, "Cick to edit", 0 /* font */);
     }
 }
 
@@ -621,7 +621,7 @@ static void wid_server_create_create (uint8_t redo)
         widp w = wid_new_container(wid_server_create_window_container,
                                        "server name container");
 
-        wid_set_tooltip(w, "Click on a server to edit it");
+        wid_set_tooltip(w, "Click on a server to edit it", 0 /* font */);
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Start a multiplayer game");
@@ -689,7 +689,7 @@ static void wid_server_create_create (uint8_t redo)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+            wid_set_color(w, WID_COLOR_BG, RED);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
@@ -753,7 +753,7 @@ static void wid_server_create_create (uint8_t redo)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+            wid_set_color(w, WID_COLOR_BG, RED);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
@@ -817,7 +817,7 @@ static void wid_server_create_create (uint8_t redo)
             wid_set_color(w, WID_COLOR_BG, c);
 
             wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, SKYBLUE);
+            wid_set_color(w, WID_COLOR_BG, RED);
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
@@ -858,16 +858,16 @@ static void wid_server_create_create (uint8_t redo)
             socketp sp = socket_find(s->ip);
             if (sp && (sp == server_socket)) {
                 wid_set_text(w, "Stop");
-                wid_set_tooltip(w, "Stop the server");
+                wid_set_tooltip(w, "Stop the server", 0 /* font */);
                 wid_set_on_mouse_down(w, wid_server_stop);
             } else {
                 wid_set_text(w, "Start");
-                wid_set_tooltip(w, "Start the server");
+                wid_set_tooltip(w, "Start the server", 0 /* font */);
                 wid_set_on_mouse_down(w, wid_server_start);
             }
 
             wid_set_font(w, small_font);
-            color c = STEELBLUE;
+            color c = BLACK;
 
             c.a = 100;
             wid_set_mode(w, WID_MODE_NORMAL);
@@ -898,7 +898,7 @@ static void wid_server_create_create (uint8_t redo)
 
         wid_set_text(w, "Go back");
         wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
 
         wid_set_text_outline(w, true);
