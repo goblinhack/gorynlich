@@ -372,7 +372,8 @@ void wid_server_join_redo (uint8_t soft_refresh)
             snprintf_realloc(&tmp, &size, &used, "\n");
 
             char *tmp2;
-            if (server_status->server_current_players > 0) {
+
+            if (server_status->server_current_players == 0) {
                 tmp2 = dynprintf(
                     "%%%%fmt=centerx$%s\n"
                     "%%%%fmt=left$Average latency %u ms\n"
@@ -385,8 +386,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
                     s->min_latency,
                     s->max_latency,
                     server_status->server_max_players,
-                    server_status->server_current_players,
-                    tmp);
+                    server_status->server_current_players);
             } else {
                 tmp2 = dynprintf(
                     "%%%%fmt=centerx$%s\n"
