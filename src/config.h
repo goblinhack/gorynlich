@@ -163,12 +163,14 @@
  */
 #undef ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
 
+#define FIXED_FONT                  "data/ttf/emulogic.ttf"
 #define VSMALL_FONT                 "data/ttf/Metamorphous_Regular.ttf"
 #define SMALL_FONT                  "data/ttf/Metamorphous_Regular.ttf"
 #define MED_FONT                    "data/ttf/Metamorphous_Regular.ttf"
 #define LARGE_FONT                  "data/ttf/Metamorphous_Regular.ttf"
 #define VLARGE_FONT                 "data/ttf/Metamorphous_Regular.ttf"
 
+#define FIXED_FONT_SIZE             8
 #define VSMALL_FONT_SIZE            10
 #define SMALL_FONT_SIZE             14
 #define MED_FONT_SIZE               16

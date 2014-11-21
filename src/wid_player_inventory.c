@@ -334,7 +334,7 @@ void wid_player_inventory_button_style (widp w,
         }
 
         full_tooltip = tmp;
-        wid_set_tooltip(w, full_tooltip);
+        wid_set_tooltip(w, full_tooltip, 0 /* font */);
         myfree(full_tooltip);
     }
 }

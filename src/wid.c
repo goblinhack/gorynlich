@@ -58,7 +58,7 @@ static tree_root *wid_top_level5;
  * Mouse movement
  */
 static widp wid_popup_tooltip;
-static widp last_wid_tooltip;
+static char *wid_tooltip_last_text;
 static int wid_popup_tooltip_mouse_x;
 static int wid_popup_tooltip_mouse_y;
 
@@ -879,7 +879,11 @@ static void wid_mouse_over_end (void)
             fast_verify(wid_popup_tooltip);
 
             wid_destroy(&wid_popup_tooltip);
-            last_wid_tooltip = 0;
+
+            if (wid_tooltip_last_text) {
+                myfree(wid_tooltip_last_text);
+                wid_tooltip_last_text = 0;
+            }
         }
     }
 }
@@ -923,14 +927,23 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         w->on_mouse_over_begin(w);
     }
 
-    if (w->tooltip && (w != last_wid_tooltip)) {
-        last_wid_tooltip = w;
+    if (w->tooltip) {
+        if (wid_tooltip_last_text) {
+            if (!strcmp(wid_get_name(w), wid_tooltip_last_text)) {
+                return (true);
+            }
+
+            myfree(wid_tooltip_last_text);
+        }
+
+        wid_tooltip_last_text = dupstr(wid_get_name(w), "tooltip text");
 
         if (wid_popup_tooltip) {
             wid_destroy_immediate(wid_popup_tooltip);
         }
 
-        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, small_font);
+        wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, 
+                                        w->tooltip_font ? w->tooltip_font : small_font);
 
         wid_popup_tooltip_mouse_x = mouse_x;
         wid_popup_tooltip_mouse_y = mouse_y;
@@ -959,7 +972,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         wid_move_to_pct_centered(wid_popup_tooltip, 0.5, -0.5);
         wid_move_to_pct_centered_in(wid_popup_tooltip, 0.5, 0.2, 200);
 
-        wid_destroy_ptr_in(&wid_popup_tooltip, 3000);
+        wid_destroy_ptr_in(&wid_popup_tooltip, 5000);
 #endif
     }
 
@@ -1244,6 +1257,13 @@ const char *wid_get_text (widp w)
     return (w->text);
 }
 
+const char *wid_get_name (widp w)
+{
+    fast_verify(w);
+
+    return (w->name);
+}
+
 const char *wid_get_tooltip (widp w)
 {
     fast_verify(w);
@@ -1330,7 +1350,8 @@ void wid_set_text (widp w, const char *string)
     }
 }
 
-void wid_set_tooltip (widp w, const char *string)
+void wid_set_tooltip (widp w, const char *string,
+                      fontp font)
 {
     fast_verify(w);
 
@@ -1344,6 +1365,7 @@ void wid_set_tooltip (widp w, const char *string)
     }
 
     w->tooltip = dupstr(string, "wid tooltip");
+    w->tooltip_font = font;
 }
 
 uint8_t wid_get_received_input (widp w)
@@ -3184,7 +3206,7 @@ widp wid_new_rounded_window (const char *name)
     wid_set_color(w, WID_COLOR_TL, tl);
     wid_set_color(w, WID_COLOR_BR, br);
     wid_set_color(w, WID_COLOR_BG, c);
-    wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+    wid_set_color(w, WID_COLOR_TEXT, WHITE);
     wid_set_movable(w, true);
 
     wid_raise(w);
@@ -3220,7 +3242,7 @@ widp wid_new_square_window (const char *name)
     wid_set_color(w, WID_COLOR_TL, tl);
     wid_set_color(w, WID_COLOR_BR, br);
     wid_set_color(w, WID_COLOR_BG, c);
-    wid_set_color(w, WID_COLOR_TEXT, STEELBLUE);
+    wid_set_color(w, WID_COLOR_TEXT, WHITE);
     wid_set_movable(w, true);
     wid_set_name(w, name);
 
@@ -3261,7 +3283,7 @@ widp wid_new_square_button (widp parent, const char *name)
     }
 
     wid_set_mode(w, WID_MODE_OVER); {
-        wid_set_color(w, WID_COLOR_BG, GRAY80);
+        wid_set_color(w, WID_COLOR_BG, RED);
     }
 
     wid_set_mode(w, WID_MODE_FOCUS); {
@@ -3277,7 +3299,7 @@ widp wid_new_square_button (widp parent, const char *name)
     }
 
     wid_set_mode(w, WID_MODE_ACTIVE); {
-        wid_set_color(w, WID_COLOR_BG, STEELBLUE4);
+        wid_set_color(w, WID_COLOR_BG, RED);
     }
 
     wid_set_mode(w, WID_MODE_NORMAL); {
@@ -3374,7 +3396,7 @@ static widp wid_new_scroll_bar (widp parent, widp scrollbar_owner,
     wid_set_blit_outline(w, false);
 
     wid_set_mode(w, WID_MODE_ACTIVE); {
-        c = STEELBLUE;
+        c = RED;
         c.a = 200;
         wid_set_color(w, WID_COLOR_BG, c);
 
@@ -8148,7 +8170,24 @@ static void wid_display (widp w,
             glcolor(col_text_outline);
 
 #ifdef ENABLE_LARGE_TEXT_OUTLINE
-            if (font == vsmall_font) {
+            if (font == fixed_font) {
+                ttf_puts_no_fmt(font, text,
+                                x - 1.0f * scaling,
+                                y + 1.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 1.0f * scaling,
+                                y + 1.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x - 1.0f * scaling,
+                                y - 1.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 1.0f * scaling,
+                                y - 1.0f * scaling, scaling, advance,
+                                fixed_width);
+            } else if (font == vsmall_font) {
                 ttf_puts_no_fmt(font, text,
                                 x - 1.0f * scaling,
                                 y + 1.0f * scaling, scaling, advance,

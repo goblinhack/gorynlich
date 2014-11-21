@@ -313,7 +313,7 @@ wid_game_map_server_replace_tile (widp w,
     wid_set_text_lhs(child, true);
     wid_set_text_top(child, true);
     wid_set_mode(child, WID_MODE_NORMAL);
-    wid_set_color(child, WID_COLOR_TEXT, STEELBLUE);
+    wid_set_color(child, WID_COLOR_TEXT, WHITE);
     wid_set_color(child, WID_COLOR_TL, BLACK);
     wid_set_color(child, WID_COLOR_BG, BLACK);
     wid_set_color(child, WID_COLOR_BR, BLACK);

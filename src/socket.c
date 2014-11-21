@@ -795,7 +795,6 @@ static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
                 socket_get_remote_logname(s));
             CON("%-20s", sock);
         }
-        CON(" ");
     }
 
     return (true);

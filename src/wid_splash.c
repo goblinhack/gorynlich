@@ -63,7 +63,7 @@ void sdl_splashscreen_update (void)
     wid_set_text(wid_splash, "Loading...");
     wid_set_font(wid_splash, med_font);
 
-    color col = STEELBLUE;
+    color col = BLACK;
     glcolor(col);
 
     wid_set_mode(wid_splash, WID_MODE_NORMAL);
