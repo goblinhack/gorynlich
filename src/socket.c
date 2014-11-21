@@ -781,13 +781,22 @@ static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
         if (total_attempts) {
             avg_latency /= total_attempts;
 
-            CON("%-20s %3.0f pct %5d ms %-20s %-20s", 
-                name,
-                ((float)((float)response / (float)total_attempts)) * 100.0,
-                avg_latency,
-                socket_get_local_logname(s),
-                socket_get_remote_logname(s));
-            CON("%-20s", sock);
+            if (*name) {
+                CON("%-20s %3.0f pct %5d ms %-20s %-20s", 
+                    name,
+                    ((float)((float)response / (float)total_attempts)) * 100.0,
+                    avg_latency,
+                    socket_get_local_logname(s),
+                    socket_get_remote_logname(s));
+                CON("%-20s", sock);
+            } else {
+                CON("%-20s %3.0f pct %5d ms %-20s %-20s", 
+                    sock,
+                    ((float)((float)response / (float)total_attempts)) * 100.0,
+                    avg_latency,
+                    socket_get_local_logname(s),
+                    socket_get_remote_logname(s));
+            }
         } else {
             CON("%-20s                  %-20s %-20s", 
                 name,

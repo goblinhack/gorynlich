@@ -24,8 +24,8 @@ static widp wid_console_horiz_scroll;
 
 widp wid_console_input_line;
 
-static float wid_console_line_height = 0.060f;
-static float wid_console_max_line_height = 0.060f;
+static float wid_console_line_height = 0.040f;
+static float wid_console_max_line_height = 0.040f;
 static tree_root *tree_wid_console;
 
 widp wid_console_window;
