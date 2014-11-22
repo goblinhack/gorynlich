@@ -184,6 +184,18 @@ static void client_socket_tx_ping (void)
         }
 
         ts = time_get_time_cached();
+
+        /*
+         * If nothing is on the remote end then dont ping it relentlessly.
+         */
+        if (!s->rx) {
+            if (!time_have_x_tenths_passed_since(
+                        DELAY_TENTHS_PING_WHEN_NO_RESPONSE, s->tx_last_ping)) {
+                continue;
+            }
+        }
+
+        s->tx_last_ping = ts;
         socket_tx_ping(s, seq, ts);
     }
 

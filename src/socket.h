@@ -33,6 +33,11 @@ typedef enum {
     MSG_COMPRESSED = 0xFF,
 } msg_type;
 
+enum {
+    SOCKET_LISTEN,
+    SOCKET_CONNECT,
+};
+
 typedef struct {
     uint8_t type;
     thing_stats stats;
@@ -154,7 +159,7 @@ typedef struct {
 } __attribute__ ((packed)) msg_map_update;
 
 typedef struct socket_ {
-    tree_key_two_int tree;
+    tree_key_three_int tree;
 
     uint8_t server;
     uint8_t client;
@@ -180,6 +185,7 @@ typedef struct socket_ {
      */
     uint32_t rx;
     uint32_t tx;
+    uint32_t tx_last_ping;
     uint32_t rx_error;
     uint32_t tx_error;
     uint32_t rx_bad_msg;
@@ -214,7 +220,7 @@ extern char *iprawporttodynstr(IPaddress ip);
 extern IPaddress server_address;
 extern IPaddress no_address;
 
-extern socketp socket_find(IPaddress address);
+extern socketp socket_find(IPaddress address, int);
 extern socketp socket_listen(IPaddress address);
 extern socketp socket_connect_from_client(IPaddress address);
 extern socketp socket_connect_from_server(IPaddress address);

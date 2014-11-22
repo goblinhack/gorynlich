@@ -27,11 +27,8 @@ static uint8_t server_shout(tokens_t *tokens, void *context);
 
 uint8_t server_start (IPaddress address)
 {
-    if (!on_server) {
-        return (true);
-    }
-
     if (server_socket) {
+        LOG("Server is already running; cannot restart");
         return (true);
     }
 
