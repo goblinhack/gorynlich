@@ -176,12 +176,6 @@ typedef struct socket_ {
     uint16_t avg_latency_rtt;
     uint16_t min_latency_rtt;
     uint16_t max_latency_rtt;
-    uint16_t avg_latency_us_to_peer;
-    uint16_t min_latency_us_to_peer;
-    uint16_t max_latency_us_to_peer;
-    uint16_t avg_latency_peer_to_us;
-    uint16_t min_latency_peer_to_us;
-    uint16_t max_latency_peer_to_us;
     /*
      * Counters.
      */
@@ -196,8 +190,6 @@ typedef struct socket_ {
     int channel;
     const char *local_logname;
     const char *remote_logname;
-    uint32_t latency_us_to_peer[SOCKET_PING_SEQ_NO_RANGE];
-    uint32_t latency_peer_to_us[SOCKET_PING_SEQ_NO_RANGE];
     uint32_t latency_rtt[SOCKET_PING_SEQ_NO_RANGE];
 
     /*
@@ -338,12 +330,6 @@ extern uint32_t socket_get_quality(socketp s);
 extern uint32_t socket_get_avg_latency_rtt(socketp s);
 extern uint32_t socket_get_min_latency_rtt(socketp s);
 extern uint32_t socket_get_max_latency_rtt(socketp s);
-extern uint32_t socket_get_avg_latency_us_to_peer(socketp s);
-extern uint32_t socket_get_min_latency_us_to_peer(socketp s);
-extern uint32_t socket_get_max_latency_us_to_peer(socketp s);
-extern uint32_t socket_get_avg_latency_peer_to_us(socketp s);
-extern uint32_t socket_get_min_latency_peer_to_us(socketp s);
-extern uint32_t socket_get_max_latency_peer_to_us(socketp s);
 extern uint32_t socket_get_rx(socketp s);
 extern uint32_t socket_get_tx(socketp s);
 extern uint32_t socket_get_rx_error(socketp s);

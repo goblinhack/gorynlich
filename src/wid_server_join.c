@@ -100,14 +100,7 @@ static void server_add (const server *s_in)
             s->avg_latency_rtt = socket_get_avg_latency_rtt(sp);
             s->min_latency_rtt = socket_get_min_latency_rtt(sp);
             s->max_latency_rtt = socket_get_max_latency_rtt(sp);
-            s->avg_latency_us_to_peer = socket_get_avg_latency_us_to_peer(sp);
-            s->min_latency_us_to_peer = socket_get_min_latency_us_to_peer(sp);
-            s->max_latency_us_to_peer = socket_get_max_latency_us_to_peer(sp);
-            s->avg_latency_peer_to_us = socket_get_avg_latency_peer_to_us(sp);
-            s->min_latency_peer_to_us = socket_get_min_latency_peer_to_us(sp);
-            s->max_latency_peer_to_us = socket_get_max_latency_peer_to_us(sp);
-            strncpy(s->name, socket_get_name(sp),
-                    sizeof(s->name) - 1);
+            strncpy(s->name, socket_get_name(sp), sizeof(s->name) - 1);
         }
     }
 
@@ -341,12 +334,6 @@ void wid_server_join_redo (uint8_t soft_refresh)
         s->avg_latency_rtt = socket_get_avg_latency_rtt(sp);
         s->min_latency_rtt = socket_get_min_latency_rtt(sp);
         s->max_latency_rtt = socket_get_max_latency_rtt(sp);
-        s->avg_latency_us_to_peer = socket_get_avg_latency_us_to_peer(sp);
-        s->min_latency_us_to_peer = socket_get_min_latency_us_to_peer(sp);
-        s->max_latency_us_to_peer = socket_get_max_latency_us_to_peer(sp);
-        s->avg_latency_peer_to_us = socket_get_avg_latency_peer_to_us(sp);
-        s->min_latency_peer_to_us = socket_get_min_latency_peer_to_us(sp);
-        s->max_latency_peer_to_us = socket_get_max_latency_peer_to_us(sp);
 
         /*
          * Re-sort the server.
@@ -408,24 +395,12 @@ void wid_server_join_redo (uint8_t soft_refresh)
                     "%%%%fmt=left$Average latency rtt %u ms\n"
                     "%%%%fmt=left$Minimum latency rtt %u ms\n"
                     "%%%%fmt=left$Maxumum latency rtt %u ms\n"
-                    "%%%%fmt=left$Average latency us_to_peer %u ms\n"
-                    "%%%%fmt=left$Minimum latency us_to_peer %u ms\n"
-                    "%%%%fmt=left$Maxumum latency us_to_peer %u ms\n"
-                    "%%%%fmt=left$Average latency peer_to_us %u ms\n"
-                    "%%%%fmt=left$Minimum latency peer_to_us %u ms\n"
-                    "%%%%fmt=left$Maxumum latency peer_to_us %u ms\n"
                     "%%%%fmt=left$Maxumum players %u\n"
                     "%%%%fmt=left$Current players %u\n",
                     server_status->server_name,
                     s->avg_latency_rtt,
                     s->min_latency_rtt,
                     s->max_latency_rtt,
-                    s->avg_latency_us_to_peer,
-                    s->min_latency_us_to_peer,
-                    s->max_latency_us_to_peer,
-                    s->avg_latency_peer_to_us,
-                    s->min_latency_peer_to_us,
-                    s->max_latency_peer_to_us,
                     server_status->server_max_players,
                     server_status->server_current_players);
             } else {
@@ -434,12 +409,6 @@ void wid_server_join_redo (uint8_t soft_refresh)
                     "%%%%fmt=left$Average latency rtt %u ms\n"
                     "%%%%fmt=left$Minimum latency rtt %u ms\n"
                     "%%%%fmt=left$Maxumum latency rtt %u ms\n"
-                    "%%%%fmt=left$Average latency us_to_peer %u ms\n"
-                    "%%%%fmt=left$Minimum latency us_to_peer %u ms\n"
-                    "%%%%fmt=left$Maxumum latency us_to_peer %u ms\n"
-                    "%%%%fmt=left$Average latency peer_to_us %u ms\n"
-                    "%%%%fmt=left$Minimum latency peer_to_us %u ms\n"
-                    "%%%%fmt=left$Maxumum latency peer_to_us %u ms\n"
                     "%%%%fmt=left$Maxumum players %u\n"
                     "%%%%fmt=left$Current players %u\n"
                     "%s\n",
@@ -447,12 +416,6 @@ void wid_server_join_redo (uint8_t soft_refresh)
                     s->avg_latency_rtt,
                     s->min_latency_rtt,
                     s->max_latency_rtt,
-                    s->avg_latency_us_to_peer,
-                    s->min_latency_us_to_peer,
-                    s->max_latency_us_to_peer,
-                    s->avg_latency_peer_to_us,
-                    s->min_latency_peer_to_us,
-                    s->max_latency_peer_to_us,
                     server_status->server_max_players,
                     server_status->server_current_players,
                     tmp);
