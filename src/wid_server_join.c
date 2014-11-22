@@ -43,9 +43,15 @@ typedef struct server_ {
     char *tooltip;
     uint8_t quality;
     uint8_t auto_add;
-    uint32_t avg_latency;
-    uint32_t min_latency;
-    uint32_t max_latency;
+    uint32_t avg_latency_rtt;
+    uint32_t min_latency_rtt;
+    uint32_t max_latency_rtt;
+    uint32_t avg_latency_us_to_peer;
+    uint32_t min_latency_us_to_peer;
+    uint32_t max_latency_us_to_peer;
+    uint32_t avg_latency_peer_to_us;
+    uint32_t min_latency_peer_to_us;
+    uint32_t max_latency_peer_to_us;
     socketp socket;
     uint8_t walked;
     char name[SMALL_STRING_LEN_MAX];
@@ -91,16 +97,22 @@ static void server_add (const server *s_in)
         socketp sp = socket_connect_from_client(s->ip);
         if (sp) {
             s->quality = socket_get_quality(sp);
-            s->avg_latency = socket_get_avg_latency(sp);
-            s->min_latency = socket_get_min_latency(sp);
-            s->max_latency = socket_get_max_latency(sp);
+            s->avg_latency_rtt = socket_get_avg_latency_rtt(sp);
+            s->min_latency_rtt = socket_get_min_latency_rtt(sp);
+            s->max_latency_rtt = socket_get_max_latency_rtt(sp);
+            s->avg_latency_us_to_peer = socket_get_avg_latency_us_to_peer(sp);
+            s->min_latency_us_to_peer = socket_get_min_latency_us_to_peer(sp);
+            s->max_latency_us_to_peer = socket_get_max_latency_us_to_peer(sp);
+            s->avg_latency_peer_to_us = socket_get_avg_latency_peer_to_us(sp);
+            s->min_latency_peer_to_us = socket_get_min_latency_peer_to_us(sp);
+            s->max_latency_peer_to_us = socket_get_max_latency_peer_to_us(sp);
             strncpy(s->name, socket_get_name(sp),
                     sizeof(s->name) - 1);
         }
     }
 
     s->tree.key2 = s->quality;
-    s->tree.key3 = s->avg_latency;
+    s->tree.key3 = s->avg_latency_rtt;
     s->tree.key4 = SDLNet_Read16(&s->ip.port);
     s->tree.key5 = SDLNet_Read32(&s->ip.host);
     s->auto_add = s_in->auto_add;
@@ -326,9 +338,15 @@ void wid_server_join_redo (uint8_t soft_refresh)
         }
 
         s->quality = socket_get_quality(sp);
-        s->avg_latency = socket_get_avg_latency(sp);
-        s->min_latency = socket_get_min_latency(sp);
-        s->max_latency = socket_get_max_latency(sp);
+        s->avg_latency_rtt = socket_get_avg_latency_rtt(sp);
+        s->min_latency_rtt = socket_get_min_latency_rtt(sp);
+        s->max_latency_rtt = socket_get_max_latency_rtt(sp);
+        s->avg_latency_us_to_peer = socket_get_avg_latency_us_to_peer(sp);
+        s->min_latency_us_to_peer = socket_get_min_latency_us_to_peer(sp);
+        s->max_latency_us_to_peer = socket_get_max_latency_us_to_peer(sp);
+        s->avg_latency_peer_to_us = socket_get_avg_latency_peer_to_us(sp);
+        s->min_latency_peer_to_us = socket_get_min_latency_peer_to_us(sp);
+        s->max_latency_peer_to_us = socket_get_max_latency_peer_to_us(sp);
 
         /*
          * Re-sort the server.
@@ -338,13 +356,13 @@ void wid_server_join_redo (uint8_t soft_refresh)
         }
 
         s->tree.key2 = s->quality;
-        s->tree.key3 = s->avg_latency;
+        s->tree.key3 = s->avg_latency_rtt;
         s->tree.key4 = SDLNet_Read16(&s->ip.port);
         s->tree.key5 = SDLNet_Read32(&s->ip.host);
 
         if (!tree_insert(remote_servers, &s->tree.node)) {
             ERR("Cannot re-sort host %s port %u qual %d lat %d", 
-                s->host, s->port, s->quality, s->avg_latency);
+                s->host, s->port, s->quality, s->avg_latency_rtt);
         }
 
         if (s->tooltip) {
@@ -387,30 +405,54 @@ void wid_server_join_redo (uint8_t soft_refresh)
             if (server_status->server_current_players == 0) {
                 tmp2 = dynprintf(
                     "%%%%fmt=centerx$%s\n"
-                    "%%%%fmt=left$Average latency %u ms\n"
-                    "%%%%fmt=left$Minimum latency %u ms\n"
-                    "%%%%fmt=left$Maxumum latency %u ms\n"
+                    "%%%%fmt=left$Average latency rtt %u ms\n"
+                    "%%%%fmt=left$Minimum latency rtt %u ms\n"
+                    "%%%%fmt=left$Maxumum latency rtt %u ms\n"
+                    "%%%%fmt=left$Average latency us_to_peer %u ms\n"
+                    "%%%%fmt=left$Minimum latency us_to_peer %u ms\n"
+                    "%%%%fmt=left$Maxumum latency us_to_peer %u ms\n"
+                    "%%%%fmt=left$Average latency peer_to_us %u ms\n"
+                    "%%%%fmt=left$Minimum latency peer_to_us %u ms\n"
+                    "%%%%fmt=left$Maxumum latency peer_to_us %u ms\n"
                     "%%%%fmt=left$Maxumum players %u\n"
                     "%%%%fmt=left$Current players %u\n",
                     server_status->server_name,
-                    s->avg_latency,
-                    s->min_latency,
-                    s->max_latency,
+                    s->avg_latency_rtt,
+                    s->min_latency_rtt,
+                    s->max_latency_rtt,
+                    s->avg_latency_us_to_peer,
+                    s->min_latency_us_to_peer,
+                    s->max_latency_us_to_peer,
+                    s->avg_latency_peer_to_us,
+                    s->min_latency_peer_to_us,
+                    s->max_latency_peer_to_us,
                     server_status->server_max_players,
                     server_status->server_current_players);
             } else {
                 tmp2 = dynprintf(
                     "%%%%fmt=centerx$%s\n"
-                    "%%%%fmt=left$Average latency %u ms\n"
-                    "%%%%fmt=left$Minimum latency %u ms\n"
-                    "%%%%fmt=left$Maxumum latency %u ms\n"
+                    "%%%%fmt=left$Average latency rtt %u ms\n"
+                    "%%%%fmt=left$Minimum latency rtt %u ms\n"
+                    "%%%%fmt=left$Maxumum latency rtt %u ms\n"
+                    "%%%%fmt=left$Average latency us_to_peer %u ms\n"
+                    "%%%%fmt=left$Minimum latency us_to_peer %u ms\n"
+                    "%%%%fmt=left$Maxumum latency us_to_peer %u ms\n"
+                    "%%%%fmt=left$Average latency peer_to_us %u ms\n"
+                    "%%%%fmt=left$Minimum latency peer_to_us %u ms\n"
+                    "%%%%fmt=left$Maxumum latency peer_to_us %u ms\n"
                     "%%%%fmt=left$Maxumum players %u\n"
                     "%%%%fmt=left$Current players %u\n"
                     "%s\n",
                     server_status->server_name,
-                    s->avg_latency,
-                    s->min_latency,
-                    s->max_latency,
+                    s->avg_latency_rtt,
+                    s->min_latency_rtt,
+                    s->max_latency_rtt,
+                    s->avg_latency_us_to_peer,
+                    s->min_latency_us_to_peer,
+                    s->max_latency_us_to_peer,
+                    s->avg_latency_peer_to_us,
+                    s->min_latency_peer_to_us,
+                    s->max_latency_peer_to_us,
                     server_status->server_max_players,
                     server_status->server_current_players,
                     tmp);

@@ -1033,7 +1033,7 @@ static uint8_t client_players_show (tokens_t *tokens, void *context)
         p->stats.pname,
         p->stats.pclass,
         p->quality,
-        p->avg_latency,
+        p->avg_latency_rtt,
         tmp2,
         tmp);
 
