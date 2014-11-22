@@ -996,20 +996,6 @@ void sockets_quality_check (void)
             s->avg_latency_peer_to_us = avg_latency_peer_to_us;
             s->min_latency_peer_to_us = min_latency_peer_to_us;
             s->max_latency_peer_to_us = max_latency_peer_to_us;
-
-            aplayer *p = s->player;
-            if (p) {
-                p->quality = s->quality;
-                p->avg_latency_rtt = s->avg_latency_rtt;
-                p->min_latency_rtt = s->min_latency_rtt;
-                p->max_latency_rtt = s->max_latency_rtt;
-                p->avg_latency_us_to_peer = s->avg_latency_us_to_peer;
-                p->min_latency_us_to_peer = s->min_latency_us_to_peer;
-                p->max_latency_us_to_peer = s->max_latency_us_to_peer;
-                p->avg_latency_peer_to_us = s->avg_latency_peer_to_us;
-                p->min_latency_peer_to_us = s->min_latency_peer_to_us;
-                p->max_latency_peer_to_us = s->max_latency_peer_to_us;
-            }
         }
     }
 }
@@ -2293,12 +2279,6 @@ void socket_tx_server_status (void)
             }
         }
 
-        msg_tx->quality = s->quality;
-
-        SDLNet_Write16(s->avg_latency_rtt, &msg_tx->avg_latency_rtt);
-        SDLNet_Write16(s->min_latency_rtt, &msg_tx->min_latency_rtt);
-        SDLNet_Write16(s->max_latency_rtt, &msg_tx->max_latency_rtt);
-
         UDPpacket *packet = socket_alloc_msg();
 
         memcpy(packet->data, &msg, sizeof(msg));
@@ -2344,12 +2324,6 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
     p->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
     p->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
-
-    p->quality = msg_rx->quality;
-
-    p->avg_latency_rtt = SDLNet_Read16(&msg_rx->avg_latency_rtt);
-    p->min_latency_rtt = SDLNet_Read16(&msg_rx->min_latency_rtt);
-    p->max_latency_rtt = SDLNet_Read16(&msg_rx->max_latency_rtt);
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
@@ -2614,11 +2588,53 @@ uint32_t socket_get_max_latency_rtt (socketp s)
     return (s->max_latency_rtt);
 }
 
+uint32_t socket_get_avg_latency_us_to_peer (socketp s)
+{
+    verify(s);
+
+    return (s->avg_latency_us_to_peer);
+}
+
+uint32_t socket_get_min_latency_us_to_peer (socketp s)
+{
+    verify(s);
+
+    return (s->min_latency_us_to_peer);
+}
+
+uint32_t socket_get_max_latency_us_to_peer (socketp s)
+{
+    verify(s);
+
+    return (s->max_latency_us_to_peer);
+}
+
+uint32_t socket_get_avg_latency_peer_to_us (socketp s)
+{
+    verify(s);
+
+    return (s->avg_latency_peer_to_us);
+}
+
+uint32_t socket_get_min_latency_peer_to_us (socketp s)
+{
+    verify(s);
+
+    return (s->min_latency_peer_to_us);
+}
+
+uint32_t socket_get_max_latency_peer_to_us (socketp s)
+{
+    verify(s);
+
+    return (s->max_latency_peer_to_us);
+}
+
 uint32_t socket_get_rx (socketp s)
 {
     verify(s);
 
-    return (s->min_latency_rtt);
+    return (s->rx);
 }
 
 uint32_t socket_get_tx (socketp s)
@@ -2632,21 +2648,21 @@ uint32_t socket_get_rx_error (socketp s)
 {
     verify(s);
 
-    return (s->min_latency_rtt);
+    return (s->rx_error);
 }
 
 uint32_t socket_get_tx_error (socketp s)
 {
     verify(s);
 
-    return (s->min_latency_rtt);
+    return (s->tx_error);
 }
 
 uint32_t socket_get_rx_bad_msg (socketp s)
 {
     verify(s);
 
-    return (s->min_latency_rtt);
+    return (s->rx_bad_msg);
 }
 
 void socket_tx_player_move (socketp s, 
