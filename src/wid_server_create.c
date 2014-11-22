@@ -206,7 +206,7 @@ void wid_server_create_redo (void)
         s->started = false;
         s->walked = true;
 
-        socketp sp = socket_find(s->ip);
+        socketp sp = socket_find(s->ip, SOCKET_LISTEN);
         if (!sp) {
             continue;
         }
@@ -241,7 +241,16 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 
     TREE_WALK_REVERSE(local_servers, s) {
 
-        if (!server_start(s->ip)) {
+        IPaddress ip = {0};
+
+        if (SDLNet_ResolveHost(&ip, SERVER_DEFAULT_HOST, 
+                               global_config.server_port)) {
+            MSG_BOX("Open socket, cannot resolve %s:%u",
+                SERVER_DEFAULT_HOST, global_config.server_port);
+            return (false);
+        }
+
+        if (!server_start(ip)) {
             return (true);
         }
 
@@ -249,12 +258,6 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
     }
 
     wid_server_create_redo();
-
-    wid_game_map_server_visible();
-    wid_game_map_client_visible();
-    wid_server_create_hide();
-    wid_server_join_hide();
-    wid_intro_hide();
 
     MSG(INFO, "Server started");
 
@@ -457,7 +460,7 @@ static uint8_t wid_server_create_port_receive_input (widp w,
                  * Fail
                  */
                 MSG_BOX("Failed to parse port number, "
-                       "must be in the 1024 to 65535 range");
+                        "must be in the 1024 to 65535 range");
 
                 return (true);
             }
@@ -552,7 +555,7 @@ static uint8_t wid_server_create_max_players_receive_input (widp w,
 
 static void wid_server_create_set_color (widp w, server *s)
 {
-    socketp sp = socket_find(s->ip);
+    socketp sp = socket_find(s->ip, SOCKET_LISTEN);
     if (sp && (sp == server_socket)) {
         wid_set_color(w, WID_COLOR_TEXT, GREEN);
     } else {
@@ -855,7 +858,7 @@ static void wid_server_create_create (uint8_t redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            socketp sp = socket_find(s->ip);
+            socketp sp = socket_find(s->ip, SOCKET_LISTEN);
             if (sp && (sp == server_socket)) {
                 wid_set_text(w, "Stop");
                 wid_set_tooltip(w, "Stop the server", 0 /* font */);

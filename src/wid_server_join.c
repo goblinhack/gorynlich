@@ -146,7 +146,7 @@ static void server_remove (server *s)
      * Remove this socket.
      */
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip);
+        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp) {
             socket_disconnect(sp);
             break;
@@ -220,7 +220,7 @@ void wid_server_join_hide (void)
      * Leave all other sockets.
      */
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip);
+        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp && (sp != client_joined_server)) {
             socket_disconnect(sp);
             continue;
@@ -310,7 +310,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
 
         s->walked = true;
 
-        socketp sp = socket_find(s->ip);
+        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (!sp) {
             /*
              * Connector.
@@ -320,7 +320,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
             }
         }
 
-        sp = socket_find(s->ip);
+        sp = socket_find(s->ip, SOCKET_CONNECT);
         if (!sp) {
             continue;
         }
@@ -458,7 +458,7 @@ static uint8_t wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
      * Leave all other sockets.
      */
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip);
+        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp && (sp != client_joined_server)) {
             socket_disconnect(sp);
             continue;
@@ -485,7 +485,7 @@ static uint8_t wid_server_join_leave (widp w, int32_t x, int32_t y,
      * Rescan all sockets to get new stats.
      */
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip);
+        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp) {
             socket_connect_from_client(s->ip);
             continue;
@@ -1318,7 +1318,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            socketp sp = socket_find(s->ip);
+            socketp sp = socket_find(s->ip, SOCKET_CONNECT);
 
             widp w = wid_new_rounded_small_button(wid_server_join_container,
                                            "server remove");
@@ -1393,7 +1393,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            socketp sp = socket_find(s->ip);
+            socketp sp = socket_find(s->ip, SOCKET_CONNECT);
             if (sp && (sp == client_joined_server)) {
                 wid_set_text(w, "Leave");
                 wid_set_tooltip(w, "Exit this game", 0 /* font */);
