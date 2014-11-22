@@ -31,7 +31,7 @@
 #undef MAZE_DEBUG_PRINT_EXITS
 #undef MAZE_DEBUG_SHOW_AS_GENERATING
 #undef MAZE_DEBUG_SHOW_AS_GENERATING_FRAGMENTS
-#define MAZE_DEBUG_SHOW
+#undef MAZE_DEBUG_SHOW_CONSOLE
 
 #include "main.h"
 #include "map_jigsaw.h"
@@ -2685,7 +2685,7 @@ reseed:
     LOG("Maze: Final maze:");
     map_jigsaw_buffer_print_file(MY_STDOUT);
 
-#ifdef MAZE_DEBUG_SHOW
+#ifdef MAZE_DEBUG_SHOW_CONSOLE
     map_jigsaw_buffer_print();
 #endif
 
