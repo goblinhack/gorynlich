@@ -2135,34 +2135,32 @@ void socket_tx_server_status (void)
             continue;
         }
 
-        aplayer *p = s->player;
-        if (!s->player) {
-            continue;
-        }
-
-        thingp t = p->thing;
-        if (!t) {
-            continue;
-        }
-
-        t->stats.weapon_carry_anim_id_latest = t->weapon_carry_anim_thing_id;
-        t->stats.weapon_swing_anim_id_latest = t->weapon_swing_anim_thing_id;
-
         msg_player_state *msg_tx = &msg.player;
-        memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
 
-        SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
-        SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
+        msg.server_connected = 0;
 
-        SDLNet_Write32(p->remote_ip.host, &msg_tx->remote_ip.host);
-        SDLNet_Write16(p->remote_ip.port, &msg_tx->remote_ip.port);
+        aplayer *p = s->player;
+        if (p) {
+            thingp t = p->thing;
+            if (t) {
+                msg.server_connected = 1;
+                t->stats.weapon_carry_anim_id_latest = t->weapon_carry_anim_thing_id;
+                t->stats.weapon_swing_anim_id_latest = t->weapon_swing_anim_thing_id;
+
+                memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
+
+                SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
+                SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
+
+                SDLNet_Write32(p->remote_ip.host, &msg_tx->remote_ip.host);
+                SDLNet_Write16(p->remote_ip.port, &msg_tx->remote_ip.port);
+            }
+        }
 
         msg_tx->quality = s->quality;
         SDLNet_Write16(s->avg_latency, &msg_tx->avg_latency);
         SDLNet_Write16(s->min_latency, &msg_tx->min_latency);
         SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
-
-        SDLNet_Write32(p->key, &msg_tx->key);
 
         UDPpacket *packet = socket_alloc_msg();
 
@@ -2216,11 +2214,14 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
     p->min_latency = SDLNet_Read16(&msg_rx->min_latency);
     p->max_latency = SDLNet_Read16(&msg_rx->max_latency);
 
-    p->key = SDLNet_Read32(&msg_rx->key);
-
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Client: Rx Status from %s \"%s\"", tmp, p->stats.pname);
+        if (msg->server_connected) {
+            LOG("Client: Rx Status from %s, current player \"%s\"", 
+                tmp, p->stats.pname);
+        } else {
+            LOG("Client: Rx Status from %s", tmp);
+        }
         myfree(tmp);
     }
 

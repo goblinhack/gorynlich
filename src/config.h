@@ -59,7 +59,7 @@
 /*
  * How much the wheel mouse moves.
  */
-#define ENABLE_WHEEL_SCROLL_SPEED_SCALE 3
+#define ENABLE_WHEEL_SCROLL_SPEED_SCALE 10
 
 /*
  * Tooltip appears above mouse. I prefer it to zoom into the top
@@ -74,7 +74,7 @@
 /*
  * So we don't hog all the CPU
  */
-#define MAIN_LOOP_DELAY             2
+#define MAIN_LOOP_DELAY             10
 
 /*
  * Frames per sec counter.

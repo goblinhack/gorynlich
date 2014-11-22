@@ -2,16 +2,15 @@
 bugs
 ----
 
-Qual field need to explain x/y
-server popup tooltip missing info
-2 clients not working
+sword lag in multiplayer
+update inventory while playing
+stats need to do something
+"all done" needs to be more highlighted in option screen
 
 enhancements
 ------------
 
-update inventory while playing
-stats need to do something
-"all done" needs to be more highlighted in option screen
+drop OOO UDP packets
 char mapping file x - wall and what chance etc...
 on exit spending point, bonus 
 health potion max hp needs to tick down back to max if you take a magical bonus
