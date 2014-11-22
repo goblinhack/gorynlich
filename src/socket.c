@@ -692,60 +692,6 @@ static uint8_t sockets_show_all (tokens_t *tokens, void *context)
             }
         }
 
-        uint32_t avg_latency_us_to_peer = 0;
-        uint32_t max_latency_us_to_peer = 0;
-        uint32_t min_latency_us_to_peer = (uint32_t) -1;
-
-        { FOR_ALL_IN_ARRAY(latency, s->latency_us_to_peer) {
-            if (*latency == (typeof(*latency)) -1) {
-                continue;
-            }
-
-            if (*latency == 0) {
-                continue;
-            }
-
-            /*
-             * Latency.
-             */
-            avg_latency_us_to_peer += *latency;
-
-            if (*latency > max_latency_us_to_peer) {
-                max_latency_us_to_peer = *latency;
-            }
-
-            if (*latency < min_latency_us_to_peer) {
-                min_latency_us_to_peer = *latency;
-            }
-        } }
-
-        uint32_t avg_latency_peer_to_us = 0;
-        uint32_t max_latency_peer_to_us = 0;
-        uint32_t min_latency_peer_to_us = (uint32_t) -1;
-
-        { FOR_ALL_IN_ARRAY(latency, s->latency_peer_to_us) {
-            if (*latency == (typeof(*latency)) -1) {
-                continue;
-            }
-
-            if (*latency == 0) {
-                continue;
-            }
-
-            /*
-             * Latency.
-             */
-            avg_latency_peer_to_us += *latency;
-
-            if (*latency > max_latency_peer_to_us) {
-                max_latency_peer_to_us = *latency;
-            }
-
-            if (*latency < min_latency_peer_to_us) {
-                min_latency_peer_to_us = *latency;
-            }
-        } }
-
         total_attempts = no_response + response;
 
         if (total_attempts) {
@@ -926,60 +872,6 @@ void sockets_quality_check (void)
             }
         }
 
-        uint32_t avg_latency_us_to_peer = 0;
-        uint32_t max_latency_us_to_peer = 0;
-        uint32_t min_latency_us_to_peer = (uint32_t) -1;
-
-        { FOR_ALL_IN_ARRAY(latency, s->latency_us_to_peer) {
-            if (*latency == (typeof(*latency)) -1) {
-                continue;
-            }
-
-            if (*latency == 0) {
-                continue;
-            }
-
-            /*
-             * Latency.
-             */
-            avg_latency_us_to_peer += *latency;
-
-            if (*latency > max_latency_us_to_peer) {
-                max_latency_us_to_peer = *latency;
-            }
-
-            if (*latency < min_latency_us_to_peer) {
-                min_latency_us_to_peer = *latency;
-            }
-        } }
-
-        uint32_t avg_latency_peer_to_us = 0;
-        uint32_t max_latency_peer_to_us = 0;
-        uint32_t min_latency_peer_to_us = (uint32_t) -1;
-
-        { FOR_ALL_IN_ARRAY(latency, s->latency_peer_to_us) {
-            if (*latency == (typeof(*latency)) -1) {
-                continue;
-            }
-
-            if (*latency == 0) {
-                continue;
-            }
-
-            /*
-             * Latency.
-             */
-            avg_latency_peer_to_us += *latency;
-
-            if (*latency > max_latency_peer_to_us) {
-                max_latency_peer_to_us = *latency;
-            }
-
-            if (*latency < min_latency_peer_to_us) {
-                min_latency_peer_to_us = *latency;
-            }
-        } }
-
         total_attempts = no_response + response;
 
         if (total_attempts) {
@@ -990,12 +882,6 @@ void sockets_quality_check (void)
             s->avg_latency_rtt = avg_latency_rtt;
             s->min_latency_rtt = min_latency_rtt;
             s->max_latency_rtt = max_latency_rtt;
-            s->avg_latency_us_to_peer = avg_latency_us_to_peer;
-            s->min_latency_us_to_peer = min_latency_us_to_peer;
-            s->max_latency_us_to_peer = max_latency_us_to_peer;
-            s->avg_latency_peer_to_us = avg_latency_peer_to_us;
-            s->min_latency_peer_to_us = min_latency_peer_to_us;
-            s->max_latency_peer_to_us = max_latency_peer_to_us;
         }
     }
 }
@@ -1332,8 +1218,6 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     data += sizeof(uint32_t);
 
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = (uint32_t) -1;
-    s->latency_us_to_peer[seq % ARRAY_SIZE(s->latency_us_to_peer)] = (uint32_t) -1;
-    s->latency_peer_to_us[seq % ARRAY_SIZE(s->latency_peer_to_us)] = (uint32_t) -1;
 
     if (debug_socket_ping_enabled) {
         CON("Tx Ping [to %s] seq %u, ts %u", 
@@ -1365,7 +1249,6 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
     *data++ = seq;
 
     SDLNet_Write32(ts, data);               
-    SDLNet_Write32(time_get_time_cached(), data);               
     data += sizeof(uint32_t);
 
     packet->len = data - odata;
@@ -1390,8 +1273,7 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Ping from %s, seq %u, elapsed %d ms", tmp, seq,
-            time_get_time_cached() - ts);
+        LOG("Rx Ping from %s, seq %u", tmp, seq);
         myfree(tmp);
     }
 
@@ -1406,7 +1288,6 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     uint8_t seq = *data++;
     uint32_t ts = SDLNet_Read32(data);
-    uint32_t sent_from_peer_at = SDLNet_Read32(data);
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
@@ -1417,10 +1298,6 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = 
                     time_get_time_cached() - ts;
-    s->latency_us_to_peer[seq % ARRAY_SIZE(s->latency_us_to_peer)] = 
-                    sent_from_peer_at - ts;
-    s->latency_peer_to_us[seq % ARRAY_SIZE(s->latency_us_to_peer)] = 
-                    time_get_time_cached() - sent_from_peer_at;
 }
 
 void socket_tx_name (socketp s)
@@ -2586,48 +2463,6 @@ uint32_t socket_get_max_latency_rtt (socketp s)
     verify(s);
 
     return (s->max_latency_rtt);
-}
-
-uint32_t socket_get_avg_latency_us_to_peer (socketp s)
-{
-    verify(s);
-
-    return (s->avg_latency_us_to_peer);
-}
-
-uint32_t socket_get_min_latency_us_to_peer (socketp s)
-{
-    verify(s);
-
-    return (s->min_latency_us_to_peer);
-}
-
-uint32_t socket_get_max_latency_us_to_peer (socketp s)
-{
-    verify(s);
-
-    return (s->max_latency_us_to_peer);
-}
-
-uint32_t socket_get_avg_latency_peer_to_us (socketp s)
-{
-    verify(s);
-
-    return (s->avg_latency_peer_to_us);
-}
-
-uint32_t socket_get_min_latency_peer_to_us (socketp s)
-{
-    verify(s);
-
-    return (s->min_latency_peer_to_us);
-}
-
-uint32_t socket_get_max_latency_peer_to_us (socketp s)
-{
-    verify(s);
-
-    return (s->max_latency_peer_to_us);
 }
 
 uint32_t socket_get_rx (socketp s)
