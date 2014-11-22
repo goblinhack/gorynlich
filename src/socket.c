@@ -90,12 +90,12 @@ void socket_fini (void)
     socket_init_done = false;
 }
 
-static socketp socket_create (IPaddress address)
+static socketp socket_create (IPaddress address, int type)
 {
     socketp s;
 
     if (!sockets) {
-        sockets = tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: sockets");
+        sockets = tree_alloc(TREE_KEY_THREE_INTEGER, "TREE ROOT: sockets");
     }
 
     uint16_t port = address.port;
@@ -109,8 +109,9 @@ static socketp socket_create (IPaddress address)
      */
     s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: socket");
 
-    s->tree.key2 = address.host;
-    s->tree.key3 = address.port;
+    s->tree.key2 = type;
+    s->tree.key3 = address.host;
+    s->tree.key4 = address.port;
 
     if (!tree_insert(sockets, &s->tree.node)) {
         ERR("failed to add socket");
@@ -138,14 +139,16 @@ socket *socket_listen (IPaddress address)
     /*
      * Relisten?
      */
-    socketp s = socket_find(address);
+    socketp s = socket_find(address, SOCKET_LISTEN);
     if (s) {
-        return (s);
-    }
-
-    s = socket_create(address);
-    if (!s) {
-        return (0);
+        if (s->udp_socket) {
+            return (s);
+        }
+    } else {
+        s = socket_create(address, SOCKET_LISTEN);
+        if (!s) {
+            return (0);
+        }
     }
 
     /*
@@ -193,14 +196,15 @@ socket *socket_listen (IPaddress address)
     return (s);
 }
 
-socketp socket_find (IPaddress address)
+socketp socket_find (IPaddress address, int type)
 {
     socket findme;
     socket *s;
 
     memset(&findme, 0, sizeof(findme));
-    findme.tree.key2 = address.host;
-    findme.tree.key3 = address.port;
+    findme.tree.key2 = type;
+    findme.tree.key3 = address.host;
+    findme.tree.key4 = address.port;
 
     s = (typeof(s)) tree_find(sockets, &findme.tree.node);
 
@@ -214,12 +218,12 @@ static socket *socket_connect (IPaddress address, uint8_t server_side_client)
     /*
      * Reopen?
      */
-    socketp s = socket_find(address);
+    socketp s = socket_find(address, SOCKET_CONNECT);
     if (s) {
         return (s);
     }
 
-    s = socket_create(address);
+    s = socket_create(address, SOCKET_CONNECT);
     if (!s) {
         return (0);
     }
@@ -370,12 +374,14 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
-        ERR("no UDP packet sent: %s", SDLNet_GetError());
-        WARN("  packet: %p", packet);
-        WARN("  udp: %p", socket_get_udp_socket(s));
-        WARN("  remote: %s", socket_get_remote_logname(s));
-        WARN("  local: %s", socket_get_local_logname(s));
-        WARN("  channel: %d", socket_get_channel(s));
+        /*
+         * Only warn about sockets we really care about.
+         */
+        if (s->connected) {
+            ERR("no UDP packet sent to %s: %s",
+                socket_get_remote_logname(s),
+                SDLNet_GetError());
+        }
 
         socket_count_inc_pak_tx_error(s);
     } else {
@@ -1225,6 +1231,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
         CON("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
+CON("tx ping seq %d %d", seq, ts);
 
     packet->len = data - odata;
     write_address(packet, socket_get_remote_ip(s));
@@ -1260,6 +1267,7 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
         LOG("Tx Pong [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
+CON("tx pong seq %d %d", seq, ts);
 
     socket_tx_msg(s, packet);
         
@@ -1279,6 +1287,7 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
+CON("rx ping seq %d %d", seq, ts);
     socket_tx_pong(s, seq, ts);
 
     socket_set_connected(s, true);
@@ -1300,6 +1309,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = 
                     time_get_time_cached() - ts;
+CON("rx pong seq %d %d", seq, ts);
 }
 
 void socket_tx_name (socketp s)
