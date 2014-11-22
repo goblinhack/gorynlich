@@ -42,6 +42,7 @@ typedef struct server_ {
     char *host_and_port_str;
     char *tooltip;
     uint8_t quality;
+    uint8_t auto_add;
     uint32_t avg_latency;
     uint32_t min_latency;
     uint32_t max_latency;
@@ -102,6 +103,7 @@ static void server_add (const server *s_in)
     s->tree.key3 = s->avg_latency;
     s->tree.key4 = SDLNet_Read16(&s->ip.port);
     s->tree.key5 = SDLNet_Read32(&s->ip.host);
+    s->auto_add = s_in->auto_add;
 
     /*
      * Check this ip and port combination is not added already.
@@ -253,11 +255,19 @@ void wid_server_join_visible (void)
             "10.0.0.3",
             "10.0.0.4",
             "10.0.0.5",
+            "10.0.0.6",
+            "10.0.0.7",
+            "10.0.0.8",
+            "10.0.0.9",
             "10.0.1.1",
             "10.0.1.2",
             "10.0.1.3",
             "10.0.1.4",
             "10.0.1.5",
+            "10.0.1.6",
+            "10.0.1.7",
+            "10.0.1.8",
+            "10.0.1.9",
         };
 
         int i;
@@ -267,6 +277,7 @@ void wid_server_join_visible (void)
             memset(&s, 0, sizeof(s));
             s.host = dupstr(common_ips[i], "an ip");
             s.port = global_config.server_port; 
+            s.auto_add = 1;
             server_add(&s);
         }
     }
@@ -964,6 +975,10 @@ static void wid_server_join_create (uint8_t redo)
         server *s;
 
         TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
             widp w = wid_new_square_button(wid_server_join_container,
                                            "server name");
 
@@ -1031,6 +1046,10 @@ static void wid_server_join_create (uint8_t redo)
         server *s;
 
         TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
             widp w = wid_new_square_button(wid_server_join_container,
                                            "server name");
 
@@ -1101,6 +1120,10 @@ static void wid_server_join_create (uint8_t redo)
         server *s;
 
         TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
             widp w = wid_new_square_button(wid_server_join_container,
                                            "server name");
 
@@ -1171,6 +1194,10 @@ static void wid_server_join_create (uint8_t redo)
         server *s;
 
         TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
             widp w = wid_new_square_button(wid_server_join_container,
                                            "server name");
 
@@ -1238,6 +1265,10 @@ static void wid_server_join_create (uint8_t redo)
         server *s;
 
         TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
             widp w = wid_new_square_button(wid_server_join_container,
                                            "server quality");
 
@@ -1283,6 +1314,10 @@ static void wid_server_join_create (uint8_t redo)
         server *s;
 
         TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
             socketp sp = socket_find(s->ip);
 
             widp w = wid_new_rounded_small_button(wid_server_join_container,
@@ -1335,6 +1370,10 @@ static void wid_server_join_create (uint8_t redo)
         server *s;
 
         TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
             widp w = wid_new_rounded_small_button(wid_server_join_container,
                                            "server join");
 
@@ -1457,6 +1496,7 @@ static uint8_t demarshal_servers (demarshal_p ctx, server *s)
 
     rc = rc && GET_OPT_NAMED_STRING(ctx, "host", s->host);
     rc = rc && GET_OPT_NAMED_UINT16(ctx, "port", s->port);
+    rc = rc && GET_OPT_NAMED_UINT8(ctx, "auto_add", s->auto_add);
 
     return (rc);
 }
@@ -1469,6 +1509,7 @@ static void marshal_servers (marshal_p ctx, server *s)
     if (s->host) {
         PUT_NAMED_STRING(ctx, "host", host);
         PUT_NAMED_INT16(ctx, "port", port);
+        PUT_NAMED_UINT8(ctx, "auto_add", s->auto_add);
     }
 }
 

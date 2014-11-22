@@ -102,7 +102,6 @@ typedef struct msg_player_state_ {
     uint16_t avg_latency;
     uint16_t min_latency;
     uint16_t max_latency;
-    uint32_t key;
 } __attribute__ ((packed)) msg_player_state;
 
 typedef struct {
@@ -111,6 +110,7 @@ typedef struct {
     char server_name[SMALL_STRING_LEN_MAX];
     uint8_t server_max_players;
     uint8_t server_current_players;
+    uint8_t server_connected;
     uint8_t level_no;
     uint8_t level_hide;
 } __attribute__ ((packed)) msg_server_status;

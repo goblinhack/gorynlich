@@ -821,6 +821,14 @@ static void client_poll (void)
 
                 socket_rx_server_status(s, packet, data, &latest_status);
 
+                /*
+                 * If this is a status from a server we are not connected to, 
+                 * just ignore it.
+                 */
+                if (!latest_status.server_connected) {
+                    break;
+                }
+
                 if (s == client_joined_server) {
                     client_check_still_in_game();
                 }
@@ -1050,10 +1058,6 @@ static void client_check_still_in_game (void)
         msg_player_state *p = &server_status.player;
 
         if (!p->stats.pname[0]) {
-            break;
-        }
-
-        if (p->key != client_joined_server_key) {
             break;
         }
 
