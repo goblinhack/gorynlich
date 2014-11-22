@@ -2118,17 +2118,17 @@ void socket_tx_server_status (void)
     msg.server_current_players = global_config.server_current_players;
 
     if (server_level) {
-        msg.level_no = server_level->level_no;
+        SDLNet_Write16(server_level->level_no, &msg.level_no);
         msg.level_hide = level_is_ready_to_fade_out(server_level);
-    } else {
-        msg.level_no = 0;
-        msg.level_hide = 0;
     }
 
     socketp s;
 
     /*
      * Walk all players and send them their updates.
+     *
+     * Also send to sockets with no players as someone may be pinging the 
+     * server to check if they can join.
      */
     TREE_WALK(sockets, s) {
         if (!s->server_side_client) {
@@ -2141,9 +2141,10 @@ void socket_tx_server_status (void)
 
         aplayer *p = s->player;
         if (p) {
+            msg.server_connected = 1;
+
             thingp t = p->thing;
             if (t) {
-                msg.server_connected = 1;
                 t->stats.weapon_carry_anim_id_latest = t->weapon_carry_anim_thing_id;
                 t->stats.weapon_swing_anim_id_latest = t->weapon_swing_anim_thing_id;
 
@@ -2158,6 +2159,7 @@ void socket_tx_server_status (void)
         }
 
         msg_tx->quality = s->quality;
+
         SDLNet_Write16(s->avg_latency, &msg_tx->avg_latency);
         SDLNet_Write16(s->min_latency, &msg_tx->min_latency);
         SDLNet_Write16(s->max_latency, &msg_tx->max_latency);
@@ -2167,9 +2169,9 @@ void socket_tx_server_status (void)
         memcpy(packet->data, &msg, sizeof(msg));
 
         if (debug_socket_players_enabled) {
-            LOG("Server: Tx Status [to %s]",
-                socket_get_remote_logname(s));
+            LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
         }
+CON("Server: Tx Status [to %s]", socket_get_remote_logname(s));
 
         packet->len = sizeof(msg);
         write_address(packet, socket_get_remote_ip(s));
@@ -2224,11 +2226,22 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
         }
         myfree(tmp);
     }
+    if (1) {
+        char *tmp = iptodynstr(read_address(packet));
+        if (msg->server_connected) {
+            CON("Client: Rx Status from %s, current player \"%s\"", 
+                tmp, p->stats.pname);
+        } else {
+            CON("Client: Rx Status from %s", tmp);
+        }
+        myfree(tmp);
+    }
 
     status->server_max_players = msg->server_max_players;
     status->server_current_players = msg->server_current_players;
-    status->level_no = msg->level_no;
+    status->level_no = SDLNet_Read16(&msg->level_no);
     status->level_hide = msg->level_hide;
+    status->server_connected = msg->server_connected;
 
     memcpy(status->server_name, msg->server_name, sizeof(status->server_name));
 

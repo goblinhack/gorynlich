@@ -110,9 +110,12 @@ typedef struct {
     char server_name[SMALL_STRING_LEN_MAX];
     uint8_t server_max_players;
     uint8_t server_current_players;
+    /*
+     * This indicates there is a player on this server currently.
+     */
     uint8_t server_connected;
-    uint8_t level_no;
     uint8_t level_hide;
+    uint16_t level_no;
 } __attribute__ ((packed)) msg_server_status;
 
 typedef struct msg_player_hiscore_ {
