@@ -28,7 +28,7 @@
 
 tree_rootp sockets;
 
-uint8_t debug_socket_ping_enabled = 0;
+uint8_t debug_socket_ping_enabled = 1;
 uint8_t debug_socket_connect_enabled = 0;
 uint8_t debug_socket_players_enabled = 0;
 
@@ -1231,7 +1231,6 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
         CON("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
-CON("tx ping seq %d %d", seq, ts);
 
     packet->len = data - odata;
     write_address(packet, socket_get_remote_ip(s));
@@ -1267,7 +1266,6 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
         LOG("Tx Pong [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
-CON("tx pong seq %d %d", seq, ts);
 
     socket_tx_msg(s, packet);
         
@@ -1283,11 +1281,11 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Ping from %s seq %u", tmp, seq);
+        LOG("Rx Ping from %s, seq %u, elapsed %d ms", tmp, seq,
+            time_get_time_cached() - ts);
         myfree(tmp);
     }
 
-CON("rx ping seq %d %d", seq, ts);
     socket_tx_pong(s, seq, ts);
 
     socket_set_connected(s, true);
@@ -1302,14 +1300,13 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Pong from %s seq %u, elapsed %u",
-            tmp, seq, time_get_time_cached() - ts);
+        LOG("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
+            time_get_time_cached() - ts);
         myfree(tmp);
     }
 
     s->ping_responses[seq % ARRAY_SIZE(s->ping_responses)] = 
                     time_get_time_cached() - ts;
-CON("rx pong seq %d %d", seq, ts);
 }
 
 void socket_tx_name (socketp s)
