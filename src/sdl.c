@@ -786,7 +786,7 @@ void sdl_loop (void)
 #endif /* } */
 
 #ifndef ENABLE_VIDEO_SYNC
-//            SDL_Delay(MAIN_LOOP_DELAY);
+            SDL_Delay(MAIN_LOOP_DELAY);
 #endif
         } else {
             usleep(MAIN_LOOP_DELAY);
@@ -1040,7 +1040,7 @@ void sdl_loop (void)
 #endif /* } */
 
 #ifndef ENABLE_VIDEO_SYNC
-//            SDL_Delay(MAIN_LOOP_DELAY);
+            SDL_Delay(MAIN_LOOP_DELAY);
 #endif
         } else {
             usleep(MAIN_LOOP_DELAY);
