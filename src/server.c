@@ -473,8 +473,8 @@ void server_tick (void)
  */
 static uint8_t server_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name           Quality  Latency      Remote IP      Local IP   ");
-    CON("----           -------  ------- --------------- ---------------");
+    CON("Name               Remote IP      Local IP");
+    CON("----           --------------- ---------------");
 
     uint32_t pi;
 
@@ -497,11 +497,9 @@ static uint8_t server_players_show (tokens_t *tokens, void *context)
 
         pi++;
 
-        CON("[%d] %-10s %3d pct %5d ms %-15s %-15s", 
+        CON("[%d] %-10s %-15s %-15s", 
             pi,
             p->stats_from_client.pname,
-            p->quality,
-            p->avg_latency_rtt,
             tmp,
             tmp2);
 

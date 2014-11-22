@@ -1021,19 +1021,17 @@ static void client_poll (void)
  */
 static uint8_t client_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name                    Quality  Latency      Local IP       Remote IP  ");
-    CON("----                    -------  ------- --------------- ---------------");
+    CON("Name                       Local IP       Remote IP    ");
+    CON("----                    --------------- ---------------");
 
     msg_player_state *p = &server_status.player;
 
     char *tmp = iptodynstr(p->local_ip);
     char *tmp2 = iptodynstr(p->remote_ip);
 
-    CON("%-10s/%8s %3d pct %5d ms %-15s %-15s", 
+    CON("%-10s/%8s %-15s %-15s", 
         p->stats.pname,
         p->stats.pclass,
-        p->quality,
-        p->avg_latency_rtt,
         tmp2,
         tmp);
 
