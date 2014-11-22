@@ -501,7 +501,7 @@ static uint8_t server_players_show (tokens_t *tokens, void *context)
             pi,
             p->stats_from_client.pname,
             p->quality,
-            p->avg_latency,
+            p->avg_latency_rtt,
             tmp,
             tmp2);
 
