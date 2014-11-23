@@ -618,7 +618,7 @@ static void wid_server_create_create (uint8_t redo)
     }
 
     {
-        fpoint tl = {0.0, 0.0};
+        fpoint tl = {0.4, 0.0};
         fpoint br = {1.0, 0.3};
 
         widp w = wid_new_container(wid_server_create_window_container,
@@ -627,7 +627,7 @@ static void wid_server_create_create (uint8_t redo)
         wid_set_tooltip(w, "Click on a server to edit it", 0 /* font */);
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "Start a multiplayer game");
+        wid_set_text(w, "Start a server");
         wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
@@ -645,8 +645,8 @@ static void wid_server_create_create (uint8_t redo)
     const float width4 = 0.0;
     const float width5 = 0.0;
     const float width6 = 0.0;
-    const float width7 = 0.45;
-    float width_at = 0.0;
+    const float width7 = 0.05;
+    float width_at = 0.4;
 
     {
         fpoint tl = {width_at, 0.3};
