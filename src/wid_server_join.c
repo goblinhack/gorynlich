@@ -18,6 +18,7 @@
 #include "socket.h"
 #include "client.h"
 #include "string_ext.h"
+#include "wid_popup.h"
 
 static const char *config_file = "gorynlich-remote-servers.txt";
 
@@ -56,6 +57,9 @@ typedef struct server_ {
     uint8_t walked;
     char name[SMALL_STRING_LEN_MAX];
 } server;
+
+static widp wid_server_stats_window;
+static server *wid_server_stats_window_server;
 
 static void wid_server_join_destroy_internal(server *node);
 
@@ -143,6 +147,10 @@ static void server_add (const server *s_in)
 
 static void server_remove (server *s)
 {
+    if (wid_server_stats_window) {
+        wid_destroy(&wid_server_stats_window);
+    }
+
     if (!remote_servers) {
         return;
     }
@@ -215,6 +223,10 @@ void wid_server_join_fini (void)
 void wid_server_join_hide (void)
 {
     wid_server_join_destroy();
+
+    if (wid_server_stats_window) {
+        wid_destroy(&wid_server_stats_window);
+    }
 
     /*
      * Leave all other sockets other than the joined on.
@@ -856,11 +868,49 @@ static void wid_server_join_set_color (widp w, server *s)
         wid_set_color(w, WID_COLOR_TEXT, GRAY);
     }
 
-    if (s->tooltip) {
-        wid_set_tooltip(w, s->tooltip, fixed_font);
-    } else {
+    if (!s->tooltip) {
         wid_set_tooltip(w, "Cick to edit", 0);
     }
+}
+
+static void wid_server_join_display (server *s)
+{
+    if (!s) {
+        return;
+    }
+
+    if (wid_server_stats_window) {
+        wid_destroy(&wid_server_stats_window);
+    }
+
+    wid_server_stats_window_server = s;
+
+    wid_server_stats_window = wid_popup(s->tooltip,
+          "Server statistics",      /* title */
+          0.5, 0.5,                 /* x,y postition in percent */
+          small_font,               /* title font */
+          fixed_font,              /* body font */
+          small_font,              /* button font */
+          0);
+
+    wid_move_to_pct(wid_server_stats_window, 0.0, 0.8);
+    wid_move_stop(wid_server_stats_window);
+
+    wid_set_square(wid_server_stats_window);
+
+    fpoint tl = {0.0, 0.8};
+    fpoint br = {0.4, 1.0};
+
+    wid_set_tl_br_pct(wid_server_stats_window, tl, br);
+    wid_raise(wid_server_stats_window);
+    wid_set_do_not_lower(wid_server_stats_window, true);
+}
+
+static void wid_server_join_mouse_over_server (widp w)
+{
+    server *s = (typeof(s)) wid_get_client_context(w);
+
+    wid_server_join_display(s);
 }
 
 static void wid_server_join_create (uint8_t redo)
@@ -1017,6 +1067,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_on_mouse_down(w, wid_server_join_hostname_mouse_down);
             wid_set_on_key_down(w, wid_server_join_hostname_receive_input);
+            wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1091,6 +1142,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_on_mouse_down(w, wid_server_join_ip_mouse_down);
             wid_set_on_key_down(w, wid_server_join_ip_receive_input);
+            wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1165,6 +1217,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_on_mouse_down(w, wid_server_join_port_mouse_down);
             wid_set_on_key_down(w, wid_server_join_port_receive_input);
+            wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1362,6 +1415,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_text_outline(w, true);
 
+            wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1423,11 +1477,44 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_text_outline(w, true);
 
+            wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
             wid_set_client_context(w, s);
 
             i++;
         }
     }
+
+    /*
+     * Update the stats window.
+     */
+    {
+        int gotone = 0;
+        server *s;
+
+        TREE_WALK_REVERSE(remote_servers, s) {
+            if (s->auto_add && !s->quality) {
+                continue;
+            }
+
+            if (s == wid_server_stats_window_server) {
+                wid_server_join_display(s);
+                gotone = 1;
+                break;
+            }
+        }
+
+        if (!gotone) {
+            TREE_WALK_REVERSE(remote_servers, s) {
+                if (s->auto_add && !s->quality) {
+                    continue;
+                }
+
+                wid_server_join_display(s);
+                break;
+            }
+        }
+    }
+
 
     {
         fpoint tl = {0.7, 0.90};

@@ -317,7 +317,7 @@ widp wid_popup (const char *text, const char *title,
 
         wid_set_text(wid_popup_title, title);
         wid_set_font(wid_popup_title, title_font);
-        wid_set_text_outline(wid_popup_title, true);
+        wid_set_text_outline(wid_popup_title, false);
     }
 
     {
@@ -419,7 +419,7 @@ widp wid_popup (const char *text, const char *title,
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, n->line);
             wid_set_font(child, body_font);
-            wid_set_text_outline(child, true);
+            wid_set_text_outline(child, false);
 
             /*
              * .5 line spacing for single newlines.
