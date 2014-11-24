@@ -180,7 +180,7 @@
 /*
  * Messages.
  */
-#define MAX_PLAYERS                 16
+#define MAX_PLAYERS                 4
 #define MAX_HISCORES                10
 #define SMALL_STRING_LEN_MAX        30
 #define PLAYER_MSG_MAX              100

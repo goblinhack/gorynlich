@@ -182,6 +182,7 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 
         case 'j':
             wid_intro_hide();
+            wid_intro_buttons_hide();
 
             /*
              * Start with some random junk.
@@ -255,6 +256,7 @@ static void wid_intro_single_play_selected (void)
             0 /* jitter */);
 
     wid_intro_hide();
+    wid_intro_buttons_hide();
 }
 
 static void wid_intro_play_selected_cb (void *context)
