@@ -1220,7 +1220,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = (uint32_t) -1;
 
     if (debug_socket_ping_enabled) {
-        CON("Tx Ping [to %s] seq %u, ts %u", 
+        LOG("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -2201,7 +2201,6 @@ void socket_tx_server_status (void)
         if (debug_socket_players_enabled) {
             LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
         }
-CON("Server: Tx Status [to %s]", socket_get_remote_logname(s));
 
         packet->len = sizeof(msg);
         write_address(packet, socket_get_remote_ip(s));

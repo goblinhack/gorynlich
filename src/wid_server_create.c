@@ -19,6 +19,7 @@
 #include "server.h"
 
 static widp wid_server_create_window;
+static widp wid_server_create_go_back_button;
 static widp wid_server_create_container;
 static widp wid_server_create_window_container;
 static uint8_t wid_server_create_init_done;
@@ -537,7 +538,11 @@ static uint8_t wid_server_create_max_players_receive_input (widp w,
                 a = 0;
             }
 
-            global_config.server_max_players = a;
+            if (a > MAX_PLAYERS) {
+                MSG_BOX("Max players limited to %d", global_config.server_max_players);
+            }
+
+            global_config.server_max_players = min(MAX_PLAYERS, a);
             wid_server_create_redo();
 
             break;
@@ -626,9 +631,13 @@ static void wid_server_create_create (uint8_t redo)
         wid_set_text(w, "Start a server");
         wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
-        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+
+        color c = BLACK;
+        c.a = 0;
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
+        wid_set_color(w, WID_COLOR_BG, c);
+
         wid_set_square(w);
         wid_set_bevelled(w, true);
         wid_set_bevel(w, 2);
@@ -886,23 +895,26 @@ static void wid_server_create_create (uint8_t redo)
     }
 
     {
-        fpoint tl = {0.7, 0.7};
-        fpoint br = {0.99, 0.99};
+        widp child;
 
-        widp w = wid_new_rounded_small_button(wid_server_create_window_container,
-                                              "wid server go back");
-        wid_raise(w);
+        child = wid_server_create_go_back_button = wid_new_window("Go back");
+        wid_set_font(child, small_font);
 
-        wid_set_tl_br_pct(w, tl, br);
+        fpoint tl = {0.1f, 0.95f};
+        fpoint br = {0.2f, 1.00f};
 
-        wid_set_text(w, "Go back");
-        wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-        wid_set_color(w, WID_COLOR_BG, BLACK);
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");
 
-        wid_set_text_outline(w, true);
+        wid_set_no_shape(child);
+        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
+        wid_set_mode(child, WID_MODE_OVER);
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(w, wid_server_create_go_back);
+        wid_set_on_mouse_down(child, wid_server_create_go_back);
+        wid_raise(child);
+        wid_set_do_not_lower(child, true);
     }
 
     wid_update(wid_server_create_window);
@@ -912,6 +924,10 @@ void wid_server_create_destroy (void)
 {
     if (wid_server_create_window) {
         wid_destroy(&wid_server_create_window);
+    }
+
+    if (wid_server_create_go_back_button) {
+        wid_destroy(&wid_server_create_go_back_button);
     }
 }
 
