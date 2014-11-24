@@ -23,6 +23,7 @@
 static const char *config_file = "gorynlich-remote-servers.txt";
 
 static widp wid_server_join_window;
+static widp wid_server_join_window_go_back_button;
 static widp wid_server_join_container;
 static widp wid_server_join_window_container;
 static widp wid_server_join_container_vert_scroll;
@@ -92,7 +93,7 @@ static void server_add (const server *s_in)
         s->host_and_port_str = iptodynstr(s->ip);
     }
 
-    LOG("Add server %s",s->host_and_port_str);
+    LOG("Add server %s", s->host_and_port_str);
 
     /*
      * Connector.
@@ -108,7 +109,7 @@ static void server_add (const server *s_in)
         }
     }
 
-    s->tree.key2 = s->quality;
+    s->tree.key2 = (s->quality * 10000) - s->avg_latency_rtt;
     s->tree.key3 = s->avg_latency_rtt;
     s->tree.key4 = SDLNet_Read16(&s->ip.port);
     s->tree.key5 = SDLNet_Read32(&s->ip.host);
@@ -149,6 +150,7 @@ static void server_remove (server *s)
 {
     if (wid_server_stats_window) {
         wid_destroy(&wid_server_stats_window);
+        wid_server_stats_window_server = 0;
     }
 
     if (!remote_servers) {
@@ -354,7 +356,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
             ERR("Cannot find to re-sort host %s port %u", s->host, s->port);
         }
 
-        s->tree.key2 = s->quality;
+        s->tree.key2 = (s->quality * 10000) - s->avg_latency_rtt;
         s->tree.key3 = s->avg_latency_rtt;
         s->tree.key4 = SDLNet_Read16(&s->ip.port);
         s->tree.key5 = SDLNet_Read32(&s->ip.host);
@@ -404,12 +406,12 @@ void wid_server_join_redo (uint8_t soft_refresh)
             char *tmp2;
 
             tmp2 = dynprintf(
-                "%%%%fg=green$%%%%fmt=left$Server name                 %%%%fg=red$%-20s\n"
-                "%%%%fg=green$%%%%fmt=left$Avg latency round trip time %%%%fg=red$%u ms\n"
-                "%%%%fg=green$%%%%fmt=left$Min latency round trip time %%%%fg=red$%u ms\n"
-                "%%%%fg=green$%%%%fmt=left$Max latency round trip time %%%%fg=red$%u ms\n"
-                "%%%%fg=green$%%%%fmt=left$Maximum players             %%%%fg=red$%u\n"
-                "%%%%fg=green$%%%%fmt=left$Current players             %%%%fg=red$%u\n\n"
+                "%%%%fg=green$%%%%fmt=left$Server name\t\t%%%%fg=red$%-45s\n"
+                "%%%%fg=green$%%%%fmt=left$Avg latency round trip time\t%%%%fg=red$%u ms\n"
+                "%%%%fg=green$%%%%fmt=left$Min latency round trip time\t%%%%fg=red$%u ms\n"
+                "%%%%fg=green$%%%%fmt=left$Max latency round trip time\t%%%%fg=red$%u ms\n"
+                "%%%%fg=green$%%%%fmt=left$Maximum players\t\t%%%%fg=red$%u\n"
+                "%%%%fg=green$%%%%fmt=left$Current players\t\t%%%%fg=red$%u\n\n"
                 "%s",
                 server_name,
                 s->avg_latency_rtt,
@@ -422,7 +424,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
             s->tooltip = tmp2;
             myfree(tmp);
         } else {
-            s->tooltip = dynprintf("Server is down");
+            s->tooltip = 0;
         }
     }
 
@@ -865,19 +867,31 @@ static void wid_server_join_display (server *s)
         return;
     }
 
+    wid_server_stats_window_server = s;
+
     if (wid_server_stats_window) {
         wid_destroy(&wid_server_stats_window);
     }
 
-    wid_server_stats_window_server = s;
+    if (!s->tooltip) {
+        return;
+    }
 
-    wid_server_stats_window = wid_tooltip(s->tooltip, 0.5, 0.5, fixed_font);
+    wid_server_stats_window = wid_tooltip(s->tooltip, 0.4, 0.65, small_font);
 
-    wid_move_to_pct(wid_server_stats_window, 0.05, 0.70);
+    wid_move_to_pct(wid_server_stats_window, 0.05, 0.55);
     wid_move_stop(wid_server_stats_window);
 
-    wid_set_tex(wid_server_stats_window, 0, "gothic_wide");
+    wid_set_tex(wid_server_stats_window, 0, 0);
     wid_set_square(wid_server_stats_window);
+    wid_set_bevel(wid_server_stats_window, 1);
+
+    color c = BLACK;
+    c.a = 0;
+
+    wid_set_color(wid_server_stats_window, WID_COLOR_BG, c);
+    wid_set_color(wid_server_stats_window, WID_COLOR_TL, c);
+    wid_set_color(wid_server_stats_window, WID_COLOR_BR, c);
 
     socketp sp = socket_find(s->ip, SOCKET_CONNECT);
     if (sp) {
@@ -897,11 +911,26 @@ static void wid_server_join_display (server *s)
             tl.y = 1.0 - ((double)(sp->latency_rtt[i]) / 300.0);
             br.y = 1.0;
 
+            if (sp->latency_rtt[i] == -1) {
+                continue;
+            }
+
+            color c;
+
+            if (sp->latency_rtt[i] < 50) {
+                c = GREEN;
+            } else if (sp->latency_rtt[i] < 100) {
+                c = ORANGE;
+            } else {
+                c = RED;
+            }
+
+            c.a = 50;
+
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_color(w, WID_COLOR_TEXT, WHITE);
-            wid_set_color(w, WID_COLOR_BG, BLACK);
-            wid_set_color(w, WID_COLOR_TL, STEELBLUE);
-            wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+            wid_set_color(w, WID_COLOR_BG, c);
+            wid_set_color(w, WID_COLOR_TL, c);
+            wid_set_color(w, WID_COLOR_BR, c);
             wid_lower(w);
         }
     }
@@ -916,9 +945,16 @@ static void wid_server_join_mouse_over_server (widp w)
     wid_server_join_display(s);
 }
 
+static void wid_server_join_mouse_over_end_server (widp w)
+{
+    wid_server_stats_window_server = 0;
+}
+
 static void wid_server_join_create (uint8_t redo)
 {
     float scroll_delta = 0;
+
+    wid_server_stats_window_server = 0;
 
     if (redo) {
         wid_destroy(&wid_server_join_window_container);
@@ -943,8 +979,10 @@ static void wid_server_join_create (uint8_t redo)
 
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
-        color c = BLACK;
+        color c = WHITE;
         wid_set_color(w, WID_COLOR_BG, c);
+        wid_set_tex(w, 0, "title2");
+
 
         c = BLACK;
         wid_set_color(w, WID_COLOR_TL, c);
@@ -989,9 +1027,12 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_text(w, "Join a game");
         wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
-        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+
+        color c = BLACK;
+        c.a = 0;
+        wid_set_color(w, WID_COLOR_BG, c);
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
         wid_set_square(w);
         wid_set_bevelled(w, true);
         wid_set_bevel(w, 2);
@@ -1071,6 +1112,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_on_mouse_down(w, wid_server_join_hostname_mouse_down);
             wid_set_on_key_down(w, wid_server_join_hostname_receive_input);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1146,6 +1188,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_on_mouse_down(w, wid_server_join_ip_mouse_down);
             wid_set_on_key_down(w, wid_server_join_ip_receive_input);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1221,6 +1264,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_on_mouse_down(w, wid_server_join_port_mouse_down);
             wid_set_on_key_down(w, wid_server_join_port_receive_input);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1292,6 +1336,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text_outline(w, false);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
+            wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
+            wid_set_client_context(w, s);
 
             i++;
         }
@@ -1363,6 +1410,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text_outline(w, false);
             wid_set_font(w, small_font);
             wid_set_text_centerx(w, true);
+            wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
+            wid_set_client_context(w, s);
 
             i++;
         }
@@ -1419,6 +1469,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text_outline(w, true);
 
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
             i++;
@@ -1481,14 +1532,92 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text_outline(w, true);
 
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
             i++;
         }
     }
 
+    {
+        fpoint tl = {0.5, 0.90};
+        fpoint br = {0.69, 0.99};
+
+        widp w = wid_new_rounded_small_button(wid_server_join_window_container,
+                                              "wid server add");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Add server");
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+
+        wid_set_on_mouse_down(w, wid_server_join_add);
+    }
+
+    wid_server_join_container_vert_scroll =
+        wid_new_vert_scroll_bar(wid_server_join_window, 
+                                wid_server_join_container);
+
+    wid_hide(wid_get_parent(wid_server_join_container_vert_scroll), 0);
+    wid_hide(wid_server_join_container_vert_scroll, 0);
+
+    if (redo) {
+        wid_move_delta(wid_server_join_container_vert_scroll, 0, -scroll_delta);
+    }
+
+    {
+        widp child;
+
+        child = wid_new_window("Go back");
+        wid_set_font(child, small_font);
+
+        fpoint tl = {0.0f, 0.95f};
+        fpoint br = {0.1f, 1.00f};
+
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");
+
+        wid_set_no_shape(child);
+        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
+        wid_set_mode(child, WID_MODE_OVER);
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        wid_set_mode(child, WID_MODE_NORMAL);
+
+        wid_set_on_mouse_down(child, wid_server_join_go_back);
+        wid_raise(child);
+        wid_set_do_not_lower(child, true);
+    }
+
+    wid_update(wid_server_join_window);
+
     /*
-     * Update the stats window.
+     * Make sure the mouse thinks we're over new widgets again.
+     */
+    wid_server_stats_window_server = 0;
+
+    /*
+     * Just check we cannot get stuck in a loop.
+     */
+    static int recurstion;
+    if (recurstion) {
+        return;
+    }
+
+    recurstion = 1;
+    wid_update_mouse();
+    recurstion = 0;
+
+    if (wid_server_stats_window_server) {
+        return;
+    }
+
+    /*
+     * If we're not over a server, look for the best one to show.
      */
     {
         int gotone = 0;
@@ -1517,67 +1646,16 @@ static void wid_server_join_create (uint8_t redo)
             }
         }
     }
-
-
-    {
-        fpoint tl = {0.7, 0.90};
-        fpoint br = {0.99, 0.99};
-
-        widp w = wid_new_rounded_small_button(wid_server_join_window_container,
-                                              "wid server go back");
-        wid_raise(w);
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "Go back");
-        wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-
-        wid_set_text_outline(w, true);
-
-        wid_set_on_mouse_down(w, wid_server_join_go_back);
-    }
-
-    {
-        fpoint tl = {0.5, 0.90};
-        fpoint br = {0.69, 0.99};
-
-        widp w = wid_new_rounded_small_button(wid_server_join_window_container,
-                                              "wid server add");
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "Add");
-        wid_set_tooltip(w, "Add a new server to the list", 0 /* font */);
-        wid_set_font(w, small_font);
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-
-        wid_set_text_outline(w, true);
-        wid_raise(w);
-
-        wid_set_on_mouse_down(w, wid_server_join_add);
-    }
-
-    wid_server_join_container_vert_scroll =
-        wid_new_vert_scroll_bar(wid_server_join_window, 
-                                wid_server_join_container);
-
-    wid_visible(wid_get_parent(wid_server_join_container_vert_scroll), 1);
-    wid_visible(wid_server_join_container_vert_scroll, 1);
-
-    if (redo) {
-        wid_move_delta(wid_server_join_container_vert_scroll, 0, -scroll_delta);
-    }
-
-    wid_update(wid_server_join_window);
 }
 
 void wid_server_join_destroy (void)
 {
     if (wid_server_join_window) {
         wid_destroy(&wid_server_join_window);
+    }
+
+    if (wid_server_join_window_go_back_button) {
+        wid_destroy(&wid_server_join_window_go_back_button);
     }
 
     user_is_typing = false;
