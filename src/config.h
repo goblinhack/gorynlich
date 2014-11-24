@@ -196,7 +196,7 @@
 /*
  * How many pings to consider for quality
  */
-#define SOCKET_PING_SEQ_NO_RANGE    20
+#define SOCKET_PING_SEQ_NO_RANGE    40
 
 /* 
  * 90 percent of ping fails means down
