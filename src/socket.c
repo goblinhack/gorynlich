@@ -28,7 +28,7 @@
 
 tree_rootp sockets;
 
-uint8_t debug_socket_ping_enabled = 1;
+uint8_t debug_socket_ping_enabled = 0;
 uint8_t debug_socket_connect_enabled = 0;
 uint8_t debug_socket_players_enabled = 0;
 
@@ -1240,27 +1240,54 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    msg_pong msg = {0};
+    msg.type = MSG_PONG;
+    msg.seq = seq;
+    msg.ts = ts;
 
-    uint8_t *data = packet->data;
-    uint8_t *odata = data;
+    if (global_config.user_server_name[0]) {
+        strncpy(msg.server_name, global_config.user_server_name,
+                min(sizeof(msg.server_name), 
+                    strlen(global_config.user_server_name))); 
+    } else {
+        strncpy(msg.server_name, global_config.server_name,
+                min(sizeof(msg.server_name), 
+                    strlen(global_config.server_name))); 
+    }
 
-    *data++ = MSG_PONG;
-    *data++ = seq;
+    /*
+     * Add current player names.
+     */
+    uint32_t p = 0;
+    thingp t;
 
-    SDLNet_Write32(ts, data);               
-    data += sizeof(uint32_t);
+    TREE_OFFSET_WALK_UNSAFE(server_player_things, t) {
+        if (p >= MAX_PLAYERS) {
+            break;
+        }
 
-    packet->len = data - odata;
-    write_address(packet, socket_get_remote_ip(s));
+        strncpy(msg.player_name[p], t->stats.pname,
+                min(sizeof(msg.player_name[p]), strlen(t->stats.pname))); 
+        p++;
+    }
+
+    msg.server_max_players = global_config.server_max_players;
+    msg.server_current_players = global_config.server_current_players;
 
     if (debug_socket_ping_enabled) {
         LOG("Tx Pong [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
+    UDPpacket *packet = socket_alloc_msg();
+
+    memcpy(packet->data, &msg, sizeof(msg));
+
+    packet->len = sizeof(msg);
+    write_address(packet, socket_get_remote_ip(s));
+
     socket_tx_msg(s, packet);
-        
+    
     socket_free_msg(packet);
 }
 
@@ -1286,8 +1313,17 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
-    uint8_t seq = *data++;
-    uint32_t ts = SDLNet_Read32(data);
+    msg_pong *msg;
+
+    if (packet->len != sizeof(*msg)) {
+        socket_count_inc_pak_rx_error(s, packet);
+        return;
+    }
+
+    msg = (typeof(msg)) packet->data;
+
+    uint8_t seq = msg->seq;
+    uint32_t ts = msg->ts;
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
@@ -1298,6 +1334,21 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
 
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = 
                     time_get_time_cached() - ts;
+
+    strncpy(s->server_name, msg->server_name,
+            min(sizeof(s->server_name), 
+                strlen(msg->server_name))); 
+
+    uint32_t p;
+
+    for (p = 0; p < MAX_PLAYERS; p++) {
+        strncpy(s->player_name[p], msg->player_name[p],
+                min(sizeof(s->player_name[p]), 
+                    strlen(msg->player_name[p]))); 
+    }
+
+    s->server_max_players = msg->server_max_players;
+    s->server_current_players = msg->server_current_players;
 }
 
 void socket_tx_name (socketp s)
@@ -2102,19 +2153,6 @@ void socket_tx_server_status (void)
     msg_server_status msg = {0};
     msg.type = MSG_SERVER_STATUS;
 
-    if (global_config.user_server_name[0]) {
-        strncpy(msg.server_name, global_config.user_server_name,
-                min(sizeof(msg.server_name), 
-                    strlen(global_config.user_server_name))); 
-    } else {
-        strncpy(msg.server_name, global_config.server_name,
-                min(sizeof(msg.server_name), 
-                    strlen(global_config.server_name))); 
-    }
-
-    msg.server_max_players = global_config.server_max_players;
-    msg.server_current_players = global_config.server_current_players;
-
     if (server_level) {
         SDLNet_Write16(server_level->level_no, &msg.level_no);
         msg.level_hide = level_is_ready_to_fade_out(server_level);
@@ -2135,11 +2173,11 @@ void socket_tx_server_status (void)
 
         msg_player_state *msg_tx = &msg.player;
 
-        msg.server_connected = 0;
+        msg.you_are_playing_on_this_server = 0;
 
         aplayer *p = s->player;
         if (p) {
-            msg.server_connected = 1;
+            msg.you_are_playing_on_this_server = 1;
 
             thingp t = p->thing;
             if (t) {
@@ -2204,7 +2242,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        if (msg->server_connected) {
+        if (msg->you_are_playing_on_this_server) {
             LOG("Client: Rx Status from %s, current player \"%s\"", 
                 tmp, p->stats.pname);
         } else {
@@ -2212,24 +2250,10 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
         }
         myfree(tmp);
     }
-    if (1) {
-        char *tmp = iptodynstr(read_address(packet));
-        if (msg->server_connected) {
-            CON("Client: Rx Status from %s, current player \"%s\"", 
-                tmp, p->stats.pname);
-        } else {
-            CON("Client: Rx Status from %s", tmp);
-        }
-        myfree(tmp);
-    }
 
-    status->server_max_players = msg->server_max_players;
-    status->server_current_players = msg->server_current_players;
     status->level_no = SDLNet_Read16(&msg->level_no);
     status->level_hide = msg->level_hide;
-    status->server_connected = msg->server_connected;
-
-    memcpy(status->server_name, msg->server_name, sizeof(status->server_name));
+    status->you_are_playing_on_this_server = msg->you_are_playing_on_this_server;
 
     memcpy(&s->server_status, status, sizeof(s->server_status));
 }
@@ -2498,6 +2522,34 @@ uint32_t socket_get_rx_bad_msg (socketp s)
     verify(s);
 
     return (s->rx_bad_msg);
+}
+
+const char *socket_get_server_name (socketp s)
+{
+    verify(s);
+
+    return (s->server_name);
+}
+
+const char *socket_get_other_player_name (socketp s, const uint32_t p)
+{
+    verify(s);
+
+    return (s->player_name[p]);
+}
+
+uint32_t socket_get_max_players (socketp s)
+{
+    verify(s);
+
+    return (s->server_max_players);
+}
+
+uint32_t socket_get_current_players (socketp s)
+{
+    verify(s);
+
+    return (s->server_current_players);
 }
 
 void socket_tx_player_move (socketp s, 

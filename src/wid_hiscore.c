@@ -195,7 +195,7 @@ static void wid_hiscore_create (void)
 
         wid_set_text(w, "Heroes of Legend");
         wid_set_text_outline(w, true);
-        wid_set_font(w, med_font);
+        wid_set_font(w, vlarge_font);
         wid_set_color(w, WID_COLOR_TEXT, GOLD);
 
         wid_set_text_outline(w, true);
