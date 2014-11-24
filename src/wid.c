@@ -58,7 +58,6 @@ static tree_root *wid_top_level5;
  * Mouse movement
  */
 static widp wid_popup_tooltip;
-static char *wid_tooltip_last_text;
 static int wid_popup_tooltip_mouse_x;
 static int wid_popup_tooltip_mouse_y;
 
@@ -879,11 +878,6 @@ static void wid_mouse_over_end (void)
             fast_verify(wid_popup_tooltip);
 
             wid_destroy(&wid_popup_tooltip);
-
-            if (wid_tooltip_last_text) {
-                myfree(wid_tooltip_last_text);
-                wid_tooltip_last_text = 0;
-            }
         }
     }
 }
@@ -928,16 +922,6 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
     }
 
     if (w->tooltip) {
-        if (wid_tooltip_last_text) {
-            if (!strcmp(wid_get_name(w), wid_tooltip_last_text)) {
-                return (true);
-            }
-
-            myfree(wid_tooltip_last_text);
-        }
-
-        wid_tooltip_last_text = dupstr(wid_get_name(w), "tooltip text");
-
         if (wid_popup_tooltip) {
             wid_destroy_immediate(wid_popup_tooltip);
         }
@@ -8239,6 +8223,23 @@ static void wid_display (widp w,
                                 y - 3.0f * scaling, scaling, advance,
                                 fixed_width);
             } else if (font == large_font) {
+                ttf_puts_no_fmt(font, text,
+                                x - 4.0f * scaling,
+                                y + 4.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 4.0f * scaling,
+                                y + 4.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x - 4.0f * scaling,
+                                y - 4.0f * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + 4.0f * scaling,
+                                y - 4.0f * scaling, scaling, advance,
+                                fixed_width);
+            } else if (font == vlarge_font) {
                 ttf_puts_no_fmt(font, text,
                                 x - 4.0f * scaling,
                                 y + 4.0f * scaling, scaling, advance,

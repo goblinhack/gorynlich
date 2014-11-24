@@ -308,8 +308,8 @@ widp wid_popup (const char *text, const char *title,
         br.x += maxw + PAD_X;
         br.y += titleh;
 
-        tl.y += PAD_Y * 0.5;
-        br.y += PAD_Y * 0.5;
+        tl.y += PAD_Y * 0.8;
+        br.y += PAD_Y * 0.8;
 
         wid_popup_title = wid_new_container(wid_popup_window,
                                             "wid popup container");
@@ -347,6 +347,9 @@ widp wid_popup (const char *text, const char *title,
             tl.y += maxh;
             br.y += maxh;
         }
+
+        tl.y += PAD_Y * 0.8;
+        br.y += PAD_Y * 0.8;
 
         wid_popup_container = wid_new_container(wid_popup_window,
                                                 "wid popup container2");

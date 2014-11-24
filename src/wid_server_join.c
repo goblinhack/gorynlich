@@ -18,7 +18,7 @@
 #include "socket.h"
 #include "client.h"
 #include "string_ext.h"
-#include "wid_popup.h"
+#include "wid_tooltip.h"
 
 static const char *config_file = "gorynlich-remote-servers.txt";
 
@@ -368,9 +368,9 @@ void wid_server_join_redo (uint8_t soft_refresh)
             myfree(s->tooltip);
         }
 
-        msg_server_status *server_status = socket_get_server_status(sp);
+        const char *server_name = socket_get_server_name(sp);
 
-        strncpy(s->name, server_status->server_name, sizeof(s->name) - 1);
+        strncpy(s->name, server_name, sizeof(s->name) - 1);
 
         if (s->quality) {
             int size;
@@ -380,58 +380,44 @@ void wid_server_join_redo (uint8_t soft_refresh)
             tmp = 0;
             size = 1024;
 
-            snprintf_realloc(&tmp, &size, &used, 
-                             "%%%%fmt=left$   Name              XP\n");
-            snprintf_realloc(&tmp, &size, &used, 
-                             "%%%%fmt=left$   ----           -------\n");
-
             uint32_t idx = 0;
+            uint32_t p;
 
-            msg_player_state *p = &server_status->player;
+            for (p = 0; p < MAX_PLAYERS; p++) {
+                const char *player_name = socket_get_other_player_name(sp, p);
 
-            if (p->stats.pname[0]) {
-                snprintf_realloc(&tmp, &size, &used, 
-                                "%%%%fmt=left$[%d] %-10s %07d\n",
-                                idx++,
-                                p->stats.pname,
-                                p->stats.xp);
+                if (player_name[0]) {
+                    snprintf_realloc(&tmp, &size, &used, 
+                                     "%%%%fmt=left$[%d] %-10s\n",
+                                     idx++,
+                                     player_name);
+                } else {
+                    snprintf_realloc(&tmp, &size, &used, 
+                                     "%%%%fmt=left$[%d] %-10s\n",
+                                     idx++,
+                                     "<available player slot>");
+                }
             }
 
             snprintf_realloc(&tmp, &size, &used, "\n");
 
             char *tmp2;
 
-            if (server_status->server_current_players == 0) {
-                tmp2 = dynprintf(
-                    "%%%%fmt=centerx$%s\n"
-                    "%%%%fmt=left$Average latency rtt %u ms\n"
-                    "%%%%fmt=left$Minimum latency rtt %u ms\n"
-                    "%%%%fmt=left$Maxumum latency rtt %u ms\n"
-                    "%%%%fmt=left$Maxumum players %u\n"
-                    "%%%%fmt=left$Current players %u\n",
-                    server_status->server_name,
-                    s->avg_latency_rtt,
-                    s->min_latency_rtt,
-                    s->max_latency_rtt,
-                    server_status->server_max_players,
-                    server_status->server_current_players);
-            } else {
-                tmp2 = dynprintf(
-                    "%%%%fmt=centerx$%s\n"
-                    "%%%%fmt=left$Average latency rtt %u ms\n"
-                    "%%%%fmt=left$Minimum latency rtt %u ms\n"
-                    "%%%%fmt=left$Maxumum latency rtt %u ms\n"
-                    "%%%%fmt=left$Maxumum players %u\n"
-                    "%%%%fmt=left$Current players %u\n"
-                    "%s\n",
-                    server_status->server_name,
-                    s->avg_latency_rtt,
-                    s->min_latency_rtt,
-                    s->max_latency_rtt,
-                    server_status->server_max_players,
-                    server_status->server_current_players,
-                    tmp);
-            }
+            tmp2 = dynprintf(
+                "%%%%fg=green$%%%%fmt=left$Server name                 %%%%fg=red$%-20s\n"
+                "%%%%fg=green$%%%%fmt=left$Avg latency round trip time %%%%fg=red$%u ms\n"
+                "%%%%fg=green$%%%%fmt=left$Min latency round trip time %%%%fg=red$%u ms\n"
+                "%%%%fg=green$%%%%fmt=left$Max latency round trip time %%%%fg=red$%u ms\n"
+                "%%%%fg=green$%%%%fmt=left$Maximum players             %%%%fg=red$%u\n"
+                "%%%%fg=green$%%%%fmt=left$Current players             %%%%fg=red$%u\n\n"
+                "%s",
+                server_name,
+                s->avg_latency_rtt,
+                s->min_latency_rtt,
+                s->max_latency_rtt,
+                socket_get_max_players(sp),
+                socket_get_current_players(sp),
+                tmp);
 
             s->tooltip = tmp2;
             myfree(tmp);
@@ -885,25 +871,42 @@ static void wid_server_join_display (server *s)
 
     wid_server_stats_window_server = s;
 
-    wid_server_stats_window = wid_popup(s->tooltip,
-          "Server statistics",      /* title */
-          0.5, 0.5,                 /* x,y postition in percent */
-          small_font,               /* title font */
-          fixed_font,              /* body font */
-          small_font,              /* button font */
-          0);
+    wid_server_stats_window = wid_tooltip(s->tooltip, 0.5, 0.5, fixed_font);
 
-    wid_move_to_pct(wid_server_stats_window, 0.0, 0.8);
+    wid_move_to_pct(wid_server_stats_window, 0.05, 0.70);
     wid_move_stop(wid_server_stats_window);
 
+    wid_set_tex(wid_server_stats_window, 0, "gothic_wide");
     wid_set_square(wid_server_stats_window);
 
-    fpoint tl = {0.0, 0.8};
-    fpoint br = {0.4, 1.0};
+    socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+    if (sp) {
+        uint32_t i;
 
-    wid_set_tl_br_pct(wid_server_stats_window, tl, br);
+        for (i = 0; i < SOCKET_PING_SEQ_NO_RANGE; i++) {
+            double dx = 1.0 / (double)SOCKET_PING_SEQ_NO_RANGE;
+            
+            widp w = wid_new_square_button(wid_server_stats_window, "bar");
+
+            fpoint tl;
+            fpoint br;
+
+            tl.x = dx * (double)i;
+            br.x = tl.x + dx;
+
+            tl.y = 1.0 - ((double)(sp->latency_rtt[i]) / 300.0);
+            br.y = 1.0;
+
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_color(w, WID_COLOR_TEXT, WHITE);
+            wid_set_color(w, WID_COLOR_BG, BLACK);
+            wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+            wid_set_color(w, WID_COLOR_BR, STEELBLUE);
+            wid_lower(w);
+        }
+    }
+
     wid_raise(wid_server_stats_window);
-    wid_set_do_not_lower(wid_server_stats_window, true);
 }
 
 static void wid_server_join_mouse_over_server (widp w)

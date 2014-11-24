@@ -837,7 +837,7 @@ static void client_poll (void)
                  * If this is a status from a server we are not connected to, 
                  * just ignore it.
                  */
-                if (!latest_status.server_connected) {
+                if (!latest_status.you_are_playing_on_this_server) {
                     break;
                 }
 
@@ -846,14 +846,6 @@ static void client_poll (void)
                 }
 
                 uint8_t redo = false;
-
-                if (server_status.server_current_players !=
-                    latest_status.server_current_players) {
-                    LOG("Client: Number of players in game now %u", 
-                        latest_status.server_current_players);
-
-                    redo = true;
-                }
 
                 if (client_level) {
                     level_set_level_no(client_level, latest_status.level_no);

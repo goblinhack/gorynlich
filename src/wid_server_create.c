@@ -577,21 +577,17 @@ static void wid_server_create_create (uint8_t redo)
 
     widp w = wid_server_create_window = wid_new_square_window("wid server");
 
-    fpoint tl = {0.01, 0.8};
+    fpoint tl = {0.5, 0.8};
     fpoint br = {0.99, 1.0};
 
     wid_set_tl_br_pct(w, tl, br);
     wid_set_font(w, small_font);
 
     wid_set_color(w, WID_COLOR_TEXT, WHITE);
+    wid_set_color(w, WID_COLOR_BG, BLACK);
+    wid_set_color(w, WID_COLOR_TL, STEELBLUE);
+    wid_set_color(w, WID_COLOR_BR, STEELBLUE);
 
-    color c = BLACK;
-    wid_set_color(w, WID_COLOR_BG, c);
-
-    c = STEELBLUE;
-    wid_set_color(w, WID_COLOR_TL, c);
-    wid_set_color(w, WID_COLOR_BR, c);
-    wid_set_bevel(w, 4);
     wid_set_on_key_down(w, wid_server_create_key_event);
 
     wid_set_on_mouse_motion(w, wid_server_create_receive_mouse_motion);
@@ -618,7 +614,7 @@ static void wid_server_create_create (uint8_t redo)
     }
 
     {
-        fpoint tl = {0.4, 0.0};
+        fpoint tl = {0.0, 0.0};
         fpoint br = {1.0, 0.3};
 
         widp w = wid_new_container(wid_server_create_window_container,
@@ -639,14 +635,14 @@ static void wid_server_create_create (uint8_t redo)
         wid_set_text_outline(w, true);
     }
 
-    const float width1 = 0.25;
+    const float width1 = 0.45;
     const float width2 = 0.2;
-    const float width3 = 0.1;
+    const float width3 = 0.15;
     const float width4 = 0.0;
     const float width5 = 0.0;
     const float width6 = 0.0;
-    const float width7 = 0.05;
-    float width_at = 0.4;
+    const float width7 = 0.2;
+    float width_at = 0.0;
 
     {
         fpoint tl = {width_at, 0.3};

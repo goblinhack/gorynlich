@@ -108,16 +108,23 @@ typedef struct msg_player_state_ {
 typedef struct {
     uint8_t type;
     msg_player_state player;
-    char server_name[SMALL_STRING_LEN_MAX];
-    uint8_t server_max_players;
-    uint8_t server_current_players;
     /*
      * This indicates there is a player on this server currently.
      */
-    uint8_t server_connected;
+    uint8_t you_are_playing_on_this_server;
     uint8_t level_hide;
     uint16_t level_no;
 } __attribute__ ((packed)) msg_server_status;
+
+typedef struct {
+    uint8_t type;
+    uint8_t seq;
+    uint32_t ts;
+    char server_name[SMALL_STRING_LEN_MAX];
+    char player_name[MAX_PLAYERS][SMALL_STRING_LEN_MAX];
+    uint8_t server_max_players;
+    uint8_t server_current_players;
+} __attribute__ ((packed)) msg_pong;
 
 typedef struct msg_player_hiscore_ {
     char player_name[SMALL_STRING_LEN_MAX];
@@ -201,6 +208,14 @@ typedef struct socket_ {
      * Last status from this server.
      */
     msg_server_status server_status;
+
+    /*
+     * Server name and players on this server.
+     */
+    char server_name[SMALL_STRING_LEN_MAX];
+    char player_name[MAX_PLAYERS][SMALL_STRING_LEN_MAX];
+    uint8_t server_max_players;
+    uint8_t server_current_players;
 } socket;
 
 extern void socket_count_inc_pak_rx(const socketp, msg_type);
@@ -327,7 +342,11 @@ extern void socket_rx_server_hiscore(socketp s, UDPpacket *packet,
                                     uint8_t *data, msg_server_hiscores *);
 extern void sockets_quality_check(void);
 extern uint32_t socket_get_quality(socketp s);
+extern const char *socket_get_server_name(socketp s);
+extern const char *socket_get_other_player_name(socketp s, const uint32_t p);
 extern uint32_t socket_get_avg_latency_rtt(socketp s);
+extern uint32_t socket_get_current_players(socketp s);
+extern uint32_t socket_get_max_players(socketp s);
 extern uint32_t socket_get_min_latency_rtt(socketp s);
 extern uint32_t socket_get_max_latency_rtt(socketp s);
 extern uint32_t socket_get_rx(socketp s);

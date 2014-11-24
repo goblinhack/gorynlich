@@ -73,8 +73,8 @@ typedef struct thing_stats_ {
     item_t action_bar[THING_ACTION_BAR_MAX];
     item_t worn[THING_WORN_MAX];
 
-    char pname[SMALL_STRING_LEN_MAX];
-    char pclass[SMALL_STRING_LEN_MAX];
+    char pname[SMALL_STRING_LEN_MAX+1];
+    char pclass[SMALL_STRING_LEN_MAX+1];
 
 } __attribute__ ((packed)) thing_stats;
 
