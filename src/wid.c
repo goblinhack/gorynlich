@@ -9149,6 +9149,17 @@ void wid_effect_pulses (widp w)
     }
 }
 
+void wid_effect_bounce (widp w)
+{
+    fast_verify(w);
+
+    if (wid_get_height(w) > 100) {
+        wid_scaling_to_pct_in(w, 1.0, 1.11, wid_pulse_delay, 10000);
+    } else {
+        wid_scaling_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 10000);
+    }
+}
+
 double wid_get_scaling_w (widp w)
 {
     double scaling;

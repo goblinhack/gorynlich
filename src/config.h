@@ -9,7 +9,12 @@
 /*
  * We don't always need this. Like on a laptop.
  */
-#undef ENABLE_VIDEO_SYNC
+#define ENABLE_VIDEO_SYNC
+
+/*
+ * So we don't hog all the CPU when not in video sync mode
+ */
+#define MAIN_LOOP_DELAY             5
 
 /*
  * More speed, less fancy stuff
@@ -19,8 +24,8 @@
 /*
  * Light sources
  */
-#define MAX_LIGHT_RAYS          360
-#define MAX_LIGHTS              200
+#define MAX_LIGHT_RAYS              360
+#define MAX_LIGHTS                  200
 
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
@@ -70,11 +75,6 @@
  * Tries to batch calls to draw arrays for more speed.
  */
 #define ENABLE_GL_BULK_DRAW_ARRAYS 
-
-/*
- * So we don't hog all the CPU
- */
-#define MAIN_LOOP_DELAY             10
 
 /*
  * Frames per sec counter.
