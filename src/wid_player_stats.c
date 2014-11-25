@@ -13,7 +13,7 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
-#include "wid_intro3.h"
+#include "wid_choose_game_type.h"
 #include "timer.h"
 #include "string.h"
 #include "client.h"

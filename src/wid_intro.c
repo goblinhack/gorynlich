@@ -16,7 +16,7 @@
 #include "wid_intro_settings.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
-#include "wid_intro2.h"
+#include "wid_choose_player.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
 #include "wid_server_join.h"
@@ -261,7 +261,7 @@ static void wid_intro_single_play_selected (void)
 
 static void wid_intro_play_selected_cb (void *context)
 {
-    wid_intro2_visible();
+    wid_choose_player_visible();
     wid_intro_buttons_hide();
 }
 
