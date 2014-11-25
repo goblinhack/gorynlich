@@ -21,6 +21,8 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
+#include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "name.h"
 #include "glapi.h"
 
@@ -143,7 +145,10 @@ void wid_choose_player_visible (void)
 
 static void wid_choose_player_play_selected_cb (void *context)
 {
-    wid_choose_game_type_visible();
+    wid_game_map_server_visible();
+    wid_game_map_client_visible();
+
+    wid_intro_hide();
 }
 
 static void wid_choose_player_play_selected (void)
@@ -311,6 +316,8 @@ static void wid_choose_player_create (void)
         wid_set_on_mouse_down(child, wid_choose_player_intro_all_done_mouse_event);
         wid_raise(child);
         wid_set_do_not_lower(child, true);
+
+        wid_effect_bounce(child);
     }
 
     {

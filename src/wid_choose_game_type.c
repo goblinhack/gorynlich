@@ -9,6 +9,7 @@
 #include "main.h"
 #include "wid.h"
 #include "wid_choose_game_type.h"
+#include "wid_choose_player.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
@@ -116,15 +117,12 @@ static void wid_server_create_selected (void)
     wid_server_create_visible();
 }
 
-static void wid_choose_game_type_play_selected_cb (void *context)
+static void wid_choose_game_type_single_play_selected_cb (void *context)
 {
     wid_server_join_hide();
     wid_server_create_hide();
 
-    wid_game_map_server_visible();
-    wid_game_map_client_visible();
-
-    wid_intro_hide();
+    wid_choose_player_visible();
 }
 
 static void wid_choose_game_type_multi_play_selected_cb (void *context)
@@ -155,7 +153,7 @@ static void wid_choose_game_type_play_selected (void)
 
     action_timer_create(
             &wid_timers,
-            (action_timer_callback)wid_choose_game_type_play_selected_cb,
+            (action_timer_callback)wid_choose_game_type_single_play_selected_cb,
             (action_timer_destroy_callback)0,
             0, /* context */
             "start game",
