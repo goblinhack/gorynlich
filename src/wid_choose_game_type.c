@@ -8,7 +8,7 @@
 
 #include "main.h"
 #include "wid.h"
-#include "wid_intro3.h"
+#include "wid_choose_game_type.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
@@ -18,75 +18,75 @@
 #include "timer.h"
 #include "glapi.h"
 
-static widp wid_intro3;
-static widp wid_intro3_background;
+static widp wid_choose_game_type;
+static widp wid_choose_game_type_background;
 
-static void wid_intro3_play_selected(void);
+static void wid_choose_game_type_play_selected(void);
 
-static uint8_t wid_intro3_init_done;
-static void wid_intro3_create(void);
+static uint8_t wid_choose_game_type_init_done;
+static void wid_choose_game_type_create(void);
 
 static int intro_effect_delay = 200;
 
-uint8_t wid_intro3_init (void)
+uint8_t wid_choose_game_type_init (void)
 {
-    if (!wid_intro3_init_done) {
+    if (!wid_choose_game_type_init_done) {
     }
 
-    wid_intro3_init_done = true;
+    wid_choose_game_type_init_done = true;
 
     return (true);
 }
 
-void wid_intro3_fini (void)
+void wid_choose_game_type_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
 
-    if (wid_intro3_init_done) {
-        wid_intro3_init_done = false;
+    if (wid_choose_game_type_init_done) {
+        wid_choose_game_type_init_done = false;
 
-        if (wid_intro3) {
-            wid_destroy(&wid_intro3);
-            wid_destroy_in(wid_intro3_background, wid_hide_delay * 2);
+        if (wid_choose_game_type) {
+            wid_destroy(&wid_choose_game_type);
+            wid_destroy_in(wid_choose_game_type_background, wid_hide_delay * 2);
         }
     }
 }
 
-static uint8_t wid_intro3_is_hidden;
-static uint8_t wid_intro3_is_visible;
+static uint8_t wid_choose_game_type_is_hidden;
+static uint8_t wid_choose_game_type_is_visible;
 
-void wid_intro3_hide (void)
+void wid_choose_game_type_hide (void)
 {
-    if (wid_intro3_is_hidden) {
+    if (wid_choose_game_type_is_hidden) {
         return;
     }
 
-    wid_intro3_is_hidden = true;
-    wid_intro3_is_visible = false;
+    wid_choose_game_type_is_hidden = true;
+    wid_choose_game_type_is_visible = false;
 
-    if (!wid_intro3) {
+    if (!wid_choose_game_type) {
         DIE("no wid intro");
     }
 
-    wid_fade_out(wid_intro3_background, intro_effect_delay);
+    wid_fade_out(wid_choose_game_type_background, intro_effect_delay);
 
-    wid_hide(wid_intro3, 0);
-    wid_raise(wid_intro3);
-    wid_update(wid_intro3);
+    wid_hide(wid_choose_game_type, 0);
+    wid_raise(wid_choose_game_type);
+    wid_update(wid_choose_game_type);
 }
 
-void wid_intro3_visible (void)
+void wid_choose_game_type_visible (void)
 {
-    if (wid_intro3_is_visible) {
+    if (wid_choose_game_type_is_visible) {
         return;
     }
 
-    wid_intro3_create();
+    wid_choose_game_type_create();
 
-    wid_intro3_is_visible = true;
-    wid_intro3_is_hidden = false;
+    wid_choose_game_type_is_visible = true;
+    wid_choose_game_type_is_hidden = false;
 
-    if (!wid_intro3) {
+    if (!wid_choose_game_type) {
         DIE("no wid intro");
     }
 
@@ -95,11 +95,11 @@ void wid_intro3_visible (void)
         return;
     }
 
-    wid_visible(wid_intro3, 0);
-    wid_raise(wid_intro3);
-    wid_update(wid_intro3);
+    wid_visible(wid_choose_game_type, 0);
+    wid_raise(wid_choose_game_type);
+    wid_update(wid_choose_game_type);
 
-    wid_fade_in(wid_intro3_background, intro_effect_delay);
+    wid_fade_in(wid_choose_game_type_background, intro_effect_delay);
 }
 
 static void wid_server_join_selected (void)
@@ -116,7 +116,7 @@ static void wid_server_create_selected (void)
     wid_server_create_visible();
 }
 
-static void wid_intro3_play_selected_cb (void *context)
+static void wid_choose_game_type_play_selected_cb (void *context)
 {
     wid_server_join_hide();
     wid_server_create_hide();
@@ -127,83 +127,83 @@ static void wid_intro3_play_selected_cb (void *context)
     wid_intro_hide();
 }
 
-static void wid_intro3_multi_play_selected_cb (void *context)
+static void wid_choose_game_type_multi_play_selected_cb (void *context)
 {
     wid_server_create_selected();
     wid_server_join_selected();
 }
 
-static void wid_intro3_multi_play_selected (void)
+static void wid_choose_game_type_multi_play_selected (void)
 {
     LOG("Multiplayer selected");
 
     action_timer_create(
             &wid_timers,
-            (action_timer_callback)wid_intro3_multi_play_selected_cb,
+            (action_timer_callback)wid_choose_game_type_multi_play_selected_cb,
             (action_timer_destroy_callback)0,
             0, /* context */
             "start game",
             intro_effect_delay,
             0 /* jitter */);
 
-    wid_intro3_hide();
+    wid_choose_game_type_hide();
 }
 
-static void wid_intro3_play_selected (void)
+static void wid_choose_game_type_play_selected (void)
 {
     LOG("Single player selected");
 
     action_timer_create(
             &wid_timers,
-            (action_timer_callback)wid_intro3_play_selected_cb,
+            (action_timer_callback)wid_choose_game_type_play_selected_cb,
             (action_timer_destroy_callback)0,
             0, /* context */
             "start game",
             intro_effect_delay,
             0 /* jitter */);
 
-    wid_intro3_hide();
+    wid_choose_game_type_hide();
 }
 
-static uint8_t wid_intro3_play_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_choose_game_type_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
-    wid_intro3_play_selected();
+    wid_choose_game_type_play_selected();
 
     return (true);
 }
 
-static uint8_t wid_intro3_multi_play_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_choose_game_type_multi_play_mouse_event (widp w, int32_t x, int32_t y,
                                            uint32_t button)
 {
-    wid_intro3_multi_play_selected();
+    wid_choose_game_type_multi_play_selected();
 
     return (true);
 }
 
-static uint8_t wid_intro3_go_back_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_choose_game_type_go_back_mouse_event (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
-    wid_intro3_hide();
+    wid_choose_game_type_hide();
     wid_intro_visible();
 
     return (true);
 }
 
-static uint8_t wid_intro3_play_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_choose_game_type_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
         case 's':
-            wid_intro3_play_selected();
+            wid_choose_game_type_play_selected();
             return (true);
 
         case 'm':
-            wid_intro3_multi_play_selected();
+            wid_choose_game_type_multi_play_selected();
             return (true);
 
         case SDLK_ESCAPE:
-            wid_intro3_hide();
+            wid_choose_game_type_hide();
             wid_intro_visible();
             return (true);
 
@@ -214,20 +214,20 @@ static uint8_t wid_intro3_play_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static uint8_t wid_intro3_multi_play_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_choose_game_type_multi_play_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
         case 'm':
-            wid_intro3_multi_play_selected();
+            wid_choose_game_type_multi_play_selected();
             return (true);
 
         case 's':
-            wid_intro3_play_selected();
+            wid_choose_game_type_play_selected();
             return (true);
 
         case SDLK_ESCAPE:
-            wid_intro3_hide();
+            wid_choose_game_type_hide();
             wid_intro_visible();
             return (true);
 
@@ -238,16 +238,16 @@ static uint8_t wid_intro3_multi_play_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static void wid_intro3_bg_create (void)
+static void wid_choose_game_type_bg_create (void)
 {
     widp wid;
 
-    if (wid_intro3_background) {
+    if (wid_choose_game_type_background) {
         return;
     }
 
     {
-        wid = wid_intro3_background = wid_new_window("bg");
+        wid = wid_choose_game_type_background = wid_new_window("bg");
 
         float f;
 
@@ -273,35 +273,35 @@ static void wid_intro3_bg_create (void)
     }
 }
 
-static void wid_intro3_create (void)
+static void wid_choose_game_type_create (void)
 {
-    if (wid_intro3) {
+    if (wid_choose_game_type) {
         return;
     }
 
-    wid_intro3 = wid_new_window("intro buttons");
+    wid_choose_game_type = wid_new_window("intro buttons");
 
-    wid_set_no_shape(wid_intro3);
+    wid_set_no_shape(wid_choose_game_type);
 
     fpoint tl = {0.0f, 0.0f};
     fpoint br = {1.0f, 1.0f};
-    wid_set_tl_br_pct(wid_intro3, tl, br);
-    wid_set_on_mouse_down(wid_intro3, wid_intro3_play_mouse_event);
-    wid_set_on_key_down(wid_intro3, wid_intro3_play_key_event);
+    wid_set_tl_br_pct(wid_choose_game_type, tl, br);
+    wid_set_on_mouse_down(wid_choose_game_type, wid_choose_game_type_play_mouse_event);
+    wid_set_on_key_down(wid_choose_game_type, wid_choose_game_type_play_key_event);
 
     color col = BLACK;
     col.a = 0;
     glcolor(col);
 
-    wid_set_mode(wid_intro3, WID_MODE_NORMAL);
-    wid_set_color(wid_intro3, WID_COLOR_TL, col);
-    wid_set_color(wid_intro3, WID_COLOR_BR, col);
-    wid_set_color(wid_intro3, WID_COLOR_BG, col);
+    wid_set_mode(wid_choose_game_type, WID_MODE_NORMAL);
+    wid_set_color(wid_choose_game_type, WID_COLOR_TL, col);
+    wid_set_color(wid_choose_game_type, WID_COLOR_BR, col);
+    wid_set_color(wid_choose_game_type, WID_COLOR_BG, col);
 
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro3, "play");
+        child = wid_new_square_button(wid_choose_game_type, "play");
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
@@ -325,14 +325,14 @@ static void wid_intro3_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
         wid_set_text_outline(child, true);
 
-        wid_set_on_mouse_down(child, wid_intro3_play_mouse_event);
-        wid_set_on_key_down(child, wid_intro3_play_key_event);
+        wid_set_on_mouse_down(child, wid_choose_game_type_play_mouse_event);
+        wid_set_on_key_down(child, wid_choose_game_type_play_key_event);
     }
 
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro3, "play");
+        child = wid_new_square_button(wid_choose_game_type, "play");
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
@@ -356,14 +356,14 @@ static void wid_intro3_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
         wid_set_text_outline(child, true);
 
-        wid_set_on_mouse_down(child, wid_intro3_multi_play_mouse_event);
-        wid_set_on_key_down(child, wid_intro3_multi_play_key_event);
+        wid_set_on_mouse_down(child, wid_choose_game_type_multi_play_mouse_event);
+        wid_set_on_key_down(child, wid_choose_game_type_multi_play_key_event);
     }
 
     {
         widp child;
 
-        child = wid_new_square_button(wid_intro3, "Go back");
+        child = wid_new_square_button(wid_choose_game_type, "Go back");
         wid_set_font(child, small_font);
 
         fpoint tl = {0.9f, 0.95f};
@@ -378,13 +378,13 @@ static void wid_intro3_create (void)
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_intro3_go_back_mouse_event);
+        wid_set_on_mouse_down(child, wid_choose_game_type_go_back_mouse_event);
         wid_raise(child);
         wid_set_do_not_lower(child, true);
     }
 
-    wid_intro3_bg_create();
-    wid_update(wid_intro3);
+    wid_choose_game_type_bg_create();
+    wid_update(wid_choose_game_type);
 
-    wid_move_to_pct_centered(wid_intro3, 0.5f, 0.5f);
+    wid_move_to_pct_centered(wid_choose_game_type, 0.5f, 0.5f);
 }
