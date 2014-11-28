@@ -28,7 +28,6 @@
 #include "math.h"
 #include "level.h"
 int xxx = 0;
-int count;
 
 /*
  * Display sorted.
@@ -8523,7 +8522,6 @@ CON("%x %x",a,b);
     if (did_push_matrix) {
         glPopMatrix();
     }
-count++;
 }
 
 /*
@@ -8620,14 +8618,12 @@ void wid_display_all (void)
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-count = 0;
     { TREE_WALK_REVERSE_UNSAFE(wid_top_level, w) {
         wid_display(w,
                     false /* disable_scissors */,
                     0 /* updated_scissors */);
     } }
 
-CON("count %d",count);
     glDisable(GL_SCISSOR_TEST);
 }
 
