@@ -48,6 +48,8 @@ uint8_t server_start (IPaddress address)
 
     server_socket = s;
 
+    on_server = true;
+
     return (true);
 }
 
@@ -63,6 +65,8 @@ void server_stop (void)
 
     socket_disconnect(server_socket);
     server_socket = 0;
+
+    on_server = false;
 }
 
 uint8_t server_init (void)

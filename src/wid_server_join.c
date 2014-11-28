@@ -971,8 +971,8 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_server_join_window = wid_new_square_window("wid server");
 
-        fpoint tl = {0.01, 0.01};
-        fpoint br = {0.99, 0.8};
+        fpoint tl = {0.01, 0.0};
+        fpoint br = {0.99, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
