@@ -60,6 +60,7 @@ typedef struct server_ {
 } server;
 
 static widp wid_server_stats_window;
+static widp wid_server_stats_window2;
 static server *wid_server_stats_window_server;
 
 static void wid_server_join_destroy_internal(server *node);
@@ -150,6 +151,7 @@ static void server_remove (server *s)
 {
     if (wid_server_stats_window) {
         wid_destroy_nodelay(&wid_server_stats_window);
+        wid_destroy_nodelay(&wid_server_stats_window2);
         wid_server_stats_window_server = 0;
     }
 
@@ -228,6 +230,7 @@ void wid_server_join_hide (void)
 
     if (wid_server_stats_window) {
         wid_destroy_nodelay(&wid_server_stats_window);
+        wid_destroy_nodelay(&wid_server_stats_window2);
     }
 
     /*
@@ -850,10 +853,6 @@ static void wid_server_join_set_color (widp w, server *s)
     } else {
         wid_set_color(w, WID_COLOR_TEXT, GRAY);
     }
-
-    if (!s->tooltip) {
-        wid_set_tooltip(w, "Cick to edit", 0);
-    }
 }
 
 static void wid_server_join_display (server *s)
@@ -866,27 +865,33 @@ static void wid_server_join_display (server *s)
 
     if (wid_server_stats_window) {
         wid_destroy_nodelay(&wid_server_stats_window);
+        wid_destroy_nodelay(&wid_server_stats_window2);
     }
 
     if (!s->tooltip) {
         return;
     }
 
-    wid_server_stats_window = wid_tooltip(s->tooltip, 0.4, 0.65, small_font);
+    color c = BLACK;
+    c.a = 200;
 
+    wid_server_stats_window = wid_tooltip(s->tooltip, 0.2, 0.65, small_font);
     wid_move_to_pct(wid_server_stats_window, 0.05, 0.55);
     wid_move_stop(wid_server_stats_window);
-
     wid_set_tex(wid_server_stats_window, 0, 0);
     wid_set_square(wid_server_stats_window);
-    wid_set_bevel(wid_server_stats_window, 1);
-
-    color c = BLACK;
-    c.a = 150;
-
     wid_set_color(wid_server_stats_window, WID_COLOR_BG, c);
     wid_set_color(wid_server_stats_window, WID_COLOR_TL, c);
     wid_set_color(wid_server_stats_window, WID_COLOR_BR, c);
+    wid_set_bevel(wid_server_stats_window, 0);
+
+    wid_server_stats_window2 = wid_new_square_window("bars");
+    fpoint tl = {0.5, 0.55};
+    fpoint br = {0.9, 0.92};
+    wid_set_tl_br_pct(wid_server_stats_window2, tl, br);
+    wid_set_color(wid_server_stats_window2, WID_COLOR_BG, c);
+    wid_set_color(wid_server_stats_window2, WID_COLOR_TL, c);
+    wid_set_color(wid_server_stats_window2, WID_COLOR_BR, c);
 
     socketp sp = socket_find(s->ip, SOCKET_CONNECT);
     if (sp) {
@@ -895,7 +900,7 @@ static void wid_server_join_display (server *s)
         for (i = 0; i < SOCKET_PING_SEQ_NO_RANGE; i++) {
             double dx = 1.0 / (double)SOCKET_PING_SEQ_NO_RANGE;
             
-            widp w = wid_new_square_button(wid_server_stats_window, "bar");
+            widp w = wid_new_square_button(wid_server_stats_window2, "bar");
             wid_visible(w, 0);
 
             fpoint tl;
@@ -921,17 +926,22 @@ static void wid_server_join_display (server *s)
                 c = RED;
             }
 
-            c.a = 50;
+            c.a = 200;
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_color(w, WID_COLOR_BG, c);
             wid_set_color(w, WID_COLOR_TL, c);
             wid_set_color(w, WID_COLOR_BR, c);
-            wid_lower(w);
         }
     }
 
+    wid_update(wid_server_stats_window);
+    wid_visible(wid_server_stats_window, 0);
     wid_raise(wid_server_stats_window);
+
+    wid_update(wid_server_stats_window2);
+    wid_visible(wid_server_stats_window2, 0);
+    wid_raise(wid_server_stats_window2);
 }
 
 static void wid_server_join_mouse_over_server (widp w)
@@ -973,12 +983,10 @@ static void wid_server_join_create (uint8_t redo)
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
-
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
         color c = BLACK;
         wid_set_color(w, WID_COLOR_BG, c);
-//        wid_set_tex(w, 0, "title2");
 
         c = BLACK;
         wid_set_color(w, WID_COLOR_TL, c);
@@ -987,29 +995,29 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_on_key_down(w, wid_server_join_key_event);
 
         wid_set_on_mouse_motion(w, wid_server_join_receive_mouse_motion);
-    }
 
-    {
-        widp w = wid_new_container(wid_server_join_window, "bg");
-        wid_visible(w, 0);
+        {
+            widp w = wid_new_container(wid_server_join_window, "bg");
+            wid_visible(w, 0);
 
-        float f = (1024.0 / 680.0);
+            float f = (1024.0 / 680.0);
 
-        fpoint tl = { 0.0, 0.0 };
-        fpoint br = { 1.0, f };
+            fpoint tl = { 0.0, 0.0 };
+            fpoint br = { 1.0, f };
 
-        wid_set_tl_br_pct(w, tl, br);
+            wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_tex(w, 0, "title3");
+            wid_set_tex(w, 0, "title3");
 
-        wid_lower(w);
+            wid_lower(w);
 
-        color c;
-        c = WHITE;
-        wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_set_color(w, WID_COLOR_BG, c);
+            color c;
+            c = WHITE;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_TL, c);
+            wid_set_color(w, WID_COLOR_BR, c);
+            wid_set_color(w, WID_COLOR_BG, c);
+        }
     }
 
     wid_server_join_window_container =
@@ -1108,7 +1116,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width1, 0.1};
 
-            float height = 0.08;
+            float height = 0.07;
 
             wid_server_join_set_color(w, s);
 
@@ -1118,9 +1126,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, s->host);
 
-            color c = BLACK;
-
-            c.a = 100;
+            color c = DARKSLATEBLUE;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -1129,7 +1135,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, false);
+            wid_set_text_outline(w, true);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
@@ -1183,7 +1189,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width2, 0.1};
 
-            float height = 0.08;
+            float height = 0.07;
 
             wid_server_join_set_color(w, s);
 
@@ -1196,9 +1202,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text(w, tmp);
             myfree(tmp);
 
-            color c = BLACK;
-
-            c.a = 100;
+            color c = DARKSLATEBLUE;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -1207,7 +1211,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, false);
+            wid_set_text_outline(w, true);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
@@ -1261,7 +1265,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width3, 0.1};
 
-            float height = 0.08;
+            float height = 0.07;
 
             wid_server_join_set_color(w, s);
 
@@ -1274,9 +1278,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text(w, tmp);
             myfree(tmp);
 
-            color c = BLACK;
-
-            c.a = 100;
+            color c = DARKSLATEBLUE;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -1285,7 +1287,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, false);
+            wid_set_text_outline(w, true);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
 
@@ -1339,7 +1341,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width4, 0.1};
 
-            float height = 0.08;
+            float height = 0.07;
 
             wid_server_join_set_color(w, s);
 
@@ -1352,9 +1354,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text(w, tmp);
             myfree(tmp);
 
-            color c = BLACK;
-
-            c.a = 100;
+            color c = DARKSLATEBLUE;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -1363,7 +1363,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, false);
+            wid_set_text_outline(w, true);
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
@@ -1415,7 +1415,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width5, 0.1};
 
-            float height = 0.08;
+            float height = 0.07;
 
             wid_server_join_set_color(w, s);
 
@@ -1428,9 +1428,8 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text(w, tmp);
             myfree(tmp);
 
-            color c = BLACK;
+            color c = DARKSLATEBLUE;
 
-            c.a = 100;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -1439,7 +1438,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_text_outline(w, false);
+            wid_set_text_outline(w, true);
             wid_set_font(w, small_font);
             wid_set_text_centerx(w, true);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
@@ -1465,11 +1464,12 @@ static void wid_server_join_create (uint8_t redo)
 
             widp w = wid_new_rounded_small_button(wid_server_join_server_list_container,
                                            "server remove");
+            wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width6, 0.1};
 
-            float height = 0.08;
+            float height = 0.07;
 
             wid_set_color(w, WID_COLOR_TEXT, RED);
 
@@ -1487,9 +1487,8 @@ static void wid_server_join_create (uint8_t redo)
             }
 
             wid_set_font(w, small_font);
-            color c = BLACK;
+            color c = DARKSLATEBLUE;
 
-            c.a = 100;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -1521,11 +1520,12 @@ static void wid_server_join_create (uint8_t redo)
 
             widp w = wid_new_rounded_small_button(wid_server_join_server_list_container,
                                            "server join");
+            wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width7, 0.1};
 
-            float height = 0.08;
+            float height = 0.07;
 
             if (s->quality > 0) {
                 wid_set_color(w, WID_COLOR_TEXT, GREEN);
@@ -1550,9 +1550,7 @@ static void wid_server_join_create (uint8_t redo)
             }
 
             wid_set_font(w, small_font);
-            color c = BLACK;
-
-            c.a = 100;
+            color c = DARKSLATEBLUE;
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
 
@@ -1606,40 +1604,40 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_on_mouse_down(w, wid_server_join_add);
     }
 
-    wid_server_join_container_vert_scroll =
-        wid_new_vert_scroll_bar(wid_server_join_window, 
-                                wid_server_join_server_list_container);
+    if (!redo) {
+        wid_server_join_container_vert_scroll =
+            wid_new_vert_scroll_bar(wid_server_join_window, 
+                                    wid_server_join_server_list_container);
 
-    wid_hide(wid_get_parent(wid_server_join_container_vert_scroll), 0);
-    wid_hide(wid_server_join_container_vert_scroll, 0);
+        wid_hide(wid_get_parent(wid_server_join_container_vert_scroll), 0);
+        wid_hide(wid_server_join_container_vert_scroll, 0);
 
-    if (redo) {
+        {
+            widp child;
+
+            child = wid_new_square_button(wid_server_join_window, "Go back");
+            wid_visible(child, 0);
+
+            wid_set_font(child, small_font);
+
+            fpoint tl = {0.9f, 0.95f};
+            fpoint br = {1.0f, 1.00f};
+
+            wid_set_tl_br_pct(child, tl, br);
+            wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");
+
+            wid_set_no_shape(child);
+            wid_set_color(child, WID_COLOR_TEXT, GRAY90);
+            wid_set_mode(child, WID_MODE_OVER);
+            wid_set_color(child, WID_COLOR_TEXT, WHITE);
+            wid_set_mode(child, WID_MODE_NORMAL);
+
+            wid_set_on_mouse_down(child, wid_server_join_go_back);
+            wid_raise(child);
+            wid_set_do_not_lower(child, true);
+        }
+    } else {
         wid_move_delta(wid_server_join_container_vert_scroll, 0, -scroll_delta);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_server_join_window, "Go back");
-        wid_visible(child, 0);
-
-        wid_set_font(child, small_font);
-
-        fpoint tl = {0.9f, 0.95f};
-        fpoint br = {1.0f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");
-
-        wid_set_no_shape(child);
-        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
-        wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_server_join_go_back);
-        wid_raise(child);
-        wid_set_do_not_lower(child, true);
     }
 
     wid_update(wid_server_join_window);
