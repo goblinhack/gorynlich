@@ -306,9 +306,7 @@ static void wid_choose_game_type_bg_create (void)
     {
         wid = wid_choose_game_type_background = wid_new_window("bg");
 
-        float f;
-
-        f = (1024.0 / 680.0);
+        float f = (1024.0 / 680.0);
 
         fpoint tl = { 0.0, 0.0 };
         fpoint br = { 1.0, f };
