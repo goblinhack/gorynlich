@@ -617,6 +617,7 @@ static void wid_server_create_create (uint8_t redo)
 
         widp w = wid_new_container(wid_server_create_window_container,
                                        "server name container");
+        wid_visible(w, 0);
 
         wid_set_tooltip(w, "Click on a server to edit it", 0 /* font */);
         wid_set_tl_br_pct(w, tl, br);
