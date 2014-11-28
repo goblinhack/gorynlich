@@ -176,6 +176,12 @@ typedef struct socket_ {
      * If there is a player using this socket.
      */
     aplayerp player;
+
+    /*
+     * Ping sequence number
+     */
+    uint8_t tx_ping_seq;
+
     /*
      * Line quality.
      */
@@ -183,6 +189,7 @@ typedef struct socket_ {
     uint16_t avg_latency_rtt;
     uint16_t min_latency_rtt;
     uint16_t max_latency_rtt;
+
     /*
      * Counters.
      */

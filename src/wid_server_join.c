@@ -538,7 +538,7 @@ static uint8_t wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
         case 'b':
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
 
         default:
@@ -605,7 +605,7 @@ static uint8_t wid_server_join_hostname_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
 
         default:
@@ -667,7 +667,7 @@ static uint8_t wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
         default:
             break;
@@ -770,7 +770,7 @@ static uint8_t wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
         default:
             break;
@@ -882,7 +882,7 @@ static void wid_server_join_display (server *s)
     wid_set_bevel(wid_server_stats_window, 1);
 
     color c = BLACK;
-    c.a = 0;
+    c.a = 150;
 
     wid_set_color(wid_server_stats_window, WID_COLOR_BG, c);
     wid_set_color(wid_server_stats_window, WID_COLOR_TL, c);
@@ -1567,10 +1567,7 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_text(w, "Add a server");
         wid_set_no_shape(w);
 
-        if (!remote_servers || !tree_root_size(remote_servers)) {
-            wid_fade_in_out(w, 1000, 1000, false /* fade out first */);
-        }
-CON("%d",tree_root_size(remote_servers));
+        wid_fade_in_out(w, 1000, 1000, false /* fade out first */);
 
         wid_set_font(w, med_font);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
