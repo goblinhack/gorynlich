@@ -11,7 +11,7 @@
 #include "color.h"
 #include "wid_server_create.h"
 #include "wid_intro.h"
-#include "wid_server_join.h"
+#include "wid_choose_game_type.h"
 #include "string.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
@@ -226,8 +226,7 @@ void wid_server_create_redo (void)
 static uint8_t wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t button)
 {
     wid_server_create_hide();
-    wid_server_join_hide();
-    wid_intro_visible();
+    wid_choose_game_type_visible();
 
     return (true);
 }
@@ -275,10 +274,11 @@ static uint8_t wid_server_stop (widp w, int32_t x, int32_t y, uint32_t button)
 static uint8_t wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
+        case 'q':
+        case 'b':
         case SDLK_ESCAPE:
             wid_server_create_hide();
-            wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
 
         case ' ':
@@ -356,8 +356,7 @@ static uint8_t wid_server_create_name_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_create_hide();
-            wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
         default:
             break;
@@ -417,8 +416,7 @@ static uint8_t wid_server_create_port_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_create_hide();
-            wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
         default:
             break;
@@ -495,8 +493,7 @@ static uint8_t wid_server_create_max_players_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_create_hide();
-            wid_server_join_hide();
-            wid_intro_visible();
+            wid_choose_game_type_visible();
             return (true);
         default:
             break;

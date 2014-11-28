@@ -170,7 +170,6 @@ static void client_alive_check (void)
 static void client_socket_tx_ping (void)
 {
     static uint32_t ts;
-    static uint8_t seq;
 
     if (!time_have_x_tenths_passed_since(DELAY_TENTHS_PING, ts)) {
         return;
@@ -196,13 +195,15 @@ static void client_socket_tx_ping (void)
         }
 
         s->tx_last_ping = ts;
-        socket_tx_ping(s, seq, ts);
+        socket_tx_ping(s, s->tx_ping_seq++, ts);
     }
 
     /*
      * Every few seconds check for dead peers.
      */
-    if (ts && !(seq % 3)) {
+    static int count;
+    count++;
+    if (ts && !(count % 5)) {
         client_alive_check();
     }
 
@@ -215,8 +216,6 @@ static void client_socket_tx_ping (void)
             ts = time_get_time_cached();
         }
     }
-
-    seq++;
 }
 
 void client_tick (void)
