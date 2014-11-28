@@ -11,7 +11,7 @@
 #include "color.h"
 #include "wid_server_join.h"
 #include "wid_game_map_client.h"
-#include "wid_server_create.h"
+#include "wid_choose_game_type.h"
 #include "wid_intro.h"
 #include "string.h"
 #include "marshal.h"
@@ -24,7 +24,7 @@ static const char *config_file = "gorynlich-remote-servers.txt";
 
 static widp wid_server_join_window;
 static widp wid_server_join_window_go_back_button;
-static widp wid_server_join_container;
+static widp wid_server_join_server_list_container;
 static widp wid_server_join_window_container;
 static widp wid_server_join_container_vert_scroll;
 static uint8_t wid_server_join_init_done;
@@ -439,8 +439,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
 static uint8_t wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t button)
 {
     wid_server_join_hide();
-    wid_server_create_hide();
-    wid_intro_visible();
+    wid_choose_game_type_visible();
 
     return (true);
 }
@@ -457,7 +456,6 @@ static uint8_t wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
     }
 
     wid_server_join_hide();
-    wid_server_create_hide();
 
     /*
      * Leave all other sockets.
@@ -537,9 +535,9 @@ static uint8_t wid_server_join_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case 'q':
+        case 'b':
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_server_create_hide();
             wid_intro_visible();
             return (true);
 
@@ -607,7 +605,6 @@ static uint8_t wid_server_join_hostname_receive_input (widp w,
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_server_create_hide();
             wid_intro_visible();
             return (true);
 
@@ -670,7 +667,6 @@ static uint8_t wid_server_join_ip_receive_input (widp w, const SDL_KEYSYM *key)
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_server_create_hide();
             wid_intro_visible();
             return (true);
         default:
@@ -774,7 +770,6 @@ static uint8_t wid_server_join_port_receive_input (widp w, const SDL_KEYSYM *key
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_server_join_hide();
-            wid_server_create_hide();
             wid_intro_visible();
             return (true);
         default:
@@ -970,20 +965,48 @@ static void wid_server_join_create (uint8_t redo)
         }
 
         widp w = wid_server_join_window = wid_new_square_window("wid server");
-        fpoint tl = { 0.0, 0.0 };
-        fpoint br = { 1.0, 0.76 };
+
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {1.0, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
 
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
-        color c = WHITE;
+        color c = BLACK;
         wid_set_color(w, WID_COLOR_BG, c);
-        wid_set_tex(w, 0, "title2");
+//        wid_set_tex(w, 0, "title2");
 
+        c = BLACK;
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
+        wid_set_bevel(w, 4);
         wid_set_on_key_down(w, wid_server_join_key_event);
+
         wid_set_on_mouse_motion(w, wid_server_join_receive_mouse_motion);
+    }
+
+    {
+        widp w = wid_new_container(wid_server_join_window, "bg");
+
+        float f = (1024.0 / 680.0);
+
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 1.0, f };
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_tex(w, 0, "title3");
+
+        wid_lower(w);
+
+        color c;
+        c = WHITE;
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
+        wid_set_color(w, WID_COLOR_BG, c);
     }
 
     wid_server_join_window_container =
@@ -997,7 +1020,7 @@ static void wid_server_join_create (uint8_t redo)
     }
 
     {
-        widp w = wid_server_join_container =
+        widp w = wid_server_join_server_list_container =
             wid_new_container(wid_server_join_window_container,
                               "wid settings container");
 
@@ -1071,7 +1094,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_server_join_container,
+            widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
 
             fpoint tl = {width_at, 0.0};
@@ -1144,7 +1167,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_server_join_container,
+            widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
 
             fpoint tl = {width_at, 0.0};
@@ -1220,7 +1243,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_server_join_container,
+            widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
 
             fpoint tl = {width_at, 0.0};
@@ -1296,7 +1319,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_server_join_container,
+            widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
 
             fpoint tl = {width_at, 0.0};
@@ -1370,7 +1393,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            widp w = wid_new_square_button(wid_server_join_container,
+            widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server quality");
 
             fpoint tl = {width_at, 0.0};
@@ -1424,7 +1447,7 @@ static void wid_server_join_create (uint8_t redo)
 
             socketp sp = socket_find(s->ip, SOCKET_CONNECT);
 
-            widp w = wid_new_rounded_small_button(wid_server_join_container,
+            widp w = wid_new_rounded_small_button(wid_server_join_server_list_container,
                                            "server remove");
 
             fpoint tl = {width_at, 0.0};
@@ -1480,7 +1503,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            widp w = wid_new_rounded_small_button(wid_server_join_container,
+            widp w = wid_new_rounded_small_button(wid_server_join_server_list_container,
                                            "server join");
 
             fpoint tl = {width_at, 0.0};
@@ -1533,19 +1556,36 @@ static void wid_server_join_create (uint8_t redo)
     }
 
     {
-        fpoint tl = {0.5, 0.90};
-        fpoint br = {0.69, 0.99};
+        fpoint tl = {0.7, 0.95};
+        fpoint br = {0.9, 1.0};
 
-        widp w = wid_new_rounded_small_button(wid_server_join_window_container,
-                                              "wid server add");
+        widp w = wid_new_square_button(wid_server_join_window_container,
+                                       "wid server add");
 
         wid_set_tl_br_pct(w, tl, br);
 
-        wid_set_text(w, "Add server");
-        wid_set_font(w, small_font);
+        wid_set_text(w, "Add a server");
+        wid_set_no_shape(w);
+
+        if (!remote_servers || !tree_root_size(remote_servers)) {
+            wid_fade_in_out(w, 1000, 1000, false /* fade out first */);
+        }
+CON("%d",tree_root_size(remote_servers));
+
+        wid_set_font(w, med_font);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
         wid_set_color(w, WID_COLOR_BG, BLACK);
 
+        color c = WHITE;
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        c = RED;
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
         wid_set_text_outline(w, true);
         wid_raise(w);
 
@@ -1554,7 +1594,7 @@ static void wid_server_join_create (uint8_t redo)
 
     wid_server_join_container_vert_scroll =
         wid_new_vert_scroll_bar(wid_server_join_window, 
-                                wid_server_join_container);
+                                wid_server_join_server_list_container);
 
     wid_hide(wid_get_parent(wid_server_join_container_vert_scroll), 0);
     wid_hide(wid_server_join_container_vert_scroll, 0);
@@ -1566,11 +1606,11 @@ static void wid_server_join_create (uint8_t redo)
     {
         widp child;
 
-        child = wid_new_window("Go back");
+        child = wid_new_square_button(wid_server_join_window, "Go back");
         wid_set_font(child, small_font);
 
-        fpoint tl = {0.0f, 0.95f};
-        fpoint br = {0.1f, 1.00f};
+        fpoint tl = {0.9f, 0.95f};
+        fpoint br = {1.0f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");

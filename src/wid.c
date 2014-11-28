@@ -8224,37 +8224,37 @@ static void wid_display (widp w,
                                 fixed_width);
             } else if (font == large_font) {
                 ttf_puts_no_fmt(font, text,
-                                x - 4.0f * scaling,
-                                y + 4.0f * scaling, scaling, advance,
+                                x - 3.0f * scaling,
+                                y + 3.0f * scaling, scaling, advance,
                                 fixed_width);
                 ttf_puts_no_fmt(font, text,
-                                x + 4.0f * scaling,
-                                y + 4.0f * scaling, scaling, advance,
+                                x + 3.0f * scaling,
+                                y + 3.0f * scaling, scaling, advance,
                                 fixed_width);
                 ttf_puts_no_fmt(font, text,
-                                x - 4.0f * scaling,
-                                y - 4.0f * scaling, scaling, advance,
+                                x - 3.0f * scaling,
+                                y - 3.0f * scaling, scaling, advance,
                                 fixed_width);
                 ttf_puts_no_fmt(font, text,
-                                x + 4.0f * scaling,
-                                y - 4.0f * scaling, scaling, advance,
+                                x + 3.0f * scaling,
+                                y - 3.0f * scaling, scaling, advance,
                                 fixed_width);
             } else if (font == vlarge_font) {
                 ttf_puts_no_fmt(font, text,
-                                x - 4.0f * scaling,
-                                y + 4.0f * scaling, scaling, advance,
+                                x - 3.0f * scaling,
+                                y + 3.0f * scaling, scaling, advance,
                                 fixed_width);
                 ttf_puts_no_fmt(font, text,
-                                x + 4.0f * scaling,
-                                y + 4.0f * scaling, scaling, advance,
+                                x + 3.0f * scaling,
+                                y + 3.0f * scaling, scaling, advance,
                                 fixed_width);
                 ttf_puts_no_fmt(font, text,
-                                x - 4.0f * scaling,
-                                y - 4.0f * scaling, scaling, advance,
+                                x - 3.0f * scaling,
+                                y - 3.0f * scaling, scaling, advance,
                                 fixed_width);
                 ttf_puts_no_fmt(font, text,
-                                x + 4.0f * scaling,
-                                y - 4.0f * scaling, scaling, advance,
+                                x + 3.0f * scaling,
+                                y - 3.0f * scaling, scaling, advance,
                                 fixed_width);
             } else {
                 DIE("unhandled text outline case");
