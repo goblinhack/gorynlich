@@ -573,7 +573,8 @@ static void wid_server_create_create (uint8_t redo)
         return;
     }
 
-    widp w = wid_server_create_window = wid_new_square_window("wid server");
+    widp w = wid_server_create_window = 
+                    wid_new_square_window("wid server create");
 
     fpoint tl = {0.5, 0.8};
     fpoint br = {0.99, 1.0};

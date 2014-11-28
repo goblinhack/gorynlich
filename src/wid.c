@@ -5815,7 +5815,9 @@ static widp wid_mouse_up_handler_at (widp w, int32_t x, int32_t y, uint8_t stric
 static widp wid_mouse_motion_handler_at (widp w, int32_t x, int32_t y,
                                          int32_t relx, int32_t rely,
                                          int32_t wheelx, int32_t wheely,
-                                         uint8_t strict)
+                                         uint8_t strict,
+                                         int depth,
+                                         int debug)
 {
     widp child;
 
@@ -5824,6 +5826,9 @@ static widp wid_mouse_motion_handler_at (widp w, int32_t x, int32_t y,
     }
 
     if (wid_ignore_for_events(w)) {
+        /*
+         * Fading in/out ?
+         */
         return (0);
     }
 
@@ -5848,7 +5853,9 @@ static widp wid_mouse_motion_handler_at (widp w, int32_t x, int32_t y,
                 wid_mouse_motion_handler_at(child, x, y,
                                             relx, rely,
                                             wheelx, wheely,
-                                            true /* strict */);
+                                            true /* strict */,
+                                            depth + 2,
+                                            debug);
         if (closer_match) {
             return (closer_match);
         }
@@ -6224,7 +6231,9 @@ static widp wid_mouse_motion_handler (int32_t x, int32_t y,
     w = wid_mouse_motion_handler_at(wid_focus, x, y,
                                     relx, rely,
                                     wheelx, wheely,
-                                    true /* strict */);
+                                    true /* strict */,
+                                    0 /* depth */,
+                                    0 /* debug */);
     if (w) {
         return (w);
     }
@@ -6232,7 +6241,9 @@ static widp wid_mouse_motion_handler (int32_t x, int32_t y,
     w = wid_mouse_motion_handler_at(wid_over, x, y,
                                     relx, rely,
                                     wheelx, wheely,
-                                    true /* strict */);
+                                    true /* strict */,
+                                    0 /* depth */,
+                                    0 /* debug */);
     if (w) {
         return (w);
     }
@@ -6248,7 +6259,9 @@ static widp wid_mouse_motion_handler (int32_t x, int32_t y,
         w = wid_mouse_motion_handler_at(w, x, y,
                                         relx, rely,
                                         wheelx, wheely,
-                                        true /* strict */);
+                                        true /* strict */,
+                                        0 /* depth */,
+                                        0 /* debug */);
         if (!w) {
             continue;
         }
@@ -6267,7 +6280,9 @@ static widp wid_mouse_motion_handler (int32_t x, int32_t y,
         w = wid_mouse_motion_handler_at(w, x, y,
                                         relx, rely,
                                         wheelx, wheely,
-                                        false /* strict */);
+                                        false /* strict */,
+                                        0 /* depth */,
+                                        0 /* debug */);
         if (!w) {
             continue;
         }
@@ -8634,8 +8649,13 @@ void wid_fade_in (widp w, uint32_t delay)
     w->timestamp_fading_begin = time_get_time_cached();
     w->timestamp_fading_end = w->timestamp_fading_begin + delay;
     w->fade_out = false;
-    w->fade_in = true;
     w->hidden = false;
+
+    if (delay == 0) {
+        w->fade_in = false;
+    } else {
+        w->fade_in = true;
+    }
 }
 
 void wid_fade_out (widp w, uint32_t delay)
@@ -8644,8 +8664,13 @@ void wid_fade_out (widp w, uint32_t delay)
 
     w->timestamp_fading_begin = time_get_time_cached();
     w->timestamp_fading_end = w->timestamp_fading_begin + delay;
-    w->fade_out = true;
     w->fade_in = false;
+
+    if (delay == 0) {
+        w->fade_out = false;
+    } else {
+        w->fade_out = true;
+    }
 }
 
 void wid_fade_in_out (widp w, uint32_t delay, uint32_t repeat, uint8_t in)
