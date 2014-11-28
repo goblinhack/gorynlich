@@ -873,10 +873,9 @@ static void wid_server_join_display (server *s)
     }
 
     color c = BLACK;
-    c.a = 200;
 
-    wid_server_stats_window = wid_tooltip(s->tooltip, 0.2, 0.65, small_font);
-    wid_move_to_pct(wid_server_stats_window, 0.05, 0.55);
+    wid_server_stats_window = wid_tooltip(s->tooltip, 0.2, 0.8, fixed_font);
+    wid_move_to_pct(wid_server_stats_window, 0.0, 0.65);
     wid_move_stop(wid_server_stats_window);
     wid_set_tex(wid_server_stats_window, 0, 0);
     wid_set_square(wid_server_stats_window);
@@ -906,7 +905,7 @@ static void wid_server_join_display (server *s)
             fpoint tl;
             fpoint br;
 
-            tl.x = dx * (double)i;
+            tl.x = dx * (double)i - 0.1;
             br.x = tl.x + dx;
 
             tl.y = 1.0 - ((double)(sp->latency_rtt[i]) / 300.0);
@@ -926,8 +925,9 @@ static void wid_server_join_display (server *s)
                 c = RED;
             }
 
-            c.a = 200;
+            c.a = 100;
 
+            wid_set_bevel(w, 2);
             wid_set_tl_br_pct(w, tl, br);
             wid_set_color(w, WID_COLOR_BG, c);
             wid_set_color(w, WID_COLOR_TL, c);
@@ -949,6 +949,19 @@ static void wid_server_join_mouse_over_server (widp w)
     server *s = (typeof(s)) wid_get_client_context(w);
 
     wid_server_join_display(s);
+}
+
+static uint8_t wid_server_join_mouse_motion_over_server (
+                                    widp w,
+                                    int32_t x, int32_t y,
+                                    int32_t relx, int32_t rely,
+                                    int32_t wheelx, int32_t wheely)
+{
+    server *s = (typeof(s)) wid_get_client_context(w);
+
+    wid_server_join_display(s);
+
+    return (true);
 }
 
 static void wid_server_join_mouse_over_end_server (widp w)
@@ -975,7 +988,8 @@ static void wid_server_join_create (uint8_t redo)
             return;
         }
 
-        widp w = wid_server_join_window = wid_new_square_window("wid server");
+        widp w = wid_server_join_window = 
+                        wid_new_square_window("wid join main window");
         wid_visible(w, 0);
 
         fpoint tl = {0.0, 0.0};
@@ -1021,7 +1035,7 @@ static void wid_server_join_create (uint8_t redo)
     }
 
     wid_server_join_window_container =
-        wid_new_container(wid_server_join_window, "wid settings container");
+        wid_new_container(wid_server_join_window, "wid server join container");
     wid_visible(wid_server_join_window_container, 0);
 
     {
@@ -1034,7 +1048,7 @@ static void wid_server_join_create (uint8_t redo)
     {
         widp w = wid_server_join_server_list_container =
             wid_new_container(wid_server_join_window_container,
-                              "wid settings container");
+                              "wid server list container");
         wid_visible(w, 0);
 
         fpoint tl = {0.0, 0.15};
@@ -1043,9 +1057,19 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_tl_br_pct(w, tl, br);
     }
 
+    const float width1 = 0.25;
+    const float width2 = 0.20;
+    const float width3 = 0.1;
+    const float width4 = 0.23;
+    const float width5 = 0.1;
+    const float width6 = 0.08;
+    const float width7 = 0.08;
+    float width_at = 0.0;
+    const float line_height = 0.05;
+
     {
         fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 0.1};
+        fpoint br = {1.0, line_height};
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server name");
@@ -1069,17 +1093,8 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_text_outline(w, true);
     }
 
-    const float width1 = 0.25;
-    const float width2 = 0.20;
-    const float width3 = 0.1;
-    const float width4 = 0.23;
-    const float width5 = 0.1;
-    const float width6 = 0.05;
-    const float width7 = 0.07;
-    float width_at = 0.0;
-
     {
-        fpoint tl = {width_at, 0.1};
+        fpoint tl = {width_at, line_height};
         fpoint br = {width_at + width1, 0.15};
 
         widp w = wid_new_container(wid_server_join_window_container,
@@ -1114,9 +1129,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
-            fpoint br = {width_at + width1, 0.1};
+            fpoint br = {width_at + width1, line_height};
 
-            float height = 0.07;
+            float height = 0.08;
 
             wid_server_join_set_color(w, s);
 
@@ -1142,6 +1157,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_on_mouse_down(w, wid_server_join_hostname_mouse_down);
             wid_set_on_key_down(w, wid_server_join_hostname_receive_input);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_motion(w, wid_server_join_mouse_motion_over_server);
             wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
@@ -1152,7 +1168,7 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width1;
 
     {
-        fpoint tl = {width_at, 0.1};
+        fpoint tl = {width_at, line_height};
         fpoint br = {width_at + width2, 0.15};
 
         widp w = wid_new_container(wid_server_join_window_container,
@@ -1187,9 +1203,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
-            fpoint br = {width_at + width2, 0.1};
+            fpoint br = {width_at + width2, line_height};
 
-            float height = 0.07;
+            float height = 0.08;
 
             wid_server_join_set_color(w, s);
 
@@ -1218,6 +1234,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_on_mouse_down(w, wid_server_join_ip_mouse_down);
             wid_set_on_key_down(w, wid_server_join_ip_receive_input);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_motion(w, wid_server_join_mouse_motion_over_server);
             wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
@@ -1228,7 +1245,7 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width2;
 
     {
-        fpoint tl = {width_at, 0.1};
+        fpoint tl = {width_at, line_height};
         fpoint br = {width_at + width3, 0.15};
 
         widp w = wid_new_container(wid_server_join_window_container,
@@ -1263,9 +1280,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
-            fpoint br = {width_at + width3, 0.1};
+            fpoint br = {width_at + width3, line_height};
 
-            float height = 0.07;
+            float height = 0.08;
 
             wid_server_join_set_color(w, s);
 
@@ -1294,6 +1311,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_on_mouse_down(w, wid_server_join_port_mouse_down);
             wid_set_on_key_down(w, wid_server_join_port_receive_input);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_motion(w, wid_server_join_mouse_motion_over_server);
             wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
@@ -1304,7 +1322,7 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width3;
 
     {
-        fpoint tl = {width_at, 0.1};
+        fpoint tl = {width_at, line_height};
         fpoint br = {width_at + width4, 0.15};
 
         widp w = wid_new_container(wid_server_join_window_container,
@@ -1339,9 +1357,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
-            fpoint br = {width_at + width4, 0.1};
+            fpoint br = {width_at + width4, line_height};
 
-            float height = 0.07;
+            float height = 0.08;
 
             wid_server_join_set_color(w, s);
 
@@ -1367,6 +1385,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_font(w, small_font);
             wid_set_text_lhs(w, true);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_motion(w, wid_server_join_mouse_motion_over_server);
             wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
@@ -1377,7 +1396,7 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width4;
 
     {
-        fpoint tl = {width_at, 0.1};
+        fpoint tl = {width_at, line_height};
         fpoint br = {width_at + width5, 0.15};
 
         widp w = wid_new_container(wid_server_join_window_container,
@@ -1413,9 +1432,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
-            fpoint br = {width_at + width5, 0.1};
+            fpoint br = {width_at + width5, line_height};
 
-            float height = 0.07;
+            float height = 0.08;
 
             wid_server_join_set_color(w, s);
 
@@ -1442,6 +1461,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_font(w, small_font);
             wid_set_text_centerx(w, true);
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_motion(w, wid_server_join_mouse_motion_over_server);
             wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
@@ -1462,14 +1482,26 @@ static void wid_server_join_create (uint8_t redo)
 
             socketp sp = socket_find(s->ip, SOCKET_CONNECT);
 
+            if (sp && (sp == client_joined_server)) {
+                /*
+                 * Ignore
+                 */
+                continue;
+            } else {
+                if (!s->auto_add) {
+                } else {
+                    continue;
+                }
+            }
+
             widp w = wid_new_rounded_small_button(wid_server_join_server_list_container,
                                            "server remove");
             wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
-            fpoint br = {width_at + width6, 0.1};
+            fpoint br = {width_at + width6, line_height};
 
-            float height = 0.07;
+            float height = 0.08;
 
             wid_set_color(w, WID_COLOR_TEXT, RED);
 
@@ -1478,16 +1510,11 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            if (sp && (sp == client_joined_server)) {
-                wid_set_text(w, "-");
-            } else {
-                wid_set_on_mouse_down(w, wid_server_join_delete);
-                wid_set_text(w, "Del");
-                wid_set_tooltip(w, "Remove this server from the list", 0 /* font */);
-            }
-
             wid_set_font(w, small_font);
             color c = DARKSLATEBLUE;
+
+            wid_set_text(w, "Delete");
+            wid_set_on_mouse_down(w, wid_server_join_delete);
 
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_BG, c);
@@ -1500,6 +1527,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text_outline(w, true);
 
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_motion(w, wid_server_join_mouse_motion_over_server);
             wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 
@@ -1523,9 +1551,9 @@ static void wid_server_join_create (uint8_t redo)
             wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
-            fpoint br = {width_at + width7, 0.1};
+            fpoint br = {width_at + width7, line_height};
 
-            float height = 0.07;
+            float height = 0.08;
 
             if (s->quality > 0) {
                 wid_set_color(w, WID_COLOR_TEXT, GREEN);
@@ -1541,11 +1569,9 @@ static void wid_server_join_create (uint8_t redo)
             socketp sp = socket_find(s->ip, SOCKET_CONNECT);
             if (sp && (sp == client_joined_server)) {
                 wid_set_text(w, "Leave");
-                wid_set_tooltip(w, "Exit this game", 0 /* font */);
                 wid_set_on_mouse_down(w, wid_server_join_leave);
             } else {
                 wid_set_text(w, "Join");
-                wid_set_tooltip(w, "Try to join the game on this server", 0 /* font */);
                 wid_set_on_mouse_down(w, wid_server_join);
             }
 
@@ -1562,6 +1588,7 @@ static void wid_server_join_create (uint8_t redo)
             wid_set_text_outline(w, true);
 
             wid_set_on_mouse_over_begin(w, wid_server_join_mouse_over_server);
+            wid_set_on_mouse_motion(w, wid_server_join_mouse_motion_over_server);
             wid_set_on_mouse_over_end(w, wid_server_join_mouse_over_end_server);
             wid_set_client_context(w, s);
 

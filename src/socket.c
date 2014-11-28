@@ -28,7 +28,7 @@
 
 tree_rootp sockets;
 
-uint8_t debug_socket_ping_enabled = 0;
+uint8_t debug_socket_ping_enabled = 1;
 uint8_t debug_socket_connect_enabled = 0;
 uint8_t debug_socket_players_enabled = 0;
 
