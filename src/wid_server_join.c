@@ -149,7 +149,7 @@ static void server_add (const server *s_in)
 static void server_remove (server *s)
 {
     if (wid_server_stats_window) {
-        wid_destroy(&wid_server_stats_window);
+        wid_destroy_nodelay(&wid_server_stats_window);
         wid_server_stats_window_server = 0;
     }
 
@@ -227,7 +227,7 @@ void wid_server_join_hide (void)
     wid_server_join_destroy();
 
     if (wid_server_stats_window) {
-        wid_destroy(&wid_server_stats_window);
+        wid_destroy_nodelay(&wid_server_stats_window);
     }
 
     /*
@@ -865,7 +865,7 @@ static void wid_server_join_display (server *s)
     wid_server_stats_window_server = s;
 
     if (wid_server_stats_window) {
-        wid_destroy(&wid_server_stats_window);
+        wid_destroy_nodelay(&wid_server_stats_window);
     }
 
     if (!s->tooltip) {
@@ -896,6 +896,7 @@ static void wid_server_join_display (server *s)
             double dx = 1.0 / (double)SOCKET_PING_SEQ_NO_RANGE;
             
             widp w = wid_new_square_button(wid_server_stats_window, "bar");
+            wid_visible(w, 0);
 
             fpoint tl;
             fpoint br;
@@ -952,7 +953,7 @@ static void wid_server_join_create (uint8_t redo)
     wid_server_stats_window_server = 0;
 
     if (redo) {
-        wid_destroy(&wid_server_join_window_container);
+        wid_destroy_nodelay(&wid_server_join_window_container);
         if (wid_server_join_container_vert_scroll) {
             scroll_delta = 
                 wid_get_tl_y(wid_get_parent(wid_server_join_container_vert_scroll)) -
@@ -965,6 +966,7 @@ static void wid_server_join_create (uint8_t redo)
         }
 
         widp w = wid_server_join_window = wid_new_square_window("wid server");
+        wid_visible(w, 0);
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {1.0, 1.0};
@@ -989,6 +991,7 @@ static void wid_server_join_create (uint8_t redo)
 
     {
         widp w = wid_new_container(wid_server_join_window, "bg");
+        wid_visible(w, 0);
 
         float f = (1024.0 / 680.0);
 
@@ -1011,6 +1014,7 @@ static void wid_server_join_create (uint8_t redo)
 
     wid_server_join_window_container =
         wid_new_container(wid_server_join_window, "wid settings container");
+    wid_visible(wid_server_join_window_container, 0);
 
     {
         fpoint tl = {0.0, 0.0};
@@ -1023,6 +1027,7 @@ static void wid_server_join_create (uint8_t redo)
         widp w = wid_server_join_server_list_container =
             wid_new_container(wid_server_join_window_container,
                               "wid settings container");
+        wid_visible(w, 0);
 
         fpoint tl = {0.0, 0.15};
         fpoint br = {1.0, 0.9};
@@ -1036,6 +1041,7 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server name");
+        wid_visible(w, 0);
 
         wid_set_tooltip(w, "Click on a server to edit it", 0 /* font */);
         wid_set_tl_br_pct(w, tl, br);
@@ -1070,6 +1076,7 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server hostname");
+        wid_visible(w, 0);
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1096,6 +1103,7 @@ static void wid_server_join_create (uint8_t redo)
 
             widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
+            wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width1, 0.1};
@@ -1143,6 +1151,7 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server ip");
+        wid_visible(w, 0);
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1169,6 +1178,7 @@ static void wid_server_join_create (uint8_t redo)
 
             widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
+            wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width2, 0.1};
@@ -1219,6 +1229,7 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server port");
+        wid_visible(w, 0);
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1245,6 +1256,7 @@ static void wid_server_join_create (uint8_t redo)
 
             widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
+            wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width3, 0.1};
@@ -1295,6 +1307,7 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server name");
+        wid_visible(w, 0);
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1321,6 +1334,7 @@ static void wid_server_join_create (uint8_t redo)
 
             widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server name");
+            wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width4, 0.1};
@@ -1368,6 +1382,7 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server quality");
+        wid_visible(w, 0);
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1395,6 +1410,7 @@ static void wid_server_join_create (uint8_t redo)
 
             widp w = wid_new_square_button(wid_server_join_server_list_container,
                                            "server quality");
+            wid_visible(w, 0);
 
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width5, 0.1};
@@ -1561,6 +1577,7 @@ static void wid_server_join_create (uint8_t redo)
 
         widp w = wid_new_square_button(wid_server_join_window_container,
                                        "wid server add");
+        wid_visible(w, 0);
 
         wid_set_tl_br_pct(w, tl, br);
 
@@ -1604,6 +1621,8 @@ static void wid_server_join_create (uint8_t redo)
         widp child;
 
         child = wid_new_square_button(wid_server_join_window, "Go back");
+        wid_visible(child, 0);
+
         wid_set_font(child, small_font);
 
         fpoint tl = {0.9f, 0.95f};
@@ -1681,11 +1700,11 @@ static void wid_server_join_create (uint8_t redo)
 void wid_server_join_destroy (void)
 {
     if (wid_server_join_window) {
-        wid_destroy(&wid_server_join_window);
+        wid_destroy_nodelay(&wid_server_join_window);
     }
 
     if (wid_server_join_window_go_back_button) {
-        wid_destroy(&wid_server_join_window_go_back_button);
+        wid_destroy_nodelay(&wid_server_join_window_go_back_button);
     }
 
     user_is_typing = false;
