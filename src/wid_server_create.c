@@ -234,8 +234,6 @@ static uint8_t wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t
 
 static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 {
-    on_server = true;
-
     server_stop();
 
     server *s;
@@ -268,8 +266,6 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 static uint8_t wid_server_stop (widp w, int32_t x, int32_t y, uint32_t button)
 {
     server_stop();
-
-    on_server = false;
 
     wid_server_create_redo();
 

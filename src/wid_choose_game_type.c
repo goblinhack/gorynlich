@@ -126,22 +126,65 @@ static void wid_choose_game_type_single_play_selected_cb (void *context)
     wid_choose_player_visible();
 }
 
-static void wid_choose_game_type_multi_play_selected_cb (void *context)
+static void wid_choose_game_type_start_server_selected_cb (void *context)
 {
     wid_server_create_selected();
-    wid_server_join_selected();
 }
 
-static void wid_choose_game_type_multi_play_selected (void)
+static void wid_choose_game_type_start_server_selected (void)
 {
-    LOG("Multiplayer selected");
+    LOG("Start server selected");
 
     action_timer_create(
             &wid_timers,
-            (action_timer_callback)wid_choose_game_type_multi_play_selected_cb,
+            (action_timer_callback)wid_choose_game_type_start_server_selected_cb,
             (action_timer_destroy_callback)0,
             0, /* context */
             "start game",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_choose_game_type_hide();
+}
+
+static void wid_choose_game_type_stop_server_selected_cb (void *context)
+{
+    wid_server_create_selected();
+    wid_choose_game_type_visible();
+    wid_choose_game_type_hide();
+}
+
+static void wid_choose_game_type_stop_server_selected (void)
+{
+    LOG("Stop server selected");
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_choose_game_type_stop_server_selected_cb,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "stop game",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_choose_game_type_hide();
+}
+
+static void wid_choose_game_type_join_game_selected_cb (void *context)
+{
+    wid_server_join_selected();
+}
+
+static void wid_choose_game_type_join_game_selected (void)
+{
+    LOG("Join game selected");
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_choose_game_type_join_game_selected_cb,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "Join game",
             intro_effect_delay,
             0 /* jitter */);
 
@@ -172,16 +215,36 @@ static uint8_t wid_choose_game_type_play_mouse_event (widp w, int32_t x, int32_t
     return (true);
 }
 
-static uint8_t wid_choose_game_type_multi_play_mouse_event (widp w, int32_t x, int32_t y,
-                                           uint32_t button)
+static uint8_t 
+wid_choose_game_type_start_server_mouse_event (widp w, int32_t x, int32_t y,
+                                               uint32_t button)
 {
-    wid_choose_game_type_multi_play_selected();
+    wid_choose_game_type_start_server_selected();
 
     return (true);
 }
 
-static uint8_t wid_choose_game_type_go_back_mouse_event (widp w, int32_t x, int32_t y,
-                                               uint32_t button)
+static uint8_t 
+wid_choose_game_type_stop_server_mouse_event (widp w, int32_t x, int32_t y,
+                                              uint32_t button)
+{
+    wid_choose_game_type_stop_server_selected();
+
+    return (true);
+}
+
+static uint8_t 
+wid_choose_game_type_join_game_mouse_event (widp w, int32_t x, int32_t y,
+                                            uint32_t button)
+{
+    wid_choose_game_type_join_game_selected();
+
+    return (true);
+}
+
+static uint8_t 
+wid_choose_game_type_go_back_mouse_event (widp w, int32_t x, int32_t y,
+                                          uint32_t button)
 {
     wid_choose_game_type_hide();
     wid_intro_visible();
@@ -198,7 +261,7 @@ static uint8_t wid_choose_game_type_play_key_event (widp w, const SDL_KEYSYM *ke
             return (true);
 
         case 'm':
-            wid_choose_game_type_multi_play_selected();
+            wid_choose_game_type_start_server_selected();
             return (true);
 
         case SDLK_ESCAPE:
@@ -213,15 +276,10 @@ static uint8_t wid_choose_game_type_play_key_event (widp w, const SDL_KEYSYM *ke
     return (false);
 }
 
-static uint8_t wid_choose_game_type_multi_play_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_choose_game_type_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
         case ' ':
-        case 'm':
-            wid_choose_game_type_multi_play_selected();
-            return (true);
-
-        case 's':
             wid_choose_game_type_play_selected();
             return (true);
 
@@ -304,8 +362,8 @@ static void wid_choose_game_type_create (void)
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.1f, 0.00f};
-        fpoint br = {0.5f, 1.00f};
+        fpoint tl = {0.1f, 0.50f};
+        fpoint br = {0.5f, 0.70f};
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "Single player");
@@ -342,8 +400,14 @@ static void wid_choose_game_type_create (void)
 
         if (server_socket) {
             wid_set_text(child, "Stop server");
+
+            wid_set_on_mouse_down(child, wid_choose_game_type_stop_server_mouse_event);
+            wid_set_on_key_down(child, wid_choose_game_type_key_event);
         } else {
             wid_set_text(child, "Start a server");
+
+            wid_set_on_mouse_down(child, wid_choose_game_type_start_server_mouse_event);
+            wid_set_on_key_down(child, wid_choose_game_type_key_event);
         }
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
@@ -359,9 +423,6 @@ static void wid_choose_game_type_create (void)
 
         wid_set_mode(child, WID_MODE_NORMAL);
         wid_set_text_outline(child, true);
-
-        wid_set_on_mouse_down(child, wid_choose_game_type_multi_play_mouse_event);
-        wid_set_on_key_down(child, wid_choose_game_type_multi_play_key_event);
     }
 
     {
@@ -391,8 +452,8 @@ static void wid_choose_game_type_create (void)
         wid_set_mode(child, WID_MODE_NORMAL);
         wid_set_text_outline(child, true);
 
-        wid_set_on_mouse_down(child, wid_choose_game_type_multi_play_mouse_event);
-        wid_set_on_key_down(child, wid_choose_game_type_multi_play_key_event);
+        wid_set_on_mouse_down(child, wid_choose_game_type_join_game_mouse_event);
+        wid_set_on_key_down(child, wid_choose_game_type_key_event);
     }
 
     {
