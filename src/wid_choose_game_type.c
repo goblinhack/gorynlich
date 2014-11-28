@@ -331,12 +331,12 @@ static void wid_choose_game_type_create (void)
     {
         widp child;
 
-        child = wid_new_square_button(wid_choose_game_type, "play");
+        child = wid_new_square_button(wid_choose_game_type, "start server");
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.5f, 0.30f};
-        fpoint br = {1.0f, 0.50f};
+        fpoint tl = {0.5f, 0.40f};
+        fpoint br = {1.0f, 0.60f};
 
         wid_set_tl_br_pct(child, tl, br);
 
@@ -367,12 +367,12 @@ static void wid_choose_game_type_create (void)
     {
         widp child;
 
-        child = wid_new_square_button(wid_choose_game_type, "play");
+        child = wid_new_square_button(wid_choose_game_type, "join");
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.5f, 0.50f};
-        fpoint br = {1.0f, 0.70f};
+        fpoint tl = {0.5f, 0.60f};
+        fpoint br = {1.0f, 0.80f};
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "Join a game");
