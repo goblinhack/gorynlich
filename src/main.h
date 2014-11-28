@@ -473,6 +473,11 @@ extern uint8_t is_client;
 extern uint8_t is_headless;
 
 /*
+ * main.c
+ */
+extern uint8_t opt_quickstart;
+
+/*
  * Server with no display.
  */
 #define HEADLESS is_headless

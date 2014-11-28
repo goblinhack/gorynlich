@@ -18,6 +18,7 @@
 #include "level.h"
 #include "timer.h"
 #include "glapi.h"
+#include "server.h"
 
 static widp wid_choose_game_type;
 static widp wid_choose_game_type_background;
@@ -307,7 +308,7 @@ static void wid_choose_game_type_create (void)
         fpoint br = {0.5f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Play game");
+        wid_set_text(child, "Single player");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
@@ -334,11 +335,47 @@ static void wid_choose_game_type_create (void)
         wid_set_font(child, large_font);
         wid_set_no_shape(child);
 
-        fpoint tl = {0.5f, 0.00f};
-        fpoint br = {1.0f, 1.00f};
+        fpoint tl = {0.5f, 0.30f};
+        fpoint br = {1.0f, 0.50f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Create or join multiplayer");
+
+        if (server_socket) {
+            wid_set_text(child, "Stop server");
+        } else {
+            wid_set_text(child, "Start a server");
+        }
+
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        color c = ORANGE;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_OVER);
+        c = RED;
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_FOCUS);
+        wid_set_color(child, WID_COLOR_TEXT, c);
+
+        wid_set_mode(child, WID_MODE_NORMAL);
+        wid_set_text_outline(child, true);
+
+        wid_set_on_mouse_down(child, wid_choose_game_type_multi_play_mouse_event);
+        wid_set_on_key_down(child, wid_choose_game_type_multi_play_key_event);
+    }
+
+    {
+        widp child;
+
+        child = wid_new_square_button(wid_choose_game_type, "play");
+        wid_set_font(child, large_font);
+        wid_set_no_shape(child);
+
+        fpoint tl = {0.5f, 0.50f};
+        fpoint br = {1.0f, 0.70f};
+
+        wid_set_tl_br_pct(child, tl, br);
+        wid_set_text(child, "Join a game");
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         color c = ORANGE;
