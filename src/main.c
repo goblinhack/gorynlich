@@ -63,6 +63,7 @@ FILE *LOG_STDOUT;
 FILE *LOG_STDERR;
 
 uint8_t quitting;
+uint8_t opt_quickstart;
 
 void quit (void)
 {
@@ -429,6 +430,10 @@ static void usage (void)
     CON("        --seed        dungeon random seed");
     CON("        -seed");
     CON(" ");
+    CON("        --quickstart  skip the intro");
+    CON("        -quickstart");
+    CON("        -q");
+    CON(" ");
     CON("Written by Neil McGill, goblinhack@gmail.com");
 }
 
@@ -500,6 +505,17 @@ static void parse_args (int32_t argc, char *argv[])
 
             opt_seed = atoi(argv[i + 1]);
             i++;
+            continue;
+        }
+
+        /*
+         * -quickstart
+         */
+        if (!strcasecmp(argv[i], "--quickstart") ||
+            !strcasecmp(argv[i], "-quickstart") ||
+            !strcasecmp(argv[i], "-q")) {
+
+            opt_quickstart = 1;
             continue;
         }
 

@@ -22,70 +22,13 @@ static widp demo_players[MAX_DEMO_PLAYERS];
 static float demo_player_x[MAX_DEMO_PLAYERS];
 static int demo_player_dead[MAX_DEMO_PLAYERS];
 static tpp demo_player_tp[MAX_DEMO_PLAYERS];
-static int demo_player_speed[MAX_DEMO_PLAYERS];
+static double demo_player_speed[MAX_DEMO_PLAYERS];
 
-static float x = -1.0;
-static double y = 0.1;
-static double dy = 0.0005;
-
-static void wid_rock_tick (void)
-{
-    y += dy;
-    x += 0.009;
-
-    static const double wall_start = 0.25;
-    static const double accell_down = 1.11;
-    static const double friction_up = 0.90;
-    static const double elasticity = 0.6;
-
-    if (y > wall_start) {
-        y = wall_start;
-        dy = -dy * elasticity;
-        y += dy;
-
-        int i;
-
-        static int cnt;
-
-        cnt++;
-
-        if (cnt == 2) {
-            for (i = 0; i < demo_player_count; i++) {
-                widp wid = demo_players[i];
-
-                if ((demo_player_x[i] > 0.25) && (demo_player_x[i] < 0.4)) {
-                    tpp tp = tp_find("data/things/blood2");
-                    wid_set_thing_template(wid, tp);
-                    demo_player_dead[i] = true;
-                    wid_set_animate(wid, true);
-                }
-            }
-        }
-
-        if (cnt == 3) {
-            for (i = 0; i < demo_player_count; i++) {
-                widp wid = demo_players[i];
-
-                if ((demo_player_x[i] > 0.9) && (demo_player_x[i] < 1.0)) {
-                    tpp tp = tp_find("data/things/blood2");
-                    wid_set_thing_template(wid, tp);
-                    demo_player_dead[i] = true;
-                    wid_set_animate(wid, true);
-                }
-            }
-        }
-    }
-
-    if (dy < 0) {
-        dy *= friction_up;
-
-        if (dy > -0.0001) {
-            dy = 0.0001;
-        }
-    } else {
-        dy *= accell_down;
-    }
-}
+static double x;
+static double X;
+static double y;
+static double elapsed;
+static const double wall_start = 0.25;
 
 static void wid_intro_demo_buttons_tick (widp wid)
 {
@@ -103,8 +46,9 @@ static void wid_intro_demo_buttons_tick (widp wid)
 
         wid_set_tilename(wid, tilename);
 
-        *x += 0.001 * 
-            (double) (myrand() % (demo_player_speed[index] + tp_get_speed(t)));
+        *x = X + 0.2 + elapsed * 0.000005 * demo_player_speed[index];
+
+        demo_player_x[index] *= 0.95;
 
         wid_set_animate(wid, false);
     }
@@ -142,9 +86,10 @@ static uint8_t wid_intro_demo_buttons_add_tiles (const tree_node *node, void *ar
     };
 
     demo_players[demo_player_count] = child = wid_new_window("player");
+
     demo_player_tp[demo_player_count] = tp;
     demo_player_speed[demo_player_count] = 
-                myrand() % (tp_get_speed(tp) / 2);
+                myrand() % (tp_get_speed(tp) * 8);
 
     wid_set_thing_template(child, tp);
     wid_set_tl_br_pct(child, tl, br);
@@ -160,7 +105,6 @@ int sdl_intro_demo_update (void)
     static widp wid_intro;
     static widp wid_rock;
     static widp wid_wall_floor;
-    static int first = true;
 
     if (!wid_intro) {
         wid_intro = wid_new_window("splash icon");
@@ -222,23 +166,83 @@ int sdl_intro_demo_update (void)
                              1000,
                              10000,
                              0);
-    }
 
-    wid_rock_tick();
-    wid_move_to_pct(wid_rock, x, y);
-
-    if (first) {
-        first = 0;
         tree_walk(thing_templates_create_order,
                   wid_intro_demo_buttons_add_tiles, 0 /* arg */);
     }
 
-    if (x > 1.0) {
+    {
+        static double ts_start;
+        if (!ts_start) {
+            ts_start = time_get_time_cached();
+        }
+
+        elapsed = time_get_time_cached() - ts_start;
+        x = (elapsed / 7000.0);
+
+        static double y = 0;;
+        static const double gravity = 0.05;
+        static double speed = 0.001;
+        static double decel = 1.0 - gravity;
+        static double accel = 1.0 + gravity;
+        static double speed_loss_on_impact = 0.8;
+        static double dir = 1;
+
+        y += speed * dir;
+
+        if (dir < 0) {
+            speed *= decel;
+        } else {
+            speed *= accel;
+        }
+
+        if (speed < 0.001) {
+            dir = -dir;
+            speed = 0.001;
+            y += speed * dir;
+        }
+
+        X = (x - 0.2) * 3.5;
+
+        wid_move_to_pct(wid_rock, X, y);
+
+        if (y > wall_start) {
+            speed *= speed_loss_on_impact;
+
+            dir = -dir;
+
+            int i;
+            for (i = 0; i < demo_player_count; i++) {
+                widp wid = demo_players[i];
+
+                if (wid) {
+                    if ((demo_player_x[i] > X - 0.1) && (demo_player_x[i] < X + 0.2)) {
+                        tpp tp = tp_find("data/things/blood2");
+                        wid_set_thing_template(wid, tp);
+                        demo_player_dead[i] = true;
+                        wid_set_animate(wid, true);
+                        wid_destroy(&demo_players[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    if (opt_quickstart)  {
+        x = 1.0;
+    }
+
+    if (x > 0.6) {
         wid_destroy_nodelay(&wid_intro);
         wid_destroy_nodelay(&wid_wall_floor);
         wid_intro_init();
-        while (demo_player_count-- > 0) {
-            wid_destroy_nodelay(&demo_players[demo_player_count--]);
+
+        int i;
+        for (i = 0; i < demo_player_count; i++) {
+            widp wid = demo_players[i];
+            if (wid) {
+                wid_destroy(&demo_players[i]);
+            }
         }
         return (false);
     }

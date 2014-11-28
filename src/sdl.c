@@ -283,24 +283,6 @@ uint8_t sdl_init (void)
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
      */
 
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-
-#    ifdef ENABLE_VIDEO_SYNC /* { */
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-#    else
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
-#    endif /* } */
-
-#else /* } { */
-
-#    ifdef ENABLE_VIDEO_SYNC /* { */
-        SDL_GL_SetSwapInterval(1);
-#    else
-        SDL_GL_SetSwapInterval(0);
-#    endif /* } */
-
-#endif /* } */
-
     uint32_t video_flags;
 
 #ifndef ENABLE_SDL_WINDOW /* { */
@@ -863,14 +845,33 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
-
-//            SDL_Delay(MAIN_LOOP_DELAY * 4);
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
     }
 
     wid_console_hello();
+
+    /*
+     * Now enable video sync which is slower.
+     */
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+
+#    ifdef ENABLE_VIDEO_SYNC /* { */
+        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+#    else
+        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
+#    endif /* } */
+
+#else /* } { */
+
+#    ifdef ENABLE_VIDEO_SYNC /* { */
+        SDL_GL_SetSwapInterval(1);
+#    else
+        SDL_GL_SetSwapInterval(0);
+#    endif /* } */
+
+#endif /* } */
 
     for (;;) {
         /*

@@ -302,7 +302,7 @@ static double dy;
 static void wid_intro_tick_reset (void)
 {
     y = -0.20;
-    dy = 0.00003;
+    dy = 0.00026;
 }
 
 static void wid_intro_tick (widp wid)
@@ -312,16 +312,16 @@ static void wid_intro_tick (widp wid)
     y += dy;
 
     static const double wall_start = 0.38;
-    static const double accell_down = 1.03;
-    static const double friction_up = 0.97;
-    static const double elasticity = 0.2;
+    static const double accell_down = 1.06;
+    static const double friction_up = 0.9;
+    static const double elasticity = 0.09;
 
     if (y > wall_start) {
         y = wall_start;
         dy = -dy * elasticity;
         y += dy;
 
-        wid_rotate_to_pct_in(wid, 0.1, 1.2, 100, 1);
+        wid_rotate_to_pct_in(wid, 0.1, 1.2, 300, 1);
     }
 
     if (dy < 0) {
