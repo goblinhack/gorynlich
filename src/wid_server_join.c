@@ -970,9 +970,8 @@ static void wid_server_join_create (uint8_t redo)
         }
 
         widp w = wid_server_join_window = wid_new_square_window("wid server");
-
-        fpoint tl = {0.01, 0.0};
-        fpoint br = {0.99, 1.0};
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 1.0, 0.76 };
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
@@ -983,13 +982,7 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_color(w, WID_COLOR_BG, c);
         wid_set_tex(w, 0, "title2");
 
-
-        c = BLACK;
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_set_bevel(w, 4);
         wid_set_on_key_down(w, wid_server_join_key_event);
-
         wid_set_on_mouse_motion(w, wid_server_join_receive_mouse_motion);
     }
 
