@@ -147,7 +147,7 @@ static void server_add (const server *s_in)
     }
 }
 
-static void server_remove (server *s)
+static void server_remove (server *s_in)
 {
     if (wid_server_stats_window) {
         wid_destroy_nodelay(&wid_server_stats_window);
@@ -162,6 +162,7 @@ static void server_remove (server *s)
     /*
      * Remove this socket.
      */
+    server *s;
     TREE_WALK(remote_servers, s) {
         socketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp) {
@@ -170,9 +171,11 @@ static void server_remove (server *s)
         }
     }
 
-    wid_server_join_destroy_internal(s);
-    tree_remove(remote_servers, &s->tree.node);
-    myfree(s);
+    CON("Remove server %s", s_in->host_and_port_str);
+
+    wid_server_join_destroy_internal(s_in);
+    tree_remove(remote_servers, &s_in->tree.node);
+    myfree(s_in);
 }
 
 uint8_t wid_server_join_init (void)
@@ -873,9 +876,10 @@ static void wid_server_join_display (server *s)
     }
 
     color c = BLACK;
+    c.a = 255;
 
     wid_server_stats_window = wid_tooltip(s->tooltip, 0.2, 0.8, fixed_font);
-    wid_move_to_pct(wid_server_stats_window, 0.0, 0.65);
+    wid_move_to_pct(wid_server_stats_window, 0.05, 0.72);
     wid_move_stop(wid_server_stats_window);
     wid_set_tex(wid_server_stats_window, 0, 0);
     wid_set_square(wid_server_stats_window);
@@ -885,8 +889,8 @@ static void wid_server_join_display (server *s)
     wid_set_bevel(wid_server_stats_window, 0);
 
     wid_server_stats_window2 = wid_new_square_window("bars");
-    fpoint tl = {0.5, 0.55};
-    fpoint br = {0.9, 0.92};
+    fpoint tl = {0.5, 0.70};
+    fpoint br = {0.9, 0.95};
     wid_set_tl_br_pct(wid_server_stats_window2, tl, br);
     wid_set_color(wid_server_stats_window2, WID_COLOR_BG, c);
     wid_set_color(wid_server_stats_window2, WID_COLOR_TL, c);
@@ -905,8 +909,9 @@ static void wid_server_join_display (server *s)
             fpoint tl;
             fpoint br;
 
-            tl.x = dx * (double)i - 0.1;
+            tl.x = dx * (double)i;
             br.x = tl.x + dx;
+            tl.x -= 0.01;
 
             tl.y = 1.0 - ((double)(sp->latency_rtt[i]) / 300.0);
             br.y = 1.0;
@@ -914,6 +919,10 @@ static void wid_server_join_display (server *s)
             if (sp->latency_rtt[i] == -1) {
                 continue;
             }
+
+            char *tmp = dynprintf("%d%% ms", sp->latency_rtt[i]);
+            wid_set_tooltip(w, tmp, 0 /* font */);
+            myfree(tmp);
 
             color c;
 
@@ -1057,14 +1066,14 @@ static void wid_server_join_create (uint8_t redo)
         wid_set_tl_br_pct(w, tl, br);
     }
 
-    const float width1 = 0.25;
-    const float width2 = 0.20;
+    const float width1 = 0.20;
+    const float width2 = 0.10;
     const float width3 = 0.1;
     const float width4 = 0.23;
     const float width5 = 0.1;
     const float width6 = 0.08;
     const float width7 = 0.08;
-    float width_at = 0.0;
+    float width_at = 0.05;
     const float line_height = 0.05;
 
     {
@@ -1094,8 +1103,8 @@ static void wid_server_join_create (uint8_t redo)
     }
 
     {
-        fpoint tl = {width_at, line_height};
-        fpoint br = {width_at + width1, 0.15};
+        fpoint tl = {width_at, line_height * 2};
+        fpoint br = {width_at + width1, line_height * 3};
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server hostname");
@@ -1131,7 +1140,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width1, line_height};
 
-            float height = 0.08;
+            float height = line_height;
 
             wid_server_join_set_color(w, s);
 
@@ -1168,8 +1177,8 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width1;
 
     {
-        fpoint tl = {width_at, line_height};
-        fpoint br = {width_at + width2, 0.15};
+        fpoint tl = {width_at, line_height * 2};
+        fpoint br = {width_at + width2, line_height * 3};
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server ip");
@@ -1205,7 +1214,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width2, line_height};
 
-            float height = 0.08;
+            float height = line_height;
 
             wid_server_join_set_color(w, s);
 
@@ -1245,8 +1254,8 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width2;
 
     {
-        fpoint tl = {width_at, line_height};
-        fpoint br = {width_at + width3, 0.15};
+        fpoint tl = {width_at, line_height * 2};
+        fpoint br = {width_at + width3, line_height * 3};
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server port");
@@ -1282,7 +1291,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width3, line_height};
 
-            float height = 0.08;
+            float height = line_height;
 
             wid_server_join_set_color(w, s);
 
@@ -1322,8 +1331,8 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width3;
 
     {
-        fpoint tl = {width_at, line_height};
-        fpoint br = {width_at + width4, 0.15};
+        fpoint tl = {width_at, line_height * 2};
+        fpoint br = {width_at + width4, line_height * 3};
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server name");
@@ -1359,7 +1368,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width4, line_height};
 
-            float height = 0.08;
+            float height = line_height;
 
             wid_server_join_set_color(w, s);
 
@@ -1396,8 +1405,8 @@ static void wid_server_join_create (uint8_t redo)
     width_at += width4;
 
     {
-        fpoint tl = {width_at, line_height};
-        fpoint br = {width_at + width5, 0.15};
+        fpoint tl = {width_at, line_height * 2};
+        fpoint br = {width_at + width5, line_height * 3};
 
         widp w = wid_new_container(wid_server_join_window_container,
                                        "server quality");
@@ -1434,7 +1443,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width5, line_height};
 
-            float height = 0.08;
+            float height = line_height;
 
             wid_server_join_set_color(w, s);
 
@@ -1501,7 +1510,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width6, line_height};
 
-            float height = 0.08;
+            float height = line_height;
 
             wid_set_color(w, WID_COLOR_TEXT, RED);
 
@@ -1553,7 +1562,7 @@ static void wid_server_join_create (uint8_t redo)
             fpoint tl = {width_at, 0.0};
             fpoint br = {width_at + width7, line_height};
 
-            float height = 0.08;
+            float height = line_height;
 
             if (s->quality > 0) {
                 wid_set_color(w, WID_COLOR_TEXT, GREEN);
@@ -1597,8 +1606,8 @@ static void wid_server_join_create (uint8_t redo)
     }
 
     {
-        fpoint tl = {0.7, 0.95};
-        fpoint br = {0.9, 1.0};
+        fpoint tl = {0.0, 0.95};
+        fpoint br = {0.2, 1.0};
 
         widp w = wid_new_square_button(wid_server_join_window_container,
                                        "wid server add");

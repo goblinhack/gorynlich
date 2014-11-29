@@ -257,7 +257,7 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 
     wid_server_create_redo();
 
-    MSG(INFO, "Server started");
+    MSG(POPUP, "Server started");
 
     return (true);
 }
