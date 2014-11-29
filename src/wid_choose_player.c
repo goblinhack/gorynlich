@@ -317,7 +317,7 @@ static void wid_choose_player_create (void)
         wid_raise(child);
         wid_set_do_not_lower(child, true);
 
-        wid_effect_bounce(child);
+        wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
     }
 
     {
