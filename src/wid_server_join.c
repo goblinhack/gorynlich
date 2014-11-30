@@ -1030,7 +1030,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            wid_set_tex(w, 0, "title3");
+            wid_set_tex(w, 0, "title2");
 
             wid_lower(w);
 
