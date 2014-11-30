@@ -10,7 +10,6 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_server_create.h"
-#include "wid_intro.h"
 #include "wid_choose_game_type.h"
 #include "string.h"
 #include "wid_game_map_server.h"
@@ -18,8 +17,8 @@
 #include "socket.h"
 #include "server.h"
 
-#define WID_INTRO_MAX_SETTINGS  5
-#define WID_INTRO_MAX_VAL      30 
+#define WID_SERVER_CREATE_MAX_SETTINGS  5
+#define WID_SERVER_CREATE_MAX_VAL      30 
 
 enum {
     WID_SERVER_CREATE_ROW_SERVER_NAME,
@@ -29,7 +28,7 @@ enum {
     WID_SERVER_CREATE_ROW_INCLUDE_MONSTERS,
 };
 
-static const char *wid_intro_button_col1[WID_INTRO_MAX_SETTINGS] = {
+static const char *wid_server_create_button_col1[WID_SERVER_CREATE_MAX_SETTINGS] = {
     "Server name",
     "Port",
     "Max Players",
@@ -37,7 +36,7 @@ static const char *wid_intro_button_col1[WID_INTRO_MAX_SETTINGS] = {
     "Monsters",
 };
 
-static const char *wid_intro_button_col2[WID_INTRO_MAX_SETTINGS] = {
+static const char *wid_server_create_button_col2[WID_SERVER_CREATE_MAX_SETTINGS] = {
     0,
     "+",
     "+",
@@ -45,7 +44,7 @@ static const char *wid_intro_button_col2[WID_INTRO_MAX_SETTINGS] = {
     0,
 };
 
-static const char *wid_intro_button_col3[WID_INTRO_MAX_SETTINGS] = {
+static const char *wid_server_create_button_col3[WID_SERVER_CREATE_MAX_SETTINGS] = {
     0,
     "-",
     "-",
@@ -53,8 +52,8 @@ static const char *wid_intro_button_col3[WID_INTRO_MAX_SETTINGS] = {
     0,
 };
 
-static const char *wid_intro_button_col4
-                        [WID_INTRO_MAX_SETTINGS][WID_INTRO_MAX_VAL] = {
+static const char *wid_server_create_button_col4
+                        [WID_SERVER_CREATE_MAX_SETTINGS][WID_SERVER_CREATE_MAX_VAL] = {
     { 0 },
     { 0 },
     { 0 },
@@ -62,14 +61,31 @@ static const char *wid_intro_button_col4
     { "Off", "On", 0 },
 };
 
-static uint32_t wid_intro_button_val[WID_INTRO_MAX_SETTINGS];
+static uint8_t wid_server_create_name_mouse_down(widp w, 
+                                                 int32_t x, int32_t y,
+                                                 uint32_t button);
+static uint8_t wid_server_create_port_mouse_down(widp w, 
+                                                 int32_t x, int32_t y,
+                                                 uint32_t button);
+static uint8_t wid_server_create_max_players_mouse_down(widp w, 
+                                                        int32_t x, int32_t y,
+                                                        uint32_t button);
+
+static const on_mouse_down_t wid_server_create_button_mouse_down[WID_SERVER_CREATE_MAX_SETTINGS] = {
+    wid_server_create_name_mouse_down,
+    wid_server_create_port_mouse_down,
+    wid_server_create_max_players_mouse_down,
+    0,
+    0,
+};
+
+static uint32_t wid_server_create_button_val[WID_SERVER_CREATE_MAX_SETTINGS];
+static char wid_server_create_button_sval[WID_SERVER_CREATE_MAX_SETTINGS][MAXSTR];
 
 static widp wid_server_create_window;
 static widp wid_server_create_go_back_button;
 static widp wid_server_create_container;
 static uint8_t wid_server_create_init_done;
-
-static struct config old_global_config;
 
 static void wid_server_create_menu(void);
 static void wid_server_config_changed(void);
@@ -88,14 +104,13 @@ typedef struct server_ {
 } server;
 
 static void wid_server_create_destroy_internal(server *node);
-#if 0
+
 static uint8_t wid_server_create_name_receive_input(widp w,
                                                     const SDL_KEYSYM *key);
 static uint8_t wid_server_create_port_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
 static uint8_t wid_server_create_max_players_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
-#endif
 
 static tree_rootp local_servers;
 
@@ -170,7 +185,6 @@ static void wid_server_local_server_add (const server *s_in)
     }
 }
 
-#if 0
 static void server_remove (server *s)
 {
     if (!local_servers) {
@@ -181,7 +195,6 @@ static void server_remove (server *s)
     tree_remove(local_servers, &s->tree.node);
     myfree(s);
 }
-#endif
 
 uint8_t wid_server_create_init (void)
 {
@@ -309,7 +322,10 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 
     wid_server_create_redo();
 
-    MSG(POPUP, "Server started");
+    MSG(POPUP, "Server successfully started! Woot!");
+
+    wid_server_create_hide();
+    wid_choose_game_type_visible();
 
     return (true);
 }
@@ -348,7 +364,6 @@ static uint8_t wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-#if 0
 static uint8_t wid_server_create_name_mouse_down (widp w, 
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
@@ -584,175 +599,6 @@ static uint8_t wid_server_create_max_players_receive_input (widp w,
      */
     return (wid_receive_input(w, key));
 }
-#endif
-
-#if 0
-    {
-        uint32_t i = 0;
-        server *s;
-
-        TREE_WALK_REVERSE(local_servers, s) {
-            widp w = wid_new_square_button(wid_server_create_container,
-                                           "server name container 2");
-
-            fpoint tl = {width_at, 0.45};
-            fpoint br = {width_at + width1, 0.75};
-
-            wid_server_create_set_color(w, s);
-
-            wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, s->name);
-
-            color c = BLACK;
-
-            c.a = 100;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, RED);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-
-            wid_set_text_outline(w, true);
-            wid_set_font(w, small_font);
-            wid_set_text_lhs(w, true);
-
-            wid_set_on_mouse_down(w, wid_server_create_name_mouse_down);
-            wid_set_client_context(w, s);
-
-            i++;
-        }
-    }
-
-    {
-        uint32_t i = 0;
-        server *s;
-
-        TREE_WALK_REVERSE(local_servers, s) {
-            widp w = wid_new_square_button(wid_server_create_container,
-                                           "server max players container2");
-
-            fpoint tl = {width_at, 0.45};
-            fpoint br = {width_at + width2, 0.75};
-
-            wid_server_create_set_color(w, s);
-
-            wid_set_tl_br_pct(w, tl, br);
-
-            char *tmp = dynprintf("%u", global_config.server_max_players);
-            wid_set_text(w, tmp);
-            myfree(tmp);
-
-            color c = BLACK;
-
-            c.a = 100;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, RED);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-
-            wid_set_text_outline(w, true);
-            wid_set_font(w, small_font);
-            wid_set_text_centerx(w, true);
-
-            wid_set_on_mouse_down(w, wid_server_create_max_players_mouse_down);
-            wid_set_client_context(w, s);
-
-            i++;
-        }
-    }
-
-    {
-        uint32_t i = 0;
-        server *s;
-
-        TREE_WALK_REVERSE(local_servers, s) {
-            widp w = wid_new_square_button(wid_server_create_container,
-                                           "server port container2");
-
-            fpoint tl = {width_at, 0.45};
-            fpoint br = {width_at + width3, 0.75};
-
-            wid_server_create_set_color(w, s);
-
-            wid_set_tl_br_pct(w, tl, br);
-
-            char *tmp = iprawporttodynstr(s->ip);
-            wid_set_text(w, tmp);
-            myfree(tmp);
-
-            color c = BLACK;
-
-            c.a = 100;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, RED);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-
-            wid_set_text_outline(w, true);
-            wid_set_font(w, small_font);
-            wid_set_text_lhs(w, true);
-
-            wid_set_on_mouse_down(w, wid_server_create_port_mouse_down);
-            wid_set_client_context(w, s);
-
-            i++;
-        }
-    }
-
-    {
-        uint32_t i = 0;
-        server *s;
-
-        TREE_WALK_REVERSE(local_servers, s) {
-            widp w = wid_new_rounded_small_button(wid_server_create_container,
-                                                  "server join");
-
-            fpoint tl = {width_at, 0.2};
-            fpoint br = {width_at + width7, 0.7};
-
-            wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-            wid_set_tl_br_pct(w, tl, br);
-
-            socketp sp = socket_find(s->ip, SOCKET_LISTEN);
-            if (sp && (sp == server_socket)) {
-                wid_set_text(w, "Stop");
-                wid_set_tooltip(w, "Stop the server", 0 /* font */);
-                wid_set_on_mouse_down(w, wid_server_stop);
-            } else {
-                wid_set_text(w, "Start");
-                wid_set_tooltip(w, "Start the server", 0 /* font */);
-                wid_set_on_mouse_down(w, wid_server_start);
-            }
-
-            wid_set_font(w, small_font);
-            color c = BLACK;
-
-            c.a = 100;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            c = RED;
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_text_outline(w, true);
-
-            wid_set_client_context(w, s);
-
-            i++;
-        }
-    }
-#endif
 
 void wid_server_create_destroy (void)
 {
@@ -825,13 +671,13 @@ static uint8_t wid_server_create_col2_mouse_event (widp w,
      * Increment.
      */
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
-    int32_t val = wid_intro_button_val[row];
+    int32_t val = wid_server_create_button_val[row];
 
-    if (!wid_intro_button_col4[row][val+1]) {
+    if (!wid_server_create_button_col4[row][val+1]) {
         return (true);
     }
 
-    wid_intro_button_val[row]++;
+    wid_server_create_button_val[row]++;
 
     wid_destroy_nodelay(&wid_server_create_container);
     wid_server_create_menu();
@@ -849,13 +695,13 @@ static uint8_t wid_server_create_col3_mouse_event (widp w,
      * Decrement.
      */
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
-    int32_t val = wid_intro_button_val[row];
+    int32_t val = wid_server_create_button_val[row];
 
     if (!val) {
         return (true);
     }
 
-    wid_intro_button_val[row]--;
+    wid_server_create_button_val[row]--;
 
     wid_destroy_nodelay(&wid_server_create_container);
     wid_server_create_menu();
@@ -874,7 +720,7 @@ static uint8_t wid_server_create_col4_mouse_event (widp w,
      */
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
 
-    wid_intro_button_val[row] = !wid_intro_button_val[row];
+    wid_server_create_button_val[row] = !wid_server_create_button_val[row];
 
     wid_destroy_nodelay(&wid_server_create_container);
     wid_server_create_menu();
@@ -886,7 +732,39 @@ static uint8_t wid_server_create_col4_mouse_event (widp w,
 
 static void wid_server_create_read (void)
 {
-    memcpy(&old_global_config, &global_config, sizeof(old_global_config));
+    server *s;
+
+    TREE_WALK_REVERSE(local_servers, s) {
+
+        strncpy(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_SERVER_NAME],
+                s->name,
+                sizeof(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_SERVER_NAME]));
+
+        {
+            char *tmp = iprawporttodynstr(s->ip);
+            strncpy(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_PORT],
+                    tmp,
+                    sizeof(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_PORT]));
+            myfree(tmp);
+        }
+
+        {
+            char *tmp = dynprintf("%u", global_config.server_max_players);
+            strncpy(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_MAX_PLAYERS],
+                    tmp,
+                    sizeof(wid_server_create_button_sval[WID_SERVER_CREATE_ROW_MAX_PLAYERS]));
+            myfree(tmp);
+        }
+
+        wid_server_create_button_val[WID_SERVER_CREATE_ROW_MAX_PLAYERS] =
+            global_config.server_max_players;
+        wid_server_create_button_val[WID_SERVER_CREATE_ROW_DEATH_MATCH] =
+            0;
+        wid_server_create_button_val[WID_SERVER_CREATE_ROW_INCLUDE_MONSTERS] =
+            0;
+
+        break;
+    }
 }
 
 static void wid_server_config_changed (void)
@@ -938,10 +816,10 @@ static void wid_server_create_menu (void)
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++)
+        for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++)
         {
             widp w = wid_new_square_button(wid_server_create_container,
-                                           wid_intro_button_col1[i]);
+                                           wid_server_create_button_col1[i]);
 
             fpoint tl = {0.05, 0.2};
             fpoint br = {0.48, 0.28};
@@ -952,7 +830,7 @@ static void wid_server_create_menu (void)
             tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, wid_intro_button_col1[i]);
+            wid_set_text(w, wid_server_create_button_col1[i]);
             wid_set_font(w, small_font);
 
             color c = BLACK;
@@ -976,14 +854,14 @@ static void wid_server_create_menu (void)
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
+        for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++) {
 
-            if (!wid_intro_button_col2[i]) {
+            if (!wid_server_create_button_col2[i]) {
                 continue;
             }
 
             widp w = wid_new_square_button(wid_server_create_container,
-                                           wid_intro_button_col2[i]);
+                                           wid_server_create_button_col2[i]);
 
             fpoint tl = {0.49, 0.2};
             fpoint br = {0.595, 0.28};
@@ -994,7 +872,7 @@ static void wid_server_create_menu (void)
             tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, wid_intro_button_col2[i]);
+            wid_set_text(w, wid_server_create_button_col2[i]);
             wid_set_font(w, small_font);
 
             color c = WHITE;
@@ -1021,14 +899,14 @@ static void wid_server_create_menu (void)
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
+        for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++) {
 
-            if (!wid_intro_button_col3[i]) {
+            if (!wid_server_create_button_col3[i]) {
                 continue;
             }
 
             widp w = wid_new_square_button(wid_server_create_container,
-                                           wid_intro_button_col3[i]);
+                                           wid_server_create_button_col3[i]);
 
             fpoint tl = {0.605, 0.2};
             fpoint br = {0.71, 0.28};
@@ -1039,7 +917,7 @@ static void wid_server_create_menu (void)
             tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, wid_intro_button_col3[i]);
+            wid_set_text(w, wid_server_create_button_col3[i]);
             wid_set_font(w, small_font);
 
             color c = WHITE;
@@ -1066,14 +944,14 @@ static void wid_server_create_menu (void)
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
+        for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++) {
 
-            if (!wid_intro_button_col4[i]) {
+            if (!wid_server_create_button_col4[i]) {
                 continue;
             }
 
             widp w = wid_new_square_button(wid_server_create_container,
-                                           wid_intro_button_col3[i]);
+                                           wid_server_create_button_col3[i]);
 
             fpoint tl = {0.72, 0.2};
             fpoint br = {0.95, 0.28};
@@ -1084,10 +962,13 @@ static void wid_server_create_menu (void)
             tl.y += (double)i * height;
 
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w,
-                         wid_intro_button_col4[i][wid_intro_button_val[i]]);
+            if (wid_server_create_button_sval[i][0]) {
+                wid_set_text(w, wid_server_create_button_sval[i]);
+            } else {
+                wid_set_text(w, wid_server_create_button_col4[i][wid_server_create_button_val[i]]);
+            }
             wid_set_font(w, small_font);
-
+ 
             color c = WHITE;
 
             c.a = 200;
@@ -1100,7 +981,12 @@ static void wid_server_create_menu (void)
 
             wid_set_mode(w, WID_MODE_NORMAL);
 
-            wid_set_on_mouse_down(w, wid_server_create_col4_mouse_event);
+            if (wid_server_create_button_mouse_down[i]) {
+                wid_set_on_mouse_down(w, wid_server_create_button_mouse_down[i]);
+            } else {
+                wid_set_on_mouse_down(w, wid_server_create_col4_mouse_event);
+
+            }
             wid_set_client_context(w, (void*)(uintptr_t)i);
             wid_set_bevel(w,0);
 
@@ -1133,6 +1019,41 @@ static void wid_server_create_menu (void)
         wid_set_on_key_down(w, wid_server_create_key_event);
 
         wid_set_tex(w, 0, "button_black");
+    }
+
+    {
+        fpoint tl = {0.0, 0.95};
+        fpoint br = {0.2, 1.0};
+
+        widp w = wid_new_square_button(wid_server_create_container,
+                                       "wid server add");
+        wid_visible(w, 0);
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Start the server");
+        wid_set_no_shape(w);
+
+        wid_fade_in_out(w, 1000, 1000, false /* fade out first */);
+
+        wid_set_font(w, med_font);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_color(w, WID_COLOR_BG, BLACK);
+
+        color c = WHITE;
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        c = RED;
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_TEXT, c);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_text_outline(w, true);
+        wid_raise(w);
+
+        wid_set_on_mouse_down(w, wid_server_start);
     }
 
     wid_raise(wid_server_create_window);
