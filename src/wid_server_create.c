@@ -82,6 +82,7 @@ static const on_mouse_down_t wid_server_create_button_mouse_down[WID_SERVER_CREA
 static uint32_t wid_server_create_button_val[WID_SERVER_CREATE_MAX_SETTINGS];
 static char wid_server_create_button_sval[WID_SERVER_CREATE_MAX_SETTINGS][MAXSTR];
 
+static widp wid_choose_game_type_background;
 static widp wid_server_create_window;
 static widp wid_server_create_go_back_button;
 static widp wid_server_create_container;
@@ -243,6 +244,11 @@ void wid_server_create_hide (void)
     /*
      * Leave server socket open.
      */
+
+    if (wid_choose_game_type_background) {
+        wid_destroy_in(wid_choose_game_type_background, wid_hide_delay * 2);
+        wid_choose_game_type_background= 0;
+    }
 }
 
 void wid_server_create_visible (void)
@@ -322,7 +328,7 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 
     wid_server_create_redo();
 
-    MSG(POPUP, "Server successfully started! Woot!");
+    MSG(POPUP, "Server started! Woot!");
 
     wid_server_create_hide();
     wid_choose_game_type_visible();
@@ -772,6 +778,39 @@ static void wid_server_config_changed (void)
     config_save();
 }
 
+static void wid_choose_game_type_bg_create (void)
+{
+    widp wid;
+
+    if (wid_choose_game_type_background) {
+        return;
+    }
+
+    {
+        wid = wid_choose_game_type_background = wid_new_window("bg");
+
+        float f = (1024.0 / 680.0);
+
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 1.0, f };
+
+        wid_set_tl_br_pct(wid, tl, br);
+
+        wid_set_tex(wid, 0, "title3");
+
+        wid_lower(wid);
+
+        color c;
+        c = WHITE;
+        wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_color(wid, WID_COLOR_TL, c);
+        wid_set_color(wid, WID_COLOR_BR, c);
+        wid_set_color(wid, WID_COLOR_BG, c);
+
+        wid_update(wid);
+    }
+}
+
 static void wid_server_create_menu (void)
 {
     if (!wid_server_create_window) {
@@ -785,7 +824,7 @@ static void wid_server_create_menu (void)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
 
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+        wid_set_tex(w, 0, "title2");
     }
 
     {
@@ -1022,8 +1061,8 @@ static void wid_server_create_menu (void)
     }
 
     {
-        fpoint tl = {0.0, 0.95};
-        fpoint br = {0.2, 1.0};
+        fpoint tl = {0.1, 0.8};
+        fpoint br = {0.45, 0.88};
 
         widp w = wid_new_square_button(wid_server_create_container,
                                        "wid server add");
@@ -1032,9 +1071,6 @@ static void wid_server_create_menu (void)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Start the server");
-        wid_set_no_shape(w);
-
-        wid_fade_in_out(w, 1000, 1000, false /* fade out first */);
 
         wid_set_font(w, med_font);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
@@ -1065,4 +1101,6 @@ static void wid_server_create_menu (void)
 
     wid_move_to_pct_centered(wid_server_create_window, 0.5, 0.5);
     wid_raise(wid_server_create_window);
+
+    wid_choose_game_type_bg_create();
 }
