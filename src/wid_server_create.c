@@ -18,13 +18,61 @@
 #include "socket.h"
 #include "server.h"
 
+#define WID_INTRO_MAX_SETTINGS  5
+#define WID_INTRO_MAX_VAL      30 
+
+enum {
+    WID_SERVER_CREATE_ROW_SERVER_NAME,
+    WID_SERVER_CREATE_ROW_PORT,
+    WID_SERVER_CREATE_ROW_MAX_PLAYERS,
+    WID_SERVER_CREATE_ROW_DEATH_MATCH,
+    WID_SERVER_CREATE_ROW_INCLUDE_MONSTERS,
+};
+
+static const char *wid_intro_button_col1[WID_INTRO_MAX_SETTINGS] = {
+    "Server name",
+    "Port",
+    "Max Players",
+    "Death Match",
+    "Monsters",
+};
+
+static const char *wid_intro_button_col2[WID_INTRO_MAX_SETTINGS] = {
+    0,
+    "+",
+    "+",
+    0,
+    0,
+};
+
+static const char *wid_intro_button_col3[WID_INTRO_MAX_SETTINGS] = {
+    0,
+    "-",
+    "-",
+    0,
+    0,
+};
+
+static const char *wid_intro_button_col4
+                        [WID_INTRO_MAX_SETTINGS][WID_INTRO_MAX_VAL] = {
+    { 0 },
+    { 0 },
+    { 0 },
+    { "Off", "On", 0 },
+    { "Off", "On", 0 },
+};
+
+static uint32_t wid_intro_button_val[WID_INTRO_MAX_SETTINGS];
+
 static widp wid_server_create_window;
 static widp wid_server_create_go_back_button;
 static widp wid_server_create_container;
-static widp wid_server_create_window_container;
 static uint8_t wid_server_create_init_done;
 
-static void wid_server_create_create(uint8_t redo);
+static struct config old_global_config;
+
+static void wid_server_create_menu(void);
+static void wid_server_config_changed(void);
 static void wid_server_create_destroy(void);
 static uint8_t wid_server_load_local_server(void);
 
@@ -40,12 +88,14 @@ typedef struct server_ {
 } server;
 
 static void wid_server_create_destroy_internal(server *node);
+#if 0
 static uint8_t wid_server_create_name_receive_input(widp w,
                                                     const SDL_KEYSYM *key);
 static uint8_t wid_server_create_port_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
 static uint8_t wid_server_create_max_players_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
+#endif
 
 static tree_rootp local_servers;
 
@@ -120,6 +170,7 @@ static void wid_server_local_server_add (const server *s_in)
     }
 }
 
+#if 0
 static void server_remove (server *s)
 {
     if (!local_servers) {
@@ -130,6 +181,7 @@ static void server_remove (server *s)
     tree_remove(local_servers, &s->tree.node);
     myfree(s);
 }
+#endif
 
 uint8_t wid_server_create_init (void)
 {
@@ -182,7 +234,7 @@ void wid_server_create_hide (void)
 
 void wid_server_create_visible (void)
 {
-    wid_server_create_create(false);
+    wid_server_create_menu();
 }
 
 void wid_server_create_redo (void)
@@ -220,7 +272,7 @@ void wid_server_create_redo (void)
     }
 
     wid_server_create_destroy();
-    wid_server_create_create(false);
+    wid_server_create_menu();
 }
 
 static uint8_t wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t button)
@@ -296,25 +348,7 @@ static uint8_t wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static uint8_t wid_server_create_receive_mouse_motion (
-                    widp w,
-                    int32_t x, int32_t y,
-                    int32_t relx, int32_t rely,
-                    int32_t wheelx, int32_t wheely)
-{
-    if (wheelx || wheely) {
-        /*
-         * Allow scrolling.
-         */
-        return (false);
-    }
-
-    /*
-     * Block moving the window.
-     */
-    return (true);
-}
-
+#if 0
 static uint8_t wid_server_create_name_mouse_down (widp w, 
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
@@ -550,125 +584,9 @@ static uint8_t wid_server_create_max_players_receive_input (widp w,
      */
     return (wid_receive_input(w, key));
 }
+#endif
 
-static void wid_server_create_set_color (widp w, server *s)
-{
-    socketp sp = socket_find(s->ip, SOCKET_LISTEN);
-    if (sp && (sp == server_socket)) {
-        wid_set_color(w, WID_COLOR_TEXT, GREEN);
-    } else {
-        wid_set_color(w, WID_COLOR_TEXT, GRAY);
-    }
-
-    if (s->tooltip) {
-        wid_set_tooltip(w, s->tooltip, fixed_font);
-    } else {
-        wid_set_tooltip(w, "Cick to edit", 0 /* font */);
-    }
-}
-
-static void wid_server_create_create (uint8_t redo)
-{
-    if (wid_server_create_window) {
-        return;
-    }
-
-    widp w = wid_server_create_window = 
-                    wid_new_square_window("wid server create");
-
-    fpoint tl = {0.5, 0.8};
-    fpoint br = {0.99, 1.0};
-
-    wid_set_tl_br_pct(w, tl, br);
-    wid_set_font(w, small_font);
-
-    wid_set_color(w, WID_COLOR_TEXT, WHITE);
-    wid_set_color(w, WID_COLOR_BG, BLACK);
-    wid_set_color(w, WID_COLOR_TL, STEELBLUE);
-    wid_set_color(w, WID_COLOR_BR, STEELBLUE);
-
-    wid_set_on_key_down(w, wid_server_create_key_event);
-
-    wid_set_on_mouse_motion(w, wid_server_create_receive_mouse_motion);
-
-    wid_server_create_window_container =
-        wid_new_container(wid_server_create_window, "wid settings container");
-
-    {
-        fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 1.0};
-
-        wid_set_tl_br_pct(wid_server_create_window_container, tl, br);
-    }
-
-    {
-        widp w = wid_server_create_container =
-            wid_new_container(wid_server_create_window_container,
-                              "wid settings container");
-
-        fpoint tl = {0.0, 0.15};
-        fpoint br = {1.0, 0.9};
-
-        wid_set_tl_br_pct(w, tl, br);
-    }
-
-    {
-        fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 0.3};
-
-        widp w = wid_new_container(wid_server_create_window_container,
-                                       "server name container");
-        wid_visible(w, 0);
-
-        wid_set_tooltip(w, "Click on a server to edit it", 0 /* font */);
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "Start a server");
-        wid_set_font(w, large_font);
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-        color c = BLACK;
-        c.a = 0;
-        wid_set_color(w, WID_COLOR_TL, c);
-        wid_set_color(w, WID_COLOR_BR, c);
-        wid_set_color(w, WID_COLOR_BG, c);
-
-        wid_set_square(w);
-        wid_set_bevelled(w, true);
-        wid_set_bevel(w, 2);
-        wid_set_text_outline(w, true);
-    }
-
-    const float width1 = 0.45;
-    const float width2 = 0.2;
-    const float width3 = 0.15;
-    const float width4 = 0.0;
-    const float width5 = 0.0;
-    const float width6 = 0.0;
-    const float width7 = 0.2;
-    float width_at = 0.0;
-
-    {
-        fpoint tl = {width_at, 0.3};
-        fpoint br = {width_at + width1, 0.5};
-
-        widp w = wid_new_container(wid_server_create_window_container,
-                                       "server name container");
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "name");
-        wid_set_font(w, small_font);
-
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
-        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
-        wid_set_square(w);
-        wid_set_bevelled(w, true);
-        wid_set_bevel(w, 2);
-        wid_set_text_outline(w, true);
-    }
-
+#if 0
     {
         uint32_t i = 0;
         server *s;
@@ -705,29 +623,6 @@ static void wid_server_create_create (uint8_t redo)
 
             i++;
         }
-    }
-
-    width_at += width1;
-
-    {
-        fpoint tl = {width_at, 0.3};
-        fpoint br = {width_at + width2, 0.5};
-
-        widp w = wid_new_container(wid_server_create_window_container,
-                                       "server max players container");
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "Max players");
-        wid_set_font(w, small_font);
-
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
-        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
-        wid_set_square(w);
-        wid_set_bevelled(w, true);
-        wid_set_bevel(w, 2);
-        wid_set_text_outline(w, true);
     }
 
     {
@@ -771,29 +666,6 @@ static void wid_server_create_create (uint8_t redo)
         }
     }
 
-    width_at += width2;
-
-    {
-        fpoint tl = {width_at, 0.3};
-        fpoint br = {width_at + width3, 0.5};
-
-        widp w = wid_new_container(wid_server_create_window_container,
-                                       "server port container");
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "Port");
-        wid_set_font(w, small_font);
-
-        wid_set_color(w, WID_COLOR_BG, BLACK);
-        wid_set_color(w, WID_COLOR_TL, STEELBLUE);
-        wid_set_color(w, WID_COLOR_BR, STEELBLUE);
-        wid_set_square(w);
-        wid_set_bevelled(w, true);
-        wid_set_bevel(w, 2);
-        wid_set_text_outline(w, true);
-    }
-
     {
         uint32_t i = 0;
         server *s;
@@ -834,14 +706,6 @@ static void wid_server_create_create (uint8_t redo)
             i++;
         }
     }
-
-    width_at += width3;
-
-    width_at += width4;
-
-    width_at += width5;
-
-    width_at += width6;
 
     {
         uint32_t i = 0;
@@ -888,32 +752,7 @@ static void wid_server_create_create (uint8_t redo)
             i++;
         }
     }
-
-    {
-        widp child;
-
-        child = wid_server_create_go_back_button = wid_new_window("Go back");
-        wid_set_font(child, small_font);
-
-        fpoint tl = {0.1f, 0.95f};
-        fpoint br = {0.2f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");
-
-        wid_set_no_shape(child);
-        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
-        wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_server_create_go_back);
-        wid_raise(child);
-        wid_set_do_not_lower(child, true);
-    }
-
-    wid_update(wid_server_create_window);
-}
+#endif
 
 void wid_server_create_destroy (void)
 {
@@ -969,4 +808,340 @@ static uint8_t wid_server_load_local_server (void)
     wid_server_local_server_add(&s);
 
     return (true);
+}
+
+static uint8_t wid_server_create_col1_mouse_event (widp w,
+                                                    int32_t x, int32_t y,
+                                                    uint32_t button)
+{
+    return (true);
+}
+
+static uint8_t wid_server_create_col2_mouse_event (widp w,
+                                                    int32_t x, int32_t y,
+                                                    uint32_t button)
+{
+    /*
+     * Increment.
+     */
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+    int32_t val = wid_intro_button_val[row];
+
+    if (!wid_intro_button_col4[row][val+1]) {
+        return (true);
+    }
+
+    wid_intro_button_val[row]++;
+
+    wid_destroy_nodelay(&wid_server_create_container);
+    wid_server_create_menu();
+
+    wid_server_config_changed();
+
+    return (true);
+}
+
+static uint8_t wid_server_create_col3_mouse_event (widp w,
+                                                    int32_t x, int32_t y,
+                                                    uint32_t button)
+{
+    /*
+     * Decrement.
+     */
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+    int32_t val = wid_intro_button_val[row];
+
+    if (!val) {
+        return (true);
+    }
+
+    wid_intro_button_val[row]--;
+
+    wid_destroy_nodelay(&wid_server_create_container);
+    wid_server_create_menu();
+
+    wid_server_config_changed();
+
+    return (true);
+}
+
+static uint8_t wid_server_create_col4_mouse_event (widp w,
+                                                    int32_t x, int32_t y,
+                                                    uint32_t button)
+{
+    /*
+     * Invert.
+     */
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+
+    wid_intro_button_val[row] = !wid_intro_button_val[row];
+
+    wid_destroy_nodelay(&wid_server_create_container);
+    wid_server_create_menu();
+
+    wid_server_config_changed();
+
+    return (true);
+}
+
+static void wid_server_create_read (void)
+{
+    memcpy(&old_global_config, &global_config, sizeof(old_global_config));
+}
+
+static void wid_server_config_changed (void)
+{
+    config_save();
+}
+
+static void wid_server_create_menu (void)
+{
+    if (!wid_server_create_window) {
+        wid_server_create_read();
+
+        widp w = wid_server_create_window = wid_new_rounded_window("wid settings");
+
+        fpoint tl = {0.2, 0.05};
+        fpoint br = {0.8, 0.95};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_font(w, small_font);
+
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+    }
+
+    {
+        widp w = wid_server_create_container =
+            wid_new_container(wid_server_create_window, "wid settings container");
+
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {1.0, 1.0};
+
+        wid_set_tl_br_pct(w, tl, br);
+    }
+
+    {
+        fpoint tl = {0.0, 0.0};
+        fpoint br = {1.0, 0.15};
+
+        widp w = wid_new_container(wid_server_create_window, "wid settings title");
+
+        wid_set_tl_br_pct(w, tl, br);
+
+        wid_set_text(w, "Server Settings");
+        wid_set_font(w, small_font);
+        wid_set_color(w, WID_COLOR_TEXT, GOLD);
+
+        wid_set_text_outline(w, true);
+    }
+
+    {
+        uint32_t i;
+
+        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++)
+        {
+            widp w = wid_new_square_button(wid_server_create_container,
+                                           wid_intro_button_col1[i]);
+
+            fpoint tl = {0.05, 0.2};
+            fpoint br = {0.48, 0.28};
+
+            double height = 0.08;
+
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_text(w, wid_intro_button_col1[i]);
+            wid_set_font(w, small_font);
+
+            color c = BLACK;
+
+            c.a = 200;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            c.a = 255;
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_on_mouse_down(w, wid_server_create_col1_mouse_event);
+            wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_bevel(w,0);
+        }
+    }
+
+    {
+        uint32_t i;
+
+        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
+
+            if (!wid_intro_button_col2[i]) {
+                continue;
+            }
+
+            widp w = wid_new_square_button(wid_server_create_container,
+                                           wid_intro_button_col2[i]);
+
+            fpoint tl = {0.49, 0.2};
+            fpoint br = {0.595, 0.28};
+
+            double height = 0.08;
+
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_text(w, wid_intro_button_col2[i]);
+            wid_set_font(w, small_font);
+
+            color c = WHITE;
+
+            c.a = 200;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            c.a = 250;
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_on_mouse_down(w, wid_server_create_col2_mouse_event);
+            wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "button_green");
+            wid_set_square(w);
+        }
+    }
+
+    {
+        uint32_t i;
+
+        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
+
+            if (!wid_intro_button_col3[i]) {
+                continue;
+            }
+
+            widp w = wid_new_square_button(wid_server_create_container,
+                                           wid_intro_button_col3[i]);
+
+            fpoint tl = {0.605, 0.2};
+            fpoint br = {0.71, 0.28};
+
+            double height = 0.08;
+
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_text(w, wid_intro_button_col3[i]);
+            wid_set_font(w, small_font);
+
+            color c = WHITE;
+
+            c.a = 200;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            c.a = 250;
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_on_mouse_down(w, wid_server_create_col3_mouse_event);
+            wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "button_red");
+            wid_set_square(w);
+        }
+    }
+
+    {
+        uint32_t i;
+
+        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
+
+            if (!wid_intro_button_col4[i]) {
+                continue;
+            }
+
+            widp w = wid_new_square_button(wid_server_create_container,
+                                           wid_intro_button_col3[i]);
+
+            fpoint tl = {0.72, 0.2};
+            fpoint br = {0.95, 0.28};
+
+            double height = 0.08;
+
+            br.y += (double)i * height;
+            tl.y += (double)i * height;
+
+            wid_set_tl_br_pct(w, tl, br);
+            wid_set_text(w,
+                         wid_intro_button_col4[i][wid_intro_button_val[i]]);
+            wid_set_font(w, small_font);
+
+            color c = WHITE;
+
+            c.a = 200;
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            c.a = 255;
+            wid_set_mode(w, WID_MODE_OVER);
+            wid_set_color(w, WID_COLOR_BG, c);
+
+            wid_set_mode(w, WID_MODE_NORMAL);
+
+            wid_set_on_mouse_down(w, wid_server_create_col4_mouse_event);
+            wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_bevel(w,0);
+
+            wid_set_tex(w, 0, "button_black");
+            wid_set_square(w);
+        }
+    }
+
+    {
+        widp w = wid_new_rounded_small_button(wid_server_create_container,
+                                              "back");
+
+        fpoint tl = {0.70, 0.80};
+        fpoint br = {0.90, 0.90};
+
+        wid_set_tl_br_pct(w, tl, br);
+        wid_set_text(w, "%%tile=button_b$Back");
+        wid_set_font(w, small_font);
+        wid_set_no_shape(w);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+        wid_set_color(w, WID_COLOR_TEXT, GRAY);
+
+        wid_set_mode(w, WID_MODE_OVER);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
+
+        wid_set_mode(w, WID_MODE_NORMAL);
+
+        wid_set_on_mouse_down(w, wid_server_create_go_back);
+        wid_set_on_key_down(w, wid_server_create_key_event);
+
+        wid_set_tex(w, 0, "button_black");
+    }
+
+    wid_raise(wid_server_create_window);
+
+    wid_update(wid_server_create_window);
+
+    wid_set_tex(wid_server_create_window, 0, "window_gothic");
+    wid_set_square(wid_server_create_window);
+
+    wid_move_to_pct_centered(wid_server_create_window, 0.5, 0.5);
+    wid_raise(wid_server_create_window);
 }
