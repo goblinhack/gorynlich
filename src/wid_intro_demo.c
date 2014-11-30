@@ -227,8 +227,9 @@ int sdl_intro_demo_update (void)
             }
         }
     }
-
-    if (opt_quickstart)  {
+   
+    if (opt_quickstart || !global_config.intro_screen) {
+        global_config.intro_screen = 0;
         x = 1.0;
     }
 

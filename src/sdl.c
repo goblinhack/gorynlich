@@ -663,8 +663,6 @@ void sdl_exit (void)
     sdl_main_loop_running = false;
 }
 
-uint8_t fps_enabled = ENABLE_FPS_COUNTER;
-
 /*
  * User has entered a command, run it
  */
@@ -673,12 +671,12 @@ uint8_t fps_enable (tokens_t *tokens, void *context)
     char *s = tokens->args[2];
 
     if (!s || (*s == '\0')) {
-        fps_enabled = true;
+        global_config.fps_counter = true;
     } else {
-        fps_enabled = strtol(s, 0, 10) ? 1 : 0;
+        global_config.fps_counter = strtol(s, 0, 10) ? 1 : 0;
     }
 
-    DBG("FPS mode set to %u", fps_enabled);
+    DBG("FPS mode set to %u", global_config.fps_counter);
 
     return (true);
 }
@@ -725,6 +723,23 @@ void sdl_loop (void)
         glClearColor(BLACK.r, BLACK.g, BLACK.b, 1.0f);
     }
 
+    /*
+     * Turn on syncing for the intro screen.
+     */
+    if (!HEADLESS) {
+
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+
+#else /* } { */
+
+    SDL_GL_SetSwapInterval(1);
+
+#endif /* } */
+
+    }
+
     while (!init_done) {
         /*
          * Clear the screen
@@ -766,10 +781,6 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
-
-#ifndef ENABLE_VIDEO_SYNC
-            SDL_Delay(MAIN_LOOP_DELAY);
-#endif
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
@@ -784,28 +795,6 @@ void sdl_loop (void)
      *
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
      */
-
-    if (!HEADLESS) {
-
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-
-#    ifdef ENABLE_VIDEO_SYNC /* { */
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-#    else
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
-#    endif /* } */
-
-#else /* } { */
-
-#    ifdef ENABLE_VIDEO_SYNC /* { */
-        SDL_GL_SetSwapInterval(1);
-#    else
-        SDL_GL_SetSwapInterval(0);
-#    endif /* } */
-
-#endif /* } */
-
-    }
 
     for (;;) {
         /*
@@ -852,27 +841,27 @@ void sdl_loop (void)
 
     wid_console_hello();
 
-    /*
-     * Now enable video sync which is slower.
-     */
+    if (!HEADLESS) {
+
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
 
-#    ifdef ENABLE_VIDEO_SYNC /* { */
+    if (global_config.display_sync) {
         SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-#    else
+    } else {
         SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
-#    endif /* } */
+    }
 
 #else /* } { */
 
-#    ifdef ENABLE_VIDEO_SYNC /* { */
+    if (global_config.display_sync) {
         SDL_GL_SetSwapInterval(1);
-#    else
+    } else {
         SDL_GL_SetSwapInterval(0);
-#    endif /* } */
+    }
 
 #endif /* } */
 
+    }
     for (;;) {
         /*
          * Clear the screen
@@ -922,9 +911,9 @@ void sdl_loop (void)
                                     SDL_QUITMASK|
                                     SDL_MOUSEEVENTMASK|
                                     /*
-                                        * Seems not to be in SDL 1.2.14
+                                     * Seems not to be in SDL 1.2.14
                                     SDL_MOUSEWHEELMASK|
-                                        */
+                                     */
                                     SDL_MOUSEMOTIONMASK|
                                     SDL_MOUSEBUTTONDOWNMASK|
                                     SDL_MOUSEBUTTONUPMASK|
@@ -1008,7 +997,7 @@ void sdl_loop (void)
                 /*
                  * FPS
                  */
-                if (fps_enabled) {
+                if (global_config.fps_counter) {
                     /*
                      * Update FPS counter.
                      */
@@ -1021,7 +1010,7 @@ void sdl_loop (void)
             /*
              * FPS
              */
-            if (fps_enabled) {
+            if (global_config.fps_counter) {
                 glcolor(RED);
 
                 ttf_puts(small_font, fps_text, 0, 0, 1.0, 1.0, true);
@@ -1040,9 +1029,9 @@ void sdl_loop (void)
             SDL_GL_SwapBuffers();
 #endif /* } */
 
-#ifndef ENABLE_VIDEO_SYNC
-            SDL_Delay(MAIN_LOOP_DELAY);
-#endif
+            if (!global_config.display_sync) {
+                SDL_Delay(MAIN_LOOP_DELAY);
+            }
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
