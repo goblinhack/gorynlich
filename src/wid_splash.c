@@ -60,7 +60,7 @@ void sdl_splashscreen_update (void)
     br.x = ((0.6 / (float)maxsize) * (float)(maxsize - size)) + 0.2;
 
     wid_set_tl_br_pct(wid_splash, tl, br);
-    wid_set_text(wid_splash, "Loading...");
+    wid_set_text(wid_splash, "Glorping...");
     wid_set_font(wid_splash, med_font);
 
     color col = BLACK;

@@ -273,7 +273,6 @@ uint8_t debug_socket_ping_enable(tokensp, void *context);
 uint8_t debug_socket_connect_enable(tokensp, void *context);
 uint8_t debug_socket_players_enable(tokensp, void *context);
 
-extern uint8_t fps_enabled;
 uint8_t fps_enable(tokensp, void *context);
 
 /*
@@ -380,6 +379,9 @@ struct config {
     float yscale;
     int32_t sound_volume;
     int32_t music_volume;
+    int32_t display_sync;
+    int32_t intro_screen;
+    int32_t fps_counter;
     char server_name[SMALL_STRING_LEN_MAX];
     char user_server_name[SMALL_STRING_LEN_MAX];
     uint16_t server_port;
