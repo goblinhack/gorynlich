@@ -7,11 +7,6 @@
 #pragma once
 
 /*
- * We don't always need this. Like on a laptop.
- */
-#define ENABLE_VIDEO_SYNC
-
-/*
  * So we don't hog all the CPU when not in video sync mode
  */
 #define MAIN_LOOP_DELAY             5
@@ -75,11 +70,6 @@
  * Tries to batch calls to draw arrays for more speed.
  */
 #define ENABLE_GL_BULK_DRAW_ARRAYS 
-
-/*
- * Frames per sec counter.
- */
-#define ENABLE_FPS_COUNTER          1
 
 /*
  * Screen sizes.

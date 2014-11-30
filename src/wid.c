@@ -8653,6 +8653,8 @@ void wid_fade_in (widp w, uint32_t delay)
 
     if (delay == 0) {
         w->fade_in = false;
+        w->hidden = false;
+        w->visible = true;
     } else {
         w->fade_in = true;
     }
@@ -8668,6 +8670,8 @@ void wid_fade_out (widp w, uint32_t delay)
 
     if (delay == 0) {
         w->fade_out = false;
+        w->hidden = true;
+        w->visible = false;
     } else {
         w->fade_out = true;
     }

@@ -331,18 +331,13 @@ static void wid_intro_extra_create (void)
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, "%%tile=button_b$Back");
         wid_set_font(w, small_font);
+        wid_set_no_shape(w);
 
-        color c = WHITE;
-
-        c.a = 220;
         wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_color(w, WID_COLOR_BG, c);
+        wid_set_color(w, WID_COLOR_TEXT, GRAY);
 
-        c.a = 255;
         wid_set_mode(w, WID_MODE_OVER);
-        wid_set_color(w, WID_COLOR_BG, c);
-
-        wid_set_mode(w, WID_MODE_FOCUS);
+        wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
         wid_set_mode(w, WID_MODE_NORMAL);
 
@@ -350,8 +345,6 @@ static void wid_intro_extra_create (void)
         wid_set_on_key_down(w, wid_intro_extra_key_event);
 
         wid_set_tex(w, 0, "button_black");
-        wid_set_square(w);
-
     }
 
     wid_raise(wid_intro_extra);
