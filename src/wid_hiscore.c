@@ -102,6 +102,7 @@ static uint8_t wid_hiscore_mouse_event (widp w, int32_t x, int32_t y,
 static uint8_t wid_hiscore_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
+        case 'b':
         case 'q':
         case SDLK_ESCAPE:
             wid_hiscore_hide();

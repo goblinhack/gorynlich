@@ -54,6 +54,7 @@ void wid_intro_about_visible (void)
 static uint8_t wid_intro_about_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
+        case 'b':
         case 'q':
         case SDLK_ESCAPE:
             wid_intro_about_hide();
