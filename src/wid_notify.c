@@ -253,6 +253,13 @@ widp wid_notify (uint32_t level, const char *text)
 {
     widp w;
 
+    /*
+     * If the game has not started, keep quiet. Prefer popups.
+     */
+    if (!player) {
+        return (0);
+    }
+
     if (nelems) {
         wid_notify_elem *e = &elems[nelems - 1];
 

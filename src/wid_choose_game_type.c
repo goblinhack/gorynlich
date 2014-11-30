@@ -50,6 +50,7 @@ void wid_choose_game_type_fini (void)
         if (wid_choose_game_type) {
             wid_destroy(&wid_choose_game_type);
             wid_destroy_in(wid_choose_game_type_background, wid_hide_delay * 2);
+            wid_choose_game_type_background = 0;
         }
     }
 }
@@ -75,6 +76,10 @@ void wid_choose_game_type_hide (void)
     wid_hide(wid_choose_game_type, 0);
     wid_raise(wid_choose_game_type);
     wid_update(wid_choose_game_type);
+
+    wid_destroy(&wid_choose_game_type);
+    wid_destroy_in(wid_choose_game_type_background, wid_hide_delay * 2);
+    wid_choose_game_type_background = 0;
 }
 
 void wid_choose_game_type_visible (void)
@@ -149,9 +154,10 @@ static void wid_choose_game_type_start_server_selected (void)
 
 static void wid_choose_game_type_stop_server_selected_cb (void *context)
 {
-    wid_server_create_selected();
-    wid_choose_game_type_visible();
     wid_choose_game_type_hide();
+    wid_choose_game_type_visible();
+
+    server_stop();
 }
 
 static void wid_choose_game_type_stop_server_selected (void)
