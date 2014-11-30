@@ -8169,110 +8169,42 @@ static void wid_display (widp w,
             glcolor(col_text_outline);
 
 #ifdef ENABLE_LARGE_TEXT_OUTLINE
+            double outline = 0;
+
             if (font == fixed_font) {
-                ttf_puts_no_fmt(font, text,
-                                x - 1.0f * scaling,
-                                y + 1.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 1.0f * scaling,
-                                y + 1.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x - 1.0f * scaling,
-                                y - 1.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 1.0f * scaling,
-                                y - 1.0f * scaling, scaling, advance,
-                                fixed_width);
+                outline = 1.0;
             } else if (font == vsmall_font) {
-                ttf_puts_no_fmt(font, text,
-                                x - 1.0f * scaling,
-                                y + 1.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 1.0f * scaling,
-                                y + 1.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x - 1.0f * scaling,
-                                y - 1.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 1.0f * scaling,
-                                y - 1.0f * scaling, scaling, advance,
-                                fixed_width);
+                outline = 1.0;
             } else if (font == small_font) {
-                ttf_puts_no_fmt(font, text,
-                                x - 2.0f * scaling,
-                                y + 2.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 2.0f * scaling,
-                                y + 2.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x - 2.0f * scaling,
-                                y - 2.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 2.0f * scaling,
-                                y - 2.0f * scaling, scaling, advance,
-                                fixed_width);
+                outline = 1.0;
             } else if (font == med_font) {
-                ttf_puts_no_fmt(font, text,
-                                x - 3.0f * scaling,
-                                y + 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 3.0f * scaling,
-                                y + 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x - 3.0f * scaling,
-                                y - 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 3.0f * scaling,
-                                y - 3.0f * scaling, scaling, advance,
-                                fixed_width);
+                outline = 1.5;
             } else if (font == large_font) {
-                ttf_puts_no_fmt(font, text,
-                                x - 3.0f * scaling,
-                                y + 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 3.0f * scaling,
-                                y + 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x - 3.0f * scaling,
-                                y - 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 3.0f * scaling,
-                                y - 3.0f * scaling, scaling, advance,
-                                fixed_width);
+                outline = 2.0;
             } else if (font == vlarge_font) {
-                ttf_puts_no_fmt(font, text,
-                                x - 3.0f * scaling,
-                                y + 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 3.0f * scaling,
-                                y + 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x - 3.0f * scaling,
-                                y - 3.0f * scaling, scaling, advance,
-                                fixed_width);
-                ttf_puts_no_fmt(font, text,
-                                x + 3.0f * scaling,
-                                y - 3.0f * scaling, scaling, advance,
-                                fixed_width);
+                outline = 3.0;
             } else {
                 DIE("unhandled text outline case");
+            }
+
+            double dx;
+            for (dx = 0.5; dx < outline; dx += 0.5) {
+                ttf_puts_no_fmt(font, text,
+                                x - dx * scaling,
+                                y + dx * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + dx * scaling,
+                                y + dx * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x - dx * scaling,
+                                y - dx * scaling, scaling, advance,
+                                fixed_width);
+                ttf_puts_no_fmt(font, text,
+                                x + dx * scaling,
+                                y - dx * scaling, scaling, advance,
+                                fixed_width);
             }
 #else
             ttf_puts_no_fmt(font, text,

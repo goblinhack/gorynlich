@@ -684,7 +684,6 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
             wid_chat_log(buf + len);
         }
 #endif
-
         term_log(buf + len);
     }
 }
