@@ -174,6 +174,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
                                       "wid tooltip container2");
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, n->line);
+            wid_set_text_outline(child, n->line, true);
             wid_set_font(child, font);
             wid_set_color(child, WID_COLOR_TEXT, WHITE);
 

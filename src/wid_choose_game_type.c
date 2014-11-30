@@ -264,6 +264,8 @@ static uint8_t wid_choose_game_type_play_key_event (widp w, const SDL_KEYSYM *ke
             wid_choose_game_type_start_server_selected();
             return (true);
 
+        case 'b':
+        case 'q':
         case SDLK_ESCAPE:
             wid_choose_game_type_hide();
             wid_intro_visible();
@@ -283,6 +285,8 @@ static uint8_t wid_choose_game_type_key_event (widp w, const SDL_KEYSYM *key)
             wid_choose_game_type_play_selected();
             return (true);
 
+        case 'b':
+        case 'q':
         case SDLK_ESCAPE:
             wid_choose_game_type_hide();
             wid_intro_visible();
