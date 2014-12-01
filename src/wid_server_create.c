@@ -24,8 +24,8 @@ enum {
     WID_SERVER_CREATE_ROW_SERVER_NAME,
     WID_SERVER_CREATE_ROW_PORT,
     WID_SERVER_CREATE_ROW_MAX_PLAYERS,
-    WID_SERVER_CREATE_ROW_DEATH_MATCH,
-    WID_SERVER_CREATE_ROW_INCLUDE_MONSTERS,
+    WID_SERVER_CREATE_ROW_DEATHMATCH,
+    WID_SERVER_CREATE_ROW_DEATHMATCH_MONSTERS,
 };
 
 static const char *wid_server_create_button_col1[WID_SERVER_CREATE_MAX_SETTINGS] = {
@@ -33,7 +33,7 @@ static const char *wid_server_create_button_col1[WID_SERVER_CREATE_MAX_SETTINGS]
     "Port",
     "Max Players",
     "Death Match",
-    "Monsters",
+    "Include Monsters",
 };
 
 static const char *wid_server_create_button_col2[WID_SERVER_CREATE_MAX_SETTINGS] = {
@@ -67,14 +67,11 @@ static uint8_t wid_server_create_name_mouse_down(widp w,
 static uint8_t wid_server_create_port_mouse_down(widp w, 
                                                  int32_t x, int32_t y,
                                                  uint32_t button);
-static uint8_t wid_server_create_max_players_mouse_down(widp w, 
-                                                        int32_t x, int32_t y,
-                                                        uint32_t button);
 
 static const on_mouse_down_t wid_server_create_button_mouse_down[WID_SERVER_CREATE_MAX_SETTINGS] = {
     wid_server_create_name_mouse_down,
     wid_server_create_port_mouse_down,
-    wid_server_create_max_players_mouse_down,
+    0,
     0,
     0,
 };
@@ -109,8 +106,6 @@ static void wid_server_create_destroy_internal(server *node);
 static uint8_t wid_server_create_name_receive_input(widp w,
                                                     const SDL_KEYSYM *key);
 static uint8_t wid_server_create_port_receive_input(widp w, 
-                                                    const SDL_KEYSYM *key);
-static uint8_t wid_server_create_max_players_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
 
 static tree_rootp local_servers;
@@ -253,12 +248,13 @@ void wid_server_create_hide (void)
 
 void wid_server_create_visible (void)
 {
-    wid_server_create_menu();
+    wid_server_create_redo();
 }
 
 void wid_server_create_redo (void)
 {
     if (!wid_server_create_window) {
+        wid_server_create_menu();
         return;
     }
 
@@ -336,15 +332,6 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
     return (true);
 }
 
-static uint8_t wid_server_stop (widp w, int32_t x, int32_t y, uint32_t button)
-{
-    server_stop();
-
-    wid_server_create_redo();
-
-    return (true);
-}
-
 static uint8_t wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch (key->sym) {
@@ -353,14 +340,6 @@ static uint8_t wid_server_create_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_ESCAPE:
             wid_server_create_hide();
             wid_choose_game_type_visible();
-            return (true);
-
-        case ' ':
-            if (server_socket) {
-                wid_server_stop(w, 0, 0, 0);
-            } else {
-                wid_server_start(w, 0, 0, 0);
-            }
             return (true);
 
         default:
@@ -390,16 +369,6 @@ static uint8_t wid_server_create_port_mouse_down (widp w,
     return (true);
 }
 
-static uint8_t wid_server_create_max_players_mouse_down (widp w, 
-                                                         int32_t x, int32_t y,
-                                                         uint32_t button)
-{
-    wid_set_show_cursor(w, true);
-    wid_set_on_key_down(w, wid_server_create_max_players_receive_input);
-
-    return (true);
-}
-
 /*
  * Key down etc...
  */
@@ -417,7 +386,7 @@ static uint8_t wid_server_create_name_receive_input (widp w,
             break;
     }
 
-    s = (typeof(s)) wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context2(w);
     if (!s) {
         return (false);
     }
@@ -477,7 +446,7 @@ static uint8_t wid_server_create_port_receive_input (widp w,
             break;
     }
 
-    s = (typeof(s)) wid_get_client_context(w);
+    s = (typeof(s)) wid_get_client_context2(w);
     if (!s) {
         return (false);
     }
@@ -523,75 +492,6 @@ static uint8_t wid_server_create_port_receive_input (widp w,
             wid_server_local_server_add(&sn);
             wid_server_create_redo();
             myfree(sn.name);
-
-            break;
-        }
-
-        default:
-            break;
-    }
-
-    /*
-     * Feed to the general input handler
-     */
-    return (wid_receive_input(w, key));
-}
-
-/*
- * Key down etc...
- */
-static uint8_t wid_server_create_max_players_receive_input (widp w, 
-                                                     const SDL_KEYSYM *key)
-{
-    server *s;
-
-    switch (key->sym) {
-        case SDLK_ESCAPE:
-            wid_server_create_hide();
-            wid_choose_game_type_visible();
-            return (true);
-        default:
-            break;
-    }
-
-    s = (typeof(s)) wid_get_client_context(w);
-    if (!s) {
-        return (false);
-    }
-
-    switch (key->sym) {
-        case SDLK_RETURN: {
-            /*
-             * Change max_players address.
-             */
-            wid_set_show_cursor(w, false);
-
-            server sn;
-
-            memset(&sn, 0, sizeof(sn));
-
-            const char *max_players_str = wid_get_text(w);
-            int a;
-            int success = sscanf(max_players_str, "%u", &a);
-            if (success != 1) {
-                /*
-                 * Fail
-                 */
-                MSG_BOX("Failed to parse max players number");
-
-                return (true);
-            }
-
-            if (a < 0) {
-                a = 0;
-            }
-
-            if (a > MAX_PLAYERS) {
-                MSG_BOX("Max players limited to %d", global_config.server_max_players);
-            }
-
-            global_config.server_max_players = min(MAX_PLAYERS, a);
-            wid_server_create_redo();
 
             break;
         }
@@ -669,52 +569,70 @@ static uint8_t wid_server_create_col1_mouse_event (widp w,
     return (true);
 }
 
-static uint8_t wid_server_create_col2_mouse_event (widp w,
+static uint8_t wid_server_create_col2_mouse_event_ (widp w,
                                                     int32_t x, int32_t y,
-                                                    uint32_t button)
+                                                    uint32_t button, 
+                                                    int32_t delta)
 {
     /*
      * Increment.
      */
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
-    int32_t val = wid_server_create_button_val[row];
+    server *s = (typeof(s)) wid_get_client_context2(w);
 
-    if (!wid_server_create_button_col4[row][val+1]) {
-        return (true);
+    if (row == WID_SERVER_CREATE_ROW_PORT) {
+        global_config.server_port+= delta;
+
+        server sn;
+
+        memset(&sn, 0, sizeof(sn));
+
+        sn.name = global_config.server_name;
+        sn.port = global_config.server_port;
+
+        strncpy(global_config.server_name, sn.name,
+                sizeof(global_config.server_name));
+        if (s) {
+            server_remove(s);
+        }
+
+        wid_server_local_server_add(&sn);
+    } else if (row == WID_SERVER_CREATE_ROW_MAX_PLAYERS) {
+        if (delta == 1) {
+            if (global_config.server_max_players >= MAX_PLAYERS) {
+                MSG(POPUP, "Max players limited to %d", global_config.server_max_players);
+                delta = 0;
+            }
+        } else {
+            if (global_config.server_max_players <= 1) {
+                MSG(POPUP, "Don't be silly");
+                delta = 0;
+            }
+        }
+
+        global_config.server_max_players += delta;
+    } else {
+        wid_server_create_button_val[row] += delta;
     }
 
-    wid_server_create_button_val[row]++;
-
-    wid_destroy_nodelay(&wid_server_create_container);
-    wid_server_create_menu();
-
     wid_server_config_changed();
+    wid_server_create_redo();
 
     return (true);
+}
+
+static uint8_t wid_server_create_col2_mouse_event (widp w,
+                                                    int32_t x, int32_t y,
+                                                    uint32_t button)
+{
+    return (wid_server_create_col2_mouse_event_(w, x, y, button, 1));
 }
 
 static uint8_t wid_server_create_col3_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
-    /*
-     * Decrement.
-     */
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
-    int32_t val = wid_server_create_button_val[row];
-
-    if (!val) {
-        return (true);
-    }
-
-    wid_server_create_button_val[row]--;
-
-    wid_destroy_nodelay(&wid_server_create_container);
-    wid_server_create_menu();
-
-    wid_server_config_changed();
-
-    return (true);
+    return (wid_server_create_col2_mouse_event_(w, x, y, button, -1));
 }
 
 static uint8_t wid_server_create_col4_mouse_event (widp w,
@@ -729,9 +647,10 @@ static uint8_t wid_server_create_col4_mouse_event (widp w,
     wid_server_create_button_val[row] = !wid_server_create_button_val[row];
 
     wid_destroy_nodelay(&wid_server_create_container);
-    wid_server_create_menu();
 
     wid_server_config_changed();
+
+    wid_server_create_redo();
 
     return (true);
 }
@@ -762,19 +681,22 @@ static void wid_server_create_read (void)
             myfree(tmp);
         }
 
-        wid_server_create_button_val[WID_SERVER_CREATE_ROW_MAX_PLAYERS] =
-            global_config.server_max_players;
-        wid_server_create_button_val[WID_SERVER_CREATE_ROW_DEATH_MATCH] =
-            0;
-        wid_server_create_button_val[WID_SERVER_CREATE_ROW_INCLUDE_MONSTERS] =
-            0;
-
         break;
     }
+
+    wid_server_create_button_val[WID_SERVER_CREATE_ROW_DEATHMATCH] =
+        global_config.deathmatch;
+    wid_server_create_button_val[WID_SERVER_CREATE_ROW_DEATHMATCH_MONSTERS] =
+        global_config.deathmatch_monsters;
 }
 
 static void wid_server_config_changed (void)
 {
+    global_config.deathmatch = 
+        wid_server_create_button_val[WID_SERVER_CREATE_ROW_DEATHMATCH];
+    global_config.deathmatch_monsters = 
+        wid_server_create_button_val[WID_SERVER_CREATE_ROW_DEATHMATCH_MONSTERS];
+
     config_save();
 }
 
@@ -852,11 +774,22 @@ static void wid_server_create_menu (void)
         wid_set_text_outline(w, true);
     }
 
+    server *s = 0;
+    if (local_servers) {
+        TREE_WALK(local_servers, s) {
+            break;
+        }
+    }
+
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++)
-        {
+        for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++) {
+            if ((i == WID_SERVER_CREATE_ROW_DEATHMATCH_MONSTERS) && 
+                !global_config.deathmatch) {
+                continue;
+            }
+
             widp w = wid_new_square_button(wid_server_create_container,
                                            wid_server_create_button_col1[i]);
 
@@ -886,6 +819,7 @@ static void wid_server_create_menu (void)
 
             wid_set_on_mouse_down(w, wid_server_create_col1_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_client_context2(w, (void*)s);
             wid_set_bevel(w,0);
         }
     }
@@ -894,6 +828,10 @@ static void wid_server_create_menu (void)
         uint32_t i;
 
         for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++) {
+            if ((i == WID_SERVER_CREATE_ROW_DEATHMATCH_MONSTERS) && 
+                !global_config.deathmatch) {
+                continue;
+            }
 
             if (!wid_server_create_button_col2[i]) {
                 continue;
@@ -928,6 +866,7 @@ static void wid_server_create_menu (void)
 
             wid_set_on_mouse_down(w, wid_server_create_col2_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_client_context2(w, (void*)s);
             wid_set_bevel(w,0);
 
             wid_set_tex(w, 0, "button_green");
@@ -939,6 +878,10 @@ static void wid_server_create_menu (void)
         uint32_t i;
 
         for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++) {
+            if ((i == WID_SERVER_CREATE_ROW_DEATHMATCH_MONSTERS) && 
+                !global_config.deathmatch) {
+                continue;
+            }
 
             if (!wid_server_create_button_col3[i]) {
                 continue;
@@ -973,6 +916,7 @@ static void wid_server_create_menu (void)
 
             wid_set_on_mouse_down(w, wid_server_create_col3_mouse_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_client_context2(w, (void*)s);
             wid_set_bevel(w,0);
 
             wid_set_tex(w, 0, "button_red");
@@ -984,6 +928,10 @@ static void wid_server_create_menu (void)
         uint32_t i;
 
         for (i=0; i<ARRAY_SIZE(wid_server_create_button_col1); i++) {
+            if ((i == WID_SERVER_CREATE_ROW_DEATHMATCH_MONSTERS) && 
+                !global_config.deathmatch) {
+                continue;
+            }
 
             if (!wid_server_create_button_col4[i]) {
                 continue;
@@ -1027,6 +975,7 @@ static void wid_server_create_menu (void)
 
             }
             wid_set_client_context(w, (void*)(uintptr_t)i);
+            wid_set_client_context2(w, (void*)s);
             wid_set_bevel(w,0);
 
             wid_set_tex(w, 0, "button_black");

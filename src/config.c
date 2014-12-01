@@ -43,6 +43,8 @@ static uint8_t demarshal_config (demarshal_p ctx, struct config *p)
     rc = rc && GET_OPT_NAMED_INT32(ctx, "intro_screen", p->intro_screen);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "display_sync", p->display_sync);
     rc = rc && GET_OPT_NAMED_INT32(ctx, "fps_counter", p->fps_counter);
+    rc = rc && GET_OPT_NAMED_INT32(ctx, "deathmatch", p->deathmatch);
+    rc = rc && GET_OPT_NAMED_INT32(ctx, "deathmatch_monsters", p->deathmatch_monsters);
 
     char *tmp = 0;
     GET_OPT_NAMED_STRING(ctx, "name", tmp);
@@ -92,6 +94,8 @@ static void marshal_config (marshal_p ctx, struct config *p)
     PUT_NAMED_INT32(ctx, "intro_screen", p->intro_screen);
     PUT_NAMED_INT32(ctx, "display_sync", p->display_sync);
     PUT_NAMED_INT32(ctx, "fps_counter", p->fps_counter);
+    PUT_NAMED_INT32(ctx, "deathmatch", p->deathmatch);
+    PUT_NAMED_INT32(ctx, "deathmatch_monsters", p->deathmatch_monsters);
 
     if (p->stats.pname[0]) {
         PUT_NAMED_STRING(ctx, "name", p->stats.pname);
@@ -152,6 +156,8 @@ uint8_t config_load (void)
     global_config.display_sync = 1;
     global_config.intro_screen = 1;
     global_config.fps_counter = 0;
+    global_config.deathmatch = 0;
+    global_config.deathmatch_monsters = 0;
 
     if (!global_config.server_name[0]) {
         strncpy(global_config.server_name, "unnamed-server", 
