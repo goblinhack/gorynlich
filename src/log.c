@@ -670,9 +670,9 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
     if (level == POPUP) {
         widp w;
 
-        w = wid_tooltip_transient(buf + len, 5 * ONESEC);
-        wid_move_to_pct_centered(w, 0.5, -0.5);
-        wid_move_to_pct_centered_in(w, 0.5, 0.1, 2 * ONESEC);
+        w = wid_tooltip_transient(buf + len, 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
         wid_set_no_shape(w);
     } 
     
