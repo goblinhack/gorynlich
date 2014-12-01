@@ -229,6 +229,9 @@ uint32_t wid_get_gllist(widp);
 uint32_t wid_get_mode_gllist(widp);
 uint8_t wid_get_focusable(widp);
 void *wid_get_client_context(widp);
+void *wid_get_client_context2(widp);
+void wid_set_client_context(widp w, void *client_context);
+void wid_set_client_context2(widp w, void *client_context);
 void wid_fade_in(widp, uint32_t delay);
 void wid_fade_out(widp, uint32_t delay);
 void wid_fade_in_out(widp w, uint32_t delay, uint32_t repeat, 
@@ -282,7 +285,6 @@ uint8_t wid_get_flip_horiz(widp);
 uint8_t wid_get_flip_vert(widp);
 void wid_set_bevel(widp, double val);
 void wid_set_bevelled(widp, uint8_t);
-void wid_set_client_context(widp w, void *client_context);
 void wid_set_color(widp, wid_color col, color val);
 void wid_set_cursor(widp, uint32_t val);
 void wid_set_do_not_lower(widp, uint8_t val);
@@ -662,6 +664,7 @@ typedef struct wid_ {
      * Client context
      */
     void *client_context;
+    void *client_context2;
 
     /*
      * Text input

@@ -155,9 +155,8 @@ static void wid_choose_game_type_start_server_selected (void)
 static void wid_choose_game_type_stop_server_selected_cb (void *context)
 {
     wid_choose_game_type_hide();
-    wid_choose_game_type_visible();
-
     server_stop();
+    wid_choose_game_type_visible();
 }
 
 static void wid_choose_game_type_stop_server_selected (void)

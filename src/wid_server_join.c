@@ -171,7 +171,7 @@ static void server_remove (server *s_in)
         }
     }
 
-    CON("Remove server %s", s_in->host_and_port_str);
+    LOG("Remove server %s", s_in->host_and_port_str);
 
     wid_server_join_destroy_internal(s_in);
     tree_remove(remote_servers, &s_in->tree.node);
