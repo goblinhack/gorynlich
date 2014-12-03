@@ -173,7 +173,7 @@ void restart (void)
 
     args[0] = executable;
 
-    execve(executable, args, 0);
+    execve(executable, (const char *const *) args, 0);
 }
 
 void die (void)

@@ -363,7 +363,7 @@ static void demarshal_print_node (tree_demarshal_node *n)
     case MARSHAL_NONE:
         break;
     case MARSHAL_INT:
-        printf("[int] %lld", (long long)n->val.v_int);
+        printf("[int] %d", (int)n->val.v_int);
         break;
     case MARSHAL_FLOAT:
         printf("[float] %f", n->val.v_float);
@@ -402,7 +402,7 @@ static const char *demarshal_node2str (tree_demarshal_node *n)
     case MARSHAL_NONE:
         break;
     case MARSHAL_INT:
-        snprintf(buf, sizeof(buf), "[int] %lld", (long long)n->val.v_int);
+        snprintf(buf, sizeof(buf), "[int] %d", (int)n->val.v_int);
         break;
     case MARSHAL_FLOAT:
         snprintf(buf, sizeof(buf), "[float] %f", n->val.v_float);
