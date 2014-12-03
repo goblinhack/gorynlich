@@ -6,8 +6,10 @@
 
 #include <stdio.h>
 #include <signal.h>
+#ifndef _WIN32
 #include <sys/termios.h>
 #include <sys/ioctl.h>
+#endif
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -34,6 +36,7 @@ int enable_console = 1;
 int enable_console = 0;
 #endif
 
+#ifndef _WIN32
 static void term_core_refresh(void);
 
 int TERM_WIDTH = TERM_MAX_SIZE;
@@ -56,7 +59,9 @@ int term_core_buffer_size;
 
 static uint8_t term_init_done;
 static struct termios term_original_settings;
+#endif
 
+#ifndef _WIN32
 static void term_core_exit (void)
 {
     static uint8_t exitting;
@@ -119,9 +124,11 @@ static void term_core_goto_init (void)
         }
     }
 }
+#endif
 
 uint8_t term_init (void)
 {
+#ifndef _WIN32
     if (!HEADLESS && !enable_console) {
         return (true);
     }
@@ -148,11 +155,13 @@ uint8_t term_init (void)
 
     term_cls_now();
 
+#endif
     return (true);
 }
 
 void term_fini (void)
 {
+#ifndef _WIN32
     FINI_LOG("%s", __FUNCTION__);
 
     if (term_init_done) {
@@ -167,8 +176,10 @@ void term_fini (void)
         printf("\033c");
          */
     }
+#endif
 }
 
+#ifndef _WIN32
 static void term_core_putc (const char c)
 {
     term_core_buffer[term_core_buffer_pos++] = c;
@@ -310,24 +321,32 @@ static inline void term_puts_fgbg (unsigned char fg, unsigned char bg)
 
     fputs((char*)data[(bg & 7) * 8 + (fg & 7)], stdout);
 }
+#endif
 
 void term_core_cursor_show (void)
 {
+#ifndef _WIN32
     term_core_puts("\033[?25h");
+#endif
 }
 
 void term_core_cursor_hide (void)
 {
+#ifndef _WIN32
     term_core_puts("\033[?25l");
+#endif
 }
 
 void term_core_goto (int x, int y)
 {
+#ifndef _WIN32
     term_core_puts(term_core_goto_data[x][y]);
+#endif
 }
 
 void term_core_cls (void)
 {
+#ifndef _WIN32
     term_core_refresh();
 
     //
@@ -336,13 +355,17 @@ void term_core_cls (void)
     term_core_goto(0, 0);
     term_core_puts("\033[2J");
     term_core_refresh();
+#endif
 }
 
 void term_core_bell (void)
 {
+#ifndef _WIN32
     term_core_puts("\007");
+#endif
 }
 
+#ifndef _WIN32
 static void term_put (term_cell *e)
 {
     if (term_cursor_move_only) {
@@ -378,14 +401,18 @@ static void term_put (term_cell *e)
     *o = *e;
     term_x++;
 }
+#endif
 
 void term_cursor_right (void)
 {
+#ifndef _WIN32
     term_x++;
+#endif
 }
 
 void term_putc (const char c)
 {
+#ifndef _WIN32
     term_cell e = {0};
 
     e.c = c; 
@@ -393,19 +420,23 @@ void term_putc (const char c)
     e.bg = term_bg_current;
 
     term_put(&e);
+#endif
 }
 
 void term_puts (const char* s)
 {
+#ifndef _WIN32
     char c;
 
     while ((c = *s++) != '\0') {
         term_putc(c);
     }
+#endif
 }
 
 void term_fill_c (const char c)
 {
+#ifndef _WIN32
     int x, y;
 
     for (x = 0; x < TERM_WIDTH; x++) {
@@ -414,10 +445,12 @@ void term_fill_c (const char c)
             term_cells[x][y].touched = true;
         }
     }
+#endif
 }
 
 void term_scroll (void)
 {
+#ifndef _WIN32
     int x, y;
 
     for (x = 0; x < TERM_WIDTH; x++) {
@@ -435,10 +468,12 @@ void term_scroll (void)
             }
         }
     }
+#endif
 }
 
 void term_fill_fg (const term_color fg)
 {
+#ifndef _WIN32
     int x, y;
 
     for (x = 0; x < TERM_WIDTH; x++) {
@@ -447,10 +482,12 @@ void term_fill_fg (const term_color fg)
             term_cells[x][y].touched = true;
         }
     }
+#endif
 }
 
 void term_fill_bg (const term_color bg)
 {
+#ifndef _WIN32
     int x, y;
 
     for (x = 0; x < TERM_WIDTH; x++) {
@@ -459,69 +496,93 @@ void term_fill_bg (const term_color bg)
             term_cells[x][y].touched = true;
         }
     }
+#endif
 }
 
 void term_fg (term_color fg)
 {
+#ifndef _WIN32
     term_fg_current = fg;
+#endif
 }
 
 void term_bg (term_color bg)
 {
+#ifndef _WIN32
     term_bg_current = bg;
+#endif
 }
 
 void term_fgbg (term_color fg, term_color bg)
 {
+#ifndef _WIN32
     term_fg_current = fg;
     term_bg_current = bg;
+#endif
 }
 
 void term_goto (int x, int y)
 {
+#ifndef _WIN32
     term_x = x;
     term_y = y;
+#endif
 }
 
 void term_cursor_show (void)
 {
+#ifndef _WIN32
     term_core_cursor_show();
+#endif
 }
 
 void term_cursor_hide (void)
 {
+#ifndef _WIN32
     term_core_cursor_hide();
+#endif
 }
 
 void term_bell (void)
 {
+#ifndef _WIN32
     term_core_bell();
+#endif
 }
 
 void term_cls (void)
 {
+#ifndef _WIN32
     term_fill_c(' ');
+#endif
 }
 
 void term_cls_now (void)
 {
+#ifndef _WIN32
     term_cls();
 
     term_refresh();
 
     term_core_cls();
+#endif
 }
 
 void term_clear_buffer (void)
 {
+#ifndef _WIN32
     memset(term_cells, 0, sizeof(term_cells));
+#endif
 }
 
 void term_clear_bbuffer (void)
 {
+#ifndef _WIN32
     memset(term_bcells, 0, sizeof(term_bcells));
+#endif
 }
 
+#ifndef _WIN32
 static term_color term_color_string_to_index (const char **s)
 {
     if (!strncmp(*s, "black$", sizeof("black$")-1)) {
@@ -563,9 +624,11 @@ static term_color term_color_string_to_index (const char **s)
 
     return (TERM_COLOR_WHITE);
 }
+#endif
 
 void term_putf (const char *s)
 {
+#ifndef _WIN32
     char c;
     uint8_t looking_for_start = false;
 
@@ -599,10 +662,12 @@ void term_putf (const char *s)
 
         term_putc(c);
     }
+#endif
 }
 
 void term_putfy (int y, const char *s)
 {
+#ifndef _WIN32
     term_goto(0, y);
 
     term_cursor_move_only = true;
@@ -611,15 +676,19 @@ void term_putfy (int y, const char *s)
 
     term_goto(TERM_WIDTH/2 - term_x/2, y);
     term_putf(s);
+#endif
 }
 
 void term_putfmx (const char *s)
 {
+#ifndef _WIN32
     term_putfy(term_y, s);
+#endif
 }
 
 void term_refresh (void)
 {
+#ifndef _WIN32
     if (!term_init_done) {
         return;
     }
@@ -689,10 +758,12 @@ void term_refresh (void)
     memcpy(term_bcells, term_cells, sizeof(term_cells));
 
     term_core_refresh();
+#endif
 }
 
 int term_test (int32_t argc, char *argv[])
 {
+#ifndef _WIN32
     int x, y;
 
     int r = 0;
@@ -728,9 +799,11 @@ int term_test (int32_t argc, char *argv[])
         term_refresh();
     }
 
+#endif
     return (0);
 }
 
+#ifndef _WIN32
 static void term_print_last_line (void)
 {
     int x, y;
@@ -753,9 +826,11 @@ static void term_print_last_line (void)
         }
     }
 }
+#endif
 
 void term_log (const char *buf)
 {
+#ifndef _WIN32
     if (HEADLESS || enable_console) {
         term_scroll();
         term_goto(0, TERM_HEIGHT - 2);
@@ -770,6 +845,7 @@ void term_log (const char *buf)
         putchar('\n');
         term_x = 0;
     }
+#endif
 }
 
 /*
@@ -780,6 +856,7 @@ void term_log (const char *buf)
 int
 get_term_size (int fd, int *x, int *y)
 {
+#ifndef _WIN32
 #ifdef TIOCGSIZE
     struct ttysize win;
 
@@ -825,6 +902,7 @@ get_term_size (int fd, int *x, int *y)
             }
         }
     }
+#endif
 #endif
 
     if (x) {

@@ -140,7 +140,7 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
     level->exit_request = 1;
     while (level->locked) {
         LOG("Level locked... waiting on AI thread to finish");
-        sleep(1);
+	SDL_Delay(1000);
     }
     level->exit_request = 0;
 

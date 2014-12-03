@@ -401,6 +401,7 @@ uint8_t command_handle (const char *input,
     return (true);
 }
 
+#ifndef _WIN32
 static char wid_text[MAXSTR];
 
 static void console_set_text (const char *s)
@@ -447,6 +448,7 @@ static void console_refresh (void)
     term_putf(" ");
     term_refresh();
 }
+#endif
 
 void console_tick (void)
 {
@@ -454,6 +456,7 @@ void console_tick (void)
         return;
     }
 
+#ifndef _WIN32
     char seq[2];
     char seq2[2];
     char c;
@@ -686,4 +689,5 @@ void console_tick (void)
             console_set_text(updatedtext);
         }
     }
+#endif
 }

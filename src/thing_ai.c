@@ -7,6 +7,7 @@
 #define __STDC_LIMIT_MACROS
 #include <pthread.h>
 #include <unistd.h>
+#include <SDL.h>
 
 #include "main.h"
 #include "thing.h"
@@ -408,10 +409,10 @@ static void *dmap_thread2_func (void *context)
     for (;;) {
         if (!server_level) {
             /*
-             * Happens whilst we load the level and before we set the server
-             * level pointer.
+             * Happens whilst we load the level and before we set the 
+	     * level pointer.
              */
-            sleep(1);
+            SDL_Delay(1000);
             continue;
         }
 
@@ -468,10 +469,6 @@ static void dmap_thread2_wake (void)
 
 static void dmap_thread1_init (void)
 {
-    if (dmap_thread1) {
-        return;
-    }
-
     int rc = pthread_create(&dmap_thread1, NULL, &dmap_thread1_func, NULL);
 
     if (rc != 0) {
@@ -482,20 +479,12 @@ static void dmap_thread1_init (void)
 static void dmap_thread1_fini (void)
 {
     return;
-
-    if (dmap_thread1) {
-        pthread_join(dmap_thread1, NULL);
-        dmap_thread1 = 0;
-    }
 }
 
 static void dmap_thread2_init (void)
 {
-    if (dmap_thread2) {
-        return;
-    }
-
-    int rc = pthread_create(&dmap_thread2, NULL, &dmap_thread2_func, NULL);
+    int rc = 
+        pthread_create(&dmap_thread2, NULL, &dmap_thread2_func, NULL);
 
     if (rc != 0) {
         DIE("no dmap thread %s", strerror(rc));
@@ -505,11 +494,6 @@ static void dmap_thread2_init (void)
 static void dmap_thread2_fini (void)
 {
     return;
-
-    if (dmap_thread2) {
-        pthread_join(dmap_thread2, NULL);
-        dmap_thread2 = 0;
-    }
 }
 
 void dmap_process_init (void)

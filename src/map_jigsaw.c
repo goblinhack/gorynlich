@@ -1992,8 +1992,6 @@ static int maze_check_exit_can_be_reached (void)
 {
     int32_t x;
     int32_t y;
-    int32_t ex;
-    int32_t ey;
     int32_t sx;
     int32_t sy;
     int found_start = 0;
@@ -2038,9 +2036,6 @@ static int maze_check_exit_can_be_reached (void)
     if (!found_end) {
         return (false);
     }
-
-    ex = x;
-    ey = y;
 
     if (!maze_flood_find(sx, sy, MAP_END, 0)) {
         return (false);
@@ -2164,7 +2159,6 @@ static uint8_t maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
             if (!mcell->possible_jigpieces_size) {
                 printf("cell %d %d\n",x,y);
                 maze_print_cells(dg);
-                sleep(1);
                 exit(0);
 
                 return (false);
