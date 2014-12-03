@@ -191,19 +191,23 @@ fi
 #
 # for backtraces, but it doesn't help much
 #
-LDLIBS="$LDLIBS -funwind-tables -rdynamic"
-
 case `uname` in
     *MINGW*)
 	EXE=".exe"
+	LDLIBS=`echo $LDLIBS | sed -e 's/-XCClinker//g'`
+	LDLIBS="$LDLIBS -funwind-tables"
 	LDLIBS="$LDLIBS -lopengl32"
 	;;
     *Darwin*)
 	EXE=""
+	LDLIBS="$LDLIBS -funwind-tables"
+	LDLIBS="$LDLIBS -rdynamic"
 	DSYM="dsymutil ../gorynlich"
 	;;
     *)
 	EXE=""
+	LDLIBS="$LDLIBS -funwind-tables"
+	LDLIBS="$LDLIBS -rdynamic"
 	LDLIBS="$LDLIBS -lGL"
 	;;
 esac
