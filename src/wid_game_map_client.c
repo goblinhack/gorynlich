@@ -776,9 +776,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             break;
         }
 
-        color c;
-        c = RED;
-
         /*
          * Score title
          */
