@@ -104,7 +104,8 @@ cd ..
 
 for i in \
     /opt/local/bin/sdl2-config \
-    /usr/bin/sdl2-config 
+    /usr/bin/sdl2-config \
+    /mingw/bin/sdl2-config
 do
     if [ -x $i ]
     then
@@ -117,7 +118,9 @@ for i in \
     /opt/local/bin/sdl2-config \
     /usr/bin/sdl2-config \
     /usr/local/bin/sdl-config \
-    /usr/bin/sdl-config
+    /usr/bin/sdl-config \
+    /mingw/bin/sdl2-config \
+    /mingw/bin/sdl-config
 do
     if [ -x $i ]
     then
@@ -142,11 +145,6 @@ then
     log_warn "   sudo port install libsdl2_image"
     log_warn "   sudo port install libsdl2_mixer"
     log_warn "   sudo port install libsdl2_net"
-    log_warn "  Or:"
-    log_warn "   Grab SDL from:"
-    log_warn "   svn co https://svn.sourceforge.net/svnroot/goblinhack/trunk goblinhack"
-    log_warn "  Or last resort:"
-    log_warn "   A copy of SDL-1.2.14.tar.gz can be found in support/"
     exit 1
 fi
 
