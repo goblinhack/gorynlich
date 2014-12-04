@@ -160,7 +160,7 @@ then
     exit 1
 fi
 
-SDL_FLAGS=`$SDL_CONFIG --cflags`
+C_FLAGS=`$SDL_CONFIG --cflags`
 if [ $? -ne 0 ]
 then
     log_err "Please install SDL 1.2 or 1.3. $SDL_CONFIG failed."
@@ -197,6 +197,10 @@ case `uname` in
     *MINGW*)
 	EXE=".exe"
 	LDLIBS="$LDLIBS -lopengl32"
+        #
+        # For __imp warnings in pthread
+        #
+        C_FLAGS="$C_FLAG -DPTW32_STATIC_LIB"
 	;;
     *Darwin*)
 	EXE=""
@@ -212,8 +216,8 @@ LDLIBS="$LDLIBS -lpthread"
 
 cd src
 
-echo "COMPILER_FLAGS=-Werror -g -ggdb3 -O0 $SDL_FLAGS # AUTOGEN" >> .Makefile
-echo "COMPILER_FLAGS=-Werror -g -ggdb3 -O2 $SDL_FLAGS # AUTOGEN" > .Makefile
+echo "COMPILER_FLAGS=-Werror -g -ggdb3 -O0 $C_FLAGS # AUTOGEN" >> .Makefile
+echo "COMPILER_FLAGS=-Werror -g -ggdb3 -O2 $C_FLAGS # AUTOGEN" > .Makefile
 echo "    " >> .Makefile
 echo "CLANG_COMPILER_WARNINGS=-Wall -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-sign-conversion # AUTOGEN" >> .Makefile
 echo "GCC_COMPILER_WARNINGS=-Wall -fmessage-length=0 -Wno-trigraphs -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value # AUTOGEN" >> .Makefile
