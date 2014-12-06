@@ -41,11 +41,12 @@ void gl_enter_2d_mode (void)
      * Reset the view
      */
     glLoadIdentity();
+glewInit();
 
     /*
      * 2D projection
      */
-    glOrthof(0, 
+    glOrtho(0, 
              global_config.video_gl_width, global_config.video_gl_height,
              0, -1200.0, 1200.0);
 
