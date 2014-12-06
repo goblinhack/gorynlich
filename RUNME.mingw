@@ -1,0 +1,37 @@
+
+for i in \
+	/cygrdrive/c/MinGW \
+	/c/MingGW \
+	/MingGW \
+do
+	if [ -d $i ]
+	then
+		MINGW=$i
+		break
+	fi
+done
+
+if [ "$MINGW" = "" ]
+then
+	echo "Could not find MingW dir"
+	exit 1
+fi
+
+cd third-party/sdl
+
+for i in
+	glew-1.11.0.tar.gz \
+	SDL-2.0.4-9174.tar.gz \
+	SDL2_mixer-devel-2.0.0-mingw.tar.gz \
+	SDL2_net-devel-2.0.0-mingw.tar.gz
+do
+	tar zxvf $i
+	DIR=`echo $i | sed 's/.tar.gz/g'`
+	if [ ! -d $DIR ]
+	then
+		echo Failed to extract $i
+		exit 1
+	fi
+
+	cd $DIR
+done
