@@ -1,6 +1,19 @@
 #!/bin/bash
 
-TP_DIR=third-party/sdl
+TP_DIR=third-party
+WIN32_DIR=i686-w64-mingw32
+
+log_execute()
+{
+	echo $*
+	$*
+}
+
+err()
+{
+	echo ERROR: $*
+	exit 1
+}
 
 for i in \
 	/c/MingW \
@@ -16,47 +29,69 @@ done
 
 if [ $MINGW_DIR = "" ]
 then
-	echo "Could not find MingW dir"
+	err "Could not find MingW dir"
 	exit 1
 fi
  
 if [ ! -d $TP_DIR ]
 then
-	echo "Could not find third party dir"
+	err "Could not find third party dir"
 	exit 1
 fi
 
 cd $TP_DIR
 
 for i in \
-	glew-1.11.0.tar.gz \
 	SDL-2.0.4-9174.tar.gz \
-	SDL2_mixer-devel-2.0.0-mingw.tar.gz \
-	SDL2_net-devel-2.0.0-mingw.tar.gz
+	SDL2_mixer-2.0.0.tar.gz \
+	SDL2_net-2.0.0.tar.gz \
+	glew-1.11.0.tar.gz \
+	makedepend-1.0.5.tar.gz
 do
-	tar zxf $i
+	log_execute tar zxf $i
 	if [ $? -ne 0 ]
 	then
-		echo Failed to extract $i
+		err Failed to extract $i
 		exit 1
 	fi
 
 	DIR=`echo $i | sed 's/.tar.gz//g'`
-echo DIR $DIR
 	if [ ! -d $DIR ]
 	then
-		echo Failed to find dir $i
+		err "Failed to find dir $i"
 		exit 1
 	fi
 
 	pushd . >/dev/null
 
 	cd $DIR
-	if [ $? -ne 0 ]
-	then
-pwd
-	fi
-ls
-	popd >/dev/null
+		if [ $? -ne 0 ]
+		then
+			err "Failed to cd into $DIR after extracting $i"
+			exit 1
+		fi
 
+		if [ -d $WIN32_DIR ]
+		then
+			cd $WIN32_DIR
+		fi
+
+		pwd
+		echo ==========================================================================
+
+		for j in bin lib include
+		do
+			if [ -d $j ]
+			then
+				log_execute cp -rvp $j $MINGW_DIR
+			fi
+		done
+
+	popd >/dev/null
+	echo
 done
+
+log_execute cp *dll $MINGW_DIR/bin
+log_execute cp *exe $MINGW_DIR/bin
+
+./RUNME
