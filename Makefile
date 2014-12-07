@@ -11,3 +11,4 @@ clean:
 clobber:
 	rm src/Makefile
 	(cd src; make $@)
+# DO NOT DELETE
