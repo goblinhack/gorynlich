@@ -193,6 +193,11 @@ case `uname` in
         # For __imp warnings in pthread
         #
         C_FLAGS="$C_FLAGS -DPTW32_STATIC_LIB -DGLEW_STATIC"
+
+	#
+	# As sdl2-config may be configured for /usr/local
+	#
+        C_FLAGS="$C_FLAGS -I/c/MinGW/include/SDL2"
 	;;
     *Darwin*)
 	EXE=""
