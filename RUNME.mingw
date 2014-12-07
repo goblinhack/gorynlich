@@ -17,7 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-TOP=`pwd`
+TOP_DIR=`pwd`
 
 . ./scripts/common.sh
 
@@ -74,99 +74,41 @@ mycp()
 {
 	local a=$1
 	local b=$2
-	if [ -f $b ]
-	then
-		return
-	fi
+
 	run cp -rpvf $a $b
-}
 
-run cd $TP_DIR
-
-for i in \
-	SDL-2.0.4-9174.tar.gz \
-	SDL2_mixer-2.0.0.tar.gz \
-	SDL2_net-2.0.0.tar.gz \
-	glew-1.11.0.tar.gz \
-	makedepend-1.0.5.tar.gz
-do
-	case $i in
-		*SDL*) INST_DIR=SDL2 ;;
-		*gl*) INST_DIR=GL ;;
-		*) INST_DIR= ;;
-	esac
-
-	tar zxf $i
-	if [ $? -ne 0 ]
-	then
-		log_err "Failed to extract $i"
-		exit 1
-	fi
-
-	DIR=`echo $i | sed 's/.tar.gz//g'`
-	if [ ! -d $DIR ]
-	then
-		log_err "Failed to find dir $i"
-		exit 1
-	fi
-
-	pushd . >/dev/null
-
-	echo
-		cd $DIR
-		if [ $? -ne 0 ]
-		then
-			log_err "Failed to cd into $DIR after extracting $i"
-			exit 1
-		fi
-
-		if [ -d $WIN32_DIR ]
-		then
-			log "Install files from $DIR/$WIN32_DIR:"
-			cd $WIN32_DIR
-		else
-			log "Install files from $DIR:"
-		fi
-
-		for j in bin lib include
-		do
-			case $j in
-				*bin*) INST_DIR_=$j/$INST_DIR ;;
-				*lib*) INST_DIR_=$j ;;
-				*inc*) INST_DIR_=$j/$INST_DIR ;;
-			esac
-
-			if [ -d $j ]
-			then
-				mycp $j $MINGW_DIR/$INST_DIR_
-				if [ $? -ne 0 ]
-				then
-					log_err "Failed to copy needed files"
-					exit 1
-				fi
-			fi
-		done
-
-	popd >/dev/null
-done
-
-for i in *.dll *.exe
-do
-	mycp $i $MINGW_DIR
 	if [ $? -ne 0 ]
 	then
 		log_err "Failed to copy $i to $MINGW_DIR"
 		exit 1
 	fi
+}
 
-	mycp $i $TOP
-	if [ $? -ne 0 ]
-	then
-		log_err "Failed to copy $i to local dir"
-		exit 1
-	fi
-done
+mycp third-party/SDL-2.0.4-9174/include/* $MINGW_DIR/include/SDL2/
+mycp third-party/SDL2-2.0.3/i686-w64-mingw32/bin/sdl2-config $MINGW_DIR/bin
 
-cd $TOP
+mycp third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2/*.h $MINGW_DIR/include/SDL2/
+mycp third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/lib/*.a $MINGW_DIR/lib/
+mycp third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/bin/*.dll $MINGW_DIR/lib/
+
+mycp third-party/SDL2_net-2.0.0/i686-w64-mingw32/include/SDL2/*.h $MINGW_DIR/include/SDL2/
+mycp third-party/SDL2_net-2.0.0/i686-w64-mingw32/lib/*.a $MINGW_DIR/lib/
+mycp third-party/SDL2_net-2.0.0/i686-w64-mingw32/bin/*.dll $MINGW_DIR/bin/
+
+mycp third-party/glew-1.11.0/include/GL/*.h $MINGW_DIR/include/GL/
+mycp third-party/glew-1.11.0/bin/Release/Win32/*.exe $MINGW_DIR/bin/
+mycp third-party/glew-1.11.0/bin/Release/Win32/*.dll $MINGW_DIR/lib/
+
+mycp third-party/makedepend-1.0.5/*.exe $MINGW_DIR/bin/
+
+mycp third-party/*.a $MINGW_DIR/lib/
+mycp third-party/*.lib $MINGW_DIR/lib/
+mycp third-party/*.dll $MINGW_DIR/bin/
+mycp third-party/*.exe $MINGW_DIR/bin/
+
+mycp third-party/*.dll $TOP_DIR
+mycp third-party/*.exe $TOP_DIR
+
+cd $TOP_DIR
 
 ./RUNME
