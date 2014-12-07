@@ -4,6 +4,7 @@
  * See the README file for license.
  */
 
+#include "SDL_messagebox.h"
 #include "glapi.h"
 
 static void gl_init_fbo(void);
@@ -41,7 +42,10 @@ void gl_enter_2d_mode (void)
      * Reset the view
      */
     glLoadIdentity();
-glewInit();
+
+#ifdef _WIN32
+    glewInit();
+#endif
 
     /*
      * 2D projection
@@ -100,6 +104,12 @@ static void gl_init_fbo_ (
     /*
      * Create a render buffer object.
      */
+if (!glGenRenderbuffersEXT) {
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 
+		"Gorynlich",
+		"Render buffer extension is missing. Graphics will suck.", NULL);
+		return;
+}
     glGenRenderbuffersEXT(1, render_buf_id);
     glBindRenderbuffer(GL_RENDERBUFFER, *render_buf_id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
