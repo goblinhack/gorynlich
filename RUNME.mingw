@@ -1,19 +1,48 @@
-#!/bin/bash
+#!/bin/sh
+# 
+# Copyright (C) 2014 Neil McGill
+#
+# This game is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This game is distributed in the hope that it will be fun,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this game; if not, write to the Free
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+TOP=`pwd`
+
+. ./scripts/common.sh
+
+cat <<%%
+
+     .d8888b.                                     888 d8b          888      
+    d88P  Y88b                                    888 Y8P          888      
+    888    888                                    888              888      
+    888         .d88b.  888d888 888  888 88888b.  888 888  .d8888b 88888b.  
+    888  88888 d88""88b 888P"   888  888 888 "88b 888 888 d88P"    888 "88b 
+    888    888 888  888 888     888  888 888  888 888 888 888      888  888 
+    Y88b  d88P Y88..88P 888     Y88b 888 888  888 888 888 Y88b.    888  888 
+     "Y8888P88  "Y88P"  888      "Y88888 888  888 888 888  "Y8888P 888  888 
+                                     888                                    
+                                Y8b d88P                                    
+                                 "Y88P"                                     
+
+On MingW!
+
+%%
+
+log_info "Will try to install the third party stuff I need first for MinGW"
 
 TP_DIR=third-party
 WIN32_DIR=i686-w64-mingw32
-
-log_execute()
-{
-	echo $*
-	$*
-}
-
-err()
-{
-	echo ERROR: $*
-	exit 1
-}
 
 for i in \
 	/c/MingW \
@@ -29,17 +58,30 @@ done
 
 if [ $MINGW_DIR = "" ]
 then
-	err "Could not find MingW dir"
-	exit 1
-fi
- 
-if [ ! -d $TP_DIR ]
-then
-	err "Could not find third party dir"
+	log_err "Could not find MingW dir"
 	exit 1
 fi
 
-cd $TP_DIR
+log_info "MinGW install dir $MINGW_DIR"
+ 
+if [ ! -d $TP_DIR ]
+then
+	log_err "Could not find third party dir"
+	exit 1
+fi
+
+mycp()
+{
+	local a=$1
+	local b=$2
+	if [ -f $b ]
+	then
+		return
+	fi
+	run cp -rpvf $a $b
+}
+
+run cd $TP_DIR
 
 for i in \
 	SDL-2.0.4-9174.tar.gz \
@@ -48,50 +90,83 @@ for i in \
 	glew-1.11.0.tar.gz \
 	makedepend-1.0.5.tar.gz
 do
-	log_execute tar zxf $i
+	case $i in
+		*SDL*) INST_DIR=SDL2 ;;
+		*gl*) INST_DIR=GL ;;
+		*) INST_DIR= ;;
+	esac
+
+	tar zxf $i
 	if [ $? -ne 0 ]
 	then
-		err Failed to extract $i
+		log_err "Failed to extract $i"
 		exit 1
 	fi
 
 	DIR=`echo $i | sed 's/.tar.gz//g'`
 	if [ ! -d $DIR ]
 	then
-		err "Failed to find dir $i"
+		log_err "Failed to find dir $i"
 		exit 1
 	fi
 
 	pushd . >/dev/null
 
-	cd $DIR
+	echo
+		cd $DIR
 		if [ $? -ne 0 ]
 		then
-			err "Failed to cd into $DIR after extracting $i"
+			log_err "Failed to cd into $DIR after extracting $i"
 			exit 1
 		fi
 
 		if [ -d $WIN32_DIR ]
 		then
+			log "Install files from $DIR/$WIN32_DIR:"
 			cd $WIN32_DIR
+		else
+			log "Install files from $DIR:"
 		fi
-
-		pwd
-		echo ==========================================================================
 
 		for j in bin lib include
 		do
+			case $j in
+				*bin*) INST_DIR_=$j/$INST_DIR ;;
+				*lib*) INST_DIR_=$j ;;
+				*inc*) INST_DIR_=$j/$INST_DIR ;;
+			esac
+
 			if [ -d $j ]
 			then
-				log_execute cp -rvp $j $MINGW_DIR
+				mycp $j $MINGW_DIR/$INST_DIR_
+				if [ $? -ne 0 ]
+				then
+					log_err "Failed to copy needed files"
+					exit 1
+				fi
 			fi
 		done
 
 	popd >/dev/null
-	echo
 done
 
-log_execute cp *dll $MINGW_DIR/bin
-log_execute cp *exe $MINGW_DIR/bin
+for i in *.dll *.exe
+do
+	mycp $i $MINGW_DIR
+	if [ $? -ne 0 ]
+	then
+		log_err "Failed to copy $i to $MINGW_DIR"
+		exit 1
+	fi
+
+	mycp $i $TOP
+	if [ $? -ne 0 ]
+	then
+		log_err "Failed to copy $i to local dir"
+		exit 1
+	fi
+done
+
+cd $TOP
 
 ./RUNME
