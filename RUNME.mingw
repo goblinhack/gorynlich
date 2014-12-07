@@ -92,21 +92,19 @@ mycp third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/lib/*.a $MINGW_DIR/lib/
 mycp third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/bin/*.dll $MINGW_DIR/lib/
 
 mycp third-party/SDL2_net-2.0.0/i686-w64-mingw32/include/SDL2/*.h $MINGW_DIR/include/SDL2/
+mycp third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/bin/*.dll $TOP_DIR
+
 mycp third-party/SDL2_net-2.0.0/i686-w64-mingw32/lib/*.a $MINGW_DIR/lib/
 mycp third-party/SDL2_net-2.0.0/i686-w64-mingw32/bin/*.dll $MINGW_DIR/bin/
+mycp third-party/SDL2_net-2.0.0/i686-w64-mingw32/bin/*.dll $TOP_DIR
 
 mycp third-party/glew-1.11.0/include/GL/*.h $MINGW_DIR/include/GL/
 mycp third-party/glew-1.11.0/bin/Release/Win32/*.exe $MINGW_DIR/bin/
 mycp third-party/glew-1.11.0/bin/Release/Win32/*.dll $MINGW_DIR/lib/
+mycp third-party/glew-1.11.0/bin/Release/Win32/*.dll $TOP_DIR
 
 mycp third-party/makedepend-1.0.5/*.exe $MINGW_DIR/bin/
-
-mycp third-party/*.a $MINGW_DIR/lib/
-mycp third-party/*.dll $MINGW_DIR/bin/
-mycp third-party/*.exe $MINGW_DIR/bin/
-
-mycp third-party/*.dll $TOP_DIR
-mycp third-party/*.exe $TOP_DIR
+mycp third-party/makedepend-1.0.5/*.exe $TOP_DIR
 
 cd $TOP_DIR
 
