@@ -78,17 +78,24 @@
 #define DEFAULT_VIDEO_HEIGHT        672
 
 /*
- * This is multiplied by jigsaw piece size.
+ * The map is made up of jigsaw pieces that are joined togethere. This is the 
+ * size of one piece in tiles.
  */
-
 #define JIGPIECE_WIDTH              8
 #define JIGPIECE_HEIGHT             8
 
 /*
- * Map
+ * Map. How many tiles across and down.
  */
 #define MAP_WIDTH                   64
 #define MAP_HEIGHT                  64
+
+/*
+ * How many jigsaw pieces across and down make up the map. We substract
+ * one so we can have a small border and center the tiles.
+ */
+#define MAP_JIGSAW_PIECES_ACROSS      ((MAP_WIDTH / JIGPIECE_WIDTH) - 1)
+#define MAP_JIGSAW_PIECES_DOWN     ((MAP_WIDTH / JIGPIECE_WIDTH) - 1)
 
 #define MAP_DEPTH_EDITOR            0
 #define MAP_DEPTH_FLOOR             1
