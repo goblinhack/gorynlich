@@ -20,9 +20,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MAP_JIGSAW_PIECE_WIDTH      8
-#define MAP_JIGSAW_PIECE_HEIGHT     8
-
 #define MAZE_ROOM_NEXT_TO_OTHER_ROOMS_CHANCE        100
 #define MAZE_HOW_LONG_TO_SPEND_TRYING_TO_SOLVE_MAZE 100000
 #define MAZE_HOW_LIKELY_PERCENT_ARE_FORKS           50
@@ -206,7 +203,7 @@ typedef struct maze_cell_t_ {
     uint8_t best:1;
 } maze_cell_t;
 
-#define MAZE_CELL(c, x, y)          (c + (MAP_JIGSAW_PIECE_WIDTH * (y)) + (x))
+#define MAZE_CELL(c, x, y)          (c + (MAP_JIGSAW_PIECES_ACROSS * (y)) + (x))
 #define MAZE_CAN_GO(c, dir)         (c->exit[dir] && !(c->exit[dir]->walked))
 #define MAZE_HAS_EXIT(c, x, y, dir) (MAZE_CELL(c, (x), (y))->exits & (1<<(dir)))
 
@@ -224,7 +221,7 @@ typedef struct {
     int32_t frag_alt_cnt;
     jigpiece_t frag_alt[MAZE_FRAG_DIRECTIONS][JIGPIECE_MAX];
 
-    maze_cell_t maze[MAP_JIGSAW_PIECE_WIDTH * MAP_JIGSAW_PIECE_HEIGHT];
+    maze_cell_t maze[MAP_JIGSAW_PIECES_ACROSS * MAP_JIGSAW_PIECES_DOWN];
 
     /*
      * Co-ords here are in terms of rooms, not characters.
@@ -1107,8 +1104,8 @@ static void jigpiece_count_char_types (dungeon_t *dg, int32_t which)
  */
 static inline void maze_print_cells (dungeon_t *dg)
 {
-    int32_t w = MAP_JIGSAW_PIECE_WIDTH;
-    int32_t h = MAP_JIGSAW_PIECE_HEIGHT;
+    int32_t w = MAP_JIGSAW_PIECES_ACROSS;
+    int32_t h = MAP_JIGSAW_PIECES_DOWN;
     char which;
     int32_t y;
     int32_t x;
@@ -2049,10 +2046,16 @@ static int maze_check_exit_can_be_reached (void)
  */
 static void dump_jigpieces_to_map (dungeon_t *dg)
 {
-    int32_t w = MAP_JIGSAW_PIECE_WIDTH;
-    int32_t h = MAP_JIGSAW_PIECE_HEIGHT;
+    int32_t w = MAP_JIGSAW_PIECES_ACROSS;
+    int32_t h = MAP_JIGSAW_PIECES_DOWN;
     int32_t y;
     int32_t x;
+
+    /*
+     * Offset the map by an amount so we can have a border.
+     */
+    int32_t dx = JIGPIECE_WIDTH / 2;
+    int32_t dy = JIGPIECE_HEIGHT / 2;
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
@@ -2068,8 +2071,8 @@ static void dump_jigpieces_to_map (dungeon_t *dg)
 
             if (c->jigpiece) {
                 jigpiece_printat(dg,
-                                (JIGPIECE_WIDTH) * x,
-                                (JIGPIECE_HEIGHT) * y, c->jigpiece);
+                                (JIGPIECE_WIDTH * x) + dx,
+                                (JIGPIECE_HEIGHT * y) + dy, c->jigpiece);
             }
         }
     }
@@ -2119,8 +2122,8 @@ static void maze_convert_to_map (dungeon_t *dg)
  */
 static uint8_t maze_jigsaw_generate_all_possible_pieces (dungeon_t *dg)
 {
-    int32_t w = MAP_JIGSAW_PIECE_WIDTH;
-    int32_t h = MAP_JIGSAW_PIECE_HEIGHT;
+    int32_t w = MAP_JIGSAW_PIECES_ACROSS;
+    int32_t h = MAP_JIGSAW_PIECES_DOWN;
     maze_cell_t *mcell;
     int32_t dir;
     int32_t x;
@@ -2355,8 +2358,8 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
  */
 static int32_t maze_jigsaw_solve (dungeon_t *dg)
 {
-    int32_t w = MAP_JIGSAW_PIECE_WIDTH;
-    int32_t h = MAP_JIGSAW_PIECE_HEIGHT;
+    int32_t w = MAP_JIGSAW_PIECES_ACROSS;
+    int32_t h = MAP_JIGSAW_PIECES_DOWN;
     maze_cell_t *mcell;
     maze_cell_t *ocell;
     int32_t x, y;
@@ -2364,8 +2367,8 @@ static int32_t maze_jigsaw_solve (dungeon_t *dg)
     int32_t c;
 
     for (;;) {
-        x = myrand() % MAP_JIGSAW_PIECE_WIDTH;
-        y = myrand() % MAP_JIGSAW_PIECE_HEIGHT;
+        x = myrand() % MAP_JIGSAW_PIECES_ACROSS;
+        y = myrand() % MAP_JIGSAW_PIECES_DOWN;
 
         mcell = MAZE_CELL(dg->maze, x, y);
         if (!mcell->dead) {
@@ -2552,8 +2555,8 @@ static uint8_t maze_generate_and_solve (dungeon_t *dg)
 {
     int32_t y;
     int32_t x;
-    int32_t w = MAP_JIGSAW_PIECE_WIDTH;
-    int32_t h = MAP_JIGSAW_PIECE_HEIGHT;
+    int32_t w = MAP_JIGSAW_PIECES_ACROSS;
+    int32_t h = MAP_JIGSAW_PIECES_DOWN;
 
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
@@ -2571,8 +2574,8 @@ static uint8_t maze_generate_and_solve (dungeon_t *dg)
         }
     }
 
-    x = MAP_JIGSAW_PIECE_WIDTH / 2;
-    y = MAP_JIGSAW_PIECE_HEIGHT / 2;
+    x = MAP_JIGSAW_PIECES_ACROSS / 2;
+    y = MAP_JIGSAW_PIECES_DOWN / 2;
 
     maze_generate_all_random_directions(dg, MAZE_CELL(dg->maze, x, y), 0);
 
