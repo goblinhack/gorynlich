@@ -230,6 +230,7 @@ enum {
 void MSG(uint32_t level, const char *fmt, ...) 
     __attribute__ ((format (printf, 2, 3)));
 
+void SDL_MSG_BOX(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void MSG_BOX(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
