@@ -5,6 +5,7 @@
  */
 
 #include <SDL_mixer.h>
+#include <stdlib.h>
 
 #include "main.h"
 #include "music.h"
