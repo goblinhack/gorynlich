@@ -5,6 +5,8 @@
  */
 
 #include "main.h"
+#include <stdlib.h>
+
 #include "socket.h"
 #include "client.h"
 #include "time.h"
