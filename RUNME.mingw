@@ -124,3 +124,9 @@ mycp "third-party/makedepend-1.0.5/*.exe" $TOP_DIR
 cd $TOP_DIR
 
 ./RUNME
+
+if [ $? -eq 0 ]
+then
+    cd installer
+    ./windows.sh
+fi
