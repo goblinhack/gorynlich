@@ -1,0 +1,116 @@
+<project>
+    <shortName>gorynlich</shortName>
+    <fullName>Gorynlich</fullName>
+    <version>0.01</version>
+    <installerFilename></installerFilename>
+    <licenseFile>../LICENSE</licenseFile>
+    <logoImage>titleflashingslow.gif</logoImage>
+    <splashImage>titleflashingslow.gif</splashImage>
+    <enableRollback>1</enableRollback>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <desktopShortcutList>
+                <shortcut>
+                    <comment>The Dungeons of Doom</comment>
+		    <exec>${installdir}/gorynlich/gorynlich/src/ghack</exec>
+                    <icon>${installdir}/gorynlich/gorynlich/installer/ghack.ico</icon>
+                    <name>Gorynlich</name>
+                    <path>${installdir}/gorynlich/gorynlich</path>
+                    <platforms>all</platforms>
+                    <runInTerminal>0</runInTerminal>
+		    <windowsExec>${installdir}/gorynlich/gorynlich/src/gorynlich.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/gorynlich/gorynlich/installer/ghack.ico</windowsIcon>
+                    <windowsPath>${installdir}/gorynlich/gorynlich</windowsPath>
+                </shortcut>
+            </desktopShortcutList>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall ${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileslinux</name>
+                    <platforms>linux</platforms>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileswindows</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>Gorynlich</description>
+                    <destination>${installdir}/gorynlich</destination>
+                    <name>gorynlich</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>..</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>The Dungeons of Doom</comment>
+                    <name>Gorynlich</name>
+                    <runInTerminal>0</runInTerminal>
+		    <windowsExec>${installdir}/gorynlich/gorynlich/src/gorynlich.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/gorynlich/gorynlich/installer/ghack.ico</windowsIcon>
+                    <windowsPath>${installdir}/gorynlich/gorynlich</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+    </componentList>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value>${platform_install_prefix}/${product_shortname}-${product_version}</value>
+            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+    </parameterList>
+</project>
+

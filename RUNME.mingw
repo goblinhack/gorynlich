@@ -115,10 +115,8 @@ mycp "third-party/SDL2_mixer-2.0.0/build/.libs/*.a" $MINGW_DIR/lib
 mycp "third-party/SDL2_mixer-2.0.0/build/.libs/*.dll" $MINGW_DIR/bin
 mycp "third-party/SDL2_mixer-2.0.0/build/.libs/*.dll" $TOP_DIR
 
-mycp "third-party/glew-1.11.0/include/GL/*.h" $MINGW_DIR/include/GL/
-mycp "third-party/glew-1.11.0/bin/Release/Win32/*.exe" $MINGW_DIR/bin/
-mycp "third-party/glew-1.11.0/bin/Release/Win32/*.dll" $MINGW_DIR/lib/
-mycp "third-party/glew-1.11.0/bin/Release/Win32/*.dll" $TOP_DIR
+mycp "third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/bin/*.dll" $MINGW_DIR/bin
+mycp "third-party/SDL2_mixer-2.0.0/i686-w64-mingw32/bin/*.dll" $TOP_DIR
 
 mycp "third-party/makedepend-1.0.5/*.exe" $MINGW_DIR/bin/
 mycp "third-party/makedepend-1.0.5/*.exe" $TOP_DIR
