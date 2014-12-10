@@ -18,6 +18,7 @@
 #
 
 TOP_DIR=`pwd`
+TP_DIR=third-party
 
 . ./scripts/common.sh
 
@@ -40,9 +41,6 @@ On MingW!
 %%
 
 log_info "Will try to install the third party stuff I need first for MinGW"
-
-TP_DIR=third-party
-WIN32_DIR=i686-w64-mingw32
 
 for i in \
 	/c/MingW \
@@ -86,6 +84,20 @@ mycp()
 		fi
 	done
 }
+
+#
+# Extract tar files
+#
+(
+	pushd $TP_DIR >/dev/null
+
+	for i in *.tar.gz
+	do
+		run tar xf $i
+	done
+
+	popd >/dev/null
+)
 
 mycp "third-party/SDL-2.0.4-9174/include/*" $MINGW_DIR/include/SDL2/
 mycp "third-party/SDL-2.0.4-9174/sdl2-config" $MINGW_DIR/bin
