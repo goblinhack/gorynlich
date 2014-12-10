@@ -7,6 +7,10 @@
 #include "slre.h"
 #include <SDL.h>
 
+#if SDL_MAJOR_VERSION >= 2
+#include "SDL_messagebox.h"
+#endif
+
 #include "main.h"
 #include "backtrace.h"
 #include "wid_console.h"
@@ -738,5 +742,48 @@ void MSG_BOX (const char *fmt, ...)
 
     va_start(args, fmt);
     msgerr_(fmt, args);
+    va_end(args);
+}
+
+static void sdl_msgerr_ (const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+    uint32_t ts_len;
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+
+    snprintf(buf + len, sizeof(buf) - len, "ERROR: %%%%fg=red$");
+
+    len = (uint32_t)strlen(buf);
+    ts_len = len;
+
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    len = (uint32_t)strlen(buf);
+    snprintf(buf + len, sizeof(buf) - len, "%%%%fg=reset$");
+
+    putf(MY_STDERR, buf);
+    fflush(MY_STDERR);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+#if SDL_MAJOR_VERSION >= 2
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 
+	"Gorynlich", buf + ts_len, 0);
+#endif
+
+    backtrace_print();
+}
+
+void SDL_MSG_BOX (const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    sdl_msgerr_(fmt, args);
     va_end(args);
 }
