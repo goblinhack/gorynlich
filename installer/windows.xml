@@ -25,7 +25,7 @@
                     <runInTerminal>0</runInTerminal>
                     <windowsExec>${installdir}/gorynlich.exe</windowsExec>
                     <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon>${installdir}/ghack.ico</windowsIcon>
+                    <windowsIcon>${installdir}/ghack2.ico</windowsIcon>
                     <windowsPath>${installdir}/</windowsPath>
                 </shortcut>
             </desktopShortcutList>
@@ -92,10 +92,13 @@
                             <origin>C:/msys/1.0/home/nmcgill/gorynlich/libvorbis-0.dll</origin>
                         </distributionFile>
                         <distributionFile>
+                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/gorynlich.exe</origin>
+                        </distributionFile>
+                        <distributionFile>
                             <origin>C:/msys/1.0/home/nmcgill/gorynlich/installer/ghack.ico</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/gorynlich.exe</origin>
+                            <origin>C:/msys/1.0/home/nmcgill/gorynlich/installer/titleflashingslow.gif</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
