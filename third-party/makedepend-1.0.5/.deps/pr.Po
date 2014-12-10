@@ -1,0 +1,62 @@
+pr.o: pr.c def.h makedepend-config.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xos.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xosdefs.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/types.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sdkddkver.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/string.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/fcntl.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/io.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xw32defs.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/time.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/timeb.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xarch.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xfuncproto.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdlib.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdio.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdarg.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/ctype.h \
+ c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/stat.h
+
+def.h:
+
+makedepend-config.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xos.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xosdefs.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/types.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/_mingw.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sdkddkver.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stddef.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/string.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/fcntl.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/io.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xw32defs.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/time.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/timeb.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xarch.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/X11/Xfuncproto.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdlib.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/stdio.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/include/stdarg.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/ctype.h:
+
+c:\mingw\bin\../lib/gcc/mingw32/4.7.2/../../../../include/sys/stat.h:
