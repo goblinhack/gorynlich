@@ -51,7 +51,7 @@ then
     log_die "Failed to build list of ramdisk files"
 fi
 
-mkdir src/asm
+mkdir -p src/asm
 scripts/RUNME.ramdisk.pl $RAMDISK_FILES
 
 /bin/rm -f $RAMDISK_FILES
@@ -77,27 +77,18 @@ then
     log_warn "Is makedepend installed? If not:"
     log_warn "  For ubuntu do: sudo apt-get install xutils-dev"
     log_warn "  For MAC    do: sudo port install makedepend"
-    log_warn "  For MingW  do: not supported AFAIK"
+    log_warn "  For MingW  do: look in third-party for Win32 binary"
     echo
     log_warn "If you still can't find it, I have the source in third-party"
     log_warn "  cd third-party"
-    log_warn "  tar xvf makedepend-1.0.5.tar"
+    log_warn "  tar xvf makedepend-1.0.5.tar.gz"
     log_warn "  cd makedepend-1.0.5"
     log_warn "  ./configure"
-    echo
-    log_warn "Hit enter and I will try to build it for you"
+    log_warn "Hit enter to continue"
     read dummy
 
-    cd ..
-    cd third-party
-    tar xvf makedepend-1.0.5.tar
-    cd makedepend-1.0.5
-    ./configure
-    make
-    mv makedepend ../..
-    cd ../..
     cd src
-    ./makedepend *.c -p .o/ 2>/dev/null
+    makedepend *.c -p .o/ 2>/dev/null
 fi
 
 cd ..
@@ -196,11 +187,17 @@ case `uname` in
 	EXE=".exe"
 	LDLIBS=`echo $LDLIBS | sed -e 's/-XCClinker//g'`
 	LDLIBS="$LDLIBS -funwind-tables"
+	LDLIBS="$LDLIBS -lglew32"
 	LDLIBS="$LDLIBS -lopengl32"
         #
         # For __imp warnings in pthread
         #
-        C_FLAGS="$C_FLAG -DPTW32_STATIC_LIB"
+        C_FLAGS="$C_FLAGS -DPTW32_STATIC_LIB -DGLEW_STATIC"
+
+	#
+	# As sdl2-config may be configured for /usr/local
+	#
+        C_FLAGS="$C_FLAGS -I/c/MinGW/include/SDL2"
 	;;
     *Darwin*)
 	EXE=""
