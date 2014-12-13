@@ -28,7 +28,7 @@
 
 #include "main.h"
 #include "tree.h"
-#include "time_util.h"
+#include "time.h"
 
 #undef TREE_DEBUG_PRINT
 #undef TREE_DEBUG_PRINT_WALKS
@@ -232,7 +232,7 @@ void tree_debug_test (void)
             memset(&tree_debug_nodes[i], 0, sizeof(tree_debug_nodes[i]));
 
             for (;;) {
-                tree_debug_nodes[i].tree.key = myrand() % numnodes;
+                tree_debug_nodes[i].tree.key = rand() % numnodes;
                 tree_debug_nodes[i].test = tree_debug_nodes[i].tree.key;
 
                 if (tree_insert(&tree_debug_root,

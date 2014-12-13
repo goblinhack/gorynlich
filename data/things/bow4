@@ -1,5 +1,5 @@
 {
- short_name="Pro-Box"
+ short_name="Pro-Bow"
  tooltip="Professional Bow"
  fires="data/things/arrow"
  z_depth=3

@@ -174,7 +174,7 @@ foreach $f (@files) {
     $struct =~ s/\./_/g;
 
     printf OUT "    ramdisk_data[%d].data = ${struct}_start;\n", $cnt;
-    printf OUT "    ramdisk_data[%d].len = ${struct}_end - ${struct}_start;\n", $cnt;
+    printf OUT "    ramdisk_data[%d].len = (int32_t) (${struct}_end - ${struct}_start);\n", $cnt;
     $cnt++;
 }
 

@@ -1993,6 +1993,7 @@ static int maze_check_exit_can_be_reached (void)
     int32_t sy;
     int found_start = 0;
 
+    y = 1;
     for (x = 1; x < MAP_WIDTH - 1; x++) {
         for (y = 1; y < MAP_HEIGHT - 1; y++) {
 
@@ -2189,7 +2190,7 @@ maze_generate_jigpiece_find (dungeon_t *dg, maze_cell_t *mcell,
     int32_t p;
     int32_t c;
     int32_t i;
-    int32_t ok;
+    int32_t ok = 0;
 
     (*count)++;
 
