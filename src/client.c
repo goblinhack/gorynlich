@@ -7,12 +7,12 @@
 #include "main.h"
 #include <stdlib.h>
 
-#include "socket.h"
+#include "socket_util.h"
 #include "client.h"
-#include "time.h"
+#include "time_util.h"
 #include "slre.h"
 #include "command.h"
-#include "string.h"
+#include "string_util.h"
 #include "wid_server_join.h"
 #include "wid_game_map_client.h"
 #include "wid_player_stats.h"

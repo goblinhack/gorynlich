@@ -18,7 +18,7 @@
 #include "wid_game_map_client.h"
 #include "wid_intro.h"
 #include "player.h"
-#include "string.h"
+#include "string_util.h"
 #include "music.h"
 
 static widp wid_gravestone;

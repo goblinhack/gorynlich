@@ -7,7 +7,7 @@
 #include "main.h"
 #include "ttf.h"
 #include "font.h"
-#include "string.h"
+#include "string_util.h"
 
 static int32_t font_inited;
 

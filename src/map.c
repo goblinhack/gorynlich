@@ -13,7 +13,7 @@
 #include "thing_tile.h"
 #include "level.h"
 #include "bits.h"
-#include "socket.h"
+#include "socket_util.h"
 
 typedef uint8_t (*map_is_at_callback)(tpp);
 

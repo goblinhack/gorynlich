@@ -16,7 +16,7 @@
 #include "main.h"
 #include "marshal.h"
 #include "config.h"
-#include "string.h"
+#include "string_util.h"
 #include "term.h"
 
 typedef struct term_cell_ {

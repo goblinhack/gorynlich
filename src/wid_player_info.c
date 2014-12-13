@@ -13,9 +13,9 @@
 #include "wid_player_inventory.h"
 #include "wid_player_stats.h"
 #include "thing_stats.h"
-#include "string.h"
+#include "string_util.h"
 #include "thing_template.h"
-#include "time.h"
+#include "time_util.h"
 #include "client.h"
 #include "name.h"
 

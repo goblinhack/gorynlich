@@ -12,7 +12,7 @@
 #include "wid_popup.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_extra.h"
-#include "string.h"
+#include "string_util.h"
 #include "music.h"
 
 static widp wid_intro_settings;

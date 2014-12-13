@@ -14,7 +14,7 @@
 #include "wid_intro.h"
 #include "glapi.h"
 #include "thing_template.h"
-#include "time.h"
+#include "time_util.h"
 
 #define MAX_DEMO_PLAYERS 20
 static int demo_player_count;

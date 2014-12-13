@@ -401,10 +401,6 @@ static void demarshal_thing_carrying (demarshal_p ctx, tpp t)
         GET_STRING(ctx, val);
 
         tpp c = tp_find(val);
-        if (!c) {
-            DIE("carried thing %s not found", val);
-            continue;
-        }
 
         uint32_t id = tp_to_id(c);
         if (!id) {

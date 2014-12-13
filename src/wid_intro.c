@@ -25,7 +25,7 @@
 #include "music.h"
 #include "level.h"
 #include "timer.h"
-#include "socket.h"
+#include "socket_util.h"
 #include "server.h"
 #include "glapi.h"
 

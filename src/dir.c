@@ -12,7 +12,7 @@
 
 #include "main.h"
 #include "dir.h"
-#include "string.h"
+#include "string_util.h"
 #include "ramdisk.h"
 
 /*

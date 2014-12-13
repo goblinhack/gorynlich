@@ -25,7 +25,7 @@
 
 #include "main.h"
 #include "file.h"
-#include "string.h"
+#include "string_util.h"
 
 #include "ramdisk_data.c"
 

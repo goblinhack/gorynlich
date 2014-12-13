@@ -9,12 +9,12 @@
 #include "slre.h"
 
 #include "main.h"
-#include "string.h"
+#include "string_util.h"
 #include "wid.h"
 #include "level.h"
 #include "thing.h"
 #include "command.h"
-#include "time.h"
+#include "time_util.h"
 #include "marshal.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
@@ -23,7 +23,7 @@
 #include "timer.h"
 #include "sound.h"
 #include "wid_editor.h"
-#include "socket.h"
+#include "socket_util.h"
 #include "map_jigsaw.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);

@@ -10,8 +10,8 @@
 #include "tree.h"
 #include "timer.h"
 #include "timer_private.h"
-#include "string.h"
-#include "time.h"
+#include "string_util.h"
+#include "time_util.h"
 
 /*
  * Various global timers.

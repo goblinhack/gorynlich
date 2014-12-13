@@ -11,9 +11,9 @@
 
 #include "main.h"
 #include "mzip_file.h"
-#include "string.h"
+#include "string_util.h"
 #include "file.h"
-#include "time.h"
+#include "time_util.h"
 
 unsigned char *file_read (const char *filename, int32_t *out_len)
 {

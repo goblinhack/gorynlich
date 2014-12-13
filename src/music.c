@@ -50,16 +50,6 @@ void music_fini (void)
     Mix_CloseAudio();
 }
 
-extern int stb_vorbis_decode_memory(uint8_t *in, int len, 
-                                    int *channels, short **out);
-
-static void stb_vorbis_decode (uint8_t *in, int *len, int16_t **out)
-{
-    int channels;
-
-    *len = stb_vorbis_decode_memory(in, *len, &channels, out);
-}
-
 musicp music_load (const char *file, const char *name_alias)
 {
     if (name_alias) {
@@ -95,19 +85,9 @@ musicp music_load (const char *file, const char *name_alias)
 
     SDL_RWops *rw;
 
-    if (0 && strstr(file, ".ogg")) {
-        int len;
-        int16_t *out;
-
-        len = m->len;
-        stb_vorbis_decode(m->data, &len, &out);
-
-        rw = SDL_RWFromMem(out, len);
-    } else {
-        rw = SDL_RWFromMem(m->data, m->len);
-        if (!rw) {
-            DIE("cannot make RW music %s", file);
-        }
+    rw = SDL_RWFromMem(m->data, m->len);
+    if (!rw) {
+        DIE("cannot make RW music %s", file);
     }
 
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */

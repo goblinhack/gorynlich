@@ -8,11 +8,11 @@
 #include <SDL_net.h>
 
 #include "main.h"
-#include "socket.h"
-#include "string.h"
+#include "socket_util.h"
+#include "string_util.h"
 #include "slre.h"
 #include "command.h"
-#include "time.h"
+#include "time_util.h"
 #include "player.h"
 #include "wid.h"
 #include "wid_button.h"
@@ -132,7 +132,7 @@ static socketp socket_create (IPaddress address, int type)
     return (s);
 }
 
-socket *socket_listen (IPaddress address)
+gsocket *socket_listen (IPaddress address)
 {
     IPaddress listen_address;
 
@@ -198,8 +198,8 @@ socket *socket_listen (IPaddress address)
 
 socketp socket_find (IPaddress address, int type)
 {
-    socket findme;
-    socket *s;
+    gsocket findme;
+    gsocket *s;
 
     memset(&findme, 0, sizeof(findme));
     findme.tree.key2 = type;
@@ -211,7 +211,7 @@ socketp socket_find (IPaddress address, int type)
     return (s);
 }
 
-static socket *socket_connect (IPaddress address, uint8_t server_side_client)
+static gsocket *socket_connect (IPaddress address, uint8_t server_side_client)
 {
     IPaddress connect_address = address;
 
@@ -278,12 +278,12 @@ static socket *socket_connect (IPaddress address, uint8_t server_side_client)
     return (s);
 }
 
-socket *socket_connect_from_client (IPaddress address)
+gsocket *socket_connect_from_client (IPaddress address)
 {
     return (socket_connect(address, false));
 }
 
-socket *socket_connect_from_server (IPaddress address)
+gsocket *socket_connect_from_server (IPaddress address)
 {
     return (socket_connect(address, true));
 }
@@ -443,7 +443,7 @@ uint8_t debug_socket_players_enable (tokens_t *tokens, void *context)
     return (true);
 }
 
-socket *socket_find_local_ip (IPaddress address)
+gsocket *socket_find_local_ip (IPaddress address)
 {
     socketp s;
     TREE_WALK(sockets, s) {
@@ -455,7 +455,7 @@ socket *socket_find_local_ip (IPaddress address)
     return (0);
 }
 
-socket *socket_find_remote_ip (IPaddress address)
+gsocket *socket_find_remote_ip (IPaddress address)
 {
     socketp s;
     TREE_WALK(sockets, s) {

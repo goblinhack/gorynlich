@@ -28,7 +28,7 @@
 
 #include "main.h"
 #include "tree.h"
-#include "time.h"
+#include "time_util.h"
 
 #undef TREE_DEBUG_PRINT
 #undef TREE_DEBUG_PRINT_WALKS

@@ -5,6 +5,7 @@
  */
 
 #include <SDL.h>
+#include <SDL_mouse.h>
 
 #include "main.h"
 #include "wid.h"
@@ -17,7 +18,7 @@
 #include "map.h"
 #include "level.h"
 #include "thing.h"
-#include "string.h"
+#include "string_util.h"
 
 widp wid_editor_map_window;
 widp wid_editor_map_grid_container;

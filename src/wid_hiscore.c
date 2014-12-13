@@ -11,7 +11,7 @@
 #include "color.h"
 #include "wid_hiscore.h"
 #include "wid_intro_extra.h"
-#include "string.h"
+#include "string_util.h"
 #include "marshal.h"
 
 static const char *hiscore_dir_and_file = "gorynlich-hiscore.txt";

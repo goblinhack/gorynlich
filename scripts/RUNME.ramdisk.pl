@@ -38,6 +38,10 @@ my @files = (split(/\n/, `cat $filelist`));
 # 
 # close(OUT);
 
+my $PWD = `pwd`;
+
+chomp($PWD);
+
 foreach $f (@files) {
 
     my $file = "$f";
@@ -54,7 +58,7 @@ foreach $f (@files) {
     open(OUT, ">", "src/asm/ramdisk_" . $struct . ".S");
     print OUT ".globl ${struct}_start_\n";
     print OUT "${struct}_start_:\n";
-    print OUT ".incbin \"../$file\"\n";
+    print OUT ".incbin \"$PWD/$file\"\n";
     print OUT ".globl ${struct}_end_\n";
     print OUT "${struct}_end_:\n";
     print OUT "\n";

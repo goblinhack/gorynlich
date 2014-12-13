@@ -11,7 +11,7 @@
 #include "tile.h"
 #include "wid.h"
 #include "map.h"
-#include "math.h"
+#include "math_util.h"
 #include "wid_game_map_server.h"
 
 typedef struct {

@@ -1,0 +1,244 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:cpo_save=&cpo
+set cpo&vim
+imap <F9> 0obuginf("\nZZZ %s %d ",__FUNCTION__,__LINE__);0
+imap <F10> 0ofprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);0
+map! <D-v> *
+map  :call LoadSession()
+map  :grep "\<\>" *
+nmap 	p <Plug>VS_nextP       " previous misspelling
+nmap 	n <Plug>VS_nextE       " next misspelling
+nmap 	E <Plug>VS_exit        " exit
+nmap 	a <Plug>VS_alt         " propose alternatives
+nmap 	s <Plug>VS_showE       " show misspellings
+nmap 	c <Plug>VS_check       " check file
+nmap <NL> gjz.
+nmap  gkz.
+map  :call Realign():cn
+map  :set wrap
+map  :call Realign()
+map  @a
+vmap  aThanks,Neil.:wq
+nmap  aThanks,Neil.:wq
+map  :grep " (" *
+map  :q!
+map! ›[65~ <S-ScrollWheelDown>
+map! ›[64~ <S-ScrollWheelUp>
+map! ›[63~ <ScrollWheelDown>
+map! ›[62~ <ScrollWheelUp>
+map ( -
+map ) +
+map + :cnkzz
+map - :cpkzz
+map = :Highlight 
+noremap D [D
+map E :bdelete
+map F :bN
+noremap I [I
+map L :cl
+map M :w:make
+noremap N Nzz
+map P :set invpaste
+noremap Q :wq
+map S :sbN
+map T :set tabstop=4
+map U :redo
+noremap W gPdwbyw
+map Z :q
+map [ ?^func \|^{0zz
+map ] /^}/{0zz
+map _co :call MyCheckOut()
+map _ :Unhighlight 
+map e :e 
+map f :bn
+nmap gx <Plug>NetrwBrowseX
+noremap n /zz
+map s :sbn
+nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
+map <F12> :1,$ s/
+map <D-CR> :wq
+vmap <F10> 0ofprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);0
+vmap <F9> 0obuginf("\nZZZ %s %d ",__FUNCTION__,__LINE__);0
+nmap <F9> 0obuginf("\nZZZ %s %d ",__FUNCTION__,__LINE__);0
+omap <F9> 0obuginf("\nZZZ %s %d ",__FUNCTION__,__LINE__);0
+nmap <F10> 0ofprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);0
+omap <F10> 0ofprintf(stderr,"\nZZZ %s %s %d ",__FILE__,__FUNCTION__,__LINE__);0
+map <F7> :r ~/tmp/.vi_buffer3
+map <F6> :'a,'b w! ~/tmp/.vi_buffer3
+map <F5> :'a,'b s/
+map <F4> :'a,'b d
+vmap <BS> "-d
+vmap <D-x> "*d
+vmap <D-c> "*y
+vmap <D-v> "-d"*P
+nmap <D-v> "*P
+imap  aThanks,Neil.:wq
+map ›[65~ <S-ScrollWheelDown>
+map ›[64~ <S-ScrollWheelUp>
+map ›[63~ <ScrollWheelDown>
+map ›[62~ <ScrollWheelUp>
+inoremap ` :call DrChipCStubs()a
+let &cpo=s:cpo_save
+unlet s:cpo_save
+set autoindent
+set clipboard=unnamed
+set expandtab
+set formatoptions=cq
+set helplang=PO
+set hidden
+set hlsearch
+set ignorecase
+set iskeyword=@,48-57,_,192-255,#
+set matchtime=2
+set mousemodel=extend
+set ruler
+set scrolloff=2
+set shiftround
+set shiftwidth=4
+set softtabstop=4
+set tags=tags,/vob/ios/sys/tags
+set visualbell
+set nowritebackup
+let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
+let v:this_session=expand("<sfile>:p")
+silent only
+cd ~/gorynlich/data/music
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+badd +0 1
+argglobal
+silent! argdel *
+argadd 1
+edit 1
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=/*%s*/
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+setlocal nocursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != ''
+setlocal filetype=
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+setlocal foldmethod=manual
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldtext=foldtext()
+setlocal formatexpr=
+setlocal formatoptions=cq
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=0
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=
+setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,#
+setlocal keywordprg=
+setlocal nolinebreak
+setlocal nolisp
+setlocal lispwords=
+setlocal nolist
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=4
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != ''
+setlocal syntax=
+endif
+setlocal tabstop=8
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal undolevels=-123456
+setlocal nowinfixheight
+setlocal nowinfixwidth
+set nowrap
+setlocal nowrap
+setlocal wrapmargin=0
+silent! normal! zE
+let s:l = 17 - ((16 * winheight(0) + 19) / 39)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+17
+normal! 011|
+tabnext 1
+if exists('s:wipebuf')
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 shortmess=filnxtToO
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if file_readable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

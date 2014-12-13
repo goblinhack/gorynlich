@@ -11,10 +11,10 @@
 #include "color.h"
 #include "wid_server_create.h"
 #include "wid_choose_game_type.h"
-#include "string.h"
+#include "string_util.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
-#include "socket.h"
+#include "socket_util.h"
 #include "server.h"
 
 #define WID_SERVER_CREATE_MAX_SETTINGS  5
