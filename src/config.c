@@ -6,7 +6,7 @@
 
 #include "main.h"
 #include "marshal.h"
-#include "string.h"
+#include "string_util.h"
 #include "name.h"
 
 struct config global_config;

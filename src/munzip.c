@@ -10,7 +10,7 @@
 #include <errno.h>
 
 #include "main.h"
-#include "string.h"
+#include "string_util.h"
 #include "file.h"
 #include "mzip_lib.h"
 #include "mzip_file.h"

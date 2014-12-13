@@ -16,7 +16,7 @@
 #include "map.h"
 #include "level.h"
 #include "server.h"
-#include "socket.h"
+#include "socket_util.h"
 
 levelp server_level;
 widp wid_game_map_server_window;

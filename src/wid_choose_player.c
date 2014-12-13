@@ -13,7 +13,7 @@
 #include "wid_choose_game_type.h"
 #include "level.h"
 #include "timer.h"
-#include "time.h"
+#include "time_util.h"
 #include "client.h"
 #include "thing.h"
 #include "wid_notify.h"

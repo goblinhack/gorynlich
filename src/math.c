@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include "main.h"
-#include "math.h"
+#include "math_util.h"
 
 uint32_t nextpoweroftwo (uint32_t val)
 {

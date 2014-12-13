@@ -10,7 +10,7 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_player_inventory.h"
-#include "string.h"
+#include "string_util.h"
 #include "thing_template.h"
 #include "wid_player_stats.h"
 #include "color.h"

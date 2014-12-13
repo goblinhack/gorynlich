@@ -8,8 +8,8 @@
 #include <time.h>
 
 #include "main.h"
-#include "time.h"
-#include "sdl.h"
+#include "time_util.h"
+#include "sdl_util.h"
 
 uint32_t time_now;
 uint32_t base_time_in_mill;

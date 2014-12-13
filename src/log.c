@@ -14,7 +14,7 @@
 #include "main.h"
 #include "backtrace.h"
 #include "wid_console.h"
-#include "time.h"
+#include "time_util.h"
 #include "command.h"
 #include "thing.h"
 #include "level.h"
@@ -24,7 +24,7 @@
 #include "term.h"
 #include "wid_popup.h"
 #include "wid_tooltip.h"
-#include "socket.h"
+#include "socket_util.h"
 #include "wid_notify.h"
 
 uint8_t debug_enabled = 0;

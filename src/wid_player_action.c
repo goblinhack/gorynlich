@@ -13,7 +13,7 @@
 #include "wid_player_inventory.h"
 #include "wid_player_stats.h"
 #include "thing_template.h"
-#include "string.h"
+#include "string_util.h"
 
 static widp wid_player_action;
 static uint8_t wid_player_action_init_done;

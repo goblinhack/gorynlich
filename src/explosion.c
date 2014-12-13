@@ -8,7 +8,7 @@
 #include "slre.h"
 
 #include "main.h"
-#include "math.h"
+#include "math_util.h"
 #include "level.h"
 #include "thing.h"
 #include "wid_game_map_server.h"

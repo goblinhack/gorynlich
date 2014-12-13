@@ -10,7 +10,7 @@
 
 #include "main.h"
 #include "file.h"
-#include "string.h"
+#include "string_util.h"
 #include "mzip_file.h"
 #include "mzip_lib.h"
 #ifndef MINIMAL

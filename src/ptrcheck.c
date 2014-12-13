@@ -11,7 +11,7 @@
 
 #include "main.h"
 #include "backtrace.h"
-#include "time.h"
+#include "time_util.h"
 #include "tree.h"
 #include "command.h"
 

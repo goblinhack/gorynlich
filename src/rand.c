@@ -8,7 +8,7 @@
 #include <math.h>
 
 #include "main.h"
-#include "math.h"
+#include "math_util.h"
 
 double gaussrand (double mean, double stddev)
 {

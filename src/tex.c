@@ -15,7 +15,7 @@
 #include "tree.h"
 #include "pixel.h"
 #include "color.h"
-#include "math.h"
+#include "math_util.h"
 
 typedef struct tex_ {
     tree_key_string tree;
@@ -99,7 +99,6 @@ static unsigned char *load_raw_image (const char *filename,
                                                len, x, y, comp, 0);
     } else {
         DIE("unknown suffix for image, %s", filename);
-        image_data = 0;
     }
 
     if (!image_data) {

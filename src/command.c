@@ -11,7 +11,7 @@
 
 #include "main.h"
 #include "command.h"
-#include "string.h"
+#include "string_util.h"
 #include "term.h"
 #include "wid.h"
 

@@ -24,7 +24,7 @@
 #include <ctype.h>
 
 #include "main.h"
-#include "string.h"
+#include "string_util.h"
 #include "marshal.h"
 #include "ramdisk.h"
 

@@ -9,7 +9,8 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include <string.h>
+#include <strings.h>
+#include <stdlib.h>
 
 typedef enum { RB_RED, RB_BLACK } node_color;
 

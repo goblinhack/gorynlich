@@ -1,0 +1,9 @@
+width=1008 
+height=672 
+sound_volume=0 
+music_volume=0 
+name="Katorrim" 
+class="Elf" 
+server_name="bob" 
+server_max_players=4 
+server_port=10001

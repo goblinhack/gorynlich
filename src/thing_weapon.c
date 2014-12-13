@@ -10,7 +10,7 @@
 #include "thing.h"
 #include "wid.h"
 #include "wid_game_map_server.h"
-#include "math.h"
+#include "math_util.h"
 
 void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
 {

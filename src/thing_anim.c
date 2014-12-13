@@ -13,7 +13,7 @@
 #include "thing_tile_private.h"
 #include "tile.h"
 #include "wid.h"
-#include "time.h"
+#include "time_util.h"
 #include "command.h"
 
 void thing_animate (thingp t)

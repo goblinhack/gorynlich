@@ -14,8 +14,8 @@
 #include "wid_game_map_client.h"
 #include "wid_game_map_server.h"
 #include "level.h"
-#include "time.h"
-#include "socket.h"
+#include "time_util.h"
+#include "socket_util.h"
 
 TREE_GET_NEXT_INLINE(tree_key_int32_compare_func)
 

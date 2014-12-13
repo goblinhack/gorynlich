@@ -11,7 +11,7 @@
 #include <libgen.h>
 
 #include "main.h"
-#include "string.h"
+#include "string_util.h"
 
 /*
  * Replace chars in replace_set with replace_with.
