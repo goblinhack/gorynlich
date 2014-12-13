@@ -309,7 +309,6 @@ static void level_place_explosion_ (levelp level,
 
             for (dx = -0.5; dx < 0.5; dx += density) {
                 for (dy = -0.5; dy < 0.5; dy += density) {
-                    dx = 0;dy = 0;
                     double ex = ix + dx;
                     double ey = iy + dy;
 
@@ -324,7 +323,6 @@ static void level_place_explosion_ (levelp level,
                                                     distance,
                                                     nargs, args);
                     va_end(args);
-                    break;
                 }
             }
         }

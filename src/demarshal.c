@@ -306,7 +306,6 @@ void demarshal_fini (tree_demarshal *ctx)
 
         if (!found) {
             DIE("pointer ref %p not found", target.tree.key);
-            continue;
         }
 
         (*r->pptr_ref) = (*found->ptr);

@@ -230,7 +230,7 @@ static void dmap_process (level_walls *dmap, level_walls *dmap_final)
         }
     } while (changed);
 
-#ifdef DEBUG
+#ifdef GORY_DEBUG
     do {
         for (x = 1; x < MAP_WIDTH - 1; x++) {
             for (y = 1; y < MAP_HEIGHT - 1; y++) {
@@ -536,7 +536,7 @@ static void dmap_generate (levelp level)
 #ifdef ENABLE_MAP_DEBUG
     if (1)
 #else
-    if (0)
+    if (/* DISABLES CODE */ (0))
 #endif
     dmap_print(level, &dmap_monst_map_treat_doors_as_passable);
 }
@@ -641,7 +641,7 @@ static uint8_t thing_find_nexthop_dmap (thingp t,
 #ifdef ENABLE_MAP_DEBUG
     if (1)
 #else
-    if (0)
+    if (/* DISABLES CODE */ (0))
 #endif
     dmap_thing_print(t, *nexthop_x, *nexthop_y);
 

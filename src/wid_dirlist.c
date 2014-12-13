@@ -325,7 +325,7 @@ static uint8_t wid_dirlist_receive_input (widp w, const SDL_KEYSYM *key)
                     match = strncmp(wid_get_text(child), wid_get_text(w),
                                     strlen(wid_get_text(w)));
 
-                    len = strlen(wid_get_text(child));
+                    len = (int32_t) strlen(wid_get_text(child));
 
                     if (!match && (len > best)) {
                         wid_set_text(w, wid_get_text(child));
@@ -453,7 +453,7 @@ static void wid_dirlist_add_files (widp wid_dirlist_container,
 
         if (!strcasecmp(n->tree.key, ".")) {
 #ifndef ENABLE_DIR_TRAVERSAL_IN_WIDGETS
-            if (1) {
+            if (/* DISABLES CODE */ (1)) {
                 continue;
             }
 #endif

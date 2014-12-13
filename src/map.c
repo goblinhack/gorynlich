@@ -17,7 +17,7 @@
 
 typedef uint8_t (*map_is_at_callback)(tpp);
 
-#ifdef DEBUG
+#ifdef GORY_DEBUG
 FILE *fp = 0;
 #endif
 
@@ -1540,7 +1540,7 @@ void map_fixup (levelp level)
     tpp nbrs[3][3];
     widp w;
                 
-#ifdef DEBUG
+#ifdef GORY_DEBUG
     if (!fp) {
         fp = fopen("map.txt","w");
     }
@@ -1558,7 +1558,7 @@ void map_fixup (levelp level)
             widp mywid = 0;
 
             if (map_find_wall_at(level, x, y, &w)) {
-#ifdef DEBUG
+#ifdef GORY_DEBUG
 if (level != server_level)
                 fprintf(fp,"x");
 #endif
@@ -1566,7 +1566,7 @@ if (level != server_level)
             } else if (map_find_pipe_at(level, x, y, &w)) {
                 mywid = w;
             } else if (map_find_door_at(level, x, y, &w)) {
-#ifdef DEBUG
+#ifdef GORY_DEBUG
 if (level != server_level)
                 fprintf(fp,"D");
 #endif
@@ -1574,7 +1574,7 @@ if (level != server_level)
             }
 
             if (!mywid) {
-#ifdef DEBUG
+#ifdef GORY_DEBUG
 if (level != server_level)
                 fprintf(fp," ");
 #endif
@@ -1785,11 +1785,11 @@ if (level != server_level)
             wid_set_tilename(mywid, tilename);
             wid_set_font(mywid, small_font);
         }
-#ifdef DEBUG
+#ifdef GORY_DEBUG
         fprintf(fp,"\n");
 #endif
     }
-#ifdef DEBUG
+#ifdef GORY_DEBUG
     fprintf(fp,"\n");
     fprintf(fp,"\n");
 #endif
