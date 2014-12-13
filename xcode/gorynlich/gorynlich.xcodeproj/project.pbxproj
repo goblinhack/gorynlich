@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D3A19D491A3CE3FB007BF3DA /* ramdisk_data.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D481A3CE3FB007BF3DA /* ramdisk_data.c */; };
 		D3A19DB11A3CE45E007BF3DA /* backtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D4A1A3CE45E007BF3DA /* backtrace.c */; };
 		D3A19DB21A3CE45E007BF3DA /* client.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D4B1A3CE45E007BF3DA /* client.c */; };
 		D3A19DB31A3CE45E007BF3DA /* color.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D4C1A3CE45E007BF3DA /* color.c */; };
@@ -39,7 +38,6 @@
 		D3A19DCF1A3CE45E007BF3DA /* player.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D681A3CE45E007BF3DA /* player.c */; };
 		D3A19DD01A3CE45E007BF3DA /* point.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D691A3CE45E007BF3DA /* point.c */; };
 		D3A19DD11A3CE45E007BF3DA /* ptrcheck.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D6A1A3CE45E007BF3DA /* ptrcheck.c */; };
-		D3A19DD21A3CE45E007BF3DA /* ramdisk_data.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D6B1A3CE45E007BF3DA /* ramdisk_data.c */; };
 		D3A19DD41A3CE45E007BF3DA /* rand.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D6D1A3CE45E007BF3DA /* rand.c */; };
 		D3A19DD51A3CE45E007BF3DA /* resource.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D6E1A3CE45E007BF3DA /* resource.c */; };
 		D3A19DD61A3CE45E007BF3DA /* sdl.c in Sources */ = {isa = PBXBuildFile; fileRef = D3A19D6F1A3CE45E007BF3DA /* sdl.c */; };
@@ -426,7 +424,6 @@
 
 /* Begin PBXFileReference section */
 		D3A19D3E1A3CE3CE007BF3DA /* gorynlich */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gorynlich; sourceTree = BUILT_PRODUCTS_DIR; };
-		D3A19D481A3CE3FB007BF3DA /* ramdisk_data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ramdisk_data.c; path = ../../../src/ramdisk_data.c; sourceTree = "<group>"; };
 		D3A19D4A1A3CE45E007BF3DA /* backtrace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = backtrace.c; path = ../../../src/backtrace.c; sourceTree = "<group>"; };
 		D3A19D4B1A3CE45E007BF3DA /* client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = client.c; path = ../../../src/client.c; sourceTree = "<group>"; };
 		D3A19D4C1A3CE45E007BF3DA /* color.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = color.c; path = ../../../src/color.c; sourceTree = "<group>"; };
@@ -458,7 +455,6 @@
 		D3A19D681A3CE45E007BF3DA /* player.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = player.c; path = ../../../src/player.c; sourceTree = "<group>"; };
 		D3A19D691A3CE45E007BF3DA /* point.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = point.c; path = ../../../src/point.c; sourceTree = "<group>"; };
 		D3A19D6A1A3CE45E007BF3DA /* ptrcheck.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ptrcheck.c; path = ../../../src/ptrcheck.c; sourceTree = "<group>"; };
-		D3A19D6B1A3CE45E007BF3DA /* ramdisk_data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ramdisk_data.c; path = ../../../src/ramdisk_data.c; sourceTree = "<group>"; };
 		D3A19D6D1A3CE45E007BF3DA /* rand.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rand.c; path = ../../../src/rand.c; sourceTree = "<group>"; };
 		D3A19D6E1A3CE45E007BF3DA /* resource.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = resource.c; path = ../../../src/resource.c; sourceTree = "<group>"; };
 		D3A19D6F1A3CE45E007BF3DA /* sdl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sdl.c; path = ../../../src/sdl.c; sourceTree = "<group>"; };
@@ -1198,7 +1194,6 @@
 				D3A19D681A3CE45E007BF3DA /* player.c */,
 				D3A19D691A3CE45E007BF3DA /* point.c */,
 				D3A19D6A1A3CE45E007BF3DA /* ptrcheck.c */,
-				D3A19D6B1A3CE45E007BF3DA /* ramdisk_data.c */,
 				D3A19D6D1A3CE45E007BF3DA /* rand.c */,
 				D3A19D6E1A3CE45E007BF3DA /* resource.c */,
 				D3A19D6F1A3CE45E007BF3DA /* sdl.c */,
@@ -1266,7 +1261,6 @@
 				D3A19DAE1A3CE45E007BF3DA /* wid_textbox.c */,
 				D3A19DAF1A3CE45E007BF3DA /* wid_tooltip.c */,
 				D3A19DB01A3CE45E007BF3DA /* wid.c */,
-				D3A19D481A3CE3FB007BF3DA /* ramdisk_data.c */,
 			);
 			path = gorynlich;
 			sourceTree = "<group>";
@@ -1504,7 +1498,6 @@
 				D3A19E0E1A3CE45E007BF3DA /* wid_player_inventory.c in Sources */,
 				D3A1A3481A3CEA3C007BF3DA /* ramdisk_data_sound_scream_male_wav.S in Sources */,
 				D3A1A2D41A3CEA3C007BF3DA /* ramdisk_data_ttf_emulogic_ttf_pointsize19_data.S in Sources */,
-				D3A19DD21A3CE45E007BF3DA /* ramdisk_data.c in Sources */,
 				D3A19DDB1A3CE45E007BF3DA /* stb_image.c in Sources */,
 				D3A19DD81A3CE45E007BF3DA /* slre.c in Sources */,
 				D3A1A3101A3CEA3C007BF3DA /* ramdisk_data_gfx_gothic_wide_png.S in Sources */,
@@ -1534,7 +1527,6 @@
 				D3A1A3511A3CEA3C007BF3DA /* ramdisk_data_things__axe1_session.S in Sources */,
 				D3A1A3161A3CEA3C007BF3DA /* ramdisk_data_gfx_rat_png.S in Sources */,
 				D3A1A3B71A3CEA3C007BF3DA /* ramdisk_data_things_hit_success.S in Sources */,
-				D3A19D491A3CE3FB007BF3DA /* ramdisk_data.c in Sources */,
 				D3A1A3A91A3CEA3C007BF3DA /* ramdisk_data_things_gem2.S in Sources */,
 				D3A1A2F21A3CEA3C007BF3DA /* ramdisk_data_ttf_Metamorphous_Regular_ttf_pointsize14_tga.S in Sources */,
 				D3A19E0C1A3CE45E007BF3DA /* wid_player_action.c in Sources */,
