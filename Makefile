@@ -9,6 +9,6 @@ clean:
 	(cd src; make $@)
 
 clobber:
-	rm src/Makefile
 	(cd src; make $@)
+	rm src/Makefile
 # DO NOT DELETE
