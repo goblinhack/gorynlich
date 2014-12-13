@@ -1,0 +1,6 @@
+.globl data_ttf_Metamorphous_Regular_ttf_pointsize24_tga_start_
+data_ttf_Metamorphous_Regular_ttf_pointsize24_tga_start_:
+.incbin "/Users/nmcgill/gorynlich/data/ttf/Metamorphous_Regular.ttf_pointsize24.tga"
+.globl data_ttf_Metamorphous_Regular_ttf_pointsize24_tga_end_
+data_ttf_Metamorphous_Regular_ttf_pointsize24_tga_end_:
+

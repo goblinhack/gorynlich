@@ -11,11 +11,11 @@
 #include "color.h"
 #include "wid_popup.h"
 #include "wid_player_stats.h"
-#include "string.h"
+#include "string_util.h"
 #include "name.h"
 #include "thing_template.h"
 #include "wid_player_info.h"
-#include "math.h"
+#include "math_util.h"
 
 int item_push (itemp dst, item_t src)
 {

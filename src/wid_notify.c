@@ -11,7 +11,7 @@
 #include "color.h"
 #include "ttf.h"
 #include "wid_notify.h"
-#include "time.h"
+#include "time_util.h"
 #include "string_ext.h"
 
 typedef struct {

@@ -9,7 +9,7 @@
 #include "stb_image.h"
 
 #include "main.h"
-#include "math.h"
+#include "math_util.h"
 #include "glapi.h"
 #include "pixel.h"
 #include "color.h"
@@ -18,9 +18,9 @@
 #include "tile.h"
 #include "ttf.h"
 #include "ramdisk.h"
-#include "time.h"
+#include "time_util.h"
 #include "string_ext.h"
-#include "string.h"
+#include "string_util.h"
 
 #define TTF_FIXED_WIDTH_CHAR '0'
 #define TTF_GLYPH_MIN ' '

@@ -1,0 +1,6 @@
+.globl data_gfx_anim_man_png_start_
+data_gfx_anim_man_png_start_:
+.incbin "/Users/nmcgill/gorynlich/data/gfx/anim_man.png"
+.globl data_gfx_anim_man_png_end_
+data_gfx_anim_man_png_end_:
+

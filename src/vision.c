@@ -9,8 +9,8 @@
 #include "slre.h"
 
 #include "main.h"
-#include "math.h"
-#include "string.h"
+#include "math_util.h"
+#include "string_util.h"
 #include "wid.h"
 #include "level.h"
 #include "vision.h"

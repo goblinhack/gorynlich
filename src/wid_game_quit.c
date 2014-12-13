@@ -13,7 +13,7 @@
 #include "client.h"
 #include "wid_game_map_client.h"
 #include "wid_intro.h"
-#include "string.h"
+#include "string_util.h"
 
 static widp wid_really_quit_game_yes_no;
 

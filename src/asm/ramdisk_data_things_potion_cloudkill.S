@@ -1,0 +1,6 @@
+.globl data_things_potion_cloudkill_start_
+data_things_potion_cloudkill_start_:
+.incbin "/Users/nmcgill/gorynlich/data/things/potion_cloudkill"
+.globl data_things_potion_cloudkill_end_
+data_things_potion_cloudkill_end_:
+

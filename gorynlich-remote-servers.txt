@@ -1,0 +1,15 @@
+host="localhost" 
+port=10000 
+auto_add=0 
+host="localhost" 
+port=10003 
+auto_add=0 
+host="localhost" 
+port=10004 
+auto_add=0 
+host="127.0.0.2" 
+port=10008 
+auto_add=0 
+host="localhost" 
+port=10009 
+auto_add=0

@@ -78,40 +78,40 @@ void putPixel (SDL_Surface * surface, uint32_t x, uint32_t y, color col)
     switch (pitch) {
         case 16:
             putPixel_16x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 24:
             putPixel_24x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 32:
             putPixel_32x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 48:
             putPixel_48x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 64:
             putPixel_64x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 128:
             putPixel_128x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 256:
             putPixel_256x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 320:
             putPixel_320x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 640:
             putPixel_640x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 800:
             putPixel_800x32bpp(surface, x, y, rgb);
-            return;
+            break;
         case 1024:
             putPixel_1024x32bpp(surface, x, y, rgb);
-            return;
+            break;
         default:
             putPixel_32bpp(surface, x, y, rgb);
-            return;
+            break;
     }
 
     unlock(surface);

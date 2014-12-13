@@ -19,7 +19,7 @@
 #include "wid_dirlist.h"
 #include "wid_intro.h"
 #include "file.h"
-#include "string.h"
+#include "string_util.h"
 #include "marshal.h"
 #include "wid_text_input.h"
 #include "wid_textbox.h"

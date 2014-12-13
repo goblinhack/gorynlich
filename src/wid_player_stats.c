@@ -15,7 +15,7 @@
 #include "wid_player_action.h"
 #include "wid_choose_game_type.h"
 #include "timer.h"
-#include "string.h"
+#include "string_util.h"
 #include "client.h"
 
 widp wid_player_stats;

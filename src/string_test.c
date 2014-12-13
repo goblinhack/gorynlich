@@ -5,7 +5,7 @@
  */
 
 #include "main.h"
-#include "string.h"
+#include "string_util.h"
 #include "string_ext.h"
 
 uint8_t string_test (int32_t argc, char *argv[])

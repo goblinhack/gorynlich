@@ -7,15 +7,15 @@
 #include "SDL_timer.h"
 
 #include "main.h"
-#include "socket.h"
+#include "socket_util.h"
 #include "server.h"
-#include "time.h"
+#include "time_util.h"
 #include "slre.h"
 #include "command.h"
 #include "player.h"
 #include "wid_game_map_server.h"
 #include "wid_server_create.h"
-#include "string.h"
+#include "string_util.h"
 #include "thing.h"
 #include "mzip_lib.h"
 

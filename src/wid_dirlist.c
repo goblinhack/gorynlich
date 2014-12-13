@@ -13,7 +13,7 @@
 #include "color.h"
 #include "ttf.h"
 #include "dir.h"
-#include "string.h"
+#include "string_util.h"
 
 static const uint32_t MAX_ROWS = 6;
 static const int32_t PAD_X = 80;

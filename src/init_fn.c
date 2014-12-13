@@ -10,7 +10,7 @@
 #include "tree.h"
 #include "init_fn.h"
 #include "init_fn_private.h"
-#include "string.h"
+#include "string_util.h"
 
 tree_rootp init_fns;
 

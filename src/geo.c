@@ -6,7 +6,7 @@
 
 #include "main.h"
 #include "geo.h"
-#include "math.h"
+#include "math_util.h"
 
 /*
  * triangle_line_intersect(): find the 3D intersection of a line with a 
