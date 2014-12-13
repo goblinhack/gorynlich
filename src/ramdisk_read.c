@@ -5,7 +5,7 @@
  */
 
 #include <libgen.h>
-#include <string.h>
+#include "string_util.h"
 
 #define nUSE_ZLIB
 #define nUSE_MINIZ
@@ -25,7 +25,7 @@
 
 #include "main.h"
 #include "file.h"
-#include "string_util.h"
+#include "string.h"
 
 #include "ramdisk_data.c"
 
@@ -119,7 +119,7 @@ unsigned char *ramdisk_load (const char *filename, int32_t *outlen)
     }
 
     while (ramfile->filename) {
-        if (strcasecmp(ramfile->filename, filename)) {
+        if (strcmp(ramfile->filename, filename)) {
             ramfile++;
             continue;
         }

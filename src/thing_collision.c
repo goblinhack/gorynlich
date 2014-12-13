@@ -423,14 +423,14 @@ static void thing_handle_collision (thingp me, thingp it,
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
-#ifdef DEBUG
+#ifdef GORY_DEBUG
 if (thing_is_player(me) || thing_is_player(it)) {
 LOG("no overlap %s %s",thing_logname(me),thing_logname(it));
 }
 #endif
         return;
     }
-#ifdef DEBUG
+#ifdef GORY_DEBUG
 if (thing_is_player(me) || thing_is_player(it)) {
 LOG("HIT %s %s",thing_logname(me),thing_logname(it));
 }

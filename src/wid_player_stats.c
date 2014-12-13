@@ -443,7 +443,7 @@ static void wid_player_stats_create (thing_statsp s)
             wid_set_tl_br_pct(w, tl, br);
 
             char *text = 0;
-            int stat;
+            int stat = 0;
 
             wid_set_color(w, WID_COLOR_TEXT, WHITE);
 

@@ -3748,7 +3748,7 @@ void marshal_wid_grid (marshal_p ctx, widp w)
                 PUT_NAMED_STRING(ctx, "t",
                                 tp_name(child->tp));
 
-                count = (uintptr_t) wid_get_client_context(child);
+                count = (uint32_t) (uintptr_t) wid_get_client_context(child);
 
                 if (count > 0) {
                     PUT_NAMED_UINT32(ctx, "count", count);
@@ -3795,6 +3795,8 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
 
         char *name = 0;
 
+        x = y = 0;
+        
         rc = rc && GET_NAMED_UINT32(ctx, "x", x);
         rc = rc && GET_NAMED_UINT32(ctx, "y", y);
         rc = rc && GET_NAMED_STRING(ctx, "t", name);
@@ -3806,7 +3808,7 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
             continue;
         }
 
-        child = (*callback)(w, x, y, 
+        child = (*callback)(w, x, y,
                             0, /* thing */
                             tp,
                             0 /* item */,
@@ -7550,7 +7552,7 @@ static void wid_lighting_calculate (widp w,
     /*
      * Seems to add nothing.
      */
-    if (0) {
+    if (/* DISABLES CODE */ (0)) {
         wid_lighting_smooth(light);
     }
 }

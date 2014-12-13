@@ -1224,7 +1224,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
             socket_get_remote_logname(s), seq, ts);
     }
 
-    packet->len = data - odata;
+    packet->len = (int32_t)(data - odata);
     write_address(packet, socket_get_remote_ip(s));
 
     socket_tx_msg(s, packet);
