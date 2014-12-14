@@ -53,6 +53,10 @@ fi
 
 mkdir -p src/asm
 scripts/RUNME.ramdisk.pl $RAMDISK_FILES
+if [ $? -ne 0 ]
+then
+    log_die "Failed to make ramdisk files"
+fi
 
 /bin/rm -f $RAMDISK_FILES
 
