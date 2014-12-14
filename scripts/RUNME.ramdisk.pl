@@ -58,7 +58,16 @@ foreach $f (@files) {
     open(OUT, ">", "src/asm/ramdisk_" . $struct . ".S");
     print OUT ".globl ${struct}_start_\n";
     print OUT "${struct}_start_:\n";
-    print OUT ".incbin \"$PWD/$file\"\n";
+
+    #
+    # MingW didn't seem to like full paths
+    #
+    if ( `uname` =~ /*MING*/) {
+        print OUT ".incbin \"../$file\"\n";
+    } else {
+        print OUT ".incbin \"$PWD/$file\"\n";
+    }
+
     print OUT ".globl ${struct}_end_\n";
     print OUT "${struct}_end_:\n";
     print OUT "\n";
