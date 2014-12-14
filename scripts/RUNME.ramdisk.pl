@@ -62,7 +62,7 @@ foreach $f (@files) {
     #
     # MingW didn't seem to like full paths
     #
-    if ( `uname` =~ /*MING*/) {
+    if ( `uname` =~ /.*MING.*/) {
         print OUT ".incbin \"../$file\"\n";
     } else {
         print OUT ".incbin \"$PWD/$file\"\n";
