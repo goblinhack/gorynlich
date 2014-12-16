@@ -22,6 +22,9 @@ gorynlich_29x29.png:
 gorynlich_256x256.png:
 	convert -scale 256x256 $(ORIG) gorynlich_256x256.png
 
+gorynlich_512x512.png:
+	convert -scale 512x512 $(ORIG) gorynlich_512x512.png
+
 gorynlich_32x32.png:
 	convert -scale 32x32 $(ORIG) gorynlich_32x32.png
 
@@ -34,7 +37,7 @@ gorynlich_50x50.png:
 gorynlich_58x58.png:
 	convert -scale 58x58 $(ORIG) gorynlich_58x58.png
 
-gorynlich_512x512.png:
+gorynlich_512x512.icns:
 	convert -scale 512x512 $(ORIG) gorynlich_512x512.png
 	makeicns -512 gorynlich_512x512.png
 
