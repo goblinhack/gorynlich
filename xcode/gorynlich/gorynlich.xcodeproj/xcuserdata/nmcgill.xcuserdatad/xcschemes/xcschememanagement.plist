@@ -9,9 +9,49 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>gorynlichIOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>gorynlichOSX.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>goynlichOSX.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>D33120451A3E83A600F5B758</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D331205F1A3E83A700F5B758</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D33120BB1A3E8C8100F5B758</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D33120D51A3E8C8100F5B758</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D33120E71A3E8E7A00F5B758</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>D3A19D3D1A3CE3CE007BF3DA</key>
 		<dict>
 			<key>primary</key>
