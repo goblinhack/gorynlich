@@ -36,10 +36,10 @@ Y88b  d88P Y88..88P 888     Y88b 888 888  888 888 888 Y88b.    888  888
 %%
 
 NAME="gorynlich"
-APP="gorynlich.app"
-DMG="gorynlich.dmg"
-SCHEME="$NAME"
-DMG_TMP=".gorynlich.dmg"
+APP="gorynlichOSX.app"
+DMG="gorynlichOSX.dmg"
+SCHEME="gorynlichOSX"
+DMG_TMP=".gorynlichOSX.dmg"
 APP_DIR="/Users/$LOGNAME/Library/"
 
 log_info "Cleaning"
@@ -67,15 +67,10 @@ fi
 
 /bin/rm -f $DMG
 
-CANDIDATES=`find $APP_DIR -name $APP`
-echo $CANDIDATES
+XCODE_APP=`find $APP_DIR 2>/dev/null | grep "$APP$" | grep -v Archive | tail -1`
+log_info "App dir: $XCODE_APP"
 
-/bin/ls -tr $CANDIDATES
-XCODE_APP=`/bin/ls -tr $CANDIDATES | grep ":" | sed 's/://g' | tail -1`
-echo XCODE_APP $XCODE_APP
-exit 1
-
-if [ ! -d $XCODE_APP ]
+if [ ! -d "$XCODE_APP" ]
 then
     log_err "Did not find $APP dir in $APP_DIR"
     exit 1
@@ -88,7 +83,6 @@ log_info "Package $APP"
 
 /bin/rm -f $DMG_TMP
 
-set -x
 hdiutil create -srcfolder "$XCODE_APP" -volname "$NAME" -fs HFS+ -fsargs '-c c=64,a=16,e=16' -format UDRW -size 300m $DMG_TMP
 if [ $? -ne 0 ]
 then
