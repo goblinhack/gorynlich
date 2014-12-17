@@ -1,9 +1,19 @@
 
 Gorynlich (aka Goblinhack v2) is a top-down dungeon romp with single and multiplayer options.
 
-Should work on windows/linux/macos. Uses SDL. Code is pure C.
+To build:
 
-Just run ./RUNME to build. That's it.
+    Linux:
+        ./RUNME
+
+    MacOS:
+        ./RUNME
+
+    MacOS+Xcode:
+        ./RUNME.Xcode-OSX
+
+    Windows+MingW:
+        ./RUNME.mingw
 
 
      .d8888b.                                     888 d8b          888      

@@ -127,6 +127,6 @@ cd $TOP_DIR
 
 if [ $? -eq 0 ]
 then
-    cd installer
+    cd windows
     ./windows.sh
 fi

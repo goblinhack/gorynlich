@@ -41,9 +41,10 @@
       "size" : "256x256"
     },
     {
+      "size" : "512x512",
       "idiom" : "mac",
-      "scale" : "1x",
-      "size" : "512x512"
+      "filename" : "gorynlich_512x512512x512.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "mac",
