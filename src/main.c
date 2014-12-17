@@ -528,11 +528,12 @@ static void parse_args (int32_t argc, char *argv[])
          */
         if (argv[i][0] == '-') {
             usage();
-            DIE("unknown format argument, %s", argv[i]);
+            WARN("unknown format argument, %s", argv[i]);
+            continue;
         }
 
         usage();
-        DIE("unknown format argument, %s", argv[i]);
+        WARN("unknown format argument, %s", argv[i]);
     }
 }
 
