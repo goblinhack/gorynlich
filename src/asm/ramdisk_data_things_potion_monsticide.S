@@ -1,6 +1,0 @@
-.globl data_things_potion_monsticide_start_
-data_things_potion_monsticide_start_:
-.incbin "/Users/nmcgill/gorynlich/data/things/potion_monsticide"
-.globl data_things_potion_monsticide_end_
-data_things_potion_monsticide_end_:
-
