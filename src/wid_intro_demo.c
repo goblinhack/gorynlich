@@ -181,11 +181,11 @@ int sdl_intro_demo_update (void)
         x = (elapsed / 7000.0);
 
         static double y = 0;;
-        static const double gravity = 0.05;
+        static const double gravity = 0.03;
         static double speed = 0.001;
         static double decel = 1.0 - gravity;
         static double accel = 1.0 + gravity;
-        static double speed_loss_on_impact = 0.8;
+        static double speed_loss_on_impact = 0.7;
         static double dir = 1;
 
         y += speed * dir;
@@ -207,6 +207,8 @@ int sdl_intro_demo_update (void)
         wid_move_to_pct(wid_rock, X, y);
 
         if (y > wall_start) {
+            y = wall_start;
+
             speed *= speed_loss_on_impact;
 
             dir = -dir;

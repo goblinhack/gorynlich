@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "main.h"
 #include "string_util.h"
