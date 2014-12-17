@@ -1,6 +1,0 @@
-.globl data_things__sword1_anim_session_start_
-data_things__sword1_anim_session_start_:
-.incbin "/Users/nmcgill/gorynlich/data/things/.sword1_anim.session"
-.globl data_things__sword1_anim_session_end_
-data_things__sword1_anim_session_end_:
-

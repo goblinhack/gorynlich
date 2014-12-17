@@ -1,6 +1,0 @@
-.globl data_things__thing_template_h_session_start_
-data_things__thing_template_h_session_start_:
-.incbin "/Users/nmcgill/gorynlich/data/things/.thing_template.h.session"
-.globl data_things__thing_template_h_session_end_
-data_things__thing_template_h_session_end_:
-

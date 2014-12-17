@@ -1,6 +1,0 @@
-.globl data_ttf_Metamorphous_Regular_ttf_pointsize14_data_start_
-data_ttf_Metamorphous_Regular_ttf_pointsize14_data_start_:
-.incbin "/Users/nmcgill/gorynlich/data/ttf/Metamorphous_Regular.ttf_pointsize14.data"
-.globl data_ttf_Metamorphous_Regular_ttf_pointsize14_data_end_
-data_ttf_Metamorphous_Regular_ttf_pointsize14_data_end_:
-
