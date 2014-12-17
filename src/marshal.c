@@ -21,6 +21,7 @@
  */
 
 #include <math.h>
+#include <string.h>
 
 #include "main.h"
 #include "file.h"

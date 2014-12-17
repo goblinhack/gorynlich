@@ -4,6 +4,8 @@
  * See the README file for license.
  */
 
+#include <string.h>
+
 #include "main.h"
 #include "marshal.h"
 #include "string_util.h"

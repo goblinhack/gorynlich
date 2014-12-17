@@ -834,6 +834,8 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
+
+            SDL_Delay(MAIN_LOOP_DELAY);
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
@@ -842,26 +844,25 @@ void sdl_loop (void)
     wid_console_hello();
 
     if (!HEADLESS) {
-
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
 
-    if (global_config.display_sync) {
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-    } else {
-        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
-    }
+        if (global_config.display_sync) {
+            SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+        } else {
+            SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
+        }
 
 #else /* } { */
 
-    if (global_config.display_sync) {
-        SDL_GL_SetSwapInterval(1);
-    } else {
-        SDL_GL_SetSwapInterval(0);
-    }
+        if (global_config.display_sync) {
+            SDL_GL_SetSwapInterval(1);
+        } else {
+            SDL_GL_SetSwapInterval(0);
+        }
 
 #endif /* } */
-
     }
+
     for (;;) {
         /*
          * Clear the screen
