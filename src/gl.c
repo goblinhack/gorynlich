@@ -14,6 +14,13 @@ void gl_enter_2d_mode (void)
         return;
     }
 
+#ifdef _WIN32
+    if (glewInit() != GLEW_OK) {
+	SDL_MSG_BOX("GLEW init fail");
+	return;
+    }
+#endif
+
     /*
      * Enable Texture Mapping
      */
@@ -41,10 +48,6 @@ void gl_enter_2d_mode (void)
      * Reset the view
      */
     glLoadIdentity();
-
-#ifdef _WIN32
-    glewInit();
-#endif
 
     /*
      * 2D projection
@@ -103,6 +106,12 @@ static void gl_init_fbo_ (
     /*
      * Create a render buffer object.
      */
+    if (!glGenRenderbuffers) {
+	SDL_MSG_BOX("GLEW Render buffer extension is missing. "
+		"Graphics will suck.");
+	return;
+    }
+
     if (!glGenRenderbuffersEXT) {
 	SDL_MSG_BOX("Render buffer extension is missing. "
 		"Graphics will suck.");
