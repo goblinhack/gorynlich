@@ -219,6 +219,8 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 
 static void wid_intro_single_play_selected_cb (void *context)
 {
+    LOG("Play selected callback");
+
     on_server = true;
 
     wid_server_join_hide();
@@ -261,6 +263,8 @@ static void wid_intro_single_play_selected (void)
 
 static void wid_intro_play_selected_cb (void *context)
 {
+    LOG("Intro play selected callback");
+
     wid_choose_game_type_visible();
     wid_intro_buttons_hide();
 }

@@ -695,7 +695,6 @@ void thing_stats_get_random (thing_stats *player_stats)
     player_stats->max_magic = 
         player_stats->magic = gaussrand(player_stats->magic,
                                      player_stats->magic / 10);
-
     LOG(" %20s %s", "Name", player_stats->pname);
     LOG(" %20s %s", "Class", player_stats->pclass);
     LOG(" %20s %d", "Points", player_stats->spending_points);
@@ -723,6 +722,8 @@ void thing_stats_get_random (thing_stats *player_stats)
      * Be generous and give some items at startup.
      */
     thing_stats_get_random_items(player_stats);
+
+    LOG("Done generating random character");
 }
 
 void thing_stats_init (thing_stats *player_stats) 

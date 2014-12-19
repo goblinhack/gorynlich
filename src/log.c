@@ -762,6 +762,11 @@ static void sdl_msgerr_ (const char *fmt, va_list args)
 
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
+#if SDL_MAJOR_VERSION >= 2
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 
+	"Gorynlich", buf + ts_len, 0);
+#endif
+
     len = (uint32_t)strlen(buf);
     snprintf(buf + len, sizeof(buf) - len, "%%%%fg=reset$");
 
@@ -770,11 +775,6 @@ static void sdl_msgerr_ (const char *fmt, va_list args)
 
     putf(MY_STDOUT, buf);
     fflush(MY_STDOUT);
-
-#if SDL_MAJOR_VERSION >= 2
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 
-	"Gorynlich", buf + ts_len, 0);
-#endif
 
     backtrace_print();
 }
