@@ -620,7 +620,9 @@ static void jigpieces_read (dungeon_t *dg, char *buf)
             for (n = 0; n < cnt_cells_per_line; n++) {
 
                 if (*c != '|') {
-                    dieat(line, col, "expecting start of jigpiece data");
+                    ERR("Found char 0x%x '%c' when expecting | char", *c, *c);
+                    dieat(line, col, "expecting start of jigpiece "
+                          "data, found char");
                 }
 
                 c++;
