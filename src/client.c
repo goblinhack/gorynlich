@@ -762,19 +762,21 @@ static void client_poll (void)
 
         packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
         if (!packet) {
-            ERR("Out of packet space, pak %d", MAX_PACKET_SIZE);
+            ERR("Client: Out of packet space, pak %d", MAX_PACKET_SIZE);
             continue;
         }
 
         int i;
         for (i = 0; i < numready; i++) {
-            if (!SDLNet_SocketReady(socket_get_udp_socket(s))) {
+            int ready = SDLNet_SocketReady(socket_get_udp_socket(s));
+            if (ready == 0) {
                 continue;
             }
 
             int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
             if (paks != 1) {
-                ERR("Pak rx failed: %s", SDLNet_GetError());
+                LOG("Client: UDP rx failed: error='%s' paks=%d", 
+                    SDLNet_GetError(), paks);
                 continue;
             }
 
@@ -788,7 +790,29 @@ static void client_poll (void)
              */
 
             if (*packet->data == MSG_COMPRESSED) {
-                data = miniz_uncompress(packet->data + 1, &packet->len);
+                uint8_t *tmp = packet->data + 1;
+#define CHECKSUM
+#ifdef CHECKSUM
+                {
+                    uint8_t ocsum = *tmp;
+                    uint8_t csum = 0;
+                    uint16_t i;
+
+fprintf(stderr, "in csum %x, ", *tmp);
+tmp++;
+                    for (i = 0; i < packet->len - 2; i++) {
+fprintf(stderr, "%x ", tmp[i]);
+                        csum += tmp[i];
+                    }
+fprintf(stderr, "\n");
+fflush(stderr);
+                    if (csum != ocsum) {
+                        DIE("checksum mismatch, expected 0x%x not 0x%x",
+                            ocsum, csum);
+                    }
+                }
+#endif
+                data = miniz_uncompress(tmp, &packet->len);
                 odata = data;
                 pdata = packet->data;
                 packet->data = data;
@@ -1069,19 +1093,20 @@ static void client_check_still_in_game (void)
         }
 
         if (!server_connection_confirmed) {
-            server_connection_confirmed = true;
-            MSG(INFO, "%s joined", p->stats.pname);
-
-            LOG("%s joined, ID %d", 
-                p->stats.pname, p->stats.thing_id);
+            player = thing_client_find(p->stats.thing_id);
+            if (!player) {
+                ERR("failed to find player ID %d in map update",
+                    p->stats.thing_id);
+                break;
+            }
 
             music_play_game();
 
-            player = thing_client_find(p->stats.thing_id);
-            if (!player) {
-                ERR("failed to find player in map update");
-                break;
-            }
+            server_connection_confirmed = true;
+
+            MSG(INFO, "%s joined", p->stats.pname);
+
+            LOG("%s joined, ID %d", p->stats.pname, p->stats.thing_id);
 
             /*
              * Needed twice for some reason to adjust the scrollbar as the

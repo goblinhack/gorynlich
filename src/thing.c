@@ -3164,6 +3164,7 @@ LOG("tx %s", thing_logname(t));
         if (id - last_id <= 255) {
             state |= 1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT;
         }
+LOG("XXX tx   id %d",id);
 
         /*
          * Write the data.
@@ -3209,6 +3210,7 @@ LOG("tx %s", thing_logname(t));
          * We reached the limit for this packet? Send now.
          */
         packet->len = data - odata;
+LOG("XXX tx plen %d (fragment)",packet->len);
 
         /*
          * Broadcast to all clients.
@@ -3242,6 +3244,7 @@ LOG("tx %s", thing_logname(t));
         socketp sp;
 
         packet->len = data - odata;
+LOG("XXX tx plen %d",packet->len);
 
         TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
@@ -3263,6 +3266,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
      * happen on rejoins.
      */
     if (!wid_game_map_client_grid_container) {
+LOG("XXX too early");
         return;
     }
 
@@ -3290,6 +3294,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
     uint8_t *eodata = data + packet->len - 1;
     uint16_t last_id = 0;
 
+LOG("XXX rx plen %d",packet->len);
     while (data < eodata) {
         uint8_t state = *data++;
         uint8_t ext;
@@ -3350,6 +3355,7 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
             y = -1;
         }
 
+LOG("XXX rx   id %d",id);
         if ((tx == 0xFF) && (ty == 0xFF)) {
             on_map = false;
         } else {
