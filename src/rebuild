@@ -1,0 +1,11 @@
+
+while true
+do
+    echo hit enter to rebuild
+    read xxx
+    make
+    if [ $? -eq 0 ]
+    then
+        ../gorynlich
+    fi
+done
