@@ -245,19 +245,21 @@ static void server_poll (void)
 
     UDPpacket *packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!packet) {
-        ERR("out of packet space, pak %d", MAX_PACKET_SIZE);
+        ERR("Server: out of packet space, pak %d", MAX_PACKET_SIZE);
         return;
     }
 
     int i;
     for (i = 0; i < numready; i++) {
-        if (!SDLNet_SocketReady(socket_get_udp_socket(s))) {
+        int ready = SDLNet_SocketReady(socket_get_udp_socket(s));
+        if (ready == 0) {
             continue;
         }
 
         int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
         if (paks != 1) {
-            ERR("Pak rx failed: %s", SDLNet_GetError());
+            LOG("Server: UDP rx failed: error='%s' paks=%d", 
+                SDLNet_GetError(), paks);
             continue;
         }
 
