@@ -284,7 +284,12 @@ static void server_poll (void)
          * Uncompress the packet if it has an invalid type.
          */
         if (*packet->data == MSG_COMPRESSED) {
+#define CHECKSUM
+#ifdef CHECKSUM
+            data = miniz_uncompress(packet->data + 2, &packet->len);
+#else
             data = miniz_uncompress(packet->data + 1, &packet->len);
+#endif
             odata = data;
             pdata = packet->data;
 
