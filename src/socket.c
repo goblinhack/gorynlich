@@ -367,9 +367,36 @@ void socket_tx_msg (socketp s, UDPpacket *packet)
         }
 
         *packet->data = MSG_COMPRESSED;
-        memcpy(packet->data + 1, tmp, packet->len);
-        myfree(tmp);
+
+        uint8_t *data = packet->data + 1;
+        uint16_t len = packet->len; 
+
+#define CHECKSUM
+#ifdef CHECKSUM
+        {
+            uint8_t csum = 0;
+            uint16_t i;
+
+fprintf(stderr, "\nout ");
+            for (i = 0; i < len; i++) {
+                csum += tmp[i];
+fprintf(stderr, "%x ", tmp[i]);
+            }
+
+            *data++ = csum;
+            packet->len++;
+fprintf(stderr, "csum %x\n", csum);
+fflush(stderr);
+        }
+#endif
+
+fprintf(stderr, "memcpy %p %p %d\n", data,tmp,len);
+fflush(stderr);
+        memcpy(data, tmp, len);
         packet->len++;
+        myfree(tmp);
+fprintf(stderr, "tx len %d\n", packet->len);
+fflush(stderr);
     }
 
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
