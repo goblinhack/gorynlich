@@ -1221,7 +1221,7 @@ void thing_destroy (thingp t, const char *why)
      * If this is a player on the server, tell the client the player has 
      * croaked it.
      */
-    socketp s;
+    gsocketp s;
 
     TREE_WALK(sockets, s) {
         aplayer *p = s->player;
@@ -2953,7 +2953,7 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     }
 }
 
-void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
+void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 {
     /*
      * The client should be told when the level is hidden and will destroy
@@ -2970,7 +2970,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
      */
     {
         uint8_t players = 0;
-        socketp sp;
+        gsocketp sp;
 
         TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
@@ -3214,7 +3214,7 @@ LOG("XXX tx plen %d (fragment)",packet->len);
         /*
          * Broadcast to all clients.
          */
-        socketp sp;
+        gsocketp sp;
 
         packet_compress(packet);
 
@@ -3244,7 +3244,7 @@ LOG("XXX tx plen %d (fragment)",packet->len);
      * Any left over, send them now.
      */
     if (data != odata) {
-        socketp sp;
+        gsocketp sp;
 
         packet->len = data - odata;
 LOG("XXX tx plen %d",packet->len);
@@ -3263,7 +3263,7 @@ LOG("XXX tx plen %d",packet->len);
     packet_free(packet);
 }
 
-void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     /*
      * Check we don't receive an update before we're ready for it. This can
@@ -3944,7 +3944,7 @@ void thing_server_action (thingp t,
         return;
     }
 
-    socketp s = t->player->socket;
+    gsocketp s = t->player->socket;
     if (!s) {
         ERR("no player socket to handle action");
         return;

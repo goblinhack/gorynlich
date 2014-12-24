@@ -39,7 +39,7 @@ uint8_t is_headless;
 IPaddress server_address = {0};
 IPaddress no_address = {0};
 
-static void socket_destroy(socketp s);
+static void socket_destroy(gsocketp s);
 static uint8_t sockets_show_all(tokens_t *tokens, void *context);
 static uint8_t sockets_show_summary(tokens_t *tokens, void *context);
 static uint8_t socket_init_done;
@@ -90,9 +90,9 @@ void socket_fini (void)
     socket_init_done = false;
 }
 
-static socketp socket_create (IPaddress address, int type)
+static gsocketp socket_create (IPaddress address, int type)
 {
-    socketp s;
+    gsocketp s;
 
     if (!sockets) {
         sockets = tree_alloc(TREE_KEY_THREE_INTEGER, "TREE ROOT: sockets");
@@ -139,7 +139,7 @@ gsocketp socket_listen (IPaddress address)
     /*
      * Relisten?
      */
-    socketp s = socket_find(address, SOCKET_LISTEN);
+    gsocketp s = socket_find(address, SOCKET_LISTEN);
     if (s) {
         if (s->udp_socket) {
             return (s);
@@ -196,7 +196,7 @@ gsocketp socket_listen (IPaddress address)
     return (s);
 }
 
-socketp socket_find (IPaddress address, int type)
+gsocketp socket_find (IPaddress address, int type)
 {
     gsocket findme;
     gsocketp s;
@@ -218,7 +218,7 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
     /*
      * Reopen?
      */
-    socketp s = socket_find(address, SOCKET_CONNECT);
+    gsocketp s = socket_find(address, SOCKET_CONNECT);
     if (s) {
         return (s);
     }
@@ -288,7 +288,7 @@ gsocketp socket_connect_from_server (IPaddress address)
     return (socket_connect(address, true));
 }
 
-static void socket_destroy (socketp s)
+static void socket_destroy (gsocketp s)
 {
     verify(s);
 
@@ -329,7 +329,7 @@ static void socket_destroy (socketp s)
     }
 }
 
-void socket_disconnect (socketp s)
+void socket_disconnect (gsocketp s)
 {
     verify(s);
 
@@ -396,7 +396,7 @@ uint8_t debug_socket_players_enable (tokens_t *tokens, void *context)
 
 gsocketp socket_find_local_ip (IPaddress address)
 {
-    socketp s;
+    gsocketp s;
     TREE_WALK(sockets, s) {
         if (cmp_address(&address, &s->local_ip)) {
             return (s);
@@ -408,7 +408,7 @@ gsocketp socket_find_local_ip (IPaddress address)
 
 gsocketp socket_find_remote_ip (IPaddress address)
 {
-    socketp s;
+    gsocketp s;
     TREE_WALK(sockets, s) {
         if (cmp_address(&address, &s->remote_ip)) {
             return (s);
@@ -497,7 +497,7 @@ static uint8_t sockets_show_all (tokens_t *tokens, void *context)
 {
     uint32_t si = 0;
 
-    socketp s;
+    gsocketp s;
     TREE_WALK(sockets, s) {
 
         si++;
@@ -667,7 +667,7 @@ static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
     CON("Name                 Quality  Latency       Local IP            Remote IP");
     CON("----                 -------  ------- -------------------- ------------------");
         
-    socketp s;
+    gsocketp s;
     TREE_WALK(sockets, s) {
 
         si++;
@@ -780,7 +780,7 @@ void sockets_quality_check (void)
 
     ts = time_get_time_cached();
 
-    socketp s;
+    gsocketp s;
 
     TREE_WALK(sockets, s) {
         /*
@@ -841,7 +841,7 @@ void sockets_alive_check (void)
 {
     sockets_quality_check();
 
-    socketp s;
+    gsocketp s;
 
     TREE_WALK(sockets, s) {
         /*
@@ -873,42 +873,42 @@ void sockets_alive_check (void)
     }
 }
 
-IPaddress socket_get_local_ip (const socketp s)
+IPaddress socket_get_local_ip (const gsocketp s)
 {
     verify(s);
 
     return (s->local_ip);
 }
 
-IPaddress socket_get_remote_ip (const socketp s)
+IPaddress socket_get_remote_ip (const gsocketp s)
 {
     verify(s);
 
     return (s->remote_ip);
 }
 
-const char *socket_get_name (const socketp s)
+const char *socket_get_name (const gsocketp s)
 {
     verify(s);
 
     return (s->stats.pname);
 }
 
-const char *socket_get_pclass (const socketp s)
+const char *socket_get_pclass (const gsocketp s)
 {
     verify(s);
 
     return (s->stats.pclass);
 }
 
-const thing_statsp socket_get_player_stats (const socketp s)
+const thing_statsp socket_get_player_stats (const gsocketp s)
 {
     verify(s);
 
     return (&s->stats);
 }
 
-void socket_set_name (socketp s, const char *name)
+void socket_set_name (gsocketp s, const char *name)
 {
     verify(s);
 
@@ -919,7 +919,7 @@ void socket_set_name (socketp s, const char *name)
     }
 }
 
-void socket_set_pclass (socketp s, const char *pclass)
+void socket_set_pclass (gsocketp s, const char *pclass)
 {
     verify(s);
 
@@ -930,7 +930,7 @@ void socket_set_pclass (socketp s, const char *pclass)
     }
 }
 
-void socket_set_player_stats (socketp s, const thing_statsp stats)
+void socket_set_player_stats (gsocketp s, const thing_statsp stats)
 {
     verify(s);
 
@@ -941,7 +941,7 @@ void socket_set_player_stats (socketp s, const thing_statsp stats)
     }
 }
 
-const char * socket_get_local_logname (const socketp s)
+const char * socket_get_local_logname (const gsocketp s)
 {
     verify(s);
 
@@ -952,7 +952,7 @@ const char * socket_get_local_logname (const socketp s)
     return (s->local_logname);
 }
 
-const char * socket_get_remote_logname (const socketp s)
+const char * socket_get_remote_logname (const gsocketp s)
 {
     verify(s);
 
@@ -963,49 +963,49 @@ const char * socket_get_remote_logname (const socketp s)
     return (s->remote_logname);
 }
 
-uint8_t socket_get_server (const socketp s)
+uint8_t socket_get_server (const gsocketp s)
 {
     verify(s);
 
     return (s->server);
 }
 
-uint8_t socket_get_client (const socketp s)
+uint8_t socket_get_client (const gsocketp s)
 {
     verify(s);
 
     return (s->client);
 }
 
-uint8_t socket_get_server_side_client (const socketp s)
+uint8_t socket_get_server_side_client (const gsocketp s)
 {
     verify(s);
 
     return (s->server_side_client);
 }
 
-msg_server_status *socket_get_server_status (const socketp s)
+msg_server_status *socket_get_server_status (const gsocketp s)
 {
     verify(s);
 
     return (&s->server_status);
 }
 
-void socket_set_channel (socketp s, int c)
+void socket_set_channel (gsocketp s, int c)
 {
     verify(s);
 
     s->channel = c;
 }
 
-uint8_t socket_get_channel (const socketp s)
+uint8_t socket_get_channel (const gsocketp s)
 {
     verify(s);
 
     return (s->channel);
 }
 
-void socket_set_connected (socketp s, uint8_t c)
+void socket_set_connected (gsocketp s, uint8_t c)
 {
     verify(s);
 
@@ -1041,35 +1041,35 @@ void socket_set_connected (socketp s, uint8_t c)
     s->tx = 0;
 }
 
-uint8_t socket_get_connected (const socketp s)
+uint8_t socket_get_connected (const gsocketp s)
 {
     verify(s);
 
     return (s->connected);
 }
 
-UDPsocket socket_get_udp_socket (const socketp s)
+UDPsocket socket_get_udp_socket (const gsocketp s)
 {
     verify(s);
 
     return (s->udp_socket);
 }
 
-SDLNet_SocketSet socket_get_socklist (const socketp s)
+SDLNet_SocketSet socket_get_socklist (const gsocketp s)
 {
     verify(s);
 
     return (s->socklist);
 }
 
-aplayerp socket_get_player (const socketp s)
+aplayerp socket_get_player (const gsocketp s)
 {
     verify(s);
 
     return (s->player);
 }
 
-void socket_set_player (const socketp s, aplayer *p)
+void socket_set_player (const gsocketp s, aplayer *p)
 {
     thingp t = 0;
 
@@ -1105,7 +1105,7 @@ void socket_set_player (const socketp s, aplayer *p)
     p->socket = s;
 }
 
-void socket_count_inc_pak_rx (const socketp s, msg_type type)
+void socket_count_inc_pak_rx (const gsocketp s, msg_type type)
 {
     verify(s);
 
@@ -1117,14 +1117,14 @@ void socket_count_inc_pak_rx (const socketp s, msg_type type)
     }
 }
 
-void socket_count_inc_pak_tx (const socketp s)
+void socket_count_inc_pak_tx (const gsocketp s)
 {
     verify(s);
 
     s->tx++;
 }
 
-static void socket_count_inc_pak_rx_error (const socketp s, UDPpacket *packet)
+static void socket_count_inc_pak_rx_error (const gsocketp s, UDPpacket *packet)
 {
     verify(s);
 
@@ -1135,14 +1135,14 @@ static void socket_count_inc_pak_rx_error (const socketp s, UDPpacket *packet)
     myfree(tmp);
 }
 
-void socket_count_inc_pak_tx_error (const socketp s)
+void socket_count_inc_pak_tx_error (const gsocketp s)
 {
     verify(s);
 
     s->tx_error++;
 }
 
-void socket_count_inc_pak_rx_bad_msg (const socketp s)
+void socket_count_inc_pak_rx_bad_msg (const gsocketp s)
 {
     verify(s);
 
@@ -1163,6 +1163,20 @@ UDPpacket *packet_alloc (void)
     return (packet);
 }
 
+UDPpacket *packet_alloc_len (const uint16_t len)
+{
+    UDPpacket *packet;
+    
+    packet = SDLNet_AllocPacket(len);
+    if (!packet) {
+        DIE("Out of packet space, pak %u", len);
+    }
+
+    newptr(packet, "pak");
+
+    return (packet);
+}
+
 UDPpacket *packet_dup (const UDPpacket *packet)
 {
     UDPpacket *dup;
@@ -1170,37 +1184,16 @@ UDPpacket *packet_dup (const UDPpacket *packet)
     verify(packet);
 
     dup = SDLNet_AllocPacket(packet->len);
-    if (!packet) {
+    if (!dup) {
         DIE("Out of packet space, len %d", packet->len);
     }
 
+    dup->len = packet->len;
     newptr(dup, "pak dup");
 
     memcpy(dup->data, packet->data, packet->len);
 
     return (dup);
-}
-
-UDPpacket *packet_copy (const UDPpacket *packet,
-                        const int len,
-                        const int dst_offset,
-                        const int src_offset)
-{
-    UDPpacket *copy;
-
-    verify(packet);
-
-    copy = SDLNet_AllocPacket(len + dst_offset);
-    if (!packet) {
-        DIE("Out of packet space, len %d", len + dst_offset);
-    }
-
-    newptr(copy, "pak copy");
-
-    memcpy(copy->data + dst_offset, packet->data + src_offset, 
-           len - src_offset);
-
-    return (copy);
 }
 
 void packet_free (UDPpacket *packet)
@@ -1210,7 +1203,7 @@ void packet_free (UDPpacket *packet)
     SDLNet_FreePacket(packet);
 }
 
-void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
+void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
 {
     verify(s);
 
@@ -1243,7 +1236,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     socket_enqueue_packet(s, packet);
 }
 
-void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
+void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
 {
     verify(s);
 
@@ -1301,7 +1294,7 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
     socket_enqueue_packet(s, packet);
 }
 
-void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_ping (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1319,7 +1312,7 @@ void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
     socket_set_connected(s, true);
 }
 
-void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1361,7 +1354,7 @@ void socket_rx_pong (socketp s, UDPpacket *packet, uint8_t *data)
     s->server_current_players = msg->server_current_players;
 }
 
-void socket_tx_name (socketp s)
+void socket_tx_name (gsocketp s)
 {
     verify(s);
 
@@ -1398,7 +1391,7 @@ void socket_tx_name (socketp s)
     socket_enqueue_packet(s, packet);
 }
 
-void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_name (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1431,7 +1424,7 @@ void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
     p->remote_ip = s->remote_ip;
 }
 
-uint8_t socket_tx_client_join (socketp s, uint32_t *key)
+uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
 {
     verify(s);
 
@@ -1486,7 +1479,7 @@ uint8_t socket_tx_client_join (socketp s, uint32_t *key)
     return (true);
 }
 
-uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
+uint8_t socket_rx_client_join (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1571,7 +1564,7 @@ uint8_t socket_rx_client_join (socketp s, UDPpacket *packet, uint8_t *data)
     return (true);
 }
 
-void socket_tx_client_leave (socketp s)
+void socket_tx_client_leave (gsocketp s)
 {
     verify(s);
 
@@ -1610,7 +1603,7 @@ void socket_tx_client_leave (socketp s)
     socket_enqueue_packet(s, packet);
 }
 
-uint8_t socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
+uint8_t socket_rx_client_leave (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1643,7 +1636,7 @@ uint8_t socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
     return (true);
 }
 
-void socket_tx_client_close (socketp s)
+void socket_tx_client_close (gsocketp s)
 {
     verify(s);
 
@@ -1678,7 +1671,7 @@ void socket_tx_client_close (socketp s)
     socket_enqueue_packet(s, packet);
 }
 
-void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_client_close (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1701,10 +1694,10 @@ void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
 /*
  * The server is relaying a shout to clients.
  */
-static void socket_tx_client_shout_relay (socketp s, 
+static void socket_tx_client_shout_relay (gsocketp s, 
                                           uint32_t level,
                                           const char *txt,
-                                          socketp from)
+                                          gsocketp from)
 {
     verify(s);
 
@@ -1739,7 +1732,7 @@ static void socket_tx_client_shout_relay (socketp s,
     socket_enqueue_packet(s, packet);
 }
 
-void socket_tx_client_shout (socketp s, 
+void socket_tx_client_shout (gsocketp s, 
                              uint32_t level,
                              const char *txt)
 {
@@ -1768,7 +1761,7 @@ void socket_tx_client_shout (socketp s,
     socket_enqueue_packet(s, packet);
 }
 
-void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1808,7 +1801,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
     /*
      * This is for relaying the shout from the server to clients.
      */
-    socketp sp;
+    gsocketp sp;
 
     int sent = 0;
 
@@ -1892,7 +1885,7 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_tx_server_shout (uint32_t level, const char *txt)
 {
-    socketp sp;
+    gsocketp sp;
 
     TREE_WALK(sockets, sp) {
         if (!sp->connected) {
@@ -1931,10 +1924,10 @@ void socket_tx_server_shout (uint32_t level, const char *txt)
     }
 }
 
-void socket_tx_server_shout_except_to (socketp except,
+void socket_tx_server_shout_except_to (gsocketp except,
                                        uint32_t level, const char *txt)
 {
-    socketp sp;
+    gsocketp sp;
 
     TREE_WALK(sockets, sp) {
         if (sp == except) {
@@ -1976,11 +1969,11 @@ void socket_tx_server_shout_except_to (socketp except,
     }
 }
 
-void socket_tx_server_shout_only_to (socketp target, 
+void socket_tx_server_shout_only_to (gsocketp target, 
                                      uint32_t level, 
                                      const char *txt)
 {
-    socketp sp;
+    gsocketp sp;
 
     TREE_WALK(sockets, sp) {
         if (sp != target) {
@@ -2022,7 +2015,7 @@ void socket_tx_server_shout_only_to (socketp target,
     }
 }
 
-void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_server_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -2047,7 +2040,7 @@ void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
     MSG(msg.level, "%s", txt);
 }
 
-void socket_tx_tell (socketp s, 
+void socket_tx_tell (gsocketp s, 
                      const char *from,
                      const char *to,
                      const char *txt)
@@ -2087,7 +2080,7 @@ void socket_tx_tell (socketp s,
     socket_enqueue_packet(s, packet);
 }
 
-void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -2119,7 +2112,7 @@ void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
         return;
     }
 
-    socketp sp;
+    gsocketp sp;
 
     TREE_WALK(sockets, sp) {
 
@@ -2154,7 +2147,7 @@ void socket_tx_server_status (void)
         msg.level_hide = level_is_ready_to_fade_out(server_level);
     }
 
-    socketp s;
+    gsocketp s;
 
     /*
      * Walk all players and send them their updates.
@@ -2209,7 +2202,7 @@ void socket_tx_server_status (void)
 /*
  * Receive an array of all current players from the server.
  */
-void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
+void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
                               msg_server_status *status)
 {
     verify(s);
@@ -2255,7 +2248,7 @@ void socket_rx_server_status (socketp s, UDPpacket *packet, uint8_t *data,
 /*
  * Send an array of all current players to all clients.
  */
-void socket_tx_server_hiscore (socketp only,
+void socket_tx_server_hiscore (gsocketp only,
                                const char *player_name,
                                const char *death_reason,
                                uint32_t score)
@@ -2278,7 +2271,7 @@ void socket_tx_server_hiscore (socketp only,
     /*
      * Add all current players.
      */
-    socketp s;
+    gsocketp s;
     TREE_WALK(sockets, s) {
         if (only) {
             if (only != s) {
@@ -2360,7 +2353,7 @@ void socket_tx_server_hiscore (socketp only,
 /*
  * Receive an array of all current players from the server.
  */
-void socket_rx_server_hiscore (socketp s, UDPpacket *packet, 
+void socket_rx_server_hiscore (gsocketp s, UDPpacket *packet, 
                                uint8_t *data,
                                msg_server_hiscores *hiscore)
 {
@@ -2406,7 +2399,7 @@ void socket_rx_server_hiscore (socketp s, UDPpacket *packet,
  */
 void socket_tx_server_close (void)
 {
-    socketp s;
+    gsocketp s;
 
     TREE_WALK(sockets, s) {
         if (!s->connected) {
@@ -2435,7 +2428,7 @@ void socket_tx_server_close (void)
     }
 }
 
-void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_server_close (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -2453,98 +2446,98 @@ void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
     socket_set_connected(s, false);
 }
 
-uint32_t socket_get_quality (socketp s)
+uint32_t socket_get_quality (gsocketp s)
 {
     verify(s);
 
     return (s->quality);
 }
 
-uint32_t socket_get_avg_latency_rtt (socketp s)
+uint32_t socket_get_avg_latency_rtt (gsocketp s)
 {
     verify(s);
 
     return (s->avg_latency_rtt);
 }
 
-uint32_t socket_get_min_latency_rtt (socketp s)
+uint32_t socket_get_min_latency_rtt (gsocketp s)
 {
     verify(s);
 
     return (s->min_latency_rtt);
 }
 
-uint32_t socket_get_max_latency_rtt (socketp s)
+uint32_t socket_get_max_latency_rtt (gsocketp s)
 {
     verify(s);
 
     return (s->max_latency_rtt);
 }
 
-uint32_t socket_get_rx (socketp s)
+uint32_t socket_get_rx (gsocketp s)
 {
     verify(s);
 
     return (s->rx);
 }
 
-uint32_t socket_get_tx (socketp s)
+uint32_t socket_get_tx (gsocketp s)
 {
     verify(s);
 
     return (s->tx);
 }
 
-uint32_t socket_get_rx_error (socketp s)
+uint32_t socket_get_rx_error (gsocketp s)
 {
     verify(s);
 
     return (s->rx_error);
 }
 
-uint32_t socket_get_tx_error (socketp s)
+uint32_t socket_get_tx_error (gsocketp s)
 {
     verify(s);
 
     return (s->tx_error);
 }
 
-uint32_t socket_get_rx_bad_msg (socketp s)
+uint32_t socket_get_rx_bad_msg (gsocketp s)
 {
     verify(s);
 
     return (s->rx_bad_msg);
 }
 
-const char *socket_get_server_name (socketp s)
+const char *socket_get_server_name (gsocketp s)
 {
     verify(s);
 
     return (s->server_name);
 }
 
-const char *socket_get_other_player_name (socketp s, const uint32_t p)
+const char *socket_get_other_player_name (gsocketp s, const uint32_t p)
 {
     verify(s);
 
     return (s->player_name[p]);
 }
 
-uint32_t socket_get_max_players (socketp s)
+uint32_t socket_get_max_players (gsocketp s)
 {
     verify(s);
 
     return (s->server_max_players);
 }
 
-uint32_t socket_get_current_players (socketp s)
+uint32_t socket_get_current_players (gsocketp s)
 {
     verify(s);
 
     return (s->server_current_players);
 }
 
-void socket_tx_player_move (socketp s, 
+void socket_tx_player_move (gsocketp s, 
                             thingp t,
                             const uint8_t up,
                             const uint8_t down,
@@ -2588,7 +2581,7 @@ void socket_tx_player_move (socketp s,
     socket_enqueue_packet(s, packet);
 }
 
-void socket_server_rx_player_move (socketp s, UDPpacket *packet, uint8_t *data)
+void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -2626,7 +2619,7 @@ void socket_server_rx_player_move (socketp s, UDPpacket *packet, uint8_t *data)
     thing_server_move(t, x, y, up, down, left, right, fire);
 }
 
-void socket_tx_player_action (socketp s, 
+void socket_tx_player_action (gsocketp s, 
                               thingp t,
                               const uint8_t action,
                               const uint32_t action_bar_index)
@@ -2656,7 +2649,7 @@ void socket_tx_player_action (socketp s,
     socket_enqueue_packet(s, packet);
 }
 
-void socket_server_rx_player_action (socketp s, UDPpacket *packet, 
+void socket_server_rx_player_action (gsocketp s, UDPpacket *packet, 
                                      uint8_t *data)
 {
     verify(s);
@@ -2689,7 +2682,7 @@ void socket_server_rx_player_action (socketp s, UDPpacket *packet,
     thing_server_action(t, action, action_bar_index);
 }
 
-static UDPpacket *packet_finalize (socketp s, UDPpacket *packet)
+static UDPpacket *packet_finalize (gsocketp s, UDPpacket *packet)
 {
 #ifdef ENABLE_PAK_EXTRA_HEADER
     int add = 1;
@@ -2697,8 +2690,11 @@ static UDPpacket *packet_finalize (socketp s, UDPpacket *packet)
     int add = 0;
 #endif
 
+    verify(s);
+    verify(packet);
+
     if (!add) {
-        return;
+        return (packet);
     }
 
     /*
@@ -2707,6 +2703,7 @@ static UDPpacket *packet_finalize (socketp s, UDPpacket *packet)
     uint8_t csum = 0;
     uint16_t i;
     uint8_t *tmp = packet->data;
+    const uint16_t len = packet->len;
 
     for (i = 0; i < len; i++) {
         csum += tmp[i];
@@ -2715,22 +2712,35 @@ static UDPpacket *packet_finalize (socketp s, UDPpacket *packet)
     /*
      * Make a copy and add the header.
      */
-    UDPpacket *copy = packet_copy(packet, packet->len, 
-                                  2 /* dst offset */,
-                                  0 /* src offset */);
+    UDPpacket *copy = packet_alloc_len(packet->len + 2);
+    memcpy(copy->data + 2, packet->data, packet->len);
+    copy->len = packet->len + 2;
     packet_free(packet);
-    packet = 0;
+    packet = copy;
+
+    CON("Tx seq %d, csum %d, len %d, to %s", s->tx_seq, csum, packet->len,
+        socket_get_remote_logname(s));
 
     /*
      * Add the new header.
      */
-    copy->data[0] = csum;
-    copy->data[1] = ++(s->tx_seq);
+    packet->data[0] = csum;
+    packet->data[1] = s->tx_seq;
 
-    return (copy);
+    s->tx_seq++;
+
+#ifdef PACKET_DUMP
+    fprintf(stderr, "\n");
+    for (i = 0; i < packet->len; i++) {
+        fprintf(stderr, "[%02x] ", packet->data[i]);
+    }
+    fprintf(stderr, "\n");
+#endif
+
+    return (packet);
 }
 
-static UDPpacket *packet_definalize (socketp s, UDPpacket *packet)
+UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
 {
 #ifdef ENABLE_PAK_EXTRA_HEADER
     int remove = 1;
@@ -2738,56 +2748,76 @@ static UDPpacket *packet_definalize (socketp s, UDPpacket *packet)
     int remove = 0;
 #endif
 
+    verify(s);
+    verify(packet);
+
     if (!remove) {
-        return;
+        return (packet);
     }
+
+    const uint8_t in_csum = packet->data[0];
+    const uint8_t rx_seq = packet->data[1];
 
     /*
      * Check the checksum.
      */
-    uint8_t in_csum = packet->data[0];
     uint8_t csum = 0;
     uint16_t i;
     uint8_t *tmp = packet->data;
+    const uint16_t len = packet->len;
 
-    for (i = 0; i < len; i++) {
+    /*
+     * Skip 2 bytes of header
+     */
+    for (i = 2; i < len; i++) {
         csum += tmp[i];
     }
 
     if (csum != in_csum) {
         DIE("checksum mismatch, expected %d, received %d",
-            csum, in_sum);
+            csum, in_csum);
     }
 
     /*
-     * Check the sequence
+     * Check the sequence if we have received a previous sequence number.
      */
-    uint8_t rx_seq = packet->data[1];
-
-    if (rx_seq != s->rx_seq + 1) {
-        DIE("sequence mismatch, expected %d not %d",
-            s->rx_seq + 1, rx_seq);
+    if (s->rx_seq_valid) {
+        if (rx_seq != s->rx_seq) {
+            DIE("sequence mismatch, expected %d not %d",
+                s->rx_seq, rx_seq);
+        }
     }
 
-    s->rx_seq = rx_seq;
+    s->rx_seq_valid = 1;
+    s->rx_seq = rx_seq + 1;
+
+    CON("Rx seq %d, csum %d, len %d, from %s", rx_seq, in_csum, packet->len,
+        socket_get_remote_logname(s));
 
     /*
      * Give back the original packet minus the header.
      */
-    UDPpacket *copy = packet_copy(packet, packet->len, 
-                                  0 /* dst offset */,
-                                  2 /* src offset */);
+    UDPpacket *copy = packet_alloc_len(packet->len - 2);
+    memcpy(copy->data + 2, packet->data, packet->len - 2);
+    copy->len = packet->len - 2;
     packet_free(packet);
-    packet = 0;
+    packet = copy;
 
-    return (copy);
+#ifdef PACKET_DUMP
+    fprintf(stderr, "\n");
+    for (i = 0; i < packet->len; i++) {
+        fprintf(stderr, "[%02x] ", packet->data[i]);
+    }
+    fprintf(stderr, "\n");
+#endif
 
+    return (packet);
 }
 
 /*
  * Pull a packet off of the queue and send it on the UDP port for the socket.
  */
-static int socket_tx_queue_dequeue (socketp s)
+static int socket_tx_queue_dequeue (gsocketp s)
 {
     if (!s->tx_queue_size) {
         return (0);
@@ -2796,10 +2826,13 @@ static int socket_tx_queue_dequeue (socketp s)
     UDPpacket *packet;
 
     packet = s->tx_queue[s->tx_queue_head];
+    verify(packet);
+
     if (s->tx_queue_head == 0) {
         s->tx_queue_head = ARRAY_SIZE(s->tx_queue);
     }
     s->tx_queue_head--;
+    s->tx_queue_size--;
 
     /*
      * Do last changes to the packet like adding sequence numbers
@@ -2823,23 +2856,25 @@ static int socket_tx_queue_dequeue (socketp s)
     }
 
     packet_free(packet);
+
+    return (1);
 }
 
-static void socket_tx_queue_flush (socketp s)
+static void socket_tx_queue_flush (gsocketp s)
 {
     while (socket_tx_queue_dequeue(s)) { }
 }
 
-static void socket_tx_enqueue_packet (socketp s, UDPpacket *packet)
+static void socket_tx_enqueue_packet (gsocketp s, UDPpacket *packet)
 {
     verify(s);
     verify(packet);
 
-    if (s->queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
+    if (s->tx_queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
         socket_tx_queue_flush(s);
 
-        if (s->queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
-            die("socket queue stuck");
+        if (s->tx_queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
+            DIE("socket queue stuck");
         }
     }
 
@@ -2852,9 +2887,9 @@ static void socket_tx_enqueue_packet (socketp s, UDPpacket *packet)
     s->tx_queue[s->tx_queue_head] = packet;
 }
 
-static void socket_all_tx_queue_dequeue_one (socketp s)
+static void socket_all_tx_queue_dequeue_one (void)
 {
-    socketp s;
+    gsocketp s;
 
     TREE_WALK(sockets, s) {
         socket_tx_queue_dequeue(s);
@@ -2879,7 +2914,7 @@ void packet_compress (UDPpacket *packet)
     myfree(tmp);
 }
 
-void socket_enqueue_packet (socketp s, UDPpacket *packet)
+void socket_enqueue_packet (gsocketp s, UDPpacket *packet)
 {
     msg_type type;
 

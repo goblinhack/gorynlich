@@ -20,7 +20,7 @@
 #include "mzip_lib.h"
 
 static uint8_t server_init_done;
-socketp server_socket;
+gsocketp server_socket;
 
 static uint8_t server_players_show(tokens_t *tokens, void *context);
 static uint8_t server_shout(tokens_t *tokens, void *context);
@@ -32,7 +32,7 @@ uint8_t server_start (IPaddress address)
         return (true);
     }
 
-    socketp s;
+    gsocketp s;
 
     address.host = 0;
 
@@ -126,7 +126,7 @@ void server_fini (void)
     }
 }
 
-static void server_rx_client_join (socketp s)
+static void server_rx_client_join (gsocketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
@@ -156,7 +156,7 @@ static void server_rx_client_join (socketp s)
     wid_game_map_server_visible();
 }
 
-static void server_rx_client_leave_implicit (socketp s)
+static void server_rx_client_leave_implicit (gsocketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
@@ -181,7 +181,7 @@ static void server_rx_client_leave_implicit (socketp s)
     socket_set_player(s, 0);
 }
 
-static void server_rx_client_leave (socketp s)
+static void server_rx_client_leave (gsocketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
@@ -202,7 +202,7 @@ static void server_rx_client_leave (socketp s)
     server_rx_client_leave_implicit(s);
 }
 
-static void server_rx_client_close (socketp s)
+static void server_rx_client_close (gsocketp s)
 {
     aplayerp p = socket_get_player(s);
     if (!p) {
@@ -226,7 +226,7 @@ static void server_rx_client_close (socketp s)
 
 static void server_poll (void)
 {
-    socketp s = server_socket;
+    gsocketp s = server_socket;
 
     if (!s) {
         return;
@@ -243,11 +243,7 @@ static void server_poll (void)
         return;
     }
 
-    UDPpacket *packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-    if (!packet) {
-        ERR("Server: out of packet space, pak %d", MAX_PACKET_SIZE);
-        return;
-    }
+    UDPpacket *packet = packet_alloc();
 
     int i;
     for (i = 0; i < numready; i++) {
@@ -263,7 +259,7 @@ static void server_poll (void)
             continue;
         }
 
-        socketp s = socket_find_remote_ip(read_address(packet));
+        gsocketp s = socket_find_remote_ip(read_address(packet));
         if (!s) {
             char *tmp = iptodynstr(read_address(packet));
             LOG("Server: New client from %s", tmp);
@@ -281,13 +277,17 @@ static void server_poll (void)
         uint8_t uncompressed = false;
 
         /*
+         * Remove any optional header
+         */
+        packet = packet_definalize(s, packet);
+
+        /*
          * Uncompress the packet if it has an invalid type.
          */
         if (*packet->data == MSG_COMPRESSED) {
             data = miniz_uncompress(packet->data + 1, &packet->len);
             odata = data;
             pdata = packet->data;
-
             packet->data = data;
             uncompressed = true;
         } else {
@@ -356,12 +356,12 @@ static void server_poll (void)
         }
     }
 
-    SDLNet_FreePacket(packet);
+    packet_free(packet);
 }
 
 static void server_alive_check (void)
 {
-    socketp s;
+    gsocketp s;
 
     sockets_quality_check();
 
@@ -433,7 +433,7 @@ static void server_socket_tx_ping (void)
         server_alive_check();
     }
 
-    socketp s;
+    gsocketp s;
 
     TREE_WALK(sockets, s) {
 
@@ -486,7 +486,7 @@ static uint8_t server_players_show (tokens_t *tokens, void *context)
 
     pi = 0;
 
-    socketp s;
+    gsocketp s;
     TREE_WALK(sockets, s) {
 
         aplayer *p = socket_get_player(s);
