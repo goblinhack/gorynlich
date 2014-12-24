@@ -223,6 +223,17 @@ typedef struct socket_ {
     char player_name[MAX_PLAYERS][SMALL_STRING_LEN_MAX];
     uint8_t server_max_players;
     uint8_t server_current_players;
+
+    UDPpacket *tx_queue[MAX_SOCKET_TX_QUEUE_SIZE];
+    uint32_t tx_queue_head;
+    uint32_t tx_queue_size;
+
+    /*
+     * Only used with ENABLE_PAK_EXTRA_HEADER
+     */
+    uint8_t tx_seq;
+    uint8_t rx_seq;
+
 } gsocket;
 
 extern void socket_count_inc_pak_rx(const socketp, msg_type);
@@ -366,8 +377,8 @@ extern void socket_client_rx_map_update(socketp s,
                                         UDPpacket *packet, uint8_t *data);
 extern void socket_server_tx_player_update(thingp);
 extern void socket_client_rx_player_update(socketp s,
-                                          UDPpacket *packet, uint8_t *data);
-
+                                           UDPpacket *packet, uint8_t *data);
+extern void socket_tick(void);
 
 /*
  * Seemingly harmless, but we need this to read the 6 byte packet address
@@ -396,27 +407,11 @@ static inline uint8_t cmp_address (const IPaddress *a, const IPaddress *b)
 
 extern tree_rootp sockets;
 
-static inline UDPpacket *socket_alloc_msg (void)
-{
-    static UDPpacket *packet;
-
-    if (!packet) {
-        packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-        if (!packet) {
-            DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
-        }
-    }
-
-    newptr(packet, "pak");
-
-    return (packet);
-}
-
-static inline void socket_free_msg (UDPpacket *packet)
-{
-    oldptr(packet);
-
-//    SDLNet_FreePacket(packet);
-}
-
-void socket_tx_msg(socketp s, UDPpacket *packet);
+UDPpacket *packet_alloc(void);
+UDPpacket *packet_dup(const UDPpacket *packet);
+UDPpacket *packet_copy(const UDPpacket *packet,
+                       const int len,
+                       const int dst_offset,
+                       const int src_offset);
+void packet_free(UDPpacket *packet);
+void socket_enqueue_packet(socketp s, UDPpacket *packet);

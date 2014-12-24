@@ -2991,7 +2991,7 @@ void socket_server_tx_map_update (socketp p, tree_rootp tree, const char *type)
     /*
      * Allocate a fresh packet.
      */
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
     uint8_t *eodata = ((uint8_t*)packet->data) + MAX_PACKET_SIZE;
     uint8_t *odata = packet->data;
     uint8_t *data = packet->data;
@@ -3164,7 +3164,6 @@ LOG("tx %s", thing_logname(t));
         if (id - last_id <= 255) {
             state |= 1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT;
         }
-LOG("XXX tx   id %d",id);
 
         /*
          * Write the data.
@@ -3217,6 +3216,8 @@ LOG("XXX tx plen %d (fragment)",packet->len);
          */
         socketp sp;
 
+        packet_compress(packet);
+
         TREE_WALK_UNSAFE(sockets, sp) {
             if (p && (p != sp)) {
                 continue;
@@ -3227,13 +3228,15 @@ LOG("XXX tx plen %d (fragment)",packet->len);
             }
 
             write_address(packet, socket_get_remote_ip(sp));
-            socket_tx_msg(sp, packet);
+
+            socket_enqueue_packet(sp, packet_dup(packet));
         }
             
         /*
          * Reuse the same packet.
          */
         data = packet->data;
+
         *data++ = MSG_SERVER_MAP_UPDATE;
     }
 
@@ -3252,11 +3255,12 @@ LOG("XXX tx plen %d",packet->len);
             }
 
             write_address(packet, socket_get_remote_ip(sp));
-            socket_tx_msg(sp, packet);
+
+            socket_enqueue_packet(sp, packet_dup(packet));
         }
     }
 
-    socket_free_msg(packet);
+    packet_free(packet);
 }
 
 void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
@@ -3266,7 +3270,6 @@ void socket_client_rx_map_update (socketp s, UDPpacket *packet, uint8_t *data)
      * happen on rejoins.
      */
     if (!wid_game_map_client_grid_container) {
-LOG("XXX too early");
         return;
     }
 
@@ -3355,7 +3358,6 @@ LOG("XXX rx plen %d",packet->len);
             y = -1;
         }
 
-LOG("XXX rx   id %d",id);
         if ((tx == 0xFF) && (ty == 0xFF)) {
             on_map = false;
         } else {
