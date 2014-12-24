@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-extern int client_pause;
 #include <SDL.h>
 #include <unistd.h>
 #include "glapi.h"
@@ -31,6 +30,7 @@ extern int client_pause;
 #include "client.h"
 #include "term.h"
 #include "timer.h"
+#include "socket_util.h"
 
 #ifndef SDL_BUTTON_WHEELLEFT
 #define SDL_BUTTON_WHEELLEFT 6
@@ -961,6 +961,11 @@ void sdl_loop (void)
          * Network client i/o.
          */
         client_tick();
+
+        /*
+         * Flush out buffered messages.
+         */
+        socket_tick();
 
         /*
          * Let things move.
