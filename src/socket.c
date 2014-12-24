@@ -2798,7 +2798,7 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
      * Give back the original packet minus the header.
      */
     UDPpacket *copy = packet_alloc_len(packet->len - 2);
-    memcpy(copy->data + 2, packet->data, packet->len - 2);
+    memcpy(copy->data, packet->data + 2, packet->len - 2);
     copy->len = packet->len - 2;
     packet_free(packet);
     packet = copy;
