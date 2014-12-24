@@ -18,5 +18,5 @@ uint8_t client_socket_set_pclass(const char *name);
 uint8_t client_socket_shout(char *shout);
 msg_player_statep client_get_player(void);
 
-extern socketp client_joined_server;
+extern gsocketp client_joined_server;
 extern uint32_t client_player_died;

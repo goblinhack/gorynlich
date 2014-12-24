@@ -54,7 +54,7 @@ typedef struct server_ {
     uint32_t avg_latency_peer_to_us;
     uint32_t min_latency_peer_to_us;
     uint32_t max_latency_peer_to_us;
-    socketp socket;
+    gsocketp socket;
     uint8_t walked;
     char name[SMALL_STRING_LEN_MAX];
 } server;
@@ -100,7 +100,7 @@ static void server_add (const server *s_in)
      * Connector.
      */
     if (is_client) {
-        socketp sp = socket_connect_from_client(s->ip);
+        gsocketp sp = socket_connect_from_client(s->ip);
         if (sp) {
             s->quality = socket_get_quality(sp);
             s->avg_latency_rtt = socket_get_avg_latency_rtt(sp);
@@ -164,7 +164,7 @@ static void server_remove (server *s_in)
      */
     server *s;
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp) {
             socket_disconnect(sp);
             break;
@@ -245,7 +245,7 @@ void wid_server_join_hide (void)
      * Leave all other sockets.
      */
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp && (sp != client_joined_server)) {
             socket_disconnect(sp);
             continue;
@@ -335,7 +335,7 @@ void wid_server_join_redo (uint8_t soft_refresh)
 
         s->walked = true;
 
-        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (!sp) {
             /*
              * Connector.
@@ -467,7 +467,7 @@ static uint8_t wid_server_join (widp w, int32_t x, int32_t y, uint32_t button)
      * Leave all other sockets.
      */
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp && (sp != client_joined_server)) {
             socket_disconnect(sp);
             continue;
@@ -494,7 +494,7 @@ static uint8_t wid_server_join_leave (widp w, int32_t x, int32_t y,
      * Rescan all sockets to get new stats.
      */
     TREE_WALK(remote_servers, s) {
-        socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
         if (sp) {
             socket_connect_from_client(s->ip);
             continue;
@@ -896,7 +896,7 @@ static void wid_server_join_display (server *s)
     wid_set_color(wid_server_stats_window2, WID_COLOR_TL, c);
     wid_set_color(wid_server_stats_window2, WID_COLOR_BR, c);
 
-    socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+    gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
     if (sp) {
         uint32_t i;
 
@@ -1489,7 +1489,7 @@ static void wid_server_join_create (uint8_t redo)
                 continue;
             }
 
-            socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+            gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
 
             if (sp && (sp == client_joined_server)) {
                 /*
@@ -1575,7 +1575,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_tl_br_pct(w, tl, br);
 
-            socketp sp = socket_find(s->ip, SOCKET_CONNECT);
+            gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
             if (sp && (sp == client_joined_server)) {
                 wid_set_text(w, "Leave");
                 wid_set_on_mouse_down(w, wid_server_join_leave);

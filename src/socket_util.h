@@ -233,10 +233,11 @@ typedef struct socket_ {
      */
     uint8_t tx_seq;
     uint8_t rx_seq;
+    uint8_t rx_seq_valid;
 
 } gsocket;
 
-extern void socket_count_inc_pak_rx(const socketp, msg_type);
+extern void socket_count_inc_pak_rx(const gsocketp, msg_type);
 
 extern int socket_test(int32_t argc, char *argv[]);
 extern uint8_t socket_init(void);
@@ -249,134 +250,134 @@ extern char *iprawporttodynstr(IPaddress ip);
 extern IPaddress server_address;
 extern IPaddress no_address;
 
-extern socketp socket_find(IPaddress address, int);
-extern socketp socket_listen(IPaddress address);
-extern socketp socket_connect_from_client(IPaddress address);
-extern socketp socket_connect_from_server(IPaddress address);
-extern void socket_disconnect(socketp s);
+extern gsocketp socket_find(IPaddress address, int);
+extern gsocketp socket_listen(IPaddress address);
+extern gsocketp socket_connect_from_client(IPaddress address);
+extern gsocketp socket_connect_from_server(IPaddress address);
+extern void socket_disconnect(gsocketp s);
 extern void sockets_alive_check(void);
 
-extern socketp socket_find_local_ip(IPaddress address);
-extern socketp socket_find_remote_ip(IPaddress address);
+extern gsocketp socket_find_local_ip(IPaddress address);
+extern gsocketp socket_find_remote_ip(IPaddress address);
 
-extern IPaddress socket_get_local_ip(socketp);
-extern IPaddress socket_get_remote_ip(socketp);
+extern IPaddress socket_get_local_ip(gsocketp);
+extern IPaddress socket_get_remote_ip(gsocketp);
 
-extern const char *socket_get_player_name(const socketp);
-extern const char *socket_get_player_pclass(const socketp);
-extern thing_statsp socket_get_player_player_stats(const socketp);
+extern const char *socket_get_player_name(const gsocketp);
+extern const char *socket_get_player_pclass(const gsocketp);
+extern thing_statsp socket_get_player_player_stats(const gsocketp);
 
-extern const char *socket_get_local_logname(const socketp);
-extern const char *socket_get_remote_logname(const socketp);
+extern const char *socket_get_local_logname(const gsocketp);
+extern const char *socket_get_remote_logname(const gsocketp);
 
-extern void socket_set_connected(const socketp, uint8_t);
-extern uint8_t socket_get_connected(const socketp);
+extern void socket_set_connected(const gsocketp, uint8_t);
+extern uint8_t socket_get_connected(const gsocketp);
 
-extern uint8_t socket_get_server(const socketp);
-extern msg_server_status *socket_get_server_status(const socketp);
-extern uint8_t socket_get_server_side_client(const socketp s);
-extern uint8_t socket_get_client(const socketp);
+extern uint8_t socket_get_server(const gsocketp);
+extern msg_server_status *socket_get_server_status(const gsocketp);
+extern uint8_t socket_get_server_side_client(const gsocketp s);
+extern uint8_t socket_get_client(const gsocketp);
 
-extern void socket_set_channel(socketp, int);
-extern uint8_t socket_get_channel(const socketp);
+extern void socket_set_channel(gsocketp, int);
+extern uint8_t socket_get_channel(const gsocketp);
 
-extern UDPsocket socket_get_udp_socket(const socketp);
-extern SDLNet_SocketSet socket_get_socklist(const socketp);
+extern UDPsocket socket_get_udp_socket(const gsocketp);
+extern SDLNet_SocketSet socket_get_socklist(const gsocketp);
 
-extern aplayerp socket_get_player(const socketp);
-extern void socket_set_player(const socketp s, aplayerp);
+extern aplayerp socket_get_player(const gsocketp);
+extern void socket_set_player(const gsocketp s, aplayerp);
 
-extern void socket_count_inc_pak_tx(const socketp);
-extern void socket_count_inc_pak_tx_error(const socketp);
-extern void socket_count_inc_pak_rx_bad_msg(const socketp);
+extern void socket_count_inc_pak_tx(const gsocketp);
+extern void socket_count_inc_pak_tx_error(const gsocketp);
+extern void socket_count_inc_pak_rx_bad_msg(const gsocketp);
 
-extern const char *socket_get_name(const socketp s);
-extern const char *socket_get_pclass(const socketp s);
-extern const thing_statsp socket_get_player_stats(const socketp s);
-extern void socket_set_name(socketp s, const char *name);
-extern void socket_set_pclass(socketp s, const char *pclass);
-extern void socket_set_player_stats(socketp s, const thing_statsp stats);
+extern const char *socket_get_name(const gsocketp s);
+extern const char *socket_get_pclass(const gsocketp s);
+extern const thing_statsp socket_get_player_stats(const gsocketp s);
+extern void socket_set_name(gsocketp s, const char *name);
+extern void socket_set_pclass(gsocketp s, const char *pclass);
+extern void socket_set_player_stats(gsocketp s, const thing_statsp stats);
 
-extern void socket_tx_ping(socketp s, uint8_t seq, uint32_t ts);
-extern void socket_tx_pong(socketp s, uint8_t seq, uint32_t ts);
-extern void socket_rx_ping(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_rx_pong(socketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_name(socketp s);
-extern void socket_rx_name(socketp s, UDPpacket *packet, uint8_t *data);
-extern uint8_t socket_tx_client_join(socketp s, uint32_t *key);
-extern uint8_t socket_rx_client_join(socketp s, 
+extern void socket_tx_ping(gsocketp s, uint8_t seq, uint32_t ts);
+extern void socket_tx_pong(gsocketp s, uint8_t seq, uint32_t ts);
+extern void socket_rx_ping(gsocketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_rx_pong(gsocketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_name(gsocketp s);
+extern void socket_rx_name(gsocketp s, UDPpacket *packet, uint8_t *data);
+extern uint8_t socket_tx_client_join(gsocketp s, uint32_t *key);
+extern uint8_t socket_rx_client_join(gsocketp s, 
                                      UDPpacket *packet, uint8_t *data);
-extern void socket_tx_client_leave(socketp s);
-extern uint8_t socket_rx_client_leave(socketp s, 
+extern void socket_tx_client_leave(gsocketp s);
+extern uint8_t socket_rx_client_leave(gsocketp s, 
                                       UDPpacket *packet, uint8_t *data);
-extern void socket_tx_client_close(socketp s);
-extern void socket_rx_client_close(socketp s, 
+extern void socket_tx_client_close(gsocketp s);
+extern void socket_rx_client_close(gsocketp s, 
                                    UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_close(void);
-extern void socket_rx_server_close(socketp s, 
+extern void socket_rx_server_close(gsocketp s, 
                                    UDPpacket *packet, uint8_t *data);
-extern void socket_tx_client_shout(socketp s, 
+extern void socket_tx_client_shout(gsocketp s, 
                                    uint32_t level,
                                    const char *shout);
-extern void socket_rx_client_shout(socketp s, 
+extern void socket_rx_client_shout(gsocketp s, 
                                    UDPpacket *packet, uint8_t *data);
-extern void socket_tx_player_move(socketp s, 
+extern void socket_tx_player_move(gsocketp s, 
                                   thingp t,
                                   const uint8_t up,
                                   const uint8_t down,
                                   const uint8_t left,
                                   const uint8_t right,
                                   const uint8_t fire);
-extern void socket_tx_player_action(socketp s, 
+extern void socket_tx_player_action(gsocketp s, 
                                     thingp t,
                                     const uint8_t action,
                                     const uint32_t action_bar_index);
-extern void socket_server_rx_player_move(socketp s, UDPpacket *packet, 
+extern void socket_server_rx_player_move(gsocketp s, UDPpacket *packet, 
                                          uint8_t *data);
-extern void socket_server_rx_player_action(socketp s, UDPpacket *packet, 
+extern void socket_server_rx_player_action(gsocketp s, UDPpacket *packet, 
                                          uint8_t *data);
 extern void socket_tx_server_shout(uint32_t level,
                                    const char *shout);
-extern void socket_tx_server_shout_except_to(socketp,
+extern void socket_tx_server_shout_except_to(gsocketp,
                                              uint32_t level,
                                              const char *shout);
-extern void socket_tx_server_shout_only_to(socketp,
+extern void socket_tx_server_shout_only_to(gsocketp,
                                            uint32_t level,
                                            const char *shout);
-extern void socket_rx_server_shout(socketp s, UDPpacket *packet, 
+extern void socket_rx_server_shout(gsocketp s, UDPpacket *packet, 
                                    uint8_t *data);
-extern void socket_tx_tell(socketp s, 
+extern void socket_tx_tell(gsocketp s, 
                            const char *from, const char *to, 
                            const char *shout);
-extern void socket_rx_tell(socketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_rx_tell(gsocketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_status(void);
-extern void socket_rx_server_status(socketp s, UDPpacket *packet, 
+extern void socket_rx_server_status(gsocketp s, UDPpacket *packet, 
                                     uint8_t *data, msg_server_status *);
-extern void socket_tx_server_hiscore(socketp only,
+extern void socket_tx_server_hiscore(gsocketp only,
                                      const char *name,
                                      const char *reason,
                                      const uint32_t score);
-extern void socket_rx_server_hiscore(socketp s, UDPpacket *packet, 
+extern void socket_rx_server_hiscore(gsocketp s, UDPpacket *packet, 
                                     uint8_t *data, msg_server_hiscores *);
 extern void sockets_quality_check(void);
-extern uint32_t socket_get_quality(socketp s);
-extern const char *socket_get_server_name(socketp s);
-extern const char *socket_get_other_player_name(socketp s, const uint32_t p);
-extern uint32_t socket_get_avg_latency_rtt(socketp s);
-extern uint32_t socket_get_current_players(socketp s);
-extern uint32_t socket_get_max_players(socketp s);
-extern uint32_t socket_get_min_latency_rtt(socketp s);
-extern uint32_t socket_get_max_latency_rtt(socketp s);
-extern uint32_t socket_get_rx(socketp s);
-extern uint32_t socket_get_tx(socketp s);
-extern uint32_t socket_get_rx_error(socketp s);
-extern uint32_t socket_get_tx_error(socketp s);
-extern uint32_t socket_get_rx_bad_msg(socketp s);
-extern void socket_server_tx_map_update(socketp, tree_rootp, const char *type);
-extern void socket_client_rx_map_update(socketp s, 
+extern uint32_t socket_get_quality(gsocketp s);
+extern const char *socket_get_server_name(gsocketp s);
+extern const char *socket_get_other_player_name(gsocketp s, const uint32_t p);
+extern uint32_t socket_get_avg_latency_rtt(gsocketp s);
+extern uint32_t socket_get_current_players(gsocketp s);
+extern uint32_t socket_get_max_players(gsocketp s);
+extern uint32_t socket_get_min_latency_rtt(gsocketp s);
+extern uint32_t socket_get_max_latency_rtt(gsocketp s);
+extern uint32_t socket_get_rx(gsocketp s);
+extern uint32_t socket_get_tx(gsocketp s);
+extern uint32_t socket_get_rx_error(gsocketp s);
+extern uint32_t socket_get_tx_error(gsocketp s);
+extern uint32_t socket_get_rx_bad_msg(gsocketp s);
+extern void socket_server_tx_map_update(gsocketp, tree_rootp, const char *type);
+extern void socket_client_rx_map_update(gsocketp s, 
                                         UDPpacket *packet, uint8_t *data);
 extern void socket_server_tx_player_update(thingp);
-extern void socket_client_rx_player_update(socketp s,
+extern void socket_client_rx_player_update(gsocketp s,
                                            UDPpacket *packet, uint8_t *data);
 extern void socket_tick(void);
 
@@ -408,10 +409,9 @@ static inline uint8_t cmp_address (const IPaddress *a, const IPaddress *b)
 extern tree_rootp sockets;
 
 UDPpacket *packet_alloc(void);
+UDPpacket *packet_alloc_len(const uint16_t len);
 UDPpacket *packet_dup(const UDPpacket *packet);
-UDPpacket *packet_copy(const UDPpacket *packet,
-                       const int len,
-                       const int dst_offset,
-                       const int src_offset);
+void packet_compress(UDPpacket *packet);
 void packet_free(UDPpacket *packet);
-void socket_enqueue_packet(socketp s, UDPpacket *packet);
+UDPpacket *packet_definalize(gsocketp s, UDPpacket *packet);
+void socket_enqueue_packet(gsocketp s, UDPpacket *packet);
