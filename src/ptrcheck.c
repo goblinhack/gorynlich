@@ -304,7 +304,7 @@ static void hash_free (hash_t *hash_table, void *ptr)
  *
  * Check a pointer for validity.
  */
-static ptrcheck *ptrcheck_verify_pointer (void *ptr,
+static ptrcheck *ptrcheck_verify_pointer (const void *ptr,
                                           const char *func,
                                           const char *file,
                                           const uint32_t line,
@@ -325,7 +325,7 @@ static ptrcheck *ptrcheck_verify_pointer (void *ptr,
     /*
      * Check the robust handle is valid.
      */
-    e = hash_find(hash, ptr);
+    e = hash_find(hash, (void*) ptr);
     if (e) {
         context = e->context;
 
@@ -456,7 +456,7 @@ static ptrcheck *ptrcheck_verify_pointer (void *ptr,
  *
  * Record this pointer.
  */
-void *ptrcheck_alloc (void *ptr,
+void *ptrcheck_alloc (const void *ptr,
                       const char *what,
                       const uint32_t size,
                       const char *func,
@@ -479,16 +479,16 @@ void *ptrcheck_alloc (void *ptr,
         hash = hash_init(1046527 /* prime */);
 
         if (!hash) {
-            return (ptr);
+            return ((void*) ptr);
         }
     }
 
     /*
      * Missing an earlier free?
      */
-    if (hash_find(hash, ptr)) {
+    if (hash_find(hash, (void*) ptr)) {
         DIE("pointer %p alread exists and attempting to add again", ptr);
-        return (ptr);
+        return ((void*) ptr);
     }
 
     /*
@@ -513,7 +513,7 @@ void *ptrcheck_alloc (void *ptr,
     /*
      * Populate the data block.
      */
-    context->ptr = ptr;
+    context->ptr = (void*) ptr;
     context->what = what;
     context->size = size;
     context->allocated_by.func = func;
@@ -527,7 +527,7 @@ void *ptrcheck_alloc (void *ptr,
      */
     hash_add(hash, context);
 
-    return (ptr);
+    return ((void*) ptr);
 }
 
 /*
@@ -595,7 +595,7 @@ uint8_t ptrcheck_free (void *ptr,
  *
  * Check a pointer for validity.
  */
-uint8_t ptrcheck_verify (void *ptr,
+uint8_t ptrcheck_verify (const void *ptr,
                          const char *func,
                          const char *file,
                          const uint32_t line)
@@ -609,7 +609,7 @@ uint8_t ptrcheck_verify (void *ptr,
  *
  * Check a pointer for validity with no recording of history.
  */
-uint8_t ptrcheck_fast_verify (void *ptr,
+uint8_t ptrcheck_fast_verify (const void *ptr,
                               const char *func,
                               const char *file,
                               const uint32_t line)

@@ -17,4 +17,4 @@ extern void server_tick(void);
 extern uint8_t server_start(IPaddress);
 extern void server_stop(void);
 
-extern socketp server_socket;
+extern gsocketp server_socket;

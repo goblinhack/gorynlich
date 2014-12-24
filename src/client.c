@@ -30,7 +30,7 @@
 /*
  * Which socket we have actually joined on.
  */
-socketp client_joined_server;
+gsocketp client_joined_server;
 uint32_t client_joined_server_when;
 static uint32_t client_joined_server_key;
 uint32_t client_player_died;
@@ -65,7 +65,7 @@ uint8_t client_init (void)
         return (true);
     }
 
-    socketp s = 0;
+    gsocketp s = 0;
 
     /*
      * Connector.
@@ -138,7 +138,7 @@ void client_fini (void)
 
 static void client_alive_check (void)
 {
-    socketp s;
+    gsocketp s;
 
     sockets_quality_check();
 
@@ -177,7 +177,7 @@ static void client_socket_tx_ping (void)
         return;
     }
 
-    socketp s;
+    gsocketp s;
 
     TREE_WALK(sockets, s) {
         if (!socket_get_client(s)) {
@@ -268,7 +268,7 @@ static uint8_t client_set_pclass (tokens_t *tokens, void *context)
 static uint8_t client_socket_open (char *host, char *port)
 {
     uint32_t portno;
-    socketp s = 0;
+    gsocketp s = 0;
     const char *h;
 
     h = host;
@@ -306,7 +306,7 @@ static uint8_t client_socket_open (char *host, char *port)
 uint8_t client_socket_close (char *host, char *port)
 {
     uint32_t portno;
-    socketp s = 0;
+    gsocketp s = 0;
     const char *h;
 
     h = host;
@@ -395,7 +395,7 @@ uint8_t client_socket_join (const char *host,
         h = last_host;
     }
 
-    socketp s = 0;
+    gsocketp s = 0;
 
     if (!h && !port) {
         TREE_WALK(sockets, s) {
@@ -737,7 +737,7 @@ uint8_t client_tell (tokens_t *tokens, void *context)
 
 static void client_poll (void)
 {
-    socketp s;
+    gsocketp s;
 
     if (client_joined_server) {
         verify(client_joined_server);
@@ -758,13 +758,7 @@ static void client_poll (void)
             continue;
         }
 
-        UDPpacket *packet;      
-
-        packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
-        if (!packet) {
-            ERR("Client: Out of packet space, pak %d", MAX_PACKET_SIZE);
-            continue;
-        }
+        UDPpacket *packet = packet_alloc();
 
         int i;
         for (i = 0; i < numready; i++) {
@@ -774,12 +768,16 @@ static void client_poll (void)
             }
 
             int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
-CON("rx paks %d", paks);
             if (paks != 1) {
                 LOG("Client: UDP rx failed: error='%s' paks=%d", 
                     SDLNet_GetError(), paks);
                 continue;
             }
+
+            /*
+             * Remove any optional header
+             */
+            packet = packet_definalize(s, packet);
 
             uint8_t *data;
             uint8_t *odata;
@@ -790,9 +788,7 @@ CON("rx paks %d", paks);
              * Uncompress the packet if it has an invalid type.
              */
             if (*packet->data == MSG_COMPRESSED) {
-                uint8_t *tmp = packet->data + 1;
-
-                data = miniz_uncompress(tmp, &packet->len);
+                data = miniz_uncompress(packet->data + 1, &packet->len);
                 odata = data;
                 pdata = packet->data;
                 packet->data = data;
@@ -1009,7 +1005,7 @@ CON("rx paks %d", paks);
             }
         }
 
-        SDLNet_FreePacket(packet);
+        packet_free(packet);
     }
 }
 

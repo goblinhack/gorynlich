@@ -423,7 +423,7 @@ static void thing_shout_at_ (thingp t,
         return;
     }
 
-    socketp s = t->player->socket;
+    gsocketp s = t->player->socket;
     if (!s) {
         return;
     }

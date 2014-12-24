@@ -39,13 +39,14 @@
 uint8_t ptrcheck_init(void);
 void ptrcheck_fini(void);
 
-void *ptrcheck_alloc(void *ptr, const char *what, const uint32_t size,
+void *ptrcheck_alloc(const void *ptr, const char *what, const uint32_t size,
                      const char *file, const char *func, const uint32_t line);
 
-uint8_t ptrcheck_verify(void *ptr, const char *file, const char *func,
+uint8_t ptrcheck_verify(const void *ptr, const char *file, const char *func,
                         const uint32_t line);
 
-uint8_t ptrcheck_fast_verify(void *ptr, const char *file, const char *func,
+uint8_t ptrcheck_fast_verify(const void *ptr, 
+                             const char *file, const char *func,
                              const uint32_t line);
 
 uint8_t ptrcheck_free(void *ptr, const char *file, const char *func,
