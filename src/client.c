@@ -774,6 +774,7 @@ static void client_poll (void)
             }
 
             int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
+CON("rx paks %d", paks);
             if (paks != 1) {
                 LOG("Client: UDP rx failed: error='%s' paks=%d", 
                     SDLNet_GetError(), paks);
@@ -788,30 +789,9 @@ static void client_poll (void)
             /*
              * Uncompress the packet if it has an invalid type.
              */
-
             if (*packet->data == MSG_COMPRESSED) {
                 uint8_t *tmp = packet->data + 1;
-#define CHECKSUM
-#ifdef CHECKSUM
-                {
-                    uint8_t ocsum = *tmp;
-                    uint8_t csum = 0;
-                    uint16_t i;
 
-fprintf(stderr, "in csum %x, ", *tmp);
-tmp++;
-                    for (i = 0; i < packet->len - 2; i++) {
-fprintf(stderr, "%x ", tmp[i]);
-                        csum += tmp[i];
-                    }
-fprintf(stderr, "\n");
-fflush(stderr);
-                    if (csum != ocsum) {
-                        DIE("checksum mismatch, expected 0x%x not 0x%x",
-                            ocsum, csum);
-                    }
-                }
-#endif
                 data = miniz_uncompress(tmp, &packet->len);
                 odata = data;
                 pdata = packet->data;
