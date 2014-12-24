@@ -132,7 +132,7 @@ static socketp socket_create (IPaddress address, int type)
     return (s);
 }
 
-gsocket *socket_listen (IPaddress address)
+gsocketp socket_listen (IPaddress address)
 {
     IPaddress listen_address;
 
@@ -199,7 +199,7 @@ gsocket *socket_listen (IPaddress address)
 socketp socket_find (IPaddress address, int type)
 {
     gsocket findme;
-    gsocket *s;
+    gsocketp s;
 
     memset(&findme, 0, sizeof(findme));
     findme.tree.key2 = type;
@@ -211,7 +211,7 @@ socketp socket_find (IPaddress address, int type)
     return (s);
 }
 
-static gsocket *socket_connect (IPaddress address, uint8_t server_side_client)
+static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
 {
     IPaddress connect_address = address;
 
@@ -278,12 +278,12 @@ static gsocket *socket_connect (IPaddress address, uint8_t server_side_client)
     return (s);
 }
 
-gsocket *socket_connect_from_client (IPaddress address)
+gsocketp socket_connect_from_client (IPaddress address)
 {
     return (socket_connect(address, false));
 }
 
-gsocket *socket_connect_from_server (IPaddress address)
+gsocketp socket_connect_from_server (IPaddress address)
 {
     return (socket_connect(address, true));
 }
@@ -340,82 +340,6 @@ void socket_disconnect (socketp s)
     myfree(s);
 }
 
-void socket_tx_msg (socketp s, UDPpacket *packet)
-{
-    msg_type type;
-
-    type = (typeof(type)) *(packet->data);
-
-    if (type != MSG_COMPRESSED) {
-        s->tx_msg[type]++;
-    }
-
-    if (type == MSG_COMPRESSED) {
-        /*
-         * Resend of an already compressed message but to another client? I 
-         * hope so.
-         */
-    } else if (packet->len > 200) {
-        /*
-         * A good enough size for compression to work and give a smaller 
-         * packet.
-         */
-        unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
-
-        if (packet->len > MAX_PACKET_SIZE) {
-            DIE("compress fail");
-        }
-
-        *packet->data = MSG_COMPRESSED;
-
-        uint8_t *data = packet->data + 1;
-        uint16_t len = packet->len; 
-
-#define CHECKSUM
-#ifdef CHECKSUM
-        {
-            uint8_t csum = 0;
-            uint16_t i;
-
-fprintf(stderr, "\nout ");
-            for (i = 0; i < len; i++) {
-                csum += tmp[i];
-fprintf(stderr, "%x ", tmp[i]);
-            }
-
-            *data++ = csum;
-            packet->len++;
-fprintf(stderr, "csum %x\n", csum);
-fflush(stderr);
-        }
-#endif
-
-fprintf(stderr, "memcpy %p %p %d\n", data,tmp,len);
-fflush(stderr);
-        memcpy(data, tmp, len);
-        packet->len++;
-        myfree(tmp);
-fprintf(stderr, "tx len %d\n", packet->len);
-fflush(stderr);
-    }
-
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
-        /*
-         * Only warn about sockets we really care about.
-         */
-        if (s->connected) {
-            ERR("no UDP packet sent to %s: %s",
-                socket_get_remote_logname(s),
-                SDLNet_GetError());
-        }
-
-        socket_count_inc_pak_tx_error(s);
-    } else {
-        socket_count_inc_pak_tx(s);
-    }
-}
-
 /*
  * User has entered a command, run it
  */
@@ -470,7 +394,7 @@ uint8_t debug_socket_players_enable (tokens_t *tokens, void *context)
     return (true);
 }
 
-gsocket *socket_find_local_ip (IPaddress address)
+gsocketp socket_find_local_ip (IPaddress address)
 {
     socketp s;
     TREE_WALK(sockets, s) {
@@ -482,7 +406,7 @@ gsocket *socket_find_local_ip (IPaddress address)
     return (0);
 }
 
-gsocket *socket_find_remote_ip (IPaddress address)
+gsocketp socket_find_remote_ip (IPaddress address)
 {
     socketp s;
     TREE_WALK(sockets, s) {
@@ -1225,6 +1149,67 @@ void socket_count_inc_pak_rx_bad_msg (const socketp s)
     s->rx_bad_msg++;
 }
 
+UDPpacket *packet_alloc (void)
+{
+    UDPpacket *packet;
+    
+    packet = SDLNet_AllocPacket(MAX_PACKET_SIZE);
+    if (!packet) {
+        DIE("Out of packet space, pak %u", MAX_PACKET_SIZE);
+    }
+
+    newptr(packet, "pak");
+
+    return (packet);
+}
+
+UDPpacket *packet_dup (const UDPpacket *packet)
+{
+    UDPpacket *dup;
+
+    verify(packet);
+
+    dup = SDLNet_AllocPacket(packet->len);
+    if (!packet) {
+        DIE("Out of packet space, len %d", packet->len);
+    }
+
+    newptr(dup, "pak dup");
+
+    memcpy(dup->data, packet->data, packet->len);
+
+    return (dup);
+}
+
+UDPpacket *packet_copy (const UDPpacket *packet,
+                        const int len,
+                        const int dst_offset,
+                        const int src_offset)
+{
+    UDPpacket *copy;
+
+    verify(packet);
+
+    copy = SDLNet_AllocPacket(len + dst_offset);
+    if (!packet) {
+        DIE("Out of packet space, len %d", len + dst_offset);
+    }
+
+    newptr(copy, "pak copy");
+
+    memcpy(copy->data + dst_offset, packet->data + src_offset, 
+           len - src_offset);
+
+    return (copy);
+}
+
+void packet_free (UDPpacket *packet)
+{
+    oldptr(packet);
+
+    SDLNet_FreePacket(packet);
+}
+
 void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
 {
     verify(s);
@@ -1233,7 +1218,7 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     uint8_t *data = packet->data;
     uint8_t *odata = data;
@@ -1252,11 +1237,10 @@ void socket_tx_ping (socketp s, uint8_t seq, uint32_t ts)
     }
 
     packet->len = (int32_t)(data - odata);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-            
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
@@ -1306,16 +1290,15 @@ void socket_tx_pong (socketp s, uint8_t seq, uint32_t ts)
             socket_get_remote_logname(s), seq, ts);
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     memcpy(packet->data, &msg, sizeof(msg));
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-    
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_rx_ping (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1397,7 +1380,7 @@ void socket_tx_name (socketp s)
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     msg_name msg = {0};
     msg.type = MSG_NAME;
@@ -1409,11 +1392,10 @@ void socket_tx_name (socketp s)
         socket_get_remote_logname(s), s->stats.pname);
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_rx_name (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1480,7 +1462,7 @@ uint8_t socket_tx_client_join (socketp s, uint32_t *key)
 
     failed = 0;
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     msg_client_join msg = {0};
     msg.type = MSG_CLIENT_JOIN;
@@ -1496,11 +1478,10 @@ uint8_t socket_tx_client_join (socketp s, uint32_t *key)
         socket_get_remote_logname(s), s->stats.pname);
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 
     return (true);
 }
@@ -1609,7 +1590,7 @@ void socket_tx_client_leave (socketp s)
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     msg_client_leave msg = {0};
     msg.type = MSG_CLIENT_LEAVE;
@@ -1626,9 +1607,7 @@ void socket_tx_client_leave (socketp s)
     socket_set_pclass(s, 0);
     socket_set_player_stats(s, 0);
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 uint8_t socket_rx_client_leave (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1683,7 +1662,7 @@ void socket_tx_client_close (socketp s)
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     msg_client_close msg = {0};
     msg.type = MSG_CLIENT_CLOSE;
@@ -1693,11 +1672,10 @@ void socket_tx_client_close (socketp s)
     LOG("Client: Tx Close [to %s]", socket_get_remote_logname(s));
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_rx_client_close (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1734,7 +1712,7 @@ static void socket_tx_client_shout_relay (socketp s,
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
@@ -1755,11 +1733,10 @@ static void socket_tx_client_shout_relay (socketp s,
         socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_tx_client_shout (socketp s, 
@@ -1772,7 +1749,7 @@ void socket_tx_client_shout (socketp s,
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     msg_client_shout msg = {0};
     msg.type = MSG_CLIENT_SHOUT;
@@ -1785,11 +1762,10 @@ void socket_tx_client_shout (socketp s,
         socket_get_remote_logname(s), txt);
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
@@ -1916,18 +1892,6 @@ void socket_rx_client_shout (socketp s, UDPpacket *packet, uint8_t *data)
 
 void socket_tx_server_shout (uint32_t level, const char *txt)
 {
-    UDPpacket *packet = socket_alloc_msg();
-
-    msg_server_shout msg = {0};
-    msg.type = MSG_SERVER_SHOUT;
-    msg.level = level;
-
-    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
-
-    memcpy(packet->data, &msg, sizeof(msg));
-
-    packet->len = sizeof(msg);
-
     socketp sp;
 
     TREE_WALK(sockets, sp) {
@@ -1949,28 +1913,27 @@ void socket_tx_server_shout (uint32_t level, const char *txt)
         LOG("Server: Tx Shout \"%s\" to %s", txt,
             socket_get_remote_logname(sp));
 
+        UDPpacket *packet = packet_alloc();
+
+        msg_server_shout msg = {0};
+        msg.type = MSG_SERVER_SHOUT;
+        msg.level = level;
+
+        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+        memcpy(packet->data, &msg, sizeof(msg));
+
+        packet->len = sizeof(msg);
+
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_tx_msg(sp, packet);
+        socket_enqueue_packet(sp, packet);
     }
-        
-    socket_free_msg(packet);
 }
 
 void socket_tx_server_shout_except_to (socketp except,
                                        uint32_t level, const char *txt)
 {
-    UDPpacket *packet = socket_alloc_msg();
-
-    msg_server_shout msg = {0};
-    msg.type = MSG_SERVER_SHOUT;
-    msg.level = level;
-    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
-
-    memcpy(packet->data, &msg, sizeof(msg));
-
-    packet->len = sizeof(msg);
-
     socketp sp;
 
     TREE_WALK(sockets, sp) {
@@ -1993,32 +1956,30 @@ void socket_tx_server_shout_except_to (socketp except,
             continue;
         }
 
+        UDPpacket *packet = packet_alloc();
+
+        msg_server_shout msg = {0};
+        msg.type = MSG_SERVER_SHOUT;
+        msg.level = level;
+        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+        memcpy(packet->data, &msg, sizeof(msg));
+
+        packet->len = sizeof(msg);
+
         LOG("Server: Tx Shout \"%s\" to %s", txt,
             socket_get_remote_logname(sp));
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_tx_msg(sp, packet);
+        socket_enqueue_packet(sp, packet);
     }
-        
-    socket_free_msg(packet);
 }
 
 void socket_tx_server_shout_only_to (socketp target, 
                                      uint32_t level, 
                                      const char *txt)
 {
-    UDPpacket *packet = socket_alloc_msg();
-
-    msg_server_shout msg = {0};
-    msg.type = MSG_SERVER_SHOUT;
-    msg.level = level;
-    strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
-
-    memcpy(packet->data, &msg, sizeof(msg));
-
-    packet->len = sizeof(msg);
-
     socketp sp;
 
     TREE_WALK(sockets, sp) {
@@ -2041,15 +2002,24 @@ void socket_tx_server_shout_only_to (socketp target,
             continue;
         }
 
+        UDPpacket *packet = packet_alloc();
+
+        msg_server_shout msg = {0};
+        msg.type = MSG_SERVER_SHOUT;
+        msg.level = level;
+        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+        memcpy(packet->data, &msg, sizeof(msg));
+
+        packet->len = sizeof(msg);
+
         LOG("Server: Tx Shout \"%s\" to %s", txt,
             socket_get_remote_logname(sp));
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_tx_msg(sp, packet);
+        socket_enqueue_packet(sp, packet);
     }
-        
-    socket_free_msg(packet);
 }
 
 void socket_rx_server_shout (socketp s, UDPpacket *packet, uint8_t *data)
@@ -2092,7 +2062,7 @@ void socket_tx_tell (socketp s,
         return;
     }
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     msg_tell msg = {0};
     msg.type = MSG_TELL;
@@ -2111,11 +2081,10 @@ void socket_tx_tell (socketp s,
     }
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_rx_tell (socketp s, UDPpacket *packet, uint8_t *data)
@@ -2221,7 +2190,7 @@ void socket_tx_server_status (void)
             }
         }
 
-        UDPpacket *packet = socket_alloc_msg();
+        UDPpacket *packet = packet_alloc();
 
         memcpy(packet->data, &msg, sizeof(msg));
 
@@ -2230,11 +2199,10 @@ void socket_tx_server_status (void)
         }
 
         packet->len = sizeof(msg);
+
         write_address(packet, socket_get_remote_ip(s));
 
-        socket_tx_msg(s, packet);
-                
-        socket_free_msg(packet);
+        socket_enqueue_packet(s, packet);
     }
 }
 
@@ -2355,10 +2323,6 @@ void socket_tx_server_hiscore (socketp only,
         SDLNet_Write32(score, &msg_tx->score);
     }
 
-    UDPpacket *packet = socket_alloc_msg();
-
-    memcpy(packet->data, &msg, sizeof(msg));
-
     {
         TREE_WALK(sockets, s) {
             if (only) {
@@ -2380,14 +2344,17 @@ void socket_tx_server_hiscore (socketp only,
                     socket_get_remote_logname(s));
             }
 
+            UDPpacket *packet = packet_alloc();
+
+            memcpy(packet->data, &msg, sizeof(msg));
+
             packet->len = sizeof(msg);
+
             write_address(packet, socket_get_remote_ip(s));
 
-            socket_tx_msg(s, packet);
+            socket_enqueue_packet(s, packet);
         }
     }
-            
-    socket_free_msg(packet);
 }
 
 /*
@@ -2439,13 +2406,6 @@ void socket_rx_server_hiscore (socketp s, UDPpacket *packet,
  */
 void socket_tx_server_close (void)
 {
-    msg_server_close msg = {0};
-    msg.type = MSG_SERVER_CLOSE;
-
-    UDPpacket *packet = socket_alloc_msg();
-
-    memcpy(packet->data, &msg, sizeof(msg));
-
     socketp s;
 
     TREE_WALK(sockets, s) {
@@ -2460,13 +2420,19 @@ void socket_tx_server_close (void)
         LOG("Server: Tx down [to %s]",
             socket_get_remote_logname(s));
 
+        msg_server_close msg = {0};
+        msg.type = MSG_SERVER_CLOSE;
+
+        UDPpacket *packet = packet_alloc();
+
+        memcpy(packet->data, &msg, sizeof(msg));
+
         packet->len = sizeof(msg);
+
         write_address(packet, socket_get_remote_ip(s));
 
-        socket_tx_msg(s, packet);
+        socket_enqueue_packet(s, packet);
     }
-        
-    socket_free_msg(packet);
 }
 
 void socket_rx_server_close (socketp s, UDPpacket *packet, uint8_t *data)
@@ -2611,16 +2577,15 @@ void socket_tx_player_move (socketp s,
     SDLNet_Write16(t->x * THING_COORD_SCALE, &msg.x);               
     SDLNet_Write16(t->y * THING_COORD_SCALE, &msg.y);               
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     memcpy(packet->data, &msg, sizeof(msg));
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_server_rx_player_move (socketp s, UDPpacket *packet, uint8_t *data)
@@ -2680,16 +2645,15 @@ void socket_tx_player_action (socketp s,
     msg.action = action;
     msg.action_bar_index = (uint8_t) action_bar_index;
 
-    UDPpacket *packet = socket_alloc_msg();
+    UDPpacket *packet = packet_alloc();
 
     memcpy(packet->data, &msg, sizeof(msg));
 
     packet->len = sizeof(msg);
+
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_tx_msg(s, packet);
-        
-    socket_free_msg(packet);
+    socket_enqueue_packet(s, packet);
 }
 
 void socket_server_rx_player_action (socketp s, UDPpacket *packet, 
@@ -2723,4 +2687,225 @@ void socket_server_rx_player_action (socketp s, UDPpacket *packet,
     uint32_t action_bar_index = msg.action_bar_index;
 
     thing_server_action(t, action, action_bar_index);
+}
+
+static UDPpacket *packet_finalize (socketp s, UDPpacket *packet)
+{
+#ifdef ENABLE_PAK_EXTRA_HEADER
+    int add = 1;
+#else
+    int add = 0;
+#endif
+
+    if (!add) {
+        return;
+    }
+
+    /*
+     * Calculate the checksum.
+     */
+    uint8_t csum = 0;
+    uint16_t i;
+    uint8_t *tmp = packet->data;
+
+    for (i = 0; i < len; i++) {
+        csum += tmp[i];
+    }
+
+    /*
+     * Make a copy and add the header.
+     */
+    UDPpacket *copy = packet_copy(packet, packet->len, 
+                                  2 /* dst offset */,
+                                  0 /* src offset */);
+    packet_free(packet);
+    packet = 0;
+
+    /*
+     * Add the new header.
+     */
+    copy->data[0] = csum;
+    copy->data[1] = ++(s->tx_seq);
+
+    return (copy);
+}
+
+static UDPpacket *packet_definalize (socketp s, UDPpacket *packet)
+{
+#ifdef ENABLE_PAK_EXTRA_HEADER
+    int remove = 1;
+#else
+    int remove = 0;
+#endif
+
+    if (!remove) {
+        return;
+    }
+
+    /*
+     * Check the checksum.
+     */
+    uint8_t in_csum = packet->data[0];
+    uint8_t csum = 0;
+    uint16_t i;
+    uint8_t *tmp = packet->data;
+
+    for (i = 0; i < len; i++) {
+        csum += tmp[i];
+    }
+
+    if (csum != in_csum) {
+        DIE("checksum mismatch, expected %d, received %d",
+            csum, in_sum);
+    }
+
+    /*
+     * Check the sequence
+     */
+    uint8_t rx_seq = packet->data[1];
+
+    if (rx_seq != s->rx_seq + 1) {
+        DIE("sequence mismatch, expected %d not %d",
+            s->rx_seq + 1, rx_seq);
+    }
+
+    s->rx_seq = rx_seq;
+
+    /*
+     * Give back the original packet minus the header.
+     */
+    UDPpacket *copy = packet_copy(packet, packet->len, 
+                                  0 /* dst offset */,
+                                  2 /* src offset */);
+    packet_free(packet);
+    packet = 0;
+
+    return (copy);
+
+}
+
+/*
+ * Pull a packet off of the queue and send it on the UDP port for the socket.
+ */
+static int socket_tx_queue_dequeue (socketp s)
+{
+    if (!s->tx_queue_size) {
+        return (0);
+    }
+
+    UDPpacket *packet;
+
+    packet = s->tx_queue[s->tx_queue_head];
+    if (s->tx_queue_head == 0) {
+        s->tx_queue_head = ARRAY_SIZE(s->tx_queue);
+    }
+    s->tx_queue_head--;
+
+    /*
+     * Do last changes to the packet like adding sequence numbers
+     */
+    packet = packet_finalize(s, packet);
+
+    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
+                        socket_get_channel(s), packet) < 1) {
+        /*
+         * Only warn about sockets we really care about.
+         */
+        if (s->connected) {
+            ERR("no UDP packet sent to %s: %s",
+                socket_get_remote_logname(s),
+                SDLNet_GetError());
+        }
+
+        socket_count_inc_pak_tx_error(s);
+    } else {
+        socket_count_inc_pak_tx(s);
+    }
+
+    packet_free(packet);
+}
+
+static void socket_tx_queue_flush (socketp s)
+{
+    while (socket_tx_queue_dequeue(s)) { }
+}
+
+static void socket_tx_enqueue_packet (socketp s, UDPpacket *packet)
+{
+    verify(s);
+    verify(packet);
+
+    if (s->queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
+        socket_tx_queue_flush(s);
+
+        if (s->queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
+            die("socket queue stuck");
+        }
+    }
+
+    s->tx_queue_size++;
+    s->tx_queue_head++;
+    if (s->tx_queue_head >= ARRAY_SIZE(s->tx_queue)) {
+        s->tx_queue_head = 0;
+    }
+
+    s->tx_queue[s->tx_queue_head] = packet;
+}
+
+static void socket_all_tx_queue_dequeue_one (socketp s)
+{
+    socketp s;
+
+    TREE_WALK(sockets, s) {
+        socket_tx_queue_dequeue(s);
+    }
+}
+
+void packet_compress (UDPpacket *packet)
+{
+    unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
+
+    if (packet->len > MAX_PACKET_SIZE) {
+        DIE("compress fail");
+    }
+
+    *packet->data = MSG_COMPRESSED;
+
+    uint8_t *data = packet->data + 1;
+    uint16_t len = packet->len; 
+
+    memcpy(data, tmp, len);
+    packet->len++;
+    myfree(tmp);
+}
+
+void socket_enqueue_packet (socketp s, UDPpacket *packet)
+{
+    msg_type type;
+
+    type = (typeof(type)) *(packet->data);
+
+    if (type != MSG_COMPRESSED) {
+        s->tx_msg[type]++;
+    }
+
+    if (type == MSG_COMPRESSED) {
+        /*
+         * Resend of an already compressed message but to another client? I 
+         * hope so.
+         */
+    } else if (packet->len > 200) {
+        /*
+         * A good enough size for compression to work and give a smaller 
+         * packet.
+         */
+        packet_compress(packet);
+    }
+
+    socket_tx_enqueue_packet(s, packet);
+}
+
+void socket_tick (void)
+{
+    socket_all_tx_queue_dequeue_one();
 }

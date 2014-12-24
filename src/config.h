@@ -188,7 +188,21 @@
 #define DEFAULT_PORT                10000
 #define SERVER_DEFAULT_HOST         "localhost"
 #define SERVER_DEFAULT_PORT         DEFAULT_PORT
+
+/*
+ * Maximum pre-compression packet size
+ */
 #define MAX_PACKET_SIZE             4000
+
+/*
+ * Debug check to enable sequence numbers and checksum
+ */
+#define ENABLE_PAK_EXTRA_HEADER
+
+/*
+ * The number of packets we allow to buffer up on a socket during sends.
+ */
+#define MAX_SOCKET_TX_QUEUE_SIZE    16
 
 /*
  * How many pings to consider for quality
