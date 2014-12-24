@@ -274,7 +274,7 @@ void wid_server_create_redo (void)
         s->started = false;
         s->walked = true;
 
-        socketp sp = socket_find(s->ip, SOCKET_LISTEN);
+        gsocketp sp = socket_find(s->ip, SOCKET_LISTEN);
         if (!sp) {
             continue;
         }
