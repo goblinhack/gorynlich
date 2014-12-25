@@ -3210,6 +3210,7 @@ LOG("tx %s", thing_logname(t));
          */
         packet->len = data - odata;
 LOG("XXX tx plen %d (fragment)",packet->len);
+CON("map pak %p",packet);
 
         /*
          * Broadcast to all clients.
@@ -3229,7 +3230,9 @@ LOG("XXX tx plen %d (fragment)",packet->len);
 
             write_address(packet, socket_get_remote_ip(sp));
 
-            socket_enqueue_packet(sp, packet_dup(packet));
+            UDPpacket *dup = packet_dup(packet);
+
+            socket_enqueue_packet(sp, &dup);
         }
             
         /*
@@ -3247,7 +3250,10 @@ LOG("XXX tx plen %d (fragment)",packet->len);
         gsocketp sp;
 
         packet->len = data - odata;
+CON("map pak %p",packet);
 LOG("XXX tx plen %d",packet->len);
+
+        packet_compress(packet);
 
         TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
@@ -3256,7 +3262,9 @@ LOG("XXX tx plen %d",packet->len);
 
             write_address(packet, socket_get_remote_ip(sp));
 
-            socket_enqueue_packet(sp, packet_dup(packet));
+            UDPpacket *dup = packet_dup(packet);
+
+            socket_enqueue_packet(sp, &dup);
         }
     }
 
