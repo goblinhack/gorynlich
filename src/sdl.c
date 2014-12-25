@@ -873,6 +873,7 @@ void sdl_loop (void)
 
         frames++;
 
+CON("%d",__LINE__);
         /*
          * Do processing of some things, like reading the keyboard or doing
          * stuff with widgets only occasionally if we do not need to.
@@ -892,11 +893,14 @@ void sdl_loop (void)
              */
             wid_gc_all();
 
+CON("%d",__LINE__);
             if (!HEADLESS) {
                 /*
                  * Read events
                  */
+CON("%d",__LINE__);
                 SDL_PumpEvents();
+CON("%d",__LINE__);
 
 #if (SDL_MAJOR_VERSION == 2) || \
             (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
@@ -927,6 +931,7 @@ void sdl_loop (void)
                 }
             }
 
+CON("%d",__LINE__);
             if (HEADLESS || enable_console) {
                 console_tick();
             }
@@ -935,6 +940,7 @@ void sdl_loop (void)
                 break;
             }
         }
+CON("%d",__LINE__);
 
         /*
          * Fire global timers.
@@ -951,36 +957,43 @@ void sdl_loop (void)
          * Let widgets move.
          */
         wid_tick_all();
+CON("%d",__LINE__);
 
         /*
          * Network server i/o.
          */
         server_tick();
+CON("%d",__LINE__);
 
         /*
          * Network client i/o.
          */
         client_tick();
+CON("%d",__LINE__);
 
         /*
          * Flush out buffered messages.
          */
         socket_tick();
+CON("%d",__LINE__);
 
         /*
          * Let things move.
          */
         thing_tick_all();
+CON("%d",__LINE__);
 
         /*
          * Let widgets move.
          */
         wid_move_all();
+CON("%d",__LINE__);
 
         /*
          * Display windows.
          */
         wid_display_all();
+CON("%d",__LINE__);
 
         /*
          * FPS counter.
