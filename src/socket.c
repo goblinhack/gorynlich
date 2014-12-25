@@ -1187,6 +1187,7 @@ UDPpacket *packet_dup (const UDPpacket *packet)
     if (!dup) {
         DIE("Out of packet space, len %d", packet->len);
     }
+CON("pak %p -> %p",packet,dup);
 
     dup->len = packet->len;
     newptr(dup, "pak dup");
@@ -1233,7 +1234,7 @@ void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
@@ -1291,7 +1292,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_rx_ping (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1388,7 +1389,7 @@ void socket_tx_name (gsocketp s)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_rx_name (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1474,7 +1475,7 @@ uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 
     return (true);
 }
@@ -1600,7 +1601,7 @@ void socket_tx_client_leave (gsocketp s)
     socket_set_pclass(s, 0);
     socket_set_player_stats(s, 0);
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 uint8_t socket_rx_client_leave (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1668,7 +1669,7 @@ void socket_tx_client_close (gsocketp s)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_rx_client_close (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1729,7 +1730,7 @@ static void socket_tx_client_shout_relay (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_tx_client_shout (gsocketp s, 
@@ -1758,7 +1759,7 @@ void socket_tx_client_shout (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1920,7 +1921,7 @@ void socket_tx_server_shout (uint32_t level, const char *txt)
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_enqueue_packet(sp, packet);
+        socket_enqueue_packet(sp, &packet);
     }
 }
 
@@ -1965,7 +1966,7 @@ void socket_tx_server_shout_except_to (gsocketp except,
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_enqueue_packet(sp, packet);
+        socket_enqueue_packet(sp, &packet);
     }
 }
 
@@ -2011,7 +2012,7 @@ void socket_tx_server_shout_only_to (gsocketp target,
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_enqueue_packet(sp, packet);
+        socket_enqueue_packet(sp, &packet);
     }
 }
 
@@ -2077,7 +2078,7 @@ void socket_tx_tell (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -2195,7 +2196,7 @@ void socket_tx_server_status (void)
 
         write_address(packet, socket_get_remote_ip(s));
 
-        socket_enqueue_packet(s, packet);
+        socket_enqueue_packet(s, &packet);
     }
 }
 
@@ -2345,7 +2346,7 @@ void socket_tx_server_hiscore (gsocketp only,
 
             write_address(packet, socket_get_remote_ip(s));
 
-            socket_enqueue_packet(s, packet);
+            socket_enqueue_packet(s, &packet);
         }
     }
 }
@@ -2424,7 +2425,7 @@ void socket_tx_server_close (void)
 
         write_address(packet, socket_get_remote_ip(s));
 
-        socket_enqueue_packet(s, packet);
+        socket_enqueue_packet(s, &packet);
     }
 }
 
@@ -2578,7 +2579,7 @@ void socket_tx_player_move (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -2646,7 +2647,7 @@ void socket_tx_player_action (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, packet);
+    socket_enqueue_packet(s, &packet);
 }
 
 void socket_server_rx_player_action (gsocketp s, UDPpacket *packet, 
@@ -2833,6 +2834,7 @@ static int socket_tx_queue_dequeue (gsocketp s)
     }
     s->tx_queue_head--;
     s->tx_queue_size--;
+CON("dequeue size now [%d]", s->tx_queue_size);
 
     /*
      * Do last changes to the packet like adding sequence numbers
@@ -2862,6 +2864,7 @@ static int socket_tx_queue_dequeue (gsocketp s)
 
 static void socket_tx_queue_flush (gsocketp s)
 {
+CON("flush");
     while (socket_tx_queue_dequeue(s)) { }
 }
 
@@ -2883,6 +2886,7 @@ static void socket_tx_enqueue_packet (gsocketp s, UDPpacket *packet)
     if (s->tx_queue_head >= ARRAY_SIZE(s->tx_queue)) {
         s->tx_queue_head = 0;
     }
+CON("enqueue size now [%d]", s->tx_queue_size);
 
     s->tx_queue[s->tx_queue_head] = packet;
 }
@@ -2914,9 +2918,13 @@ void packet_compress (UDPpacket *packet)
     myfree(tmp);
 }
 
-void socket_enqueue_packet (gsocketp s, UDPpacket *packet)
+void socket_enqueue_packet (gsocketp s, UDPpacket **packet_in)
 {
+    UDPpacket *packet;
     msg_type type;
+
+    packet = *packet_in;
+    *packet_in = 0;
 
     type = (typeof(type)) *(packet->data);
 

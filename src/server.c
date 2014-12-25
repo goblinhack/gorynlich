@@ -232,25 +232,32 @@ static void server_poll (void)
         return;
     }
 
+CON("%s %d",__FUNCTION__,__LINE__);
     if (!socket_get_socklist(s)) {
         ERR("no socklist to listen on");
         return;
     }
+CON("%s %d",__FUNCTION__,__LINE__);
 
     int waittime = 0;
     int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
     if (numready <= 0) {
         return;
     }
-
-    UDPpacket *packet = packet_alloc();
+CON("numready %d",numready);
 
     int i;
+CON("%s %d",__FUNCTION__,__LINE__);
     for (i = 0; i < numready; i++) {
+CON("%s %d",__FUNCTION__,__LINE__);
         int ready = SDLNet_SocketReady(socket_get_udp_socket(s));
         if (ready == 0) {
-            continue;
+            break;
         }
+CON("%s %d ready %d",__FUNCTION__,__LINE__, ready);
+CON("%s %d",__FUNCTION__,__LINE__);
+
+        UDPpacket *packet = packet_alloc();
 
         int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
         if (paks != 1) {
@@ -258,6 +265,7 @@ static void server_poll (void)
                 SDLNet_GetError(), paks);
             continue;
         }
+CON("%s %d",__FUNCTION__,__LINE__);
 
         gsocketp s = socket_find_remote_ip(read_address(packet));
         if (!s) {
@@ -270,6 +278,7 @@ static void server_poll (void)
                 continue;
             }
         }
+CON("%s %d",__FUNCTION__,__LINE__);
 
         uint8_t *data;
         uint8_t *odata;
@@ -284,8 +293,11 @@ static void server_poll (void)
         /*
          * Uncompress the packet if it has an invalid type.
          */
+CON("%s %d",__FUNCTION__,__LINE__);
         if (*packet->data == MSG_COMPRESSED) {
+CON("%s %d",__FUNCTION__,__LINE__);
             data = miniz_uncompress(packet->data + 1, &packet->len);
+CON("%s %d",__FUNCTION__,__LINE__);
             odata = data;
             pdata = packet->data;
             packet->data = data;
@@ -295,6 +307,7 @@ static void server_poll (void)
             odata = data;
             pdata = data;
         }
+CON("%s %d",__FUNCTION__,__LINE__);
 
         msg_type type = (typeof(type)) *data++;
 
@@ -302,47 +315,57 @@ static void server_poll (void)
 
         switch (type) {
         case MSG_PING:
+CON("%s %d",__FUNCTION__,__LINE__);
             socket_rx_ping(s, packet, data);
             break;
 
         case MSG_PONG:
+CON("%s %d",__FUNCTION__,__LINE__);
             socket_rx_pong(s, packet, data);
             break;
 
         case MSG_NAME:
+CON("%s %d",__FUNCTION__,__LINE__);
             socket_rx_name(s, packet, data);
             break;
 
         case MSG_CLIENT_JOIN:
+CON("%s %d",__FUNCTION__,__LINE__);
             if (socket_rx_client_join(s, packet, data)) {
                 server_rx_client_join(s);
             }
             break;
 
         case MSG_CLIENT_LEAVE:
+CON("%s %d",__FUNCTION__,__LINE__);
             if (socket_rx_client_leave(s, packet, data)) {
                 server_rx_client_leave(s);
             }
             break;
 
         case MSG_CLIENT_CLOSE:
+CON("%s %d",__FUNCTION__,__LINE__);
             server_rx_client_close(s);
             socket_rx_client_close(s, packet, data);
             break;
 
         case MSG_CLIENT_SHOUT:
+CON("%s %d",__FUNCTION__,__LINE__);
             socket_rx_client_shout(s, packet, data);
             break;
 
         case MSG_TELL:
+CON("%s %d",__FUNCTION__,__LINE__);
             socket_rx_tell(s, packet, data);
             break;
 
         case MSG_CLIENT_PLAYER_MOVE:
+CON("%s %d",__FUNCTION__,__LINE__);
             socket_server_rx_player_move(s, packet, data);
             break;
 
         case MSG_CLIENT_PLAYER_ACTION:
+CON("%s %d",__FUNCTION__,__LINE__);
             socket_server_rx_player_action(s, packet, data);
             break;
 
@@ -354,9 +377,12 @@ static void server_poll (void)
             packet->data = pdata;
             myfree(odata);
         }
-    }
+CON("%s %d",__FUNCTION__,__LINE__);
 
-    packet_free(packet);
+        packet_free(packet);
+    }
+CON("%s %d",__FUNCTION__,__LINE__);
+CON("%s %d",__FUNCTION__,__LINE__);
 }
 
 static void server_alive_check (void)
@@ -470,8 +496,11 @@ void server_tick (void)
         return;
     }
 
+CON("%s %d",__FUNCTION__,__LINE__);
     server_poll();
+CON("%s %d",__FUNCTION__,__LINE__);
     server_socket_tx_ping();
+CON("%s %d",__FUNCTION__,__LINE__);
 }
 
 /*
