@@ -414,4 +414,4 @@ UDPpacket *packet_dup(const UDPpacket *packet);
 void packet_compress(UDPpacket *packet);
 void packet_free(UDPpacket *packet);
 UDPpacket *packet_definalize(gsocketp s, UDPpacket *packet);
-void socket_enqueue_packet(gsocketp s, UDPpacket *packet);
+void socket_enqueue_packet(gsocketp s, UDPpacket **packet);
