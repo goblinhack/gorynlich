@@ -226,12 +226,9 @@ void client_tick (void)
         return;
     }
 
-CON("%s %d",__FUNCTION__,__LINE__);
     client_poll();
-CON("%s %d",__FUNCTION__,__LINE__);
 
     client_socket_tx_ping();
-CON("%s %d",__FUNCTION__,__LINE__);
 }
 
 /*
@@ -746,7 +743,6 @@ static void client_poll (void)
         verify(client_joined_server);
     }
 
-CON("%s %d",__FUNCTION__,__LINE__);
     TREE_WALK(sockets, s) {
         if (!socket_get_client(s)) {
             continue;
@@ -762,7 +758,6 @@ CON("%s %d",__FUNCTION__,__LINE__);
             continue;
         }
 
-CON("%s %d",__FUNCTION__,__LINE__);
         int i;
         for (i = 0; i < numready; i++) {
             int ready = SDLNet_SocketReady(socket_get_udp_socket(s));
@@ -772,7 +767,6 @@ CON("%s %d",__FUNCTION__,__LINE__);
 
             UDPpacket *packet = packet_alloc();
 
-CON("%s %d",__FUNCTION__,__LINE__);
             int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
             if (paks != 1) {
                 LOG("Client: UDP rx failed: error='%s' paks=%d", 
@@ -780,7 +774,6 @@ CON("%s %d",__FUNCTION__,__LINE__);
                 continue;
             }
 
-CON("%s %d",__FUNCTION__,__LINE__);
             /*
              * Remove any optional header
              */
@@ -812,27 +805,22 @@ CON("%s %d",__FUNCTION__,__LINE__);
 
             switch (type) {
             case MSG_PONG:
-CON("%s %d",__FUNCTION__,__LINE__);
                 socket_rx_pong(s, packet, data);
                 break;
 
             case MSG_PING:
-CON("%s %d",__FUNCTION__,__LINE__);
                 socket_rx_ping(s, packet, data);
                 break;
 
             case MSG_CLIENT_SHOUT:
-CON("%s %d",__FUNCTION__,__LINE__);
                 socket_rx_client_shout(s, packet, data);
                 break;
 
             case MSG_SERVER_SHOUT:
-CON("%s %d",__FUNCTION__,__LINE__);
                 socket_rx_server_shout(s, packet, data);
                 break;
 
             case MSG_TELL:
-CON("%s %d",__FUNCTION__,__LINE__);
                 socket_rx_tell(s, packet, data);
                 break;
 
@@ -981,7 +969,6 @@ CON("%s %d",__FUNCTION__,__LINE__);
             }
 
             case MSG_SERVER_HISCORE: {
-CON("%s %d",__FUNCTION__,__LINE__);
                 /*
                  * This is an update of the hiscores as the player has died.
                  */
@@ -999,12 +986,10 @@ CON("%s %d",__FUNCTION__,__LINE__);
             }
 
             case MSG_SERVER_MAP_UPDATE:
-CON("%s %d",__FUNCTION__,__LINE__);
                 socket_client_rx_map_update(s, packet, data);
                 break;
 
             case MSG_SERVER_CLOSE:
-CON("%s %d",__FUNCTION__,__LINE__);
                 socket_rx_server_close(s, packet, data);
 
                 client_socket_leave_implicit();
@@ -1019,9 +1004,7 @@ CON("%s %d",__FUNCTION__,__LINE__);
                 myfree(odata);
             }
 
-CON("%s %d",__FUNCTION__,__LINE__);
             packet_free(packet);
-CON("%s %d",__FUNCTION__,__LINE__);
         }
     }
 }
