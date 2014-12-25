@@ -269,10 +269,10 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
     s->remote_ip = connect_address;
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
 
-    CON("Socket connect to %s", socket_get_remote_logname(s));
+    LOG("Socket connect to %s", socket_get_remote_logname(s));
 
     if (debug_socket_connect_enabled) {
-        CON("       from      %s", socket_get_local_logname(s));
+        LOG("       from      %s", socket_get_local_logname(s));
     }
 
     return (s);
@@ -1233,7 +1233,7 @@ void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = (uint32_t) -1;
 
     if (debug_socket_ping_enabled) {
-        CON("Tx Ping [to %s] seq %u, ts %u", 
+        LOG("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -1287,7 +1287,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
     msg.server_current_players = global_config.server_current_players;
 
     if (debug_socket_ping_enabled) {
-        CON("Tx Pong [to %s] seq %u, ts %u", 
+        LOG("Tx Pong [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -1311,7 +1311,7 @@ void socket_rx_ping (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        CON("Rx Ping from %s, seq %u", tmp, seq);
+        LOG("Rx Ping from %s, seq %u", tmp, seq);
         myfree(tmp);
     }
 
@@ -1338,7 +1338,7 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        CON("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
+        LOG("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
             time_get_time_cached() - ts);
         myfree(tmp);
     }
@@ -2077,7 +2077,7 @@ void socket_tx_tell (gsocketp s,
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (debug_socket_players_enabled) {
-        CON("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 
+        LOG("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 
             socket_get_remote_logname(s), from, to, txt);
     }
 
@@ -2112,7 +2112,7 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (debug_socket_players_enabled) {
-        CON("Client: Rx Tell from %s \"%s\"", from, txt);
+        LOG("Client: Rx Tell from %s \"%s\"", from, txt);
     }
 
     if (!socket_get_server(s)) {
@@ -2196,7 +2196,7 @@ void socket_tx_server_status (void)
         memcpy(packet->data, &msg, sizeof(msg));
 
         if (debug_socket_players_enabled) {
-            CON("Server: Tx Status [to %s]", socket_get_remote_logname(s));
+            LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
         }
 
         packet->len = sizeof(msg);
@@ -2238,10 +2238,10 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         if (msg->you_are_playing_on_this_server) {
-            CON("Client: Rx Status from %s, current player \"%s\"", 
+            LOG("Client: Rx Status from %s, current player \"%s\"", 
                 tmp, p->stats.pname);
         } else {
-            CON("Client: Rx Status from %s", tmp);
+            LOG("Client: Rx Status from %s", tmp);
         }
         myfree(tmp);
     }
@@ -2396,7 +2396,8 @@ void socket_rx_server_hiscore (gsocketp s, UDPpacket *packet,
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            CON("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, p->player_name);
+            LOG("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, 
+                p->player_name);
             myfree(tmp);
         }
     }
@@ -2726,7 +2727,7 @@ static UDPpacket *packet_finalize (gsocketp s, UDPpacket *packet)
     packet_free(packet);
     packet = copy;
 
-    CON("Tx seq %d, csum %d, len %d, to [%s]", s->tx_seq, csum, packet->len,
+    LOG("Tx seq %d, csum %d, len %d, to [%s]", s->tx_seq, csum, packet->len,
         socket_get_remote_logname(s));
 
     /*
@@ -2801,7 +2802,7 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
     s->rx_seq_valid = 1;
     s->rx_seq = rx_seq + 1;
 
-    CON("Rx seq %d, csum %d, len %d, from [%s]", rx_seq, in_csum, packet->len,
+    LOG("Rx seq %d, csum %d, len %d, from [%s]", rx_seq, in_csum, packet->len,
         socket_get_remote_logname(s));
 
     /*
@@ -2839,13 +2840,8 @@ static int socket_tx_queue_dequeue (gsocketp s)
 
     UDPpacket *packet;
 
-    packet = s->tx_queue[s->tx_queue_head];
+    packet = s->tx_queue[s->tx_queue_head++];
     verify(packet);
-
-    if (s->tx_queue_head == 0) {
-        s->tx_queue_head = ARRAY_SIZE(s->tx_queue);
-    }
-    s->tx_queue_head--;
     s->tx_queue_size--;
 
     /*
@@ -2884,21 +2880,16 @@ static void socket_tx_enqueue_packet (gsocketp s, UDPpacket *packet)
     verify(s);
     verify(packet);
 
-    if (s->tx_queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
+    if (((int)s->tx_queue_size) == MAX_SOCKET_TX_QUEUE_SIZE) {
         socket_tx_queue_flush(s);
 
-        if (s->tx_queue_size == MAX_SOCKET_TX_QUEUE_SIZE) {
+        if (((int)s->tx_queue_size) == MAX_SOCKET_TX_QUEUE_SIZE) {
             DIE("socket queue stuck");
         }
     }
 
     s->tx_queue_size++;
-    s->tx_queue_head++;
-    if (s->tx_queue_head >= ARRAY_SIZE(s->tx_queue)) {
-        s->tx_queue_head = 0;
-    }
-
-    s->tx_queue[s->tx_queue_head] = packet;
+    s->tx_queue[s->tx_queue_tail++] = packet;
 }
 
 static void socket_all_tx_queue_dequeue_one (void)
