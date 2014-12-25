@@ -269,10 +269,10 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
     s->remote_ip = connect_address;
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
 
-    LOG("Socket connect to %s", socket_get_remote_logname(s));
+    CON("Socket connect to %s", socket_get_remote_logname(s));
 
     if (debug_socket_connect_enabled) {
-        LOG("       from      %s", socket_get_local_logname(s));
+        CON("       from      %s", socket_get_local_logname(s));
     }
 
     return (s);
@@ -1163,36 +1163,43 @@ UDPpacket *packet_alloc (void)
     return (packet);
 }
 
-UDPpacket *packet_alloc_len (const uint16_t len)
-{
-    UDPpacket *packet;
-    
-    packet = SDLNet_AllocPacket(len);
-    if (!packet) {
-        DIE("Out of packet space, pak %u", len);
-    }
-
-    newptr(packet, "pak");
-
-    return (packet);
-}
-
 UDPpacket *packet_dup (const UDPpacket *packet)
 {
     UDPpacket *dup;
 
     verify(packet);
 
-    dup = SDLNet_AllocPacket(packet->len);
+    dup = SDLNet_AllocPacket(packet->len + 1); /* for miniz uncompress */
     if (!dup) {
         DIE("Out of packet space, len %d", packet->len);
     }
-CON("pak %p -> %p",packet,dup);
 
-    dup->len = packet->len;
     newptr(dup, "pak dup");
 
+    dup->len = packet->len;
     memcpy(dup->data, packet->data, packet->len);
+    memcpy(&dup->address, &packet->address, sizeof(packet->address));
+    dup->channel = packet->channel;
+
+    return (dup);
+}
+
+static UDPpacket *packet_dup_no_copy (const UDPpacket *packet,
+                                      const int adjustment)
+{
+    UDPpacket *dup;
+
+    verify(packet);
+
+    dup = SDLNet_AllocPacket(packet->len + adjustment + 1); /* for miniz uncompress */
+    if (!dup) {
+        DIE("Out of packet space, len %d", packet->len);
+    }
+
+    newptr(dup, "pak dup");
+
+    memcpy(&dup->address, &packet->address, sizeof(packet->address));
+    dup->channel = packet->channel;
 
     return (dup);
 }
@@ -1226,7 +1233,7 @@ void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = (uint32_t) -1;
 
     if (debug_socket_ping_enabled) {
-        LOG("Tx Ping [to %s] seq %u, ts %u", 
+        CON("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -1280,7 +1287,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
     msg.server_current_players = global_config.server_current_players;
 
     if (debug_socket_ping_enabled) {
-        LOG("Tx Pong [to %s] seq %u, ts %u", 
+        CON("Tx Pong [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -1304,7 +1311,7 @@ void socket_rx_ping (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Ping from %s, seq %u", tmp, seq);
+        CON("Rx Ping from %s, seq %u", tmp, seq);
         myfree(tmp);
     }
 
@@ -1331,7 +1338,7 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
+        CON("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
             time_get_time_cached() - ts);
         myfree(tmp);
     }
@@ -2070,7 +2077,7 @@ void socket_tx_tell (gsocketp s,
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (debug_socket_players_enabled) {
-        LOG("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 
+        CON("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 
             socket_get_remote_logname(s), from, to, txt);
     }
 
@@ -2105,7 +2112,7 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
 
     if (debug_socket_players_enabled) {
-        LOG("Client: Rx Tell from %s \"%s\"", from, txt);
+        CON("Client: Rx Tell from %s \"%s\"", from, txt);
     }
 
     if (!socket_get_server(s)) {
@@ -2189,7 +2196,7 @@ void socket_tx_server_status (void)
         memcpy(packet->data, &msg, sizeof(msg));
 
         if (debug_socket_players_enabled) {
-            LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
+            CON("Server: Tx Status [to %s]", socket_get_remote_logname(s));
         }
 
         packet->len = sizeof(msg);
@@ -2231,10 +2238,10 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
     if (debug_socket_players_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         if (msg->you_are_playing_on_this_server) {
-            LOG("Client: Rx Status from %s, current player \"%s\"", 
+            CON("Client: Rx Status from %s, current player \"%s\"", 
                 tmp, p->stats.pname);
         } else {
-            LOG("Client: Rx Status from %s", tmp);
+            CON("Client: Rx Status from %s", tmp);
         }
         myfree(tmp);
     }
@@ -2389,7 +2396,7 @@ void socket_rx_server_hiscore (gsocketp s, UDPpacket *packet,
 
         if (debug_socket_players_enabled) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, p->player_name);
+            CON("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, p->player_name);
             myfree(tmp);
         }
     }
@@ -2713,13 +2720,13 @@ static UDPpacket *packet_finalize (gsocketp s, UDPpacket *packet)
     /*
      * Make a copy and add the header.
      */
-    UDPpacket *copy = packet_alloc_len(packet->len + 2);
-    memcpy(copy->data + 2, packet->data, packet->len);
+    UDPpacket *copy = packet_dup_no_copy(packet, 2);
     copy->len = packet->len + 2;
+    memcpy(copy->data + 2, packet->data, packet->len);
     packet_free(packet);
     packet = copy;
 
-    CON("Tx seq %d, csum %d, len %d, to %s", s->tx_seq, csum, packet->len,
+    CON("Tx seq %d, csum %d, len %d, to [%s]", s->tx_seq, csum, packet->len,
         socket_get_remote_logname(s));
 
     /*
@@ -2774,9 +2781,11 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
         csum += tmp[i];
     }
 
+    int failed = 0;
+
     if (csum != in_csum) {
-        DIE("checksum mismatch, expected %d, received %d",
-            csum, in_csum);
+        ERR("checksum mismatch, expected %d, received %d", csum, in_csum);
+        failed = 1;
     }
 
     /*
@@ -2784,23 +2793,23 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
      */
     if (s->rx_seq_valid) {
         if (rx_seq != s->rx_seq) {
-            DIE("sequence mismatch, expected %d not %d",
-                s->rx_seq, rx_seq);
+            ERR("sequence mismatch, expected %d not %d", s->rx_seq, rx_seq);
+            failed = 1;
         }
     }
 
     s->rx_seq_valid = 1;
     s->rx_seq = rx_seq + 1;
 
-    CON("Rx seq %d, csum %d, len %d, from %s", rx_seq, in_csum, packet->len,
+    CON("Rx seq %d, csum %d, len %d, from [%s]", rx_seq, in_csum, packet->len,
         socket_get_remote_logname(s));
 
     /*
      * Give back the original packet minus the header.
      */
-    UDPpacket *copy = packet_alloc_len(packet->len - 2);
-    memcpy(copy->data, packet->data + 2, packet->len - 2);
+    UDPpacket *copy = packet_dup_no_copy(packet, -2);
     copy->len = packet->len - 2;
+    memcpy(copy->data, packet->data + 2, copy->len);
     packet_free(packet);
     packet = copy;
 
@@ -2811,6 +2820,10 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
     }
     fprintf(stderr, "\n");
 #endif
+
+    if (failed) {
+        DIE("packet layer error");
+    }
 
     return (packet);
 }
@@ -2834,7 +2847,6 @@ static int socket_tx_queue_dequeue (gsocketp s)
     }
     s->tx_queue_head--;
     s->tx_queue_size--;
-CON("dequeue size now [%d]", s->tx_queue_size);
 
     /*
      * Do last changes to the packet like adding sequence numbers
@@ -2864,7 +2876,6 @@ CON("dequeue size now [%d]", s->tx_queue_size);
 
 static void socket_tx_queue_flush (gsocketp s)
 {
-CON("flush");
     while (socket_tx_queue_dequeue(s)) { }
 }
 
@@ -2886,7 +2897,6 @@ static void socket_tx_enqueue_packet (gsocketp s, UDPpacket *packet)
     if (s->tx_queue_head >= ARRAY_SIZE(s->tx_queue)) {
         s->tx_queue_head = 0;
     }
-CON("enqueue size now [%d]", s->tx_queue_size);
 
     s->tx_queue[s->tx_queue_head] = packet;
 }
