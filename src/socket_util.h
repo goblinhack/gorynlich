@@ -409,7 +409,6 @@ static inline uint8_t cmp_address (const IPaddress *a, const IPaddress *b)
 extern tree_rootp sockets;
 
 UDPpacket *packet_alloc(void);
-UDPpacket *packet_alloc_len(const uint16_t len);
 UDPpacket *packet_dup(const UDPpacket *packet);
 void packet_compress(UDPpacket *packet);
 void packet_free(UDPpacket *packet);
