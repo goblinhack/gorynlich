@@ -225,8 +225,9 @@ typedef struct socket_ {
     uint8_t server_current_players;
 
     UDPpacket *tx_queue[MAX_SOCKET_TX_QUEUE_SIZE];
-    uint32_t tx_queue_head;
-    uint32_t tx_queue_size;
+    uint8_t tx_queue_head;
+    uint8_t tx_queue_tail;
+    uint8_t tx_queue_size;
 
     /*
      * Only used with ENABLE_PAK_EXTRA_HEADER
