@@ -244,7 +244,7 @@ static void wid_intro_extra_create (void)
         fpoint br = {0.8, 0.95};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_font(w, small_font);
+        wid_set_font(w, large_font);
 
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
@@ -270,7 +270,7 @@ static void wid_intro_extra_create (void)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Stuffs");
-        wid_set_font(w, small_font);
+        wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, GOLD);
 
         wid_set_text_outline(w, true);
@@ -298,7 +298,7 @@ static void wid_intro_extra_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_names[i]);
-            wid_set_font(w, small_font);
+            wid_set_font(w, large_font);
 
             color c = WHITE;
 
@@ -330,7 +330,7 @@ static void wid_intro_extra_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, "%%tile=button_b$Back");
-        wid_set_font(w, small_font);
+        wid_set_font(w, large_font);
         wid_set_no_shape(w);
 
         wid_set_mode(w, WID_MODE_NORMAL);
