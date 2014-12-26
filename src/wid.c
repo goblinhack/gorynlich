@@ -6932,14 +6932,23 @@ void wid_get_abs (widp w,
     int32_t brx;
     int32_t bry;
 
-    wid_get_abs_coords(w,
-                       &tlx,
-                       &tly,
-                       &brx,
-                       &bry);
+    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
 
     *x = (tlx + brx) / 2;
     *y = (tly + bry) / 2;
+}
+
+void wid_get_pct (widp w,
+                  double *px,
+                  double *py)
+{
+    int32_t x;
+    int32_t y;
+
+    wid_get_abs(w, &x, &y);
+
+    *px = (double)x / (double)global_config.video_gl_width;
+    *py = (double)y / (double)global_config.video_gl_height;
 }
 
 /*

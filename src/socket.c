@@ -1955,9 +1955,6 @@ socket_tx_server_shout_over (uint32_t level,
             continue;
         }
 
-        LOG("Server: Tx Shout \"%s\" to %s", txt,
-            socket_get_remote_logname(sp));
-
         UDPpacket *packet = packet_alloc();
 
         msg_server_shout msg = {0};
