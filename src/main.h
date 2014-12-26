@@ -236,10 +236,26 @@ void ERR(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DBG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void HOST_LOG(hostp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
-void THING_SHOUT_AT(thingp,
-                    uint32_t level,
-                    const char *fmt, ...)
-                     __attribute__ ((format (printf, 3, 4)));
+
+void MSG_CLIENT_SHOUT_OVER_PLAYER(uint32_t level, 
+                                  uint32_t thing_id,
+                                  const char *fmt, ...)
+                                  __attribute__ ((format (printf, 3, 4)));
+
+void MSG_SERVER_SHOUT_AT_PLAYER(uint32_t level,
+                                thingp,
+                                const char *fmt, ...)
+                                __attribute__ ((format (printf, 3, 4)));
+
+void MSG_SERVER_SHOUT_AT_ALL_PLAYERS(uint32_t level,
+                                     const char *fmt, ...)
+                                     __attribute__ ((format (printf, 2, 3)));
+
+void MSG_SERVER_SHOUT_OVER_THING(uint32_t level,
+                                 thingp,
+                                 const char *fmt, ...)
+                                 __attribute__ ((format (printf, 3, 4)));
+
 void THING_LOG(thingp, const char *fmt, ...)
                      __attribute__ ((format (printf, 2, 3)));
 void THING_DBG(thingp, const char *fmt, ...)

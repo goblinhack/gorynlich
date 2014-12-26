@@ -110,6 +110,8 @@ void wid_get_abs_coords(widp w,
                         int32_t *brx,
                         int32_t *bry);
 
+void wid_get_abs(widp w, int32_t *x, int32_t *y);
+
 /*
  * Text input.
  */

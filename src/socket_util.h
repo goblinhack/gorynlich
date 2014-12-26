@@ -89,6 +89,10 @@ typedef struct {
 typedef struct {
     uint8_t type;
     uint8_t level;
+    /*
+     * Used to place a message above a thing
+     */
+    uint16_t thing_id;
     char txt[PLAYER_MSG_MAX];
 } __attribute__ ((packed)) msg_server_shout;
 
@@ -322,6 +326,7 @@ extern void socket_tx_client_shout(gsocketp s,
                                    const char *shout);
 extern void socket_rx_client_shout(gsocketp s, 
                                    UDPpacket *packet, uint8_t *data);
+
 extern void socket_tx_player_move(gsocketp s, 
                                   thingp t,
                                   const uint8_t up,
@@ -329,27 +334,42 @@ extern void socket_tx_player_move(gsocketp s,
                                   const uint8_t left,
                                   const uint8_t right,
                                   const uint8_t fire);
+
 extern void socket_tx_player_action(gsocketp s, 
                                     thingp t,
                                     const uint8_t action,
                                     const uint32_t action_bar_index);
-extern void socket_server_rx_player_move(gsocketp s, UDPpacket *packet, 
+
+extern void socket_server_rx_player_move(gsocketp s, 
+                                         UDPpacket *packet, 
                                          uint8_t *data);
-extern void socket_server_rx_player_action(gsocketp s, UDPpacket *packet, 
-                                         uint8_t *data);
-extern void socket_tx_server_shout(uint32_t level,
-                                   const char *shout);
-extern void socket_tx_server_shout_except_to(gsocketp,
-                                             uint32_t level,
-                                             const char *shout);
+
+extern void socket_server_rx_player_action(gsocketp s, 
+                                           UDPpacket *packet,
+                                           uint8_t *data);
+
+extern void socket_tx_server_shout_at_all_players(uint32_t level,
+                                                  const char *shout);
+
+extern void socket_tx_server_shout_at_all_players_except(gsocketp,
+                                                         uint32_t level,
+                                                         const char *shout);
+
 extern void socket_tx_server_shout_only_to(gsocketp,
                                            uint32_t level,
                                            const char *shout);
+
+extern void socket_tx_server_shout_over(uint32_t level,
+                                        uint32_t thing_id,
+                                        const char *txt);
+
 extern void socket_rx_server_shout(gsocketp s, UDPpacket *packet, 
                                    uint8_t *data);
+
 extern void socket_tx_tell(gsocketp s, 
                            const char *from, const char *to, 
                            const char *shout);
+
 extern void socket_rx_tell(gsocketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_tx_server_status(void);
 extern void socket_rx_server_status(gsocketp s, UDPpacket *packet, 
