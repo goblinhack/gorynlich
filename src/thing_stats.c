@@ -466,7 +466,7 @@ int thing_stats_item_add (thingp t,
     }
 
     if (t) {
-        THING_SHOUT_AT(t, INFO, "Carrying too many items");
+        MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Carrying too many items");
     }
 
     return (false);
@@ -481,8 +481,8 @@ int thing_stats_item_remove (thingp t,
     itemp item = thing_stats_has_item(player_stats, id, 0);
     if (!item) {
         if (t) {
-            THING_SHOUT_AT(t, INFO, "Not carrying the %s",
-                           tp_short_name(it));
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Not carrying the %s",
+                                       tp_short_name(it));
         }
         return (false);
     }
