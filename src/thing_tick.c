@@ -240,7 +240,8 @@ void thing_tick_server_player_slow_all (void)
                 thing_used(t, tp);
                 tp = thing_is_carrying_thing(t, tp_is_torch);
                 if (!tp) {
-                    THING_SHOUT_AT(t, INFO, "Your light fizzles out");
+                    MSG_SERVER_SHOUT_AT_PLAYER(INFO, t,
+                                               "Your light fizzles out");
                 }
             }
         }

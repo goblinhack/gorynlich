@@ -6921,6 +6921,28 @@ void wid_get_abs_coords (widp w,
 }
 
 /*
+ * Get the onscreen co-ords of the widget, clipped to the parent.
+ */
+void wid_get_abs (widp w,
+                  int32_t *x,
+                  int32_t *y)
+{
+    int32_t tlx;
+    int32_t tly;
+    int32_t brx;
+    int32_t bry;
+
+    wid_get_abs_coords(w,
+                       &tlx,
+                       &tly,
+                       &brx,
+                       &bry);
+
+    *x = (tlx + brx) / 2;
+    *y = (tly + bry) / 2;
+}
+
+/*
  * Finish off a widgets move.
  */
 void wid_move_end (widp w)

@@ -59,7 +59,7 @@ void server_stop (void)
         return;
     }
 
-    socket_tx_server_shout(CRITICAL, "SERVER GOING DOWN");
+    socket_tx_server_shout_at_all_players(CRITICAL, "SERVER GOING DOWN");
 
     socket_tx_server_close();
 
@@ -143,7 +143,7 @@ static void server_rx_client_join (gsocketp s)
 
     char *tmp = dynprintf("%s joined", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout_except_to(s, WARNING, tmp);
+    socket_tx_server_shout_at_all_players_except(s, WARNING, tmp);
     myfree(tmp);
 
     LOG("Server: Total players now %u", global_config.server_current_players);
@@ -196,7 +196,7 @@ static void server_rx_client_leave (gsocketp s)
 
     char *tmp = dynprintf("%s left the game", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout(INFO, tmp);
+    socket_tx_server_shout_at_all_players(INFO, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -218,7 +218,7 @@ static void server_rx_client_close (gsocketp s)
 
     char *tmp = dynprintf("%s suddenly left the game", 
                           p->stats_from_client.pname);
-    socket_tx_server_shout(WARNING, tmp);
+    socket_tx_server_shout_at_all_players(WARNING, tmp);
     myfree(tmp);
 
     server_rx_client_leave_implicit(s);
@@ -384,9 +384,7 @@ static void server_alive_check (void)
             aplayerp p = socket_get_player(s);
 
             if (s->server_side_client) {
-                char *tmp = dynprintf("Connection lost");
-                socket_tx_server_shout_only_to(s, POPUP, tmp);
-                myfree(tmp);
+                MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, "Connection lost");
 
                 if (p) {
                     LOG("Server: \"%s\" (ID %u) dropped out from %s", 
@@ -577,7 +575,7 @@ uint8_t server_shout (tokens_t *tokens, void *context)
 
     strncpy(shout, tmp, sizeof(shout) - 1);
 
-    socket_tx_server_shout(CHAT, shout);
+    socket_tx_server_shout_at_all_players(CHAT, shout);
 
     myfree(tmp);
 

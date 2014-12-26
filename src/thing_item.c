@@ -66,7 +66,7 @@ static void thing_collect (thingp t,
         }
 
         if (thing_is_player(t)) {
-            THING_SHOUT_AT(t, INFO, "%s added", tp_short_name(tp));
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "%s added", tp_short_name(tp));
         }
         return;
     }
@@ -90,8 +90,9 @@ static void thing_collect (thingp t,
         }
 
         if (!thing_stats_item_add(t, &t->stats, i)) {
-            THING_SHOUT_AT(t, INFO, "You could not collect %s",
-                        tp_short_name(tp));
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t,
+                                       "You could not collect %s",
+                                       tp_short_name(tp));
             return;
         }
 
@@ -104,7 +105,8 @@ static void thing_collect (thingp t,
 
     if (!auto_collect) {
         if (thing_is_player(t)) {
-            THING_SHOUT_AT(t, INFO, "%s added", tp_short_name(tp));
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t,
+                                       "%s added", tp_short_name(tp));
         }
     }
 
@@ -167,8 +169,9 @@ void thing_used (thingp t, tpp tp)
      */
     int bonus_hp = tp_get_bonus_hp_on_use(tp);
     if (item->cursed) {
-        THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d health",
-                       tp_short_name(tp), bonus_hp);
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t,
+                                   "Cursed %s zaps %d health",
+                                   tp_short_name(tp), bonus_hp);
         bonus_hp = -bonus_hp;
     }
     t->stats.hp += bonus_hp;
@@ -191,8 +194,9 @@ void thing_used (thingp t, tpp tp)
      */
     int bonus_magic = tp_get_bonus_magic_on_use(tp);
     if (item->cursed) {
-        THING_SHOUT_AT(t, WARNING, "Cursed %s zaps %d of ID",
-                       tp_short_name(tp), bonus_hp);
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t,
+                                   "Cursed %s zaps %d of ID",
+                                   tp_short_name(tp), bonus_hp);
 
         bonus_magic = -bonus_magic;
     }
@@ -264,7 +268,8 @@ void thing_wear_out (thingp t, tpp tp)
     if (tp_is_weapon(tp)) {
         thing_unwield(t);
 
-        THING_SHOUT_AT(t, WARNING, "Your weapon crumbles to dust");
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t,
+                                   "Your weapon crumbles to dust");
 
         thing_wield_next_weapon(t);
     }
