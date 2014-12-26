@@ -679,7 +679,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                     } else {
                         if (!me->message_open_door_need_key) {
                             me->message_open_door_need_key = 1;
-                            THING_SHOUT_AT(me, INFO,
+                            MSG_SERVER_SHOUT_AT_PLAYER(INFO, me,
                                            "Collect keys to open doors");
                         }
                     }

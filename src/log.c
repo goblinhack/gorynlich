@@ -395,9 +395,38 @@ void CROAK (const char *fmt, ...)
     quit();
 }
 
-static void thing_shout_at_ (thingp t, 
-                             uint32_t level,
-                             const char *fmt, va_list args)
+static void msg_server_shout_at_all_players_ (uint32_t level,
+                                              const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    socket_tx_server_shout_at_all_players(level, buf + len);
+}
+
+void MSG_SERVER_SHOUT_AT_ALL_PLAYERS (uint32_t level,
+                                      const char *fmt, ...)
+{
+    va_list args;
+
+    verify(t);
+
+    va_start(args, fmt);
+    msg_server_shout_at_all_players_(level, fmt, args);
+    va_end(args);
+}
+
+static void msg_server_shout_at_player_ (uint32_t level,
+                                         thingp t,
+                                         const char *fmt, va_list args)
 {
     char buf[MAXSTR];
     uint32_t len;
@@ -431,16 +460,56 @@ static void thing_shout_at_ (thingp t,
     socket_tx_server_shout_only_to(s, level, buf + len);
 }
 
-void THING_SHOUT_AT (thingp t, 
-                     uint32_t level,
-                     const char *fmt, ...)
+void MSG_SERVER_SHOUT_AT_PLAYER (uint32_t level,
+                                 thingp t,
+                                 const char *fmt, ...)
 {
     va_list args;
 
     verify(t);
 
     va_start(args, fmt);
-    thing_shout_at_(t, level, fmt, args);
+    msg_server_shout_at_player_(level, t, fmt, args);
+    va_end(args);
+}
+
+static void thing_shout_over_ (uint32_t level,
+                               thingp t,
+                               const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+    if (t->on_server) {
+        snprintf(buf + len, sizeof(buf) - len, "Server: Thing %s: Msg over: ", 
+                 thing_logname(t));
+    } else {
+        snprintf(buf + len, sizeof(buf) - len, "Client: Thing %s: Msg over: ", 
+                 thing_logname(t));
+    }
+
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    socket_tx_server_shout_over(level, t->thing_id, buf + len);
+}
+
+void MSG_SERVER_SHOUT_OVER_THING (uint32_t level,
+                                  thingp t,
+                                  const char *fmt, ...)
+{
+    va_list args;
+
+    verify(t);
+
+    va_start(args, fmt);
+    thing_shout_over_(level, t, fmt, args);
     va_end(args);
 }
 
@@ -658,7 +727,9 @@ void WID_DBG (widp t, const char *fmt, ...)
 }
 #endif
 
-static void msg_ (uint32_t level, const char *fmt, va_list args)
+static void msg_ (uint32_t level, 
+                  uint32_t thing_id,
+                  const char *fmt, va_list args)
 {
     char buf[MAXSTR];
     uint32_t len;
@@ -678,6 +749,16 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
         wid_move_to_pct_centered(w, 0.5, -0.1);
         wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
         wid_set_no_shape(w);
+
+        thingp t = thing_client_find(thing_id);
+        if (t) {
+            widp thing_w = thing_wid(t);
+            if (thing_w) {
+                int32_t x, y;
+                wid_get_abs(thing_w, &x, &y);
+                wid_move_to_abs_centered(w, x, y);
+            }
+        }
     } 
     
     if (wid_notify(level, buf + len)) {
@@ -690,6 +771,7 @@ static void msg_ (uint32_t level, const char *fmt, va_list args)
 #endif
         term_log(buf + len);
     }
+
 }
 
 void MSG (uint32_t level, const char *fmt, ...)
@@ -697,7 +779,18 @@ void MSG (uint32_t level, const char *fmt, ...)
     va_list args;
 
     va_start(args, fmt);
-    msg_(level, fmt, args);
+    msg_(level, 0, fmt, args);
+    va_end(args);
+}
+
+void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 
+                                   uint32_t thing_id,
+                                   const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    msg_(level, thing_id, fmt, args);
     va_end(args);
 }
 

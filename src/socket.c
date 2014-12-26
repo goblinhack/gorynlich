@@ -1891,7 +1891,7 @@ void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
     }
 }
 
-void socket_tx_server_shout (uint32_t level, const char *txt)
+void socket_tx_server_shout_at_all_players (uint32_t level, const char *txt)
 {
     gsocketp sp;
 
@@ -1932,8 +1932,55 @@ void socket_tx_server_shout (uint32_t level, const char *txt)
     }
 }
 
-void socket_tx_server_shout_except_to (gsocketp except,
-                                       uint32_t level, const char *txt)
+void 
+socket_tx_server_shout_over (uint32_t level,
+                             uint32_t thing_id,
+                             const char *txt)
+{
+    gsocketp sp;
+
+    TREE_WALK(sockets, sp) {
+        if (!sp->connected) {
+            continue;
+        }
+
+        if (!sp->server_side_client) {
+            continue;
+        }
+
+        /*
+         * Only talk to players who joined this server.
+         */
+        if (!sp->player) {
+            continue;
+        }
+
+        LOG("Server: Tx Shout \"%s\" to %s", txt,
+            socket_get_remote_logname(sp));
+
+        UDPpacket *packet = packet_alloc();
+
+        msg_server_shout msg = {0};
+        msg.type = MSG_SERVER_SHOUT;
+        msg.thing_id = thing_id;
+        msg.level = level;
+
+        strncpy(msg.txt, txt, min(sizeof(msg.txt) - 1, strlen(txt))); 
+
+        memcpy(packet->data, &msg, sizeof(msg));
+
+        packet->len = sizeof(msg);
+
+        write_address(packet, socket_get_remote_ip(sp));
+
+        socket_enqueue_packet(sp, &packet);
+    }
+}
+
+void 
+socket_tx_server_shout_at_all_players_except (gsocketp except,
+                                              uint32_t level, 
+                                              const char *txt)
 {
     gsocketp sp;
 
@@ -1977,8 +2024,8 @@ void socket_tx_server_shout_except_to (gsocketp except,
     }
 }
 
-void socket_tx_server_shout_only_to (gsocketp target, 
-                                     uint32_t level, 
+void socket_tx_server_shout_only_to (gsocketp target,
+                                     uint32_t level,
                                      const char *txt)
 {
     gsocketp sp;
@@ -2045,7 +2092,11 @@ void socket_rx_server_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
         myfree(tmp);
     }
 
-    MSG(msg.level, "%s", txt);
+    if (msg.thing_id) {
+        MSG_CLIENT_SHOUT_OVER_PLAYER(msg.level, msg.thing_id, "%s", txt);
+    } else {
+        MSG(msg.level, "%s", txt);
+    }
 }
 
 void socket_tx_tell (gsocketp s, 
