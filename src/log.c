@@ -139,6 +139,42 @@ static void putf (FILE *fp, const char *s)
     putc('\n', fp);
 }
 
+static void msg_ (uint32_t level, 
+                  uint32_t thing_id,
+                  const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+    uint32_t len;
+
+    buf[0] = '\0';
+    timestamp(buf, sizeof(buf));
+    len = (uint32_t)strlen(buf);
+    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+
+    putf(MY_STDOUT, buf);
+    fflush(MY_STDOUT);
+
+    if (level == POPUP) {
+        widp w;
+
+        w = wid_tooltip_transient(buf + len, 3 * ONESEC);
+        wid_move_to_pct_centered(w, 0.5, -0.1);
+        wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
+        wid_set_no_shape(w);
+    } 
+    
+    if (wid_notify(level, buf + len)) {
+        wid_console_log(buf + len);
+
+#if 0
+        if (level == CHAT) {
+            wid_chat_log(buf + len);
+        }
+#endif
+        term_log(buf + len);
+    }
+}
+
 static void log_ (const char *fmt, va_list args)
 {
     char buf[MAXSTR];
@@ -473,31 +509,59 @@ void MSG_SERVER_SHOUT_AT_PLAYER (uint32_t level,
     va_end(args);
 }
 
-static void thing_shout_over_ (uint32_t level,
-                               thingp t,
-                               const char *fmt, va_list args)
+static void msg_over_thing_ (uint32_t level,
+                             uint32_t thing_id,
+                             const char *fmt, va_list args)
 {
     char buf[MAXSTR];
-    uint32_t len;
 
-    buf[0] = '\0';
-    timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
-    if (t->on_server) {
-        snprintf(buf + len, sizeof(buf) - len, "Server: Thing %s: Msg over: ", 
-                 thing_logname(t));
-    } else {
-        snprintf(buf + len, sizeof(buf) - len, "Client: Thing %s: Msg over: ", 
-                 thing_logname(t));
+    thingp t = thing_client_find(thing_id);
+    if (!t) {
+        return;
     }
 
-    len = (uint32_t)strlen(buf);
-    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
+    widp wid_thing = thing_wid(t);
+    if (!wid_thing) {
+        return;
+    }
 
-    putf(MY_STDOUT, buf);
-    fflush(MY_STDOUT);
+    vsnprintf(buf, sizeof(buf), fmt, args);
 
-    socket_tx_server_shout_over(level, t->thing_id, buf + len);
+    /*
+     * Center a widget over the thing.
+     */
+    widp tooltip;
+    double x, y;
+
+    wid_get_pct(wid_thing, &x, &y);
+    tooltip = wid_tooltip(buf, x, y, med_font);
+
+    wid_move_to_pct_centered(tooltip, x, y);
+    wid_move_to_pct_centered_in(tooltip, x, y - 0.2, 1000);
+    wid_fade_out(tooltip, 1000);
+    wid_set_no_shape(tooltip);
+}
+
+void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 
+                                   uint32_t thing_id,
+                                   const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    msg_over_thing_(level, thing_id, fmt, args);
+    va_end(args);
+}
+
+static void msg_server_shout_over_thing_ (uint32_t level,
+                                          thingp t,
+                                          const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+
+    vsnprintf(buf, sizeof(buf), fmt, args);
+
+    socket_tx_server_shout_over(level, t->thing_id, buf);
 }
 
 void MSG_SERVER_SHOUT_OVER_THING (uint32_t level,
@@ -509,7 +573,7 @@ void MSG_SERVER_SHOUT_OVER_THING (uint32_t level,
     verify(t);
 
     va_start(args, fmt);
-    thing_shout_over_(level, t, fmt, args);
+    msg_server_shout_over_thing_(level, t, fmt, args);
     va_end(args);
 }
 
@@ -727,70 +791,12 @@ void WID_DBG (widp t, const char *fmt, ...)
 }
 #endif
 
-static void msg_ (uint32_t level, 
-                  uint32_t thing_id,
-                  const char *fmt, va_list args)
-{
-    char buf[MAXSTR];
-    uint32_t len;
-
-    buf[0] = '\0';
-    timestamp(buf, sizeof(buf));
-    len = (uint32_t)strlen(buf);
-    vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
-
-    putf(MY_STDOUT, buf);
-    fflush(MY_STDOUT);
-
-    if (level == POPUP) {
-        widp w;
-
-        w = wid_tooltip_transient(buf + len, 3 * ONESEC);
-        wid_move_to_pct_centered(w, 0.5, -0.1);
-        wid_move_to_pct_centered_in(w, 0.5, 0.1, ONESEC / 2);
-        wid_set_no_shape(w);
-
-        thingp t = thing_client_find(thing_id);
-        if (t) {
-            widp thing_w = thing_wid(t);
-            if (thing_w) {
-                int32_t x, y;
-                wid_get_abs(thing_w, &x, &y);
-                wid_move_to_abs_centered(w, x, y);
-            }
-        }
-    } 
-    
-    if (wid_notify(level, buf + len)) {
-        wid_console_log(buf + len);
-
-#if 0
-        if (level == CHAT) {
-            wid_chat_log(buf + len);
-        }
-#endif
-        term_log(buf + len);
-    }
-
-}
-
 void MSG (uint32_t level, const char *fmt, ...)
 {
     va_list args;
 
     va_start(args, fmt);
     msg_(level, 0, fmt, args);
-    va_end(args);
-}
-
-void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 
-                                   uint32_t thing_id,
-                                   const char *fmt, ...)
-{
-    va_list args;
-
-    va_start(args, fmt);
-    msg_(level, thing_id, fmt, args);
     va_end(args);
 }
 

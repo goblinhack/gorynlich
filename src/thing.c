@@ -1511,9 +1511,9 @@ static int thing_hit_ (thingp t,
 
     if (damage > thing_get_stats_hp(t) / 10) {
         t->is_hit_crit = true;
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "CRIT");
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "%%%%fg=red$%d", damage);
     } else {
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "%d", damage);
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "%%%%fg=gray$%d", damage);
     }
 
     thing_update(t);

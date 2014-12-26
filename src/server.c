@@ -384,7 +384,9 @@ static void server_alive_check (void)
             aplayerp p = socket_get_player(s);
 
             if (s->server_side_client) {
-                MSG_SERVER_SHOUT_AT_ALL_PLAYERS(POPUP, "Connection lost");
+                MSG_SERVER_SHOUT_AT_ALL_PLAYERS(
+                    POPUP, "Connection lost to %s",
+                    socket_get_remote_logname(s));
 
                 if (p) {
                     LOG("Server: \"%s\" (ID %u) dropped out from %s", 
