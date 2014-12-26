@@ -267,9 +267,6 @@ uint8_t wid_game_map_client_player_move (void)
             
             if (!time_have_x_tenths_passed_since(delay, last_fired)) {
                 fire = 0;
-CON("XXX no fire");
-            } else {
-CON("XXX fire");
             }
 
             if (fire) {

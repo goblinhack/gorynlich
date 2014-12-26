@@ -3064,8 +3064,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
                  * Send dead changes all the time as we use that on level end
                  */
             } else if (!time_have_x_thousandths_passed_since(
-                    tp_get_tx_map_update_delay_thousandths(
-                                                            tp),
+                    tp_get_tx_map_update_delay_thousandths(tp),
                     t->timestamp_tx_map_update)) {
                 continue;
             }

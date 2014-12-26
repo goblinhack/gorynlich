@@ -3154,6 +3154,10 @@ widp wid_new_container (widp parent, const char *name)
  */
 widp wid_new_plain (widp parent, const char *name)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     widp w = wid_new(parent);
 
     w->logname = dynprintf("%s[%p] (parent %s[%p])", name, w,
@@ -3248,6 +3252,10 @@ widp wid_new_square_window (const char *name)
 
 widp wid_new_square_button (widp parent, const char *name)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     widp w = wid_new(parent);
 
     w->logname = dynprintf("%s[%p] (parent %s[%p])", name, w,
@@ -3306,6 +3314,10 @@ widp wid_new_square_button (widp parent, const char *name)
 
 widp wid_new_rounded_button (widp parent, const char *name)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     widp child;
 
     child = wid_new_square_button(parent, name);
@@ -3320,6 +3332,10 @@ widp wid_new_rounded_button (widp parent, const char *name)
 
 widp wid_new_rounded_small_button (widp parent, const char *name)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     widp child;
 
     child = wid_new_square_button(parent, name);
@@ -3339,6 +3355,10 @@ widp wid_new_rounded_small_button (widp parent, const char *name)
  */
 static widp wid_new_scroll_trough (widp parent)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     widp w = wid_new(parent);
 
     w->logname = dynprintf("%s[%p]", "scroll trough", w);
@@ -3375,6 +3395,10 @@ static widp wid_new_scroll_trough (widp parent)
 static widp wid_new_scroll_bar (widp parent, widp scrollbar_owner,
                                 uint8_t vertical)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     color c;
     color tl;
     color br;
@@ -3438,6 +3462,10 @@ static widp wid_new_scroll_bar (widp parent, widp scrollbar_owner,
 
 widp wid_new_vert_scroll_bar (widp parent, widp scrollbar_owner)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     fpoint tl;
     fpoint br;
 
@@ -3480,6 +3508,10 @@ widp wid_new_vert_scroll_bar (widp parent, widp scrollbar_owner)
 
 widp wid_new_horiz_scroll_bar (widp parent, widp scrollbar_owner)
 {
+    if (!parent) {
+        DIE("no parent");
+    }
+
     fpoint tl;
     fpoint br;
 
