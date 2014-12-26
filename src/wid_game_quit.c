@@ -126,10 +126,10 @@ static void wid_game_quit_create (void)
     wid_really_quit_game_yes_no = wid_popup(
             messages[myrand() % ARRAY_SIZE(messages)],
             "%%fg=red$Quit game?\n",
-            0.5, 0.2f,                /* x,y postition in percent */
-            small_font,               /* title font */
-            small_font,              /* body font */
-            small_font,              /* button font */
+            0.5, 0.5f,                /* x,y postition in percent */
+            med_font,               /* title font */
+            med_font,              /* body font */
+            med_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_game_quit_really_quit_callback_yes,
             "%%tile=button_n$No    ",  wid_game_quit_really_quit_callback_no);

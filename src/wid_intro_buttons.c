@@ -58,9 +58,9 @@ uint8_t wid_intro_quit_selected (void)
           "",
           "%%fg=red$Quit game?", 
           0.5, 0.5,                 /* x,y postition in percent */
-          small_font,               /* title font */
-          small_font,              /* body font */
-          small_font,              /* button font */
+          large_font,               /* title font */
+          large_font,              /* body font */
+          large_font,              /* button font */
           2,                        /* number buttons */
           "%%tile=button_y$Yes    ", wid_intro_quit_callback_yes,
           "%%tile=button_n$No    ",  wid_intro_quit_callback_no);
@@ -130,7 +130,7 @@ void wid_intro_buttons_visible (void)
         widp child;
 
         child = wid_new_square_button(wid_intro_buttons, "Extra");
-        wid_set_font(child, small_font);
+        wid_set_font(child, med_font);
 
         fpoint tl = {0.0f, 0.90f};
         fpoint br = {0.3f, 0.95f};
@@ -151,7 +151,7 @@ void wid_intro_buttons_visible (void)
         widp child;
 
         child = wid_new_square_button(wid_intro_buttons, "Quick start");
-        wid_set_font(child, small_font);
+        wid_set_font(child, med_font);
 
         fpoint tl = {0.0f, 0.95f};
         fpoint br = {0.3f, 1.00f};
@@ -172,7 +172,7 @@ void wid_intro_buttons_visible (void)
         widp child;
 
         child = wid_new_square_button(wid_intro_buttons, "Quit");
-        wid_set_font(child, small_font);
+        wid_set_font(child, med_font);
 
         fpoint tl = {0.9f, 0.95f};
         fpoint br = {1.0f, 1.00f};
