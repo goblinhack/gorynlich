@@ -169,7 +169,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         fpoint br = {1.0, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_font(w, small_font);
+        wid_set_font(w, med_font);
 
         wid_set_no_shape(w);
     }
@@ -317,7 +317,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         wid_set_text_bot(w, true);
         wid_set_text_outline(w, true);
-        wid_set_font(w, small_font);
+        wid_set_font(w, med_font);
         wid_set_no_shape(w);
     }
 
@@ -359,7 +359,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         wid_set_text_bot(w, true);
         wid_set_text_outline(w, true);
-        wid_set_font(w, small_font);
+        wid_set_font(w, med_font);
         wid_set_no_shape(w);
     }
 
