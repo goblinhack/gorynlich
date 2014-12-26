@@ -3374,12 +3374,11 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                  * to rebuild the thing without a resend. Need a way to ask
                  * for a resync.
                  */
-                ERR("Client: received unknown thing %u, need resync", id);
+                ERR("Client: received unknown thing %u, need resync TBD", id);
                 continue;
             }
 
-            tpp tp = 
-                    id_to_tp(template_id);
+            tpp tp = id_to_tp(template_id);
 
             t = thing_client_new(id, tp);
 

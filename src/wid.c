@@ -86,6 +86,7 @@ const int32_t wid_visible_delay = 100;
 const int32_t wid_hide_delay = 500;
 const int32_t wid_swipe_delay = 200;
 const int32_t wid_pulse_delay = 100;
+const int32_t wid_bounce_delay = 500;
 
 /*
  * Prototypes.
@@ -9149,9 +9150,9 @@ void wid_effect_pulses (widp w)
     fast_verify(w);
 
     if (wid_get_height(w) > 100) {
-        wid_scaling_to_pct_in(w, 1.0, 1.11, wid_pulse_delay, 1);
+        wid_scaling_to_pct_in(w, 1.0, 3.11, wid_pulse_delay, 1);
     } else {
-        wid_scaling_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 1);
+        wid_scaling_to_pct_in(w, 1.0, 3.1, wid_pulse_delay, 1);
     }
 }
 
@@ -9160,9 +9161,9 @@ void wid_effect_bounce (widp w)
     fast_verify(w);
 
     if (wid_get_height(w) > 100) {
-        wid_scaling_to_pct_in(w, 1.0, 1.11, wid_pulse_delay, 10000);
+        wid_scaling_to_pct_in(w, 1.0, 1.15, wid_bounce_delay, 10000);
     } else {
-        wid_scaling_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 10000);
+        wid_scaling_to_pct_in(w, 1.0, 1.1, wid_bounce_delay, 10000);
     }
 }
 
