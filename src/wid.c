@@ -2510,10 +2510,9 @@ TREE_PREV_INLINE(tree_wid_compare_func)
  */
 static void wid_tree_detach (widp w)
 {
-    if (w->parent && w->parent->grid) {
-        wid_grid_tree_detach(w);
-        return;
-    }
+    verify(w);
+
+    wid_grid_tree_detach(w);
 
     wid_tree_remove(w);
 }

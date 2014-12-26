@@ -378,7 +378,6 @@ widp wid_grid_find_tp_is(widp parent,
                                   uint32_t x,
                                   uint32_t y,
                                   tpp);
-uint8_t wid_remove_from_grid(widp);
 void marshal_wid_grid(marshal_p ctx, widp);
 uint8_t demarshal_wid_grid(demarshal_p ctx, widp, grid_wid_replace_t);
 void wid_move_stop(widp w);
