@@ -3209,8 +3209,6 @@ LOG("tx %s", thing_logname(t));
          * We reached the limit for this packet? Send now.
          */
         packet->len = data - odata;
-LOG("XXX tx plen %d (fragment)",packet->len);
-CON("map pak %p",packet);
 
         /*
          * Broadcast to all clients.
@@ -3250,8 +3248,6 @@ CON("map pak %p",packet);
         gsocketp sp;
 
         packet->len = data - odata;
-CON("map pak %p",packet);
-LOG("XXX tx plen %d",packet->len);
 
         packet_compress(packet);
 
@@ -3305,7 +3301,6 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
     uint8_t *eodata = data + packet->len - 1;
     uint16_t last_id = 0;
 
-LOG("XXX rx plen %d",packet->len);
     while (data < eodata) {
         uint8_t state = *data++;
         uint8_t ext;
