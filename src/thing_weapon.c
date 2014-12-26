@@ -95,7 +95,8 @@ thingp thing_weapon_carry_anim (thingp t)
 thingp thing_weapon_swing_anim (thingp t)
 {
     /*
-     * If this weapon_swing_anim has its own thing id for animations then destroy that.
+     * If this weapon_swing_anim has its own thing id for animations then 
+     * destroy that.
      */
     thingp weapon_swing_anim = 0;
 

@@ -941,9 +941,12 @@ static void client_poll (void)
                     }
 
                     if (new_stats->weapon_swing_anim_id_latest) {
-                        if (thing_client_find(new_stats->weapon_swing_anim_id_latest)) {
-                            thing_set_weapon_swing_anim_id(player,
-                                                           new_stats->weapon_swing_anim_id_latest);
+                        if (thing_client_find(
+                                    new_stats->weapon_swing_anim_id_latest)) {
+
+                            thing_set_weapon_swing_anim_id(
+                                    player,
+                                    new_stats->weapon_swing_anim_id_latest);
                         }
 
                         thingp item = thing_weapon_swing_anim(player);
