@@ -655,7 +655,7 @@ void level_pause (levelp level)
             "Get ready!",
         };
 
-        socket_tx_server_shout(POPUP,
+        socket_tx_server_shout_at_all_players(POPUP,
                                messages[myrand() % ARRAY_SIZE(messages)]);
 
         level->pause_timer = 
@@ -781,7 +781,7 @@ void level_tick (levelp level)
      */
     if (level_exit_has_been_reached(level)) {
         if (!level->end_level_first_phase_fade_out_timer) {
-            socket_tx_server_shout(POPUP, "Level completed");
+            socket_tx_server_shout_at_all_players(POPUP, "Level completed");
 
             level->end_level_first_phase_fade_out_timer = 
                 action_timer_create(&server_timers,

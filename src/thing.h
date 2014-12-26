@@ -173,7 +173,7 @@ void thing_timer_place_callback(void *context);
 void thing_timer_place_destroy_callback(void *context);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
-void thing_shout_at(thingp t, const char *what);
+void msg_server_shout_at_player(thingp t, const char *what);
 void thing_fire(thingp t,
                 const uint8_t up,
                 const uint8_t down,

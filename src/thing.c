@@ -1239,7 +1239,7 @@ void thing_destroy (thingp t, const char *why)
             THING_LOG(t, "player died: \"%s\"", t->stats.pname);
 
             char *tmp = dynprintf("%s died", t->stats.pname);
-            socket_tx_server_shout_except_to(p->socket, CRITICAL, tmp);
+            socket_tx_server_shout_at_all_players_except(p->socket, CRITICAL, tmp);
             myfree(tmp);
 
             break;
@@ -1289,12 +1289,12 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         /*
          * We have the gravestone now, I don't think we need this.
          *
-        THING_SHOUT_AT(t, CRITICAL, "Killed by %s", reason);
+        MSG_SERVER_SHOUT_AT_PLAYER(t, CRITICAL, "Killed by %s", reason);
          */
         aplayer *p = t->player;
         if (p) {
             char *tmp = dynprintf("%s Killed by %s", t->stats.pname, reason);
-            socket_tx_server_shout_except_to(p->socket, CRITICAL, tmp);
+            socket_tx_server_shout_at_all_players_except(p->socket, CRITICAL, tmp);
             myfree(tmp);
         }
 
@@ -1508,8 +1508,12 @@ static int thing_hit_ (thingp t,
      */
     t->is_hit_miss = false;
     t->is_hit_success = true;
+
     if (damage > thing_get_stats_hp(t) / 10) {
         t->is_hit_crit = true;
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "CRIT");
+    } else {
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "%d", damage);
     }
 
     thing_update(t);
@@ -3930,7 +3934,7 @@ void thing_server_action (thingp t,
 
     itemp item = &t->stats.action_bar[action_bar_index];
     if (!item->id) {
-        THING_SHOUT_AT(t, WARNING, "No item in that slot to use");
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "No item in that slot to use");
         return;
     }
 
@@ -3973,14 +3977,14 @@ void thing_server_action (thingp t,
 
         const char *message = tp_message_on_use(tp);
         if (message) {
-            THING_SHOUT_AT(t, INFO, "%s", message);
+            MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "%s", message);
             break;
         }
 
         /*
          * Failed to use.
          */
-        THING_SHOUT_AT(t, WARNING, "Failed to use the %s", tp_short_name(tp));
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "Failed to use the %s", tp_short_name(tp));
         return;
     }
 
@@ -4076,7 +4080,7 @@ void thing_server_action (thingp t,
         /*
          * Urk!
          */
-        THING_SHOUT_AT(t, INFO, "Drop failed");
+        MSG_SERVER_SHOUT_AT_PLAYER(INFO, t, "Drop failed");
 
         /*
          * Failed to drop.
