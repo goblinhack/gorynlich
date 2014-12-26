@@ -253,7 +253,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_text(w, "Health");
         wid_set_text_bot(w, true);
         wid_set_text_outline(w, true);
-        wid_set_font(w, small_font);
+        wid_set_font(w, med_font);
     }
 
     {
@@ -277,12 +277,12 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_text(w, "Magic");
         wid_set_text_bot(w, true);
         wid_set_text_outline(w, true);
-        wid_set_font(w, small_font);
+        wid_set_font(w, med_font);
     }
 
     {
         widp w =
-            wid_new_container(wid_player_action, 
+            wid_new_square_button(wid_player_action, 
                               "wid player_stats container");
 
         fpoint tl = {0.65, 0.2};
@@ -292,19 +292,18 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         wid_raise(w);
 
+        wid_set_mode(w, WID_MODE_NORMAL);
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
         wid_set_color(w, WID_COLOR_BG, WHITE);
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
-        wid_set_square(w);
+        wid_set_text_outline(w, true);
+        wid_set_font(w, large_font);
+        wid_set_no_shape(w);
 
         char tmp[40];
 
-        if (s->magic == s->max_magic) {
-            snprintf(tmp, sizeof(tmp) - 1, "%d", s->magic);
-        } else {
-            snprintf(tmp, sizeof(tmp) - 1, "%d/%d", s->magic, s->max_magic);
-        }
+        snprintf(tmp, sizeof(tmp) - 1, "%d", s->magic);
         wid_set_text(w, tmp);
 
         static int last_magic;
@@ -314,16 +313,11 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_set_mode(w, WID_MODE_ACTIVE);
             wid_set_color(w, WID_COLOR_TEXT, RED);
         }
-
-        wid_set_text_bot(w, true);
-        wid_set_text_outline(w, true);
-        wid_set_font(w, med_font);
-        wid_set_no_shape(w);
     }
 
     {
         widp w =
-            wid_new_container(wid_player_action, 
+            wid_new_square_button(wid_player_action, 
                               "wid player_stats container");
 
         fpoint tl = {0.15, 0.2};
@@ -338,15 +332,13 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_BG, WHITE);
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
-        wid_set_square(w);
+        wid_set_text_outline(w, true);
+        wid_set_font(w, large_font);
+        wid_set_no_shape(w);
 
         char tmp[40];
 
-        if (s->hp == s->max_hp) {
-            snprintf(tmp, sizeof(tmp) - 1, "%d", s->hp);
-        } else {
-            snprintf(tmp, sizeof(tmp) - 1, "%d/%d", s->hp, s->max_hp);
-        }
+        snprintf(tmp, sizeof(tmp) - 1, "%d", s->hp);
         wid_set_text(w, tmp);
 
         static int last_hp;
@@ -356,11 +348,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_set_mode(w, WID_MODE_ACTIVE);
             wid_set_color(w, WID_COLOR_TEXT, RED);
         }
-
-        wid_set_text_bot(w, true);
-        wid_set_text_outline(w, true);
-        wid_set_font(w, med_font);
-        wid_set_no_shape(w);
     }
 
     {

@@ -4,7 +4,6 @@
  z_depth=4
  is_light_source
  is_candle_light
- is_collision_map_small
  light_tint="purple"
  is_animated
  light_radius=1.0
