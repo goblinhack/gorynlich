@@ -299,7 +299,7 @@ static void wid_choose_player_create (void)
         widp child;
 
         child = wid_new_square_button(wid_choose_player, "All done");
-        wid_set_font(child, small_font);
+        wid_set_font(child, med_font);
 
         fpoint tl = {0.0f, 0.95f};
         fpoint br = {0.3f, 1.00f};
@@ -324,9 +324,9 @@ static void wid_choose_player_create (void)
         widp child;
 
         child = wid_new_square_button(wid_choose_player, "Go back");
-        wid_set_font(child, small_font);
+        wid_set_font(child, med_font);
 
-        fpoint tl = {0.9f, 0.95f};
+        fpoint tl = {0.85f, 0.95f};
         fpoint br = {1.0f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);

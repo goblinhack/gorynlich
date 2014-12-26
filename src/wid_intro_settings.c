@@ -381,9 +381,9 @@ static uint8_t wid_intro_restart_selected (void)
     wid_intro_restart_popup =
         wid_popup("", "%%fg=red$Settings changed, restart now?",
             0.5, 0.2f,                /* x,y postition in percent */
-            small_font,               /* title font */
-            small_font,              /* body font */
-            small_font,              /* button font */
+            large_font,               /* title font */
+            large_font,              /* body font */
+            large_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_intro_restart_callback_yes,
             "%%tile=button_n$No    ",  wid_intro_restart_callback_no);
@@ -475,7 +475,7 @@ static void wid_intro_settings_create (void)
         fpoint br = {0.8, 0.95};
 
         wid_set_tl_br_pct(w, tl, br);
-        wid_set_font(w, small_font);
+        wid_set_font(w, large_font);
 
         wid_set_color(w, WID_COLOR_TEXT, WHITE);
 
@@ -501,7 +501,7 @@ static void wid_intro_settings_create (void)
         wid_set_tl_br_pct(w, tl, br);
 
         wid_set_text(w, "Settings");
-        wid_set_font(w, small_font);
+        wid_set_font(w, large_font);
         wid_set_color(w, WID_COLOR_TEXT, GOLD);
 
         wid_set_text_outline(w, true);
@@ -525,7 +525,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col1[i]);
-            wid_set_font(w, small_font);
+            wid_set_font(w, large_font);
 
             color c = BLACK;
 
@@ -567,7 +567,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col2[i]);
-            wid_set_font(w, small_font);
+            wid_set_font(w, large_font);
 
             color c = WHITE;
 
@@ -612,7 +612,7 @@ static void wid_intro_settings_create (void)
 
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w, wid_intro_button_col3[i]);
-            wid_set_font(w, small_font);
+            wid_set_font(w, large_font);
 
             color c = WHITE;
 
@@ -658,7 +658,7 @@ static void wid_intro_settings_create (void)
             wid_set_tl_br_pct(w, tl, br);
             wid_set_text(w,
                          wid_intro_button_col4[i][wid_intro_button_val[i]]);
-            wid_set_font(w, small_font);
+            wid_set_font(w, large_font);
 
             color c = WHITE;
 
@@ -690,7 +690,7 @@ static void wid_intro_settings_create (void)
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_text(w, "%%tile=button_b$Back");
-        wid_set_font(w, small_font);
+        wid_set_font(w, large_font);
         wid_set_no_shape(w);
 
         wid_set_mode(w, WID_MODE_NORMAL);
