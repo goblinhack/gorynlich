@@ -197,7 +197,7 @@
 /*
  * Debug check to enable sequence numbers and checksum
  */
-#define ENABLE_PAK_EXTRA_HEADER
+#undef ENABLE_PAK_EXTRA_HEADER
 
 /*
  * The number of packets we allow to buffer up on a socket during sends.
