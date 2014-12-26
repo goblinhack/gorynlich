@@ -237,7 +237,7 @@
  * When converting from thing co-ords where 1.0 is one grid, we must convert
  * to int when sending over the network. This is the granularity.
  */
-#define THING_COORD_SCALE           100.0
+#define THING_COORD_SCALE                                   100.0
 
 /*
  * How many tiles difference between the client and server do we allow.
@@ -245,7 +245,7 @@
  * server. Set this too high and the client can push through walls. Too
  * low and it will be jerky, jumping back when we have high latency.
  */
-#define THING_MAX_SERVER_DISCREPANCY 3.0
+#define THING_MAX_SERVER_DISCREPANCY                        3.0
 
 /*
  * When things are moving on the client, we need to move them a bit slower
@@ -254,25 +254,46 @@
  * thing moves on the client will appear jerky as they reach their destination 
  * and then wait for their next move.
  */
-#define THING_MOVE_NETWORK_LATENCY_FUDGE  1.5
+#define THING_MOVE_NETWORK_LATENCY_FUDGE                    1.5
 
 /*
  * Timers
  */
-#define DELAY_TENTHS_THING_AI                   2
-#define DELAY_TENTHS_THING_COLLISION_TEST       1
-#define DELAY_TENTHS_PING                       5
-#define DELAY_TENTHS_PING_WHEN_NO_RESPONSE      20
-#define DELAY_TENTHS_SOCKET_QUALITY_CHECK       10
+#define DELAY_TENTHS_THING_AI                               2
+#define DELAY_TENTHS_THING_COLLISION_TEST                   1
 
-#define DELAY_HUNDREDTHS_PLAYER_TX_POSITION     5
-#define DELAY_THOUSANDTHS_PLAYER_POLL           15
+/*
+ * Client <-> server keepalives
+ */
+#define DELAY_TENTHS_PING                                   5
+#define DELAY_TENTHS_PING_WHEN_NO_RESPONSE                  20
+
+/*
+ * How often we look at all sockets for quality
+ */
+#define DELAY_TENTHS_SOCKET_QUALITY_CHECK                   10
+
+/*
+ * Client updates of player position to the server
+ */
+#define DELAY_HUNDREDTHS_CLIENT_TO_SERVER_PLAYER_POSITION   5
+
+/*
+ * How often we look at the keyboards
+ */
+#define DELAY_THOUSANDTHS_PLAYER_POLL                       15
+
+/*
+ * Map and player updates from the server
+ */
+#define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE        10
+#define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE     5
 
 /*
  * How frequently certain things get updated to the client.
  */
-#define DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST    50
-#define DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW    200
+#define DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST                50
+#define DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW                200
 
 #define DELAY_LEVEL_END_HIDE                    (ONESEC * 1)
 #define DELAY_LEVEL_END_DESTROY                 (ONESEC * 4)

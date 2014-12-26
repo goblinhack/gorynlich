@@ -2565,7 +2565,7 @@ void socket_tx_player_move (gsocketp s,
         static uint32_t ts;
 
         if (!time_have_x_hundredths_passed_since(
-                                DELAY_HUNDREDTHS_PLAYER_TX_POSITION, ts)) {
+                DELAY_HUNDREDTHS_CLIENT_TO_SERVER_PLAYER_POSITION, ts)) {
             return;
         }
 
