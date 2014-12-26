@@ -338,16 +338,6 @@ widp wid_popup (const char *text, const char *title,
         br.y += PAD_Y/2;
         br.y += PAD_Y/4;
 
-        if (title) {
-            /*
-             * Add space for title.
-             */
-            tl.y += maxh;
-            br.y += maxh;
-            tl.y += maxh;
-            br.y += maxh;
-        }
-
         tl.y += PAD_Y * 0.8;
         br.y += PAD_Y * 0.8;
 
