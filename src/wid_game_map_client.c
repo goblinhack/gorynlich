@@ -745,7 +745,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             wid_set_no_shape(
                 wid_textbox(wid_scoreline_container_top,
                             &wid_score, tmp,
-                            score_x, player_y_offset, small_font));
+                            score_x, player_y_offset, med_font));
 
             wid_score_container = wid_score;
         } else {
@@ -764,7 +764,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
             wid_set_no_shape(
                 wid_textbox(wid_scoreline_container_top,
                             &wid_cash, tmp,
-                            cash_x, player_y_offset, small_font));
+                            cash_x, player_y_offset, med_font));
 
             wid_cash_container = wid_cash;
         } else {
@@ -785,8 +785,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                     wid_scoreline_container_top,
                                     &wid_score_title,
                                     "XP", 
-                                    score_x, player_y_offset - score_and_cash_title_offset,
-                                    small_font);
+                                    score_x, player_y_offset - 
+                                    score_and_cash_title_offset,
+                                    med_font);
 
         wid_set_no_shape(wid_score_title_container);
 
@@ -799,8 +800,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                     wid_scoreline_container_top,
                                     &wid_cash_title,
                                     "$$$",  
-                                    cash_x, player_y_offset - score_and_cash_title_offset,
-                                    small_font);
+                                    cash_x, player_y_offset - 
+                                    score_and_cash_title_offset,
+                                    med_font);
 
         wid_set_no_shape(wid_cash_title_container);
 
@@ -825,8 +827,9 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
                                     &wid_name_title,
                                     name_title ? name_title : "No player",
                                     (score_x + cash_x) / 2,
-                                    player_y_offset - score_and_cash_value_offset,
-                                    small_font);
+                                    player_y_offset - 
+                                    score_and_cash_value_offset,
+                                    med_font);
         if (name_title) {
             myfree(name_title);
         }
@@ -860,7 +863,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_title_container = wid_textbox(
                     wid_scoreline_container_top,
                     &wid_title,
-                    level_get_title(level), 0.5, 0.07, small_font);
+                    level_get_title(level), 0.5, 0.07, med_font);
 
         wid_set_no_shape(wid_title_container);
 
@@ -879,7 +882,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         wid_level_container = wid_textbox(wid_scoreline_container_top,
                                             &wid_level,
                                             tmp, 
-                                            (score_x + cash_x) / 2.0, 0.05, small_font);
+                                            (score_x + cash_x) / 2.0, 0.05, med_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);
