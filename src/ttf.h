@@ -12,7 +12,7 @@ uint8_t ttf_init(void);
 void ttf_fini(void);
 fontp ttf_new(const char *name, int32_t pointSize, int32_t style);
 void ttf_free(fontp);
-void ttf_text_size(fontp, const char *text,
+void ttf_text_size(fontp *, const char *text,
                    uint32_t *w, uint32_t *h,
                    enum_fmt *fmt,
                    double scaling,

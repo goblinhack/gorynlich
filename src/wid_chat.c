@@ -209,7 +209,7 @@ static void wid_chat_wid_create (void)
         uint32_t w;
         uint32_t h;
 
-        ttf_text_size(font,
+        ttf_text_size(&font,
                       "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                       &w, &h, 0, 1.0f, 1.0f,
                       true /* fixed width */);
@@ -264,8 +264,9 @@ static void wid_chat_wid_create (void)
                 uint32_t chatw;
                 uint32_t chath;
 
-                ttf_text_size(font, "chat> ", &chatw, &chath, 0, 1.0f, 1.0f,
-                            false /* fixed width */);
+                ttf_text_size(&font, "chat> ", 
+                              &chatw, &chath, 0, 1.0f, 1.0f,
+                              false /* fixed width */);
 
                 wid_move_delta(child, chatw, 0);
 

@@ -136,6 +136,17 @@ void enum_name ## _destroy (void)                               \
 
 ENUM_DEF_H(ENUM_FMT, enum_fmt)
 
+#define ENUM_FONT(list_macro)                                           \
+    list_macro(ENUM_FONT_NONE = 0,              "none"),                \
+    list_macro(ENUM_FONT_FIXED,                 "fixed"),               \
+    list_macro(ENUM_FONT_VSMALL,                "vsmall"),              \
+    list_macro(ENUM_FONT_SMALL,                 "small"),               \
+    list_macro(ENUM_FONT_MED,                   "medium"),              \
+    list_macro(ENUM_FONT_LARGE,                 "large"),               \
+    list_macro(ENUM_FONT_VLARGE,                "vlarge"),              \
+
+ENUM_DEF_H(ENUM_FONT, enum_font)
+
 void enum_fmt_destroy(void);
 
 #endif

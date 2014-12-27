@@ -175,7 +175,7 @@ widp wid_popup (const char *text, const char *title,
      * Get some rough sizes for the title font.
      */
     if (title) {
-        ttf_text_size(title_font, title, &titlew, &titleh, 0, 1.0f, 1.0f,
+        ttf_text_size(&title_font, title, &titlew, &titleh, 0, 1.0f, 1.0f,
                       false /* fixed width */);
     }
 
@@ -186,7 +186,7 @@ widp wid_popup (const char *text, const char *title,
         uint32_t w;
         uint32_t h;
 
-        ttf_text_size(body_font, n->line, &w, &h, 0, 1.0f, 1.0f,
+        ttf_text_size(&body_font, n->line, &w, &h, 0, 1.0f, 1.0f,
                       false /* fixed width */);
 
         /*
@@ -194,7 +194,7 @@ widp wid_popup (const char *text, const char *title,
          */
         if (!strlen(n->line)) {
             if (!maxh) {
-                ttf_text_size(body_font, "Test", &w, &h, 0, 1.0f, 1.0f,
+                ttf_text_size(&body_font, "Test", &w, &h, 0, 1.0f, 1.0f,
                               false /* fixed width */);
 
                 maxh = h;
@@ -246,7 +246,7 @@ widp wid_popup (const char *text, const char *title,
                 button_name = "<bug>";
             }
 
-            ttf_text_size(button_font, button_name, &w, &h, 0, 1.0f, 1.0f,
+            ttf_text_size(&button_font, button_name, &w, &h, 0, 1.0f, 1.0f,
                           false /* fixed width */);
 
             w += BUTTON_PAD_X;
@@ -441,7 +441,7 @@ widp wid_popup (const char *text, const char *title,
             uint32_t h;
 
             const char *button_name = button_names[n];
-            ttf_text_size(body_font, button_name, &w, &h, 0, 1.0f, 1.0f,
+            ttf_text_size(&body_font, button_name, &w, &h, 0, 1.0f, 1.0f,
                           false /* fixed width */);
 
             widp child;
