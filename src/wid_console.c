@@ -230,7 +230,7 @@ static void wid_console_wid_create (void)
         uint32_t w;
         uint32_t h;
 
-        ttf_text_size(font,
+        ttf_text_size(&font,
                       "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                       &w, &h, 0, 1.0f, 1.0f,
                       true /* fixed width */);

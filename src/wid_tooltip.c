@@ -73,7 +73,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         uint32_t w;
         uint32_t h;
 
-        ttf_text_size(font, n->line, &w, &h, 0, 1.0f, 1.0f,
+        ttf_text_size(&font, n->line, &w, &h, 0, 1.0f, 1.0f,
                       false /* fixed width */);
 
         /*

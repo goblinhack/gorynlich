@@ -56,7 +56,8 @@ wid_notify_internal (const char *text, uint32_t level)
         uint32_t w;
         uint32_t h;
 
-        ttf_text_size(small_font, n->line, &w, &h, 0, 1.0f, 1.0f,
+        fontp font = small_font;
+        ttf_text_size(&font, n->line, &w, &h, 0, 1.0f, 1.0f,
                       false /* fixed width */);
 
         /*

@@ -8189,7 +8189,7 @@ static void wid_display (widp w,
              * Manually specified text position.
              */
             fmt = ENUM_FMT_NONE;
-            ttf_text_size(font, text, &width, &height, &fmt, scaling, advance,
+            ttf_text_size(&font, text, &width, &height, &fmt, scaling, advance,
                           fixed_width);
 
             w->text_size_cached = true;
@@ -8265,7 +8265,11 @@ static void wid_display (widp w,
             }
 
             double dx;
+
             for (dx = 0.5; dx < outline; dx += 0.5) {
+
+                col_text_outline.a /= 2.0;
+
                 ttf_puts_no_fmt(font, text,
                                 x - dx * scaling,
                                 y + dx * scaling, scaling, advance,

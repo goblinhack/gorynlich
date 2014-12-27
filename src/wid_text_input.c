@@ -219,8 +219,9 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
 
     {
         uint32_t w;
+        fontp font = large_font;
 
-        ttf_text_size(large_font,
+        ttf_text_size(&font,
                       "TITLE", &w, &title_h, 0, 1.0f, 1.0f,
                       false /* fixed width */);
 
@@ -228,7 +229,9 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
     }
 
     {
-        ttf_text_size(small_font,
+        fontp font = small_font;
+
+        ttf_text_size(&font,
                       "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                       &maxw, &maxh, 0, 1.0f, 1.0f,
                       false /* fixed width */);
@@ -263,6 +266,7 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
         while (n--) {
             uint32_t w;
             uint32_t h;
+            fontp font = med_font;
 
             const char *button_name = button_names[n];
 
@@ -270,7 +274,7 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
                 button_name = "<bug>";
             }
 
-            ttf_text_size(med_font, button_name, &w, &h, 0, 1.0f, 1.0f,
+            ttf_text_size(&font, button_name, &w, &h, 0, 1.0f, 1.0f,
                           false /* fixed width */);
 
             w += BUTTON_PAD_X;
@@ -415,9 +419,10 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
         while (n--) {
             uint32_t w;
             uint32_t h;
+            fontp font = med_font;
 
             const char *button_name = button_names[n];
-            ttf_text_size(med_font, button_name, &w, &h, 0, 1.0f, 1.0f,
+            ttf_text_size(&font, button_name, &w, &h, 0, 1.0f, 1.0f,
                           false /* fixed width */);
 
             widp child;
@@ -440,7 +445,7 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
 
             wid_set_tl_br(child, tl, br);
             wid_set_text(child, button_name);
-            wid_set_font(child, med_font);
+            wid_set_font(child, font);
 
             color c;
             if (focus_order == 1) {
@@ -519,8 +524,10 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
 
     {
         uint32_t w;
+        fontp font = large_font;
 
-        ttf_text_size(large_font,
+
+        ttf_text_size(&font,
                       "TITLE", &w, &title_h, 0, 1.0f, 1.0f,
                       false /* fixed width */);
 
@@ -528,7 +535,9 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
     }
 
     {
-        ttf_text_size(large_font,
+        fontp font = large_font;
+
+        ttf_text_size(&font,
                       "xxxxxxxxxxxxxxxx",
                       &maxw, &maxh, 0, 1.0f, 1.0f,
                       false /* fixed width */);
@@ -570,7 +579,9 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
                 button_name = "<bug>";
             }
 
-            ttf_text_size(med_font, button_name, &w, &h, 0, 1.0f, 1.0f,
+            fontp font = med_font;
+
+            ttf_text_size(&font, button_name, &w, &h, 0, 1.0f, 1.0f,
                           false /* fixed width */);
 
             w += BUTTON_PAD_X;
@@ -718,7 +729,9 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
             uint32_t h;
 
             const char *button_name = button_names[n];
-            ttf_text_size(med_font, button_name, &w, &h, 0, 1.0f, 1.0f,
+            fontp font = med_font;
+
+            ttf_text_size(&font, button_name, &w, &h, 0, 1.0f, 1.0f,
                           false /* fixed width */);
 
             widp child;
