@@ -537,9 +537,10 @@ static void msg_over_thing_ (uint32_t level,
     tooltip = wid_tooltip(buf, x, y, med_font);
 
     wid_move_to_pct_centered(tooltip, x, y);
-    wid_move_to_pct_centered_in(tooltip, x, y - 0.2, 1000);
-    wid_fade_out(tooltip, 1000);
+    wid_move_to_pct_centered_in(tooltip, x, y - 0.3, 1500);
+    wid_fade_out(tooltip, 1500);
     wid_set_no_shape(tooltip);
+    wid_raise(tooltip);
 }
 
 void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 

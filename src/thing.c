@@ -1511,9 +1511,33 @@ static int thing_hit_ (thingp t,
 
     if (damage > thing_get_stats_hp(t) / 10) {
         t->is_hit_crit = true;
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "%%%%fg=red$%d", damage);
-    } else {
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, "%%%%fg=gray$%d", damage);
+    }
+
+    if (damage > 0) {
+
+        const char *color = "gray";
+        const char *font = "small";
+
+        if (damage > 20) {
+            font = "vlarge";
+        } else if (damage > 10) {
+            font = "large";
+        } else if (damage > 5) {
+            font = "medium";
+        } else if (damage > 2) {
+            font = "small";
+        } else {
+            font = "vsmall";
+        }
+
+        if (thing_is_player(t)) {
+            color = "red";
+            font = "vlarge";
+        }
+
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 
+                                    "%%%%font=%s$%%%%fg=%s$%d", 
+                                    font, color, damage);
     }
 
     thing_update(t);

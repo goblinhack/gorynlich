@@ -87,6 +87,13 @@ tree_root *split (const char *text, uint32_t max_line_len)
                         (void) string2fmt(&text);
                         found_format_string = false;
                         continue;
+                    } else if (!strncmp(text, "font=", 5)) {
+                        text += 5;
+                        line_len -= 2; /* for the %% */
+                        (void) string2font(&text);
+
+                        found_format_string = false;
+                        continue;
                     } else if (!strncmp(text, "tex=", 4)) {
                         text += 4;
                         line_len -= 2; /* for the %% */
@@ -217,6 +224,47 @@ enum_fmt string2fmt (const char **s)
     }
 
     return (val);
+}
+
+ENUM_DEF_C(ENUM_FONT, enum_font)
+
+fontp string2font (const char **s)
+{
+    static char tmp[MAXSTR];
+    static const char *eo_tmp = tmp + MAXSTR;
+    const char *c = *s;
+    char *t = tmp;
+
+    while (t < eo_tmp) {
+        if ((*c == '\0') || (*c == '$')) {
+            break;
+        }
+
+        *t++ = *c++;
+    }
+
+    if (c == eo_tmp) {
+        return (0);
+    }
+
+    *t++ = '\0';
+    *s += (t - tmp);
+
+    enum_font val = enum_font_str2val(tmp);
+
+    if ((int) val == -1) {
+        DIE("unknown font [%s]", tmp);
+    }
+
+    switch (val) {
+    case ENUM_FONT_NONE:    return (0);
+    case ENUM_FONT_FIXED:   return (fixed_font);
+    case ENUM_FONT_VSMALL:  return (vsmall_font);
+    case ENUM_FONT_SMALL:   return (small_font);
+    case ENUM_FONT_MED:     return (med_font);
+    case ENUM_FONT_LARGE:   return (large_font);
+    case ENUM_FONT_VLARGE:  return (vlarge_font);
+    }
 }
 
 static void split_free_cb (tree_string_split_node *node)
