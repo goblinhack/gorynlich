@@ -47,7 +47,7 @@ wid_button_internal (const char *text, float x, float y, fontp font,
         font = small_font;
     }
 
-    ttf_text_size(font, text, &maxw, &maxh, 0, 1.0f, 1.0f,
+    ttf_text_size(&font, text, &maxw, &maxh, 0, 1.0f, 1.0f,
                   false /* fixed width */);
 
     {

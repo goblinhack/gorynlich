@@ -144,7 +144,7 @@ void ttf_free (font *f)
 /*
  * Return a SDL rectangle with the size of the font
  */
-void ttf_text_size (font *f, const char *text_in,
+void ttf_text_size (font **f, const char *text_in,
                     uint32_t *w, uint32_t *h,
                     enum_fmt *fmt,
                     double scaling,
@@ -169,7 +169,7 @@ void ttf_text_size (font *f, const char *text_in,
 
     x = 0;
     *w = 0;
-    *h = f->glyphs[(uint32_t)TTF_FIXED_WIDTH_CHAR].height * scaling;
+    *h = (*f)->glyphs[(uint32_t)TTF_FIXED_WIDTH_CHAR].height * scaling;
 
     while ((c = *text++) != '\0') {
 	if (!found_format_string) {
@@ -194,6 +194,11 @@ void ttf_text_size (font *f, const char *text_in,
 
 		    found_format_string = false;
 		    continue;
+		} else if (!strncmp(text, "font=", 5)) {
+		    text += 5;
+                    *f = string2font(&text);
+		    found_format_string = false;
+		    continue;
 		} else if (!strncmp(text, "tex=", 4)) {
 		    text += 4;
                     tex = string2tex(&text);
@@ -209,10 +214,10 @@ void ttf_text_size (font *f, const char *text_in,
                      */
                     (void) string2tile(&text);
 
-                    x += f->glyphs['a'].width * scaling * advance;
-                    x += f->glyphs['a'].width * scaling * advance;
-                    x += f->glyphs['a'].width * scaling * advance;
-                    x += f->glyphs['a'].width * scaling * advance;
+                    x += (*f)->glyphs['a'].width * scaling * advance;
+                    x += (*f)->glyphs['a'].width * scaling * advance;
+                    x += (*f)->glyphs['a'].width * scaling * advance;
+                    x += (*f)->glyphs['a'].width * scaling * advance;
 		    continue;
 		}
 	    }
@@ -225,12 +230,12 @@ void ttf_text_size (font *f, const char *text_in,
             x = x + x_start;
         } else {
             if (fixed_width) {
-                x += f->glyphs[TTF_FIXED_WIDTH_CHAR].width * scaling * advance;
+                x += (*f)->glyphs[TTF_FIXED_WIDTH_CHAR].width * scaling * advance;
             } else {
                 if (c == TTF_CURSOR_CHAR) {
-                    x += f->glyphs[TTF_FIXED_WIDTH_CHAR].width * scaling * advance;
+                    x += (*f)->glyphs[TTF_FIXED_WIDTH_CHAR].width * scaling * advance;
                 } else {
-                    x += f->glyphs[c].width * scaling * advance;
+                    x += (*f)->glyphs[c].width * scaling * advance;
                 }
             }
         }
@@ -370,6 +375,12 @@ static void ttf_puts_internal (font *f, const char *text,
 
                     (void)string2fmt(&text);
 
+		    found_format_string = false;
+		    continue;
+
+		} else if (!strncmp(text, "font=", 5)) {
+		    text += 5;
+                    (void)string2font(&text);
 		    found_format_string = false;
 		    continue;
 
