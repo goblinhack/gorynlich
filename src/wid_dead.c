@@ -20,6 +20,7 @@
 #include "player.h"
 #include "string_util.h"
 #include "music.h"
+#include "wid_game_quit.h"
 
 static widp wid_gravestone;
 static widp wid_click_to_continue;
@@ -186,15 +187,19 @@ static void wid_dead_gravestone_appeared (void *context)
 
     wid_notify_flush();
 
-    if (is_rejoin_allowed) {
+    /*
+     * Hide the other quit window if there is one
+     */
+    wid_game_quit_hide();
 
+    if (is_rejoin_allowed) {
         wid_rejoin_game_yes_no = wid_popup(
             messages[myrand() % ARRAY_SIZE(messages)],
             "%%fg=red$Rejoin game?",
             0.5, 0.2f,                /* x,y postition in percent */
-            small_font,               /* title font */
-            small_font,              /* body font */
-            small_font,              /* button font */
+            med_font,               /* title font */
+            med_font,              /* body font */
+            med_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_dead_rejoin_callback_yes,
             "%%tile=button_n$No    ",  wid_dead_rejoin_callback_no);
@@ -206,9 +211,9 @@ static void wid_dead_gravestone_appeared (void *context)
             messages[myrand() % ARRAY_SIZE(messages)],
             "%%fg=red$Play again?",
             0.5, 0.2f,                /* x,y postition in percent */
-            small_font,               /* title font */
-            small_font,              /* body font */
-            small_font,              /* button font */
+            med_font,               /* title font */
+            med_font,              /* body font */
+            med_font,              /* button font */
             2,                        /* number buttons */
             "%%tile=button_y$Yes    ", wid_dead_replay_callback_yes,
             "%%tile=button_n$No    ",  wid_dead_replay_callback_no);

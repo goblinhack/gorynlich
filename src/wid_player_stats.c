@@ -242,11 +242,15 @@ static uint8_t wid_player_stats_col2_mouse_event (widp w,
 
 static void wid_player_stats_create (thing_statsp s)
 {
-    if (wid_player_stats) {
+    player_stats = s;
+
+    if (!player_stats) {
         return;
     }
 
-    player_stats = s;
+    if (wid_player_stats) {
+        return;
+    }
 
     if (!wid_player_stats) {
         widp w = wid_player_stats = wid_new_rounded_window("wid player_stats");
