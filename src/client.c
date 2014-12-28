@@ -561,10 +561,15 @@ uint8_t client_socket_set_name (const char *name)
         return (false);
     }
 
-    strncpy(global_config.stats.pname, name, 
-            sizeof(global_config.stats.pname) - 1);
+    /*
+     * Cater for overlapping pointers.
+     */
+    if (strcmp(global_config.stats.pname, name)) {
+        strncpy(global_config.stats.pname, name, 
+                sizeof(global_config.stats.pname) - 1);
 
-    CON("Client name set to \"%s\"", name);
+        CON("Client name set to \"%s\"", name);
+    }
 
     if (client_joined_server) {
         socket_set_name(client_joined_server, name);
@@ -585,10 +590,15 @@ uint8_t client_socket_set_pclass (const char *pclass)
         return (false);
     }
 
-    strncpy(global_config.stats.pclass, pclass, 
-            sizeof(global_config.stats.pclass) - 1);
+    /*
+     * Cater for overlapping pointers.
+     */
+    if (strcmp(global_config.stats.pclass, pclass)) {
+        strncpy(global_config.stats.pclass, pclass, 
+                sizeof(global_config.stats.pclass) - 1);
 
-    CON("Client pclass set to \"%s\"", pclass);
+        CON("Client pclass set to \"%s\"", pclass);
+    }
 
     if (client_joined_server) {
         socket_set_pclass(client_joined_server, pclass);
