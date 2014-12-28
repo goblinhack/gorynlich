@@ -1532,7 +1532,6 @@ static int thing_hit_ (thingp t,
 
         if (thing_is_player(t)) {
             color = "red";
-            font = "vlarge";
         }
 
         MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 

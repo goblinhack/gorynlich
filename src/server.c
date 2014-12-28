@@ -412,10 +412,10 @@ static void server_alive_check (void)
 
             socket_disconnect(s);
         } else {
-            LOG("Server: Sent %d packets, quality %u",
+            LOG("Server: Sent %d packets to %s, quality %u",
                 socket_get_tx(s),
-                (socket_get_quality(s) < SOCKET_PING_FAIL_THRESHOLD));
-            server_players_show(0,0);
+                socket_get_remote_logname(s),
+                socket_get_quality(s));
         }
     }
 }
