@@ -411,6 +411,11 @@ static void server_alive_check (void)
             server_rx_client_leave_implicit(s);
 
             socket_disconnect(s);
+        } else {
+            LOG("Server: Sent %d packets, quality %u",
+                socket_get_tx(s),
+                (socket_get_quality(s) < SOCKET_PING_FAIL_THRESHOLD));
+            server_players_show(0,0);
         }
     }
 }
@@ -506,8 +511,8 @@ void server_tick (void)
  */
 static uint8_t server_players_show (tokens_t *tokens, void *context)
 {
-    CON("Name               Remote IP      Local IP");
-    CON("----           --------------- ---------------");
+    CON("Name               Remote IP      Local IP     Quality");
+    CON("----           --------------- --------------- -------");
 
     uint32_t pi;
 
@@ -530,11 +535,12 @@ static uint8_t server_players_show (tokens_t *tokens, void *context)
 
         pi++;
 
-        CON("[%d] %-10s %-15s %-15s", 
+        CON("[%d] %-10s %-15s %-15s %d", 
             pi,
             p->stats_from_client.pname,
             tmp,
-            tmp2);
+            tmp2,
+            socket_get_quality(s));
 
         myfree(tmp2);
         myfree(tmp);
