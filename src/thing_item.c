@@ -124,14 +124,33 @@ static void thing_collect (thingp t,
     }
 }
 
+static item_t thing_tp_to_item (tpp tp)
+{
+    item_t item = {0};
+
+    item.id = tp_to_id(tp);
+    item.quantity = 1;
+    item.quality = THING_ITEM_QUALITY_MAX;
+
+    return (item);
+}
+
 void thing_item_collect (thingp t, thingp it, tpp tp)
 {
-    thing_collect(t, it, it->item, tp, false);
+    if (!it) {
+        thing_collect(t, it, thing_tp_to_item(tp), tp, false);
+    } else {
+        thing_collect(t, it, it->item, tp, false);
+    }
 }
 
 void thing_auto_collect (thingp t, thingp it, tpp tp)
 {
-    thing_collect(t, it, it->item, tp, true);
+    if (!it) {
+        thing_collect(t, it, thing_tp_to_item(tp), tp, true);
+    } else {
+        thing_collect(t, it, it->item, tp, true);
+    }
 }
 
 void thing_used (thingp t, tpp tp)
