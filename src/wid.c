@@ -4856,9 +4856,9 @@ static uint8_t wid_scroll_trough_mouse_motion (widp w,
     if ((SDL_BUTTON(SDL_BUTTON_LEFT) & SDL_GetMouseState(0, 0)) ||
         wheely || wheelx) {
 
-        dy = rely ? rely : -wheely * ENABLE_WHEEL_SCROLL_SPEED_SCALE;
+        dy = rely ? rely : -wheely;
 
-        dx = relx ? relx : -wheelx * ENABLE_WHEEL_SCROLL_SPEED_SCALE;
+        dx = relx ? relx : -wheelx;
     } else {
         return (false);
     }

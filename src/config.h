@@ -59,7 +59,8 @@
 /*
  * How much the wheel mouse moves.
  */
-#define ENABLE_WHEEL_SCROLL_SPEED_SCALE 10
+#define ENABLE_WHEEL_SCROLL_SPEED_SCALE 1.5
+#define ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE 10
 
 /*
  * Tooltip appears above mouse. I prefer it to zoom into the top
