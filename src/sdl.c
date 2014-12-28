@@ -70,6 +70,8 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 uint8_t sdl_main_loop_running;
 int32_t sdl_init_video;
 
+static double sdl_wheel_mouse_accel = 1.0;
+
 #ifdef ENABLE_SDL_WINDOW /* { */
 SDL_Window *window; /* Our window handle */
 SDL_GLContext context; /* Our opengl context handle */
@@ -504,9 +506,29 @@ static void sdl_event (SDL_Event * event)
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
-        wid_mouse_motion(mouse_x, mouse_y,
-                         0, 0,
-                         event->wheel.x, event->wheel.y);
+        {
+            static uint32_t ts;
+
+            if (time_have_x_tenths_passed_since(5, ts)) {
+                sdl_wheel_mouse_accel = 1.0;
+            } else {
+                sdl_wheel_mouse_accel *= ENABLE_WHEEL_SCROLL_SPEED_SCALE;
+
+                if (sdl_wheel_mouse_accel > ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE) {
+                    sdl_wheel_mouse_accel = ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE;
+                }
+            }
+
+            ts = time_get_time_cached();
+        }
+
+        double wheel_x = event->wheel.x;
+        double wheel_y = event->wheel.y;
+
+        wheel_x *= sdl_wheel_mouse_accel;
+        wheel_y *= sdl_wheel_mouse_accel;
+
+        wid_mouse_motion(mouse_x, mouse_y, 0, 0, wheel_x, wheel_y);
         break;
 #endif /* } */
 
@@ -880,6 +902,16 @@ void sdl_loop (void)
         int32_t timestamp_now = time_update_time_milli();
 
         if (timestamp_now - timestamp_then > 20) {
+
+            /*
+             * Wheel mouse acceleration.
+             */
+#if 0
+            sdl_wheel_mouse_accel *= 0.9;
+            if (sdl_wheel_mouse_accel < 1.0) {
+                sdl_wheel_mouse_accel = 1.0;
+            }
+#endif
 
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
