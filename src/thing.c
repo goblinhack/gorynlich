@@ -1553,8 +1553,7 @@ static int thing_hit_ (thingp t,
              * Record who dun it.
              */
             if (hitter) {
-                thing_dead(t, hitter, "%s",
-                           tp_short_name(hitter->tp));
+                thing_dead(t, hitter, "%s", tp_short_name(hitter->tp));
             } else {
                 thing_dead(t, hitter, "hit");
             }

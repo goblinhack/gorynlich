@@ -502,8 +502,8 @@ void server_tick (void)
 
     server_poll();
     server_socket_tx_ping();
-    server_socket_tx_map_updates();
     server_socket_tx_player_updates();
+    server_socket_tx_map_updates();
 }
 
 /*
