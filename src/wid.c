@@ -7187,7 +7187,16 @@ static void wid_display_fast (widp w, uint8_t pass)
                 /*
                  * Player light is limited by the number of torches.
                  */
-                light_radius = t->torch_light_radius;
+                if (t == player) {
+                    light_radius = t->torch_light_radius;
+                } else {
+                    /*
+                     * If another player is on screen we will not know how
+                     * much they are lighting up the screen; so just light
+                     * up the default.
+                     */
+                    light_radius = tp_get_light_radius(tp);
+                }
             } else if (thing_is_explosion(t) && !t->is_epicenter) {
                 /*
                  * No light source for explosion edges. Too high a cpu drain.
