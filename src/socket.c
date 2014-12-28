@@ -42,6 +42,9 @@ IPaddress no_address = {0};
 static void socket_destroy(gsocketp s);
 static uint8_t sockets_show_all(tokens_t *tokens, void *context);
 static uint8_t sockets_show_summary(tokens_t *tokens, void *context);
+static void socket_all_tx_queue_dequeue_all(void);
+static void socket_tx_queue_flush(gsocketp s);
+
 static uint8_t socket_init_done;
 
 uint8_t socket_init (void)
@@ -82,6 +85,8 @@ void socket_fini (void)
     if (!socket_init_done) {
         return;
     }
+
+    socket_all_tx_queue_dequeue_all();
 
     SDLNet_Quit();
 
@@ -300,6 +305,8 @@ static void socket_destroy (gsocketp s)
         LOG("Socket destroy [to %s]", socket_get_remote_logname(s));
         LOG("               [from %s]", socket_get_local_logname(s));
     }
+
+    socket_tx_queue_flush(s);
 
     if (s->socklist) {
         SDLNet_FreeSocketSet(s->socklist);
@@ -2920,6 +2927,8 @@ static int socket_tx_queue_dequeue (gsocketp s)
 
 static void socket_tx_queue_flush (gsocketp s)
 {
+    LOG("Flushing socket %s", socket_get_local_logname(s));
+
     while (socket_tx_queue_dequeue(s)) { }
 }
 
@@ -2946,6 +2955,17 @@ static void socket_all_tx_queue_dequeue_one (void)
 
     TREE_WALK(sockets, s) {
         socket_tx_queue_dequeue(s);
+    }
+}
+
+static void socket_all_tx_queue_dequeue_all (void)
+{
+    gsocketp s;
+
+    LOG("Flush all sockets");
+
+    TREE_WALK(sockets, s) {
+        socket_tx_queue_flush(s);
     }
 }
 

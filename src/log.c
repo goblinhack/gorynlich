@@ -453,8 +453,6 @@ void MSG_SERVER_SHOUT_AT_ALL_PLAYERS (uint32_t level,
 {
     va_list args;
 
-    verify(t);
-
     va_start(args, fmt);
     msg_server_shout_at_all_players_(level, fmt, args);
     va_end(args);

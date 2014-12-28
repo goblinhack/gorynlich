@@ -298,6 +298,13 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     tpp tp;
     uint32_t action_bar_index = 0;
 
+    if (!player) {
+        wid_player_stats_hide();
+        wid_player_info_hide();
+        wid_player_inventory_hide();
+        return (true);
+    }
+
     switch (key->sym) {
     case SDLK_1: action_bar_index = 0; break;
     case SDLK_2: action_bar_index = 1; break;

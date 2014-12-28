@@ -268,7 +268,7 @@ widp wid_popup (const char *text, const char *title,
         wid_set_color(wid_popup_window, WID_COLOR_TEXT, WHITE);
 
         color c = WHITE;
-        c.a = 255;
+        c.a = 125;
         wid_set_color(wid_popup_window, WID_COLOR_BG, c);
         wid_set_color(wid_popup_window, WID_COLOR_TL, c);
         wid_set_color(wid_popup_window, WID_COLOR_BR, c);
