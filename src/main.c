@@ -127,6 +127,7 @@ void quit (void)
     sdl_fini();
     config_fini();
     enum_fmt_destroy();
+    enum_font_destroy();
     blit_fini();
     miniz_fini();
 
