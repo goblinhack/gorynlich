@@ -268,7 +268,12 @@ widp wid_popup (const char *text, const char *title,
         wid_set_color(wid_popup_window, WID_COLOR_TEXT, WHITE);
 
         color c = WHITE;
-        c.a = 125;
+
+        /*
+         * Make this too weak and the credit/about screen looks odd
+         */
+        c.a = 200;
+
         wid_set_color(wid_popup_window, WID_COLOR_BG, c);
         wid_set_color(wid_popup_window, WID_COLOR_TL, c);
         wid_set_color(wid_popup_window, WID_COLOR_BR, c);
