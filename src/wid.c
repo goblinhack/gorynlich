@@ -5138,11 +5138,42 @@ static void wid_update_internal (widp w)
     widp child;
 
     /*
-     * Clip all the children
+     * Clip all the children. Avoid this for speed for the main game window.
      */
-    if (!w->grid) {
+    if (w != wid_game_map_client_grid_container) {
         TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
             wid_update_internal(child);
+        }
+
+        if (w->grid) {
+            widgrid *grid = w->grid;
+            uint32_t gx;
+            uint32_t gy;
+            uint8_t z;
+
+            for (gx = 0; gx < grid->width; gx++) {
+                for (gy = 0; gy < grid->height; gy++) {
+                    for (z = 0; z < MAP_DEPTH; z++) {
+                        tree_root **gridtree = 
+                                grid->grid_of_trees[z] + (gy * grid->width) + gx;
+
+                        /*
+                        * Trees should be already allocated.
+                        */
+                        if (!*gridtree) {
+                            DIE("no gridtree");
+                        }
+
+                        widgridnode *node;
+
+                        TREE_WALK(*gridtree, node) {
+                            widp w = node->wid;
+
+                            wid_update_internal(w);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -5887,6 +5918,46 @@ static widp wid_mouse_motion_handler_at (widp w, int32_t x, int32_t y,
         }
     }
 
+    if (w->grid) {
+        widgrid *grid = w->grid;
+        uint32_t gx;
+        uint32_t gy;
+        uint8_t z;
+
+        for (gx = 0; gx < grid->width; gx++) {
+            for (gy = 0; gy < grid->height; gy++) {
+                for (z = 0; z < MAP_DEPTH; z++) {
+                    tree_root **gridtree = 
+                            grid->grid_of_trees[z] + (gy * grid->width) + gx;
+
+                    /*
+                    * Trees should be already allocated.
+                    */
+                    if (!*gridtree) {
+                        DIE("no gridtree");
+                    }
+
+                    widgridnode *node;
+
+                    TREE_WALK(*gridtree, node) {
+                        widp w = node->wid;
+
+                        widp closer_match =
+                            wid_mouse_motion_handler_at(w, x, y,
+                                                        relx, rely,
+                                                        wheelx, wheely,
+                                                        true /* strict */,
+                                                        depth + 2,
+                                                        debug);
+                        if (closer_match) {
+                            return (closer_match);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     TREE_WALK(w->children_display_sorted, child) {
         fast_verify(child);
 
@@ -6093,9 +6164,9 @@ void wid_move_delta (widp w, double dx, double dy)
 {
     wid_move_delta_internal(w, dx, dy);
 
-    if (!w->grid) {
-        wid_update_internal(w);
-    }
+if (!w->grid) {
+    wid_update_internal(w);
+}
 }
 
 void wid_move_to_bottom (widp w)
@@ -8313,36 +8384,7 @@ static void wid_display (widp w,
         blit_flush();
     }
 
-    if (w != wid_game_map_client_grid_container) {
-        /*
-         * If this is a grid wid, draw the elements in y sorted order.
-         */
-        TREE_WALK_REVERSE_UNSAFE_INLINE(w->children_display_sorted, child,
-                                        tree_prev_tree_wid_compare_func) {
-            uint8_t child_updated_scissors = false;
-
-            wid_display(child, disable_scissor, &child_updated_scissors);
-
-            /*
-             * Need to re-enforce the parent's scissors if the child did
-             * their own bit of scissoring?
-             */
-            if (!disable_scissor && child_updated_scissors) {
-                glScissor(
-                    tlx / global_config.xscale,
-                    global_config.video_pix_height -
-                        ((tly + clip_height) / global_config.yscale),
-                    clip_width,
-                    clip_height);
-            }
-        }
-
-        if (w->children_display_sorted) {
-            blit_flush();
-        }
-    }
-
-    if (w->grid) {
+    if (w == wid_game_map_client_grid_container) {
         int16_t maxx;
         int16_t minx;
         int16_t maxy;
@@ -8549,6 +8591,69 @@ CON("%x %x",a,b);
                 }
             }
 
+            blit_flush();
+        }
+    } else if (w->grid) {
+        int16_t maxx;
+        int16_t minx;
+        int16_t maxy;
+        int16_t miny;
+
+        minx = 0;
+        maxx = MAP_WIDTH;
+        miny = 0;
+        maxy = MAP_HEIGHT;
+
+        int32_t x, y;
+        uint8_t z;
+
+        for (z = 0; z < MAP_DEPTH; z++) {
+            for (x = maxx - 1; x >= minx; x--) {
+                for (y = miny; y < maxy; y++) {
+                    tree_root **tree = 
+                        w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                    widgridnode *node;
+
+                    TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                        *tree, 
+                                        node,
+                                        tree_prev_tree_wid_compare_func) {
+
+                        uint8_t child_updated_scissors = false;
+
+                        wid_display(node->wid, 
+                                    disable_scissor, &child_updated_scissors);
+                    }
+                }
+            }
+        }
+    }
+
+    if (w != wid_game_map_client_grid_container) {
+        /*
+         * If this is a grid wid, draw the elements in y sorted order.
+         */
+        TREE_WALK_REVERSE_UNSAFE_INLINE(w->children_display_sorted, child,
+                                        tree_prev_tree_wid_compare_func) {
+            uint8_t child_updated_scissors = false;
+
+            wid_display(child, disable_scissor, &child_updated_scissors);
+
+            /*
+             * Need to re-enforce the parent's scissors if the child did
+             * their own bit of scissoring?
+             */
+            if (!disable_scissor && child_updated_scissors) {
+                glScissor(
+                    tlx / global_config.xscale,
+                    global_config.video_pix_height -
+                        ((tly + clip_height) / global_config.yscale),
+                    clip_width,
+                    clip_height);
+            }
+        }
+
+        if (w->children_display_sorted) {
             blit_flush();
         }
     }

@@ -191,6 +191,15 @@ widp wid_editor_map_thing_replace_template (widp w,
     wid_set_color(child, WID_COLOR_TL, BLACK);
     wid_set_color(child, WID_COLOR_BG, BLACK);
     wid_set_color(child, WID_COLOR_BR, BLACK);
+
+    wid_set_mode(child, WID_MODE_OVER);
+    wid_set_color(child, WID_COLOR_TEXT, WHITE);
+    wid_set_color(child, WID_COLOR_TL, RED);
+    wid_set_color(child, WID_COLOR_BG, RED);
+    wid_set_color(child, WID_COLOR_BR, RED);
+
+    wid_set_mode(child, WID_MODE_NORMAL);
+
     wid_set_text_outline(child, true);
     wid_set_font(child, med_font);
     wid_set_no_shape(child);
@@ -215,6 +224,7 @@ widp wid_editor_map_thing_replace_template (widp w,
     map_fixup(level);
     wid_raise(wid_editor_filename_and_title);
     wid_update(wid_editor_map_window);
+    wid_update(child);
 
     return (child);
 }
@@ -928,9 +938,30 @@ void wid_editor_add_grid (void)
                 wid_set_z_depth(child, MAP_DEPTH_EDITOR);
 
                 wid_set_tl_br_pct(child, tl, br);
+
+                wid_set_mode(child, WID_MODE_NORMAL);
+                c = RED;
+                c.a = 0;
+                wid_set_color(child, WID_COLOR_TEXT, WHITE);
+                wid_set_color(child, WID_COLOR_TL, WHITE);
+                wid_set_color(child, WID_COLOR_BG, c);
+                wid_set_color(child, WID_COLOR_BR, WHITE);
+
+                wid_set_mode(child, WID_MODE_OVER);
+                c = RED;
+                c.a = 0;
+                wid_set_color(child, WID_COLOR_TEXT, WHITE);
+                wid_set_color(child, WID_COLOR_TL, RED);
+                wid_set_color(child, WID_COLOR_BG, c);
+                wid_set_color(child, WID_COLOR_BR, RED);
+
+                wid_set_mode(child, WID_MODE_NORMAL);
+
+                wid_update(child);
             }
         }
     }
+    wid_update(wid_editor_map_grid_container);
 }
 
 static void wid_editor_title_set (const char *title)
