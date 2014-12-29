@@ -27,7 +27,6 @@
 #include "wid_game_map_client.h"
 #include "math_util.h"
 #include "level.h"
-int xxx = 0;
 
 /*
  * Display sorted.
@@ -8452,43 +8451,10 @@ static void wid_display (widp w,
              */
             glBindFramebuffer(GL_FRAMEBUFFER, fbo_id1);
 
-                glClearColor(0,0,0,0);
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0,0,0,0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glcolor(WHITE);
 
-                glcolor(WHITE);
-#if 0
-static int s = GL_SRC_COLOR - 2;
-static int j = GL_SRC_COLOR - 2;
-if (xxx > 1) {
-xxx = 0;
-s++;
-if (s > GL_SRC_ALPHA_SATURATE) {
-j++;
-if (j > GL_SRC_ALPHA_SATURATE) {
-    j = GL_SRC_COLOR - 2;
-}
-s = GL_SRC_COLOR - 2;
-}
-}
-int a, b;
-a = s;
-b = j;
-if (s == GL_SRC_COLOR - 2) {
-a = GL_ZERO;
-}
-if (j == GL_SRC_COLOR - 2) {
-b = GL_ZERO;
-}
-if (s == GL_SRC_COLOR - 1) {
-a = GL_ONE;
-}
-if (j == GL_SRC_COLOR - 1) {
-b = GL_ONE;
-}
-if (xxx == 0) {
-CON("%x %x",a,b);
-}
-#endif
             /*
              * We want to merge successive light sources together.
              */
@@ -8607,7 +8573,31 @@ CON("%x %x",a,b);
         int32_t x, y;
         uint8_t z;
 
-        for (z = 0; z < MAP_DEPTH; z++) {
+        for (z = 1; z < MAP_DEPTH; z++) {
+            for (x = maxx - 1; x >= minx; x--) {
+                for (y = miny; y < maxy; y++) {
+                    tree_root **tree = 
+                        w->grid->grid_of_trees[z] + (y * w->grid->width) + x;
+                    widgridnode *node;
+
+                    TREE_WALK_REVERSE_UNSAFE_INLINE(
+                                        *tree, 
+                                        node,
+                                        tree_prev_tree_wid_compare_func) {
+
+                        uint8_t child_updated_scissors = false;
+
+                        wid_display(node->wid, 
+                                    disable_scissor, &child_updated_scissors);
+                    }
+                }
+            }
+        }
+
+        /*
+         * Huge hack for the level editor.
+         */
+        z = 0; {
             for (x = maxx - 1; x >= minx; x--) {
                 for (y = miny; y < maxy; y++) {
                     tree_root **tree = 

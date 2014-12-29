@@ -26,8 +26,6 @@ widp wid_editor_map_grid_container;
 static widp wid_editor_map_horiz_scroll;
 static widp wid_editor_map_vert_scroll;
 
-static float tile_width_pct = 1.0f / TILES_SCREEN_WIDTH;
-static float tile_height_pct = 1.0f / TILES_SCREEN_HEIGHT;
 static uint32_t tile_width;
 static uint32_t tile_height;
 levelp level_ed;
@@ -186,19 +184,12 @@ widp wid_editor_map_thing_replace_template (widp w,
     wid_set_tl_br(child, tl, br);
     wid_set_text_lhs(child, true);
     wid_set_text_top(child, true);
+
     wid_set_mode(child, WID_MODE_NORMAL);
     wid_set_color(child, WID_COLOR_TEXT, WHITE);
     wid_set_color(child, WID_COLOR_TL, BLACK);
     wid_set_color(child, WID_COLOR_BG, BLACK);
     wid_set_color(child, WID_COLOR_BR, BLACK);
-
-    wid_set_mode(child, WID_MODE_OVER);
-    wid_set_color(child, WID_COLOR_TEXT, WHITE);
-    wid_set_color(child, WID_COLOR_TL, RED);
-    wid_set_color(child, WID_COLOR_BG, RED);
-    wid_set_color(child, WID_COLOR_BR, RED);
-
-    wid_set_mode(child, WID_MODE_NORMAL);
 
     wid_set_text_outline(child, true);
     wid_set_font(child, med_font);
@@ -607,6 +598,22 @@ static uint8_t wid_editor_map_thing_replace_wrap (widp w,
         fpoint offset;
         wid_get_offset(wid_editor_map_grid_container, &offset);
 
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+        uint8_t *state = SDL_GetKeyState(0);
+
+        uint8_t shift = state[SDLK_SHIFT] ? 1 : 0;
+#else /* } { */
+        const uint8_t *state = SDL_GetKeyboardState(0);
+
+        uint8_t lshift = state[SDL_SCANCODE_LSHIFT] ? 1 : 0;
+        uint8_t rshift = state[SDL_SCANCODE_RSHIFT] ? 1 : 0;
+        uint8_t shift = lshift | rshift;
+#endif /* } */
+
+        if (shift) {
+            wid_editor_got_line_start = true;
+        }
+
         if (!wid_editor_got_line_start) {
             wid_editor_got_line_start = true;
 
@@ -636,6 +643,9 @@ static uint8_t wid_editor_map_thing_replace_wrap (widp w,
         map_fixup(level_ed);
         wid_raise(wid_editor_filename_and_title);
         wid_update(wid_editor_map_window);
+
+        line_start_x = x;
+        line_start_y = y;
 
         return (true);
     }
@@ -875,24 +885,40 @@ static uint8_t wid_editor_map_tile_key_up_event (widp w,
 void wid_editor_add_grid (void)
 {
     {
-        int32_t x;
-        int32_t y;
+        double x;
+        double y;
+        int32_t ix;
+        int32_t iy;
 
         widp child;
 
-        for (x = 0; x < MAP_WIDTH; x++) {
-            for (y = 0; y < MAP_HEIGHT; y++) {
+        for (ix = 0; ix < MAP_WIDTH; ix++) {
+            for (iy = 0; iy < MAP_HEIGHT; iy++) {
 
-                fpoint tl = {
-                    (tile_width_pct * (float)(x)),
-                    (tile_height_pct * (float)(y))
-                };
+                /*
+                 * Find the midpoint of the tile.
+                 */
+                x = (double)ix * tile_width;
+                y = (double)iy * tile_height;
 
-                fpoint br = {
-                };
+                x += tile_width / 2;
+                y += tile_height / 2;
 
-                br.x = tl.x + tile_width_pct;
-                br.y = tl.y + tile_height_pct;
+                fpoint tl = { x, y };
+                fpoint br = { x, y };
+
+                double base_tile_width =
+                        ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
+                            (double)global_config.video_gl_width);
+
+                double base_tile_height =
+                        ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
+                            (double)global_config.video_gl_height);
+
+                br.x += base_tile_width / 2.0;
+                br.y += base_tile_height / 2.0;
+                tl.x -= base_tile_width / 2.0;
+                tl.y -= base_tile_height / 2.0;
 
                 child = wid_new_square_button(wid_editor_map_grid_container,
                                               "editor grid map tile");
@@ -904,20 +930,16 @@ void wid_editor_add_grid (void)
                 wid_set_color(child, WID_COLOR_TEXT, c);
                 wid_set_font(child, vsmall_font);
 
-                if (!(x % 8)) {
+                if ((!(ix % 8)) || 
+                    (!(iy % 8)) || 
+                    (ix == MAP_WIDTH - 1) || (iy == MAP_HEIGHT - 1)) {
                     char tmp[20];
-                    sprintf(tmp, "%u",x);
+                    sprintf(tmp, "%u,%u",ix,iy);
                     wid_set_text(child, tmp);
                 }
 
-                if (!(y % 10)) {
-                    char tmp[20];
-                    sprintf(tmp, "%u",y);
-                    wid_set_text(child, tmp);
-                }
-
-                if ((x < MAP_WIDTH) &&
-                    (y < MAP_HEIGHT)) {
+                if ((ix < MAP_WIDTH) &&
+                    (iy < MAP_HEIGHT)) {
                     wid_set_on_key_down(child,
                                         wid_editor_map_tile_key_down_event);
                     wid_set_on_key_up(child,
@@ -935,25 +957,31 @@ void wid_editor_add_grid (void)
                     wid_set_thing_template(child, noentry);
                 }
 
+                wid_set_color(child, WID_COLOR_TEXT, WHITE);
                 wid_set_z_depth(child, MAP_DEPTH_EDITOR);
+                wid_set_bevel(child, 1);
 
-                wid_set_tl_br_pct(child, tl, br);
+                wid_set_tl_br(child, tl, br);
 
                 wid_set_mode(child, WID_MODE_NORMAL);
                 c = RED;
                 c.a = 0;
-                wid_set_color(child, WID_COLOR_TEXT, WHITE);
-                wid_set_color(child, WID_COLOR_TL, WHITE);
                 wid_set_color(child, WID_COLOR_BG, c);
-                wid_set_color(child, WID_COLOR_BR, WHITE);
+
+                c = WHITE;
+                c.a = 100;
+                wid_set_color(child, WID_COLOR_TL, c);
+                wid_set_color(child, WID_COLOR_BR, c);
 
                 wid_set_mode(child, WID_MODE_OVER);
                 c = RED;
                 c.a = 0;
-                wid_set_color(child, WID_COLOR_TEXT, WHITE);
-                wid_set_color(child, WID_COLOR_TL, RED);
                 wid_set_color(child, WID_COLOR_BG, c);
-                wid_set_color(child, WID_COLOR_BR, RED);
+
+                c = RED;
+                c.a = 100;
+                wid_set_color(child, WID_COLOR_TL, c);
+                wid_set_color(child, WID_COLOR_BR, c);
 
                 wid_set_mode(child, WID_MODE_NORMAL);
 
@@ -1067,8 +1095,6 @@ void wid_editor_map_wid_create (void)
                             wid_editor_map_receive_mouse_up);
     }
 
-    wid_editor_add_grid();
-
     double base_tile_width =
             ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
                 (double)global_config.video_gl_width);
@@ -1095,6 +1121,8 @@ void wid_editor_map_wid_create (void)
     if (!tile_height) {
         tile_height = TILE_HEIGHT;
     }
+
+    wid_editor_add_grid();
 
     wid_new_grid(wid_editor_map_grid_container,
                     MAP_WIDTH,
