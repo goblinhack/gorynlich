@@ -1071,10 +1071,10 @@ tree_rootp map_all_things_is_exit_at (levelp level, int32_t x, int32_t y)
 }
 
 static tpp map_find_x_at_depth (levelp level,
-                                            int32_t x, int32_t y,
-                                            map_is_at_callback callback,
-                                            uint8_t z,
-                                            widp *wout)
+                                int32_t x, int32_t y,
+                                map_is_at_callback callback,
+                                uint8_t z,
+                                widp *wout)
 {
     tpp tp;
     widp grid_wid;
