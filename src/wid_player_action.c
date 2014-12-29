@@ -165,7 +165,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         widp w = wid_player_action = 
                         wid_new_square_window("wid player_stats");
 
-        fpoint tl = {0.0, 0.8};
+        fpoint tl = {0.0, 0.82};
         fpoint br = {1.0, 1.0};
 
         wid_set_tl_br_pct(w, tl, br);
