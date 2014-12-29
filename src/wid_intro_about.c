@@ -95,11 +95,11 @@ static void wid_intro_about_create (void)
           "\n"
           "\n"
           "\n"
-          "Game Music by the talented and amazing. Charlotte McGill\n"
+          "Game Music by the talented and amazing, Charlotte McGill\n"
           "\n"
           "Additional Music by the frankly awesome, Deceased Senior Technician, DST. AKA nosoapradio.us\n"
           "\n"
-          "Coding by Me\n"
+          "Coding by Goblinhack\n"
           "\n"
           "\n"
           "\n"
@@ -128,8 +128,8 @@ static void wid_intro_about_create (void)
           "%%fg=gold$Credits",      /* title */
           0.5, 0.5,                 /* x,y postition in percent */
           large_font,               /* title font */
-          small_font,              /* body font */
-          small_font,              /* button font */
+          small_font,               /* body font */
+          small_font,               /* button font */
           1,                        /* number buttons */
           "%%tile=button_b$Back", wid_intro_about_callback_close);
 
