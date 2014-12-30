@@ -158,11 +158,13 @@ typedef struct {
      * be. We send only what portions of this message are changed.
      */
     uint8_t data;
+    uint8_t ext;
     uint8_t template_id;        // optional
-    uint16_t id;                // optional
     uint8_t x;                  // optional
     uint8_t y;                  // optional
+    uint16_t id;                // optional
     uint16_t owner_id;          // optional
+    uint16_t thing_owner_id;    // optional
 } __attribute__ ((packed)) msg_map_update;
 
 typedef struct socket_ {

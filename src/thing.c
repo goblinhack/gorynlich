@@ -3149,7 +3149,9 @@ LOG("tx %s", thing_logname(t));
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS) |
             ((t->is_hit_miss    ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS);
+                THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS) |
+            ((t->owner_thing_id ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT);
 
         t->is_hit_crit = 0;
         t->is_hit_success = 0;
@@ -3213,6 +3215,11 @@ LOG("tx %s", thing_logname(t));
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             *data++ = tx;
             *data++ = ty;
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
+            SDLNet_Write16(t->owner_thing_id, data);               
+            data += sizeof(uint16_t);
         }
 
         t->last_tx = tx;
@@ -3329,6 +3336,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
     while (data < eodata) {
         uint8_t state = *data++;
         uint8_t ext;
+        uint16_t owner_thing_id;
         uint8_t template_id;
         uint16_t id;
         uint8_t on_map;
@@ -3390,6 +3398,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             on_map = false;
         } else {
             on_map = true;
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
+            owner_thing_id = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+        } else {
+            owner_thing_id = 0;
         }
 
         t = thing_client_find(id);
@@ -3543,6 +3558,14 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             thing_hide(t);
         } else {
             thing_visible(t);
+        }
+
+        if (owner_thing_id) {
+            /*
+             * The owner may not have been synced yet, so this could be a 
+             * placeholder.
+             */
+            t->owner_thing_id = owner_thing_id;
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
