@@ -493,7 +493,7 @@ static void wid_intro_create (void)
         wid_set_no_shape(child);
 
         fpoint tl = {0.0f, 0.60f};
-        fpoint br = {1.0f, 1.00f};
+        fpoint br = {1.0f, 0.80f};
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "Press SPACE or click to play");
