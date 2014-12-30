@@ -247,7 +247,7 @@
  * server. Set this too high and the client can push through walls. Too
  * low and it will be jerky, jumping back when we have high latency.
  */
-#define THING_MAX_SERVER_DISCREPANCY                        3.0
+#define THING_MAX_SERVER_DISCREPANCY                        5.0
 
 /*
  * When things are moving on the client, we need to move them a bit slower
