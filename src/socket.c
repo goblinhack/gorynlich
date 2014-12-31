@@ -3057,9 +3057,6 @@ static int socket_rx_queue_receive_packets (gsocketp s)
 
         count++;
     }
-if (count) {
-CON("   %d", s->rx_queue_size);
-}
 
     return (count);
 }
@@ -3112,12 +3109,16 @@ void socket_tick (void)
     gsocketp s;
 
     TREE_WALK(sockets, s) {
-if (s->tx_queue_size) {
-CON("%d", s->tx_queue_size);
-}
+        int loop = 0;
+
+        while (loop++ < MAX_SOCKET_TX_PACKETS_PER_LOOP) {
+            if (!socket_tx_queue_send_packet(s)) {
+                break;
+            }
+        }
+
         for (;;) {
-            if (!socket_tx_queue_send_packet(s) && 
-                !socket_rx_queue_receive_packets(s)) {
+            if (!socket_rx_queue_receive_packets(s)) {
                 break;
             }
         }

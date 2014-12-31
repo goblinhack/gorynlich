@@ -199,12 +199,19 @@
 /*
  * Debug check to enable sequence numbers and checksum
  */
-#define ENABLE_PAK_EXTRA_HEADER
+#undef ENABLE_PAK_EXTRA_HEADER
 
 /*
  * The number of packets we allow to buffer up on a socket during sends.
  */
 #define MAX_SOCKET_QUEUE_SIZE       256
+
+/*
+ * How many tx packets we pull off of the tx queue per frame. This has
+ * to be fairly low as windows can't handle sending too much to a
+ * socket that is not yet listening.
+ */
+#define MAX_SOCKET_TX_PACKETS_PER_LOOP 4
 
 /*
  * How many pings to consider for quality
