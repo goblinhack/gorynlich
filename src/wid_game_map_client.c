@@ -541,7 +541,10 @@ void wid_game_map_client_wid_destroy (void)
  * Replace or place a tile.
  */
 widp
-wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
+wid_game_map_client_replace_tile (widp w, 
+                                  double x, double y, 
+                                  thingp t,
+                                  tpp tp)
 {
     tree_rootp thing_tiles;
     const char *tilename;
@@ -553,9 +556,11 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
     /*
      * Grow tl and br to fit the template thing. Use the first tile.
      */
-    tpp tp = thing_tp(t);
     if (!tp) {
-        DIE("no thing template");
+        tp = thing_tp(t);
+        if (!tp) {
+            DIE("no thing template");
+        }
     }
 
     if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_WIDTH)) {
@@ -601,6 +606,10 @@ wid_game_map_client_replace_tile (widp w, double x, double y, thingp t)
      * "paint" the thing.
      */
     wid_game_map_client_set_thing_template(child, tp);
+
+    if (!t) {
+        t = thing_client_local_new(tp);
+    }
 
     wid_set_thing(child, t);
     wid_set_tile(child, tile);

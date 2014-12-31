@@ -242,15 +242,19 @@
 /*
  * Thumb in air. Needs to be big enough so wrap arounds and id reuse is less 
  * common. Max is 64K for tx map sending from server to client.
+ *
+ * 0  ... 24 * 1024 (walls and obstacles)
+ * 24 ... 48 * 1024 (monsters and players)
+ * 48 ... 64 * 1024 (client local)
  */
-#define THING_ID_MAX                (64*1024)
+#define THING_ID_MAX                (48*1024)
 
 /*
  * Local client things like explosions we use a separate space beyond the 
  * above.
  */
 #define THING_CLIENT_ID_MIN         (THING_ID_MAX + 1)
-#define THING_CLIENT_ID_MAX         (THING_ID_MAX * 2)
+#define THING_CLIENT_ID_MAX         (64*1024)
 
 /*
  * When converting from thing co-ords where 1.0 is one grid, we must convert
