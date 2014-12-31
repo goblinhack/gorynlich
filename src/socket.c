@@ -3093,7 +3093,7 @@ static void socket_rx_queue_flush_all (void)
     }
 }
 
-void socket_tick (void)
+void socket_tx_tick (void)
 {
     gsocketp s;
 
@@ -3105,7 +3105,14 @@ void socket_tick (void)
                 break;
             }
         }
+    }
+}
 
+void socket_rx_tick (void)
+{
+    gsocketp s;
+
+    TREE_WALK(sockets, s) {
         for (;;) {
             if (!socket_rx_queue_receive_packets(s)) {
                 break;
