@@ -239,13 +239,16 @@ void thing_update (thingp t)
     }
 
     t->updated++;
+LOG("update %s udpated %d", thing_logname(t), t->updated);
 
     /*
      * Update the weapon being carried.
      */
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
-        thing_update(weapon_carry_anim);
+        if (!thing_is_dead(weapon_carry_anim)) {
+            thing_update(weapon_carry_anim);
+        }
     }
 
     /*
@@ -253,7 +256,9 @@ void thing_update (thingp t)
      */
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
-        thing_update(weapon_swing_anim);
+        if (!thing_is_dead(weapon_swing_anim)) {
+            thing_update(weapon_swing_anim);
+        }
     }
 }
 
@@ -1282,6 +1287,14 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     if (reason) {
         t->dead_reason = reason;
     }
+
+    /*
+     * Replace the logname
+     */
+    char *new_logname = dynprintf("%s (dead, %s)", 
+                                  t->logname, reason);
+    myfree(t->logname);
+    t->logname = new_logname;
 
     if (thing_is_player(t)) {
         THING_LOG(t, "dead (%s)", reason);
@@ -2952,17 +2965,47 @@ static void thing_client_wid_move (thingp t, double x, double y,
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
+
+#if 0
+    /*
+     * If carrying a weapon, move it locally so that we don't see lag if the
+     * weapon position arrives later than player position.
+     */
+    if (t->weapon_carry_anim_thing_id) {
+        thingp item = thing_weapon_carry_anim(t);
+        if (item) {
+            thing_client_wid_move(item, x, y, smooth);
+        }
+    }
+
+    if (t->weapon_swing_anim_thing_id) {
+        thingp item = thing_weapon_swing_anim(t);
+        if (item) {
+            thing_client_wid_move(item, x, y, smooth);
+        }
+    }
+#endif
 }
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
+    if (thing_is_animation(t)) {
+        return;
+    }
+
+    if (thing_is_weapon_swing_effect(t)) {
+        return;
+    }
+
     thing_client_wid_move(t, x, y, smooth);
 
     /*
      * Update the weapon being carried.
      */
+LOG("move player %s",thing_logname(t));
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
+LOG("move weapon %s",thing_logname(weapon_carry_anim));
         thing_client_wid_move(weapon_carry_anim, x, y, smooth);
     }
 
@@ -3108,7 +3151,6 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         uint8_t tx;
         uint8_t ty;
 #if 0
-LOG("tx %s", thing_logname(t));
 #endif
 
         widp w = thing_wid(t);
@@ -3127,8 +3169,6 @@ LOG("tx %s", thing_logname(t));
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->has_left_level ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
-            ((t->owner_thing_id ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->is_hit_crit    ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
             ((t->is_hit_success ? 1 : 0) << 
@@ -3139,7 +3179,7 @@ LOG("tx %s", thing_logname(t));
         /*
          * WARING: Keep the above and below in sync.
          */
-        const uint8_t ext =
+        uint8_t ext =
             ((t->is_dead        ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
             ((t->has_left_level ? 1 : 0) << 
@@ -3149,9 +3189,20 @@ LOG("tx %s", thing_logname(t));
             ((t->is_hit_success ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS) |
             ((t->is_hit_miss    ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS) |
-            ((t->owner_thing_id ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT);
+                THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS);
+
+        if (t->owner_thing_id && (t->owner_thing_id != (uint16_t) -1)) {
+            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT;
+            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
+        } else if (t->weapon_carry_anim_thing_id && 
+                   (t->weapon_carry_anim_thing_id != (uint16_t) -1)) {
+            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT;
+            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
+        } else if (t->weapon_swing_anim_thing_id && 
+                   (t->weapon_swing_anim_thing_id != (uint16_t) -1)) {
+            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT;
+            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
+        }
 
         t->is_hit_crit = 0;
         t->is_hit_success = 0;
@@ -3199,27 +3250,40 @@ LOG("tx %s", thing_logname(t));
 
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT)) {
             *data++ = id - last_id;
+//LOG("  id       %02x",id);
         } else {
             SDLNet_Write16(id, data);               
             data += sizeof(uint16_t);
+//LOG("  id       %04x",id);
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT)) {
             *data++ = template_id;
+//LOG("  template %02x",template_id);
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_EXT_PRESENT)) {
             *data++ = ext;
+//LOG("  ext      %02x",ext);
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             *data++ = tx;
+//LOG("  tx       %02x",tx);
             *data++ = ty;
+//LOG("  ty       %02x",ty);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT)) {
             SDLNet_Write16(t->owner_thing_id, data);               
             data += sizeof(uint16_t);
+            SDLNet_Write16(t->weapon_carry_anim_thing_id, data);               
+            data += sizeof(uint16_t);
+            SDLNet_Write16(t->weapon_swing_anim_thing_id, data);               
+            data += sizeof(uint16_t);
+//LOG("  owner    %04x",t->owner_thing_id);
+//LOG("  carry    %04x",t->weapon_carry_anim_thing_id);
+//LOG("  swing    %04x",t->weapon_swing_anim_thing_id);
         }
 
         t->last_tx = tx;
@@ -3312,30 +3376,18 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
     uint8_t need_fixup = false;
     verify(s);
 
-    /*
-     * Cache the local player weapon. We do not accept updates for it as
-     * we locally echo the weapon and player.
-     */
-    thingp weapon_carry_anim;
-    if (player) {
-        weapon_carry_anim = thing_weapon_carry_anim(player);
-    } else {
-        weapon_carry_anim = 0;
-    }
-
-    thingp weapon_swing_anim;
-    if (player) {
-        weapon_swing_anim = thing_weapon_swing_anim(player);
-    } else {
-        weapon_swing_anim = 0;
-    }
-
     uint8_t *eodata = data + packet->len - 1;
     uint16_t last_id = 0;
 
+//LOG("rx map update:");
+//hex_dump_log(data, 0, packet->len);
     while (data < eodata) {
+//LOG("rx map element:");
+//hex_dump_log(data, 0, 10);
         uint8_t state = *data++;
         uint8_t ext;
+        uint16_t weapon_carry_anim_thing_id;
+        uint16_t weapon_swing_anim_thing_id;
         uint16_t owner_thing_id;
         uint8_t template_id;
         uint16_t id;
@@ -3351,12 +3403,14 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              * Delta ID update.
              */
             id = *data++ + last_id;
+//LOG("  id       %02x",id);
         } else {
             /*
              * Full ID update.
              */
             id = SDLNet_Read16(data);
             data += sizeof(uint16_t);
+//LOG("  id       %04x",id);
         }
         last_id = id;
 
@@ -3365,6 +3419,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              * Full template ID update.
              */
             template_id = *data++;
+//LOG("  template %02x",template_id);
         } else {
             template_id = -1;
         }
@@ -3374,6 +3429,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              * Extensions present.
              */
             ext = *data++;
+//LOG("  ext      %02x",ext);
         } else {
             ext = 0;
         }
@@ -3384,6 +3440,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
              */
             tx = *data++;
             ty = *data++;
+//LOG("  tx       %02x",tx);
+//LOG("  ty       %02x",ty);
 
             x = ((double)tx) / (double) (256 / MAP_WIDTH);
             y = ((double)ty) / (double) (256 / MAP_HEIGHT);
@@ -3400,22 +3458,40 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             on_map = true;
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_OWNER_ID_PRESENT)) {
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT)) {
             owner_thing_id = SDLNet_Read16(data);
             data += sizeof(uint16_t);
+            weapon_carry_anim_thing_id = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+            weapon_swing_anim_thing_id = SDLNet_Read16(data);
+            data += sizeof(uint16_t);
+//LOG("  owner    %02x",owner_thing_id);
+//LOG("  carry    %02x",weapon_carry_anim_thing_id);
+//LOG("  swing    %02x",weapon_swing_anim_thing_id);
         } else {
             owner_thing_id = 0;
+            weapon_carry_anim_thing_id = 0;
+            weapon_swing_anim_thing_id = 0;
         }
 
         t = thing_client_find(id);
         if (!t) {
             if (template_id == (uint8_t)-1) {
                 /*
+                 * It's okay if it is dead, we can ignore this as the server 
+                 * is just making sure we got the dead hint.
+                 */
+                if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
+                    LOG("Client: received DEAD unknown thing %u", id);
+                    continue;
+                }
+
+                /*
                  * This could happen due to packet loss and we have no way
                  * to rebuild the thing without a resend. Need a way to ask
                  * for a resync.
                  */
-                ERR("Client: received unknown thing %u, need resync TBD", id);
+                DIE("Client: received unknown thing %u, need resync TBD", id);
                 continue;
             }
 
@@ -3477,9 +3553,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
             widp w = thing_wid(t);
             if (w) {
-                if ((t == player) || 
-                    ((t == weapon_carry_anim) && weapon_carry_anim) ||
-                    ((t == weapon_swing_anim) && weapon_swing_anim)) {
+                if (t == player) {
                     /*
                      * Local echo only.
                      */
@@ -3560,12 +3634,64 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             thing_visible(t);
         }
 
-        if (owner_thing_id) {
+//LOG("        rx %s owner %d weapon_carry_anim_thing_id %d 
+//weapon_swing_anim_thing_id %d ",thing_logname(t), owner_thing_id, 
+//weapon_carry_anim_thing_id, weapon_swing_anim_thing_id);
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT)) {
             /*
              * The owner may not have been synced yet, so this could be a 
              * placeholder.
              */
             t->owner_thing_id = owner_thing_id;
+
+//LOG("           thing %s",thing_logname(t));
+//LOG("           owner_thing_id %d",owner_thing_id);
+//LOG("           weapon_carry_anim_thing_id %d",weapon_carry_anim_thing_id);
+//LOG("           weapon_swing_anim_thing_id %d",weapon_swing_anim_thing_id);
+            if (weapon_carry_anim_thing_id) {
+                if (thing_client_find(weapon_carry_anim_thing_id)) {
+                    thing_set_weapon_carry_anim_id(
+                        t, weapon_carry_anim_thing_id);
+                } else {
+                    /*
+                     * Future reference
+                     */
+                    t->weapon_carry_anim_thing_id = weapon_carry_anim_thing_id;
+                }
+
+                thingp item = thing_weapon_carry_anim(t);
+                if (item) {
+                    item->dir = t->dir;
+                    thing_set_owner(item, t);
+                }
+            }
+
+            if (weapon_swing_anim_thing_id) {
+                if (thing_client_find(weapon_swing_anim_thing_id)) {
+
+                    thing_set_weapon_swing_anim_id(
+                            t, weapon_swing_anim_thing_id);
+                } else {
+                    t->weapon_swing_anim_thing_id = weapon_swing_anim_thing_id;
+                }
+
+                thingp item = thing_weapon_swing_anim(t);
+                if (item) {
+                    item->dir = t->dir;
+                    thing_set_owner(item, t);
+                }
+            }
+
+            /*
+             * If swinging a weapon now, hide the carried weapon until the 
+             * swing is over.
+             */
+            if (t->weapon_swing_anim_thing_id) {
+                thingp carry = thing_weapon_carry_anim(t);
+                if (carry) {
+                    thing_hide(carry);
+                }
+            }
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
@@ -4237,14 +4363,16 @@ void thing_set_weapon_carry_anim (thingp t, thingp weapon_carry_anim)
 
         if (weapon_carry_anim) {
             THING_LOG(t, "weapon_carry_anim change %s->%s", 
-                      thing_logname(old_weapon_carry_anim), thing_logname(weapon_carry_anim));
+                      thing_logname(old_weapon_carry_anim), 
+                      thing_logname(weapon_carry_anim));
         } else {
             THING_LOG(t, "remove weapon_carry_anim %s", 
                       thing_logname(old_weapon_carry_anim));
         }
     } else {
         if (weapon_carry_anim) {
-            THING_LOG(t, "weapon_carry_anim %s", thing_logname(weapon_carry_anim));
+            THING_LOG(t, "weapon_carry_anim %s", 
+                      thing_logname(weapon_carry_anim));
         }
     }
 
@@ -4289,14 +4417,16 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
 
         if (weapon_swing_anim) {
             THING_LOG(t, "weapon_swing_anim change %s->%s", 
-                      thing_logname(old_weapon_swing_anim), thing_logname(weapon_swing_anim));
+                      thing_logname(old_weapon_swing_anim), 
+                      thing_logname(weapon_swing_anim));
         } else {
             THING_LOG(t, "remove weapon_swing_anim %s", 
                       thing_logname(old_weapon_swing_anim));
         }
     } else {
         if (weapon_swing_anim) {
-            THING_LOG(t, "weapon_swing_anim %s", thing_logname(weapon_swing_anim));
+            THING_LOG(t, "weapon_swing_anim %s", 
+                      thing_logname(weapon_swing_anim));
         }
     }
 

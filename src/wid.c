@@ -156,12 +156,12 @@ void wid_fini (void)
 
         wid_gc_all();
 
-        tree_destroy(&wid_top_level5, (tree_destroy_func)0);
-        tree_destroy(&wid_top_level4, (tree_destroy_func)0);
-        tree_destroy(&wid_top_level3, (tree_destroy_func)0);
-        tree_destroy(&wid_top_level2, (tree_destroy_func)0);
         tree_destroy(&wid_top_level,
                      (tree_destroy_func)wid_destroy_immediate_internal);
+        tree_destroy(&wid_top_level3, (tree_destroy_func)0);
+        tree_destroy(&wid_top_level2, (tree_destroy_func)0);
+        tree_destroy(&wid_top_level5, (tree_destroy_func)0);
+        tree_destroy(&wid_top_level4, (tree_destroy_func)0);
 
         action_timers_destroy(&wid_timers);
     }
@@ -2541,7 +2541,7 @@ static void wid_tree_attach (widp w)
         DIE("wid set z depth tree insert");
     }
 
-    w->in_tree = true;
+    w->in_tree = root;
 }
 
 static void wid_tree_insert (widp w)
@@ -2583,7 +2583,7 @@ static void wid_tree_insert (widp w)
         DIE("widget tree insert");
     }
 
-    w->in_tree = true;
+    w->in_tree = root;
 }
 
 static void wid_tree2_unsorted_insert (widp w)
@@ -2624,7 +2624,7 @@ static void wid_tree2_unsorted_insert (widp w)
      * The other tree will do the actual node free.
      */
     w->tree2_unsorted.node.is_static_mem = true;
-    w->in_tree2_unsorted = true;
+    w->in_tree2_unsorted = root;
 }
 
 static void wid_tree3_moving_wids_insert (widp w)
@@ -2665,7 +2665,7 @@ static void wid_tree3_moving_wids_insert (widp w)
      * The other tree will do the actual node free.
      */
     w->tree3_moving_wids.node.is_static_mem = true;
-    w->in_tree3_moving_wids = true;
+    w->in_tree3_moving_wids = root;
 }
 
 static void wid_tree4_wids_being_destroyed_insert (widp w)
@@ -2706,7 +2706,7 @@ static void wid_tree4_wids_being_destroyed_insert (widp w)
      * The other tree will do the actual node free.
      */
     w->tree4_wids_being_destroyed.node.is_static_mem = true;
-    w->in_tree4_wids_being_destroyed = true;
+    w->in_tree4_wids_being_destroyed = root;
 }
 
 static void wid_tree5_ticking_wids_insert (widp w)
@@ -2747,49 +2747,34 @@ static void wid_tree5_ticking_wids_insert (widp w)
      * The other tree will do the actual node free.
      */
     w->tree5_ticking_wids.node.is_static_mem = true;
-    w->in_tree5_ticking_wids = true;
+    w->in_tree5_ticking_wids = root;
 }
 
 static void wid_tree_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree) {
+    tree_root *root = w->in_tree;
+    if (!root) {
         return;
     }
-    w->in_tree = false;
-
-    tree_root *root;
-
-    if (!w->parent) {
-        root = wid_top_level;
-    } else {
-        root = w->parent->children_display_sorted;
-    }
+    verify(root);
 
     if (!tree_remove(root, &w->tree.node)) {
         DIE("remove %s from display sorted tree", w->logname);
     }
+
+    w->in_tree = 0;
 }
 
 static void wid_tree2_unsorted_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree2_unsorted) {
+    tree_root *root = w->in_tree2_unsorted;
+    if (!root) {
         return;
     }
-
-    tree_root *root;
-
-    if (!w->parent) {
-        root = wid_top_level2;
-    } else {
-        verify(w->parent);
-
-        root = w->parent->children_unsorted;
-    }
-
     verify(root);
 
     if (!tree_remove(root, &w->tree2_unsorted.node)) {
@@ -2803,17 +2788,11 @@ static void wid_tree3_moving_wids_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree3_moving_wids) {
-        return;
-    }
-
-    tree_root *root;
-
-    root = wid_top_level3;
-
+    tree_root *root = w->in_tree3_moving_wids;
     if (!root) {
         return;
     }
+    verify(root);
 
     if (!tree_remove(root, &w->tree3_moving_wids.node)) {
         DIE("remove from move tree");
@@ -2826,46 +2805,34 @@ static void wid_tree4_wids_being_destroyed_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree4_wids_being_destroyed) {
-        return;
-    }
-
-    tree_root *root;
-
-    root = wid_top_level4;
-
+    tree_root *root = w->in_tree4_wids_being_destroyed;
     if (!root) {
         return;
     }
+    verify(root);
 
     if (!tree_remove(root, &w->tree4_wids_being_destroyed.node)) {
         DIE("remove from gc tree");
     }
 
-    w->in_tree4_wids_being_destroyed = false;
+    w->in_tree4_wids_being_destroyed = 0;
 }
 
 static void wid_tree5_ticking_wids_remove (widp w)
 {
     fast_verify(w);
 
-    if (!w->in_tree5_ticking_wids) {
-        return;
-    }
-
-    tree_root *root;
-
-    root = wid_top_level5;
-
+    tree_root *root = w->in_tree5_ticking_wids;
     if (!root) {
         return;
     }
+    verify(root);
 
     if (!tree_remove(root, &w->tree5_ticking_wids.node)) {
         DIE("remove from tick tree");
     }
 
-    w->in_tree5_ticking_wids = false;
+    w->in_tree5_ticking_wids = 0;
 }
 
 /*
