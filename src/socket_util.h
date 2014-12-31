@@ -2,7 +2,6 @@
  * Copyright (C) 2011 Neil McGill
  *
  * See the README file for license.
- *
  */
 
 #pragma once
@@ -230,12 +229,12 @@ typedef struct socket_ {
     uint8_t server_max_players;
     uint8_t server_current_players;
 
-    UDPpacket *tx_queue[MAX_SOCKET_TX_QUEUE_SIZE];
+    UDPpacket *tx_queue[MAX_SOCKET_QUEUE_SIZE];
     uint8_t tx_queue_head;
     uint8_t tx_queue_tail;
     uint8_t tx_queue_size;
 
-    UDPpacket *rx_queue[MAX_SOCKET_TX_QUEUE_SIZE];
+    UDPpacket *rx_queue[MAX_SOCKET_QUEUE_SIZE];
     uint8_t rx_queue_head;
     uint8_t rx_queue_tail;
     uint8_t rx_queue_size;
@@ -445,5 +444,6 @@ void packet_compress(UDPpacket *packet);
 void packet_free(UDPpacket *packet);
 UDPpacket *packet_definalize(gsocketp s, UDPpacket *packet);
 
-void socket_tx_enqueue_packet(gsocketp s, UDPpacket **packet);
+void socket_tx_enqueue(gsocketp s, UDPpacket **packet);
+UDPpacket *socket_rx_dequeue(gsocketp s);
 void socket_dequeue_packet(gsocketp s, UDPpacket **packet);
