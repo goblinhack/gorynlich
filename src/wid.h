@@ -592,13 +592,14 @@ typedef struct wid_ {
     uint8_t being_destroyed:1;
     uint8_t do_not_raise:1;
     uint8_t do_not_lower:1;
-    uint8_t in_tree:1;
-    uint8_t in_tree2_unsorted:1;
-    uint8_t in_tree3_moving_wids:1;
-    uint8_t in_tree4_wids_being_destroyed:1;
-    uint8_t in_tree5_ticking_wids:1;
     uint8_t can_be_atteched_now:1;
     uint8_t animate:1;
+
+    tree_rootp in_tree;
+    tree_rootp in_tree2_unsorted;
+    tree_rootp in_tree3_moving_wids;
+    tree_rootp in_tree4_wids_being_destroyed;
+    tree_rootp in_tree5_ticking_wids;
 
     /*
      * Thing related.

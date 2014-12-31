@@ -59,6 +59,7 @@ static void thing_action_timer_callback_dead (void *context)
         thing = thing_client_find(place->thing_id);
     }
 
+LOG("KILL %s",thing_logname(thing));
     if (thing) {
         verify(thing);
         thing->timer_dead = 0;

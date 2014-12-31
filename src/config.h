@@ -25,8 +25,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -199,7 +199,17 @@
 /*
  * Debug check to enable sequence numbers and checksum
  */
-#undef ENABLE_PAK_EXTRA_HEADER
+#define ENABLE_PAK_EXTRA_HEADER
+
+/*
+ * Hex dumps
+ */
+#undef ENABLE_PACKET_DUMP
+
+/*
+ * Above what lenght it is worth compressing
+ */
+#define PACKET_LEN_COMPRESS_THRESHOLD 200
 
 /*
  * The number of packets we allow to buffer up on a socket during sends.
