@@ -103,109 +103,8 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +3 amulet1
-badd +3 apple1
-badd +3 apple2
-badd +4 arrow
-badd +3 axe1
-badd +3 axe2
-badd +3 banana
-badd +3 blood1
-badd +3 blood2
-badd +3 bonepile1
-badd +3 bonepile2
-badd +3 bonepile3
-badd +3 bow1
-badd +3 bow2
-badd +3 bow3
-badd +3 bow4
-badd +3 brazier
-badd +3 bread
-badd +3 cheese
-badd +3 chest1
-badd +3 cloudkill1
-badd +3 cloudkill2
-badd +3 cloudkill3
-badd +3 cloudkill4
-badd +3 coins1
-badd +3 death
-badd +3 door1
-badd +3 door2
-badd +3 dwarf
-badd +3 elf
-badd +3 exit1
-badd +3 exit2
-badd +3 exit3
-badd +3 exit4
-badd +3 exit5
-badd +3 exit6
-badd +3 exit7
-badd +3 explosion1
-badd +3 explosion2
-badd +3 explosion3
-badd +3 explosion4
-badd +3 fireball
-badd +3 floor1
-badd +3 floor2
-badd +3 floor3
-badd +3 floor4
-badd +3 floor5
-badd +3 floor6
-badd +3 gem1
-badd +3 gem2
-badd +3 gem3
-badd +3 gem4
-badd +3 gem5
-badd +3 gem6
-badd +3 gem7
-badd +3 generator1
-badd +3 generator5
-badd +3 generator6
-badd +3 generator7
-badd +3 ghost1
-badd +3 ghost2
-badd +3 ghost3
-badd +3 hit_miss
-badd +3 hit_success
-badd +3 key
-badd +3 keys2
-badd +3 keys3
-badd +3 noentry
-badd +3 pipe
-badd +3 poison1
-badd +3 poison2
-badd +3 poison3
-badd +3 poison4
-badd +3 potion_cloudkill
-badd +3 potion_fire
-badd +3 potion_life
-badd +3 potion_monsticide
-badd +3 potion_shield
-badd +3 ring1
-badd +3 ring2
-badd +3 ring3
-badd +3 rock1
-badd +3 scythe1
-badd +3 spam
-badd +3 sword1
-badd +3 sword2
-badd +3 sword3
-badd +3 torch
-badd +3 torches
-badd +3 valkyrie
-badd +3 wall1
-badd +3 wall2
-badd +3 wall3
-badd +3 wall4
-badd +3 wall5
-badd +3 wall6
-badd +3 wand_fire
-badd +3 warrior
-badd +3 water
-badd +3 water_poison
-badd +3 weapon_swing1
-badd +3 wizard
-silent! argdel *
+badd +0 weapon_swing1
+args weapon_swing1
 edit weapon_swing1
 set splitbelow splitright
 set nosplitbelow
@@ -287,7 +186,7 @@ setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=4
 setlocal nospell
-setlocal spellcapcheck=
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
@@ -308,11 +207,11 @@ set nowrap
 setlocal nowrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 3 - ((2 * winheight(0) + 19) / 39)
+let s:l = 263 - ((43 * winheight(0) + 22) / 44)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
+263
 normal! 0
 tabnext 1
 if exists('s:wipebuf')

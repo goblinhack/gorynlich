@@ -258,7 +258,7 @@ enum {
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS,
-    THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT,
+    THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT,
 };
 
 uint8_t thing_server_move(thingp t,
@@ -432,8 +432,17 @@ typedef struct thing_ {
      */
     thing_stats stats;
 
+    /*
+     * These values are not sent between server and client. Instead we send 
+     * the weapon id alone and create local things for weapon swings.
+     */
     uint16_t weapon_carry_anim_thing_id;
     uint16_t weapon_swing_anim_thing_id;
+
+    /*
+     * Weapon thing template.
+     */
+    tpp weapon;
 
     /*
      * Pointer to common settings for this thing.
@@ -957,11 +966,11 @@ static inline uint8_t thing_is_rrr5 (thingp t)
     return (tp_is_rrr5(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr6 (thingp t)
+static inline uint8_t thing_is_weapon_carry_effect (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr6(thing_tp(t)));
+    return (tp_is_weapon_carry_effect(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_spell (thingp t)
@@ -1344,9 +1353,9 @@ static inline uint8_t thing_is_rrr5_noverify (thingp t)
     return (t->tp->is_rrr5);
 }
 
-static inline uint8_t thing_is_rrr6_noverify (thingp t)
+static inline uint8_t thing_is_weapon_carry_effect_noverify (thingp t)
 {
-    return (t->tp->is_rrr6);
+    return (t->tp->is_weapon_carry_effect);
 }
 
 static inline uint8_t thing_is_spell_noverify (thingp t)
@@ -1732,6 +1741,10 @@ static inline itemp thing_weapon_item (const thingp t)
 
 static inline tpp thing_weapon (const thingp t)
 {
+    if (t->weapon) {
+        return (t->weapon);
+    }
+
     itemp item = thing_weapon_item(t);
     if (!item) {
         return (0);
