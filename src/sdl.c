@@ -985,6 +985,11 @@ void sdl_loop (void)
         wid_tick_all();
 
         /*
+         * Read messages from the network.
+         */
+        socket_rx_tick();
+
+        /*
          * Network server i/o.
          */
         server_tick();
@@ -995,14 +1000,14 @@ void sdl_loop (void)
         client_tick();
 
         /*
-         * Flush out buffered messages.
-         */
-        socket_tick();
-
-        /*
          * Let things move.
          */
         thing_tick_all();
+
+        /*
+         * Flush out buffered messages.
+         */
+        socket_tx_tick();
 
         /*
          * Let widgets move.

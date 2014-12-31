@@ -529,7 +529,6 @@ const char *name_random (const char *pclass)
     } else if (!strcasecmp(pclass, "valkyrie")) {
         static const char *names[] = {
             "Lady Applespice",
-            "Lady Boy",
             "Lady Benalot",
             "Lady Blackeye",
             "Lady Blackguard",

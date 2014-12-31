@@ -199,7 +199,7 @@
 /*
  * Debug check to enable sequence numbers and checksum
  */
-#define ENABLE_PAK_EXTRA_HEADER
+#undef ENABLE_PAK_EXTRA_HEADER
 
 /*
  * Hex dumps

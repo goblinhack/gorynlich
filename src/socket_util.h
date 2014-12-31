@@ -411,7 +411,8 @@ extern void socket_client_rx_map_update(gsocketp s,
 extern void socket_server_tx_player_update(thingp);
 extern void socket_client_rx_player_update(gsocketp s,
                                            UDPpacket *packet, uint8_t *data);
-extern void socket_tick(void);
+extern void socket_tx_tick(void);
+extern void socket_rx_tick(void);
 
 /*
  * Seemingly harmless, but we need this to read the 6 byte packet address
