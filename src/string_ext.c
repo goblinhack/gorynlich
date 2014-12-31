@@ -264,6 +264,7 @@ fontp string2font (const char **s)
     case ENUM_FONT_MED:     return (med_font);
     case ENUM_FONT_LARGE:   return (large_font);
     case ENUM_FONT_VLARGE:  return (vlarge_font);
+    default: return (0);
     }
 }
 
