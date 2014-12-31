@@ -227,36 +227,14 @@ static void server_rx_client_close (gsocketp s)
 static void server_poll (void)
 {
     gsocketp s = server_socket;
-
     if (!s) {
         return;
     }
 
-    if (!socket_get_socklist(s)) {
-        ERR("no socklist to listen on");
-        return;
-    }
-
-    int waittime = 0;
-    int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
-    if (numready <= 0) {
-        return;
-    }
-
-    int i;
-    for (i = 0; i < numready; i++) {
-        int ready = SDLNet_SocketReady(socket_get_udp_socket(s));
-        if (ready == 0) {
+    for (;;) {
+        UDPpacket *packet = socket_rx_dequeue(s);
+        if (!packet) {
             break;
-        }
-
-        UDPpacket *packet = packet_alloc();
-
-        int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
-        if (paks != 1) {
-            LOG("Server: UDP rx failed: error='%s' paks=%d", 
-                SDLNet_GetError(), paks);
-            continue;
         }
 
         gsocketp s = socket_find_remote_ip(read_address(packet));

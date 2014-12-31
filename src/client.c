@@ -758,30 +758,10 @@ static void client_poll (void)
             continue;
         }
 
-        if (!socket_get_socklist(s)) {
-            continue;
-        }
-
-        int waittime = 0;
-        int numready = SDLNet_CheckSockets(socket_get_socklist(s), waittime);
-        if (numready <= 0) {
-            continue;
-        }
-
-        int i;
-        for (i = 0; i < numready; i++) {
-            int ready = SDLNet_SocketReady(socket_get_udp_socket(s));
-            if (ready == 0) {
+        for (;;) {
+            UDPpacket *packet = socket_rx_dequeue(s);
+            if (!packet) {
                 break;
-            }
-
-            UDPpacket *packet = packet_alloc();
-
-            int paks = SDLNet_UDP_Recv(socket_get_udp_socket(s), packet);
-            if (paks != 1) {
-                LOG("Client: UDP rx failed: error='%s' paks=%d", 
-                    SDLNet_GetError(), paks);
-                continue;
             }
 
             /*

@@ -3262,7 +3262,7 @@ LOG("tx %s", thing_logname(t));
 
             UDPpacket *dup = packet_dup(packet);
 
-            socket_tx_enqueue_packet(sp, &dup);
+            socket_tx_enqueue(sp, &dup);
         }
             
         /*
@@ -3292,7 +3292,7 @@ LOG("tx %s", thing_logname(t));
 
             UDPpacket *dup = packet_dup(packet);
 
-            socket_tx_enqueue_packet(sp, &dup);
+            socket_tx_enqueue(sp, &dup);
         }
     }
 
