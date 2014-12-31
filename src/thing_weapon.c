@@ -266,6 +266,7 @@ void thing_swing (thingp t)
      */
     thing_timer_destroy(child, 200);
 
+LOG("KILL SOON %s",thing_logname(child));
     thing_update(child);
 
     t->needs_tx_player_update = true;

@@ -2237,9 +2237,6 @@ void socket_tx_server_status (void)
 
             thingp t = p->thing;
             if (t) {
-                t->stats.weapon_carry_anim_id_latest = t->weapon_carry_anim_thing_id;
-                t->stats.weapon_swing_anim_id_latest = t->weapon_swing_anim_thing_id;
-
                 memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
 
                 SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
@@ -2797,12 +2794,8 @@ static UDPpacket *packet_finalize (gsocketp s, UDPpacket *packet)
 
     s->tx_seq++;
 
-#ifdef PACKET_DUMP
-    fprintf(stderr, "\n");
-    for (i = 0; i < packet->len; i++) {
-        fprintf(stderr, "[%02x] ", packet->data[i]);
-    }
-    fprintf(stderr, "\n");
+#ifdef ENABLE_PACKET_DUMP
+    hex_dump_log(packet->data, 0, packet->len);
 #endif
 
     return (packet);
@@ -2873,12 +2866,8 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
     packet_free(packet);
     packet = copy;
 
-#ifdef PACKET_DUMP
-    fprintf(stderr, "\n");
-    for (i = 0; i < packet->len; i++) {
-        fprintf(stderr, "[%02x] ", packet->data[i]);
-    }
-    fprintf(stderr, "\n");
+#ifdef ENABLE_PACKET_DUMP
+    hex_dump_log(packet->data, 0, packet->len);
 #endif
 
     if (failed) {
@@ -2985,7 +2974,7 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
          * Resend of an already compressed message but to another client? I 
          * hope so.
          */
-    } else if (packet->len > 200) {
+    } else if (packet->len > PACKET_LEN_COMPRESS_THRESHOLD) {
         /*
          * A good enough size for compression to work and give a smaller 
          * packet.
