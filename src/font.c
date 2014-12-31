@@ -75,8 +75,10 @@ uint8_t font_init (void)
     } else if (global_config.video_pix_width <= 800) {
         delta = -5;
     } else if (global_config.video_pix_width < 1400) {
-    } else {
+    } else if (global_config.video_pix_width < 1600) {
         delta = +2;
+    } else {
+        delta = +4;
     }
 
     fixed_font_size += delta;
