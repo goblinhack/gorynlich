@@ -59,7 +59,6 @@ static void thing_action_timer_callback_dead (void *context)
         thing = thing_client_find(place->thing_id);
     }
 
-LOG("KILL %s",thing_logname(thing));
     if (thing) {
         verify(thing);
         thing->timer_dead = 0;
@@ -132,7 +131,8 @@ void thing_timer_place_and_destroy_callback (void *context)
                                         wid_game_map_client_grid_container,
                                         place->x,
                                         place->y,
-                                        t);
+                                        t,
+                                        0 /* tpp */);
     }
 
     /*
@@ -244,7 +244,8 @@ void thing_timer_place_callback (void *context)
                                         wid_game_map_client_grid_container,
                                         place->x,
                                         place->y,
-                                        t);
+                                        t,
+                                        0 /* tpp */);
     }
 
     thingp t = wid_get_thing(w);

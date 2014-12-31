@@ -164,11 +164,9 @@ typedef struct {
     uint16_t id;                // optional
 
     /*
-     * THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT
+     * THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT
      */
-    uint16_t thing_owner_id;
-    uint16_t weapon_carry_anim_thing_id;
-    uint16_t weapon_swing_anim_thing_id;
+    uint8_t weapon_id;
 } __attribute__ ((packed)) msg_map_update;
 
 typedef struct socket_ {

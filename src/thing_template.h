@@ -226,7 +226,7 @@ typedef struct tp_ {
     uint8_t is_rrr3:1;
     uint8_t is_rrr4:1;
     uint8_t is_rrr5:1;
-    uint8_t is_rrr6:1;
+    uint8_t is_weapon_carry_effect:1;
     uint8_t is_spell:1;
     uint8_t is_hand_item:1;
     uint8_t is_boots:1;
@@ -539,9 +539,9 @@ static inline uint8_t tp_is_rrr5 (tpp t)
     return (t->is_rrr5);
 }
 
-static inline uint8_t tp_is_rrr6 (tpp t)
+static inline uint8_t tp_is_weapon_carry_effect (tpp t)
 {
-    return (t->is_rrr6);
+    return (t->is_weapon_carry_effect);
 }
 
 static inline uint8_t tp_is_spell (tpp t)

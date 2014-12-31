@@ -10,6 +10,7 @@
 #include "thing.h"
 #include "wid.h"
 #include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "math_util.h"
 
 void thing_weapon_swing_offset (thingp t, double *dx, double *dy)
@@ -161,10 +162,16 @@ void thing_unwield (thingp t)
         thing_dead(weapon_swing_anim, 0, "owner weapon");
         thing_set_weapon_swing_anim(t, 0);
     }
+
+    t->weapon = 0;
 }
 
 void thing_wield (thingp t, tpp weapon)
 {
+    if (t->weapon == weapon) {
+        return;
+    }
+
     thing_unwield(t);
 
     if (thing_is_player(t)) {
@@ -184,14 +191,25 @@ void thing_wield (thingp t, tpp weapon)
         return;
     }
 
-    widp weapon_carry_anim_wid = wid_game_map_server_replace_tile(
-                            wid_game_map_server_grid_container,
-                            t->x,
-                            t->y,
-                            0, /* thing */
-                            what,
-                            0 /* item */,
-                            0 /* stats */);
+    t->weapon = weapon;
+
+    widp weapon_carry_anim_wid;
+
+    if (t->on_server) {
+        weapon_carry_anim_wid = wid_game_map_server_replace_tile(
+                                wid_game_map_server_grid_container,
+                                t->x,
+                                t->y,
+                                0, /* thing */
+                                what,
+                                0 /* item */,
+                                0 /* stats */);
+    } else {
+        weapon_carry_anim_wid = wid_game_map_client_replace_tile(
+                                wid_game_map_client_grid_container,
+                                t->x, t->y, 0, what);
+    }
+
     /*
      * Save the thing id so the client wid can keep track of the weapon.
      */
@@ -201,13 +219,15 @@ void thing_wield (thingp t, tpp weapon)
     child->dir = t->dir;
 
     /*
-     * Attach to the t thing.
+     * Attach to the thing.
      */
     thing_set_owner(child, t);
 
-    thing_update(child);
+    if (t->on_server) {
+        thing_update(child);
 
-    t->needs_tx_player_update = true;
+        t->needs_tx_player_update = true;
+    }
 }
 
 void thing_swing (thingp t)
@@ -239,7 +259,10 @@ void thing_swing (thingp t)
         return;
     }
 
-    widp weapon_swing_anim_wid = wid_game_map_server_replace_tile(
+    widp weapon_swing_anim_wid;
+
+    if (t->on_server) {
+        weapon_swing_anim_wid = wid_game_map_server_replace_tile(
                             wid_game_map_server_grid_container,
                             t->x,
                             t->y,
@@ -247,6 +270,11 @@ void thing_swing (thingp t)
                             what,
                             0 /* item */,
                             0 /* stats */);
+    } else {
+        weapon_swing_anim_wid = wid_game_map_client_replace_tile(
+                                wid_game_map_client_grid_container,
+                                t->x, t->y, 0, what);
+    }
 
     /*
      * Save the thing id so the client wid can keep track of the weapon.
@@ -260,14 +288,9 @@ void thing_swing (thingp t)
 
     thing_set_weapon_swing_anim(t, child);
 
-    /*
-     * Destroy the thing quickly. Allow enough time for the client anim
-     * to run.
-     */
-    thing_timer_destroy(child, 200);
+    if (t->on_server) {
+        thing_update(child);
 
-LOG("KILL SOON %s",thing_logname(child));
-    thing_update(child);
-
-    t->needs_tx_player_update = true;
+        t->needs_tx_player_update = true;
+    }
 }
