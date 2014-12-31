@@ -235,6 +235,11 @@ typedef struct socket_ {
     uint8_t tx_queue_tail;
     uint8_t tx_queue_size;
 
+    UDPpacket *rx_queue[MAX_SOCKET_TX_QUEUE_SIZE];
+    uint8_t rx_queue_head;
+    uint8_t rx_queue_tail;
+    uint8_t rx_queue_size;
+
     /*
      * Only used with ENABLE_PAK_EXTRA_HEADER
      */
@@ -433,7 +438,12 @@ extern tree_rootp sockets;
 
 UDPpacket *packet_alloc(void);
 UDPpacket *packet_dup(const UDPpacket *packet);
+
+uint8_t *packet_decompress(UDPpacket *packet, uint8_t *uncompressed);
 void packet_compress(UDPpacket *packet);
+
 void packet_free(UDPpacket *packet);
 UDPpacket *packet_definalize(gsocketp s, UDPpacket *packet);
-void socket_enqueue_packet(gsocketp s, UDPpacket **packet);
+
+void socket_tx_enqueue_packet(gsocketp s, UDPpacket **packet);
+void socket_dequeue_packet(gsocketp s, UDPpacket **packet);

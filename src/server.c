@@ -274,7 +274,7 @@ static void server_poll (void)
         uint8_t *data;
         uint8_t *odata;
         uint8_t *pdata;
-        uint8_t uncompressed = false;
+        uint8_t uncompressed;
 
         /*
          * Remove any optional header
@@ -284,17 +284,9 @@ static void server_poll (void)
         /*
          * Uncompress the packet if it has an invalid type.
          */
-        if (*packet->data == MSG_COMPRESSED) {
-            data = miniz_uncompress(packet->data + 1, &packet->len);
-            odata = data;
-            pdata = packet->data;
-            packet->data = data;
-            uncompressed = true;
-        } else {
-            data = packet->data;
-            odata = data;
-            pdata = data;
-        }
+        pdata = packet->data;
+        data = packet_decompress(packet, &uncompressed);
+        odata = data;
 
         msg_type type = (typeof(type)) *data++;
 
