@@ -1248,7 +1248,7 @@ void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
@@ -1306,7 +1306,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_rx_ping (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1403,7 +1403,7 @@ void socket_tx_name (gsocketp s)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_rx_name (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1489,7 +1489,7 @@ uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 
     return (true);
 }
@@ -1615,7 +1615,7 @@ void socket_tx_client_leave (gsocketp s)
     socket_set_pclass(s, 0);
     socket_set_player_stats(s, 0);
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 uint8_t socket_rx_client_leave (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1683,7 +1683,7 @@ void socket_tx_client_close (gsocketp s)
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_rx_client_close (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1744,7 +1744,7 @@ static void socket_tx_client_shout_relay (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_tx_client_shout (gsocketp s, 
@@ -1773,7 +1773,7 @@ void socket_tx_client_shout (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_rx_client_shout (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -1935,7 +1935,7 @@ void socket_tx_server_shout_at_all_players (uint32_t level, const char *txt)
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_enqueue_packet(sp, &packet);
+        socket_tx_enqueue_packet(sp, &packet);
     }
 }
 
@@ -1977,7 +1977,7 @@ socket_tx_server_shout_over (uint32_t level,
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_enqueue_packet(sp, &packet);
+        socket_tx_enqueue_packet(sp, &packet);
     }
 }
 
@@ -2024,7 +2024,7 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_enqueue_packet(sp, &packet);
+        socket_tx_enqueue_packet(sp, &packet);
     }
 }
 
@@ -2070,7 +2070,7 @@ void socket_tx_server_shout_only_to (gsocketp target,
 
         write_address(packet, socket_get_remote_ip(sp));
 
-        socket_enqueue_packet(sp, &packet);
+        socket_tx_enqueue_packet(sp, &packet);
     }
 }
 
@@ -2140,7 +2140,7 @@ void socket_tx_tell (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -2258,7 +2258,7 @@ void socket_tx_server_status (void)
 
         write_address(packet, socket_get_remote_ip(s));
 
-        socket_enqueue_packet(s, &packet);
+        socket_tx_enqueue_packet(s, &packet);
     }
 }
 
@@ -2408,7 +2408,7 @@ void socket_tx_server_hiscore (gsocketp only,
 
             write_address(packet, socket_get_remote_ip(s));
 
-            socket_enqueue_packet(s, &packet);
+            socket_tx_enqueue_packet(s, &packet);
         }
     }
 }
@@ -2488,7 +2488,7 @@ void socket_tx_server_close (void)
 
         write_address(packet, socket_get_remote_ip(s));
 
-        socket_enqueue_packet(s, &packet);
+        socket_tx_enqueue_packet(s, &packet);
     }
 }
 
@@ -2642,7 +2642,7 @@ void socket_tx_player_move (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_server_rx_player_move (gsocketp s, UDPpacket *packet, uint8_t *data)
@@ -2710,7 +2710,7 @@ void socket_tx_player_action (gsocketp s,
 
     write_address(packet, socket_get_remote_ip(s));
 
-    socket_enqueue_packet(s, &packet);
+    socket_tx_enqueue_packet(s, &packet);
 }
 
 void socket_server_rx_player_action (gsocketp s, UDPpacket *packet, 
@@ -2884,6 +2884,43 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
     return (packet);
 }
 
+uint8_t *packet_decompress (UDPpacket *packet, uint8_t *uncompressed)
+{
+    uint8_t *data;
+
+    /*
+     * Uncompress the packet if it has an invalid type.
+     */
+    if (*packet->data == MSG_COMPRESSED) {
+        data = miniz_uncompress(packet->data + 1, &packet->len);
+        packet->data = data;
+        *uncompressed = true;
+    } else {
+        data = packet->data;
+        *uncompressed = false;
+    }
+
+    return (data);
+}
+
+void packet_compress (UDPpacket *packet)
+{
+    unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
+
+    if (packet->len > MAX_PACKET_SIZE) {
+        DIE("compress fail");
+    }
+
+    *packet->data = MSG_COMPRESSED;
+
+    uint8_t *data = packet->data + 1;
+    uint16_t len = packet->len; 
+
+    memcpy(data, tmp, len);
+    packet->len++;
+    myfree(tmp);
+}
+
 /*
  * Pull a packet off of the queue and send it on the UDP port for the socket.
  */
@@ -2925,39 +2962,6 @@ static int socket_tx_queue_dequeue (gsocketp s)
     return (1);
 }
 
-static void socket_tx_queue_flush (gsocketp s)
-{
-    LOG("Flushing socket %s", socket_get_local_logname(s));
-
-    while (socket_tx_queue_dequeue(s)) { }
-}
-
-static void socket_tx_enqueue_packet (gsocketp s, UDPpacket *packet)
-{
-    verify(s);
-    verify(packet);
-
-    if (((int)s->tx_queue_size) == MAX_SOCKET_TX_QUEUE_SIZE) {
-        socket_tx_queue_flush(s);
-
-        if (((int)s->tx_queue_size) == MAX_SOCKET_TX_QUEUE_SIZE) {
-            DIE("socket queue stuck");
-        }
-    }
-
-    s->tx_queue_size++;
-    s->tx_queue[s->tx_queue_tail++] = packet;
-}
-
-static void socket_all_tx_queue_dequeue_one (void)
-{
-    gsocketp s;
-
-    TREE_WALK(sockets, s) {
-        socket_tx_queue_dequeue(s);
-    }
-}
-
 static void socket_all_tx_queue_dequeue_all (void)
 {
     gsocketp s;
@@ -2969,25 +2973,23 @@ static void socket_all_tx_queue_dequeue_all (void)
     }
 }
 
-void packet_compress (UDPpacket *packet)
+static void socket_tx_queue_flush (gsocketp s)
 {
-    unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
+    LOG("Flushing socket %s", socket_get_local_logname(s));
 
-    if (packet->len > MAX_PACKET_SIZE) {
-        DIE("compress fail");
-    }
-
-    *packet->data = MSG_COMPRESSED;
-
-    uint8_t *data = packet->data + 1;
-    uint16_t len = packet->len; 
-
-    memcpy(data, tmp, len);
-    packet->len++;
-    myfree(tmp);
+    while (socket_tx_queue_dequeue(s)) { }
 }
 
-void socket_enqueue_packet (gsocketp s, UDPpacket **packet_in)
+static void socket_all_tx_queue_dequeue_one (void)
+{
+    gsocketp s;
+
+    TREE_WALK(sockets, s) {
+        socket_tx_queue_dequeue(s);
+    }
+}
+
+void socket_tx_enqueue_packet (gsocketp s, UDPpacket **packet_in)
 {
     UDPpacket *packet;
     msg_type type;
@@ -3014,7 +3016,16 @@ void socket_enqueue_packet (gsocketp s, UDPpacket **packet_in)
         packet_compress(packet);
     }
 
-    socket_tx_enqueue_packet(s, packet);
+    if (((int)s->tx_queue_size) == MAX_SOCKET_TX_QUEUE_SIZE) {
+        socket_tx_queue_flush(s);
+
+        if (((int)s->tx_queue_size) == MAX_SOCKET_TX_QUEUE_SIZE) {
+            DIE("socket queue stuck");
+        }
+    }
+
+    s->tx_queue_size++;
+    s->tx_queue[s->tx_queue_tail++] = packet;
 }
 
 void socket_tick (void)
