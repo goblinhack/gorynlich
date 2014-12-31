@@ -24,4 +24,5 @@ char *dynprintf(const char *fmt, ...);
 char *dynvprintf(const char *fmt, va_list args);
 char *mybasename(const char *in, const char *who);
 uint8_t hex_dump(void *addr, uint64_t offset, uint64_t len);
+uint8_t hex_dump_log(void *addr, uint64_t offset, uint64_t len);
 char *strcasestr_(const char *s, const char *find);

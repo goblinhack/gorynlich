@@ -214,6 +214,7 @@ extern uint8_t croaked;
 void CROAK(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void DYING(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+void LOGS(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void WARN(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void INIT_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
 void FINI_LOG(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));

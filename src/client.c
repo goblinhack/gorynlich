@@ -878,12 +878,7 @@ static void client_poll (void)
                      * Some fields we don't care too much if they change.
                      */
                     memcpy(&changed_stats, new_stats, sizeof(changed_stats));
-                    changed_stats.thing_id = 
-                                    old_stats->thing_id;
-                    changed_stats.weapon_carry_anim_id_latest = 
-                                    old_stats->weapon_carry_anim_id_latest;
-                    changed_stats.weapon_swing_anim_id_latest = 
-                                    old_stats->weapon_swing_anim_id_latest;
+                    changed_stats.thing_id = old_stats->thing_id;
                     new_stats = &changed_stats;
 
                     /*
@@ -902,52 +897,6 @@ static void client_poll (void)
 
                     new_stats = &server_stats->stats;
                     memcpy(old_stats, new_stats, sizeof(thing_stats));
-
-                    /*
-                     * If we're carrying a weapon now, update the direction.  
-                     * However if it is no longer a valid thing (perhaps the
-                     * weapon swing finished) then ignore this update for this
-                     * ID.
-                     */
-                    if (new_stats->weapon_carry_anim_id_latest) {
-                        if (thing_client_find(new_stats->weapon_carry_anim_id_latest)) {
-                            thing_set_weapon_carry_anim_id(
-                                player, new_stats->weapon_carry_anim_id_latest);
-                        }
-
-                        thingp item = thing_weapon_carry_anim(player);
-                        if (item) {
-                            item->dir = player->dir;
-                            thing_set_owner(item, player);
-                        }
-                    }
-
-                    if (new_stats->weapon_swing_anim_id_latest) {
-                        if (thing_client_find(
-                                    new_stats->weapon_swing_anim_id_latest)) {
-
-                            thing_set_weapon_swing_anim_id(
-                                    player,
-                                    new_stats->weapon_swing_anim_id_latest);
-                        }
-
-                        thingp item = thing_weapon_swing_anim(player);
-                        if (item) {
-                            item->dir = player->dir;
-                            thing_set_owner(item, player);
-                        }
-                    }
-
-                    /*
-                     * If swinging a weapon now, hide the carried weapon 
-                     * until the swing is over.
-                     */
-                    if (player->weapon_swing_anim_thing_id) {
-                        thingp carry = thing_weapon_carry_anim(player);
-                        if (carry) {
-                            thing_hide(carry);
-                        }
-                    }
                 }
 
                 break;

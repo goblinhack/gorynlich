@@ -198,6 +198,26 @@ void LOG (const char *fmt, ...)
     va_end(args);
 }
 
+static void logs_ (const char *fmt, va_list args)
+{
+    char buf[MAXSTR];
+
+    buf[0] = '\0';
+    vsnprintf(buf, sizeof(buf), fmt, args);
+
+    fwrite(buf, strlen(buf), 1, MY_STDOUT);
+    fflush(MY_STDOUT);
+}
+
+void LOGS (const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    logs_(fmt, args);
+    va_end(args);
+}
+
 static void warn_ (const char *fmt, va_list args)
 {
     char buf[MAXSTR];
