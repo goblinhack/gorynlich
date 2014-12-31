@@ -199,12 +199,12 @@
 /*
  * Debug check to enable sequence numbers and checksum
  */
-#undef ENABLE_PAK_EXTRA_HEADER
+#define ENABLE_PAK_EXTRA_HEADER
 
 /*
  * The number of packets we allow to buffer up on a socket during sends.
  */
-#define MAX_SOCKET_TX_QUEUE_SIZE    256
+#define MAX_SOCKET_QUEUE_SIZE       256
 
 /*
  * How many pings to consider for quality
