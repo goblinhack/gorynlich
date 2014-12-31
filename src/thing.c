@@ -239,7 +239,6 @@ void thing_update (thingp t)
     }
 
     t->updated++;
-LOG("update %s udpated %d", thing_logname(t), t->updated);
 
     /*
      * Update the weapon being carried.
@@ -711,6 +710,7 @@ thingp thing_server_new (const char *name,
         id = min;
     }
 
+LOG("next id %u",id);
     /*
      * Find a free thing slot
      */
@@ -831,6 +831,7 @@ thingp thing_server_new (const char *name,
             THING_LOG(t, "created (total %d)", client_things_total);
         }
     }
+LOG("new %s",thing_logname(t));
 
     return (t);
 }
@@ -931,6 +932,7 @@ thingp thing_client_new (uint32_t id, tpp tp)
         THING_LOG(t, "created");
     }
 
+LOG("new %s",thing_logname(t));
     return (t);
 }
 
@@ -948,7 +950,7 @@ thingp thing_client_local_new (tpp tp)
     uint32_t min;
     uint32_t max;
 
-    min = THING_CLIENT_ID_MIN / 2;
+    min = THING_CLIENT_ID_MIN;
     max = THING_CLIENT_ID_MAX;
 
     next = &next_client_thing_id;
@@ -2965,26 +2967,6 @@ static void thing_client_wid_move (thingp t, double x, double y,
     } else {
         wid_set_tl_br(t->wid, tl, br);
     }
-
-#if 0
-    /*
-     * If carrying a weapon, move it locally so that we don't see lag if the
-     * weapon position arrives later than player position.
-     */
-    if (t->weapon_carry_anim_thing_id) {
-        thingp item = thing_weapon_carry_anim(t);
-        if (item) {
-            thing_client_wid_move(item, x, y, smooth);
-        }
-    }
-
-    if (t->weapon_swing_anim_thing_id) {
-        thingp item = thing_weapon_swing_anim(t);
-        if (item) {
-            thing_client_wid_move(item, x, y, smooth);
-        }
-    }
-#endif
 }
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
@@ -3002,10 +2984,8 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
     /*
      * Update the weapon being carried.
      */
-LOG("move player %s",thing_logname(t));
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
-LOG("  move weapon %s",thing_logname(weapon_carry_anim));
         thing_client_wid_move(weapon_carry_anim, x, y, smooth);
     }
 
@@ -3013,12 +2993,14 @@ LOG("  move weapon %s",thing_logname(weapon_carry_anim));
      * Update the weapon being swung.
      */
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
+CON("swing %d",t->weapon_swing_anim_thing_id);
     if (weapon_swing_anim) {
         double dx = 0;
         double dy = 0;
 
         thing_weapon_swing_offset(t, &dx, &dy);
-        thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, false);
+CON("client offset xy %f %f, %f %f",x, y, dx, dy);
+        thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, smooth);
     }
 }
 
@@ -3097,15 +3079,14 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             }
         }
 
-        if (!t->first_update) {
-            /*
-             * Only send animations at the start. Let them time out on the 
-             * client.
-             */
-            if (tp_is_weapon_swing_effect(tp)) {
-                t->updated--;
-                continue;
-            }
+        /*
+         * Don't sent local effects to the client to save bandwidth. The 
+         * client can infer the swing and animations.
+         */
+        if (tp_is_weapon_swing_effect(tp) ||
+            tp_is_weapon_carry_effect(tp)) {
+            t->updated--;
+            continue;
         }
 
         /*
@@ -3150,8 +3131,6 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         uint32_t id = t->thing_id;
         uint8_t tx;
         uint8_t ty;
-#if 0
-#endif
 
         widp w = thing_wid(t);
         if (w) {
@@ -3191,16 +3170,8 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             ((t->is_hit_miss    ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS);
 
-        if (t->owner_thing_id && (t->owner_thing_id != (uint16_t) -1)) {
-            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT;
-            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
-        } else if (t->weapon_carry_anim_thing_id && 
-                   (t->weapon_carry_anim_thing_id != (uint16_t) -1)) {
-            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT;
-            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
-        } else if (t->weapon_swing_anim_thing_id && 
-                   (t->weapon_swing_anim_thing_id != (uint16_t) -1)) {
-            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT;
+        if (t->weapon) {
+            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT;
             state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
         }
 
@@ -3274,16 +3245,9 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 //LOG("  ty       %02x",ty);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT)) {
-            SDLNet_Write16(t->owner_thing_id, data);               
-            data += sizeof(uint16_t);
-            SDLNet_Write16(t->weapon_carry_anim_thing_id, data);               
-            data += sizeof(uint16_t);
-            SDLNet_Write16(t->weapon_swing_anim_thing_id, data);               
-            data += sizeof(uint16_t);
-//LOG("  owner    %04x",t->owner_thing_id);
-//LOG("  carry    %04x",t->weapon_carry_anim_thing_id);
-//LOG("  swing    %04x",t->weapon_swing_anim_thing_id);
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT)) {
+            *data++ = tp_to_id(t->weapon);
+//LOG("  weapon   %0x",t->weapon_id);
         }
 
         t->last_tx = tx;
@@ -3386,10 +3350,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 //hex_dump_log(data, 0, 10);
         uint8_t state = *data++;
         uint8_t ext;
-        uint16_t weapon_carry_anim_thing_id;
-        uint16_t weapon_swing_anim_thing_id;
-        uint16_t owner_thing_id;
         uint8_t template_id;
+        uint8_t weapon_id;
         uint16_t id;
         uint8_t on_map;
         thingp t;
@@ -3458,20 +3420,11 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             on_map = true;
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT)) {
-            owner_thing_id = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
-            weapon_carry_anim_thing_id = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
-            weapon_swing_anim_thing_id = SDLNet_Read16(data);
-            data += sizeof(uint16_t);
-//LOG("  owner    %02x",owner_thing_id);
-//LOG("  carry    %02x",weapon_carry_anim_thing_id);
-//LOG("  swing    %02x",weapon_swing_anim_thing_id);
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT)) {
+            weapon_id = *data++;
+//LOG("  weapon   %02x",weapon_id);
         } else {
-            owner_thing_id = 0;
-            weapon_carry_anim_thing_id = 0;
-            weapon_swing_anim_thing_id = 0;
+            weapon_id = 0;
         }
 
         t = thing_client_find(id);
@@ -3550,7 +3503,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 //LOG("        rx %s owner %d weapon_carry_anim_thing_id %d 
 //weapon_swing_anim_thing_id %d ",thing_logname(t), owner_thing_id, 
 //weapon_carry_anim_thing_id, weapon_swing_anim_thing_id);
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_MORE_IDS_PRESENT)) {
+#if 0
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT)) {
             /*
              * The owner may not have been synced yet, so this could be a 
              * placeholder.
@@ -3581,10 +3535,12 @@ LOG("           weapon_swing_anim_thing_id %d",weapon_swing_anim_thing_id);
 
             if (weapon_swing_anim_thing_id) {
                 if (thing_client_find(weapon_swing_anim_thing_id)) {
-
                     thing_set_weapon_swing_anim_id(
                             t, weapon_swing_anim_thing_id);
                 } else {
+                    /*
+                     * Future reference
+                     */
                     t->weapon_swing_anim_thing_id = weapon_swing_anim_thing_id;
                 }
 
@@ -3606,6 +3562,8 @@ LOG("           weapon_swing_anim_thing_id %d",weapon_swing_anim_thing_id);
                 }
             }
         }
+#endif
+
         /*
          * Move the thing?
          */
@@ -3670,21 +3628,28 @@ LOG("           weapon_swing_anim_thing_id %d",weapon_swing_anim_thing_id);
                      */
                     wid_game_map_client_replace_tile(
                                             wid_game_map_client_grid_container,
-                                            x, y, t);
+                                            x, y, t, 0);
                 }
             }
         }
 
+        if (weapon_id) {
+            thing_wield(t, id_to_tp(weapon_id));
+        }
+
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS)) {
             thing_effect_hit_miss(t);
+            thing_swing(t);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS)) {
             thing_effect_hit_success(t);
+            thing_swing(t);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT)) {
             thing_effect_hit_crit(t);
+            thing_swing(t);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
