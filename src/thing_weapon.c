@@ -247,15 +247,13 @@ void thing_swing (thingp t)
 
     const char *swung_as = tp_weapon_swing_anim(weapon);
     if (!swung_as) {
-        ERR("%s could not swing %s", thing_logname(t),
-            tp_short_name(weapon));
+        ERR("%s could not swing %s", thing_logname(t), tp_short_name(weapon));
         return;
     }
 
     tpp what = tp_find(swung_as);
     if (!what) {
-        ERR("Could not find %s to wield for %s",
-            swung_as, thing_logname(t));
+        ERR("Could not find %s to wield for %s", swung_as, thing_logname(t));
         return;
     }
 
@@ -263,17 +261,17 @@ void thing_swing (thingp t)
 
     if (t->on_server) {
         weapon_swing_anim_wid = wid_game_map_server_replace_tile(
-                            wid_game_map_server_grid_container,
-                            t->x,
-                            t->y,
-                            0, /* thing */
-                            what,
-                            0 /* item */,
-                            0 /* stats */);
+                                    wid_game_map_server_grid_container,
+                                    t->x,
+                                    t->y,
+                                    0, /* thing */
+                                    what,
+                                    0 /* item */,
+                                    0 /* stats */);
     } else {
         weapon_swing_anim_wid = wid_game_map_client_replace_tile(
-                                wid_game_map_client_grid_container,
-                                t->x, t->y, 0, what);
+                                    wid_game_map_client_grid_container,
+                                    t->x, t->y, 0, what);
     }
 
     /*
@@ -286,11 +284,16 @@ void thing_swing (thingp t)
      */
     thing_set_owner(child, t);
 
+    child->dir = t->dir;
+
     thing_set_weapon_swing_anim(t, child);
 
     if (t->on_server) {
         thing_update(child);
 
         t->needs_tx_player_update = true;
+        t->needs_tx_weapon_swung = true;
+
+        thing_timer_destroy(child, 50);
     }
 }
