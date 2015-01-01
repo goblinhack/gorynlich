@@ -1363,7 +1363,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                 /*
                  * It doth polymorph.
                  */
-                t->resync = 1;
+                t->needs_tx_refresh_xy_and_template_id = 1;
                 t->tp = what;
                 t->stats.hp = tp_get_stats_max_hp(what);
                 t->stats.magic = tp_get_stats_max_magic(what);
@@ -2029,7 +2029,7 @@ void thing_join_level (thingp t)
     /*
      * To force the client to move to the new start position.
      */
-    t->resync = 1;
+    t->needs_tx_refresh_xy_and_template_id = 1;
 
     t->needs_tx_player_update = true;
 
@@ -3140,7 +3140,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         }
 
         uint8_t state = t->dir | 
-            ((t->resync         ? 1 : 0) << 
+            ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_RESYNC) |
             ((t->is_dead        ? 1 : 0) << 
                 THING_STATE_BIT_SHIFT_EXT_PRESENT) |
@@ -3173,6 +3173,12 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
         }
 
+        if (t->needs_tx_weapon_swung) {
+            t->needs_tx_weapon_swung = false;
+            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_SWUNG;
+            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
+        }
+
         t->is_hit_crit = 0;
         t->is_hit_success = 0;
         t->is_hit_miss = 0;
@@ -3193,7 +3199,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
 
-        if (t->resync || t->is_dead) {
+        if (t->needs_tx_refresh_xy_and_template_id || t->is_dead) {
             state |= 1 << THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT;
             state |= 1 << THING_STATE_BIT_SHIFT_XY_PRESENT;
         }
@@ -3250,7 +3256,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 
         t->last_tx = tx;
         t->last_ty = ty;
-        t->resync = 0;
+        t->needs_tx_refresh_xy_and_template_id = 0;
         t->first_update = false;
 
         if (data + sizeof(msg_map_update) < eodata) {
@@ -3350,6 +3356,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         uint8_t ext;
         uint8_t template_id;
         uint8_t weapon_id;
+        uint8_t weapon_swung;
         uint16_t id;
         uint8_t on_map;
         thingp t;
@@ -3423,6 +3430,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 //LOG("  weapon   %02x",weapon_id);
         } else {
             weapon_id = 0;
+        }
+
+        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_SWUNG)) {
+            weapon_swung = true;
+//LOG("  weapon swung");
+        } else {
+            weapon_swung = false;
         }
 
         t = thing_client_find(id);
@@ -3569,6 +3583,10 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 
         if (weapon_id) {
             thing_wield(t, id_to_tp(weapon_id));
+        }
+
+        if (weapon_swung) {
+            thing_swing(t);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS)) {
@@ -3951,7 +3969,7 @@ uint8_t thing_server_move (thingp t,
             THING_LOG(t, "  client %f %f", x, y);
 
             thing_update(t);
-            t->resync = 1;
+            t->needs_tx_refresh_xy_and_template_id = 1;
 
             return (false);
         }
