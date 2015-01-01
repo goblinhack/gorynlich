@@ -259,6 +259,7 @@ enum {
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT,
     THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS,
     THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT,
+    THING_STATE_BIT_SHIFT_EXT_WEAPON_SWUNG,
 };
 
 uint8_t thing_server_move(thingp t,
@@ -646,9 +647,14 @@ typedef struct thing_ {
     uint32_t needs_tx_player_update:1;
 
     /*
+     * Swung a weapon
+     */
+    uint32_t needs_tx_weapon_swung:1;
+
+    /*
      * Force client to server postion.
      */
-    uint32_t resync:1;
+    uint32_t needs_tx_refresh_xy_and_template_id:1;
 
     /*
      * Limit certain message types.
