@@ -293,7 +293,17 @@ void thing_swing (thingp t)
 
         t->needs_tx_player_update = true;
         t->needs_tx_weapon_swung = true;
+CON("%s swing server",thing_logname(t));
 
         thing_timer_destroy(child, 50);
+    } else {
+        /*
+         * Hide the weapon too or it just floats in the air.
+         */
+        thingp weapon_carry_anim = thing_weapon_carry_anim(t);
+        if (weapon_carry_anim) {
+            thing_hide(weapon_carry_anim);
+        }
+CON("%s swing client %s",thing_logname(t), thing_logname(child));
     }
 }

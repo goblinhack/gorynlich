@@ -618,16 +618,20 @@ void thing_stats_get_random (thing_stats *player_stats)
 {
     LOG("Generate random character");
 
-    strncpy(player_stats->pclass, pclass_random(),
-            sizeof(player_stats->pclass) - 1);
+    if (!player_stats->pclass[0]) {
+        strncpy(player_stats->pclass, pclass_random(),
+                sizeof(player_stats->pclass) - 1);
+    }
 
     const tpp tp = thing_stats_to_tp(player_stats);
 
     thing_stats_init(player_stats);
 
     if (!wid_player_info_set_name) {
-        strncpy(player_stats->pname, name_random(player_stats->pclass),
-                sizeof(player_stats->pname) - 1);
+        if (!player_stats->pname[0]) {
+            strncpy(player_stats->pname, name_random(player_stats->pclass),
+                    sizeof(player_stats->pname) - 1);
+        }
     }
 
     player_stats->spending_points = player_stats_generate_spending_points();
