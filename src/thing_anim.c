@@ -29,7 +29,6 @@ void thing_animate (thingp t)
          * If within the animate time of this frame, keep with it.
          */
         if (t->timestamp_change_to_next_frame > time_get_time_cached()) {
-
             return;
         }
 
@@ -50,6 +49,7 @@ void thing_animate (thingp t)
         return;
     }
 
+LOG("anim %s %f %f",thing_logname(t),t->x,t->y);
     /*
      * Get the next tile.
      */
