@@ -965,11 +965,11 @@ static inline uint8_t thing_is_rrr4 (thingp t)
     return (tp_is_rrr4(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr5 (thingp t)
+static inline uint8_t thing_can_walk_through (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr5(thing_tp(t)));
+    return (tp_can_walk_through(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_weapon_carry_effect (thingp t)
@@ -1354,9 +1354,9 @@ static inline uint8_t thing_is_rrr4_noverify (thingp t)
     return (t->tp->is_rrr4);
 }
 
-static inline uint8_t thing_is_rrr5_noverify (thingp t)
+static inline uint8_t thing_can_walk_through_noverify (thingp t)
 {
-    return (t->tp->is_rrr5);
+    return (t->tp->can_walk_through);
 }
 
 static inline uint8_t thing_is_weapon_carry_effect_noverify (thingp t)
