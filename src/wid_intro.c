@@ -189,7 +189,7 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
              */
             thing_statsp s;
             s = &global_config.stats;
-            thing_stats_get_random(s);
+            thing_stats_get_random(s, false /* new_random_name_and_class */);
 
             wid_server_create_visible();
             wid_server_join_visible();
@@ -246,7 +246,7 @@ static void wid_intro_single_play_selected (void)
      */
     thing_statsp s;
     s = &global_config.stats;
-    thing_stats_get_random(s);
+    thing_stats_get_random(s, false /* new_random_name_and_class */);
 
     action_timer_create(
             &wid_timers,
