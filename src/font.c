@@ -94,37 +94,41 @@ uint8_t font_init (void)
      */
     char *tmp;
 
-    tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
-    fixedfont  = ttf_write_tga((char*) tmp, FIXED_FONT_SIZE);
-    myfree(tmp);
+    int32_t i;
 
-    tmp = strprepend(mybasename(VSMALL_FONT, __FUNCTION__), TTF_PATH);
-    vsmall_font  = ttf_write_tga((char*) tmp, VSMALL_FONT_SIZE);
-    myfree(tmp);
+    for (i = 8; i < 40; i++) {
+        tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
+        fixedfont  = ttf_write_tga((char*) tmp, i);
+        myfree(tmp);
 
-    tmp = strprepend(mybasename(SMALL_FONT, __FUNCTION__), TTF_PATH);
-    small_font  = ttf_write_tga((char*) tmp, SMALL_FONT_SIZE);
-    myfree(tmp);
+        tmp = strprepend(mybasename(VSMALL_FONT, __FUNCTION__), TTF_PATH);
+        vsmall_font  = ttf_write_tga((char*) tmp, i);
+        myfree(tmp);
 
-    tmp = strprepend(mybasename(MED_FONT, __FUNCTION__), TTF_PATH);
-    med_font    = ttf_write_tga((char*) tmp, MED_FONT_SIZE);
-    myfree(tmp);
+        tmp = strprepend(mybasename(SMALL_FONT, __FUNCTION__), TTF_PATH);
+        small_font  = ttf_write_tga((char*) tmp, i);
+        myfree(tmp);
 
-    tmp = strprepend(mybasename(LARGE_FONT, __FUNCTION__), TTF_PATH);
-    large_font  = ttf_write_tga((char*) tmp, LARGE_FONT_SIZE);
-    myfree(tmp);
+        tmp = strprepend(mybasename(MED_FONT, __FUNCTION__), TTF_PATH);
+        med_font    = ttf_write_tga((char*) tmp, i);
+        myfree(tmp);
 
-    tmp = strprepend(mybasename(VLARGE_FONT, __FUNCTION__), TTF_PATH);
-    vlarge_font  = ttf_write_tga((char*) tmp, VLARGE_FONT_SIZE);
-    myfree(tmp);
+        tmp = strprepend(mybasename(LARGE_FONT, __FUNCTION__), TTF_PATH);
+        large_font  = ttf_write_tga((char*) tmp, i);
+        myfree(tmp);
+
+        tmp = strprepend(mybasename(VLARGE_FONT, __FUNCTION__), TTF_PATH);
+        vlarge_font  = ttf_write_tga((char*) tmp, i);
+        myfree(tmp);
+    }
 #endif
 
-    fixed_font = ttf_read_tga((char*)FIXED_FONT, FIXED_FONT_SIZE);
-    vsmall_font = ttf_read_tga((char*)VSMALL_FONT, VSMALL_FONT_SIZE);
-    small_font  = ttf_read_tga((char*)SMALL_FONT, SMALL_FONT_SIZE);
-    med_font    = ttf_read_tga((char*)MED_FONT, MED_FONT_SIZE);
-    large_font  = ttf_read_tga((char*)LARGE_FONT, LARGE_FONT_SIZE);
-    vlarge_font  = ttf_read_tga((char*)VLARGE_FONT, VLARGE_FONT_SIZE);
+    fixed_font = ttf_read_tga((char*)FIXED_FONT, fixed_font_size);
+    vsmall_font = ttf_read_tga((char*)VSMALL_FONT, vsmall_font_size);
+    small_font  = ttf_read_tga((char*)SMALL_FONT, small_font_size);
+    med_font    = ttf_read_tga((char*)MED_FONT, med_font_size);
+    large_font  = ttf_read_tga((char*)LARGE_FONT, large_font_size);
+    vlarge_font  = ttf_read_tga((char*)VLARGE_FONT, vlarge_font_size);
 
     return (true);
 }
