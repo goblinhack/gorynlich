@@ -563,7 +563,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
         GET_OPT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
+        GET_OPT_NAMED_BITFIELD(ctx, "can_walk_through", t->can_walk_through);
         GET_OPT_NAMED_BITFIELD(ctx, "is_weapon_carry_effect", t->is_weapon_carry_effect);
         GET_OPT_NAMED_BITFIELD(ctx, "is_spell", t->is_spell);
         GET_OPT_NAMED_BITFIELD(ctx, "is_hand_item", t->is_hand_item);
@@ -723,7 +723,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_rrr2", t->is_rrr2);
     PUT_NAMED_BITFIELD(ctx, "is_rrr3", t->is_rrr3);
     PUT_NAMED_BITFIELD(ctx, "is_rrr4", t->is_rrr4);
-    PUT_NAMED_BITFIELD(ctx, "is_rrr5", t->is_rrr5);
+    PUT_NAMED_BITFIELD(ctx, "can_walk_through", t->can_walk_through);
     PUT_NAMED_BITFIELD(ctx, "is_weapon_carry_effect", t->is_weapon_carry_effect);
     PUT_NAMED_BITFIELD(ctx, "is_spell", t->is_spell);
     PUT_NAMED_BITFIELD(ctx, "is_hand_item", t->is_hand_item);
