@@ -77,7 +77,8 @@ typedef struct thing_stats_ {
 } __attribute__ ((packed)) thing_stats;
 
 int thing_stats_val_to_modifier(int value);
-void thing_stats_get_random(thing_stats *);
+void thing_stats_get_random(thing_stats *,
+                            int new_random_name_and_class);
 void thing_stats_init(thing_stats *);
 tpp thing_stats_to_tp(thing_stats *);
 
