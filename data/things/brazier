@@ -6,6 +6,7 @@
  is_candle_light
  light_tint="purple"
  is_animated
+ can_walk_through
  light_radius=1.0
  tiles={
   tile={

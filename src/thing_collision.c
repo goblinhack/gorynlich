@@ -647,6 +647,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * Allow monsters to walk into these things:
                  */
                 if (thing_is_player(it)                 ||
+                    thing_can_walk_through(it)          ||
                     thing_is_carryable(it)              ||
                     thing_is_weapon_swing_effect(it)    ||
                     thing_is_explosion(it)              ||
@@ -689,6 +690,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * Allow players to collect keys and other junk.
                  */
                 if (thing_is_carryable(it)              ||
+                    thing_can_walk_through(it)          ||
                     thing_is_food(it)                   ||
                     thing_is_treasure(it)               ||
                     thing_is_weapon(it)                 ||
