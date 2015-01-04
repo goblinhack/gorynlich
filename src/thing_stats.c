@@ -614,11 +614,12 @@ static void player_stats_generate_fixed_items (thing_stats *player_stats)
     }
 }
 
-void thing_stats_get_random (thing_stats *player_stats) 
+void thing_stats_get_random (thing_stats *player_stats,
+                             int new_random_name_and_class) 
 {
     LOG("Generate random character");
 
-    if (!player_stats->pclass[0]) {
+    if (!player_stats->pclass[0] || new_random_name_and_class) {
         strncpy(player_stats->pclass, pclass_random(),
                 sizeof(player_stats->pclass) - 1);
     }
@@ -627,8 +628,15 @@ void thing_stats_get_random (thing_stats *player_stats)
 
     thing_stats_init(player_stats);
 
+    /*
+     * If the player ever set a name manually then never override it on 
+     * rerolls
+     */
     if (!wid_player_info_set_name) {
-        if (!player_stats->pname[0]) {
+        /*
+         * If no name of a force of a new name, make one up
+         */
+        if (!player_stats->pname[0] || new_random_name_and_class) {
             strncpy(player_stats->pname, name_random(player_stats->pclass),
                     sizeof(player_stats->pname) - 1);
         }
