@@ -710,7 +710,6 @@ thingp thing_server_new (const char *name,
         id = min;
     }
 
-LOG("next id %u",id);
     /*
      * Find a free thing slot
      */
@@ -831,7 +830,6 @@ LOG("next id %u",id);
             THING_LOG(t, "created (total %d)", client_things_total);
         }
     }
-LOG("new %s",thing_logname(t));
 
     return (t);
 }
@@ -932,7 +930,6 @@ thingp thing_client_new (uint32_t id, tpp tp)
         THING_LOG(t, "created");
     }
 
-LOG("new %s",thing_logname(t));
     return (t);
 }
 
@@ -2971,14 +2968,6 @@ static void thing_client_wid_move (thingp t, double x, double y,
 
 void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
 {
-    if (thing_is_animation(t)) {
-        return;
-    }
-
-    if (thing_is_weapon_swing_effect(t)) {
-        return;
-    }
-
     thing_client_wid_move(t, x, y, smooth);
 
     /*
@@ -2986,6 +2975,7 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
      */
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
+        weapon_carry_anim->dir = t->dir;
         thing_client_wid_move(weapon_carry_anim, x, y, smooth);
     }
 
@@ -2997,6 +2987,7 @@ void thing_client_wid_update (thingp t, double x, double y, uint8_t smooth)
         double dx = 0;
         double dy = 0;
 
+        weapon_swing_anim->dir = t->dir;
         thing_weapon_swing_offset(t, &dx, &dy);
         thing_client_wid_move(weapon_swing_anim, x + dx, y + dy, smooth);
     }
@@ -3308,7 +3299,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
     /*
      * Any left over, send them now.
      */
-    if (data != odata) {
+    if (data - odata > 1) {
         gsocketp sp;
 
         packet->len = data - odata;
@@ -3513,6 +3504,22 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
         t->dir = state & 0x7;
 
         /*
+         * Wield weapons before calling thing_client_wid_update which will
+         * also move the weapons.
+         */
+        if (weapon_id) {
+            thing_wield(t, id_to_tp(weapon_id));
+        }
+
+        if (weapon_swung) {
+            thing_swing(t);
+
+            if (!(state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT))) {
+                thing_client_wid_update(t, t->x, t->y, false /* smooth */);
+            }
+        }
+
+        /*
          * Move the thing?
          */
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
@@ -3579,14 +3586,6 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                                             x, y, t, 0);
                 }
             }
-        }
-
-        if (weapon_id) {
-            thing_wield(t, id_to_tp(weapon_id));
-        }
-
-        if (weapon_swung) {
-            thing_swing(t);
         }
 
         if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS)) {
@@ -4068,7 +4067,8 @@ void thing_server_action (thingp t,
         /*
          * Failed to use.
          */
-        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "Failed to use the %s", tp_short_name(tp));
+        MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "Failed to use the %s", 
+                                   tp_short_name(tp));
         return;
     }
 
