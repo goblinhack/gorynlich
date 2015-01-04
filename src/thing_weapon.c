@@ -257,6 +257,9 @@ void thing_swing (thingp t)
         return;
     }
 
+    /*
+     * Put the swing anim on the map
+     */
     widp weapon_swing_anim_wid;
 
     if (t->on_server) {
@@ -271,7 +274,10 @@ void thing_swing (thingp t)
     } else {
         weapon_swing_anim_wid = wid_game_map_client_replace_tile(
                                     wid_game_map_client_grid_container,
-                                    t->x, t->y, 0, what);
+                                    t->x, 
+                                    t->y, 
+                                    0,  /* thing */
+                                    what);
     }
 
     /*
@@ -293,7 +299,6 @@ void thing_swing (thingp t)
 
         t->needs_tx_player_update = true;
         t->needs_tx_weapon_swung = true;
-CON("%s swing server",thing_logname(t));
 
         thing_timer_destroy(child, 50);
     } else {
@@ -304,6 +309,5 @@ CON("%s swing server",thing_logname(t));
         if (weapon_carry_anim) {
             thing_hide(weapon_carry_anim);
         }
-CON("%s swing client %s",thing_logname(t), thing_logname(child));
     }
 }

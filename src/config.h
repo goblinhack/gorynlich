@@ -288,7 +288,7 @@
 /*
  * Client <-> server keepalives
  */
-#define DELAY_TENTHS_PING                                   5
+#define DELAY_TENTHS_PING                                   10
 #define DELAY_TENTHS_PING_WHEN_NO_RESPONSE                  20
 
 /*
@@ -310,7 +310,7 @@
  * Map and player updates from the server
  */
 #define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE        10
-#define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE     5
+#define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE     50
 
 /*
  * How frequently certain things get updated to the client.
