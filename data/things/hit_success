@@ -3,6 +3,8 @@
  tooltip="sparks!"
  z_depth=3
  is_animated
+ is_light_source
+ light_radius=0.5
  is_hidden_from_editor
  is_explosion
  is_animated_no_dir

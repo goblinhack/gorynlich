@@ -147,7 +147,7 @@ static void wid_player_stats_reroll (void)
 {
     LOG("Reroll stats");
 
-    thing_stats_get_random(player_stats);
+    thing_stats_get_random(player_stats, true /* new_random_name_and_class */);
 
     wid_player_stats_redraw();
 

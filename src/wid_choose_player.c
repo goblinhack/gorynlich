@@ -135,7 +135,7 @@ void wid_choose_player_visible (void)
      */
     thing_statsp s;
     s = &global_config.stats;
-    thing_stats_get_random(s);
+    thing_stats_get_random(s, false /* new_random_name_and_class */);
 
     wid_player_stats_visible(s);
     wid_player_info_visible(s);
