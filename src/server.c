@@ -344,6 +344,10 @@ static void server_alive_check (void)
          * Don't kill off new born connections.
          */
         if (socket_get_tx(s) < 200) {
+            LOG("Server: Sent %d packets to %s, quality %u",
+                socket_get_tx(s),
+                socket_get_remote_logname(s),
+                socket_get_quality(s));
             continue;
         }
 
