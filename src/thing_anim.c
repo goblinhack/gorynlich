@@ -49,7 +49,6 @@ void thing_animate (thingp t)
         return;
     }
 
-LOG("anim %s %f %f",thing_logname(t),t->x,t->y);
     /*
      * Get the next tile.
      */
