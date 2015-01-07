@@ -62,6 +62,14 @@ void level_fini (void)
     if (level_init_done) {
         level_init_done = false;
     }
+
+    if (server_timers) {
+        ERR("server timers still set on level fini");
+    }
+
+    if (client_timers) {
+        ERR("client timers still set on level fini");
+    }
 }
 
 /*
