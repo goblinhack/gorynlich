@@ -310,7 +310,7 @@ static void wid_choose_player_create (void)
         wid_set_no_shape(child);
         wid_set_color(child, WID_COLOR_TEXT, GRAY90);
         wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
+        wid_set_color(child, WID_COLOR_TEXT, RED);
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_choose_player_intro_all_done_mouse_event);
