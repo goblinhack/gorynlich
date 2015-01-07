@@ -71,9 +71,9 @@ uint8_t font_init (void)
 
     delta = 0;
     if (global_config.video_pix_width <= 640) {
-        delta = -7;
+        delta = -4;
     } else if (global_config.video_pix_width <= 800) {
-        delta = -5;
+        delta = -2;
     } else if (global_config.video_pix_width < 1400) {
     } else if (global_config.video_pix_width < 1600) {
         delta = +2;
@@ -81,7 +81,7 @@ uint8_t font_init (void)
         delta = +4;
     }
 
-    fixed_font_size += delta;
+    fixed_font_size  += delta;
     vsmall_font_size += delta;
     small_font_size  += delta;
     med_font_size    += delta;
@@ -98,27 +98,27 @@ uint8_t font_init (void)
 
     for (i = 8; i < 40; i++) {
         tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
-        fixedfont  = ttf_write_tga((char*) tmp, i);
+        ttf_write_tga((char*) tmp, i);
         myfree(tmp);
 
         tmp = strprepend(mybasename(VSMALL_FONT, __FUNCTION__), TTF_PATH);
-        vsmall_font  = ttf_write_tga((char*) tmp, i);
+        ttf_write_tga((char*) tmp, i);
         myfree(tmp);
 
         tmp = strprepend(mybasename(SMALL_FONT, __FUNCTION__), TTF_PATH);
-        small_font  = ttf_write_tga((char*) tmp, i);
+        ttf_write_tga((char*) tmp, i);
         myfree(tmp);
 
         tmp = strprepend(mybasename(MED_FONT, __FUNCTION__), TTF_PATH);
-        med_font    = ttf_write_tga((char*) tmp, i);
+        ttf_write_tga((char*) tmp, i);
         myfree(tmp);
 
         tmp = strprepend(mybasename(LARGE_FONT, __FUNCTION__), TTF_PATH);
-        large_font  = ttf_write_tga((char*) tmp, i);
+        ttf_write_tga((char*) tmp, i);
         myfree(tmp);
 
         tmp = strprepend(mybasename(VLARGE_FONT, __FUNCTION__), TTF_PATH);
-        vlarge_font  = ttf_write_tga((char*) tmp, i);
+        ttf_write_tga((char*) tmp, i);
         myfree(tmp);
     }
 #endif

@@ -304,7 +304,7 @@ static void wid_player_stats_create (thing_statsp s)
             wid_set_text(w, rows[i].col1);
 
             wid_set_color(w, WID_COLOR_TEXT, WHITE);
-            wid_set_font(w, small_font);
+            wid_set_font(w, vsmall_font);
 
             switch (i) {
             case STAT_EXPERIENCE:
@@ -312,7 +312,7 @@ static void wid_player_stats_create (thing_statsp s)
             case STAT_LEVEL:
                 break;
             case STAT_SPENDING_POINTS:
-                wid_set_font(w, small_font);
+                wid_set_font(w, vsmall_font);
 
                 if (s->spending_points > 0) {
                     wid_set_color(w, WID_COLOR_TEXT, RED);
@@ -391,7 +391,7 @@ static void wid_player_stats_create (thing_statsp s)
                 wid_set_text(w, rows[i].col2);
             }
 
-            wid_set_font(w, small_font);
+            wid_set_font(w, vsmall_font);
 
             color c = WHITE;
 
@@ -537,7 +537,7 @@ static void wid_player_stats_create (thing_statsp s)
 
             myfree(text);
 
-            wid_set_font(w, small_font);
+            wid_set_font(w, vsmall_font);
             wid_set_no_shape(w);
         }
     }

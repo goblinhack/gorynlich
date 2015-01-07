@@ -140,6 +140,7 @@ then
     log_warn "   sudo port install libsdl2_image"
     log_warn "   sudo port install libsdl2_mixer"
     log_warn "   sudo port install libsdl2_net"
+    log_warn "   sudo port install libsdl2_ttf"
     exit 1
 fi
 
