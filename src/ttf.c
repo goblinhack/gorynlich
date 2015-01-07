@@ -705,6 +705,13 @@ ttf_write_tga (char *name, int32_t pointsize)
     uint32_t h;
     font *f;
 
+    snprintf(filename, sizeof(filename), "%s_pointsize%u.tga",
+             name, pointsize);
+
+    if (tex_find(filename)) {
+        return (0);
+    }
+
     /*
      * x glyphs horizontally and y vertically.
      */
@@ -842,9 +849,6 @@ ttf_write_tga (char *name, int32_t pointsize)
             }
         }
     }
-
-    snprintf(filename, sizeof(filename), "%s_pointsize%u.tga",
-             name, pointsize);
 
     SDL_LockSurface(dst);
     stbi_write_tga(filename, dst->w, dst->h, STBI_rgb_alpha, dst->pixels);

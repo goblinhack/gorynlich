@@ -731,7 +731,7 @@ uint8_t wid_ignore_for_events (widp w)
 
     if (w->ignore_for_events || w->moving ||
         /*
-         * For buttons that pulse.
+         * Need this disabled for fading buttons to work
          */
         (!w->fade_count && (w->fade_out || w->fade_in)) ||
         w->hidden ||
@@ -743,6 +743,9 @@ uint8_t wid_ignore_for_events (widp w)
         top = wid_get_top_parent(w);
 
         if (top->moving ||
+            /*
+             * Need this disabled for fading buttons to work
+             */
             (!w->fade_count && (w->fade_in)) ||
             top->hidden ||
             top->being_destroyed) {
@@ -8945,6 +8948,8 @@ static double wid_get_fade_amount (widp w)
 
             if (w->fade_count) {
                 wid_fade_in_out(w, w->fade_delay, w->fade_count - 1, true);
+                w->hidden = false;
+                w->visible = true;
             }
 
             return (0.0f);
