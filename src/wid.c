@@ -2836,6 +2836,7 @@ static void wid_tree5_ticking_wids_remove (widp w)
     }
 
     w->in_tree5_ticking_wids = 0;
+    w->on_tick = 0;
 }
 
 /*
@@ -3031,6 +3032,12 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
 
         wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
     }
+
+    /*
+     * Make sure it stops ticking right now as client pointers this widget 
+     * might use in the ticker may no longer be valid.
+     */
+    wid_tree5_ticking_wids_remove(w);
 }
 
 void wid_destroy (widp *wp)
