@@ -70,7 +70,10 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 uint8_t sdl_main_loop_running;
 int32_t sdl_init_video;
 
+#if (SDL_MAJOR_VERSION == 2) || \
+        (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
 static double sdl_wheel_mouse_accel = 1.0;
+#endif /* } */
 
 #ifdef ENABLE_SDL_WINDOW /* { */
 SDL_Window *window; /* Our window handle */
