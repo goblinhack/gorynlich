@@ -603,8 +603,8 @@ static uint8_t wid_server_join_port_mouse_down (widp w, int32_t x, int32_t y,
 /*
  * Key down etc...
  */
-static uint8_t wid_server_join_hostname_receive_input (widp w, 
-                                                  const SDL_KEYSYM *key)
+static uint8_t wid_server_join_hostname_receive_input (widp w,
+                                                       const SDL_KEYSYM *key)
 {
     server *s;
 
