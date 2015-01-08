@@ -601,14 +601,15 @@ static uint8_t wid_editor_map_thing_replace_wrap (widp w,
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
         uint8_t *state = SDL_GetKeyState(0);
 
-        uint8_t shift = state[SDLK_SHIFT] ? 1 : 0;
+        uint8_t lshift = state[SDLK_LSHIFT] ? 1 : 0;
+        uint8_t rshift = state[SDLK_RSHIFT] ? 1 : 0;
 #else /* } { */
         const uint8_t *state = SDL_GetKeyboardState(0);
 
         uint8_t lshift = state[SDL_SCANCODE_LSHIFT] ? 1 : 0;
         uint8_t rshift = state[SDL_SCANCODE_RSHIFT] ? 1 : 0;
-        uint8_t shift = lshift | rshift;
 #endif /* } */
+        uint8_t shift = lshift | rshift;
 
         if (shift) {
             wid_editor_got_line_start = true;
