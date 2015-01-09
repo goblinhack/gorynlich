@@ -878,8 +878,8 @@ static void wid_server_join_display (server *s)
     color c = BLACK;
     c.a = 255;
 
-    wid_server_stats_window = wid_tooltip(s->tooltip, 0.2, 0.8, fixed_font);
-    wid_move_to_pct(wid_server_stats_window, 0.05, 0.72);
+    wid_server_stats_window = wid_tooltip(s->tooltip, 0.2, 0.55, fixed_font);
+    wid_move_to_pct(wid_server_stats_window, 0.05, 0.56);
     wid_move_stop(wid_server_stats_window);
     wid_set_tex(wid_server_stats_window, 0, 0);
     wid_set_square(wid_server_stats_window);
@@ -889,8 +889,8 @@ static void wid_server_join_display (server *s)
     wid_set_bevel(wid_server_stats_window, 0);
 
     wid_server_stats_window2 = wid_new_square_window("bars");
-    fpoint tl = {0.5, 0.70};
-    fpoint br = {0.9, 0.95};
+    fpoint tl = {0.6, 0.60};
+    fpoint br = {0.95, 0.85};
     wid_set_tl_br_pct(wid_server_stats_window2, tl, br);
     wid_set_color(wid_server_stats_window2, WID_COLOR_BG, c);
     wid_set_color(wid_server_stats_window2, WID_COLOR_TL, c);
@@ -1656,7 +1656,7 @@ static void wid_server_join_create (uint8_t redo)
 
             wid_set_font(child, small_font);
 
-            fpoint tl = {0.9f, 0.95f};
+            fpoint tl = {0.85f, 0.95f};
             fpoint br = {1.0f, 1.00f};
 
             wid_set_tl_br_pct(child, tl, br);
