@@ -106,6 +106,11 @@ int sdl_intro_demo_update (void)
     static widp wid_rock;
     static widp wid_wall_floor;
 
+    if (opt_quickstart || !global_config.intro_screen) {
+        wid_intro_init();
+        return (false);
+    }
+
     if (!wid_intro) {
         wid_intro = wid_new_window("splash icon");
 
