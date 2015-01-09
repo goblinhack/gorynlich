@@ -794,7 +794,7 @@ static void wid_server_create_menu (void)
                                            wid_server_create_button_col1[i]);
 
             fpoint tl = {0.05, 0.2};
-            fpoint br = {0.48, 0.28};
+            fpoint br = {0.40, 0.28};
 
             double height = 0.08;
 
@@ -840,8 +840,8 @@ static void wid_server_create_menu (void)
             widp w = wid_new_square_button(wid_server_create_container,
                                            wid_server_create_button_col2[i]);
 
-            fpoint tl = {0.49, 0.2};
-            fpoint br = {0.595, 0.28};
+            fpoint tl = {0.40, 0.2};
+            fpoint br = {0.50, 0.28};
 
             double height = 0.08;
 
@@ -890,8 +890,8 @@ static void wid_server_create_menu (void)
             widp w = wid_new_square_button(wid_server_create_container,
                                            wid_server_create_button_col3[i]);
 
-            fpoint tl = {0.605, 0.2};
-            fpoint br = {0.71, 0.28};
+            fpoint tl = {0.50, 0.2};
+            fpoint br = {0.60, 0.28};
 
             double height = 0.08;
 
@@ -940,7 +940,7 @@ static void wid_server_create_menu (void)
             widp w = wid_new_square_button(wid_server_create_container,
                                            wid_server_create_button_col3[i]);
 
-            fpoint tl = {0.72, 0.2};
+            fpoint tl = {0.60, 0.2};
             fpoint br = {0.95, 0.28};
 
             double height = 0.08;
@@ -1028,10 +1028,6 @@ static void wid_server_create_menu (void)
         color c = WHITE;
 
         wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_color(w, WID_COLOR_TEXT, c);
-
-        c = RED;
-        wid_set_mode(w, WID_MODE_OVER);
         wid_set_color(w, WID_COLOR_TEXT, c);
 
         wid_set_mode(w, WID_MODE_NORMAL);
