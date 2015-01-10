@@ -515,8 +515,6 @@ void wid_game_map_client_wid_create (void)
 
 void wid_game_map_client_wid_destroy (void)
 {
-    LOG("Client: Destroy game map");
-
     if (client_level) {
         LOG("Client: Destroy game level");
 
@@ -524,6 +522,8 @@ void wid_game_map_client_wid_destroy (void)
     }
 
     if (wid_game_map_client_window) {
+        LOG("Client: Destroy game window");
+
         wid_destroy(&wid_game_map_client_window);
     }
 
