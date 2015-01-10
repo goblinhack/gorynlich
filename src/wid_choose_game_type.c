@@ -469,7 +469,7 @@ static void wid_choose_game_type_create (void)
         child = wid_new_square_button(wid_choose_game_type, "Go back");
         wid_set_font(child, small_font);
 
-        fpoint tl = {0.9f, 0.95f};
+        fpoint tl = {0.85f, 0.95f};
         fpoint br = {1.0f, 1.00f};
 
         wid_set_tl_br_pct(child, tl, br);
