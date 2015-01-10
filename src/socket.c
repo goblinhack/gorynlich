@@ -399,7 +399,7 @@ char *iptodynstr (IPaddress ip)
 
     if (!(hostname = SDLNet_ResolveIP(&ip))) {
         return (dynprintf("IPv4 %u.%u.%u.%u:%u",
-                          hostname, ip1, ip2, ip3, ip4, port));
+                          ip1, ip2, ip3, ip4, port));
 
     }
 
@@ -419,10 +419,14 @@ char *iptodynstr (IPaddress ip)
                            port));
     }
 
-    return (dynprintf("%s%s%u.%u.%u.%u:%u",
-                      hostname && *hostname ? hostname : "",
-                      hostname && *hostname ? "," : "",
-                      ip1, ip2, ip3, ip4, port));
+    if (is_ip_address(hostname)) {
+        return (dynprintf("%s:%u", hostname, port));
+    } else {
+        return (dynprintf("%s%s%u.%u.%u.%u:%u",
+                        hostname && *hostname ? hostname : "",
+                        hostname && *hostname ? "," : "",
+                        ip1, ip2, ip3, ip4, port));
+    }
 }
 
 char *iptodynstr_no_resolve (IPaddress ip)

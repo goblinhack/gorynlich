@@ -485,6 +485,33 @@ static inline int address_resolve (IPaddress *address,
     return (0);
 }
 
+/*
+ * is_ip_address
+ *
+ * Is the string in a.b.c.d format?
+ */
+static inline int is_ip_address (const char *host)
+{
+    unsigned int n1;
+    unsigned int n2;
+    unsigned int n3;
+    unsigned int n4;
+
+    if (!host) {
+        return (0);
+    }
+
+    if (sscanf(host, "%u.%u.%u.%u", &n1, &n2, &n3, &n4) == 4) {
+        if ((n1 > 255) || (n2 > 255) || (n3 > 255) || (n4 > 255)) {
+            return (0);
+        }
+
+        return (1);
+    }
+
+    return (0);
+}
+
 extern tree_rootp sockets;
 
 UDPpacket *packet_alloc(void);
