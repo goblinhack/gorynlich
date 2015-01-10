@@ -270,7 +270,7 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
 
     LOG("Socket connect to %s", socket_get_remote_logname(s));
-    LOG("       from      %s", socket_get_local_logname(s));
+    LOG("       from       %s", socket_get_local_logname(s));
 
     return (s);
 }

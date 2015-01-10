@@ -59,7 +59,8 @@ static uint8_t level_place_explosion_at (levelp level,
         delay *= 0.75;
     }
 
-    thing_place_and_destroy_timed(tp,
+    thing_place_and_destroy_timed(level,
+                                  tp,
                                   owner,
                                   x,
                                   y,
