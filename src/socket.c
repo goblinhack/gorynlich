@@ -1290,7 +1290,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
         }
 
         strncpy(msg.player_name[p], t->stats.pname,
-                min(sizeof(msg.player_name[p]), strlen(t->stats.pname))); 
+                min(sizeof(msg.player_name[p]), strlen(t->stats.pname) + 1)); 
         p++;
     }
 
@@ -1359,14 +1359,14 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     strncpy(s->server_name, msg->server_name,
             min(sizeof(s->server_name), 
-                strlen(msg->server_name))); 
+                strlen(msg->server_name) + 1)); 
 
     uint32_t p;
 
     for (p = 0; p < MAX_PLAYERS; p++) {
         strncpy(s->player_name[p], msg->player_name[p],
                 min(sizeof(s->player_name[p]), 
-                    strlen(msg->player_name[p]))); 
+                    strlen(msg->player_name[p]) + 1)); 
     }
 
     s->server_max_players = msg->server_max_players;
@@ -2355,11 +2355,11 @@ void socket_tx_server_hiscore (gsocketp only,
 
             strncpy(msg_tx->player_name, h->player_name, 
                     min(sizeof(msg_tx->player_name),
-                        strlen(h->player_name))); 
+                        strlen(h->player_name) + 1)); 
 
             strncpy(msg_tx->death_reason, h->death_reason, 
                     min(sizeof(msg_tx->death_reason),
-                        strlen(h->death_reason))); 
+                        strlen(h->death_reason) + 1)); 
 
             SDLNet_Write32(h->tree.key2, &msg_tx->score);
         }
@@ -2372,10 +2372,10 @@ void socket_tx_server_hiscore (gsocketp only,
         msg_player_hiscore *msg_tx = &msg.players[0];
 
         strncpy(msg_tx->player_name, player_name, 
-                min(sizeof(msg_tx->player_name), strlen(player_name))); 
+                min(sizeof(msg_tx->player_name), strlen(player_name) + 1)); 
 
         strncpy(msg_tx->death_reason, death_reason, 
-                min(sizeof(msg_tx->death_reason), strlen(death_reason))); 
+                min(sizeof(msg_tx->death_reason), strlen(death_reason) + 1)); 
 
         SDLNet_Write32(score, &msg_tx->score);
     }
