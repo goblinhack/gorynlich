@@ -82,7 +82,7 @@ static void server_add (const server *s_in)
     s->host = dupstr(s_in->host, "server hostname");
     s->port = s_in->port;
 
-    if ((SDLNet_ResolveHost(&s->ip, 
+    if ((address_resolve(&s->ip, 
                             s->host,
                             s->port)) == -1) {
         LOG("Cannot resolve host %s port %u", 

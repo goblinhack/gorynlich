@@ -284,7 +284,7 @@ static uint8_t client_socket_open (char *host, char *port)
 
     LOG("Client: Trying to resolve server address %s:%u", h, portno);
 
-    if (SDLNet_ResolveHost(&server_address, h, portno)) {
+    if (address_resolve(&server_address, h, portno)) {
         MSG_BOX("Open socket, cannot resolve %s:%u", h, portno);
         return (false);
     }
@@ -333,7 +333,9 @@ uint8_t client_socket_close (char *host, char *port)
             portno = global_config.server_port;
         }
 
-        if (SDLNet_ResolveHost(&server_address, h, portno)) {
+        LOG("Client: Trying to resolve server address %s:%u", h, portno);
+
+        if (address_resolve(&server_address, h, portno)) {
             ERR("Close socket, cannot resolve %s:%u", h, portno);
             return (false);
         }
@@ -421,7 +423,7 @@ uint8_t client_socket_join (const char *host,
             }
         }
 
-        if (SDLNet_ResolveHost(&server_address, h, portno)) {
+        if (address_resolve(&server_address, h, portno)) {
             if (quiet) {
                 WARN("Cannot join %s:%u", h, portno);
             } else {
