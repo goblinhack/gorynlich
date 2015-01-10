@@ -29,8 +29,6 @@
 tree_rootp sockets;
 
 uint8_t debug_socket_ping_enabled = 0;
-uint8_t debug_socket_connect_enabled = 0;
-uint8_t debug_socket_players_enabled = 0;
 
 uint8_t on_server;
 uint8_t is_client;
@@ -68,12 +66,6 @@ uint8_t socket_init (void)
 
     command_add(debug_socket_ping_enable, "set debug socket ping [01]",
                 "debug periodic pings");
-
-    command_add(debug_socket_connect_enable, "set debug socket connect [01]",
-                "debug sockets connections");
-
-    command_add(debug_socket_players_enable, "set debug socket update [01]",
-                "debug player updates");
 
     socket_init_done = true;
 
@@ -278,10 +270,7 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
     s->local_ip = *SDLNet_UDP_GetPeerAddress(s->udp_socket, -1);
 
     LOG("Socket connect to %s", socket_get_remote_logname(s));
-
-    if (debug_socket_connect_enabled) {
-        LOG("       from      %s", socket_get_local_logname(s));
-    }
+    LOG("       from      %s", socket_get_local_logname(s));
 
     return (s);
 }
@@ -365,42 +354,6 @@ uint8_t debug_socket_ping_enable (tokens_t *tokens, void *context)
     }
 
     CON("Debug ping mode set to %u", debug_socket_ping_enabled);
-
-    return (true);
-}
-
-/*
- * User has entered a command, run it
- */
-uint8_t debug_socket_connect_enable (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[4];
-
-    if (!s || (*s == '\0')) {
-        debug_socket_connect_enabled = 1;
-    } else {
-        debug_socket_connect_enabled = strtol(s, 0, 10) ? 1 : 0;
-    }
-
-    CON("Debug socket connect mode set to %u", debug_socket_connect_enabled);
-
-    return (true);
-}
-
-/*
- * User has entered a command, run it
- */
-uint8_t debug_socket_players_enable (tokens_t *tokens, void *context)
-{
-    char *s = tokens->args[4];
-
-    if (!s || (*s == '\0')) {
-        debug_socket_players_enabled = 1;
-    } else {
-        debug_socket_players_enabled = strtol(s, 0, 10) ? 1 : 0;
-    }
-
-    CON("Debug socket player mode set to %u", debug_socket_players_enabled);
 
     return (true);
 }
@@ -2133,12 +2086,8 @@ void socket_tx_tell (gsocketp s,
 
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
-
-    if (debug_socket_players_enabled) {
-        LOG("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 
-            socket_get_remote_logname(s), from, to, txt);
-    }
+    LOG("Tx Tell [to %s] from \"%s\" to \"%s\" msg \"%s\"", 
+        socket_get_remote_logname(s), from, to, txt);
 
     packet->len = sizeof(msg);
 
@@ -2169,10 +2118,6 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
     memcpy(to, msg.to, SMALL_STRING_LEN_MAX);
 
     LOG("TELL: from \"%s\" to \"%s\" msg \"%s\"", from, to, txt);
-
-    if (debug_socket_players_enabled) {
-        LOG("Client: Rx Tell from %s \"%s\"", from, txt);
-    }
 
     if (!socket_get_server(s)) {
         MSG(CHAT, "%s, says %s", from, txt);
@@ -2251,7 +2196,7 @@ void socket_tx_server_status (void)
 
         memcpy(packet->data, &msg, sizeof(msg));
 
-        if (debug_socket_players_enabled) {
+        if (0) {
             LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
         }
 
@@ -2291,7 +2236,7 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
     p->remote_ip.host = SDLNet_Read32(&msg_rx->remote_ip.host);
     p->remote_ip.port = SDLNet_Read16(&msg_rx->remote_ip.port);
 
-    if (debug_socket_players_enabled) {
+    if (0) {
         char *tmp = iptodynstr(read_address(packet));
         if (msg->you_are_playing_on_this_server) {
             LOG("Client: Rx Status from %s, current player \"%s\"", 
@@ -2396,10 +2341,7 @@ void socket_tx_server_hiscore (gsocketp only,
                 continue;
             }
 
-            if (debug_socket_players_enabled) {
-                LOG("Server: Tx hiscore [to %s]",
-                    socket_get_remote_logname(s));
-            }
+            LOG("Server: Tx hiscore [to %s]", socket_get_remote_logname(s));
 
             UDPpacket *packet = packet_alloc();
 
@@ -2450,12 +2392,9 @@ void socket_rx_server_hiscore (gsocketp s, UDPpacket *packet,
             continue;
         }
 
-        if (debug_socket_players_enabled) {
-            char *tmp = iptodynstr(read_address(packet));
-            LOG("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, 
-                p->player_name);
-            myfree(tmp);
-        }
+        char *tmp = iptodynstr(read_address(packet));
+        LOG("Client: Rx hiscore from %s %u:\"%s\"", tmp, pi, p->player_name);
+        myfree(tmp);
     }
 }
 
