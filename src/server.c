@@ -148,6 +148,12 @@ static void server_rx_client_join (gsocketp s)
 
     LOG("Server: Total players now %u", global_config.server_current_players);
 
+    /*
+     * Tick the player things so we work out their torch light so they do not 
+     * start the level in darkness.
+     */
+    thing_tick_server_player_slow_all(true /* force */);
+
     socket_server_tx_map_update(s, server_boring_things,
                                 "rx client join boring things");
     socket_server_tx_map_update(s, server_active_things,

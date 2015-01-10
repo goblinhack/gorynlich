@@ -217,7 +217,7 @@ void level_update_now (levelp level)
     /*
      * Ensure things are updated at the start of the new level.
      */
-    thing_tick_server_player_slow_all();
+    thing_tick_server_player_slow_all(true /* force */);
 }
 
 levelp level_load (uint32_t level_no, 
