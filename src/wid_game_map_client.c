@@ -688,11 +688,6 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         return;
     }
 
-    /*
-     * Update all the player side things with the new item counts.
-     */
-    thing_tick_client_player_slow_all();
-
     if (player->stats.pclass[0]) {
         wid_player_action_hide();
         wid_player_action_visible(&player->stats, true);
