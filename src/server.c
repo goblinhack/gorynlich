@@ -94,7 +94,7 @@ uint8_t server_init (void)
     LOG("Server: Trying to resolve server address %s:%u", 
         SERVER_DEFAULT_HOST, portno);
 
-    if (SDLNet_ResolveHost(&server_address, SERVER_DEFAULT_HOST, portno)) {
+    if (address_resolve(&server_address, SERVER_DEFAULT_HOST, portno)) {
         MSG_BOX("Open socket, cannot resolve %s:%u",
                SERVER_DEFAULT_HOST, portno);
         return (false);

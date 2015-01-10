@@ -140,7 +140,7 @@ static void wid_server_local_server_add (const server *s_in)
     /*
      * Need to resolve.
      */
-    if ((SDLNet_ResolveHost(&s->ip, "0.0.0.0", s_in->port)) == -1) {
+    if ((address_resolve(&s->ip, "0.0.0.0", s_in->port)) == -1) {
         LOG("Cannot resolve port %u", s_in->port);
     }
 
@@ -308,7 +308,7 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 
         IPaddress ip = {0};
 
-        if (SDLNet_ResolveHost(&ip, SERVER_DEFAULT_HOST, 
+        if (address_resolve(&ip, SERVER_DEFAULT_HOST, 
                                global_config.server_port)) {
             MSG_BOX("Open socket, cannot resolve %s:%u",
                 SERVER_DEFAULT_HOST, global_config.server_port);
