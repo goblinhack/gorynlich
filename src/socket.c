@@ -1430,7 +1430,8 @@ uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
 
     if (!s->connected) {
         if (failed++ > 10) {
-            WARN("Server is not present, cannot join yet. Retrying...");
+            WARN("Server %s is not present, cannot join yet",
+                 socket_get_remote_logname(s));
         }
         return (false);
     }

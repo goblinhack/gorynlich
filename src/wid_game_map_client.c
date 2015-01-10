@@ -108,8 +108,7 @@ static void wid_game_map_client_start_cb (void *context)
         portno = SDLNet_Read16(&addr.port);
     }
 
-    if (!client_socket_join(SERVER_DEFAULT_HOST, 0, portno,
-                            true /* quiet */)) {
+    if (!client_socket_join(0, 0, portno, true /* quiet */)) {
         action_timer_create(
                 &wid_timers,
                 (action_timer_callback)wid_game_map_client_start_cb,
