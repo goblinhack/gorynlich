@@ -187,9 +187,9 @@ void wid_game_map_server_wid_create (void)
 
 void wid_game_map_server_wid_destroy (uint8_t keep_players)
 {
-    LOG("Server: Destroy game map");
-
     if (server_level) {
+        LOG("Server: Destroy game map");
+
         if (keep_players) {
             LOG("Server: Destroy level but keep players");
         } else {
@@ -200,6 +200,8 @@ void wid_game_map_server_wid_destroy (uint8_t keep_players)
     }
 
     if (wid_game_map_server_window) {
+        LOG("Server: Destroy game window`");
+
         wid_game_map_server_hide();
 
         wid_destroy(&wid_game_map_server_window);
