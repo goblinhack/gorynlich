@@ -876,7 +876,7 @@ static void wid_server_join_display (server *s)
     }
 
     color c = BLACK;
-    c.a = 255;
+    c.a = 100;
 
     wid_server_stats_window = wid_tooltip(s->tooltip, 0.2, 0.55, fixed_font);
     wid_move_to_pct(wid_server_stats_window, 0.05, 0.56);
@@ -889,7 +889,7 @@ static void wid_server_join_display (server *s)
     wid_set_bevel(wid_server_stats_window, 0);
 
     wid_server_stats_window2 = wid_new_square_window("bars");
-    fpoint tl = {0.6, 0.60};
+    fpoint tl = {0.65, 0.60};
     fpoint br = {0.95, 0.85};
     wid_set_tl_br_pct(wid_server_stats_window2, tl, br);
     wid_set_color(wid_server_stats_window2, WID_COLOR_BG, c);
@@ -1081,7 +1081,7 @@ static void wid_server_join_create (uint8_t redo)
         fpoint br = {1.0, line_height};
 
         widp w = wid_new_container(wid_server_join_window_container,
-                                       "server name");
+                                   "server name");
         wid_visible(w, 0);
 
         wid_set_tooltip(w, "Click on a server to edit it", 0 /* font */);
