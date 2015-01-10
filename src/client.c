@@ -397,6 +397,9 @@ uint8_t client_socket_join (const char *host,
         h = last_host;
     }
 
+    LOG("Client: Join host %s, port %s, portno %u",
+        h ? h : "-",port ? port: "-", portno);
+
     gsocketp s = 0;
 
     if (!h && !port) {
@@ -453,6 +456,8 @@ uint8_t client_socket_join (const char *host,
     if (!socket_tx_client_join(s, &client_joined_server_key)) {
         if (!quiet) {
             MSG(CRITICAL, "Join failed");
+        } else {
+            LOG("Client: Joining failed to %s", socket_get_remote_logname(s));
         }
         return (false);
     }
