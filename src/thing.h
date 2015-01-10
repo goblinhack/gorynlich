@@ -25,8 +25,7 @@ thingp thing_client_local_new(tpp tp);
 void thing_restarted(thingp t, levelp level);
 void thing_destroy(thingp, const char *why);
 void thing_tick_all(void);
-void thing_tick_client_player_slow_all(void);
-void thing_tick_server_player_slow_all(void);
+void thing_tick_server_player_slow_all(int force);
 uint8_t thing_mob_spawn(thingp);
 uint8_t thing_mob_spawn_on_death(thingp);
 void thing_dead(thingp, thingp killer,
@@ -246,21 +245,26 @@ enum {
     THING_STATE_BIT_SHIFT_DIR_BIT0,
     THING_STATE_BIT_SHIFT_DIR_BIT1,
     THING_STATE_BIT_SHIFT_DIR_BIT2,
-    THING_STATE_BIT_SHIFT_RESYNC,
-    THING_STATE_BIT_SHIFT_EXT_PRESENT,
     THING_STATE_BIT_SHIFT_XY_PRESENT,
     THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT,
     THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT,
+    THING_STATE_BIT_SHIFT_EXT1_PRESENT,
+    THING_STATE_BIT_SHIFT_EXT2_PRESENT,
 };
 
 enum {
-    THING_STATE_BIT_SHIFT_EXT_IS_DEAD,
-    THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL,
-    THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS,
-    THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT,
-    THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS,
-    THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT,
-    THING_STATE_BIT_SHIFT_EXT_WEAPON_SWUNG,
+    THING_STATE_BIT_SHIFT_EXT1_IS_DEAD,
+    THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL,
+    THING_STATE_BIT_SHIFT_EXT1_IS_HIT_SUCCESS,
+    THING_STATE_BIT_SHIFT_EXT1_IS_HIT_CRIT,
+    THING_STATE_BIT_SHIFT_EXT1_IS_HIT_MISS,
+    THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT,
+    THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG,
+};
+
+enum {
+    THING_STATE_BIT_SHIFT_EXT2_RESYNC,
+    THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS,
 };
 
 uint8_t thing_server_move(thingp t,
