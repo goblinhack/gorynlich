@@ -719,11 +719,17 @@ static uint8_t sockets_show_summary (tokens_t *tokens, void *context)
                     socket_get_remote_logname(s));
             }
         } else {
-            CON("%-20s                  %-20s %-20s", 
-                name,
-                socket_get_local_logname(s),
-                socket_get_remote_logname(s));
-            CON("%-20s", sock);
+            if (*name) {
+                CON("%-20s                  %-20s %-20s", 
+                    name,
+                    socket_get_local_logname(s),
+                    socket_get_remote_logname(s));
+            } else {
+                CON("%-20s                  %-20s %-20s", 
+                    sock,
+                    socket_get_local_logname(s),
+                    socket_get_remote_logname(s));
+            }
         }
     }
 
