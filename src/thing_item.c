@@ -245,6 +245,8 @@ void thing_used (thingp t, tpp tp)
      * Check HP did not go too low.
      */
     if (thing_get_stats_hp(t) < 0) {
+        t->stats.hp = 0;
+
         const char *name = tp_short_name(tp);
 
         thing_dead(t, 0, "%s", name);

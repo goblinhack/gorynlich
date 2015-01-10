@@ -1606,6 +1606,9 @@ static int thing_hit_ (thingp t,
              * A hit, but not enough to kill the thing.
              */
             t->stats.hp -= damage;
+            if (t->stats.hp < 0) {
+                t->stats.hp = 0;
+            }
 
             if (thing_is_player(t)) {
                 THING_LOG(t, "hit by (%s) for %u", 
