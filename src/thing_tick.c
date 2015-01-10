@@ -210,7 +210,7 @@ static void thing_tick_server_all (void)
 //    LOG("server count %d",count);
 }
 
-void thing_tick_server_player_slow_all (void)
+void thing_tick_server_player_slow_all (int force)
 {
     thingp t;
 
@@ -229,7 +229,7 @@ void thing_tick_server_player_slow_all (void)
             continue;
         }
 
-        if (time_have_x_secs_passed_since(60, t->timestamp_torch)) {
+        if (force || time_have_x_secs_passed_since(60, t->timestamp_torch)) {
             t->timestamp_torch = time_get_time_cached();
 
             /*
@@ -249,7 +249,7 @@ void thing_tick_server_player_slow_all (void)
         /*
          * If health went over the max, tick it down.
          */
-        if (time_have_x_secs_passed_since(1, t->timestamp_health)) {
+        if (force || time_have_x_secs_passed_since(1, t->timestamp_health)) {
             t->timestamp_health = time_get_time_cached();
 
             int delta = thing_get_stats_max_hp(t) - thing_get_stats_hp(t);
@@ -261,38 +261,22 @@ void thing_tick_server_player_slow_all (void)
             if (delta > 0) {
                 t->stats.magic -= delta / 10;
             }
-        }
-    }
-}
 
-void thing_tick_client_player_slow_all (void)
-{
-    thingp t;
+            /*
+             * Work out the torch light radius. Each torch lights 0.5 radius 
+             * units.
+             */
+            float torch_light_radius = 
+                (double) thing_is_carrying_thing_count(t, tp_is_torch) / 2.0;
+            if (torch_light_radius > 
+                tp_get_light_radius(t->tp)) {
+                torch_light_radius = tp_get_light_radius(t->tp);
+            }
 
-    TREE_OFFSET_WALK_UNSAFE(client_player_things, t) {
-
-        /*
-         * Sanity checks.
-         */
-        thing_sanity(t);
-
-        /*
-         * If something changed in the player that we need to update the 
-         * client, do so now.
-         */
-        if (thing_is_dead(t)) {
-            continue;
-        }
-
-        /*
-         * Work out the torch light radius. Each torch lights 0.5 radius 
-         * units.
-         */
-        t->torch_light_radius = 
-            (double) thing_is_carrying_thing_count(t, tp_is_torch) / 2.0;
-        if (t->torch_light_radius > 
-            tp_get_light_radius(t->tp)) {
-            t->torch_light_radius = tp_get_light_radius(t->tp);
+            if (torch_light_radius != t->torch_light_radius) {
+                t->torch_light_radius = torch_light_radius;
+                thing_update(t);
+            }
         }
     }
 }
@@ -479,16 +463,7 @@ void thing_tick_all (void)
     /*
      * Slow tick.
      */
-    if (server_level) {
-        static uint32_t ts;
-
-        if (time_have_x_secs_passed_since(60, ts)) {
-
-            ts = time_get_time_cached();
-
-            thing_tick_server_player_slow_all();
-        }
-    }
+    thing_tick_server_player_slow_all(false /* force */);
 
     thing_tick_client_all();
 }

@@ -3147,44 +3147,36 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             ty = 0xFF;
         }
 
-        uint8_t state = t->dir | 
-            ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_RESYNC) |
-            ((t->is_dead        ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
-            ((t->has_left_level ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
-            ((t->is_hit_crit    ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
-            ((t->is_hit_success ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_PRESENT) |
-            ((t->is_hit_miss    ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_PRESENT);
+        uint8_t state = t->dir;
 
         /*
          * WARING: Keep the above and below in sync.
          */
-        uint8_t ext =
+        uint8_t ext1 =
             ((t->is_dead        ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_IS_DEAD) |
+                THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)             |
             ((t->has_left_level ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL) |
-            ((t->is_hit_crit ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT) |
+                THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)      |
+            ((t->is_hit_crit    ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT1_IS_HIT_CRIT)         |
             ((t->is_hit_success ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS) |
+                THING_STATE_BIT_SHIFT_EXT1_IS_HIT_SUCCESS)      |
             ((t->is_hit_miss    ? 1 : 0) << 
-                THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS);
+                THING_STATE_BIT_SHIFT_EXT1_IS_HIT_MISS);
+
+        uint8_t ext2 =
+            (((t->torch_light_radius > 0.0)          ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)  |
+            ((t->needs_tx_refresh_xy_and_template_id ? 1 : 0) << 
+                THING_STATE_BIT_SHIFT_EXT2_RESYNC);
 
         if (t->weapon) {
-            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT;
-            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
+            ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT;
         }
 
         if (t->needs_tx_weapon_swung) {
             t->needs_tx_weapon_swung = false;
-            ext |= 1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_SWUNG;
-            state |= 1 << THING_STATE_BIT_SHIFT_EXT_PRESENT;
+            ext1 |= 1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG;
         }
 
         t->is_hit_crit = 0;
@@ -3226,6 +3218,14 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
             state |= 1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT;
         }
 
+        if (ext1) {
+            state |= 1 << THING_STATE_BIT_SHIFT_EXT1_PRESENT;
+        }
+
+        if (ext2) {
+            state |= 1 << THING_STATE_BIT_SHIFT_EXT2_PRESENT;
+        }
+
         /*
          * Write the data.
          */
@@ -3245,9 +3245,14 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 //LOG("  template %02x",template_id);
         }
 
-        if (state & (1 << THING_STATE_BIT_SHIFT_EXT_PRESENT)) {
-            *data++ = ext;
-//LOG("  ext      %02x",ext);
+        if (ext1) {
+            *data++ = ext1;
+//LOG("  ext      %02x",ext1);
+        }
+
+        if (ext2) {
+            *data++ = ext2;
+//LOG("  ext      %02x",ext2);
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
@@ -3257,9 +3262,14 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 //LOG("  ty       %02x",ty);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT)) {
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)) {
             *data++ = tp_to_id(t->weapon);
 //LOG("  weapon   %0x",t->weapon_id);
+        }
+
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
+            *data++ = (uint8_t) ((int) (t->torch_light_radius * 4.0));
+//LOG("tx  torch    %f -> %d",t->torch_light_radius, *(data - 1));
         }
 
         t->last_tx = tx;
@@ -3361,10 +3371,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
 //LOG("rx map element:");
 //hex_dump_log(data, 0, 10);
         uint8_t state = *data++;
-        uint8_t ext;
+        uint8_t ext1;
+        uint8_t ext2;
         uint8_t template_id;
         uint8_t weapon_id;
         uint8_t weapon_swung;
+        uint8_t torch_light_radius_present;
+        float torch_light_radius;
         uint16_t id;
         uint8_t on_map;
         thingp t;
@@ -3399,14 +3412,24 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             template_id = -1;
         }
 
-        if (state & (1 << THING_STATE_BIT_SHIFT_EXT_PRESENT)) {
+        if (state & (1 << THING_STATE_BIT_SHIFT_EXT1_PRESENT)) {
             /*
              * Extensions present.
              */
-            ext = *data++;
+            ext1 = *data++;
 //LOG("  ext      %02x",ext);
         } else {
-            ext = 0;
+            ext1 = 0;
+        }
+
+        if (state & (1 << THING_STATE_BIT_SHIFT_EXT2_PRESENT)) {
+            /*
+             * Extensions present.
+             */
+            ext2 = *data++;
+//LOG("  ext      %02x",ext);
+        } else {
+            ext2 = 0;
         }
 
         if (state & (1 << THING_STATE_BIT_SHIFT_XY_PRESENT)) {
@@ -3433,28 +3456,36 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             on_map = true;
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT)) {
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)) {
             weapon_id = *data++;
 //LOG("  weapon   %02x",weapon_id);
         } else {
             weapon_id = 0;
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_WEAPON_SWUNG)) {
+        if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
+            torch_light_radius = ((float) (*data++)) / 4.0;
+            torch_light_radius_present = true;
+//LOG("  torch light %d -> %f", *(data - 1), torch_light_radius);
+        } else {
+            torch_light_radius_present = false;
+        }
+
+        t = thing_client_find(id);
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG)) {
             weapon_swung = true;
 //LOG("  weapon swung");
         } else {
             weapon_swung = false;
         }
 
-        t = thing_client_find(id);
         if (!t) {
             if (template_id == (uint8_t)-1) {
                 /*
                  * It's okay if it is dead, we can ignore this as the server 
                  * is just making sure we got the dead hint.
                  */
-                if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
+                if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)) {
                     LOG("Client: received DEAD unknown thing %u", id);
                     continue;
                 }
@@ -3499,7 +3530,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                     }
                 }
 
-                if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
+                if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)) {
                     /*
                      * If this thing is leaving the level, no need to update
                      * the map if it is a wall as all walls are leaving.
@@ -3546,7 +3577,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                     /*
                      * Local echo only.
                      */
-                    if ((state & (1 << THING_STATE_BIT_SHIFT_RESYNC))) {
+                    if ((ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_RESYNC))) {
                         /*
                          * Check we are roughly where the server thinks we 
                          * are. If wildly out of whack, correct our viewpoint.
@@ -3605,25 +3636,29 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             }
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_MISS)) {
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_HIT_MISS)) {
             thing_effect_hit_miss(t);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_SUCCESS)) {
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_HIT_SUCCESS)) {
             thing_effect_hit_success(t);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_HIT_CRIT)) {
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_HIT_CRIT)) {
             thing_effect_hit_crit(t);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_HAS_LEFT_LEVEL)) {
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL)) {
             thing_hide(t);
         } else {
             thing_visible(t);
         }
 
-        if (ext & (1 << THING_STATE_BIT_SHIFT_EXT_IS_DEAD)) {
+        if (torch_light_radius_present) {
+            t->torch_light_radius = torch_light_radius;
+        }
+
+        if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_IS_DEAD)) {
 //LOG("rx %s dead",thing_logname(t));
             thing_dead(t, 0, "server killed");
         }
