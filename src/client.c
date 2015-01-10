@@ -42,7 +42,7 @@ static uint8_t client_set_name(tokens_t *tokens, void *context);
 static uint8_t client_set_pclass(tokens_t *tokens, void *context);
 static uint8_t client_shout(tokens_t *tokens, void *context);
 static uint8_t client_tell(tokens_t *tokens, void *context);
-static uint8_t client_players_show(tokens_t *tokens, void *context);
+static uint8_t client_player_show(tokens_t *tokens, void *context);
 static uint8_t client_join(tokens_t *tokens, void *context);
 static uint8_t client_leave(tokens_t *tokens, void *context);
 static uint8_t client_open(tokens_t *tokens, void *context);
@@ -102,8 +102,8 @@ uint8_t client_init (void)
     command_add(client_tell, "tell [A-Za-z0-9_-]* [A-Za-z0-9_-]*",
                 "send a message to a player");
 
-    command_add(client_players_show, "show players", 
-                "show all players state");
+    command_add(client_player_show, "show client player", 
+                "show client player state");
 
     client_init_done = true;
 
@@ -953,7 +953,7 @@ static void client_poll (void)
 /*
  * User has entered a command, run it
  */
-static uint8_t client_players_show (tokens_t *tokens, void *context)
+static uint8_t client_player_show (tokens_t *tokens, void *context)
 {
     CON("Name                       Local IP       Remote IP    ");
     CON("----                    --------------- ---------------");
@@ -963,7 +963,7 @@ static uint8_t client_players_show (tokens_t *tokens, void *context)
     char *tmp = iptodynstr(p->local_ip);
     char *tmp2 = iptodynstr(p->remote_ip);
 
-    CON("%-10s/%8s %-15s %-15s", 
+    CON("%-10s/%12s %-15s %-15s", 
         p->stats.pname,
         p->stats.pclass,
         tmp2,
