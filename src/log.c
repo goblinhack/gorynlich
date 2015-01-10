@@ -694,8 +694,6 @@ uint8_t debug_enable (tokens_t *tokens, void *context)
     if (!debug_enabled) {
         debug_enabled = 0;
         debug_socket_ping_enabled = 0;
-        debug_socket_connect_enabled = 0;
-        debug_socket_players_enabled = 0;
     }
 
     CON("Debug mode set to %u", debug_enabled);
