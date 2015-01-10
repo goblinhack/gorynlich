@@ -2675,7 +2675,8 @@ void thing_place_timed (tpp tp,
 /*
  * Place a thing after a delay.
  */
-void thing_place_and_destroy_timed (tpp tp, 
+void thing_place_and_destroy_timed (levelp level,
+                                    tpp tp, 
                                     thingp owner,
                                     double x,
                                     double y,
@@ -2710,7 +2711,7 @@ void thing_place_and_destroy_timed (tpp tp,
                 "place and destroy thing",
                 ms,
                 jitter);
-    } else {
+    } else if (server_level && (level == server_level)) {
         action_timer_create(
                 &server_timers,
                 (action_timer_callback)
@@ -2721,6 +2722,19 @@ void thing_place_and_destroy_timed (tpp tp,
                 "place and destroy thing",
                 ms,
                 jitter);
+    } else if (client_level && (level == client_level)) {
+        action_timer_create(
+                &client_timers,
+                (action_timer_callback)
+                    thing_timer_place_and_destroy_callback,
+                (action_timer_callback)
+                    thing_timer_place_and_destroy_destroy_callback,
+                context,
+                "place and destroy thing",
+                ms,
+                jitter);
+    } else {
+        DIE("don't know where to place explosion");
     }
 }
 
