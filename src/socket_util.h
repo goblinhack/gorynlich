@@ -437,6 +437,54 @@ static inline uint8_t cmp_address (const IPaddress *a, const IPaddress *b)
     return ((a->host == b->host) && (a->port == b->port));
 }
 
+/*
+ * address_resolve
+ *
+ * Avpid calling SDLNet_ResolveHost unless we have to as DNS look ups can 
+ * block for a long time (seconds).
+ */
+static inline int address_resolve (IPaddress *address,
+                                   const char *host,
+                                   const uint16_t port)
+{
+    unsigned int n1;
+    unsigned int n2;
+    unsigned int n3;
+    unsigned int n4;
+    uint32_t addr;
+
+    if (!strcasecmp(host, "localhost")) {
+        n1 = 127;
+        n2 = 0;
+        n3 = 0;
+        n4 = 1;
+
+        addr = (n1 << 24) | (n2 << 16) | (n3 << 8) | n4;
+
+        SDLNet_Write32(addr, &address->host);
+    } else if (sscanf(host, "%u.%u.%u.%u", &n1, &n2, &n3, &n4) == 4) {
+        addr = (n1 << 24) | (n2 << 16) | (n3 << 8) | n4;
+
+        if ((n1 > 255) || (n2 > 255) || (n3 > 255) || (n4 > 255)) {
+            return (-1);
+        }
+
+        SDLNet_Write32(addr, &address->host);
+    } else {
+        LOG("Resolving address %s...", host);
+
+        if ((SDLNet_ResolveHost(address, host, port)) == -1) {
+            ERR("Cannot resolve host %s port %u", host, port);
+
+            return (-1);
+        }
+    }
+
+    SDLNet_Write16(port, &address->port);
+
+    return (0);
+}
+
 extern tree_rootp sockets;
 
 UDPpacket *packet_alloc(void);
