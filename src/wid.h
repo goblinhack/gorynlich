@@ -525,7 +525,12 @@ typedef struct wid_ {
     /*
      * No particular sort order.
      */
-    tree_root *children_unsorted;
+    tree_root *tree2_children_unsorted;
+
+    /*
+     * How many references are held by children of this wid.
+     */
+    uint32_t ref;
 
     /*
      * Optionally set to the previous wid in a list
