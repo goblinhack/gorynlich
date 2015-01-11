@@ -461,6 +461,24 @@ uint8_t client_socket_join (const char *host,
         }
     }
 
+    /*
+     * If we hit join a server without creating a player, then we need
+     * to generate some stats.
+     */
+    if (!global_config.stats.pname[0] ||
+        !global_config.stats.pclass[0] ||
+        !global_config.stats.hp) {
+
+        LOG("Client: Need random stats set:");
+
+        thing_statsp s;
+        s = &global_config.stats;
+        thing_stats_get_random(s, false /* new_random_name_and_class */);
+    }
+
+    /*
+     * Copy stuff into the socket
+     */
     socket_set_name(s, global_config.stats.pname);
     socket_set_pclass(s, global_config.stats.pclass);
     socket_set_player_stats(s, &global_config.stats);
@@ -475,6 +493,7 @@ uint8_t client_socket_join (const char *host,
     }
 
     LOG("Client: Joining server %s", socket_get_remote_logname(s));
+    thing_stats_dump(&global_config.stats);
 
     client_joined_server = s;
     client_joined_server_when = time_get_time_cached();
@@ -900,6 +919,8 @@ static void client_poll (void)
                     changed_stats.thing_id = old_stats->thing_id;
                     new_stats = &changed_stats;
 
+                    int changed = 0;
+
                     /*
                      * Now see what really changed and if we need to update 
                      * scores.
@@ -911,12 +932,17 @@ static void client_poll (void)
                         memcpy(old_stats, new_stats, sizeof(thing_stats));
 
                         wid_game_map_client_score_update(client_level, redo);
+
+                        changed = 1;
                     }
 
                     new_stats = &server_stats->stats;
                     memcpy(old_stats, new_stats, sizeof(thing_stats));
-LOG("rx update");
-thing_dump(player);
+
+                    if (changed) {
+                        LOG("Client: player stats changed on server:");
+                        thing_dump(player);
+                    }
                 }
 
                 break;
