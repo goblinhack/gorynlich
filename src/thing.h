@@ -12,7 +12,9 @@
 
 uint8_t thing_init(void);
 void thing_fini(void);
+char *item2str(const item_t i);
 void thing_dump(const thingp t);
+void thing_stats_dump(const thing_statsp s);
 void thing_update(thingp t);
 void thing_map_sanity(void);
 void thing_sanity(thingp);

@@ -227,46 +227,6 @@ void thing_fini (void)
     }
 }
 
-static char *item_dump (const item_t i)
-{
-    char *tmp;
-    int32_t size;
-    int32_t used;
-
-    tmp = 0;
-    size = 0;
-    used = 0;
-
-    if (!i.id) {
-        return (0);
-    }
-
-    snprintf_realloc(&tmp, &size, &used, "%20s",
-                     tp_short_name(id_to_tp(i.id)));
-
-    if (i.quantity > 1) {
-        snprintf_realloc(&tmp, &size, &used, " x %u",
-                        i.quantity);
-    }
-
-    if (i.quality < THING_ITEM_QUALITY_MAX) {
-        snprintf_realloc(&tmp, &size, &used, " %2.0f%%%%%",
-                         (100.0 / (float)THING_ITEM_QUALITY_MAX) *
-                         (float) i.quality);
-    }
-
-    if (i.cursed) {
-        snprintf_realloc(&tmp, &size, &used, " (cursed)");
-    }
-
-    if (i.cursed) {
-        snprintf_realloc(&tmp, &size, &used, " (+%d)",
-                         i.enchanted);
-    }
-
-    return (tmp);
-}
-
 void thing_dump (const thingp t)
 {
     const thing_statsp s = &t->stats;
@@ -283,152 +243,7 @@ void thing_dump (const thingp t)
 
     LOG("  %-20s %u", "thing_id", t->thing_id);
 
-    LOG("  stats:");
-
-    LOG("    %-20s %4d %-20s %4d", 
-        "hp", s->hp, 
-        "max-hp", s->max_hp);
-
-    LOG("    %-20s %4d %-20s %4d", 
-        "hp", s->magic, 
-        "max-hp", s->max_magic);
-
-    LOG("    %-20s %4u %-20s %4u", 
-        "xp", s->xp, 
-        "cash", s->cash);
-
-    LOG("    %-20s %4u %-20s %4u", 
-        "spending", s->spending_points, 
-        "vision", s->vision);
-
-    LOG("    %-20s %4u %-20s %4u", 
-        "attack_melee", s->attack_melee, 
-        "attack_ranged", s->attack_ranged);
-
-    LOG("    %-20s %4u %-20s %4u", 
-        "attack_magical", s->attack_magical, 
-        "defense", s->defense);
-
-    LOG("    %-20s %4u %-20s %4u", 
-        "speed", s->speed, 
-        "healing", s->healing);
-
-    if (s->weapon) {
-        LOG("  %-20s %s",
-            "weapon",
-            tp_short_name(id_to_tp(s->weapon)));
-    }
-
-    {
-        LOG("  inventory:");
-
-        char *item_str = 0;
-        int i = 0;
-
-        while (i < THING_INVENTORY_MAX) {
-            item_t a = s->inventory[i++];
-
-            char *tmp = item_dump(a);
-            if (tmp) {
-                if (item_str) {
-                    LOG("    %-30s %-30s", item_str, tmp);
-                    myfree(item_str);
-                    myfree(tmp);
-                    item_str = 0;
-                } else {
-                    item_str = tmp;
-                }
-            }
-
-            i++;
-        }
-
-        if (item_str) {
-            LOG("    %-30s", item_str);
-            myfree(item_str);
-        }
-    }
-
-    {
-        LOG("  action bar:");
-
-        int i;
-        for (i = 0; i < THING_ACTION_BAR_MAX; i+=2) {
-            item_t a = s->action_bar[i];
-            item_t b = s->action_bar[i + 1];
-
-            char *ia = item_dump(a);
-            char *ib = item_dump(b);
-
-            LOG("    (%d) %-30s (%d) %-30s",
-                i, ia ? ia : "nothing", 
-                i, ib ? ib : "nothing");
-
-            if (ia) {
-                myfree(ia);
-            }
-
-            if (ib) {
-                myfree(ib);
-            }
-        }
-    }
-
-    {
-        LOG("  worn:");
-
-        {
-            item_t a = s->worn[THING_WORN_ARMOR];
-            item_t b = s->worn[THING_WORN_HELMET];
-
-            char *ia = item_dump(a);
-            char *ib = item_dump(b);
-
-            LOG("    %-10s: %-30s %-10s: %-30s", 
-                "armor", ia ? ia : "-", 
-                "helmet", ib ? ib : "-");
-
-            if (ia) {
-                myfree(ia);
-            }
-
-            if (ib) {
-                myfree(ib);
-            }
-        }
-
-        {
-            item_t a = s->worn[THING_WORN_ARM_LEFT];
-            item_t b = s->worn[THING_WORN_ARM_RIGHT];
-
-            char *ia = item_dump(a);
-            char *ib = item_dump(b);
-
-            LOG("    %-10s: %-30s %-10s: %-30s", 
-                "arm left", ia ? ia : "-", 
-                "arm right", ib ? ib : "-");
-
-            if (ia) {
-                myfree(ia);
-            }
-
-            if (ib) {
-                myfree(ib);
-            }
-        }
-
-        {
-            item_t a = s->worn[THING_WORN_BOOTS];
-            char *ia = item_dump(a);
-
-            LOG("    %-10s: %-30s",
-                "boots", ia ? ia : "-");
-
-            if (ia) {
-                myfree(ia);
-            }
-        }
-    }
+    thing_stats_dump(s);
 }
 
 void thing_update (thingp t)
@@ -1036,9 +851,12 @@ thingp thing_server_new (const char *name,
         }
     }
 
-if (thing_is_player(t)) {
-thing_dump(t);
-}
+    if (thing_is_player(t)) {
+        LOG("New player:");
+
+        thing_dump(t);
+    }
+
     return (t);
 }
 
@@ -1364,6 +1182,12 @@ void thing_destroy (thingp t, const char *why)
 
     if (!thing_is_boring_noverify(t)) {
         THING_LOG(t, "destroyed (%s)", why);
+    }
+
+    if (thing_is_player(t)) {
+        LOG("Destroy player:");
+
+        thing_dump(t);
     }
  
     /*
