@@ -410,9 +410,21 @@ uint8_t client_socket_join (const char *host,
         }
 
         if (!s) {
-            WARN("Do not know which socket to join");
-            return (false);
+            h = SERVER_DEFAULT_HOST;
         }
+    }
+
+    if (!h && !port && !s) {
+        TREE_WALK(sockets, s) {
+            if (socket_get_client(s)) {
+                break;
+            }
+        }
+
+        if (!s) {
+            h = SERVER_DEFAULT_HOST;
+        }
+
     } else {
         if (!h || !*h) {
             h = SERVER_DEFAULT_HOST;
@@ -893,7 +905,6 @@ static void client_poll (void)
                      * scores.
                      */
                     if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
-
                         /*
                          * If the stats change, update the inventory
                          */
@@ -904,6 +915,8 @@ static void client_poll (void)
 
                     new_stats = &server_stats->stats;
                     memcpy(old_stats, new_stats, sizeof(thing_stats));
+LOG("rx update");
+thing_dump(player);
                 }
 
                 break;
