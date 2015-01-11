@@ -16,6 +16,157 @@
 #include "thing_template.h"
 #include "wid_player_info.h"
 #include "math_util.h"
+#include "thing.h"
+
+void thing_stats_dump (const thing_statsp s)
+{
+    LOG("  stats:");
+
+    LOG("    %-20s %4d %-20s %4d", 
+        "hp", s->hp, 
+        "max-hp", s->max_hp);
+
+    LOG("    %-20s %4d %-20s %4d", 
+        "hp", s->magic, 
+        "max-hp", s->max_magic);
+
+    LOG("    %-20s %4u %-20s %4u", 
+        "xp", s->xp, 
+        "cash", s->cash);
+
+    LOG("    %-20s %4u %-20s %4u", 
+        "spending", s->spending_points, 
+        "vision", s->vision);
+
+    LOG("    %-20s %4u %-20s %4u", 
+        "attack_melee", s->attack_melee, 
+        "attack_ranged", s->attack_ranged);
+
+    LOG("    %-20s %4u %-20s %4u", 
+        "attack_magical", s->attack_magical, 
+        "defense", s->defense);
+
+    LOG("    %-20s %4u %-20s %4u", 
+        "speed", s->speed, 
+        "healing", s->healing);
+
+    if (s->weapon) {
+        LOG("  %-20s %s",
+            "weapon",
+            tp_short_name(id_to_tp(s->weapon)));
+    }
+
+    {
+        LOG("  inventory:");
+
+        char *item_str = 0;
+        int i = 0;
+
+        while (i < THING_INVENTORY_MAX) {
+            item_t a = s->inventory[i++];
+
+            char *tmp = item2str(a);
+            if (tmp) {
+                if (item_str) {
+                    LOG("    %-30s %-30s", item_str, tmp);
+                    myfree(item_str);
+                    myfree(tmp);
+                    item_str = 0;
+                } else {
+                    item_str = tmp;
+                }
+            }
+
+            i++;
+        }
+
+        if (item_str) {
+            LOG("    %-30s", item_str);
+            myfree(item_str);
+        }
+    }
+
+    {
+        LOG("  action bar:");
+
+        int i;
+        for (i = 0; i < THING_ACTION_BAR_MAX; i+=2) {
+            item_t a = s->action_bar[i];
+            item_t b = s->action_bar[i + 1];
+
+            char *ia = item2str(a);
+            char *ib = item2str(b);
+
+            LOG("    (%d) %-30s (%d) %-30s",
+                i, ia ? ia : "nothing", 
+                i, ib ? ib : "nothing");
+
+            if (ia) {
+                myfree(ia);
+            }
+
+            if (ib) {
+                myfree(ib);
+            }
+        }
+    }
+
+    {
+        LOG("  worn:");
+
+        {
+            item_t a = s->worn[THING_WORN_ARMOR];
+            item_t b = s->worn[THING_WORN_HELMET];
+
+            char *ia = item2str(a);
+            char *ib = item2str(b);
+
+            LOG("    %-10s: %-30s %-10s: %-30s", 
+                "armor", ia ? ia : "-", 
+                "helmet", ib ? ib : "-");
+
+            if (ia) {
+                myfree(ia);
+            }
+
+            if (ib) {
+                myfree(ib);
+            }
+        }
+
+        {
+            item_t a = s->worn[THING_WORN_ARM_LEFT];
+            item_t b = s->worn[THING_WORN_ARM_RIGHT];
+
+            char *ia = item2str(a);
+            char *ib = item2str(b);
+
+            LOG("    %-10s: %-30s %-10s: %-30s", 
+                "arm left", ia ? ia : "-", 
+                "arm right", ib ? ib : "-");
+
+            if (ia) {
+                myfree(ia);
+            }
+
+            if (ib) {
+                myfree(ib);
+            }
+        }
+
+        {
+            item_t a = s->worn[THING_WORN_BOOTS];
+            char *ia = item2str(a);
+
+            LOG("    %-10s: %-30s",
+                "boots", ia ? ia : "-");
+
+            if (ia) {
+                myfree(ia);
+            }
+        }
+    }
+}
 
 int item_push (itemp dst, item_t src)
 {
