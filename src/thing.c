@@ -250,7 +250,7 @@ static char *item_dump (const item_t i)
     }
 
     if (i.quality < THING_ITEM_QUALITY_MAX) {
-        snprintf_realloc(&tmp, &size, &used, " %2f%%%",
+        snprintf_realloc(&tmp, &size, &used, " %2.0f%%%%%",
                          (100.0 / (float)THING_ITEM_QUALITY_MAX) *
                          (float) i.quality);
     }
@@ -283,31 +283,33 @@ void thing_dump (const thingp t)
 
     LOG("  %-20s %u", "thing_id", t->thing_id);
 
-    LOG("  %-20s %4d %-20s %4d", 
+    LOG("  stats:");
+
+    LOG("    %-20s %4d %-20s %4d", 
         "hp", s->hp, 
         "max-hp", s->max_hp);
 
-    LOG("  %-20s %4d %-20s %4d", 
+    LOG("    %-20s %4d %-20s %4d", 
         "hp", s->magic, 
         "max-hp", s->max_magic);
 
-    LOG("  %-20s %4u %-20s %4u", 
+    LOG("    %-20s %4u %-20s %4u", 
         "xp", s->xp, 
         "cash", s->cash);
 
-    LOG("  %-20s %4u %-20s %4u", 
+    LOG("    %-20s %4u %-20s %4u", 
         "spending", s->spending_points, 
         "vision", s->vision);
 
-    LOG("  %-20s %4u %-20s %4u", 
+    LOG("    %-20s %4u %-20s %4u", 
         "attack_melee", s->attack_melee, 
         "attack_ranged", s->attack_ranged);
 
-    LOG("  %-20s %4u %-20s %4u", 
+    LOG("    %-20s %4u %-20s %4u", 
         "attack_magical", s->attack_magical, 
         "defense", s->defense);
 
-    LOG("  %-20s %4u %-20s %4u", 
+    LOG("    %-20s %4u %-20s %4u", 
         "speed", s->speed, 
         "healing", s->healing);
 
