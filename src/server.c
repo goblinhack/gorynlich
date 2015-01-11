@@ -141,6 +141,8 @@ static void server_rx_client_join (gsocketp s)
         p->stats_from_client.pname, 
         p->key, socket_get_remote_logname(s));
 
+    thing_stats_dump(&p->stats_from_client);
+
     char *tmp = dynprintf("%s joined", 
                           p->stats_from_client.pname);
     socket_tx_server_shout_at_all_players_except(s, WARNING, tmp);

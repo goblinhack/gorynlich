@@ -7,6 +7,47 @@
 #include "main.h"
 #include "thing.h"
 #include "thing_stats.h"
+#include "string_ext.h"
+
+char *item2str (const item_t i)
+{
+    char *tmp;
+    int32_t size;
+    int32_t used;
+
+    tmp = 0;
+    size = 0;
+    used = 0;
+
+    if (!i.id) {
+        return (0);
+    }
+
+    snprintf_realloc(&tmp, &size, &used, "%20s",
+                     tp_short_name(id_to_tp(i.id)));
+
+    if (i.quantity > 1) {
+        snprintf_realloc(&tmp, &size, &used, " x %u",
+                        i.quantity);
+    }
+
+    if (i.quality < THING_ITEM_QUALITY_MAX) {
+        snprintf_realloc(&tmp, &size, &used, " %2.0f%%%%%",
+                         (100.0 / (float)THING_ITEM_QUALITY_MAX) *
+                         (float) i.quality);
+    }
+
+    if (i.cursed) {
+        snprintf_realloc(&tmp, &size, &used, " (cursed)");
+    }
+
+    if (i.cursed) {
+        snprintf_realloc(&tmp, &size, &used, " (+%d)",
+                         i.enchanted);
+    }
+
+    return (tmp);
+}
 
 static void thing_collect (thingp t, 
                            thingp it,
