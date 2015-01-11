@@ -528,11 +528,6 @@ typedef struct wid_ {
     tree_root *tree2_children_unsorted;
 
     /*
-     * How many references are held by children of this wid.
-     */
-    uint32_t ref;
-
-    /*
      * Optionally set to the previous wid in a list
      */
     widp prev;

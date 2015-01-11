@@ -156,8 +156,14 @@ void wid_fini (void)
 
         wid_gc_all();
 
-        tree_destroy(&wid_top_level,
-                     (tree_destroy_func)wid_destroy_immediate_internal);
+        {
+            widp child;
+            TREE_WALK(wid_top_level, child) {
+                wid_destroy_immediate(child);
+            }
+        }
+
+        tree_destroy(&wid_top_level, (tree_destroy_func)0);
         tree_destroy(&wid_top_level3, (tree_destroy_func)0);
         tree_destroy(&wid_top_level2, (tree_destroy_func)0);
         tree_destroy(&wid_top_level5, (tree_destroy_func)0);
@@ -2849,10 +2855,6 @@ static widp wid_new (widp parent)
     w = (typeof(w)) myzalloc(sizeof(*w), "widget");
     w->parent = parent;
 
-    if (parent) {
-        parent->ref++;
-    }
-
     wid_tree_insert(w);
     wid_tree2_unsorted_insert(w);
 
@@ -2936,21 +2938,26 @@ static void wid_destroy_immediate_internal (widp w)
      */
     wid_destroy_grid(w);
 
-    widp child;
-    TREE_WALK(w->children_display_sorted, child) {
-        wid_destroy_immediate_internal(child);
+    {
+        widp child;
+        TREE_WALK(w->children_display_sorted, child) {
+            wid_destroy_immediate(child);
+        }
     }
 
-    if (w->parent) {
-        w->parent->ref--;
+    {
+        widp child;
+        TREE_OFFSET_WALK(w->tree2_children_unsorted, child, tree2_unsorted) {
+            wid_destroy_immediate(child);
+        }
     }
+
     w->parent = 0;
 }
 
 static void wid_destroy_immediate (widp w)
 {
     fast_verify(w);
-
 
     /*
      * If removing a top level widget, choose a new focus.
@@ -2964,10 +2971,6 @@ static void wid_destroy_immediate (widp w)
     wid_tree2_unsorted_remove(w);
 
     wid_destroy_immediate_internal(w);
-
-    if (w->ref) {
-        ERR("destroying wid %s still has %u children", w->logname, w->ref);
-    }
 
     tree_destroy(&w->children_display_sorted, (tree_destroy_func)0);
     tree_destroy(&w->tree2_children_unsorted, (tree_destroy_func)0);
