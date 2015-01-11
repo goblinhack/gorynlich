@@ -2600,7 +2600,7 @@ static void wid_tree2_unsorted_insert (widp w)
     if (!w->parent) {
         root = wid_top_level2;
     } else {
-        root = w->parent->children_unsorted;
+        root = w->parent->tree2_children_unsorted;
     }
 
     if (!root) {
@@ -2608,7 +2608,7 @@ static void wid_tree2_unsorted_insert (widp w)
         if (!w->parent) {
             wid_top_level2 = root;
         } else {
-            w->parent->children_unsorted = root;
+            w->parent->tree2_children_unsorted = root;
         }
 
         root->offset = STRUCT_OFFSET(struct wid_, tree2_unsorted);
@@ -2849,6 +2849,10 @@ static widp wid_new (widp parent)
     w = (typeof(w)) myzalloc(sizeof(*w), "widget");
     w->parent = parent;
 
+    if (parent) {
+        parent->ref++;
+    }
+
     wid_tree_insert(w);
     wid_tree2_unsorted_insert(w);
 
@@ -2932,9 +2936,41 @@ static void wid_destroy_immediate_internal (widp w)
      */
     wid_destroy_grid(w);
 
-    tree_destroy(&w->children_unsorted, (tree_destroy_func)0);
-    tree_destroy(&w->children_display_sorted,
-                 (tree_destroy_func)wid_destroy_immediate_internal);
+    widp child;
+    TREE_WALK(w->children_display_sorted, child) {
+        wid_destroy_immediate_internal(child);
+    }
+
+    if (w->parent) {
+        w->parent->ref--;
+    }
+    w->parent = 0;
+}
+
+static void wid_destroy_immediate (widp w)
+{
+    fast_verify(w);
+
+
+    /*
+     * If removing a top level widget, choose a new focus.
+     */
+    if (!w->parent) {
+        wid_find_top_focus();
+    }
+
+    wid_tree_detach(w);
+
+    wid_tree2_unsorted_remove(w);
+
+    wid_destroy_immediate_internal(w);
+
+    if (w->ref) {
+        ERR("destroying wid %s still has %u children", w->logname, w->ref);
+    }
+
+    tree_destroy(&w->children_display_sorted, (tree_destroy_func)0);
+    tree_destroy(&w->tree2_children_unsorted, (tree_destroy_func)0);
 
     if (w->name) {
         myfree(w->name);
@@ -2950,24 +2986,6 @@ static void wid_destroy_immediate_internal (widp w)
         myfree(w->logname);
         w->logname = 0;
     }
-}
-
-static void wid_destroy_immediate (widp w)
-{
-    fast_verify(w);
-
-    /*
-     * If removing a top level widget, choose a new focus.
-     */
-    if (!w->parent) {
-        wid_find_top_focus();
-    }
-
-    wid_tree_detach(w);
-
-    wid_tree2_unsorted_remove(w);
-
-    wid_destroy_immediate_internal(w);
 
     myfree(w);
 }
@@ -3018,7 +3036,7 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
         wid_mouse_motion_end();
     }
 
-    TREE_OFFSET_WALK(w->children_unsorted, child, tree2_unsorted) {
+    TREE_OFFSET_WALK(w->tree2_children_unsorted, child, tree2_unsorted) {
         widp c;
 
         fast_verify(child);
@@ -3697,7 +3715,7 @@ static void wid_attach_to_grid_internal (widp w)
 {
     widp child;
 
-    { TREE_OFFSET_WALK(w->children_unsorted, child, tree2_unsorted) {
+    { TREE_OFFSET_WALK(w->tree2_children_unsorted, child, tree2_unsorted) {
         wid_attach_to_grid_internal(child);
     } }
 
@@ -4888,7 +4906,7 @@ static void wid_adjust_scrollbar (widp scrollbar, widp owner)
         maxx = owner->grid->br_x;
         maxy = owner->grid->br_y;
     } else {
-        TREE_OFFSET_WALK_UNSAFE(owner->children_unsorted, child) {
+        TREE_OFFSET_WALK_UNSAFE(owner->tree2_children_unsorted, child) {
             double tl_x, tl_y, br_x, br_y;
 
             wid_get_tl_x_tl_y_br_x_br_y(child, &tl_x, &tl_y, &br_x, &br_y);
@@ -5117,7 +5135,7 @@ static void wid_update_internal (widp w)
      * Clip all the children. Avoid this for speed for the main game window.
      */
     if (w != wid_game_map_client_grid_container) {
-        TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
+        TREE_OFFSET_WALK_UNSAFE(w->tree2_children_unsorted, child) {
             wid_update_internal(child);
         }
 
@@ -6058,7 +6076,7 @@ static void wid_children_move_delta_internal (widp w, double dx, double dy)
 
     widp child;
 
-    { TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
+    { TREE_OFFSET_WALK_UNSAFE(w->tree2_children_unsorted, child) {
         wid_children_move_delta_internal(child, dx, dy);
     } }
 }
@@ -6127,7 +6145,7 @@ static void wid_move_delta_internal (widp w, double dx, double dy)
             w->grid->br_y += dy;
         }
     } else {
-        { TREE_OFFSET_WALK_UNSAFE(w->children_unsorted, child) {
+        { TREE_OFFSET_WALK_UNSAFE(w->tree2_children_unsorted, child) {
             wid_children_move_delta_internal(child, dx, dy);
         } }
     }

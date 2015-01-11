@@ -372,8 +372,8 @@ itemp thing_stats_has_worn_item (thing_stats *player_stats,
 }
 
 int thing_stats_item_add (thingp t,
-                           thing_stats *player_stats,
-                           item_t item)
+                          thing_stats *player_stats,
+                          item_t item)
 {
     tpp it = id_to_tp(item.id);
     itemp oitem;

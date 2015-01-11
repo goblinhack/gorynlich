@@ -12,6 +12,7 @@
 
 uint8_t thing_init(void);
 void thing_fini(void);
+void thing_dump(const thingp t);
 void thing_update(thingp t);
 void thing_map_sanity(void);
 void thing_sanity(thingp);
