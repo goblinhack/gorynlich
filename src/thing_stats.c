@@ -168,6 +168,136 @@ void thing_stats_dump (const thing_statsp s)
     }
 }
 
+/*
+ * Dump what changed between two stats
+ */
+void thing_stats_diff (const thing_statsp old, const thing_statsp new)
+{
+    const char indent[] = "  ";
+
+    if (old->hp != new->hp) {
+        LOG("%sHp changed from %d to %d", indent, old->hp, new->hp);
+    }
+
+    if (old->magic != new->magic) {
+        LOG("%sMagic changed from %d to %d", indent, old->magic, new->magic);
+    }
+
+    if (old->xp != new->xp) {
+        LOG("%sXp changed from %d to %d", indent, old->xp, new->xp);
+    }
+
+    if (old->cash != new->cash) {
+        LOG("%sCash changed from %d to %d", indent, old->cash, new->cash);
+    }
+
+    if (old->spending_points != new->spending_points) {
+        LOG("%sSpending_points changed from %d to %d", indent, old->spending_points, new->spending_points);
+    }
+
+    if (old->vision != new->vision) {
+        LOG("%sVision changed from %d to %d", indent, old->vision, new->vision);
+    }
+
+    if (old->attack_melee != new->attack_melee) {
+        LOG("%sAttack_melee changed from %d to %d", indent, old->attack_melee, new->attack_melee);
+    }
+
+    if (old->attack_ranged != new->attack_ranged) {
+        LOG("%sAttack_ranged changed from %d to %d", indent, old->attack_ranged, new->attack_ranged);
+    }
+
+    if (old->defense != new->defense) {
+        LOG("%sDefense changed from %d to %d", indent, old->defense, new->defense);
+    }
+
+    if (old->attack_magical != new->attack_magical) {
+        LOG("%sAttack_magical changed from %d to %d", indent, old->attack_magical, new->attack_magical);
+    }
+
+    if (old->weapon != new->weapon) {
+        LOG("%sWeapon changed from %s to %s", indent,
+            tp_short_name(id_to_tp(old->magic)),
+            tp_short_name(id_to_tp(new->magic)));
+    }
+
+    {
+        int i = 0;
+
+        for (i = 0; i < THING_INVENTORY_MAX; i++) {
+            item_t a = old->inventory[i];
+            item_t b = new->inventory[i];
+
+            if (memcmp(&a, &b, sizeof(a))) {
+                char *ia = item2str(a);
+                char *ib = item2str(b);
+
+                if (ia && ib) {
+                    LOG("%sItem changed, %s to %s", indent, ia, ib);
+                    myfree(ia);
+                    myfree(ib);
+                } else if (ia) {
+                    LOG("%sItem removed, %s", indent, ia);
+                    myfree(ia);
+                } else if (ib) {
+                    LOG("%sItem added, %s", indent, ib);
+                    myfree(ib);
+                }
+            }
+        }
+    }
+
+    {
+        int i;
+        for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+            item_t a = old->action_bar[i];
+            item_t b = new->action_bar[i];
+
+            if (memcmp(&a, &b, sizeof(a))) {
+                char *ia = item2str(a);
+                char *ib = item2str(b);
+
+                if (ia && ib) {
+                    LOG("%sAction item %d changed, %s to %s", indent, i, ia, ib);
+                    myfree(ia);
+                    myfree(ib);
+                } else if (ia) {
+                    LOG("%sAction item %d removed, %s", indent, i, ia);
+                    myfree(ia);
+                } else if (ib) {
+                    LOG("%sAction item %d added, %s", indent, i, ib);
+                    myfree(ib);
+                }
+            }
+        }
+    }
+
+    {
+        int i;
+        for (i = 0; i < THING_WORN_MAX; i++) {
+            item_t a = old->worn[i];
+            item_t b = new->worn[i];
+
+            if (memcmp(&a, &b, sizeof(a))) {
+                char *ia = item2str(a);
+                char *ib = item2str(b);
+
+                if (ia && ib) {
+                    LOG("%sWorn item %d changed, %s to %s", indent, i, ia, ib);
+                    myfree(ia);
+                    myfree(ib);
+                } else if (ia) {
+                    LOG("%sWorn item %d removed, %s", indent, i, ia);
+                    myfree(ia);
+                } else if (ib) {
+                    LOG("%sWorn item %d added, %s", indent, i, ib);
+                    myfree(ib);
+                }
+            }
+        }
+    }
+}
+
 int item_push (itemp dst, item_t src)
 {
     if (!dst->id) {

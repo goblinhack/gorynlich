@@ -15,6 +15,7 @@ void thing_fini(void);
 char *item2str(const item_t i);
 void thing_dump(const thingp t);
 void thing_stats_dump(const thing_statsp s);
+void thing_stats_diff(const thing_statsp old, const thing_statsp new);
 void thing_update(thingp t);
 void thing_map_sanity(void);
 void thing_sanity(thingp);
