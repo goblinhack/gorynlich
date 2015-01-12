@@ -1,6 +1,4 @@
-forever decreasing hp
 health not 0 on dead
-health < 100
 down diagonal arrow has line under it
 update inventory while playing
 stats need to do something
