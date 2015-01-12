@@ -1,4 +1,4 @@
-health not 0 on dead
+health should be 0 on dead
 down diagonal arrow has line under it
 update inventory while playing
 stats need to do something
