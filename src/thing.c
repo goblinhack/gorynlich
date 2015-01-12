@@ -1686,6 +1686,10 @@ int thing_hit (thingp t,
         return (false);
     }
 
+    if (hitter->is_dead) {
+        return (false);
+    }
+
     /*
      * Sanity check.
      */

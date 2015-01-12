@@ -27,8 +27,8 @@ void thing_stats_dump (const thing_statsp s)
         "max-hp", s->max_hp);
 
     LOG("    %-20s %4d %-20s %4d", 
-        "hp", s->magic, 
-        "max-hp", s->max_magic);
+        "magic", s->magic, 
+        "max-magic", s->max_magic);
 
     LOG("    %-20s %4u %-20s %4u", 
         "xp", s->xp, 
