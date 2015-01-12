@@ -2,7 +2,7 @@
  short_name="Shiny topaz"
  tooltip="Yellow topaz"
  z_depth=3
- is_boring
+ is_inactive
  is_treasure
  is_stackable
  hit_priority=1

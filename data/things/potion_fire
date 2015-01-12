@@ -2,7 +2,7 @@
  short_name="Fire potion"
  tooltip="Burny fire fire potion"
  z_depth=3
- is_boring
+ is_inactive
  is_food
  is_stackable
  hit_priority=5
