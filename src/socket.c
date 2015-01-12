@@ -2195,6 +2195,11 @@ void socket_tx_server_status (void)
             if (t) {
                 memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
 
+                if (0) {
+                    LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
+                    thing_dump(t);
+                }
+
                 SDLNet_Write32(p->local_ip.host, &msg_tx->local_ip.host);
                 SDLNet_Write16(p->local_ip.port, &msg_tx->local_ip.port);
 
