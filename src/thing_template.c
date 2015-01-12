@@ -584,7 +584,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         GET_OPT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
         GET_OPT_NAMED_BITFIELD(ctx, "is_combustable", t->is_combustable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
-        GET_OPT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
+        GET_OPT_NAMED_BITFIELD(ctx, "is_inactive", t->is_inactive);
         GET_OPT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
         GET_OPT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);
         GET_OPT_NAMED_BITFIELD(ctx, "is_effect_sway", t->is_effect_sway);
@@ -744,7 +744,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
     PUT_NAMED_BITFIELD(ctx, "is_animated", t->is_animated);
     PUT_NAMED_BITFIELD(ctx, "is_combustable", t->is_combustable);
     PUT_NAMED_BITFIELD(ctx, "is_projectile", t->is_projectile);
-    PUT_NAMED_BITFIELD(ctx, "is_boring", t->is_boring);
+    PUT_NAMED_BITFIELD(ctx, "is_inactive", t->is_inactive);
     PUT_NAMED_BITFIELD(ctx, "is_ring", t->is_ring);
     PUT_NAMED_BITFIELD(ctx, "is_joinable", t->is_joinable);
     PUT_NAMED_BITFIELD(ctx, "is_wall", t->is_wall);

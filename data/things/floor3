@@ -2,7 +2,7 @@
  short_name="floor"
  tooltip="Floor"
  z_depth=1
- is_boring
+ is_inactive
  is_floor
  tiles={
   tile={

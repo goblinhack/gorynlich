@@ -365,9 +365,9 @@ uint8_t map_is_projectile_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_projectile));
 }
 
-uint8_t map_is_boring_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_inactive_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_boring));
+    return (map_is_x_at(level, x, y, tp_is_inactive));
 }
 
 uint8_t map_is_plant_at (levelp level, int32_t x, int32_t y)
@@ -697,9 +697,9 @@ thingp map_thing_is_projectile_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_projectile));
 }
 
-thingp map_thing_is_boring_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_inactive_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_boring));
+    return (map_thing_is_x_at(level, x, y, tp_is_inactive));
 }
 
 thingp map_thing_is_plant_at (levelp level, int32_t x, int32_t y)
@@ -1045,9 +1045,9 @@ tree_rootp map_all_things_is_projectile_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_projectile));
 }
 
-tree_rootp map_all_things_is_boring_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_inactive_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_boring));
+    return (map_all_things_is_x_at(level, x, y, tp_is_inactive));
 }
 
 tree_rootp map_all_things_is_plant_at (levelp level, int32_t x, int32_t y)
@@ -1496,7 +1496,7 @@ tpp map_find_is_projectile_at (levelp level,
 tpp map_find_item_perma_at (levelp level,
                                    int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_boring, w));
+    return (map_find_x_at(level, x, y, tp_is_inactive, w));
 }
 
 tpp map_find_is_ring_at (levelp level,
@@ -2190,9 +2190,9 @@ uint32_t level_count_is_projectile (levelp level)
     return (level_count_is_x(level, tp_is_projectile));
 }
 
-uint32_t level_count_is_boring (levelp level)
+uint32_t level_count_is_inactive (levelp level)
 {
-    return (level_count_is_x(level, tp_is_boring));
+    return (level_count_is_x(level, tp_is_inactive));
 }
 
 uint32_t level_count_is_item_is_hidden (levelp level)
@@ -2549,9 +2549,9 @@ tree_rootp map_all_things_is_projectile (levelp level)
     return (map_all_things_is_x(level, tp_is_projectile));
 }
 
-tree_rootp map_all_things_is_boring (levelp level)
+tree_rootp map_all_things_is_inactive (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_boring));
+    return (map_all_things_is_x(level, tp_is_inactive));
 }
 
 tree_rootp map_all_things_is_plant (levelp level)
