@@ -1096,15 +1096,23 @@ static void thing_remove_hooks (thingp t)
             return;
         }
 
-        THING_LOG(t, "detach from owner %s", thing_logname(owner));
+        if (0) {
+            THING_LOG(t, "detach from owner %s", thing_logname(owner));
+        }
 
         if (t->thing_id == owner->weapon_carry_anim_thing_id) {
-            THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
+            if (0) {
+                THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
+            }
+
             thing_set_weapon_carry_anim(owner, 0);
         }
 
         if (t->thing_id == owner->weapon_swing_anim_thing_id) {
-            THING_LOG(t, "detach from swing anim owner %s", thing_logname(owner));
+            if (0) {
+                THING_LOG(t, "detach from swing anim owner %s", thing_logname(owner));
+            }
+
             thing_set_weapon_swing_anim(owner, 0);
 
             /*
@@ -4308,12 +4316,16 @@ void thing_set_owner (thingp t, thingp owner)
             THING_LOG(t, "owner change %s->%s", 
                       thing_logname(old_owner), thing_logname(owner));
         } else {
-            THING_LOG(t, "remove owner %s", 
-                      thing_logname(old_owner));
+            if (0) {
+                THING_LOG(t, "remove owner %s", 
+                        thing_logname(old_owner));
+            }
         }
     } else {
         if (owner) {
-            THING_LOG(t, "owner %s", thing_logname(owner));
+            if (0) {
+                THING_LOG(t, "owner %s", thing_logname(owner));
+            }
         }
     }
 
@@ -4415,13 +4427,17 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
                       thing_logname(old_weapon_swing_anim), 
                       thing_logname(weapon_swing_anim));
         } else {
-            THING_LOG(t, "remove weapon_swing_anim %s", 
-                      thing_logname(old_weapon_swing_anim));
+            if (0) {
+                THING_LOG(t, "remove weapon_swing_anim %s", 
+                        thing_logname(old_weapon_swing_anim));
+            }
         }
     } else {
         if (weapon_swing_anim) {
-            THING_LOG(t, "weapon_swing_anim %s", 
-                      thing_logname(weapon_swing_anim));
+            if (0) {
+                THING_LOG(t, "weapon_swing_anim %s", 
+                        thing_logname(weapon_swing_anim));
+            }
         }
     }
 
