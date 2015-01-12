@@ -851,12 +851,6 @@ thingp thing_server_new (const char *name,
         }
     }
 
-    if (thing_is_player(t)) {
-        LOG("New player:");
-
-        thing_dump(t);
-    }
-
     return (t);
 }
 
