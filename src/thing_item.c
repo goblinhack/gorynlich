@@ -23,7 +23,7 @@ char *item2str (const item_t i)
         return (0);
     }
 
-    snprintf_realloc(&tmp, &size, &used, "%20s",
+    snprintf_realloc(&tmp, &size, &used, "%s",
                      tp_short_name(id_to_tp(i.id)));
 
     if (i.quantity > 1) {
@@ -32,7 +32,7 @@ char *item2str (const item_t i)
     }
 
     if (i.quality < THING_ITEM_QUALITY_MAX) {
-        snprintf_realloc(&tmp, &size, &used, " %2.0f%%%%%",
+        snprintf_realloc(&tmp, &size, &used, " %2.0f%%",
                          (100.0 / (float)THING_ITEM_QUALITY_MAX) *
                          (float) i.quality);
     }

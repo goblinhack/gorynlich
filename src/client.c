@@ -919,30 +919,26 @@ static void client_poll (void)
                     changed_stats.thing_id = old_stats->thing_id;
                     new_stats = &changed_stats;
 
-                    int changed = 0;
-
                     /*
                      * Now see what really changed and if we need to update 
                      * scores.
                      */
                     if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
+                        LOG("Client: %s player stats changed:",
+                            thing_logname(player));
+
+                        thing_stats_diff(old_stats, new_stats);
+
                         /*
                          * If the stats change, update the inventory
                          */
                         memcpy(old_stats, new_stats, sizeof(thing_stats));
 
                         wid_game_map_client_score_update(client_level, redo);
-
-                        changed = 1;
                     }
 
                     new_stats = &server_stats->stats;
                     memcpy(old_stats, new_stats, sizeof(thing_stats));
-
-                    if (changed) {
-                        LOG("Client: player stats changed on server:");
-                        thing_dump(player);
-                    }
                 }
 
                 break;
