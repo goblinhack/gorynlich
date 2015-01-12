@@ -2,7 +2,7 @@
  short_name="Tasty water"
  tooltip="Water..."
  z_depth=4
- is_boring
+ is_inactive
  is_food
  carried_as="data/things/water"
  is_stackable

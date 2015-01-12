@@ -2,7 +2,7 @@
  short_name="Starstone"
  tooltip="Starstone"
  z_depth=3
- is_boring
+ is_inactive
  is_treasure
  is_stackable
  hit_priority=1

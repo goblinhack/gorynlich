@@ -2,7 +2,7 @@
  short_name="Spam"
  tooltip="Spam, spam, spam, spam, spam"
  z_depth=3
- is_boring
+ is_inactive
  is_spam
  tiles={
   tile={

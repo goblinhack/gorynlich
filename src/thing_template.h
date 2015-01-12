@@ -250,7 +250,7 @@ typedef struct tp_ {
     uint8_t is_collision_map_tiny:1;
     uint8_t is_combustable:1;
     uint8_t is_projectile:1;
-    uint8_t is_boring:1;
+    uint8_t is_inactive:1;
     uint8_t is_joinable:1;
     uint8_t is_wall:1;
     uint8_t is_effect_sway:1;
@@ -654,9 +654,9 @@ static inline uint8_t tp_is_projectile (tpp t)
     return (t->is_projectile);
 }
 
-static inline uint8_t tp_is_boring (tpp t)
+static inline uint8_t tp_is_inactive (tpp t)
 {
-    return (t->is_boring);
+    return (t->is_inactive);
 }
 
 static inline uint8_t tp_is_joinable (tpp t)
