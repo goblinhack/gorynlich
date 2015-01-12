@@ -2,7 +2,7 @@
  short_name="Cloudkill potion"
  tooltip="Potion of blackiness, aka cloudkill"
  z_depth=4
- is_boring
+ is_inactive
  is_food
  is_stackable
  hit_priority=5

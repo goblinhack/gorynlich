@@ -1278,9 +1278,9 @@ static inline uint8_t thing_is_light_source_noverify (thingp t)
     return (t->tp->is_light_source);
 }
 
-static inline uint8_t thing_is_boring_noverify (thingp t)
+static inline uint8_t thing_is_inactive_noverify (thingp t)
 {
-    return (t->tp->is_boring);
+    return (t->tp->is_inactive);
 }
 
 static inline uint8_t thing_is_candle_light_noverify (thingp t)

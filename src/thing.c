@@ -780,7 +780,7 @@ thingp thing_server_new (const char *name,
         t->tree2.node.is_static_mem = true;
     }
 
-    if (tp_is_boring(tp)) {
+    if (tp_is_inactive(tp)) {
         if (!tree_insert(server_boring_things, &t->tree.node)) {
             DIE("thing insert name [%s, %u] into server_boring_things failed", 
                 name, id);
@@ -843,7 +843,11 @@ thingp thing_server_new (const char *name,
         server_things_total++;
     }
 
-    if (!thing_is_boring_noverify(t)) {
+    if (!thing_is_inactive_noverify(t) &&
+        !thing_is_explosion(t) &&
+        !thing_is_weapon_swing_effect(t) &&
+        !thing_is_weapon_carry_effect(t)) {
+
         if (t->on_server) {
             THING_LOG(t, "created (total %d)", server_things_total);
         } else {
@@ -923,7 +927,7 @@ thingp thing_client_new (uint32_t id, tpp tp)
         t->tree2.node.is_static_mem = true;
     }
 
-    if (tp_is_boring(tp)) {
+    if (tp_is_inactive(tp)) {
         if (!tree_insert(client_boring_things, &t->tree.node)) {
             DIE("thing insert id [%u] failed into client_boring_things", id);
         }
@@ -946,7 +950,10 @@ thingp thing_client_new (uint32_t id, tpp tp)
     t->logname = dynprintf("%s[%p, id %u] (client)", thing_short_name(t), t,
                            t->thing_id);
 
-    if (!thing_is_boring_noverify(t)) {
+    if (!thing_is_inactive_noverify(t) &&
+        !thing_is_explosion(t) &&
+        !thing_is_weapon_swing_effect(t) &&
+        !thing_is_weapon_carry_effect(t)) {
         THING_LOG(t, "created");
     }
 
@@ -1182,7 +1189,10 @@ void thing_destroy (thingp t, const char *why)
 {
     verify(t);
 
-    if (!thing_is_boring_noverify(t)) {
+    if (!thing_is_inactive_noverify(t) &&
+        !thing_is_explosion(t) &&
+        !thing_is_weapon_swing_effect(t) &&
+        !thing_is_weapon_carry_effect(t)) {
         THING_LOG(t, "destroyed (%s)", why);
     }
 

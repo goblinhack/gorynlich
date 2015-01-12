@@ -8528,7 +8528,7 @@ static void wid_display (widp w,
                             uint8_t lit = 0;
 
                             if (t->lit) {
-                                if (thing_is_boring_noverify(t)) {
+                                if (thing_is_inactive_noverify(t)) {
                                     continue;
                                 }
 

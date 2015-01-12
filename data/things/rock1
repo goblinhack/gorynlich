@@ -2,7 +2,7 @@
  short_name="rock"
  tooltip="Rock"
  z_depth=2
- is_boring
+ is_inactive
  is_wall
  is_shadow_caster
  is_rock
