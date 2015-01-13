@@ -52,7 +52,7 @@ static uint8_t map_is_x_at (levelp level,
                     continue;
                 }
 
-                if (thing_is_dead(thing_it)) {
+                if (thing_is_dead_or_dying(thing_it)) {
                     w = wid_grid_find_next(grid_wid, w, x, y, z);
                     continue;
                 }
@@ -418,7 +418,7 @@ static thingp map_thing_is_x_at (levelp level,
                 continue;
             }
 
-            if (thing_is_dead(thing_it)) {
+            if (thing_is_dead_or_dying(thing_it)) {
                 w = wid_grid_find_next(grid_wid, w, x, y, z);
                 continue;
             }
@@ -754,7 +754,7 @@ static tree_rootp map_all_things_is_x_at (levelp level,
                 continue;
             }
 
-            if (thing_is_dead(thing_it)) {
+            if (thing_is_dead_or_dying(thing_it)) {
                 w = wid_grid_find_next(grid_wid, w, x, y, z);
                 continue;
             }
@@ -1102,7 +1102,7 @@ static tpp map_find_x_at_depth (levelp level,
                 continue;
             }
 
-            if (thing_is_dead(thing_it)) {
+            if (thing_is_dead_or_dying(thing_it)) {
                 w = wid_grid_find_next(grid_wid, w, x, y, z);
                 continue;
             }
@@ -1159,7 +1159,7 @@ static tpp map_find_x_at (levelp level,
                     continue;
                 }
 
-                if (thing_is_dead(thing_it)) {
+                if (thing_is_dead_or_dying(thing_it)) {
                     w = wid_grid_find_next(grid_wid, w, x, y, z);
                     continue;
                 }
@@ -2256,7 +2256,7 @@ static tree_rootp map_all_things_is_x (levelp level,
                         continue;
                     }
 
-                    if (thing_is_dead(thing_it)) {
+                    if (thing_is_dead_or_dying(thing_it)) {
                         w = wid_grid_find_next(grid_wid, w, x, y, z);
                         continue;
                     }

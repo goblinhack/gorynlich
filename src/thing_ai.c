@@ -276,7 +276,7 @@ static uint32_t dmap_monst_goals_set (uint8_t test, level_walls *dmap)
         /*
          * Ignore dead players.
          */
-        if (thing_is_dead_noverify(thing_it)) {
+        if (thing_is_dead_or_dying_noverify(thing_it)) {
             continue;
         }
 
