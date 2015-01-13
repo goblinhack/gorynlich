@@ -265,7 +265,7 @@ void thing_update (thingp t)
      */
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {
-        if (!thing_is_dead(weapon_carry_anim)) {
+        if (!thing_is_dead_or_dying(weapon_carry_anim)) {
             thing_update(weapon_carry_anim);
         }
     }
@@ -275,7 +275,7 @@ void thing_update (thingp t)
      */
     thingp weapon_swing_anim = thing_weapon_swing_anim(t);
     if (weapon_swing_anim) {
-        if (!thing_is_dead(weapon_swing_anim)) {
+        if (!thing_is_dead_or_dying(weapon_swing_anim)) {
             thing_update(weapon_swing_anim);
         }
     }
@@ -1068,7 +1068,7 @@ void thing_restarted (thingp t, levelp level)
 
     t->current_tile = 0;
 
-    if (!thing_is_dead(t)) {
+    if (!thing_is_dead_or_dying(t)) {
         return;
     }
 
@@ -1315,19 +1315,19 @@ void thing_destroy (thingp t, const char *why)
 static void thing_dead_ (thingp t, thingp killer, char *reason)
 {
     /*
-     * Why did I die!? 8(
-     */
-    if (t->dead_reason) {
-        myfree(t->dead_reason);
-        t->dead_reason = 0;
-    }
-    
-    /*
      * Detach from the owner
      */
     thing_remove_hooks(t);
 
+    /*
+     * Why did I die!? 8(
+     */
     if (reason) {
+        if (t->dead_reason) {
+            myfree(t->dead_reason);
+            t->dead_reason = 0;
+        }
+
         t->dead_reason = reason;
     }
 
@@ -1434,7 +1434,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     /*
      * You only die once.
      */
-    if (t->is_dead) {
+    if (thing_is_dead(t)) {
         return;
     }
 
@@ -1549,13 +1549,95 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
     }
 }
 
+static void thing_dying_ (thingp t, thingp killer, char *reason)
+{
+    /*
+     * Why did I die!? 8(
+     */
+    if (reason) {
+        if (t->dead_reason) {
+            myfree(t->dead_reason);
+            t->dead_reason = 0;
+        }
+
+        t->dead_reason = reason;
+    }
+
+    /*
+     * Replace the logname
+     */
+    char *new_logname = dynprintf("%s (dying, %s)", 
+                                  t->logname, reason);
+    myfree(t->logname);
+    t->logname = new_logname;
+
+    if (thing_is_player(t)) {
+        THING_LOG(t, "dying (%s)", reason);
+    }
+}
+
+void thing_dying (thingp t, thingp killer, const char *reason, ...)
+{
+    va_list args;
+
+    verify(t);
+
+    tpp tp = thing_tp(t);
+
+    /*
+     * Post death server events.
+     */
+    if (t->on_server) {
+        /*
+         * If this is a dead player, then rethink AI targets.
+         */
+        if (thing_is_player(t)) {
+            level_set_monst_map_treat_doors_as_passable(server_level);
+            level_set_monst_map_treat_doors_as_walls(server_level);
+        }
+
+        /*
+         * Bounty for the killer?
+         */
+        uint32_t score = tp_get_bonus_xp_on_death(tp);
+        if (score && killer) {
+            thingp recipient = killer;
+
+            /*
+             * Did someone throw this weapon and gets the score?
+             */
+            if (killer->owner_thing_id) {
+                thingp real_recipient = thing_owner(killer);
+                if (real_recipient) {
+                    recipient = real_recipient;
+                }
+            }
+
+            verify(recipient);
+
+            recipient->stats.xp += tp_get_bonus_xp_on_death(tp);
+        }
+    }
+
+    /*
+     * Log the means of death!
+     */
+    if (reason) {
+        va_start(args, reason);
+        thing_dying_(t, killer, dynvprintf(reason, args));
+        va_end(args);
+    } else {
+        thing_dying_(t, killer, 0);
+    }
+}
+
 static int thing_hit_ (thingp t, 
                        thingp hitter, 
                        int32_t damage)
 {
     verify(t);
 
-    if (t->is_dead) {
+    if (thing_is_dead(t)) {
         return (false);
     }
 
@@ -1608,10 +1690,18 @@ static int thing_hit_ (thingp t,
             /*
              * Record who dun it.
              */
-            if (hitter) {
-                thing_dead(t, hitter, "%s", tp_short_name(hitter->tp));
+            if (thing_is_player(t)) {
+                if (hitter) {
+                    thing_dying(t, hitter, "%s", tp_short_name(hitter->tp));
+                } else {
+                    thing_dying(t, hitter, "hit");
+                }
             } else {
-                thing_dead(t, hitter, "hit");
+                if (hitter) {
+                    thing_dead(t, hitter, "%s", tp_short_name(hitter->tp));
+                } else {
+                    thing_dead(t, hitter, "hit");
+                }
             }
 
             /*
@@ -1694,11 +1784,11 @@ int thing_hit (thingp t,
         verify(hitter);
     }
 
-    if (t->is_dead) {
+    if (thing_is_dead(t)) {
         return (false);
     }
 
-    if (hitter->is_dead) {
+    if (thing_is_dead(hitter)) {
         return (false);
     }
 

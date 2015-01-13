@@ -128,7 +128,7 @@ void wid_animate (widp w)
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (t && thing_is_dead(t)) {
+        } else if (t && thing_is_dead_or_dying(t)) {
             if (!thing_tile_is_dead(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;

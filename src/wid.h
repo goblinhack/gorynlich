@@ -797,3 +797,12 @@ static inline uint8_t wid_is_moving (widp w)
 }
 
 extern widp wid_mouse_template;
+
+extern const int32_t wid_fade_delay;
+extern const int32_t wid_destroy_delay_ms;
+extern const int32_t wid_visible_delay;
+extern const int32_t wid_hide_delay;
+extern const int32_t wid_swipe_delay;
+extern const int32_t wid_pulse_delay;
+extern const int32_t wid_bounce_delay;
+
