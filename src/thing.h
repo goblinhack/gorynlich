@@ -34,6 +34,8 @@ uint8_t thing_mob_spawn(thingp);
 uint8_t thing_mob_spawn_on_death(thingp);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
+void thing_dying(thingp, thingp killer,
+                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 int thing_hit(thingp, thingp hitter, uint32_t damage);
 void thing_hide(thingp);
 thingp thing_owner(thingp t);
@@ -671,13 +673,32 @@ typedef struct thing_ {
     uint32_t message_open_door_need_key:1;
 } thing;
 
+
 #include "thing_template.h"
+static inline tpp thing_tp (thingp t)
+{
+    verify(t);
+
+    return (t->tp);
+}
 
 static inline uint8_t thing_is_open (thingp t)
 {
     verify(t);
 
     return (t->is_open);
+}
+
+static inline uint8_t thing_is_dying (thingp t)
+{
+    return (tp_is_player(thing_tp(t)) && (t->stats.hp <= 0));
+}
+
+static inline uint8_t thing_is_dead_or_dying (thingp t)
+{
+    verify(t);
+
+    return t->is_dead || thing_is_dying(t);
 }
 
 static inline uint8_t thing_is_dead (thingp t)
@@ -699,13 +720,6 @@ static inline uint8_t thing_has_left_level (thingp t)
     verify(t);
 
     return (t->has_left_level);
-}
-
-static inline tpp thing_tp (thingp t)
-{
-    verify(t);
-
-    return (t->tp);
 }
 
 static inline uint8_t thing_is_exit (thingp t)
@@ -1171,6 +1185,11 @@ static inline uint8_t thing_is_open_noverify (thingp t)
 static inline uint8_t thing_is_dead_noverify (thingp t)
 {
     return (t->is_dead);
+}
+
+static inline uint8_t thing_is_dead_or_dying_noverify (thingp t)
+{
+    return t->is_dead || thing_is_dying(t);
 }
 
 static inline uint8_t thing_is_exit_noverify (thingp t)

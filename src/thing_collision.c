@@ -399,7 +399,7 @@ LOG("    %f %f %f %f",Bpx1,Bpy1,Bpx2,Bpy2);
 static void thing_handle_collision (thingp me, thingp it, 
                                     int32_t x, int32_t y)
 {
-    if (thing_is_dead(it)) {
+    if (thing_is_dead_or_dying(it)) {
         return;
     }
 
@@ -638,7 +638,7 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * Allow dead ghosts to walk over each other!
              */
-            if (thing_is_dead(it)) {
+            if (thing_is_dead_or_dying(it)) {
                 continue;
             }
 
@@ -782,7 +782,7 @@ uint8_t thing_hit_any_obstacle (widp grid, thingp t, double nx, double ny)
                 /*
                  * Allow dead ghosts to walk over each other!
                  */
-                if (thing_is_dead(it)) {
+                if (thing_is_dead_or_dying(it)) {
                     wid_it = wid_next;
                     continue;
                 }
