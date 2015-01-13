@@ -225,10 +225,6 @@ void thing_tick_server_player_slow_all (int force)
          * If something changed in the player that we need to update the 
          * server, do so now.
          */
-        if (thing_is_dead(t)) {
-            continue;
-        }
-
         if (force || time_have_x_secs_passed_since(60, t->timestamp_torch)) {
             t->timestamp_torch = time_get_time_cached();
 
@@ -250,6 +246,17 @@ void thing_tick_server_player_slow_all (int force)
          * If health went over the max, tick it down.
          */
         if (force || time_have_x_secs_passed_since(1, t->timestamp_health)) {
+            if (thing_is_dying(t)) {
+                t->stats.hp--;
+
+                thing_update(t);
+
+                if (t->stats.hp <= -10) {
+                    thing_dead(t, 0, 0);
+                }
+            }
+
+
             t->timestamp_health = time_get_time_cached();
 
             int delta = thing_get_stats_hp(t) - thing_get_stats_max_hp(t);

@@ -132,7 +132,7 @@ void thing_animate (thingp t)
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
-        } else if (thing_is_dead(t)) {
+        } else if (thing_is_dead_or_dying(t)) {
             if (!thing_tile_is_dead(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
