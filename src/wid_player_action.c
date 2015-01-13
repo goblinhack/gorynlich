@@ -308,11 +308,22 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         static int last_magic;
         if (last_magic != s->magic) {
-            wid_effect_pulses(w);
             last_magic = s->magic;
+
+            if (s->magic > 0) {
+                wid_effect_pulses(w);
+            }
+
             wid_set_mode(w, WID_MODE_ACTIVE);
             wid_set_color(w, WID_COLOR_TEXT, RED);
         }
+
+        if (s->magic < s->max_magic / 10) {
+            wid_scaling_to_pct_in(w, 1.0, 3.15, wid_bounce_delay, 10000);
+            wid_set_mode(w, WID_MODE_NORMAL);
+            wid_set_color(w, WID_COLOR_TEXT, RED);
+        }
+
     }
 
     {
@@ -343,9 +354,19 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         static int last_hp;
         if (last_hp != s->hp) {
-            wid_effect_pulses(w);
             last_hp = s->hp;
+
+            if (s->hp > 0) {
+                wid_effect_pulses(w);
+            }
+
             wid_set_mode(w, WID_MODE_ACTIVE);
+            wid_set_color(w, WID_COLOR_TEXT, RED);
+        }
+
+        if (s->hp < s->max_hp / 10) {
+            wid_scaling_to_pct_in(w, 1.0, 3.15, wid_bounce_delay, 10000);
+            wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_TEXT, RED);
         }
     }
