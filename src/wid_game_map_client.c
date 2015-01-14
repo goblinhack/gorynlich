@@ -239,6 +239,10 @@ uint8_t wid_game_map_client_player_move (void)
         return (false);
     }
 
+    if (thing_is_dead_or_dying(player)) {
+        return (true);
+    }
+
     /*
      * If no longer visible it may mean we have finished the level and are 
      * waiting for others to finish.
