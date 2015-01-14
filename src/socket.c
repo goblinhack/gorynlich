@@ -2286,6 +2286,10 @@ void socket_tx_server_hiscore (gsocketp only,
     uint32_t hi_index = 0;
     hiscore *h;
 
+    if (!death_reason) {
+        DIE("Player %s death with no reason", player_name);
+    }
+
     { TREE_WALK_REVERSE(hiscores, h) {
         hi[hi_index++] = h;
         if (hi_index >= MAX_HISCORES) {
