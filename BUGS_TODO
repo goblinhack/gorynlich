@@ -1,4 +1,6 @@
+fonts too large in 640x480
 health was at 2 on dead
+need dying anim
 need unconscious with tick down to -10
 down diagonal arrow has line under it
 update inventory while playing
@@ -10,6 +12,7 @@ magic attack - green fireball?
 click on weapon to switch
 shortcut key for left/right weapon shift
 hover over weapon for stats popup
+xp level and hp increase per level
 press m for magic to build up magic attack
 press m for magic to give life to other players
 first to exit level gets 2 spending points, else get 1
@@ -22,6 +25,11 @@ different colors for walls
 boss baddies every 10 levels
 bosses drop exit on death
 picture of keyboard and keys to use at start
+
+Tue Jan 13 21:54:05 EST 2015
+- crash on death no reason
+- monster hits player when dead
+- on player death monsters did not wander off
 
 Mon Jan 12 21:38:13 EST 2015
 - flash health when critical
