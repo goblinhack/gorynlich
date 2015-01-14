@@ -30,6 +30,10 @@
    y=0 
    t="data/things/floor2" 
   } {   
+   x=5 
+   y=5
+   t="data/things/bonepile3" 
+  } {   
    x=7 
    y=0 
    t="data/things/floor2" 

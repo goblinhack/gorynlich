@@ -1329,6 +1329,12 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
         }
 
         t->dead_reason = reason;
+    } else {
+        reason = t->dead_reason;
+    }
+
+    if (!reason) {
+        DIE("thing %s dead for no reason? why? why? why?!", thing_logname(t));
     }
 
     /*
@@ -1637,7 +1643,10 @@ static int thing_hit_ (thingp t,
 {
     verify(t);
 
-    if (thing_is_dead(t)) {
+    /*
+     * Cruel to let things keep on hitting you when you're dead
+     */
+    if (thing_is_dead_or_dying(t)) {
         return (false);
     }
 
@@ -1784,11 +1793,19 @@ int thing_hit (thingp t,
         verify(hitter);
     }
 
-    if (thing_is_dead(t)) {
+    /*
+     * Cruel to let things keep on hitting you when you're dead
+     */
+    if (thing_is_dead_or_dying(t)) {
         return (false);
     }
 
-    if (thing_is_dead(hitter)) {
+    if (thing_is_dead_or_dying(hitter)) {
+        /*
+         * This case is hit if a ghost runs into a player. The ghost takes 
+         * damage. We don't want the player to keep absorbing hits when 
+         * already dead though.
+         */
         return (false);
     }
 
@@ -3889,6 +3906,10 @@ void thing_client_move (thingp t,
                         const uint8_t right,
                         const uint8_t fire)
 {
+    if (thing_is_dead_or_dying(t)) {
+        return;
+    }
+
     widp grid = wid_game_map_client_grid_container;
 
     if (t->wid) {
@@ -4112,6 +4133,10 @@ uint8_t thing_server_move (thingp t,
                            const uint8_t right,
                            const uint8_t fire)
 {
+    if (thing_is_dead_or_dying(t)) {
+        return (false);
+    }
+
     widp grid = wid_game_map_server_grid_container;
 
     thing_move_set_dir(t, &x, &y, up, down, left, right);
