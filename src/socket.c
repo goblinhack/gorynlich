@@ -904,15 +904,27 @@ void socket_set_pclass (gsocketp s, const char *pclass)
     }
 }
 
-void socket_set_player_stats (gsocketp s, const thing_statsp stats)
+/*
+ * true on changed
+ */
+int socket_set_player_stats (gsocketp s, const thing_statsp stats)
 {
     verify(s);
 
     if (!stats) {
         memset(&s->stats, 0, sizeof(thing_stats));
-    } else {
-        memcpy(&s->stats, stats, sizeof(thing_stats));
+        return (true);
     }
+
+    if (!memcmp(&s->stats, stats, sizeof(thing_stats))) {
+        /*
+         * No change
+         */
+        return (false);
+    }
+
+    memcpy(&s->stats, stats, sizeof(thing_stats));
+    return (true);
 }
 
 const char * socket_get_local_logname (const gsocketp s)
@@ -1399,6 +1411,40 @@ void socket_rx_name (gsocketp s, UDPpacket *packet, uint8_t *data)
     if (!p) {
         p = (typeof(p)) myzalloc(sizeof(*p), "player");
 
+        /*
+         * Stats from the player.
+         */
+        thing_stats new_stats;
+        memcpy(&new_stats, &msg.stats, sizeof(new_stats));
+
+        /*
+         * Current stats either from the thing or player if no thing.
+         */
+        thing_stats current_stats;
+        if (p->thing) {
+            memcpy(&current_stats, &p->thing->stats, sizeof(current_stats));
+        } else {
+            memcpy(&current_stats, &p->stats_from_client, sizeof(new_stats));
+        }
+
+        /*
+         * Merge them together.
+         */
+        thing_stats merged_stats;
+        thing_stats_merge(&merged_stats, &current_stats, &new_stats);
+
+        /*
+         * Now update the player stats and thing with merged stats.
+         */
+        memcpy(&p->stats_from_client, &merged_stats, sizeof(merged_stats));
+
+        if (p->thing) {
+            memcpy(&p->thing->stats, &merged_stats, sizeof(merged_stats));
+        }
+
+        /*
+         * We keep stats on the socket in case the player gets disconnected.
+         */
         socket_set_player(s, p);
     }
 

@@ -71,7 +71,7 @@ uint8_t font_init (void)
 
     delta = 0;
     if (global_config.video_pix_width <= 640) {
-        delta = -4;
+        delta = -6;
     } else if (global_config.video_pix_width <= 800) {
         delta = -2;
     } else if (global_config.video_pix_width < 1400) {
@@ -96,7 +96,7 @@ uint8_t font_init (void)
 
     int32_t i;
 
-    for (i = 8; i < 40; i++) {
+    for (i = 6; i < 40; i++) {
         tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
         ttf_write_tga((char*) tmp, i);
         myfree(tmp);

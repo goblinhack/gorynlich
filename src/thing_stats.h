@@ -115,3 +115,8 @@ int thing_stats_item_polymorph(thing_stats *thing_stats,
                                 const uint32_t to);
 
 void player_inventory_sort(thing_stats *thing_stats);
+
+void thing_stats_client_modified(thing_stats *player_stats);
+void thing_stats_dump(const thing_statsp s);
+void thing_stats_diff(const thing_statsp old, const thing_statsp new_stats);
+void thing_stats_merge(thing_statsp merged_stats, thing_statsp current_stats, thing_statsp new_stats);;
