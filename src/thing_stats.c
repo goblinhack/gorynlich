@@ -17,6 +17,8 @@
 #include "wid_player_info.h"
 #include "math_util.h"
 #include "thing.h"
+#include "client.h"
+#include "socket_util.h"
 
 void thing_stats_dump (const thing_statsp s)
 {
@@ -171,62 +173,62 @@ void thing_stats_dump (const thing_statsp s)
 /*
  * Dump what changed between two stats
  */
-void thing_stats_diff (const thing_statsp old, const thing_statsp new)
+void thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stats)
 {
     const char indent[] = "  ";
 
-    if (old->hp != new->hp) {
-        LOG("%sHp changed from %d to %d", indent, old->hp, new->hp);
+    if (old_stats->hp != new_stats->hp) {
+        LOG("%sHp changed from %d to %d", indent, old_stats->hp, new_stats->hp);
     }
 
-    if (old->magic != new->magic) {
-        LOG("%sMagic changed from %d to %d", indent, old->magic, new->magic);
+    if (old_stats->magic != new_stats->magic) {
+        LOG("%sMagic changed from %d to %d", indent, old_stats->magic, new_stats->magic);
     }
 
-    if (old->xp != new->xp) {
-        LOG("%sXp changed from %d to %d", indent, old->xp, new->xp);
+    if (old_stats->xp != new_stats->xp) {
+        LOG("%sXp changed from %d to %d", indent, old_stats->xp, new_stats->xp);
     }
 
-    if (old->cash != new->cash) {
-        LOG("%sCash changed from %d to %d", indent, old->cash, new->cash);
+    if (old_stats->cash != new_stats->cash) {
+        LOG("%sCash changed from %d to %d", indent, old_stats->cash, new_stats->cash);
     }
 
-    if (old->spending_points != new->spending_points) {
-        LOG("%sSpending_points changed from %d to %d", indent, old->spending_points, new->spending_points);
+    if (old_stats->spending_points != new_stats->spending_points) {
+        LOG("%sSpending_points changed from %d to %d", indent, old_stats->spending_points, new_stats->spending_points);
     }
 
-    if (old->vision != new->vision) {
-        LOG("%sVision changed from %d to %d", indent, old->vision, new->vision);
+    if (old_stats->vision != new_stats->vision) {
+        LOG("%sVision changed from %d to %d", indent, old_stats->vision, new_stats->vision);
     }
 
-    if (old->attack_melee != new->attack_melee) {
-        LOG("%sAttack_melee changed from %d to %d", indent, old->attack_melee, new->attack_melee);
+    if (old_stats->attack_melee != new_stats->attack_melee) {
+        LOG("%sAttack_melee changed from %d to %d", indent, old_stats->attack_melee, new_stats->attack_melee);
     }
 
-    if (old->attack_ranged != new->attack_ranged) {
-        LOG("%sAttack_ranged changed from %d to %d", indent, old->attack_ranged, new->attack_ranged);
+    if (old_stats->attack_ranged != new_stats->attack_ranged) {
+        LOG("%sAttack_ranged changed from %d to %d", indent, old_stats->attack_ranged, new_stats->attack_ranged);
     }
 
-    if (old->defense != new->defense) {
-        LOG("%sDefense changed from %d to %d", indent, old->defense, new->defense);
+    if (old_stats->defense != new_stats->defense) {
+        LOG("%sDefense changed from %d to %d", indent, old_stats->defense, new_stats->defense);
     }
 
-    if (old->attack_magical != new->attack_magical) {
-        LOG("%sAttack_magical changed from %d to %d", indent, old->attack_magical, new->attack_magical);
+    if (old_stats->attack_magical != new_stats->attack_magical) {
+        LOG("%sAttack_magical changed from %d to %d", indent, old_stats->attack_magical, new_stats->attack_magical);
     }
 
-    if (old->weapon != new->weapon) {
+    if (old_stats->weapon != new_stats->weapon) {
         LOG("%sWeapon changed from %s to %s", indent,
-            tp_short_name(id_to_tp(old->magic)),
-            tp_short_name(id_to_tp(new->magic)));
+            tp_short_name(id_to_tp(old_stats->magic)),
+            tp_short_name(id_to_tp(new_stats->magic)));
     }
 
     {
         int i = 0;
 
         for (i = 0; i < THING_INVENTORY_MAX; i++) {
-            item_t a = old->inventory[i];
-            item_t b = new->inventory[i];
+            item_t a = old_stats->inventory[i];
+            item_t b = new_stats->inventory[i];
 
             if (memcmp(&a, &b, sizeof(a))) {
                 char *ia = item2str(a);
@@ -250,8 +252,8 @@ void thing_stats_diff (const thing_statsp old, const thing_statsp new)
     {
         int i;
         for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-            item_t a = old->action_bar[i];
-            item_t b = new->action_bar[i];
+            item_t a = old_stats->action_bar[i];
+            item_t b = new_stats->action_bar[i];
 
             if (memcmp(&a, &b, sizeof(a))) {
                 char *ia = item2str(a);
@@ -275,8 +277,8 @@ void thing_stats_diff (const thing_statsp old, const thing_statsp new)
     {
         int i;
         for (i = 0; i < THING_WORN_MAX; i++) {
-            item_t a = old->worn[i];
-            item_t b = new->worn[i];
+            item_t a = old_stats->worn[i];
+            item_t b = new_stats->worn[i];
 
             if (memcmp(&a, &b, sizeof(a))) {
                 char *ia = item2str(a);
@@ -293,6 +295,96 @@ void thing_stats_diff (const thing_statsp old, const thing_statsp new)
                     LOG("%sWorn item %d added, %s", indent, i, ib);
                     myfree(ib);
                 }
+            }
+        }
+    }
+}
+
+/*
+ * Dump what changed between two stats
+ */
+void thing_stats_merge (thing_statsp merged_stats, thing_statsp current_stats, thing_statsp new_stats)
+{
+    if (current_stats->hp != new_stats->hp) {
+        merged_stats->hp = new_stats->hp;
+    }
+
+    if (current_stats->magic != new_stats->magic) {
+        merged_stats->magic = new_stats->magic;
+    }
+
+    if (current_stats->xp != new_stats->xp) {
+        merged_stats->xp = new_stats->xp;
+    }
+
+    if (current_stats->cash != new_stats->cash) {
+        merged_stats->cash = new_stats->cash;
+    }
+
+    if (current_stats->spending_points != new_stats->spending_points) {
+        merged_stats->spending_points = new_stats->spending_points;
+    }
+
+    if (current_stats->vision != new_stats->vision) {
+        merged_stats->vision = new_stats->vision;
+    }
+
+    if (current_stats->attack_melee != new_stats->attack_melee) {
+        merged_stats->attack_melee = new_stats->attack_melee;
+    }
+
+    if (current_stats->attack_ranged != new_stats->attack_ranged) {
+        merged_stats->attack_ranged = new_stats->attack_ranged;
+    }
+
+    if (current_stats->defense != new_stats->defense) {
+        merged_stats->defense = new_stats->defense;
+    }
+
+    if (current_stats->attack_magical != new_stats->attack_magical) {
+        merged_stats->attack_magical = new_stats->attack_magical;
+    }
+
+    if (current_stats->weapon != new_stats->weapon) {
+        merged_stats->weapon = new_stats->weapon;
+    }
+
+    {
+        int i = 0;
+
+        for (i = 0; i < THING_INVENTORY_MAX; i++) {
+            item_t a = current_stats->inventory[i];
+            item_t b = new_stats->inventory[i];
+            item_t *c = &merged_stats->inventory[i];
+
+            if (memcmp(&a, &b, sizeof(a))) {
+                memcpy(c, &b, sizeof(b));
+            }
+        }
+    }
+
+    {
+        int i;
+        for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+            item_t a = current_stats->action_bar[i];
+            item_t b = new_stats->action_bar[i];
+            item_t *c = &merged_stats->action_bar[i];
+
+            if (memcmp(&a, &b, sizeof(a))) {
+                memcpy(c, &b, sizeof(b));
+            }
+        }
+    }
+
+    {
+        int i;
+        for (i = 0; i < THING_WORN_MAX; i++) {
+            item_t a = current_stats->worn[i];
+            item_t b = new_stats->worn[i];
+            item_t *c = &merged_stats->worn[i];
+
+            if (memcmp(&a, &b, sizeof(a))) {
+                memcpy(c, &b, sizeof(b));
             }
         }
     }
@@ -1056,4 +1148,21 @@ tpp
 thing_stats_to_tp (thing_stats *player_stats)
 {
     return (tp_find_short_name(player_stats->pclass));
+}
+
+/*
+ * If the stats have changed with those on the socket, update the server.
+ */
+void thing_stats_client_modified (thing_stats *player_stats) 
+{
+    if (!client_joined_server) {
+        return;
+    }
+
+    if (socket_set_player_stats(client_joined_server, player_stats)) {
+        /*
+         * Something changed.
+         */
+        socket_tx_name(client_joined_server);
+    }
 }
