@@ -1,16 +1,16 @@
-fonts too large in 640x480
-health was at 2 on dead
-need dying anim
-need unconscious with tick down to -10
-down diagonal arrow has line under it
+spin player widget on hit
+bounce on walk
 update inventory while playing
 stats need to do something
+click on weapon to switch
+shortcut key for left/right weapon shift
+stop pulsing -9 when dead
+need dying anim
+down diagonal arrow has line under it
 sound effects for weapons and hits
 sound on momey collect
 sound on potion use
 magic attack - green fireball?
-click on weapon to switch
-shortcut key for left/right weapon shift
 hover over weapon for stats popup
 xp level and hp increase per level
 press m for magic to build up magic attack
@@ -25,6 +25,11 @@ different colors for walls
 boss baddies every 10 levels
 bosses drop exit on death
 picture of keyboard and keys to use at start
+
+Thu Jan 15 21:34:42 EST 2015
+- fonts too large in 640x480
+- health was at 2 on dead
+- need unconscious with tick down to -10
 
 Tue Jan 13 21:54:05 EST 2015
 - crash on death no reason

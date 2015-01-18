@@ -310,7 +310,7 @@ extern const char *socket_get_pclass(const gsocketp s);
 extern const thing_statsp socket_get_player_stats(const gsocketp s);
 extern void socket_set_name(gsocketp s, const char *name);
 extern void socket_set_pclass(gsocketp s, const char *pclass);
-extern void socket_set_player_stats(gsocketp s, const thing_statsp stats);
+extern int socket_set_player_stats(gsocketp s, const thing_statsp stats);
 
 extern void socket_tx_ping(gsocketp s, uint8_t seq, uint32_t ts);
 extern void socket_tx_pong(gsocketp s, uint8_t seq, uint32_t ts);
