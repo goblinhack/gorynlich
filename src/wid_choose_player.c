@@ -301,8 +301,8 @@ static void wid_choose_player_create (void)
         child = wid_new_square_button(wid_choose_player, "All done");
         wid_set_font(child, med_font);
 
-        fpoint tl = {0.0f, 0.95f};
-        fpoint br = {0.3f, 1.00f};
+        fpoint tl = {0.85f, 0.90f};
+        fpoint br = {1.0f, 0.95f};
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "%%fmt=left$%%tile=button_a$All done");
@@ -310,14 +310,12 @@ static void wid_choose_player_create (void)
         wid_set_no_shape(child);
         wid_set_color(child, WID_COLOR_TEXT, GRAY90);
         wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TEXT, RED);
+        wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_choose_player_intro_all_done_mouse_event);
         wid_raise(child);
         wid_set_do_not_lower(child, true);
-
-        wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
     }
 
     {
