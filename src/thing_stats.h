@@ -120,3 +120,4 @@ void thing_stats_client_modified(thing_stats *player_stats);
 void thing_stats_dump(const thing_statsp s);
 void thing_stats_diff(const thing_statsp old, const thing_statsp new_stats);
 void thing_stats_merge(thing_statsp merged_stats, thing_statsp current_stats, thing_statsp new_stats);;
+void thing_stats_modify_xp(thingp t, int32_t value);

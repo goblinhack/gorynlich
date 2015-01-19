@@ -1166,3 +1166,17 @@ void thing_stats_client_modified (thing_stats *player_stats)
         socket_tx_name(client_joined_server);
     }
 }
+
+void thing_stats_modify_xp (thingp t, int32_t value)
+{
+    verify(t);
+
+    t->stats.xp += value;
+
+    if (thing_is_player(t)) {
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                    "%%%%font=%s$%%%%fg=%s$%d", 
+                                    "large", "gold", 
+                                    value);
+    }
+}
