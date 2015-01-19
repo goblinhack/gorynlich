@@ -496,7 +496,7 @@ static void wid_intro_create (void)
         fpoint br = {1.0f, 0.80f};
 
         wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Press SPACE or click to play");
+        wid_set_text(child, "Click to play");
         wid_effect_bounce(child);
         wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
 

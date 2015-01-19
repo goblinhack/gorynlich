@@ -161,6 +161,7 @@
  * Fonts
  */
 #undef ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
+#define ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
 
 #define FIXED_FONT                  "data/ttf/emulogic.ttf"
 #if 0

@@ -8258,7 +8258,7 @@ static void wid_display (widp w,
 
         int32_t x, y;
         double xpc, ypc;
-        uint32_t width, height;
+        double width, height;
         enum_fmt fmt;
 
         if (!w->text_size_cached) {

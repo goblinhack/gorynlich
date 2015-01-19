@@ -206,8 +206,8 @@ static void wid_chat_wid_create (void)
     }
 
     {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         ttf_text_size(&font,
                       "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -261,8 +261,8 @@ static void wid_chat_wid_create (void)
                 wid_set_name(child, "chat input");
                 wid_chat_input_line = child;
 
-                uint32_t chatw;
-                uint32_t chath;
+                double chatw;
+                double chath;
 
                 ttf_text_size(&font, "chat> ", 
                               &chatw, &chath, 0, 1.0f, 1.0f,
