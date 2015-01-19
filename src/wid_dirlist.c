@@ -551,7 +551,7 @@ widp wid_dirlist (const char *dir,
     widp wid_dirlist_textbox;
     tree_file_node *n;
     tree_root *d;
-    uint32_t title_h;
+    double title_h;
     uint32_t toth = 0;
     uint32_t maxbuttonw = 0;
     uint32_t maxbuttonh = 0;
@@ -591,7 +591,7 @@ widp wid_dirlist (const char *dir,
     }
 
     {
-        uint32_t w;
+        double w;
 
         fontp font = large_font;
         ttf_text_size(&font,
@@ -602,8 +602,8 @@ widp wid_dirlist (const char *dir,
     }
 
     {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         fontp font = small_font;
         ttf_text_size(&font,
@@ -616,8 +616,8 @@ widp wid_dirlist (const char *dir,
     }
 
     { TREE_WALK(d, n) {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         fontp font = small_font;
         ttf_text_size(&font,
@@ -670,8 +670,8 @@ widp wid_dirlist (const char *dir,
         int32_t n = args;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
 
             const char *button_name = button_names[n];
 
@@ -851,8 +851,8 @@ widp wid_dirlist (const char *dir,
         x += PAD_X/2;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
             fontp font = med_font;
 
             const char *button_name = button_names[n];

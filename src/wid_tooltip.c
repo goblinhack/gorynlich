@@ -70,8 +70,8 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
      * Get some rough sizes for the font.
      */
     { TREE_WALK(d, n) {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         ttf_text_size(&font, n->line, &w, &h, 0, 1.0f, 1.0f,
                       false /* fixed width */);

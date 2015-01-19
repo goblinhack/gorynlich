@@ -23,8 +23,8 @@ wid_button_internal (const char *text, float x, float y, fontp font,
                      uint32_t text_scale)
 {
     widp wid_button_window;
-    uint32_t maxw = 0;
-    uint32_t maxh = 0;
+    double maxw = 0;
+    double maxh = 0;
     int32_t mx, my;
 
     /*
