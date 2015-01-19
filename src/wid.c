@@ -2990,6 +2990,26 @@ static void wid_destroy_immediate (widp w)
         w->logname = 0;
     }
 
+    if (w == wid_popup_tooltip) {
+        wid_popup_tooltip = 0;
+    }
+
+    if (w == wid_focus_locked) {
+        wid_focus_locked = 0;
+    }
+
+    if (w == wid_focus) {
+        wid_focus = 0;
+    }
+
+    if (w == wid_over) {
+        wid_over = 0;
+    }
+
+    if (w == wid_moving) {
+        wid_moving = 0;
+    }
+
     myfree(w);
 }
 
