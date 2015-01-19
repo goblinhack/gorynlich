@@ -1,3 +1,5 @@
+taller elf
+animate ghost better
 collision detection broken
 center player icon in inventory screen
 action bar needs to be larger
@@ -10,7 +12,6 @@ click on weapon to switch
 shortcut key for left/right weapon shift
 stop pulsing -9 when dead
 need dying anim
-down diagonal arrow has line under it
 sound effects for weapons and hits
 sound on momey collect
 sound on potion use
@@ -22,10 +23,9 @@ press m for magic to give life to other players
 first to exit level gets 2 spending points, else get 1
 char mapping file and char levels to read in level ed
 single player mode direct socket
-single player pause level if spending points
+pause character on spending point window
 fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
 lit levels gauntlet old style
-different colors for walls
 boss baddies every 10 levels
 bosses drop exit on death
 picture of keyboard and keys to use at start
@@ -34,6 +34,7 @@ Mon Jan 19 09:56:33 EST 2015
 - smooth scaling fonts
 - click to play
 - retro font
+- down diagonal arrow has line under it
 
 Sun Jan 18 09:30:50 EST 2015
 - new tiles
