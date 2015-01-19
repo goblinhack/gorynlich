@@ -1477,7 +1477,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
             verify(recipient);
 
-            recipient->stats.xp += tp_get_bonus_xp_on_death(tp);
+            thing_stats_modify_xp(recipient, tp_get_bonus_xp_on_death(tp));
         }
     }
 
@@ -1619,9 +1619,7 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
                 }
             }
 
-            verify(recipient);
-
-            recipient->stats.xp += tp_get_bonus_xp_on_death(tp);
+            thing_stats_modify_xp(recipient, tp_get_bonus_xp_on_death(tp));
         }
     }
 
@@ -1661,8 +1659,7 @@ static int thing_hit_ (thingp t,
     }
 
     if (damage > 0) {
-
-        const char *color = "gray";
+        const char *color = "white";
         const char *font = "small";
 
         if (damage > 20) {
