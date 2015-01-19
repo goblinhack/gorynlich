@@ -141,8 +141,8 @@ static uint8_t resource_init_20 (void *context)
 
 static uint8_t resource_init_21 (void *context)
 {
-    return (tex_load_tiled("data/gfx/sprites_small.png",
-                           "sprites_small",
+    return (tex_load_tiled("data/gfx/sprites.png",
+                           "sprites",
                            TILE_WIDTH, TILE_HEIGHT) != 0);
 }
 
@@ -2342,7 +2342,7 @@ static uint8_t resource_init_last (void *context)
         0,
     };
 
-    tile_load_arr("sprites_small", TILE_WIDTH, TILE_HEIGHT,
+    tile_load_arr("sprites", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(small_tiles), small_tiles);
 
     static const char *explosion_tiles[] = {
