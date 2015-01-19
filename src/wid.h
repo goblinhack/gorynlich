@@ -631,8 +631,8 @@ typedef struct wid_ {
      * Cache of text size as this is expensive to work out if there are colors
      * in the strings.
      */
-    int16_t ttf_width;
-    int16_t ttf_height;
+    double ttf_width;
+    double ttf_height;
     enum_fmt fmt;
 
     /*

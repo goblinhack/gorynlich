@@ -227,8 +227,8 @@ static void wid_console_wid_create (void)
     }
 
     {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         ttf_text_size(&font,
                       "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
