@@ -25,7 +25,7 @@
 #define TTF_FIXED_WIDTH_CHAR '0'
 #define TTF_GLYPH_MIN ' '
 #define TTF_GLYPH_MAX 126
-#define TTF_TABSTOP 80
+#define TTF_TABSTOP 80.0
 
 /*
  * Enable this to generate the font bitmaps.
@@ -37,17 +37,17 @@
 #endif
 
 typedef struct {
-    uint32_t width;
-    uint32_t height;
-    int32_t minx;
-    int32_t maxx;
-    int32_t miny;
-    int32_t maxy;
-    int32_t advance;
-    float texMinX;
-    float texMaxX;
-    float texMinY;
-    float texMaxY;
+    double width;
+    double height;
+    double minx;
+    double maxx;
+    double miny;
+    double maxy;
+    double advance;
+    double texMinX;
+    double texMaxX;
+    double texMinY;
+    double texMaxY;
 } glyph;
 
 typedef struct {
@@ -145,7 +145,8 @@ void ttf_free (font *f)
  * Return a SDL rectangle with the size of the font
  */
 void ttf_text_size (font **f, const char *text_in,
-                    uint32_t *w, uint32_t *h,
+                    double *w, 
+                    double *h,
                     enum_fmt *fmt,
                     double scaling,
                     double advance,
@@ -154,8 +155,8 @@ void ttf_text_size (font **f, const char *text_in,
     uint8_t found_format_string = false;
     int32_t c;
     texp tex;
-    int32_t x_start = 0;
-    int32_t x;
+    double x_start = 0;
+    double x;
     enum_fmt _fmt;
     const char *text = text_in;
 
@@ -214,10 +215,11 @@ void ttf_text_size (font **f, const char *text_in,
                      */
                     (void) string2tile(&text);
 
-                    x += (*f)->glyphs['a'].width * scaling * advance;
-                    x += (*f)->glyphs['a'].width * scaling * advance;
-                    x += (*f)->glyphs['a'].width * scaling * advance;
-                    x += (*f)->glyphs['a'].width * scaling * advance;
+                    double a_width = (*f)->glyphs['a'].width * scaling * advance;
+                    x += a_width;
+                    x += a_width;
+                    x += a_width;
+                    x += a_width;
 		    continue;
 		}
 	    }
@@ -226,7 +228,7 @@ void ttf_text_size (font **f, const char *text_in,
 	found_format_string = false;
 
         if (c == '\t') {
-            x = ((((x-x_start) / TTF_TABSTOP) + 1) * TTF_TABSTOP);
+            x = ((((x-x_start) / TTF_TABSTOP) + 1.0) * TTF_TABSTOP);
             x = x + x_start;
         } else {
             if (fixed_width) {
@@ -247,7 +249,7 @@ void ttf_text_size (font **f, const char *text_in,
 /*
  * Blit the font to the screen
  */
-void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
+void ttf_putc (font *f, int32_t c, double x, double y, double scaling)
 {
     if (HEADLESS) {
         return;
@@ -327,7 +329,7 @@ void ttf_putc (font *f, int32_t c, int32_t x, int32_t y, double scaling)
  * Blit the font to the screen
  */
 static void ttf_puts_internal (font *f, const char *text,
-                               int32_t x, int32_t y,
+                               double x, double y,
                                double scaling, double advance,
                                uint8_t include_formatting,
                                uint8_t draw_cursor,
@@ -340,7 +342,7 @@ static void ttf_puts_internal (font *f, const char *text,
     texp tex;
     tilep tile;
     color fg;
-    int32_t x_start = x;
+    double x_start = x;
 
     while ((c = *text++) != '\0') {
 	if (!found_format_string) {
@@ -421,8 +423,8 @@ static void ttf_puts_internal (font *f, const char *text,
                     br.x = (x + f->glyphs['a'].width * scaling);
                     br.y = (y + f->glyphs['a'].height * (scaling));
 
-                    int width = br.x - tl.x;
-                    int height = br.y - tl.y;
+                    double width = br.x - tl.x;
+                    double height = br.y - tl.y;
 
                     tl.x -= width;
                     tl.y -= height / 2;
@@ -488,7 +490,7 @@ static void ttf_puts_internal (font *f, const char *text,
     }
 }
 
-void ttf_puts (font *f, const char *text, int32_t x, int32_t y,
+void ttf_puts (font *f, const char *text, double x, double y,
                double scaling, double advance,
                uint8_t fixed_width)
 {
@@ -498,7 +500,7 @@ void ttf_puts (font *f, const char *text, int32_t x, int32_t y,
                       fixed_width);
 }
 
-void ttf_puts_no_fmt (font *f, const char *text, int32_t x, int32_t y,
+void ttf_puts_no_fmt (font *f, const char *text, double x, double y,
                       double scaling, double advance,
                       uint8_t fixed_width)
 {
@@ -520,8 +522,8 @@ ttf_set_color_key (SDL_Surface *glyph_surface,
                    uint8_t ckr,
                    uint8_t ckg,
                    uint8_t ckb,
-                   uint32_t *width,
-                   uint32_t *height)
+                   double *width,
+                   double *height)
 {
     SDL_Surface *tmp;
     uint32_t colorkey;
@@ -555,7 +557,7 @@ ttf_set_color_key (SDL_Surface *glyph_surface,
                             );
 
     if (!tmp) {
-        ERR("Failed to make RGB surface size %d %d: %s",
+        ERR("Failed to make RGB surface size %f %f: %s",
             *width, *height, SDL_GetError());
         return;
     }
@@ -591,16 +593,28 @@ ttf_create_tex_from_char (TTF_Font *ttf, const char *name, font *f, uint8_t c)
     /*
      * Load the glyph info
      */
+    int minx;
+    int maxx;
+    int miny;
+    int maxy;
+    int advance;
+
     e = TTF_GlyphMetrics(ttf, c,
-                         &f->glyphs[c].minx,
-                         &f->glyphs[c].maxx,
-                         &f->glyphs[c].miny,
-                         &f->glyphs[c].maxy,
-                         &f->glyphs[c].advance);
+                         &minx,
+                         &maxx,
+                         &miny,
+                         &maxy,
+                         &advance);
     if (e != 0) {
         ERR("error loading font glyph %u %s", c, name);
         return;
     }
+
+    f->glyphs[c].minx = minx;
+    f->glyphs[c].maxx = maxx;
+    f->glyphs[c].miny = miny;
+    f->glyphs[c].maxy = maxy;
+    f->glyphs[c].advance = advance;
 
     text[0] = c;
     text[1] = '\0';
@@ -697,11 +711,11 @@ ttf_write_tga (char *name, int32_t pointsize)
     SDL_Surface *dst;
     uint32_t height;
     uint32_t width;
-    int16_t maxx;
-    int16_t maxy[TTF_GLYPH_MAX];
+    double maxx;
+    double maxy[TTF_GLYPH_MAX];
     uint32_t c;
-    uint32_t x;
-    uint32_t y;
+    int x;
+    int y;
     uint32_t h;
     font *f;
 
@@ -811,8 +825,8 @@ ttf_write_tga (char *name, int32_t pointsize)
      * Convert the black border smoothing that ttf adds into alpha.
      */
     {
-        int32_t x;
-        int32_t y;
+        double x;
+        double y;
 
         for (x = 0; x < dst->w; x++) {
             for (y = 0; y < dst->h; y++) {

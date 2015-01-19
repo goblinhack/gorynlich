@@ -204,21 +204,21 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
     widp wid_text_input_title;
     widp wid_text_input_window;
     widp wid_text_input_textbox;
-    uint32_t title_h;
+    double title_h;
     uint32_t toth = 0;
     uint32_t maxbuttonw = 0;
     uint32_t maxbuttonh = 0;
     uint32_t button_y;
     va_list ap;
     const char *button_names[args];
-    uint32_t maxw;
-    uint32_t maxh;
+    double maxw;
+    double maxh;
 
     wid_text_input_callback button_callback[args];
     memset(button_callback, 0, sizeof(button_callback));
 
     {
-        uint32_t w;
+        double w;
         fontp font = large_font;
 
         ttf_text_size(&font,
@@ -264,8 +264,8 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
         int32_t n = args;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
             fontp font = med_font;
 
             const char *button_name = button_names[n];
@@ -417,8 +417,8 @@ widp wid_text_input (const char *title, double x, double y, int32_t args, ...)
         x += PAD_X/2;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
             fontp font = med_font;
 
             const char *button_name = button_names[n];
@@ -509,23 +509,22 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
     widp wid_text_input_title;
     widp wid_text_input_window;
     widp wid_text_input_textbox;
-    uint32_t title_h;
+    double title_h;
     uint32_t toth = 0;
     uint32_t maxbuttonw = 0;
     uint32_t maxbuttonh = 0;
     uint32_t button_y;
     va_list ap;
     const char *button_names[args];
-    uint32_t maxw;
-    uint32_t maxh;
+    double maxw;
+    double maxh;
 
     wid_text_input_callback button_callback[args];
     memset(button_callback, 0, sizeof(button_callback));
 
     {
-        uint32_t w;
+        double w;
         fontp font = large_font;
-
 
         ttf_text_size(&font,
                       "TITLE", &w, &title_h, 0, 1.0f, 1.0f,
@@ -570,8 +569,8 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
         int32_t n = args;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
 
             const char *button_name = button_names[n];
 
@@ -725,8 +724,8 @@ widp wid_large_text_input (const char *title, double x, double y, int32_t args, 
         x += PAD_X/2;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
 
             const char *button_name = button_names[n];
             fontp font = med_font;

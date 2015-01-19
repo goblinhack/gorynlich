@@ -59,8 +59,8 @@ static widp wid_textbox_internal (widp parent,
      * Get some rough sizes for the font.
      */
     { TREE_WALK(d, n) {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         ttf_text_size(&font, n->line, &w, &h, 0, 1.0f, 1.0f,
                       fixed_width);

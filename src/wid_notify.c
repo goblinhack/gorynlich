@@ -53,8 +53,8 @@ wid_notify_internal (const char *text, uint32_t level)
      * Get some rough sizes for the font.
      */
     { TREE_WALK(d, n) {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         fontp font = small_font;
         ttf_text_size(&font, n->line, &w, &h, 0, 1.0f, 1.0f,
