@@ -113,14 +113,14 @@
 /*
  * Tile pixel width.
  */
-#define TILE_WIDTH                  64
-#define TILE_HEIGHT                 64
+#define TILE_WIDTH                  16
+#define TILE_HEIGHT                 16
 
 /*
  * The width of wall blocks and floor tiles not counting shadow pixels
  */
-#define TILE_PIX_WIDTH              48
-#define TILE_PIX_HEIGHT             48
+#define TILE_PIX_WIDTH              12
+#define TILE_PIX_HEIGHT             12
 
 /*
  * The width including shadow pixels.
@@ -131,8 +131,8 @@
 /*
  * The number of tiles per screen.
  */
-#define TILES_SCREEN_WIDTH          21
-#define TILES_SCREEN_HEIGHT         14
+#define TILES_SCREEN_WIDTH          16
+#define TILES_SCREEN_HEIGHT         12
 
 /*
  * Padding for tiles on the edge of the smooth scroll. Has to be quite wide so 
@@ -163,18 +163,26 @@
 #undef ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
 
 #define FIXED_FONT                  "data/ttf/emulogic.ttf"
+#if 0
 #define VSMALL_FONT                 "data/ttf/Metamorphous_Regular.ttf"
 #define SMALL_FONT                  "data/ttf/Metamorphous_Regular.ttf"
 #define MED_FONT                    "data/ttf/Metamorphous_Regular.ttf"
 #define LARGE_FONT                  "data/ttf/Metamorphous_Regular.ttf"
 #define VLARGE_FONT                 "data/ttf/Metamorphous_Regular.ttf"
+#else
+#define VSMALL_FONT                 "data/ttf/emulogic.ttf"
+#define SMALL_FONT                  "data/ttf/emulogic.ttf"
+#define MED_FONT                    "data/ttf/emulogic.ttf"
+#define LARGE_FONT                  "data/ttf/emulogic.ttf"
+#define VLARGE_FONT                 "data/ttf/emulogic.ttf"
+#endif
 
 #define FIXED_FONT_SIZE             12
-#define VSMALL_FONT_SIZE            12
-#define SMALL_FONT_SIZE             16
-#define MED_FONT_SIZE               18
-#define LARGE_FONT_SIZE             20
-#define VLARGE_FONT_SIZE            28
+#define VSMALL_FONT_SIZE            8
+#define SMALL_FONT_SIZE             10
+#define MED_FONT_SIZE               12
+#define LARGE_FONT_SIZE             14
+#define VLARGE_FONT_SIZE            16
 
 /*
  * Messages.
