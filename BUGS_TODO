@@ -1,4 +1,8 @@
+collision detection broken
+center player icon in inventory screen
+action bar needs to be larger
 spin player widget on hit
+choose player intro window - 5 panels screen width
 bounce on walk
 update inventory while playing
 stats need to do something
@@ -25,6 +29,9 @@ different colors for walls
 boss baddies every 10 levels
 bosses drop exit on death
 picture of keyboard and keys to use at start
+
+Mon Jan 19 09:30:50 EST 2015
+- new tiles
 
 Thu Jan 15 21:34:42 EST 2015
 - fonts too large in 640x480

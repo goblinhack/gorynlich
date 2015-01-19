@@ -129,8 +129,8 @@ widp wid_popup (const char *text, const char *title,
     widp wid_popup_window;
     tree_string_split_node *n;
     tree_root *d;
-    uint32_t titlew = 0;
-    uint32_t titleh = 0;
+    double titlew = 0;
+    double titleh = 0;
     uint32_t maxw = 0;
     uint32_t maxh = 0;
     uint32_t toth = 0;
@@ -183,8 +183,8 @@ widp wid_popup (const char *text, const char *title,
      * Get some rough sizes for the font.
      */
     { TREE_WALK(d, n) {
-        uint32_t w;
-        uint32_t h;
+        double w;
+        double h;
 
         ttf_text_size(&body_font, n->line, &w, &h, 0, 1.0f, 1.0f,
                       false /* fixed width */);
@@ -237,8 +237,8 @@ widp wid_popup (const char *text, const char *title,
         int32_t n = args;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
 
             const char *button_name = button_names[n];
 
@@ -442,8 +442,8 @@ widp wid_popup (const char *text, const char *title,
         x += PAD_X/2;
 
         while (n--) {
-            uint32_t w;
-            uint32_t h;
+            double w;
+            double h;
 
             const char *button_name = button_names[n];
             ttf_text_size(&body_font, button_name, &w, &h, 0, 1.0f, 1.0f,
