@@ -1175,7 +1175,7 @@ void thing_stats_modify_xp (thingp t, int32_t value)
 
     if (thing_is_player(t)) {
         MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                    "%%%%font=%s$%%%%fg=%s$%d", 
+                                    "%%%%font=%s$%%%%fg=%s$+%d", 
                                     "large", "gold", 
                                     value);
     }
