@@ -82,7 +82,7 @@ void wid_player_inventory_button_style (widp w,
 
     wid_set_mode(w, WID_MODE_OVER);
 
-    c = WHITE;
+    c = RED;
     c.a = 50;
     wid_set_color(w, WID_COLOR_BG, c);
 
@@ -99,6 +99,10 @@ void wid_player_inventory_button_style (widp w,
     if (!item.id) {
         return;
     }
+
+    c = WHITE;
+    c.a = 50;
+    wid_set_color(w, WID_COLOR_BG, c);
 
     tpp tp = id_to_tp(item.id);
 
