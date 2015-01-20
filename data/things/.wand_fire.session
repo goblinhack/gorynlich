@@ -103,24 +103,25 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +18 axe1
-badd +18 axe2
-badd +18 axe3
-badd +18 axe4
-badd +18 axe5
-badd +18 bow1
-badd +19 bow2
-badd +19 bow3
-badd +19 bow4
-badd +18 scythe1
-badd +19 sword1
-badd +19 sword2
-badd +19 sword3
-badd +19 sword4
-badd +19 sword5
-badd +19 sword6
+badd +27 valkyrie
+badd +20 axe1
+badd +19 axe2
+badd +19 axe3
+badd +19 axe4
+badd +19 axe5
+badd +19 bow1
+badd +20 bow2
+badd +20 bow3
+badd +20 bow4
+badd +19 scythe1
+badd +20 sword1
+badd +20 sword2
+badd +20 sword3
+badd +20 sword4
+badd +20 sword5
+badd +20 sword6
 badd +0 wand_fire
-silent! argdel *
+args valkyrie
 edit wand_fire
 set splitbelow splitright
 set nosplitbelow
@@ -223,12 +224,12 @@ set nowrap
 setlocal nowrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 23 - ((19 * winheight(0) + 19) / 39)
+let s:l = 24 - ((23 * winheight(0) + 29) / 58)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-23
-normal! 029l
+24
+normal! 01l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
