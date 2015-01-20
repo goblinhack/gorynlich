@@ -425,7 +425,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
     {
         double x;
         double max_across = 10.0;
-        double border_left = 0.064;
+        double border_left = 0.065;
         double border_right = 0.25;
         double dx = (1.0 - (border_left + border_right)) / max_across;
 
