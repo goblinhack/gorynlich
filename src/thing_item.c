@@ -234,18 +234,19 @@ void thing_used (thingp t, tpp tp)
                                    tp_short_name(tp), bonus_hp);
         bonus_hp = -bonus_hp;
     }
-    t->stats.hp += bonus_hp;
+
+    thing_stats_modify_hp(t, bonus_hp);
 
     /*
      * Need to allow magic items to override this.
      */
-    if (thing_get_stats_hp(t) > thing_get_stats_max_hp(t)) {
+    if (thing_stats_get_hp(t) > thing_stats_get_max_hp(t)) {
         if (tp_is_magical(tp)) {
             /*
              * Allow temorary over max.
              */
         } else {
-            t->stats.hp = thing_get_stats_max_hp(t);
+            thing_stats_set_hp(t, thing_stats_get_max_hp(t));
         }
     }
 
@@ -260,18 +261,19 @@ void thing_used (thingp t, tpp tp)
 
         bonus_magic = -bonus_magic;
     }
-    t->stats.magic += bonus_magic;
+
+    thing_stats_modify_magic(t, bonus_magic);
 
     /*
      * Need to allow magic items to override this.
      */
-    if (thing_get_stats_magic(t) > thing_get_stats_max_magic(t)) {
+    if (thing_stats_get_magic(t) > thing_stats_get_max_magic(t)) {
         if (tp_is_magical(tp)) {
             /*
              * Allow temorary over max.
              */
         } else {
-            t->stats.magic = thing_get_stats_max_magic(t);
+            thing_stats_set_magic(t, thing_stats_get_max_magic(t));
         }
     }
 
@@ -283,14 +285,14 @@ void thing_used (thingp t, tpp tp)
     thing_stats_item_remove(t, &t->stats, tp);
 
     /*
-     * Check HP did not go too low.
+     * Did the item push us into death's icy grip?
      */
-    if (thing_get_stats_hp(t) < 0) {
-        t->stats.hp = 0;
+    if (thing_stats_get_hp(t) < 0) {
+        thing_stats_set_hp(t, 0);
 
         const char *name = tp_short_name(tp);
 
-        thing_dead(t, 0, "%s", name);
+        thing_dying(t, 0, "%s", name);
         return;
     }
 }
