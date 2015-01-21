@@ -326,5 +326,11 @@
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_FAST                50
 #define DELAY_THOUSANDTHS_TX_MAP_UPDATE_SLOW                200
 
-#define DELAY_LEVEL_END_HIDE                    (ONESEC * 1)
-#define DELAY_LEVEL_END_DESTROY                 (ONESEC * 4)
+#define DELAY_LEVEL_END_HIDE                                (ONESEC * 1)
+#define DELAY_LEVEL_END_DESTROY                             (ONESEC * 4)
+
+/*
+ * Players start to croak it at 0 and tick down to this and then really croak 
+ * it. 8(
+ */
+#define THING_MIN_HEALTH                                    (-10)

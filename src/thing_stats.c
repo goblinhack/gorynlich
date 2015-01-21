@@ -590,30 +590,30 @@ void player_inventory_sort (thing_stats *player_stats)
         DIE("no player stats");
     }
 
-    static const uint32_t NCLASSES = 
+    static const int32_t NCLASSES = 
                     THING_INVENTORY_CLASSES;
-    static const uint32_t N_PER_CLASS = 
+    static const int32_t N_PER_CLASS = 
                     THING_INVENTORY_MAX / THING_INVENTORY_CLASSES;
 
     item_t inv_new[THING_INVENTORY_MAX];
     item_t inv_old[THING_INVENTORY_MAX];
-    uint32_t count_per_class[THING_INVENTORY_CLASSES];
+    int32_t count_per_class[THING_INVENTORY_CLASSES];
 
     memcpy(inv_old, &player_stats->inventory, sizeof(inv_old));
     memset(inv_new, 0, sizeof(inv_new));
     memset(count_per_class, 0, sizeof(count_per_class));
 
-    uint32_t i;
+    int32_t i;
 
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
-        uint32_t id;
+        int32_t id;
 
         id = inv_old[i].id;
         if (!id) {
             continue;
         }
 
-        uint32_t base = THING_INVENTORY_MISC_BASE;
+        int32_t base = THING_INVENTORY_MISC_BASE;
 
         tpp tp = id_to_tp(id);
 
@@ -650,7 +650,7 @@ void player_inventory_sort (thing_stats *player_stats)
             continue;
         }
 
-        uint32_t new_i = base + count_per_class[which];
+        int32_t new_i = base + count_per_class[which];
         if (new_i >= THING_INVENTORY_MAX) {
             ERR("overflow in item sorting");
             continue;
@@ -664,8 +664,8 @@ void player_inventory_sort (thing_stats *player_stats)
 }
 
 itemp thing_stats_has_item (thing_stats *player_stats,
-                             uint32_t id,
-                             uint32_t *index)
+                             int32_t id,
+                             int32_t *index)
 {
     itemp i;
     
@@ -688,10 +688,10 @@ itemp thing_stats_has_item (thing_stats *player_stats,
 }
 
 itemp thing_stats_has_inventory_item (thing_stats *player_stats,
-                                       uint32_t id,
-                                       uint32_t *index)
+                                       int32_t id,
+                                       int32_t *index)
 {
-    uint32_t i;
+    int32_t i;
 
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
         if (player_stats->inventory[i].id == id) {
@@ -707,10 +707,10 @@ itemp thing_stats_has_inventory_item (thing_stats *player_stats,
 }
 
 itemp thing_stats_has_action_bar_item (thing_stats *player_stats,
-                                        uint32_t id,
-                                        uint32_t *index)
+                                        int32_t id,
+                                        int32_t *index)
 {
-    uint32_t i;
+    int32_t i;
 
     for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
         if (player_stats->action_bar[i].id == id) {
@@ -726,10 +726,10 @@ itemp thing_stats_has_action_bar_item (thing_stats *player_stats,
 }
 
 itemp thing_stats_has_worn_item (thing_stats *player_stats,
-                                  uint32_t id,
-                                  uint32_t *index)
+                                  int32_t id,
+                                  int32_t *index)
 {
-    uint32_t i;
+    int32_t i;
 
     for (i = 0; i < THING_WORN_MAX; i++) {
         if (player_stats->worn[i].id == id) {
@@ -750,7 +750,7 @@ int thing_stats_item_add (thingp t,
 {
     tpp it = id_to_tp(item.id);
     itemp oitem;
-    uint32_t i;
+    int32_t i;
 
     if (!item.quantity) {
         DIE("Bad quantity for item add %s", tp_short_name(it));
@@ -872,8 +872,8 @@ int thing_stats_item_remove (thingp t,
  * all water to poisoned water.
  */
 int thing_stats_item_polymorph (thing_stats *player_stats,
-                                 const uint32_t from,
-                                 const uint32_t to)
+                                 const int32_t from,
+                                 const int32_t to)
 {
     itemp from_item = thing_stats_has_item(player_stats, from, 0);
 
@@ -907,7 +907,7 @@ static void thing_stats_get_random_items (thing_stats *player_stats)
                 continue;
             }
 
-            uint32_t chance = myrand() % 10000;
+            int32_t chance = myrand() % 10000;
 
             if (tp_get_d10000_chance_of_appearing(t) < chance) {
                 continue;
@@ -950,7 +950,7 @@ static void player_stats_generate_fixed_items (thing_stats *player_stats)
     /*
      * Start with items defined for this base class.
      */
-    uint32_t i;
+    int32_t i;
 
     for (i = 0; i < THING_MAX; i++) {
 
@@ -1167,16 +1167,344 @@ void thing_stats_client_modified (thing_stats *player_stats)
     }
 }
 
-void thing_stats_modify_xp (thingp t, int32_t value)
+int32_t thing_stats_get_cash (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.cash;
+    return (val);
+}
+
+int32_t thing_stats_get_hp (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.hp;
+    return (val);
+}
+
+int32_t thing_stats_get_max_hp (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.max_hp;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_max_hp(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_magic (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.magic;
+    return (val);
+}
+
+int32_t thing_stats_get_max_magic (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.max_magic;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_max_magic(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_xp (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.xp;
+    return (val);
+}
+
+int32_t thing_stats_get_attack_melee (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.attack_melee;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_attack_melee(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_attack_ranged (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.attack_ranged;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_attack_ranged(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_attack_magical (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.attack_magical;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_attack_magical(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_speed (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.speed;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_speed(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_vision (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.vision;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_vision(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_healing (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.healing;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_healing(t->tp);
+    return (val);
+}
+
+int32_t thing_stats_get_defense (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.defense;
+    if (val) {
+        return (val);
+    }
+
+    val = tp_get_stats_defense(t->tp);
+    return (val);
+}
+
+void thing_stats_set_cash (thingp t, int32_t val)
 {
     verify(t);
 
-    t->stats.xp += value;
+    t->stats.cash = val;
+}
+
+void thing_stats_set_hp (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.hp = val;
+}
+
+void thing_stats_set_max_hp (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.max_hp = val;
+}
+
+void thing_stats_set_magic (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.magic = val;
+}
+
+void thing_stats_set_max_magic (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.max_magic = val;
+}
+
+void thing_stats_set_xp (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.xp = val;
+}
+
+void thing_stats_set_attack_melee (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.attack_melee = val;
+}
+
+void thing_stats_set_attack_ranged (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.attack_ranged = val;
+}
+
+void thing_stats_set_attack_magical (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.attack_magical = val;
+}
+
+void thing_stats_set_speed (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.speed = val;
+}
+
+void thing_stats_set_vision (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.vision = val;
+}
+
+void thing_stats_set_healing (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.healing = val;
+}
+
+void thing_stats_set_defense (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.defense = val;
+}
+
+void thing_stats_modify_cash (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.cash += val;
+}
+
+void thing_stats_modify_hp (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.hp += val;
+
+    if (t->stats.hp <= THING_MIN_HEALTH) {
+        t->stats.hp = THING_MIN_HEALTH;
+    }
+}
+
+void thing_stats_modify_max_hp (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.max_hp += val;
+}
+
+void thing_stats_modify_magic (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.magic += val;
+}
+
+void thing_stats_modify_max_magic (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.max_magic += val;
+}
+
+void thing_stats_modify_xp (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.xp += val;
 
     if (thing_is_player(t)) {
         MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
                                     "%%%%font=%s$%%%%fg=%s$+%d", 
                                     "large", "gold", 
-                                    value);
+                                    val);
     }
+}
+
+void thing_stats_modify_attack_melee (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.attack_melee += val;
+}
+
+void thing_stats_modify_attack_ranged (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.attack_ranged += val;
+}
+
+void thing_stats_modify_attack_magical (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.attack_magical += val;
+}
+
+void thing_stats_modify_speed (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.speed += val;
+}
+
+void thing_stats_modify_vision (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.vision += val;
+}
+
+void thing_stats_modify_healing (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.healing += val;
+}
+
+void thing_stats_modify_defense (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.defense += val;
 }

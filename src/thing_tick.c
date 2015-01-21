@@ -247,24 +247,23 @@ void thing_tick_server_player_slow_all (int force)
          */
         if (force || time_have_x_secs_passed_since(1, t->timestamp_health)) {
             if (thing_is_dying(t)) {
-                t->stats.hp--;
+                thing_stats_modify_hp(t, -1);
 
                 thing_update(t);
 
-                if (t->stats.hp <= -10) {
+                if (t->stats.hp <= THING_MIN_HEALTH) {
                     thing_dead(t, 0, 0);
                 }
             }
 
-
             t->timestamp_health = time_get_time_cached();
 
-            int delta = thing_get_stats_hp(t) - thing_get_stats_max_hp(t);
+            int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
             if (delta > 0) {
                 t->stats.hp -= delta / 10;
             }
 
-            delta = thing_get_stats_magic(t) - thing_get_stats_max_magic(t);
+            delta = thing_stats_get_magic(t) - thing_stats_get_max_magic(t);
             if (delta > 0) {
                 t->stats.magic -= delta / 10;
             }

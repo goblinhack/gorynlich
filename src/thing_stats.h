@@ -51,8 +51,8 @@ typedef struct thing_stats_ {
     int16_t magic;
     int16_t max_magic;
 
-    uint32_t xp;
-    uint32_t cash;
+    int32_t xp;
+    int32_t cash;
 
     uint8_t spending_points;
     uint8_t attack_melee;
@@ -62,11 +62,11 @@ typedef struct thing_stats_ {
     uint8_t speed;
     uint8_t vision;
     uint8_t healing;
-    uint8_t weapon;
 
     /*
      * What we are carrying and where.
      */
+    uint8_t weapon;
     item_t inventory[THING_INVENTORY_MAX];
     item_t action_bar[THING_ACTION_BAR_MAX];
     item_t worn[THING_WORN_MAX];
@@ -83,20 +83,20 @@ void thing_stats_init(thing_stats *);
 tpp thing_stats_to_tp(thing_stats *);
 
 itemp thing_stats_has_item(thing_stats *thing_stats,
-                            uint32_t id,
-                            uint32_t *index);
+                            int32_t id,
+                            int32_t *index);
 
 itemp thing_stats_has_inventory_item(thing_stats *thing_stats,
-                                        uint32_t item,
-                                        uint32_t *index);
+                                        int32_t item,
+                                        int32_t *index);
 
 itemp thing_stats_has_action_bar_item(thing_stats *thing_stats,
-                                       uint32_t item,
-                                       uint32_t *index);
+                                       int32_t item,
+                                       int32_t *index);
 
 itemp thing_stats_has_worn_item(thing_stats *thing_stats,
-                                   uint32_t item,
-                                   uint32_t *index);
+                                   int32_t item,
+                                   int32_t *index);
 
 int thing_stats_item_add(thingp t,
                           thing_stats *thing_stats,
@@ -111,8 +111,8 @@ int thing_stats_item_degrade(thingp t,
                               const tpp it);
 
 int thing_stats_item_polymorph(thing_stats *thing_stats,
-                                const uint32_t from,
-                                const uint32_t to);
+                                const int32_t from,
+                                const int32_t to);
 
 void player_inventory_sort(thing_stats *thing_stats);
 
@@ -120,4 +120,43 @@ void thing_stats_client_modified(thing_stats *player_stats);
 void thing_stats_dump(const thing_statsp s);
 void thing_stats_diff(const thing_statsp old, const thing_statsp new_stats);
 void thing_stats_merge(thing_statsp merged_stats, thing_statsp current_stats, thing_statsp new_stats);;
-void thing_stats_modify_xp(thingp t, int32_t value);
+
+int32_t thing_stats_get_cash(thingp t);
+int32_t thing_stats_get_hp(thingp t);
+int32_t thing_stats_get_max_hp(thingp t);
+int32_t thing_stats_get_magic(thingp t);
+int32_t thing_stats_get_max_magic(thingp t);
+int32_t thing_stats_get_xp(thingp t);
+int32_t thing_stats_get_attack_melee(thingp t);
+int32_t thing_stats_get_attack_ranged(thingp t);
+int32_t thing_stats_get_attack_magical(thingp t);
+int32_t thing_stats_get_speed(thingp t);
+int32_t thing_stats_get_vision(thingp t);
+int32_t thing_stats_get_healing(thingp t);
+int32_t thing_stats_get_defense(thingp t);
+void thing_stats_set_cash(thingp t, int32_t val);
+void thing_stats_set_hp(thingp t, int32_t val);
+void thing_stats_set_max_hp(thingp t, int32_t val);
+void thing_stats_set_magic(thingp t, int32_t val);
+void thing_stats_set_max_magic(thingp t, int32_t val);
+void thing_stats_set_xp(thingp t, int32_t val);
+void thing_stats_set_attack_melee(thingp t, int32_t val);
+void thing_stats_set_attack_ranged(thingp t, int32_t val);
+void thing_stats_set_attack_magical(thingp t, int32_t val);
+void thing_stats_set_speed(thingp t, int32_t val);
+void thing_stats_set_vision(thingp t, int32_t val);
+void thing_stats_set_healing(thingp t, int32_t val);
+void thing_stats_set_defense(thingp t, int32_t val);
+void thing_stats_modify_cash(thingp t, int32_t val);
+void thing_stats_modify_hp(thingp t, int32_t val);
+void thing_stats_modify_max_hp(thingp t, int32_t val);
+void thing_stats_modify_magic(thingp t, int32_t val);
+void thing_stats_modify_max_magic(thingp t, int32_t val);
+void thing_stats_modify_xp(thingp t, int32_t val);
+void thing_stats_modify_attack_melee(thingp t, int32_t val);
+void thing_stats_modify_attack_ranged(thingp t, int32_t val);
+void thing_stats_modify_attack_magical(thingp t, int32_t val);
+void thing_stats_modify_speed(thingp t, int32_t val);
+void thing_stats_modify_vision(thingp t, int32_t val);
+void thing_stats_modify_healing(thingp t, int32_t val);
+void thing_stats_modify_defense(thingp t, int32_t val);
