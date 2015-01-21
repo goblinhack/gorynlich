@@ -971,11 +971,28 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         wid_move_to_abs(wid_popup_tooltip, px, py);
 #else
         /*
-         * Looks better for it to swipe down I think. Do I think? God only 
-         * knows. Why am I talking to myself!?
+         * If the mouse is over the pop up window, move the window a bit
          */
-        wid_move_to_pct_centered(wid_popup_tooltip, 0.5, -0.5);
-        wid_move_to_pct_centered_in(wid_popup_tooltip, 0.5, 0.2, 200);
+        int32_t mx = global_config.video_gl_width / 2;
+        int32_t wx = wid_get_width(wid_popup_tooltip) / 2;
+        int32_t maxy = (global_config.video_gl_height * 0.2) +
+                        wid_get_height(wid_popup_tooltip);
+
+        double minx = mx - wx;
+        double maxx = mx + wx;
+
+        double atx = 0.5;
+
+        if ((mouse_x >= mx) && (mouse_x < maxx) && (mouse_y < maxy)) {
+            atx = 0.25;
+        }
+
+        if ((mouse_x <= mx) && (mouse_x > minx) && (mouse_y < maxy)) {
+            atx = 0.75;
+        }
+
+        wid_move_to_pct_centered(wid_popup_tooltip, atx, -0.5);
+        wid_move_to_pct_centered_in(wid_popup_tooltip, atx, 0.2, 200);
 
         wid_destroy_ptr_in(&wid_popup_tooltip, 5000);
 #endif

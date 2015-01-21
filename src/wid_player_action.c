@@ -323,7 +323,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_TEXT, RED);
         }
-
     }
 
     {
@@ -364,7 +363,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
             wid_set_color(w, WID_COLOR_TEXT, RED);
         }
 
-        if (s->hp < s->max_hp / 10) {
+        if ((s->hp < s->max_hp / 10) && (s->hp > THING_MIN_HEALTH)) {
             wid_scaling_to_pct_in(w, 1.0, 3.15, wid_bounce_delay, 10000);
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_TEXT, RED);

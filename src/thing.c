@@ -1412,8 +1412,8 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
                  */
                 t->needs_tx_refresh_xy_and_template_id = 1;
                 t->tp = what;
-                t->stats.hp = tp_get_stats_max_hp(what);
-                t->stats.magic = tp_get_stats_max_magic(what);
+                thing_stats_set_hp(t, tp_get_stats_max_hp(what));
+                thing_stats_set_magic(t, tp_get_stats_max_magic(what));
                 thing_update(t);
 
                 /*
@@ -1654,7 +1654,7 @@ static int thing_hit_ (thingp t,
     t->is_hit_miss = false;
     t->is_hit_success = true;
 
-    if (damage > thing_get_stats_hp(t) / 10) {
+    if (damage > thing_stats_get_hp(t) / 10) {
         t->is_hit_crit = true;
     }
 
@@ -1689,9 +1689,13 @@ static int thing_hit_ (thingp t,
      * Keep hitting until all damage is used up or the thing is dead.
      */
     while (damage > 0) {
-        if (thing_get_stats_hp(t) <= damage) {
-            damage -= thing_get_stats_hp(t);
-            t->stats.hp = 0;
+        if (thing_stats_get_hp(t) <= damage) {
+            damage -= thing_stats_get_hp(t);
+
+            /*
+             * Start the death countdown
+             */
+            thing_stats_set_hp(t, 0);
 
             /*
              * Record who dun it.
@@ -1728,7 +1732,7 @@ static int thing_hit_ (thingp t,
             /*
              * If polymorphed, hit again?
              */
-            if (!thing_get_stats_hp(t)) {
+            if (!thing_stats_get_hp(t)) {
                 /*
                  * No it really died.
                  */
@@ -1745,9 +1749,10 @@ static int thing_hit_ (thingp t,
             /*
              * A hit, but not enough to kill the thing.
              */
-            t->stats.hp -= damage;
+            thing_stats_modify_hp(t, -damage);
+
             if (t->stats.hp < 0) {
-                t->stats.hp = 0;
+                thing_stats_set_hp(t, 0);
             }
 
             if (thing_is_player(t)) {
