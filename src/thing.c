@@ -165,6 +165,9 @@ tree_root *client_boring_things;
 static int server_things_total;
 static int client_things_total;
 
+static int server_monst_things_total;
+static int client_monst_things_total;
+
 static uint32_t next_thing_id;
 static uint32_t next_monst_thing_id;
 
@@ -837,6 +840,14 @@ thingp thing_server_new (const char *name,
 
     thing_server_init(t, x, y);
 
+    if (thing_is_monst(t)) {
+        if (t->on_server) {
+            server_monst_things_total++;
+        } else {
+            client_monst_things_total++;
+        }
+    }
+
     if (t->on_server) {
         server_things_total++;
     } else {
@@ -849,9 +860,11 @@ thingp thing_server_new (const char *name,
         !thing_is_weapon_carry_effect(t)) {
 
         if (t->on_server) {
-            THING_LOG(t, "created (total %d)", server_things_total);
+            THING_LOG(t, "created (total %d monst %d)", 
+                      server_things_total, server_monst_things_total);
         } else {
-            THING_LOG(t, "created (total %d)", client_things_total);
+            THING_LOG(t, "created (total %d monst %d)", 
+                      client_things_total, client_monst_things_total);
         }
     }
 
@@ -1197,7 +1210,7 @@ void thing_destroy (thingp t, const char *why)
     }
 
     if (thing_is_player(t)) {
-        LOG("Destroy player:");
+        THING_LOG(t, "destroy player");
 
         thing_dump(t);
     }
@@ -1301,6 +1314,14 @@ void thing_destroy (thingp t, const char *why)
         player = 0;
 
         client_player_died = true;
+    }
+
+    if (thing_is_monst(t)) {
+        if (t->on_server) {
+            server_monst_things_total--;
+        } else {
+            client_monst_things_total--;
+        }
     }
 
     if (t->on_server) {
@@ -1477,7 +1498,16 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
             verify(recipient);
 
-            thing_stats_modify_xp(recipient, tp_get_bonus_xp_on_death(tp));
+            int32_t val = tp_get_bonus_xp_on_death(tp);
+
+            thing_stats_modify_xp(recipient, val);
+
+            if (thing_is_player(killer)) {
+                MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                            "%%%%font=%s$%%%%fg=%s$+%d", 
+                                            "large", "gold", 
+                                            val);
+            }
         }
     }
 
@@ -1528,6 +1558,12 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
      */
     if (t->on_server) {
         thing_update(t);
+
+        /*
+         * Send the players an update of their status so the client gets the 
+         * final score.
+         */
+        socket_tx_server_status();
     }
 
     if (!t->on_active_list) {
@@ -1568,14 +1604,6 @@ static void thing_dying_ (thingp t, thingp killer, char *reason)
 
         t->dead_reason = reason;
     }
-
-    /*
-     * Replace the logname
-     */
-    char *new_logname = dynprintf("%s (dying, %s)", 
-                                  t->logname, reason);
-    myfree(t->logname);
-    t->logname = new_logname;
 
     if (thing_is_player(t)) {
         THING_LOG(t, "dying (%s)", reason);
@@ -1618,8 +1646,6 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
                     recipient = real_recipient;
                 }
             }
-
-            thing_stats_modify_xp(recipient, tp_get_bonus_xp_on_death(tp));
         }
     }
 
@@ -1639,6 +1665,8 @@ static int thing_hit_ (thingp t,
                        thingp hitter, 
                        int32_t damage)
 {
+    int32_t orig_damage = damage;
+
     verify(t);
 
     /*
@@ -1656,31 +1684,6 @@ static int thing_hit_ (thingp t,
 
     if (damage > thing_stats_get_hp(t) / 10) {
         t->is_hit_crit = true;
-    }
-
-    if (damage > 0) {
-        const char *color = "white";
-        const char *font = "small";
-
-        if (damage > 20) {
-            font = "vlarge";
-        } else if (damage > 10) {
-            font = "large";
-        } else if (damage > 5) {
-            font = "medium";
-        } else if (damage > 2) {
-            font = "small";
-        } else {
-            font = "vsmall";
-        }
-
-        if (thing_is_player(t)) {
-            color = "red";
-        }
-
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 
-                                    "%%%%font=%s$%%%%fg=%s$%d", 
-                                    font, color, damage);
     }
 
     thing_update(t);
@@ -1751,7 +1754,7 @@ static int thing_hit_ (thingp t,
              */
             thing_stats_modify_hp(t, -damage);
 
-            if (t->stats.hp < 0) {
+            if (thing_stats_get_hp(t) < 0) {
                 thing_stats_set_hp(t, 0);
             }
 
@@ -1778,6 +1781,31 @@ static int thing_hit_ (thingp t,
                 level_open_door(server_level, t->x, t->y-1);
                 level_open_door(server_level, t->x, t->y+1);
             }
+        }
+    } else {
+        if (orig_damage > 0) {
+            const char *color = "white";
+            const char *font = "small";
+
+            if (orig_damage > 20) {
+                font = "vlarge";
+            } else if (orig_damage > 10) {
+                font = "large";
+            } else if (orig_damage > 5) {
+                font = "medium";
+            } else if (orig_damage > 2) {
+                font = "small";
+            } else {
+                font = "vsmall";
+            }
+
+            if (thing_is_player(t)) {
+                color = "red";
+            }
+
+            MSG_SERVER_SHOUT_OVER_THING(POPUP, t, 
+                                        "%%%%font=%s$%%%%fg=%s$-%d", 
+                                        font, color, orig_damage);
         }
     }
 
