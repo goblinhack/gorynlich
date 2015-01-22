@@ -260,12 +260,12 @@ void thing_tick_server_player_slow_all (int force)
 
             int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
             if (delta > 0) {
-                t->stats.hp -= delta / 10;
+                thing_stats_modify_hp(t, -delta / 10);
             }
 
             delta = thing_stats_get_magic(t) - thing_stats_get_max_magic(t);
             if (delta > 0) {
-                t->stats.magic -= delta / 10;
+                thing_stats_modify_magic(t, -delta / 10);
             }
 
             /*

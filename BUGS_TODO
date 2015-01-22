@@ -1,6 +1,4 @@
-health stops at -9 sometimes not -10
-collect treasure popup
-kill monst popup over monst now player
+score flashes red at level start
 collision detection broken
 sword vanished on level 2
 action bar appears on screen after level exit
@@ -33,6 +31,9 @@ add story slides, nine princesses or prince that the kingdom of pixelvania has a
 
 Wed Jan 21 08:39:27 EST 2015
 - stop pulsing -9 when dead
+- health stops at -9 sometimes not -10
+- collect treasure popup
+- kill monst popup over monst not player
 
 Tue Jan 20 21:37:38 EST 2015
 - center player icon in inventory screen
