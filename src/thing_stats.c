@@ -1451,13 +1451,6 @@ void thing_stats_modify_xp (thingp t, int32_t val)
     verify(t);
 
     t->stats.xp += val;
-
-    if (thing_is_player(t)) {
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                    "%%%%font=%s$%%%%fg=%s$+%d", 
-                                    "large", "gold", 
-                                    val);
-    }
 }
 
 void thing_stats_modify_attack_melee (thingp t, int32_t val)
