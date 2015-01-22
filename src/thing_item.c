@@ -121,12 +121,17 @@ static void thing_collect (thingp t,
         /*
          * If treasure, just add it to the score. Don't carry it.
          */
+        int32_t val = tp_get_bonus_cash_on_collect(tp) * i.quantity;
+
         if (tp_is_treasure(tp)) {
             /*
              * Bonus for collecting?
              */
-            t->stats.cash += tp_get_bonus_cash_on_collect(tp) *
-                            i.quantity;
+            thing_stats_modify_cash(t, val);
+
+            MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                        "%%%%font=%s$%%%%fg=%s$%d$", 
+                                        "large", "gold", val);
             return;
         }
 
@@ -140,8 +145,11 @@ static void thing_collect (thingp t,
         /*
          * Bonus for collecting?
          */
-        t->stats.cash += tp_get_bonus_cash_on_collect(tp) *
-                        i.quantity;
+        thing_stats_modify_cash(t, val);
+
+        MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                    "%%%%font=%s$%%%%fg=%s$%d$", 
+                                    "large", "gold", val);
     }
 
     if (!auto_collect) {
