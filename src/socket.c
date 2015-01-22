@@ -2204,7 +2204,7 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
 }
 
 /*
- * Send an array of all current players to all clients.
+ * Send each player their status update
  */
 void socket_tx_server_status (void)
 {
