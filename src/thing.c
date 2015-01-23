@@ -1366,9 +1366,11 @@ static void thing_dead_ (thingp t, thingp killer, char *reason)
     myfree(t->logname);
     t->logname = new_logname;
 
-    if (thing_is_player(t)) {
+    if (thing_is_player(t) || thing_is_monst(t)) {
         THING_LOG(t, "dead (%s)", reason);
+    }
 
+    if (thing_is_player(t)) {
         /*
          * We have the gravestone now, I don't think we need this.
          *
@@ -1500,13 +1502,15 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
 
             int32_t val = tp_get_bonus_xp_on_death(tp);
 
-            thing_stats_modify_xp(recipient, val);
+            if (val) {
+                thing_stats_modify_xp(recipient, val);
 
-            if (thing_is_player(killer)) {
-                MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                            "%%%%font=%s$%%%%fg=%s$+%d", 
-                                            "large", "gold", 
-                                            val);
+                if (thing_is_player(killer)) {
+                    MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                                "%%%%font=%s$%%%%fg=%s$+%d", 
+                                                "large", "gold", 
+                                                val);
+                }
             }
         }
     }
@@ -3462,6 +3466,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         t->needs_tx_refresh_xy_and_template_id = 0;
         t->first_update = false;
 
+THING_LOG(t, "tx");
         if (data + sizeof(msg_map_update) < eodata) {
             /*
              * Can fit more in.
@@ -3656,6 +3661,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             torch_light_radius_present = false;
         }
 
+LOG("rx id %d",id);
         t = thing_client_find(id);
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG)) {
             weapon_swung = true;
@@ -3680,7 +3686,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                  * to rebuild the thing without a resend. Need a way to ask
                  * for a resync.
                  */
-                DIE("Client: received unknown thing %u, need resync TBD", id);
+                ERR("Client: received unknown thing %u", id);
                 continue;
             }
 

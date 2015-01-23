@@ -310,12 +310,14 @@ static void wid_player_action_create (thing_statsp s, int fast)
         if (last_magic != s->magic) {
             last_magic = s->magic;
 
-            if (s->magic > 0) {
-                wid_effect_pulses(w);
-            }
+            if (last_magic > s->magic) {
+                if (s->magic > 0) {
+                    wid_effect_pulses(w);
+                }
 
-            wid_set_mode(w, WID_MODE_ACTIVE);
-            wid_set_color(w, WID_COLOR_TEXT, RED);
+                wid_set_mode(w, WID_MODE_ACTIVE);
+                wid_set_color(w, WID_COLOR_TEXT, RED);
+            }
         }
 
         if (s->magic < s->max_magic / 10) {
@@ -355,12 +357,14 @@ static void wid_player_action_create (thing_statsp s, int fast)
         if (last_hp != s->hp) {
             last_hp = s->hp;
 
-            if (s->hp > 0) {
-                wid_effect_pulses(w);
-            }
+            if (last_hp > s->hp) {
+                if (s->hp > 0) {
+                    wid_effect_pulses(w);
+                }
 
-            wid_set_mode(w, WID_MODE_ACTIVE);
-            wid_set_color(w, WID_COLOR_TEXT, RED);
+                wid_set_mode(w, WID_MODE_ACTIVE);
+                wid_set_color(w, WID_COLOR_TEXT, RED);
+            }
         }
 
         if ((s->hp < s->max_hp / 10) && (s->hp > THING_MIN_HEALTH)) {

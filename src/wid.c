@@ -9417,7 +9417,7 @@ double wid_get_scaling_h (widp w)
     return (scaling + w->scale_h_base);
 }
 
-void wid_blit_scaling_to_pct_in (widp w,
+void wid_scaling_blit_to_pct_in (widp w,
                             double blit_scaling_start,
                             double blit_scaling_end,
                             uint32_t ms,
@@ -9487,7 +9487,7 @@ void wid_blit_effect_pulses (widp w)
 {
     fast_verify(w);
 
-    wid_blit_scaling_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 1);
+    wid_scaling_blit_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 1);
 }
 
 double wid_get_blit_scaling_w (widp w)
@@ -9506,7 +9506,7 @@ double wid_get_blit_scaling_w (widp w)
         w->blit_scaling_w = false;
 
         if (w->blit_scaling_w_bounce_count) {
-            wid_blit_scaling_to_pct_in(w,
+            wid_scaling_blit_to_pct_in(w,
                                   w->blit_scaling_w_end,
                                   w->blit_scaling_w_start,
                                   w->timestamp_blit_scaling_w_end -
@@ -9543,7 +9543,7 @@ double wid_get_blit_scaling_h (widp w)
         w->blit_scaling_h = false;
 
         if (w->blit_scaling_h_bounce_count) {
-            wid_blit_scaling_to_pct_in(w,
+            wid_scaling_blit_to_pct_in(w,
                                   w->blit_scaling_h_end,
                                   w->blit_scaling_h_start,
                                   w->timestamp_blit_scaling_h_end -

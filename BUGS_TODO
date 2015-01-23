@@ -1,6 +1,3 @@
-score flashes red at level start
-explosions too large
-rapid fire of arrows too rapid
 collision detection broken
 sword vanished on level 2
 action bar appears on screen after level exit
@@ -31,6 +28,12 @@ boss baddies every 10 levels
 bosses drop exit on death
 picture of keyboard and keys to use at start
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
+
+Fri Jan 23 06:48:07 EST 2015
+- rapid fire of arrows too rapid - ok for master bow
+- pop of 0$ over player
+- score flashes red at level start
+- explosions too large
 
 Wed Jan 21 08:39:27 EST 2015
 - stop pulsing -9 when dead
