@@ -103,9 +103,9 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +18 sword6
+badd +11 axe4
 badd +0 axe5
-args sword6 axe5
+args axe4
 edit axe5
 set splitbelow splitright
 set nosplitbelow
@@ -113,7 +113,6 @@ set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 argglobal
-edit axe5
 setlocal autoindent
 setlocal nobinary
 setlocal bufhidden=
@@ -209,12 +208,12 @@ set nowrap
 setlocal nowrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 17 - ((16 * winheight(0) + 19) / 39)
+let s:l = 2 - ((1 * winheight(0) + 25) / 51)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-17
-normal! 017l
+2
+normal! 018l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

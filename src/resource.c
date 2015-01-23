@@ -2420,7 +2420,7 @@ static uint8_t resource_init_last (void *context)
         "explosion4.16",
     };
 
-    tile_load_arr("explosion", 128, 128,
+    tile_load_arr("explosion", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(explosion_tiles), explosion_tiles);
 
     static const char *cloudkill_tiles[] = {
@@ -2498,7 +2498,7 @@ static uint8_t resource_init_last (void *context)
         "cloudkill4.16",
     };
 
-    tile_load_arr("cloudkill", 128, 128,
+    tile_load_arr("cloudkill", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(cloudkill_tiles), cloudkill_tiles);
 
     static const char *poison_tiles[] = {
@@ -2576,7 +2576,7 @@ static uint8_t resource_init_last (void *context)
         "poison4.16",
     };
 
-    tile_load_arr("poison", 128, 128,
+    tile_load_arr("poison", TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(poison_tiles), poison_tiles);
 
     static const char *anim_man_tiles[] = {

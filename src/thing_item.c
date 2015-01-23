@@ -129,10 +129,13 @@ static void thing_collect (thingp t,
              */
             thing_stats_modify_cash(t, val);
 
-            MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                        "%%%%font=%s$%%%%fg=%s$%d$", 
-                                        "large", "gold", val);
-            return;
+            if (val) {
+                MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                            "%%%%font=%s$%%%%fg=%s$%d$", 
+                                            "large", "gold", val);
+
+                return;
+            }
         }
 
         if (!thing_stats_item_add(t, &t->stats, i)) {
@@ -147,9 +150,11 @@ static void thing_collect (thingp t,
          */
         thing_stats_modify_cash(t, val);
 
-        MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                    "%%%%font=%s$%%%%fg=%s$%d$", 
-                                    "large", "gold", val);
+        if (val) {
+            MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                        "%%%%font=%s$%%%%fg=%s$%d$", 
+                                        "large", "gold", val);
+        }
     }
 
     if (!auto_collect) {
