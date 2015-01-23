@@ -103,8 +103,15 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
+badd +11 axe1_anim
+badd +11 axe2_anim
+badd +7 bonepile1
+badd +7 bonepile2
+badd +7 bonepile3
+badd +11 bow1_anim
+badd +10 brazier
 badd +0 dwarf
-args dwarf
+silent! argdel *
 edit dwarf
 set splitbelow splitright
 set nosplitbelow
@@ -186,7 +193,7 @@ setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=4
 setlocal nospell
-setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellcapcheck=
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
@@ -207,12 +214,12 @@ set nowrap
 setlocal nowrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 11 - ((10 * winheight(0) + 18) / 37)
+let s:l = 27 - ((25 * winheight(0) + 25) / 51)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-11
-normal! 012l
+27
+normal! 014l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

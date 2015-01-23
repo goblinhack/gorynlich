@@ -270,6 +270,10 @@ uint8_t wid_game_map_client_player_move (void)
             
             if (!time_have_x_tenths_passed_since(delay, last_fired)) {
                 fire = 0;
+
+                if (!up && !down && !left && !right) {
+                    return (false);
+                }
             }
 
             if (fire) {
@@ -621,14 +625,14 @@ wid_game_map_client_replace_tile (widp w,
     double dy = 0;
 
     if (thing_is_explosion(t)) {
-        wid_blit_scaling_to_pct_in(child, 1.0, 3.0, 500, 0);
+        wid_scaling_blit_to_pct_in(child, 1.0, 3.0, 500, 0);
         dx = ((double)(((int)(rand() % 100)) - 50)) / 100.0;
         dy = ((double)(((int)(rand() % 100)) - 50)) / 100.0;
         wid_fade_out(child, 500);
     }
 
     if (thing_is_mob_spawner(t)) {
-        wid_blit_scaling_to_pct_in(child, 1.0, 1.1, 1000, 10000);
+        wid_scaling_blit_to_pct_in(child, 1.0, 1.1, 1000, 10000);
     }
 
     thing_client_wid_update(t, x + dx, y + dy, false /* smooth */);
