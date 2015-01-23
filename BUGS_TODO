@@ -1,4 +1,6 @@
 score flashes red at level start
+explosions too large
+rapid fire of arrows too rapid
 collision detection broken
 sword vanished on level 2
 action bar appears on screen after level exit
@@ -6,6 +8,7 @@ spin player widget on hit
 choose player intro window - 5 panels screen width
 bounce on walk
 update inventory while playing
+screen shake
 stats need to do something
 click on weapon to switch
 shortcut key for left/right weapon shift
