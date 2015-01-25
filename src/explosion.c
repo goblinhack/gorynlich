@@ -80,19 +80,19 @@ static uint8_t this_explosion_radius;
 
 static void explosion_flood (levelp level, uint8_t x, uint8_t y)
 {
-    if (x < MAP_BORDER) {
+    if (x < 1) {
         return;
     }
 
-    if (y < MAP_BORDER) {
+    if (y < 1) {
         return;
     }
 
-    if (x > MAP_WIDTH - MAP_BORDER) {
+    if (x > MAP_WIDTH - 1) {
         return;
     }
 
-    if (y > MAP_HEIGHT - MAP_BORDER) {
+    if (y > MAP_HEIGHT - 1) {
         return;
     }
 

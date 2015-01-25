@@ -17790,6 +17790,10 @@
    y=16 
    t="data/things/water" 
   } {   
+   x=35 
+   y=16 
+   t="data/things/exit1" 
+  } {   
    x=28 
    y=18 
    t="data/things/apple2" 

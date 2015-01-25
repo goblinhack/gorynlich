@@ -1120,6 +1120,8 @@ static void thing_remove_hooks (thingp t)
             THING_LOG(t, "detach from owner %s", thing_logname(owner));
         }
 
+        thing_unwield(t);
+
         if (t->thing_id == owner->weapon_carry_anim_thing_id) {
             if (0) {
                 THING_LOG(t, "detach from carry anim owner %s", thing_logname(owner));
@@ -2231,8 +2233,6 @@ void thing_join_level (thingp t)
      */
     t->needs_tx_refresh_xy_and_template_id = 1;
 
-    t->needs_tx_player_update = true;
-
     /*
      * Make the weapon leave to
      */
@@ -2395,6 +2395,7 @@ void things_level_destroyed (levelp level, uint8_t keep_players)
                     !thing_is_animation(t) &&
                     !thing_is_weapon_swing_effect(t)) {
 
+                    thing_weapon_sheath(player);
                     thing_map_remove(t);
                     thing_set_wid(t, 0);
                     continue;
@@ -3763,6 +3764,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
          * also move the weapons.
          */
         if (weapon_id) {
+THING_LOG(t, "rx weapon");
             thing_wield(t, id_to_tp(weapon_id));
         }
 
