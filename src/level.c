@@ -29,7 +29,7 @@
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
 static uint8_t level_server_init_done;
-static void level_start_timers(levelp level);
+static void level_reset_players(levelp level);
 uint8_t game_over;
 
 uint8_t level_init (void)
@@ -278,7 +278,7 @@ levelp level_load (uint32_t level_no,
     level_update_now(level);
 
     level_set_is_paused(level, false);
-    level_start_timers(level);
+    level_reset_players(level);
 
     level_server_init();
 
@@ -306,7 +306,7 @@ levelp level_load_random (uint32_t level_no,
     level_update_now(level);
 
     level_set_is_paused(level, false);
-    level_start_timers(level);
+    level_reset_players(level);
 
     level_server_init();
 
@@ -616,9 +616,9 @@ void level_place_plant_pod (levelp level)
 }
 
 /*
- * Start any timers.
+ * New level; update players.
  */
-void level_start_timers (levelp level)
+void level_reset_players (levelp level)
 {
     thingp t;
 
@@ -630,6 +630,8 @@ void level_start_timers (levelp level)
             tpp weapon = thing_weapon(t);
             if (weapon) {
                 thing_wield(t, weapon);
+                thing_update(t);
+LOG("------------------------------------------");
             }
         }
     }
