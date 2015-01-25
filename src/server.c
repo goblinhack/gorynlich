@@ -411,7 +411,7 @@ static void server_socket_tx_ping (void)
         return;
     }
 
-    ts = time_get_time_cached();
+    ts = time_get_time_ms();
 
     /*
      * Every few seconds check for dead peers.
@@ -435,7 +435,7 @@ static void server_socket_tx_ping (void)
             continue;
         }
 
-        socket_tx_ping(s, seq, time_get_time_cached());
+        socket_tx_ping(s, seq, time_get_time_ms());
     }
 
     seq++;
@@ -450,7 +450,7 @@ static void server_socket_tx_map_updates (void)
         return;
     }
 
-    ts = time_get_time_cached();
+    ts = time_get_time_ms();
 
     socket_server_tx_map_update(0, server_active_things,
                                 "rx client join active things");
@@ -461,15 +461,6 @@ static void server_socket_tx_map_updates (void)
 
 static void server_socket_tx_player_updates (void)
 {
-    static uint32_t ts;
-
-    if (!time_have_x_hundredths_passed_since(
-            DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE, ts)) {
-        return;
-    }
-
-    ts = time_get_time_cached();
-
     /*
      * Send players their items lists
      */

@@ -64,7 +64,7 @@ static void wid_player_info_buttons_tick (widp wid)
         return;
     }
 
-    int tick = time_get_time_milli() / 100;
+    int tick = time_get_time_ms() / 100;
     int which = tick % 8;
 
     const char *tn = player_stats->pclass;

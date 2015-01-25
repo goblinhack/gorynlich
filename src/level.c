@@ -230,7 +230,7 @@ levelp level_load (uint32_t level_no,
     level = level_new(wid, level_no, is_editor, on_server);
 
     level_set_is_paused(level, true);
-    level_set_timestamp_started(level, time_get_time_cached());
+    level_set_timestamp_started(level, time_get_time_ms());
 
     char *dir_and_file;
 
@@ -297,7 +297,7 @@ levelp level_load_random (uint32_t level_no,
     level = level_new(wid, level_no, is_editor, on_server);
 
     level_set_is_paused(level, true);
-    level_set_timestamp_started(level, time_get_time_cached());
+    level_set_timestamp_started(level, time_get_time_ms());
 
     LEVEL_LOG(level, "Level generating");
 
