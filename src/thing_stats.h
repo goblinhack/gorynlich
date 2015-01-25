@@ -66,7 +66,7 @@ typedef struct thing_stats_ {
     /*
      * What we are carrying and where.
      */
-    uint8_t weapon;
+    uint8_t action_bar_index;;
     item_t inventory[THING_INVENTORY_MAX];
     item_t action_bar[THING_ACTION_BAR_MAX];
     item_t worn[THING_WORN_MAX];

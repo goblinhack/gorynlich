@@ -1618,7 +1618,8 @@ static inline itemp thing_has_item (const thingp t,
 static inline itemp thing_weapon_item (const thingp t)
 {
     itemp item = 
-        thing_has_action_bar_item(t, t->stats.action_bar[t->stats.weapon].id);
+        thing_has_action_bar_item(t, 
+            t->stats.action_bar[t->stats.action_bar_index].id);
 
     return (item);
 }
