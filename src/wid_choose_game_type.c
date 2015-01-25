@@ -97,8 +97,8 @@ void wid_choose_game_type_visible (void)
         DIE("no wid intro");
     }
 
-    if (game_over) {
-        game_over = false;
+    if (global_config.game_over) {
+        global_config.game_over = false;
         return;
     }
 
