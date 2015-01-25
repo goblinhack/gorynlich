@@ -56,6 +56,15 @@ void wid_player_inventory_visible (thing_statsp s)
     wid_player_inventory_create(s);
 }
 
+int wid_player_inventory_is_visible (void)
+{
+    if (wid_player_inventory) {
+        return (1);
+    } else {
+        return (0);
+    }
+}
+
 void wid_player_inventory_button_style (widp w,
                                         thing_statsp s,
                                         const item_t item,
@@ -101,12 +110,12 @@ void wid_player_inventory_button_style (widp w,
     }
 
     c = WHITE;
-    c.a = 50;
+    c.a = 100;
     wid_set_color(w, WID_COLOR_BG, c);
 
     tpp tp = id_to_tp(item.id);
 
-    if (player && action_bar_item && (index == s->weapon)) {
+    if (player && action_bar_item && (index == s->action_bar_index)) {
         wid_set_color(w, WID_COLOR_TL, RED);
         wid_set_color(w, WID_COLOR_BR, RED);
         wid_set_rounded_small(w);
