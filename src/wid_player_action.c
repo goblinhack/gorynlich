@@ -14,6 +14,9 @@
 #include "wid_player_stats.h"
 #include "thing_template.h"
 #include "string_util.h"
+#include "socket_util.h"
+#include "client.h"
+#include "thing.h"
 
 static widp wid_player_action;
 static uint8_t wid_player_action_init_done;
@@ -59,6 +62,34 @@ wid_player_action_button_style_mouse_down (widp w,
                                            uint32_t button)
 {
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
+
+    /*
+     * Weapon switch if we click on a weapon when the stats window is not 
+     * present.
+     */
+    if (!wid_player_inventory_is_visible()) {
+        int32_t action_bar_index = (typeof(action_bar_index))
+                        wid_get_client_context2(w);
+        uint32_t id = player->stats.action_bar[action_bar_index].id;
+        if (!id) {
+            MSG(WARNING, "Nothing in that slot");
+            return (true);
+        }
+
+        if (!client_joined_server) {
+            MSG(WARNING, "Not connected to server");
+            return (true);
+        }
+
+        socket_tx_player_action(client_joined_server, player, 
+                                PLAYER_ACTION_USE,
+                                action_bar_index);
+        return (true);
+    }
+
+    /*
+     * This is a move of an item likely.
+     */
     itemp over_item = &player_stats->action_bar[id];
 
     if (!wid_mouse_template) {
@@ -459,6 +490,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
             item_t item = s->action_bar[i];
 
             wid_set_client_context(w, (void*) (uintptr_t) i);
+            wid_set_client_context2(w, (void*) (uintptr_t) x);
 
             wid_player_inventory_button_style(w, s, item,
                                               true, /* action bar item */

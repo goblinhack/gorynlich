@@ -52,11 +52,9 @@ void thing_stats_dump (const thing_statsp s)
         "speed", s->speed, 
         "healing", s->healing);
 
-    if (s->weapon) {
-        LOG("  %-20s %s",
-            "weapon",
-            tp_short_name(id_to_tp(s->weapon)));
-    }
+    LOG("    %-20s %4u %-20s %4u", 
+        "action bar", s->action_bar_index, 
+        "-", 0);
 
     {
         LOG("  inventory:");
@@ -217,10 +215,8 @@ void thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stat
         LOG("%sAttack_magical changed from %d to %d", indent, old_stats->attack_magical, new_stats->attack_magical);
     }
 
-    if (old_stats->weapon != new_stats->weapon) {
-        LOG("%sWeapon changed from %s to %s", indent,
-            tp_short_name(id_to_tp(old_stats->magic)),
-            tp_short_name(id_to_tp(new_stats->magic)));
+    if (old_stats->action_bar_index != new_stats->action_bar_index) {
+        LOG("%sAction index   changed from %d to %d", indent, old_stats->action_bar_index, new_stats->action_bar_index);
     }
 
     {
@@ -345,8 +341,8 @@ void thing_stats_merge (thing_statsp merged_stats, thing_statsp current_stats, t
         merged_stats->attack_magical = new_stats->attack_magical;
     }
 
-    if (current_stats->weapon != new_stats->weapon) {
-        merged_stats->weapon = new_stats->weapon;
+    if (current_stats->action_bar_index != new_stats->action_bar_index) {
+        merged_stats->action_bar_index = new_stats->action_bar_index;
     }
 
     {
@@ -707,8 +703,8 @@ itemp thing_stats_has_inventory_item (thing_stats *player_stats,
 }
 
 itemp thing_stats_has_action_bar_item (thing_stats *player_stats,
-                                        int32_t id,
-                                        int32_t *index)
+                                      int32_t id,
+                                      int32_t *index)
 {
     int32_t i;
 

@@ -4310,7 +4310,7 @@ void thing_server_action (thingp t,
         if (tp_is_weapon(tp)) {
             thing_wield(t, tp);
 
-            t->stats.weapon = action_bar_index;
+            t->stats.action_bar_index = action_bar_index;
             return;
         }
 

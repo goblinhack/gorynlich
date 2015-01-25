@@ -6,29 +6,11 @@
 
 #pragma once
 
-#define MAXSTR                      1024
-
-/*
- * So we don't hog all the CPU when not in video sync mode
- */
-#define MAIN_LOOP_DELAY             5
-
-/*
- * More speed, less fancy stuff
- */
-#undef MORE_SPEED_LESS_VISUALS
-
-/*
- * Light sources
- */
-#define MAX_LIGHT_RAYS              360
-#define MAX_LIGHTS                  200
-
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -61,8 +43,8 @@
 /*
  * How much the wheel mouse moves.
  */
-#define ENABLE_WHEEL_SCROLL_SPEED_SCALE 1.5
-#define ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE 10
+#define ENABLE_WHEEL_SCROLL_SPEED_SCALE         1.5
+#define ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE     10
 
 /*
  * Tooltip appears above mouse. I prefer it to zoom into the top
@@ -73,6 +55,22 @@
  * Tries to batch calls to draw arrays for more speed.
  */
 #define ENABLE_GL_BULK_DRAW_ARRAYS 
+
+/*
+ * So we don't hog all the CPU when not in video sync mode
+ */
+#define MAIN_LOOP_DELAY             5
+
+/*
+ * Max long string size
+ */
+#define MAXSTR                      1024
+
+/*
+ * Light sources
+ */
+#define MAX_LIGHT_RAYS              360
+#define MAX_LIGHTS                  200
 
 /*
  * Screen sizes.

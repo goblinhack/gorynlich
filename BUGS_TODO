@@ -1,16 +1,14 @@
+explosions on server are lingering when invisible on client
+weapon collect did not update red box in action screen
 explosions have no effect on bottom of screen
-action bar gray needs to be darker
-action items should be bigger
-explosion white out has small dots
 can use potions when dead?
-center them too
-click on weapon to switch
 keypress to switch weapon
 weapon left right switch
 action bar appears on screen after level exit
 sword vanished on level 2
 collision detection broken
                                     <<< start of feb >>>
+remove chat for single player
 stats need to do something
 need dying anim
 spin player widget on hit
@@ -22,7 +20,6 @@ update inventory while playing
 sound effects for weapons and hits http://www.bfxr.net/
 sound on momey collect
 sound on potion use
-hover over weapon for stats popup
 xp level and hp increase per level
 press m for magic to build up magic attack
 press m for magic to give life to other players
@@ -46,7 +43,13 @@ add story slides, nine princesses or prince that the kingdom of pixelvania has a
 
 
 Sat Jan 24 18:55:22 EST 2015
+- explosion white out has small dots
+- click on weapon to switch
+- action items should be bigger
+- center them too
 - unknown rx thing error on explosions
+- hover over weapon for stats popup
+- action bar gray needs to be lighter
 
 Fri Jan 23 06:48:07 EST 2015
 - rapid fire of arrows too rapid - ok for master bow

@@ -130,7 +130,6 @@ void thing_wield_next_weapon (thingp t)
         }
 
         thing_wield(t, weapon);
-        t->stats.weapon = i;
         break;
     }
 }
@@ -164,6 +163,11 @@ void thing_unwield (thingp t)
     }
 
     t->weapon = 0;
+
+    /*
+     * Update the thing stats so the weapon inventory changes.
+     */
+    t->stats.action_bar_index = 0;
 }
 
 void thing_wield (thingp t, tpp weapon)
@@ -192,6 +196,17 @@ void thing_wield (thingp t, tpp weapon)
     }
 
     t->weapon = weapon;
+
+    /*
+     * Update the thing stats so the weapon inventory changes.
+     */
+    int32_t action_bar_index;
+
+    if (thing_stats_has_action_bar_item(&t->stats,
+                                        tp_to_id(weapon),
+                                        &action_bar_index)) {
+        t->stats.action_bar_index = action_bar_index;
+    }
 
     widp weapon_carry_anim_wid;
 
@@ -224,7 +239,7 @@ void thing_wield (thingp t, tpp weapon)
     thing_set_owner(child, t);
 
     if (t->on_server) {
-        thing_update(child);
+        thing_update(t);
 
         t->needs_tx_player_update = true;
     }
@@ -295,7 +310,7 @@ void thing_swing (thingp t)
     thing_set_weapon_swing_anim(t, child);
 
     if (t->on_server) {
-        thing_update(child);
+        thing_update(t);
 
         t->needs_tx_player_update = true;
         t->needs_tx_weapon_swung = true;
