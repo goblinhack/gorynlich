@@ -653,7 +653,6 @@ typedef struct thing_ {
     uint32_t on_server:1;
     uint32_t on_server_player_things:1;
     uint32_t on_client_player_things:1;
-    uint32_t needs_tx_player_update:1;
 
     /*
      * Swung a weapon
@@ -1643,6 +1642,7 @@ static inline tpp thing_weapon (const thingp t)
 }
 
 void thing_unwield(thingp t);
+void thing_weapon_sheath(thingp t);
 void thing_wield(thingp t, tpp tp);
 void thing_swing(thingp t);
 void thing_weapon_swing_offset(thingp t, double *dx, double *dy);

@@ -1,7 +1,6 @@
-sword vanished on level 2
+level no does not increase
 action bar appears on screen after level exit
 explosions on server are lingering when invisible on client
-explosions have no effect on bottom of screen
 can use potions when dead?
 collision detection broken
                                     <<< start of feb >>>
@@ -28,6 +27,7 @@ single player mode direct socket
 pause character on spending point window
 fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
                                     <<< start of may >>>
+more monsters
 generate lots of levels
 lit levels gauntlet old style
                                     <<< start of june >>>
@@ -39,7 +39,11 @@ bosses drop exit on death
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 
 Sun Jan 25 10:08:35 EST 2015
+- explosions have no effect on bottom of screen
+- sword vanished on level 2
 - weapon left right switch
+- item bar selection broken with server
+- no switch to non weapons
 
 Sat Jan 24 18:55:22 EST 2015
 - keypress to switch weapon

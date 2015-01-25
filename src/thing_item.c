@@ -32,7 +32,7 @@ char *item2str (const item_t i)
     }
 
     if (i.quality < THING_ITEM_QUALITY_MAX) {
-        snprintf_realloc(&tmp, &size, &used, " %2.0f%%",
+        snprintf_realloc(&tmp, &size, &used, " %2.0fpct",
                          (100.0 / (float)THING_ITEM_QUALITY_MAX) *
                          (float) i.quality);
     }
@@ -56,10 +56,6 @@ static void thing_collect (thingp t,
                            uint8_t auto_collect)
 {
     uint32_t id;
-
-    if (thing_is_player(t)) {
-        t->needs_tx_player_update = true;
-    }
 
     id = tp_to_id(tp);
 
@@ -225,10 +221,6 @@ void thing_used (thingp t, tpp tp)
         return;
     }
 
-    if (thing_is_player(t)) {
-        t->needs_tx_player_update = true;
-    }
-
     /*
      * Switch of weapons.
      */
@@ -328,10 +320,6 @@ void thing_wear_out (thingp t, tpp tp)
         return;
     }
 
-    if (thing_is_player(t)) {
-        t->needs_tx_player_update = true;
-    }
-
     if (item->quality) {
         item->quality--;
         return;
@@ -391,10 +379,6 @@ void thing_drop (thingp t, tpp tp)
      */
     if (auto_wield) {
         thing_wield_next_weapon(t);
-    }
-
-    if (thing_is_player(t)) {
-        t->needs_tx_player_update = true;
     }
 }
 
