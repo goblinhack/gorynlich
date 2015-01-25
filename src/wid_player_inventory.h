@@ -14,5 +14,6 @@ void wid_player_inventory_button_style(widp w, thing_statsp, const item_t,
                                        const int inventory_item,
                                        const int index);
 uint8_t wid_player_item_pick_up(widp w, itemp over_item);
+int wid_player_inventory_is_visible(void);
 
 extern item_t wid_item;
