@@ -179,10 +179,10 @@ int sdl_intro_demo_update (void)
     {
         static double ts_start;
         if (!ts_start) {
-            ts_start = time_get_time_cached();
+            ts_start = time_get_time_ms();
         }
 
-        elapsed = time_get_time_cached() - ts_start;
+        elapsed = time_get_time_ms() - ts_start;
         x = (elapsed / 7000.0);
 
         static double y = 0;;

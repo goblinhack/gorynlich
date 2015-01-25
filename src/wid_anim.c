@@ -40,7 +40,7 @@ void wid_animate (widp w)
         /*
          * If within the animate time of this frame, keep with it.
          */
-        if (w->timestamp_change_to_next_frame > time_get_time_cached()) {
+        if (w->timestamp_change_to_next_frame > time_get_time_ms()) {
             return;
         }
 
@@ -167,5 +167,5 @@ void wid_animate (widp w)
         delay = myrand() % delay;
     }
 
-    w->timestamp_change_to_next_frame = time_get_time_cached() + delay;
+    w->timestamp_change_to_next_frame = time_get_time_ms() + delay;
 }

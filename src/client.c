@@ -184,7 +184,7 @@ static void client_socket_tx_ping (void)
             continue;
         }
 
-        ts = time_get_time_cached();
+        ts = time_get_time_ms();
 
         /*
          * If nothing is on the remote end then dont ping it relentlessly.
@@ -215,7 +215,7 @@ static void client_socket_tx_ping (void)
         if (time_have_x_tenths_passed_since(10, ts)) {
             wid_server_join_redo(true /* soft refresh */);
 
-            ts = time_get_time_cached();
+            ts = time_get_time_ms();
         }
     }
 }
@@ -496,7 +496,7 @@ uint8_t client_socket_join (const char *host,
     thing_stats_dump(&global_config.stats);
 
     client_joined_server = s;
-    client_joined_server_when = time_get_time_cached();
+    client_joined_server_when = time_get_time_ms();
 
     verify(client_joined_server);
 
