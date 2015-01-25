@@ -81,13 +81,25 @@ void wid_player_inventory_button_style (widp w,
     c.a = 0;
     wid_set_color(w, WID_COLOR_BG, c);
 
-    c = STEELBLUE;
-    c.a = 30;
-    wid_set_color(w, WID_COLOR_TL, c);
+    if (action_bar_item) {
+        c = GREEN;
+        c.a = 100;
+        wid_set_color(w, WID_COLOR_TL, c);
 
-    c = GRAY;
-    c.a = 30;
-    wid_set_color(w, WID_COLOR_BR, c);
+        c = GREEN;
+        c.a = 100;
+        wid_set_color(w, WID_COLOR_BR, c);
+
+        wid_set_rounded_small(w);
+    } else {
+        c = STEELBLUE;
+        c.a = 30;
+        wid_set_color(w, WID_COLOR_TL, c);
+
+        c = GRAY;
+        c.a = 30;
+        wid_set_color(w, WID_COLOR_BR, c);
+    }
 
     wid_set_mode(w, WID_MODE_OVER);
 

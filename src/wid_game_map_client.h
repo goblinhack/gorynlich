@@ -33,3 +33,5 @@ extern uint32_t client_tile_height;
 
 extern double last_playery;
 extern double last_playerx;
+
+extern uint32_t player_action_bar_changed_at;
