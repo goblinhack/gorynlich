@@ -123,7 +123,7 @@ void wid_player_stats_visible (thing_statsp s)
 void wid_player_stats_redraw (void)
 {
     if (!player_stats) {
-        DIE("no player stats to redraw");
+        return;
     }
 
     player_inventory_sort(player_stats);

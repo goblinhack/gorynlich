@@ -312,17 +312,39 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         return (true);
     }
 
+    int redraw_action_bar = 0;
+
     switch (key->sym) {
-    case SDLK_1: action_bar_index = 0; break;
-    case SDLK_2: action_bar_index = 1; break;
-    case SDLK_3: action_bar_index = 2; break;
-    case SDLK_4: action_bar_index = 3; break;
-    case SDLK_5: action_bar_index = 4; break;
-    case SDLK_6: action_bar_index = 5; break;
-    case SDLK_7: action_bar_index = 6; break;
-    case SDLK_8: action_bar_index = 7; break;
-    case SDLK_9: action_bar_index = 8; break;
-    case SDLK_0: action_bar_index = 9; break;
+    case SDLK_1: action_bar_index = 0; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_2: action_bar_index = 1; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_3: action_bar_index = 2; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_4: action_bar_index = 3; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_5: action_bar_index = 4; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_6: action_bar_index = 5; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_7: action_bar_index = 6; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_8: action_bar_index = 7; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_9: action_bar_index = 8; 
+        redraw_action_bar = 1;
+        break;
+    case SDLK_0: action_bar_index = 9; 
+        redraw_action_bar = 1;
+        break;
 
     case '\t': {
         /*
@@ -359,19 +381,31 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     }
 
     tp = id_to_tp(id);
-    if (tp) {
-        if (!client_joined_server) {
-            MSG(WARNING, "Not connected to server");
-            return (true);
-        }
-
-        socket_tx_player_action(client_joined_server, player, 
-                                PLAYER_ACTION_USE,
-                                action_bar_index);
+    if (!tp) {
+        MSG(WARNING, "No carried item is using that key");
         return (true);
     }
 
-    MSG(WARNING, "No carried item is using that key");
+    if (!client_joined_server) {
+        MSG(WARNING, "Not connected to server");
+        return (true);
+    }
+
+    socket_tx_player_action(client_joined_server, player, 
+                            PLAYER_ACTION_USE,
+                            action_bar_index);
+
+    if (redraw_action_bar) {
+        /*
+         * Assume the server will accept the change and update locally else it 
+         * looks laggy.
+         */
+        player->stats.action_bar_index = action_bar_index;
+
+        wid_player_action_hide();
+        wid_player_action_visible(&player->stats, 1 /* fast */);
+    }
+
     return (true);
 }
 
