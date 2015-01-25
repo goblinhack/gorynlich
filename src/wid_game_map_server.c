@@ -164,12 +164,16 @@ void wid_game_map_server_wid_create (void)
 
     server_level_is_being_loaded = true;
 
-#if 1
-    server_level = level_load_random(1, wid_game_map_server_grid_container, 
+    global_config.level_no++;
+
+#if 0
+    server_level = level_load_random(global_config.level_no,
+                                     wid_game_map_server_grid_container, 
                                      false /* is_editor */,
                                      true /* server */);
 #else
-    server_level = level_load(1, wid_game_map_server_grid_container, 
+    server_level = level_load(global_config.level_no,
+                              wid_game_map_server_grid_container, 
                               false /* is_editor */,
                               true /* server */);
 #endif
@@ -187,6 +191,10 @@ void wid_game_map_server_wid_create (void)
 
 void wid_game_map_server_wid_destroy (uint8_t keep_players)
 {
+    if (!keep_players) {
+        global_config.level_no = 0;
+    }
+
     if (server_level) {
         LOG("Server: Destroy game map");
 

@@ -30,7 +30,6 @@ static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
 static uint8_t level_server_init_done;
 static void level_reset_players(levelp level);
-uint8_t game_over;
 
 uint8_t level_init (void)
 {
