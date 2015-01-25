@@ -28,7 +28,7 @@ void thing_animate (thingp t)
         /*
          * If within the animate time of this frame, keep with it.
          */
-        if (t->timestamp_change_to_next_frame > time_get_time_cached()) {
+        if (t->timestamp_change_to_next_frame > time_get_time_ms()) {
             return;
         }
 
@@ -175,7 +175,7 @@ void thing_animate (thingp t)
         delay = myrand() % delay;
     }
 
-    t->timestamp_change_to_next_frame = time_get_time_cached() + delay;
+    t->timestamp_change_to_next_frame = time_get_time_ms() + delay;
 
     command = thing_tile_command(tile);
     if (command) {

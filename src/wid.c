@@ -76,6 +76,8 @@ static widp wid_moving;
 static int32_t wid_moving_last_x;
 static int32_t wid_moving_last_y;
 
+static uint32_t wid_time;
+
 /*
  * Widget effects
  */
@@ -1229,7 +1231,7 @@ void wid_set_mode (widp w, wid_mode mode)
 {
     fast_verify(w);
 
-    w->timestamp_last_mode_change = time_get_time_cached();
+    w->timestamp_last_mode_change = wid_time;;
     w->mode = mode;
 }
 
@@ -3112,7 +3114,7 @@ void wid_destroy_in (widp w, uint32_t ms)
 {
     fast_verify(w);
 
-    w->destroy_when = time_get_time_cached() + ms;
+    w->destroy_when = wid_time + ms;
 
     wid_tree4_wids_being_destroyed_insert(w);
 }
@@ -3121,7 +3123,7 @@ void wid_destroy_ptr_in (widp *w, uint32_t ms)
 {
     fast_verify(*w);
 
-    (*w)->destroy_when = time_get_time_cached() + ms;
+    (*w)->destroy_when = wid_time + ms;
     (*w)->destroy_ptr = w;
 
     wid_tree4_wids_being_destroyed_insert(*w);
@@ -7109,7 +7111,7 @@ static void wid_gc (widp w)
     /*
      * Delayed destroy?
      */
-    if (w->destroy_when && (time_get_time_cached() >= w->destroy_when)) {
+    if (w->destroy_when && (wid_time >= w->destroy_when)) {
         fast_verify(w);
 
         if (w->destroy_ptr) {
@@ -7216,7 +7218,7 @@ static void wid_display_fast (widp w, uint8_t pass)
      * If this widget was active and the time has elapsed, make it normal.
      */
     if (wid_get_mode(w) == WID_MODE_ACTIVE) {
-        if ((time_get_time_cached() - w->timestamp_last_mode_change) > 250) {
+        if ((wid_time - w->timestamp_last_mode_change) > 250) {
             wid_set_mode(w, WID_MODE_NORMAL);
         }
     }
@@ -7336,7 +7338,10 @@ static void wid_display_fast (widp w, uint8_t pass)
         w->blit_scaling_w || w->blit_scaling_h) {
 
         double scale_width = wid_get_blit_scaling_w(w) - 1;
-        double scale_height = wid_get_blit_scaling_h(w) - 1;
+        /*
+         * Assume square scaling for speed.
+         */
+        double scale_height = scale_width;
 
         double blit_width = owidth;
         double blit_height = oheight;
@@ -8013,7 +8018,7 @@ static void wid_display (widp w,
      * If this widget was active and the time has elapsed, make it normal.
      */
     if (wid_get_mode(w) == WID_MODE_ACTIVE) {
-        if ((time_get_time_cached() - w->timestamp_last_mode_change) > 250) {
+        if ((wid_time - w->timestamp_last_mode_change) > 250) {
             wid_set_mode(w, WID_MODE_NORMAL);
         }
     }
@@ -8716,7 +8721,7 @@ void wid_move_all (void)
         int32_t x;
         int32_t y;
 
-        if (time_get_time_cached() >= w->timestamp_moving_end) {
+        if (wid_time >= w->timestamp_moving_end) {
             x = w->moving_end.x;
             y = w->moving_end.y;
 
@@ -8725,7 +8730,7 @@ void wid_move_all (void)
             wid_tree3_moving_wids_remove(w);
         } else {
             double time_step =
-                (double)(time_get_time_cached() - w->timestamp_moving_begin) /
+                (double)(wid_time - w->timestamp_moving_begin) /
                 (double)(w->timestamp_moving_end - w->timestamp_moving_begin);
 
             x = (time_step * (double)(w->moving_end.x - w->moving_start.x)) +
@@ -8755,6 +8760,8 @@ void wid_gc_all (void)
  */
 void wid_tick_all (void)
 {
+    wid_time = time_get_time_ms();
+
     widp w;
 
     { TREE_OFFSET_WALK_UNSAFE(wid_top_level5, w) {
@@ -8798,7 +8805,7 @@ void wid_fade_in (widp w, uint32_t delay)
 {
     fast_verify(w);
 
-    w->timestamp_fading_begin = time_get_time_cached();
+    w->timestamp_fading_begin = wid_time;
     w->timestamp_fading_end = w->timestamp_fading_begin + delay;
     w->fade_out = false;
     w->hidden = false;
@@ -8816,7 +8823,7 @@ void wid_fade_out (widp w, uint32_t delay)
 {
     fast_verify(w);
 
-    w->timestamp_fading_begin = time_get_time_cached();
+    w->timestamp_fading_begin = wid_time;
     w->timestamp_fading_end = w->timestamp_fading_begin + delay;
     w->fade_in = false;
 
@@ -8833,7 +8840,7 @@ void wid_fade_in_out (widp w, uint32_t delay, uint32_t repeat, uint8_t in)
 {
     fast_verify(w);
 
-    w->timestamp_fading_begin = time_get_time_cached();
+    w->timestamp_fading_begin = wid_time;
     w->timestamp_fading_end = w->timestamp_fading_begin + delay;
 
     if (in) {
@@ -8985,7 +8992,7 @@ static double wid_get_fade_amount (widp w)
         return (1.0f);
     }
 
-    if (time_get_time_cached() >= w->timestamp_fading_end) {
+    if (wid_time >= w->timestamp_fading_end) {
         if (w->fade_in) {
             w->fade_in = false;
             w->hidden = false;
@@ -9027,7 +9034,7 @@ static double wid_get_fade_amount (widp w)
                     w->timestamp_fading_begin;
 
     if (w->fade_in) {
-        fade = (double)(time_get_time_cached() - w->timestamp_fading_begin) /
+        fade = (double)(wid_time - w->timestamp_fading_begin) /
                (double)effect_duration;
 
         return (fade);
@@ -9035,7 +9042,7 @@ static double wid_get_fade_amount (widp w)
 
     if (w->fade_out) {
         fade = 1.0f -
-                ((double)(time_get_time_cached() - w->timestamp_fading_begin) /
+                ((double)(wid_time - w->timestamp_fading_begin) /
                  (double)effect_duration);
 
         return (fade);
@@ -9100,7 +9107,7 @@ void wid_move_to_pct_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
-    w->timestamp_moving_begin = time_get_time_cached();
+    w->timestamp_moving_begin = wid_time;
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
     x *= (double)global_config.video_gl_width;
@@ -9183,7 +9190,7 @@ void wid_move_to_abs_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
-    w->timestamp_moving_begin = time_get_time_cached();
+    w->timestamp_moving_begin = wid_time;
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
     w->moving_start.x = wid_get_tl_x(w);
@@ -9199,7 +9206,7 @@ void wid_move_to_pct_centered_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
-    w->timestamp_moving_begin = time_get_time_cached();
+    w->timestamp_moving_begin = wid_time;
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
     x *= (double)global_config.video_gl_width;
@@ -9221,7 +9228,7 @@ void wid_move_delta_pct_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
-    w->timestamp_moving_begin = time_get_time_cached();
+    w->timestamp_moving_begin = wid_time;
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
     x *= (double)global_config.video_gl_width;
@@ -9240,7 +9247,7 @@ void wid_move_to_abs_centered_in (widp w, double x, double y, uint32_t ms)
 {
     fast_verify(w);
 
-    w->timestamp_moving_begin = time_get_time_cached();
+    w->timestamp_moving_begin = wid_time;
     w->timestamp_moving_end = w->timestamp_moving_begin + ms;
 
     x -= (wid_get_br_x(w) - wid_get_tl_x(w))/2;
@@ -9263,8 +9270,8 @@ void wid_scaling_to_pct_in (widp w,
 {
     fast_verify(w);
 
-    w->timestamp_scaling_w_begin = time_get_time_cached();
-    w->timestamp_scaling_h_begin = time_get_time_cached();
+    w->timestamp_scaling_w_begin = wid_time;
+    w->timestamp_scaling_h_begin = wid_time;
 
     w->timestamp_scaling_w_end = w->timestamp_scaling_w_begin + ms;
     w->timestamp_scaling_h_end = w->timestamp_scaling_h_begin + ms;
@@ -9351,9 +9358,11 @@ double wid_get_scaling_w (widp w)
         return (1.0);
     }
 
+    const uint32_t ts = wid_time;
+
     w->text_size_cached = false;
 
-    if (time_get_time_cached() >= w->timestamp_scaling_w_end) {
+    if (ts >= w->timestamp_scaling_w_end) {
 
         scaling = w->scaling_w_end;
         w->scaling_w = false;
@@ -9371,7 +9380,7 @@ double wid_get_scaling_w (widp w)
     }
 
     double time_step =
-        (double)(time_get_time_cached() - w->timestamp_scaling_w_begin) /
+        (double)(ts - w->timestamp_scaling_w_begin) /
         (double)(w->timestamp_scaling_w_end - w->timestamp_scaling_w_begin);
 
     scaling = (time_step * (double)(w->scaling_w_end - w->scaling_w_start)) +
@@ -9390,7 +9399,9 @@ double wid_get_scaling_h (widp w)
 
     w->text_size_cached = false;
 
-    if (time_get_time_cached() >= w->timestamp_scaling_h_end) {
+    const uint32_t ts = wid_time;
+
+    if (ts >= w->timestamp_scaling_h_end) {
 
         scaling = w->scaling_h_end;
         w->scaling_h = false;
@@ -9408,7 +9419,7 @@ double wid_get_scaling_h (widp w)
     }
 
     double time_step =
-        (double)(time_get_time_cached() - w->timestamp_scaling_h_begin) /
+        (double)(ts - w->timestamp_scaling_h_begin) /
         (double)(w->timestamp_scaling_h_end - w->timestamp_scaling_h_begin);
 
     scaling = (time_step * (double)(w->scaling_h_end - w->scaling_h_start)) +
@@ -9425,8 +9436,10 @@ void wid_scaling_blit_to_pct_in (widp w,
 {
     fast_verify(w);
 
-    w->timestamp_blit_scaling_w_begin = time_get_time_cached();
-    w->timestamp_blit_scaling_h_begin = time_get_time_cached();
+    const uint32_t ts = wid_time;
+
+    w->timestamp_blit_scaling_w_begin = ts;
+    w->timestamp_blit_scaling_h_begin = ts;
 
     w->timestamp_blit_scaling_w_end = w->timestamp_blit_scaling_w_begin + ms;
     w->timestamp_blit_scaling_h_end = w->timestamp_blit_scaling_h_begin + ms;
@@ -9500,7 +9513,9 @@ double wid_get_blit_scaling_w (widp w)
 
     w->text_size_cached = false;
 
-    if (time_get_time_cached() >= w->timestamp_blit_scaling_w_end) {
+    const uint32_t ts = wid_time;
+
+    if (ts >= w->timestamp_blit_scaling_w_end) {
 
         blit_scaling = w->blit_scaling_w_end;
         w->blit_scaling_w = false;
@@ -9518,7 +9533,7 @@ double wid_get_blit_scaling_w (widp w)
     }
 
     double time_step =
-        (double)(time_get_time_cached() - w->timestamp_blit_scaling_w_begin) /
+        (double)(ts - w->timestamp_blit_scaling_w_begin) /
         (double)(w->timestamp_blit_scaling_w_end - w->timestamp_blit_scaling_w_begin);
 
     blit_scaling = (time_step * (double)(w->blit_scaling_w_end - w->blit_scaling_w_start)) +
@@ -9537,7 +9552,7 @@ double wid_get_blit_scaling_h (widp w)
 
     w->text_size_cached = false;
 
-    if (time_get_time_cached() >= w->timestamp_blit_scaling_h_end) {
+    if (wid_time >= w->timestamp_blit_scaling_h_end) {
 
         blit_scaling = w->blit_scaling_h_end;
         w->blit_scaling_h = false;
@@ -9555,7 +9570,7 @@ double wid_get_blit_scaling_h (widp w)
     }
 
     double time_step =
-        (double)(time_get_time_cached() - w->timestamp_blit_scaling_h_begin) /
+        (double)(wid_time - w->timestamp_blit_scaling_h_begin) /
         (double)(w->timestamp_blit_scaling_h_end - w->timestamp_blit_scaling_h_begin);
 
     blit_scaling = (time_step * (double)(w->blit_scaling_h_end - w->blit_scaling_h_start)) +
@@ -9572,7 +9587,7 @@ void wid_rotate_to_pct_in (widp w,
 {
     fast_verify(w);
 
-    w->timestamp_rotate_begin = time_get_time_cached();
+    w->timestamp_rotate_begin = wid_time;
     w->timestamp_rotate_end = w->timestamp_rotate_begin + ms;
 
     w->rotate_start = rotate_start;
@@ -9643,7 +9658,7 @@ double wid_get_rotate (widp w)
 
     w->text_size_cached = false;
 
-    if (time_get_time_cached() >= w->timestamp_rotate_end) {
+    if (wid_time >= w->timestamp_rotate_end) {
 
         rotating = w->rotate_end;
         w->rotating = false;
@@ -9661,7 +9676,7 @@ double wid_get_rotate (widp w)
     }
 
     double time_step =
-        (double)(time_get_time_cached() - w->timestamp_rotate_begin) /
+        (double)(wid_time - w->timestamp_rotate_begin) /
         (double)(w->timestamp_rotate_end - w->timestamp_rotate_begin);
 
     rotating = (time_step * (double)(w->rotate_end - w->rotate_start)) +

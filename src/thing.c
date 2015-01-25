@@ -1505,11 +1505,24 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
             if (val) {
                 thing_stats_modify_xp(recipient, val);
 
-                if (thing_is_player(killer)) {
-                    MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
-                                                "%%%%font=%s$%%%%fg=%s$+%d", 
-                                                "large", "gold", 
-                                                val);
+                if (thing_is_player(recipient)) {
+#if 0
+                    if (thing_is_explosion(killer)) {
+                        /*
+                         * Too many packets if we kill a lot of things in one 
+                         * go.
+                         *
+                         * But it looks nice... 8)
+                         */
+                    } else {
+#endif
+                        MSG_SERVER_SHOUT_OVER_THING(POPUP, t,
+                                                    "%%%%font=%s$%%%%fg=%s$+%d", 
+                                                    "large", "gold", 
+                                                    val);
+#if 0
+                    }
+#endif
                 }
             }
         }
@@ -1567,7 +1580,9 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
          * Send the players an update of their status so the client gets the 
          * final score.
          */
-        socket_tx_server_status();
+        if (thing_is_player(t)) {
+            socket_tx_server_status();
+        }
     }
 
     if (!t->on_active_list) {
@@ -1665,9 +1680,7 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
     }
 }
 
-static int thing_hit_ (thingp t, 
-                       thingp hitter, 
-                       int32_t damage)
+static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t damage)
 {
     int32_t orig_damage = damage;
 
@@ -1708,16 +1721,16 @@ static int thing_hit_ (thingp t,
              * Record who dun it.
              */
             if (thing_is_player(t)) {
-                if (hitter) {
-                    thing_dying(t, hitter, "%s", tp_short_name(hitter->tp));
+                if (orig_hitter) {
+                    thing_dying(t, orig_hitter, "%s", tp_short_name(orig_hitter->tp));
                 } else {
-                    thing_dying(t, hitter, "hit");
+                    thing_dying(t, orig_hitter, "hit");
                 }
             } else {
-                if (hitter) {
-                    thing_dead(t, hitter, "%s", tp_short_name(hitter->tp));
+                if (orig_hitter) {
+                    thing_dead(t, orig_hitter, "%s", tp_short_name(orig_hitter->tp));
                 } else {
-                    thing_dead(t, hitter, "hit");
+                    thing_dead(t, orig_hitter, "hit");
                 }
             }
 
@@ -1764,7 +1777,7 @@ static int thing_hit_ (thingp t,
 
             if (thing_is_player(t)) {
                 THING_LOG(t, "hit by (%s) for %u", 
-                          thing_logname(hitter), damage);
+                          thing_logname(orig_hitter), damage);
             }
 
             damage = 0;
@@ -1816,9 +1829,7 @@ static int thing_hit_ (thingp t,
     return (true);
 }
 
-int thing_hit (thingp t, 
-               thingp hitter, 
-               uint32_t damage)
+int thing_hit (thingp t, thingp hitter, uint32_t damage)
 {
     thingp orig_hitter = hitter;
 
@@ -2007,7 +2018,7 @@ int thing_hit (thingp t,
                 return (false);
             }
 
-            orig_hitter->timestamp_hit = time_get_time_cached();
+            orig_hitter->timestamp_hit = time_get_time_ms();
         }
 
         /*
@@ -2054,7 +2065,7 @@ int thing_hit (thingp t,
 
     int r;
 
-    r = thing_hit_(t, hitter, damage);
+    r = thing_hit_(t, orig_hitter, hitter, damage);
 
     return (r);
 }
@@ -2766,7 +2777,7 @@ void thing_set_is_open (thingp t, uint8_t val)
 {
     verify(t);
 
-    t->timestamp_change_to_next_frame = time_get_time_cached();
+    t->timestamp_change_to_next_frame = time_get_time_ms();
 
     t->is_open = val;
 }
@@ -2932,11 +2943,11 @@ void thing_place_and_destroy_timed (levelp level,
 
 void thing_teleport (thingp t, int32_t x, int32_t y)
 {
-    if (time_get_time_cached() - t->timestamp_teleport < 500) {
+    if (time_get_time_ms() - t->timestamp_teleport < 500) {
         return;
     }
 
-    t->timestamp_teleport = time_get_time_cached();
+    t->timestamp_teleport = time_get_time_ms();
 
     widp wid_next_floor = wid_grid_find_thing_template(
                                     wid_game_map_server_grid_container,
@@ -3314,7 +3325,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
                 continue;
             }
 
-            t->timestamp_tx_map_update = time_get_time_cached();
+            t->timestamp_tx_map_update = time_get_time_ms();
 
             t->updated--;
         }
@@ -3422,7 +3433,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 
         if (state & (1 << THING_STATE_BIT_SHIFT_ID_DELTA_PRESENT)) {
             *data++ = id - last_id;
-//LOG("  id       %02x",id);
+//LOG("  id       %02x",*(data-1));
         } else {
             SDLNet_Write16(id, data);               
             data += sizeof(uint16_t);
@@ -3453,7 +3464,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT)) {
             *data++ = tp_to_id(t->weapon);
-//LOG("  weapon   %0x",t->weapon_id);
+//LOG("  weapon   %0x",tp_to_id(t->weapon));
         }
 
         if (ext2 & (1 << THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS)) {
@@ -3466,7 +3477,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
         t->needs_tx_refresh_xy_and_template_id = 0;
         t->first_update = false;
 
-THING_LOG(t, "tx");
+//THING_LOG(t, "tx");
         if (data + sizeof(msg_map_update) < eodata) {
             /*
              * Can fit more in.
@@ -3487,7 +3498,9 @@ THING_LOG(t, "tx");
          */
         gsocketp sp;
 
-        packet_compress(packet);
+        if (packet->len > PACKET_LEN_COMPRESS_THRESHOLD) {
+            packet_compress(packet);
+        }
 
         TREE_WALK_UNSAFE(sockets, sp) {
             if (p && (p != sp)) {
@@ -3521,7 +3534,9 @@ THING_LOG(t, "tx");
 
         packet->len = data - odata;
 
-        packet_compress(packet);
+        if (packet->len > PACKET_LEN_COMPRESS_THRESHOLD) {
+            packet_compress(packet);
+        }
 
         TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
@@ -3661,7 +3676,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             torch_light_radius_present = false;
         }
 
-LOG("rx id %d",id);
+//LOG("rx id %d",id);
         t = thing_client_find(id);
         if (ext1 & (1 << THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG)) {
             weapon_swung = true;
@@ -3694,6 +3709,7 @@ LOG("rx id %d",id);
 
             t = thing_client_new(id, tp);
 
+//LOG("rx id %d create thing",id);
             if (!need_fixup &&
                 (tp_is_wall(tp) ||
                  tp_is_pipe(tp) ||
