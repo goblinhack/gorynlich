@@ -13,6 +13,8 @@
 #include "main.h"
 #include "string_util.h"
 
+#define HEX_DUMP_WIDTH (MAXSTR / 2)
+
 /*
  * Replace chars in replace_set with replace_with.
  */
@@ -387,7 +389,6 @@ char *mybasename (const char *in, const char *who)
  */
 uint8_t hex_dump (void *addr, uint64_t offset, uint64_t len)
 {
-#define HEX_DUMP_WIDTH 16
     uint8_t skipping_blanks = false;
     uint8_t empty[HEX_DUMP_WIDTH] = {0};
     uint8_t buf[HEX_DUMP_WIDTH + 1];
@@ -469,7 +470,6 @@ uint8_t hex_dump (void *addr, uint64_t offset, uint64_t len)
  */
 uint8_t hex_dump_log (void *addr, uint64_t offset, uint64_t len)
 {
-#define HEX_DUMP_WIDTH 16
     uint8_t skipping_blanks = false;
     uint8_t empty[HEX_DUMP_WIDTH] = {0};
     uint8_t buf[HEX_DUMP_WIDTH + 1];
@@ -504,9 +504,11 @@ uint8_t hex_dump_log (void *addr, uint64_t offset, uint64_t len)
             x = 0;
         }
 
+#if 0
         if (x && (((i % (HEX_DUMP_WIDTH/2))) == 0)) {
             LOGS(" ");
         }
+#endif
 
         skipping_blanks = false;
 

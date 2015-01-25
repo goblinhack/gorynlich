@@ -47,7 +47,7 @@ const char *timestamp (char *buf, int32_t len)
 {
     static char buf_[200];
 
-    int32_t log_msec = time_get_time_milli();
+    int32_t log_msec = time_get_time_ms();
     int32_t log_secs = log_msec / ONESEC;
     int32_t log_mins = log_secs / 60;
     int32_t log_hrs = log_mins / 60;
@@ -74,7 +74,7 @@ const char *timestamp (char *buf, int32_t len)
 
 uint8_t time_have_x_hundredths_passed_since (uint32_t val, uint32_t since)
 {
-    time_get_time_milli();
+    time_get_time_ms();
 
     /*
      * Cater for negative future times.
@@ -86,7 +86,7 @@ uint8_t time_have_x_hundredths_passed_since (uint32_t val, uint32_t since)
 
 uint8_t time_have_x_thousandths_passed_since (uint32_t val, uint32_t since)
 {
-    time_get_time_milli();
+    time_get_time_ms();
 
     /*
      * Cater for negative future times.
@@ -98,7 +98,7 @@ uint8_t time_have_x_thousandths_passed_since (uint32_t val, uint32_t since)
 
 uint8_t time_have_x_tenths_passed_since (uint32_t val, uint32_t since)
 {
-    time_get_time_milli();
+    time_get_time_ms();
 
     /*
      * Cater for negative future times.
@@ -110,7 +110,7 @@ uint8_t time_have_x_tenths_passed_since (uint32_t val, uint32_t since)
 
 uint8_t time_have_x_secs_passed_since (uint32_t val, uint32_t since)
 {
-    time_get_time_milli();
+    time_get_time_ms();
 
     /*
      * Cater for negative future times.

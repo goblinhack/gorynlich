@@ -522,7 +522,7 @@ static void sdl_event (SDL_Event * event)
                 }
             }
 
-            ts = time_get_time_cached();
+            ts = time_get_time_ms();
         }
 
         double wheel_x = event->wheel.x;
@@ -739,7 +739,7 @@ void sdl_loop (void)
     /*
      * Wait for events
      */
-    int32_t timestamp_then = time_get_time_milli();
+    int32_t timestamp_then = time_get_time_ms();
     int32_t timestamp_then2 = timestamp_then;
 
     sdl_main_loop_running = true;

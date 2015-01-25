@@ -346,7 +346,7 @@ static ptrcheck *ptrcheck_verify_pointer (const void *ptr,
         }
 
         context->last_seen[context->last_seen_at].tb = traceback_alloc();
-        context->last_seen[context->last_seen_at].ms = time_get_time_milli();
+        context->last_seen[context->last_seen_at].ms = time_get_time_ms();
 
         context->last_seen_at++;
         context->last_seen_size++;
@@ -519,7 +519,7 @@ void *ptrcheck_alloc (const void *ptr,
     context->allocated_by.func = func;
     context->allocated_by.file = file;
     context->allocated_by.line = line;
-    context->allocated_by.ms = time_get_time_milli();
+    context->allocated_by.ms = time_get_time_ms();
     context->allocated_by.tb = traceback_alloc();
 
     /*
@@ -563,7 +563,7 @@ uint8_t ptrcheck_free (void *ptr,
     context->freed_by.func = func;
     context->freed_by.line = line;
     context->freed_by.tb = traceback_alloc();
-    context->freed_by.ms = time_get_time_milli();
+    context->freed_by.ms = time_get_time_ms();
 
     /*
      * Add the free info to the ring buffer.

@@ -277,7 +277,7 @@ uint8_t wid_game_map_client_player_move (void)
             }
 
             if (fire) {
-                last_fired = time_get_time_cached();
+                last_fired = time_get_time_ms();
             }
         }
     }

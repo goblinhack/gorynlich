@@ -35,7 +35,7 @@ extern uint32_t base_time_in_mill;
 extern uint32_t SDL_GetTicks(void);
 static uint32_t time_update_time_milli(void);
 
-static inline uint32_t time_get_time_cached (void)
+static inline uint32_t time_get_time_ms (void)
 {
     /*
      * Do we really need to cache this? As it messes up timestamps when things 
@@ -68,7 +68,7 @@ static inline uint32_t time_update_time_milli (void)
 #endif
     extern uint8_t sdl_main_loop_running;
 
-    if (!sdl_main_loop_running || !sdl_init_video || HEADLESS) {
+    if (unlikely(!sdl_main_loop_running || !sdl_init_video || HEADLESS)) {
         struct timeval  tv;
 
         gettimeofday(&tv, NULL);
@@ -88,9 +88,4 @@ static inline uint32_t time_update_time_milli (void)
     time_now = SDL_GetTicks();
 
     return (time_now);
-}
-
-static inline uint32_t time_get_time_milli (void)
-{
-    return (time_get_time_cached());
 }

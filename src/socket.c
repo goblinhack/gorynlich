@@ -752,7 +752,7 @@ void sockets_quality_check (void)
         return;
     }
 
-    ts = time_get_time_cached();
+    ts = time_get_time_ms();
 
     gsocketp s;
 
@@ -1325,12 +1325,12 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
         LOG("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
-            time_get_time_cached() - ts);
+            time_get_time_ms() - ts);
         myfree(tmp);
     }
 
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = 
-                    time_get_time_cached() - ts;
+                    time_get_time_ms() - ts;
 
     strncpy(s->server_name, msg->server_name,
             min(sizeof(s->server_name), 
@@ -1489,7 +1489,7 @@ uint8_t socket_tx_client_join (gsocketp s, uint32_t *key)
     msg_client_join msg = {0};
     msg.type = MSG_CLIENT_JOIN;
 
-    *key = time_get_time_cached();
+    *key = time_get_time_ms();
     SDLNet_Write32(*key, &msg.key);
 
     memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
@@ -1989,6 +1989,9 @@ socket_tx_server_shout_over (uint32_t level,
 
         packet->len = sizeof(msg);
 
+        LOG("Client: Tx Shout %s over \"%s\"", 
+            socket_get_remote_logname(sp), txt);
+
         write_address(packet, socket_get_remote_ip(sp));
 
         socket_tx_enqueue(sp, &packet);
@@ -2208,6 +2211,15 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
  */
 void socket_tx_server_status (void)
 {
+    static uint32_t ts;
+
+    if (!time_have_x_hundredths_passed_since(
+            DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE, ts)) {
+        return;
+    }
+
+    ts = time_get_time_ms();
+
     msg_server_status msg = {0};
     msg.type = MSG_SERVER_STATUS;
 
@@ -2258,7 +2270,7 @@ void socket_tx_server_status (void)
 
         memcpy(packet->data, &msg, sizeof(msg));
 
-        if (0) {
+        if (1) {
             LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
         }
 
@@ -2630,7 +2642,7 @@ void socket_tx_player_move (gsocketp s,
             return;
         }
 
-        ts = time_get_time_cached();
+        ts = time_get_time_ms();
     }
 
     msg_player_move msg = {0};
@@ -2903,6 +2915,11 @@ uint8_t *packet_decompress (UDPpacket *packet, uint8_t *uncompressed)
 
 void packet_compress (UDPpacket *packet)
 {
+#ifdef ENABLE_PACKET_DUMP
+    LOG("Tx pre compressed:");
+    hex_dump_log(packet->data, 0, packet->len);
+#endif
+
     unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
 
     if (packet->len > MAX_PACKET_SIZE) {
@@ -2917,6 +2934,11 @@ void packet_compress (UDPpacket *packet)
     memcpy(data, tmp, len);
     packet->len++;
     myfree(tmp);
+
+#ifdef ENABLE_PACKET_DUMP
+    LOG("Tx post compressed:");
+    hex_dump_log(packet->data, 0, packet->len);
+#endif
 }
 
 /*
@@ -2939,6 +2961,10 @@ static int socket_tx_queue_send_packet (gsocketp s)
      */
     packet = packet_finalize(s, packet);
 
+#ifdef ENABLE_PACKET_DUMP
+    LOG("%p Send slot %d", s, s->tx_queue_head - 1);
+    hex_dump_log(packet->data, 0, packet->len);
+#endif
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
         /*
@@ -2987,16 +3013,25 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
         packet_compress(packet);
     }
 
-    if (((int)s->tx_queue_size) == MAX_SOCKET_QUEUE_SIZE) {
+    if (((int)s->tx_queue_size) == MAX_SOCKET_QUEUE_SIZE - 1) {
         socket_tx_queue_flush(s);
 
-        if (((int)s->tx_queue_size) == MAX_SOCKET_QUEUE_SIZE) {
+        if (((int)s->tx_queue_size) == MAX_SOCKET_QUEUE_SIZE - 1) {
             DIE("socket tx queue stuck");
         }
     }
 
+    if (s->tx_queue_size >= MAX_SOCKET_QUEUE_SIZE / 4) {
+        ERR("Socket congested %s", socket_get_remote_logname(s));
+    }
+
     s->tx_queue_size++;
     s->tx_queue[s->tx_queue_tail++] = packet;
+
+#ifdef ENABLE_PACKET_DUMP
+    LOG("s %p Enqueued slot %d size %d",s,  s->tx_queue_tail - 1, s->tx_queue_size);
+    hex_dump_log(packet->data, 0, packet->len);
+#endif
 }
 
 /*
@@ -3042,7 +3077,11 @@ static int socket_rx_queue_receive_packets (gsocketp s)
             return (count);
         }
 
-        if (((int)s->rx_queue_size) == MAX_SOCKET_QUEUE_SIZE) {
+#ifdef ENABLE_PACKET_DUMP
+    LOG("Receive");
+    hex_dump_log(packet->data, 0, packet->len);
+#endif
+        if (((int)s->rx_queue_size) >= MAX_SOCKET_QUEUE_SIZE - 1) {
             return (count);
         }
 
@@ -3109,6 +3148,10 @@ void socket_tx_tick (void)
             if (!socket_tx_queue_send_packet(s)) {
                 break;
             }
+        }
+
+        if (s->tx_queue_size > MAX_SOCKET_QUEUE_SIZE / 2) {
+            socket_tx_queue_flush(s);
         }
     }
 }

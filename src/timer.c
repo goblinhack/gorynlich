@@ -106,7 +106,7 @@ timerp action_timer_create (tree_rootp *root,
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: timer");
 
-    t->expires_when = time_get_time_cached() + duration_ms;
+    t->expires_when = time_get_time_ms() + duration_ms;
     if (jitter) {
         t->expires_when += myrand() % jitter;
     }
@@ -124,7 +124,7 @@ timerp action_timer_create (tree_rootp *root,
     t->logname = dynprintf("%s [timer:%p] context:%p", name, t, context);
 
     TIMER_LOG(t, "created, fires in %3.2f secs",
-              ((float)(t->expires_when - time_get_time_cached())) /
+              ((float)(t->expires_when - time_get_time_ms())) /
               (float)ONESEC);
 
     return (t);
@@ -155,7 +155,7 @@ void action_timers_tick (tree_rootp *root)
 
         verify(t);
 
-        if (t->expires_when > time_get_time_cached()) {
+        if (t->expires_when > time_get_time_ms()) {
             return;
         }
 
