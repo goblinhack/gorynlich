@@ -419,6 +419,13 @@ struct config {
     thing_stats dead_stats;
 
     uint8_t starting_stats_inited;
+
+    uint8_t game_over;
+
+    /*
+     * Current level
+     */
+    int32_t level_no;
 };
 
 extern struct config global_config;
