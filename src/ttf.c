@@ -275,14 +275,14 @@ void ttf_putc (font *f, int32_t c, double x, double y, double scaling)
 
         if (first) {
             first = false;
-            last = time_get_time_cached();
+            last = time_get_time_ms();
         }
 
         glcolor_save();
 
         if (time_have_x_tenths_passed_since(10, last)) {
             glcolor(CONSOLE_CURSOR_COLOR);
-            last = time_get_time_cached();
+            last = time_get_time_ms();
         } else if (time_have_x_tenths_passed_since(5, last)) {
             glcolor(CONSOLE_CURSOR_COLOR);
         } else {

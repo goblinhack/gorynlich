@@ -6,6 +6,8 @@
 
 #pragma once
 
+#define MAXSTR                      1024
+
 /*
  * So we don't hog all the CPU when not in video sync mode
  */
@@ -25,8 +27,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -291,7 +293,7 @@
  * Timers
  */
 #define DELAY_TENTHS_THING_AI                               2
-#define DELAY_TENTHS_THING_COLLISION_TEST                   1
+#define DELAY_TENTHS_THING_COLLISION_TEST                   2
 
 /*
  * Client <-> server keepalives

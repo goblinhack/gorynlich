@@ -78,12 +78,12 @@ static void thing_tick_server_all (void)
                  * When does this thing expire ?
                  */
                 t->timestamp_lifestamp =
-                        time_get_time_cached() +
+                        time_get_time_ms() +
                         tp_get_lifespan(tp);
 
                 THING_LOG(t, "set end of life to %u", t->timestamp_lifestamp);
 
-            } else if (time_get_time_cached() > t->timestamp_lifestamp) {
+            } else if (time_get_time_ms() > t->timestamp_lifestamp) {
                 thing_dead(t, 0, "out of life"); 
                 continue;
             }
@@ -133,7 +133,7 @@ static void thing_tick_server_all (void)
 
             thing_handle_collisions(wid_game_map_server_grid_container, t);
 
-            t->timestamp_collision = time_get_time_cached() + (myrand() % 100);
+            t->timestamp_collision = time_get_time_ms() + (myrand() % 100);
 
             /*
              * Died in a collision ? 8( Handle it next time around.
@@ -180,7 +180,7 @@ static void thing_tick_server_all (void)
                     /*
                      * Add some jitter.
                      */
-                    t->timestamp_ai = time_get_time_cached() + (myrand() % 100);
+                    t->timestamp_ai = time_get_time_ms() + (myrand() % 100);
                 }
             }
         }
@@ -202,7 +202,7 @@ static void thing_tick_server_all (void)
                 /*
                  * Add some jitter.
                  */
-                t->timestamp_mob_spawn = time_get_time_cached() +
+                t->timestamp_mob_spawn = time_get_time_ms() +
                                 (myrand() % (delay * 100));
             }
         }
@@ -226,7 +226,7 @@ void thing_tick_server_player_slow_all (int force)
          * server, do so now.
          */
         if (force || time_have_x_secs_passed_since(60, t->timestamp_torch)) {
-            t->timestamp_torch = time_get_time_cached();
+            t->timestamp_torch = time_get_time_ms();
 
             /*
              * Use up one torch unit.
@@ -256,7 +256,7 @@ void thing_tick_server_player_slow_all (int force)
                 }
             }
 
-            t->timestamp_health = time_get_time_cached();
+            t->timestamp_health = time_get_time_ms();
 
             int delta = thing_stats_get_hp(t) - thing_stats_get_max_hp(t);
             if (delta > 0) {
@@ -428,7 +428,7 @@ void thing_tick_all (void)
         if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI, ts)) {
             thing_generate_dmaps();
 
-            ts = time_get_time_cached();
+            ts = time_get_time_ms();
         }
 
         /*
@@ -449,7 +449,7 @@ void thing_tick_all (void)
 
             wid_game_map_client_scroll_adjust(0);
 
-            ts = time_get_time_cached();
+            ts = time_get_time_ms();
         }
     }
 
