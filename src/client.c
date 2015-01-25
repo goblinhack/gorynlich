@@ -909,6 +909,14 @@ static void client_poll (void)
                 thing_statsp new_stats = &server_stats->stats;
                 thing_statsp old_stats = &player->stats;
 
+                /*
+                 * If we've just changed weapons locally and receive an update
+                 * with the old weapon then ignore that.
+                 */
+                if (time_get_time_ms() - player_action_bar_changed_at < ONESEC) {
+                    new_stats->action_bar_index = old_stats->action_bar_index;
+                }
+
                 if (player) {
                     thing_stats changed_stats;
 
