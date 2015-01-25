@@ -82,11 +82,11 @@ void wid_player_inventory_button_style (widp w,
     wid_set_color(w, WID_COLOR_BG, c);
 
     if (action_bar_item) {
-        c = GREEN;
+        c = GRAY50;
         c.a = 100;
         wid_set_color(w, WID_COLOR_TL, c);
 
-        c = GREEN;
+        c = GRAY10;
         c.a = 100;
         wid_set_color(w, WID_COLOR_BR, c);
 
