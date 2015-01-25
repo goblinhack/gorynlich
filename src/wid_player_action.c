@@ -12,11 +12,13 @@
 #include "wid_player_action.h"
 #include "wid_player_inventory.h"
 #include "wid_player_stats.h"
+#include "wid_game_map_client.h"
 #include "thing_template.h"
 #include "string_util.h"
 #include "socket_util.h"
 #include "client.h"
 #include "thing.h"
+#include "time_util.h"
 
 static widp wid_player_action;
 static uint8_t wid_player_action_init_done;
@@ -80,6 +82,8 @@ wid_player_action_button_style_mouse_down (widp w,
             MSG(WARNING, "Not connected to server");
             return (true);
         }
+
+        player_action_bar_changed_at = time_get_time_ms();
 
         socket_tx_player_action(client_joined_server, player, 
                                 PLAYER_ACTION_USE,
@@ -460,13 +464,13 @@ static void wid_player_action_create (thing_statsp s, int fast)
         double x;
         double max_across = 10.0;
         double border_left = 0.065;
-        double border_right = 0.25;
+        double border_right = 0.24;
         double dx = (1.0 - (border_left + border_right)) / max_across;
 
         double y;
         double max_down = 1.0;
         double border_top = 0.011;
-        double border_bottom = 0.25;
+        double border_bottom = 0.26;
         double dy = (1.0 - (border_top + border_bottom)) / max_down;
 
         int i = 0;

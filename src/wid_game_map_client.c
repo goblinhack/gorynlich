@@ -50,6 +50,8 @@ double last_playerx;
 uint32_t client_tile_width;
 uint32_t client_tile_height;
 
+uint32_t player_action_bar_changed_at;
+
 static void wid_game_map_client_set_thing_template (widp w, tpp t)
 {
     wid_set_thing_template(w, t);
@@ -303,7 +305,6 @@ uint8_t wid_game_map_client_player_move (void)
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
     tpp tp;
-    uint32_t action_bar_index = 0;
 
     if (!player) {
         wid_player_stats_hide();
@@ -313,65 +314,137 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     }
 
     int redraw_action_bar = 0;
+    int action_bar_index = player->stats.action_bar_index;
 
-    switch (key->sym) {
-    case SDLK_1: action_bar_index = 0; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_2: action_bar_index = 1; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_3: action_bar_index = 2; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_4: action_bar_index = 3; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_5: action_bar_index = 4; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_6: action_bar_index = 5; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_7: action_bar_index = 6; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_8: action_bar_index = 7; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_9: action_bar_index = 8; 
-        redraw_action_bar = 1;
-        break;
-    case SDLK_0: action_bar_index = 9; 
-        redraw_action_bar = 1;
-        break;
+    if (key->mod & KMOD_SHIFT) {
+        int weapon_switch_delta = 0;
 
-    case '\t': {
-        /*
-         * Show the inventory.
-         */
-        thing_statsp s;
-
-        s = &player->stats;
-
-        if (!wid_player_stats || wid_is_hidden(wid_player_stats)) {
-            wid_player_stats_visible(s);
-            wid_player_info_visible(s);
-            wid_player_inventory_visible(s);
-        } else {
-            wid_player_stats_hide();
-            wid_player_info_hide();
-            wid_player_inventory_hide();
+        switch (key->sym) {
+        case SDLK_LEFT:
+            weapon_switch_delta = -1;
+            break;
+        case SDLK_RIGHT:
+            weapon_switch_delta = 1;
+            break;
         }
-        return (true);
-    }
 
-    case 'q':
-        wid_game_quit_visible();
-        return (true);
+        /*
+         * Weapon switch?
+         */
+        if (!weapon_switch_delta) {
+            return (true);
+        }
 
-    default:
-        return (false);
+        /*
+         * Only switch between weapons
+         */
+        int tries = THING_ACTION_BAR_MAX;
+
+        while (tries-- > 0) {
+            action_bar_index += weapon_switch_delta;
+            if (action_bar_index < 0) {
+                action_bar_index = THING_ACTION_BAR_MAX - 1;
+            }
+
+            if (action_bar_index >= THING_ACTION_BAR_MAX) {
+                action_bar_index = 0;
+            }
+
+            uint32_t id = player->stats.action_bar[action_bar_index].id;
+            if (!id) {
+                continue;
+            }
+
+            tp = id_to_tp(id);
+            if (!tp) {
+                continue;
+            }
+
+            if (!tp_is_weapon(tp)) {
+                continue;
+            }
+
+            /*
+             * Found a weapon, switch to it.
+             */
+            break;
+        }
+
+        if (tries <= 0) {
+            return (true);
+        }
+
+        redraw_action_bar = 1;
+    } else {
+        switch (key->sym) {
+        case SDLK_1:
+            action_bar_index = 0; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_2:
+            action_bar_index = 1; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_3:
+            action_bar_index = 2; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_4:
+            action_bar_index = 3; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_5:
+            action_bar_index = 4; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_6:
+            action_bar_index = 5; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_7:
+            action_bar_index = 6; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_8:
+            action_bar_index = 7; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_9:
+            action_bar_index = 8; 
+            redraw_action_bar = 1;
+            break;
+        case SDLK_0:
+            action_bar_index = 9; 
+            redraw_action_bar = 1;
+            break;
+
+        case '\t': {
+            /*
+             * Show the inventory.
+             */
+            thing_statsp s;
+
+            s = &player->stats;
+
+            if (!wid_player_stats || wid_is_hidden(wid_player_stats)) {
+                wid_player_stats_visible(s);
+                wid_player_info_visible(s);
+                wid_player_inventory_visible(s);
+            } else {
+                wid_player_stats_hide();
+                wid_player_info_hide();
+                wid_player_inventory_hide();
+            }
+            return (true);
+        }
+
+        case 'q':
+            wid_game_quit_visible();
+            return (true);
+
+        default:
+            return (false);
+        }
     }
 
     uint32_t id = player->stats.action_bar[action_bar_index].id;
@@ -399,11 +472,17 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         /*
          * Assume the server will accept the change and update locally else it 
          * looks laggy.
+         *
+         * If potions and the like then we do not switch to them.
          */
-        player->stats.action_bar_index = action_bar_index;
+        if (tp_is_weapon(tp)) {
+            player_action_bar_changed_at = time_get_time_ms();
 
-        wid_player_action_hide();
-        wid_player_action_visible(&player->stats, 1 /* fast */);
+            player->stats.action_bar_index = action_bar_index;
+
+            wid_player_action_hide();
+            wid_player_action_visible(&player->stats, 1 /* fast */);
+        }
     }
 
     return (true);

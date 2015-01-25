@@ -1,10 +1,7 @@
+action bar appears on screen after level exit
 explosions on server are lingering when invisible on client
-weapon collect did not update red box in action screen
 explosions have no effect on bottom of screen
 can use potions when dead?
-keypress to switch weapon
-weapon left right switch
-action bar appears on screen after level exit
 sword vanished on level 2
 collision detection broken
                                     <<< start of feb >>>
@@ -41,8 +38,13 @@ bosses drop exit on death
                                     <<< start of aug >>>
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 
+Sun Jan 25 10:08:35 EST 2015
+- weapon left right switch
 
 Sat Jan 24 18:55:22 EST 2015
+- keypress to switch weapon
+- mouse click to switch weapon
+- weapon collect did not update red box in action screen
 - explosion white out has small dots
 - click on weapon to switch
 - action items should be bigger
