@@ -205,6 +205,11 @@
 #define MAX_PACKET_SIZE             4000
 
 /*
+ * The number of packets we allow to buffer up on a socket during sends.
+ */
+#define MAX_SOCKET_QUEUE_SIZE       256
+
+/*
  * Debug check to enable sequence numbers and checksum
  */
 #undef ENABLE_PAK_EXTRA_HEADER
@@ -218,11 +223,6 @@
  * Above what lenght it is worth compressing
  */
 #define PACKET_LEN_COMPRESS_THRESHOLD 200
-
-/*
- * The number of packets we allow to buffer up on a socket during sends.
- */
-#define MAX_SOCKET_QUEUE_SIZE       256
 
 /*
  * How many tx packets we pull off of the tx queue per frame. This has

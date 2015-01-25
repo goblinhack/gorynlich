@@ -122,6 +122,3 @@ void level_place_cloudkill(levelp level,
 void level_place_small_cloudkill(levelp level, 
                                  thingp owner,
                                  double x, double y);
-extern uint8_t game_over;
-
-extern uint32_t start_lives;

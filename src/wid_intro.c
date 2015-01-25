@@ -150,8 +150,8 @@ void wid_intro_visible (void)
 
     music_play_intro();
 
-    if (game_over) {
-        game_over = false;
+    if (global_config.game_over) {
+        global_config.game_over = false;
         wid_game_over_visible();
         return;
     }
