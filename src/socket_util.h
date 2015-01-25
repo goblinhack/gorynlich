@@ -28,6 +28,7 @@ typedef enum {
     MSG_SERVER_MAP_UPDATE,
     MSG_CLIENT_PLAYER_MOVE,
     MSG_CLIENT_PLAYER_ACTION,
+    MSG_SUPER_PACKET,
     MSG_MAX,
     MSG_COMPRESSED = 0xFF,
 } msg_type;
@@ -36,6 +37,11 @@ enum {
     SOCKET_LISTEN,
     SOCKET_CONNECT,
 };
+
+typedef struct {
+    uint8_t type;
+    uint16_t len;
+} __attribute__ ((packed)) msg_super_packet;
 
 typedef struct {
     uint8_t type;
