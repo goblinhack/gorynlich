@@ -143,6 +143,23 @@ void thing_unwield (thingp t)
 
     THING_LOG(t, "unwielding %s", tp_short_name(weapon));
 
+    thing_weapon_sheath(t);
+
+    /*
+     * Update the thing stats so the weapon inventory changes.
+     */
+    t->stats.action_bar_index = 0;
+}
+
+void thing_weapon_sheath (thingp t)
+{
+    tpp weapon = thing_weapon(t);
+    if (!weapon) {
+        return;
+    }
+
+    THING_LOG(t, "sheathing %s", tp_short_name(weapon));
+
     /*
      * If this weapon has its own thing id for animations then destroy that.
      */
@@ -163,11 +180,6 @@ void thing_unwield (thingp t)
     }
 
     t->weapon = 0;
-
-    /*
-     * Update the thing stats so the weapon inventory changes.
-     */
-    t->stats.action_bar_index = 0;
 }
 
 void thing_wield (thingp t, tpp weapon)
@@ -240,8 +252,6 @@ void thing_wield (thingp t, tpp weapon)
 
     if (t->on_server) {
         thing_update(t);
-
-        t->needs_tx_player_update = true;
     }
 }
 
@@ -312,7 +322,6 @@ void thing_swing (thingp t)
     if (t->on_server) {
         thing_update(t);
 
-        t->needs_tx_player_update = true;
         t->needs_tx_weapon_swung = true;
 
         thing_timer_destroy(child, 50);
