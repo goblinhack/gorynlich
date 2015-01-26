@@ -1110,12 +1110,13 @@ static void thing_remove_hooks (thingp t)
     /*
      * We are owned by something. i.e. we are a sword.
      */
+    thingp owner = 0;
+    
     if (t->owner_thing_id) {
-        thingp owner = thing_owner(t);
-        if (!owner) {
-            return;
-        }
+        owner = thing_owner(t);
+    }
 
+    if (t->owner_thing_id && owner) {
         if (0) {
             THING_LOG(t, "detach from owner %s", thing_logname(owner));
         }
@@ -1190,7 +1191,8 @@ static void thing_remove_hooks (thingp t)
 
             memcpy(&global_config.dead_stats, &t->stats, sizeof(thing_stats));
 
-            wid_player_action_visible(&global_config.dead_stats, true /* fast */);
+            wid_player_action_visible(&global_config.dead_stats, 
+                                      true /* fast */);
         }
     }
 }

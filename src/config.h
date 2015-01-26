@@ -9,8 +9,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -202,12 +202,7 @@
 /*
  * Maximum pre-compression packet size
  */
-#define MAX_PACKET_SIZE             4000
-
-/*
- * The number of packets we allow to buffer up on a socket during sends.
- */
-#define MAX_SOCKET_QUEUE_SIZE       256
+#define MAX_PACKET_SIZE             1500
 
 /*
  * Debug check to enable sequence numbers and checksum
