@@ -3014,7 +3014,12 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
     }
 
     if (s->tx_queue_size) {
-        UDPpacket *super_packet = s->tx_queue[s->tx_queue_tail - 1];
+        uint8_t tx_queue_tail = s->tx_queue_tail - 1;
+
+        UDPpacket *super_packet = s->tx_queue[tx_queue_tail];
+
+        verify(super_packet);
+
         const uint8_t head_type = super_packet->data[0];
 
         uint16_t fragment_len = packet->len;
@@ -3047,7 +3052,6 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
              * fragment.
              */
             if (head_type != MSG_SUPER_PACKET) {
-LOG("%p   tx first frag (len %d) slot %d",super_packet, oldlen, s->tx_queue_tail - 1);
                 memmove(super_packet->data + sizeof(msg_super_packet), 
                         super_packet->data, 
                         oldlen);
@@ -3067,7 +3071,7 @@ LOG("%p   tx first frag (len %d) slot %d",super_packet, oldlen, s->tx_queue_tail
                    packet->data, fragment_len);
 
             super_packet->len = newlen;
-LOG("%p   tx frag %d (len now %d)", super_packet,fragment_len,super_packet->len);
+
             /*
              * Whee! We do not need to add to the queue if we added this as a 
              * fragment.
@@ -3091,7 +3095,6 @@ LOG("%p   tx frag %d (len now %d)", super_packet,fragment_len,super_packet->len)
     s->tx_queue_size++;
     s->tx_queue[s->tx_queue_tail++] = packet;
 
-LOG("%p enqueue slot %d",packet, s->tx_queue_tail - 1);
 #ifdef ENABLE_PACKET_DUMP
     LOG("s %p Enqueued slot %d size %d",s,  s->tx_queue_tail - 1, s->tx_queue_size);
     hex_dump_log(packet->data, 0, packet->len);
