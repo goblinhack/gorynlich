@@ -317,8 +317,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
     {
         widp w =
-            wid_new_square_button(wid_player_action, 
-                              "wid player_stats container");
+            wid_new_square_button(wid_player_action,
+                                  "wid player_stats container");
 
         fpoint tl = {0.65, 0.2};
         fpoint br = {0.85, 0.88};
@@ -343,8 +343,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         static int last_magic;
         if (last_magic != s->magic) {
-            last_magic = s->magic;
-
             if (last_magic > s->magic) {
                 if (s->magic > 0) {
                     wid_effect_pulses(w);
@@ -353,6 +351,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
                 wid_set_mode(w, WID_MODE_ACTIVE);
                 wid_set_color(w, WID_COLOR_TEXT, RED);
             }
+
+            last_magic = s->magic;
         }
 
         if (s->magic < s->max_magic / 10) {
@@ -390,8 +390,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         static int last_hp;
         if (last_hp != s->hp) {
-            last_hp = s->hp;
-
             if (last_hp > s->hp) {
                 if (s->hp > 0) {
                     wid_effect_pulses(w);
@@ -400,6 +398,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
                 wid_set_mode(w, WID_MODE_ACTIVE);
                 wid_set_color(w, WID_COLOR_TEXT, RED);
             }
+
+            last_hp = s->hp;
         }
 
         if ((s->hp < s->max_hp / 10) && (s->hp > THING_MIN_HEALTH)) {
@@ -527,5 +527,5 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
 static void wid_player_action_destroy (void)
 {
-    wid_destroy(&wid_player_action);
+    wid_destroy_nodelay(&wid_player_action);
 }

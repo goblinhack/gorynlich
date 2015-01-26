@@ -647,6 +647,11 @@ void wid_game_map_client_wid_destroy (void)
     if (wid_game_map_client_window) {
         LOG("Client: Destroy game window");
 
+        wid_player_stats_hide();
+        wid_player_info_hide();
+        wid_player_inventory_hide();
+        wid_player_action_hide();
+
         wid_destroy(&wid_game_map_client_window);
     }
 
