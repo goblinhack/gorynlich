@@ -175,6 +175,11 @@ typedef struct {
     uint8_t weapon_id;
 } __attribute__ ((packed)) msg_map_update;
 
+/*
+ * The number of packets we allow to buffer up on a socket during sends.
+ */
+#define MAX_SOCKET_QUEUE_SIZE       256
+
 typedef struct socket_ {
     tree_key_three_int tree;
 
