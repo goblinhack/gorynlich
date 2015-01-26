@@ -326,6 +326,8 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_RIGHT:
             weapon_switch_delta = 1;
             break;
+        default:
+            break;
         }
 
         /*
