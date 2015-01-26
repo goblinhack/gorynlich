@@ -71,7 +71,7 @@ wid_player_action_button_style_mouse_down (widp w,
      */
     if (!wid_player_inventory_is_visible()) {
         int32_t action_bar_index = (typeof(action_bar_index))
-                        wid_get_client_context2(w);
+                        (uintptr_t) wid_get_client_context2(w);
         uint32_t id = player->stats.action_bar[action_bar_index].id;
         if (!id) {
             MSG(WARNING, "Nothing in that slot");

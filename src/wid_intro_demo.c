@@ -186,7 +186,7 @@ int sdl_intro_demo_update (void)
         x = (elapsed / 7000.0);
 
         static double y = 0;;
-        static const double gravity = 0.03;
+#define gravity 0.03
         static double speed = 0.001;
         static double decel = 1.0 - gravity;
         static double accel = 1.0 + gravity;
