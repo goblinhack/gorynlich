@@ -1637,8 +1637,6 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
 
     verify(t);
 
-    tpp tp = thing_tp(t);
-
     /*
      * Post death server events.
      */
@@ -1649,24 +1647,6 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
         if (thing_is_player(t)) {
             level_set_monst_map_treat_doors_as_passable(server_level);
             level_set_monst_map_treat_doors_as_walls(server_level);
-        }
-
-        /*
-         * Bounty for the killer?
-         */
-        uint32_t score = tp_get_bonus_xp_on_death(tp);
-        if (score && killer) {
-            thingp recipient = killer;
-
-            /*
-             * Did someone throw this weapon and gets the score?
-             */
-            if (killer->owner_thing_id) {
-                thingp real_recipient = thing_owner(killer);
-                if (real_recipient) {
-                    recipient = real_recipient;
-                }
-            }
         }
     }
 

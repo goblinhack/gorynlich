@@ -1155,7 +1155,7 @@ UDPpacket *packet_dup (const UDPpacket *packet)
 
     verify(packet);
 
-    dup = SDLNet_AllocPacket(packet->len + 1); /* for miniz uncompress */
+    dup = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!dup) {
         DIE("Out of packet space, len %d", packet->len);
     }
@@ -1177,7 +1177,7 @@ static UDPpacket *packet_dup_no_copy (const UDPpacket *packet,
 
     verify(packet);
 
-    dup = SDLNet_AllocPacket(packet->len + adjustment + 1); /* for miniz uncompress */
+    dup = SDLNet_AllocPacket(MAX_PACKET_SIZE);
     if (!dup) {
         DIE("Out of packet space, len %d", packet->len);
     }
@@ -2965,7 +2965,6 @@ static int socket_tx_queue_send_packet (gsocketp s)
     LOG("%p Send slot %d", s, s->tx_queue_head - 1);
     hex_dump_log(packet->data, 0, packet->len);
 #endif
-CON("UDP TX %d, data %d", packet->len, packet->data[0]);
     if (SDLNet_UDP_Send(socket_get_udp_socket(s),
                         socket_get_channel(s), packet) < 1) {
         /*
@@ -3029,7 +3028,7 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
          * Work out how big the packet would be if we added a fragment onto 
          * it.
          */
-        uint16_t newlen = oldlen + packet->len + sizeof(msg_super_packet);
+        uint16_t newlen = oldlen + fragment_len + sizeof(msg_super_packet);
 
         /*
          * Bear in mind the head packet may not yet be a fragment so we have 
@@ -3048,7 +3047,7 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
              * fragment.
              */
             if (head_type != MSG_SUPER_PACKET) {
-CON("   first frag len %d", oldlen);
+LOG("%p   tx first frag (len %d) slot %d",super_packet, oldlen, s->tx_queue_tail - 1);
                 memmove(super_packet->data + sizeof(msg_super_packet), 
                         super_packet->data, 
                         oldlen);
@@ -3068,7 +3067,7 @@ CON("   first frag len %d", oldlen);
                    packet->data, fragment_len);
 
             super_packet->len = newlen;
-CON("   tx frag %d (len now %d)", fragment_len,super_packet->len);
+LOG("%p   tx frag %d (len now %d)", super_packet,fragment_len,super_packet->len);
             /*
              * Whee! We do not need to add to the queue if we added this as a 
              * fragment.
@@ -3092,6 +3091,7 @@ CON("   tx frag %d (len now %d)", fragment_len,super_packet->len);
     s->tx_queue_size++;
     s->tx_queue[s->tx_queue_tail++] = packet;
 
+LOG("%p enqueue slot %d",packet, s->tx_queue_tail - 1);
 #ifdef ENABLE_PACKET_DUMP
     LOG("s %p Enqueued slot %d size %d",s,  s->tx_queue_tail - 1, s->tx_queue_size);
     hex_dump_log(packet->data, 0, packet->len);
@@ -3110,8 +3110,7 @@ UDPpacket *socket_rx_dequeue (gsocketp s)
     }
 
     packet = s->rx_queue[s->rx_queue_head];
-verify(packet);
-CON("RX dequeue len %d type %d", packet->len, packet->data[0]);
+    verify(packet);
 
     /*
      * If this is a super packet, pull off a fragment.
@@ -3123,7 +3122,6 @@ CON("RX dequeue len %d type %d", packet->len, packet->data[0]);
          * Read the head fragment size.
          */
         uint16_t fragment_len = SDLNet_Read16(super_packet->data + 1);
-CON("   rx frag %d (total %d)", fragment_len, super_packet->len);
 
         /*
          * We need to adjust the super packet after removing the head fragment
@@ -3135,11 +3133,11 @@ CON("   rx frag %d (total %d)", fragment_len, super_packet->len);
          * Allocate a fragment and set it up with similar source data.
          */
         UDPpacket *fragment = packet_alloc();
-CON("alloc fragment %p",fragment);
         fragment->channel = super_packet->channel;
         memcpy(&fragment->address, &super_packet->address, sizeof(IPaddress));
         memcpy(fragment->data, super_packet->data + sizeof(msg_super_packet), 
                fragment_len);
+        fragment->len = fragment_len;
 
         /*
          * If this is the last fragment, free the super packet.
@@ -3150,18 +3148,15 @@ CON("alloc fragment %p",fragment);
             /*
              * Last fragment. Discard the super packet.
              */
-            s->rx_queue_size--;
-CON("free super_packet %p",super_packet);
             packet_free(super_packet);
             packet = fragment;
-CON("   rx last frag");
         } else {
             /*
              * More fragments. Now move the data for the next fragment to the 
              * head.
              */
-            memmove(super_packet->data, super_packet->data + move_len, 
-                    new_super_packet_len);
+            memmove(super_packet->data, 
+                    super_packet->data + move_len, new_super_packet_len);
 
             super_packet->len = new_super_packet_len;
             return (fragment);
@@ -3171,7 +3166,6 @@ CON("   rx last frag");
     s->rx_queue_head++;
     s->rx_queue_size--;
 
-verify(packet);
     return (packet);
 }
 
@@ -3199,11 +3193,10 @@ static int socket_rx_queue_receive_packets (gsocketp s)
                 SDLNet_GetError(), paks);
             return (count);
         }
-CON("UDP RX %d type %d", packet->len, packet->data[0]);
 
 #ifdef ENABLE_PACKET_DUMP
-    LOG("Receive");
-    hex_dump_log(packet->data, 0, packet->len);
+        LOG("Receive");
+        hex_dump_log(packet->data, 0, packet->len);
 #endif
         if (((int)s->rx_queue_size) >= MAX_SOCKET_QUEUE_SIZE - 1) {
             return (count);
