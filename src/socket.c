@@ -3076,6 +3076,7 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
              * Whee! We do not need to add to the queue if we added this as a 
              * fragment.
              */
+            packet_free(packet);
             return;
         }
     }
