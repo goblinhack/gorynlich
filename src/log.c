@@ -864,7 +864,9 @@ void MSG_BOX (const char *fmt, ...)
 static void sdl_msgerr_ (const char *fmt, va_list args)
 {
     char buf[MAXSTR];
+#if SDL_MAJOR_VERSION >= 2
     uint32_t ts_len;
+#endif
     uint32_t len;
 
     buf[0] = '\0';
@@ -874,7 +876,9 @@ static void sdl_msgerr_ (const char *fmt, va_list args)
     snprintf(buf + len, sizeof(buf) - len, "ERROR: %%%%fg=red$");
 
     len = (uint32_t)strlen(buf);
+#if SDL_MAJOR_VERSION >= 2
     ts_len = len;
+#endif
 
     vsnprintf(buf + len, sizeof(buf) - len, fmt, args);
 
