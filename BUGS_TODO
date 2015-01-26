@@ -1,5 +1,5 @@
 super packets - need to pack small messages
-action bar appears on screen after level exit
+action bar appears on screen after level exit (quit in game)
 explosions on server are lingering when invisible on client
 can use potions when dead?
 collision detection broken
