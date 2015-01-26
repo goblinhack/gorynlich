@@ -106,18 +106,6 @@ static void gl_init_fbo_ (
     /*
      * Create a render buffer object.
      */
-    if (!glGenRenderbuffers) {
-	SDL_MSG_BOX("GLEW Render buffer extension is missing. "
-		"Graphics will suck.");
-	return;
-    }
-
-    if (!glGenRenderbuffersEXT) {
-	SDL_MSG_BOX("Render buffer extension is missing. "
-		"Graphics will suck.");
-	return;
-    }
-
     glGenRenderbuffersEXT(1, render_buf_id);
     glBindRenderbuffer(GL_RENDERBUFFER, *render_buf_id);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
