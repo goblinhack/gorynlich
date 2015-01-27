@@ -55,8 +55,15 @@ static uint8_t level_place_explosion_at (levelp level,
      * Make the delay on the server a lot smaller so we don't see things die 
      * after the explosion.
      */
+    uint32_t destroy_in;
+    uint32_t jitter;
+
     if (level == server_level) {
-        delay *= 0.75;
+        destroy_in = 100;
+        jitter = 10;
+    } else {
+        destroy_in = 3000;
+        jitter = 100;
     }
 
     thing_place_and_destroy_timed(level,
@@ -65,8 +72,8 @@ static uint8_t level_place_explosion_at (levelp level,
                                   x,
                                   y,
                                   delay,
-                                  3000, // destroy in
-                                  100, // jitter
+                                  destroy_in,
+                                  jitter,
                                   level == server_level ? 1 : 0,
                                   dist == 0 ? 1 : 0);
 
@@ -219,11 +226,17 @@ static void level_place_explosion_ (levelp level,
                 tx = x + (double)dx;
                 ty = y + (double)dy;
 
+#if 0
+                /*
+                 * We want sparks to appear over walls, so not sure why this 
+                 * code existed.
+                 */
                 if (map_find_wall_at(level, tx, ty, 0) ||
                     map_find_door_at(level, tx, ty, 0) ||
                     map_find_rock_at(level, tx, ty, 0)) {
                     continue;
                 }
+#endif
 
                 double distance = DISTANCE(x, y, tx, ty);
                 if (!gotone || (distance < best_distance)) {
