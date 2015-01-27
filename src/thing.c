@@ -4307,6 +4307,13 @@ void thing_server_action (thingp t,
         return;
     }
 
+    if (thing_is_dead_or_dying(t)) {
+        /*
+         * Future use when dead?
+         */
+        return;
+    }
+
     switch (action) {
     case PLAYER_ACTION_USE: {
         if (tp_is_weapon(tp)) {
