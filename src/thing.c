@@ -3158,6 +3158,9 @@ static void thing_client_wid_move (thingp t, double x, double y,
 
         double ms = (1000.0 / speed) / (1.0 / time_step);
 
+        /*
+         * Remove this and thing moves are jerky.
+         */
         ms *= THING_MOVE_NETWORK_LATENCY_FUDGE;
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
@@ -3746,7 +3749,6 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
          * also move the weapons.
          */
         if (weapon_id) {
-THING_LOG(t, "rx weapon");
             thing_wield(t, id_to_tp(weapon_id));
         }
 
@@ -4147,6 +4149,14 @@ void thing_fire (thingp t,
     p->dy = dy;
     p->dir = t->dir;
 
+    /*
+     * Check for immediate collision with a wall
+     */
+    thing_handle_collisions(wid_game_map_server_grid_container, p);
+    if (thing_is_dead_or_dying(p)) {
+        return;
+    }
+
     double fnexthop_x = p->x + p->dx;
     double fnexthop_y = p->y + p->dy;
 
@@ -4190,7 +4200,15 @@ uint8_t thing_server_move (thingp t,
         thing_move_set_dir(weapon_swing_anim, &x, &y, up, down, left, right);
     }
 
-    if (thing_hit_solid_obstacle(grid, t, x, y)) {
+    /*
+     * A thing can move diagonally and may not have a collision at the
+     * destination, but it might half way through the move; so check for that 
+     * and this prevents ghosts taking shortcuts around corners.
+     */
+    if (thing_hit_solid_obstacle(grid, t, x, y) ||
+        thing_hit_solid_obstacle(grid, t, 
+                                 (t->x + x) / 2.0, 
+                                 (t->y + y) / 2.0)) {
         if ((x != t->x) &&
             !thing_hit_solid_obstacle(grid, t, x, t->y)) {
             y = t->y;
