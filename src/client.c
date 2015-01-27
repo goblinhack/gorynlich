@@ -883,9 +883,10 @@ static void client_poll (void)
                  */
                 if (server_status.server_current_players != 
                         latest_status.server_current_players) {
-                    wid_chat_fini();
                     if (latest_status.server_current_players > 1) {
-                        wid_chat_init();
+                        wid_visible(wid_chat_window, 0);
+                    } else {
+                        wid_hide(wid_chat_window, 0);
                     }
                 }
 
