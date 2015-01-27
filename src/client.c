@@ -19,6 +19,7 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
+#include "wid_chat.h"
 #include "wid.h"
 #include "thing.h"
 #include "mzip_lib.h"
@@ -876,6 +877,22 @@ static void client_poll (void)
                     LOG("Client: Level no %u", latest_status.level_no);
                     redo = true;
                 }
+
+                /*
+                 * Someone joined or left?
+                 */
+                if (server_status.server_current_players != 
+                        latest_status.server_current_players) {
+                    wid_chat_fini();
+                    if (latest_status.server_current_players > 1) {
+                        wid_chat_init();
+                    }
+                }
+
+                global_config.server_current_players =
+                                latest_status.server_current_players;
+                global_config.level_no =
+                                latest_status.level_no;
 
                 if (latest_status.level_hide) {
                     if (client_level) {
