@@ -657,8 +657,9 @@ static uint8_t thing_try_nexthop (thingp t,
     if (thing_find_nexthop_dmap(t, dmap, nexthop_x, nexthop_y)) {
 
         if (!can_change_dir_without_moving) {
-            if (thing_hit_solid_obstacle(wid_game_map_server_grid_container, t, 
-                                        *nexthop_x, *nexthop_y)) {
+            if (thing_hit_solid_obstacle(wid_game_map_server_grid_container, 
+                                         t,
+                                         *nexthop_x, *nexthop_y)) {
                 return (false);
             }
         }
