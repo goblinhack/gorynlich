@@ -308,5 +308,7 @@ void wid_chat_hide (void)
 
 void wid_chat_visible (void)
 {
-    wid_visible(wid_chat_window, 0);
+    if (global_config.server_current_players > 1) {
+        wid_visible(wid_chat_window, 0);
+    }
 }

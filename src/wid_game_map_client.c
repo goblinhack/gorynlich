@@ -633,7 +633,9 @@ void wid_game_map_client_wid_create (void)
 
     wid_hide(wid_game_map_client_window, 0);
 
-    wid_visible(wid_chat_window, 0);
+    if (global_config.server_current_players > 1) {
+        wid_visible(wid_chat_window, 0);
+    }
 }
 
 void wid_game_map_client_wid_destroy (void)
@@ -985,8 +987,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     }
 
     if (update) {
-        wid_raise(wid_chat_window);
-        wid_visible(wid_chat_window, 0);
+        if (global_config.server_current_players > 1) {
+            wid_raise(wid_chat_window);
+            wid_visible(wid_chat_window, 0);
+        }
         return;
     }
 
@@ -1035,6 +1039,8 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
 
     wid_set_focus(wid_game_map_client_grid_container);
 
-    wid_raise(wid_chat_window);
-    wid_visible(wid_chat_window, 0);
+    if (global_config.server_current_players > 1) {
+        wid_raise(wid_chat_window);
+        wid_visible(wid_chat_window, 0);
+    }
 }
