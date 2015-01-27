@@ -1,5 +1,3 @@
-collision detection broken
-explosions on server are lingering when invisible on client
 can use potions when dead?
                                     <<< start of feb >>>
 remove chat for single player
@@ -37,6 +35,9 @@ bosses drop exit on death
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 
 Mon Jan 26 08:06:11 EST 2015
+- fire missile next to wall - goes right through
+- collision detection broken
+- explosions on server are lingering when invisible on client
 - quit game whilst counting down - action bar still there
 - action bar appears on screen after level exit (quit in game)
 - super packets - need to pack small messages
