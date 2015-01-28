@@ -68,6 +68,7 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 #endif /* } */
 
 uint8_t sdl_main_loop_running;
+uint8_t sdl_shift_held;
 int32_t sdl_init_video;
 
 #if (SDL_MAJOR_VERSION == 2) || \
@@ -478,6 +479,8 @@ static void sdl_event (SDL_Event * event)
             key = &event->key.keysym;
 
             wid_key_down(key, mouse_x, mouse_y);
+
+            sdl_shift_held = (key->mod & KMOD_SHIFT) ? 1 : 0;
         break;
 
     case SDL_KEYUP:
@@ -488,6 +491,8 @@ static void sdl_event (SDL_Event * event)
             key = &event->key.keysym;
 
             wid_key_up(key, mouse_x, mouse_y);
+
+            sdl_shift_held = (key->mod & KMOD_SHIFT) ? 1 : 0;
         break;
 
 #if (SDL_MAJOR_VERSION == 2) || \
