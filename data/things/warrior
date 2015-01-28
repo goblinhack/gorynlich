@@ -249,5 +249,55 @@
    is_dir_right
    tile="warrior-br5"
   }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying1"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying2"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying3"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying4"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying5"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying6"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying7"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying8"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying9"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="warrior-dying10"
+  }
  }
 }

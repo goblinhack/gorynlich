@@ -83,7 +83,12 @@ void wid_animate (widp w)
             tile = thing_tile_first(tiles);
         }
 
-        if (t && thing_is_dir_tl(t)) {
+        if (t && thing_is_dying(t)) {
+            if (!thing_tile_is_dying(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
+        } else if (t && thing_is_dir_tl(t)) {
             if (!thing_tile_is_dir_tl(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
@@ -125,11 +130,6 @@ void wid_animate (widp w)
             }
         } else if (t && thing_is_open(t)) {
             if (!thing_tile_is_open(tile)) {
-                tile = thing_tile_next(tiles, tile);
-                continue;
-            }
-        } else if (t && thing_is_dead_or_dying(t)) {
-            if (!thing_tile_is_dead(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }

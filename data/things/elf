@@ -249,5 +249,55 @@
    is_dir_right
    tile="elf-br5"
   }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying1"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying2"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying3"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying4"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying5"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying6"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying7"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying8"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying9"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="elf-dying10"
+  }
  }
 }
