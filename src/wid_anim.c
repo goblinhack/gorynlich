@@ -83,8 +83,8 @@ void wid_animate (widp w)
             tile = thing_tile_first(tiles);
         }
 
-        if (t && thing_is_dying(t)) {
-            if (!thing_tile_is_dying(tile)) {
+        if (thing_tile_is_dying(tile)) {
+            if (t && !thing_is_dying(t)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
@@ -134,6 +134,11 @@ void wid_animate (widp w)
                 continue;
             }
         } else {
+            if (thing_tile_is_dying(tile)) {
+                tile = thing_tile_next(tiles, tile);
+                continue;
+            }
+
             if (thing_tile_is_dead(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
