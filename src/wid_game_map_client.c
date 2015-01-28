@@ -205,27 +205,39 @@ void wid_game_map_client_scroll_adjust (uint8_t adjust)
 
 uint8_t wid_game_map_client_player_move (void)
 {
+    uint8_t right = 0;
+    uint8_t left  = 0;
+    uint8_t up    = 0;
+    uint8_t down  = 0;
+    uint8_t fire  = 0;
+
+    if (!sdl_shift_held) {
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-    uint8_t *state = SDL_GetKeyState(0);
+        {
+            uint8_t *state = SDL_GetKeyState(0);
 
-    uint8_t right = state[SDLK_RIGHT] ? 1 : 0;
-    uint8_t left  = state[SDLK_LEFT] ? 1 : 0;
-    uint8_t up    = state[SDLK_UP] ? 1 : 0;
-    uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
-    uint8_t fire  = state[SDLK_SPACE] ? 1 : 0;
+            right = state[SDLK_RIGHT] ? 1 : 0;
+            left  = state[SDLK_LEFT] ? 1 : 0;
+            up    = state[SDLK_UP] ? 1 : 0;
+            down  = state[SDLK_DOWN] ? 1 : 0;
+            fire  = state[SDLK_SPACE] ? 1 : 0;
 
-    debug = state[SDLK_d] ? 1 : 0;
+            debug = state[SDLK_d] ? 1 : 0;
+        }
 #else /* } { */
-    const uint8_t *state = SDL_GetKeyboardState(0);
+        {
+            const uint8_t *state = SDL_GetKeyboardState(0);
 
-    uint8_t right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
-    uint8_t left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
-    uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
-    uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
-    uint8_t fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
+            right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
+            left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
+            up    = state[SDL_SCANCODE_UP] ? 1 : 0;
+            down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
+            fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
 
-    debug = state[SDL_SCANCODE_D] ? 1 : 0;
+            debug = state[SDL_SCANCODE_D] ? 1 : 0;
+        }
 #endif /* } */
+    }
 
     if (!player) {
         LOG("No player, cannot move");
