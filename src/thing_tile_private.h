@@ -85,6 +85,7 @@ typedef struct thing_tile_ {
     uint8_t is_open:1;
     uint8_t is_dead:1;
     uint8_t is_end_of_anim:1;
+    uint8_t is_dying:1;
     uint8_t is_dead_on_end_of_anim:1;
 
 } thing_tile;

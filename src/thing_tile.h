@@ -86,6 +86,7 @@ uint8_t thing_tile_is_yyy16(thing_tilep);
 uint8_t thing_tile_is_yyy17(thing_tilep);
 uint8_t thing_tile_is_open(thing_tilep);
 uint8_t thing_tile_is_dead(thing_tilep);
+uint8_t thing_tile_is_dying(thing_tilep);
 uint8_t thing_tile_is_end_of_anim(thing_tilep);
 uint8_t thing_tile_is_dead_on_end_of_anim(thing_tilep);
 

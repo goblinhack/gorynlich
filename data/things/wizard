@@ -249,5 +249,55 @@
    is_dir_right
    tile="wizard-br5"
   }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying1"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying2"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying3"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying4"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying5"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying6"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying7"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying8"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying9"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="wizard-dying10"
+  }
  }
 }
