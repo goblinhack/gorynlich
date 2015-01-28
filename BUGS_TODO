@@ -1,4 +1,3 @@
-shift left/right should not change dir
 dying anim wrong at start
 dying anim not working
 
@@ -38,6 +37,7 @@ bosses drop exit on death
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 
 Tue Jan 27 07:04:29 EST 2015
+- shift left/right should not change dir
 - remove chat for single player
 - can use potions when dead?
 
