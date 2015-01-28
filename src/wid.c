@@ -2019,7 +2019,12 @@ void wid_set_tilename (widp w, const char *name)
             snprintf(tmp + strlen(name) - 1, sizeof(tmp), "-eyes");
             tile = tile_find(tmp);
             if (!tile) {
+                /*
+                 * Not all tiles, like if the player is dying, need to have 
+                 * cats eyes.
+                 *
                 DIE("failed to set wid tile %s for eyes", tmp);
+                 */
             }
         }
 
@@ -2046,7 +2051,12 @@ void wid_set_tile (widp w, tilep tile)
             snprintf(tmp + strlen(name) - 1, sizeof(tmp), "-eyes");
             tile = tile_find(tmp);
             if (!tile) {
+                /*
+                 * Not all tiles, like if the player is dying, need to have 
+                 * cats eyes.
+                 *
                 DIE("failed to set wid tile %s for eyes", tmp);
+                 */
             }
         }
 

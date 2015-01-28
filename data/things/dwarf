@@ -249,5 +249,55 @@
    is_dir_right
    tile="dwarf-br5"
   }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying1"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying2"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying3"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying4"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying5"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying6"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying7"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying8"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying9"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="dwarf-dying10"
+  }
  }
 }

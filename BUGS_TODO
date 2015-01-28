@@ -5,20 +5,21 @@ bounce on walk
 update inventory while playing
 stats need to do something
 magic attack - green fireball?
-choose player intro window - 5 panels screen width
-                                    <<< start of mar >>>
 sound effects for weapons and hits http://www.bfxr.net/
 sound on momey collect
 sound on potion use
+                                    <<< start of mar >>>
+need single player global flag
+single player mode direct socket
 xp level and hp increase per level
 press m for magic to build up magic attack
 press m for magic to give life to other players
 screen shake
-                                    <<< start of apr >>>
 first to exit level gets 2 spending points, else get 1
+                                    <<< start of apr >>>
+choose player intro window - 5 panels screen width
 char mapping file and char levels to read in level ed
-single player mode direct socket
-pause character on spending point window
+pause character on spending point window - on single player?
 fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
                                     <<< start of may >>>
 more monsters
