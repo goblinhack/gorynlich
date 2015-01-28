@@ -249,5 +249,55 @@
    is_dir_right
    tile="valkyrie-br5"
   }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying1"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying2"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying3"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying4"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying5"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying6"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying7"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying8"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying9"
+  }
+  tile={
+   delay=1000
+   is_dying
+   tile="valkyrie-dying10"
+  }
  }
 }
