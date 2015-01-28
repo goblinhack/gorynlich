@@ -1,5 +1,8 @@
+shift left/right should not change dir
+dying anim wrong at start
+dying anim not working
+
                                     <<< start of feb >>>
-need dying anim
 spin player widget on hit
 bounce on walk
 update inventory while playing
