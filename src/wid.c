@@ -2075,16 +2075,6 @@ void wid_set_z_depth (widp w, uint8_t z_depth)
     wid_tree_detach(w);
     w->tree.z_depth = z_depth;
     wid_tree_attach(w);
-
-    thingp t = wid_get_thing(w);
-if (t) {
-if (thing_is_player(t)) {
-    LOG("w %s set player %d", wid_logname(w), wid_get_z_depth(w));
-}
-if (thing_is_weapon_carry_effect(t)) {
-    LOG("w %s set weapon %d", wid_logname(w), wid_get_z_depth(w));
-}
-}
 }
 
 uint8_t wid_get_z_depth (widp w)

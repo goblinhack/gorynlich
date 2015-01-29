@@ -857,7 +857,7 @@ thingp thing_server_new (const char *name,
     if (!thing_is_inactive_noverify(t) &&
         !thing_is_explosion(t) &&
         !thing_is_weapon_swing_effect(t) &&
-        !thing_is_weapon_carry_effect(t)) {
+        !thing_is_weapon_carry_anim(t)) {
 
         if (t->on_server) {
             THING_LOG(t, "created (total %d monst %d)", 
@@ -966,7 +966,7 @@ thingp thing_client_new (uint32_t id, tpp tp)
     if (!thing_is_inactive_noverify(t) &&
         !thing_is_explosion(t) &&
         !thing_is_weapon_swing_effect(t) &&
-        !thing_is_weapon_carry_effect(t)) {
+        !thing_is_weapon_carry_anim(t)) {
         THING_LOG(t, "created");
     }
 
@@ -1209,7 +1209,7 @@ void thing_destroy (thingp t, const char *why)
     if (!thing_is_inactive_noverify(t) &&
         !thing_is_explosion(t) &&
         !thing_is_weapon_swing_effect(t) &&
-        !thing_is_weapon_carry_effect(t)) {
+        !thing_is_weapon_carry_anim(t)) {
         THING_LOG(t, "destroyed (%s)", why);
     }
 
@@ -3297,7 +3297,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
          * client can infer the swing and animations.
          */
         if (tp_is_weapon_swing_effect(tp) ||
-            tp_is_weapon_carry_effect(tp)) {
+            tp_is_weapon_carry_anim(tp)) {
             t->updated--;
             continue;
         }
