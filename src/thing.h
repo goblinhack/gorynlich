@@ -993,11 +993,11 @@ static inline uint8_t thing_can_walk_through (thingp t)
     return (tp_can_walk_through(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_weapon_carry_effect (thingp t)
+static inline uint8_t thing_is_weapon_carry_anim (thingp t)
 {
     verify(t);
 
-    return (tp_is_weapon_carry_effect(thing_tp(t)));
+    return (tp_is_weapon_carry_anim(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_spell (thingp t)
@@ -1385,9 +1385,9 @@ static inline uint8_t thing_can_walk_through_noverify (thingp t)
     return (t->tp->can_walk_through);
 }
 
-static inline uint8_t thing_is_weapon_carry_effect_noverify (thingp t)
+static inline uint8_t thing_is_weapon_carry_anim_noverify (thingp t)
 {
-    return (t->tp->is_weapon_carry_effect);
+    return (t->tp->is_weapon_carry_anim);
 }
 
 static inline uint8_t thing_is_spell_noverify (thingp t)
