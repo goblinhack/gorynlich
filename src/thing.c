@@ -1650,6 +1650,11 @@ void thing_dying (thingp t, thingp killer, const char *reason, ...)
             level_set_monst_map_treat_doors_as_passable(server_level);
             level_set_monst_map_treat_doors_as_walls(server_level);
         }
+    } else {
+        /*
+         * Move the weapon behind the poor thing.
+         */
+        thing_set_weapon_placement(t);
     }
 
     /*
@@ -2556,7 +2561,7 @@ uint8_t thing_got_to_exit_first (thingp t)
     return (t->got_to_exit_first);
 }
 
-void thing_set_is_dir_down (thingp t)
+void thing_set_dir_down (thingp t)
 {
     verify(t);
 
@@ -2568,6 +2573,8 @@ void thing_set_is_dir_down (thingp t)
         t->dir = THING_DIR_DOWN;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -2579,7 +2586,7 @@ uint8_t thing_is_dir_down (thingp t)
     return (t->dir == THING_DIR_DOWN);
 }
 
-void thing_set_is_dir_up (thingp t)
+void thing_set_dir_up (thingp t)
 {
     verify(t);
 
@@ -2591,6 +2598,8 @@ void thing_set_is_dir_up (thingp t)
         t->dir = THING_DIR_UP;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -2602,7 +2611,7 @@ uint8_t thing_is_dir_up (thingp t)
     return (t->dir == THING_DIR_UP);
 }
 
-void thing_set_is_dir_left (thingp t)
+void thing_set_dir_left (thingp t)
 {
     verify(t);
 
@@ -2614,6 +2623,8 @@ void thing_set_is_dir_left (thingp t)
         t->dir = THING_DIR_LEFT;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -2625,7 +2636,7 @@ uint8_t thing_is_dir_left (thingp t)
     return (t->dir == THING_DIR_LEFT);
 }
 
-void thing_set_is_dir_right (thingp t)
+void thing_set_dir_right (thingp t)
 {
     verify(t);
 
@@ -2637,6 +2648,8 @@ void thing_set_is_dir_right (thingp t)
         t->dir = THING_DIR_RIGHT;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -2648,7 +2661,7 @@ uint8_t thing_is_dir_right (thingp t)
     return (t->dir == THING_DIR_RIGHT);
 }
 
-void thing_set_is_dir_tl (thingp t)
+void thing_set_dir_tl (thingp t)
 {
     verify(t);
 
@@ -2660,6 +2673,8 @@ void thing_set_is_dir_tl (thingp t)
         t->dir = THING_DIR_TL;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -2671,7 +2686,7 @@ uint8_t thing_is_dir_tl (thingp t)
     return (t->dir == THING_DIR_TL);
 }
 
-void thing_set_is_dir_bl (thingp t)
+void thing_set_dir_bl (thingp t)
 {
     verify(t);
 
@@ -2683,6 +2698,8 @@ void thing_set_is_dir_bl (thingp t)
         t->dir = THING_DIR_BL;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -2694,7 +2711,7 @@ uint8_t thing_is_dir_bl (thingp t)
     return (t->dir == THING_DIR_BL);
 }
 
-void thing_set_is_dir_tr (thingp t)
+void thing_set_dir_tr (thingp t)
 {
     verify(t);
 
@@ -2706,6 +2723,8 @@ void thing_set_is_dir_tr (thingp t)
         t->dir = THING_DIR_TR;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -2717,7 +2736,7 @@ uint8_t thing_is_dir_tr (thingp t)
     return (t->dir == THING_DIR_TR);
 }
 
-void thing_set_is_dir_br (thingp t)
+void thing_set_dir_br (thingp t)
 {
     verify(t);
 
@@ -2729,6 +2748,8 @@ void thing_set_is_dir_br (thingp t)
         t->dir = THING_DIR_BR;
         if (t->on_server) {
             thing_update(t);
+        } else {
+            thing_set_weapon_placement(t);
         }
     }
 }
@@ -3914,24 +3935,24 @@ static void thing_move_set_dir (thingp t,
 
     if (up) {
         if (left) {
-            thing_set_is_dir_tl(t);
+            thing_set_dir_tl(t);
         } else if (right) {
-            thing_set_is_dir_tr(t);
+            thing_set_dir_tr(t);
         } else {
-            thing_set_is_dir_up(t);
+            thing_set_dir_up(t);
         }
     } else if (down) {
         if (left) {
-            thing_set_is_dir_bl(t);
+            thing_set_dir_bl(t);
         } else if (right) {
-            thing_set_is_dir_br(t);
+            thing_set_dir_br(t);
         } else {
-            thing_set_is_dir_down(t);
+            thing_set_dir_down(t);
         }
     } else if (left) {
-        thing_set_is_dir_left(t);
+        thing_set_dir_left(t);
     } else if (right) {
-        thing_set_is_dir_right(t);
+        thing_set_dir_right(t);
     }
 }
 

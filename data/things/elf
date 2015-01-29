@@ -298,6 +298,7 @@
    delay=1000
    is_dying
    tile="elf-dying10"
+   is_end_of_anim
   }
  }
 }
