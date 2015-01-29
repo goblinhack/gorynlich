@@ -265,9 +265,9 @@ uint8_t map_can_walk_through_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_can_walk_through));
 }
 
-uint8_t map_is_weapon_carry_effect_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_weapon_carry_anim_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_weapon_carry_effect));
+    return (map_is_x_at(level, x, y, tp_is_weapon_carry_anim));
 }
 
 uint8_t map_is_spell_at (levelp level, int32_t x, int32_t y)
@@ -597,9 +597,9 @@ thingp map_thing_can_walk_through_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_can_walk_through));
 }
 
-thingp map_thing_is_weapon_carry_effect_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_weapon_carry_anim_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_weapon_carry_effect));
+    return (map_thing_is_x_at(level, x, y, tp_is_weapon_carry_anim));
 }
 
 thingp map_thing_is_spell_at (levelp level, int32_t x, int32_t y)
@@ -945,9 +945,9 @@ tree_rootp map_all_things_can_walk_through_at (levelp level, int32_t x, int32_t 
     return (map_all_things_is_x_at(level, x, y, tp_can_walk_through));
 }
 
-tree_rootp map_all_things_is_weapon_carry_effect_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_weapon_carry_anim_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_weapon_carry_effect));
+    return (map_all_things_is_x_at(level, x, y, tp_is_weapon_carry_anim));
 }
 
 tree_rootp map_all_things_is_spell_at (levelp level, int32_t x, int32_t y)
@@ -1385,10 +1385,10 @@ tpp map_find_can_walk_through_at (levelp level,
     return (map_find_x_at(level, x, y, tp_can_walk_through, w));
 }
 
-tpp map_find_weapon_carry_effect_at (levelp level,
+tpp map_find_weapon_carry_anim_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_weapon_carry_effect, w));
+    return (map_find_x_at(level, x, y, tp_is_weapon_carry_anim, w));
 }
 
 tpp map_find_spell_at (levelp level,
@@ -2095,9 +2095,9 @@ uint32_t level_count_can_walk_through (levelp level)
     return (level_count_is_x(level, tp_can_walk_through));
 }
 
-uint32_t level_count_is_weapon_carry_effect (levelp level)
+uint32_t level_count_is_weapon_carry_anim (levelp level)
 {
-    return (level_count_is_x(level, tp_is_weapon_carry_effect));
+    return (level_count_is_x(level, tp_is_weapon_carry_anim));
 }
 
 uint32_t level_count_is_spell (levelp level)
@@ -2449,9 +2449,9 @@ tree_rootp map_all_things_can_walk_through (levelp level)
     return (map_all_things_is_x(level, tp_can_walk_through));
 }
 
-tree_rootp map_all_things_is_weapon_carry_effect (levelp level)
+tree_rootp map_all_things_is_weapon_carry_anim (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_weapon_carry_effect));
+    return (map_all_things_is_x(level, tp_is_weapon_carry_anim));
 }
 
 tree_rootp map_all_things_is_spell (levelp level)
