@@ -115,22 +115,22 @@ uint8_t thing_got_to_exit_first(thingp t);
 void thing_set_redo_maze_search(thingp t, uint8_t val);
 uint8_t thing_redo_maze_search(thingp t);
 
-void thing_set_is_dir_down(thingp t);
+void thing_set_dir_down(thingp t);
 uint8_t thing_is_dir_down(thingp t);
-void thing_set_is_dir_up(thingp t);
+void thing_set_dir_up(thingp t);
 uint8_t thing_is_dir_up(thingp t);
-void thing_set_is_dir_left(thingp t);
+void thing_set_dir_left(thingp t);
 uint8_t thing_is_dir_left(thingp t);
-void thing_set_is_dir_right(thingp t);
+void thing_set_dir_right(thingp t);
 uint8_t thing_is_dir_right(thingp t);
 
-void thing_set_is_dir_tl(thingp t);
+void thing_set_dir_tl(thingp t);
 uint8_t thing_is_dir_tl(thingp t);
-void thing_set_is_dir_bl(thingp t);
+void thing_set_dir_bl(thingp t);
 uint8_t thing_is_dir_bl(thingp t);
-void thing_set_is_dir_tr(thingp t);
+void thing_set_dir_tr(thingp t);
 uint8_t thing_is_dir_tr(thingp t);
-void thing_set_is_dir_br(thingp t);
+void thing_set_dir_br(thingp t);
 uint8_t thing_is_dir_br(thingp t);
 
 void thing_set_opened_exit(thingp t, uint8_t val);
@@ -689,7 +689,7 @@ static inline uint8_t thing_is_open (thingp t)
 static inline uint8_t thing_is_dying (thingp t)
 {
     return (tp_is_player(thing_tp(t)) && 
-            (thing_stats_get_hp(t) <= 0));
+            (thing_stats_get_hp(t) < 0));
 }
 
 static inline uint8_t thing_is_dead_or_dying (thingp t)
@@ -1648,6 +1648,7 @@ void thing_swing(thingp t);
 void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
 thingp thing_weapon_carry_anim(thingp t);
 thingp thing_weapon_swing_anim(thingp t);
+void thing_set_weapon_placement(thingp t);
 
 /*
  * thing_item.h
