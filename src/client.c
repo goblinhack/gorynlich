@@ -961,6 +961,12 @@ static void client_poll (void)
                         memcpy(old_stats, new_stats, sizeof(thing_stats));
 
                         wid_game_map_client_score_update(client_level, redo);
+
+                        /*
+                         * Update the weapon placement as the thing might be 
+                         * dying.
+                         */
+                        thing_set_weapon_placement(player);
                     }
 
                     new_stats = &server_stats->stats;

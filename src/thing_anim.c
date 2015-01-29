@@ -62,6 +62,10 @@ void thing_animate (thingp t)
         }
 
         if (thing_is_animate_only_when_moving_noverify(t) &&
+            /*
+             * Let dying things decay. I guess they sort of move... urgh.
+             */
+            !thing_is_dead_or_dying(t) &&
             !t->is_moving) {
             /*
              * Same tile.
@@ -87,11 +91,14 @@ void thing_animate (thingp t)
             tile = thing_tile_first(tiles);
         }
 
-        if (thing_tile_is_dying(tile)) {
-            if (!thing_is_dying(t)) {
+        if (thing_is_dying(t)) {
+            if (!thing_tile_is_dying(tile)) {
                 tile = thing_tile_next(tiles, tile);
                 continue;
             }
+        } else if (thing_tile_is_dying(tile)) {
+            tile = thing_tile_next(tiles, tile);
+            continue;
         } else if (thing_is_dir_tl(t)) {
             if (!thing_tile_is_dir_tl(tile)) {
                 tile = thing_tile_next(tiles, tile);

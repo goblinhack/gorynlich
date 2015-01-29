@@ -335,3 +335,71 @@ void thing_swing (thingp t)
         }
     }
 }
+
+static widp thing_get_weapon_carry_anim_wid (thingp t)
+{
+    thingp weapon = thing_weapon_carry_anim(t);
+    if (!weapon) {
+        return (0);
+    }
+
+    return (thing_wid(weapon));
+}
+
+/*
+ * If a player carrying a weapon moves around, adjust the placement of the 
+ * weapon so it is not always in front.
+ */
+void thing_set_weapon_placement (thingp t)
+{
+    widp owner_wid = thing_wid(t);
+    if (!owner_wid) {
+        return;
+    }
+
+    widp weapon_wid = thing_get_weapon_carry_anim_wid(t);
+    if (!weapon_wid) {
+        return;
+    }
+
+    int depth_modifier = 0;
+
+    if (thing_is_dead_or_dying(t)) {
+        depth_modifier = -1;
+    } else switch (t->dir) {
+        case THING_DIR_LEFT:
+            depth_modifier = 1;
+            break;
+        case THING_DIR_RIGHT:
+            depth_modifier = 1;
+            break;
+        case THING_DIR_UP:
+            depth_modifier = -1;
+            break;
+        case THING_DIR_DOWN:
+            depth_modifier = 1;
+            break;
+        case THING_DIR_TL:
+            depth_modifier = -1;
+            break;
+        case THING_DIR_BL:
+            depth_modifier = -1;
+            break;
+        case THING_DIR_TR:
+            depth_modifier = 1;
+            break;
+        case THING_DIR_BR:
+            depth_modifier = 1;
+            break;
+    }
+
+    int weapon_depth = wid_get_z_depth(weapon_wid);
+    int player_depth = wid_get_z_depth(owner_wid);
+    int new_weapon_depth = player_depth + depth_modifier;
+
+    if (new_weapon_depth == weapon_depth) {
+        return;
+    }
+
+    wid_set_z_depth(weapon_wid, new_weapon_depth);
+}
