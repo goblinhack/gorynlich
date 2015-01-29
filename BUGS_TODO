@@ -1,5 +1,7 @@
-dying anim not working
 
+lifeforce potion added string too long in bottom right window
+hair more curly 
+ghosts more transparent on bottomk
                                     <<< start of feb >>>
 spin player widget on hit
 bounce on walk
@@ -36,6 +38,9 @@ bosses drop exit on death
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 
 Wed Jan 28 08:33:12 EST 2015
+- dying anim not working
+- raise player over weapon when dead
+- weapon placement on move needs fixed
 - dying anim wrong at start
 - shift left/right should not change dir
 

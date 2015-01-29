@@ -246,7 +246,10 @@ void thing_tick_server_player_slow_all (int force)
          * If health went over the max, tick it down.
          */
         if (force || time_have_x_secs_passed_since(1, t->timestamp_health)) {
-            if (thing_is_dying(t)) {
+            /*
+             * Start to croak it
+             */
+            if (thing_stats_get_hp(t) <= 0) {
                 thing_stats_modify_hp(t, -1);
 
                 thing_update(t);
