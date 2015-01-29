@@ -44,7 +44,7 @@ wid_notify_internal (const char *text, uint32_t level)
     uint32_t chars_per_line;
     uint32_t max_rows;
 
-    chars_per_line = 26;
+    chars_per_line = 25;
     max_rows = 22;
 
     d = split(text, chars_per_line);
