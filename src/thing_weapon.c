@@ -336,7 +336,7 @@ void thing_swing (thingp t)
     }
 }
 
-static widp thing_get_weapon_carry_anim_wid (thingp t)
+widp thing_get_weapon_carry_anim_wid (thingp t)
 {
     thingp weapon = thing_weapon_carry_anim(t);
     if (!weapon) {
