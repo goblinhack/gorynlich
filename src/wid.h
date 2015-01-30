@@ -288,6 +288,9 @@ void wid_rotate_immediate(widp, double val);
 void wid_bounce_to_pct_in(widp, double height, double fade, uint32_t ms, uint32_t repeat_count);
 double wid_get_bounce(widp);
 
+void wid_shake_to_pct_in(widp, double height, double fade, uint32_t ms, uint32_t repeat_count);
+void wid_get_shake(widp, double *x, double *y);
+
 void wid_flip_horiz(widp, uint8_t);
 void wid_flip_vert(widp, uint8_t);
 uint8_t wid_get_flip_horiz(widp);
@@ -579,6 +582,8 @@ typedef struct wid_ {
     uint8_t rotated:1;
     uint8_t rotating:1;
     uint8_t bouncing:1;
+    uint8_t shaking:1;
+    uint8_t shaking_set:1;
     uint8_t flip_vert:1;
     uint8_t flip_horiz:1;
     uint8_t first_update:1;
@@ -717,6 +722,9 @@ typedef struct wid_ {
     uint32_t timestamp_bounce_begin;
     uint32_t timestamp_bounce_end;
 
+    uint32_t timestamp_shake_begin;
+    uint32_t timestamp_shake_end;
+
     uint32_t destroy_when;
 
     uint32_t timestamp_last_mode_change;
@@ -762,8 +770,25 @@ typedef struct wid_ {
      */
     double bounce_fade;
 
+    /*
+     * Percentage of wid size to shake. 1.0; shake own width/height.
+     */
+    double shake_amount;
+
+    /*
+     * How much teh shake fades each shake.
+     */
+    double shake_fade;
+
+    /*
+     * The amount we are currently shaking.
+     */
+    double shake_x;
+    double shake_y;
+
     uint16_t rotate_sways_count;
     uint16_t bounce_count;
+    uint16_t shake_count;
     uint16_t fade_count;
     uint16_t fade_delay;
 

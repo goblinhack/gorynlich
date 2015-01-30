@@ -760,8 +760,8 @@ wid_game_map_client_replace_tile (widp w,
 
     if (thing_is_explosion(t)) {
         wid_scaling_blit_to_pct_in(child, 1.0, 3.0, 500, 0);
-        dx = ((double)(((int)(rand() % 100)) - 50)) / 100.0;
-        dy = ((double)(((int)(rand() % 100)) - 50)) / 100.0;
+        dx = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
+        dy = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
         wid_fade_out(child, 500);
     }
 
