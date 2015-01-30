@@ -1,7 +1,6 @@
 
 --------------------------------------- plan for feb --------------------------------------
 
-spin player widget on hit?
 update inventory while playing
 stats need to do something
 magic attack - green fireball?
@@ -81,7 +80,8 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
-
+Fri Jan 30 07:16:43 EST 2015
+- shake player widget on hit?
 
 Thu Jan 29 07:24:46 EST 2015
 - bounce on walk
