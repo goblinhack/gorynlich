@@ -143,7 +143,6 @@ void wid_intro_buttons_visible (void)
         wid_set_mode(child, WID_MODE_OVER);
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_mode(child, WID_MODE_NORMAL);
-
         wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
     }
 
@@ -166,6 +165,8 @@ void wid_intro_buttons_visible (void)
         wid_set_mode(child, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(child, wid_intro_intro_extra_mouse_event);
+
+        wid_bounce_to_pct_in(child, 0.15, 0.9, 500, 1000);
     }
 
     {

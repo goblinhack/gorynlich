@@ -497,7 +497,7 @@ static void wid_intro_create (void)
 
         wid_set_tl_br_pct(child, tl, br);
         wid_set_text(child, "Click to play");
-        wid_effect_bounce(child);
+        wid_effect_pulse_forever(child);
         wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
 
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
