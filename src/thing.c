@@ -2237,6 +2237,9 @@ static void thing_effect_hit_crit (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
+
+        wid_shake_to_pct_in(w, 0.3, 0.9, 100, 5);
+
         if (thing_is_warm_blooded(t)) {
             level_place_blood_crit(client_level,
                                    0, // owner
@@ -2257,6 +2260,9 @@ static void thing_effect_hit_success (thingp t)
     if (w) {
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
+
+        wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
+
         if (thing_is_warm_blooded(t)) {
             level_place_blood(client_level,
                               0, // owner

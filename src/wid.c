@@ -7366,6 +7366,16 @@ static void wid_display_fast (widp w, uint8_t pass)
         br.y -= height;
     }
 
+    if (w->shaking) {
+        double x, y;
+        wid_get_shake(w, &x, &y);
+
+        tl.x += x;
+        br.x += x;
+        tl.y += y;
+        br.y += y;
+    }
+
     if (w->blit_scaled_w || w->blit_scaled_h ||
         w->blit_scaling_w || w->blit_scaling_h) {
 
@@ -8123,7 +8133,7 @@ static void wid_display (widp w,
     /*
      * Do rotation and flipping.
      */
-    if (w->rotating || w->rotated || w->bouncing || w->flip_horiz || w->flip_vert) {
+    if (w->rotating || w->rotated || w->bouncing || w->shaking || w->flip_horiz || w->flip_vert) {
         did_push_matrix = true;
 
         glPushMatrix();
@@ -8131,6 +8141,13 @@ static void wid_display (widp w,
 
         if (w->bouncing) {
             glTranslatef(0, - wid_get_bounce(w), 0);
+        }
+
+        if (w->shaking) {
+            double x, y;
+
+            wid_get_shake(w, &x, &y);
+            glTranslatef(0, x, y);
         }
 
         /*
@@ -9647,6 +9664,23 @@ void wid_bounce_to_pct_in (widp w,
     w->bouncing = true;
 }
 
+void wid_shake_to_pct_in (widp w,
+                          double shake_amount,
+                          double shake_fade,
+                          uint32_t ms,
+                          uint32_t shake_count)
+{
+    fast_verify(w);
+
+    w->timestamp_shake_begin = wid_time;
+    w->timestamp_shake_end = w->timestamp_shake_begin + ms;
+
+    w->shake_amount = shake_amount;
+    w->shake_fade = shake_fade;
+    w->shake_count = shake_count;
+    w->shaking = true;
+}
+
 void wid_rotate_immediate (widp w, double rotate_base)
 {
     fast_verify(w);
@@ -9771,6 +9805,67 @@ double wid_get_bounce (widp w)
     height *= w->bounce_height;
 
     return (height);
+}
+
+void wid_get_shake (widp w, double *x, double *y)
+{
+    if (!w->shaking) {
+        *x = 0.0;
+        *y = 0.0;
+        return;
+    }
+
+    w->text_size_cached = false;
+
+    if (wid_time >= w->timestamp_shake_end) {
+
+        w->shaking = false;
+        w->shaking_set = false;
+
+        *x = 0.0;
+        *y = 0.0;
+
+        if (w->shake_count) {
+            wid_shake_to_pct_in(
+                w,
+                w->shake_amount * w->shake_fade,
+                w->shake_fade,
+                (double)(w->timestamp_shake_end - w->timestamp_shake_begin) * w->shake_fade,
+                w->shake_count - 1);
+        }
+
+        return;
+    }
+
+    /*
+     * Set the shake amount to a starting point.
+     */
+    if (!w->shaking_set) {
+        w->shaking_set = 1;
+
+        w->shake_x = wid_get_width(w) * 
+            (((double) (myrand() % 100)) / 100.0) * 
+            w->shake_amount;
+
+        w->shake_y = wid_get_height(w) * 
+            (((double) (myrand() % 100)) / 100.0) * 
+            w->shake_amount;
+
+        if ((myrand() % 10) < 5) {
+            w->shake_x *= -1.0;
+        }
+
+        if ((myrand() % 10) < 5) {
+            w->shake_y *= -1.0;
+        }
+    }
+
+    double time_step =
+        (double)(wid_time - w->timestamp_shake_begin) /
+        (double)(w->timestamp_shake_end - w->timestamp_shake_begin);
+
+    *x = w->shake_x * (1.0 - time_step);
+    *y = w->shake_y * (1.0 - time_step);
 }
 
 uint8_t wids_overlap (widp A, widp B)
