@@ -1,14 +1,14 @@
 
-                                    <<< start of feb >>>
-spin player widget on hit
-bounce on walk
+                                    <<< plan for feb >>>
+spin player widget on hit?
 update inventory while playing
 stats need to do something
 magic attack - green fireball?
 sound effects for weapons and hits http://www.bfxr.net/
 sound on momey collect
 sound on potion use
-                                    <<< start of mar >>>
+inventory panels should slide in nicely
+                                    <<< plan for mar >>>
 need single player global flag
 single player mode direct socket
 xp level and hp increase per level
@@ -16,25 +16,26 @@ press m for magic to build up magic attack
 press m for magic to give life to other players
 screen shake
 first to exit level gets 2 spending points, else get 1
-                                    <<< start of apr >>>
+                                    <<< plan for apr >>>
 choose player intro window - 5 panels screen width
 char mapping file and char levels to read in level ed
 pause character on spending point window - on single player?
 fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
-                                    <<< start of may >>>
+                                    <<< plan for may >>>
 more monsters
 generate lots of levels
 lit levels gauntlet old style
 amulet of resurrection when dying?
-                                    <<< start of june >>>
+                                    <<< plan for june >>>
 picture of keyboard and keys to use at start
-                                    <<< start of jul >>>
+                                    <<< plan for jul >>>
 boss baddies every 10 levels
 bosses drop exit on death
-                                    <<< start of aug >>>
+                                    <<< plan for aug >>>
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 
 Thu Jan 29 07:24:46 EST 2015
+- bounce on walk
 - raise player over weapon when dead
 - lifeforce potion added string too long in bottom right window
 - hair more curly 
