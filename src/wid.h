@@ -207,7 +207,6 @@ double wid_get_br_y(widp);
 double wid_get_height(widp);
 void wid_get_mxy(widp w, double *x, double *y);
 double wid_get_mode_bevel(widp);
-double wid_get_rotate(widp);
 double wid_get_text_advance(widp);
 double wid_get_text_scaling(widp);
 double wid_get_tl_x(widp);
@@ -270,20 +269,25 @@ double wid_get_scaling_h(widp);
 void wid_scale_immediate(widp, double val);
 void wid_scale_w_immediate(widp, double val);
 void wid_scale_h_immediate(widp, double val);
-void wid_scaling_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t bounce_count);
+void wid_scaling_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t repeat_count);
 void wid_effect_pulses(widp);
-void wid_effect_bounce(widp);
+void wid_effect_pulse_forever(widp);
 
 double wid_get_blit_scaling_w(widp);
 double wid_get_blit_scaling_h(widp);
 void wid_blit_scale_immediate(widp, double val);
 void wid_blit_scale_w_immediate(widp, double val);
 void wid_blit_scale_h_immediate(widp, double val);
-void wid_scaling_blit_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t bounce_count);
+void wid_scaling_blit_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t repeat_count);
 void wid_blit_effect_pulses(widp);
 
-void wid_rotate_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t bounce_count);
+double wid_get_rotate(widp);
+void wid_rotate_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t repeat_count);
 void wid_rotate_immediate(widp, double val);
+
+void wid_bounce_to_pct_in(widp, double height, double fade, uint32_t ms, uint32_t repeat_count);
+double wid_get_bounce(widp);
+
 void wid_flip_horiz(widp, uint8_t);
 void wid_flip_vert(widp, uint8_t);
 uint8_t wid_get_flip_horiz(widp);
@@ -574,6 +578,7 @@ typedef struct wid_ {
     uint8_t blit_scaling_h:1;
     uint8_t rotated:1;
     uint8_t rotating:1;
+    uint8_t bouncing:1;
     uint8_t flip_vert:1;
     uint8_t flip_horiz:1;
     uint8_t first_update:1;
@@ -640,11 +645,6 @@ typedef struct wid_ {
      */
     thing_tilep current_tile;
 
-    /*
-     * When to change frame for animation.
-     */
-    uint32_t timestamp_change_to_next_frame;
-
     fsize texuv;
     fsize tex_tl;
     fsize tex_br;
@@ -653,7 +653,6 @@ typedef struct wid_ {
      * WID_MODE_NORMAL ...
      */
     wid_mode mode;
-    int32_t timestamp_last_mode_change;
 
     /*
      * Offset of child widgets in the parent window.
@@ -670,11 +669,6 @@ typedef struct wid_ {
      */
     void *client_context;
     void *client_context2;
-
-    /*
-     * Text input
-     */
-    uint32_t cursor;
 
     /*
      * Text placement.
@@ -703,8 +697,10 @@ typedef struct wid_ {
      */
     uint32_t timestamp_fading_begin;
     uint32_t timestamp_fading_end;
+
     uint32_t timestamp_moving_begin;
     uint32_t timestamp_moving_end;
+
     uint32_t timestamp_scaling_w_begin;
     uint32_t timestamp_scaling_w_end;
     uint32_t timestamp_scaling_h_begin;
@@ -717,7 +713,19 @@ typedef struct wid_ {
 
     uint32_t timestamp_rotate_begin;
     uint32_t timestamp_rotate_end;
+
+    uint32_t timestamp_bounce_begin;
+    uint32_t timestamp_bounce_end;
+
     uint32_t destroy_when;
+
+    uint32_t timestamp_last_mode_change;
+
+    /*
+     * When to change frame for animation.
+     */
+    uint32_t timestamp_change_to_next_frame;
+
     widp *destroy_ptr;
     fpoint moving_start;
     fpoint moving_end;
@@ -728,8 +736,8 @@ typedef struct wid_ {
     double scale_h_base;
     double scaling_h_start;
     double scaling_h_end;
-    uint32_t scaling_w_bounce_count;
-    uint32_t scaling_h_bounce_count;
+    uint16_t scaling_w_repeat_count;
+    uint16_t scaling_h_repeat_count;
 
     double blit_scale_w_base;
     double blit_scaling_w_start;
@@ -737,15 +745,32 @@ typedef struct wid_ {
     double blit_scale_h_base;
     double blit_scaling_h_start;
     double blit_scaling_h_end;
-    uint32_t blit_scaling_w_bounce_count;
-    uint32_t blit_scaling_h_bounce_count;
+    uint16_t blit_scaling_w_repeat_count;
+    uint16_t blit_scaling_h_repeat_count;
 
     double rotate_base;
     double rotate_start;
     double rotate_end;
-    uint32_t rotate_sways_count;
-    uint32_t fade_count;
-    uint32_t fade_delay;
+
+    /*
+     * Percentage of wid height. 1.0; bounce own height.
+     */
+    double bounce_height;
+
+    /*
+     * Effect of gravity. 0.1; rapid decrease, 0.9 slow
+     */
+    double bounce_fade;
+
+    uint16_t rotate_sways_count;
+    uint16_t bounce_count;
+    uint16_t fade_count;
+    uint16_t fade_delay;
+
+    /*
+     * Text input
+     */
+    uint16_t cursor;
 
     /*
      * Order of this wid amongst other focusable widgets.
@@ -804,5 +829,5 @@ extern const int32_t wid_visible_delay;
 extern const int32_t wid_hide_delay;
 extern const int32_t wid_swipe_delay;
 extern const int32_t wid_pulse_delay;
-extern const int32_t wid_bounce_delay;
+extern const int32_t wid_scaling_forever_delay;
 

@@ -316,6 +316,8 @@ static void wid_choose_player_create (void)
         wid_set_on_mouse_down(child, wid_choose_player_intro_all_done_mouse_event);
         wid_raise(child);
         wid_set_do_not_lower(child, true);
+
+        wid_bounce_to_pct_in(child, 0.1, 1.0, 500, 1000);
     }
 
     {
