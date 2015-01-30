@@ -3084,7 +3084,9 @@ void thing_server_wid_update (thingp t, double x, double y, uint8_t is_new)
     }
 }
 
-static void thing_client_wid_move (thingp t, double x, double y, 
+static void thing_client_wid_move (thingp t, 
+                                   double x, 
+                                   double y, 
                                    uint8_t smooth)
 {
     double dist = DISTANCE(t->x, t->y, x, y);
@@ -3185,8 +3187,23 @@ static void thing_client_wid_move (thingp t, double x, double y,
         ms *= THING_MOVE_NETWORK_LATENCY_FUDGE;
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
+
     } else {
         wid_set_tl_br(t->wid, tl, br);
+    }
+
+    /*
+     * Make the player bounce about as the walk
+     */
+    if (thing_is_player(t)) {
+        if (!t->wid->bouncing) {
+            wid_bounce_to_pct_in(t->wid, 0.1, 0.9, 200, 0);
+        }
+
+        widp weapon_wid = thing_get_weapon_carry_anim_wid(t);
+        if (weapon_wid) {
+            wid_bounce_to_pct_in(weapon_wid, 0.15, 0.9, 150, 0);
+        }
     }
 }
 
@@ -4009,8 +4026,13 @@ void thing_client_move (thingp t,
 
     /*
      * Oddly doing smooth moving makes it more jumpy when scrolling.
+     *
+     * Don't send an update if just firing as it looks like we're moving
+     * and the player will hop up and down.
      */
-    thing_client_wid_update(t, x, y, false);
+    if (up || down || left || right) {
+        thing_client_wid_update(t, x, y, false);
+    }
 
     socket_tx_player_move(client_joined_server, t, up, down, left, right, 
                           fire);

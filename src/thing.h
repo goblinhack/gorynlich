@@ -1649,6 +1649,7 @@ void thing_weapon_swing_offset(thingp t, double *dx, double *dy);
 thingp thing_weapon_carry_anim(thingp t);
 thingp thing_weapon_swing_anim(thingp t);
 void thing_set_weapon_placement(thingp t);
+widp thing_get_weapon_carry_anim_wid(thingp t);
 
 /*
  * thing_item.h

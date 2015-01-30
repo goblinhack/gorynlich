@@ -87,7 +87,7 @@ const int32_t wid_visible_delay = 100;
 const int32_t wid_hide_delay = 500;
 const int32_t wid_swipe_delay = 200;
 const int32_t wid_pulse_delay = 100;
-const int32_t wid_bounce_delay = 500;
+const int32_t wid_scaling_forever_delay = 500;
 
 /*
  * Prototypes.
@@ -7356,6 +7356,16 @@ static void wid_display_fast (widp w, uint8_t pass)
 
     glcolor(col_tile);
 
+    /*
+     * Do rotation and flipping.
+     */
+    if (w->bouncing) {
+        double height = wid_get_bounce(w);
+
+        tl.y -= height;
+        br.y -= height;
+    }
+
     if (w->blit_scaled_w || w->blit_scaled_h ||
         w->blit_scaling_w || w->blit_scaling_h) {
 
@@ -8113,11 +8123,15 @@ static void wid_display (widp w,
     /*
      * Do rotation and flipping.
      */
-    if (w->rotating || w->rotated || w->flip_horiz || w->flip_vert) {
+    if (w->rotating || w->rotated || w->bouncing || w->flip_horiz || w->flip_vert) {
         did_push_matrix = true;
 
         glPushMatrix();
         glTranslatef(((tlx + brx)/2), ((tly + bry)/2), 0);
+
+        if (w->bouncing) {
+            glTranslatef(0, - wid_get_bounce(w), 0);
+        }
 
         /*
          * If rotating the widget, turn off the scissors.
@@ -8136,9 +8150,7 @@ static void wid_display (widp w,
             glScalef(1, -1, 1);
         }
 
-        if (did_push_matrix) {
-            glTranslatef(-((tlx + brx)/2), -((tly + bry)/2), 0);
-        }
+        glTranslatef(-((tlx + brx)/2), -((tly + bry)/2), 0);
     }
 
     /*
@@ -9288,7 +9300,7 @@ void wid_scaling_to_pct_in (widp w,
                             double scaling_start,
                             double scaling_end,
                             uint32_t ms,
-                            uint32_t scaling_bounce_count)
+                            uint32_t scaling_repeat_count)
 {
     fast_verify(w);
 
@@ -9304,8 +9316,8 @@ void wid_scaling_to_pct_in (widp w,
     w->scaling_w_end = scaling_end;
     w->scaling_h_end = scaling_end;
 
-    w->scaling_w_bounce_count = scaling_bounce_count;
-    w->scaling_h_bounce_count = scaling_bounce_count;
+    w->scaling_w_repeat_count = scaling_repeat_count;
+    w->scaling_h_repeat_count = scaling_repeat_count;
 
     w->scaling_w = true;
     w->scaling_h = true;
@@ -9361,14 +9373,14 @@ void wid_effect_pulses (widp w)
     }
 }
 
-void wid_effect_bounce (widp w)
+void wid_effect_pulse_forever (widp w)
 {
     fast_verify(w);
 
     if (wid_get_height(w) > 100) {
-        wid_scaling_to_pct_in(w, 1.0, 1.15, wid_bounce_delay, 10000);
+        wid_scaling_to_pct_in(w, 1.0, 1.15, wid_scaling_forever_delay, 10000);
     } else {
-        wid_scaling_to_pct_in(w, 1.0, 1.1, wid_bounce_delay, 10000);
+        wid_scaling_to_pct_in(w, 1.0, 1.1, wid_scaling_forever_delay, 10000);
     }
 }
 
@@ -9389,13 +9401,13 @@ double wid_get_scaling_w (widp w)
         scaling = w->scaling_w_end;
         w->scaling_w = false;
 
-        if (w->scaling_w_bounce_count) {
+        if (w->scaling_w_repeat_count) {
             wid_scaling_to_pct_in(w,
                                   w->scaling_w_end,
                                   w->scaling_w_start,
                                   w->timestamp_scaling_w_end -
                                   w->timestamp_scaling_w_begin,
-                                  w->scaling_w_bounce_count - 1);
+                                  w->scaling_w_repeat_count - 1);
         }
 
         return (scaling + w->scale_w_base);
@@ -9428,13 +9440,13 @@ double wid_get_scaling_h (widp w)
         scaling = w->scaling_h_end;
         w->scaling_h = false;
 
-        if (w->scaling_h_bounce_count) {
+        if (w->scaling_h_repeat_count) {
             wid_scaling_to_pct_in(w,
                                   w->scaling_h_end,
                                   w->scaling_h_start,
                                   w->timestamp_scaling_h_end -
                                   w->timestamp_scaling_h_begin,
-                                  w->scaling_h_bounce_count - 1);
+                                  w->scaling_h_repeat_count - 1);
         }
 
         return (scaling + w->scale_h_base);
@@ -9454,7 +9466,7 @@ void wid_scaling_blit_to_pct_in (widp w,
                             double blit_scaling_start,
                             double blit_scaling_end,
                             uint32_t ms,
-                            uint32_t blit_scaling_bounce_count)
+                            uint32_t blit_scaling_repeat_count)
 {
     fast_verify(w);
 
@@ -9472,8 +9484,8 @@ void wid_scaling_blit_to_pct_in (widp w,
     w->blit_scaling_w_end = blit_scaling_end;
     w->blit_scaling_h_end = blit_scaling_end;
 
-    w->blit_scaling_w_bounce_count = blit_scaling_bounce_count;
-    w->blit_scaling_h_bounce_count = blit_scaling_bounce_count;
+    w->blit_scaling_w_repeat_count = blit_scaling_repeat_count;
+    w->blit_scaling_h_repeat_count = blit_scaling_repeat_count;
 
     w->blit_scaling_w = true;
     w->blit_scaling_h = true;
@@ -9542,13 +9554,13 @@ double wid_get_blit_scaling_w (widp w)
         blit_scaling = w->blit_scaling_w_end;
         w->blit_scaling_w = false;
 
-        if (w->blit_scaling_w_bounce_count) {
+        if (w->blit_scaling_w_repeat_count) {
             wid_scaling_blit_to_pct_in(w,
                                   w->blit_scaling_w_end,
                                   w->blit_scaling_w_start,
                                   w->timestamp_blit_scaling_w_end -
                                   w->timestamp_blit_scaling_w_begin,
-                                  w->blit_scaling_w_bounce_count - 1);
+                                  w->blit_scaling_w_repeat_count - 1);
         }
 
         return (blit_scaling + w->blit_scale_w_base);
@@ -9579,13 +9591,13 @@ double wid_get_blit_scaling_h (widp w)
         blit_scaling = w->blit_scaling_h_end;
         w->blit_scaling_h = false;
 
-        if (w->blit_scaling_h_bounce_count) {
+        if (w->blit_scaling_h_repeat_count) {
             wid_scaling_blit_to_pct_in(w,
                                   w->blit_scaling_h_end,
                                   w->blit_scaling_h_start,
                                   w->timestamp_blit_scaling_h_end -
                                   w->timestamp_blit_scaling_h_begin,
-                                  w->blit_scaling_h_bounce_count - 1);
+                                  w->blit_scaling_h_repeat_count - 1);
         }
 
         return (blit_scaling + w->blit_scale_h_base);
@@ -9616,6 +9628,23 @@ void wid_rotate_to_pct_in (widp w,
     w->rotate_end = rotate_end;
     w->rotate_sways_count = rotate_sways_count;
     w->rotating = true;
+}
+
+void wid_bounce_to_pct_in (widp w,
+                            double bounce_height,
+                            double bounce_fade,
+                            uint32_t ms,
+                            uint32_t bounce_count)
+{
+    fast_verify(w);
+
+    w->timestamp_bounce_begin = wid_time;
+    w->timestamp_bounce_end = w->timestamp_bounce_begin + ms;
+
+    w->bounce_height = bounce_height;
+    w->bounce_fade = bounce_fade;
+    w->bounce_count = bounce_count;
+    w->bouncing = true;
 }
 
 void wid_rotate_immediate (widp w, double rotate_base)
@@ -9705,6 +9734,43 @@ double wid_get_rotate (widp w)
                     w->rotate_start;
 
     return (w->rotate_base + rotating);
+}
+
+double wid_get_bounce (widp w)
+{
+    if (!w->bouncing) {
+        return (0.0);
+    }
+
+    w->text_size_cached = false;
+
+    if (wid_time >= w->timestamp_bounce_end) {
+
+        w->bouncing = false;
+
+        if (w->bounce_count) {
+            wid_bounce_to_pct_in(
+                w,
+                w->bounce_height * w->bounce_fade,
+                w->bounce_fade,
+                (double)(w->timestamp_bounce_end - w->timestamp_bounce_begin) * w->bounce_fade,
+                w->bounce_count - 1);
+        }
+
+        return (0);
+    }
+
+    double time_step =
+        (double)(wid_time - w->timestamp_bounce_begin) /
+        (double)(w->timestamp_bounce_end - w->timestamp_bounce_begin);
+
+    double height = sin(time_step * RAD_180);
+
+    height *= (double) wid_get_height(w);
+
+    height *= w->bounce_height;
+
+    return (height);
 }
 
 uint8_t wids_overlap (widp A, widp B)
