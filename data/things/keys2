@@ -7,6 +7,7 @@
  carried_as="data/things/key"
  is_valid_for_action_bar
  is_stackable
+ is_inactive
  is_carryable
  tiles={
   tile={
