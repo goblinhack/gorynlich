@@ -13,6 +13,7 @@
 #include "tile.h"
 #include "thing.h"
 #include "marshal.h"
+#include "thing_stats.h"
 
 /*
  * Using static memory as these things never change once made.
@@ -467,39 +468,39 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
         uint32_t tmp_uint32 = 0;
 
         if (GET_OPT_NAMED_INT16(ctx, "max_hp", tmp_int16)) {
-            t->stats.max_hp = tmp_int16;
+            stats_set_max_hp(&t->stats, tmp_int16);
         }
 
         if (GET_OPT_NAMED_INT16(ctx, "max_magic", tmp_int16)) {
-            t->stats.max_magic = tmp_int16;
+            stats_set_max_magic(&t->stats, tmp_int16);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_melee", tmp_uint32)) {
-            t->stats.attack_melee = tmp_uint32;
+            stats_set_attack_melee(&t->stats, tmp_uint32);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_ranged", tmp_uint32)) {
-            t->stats.attack_ranged = tmp_uint32;
+            stats_set_attack_ranged(&t->stats, tmp_uint32);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_attack_magical", tmp_uint32)) {
-            t->stats.attack_magical = tmp_uint32;
+            stats_set_attack_magical(&t->stats, tmp_uint32);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_speed", tmp_uint32)) {
-            t->stats.speed = tmp_uint32;
+            stats_set_speed(&t->stats, tmp_uint32);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_vision", tmp_uint32)) {
-            t->stats.vision = tmp_uint32;
+            stats_set_vision(&t->stats, tmp_uint32);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_healing", tmp_uint32)) {
-            t->stats.healing = tmp_uint32;
+            stats_set_healing(&t->stats, tmp_uint32);
         }
 
         if (GET_OPT_NAMED_UINT32(ctx, "stats_defense", tmp_uint32)) {
-            t->stats.defense = tmp_uint32;
+            stats_set_defense(&t->stats, tmp_uint32);
         }
 
         GET_OPT_NAMED_UINT32(ctx, "hp_per_level", t->hp_per_level);
