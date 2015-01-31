@@ -2238,6 +2238,16 @@ static void thing_effect_hit_crit (thingp t)
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
 
+        /*
+         * Shake the screen.
+         */
+        if (thing_is_player(t)) {
+            wid_shake_to_pct_in(wid_game_map_client_grid_container, 0.03, 0.9, 100, 5);
+        }
+
+        /*
+         * Shake the player.
+         */
         wid_shake_to_pct_in(w, 0.3, 0.9, 100, 5);
 
         if (thing_is_warm_blooded(t)) {
@@ -2261,6 +2271,9 @@ static void thing_effect_hit_success (thingp t)
         wid_set_mode(w, WID_MODE_ACTIVE);
         wid_set_color(w, WID_COLOR_BLIT, RED);
 
+        /*
+         * Shake the player.
+         */
         wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
 
         if (thing_is_warm_blooded(t)) {

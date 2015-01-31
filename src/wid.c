@@ -8588,12 +8588,39 @@ static void wid_display (widp w,
             double window_w = tw;
             double window_h = th;
 
+
+#ifdef INTERESTING_EFFECT
             blit_init();
+            glcolor(GREEN);
             blit(fbo_tex_id1,
                  0.0, 1.0, 1.0, 0.0,
                  0, 0, window_w, window_h);
             blit_flush();
+#else
+            /*
+             * Stretch the shadow so when the screen shakes the borders are 
+             * black as well. This is a bit of a hack but it also makes the
+             * lights look nice with a kind of halo effect.
+             */
+            {
+                const int dw = global_config.video_gl_width / 4;
+                const int dh = global_config.video_gl_width / 4;
 
+                blit_init();
+                glcolor(WHITE);
+                blit(fbo_tex_id1,
+                    0.0, 1.0, 1.0, 0.0,
+                    -dw, -dh, window_w + dw, window_h + dh);
+                blit_flush();
+            }
+
+            blit_init();
+            glcolor(WHITE);
+            blit(fbo_tex_id1,
+                 0.0, 1.0, 1.0, 0.0,
+                 0, 0, window_w, window_h);
+            blit_flush();
+#endif
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             /*
