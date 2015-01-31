@@ -613,7 +613,7 @@ uint8_t client_socket_set_name (const char *name)
     if (client_joined_server) {
         socket_set_name(client_joined_server, name);
 
-        socket_tx_name(client_joined_server);
+        socket_tx_client_status(client_joined_server);
     }
 
     return (true);
@@ -642,7 +642,7 @@ uint8_t client_socket_set_pclass (const char *pclass)
     if (client_joined_server) {
         socket_set_pclass(client_joined_server, pclass);
 
-        socket_tx_name(client_joined_server);
+        socket_tx_client_status(client_joined_server);
     }
 
     return (true);
@@ -892,13 +892,23 @@ static void client_rx_server_status (gsocketp s,
     thing_statsp old_stats = &player->stats;
 
     /*
-     * If we've just changed weapons locally and receive an update
-     * with the old weapon then ignore that.
+     * If the server is a bit behind our changes, wait for it to merge them 
+     * in.
      */
-    if (time_get_time_ms() - player_action_bar_changed_at < ONESEC) {
+    int version_delta = (int)new_stats->client_version - (int)old_stats->client_version;
 
-        stats_set_action_bar_index(new_stats,
-            stats_get_action_bar_index(old_stats));
+    if ((version_delta >= 0) || (version_delta < -255)) {
+        /*
+         * Server has latest version; (accounted for wraparond(.
+         */
+    } else {
+        /*
+         * Server is behind.
+         */
+        LOG("Client is behind latest version of stats, %d < %d", 
+            old_stats->client_version, new_stats->client_version);
+
+        return;
     }
 
     /*

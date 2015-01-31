@@ -994,7 +994,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         }
 
         wid_move_to_pct_centered(wid_popup_tooltip, atx, -0.5);
-        wid_move_to_pct_centered_in(wid_popup_tooltip, atx, 0.2, 200);
+        wid_move_to_pct_centered_in(wid_popup_tooltip, atx, 0.1, 200);
 
         wid_destroy_ptr_in(&wid_popup_tooltip, 5000);
 #endif

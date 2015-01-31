@@ -868,6 +868,8 @@ thingp thing_server_new (const char *name,
         }
     }
 
+    thing_stats_set_on_server(t, t->on_server);
+
     return (t);
 }
 
@@ -969,6 +971,8 @@ thingp thing_client_new (uint32_t id, tpp tp)
         !thing_is_weapon_carry_anim(t)) {
         THING_LOG(t, "created");
     }
+
+    thing_stats_set_on_server(t, t->on_server);
 
     return (t);
 }
@@ -1585,7 +1589,7 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
          * final score.
          */
         if (thing_is_player(t)) {
-            socket_tx_server_status();
+            socket_tx_server_status(t->player->socket);
         }
     }
 
