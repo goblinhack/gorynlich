@@ -4381,7 +4381,7 @@ void thing_server_action (thingp t,
         if (tp_is_weapon(tp)) {
             thing_wield(t, tp);
 
-            t->stats.action_bar_index = action_bar_index;
+            thing_stats_set_action_bar_index(t, action_bar_index);
             return;
         }
 

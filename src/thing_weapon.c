@@ -148,7 +148,7 @@ void thing_unwield (thingp t)
     /*
      * Update the thing stats so the weapon inventory changes.
      */
-    t->stats.action_bar_index = 0;
+    thing_stats_set_action_bar_index(t, 0);
 }
 
 void thing_weapon_sheath (thingp t)
@@ -217,7 +217,7 @@ void thing_wield (thingp t, tpp weapon)
     if (thing_stats_has_action_bar_item(&t->stats,
                                         tp_to_id(weapon),
                                         &action_bar_index)) {
-        t->stats.action_bar_index = action_bar_index;
+        thing_stats_set_action_bar_index(t, action_bar_index);
     }
 
     widp weapon_carry_anim_wid;
