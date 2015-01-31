@@ -326,7 +326,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     }
 
     int redraw_action_bar = 0;
-    int action_bar_index = player->stats.action_bar_index;
+    int action_bar_index = thing_stats_get_action_bar_index(player);
 
     if (key->mod & KMOD_SHIFT) {
         int weapon_switch_delta = 0;
@@ -492,7 +492,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         if (tp_is_weapon(tp)) {
             player_action_bar_changed_at = time_get_time_ms();
 
-            player->stats.action_bar_index = action_bar_index;
+            thing_stats_set_action_bar_index(player, action_bar_index);
 
             wid_player_action_hide();
             wid_player_action_visible(&player->stats, 1 /* fast */);
