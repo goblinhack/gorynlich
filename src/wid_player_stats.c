@@ -38,7 +38,7 @@ enum {
     STAT_EXPERIENCE,
     STAT_LEVEL,
     STAT_MAX_HP,
-    STAT_MAX_ID,
+    STAT_MAX_MAGIC,
     STAT_ATTACK_MELEE,
     STAT_ATTACK_RANGED,
     STAT_ATTACK_MAGICAL,
@@ -64,7 +64,7 @@ static row rows[WID_INTRO_MAX_SETTINGS] = {
     { /* STAT_MAX_HP          */ "Max Health",      "+", 5,
     "Health points. This is the max you can recover to with your healing ability." },
 
-    { /* STAT_MAX_ID          */ "Max ID",          "+", 5,
+    { /* STAT_MAX_MAGIC          */ "Max ID",          "+", 5,
     "ID is your life force used for magic and life changing events." },
 
     { /* STAT_ATTACK_MELEE    */ "Attack, Melee",   "+", 1,
@@ -196,42 +196,42 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
     case STAT_SPENDING_POINTS:
         break;
     case STAT_MAX_HP:
-        player_stats->max_hp += rows[row].increment;
-        player_stats->hp = player_stats->max_hp;
-        player_stats->spending_points--;
+        stats_modify_max_hp(player_stats, rows[row].increment);
+        stats_set_hp(player_stats, player_stats->max_hp);
+        stats_modify_spending_points(player_stats, -1);
         break;
-    case STAT_MAX_ID:
-        player_stats->max_magic += rows[row].increment;
-        player_stats->magic = player_stats->max_magic;
-        player_stats->spending_points--;
+    case STAT_MAX_MAGIC:
+        stats_modify_max_magic(player_stats, rows[row].increment);
+        stats_set_magic(player_stats, player_stats->max_magic);
+        stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_ATTACK_MELEE:
-        player_stats->attack_melee += rows[row].increment;
-        player_stats->spending_points--;
+        stats_modify_attack_melee(player_stats, rows[row].increment);
+        stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_ATTACK_RANGED:
-        player_stats->attack_ranged += rows[row].increment;
-        player_stats->spending_points--;
+        stats_modify_attack_ranged(player_stats, rows[row].increment);
+        stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_ATTACK_MAGICAL:
-        player_stats->attack_magical += rows[row].increment;
-        player_stats->spending_points--;
+        stats_modify_attack_magical(player_stats, rows[row].increment);
+        stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_DEFENSE:
-        player_stats->defense += rows[row].increment;
-        player_stats->spending_points--;
+        stats_modify_defense(player_stats, rows[row].increment);
+        stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_SPEED:
-        player_stats->speed += rows[row].increment;
-        player_stats->spending_points--;
+        stats_modify_speed(player_stats, rows[row].increment);
+        stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_VISION:
-        player_stats->vision += rows[row].increment;
-        player_stats->spending_points--;
+        stats_modify_vision(player_stats, rows[row].increment);
+        stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_HEALING:
-        player_stats->healing += rows[row].increment;
-        player_stats->spending_points--;
+        stats_modify_healing(player_stats, rows[row].increment);
+        stats_modify_spending_points(player_stats, -1);
         break;
     }
 
@@ -485,7 +485,7 @@ static void wid_player_stats_create (thing_statsp s)
                     text = dynprintf("%u", s->max_hp);
                 }
                 break;
-            case STAT_MAX_ID:
+            case STAT_MAX_MAGIC:
                 stat = s->magic;
                 if (s->magic != s->max_magic) {
                     text = dynprintf("%u (%u)", s->magic, s->max_magic);
