@@ -15,7 +15,6 @@
 typedef enum {
     MSG_PING,
     MSG_PONG,
-    MSG_NAME,
     MSG_TELL,
     MSG_CLIENT_SHOUT,
     MSG_SERVER_SHOUT,
@@ -23,6 +22,7 @@ typedef enum {
     MSG_CLIENT_LEAVE,
     MSG_CLIENT_CLOSE,
     MSG_SERVER_CLOSE,
+    MSG_CLIENT_STATUS,
     MSG_SERVER_STATUS,
     MSG_SERVER_HISCORE,
     MSG_SERVER_MAP_UPDATE,
@@ -328,8 +328,8 @@ extern void socket_tx_ping(gsocketp s, uint8_t seq, uint32_t ts);
 extern void socket_tx_pong(gsocketp s, uint8_t seq, uint32_t ts);
 extern void socket_rx_ping(gsocketp s, UDPpacket *packet, uint8_t *data);
 extern void socket_rx_pong(gsocketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_name(gsocketp s);
-extern void socket_rx_name(gsocketp s, UDPpacket *packet, uint8_t *data);
+extern void socket_tx_client_status(gsocketp s);
+extern void socket_rx_client_status(gsocketp s, UDPpacket *packet, uint8_t *data);
 extern uint8_t socket_tx_client_join(gsocketp s, uint32_t *key);
 extern uint8_t socket_rx_client_join(gsocketp s, 
                                      UDPpacket *packet, uint8_t *data);
@@ -392,7 +392,7 @@ extern void socket_tx_tell(gsocketp s,
                            const char *shout);
 
 extern void socket_rx_tell(gsocketp s, UDPpacket *packet, uint8_t *data);
-extern void socket_tx_server_status(void);
+extern void socket_tx_server_status(gsocketp s);
 extern void socket_rx_server_status(gsocketp s, UDPpacket *packet, 
                                     uint8_t *data, msg_server_status *);
 extern void socket_tx_server_hiscore(gsocketp only,
