@@ -16,7 +16,6 @@ single player mode direct socket
 xp level and hp increase per level
 press m for magic to build up magic attack
 press m for magic to give life to other players
-screen shake
 first to exit level gets 2 spending points, else get 1
 
 --------------------------------------- plan for apr --------------------------------------
@@ -81,6 +80,8 @@ different profiles for level generation
 mining?
 
 Fri Jan 30 07:16:43 EST 2015
+- zoom in the inventory panels
+- screen shake
 - shake player widget on hit?
 
 Thu Jan 29 07:24:46 EST 2015

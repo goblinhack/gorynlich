@@ -391,6 +391,8 @@ static void wid_choose_game_type_create (void)
 
         wid_set_on_mouse_down(child, wid_choose_game_type_play_mouse_event);
         wid_set_on_key_down(child, wid_choose_game_type_play_key_event);
+
+        wid_bounce_to_pct_in(child, 0.15, 0.9, 500, 1000);
     }
 
     {
