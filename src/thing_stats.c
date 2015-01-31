@@ -1547,3 +1547,287 @@ void thing_stats_modify_defense (thingp t, int32_t val)
     t->stats.defense += val;
     t->stats.version++;
 }
+
+int32_t stats_get_cash (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->cash;
+    return (val);
+}
+
+int32_t stats_get_hp (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->hp;
+    return (val);
+}
+
+int32_t stats_get_action_bar_index (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->action_bar_index;
+    return (val);
+}
+
+int32_t stats_get_max_hp (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->max_hp;
+    return (val);
+}
+
+int32_t stats_get_magic (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->magic;
+    return (val);
+}
+
+int32_t stats_get_max_magic (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->max_magic;
+    return (val);
+}
+
+int32_t stats_get_xp (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->xp;
+    return (val);
+}
+
+int32_t stats_get_attack_melee (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->attack_melee;
+    return (val);
+}
+
+int32_t stats_get_attack_ranged (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->attack_ranged;
+    return (val);
+}
+
+int32_t stats_get_attack_magical (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->attack_magical;
+    return (val);
+}
+
+int32_t stats_get_speed (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->speed;
+    return (val);
+}
+
+int32_t stats_get_vision (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->vision;
+    return (val);
+}
+
+int32_t stats_get_healing (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->healing;
+    return (val);
+}
+
+int32_t stats_get_defense (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->defense;
+    return (val);
+}
+
+void stats_set_cash (thing_statsp stats, int32_t val)
+{
+    stats->cash = val;
+    stats->version++;
+}
+
+void stats_set_action_bar_index (thing_statsp stats, int32_t val)
+{
+    stats->action_bar_index = val;
+    stats->version++;
+}
+
+void stats_set_hp (thing_statsp stats, int32_t val)
+{
+    stats->hp = val;
+    stats->version++;
+}
+
+void stats_set_max_hp (thing_statsp stats, int32_t val)
+{
+    stats->max_hp = val;
+    stats->version++;
+}
+
+void stats_set_magic (thing_statsp stats, int32_t val)
+{
+    stats->magic = val;
+    stats->version++;
+}
+
+void stats_set_max_magic (thing_statsp stats, int32_t val)
+{
+    stats->max_magic = val;
+    stats->version++;
+}
+
+void stats_set_xp (thing_statsp stats, int32_t val)
+{
+    stats->xp = val;
+    stats->version++;
+}
+
+void stats_set_attack_melee (thing_statsp stats, int32_t val)
+{
+    stats->attack_melee = val;
+    stats->version++;
+}
+
+void stats_set_attack_ranged (thing_statsp stats, int32_t val)
+{
+    stats->attack_ranged = val;
+    stats->version++;
+}
+
+void stats_set_attack_magical (thing_statsp stats, int32_t val)
+{
+    stats->attack_magical = val;
+    stats->version++;
+}
+
+void stats_set_speed (thing_statsp stats, int32_t val)
+{
+    stats->speed = val;
+    stats->version++;
+}
+
+void stats_set_vision (thing_statsp stats, int32_t val)
+{
+    stats->vision = val;
+    stats->version++;
+}
+
+void stats_set_healing (thing_statsp stats, int32_t val)
+{
+    stats->healing = val;
+    stats->version++;
+}
+
+void stats_set_defense (thing_statsp stats, int32_t val)
+{
+    stats->defense = val;
+    stats->version++;
+}
+
+void stats_modify_cash (thing_statsp stats, int32_t val)
+{
+    stats->cash += val;
+    stats->version++;
+}
+
+void stats_modify_hp (thing_statsp stats, int32_t val)
+{
+    stats->hp += val;
+
+    if (stats->hp <= THING_MIN_HEALTH) {
+        stats->hp = THING_MIN_HEALTH;
+    }
+    stats->version++;
+}
+
+void stats_modify_action_bar_index (thing_statsp stats, int32_t val)
+{
+    stats->action_bar_index += val;
+    stats->version++;
+}
+
+void stats_modify_max_hp (thing_statsp stats, int32_t val)
+{
+    stats->max_hp += val;
+    stats->version++;
+}
+
+void stats_modify_magic (thing_statsp stats, int32_t val)
+{
+    stats->magic += val;
+    stats->version++;
+}
+
+void stats_modify_max_magic (thing_statsp stats, int32_t val)
+{
+    stats->max_magic += val;
+    stats->version++;
+}
+
+void stats_modify_xp (thing_statsp stats, int32_t val)
+{
+    stats->xp += val;
+    stats->version++;
+}
+
+void stats_modify_attack_melee (thing_statsp stats, int32_t val)
+{
+    stats->attack_melee += val;
+    stats->version++;
+}
+
+void stats_modify_attack_ranged (thing_statsp stats, int32_t val)
+{
+    stats->attack_ranged += val;
+    stats->version++;
+}
+
+void stats_modify_attack_magical (thing_statsp stats, int32_t val)
+{
+    stats->attack_magical += val;
+    stats->version++;
+}
+
+void stats_modify_speed (thing_statsp stats, int32_t val)
+{
+    stats->speed += val;
+    stats->version++;
+}
+
+void stats_modify_vision (thing_statsp stats, int32_t val)
+{
+    stats->vision += val;
+    stats->version++;
+}
+
+void stats_modify_healing (thing_statsp stats, int32_t val)
+{
+    stats->healing += val;
+    stats->version++;
+}
+
+void stats_modify_defense (thing_statsp stats, int32_t val)
+{
+    stats->defense += val;
+    stats->version++;
+}

@@ -896,7 +896,9 @@ static void client_rx_server_status (gsocketp s,
      * with the old weapon then ignore that.
      */
     if (time_get_time_ms() - player_action_bar_changed_at < ONESEC) {
-        new_stats->action_bar_index = old_stats->action_bar_index;
+
+        stats_set_action_bar_index(new_stats,
+            stats_get_action_bar_index(old_stats));
     }
 
     /*
