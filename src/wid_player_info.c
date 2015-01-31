@@ -50,6 +50,10 @@ void wid_player_info_fini (void)
 
 void wid_player_info_hide (void)
 {
+    if (wid_player_info) {
+        wid_move_to_pct_centered_in(wid_player_info, 0.5, -0.45, 200);
+    }
+
     wid_player_info_destroy();
 }
 
@@ -511,7 +515,8 @@ static void wid_player_info_create (thing_statsp s)
         wid_set_on_mouse_down(w, wid_player_info_button_style_mouse_down);
     }
 
-    wid_move_to_pct_centered(wid_player_info, 0.5, 0.45);
+    wid_move_to_pct_centered(wid_player_info, 0.5, 1.45);
+    wid_move_to_pct_centered_in(wid_player_info, 0.5, 0.45, 200);
 
     wid_raise(wid_player_info);
     wid_update(wid_player_info);

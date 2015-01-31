@@ -166,7 +166,7 @@ void wid_game_map_server_wid_create (void)
 
     global_config.level_no++;
 
-#if 1
+#if 0
     server_level = level_load_random(global_config.level_no,
                                      wid_game_map_server_grid_container, 
                                      false /* is_editor */,
