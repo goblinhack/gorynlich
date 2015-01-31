@@ -46,6 +46,12 @@ int item_pop(itemp dst, itemp popped);
 typedef struct thing_stats_ {
     uint16_t thing_id;
 
+    /*
+     * Used by the client to know if the server has accepted a change.
+     * The client can therefore avoid updates of older versions.
+     */
+    int16_t version;
+
     int16_t hp;
     int16_t max_hp;
     int16_t magic;
