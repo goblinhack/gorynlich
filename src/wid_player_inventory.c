@@ -131,7 +131,8 @@ void wid_player_inventory_button_style (widp w,
 
     tpp tp = id_to_tp(item.id);
 
-    if (player && action_bar_item && (index == s->action_bar_index)) {
+    if (player && action_bar_item && 
+        (index == stats_get_action_bar_index(s))) {
         wid_set_color(w, WID_COLOR_TL, RED);
         wid_set_color(w, WID_COLOR_BR, RED);
         wid_set_rounded_small(w);
