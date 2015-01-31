@@ -784,6 +784,155 @@ uint8_t client_tell (tokens_t *tokens, void *context)
     return (r);
 }
 
+/*
+ * We've received an update from the server for our player.
+ * We need to merge in the status and update the stats windows.
+ */
+static void client_rx_server_status (gsocketp s, 
+                                     UDPpacket *packet, 
+                                     uint8_t *data)
+{
+    msg_server_status latest_status = {0};
+
+    socket_rx_server_status(s, packet, data, &latest_status);
+
+    /*
+     * If this is a status from a server we are not connected to, just ignore 
+     * it.
+     */
+    if (!latest_status.you_are_playing_on_this_server) {
+        return;
+    }
+
+    /*
+     * Received on a socket we are no longer joined on?
+     */
+    if (s != client_joined_server) {
+        return;
+    }
+
+    /*
+     * Look for our name in the update to know the server has acked our join.
+     */
+    client_check_still_in_game();
+
+    uint8_t redo = false;
+
+    if (client_level) {
+        level_set_level_no(client_level, latest_status.level_no);
+    }
+
+    if (server_status.level_no != latest_status.level_no) {
+        LOG("Client: Level no %u", latest_status.level_no);
+        redo = true;
+    }
+
+    /*
+     * Someone joined or left?
+     */
+    if (server_status.server_current_players != 
+            latest_status.server_current_players) {
+        if (latest_status.server_current_players > 1) {
+            wid_visible(wid_chat_window, 0);
+        } else {
+            wid_hide(wid_chat_window, 0);
+        }
+    }
+
+    global_config.server_current_players = latest_status.server_current_players;
+    global_config.level_no = latest_status.level_no;
+
+    /*
+     * Left a level?
+     */
+    if (latest_status.level_hide) {
+        if (client_level) {
+            things_level_destroyed(client_level,
+                                    true /* keep players */);
+        }
+    }
+
+    /*
+     * Left or joined a level?
+     */
+    if (server_status.level_hide != latest_status.level_hide) {
+        if (latest_status.level_hide) {
+            LOG("Client: Hide level");
+
+            wid_hide(wid_game_map_client_grid_container, 
+                        wid_hide_delay);
+        } else {
+            /*
+             * Reveal the level and re-equip players.
+             */
+            LOG("Client: Reveal level");
+
+            wid_visible(wid_game_map_client_grid_container, 
+                        wid_visible_delay);
+
+            wid_game_map_client_scroll_adjust(1);
+        }
+    }
+
+    /*
+     * Save the received status globally. We will then compare with the player 
+     * status for changes.
+     */
+    memcpy(&server_status, &latest_status, sizeof(server_status));
+
+    /*
+     * Check the player is not dead and gone.
+     */
+    if (!player) {
+        return;
+    }
+
+    msg_player_state *server_stats = &server_status.player;
+    thing_statsp new_stats = &server_stats->stats;
+    thing_statsp old_stats = &player->stats;
+
+    /*
+     * If we've just changed weapons locally and receive an update
+     * with the old weapon then ignore that.
+     */
+    if (time_get_time_ms() - player_action_bar_changed_at < ONESEC) {
+        new_stats->action_bar_index = old_stats->action_bar_index;
+    }
+
+    /*
+     * Some fields we don't care too much if they change.
+     */
+    thing_stats changed_stats;
+
+    memcpy(&changed_stats, new_stats, sizeof(changed_stats));
+    changed_stats.thing_id = old_stats->thing_id;
+    new_stats = &changed_stats;
+
+    /*
+     * Now see what really changed and if we need to update scores.
+     */
+    if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
+        LOG("Client: %s player stats changed:", thing_logname(player));
+
+        thing_stats_diff(old_stats, new_stats);
+
+        /*
+         * If the stats change, update the inventory
+         */
+        memcpy(old_stats, new_stats, sizeof(thing_stats));
+
+        wid_game_map_client_score_update(client_level, redo);
+
+        /*
+         * Update the weapon placement as the thing might be dying.
+         */
+        thing_set_weapon_placement(player);
+    }
+
+    new_stats = &server_stats->stats;
+    memcpy(old_stats, new_stats, sizeof(thing_stats));
+}
+
 static void client_poll (void)
 {
     gsocketp s;
@@ -846,133 +995,7 @@ static void client_poll (void)
                 break;
 
             case MSG_SERVER_STATUS: {
-                /*
-                 * This is an update our player state on the server.
-                 */
-                msg_server_status latest_status;
-
-                memset(&latest_status, 0, sizeof(latest_status));
-
-                socket_rx_server_status(s, packet, data, &latest_status);
-
-                /*
-                 * If this is a status from a server we are not connected to, 
-                 * just ignore it.
-                 */
-                if (!latest_status.you_are_playing_on_this_server) {
-                    break;
-                }
-
-                if (s == client_joined_server) {
-                    client_check_still_in_game();
-                }
-
-                uint8_t redo = false;
-
-                if (client_level) {
-                    level_set_level_no(client_level, latest_status.level_no);
-                }
-
-                if (server_status.level_no != latest_status.level_no) {
-                    LOG("Client: Level no %u", latest_status.level_no);
-                    redo = true;
-                }
-
-                /*
-                 * Someone joined or left?
-                 */
-                if (server_status.server_current_players != 
-                        latest_status.server_current_players) {
-                    if (latest_status.server_current_players > 1) {
-                        wid_visible(wid_chat_window, 0);
-                    } else {
-                        wid_hide(wid_chat_window, 0);
-                    }
-                }
-
-                global_config.server_current_players =
-                                latest_status.server_current_players;
-                global_config.level_no =
-                                latest_status.level_no;
-
-                if (latest_status.level_hide) {
-                    if (client_level) {
-                        things_level_destroyed(client_level,
-                                               true /* keep players */);
-                    }
-                }
-
-                if (server_status.level_hide != latest_status.level_hide) {
-                    if (latest_status.level_hide) {
-                        LOG("Client: Hide level");
-
-                        wid_hide(wid_game_map_client_grid_container, 
-                                 wid_hide_delay);
-                    } else {
-                        /*
-                         * Reveal the level and re-equip players.
-                         */
-                        LOG("Client: Reveal level");
-
-                        wid_visible(wid_game_map_client_grid_container, 
-                                    wid_visible_delay);
-
-                        wid_game_map_client_scroll_adjust(1);
-                    }
-                }
-
-                memcpy(&server_status, &latest_status, sizeof(server_status));
-
-                msg_player_state *server_stats = &server_status.player;
-                thing_statsp new_stats = &server_stats->stats;
-                thing_statsp old_stats = &player->stats;
-
-                /*
-                 * If we've just changed weapons locally and receive an update
-                 * with the old weapon then ignore that.
-                 */
-                if (time_get_time_ms() - player_action_bar_changed_at < ONESEC) {
-                    new_stats->action_bar_index = old_stats->action_bar_index;
-                }
-
-                if (player) {
-                    thing_stats changed_stats;
-
-                    /*
-                     * Some fields we don't care too much if they change.
-                     */
-                    memcpy(&changed_stats, new_stats, sizeof(changed_stats));
-                    changed_stats.thing_id = old_stats->thing_id;
-                    new_stats = &changed_stats;
-
-                    /*
-                     * Now see what really changed and if we need to update 
-                     * scores.
-                     */
-                    if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
-                        LOG("Client: %s player stats changed:",
-                            thing_logname(player));
-
-                        thing_stats_diff(old_stats, new_stats);
-
-                        /*
-                         * If the stats change, update the inventory
-                         */
-                        memcpy(old_stats, new_stats, sizeof(thing_stats));
-
-                        wid_game_map_client_score_update(client_level, redo);
-
-                        /*
-                         * Update the weapon placement as the thing might be 
-                         * dying.
-                         */
-                        thing_set_weapon_placement(player);
-                    }
-
-                    new_stats = &server_stats->stats;
-                    memcpy(old_stats, new_stats, sizeof(thing_stats));
-                }
-
+                client_rx_server_status(s, packet, data);
                 break;
             }
 
