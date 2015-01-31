@@ -254,7 +254,7 @@ void thing_tick_server_player_slow_all (int force)
 
                 thing_update(t);
 
-                if (t->stats.hp <= THING_MIN_HEALTH) {
+                if (thing_stats_get_hp(t) <= THING_MIN_HEALTH) {
                     thing_dead(t, 0, 0);
                 }
             }
