@@ -1179,6 +1179,14 @@ int32_t thing_stats_get_hp (thingp t)
     return (val);
 }
 
+int32_t thing_stats_get_action_bar_index (thingp t)
+{
+    int32_t val;
+
+    val = t->stats.action_bar_index;
+    return (val);
+}
+
 int32_t thing_stats_get_max_hp (thingp t)
 {
     int32_t val;
@@ -1317,6 +1325,15 @@ void thing_stats_set_cash (thingp t, int32_t val)
     verify(t);
 
     t->stats.cash = val;
+    t->stats.version++;
+}
+
+void thing_stats_set_action_bar_index (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.action_bar_index = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_hp (thingp t, int32_t val)
@@ -1324,6 +1341,7 @@ void thing_stats_set_hp (thingp t, int32_t val)
     verify(t);
 
     t->stats.hp = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_max_hp (thingp t, int32_t val)
@@ -1331,6 +1349,7 @@ void thing_stats_set_max_hp (thingp t, int32_t val)
     verify(t);
 
     t->stats.max_hp = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_magic (thingp t, int32_t val)
@@ -1338,6 +1357,7 @@ void thing_stats_set_magic (thingp t, int32_t val)
     verify(t);
 
     t->stats.magic = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_max_magic (thingp t, int32_t val)
@@ -1345,6 +1365,7 @@ void thing_stats_set_max_magic (thingp t, int32_t val)
     verify(t);
 
     t->stats.max_magic = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_xp (thingp t, int32_t val)
@@ -1352,6 +1373,7 @@ void thing_stats_set_xp (thingp t, int32_t val)
     verify(t);
 
     t->stats.xp = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_attack_melee (thingp t, int32_t val)
@@ -1359,6 +1381,7 @@ void thing_stats_set_attack_melee (thingp t, int32_t val)
     verify(t);
 
     t->stats.attack_melee = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_attack_ranged (thingp t, int32_t val)
@@ -1366,6 +1389,7 @@ void thing_stats_set_attack_ranged (thingp t, int32_t val)
     verify(t);
 
     t->stats.attack_ranged = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_attack_magical (thingp t, int32_t val)
@@ -1373,6 +1397,7 @@ void thing_stats_set_attack_magical (thingp t, int32_t val)
     verify(t);
 
     t->stats.attack_magical = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_speed (thingp t, int32_t val)
@@ -1380,6 +1405,7 @@ void thing_stats_set_speed (thingp t, int32_t val)
     verify(t);
 
     t->stats.speed = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_vision (thingp t, int32_t val)
@@ -1387,6 +1413,7 @@ void thing_stats_set_vision (thingp t, int32_t val)
     verify(t);
 
     t->stats.vision = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_healing (thingp t, int32_t val)
@@ -1394,6 +1421,7 @@ void thing_stats_set_healing (thingp t, int32_t val)
     verify(t);
 
     t->stats.healing = val;
+    t->stats.version++;
 }
 
 void thing_stats_set_defense (thingp t, int32_t val)
@@ -1401,6 +1429,7 @@ void thing_stats_set_defense (thingp t, int32_t val)
     verify(t);
 
     t->stats.defense = val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_cash (thingp t, int32_t val)
@@ -1408,6 +1437,7 @@ void thing_stats_modify_cash (thingp t, int32_t val)
     verify(t);
 
     t->stats.cash += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_hp (thingp t, int32_t val)
@@ -1419,6 +1449,15 @@ void thing_stats_modify_hp (thingp t, int32_t val)
     if (t->stats.hp <= THING_MIN_HEALTH) {
         t->stats.hp = THING_MIN_HEALTH;
     }
+    t->stats.version++;
+}
+
+void thing_stats_modify_action_bar_index (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.action_bar_index += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_max_hp (thingp t, int32_t val)
@@ -1426,6 +1465,7 @@ void thing_stats_modify_max_hp (thingp t, int32_t val)
     verify(t);
 
     t->stats.max_hp += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_magic (thingp t, int32_t val)
@@ -1433,6 +1473,7 @@ void thing_stats_modify_magic (thingp t, int32_t val)
     verify(t);
 
     t->stats.magic += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_max_magic (thingp t, int32_t val)
@@ -1440,6 +1481,7 @@ void thing_stats_modify_max_magic (thingp t, int32_t val)
     verify(t);
 
     t->stats.max_magic += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_xp (thingp t, int32_t val)
@@ -1447,6 +1489,7 @@ void thing_stats_modify_xp (thingp t, int32_t val)
     verify(t);
 
     t->stats.xp += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_attack_melee (thingp t, int32_t val)
@@ -1454,6 +1497,7 @@ void thing_stats_modify_attack_melee (thingp t, int32_t val)
     verify(t);
 
     t->stats.attack_melee += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_attack_ranged (thingp t, int32_t val)
@@ -1461,6 +1505,7 @@ void thing_stats_modify_attack_ranged (thingp t, int32_t val)
     verify(t);
 
     t->stats.attack_ranged += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_attack_magical (thingp t, int32_t val)
@@ -1468,6 +1513,7 @@ void thing_stats_modify_attack_magical (thingp t, int32_t val)
     verify(t);
 
     t->stats.attack_magical += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_speed (thingp t, int32_t val)
@@ -1475,6 +1521,7 @@ void thing_stats_modify_speed (thingp t, int32_t val)
     verify(t);
 
     t->stats.speed += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_vision (thingp t, int32_t val)
@@ -1482,6 +1529,7 @@ void thing_stats_modify_vision (thingp t, int32_t val)
     verify(t);
 
     t->stats.vision += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_healing (thingp t, int32_t val)
@@ -1489,6 +1537,7 @@ void thing_stats_modify_healing (thingp t, int32_t val)
     verify(t);
 
     t->stats.healing += val;
+    t->stats.version++;
 }
 
 void thing_stats_modify_defense (thingp t, int32_t val)
@@ -1496,4 +1545,5 @@ void thing_stats_modify_defense (thingp t, int32_t val)
     verify(t);
 
     t->stats.defense += val;
+    t->stats.version++;
 }
