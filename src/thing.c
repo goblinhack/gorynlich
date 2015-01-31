@@ -705,6 +705,15 @@ thingp thing_server_new (const char *name,
     t->on_server = true;
 
     /*
+     * Make sure we don't treat changes to these stats with a client version 
+     * bump.
+     */
+    thing_stats_set_on_server(t, t->on_server);
+    if (stats) {
+        stats_set_on_server(stats, t->on_server);
+    }
+
+    /*
      * Use a different base for monsters so that the IDs we create are going
      * to be contiguous and allows us to optimize when sending map updates.
      */
@@ -818,6 +827,8 @@ thingp thing_server_new (const char *name,
         memcpy(&t->stats, stats, sizeof(thing_stats));
     } else {
         memcpy(&t->stats, &tp->stats, sizeof(thing_stats));
+
+        thing_stats_set_on_server(t, t->on_server);
     }
 
     t->stats.thing_id = id;
@@ -867,8 +878,6 @@ thingp thing_server_new (const char *name,
                       client_things_total, client_monst_things_total);
         }
     }
-
-    thing_stats_set_on_server(t, t->on_server);
 
     return (t);
 }
@@ -923,13 +932,20 @@ thingp thing_client_new (uint32_t id, tpp tp)
     }
 
     t = (typeof(t)) myzalloc(sizeof(*t), "TREE NODE: thing");
+
+    /*
+     * We need to set the location of this thing when in combined client 
+     * server mode.
+     */
+    t->on_server = false;
+    thing_stats_set_on_server(t, t->on_server);
+
     t->map_x = -1.0;
     t->map_y = -1.0;
 
     t->tree.key = id;
     thing_client_ids[id] = t;
     t->tp = tp;
-    t->on_server = false;
 
     if (tp_is_player(tp)) {
         t->tree2.key = id;
