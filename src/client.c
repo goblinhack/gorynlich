@@ -911,6 +911,7 @@ static void client_rx_server_status (gsocketp s,
         return;
     }
 
+CON("version of stats, client %d server %d", old_stats->client_version, new_stats->client_version);
     /*
      * Some fields we don't care too much if they change.
      */
