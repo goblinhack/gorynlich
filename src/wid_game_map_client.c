@@ -221,8 +221,6 @@ uint8_t wid_game_map_client_player_move (void)
             up    = state[SDLK_UP] ? 1 : 0;
             down  = state[SDLK_DOWN] ? 1 : 0;
             fire  = state[SDLK_SPACE] ? 1 : 0;
-
-            debug = state[SDLK_d] ? 1 : 0;
         }
 #else /* } { */
         {
@@ -233,8 +231,6 @@ uint8_t wid_game_map_client_player_move (void)
             up    = state[SDL_SCANCODE_UP] ? 1 : 0;
             down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
             fire  = state[SDL_SCANCODE_SPACE] ? 1 : 0;
-
-            debug = state[SDL_SCANCODE_D] ? 1 : 0;
         }
 #endif /* } */
     }
@@ -430,6 +426,10 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_0:
             action_bar_index = 9; 
             redraw_action_bar = 1;
+            break;
+        case 'd':
+            debug = !debug;
+            CON("debug %d", debug);
             break;
 
         case '\t': {
