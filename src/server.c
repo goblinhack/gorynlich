@@ -287,8 +287,8 @@ static void server_poll (void)
             socket_rx_pong(s, packet, data);
             break;
 
-        case MSG_NAME:
-            socket_rx_name(s, packet, data);
+        case MSG_CLIENT_STATUS:
+            socket_rx_client_status(s, packet, data);
             break;
 
         case MSG_CLIENT_JOIN:
@@ -464,7 +464,7 @@ static void server_socket_tx_player_updates (void)
     /*
      * Send players their items lists
      */
-    socket_tx_server_status();
+    socket_tx_server_status(0 /* all clients */);
 }
 
 void server_tick (void)

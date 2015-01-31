@@ -50,7 +50,7 @@ typedef struct thing_stats_ {
      * Used by the client to know if the server has accepted a change.
      * The client can therefore avoid updates of older versions.
      */
-    int16_t version;
+    int16_t client_version;
 
     int16_t hp;
     int16_t max_hp;
@@ -73,6 +73,12 @@ typedef struct thing_stats_ {
      * What we are carrying and where.
      */
     uint8_t action_bar_index;;
+
+    /*
+     * Where this stats structure is used
+     */
+    uint8_t on_server:1;
+
     item_t inventory[THING_INVENTORY_MAX];
     item_t action_bar[THING_ACTION_BAR_MAX];
     item_t worn[THING_WORN_MAX];
@@ -83,50 +89,54 @@ typedef struct thing_stats_ {
 } __attribute__ ((packed)) thing_stats;
 
 int thing_stats_val_to_modifier(int value);
-void thing_stats_get_random(thing_stats *,
+void thing_stats_get_random(thing_statsp ,
                             int new_random_name_and_class);
-void thing_stats_init(thing_stats *);
-tpp thing_stats_to_tp(thing_stats *);
+void thing_stats_init(thing_statsp );
+tpp thing_stats_to_tp(thing_statsp );
 
-itemp thing_stats_has_item(thing_stats *thing_stats,
+itemp thing_stats_has_item(thing_statsp thing_stats,
                             int32_t id,
                             int32_t *index);
 
-itemp thing_stats_has_inventory_item(thing_stats *thing_stats,
+itemp thing_stats_has_inventory_item(thing_statsp thing_stats,
                                         int32_t item,
                                         int32_t *index);
 
-itemp thing_stats_has_action_bar_item(thing_stats *thing_stats,
+itemp thing_stats_has_action_bar_item(thing_statsp thing_stats,
                                        int32_t item,
                                        int32_t *index);
 
-itemp thing_stats_has_worn_item(thing_stats *thing_stats,
+itemp thing_stats_has_worn_item(thing_statsp thing_stats,
                                    int32_t item,
                                    int32_t *index);
 
 int thing_stats_item_add(thingp t,
-                          thing_stats *thing_stats,
+                          thing_statsp thing_stats,
                           item_t item);
 
 int thing_stats_item_remove(thingp t,
-                             thing_stats *thing_stats,
+                             thing_statsp thing_stats,
                              const tpp it);
 
 int thing_stats_item_degrade(thingp t,
-                              thing_stats *thing_stats,
+                              thing_statsp thing_stats,
                               const tpp it);
 
-int thing_stats_item_polymorph(thing_stats *thing_stats,
+int thing_stats_item_polymorph(thing_statsp thing_stats,
                                 const int32_t from,
                                 const int32_t to);
 
-void player_inventory_sort(thing_stats *thing_stats);
+void player_inventory_sort(thing_statsp thing_stats);
 
-void thing_stats_client_modified(thing_stats *player_stats);
+void thing_stats_client_modified(thing_statsp player_stats);
 void thing_stats_dump(const thing_statsp s);
 void thing_stats_diff(const thing_statsp old, const thing_statsp new_stats);
-void thing_stats_merge(thing_statsp merged_stats, thing_statsp current_stats, thing_statsp new_stats);;
+int thing_stats_merge(thing_statsp merged_stats, 
+                      thing_statsp current_stats, 
+                      thing_statsp new_stats);;
 
+int32_t thing_stats_get_client_version(thingp t);
+int32_t thing_stats_get_on_server(thingp t);
 int32_t thing_stats_get_cash(thingp t);
 int32_t thing_stats_get_hp(thingp t);
 int32_t thing_stats_get_action_bar_index(thingp t);
@@ -142,6 +152,8 @@ int32_t thing_stats_get_spending_points(thingp t);
 int32_t thing_stats_get_vision(thingp t);
 int32_t thing_stats_get_healing(thingp t);
 int32_t thing_stats_get_defense(thingp t);
+void thing_stats_set_client_version(thingp t, int32_t val);
+void thing_stats_set_on_server(thingp t, int32_t val);
 void thing_stats_set_cash(thingp t, int32_t val);
 void thing_stats_set_hp(thingp t, int32_t val);
 void thing_stats_set_action_bar_index(thingp t, int32_t val);
@@ -157,6 +169,7 @@ void thing_stats_set_spending_points(thingp t, int32_t val);
 void thing_stats_set_vision(thingp t, int32_t val);
 void thing_stats_set_healing(thingp t, int32_t val);
 void thing_stats_set_defense(thingp t, int32_t val);
+void thing_stats_modify_client_version(thingp t, int32_t val);
 void thing_stats_modify_cash(thingp t, int32_t val);
 void thing_stats_modify_hp(thingp t, int32_t val);
 void thing_stats_modify_action_bar_index(thingp t, int32_t val);
@@ -173,6 +186,8 @@ void thing_stats_modify_vision(thingp t, int32_t val);
 void thing_stats_modify_healing(thingp t, int32_t val);
 void thing_stats_modify_defense(thingp t, int32_t val);
 
+int32_t stats_get_client_version(thing_statsp);
+int32_t stats_get_on_server(thing_statsp);
 int32_t stats_get_cash(thing_statsp);
 int32_t stats_get_hp(thing_statsp);
 int32_t stats_get_action_bar_index(thing_statsp);
@@ -188,6 +203,8 @@ int32_t stats_get_spending_points(thing_statsp);
 int32_t stats_get_vision(thing_statsp);
 int32_t stats_get_healing(thing_statsp);
 int32_t stats_get_defense(thing_statsp);
+void stats_set_client_version(thing_statsp, int32_t val);
+void stats_set_on_server(thing_statsp, int32_t val);
 void stats_set_cash(thing_statsp, int32_t val);
 void stats_set_hp(thing_statsp, int32_t val);
 void stats_set_action_bar_index(thing_statsp, int32_t val);
@@ -203,6 +220,7 @@ void stats_set_spending_points(thing_statsp, int32_t val);
 void stats_set_vision(thing_statsp, int32_t val);
 void stats_set_healing(thing_statsp, int32_t val);
 void stats_set_defense(thing_statsp, int32_t val);
+void stats_modify_client_version(thing_statsp, int32_t val);
 void stats_modify_cash(thing_statsp, int32_t val);
 void stats_modify_hp(thing_statsp, int32_t val);
 void stats_modify_action_bar_index(thing_statsp, int32_t val);
