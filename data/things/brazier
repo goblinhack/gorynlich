@@ -8,7 +8,6 @@
  is_animated
  can_walk_through
  light_radius=1.0
- is_inactive
  tiles={
   tile={
    tile="brazier1"
