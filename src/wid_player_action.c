@@ -225,7 +225,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_no_shape(w);
 
-        int which = (int)(((double)s->hp / (double)s->max_hp) * 16) + 1;
+        int which = (int)(((double)stats_get_hp(s) / (double)s->max_hp) * 16) + 1;
         if (which > 16) {
             which = 16;
         }
@@ -385,13 +385,13 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
         char tmp[40];
 
-        snprintf(tmp, sizeof(tmp) - 1, "%d", s->hp);
+        snprintf(tmp, sizeof(tmp) - 1, "%d", stats_get_hp(s));
         wid_set_text(w, tmp);
 
         static int last_hp;
-        if (last_hp != s->hp) {
-            if (last_hp > s->hp) {
-                if (s->hp > 0) {
+        if (last_hp != stats_get_hp(s)) {
+            if (last_hp > stats_get_hp(s)) {
+                if (stats_get_hp(s) > 0) {
                     wid_effect_pulses(w);
                 }
 
@@ -399,10 +399,10 @@ static void wid_player_action_create (thing_statsp s, int fast)
                 wid_set_color(w, WID_COLOR_TEXT, RED);
             }
 
-            last_hp = s->hp;
+            last_hp = stats_get_hp(s);
         }
 
-        if ((s->hp < s->max_hp / 10) && (s->hp > THING_MIN_HEALTH)) {
+        if ((stats_get_hp(s) < s->max_hp / 10) && (stats_get_hp(s) > THING_MIN_HEALTH)) {
             wid_scaling_to_pct_in(w, 1.0, 3.15, wid_scaling_forever_delay, 10000);
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_TEXT, RED);
@@ -425,7 +425,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_no_shape(w);
 
-        int which = (int)(((double)s->hp / (double)s->max_hp) * 16) + 1;
+        int which = (int)(((double)stats_get_hp(s) / (double)s->max_hp) * 16) + 1;
         if (which > 16) {
             which = 16;
         }
