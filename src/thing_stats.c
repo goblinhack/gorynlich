@@ -1408,6 +1408,14 @@ void thing_stats_set_speed (thingp t, int32_t val)
     t->stats.version++;
 }
 
+void thing_stats_set_spending_points (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.spending_points = val;
+    t->stats.version++;
+}
+
 void thing_stats_set_vision (thingp t, int32_t val)
 {
     verify(t);
@@ -1524,6 +1532,14 @@ void thing_stats_modify_speed (thingp t, int32_t val)
     t->stats.version++;
 }
 
+void thing_stats_modify_spending_points (thingp t, int32_t val)
+{
+    verify(t);
+
+    t->stats.spending_points += val;
+    t->stats.version++;
+}
+
 void thing_stats_modify_vision (thingp t, int32_t val)
 {
     verify(t);
@@ -1636,6 +1652,14 @@ int32_t stats_get_speed (thing_statsp stats)
     return (val);
 }
 
+int32_t stats_get_spending_points (thing_statsp stats)
+{
+    int32_t val;
+
+    val = stats->spending_points;
+    return (val);
+}
+
 int32_t stats_get_vision (thing_statsp stats)
 {
     int32_t val;
@@ -1726,6 +1750,12 @@ void stats_set_speed (thing_statsp stats, int32_t val)
     stats->version++;
 }
 
+void stats_set_spending_points (thing_statsp stats, int32_t val)
+{
+    stats->spending_points = val;
+    stats->version++;
+}
+
 void stats_set_vision (thing_statsp stats, int32_t val)
 {
     stats->vision = val;
@@ -1811,6 +1841,12 @@ void stats_modify_attack_magical (thing_statsp stats, int32_t val)
 void stats_modify_speed (thing_statsp stats, int32_t val)
 {
     stats->speed += val;
+    stats->version++;
+}
+
+void stats_modify_spending_points (thing_statsp stats, int32_t val)
+{
+    stats->spending_points += val;
     stats->version++;
 }
 
