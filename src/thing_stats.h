@@ -129,6 +129,7 @@ void thing_stats_merge(thing_statsp merged_stats, thing_statsp current_stats, th
 
 int32_t thing_stats_get_cash(thingp t);
 int32_t thing_stats_get_hp(thingp t);
+int32_t thing_stats_get_action_bar_index(thingp t);
 int32_t thing_stats_get_max_hp(thingp t);
 int32_t thing_stats_get_magic(thingp t);
 int32_t thing_stats_get_max_magic(thingp t);
@@ -142,6 +143,7 @@ int32_t thing_stats_get_healing(thingp t);
 int32_t thing_stats_get_defense(thingp t);
 void thing_stats_set_cash(thingp t, int32_t val);
 void thing_stats_set_hp(thingp t, int32_t val);
+void thing_stats_set_action_bar_index(thingp t, int32_t val);
 void thing_stats_set_max_hp(thingp t, int32_t val);
 void thing_stats_set_magic(thingp t, int32_t val);
 void thing_stats_set_max_magic(thingp t, int32_t val);
@@ -155,6 +157,7 @@ void thing_stats_set_healing(thingp t, int32_t val);
 void thing_stats_set_defense(thingp t, int32_t val);
 void thing_stats_modify_cash(thingp t, int32_t val);
 void thing_stats_modify_hp(thingp t, int32_t val);
+void thing_stats_modify_action_bar_index(thingp t, int32_t val);
 void thing_stats_modify_max_hp(thingp t, int32_t val);
 void thing_stats_modify_magic(thingp t, int32_t val);
 void thing_stats_modify_max_magic(thingp t, int32_t val);
