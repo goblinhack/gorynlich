@@ -502,12 +502,6 @@ static uint8_t sockets_show_all (tokens_t *tokens, void *context)
                 s->rx_msg[MSG_PONG]);
         }
 
-        if (s->tx_msg[MSG_NAME] || s->rx_msg[MSG_NAME]) {
-            CON("  Name           : tx %u, rx %u",
-                s->tx_msg[MSG_NAME], 
-                s->rx_msg[MSG_NAME]);
-        }
-
         if (s->tx_msg[MSG_TELL] || s->rx_msg[MSG_TELL]) {
             CON("  Tell           : tx %u, rx %u",
                 s->tx_msg[MSG_TELL], 
@@ -536,6 +530,12 @@ static uint8_t sockets_show_all (tokens_t *tokens, void *context)
             CON("  Server Shout   : tx %u, rx %u",
                 s->tx_msg[MSG_SERVER_SHOUT], 
                 s->rx_msg[MSG_SERVER_SHOUT]);
+        }
+
+        if (s->tx_msg[MSG_CLIENT_STATUS] || s->rx_msg[MSG_CLIENT_STATUS]) {
+            CON("  Client status  : tx %u, rx %u",
+                s->tx_msg[MSG_CLIENT_STATUS], 
+                s->rx_msg[MSG_CLIENT_STATUS]);
         }
 
         if (s->tx_msg[MSG_SERVER_STATUS] || s->rx_msg[MSG_SERVER_STATUS]) {
@@ -1348,7 +1348,7 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
     s->server_current_players = msg->server_current_players;
 }
 
-void socket_tx_name (gsocketp s)
+void socket_tx_client_status (gsocketp s)
 {
     verify(s);
 
@@ -1370,7 +1370,7 @@ void socket_tx_name (gsocketp s)
     UDPpacket *packet = packet_alloc();
 
     msg_name msg = {0};
-    msg.type = MSG_NAME;
+    msg.type = MSG_CLIENT_STATUS;
 
     memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
     memcpy(packet->data, &msg, sizeof(msg));
@@ -1385,7 +1385,7 @@ void socket_tx_name (gsocketp s)
     socket_tx_enqueue(s, &packet);
 }
 
-void socket_rx_name (gsocketp s, UDPpacket *packet, uint8_t *data)
+void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
@@ -1431,7 +1431,7 @@ void socket_rx_name (gsocketp s, UDPpacket *packet, uint8_t *data)
          * Merge them together.
          */
         thing_stats merged_stats;
-        thing_stats_merge(&merged_stats, &current_stats, &new_stats);
+        int changed = thing_stats_merge(&merged_stats, &current_stats, &new_stats);
 
         /*
          * Now update the player stats and thing with merged stats.
@@ -1446,6 +1446,13 @@ void socket_rx_name (gsocketp s, UDPpacket *packet, uint8_t *data)
          * We keep stats on the socket in case the player gets disconnected.
          */
         socket_set_player(s, p);
+
+        if (changed) {
+            /*
+             * Update the client that we have merged their stat change in.
+             */
+            socket_tx_server_status(s);
+        }
     }
 
     p->local_ip = s->local_ip;
@@ -2209,13 +2216,15 @@ void socket_rx_tell (gsocketp s, UDPpacket *packet, uint8_t *data)
 /*
  * Send each player their status update
  */
-void socket_tx_server_status (void)
+void socket_tx_server_status (gsocketp s_in)
 {
     static uint32_t ts;
 
-    if (!time_have_x_hundredths_passed_since(
-            DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE, ts)) {
-        return;
+    if (!s_in) {
+        if (!time_have_x_hundredths_passed_since(
+                DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE, ts)) {
+            return;
+        }
     }
 
     ts = time_get_time_ms();
@@ -2238,6 +2247,10 @@ void socket_tx_server_status (void)
      * server to check if they can join.
      */
     TREE_WALK(sockets, s) {
+        if (s_in && (s != s_in)) {
+            continue;
+        }
+
         if (!s->server_side_client) {
             continue;
         }
