@@ -82,10 +82,10 @@ void wid_choose_player_hide (void)
     wid_raise(wid_choose_player);
     wid_update(wid_choose_player);
     
-    wid_player_stats_hide();
-    wid_player_info_hide();
-    wid_player_inventory_hide();
-    wid_player_action_hide();
+    wid_player_stats_hide(false /* fast */);
+    wid_player_info_hide(false /* fast */);
+    wid_player_inventory_hide(false /* fast */);
+    wid_player_action_hide(false /* fast */);
 
     thing_statsp s;
     s = &global_config.stats;
@@ -137,9 +137,9 @@ void wid_choose_player_visible (void)
     s = &global_config.stats;
     thing_stats_get_random(s, false /* new_random_name_and_class */);
 
-    wid_player_stats_visible(s);
-    wid_player_info_visible(s);
-    wid_player_inventory_visible(s);
+    wid_player_stats_visible(s, false /* fast */);
+    wid_player_info_visible(s, false /* fast */);
+    wid_player_inventory_visible(s, false /* fast */);
     wid_player_action_visible(s, false);
 }
 

@@ -21,7 +21,7 @@ static widp wid_player_inventory;
 static widp wid_player_inventory_container;
 static uint8_t wid_player_inventory_init_done;
 
-static void wid_player_inventory_create(thing_statsp );
+static void wid_player_inventory_create(thing_statsp, int fast);
 static void wid_player_inventory_destroy(void);
 static thing_statsp player_stats;
 
@@ -46,18 +46,22 @@ void wid_player_inventory_fini (void)
     }
 }
 
-void wid_player_inventory_hide (void)
+void wid_player_inventory_hide (int fast)
 {
     if (wid_player_inventory) {
-        wid_move_to_pct_centered_in(wid_player_inventory, 0.5, 1.45, 200);
+        if (fast) {
+            wid_hide(wid_player_inventory, 0);
+        } else {
+            wid_move_to_pct_centered_in(wid_player_inventory, 0.5, 1.45, 200);
+        }
     }
 
     wid_player_inventory_destroy();
 }
 
-void wid_player_inventory_visible (thing_statsp s)
+void wid_player_inventory_visible (thing_statsp s, int fast)
 {
-    wid_player_inventory_create(s);
+    wid_player_inventory_create(s, fast);
 }
 
 int wid_player_inventory_is_visible (void)
@@ -496,12 +500,12 @@ wid_player_inventory_button_style_mouse_down (widp w,
         }
     }
 
-    wid_player_stats_redraw();
+    wid_player_stats_redraw(true /* fast */);
 
     return (true);
 }
 
-static void wid_player_inventory_create (thing_statsp s)
+static void wid_player_inventory_create (thing_statsp s, int fast)
 {
     if (wid_player_inventory) {
         return;
@@ -643,8 +647,12 @@ static void wid_player_inventory_create (thing_statsp s)
         item++;
     }
 
-    wid_move_to_pct_centered(wid_player_inventory, 0.8, -0.45);
-    wid_move_to_pct_centered_in(wid_player_inventory, 0.8, 0.45, 200);
+    if (fast) {
+        wid_move_to_pct_centered(wid_player_inventory, 0.8, 0.45);
+    } else {
+        wid_move_to_pct_centered(wid_player_inventory, 0.8, -0.45);
+        wid_move_to_pct_centered_in(wid_player_inventory, 0.8, 0.45, 200);
+    }
 
     wid_raise(wid_player_inventory);
     wid_update(wid_player_inventory);
