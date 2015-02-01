@@ -6223,9 +6223,9 @@ void wid_move_delta (widp w, double dx, double dy)
 {
     wid_move_delta_internal(w, dx, dy);
 
-if (!w->grid) {
-    wid_update_internal(w);
-}
+    if (!w->grid) {
+        wid_update_internal(w);
+    }
 }
 
 void wid_move_to_bottom (widp w)
