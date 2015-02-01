@@ -59,19 +59,19 @@ void wid_player_action_visible (thing_statsp s, int fast)
 }
 
 static uint8_t 
-wid_player_action_button_style_mouse_down (widp w,
-                                           int32_t x, int32_t y,
-                                           uint32_t button)
+wid_player_action_button_mouse_down (widp w,
+                                     int32_t x, int32_t y,
+                                     uint32_t button)
 {
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
     int32_t action_bar_index = (typeof(action_bar_index))
                     (uintptr_t) wid_get_client_context2(w);
 
-    /*
-     * Weapon switch if we click on a weapon when the stats window is not 
-     * present.
-     */
     if (!wid_player_inventory_is_visible() && !wid_mouse_template) {
+        /*
+         * Inventory window is hidden, we've clicked on a button and
+         * the mouse has no item. Use the item we've clicked on.
+         */
         uint32_t id = player->stats.action_bar[action_bar_index].id;
         if (!id) {
             MSG(WARNING, "Nothing in that slot");
@@ -91,12 +91,13 @@ wid_player_action_button_style_mouse_down (widp w,
         return (true);
     }
 
-    /*
-     * This is a move of an item likely.
-     */
     itemp over_item = &player_stats->action_bar[id];
 
     if (!wid_mouse_template) {
+        /*
+         * Inventory window is visible, we've clicked on a button and
+         * the mouse has no item. Pick up the item we've clicked on.
+         */
         int wield = false;
 
         if (player) {
@@ -113,7 +114,15 @@ wid_player_action_button_style_mouse_down (widp w,
                 tpp weapon = id_to_tp(current_id);
                 if (tp_is_weapon(weapon)) {
                     thing_unwield(player);
+
+                    /*
+                     * Need to wield the next weapon.
+                     */
                     wield = true;
+
+                    socket_tx_player_action(client_joined_server, player, 
+                                            PLAYER_ACTION_STOP_USE,
+                                            current_action_bar_index);
                 }
             }
         }
@@ -142,7 +151,8 @@ wid_player_action_button_style_mouse_down (widp w,
         }
     } else {
         /*
-         * Drop the current item.
+         * Inventory window is visible, we've clicked on a button and
+         * the mouse has an item. Drop the item we've clicked on.
          */
         int dropped = false;
 
@@ -546,8 +556,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                                               false, /* inventory item */
                                               x);
 
-            wid_set_on_mouse_down(w, 
-                                  wid_player_action_button_style_mouse_down);
+            wid_set_on_mouse_down(w, wid_player_action_button_mouse_down);
 
             i++;
         }

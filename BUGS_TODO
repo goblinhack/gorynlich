@@ -1,5 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-pop action bar last weapon does not unwield
 put a weapon in inventory and not selected
 multiplayer, join game does not show stats window
 move stats panel on left into middle
@@ -55,6 +54,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+
+Sun Feb  1 12:01:06 EST 2015
+- pop action bar last weapon does not unwield
 
 Sun Feb  1 08:14:28 EST 2015
 - update inventory while playing
