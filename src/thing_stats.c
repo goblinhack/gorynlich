@@ -22,7 +22,7 @@
 
 void thing_stats_dump (const thing_statsp s)
 {
-    LOG("  stats (version %d %s):",
+    LOG("  stats (version %d, %s):",
         s->client_version, s->on_server ? "on server" : "on client");
 
     LOG("    %-20s %4d %-20s %4d", 
