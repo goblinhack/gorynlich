@@ -62,6 +62,19 @@ void wid_player_info_visible (thing_statsp s)
     wid_player_info_create(s);
 }
 
+int wid_player_info_is_visible (void)
+{
+    if (!wid_player_info) {
+        return (false);
+    }
+
+    if (wid_is_hidden(wid_player_info)) {
+        return (false);
+    }
+
+    return (true);
+}
+
 static void wid_player_info_buttons_tick (widp wid)
 {
     if (!player_stats) {
