@@ -1204,10 +1204,10 @@ static void thing_remove_hooks (thingp t)
      */
     if (!t->on_server) {
         if (thing_is_player(t)) {
-            wid_player_stats_hide();
-            wid_player_info_hide();
-            wid_player_inventory_hide();
-            wid_player_action_hide();
+            wid_player_stats_hide(true /* fast */);
+            wid_player_info_hide(true /* fast */);
+            wid_player_inventory_hide(true /* fast */);
+            wid_player_action_hide(true /* fast */);
 
             memcpy(&global_config.dead_stats, &t->stats, sizeof(thing_stats));
 
