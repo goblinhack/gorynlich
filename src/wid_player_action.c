@@ -48,7 +48,7 @@ void wid_player_action_fini (void)
     }
 }
 
-void wid_player_action_hide (void)
+void wid_player_action_hide (int fast)
 {
     wid_player_action_destroy();
 }
@@ -183,7 +183,7 @@ wid_player_action_button_style_mouse_down (widp w,
         }
     }
 
-    wid_player_stats_redraw();
+    wid_player_stats_redraw(true /* fast */);
 
     return (true);
 }
