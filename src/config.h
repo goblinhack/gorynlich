@@ -305,6 +305,11 @@
 #define DELAY_HUNDREDTHS_CLIENT_TO_SERVER_PLAYER_POSITION   5
 
 /*
+ * Updates of client status to server
+ */
+#define DELAY_TENTHS_CLIENT_TO_SERVER_STATUS                1
+
+/*
  * How often we look at the keyboards
  */
 #define DELAY_THOUSANDTHS_PLAYER_POLL                       15

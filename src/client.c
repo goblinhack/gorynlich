@@ -230,6 +230,19 @@ void client_tick (void)
     client_poll();
 
     client_socket_tx_ping();
+
+    static uint32_t ts;
+
+    if (!time_have_x_tenths_passed_since(
+            DELAY_TENTHS_CLIENT_TO_SERVER_STATUS, ts)) {
+        return;
+    }
+
+    ts = time_get_time_ms();
+
+    if (player) {
+        thing_stats_client_modified(&player->stats);
+    }
 }
 
 /*
@@ -897,6 +910,7 @@ static void client_rx_server_status (gsocketp s,
      */
     int version_delta = (int)new_stats->client_version - (int)old_stats->client_version;
 
+CON("version of stats, client: %d server: %d", old_stats->client_version, new_stats->client_version);
     if ((version_delta >= 0) || (version_delta < -255)) {
         /*
          * Server has latest version; (accounted for wraparond(.
@@ -905,18 +919,16 @@ static void client_rx_server_status (gsocketp s,
         /*
          * Server is behind.
          */
-        LOG("Client is behind latest version of stats, %d < %d", 
+        CON("Server is behind latest version of stats, client: %d server: %d, ignore", 
             old_stats->client_version, new_stats->client_version);
 
         return;
     }
 
-CON("version of stats, client %d server %d", old_stats->client_version, new_stats->client_version);
     /*
      * Some fields we don't care too much if they change.
      */
     thing_stats changed_stats;
-
     memcpy(&changed_stats, new_stats, sizeof(changed_stats));
     changed_stats.thing_id = old_stats->thing_id;
     new_stats = &changed_stats;
@@ -925,7 +937,7 @@ CON("version of stats, client %d server %d", old_stats->client_version, new_stat
      * Now see what really changed and if we need to update scores.
      */
     if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
-        LOG("Client: %s player stats changed:", thing_logname(player));
+        LOG("Client: %s player stats changed on server:", thing_logname(player));
 
         thing_stats_diff(old_stats, new_stats);
 
@@ -933,6 +945,7 @@ CON("version of stats, client %d server %d", old_stats->client_version, new_stat
          * If the stats change, update the inventory
          */
         memcpy(old_stats, new_stats, sizeof(thing_stats));
+        thing_stats_set_on_server(player, player->on_server);
 
         wid_game_map_client_score_update(client_level, redo);
 
@@ -944,6 +957,7 @@ CON("version of stats, client %d server %d", old_stats->client_version, new_stat
 
     new_stats = &server_stats->stats;
     memcpy(old_stats, new_stats, sizeof(thing_stats));
+    thing_stats_set_on_server(player, player->on_server);
 }
 
 static void client_poll (void)
