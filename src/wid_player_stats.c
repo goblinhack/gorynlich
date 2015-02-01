@@ -118,8 +118,6 @@ void wid_player_stats_hide (void)
     }
 
     wid_player_stats_destroy();
-
-    player_stats = 0;
 }
 
 void wid_player_stats_visible (thing_statsp s)
@@ -129,6 +127,10 @@ void wid_player_stats_visible (thing_statsp s)
 
 void wid_player_stats_redraw (void)
 {
+    if (wid_player_info_is_visible()) {
+        return;
+    }
+
     if (!player_stats) {
         return;
     }
