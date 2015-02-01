@@ -959,6 +959,9 @@ static void client_rx_server_status (gsocketp s,
     new_stats = &server_stats->stats;
     memcpy(old_stats, new_stats, sizeof(thing_stats));
     thing_stats_set_on_server(player, player->on_server);
+
+    memcpy(&s->stats, new_stats, sizeof(thing_stats));
+    stats_set_on_server(&s->stats, player->on_server);
 }
 
 static void client_poll (void)
