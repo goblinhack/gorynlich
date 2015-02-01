@@ -916,7 +916,7 @@ int socket_set_player_stats (gsocketp s, const thing_statsp stats)
         return (true);
     }
 
-    if (!memcmp(&s->stats, stats, sizeof(thing_stats))) {
+    if (!thing_stats_diff(&s->stats, stats)) {
         /*
          * No change
          */
