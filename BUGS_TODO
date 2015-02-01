@@ -55,6 +55,7 @@ mining?
 
 
 Sun Feb  1 12:01:06 EST 2015
+- sending too many client status updates; now look for changes only
 - put a weapon in inventory and not selected
 - pop action bar last weapon does not unwield
 
