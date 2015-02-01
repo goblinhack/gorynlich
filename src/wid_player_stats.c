@@ -127,7 +127,7 @@ void wid_player_stats_visible (thing_statsp s)
 
 void wid_player_stats_redraw (void)
 {
-    if (wid_player_info_is_visible()) {
+    if (!wid_player_info_is_visible()) {
         return;
     }
 
