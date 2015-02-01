@@ -323,7 +323,9 @@ static void wid_player_info_create (thing_statsp s)
 
         const char *tooltip = tp_get_tooltip(tp);
 
-        wid_set_tooltip(w, tooltip, 0 /* font */);
+        if (!player) {
+            wid_set_tooltip(w, tooltip, 0 /* font */);
+        }
     }
 
     {

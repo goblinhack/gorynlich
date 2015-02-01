@@ -58,6 +58,7 @@ different profiles for level generation
 mining?
 
 Sat Jan 31 11:54:52 EST 2015
+- removed tooltip for player character on info screen when playing
 - tweaked the lighting again, added a bit of fuzz so the edges are beyond the end of 
   the screen; this stops edges appearing with shaking 
 - keys and braziers made inactive
