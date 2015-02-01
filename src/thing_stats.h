@@ -236,3 +236,4 @@ void stats_modify_spending_points(thing_statsp, int32_t val);
 void stats_modify_vision(thing_statsp, int32_t val);
 void stats_modify_healing(thing_statsp, int32_t val);
 void stats_modify_defense(thing_statsp, int32_t val);
+void stats_bump_version(thing_statsp stats);
