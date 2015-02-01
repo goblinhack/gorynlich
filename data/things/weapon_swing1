@@ -10,6 +10,10 @@
  hit_priority=0
  is_collision_map_large
  hit_delay_tenths=2
+ is_light_source
+ is_candle_light
+ light_tint="white"
+ light_radius=1.0
  tiles={
   tile={
    tile="weapon_swing2.1"
