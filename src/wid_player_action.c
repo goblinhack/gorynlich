@@ -71,7 +71,7 @@ wid_player_action_button_style_mouse_down (widp w,
      * Weapon switch if we click on a weapon when the stats window is not 
      * present.
      */
-    if (!wid_player_inventory_is_visible()) {
+    if (!wid_player_inventory_is_visible() && !wid_mouse_template) {
         uint32_t id = player->stats.action_bar[action_bar_index].id;
         if (!id) {
             MSG(WARNING, "Nothing in that slot");
