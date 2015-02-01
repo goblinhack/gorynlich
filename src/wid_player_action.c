@@ -67,7 +67,9 @@ wid_player_action_button_mouse_down (widp w,
     int32_t action_bar_index = (typeof(action_bar_index))
                     (uintptr_t) wid_get_client_context2(w);
 
-    if (!wid_player_inventory_is_visible() && !wid_mouse_template) {
+    if (player &&
+        !wid_player_inventory_is_visible() && 
+        !wid_mouse_template) {
         /*
          * Inventory window is hidden, we've clicked on a button and
          * the mouse has no item. Use the item we've clicked on.
@@ -133,7 +135,7 @@ wid_player_action_button_mouse_down (widp w,
          * If we just moved a weapon into the inventory we need to auto use 
          * the next weapon we have.
          */
-        if (wield) {
+        if (player && wield) {
             thing_wield_next_weapon(player);
 
             int current_action_bar_index = 
@@ -152,7 +154,8 @@ wid_player_action_button_mouse_down (widp w,
     } else {
         /*
          * Inventory window is visible, we've clicked on a button and
-         * the mouse has an item. Drop the item we've clicked on.
+         * the mouse has an item. Place the item we've clicked on onto
+         * the action bar.
          */
         int dropped = false;
 
@@ -236,6 +239,33 @@ wid_player_action_button_mouse_down (widp w,
     }
 
     stats_bump_version(player_stats);
+
+    /*
+     * Send an update now.
+     */
+    thing_stats_client_modified(player_stats);
+
+
+    /*
+     * If we've placed a weapon and we had none, then start using this one 
+     * now.
+     */
+    if (player && !player->weapon) {
+        thing_wield_next_weapon(player);
+
+        int current_action_bar_index = 
+            thing_stats_get_action_bar_index(player);
+
+        uint32_t current_id = 
+            player->stats.action_bar[current_action_bar_index].id;
+
+        tpp weapon = id_to_tp(current_id);
+        if (tp_is_weapon(weapon)) {
+            socket_tx_player_action(client_joined_server, player, 
+                                    PLAYER_ACTION_USE,
+                                    current_action_bar_index);
+        }
+    }
 
     wid_player_stats_redraw(true /* fast */);
 

@@ -1,5 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-put a weapon in inventory and not selected
 multiplayer, join game does not show stats window
 move stats panel on left into middle
 stats need to do something
@@ -57,6 +56,7 @@ mining?
 
 
 Sun Feb  1 12:01:06 EST 2015
+- put a weapon in inventory and not selected
 - pop action bar last weapon does not unwield
 
 Sun Feb  1 08:14:28 EST 2015
