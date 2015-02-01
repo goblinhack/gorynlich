@@ -1375,8 +1375,10 @@ void socket_tx_client_status (gsocketp s)
     memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
     memcpy(packet->data, &msg, sizeof(msg));
 
-    LOG("Client: Tx Name [to %s] \"%s\"", 
+    LOG("Client: Tx Client Status [to %s] \"%s\"", 
         socket_get_remote_logname(s), s->stats.pname);
+    thing_stats_dump(&s->stats);
+// CON("client, tx version: %d",s->stats.client_version);
 
     packet->len = sizeof(msg);
 
@@ -1399,7 +1401,7 @@ void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
     memcpy(&msg, packet->data, sizeof(msg));
 
     char *tmp = iptodynstr(read_address(packet));
-    LOG("Server: Rx Name from %s \"%s\"", tmp, msg.stats.pname);
+    LOG("Server: Rx Client Status from %s \"%s\"", tmp, msg.stats.pname);
     myfree(tmp);
 
     socket_set_player_stats(s, &msg.stats);
@@ -1410,49 +1412,52 @@ void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
     aplayer *p = s->player;
     if (!p) {
         p = (typeof(p)) myzalloc(sizeof(*p), "player");
+    }
 
+    /*
+     * Stats from the player.
+     */
+    thing_stats new_stats;
+    memcpy(&new_stats, &msg.stats, sizeof(new_stats));
+
+    /*
+     * Current stats either from the thing or player if no thing.
+     */
+    thing_stats current_stats;
+    if (p->thing) {
+        memcpy(&current_stats, &p->thing->stats, sizeof(current_stats));
+    } else {
+        memcpy(&current_stats, &p->stats_from_client, sizeof(new_stats));
+    }
+
+// CON("server, rx version %d",new_stats.client_version);
+
+    /*
+     * Merge them together.
+     */
+    thing_stats merged_stats;
+    memcpy(&merged_stats, &current_stats, sizeof(current_stats));
+    int changed = thing_stats_merge(&merged_stats, &current_stats, &new_stats);
+
+    /*
+     * Now update the player stats and thing with merged stats.
+     */
+    memcpy(&p->stats_from_client, &merged_stats, sizeof(merged_stats));
+
+    if (p->thing) {
+        memcpy(&p->thing->stats, &merged_stats, sizeof(merged_stats));
+    }
+
+    /*
+     * We keep stats on the socket in case the player gets disconnected.
+     */
+    socket_set_player(s, p);
+
+    if (changed) {
         /*
-         * Stats from the player.
+         * Update the client that we have merged their stat change in.
          */
-        thing_stats new_stats;
-        memcpy(&new_stats, &msg.stats, sizeof(new_stats));
-
-        /*
-         * Current stats either from the thing or player if no thing.
-         */
-        thing_stats current_stats;
-        if (p->thing) {
-            memcpy(&current_stats, &p->thing->stats, sizeof(current_stats));
-        } else {
-            memcpy(&current_stats, &p->stats_from_client, sizeof(new_stats));
-        }
-
-        /*
-         * Merge them together.
-         */
-        thing_stats merged_stats;
-        int changed = thing_stats_merge(&merged_stats, &current_stats, &new_stats);
-
-        /*
-         * Now update the player stats and thing with merged stats.
-         */
-        memcpy(&p->stats_from_client, &merged_stats, sizeof(merged_stats));
-
-        if (p->thing) {
-            memcpy(&p->thing->stats, &merged_stats, sizeof(merged_stats));
-        }
-
-        /*
-         * We keep stats on the socket in case the player gets disconnected.
-         */
-        socket_set_player(s, p);
-
-        if (changed) {
-            /*
-             * Update the client that we have merged their stat change in.
-             */
-            socket_tx_server_status(s);
-        }
+        socket_tx_server_status(s);
     }
 
     p->local_ip = s->local_ip;
@@ -2267,8 +2272,9 @@ void socket_tx_server_status (gsocketp s_in)
             if (t) {
                 memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
 
+// CON("server, tx version: %d",t->stats.client_version);
                 if (0) {
-                    LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
+                    LOG("Server: Tx Server Status [to %s]", socket_get_remote_logname(s));
                     thing_dump(t);
                 }
 
@@ -2284,8 +2290,8 @@ void socket_tx_server_status (gsocketp s_in)
 
         memcpy(packet->data, &msg, sizeof(msg));
 
-        if (1) {
-            LOG("Server: Tx Status [to %s]", socket_get_remote_logname(s));
+        if (0) {
+            LOG("Server: Tx Server Status [to %s]", socket_get_remote_logname(s));
         }
 
         packet->len = sizeof(msg);
@@ -2327,10 +2333,10 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
     if (0) {
         char *tmp = iptodynstr(read_address(packet));
         if (msg->you_are_playing_on_this_server) {
-            LOG("Client: Rx Status from %s, current player \"%s\"", 
+            LOG("Client: Rx Server Status from %s, current player \"%s\"", 
                 tmp, p->stats.pname);
         } else {
-            LOG("Client: Rx Status from %s", tmp);
+            LOG("Client: Rx Server Status from %s", tmp);
         }
         myfree(tmp);
     }
@@ -2341,6 +2347,7 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
     status->you_are_playing_on_this_server = msg->you_are_playing_on_this_server;
 
     memcpy(&s->server_status, status, sizeof(s->server_status));
+// CON("client, rx version: %d",s->stats.client_version);
 }
 
 /*

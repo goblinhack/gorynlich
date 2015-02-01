@@ -130,7 +130,7 @@ void player_inventory_sort(thing_statsp thing_stats);
 
 void thing_stats_client_modified(thing_statsp player_stats);
 void thing_stats_dump(const thing_statsp s);
-void thing_stats_diff(const thing_statsp old, const thing_statsp new_stats);
+int thing_stats_diff(const thing_statsp old, const thing_statsp new_stats);
 int thing_stats_merge(thing_statsp merged_stats, 
                       thing_statsp current_stats, 
                       thing_statsp new_stats);;
