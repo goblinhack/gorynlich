@@ -278,6 +278,8 @@ wid_player_info_button_style_mouse_down (widp w,
         }
     }
 
+    stats_bump_version(player_stats);
+
     wid_player_stats_redraw(true /* fast */);
 
     return (true);
