@@ -630,7 +630,6 @@ void level_reset_players (levelp level)
             if (weapon) {
                 thing_wield(t, weapon);
                 thing_update(t);
-LOG("------------------------------------------");
             }
         }
     }

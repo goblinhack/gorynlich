@@ -3827,6 +3827,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
          */
         if (weapon_id) {
             thing_wield(t, id_to_tp(weapon_id));
+        } else if (t->weapon) {
+            thing_unwield(t);
         }
 
         if (weapon_swung) {
@@ -4427,6 +4429,15 @@ void thing_server_action (thingp t,
          */
         MSG_SERVER_SHOUT_AT_PLAYER(WARNING, t, "Failed to use the %s", 
                                    tp_short_name(tp));
+        return;
+    }
+
+    case PLAYER_ACTION_STOP_USE: {
+        if (tp_is_weapon(tp)) {
+            thing_unwield(t);
+            return;
+        }
+
         return;
     }
 
