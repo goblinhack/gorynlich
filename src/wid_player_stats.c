@@ -23,7 +23,7 @@ widp wid_player_stats;
 static widp wid_player_stats_container;
 static uint8_t wid_thing_stats_init_done;
 
-static void wid_player_stats_create(thing_statsp );
+static void wid_player_stats_create(thing_statsp, int fast);
 static void wid_player_stats_destroy(void);
 static thing_statsp player_stats;
 
@@ -111,21 +111,25 @@ void wid_player_stats_fini (void)
     }
 }
 
-void wid_player_stats_hide (void)
+void wid_player_stats_hide (int fast)
 {
     if (wid_player_stats) {
-        wid_move_to_pct_centered_in(wid_player_stats, 0.5, 1.45, 200);
+        if (fast) {
+            wid_hide(wid_player_stats, 0);
+        } else {
+            wid_move_to_pct_centered_in(wid_player_stats, 0.5, 1.45, 200);
+        }
     }
 
     wid_player_stats_destroy();
 }
 
-void wid_player_stats_visible (thing_statsp s)
+void wid_player_stats_visible (thing_statsp s, int fast)
 {
-    wid_player_stats_create(s);
+    wid_player_stats_create(s, fast);
 }
 
-void wid_player_stats_redraw (void)
+void wid_player_stats_redraw (int fast)
 {
     if (!wid_player_info_is_visible()) {
         return;
@@ -137,17 +141,17 @@ void wid_player_stats_redraw (void)
 
     player_inventory_sort(player_stats);
 
-    wid_player_stats_hide();
-    wid_player_stats_create(player_stats);
+    wid_player_stats_hide(fast);
+    wid_player_stats_create(player_stats, fast);
 
-    wid_player_info_hide();
-    wid_player_info_visible(player_stats);
+    wid_player_info_hide(fast);
+    wid_player_info_visible(player_stats, fast);
 
-    wid_player_inventory_hide();
-    wid_player_inventory_visible(player_stats);
+    wid_player_inventory_hide(fast);
+    wid_player_inventory_visible(player_stats, fast);
 
-    wid_player_action_hide();
-    wid_player_action_visible(player_stats, true);
+    wid_player_action_hide(fast);
+    wid_player_action_visible(player_stats, fast);
 
     wid_raise(wid_mouse_template);
 }
@@ -158,7 +162,7 @@ static void wid_player_stats_reroll (void)
 
     thing_stats_get_random(player_stats, true /* new_random_name_and_class */);
 
-    wid_player_stats_redraw();
+    wid_player_stats_redraw(true /* fast */);
 
     /*
      * No carrying of mouse items from old screen
@@ -235,7 +239,7 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
         break;
     }
 
-    wid_player_stats_redraw();
+    wid_player_stats_redraw(true /* fast */);
 
     return (true);
 }
@@ -249,7 +253,7 @@ static uint8_t wid_player_stats_col2_mouse_event (widp w,
     return (true);
 }
 
-static void wid_player_stats_create (thing_statsp s)
+static void wid_player_stats_create (thing_statsp s, int fast)
 {
     player_stats = s;
 
@@ -587,8 +591,12 @@ static void wid_player_stats_create (thing_statsp s)
         wid_set_square(w);
     }
 
-    wid_move_to_pct_centered(wid_player_stats, 0.2, -0.45);
-    wid_move_to_pct_centered_in(wid_player_stats, 0.2, 0.45, 200);
+    if (fast) {
+        wid_move_to_pct_centered(wid_player_stats, 0.2, 0.45);
+    } else {
+        wid_move_to_pct_centered(wid_player_stats, 0.2, -0.45);
+        wid_move_to_pct_centered_in(wid_player_stats, 0.2, 0.45, 200);
+    }
 
     wid_raise(wid_player_stats);
     wid_update(wid_player_stats);
