@@ -83,6 +83,7 @@ typedef struct {
 enum {
     PLAYER_ACTION_USE,
     PLAYER_ACTION_DROP,
+    PLAYER_ACTION_STOP_USE,
 };
 
 typedef struct {
