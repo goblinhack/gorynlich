@@ -478,10 +478,6 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         return (true);
     }
 
-    socket_tx_player_action(client_joined_server, player, 
-                            PLAYER_ACTION_USE,
-                            action_bar_index);
-
     if (redraw_action_bar) {
         /*
          * Assume the server will accept the change and update locally else it 
@@ -497,7 +493,13 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
             wid_player_action_hide();
             wid_player_action_visible(&player->stats, 1 /* fast */);
         }
+
+        wid_player_stats_redraw();
     }
+
+    socket_tx_player_action(client_joined_server, player, 
+                            PLAYER_ACTION_USE,
+                            action_bar_index);
 
     return (true);
 }
