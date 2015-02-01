@@ -68,6 +68,10 @@ void thing_stats_dump (const thing_statsp s)
 
             char *tmp = item2str(a);
             if (tmp) {
+                char *tmp2 = dynprintf("[%d] %s", i, tmp);
+                swap(tmp, tmp2);
+                myfree(tmp2);
+
                 if (item_str) {
                     LOG("    %-30s %-30s", item_str, tmp);
                     myfree(item_str);
@@ -77,8 +81,6 @@ void thing_stats_dump (const thing_statsp s)
                     item_str = tmp;
                 }
             }
-
-            i++;
         }
 
         if (item_str) {
@@ -1157,6 +1159,8 @@ void thing_stats_get_random (thing_statsp player_stats,
      * Be generous and give some items at startup.
      */
     thing_stats_get_random_items(player_stats);
+
+    player_inventory_sort(player_stats);
 
     LOG("Done generating random character");
 }
