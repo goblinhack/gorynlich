@@ -481,6 +481,50 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
                 wid_set_mode(w, WID_MODE_ACTIVE);
                 wid_set_color(w, WID_COLOR_TEXT, RED);
+            } else {
+                int delta = stats_get_hp(s) - last_hp;
+                int count = (rand() % delta) + 1;
+
+                if (count > 10) {
+                    count = 10;
+                }
+
+                while (count--) {
+                    tpp what = tp_find("data/things/heart");
+                    if (!what) {
+                        DIE("cannot place heart");
+                    }
+
+                    widp heart =
+                        wid_new_square_button(wid_player_action,
+                                              "wid player_stats container");
+
+                    fpoint tl = {0.19, 0.25};
+                    fpoint br = {0.24, 0.50};
+
+                    double dx = (myrand() % 100) / 1000.0;
+                    double dy = (myrand() % 100) / 1000.0;
+
+                    tl.x += dx;
+                    tl.y += dy;
+                    br.x += dx;
+                    br.y += dy;
+
+                    wid_set_tl_br_pct(heart, tl, br);
+
+                    wid_set_thing_template(heart, what);
+
+                    wid_move_to_pct_centered_in(heart, 0.15, 0.6, 4000);
+                    wid_fade_out(heart, 2000);
+
+                    wid_raise(heart);
+                    wid_set_mode(heart, WID_MODE_NORMAL);
+                    wid_set_color(heart, WID_COLOR_TEXT, WHITE);
+                    wid_set_color(heart, WID_COLOR_BG, WHITE);
+                    wid_set_color(heart, WID_COLOR_TL, WHITE);
+                    wid_set_color(heart, WID_COLOR_BR, WHITE);
+                    wid_set_no_shape(heart);
+                }
             }
 
             last_hp = stats_get_hp(s);
