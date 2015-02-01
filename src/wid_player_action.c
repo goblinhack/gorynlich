@@ -64,14 +64,14 @@ wid_player_action_button_style_mouse_down (widp w,
                                            uint32_t button)
 {
     uint32_t id = (typeof(id)) (uintptr_t) wid_get_client_context(w);
+    int32_t action_bar_index = (typeof(action_bar_index))
+                    (uintptr_t) wid_get_client_context2(w);
 
     /*
      * Weapon switch if we click on a weapon when the stats window is not 
      * present.
      */
     if (!wid_player_inventory_is_visible()) {
-        int32_t action_bar_index = (typeof(action_bar_index))
-                        (uintptr_t) wid_get_client_context2(w);
         uint32_t id = player->stats.action_bar[action_bar_index].id;
         if (!id) {
             MSG(WARNING, "Nothing in that slot");
@@ -97,7 +97,49 @@ wid_player_action_button_style_mouse_down (widp w,
     itemp over_item = &player_stats->action_bar[id];
 
     if (!wid_mouse_template) {
+        int wield = false;
+
+        if (player) {
+            int current_action_bar_index = 
+                thing_stats_get_action_bar_index(player);
+
+            /*
+             * If we just picked up the current weapon (to move it elsewhere) 
+             * then stop using it.
+             */
+            if (action_bar_index == current_action_bar_index) {
+                uint32_t current_id = player->stats.action_bar[action_bar_index].id;
+
+                tpp weapon = id_to_tp(current_id);
+                if (tp_is_weapon(weapon)) {
+                    thing_unwield(player);
+                    wield = true;
+                }
+            }
+        }
+
         wid_player_item_pick_up(w, over_item);
+
+        /*
+         * If we just moved a weapon into the inventory we need to auto use 
+         * the next weapon we have.
+         */
+        if (wield) {
+            thing_wield_next_weapon(player);
+
+            int current_action_bar_index = 
+                thing_stats_get_action_bar_index(player);
+
+            uint32_t current_id = 
+                player->stats.action_bar[current_action_bar_index].id;
+
+            tpp weapon = id_to_tp(current_id);
+            if (tp_is_weapon(weapon)) {
+                socket_tx_player_action(client_joined_server, player, 
+                                        PLAYER_ACTION_USE,
+                                        current_action_bar_index);
+            }
+        }
     } else {
         /*
          * Drop the current item.
@@ -182,6 +224,8 @@ wid_player_action_button_style_mouse_down (widp w,
             wid_set_client_context(w, 0);
         }
     }
+
+    stats_bump_version(player_stats);
 
     wid_player_stats_redraw(true /* fast */);
 
