@@ -350,7 +350,7 @@ void wid_set_text_centery(widp, uint8_t val);
 void wid_set_text_fixed_width(widp, uint8_t val);
 void wid_set_text_lhs(widp, uint8_t val);
 void wid_set_text_outline(widp, uint8_t val);
-void wid_set_blit_outline(widp, uint8_t val);
+void wid_set_blit_outline(widp, double val);
 void wid_set_text_pos(widp, uint8_t val, double x, double y);
 void wid_set_text_rhs(widp, uint8_t val);
 void wid_set_text_scaling(widp, double val);
@@ -747,6 +747,7 @@ typedef struct wid_ {
     uint16_t scaling_w_repeat_count;
     uint16_t scaling_h_repeat_count;
 
+    double blit_outline_val;
     double blit_scale_w_base;
     double blit_scaling_w_start;
     double blit_scaling_w_end;

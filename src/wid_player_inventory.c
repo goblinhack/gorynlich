@@ -83,6 +83,13 @@ void wid_player_inventory_button_style (widp w,
 {
     color c;
 
+#ifdef SEEMS_TO_ADD_NOTHING
+    wid_set_blit_outline(w, 1.5);
+    c = BLACK;
+    c.a = 30;
+    wid_set_color(w, WID_COLOR_BLIT_OUTLINE, c);
+#endif
+
     wid_set_mode(w, WID_MODE_NORMAL);
 
     c = BLACK;
