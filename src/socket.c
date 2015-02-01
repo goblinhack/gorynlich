@@ -1369,7 +1369,7 @@ void socket_tx_client_status (gsocketp s)
 
     UDPpacket *packet = packet_alloc();
 
-    msg_name msg = {0};
+    msg_client_status msg = {0};
     msg.type = MSG_CLIENT_STATUS;
 
     memcpy(&msg.stats, &s->stats, sizeof(thing_stats));
@@ -1391,7 +1391,7 @@ void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
 {
     verify(s);
 
-    msg_name msg = {0};
+    msg_client_status msg = {0};
 
     if (packet->len != sizeof(msg)) {
         socket_count_inc_pak_rx_error(s, packet);

@@ -1225,6 +1225,8 @@ int32_t thing_stats_get_cash (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.cash;
     return (val);
 }
@@ -1232,6 +1234,8 @@ int32_t thing_stats_get_cash (thingp t)
 int32_t thing_stats_get_client_version (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.client_version;
     return (val);
@@ -1241,6 +1245,8 @@ int32_t thing_stats_get_on_server (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.on_server;
     return (val);
 }
@@ -1248,6 +1254,8 @@ int32_t thing_stats_get_on_server (thingp t)
 int32_t thing_stats_get_hp (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.hp;
     return (val);
@@ -1257,6 +1265,8 @@ int32_t thing_stats_get_action_bar_index (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.action_bar_index;
     return (val);
 }
@@ -1264,6 +1274,8 @@ int32_t thing_stats_get_action_bar_index (thingp t)
 int32_t thing_stats_get_max_hp (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.max_hp;
     if (val) {
@@ -1278,6 +1290,8 @@ int32_t thing_stats_get_magic (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.magic;
     return (val);
 }
@@ -1285,6 +1299,8 @@ int32_t thing_stats_get_magic (thingp t)
 int32_t thing_stats_get_max_magic (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.max_magic;
     if (val) {
@@ -1299,6 +1315,8 @@ int32_t thing_stats_get_xp (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.xp;
     return (val);
 }
@@ -1306,6 +1324,8 @@ int32_t thing_stats_get_xp (thingp t)
 int32_t thing_stats_get_attack_melee (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.attack_melee;
     if (val) {
@@ -1320,6 +1340,8 @@ int32_t thing_stats_get_attack_ranged (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.attack_ranged;
     if (val) {
         return (val);
@@ -1332,6 +1354,8 @@ int32_t thing_stats_get_attack_ranged (thingp t)
 int32_t thing_stats_get_attack_magical (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.attack_magical;
     if (val) {
@@ -1346,6 +1370,8 @@ int32_t thing_stats_get_speed (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.speed;
     if (val) {
         return (val);
@@ -1358,6 +1384,8 @@ int32_t thing_stats_get_speed (thingp t)
 int32_t thing_stats_get_vision (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.vision;
     if (val) {
@@ -1372,6 +1400,8 @@ int32_t thing_stats_get_healing (thingp t)
 {
     int32_t val;
 
+    verify(t);
+
     val = t->stats.healing;
     if (val) {
         return (val);
@@ -1384,6 +1414,8 @@ int32_t thing_stats_get_healing (thingp t)
 int32_t thing_stats_get_defense (thingp t)
 {
     int32_t val;
+
+    verify(t);
 
     val = t->stats.defense;
     if (val) {
@@ -1770,7 +1802,7 @@ int32_t stats_get_defense (thing_statsp stats)
     return (val);
 }
 
-static void stats_bump_version (thing_statsp stats)
+void stats_bump_version (thing_statsp stats)
 {
     if (!stats->on_server) {
         stats->client_version++;

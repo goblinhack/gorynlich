@@ -64,7 +64,7 @@ typedef struct {
 typedef struct {
     uint8_t type;
     thing_stats stats;
-} __attribute__ ((packed)) msg_name;
+} __attribute__ ((packed)) msg_client_status;
 
 typedef struct {
     uint8_t type;

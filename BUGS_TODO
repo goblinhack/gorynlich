@@ -1,8 +1,7 @@
 --------------------------------------- plan for feb --------------------------------------
-pick up an item from the inventory and the wrong item is moved
+put a weapon in inventory and not selected
 multiplayer, join game does not show stats window
 move stats panel on left into middle
-update inventory while playing
 stats need to do something
 magic attack - green fireball?
 sound effects for weapons and hits http://www.bfxr.net/
@@ -55,6 +54,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sun Feb  1 08:14:28 EST 2015
+- update inventory while playing
+- pick up an item from the inventory and the wrong item is moved
 
 Sat Jan 31 11:54:52 EST 2015
 - spending points spending should not cause windows to zoom up/down
