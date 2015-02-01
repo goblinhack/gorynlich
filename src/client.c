@@ -920,7 +920,7 @@ static void client_rx_server_status (gsocketp s,
         /*
          * Server is behind.
          */
-        CON("Server is behind latest version of stats, client: %d server: %d, ignore", 
+        LOG("Server is behind latest version of stats, client: %d server: %d, ignore", 
             old_stats->client_version, new_stats->client_version);
 
         return;
