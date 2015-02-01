@@ -1813,11 +1813,12 @@ uint8_t wid_get_blit_outline (widp w)
 /*
  * Look at all the widset modes and return the most relevent setting
  */
-void wid_set_blit_outline (widp w, uint8_t val)
+void wid_set_blit_outline (widp w, double val)
 {
     fast_verify(w);
 
-    w->blit_outline = val;
+    w->blit_outline = 1;
+    w->blit_outline_val = val;
 }
 
 /*
@@ -7398,11 +7399,60 @@ static void wid_display_fast (widp w, uint8_t pass)
         br.x += blit_width;
         tl.y -= blit_height;
         br.y += blit_height;
-
-        tile_blit_fat(tile, 0, tl, br);
-    } else {
-        tile_blit_fat(tile, 0, tl, br);
     }
+
+    /*
+     * Blit a border around the tile.
+     */
+    if (wid_get_blit_outline(w)) {
+        color col_blit_outline = wid_get_color(w, WID_COLOR_BLIT_OUTLINE);
+
+        glcolor(col_blit_outline);
+
+        fpoint ntl;
+        fpoint nbr;
+
+        double scale = w->blit_outline_val;
+        double ow = wid_get_width(w);
+        double oh = wid_get_height(w);
+        double nw = ow * scale;
+        double nh = oh * scale;
+        double dx = (nw - ow) / 2.0;
+        double dy = (nh - oh) / 2.0;
+
+        ntl.x = tl.x - dx;
+        nbr.x = br.x + dx;
+
+        ntl.y = tl.y - dy;
+        nbr.y = br.y + dy;
+
+        double ox = ((tl.x + ow * tile->px1) +
+                     (tl.x + ow * tile->px2)) / 2.0;
+
+        double oy = ((tl.y + oh * tile->py1) +
+                     (tl.y + oh * tile->py2)) / 2.0;
+
+        double nx = ((ntl.x + nw * tile->px1) +
+                     (ntl.x + nw * tile->px2)) / 2.0;
+
+        double ny = ((ntl.y + nh * tile->py1) +
+                     (ntl.y + nh * tile->py2)) / 2.0;
+
+        dx = ox - nx;
+        dy = oy - ny;
+
+        ntl.x += dx;
+        nbr.x += dx;
+
+        ntl.y += dy;
+        nbr.y += dy;
+
+        tile_blit_fat(tile, 0, ntl, nbr);
+
+        glcolor(WHITE);
+    }
+
+    tile_blit_fat(tile, 0, tl, br);
 }
 
 /*
@@ -8073,7 +8123,6 @@ static void wid_display (widp w,
 
     color col_tl = wid_get_color(w, WID_COLOR_TL);
     color col_br = wid_get_color(w, WID_COLOR_BR);
-    color col_blit_outline = wid_get_color(w, WID_COLOR_BLIT_OUTLINE);
     color col = wid_get_color(w, WID_COLOR_BG);
     color col_tile = wid_get_color(w, WID_COLOR_BLIT);
 
@@ -8286,21 +8335,49 @@ static void wid_display (widp w,
          * Blit a border around the tile.
          */
         if (wid_get_blit_outline(w)) {
+            color col_blit_outline = wid_get_color(w, WID_COLOR_BLIT_OUTLINE);
+
             glcolor(col_blit_outline);
 
-            fpoint otl;
-            fpoint obr;
-            int32_t dx;
-            int32_t dy;
+            fpoint ntl;
+            fpoint nbr;
 
-            dx = 2;
-            dy = 2;
-            otl.x = tl.x - dx;
-            otl.y = tl.y - dx;
-            obr.x = br.x + dy;
-            obr.y = br.y + dy;
+            double scale = w->blit_outline_val;
+            double ow = wid_get_width(w);
+            double oh = wid_get_height(w);
+            double nw = ow * scale;
+            double nh = oh * scale;
+            double dx = (nw - ow) / 2.0;
+            double dy = (nh - oh) / 2.0;
 
-            tile_blit_fat(tile, 0, otl, obr);
+            ntl.x = tl.x - dx;
+            nbr.x = br.x + dx;
+
+            ntl.y = tl.y - dy;
+            nbr.y = br.y + dy;
+
+            double ox = ((tl.x + ow * tile->px1) +
+                        (tl.x + ow * tile->px2)) / 2.0;
+
+            double oy = ((tl.y + oh * tile->py1) +
+                        (tl.y + oh * tile->py2)) / 2.0;
+
+            double nx = ((ntl.x + nw * tile->px1) +
+                        (ntl.x + nw * tile->px2)) / 2.0;
+
+            double ny = ((ntl.y + nh * tile->py1) +
+                        (ntl.y + nh * tile->py2)) / 2.0;
+
+            dx = ox - nx;
+            dy = oy - ny;
+
+            ntl.x += dx;
+            nbr.x += dx;
+
+            ntl.y += dy;
+            nbr.y += dy;
+
+            tile_blit_fat(tile, 0, ntl, nbr);
 
             glcolor(WHITE);
         }
