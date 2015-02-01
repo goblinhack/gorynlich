@@ -172,56 +172,69 @@ void thing_stats_dump (const thing_statsp s)
 /*
  * Dump what changed between two stats
  */
-void thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stats)
+int thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stats)
 {
     const char indent[] = "  ";
+    int changed = 0;
 
     if (old_stats->hp != new_stats->hp) {
         LOG("%sHp changed from %d to %d", indent, old_stats->hp, new_stats->hp);
+        changed = 1;
     }
 
     if (old_stats->magic != new_stats->magic) {
         LOG("%sMagic changed from %d to %d", indent, old_stats->magic, new_stats->magic);
+        changed = 1;
     }
 
     if (old_stats->xp != new_stats->xp) {
         LOG("%sXp changed from %d to %d", indent, old_stats->xp, new_stats->xp);
+        changed = 1;
     }
 
     if (old_stats->cash != new_stats->cash) {
         LOG("%sCash changed from %d to %d", indent, old_stats->cash, new_stats->cash);
+        changed = 1;
     }
 
     if (old_stats->client_version != new_stats->client_version) {
         LOG("%sClient version changed from %d to %d", indent, old_stats->client_version, new_stats->client_version);
+        changed = 1;
     }
 
     if (old_stats->spending_points != new_stats->spending_points) {
         LOG("%sSpending_points changed from %d to %d", indent, old_stats->spending_points, new_stats->spending_points);
+        changed = 1;
     }
 
     if (old_stats->vision != new_stats->vision) {
         LOG("%sVision changed from %d to %d", indent, old_stats->vision, new_stats->vision);
+        changed = 1;
     }
 
     if (old_stats->attack_melee != new_stats->attack_melee) {
         LOG("%sAttack_melee changed from %d to %d", indent, old_stats->attack_melee, new_stats->attack_melee);
+        changed = 1;
     }
 
     if (old_stats->attack_ranged != new_stats->attack_ranged) {
         LOG("%sAttack_ranged changed from %d to %d", indent, old_stats->attack_ranged, new_stats->attack_ranged);
+        changed = 1;
     }
 
     if (old_stats->defense != new_stats->defense) {
         LOG("%sDefense changed from %d to %d", indent, old_stats->defense, new_stats->defense);
+        changed = 1;
     }
 
     if (old_stats->attack_magical != new_stats->attack_magical) {
         LOG("%sAttack_magical changed from %d to %d", indent, old_stats->attack_magical, new_stats->attack_magical);
+        changed = 1;
     }
 
     if (old_stats->action_bar_index != new_stats->action_bar_index) {
         LOG("%sAction index   changed from %d to %d", indent, old_stats->action_bar_index, new_stats->action_bar_index);
+        changed = 1;
     }
 
     {
@@ -232,6 +245,8 @@ void thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stat
             item_t b = new_stats->inventory[i];
 
             if (memcmp(&a, &b, sizeof(a))) {
+                changed = 1;
+
                 char *ia = item2str(a);
                 char *ib = item2str(b);
 
@@ -257,6 +272,8 @@ void thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stat
             item_t b = new_stats->action_bar[i];
 
             if (memcmp(&a, &b, sizeof(a))) {
+                changed = 1;
+
                 char *ia = item2str(a);
                 char *ib = item2str(b);
 
@@ -282,6 +299,8 @@ void thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stat
             item_t b = new_stats->worn[i];
 
             if (memcmp(&a, &b, sizeof(a))) {
+                changed = 1;
+
                 char *ia = item2str(a);
                 char *ib = item2str(b);
 
@@ -299,6 +318,8 @@ void thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stat
             }
         }
     }
+
+    return (changed);
 }
 
 /*
@@ -1373,7 +1394,7 @@ static void thing_stats_verify (thingp t)
 {
     verify(t);
 
-    if (t->on_server && !t->stats.on_server) {
+    if (t->on_server != t->stats.on_server) {
         DIE("%s thing stats location do not match thing", thing_logname(t));
     }
 }
@@ -1754,6 +1775,10 @@ static void stats_bump_version (thing_statsp stats)
 
 void stats_set_cash (thing_statsp stats, int32_t val)
 {
+    if (stats->cash == val) {
+        return;
+    }
+
     stats->cash = val;
     stats_bump_version(stats);
 }
@@ -1770,84 +1795,140 @@ void stats_set_on_server (thing_statsp stats, int32_t val)
 
 void stats_set_action_bar_index (thing_statsp stats, int32_t val)
 {
+    if (stats->action_bar_index == val) {
+        return;
+    }
+
     stats->action_bar_index = val;
     stats_bump_version(stats);
 }
 
 void stats_set_hp (thing_statsp stats, int32_t val)
 {
+    if (stats->hp == val) {
+        return;
+    }
+
     stats->hp = val;
     stats_bump_version(stats);
 }
 
 void stats_set_max_hp (thing_statsp stats, int32_t val)
 {
+    if (stats->max_hp == val) {
+        return;
+    }
+
     stats->max_hp = val;
     stats_bump_version(stats);
 }
 
 void stats_set_magic (thing_statsp stats, int32_t val)
 {
+    if (stats->magic == val) {
+        return;
+    }
+
     stats->magic = val;
     stats_bump_version(stats);
 }
 
 void stats_set_max_magic (thing_statsp stats, int32_t val)
 {
+    if (stats->max_magic == val) {
+        return;
+    }
+
     stats->max_magic = val;
     stats_bump_version(stats);
 }
 
 void stats_set_xp (thing_statsp stats, int32_t val)
 {
+    if (stats->xp == val) {
+        return;
+    }
+
     stats->xp = val;
     stats_bump_version(stats);
 }
 
 void stats_set_attack_melee (thing_statsp stats, int32_t val)
 {
+    if (stats->attack_melee == val) {
+        return;
+    }
+
     stats->attack_melee = val;
     stats_bump_version(stats);
 }
 
 void stats_set_attack_ranged (thing_statsp stats, int32_t val)
 {
+    if (stats->attack_ranged == val) {
+        return;
+    }
+
     stats->attack_ranged = val;
     stats_bump_version(stats);
 }
 
 void stats_set_attack_magical (thing_statsp stats, int32_t val)
 {
+    if (stats->attack_magical == val) {
+        return;
+    }
+
     stats->attack_magical = val;
     stats_bump_version(stats);
 }
 
 void stats_set_speed (thing_statsp stats, int32_t val)
 {
+    if (stats->speed == val) {
+        return;
+    }
+
     stats->speed = val;
     stats_bump_version(stats);
 }
 
 void stats_set_spending_points (thing_statsp stats, int32_t val)
 {
+    if (stats->spending_points == val) {
+        return;
+    }
+
     stats->spending_points = val;
     stats_bump_version(stats);
 }
 
 void stats_set_vision (thing_statsp stats, int32_t val)
 {
+    if (stats->vision == val) {
+        return;
+    }
+
     stats->vision = val;
     stats_bump_version(stats);
 }
 
 void stats_set_healing (thing_statsp stats, int32_t val)
 {
+    if (stats->healing == val) {
+        return;
+    }
+
     stats->healing = val;
     stats_bump_version(stats);
 }
 
 void stats_set_defense (thing_statsp stats, int32_t val)
 {
+    if (stats->defense == val) {
+        return;
+    }
+
     stats->defense = val;
     stats_bump_version(stats);
 }
