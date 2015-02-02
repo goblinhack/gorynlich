@@ -481,7 +481,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
                 wid_set_mode(w, WID_MODE_ACTIVE);
                 wid_set_color(w, WID_COLOR_TEXT, RED);
-            } else {
+            } else if (last_hp) {
                 int delta = stats_get_hp(s) - last_hp;
                 int count = (rand() % delta) + 1;
 
@@ -489,20 +489,20 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     count = 10;
                 }
 
-                while (count--) {
+                int i = count;
+                while (i--) {
                     tpp what = tp_find("data/things/heart");
                     if (!what) {
                         DIE("cannot place heart");
                     }
 
                     widp heart =
-                        wid_new_square_button(wid_player_action,
-                                              "wid player_stats container");
+                        wid_new_square_window("wid player_stats container");
 
-                    fpoint tl = {0.19, 0.25};
-                    fpoint br = {0.24, 0.50};
+                    fpoint tl = {0.1, 0.80};
+                    fpoint br = {0.15, 0.85};
 
-                    double dx = (myrand() % 100) / 1000.0;
+                    double dx = (myrand() % 100) / 1500.0;
                     double dy = (myrand() % 100) / 1000.0;
 
                     tl.x += dx;
@@ -511,11 +511,15 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     br.y += dy;
 
                     wid_set_tl_br_pct(heart, tl, br);
+                    double px, py;
+                    wid_get_pct(heart, &px, &py);
 
                     wid_set_thing_template(heart, what);
 
-                    wid_move_to_pct_centered_in(heart, 0.15, 0.6, 4000);
-                    wid_fade_out(heart, 2000);
+                    uint32_t delay = 2000;
+                    wid_move_to_pct_centered_in(heart, px - 0.1, py - 0.1, delay);
+                    wid_fade_out(heart, delay + 100);
+                    wid_destroy_in(heart, delay - 100);
 
                     wid_raise(heart);
                     wid_set_mode(heart, WID_MODE_NORMAL);
@@ -524,6 +528,18 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     wid_set_color(heart, WID_COLOR_TL, WHITE);
                     wid_set_color(heart, WID_COLOR_BR, WHITE);
                     wid_set_no_shape(heart);
+                    wid_set_do_not_lower(heart, 1);
+
+                    double scale = delta / (double) count;
+                    if (scale < 1.0) {
+                        scale = 1.0;
+                    }
+
+                    if (scale > 2.0) {
+                        scale = 2.0;
+                    }
+
+                    wid_scaling_to_pct_in(heart, scale, 0.5, delay + 100, 1);
                 }
             }
 
