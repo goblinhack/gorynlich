@@ -8967,6 +8967,13 @@ void wid_fade_out (widp w, uint32_t delay)
 {
     fast_verify(w);
 
+    /*
+     * If already faded out, do not fade out again, this causes a flicker.
+     */
+    if (w->fade_out) {
+        return;
+    }
+
     w->timestamp_fading_begin = wid_time;
     w->timestamp_fading_end = w->timestamp_fading_begin + delay;
     w->fade_in = false;
