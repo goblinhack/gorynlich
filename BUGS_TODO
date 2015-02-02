@@ -3,6 +3,7 @@ need to add stuff to the action bar all the time if there is space
 health potion and health increases need some kind of effect
 stats need to do something
 multiplayer, join game does not show stats window
+change menu system to be simpler
 magic attack - green fireball?
 sound effects for weapons and hits http://www.bfxr.net/
 sound on momey collect
@@ -57,6 +58,7 @@ mining?
 
 
 Sun Feb  1 12:01:06 EST 2015
+- wid tile outline and scaling with recenter
 - added some hearts on health increases
 - added useless blit outline effect...
 - sending too many client status updates; now look for changes only
