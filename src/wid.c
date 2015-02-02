@@ -2065,6 +2065,62 @@ void wid_set_tile (widp w, tilep tile)
     }
 }
 
+/*
+ * Scale a tile defined by its corners and recenter it based on the graphics 
+ * in that tile.
+ */
+static void wid_tile_scale (widp w, 
+                            tilep tile,
+                            fpoint tl,
+                            fpoint br,
+                            fpoint *new_tl,
+                            fpoint *new_br,
+                            double scale) 
+{
+    double ow = wid_get_width(w);
+    double oh = wid_get_height(w);
+    double nw = ow * scale;
+    double nh = oh * scale;
+    double dx = (nw - ow) / 2.0;
+    double dy = (nh - oh) / 2.0;
+
+    /*
+     * Scale the tile.
+     */
+    new_tl->x = tl.x - dx;
+    new_br->x = br.x + dx;
+
+    new_tl->y = tl.y - dy;
+    new_br->y = br.y + dy;
+
+    /*
+     * Get the midpoint of the graphic inside the tile.
+     */
+    double ox = ((tl.x + ow * tile->px1) + (tl.x + ow * tile->px2)) / 2.0;
+    double oy = ((tl.y + oh * tile->py1) + (tl.y + oh * tile->py2)) / 2.0;
+
+    /*
+     * Get the midpoint of the graphic inside the scaled tile.
+     */
+    double nx = ((new_tl->x + nw * tile->px1) + (new_tl->x + nw * tile->px2)) / 2.0;
+    double ny = ((new_tl->y + nh * tile->py1) + (new_tl->y + nh * tile->py2)) / 2.0;
+
+    /*
+     * Work out the difference between midpoints.
+     */
+    dx = ox - nx;
+    dy = oy - ny;
+
+    /*
+     * Recenter.
+     */
+    new_tl->x += dx;
+    new_br->x += dx;
+
+    new_tl->y += dy;
+    new_br->y += dy;
+}
+
 void wid_set_z_depth (widp w, uint8_t z_depth)
 {
     fast_verify(w);
@@ -7380,25 +7436,19 @@ static void wid_display_fast (widp w, uint8_t pass)
     if (w->blit_scaled_w || w->blit_scaled_h ||
         w->blit_scaling_w || w->blit_scaling_h) {
 
-        double scale_width = wid_get_blit_scaling_w(w) - 1;
-        /*
-         * Assume square scaling for speed.
-         */
-        double scale_height = scale_width;
+        double scale = wid_get_blit_scaling_w(w);
+        fpoint new_tl;
+        fpoint new_br;
 
-        double blit_width = owidth;
-        double blit_height = oheight;
-
-        blit_width /= 2.0;
-        blit_height /= 2.0;
-
-        blit_width *= scale_width;
-        blit_height *= scale_height;
-
-        tl.x -= blit_width;
-        br.x += blit_width;
-        tl.y -= blit_height;
-        br.y += blit_height;
+        wid_tile_scale(w, 
+                       tile,
+                       tl,
+                       br,
+                       &new_tl,
+                       &new_br,
+                       scale);
+        tl = new_tl;
+        br = new_br;
     }
 
     /*
@@ -7409,45 +7459,19 @@ static void wid_display_fast (widp w, uint8_t pass)
 
         glcolor(col_blit_outline);
 
-        fpoint ntl;
-        fpoint nbr;
-
         double scale = w->blit_outline_val;
-        double ow = wid_get_width(w);
-        double oh = wid_get_height(w);
-        double nw = ow * scale;
-        double nh = oh * scale;
-        double dx = (nw - ow) / 2.0;
-        double dy = (nh - oh) / 2.0;
+        fpoint new_tl;
+        fpoint new_br;
 
-        ntl.x = tl.x - dx;
-        nbr.x = br.x + dx;
+        wid_tile_scale(w, 
+                       tile,
+                       tl,
+                       br,
+                       &new_tl,
+                       &new_br,
+                       scale);
 
-        ntl.y = tl.y - dy;
-        nbr.y = br.y + dy;
-
-        double ox = ((tl.x + ow * tile->px1) +
-                     (tl.x + ow * tile->px2)) / 2.0;
-
-        double oy = ((tl.y + oh * tile->py1) +
-                     (tl.y + oh * tile->py2)) / 2.0;
-
-        double nx = ((ntl.x + nw * tile->px1) +
-                     (ntl.x + nw * tile->px2)) / 2.0;
-
-        double ny = ((ntl.y + nh * tile->py1) +
-                     (ntl.y + nh * tile->py2)) / 2.0;
-
-        dx = ox - nx;
-        dy = oy - ny;
-
-        ntl.x += dx;
-        nbr.x += dx;
-
-        ntl.y += dy;
-        nbr.y += dy;
-
-        tile_blit_fat(tile, 0, ntl, nbr);
+        tile_blit_fat(tile, 0, new_tl, new_br);
 
         glcolor(WHITE);
     }
@@ -7634,7 +7658,7 @@ static void wid_light_calculate_for_single_obstacle (widp w,
 
         /*
          * For each blocking radian, look at the distance to the light.
-         * If closer than what is blocking that radian currently, then use 
+         * If closer than what is blocking that radian currenew_tly, then use 
          * this value.
          *
          * In essence, this is a depth buffer.
@@ -8339,45 +8363,19 @@ static void wid_display (widp w,
 
             glcolor(col_blit_outline);
 
-            fpoint ntl;
-            fpoint nbr;
-
             double scale = w->blit_outline_val;
-            double ow = wid_get_width(w);
-            double oh = wid_get_height(w);
-            double nw = ow * scale;
-            double nh = oh * scale;
-            double dx = (nw - ow) / 2.0;
-            double dy = (nh - oh) / 2.0;
+            fpoint new_tl;
+            fpoint new_br;
 
-            ntl.x = tl.x - dx;
-            nbr.x = br.x + dx;
+            wid_tile_scale(w, 
+                           tile,
+                           tl,
+                           br,
+                           &new_tl,
+                           &new_br,
+                           scale);
 
-            ntl.y = tl.y - dy;
-            nbr.y = br.y + dy;
-
-            double ox = ((tl.x + ow * tile->px1) +
-                        (tl.x + ow * tile->px2)) / 2.0;
-
-            double oy = ((tl.y + oh * tile->py1) +
-                        (tl.y + oh * tile->py2)) / 2.0;
-
-            double nx = ((ntl.x + nw * tile->px1) +
-                        (ntl.x + nw * tile->px2)) / 2.0;
-
-            double ny = ((ntl.y + nh * tile->py1) +
-                        (ntl.y + nh * tile->py2)) / 2.0;
-
-            dx = ox - nx;
-            dy = oy - ny;
-
-            ntl.x += dx;
-            nbr.x += dx;
-
-            ntl.y += dy;
-            nbr.y += dy;
-
-            tile_blit_fat(tile, 0, ntl, nbr);
+            tile_blit_fat(tile, 0, new_tl, new_br);
 
             glcolor(WHITE);
         }
@@ -8387,27 +8385,24 @@ static void wid_display (widp w,
         if (w->blit_scaled_w || w->blit_scaled_h ||
             w->blit_scaling_w || w->blit_scaling_h) {
 
-            double scale_width = wid_get_blit_scaling_w(w) - 1;
-            double scale_height = wid_get_blit_scaling_h(w) - 1;
+            double scale = wid_get_blit_scaling_w(w);
+            fpoint new_tl;
+            fpoint new_br;
 
-            double blit_width = owidth;
-            double blit_height = oheight;
+            wid_tile_scale(w, 
+                           tile,
+                           tl,
+                           br,
+                           &new_tl,
+                           &new_br,
+                           scale);
 
-            blit_width /= 2.0;
-            blit_height /= 2.0;
+            tl = new_tl;
+            br = new_br;
 
-            blit_width *= scale_width;
-            blit_height *= scale_height;
-
-            tl.x -= blit_width;
-            br.x += blit_width;
-            tl.y -= blit_height;
-            br.y += blit_height;
-
-            tile_blit_fat(tile, 0, tl, br);
-        } else {
-            tile_blit_fat(tile, 0, tl, br);
         }
+
+        tile_blit_fat(tile, 0, tl, br);
 
         glBindTexture(GL_TEXTURE_2D, 0);
 
