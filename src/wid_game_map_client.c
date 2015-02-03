@@ -872,6 +872,7 @@ wid_game_map_client_replace_tile (widp w,
                     if (delay < 100) {
                         delay = 100;
                     }
+                    delay = count * 500;
 
                     wid_fade_out(heart, delay);
                     wid_destroy_in(heart, delay);
