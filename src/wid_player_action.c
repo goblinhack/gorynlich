@@ -481,7 +481,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
                 wid_set_mode(w, WID_MODE_ACTIVE);
                 wid_set_color(w, WID_COLOR_TEXT, RED);
-            } else if (last_hp) {
+            } else if (player && last_hp) {
                 int delta = stats_get_hp(s) - last_hp;
                 int count = (rand() % delta) + 1;
 
@@ -539,7 +539,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
                         scale = 2.0;
                     }
 
-                    wid_scaling_to_pct_in(heart, scale, 0.5, delay + 100, 1);
+                    wid_scaling_to_pct_in(heart, scale, 0.5, delay + 100, 0);
                 }
             }
 
