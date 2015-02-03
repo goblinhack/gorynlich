@@ -1,9 +1,15 @@
 --------------------------------------- plan for feb --------------------------------------
 need to add stuff to the action bar all the time if there is space
-health potion and health increases need some kind of effect
-stats need to do something
+health potion need some kind of glowing effect
+create super menu system to simplify the cruddy menu systems
+ - zoom effect
+ - keyboard controlled or mouse
+ - left/right callbacks for change value
+ - combine intro menu with extras/quit/back
+ - change single/multiplayer window
+ - change stats window too?
 multiplayer, join game does not show stats window
-change menu system to be simpler
+stats need to do something
 magic attack - green fireball?
 sound effects for weapons and hits http://www.bfxr.net/
 sound on momey collect

@@ -194,12 +194,10 @@ static void level_place_explosion_ (levelp level,
                                     double x, 
                                     double y,
                                     int radius,
+                                    double density,
                                     uint32_t nargs, ...)
 {
     va_list args;
-
-    x += 0.5;
-    y += 0.5;
 
     /*
      * However, as the player can move close to walls, the current tile might 
@@ -254,9 +252,6 @@ static void level_place_explosion_ (levelp level,
         }
     }
 
-    x = (int)x;
-    y = (int)y;
-
     /*
      * Record the start of this explosion. We will do a map flood fill to find 
      * out the extent of the detonation.
@@ -307,6 +302,16 @@ static void level_place_explosion_ (levelp level,
                                     nargs, args);
     va_end(args);
 
+    /*
+     * If 0 radius, then we want to only place the epicenter of the explosion 
+     * so that it gets synced to the client. This is useful for explosions 
+     * that are effects only and do not interact, so we don't need to place
+     * the explosion tiles on the server to do collisions.
+     */
+    if (!radius) {
+        return;
+    }
+
     for (ix = 1; ix < MAP_WIDTH - 1; ix++) {
         for (iy = 1; iy < MAP_HEIGHT - 1; iy++) {
             int8_t distance = this_explosion[ix][iy];
@@ -318,7 +323,6 @@ static void level_place_explosion_ (levelp level,
                 continue;
             }
 
-            double density = 0.5;
             double dx, dy;
 
             for (dx = -0.5; dx < 0.5; dx += density) {
@@ -353,6 +357,7 @@ void level_place_explosion (levelp level,
                            owner,
                            x, y,
                            6, // radius
+                           0.5, // density
                            4, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
@@ -370,6 +375,7 @@ void level_place_small_explosion (levelp level,
                            owner,
                            x, y,
                            1, // radius
+                           0.5, // density
                            4, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
@@ -385,6 +391,7 @@ void level_place_hit_success (levelp level,
                            owner,
                            x, y,
                            0, // radius
+                           0.5, // density
                            1, // nargs
                            "data/things/hit_success");
 }
@@ -397,6 +404,7 @@ void level_place_hit_miss (levelp level,
                            owner,
                            x, y,
                            0, // radius
+                           0.5, // density
                            1, // nargs
                            "data/things/hit_miss");
 }
@@ -409,6 +417,7 @@ void level_place_blood (levelp level,
                            owner,
                            x, y,
                            0, // radius
+                           0.5, // density
                            1, // nargs
                            "data/things/blood1");
 }
@@ -421,6 +430,7 @@ void level_place_blood_crit (levelp level,
                            owner,
                            x, y,
                            0, // radius
+                           0.5, // density
                            1, // nargs
                            "data/things/blood2");
 }
@@ -435,6 +445,7 @@ void level_place_fireball (levelp level,
                            owner,
                            x, y,
                            7, // radius
+                           0.5, // density
                            4, // nargs
                            "data/things/explosion1",
                            "data/things/explosion2",
@@ -450,11 +461,25 @@ void level_place_poison (levelp level,
                            owner,
                            x, y,
                            9, // radius
+                           0.5, // density
                            4, // nargs
                            "data/things/poison1",
                            "data/things/poison2",
                            "data/things/poison3",
                            "data/things/poison4");
+}
+
+void level_place_sparkles (levelp level, 
+                           thingp owner,
+                           double x, double y)
+{
+    level_place_explosion_(level, 
+                           owner,
+                           x, y,
+                           level == server_level ? 0 : 1, // radius
+                           0.5, // density
+                           1, // nargs
+                           "data/things/sparkle");
 }
 
 void level_place_cloudkill (levelp level, 
@@ -465,6 +490,7 @@ void level_place_cloudkill (levelp level,
                            owner,
                            x, y,
                            12, // radius
+                           0.5, // density
                            4, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
@@ -480,6 +506,7 @@ void level_place_small_cloudkill (levelp level,
                            owner,
                            x, y,
                            2, // radius
+                           0.5, // density
                            4, // nargs
                            "data/things/cloudkill1",
                            "data/things/cloudkill2",
