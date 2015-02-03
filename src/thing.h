@@ -355,6 +355,7 @@ extern uint16_t THING_EXPLOSION4;
 extern uint16_t THING_HIT_SUCCESS;
 extern uint16_t THING_HIT_MISS;
 extern uint16_t THING_HEART;
+extern uint16_t THING_SPARKLE;
 extern uint16_t THING_BLOOD1;
 extern uint16_t THING_BLOOD2;
 extern uint16_t THING_POISON1;
