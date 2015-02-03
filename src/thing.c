@@ -83,6 +83,7 @@ uint16_t THING_EXPLOSION4;
 uint16_t THING_HIT_SUCCESS;
 uint16_t THING_HIT_MISS;
 uint16_t THING_HEART;
+uint16_t THING_SPARKLE;
 uint16_t THING_BLOOD1;
 uint16_t THING_BLOOD2;
 uint16_t THING_POISON1;
@@ -4413,6 +4414,12 @@ void thing_server_action (thingp t,
             break;
         } else if (item->id == THING_POTION_MONSTICIDE) {
             level_place_poison(server_level, t, t->x, t->y);
+            break;
+        } else if (item->id == THING_POTION_LIFE) {
+            level_place_sparkles(server_level, t, t->x, t->y);
+            break;
+        } else if (item->id == THING_POTION_SHIELD) {
+            level_place_sparkles(server_level, t, t->x, t->y);
             break;
         } else if (item->id == THING_POTION_CLOUDKILL) {
             level_place_cloudkill(server_level, t, t->x, t->y);

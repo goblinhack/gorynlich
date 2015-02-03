@@ -1817,7 +1817,7 @@ void wid_set_blit_outline (widp w, double val)
 {
     fast_verify(w);
 
-    w->blit_outline = 1;
+    w->blit_outline = val ? 1 : 0;
     w->blit_outline_val = val;
 }
 
@@ -8399,7 +8399,6 @@ static void wid_display (widp w,
 
             tl = new_tl;
             br = new_br;
-
         }
 
         tile_blit_fat(tile, 0, tl, br);
