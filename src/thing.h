@@ -178,11 +178,6 @@ void thing_timer_place_destroy_callback(void *context);
 void thing_server_wid_update(thingp t, double x, double y, uint8_t is_new);
 void thing_client_wid_update(thingp t, double x, double y, uint8_t smooth);
 void msg_server_shout_at_player(thingp t, const char *what);
-void thing_fire(thingp t,
-                const uint8_t up,
-                const uint8_t down,
-                const uint8_t left,
-                const uint8_t right);
 uint8_t thing_use(thingp t, uint32_t id);
 
 itemp thing_is_carrying_specific_item(thingp, uint32_t id);
@@ -259,9 +254,7 @@ enum {
 enum {
     THING_STATE_BIT_SHIFT_EXT1_IS_DEAD,
     THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL,
-    THING_STATE_BIT_SHIFT_EXT1_IS_HIT_SUCCESS,
-    THING_STATE_BIT_SHIFT_EXT1_IS_HIT_CRIT,
-    THING_STATE_BIT_SHIFT_EXT1_IS_HIT_MISS,
+    THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG,
 };
@@ -271,18 +264,16 @@ enum {
     THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS,
 };
 
-uint8_t thing_server_move(thingp t,
-                          double x,
-                          double y,
-                          const uint8_t up,
-                          const uint8_t down,
-                          const uint8_t left,
-                          const uint8_t right,
-                          const uint8_t fire);
-
-void thing_server_action(thingp t,
-                         uint8_t action,
-                         uint32_t action_bar_index);
+enum {
+    /*
+     * Sorted in order of importance as only one effect can be sent to the 
+     * client at a time.
+     */
+    THING_STATE_EFFECT_IS_HIT_MISS,
+    THING_STATE_EFFECT_IS_HIT_SUCCESS,
+    THING_STATE_EFFECT_IS_POWER_UP,
+    THING_STATE_EFFECT_IS_HIT_CRIT,
+};
 
 void thing_client_move(thingp t,
                        double x,
@@ -355,7 +346,6 @@ extern uint16_t THING_EXPLOSION4;
 extern uint16_t THING_HIT_SUCCESS;
 extern uint16_t THING_HIT_MISS;
 extern uint16_t THING_HEART;
-extern uint16_t THING_SPARKLE;
 extern uint16_t THING_BLOOD1;
 extern uint16_t THING_BLOOD2;
 extern uint16_t THING_POISON1;
@@ -607,6 +597,11 @@ typedef struct thing_ {
      */
     uint8_t updated;
 
+    /*
+     * The type of effect we plan to send to the client.
+     */
+    uint8_t effect;
+
     uint8_t dir:3;
 
     /*
@@ -648,9 +643,6 @@ typedef struct thing_ {
 
     uint32_t has_left_level:1;
     uint32_t is_moving:1;
-    uint32_t is_hit_success:1;
-    uint32_t is_hit_crit:1;
-    uint32_t is_hit_miss:1;
     uint32_t on_active_list:1;
     uint32_t on_server:1;
     uint32_t on_server_player_things:1;
@@ -1643,6 +1635,46 @@ static inline tpp thing_weapon (const thingp t)
     return (id_to_tp(item->id));
 }
 
+/*
+ * thing.c
+ */
+void thing_move(thingp t, double x, double y);
+
+void thing_move_set_dir(thingp t,
+                        double *x,
+                        double *y,
+                        uint8_t up,
+                        uint8_t down,
+                        uint8_t left,
+                        uint8_t right);
+/*
+ * thing_server.c
+ */
+uint8_t thing_server_move(thingp t,
+                          double x,
+                          double y,
+                          const uint8_t up,
+                          const uint8_t down,
+                          const uint8_t left,
+                          const uint8_t right,
+                          const uint8_t fire);
+
+void thing_server_action(thingp t,
+                         uint8_t action,
+                         uint32_t action_bar_index);
+void thing_server_fire(thingp t,
+                        const uint8_t up,
+                        const uint8_t down,
+                        const uint8_t left,
+                        const uint8_t right);
+
+/*
+ * thing_client.c
+ */
+
+/*
+ * thing_weapon.c
+ */
 void thing_unwield(thingp t);
 void thing_weapon_sheath(thingp t);
 void thing_wield(thingp t, tpp tp);
@@ -1654,7 +1686,13 @@ void thing_set_weapon_placement(thingp t);
 widp thing_get_weapon_carry_anim_wid(thingp t);
 
 /*
- * thing_item.h
+ * thing_effect.c
+ */
+void thing_server_effect(thingp t, int effect);
+void thing_client_effect(thingp t, int effect);
+
+/*
+ * thing_item.c
  */
 void thing_auto_collect(thingp t, thingp it, tpp tp);
 void thing_item_collect(thingp t, thingp it, tpp tp);

@@ -14,7 +14,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/demarshal.o 		\
     $(OBJDIR)/dir.o 			\
     $(OBJDIR)/explosion.o 		\
-    $(OBJDIR)/vision.o 			\
     $(OBJDIR)/file.o 			\
     $(OBJDIR)/font.o 			\
     $(OBJDIR)/geo.o 			\
@@ -28,18 +27,18 @@ GAME_OBJECTS=				\
     $(OBJDIR)/map_jigsaw.o 		\
     $(OBJDIR)/marshal.o 		\
     $(OBJDIR)/math.o 			\
-    $(OBJDIR)/rand.o 			\
     $(OBJDIR)/miniz.o 			\
     $(OBJDIR)/music.o 			\
     $(OBJDIR)/mzip_file.o 		\
     $(OBJDIR)/mzip_lib.o 		\
     $(OBJDIR)/name.o 			\
+    $(OBJDIR)/pcg_basic.o 		\
     $(OBJDIR)/pixel.o 			\
     $(OBJDIR)/player.o 			\
-    $(OBJDIR)/thing_stats.o 		\
     $(OBJDIR)/point.o 			\
     $(OBJDIR)/ptrcheck.o 		\
     $(OBJDIR)/ramdisk_read.o 		\
+    $(OBJDIR)/rand.o 			\
     $(OBJDIR)/resource.o 		\
     $(OBJDIR)/sdl.o 			\
     $(OBJDIR)/server.o 			\
@@ -55,8 +54,12 @@ GAME_OBJECTS=				\
     $(OBJDIR)/thing_ai.o 		\
     $(OBJDIR)/thing_anim.o 		\
     $(OBJDIR)/thing_collision.o 	\
+    $(OBJDIR)/thing_effect.o 		\
+    $(OBJDIR)/thing_client.o 		\
+    $(OBJDIR)/thing_server.o 		\
     $(OBJDIR)/thing_item.o 		\
     $(OBJDIR)/thing_mob_spawn.o 	\
+    $(OBJDIR)/thing_stats.o 		\
     $(OBJDIR)/thing_template.o 		\
     $(OBJDIR)/thing_tick.o 		\
     $(OBJDIR)/thing_tile.o 		\
@@ -69,10 +72,13 @@ GAME_OBJECTS=				\
     $(OBJDIR)/tree.o 			\
     $(OBJDIR)/ttf.o 			\
     $(OBJDIR)/util.o 			\
+    $(OBJDIR)/vision.o 			\
     $(OBJDIR)/wid.o 			\
     $(OBJDIR)/wid_anim.o 		\
     $(OBJDIR)/wid_button.o 		\
     $(OBJDIR)/wid_chat.o 		\
+    $(OBJDIR)/wid_choose_game_type.o 	\
+    $(OBJDIR)/wid_choose_player.o 	\
     $(OBJDIR)/wid_console.o 		\
     $(OBJDIR)/wid_dead.o 		\
     $(OBJDIR)/wid_dirlist.o 		\
@@ -85,18 +91,16 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_game_quit.o 		\
     $(OBJDIR)/wid_hiscore.o 		\
     $(OBJDIR)/wid_intro.o 		\
-    $(OBJDIR)/wid_intro_extra.o 	\
-    $(OBJDIR)/wid_intro_buttons.o 	\
-    $(OBJDIR)/wid_choose_player.o 	\
-    $(OBJDIR)/wid_choose_game_type.o 	\
     $(OBJDIR)/wid_intro_about.o 	\
-    $(OBJDIR)/wid_intro_settings.o 	\
-    $(OBJDIR)/wid_player_stats.o 	\
-    $(OBJDIR)/wid_player_info.o 	\
-    $(OBJDIR)/wid_player_action.o 	\
-    $(OBJDIR)/wid_player_inventory.o 	\
+    $(OBJDIR)/wid_intro_buttons.o 	\
     $(OBJDIR)/wid_intro_demo.o 		\
+    $(OBJDIR)/wid_intro_extra.o 	\
+    $(OBJDIR)/wid_intro_settings.o 	\
     $(OBJDIR)/wid_notify.o 		\
+    $(OBJDIR)/wid_player_action.o 	\
+    $(OBJDIR)/wid_player_info.o 	\
+    $(OBJDIR)/wid_player_inventory.o 	\
+    $(OBJDIR)/wid_player_stats.o 	\
     $(OBJDIR)/wid_popup.o 		\
     $(OBJDIR)/wid_server_create.o 	\
     $(OBJDIR)/wid_server_join.o 	\
@@ -104,7 +108,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_text_input.o 		\
     $(OBJDIR)/wid_textbox.o 		\
     $(OBJDIR)/wid_tooltip.o 		\
-    $(OBJDIR)/pcg_basic.o 		\
 
 MZIP_OBJECTS=				\
     $(OBJDIR)/util_basic.o 		\

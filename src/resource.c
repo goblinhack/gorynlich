@@ -2760,7 +2760,6 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_CLOUDKILL4, "data/things/cloudkill4");
 
     tp_load(&THING_HEART, "data/things/heart");
-    tp_load(&THING_SPARKLE, "data/things/sparkle");
     tp_load(&THING_HIT_SUCCESS, "data/things/hit_success");
     tp_load(&THING_HIT_MISS, "data/things/hit_miss");
     tp_load(&THING_BLOOD1, "data/things/blood1");
