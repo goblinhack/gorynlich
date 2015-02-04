@@ -765,17 +765,7 @@ wid_game_map_client_replace_tile (widp w,
         wid_scaling_blit_to_pct_in(child, 1.0, 1.1, 1000, 10000);
     }
 
-    if (tp_to_id(tp) == THING_HEART) {
-        /*
-         * The epicenter is only used as a placeholder.
-         */
-        wid_fade_out(child, 1);
-    } else if (tp_to_id(tp) == THING_SPARKLE) {
-        /*
-         * The epicenter is only used as a placeholder.
-         */
-        wid_fade_out(child, 1);
-    } else if (thing_is_explosion(t)) {
+    if (thing_is_explosion(t)) {
         wid_scaling_blit_to_pct_in(child, 1.0, 3.0, 500, 0);
         dx = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
         dy = ((double)(((int)(myrand() % 100)) - 50)) / 100.0;
@@ -821,63 +811,6 @@ wid_game_map_client_replace_tile (widp w,
                    (tp->id == THING_POISON4)) {
 
             level_place_poison(client_level, 0, t->x, t->y);
-
-        } else if ((tp->id == THING_HEART) ||
-                   (tp->id == THING_SPARKLE)) {
-
-//            level_place_sparkles(client_level, 0, t->x, t->y);
-
-                int count = 20;
-                int i = count;
-                while (i--) {
-                    tpp what = tp_find("data/things/sparkle");
-                    if (!what) {
-                        DIE("cannot place heart");
-                    }
-
-                    widp heart =
-                        wid_new_square_window("wid player_stats container");
-
-                    widp w = t->wid;
-                    double px, py;
-
-                    wid_get_pct(w, &px, &py);
-
-                    fpoint tl = {0.0, 0.0};
-                    fpoint br = {0.1, 0.1};
-
-                    br.y = 
-                        ((double)global_config.video_gl_width /
-                         (double)global_config.video_gl_height) / 10.0;
-
-                    wid_set_tl_br_pct(heart, tl, br);
-
-                    wid_set_thing_template(heart, what);
-
-                    px += gaussrand(0.0, 0.03);
-                    py += gaussrand(0.0, 0.04);
-
-                    wid_move_to_pct_centered(heart, px, py);
-
-                    wid_raise(heart);
-                    wid_set_mode(heart, WID_MODE_NORMAL);
-                    wid_set_color(heart, WID_COLOR_TEXT, WHITE);
-                    wid_set_color(heart, WID_COLOR_BG, WHITE);
-                    wid_set_color(heart, WID_COLOR_TL, WHITE);
-                    wid_set_color(heart, WID_COLOR_BR, WHITE);
-                    wid_set_no_shape(heart);
-                    wid_set_do_not_lower(heart, 1);
-
-                    uint32_t delay = gaussrand(1000, 100);
-                    if (delay < 100) {
-                        delay = 100;
-                    }
-                    delay = count * 500;
-
-                    wid_fade_out(heart, delay);
-                    wid_destroy_in(heart, delay);
-                    wid_scaling_to_pct_in(heart, 0.5, 0.0, delay, 0);
-                }
 
         } else if ((tp->id == THING_CLOUDKILL1) ||
                    (tp->id == THING_CLOUDKILL2) ||
