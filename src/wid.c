@@ -4423,22 +4423,31 @@ static void wid_raise_override (widp parent)
     }
 }
 
-void wid_raise (widp w)
+void wid_raise (widp w_in)
 {
-    if (!w) {
+    if (!w_in) {
         return;
     }
 
-    wid_raise_internal(w);
+    wid_raise_internal(w_in);
 
     /*
      * If some widget wants to be on top, let it.
      */
+    widp w;
     TREE_WALK(wid_top_level, w) {
         wid_raise_override(w);
     }
 
     wid_find_top_focus();
+
+    /*
+     * If we were hovering over a window and it was replaced, we need to fake 
+     * a mouse movement so we know we are still over it.
+     */
+    if (!w_in->parent && w_in->children_display_sorted) {
+        wid_update_mouse();
+    }
 }
 
 static void wid_lower_internal (widp w)
@@ -4460,17 +4469,18 @@ static void wid_lower_internal (widp w)
     wid_tree_attach(w);
 }
 
-void wid_lower (widp w)
+void wid_lower (widp w_in)
 {
-    if (!w) {
+    if (!w_in) {
         return;
     }
 
-    wid_lower_internal(w);
+    wid_lower_internal(w_in);
 
     /*
      * If some widget wants to be on top, let it.
      */
+    widp w;
     TREE_WALK(wid_top_level, w) {
         if (w->do_not_raise) {
             wid_lower_internal(w);
@@ -4479,6 +4489,14 @@ void wid_lower (widp w)
     }
 
     wid_find_top_focus();
+
+    /*
+     * If we were hovering over a window and it was replaced, we need to fake 
+     * a mouse movement so we know we are still over it.
+     */
+    if (!w_in->parent && w_in->children_display_sorted) {
+        wid_update_mouse();
+    }
 }
 
 void wid_toggle_hidden (widp w, uint32_t delay)
@@ -5324,6 +5342,14 @@ void wid_update (widp w)
     fast_verify(w);
 
     wid_update_internal(w);
+
+    /*
+     * If we were hovering over a window and it was replaced, we need to fake 
+     * a mouse movement so we know we are still over it.
+     */
+    if (!w->parent && w->children_display_sorted) {
+        wid_update_mouse();
+    }
 }
 
 void wid_update_mouse (void)
