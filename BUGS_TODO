@@ -1,6 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-change hit/miss/crit hit bitfields into a general effect message event to also accomodate health effects
-health potion need some kind of glowing effect
 need to add stuff to the action bar all the time if there is space
 create super menu system to simplify the cruddy menu systems
  - zoom effect
@@ -64,6 +62,8 @@ different profiles for level generation
 mining?
 
 Wed Feb  4 20:17:49 EST 2015
+- health potion need some kind of glowing effect
+- change hit/miss/crit hit bitfields into a general effect message event to also accomodate health effects
 - fixed negative time for moving objects due to using gauss rand
 - when over max hp from a potion we were flashing red when decreasing health
 
