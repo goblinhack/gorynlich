@@ -469,19 +469,6 @@ void level_place_poison (levelp level,
                            "data/things/poison4");
 }
 
-void level_place_sparkles (levelp level, 
-                           thingp owner,
-                           double x, double y)
-{
-    level_place_explosion_(level, 
-                           owner,
-                           x, y,
-                           level == server_level ? 0 : 1, // radius
-                           0.5, // density
-                           1, // nargs
-                           "data/things/sparkle");
-}
-
 void level_place_cloudkill (levelp level, 
                             thingp owner,
                             double x, double y)
