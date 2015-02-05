@@ -2077,12 +2077,13 @@ static void wid_tile_scale (widp w,
                             fpoint *new_br,
                             double scale) 
 {
-    double ow = wid_get_width(w);
-    double oh = wid_get_height(w);
+    double ow = br.x - tl.x;
+    double oh = br.y - tl.y;
     double nw = ow * scale;
     double nh = oh * scale;
     double dx = (nw - ow) / 2.0;
     double dy = (nh - oh) / 2.0;
+    LOG("  ow %f oh %f nw %f nh %f",ow,oh,nw,nh);
 
     /*
      * Scale the tile.
@@ -8384,7 +8385,7 @@ static void wid_display (widp w,
 
         if (w->blit_scaled_w || w->blit_scaled_h ||
             w->blit_scaling_w || w->blit_scaling_h) {
-
+        
             double scale = wid_get_blit_scaling_w(w);
             fpoint new_tl;
             fpoint new_br;
