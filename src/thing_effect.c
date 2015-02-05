@@ -134,12 +134,9 @@ static void thing_client_effect_hit_crit (thingp t)
 
 static void thing_client_effect_power_up (thingp t)
 {
-    int count = 20;
+    int count = 50;
     int i = count;
     while (i--) {
-        widp power_up =
-            wid_new_square_window("wid player_stats container");
-
         widp w = t->wid;
         double px, py;
 
@@ -152,31 +149,32 @@ static void thing_client_effect_power_up (thingp t)
             ((double)global_config.video_gl_width /
                 (double)global_config.video_gl_height) / 10.0;
 
+        widp power_up = wid_new_square_window("sparkle");
         wid_set_tl_br_pct(power_up, tl, br);
         wid_set_tilename(power_up, "sparkle");
 
-        px += gaussrand(0.0, 0.03);
-        py += gaussrand(0.0, 0.04);
-
-        wid_move_to_pct_centered(power_up, px, py);
-
-        wid_raise(power_up);
-        wid_set_mode(power_up, WID_MODE_NORMAL);
-        wid_set_color(power_up, WID_COLOR_TEXT, WHITE);
-        wid_set_color(power_up, WID_COLOR_BG, WHITE);
-        wid_set_color(power_up, WID_COLOR_TL, RED);
-        wid_set_color(power_up, WID_COLOR_BR, WHITE);
-        wid_set_no_shape(power_up);
-        wid_set_do_not_lower(power_up, 1);
-
-        uint32_t delay = gaussrand(1000, 1000);
+        int delay = gaussrand(200, 500);
         if (delay < 100) {
             delay = 100;
         }
 
+        wid_move_to_pct_centered(power_up, px, py);
+        px += gaussrand(0.0, 0.15);
+        py += gaussrand(0.0, 0.15);
+        wid_move_to_pct_centered_in(power_up, px, py, delay);
+
+        wid_set_no_shape(power_up);
+        wid_set_mode(power_up, WID_MODE_NORMAL);
+
+        color c;
+        c.a = 255;
+        c.r = myrand() % 255;
+        c.g = myrand() % 255;
+        c.b = myrand() % 255;
+        wid_set_color(power_up, WID_COLOR_BLIT, c);
+
         wid_fade_out(power_up, delay);
         wid_destroy_in(power_up, delay);
-        wid_scaling_blit_to_pct_in(power_up, 0.5, 0.0, delay, 0);
-        wid_set_debug(power_up, 1);
+        wid_scaling_blit_to_pct_in(power_up, 0.1, 0.4, delay * 2, 0);
     }
 }
