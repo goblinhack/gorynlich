@@ -116,9 +116,6 @@ void level_place_fireball(levelp level,
 void level_place_poison(levelp level, 
                         thingp owner,
                         double x, double y);
-void level_place_sparkles(levelp level, 
-                        thingp owner,
-                        double x, double y);
 void level_place_cloudkill(levelp level, 
                            thingp owner,
                            double x, double y);
