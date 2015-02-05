@@ -63,6 +63,10 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
+Wed Feb  4 20:17:49 EST 2015
+- fixed negative time for moving objects due to using gauss rand
+- when over max hp from a potion we were flashing red when decreasing health
+
 Wed Feb  4 07:08:34 EST 2015
 - split thing.c into client/server
 - added effect can be sent to client

@@ -428,12 +428,22 @@ static void wid_player_action_create (thing_statsp s, int fast)
         static int last_magic;
         if (last_magic != s->magic) {
             if (last_magic > s->magic) {
-                if (s->magic > 0) {
-                    wid_effect_pulses(w);
-                }
+                if (stats_get_magic(s) >= stats_get_max_magic(s)) {
+                    /*
+                     * Don't flash as this is just a magical effect winding 
+                     * down.
+                     */
+                } else {
+                    /*
+                     * Warn the user about the decrease.
+                     */
+                    if (stats_get_magic(s) > 0) {
+                        wid_effect_pulses(w);
+                    }
 
-                wid_set_mode(w, WID_MODE_ACTIVE);
-                wid_set_color(w, WID_COLOR_TEXT, RED);
+                    wid_set_mode(w, WID_MODE_ACTIVE);
+                    wid_set_color(w, WID_COLOR_TEXT, RED);
+                }
             }
 
             last_magic = s->magic;
@@ -475,12 +485,22 @@ static void wid_player_action_create (thing_statsp s, int fast)
         static int last_hp;
         if (last_hp != stats_get_hp(s)) {
             if (last_hp > stats_get_hp(s)) {
-                if (stats_get_hp(s) > 0) {
-                    wid_effect_pulses(w);
-                }
+                if (stats_get_hp(s) >= stats_get_max_hp(s)) {
+                    /*
+                     * Don't flash as this is just a magical effect winding 
+                     * down.
+                     */
+                } else {
+                    /*
+                     * Warn the user about the decrease.
+                     */
+                    if (stats_get_hp(s) > 0) {
+                        wid_effect_pulses(w);
+                    }
 
-                wid_set_mode(w, WID_MODE_ACTIVE);
-                wid_set_color(w, WID_COLOR_TEXT, RED);
+                    wid_set_mode(w, WID_MODE_ACTIVE);
+                    wid_set_color(w, WID_COLOR_TEXT, RED);
+                }
             } else if (player && last_hp) {
                 int delta = stats_get_hp(s) - last_hp;
                 int count = (rand() % delta) + 1;
