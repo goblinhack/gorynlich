@@ -159,11 +159,36 @@ wid_player_action_button_mouse_down (widp w,
          */
         int dropped = false;
 
-        if (item_push(over_item, wid_item)) {
+        if (!dropped) {
             /*
-             * Success
+             * Is this item in the bar already and can it be merged with?
              */
-            dropped = true;
+            int i;
+
+            for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+                itemp same_item = &player_stats->action_bar[i];
+                if (same_item->id == wid_item.id) {
+                    /*
+                     * Try again
+                     */
+                    if (item_push(same_item, wid_item)) {
+                        /*
+                         * Success
+                         */
+                        dropped = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (!dropped) {
+            if (item_push(over_item, wid_item)) {
+                /*
+                * Success
+                */
+                dropped = true;
+            }
         }
 
         if (!dropped) {
@@ -174,9 +199,9 @@ wid_player_action_button_mouse_down (widp w,
             int i;
 
             for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-                itemp freeitem = &player_stats->action_bar[i];
-                if (!freeitem->id) {
-                    memcpy(freeitem, over_item, sizeof(item_t));
+                itemp free_slot = &player_stats->action_bar[i];
+                if (!free_slot->id) {
+                    memcpy(free_slot, over_item, sizeof(item_t));
                     memset(over_item, 0, sizeof(item_t));
 
                     /*
@@ -201,9 +226,9 @@ wid_player_action_button_mouse_down (widp w,
             int i;
 
             for (i = 0; i < THING_INVENTORY_MAX; i++) {
-                itemp freeitem = &player_stats->inventory[i];
-                if (!freeitem->id) {
-                    memcpy(freeitem, over_item, sizeof(item_t));
+                itemp free_slot = &player_stats->inventory[i];
+                if (!free_slot->id) {
+                    memcpy(free_slot, over_item, sizeof(item_t));
                     memset(over_item, 0, sizeof(item_t));
 
                     /*
