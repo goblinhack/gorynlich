@@ -169,7 +169,7 @@ wid_player_action_button_mouse_down (widp w,
         if (!dropped) {
             /*
              * If we failed to drop, can we move the item that we are over
-             * somewhere else in the action bat?
+             * somewhere else in the action bar?
              */
             int i;
 

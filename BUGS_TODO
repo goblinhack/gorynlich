@@ -1,5 +1,6 @@
 --------------------------------------- plan for feb --------------------------------------
-replacing items on full action bar does not always work
+need to group items when moving in inventory
+need to add to existing item type when dropping into inventory
 need shield potion effect
 gray out screen on death?
 create super menu system to simplify the cruddy menu systems
@@ -64,6 +65,7 @@ different profiles for level generation
 mining?
 
 Thu Feb  5 06:43:22 EST 2015
+- replacing items on full action bar does not always work
 - need to add stuff to the action bar all the time if there is space
 
 Wed Feb  4 20:17:49 EST 2015
