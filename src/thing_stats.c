@@ -940,7 +940,7 @@ static void thing_stats_get_random_items (thing_statsp player_stats)
 {
     int count = gaussrand(2, 1) + 1;
 
-    while (count--) {
+    while (count-- > 0) {
         tpp t = 0;
 
         for (;;) {
@@ -1131,7 +1131,7 @@ void thing_stats_get_random (thing_statsp player_stats,
     player_stats->magic = tp_get_stats_max_magic(tp);
     player_stats->max_magic = 
         player_stats->magic = gaussrand(player_stats->magic,
-                                     player_stats->magic / 10);
+                                        player_stats->magic / 10);
     LOG(" %20s %s", "Name", player_stats->pname);
     LOG(" %20s %s", "Class", player_stats->pclass);
     LOG(" %20s %d", "Points", player_stats->spending_points);
