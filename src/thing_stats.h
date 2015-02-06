@@ -42,6 +42,7 @@ typedef struct item_t_ {
 
 int item_push(itemp dst, item_t src);
 int item_pop(itemp dst, itemp popped);
+int item_pop_all(itemp dst, itemp popped);
 
 typedef struct thing_stats_ {
     uint16_t thing_id;

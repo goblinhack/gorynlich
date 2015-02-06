@@ -397,7 +397,9 @@ wid_player_item_pick_up (widp w, itemp over_item)
     /*
      * Pick up an item.
      */
-    if (!item_pop(over_item, &wid_item)) {
+CON("pick up all:");
+    if (!item_pop_all(over_item, &wid_item)) {
+CON("  failed");
         /*
          * Failed.
          */

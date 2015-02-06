@@ -1,7 +1,5 @@
 --------------------------------------- plan for feb --------------------------------------
-need to merge same items when dropping into inventory bar
-need to group items when picking up in inventory
-need shield potion effect
+apple and water icons look a bit crap
 gray out screen on death?
 create super menu system to simplify the cruddy menu systems
  - zoom effect
@@ -16,12 +14,14 @@ magic attack - green fireball?
 sound effects for weapons and hits http://www.bfxr.net/
 sound on momey collect
 sound on potion use
+need shield potion effect
 --------------------------------------- plan for mar --------------------------------------
 need single player global flag
 single player mode direct socket
 xp level and hp increase per level
 press m for magic to build up magic attack
 press m for magic to give life to other players
+ - pop bouncing m and arrow over player to give them a clue what to do
 first to exit level gets 2 spending points, else get 1
 --------------------------------------- plan for apr --------------------------------------
 choose player intro window - 5 panels screen width
@@ -63,6 +63,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Thu Feb  5 18:56:46 EST 2015
+- need to merge same items when dropping into inventory bar
+- need to group items when picking up in inventory
 
 Thu Feb  5 06:43:22 EST 2015
 - when dropping item of same type need to look for same item first

@@ -241,6 +241,9 @@ enum {
 };
 
 enum {
+    /********************************************************************
+     * Update msg_map_update if you add here
+     ********************************************************************/
     THING_STATE_BIT_SHIFT_DIR_BIT0,
     THING_STATE_BIT_SHIFT_DIR_BIT1,
     THING_STATE_BIT_SHIFT_DIR_BIT2,
@@ -249,19 +252,34 @@ enum {
     THING_STATE_BIT_SHIFT_ID_TEMPLATE_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_PRESENT,
     THING_STATE_BIT_SHIFT_EXT2_PRESENT,
+    /********************************************************************
+     * Update msg_map_update if you add here
+     ********************************************************************/
 };
 
 enum {
+    /********************************************************************
+     * Update msg_map_update if you add here
+     ********************************************************************/
     THING_STATE_BIT_SHIFT_EXT1_IS_DEAD,
     THING_STATE_BIT_SHIFT_EXT1_HAS_LEFT_LEVEL,
     THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT,
     THING_STATE_BIT_SHIFT_EXT1_WEAPON_SWUNG,
+    /********************************************************************
+     * Update msg_map_update if you add here
+     ********************************************************************/
 };
 
 enum {
+    /********************************************************************
+     * Update msg_map_update if you add here
+     ********************************************************************/
     THING_STATE_BIT_SHIFT_EXT2_RESYNC,
     THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS,
+    /********************************************************************
+     * Update msg_map_update if you add here
+     ********************************************************************/
 };
 
 enum {
