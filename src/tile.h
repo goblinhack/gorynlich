@@ -13,7 +13,9 @@ uint8_t tile_init(void);
 void tile_fini(void);
 void tile_load(const char *file, uint32_t width, uint32_t height,
                uint32_t nargs, ...);
-void tile_load_arr(const char *file, uint32_t width, uint32_t height,
+void tile_load_arr(const char *tex, 
+                   const char *tex_black_and_white,
+                   uint32_t width, uint32_t height,
                    uint32_t nargs, const char *arr[]);
 tilep tile_find(const char *name);
 tilep tile_from_surface(SDL_Surface *surface,
@@ -45,6 +47,24 @@ void tile_blit_fat (tile *tile, char *name, fpoint tl, fpoint br)
     }
 
     blit(tile->gl_surface_binding,
+         tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
+}
+
+/*
+ * Blits a whole tile. Y co-ords are inverted.
+ */
+static inline
+void tile_blit_fat_black_and_white (tile *tile, char *name, fpoint tl, fpoint br)
+{
+    if (!tile) {
+        if (!name) {
+            DIE("no name for tile blit");
+        }
+
+        tile = tile_find(name);
+    }
+
+    blit(tile->gl_surface_binding_black_and_white,
          tile->x1, tile->y2, tile->x2, tile->y1, tl.x, br.y, br.x, tl.y);
 }
 

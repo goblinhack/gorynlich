@@ -12,6 +12,10 @@ texp tex_load(const char *file, const char *name);
 texp tex_load_tiled(const char *file, const char *name, 
                     uint32_t x,
                     uint32_t y);
+texp tex_load_tiled_black_and_white(
+                    const char *file, const char *name, 
+                    uint32_t x,
+                    uint32_t y);
 texp tex_find(const char *name);
 texp tex_from_surface(SDL_Surface *surface,
                       const char *optional_file,

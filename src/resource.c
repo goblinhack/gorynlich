@@ -89,6 +89,10 @@ static uint8_t resource_init_13 (void *context)
 {
     return (tex_load_tiled("data/gfx/explosion.png",
                            "explosion",
+                           1024, 1024) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/explosion.png",
+                           "explosion_black_and_white",
                            1024, 1024) != 0);
 }
 
@@ -96,6 +100,10 @@ static uint8_t resource_init_14 (void *context)
 {
     return (tex_load_tiled("data/gfx/cloudkill.png",
                            "cloudkill",
+                           1024, 1024) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/cloudkill.png",
+                           "cloudkill_black_and_white",
                            1024, 1024) != 0);
 }
 
@@ -103,6 +111,10 @@ static uint8_t resource_init_15 (void *context)
 {
     return (tex_load_tiled("data/gfx/poison.png",
                            "poison",
+                           1024, 1024) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/poison.png",
+                           "poison_black_and_white",
                            1024, 1024) != 0);
 }
 
@@ -143,6 +155,10 @@ static uint8_t resource_init_21 (void *context)
 {
     return (tex_load_tiled("data/gfx/sprites.png",
                            "sprites",
+                           TILE_WIDTH, TILE_HEIGHT) != 0) &&
+           (tex_load_tiled_black_and_white(
+                           "data/gfx/sprites.png",
+                           "sprites_black_and_white",
                            TILE_WIDTH, TILE_HEIGHT) != 0);
 }
 
@@ -2343,7 +2359,9 @@ static uint8_t resource_init_last (void *context)
         0,
     };
 
-    tile_load_arr("sprites", TILE_WIDTH, TILE_HEIGHT,
+    tile_load_arr("sprites", 
+                  "sprites_black_and_white",
+                  TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(small_tiles), small_tiles);
 
     static const char *explosion_tiles[] = {
@@ -2421,7 +2439,9 @@ static uint8_t resource_init_last (void *context)
         "explosion4.16",
     };
 
-    tile_load_arr("explosion", TILE_WIDTH, TILE_HEIGHT,
+    tile_load_arr("explosion", 
+                  "explosion_black_and_white",
+                  TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(explosion_tiles), explosion_tiles);
 
     static const char *cloudkill_tiles[] = {
@@ -2499,7 +2519,9 @@ static uint8_t resource_init_last (void *context)
         "cloudkill4.16",
     };
 
-    tile_load_arr("cloudkill", TILE_WIDTH, TILE_HEIGHT,
+    tile_load_arr("cloudkill", 
+                  "cloudkill_black_and_white",
+                  TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(cloudkill_tiles), cloudkill_tiles);
 
     static const char *poison_tiles[] = {
@@ -2577,7 +2599,9 @@ static uint8_t resource_init_last (void *context)
         "poison4.16",
     };
 
-    tile_load_arr("poison", TILE_WIDTH, TILE_HEIGHT,
+    tile_load_arr("poison", 
+                  "poison_black_and_white",
+                  TILE_WIDTH, TILE_HEIGHT,
                   ARRAY_SIZE(poison_tiles), poison_tiles);
 
     static const char *anim_man_tiles[] = {
@@ -2600,7 +2624,9 @@ static uint8_t resource_init_last (void *context)
         "anim_man1.16",
     };
 
-    tile_load_arr("anim_man", 256, 256,
+    tile_load_arr("anim_man", 
+                  0, /* black and white */
+                  256, 256,
                   ARRAY_SIZE(anim_man_tiles), anim_man_tiles);
 
     static const char *anim_treasure_chest_tiles[] = {
@@ -2623,7 +2649,9 @@ static uint8_t resource_init_last (void *context)
         "anim_treasure_chest1.16",
     };
 
-    tile_load_arr("anim_treasure_chest", 256, 256,
+    tile_load_arr("anim_treasure_chest", 
+                  0, /* black and white */
+                  256, 256,
                   ARRAY_SIZE(anim_treasure_chest_tiles), anim_treasure_chest_tiles);
 
     static const char *anim_eyes_tiles[] = {
@@ -2646,7 +2674,9 @@ static uint8_t resource_init_last (void *context)
         "anim_eyes1.16",
     };
 
-    tile_load_arr("anim_eyes", 128, 128,
+    tile_load_arr("anim_eyes", 
+                  0, /* black and white */
+                  128, 128,
                   ARRAY_SIZE(anim_eyes_tiles), anim_eyes_tiles);
 
     static const char *crystalball_tiles[] = {
@@ -2669,7 +2699,9 @@ static uint8_t resource_init_last (void *context)
         "crystalball.1",
     };
 
-    tile_load_arr("crystalball", 256, 256,
+    tile_load_arr("crystalball", 
+                  0, /* black and white */
+                  256, 256,
                   ARRAY_SIZE(crystalball_tiles), 
                   crystalball_tiles);
 
@@ -2693,7 +2725,9 @@ static uint8_t resource_init_last (void *context)
         "crystalball_purple.1",
     };
 
-    tile_load_arr("crystalball_purple", 256, 256,
+    tile_load_arr("crystalball_purple", 
+                  0, /* black and white */
+                  256, 256,
                   ARRAY_SIZE(crystalball_purple_tiles), 
                   crystalball_purple_tiles);
 
