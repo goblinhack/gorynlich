@@ -39,6 +39,11 @@ tree_root *textures;
 
 static uint8_t tex_init_done;
 
+static texp tex_black_and_white(SDL_Surface *in,
+                                uint32_t tile_width,
+                                uint32_t tile_height,
+                                const char *file,
+                                const char *name);
 uint8_t tex_init (void)
 {
     tex_init_done = true;
@@ -226,6 +231,48 @@ texp tex_load_tiled (const char *file,
 #else
     t = tex_from_surface(surface, file, name);
 #endif
+
+    t->tile_width = tile_width;
+    t->tile_height = tile_height;
+
+    t->tiles_width = tex_get_width(t) / tile_width;
+    t->tiles_height = tex_get_height(t) / tile_height;
+
+    return (t);
+}
+
+/*
+ * Load a texture which has regular tiles with single pixel gaps between
+ * each tile
+ */
+texp tex_load_tiled_black_and_white (const char *file,
+                                     const char *name,
+                                     uint32_t tile_width,
+                                     uint32_t tile_height)
+{
+    texp t = tex_find(name);
+
+    if (t) {
+        return (t);
+    }
+
+    if (!file) {
+        if (!name) {
+            DIE("no file for tex");
+        } else {
+            DIE("no file for tex loading %s", name);
+        }
+    }
+
+    SDL_Surface *surface = 0;
+
+    surface = load_image(file);
+
+    if (!surface) {
+        DIE("could not make surface from file, %s", file);
+    }
+
+    t = tex_black_and_white(surface, tile_width, tile_height, file, name);
 
     t->tile_width = tile_width;
     t->tile_height = tile_height;
@@ -518,6 +565,86 @@ texp tex_from_tiled_surface (SDL_Surface *in,
     stbi_write_tga("neil.tga", out->w, out->h, STBI_rgb_alpha, out->pixels);
     SDL_UnlockSurface(out);
 #endif
+
+    SDL_FreeSurface(in);
+    oldptr(in);
+
+    t = tex_from_surface(out, file, name);
+
+    return (t);
+}
+
+static texp tex_black_and_white (SDL_Surface *in,
+                                 uint32_t tile_width,
+                                 uint32_t tile_height,
+                                 const char *file,
+                                 const char *name)
+{
+    tex *t;
+
+    if (!in) {
+        DIE("could not make surface from file, %s", file);
+    }
+
+    uint32_t rmask, gmask, bmask, amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+    uint32_t iwidth  = in->w;
+    uint32_t iheight = in->h;
+    /*
+     * Subtract space for the single pixel padding and make a surface to
+     * copy pixels to.
+     */
+    uint32_t owidth  = iwidth;
+    uint32_t oheight = iheight;
+
+    int32_t ix;
+    int32_t iy;
+    uint32_t ox;
+    uint32_t oy;
+
+    SDL_Surface *out = SDL_CreateRGBSurface(0, owidth, oheight, 32,
+                                            rmask, gmask, bmask, amask);
+    newptr(out, "SDL_CreateRGBSurface");
+
+    /*
+     * Omit every grid pixel between tiles.
+     */
+    ox = 0;
+
+    for (ix = 0; ix < (int32_t) iwidth; ix++) {
+
+        oy = 0;
+
+        for (iy = 0; iy < (int32_t) iheight; iy++) {
+
+            color c;
+
+            c = getPixel(in, ix, iy);
+            
+            uint8_t avg = (c.r + c.g + c.b) / 3;
+            c.r = avg;
+            c.g = avg;
+            c.b = avg;
+
+            putPixel(out, ox, oy, c);
+
+            oy++;
+        }
+
+        ox++;
+    }
 
     SDL_FreeSurface(in);
     oldptr(in);

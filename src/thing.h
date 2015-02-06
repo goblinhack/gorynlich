@@ -708,7 +708,7 @@ static inline uint8_t thing_is_dead_or_dying (thingp t)
 {
     verify(t);
 
-    return t->is_dead || thing_is_dying(t);
+    return (t->is_dead || thing_is_dying(t));
 }
 
 static inline uint8_t thing_is_dead (thingp t)
