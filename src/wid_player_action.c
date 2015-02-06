@@ -129,6 +129,7 @@ wid_player_action_button_mouse_down (widp w,
             }
         }
 
+CON("pick up");
         wid_player_item_pick_up(w, over_item);
 
         /*

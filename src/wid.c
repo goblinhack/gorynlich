@@ -8696,20 +8696,21 @@ static void wid_display (widp w,
 
             blit_init();
             glcolor(WHITE);
-            blit(fbo_tex_id1,
-                 0.0, 1.0, 1.0, 0.0,
-                 -dw, -dh, window_w + dw, window_h + dh);
 
-#ifdef INTERESTING_EFFECT
+
             if (debug) {
-                color c= GREEN;
+//            if (player && thing_is_dead(player)) {
+                color c = CYAN;
                 glcolor(c);
-                c.a = 50;
+                c.a = 255;
                 blit(fbo_tex_id1,
                     0.0, 1.0, 1.0, 0.0,
                     0, 0, window_w, window_h);
+            } else {
+                blit(fbo_tex_id1,
+                    0.0, 1.0, 1.0, 0.0,
+                    -dw, -dh, window_w + dw, window_h + dh);
             }
-#endif
 
             blit_flush();
 
