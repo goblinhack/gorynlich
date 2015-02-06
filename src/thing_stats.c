@@ -519,6 +519,22 @@ int item_pop (itemp dst, itemp popped)
     return (true);
 }
 
+int item_pop_all (itemp dst, itemp popped)
+{
+    if (!dst->id) {
+        return (false);
+    }
+
+    if (!dst->quantity) {
+        DIE("bug, cannot pop, no quantity");
+    }
+
+    memcpy(popped, dst, sizeof(item_t));
+    memset(dst, 0, sizeof(item_t));
+
+    return (true);
+}
+
 static int item_enchant_randomly (void)
 {
     int r = myrand() % 1000;
@@ -652,6 +668,10 @@ void player_inventory_sort (thing_statsp player_stats)
 
     int32_t i;
 
+    /*
+     * For each item in the inventory, move it to a sorted slot based on its 
+     * type.
+     */
     for (i = 0; i < THING_INVENTORY_MAX; i++) {
         int32_t id;
 
@@ -660,10 +680,57 @@ void player_inventory_sort (thing_statsp player_stats)
             continue;
         }
 
+        /*
+         * Before we look for a sorting slot for this item, see if one of its 
+         * kind has already been sorted. This way we can merge together 
+         * multiple torches into one bundle.
+         */
+        int merged = 0;
+        int32_t j;
+
+        for (j = 0; j < THING_INVENTORY_MAX; j++) {
+            int32_t id2;
+
+            /*
+             * Look for similar items. They might not be identical i.e. one 
+             * enchanted and the other not. Those we can't merge.
+             */
+            id2 = inv_new[j].id;
+            if (id != id2) {
+                continue;
+            }
+
+            itemp dst = &inv_new[j];
+            item_t src = inv_old[i];
+
+            if (item_push(dst, src)) {
+                /*
+                 * Woo hoo, we merged this item onto an existing item.
+                 */
+                merged = 1;
+                break;
+            }
+
+            /*
+             * Can't merge this item. Maybe it contains too many of its kind.
+             */
+        }
+
+        if (merged) {
+            continue;
+        }
+
+        /*
+         * Ok, this item is not in the new sorted list yet, look for somewhere 
+         * (a sorted slot) to fit it in.
+         */
         int32_t base = THING_INVENTORY_MISC_BASE;
 
         tpp tp = id_to_tp(id);
 
+        /*
+         * Find in which sorting slot the item should move.
+         */
         if (tp_is_magical(tp)) {
             base = THING_INVENTORY_MAGICAL_BASE;
         } else if (tp_is_weapon(tp)) {
@@ -674,6 +741,10 @@ void player_inventory_sort (thing_statsp player_stats)
             base = THING_INVENTORY_FOOD_BASE;
         }
 
+        /*
+         * If that destination sort slot is full, try any slot to fit the item 
+         * in.
+         */
         if (count_per_class[base] >= N_PER_CLASS) {
             base = THING_INVENTORY_MISC_BASE;
 
@@ -697,6 +768,9 @@ void player_inventory_sort (thing_statsp player_stats)
             continue;
         }
 
+        /*
+         * Add this new unique item into the sorted section.
+         */
         int32_t new_i = base + count_per_class[which];
         if (new_i >= THING_INVENTORY_MAX) {
             ERR("overflow in item sorting");
