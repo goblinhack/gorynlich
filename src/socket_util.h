@@ -172,9 +172,20 @@ typedef struct {
     uint16_t id;                // optional
 
     /*
-     * THING_STATE_BIT_SHIFT_EXT_WEAPON_ID_PRESENT
+     * THING_STATE_BIT_SHIFT_EXT1_WEAPON_ID_PRESENT
      */
     uint8_t weapon_id;
+
+    /*
+     * THING_STATE_BIT_SHIFT_EXT1_EFFECT_PRESENT
+     */
+    uint8_t effect;
+
+    /*
+     * THING_STATE_BIT_SHIFT_EXT2_TORCH_LIGHT_RADIUS
+     */
+    uint8_t torch_light;
+
 } __attribute__ ((packed)) msg_map_update;
 
 /*
