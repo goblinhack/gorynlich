@@ -110,10 +110,20 @@ void tile_load (const char *tex_name, uint32_t width, uint32_t height,
 }
 #endif
 
-void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
+void tile_load_arr (const char *tex_name, 
+                    const char *tex_name_black_and_white,
+                    uint32_t width, uint32_t height,
                     uint32_t nargs, const char *arr[])
 {
     texp tex = tex_load(0, tex_name);
+    texp tex_black_and_white;
+    
+    if (tex_name_black_and_white) {
+        tex_black_and_white = tex_load(0, tex_name_black_and_white);
+    } else {
+        tex_black_and_white = 0;
+    }
+
     float fw = 1.0 / (((float)tex_get_width(tex)) / ((float)width));
     float fh = 1.0 / (((float)tex_get_height(tex)) / ((float)height));
     uint32_t x = 0;
@@ -152,6 +162,11 @@ void tile_load_arr (const char *tex_name, uint32_t width, uint32_t height,
             t->height = height;
             t->tex = tex;
             t->gl_surface_binding = tex_get_gl_binding(tex);
+
+            if (tex_black_and_white) {
+                t->gl_surface_binding_black_and_white = 
+                                tex_get_gl_binding(tex_black_and_white);
+            }
 
             t->x1 = fw * (float)(x);
             t->y1 = fh * (float)(y);

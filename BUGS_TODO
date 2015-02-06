@@ -1,6 +1,5 @@
 --------------------------------------- plan for feb --------------------------------------
 apple and water icons look a bit crap
-gray out screen on death?
 create super menu system to simplify the cruddy menu systems
  - zoom effect
  - keyboard controlled or mouse
@@ -65,6 +64,7 @@ different profiles for level generation
 mining?
 
 Thu Feb  5 18:56:46 EST 2015
+- gray out screen on death?
 - need to merge same items when dropping into inventory bar
 - need to group items when picking up in inventory
 
