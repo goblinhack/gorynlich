@@ -7286,7 +7286,7 @@ static void wid_light_add (widp w, fpoint at, double strength, color c)
 /*
  * Display one wid and its children
  */
-static void wid_display_fast (widp w, uint8_t pass)
+static void wid_display_fast (widp w, uint8_t pass, uint8_t black_and_white)
 {
     uint8_t fading;
     int32_t owidth;
@@ -7503,7 +7503,11 @@ static void wid_display_fast (widp w, uint8_t pass)
         glcolor(WHITE);
     }
 
-    tile_blit_fat(tile, 0, tl, br);
+    if (black_and_white) {
+        tile_blit_fat_black_and_white(tile, 0, tl, br);
+    } else {
+        tile_blit_fat(tile, 0, tl, br);
+    }
 }
 
 /*
@@ -8612,6 +8616,11 @@ static void wid_display (widp w,
         int32_t x, y;
         uint8_t z;
 
+        uint8_t black_and_white = 0;
+        if (!player || thing_is_dead_or_dying(player)) {
+            black_and_white = 1;
+        }
+
         wid_light_init();
 
         for (z = 0; z < MAP_DEPTH; z++) {
@@ -8626,7 +8635,7 @@ static void wid_display (widp w,
                                         node,
                                         tree_prev_tree_wid_compare_func) {
 
-                        wid_display_fast(node->wid, 0);
+                        wid_display_fast(node->wid, 0, black_and_white);
                     }
                 }
             }
@@ -8697,19 +8706,17 @@ static void wid_display (widp w,
             blit_init();
             glcolor(WHITE);
 
-
             if (debug) {
-//            if (player && thing_is_dead(player)) {
-                color c = CYAN;
+                color c = GREEN;
                 glcolor(c);
                 c.a = 255;
                 blit(fbo_tex_id1,
-                    0.0, 1.0, 1.0, 0.0,
-                    0, 0, window_w, window_h);
+                     0.0, 1.0, 1.0, 0.0,
+                     0, 0, window_w, window_h);
             } else {
                 blit(fbo_tex_id1,
-                    0.0, 1.0, 1.0, 0.0,
-                    -dw, -dh, window_w + dw, window_h + dh);
+                     0.0, 1.0, 1.0, 0.0,
+                     -dw, -dh, window_w + dw, window_h + dh);
             }
 
             blit_flush();
@@ -8761,7 +8768,7 @@ static void wid_display (widp w,
                             }
 
                             if (lit) {
-                                wid_display_fast(node->wid, 1);
+                                wid_display_fast(node->wid, 1, black_and_white);
                             }
                         }
                     }

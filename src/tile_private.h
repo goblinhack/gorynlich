@@ -32,6 +32,7 @@ typedef struct tile_ {
     double px2;
     double py2;
     int32_t gl_surface_binding;
+    int32_t gl_surface_binding_black_and_white;
     texp tex;
 } tile;
 
