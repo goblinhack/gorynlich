@@ -476,7 +476,6 @@ static void wid_player_action_create (thing_statsp s, int fast)
         }
 
         if (s->magic < s->max_magic / 10) {
-            wid_scaling_to_pct_in(w, 1.0, 3.15, wid_scaling_forever_delay, 10000);
             wid_set_mode(w, WID_MODE_NORMAL);
             wid_set_color(w, WID_COLOR_TEXT, RED);
         }
@@ -590,12 +589,12 @@ static void wid_player_action_create (thing_statsp s, int fast)
             }
 
             last_hp = stats_get_hp(s);
-        }
 
-        if ((stats_get_hp(s) < s->max_hp / 10) && (stats_get_hp(s) > THING_MIN_HEALTH)) {
-            wid_scaling_to_pct_in(w, 1.0, 3.15, wid_scaling_forever_delay, 10000);
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_TEXT, RED);
+            if ((stats_get_hp(s) < s->max_hp / 10) && (stats_get_hp(s) > THING_MIN_HEALTH)) {
+                wid_scaling_to_pct_in(w, 1.0, 3.15, wid_scaling_forever_delay, 0);
+                wid_set_mode(w, WID_MODE_NORMAL);
+                wid_set_color(w, WID_COLOR_TEXT, RED);
+            }
         }
     }
 
