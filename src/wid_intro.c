@@ -449,41 +449,39 @@ static uint8_t wid_menu_past_legends_selected (widp w,
 
 static void wid_intro_create (void)
 {
-    if (wid_intro) {
-        return;
+    if (!wid_intro) {
+        music_play_intro();
+
+        wid_intro = wid_new_window("intro buttons");
+
+        wid_set_no_shape(wid_intro);
+
+        fpoint tl = {0.0f, 0.0f};
+        fpoint br = {1.0f, 1.0f};
+        wid_set_tl_br_pct(wid_intro, tl, br);
+        wid_set_on_key_down(wid_intro, wid_intro_key_event);
+
+        color col = BLACK;
+        col.a = 0;
+        glcolor(col);
+
+        wid_set_mode(wid_intro, WID_MODE_NORMAL);
+        wid_set_color(wid_intro, WID_COLOR_TL, col);
+        wid_set_color(wid_intro, WID_COLOR_BR, col);
+        wid_set_color(wid_intro, WID_COLOR_BG, col);
+
+        wid_intro_bg_create();
+        wid_update(wid_intro);
+
+        wid_update(wid_intro);
+
+        wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
+        wid_fade_in(wid_intro_background, intro_effect_delay*2);
+        wid_fade_in(wid_intro_title, intro_effect_delay*2);
+        wid_fade_in(wid_intro_man, intro_effect_delay*2);
+        wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
+        wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
     }
-
-    music_play_intro();
-
-    wid_intro = wid_new_window("intro buttons");
-
-    wid_set_no_shape(wid_intro);
-
-    fpoint tl = {0.0f, 0.0f};
-    fpoint br = {1.0f, 1.0f};
-    wid_set_tl_br_pct(wid_intro, tl, br);
-    wid_set_on_key_down(wid_intro, wid_intro_key_event);
-
-    color col = BLACK;
-    col.a = 0;
-    glcolor(col);
-
-    wid_set_mode(wid_intro, WID_MODE_NORMAL);
-    wid_set_color(wid_intro, WID_COLOR_TL, col);
-    wid_set_color(wid_intro, WID_COLOR_BR, col);
-    wid_set_color(wid_intro, WID_COLOR_BG, col);
-
-    wid_intro_bg_create();
-    wid_update(wid_intro);
-
-    wid_update(wid_intro);
-
-    wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
-    wid_fade_in(wid_intro_background, intro_effect_delay*2);
-    wid_fade_in(wid_intro_title, intro_effect_delay*2);
-    wid_fade_in(wid_intro_man, intro_effect_delay*2);
-    wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
-    wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
 
     {
         widp w = 
