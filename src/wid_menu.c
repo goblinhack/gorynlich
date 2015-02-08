@@ -27,6 +27,8 @@ typedef struct {
     on_mouse_down_t event_handler[WID_MENU_MAX_ITEMS];
 } wid_menu_ctx;
 
+static void wid_menu_destroy(widp w);
+
 static void wid_menu_update (widp w)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
@@ -106,6 +108,28 @@ static void wid_menu_update (widp w)
     wid_update(w);
 }
 
+static uint8_t wid_menu_mouse_down (widp w,
+                                    int32_t x, int32_t y,
+                                    uint32_t button)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+
+    widp b = ctx->buttons[ctx->focus];
+    verify(b);
+
+    on_mouse_down_t event_handler = 
+                    ctx->event_handler[ctx->focus];
+
+    wid_destroy(&ctx->w);
+
+    (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+
+    return (true);
+}
+
 static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
@@ -124,14 +148,26 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
             }
             break;
 
+        case SDLK_ESCAPE:
+            ctx->focus = ctx->items - 1;
+
+            /*
+             * Fall through
+             */
+
         case ' ':
         case SDLK_RETURN: {
-            widp b = ctx->buttons[ctx->focus];
-            verify(b);
-            (*ctx->event_handler[ctx->focus])(b, 
-                                              mouse_x, mouse_y, 
-                                              SDL_BUTTON_LEFT);
-            } break;
+                widp b = ctx->buttons[ctx->focus];
+                verify(b);
+
+                on_mouse_down_t event_handler = 
+                                ctx->event_handler[ctx->focus];
+
+                wid_destroy(&ctx->w);
+
+                (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+                return (true);
+            }
 
         case SDLK_LEFT:
             break;
@@ -269,6 +305,7 @@ widp wid_menu (widp parent,
         wid_set_on_mouse_down(b, fn);
         wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
         wid_set_on_key_down(b, wid_menu_wid_key_event);
+        wid_set_on_mouse_down(b, wid_menu_mouse_down);
 
         wid_set_client_context(b, ctx);
         wid_set_client_context2(b, (void*) (uintptr_t) i);
