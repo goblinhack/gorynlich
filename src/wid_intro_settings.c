@@ -34,6 +34,7 @@ static uint8_t wid_intro_settings_decrement_mouse_event(widp w,
 static uint8_t wid_intro_settings_toggle_mouse_event(widp w,
                                                    int32_t x, int32_t y,
                                                    uint32_t button);
+static int saved_focus;
 
 #define WID_INTRO_MAX_SETTINGS  6
 #define WID_INTRO_MAX_VAL      30 
@@ -143,12 +144,20 @@ static uint8_t wid_intro_settings_mouse_event (widp w,
 }
 
 static uint8_t wid_intro_settings_increment_mouse_event (widp w,
-                                                    int32_t x, int32_t y,
-                                                    uint32_t button)
+                                                         int32_t x, int32_t y,
+                                                         uint32_t button)
 {
     /*
      * Increment.
      */
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    /*
+     * Save the focus so when we remake the menu we are at the same entry.
+     */
+    saved_focus = ctx->focus;
+
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
     int32_t val = wid_intro_button_val[row];
 
@@ -167,12 +176,20 @@ static uint8_t wid_intro_settings_increment_mouse_event (widp w,
 }
 
 static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
-                                                    int32_t x, int32_t y,
-                                                    uint32_t button)
+                                                         int32_t x, int32_t y,
+                                                         uint32_t button)
 {
     /*
      * Decrement.
      */
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    /*
+     * Save the focus so when we remake the menu we are at the same entry.
+     */
+    saved_focus = ctx->focus;
+
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
     int32_t val = wid_intro_button_val[row];
 
@@ -197,6 +214,14 @@ static uint8_t wid_intro_settings_toggle_mouse_event (widp w,
     /*
      * Invert.
      */
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    /*
+     * Save the focus so when we remake the menu we are at the same entry.
+     */
+    saved_focus = ctx->focus;
+
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
 
     wid_intro_button_val[row] = !wid_intro_button_val[row];
@@ -452,12 +477,12 @@ static void wid_intro_settings_create (void)
                 wid_intro_button_value_string[i][wid_intro_button_val[i]]);
     }
 
-i = WID_INTRO_SETTINGS_ROW_WINDOW;
+    i = WID_INTRO_SETTINGS_ROW_WINDOW;
     widp menu = wid_menu(wid_intro_settings,
                 vvlarge_font,
                 large_font,
                 0.95, /* padding between buttons */
-                0, /* focus */
+                saved_focus, /* focus */
                 7, /* items */
                 values[i],
                     wid_intro_settings_mouse_event,
@@ -483,7 +508,6 @@ i = WID_INTRO_SETTINGS_ROW_WINDOW;
     for (i = WID_INTRO_SETTINGS_ROW_WINDOW; i < WID_INTRO_MAX_SETTINGS; i++) {
         myfree(values[i]);
     }
-
 
     wid_move_to_pct_centered(menu, 0.5, 0.7);
 

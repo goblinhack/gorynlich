@@ -160,7 +160,7 @@
 /*
  * Fonts
  */
-#undef ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
+#define ENABLE_GENERATE_TTF         // Edit RUNME to add -lSDL_ttf
 
 #define FIXED_FONT                  "data/ttf/emulogic.ttf"
 #if 0
@@ -185,6 +185,7 @@
 #define LARGE_FONT_SIZE             22
 #define VLARGE_FONT_SIZE            26
 #define VVLARGE_FONT_SIZE           50
+#define MAX_FONT_SIZE               60
 
 /*
  * Messages.
