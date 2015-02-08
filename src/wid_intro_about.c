@@ -10,7 +10,7 @@
 #include "wid.h"
 #include "wid_popup.h"
 #include "wid_intro_about.h"
-#include "wid_intro_extra.h"
+#include "wid_intro.h"
 #include "color.h"
 
 static widp wid_intro_about;
@@ -43,7 +43,7 @@ void wid_intro_about_hide (void)
 {
     wid_intro_about_destroy();
 
-    wid_intro_extra_visible();
+    wid_intro_visible();
 }
 
 void wid_intro_about_visible (void)
