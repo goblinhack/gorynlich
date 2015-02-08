@@ -17,6 +17,7 @@ fontp small_font;
 fontp med_font;
 fontp large_font;
 fontp vlarge_font;
+fontp vvlarge_font;
 
 void font_fini (void)
 {
@@ -54,6 +55,11 @@ void font_fini (void)
             ttf_free(vlarge_font);
             vlarge_font = 0;
         }
+
+        if (vvlarge_font) {
+            ttf_free(vvlarge_font);
+            vvlarge_font = 0;
+        }
     }
 }
 
@@ -64,6 +70,7 @@ uint8_t font_init (void)
     int32_t small_font_size = SMALL_FONT_SIZE;
     int32_t med_font_size = MED_FONT_SIZE;
     int32_t vlarge_font_size = VLARGE_FONT_SIZE;
+    int32_t vvlarge_font_size = VVLARGE_FONT_SIZE;
     int32_t large_font_size = LARGE_FONT_SIZE;
     int32_t delta;
 
@@ -85,8 +92,9 @@ uint8_t font_init (void)
     vsmall_font_size += delta;
     small_font_size  += delta;
     med_font_size    += delta;
-    vlarge_font_size += delta;
     large_font_size  += delta;
+    vlarge_font_size += delta;
+    vvlarge_font_size += delta;
 
 #ifdef ENABLE_GENERATE_TTF
     /*
@@ -96,7 +104,7 @@ uint8_t font_init (void)
 
     int32_t i;
 
-    for (i = 2; i < 40; i++) {
+    for (i = 2; i < 100; i++) {
         tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
         ttf_write_tga((char*) tmp, i);
         myfree(tmp);
@@ -120,6 +128,10 @@ uint8_t font_init (void)
         tmp = strprepend(mybasename(VLARGE_FONT, __FUNCTION__), TTF_PATH);
         ttf_write_tga((char*) tmp, i);
         myfree(tmp);
+
+        tmp = strprepend(mybasename(VVLARGE_FONT, __FUNCTION__), TTF_PATH);
+        ttf_write_tga((char*) tmp, i);
+        myfree(tmp);
     }
 #endif
 
@@ -128,7 +140,8 @@ uint8_t font_init (void)
     small_font  = ttf_read_tga((char*)SMALL_FONT, small_font_size);
     med_font    = ttf_read_tga((char*)MED_FONT, med_font_size);
     large_font  = ttf_read_tga((char*)LARGE_FONT, large_font_size);
-    vlarge_font  = ttf_read_tga((char*)VLARGE_FONT, vlarge_font_size);
+    vlarge_font = ttf_read_tga((char*)VLARGE_FONT, vlarge_font_size);
+    vvlarge_font = ttf_read_tga((char*)VVLARGE_FONT, vvlarge_font_size);
 
     return (true);
 }

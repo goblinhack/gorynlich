@@ -175,14 +175,16 @@
 #define MED_FONT                    "data/ttf/emulogic.ttf"
 #define LARGE_FONT                  "data/ttf/emulogic.ttf"
 #define VLARGE_FONT                 "data/ttf/emulogic.ttf"
+#define VVLARGE_FONT                "data/ttf/emulogic.ttf"
 #endif
 
-#define FIXED_FONT_SIZE             12
+#define FIXED_FONT_SIZE             8
 #define VSMALL_FONT_SIZE            8
 #define SMALL_FONT_SIZE             10
 #define MED_FONT_SIZE               12
 #define LARGE_FONT_SIZE             22
 #define VLARGE_FONT_SIZE            26
+#define VVLARGE_FONT_SIZE           50
 
 /*
  * Messages.
