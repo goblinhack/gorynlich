@@ -103,21 +103,36 @@ void wid_intro_hide (void)
                           intro_effect_delay_zoom, 0);
     wid_fade_out(wid_intro_title, intro_effect_delay_zoom);
     wid_move_delta_pct_in(wid_intro_title, -2.0f, -4.0f,
-                                intro_effect_delay_zoom);
+                          intro_effect_delay_zoom);
 
     wid_fade_out(wid_intro_man, intro_effect_delay_zoom);
     wid_move_delta_pct_in(wid_intro_man, -2.0f, -0.0f,
-                                intro_effect_delay_zoom);
+                          intro_effect_delay_zoom);
 
     wid_fade_out(wid_intro_treasure_chest, intro_effect_delay_zoom);
     wid_move_delta_pct_in(wid_intro_treasure_chest, 2.0f, -0.0f,
-                                intro_effect_delay_zoom);
+                          intro_effect_delay_zoom);
 
     wid_fade_out(wid_intro_eyes, intro_effect_delay_zoom);
 
     wid_hide(wid_intro, 0);
     wid_raise(wid_intro);
     wid_update(wid_intro);
+
+    wid_destroy_in(wid_intro, wid_hide_delay * 2);
+    wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
+    wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
+    wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
+    wid_destroy_in(wid_intro_treasure_chest, wid_hide_delay * 2);
+    wid_destroy_in(wid_intro_eyes, wid_hide_delay * 2);
+
+    wid_intro = 0;
+    wid_intro_background = 0;
+    wid_intro_title = 0;
+    wid_intro_man = 0;
+    wid_intro_treasure_chest = 0;
+    wid_intro_eyes = 0;
+    wid_intro_menu = 0;
 }
 
 void wid_intro_visible (void)
@@ -130,15 +145,15 @@ void wid_intro_visible (void)
         return;
     }
 
+    wid_intro_is_visible = true;
+    wid_intro_is_hidden = false;
+
     wid_intro_create();
     wid_intro_menu_create();
 
     wid_notify_flush();
 
     LOG("Client: Intro screen show");
-
-    wid_intro_is_visible = true;
-    wid_intro_is_hidden = false;
 
     if (!wid_intro) {
         DIE("no wid intro");
@@ -257,6 +272,10 @@ static void wid_intro_tick_reset (void)
 
 static void wid_intro_tick (widp wid)
 {
+    if (!wid_intro_title) {
+        return;
+    }
+
     wid_move_to_pct_centered(wid_intro_title, 0.5f, y);
 
     y += dy;
@@ -287,117 +306,111 @@ static void wid_intro_tick (widp wid)
 
 static void wid_intro_bg_create (void)
 {
-    if (wid_intro_background) {
-        return;
+    if (!wid_intro_title) {
+        widp wid = wid_intro_title = wid_new_window("bg");
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 1.0, 0.76 };
+
+        wid_set_tl_br_pct(wid, tl, br);
+
+        wid_set_tex(wid, 0, "main_title");
+
+        wid_lower(wid);
+
+        color c;
+        c = WHITE;
+        wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_color(wid, WID_COLOR_TL, c);
+        wid_set_color(wid, WID_COLOR_BR, c);
+        wid_set_color(wid, WID_COLOR_BG, c);
+
+        wid_update(wid);
+        wid_move_to_pct_centered(wid_intro_title, 0.5f, -4.1f);
+        wid_set_on_tick(wid, wid_intro_tick);
+        wid_intro_tick_reset();
     }
 
-    {
-        {
-            widp wid = wid_intro_title = wid_new_window("bg");
-            fpoint tl = { 0.0, 0.0 };
-            fpoint br = { 1.0, 0.76 };
+    if (!wid_intro_man) {
+        widp wid = wid_intro_man = wid_new_window("bg");
+        fpoint tl = { 0.0, 0.56 };
+        fpoint br = { 0.3, 1.0 };
 
-            wid_set_tl_br_pct(wid, tl, br);
+        wid_set_tl_br_pct(wid, tl, br);
 
-            wid_set_tex(wid, 0, "main_title");
+        tpp tp = tp_find("data/things/anim_man");
+        wid_set_thing_template(wid, tp);
 
-            wid_lower(wid);
+        wid_raise(wid);
 
-            color c;
-            c = WHITE;
-            wid_set_mode(wid, WID_MODE_NORMAL);
-            wid_set_color(wid, WID_COLOR_TL, c);
-            wid_set_color(wid, WID_COLOR_BR, c);
-            wid_set_color(wid, WID_COLOR_BG, c);
+        wid_set_mode(wid, WID_MODE_NORMAL);
 
-            wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_title, 0.5f, -4.1f);
-            wid_set_on_tick(wid, wid_intro_tick);
-            wid_intro_tick_reset();
-        }
+        wid_update(wid);
+        wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.70f);
+        wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.70f, 1000);
+    }
 
-        {
-            widp wid = wid_intro_man = wid_new_window("bg");
-            fpoint tl = { 0.0, 0.56 };
-            fpoint br = { 0.3, 1.0 };
+    if (!wid_intro_treasure_chest) {
+        widp wid = wid_intro_treasure_chest = wid_new_window("bg");
 
-            wid_set_tl_br_pct(wid, tl, br);
+        fpoint tl = { 0.0, 0.56 };
+        fpoint br = { 0.3, 1.0 };
 
-            tpp tp = tp_find("data/things/anim_man");
-            wid_set_thing_template(wid, tp);
+        wid_set_tl_br_pct(wid, tl, br);
 
-            wid_raise(wid);
+        tpp tp = tp_find("data/things/anim_treasure_chest");
+        wid_set_thing_template(wid, tp);
 
-            wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_raise(wid);
 
-            wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_man, -0.8f, 0.70f);
-            wid_move_to_pct_centered_in(wid_intro_man, 0.08f, 0.70f, 1000);
-        }
+        wid_set_mode(wid, WID_MODE_NORMAL);
 
-        {
-            widp wid = wid_intro_treasure_chest = wid_new_window("bg");
+        wid_update(wid);
+        wid_move_to_pct_centered(wid_intro_treasure_chest, 0.96f, 0.75f);
+    }
 
-            fpoint tl = { 0.0, 0.56 };
-            fpoint br = { 0.3, 1.0 };
+    if (!wid_intro_eyes) {
+        widp wid = wid_intro_eyes = wid_new_window("bg");
 
-            wid_set_tl_br_pct(wid, tl, br);
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 0.1, 0.12 };
 
-            tpp tp = tp_find("data/things/anim_treasure_chest");
-            wid_set_thing_template(wid, tp);
+        wid_set_tl_br_pct(wid, tl, br);
 
-            wid_raise(wid);
+        tpp tp = tp_find("data/things/anim_eyes");
+        wid_set_thing_template(wid, tp);
 
-            wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_raise(wid);
 
-            wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_treasure_chest, 0.96f, 0.75f);
-        }
+        wid_set_mode(wid, WID_MODE_NORMAL);
 
-        {
-            widp wid = wid_intro_eyes = wid_new_window("bg");
+        wid_update(wid);
+        wid_move_to_pct_centered(wid_intro_eyes, 0.53f, 0.74f);
+    }
 
-            fpoint tl = { 0.0, 0.0 };
-            fpoint br = { 0.1, 0.12 };
+    if (!wid_intro_background) {
+        widp wid = wid_intro_background = wid_new_window("bg");
 
-            wid_set_tl_br_pct(wid, tl, br);
+        float f;
 
-            tpp tp = tp_find("data/things/anim_eyes");
-            wid_set_thing_template(wid, tp);
+        f = (1024.0 / 680.0);
 
-            wid_raise(wid);
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 1.0, f };
 
-            wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_tl_br_pct(wid, tl, br);
 
-            wid_update(wid);
-            wid_move_to_pct_centered(wid_intro_eyes, 0.53f, 0.74f);
-        }
+        wid_set_tex(wid, 0, "title");
 
-        {
-            widp wid = wid_intro_background = wid_new_window("bg");
+        wid_lower(wid);
 
-            float f;
+        color c;
+        c = WHITE;
+        wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_color(wid, WID_COLOR_TL, c);
+        wid_set_color(wid, WID_COLOR_BR, c);
+        wid_set_color(wid, WID_COLOR_BG, c);
 
-            f = (1024.0 / 680.0);
-
-            fpoint tl = { 0.0, 0.0 };
-            fpoint br = { 1.0, f };
-
-            wid_set_tl_br_pct(wid, tl, br);
-
-            wid_set_tex(wid, 0, "title");
-
-            wid_lower(wid);
-
-            color c;
-            c = WHITE;
-            wid_set_mode(wid, WID_MODE_NORMAL);
-            wid_set_color(wid, WID_COLOR_TL, c);
-            wid_set_color(wid, WID_COLOR_BR, c);
-            wid_set_color(wid, WID_COLOR_BG, c);
-
-            wid_update(wid);
-        }
+        wid_update(wid);
     }
 }
 
@@ -467,7 +480,7 @@ static uint8_t wid_menu_play_game_selected (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
-    wid_destroy(&wid_intro_menu);
+    wid_intro_hide();
     wid_choose_game_type_visible();
 
     return (true);
