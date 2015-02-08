@@ -21,6 +21,7 @@
 #include "string_util.h"
 #include "music.h"
 #include "wid_game_quit.h"
+#include "wid_menu.h"
 
 static widp wid_gravestone;
 static widp wid_click_to_continue;
@@ -156,7 +157,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "You went to the restaurant at the end of the universe",
         "You came to a sticky and pointless end",
         "You popped your clogs",
-        "You went off to make your maker.\nIt was not impressed.",
+        "You went off to make your maker. It was not impressed.",
         "You joined the choir invisible",
         "Your god told you to slow down",
         "You are six feet under",
@@ -170,7 +171,7 @@ static void wid_dead_gravestone_appeared (void *context)
         "Well, that could have been worse",
         "Don't play games as a career",
         "Are you paid to play this?",
-        "Are you paid to play this?\nYou shouldn't be",
+        "Are you paid to play this? You shouldn't be",
         "Is that the best you could do?",
         "Awful. Just awful.",
         "My pet kakapo plays better than that",
@@ -180,8 +181,8 @@ static void wid_dead_gravestone_appeared (void *context)
         "Worst game ever",
         "Epic fail",
         "Just stop playing. You'll never win",
-        "Believe in yourself more\nSomeone has to",
-        "Don't give up\nIn general. But please give up on this game",
+        "Believe in yourself more. Someone has to",
+        "Don't give up. In general. But please give up on this game",
         "Goodbye cruel world",
     };
 
@@ -193,33 +194,28 @@ static void wid_dead_gravestone_appeared (void *context)
     wid_game_quit_hide();
 
     if (is_rejoin_allowed) {
-        wid_rejoin_game_yes_no = wid_popup(
-            messages[myrand() % ARRAY_SIZE(messages)],
-            "%%fg=red$Rejoin game?",
-            0.5, 0.2f,                /* x,y postition in percent */
-            med_font,               /* title font */
-            med_font,              /* body font */
-            med_font,              /* button font */
-            2,                        /* number buttons */
-            "%%tile=button_y$Yes    ", wid_dead_rejoin_callback_yes,
-            "%%tile=button_n$No    ",  wid_dead_rejoin_callback_no);
-
-        wid_set_tex(wid_rejoin_game_yes_no, 0, "gothic_wide");
-        wid_set_square(wid_rejoin_game_yes_no);
+        wid_rejoin_game_yes_no = 
+            wid_menu(0,
+                    vvlarge_font,
+                    large_font,
+                    0.95, /* padding between buttons */
+                    1, /* focus */
+                    3, /* items */
+                    "Rejoin game?", (void*) 0,
+                    "Yes", wid_dead_rejoin_callback_yes,
+                    "No",  wid_dead_rejoin_callback_no);
     } else {
-        wid_replay_game_yes_no = wid_popup(
-            messages[myrand() % ARRAY_SIZE(messages)],
-            "%%fg=red$Play again?",
-            0.5, 0.2f,                /* x,y postition in percent */
-            med_font,               /* title font */
-            med_font,              /* body font */
-            med_font,              /* button font */
-            2,                        /* number buttons */
-            "%%tile=button_y$Yes    ", wid_dead_replay_callback_yes,
-            "%%tile=button_n$No    ",  wid_dead_replay_callback_no);
-
-        wid_set_tex(wid_replay_game_yes_no, 0, "gothic_wide");
-        wid_set_square(wid_replay_game_yes_no);
+        wid_replay_game_yes_no = 
+            wid_menu(0,
+                    vvlarge_font,
+                    large_font,
+                    0.95, /* padding between buttons */
+                    2, /* focus */
+                    4, /* items */
+                    "Play again?", (void*) 0,
+                    messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
+                    "Yes", wid_dead_replay_callback_yes,
+                    "No",  wid_dead_replay_callback_no);
     }
 }
 
