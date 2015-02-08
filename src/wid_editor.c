@@ -23,6 +23,7 @@
 #include "marshal.h"
 #include "wid_text_input.h"
 #include "wid_textbox.h"
+#include "wid_menu.h"
 #include "level.h"
 
 static uint8_t wid_editor_init_done;
@@ -482,17 +483,16 @@ void wid_editor_clear (void)
         return;
     }
 
-    wid_editor_clear_popup = wid_popup("", "Clear level?",
-        0.5, 0.2f,                /* x,y postition in percent */
-        small_font,               /* title font */
-        small_font,              /* body font */
-        small_font,              /* button font */
-        2,                        /* number buttons */
-        "%%tile=button_y$Yes    ", wid_editor_clear_callback_yes,
-        "%%tile=button_n$No    ",  wid_editor_clear_callback_no);
-
-    wid_set_tex(wid_editor_clear_popup, 0, "gothic_wide");
-    wid_set_square(wid_editor_clear_popup);
+    wid_editor_clear_popup = 
+        wid_menu(0,
+                vvlarge_font,
+                large_font,
+                0.95, /* padding between buttons */
+                1, /* focus */
+                3, /* items */
+                "Clear level?", (void*) 0,
+                "Yes", wid_editor_clear_callback_yes,
+                "No",  wid_editor_clear_callback_no);
 }
 
 void wid_editor_reset_buttons (void)

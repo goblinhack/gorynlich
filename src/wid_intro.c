@@ -452,7 +452,6 @@ static void wid_intro_quit_selected (void)
                  "Yes", wid_intro_quit_callback_yes,
                  "No",  wid_intro_quit_callback_no);
 
-
     wid_move_to_pct_centered(wid_intro_quit_popup, 0.5, 0.7);
 }
 
