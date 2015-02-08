@@ -11,7 +11,6 @@
 #include "wid_intro.h"
 #include "wid_popup.h"
 #include "wid_intro_about.h"
-#include "wid_intro_buttons.h"
 #include "wid_intro_settings.h"
 #include "wid_menu.h"
 #include "wid_game_over.h"
@@ -42,6 +41,7 @@ static uint8_t wid_intro_is_hidden;
 static uint8_t wid_intro_is_visible;
 static uint8_t wid_intro_init_done;
 
+static void wid_intro_quit_selected(void);
 static void wid_intro_single_play_selected(void);
 static void wid_intro_create(void);
 static void wid_intro_menu_create(void);
@@ -174,10 +174,12 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch ((int)key->sym) {
         case 's':
+            wid_destroy(&wid_intro_menu);
             wid_intro_single_play_selected();
             return (true);
 
         case 'j':
+            wid_destroy(&wid_intro_menu);
             wid_intro_hide();
 
             /*
@@ -407,11 +409,54 @@ static void wid_intro_bg_create (void)
     }
 }
 
+static widp wid_intro_quit_popup;
+
+static void wid_intro_quit_callback_yes (widp wid)
+{
+    wid_destroy(&wid_intro_quit_popup);
+
+    FINI_LOG("quit yes selected");
+    sdl_exit();
+}
+
+static void wid_intro_quit_callback_no (widp wid)
+{
+    wid_destroy(&wid_intro_quit_popup);
+
+    wid_intro_visible();
+}
+
+static void wid_intro_quit_selected (void)
+{
+    LOG("Intro quit selected");
+
+    if (wid_intro_quit_popup) {
+        return;
+    }
+
+    wid_destroy(&wid_intro_menu);
+
+    wid_intro_quit_popup = 
+        wid_menu(0,
+                 vvlarge_font,
+                 large_font,
+                 0.95, /* padding between buttons */
+                 2, /* focus */
+                 3, /* items */
+                 "Quit game?", (void*)0,
+                 "Yes", wid_intro_quit_callback_yes,
+                 "No",  wid_intro_quit_callback_no);
+
+
+    wid_set_tex(wid_intro_quit_popup, 0, "gothic_wide");
+    wid_set_square(wid_intro_quit_popup);
+}
+
 static uint8_t wid_menu_settings_selected (widp w, 
                                            int32_t x, int32_t y,
                                            uint32_t button)
 {
-    wid_intro_menu = 0;
+    wid_destroy(&wid_intro_menu);
     wid_intro_settings_visible();
 
     return (true);
@@ -421,7 +466,7 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-    wid_intro_menu = 0;
+    wid_destroy(&wid_intro_menu);
     wid_editor_visible();
 
     return (true);
@@ -431,7 +476,7 @@ static uint8_t wid_menu_play_game_selected (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
-    wid_intro_menu = 0;
+    wid_destroy(&wid_intro_menu);
     wid_choose_game_type_visible();
 
     return (true);
@@ -441,7 +486,7 @@ static uint8_t wid_menu_quick_start_selected (widp w,
                                               int32_t x, int32_t y,
                                               uint32_t button)
 {
-    wid_intro_menu = 0;
+    wid_destroy(&wid_intro_menu);
     wid_intro_single_play_selected();
 
     return (true);
@@ -453,6 +498,7 @@ static uint8_t wid_menu_past_legends_selected (widp w,
 {
     wid_intro_menu = 0;
     wid_hiscore_visible();
+    wid_destroy(&wid_intro_menu);
 
     return (true);
 }
