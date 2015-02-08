@@ -5,7 +5,6 @@
  */
 
 #include <errno.h>
-#include <SDL.h>
 
 #include "main.h"
 #include "wid_dirlist.h"
