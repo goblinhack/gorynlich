@@ -13,20 +13,6 @@
 #include "ttf.h"
 #include "wid_menu.h"
 
-#define WID_MENU_MAX_ITEMS 20
-
-typedef struct {
-    widp w;
-    int focus;
-    int items;
-    fontp focus_font;
-    fontp normal_font;
-    double focus_height;
-    double normal_height;
-    widp buttons[WID_MENU_MAX_ITEMS];
-    on_mouse_down_t event_handler[WID_MENU_MAX_ITEMS];
-} wid_menu_ctx;
-
 static void wid_menu_destroy(widp w);
 
 static void wid_menu_update (widp w)
