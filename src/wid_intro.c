@@ -10,7 +10,6 @@
 #include "wid.h"
 #include "wid_intro.h"
 #include "wid_popup.h"
-#include "wid_intro_extra.h"
 #include "wid_intro_about.h"
 #include "wid_intro_buttons.h"
 #include "wid_intro_settings.h"
