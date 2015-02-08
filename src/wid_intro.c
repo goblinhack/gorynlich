@@ -457,37 +457,42 @@ static void wid_intro_bg_create (void)
 }
 
 static uint8_t wid_menu_settings_selected (widp w, 
-                                            int32_t x, int32_t y,
-                                            uint32_t button)
+                                           int32_t x, int32_t y,
+                                           uint32_t button)
 {
+CON("%s",__FUNCTION__);
     return (true);
 }
 
 static uint8_t wid_menu_level_editor_selected (widp w,
-                                                int32_t x, int32_t y,
-                                                uint32_t button)
+                                               int32_t x, int32_t y,
+                                               uint32_t button)
 {
+CON("%s",__FUNCTION__);
     return (true);
 }
 
 static uint8_t wid_menu_play_game_selected (widp w,
-                                             int32_t x, int32_t y,
-                                             uint32_t button)
+                                            int32_t x, int32_t y,
+                                            uint32_t button)
 {
+CON("%s",__FUNCTION__);
     return (true);
 }
 
 static uint8_t wid_menu_past_legends_selected (widp w,
-                                                int32_t x, int32_t y,
-                                                uint32_t button)
+                                               int32_t x, int32_t y,
+                                               uint32_t button)
 {
+CON("%s",__FUNCTION__);
     return (true);
 }
 
 static uint8_t wid_menu_quit_selected (widp w,
-                                        int32_t x, int32_t y,
-                                        uint32_t button)
+                                       int32_t x, int32_t y,
+                                       uint32_t button)
 {
+CON("%s",__FUNCTION__);
     return (true);
 }
 
