@@ -113,14 +113,13 @@ static void wid_menu_update (widp w)
     wid_update(w);
 }
 
-static uint8_t wid_menu_mouse_down (widp w,
-                                    int32_t x, int32_t y,
-                                    uint32_t button)
+static uint8_t wid_menu_mouse_event (widp w,
+                                     int focus,
+                                     int32_t x, int32_t y,
+                                     uint32_t button)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
-
-    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
 
     widp b = ctx->buttons[ctx->focus];
     verify(b);
@@ -130,6 +129,30 @@ static uint8_t wid_menu_mouse_down (widp w,
     (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
 
     return (true);
+}
+
+static uint8_t wid_menu_button_mouse_event (widp w,
+                                            int32_t x, int32_t y,
+                                            uint32_t button)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+
+    return (wid_menu_mouse_event(w, focus, x, y, button));
+}
+
+static uint8_t wid_menu_parent_mouse_event (widp w,
+                                            int32_t x, int32_t y,
+                                            uint32_t button)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    int focus = ctx->focus;
+
+    return (wid_menu_mouse_event(w, focus, x, y, button));
 }
 
 static void wid_menu_next_focus (wid_menu_ctx *ctx)
@@ -178,12 +201,10 @@ static void wid_menu_first_focus (wid_menu_ctx *ctx)
     wid_menu_update(ctx->w);
 }
 
-static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
+static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
-
-    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
 
     switch (key->sym) {
         case SDLK_TAB:
@@ -241,6 +262,58 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
     return (true);
 }
 
+static uint8_t wid_menu_button_key_event (widp w, const SDL_KEYSYM *key)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+
+    switch (key->sym) {
+        case SDLK_TAB:
+        case SDLK_BACKSPACE:
+        case SDLK_ESCAPE:
+        case ' ':
+        case SDLK_RETURN:
+        case SDLK_LEFT:
+        case SDLK_RIGHT:
+        case SDLK_UP:
+        case SDLK_DOWN:
+        case SDLK_HOME:
+        case SDLK_END:
+            return (wid_menu_key_event(w, focus, key));
+
+        default:
+            return (false);
+    }
+}
+
+static uint8_t wid_menu_parent_key_event (widp w, const SDL_KEYSYM *key)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    int focus = ctx->focus;
+
+    switch (key->sym) {
+        case SDLK_TAB:
+        case SDLK_BACKSPACE:
+        case SDLK_ESCAPE:
+        case ' ':
+        case SDLK_RETURN:
+        case SDLK_LEFT:
+        case SDLK_RIGHT:
+        case SDLK_UP:
+        case SDLK_DOWN:
+        case SDLK_HOME:
+        case SDLK_END:
+            return (wid_menu_key_event(w, focus, key));
+
+        default:
+            return (false);
+    }
+}
+
 static void wid_menu_mouse_over (widp w)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
@@ -294,9 +367,6 @@ widp wid_menu (widp parent,
     ttf_text_size(&normal_font, "X", &unused, 
                   &ctx->normal_height, 0, 1.0f, 1.0f,
                   false /* fixed width */);
-    double total_height_needed = 
-                    ctx->focus_height + 
-                    ctx->normal_height * (items - 1);
 
     /*
      * Padding
@@ -304,30 +374,60 @@ widp wid_menu (widp parent,
     ctx->focus_height *= padding;
     ctx->normal_height *= padding;
 
+    widp wrapper;
+    if (parent) {
+        wrapper = wid_new_container(parent, "wid menu");
+    } else {
+        wrapper = wid_new_window("wid menu");
+    }
+
+    {
+        fpoint tl = { 0.0, 0.0};
+        fpoint br = { 1.0, 1.0};
+
+        wid_set_tl_br_pct(wrapper, tl, br);
+        color c = RED;
+        c.a = 100;
+            wid_set_color(wrapper, WID_COLOR_BG, c);
+            wid_set_color(wrapper, WID_COLOR_TL, c);
+            wid_set_color(wrapper, WID_COLOR_BR, c);
+
+//        wid_set_no_shape(wrapper);
+        wid_set_on_destroy(wrapper, wid_menu_destroy);
+        wid_set_client_context(wrapper, ctx);
+        wid_set_on_key_down(wrapper, wid_menu_parent_key_event);
+        wid_set_on_mouse_down(wrapper, wid_menu_parent_mouse_event);
+        ctx->w = wrapper;
+    }
+
     /*
      * Create the button container
      */
-    widp w;
-    if (parent) {
-        w = wid_new_container(parent, "wid menu");
-    } else {
-        w = wid_new_window("wid menu");
+    widp w = wid_new_container(wrapper, "wid menu");
+
+    {
+        fpoint tl = { 0.0, 0.0};
+        fpoint br = { 0.0, 0.0};
+
+        double total_height_needed = 
+                        ctx->focus_height + 
+                        ctx->normal_height * (items - 1);
+
+        br.x = global_config.video_gl_width;
+
+        /*
+         * Need a bit of fudge so the text outline does not creep out of the 
+         * widget scissors.
+         */
+        br.y = total_height_needed * 1.1;
+
+        wid_set_tl_br(w, tl, br);
+        wid_move_to_pct_centered(w, 0.5, 0.5);
     }
-
-    fpoint tl = { 0.0, 0.0};
-    fpoint br = { 0.0, 0.0};
-    br.x = global_config.video_gl_width;
-    br.y = total_height_needed;
-    wid_set_tl_br(w, tl, br);
-
-    wid_set_no_shape(w);
-    wid_move_to_pct_centered(w, 0.5, 0.5);
-    wid_set_on_destroy(w, wid_menu_destroy);
 
     wid_set_client_context(w, ctx);
     ctx->items = items;
     ctx->focus = focus;
-    ctx->w = w;
     ctx->focus_font = focus_font;
     ctx->normal_font = normal_font;
 
@@ -350,8 +450,8 @@ widp wid_menu (widp parent,
 
         wid_set_on_mouse_down(b, fn);
         wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
-        wid_set_on_key_down(b, wid_menu_wid_key_event);
-        wid_set_on_mouse_down(b, wid_menu_mouse_down);
+        wid_set_on_key_down(b, wid_menu_button_key_event);
+        wid_set_on_mouse_down(b, wid_menu_button_mouse_event);
 
         wid_set_client_context(b, ctx);
         wid_set_client_context2(b, (void*) (uintptr_t) i);
@@ -359,9 +459,10 @@ widp wid_menu (widp parent,
 
     va_end(ap);
 
-    wid_menu_update(w);
-    wid_set_do_not_lower(w, 1);
-    wid_raise(w);
+    wid_move_to_pct_centered(wrapper, 0.5, 0.5);
+    wid_menu_update(wrapper);
+    wid_set_do_not_lower(wrapper, 1);
+    wid_raise(wrapper);
 
-    return (w);
+    return (wrapper);
 }
