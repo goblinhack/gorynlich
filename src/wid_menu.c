@@ -233,11 +233,31 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
                 return (true);
             }
 
-        case SDLK_LEFT:
-            break;
+        case SDLK_LEFT: {
+                widp b = ctx->buttons[ctx->focus];
+                verify(b);
 
-        case SDLK_RIGHT:
-            break;
+                on_mouse_down_t event_handler = 
+                                ctx->event_handler[ctx->focus];
+
+                if (event_handler) {
+                    (event_handler)(b, mouse_x, mouse_y, SDLK_LEFT);
+                }
+                return (true);
+            }
+
+        case SDLK_RIGHT: {
+                widp b = ctx->buttons[ctx->focus];
+                verify(b);
+
+                on_mouse_down_t event_handler = 
+                                ctx->event_handler[ctx->focus];
+
+                if (event_handler) {
+                    (event_handler)(b, mouse_x, mouse_y, SDLK_RIGHT);
+                }
+                return (true);
+            }
 
         case SDLK_UP:
             wid_menu_prev_focus(ctx);
