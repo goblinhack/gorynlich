@@ -12,6 +12,7 @@
 #include "wid_popup.h"
 #include "wid_intro_settings.h"
 #include "wid_intro.h"
+#include "wid_menu.h"
 #include "string_util.h"
 #include "music.h"
 
@@ -25,6 +26,15 @@ static void wid_intro_settings_create(void);
 static void wid_intro_settings_destroy(void);
 static void wid_intro_settings_save(void);
 static uint8_t wid_intro_restart_selected(void);
+static uint8_t wid_intro_settings_increment_mouse_event(widp w,
+                                                   int32_t x, int32_t y,
+                                                   uint32_t button);
+static uint8_t wid_intro_settings_decrement_mouse_event(widp w,
+                                                   int32_t x, int32_t y,
+                                                   uint32_t button);
+static uint8_t wid_intro_settings_toggle_mouse_event(widp w,
+                                                   int32_t x, int32_t y,
+                                                   uint32_t button);
 
 #define WID_INTRO_MAX_SETTINGS  6
 #define WID_INTRO_MAX_VAL      30 
@@ -38,34 +48,7 @@ enum {
     WID_INTRO_SETTINGS_ROW_FPS_COUNTER,
 };
 
-static const char *wid_intro_button_col1[WID_INTRO_MAX_SETTINGS] = {
-    "Window",
-    "Sound",
-    "Music",
-    "Intro screen",
-    "Display sync",
-    "FPS counter",
-};
-
-static const char *wid_intro_button_col2[WID_INTRO_MAX_SETTINGS] = {
-    "+",
-    "+",
-    "+",
-    0,
-    0,
-    0,
-};
-
-static const char *wid_intro_button_col3[WID_INTRO_MAX_SETTINGS] = {
-    "-",
-    "-",
-    "-",
-    0,
-    0,
-    0,
-};
-
-static const char *wid_intro_button_col4
+static const char *wid_intro_button_toggle
                         [WID_INTRO_MAX_SETTINGS][WID_INTRO_MAX_VAL] = {
     { 
         "640x480",
@@ -124,7 +107,7 @@ void wid_intro_settings_visible (void)
     wid_intro_settings_create();
 }
 
-static uint8_t wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
+static uint8_t wid_intro_settings_back_mouse_event (widp w, int32_t x, int32_t y,
                                                uint32_t button)
 {
     wid_intro_settings_save();
@@ -136,24 +119,32 @@ static uint8_t wid_intro_settings_mouse_event (widp w, int32_t x, int32_t y,
     return (true);
 }
 
-static uint8_t wid_intro_settings_col1_mouse_event (widp w,
+static uint8_t wid_intro_settings_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
+    if (button == SDLK_LEFT) {
+        wid_intro_settings_decrement_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+    } else if (button == SDLK_RIGHT) {
+        wid_intro_settings_increment_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+    } else {
+        wid_intro_settings_toggle_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+    }
+
     return (true);
 }
 
-static uint8_t wid_intro_settings_col2_mouse_event (widp w,
+static uint8_t wid_intro_settings_increment_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
     /*
      * Increment.
      */
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
     int32_t val = wid_intro_button_val[row];
 
-    if (!wid_intro_button_col4[row][val+1]) {
+    if (!wid_intro_button_toggle[row][val+1]) {
         return (true);
     }
 
@@ -167,14 +158,14 @@ static uint8_t wid_intro_settings_col2_mouse_event (widp w,
     return (true);
 }
 
-static uint8_t wid_intro_settings_col3_mouse_event (widp w,
+static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
     /*
      * Decrement.
      */
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
     int32_t val = wid_intro_button_val[row];
 
     if (!val) {
@@ -191,14 +182,14 @@ static uint8_t wid_intro_settings_col3_mouse_event (widp w,
     return (true);
 }
 
-static uint8_t wid_intro_settings_col4_mouse_event (widp w,
+static uint8_t wid_intro_settings_toggle_mouse_event (widp w,
                                                     int32_t x, int32_t y,
                                                     uint32_t button)
 {
     /*
      * Invert.
      */
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
 
     wid_intro_button_val[row] = !wid_intro_button_val[row];
 
@@ -207,41 +198,6 @@ static uint8_t wid_intro_settings_col4_mouse_event (widp w,
 
     wid_intro_settings_save();
 
-    return (true);
-}
-
-static uint8_t wid_intro_settings_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case 'q':
-        case 'b':
-        case SDLK_ESCAPE:
-            wid_intro_settings_hide();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
-static uint8_t wid_intro_settings_receive_mouse_motion (
-                    widp w,
-                    int32_t x, int32_t y,
-                    int32_t relx, int32_t rely,
-                    int32_t wheelx, int32_t wheely)
-{
-    if (wheelx || wheely) {
-        /*
-         * Allow scrolling.
-         */
-        return (false);
-    }
-
-    /*
-     * Block moving the window.
-     */
     return (true);
 }
 
@@ -260,7 +216,7 @@ static void wid_intro_settings_read (void)
                         global_config.video_pix_width, global_config.video_pix_height);
 
     for (val = 0; val < WID_INTRO_MAX_VAL; val++) {
-        cmp_str = wid_intro_button_col4[WID_INTRO_SETTINGS_ROW_WINDOW][val];
+        cmp_str = wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_WINDOW][val];
         if (!cmp_str) {
             continue;
         }
@@ -286,7 +242,7 @@ static void wid_intro_settings_read (void)
         global_config.sound_volume;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_col4[WID_INTRO_SETTINGS_ROW_SOUND][val]) {
+        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_SOUND][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_SOUND] = 0;
 
@@ -300,7 +256,7 @@ static void wid_intro_settings_read (void)
         global_config.music_volume;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_col4[WID_INTRO_SETTINGS_ROW_MUSIC][val]) {
+        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_MUSIC][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_MUSIC] = 0;
 
@@ -314,7 +270,7 @@ static void wid_intro_settings_read (void)
         global_config.display_sync;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_col4[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC][val]) {
+        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC] = 0;
 
@@ -328,7 +284,7 @@ static void wid_intro_settings_read (void)
         global_config.fps_counter;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_col4[WID_INTRO_SETTINGS_ROW_FPS_COUNTER][val]) {
+        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_FPS_COUNTER][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_FPS_COUNTER] = 0;
 
@@ -342,7 +298,7 @@ static void wid_intro_settings_read (void)
         global_config.intro_screen;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_col4[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN][val]) {
+        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN] = 0;
 
@@ -401,7 +357,7 @@ static void wid_intro_settings_save (void)
     /*
      * window.
      */
-    sscanf(wid_intro_button_col4[WID_INTRO_SETTINGS_ROW_WINDOW][
+    sscanf(wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_WINDOW][
             wid_intro_button_val[WID_INTRO_SETTINGS_ROW_WINDOW]],
             "%dx%d",
             &global_config.video_pix_width,
@@ -466,256 +422,38 @@ static void wid_intro_settings_create (void)
 {
     wid_intro_settings_restart_needed = false;
 
-    if (!wid_intro_settings) {
-        wid_intro_settings_read();
-
-        widp w = wid_intro_settings = wid_new_rounded_window("wid settings");
-
-        fpoint tl = {0.2, 0.05};
-        fpoint br = {0.8, 0.95};
-
-        wid_set_tl_br_pct(w, tl, br);
-        wid_set_font(w, large_font);
-
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-        wid_set_on_mouse_motion(w, wid_intro_settings_receive_mouse_motion);
+    if (wid_intro_settings) {
+        return;
     }
 
-    {
-        widp w = wid_intro_settings_container =
-            wid_new_container(wid_intro_settings, "wid settings container");
-
-        fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 1.0};
-
-        wid_set_tl_br_pct(w, tl, br);
-    }
-
-    {
-        fpoint tl = {0.0, 0.0};
-        fpoint br = {1.0, 0.15};
-
-        widp w = wid_new_container(wid_intro_settings, "wid settings title");
-
-        wid_set_tl_br_pct(w, tl, br);
-
-        wid_set_text(w, "Settings");
-        wid_set_font(w, large_font);
-        wid_set_color(w, WID_COLOR_TEXT, GOLD);
-
-        wid_set_text_outline(w, true);
-    }
-
-    {
-        uint32_t i;
-
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++)
-        {
-            widp w = wid_new_square_button(wid_intro_settings_container,
-                                           wid_intro_button_col1[i]);
-
-            fpoint tl = {0.05, 0.2};
-            fpoint br = {0.48, 0.28};
-
-            double height = 0.08;
-
-            br.y += (double)i * height;
-            tl.y += (double)i * height;
-
-            wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, wid_intro_button_col1[i]);
-            wid_set_font(w, large_font);
-
-            color c = BLACK;
-
-            c.a = 200;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            c.a = 255;
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-
-            wid_set_on_mouse_down(w, wid_intro_settings_col1_mouse_event);
-            wid_set_client_context(w, (void*)(uintptr_t)i);
-            wid_set_bevel(w,0);
-        }
-    }
-
-    {
-        uint32_t i;
-
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
-
-            if (!wid_intro_button_col2[i]) {
-                continue;
-            }
-
-            widp w = wid_new_square_button(wid_intro_settings_container,
-                                           wid_intro_button_col2[i]);
-
-            fpoint tl = {0.49, 0.2};
-            fpoint br = {0.595, 0.28};
-
-            double height = 0.08;
-
-            br.y += (double)i * height;
-            tl.y += (double)i * height;
-
-            wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, wid_intro_button_col2[i]);
-            wid_set_font(w, large_font);
-
-            color c = WHITE;
-
-            c.a = 200;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            c.a = 250;
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-
-            wid_set_on_mouse_down(w, wid_intro_settings_col2_mouse_event);
-            wid_set_client_context(w, (void*)(uintptr_t)i);
-            wid_set_bevel(w,0);
-
-            wid_set_tex(w, 0, "button_green");
-            wid_set_square(w);
-        }
-    }
-
-    {
-        uint32_t i;
-
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
-
-            if (!wid_intro_button_col3[i]) {
-                continue;
-            }
-
-            widp w = wid_new_square_button(wid_intro_settings_container,
-                                           wid_intro_button_col3[i]);
-
-            fpoint tl = {0.605, 0.2};
-            fpoint br = {0.71, 0.28};
-
-            double height = 0.08;
-
-            br.y += (double)i * height;
-            tl.y += (double)i * height;
-
-            wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, wid_intro_button_col3[i]);
-            wid_set_font(w, large_font);
-
-            color c = WHITE;
-
-            c.a = 200;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            c.a = 250;
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-
-            wid_set_on_mouse_down(w, wid_intro_settings_col3_mouse_event);
-            wid_set_client_context(w, (void*)(uintptr_t)i);
-            wid_set_bevel(w,0);
-
-            wid_set_tex(w, 0, "button_red");
-            wid_set_square(w);
-        }
-    }
-
-    {
-        uint32_t i;
-
-        for (i=0; i<ARRAY_SIZE(wid_intro_button_col1); i++) {
-
-            if (!wid_intro_button_col4[i]) {
-                continue;
-            }
-
-            widp w = wid_new_square_button(wid_intro_settings_container,
-                                           wid_intro_button_col3[i]);
-
-            fpoint tl = {0.72, 0.2};
-            fpoint br = {0.95, 0.28};
-
-            double height = 0.08;
-
-            br.y += (double)i * height;
-            tl.y += (double)i * height;
-
-            wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w,
-                         wid_intro_button_col4[i][wid_intro_button_val[i]]);
-            wid_set_font(w, large_font);
-
-            color c = WHITE;
-
-            c.a = 200;
-            wid_set_mode(w, WID_MODE_NORMAL);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            c.a = 255;
-            wid_set_mode(w, WID_MODE_OVER);
-            wid_set_color(w, WID_COLOR_BG, c);
-
-            wid_set_mode(w, WID_MODE_NORMAL);
-
-            wid_set_on_mouse_down(w, wid_intro_settings_col4_mouse_event);
-            wid_set_client_context(w, (void*)(uintptr_t)i);
-            wid_set_bevel(w,0);
-
-            wid_set_tex(w, 0, "button_black");
-            wid_set_square(w);
-        }
-    }
-
-    {
-        widp w = wid_new_rounded_small_button(wid_intro_settings_container,
-                                              "back");
-
-        fpoint tl = {0.70, 0.80};
-        fpoint br = {0.90, 0.90};
-
-        wid_set_tl_br_pct(w, tl, br);
-        wid_set_text(w, "%%tile=button_b$Back");
-        wid_set_font(w, large_font);
-        wid_set_no_shape(w);
-
-        wid_set_mode(w, WID_MODE_NORMAL);
-        wid_set_color(w, WID_COLOR_TEXT, GRAY);
-
-        wid_set_mode(w, WID_MODE_OVER);
-        wid_set_color(w, WID_COLOR_TEXT, WHITE);
-
-        wid_set_mode(w, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(w, wid_intro_settings_mouse_event);
-        wid_set_on_key_down(w, wid_intro_settings_key_event);
-
-        wid_set_tex(w, 0, "button_black");
-    }
+    wid_intro_settings_read();
+
+    widp w = wid_intro_settings = wid_new_rounded_window("wid settings");
+
+    fpoint tl = {0.0, 0.0};
+    fpoint br = {1.0, 1.0};
+
+    wid_set_tl_br_pct(w, tl, br);
+    wid_set_no_shape(w);
+
+    widp menu = wid_menu(wid_intro_settings,
+                vvlarge_font,
+                large_font,
+                0.95, /* padding between buttons */
+                0, /* focus */
+                7, /* items */
+                "Window",          wid_intro_settings_mouse_event,
+                "Sound",           wid_intro_settings_mouse_event,
+                "Music",           wid_intro_settings_mouse_event,
+                "Intro screen",    wid_intro_settings_mouse_event,
+                "Display sync",    wid_intro_settings_mouse_event,
+                "FPS counter",     wid_intro_settings_mouse_event,
+                "Back",            wid_intro_settings_back_mouse_event);
+
+    wid_move_to_pct_centered(menu, 0.5, 0.7);
 
     wid_raise(wid_intro_settings);
-
     wid_update(wid_intro_settings);
-
-    wid_set_tex(wid_intro_settings, 0, "window_gothic");
-    wid_set_square(wid_intro_settings);
-
-    wid_move_to_pct_centered(wid_intro_settings, 0.5, 0.5);
-    wid_raise(wid_intro_settings);
 }
 
 static void wid_intro_settings_destroy (void)
