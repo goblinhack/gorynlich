@@ -17,6 +17,7 @@
 #include "music.h"
 
 static widp wid_intro_settings;
+static widp wid_intro_menu;
 static uint8_t wid_intro_settings_init_done;
 static uint8_t wid_intro_settings_restart_needed;
 static struct config old_global_config;
@@ -25,6 +26,7 @@ static void wid_intro_settings_create(void);
 static void wid_intro_settings_destroy(void);
 static void wid_intro_settings_save(void);
 static uint8_t wid_intro_restart_selected(void);
+static void wid_intro_settings_read(void);
 static uint8_t wid_intro_settings_increment_mouse_event(widp w,
                                                    int32_t x, int32_t y,
                                                    uint32_t button);
@@ -81,6 +83,15 @@ static const char *wid_intro_button_value_string
     { "Off", "On", 0 },
 };
 
+static int wid_intro_button_value_toggle[WID_INTRO_MAX_SETTINGS] = {
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+};
+
 static uint32_t wid_intro_button_val[WID_INTRO_MAX_SETTINGS];
 
 uint8_t wid_intro_settings_init (void)
@@ -113,11 +124,14 @@ void wid_intro_settings_hide (void)
 
 void wid_intro_settings_visible (void)
 {
+    wid_intro_settings_read();
+
     wid_intro_settings_create();
 }
 
-static uint8_t wid_intro_settings_back_mouse_event (widp w, int32_t x, int32_t y,
-                                               uint32_t button)
+static uint8_t wid_intro_settings_back_mouse_event (widp w, 
+                                                    int32_t x, int32_t y,
+                                                    uint32_t button)
 {
     wid_intro_settings_save();
 
@@ -129,8 +143,8 @@ static uint8_t wid_intro_settings_back_mouse_event (widp w, int32_t x, int32_t y
 }
 
 static uint8_t wid_intro_settings_mouse_event (widp w,
-                                                    int32_t x, int32_t y,
-                                                    uint32_t button)
+                                               int32_t x, int32_t y,
+                                               uint32_t button)
 {
     if (button == SDLK_LEFT) {
         wid_intro_settings_decrement_mouse_event(w, x, y, SDL_BUTTON_LEFT);
@@ -153,23 +167,17 @@ static uint8_t wid_intro_settings_increment_mouse_event (widp w,
     wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
     verify(ctx);
 
-    /*
-     * Save the focus so when we remake the menu we are at the same entry.
-     */
-    saved_focus = ctx->focus;
-
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
     int32_t val = wid_intro_button_val[row];
 
     if (!wid_intro_button_value_string[row][val+1]) {
-        return (true);
+        wid_intro_button_val[row] = 0;
+    } else {
+        wid_intro_button_val[row]++;
     }
 
-    wid_intro_button_val[row]++;
-
-    wid_destroy_nodelay(&wid_intro_settings);
+    wid_intro_settings_destroy();
     wid_intro_settings_create();
-
     wid_intro_settings_save();
 
     return (true);
@@ -185,11 +193,6 @@ static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
     wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
     verify(ctx);
 
-    /*
-     * Save the focus so when we remake the menu we are at the same entry.
-     */
-    saved_focus = ctx->focus;
-
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
     int32_t val = wid_intro_button_val[row];
 
@@ -199,9 +202,8 @@ static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
 
     wid_intro_button_val[row]--;
 
-    wid_destroy_nodelay(&wid_intro_settings);
+    wid_intro_settings_destroy();
     wid_intro_settings_create();
-
     wid_intro_settings_save();
 
     return (true);
@@ -217,18 +219,19 @@ static uint8_t wid_intro_settings_toggle_mouse_event (widp w,
     wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
     verify(ctx);
 
-    /*
-     * Save the focus so when we remake the menu we are at the same entry.
-     */
-    saved_focus = ctx->focus;
-
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
+
+    /*
+     * If this is not the kind of value you toggle, then just increment.
+     */
+    if (!wid_intro_button_value_toggle[row]) {
+        return (wid_intro_settings_increment_mouse_event(w, x, y, button));
+    }
 
     wid_intro_button_val[row] = !wid_intro_button_val[row];
 
-    wid_destroy_nodelay(&wid_intro_settings);
+    wid_intro_settings_destroy();
     wid_intro_settings_create();
-
     wid_intro_settings_save();
 
     return (true);
@@ -249,7 +252,8 @@ static void wid_intro_settings_read (void)
                         global_config.video_pix_width, global_config.video_pix_height);
 
     for (val = 0; val < WID_INTRO_MAX_VAL; val++) {
-        cmp_str = wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_WINDOW][val];
+        cmp_str = wid_intro_button_value_string
+                        [WID_INTRO_SETTINGS_ROW_WINDOW][val];
         if (!cmp_str) {
             continue;
         }
@@ -459,8 +463,6 @@ static void wid_intro_settings_create (void)
         return;
     }
 
-    wid_intro_settings_read();
-
     widp w = wid_intro_settings = wid_new_rounded_window("wid settings");
 
     fpoint tl = {0.0, 0.0};
@@ -478,7 +480,7 @@ static void wid_intro_settings_create (void)
     }
 
     i = WID_INTRO_SETTINGS_ROW_WINDOW;
-    widp menu = wid_menu(wid_intro_settings,
+    wid_intro_menu = wid_menu(wid_intro_settings,
                 vvlarge_font,
                 large_font,
                 0.95, /* padding between buttons */
@@ -509,7 +511,7 @@ static void wid_intro_settings_create (void)
         myfree(values[i]);
     }
 
-    wid_move_to_pct_centered(menu, 0.5, 0.7);
+    wid_move_to_pct_centered(wid_intro_menu, 0.5, 0.7);
 
     wid_raise(wid_intro_settings);
     wid_update(wid_intro_settings);
@@ -517,5 +519,18 @@ static void wid_intro_settings_create (void)
 
 static void wid_intro_settings_destroy (void)
 {
-    wid_destroy(&wid_intro_settings);
+    if (!wid_intro_settings) {
+        return;
+    }
+
+    wid_menu_ctx *ctx = 
+                    (typeof(ctx)) wid_get_client_context(wid_intro_menu);
+    verify(ctx);
+
+    /*
+     * Save the focus so when we remake the menu we are at the same entry.
+     */
+    saved_focus = ctx->focus;
+
+    wid_destroy_nodelay(&wid_intro_settings);
 }
