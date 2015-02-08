@@ -5,7 +5,6 @@
  */
 
 #include <libgen.h>
-#include <SDL.h>
 #include <errno.h>
 
 #include "main.h"
@@ -18,11 +17,12 @@
 #include "wid_tooltip.h"
 #include "wid_dirlist.h"
 #include "wid_intro.h"
+#include "wid_menu.h"
+#include "wid_textbox.h"
 #include "file.h"
 #include "string_util.h"
 #include "marshal.h"
 #include "wid_text_input.h"
-#include "wid_textbox.h"
 #include "wid_menu.h"
 #include "level.h"
 
