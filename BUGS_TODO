@@ -5,7 +5,7 @@ create super menu system to simplify the cruddy menu systems
  x keyboard controlled or mouse
  - left/right callbacks for change value
  x combine intro menu with extras/quit/back
- - change single/multiplayer window
+ x change single/multiplayer window
  - change stats window too?
 apple and water icons look a bit crap
 multiplayer, join game does not show stats window
@@ -66,6 +66,7 @@ mining?
 
 Sun Feb  8 08:52:05 EST 2015
 - editor/quit menu working again
+- choose player menu working
 
 Sat Feb  7 19:10:53 EST 2015
 - fixed ttf font padding
