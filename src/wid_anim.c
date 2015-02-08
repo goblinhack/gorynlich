@@ -4,13 +4,10 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
-#include "slre.h"
 
 #include "main.h"
 #include "thing.h"
 #include "thing_tile.h"
-#include "wid.h"
 #include "time_util.h"
 #include "wid.h"
 

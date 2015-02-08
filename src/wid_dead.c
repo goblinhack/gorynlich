@@ -4,21 +4,15 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
-#include "main.h"
 #include "wid.h"
 #include "color.h"
-#include "wid_popup.h"
 #include "wid_dead.h"
-#include "thing.h"
 #include "wid_notify.h"
 #include "timer.h"
 #include "client.h"
 #include "wid_game_map_client.h"
 #include "wid_intro.h"
-#include "player.h"
-#include "string_util.h"
 #include "music.h"
 #include "wid_game_quit.h"
 #include "wid_menu.h"

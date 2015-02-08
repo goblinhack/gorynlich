@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-#include <SDL.h>
 #include "slre.h"
 
 #include "main.h"

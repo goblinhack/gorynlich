@@ -5,7 +5,6 @@
  */
 
 #include "main.h"
-#include <stdlib.h>
 
 #include "socket_util.h"
 #include "client.h"
@@ -15,7 +14,6 @@
 #include "string_util.h"
 #include "wid_server_join.h"
 #include "wid_game_map_client.h"
-#include "wid_player_stats.h"
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
