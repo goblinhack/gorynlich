@@ -24,6 +24,7 @@ typedef struct {
     double focus_height;
     double normal_height;
     widp buttons[WID_MENU_MAX_ITEMS];
+    on_mouse_down_t event_handler[WID_MENU_MAX_ITEMS];
 } wid_menu_ctx;
 
 static void wid_menu_update (widp w)
@@ -37,10 +38,15 @@ static void wid_menu_update (widp w)
                     ctx->focus_height + 
                     ctx->normal_height * (items - 1);
 
-    double fh = ctx->focus_height / total_height_needed;
-    double nh = (ctx->normal_height * ((double)items - 1)) / 
+    /*
+     * We make the selected item larger than the rest so we need to work out 
+     * by what percent that the larger item should get and by how much to 
+     * shring the smaller items so it all fits into 100%
+     */
+    double focus_wid_height = ctx->focus_height / total_height_needed;
+    double normal_wid_height = (ctx->normal_height * ((double)items - 1)) / 
                     total_height_needed;
-    nh /= (double)(items - 1);
+    normal_wid_height /= (double)(items - 1);
 
     double y = 0;
 
@@ -63,12 +69,12 @@ static void wid_menu_update (widp w)
 
         if (i == ctx->focus) {
             font = ctx->focus_font;
-            y += fh;
+            y += focus_wid_height;
             c = GREEN;
         } else {
             font = ctx->normal_font;
-            y += nh;
-            c = WHITE;
+            y += normal_wid_height;
+            c = GRAY;
         }
 
         br.y = y;
@@ -76,8 +82,11 @@ static void wid_menu_update (widp w)
         wid_set_tl_br_pct(b, tl, br);
 
         color transparent = BLACK;
-        transparent.a = 50;
+        transparent.a = 0;
 
+        /*
+         * Make sure the other widgets look plain in all modes.
+         */
         int mode;
         for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
             wid_set_no_shape(b);
@@ -102,6 +111,8 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
+    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+
     switch (key->sym) {
         case SDLK_BACKSPACE:
             break;
@@ -111,11 +122,16 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
             if (ctx->focus > ctx->items - 1) {
                 ctx->focus = 0;
             }
-            return (true);
+            break;
 
         case ' ':
-        case SDLK_RETURN:
-            return (true);
+        case SDLK_RETURN: {
+            widp b = ctx->buttons[ctx->focus];
+            verify(b);
+            (*ctx->event_handler[ctx->focus])(b, 
+                                              mouse_x, mouse_y, 
+                                              SDL_BUTTON_LEFT);
+            } break;
 
         case SDLK_LEFT:
             break;
@@ -144,11 +160,24 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_END:
             ctx->focus = ctx->items - 1;
             break;
+
+        default:
+            return (false);
     }
 
     wid_menu_update(ctx->w);
 
-    return (false);
+    return (true);
+}
+
+static void wid_menu_mouse_over (widp w)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+
+    verify(ctx);
+    ctx->focus = focus;
+    wid_menu_update(ctx->w);
 }
 
 static void wid_menu_destroy (widp w)
@@ -210,7 +239,6 @@ widp wid_menu (widp parent,
     wid_set_tl_br(w, tl, br);
 
     wid_set_no_shape(w);
-    wid_set_on_key_down(w, wid_menu_wid_key_event);
     wid_move_to_pct_centered(w, 0.5, 0.5);
     wid_set_on_destroy(w, wid_menu_destroy);
 
@@ -234,10 +262,16 @@ widp wid_menu (widp parent,
 
         widp b = wid_new_container(w, "wid menu button");
         ctx->buttons[i] = b;
+        ctx->event_handler[i] = fn;
+
         wid_set_text(b, text);
 
         wid_set_on_mouse_down(b, fn);
+        wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
+        wid_set_on_key_down(b, wid_menu_wid_key_event);
 
+        wid_set_client_context(b, ctx);
+        wid_set_client_context2(b, (void*) (uintptr_t) i);
     }
 
     va_end(ap);
