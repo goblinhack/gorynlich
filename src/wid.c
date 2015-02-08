@@ -6554,10 +6554,45 @@ static widp wid_mouse_motion_handler (int32_t x, int32_t y,
     return (0);
 }
 
+/*
+ * Catch recursive cases like this:
+ *
+ * #42 0x00000001180a1233 in wid_update (w=0x11f0c0c00) at wid.c:5353
+ *
+ * #43 0x00000001180bf45d in wid_editor_map_thing_replace_template 
+ * 
+ * #44 0x00000001180c1509 in wid_editor_map_thing_replace (w=0x11f1dca00, x=5, 
+ * 
+ * #45 0x00000001180c0275 in wid_editor_map_tile_mouse_motion (w=0x11f1dca00, 
+ * 
+ * #46 0x00000001180a170f in wid_mouse_motion (x=338, y=357, relx=0, rely=0, 
+ * 
+ * #47 0x000000011809ff26 in wid_update_mouse () at wid.c:5371
+ *
+ * #48 0x00000001180a1233 in wid_update (w=0x11f0c0c00) at wid.c:5353
+ *
+ * #49 0x00000001180bf45d in wid_editor_map_thing_replace_template 
+ * 
+ * #50 0x00000001180c1509 in wid_editor_map_thing_replace (w=0x11f1dca00, x=5, 
+ * 
+ * #51 0x00000001180c0275 in wid_editor_map_tile_mouse_motion (w=0x11f1dca00, 
+ * 
+ * #52 0x00000001180a170f in wid_mouse_motion (x=338, y=357, relx=0, rely=0, 
+ * 
+ */
+static int wid_mouse_motion_recursion;
+
 void wid_mouse_motion (int32_t x, int32_t y,
                        int32_t relx, int32_t rely,
                        int32_t wheelx, int32_t wheely)
 {
+    if (wid_mouse_motion_recursion) {
+        wid_mouse_motion_recursion = 0;
+        return;
+    }
+
+    wid_mouse_motion_recursion = 1;
+
     widp w;
 
     if (wid_mouse_template) {
@@ -6606,6 +6641,7 @@ void wid_mouse_motion (int32_t x, int32_t y,
         }
 
         wid_move_delta(wid_moving, dx, dy);
+        wid_mouse_motion_recursion = 0;
         return;
     }
 
@@ -6736,6 +6772,8 @@ void wid_mouse_motion (int32_t x, int32_t y,
     if (!over) {
         wid_mouse_over_end();
     }
+
+    wid_mouse_motion_recursion = 0;
 }
 
 void wid_mouse_down (uint32_t button, int32_t x, int32_t y)
