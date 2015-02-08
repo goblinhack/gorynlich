@@ -17,7 +17,6 @@
 #include "music.h"
 
 static widp wid_intro_settings;
-static widp wid_intro_settings_container;
 static uint8_t wid_intro_settings_init_done;
 static uint8_t wid_intro_settings_restart_needed;
 static struct config old_global_config;
@@ -159,7 +158,7 @@ static uint8_t wid_intro_settings_increment_mouse_event (widp w,
 
     wid_intro_button_val[row]++;
 
-    wid_destroy_nodelay(&wid_intro_settings_container);
+    wid_destroy_nodelay(&wid_intro_settings);
     wid_intro_settings_create();
 
     wid_intro_settings_save();
@@ -183,7 +182,7 @@ static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
 
     wid_intro_button_val[row]--;
 
-    wid_destroy_nodelay(&wid_intro_settings_container);
+    wid_destroy_nodelay(&wid_intro_settings);
     wid_intro_settings_create();
 
     wid_intro_settings_save();
@@ -202,7 +201,7 @@ static uint8_t wid_intro_settings_toggle_mouse_event (widp w,
 
     wid_intro_button_val[row] = !wid_intro_button_val[row];
 
-    wid_destroy_nodelay(&wid_intro_settings_container);
+    wid_destroy_nodelay(&wid_intro_settings);
     wid_intro_settings_create();
 
     wid_intro_settings_save();
