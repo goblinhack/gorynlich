@@ -395,7 +395,6 @@ widp wid_menu (widp parent,
 #else
         wid_set_no_shape(wrapper);
 #endif
-
         wid_set_on_destroy(wrapper, wid_menu_destroy);
         wid_set_client_context(wrapper, ctx);
         wid_set_on_key_down(wrapper, wid_menu_parent_key_event);
