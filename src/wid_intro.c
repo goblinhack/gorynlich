@@ -17,6 +17,7 @@
 #include "wid_menu.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
+#include "wid_editor.h"
 #include "wid_choose_game_type.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
@@ -40,7 +41,6 @@ static widp wid_intro_eyes;
 static uint8_t wid_intro_is_hidden;
 static uint8_t wid_intro_is_visible;
 
-static void wid_intro_play_selected(void);
 static void wid_intro_single_play_selected(void);
 
 static uint8_t wid_intro_init_done;
@@ -74,8 +74,6 @@ void wid_intro_fini (void)
             wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_treasure_chest, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_eyes, wid_hide_delay * 2);
-
-            wid_intro_buttons_hide();
         }
     }
 }
@@ -161,8 +159,6 @@ void wid_intro_visible (void)
     wid_raise(wid_intro);
     wid_update(wid_intro);
 
-    wid_intro_buttons_visible();
-
     wid_fade_in(wid_intro_background, intro_effect_delay);
     wid_fade_in(wid_intro_title, intro_effect_delay);
     wid_fade_in(wid_intro_man, intro_effect_delay);
@@ -173,17 +169,12 @@ void wid_intro_visible (void)
 static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch ((int)key->sym) {
-        case ' ':
-            wid_intro_play_selected();
-            return (true);
-
         case 's':
             wid_intro_single_play_selected();
             return (true);
 
         case 'j':
             wid_intro_hide();
-            wid_intro_buttons_hide();
 
             /*
              * Start with some random junk.
@@ -199,10 +190,6 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
         case 'q':
         case SDLK_ESCAPE:
             wid_intro_quit_selected();
-            return (true);
-
-        case 'x':
-            wid_intro_intro_extra_selected();
             return (true);
 
         case '`':
@@ -259,46 +246,6 @@ static void wid_intro_single_play_selected (void)
             0 /* jitter */);
 
     wid_intro_hide();
-    wid_intro_buttons_hide();
-}
-
-static void wid_intro_play_selected_cb (void *context)
-{
-    LOG("Intro play selected callback");
-
-    wid_choose_game_type_visible();
-    wid_intro_buttons_hide();
-}
-
-static void wid_intro_play_selected (void)
-{
-    LOG("Quick play selected, start game");
-
-    action_timer_create(
-            &wid_timers,
-            (action_timer_callback)wid_intro_play_selected_cb,
-            (action_timer_destroy_callback)0,
-            0, /* context */
-            "start game",
-            intro_effect_delay,
-            0 /* jitter */);
-
-    wid_intro_hide();
-}
-
-static uint8_t wid_intro_play_mouse_event (widp w, int32_t x, int32_t y,
-                                           uint32_t button)
-{
-    /*
-     * Race condition whilst other windows slide in
-     */
-    if (!wid_intro_buttons) {
-        return (false);
-    }
-
-    wid_intro_play_selected();
-
-    return (true);
 }
 
 static double y;
@@ -460,7 +407,8 @@ static uint8_t wid_menu_settings_selected (widp w,
                                            int32_t x, int32_t y,
                                            uint32_t button)
 {
-CON("%s",__FUNCTION__);
+    wid_intro_extra_visible();
+
     return (true);
 }
 
@@ -468,7 +416,8 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-CON("%s",__FUNCTION__);
+    wid_editor_visible();
+
     return (true);
 }
 
@@ -476,7 +425,17 @@ static uint8_t wid_menu_play_game_selected (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
-CON("%s",__FUNCTION__);
+    wid_choose_game_type_visible();
+
+    return (true);
+}
+
+static uint8_t wid_menu_quick_start_selected (widp w,
+                                              int32_t x, int32_t y,
+                                              uint32_t button)
+{
+    wid_intro_single_play_selected();
+
     return (true);
 }
 
@@ -484,15 +443,8 @@ static uint8_t wid_menu_past_legends_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-CON("%s",__FUNCTION__);
-    return (true);
-}
+    wid_hiscore_visible();
 
-static uint8_t wid_menu_quit_selected (widp w,
-                                       int32_t x, int32_t y,
-                                       uint32_t button)
-{
-CON("%s",__FUNCTION__);
     return (true);
 }
 
@@ -512,7 +464,6 @@ static void wid_intro_create (void)
     fpoint br = {1.0f, 1.0f};
     wid_set_tl_br_pct(wid_intro, tl, br);
     wid_set_on_key_down(wid_intro, wid_intro_key_event);
-    wid_set_on_mouse_down(wid_intro, wid_intro_play_mouse_event);
 
     color col = BLACK;
     col.a = 0;
@@ -526,42 +477,7 @@ static void wid_intro_create (void)
     wid_intro_bg_create();
     wid_update(wid_intro);
 
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_intro, "play");
-        wid_set_font(child, vlarge_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.0f, 0.60f};
-        fpoint br = {1.0f, 0.80f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Click to play");
-        wid_effect_pulse_forever(child);
-        wid_fade_in_out(child, 1000, 1000, false /* fade out first */);
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = WHITE;
-        c.a = 200;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c = RED;
-        c.a = 255;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        c.a = 225;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-        wid_set_text_outline(child, true);
-
-        wid_set_on_mouse_down(child, wid_intro_play_mouse_event);
-    }
-
     wid_update(wid_intro);
-
-    wid_intro_buttons_visible();
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
     wid_fade_in(wid_intro_background, intro_effect_delay*2);
@@ -580,9 +496,10 @@ static void wid_intro_create (void)
                      5, /* items */
                      "Editor",          wid_menu_level_editor_selected,
                      "Settings",        wid_menu_settings_selected,
+                     "Quick start",     wid_menu_quick_start_selected,
                      "Play game",       wid_menu_play_game_selected,
                      "Hiscores",        wid_menu_past_legends_selected,
-                     "Quit",            wid_menu_quit_selected);
+                     "Quit",            wid_intro_quit_selected);
 
         wid_move_to_pct_centered(w, 0.5, 0.7);
     }
