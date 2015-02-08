@@ -48,7 +48,16 @@ enum {
     WID_INTRO_SETTINGS_ROW_FPS_COUNTER,
 };
 
-static const char *wid_intro_button_toggle
+static const char *wid_intro_button_name[WID_INTRO_MAX_SETTINGS] = {
+    "Window",
+    "Sound",
+    "Music",
+    "Intro screen",
+    "Display sync",
+    "FPS counter",
+};
+
+static const char *wid_intro_button_value_string
                         [WID_INTRO_MAX_SETTINGS][WID_INTRO_MAX_VAL] = {
     { 
         "640x480",
@@ -144,7 +153,7 @@ static uint8_t wid_intro_settings_increment_mouse_event (widp w,
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
     int32_t val = wid_intro_button_val[row];
 
-    if (!wid_intro_button_toggle[row][val+1]) {
+    if (!wid_intro_button_value_string[row][val+1]) {
         return (true);
     }
 
@@ -216,7 +225,7 @@ static void wid_intro_settings_read (void)
                         global_config.video_pix_width, global_config.video_pix_height);
 
     for (val = 0; val < WID_INTRO_MAX_VAL; val++) {
-        cmp_str = wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_WINDOW][val];
+        cmp_str = wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_WINDOW][val];
         if (!cmp_str) {
             continue;
         }
@@ -242,7 +251,7 @@ static void wid_intro_settings_read (void)
         global_config.sound_volume;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_SOUND][val]) {
+        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_SOUND][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_SOUND] = 0;
 
@@ -256,7 +265,7 @@ static void wid_intro_settings_read (void)
         global_config.music_volume;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_MUSIC][val]) {
+        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_MUSIC][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_MUSIC] = 0;
 
@@ -270,7 +279,7 @@ static void wid_intro_settings_read (void)
         global_config.display_sync;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC][val]) {
+        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_DISPLAY_SYNC] = 0;
 
@@ -284,7 +293,7 @@ static void wid_intro_settings_read (void)
         global_config.fps_counter;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_FPS_COUNTER][val]) {
+        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_FPS_COUNTER][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_FPS_COUNTER] = 0;
 
@@ -298,7 +307,7 @@ static void wid_intro_settings_read (void)
         global_config.intro_screen;
 
     if ((val >= WID_INTRO_MAX_VAL) || (val < 0) ||
-        !wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN][val]) {
+        !wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN][val]) {
 
         wid_intro_button_val[WID_INTRO_SETTINGS_ROW_INTRO_SCREEN] = 0;
 
@@ -357,7 +366,7 @@ static void wid_intro_settings_save (void)
     /*
      * window.
      */
-    sscanf(wid_intro_button_toggle[WID_INTRO_SETTINGS_ROW_WINDOW][
+    sscanf(wid_intro_button_value_string[WID_INTRO_SETTINGS_ROW_WINDOW][
             wid_intro_button_val[WID_INTRO_SETTINGS_ROW_WINDOW]],
             "%dx%d",
             &global_config.video_pix_width,
@@ -436,19 +445,46 @@ static void wid_intro_settings_create (void)
     wid_set_tl_br_pct(w, tl, br);
     wid_set_no_shape(w);
 
+    char *values[WID_INTRO_MAX_SETTINGS];
+    int i;
+    for (i = WID_INTRO_SETTINGS_ROW_WINDOW; i < WID_INTRO_MAX_SETTINGS; i++) {
+        values[i] = dynprintf("%s:%s",
+                wid_intro_button_name[i],
+                wid_intro_button_value_string[i][wid_intro_button_val[i]]);
+    }
+
+i = WID_INTRO_SETTINGS_ROW_WINDOW;
     widp menu = wid_menu(wid_intro_settings,
                 vvlarge_font,
                 large_font,
                 0.95, /* padding between buttons */
                 0, /* focus */
                 7, /* items */
-                "Window",          wid_intro_settings_mouse_event,
-                "Sound",           wid_intro_settings_mouse_event,
-                "Music",           wid_intro_settings_mouse_event,
-                "Intro screen",    wid_intro_settings_mouse_event,
-                "Display sync",    wid_intro_settings_mouse_event,
-                "FPS counter",     wid_intro_settings_mouse_event,
-                "Back",            wid_intro_settings_back_mouse_event);
+                values[i],
+                    wid_intro_settings_mouse_event,
+
+                values[i + 1],
+                    wid_intro_settings_mouse_event,
+
+                values[i + 2],
+                    wid_intro_settings_mouse_event,
+
+                values[i + 3],
+                    wid_intro_settings_mouse_event,
+
+                values[i + 4],
+                    wid_intro_settings_mouse_event,
+
+                values[i + 5],
+                    wid_intro_settings_mouse_event,
+
+                "Back",            
+                    wid_intro_settings_back_mouse_event);
+
+    for (i = WID_INTRO_SETTINGS_ROW_WINDOW; i < WID_INTRO_MAX_SETTINGS; i++) {
+        myfree(values[i]);
+    }
+
 
     wid_move_to_pct_centered(menu, 0.5, 0.7);
 
