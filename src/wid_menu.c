@@ -76,7 +76,12 @@ static void wid_menu_update (widp w)
         } else {
             font = ctx->normal_font;
             y += normal_wid_height;
-            c = GRAY;
+
+            if (!ctx->event_handler[i]) {
+                c = WHITE;
+            } else {
+                c = GRAY;
+            }
         }
 
         br.y = y;
@@ -120,14 +125,57 @@ static uint8_t wid_menu_mouse_down (widp w,
     widp b = ctx->buttons[ctx->focus];
     verify(b);
 
-    on_mouse_down_t event_handler = 
-                    ctx->event_handler[ctx->focus];
-
-    wid_destroy(&ctx->w);
+    on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
 
     (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
 
     return (true);
+}
+
+static void wid_menu_next_focus (wid_menu_ctx *ctx)
+{
+    ctx->focus++;
+    if (ctx->focus > ctx->items - 1) {
+        ctx->focus = 0;
+    }
+
+    if (!ctx->event_handler[ctx->focus]) {
+        wid_menu_next_focus(ctx);
+    }
+
+    wid_menu_update(ctx->w);
+}
+
+static void wid_menu_prev_focus (wid_menu_ctx *ctx)
+{
+    ctx->focus--;
+    if (ctx->focus < 0) {
+        ctx->focus = ctx->items - 1;
+    }
+
+    if (!ctx->event_handler[ctx->focus]) {
+        wid_menu_prev_focus(ctx);
+    }
+
+    wid_menu_update(ctx->w);
+}
+
+static void wid_menu_last_focus (wid_menu_ctx *ctx)
+{
+    ctx->focus = ctx->items - 1;
+
+    wid_menu_update(ctx->w);
+}
+
+static void wid_menu_first_focus (wid_menu_ctx *ctx)
+{
+    ctx->focus = 0;
+
+    if (!ctx->event_handler[ctx->focus]) {
+        wid_menu_next_focus(ctx);
+    }
+
+    wid_menu_update(ctx->w);
 }
 
 static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
@@ -138,16 +186,11 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
     int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
 
     switch (key->sym) {
-        case SDLK_BACKSPACE:
-            break;
-
         case SDLK_TAB:
-            ctx->focus++;
-            if (ctx->focus > ctx->items - 1) {
-                ctx->focus = 0;
-            }
+            wid_menu_next_focus(ctx);
             break;
 
+        case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
             ctx->focus = ctx->items - 1;
 
@@ -163,9 +206,9 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
                 on_mouse_down_t event_handler = 
                                 ctx->event_handler[ctx->focus];
 
-                wid_destroy(&ctx->w);
-
-                (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+                if (event_handler) {
+                    (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+                }
                 return (true);
             }
 
@@ -176,32 +219,24 @@ static uint8_t wid_menu_wid_key_event (widp w, const SDL_KEYSYM *key)
             break;
 
         case SDLK_UP:
-            ctx->focus--;
-            if (ctx->focus < 0) {
-                ctx->focus = ctx->items - 1;
-            }
+            wid_menu_prev_focus(ctx);
             break;
 
         case SDLK_DOWN:
-            ctx->focus++;
-            if (ctx->focus > ctx->items - 1) {
-                ctx->focus = 0;
-            }
+            wid_menu_next_focus(ctx);
             break;
 
         case SDLK_HOME:
-            ctx->focus = 0;
+            wid_menu_first_focus(ctx);
             break;
 
         case SDLK_END:
-            ctx->focus = ctx->items - 1;
+            wid_menu_last_focus(ctx);
             break;
 
         default:
             return (false);
     }
-
-    wid_menu_update(ctx->w);
 
     return (true);
 }
@@ -212,7 +247,13 @@ static void wid_menu_mouse_over (widp w)
     int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
 
     verify(ctx);
+
     ctx->focus = focus;
+
+    if (!ctx->event_handler[ctx->focus]) {
+        wid_menu_next_focus(ctx);
+    }
+
     wid_menu_update(ctx->w);
 }
 
@@ -266,7 +307,12 @@ widp wid_menu (widp parent,
     /*
      * Create the button container
      */
-    widp w = wid_new_container(parent, "wid menu");
+    widp w;
+    if (parent) {
+        w = wid_new_container(parent, "wid menu");
+    } else {
+        w = wid_new_window("wid menu");
+    }
 
     fpoint tl = { 0.0, 0.0};
     fpoint br = { 0.0, 0.0};
