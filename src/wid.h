@@ -272,6 +272,7 @@ void wid_scale_h_immediate(widp, double val);
 void wid_scaling_to_pct_in(widp, double start, double end, uint32_t ms, uint32_t repeat_count);
 void wid_effect_pulses(widp);
 void wid_effect_pulse_forever(widp);
+void wid_effect_pulse_stop(widp);
 
 double wid_get_blit_scaling_w(widp);
 double wid_get_blit_scaling_h(widp);
