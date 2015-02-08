@@ -12,6 +12,7 @@
 #include "string_ext.h"
 #include "ttf.h"
 #include "wid_menu.h"
+#include "time_util.h"
 
 static void wid_menu_destroy(widp w);
 
@@ -327,6 +328,15 @@ static void wid_menu_mouse_over (widp w)
 
     verify(ctx);
 
+    /*
+     * If we recreate the menu with a fixed focus we will be told about
+     * a mouse over event immediately which may not be over the focus item
+     * and will cause us to move. Annoying.
+     */
+    if (ctx->created - time_get_time_ms() < 100) {
+        return;
+    }
+
     ctx->focus = focus;
 
     if (!ctx->event_handler[ctx->focus]) {
@@ -464,6 +474,8 @@ widp wid_menu (widp parent,
         wid_set_client_context(b, ctx);
         wid_set_client_context2(b, (void*) (uintptr_t) i);
     }
+
+    ctx->created = time_get_time_ms();
 
     va_end(ap);
 
