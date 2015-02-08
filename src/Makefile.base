@@ -102,6 +102,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_player_inventory.o 	\
     $(OBJDIR)/wid_player_stats.o 	\
     $(OBJDIR)/wid_popup.o 		\
+    $(OBJDIR)/wid_menu.o 		\
     $(OBJDIR)/wid_server_create.o 	\
     $(OBJDIR)/wid_server_join.o 	\
     $(OBJDIR)/wid_splash.o 		\
