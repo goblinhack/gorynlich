@@ -14,6 +14,7 @@
 #include "wid_intro_about.h"
 #include "wid_intro_buttons.h"
 #include "wid_intro_settings.h"
+#include "wid_menu.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
 #include "wid_choose_game_type.h"
@@ -455,6 +456,41 @@ static void wid_intro_bg_create (void)
     }
 }
 
+static uint8_t wid_menu_settings_selected (widp w, 
+                                            int32_t x, int32_t y,
+                                            uint32_t button)
+{
+    return (true);
+}
+
+static uint8_t wid_menu_level_editor_selected (widp w,
+                                                int32_t x, int32_t y,
+                                                uint32_t button)
+{
+    return (true);
+}
+
+static uint8_t wid_menu_play_game_selected (widp w,
+                                             int32_t x, int32_t y,
+                                             uint32_t button)
+{
+    return (true);
+}
+
+static uint8_t wid_menu_past_legends_selected (widp w,
+                                                int32_t x, int32_t y,
+                                                uint32_t button)
+{
+    return (true);
+}
+
+static uint8_t wid_menu_quit_selected (widp w,
+                                        int32_t x, int32_t y,
+                                        uint32_t button)
+{
+    return (true);
+}
+
 static void wid_intro_create (void)
 {
     if (wid_intro) {
@@ -528,4 +564,21 @@ static void wid_intro_create (void)
     wid_fade_in(wid_intro_man, intro_effect_delay*2);
     wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
     wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
+
+    {
+        widp w = 
+            wid_menu(wid_intro,
+                     vvlarge_font,
+                     large_font,
+                     0.95, /* padding between buttons */
+                     2, /* focus */
+                     5, /* items */
+                     "Editor",          wid_menu_level_editor_selected,
+                     "Settings",        wid_menu_settings_selected,
+                     "Play game",       wid_menu_play_game_selected,
+                     "Hiscores",        wid_menu_past_legends_selected,
+                     "Quit",            wid_menu_quit_selected);
+
+        wid_move_to_pct_centered(w, 0.5, 0.7);
+    }
 }

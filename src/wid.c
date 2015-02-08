@@ -1480,6 +1480,8 @@ void wid_set_font (widp w, fontp val)
     fast_verify(w);
 
     w->cfg[wid_get_mode(w)].font = val;
+
+    w->text_size_cached = false;
 }
 
 /*
@@ -8532,6 +8534,8 @@ static void wid_display (widp w,
                 outline = 2.0;
             } else if (font == vlarge_font) {
                 outline = 3.0;
+            } else if (font == vvlarge_font) {
+                outline = 3.0;
             } else {
                 DIE("unhandled text outline case");
             }
@@ -8571,7 +8575,11 @@ static void wid_display (widp w,
          * Widget text
          */
         glcolor(col_text);
+if (w->debug) {
+debug = 1;
+}
         ttf_puts(font, text, x, y, scaling, advance, fixed_width);
+debug = 0;
 
         blit_flush();
     }
@@ -9533,6 +9541,16 @@ void wid_effect_pulse_forever (widp w)
     } else {
         wid_scaling_to_pct_in(w, 1.0, 1.1, wid_scaling_forever_delay, 10000);
     }
+}
+
+void wid_effect_pulse_stop (widp w)
+{
+    fast_verify(w);
+
+    w->scaling_w = false;
+    w->scaling_h = false;
+    w->blit_scaling_w = false;
+    w->blit_scaling_h = false;
 }
 
 double wid_get_scaling_w (widp w)
