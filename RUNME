@@ -175,11 +175,11 @@ LDLIBS="$SDL_LIBS"
 
 if [ "$SDL2_CONFIG" != "" ]
 then
-#    LDLIBS="$LDLIBS -lSDL2_ttf"
+    LDLIBS="$LDLIBS -lSDL2_ttf"
     LDLIBS="$LDLIBS -lSDL2_mixer"
     LDLIBS="$LDLIBS -lSDL2_net"
 else
-#    LDLIBS="$LDLIBS -lSDL_ttf"
+    LDLIBS="$LDLIBS -lSDL_ttf"
     LDLIBS="$LDLIBS -lSDL_mixer"
     LDLIBS="$LDLIBS -lSDL_net"
 fi
