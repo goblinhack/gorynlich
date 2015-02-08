@@ -14,6 +14,7 @@
 #include "wid_game_map_client.h"
 #include "wid_intro.h"
 #include "string_util.h"
+#include "wid_menu.h"
 
 static widp wid_really_quit_game_yes_no;
 
@@ -96,10 +97,10 @@ static void wid_game_quit_create (void)
         "Keep going you coward",
         "Look I'll be nice, keep playing",
         "When the going gets tough, you just leave, right?",
-        "Ho hum. Such High hopes...",
+        "Ho hum. Such high hopes...",
         "What? Wait",
         "Why? Why? Why?",
-        "What did I ever do to you?\nExcept all the monster attacks",
+        "What did I ever do to you? Except all the monster attacks...",
         "Don't do this to me",
         "Please Dave, don't do it",
         "You will not quit, soldier",
@@ -123,16 +124,17 @@ static void wid_game_quit_create (void)
         return;
     }
 
-    wid_really_quit_game_yes_no = wid_popup(
-            messages[myrand() % ARRAY_SIZE(messages)],
-            "%%fg=red$Quit game?\n",
-            0.5, 0.5f,                /* x,y postition in percent */
-            med_font,               /* title font */
-            med_font,              /* body font */
-            med_font,              /* button font */
-            2,                        /* number buttons */
-            "%%tile=button_y$Yes    ", wid_game_quit_really_quit_callback_yes,
-            "%%tile=button_n$No    ",  wid_game_quit_really_quit_callback_no);
+    wid_really_quit_game_yes_no = 
+        wid_menu(0,
+                vvlarge_font,
+                large_font,
+                0.95, /* padding between buttons */
+                3, /* focus */
+                4, /* items */
+                "Quit game?", (void*) 0,
+                messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
+                "Yes", wid_game_quit_really_quit_callback_yes,
+                "No",  wid_game_quit_really_quit_callback_no);
 
     wid_set_tex(wid_really_quit_game_yes_no, 0, "gothic_wide");
     wid_set_square(wid_really_quit_game_yes_no);
