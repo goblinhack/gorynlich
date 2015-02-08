@@ -1,9 +1,10 @@
 --------------------------------------- plan for feb --------------------------------------
 create super menu system to simplify the cruddy menu systems
- - zoom effect
- - keyboard controlled or mouse
+ - need to recreate menu on intro visible
+ x zoom effect
+ x keyboard controlled or mouse
  - left/right callbacks for change value
- - combine intro menu with extras/quit/back
+ x combine intro menu with extras/quit/back
  - change single/multiplayer window
  - change stats window too?
 apple and water icons look a bit crap
