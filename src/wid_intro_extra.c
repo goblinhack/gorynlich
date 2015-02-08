@@ -100,8 +100,6 @@ void wid_intro_extra_hide (void)
 
 void wid_intro_extra_visible (void)
 {
-    wid_intro_buttons_hide();
-
     if (wid_intro_extra_is_visible) {
         return;
     }
@@ -120,8 +118,6 @@ void wid_intro_extra_visible (void)
     }
 
     wid_visible(wid_intro_extra, 0);
-
-    wid_intro_buttons_hide();
 }
 
 static void wid_intro_extra_about_selected (void)
@@ -193,8 +189,6 @@ static uint8_t wid_intro_extra_mouse_back_event (widp w, int32_t x, int32_t y,
 {
     wid_intro_extra_hide();
 
-    wid_intro_buttons_visible();
-
     return (true);
 }
 
@@ -206,7 +200,6 @@ static uint8_t wid_intro_extra_key_event (widp w, const SDL_KEYSYM *key)
         case SDLK_ESCAPE:
             wid_intro_extra_hide();
 
-            wid_intro_buttons_visible();
             return (true);
 
         default:
