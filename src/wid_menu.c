@@ -386,13 +386,16 @@ widp wid_menu (widp parent,
         fpoint br = { 1.0, 1.0};
 
         wid_set_tl_br_pct(wrapper, tl, br);
+#ifdef DEBUG
         color c = RED;
         c.a = 100;
-            wid_set_color(wrapper, WID_COLOR_BG, c);
-            wid_set_color(wrapper, WID_COLOR_TL, c);
-            wid_set_color(wrapper, WID_COLOR_BR, c);
+        wid_set_color(wrapper, WID_COLOR_BG, c);
+        wid_set_color(wrapper, WID_COLOR_TL, c);
+        wid_set_color(wrapper, WID_COLOR_BR, c);
+#else
+        wid_set_no_shape(wrapper);
+#endif
 
-//        wid_set_no_shape(wrapper);
         wid_set_on_destroy(wrapper, wid_menu_destroy);
         wid_set_client_context(wrapper, ctx);
         wid_set_on_key_down(wrapper, wid_menu_parent_key_event);
