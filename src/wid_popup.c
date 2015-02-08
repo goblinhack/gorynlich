@@ -545,68 +545,6 @@ widp wid_popup (const char *text, const char *title,
     return (wid_popup_window);
 }
 
-widp wid_popup_simple (const char *text)
-{
-    widp w;
-
-    w = wid_popup(text ? text : "", /* body text */
-                  "",               /* title */
-                  0.5f, 0.5f,       /* x,y postition in percent */
-                  0,                /* title font */
-                  0,                /* body font */
-                  0,                /* button font */
-                  0);
-
-    return (w);
-}
-
-static void wid_popup_ok_close (widp wid)
-{
-    wid = wid_get_top_parent(wid);
-
-    wid_destroy(&wid);
-}
-
-static uint8_t wid_popup_ok_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case 'q':
-        case SDLK_ESCAPE:
-            wid_popup_ok_close(w);
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
-widp wid_popup_ok (const char *text)
-{
-    if (!sdl_init_video) {
-        return (0);
-    }
-
-    widp w;
-
-    w = wid_popup(text ? text : "", /* body text */
-                  "",               /* title */
-                  0.5f, 0.5f,       /* x,y postition in percent */
-                  0,                /* title font */
-                  0,                /* body font */
-                  0,                /* button font */
-                  1,                /* number args */
-                  "ok", wid_popup_ok_close);
-
-    wid_set_on_key_down(w, wid_popup_ok_key_event);
-
-    wid_set_tex(w, 0, "gothic_wide");
-    wid_set_square(w);
-
-    return (w);
-}
-
 static void wid_popup_error_close (widp wid)
 {
     wid = wid_get_top_parent(wid);
