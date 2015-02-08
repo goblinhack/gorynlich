@@ -448,8 +448,7 @@ static void wid_intro_quit_selected (void)
                  "No",  wid_intro_quit_callback_no);
 
 
-    wid_set_tex(wid_intro_quit_popup, 0, "gothic_wide");
-    wid_set_square(wid_intro_quit_popup);
+    wid_move_to_pct_centered(wid_intro_quit_popup, 0.5, 0.7);
 }
 
 static uint8_t wid_menu_settings_selected (widp w, 
