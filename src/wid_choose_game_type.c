@@ -19,6 +19,7 @@
 #include "timer.h"
 #include "glapi.h"
 #include "server.h"
+#include "wid_menu.h"
 
 static widp wid_choose_game_type;
 static widp wid_choose_game_type_background;
@@ -283,27 +284,6 @@ static uint8_t wid_choose_game_type_play_key_event (widp w, const SDL_KEYSYM *ke
     return (false);
 }
 
-static uint8_t wid_choose_game_type_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case ' ':
-            wid_choose_game_type_play_selected();
-            return (true);
-
-        case 'b':
-        case 'q':
-        case SDLK_ESCAPE:
-            wid_choose_game_type_hide();
-            wid_intro_visible();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static void wid_choose_game_type_bg_create (void)
 {
     widp wid;
@@ -362,134 +342,33 @@ static void wid_choose_game_type_create (void)
     wid_set_color(wid_choose_game_type, WID_COLOR_BR, col);
     wid_set_color(wid_choose_game_type, WID_COLOR_BG, col);
 
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_choose_game_type, "play");
-        wid_set_font(child, large_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.1f, 0.50f};
-        fpoint br = {0.5f, 0.70f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Single player");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c = RED;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-        wid_set_text_outline(child, true);
-
-        wid_set_on_mouse_down(child, wid_choose_game_type_play_mouse_event);
-        wid_set_on_key_down(child, wid_choose_game_type_play_key_event);
-
-        wid_bounce_to_pct_in(child, 0.15, 0.9, 500, 1000);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_choose_game_type, "start server");
-        wid_set_font(child, large_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.5f, 0.40f};
-        fpoint br = {1.0f, 0.60f};
-
-        wid_set_tl_br_pct(child, tl, br);
-
-        if (server_socket) {
-            wid_set_text(child, "Stop server");
-
-            wid_set_on_mouse_down(child, wid_choose_game_type_stop_server_mouse_event);
-            wid_set_on_key_down(child, wid_choose_game_type_key_event);
-        } else {
-            wid_set_text(child, "Start a server");
-
-            wid_set_on_mouse_down(child, wid_choose_game_type_start_server_mouse_event);
-            wid_set_on_key_down(child, wid_choose_game_type_key_event);
-        }
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c = RED;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-        wid_set_text_outline(child, true);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_choose_game_type, "join");
-        wid_set_font(child, large_font);
-        wid_set_no_shape(child);
-
-        fpoint tl = {0.5f, 0.60f};
-        fpoint br = {1.0f, 0.80f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "Join a game");
-
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        color c = ORANGE;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_OVER);
-        c = RED;
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_FOCUS);
-        wid_set_color(child, WID_COLOR_TEXT, c);
-
-        wid_set_mode(child, WID_MODE_NORMAL);
-        wid_set_text_outline(child, true);
-
-        wid_set_on_mouse_down(child, wid_choose_game_type_join_game_mouse_event);
-        wid_set_on_key_down(child, wid_choose_game_type_key_event);
-    }
-
-    {
-        widp child;
-
-        child = wid_new_square_button(wid_choose_game_type, "Go back");
-        wid_set_font(child, small_font);
-
-        fpoint tl = {0.85f, 0.95f};
-        fpoint br = {1.0f, 1.00f};
-
-        wid_set_tl_br_pct(child, tl, br);
-        wid_set_text(child, "%%fmt=left$%%tile=button_b$Go back");
-
-        wid_set_no_shape(child);
-        wid_set_color(child, WID_COLOR_TEXT, GRAY90);
-        wid_set_mode(child, WID_MODE_OVER);
-        wid_set_color(child, WID_COLOR_TEXT, WHITE);
-        wid_set_mode(child, WID_MODE_NORMAL);
-
-        wid_set_on_mouse_down(child, wid_choose_game_type_go_back_mouse_event);
-        wid_raise(child);
-        wid_set_do_not_lower(child, true);
-    }
-
     wid_choose_game_type_bg_create();
     wid_update(wid_choose_game_type);
 
     wid_move_to_pct_centered(wid_choose_game_type, 0.5f, 0.5f);
+
+    on_mouse_down_t server_fn;
+    const char *server_text;
+
+    if (server_socket) {
+        server_text = "Stop server";
+        server_fn = wid_choose_game_type_stop_server_mouse_event;
+    } else {
+        server_text = "Start a server";
+        server_fn = wid_choose_game_type_start_server_mouse_event;
+    }
+
+    widp w = 
+        wid_menu(wid_choose_game_type,
+                 vvlarge_font,
+                 large_font,
+                 0.95, /* padding between buttons */
+                 1, /* focus */
+                 4, /* items */
+                 "Join server",     wid_choose_game_type_join_game_mouse_event,
+                 "Single player",   wid_choose_game_type_play_mouse_event,
+                 server_text,       server_fn,
+                 "Back",            wid_choose_game_type_go_back_mouse_event);
+
+    wid_move_to_pct_centered(w, 0.5, 0.7);
 }
