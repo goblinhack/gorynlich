@@ -31,6 +31,7 @@
 #include "glapi.h"
 
 static widp wid_intro;
+static widp wid_intro_menu;
 static widp wid_intro_background;
 static widp wid_intro_title;
 static widp wid_intro_man;
@@ -39,11 +40,11 @@ static widp wid_intro_eyes;
 
 static uint8_t wid_intro_is_hidden;
 static uint8_t wid_intro_is_visible;
+static uint8_t wid_intro_init_done;
 
 static void wid_intro_single_play_selected(void);
-
-static uint8_t wid_intro_init_done;
 static void wid_intro_create(void);
+static void wid_intro_menu_create(void);
 
 static int intro_effect_delay = 500;
 static int intro_effect_delay_zoom = 1000;
@@ -122,6 +123,10 @@ void wid_intro_hide (void)
 void wid_intro_visible (void)
 {
     if (wid_intro_is_visible) {
+        /*
+         * Make sure the menu is visible.
+         */
+        wid_intro_menu_create();
         return;
     }
 
@@ -406,6 +411,7 @@ static uint8_t wid_menu_settings_selected (widp w,
                                            int32_t x, int32_t y,
                                            uint32_t button)
 {
+    wid_intro_menu = 0;
     wid_intro_settings_visible();
 
     return (true);
@@ -415,6 +421,7 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
+    wid_intro_menu = 0;
     wid_editor_visible();
 
     return (true);
@@ -424,6 +431,7 @@ static uint8_t wid_menu_play_game_selected (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
+    wid_intro_menu = 0;
     wid_choose_game_type_visible();
 
     return (true);
@@ -433,6 +441,7 @@ static uint8_t wid_menu_quick_start_selected (widp w,
                                               int32_t x, int32_t y,
                                               uint32_t button)
 {
+    wid_intro_menu = 0;
     wid_intro_single_play_selected();
 
     return (true);
@@ -442,6 +451,7 @@ static uint8_t wid_menu_past_legends_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
+    wid_intro_menu = 0;
     wid_hiscore_visible();
 
     return (true);
@@ -449,55 +459,68 @@ static uint8_t wid_menu_past_legends_selected (widp w,
 
 static void wid_intro_create (void)
 {
+    if (wid_intro) {
+        return;
+    }
+
+    music_play_intro();
+
+    wid_intro = wid_new_window("intro buttons");
+
+    wid_set_no_shape(wid_intro);
+
+    fpoint tl = {0.0f, 0.0f};
+    fpoint br = {1.0f, 1.0f};
+    wid_set_tl_br_pct(wid_intro, tl, br);
+    wid_set_on_key_down(wid_intro, wid_intro_key_event);
+
+    color col = BLACK;
+    col.a = 0;
+    glcolor(col);
+
+    wid_set_mode(wid_intro, WID_MODE_NORMAL);
+    wid_set_color(wid_intro, WID_COLOR_TL, col);
+    wid_set_color(wid_intro, WID_COLOR_BR, col);
+    wid_set_color(wid_intro, WID_COLOR_BG, col);
+
+    wid_intro_bg_create();
+    wid_update(wid_intro);
+
+    wid_update(wid_intro);
+
+    wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
+    wid_fade_in(wid_intro_background, intro_effect_delay*2);
+    wid_fade_in(wid_intro_title, intro_effect_delay*2);
+    wid_fade_in(wid_intro_man, intro_effect_delay*2);
+    wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
+    wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
+
+    wid_intro_menu_create();
+}
+
+static void wid_intro_menu_create (void)
+{
     if (!wid_intro) {
-        music_play_intro();
-
-        wid_intro = wid_new_window("intro buttons");
-
-        wid_set_no_shape(wid_intro);
-
-        fpoint tl = {0.0f, 0.0f};
-        fpoint br = {1.0f, 1.0f};
-        wid_set_tl_br_pct(wid_intro, tl, br);
-        wid_set_on_key_down(wid_intro, wid_intro_key_event);
-
-        color col = BLACK;
-        col.a = 0;
-        glcolor(col);
-
-        wid_set_mode(wid_intro, WID_MODE_NORMAL);
-        wid_set_color(wid_intro, WID_COLOR_TL, col);
-        wid_set_color(wid_intro, WID_COLOR_BR, col);
-        wid_set_color(wid_intro, WID_COLOR_BG, col);
-
-        wid_intro_bg_create();
-        wid_update(wid_intro);
-
-        wid_update(wid_intro);
-
-        wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
-        wid_fade_in(wid_intro_background, intro_effect_delay*2);
-        wid_fade_in(wid_intro_title, intro_effect_delay*2);
-        wid_fade_in(wid_intro_man, intro_effect_delay*2);
-        wid_fade_in(wid_intro_treasure_chest, intro_effect_delay*2);
-        wid_fade_in(wid_intro_eyes, intro_effect_delay*2);
+        return;
     }
 
-    {
-        widp w = 
-            wid_menu(wid_intro,
-                     vvlarge_font,
-                     large_font,
-                     0.95, /* padding between buttons */
-                     2, /* focus */
-                     5, /* items */
-                     "Editor",          wid_menu_level_editor_selected,
-                     "Settings",        wid_menu_settings_selected,
-                     "Quick start",     wid_menu_quick_start_selected,
-                     "Play game",       wid_menu_play_game_selected,
-                     "Hiscores",        wid_menu_past_legends_selected,
-                     "Quit",            wid_intro_quit_selected);
-
-        wid_move_to_pct_centered(w, 0.5, 0.7);
+    if (wid_intro_menu) {
+        return;
     }
+
+    wid_intro_menu = 
+        wid_menu(wid_intro,
+                    vvlarge_font,
+                    large_font,
+                    0.95, /* padding between buttons */
+                    3, /* focus */
+                    6, /* items */
+                    "Editor",          wid_menu_level_editor_selected,
+                    "Settings",        wid_menu_settings_selected,
+                    "Quick start",     wid_menu_quick_start_selected,
+                    "Play game",       wid_menu_play_game_selected,
+                    "Hiscores",        wid_menu_past_legends_selected,
+                    "Quit",            wid_intro_quit_selected);
+
+    wid_move_to_pct_centered(wid_intro_menu, 0.5, 0.7);
 }
