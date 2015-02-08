@@ -407,7 +407,7 @@ static uint8_t wid_menu_settings_selected (widp w,
                                            int32_t x, int32_t y,
                                            uint32_t button)
 {
-    wid_intro_extra_visible();
+    wid_intro_settings_visible();
 
     return (true);
 }
