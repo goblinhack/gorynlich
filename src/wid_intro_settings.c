@@ -119,7 +119,9 @@ void wid_intro_settings_hide (void)
 {
     wid_intro_settings_destroy();
 
-    wid_intro_visible();
+    if (!wid_intro_settings_restart_needed) {
+        wid_intro_visible();
+    }
 }
 
 void wid_intro_settings_visible (void)
@@ -357,6 +359,8 @@ static void wid_intro_restart_callback_yes (widp wid)
 static void wid_intro_restart_callback_no (widp wid)
 {
     wid_destroy(&wid_intro_restart_popup);
+
+    wid_intro_visible();
 }
 
 static uint8_t wid_intro_restart_selected (void)
@@ -371,18 +375,16 @@ static uint8_t wid_intro_restart_selected (void)
         return (false);
     }
 
-    wid_intro_restart_popup =
-        wid_popup("", "%%fg=red$Settings changed, restart now?",
-            0.5, 0.2f,                /* x,y postition in percent */
-            large_font,               /* title font */
-            large_font,              /* body font */
-            large_font,              /* button font */
-            2,                        /* number buttons */
-            "%%tile=button_y$Yes    ", wid_intro_restart_callback_yes,
-            "%%tile=button_n$No    ",  wid_intro_restart_callback_no);
-
-    wid_set_tex(wid_intro_restart_popup, 0, "gothic_wide");
-    wid_set_square(wid_intro_restart_popup);
+    wid_intro_restart_popup = 
+        wid_menu(0,
+                 vvlarge_font,
+                 large_font,
+                 0.95, /* padding between buttons */
+                 2, /* focus */
+                 3, /* items */
+                 "Settings changed, restart game?", (void*)0,
+                 "Yes", wid_intro_restart_callback_yes,
+                 "No",  wid_intro_restart_callback_no);
 
     return (true);
 }

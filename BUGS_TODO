@@ -1,4 +1,6 @@
 --------------------------------------- plan for feb --------------------------------------
+- remove gothic and window textures - no longer needed
+- some quit strings too long now
 create super menu system to simplify the cruddy menu systems
  - need to recreate menu on intro visible
  x zoom effect

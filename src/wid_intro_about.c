@@ -11,6 +11,7 @@
 #include "wid_popup.h"
 #include "wid_intro_about.h"
 #include "wid_intro.h"
+#include "wid_menu.h"
 #include "color.h"
 
 static widp wid_intro_about;
@@ -51,22 +52,6 @@ void wid_intro_about_visible (void)
     wid_intro_about_create();
 }
 
-static uint8_t wid_intro_about_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case 'b':
-        case 'q':
-        case SDLK_ESCAPE:
-            wid_intro_about_hide();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static void wid_intro_about_callback_close (widp wid)
 {
     wid_intro_about_hide();
@@ -78,45 +63,25 @@ static void wid_intro_about_create (void)
         return;
     }
 
-    wid_intro_about = wid_popup(
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "%%fg=green$Copyright Neil McGill\n"
-          "%%fg=green$goblinhack@gmail.com\n"
-          "\n"
-          "\n"
-          "\n"
-          "Game Music by the talented and amazing, Charlotte McGill\n"
-          "\n"
-          "\n"
-          "\n"
-          "Additional Music by the frankly awesome, Deceased Senior Technician, DST. AKA nosoapradio.us\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          "\n"
-          ,
-          "%%fg=gold$Credits",      /* title */
-          0.5, 0.5,                 /* x,y postition in percent */
-          large_font,               /* title font */
-          small_font,               /* body font */
-          small_font,               /* button font */
-          1,                        /* number buttons */
-          "%%tile=button_b$Back", wid_intro_about_callback_close);
-
-    wid_set_on_key_down(wid_intro_about, wid_intro_about_key_event);
-
-    wid_set_tex(wid_intro_about, 0, "window_gothic");
-    wid_set_square(wid_intro_about);
+    wid_intro_about = 
+        wid_menu(0,
+                vvlarge_font,
+                large_font,
+                0.95, /* padding between buttons */
+                6, /* focus */
+                7, /* items */
+                "Credits", (void*) 0,
+                "Code monkey #1: Neil McGill", 
+                (void*) 0,
+                "Code monkey #2: Richard Franks",
+                (void*) 0,
+                "Music: Charlotte McGill",
+                (void*) 0,
+                "Music: Deceased Senior Technician, DST. AKA nosoapradio.us",
+                (void*) 0,
+                "Support: %%fg=green$goblinhack@gmail.com",
+                (void*) 0,
+                "Back",  wid_intro_about_callback_close);
 
     wid_move_to_pct_centered(wid_intro_about, 0.5, 0.5 - 1.0);
     wid_move_to_pct_centered_in(wid_intro_about, 0.5, 0.5, 200);
