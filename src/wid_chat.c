@@ -4,7 +4,6 @@
  * See the README file for license.
  */
 
-#include <SDL.h>
 
 #include "main.h"
 #include "wid_chat.h"
