@@ -11,7 +11,6 @@
 #include "wid_intro.h"
 #include "wid_choose_player.h"
 #include "wid_popup.h"
-#include "wid_intro_extra.h"
 #include "wid_intro_about.h"
 #include "wid_intro_settings.h"
 #include "wid_intro_buttons.h"
