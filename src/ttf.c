@@ -864,13 +864,20 @@ ttf_write_tga (char *name, int32_t pointsize)
         }
     }
 
-#define MAX_LINES 2048
-    if (dst->h > MAX_LINES) {
+#define MAX_TEXTURE_HEIGHT 4096
+
+    if (dst->h > MAX_TEXTURE_HEIGHT) {
         DIE("ttf is too large");
     }
 
-    uint8_t filled_line[MAX_LINES] = {0};
+    uint8_t filled_pixel_row[MAX_TEXTURE_HEIGHT] = {0};
 
+    /*
+     * What the hell am I doing here? The ttf library returns incorrect 
+     * boounds for the top and bottom of glyphs, so I'm looking for a line of 
+     * no pixels above and below each glyph so I can really find the texture 
+     * bounds of a glyph. This allows squeezing of text together.
+     */
     {
         int x;
         int y;
@@ -880,17 +887,10 @@ ttf_write_tga (char *name, int32_t pointsize)
                 color c;
                 c = getPixel(dst, x, y);
                 if (c.r || c.g || c.b || c.a) {
-                    filled_line[y] = true;
+                    filled_pixel_row[y] = true;
                     break;
                 }
             }
-
-#if 0
-                for (x = 0; x < dst->w; x++) {
-                    color c = RED;
-                    putPixel(dst, x, y, c);
-                }
-#endif
         }
     }
 
@@ -913,7 +913,7 @@ ttf_write_tga (char *name, int32_t pointsize)
             int maxy = y;
 
             for (;;) {
-                if (!filled_line[miny]) {
+                if (!filled_pixel_row[miny]) {
                     break;
                 }
 
@@ -924,12 +924,12 @@ ttf_write_tga (char *name, int32_t pointsize)
             }
 
             for (;;) {
-                if (!filled_line[maxy]) {
+                if (!filled_pixel_row[maxy]) {
                     break;
                 }
 
                 maxy++;
-                if (maxy >= MAX_LINES - 1) {
+                if (maxy >= MAX_TEXTURE_HEIGHT - 1) {
                     break;
                 }
             }
