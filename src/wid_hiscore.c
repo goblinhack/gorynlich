@@ -10,7 +10,6 @@
 #include "wid.h"
 #include "color.h"
 #include "wid_hiscore.h"
-#include "wid_intro_extra.h"
 #include "wid_intro.h"
 #include "string_util.h"
 #include "marshal.h"
