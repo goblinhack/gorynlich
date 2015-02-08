@@ -4,18 +4,12 @@
  * See the LICENSE file for license.
  */
 
-#include <SDL.h>
 
-#include "main.h"
 #include "wid.h"
 #include "wid_intro.h"
 #include "wid_choose_player.h"
-#include "wid_choose_game_type.h"
-#include "level.h"
 #include "timer.h"
-#include "time_util.h"
 #include "client.h"
-#include "thing.h"
 #include "wid_notify.h"
 #include "wid_player_stats.h"
 #include "wid_player_info.h"
