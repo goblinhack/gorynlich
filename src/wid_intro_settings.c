@@ -11,7 +11,7 @@
 #include "color.h"
 #include "wid_popup.h"
 #include "wid_intro_settings.h"
-#include "wid_intro_extra.h"
+#include "wid_intro.h"
 #include "string_util.h"
 #include "music.h"
 
@@ -116,7 +116,7 @@ void wid_intro_settings_hide (void)
 {
     wid_intro_settings_destroy();
 
-    wid_intro_extra_visible();
+    wid_intro_visible();
 }
 
 void wid_intro_settings_visible (void)
