@@ -104,7 +104,7 @@ uint8_t font_init (void)
 
     int32_t i;
 
-    for (i = 2; i < 100; i++) {
+    for (i = 2; i < MAX_FONT_SIZE; i++) {
         tmp = strprepend(mybasename(FIXED_FONT, __FUNCTION__), TTF_PATH);
         ttf_write_tga((char*) tmp, i);
         myfree(tmp);
