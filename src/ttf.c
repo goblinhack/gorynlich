@@ -864,6 +864,130 @@ ttf_write_tga (char *name, int32_t pointsize)
         }
     }
 
+#define MAX_LINES 2048
+    if (dst->h > MAX_LINES) {
+        DIE("ttf is too large");
+    }
+
+    uint8_t filled_line[MAX_LINES] = {0};
+
+    {
+        int x;
+        int y;
+
+        for (y = 0; y < dst->h; y++) {
+            for (x = 0; x < dst->w; x++) {
+                color c;
+                c = getPixel(dst, x, y);
+                if (c.r || c.g || c.b || c.a) {
+                    filled_line[y] = true;
+                    break;
+                }
+            }
+
+#if 0
+                for (x = 0; x < dst->w; x++) {
+                    color c = RED;
+                    putPixel(dst, x, y, c);
+                }
+#endif
+        }
+    }
+
+    /*
+     * Work our the tex co-ords for each glyph in the large tex.
+     */
+    x = 0;
+    y = 0;
+    h = 0;
+
+    int d1_max = 0;
+    int d2_max = 0;
+
+    for (c = TTF_GLYPH_MIN; c < TTF_GLYPH_MAX; c++) {
+
+        {
+            int y = (h + (h + f->glyphs[c].height)) / 2;
+
+            int miny = y;
+            int maxy = y;
+
+            for (;;) {
+                if (!filled_line[miny]) {
+                    break;
+                }
+
+                miny--;
+                if (miny <= 0) {
+                    break;
+                }
+            }
+
+            for (;;) {
+                if (!filled_line[maxy]) {
+                    break;
+                }
+
+                maxy++;
+                if (maxy >= MAX_LINES - 1) {
+                    break;
+                }
+            }
+
+            int d1 = y - miny;
+            if (d1 > d1_max) {
+                d1_max = d1;
+            }
+
+            int d2 = maxy - y;
+            if (d2 > d2_max) {
+                d2_max = d2;
+            }
+        }
+
+        if (++x >= glyph_per_row) {
+            x = 0;
+            h += maxy[y];
+            y++;
+        }
+    }
+
+    x = 0;
+    y = 0;
+    h = 0;
+
+    for (c = TTF_GLYPH_MIN; c < TTF_GLYPH_MAX; c++) {
+
+        f->glyphs[c].texMinX =
+                        (double)(x * maxx) / (double)dst->w;
+        f->glyphs[c].texMaxX =
+                        (double)((x * maxx) + f->glyphs[c].width) /
+                        (double)dst->w;
+
+        {
+            int y = (h + (h + f->glyphs[c].height)) / 2;
+            int y1 = y - d1_max;
+            int y2 = y + d2_max;
+
+            if (y1 < 0) {
+                y1 = 0;
+            }
+
+            f->glyphs[c].texMinY =
+                            (double)(y1) /
+                            (double)dst->h;
+            f->glyphs[c].texMaxY =
+                            (double)(y2) /
+                            (double)dst->h;
+        }
+
+        if (++x >= glyph_per_row) {
+            x = 0;
+            h += maxy[y];
+            y++;
+        }
+    }
+
     SDL_LockSurface(dst);
     stbi_write_tga(filename, dst->w, dst->h, STBI_rgb_alpha, dst->pixels);
     SDL_UnlockSurface(dst);
@@ -885,25 +1009,6 @@ ttf_write_tga (char *name, int32_t pointsize)
 
         f->tex[c].image = dst;
         f->tex[c].tex = tex_get_gl_binding(tex);
-
-        f->glyphs[c].texMinX =
-                        (double)(x * maxx) /
-                        (double)dst->w;
-        f->glyphs[c].texMaxX =
-                        (double)((x * maxx) + f->glyphs[c].width) /
-                        (double)dst->w;
-        f->glyphs[c].texMinY =
-                        (double)(h) /
-                        (double)dst->h;
-        f->glyphs[c].texMaxY =
-                        (double)(h + f->glyphs[c].height) /
-                        (double)dst->h;
-
-        if (++x >= glyph_per_row) {
-            x = 0;
-            h += maxy[y];
-            y++;
-        }
     }
 
     /*
