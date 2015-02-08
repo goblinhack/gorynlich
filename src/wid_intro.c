@@ -130,15 +130,8 @@ void wid_intro_visible (void)
         return;
     }
 
-    if (wid_intro) {
-        wid_destroy(&wid_intro);
-        wid_destroy(&wid_intro_background);
-        wid_destroy(&wid_intro_title);
-        wid_destroy(&wid_intro_man);
-        wid_destroy(&wid_intro_treasure_chest);
-        wid_destroy(&wid_intro_eyes);
-        wid_intro_create();
-    }
+    wid_intro_create();
+    wid_intro_menu_create();
 
     wid_notify_flush();
 
@@ -194,7 +187,6 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
             return (true);
 
         case 'q':
-        case SDLK_ESCAPE:
             wid_intro_quit_selected();
             return (true);
 
@@ -465,7 +457,7 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-    wid_destroy(&wid_intro_menu);
+    wid_intro_hide();
     wid_editor_visible();
 
     return (true);
@@ -495,9 +487,8 @@ static uint8_t wid_menu_past_legends_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-    wid_intro_menu = 0;
-    wid_hiscore_visible();
     wid_destroy(&wid_intro_menu);
+    wid_hiscore_visible();
 
     return (true);
 }
@@ -555,17 +546,17 @@ static void wid_intro_menu_create (void)
 
     wid_intro_menu = 
         wid_menu(wid_intro,
-                    vvlarge_font,
-                    large_font,
-                    0.95, /* padding between buttons */
-                    3, /* focus */
-                    6, /* items */
-                    "Editor",          wid_menu_level_editor_selected,
-                    "Settings",        wid_menu_settings_selected,
-                    "Quick start",     wid_menu_quick_start_selected,
-                    "Play game",       wid_menu_play_game_selected,
-                    "Hiscores",        wid_menu_past_legends_selected,
-                    "Quit",            wid_intro_quit_selected);
+                 vvlarge_font,
+                 large_font,
+                 0.95, /* padding between buttons */
+                 3, /* focus */
+                 6, /* items */
+                 "Editor",          wid_menu_level_editor_selected,
+                 "Settings",        wid_menu_settings_selected,
+                 "Quick start",     wid_menu_quick_start_selected,
+                 "Play game",       wid_menu_play_game_selected,
+                 "Hiscores",        wid_menu_past_legends_selected,
+                 "Quit",            wid_intro_quit_selected);
 
     wid_move_to_pct_centered(wid_intro_menu, 0.5, 0.7);
 }
