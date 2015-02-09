@@ -505,6 +505,16 @@ static uint8_t wid_menu_past_legends_selected (widp w,
     return (true);
 }
 
+static uint8_t wid_menu_credits_selected (widp w,
+                                          int32_t x, int32_t y,
+                                          uint32_t button)
+{
+    wid_destroy(&wid_intro_menu);
+    wid_intro_about_visible();
+
+    return (true);
+}
+
 static void wid_intro_create (void)
 {
     if (wid_intro) {
@@ -564,6 +574,7 @@ static void wid_intro_menu_create (void)
                  3, /* focus */
                  6, /* items */
                  "Editor",          wid_menu_level_editor_selected,
+                 "Credits",         wid_menu_credits_selected,
                  "Settings",        wid_menu_settings_selected,
                  "Quick start",     wid_menu_quick_start_selected,
                  "Play game",       wid_menu_play_game_selected,

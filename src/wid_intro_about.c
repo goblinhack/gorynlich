@@ -66,25 +66,32 @@ static void wid_intro_about_create (void)
     wid_intro_about = 
         wid_menu(0,
                 vvlarge_font,
-                large_font,
+                vlarge_font,
                 0.95, /* padding between buttons */
                 6, /* focus */
                 7, /* items */
-                "Credits", (void*) 0,
-                "Code monkey #1: Neil McGill", 
+                "%%fmt=left$"
+                "%%fg=gray$Code monkey #1:\t%%fg=white$Neil McGill", 
                 (void*) 0,
-                "Code monkey #2: Richard Franks",
+                "%%fmt=left$"
+                "%%fg=gray$Code monkey #2:\t%%fg=red$Richard Franks",
                 (void*) 0,
-                "Music: Charlotte McGill",
+                "%%fmt=left$"
+                "%%fg=gray$Music:\t%%fg=purple$Charlotte McGill",
                 (void*) 0,
-                "Music: Deceased Senior Technician, DST. AKA nosoapradio.us",
+                "%%fmt=left$"
+                "%%fg=gray$Music:\t%%fg=cyan$Deceased Senior Technician",
                 (void*) 0,
-                "Support: %%fg=green$goblinhack@gmail.com",
+                "%%fmt=left$"
+                "%%fg=gray$Music:\t%%fg=cyan$  (nosoapradio.us)",
                 (void*) 0,
+                "%%fmt=left$"
+                "%%fg=gray$Support: %%fg=green$goblinhack@gmail.com",
+                (void*) 0,
+                "%%fmt=left$"
                 "Back",  wid_intro_about_callback_close);
 
-    wid_move_to_pct_centered(wid_intro_about, 0.5, 0.5 - 1.0);
-    wid_move_to_pct_centered_in(wid_intro_about, 0.5, 0.5, 200);
+    wid_move_to_pct_centered(wid_intro_about, 0.6, 0.5);
 }
 
 static void wid_intro_about_destroy (void)

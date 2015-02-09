@@ -59,3 +59,5 @@ widp wid_menu(widp parent,
               double padding,
               int focus,
               int args, ...);
+
+extern int wid_menu_visible;
