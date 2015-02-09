@@ -864,8 +864,6 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
-
-            SDL_Delay(MAIN_LOOP_DELAY);
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
@@ -1079,10 +1077,6 @@ void sdl_loop (void)
 #else /* } { */
             SDL_GL_SwapBuffers();
 #endif /* } */
-
-            if (!global_config.display_sync) {
-                SDL_Delay(MAIN_LOOP_DELAY);
-            }
         } else {
             usleep(MAIN_LOOP_DELAY);
         }
