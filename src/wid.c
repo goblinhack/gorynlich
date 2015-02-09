@@ -8611,11 +8611,7 @@ static void wid_display (widp w,
          * Widget text
          */
         glcolor(col_text);
-if (w->debug) {
-debug = 1;
-}
         ttf_puts(font, text, x, y, scaling, advance, fixed_width);
-debug = 0;
 
         blit_flush();
     }
