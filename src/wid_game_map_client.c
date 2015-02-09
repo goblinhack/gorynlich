@@ -16,6 +16,7 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
+#include "wid_menu.h"
 #include "thing.h"
 #include "level.h"
 #include "server.h"
@@ -238,6 +239,11 @@ uint8_t wid_game_map_client_player_move (void)
 
     if (!player) {
         LOG("No player, cannot move");
+        return (false);
+    }
+
+    if (wid_menu_visible) {
+        LOG("Menu present, ignore moves");
         return (false);
     }
 
