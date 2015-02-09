@@ -144,6 +144,7 @@ ENUM_DEF_H(ENUM_FMT, enum_fmt)
     list_macro(ENUM_FONT_MED,                   "medium"),              \
     list_macro(ENUM_FONT_LARGE,                 "large"),               \
     list_macro(ENUM_FONT_VLARGE,                "vlarge"),              \
+    list_macro(ENUM_FONT_VVLARGE,               "vvlarge"),             \
 
 ENUM_DEF_H(ENUM_FONT, enum_font)
 
