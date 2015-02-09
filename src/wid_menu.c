@@ -14,6 +14,8 @@
 #include "wid_menu.h"
 #include "time_util.h"
 
+int wid_menu_visible;
+
 static void wid_menu_destroy(widp w);
 
 static void wid_menu_update (widp w)
@@ -65,9 +67,9 @@ static void wid_menu_update (widp w)
             y += normal_wid_height;
 
             if (!ctx->event_handler[i]) {
-                c = WHITE;
+                c = YELLOW;
             } else {
-                c = GRAY;
+                c = GRAY70;
             }
         }
 
@@ -122,9 +124,6 @@ static uint8_t wid_menu_button_mouse_event (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
-    wid_menu_ctx *ctx = wid_get_client_context(w);
-    verify(ctx);
-
     int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
 
     return (wid_menu_mouse_event(w, focus, x, y, button));
@@ -271,9 +270,6 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
 
 static uint8_t wid_menu_button_key_event (widp w, const SDL_KEYSYM *key)
 {
-    wid_menu_ctx *ctx = wid_get_client_context(w);
-    verify(ctx);
-
     int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
 
     switch (key->sym) {
@@ -333,7 +329,7 @@ static void wid_menu_mouse_over (widp w)
      * a mouse over event immediately which may not be over the focus item
      * and will cause us to move. Annoying.
      */
-    if (ctx->created - time_get_time_ms() < 100) {
+    if (time_get_time_ms() - ctx->created < 100) {
         return;
     }
 
@@ -353,6 +349,8 @@ static void wid_menu_destroy (widp w)
 
     wid_set_client_context(w, 0);
     myfree(ctx);
+
+    wid_menu_visible = false;
 }
 
 widp wid_menu (widp parent,
@@ -365,6 +363,8 @@ widp wid_menu (widp parent,
     if (items >= WID_MENU_MAX_ITEMS) {
         DIE("too many menu items");
     }
+
+    wid_menu_visible = true;
 
     /*
      * Create a context to hold button info so we can update it when the focus 

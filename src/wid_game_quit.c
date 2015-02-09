@@ -96,11 +96,11 @@ static void wid_game_quit_create (void)
         "Cmon, this is no fun?",
         "Keep going you coward",
         "Look I'll be nice, keep playing",
-        "When the going gets tough, you just leave, right?",
+        "When the going gets tough, you just leave?",
         "Ho hum. Such high hopes...",
         "What? Wait",
         "Why? Why? Why?",
-        "What did I ever do to you? Except all the monster attacks...",
+        "What did I do to you? Except all the monsters...",
         "Don't do this to me",
         "Please Dave, don't do it",
         "You will not quit, soldier",
@@ -126,16 +126,13 @@ static void wid_game_quit_create (void)
 
     wid_really_quit_game_yes_no = 
         wid_menu(0,
-                vvlarge_font,
-                large_font,
-                0.95, /* padding between buttons */
-                3, /* focus */
-                4, /* items */
-                "Quit game?", (void*) 0,
-                messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
-                "Yes", wid_game_quit_really_quit_callback_yes,
-                "No",  wid_game_quit_really_quit_callback_no);
-
-    wid_set_tex(wid_really_quit_game_yes_no, 0, "gothic_wide");
-    wid_set_square(wid_really_quit_game_yes_no);
+                 vvlarge_font,
+                 large_font,
+                 0.95, /* padding between buttons */
+                 3, /* focus */
+                 4, /* items */
+                 "%%fg=red$Quit game?", (void*) 0,
+                 messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
+                 "Yes", wid_game_quit_really_quit_callback_yes,
+                 "No",  wid_game_quit_really_quit_callback_no);
 }
