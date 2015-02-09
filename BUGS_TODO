@@ -1,23 +1,21 @@
 --------------------------------------- plan for feb --------------------------------------
+- point popup vlarge seems to flash briefly
+- picked up potion when had empty slots and potion in inventory and it went to inventory
+- wid menu should look at key pressed to find shortcut to menu
+- revamp join window
+- revamp server window
+- revamp stats window? move all done into spending menu
+- multiplayer, join game does not show stats window
 - pop up point on baddie death is being scissored
 - remove gothic and window textures - no longer needed
-- some quit strings too long now
-create super menu system to simplify the cruddy menu systems
- - need to recreate menu on intro visible
- x zoom effect
- x keyboard controlled or mouse
- - left/right callbacks for change value
- x combine intro menu with extras/quit/back
- x change single/multiplayer window
- - change stats window too?
-apple and water icons look a bit crap
-multiplayer, join game does not show stats window
-stats need to do something
-magic attack - green fireball?
-sound effects for weapons and hits http://www.bfxr.net/
-sound on momey collect
-sound on potion use
-need shield potion effect
+- change stats window too?
+- apple and water icons look a bit crap
+- stats need to do something
+- magic attack - green fireball?
+- sound effects for weapons and hits http://www.bfxr.net/
+- sound on momey collect
+- sound on potion use
+- need shield potion effect
 --------------------------------------- plan for mar --------------------------------------
 need single player global flag
 single player mode direct socket
@@ -67,8 +65,19 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
+Mon Feb  9 07:10:37 EST 2015
+- fixed outline on popup of points
+
 Sun Feb  8 19:15:10 EST 2015
+- create super menu system to simplify the cruddy menu systems
+  - need to recreate menu on intro visible
+  - zoom effect
+  - keyboard controlled or mouse
+  - left/right callbacks for change value
+  - combine intro menu with extras/quit/back
+  - change single/multiplayer window
 - moving the quit menu on the game moves the player
+- some quit strings too long now
 
 Sun Feb  8 08:52:05 EST 2015
 - editor/quit menu working again

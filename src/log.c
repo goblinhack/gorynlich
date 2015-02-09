@@ -548,17 +548,23 @@ static void msg_over_thing_ (uint32_t level,
     /*
      * Center a widget over the thing.
      */
-    widp tooltip;
     double x, y;
 
     wid_get_pct(wid_thing, &x, &y);
-    tooltip = wid_tooltip(buf, x, y, med_font);
+    widp w = wid_new_window("wid_tooltip");
 
-    wid_move_to_pct_centered(tooltip, x, y);
-    wid_move_to_pct_centered_in(tooltip, x, y - 0.3, 1500);
-    wid_fade_out(tooltip, 1500);
-    wid_set_no_shape(tooltip);
-    wid_raise(tooltip);
+    fpoint tl = {0, 0};
+    fpoint br = {1, 1};
+    wid_set_tl_br_pct(w, tl, br);
+    wid_set_text(w, buf);
+    wid_set_text_outline(w, true);
+    wid_set_font(w, med_font);
+    wid_move_to_pct_centered(w, x, y);
+    wid_move_to_pct_centered_in(w, x, y - 0.3, 1500);
+    wid_fade_out(w, 1500);
+    wid_destroy_in(w, 1500);
+    wid_set_no_shape(w);
+    wid_raise(w);
 }
 
 void MSG_CLIENT_SHOUT_OVER_PLAYER (uint32_t level, 
