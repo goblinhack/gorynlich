@@ -67,6 +67,9 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
+Sun Feb  8 19:15:10 EST 2015
+- moving the quit menu on the game moves the player
+
 Sun Feb  8 08:52:05 EST 2015
 - editor/quit menu working again
 - choose player menu working
