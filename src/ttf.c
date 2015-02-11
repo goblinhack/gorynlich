@@ -382,7 +382,7 @@ static void ttf_puts_internal (font *f, const char *text,
 
 		} else if (!strncmp(text, "font=", 5)) {
 		    text += 5;
-                    (void)string2font(&text);
+                    f = string2font(&text);
 		    found_format_string = false;
 		    continue;
 
