@@ -1,5 +1,5 @@
 --------------------------------------- plan for feb --------------------------------------
-- wid menu should look at key pressed to find shortcut to menu
+- ERROR: Leave the current server first before trying to join again
 - revamp join window
 - revamp server window
 - revamp stats window? move all done into spending menu
@@ -66,6 +66,7 @@ mining?
 
 Wed Feb 11 06:38:12 EST 2015
 - picked up potion when had empty slots and potion in inventory and it went to inventory
+- wid menu should look at key pressed to find shortcut to menu
 
 Tue Feb 10 20:53:22 EST 2015
 - made inventory items larger
