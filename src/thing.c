@@ -1812,12 +1812,10 @@ static int thing_hit_ (thingp t, thingp orig_hitter, thingp hitter, int32_t dama
             const char *font = "small";
 
             if (orig_damage > 20) {
-                font = "vvlarge";
-            } else if (orig_damage > 10) {
                 font = "vlarge";
-            } else if (orig_damage > 5) {
+            } else if (orig_damage > 10) {
                 font = "large";
-            } else if (orig_damage > 3) {
+            } else if (orig_damage > 5) {
                 font = "medium";
             } else if (orig_damage > 2) {
                 font = "small";

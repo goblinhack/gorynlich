@@ -1,5 +1,5 @@
 --------------------------------------- plan for feb --------------------------------------
-- point popup vlarge seems to flash briefly
+- torch wobbles in in inventory
 - picked up potion when had empty slots and potion in inventory and it went to inventory
 - wid menu should look at key pressed to find shortcut to menu
 - revamp join window
@@ -64,6 +64,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Tue Feb 10 20:53:22 EST 2015
+- made inventory items larger
+- point popup vlarge seems to flash briefly
 
 Mon Feb  9 07:10:37 EST 2015
 - fixed outline on popup of points
