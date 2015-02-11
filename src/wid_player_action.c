@@ -561,7 +561,8 @@ static void wid_player_action_create (thing_statsp s, int fast)
                     wid_set_thing_template(heart, what);
 
                     uint32_t delay = 2000;
-                    wid_move_to_pct_centered_in(heart, px - 0.1, py - 0.1, delay);
+                    wid_move_to_pct_centered_in(heart, 
+                                                px - 0.1, py - 0.1, delay);
                     wid_fade_out(heart, delay + 100);
                     wid_destroy_in(heart, delay - 100);
 
@@ -646,6 +647,11 @@ static void wid_player_action_create (thing_statsp s, int fast)
         wid_set_color(w, WID_COLOR_TL, WHITE);
         wid_set_color(w, WID_COLOR_BR, WHITE);
         wid_set_square(w);
+
+        /*
+         * Allow over-sized items
+         */
+        wid_set_disable_scissors(wid_item_bar, 1);
     }
 
     {

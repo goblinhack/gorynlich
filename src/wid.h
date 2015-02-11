@@ -63,6 +63,7 @@ void wid_destroy_nodelay(widp *);
 void wid_destroy_in(widp w, uint32_t ms);
 void wid_destroy_ptr_in(widp *w, uint32_t ms);
 void wid_set_ignore_events(widp, uint8_t);
+void wid_set_disable_scissors(widp w, uint8_t val);
 void wid_set_debug(widp, uint8_t);
 void wid_set_animate(widp, uint8_t);
 
@@ -548,6 +549,7 @@ typedef struct wid_ {
      * Flags.
      */
     uint8_t hidden:1;
+    uint8_t disable_scissors:1;
     uint8_t debug:1;
     uint8_t bevelled:1;
     uint8_t rounded:1;
