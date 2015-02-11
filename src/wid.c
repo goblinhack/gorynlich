@@ -1357,8 +1357,6 @@ void wid_set_text (widp w, const char *string)
         wid_set_name(w, string);
     }
 
-    w->text_size_cached = false;
-
     uint32_t len;
 
     if (!string) {
@@ -1478,8 +1476,6 @@ void wid_set_font (widp w, fontp val)
     fast_verify(w);
 
     w->cfg[wid_get_mode(w)].font = val;
-
-    w->text_size_cached = false;
 }
 
 /*
@@ -2002,6 +1998,9 @@ void wid_set_tilename (widp w, const char *name)
     }
 
     w->tile = tile;
+    if (!w->first_tile) {
+        w->first_tile = tile;
+    }
 
     thingp t = wid_get_thing(w);
 
@@ -2038,6 +2037,9 @@ void wid_set_tile (widp w, tilep tile)
     fast_verify(w);
 
     w->tile = tile;
+    if (!w->first_tile) {
+        w->first_tile = tile;
+    }
 
     thingp t = wid_get_thing(w);
 
@@ -2070,20 +2072,24 @@ void wid_set_tile (widp w, tilep tile)
  * in that tile.
  */
 static void wid_tile_scale (widp w, 
-                            tilep tile,
                             fpoint tl,
                             fpoint br,
                             fpoint *new_tl,
                             fpoint *new_br,
                             double scale) 
 {
+    /*
+     * Use the first tile for centering animations else things like torches 
+     * with alpha tend to bounce around.
+     */
+    tilep tile = w->first_tile ? w->first_tile : w->tile;
+
     double ow = br.x - tl.x;
     double oh = br.y - tl.y;
     double nw = ow * scale;
     double nh = oh * scale;
     double dx = (nw - ow) / 2.0;
     double dy = (nh - oh) / 2.0;
-    LOG("  ow %f oh %f nw %f nh %f",ow,oh,nw,nh);
 
     /*
      * Scale the tile.
@@ -7506,7 +7512,6 @@ static void wid_display_fast (widp w, uint8_t pass, uint8_t black_and_white)
         fpoint new_br;
 
         wid_tile_scale(w, 
-                       tile,
                        tl,
                        br,
                        &new_tl,
@@ -7529,7 +7534,6 @@ static void wid_display_fast (widp w, uint8_t pass, uint8_t black_and_white)
         fpoint new_br;
 
         wid_tile_scale(w, 
-                       tile,
                        tl,
                        br,
                        &new_tl,
@@ -8437,7 +8441,6 @@ static void wid_display (widp w,
             fpoint new_br;
 
             wid_tile_scale(w, 
-                           tile,
                            tl,
                            br,
                            &new_tl,
@@ -8459,7 +8462,6 @@ static void wid_display (widp w,
             fpoint new_br;
 
             wid_tile_scale(w, 
-                           tile,
                            tl,
                            br,
                            &new_tl,
@@ -8494,23 +8496,16 @@ static void wid_display (widp w,
         double width, height;
         enum_fmt fmt;
 
-        if (!w->text_size_cached) {
-            /*
-             * Manually specified text position.
-             */
-            fmt = ENUM_FMT_NONE;
-            ttf_text_size(&font, text, &width, &height, &fmt, scaling, advance,
-                          fixed_width);
+        /*
+            * Manually specified text position.
+            */
+        fmt = ENUM_FMT_NONE;
+        ttf_text_size(&font, text, &width, &height, &fmt, scaling, advance,
+                        fixed_width);
 
-            w->text_size_cached = true;
-            w->ttf_width = width;
-            w->ttf_height = height;
-            w->fmt = fmt;
-        } else {
-            width = w->ttf_width;
-            height = w->ttf_height;
-            fmt = w->fmt;
-        }
+        w->ttf_width = width;
+        w->ttf_height = height;
+        w->fmt = fmt;
 
         if (wid_get_text_pos(w, &xpc, &ypc)) {
             x = (owidth * xpc) - ((int32_t)width / 2) + otlx;
@@ -9595,8 +9590,6 @@ double wid_get_scaling_w (widp w)
 
     const uint32_t ts = wid_time;
 
-    w->text_size_cached = false;
-
     if (ts >= w->timestamp_scaling_w_end) {
 
         scaling = w->scaling_w_end;
@@ -9631,8 +9624,6 @@ double wid_get_scaling_h (widp w)
     if (!w->scaling_h && !w->scaled_h) {
         return (1.0);
     }
-
-    w->text_size_cached = false;
 
     const uint32_t ts = wid_time;
 
@@ -9746,8 +9737,6 @@ double wid_get_blit_scaling_w (widp w)
         return (1.0);
     }
 
-    w->text_size_cached = false;
-
     const uint32_t ts = wid_time;
 
     if (ts >= w->timestamp_blit_scaling_w_end) {
@@ -9784,8 +9773,6 @@ double wid_get_blit_scaling_h (widp w)
     if (!w->blit_scaling_h && !w->blit_scaled_h) {
         return (1.0);
     }
-
-    w->text_size_cached = false;
 
     if (wid_time >= w->timestamp_blit_scaling_h_end) {
 
@@ -9925,8 +9912,6 @@ double wid_get_rotate (widp w)
         return (0.0);
     }
 
-    w->text_size_cached = false;
-
     if (wid_time >= w->timestamp_rotate_end) {
 
         rotating = w->rotate_end;
@@ -9959,8 +9944,6 @@ double wid_get_bounce (widp w)
     if (!w->bouncing) {
         return (0.0);
     }
-
-    w->text_size_cached = false;
 
     if (wid_time >= w->timestamp_bounce_end) {
 
@@ -9998,8 +9981,6 @@ void wid_get_shake (widp w, double *x, double *y)
         *y = 0.0;
         return;
     }
-
-    w->text_size_cached = false;
 
     if (wid_time >= w->timestamp_shake_end) {
 

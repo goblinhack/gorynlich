@@ -79,7 +79,7 @@ widp wid_tooltip (const char *text, float x, float y, fontp font)
         /*
          * Factor in the outline
          */
-//        h *= 1.5;
+        h *= 1.5;
 
         /*
          * .5 line spacing for single newlines.

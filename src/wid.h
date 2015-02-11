@@ -589,7 +589,6 @@ typedef struct wid_ {
     uint8_t flip_horiz:1;
     uint8_t first_update:1;
     uint8_t show_cursor:1;
-    uint8_t text_size_cached:1;
     uint8_t text_pos_set:1;
     uint8_t text_fixed_width;
     uint8_t text_lhs:1;
@@ -632,6 +631,18 @@ typedef struct wid_ {
     tilep tile;
 
     /*
+     * First tile found in an animation. Used as the centering tile when
+     * scaling.
+     */
+    tilep first_tile;
+
+    /*
+     * For animation.
+     */
+    thing_tilep current_tile;
+
+    fsize texuv;
+    /*
      * The wid shape
      */
     double bevel;
@@ -646,12 +657,6 @@ typedef struct wid_ {
     double ttf_height;
     enum_fmt fmt;
 
-    /*
-     * For animation.
-     */
-    thing_tilep current_tile;
-
-    fsize texuv;
     fsize tex_tl;
     fsize tex_br;
 
