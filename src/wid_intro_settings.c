@@ -382,9 +382,11 @@ static uint8_t wid_intro_restart_selected (void)
                  0.95, /* padding between buttons */
                  2, /* focus */
                  3, /* items */
-                 "Settings changed, restart game?", (void*)0,
-                 "Yes", wid_intro_restart_callback_yes,
-                 "No",  wid_intro_restart_callback_no);
+                 (int) 0, "Settings changed, restart game?", (void*)0,
+
+                 (int) 'y', "Yes", wid_intro_restart_callback_yes,
+
+                 (int) 'n', "No",  wid_intro_restart_callback_no);
 
     return (true);
 }
@@ -488,26 +490,20 @@ static void wid_intro_settings_create (void)
                 0.95, /* padding between buttons */
                 saved_focus, /* focus */
                 7, /* items */
-                values[i],
-                    wid_intro_settings_mouse_event,
 
-                values[i + 1],
-                    wid_intro_settings_mouse_event,
+                (int) '1', values[i], wid_intro_settings_mouse_event,
 
-                values[i + 2],
-                    wid_intro_settings_mouse_event,
+                (int) '2', values[i + 1], wid_intro_settings_mouse_event,
 
-                values[i + 3],
-                    wid_intro_settings_mouse_event,
+                (int) '3', values[i + 2], wid_intro_settings_mouse_event,
 
-                values[i + 4],
-                    wid_intro_settings_mouse_event,
+                (int) '4', values[i + 3], wid_intro_settings_mouse_event,
 
-                values[i + 5],
-                    wid_intro_settings_mouse_event,
+                (int) '5', values[i + 4], wid_intro_settings_mouse_event,
 
-                "Back",            
-                    wid_intro_settings_back_mouse_event);
+                (int) '6', values[i + 5], wid_intro_settings_mouse_event,
+
+                (int) 'b', "Back", wid_intro_settings_back_mouse_event);
 
     for (i = WID_INTRO_SETTINGS_ROW_WINDOW; i < WID_INTRO_MAX_SETTINGS; i++) {
         myfree(values[i]);
