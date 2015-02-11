@@ -70,26 +70,32 @@ static void wid_intro_about_create (void)
                 0.95, /* padding between buttons */
                 6, /* focus */
                 7, /* items */
-                "%%fmt=left$"
+
+                (int) '0', "%%fmt=left$"
                 "%%fg=gray$Code monkey #1:\t%%fg=white$Neil McGill", 
                 (void*) 0,
-                "%%fmt=left$"
+
+                (int) '0', "%%fmt=left$"
                 "%%fg=gray$Code monkey #2:\t%%fg=red$Richard Franks",
                 (void*) 0,
-                "%%fmt=left$"
+
+                (int) '0', "%%fmt=left$"
                 "%%fg=gray$Music:\t%%fg=purple$Charlotte McGill",
                 (void*) 0,
-                "%%fmt=left$"
+
+                (int) '0', "%%fmt=left$"
                 "%%fg=gray$Music:\t%%fg=cyan$Deceased Senior Technician",
                 (void*) 0,
-                "%%fmt=left$"
+
+                (int) '0', "%%fmt=left$"
                 "%%fg=gray$Music:\t%%fg=cyan$  (nosoapradio.us)",
                 (void*) 0,
-                "%%fmt=left$"
+
+                (int) '0', "%%fmt=left$"
                 "%%fg=gray$Support: %%fg=green$goblinhack@gmail.com",
                 (void*) 0,
-                "%%fmt=left$"
-                "Back",  wid_intro_about_callback_close);
+
+                (int) 'b', "%%fmt=left$" "Back", wid_intro_about_callback_close);
 
     wid_move_to_pct_centered(wid_intro_about, 0.6, 0.5);
 }

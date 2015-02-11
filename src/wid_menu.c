@@ -223,9 +223,7 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
                 widp b = ctx->buttons[ctx->focus];
                 verify(b);
 
-                on_mouse_down_t event_handler = 
-                                ctx->event_handler[ctx->focus];
-
+                on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
                 if (event_handler) {
                     (event_handler)(b, mouse_x, mouse_y, SDLK_LEFT);
                 }
@@ -236,9 +234,7 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
                 widp b = ctx->buttons[ctx->focus];
                 verify(b);
 
-                on_mouse_down_t event_handler = 
-                                ctx->event_handler[ctx->focus];
-
+                on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
                 if (event_handler) {
                     (event_handler)(b, mouse_x, mouse_y, SDLK_RIGHT);
                 }
@@ -261,8 +257,25 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
             wid_menu_last_focus(ctx);
             break;
 
-        default:
+        default: {
+            int i;
+
+            /*
+             * Shortcut key oressed?
+             */
+            for (i = 0; i < ctx->items; i++) {
+                if (key->sym == ctx->shortcut[i]) {
+                    on_mouse_down_t event_handler = ctx->event_handler[i];
+                    if (event_handler) {
+                        widp b = ctx->buttons[i];
+                        verify(b);
+
+                        (event_handler)(b, mouse_x, mouse_y, SDLK_LEFT);
+                    }
+                }
+            }
             return (false);
+        }
     }
 
     return (true);
@@ -272,23 +285,7 @@ static uint8_t wid_menu_button_key_event (widp w, const SDL_KEYSYM *key)
 {
     int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
 
-    switch (key->sym) {
-        case SDLK_TAB:
-        case SDLK_BACKSPACE:
-        case SDLK_ESCAPE:
-        case ' ':
-        case SDLK_RETURN:
-        case SDLK_LEFT:
-        case SDLK_RIGHT:
-        case SDLK_UP:
-        case SDLK_DOWN:
-        case SDLK_HOME:
-        case SDLK_END:
-            return (wid_menu_key_event(w, focus, key));
-
-        default:
-            return (false);
-    }
+    return (wid_menu_key_event(w, focus, key));
 }
 
 static uint8_t wid_menu_parent_key_event (widp w, const SDL_KEYSYM *key)
@@ -298,23 +295,7 @@ static uint8_t wid_menu_parent_key_event (widp w, const SDL_KEYSYM *key)
 
     int focus = ctx->focus;
 
-    switch (key->sym) {
-        case SDLK_TAB:
-        case SDLK_BACKSPACE:
-        case SDLK_ESCAPE:
-        case ' ':
-        case SDLK_RETURN:
-        case SDLK_LEFT:
-        case SDLK_RIGHT:
-        case SDLK_UP:
-        case SDLK_DOWN:
-        case SDLK_HOME:
-        case SDLK_END:
-            return (wid_menu_key_event(w, focus, key));
-
-        default:
-            return (false);
-    }
+    return (wid_menu_key_event(w, focus, key));
 }
 
 static void wid_menu_mouse_over (widp w)
@@ -457,12 +438,14 @@ widp wid_menu (widp parent,
      * Create the buttons
      */
     for (i = 0; i < ctx->items; i++) {
+        const char shortcut = va_arg(ap, int);
         const char *text = va_arg(ap, const char*);
         on_mouse_down_t fn = va_arg(ap, on_mouse_down_t);
 
         widp b = wid_new_container(w, "wid menu button");
         ctx->buttons[i] = b;
         ctx->event_handler[i] = fn;
+        ctx->shortcut[i] = shortcut;
 
         wid_set_text(b, text);
 
