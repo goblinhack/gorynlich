@@ -13,6 +13,7 @@
 #include "ttf.h"
 #include "wid_menu.h"
 #include "time_util.h"
+#include "timer.h"
 
 int wid_menu_visible;
 
@@ -187,6 +188,58 @@ static void wid_menu_first_focus (wid_menu_ctx *ctx)
     wid_menu_update(ctx->w);
 }
 
+static void wid_menu_set_focus (wid_menu_ctx *ctx, int focus)
+{
+    ctx->focus = focus;
+
+    wid_menu_update(ctx->w);
+}
+
+typedef struct {
+    on_mouse_down_t event_handler;
+    widp w;
+    int key;
+} wid_menu_callback_ctx;
+
+static void wid_menu_callback_do (void *context)
+{
+    wid_menu_callback_ctx *tmp = (typeof(tmp)) context;
+
+    verify(tmp);
+
+    (tmp->event_handler)(tmp->w, mouse_x, mouse_y, tmp->key);
+
+    myfree(tmp);
+}
+
+static void wid_menu_callback (widp w, 
+                               int focus, 
+                               on_mouse_down_t event_handler,
+                               int key)
+{
+    if (!event_handler) {
+        return;
+    }
+
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+    wid_menu_set_focus(ctx, focus);
+
+    wid_menu_callback_ctx *tmp = myzalloc(sizeof(*tmp), "menu callback");
+    tmp->w = w;
+    tmp->event_handler = event_handler;
+    tmp->key = key;
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_menu_callback_do,
+            (action_timer_destroy_callback)0,
+            tmp, /* context */
+            "menu callback",
+            1, 0 /* jitter */);
+}
+
+
 static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
@@ -213,9 +266,8 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
                 on_mouse_down_t event_handler = 
                                 ctx->event_handler[ctx->focus];
 
-                if (event_handler) {
-                    (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
-                }
+                wid_menu_callback(b, ctx->focus, event_handler, 
+                                  SDL_BUTTON_LEFT);
                 return (true);
             }
 
@@ -224,9 +276,9 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
                 verify(b);
 
                 on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
-                if (event_handler) {
-                    (event_handler)(b, mouse_x, mouse_y, SDLK_LEFT);
-                }
+                
+                wid_menu_callback(b, ctx->focus, event_handler, 
+                                  SDL_BUTTON_LEFT);
                 return (true);
             }
 
@@ -235,9 +287,9 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
                 verify(b);
 
                 on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
-                if (event_handler) {
-                    (event_handler)(b, mouse_x, mouse_y, SDLK_RIGHT);
-                }
+
+                wid_menu_callback(b, ctx->focus, event_handler, 
+                                  SDL_BUTTON_RIGHT);
                 return (true);
             }
 
@@ -266,12 +318,13 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
             for (i = 0; i < ctx->items; i++) {
                 if (key->sym == ctx->shortcut[i]) {
                     on_mouse_down_t event_handler = ctx->event_handler[i];
-                    if (event_handler) {
-                        widp b = ctx->buttons[i];
-                        verify(b);
 
-                        (event_handler)(b, mouse_x, mouse_y, SDLK_LEFT);
-                    }
+                    widp b = ctx->buttons[i];
+                    verify(b);
+
+                    wid_menu_callback(b, i, event_handler, (int)SDLK_LEFT);
+
+                    return (true);
                 }
             }
             return (false);
