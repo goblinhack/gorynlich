@@ -1,5 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-- ERROR: Leave the current server first before trying to join again
 - revamp join window
 - revamp server window
 - revamp stats window? move all done into spending menu
@@ -22,7 +21,8 @@
 - pop bouncing m and arrow over player to give them a clue what to do
 - first to exit level gets 2 spending points, else get 1
 - weapon swing is nutso fast when fps sync is off
-- center textures in the action bar
+- minor bug: center textures in the action bar
+- minor bug: cannot select 'S' for settings menu, goes to 's' quick start
 --------------------------------------- plan for apr --------------------------------------
 choose player intro window - 5 panels screen width
 char mapping file and char levels to read in level ed
@@ -65,6 +65,7 @@ different profiles for level generation
 mining?
 
 Wed Feb 11 06:38:12 EST 2015
+- ERROR: Leave the current server first before trying to join again
 - picked up potion when had empty slots and potion in inventory and it went to inventory
 - wid menu should look at key pressed to find shortcut to menu
 
