@@ -556,7 +556,7 @@ static void wid_intro_menu_create (void)
                  vvlarge_font,
                  large_font,
                  0.95, /* padding between buttons */
-                 3, /* focus */
+                 4, /* focus */
                  7, /* items */
 
                  (int) 'e', "Editor", wid_menu_level_editor_selected,
