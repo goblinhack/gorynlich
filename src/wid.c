@@ -84,7 +84,7 @@ const int32_t wid_destroy_delay_ms = 500;
 const int32_t wid_visible_delay = 100;
 const int32_t wid_hide_delay = 500;
 const int32_t wid_swipe_delay = 200;
-const int32_t wid_pulse_delay = 100;
+const int32_t wid_pulse_delay = 300;
 const int32_t wid_scaling_forever_delay = 500;
 
 /*
@@ -720,6 +720,11 @@ static void wid_mouse_motion_end (void)
 void wid_set_ignore_events (widp w, uint8_t val)
 {
     w->ignore_for_events = val;
+}
+
+void wid_set_disable_scissors (widp w, uint8_t val)
+{
+    w->disable_scissors = val;
 }
 
 /*
@@ -2167,6 +2172,12 @@ void wid_set_thing (widp w, thingp t)
         return;
     }
 
+    /*
+     * Get the first tile and not random on purpose as animations will
+     * use the first tile as a center. If the widget is remade again and
+     * again then the tile will appear to wobble as a new center is chosen.
+     * i.e. the inventory screen with a torch.
+     */
     tile = (typeof(tile)) tree_root_first(tiles);
     if (!tile) {
         return;
@@ -2200,7 +2211,7 @@ void wid_set_thing_template (widp w, tpp t)
         return;
     }
 
-    tile = (typeof(tile)) tree_root_get_random(tiles);
+    tile = (typeof(tile)) tree_root_first(tiles);
     if (!tile) {
         return;
     }
@@ -8327,6 +8338,10 @@ static void wid_display (widp w,
         text = wid_get_text(w);
     }
 
+    if (w->disable_scissors) {
+        disable_scissor = true;
+    }
+
     /*
      * Should be no need for scissors if you do not have any children
      * or are not the top level wid.
@@ -9553,9 +9568,9 @@ void wid_effect_pulses (widp w)
     fast_verify(w);
 
     if (wid_get_height(w) > 100) {
-        wid_scaling_to_pct_in(w, 1.0, 3.11, wid_pulse_delay, 1);
+        wid_scaling_to_pct_in(w, 1.0, 1.15, wid_pulse_delay, 1);
     } else {
-        wid_scaling_to_pct_in(w, 1.0, 3.1, wid_pulse_delay, 1);
+        wid_scaling_to_pct_in(w, 1.0, 1.1, wid_pulse_delay, 1);
     }
 }
 

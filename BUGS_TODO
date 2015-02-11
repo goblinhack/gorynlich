@@ -1,12 +1,10 @@
 --------------------------------------- plan for feb --------------------------------------
-- torch wobbles in in inventory
 - picked up potion when had empty slots and potion in inventory and it went to inventory
 - wid menu should look at key pressed to find shortcut to menu
 - revamp join window
 - revamp server window
 - revamp stats window? move all done into spending menu
 - multiplayer, join game does not show stats window
-- pop up point on baddie death is being scissored
 - remove gothic and window textures - no longer needed
 - change stats window too?
 - apple and water icons look a bit crap
@@ -24,6 +22,7 @@ press m for magic to build up magic attack
 press m for magic to give life to other players
  - pop bouncing m and arrow over player to give them a clue what to do
 first to exit level gets 2 spending points, else get 1
+- weapon swing is nutso fast when fps sync is off
 --------------------------------------- plan for apr --------------------------------------
 choose player intro window - 5 panels screen width
 char mapping file and char levels to read in level ed
@@ -68,6 +67,8 @@ mining?
 Tue Feb 10 20:53:22 EST 2015
 - made inventory items larger
 - point popup vlarge seems to flash briefly
+- torch wobbles in in inventory
+- oversized inentory items
 
 Mon Feb  9 07:10:37 EST 2015
 - fixed outline on popup of points
