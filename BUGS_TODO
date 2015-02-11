@@ -1,5 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-- picked up potion when had empty slots and potion in inventory and it went to inventory
 - wid menu should look at key pressed to find shortcut to menu
 - revamp join window
 - revamp server window
@@ -15,14 +14,15 @@
 - sound on potion use
 - need shield potion effect
 --------------------------------------- plan for mar --------------------------------------
-need single player global flag
-single player mode direct socket
-xp level and hp increase per level
-press m for magic to build up magic attack
-press m for magic to give life to other players
- - pop bouncing m and arrow over player to give them a clue what to do
-first to exit level gets 2 spending points, else get 1
+- need single player global flag
+- single player mode direct socket
+- xp level and hp increase per level
+- press m for magic to build up magic attack
+- press m for magic to give life to other players
+- pop bouncing m and arrow over player to give them a clue what to do
+- first to exit level gets 2 spending points, else get 1
 - weapon swing is nutso fast when fps sync is off
+- center textures in the action bar
 --------------------------------------- plan for apr --------------------------------------
 choose player intro window - 5 panels screen width
 char mapping file and char levels to read in level ed
@@ -63,6 +63,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Wed Feb 11 06:38:12 EST 2015
+- picked up potion when had empty slots and potion in inventory and it went to inventory
 
 Tue Feb 10 20:53:22 EST 2015
 - made inventory items larger

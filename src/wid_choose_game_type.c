@@ -360,10 +360,14 @@ static void wid_choose_game_type_create (void)
                  0.95, /* padding between buttons */
                  1, /* focus */
                  4, /* items */
-                 "Join server",     wid_choose_game_type_join_game_mouse_event,
-                 "Single player",   wid_choose_game_type_play_mouse_event,
-                 server_text,       server_fn,
-                 "Back",            wid_choose_game_type_go_back_mouse_event);
+
+                 (int) 'j', "Join server", wid_choose_game_type_join_game_mouse_event,
+
+                 (int) 's', "Single player", wid_choose_game_type_play_mouse_event,
+
+                 (int) 'm', server_text, server_fn,
+
+                 (int) 'b', "Back", wid_choose_game_type_go_back_mouse_event);
 
     wid_move_to_pct_centered(w, 0.5, 0.7);
 }

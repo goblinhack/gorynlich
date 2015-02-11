@@ -195,9 +195,12 @@ static void wid_dead_gravestone_appeared (void *context)
                     0.95, /* padding between buttons */
                     1, /* focus */
                     3, /* items */
-                    "Rejoin game?", (void*) 0,
-                    "Yes", wid_dead_rejoin_callback_yes,
-                    "No",  wid_dead_rejoin_callback_no);
+
+                    (int) 0, "Rejoin game?", (void*) 0,
+
+                    (int) 'y', "Yes", wid_dead_rejoin_callback_yes,
+
+                    (int) 'n', "No",  wid_dead_rejoin_callback_no);
     } else {
         wid_replay_game_yes_no = 
             wid_menu(0,
@@ -206,10 +209,14 @@ static void wid_dead_gravestone_appeared (void *context)
                     0.95, /* padding between buttons */
                     2, /* focus */
                     4, /* items */
-                    "Play again?", (void*) 0,
-                    messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
-                    "Yes", wid_dead_replay_callback_yes,
-                    "No",  wid_dead_replay_callback_no);
+
+                    (int) 0, "Play again?", (void*) 0,
+
+                    (int) 0, messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
+
+                    (int) 'y', "Yes", wid_dead_replay_callback_yes,
+
+                    (int) 'n', "No",  wid_dead_replay_callback_no);
     }
 }
 
