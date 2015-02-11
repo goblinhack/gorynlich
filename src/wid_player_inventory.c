@@ -150,6 +150,7 @@ void wid_player_inventory_button_style (widp w,
     }
 
     wid_set_thing_template(w, tp);
+    wid_blit_scale_immediate(w, 1.5);
 
     int quantity = item.quantity;
     int quality = item.quality;
