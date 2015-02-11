@@ -51,6 +51,11 @@ typedef struct {
      */
     on_mouse_down_t event_handler[WID_MENU_MAX_ITEMS];
 
+    /*
+     * Shortcut key
+     */
+    char shortcut[WID_MENU_MAX_ITEMS];
+
 } wid_menu_ctx;
 
 widp wid_menu(widp parent,

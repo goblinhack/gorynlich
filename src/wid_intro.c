@@ -181,11 +181,6 @@ void wid_intro_visible (void)
 static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch ((int)key->sym) {
-        case 's':
-            wid_destroy(&wid_intro_menu);
-            wid_intro_single_play_selected();
-            return (true);
-
         case 'j':
             wid_destroy(&wid_intro_menu);
             wid_intro_hide();
@@ -199,19 +194,6 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 
             wid_server_create_visible();
             wid_server_join_visible();
-            return (true);
-
-        case 'q':
-            wid_intro_quit_selected();
-            return (true);
-
-        case '`':
-        case SDLK_LEFT:
-        case SDLK_RIGHT:
-        case SDLK_TAB:
-            break;
-
-        default:
             return (true);
     }
 
@@ -448,9 +430,12 @@ static void wid_intro_quit_selected (void)
                  0.95, /* padding between buttons */
                  2, /* focus */
                  3, /* items */
-                 "Quit game?", (void*)0,
-                 "Yes", wid_intro_quit_callback_yes,
-                 "No",  wid_intro_quit_callback_no);
+
+                 (int) 0, "Quit game?", (void*)0,
+
+                 (int) 'y', "Yes", wid_intro_quit_callback_yes,
+
+                 (int) 'n', "No",  wid_intro_quit_callback_no);
 
     wid_move_to_pct_centered(wid_intro_quit_popup, 0.5, 0.7);
 }
@@ -572,14 +557,21 @@ static void wid_intro_menu_create (void)
                  large_font,
                  0.95, /* padding between buttons */
                  3, /* focus */
-                 6, /* items */
-                 "Editor",          wid_menu_level_editor_selected,
-                 "Credits",         wid_menu_credits_selected,
-                 "Settings",        wid_menu_settings_selected,
-                 "Quick start",     wid_menu_quick_start_selected,
-                 "Play game",       wid_menu_play_game_selected,
-                 "Hiscores",        wid_menu_past_legends_selected,
-                 "Quit",            wid_intro_quit_selected);
+                 7, /* items */
+
+                 (int) 'e', "Editor", wid_menu_level_editor_selected,
+
+                 (int) 'c', "Credits", wid_menu_credits_selected,
+
+                 (int) 'S', "Settings", wid_menu_settings_selected,
+
+                 (int) 's', "Quick start", wid_menu_quick_start_selected,
+
+                 (int) ' ', "Play game", wid_menu_play_game_selected,
+
+                 (int) 'h', "Hiscores", wid_menu_past_legends_selected,
+
+                 (int) 'q', "Quit", wid_intro_quit_selected);
 
     wid_move_to_pct_centered(wid_intro_menu, 0.5, 0.7);
 }

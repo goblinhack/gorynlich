@@ -490,9 +490,12 @@ void wid_editor_clear (void)
                 0.95, /* padding between buttons */
                 1, /* focus */
                 3, /* items */
-                "Clear level?", (void*) 0,
-                "Yes", wid_editor_clear_callback_yes,
-                "No",  wid_editor_clear_callback_no);
+
+                (int) 0, "Clear level?", (void*) 0,
+
+                (int) 'y', "Yes", wid_editor_clear_callback_yes,
+
+                (int) 'n', "No",  wid_editor_clear_callback_no);
 }
 
 void wid_editor_reset_buttons (void)
