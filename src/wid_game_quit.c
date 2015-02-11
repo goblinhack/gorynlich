@@ -131,8 +131,12 @@ static void wid_game_quit_create (void)
                  0.95, /* padding between buttons */
                  3, /* focus */
                  4, /* items */
-                 "%%fg=red$Quit game?", (void*) 0,
-                 messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
-                 "Yes", wid_game_quit_really_quit_callback_yes,
-                 "No",  wid_game_quit_really_quit_callback_no);
+
+                 (int) 0, "%%fg=red$Quit game?", (void*) 0,
+
+                 (int) 0, messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
+
+                 (int) 'y', "Yes", wid_game_quit_really_quit_callback_yes,
+
+                 (int) 'n', "No",  wid_game_quit_really_quit_callback_no);
 }

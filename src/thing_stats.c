@@ -892,20 +892,20 @@ int thing_stats_item_add (thingp t,
     }
 
     /*
-     * If the item is already on the inventor, try and push onto it.
+     * All items go on the ation bar first if there is space.
      */
-    oitem = thing_stats_has_inventory_item(player_stats, item.id, 0);
-    if (oitem) {
+    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
+        oitem = &player_stats->action_bar[i];
         if (item_push(oitem, item)) {
             return (true);
         }
     }
 
     /*
-     * All items go on the ation bar first if there is space.
+     * If the item is already on the inventory, try and push onto it.
      */
-    for (i = 0; i < THING_ACTION_BAR_MAX; i++) {
-        oitem = &player_stats->action_bar[i];
+    oitem = thing_stats_has_inventory_item(player_stats, item.id, 0);
+    if (oitem) {
         if (item_push(oitem, item)) {
             return (true);
         }
