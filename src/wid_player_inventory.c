@@ -144,9 +144,13 @@ void wid_player_inventory_button_style (widp w,
 
     if (player && action_bar_item && 
         (index == stats_get_action_bar_index(s))) {
-        wid_set_color(w, WID_COLOR_TL, RED);
-        wid_set_color(w, WID_COLOR_BR, RED);
+        color c = RED;
+        c.a = 200;
+        wid_scaling_to_pct_in(w, 1.0, 1.2, 2500, 1000);
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
         wid_set_rounded_small(w);
+        wid_set_bevel(w, 3);
     }
 
     wid_set_thing_template(w, tp);
@@ -633,6 +637,10 @@ static void wid_player_inventory_create (thing_statsp s, int fast)
 
         widp w = wid_new_square_button(wid_player_inventory_container, 
                                        "wid player_stats inventory item");
+        /*
+         * Allow over-sized items
+         */
+        wid_set_disable_scissors(w, 1);
         fpoint tl = {0.0, 0.0};
         fpoint br = {0.0, 0.0};
 

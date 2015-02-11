@@ -359,6 +359,11 @@ static void wid_player_info_create (thing_statsp s, int fast)
 
         wid_set_text_outline(w, true);
         wid_raise(w);
+
+        /*
+         * Allow over-sized items
+         */
+        wid_set_disable_scissors(w, 1);
     }
 
     {
