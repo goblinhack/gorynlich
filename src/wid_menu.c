@@ -387,6 +387,65 @@ static void wid_menu_destroy (widp w)
     wid_menu_visible = false;
 }
 
+static void wid_menu_tick (widp w)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    int items = ctx->items;
+
+    static int val;
+    static int delta = 1;
+    static int step = 2;
+
+    val += delta * step;
+
+    if (val > 255) {
+        val = 255;
+        delta = -1;
+    }
+    if (val < 200) {
+        val = 200;
+        delta = 1;
+    }
+
+    int i;
+    for (i = 0; i < items; i++) {
+
+        widp b = ctx->buttons[i];
+        verify(b);
+
+        wid_set_text_centerx(b, 1);
+        wid_set_text_centery(b, 1);
+
+        color c;
+
+        uint8_t tick = rand() % 255;
+        c.a = tick;
+        if (i != ctx->focus) {
+            continue;
+        }
+
+        c = GREEN;
+        c.g = val;
+
+        /*
+         * Make sure the other widgets look plain in all modes.
+         */
+        int old_mode = wid_get_mode(b);
+
+        int mode;
+        for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
+            wid_set_no_shape(b);
+            wid_set_mode(b, mode);
+            wid_set_color(b, WID_COLOR_TEXT, c);
+            wid_set_text_outline(b, true);
+        }
+
+        wid_set_mode(b, old_mode);
+    }
+}
+
 widp wid_menu (widp parent,
                fontp focus_font,
                fontp normal_font,
@@ -456,6 +515,7 @@ widp wid_menu (widp parent,
      * Create the button container
      */
     widp w = wid_new_container(wrapper, "wid menu");
+    wid_set_on_tick(w, wid_menu_tick);
 
     {
         fpoint tl = { 0.0, 0.0};
