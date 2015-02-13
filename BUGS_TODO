@@ -63,6 +63,10 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
+Fri Feb 13 08:33:08 EST 2015
+- added random clicker to menus
+- started on create server menu
+
 Wed Feb 11 06:38:12 EST 2015
 - ERROR: Leave the current server first before trying to join again
 - picked up potion when had empty slots and potion in inventory and it went to inventory
