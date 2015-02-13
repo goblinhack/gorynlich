@@ -444,11 +444,314 @@ static void wid_menu_tick (widp w)
 
         wid_set_mode(b, old_mode);
     }
+
+    /*
+     * Make the background flicker.
+     */
+    static double r;
+    static double g;
+    static double b;
+
+    static double nr;
+    static double ng;
+    static double nb;
+
+    if (!(myrand() % 10)) {
+        static int cnt = 0;
+	static color cols[1000] = {
+        };
+
+        if (!cnt) {
+            cols[cnt++] = FIREBRICK;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED3;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGERED3;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED3;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGERED3;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGE4;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = ORANGERED4;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED1;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED2;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED3;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = ORANGERED;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = RED4;
+	    cols[cnt++] = RED;
+	    cols[cnt++] = ORANGE;
+	    cols[cnt++] = RED4;
+	}
+
+
+        color c = cols[myrand() % cnt];
+
+        nr = c.r;
+        ng = c.g;
+        nb = c.b;
+    }
+
+    color c;
+
+    r = (r * 10.0 + nr) / 11.0;
+    g = (g * 10.0 + ng) / 11.0;
+    b = (b * 10.0 + nb) / 11.0;
+
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    c.a = 35;
+
+    {
+        widp w = ctx->w;
+        wid_set_color(w, WID_COLOR_BG, c);
+        wid_set_color(w, WID_COLOR_TL, c);
+        wid_set_color(w, WID_COLOR_BR, c);
+    }
 }
 
 widp wid_menu (widp parent,
                fontp focus_font,
                fontp normal_font,
+               double x,
+               double y,
                double padding,
                int focus,
                int items, ...)
@@ -495,15 +798,14 @@ widp wid_menu (widp parent,
         fpoint br = { 1.0, 1.0};
 
         wid_set_tl_br_pct(wrapper, tl, br);
-#ifdef DEBUG
+
         color c = RED;
         c.a = 100;
         wid_set_color(wrapper, WID_COLOR_BG, c);
         wid_set_color(wrapper, WID_COLOR_TL, c);
         wid_set_color(wrapper, WID_COLOR_BR, c);
-#else
-        wid_set_no_shape(wrapper);
-#endif
+        wid_set_tex(wrapper, 0, "alpha");
+
         wid_set_on_destroy(wrapper, wid_menu_destroy);
         wid_set_client_context(wrapper, ctx);
         wid_set_on_key_down(wrapper, wid_menu_parent_key_event);
@@ -576,6 +878,8 @@ widp wid_menu (widp parent,
     va_end(ap);
 
     wid_move_to_pct_centered(wrapper, 0.5, 0.5);
+    wid_move_to_pct_centered(w, x, y);
+
     wid_menu_update(wrapper);
     wid_set_do_not_lower(wrapper, 1);
     wid_raise(wrapper);

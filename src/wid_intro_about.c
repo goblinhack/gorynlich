@@ -67,6 +67,8 @@ static void wid_intro_about_create (void)
         wid_menu(0,
                 vvlarge_font,
                 vlarge_font,
+                0.6, /* x */
+                0.5, /* y */
                 0.95, /* padding between buttons */
                 6, /* focus */
                 7, /* items */
@@ -96,8 +98,6 @@ static void wid_intro_about_create (void)
                 (void*) 0,
 
                 (int) 'b', "%%fmt=left$" "Back", wid_intro_about_callback_close);
-
-    wid_move_to_pct_centered(wid_intro_about, 0.6, 0.5);
 }
 
 static void wid_intro_about_destroy (void)

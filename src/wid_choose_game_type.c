@@ -353,21 +353,22 @@ static void wid_choose_game_type_create (void)
         server_fn = wid_choose_game_type_start_server_mouse_event;
     }
 
-    widp w = 
         wid_menu(wid_choose_game_type,
                  vvlarge_font,
                  large_font,
+                 0.5, /* x */
+                 0.7, /* y */
                  0.95, /* padding between buttons */
                  1, /* focus */
                  4, /* items */
 
-                 (int) 'j', "Join server", wid_choose_game_type_join_game_mouse_event,
+                 (int) 'j', "Join server", 
+                    wid_choose_game_type_join_game_mouse_event,
 
-                 (int) 's', "Single player", wid_choose_game_type_play_mouse_event,
+                 (int) 's', "Single player", 
+                    wid_choose_game_type_play_mouse_event,
 
                  (int) 'm', server_text, server_fn,
 
                  (int) 'b', "Back", wid_choose_game_type_go_back_mouse_event);
-
-    wid_move_to_pct_centered(w, 0.5, 0.7);
 }

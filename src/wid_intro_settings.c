@@ -379,6 +379,8 @@ static uint8_t wid_intro_restart_selected (void)
         wid_menu(0,
                  vvlarge_font,
                  large_font,
+                 0.5, /* x */
+                 0.5, /* y */
                  0.95, /* padding between buttons */
                  2, /* focus */
                  3, /* items */
@@ -487,6 +489,8 @@ static void wid_intro_settings_create (void)
     wid_intro_menu = wid_menu(wid_intro_settings,
                 vvlarge_font,
                 large_font,
+                0.5, /* x */
+                0.5, /* y */
                 0.95, /* padding between buttons */
                 saved_focus, /* focus */
                 7, /* items */

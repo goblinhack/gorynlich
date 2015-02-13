@@ -192,6 +192,8 @@ static void wid_dead_gravestone_appeared (void *context)
             wid_menu(0,
                     vvlarge_font,
                     large_font,
+                    0.5, /* x */
+                    0.3, /* y */
                     0.95, /* padding between buttons */
                     1, /* focus */
                     3, /* items */
@@ -206,13 +208,16 @@ static void wid_dead_gravestone_appeared (void *context)
             wid_menu(0,
                     vvlarge_font,
                     large_font,
+                    0.5, /* x */
+                    0.3, /* y */
                     0.95, /* padding between buttons */
                     2, /* focus */
                     4, /* items */
 
                     (int) 0, "Play again?", (void*) 0,
 
-                    (int) 0, messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
+                    (int) 0, 
+                        messages[myrand() % ARRAY_SIZE(messages)], (void*) 0,
 
                     (int) 'y', "Yes", wid_dead_replay_callback_yes,
 

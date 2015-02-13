@@ -742,6 +742,8 @@ static void wid_server_create_menu (void)
     menu = wid_menu(wid_server_create_window,
                 vvlarge_font,
                 large_font,
+                0.5, /* x */
+                0.5, /* y */
                 0.95, /* padding between buttons */
                 saved_focus, /* focus */
                 5, /* items */
