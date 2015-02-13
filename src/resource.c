@@ -19,6 +19,12 @@ static uint8_t resource_init_1 (void *context)
                      "gorynlich") != 0);
 }
 
+static uint8_t resource_init_1a (void *context)
+{
+    return (tex_load("data/gfx/alpha.png",
+                     "alpha") != 0);
+}
+
 static uint8_t resource_init_2 (void *context)
 {
     return (tex_load("data/gfx/title2.png",
@@ -2939,6 +2945,9 @@ uint8_t resource_init (void)
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_1,
                           0, "resource_init_1");
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_1a,
+                          0, "resource_init_1a");
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_2,
                           0, "resource_init_2");
