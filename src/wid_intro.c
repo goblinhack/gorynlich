@@ -69,6 +69,7 @@ void wid_intro_fini (void)
 
         if (wid_intro) {
             wid_destroy(&wid_intro);
+            wid_destroy(&wid_intro_menu);
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
@@ -120,6 +121,10 @@ void wid_intro_hide (void)
     wid_update(wid_intro);
 
     wid_destroy_in(wid_intro, wid_hide_delay * 2);
+
+    if (wid_intro_menu) {
+        wid_destroy_nodelay(&wid_intro_menu);
+    }
     wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
     wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
     wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
@@ -127,12 +132,12 @@ void wid_intro_hide (void)
     wid_destroy_in(wid_intro_eyes, wid_hide_delay * 2);
 
     wid_intro = 0;
+    wid_intro_menu = 0;
     wid_intro_background = 0;
     wid_intro_title = 0;
     wid_intro_man = 0;
     wid_intro_treasure_chest = 0;
     wid_intro_eyes = 0;
-    wid_intro_menu = 0;
 }
 
 void wid_intro_visible (void)
@@ -427,6 +432,8 @@ static void wid_intro_quit_selected (void)
         wid_menu(0,
                  vvlarge_font,
                  large_font,
+                 0.5, /* x */
+                 0.3, /* y */
                  0.95, /* padding between buttons */
                  2, /* focus */
                  3, /* items */
@@ -543,18 +550,16 @@ static void wid_intro_create (void)
 
 static void wid_intro_menu_create (void)
 {
-    if (!wid_intro) {
-        return;
-    }
-
     if (wid_intro_menu) {
         return;
     }
 
     wid_intro_menu = 
-        wid_menu(wid_intro,
+        wid_menu(0,
                  vvlarge_font,
                  large_font,
+                 0.5, /* x */
+                 0.7, /* y */
                  0.95, /* padding between buttons */
                  4, /* focus */
                  7, /* items */
@@ -572,6 +577,4 @@ static void wid_intro_menu_create (void)
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 
                  (int) 'q', "Quit", wid_intro_quit_selected);
-
-    wid_move_to_pct_centered(wid_intro_menu, 0.5, 0.7);
 }
