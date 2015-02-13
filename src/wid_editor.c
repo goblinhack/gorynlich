@@ -487,6 +487,8 @@ void wid_editor_clear (void)
         wid_menu(0,
                 vvlarge_font,
                 large_font,
+                0.5, /* x */
+                0.5, /* y */
                 0.95, /* padding between buttons */
                 1, /* focus */
                 3, /* items */

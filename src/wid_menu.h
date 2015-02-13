@@ -61,6 +61,8 @@ typedef struct {
 widp wid_menu(widp parent,
               fontp focus_font,
               fontp other_font,
+              double x,
+              double y,
               double padding,
               int focus,
               int args, ...);
