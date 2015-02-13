@@ -4,14 +4,16 @@
 - revamp stats window? move all done into spending menu
 - multiplayer, join game does not show stats window
 - remove gothic and window textures - no longer needed
-- change stats window too?
-- apple and water icons look a bit crap
 - stats need to do something
 - magic attack - green fireball?
 - sound effects for weapons and hits http://www.bfxr.net/
 - sound on momey collect
 - sound on potion use
-- need shield potion effect
+* minor bug: weapon swing is nutso fast when fps sync is off
+* minor bug: power up effect is a bit feeble on shield potion
+* minor bug: apple and water icons look a bit crap
+* minor bug: center textures in the action bar
+* minor bug: cannot select 'S' for settings menu, goes to 's' quick start
 --------------------------------------- plan for mar --------------------------------------
 - need single player global flag
 - single player mode direct socket
@@ -20,14 +22,11 @@
 - press m for magic to give life to other players
 - pop bouncing m and arrow over player to give them a clue what to do
 - first to exit level gets 2 spending points, else get 1
-- weapon swing is nutso fast when fps sync is off
-- minor bug: center textures in the action bar
-- minor bug: cannot select 'S' for settings menu, goes to 's' quick start
 --------------------------------------- plan for apr --------------------------------------
-choose player intro window - 5 panels screen width
-char mapping file and char levels to read in level ed
-pause character on spending point window - on single player?
-fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
+- choose player intro window - 5 panels screen width
+- char mapping file and char levels to read in level ed
+- pause character on spending point window - on single player?
+- fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
 --------------------------------------- plan for may --------------------------------------
 more monsters, ideas:
     * screaming skulls that fire fireballs
