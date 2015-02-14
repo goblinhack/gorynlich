@@ -433,7 +433,7 @@ static void wid_intro_quit_selected (void)
                  vvlarge_font,
                  large_font,
                  0.5, /* x */
-                 0.3, /* y */
+                 0.5, /* y */
                  0.95, /* padding between buttons */
                  2, /* focus */
                  3, /* items */
@@ -443,8 +443,6 @@ static void wid_intro_quit_selected (void)
                  (int) 'y', "Yes", wid_intro_quit_callback_yes,
 
                  (int) 'n', "No",  wid_intro_quit_callback_no);
-
-    wid_move_to_pct_centered(wid_intro_quit_popup, 0.5, 0.7);
 }
 
 static uint8_t wid_menu_settings_selected (widp w, 
