@@ -327,6 +327,7 @@ void wid_set_on_mouse_over_begin(widp, on_mouse_over_begin_t fn);
 void wid_set_on_mouse_over_end(widp, on_mouse_over_end_t fn);
 void wid_set_on_mouse_up(widp, on_mouse_up_t fn);
 void wid_set_on_destroy(widp, on_destroy_t fn);
+void wid_set_on_destroy_begin(widp, on_destroy_t fn);
 void wid_set_on_tick(widp, on_tick_t fn);
 void wid_set_prev(widp w, widp);
 void wid_set_radius(widp, fsize val);
@@ -703,6 +704,7 @@ typedef struct wid_ {
     on_mouse_over_begin_t on_mouse_over_begin;
     on_mouse_over_end_t on_mouse_over_end;
     on_destroy_t on_destroy;
+    on_destroy_t on_destroy_begin;
     on_tick_t on_tick;
 
     /*

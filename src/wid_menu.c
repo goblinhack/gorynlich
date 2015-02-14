@@ -385,7 +385,6 @@ static void wid_menu_destroy (widp w)
     myfree(ctx);
 
     wid_menu_visible = false;
-//    wid_move_delta_pct_in(w,-1,0,100);
 }
 
 static void wid_menu_tick (widp w)
@@ -752,6 +751,14 @@ static void wid_menu_tick (widp w)
     }
 }
 
+static void wid_menu_destroy_begin (widp w)
+{
+    wid_set_tex(w, 0, 0);
+    wid_set_no_shape(w);
+
+    wid_move_delta_pct_in(w, -2.0, 0.0, 200);
+}
+
 widp wid_menu (widp parent,
                fontp focus_font,
                fontp normal_font,
@@ -811,6 +818,7 @@ widp wid_menu (widp parent,
         wid_set_color(wrapper, WID_COLOR_BR, c);
         wid_set_tex(wrapper, 0, "alpha");
 
+        wid_set_on_destroy_begin(wrapper, wid_menu_destroy_begin);
         wid_set_on_destroy(wrapper, wid_menu_destroy);
         wid_set_client_context(wrapper, ctx);
         wid_set_on_key_down(wrapper, wid_menu_parent_key_event);
