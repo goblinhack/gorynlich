@@ -767,7 +767,5 @@ static void wid_server_create_menu (void)
         myfree(values[i]);
     }
 
-    wid_move_to_pct_centered(menu, 0.5, 0.7);
-
     wid_choose_game_type_bg_create();
 }
