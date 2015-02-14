@@ -737,7 +737,7 @@ static void wid_menu_tick (widp w)
     c.r = r;
     c.g = g;
     c.b = b;
-    c.a = 35;
+    c.a = 135;
 
     {
         widp w = ctx->w;
