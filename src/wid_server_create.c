@@ -74,7 +74,6 @@ static uint32_t wid_server_create_button_val[WID_SERVER_CREATE_MAX_SETTINGS];
 static char wid_server_create_button_sval[WID_SERVER_CREATE_MAX_SETTINGS][MAXSTR];
 
 static widp wid_server_create_bg;
-static widp wid_server_create_window;
 static widp wid_server_create_container;
 static uint8_t wid_server_create_init_done;
 
@@ -246,11 +245,6 @@ void wid_server_create_visible (void)
 
 void wid_server_create_redo (void)
 {
-    if (!wid_server_create_window) {
-        wid_server_create_menu();
-        return;
-    }
-
     server *s;
 
     {
@@ -484,10 +478,6 @@ static uint8_t wid_server_create_port_receive_input (widp w,
 
 void wid_server_create_destroy (void)
 {
-    if (!wid_server_create_window) {
-        return;
-    }
-
     if (menu) {
         wid_menu_ctx *ctx = 
                 (typeof(ctx)) wid_get_client_context(menu);
@@ -497,10 +487,6 @@ void wid_server_create_destroy (void)
          * Save the focus so when we remake the menu we are at the same entry.
          */
         saved_focus = ctx->focus;
-    }
-
-    if (wid_server_create_window) {
-        wid_destroy(&wid_server_create_window);
     }
 }
 
@@ -662,39 +648,6 @@ static void wid_server_config_changed (void)
     config_save();
 }
 
-static void wid_choose_game_type_bg_create (void)
-{
-    widp wid;
-
-    if (wid_server_create_bg) {
-        return;
-    }
-
-    {
-        wid = wid_server_create_bg = wid_new_window("bg");
-
-        float f = (1024.0 / 680.0);
-
-        fpoint tl = { 0.0, 0.0 };
-        fpoint br = { 1.0, f };
-
-        wid_set_tl_br_pct(wid, tl, br);
-
-        wid_set_tex(wid, 0, "title3");
-
-        wid_lower(wid);
-
-        color c;
-        c = WHITE;
-        wid_set_mode(wid, WID_MODE_NORMAL);
-        wid_set_color(wid, WID_COLOR_TL, c);
-        wid_set_color(wid, WID_COLOR_BR, c);
-        wid_set_color(wid, WID_COLOR_BG, c);
-
-        wid_update(wid);
-    }
-}
-
 static uint8_t wid_server_create_mouse_event (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
@@ -712,38 +665,34 @@ static uint8_t wid_server_create_mouse_event (widp w,
 
 static void wid_server_create_menu (void)
 {
-    if (!wid_server_create_window) {
-        wid_server_create_read();
-
-        widp w = wid_server_create_window = 
-                        wid_new_rounded_window("wid settings");
-
-        fpoint tl = {0.0, 1.0};
-        fpoint br = {0.0, 1.0};
-
-        wid_set_tl_br_pct(w, tl, br);
-        wid_set_font(w, small_font);
-
-        wid_set_tex(w, 0, "title2");
-    }
+    wid_server_create_read();
 
     char *values[WID_SERVER_CREATE_MAX_SETTINGS];
     int i;
     for (i = WID_SERVER_CREATE_ROW_SERVER_NAME; 
          i < WID_SERVER_CREATE_MAX_SETTINGS; i++) {
-        values[i] = dynprintf("%s:%s",
-                wid_server_create_button_name[i],
-                wid_server_create_button_value_string[i]
-                    [wid_server_create_button_val[i]]);
+
+        const char *val;
+
+        val = wid_server_create_button_value_string[i]
+                        [wid_server_create_button_val[i]];
+
+        if (val) {
+            values[i] = dynprintf("%s:%s",
+                                  wid_server_create_button_name[i], val);
+        } else {
+            values[i] = dynprintf("%s: <not set>",
+                                  wid_server_create_button_name[i]);
+        }
     }
 
     i = WID_SERVER_CREATE_ROW_SERVER_NAME;
 
-    menu = wid_menu(wid_server_create_window,
-                vvlarge_font,
+    menu = wid_menu(0,
+                vlarge_font,
                 large_font,
                 0.5, /* x */
-                0.5, /* y */
+                0.7, /* y */
                 0.95, /* padding between buttons */
                 saved_focus, /* focus */
                 5, /* items */
@@ -766,6 +715,4 @@ static void wid_server_create_menu (void)
          i < WID_SERVER_CREATE_MAX_SETTINGS; i++) {
         myfree(values[i]);
     }
-
-    wid_choose_game_type_bg_create();
 }
