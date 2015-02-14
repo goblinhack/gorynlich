@@ -23,6 +23,7 @@ static void wid_choose_game_type_play_selected(void);
 
 static uint8_t wid_choose_game_type_init_done;
 static void wid_choose_game_type_create(void);
+static widp menu;
 
 static int intro_effect_delay = 200;
 
@@ -47,6 +48,10 @@ void wid_choose_game_type_fini (void)
             wid_destroy(&wid_choose_game_type);
             wid_destroy_in(wid_choose_game_type_background, wid_hide_delay * 2);
             wid_choose_game_type_background = 0;
+        }
+
+        if (menu) {
+            wid_destroy(&menu);
         }
     }
 }
@@ -76,6 +81,10 @@ void wid_choose_game_type_hide (void)
     wid_destroy(&wid_choose_game_type);
     wid_destroy_in(wid_choose_game_type_background, wid_hide_delay * 2);
     wid_choose_game_type_background = 0;
+
+    if (menu) {
+        wid_destroy(&menu);
+    }
 }
 
 void wid_choose_game_type_visible (void)
@@ -145,7 +154,7 @@ static void wid_choose_game_type_start_server_selected (void)
             intro_effect_delay,
             0 /* jitter */);
 
-    wid_choose_game_type_hide();
+    wid_destroy(&menu);
 }
 
 static void wid_choose_game_type_stop_server_selected_cb (void *context)
@@ -353,7 +362,7 @@ static void wid_choose_game_type_create (void)
         server_fn = wid_choose_game_type_start_server_mouse_event;
     }
 
-        wid_menu(wid_choose_game_type,
+    menu = wid_menu(0,
                  vvlarge_font,
                  large_font,
                  0.5, /* x */
