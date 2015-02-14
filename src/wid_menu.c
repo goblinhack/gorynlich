@@ -734,10 +734,10 @@ static void wid_menu_tick (widp w)
     g = (g * 10.0 + ng) / 11.0;
     b = (b * 10.0 + nb) / 11.0;
 
-    c.r = r;
-    c.g = g;
-    c.b = b;
-    c.a = 135;
+    c.r = 0;
+    c.g = 0;
+    c.b = 0;
+    c.a = r;
 
     {
         widp w = ctx->w;
