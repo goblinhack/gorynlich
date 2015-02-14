@@ -385,7 +385,7 @@ static void wid_menu_destroy (widp w)
     myfree(ctx);
 
     wid_menu_visible = false;
-    wid_move_delta_pct_in(w,-1,0,100);
+//    wid_move_delta_pct_in(w,-1,0,100);
 }
 
 static void wid_menu_tick (widp w)
