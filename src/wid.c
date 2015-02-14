@@ -2562,6 +2562,13 @@ void wid_set_on_destroy (widp w, on_destroy_t fn)
     w->on_destroy = fn;
 }
 
+void wid_set_on_destroy_begin (widp w, on_destroy_t fn)
+{
+    fast_verify(w);
+
+    w->on_destroy_begin = fn;
+}
+
 void wid_set_on_tick (widp w, on_tick_t fn)
 {
     fast_verify(w);
@@ -3176,6 +3183,10 @@ static void wid_destroy_delay (widp *wp, int32_t delay)
         wid_fade_out(w, delay);
 
         wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
+    }
+
+    if (w->on_destroy_begin) {
+        (w->on_destroy_begin)(w);
     }
 
     /*
