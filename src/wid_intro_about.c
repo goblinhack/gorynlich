@@ -67,7 +67,7 @@ static void wid_intro_about_create (void)
         wid_menu(0,
                 vvlarge_font,
                 vlarge_font,
-                0.4, /* x */
+                0.55, /* x */
                 0.5, /* y */
                 0.95, /* padding between buttons */
                 6, /* focus */
