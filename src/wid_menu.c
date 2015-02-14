@@ -385,6 +385,7 @@ static void wid_menu_destroy (widp w)
     myfree(ctx);
 
     wid_menu_visible = false;
+    wid_move_delta_pct_in(w,-1,0,100);
 }
 
 static void wid_menu_tick (widp w)
@@ -734,6 +735,10 @@ static void wid_menu_tick (widp w)
     g = (g * 10.0 + ng) / 11.0;
     b = (b * 10.0 + nb) / 11.0;
 
+    /*
+     * And then I decided to dump all the red stuff above and just make it 
+     * fade in and out. Oh well.
+     */
     c.r = 0;
     c.g = 0;
     c.b = 0;
