@@ -513,8 +513,6 @@ static void wid_intro_settings_create (void)
         myfree(values[i]);
     }
 
-    wid_move_to_pct_centered(wid_intro_menu, 0.5, 0.7);
-
     wid_raise(wid_intro_settings);
     wid_update(wid_intro_settings);
 }
