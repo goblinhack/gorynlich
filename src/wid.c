@@ -9508,6 +9508,22 @@ void wid_move_to_abs_centered_in (widp w, double x, double y, uint32_t ms)
     wid_tree3_moving_wids_insert(w);
 }
 
+void wid_move_to_centered_in (widp w, double x, double y, uint32_t ms)
+{
+    fast_verify(w);
+
+    w->timestamp_moving_begin = wid_time;
+    w->timestamp_moving_end = w->timestamp_moving_begin + ms;
+
+    w->moving_start.x = wid_get_tl_x(w);
+    w->moving_start.y = wid_get_tl_y(w);
+    w->moving_end.x = x;
+    w->moving_end.y = y;
+    w->moving = true;
+
+    wid_tree3_moving_wids_insert(w);
+}
+
 void wid_scaling_to_pct_in (widp w,
                             double scaling_start,
                             double scaling_end,

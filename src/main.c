@@ -80,56 +80,96 @@ void quit (void)
      */
     if (is_client) {
         config_save();
+        LOG("  - config_save");
     }
 
     wid_server_save_remote_server_list();
+    LOG("  - wid_server_save_remote_server_list");
 
     if (on_server) {
         hiscore_save();
+        LOG("  - hiscore_save");
     }
 
     sdl_exit();
+    LOG("  - sdl_exit");
 
     wid_editor_fini();
+    LOG("  - wid_editor_fini");
     wid_game_map_client_fini();
+    LOG("  - wid_game_map_client_fini");
     wid_game_map_server_fini();
+    LOG("  - wid_game_map_server_fini");
 
     level_fini();
+    LOG("  - level_fini");
     player_fini();
+    LOG("  - player_fini");
     tp_fini();
+    LOG("  - tp_fini");
     thing_fini();
+    LOG("  - thing_fini");
 
     wid_console_fini();
+    LOG("  - wid_console_fini");
     wid_chat_fini();
+    LOG("  - wid_chat_fini");
     wid_intro_fini();
+    LOG("  - wid_intro_fini");
     wid_choose_player_fini();
+    LOG("  - wid_choose_player_fini");
     wid_choose_game_type_fini();
+    LOG("  - wid_choose_game_type_fini");
     wid_intro_about_fini();
+    LOG("  - wid_intro_about_fini");
     wid_game_over_fini();
+    LOG("  - wid_game_over_fini");
     wid_intro_settings_fini();
+    LOG("  - wid_intro_settings_fini");
     wid_player_stats_fini();
+    LOG("  - wid_player_stats_fini");
     wid_hiscore_fini();
+    LOG("  - wid_hiscore_fini");
     wid_server_join_fini();
+    LOG("  - wid_server_join_fini");
     wid_server_create_fini();
+    LOG("  - wid_server_create_fini");
 
     command_fini();
+    LOG("  - command_fini");
 
     client_fini();
+    LOG("  - client_fini");
     server_fini();
+    LOG("  - server_fini");
     socket_fini();
+    LOG("  - socket_fini");
     wid_fini();
+    LOG("  - wid_fini");
     ttf_fini();
+    LOG("  - ttf_fini");
     font_fini();
+    LOG("  - font_fini");
     tex_fini();
+    LOG("  - tex_fini");
     music_fini();
+    LOG("  - music_fini");
     sound_fini();
+    LOG("  - sound_fini");
     tile_fini();
+    LOG("  - tile_fini");
     sdl_fini();
+    LOG("  - sdl_fini");
     config_fini();
+    LOG("  - config_fini");
     enum_fmt_destroy();
+    LOG("  - enum_fmt_destroy");
     enum_font_destroy();
+    LOG("  - enum_font_destroy");
     blit_fini();
+    LOG("  - blit_fini");
     miniz_fini();
+    LOG("  - miniz_fini");
 
     if (EXEC_FULL_PATH_AND_NAME) {
         myfree(EXEC_FULL_PATH_AND_NAME);
@@ -159,10 +199,12 @@ void quit (void)
 #ifdef ENABLE_LEAKCHECK
     if (!croaked) {
         ptrcheck_fini();
+        LOG("  - ptrcheck_fini");
     }
 #endif
 
     term_fini();
+    LOG("  - term_fini");
 }
 
 void restart (void)
@@ -185,9 +227,8 @@ void die (void)
 {
     quit();
 
+    LOG("Bye, error exit");
     fprintf(MY_STDERR, "exit(1) error\n");
-
-    term_fini();
 
     exit(1);
 }
@@ -790,6 +831,7 @@ int32_t main (int32_t argc, char *argv[])
 
     quit();
 
+    LOG("Bye, ok exit");
     fprintf(MY_STDOUT, "Exited\n");
 
     return (0);
