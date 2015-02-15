@@ -28,6 +28,7 @@
 #include "socket_util.h"
 #include "server.h"
 #include "glapi.h"
+#include "wid_keyboard.h"
 
 static widp wid_intro;
 static widp wid_intro_menu;
@@ -546,6 +547,14 @@ static void wid_intro_create (void)
     wid_intro_menu_create();
 }
 
+static void wid_keyboard_event_selected (widp w, const char *text)
+{
+    CON("selected %s",text);
+}
+static void wid_keyboard_event_cancelled (widp w, const char *text)
+{
+    CON("cancelled %s",text);
+}
 static void wid_intro_menu_create (void)
 {
     if (wid_intro_menu) {
@@ -575,4 +584,10 @@ static void wid_intro_menu_create (void)
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 
                  (int) 'q', "Quit", wid_intro_quit_selected);
+
+if (0)
+wid_keyboard("initial value",
+             "Title",
+             wid_keyboard_event_selected,
+             wid_keyboard_event_cancelled);
 }
