@@ -550,10 +550,12 @@ static void wid_intro_create (void)
 static void wid_keyboard_event_selected (widp w, const char *text)
 {
     CON("selected %s",text);
+    wid_destroy(&w);
 }
 static void wid_keyboard_event_cancelled (widp w, const char *text)
 {
     CON("cancelled %s",text);
+    wid_destroy(&w);
 }
 static void wid_intro_menu_create (void)
 {
@@ -585,9 +587,9 @@ static void wid_intro_menu_create (void)
 
                  (int) 'q', "Quit", wid_intro_quit_selected);
 
-if (0)
+    if (0)
 wid_keyboard("initial value",
-             "Title",
+             "Test menu",
              wid_keyboard_event_selected,
              wid_keyboard_event_cancelled);
 }

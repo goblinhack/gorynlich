@@ -249,6 +249,7 @@ void wid_move_delta(widp, double dx, double dy);
 void wid_move_to_abs(widp, double dx, double dy);
 void wid_move_to_abs_centered(widp, double dx, double dy);
 void wid_move_to_abs_centered_in(widp, double dx, double dy, uint32_t delay);
+void wid_move_to_centered_in(widp, double dx, double dy, uint32_t delay);
 void wid_move_delta_pct_in(widp, double dx, double dy, uint32_t delay);
 void wid_move_to_abs_in(widp, double dx, double dy, uint32_t delay);
 void wid_move_to_bottom(widp);

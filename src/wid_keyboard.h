@@ -8,7 +8,7 @@
 
 typedef void(*wid_keyboard_event_t)(widp, const char *text);
 
-#define WID_KEYBOARD_ACROSS 14
+#define WID_KEYBOARD_ACROSS 12
 #define WID_KEYBOARD_DOWN   5
 
 typedef struct {
@@ -48,6 +48,11 @@ typedef struct {
      */
     wid_keyboard_event_t selected;
     wid_keyboard_event_t cancelled;
+
+    /*
+     * Just created?
+     */
+    int is_new;
 
 } wid_keyboard_ctx;
 
