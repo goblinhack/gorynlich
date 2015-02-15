@@ -14,13 +14,28 @@
 #include "wid_keyboard.h"
 #include "time_util.h"
 #include "timer.h"
+#include "math_util.h"
 
+/*
+ * How keys appear on screen
+ */
 static const char* keys[WID_KEYBOARD_DOWN][WID_KEYBOARD_ACROSS] = {
-  { "\"", "!", "@", "#", "$", "%%", "^", "&", "*", "(", ")", "_", "+",  "DEL"    },
-  { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "{", "}", "-",  "CLEAR"  },
-  { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "[", "]", "'",  ":",     },
-  { "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "{", "}", "|",  "ENTER", },
-  { "u", "v", "w", "x", "y", "z", "<", ">", "?", ",", ".", "/", "\"", "SPACE", },
+  { "!", "@", "#", "$", "%%", "^", "*", "(", ")", "_", "+", "DEL"    },
+  { "1", "2", "3", "4", "5", "6",  "7", "8", "9", "0", "-", "CLEAR"  },
+  { "a", "b", "c", "d", "e", "f",  "g", "h", "i", "j", ";", "\"",     },
+  { "k", "l", "m", "n", "o", "p",  "q", "r", "s", "t", ":", "ENTER", },
+  { "u", "v", "w", "x", "y", "z",  "<", ">", "k", ",", "r", "SPACE", },
+};
+
+/*
+ * The real key behind the scenes
+ */
+static const char key_char[WID_KEYBOARD_DOWN][WID_KEYBOARD_ACROSS] = {
+  { '!', '@', '#', '$', '%', '^', '*', '(', ')', '_', '+', ''  },
+  { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', ''  },
+  { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', ';', '\'', },
+  { 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', ':', '\n', },
+  { 'u', 'v', 'w', 'x', 'y', 'z', '<', '>', 'k', ',', 'r', ' ',  },
 };
 
 int wid_keyboard_visible;
@@ -88,12 +103,36 @@ static void wid_keyboard_update_buttons (widp w)
         }
 
         wid_set_tl_br_pct(b, tl, br);
+
         wid_set_color(b, WID_COLOR_TEXT, c);
         wid_set_font(b, font);
     }
     }
 
     wid_update(w);
+
+    /*
+     * Zoom buttons in
+     */
+    if (ctx->is_new) {
+        ctx->is_new = false;
+
+        for (x = 0; x < WID_KEYBOARD_ACROSS; x++) {
+            for (y = 0; y < WID_KEYBOARD_DOWN; y++) {
+
+                widp b = ctx->buttons[y][x];
+                fpoint tl;
+                fpoint br;
+
+                wid_get_tl_br(b, &tl, &br);
+                double x = gauss(0.0, 2.0);
+                double y = gauss(0.0, 2.0);
+
+                wid_move_to_pct_centered(b, x, y);
+                wid_move_to_centered_in(b, tl.x, tl.y, 500);
+            }
+        }
+    }
 }
 
 static void wid_keyboard_event (widp w, int focusx, int focusy,
@@ -102,11 +141,17 @@ static void wid_keyboard_event (widp w, int focusx, int focusy,
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
-    const char *add = keys[focusy][focusx];
+    const char *add;
+    if ((focusx == -1) && (focusy == -1)) {
+        add = 0;
+    } else {
+        add = keys[focusy][focusx];
+    }
+
     if (key) {
         wid_receive_input(ctx->input, key);
     } else if (!strcmp(add, "ENTER")) {
-        CON("ENTER");
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
     } else if (!strcmp(add, "CLEAR")) {
         for (;;) {
             SDL_KEYSYM key = {0};
@@ -138,7 +183,8 @@ static void wid_keyboard_event (widp w, int focusx, int focusy,
 
         for (x = 0; x < WID_KEYBOARD_ACROSS; x++) {
             for (y = 0; y < WID_KEYBOARD_DOWN; y++) {
-                if (add[0] == keys[y][x][0]) {
+                char c = key_char[y][x];
+                if (c == key->sym) {
                     focusx = x;
                     focusy = y;
                     break;
@@ -293,14 +339,20 @@ static uint8_t wid_keyboard_parent_key_down (widp w,
 
 static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
 {
-    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
-    int focusx = (focus & 0xff);
-    int focusy = (focus & 0xff00) >> 8;
+    wid_keyboard_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
 
     switch (key->sym) {
-        case SDLK_BACKSPACE:
         case SDLK_ESCAPE:
+            (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+            return (true);
+
         case SDLK_RETURN:
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+            return (true);
+
+        case SDLK_BACKSPACE:
+        case SDLK_DELETE:
         case SDLK_LEFT:
         case SDLK_RIGHT:
         case SDLK_UP:
@@ -310,7 +362,40 @@ static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
             break;
 
         default:
-            wid_keyboard_event(w, focusx, focusy, 0);
+            wid_keyboard_event(w, -1, -1, key);
+            return (true);
+    }
+
+    return (false);
+}
+
+static uint8_t wid_keyboard_text_input_key_event (widp w, const SDL_KEYSYM *key)
+{
+    wid_keyboard_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    switch (key->sym) {
+        case SDLK_ESCAPE:
+            (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+            return (true);
+
+        case SDLK_RETURN:
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+            return (true);
+
+        case SDLK_BACKSPACE:
+        case SDLK_DELETE:
+        case SDLK_LEFT:
+        case SDLK_RIGHT:
+        case SDLK_UP:
+        case SDLK_DOWN:
+        case SDLK_HOME:
+        case SDLK_END:
+            wid_receive_input(ctx->input, key);
+            break;
+
+        default:
+            wid_keyboard_event(w, -1, -1, key);
             return (true);
     }
 
@@ -405,10 +490,28 @@ static void wid_keyboard_tick (widp w)
 
 static void wid_keyboard_destroy_begin (widp w)
 {
-    wid_set_tex(w, 0, 0);
-    wid_set_no_shape(w);
+    wid_keyboard_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
 
-    wid_move_delta_pct_in(w, -2.0, 0.0, 200);
+    /*
+     * Zoom buttons in
+     */
+    int x, y;
+
+    for (x = 0; x < WID_KEYBOARD_ACROSS; x++) {
+        for (y = 0; y < WID_KEYBOARD_DOWN; y++) {
+
+            widp b = ctx->buttons[y][x];
+            fpoint tl;
+            fpoint br;
+
+            wid_get_tl_br(b, &tl, &br);
+            double x = gauss(0.0, 2.0);
+            double y = gauss(0.0, 2.0);
+
+            wid_move_to_pct_centered_in(b, x, y, 500);
+        }
+    }
 }
 
 widp wid_keyboard (const char *text,
@@ -425,10 +528,12 @@ widp wid_keyboard (const char *text,
     wid_keyboard_ctx *ctx = myzalloc(sizeof(*ctx), "wid keyboard");
     ctx->focusx = WID_KEYBOARD_ACROSS / 2;
     ctx->focusx = WID_KEYBOARD_DOWN / 2;;
-    ctx->created = time_get_time_ms();
+    ctx->cancelled = cancelled;
+    ctx->selected = selected;
 
     widp window = wid_new_window("wid keyboard");
     ctx->w = window;
+    ctx->is_new = true;
 
     /*
      * Main window
@@ -464,7 +569,7 @@ widp wid_keyboard (const char *text,
         wid_set_text_outline(w, true);
         wid_set_font(w, vvlarge_font);
 
-        wid_set_color(window, WID_COLOR_TEXT, YELLOW);
+        wid_set_color(w, WID_COLOR_TEXT, YELLOW);
     }
 
     /*
@@ -482,6 +587,7 @@ widp wid_keyboard (const char *text,
         wid_set_text(w, text);
         wid_set_text_outline(w, true);
         wid_set_show_cursor(w, true);
+        wid_set_on_key_down(w, wid_keyboard_text_input_key_event);
         wid_set_font(w, vlarge_font);
         wid_set_client_context(w, ctx);
 
