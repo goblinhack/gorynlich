@@ -46,9 +46,12 @@ static void wid_intro_quit_selected(void);
 static void wid_intro_single_play_selected(void);
 static void wid_intro_create(void);
 static void wid_intro_menu_create(void);
+static void wid_intro_menu_destroy(void);
 
 static int intro_effect_delay = 500;
 static int intro_effect_delay_zoom = 1000;
+
+static int saved_focus;
 
 uint8_t wid_intro_init (void)
 {
@@ -70,7 +73,7 @@ void wid_intro_fini (void)
 
         if (wid_intro) {
             wid_destroy(&wid_intro);
-            wid_destroy(&wid_intro_menu);
+            wid_intro_menu_destroy();
             wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
             wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
@@ -123,9 +126,7 @@ void wid_intro_hide (void)
 
     wid_destroy_in(wid_intro, wid_hide_delay * 2);
 
-    if (wid_intro_menu) {
-        wid_destroy_nodelay(&wid_intro_menu);
-    }
+    wid_intro_menu_destroy();
     wid_destroy_in(wid_intro_background, wid_hide_delay * 2);
     wid_destroy_in(wid_intro_title, wid_hide_delay * 2);
     wid_destroy_in(wid_intro_man, wid_hide_delay * 2);
@@ -133,7 +134,6 @@ void wid_intro_hide (void)
     wid_destroy_in(wid_intro_eyes, wid_hide_delay * 2);
 
     wid_intro = 0;
-    wid_intro_menu = 0;
     wid_intro_background = 0;
     wid_intro_title = 0;
     wid_intro_man = 0;
@@ -188,7 +188,7 @@ static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
 {
     switch ((int)key->sym) {
         case 'j':
-            wid_destroy(&wid_intro_menu);
+            wid_intro_menu_destroy();
             wid_intro_hide();
 
             /*
@@ -427,7 +427,7 @@ static void wid_intro_quit_selected (void)
         return;
     }
 
-    wid_destroy(&wid_intro_menu);
+    wid_intro_menu_destroy();
 
     wid_intro_quit_popup = 
         wid_menu(0,
@@ -450,7 +450,7 @@ static uint8_t wid_menu_settings_selected (widp w,
                                            int32_t x, int32_t y,
                                            uint32_t button)
 {
-    wid_destroy(&wid_intro_menu);
+    wid_intro_menu_destroy();
     wid_intro_settings_visible();
 
     return (true);
@@ -480,7 +480,7 @@ static uint8_t wid_menu_quick_start_selected (widp w,
                                               int32_t x, int32_t y,
                                               uint32_t button)
 {
-    wid_destroy(&wid_intro_menu);
+    wid_intro_menu_destroy();
     wid_intro_single_play_selected();
 
     return (true);
@@ -490,7 +490,7 @@ static uint8_t wid_menu_past_legends_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-    wid_destroy(&wid_intro_menu);
+    wid_intro_menu_destroy();
     wid_hiscore_visible();
 
     return (true);
@@ -500,7 +500,7 @@ static uint8_t wid_menu_credits_selected (widp w,
                                           int32_t x, int32_t y,
                                           uint32_t button)
 {
-    wid_destroy(&wid_intro_menu);
+    wid_intro_menu_destroy();
     wid_intro_about_visible();
 
     return (true);
@@ -570,7 +570,7 @@ static void wid_intro_menu_create (void)
                  0.5, /* x */
                  0.7, /* y */
                  0.95, /* padding between buttons */
-                 4, /* focus */
+                 saved_focus, /* focus */
                  7, /* items */
 
                  (int) 'e', "Editor", wid_menu_level_editor_selected,
@@ -592,4 +592,22 @@ wid_keyboard("initial value",
              "Test menu",
              wid_keyboard_event_selected,
              wid_keyboard_event_cancelled);
+}
+
+static void wid_intro_menu_destroy (void)
+{
+    if (!wid_intro_menu) {
+        return;
+    }
+
+    wid_menu_ctx *ctx = 
+                    (typeof(ctx)) wid_get_client_context(wid_intro_menu);
+    verify(ctx);
+
+    /*
+     * Save the focus so when we remake the menu we are at the same entry.
+     */
+    saved_focus = ctx->focus;
+
+    wid_destroy(&wid_intro_menu);
 }

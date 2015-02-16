@@ -14,6 +14,7 @@
 #include "wid_menu.h"
 #include "time_util.h"
 #include "timer.h"
+#include "math_util.h"
 
 int wid_menu_visible;
 
@@ -753,10 +754,18 @@ static void wid_menu_tick (widp w)
 
 static void wid_menu_destroy_begin (widp w)
 {
-    wid_set_tex(w, 0, 0);
-    wid_set_no_shape(w);
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
 
-    wid_move_delta_pct_in(w, -2.0, 0.0, 200);
+    int i;
+    for (i = 0; i < ctx->items; i++) {
+
+        widp b = ctx->buttons[i];
+        verify(b);
+
+        double x = gauss(0.0, 2.0);
+        wid_move_delta_pct_in(b, x, 0.0, 200);
+    }
 }
 
 widp wid_menu (widp parent,
