@@ -213,11 +213,16 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
 
 static void sdl_init_joystick (void)
 {
+#if (SDL_MAJOR_VERSION == 2) /* { */
     SDL_GameController *controller = NULL;
 
-    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
     SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER);
+#endif /* } */
 
+    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+
+    sdl_joy_index = 0; 
+#if (SDL_MAJOR_VERSION == 2) /* { */
     for (sdl_joy_index = 0; 
          sdl_joy_index < SDL_NumJoysticks(); ++sdl_joy_index) {
 
@@ -237,13 +242,16 @@ static void sdl_init_joystick (void)
         LOG("No found gamecontroller");
         return;
     }
+#endif /* } */
 
     SDL_Joystick *joy;
 
     joy = SDL_JoystickOpen(sdl_joy_index);
     if (joy) {
         LOG("Opened Joystick 0");
+#if (SDL_MAJOR_VERSION == 2) /* { */
         LOG("Name: %s", SDL_JoystickNameForIndex(0));
+#endif /* } */
         LOG("Number of Axes: %d", SDL_JoystickNumAxes(joy));
         LOG("Number of Buttons: %d", SDL_JoystickNumButtons(joy));
         LOG("Number of Balls: %d", SDL_JoystickNumBalls(joy));
