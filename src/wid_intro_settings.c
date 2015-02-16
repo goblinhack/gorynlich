@@ -490,7 +490,7 @@ static void wid_intro_settings_create (void)
                 vvlarge_font,
                 large_font,
                 0.5, /* x */
-                0.5, /* y */
+                0.7, /* y */
                 0.95, /* padding between buttons */
                 saved_focus, /* focus */
                 7, /* items */
@@ -532,5 +532,5 @@ static void wid_intro_settings_destroy (void)
      */
     saved_focus = ctx->focus;
 
-    wid_destroy_nodelay(&wid_intro_settings);
+    wid_destroy(&wid_intro_settings);
 }
