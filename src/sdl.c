@@ -73,20 +73,23 @@ int32_t sdl_init_video;
 uint32_t mouse_down;
 int32_t mouse_x;
 int32_t mouse_y;
+int32_t joy_left;
+int32_t joy_right;
+int32_t joy_up;
+int32_t joy_down;
 
 static SDL_Joystick *joy;
 #if (SDL_MAJOR_VERSION == 2) /* { */
 static SDL_Haptic *haptic;
 #endif /* } */
 
-int sdl_joy_index;
-int sdl_joy_axes;
-int sdl_joy_buttons;
-int sdl_joy_balls;
+int joy_index;
+int joy_axes;
+int joy_buttons;
+int joy_balls;
 
 #if (SDL_MAJOR_VERSION == 2) || \
         (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
-static double sdl_wheel_mouse_accel = 1.0;
 #endif /* } */
 
 #ifdef ENABLE_SDL_WINDOW /* { */
@@ -251,7 +254,7 @@ static void sdl_init_rumble (void)
         return;
     }
 
-    LOG("Opened Haptic for joy index %d", sdl_joy_index);
+    LOG("Opened Haptic for joy index %d", joy_index);
 }
 
 static void sdl_init_joystick (void)
@@ -266,19 +269,19 @@ static void sdl_init_joystick (void)
 
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
-    sdl_joy_index = 0; 
+    joy_index = 0; 
 #if (SDL_MAJOR_VERSION == 2) /* { */
-    for (sdl_joy_index = 0; 
-         sdl_joy_index < SDL_NumJoysticks(); ++sdl_joy_index) {
+    for (joy_index = 0; 
+         joy_index < SDL_NumJoysticks(); ++joy_index) {
 
-        if (SDL_IsGameController(sdl_joy_index)) {
-            controller = SDL_GameControllerOpen(sdl_joy_index);
+        if (SDL_IsGameController(joy_index)) {
+            controller = SDL_GameControllerOpen(joy_index);
             if (controller) {
                 LOG("Found gamecontroller");
                 break;
             } else {
                 ERR("Could not open gamecontroller %i: %s",
-                    sdl_joy_index, SDL_GetError());
+                    joy_index, SDL_GetError());
             }
         }
     }
@@ -289,9 +292,9 @@ static void sdl_init_joystick (void)
     }
 #endif /* } */
 
-    joy = SDL_JoystickOpen(sdl_joy_index);
+    joy = SDL_JoystickOpen(joy_index);
     if (joy) {
-        LOG("Opened Joystick %d", sdl_joy_index);
+        LOG("Opened Joystick %d", joy_index);
 #if (SDL_MAJOR_VERSION == 2) /* { */
         LOG("Name: %s", SDL_JoystickNameForIndex(0));
 #endif /* } */
@@ -299,9 +302,9 @@ static void sdl_init_joystick (void)
         LOG("Number of Buttons: %d", SDL_JoystickNumButtons(joy));
         LOG("Number of Balls: %d", SDL_JoystickNumBalls(joy));
 
-        sdl_joy_axes = SDL_JoystickNumAxes(joy);
-        sdl_joy_buttons = SDL_JoystickNumButtons(joy);
-        sdl_joy_balls = SDL_JoystickNumBalls(joy);
+        joy_axes = SDL_JoystickNumAxes(joy);
+        joy_buttons = SDL_JoystickNumButtons(joy);
+        joy_balls = SDL_JoystickNumBalls(joy);
     } else {
         ERR("Couldn't open Joystick 0");
     }
@@ -644,16 +647,18 @@ static void sdl_event (SDL_Event * event)
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
 
+        static double accel = 1.0;
+
         {
             static uint32_t ts;
 
             if (time_have_x_tenths_passed_since(5, ts)) {
-                sdl_wheel_mouse_accel = 1.0;
+                accel = 1.0;
             } else {
-                sdl_wheel_mouse_accel *= ENABLE_WHEEL_SCROLL_SPEED_SCALE;
+                accel *= ENABLE_WHEEL_SCROLL_SPEED_SCALE;
 
-                if (sdl_wheel_mouse_accel > ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE) {
-                    sdl_wheel_mouse_accel = ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE;
+                if (accel > ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE) {
+                    accel = ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE;
                 }
             }
 
@@ -663,8 +668,8 @@ static void sdl_event (SDL_Event * event)
         double wheel_x = event->wheel.x;
         double wheel_y = event->wheel.y;
 
-        wheel_x *= sdl_wheel_mouse_accel;
-        wheel_y *= sdl_wheel_mouse_accel;
+        wheel_x *= accel;
+        wheel_y *= accel;
 
         wid_mouse_motion(mouse_x, mouse_y, 0, 0, wheel_x, wheel_y);
         break;
@@ -733,8 +738,6 @@ static void sdl_event (SDL_Event * event)
         break;
 
     case SDL_JOYAXISMOTION:
-        system("clear");
-
         DBG("Joystick %d: axis %d moved by %d",
             event->jaxis.which, event->jaxis.axis, event->jaxis.value);
 
@@ -743,7 +746,7 @@ static void sdl_event (SDL_Event * event)
 
         static int *axes;
         if (!axes) {
-            axes = myzalloc(sizeof(int) * sdl_joy_axes, "joy axes");
+            axes = myzalloc(sizeof(int) * joy_axes, "joy axes");
         }
 
         axes[axis] = value;
@@ -753,7 +756,7 @@ static void sdl_event (SDL_Event * event)
             *tmp = 0;
 
             int i;
-            for (i = 0; i < sdl_joy_axes; ++i) {
+            for (i = 0; i < joy_axes; ++i) {
                 int len = 80 - 20;
 
                 *tmp = 0;
@@ -773,31 +776,74 @@ static void sdl_event (SDL_Event * event)
 
         if (axes[3] > deadzone) {
             DBG("right stick, right");
+            joy_right = true;
         }
         if (axes[3] < -deadzone) {
             DBG("right stick, left");
+            joy_left = true;
         }
         if (axes[4] > deadzone) {
             DBG("right stick, down");
+            joy_down = true;
         }
         if (axes[4] < -deadzone) {
             DBG("right stick, up");
+            joy_up = true;
         }
 
         /*
          * Left stick
          */
+        int mx = 0;
+        int my = 0;
+
         if (axes[0] > deadzone) {
             DBG("left stick, right");
+            mx = 1;
         }
+
         if (axes[0] < -deadzone) {
             DBG("left stick, left");
+            mx = -1;
         }
+
         if (axes[1] > deadzone) {
             DBG("left stick, down");
+            my = 1;
         }
+
         if (axes[1] < -deadzone) {
             DBG("left stick, up");
+            my = -1;
+        }
+
+        if ((mx != 0) || (my != 0)) {
+
+            static double accel = 1.0;
+            static uint32_t ts;
+
+            if (time_have_x_tenths_passed_since(5, ts)) {
+                accel = 1.0;
+            } else {
+                accel *= ENABLE_WHEEL_SCROLL_SPEED_SCALE;
+
+                if (accel > ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE) {
+                    accel = ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE;
+                }
+            }
+
+            ts = time_get_time_ms();
+
+            double x = (double)mx * accel;
+            double y = (double)my * accel;
+
+            SDL_GetMouseState(&mouse_x, &mouse_y);
+
+            mouse_x *= global_config.xscale;
+            mouse_y *= global_config.yscale;
+
+CON("%f %f",x,y);
+            wid_mouse_motion(mouse_x, mouse_y, x, y, x, y);
         }
 
         break;
@@ -1108,16 +1154,6 @@ void sdl_loop (void)
         int32_t timestamp_now = time_update_time_milli();
 
         if (timestamp_now - timestamp_then > 20) {
-
-            /*
-             * Wheel mouse acceleration.
-             */
-#if 0
-            sdl_wheel_mouse_accel *= 0.9;
-            if (sdl_wheel_mouse_accel < 1.0) {
-                sdl_wheel_mouse_accel = 1.0;
-            }
-#endif
 
             /*
              * Give up some CPU to allow events to arrive and time for the GPU 
