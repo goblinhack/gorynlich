@@ -6613,7 +6613,6 @@ void wid_mouse_motion (int32_t x, int32_t y,
                        int32_t wheelx, int32_t wheely)
 {
     if (wid_mouse_motion_recursion) {
-        wid_mouse_motion_recursion = 0;
         return;
     }
 
@@ -9016,6 +9015,34 @@ void wid_tick_all (void)
     action_timers_tick(&wid_timers);
 }
 
+static void wid_mouse_blit (void)
+{
+    static tilep tile;
+
+    if (!tile) {
+        tile = tile_find("gem7");
+        if (!tile) {
+            return;
+        }
+    }
+
+    point tl;
+    point br;
+
+    double x = mouse_x;
+    double y = mouse_y;
+    double size = ((double)global_config.video_gl_width) / 40.0;
+
+    tl.x = x - size;
+    tl.y = y - size;
+    br.x = x + size;
+    br.y = y + size;
+
+    glcolor(WHITE);
+
+    tile_blit_at(tile, 0, tl, br);
+}
+
 /*
  * Display all widgets
  */
@@ -9038,6 +9065,8 @@ void wid_display_all (void)
     } }
 
     glDisable(GL_SCISSOR_TEST);
+
+    wid_mouse_blit();
 }
 
 void wid_fade_in (widp w, uint32_t delay)
