@@ -34,3 +34,7 @@ extern uint32_t mouse_down;
 extern int32_t mouse_x;
 extern int32_t mouse_y;
 extern uint8_t sdl_shift_held;
+extern int sdl_joy_index;
+extern int sdl_joy_axes;
+extern int sdl_joy_buttons;
+extern int sdl_joy_balls;
