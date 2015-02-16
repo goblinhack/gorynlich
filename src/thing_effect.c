@@ -87,6 +87,8 @@ static void thing_client_effect_hit_success (thingp t)
          */
         wid_shake_to_pct_in(w, 0.1, 0.9, 100, 5);
 
+        sdl_joy_rumble(0.5, 200);
+
         if (thing_is_warm_blooded(t)) {
             level_place_blood(client_level,
                               0, // owner
@@ -113,7 +115,10 @@ static void thing_client_effect_hit_crit (thingp t)
          */
         if (thing_is_player(t)) {
             wid_shake_to_pct_in(wid_game_map_client_grid_container, 0.03, 0.9, 100, 5);
+
+            sdl_joy_rumble(1.0, 1000);
         }
+
 
         /*
          * Shake the player.
