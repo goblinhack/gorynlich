@@ -73,6 +73,12 @@ int32_t sdl_init_video;
 uint32_t mouse_down;
 int32_t mouse_x;
 int32_t mouse_y;
+
+static SDL_Joystick *joy;
+#if (SDL_MAJOR_VERSION == 2) /* { */
+static SDL_Haptic *haptic;
+#endif /* } */
+
 int sdl_joy_index;
 int sdl_joy_axes;
 int sdl_joy_buttons;
@@ -211,12 +217,51 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
     return (false);
 }
 
+void sdl_joy_rumble (float strength, uint32_t ms)
+{
+#if (SDL_MAJOR_VERSION == 2) /* { */
+    if (!haptic) {
+        return;
+    }
+
+    SDL_HapticRumblePlay(haptic, strength, ms);
+#endif /* } */
+}
+
+static void sdl_init_rumble (void)
+{
+#if (SDL_MAJOR_VERSION == 2) /* { */
+    if (!haptic) {
+        haptic = SDL_HapticOpenFromJoystick(joy);
+        if (!haptic) {
+            LOG("Couldn't initialize SDL rumble: %s", SDL_GetError());
+            return;
+        }
+    }
+
+    if (!SDL_HapticRumbleSupported(haptic)) {
+        LOG("No SDL rumble support: %s", SDL_GetError());
+        return;
+    }
+#endif /* } */
+
+
+    if (SDL_HapticRumbleInit(haptic) != 0) {
+        LOG("SDL rumble nit failed: %s", SDL_GetError());
+        return;
+    }
+
+    LOG("Opened Haptic for joy index %d", sdl_joy_index);
+}
+
 static void sdl_init_joystick (void)
 {
 #if (SDL_MAJOR_VERSION == 2) /* { */
     SDL_GameController *controller = NULL;
 
     SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER);
+
+    SDL_InitSubSystem(SDL_INIT_HAPTIC);
 #endif /* } */
 
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
@@ -244,11 +289,9 @@ static void sdl_init_joystick (void)
     }
 #endif /* } */
 
-    SDL_Joystick *joy;
-
     joy = SDL_JoystickOpen(sdl_joy_index);
     if (joy) {
-        LOG("Opened Joystick 0");
+        LOG("Opened Joystick %d", sdl_joy_index);
 #if (SDL_MAJOR_VERSION == 2) /* { */
         LOG("Name: %s", SDL_JoystickNameForIndex(0));
 #endif /* } */
@@ -280,6 +323,7 @@ uint8_t sdl_init (void)
     }
 
     sdl_init_joystick();
+    sdl_init_rumble();
 
     sdl_init_video = 1;
 
@@ -689,7 +733,7 @@ static void sdl_event (SDL_Event * event)
     case SDL_JOYAXISMOTION:
         system("clear");
 
-        CON("Joystick %d: axis %d moved by %d",
+        DBG("Joystick %d: axis %d moved by %d",
             event->jaxis.which, event->jaxis.axis, event->jaxis.value);
 
         int axis = event->jaxis.axis;
@@ -702,7 +746,7 @@ static void sdl_event (SDL_Event * event)
 
         axes[axis] = value;
 
-        {
+        if (debug_enable) {
             char tmp[MAXSTR];
             *tmp = 0;
 
@@ -716,7 +760,7 @@ static void sdl_event (SDL_Event * event)
                          "  %2d: %6d  ", i, axes[i]);
 
                 print_bar(tmp, (axes[i] + 32767) * (len-1) / 65534, len);
-                CON("%s", tmp);
+                DBG("%s", tmp);
             }
         }
 
@@ -726,87 +770,87 @@ static void sdl_event (SDL_Event * event)
         int deadzone = 8000;
 
         if (axes[3] > deadzone) {
-            CON("right stick, right");
+            DBG("right stick, right");
         }
         if (axes[3] < -deadzone) {
-            CON("right stick, left");
+            DBG("right stick, left");
         }
         if (axes[4] > deadzone) {
-            CON("right stick, down");
+            DBG("right stick, down");
         }
         if (axes[4] < -deadzone) {
-            CON("right stick, up");
+            DBG("right stick, up");
         }
 
         /*
          * Left stick
          */
         if (axes[0] > deadzone) {
-            CON("left stick, right");
+            DBG("left stick, right");
         }
         if (axes[0] < -deadzone) {
-            CON("left stick, left");
+            DBG("left stick, left");
         }
         if (axes[1] > deadzone) {
-            CON("left stick, down");
+            DBG("left stick, down");
         }
         if (axes[1] < -deadzone) {
-            CON("left stick, up");
+            DBG("left stick, up");
         }
 
         break;
 
     case SDL_JOYBALLMOTION:
-        CON("Joystick %d: ball %d moved by %d,%d",
+        DBG("Joystick %d: ball %d moved by %d,%d",
             event->jball.which, event->jball.ball, event->jball.xrel,
             event->jball.yrel);
         break;
 
     case SDL_JOYHATMOTION:
-        CON("Joystick %d: hat %d moved to ", event->jhat.which,
+        DBG("Joystick %d: hat %d moved to ", event->jhat.which,
             event->jhat.hat);
 
         switch (event->jhat.value) {
         case SDL_HAT_CENTERED:
-            CON("CENTER");
+            DBG("CENTER");
             break;
         case SDL_HAT_UP:
-            CON("UP");
+            DBG("UP");
             break;
         case SDL_HAT_RIGHTUP:
-            CON("RIGHTUP");
+            DBG("RIGHTUP");
             break;
         case SDL_HAT_RIGHT:
-            CON("RIGHT");
+            DBG("RIGHT");
             break;
         case SDL_HAT_RIGHTDOWN:
-            CON("RIGHTDOWN");
+            DBG("RIGHTDOWN");
             break;
         case SDL_HAT_DOWN:
-            CON("DOWN");
+            DBG("DOWN");
             break;
         case SDL_HAT_LEFTDOWN:
-            CON("LEFTDOWN");
+            DBG("LEFTDOWN");
             break;
         case SDL_HAT_LEFT:
-            CON("LEFT");
+            DBG("LEFT");
             break;
         case SDL_HAT_LEFTUP:
-            CON("LEFTUP");
+            DBG("LEFTUP");
             break;
         default:
-            CON("UNKNOWN");
+            DBG("UNKNOWN");
             break;
         }
         break;
 
     case SDL_JOYBUTTONDOWN:
-        CON("Joystick %d: button %d pressed",
+        DBG("Joystick %d: button %d pressed",
             event->jbutton.which, event->jbutton.button);
         break;
 
     case SDL_JOYBUTTONUP:
-        CON("Joystick %d: button %d released",
+        DBG("Joystick %d: button %d released",
             event->jbutton.which, event->jbutton.button);
         break;
 
