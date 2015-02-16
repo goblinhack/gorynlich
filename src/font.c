@@ -72,29 +72,18 @@ uint8_t font_init (void)
     int32_t vlarge_font_size = VLARGE_FONT_SIZE;
     int32_t vvlarge_font_size = VVLARGE_FONT_SIZE;
     int32_t large_font_size = LARGE_FONT_SIZE;
-    int32_t delta;
 
     font_inited = true;
 
-    delta = 0;
-    if (global_config.video_pix_width <= 640) {
-        delta = -4;
-    } else if (global_config.video_pix_width <= 800) {
-        delta = -2;
-    } else if (global_config.video_pix_width < 1400) {
-    } else if (global_config.video_pix_width < 1600) {
-        delta = +1;
-    } else {
-        delta = +2;
-    }
+    double scale = (double)global_config.video_pix_width / 1000.0;
 
-    fixed_font_size  += delta;
-    vsmall_font_size += delta;
-    small_font_size  += delta;
-    med_font_size    += delta;
-    large_font_size  += delta;
-    vlarge_font_size += delta;
-    vvlarge_font_size += delta;
+    fixed_font_size  = ((double)fixed_font_size  ) * scale;
+    vsmall_font_size = ((double)vsmall_font_size ) * scale;
+    small_font_size  = ((double)small_font_size  ) * scale;
+    med_font_size    = ((double)med_font_size    ) * scale;
+    large_font_size  = ((double)large_font_size  ) * scale;
+    vlarge_font_size = ((double)vlarge_font_size ) * scale;
+    vvlarge_font_size = ((double)vvlarge_font_size ) * scale;
 
 #ifdef ENABLE_GENERATE_TTF
     /*

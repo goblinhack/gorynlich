@@ -67,6 +67,9 @@ mining?
 Sun Feb 15 20:42:29 EST 2015
 - keyboard widget done
 - add rumble support
+- add mouse icon
+- added font scaling
+- fix mouse motion recursion
 
 Sat Feb 14 21:17:41 EST 2015
 - started on wid keyboard
