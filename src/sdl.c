@@ -325,6 +325,8 @@ uint8_t sdl_init (void)
     sdl_init_joystick();
     sdl_init_rumble();
 
+    SDL_ShowCursor(0);
+
     sdl_init_video = 1;
 
     INIT_LOG("SDL version : %u.%u", SDL_MAJOR_VERSION, SDL_MINOR_VERSION);
