@@ -18,6 +18,7 @@ void sdl_show_keyboard(void);
 void sdl_hide_keyboard(void);
 void sdl_exit(void);
 uint8_t sdl_is_exiting(void);
+void sdl_joy_rumble(float strength, uint32_t ms);
 
 extern int32_t sdl_init_video;
 extern uint8_t sdl_exiting;
