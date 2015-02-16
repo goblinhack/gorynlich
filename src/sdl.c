@@ -70,6 +70,13 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 uint8_t sdl_main_loop_running;
 uint8_t sdl_shift_held;
 int32_t sdl_init_video;
+uint32_t mouse_down;
+int32_t mouse_x;
+int32_t mouse_y;
+int sdl_joy_index;
+int sdl_joy_axes;
+int sdl_joy_buttons;
+int sdl_joy_balls;
 
 #if (SDL_MAJOR_VERSION == 2) || \
         (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
@@ -204,6 +211,51 @@ static inline uint8_t sdl_find_video_size (int32_t w, int32_t h)
     return (false);
 }
 
+static void sdl_init_joystick (void)
+{
+    SDL_GameController *controller = NULL;
+
+    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+    SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER);
+
+    for (sdl_joy_index = 0; 
+         sdl_joy_index < SDL_NumJoysticks(); ++sdl_joy_index) {
+
+        if (SDL_IsGameController(sdl_joy_index)) {
+            controller = SDL_GameControllerOpen(sdl_joy_index);
+            if (controller) {
+                LOG("Found gamecontroller");
+                break;
+            } else {
+                ERR("Could not open gamecontroller %i: %s",
+                    sdl_joy_index, SDL_GetError());
+            }
+        }
+    }
+
+    if (!controller) {
+        LOG("No found gamecontroller");
+        return;
+    }
+
+    SDL_Joystick *joy;
+
+    joy = SDL_JoystickOpen(sdl_joy_index);
+    if (joy) {
+        LOG("Opened Joystick 0");
+        LOG("Name: %s", SDL_JoystickNameForIndex(0));
+        LOG("Number of Axes: %d", SDL_JoystickNumAxes(joy));
+        LOG("Number of Buttons: %d", SDL_JoystickNumButtons(joy));
+        LOG("Number of Balls: %d", SDL_JoystickNumBalls(joy));
+
+        sdl_joy_axes = SDL_JoystickNumAxes(joy);
+        sdl_joy_buttons = SDL_JoystickNumButtons(joy);
+        sdl_joy_balls = SDL_JoystickNumBalls(joy);
+    } else {
+        ERR("Couldn't open Joystick 0");
+    }
+}
+
 uint8_t sdl_init (void)
 {
     if (HEADLESS) {
@@ -218,6 +270,8 @@ uint8_t sdl_init (void)
         ERR("Couldn't initialize SDL: %s", SDL_GetError());
         return (false);
     }
+
+    sdl_init_joystick();
 
     sdl_init_video = 1;
 
@@ -399,6 +453,16 @@ static int32_t sdl_filter_events (void *userdata, SDL_Event *event)
         case SDL_MOUSEWHEEL:
         case SDL_KEYDOWN:
         case SDL_KEYUP:
+        case SDL_CONTROLLERDEVICEADDED:
+        case SDL_CONTROLLERDEVICEREMOVED:
+        case SDL_CONTROLLERBUTTONDOWN:
+        case SDL_CONTROLLERBUTTONUP:
+        case SDL_CONTROLLERAXISMOTION:
+        case SDL_JOYAXISMOTION:               /* Joystick axis motion */
+        case SDL_JOYBALLMOTION:               /* Joystick trackball motion */
+        case SDL_JOYHATMOTION:                /* Joystick hat position change */
+        case SDL_JOYBUTTONDOWN:               /* Joystick button pressed */
+        case SDL_JOYBUTTONUP:                 /* Joystick button released */
             return (1);
 
         /* Drop all other events */
@@ -408,9 +472,21 @@ static int32_t sdl_filter_events (void *userdata, SDL_Event *event)
 }
 #endif /* } */
 
-uint32_t mouse_down;
-int32_t mouse_x;
-int32_t mouse_y;
+static void print_bar (char *tmp, int pos, int len)
+{
+    int i;
+
+    snprintf(tmp + strlen(tmp), sizeof(tmp) - strlen(tmp), "[");
+
+    for (i = 0; i < len; ++i) {
+        if (i == pos) {
+            snprintf(tmp + strlen(tmp), sizeof(tmp) - strlen(tmp), "#");
+        } else {
+            snprintf(tmp + strlen(tmp), sizeof(tmp) - strlen(tmp), " ");
+        }
+    }
+    snprintf(tmp + strlen(tmp), sizeof(tmp) - strlen(tmp), "]");
+}
 
 static void sdl_event (SDL_Event * event)
 {
@@ -602,57 +678,127 @@ static void sdl_event (SDL_Event * event)
         wid_mouse_up(event->button.button, mouse_x, mouse_y);
         break;
 
+    case SDL_JOYAXISMOTION:
+        system("clear");
+
+        CON("Joystick %d: axis %d moved by %d",
+            event->jaxis.which, event->jaxis.axis, event->jaxis.value);
+
+        int axis = event->jaxis.axis;
+        int value = event->jaxis.value;
+
+        static int *axes;
+        if (!axes) {
+            axes = myzalloc(sizeof(int) * sdl_joy_axes, "joy axes");
+        }
+
+        axes[axis] = value;
+
+        {
+            char tmp[MAXSTR];
+            *tmp = 0;
+
+            int i;
+            for (i = 0; i < sdl_joy_axes; ++i) {
+                int len = 80 - 20;
+
+                *tmp = 0;
+                snprintf(tmp + strlen(tmp),
+                         sizeof(tmp) - strlen(tmp),
+                         "  %2d: %6d  ", i, axes[i]);
+
+                print_bar(tmp, (axes[i] + 32767) * (len-1) / 65534, len);
+                CON("%s", tmp);
+            }
+        }
+
+        /*
+         * Right stick
+         */
+        int deadzone = 8000;
+
+        if (axes[3] > deadzone) {
+            CON("right stick, right");
+        }
+        if (axes[3] < -deadzone) {
+            CON("right stick, left");
+        }
+        if (axes[4] > deadzone) {
+            CON("right stick, down");
+        }
+        if (axes[4] < -deadzone) {
+            CON("right stick, up");
+        }
+
+        /*
+         * Left stick
+         */
+        if (axes[0] > deadzone) {
+            CON("left stick, right");
+        }
+        if (axes[0] < -deadzone) {
+            CON("left stick, left");
+        }
+        if (axes[1] > deadzone) {
+            CON("left stick, down");
+        }
+        if (axes[1] < -deadzone) {
+            CON("left stick, up");
+        }
+
+        break;
+
     case SDL_JOYBALLMOTION:
-        DBG("Joystick %d: ball %d moved by %d,%d",
+        CON("Joystick %d: ball %d moved by %d,%d",
             event->jball.which, event->jball.ball, event->jball.xrel,
             event->jball.yrel);
         break;
 
     case SDL_JOYHATMOTION:
-        DBG("Joystick %d: hat %d moved to ", event->jhat.which,
+        CON("Joystick %d: hat %d moved to ", event->jhat.which,
             event->jhat.hat);
 
         switch (event->jhat.value) {
         case SDL_HAT_CENTERED:
-            DBG("CENTER");
+            CON("CENTER");
             break;
         case SDL_HAT_UP:
-            DBG("UP");
+            CON("UP");
             break;
         case SDL_HAT_RIGHTUP:
-            DBG("RIGHTUP");
+            CON("RIGHTUP");
             break;
         case SDL_HAT_RIGHT:
-            DBG("RIGHT");
+            CON("RIGHT");
             break;
         case SDL_HAT_RIGHTDOWN:
-            DBG("RIGHTDOWN");
+            CON("RIGHTDOWN");
             break;
         case SDL_HAT_DOWN:
-            DBG("DOWN");
+            CON("DOWN");
             break;
         case SDL_HAT_LEFTDOWN:
-            DBG("LEFTDOWN");
+            CON("LEFTDOWN");
             break;
         case SDL_HAT_LEFT:
-            DBG("LEFT");
+            CON("LEFT");
             break;
         case SDL_HAT_LEFTUP:
-            DBG("LEFTUP");
+            CON("LEFTUP");
             break;
         default:
-            DBG("UNKNOWN");
+            CON("UNKNOWN");
             break;
         }
         break;
 
     case SDL_JOYBUTTONDOWN:
-        DBG("Joystick %d: button %d pressed",
+        CON("Joystick %d: button %d pressed",
             event->jbutton.which, event->jbutton.button);
         break;
 
     case SDL_JOYBUTTONUP:
-        DBG("Joystick %d: button %d released",
+        CON("Joystick %d: button %d released",
             event->jbutton.which, event->jbutton.button);
         break;
 
@@ -939,25 +1085,25 @@ void sdl_loop (void)
 #if (SDL_MAJOR_VERSION == 2) || \
             (SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION > 2) /* { */
                 found = SDL_PeepEvents(events,
-                                    ARRAY_SIZE(events),
-                                    SDL_GETEVENT,
-                                    SDL_QUIT,
-                                    SDL_LASTEVENT);
+                                       ARRAY_SIZE(events),
+                                       SDL_GETEVENT,
+                                       SDL_QUIT,
+                                       SDL_LASTEVENT);
 #else /* } { */
                 found = SDL_PeepEvents(events,
-                                    ARRAY_SIZE(events),
-                                    SDL_GETEVENT,
-                                    SDL_QUITMASK|
-                                    SDL_MOUSEEVENTMASK|
-                                    /*
-                                     * Seems not to be in SDL 1.2.14
-                                    SDL_MOUSEWHEELMASK|
-                                     */
-                                    SDL_MOUSEMOTIONMASK|
-                                    SDL_MOUSEBUTTONDOWNMASK|
-                                    SDL_MOUSEBUTTONUPMASK|
-                                    SDL_KEYDOWNMASK|
-                                    SDL_KEYUPMASK);
+                                       ARRAY_SIZE(events),
+                                       SDL_GETEVENT,
+                                       SDL_QUITMASK|
+                                       SDL_MOUSEEVENTMASK|
+                                        /*
+                                        * Seems not to be in SDL 1.2.14
+                                        SDL_MOUSEWHEELMASK|
+                                        */
+                                       SDL_MOUSEMOTIONMASK|
+                                       SDL_MOUSEBUTTONDOWNMASK|
+                                       SDL_MOUSEBUTTONUPMASK|
+                                       SDL_KEYDOWNMASK|
+                                       SDL_KEYUPMASK);
 #endif /* } */
 
                 for (i = 0; i < found; ++i) {
