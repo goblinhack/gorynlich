@@ -43,6 +43,8 @@ int wid_keyboard_visible;
 static void wid_keyboard_destroy(widp w);
 static void wid_keyboard_set_focus(wid_keyboard_ctx *ctx,
                                    int focusx, int focusy);
+static uint8_t wid_keyboard_text_input_key_event(widp w, 
+                                                 const SDL_KEYSYM *key);
 
 static void wid_keyboard_update_buttons (widp w)
 {
@@ -91,6 +93,8 @@ static void wid_keyboard_update_buttons (widp w)
                 font = vvlarge_font;
             }
             wid_raise(b);
+
+            wid_mouse_warp(b);
         } else {
             if (strlen(t) > 1) {
                 font = med_font;
@@ -337,6 +341,63 @@ static uint8_t wid_keyboard_parent_key_down (widp w,
     return (true);
 }
 
+static uint8_t wid_keyboard_parent_joy_button (widp w, 
+                                               int32_t x,
+                                               int32_t y)
+{
+    wid_keyboard_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+            (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+            (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+            wid_keyboard_focus_up(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+            wid_keyboard_focus_down(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+            wid_keyboard_focus_left(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+            wid_keyboard_focus_right(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+    }
+
+    return (true);
+}
+
 static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
 {
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
@@ -364,6 +425,78 @@ static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
         default:
             wid_keyboard_event(w, -1, -1, key);
             return (true);
+    }
+
+    return (false);
+}
+
+static uint8_t wid_keyboard_button_joy_button_event (widp w, 
+                                                     int32_t x, int32_t y)
+{
+    wid_keyboard_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+        return (wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy));
+    }
+
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_BACKSPACE;
+        wid_keyboard_text_input_key_event(ctx->input, &key);
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_LEFT;
+        wid_keyboard_text_input_key_event(ctx->input, &key);
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_RIGHT;
+        wid_keyboard_text_input_key_event(ctx->input, &key);
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+        wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+        wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_BACKSPACE;
+        wid_receive_input(ctx->input, &key);
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+        wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
+        return (true);
     }
 
     return (false);
@@ -550,6 +683,7 @@ widp wid_keyboard (const char *text,
 
         wid_set_on_destroy_begin(window, wid_keyboard_destroy_begin);
         wid_set_on_key_down(window, wid_keyboard_parent_key_down);
+        wid_set_on_joy_button(window, wid_keyboard_parent_joy_button);
         wid_set_on_destroy(window, wid_keyboard_destroy);
         wid_set_client_context(window, ctx);
     }
@@ -636,6 +770,7 @@ widp wid_keyboard (const char *text,
             wid_set_text_outline(b, true);
             wid_set_on_mouse_over_begin(b, wid_keyboard_mouse_over);
             wid_set_on_key_down(b, wid_keyboard_button_key_event);
+            wid_set_on_joy_button(b, wid_keyboard_button_joy_button_event);
             wid_set_on_mouse_down(b, wid_keyboard_button_mouse_event);
 
             wid_set_color(b, WID_COLOR_BG, GRAY20);
