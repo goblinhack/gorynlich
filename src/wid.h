@@ -127,7 +127,7 @@ uint8_t wid_receive_input(widp, const SDL_KEYSYM *key);
 void wid_mouse_motion(int32_t x, int32_t y,
                       int32_t relx, int32_t rely,
                       int32_t wheelx, int32_t wheely);
-void wid_joy_button(void);
+void wid_joy_button(int32_t x, int32_t y);
 void wid_mouse_down(uint32_t button, int32_t x, int32_t y);
 void wid_mouse_up(uint32_t button, int32_t x, int32_t y);
 void wid_key_down(const struct SDL_KEYSYM *, int32_t x, int32_t y);
@@ -137,6 +137,7 @@ typedef void(*on_mouse_focus_begin_t)(widp);
 typedef void(*on_mouse_focus_end_t)(widp);
 typedef void(*on_mouse_over_begin_t)(widp);
 typedef void(*on_mouse_over_end_t)(widp);
+typedef uint8_t(*on_joy_button_t)(widp, int32_t x, int32_t y);
 typedef uint8_t(*on_mouse_down_t)(widp, int32_t x, int32_t y, uint32_t button);
 typedef uint8_t(*on_mouse_up_t)(widp, int32_t x, int32_t y, uint32_t button);
 typedef uint8_t(*on_mouse_motion_t)(widp,
@@ -321,6 +322,7 @@ void wid_set_name(widp, const char *string);
 void wid_set_offset(widp, fpoint offset);
 void wid_set_on_key_down(widp, on_key_down_t fn);
 void wid_set_on_key_up(widp, on_key_up_t fn);
+void wid_set_on_joy_button(widp, on_joy_button_t fn);
 void wid_set_on_mouse_down(widp, on_mouse_down_t fn);
 void wid_set_on_mouse_motion(widp, on_mouse_motion_t fn);
 void wid_set_on_mouse_focus_begin(widp, on_mouse_focus_begin_t fn);
@@ -698,6 +700,7 @@ typedef struct wid_ {
      */
     on_key_down_t on_key_down;
     on_key_up_t on_key_up;
+    on_joy_button_t on_joy_button;
     on_mouse_down_t on_mouse_down;
     on_mouse_up_t on_mouse_up;
     on_mouse_motion_t on_mouse_motion;
