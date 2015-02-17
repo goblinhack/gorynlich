@@ -1,5 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-- change hiscore menu to wid menu
 - add xbox 360 controller support
 - revamp join window
 - revamp server window
@@ -64,6 +63,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Tue Feb 17 08:07:09 EST 2015
+- wid keyboard mostly working with xbox
+- hiscore menu + xbo
 
 Mon Feb 16 20:46:20 EST 2015
 - xbox working with menu

@@ -115,6 +115,48 @@ static uint8_t wid_hiscore_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
+static uint8_t wid_hiscore_joy_button_event (widp w, int32_t x, int32_t y)
+{
+    wid_hiscore_hide();
+
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
+
+    return (true);
+}
+
 static uint8_t wid_hiscore_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
@@ -173,6 +215,7 @@ static void wid_hiscore_create (void)
     wid_set_color(w, WID_COLOR_BR, c);
     wid_set_on_mouse_down(w, wid_hiscore_mouse_event);
     wid_set_on_key_down(w, wid_hiscore_key_event);
+    wid_set_on_joy_button(w, wid_hiscore_joy_button_event);
 
     wid_set_on_mouse_motion(w, wid_hiscore_receive_mouse_motion);
 
