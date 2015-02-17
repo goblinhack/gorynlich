@@ -6962,8 +6962,22 @@ void wid_joy_button (int32_t x, int32_t y)
     /*
      * Raise on mouse.
      */
-    if ((w->on_joy_button && (w->on_joy_button)(w, x, y)) ||
-        wid_get_movable(w)) {
+    if (w->on_joy_button) {
+        /*
+         * If the button doesn't eat the event, try the parent.
+         */
+        while (!(w->on_joy_button)(w, x, y)) {
+            w = w->parent;
+            fast_verify(w);
+
+            while (w && !w->on_joy_button) {
+                w = w->parent;
+            }
+
+            if (!w) {
+                return;
+            }
+        }
 
         fast_verify(w);
 
@@ -7323,6 +7337,18 @@ try_parent:
 
         w = w->parent;
     }
+}
+
+void wid_mouse_warp (widp w)
+{
+    int32_t tlx, tly, brx, bry;
+
+    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
+
+    int32_t x = (tlx + brx) / 2.0;
+    int32_t y = (tly + bry) / 2.0;
+
+    sdl_mouse_warp(x, y);
 }
 
 /*
