@@ -876,13 +876,18 @@ static void sdl_event (SDL_Event * event)
     }
 }
 
-static void sdl_mouse_center (void)
+void sdl_mouse_center (void)
 {
     int x, y;
 
     x = global_config.video_pix_width / 2;
     y = global_config.video_pix_height / 2;
     
+    sdl_mouse_warp(x, y);
+}
+
+void sdl_mouse_warp (int32_t x, int32_t y)
+{
 #if (SDL_MAJOR_VERSION == 2)
     SDL_WarpMouseInWindow(window, x, y);
 #else

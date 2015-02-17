@@ -105,6 +105,7 @@ void wid_always_hidden(widp, uint8_t value);
 /*
  * Location
  */
+void wid_mouse_warp(widp w);
 void wid_get_abs_coords(widp w,
                         int32_t *tlx,
                         int32_t *tly,

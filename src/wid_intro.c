@@ -563,6 +563,7 @@ static void wid_intro_menu_create (void)
         return;
     }
 
+if (1)
     wid_intro_menu = 
         wid_menu(0,
                  vvlarge_font,

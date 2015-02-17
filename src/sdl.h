@@ -55,6 +55,8 @@ enum {
 
 struct tokens_t_;
 uint8_t sdl_user_exit(struct tokens_t_ *tokens, void *context);
+void sdl_mouse_center(void);
+void sdl_mouse_warp(int32_t x, int32_t y);
 
 extern uint32_t mouse_down;
 extern int32_t mouse_x;
