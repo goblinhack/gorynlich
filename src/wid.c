@@ -6843,6 +6843,10 @@ void wid_mouse_down (uint32_t button, int32_t x, int32_t y)
     }
 }
 
+void wid_joy_button (void)
+{
+}
+
 void wid_mouse_up (uint32_t button, int32_t x, int32_t y)
 {
     widp w;
