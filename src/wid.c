@@ -2506,6 +2506,13 @@ void wid_set_on_key_up (widp w, on_key_up_t fn)
     w->on_key_up = fn;
 }
 
+void wid_set_on_joy_button (widp w, on_joy_button_t fn)
+{
+    fast_verify(w);
+
+    w->on_joy_button = fn;
+}
+
 void wid_set_on_mouse_down (widp w, on_mouse_down_t fn)
 {
     fast_verify(w);
@@ -5918,6 +5925,77 @@ static widp wid_key_up_handler_at (widp w, int32_t x, int32_t y,
     return (0);
 }
 
+static widp wid_joy_button_handler_at (widp w, int32_t x, int32_t y,
+                                        uint8_t strict)
+{
+    widp child;
+
+    if (!w) {
+        return (0);
+    }
+
+    if (wid_ignore_for_events(w)) {
+        return (0);
+    }
+
+    if (strict) {
+        if ((x < w->abs_tl.x) ||
+            (y < w->abs_tl.y) ||
+            (x > w->abs_br.x) ||
+            (y > w->abs_br.y)) {
+            return (0);
+        }
+    }
+
+    TREE_WALK(w->children_display_sorted, child) {
+        fast_verify(child);
+
+        if (wid_focus_locked &&
+            (wid_get_top_parent(child) != wid_get_top_parent(wid_focus_locked))) {
+            continue;
+        }
+
+        widp closer_match = wid_joy_button_handler_at(child, x, y,
+                                                      true /* strict */);
+        if (closer_match) {
+            return (closer_match);
+        }
+    }
+
+    if (w->on_joy_button) {
+        if (wid_focus_locked &&
+            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
+            return (0);
+        }
+
+        return (w);
+    }
+
+    if (wid_get_movable(w)) {
+        if (wid_focus_locked &&
+            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
+            return (0);
+        }
+
+        return (w);
+    }
+
+    /*
+     * Prevent mouse events that occur in the bounds of one window, leaking
+     * into lower levels.
+     */
+    if (!w->parent) {
+        if (wid_focus_locked &&
+            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
+            return (0);
+        }
+
+        return (w);
+    }
+
+    return (0);
+}
+
 static widp wid_mouse_down_handler_at (widp w, int32_t x, int32_t y,
                                        uint8_t strict)
 {
@@ -6411,6 +6489,55 @@ void wid_move_to_top (widp w)
     wid_move_delta(w, 0, wid_get_tl_y(w->parent) - wid_get_tl_y(w));
 }
 
+static widp wid_joy_button_handler (int32_t x, int32_t y)
+{
+    widp w;
+
+    w = wid_joy_button_handler_at(wid_focus, x, y, true /* strict */);
+    if (w) {
+        return (w);
+    }
+
+    w = wid_joy_button_handler_at(wid_over, x, y, true /* strict */);
+    if (w) {
+        return (w);
+    }
+
+    { TREE_WALK(wid_top_level, w) {
+        fast_verify(w);
+
+        if (wid_focus_locked &&
+            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
+            continue;
+        }
+
+        w = wid_joy_button_handler_at(w, x, y, true /* strict */);
+        if (!w) {
+            continue;
+        }
+
+        return (w);
+    } }
+
+    { TREE_WALK(wid_top_level, w) {
+        fast_verify(w);
+
+        if (wid_focus_locked &&
+            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
+            continue;
+        }
+
+        w = wid_joy_button_handler_at(w, x, y, false /* strict */);
+        if (!w) {
+            continue;
+        }
+
+        return (w);
+    } }
+
+    return (0);
+}
+
 static widp wid_mouse_down_handler (int32_t x, int32_t y)
 {
     widp w;
@@ -6801,6 +6928,68 @@ void wid_mouse_motion (int32_t x, int32_t y,
     wid_mouse_motion_recursion = 0;
 }
 
+void wid_joy_button (int32_t x, int32_t y)
+{
+    /*
+     * Only if there is a change in status, send an event.
+     */
+    static uint32_t ts[SDL_MAX_BUTTONS];
+    int changed = false;
+    int b;
+
+    for (b = 0; b < SDL_MAX_BUTTONS; b++) {
+        if (sdl_joy_button[b]) {
+            if (time_have_x_tenths_passed_since(1, ts[b])) {
+                changed = true;
+                ts[b] = time_get_time_ms();
+            }
+        }
+    }
+
+    if (!changed) {
+        return;
+    }
+
+    widp w;
+
+    sound_play_click();
+
+    w = wid_joy_button_handler(x, y);
+    if (!w) {
+        return;
+    }
+
+    /*
+     * Raise on mouse.
+     */
+    if ((w->on_joy_button && (w->on_joy_button)(w, x, y)) ||
+        wid_get_movable(w)) {
+
+        fast_verify(w);
+
+        wid_set_focus(w);
+        wid_set_mode(w, WID_MODE_ACTIVE);
+        wid_raise(w);
+
+        /*
+         * Move on mouse.
+         */
+        if (wid_get_movable(w)) {
+            wid_mouse_motion_begin(w, x, y);
+            return;
+        }
+
+        return;
+    }
+
+    if (wid_get_movable(w)) {
+        wid_set_mode(w, WID_MODE_ACTIVE);
+        wid_raise(w);
+        wid_mouse_motion_begin(w, x, y);
+        return;
+    }
+}
+
 void wid_mouse_down (uint32_t button, int32_t x, int32_t y)
 {
     widp w;
@@ -6841,10 +7030,6 @@ void wid_mouse_down (uint32_t button, int32_t x, int32_t y)
         wid_mouse_motion_begin(w, x, y);
         return;
     }
-}
-
-void wid_joy_button (void)
-{
 }
 
 void wid_mouse_up (uint32_t button, int32_t x, int32_t y)

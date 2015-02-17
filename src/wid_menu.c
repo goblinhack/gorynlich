@@ -19,6 +19,12 @@
 int wid_menu_visible;
 
 static void wid_menu_destroy(widp w);
+static void wid_menu_callback(widp w, 
+                              int focus, 
+                              on_mouse_down_t event_handler,
+                              int key);
+static void wid_menu_prev_focus(wid_menu_ctx *ctx);
+static void wid_menu_next_focus(wid_menu_ctx *ctx);
 
 static void wid_menu_update (widp w)
 {
@@ -141,6 +147,99 @@ static uint8_t wid_menu_parent_mouse_event (widp w,
     int focus = ctx->focus;
 
     return (wid_menu_mouse_event(w, focus, x, y, button));
+}
+
+static uint8_t wid_menu_joy_button_event (widp w,
+                                     int focus,
+                                     int32_t x, int32_t y)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    widp b = ctx->buttons[ctx->focus];
+    verify(b);
+
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+        ctx->focus = ctx->items - 1;
+        widp b = ctx->buttons[ctx->focus];
+        verify(b);
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        wid_menu_callback(b, ctx->focus, event_handler, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+        wid_menu_prev_focus(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+        wid_menu_next_focus(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+        wid_menu_prev_focus(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+        wid_menu_next_focus(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+        ctx->focus = ctx->items - 1;
+        widp b = ctx->buttons[ctx->focus];
+        verify(b);
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        wid_menu_callback(b, ctx->focus, event_handler, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+        wid_menu_prev_focus(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+        wid_menu_next_focus(ctx);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
+
+    return (true);
+}
+
+static uint8_t wid_menu_button_joy_button_event (widp w,
+                                            int32_t x, int32_t y)
+{
+    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+
+    return (wid_menu_joy_button_event(w, focus, x, y));
+}
+
+static uint8_t wid_menu_parent_joy_button_event (widp w,
+                                            int32_t x, int32_t y)
+{
+    wid_menu_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    int focus = ctx->focus;
+
+    return (wid_menu_joy_button_event(w, focus, x, y));
 }
 
 static void wid_menu_next_focus (wid_menu_ctx *ctx)
@@ -832,6 +931,7 @@ widp wid_menu (widp parent,
         wid_set_client_context(wrapper, ctx);
         wid_set_on_key_down(wrapper, wid_menu_parent_key_event);
         wid_set_on_mouse_down(wrapper, wid_menu_parent_mouse_event);
+        wid_set_on_joy_button(wrapper, wid_menu_parent_joy_button_event);
         ctx->w = wrapper;
     }
 
@@ -886,10 +986,10 @@ widp wid_menu (widp parent,
 
         wid_set_text(b, text);
 
-        wid_set_on_mouse_down(b, fn);
         wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
         wid_set_on_key_down(b, wid_menu_button_key_event);
         wid_set_on_mouse_down(b, wid_menu_button_mouse_event);
+        wid_set_on_joy_button(b, wid_menu_button_joy_button_event);
 
         wid_set_client_context(b, ctx);
         wid_set_client_context2(b, (void*) (uintptr_t) i);
