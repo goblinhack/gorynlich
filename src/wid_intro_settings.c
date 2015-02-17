@@ -532,5 +532,5 @@ static void wid_intro_settings_destroy (void)
      */
     saved_focus = ctx->focus;
 
-    wid_destroy(&wid_intro_settings);
+    wid_destroy_nodelay(&wid_intro_settings);
 }

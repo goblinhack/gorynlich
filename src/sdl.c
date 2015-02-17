@@ -762,21 +762,24 @@ static void sdl_event (SDL_Event * event)
 
         sdl_joy_axes[axis] = value;
 
+        sdl_left_fire = false;
+        sdl_right_fire = false;
 
         if (sdl_joy_axes[2] > sdl_joy_deadzone) {
-            CON("left fire");
+            DBG("left fire");
             sdl_left_fire = true;
             sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE] = 1;
         }
 
         if (sdl_joy_axes[5] > sdl_joy_deadzone) {
-            CON("right fire");
+            DBG("right fire");
             sdl_right_fire = true;
             sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE] = 1;
         }
 
         if (sdl_right_fire || sdl_left_fire) {
-            wid_joy_button();
+            SDL_GetMouseState(&mouse_x, &mouse_y);
+            wid_joy_button(mouse_x, mouse_y);
         }
 
         break;
@@ -837,17 +840,19 @@ static void sdl_event (SDL_Event * event)
         break;
 
     case SDL_JOYBUTTONDOWN:
-        CON("Joystick %d: button %d pressed",
+        DBG("Joystick %d: button %d pressed",
             event->jbutton.which, event->jbutton.button);
         sdl_joy_button[event->jbutton.button] = 1;
-        wid_joy_button();
+        SDL_GetMouseState(&mouse_x, &mouse_y);
+        wid_joy_button(mouse_x, mouse_y);
         break;
 
     case SDL_JOYBUTTONUP:
-        CON("Joystick %d: button %d released",
+        DBG("Joystick %d: button %d released",
             event->jbutton.which, event->jbutton.button);
         sdl_joy_button[event->jbutton.button] = 0;
-        wid_joy_button();
+        SDL_GetMouseState(&mouse_x, &mouse_y);
+        wid_joy_button(mouse_x, mouse_y);
         break;
 
 #if (SDL_MAJOR_VERSION == 2) || \
@@ -907,24 +912,45 @@ static void sdl_tick (void)
         return;
     }
 
+    SDL_GetMouseState(&mouse_x, &mouse_y);
+
     /*
      * Right stick
      */
     if (sdl_joy_axes[3] > sdl_joy_deadzone) {
         DBG("right stick, right");
         sdl_joy1_right = true;
+
+        sdl_joy_button[SDL_JOY_BUTTON_RIGHT]++;
+        wid_joy_button(mouse_x, mouse_y);
+        sdl_joy_button[SDL_JOY_BUTTON_RIGHT]--;
     }
+
     if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
         DBG("right stick, left");
         sdl_joy1_left = true;
+
+        sdl_joy_button[SDL_JOY_BUTTON_LEFT]++;
+        wid_joy_button(mouse_x, mouse_y);
+        sdl_joy_button[SDL_JOY_BUTTON_LEFT]--;
     }
+
     if (sdl_joy_axes[4] > sdl_joy_deadzone) {
         DBG("right stick, down");
         sdl_joy1_down = true;
+
+        sdl_joy_button[SDL_JOY_BUTTON_DOWN]++;
+        wid_joy_button(mouse_x, mouse_y);
+        sdl_joy_button[SDL_JOY_BUTTON_DOWN]--;
     }
+
     if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
         DBG("right stick, up");
         sdl_joy1_up = true;
+
+        sdl_joy_button[SDL_JOY_BUTTON_UP]++;
+        wid_joy_button(mouse_x, mouse_y);
+        sdl_joy_button[SDL_JOY_BUTTON_UP]--;
     }
 
     /*
