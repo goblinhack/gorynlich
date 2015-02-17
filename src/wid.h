@@ -127,6 +127,7 @@ uint8_t wid_receive_input(widp, const SDL_KEYSYM *key);
 void wid_mouse_motion(int32_t x, int32_t y,
                       int32_t relx, int32_t rely,
                       int32_t wheelx, int32_t wheely);
+void wid_joy_button(void);
 void wid_mouse_down(uint32_t button, int32_t x, int32_t y);
 void wid_mouse_up(uint32_t button, int32_t x, int32_t y);
 void wid_key_down(const struct SDL_KEYSYM *, int32_t x, int32_t y);
