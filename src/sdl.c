@@ -73,18 +73,31 @@ int32_t sdl_init_video;
 uint32_t mouse_down;
 int32_t mouse_x;
 int32_t mouse_y;
-int32_t joy_left;
-int32_t joy_right;
-int32_t joy_up;
-int32_t joy_down;
+
+int32_t sdl_left_fire;
+int32_t sdl_right_fire;
+
+int32_t sdl_joy1_right;
+int32_t sdl_joy1_left;
+int32_t sdl_joy1_down;
+int32_t sdl_joy1_up;
+
+int32_t sdl_joy2_right;
+int32_t sdl_joy2_left;
+int32_t sdl_joy2_down;
+int32_t sdl_joy2_up;
+
+uint8_t sdl_joy_button[SDL_MAX_BUTTONS];
 
 static SDL_Joystick *joy;
 #if (SDL_MAJOR_VERSION == 2) /* { */
 static SDL_Haptic *haptic;
 #endif /* } */
 
+static int *sdl_joy_axes;
+static const int sdl_joy_deadzone = 8000;
 int joy_index;
-int joy_axes;
+int joy_naxes;
 int joy_buttons;
 int joy_balls;
 
@@ -302,7 +315,7 @@ static void sdl_init_joystick (void)
         LOG("Number of Buttons: %d", SDL_JoystickNumButtons(joy));
         LOG("Number of Balls: %d", SDL_JoystickNumBalls(joy));
 
-        joy_axes = SDL_JoystickNumAxes(joy);
+        joy_naxes = SDL_JoystickNumAxes(joy);
         joy_buttons = SDL_JoystickNumButtons(joy);
         joy_balls = SDL_JoystickNumBalls(joy);
     } else {
@@ -721,7 +734,6 @@ static void sdl_event (SDL_Event * event)
         mouse_y *= global_config.yscale;
 
         wid_mouse_down(event->button.button, mouse_x, mouse_y);
-
         break;
 
     case SDL_MOUSEBUTTONUP:
@@ -744,106 +756,27 @@ static void sdl_event (SDL_Event * event)
         int axis = event->jaxis.axis;
         int value = event->jaxis.value;
 
-        static int *axes;
-        if (!axes) {
-            axes = myzalloc(sizeof(int) * joy_axes, "joy axes");
+        if (!sdl_joy_axes) {
+            sdl_joy_axes = myzalloc(sizeof(int) * joy_naxes, "joy axes");
         }
 
-        axes[axis] = value;
+        sdl_joy_axes[axis] = value;
 
-        if (debug_enable) {
-            char tmp[MAXSTR];
-            *tmp = 0;
 
-            int i;
-            for (i = 0; i < joy_axes; ++i) {
-                int len = 80 - 20;
-
-                *tmp = 0;
-                snprintf(tmp + strlen(tmp),
-                         sizeof(tmp) - strlen(tmp),
-                         "  %2d: %6d  ", i, axes[i]);
-
-                print_bar(tmp, (axes[i] + 32767) * (len-1) / 65534, len);
-                DBG("%s", tmp);
-            }
+        if (sdl_joy_axes[2] > sdl_joy_deadzone) {
+            CON("left fire");
+            sdl_left_fire = true;
+            sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE] = 1;
         }
 
-        /*
-         * Right stick
-         */
-        int deadzone = 8000;
-
-        if (axes[3] > deadzone) {
-            DBG("right stick, right");
-            joy_right = true;
-        }
-        if (axes[3] < -deadzone) {
-            DBG("right stick, left");
-            joy_left = true;
-        }
-        if (axes[4] > deadzone) {
-            DBG("right stick, down");
-            joy_down = true;
-        }
-        if (axes[4] < -deadzone) {
-            DBG("right stick, up");
-            joy_up = true;
+        if (sdl_joy_axes[5] > sdl_joy_deadzone) {
+            CON("right fire");
+            sdl_right_fire = true;
+            sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE] = 1;
         }
 
-        /*
-         * Left stick
-         */
-        int mx = 0;
-        int my = 0;
-
-        if (axes[0] > deadzone) {
-            DBG("left stick, right");
-            mx = 1;
-        }
-
-        if (axes[0] < -deadzone) {
-            DBG("left stick, left");
-            mx = -1;
-        }
-
-        if (axes[1] > deadzone) {
-            DBG("left stick, down");
-            my = 1;
-        }
-
-        if (axes[1] < -deadzone) {
-            DBG("left stick, up");
-            my = -1;
-        }
-
-        if ((mx != 0) || (my != 0)) {
-
-            static double accel = 1.0;
-            static uint32_t ts;
-
-            if (time_have_x_tenths_passed_since(5, ts)) {
-                accel = 1.0;
-            } else {
-                accel *= ENABLE_WHEEL_SCROLL_SPEED_SCALE;
-
-                if (accel > ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE) {
-                    accel = ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE;
-                }
-            }
-
-            ts = time_get_time_ms();
-
-            double x = (double)mx * accel;
-            double y = (double)my * accel;
-
-            SDL_GetMouseState(&mouse_x, &mouse_y);
-
-            mouse_x *= global_config.xscale;
-            mouse_y *= global_config.yscale;
-
-CON("%f %f",x,y);
-            wid_mouse_motion(mouse_x, mouse_y, x, y, x, y);
+        if (sdl_right_fire || sdl_left_fire) {
+            wid_joy_button();
         }
 
         break;
@@ -860,30 +793,41 @@ CON("%f %f",x,y);
 
         switch (event->jhat.value) {
         case SDL_HAT_CENTERED:
-            DBG("CENTER");
             break;
         case SDL_HAT_UP:
             DBG("UP");
+            sdl_joy2_up = true;
             break;
         case SDL_HAT_RIGHTUP:
             DBG("RIGHTUP");
+            sdl_joy2_right = true;
+            sdl_joy2_up = true;
             break;
         case SDL_HAT_RIGHT:
             DBG("RIGHT");
+            sdl_joy2_right = true;
             break;
         case SDL_HAT_RIGHTDOWN:
             DBG("RIGHTDOWN");
+            sdl_joy2_right = true;
+            sdl_joy2_down = true;
             break;
         case SDL_HAT_DOWN:
             DBG("DOWN");
+            sdl_joy2_down = true;
             break;
         case SDL_HAT_LEFTDOWN:
             DBG("LEFTDOWN");
+            sdl_joy2_left = true;
+            sdl_joy2_down = true;
             break;
         case SDL_HAT_LEFT:
             DBG("LEFT");
+            sdl_joy2_left = true;
             break;
         case SDL_HAT_LEFTUP:
+            sdl_joy2_left = true;
+            sdl_joy2_up = true;
             DBG("LEFTUP");
             break;
         default:
@@ -893,13 +837,17 @@ CON("%f %f",x,y);
         break;
 
     case SDL_JOYBUTTONDOWN:
-        DBG("Joystick %d: button %d pressed",
+        CON("Joystick %d: button %d pressed",
             event->jbutton.which, event->jbutton.button);
+        sdl_joy_button[event->jbutton.button] = 1;
+        wid_joy_button();
         break;
 
     case SDL_JOYBUTTONUP:
-        DBG("Joystick %d: button %d released",
+        CON("Joystick %d: button %d released",
             event->jbutton.which, event->jbutton.button);
+        sdl_joy_button[event->jbutton.button] = 0;
+        wid_joy_button();
         break;
 
 #if (SDL_MAJOR_VERSION == 2) || \
@@ -920,6 +868,153 @@ CON("%f %f",x,y);
     default:
         DBG("Unknown event %d", event->type);
         break;
+    }
+}
+
+static void sdl_mouse_center (void)
+{
+    int x, y;
+
+    x = global_config.video_pix_width / 2;
+    y = global_config.video_pix_height / 2;
+    
+#if (SDL_MAJOR_VERSION == 2)
+    SDL_WarpMouseInWindow(window, x, y);
+#else
+    SDL_WarpMouse(x, y);
+#endif
+}
+
+static void sdl_tick (void)
+{
+    sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE] = 0;
+    sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE] = 0;
+
+    sdl_left_fire = false;
+    sdl_left_fire = true;
+
+    sdl_joy1_right = false;
+    sdl_joy1_left = false;
+    sdl_joy1_down = false;
+    sdl_joy1_up = false;
+
+    sdl_joy2_right = false;
+    sdl_joy2_left = false;
+    sdl_joy2_down = false;
+    sdl_joy2_up = false;
+
+    if (!sdl_joy_axes) {
+        return;
+    }
+
+    /*
+     * Right stick
+     */
+    if (sdl_joy_axes[3] > sdl_joy_deadzone) {
+        DBG("right stick, right");
+        sdl_joy1_right = true;
+    }
+    if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
+        DBG("right stick, left");
+        sdl_joy1_left = true;
+    }
+    if (sdl_joy_axes[4] > sdl_joy_deadzone) {
+        DBG("right stick, down");
+        sdl_joy1_down = true;
+    }
+    if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
+        DBG("right stick, up");
+        sdl_joy1_up = true;
+    }
+
+    /*
+     * Left stick
+     */
+    int mx = 0;
+    int my = 0;
+
+    if (sdl_joy_axes[0] > sdl_joy_deadzone) {
+        DBG("left stick, right");
+        sdl_joy2_right = true;
+        mx = 1;
+    }
+
+    if (sdl_joy_axes[0] < -sdl_joy_deadzone) {
+        DBG("left stick, left");
+        sdl_joy2_left = true;
+        mx = -1;
+    }
+
+    if (sdl_joy_axes[1] > sdl_joy_deadzone) {
+        DBG("left stick, down");
+        sdl_joy2_down = true;
+        my = 1;
+    }
+
+    if (sdl_joy_axes[1] < -sdl_joy_deadzone) {
+        DBG("left stick, up");
+        sdl_joy2_up = true;
+        my = -1;
+    }
+
+    static double accel = 1.0;
+    static uint32_t ts;
+
+    if (time_have_x_tenths_passed_since(5, ts)) {
+        accel = 1.0;
+    }
+
+    if ((mx != 0) || (my != 0)) {
+        ts = time_get_time_ms();
+
+        accel *= ENABLE_WHEEL_SCROLL_SPEED_SCALE;
+
+        if (accel > ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE) {
+            accel = ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE;
+        }
+
+        double x = mouse_x + ((double)mx * accel);
+        double y = mouse_y + ((double)my * accel);
+
+        if (x < 0) {
+            x = 0;
+        }
+
+        if (y < 0) {
+            y = 0;
+        }
+
+        if (x > global_config.video_pix_width - 1) {
+            x = global_config.video_pix_width - 1;
+        }
+
+        if (y > global_config.video_pix_height - 1) {
+            y = global_config.video_pix_height - 1;
+        }
+        
+#if (SDL_MAJOR_VERSION == 2)
+        SDL_WarpMouseInWindow(window, x, y);
+#else
+        SDL_WarpMouse(x, y);
+#endif
+    }
+
+    if (debug_enable) {
+        char tmp[MAXSTR];
+        *tmp = 0;
+
+        int i;
+        for (i = 0; i < joy_naxes; ++i) {
+            int len = 80 - 20;
+
+            *tmp = 0;
+            snprintf(tmp + strlen(tmp),
+                        sizeof(tmp) - strlen(tmp),
+                        "  %2d: %6d  ", i, sdl_joy_axes[i]);
+
+            print_bar(tmp, (sdl_joy_axes[i] + 32767) * (len-1) / 65534, len);
+            DBG("%s", tmp);
+        }
     }
 }
 
@@ -1015,6 +1110,8 @@ void sdl_loop (void)
 #endif /* } */
 
     }
+
+    sdl_mouse_center();
 
     while (!init_done) {
         /*
@@ -1146,6 +1243,11 @@ void sdl_loop (void)
         }
 
         frames++;
+
+        /*
+         * Reset joystick handling before we poll and update.
+         */
+        sdl_tick();
 
         /*
          * Do processing of some things, like reading the keyboard or doing
