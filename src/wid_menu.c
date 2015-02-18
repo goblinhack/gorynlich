@@ -1002,8 +1002,13 @@ widp wid_menu (widp parent,
     wid_move_to_pct_centered(wrapper, 0.5, 0.5);
     wid_move_to_pct_centered(w, x, y);
 
+    wid_update(wrapper);
     wid_menu_update(wrapper);
     wid_set_do_not_lower(wrapper, 1);
+    wid_raise(wrapper);
+
+    wid_menu_update(wrapper);
+    wid_update(wrapper);
     wid_raise(wrapper);
 
     return (wrapper);
