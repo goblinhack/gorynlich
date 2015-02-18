@@ -1,10 +1,20 @@
 --------------------------------------- plan for feb --------------------------------------
-- add xbox 360 controller support
+- move wid editor help tooltip down a bit
+- revamp set wid editor title
+- add xbox 360 controller support for editor buttons
+- add xbox 360 controller support for game player movement
+- add choose name screen
+- add choose player screen
+- add level map chooser screen
+- add ability to save level topology
+- add ability to connect levels together
+- remove file load/save widgets, no longer needed
 - revamp join window
 - revamp server window
 - revamp stats window? move all done into spending menu
 - multiplayer, join game does not show stats window
 - remove gothic and window textures - no longer needed
+--------------------------------------- plan for mar --------------------------------------
 - stats need to do something
 - magic attack - green fireball?
 - sound effects for weapons and hits http://www.bfxr.net/
@@ -15,19 +25,17 @@
 * minor bug: apple and water icons look a bit crap
 * minor bug: center textures in the action bar
 * minor bug: cannot select 'S' for settings menu, goes to 's' quick start
---------------------------------------- plan for mar --------------------------------------
 - need single player global flag
 - single player mode direct socket
+--------------------------------------- plan for apr --------------------------------------
 - xp level and hp increase per level
 - press m for magic to build up magic attack
 - press m for magic to give life to other players
 - pop bouncing m and arrow over player to give them a clue what to do
 - first to exit level gets 2 spending points, else get 1
---------------------------------------- plan for apr --------------------------------------
-- choose player intro window - 5 panels screen width
-- char mapping file and char levels to read in level ed
 - pause character on spending point window - on single player?
 - fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
+- char mapping file and char levels to read in level ed
 --------------------------------------- plan for may --------------------------------------
 more monsters, ideas:
     * screaming skulls that fire fireballs
@@ -63,6 +71,14 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Wed Feb 18 08:00:26 EST 2015
+- make the editor map larger
+- make the editor tile palette largeer
+- improved hiscore fonts
+- set max font size for scaling
+- editor map scrolling with xbox
+- more tiles onscreen in editor
 
 Tue Feb 17 08:07:09 EST 2015
 - wid keyboard and menu working with xbox controller

@@ -133,6 +133,10 @@
  */
 #define TILES_SCREEN_WIDTH          16
 #define TILES_SCREEN_HEIGHT         12
+#define TILES_SCREEN_EDITOR_WIDTH   32
+#define TILES_SCREEN_EDITOR_HEIGHT  24
+#define WID_EDITOR_MENU_TILES_ACROSS 14
+#define WID_EDITOR_MENU_TILES_DOWN  10
 
 /*
  * Padding for tiles on the edge of the smooth scroll. Has to be quite wide so 
@@ -170,13 +174,13 @@
 #define VLARGE_FONT                 "data/ttf/emulogic.ttf"
 #define VVLARGE_FONT                "data/ttf/emulogic.ttf"
 
-#define FIXED_FONT_SIZE             8
-#define VSMALL_FONT_SIZE            8
-#define SMALL_FONT_SIZE             10
-#define MED_FONT_SIZE               12
-#define LARGE_FONT_SIZE             22
-#define VLARGE_FONT_SIZE            26
-#define VVLARGE_FONT_SIZE           50
+#define VSMALL_FONT_SIZE            6
+#define SMALL_FONT_SIZE             8
+#define FIXED_FONT_SIZE             10
+#define MED_FONT_SIZE               14
+#define LARGE_FONT_SIZE             18
+#define VLARGE_FONT_SIZE            24
+#define VVLARGE_FONT_SIZE           30
 #define MAX_FONT_SIZE               60
 
 /*
