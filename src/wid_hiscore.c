@@ -259,10 +259,13 @@ static void wid_hiscore_create (void)
             float height = 0.08;
 
             if (i < 1) {
+                wid_set_font(w, vlarge_font);
                 wid_set_color(w, WID_COLOR_TEXT, YELLOW);
             } else if (i < 4) {
+                wid_set_font(w, large_font);
                 wid_set_color(w, WID_COLOR_TEXT, GREEN);
             } else {
+                wid_set_font(w, med_font);
                 wid_set_color(w, WID_COLOR_TEXT, SKYBLUE);
             }
 
@@ -287,7 +290,6 @@ static void wid_hiscore_create (void)
             wid_set_bevel(w,0);
             wid_set_no_shape(w);
             wid_set_text_outline(w, true);
-            wid_set_font(w, med_font);
             wid_set_text_lhs(w, true);
             wid_set_text_outline(w, true);
 

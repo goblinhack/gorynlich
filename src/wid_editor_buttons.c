@@ -31,9 +31,7 @@ static float wid_tile_height = 0.07;
 static float wid_button_width = 1.0f / 4.0f;
 static float wid_button_height = 1.0f / 3.0f;
 
-static const int32_t ICONS_ACROSS = 4;
-static const int32_t TILES_ACROSS = 6;
-static const int32_t TILES_DOWN = 10;
+static const int32_t WID_EDITOR_ICONS_ACROSS = 4;
 
 /*
  * Mouse up etc...
@@ -261,8 +259,8 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
         first_thing_template = tp;
     }
 
-    float w = 1.0 / TILES_ACROSS;
-    float h = 1.0 / TILES_DOWN;
+    float w = 1.0 / WID_EDITOR_MENU_TILES_ACROSS;
+    float h = 1.0 / WID_EDITOR_MENU_TILES_DOWN;
 
     fpoint tl = {
         (w * (float)(x)),
@@ -294,7 +292,7 @@ static uint8_t wid_editor_buttons_add_tiles (const tree_node *node, void *arg)
 
     x++;
 
-    if (x >= TILES_ACROSS) {
+    if (x >= WID_EDITOR_MENU_TILES_ACROSS) {
         x = 0;
         y++;
     }
@@ -313,7 +311,7 @@ void wid_editor_buttons_wid_create (void)
 
     {
         fpoint tl = {0.0f, 0.0f};
-        fpoint br = {0.32f, 1.0f};
+        fpoint br = {0.7f, 1.0f};
 
         wid_editor_buttons_window =
                         wid_new_square_window("wid_editor_buttons");
@@ -336,12 +334,6 @@ void wid_editor_buttons_wid_create (void)
         wid_set_text_bot(wid_editor_buttons_window, true);
         wid_set_text_lhs(wid_editor_buttons_window, true);
         wid_set_tl_br_pct(wid_editor_buttons_window, tl, br);
-
-        fsize sz = {0.0f, 0.0f};
-        wid_set_tex_tl(wid_editor_buttons_window, sz);
-
-        fsize sz2 = {1.32f, 1.0f};
-        wid_set_tex_br(wid_editor_buttons_window, sz2);
     }
 
     /*
@@ -349,7 +341,7 @@ void wid_editor_buttons_wid_create (void)
      */
     {
         fpoint tl = {0.02f, 0.00f};
-        fpoint br = {0.99f, wid_tile_height * TILES_DOWN};
+        fpoint br = {0.99f, wid_tile_height * WID_EDITOR_MENU_TILES_DOWN};
 
         wid_editor_buttons_container1 =
                         wid_new_container(wid_editor_buttons_window,
@@ -361,8 +353,8 @@ void wid_editor_buttons_wid_create (void)
      * Recently used tiles.
      */
     {
-        fpoint tl = {0.02f, wid_tile_height * TILES_DOWN};
-        fpoint br = {0.99f, wid_tile_height * (TILES_DOWN + 1)};
+        fpoint tl = {0.02f, wid_tile_height * WID_EDITOR_MENU_TILES_DOWN};
+        fpoint br = {0.99f, wid_tile_height * (WID_EDITOR_MENU_TILES_DOWN + 1)};
 
         wid_editor_buttons_container2 =
                         wid_new_container(wid_editor_buttons_window,
@@ -374,7 +366,7 @@ void wid_editor_buttons_wid_create (void)
      * Icons.
      */
     {
-        fpoint tl = {0.02f, wid_tile_height * (TILES_DOWN + 1)};
+        fpoint tl = {0.02f, wid_tile_height * (WID_EDITOR_MENU_TILES_DOWN + 1)};
         fpoint br = {0.99f, 0.99f};
 
         wid_editor_buttons_container3 =
@@ -395,12 +387,12 @@ void wid_editor_buttons_wid_create (void)
         x = 0;
         y = 0;
 
-        float w = 1.0 / TILES_ACROSS;
+        float w = 1.0 / WID_EDITOR_MENU_TILES_ACROSS;
         float h = 1.0;
 
         int32_t i;
 
-        for (i=0;i<TILES_ACROSS;i++) {
+        for (i=0;i<WID_EDITOR_MENU_TILES_ACROSS;i++) {
             fpoint tl = {
                 (w * (float)(x)),
                 (h * (float)(y))
@@ -599,6 +591,7 @@ void wid_editor_buttons_wid_create (void)
             wid_set_mode(child, WID_MODE_NORMAL);
             wid_set_color(child, WID_COLOR_BG, BLACK);
 
+            c = RED;
             c.a = 250;
             wid_set_mode(child, WID_MODE_OVER);
             wid_set_color(child, WID_COLOR_BG, c);
@@ -616,7 +609,7 @@ void wid_editor_buttons_wid_create (void)
 
             x++;
 
-            if (x >= ICONS_ACROSS) {
+            if (x >= WID_EDITOR_ICONS_ACROSS) {
                 x = 0;
                 y++;
             }
