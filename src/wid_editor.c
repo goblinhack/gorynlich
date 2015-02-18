@@ -89,7 +89,7 @@ void wid_editor_visible (void)
     wid_move_end(wid_editor_buttons_window);
     wid_move_end(wid_editor_map_window);
 
-    wid_move_to_pct_in(wid_editor_buttons_window, 0.67, 0.0, 0);
+    wid_move_to_pct_in(wid_editor_buttons_window, 0.15, 0.0, 0);
 
     wid_visible(wid_editor_map_window, wid_fade_delay);
     wid_visible(wid_editor_buttons_window, wid_fade_delay);

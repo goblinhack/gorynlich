@@ -85,6 +85,28 @@ uint8_t font_init (void)
     vlarge_font_size = ((double)vlarge_font_size ) * scale;
     vvlarge_font_size = ((double)vvlarge_font_size ) * scale;
 
+    if (fixed_font_size > MAX_FONT_SIZE - 1) {
+        fixed_font_size = MAX_FONT_SIZE - 1;
+    }
+    if (vsmall_font_size > MAX_FONT_SIZE - 1) {
+        vsmall_font_size = MAX_FONT_SIZE - 1;
+    }
+    if (small_font_size > MAX_FONT_SIZE - 1) {
+        small_font_size = MAX_FONT_SIZE - 1;
+    }
+    if (med_font_size > MAX_FONT_SIZE - 1) {
+        med_font_size = MAX_FONT_SIZE - 1;
+    }
+    if (large_font_size > MAX_FONT_SIZE - 1) {
+        large_font_size = MAX_FONT_SIZE - 1;
+    }
+    if (vlarge_font_size > MAX_FONT_SIZE - 1) {
+        vlarge_font_size = MAX_FONT_SIZE - 1;
+    }
+    if (vvlarge_font_size > MAX_FONT_SIZE - 1) {
+        vvlarge_font_size = MAX_FONT_SIZE - 1;
+    }
+
 #ifdef ENABLE_GENERATE_TTF
     /*
      * Generate bitmaps from TTF.
