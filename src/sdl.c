@@ -769,12 +769,17 @@ static void sdl_event (SDL_Event * event)
             DBG("left fire");
             sdl_left_fire = true;
             sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE] = 1;
+        } else {
+            sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE] = 0;
         }
+
 
         if (sdl_joy_axes[5] > sdl_joy_deadzone) {
             DBG("right fire");
             sdl_right_fire = true;
             sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE] = 1;
+        } else {
+            sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE] = 0;
         }
 
         if (sdl_right_fire || sdl_left_fire) {
@@ -851,8 +856,6 @@ static void sdl_event (SDL_Event * event)
         DBG("Joystick %d: button %d released",
             event->jbutton.which, event->jbutton.button);
         sdl_joy_button[event->jbutton.button] = 0;
-        SDL_GetMouseState(&mouse_x, &mouse_y);
-        wid_joy_button(mouse_x, mouse_y);
         break;
 
 #if (SDL_MAJOR_VERSION == 2) || \
@@ -893,13 +896,12 @@ void sdl_mouse_warp (int32_t x, int32_t y)
 #else
     SDL_WarpMouse(x, y);
 #endif
+
+    SDL_GetMouseState(&mouse_x, &mouse_y);
 }
 
 static void sdl_tick (void)
 {
-    sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE] = 0;
-    sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE] = 0;
-
     sdl_left_fire = false;
     sdl_left_fire = true;
 
