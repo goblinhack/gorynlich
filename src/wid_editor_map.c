@@ -110,11 +110,11 @@ widp wid_editor_map_thing_replace_template (widp w,
     fpoint br = { x, y };
 
     double base_tile_width =
-            ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
+            ((1.0f / ((double)TILES_SCREEN_EDITOR_WIDTH)) *
                 (double)global_config.video_gl_width);
 
     double base_tile_height =
-            ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
+            ((1.0f / ((double)TILES_SCREEN_EDITOR_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
     double tw = tile_get_width(tile);
@@ -710,14 +710,37 @@ static uint8_t wid_editor_map_receive_joy_down (widp w,
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
     }
+
+    static double scroll_x = 0;
+    static double scroll_y = 0;
+
     if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+        scroll_y -= 0.1;
+        if (scroll_y < 0.0) {
+            scroll_y = 0.0;
+        }
+        wid_move_to_vert_pct(wid_editor_map_vert_scroll, scroll_y);
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
-wid_move_to_vert_pct(wid_editor_map_vert_scroll, 0.5);
+        scroll_y += 0.1;
+        if (scroll_y > 1.0) {
+            scroll_y = 1.0;
+        }
+        wid_move_to_vert_pct(wid_editor_map_vert_scroll, scroll_y);
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+        scroll_x -= 0.1;
+        if (scroll_x < 0.0) {
+            scroll_x = 0.0;
+        }
+        wid_move_to_horiz_pct(wid_editor_map_horiz_scroll, scroll_x);
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+        scroll_x += 0.1;
+        if (scroll_x > 1.0) {
+            scroll_x = 1.0;
+        }
+        wid_move_to_horiz_pct(wid_editor_map_horiz_scroll, scroll_x);
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
     }
@@ -961,11 +984,11 @@ void wid_editor_add_grid (void)
                 fpoint br = { x, y };
 
                 double base_tile_width =
-                        ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
+                        ((1.0f / ((double)TILES_SCREEN_EDITOR_WIDTH)) *
                             (double)global_config.video_gl_width);
 
                 double base_tile_height =
-                        ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
+                        ((1.0f / ((double)TILES_SCREEN_EDITOR_HEIGHT)) *
                             (double)global_config.video_gl_height);
 
                 br.x += base_tile_width / 2.0;
@@ -982,14 +1005,6 @@ void wid_editor_add_grid (void)
 
                 wid_set_color(child, WID_COLOR_TEXT, c);
                 wid_set_font(child, vsmall_font);
-
-                if ((!(ix % 8)) || 
-                    (!(iy % 8)) || 
-                    (ix == MAP_WIDTH - 1) || (iy == MAP_HEIGHT - 1)) {
-                    char tmp[20];
-                    sprintf(tmp, "%u,%u",ix,iy);
-                    wid_set_text(child, tmp);
-                }
 
                 if ((ix < MAP_WIDTH) &&
                     (iy < MAP_HEIGHT)) {
@@ -1021,10 +1036,22 @@ void wid_editor_add_grid (void)
                 c.a = 0;
                 wid_set_color(child, WID_COLOR_BG, c);
 
-                c = WHITE;
-                c.a = 100;
-                wid_set_color(child, WID_COLOR_TL, c);
-                wid_set_color(child, WID_COLOR_BR, c);
+                if ((!(ix % TILES_SCREEN_WIDTH)) || 
+                    (!(iy % TILES_SCREEN_HEIGHT)) || 
+                    (ix == MAP_WIDTH - 1) || (iy == MAP_HEIGHT - 1)) {
+                    char tmp[20];
+                    sprintf(tmp, "%u,%u",ix,iy);
+                    wid_set_text(child, tmp);
+                    c = GREEN;
+                    c.a = 100;
+                    wid_set_color(child, WID_COLOR_TL, c);
+                    wid_set_color(child, WID_COLOR_BR, c);
+                } else {
+                    c = WHITE;
+                    c.a = 100;
+                    wid_set_color(child, WID_COLOR_TL, c);
+                    wid_set_color(child, WID_COLOR_BR, c);
+                }
 
                 wid_set_mode(child, WID_MODE_OVER);
                 c = RED;
@@ -1151,11 +1178,11 @@ void wid_editor_map_wid_create (void)
     }
 
     double base_tile_width =
-            ((1.0f / ((double)TILES_SCREEN_WIDTH)) *
+            ((1.0f / ((double)TILES_SCREEN_EDITOR_WIDTH)) *
                 (double)global_config.video_gl_width);
 
     double base_tile_height =
-            ((1.0f / ((double)TILES_SCREEN_HEIGHT)) *
+            ((1.0f / ((double)TILES_SCREEN_EDITOR_HEIGHT)) *
                 (double)global_config.video_gl_height);
 
     fpoint tl = { 0, 0 };
