@@ -953,7 +953,8 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         }
 
         wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, 
-                                        w->tooltip_font ? w->tooltip_font : small_font);
+                                        w->tooltip_font ? 
+                                        w->tooltip_font : small_font);
 
         wid_popup_tooltip_mouse_x = mouse_x;
         wid_popup_tooltip_mouse_y = mouse_y;
