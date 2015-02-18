@@ -18,6 +18,11 @@ typedef struct {
     widp w;
 
     /*
+     * Current button
+     */
+    widp b;
+
+    /*
      * Text input widget
      */
     widp input;

@@ -6939,7 +6939,7 @@ void wid_joy_button (int32_t x, int32_t y)
 
     for (b = 0; b < SDL_MAX_BUTTONS; b++) {
         if (sdl_joy_button[b]) {
-            if (time_have_x_tenths_passed_since(1, ts[b])) {
+            if (time_have_x_tenths_passed_since(2, ts[b])) {
                 changed = true;
                 ts[b] = time_get_time_ms();
             }

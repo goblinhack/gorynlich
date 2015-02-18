@@ -56,6 +56,8 @@ static void wid_keyboard_update_buttons (widp w)
 
     int x, y;
 
+    ctx->b = 0;
+
     for (x = 0; x < WID_KEYBOARD_ACROSS; x++) {
     for (y = 0; y < WID_KEYBOARD_DOWN; y++) {
 
@@ -92,9 +94,10 @@ static void wid_keyboard_update_buttons (widp w)
             } else {
                 font = vvlarge_font;
             }
-            wid_raise(b);
 
-            wid_mouse_warp(b);
+            ctx->b = b;
+
+            wid_raise(b);
         } else {
             if (strlen(t) > 1) {
                 font = med_font;
@@ -347,52 +350,70 @@ static uint8_t wid_keyboard_parent_joy_button (widp w,
 {
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
+    int ret = false;
 
     if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
-            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
-            (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+        (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
-            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
-            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
-            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
-            (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+        (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
-            wid_keyboard_focus_up(ctx);
+        wid_keyboard_focus_up(ctx);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
-            wid_keyboard_focus_down(ctx);
+        wid_keyboard_focus_down(ctx);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
-            wid_keyboard_focus_left(ctx);
+        wid_keyboard_focus_left(ctx);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
-            wid_keyboard_focus_right(ctx);
+        wid_keyboard_focus_right(ctx);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
-            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
-            (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
+    }
+
+    wid_keyboard_update_buttons(ctx->w);
+    if (ctx->b) {
+        wid_mouse_warp(ctx->b);
     }
 
     return (true);
@@ -435,44 +456,45 @@ static uint8_t wid_keyboard_button_joy_button_event (widp w,
 {
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
+    int ret = false;
 
     if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
-        return (wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy));
+        ret = wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
     }
 
     if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
         (ctx->selected)(ctx->w, wid_get_text(ctx->input));
-        return (true);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
-        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
-        return (true);
-    }
-    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
         SDL_KEYSYM key = {0};
         key.sym = SDLK_BACKSPACE;
         wid_keyboard_text_input_key_event(ctx->input, &key);
-        return (true);
+        ret = true;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+        (ctx->selected)(ctx->w, wid_get_text(ctx->input));
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
         SDL_KEYSYM key = {0};
         key.sym = SDLK_LEFT;
         wid_keyboard_text_input_key_event(ctx->input, &key);
-        return (true);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
         SDL_KEYSYM key = {0};
         key.sym = SDLK_RIGHT;
         wid_keyboard_text_input_key_event(ctx->input, &key);
-        return (true);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
         wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
-        return (true);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
         wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
-        return (true);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
     }
@@ -492,14 +514,19 @@ static uint8_t wid_keyboard_button_joy_button_event (widp w,
         SDL_KEYSYM key = {0};
         key.sym = SDLK_BACKSPACE;
         wid_receive_input(ctx->input, &key);
-        return (true);
+        ret = true;
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
         wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
-        return (true);
+        ret = true;
     }
 
-    return (false);
+    wid_keyboard_update_buttons(ctx->w);
+    if (ctx->b) {
+        wid_mouse_warp(ctx->b);
+    }
+
+    return (ret);
 }
 
 static uint8_t wid_keyboard_text_input_key_event (widp w, const SDL_KEYSYM *key)
