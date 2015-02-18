@@ -51,7 +51,7 @@ static void wid_intro_menu_destroy(void);
 static int intro_effect_delay = 500;
 static int intro_effect_delay_zoom = 1000;
 
-static int saved_focus;
+static int saved_focus = 4;
 
 uint8_t wid_intro_init (void)
 {
@@ -563,7 +563,6 @@ static void wid_intro_menu_create (void)
         return;
     }
 
-if (1)
     wid_intro_menu = 
         wid_menu(0,
                  vvlarge_font,

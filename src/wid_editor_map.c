@@ -675,6 +675,58 @@ static uint8_t wid_editor_map_receive_mouse_down (widp w,
     return (false);
 }
 
+static uint8_t wid_editor_map_receive_joy_down (widp w,
+                                                int32_t x,
+                                                int32_t y)
+{
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+        return (wid_editor_map_thing_replace_wrap(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+        if (!wid_editor_mode_draw) {
+            wid_editor_draw();
+            return (true);
+        }
+
+        wid_editor_hide();
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+        return (wid_editor_map_thing_remove(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+wid_move_to_vert_pct(wid_editor_map_vert_scroll, 0.5);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
+
+    return (true);
+}
+
 static uint8_t wid_editor_map_receive_mouse_motion (
                     widp w,
                     int32_t x, int32_t y,
@@ -1055,6 +1107,8 @@ void wid_editor_map_wid_create (void)
 
         wid_set_on_mouse_down(wid_editor_map_window,
                               wid_editor_map_receive_mouse_down);
+        wid_set_on_joy_button(wid_editor_map_window,
+                              wid_editor_map_receive_joy_down);
         wid_set_on_mouse_motion(wid_editor_map_window,
                                 wid_editor_map_receive_mouse_motion);
         wid_set_on_mouse_up(wid_editor_map_window,
