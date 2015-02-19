@@ -41,6 +41,20 @@ static uint8_t wid_editor_buttons_receive_mouse_down (widp w,
                                                     int32_t y,
                                                     uint32_t button)
 {
+CON("fake wid_editor_buttons_receive_mouse_down");
+    if (button == 2) {
+            wid_toggle_hidden(wid_editor_buttons_window,
+                              false /* immediate */);
+
+            wid_raise(wid_editor_clear_popup);
+            wid_raise(wid_editor_help_popup);
+            wid_raise(wid_editor_save_popup);
+            wid_raise(wid_editor_title_popup);
+            wid_raise(wid_editor_load_popup);
+            wid_raise(wid_editor_filename_and_title);
+
+            return (true);
+    }
     return (false);
 }
 

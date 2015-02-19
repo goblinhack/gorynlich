@@ -1,4 +1,6 @@
 --------------------------------------- plan for feb --------------------------------------
+- xbox button held does not draw
+- xbox stuck at edges of screen
 - add xbox 360 controller support for editor buttons
 - add xbox 360 controller support for game player movement
 - revamp set wid editor title
