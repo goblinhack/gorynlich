@@ -451,7 +451,7 @@ static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static uint8_t wid_keyboard_button_joy_button_event (widp w, 
+static uint8_t wid_keyboard_button_joy_down_event (widp w, 
                                                      int32_t x, int32_t y)
 {
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
@@ -710,7 +710,7 @@ widp wid_keyboard (const char *text,
 
         wid_set_on_destroy_begin(window, wid_keyboard_destroy_begin);
         wid_set_on_key_down(window, wid_keyboard_parent_key_down);
-        wid_set_on_joy_button(window, wid_keyboard_parent_joy_button);
+        wid_set_on_joy_down(window, wid_keyboard_parent_joy_button);
         wid_set_on_destroy(window, wid_keyboard_destroy);
         wid_set_client_context(window, ctx);
     }
@@ -797,7 +797,7 @@ widp wid_keyboard (const char *text,
             wid_set_text_outline(b, true);
             wid_set_on_mouse_over_begin(b, wid_keyboard_mouse_over);
             wid_set_on_key_down(b, wid_keyboard_button_key_event);
-            wid_set_on_joy_button(b, wid_keyboard_button_joy_button_event);
+            wid_set_on_joy_down(b, wid_keyboard_button_joy_down_event);
             wid_set_on_mouse_down(b, wid_keyboard_button_mouse_event);
 
             wid_set_color(b, WID_COLOR_BG, GRAY20);

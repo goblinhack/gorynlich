@@ -115,7 +115,7 @@ static uint8_t wid_hiscore_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static uint8_t wid_hiscore_joy_button_event (widp w, int32_t x, int32_t y)
+static uint8_t wid_hiscore_joy_down_event (widp w, int32_t x, int32_t y)
 {
     wid_hiscore_hide();
 
@@ -215,7 +215,7 @@ static void wid_hiscore_create (void)
     wid_set_color(w, WID_COLOR_BR, c);
     wid_set_on_mouse_down(w, wid_hiscore_mouse_event);
     wid_set_on_key_down(w, wid_hiscore_key_event);
-    wid_set_on_joy_button(w, wid_hiscore_joy_button_event);
+    wid_set_on_joy_down(w, wid_hiscore_joy_down_event);
 
     wid_set_on_mouse_motion(w, wid_hiscore_receive_mouse_motion);
 
