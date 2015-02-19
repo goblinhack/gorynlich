@@ -28,14 +28,11 @@ static void wid_intro_settings_save(void);
 static uint8_t wid_intro_restart_selected(void);
 static void wid_intro_settings_read(void);
 static uint8_t wid_intro_settings_increment_mouse_event(widp w,
-                                                   int32_t x, int32_t y,
-                                                   uint32_t button);
+                                                   int32_t x, int32_t y);
 static uint8_t wid_intro_settings_decrement_mouse_event(widp w,
-                                                   int32_t x, int32_t y,
-                                                   uint32_t button);
+                                                   int32_t x, int32_t y);
 static uint8_t wid_intro_settings_toggle_mouse_event(widp w,
-                                                   int32_t x, int32_t y,
-                                                   uint32_t button);
+                                                   int32_t x, int32_t y);
 static int saved_focus;
 
 #define WID_INTRO_MAX_SETTINGS  6
@@ -145,20 +142,19 @@ static uint8_t wid_intro_settings_mouse_event (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-    if (button == SDLK_LEFT) {
-        wid_intro_settings_decrement_mouse_event(w, x, y, SDL_BUTTON_LEFT);
-    } else if (button == SDLK_RIGHT) {
-        wid_intro_settings_increment_mouse_event(w, x, y, SDL_BUTTON_RIGHT);
+    if (button == SDL_BUTTON_LEFT) {
+        wid_intro_settings_decrement_mouse_event(w, x, y);
+    } else if (button == SDL_BUTTON_RIGHT) {
+        wid_intro_settings_increment_mouse_event(w, x, y);
     } else {
-        wid_intro_settings_toggle_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+        wid_intro_settings_toggle_mouse_event(w, x, y);
     }
 
     return (true);
 }
 
 static uint8_t wid_intro_settings_increment_mouse_event (widp w,
-                                                         int32_t x, int32_t y,
-                                                         uint32_t button)
+                                                         int32_t x, int32_t y)
 {
     /*
      * Increment.
@@ -183,8 +179,7 @@ static uint8_t wid_intro_settings_increment_mouse_event (widp w,
 }
 
 static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
-                                                         int32_t x, int32_t y,
-                                                         uint32_t button)
+                                                         int32_t x, int32_t y)
 {
     /*
      * Decrement.
@@ -209,8 +204,7 @@ static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
 }
 
 static uint8_t wid_intro_settings_toggle_mouse_event (widp w,
-                                                    int32_t x, int32_t y,
-                                                    uint32_t button)
+                                                    int32_t x, int32_t y)
 {
     /*
      * Invert.
@@ -224,7 +218,7 @@ static uint8_t wid_intro_settings_toggle_mouse_event (widp w,
      * If this is not the kind of value you toggle, then just increment.
      */
     if (!wid_intro_button_value_toggle[row]) {
-        return (wid_intro_settings_increment_mouse_event(w, x, y, button));
+        return (wid_intro_settings_increment_mouse_event(w, x, y));
     }
 
     wid_intro_button_val[row] = !wid_intro_button_val[row];
