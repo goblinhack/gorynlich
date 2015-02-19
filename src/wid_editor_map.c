@@ -675,7 +675,7 @@ static uint8_t wid_editor_map_receive_mouse_down (widp w,
     return (false);
 }
 
-static uint8_t wid_editor_map_receive_joy_down (widp w,
+static uint8_t wid_editor_map_receive_joy_button (widp w,
                                                 int32_t x,
                                                 int32_t y)
 {
@@ -955,6 +955,59 @@ static uint8_t wid_editor_map_tile_key_up_event (widp w,
     return (false);
 }
 
+static uint8_t wid_editor_map_tile_joy_down_event (widp w, int x, int y)
+{
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+        return (wid_editor_map_thing_replace_wrap(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+        return (wid_editor_map_thing_remove(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_TAB;
+        return (wid_editor_map_tile_key_up_event(w, &key));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+        return (wid_editor_map_thing_replace_wrap(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+        return (wid_editor_map_thing_remove(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+        return (wid_editor_map_thing_replace_wrap(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+        return (wid_editor_map_thing_remove(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+        return (wid_editor_map_thing_replace_wrap(w, x, y));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+        return (wid_editor_map_thing_remove(w, x, y));
+    }
+
+    wid_fake_joy_button(x, y);
+
+    return (true);
+}
+
 /*
  * Create the wid_editor_map
  */
@@ -1012,6 +1065,8 @@ void wid_editor_add_grid (void)
                                         wid_editor_map_tile_key_down_event);
                     wid_set_on_key_up(child,
                                       wid_editor_map_tile_key_up_event);
+                    wid_set_on_joy_down(child,
+                                      wid_editor_map_tile_joy_down_event);
                     wid_set_on_mouse_motion(child,
                                             wid_editor_map_tile_mouse_motion);
                 } else {
@@ -1134,8 +1189,8 @@ void wid_editor_map_wid_create (void)
 
         wid_set_on_mouse_down(wid_editor_map_window,
                               wid_editor_map_receive_mouse_down);
-        wid_set_on_joy_button(wid_editor_map_window,
-                              wid_editor_map_receive_joy_down);
+        wid_set_on_joy_down(wid_editor_map_window,
+                              wid_editor_map_receive_joy_button);
         wid_set_on_mouse_motion(wid_editor_map_window,
                                 wid_editor_map_receive_mouse_motion);
         wid_set_on_mouse_up(wid_editor_map_window,
@@ -1144,6 +1199,8 @@ void wid_editor_map_wid_create (void)
                             wid_editor_map_tile_key_down_event);
         wid_set_on_key_up(wid_editor_map_window,
                           wid_editor_map_tile_key_up_event);
+        wid_set_on_joy_down(wid_editor_map_window,
+                              wid_editor_map_tile_joy_down_event);
 
         wid_set_text_bot(wid_editor_map_window, true);
         wid_set_text_lhs(wid_editor_map_window, true);
