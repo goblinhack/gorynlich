@@ -129,6 +129,7 @@ void wid_mouse_motion(int32_t x, int32_t y,
                       int32_t relx, int32_t rely,
                       int32_t wheelx, int32_t wheely);
 void wid_joy_button(int32_t x, int32_t y);
+void wid_fake_joy_button(int32_t x, int32_t y);
 void wid_mouse_down(uint32_t button, int32_t x, int32_t y);
 void wid_mouse_up(uint32_t button, int32_t x, int32_t y);
 void wid_key_down(const struct SDL_KEYSYM *, int32_t x, int32_t y);
@@ -323,7 +324,7 @@ void wid_set_name(widp, const char *string);
 void wid_set_offset(widp, fpoint offset);
 void wid_set_on_key_down(widp, on_key_down_t fn);
 void wid_set_on_key_up(widp, on_key_up_t fn);
-void wid_set_on_joy_button(widp, on_joy_button_t fn);
+void wid_set_on_joy_down(widp, on_joy_button_t fn);
 void wid_set_on_mouse_down(widp, on_mouse_down_t fn);
 void wid_set_on_mouse_motion(widp, on_mouse_motion_t fn);
 void wid_set_on_mouse_focus_begin(widp, on_mouse_focus_begin_t fn);
