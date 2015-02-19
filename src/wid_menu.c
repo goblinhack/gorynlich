@@ -422,7 +422,7 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
                     widp b = ctx->buttons[i];
                     verify(b);
 
-                    wid_menu_callback(b, i, event_handler, (int)SDLK_LEFT);
+                    wid_menu_callback(b, i, event_handler, (int)SDLK_RIGHT);
 
                     return (true);
                 }
