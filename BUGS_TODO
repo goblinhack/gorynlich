@@ -1,8 +1,7 @@
 --------------------------------------- plan for feb --------------------------------------
-- move wid editor help tooltip down a bit
-- revamp set wid editor title
 - add xbox 360 controller support for editor buttons
 - add xbox 360 controller support for game player movement
+- revamp set wid editor title
 - add choose name screen
 - add choose player screen
 - add level map chooser screen
@@ -71,6 +70,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Wed Feb 18 21:43:48 EST 2015
+- screen resoloution setting l/r does not work
+- move wid editor help tooltip down a bit
 
 Wed Feb 18 08:00:26 EST 2015
 - make the editor map larger

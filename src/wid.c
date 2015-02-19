@@ -981,7 +981,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
          */
         int32_t mx = global_config.video_gl_width / 2;
         int32_t wx = wid_get_width(wid_popup_tooltip) / 2;
-        int32_t maxy = (global_config.video_gl_height * 0.2) +
+        int32_t maxy = (global_config.video_gl_height * 0.3) +
                         wid_get_height(wid_popup_tooltip);
 
         double minx = mx - wx;

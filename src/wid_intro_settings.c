@@ -67,12 +67,9 @@ static const char *wid_intro_button_value_string
         "1008x672",
         "1024x768",
         "1152x864",
-        "1512x1008",
         "1280x960",
         "1280x1024",
-        "1370x856",
-        "1400x1050",
-        "1600x800",
+        "1512x1008",
         "2880x1800",
         0 
     },
@@ -151,7 +148,7 @@ static uint8_t wid_intro_settings_mouse_event (widp w,
     if (button == SDLK_LEFT) {
         wid_intro_settings_decrement_mouse_event(w, x, y, SDL_BUTTON_LEFT);
     } else if (button == SDLK_RIGHT) {
-        wid_intro_settings_increment_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+        wid_intro_settings_increment_mouse_event(w, x, y, SDL_BUTTON_RIGHT);
     } else {
         wid_intro_settings_toggle_mouse_event(w, x, y, SDL_BUTTON_LEFT);
     }
