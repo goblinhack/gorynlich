@@ -981,7 +981,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
          */
         int32_t mx = global_config.video_gl_width / 2;
         int32_t wx = wid_get_width(wid_popup_tooltip) / 2;
-        int32_t maxy = (global_config.video_gl_height * 0.3) +
+        int32_t maxy = (global_config.video_gl_height * 0.2) +
                         wid_get_height(wid_popup_tooltip);
 
         double minx = mx - wx;
@@ -998,7 +998,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
         }
 
         wid_move_to_pct_centered(wid_popup_tooltip, atx, -0.5);
-        wid_move_to_pct_centered_in(wid_popup_tooltip, atx, 0.1, 200);
+        wid_move_to_pct_centered_in(wid_popup_tooltip, atx, 0.2, 200);
 
         wid_destroy_ptr_in(&wid_popup_tooltip, 5000);
 #endif
@@ -2507,7 +2507,7 @@ void wid_set_on_key_up (widp w, on_key_up_t fn)
     w->on_key_up = fn;
 }
 
-void wid_set_on_joy_button (widp w, on_joy_button_t fn)
+void wid_set_on_joy_down (widp w, on_joy_button_t fn)
 {
     fast_verify(w);
 
@@ -5926,7 +5926,7 @@ static widp wid_key_up_handler_at (widp w, int32_t x, int32_t y,
     return (0);
 }
 
-static widp wid_joy_button_handler_at (widp w, int32_t x, int32_t y,
+static widp wid_joy_down_handler_at (widp w, int32_t x, int32_t y,
                                         uint8_t strict)
 {
     widp child;
@@ -5956,7 +5956,7 @@ static widp wid_joy_button_handler_at (widp w, int32_t x, int32_t y,
             continue;
         }
 
-        widp closer_match = wid_joy_button_handler_at(child, x, y,
+        widp closer_match = wid_joy_down_handler_at(child, x, y,
                                                       true /* strict */);
         if (closer_match) {
             return (closer_match);
@@ -6490,16 +6490,16 @@ void wid_move_to_top (widp w)
     wid_move_delta(w, 0, wid_get_tl_y(w->parent) - wid_get_tl_y(w));
 }
 
-static widp wid_joy_button_handler (int32_t x, int32_t y)
+static widp wid_joy_down_handler (int32_t x, int32_t y)
 {
     widp w;
 
-    w = wid_joy_button_handler_at(wid_focus, x, y, true /* strict */);
+    w = wid_joy_down_handler_at(wid_focus, x, y, true /* strict */);
     if (w) {
         return (w);
     }
 
-    w = wid_joy_button_handler_at(wid_over, x, y, true /* strict */);
+    w = wid_joy_down_handler_at(wid_over, x, y, true /* strict */);
     if (w) {
         return (w);
     }
@@ -6512,7 +6512,7 @@ static widp wid_joy_button_handler (int32_t x, int32_t y)
             continue;
         }
 
-        w = wid_joy_button_handler_at(w, x, y, true /* strict */);
+        w = wid_joy_down_handler_at(w, x, y, true /* strict */);
         if (!w) {
             continue;
         }
@@ -6528,7 +6528,7 @@ static widp wid_joy_button_handler (int32_t x, int32_t y)
             continue;
         }
 
-        w = wid_joy_button_handler_at(w, x, y, false /* strict */);
+        w = wid_joy_down_handler_at(w, x, y, false /* strict */);
         if (!w) {
             continue;
         }
@@ -6929,6 +6929,73 @@ void wid_mouse_motion (int32_t x, int32_t y,
     wid_mouse_motion_recursion = 0;
 }
 
+/*
+ * If no handler for this button, fake a mouse event.
+ */
+void wid_fake_joy_button (int32_t x, int32_t y)
+{
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+        wid_mouse_down(SDL_BUTTON_LEFT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+        wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+        wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+        wid_mouse_down(2, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+        wid_mouse_down(SDL_BUTTON_LEFT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+        wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+        wid_mouse_down(SDL_BUTTON_LEFT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+        wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+        wid_mouse_down(SDL_BUTTON_LEFT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+        wid_mouse_down(SDL_BUTTON_LEFT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+        wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+        wid_mouse_down(SDL_BUTTON_LEFT, x, y);
+        return;
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+        wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
+        return;
+    }
+}
+
 void wid_joy_button (int32_t x, int32_t y)
 {
     /*
@@ -6955,8 +7022,9 @@ void wid_joy_button (int32_t x, int32_t y)
 
     sound_play_click();
 
-    w = wid_joy_button_handler(x, y);
+    w = wid_joy_down_handler(x, y);
     if (!w) {
+        wid_fake_joy_button(x, y);
         return;
     }
 
@@ -6976,6 +7044,7 @@ void wid_joy_button (int32_t x, int32_t y)
             }
 
             if (!w) {
+                wid_fake_joy_button(x, y);
                 return;
             }
         }
@@ -6995,6 +7064,8 @@ void wid_joy_button (int32_t x, int32_t y)
         }
 
         return;
+    } else {
+        wid_fake_joy_button(x, y);
     }
 
     if (wid_get_movable(w)) {
