@@ -121,7 +121,7 @@ uint8_t config_save (void)
     char *file = dynprintf("%s", config_dir_and_file);
     marshal_p ctx;
 
-    CON("Saving config to: %s", file);
+    LOG("Saving config to: %s", file);
 
     ctx = marshal(file);
     if (!ctx) {
