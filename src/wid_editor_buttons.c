@@ -41,21 +41,74 @@ static uint8_t wid_editor_buttons_receive_mouse_down (widp w,
                                                     int32_t y,
                                                     uint32_t button)
 {
-CON("fake wid_editor_buttons_receive_mouse_down");
+CON("wid_editor_buttons_receive_mouse_down button %d",button);
     if (button == 2) {
-            wid_toggle_hidden(wid_editor_buttons_window,
-                              false /* immediate */);
+        wid_toggle_hidden(wid_editor_buttons_window,
+                            false /* immediate */);
 
-            wid_raise(wid_editor_clear_popup);
-            wid_raise(wid_editor_help_popup);
-            wid_raise(wid_editor_save_popup);
-            wid_raise(wid_editor_title_popup);
-            wid_raise(wid_editor_load_popup);
-            wid_raise(wid_editor_filename_and_title);
+        wid_raise(wid_editor_clear_popup);
+        wid_raise(wid_editor_help_popup);
+        wid_raise(wid_editor_save_popup);
+        wid_raise(wid_editor_title_popup);
+        wid_raise(wid_editor_load_popup);
+        wid_raise(wid_editor_filename_and_title);
 
-            return (true);
+        return (true);
     }
     return (false);
+}
+
+static uint8_t wid_editor_buttons_receive_joy_down (widp w, int x, int y)
+{
+    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+CON("wid_editor_buttons_receive_joy_down JOY_A");
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+        wid_editor_hide();
+        return (true);
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+CON("wid_editor_buttons_receive_joy_down JOY_Y");
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 2));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+        return (wid_editor_buttons_receive_mouse_down(w, x, y, 1));
+    }
+
+    return (true);
 }
 
 /*
@@ -344,6 +397,8 @@ void wid_editor_buttons_wid_create (void)
 
         wid_set_on_mouse_down(wid_editor_buttons_window,
                             wid_editor_buttons_receive_mouse_down);
+        wid_set_on_joy_down(wid_editor_buttons_window,
+                            wid_editor_buttons_receive_joy_down);
 
         wid_set_text_bot(wid_editor_buttons_window, true);
         wid_set_text_lhs(wid_editor_buttons_window, true);
