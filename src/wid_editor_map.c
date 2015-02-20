@@ -25,6 +25,8 @@ widp wid_editor_map_grid_container;
 
 static widp wid_editor_map_horiz_scroll;
 static widp wid_editor_map_vert_scroll;
+static uint8_t wid_editor_map_tile_joy_down_event(widp w, int x, int y);
+static uint8_t wid_editor_map_tile_key_up_event(widp w, const SDL_KEYSYM *key);
 
 static uint32_t tile_width;
 static uint32_t tile_height;
@@ -680,6 +682,7 @@ static uint8_t wid_editor_map_receive_joy_button (widp w,
                                                 int32_t y)
 {
     if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+CON("wid_editor_map_receive_joy_button A");
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
@@ -695,6 +698,10 @@ static uint8_t wid_editor_map_receive_joy_button (widp w,
         return (wid_editor_map_thing_remove(w, x, y));
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+CON("wid_editor_map_receive_joy_button Y");
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_TAB;
+        return (wid_editor_map_tile_key_up_event(w, &key));
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
     }
@@ -782,6 +789,8 @@ static uint8_t wid_editor_map_receive_mouse_motion (
         return (wid_editor_map_thing_remove(w, x, y));
     }
 #endif
+CON("%s",__FUNCTION__);
+    wid_editor_map_tile_joy_down_event(w, x, y);
 
     /*
      * Block moving the window.
@@ -921,6 +930,9 @@ static uint8_t wid_editor_map_tile_mouse_motion (widp w,
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
+CON("%s",__FUNCTION__);
+    wid_editor_map_tile_joy_down_event(w, x, y);
+
     /*
      * Block moving the window.
      */
@@ -936,6 +948,7 @@ static uint8_t wid_editor_map_tile_key_up_event (widp w,
 
     switch (key->sym) {
         case SDLK_TAB:
+CON("tile map TAB");
             wid_toggle_hidden(wid_editor_buttons_window,
                               false /* immediate */);
 
@@ -958,6 +971,7 @@ static uint8_t wid_editor_map_tile_key_up_event (widp w,
 static uint8_t wid_editor_map_tile_joy_down_event (widp w, int x, int y)
 {
     if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+CON("wid_editor_map_tile_joy_down_event JOY_A");
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
@@ -966,6 +980,7 @@ static uint8_t wid_editor_map_tile_joy_down_event (widp w, int x, int y)
         return (wid_editor_map_thing_remove(w, x, y));
     }
     if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+CON("wid_editor_map_tile_joy_down_event JOY_Y");
         SDL_KEYSYM key = {0};
         key.sym = SDLK_TAB;
         return (wid_editor_map_tile_key_up_event(w, &key));
