@@ -67,6 +67,7 @@ extern DECLSPEC int32_t SDLCALL SDL_iPhoneKeyboardToggle(SDL_Window * window);
 #endif
 #endif /* } */
 
+static int sdl_get_mouse(void);
 uint8_t sdl_main_loop_running;
 uint8_t sdl_shift_held;
 int32_t sdl_init_video;
@@ -655,7 +656,7 @@ static void sdl_event (SDL_Event * event)
         DBG("Mouse: wheel scrolled %d in x and %d in y in window %d",
             event->wheel.x, event->wheel.y, event->wheel.windowID);
 
-        SDL_GetMouseState(&mouse_x, &mouse_y);
+        sdl_get_mouse();
 
         mouse_x *= global_config.xscale;
         mouse_y *= global_config.yscale;
@@ -689,7 +690,7 @@ static void sdl_event (SDL_Event * event)
 #endif /* } */
 
     case SDL_MOUSEMOTION:
-        mouse_down = SDL_GetMouseState(&mouse_x, &mouse_y);
+        mouse_down = sdl_get_mouse();
 
         DBG("Mouse: moved to %d,%d (%d,%d) state %d",
             event->motion.x, event->motion.y,
@@ -704,7 +705,7 @@ static void sdl_event (SDL_Event * event)
         break;
 
     case SDL_MOUSEBUTTONDOWN:
-        mouse_down = SDL_GetMouseState(&mouse_x, &mouse_y);
+        mouse_down = sdl_get_mouse();
 
         DBG("Mouse DOWN: button %d pressed at %d,%d state %x",
             event->button.button, event->button.x, event->button.y, 
@@ -737,7 +738,7 @@ static void sdl_event (SDL_Event * event)
         break;
 
     case SDL_MOUSEBUTTONUP:
-        mouse_down = SDL_GetMouseState(&mouse_x, &mouse_y);
+        mouse_down = sdl_get_mouse();
 
         DBG("Mouse UP: button %d released at %d,%d state %d",
             event->button.button, event->button.x, event->button.y, 
@@ -783,7 +784,7 @@ static void sdl_event (SDL_Event * event)
         }
 
         if (sdl_right_fire || sdl_left_fire) {
-            SDL_GetMouseState(&mouse_x, &mouse_y);
+            sdl_get_mouse();
             wid_joy_button(mouse_x, mouse_y);
         }
 
@@ -848,7 +849,7 @@ static void sdl_event (SDL_Event * event)
         DBG("Joystick %d: button %d pressed",
             event->jbutton.which, event->jbutton.button);
         sdl_joy_button[event->jbutton.button] = 1;
-        SDL_GetMouseState(&mouse_x, &mouse_y);
+        sdl_get_mouse();
         wid_joy_button(mouse_x, mouse_y);
         break;
 
@@ -879,6 +880,17 @@ static void sdl_event (SDL_Event * event)
     }
 }
 
+static int sdl_get_mouse (void)
+{
+    int button = SDL_GetMouseState(&mouse_x, &mouse_y);
+
+    if (!mouse_x && !mouse_y) {
+        sdl_mouse_center();
+    }
+
+    return (button);
+}
+
 void sdl_mouse_center (void)
 {
     int x, y;
@@ -894,8 +906,8 @@ void sdl_mouse_warp (int32_t x, int32_t y)
     if ((x <= 0) || (y <= 0) || 
         (x >= global_config.video_pix_width - 1) ||
         (y >= global_config.video_pix_height - 1)) {
-        sdl_mouse_center();
-        return;
+        x = global_config.video_pix_width / 2;
+        y = global_config.video_pix_height / 2;
     }
 
 #if (SDL_MAJOR_VERSION == 2)
@@ -906,8 +918,6 @@ void sdl_mouse_warp (int32_t x, int32_t y)
 
     mouse_x = x;
     mouse_y = y;
-
-    SDL_GetMouseState(&mouse_x, &mouse_y);
 }
 
 static void sdl_tick (void)
@@ -929,7 +939,7 @@ static void sdl_tick (void)
         return;
     }
 
-    SDL_GetMouseState(&mouse_x, &mouse_y);
+    sdl_get_mouse();
 
     /*
      * Right stick
@@ -1150,8 +1160,6 @@ void sdl_loop (void)
 
     }
 
-    sdl_mouse_center();
-
     while (!init_done) {
         /*
          * Clear the screen
@@ -1340,6 +1348,16 @@ void sdl_loop (void)
                 for (i = 0; i < found; ++i) {
                     sdl_event(&events[i]);
                 }
+            }
+
+            /*
+             * SDL doesn't seem to like an immediate center.
+             */
+            static int first = 1;
+            if (first) {
+                first = 0;
+                sdl_mouse_center();
+                wid_mouse_motion(mouse_x, mouse_y, 0, 0, 0, 0);
             }
 
             if (HEADLESS || enable_console) {
