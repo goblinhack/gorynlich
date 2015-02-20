@@ -891,11 +891,21 @@ void sdl_mouse_center (void)
 
 void sdl_mouse_warp (int32_t x, int32_t y)
 {
+    if ((x <= 0) || (y <= 0) || 
+        (x >= global_config.video_pix_width - 1) ||
+        (y >= global_config.video_pix_height - 1)) {
+        sdl_mouse_center();
+        return;
+    }
+
 #if (SDL_MAJOR_VERSION == 2)
     SDL_WarpMouseInWindow(window, x, y);
 #else
     SDL_WarpMouse(x, y);
 #endif
+
+    mouse_x = x;
+    mouse_y = y;
 
     SDL_GetMouseState(&mouse_x, &mouse_y);
 }
@@ -1025,11 +1035,7 @@ static void sdl_tick (void)
             y = global_config.video_pix_height - 1;
         }
         
-#if (SDL_MAJOR_VERSION == 2)
-        SDL_WarpMouseInWindow(window, x, y);
-#else
-        SDL_WarpMouse(x, y);
-#endif
+        sdl_mouse_warp(x, y);
     }
 
     if (debug_enable) {
