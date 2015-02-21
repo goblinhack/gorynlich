@@ -6864,6 +6864,16 @@ void wid_mouse_motion (int32_t x, int32_t y,
             if (w->on_mouse_motion) {
                 fast_verify(w);
 
+                /*
+                 * If this is a dummy mouse move just to update what widge
+                 * we are over then don't call the mouse motion function
+                 * else we end up drawing on the map when we hide the editor
+                 * tile window.
+                 */
+                if (!relx && !rely && !wheelx && !wheely) {
+                    break;
+                }
+
                 if ((*w->on_mouse_motion)(w, x, y,
                                           relx, rely, wheelx, wheely)) {
                     break;
@@ -6934,63 +6944,63 @@ void wid_mouse_motion (int32_t x, int32_t y,
  */
 void wid_fake_joy_button (int32_t x, int32_t y)
 {
-    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         wid_mouse_down(SDL_BUTTON_LEFT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
         wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
         wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
         wid_mouse_down(2, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
         wid_mouse_down(SDL_BUTTON_LEFT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
         wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
         wid_mouse_down(SDL_BUTTON_LEFT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
         wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
         wid_mouse_down(SDL_BUTTON_LEFT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
         wid_mouse_down(SDL_BUTTON_LEFT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
         wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
         wid_mouse_down(SDL_BUTTON_LEFT, x, y);
         return;
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
         wid_mouse_down(SDL_BUTTON_RIGHT, x, y);
         return;
     }
@@ -7006,7 +7016,7 @@ void wid_joy_button (int32_t x, int32_t y)
     int b;
 
     for (b = 0; b < SDL_MAX_BUTTONS; b++) {
-        if (sdl_joy_button[b]) {
+        if (sdl_joy_buttons[b]) {
             if (time_have_x_tenths_passed_since(2, ts[b])) {
                 changed = true;
                 ts[b] = time_get_time_ms();
@@ -7037,7 +7047,6 @@ void wid_joy_button (int32_t x, int32_t y)
          */
         while (!(w->on_joy_button)(w, x, y)) {
             w = w->parent;
-            fast_verify(w);
 
             while (w && !w->on_joy_button) {
                 w = w->parent;
