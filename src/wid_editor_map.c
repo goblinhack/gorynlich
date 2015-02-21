@@ -611,6 +611,15 @@ static uint8_t wid_editor_map_thing_replace_wrap (widp w,
         uint8_t lshift = state[SDL_SCANCODE_LSHIFT] ? 1 : 0;
         uint8_t rshift = state[SDL_SCANCODE_RSHIFT] ? 1 : 0;
 #endif /* } */
+
+        if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
+            lshift = true;
+        }
+
+        if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
+            rshift = true;
+        }
+
         uint8_t shift = lshift | rshift;
 
         if (shift) {
@@ -677,6 +686,29 @@ static uint8_t wid_editor_map_receive_mouse_down (widp w,
     return (false);
 }
 
+static void wid_editor_map_scroll (void)
+{
+    static double delta = 0.1;
+    static double speed = 50;
+
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
+        wid_move_delta_pct_in(wid_editor_map_vert_scroll,
+                              0.0, -delta, speed);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
+        wid_move_delta_pct_in(wid_editor_map_vert_scroll,
+                              0.0, delta, speed);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
+        wid_move_delta_pct_in(wid_editor_map_horiz_scroll,
+                              -delta, 0.0, speed);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
+        wid_move_delta_pct_in(wid_editor_map_horiz_scroll,
+                              delta, 0.0, speed);
+    }
+}
+
 static uint8_t wid_editor_map_receive_joy_button (widp w,
                                                 int32_t x,
                                                 int32_t y)
@@ -685,13 +717,9 @@ static uint8_t wid_editor_map_receive_joy_button (widp w,
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
-        if (!wid_editor_mode_draw) {
-            wid_editor_draw();
-            return (true);
-        }
-
-        wid_editor_hide();
-        return (true);
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_TAB;
+        return (wid_editor_map_tile_key_up_event(w, &key));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
         return (wid_editor_map_thing_remove(w, x, y));
@@ -716,41 +744,7 @@ static uint8_t wid_editor_map_receive_joy_button (widp w,
     if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
     }
 
-    static double scroll_x = 0;
-    static double scroll_y = 0;
-
-    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
-        scroll_y -= 0.1;
-        if (scroll_y < 0.0) {
-            scroll_y = 0.0;
-        }
-        wid_move_to_vert_pct(wid_editor_map_vert_scroll, scroll_y);
-    }
-    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
-        scroll_y += 0.1;
-        if (scroll_y > 1.0) {
-            scroll_y = 1.0;
-        }
-        wid_move_to_vert_pct(wid_editor_map_vert_scroll, scroll_y);
-    }
-    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
-        scroll_x -= 0.1;
-        if (scroll_x < 0.0) {
-            scroll_x = 0.0;
-        }
-        wid_move_to_horiz_pct(wid_editor_map_horiz_scroll, scroll_x);
-    }
-    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
-        scroll_x += 0.1;
-        if (scroll_x > 1.0) {
-            scroll_x = 1.0;
-        }
-        wid_move_to_horiz_pct(wid_editor_map_horiz_scroll, scroll_x);
-    }
-    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
-    }
-    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
-    }
+    wid_editor_map_scroll();
 
     return (true);
 }
@@ -766,6 +760,13 @@ static uint8_t wid_editor_map_receive_mouse_motion (
          * Allow scrolling.
          */
         return (false);
+    }
+
+    if (!relx && !rely && !wheelx && !wheely) {
+        /*
+         * Not really a movement, just a fake update as something has risen
+         */
+        return (true);
     }
 
 #if 0
@@ -919,6 +920,13 @@ static uint8_t wid_editor_map_tile_mouse_motion (widp w,
         return (false);
     }
 
+    if (!relx && !rely && !wheelx && !wheely) {
+        /*
+         * Not really a movement, just a fake update as something has risen
+         */
+        return (true);
+    }
+
     if (mouse_down & SDL_BUTTON_LEFT) {
         return (wid_editor_map_thing_replace(w, x, y, false /* scaled */));
     }
@@ -969,6 +977,9 @@ static uint8_t wid_editor_map_tile_joy_down_event (widp w, int x, int y)
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
+        SDL_KEYSYM key = {0};
+        key.sym = SDLK_TAB;
+        return (wid_editor_map_tile_key_up_event(w, &key));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
         return (wid_editor_map_thing_remove(w, x, y));
@@ -979,10 +990,8 @@ static uint8_t wid_editor_map_tile_joy_down_event (widp w, int x, int y)
         return (wid_editor_map_tile_key_up_event(w, &key));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
-        return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
-        return (wid_editor_map_thing_remove(w, x, y));
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
@@ -1012,6 +1021,8 @@ static uint8_t wid_editor_map_tile_joy_down_event (widp w, int x, int y)
     }
 
     wid_fake_joy_button(x, y);
+
+    wid_editor_map_scroll();
 
     return (true);
 }
@@ -1197,8 +1208,6 @@ void wid_editor_map_wid_create (void)
 
         wid_set_on_mouse_down(wid_editor_map_window,
                               wid_editor_map_receive_mouse_down);
-        wid_set_on_joy_down(wid_editor_map_window,
-                              wid_editor_map_receive_joy_button);
         wid_set_on_mouse_motion(wid_editor_map_window,
                                 wid_editor_map_receive_mouse_motion);
         wid_set_on_mouse_up(wid_editor_map_window,
@@ -1208,7 +1217,7 @@ void wid_editor_map_wid_create (void)
         wid_set_on_key_up(wid_editor_map_window,
                           wid_editor_map_tile_key_up_event);
         wid_set_on_joy_down(wid_editor_map_window,
-                              wid_editor_map_tile_joy_down_event);
+                              wid_editor_map_receive_joy_button);
 
         wid_set_text_bot(wid_editor_map_window, true);
         wid_set_text_lhs(wid_editor_map_window, true);
