@@ -1,4 +1,7 @@
 --------------------------------------- plan for feb --------------------------------------
+- add Y to pop up menu items
+- l/r for moving through action items
+- if menu not popped up, left trigger moves player ?
 - add xbox 360 controller support for game player movement
 - revamp set wid editor title
 - add choose name screen
@@ -71,6 +74,7 @@ different profiles for level generation
 mining?
 
 Sat Feb 21 08:11:46 EST 2015
+- player moving with xbox
 - right joy move not working
 - xbox button held does not draw
 - add xbox 360 controller support for editor buttons
