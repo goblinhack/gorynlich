@@ -6864,16 +6864,6 @@ void wid_mouse_motion (int32_t x, int32_t y,
             if (w->on_mouse_motion) {
                 fast_verify(w);
 
-                /*
-                 * If this is a dummy mouse move just to update what widge
-                 * we are over then don't call the mouse motion function
-                 * else we end up drawing on the map when we hide the editor
-                 * tile window.
-                 */
-                if (!relx && !rely && !wheelx && !wheely) {
-                    break;
-                }
-
                 if ((*w->on_mouse_motion)(w, x, y,
                                           relx, rely, wheelx, wheely)) {
                     break;
