@@ -237,6 +237,40 @@ uint8_t wid_game_map_client_player_move (void)
 #endif /* } */
     }
 
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
+        up = true;
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
+        down = true;
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
+        left = true;
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
+        right = true;
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
+        fire = true;
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+        fire = true;
+    }
+    if (sdl_joy_axes[3] > sdl_joy_deadzone) {
+        right = true;
+    }
+
+    if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
+        left = true;
+    }
+
+    if (sdl_joy_axes[4] > sdl_joy_deadzone) {
+        down = true;
+    }
+
+    if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
+        up = true;
+    }
+
     if (!player) {
         LOG("No player, cannot move");
         return (false);
