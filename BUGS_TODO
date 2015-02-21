@@ -1,7 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-- right joy move not working
-- xbox button held does not draw
-- add xbox 360 controller support for editor buttons
 - add xbox 360 controller support for game player movement
 - revamp set wid editor title
 - add choose name screen
@@ -72,6 +69,11 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sat Feb 21 08:11:46 EST 2015
+- right joy move not working
+- xbox button held does not draw
+- add xbox 360 controller support for editor buttons
 
 Fri Feb 20 20:41:37 EST 2015
 - hide cursor
