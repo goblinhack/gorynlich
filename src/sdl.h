@@ -81,4 +81,4 @@ extern int32_t sdl_joy2_left;
 extern int32_t sdl_joy2_down;
 extern int32_t sdl_joy2_up;
 
-extern uint8_t sdl_joy_button[SDL_MAX_BUTTONS];
+extern uint8_t sdl_joy_buttons[SDL_MAX_BUTTONS];

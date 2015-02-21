@@ -681,11 +681,10 @@ static uint8_t wid_editor_map_receive_joy_button (widp w,
                                                 int32_t x,
                                                 int32_t y)
 {
-    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
-CON("wid_editor_map_receive_joy_button A");
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
         if (!wid_editor_mode_draw) {
             wid_editor_draw();
             return (true);
@@ -694,64 +693,63 @@ CON("wid_editor_map_receive_joy_button A");
         wid_editor_hide();
         return (true);
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
-CON("wid_editor_map_receive_joy_button Y");
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
         SDL_KEYSYM key = {0};
         key.sym = SDLK_TAB;
         return (wid_editor_map_tile_key_up_event(w, &key));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
     }
 
     static double scroll_x = 0;
     static double scroll_y = 0;
 
-    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
         scroll_y -= 0.1;
         if (scroll_y < 0.0) {
             scroll_y = 0.0;
         }
         wid_move_to_vert_pct(wid_editor_map_vert_scroll, scroll_y);
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
         scroll_y += 0.1;
         if (scroll_y > 1.0) {
             scroll_y = 1.0;
         }
         wid_move_to_vert_pct(wid_editor_map_vert_scroll, scroll_y);
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
         scroll_x -= 0.1;
         if (scroll_x < 0.0) {
             scroll_x = 0.0;
         }
         wid_move_to_horiz_pct(wid_editor_map_horiz_scroll, scroll_x);
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
         scroll_x += 0.1;
         if (scroll_x > 1.0) {
             scroll_x = 1.0;
         }
         wid_move_to_horiz_pct(wid_editor_map_horiz_scroll, scroll_x);
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
     }
 
     return (true);
@@ -789,7 +787,6 @@ static uint8_t wid_editor_map_receive_mouse_motion (
         return (wid_editor_map_thing_remove(w, x, y));
     }
 #endif
-CON("%s",__FUNCTION__);
     wid_editor_map_tile_joy_down_event(w, x, y);
 
     /*
@@ -930,7 +927,6 @@ static uint8_t wid_editor_map_tile_mouse_motion (widp w,
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
-CON("%s",__FUNCTION__);
     wid_editor_map_tile_joy_down_event(w, x, y);
 
     /*
@@ -948,7 +944,6 @@ static uint8_t wid_editor_map_tile_key_up_event (widp w,
 
     switch (key->sym) {
         case SDLK_TAB:
-CON("tile map TAB");
             wid_toggle_hidden(wid_editor_buttons_window,
                               false /* immediate */);
 
@@ -970,51 +965,49 @@ CON("tile map TAB");
 
 static uint8_t wid_editor_map_tile_joy_down_event (widp w, int x, int y)
 {
-    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
-CON("wid_editor_map_tile_joy_down_event JOY_A");
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
-CON("wid_editor_map_tile_joy_down_event JOY_Y");
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
         SDL_KEYSYM key = {0};
         key.sym = SDLK_TAB;
         return (wid_editor_map_tile_key_up_event(w, &key));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
         return (wid_editor_map_thing_replace_wrap(w, x, y));
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
