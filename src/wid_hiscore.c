@@ -119,39 +119,39 @@ static uint8_t wid_hiscore_joy_down_event (widp w, int32_t x, int32_t y)
 {
     wid_hiscore_hide();
 
-    if (sdl_joy_button[SDL_JOY_BUTTON_A]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_B]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_X]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_Y]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_START]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_XBOX]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_BACK]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_UP]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_DOWN]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
     }
-    if (sdl_joy_button[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
     }
 
     return (true);
