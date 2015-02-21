@@ -95,8 +95,8 @@ static SDL_Joystick *joy;
 static SDL_Haptic *haptic;
 #endif /* } */
 
-static int *sdl_joy_axes;
-static const int sdl_joy_deadzone = 8000;
+int *sdl_joy_axes;
+int sdl_joy_deadzone = 8000;
 int joy_index;
 int joy_naxes;
 int joy_buttons;
