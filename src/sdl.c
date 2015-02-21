@@ -906,7 +906,6 @@ void sdl_mouse_center (void)
 
 void sdl_mouse_warp (int32_t x, int32_t y)
 {
-
     mouse_x = x;
     mouse_y = y;
 
@@ -1027,7 +1026,7 @@ static void sdl_tick (void)
     if ((mx != 0) || (my != 0)) {
         ts = time_get_time_ms();
 
-        accel *= ENABLE_JOY_MAX_SCROLL_SPEED_SCALE;
+        accel *= ENABLE_JOY_SCROLL_SPEED_SCALE;
 
         if (accel > ENABLE_JOY_MAX_SCROLL_SPEED_SCALE) {
             accel = ENABLE_JOY_MAX_SCROLL_SPEED_SCALE;
