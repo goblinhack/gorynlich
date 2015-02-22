@@ -8,6 +8,7 @@
 #include "wid.h"
 #include "wid_choose_name.h"
 #include "wid_choose_player.h"
+#include "wid_choose_pclass.h"
 #include "wid_choose_game_type.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
@@ -127,7 +128,7 @@ static void wid_keyboard_event_selected (widp w, const char *text)
 static void wid_keyboard_event_cancelled (widp w, const char *text)
 {
     wid_choose_name_hide();
-    wid_intro_visible();
+    wid_choose_pclass_visible();
 }
 
 static uint8_t wid_choose_name_play_key_event (widp w, const SDL_KEYSYM *key)
@@ -135,7 +136,7 @@ static uint8_t wid_choose_name_play_key_event (widp w, const SDL_KEYSYM *key)
     switch (key->sym) {
         case SDLK_ESCAPE:
             wid_choose_name_hide();
-            wid_intro_visible();
+            wid_choose_pclass_visible();
             return (true);
 
         default:

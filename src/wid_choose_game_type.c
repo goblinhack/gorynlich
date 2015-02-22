@@ -8,6 +8,7 @@
 #include "wid.h"
 #include "wid_choose_game_type.h"
 #include "wid_choose_player.h"
+#include "wid_choose_name.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
@@ -257,7 +258,7 @@ wid_choose_game_type_go_back_mouse_event (widp w, int32_t x, int32_t y,
                                           uint32_t button)
 {
     wid_choose_game_type_hide();
-    wid_intro_visible();
+    wid_choose_name_visible();
 
     return (true);
 }

@@ -126,7 +126,26 @@ static void wid_choose_pclass_callback (widp w)
      * Retrieve the selected class.
      */
     thing_statsp s = &global_config.stats;
-    strncpy(s->pclass, pclass_nth(row), sizeof(s->pclass) - 1);
+    const char *new_pclass = pclass_nth(row);
+
+    if (strlen(s->pclass)) {
+        if (!strcasecmp(s->pclass, new_pclass)) {
+            /*
+             * No change.
+             */
+        } else {
+            /*
+             * Changed; start with a new random name.
+             */
+            s->pname[0] = '\0';
+        }
+    } else {
+        /*
+         * New class.
+         */
+    }
+
+    strncpy(s->pclass, new_pclass, sizeof(s->pclass) - 1);
 
     wid_choose_pclass_hide();
     wid_choose_name_visible();
