@@ -63,9 +63,13 @@ static int wid_popup_tooltip_mouse_y;
  * Good for popups.
  */
 static widp wid_focus_locked;
-
 static widp wid_focus;
 static widp wid_over;
+
+/*
+ * Mouse
+ */
+int wid_mouse_visible = 1;
 
 /*
  * Widget moving
@@ -5927,7 +5931,7 @@ static widp wid_key_up_handler_at (widp w, int32_t x, int32_t y,
 }
 
 static widp wid_joy_down_handler_at (widp w, int32_t x, int32_t y,
-                                        uint8_t strict)
+                                     uint8_t strict)
 {
     widp child;
 
@@ -5957,35 +5961,13 @@ static widp wid_joy_down_handler_at (widp w, int32_t x, int32_t y,
         }
 
         widp closer_match = wid_joy_down_handler_at(child, x, y,
-                                                      true /* strict */);
+                                                    true /* strict */);
         if (closer_match) {
             return (closer_match);
         }
     }
 
     if (w->on_joy_button) {
-        if (wid_focus_locked &&
-            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
-            return (0);
-        }
-
-        return (w);
-    }
-
-    if (wid_get_movable(w)) {
-        if (wid_focus_locked &&
-            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
-            return (0);
-        }
-
-        return (w);
-    }
-
-    /*
-     * Prevent mouse events that occur in the bounds of one window, leaking
-     * into lower levels.
-     */
-    if (!w->parent) {
         if (wid_focus_locked &&
             (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
             return (0);
@@ -6494,32 +6476,6 @@ static widp wid_joy_down_handler (int32_t x, int32_t y)
 {
     widp w;
 
-    w = wid_joy_down_handler_at(wid_focus, x, y, true /* strict */);
-    if (w) {
-        return (w);
-    }
-
-    w = wid_joy_down_handler_at(wid_over, x, y, true /* strict */);
-    if (w) {
-        return (w);
-    }
-
-    { TREE_WALK(wid_top_level, w) {
-        fast_verify(w);
-
-        if (wid_focus_locked &&
-            (wid_get_top_parent(w) != wid_get_top_parent(wid_focus_locked))) {
-            continue;
-        }
-
-        w = wid_joy_down_handler_at(w, x, y, true /* strict */);
-        if (!w) {
-            continue;
-        }
-
-        return (w);
-    } }
-
     { TREE_WALK(wid_top_level, w) {
         fast_verify(w);
 
@@ -6740,6 +6696,10 @@ void wid_mouse_motion (int32_t x, int32_t y,
                        int32_t relx, int32_t rely,
                        int32_t wheelx, int32_t wheely)
 {
+    if (!wid_mouse_visible) {
+        return;
+    }
+
     if (wid_mouse_motion_recursion) {
         return;
     }
@@ -7408,18 +7368,6 @@ try_parent:
 
         w = w->parent;
     }
-}
-
-void wid_mouse_warp (widp w)
-{
-    int32_t tlx, tly, brx, bry;
-
-    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
-
-    int32_t x = (tlx + brx) / 2.0;
-    int32_t y = (tly + bry) / 2.0;
-
-    sdl_mouse_warp(x, y);
 }
 
 /*
@@ -9301,9 +9249,41 @@ void wid_tick_all (void)
     action_timers_tick(&wid_timers);
 }
 
+void wid_mouse_hide (int visible)
+{
+    static int saved_mouse_x;
+    static int saved_mouse_y;
+
+    if (visible != wid_mouse_visible) {
+        wid_mouse_visible = visible;
+
+        if (visible) {
+            sdl_mouse_warp(saved_mouse_x, saved_mouse_y);
+        } else {
+            saved_mouse_x = mouse_x;
+            saved_mouse_y = mouse_y;
+        }
+    }
+}
+
+void wid_mouse_warp (widp w)
+{
+    int32_t tlx, tly, brx, bry;
+
+    wid_get_abs_coords(w, &tlx, &tly, &brx, &bry);
+
+    int32_t x = (tlx + brx) / 2.0;
+    int32_t y = (tly + bry) / 2.0;
+
+    sdl_mouse_warp(x, y);
+}
+
 static void wid_mouse_blit (void)
 {
+    static uint32_t ts;
     static tilep tile;
+    static double mx;
+    static double my;
 
     if (!tile) {
         tile = tile_find("gem7");
@@ -9312,12 +9292,25 @@ static void wid_mouse_blit (void)
         }
     }
 
-    point tl;
-    point br;
-
     double x = mouse_x;
     double y = mouse_y;
-    double size = ((double)global_config.video_gl_width) / 40.0;
+
+    if ((x != mx) || (y != my)) {
+        ts = wid_time;
+        mx = x;
+        my = y;
+    }
+
+    /*
+     * Hide the mouse after some inactivity.
+     */
+    if (wid_time - ts > 2000) {
+        return;
+    }
+
+    double size = ((double)global_config.video_gl_width) / 80.0;
+    point tl;
+    point br;
 
     tl.x = x - size;
     tl.y = y - size;
@@ -9352,7 +9345,9 @@ void wid_display_all (void)
 
     glDisable(GL_SCISSOR_TEST);
 
-    wid_mouse_blit();
+    if (wid_mouse_visible) {
+        wid_mouse_blit();
+    }
 }
 
 void wid_fade_in (widp w, uint32_t delay)

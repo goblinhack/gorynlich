@@ -307,7 +307,7 @@ static void wid_player_action_create (thing_statsp s, int fast)
 
     if (!wid_player_action) {
         widp w = wid_player_action = 
-                        wid_new_square_window("wid player_stats");
+                        wid_new_square_window("wid player action");
 
         fpoint tl = {0.0, 0.82};
         fpoint br = {1.0, 1.0};
