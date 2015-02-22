@@ -119,6 +119,7 @@ void sdl_fini (void)
 
     FINI_LOG("%s", __FUNCTION__);
 
+    SDL_ShowCursor(0);
     SDL_ShowCursor(1);
 
     if (sdl_init_video) {
@@ -1086,6 +1087,8 @@ void sdl_exit (void)
     }
 
     FINI_LOG("Main loop is exiting...");
+
+    SDL_ShowCursor(1);
 
     sdl_main_loop_running = false;
 }
