@@ -20,6 +20,7 @@
 #include "wid_hiscore.h"
 #include "wid_notify.h"
 #include "wid_server_join.h"
+#include "wid_choose_name.h"
 #include "wid_server_create.h"
 #include "thing_template.h"
 #include "music.h"
@@ -471,7 +472,7 @@ static uint8_t wid_menu_play_game_selected (widp w,
                                             uint32_t button)
 {
     wid_intro_hide();
-    wid_choose_game_type_visible();
+    wid_choose_pclass_type_visible();
 
     return (true);
 }
