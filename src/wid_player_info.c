@@ -295,7 +295,7 @@ static void wid_player_info_create (thing_statsp s, int fast)
 
     if (!wid_player_info) {
         widp w = wid_player_info = 
-                        wid_new_rounded_window("wid player_stats");
+                        wid_new_rounded_window("wid player info");
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {0.3, 0.9};

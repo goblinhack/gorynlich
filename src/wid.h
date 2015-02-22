@@ -103,9 +103,15 @@ void wid_toggle_hidden(widp, uint32_t delay);
 void wid_always_hidden(widp, uint8_t value);
 
 /*
- * Location
+ * Mousy
  */
 void wid_mouse_warp(widp w);
+void wid_mouse_hide(int);
+extern int wid_mouse_visible;
+
+/*
+ * Location
+ */
 void wid_get_abs_coords(widp w,
                         int32_t *tlx,
                         int32_t *tly,
