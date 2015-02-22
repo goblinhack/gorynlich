@@ -262,6 +262,49 @@ static uint8_t wid_choose_player_intro_all_done_mouse_event (widp w,
     return (true);
 }
 
+static uint8_t wid_choose_player_intro_all_done_joy_event (widp w, 
+                                                      int32_t x, int32_t y)
+{
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+        wid_choose_player_intro_all_done_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+        return (true);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
+
+    return (false);
+}
+
 static void wid_choose_player_create (void)
 {
     if (wid_choose_player) {
@@ -307,7 +350,11 @@ static void wid_choose_player_create (void)
         wid_set_color(child, WID_COLOR_TEXT, WHITE);
         wid_set_mode(child, WID_MODE_NORMAL);
 
-        wid_set_on_mouse_down(child, wid_choose_player_intro_all_done_mouse_event);
+        wid_set_on_mouse_down(child, 
+                              wid_choose_player_intro_all_done_mouse_event);
+        wid_set_on_joy_down(child, 
+                              wid_choose_player_intro_all_done_joy_event);
+
         wid_raise(child);
         wid_set_do_not_lower(child, true);
 

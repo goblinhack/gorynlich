@@ -10,17 +10,47 @@
 #include "main.h"
 #include "name.h"
 
+static const char *classes[] = {
+    "wizard",
+    "dwarf",
+    "warrior",
+    "valkyrie",
+    "elf",
+};
+
+int pclass_count (void)
+{
+    return (ARRAY_SIZE(classes));
+}
+
 const char *pclass_random (void)
 {
-    static const char *classes[] = {
-        "Wizard",
-        "Dwarf",
-        "Warrior",
-        "Valkyrie",
-        "Elf",
-    };
-
     return (classes[myrand() % ARRAY_SIZE(classes)]);
+}
+
+const char *pclass_nth (const int n)
+{
+    if (n >= ARRAY_SIZE(classes)) {
+        return (0);
+    }
+
+    return (classes[n]);
+}
+
+int pclass_find (const char *pclass)
+{
+    if (!pclass) {
+        return (-1);
+    }
+
+    int n;
+    for (n = 0; n < ARRAY_SIZE(classes); n++) {
+        if (!strcasecmp(pclass, classes[n])) {
+            return (n);
+        }
+    }
+
+    return (-1);
 }
 
 const char *name_random (const char *pclass)

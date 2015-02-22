@@ -1,4 +1,5 @@
 --------------------------------------- plan for feb --------------------------------------
+- choose inv screen A/B don't work
 - revamp set wid editor title
 - add choose name screen
 - add choose player screen
@@ -69,8 +70,12 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
+Sun Feb 22 15:30:39 EST 2015
+- added pclass choosing menu
+
 Sun Feb 22 07:54:27 EST 2015
 - click on action bar with A needs to work
+- make mouse visible on exit
 
 Sat Feb 21 19:44:08 EST 2015
 - add xbox 360 controller support for game player movement
