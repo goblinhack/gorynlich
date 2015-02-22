@@ -656,9 +656,6 @@ static void sdl_event (SDL_Event * event)
 
         sdl_get_mouse();
 
-        mouse_x *= global_config.xscale;
-        mouse_y *= global_config.yscale;
-
         static double accel = 1.0;
 
         {
@@ -694,9 +691,6 @@ static void sdl_event (SDL_Event * event)
             event->motion.x, event->motion.y,
             event->motion.xrel, event->motion.yrel, mouse_down);
 
-        mouse_x *= global_config.xscale;
-        mouse_y *= global_config.yscale;
-
         wid_mouse_motion(mouse_x, mouse_y,
                          event->motion.xrel, event->motion.yrel,
                          0, 0);
@@ -729,9 +723,6 @@ static void sdl_event (SDL_Event * event)
         }
 #endif /* } */
 
-        mouse_x *= global_config.xscale;
-        mouse_y *= global_config.yscale;
-
         wid_mouse_down(event->button.button, mouse_x, mouse_y);
         break;
 
@@ -741,9 +732,6 @@ static void sdl_event (SDL_Event * event)
         DBG("Mouse UP: button %d released at %d,%d state %d",
             event->button.button, event->button.x, event->button.y, 
             mouse_down);
-
-        mouse_x *= global_config.xscale;
-        mouse_y *= global_config.yscale;
 
         wid_mouse_up(event->button.button, mouse_x, mouse_y);
         break;
@@ -880,8 +868,11 @@ static void sdl_event (SDL_Event * event)
 
 static int sdl_get_mouse (void)
 {
-    int x, y;
+    if (!wid_mouse_visible) {
+        return (0);
+    }
 
+    int x, y;
     int button = SDL_GetMouseState(&x, &y);
 
     if (!x && !y) {
@@ -890,6 +881,9 @@ static int sdl_get_mouse (void)
 
     mouse_x = x;
     mouse_y = y;
+
+    mouse_x *= global_config.xscale;
+    mouse_y *= global_config.yscale;
 
     return (button);
 }
@@ -906,14 +900,17 @@ void sdl_mouse_center (void)
 
 void sdl_mouse_warp (int32_t x, int32_t y)
 {
-    mouse_x = x;
-    mouse_y = y;
+    int32_t border = 10;
 
-    if ((x <= 0) || (y <= 0) || 
-        (x >= global_config.video_pix_width - 1) ||
-        (y >= global_config.video_pix_height - 1)) {
-        x = global_config.video_pix_width / 2;
-        y = global_config.video_pix_height / 2;
+    if (x <= 0) {
+        x = border;
+    } else if (x >= global_config.video_pix_width - border) {
+        x = global_config.video_pix_width - border;
+    }
+    if (y <= 0) {
+        y = border;
+    } else if (y >= global_config.video_pix_height - border) {
+        y = global_config.video_pix_height - border;
     }
 
 #if (SDL_MAJOR_VERSION == 2)
