@@ -46,8 +46,8 @@
 #define ENABLE_WHEEL_SCROLL_SPEED_SCALE         1.2
 #define ENABLE_WHEEL_MAX_SCROLL_SPEED_SCALE     15
 
-#define ENABLE_JOY_SCROLL_SPEED_SCALE           1.1
-#define ENABLE_JOY_MAX_SCROLL_SPEED_SCALE       2
+#define ENABLE_JOY_SCROLL_SPEED_SCALE           1.0
+#define ENABLE_JOY_MAX_SCROLL_SPEED_SCALE       1.5
 
 /*
  * Tooltip appears above mouse. I prefer it to zoom into the top
