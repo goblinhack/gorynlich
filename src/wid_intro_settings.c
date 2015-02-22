@@ -142,6 +142,19 @@ static uint8_t wid_intro_settings_mouse_event (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
+
+    /*
+     * If this is not the kind of value you toggle, then just increment.
+     */
+    if (wid_intro_button_value_toggle[row]) {
+        wid_intro_settings_toggle_mouse_event(w, x, y);
+        return (true);
+    }
+
     if (button == SDL_BUTTON_LEFT) {
         wid_intro_settings_decrement_mouse_event(w, x, y);
     } else if (button == SDL_BUTTON_RIGHT) {

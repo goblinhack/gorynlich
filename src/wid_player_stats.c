@@ -266,7 +266,7 @@ static void wid_player_stats_create (thing_statsp s, int fast)
     }
 
     if (!wid_player_stats) {
-        widp w = wid_player_stats = wid_new_rounded_window("wid player_stats");
+        widp w = wid_player_stats = wid_new_rounded_window("wid player stats");
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {0.3, 0.9};

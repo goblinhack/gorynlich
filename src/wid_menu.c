@@ -177,10 +177,12 @@ static uint8_t wid_menu_joy_down_event (widp w,
         wid_menu_next_focus(ctx);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
-        wid_menu_prev_focus(ctx);
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
-        wid_menu_next_focus(ctx);
+        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_RIGHT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
         on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];

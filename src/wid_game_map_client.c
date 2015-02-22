@@ -240,35 +240,65 @@ uint8_t wid_game_map_client_player_move (void)
     if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
         up = true;
     }
+
     if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
         down = true;
     }
+
     if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
         left = true;
     }
+
     if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
         right = true;
     }
+
     if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
         fire = true;
-    }
-    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    } else if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+        fire = true;
+    } else if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         fire = true;
     }
-    if (sdl_joy_axes[3] > sdl_joy_deadzone) {
-        right = true;
-    }
 
-    if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
-        left = true;
-    }
+    if (sdl_joy_axes) {
+        if (sdl_joy_axes[3] > sdl_joy_deadzone) {
+            right = true;
+        }
 
-    if (sdl_joy_axes[4] > sdl_joy_deadzone) {
-        down = true;
-    }
+        if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
+            left = true;
+        }
 
-    if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
-        up = true;
+        if (sdl_joy_axes[4] > sdl_joy_deadzone) {
+            down = true;
+        }
+
+        if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
+            up = true;
+        }
+
+        if (wid_player_inventory_is_visible()) {
+            wid_mouse_hide(1);
+        } else {
+            wid_mouse_hide(0);
+
+            if (sdl_joy_axes[0] > sdl_joy_deadzone) {
+                right = true;
+            }
+
+            if (sdl_joy_axes[0] < -sdl_joy_deadzone) {
+                left = true;
+            }
+
+            if (sdl_joy_axes[1] > sdl_joy_deadzone) {
+                down = true;
+            }
+
+            if (sdl_joy_axes[1] < -sdl_joy_deadzone) {
+                up = true;
+            }
+        }
     }
 
     if (!player) {
@@ -545,6 +575,71 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     return (true);
 }
 
+static uint8_t wid_game_map_joy_event (widp w, int x, int y)
+{
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
+        SDL_KEYSYM key = {0};
+        key.sym = 'q';
+        wid_game_map_key_event(w, &key);
+        return (true);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
+        SDL_KEYSYM key = {0};
+        key.sym = '\t';
+        return (wid_game_map_key_event(w, &key));
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
+        SDL_KEYSYM key = {0};
+        key.mod = KMOD_SHIFT;
+        key.sym = SDLK_LEFT;
+        return (wid_game_map_key_event(w, &key));
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
+        SDL_KEYSYM key = {0};
+        key.mod = KMOD_SHIFT;
+        key.sym = SDLK_RIGHT;
+        return (wid_game_map_key_event(w, &key));
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+        SDL_KEYSYM key = {0};
+        key.mod = KMOD_SHIFT;
+        key.sym = SDLK_LEFT;
+        return (wid_game_map_key_event(w, &key));
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+        SDL_KEYSYM key = {0};
+        key.mod = KMOD_SHIFT;
+        key.sym = SDLK_RIGHT;
+        return (wid_game_map_key_event(w, &key));
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
+        SDL_KEYSYM key = {0};
+        key.sym = 'q';
+        wid_game_map_key_event(w, &key);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
+    return (true);
+}
+
 /*
  * Create the wid_game_map_client
  */
@@ -590,6 +685,8 @@ void wid_game_map_client_wid_create (void)
 
         wid_set_on_key_down(wid_game_map_client_window, 
                             wid_game_map_key_event);
+        wid_set_on_joy_down(wid_game_map_client_window, 
+                            wid_game_map_joy_event);
     }
 
     {
@@ -613,6 +710,9 @@ void wid_game_map_client_wid_create (void)
 
         wid_set_on_key_down(wid_game_map_client_grid_container, 
                             wid_game_map_key_event);
+
+        wid_set_on_joy_down(wid_game_map_client_grid_container, 
+                            wid_game_map_joy_event);
 
         LOG("Client: Created map container window");
     }
