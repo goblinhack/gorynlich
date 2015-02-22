@@ -183,6 +183,7 @@ static uint8_t wid_player_stats_reroll_joy_event (widp w, int32_t x, int32_t y)
 {
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         wid_player_stats_reroll_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+        return (true);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
     }
@@ -217,7 +218,7 @@ static uint8_t wid_player_stats_reroll_joy_event (widp w, int32_t x, int32_t y)
     if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
     }
 
-    return (true);
+    return (false);
 }
 
 static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
@@ -290,6 +291,7 @@ static uint8_t wid_player_stats_col1_name_joy_event (widp w,
 {
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         wid_player_stats_col1_name_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+        return (true);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
     }
@@ -324,7 +326,7 @@ static uint8_t wid_player_stats_col1_name_joy_event (widp w,
     if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
     }
 
-    return (true);
+    return (false);
 }
 
 static uint8_t wid_player_stats_col2_mouse_event (widp w,
@@ -341,6 +343,7 @@ static uint8_t wid_player_stats_col2_joy_event (widp w,
 {
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         wid_player_stats_col2_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+        return (true);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
     }
@@ -375,7 +378,7 @@ static uint8_t wid_player_stats_col2_joy_event (widp w,
     if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
     }
 
-    return (true);
+    return (false);
 }
 
 static void wid_player_stats_create (thing_statsp s, int fast)

@@ -119,6 +119,8 @@ void sdl_fini (void)
 
     FINI_LOG("%s", __FUNCTION__);
 
+    SDL_ShowCursor(1);
+
     if (sdl_init_video) {
         sdl_init_video = 0;
         SDL_VideoQuit();
@@ -853,6 +855,8 @@ static void sdl_event (SDL_Event * event)
 #endif /* } */
 
     case SDL_QUIT:
+        SDL_ShowCursor(1);
+
         DIE("Quit requested");
         break;
 
@@ -1480,6 +1484,8 @@ void sdl_loop (void)
             usleep(MAIN_LOOP_DELAY);
         }
     }
+
+    SDL_ShowCursor(1);
 }
 
 void sdl_show_keyboard (void)
