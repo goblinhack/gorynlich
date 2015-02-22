@@ -78,6 +78,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_button.o 		\
     $(OBJDIR)/wid_chat.o 		\
     $(OBJDIR)/wid_choose_game_type.o 	\
+    $(OBJDIR)/wid_choose_name.o 	\
     $(OBJDIR)/wid_choose_player.o 	\
     $(OBJDIR)/wid_console.o 		\
     $(OBJDIR)/wid_dead.o 		\

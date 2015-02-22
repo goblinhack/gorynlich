@@ -524,6 +524,7 @@ wid_player_inventory_button_style_joy_down (widp w, int32_t x, int32_t y)
 {
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         wid_player_inventory_button_style_mouse_down(w, x, y, SDL_BUTTON_LEFT);
+        return (true);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
     }
@@ -558,7 +559,7 @@ wid_player_inventory_button_style_joy_down (widp w, int32_t x, int32_t y)
     if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
     }
 
-    return (true);
+    return (false);
 }
 
 static void wid_player_inventory_create (thing_statsp s, int fast)

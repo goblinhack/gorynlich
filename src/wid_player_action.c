@@ -337,7 +337,7 @@ wid_player_action_button_joy_down (widp w,
     if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
     }
 
-    return (true);
+    return (false);
 }
 
 static void wid_player_action_create (thing_statsp s, int fast)
