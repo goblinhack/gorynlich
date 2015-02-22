@@ -529,7 +529,7 @@ static void wid_player_inventory_create (thing_statsp s, int fast)
 
     if (!wid_player_inventory) {
         widp w = wid_player_inventory = 
-                        wid_new_rounded_window("wid player_stats");
+                        wid_new_rounded_window("wid player inv");
 
         fpoint tl = {0.0, 0.0};
         fpoint br = {0.3, 0.9};
