@@ -179,6 +179,47 @@ static uint8_t wid_player_stats_reroll_mouse_event (widp w,
     return (true);
 }
 
+static uint8_t wid_player_stats_reroll_joy_event (widp w, int32_t x, int32_t y)
+{
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+        wid_player_stats_reroll_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
+
+    return (true);
+}
+
 static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
                                                        int32_t x, int32_t y,
                                                        uint32_t button)
@@ -244,11 +285,95 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
     return (true);
 }
 
+static uint8_t wid_player_stats_col1_name_joy_event (widp w,
+                                                     int32_t x, int32_t y)
+{
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+        wid_player_stats_col1_name_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
+
+    return (true);
+}
+
 static uint8_t wid_player_stats_col2_mouse_event (widp w,
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
 {
     wid_player_stats_col1_name_mouse_event(w, x, y, button);
+
+    return (true);
+}
+
+static uint8_t wid_player_stats_col2_joy_event (widp w,
+                                                     int32_t x, int32_t y)
+{
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+        wid_player_stats_col2_mouse_event(w, x, y, SDL_BUTTON_LEFT);
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_DOWN]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_FIRE]) {
+    }
+    if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_FIRE]) {
+    }
 
     return (true);
 }
@@ -360,6 +485,7 @@ static void wid_player_stats_create (thing_statsp s, int fast)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_on_mouse_down(w, wid_player_stats_col1_name_mouse_event);
+            wid_set_on_joy_down(w, wid_player_stats_col1_name_joy_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
 
             wid_set_tex(w, 0, "button_black");
@@ -419,6 +545,7 @@ static void wid_player_stats_create (thing_statsp s, int fast)
             wid_set_mode(w, WID_MODE_NORMAL);
 
             wid_set_on_mouse_down(w, wid_player_stats_col2_mouse_event);
+            wid_set_on_joy_down(w, wid_player_stats_col2_joy_event);
             wid_set_client_context(w, (void*)(uintptr_t)i);
 
             wid_set_tex(w, 0, "button_black");
@@ -581,6 +708,7 @@ static void wid_player_stats_create (thing_statsp s, int fast)
         wid_set_mode(w, WID_MODE_NORMAL);
 
         wid_set_on_mouse_down(w, wid_player_stats_reroll_mouse_event);
+        wid_set_on_joy_down(w, wid_player_stats_reroll_joy_event);
 
         wid_set_tooltip(w, 
                         "Select this to try a different character. "
