@@ -20,7 +20,7 @@
 #include "wid_hiscore.h"
 #include "wid_notify.h"
 #include "wid_server_join.h"
-#include "wid_choose_name.h"
+#include "wid_choose_pclass.h"
 #include "wid_server_create.h"
 #include "thing_template.h"
 #include "music.h"
@@ -472,7 +472,7 @@ static uint8_t wid_menu_play_game_selected (widp w,
                                             uint32_t button)
 {
     wid_intro_hide();
-    wid_choose_pclass_type_visible();
+    wid_choose_pclass_visible();
 
     return (true);
 }
@@ -548,16 +548,6 @@ static void wid_intro_create (void)
     wid_intro_menu_create();
 }
 
-static void wid_keyboard_event_selected (widp w, const char *text)
-{
-    CON("selected %s",text);
-    wid_destroy(&w);
-}
-static void wid_keyboard_event_cancelled (widp w, const char *text)
-{
-    CON("cancelled %s",text);
-    wid_destroy(&w);
-}
 static void wid_intro_menu_create (void)
 {
     if (wid_intro_menu) {
@@ -587,12 +577,6 @@ static void wid_intro_menu_create (void)
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 
                  (int) 'q', "Quit", wid_intro_quit_selected);
-
-    if (0)
-wid_keyboard("initial value",
-             "Test menu",
-             wid_keyboard_event_selected,
-             wid_keyboard_event_cancelled);
 }
 
 static void wid_intro_menu_destroy (void)
