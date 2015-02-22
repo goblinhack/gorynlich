@@ -22,8 +22,8 @@
 static const char* keys[WID_KEYBOARD_DOWN][WID_KEYBOARD_ACROSS] = {
   { "!", "@", "#", "$", "%%", "^", "*", "(", ")", "_", "+", "DEL"    },
   { "1", "2", "3", "4", "5", "6",  "7", "8", "9", "0", "-", "CLEAR"  },
-  { "a", "b", "c", "d", "e", "f",  "g", "h", "i", "j", ";", "\"",     },
-  { "k", "l", "m", "n", "o", "p",  "q", "r", "s", "t", ":", "ENTER", },
+  { "a", "b", "c", "d", "e", "f",  "g", "h", "i", "j", ";", "CANCEL",},
+  { "k", "l", "m", "n", "o", "p",  "q", "r", "s", "t", ":", "OK",    },
   { "u", "v", "w", "x", "y", "z",  "<", ">", "k", ",", "r", "SPACE", },
 };
 
@@ -109,8 +109,11 @@ static void wid_keyboard_update_buttons (widp w)
             c = GRAY70;
         }
 
-        wid_set_tl_br_pct(b, tl, br);
+        if (!strcasecmp(t, "ok")) {
+            font = vvlarge_font;
+        }
 
+        wid_set_tl_br_pct(b, tl, br);
         wid_set_color(b, WID_COLOR_TEXT, c);
         wid_set_font(b, font);
     }
@@ -127,11 +130,24 @@ static void wid_keyboard_update_buttons (widp w)
         for (x = 0; x < WID_KEYBOARD_ACROSS; x++) {
             for (y = 0; y < WID_KEYBOARD_DOWN; y++) {
 
+                const char *t = keys[y][x];
                 widp b = ctx->buttons[y][x];
+
+                /*
+                 * Start on the ok button.
+                 */
+                if (!strcasecmp(t, "ok")) {
+                    ctx->focusx = x;
+                    ctx->focusy = y;
+                    wid_mouse_warp(b);
+                    continue;
+                }
+
                 fpoint tl;
                 fpoint br;
 
                 wid_get_tl_br(b, &tl, &br);
+
                 double x = gauss(0.0, 2.0);
                 double y = gauss(0.0, 2.0);
 
@@ -157,9 +173,11 @@ static void wid_keyboard_event (widp w, int focusx, int focusy,
 
     if (key) {
         wid_receive_input(ctx->input, key);
-    } else if (!strcmp(add, "ENTER")) {
+    } else if (!strcasecmp(add, "OK")) {
         (ctx->selected)(ctx->w, wid_get_text(ctx->input));
-    } else if (!strcmp(add, "CLEAR")) {
+    } else if (!strcasecmp(add, "CANCEL")) {
+        (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
+    } else if (!strcasecmp(add, "CLEAR")) {
         for (;;) {
             SDL_KEYSYM key = {0};
             key.sym = SDLK_BACKSPACE;
@@ -171,11 +189,11 @@ static void wid_keyboard_event (widp w, int focusx, int focusy,
             wid_receive_input(ctx->input, &key);
         }
 
-    } else if (!strcmp(add, "DEL")) {
+    } else if (!strcasecmp(add, "DEL")) {
         SDL_KEYSYM key = {0};
         key.sym = SDLK_BACKSPACE;
         wid_receive_input(ctx->input, &key);
-    } else if (!strcmp(add, "SPACE")) {
+    } else if (!strcasecmp(add, "SPACE")) {
         SDL_KEYSYM key = {0};
         key.sym = ' ';
         wid_receive_input(ctx->input, &key);
@@ -303,6 +321,9 @@ static uint8_t wid_keyboard_parent_key_down (widp w,
     verify(ctx);
 
     switch (key->sym) {
+        case '`':
+            return (false);
+
         case SDLK_ESCAPE:
             (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
             return (true);
@@ -425,6 +446,9 @@ static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
     verify(ctx);
 
     switch (key->sym) {
+        case '`':
+            return (false);
+
         case SDLK_ESCAPE:
             (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
             return (true);
@@ -634,8 +658,6 @@ static void wid_keyboard_tick (widp w)
         /*
          * Make sure the other widgets look plain in all modes.
          */
-        int old_mode = wid_get_mode(b);
-
         int mode;
         for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
             wid_set_mode(b, mode);
@@ -643,7 +665,7 @@ static void wid_keyboard_tick (widp w)
             wid_set_text_outline(b, true);
         }
 
-        wid_set_mode(b, old_mode);
+        wid_set_mode(w, WID_MODE_NORMAL);
     }
     }
 }
@@ -686,8 +708,8 @@ widp wid_keyboard (const char *text,
      * changes
      */
     wid_keyboard_ctx *ctx = myzalloc(sizeof(*ctx), "wid keyboard");
-    ctx->focusx = WID_KEYBOARD_ACROSS / 2;
-    ctx->focusx = WID_KEYBOARD_DOWN / 2;;
+    ctx->focusx = -1;
+    ctx->focusx = -1;
     ctx->cancelled = cancelled;
     ctx->selected = selected;
 
@@ -794,6 +816,7 @@ widp wid_keyboard (const char *text,
             ctx->buttons[y][x] = b;
 
             wid_set_text(b, keys[y][x]);
+
             wid_set_text_outline(b, true);
             wid_set_on_mouse_over_begin(b, wid_keyboard_mouse_over);
             wid_set_on_key_down(b, wid_keyboard_button_key_event);
@@ -823,6 +846,11 @@ widp wid_keyboard (const char *text,
 
     wid_keyboard_update_buttons(window);
     wid_set_do_not_lower(window, 1);
+    wid_update(window);
+    wid_raise(window);
+    wid_keyboard_update_buttons(window);
+    wid_set_do_not_lower(window, 1);
+    wid_update(window);
     wid_raise(window);
 
     return (window);

@@ -72,6 +72,8 @@ mining?
 
 Sun Feb 22 15:30:39 EST 2015
 - added pclass choosing menu
+- added name choosing menu
+- keyboard focus on ok at start
 
 Sun Feb 22 07:54:27 EST 2015
 - click on action bar with A needs to work
