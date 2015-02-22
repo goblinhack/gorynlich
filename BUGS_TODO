@@ -1,5 +1,4 @@
 --------------------------------------- plan for feb --------------------------------------
-- click on action bar with A needs to work
 - revamp set wid editor title
 - add choose name screen
 - add choose player screen
@@ -69,6 +68,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sun Feb 22 07:54:27 EST 2015
+- click on action bar with A needs to work
 
 Sat Feb 21 19:44:08 EST 2015
 - add xbox 360 controller support for game player movement
