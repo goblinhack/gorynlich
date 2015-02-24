@@ -547,6 +547,7 @@ static void wid_menu_tick (widp w)
         wid_set_mode(b, old_mode);
     }
 
+#ifdef ENABLE_FLICKER
     /*
      * Make the background flicker.
      */
@@ -851,6 +852,7 @@ static void wid_menu_tick (widp w)
         wid_set_color(w, WID_COLOR_TL, c);
         wid_set_color(w, WID_COLOR_BR, c);
     }
+#endif
 }
 
 static void wid_menu_destroy_begin (widp w)
@@ -921,13 +923,14 @@ widp wid_menu (widp parent,
 
         wid_set_tl_br_pct(wrapper, tl, br);
 
+#ifdef ENABLE_FLICKER
         color c = RED;
         c.a = 100;
         wid_set_color(wrapper, WID_COLOR_BG, c);
         wid_set_color(wrapper, WID_COLOR_TL, c);
         wid_set_color(wrapper, WID_COLOR_BR, c);
         wid_set_tex(wrapper, 0, "alpha");
-
+#endif
         wid_set_on_destroy_begin(wrapper, wid_menu_destroy_begin);
         wid_set_on_destroy(wrapper, wid_menu_destroy);
         wid_set_client_context(wrapper, ctx);

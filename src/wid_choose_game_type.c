@@ -7,11 +7,13 @@
 
 #include "wid.h"
 #include "wid_choose_game_type.h"
-#include "wid_choose_player.h"
+#include "wid_choose_stats.h"
 #include "wid_choose_name.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
 #include "wid_server_create.h"
+#include "wid_game_map_server.h"
+#include "wid_game_map_client.h"
 #include "timer.h"
 #include "glapi.h"
 #include "server.h"
@@ -129,12 +131,36 @@ static void wid_server_create_selected (void)
     wid_server_create_visible();
 }
 
+static void wid_choose_player_play_selected_cb (void *context)
+{
+    wid_game_map_server_visible();
+    wid_game_map_client_visible();
+
+    wid_intro_hide();
+}
+
+static void wid_choose_player_play_selected (void)
+{
+    LOG("Play from stats selection");
+
+    action_timer_create(
+            &wid_timers,
+            (action_timer_callback)wid_choose_player_play_selected_cb,
+            (action_timer_destroy_callback)0,
+            0, /* context */
+            "start game",
+            intro_effect_delay,
+            0 /* jitter */);
+
+    wid_choose_game_type_hide();
+}
+
 static void wid_choose_game_type_single_play_selected_cb (void *context)
 {
     wid_server_join_hide();
     wid_server_create_hide();
 
-    wid_choose_player_visible();
+    wid_choose_player_play_selected();
 }
 
 static void wid_choose_game_type_start_server_selected_cb (void *context)

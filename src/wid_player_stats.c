@@ -27,31 +27,7 @@ static void wid_player_stats_create(thing_statsp, int fast);
 static void wid_player_stats_destroy(void);
 static thing_statsp player_stats;
 
-typedef struct row_ {
-    const char *col1;
-    const char *col2;
-    uint32_t increment;
-    const char *tooltip;
-} row;
-
-enum {
-    STAT_SPENDING_POINTS,
-    STAT_EXPERIENCE,
-    STAT_LEVEL,
-    STAT_MAX_HP,
-    STAT_MAX_MAGIC,
-    STAT_ATTACK_MELEE,
-    STAT_ATTACK_RANGED,
-    STAT_ATTACK_MAGICAL,
-    STAT_DEFENSE,
-    STAT_SPEED,
-    STAT_VISION,
-    STAT_HEALING,
-};
-
-#define WID_INTRO_MAX_SETTINGS 12 
-
-static row rows[WID_INTRO_MAX_SETTINGS] = {
+player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
       /*                         Column 1     Column 2 Increm */
     { /* STAT_SPENDING_POINTS */ "Spending points", 0,   0,
     "Click on a statistic below to spend your hard earned points." },
@@ -228,13 +204,13 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
     /*
      * Increment.
      */
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
+    int32_t which = (typeof(which)) (intptr_t) wid_get_client_context(w);
 
     if (!player_stats->spending_points) {
         return (true);
     }
 
-    switch (row) {
+    switch (which) {
     case STAT_EXPERIENCE:
         break;
     case STAT_LEVEL:
@@ -242,41 +218,41 @@ static uint8_t wid_player_stats_col1_name_mouse_event (widp w,
     case STAT_SPENDING_POINTS:
         break;
     case STAT_MAX_HP:
-        stats_modify_max_hp(player_stats, rows[row].increment);
+        stats_modify_max_hp(player_stats, player_stats_arr[which].increment);
         stats_set_hp(player_stats, player_stats->max_hp);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_MAX_MAGIC:
-        stats_modify_max_magic(player_stats, rows[row].increment);
+        stats_modify_max_magic(player_stats, player_stats_arr[which].increment);
         stats_set_magic(player_stats, player_stats->max_magic);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_ATTACK_MELEE:
-        stats_modify_attack_melee(player_stats, rows[row].increment);
+        stats_modify_attack_melee(player_stats, player_stats_arr[which].increment);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_ATTACK_RANGED:
-        stats_modify_attack_ranged(player_stats, rows[row].increment);
+        stats_modify_attack_ranged(player_stats, player_stats_arr[which].increment);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_ATTACK_MAGICAL:
-        stats_modify_attack_magical(player_stats, rows[row].increment);
+        stats_modify_attack_magical(player_stats, player_stats_arr[which].increment);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_DEFENSE:
-        stats_modify_defense(player_stats, rows[row].increment);
+        stats_modify_defense(player_stats, player_stats_arr[which].increment);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_SPEED:
-        stats_modify_speed(player_stats, rows[row].increment);
+        stats_modify_speed(player_stats, player_stats_arr[which].increment);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_VISION:
-        stats_modify_vision(player_stats, rows[row].increment);
+        stats_modify_vision(player_stats, player_stats_arr[which].increment);
         stats_modify_spending_points(player_stats, -1);
         break;
     case STAT_HEALING:
-        stats_modify_healing(player_stats, rows[row].increment);
+        stats_modify_healing(player_stats, player_stats_arr[which].increment);
         stats_modify_spending_points(player_stats, -1);
         break;
     }
@@ -426,12 +402,11 @@ static void wid_player_stats_create (thing_statsp s, int fast)
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(rows); i++)
-        {
+        for (i=0; i<ARRAY_SIZE(player_stats_arr); i++) {
             widp w = wid_new_square_button(wid_player_stats_container,
-                                           rows[i].col1);
-            if (rows[i].tooltip) {
-                wid_set_tooltip(w, rows[i].tooltip, 0 /* font */);
+                                           player_stats_arr[i].col1);
+            if (player_stats_arr[i].tooltip) {
+                wid_set_tooltip(w, player_stats_arr[i].tooltip, 0 /* font */);
             }
 
             fpoint tl = {0.05, 0.2};
@@ -442,7 +417,7 @@ static void wid_player_stats_create (thing_statsp s, int fast)
             br.y += ROW_HEIGHT;
 
             wid_set_tl_br_pct(w, tl, br);
-            wid_set_text(w, rows[i].col1);
+            wid_set_text(w, player_stats_arr[i].col1);
 
             wid_set_color(w, WID_COLOR_TEXT, WHITE);
             wid_set_font(w, vsmall_font);
@@ -508,16 +483,16 @@ static void wid_player_stats_create (thing_statsp s, int fast)
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(rows); i++) {
+        for (i=0; i<ARRAY_SIZE(player_stats_arr); i++) {
 
-            if (!rows[i].col2) {
+            if (!player_stats_arr[i].col2) {
                 continue;
             }
 
             widp w = wid_new_square_button(wid_player_stats_container,
-                                           rows[i].col2);
-            if (rows[i].tooltip) {
-                wid_set_tooltip(w, rows[i].tooltip, 0 /* font */);
+                                           player_stats_arr[i].col2);
+            if (player_stats_arr[i].tooltip) {
+                wid_set_tooltip(w, player_stats_arr[i].tooltip, 0 /* font */);
             }
 
             fpoint tl = {0.48, 0.2};
@@ -530,7 +505,7 @@ static void wid_player_stats_create (thing_statsp s, int fast)
             wid_set_tl_br_pct(w, tl, br);
 
             if (s->spending_points > 0) {
-                wid_set_text(w, rows[i].col2);
+                wid_set_text(w, player_stats_arr[i].col2);
             }
 
             wid_set_font(w, vsmall_font);
@@ -568,16 +543,16 @@ static void wid_player_stats_create (thing_statsp s, int fast)
     {
         uint32_t i;
 
-        for (i=0; i<ARRAY_SIZE(rows); i++) {
+        for (i=0; i<ARRAY_SIZE(player_stats_arr); i++) {
 
-            if (!rows[i].col1) {
+            if (!player_stats_arr[i].col1) {
                 continue;
             }
 
             widp w = wid_new_square_button(wid_player_stats_container,
-                                           rows[i].col1);
-            if (rows[i].tooltip) {
-                wid_set_tooltip(w, rows[i].tooltip, 0 /* font */);
+                                           player_stats_arr[i].col1);
+            if (player_stats_arr[i].tooltip) {
+                wid_set_tooltip(w, player_stats_arr[i].tooltip, 0 /* font */);
             }
 
             fpoint tl = {0.82, 0.2};
@@ -652,7 +627,7 @@ static void wid_player_stats_create (thing_statsp s, int fast)
 
             int modifier = thing_stats_val_to_modifier(stat);
 
-            if (rows[i].increment == 1) {
+            if (player_stats_arr[i].increment == 1) {
                 if (modifier <= -3) {
                     wid_set_color(w, WID_COLOR_TEXT, DARKGRAY);
                 } else if (modifier <= -2) {

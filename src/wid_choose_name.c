@@ -7,9 +7,8 @@
 
 #include "wid.h"
 #include "wid_choose_name.h"
-#include "wid_choose_player.h"
 #include "wid_choose_pclass.h"
-#include "wid_choose_game_type.h"
+#include "wid_choose_stats.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
 #include "wid_keyboard.h"
@@ -122,7 +121,7 @@ static void wid_keyboard_event_selected (widp w, const char *text)
     strncpy(s->pname, text, sizeof(s->pname) - 1);
 
     wid_choose_name_hide();
-    wid_choose_game_type_visible();
+    wid_choose_stats_visible();
 }
 
 static void wid_keyboard_event_cancelled (widp w, const char *text)
