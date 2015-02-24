@@ -32,10 +32,12 @@
 #include "wid_server_join.h"
 #include "wid_server_create.h"
 #include "wid_intro.h"
-#include "wid_choose_player.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
 #include "wid_choose_game_type.h"
+#include "wid_choose_name.h"
+#include "wid_choose_pclass.h"
+#include "wid_choose_stats.h"
 #include "string_util.h"
 #include "dir.h"
 #include "file.h"
@@ -116,8 +118,12 @@ void quit (void)
     LOG("  - wid_chat_fini");
     wid_intro_fini();
     LOG("  - wid_intro_fini");
-    wid_choose_player_fini();
-    LOG("  - wid_choose_player_fini");
+    wid_choose_name_fini();
+    LOG("  - wid_choose_name_fini");
+    wid_choose_pclass_fini();
+    LOG("  - wid_choose_pclass_fini");
+    wid_choose_stats_fini();
+    LOG("  - wid_choose_stats_fini");
     wid_choose_game_type_fini();
     LOG("  - wid_choose_game_type_fini");
     wid_intro_about_fini();
@@ -788,8 +794,16 @@ int32_t main (int32_t argc, char *argv[])
                           0, "wid_intro_about_init");
 
     action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_choose_player_init,
-                          0, "wid_choose_player_init");
+                          (action_init_fn_callback)wid_choose_name_init,
+                          0, "wid_choose_name_init");
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)wid_choose_pclass_init,
+                          0, "wid_choose_pclass_init");
+
+    action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)wid_choose_stats_init,
+                          0, "wid_choose_stats_init");
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_choose_game_type_init,
