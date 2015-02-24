@@ -8,7 +8,6 @@
 #include "wid.h"
 #include "wid_choose_name.h"
 #include "wid_choose_pclass.h"
-#include "wid_choose_player.h"
 #include "wid_choose_game_type.h"
 #include "wid_intro.h"
 #include "wid_server_join.h"
