@@ -1,8 +1,6 @@
 --------------------------------------- plan for feb --------------------------------------
-- choose inv screen A/B don't work
+- need menu with 2 or 3 columns
 - revamp set wid editor title
-- add choose name screen
-- add choose player screen
 - add level map chooser screen
 - add ability to save level topology
 - add ability to connect levels together
@@ -69,6 +67,11 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Mon Feb 23 08:45:54 EST 2015
+- added choose stats menu
+- add choose name screen
+- add choose player screen
 
 Sun Feb 22 15:30:39 EST 2015
 - added pclass choosing menu
