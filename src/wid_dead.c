@@ -194,7 +194,7 @@ static void wid_dead_gravestone_appeared (void *context)
                     large_font,
                     0.5, /* x */
                     0.3, /* y */
-                    0.95, /* padding between buttons */
+                    1, /* columns */
                     1, /* focus */
                     3, /* items */
 
@@ -210,7 +210,7 @@ static void wid_dead_gravestone_appeared (void *context)
                     large_font,
                     0.5, /* x */
                     0.3, /* y */
-                    0.95, /* padding between buttons */
+                    1, /* columns */
                     2, /* focus */
                     4, /* items */
 

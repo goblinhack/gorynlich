@@ -126,6 +126,9 @@ static void wid_choose_pclass_callback (widp w)
      */
     thing_statsp s = &global_config.stats;
     const char *new_pclass = pclass_nth(row);
+    if (!new_pclass) {
+        DIE("not player calss from row %d", row);
+    }
 
     if (strlen(s->pclass)) {
         if (!strcasecmp(s->pclass, new_pclass)) {
@@ -253,7 +256,7 @@ static void wid_choose_pclass_create (void)
                  large_font,
                  0.5, /* x */
                  0.7, /* y */
-                 0.95, /* padding between buttons */
+                 1, /* columns */
                  focus, /* focus */
                  pclass_count() + 1, /* items */
 

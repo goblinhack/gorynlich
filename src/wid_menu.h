@@ -7,6 +7,7 @@
 #pragma once
 
 #define WID_MENU_MAX_ITEMS 20
+#define WID_MENU_MAX_COLS  10
 
 typedef struct {
     /*
@@ -23,6 +24,11 @@ typedef struct {
      * size of the menu
      */
     int items;
+
+    /*
+     * columns
+     */
+    int cols;
 
     /*
      * How large the focus line is
@@ -44,12 +50,17 @@ typedef struct {
     /*
      * Items in the menu
      */
-    widp buttons[WID_MENU_MAX_ITEMS];
+    widp buttons[WID_MENU_MAX_ITEMS][WID_MENU_MAX_COLS];
 
     /*
      * What to call on events
      */
     on_mouse_down_t event_handler[WID_MENU_MAX_ITEMS];
+
+    /*
+     * Percentage width of each column.
+     */
+    double col_width[WID_MENU_MAX_COLS];
 
     /*
      * Shortcut key
@@ -63,7 +74,7 @@ widp wid_menu(widp parent,
               fontp other_font,
               double x,
               double y,
-              double padding,
+              int cols,
               int focus,
               int args, ...);
 
