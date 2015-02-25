@@ -596,6 +596,18 @@ void *wid_get_client_context2 (widp w)
     return (w->client_context2);
 }
 
+void wid_set_client_context3 (widp w, void *client_context3)
+{
+    fast_verify(w);
+
+    w->client_context3 = client_context3;
+}
+
+void *wid_get_client_context3 (widp w)
+{
+    return (w->client_context3);
+}
+
 void wid_set_prev (widp w, widp prev)
 {
     fast_verify(w);

@@ -52,76 +52,90 @@ static void wid_menu_update (widp w)
     int i;
     for (i = 0; i < items; i++) {
 
-        widp b = ctx->buttons[i];
-        verify(b);
+        double cx = 0.0;
+        int c;
+        double saved_y = y;
 
-        wid_set_text_centerx(b, 1);
-        wid_set_text_centery(b, 1);
+        for (c = 0; c < ctx->cols; c++) {
 
-        fpoint tl = { 0.0, 0.0};
-        fpoint br = { 1.0, 1.0};
+            y = saved_y;
 
-        fontp font;
-        color c;
+            widp b = ctx->buttons[i][c];
+            verify(b);
 
-        tl.y = y;
+            wid_set_text_centerx(b, 1);
+            wid_set_text_centery(b, 1);
 
-        if (i == ctx->focus) {
-            font = ctx->focus_font;
-            y += focus_wid_height;
-            c = GREEN;
-        } else {
-            font = ctx->normal_font;
-            y += normal_wid_height;
+            fpoint tl = { 0.0, 0.0};
+            fpoint br = { 1.0, 1.0};
 
-            if (!ctx->event_handler[i]) {
-                c = YELLOW;
+            tl.x = cx;
+            br.x = cx + ctx->col_width[c];
+            cx = br.x;
+
+            fontp font;
+            color c;
+
+            tl.y = y;
+
+            if (i == ctx->focus) {
+                font = ctx->focus_font;
+                y += focus_wid_height;
+                c = GREEN;
             } else {
-                c = GRAY70;
+                font = ctx->normal_font;
+                y += normal_wid_height;
+
+                if (!ctx->event_handler[i]) {
+                    c = YELLOW;
+                } else {
+                    c = GRAY70;
+                }
             }
+
+            br.y = y;
+
+            wid_set_tl_br_pct(b, tl, br);
+
+            color transparent = BLACK;
+            transparent.a = 0;
+
+            /*
+            * Make sure the other widgets look plain in all modes.
+            */
+            int mode;
+            for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
+                wid_set_no_shape(b);
+                wid_set_mode(b, mode);
+                wid_set_color(b, WID_COLOR_TEXT, c);
+                wid_set_color(b, WID_COLOR_BG, transparent);
+                wid_set_color(b, WID_COLOR_TL, transparent);
+                wid_set_color(b, WID_COLOR_BR, transparent);
+                wid_set_font(b, font);
+                wid_set_text_outline(b, true);
+            }
+
+            wid_set_mode(b, WID_MODE_NORMAL);
+            wid_update(b);
         }
-
-        br.y = y;
-
-        wid_set_tl_br_pct(b, tl, br);
-
-        color transparent = BLACK;
-        transparent.a = 0;
-
-        /*
-         * Make sure the other widgets look plain in all modes.
-         */
-        int mode;
-        for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
-            wid_set_no_shape(b);
-            wid_set_mode(b, mode);
-            wid_set_color(b, WID_COLOR_TEXT, c);
-            wid_set_color(b, WID_COLOR_BG, transparent);
-            wid_set_color(b, WID_COLOR_TL, transparent);
-            wid_set_color(b, WID_COLOR_BR, transparent);
-            wid_set_font(b, font);
-            wid_set_text_outline(b, true);
-        }
-
-        wid_set_mode(b, WID_MODE_NORMAL);
-        wid_update(b);
     }
 
     wid_update(w);
 }
 
 static uint8_t wid_menu_mouse_event (widp w,
-                                     int focus,
+                                     int item,
+                                     int col,
                                      int32_t x, int32_t y,
                                      uint32_t button)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
-    widp b = ctx->buttons[ctx->focus];
+    widp b = ctx->buttons[item][col];
     verify(b);
 
-    on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+    on_mouse_down_t event_handler = ctx->event_handler[item];
 
     (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
 
@@ -132,9 +146,10 @@ static uint8_t wid_menu_button_mouse_event (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
-    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+    int item = (typeof(item)) (uintptr_t) wid_get_client_context2(w);
+    int col = (typeof(col)) (uintptr_t) wid_get_client_context3(w);
 
-    return (wid_menu_mouse_event(w, focus, x, y, button));
+    return (wid_menu_mouse_event(w, item, col, x, y, button));
 }
 
 static uint8_t wid_menu_parent_mouse_event (widp w,
@@ -144,30 +159,32 @@ static uint8_t wid_menu_parent_mouse_event (widp w,
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
-    int focus = ctx->focus;
+    int item = ctx->focus;
 
-    return (wid_menu_mouse_event(w, focus, x, y, button));
+    return (wid_menu_mouse_event(w, item, 0, x, y, button));
 }
 
 static uint8_t wid_menu_joy_down_event (widp w,
-                                     int focus,
-                                     int32_t x, int32_t y)
+                                        int32_t x, int32_t y)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
-    widp b = ctx->buttons[ctx->focus];
+    int item = ctx->focus;
+    int col = 0;
+
+    widp b = ctx->buttons[item][col];
     verify(b);
 
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
         ctx->focus = ctx->items - 1;
-        widp b = ctx->buttons[ctx->focus];
+        widp b = ctx->buttons[item][col];
         verify(b);
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         wid_menu_callback(b, ctx->focus, event_handler, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
@@ -177,34 +194,34 @@ static uint8_t wid_menu_joy_down_event (widp w,
         wid_menu_next_focus(ctx);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_RIGHT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_RIGHT_STICK_DOWN]) {
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_START]) {
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_XBOX]) {
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_BACK]) {
         ctx->focus = ctx->items - 1;
-        widp b = ctx->buttons[ctx->focus];
+        widp b = ctx->buttons[item][col];
         verify(b);
-        on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+        on_mouse_down_t event_handler = ctx->event_handler[item];
         wid_menu_callback(b, ctx->focus, event_handler, SDL_BUTTON_LEFT);
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_UP]) {
@@ -228,9 +245,7 @@ static uint8_t wid_menu_joy_down_event (widp w,
 static uint8_t wid_menu_button_joy_down_event (widp w,
                                             int32_t x, int32_t y)
 {
-    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
-
-    return (wid_menu_joy_down_event(w, focus, x, y));
+    return (wid_menu_joy_down_event(w, x, y));
 }
 
 static uint8_t wid_menu_parent_joy_down_event (widp w,
@@ -239,9 +254,7 @@ static uint8_t wid_menu_parent_joy_down_event (widp w,
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
-    int focus = ctx->focus;
-
-    return (wid_menu_joy_down_event(w, focus, x, y));
+    return (wid_menu_joy_down_event(w, x, y));
 }
 
 static void wid_menu_next_focus (wid_menu_ctx *ctx)
@@ -342,7 +355,7 @@ static void wid_menu_callback (widp w,
 }
 
 
-static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
+static uint8_t wid_menu_key_event (widp w, const SDL_KEYSYM *key)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
@@ -362,7 +375,7 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
 
         case ' ':
         case SDLK_RETURN: {
-                widp b = ctx->buttons[ctx->focus];
+                widp b = ctx->buttons[ctx->focus][0];
                 verify(b);
 
                 on_mouse_down_t event_handler = 
@@ -374,10 +387,11 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
             }
 
         case SDLK_LEFT: {
-                widp b = ctx->buttons[ctx->focus];
+                widp b = ctx->buttons[ctx->focus][0];
                 verify(b);
 
-                on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+                on_mouse_down_t event_handler = 
+                                ctx->event_handler[ctx->focus];
                 
                 wid_menu_callback(b, ctx->focus, event_handler, 
                                   SDL_BUTTON_LEFT);
@@ -385,10 +399,11 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
             }
 
         case SDLK_RIGHT: {
-                widp b = ctx->buttons[ctx->focus];
+                widp b = ctx->buttons[ctx->focus][0];
                 verify(b);
 
-                on_mouse_down_t event_handler = ctx->event_handler[ctx->focus];
+                on_mouse_down_t event_handler = 
+                                ctx->event_handler[ctx->focus];
 
                 wid_menu_callback(b, ctx->focus, event_handler, 
                                   SDL_BUTTON_RIGHT);
@@ -419,9 +434,10 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
              */
             for (i = 0; i < ctx->items; i++) {
                 if (key->sym == ctx->shortcut[i]) {
-                    on_mouse_down_t event_handler = ctx->event_handler[i];
+                    on_mouse_down_t event_handler = 
+                                    ctx->event_handler[i];
 
-                    widp b = ctx->buttons[i];
+                    widp b = ctx->buttons[i][0];
                     verify(b);
 
                     wid_menu_callback(b, i, event_handler, (int)SDLK_RIGHT);
@@ -438,9 +454,7 @@ static uint8_t wid_menu_key_event (widp w, int focus, const SDL_KEYSYM *key)
 
 static uint8_t wid_menu_button_key_event (widp w, const SDL_KEYSYM *key)
 {
-    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
-
-    return (wid_menu_key_event(w, focus, key));
+    return (wid_menu_key_event(w, key));
 }
 
 static uint8_t wid_menu_parent_key_event (widp w, const SDL_KEYSYM *key)
@@ -448,15 +462,14 @@ static uint8_t wid_menu_parent_key_event (widp w, const SDL_KEYSYM *key)
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
-    int focus = ctx->focus;
-
-    return (wid_menu_key_event(w, focus, key));
+    return (wid_menu_key_event(w, key));
 }
 
 static void wid_menu_mouse_over (widp w)
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
-    int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
+    int item = (typeof(item)) (uintptr_t) wid_get_client_context2(w);
+    int col = (typeof(col)) (uintptr_t) wid_get_client_context3(w);
 
     verify(ctx);
 
@@ -469,7 +482,7 @@ static void wid_menu_mouse_over (widp w)
         return;
     }
 
-    ctx->focus = focus;
+    ctx->focus = item;
 
     if (!ctx->event_handler[ctx->focus]) {
         wid_menu_next_focus(ctx);
@@ -514,37 +527,41 @@ static void wid_menu_tick (widp w)
     int i;
     for (i = 0; i < items; i++) {
 
-        widp b = ctx->buttons[i];
-        verify(b);
+        int c;
+        for (c = 0; c < ctx->cols; c++) {
 
-        wid_set_text_centerx(b, 1);
-        wid_set_text_centery(b, 1);
+            widp b = ctx->buttons[i][c];
+            verify(b);
 
-        color c;
+            wid_set_text_centerx(b, 1);
+            wid_set_text_centery(b, 1);
 
-        uint8_t tick = rand() % 255;
-        c.a = tick;
-        if (i != ctx->focus) {
-            continue;
+            color c;
+
+            uint8_t tick = rand() % 255;
+            c.a = tick;
+            if (i != ctx->focus) {
+                continue;
+            }
+
+            c = GREEN;
+            c.g = val;
+
+            /*
+             * Make sure the other widgets look plain in all modes.
+             */
+            int old_mode = wid_get_mode(b);
+
+            int mode;
+            for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
+                wid_set_no_shape(b);
+                wid_set_mode(b, mode);
+                wid_set_color(b, WID_COLOR_TEXT, c);
+                wid_set_text_outline(b, true);
+            }
+
+            wid_set_mode(b, old_mode);
         }
-
-        c = GREEN;
-        c.g = val;
-
-        /*
-         * Make sure the other widgets look plain in all modes.
-         */
-        int old_mode = wid_get_mode(b);
-
-        int mode;
-        for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
-            wid_set_no_shape(b);
-            wid_set_mode(b, mode);
-            wid_set_color(b, WID_COLOR_TEXT, c);
-            wid_set_text_outline(b, true);
-        }
-
-        wid_set_mode(b, old_mode);
     }
 
 #ifdef ENABLE_FLICKER
@@ -863,11 +880,14 @@ static void wid_menu_destroy_begin (widp w)
     int i;
     for (i = 0; i < ctx->items; i++) {
 
-        widp b = ctx->buttons[i];
-        verify(b);
+        int c;
+        for (c = 0; c < ctx->cols; c++) {
+            widp b = ctx->buttons[i][c];
+            verify(b);
 
-        double x = gauss(0.0, 2.0);
-        wid_move_delta_pct_in(b, x, 0.0, 200);
+            double x = gauss(0.0, 2.0);
+            wid_move_delta_pct_in(b, x, 0.0, 200);
+        }
     }
 }
 
@@ -876,7 +896,7 @@ widp wid_menu (widp parent,
                fontp normal_font,
                double x,
                double y,
-               double padding,
+               int cols,
                int focus,
                int items, ...)
 {
@@ -907,6 +927,7 @@ widp wid_menu (widp parent,
     /*
      * Padding
      */
+    double padding = 0.95;
     ctx->focus_height *= padding;
     ctx->normal_height *= padding;
 
@@ -968,6 +989,7 @@ widp wid_menu (widp parent,
 
     wid_set_client_context(w, ctx);
     ctx->items = items;
+    ctx->cols = cols;
     ctx->focus = focus;
     ctx->focus_font = focus_font;
     ctx->normal_font = normal_font;
@@ -977,27 +999,49 @@ widp wid_menu (widp parent,
     va_start(ap, items);
 
     /*
+     * If multiple columns then read the widths of each.
+     */
+    if (cols > 1) {
+        int c;
+        for (c = 0; c < cols; c++) {
+            double width = va_arg(ap, double);
+            ctx->col_width[c] = width;
+        }
+    } else {
+        ctx->col_width[0] = 1.0;
+    }
+
+    /*
      * Create the buttons
      */
     for (i = 0; i < ctx->items; i++) {
         const char shortcut = va_arg(ap, int);
-        const char *text = va_arg(ap, const char*);
+
+        int c;
+        for (c = 0; c < cols; c++) {
+            const char *text = va_arg(ap, const char*);
+
+            widp b = wid_new_container(w, "wid menu button");
+            ctx->buttons[i][c] = b;
+            ctx->shortcut[i] = shortcut;
+
+            wid_set_text(b, text);
+
+            wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
+            wid_set_on_key_down(b, wid_menu_button_key_event);
+            wid_set_on_mouse_down(b, wid_menu_button_mouse_event);
+            wid_set_on_joy_down(b, wid_menu_button_joy_down_event);
+
+            wid_set_client_context(b, ctx);
+            wid_set_client_context2(b, (void*) (uintptr_t) i);
+            wid_set_client_context3(b, (void*) (uintptr_t) c);
+        }
+
         on_mouse_down_t fn = va_arg(ap, on_mouse_down_t);
 
-        widp b = wid_new_container(w, "wid menu button");
-        ctx->buttons[i] = b;
-        ctx->event_handler[i] = fn;
-        ctx->shortcut[i] = shortcut;
-
-        wid_set_text(b, text);
-
-        wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
-        wid_set_on_key_down(b, wid_menu_button_key_event);
-        wid_set_on_mouse_down(b, wid_menu_button_mouse_event);
-        wid_set_on_joy_down(b, wid_menu_button_joy_down_event);
-
-        wid_set_client_context(b, ctx);
-        wid_set_client_context2(b, (void*) (uintptr_t) i);
+        for (c = 0; c < cols; c++) {
+            ctx->event_handler[i] = fn;
+        }
     }
 
     ctx->created = time_get_time_ms();

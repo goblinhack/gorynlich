@@ -1,5 +1,6 @@
 --------------------------------------- plan for feb --------------------------------------
-- need menu with 2 or 3 columns
+- need menu with 2 or 3 columns for stats 
+- need menu with 2 or 3 columns for settings
 - revamp set wid editor title
 - add level map chooser screen
 - add ability to save level topology
@@ -67,6 +68,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Tue Feb 24 22:29:57 EST 2015
+- wid menu width columns created
 
 Mon Feb 23 08:45:54 EST 2015
 - added choose stats menu

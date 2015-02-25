@@ -436,7 +436,7 @@ static void wid_intro_quit_selected (void)
                  large_font,
                  0.5, /* x */
                  0.5, /* y */
-                 0.95, /* padding between buttons */
+                 1, /* columns */
                  2, /* focus */
                  3, /* items */
 
@@ -554,13 +554,58 @@ static void wid_intro_menu_create (void)
         return;
     }
 
+    if (1) {
     wid_intro_menu = 
         wid_menu(0,
                  vvlarge_font,
                  large_font,
                  0.5, /* x */
                  0.7, /* y */
-                 0.95, /* padding between buttons */
+                 4, /* columns */
+                 saved_focus, /* focus */
+                 7, /* items */
+
+                 /*
+                  * Column widths
+                  */
+                 (double) 0.7, (double) 0.1, (double) 0.1, (double) 0.1,
+
+                 (int) 'e', "Editor", 
+                 "x", "y", "z", 
+                 wid_menu_level_editor_selected,
+
+                 (int) 'c', "Credits", 
+                 "x", "y", "z", 
+                 wid_menu_credits_selected,
+
+                 (int) 'S', "Settings", 
+                 "x", "y", "z", 
+                 wid_menu_settings_selected,
+
+                 (int) 's', "Quick start", 
+                 "x", "y", "z", 
+                 wid_menu_quick_start_selected,
+
+                 (int) ' ', "Play game", 
+                 "x", "y", "z", 
+                 wid_menu_play_game_selected,
+
+                 (int) 'h', "Hiscores", 
+                 "x", "y", "z", 
+                 wid_menu_past_legends_selected,
+
+                 (int) 'q', "Quit", 
+                 "x", "y", "z", 
+                 wid_intro_quit_selected);
+                 
+    } else
+    wid_intro_menu = 
+        wid_menu(0,
+                 vvlarge_font,
+                 large_font,
+                 0.5, /* x */
+                 0.7, /* y */
+                 1, /* columns */
                  saved_focus, /* focus */
                  7, /* items */
 
