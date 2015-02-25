@@ -693,7 +693,7 @@ static void wid_server_create_menu (void)
                 large_font,
                 0.5, /* x */
                 0.7, /* y */
-                0.95, /* padding between buttons */
+                1, /* columns */
                 saved_focus, /* focus */
                 5, /* items */
 

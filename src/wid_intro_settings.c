@@ -385,7 +385,7 @@ static uint8_t wid_intro_restart_selected (void)
                  large_font,
                  0.5, /* x */
                  0.5, /* y */
-                 0.95, /* padding between buttons */
+                 1, /* columns */
                  2, /* focus */
                  3, /* items */
                  (int) 0, "Settings changed, restart game?", (void*)0,
@@ -495,7 +495,7 @@ static void wid_intro_settings_create (void)
                 large_font,
                 0.5, /* x */
                 0.7, /* y */
-                0.95, /* padding between buttons */
+                1, /* columns */
                 saved_focus, /* focus */
                 7, /* items */
 

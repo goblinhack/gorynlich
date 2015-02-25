@@ -245,8 +245,10 @@ uint32_t wid_get_mode_gllist(widp);
 uint8_t wid_get_focusable(widp);
 void *wid_get_client_context(widp);
 void *wid_get_client_context2(widp);
+void *wid_get_client_context3(widp);
 void wid_set_client_context(widp w, void *client_context);
 void wid_set_client_context2(widp w, void *client_context);
+void wid_set_client_context3(widp w, void *client_context);
 void wid_fade_in(widp, uint32_t delay);
 void wid_fade_out(widp, uint32_t delay);
 void wid_fade_in_out(widp w, uint32_t delay, uint32_t repeat, 
@@ -695,6 +697,7 @@ typedef struct wid_ {
      */
     void *client_context;
     void *client_context2;
+    void *client_context3;
 
     /*
      * Text placement.
