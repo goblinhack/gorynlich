@@ -394,7 +394,7 @@ static void wid_choose_game_type_create (void)
                  large_font,
                  0.5, /* x */
                  0.7, /* y */
-                 0.95, /* padding between buttons */
+                 1, /* columns */
                  1, /* focus */
                  4, /* items */
 

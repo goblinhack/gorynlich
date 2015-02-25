@@ -489,7 +489,7 @@ void wid_editor_clear (void)
                 large_font,
                 0.5, /* x */
                 0.5, /* y */
-                0.95, /* padding between buttons */
+                1, /* columns */
                 1, /* focus */
                 3, /* items */
 

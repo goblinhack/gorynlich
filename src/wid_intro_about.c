@@ -69,7 +69,7 @@ static void wid_intro_about_create (void)
                 vlarge_font,
                 0.55, /* x */
                 0.5, /* y */
-                0.95, /* padding between buttons */
+                1, /* columns */
                 6, /* focus */
                 7, /* items */
 

@@ -233,7 +233,7 @@ static void wid_choose_stats_create (void)
                  large_font,
                  0.5, /* x */
                  0.5, /* y */
-                 0.95, /* padding between buttons */
+                 1, /* columns */
                  focus, /* focus */
                  PLAYER_STATS_MAX + 1, /* items */
 
