@@ -38,31 +38,31 @@ player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
     { /* STAT_LEVEL           */ "Level",           0,   0,
     "Your current experience level" },
 
-    { /* STAT_MAX_HP          */ "Max Health",      "+", 5,
+    { /* STAT_MAX_HP          */ "%%fmt=left$Health",          "+", 5,
     "Health points. This is the max you can recover to with your healing ability." },
 
-    { /* STAT_MAX_MAGIC          */ "Max ID",          "+", 5,
+    { /* STAT_MAX_MAGIC       */ "%%fmt=left$Magic",           "+", 5,
     "ID is your life force used for magic and life changing events." },
 
-    { /* STAT_ATTACK_MELEE    */ "Attack, Melee",   "+", 1,
+    { /* STAT_ATTACK_MELEE    */ "%%fmt=left$Melee",           "+", 1,
     "This modifier is the percentage damage gain you get in physical attacks." },
 
-    { /* STAT_ATTACK_RANGED   */ "Attack, Ranged",  "+", 1,
+    { /* STAT_ATTACK_RANGED   */ "%%fmt=left$Range damage",    "+", 1,
     "This modifier is the percentage damage gain you get in missile attacks." },
 
-    { /* STAT_ATTACK_MAGIC   */ "Attack, Magical",  "+", 1,
+    { /* STAT_ATTACK_MAGIC    */ "%%fmt=left$Magic damage",    "+", 1,
     "This modifier is the percentage damage gain you get in magical attacks." },
 
-    { /* STAT_DEFENSE         */ "Defense",         "+", 1,
+    { /* STAT_DEFENSE         */ "%%fmt=left$Defense",         "+", 1,
     "This modifier is the percentage gain you get in defense against attacks" },
 
-    { /* STAT_SPEED           */ "Speed",           "+", 1,
+    { /* STAT_SPEED           */ "%%fmt=left$Speed",           "+", 1,
     "This modifier is the percentage gain you get in running around like a nutter." },
 
-    { /* STAT_VISION          */ "Vision",          "+", 1,
+    { /* STAT_VISION          */ "%%fmt=left$Vision",          "+", 1,
     "This modifier is the percentage gain you get in seeing bad stuffs." },
 
-    { /* STAT_HEALING         */ "Healing",         "+", 1,
+    { /* STAT_HEALING         */ "%%fmt=left$Healing",         "+", 1,
     "This modifier is the percentage gain you get in recovering health points." },
 };
 

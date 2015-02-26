@@ -19,6 +19,7 @@
 #include "wid_menu.h"
 #include "name.h"
 #include "thing.h"
+#include "string_util.h"
 
 static widp wid_choose_stats;
 static widp wid_choose_stats_background;
@@ -228,62 +229,162 @@ static void wid_choose_stats_create (void)
 
     int focus = PLAYER_STATS_MAX / 2;
 
+    char *cols[PLAYER_STATS_MAX][2];
+    memset(cols, 0, sizeof(cols));
+
+    int i;
+    for (i = 0; i < PLAYER_STATS_MAX; i++) {
+        char *text = 0;
+        int stat = 0;
+
+        switch (i) {
+        case STAT_SPENDING_POINTS:
+            stat = s->spending_points;
+            text = dynprintf("%u", stat);
+            break;
+        case STAT_MAX_HP:
+            stat = s->hp;
+            if (s->hp != s->max_hp) {
+                text = dynprintf("%u (%u)", s->hp, s->max_hp);
+            } else {
+                text = dynprintf("%u", s->max_hp);
+            }
+            break;
+        case STAT_MAX_MAGIC:
+            stat = s->magic;
+            if (s->magic != s->max_magic) {
+                text = dynprintf("%u (%u)", s->magic, s->max_magic);
+            } else {
+                text = dynprintf("%u", s->max_magic);
+            }
+            break;
+        case STAT_ATTACK_MELEE:
+            stat = s->attack_melee;
+            break;
+        case STAT_ATTACK_RANGED:
+            stat = s->attack_ranged;
+            break;
+        case STAT_ATTACK_MAGICAL:
+            stat = s->attack_magical;
+            break;
+        case STAT_DEFENSE:
+            stat = s->defense;
+            break;
+        case STAT_SPEED:
+            stat = s->speed;
+            break;
+        case STAT_VISION:
+            stat = s->vision;
+            break;
+        case STAT_HEALING:
+            stat = s->healing;
+            break;
+        }
+
+        cols[i][0] = text;
+
+        int modifier = thing_stats_val_to_modifier(stat);
+
+        if (modifier > 0) {
+            text = dynprintf("%u / +%d", stat, modifier);
+        } else if (modifier < 0) {
+            text = dynprintf("%u", stat);
+        } else {
+            text = dynprintf("%u / %d", stat, modifier);
+        }
+
+        cols[i][1] = text;
+    }
+
     menu = wid_menu(0,
-                 vvlarge_font,
-                 large_font,
-                 0.5, /* x */
-                 0.5, /* y */
-                 1, /* columns */
-                 focus, /* focus */
-                 PLAYER_STATS_MAX + 1, /* items */
+                vvlarge_font,
+                large_font,
+                0.5, /* x */
+                0.5, /* y */
+                3, /* columns */
+                focus, /* focus */
+                PLAYER_STATS_MAX - 1, /* items */
+
+                /*
+                 * Column widths
+                 */
+                (double) 0.6, (double) 0.1, (double) 0.1,
 
                 (int) 0,
                 player_stats_arr[STAT_SPENDING_POINTS].col1,
-                wid_choose_stats_callback,
-
-                (int) 0,
-                player_stats_arr[STAT_EXPERIENCE].col1,
-                wid_choose_stats_callback,
-
-                (int) 0,
-                player_stats_arr[STAT_LEVEL].col1,
+                cols[STAT_SPENDING_POINTS][0],
+                cols[STAT_SPENDING_POINTS][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_MAX_HP].col1,
+                cols[STAT_MAX_HP][0],
+                cols[STAT_MAX_HP][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_MAX_MAGIC].col1,
+                cols[STAT_MAX_MAGIC][0],
+                cols[STAT_MAX_MAGIC][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_ATTACK_MELEE].col1,
+                cols[STAT_ATTACK_MELEE][0],
+                cols[STAT_ATTACK_MELEE][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_ATTACK_RANGED].col1,
+                cols[STAT_ATTACK_RANGED][0],
+                cols[STAT_ATTACK_RANGED][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_ATTACK_MAGICAL].col1,
+                cols[STAT_ATTACK_MAGICAL][0],
+                cols[STAT_ATTACK_MAGICAL][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_DEFENSE].col1,
+                cols[STAT_DEFENSE][0],
+                cols[STAT_DEFENSE][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_SPEED].col1,
+                cols[STAT_SPEED][0],
+                cols[STAT_SPEED][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_VISION].col1,
+                cols[STAT_VISION][0],
+                cols[STAT_VISION][1],
                 wid_choose_stats_callback,
 
                 (int) 0,
                 player_stats_arr[STAT_HEALING].col1,
+                cols[STAT_HEALING][0],
+                cols[STAT_HEALING][1],
                 wid_choose_stats_callback,
 
-                (int) 'b', "back",     wid_choose_stats_go_back);
+                (int) 'b', 
+                "back", (char*) 0, (char*) 0,     
+                wid_choose_stats_go_back);
+
+    for (i = 0; i < PLAYER_STATS_MAX; i++) {
+        char *text = 0;
+
+        text = cols[i][0];
+        if (text) {
+            myfree(text);
+        }
+
+        text = cols[i][1];
+        if (text) {
+            myfree(text);
+        }
+    }
 }
