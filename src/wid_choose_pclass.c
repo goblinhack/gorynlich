@@ -195,7 +195,7 @@ static void wid_choose_pclass_bg_create (void)
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        wid_set_tex(wid, 0, "title3");
+        wid_set_tex(wid, 0, "title4");
 
         wid_lower(wid);
 

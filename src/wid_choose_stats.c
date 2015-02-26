@@ -29,6 +29,7 @@ static void wid_choose_stats_create(void);
 static widp menu;
 
 static int intro_effect_delay = 200;
+static int saved_focus = 0;
 
 uint8_t wid_choose_stats_init (void)
 {
@@ -124,6 +125,8 @@ static void wid_choose_stats_callback (widp w)
 
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
 
+    saved_focus = row;
+
     thing_statsp s;
     if (player) {
         s = &player->stats;
@@ -131,11 +134,48 @@ static void wid_choose_stats_callback (widp w)
         s = &global_config.stats;
     }
 
-    if (s->spending_points) {
+    s->spending_points--;
+
+    switch (row) {
+    case 1:
+        s->hp += s->hp / 10;
+        s->max_hp += s->max_hp / 10;
+        break;
+    case 2:
+        s->magic += s->magic / 10;
+        s->max_magic += s->max_magic / 10;
+        break;
+    case 3:
+        s->attack_melee++;
+        break;
+    case 4:
+        s->attack_ranged++;
+        break;
+    case 5:
+        s->attack_magical++;
+        break;
+    case 6:
+        s->defense++;
+        break;
+    case 7:
+        s->speed++;
+        break;
+    case 8:
+        s->vision++;
+        break;
+    case 9:
+        s->healing++;
+        break;
     }
 
-    wid_choose_stats_hide();
-    wid_choose_game_type_visible();
+    if (!s->spending_points) {
+        wid_choose_stats_hide();
+        wid_choose_game_type_visible();
+        return;
+    }
+
+    wid_destroy_nodelay(&menu);
+    wid_choose_stats_create();
 }
 
 static uint8_t 
@@ -197,32 +237,30 @@ static void wid_choose_stats_bg_create (void)
 
 static void wid_choose_stats_create (void)
 {
-    if (wid_choose_stats) {
-        return;
+    if (!wid_choose_stats) {
+        wid_choose_stats = wid_new_window("intro buttons");
+
+        wid_set_no_shape(wid_choose_stats);
+
+        fpoint tl = {0.0f, 0.0f};
+        fpoint br = {1.0f, 1.0f};
+        wid_set_tl_br_pct(wid_choose_stats, tl, br);
+        wid_set_on_key_down(wid_choose_stats, wid_choose_stats_play_key_event);
+
+        color col = BLACK;
+        col.a = 0;
+        glcolor(col);
+
+        wid_set_mode(wid_choose_stats, WID_MODE_NORMAL);
+        wid_set_color(wid_choose_stats, WID_COLOR_TL, col);
+        wid_set_color(wid_choose_stats, WID_COLOR_BR, col);
+        wid_set_color(wid_choose_stats, WID_COLOR_BG, col);
+
+        wid_choose_stats_bg_create();
+        wid_update(wid_choose_stats);
+
+        wid_move_to_pct_centered(wid_choose_stats, 0.5f, 0.5f);
     }
-
-    wid_choose_stats = wid_new_window("intro buttons");
-
-    wid_set_no_shape(wid_choose_stats);
-
-    fpoint tl = {0.0f, 0.0f};
-    fpoint br = {1.0f, 1.0f};
-    wid_set_tl_br_pct(wid_choose_stats, tl, br);
-    wid_set_on_key_down(wid_choose_stats, wid_choose_stats_play_key_event);
-
-    color col = BLACK;
-    col.a = 0;
-    glcolor(col);
-
-    wid_set_mode(wid_choose_stats, WID_MODE_NORMAL);
-    wid_set_color(wid_choose_stats, WID_COLOR_TL, col);
-    wid_set_color(wid_choose_stats, WID_COLOR_BR, col);
-    wid_set_color(wid_choose_stats, WID_COLOR_BG, col);
-
-    wid_choose_stats_bg_create();
-    wid_update(wid_choose_stats);
-
-    wid_move_to_pct_centered(wid_choose_stats, 0.5f, 0.5f);
 
     thing_statsp s;
     s = &global_config.stats;
@@ -235,6 +273,7 @@ static void wid_choose_stats_create (void)
     int i;
     for (i = 0; i < PLAYER_STATS_MAX; i++) {
         char *text = 0;
+        char *text2 = 0;
         int stat = 0;
 
         switch (i) {
@@ -281,40 +320,54 @@ static void wid_choose_stats_create (void)
             break;
         }
 
-        cols[i][0] = text;
-
         int modifier = thing_stats_val_to_modifier(stat);
 
-        if (modifier > 0) {
-            text = dynprintf("%u / +%d", stat, modifier);
-        } else if (modifier < 0) {
-            text = dynprintf("%u", stat);
-        } else {
-            text = dynprintf("%u / %d", stat, modifier);
+        if (!text) {
+            if (modifier > 0) {
+                if (modifier > 2) {
+                    text = dynprintf("%%%%fg=gold$%u", stat);
+                    text2 = dynprintf("%%%%fg=gold$Lvl %d", modifier);
+                } else if (modifier > 2) {
+                    text = dynprintf("%%%%fg=yellow$%u", stat);
+                    text2 = dynprintf("%%%%fg=yellow$Lvl %d", modifier);
+                } else if (modifier > 1) {
+                    text = dynprintf("%%%%fg=white$%u", stat);
+                    text2 = dynprintf("%%%%fg=white$Lvl %d", modifier);
+                } else {
+                    text = dynprintf("%%%%fg=gray80$%u", stat);
+                    text2 = dynprintf("%%%%fg=gray80$Lvl %d", modifier);
+                }
+            } else if (modifier < 0) {
+                text = dynprintf("%%%%fg=red$%u", stat);
+                text2 = dynprintf("%%%%fg=red$Lvl %d", modifier);
+            } else {
+                text = dynprintf("%u", stat);
+            }
         }
 
-        cols[i][1] = text;
+        cols[i][0] = text;
+        cols[i][1] = text2;
     }
 
     menu = wid_menu(0,
                 vvlarge_font,
-                large_font,
+                vlarge_font,
                 0.5, /* x */
                 0.5, /* y */
                 3, /* columns */
-                focus, /* focus */
+                saved_focus ? saved_focus : focus, /* focus */
                 PLAYER_STATS_MAX - 1, /* items */
 
                 /*
                  * Column widths
                  */
-                (double) 0.6, (double) 0.1, (double) 0.1,
+                (double) 0.4, (double) 0.15, (double) 0.15,
 
                 (int) 0,
                 player_stats_arr[STAT_SPENDING_POINTS].col1,
                 cols[STAT_SPENDING_POINTS][0],
                 cols[STAT_SPENDING_POINTS][1],
-                wid_choose_stats_callback,
+                (on_mouse_down_t) 0,
 
                 (int) 0,
                 player_stats_arr[STAT_MAX_HP].col1,
@@ -371,7 +424,7 @@ static void wid_choose_stats_create (void)
                 wid_choose_stats_callback,
 
                 (int) 'b', 
-                "back", (char*) 0, (char*) 0,     
+                "%%fmt=left$back", (char*) 0, (char*) 0,     
                 wid_choose_stats_go_back);
 
     for (i = 0; i < PLAYER_STATS_MAX; i++) {

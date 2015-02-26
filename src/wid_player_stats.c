@@ -632,10 +632,10 @@ static void wid_player_stats_create (thing_statsp s, int fast)
                     wid_set_color(w, WID_COLOR_TEXT, DARKGRAY);
                 } else if (modifier <= -2) {
                     wid_set_color(w, WID_COLOR_TEXT, GRAY);
-                } else if (modifier >= 3) {
-                    wid_set_color(w, WID_COLOR_TEXT, GOLD);
                 } else if (modifier >= 2) {
                     wid_set_color(w, WID_COLOR_TEXT, GREEN);
+                } else if (modifier >= 3) {
+                    wid_set_color(w, WID_COLOR_TEXT, GOLD);
                 } else {
                     wid_set_color(w, WID_COLOR_TEXT, WHITE);
                 }

@@ -982,7 +982,7 @@ widp wid_menu (widp parent,
          * Need a bit of fudge so the text outline does not creep out of the 
          * widget scissors.
          */
-        br.y = total_height_needed * 1.1;
+        br.y = total_height_needed * 1.2;
 
         wid_set_tl_br(w, tl, br);
         wid_move_to_pct_centered(w, 0.5, 0.5);
