@@ -61,6 +61,7 @@ typedef struct {
      * Percentage width of each column.
      */
     double col_width[WID_MENU_MAX_COLS];
+    double total_col_width;
 
     /*
      * Shortcut key
