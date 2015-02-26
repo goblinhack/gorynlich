@@ -908,8 +908,6 @@ static void client_rx_server_status (gsocketp s,
      */
     int version_delta = (int)new_stats->client_version - (int)old_stats->client_version;
 
-//CON("version of stats, client: %d server: %d", old_stats->client_version, 
-//new_stats->client_version);
     if ((version_delta >= 0) || (version_delta < -255)) {
         /*
          * Server has latest version; (accounted for wraparond(.

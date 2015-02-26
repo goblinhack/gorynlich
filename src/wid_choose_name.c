@@ -215,6 +215,11 @@ static void wid_choose_name_create (void)
         strncpy(s->pname, name_random(s->pclass), sizeof(s->pname) - 1);
     }
 
+    /*
+     * Start with some random junk.
+     */
+    thing_stats_get_random(s, false /* new_random_name_and_class */);
+
     menu_keyboard = wid_keyboard(s->pname, "Choose a name",
                                  wid_keyboard_event_selected,
                                  wid_keyboard_event_cancelled);
