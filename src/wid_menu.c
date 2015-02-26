@@ -52,12 +52,11 @@ static void wid_menu_update (widp w)
     int i;
     for (i = 0; i < items; i++) {
 
-        double cx = 0.0;
+        double cx = (1.0 - ctx->total_col_width) / 2.0;
         int c;
         double saved_y = y;
 
         for (c = 0; c < ctx->cols; c++) {
-
             y = saved_y;
 
             widp b = ctx->buttons[i][c];
@@ -146,6 +145,8 @@ static uint8_t wid_menu_button_mouse_event (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
+    verify(w);
+
     int item = (typeof(item)) (uintptr_t) wid_get_client_context2(w);
     int col = (typeof(col)) (uintptr_t) wid_get_client_context3(w);
 
@@ -1006,9 +1007,11 @@ widp wid_menu (widp parent,
         for (c = 0; c < cols; c++) {
             double width = va_arg(ap, double);
             ctx->col_width[c] = width;
+            ctx->total_col_width += width;
         }
     } else {
         ctx->col_width[0] = 1.0;
+        ctx->total_col_width = 1.0;
     }
 
     /*
@@ -1025,7 +1028,9 @@ widp wid_menu (widp parent,
             ctx->buttons[i][c] = b;
             ctx->shortcut[i] = shortcut;
 
-            wid_set_text(b, text);
+            if (text) {
+                wid_set_text(b, text);
+            }
 
             wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
             wid_set_on_key_down(b, wid_menu_button_key_event);
