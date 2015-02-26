@@ -8837,11 +8837,11 @@ static void wid_display (widp w,
             } else if (font == med_font) {
                 outline = 1.5;
             } else if (font == large_font) {
-                outline = 2.0;
+                outline = 3.0;
             } else if (font == vlarge_font) {
-                outline = 3.0;
+                outline = 4.0;
             } else if (font == vvlarge_font) {
-                outline = 3.0;
+                outline = 5.0;
             } else {
                 DIE("unhandled text outline case");
             }
@@ -8850,7 +8850,7 @@ static void wid_display (widp w,
 
             for (dx = 0.5; dx < outline; dx += 0.5) {
 
-                col_text_outline.a /= 2.0;
+//                col_text_outline.a /= 2.0;
 
                 ttf_puts_no_fmt(font, text,
                                 x - dx * scaling,
