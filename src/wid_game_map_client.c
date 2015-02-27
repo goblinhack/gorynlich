@@ -84,7 +84,6 @@ void wid_game_map_client_hide (void)
     if (wid_game_map_client_window) {
         LOG("Client: Map hide");
 
-        wid_player_stats_hide(true /* fast */);
         wid_player_info_hide(true /* fast */);
         wid_player_inventory_hide(true /* fast */);
         wid_player_action_hide(true /* fast */);
@@ -386,7 +385,6 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
     tpp tp;
 
     if (!player) {
-        wid_player_stats_hide(true /* fast */);
         wid_player_info_hide(true /* fast */);
         wid_player_inventory_hide(true /* fast */);
         return (true);
@@ -511,12 +509,10 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
             s = &player->stats;
 
-            if (!wid_player_stats || wid_is_hidden(wid_player_stats)) {
-                wid_player_stats_visible(s, false /* fast */);
+            if (!wid_player_info_is_visible()) {
                 wid_player_info_visible(s, false /* fast */);
                 wid_player_inventory_visible(s, false /* fast */);
             } else {
-                wid_player_stats_hide(false /* fast */);
                 wid_player_info_hide(false /* fast */);
                 wid_player_inventory_hide(false /* fast */);
             }
@@ -804,7 +800,6 @@ void wid_game_map_client_wid_destroy (void)
     if (wid_game_map_client_window) {
         LOG("Client: Destroy game window");
 
-        wid_player_stats_hide(true /* fast */);
         wid_player_info_hide(true /* fast */);
         wid_player_inventory_hide(true /* fast */);
         wid_player_action_hide(true /* fast */);
