@@ -132,8 +132,6 @@ void quit (void)
     LOG("  - wid_game_over_fini");
     wid_intro_settings_fini();
     LOG("  - wid_intro_settings_fini");
-    wid_player_stats_fini();
-    LOG("  - wid_player_stats_fini");
     wid_hiscore_fini();
     LOG("  - wid_hiscore_fini");
     wid_server_join_fini();
@@ -812,10 +810,6 @@ int32_t main (int32_t argc, char *argv[])
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_intro_settings_init,
                           0, "wid_intro_settings_init");
-
-    action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_thing_stats_init,
-                          0, "wid_thing_stats_init");
 
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)wid_game_map_server_init,
