@@ -323,26 +323,25 @@ static void wid_choose_stats_create (void)
         int modifier = thing_stats_val_to_modifier(stat);
 
         if (!text) {
-            if (modifier > 0) {
-                if (modifier > 2) {
-                    text = dynprintf("%%%%fg=gold$%u", stat);
-                    text2 = dynprintf("%%%%fg=gold$Lvl %d", modifier);
-                } else if (modifier > 2) {
-                    text = dynprintf("%%%%fg=yellow$%u", stat);
-                    text2 = dynprintf("%%%%fg=yellow$Lvl %d", modifier);
-                } else if (modifier > 1) {
-                    text = dynprintf("%%%%fg=white$%u", stat);
-                    text2 = dynprintf("%%%%fg=white$Lvl %d", modifier);
-                } else {
-                    text = dynprintf("%%%%fg=gray80$%u", stat);
-                    text2 = dynprintf("%%%%fg=gray80$Lvl %d", modifier);
-                }
-            } else if (modifier < 0) {
-                text = dynprintf("%%%%fg=red$%u", stat);
-                text2 = dynprintf("%%%%fg=red$Lvl %d", modifier);
+            text = dynprintf("bar:%u,%u", stat, 20);
+            if (modifier > 4) {
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=gold$%2d", modifier);
+            } else if (modifier > 3) {
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=green$%2d", modifier);
+            } else if (modifier > 2) {
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=yellow$%2d", modifier);
+            } else if (modifier > 1) {
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=white$%2d", modifier);
+            } else if (modifier > 0) {
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=gray80$%2d", modifier);
+            } else if (modifier > -2) {
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=gray30$%2d", modifier);
             } else {
-                text = dynprintf("%u", stat);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=red$%2d", 
+                                  modifier);
             }
+        } else {
+            text = dynprintf("%u", stat);
         }
 
         cols[i][0] = text;
@@ -361,7 +360,7 @@ static void wid_choose_stats_create (void)
                 /*
                  * Column widths
                  */
-                (double) 0.4, (double) 0.15, (double) 0.15,
+                (double) 0.4, (double) 0.2, (double) 0.2,
 
                 (int) 0,
                 player_stats_arr[STAT_SPENDING_POINTS].col1,

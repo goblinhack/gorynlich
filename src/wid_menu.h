@@ -64,6 +64,12 @@ typedef struct {
     double total_col_width;
 
     /*
+     * For items drawn as a bar and not text.
+     */
+    widp bar[WID_MENU_MAX_ITEMS][WID_MENU_MAX_COLS];
+    double bar_width[WID_MENU_MAX_ITEMS][WID_MENU_MAX_COLS];
+
+    /*
      * Shortcut key
      */
     char shortcut[WID_MENU_MAX_ITEMS];
