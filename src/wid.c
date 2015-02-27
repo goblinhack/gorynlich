@@ -8848,9 +8848,11 @@ static void wid_display (widp w,
 
             double dx;
 
-            for (dx = 0.5; dx < outline; dx += 0.5) {
+            col_text_outline.a = 255;
 
-//                col_text_outline.a /= 2.0;
+            for (dx = 0.5; dx < outline; dx += 0.5) {
+                glcolor(col_text_outline);
+                col_text_outline.a = (col_text_outline.a * 2) / 3;
 
                 ttf_puts_no_fmt(font, text,
                                 x - dx * scaling,

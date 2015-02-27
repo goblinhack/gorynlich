@@ -62,6 +62,13 @@ static void wid_menu_update (widp w)
             widp b = ctx->buttons[i][c];
             verify(b);
 
+            widp bar = ctx->bar[i][c];
+            if (bar) {
+                verify(bar);
+            }
+
+            double bar_width = ctx->bar_width[i][c];
+
             wid_set_text_centerx(b, 1);
             wid_set_text_centery(b, 1);
 
@@ -100,8 +107,8 @@ static void wid_menu_update (widp w)
             transparent.a = 0;
 
             /*
-            * Make sure the other widgets look plain in all modes.
-            */
+             * Make sure the other widgets look plain in all modes.
+             */
             int mode;
             for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
                 wid_set_no_shape(b);
@@ -116,6 +123,23 @@ static void wid_menu_update (widp w)
 
             wid_set_mode(b, WID_MODE_NORMAL);
             wid_update(b);
+
+            if (bar) {
+                fpoint tl;
+                fpoint br;
+
+                tl.x = 0.1;
+                tl.y = 0;
+                br.x = bar_width;
+                br.y = 0.9;
+
+                wid_set_bevel(bar, 2);
+                wid_set_tl_br_pct(bar, tl, br);
+                wid_set_color(bar, WID_COLOR_BG, c);
+
+                wid_set_color(bar, WID_COLOR_TL, WHITE);
+                wid_set_color(bar, WID_COLOR_BR, BLACK);
+            }
         }
     }
 
@@ -1028,18 +1052,40 @@ widp wid_menu (widp parent,
             ctx->buttons[i][c] = b;
             ctx->shortcut[i] = shortcut;
 
-            if (text) {
-                wid_set_text(b, text);
-            }
-
-            wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
             wid_set_on_key_down(b, wid_menu_button_key_event);
             wid_set_on_mouse_down(b, wid_menu_button_mouse_event);
             wid_set_on_joy_down(b, wid_menu_button_joy_down_event);
+            wid_set_on_mouse_over_begin(b, wid_menu_mouse_over);
 
             wid_set_client_context(b, ctx);
             wid_set_client_context2(b, (void*) (uintptr_t) i);
             wid_set_client_context3(b, (void*) (uintptr_t) c);
+
+            if (text) {
+                if (!strncmp(text, "bar:", 3)) {
+                    widp bar = ctx->bar[i][c] = wid_new_square_button(b, "bar");
+
+                    int val;
+                    int max;
+                    sscanf(text, "bar:%d,%d", &val, &max);
+
+                    double p = ((double)val) / ((double)max);
+
+                    ctx->bar_width[i][c] = p;
+
+                    wid_set_on_key_down(bar, wid_menu_button_key_event);
+                    wid_set_on_mouse_down(bar, wid_menu_button_mouse_event);
+                    wid_set_on_joy_down(bar, wid_menu_button_joy_down_event);
+                    wid_set_on_mouse_over_begin(bar, wid_menu_mouse_over);
+
+                    wid_set_client_context(bar, ctx);
+                    wid_set_client_context2(bar, (void*) (uintptr_t) i);
+                    wid_set_client_context3(bar, (void*) (uintptr_t) c);
+
+                } else {
+                    wid_set_text(b, text);
+                }
+            }
         }
 
         on_mouse_down_t fn = va_arg(ap, on_mouse_down_t);
