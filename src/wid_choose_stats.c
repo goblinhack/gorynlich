@@ -31,6 +31,69 @@ static widp menu;
 static int intro_effect_delay = 200;
 static int saved_focus = 0;
 
+typedef struct player_stats_row_ {
+    const char *col1;
+    const char *col2;
+    uint32_t increment;
+    const char *tooltip;
+} player_stats_row;
+
+enum {
+    STAT_SPENDING_POINTS,
+    STAT_EXPERIENCE,
+    STAT_LEVEL,
+    STAT_MAX_HP,
+    STAT_MAX_MAGIC,
+    STAT_ATTACK_MELEE,
+    STAT_ATTACK_RANGED,
+    STAT_ATTACK_MAGICAL,
+    STAT_DEFENSE,
+    STAT_SPEED,
+    STAT_VISION,
+    STAT_HEALING,
+};
+
+#define PLAYER_STATS_MAX 12 
+
+static player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
+      /*                         Column 1     Column 2 Increm */
+    { /* STAT_SPENDING_POINTS */ "Spending points", 0,   0,
+    "Click on a statistic below to spend your hard earned points." },
+
+    { /* STAT_EXPERIENCE      */ "Experience",      0,   0,
+    "Experience points earned on defeating Bad Guys." },
+
+    { /* STAT_LEVEL           */ "Level",           0,   0,
+    "Your current experience level" },
+
+    { /* STAT_MAX_HP          */ "%%fmt=left$Health",          "+", 5,
+    "Health points. This is the max you can recover to with your healing ability." },
+
+    { /* STAT_MAX_MAGIC       */ "%%fmt=left$Magic",           "+", 5,
+    "ID is your life force used for magic and life changing events." },
+
+    { /* STAT_ATTACK_MELEE    */ "%%fmt=left$Melee",           "+", 1,
+    "This modifier is the percentage damage gain you get in physical attacks." },
+
+    { /* STAT_ATTACK_RANGED   */ "%%fmt=left$Range damage",    "+", 1,
+    "This modifier is the percentage damage gain you get in missile attacks." },
+
+    { /* STAT_ATTACK_MAGIC    */ "%%fmt=left$Magic damage",    "+", 1,
+    "This modifier is the percentage damage gain you get in magical attacks." },
+
+    { /* STAT_DEFENSE         */ "%%fmt=left$Defense",         "+", 1,
+    "This modifier is the percentage gain you get in defense against attacks" },
+
+    { /* STAT_SPEED           */ "%%fmt=left$Speed",           "+", 1,
+    "This modifier is the percentage gain you get in running around like a nutter." },
+
+    { /* STAT_VISION          */ "%%fmt=left$Vision",          "+", 1,
+    "This modifier is the percentage gain you get in seeing bad stuffs." },
+
+    { /* STAT_HEALING         */ "%%fmt=left$Healing",         "+", 1,
+    "This modifier is the percentage gain you get in recovering health points." },
+};
+
 uint8_t wid_choose_stats_init (void)
 {
     if (!wid_choose_stats_init_done) {

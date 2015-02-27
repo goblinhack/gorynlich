@@ -52,7 +52,7 @@ void wid_player_inventory_hide (int fast)
         if (fast) {
             wid_hide(wid_player_inventory, 0);
         } else {
-            wid_move_to_pct_centered_in(wid_player_inventory, 0.5, 1.45, 200);
+            wid_move_to_pct_centered_in(wid_player_inventory, 1.85, 0.45, 200);
         }
     }
 
@@ -575,7 +575,7 @@ static void wid_player_inventory_create (thing_statsp s, int fast)
                         wid_new_rounded_window("wid player inv");
 
         fpoint tl = {0.0, 0.0};
-        fpoint br = {0.3, 0.9};
+        fpoint br = {0.3, 0.8};
 
         wid_set_tl_br_pct(w, tl, br);
         wid_set_font(w, small_font);
@@ -712,10 +712,10 @@ static void wid_player_inventory_create (thing_statsp s, int fast)
     }
 
     if (fast) {
-        wid_move_to_pct_centered(wid_player_inventory, 0.8, 0.45);
+        wid_move_to_pct_centered(wid_player_inventory, 0.85, 0.45);
     } else {
-        wid_move_to_pct_centered(wid_player_inventory, 0.8, -0.45);
-        wid_move_to_pct_centered_in(wid_player_inventory, 0.8, 0.45, 200);
+        wid_move_to_pct_centered(wid_player_inventory, 1.85, 0.45);
+        wid_move_to_pct_centered_in(wid_player_inventory, 0.85, 0.45, 200);
     }
 
     wid_raise(wid_player_inventory);
