@@ -1,5 +1,5 @@
 --------------------------------------- plan for feb --------------------------------------
-- remove spending points from in game stats menu
+- move item from action bar does not redraw
 - need menu with 2 or 3 columns for settings
 - revamp set wid editor title
 --------------------------------------- plan for mar --------------------------------------
@@ -68,6 +68,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Fri Feb 27 07:45:03 EST 2015
+- got rid of stats panel in game, had little use
+- remove spending points from in game stats menu
 
 Thu Feb 26 22:15:40 EST 2015
 - sliding bar for scale for stat points
