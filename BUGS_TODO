@@ -1,13 +1,13 @@
 --------------------------------------- plan for feb --------------------------------------
-- intro settings mouse click doe not work
+- add numpad to wid server create
 --------------------------------------- plan for mar --------------------------------------
+- revamp join window
+- revamp server window
 - add level map chooser screen
 - add ability to save level topology
 - add ability to connect levels together
 - remove file load/save widgets, no longer needed
-- revamp join window
-- revamp server window
-- revamp stats window? move all done into spending menu
+- sound on key click in menus
 - multiplayer, join game does not show stats window
 - remove gothic and window textures - no longer needed
 - stats need to do something
@@ -66,6 +66,10 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sat Feb 28 08:01:44 EST 2015
+- intro settings mouse click doe not work
+- revamp stats window? move all done into spending menu
 
 Fri Feb 27 21:28:31 EST 2015
 - revamp set wid editor title
