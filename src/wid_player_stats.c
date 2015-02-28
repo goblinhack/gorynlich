@@ -23,14 +23,11 @@ static thing_statsp player_stats;
 
 void wid_player_stats_redraw (int fast)
 {
-CON("redraw");
     if (!wid_player_info_is_visible()) {
-CON("redraw fail");
         return;
     }
 
     if (!player_stats) {
-CON("redraw fail2");
         return;
     }
 
@@ -46,4 +43,13 @@ CON("redraw fail2");
     wid_player_action_visible(player_stats, fast);
 
     wid_raise(wid_mouse_template);
+}
+
+void wid_player_stats_visible (thing_statsp s)
+{
+    player_stats = s;
+}
+
+void wid_player_stats_hide (thing_statsp s)
+{
 }

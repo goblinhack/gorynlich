@@ -481,11 +481,14 @@ static void wid_intro_settings_create (void)
     wid_set_tl_br_pct(w, tl, br);
     wid_set_no_shape(w);
 
+    char *keys[WID_INTRO_MAX_SETTINGS];
     char *values[WID_INTRO_MAX_SETTINGS];
+
     int i;
     for (i = WID_INTRO_SETTINGS_ROW_WINDOW; i < WID_INTRO_MAX_SETTINGS; i++) {
-        values[i] = dynprintf("%s:%s",
-                wid_intro_button_name[i],
+        keys[i] = dynprintf("%s",
+                wid_intro_button_name[i]);
+        values[i] = dynprintf("%s",
                 wid_intro_button_value_string[i][wid_intro_button_val[i]]);
     }
 
@@ -495,25 +498,52 @@ static void wid_intro_settings_create (void)
                 large_font,
                 0.5, /* x */
                 0.7, /* y */
-                1, /* columns */
+                2, /* columns */
                 saved_focus, /* focus */
                 7, /* items */
 
-                (int) '1', values[i], wid_intro_settings_mouse_event,
+                /*
+                 * Column widths
+                 */
+                (double) 0.5, (double) 0.2,
 
-                (int) '2', values[i + 1], wid_intro_settings_mouse_event,
+                (int) '1', 
+                keys[i], 
+                values[i], 
+                wid_intro_settings_mouse_event,
 
-                (int) '3', values[i + 2], wid_intro_settings_mouse_event,
+                (int) '2', 
+                keys[i + 1], 
+                values[i + 1], 
+                wid_intro_settings_mouse_event,
 
-                (int) '4', values[i + 3], wid_intro_settings_mouse_event,
+                (int) '3', 
+                keys[i + 2], 
+                values[i + 2], 
+                wid_intro_settings_mouse_event,
 
-                (int) '5', values[i + 4], wid_intro_settings_mouse_event,
+                (int) '4', 
+                keys[i + 3], 
+                values[i + 3], 
+                wid_intro_settings_mouse_event,
 
-                (int) '6', values[i + 5], wid_intro_settings_mouse_event,
+                (int) '5', 
+                keys[i + 4], 
+                values[i + 4], 
+                wid_intro_settings_mouse_event,
 
-                (int) 'b', "Back", wid_intro_settings_back_mouse_event);
+                (int) '6', 
+                keys[i + 5], 
+                values[i + 5], 
+                wid_intro_settings_mouse_event,
+
+                (int) 'b', 
+                "Back", 
+                (char*) 0,
+                wid_intro_settings_back_mouse_event);
 
     for (i = WID_INTRO_SETTINGS_ROW_WINDOW; i < WID_INTRO_MAX_SETTINGS; i++) {
+        myfree(keys[i]);
         myfree(values[i]);
     }
 
