@@ -24,6 +24,7 @@
 #include "marshal.h"
 #include "wid_text_input.h"
 #include "wid_menu.h"
+#include "wid_keyboard.h"
 #include "level.h"
 
 static uint8_t wid_editor_init_done;
@@ -237,30 +238,21 @@ static void wid_editor_save_cancel (widp w)
     wid_editor_save_popup = 0;
 }
 
-static void wid_editor_title_ok (widp w)
+static void wid_editor_title_ok (widp w, const char *text)
 {
-    widp top;
+    thing_statsp s = &global_config.stats;
+    strncpy(s->pname, text, sizeof(s->pname) - 1);
 
-    /*
-     * We're given the ok or cancel button, so must title the text box.
-     */
-    const char *title = wid_get_text(w);
+    level_set_title(level_ed, text);
 
-    level_set_title(level_ed, title);
-
-    /*
-     * Destroy the title dialog.
-     */
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_editor_title_popup = 0;
+    wid_destroy(&wid_editor_title_popup);
 
     wid_destroy(&wid_editor_filename_and_title);
 
    if (level_get_title(level_ed) &&
         strcasecmp(level_get_title(level_ed), "(null)")) {
 
-        LOG("Level titled as: %s", title);
+        LOG("Level titled as: %s", text);
 
         char *name = dynprintf("%s", level_get_title(level_ed));
 
@@ -282,17 +274,11 @@ static void wid_editor_title_ok (widp w)
     wid_set_no_shape(wid_editor_filename_and_title);
     wid_raise(wid_editor_filename_and_title);
     wid_set_do_not_lower(wid_editor_filename_and_title, true);
-    wid_destroy_in(wid_editor_filename_and_title, 3000);
     wid_editor_filename_and_title = 0;
 }
 
-static void wid_editor_title_cancel (widp w)
+static void wid_editor_title_cancel (widp w, const char *text)
 {
-    widp top;
-
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_editor_title_popup = 0;
 }
 
 static void wid_editor_load_ok (widp w)
@@ -431,12 +417,10 @@ void wid_editor_title (void)
         return;
     }
 
-    wid_editor_title_popup = wid_text_input(
-          "Level title?",
-          0.5, 0.5,                 /* position */
-          2,                        /* buttons */
-          "Ok", wid_editor_title_ok,
-          "Cancel", wid_editor_title_cancel);
+    wid_editor_title_popup = wid_keyboard(level_get_title(level_ed),
+                                          "Level title",
+                                          wid_editor_title_ok,
+                                          wid_editor_title_cancel);
 }
 
 void wid_editor_load (void)
