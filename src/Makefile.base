@@ -104,6 +104,7 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_popup.o 		\
     $(OBJDIR)/wid_menu.o 		\
     $(OBJDIR)/wid_keyboard.o 		\
+    $(OBJDIR)/wid_numpad.o 		\
     $(OBJDIR)/wid_server_create.o 	\
     $(OBJDIR)/wid_server_join.o 	\
     $(OBJDIR)/wid_splash.o 		\
