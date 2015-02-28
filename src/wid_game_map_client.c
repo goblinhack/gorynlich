@@ -510,9 +510,11 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
             s = &player->stats;
 
             if (!wid_player_info_is_visible()) {
+                wid_player_stats_visible(s);
                 wid_player_info_visible(s, false /* fast */);
                 wid_player_inventory_visible(s, false /* fast */);
             } else {
+                wid_player_stats_hide(s);
                 wid_player_info_hide(false /* fast */);
                 wid_player_inventory_hide(false /* fast */);
             }

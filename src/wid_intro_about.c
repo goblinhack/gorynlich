@@ -69,35 +69,48 @@ static void wid_intro_about_create (void)
                 vlarge_font,
                 0.55, /* x */
                 0.5, /* y */
-                1, /* columns */
+                2, /* columns */
                 6, /* focus */
                 7, /* items */
 
-                (int) '0', "%%fmt=left$"
-                "%%fg=gray$Code monkey #1:\t%%fg=white$Neil McGill", 
+                /*
+                 * Column widths
+                 */
+                (double) 0.25, (double) 0.75,
+
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Code monkey #1",
+                "%%fg=white$Neil McGill", 
                 (void*) 0,
 
-                (int) '0', "%%fmt=left$"
-                "%%fg=gray$Code monkey #2:\t%%fg=red$Richard Franks",
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Code monkey #2",
+                "%%fg=red$Richard Franks",
                 (void*) 0,
 
-                (int) '0', "%%fmt=left$"
-                "%%fg=gray$Music:\t%%fg=purple$Charlotte McGill",
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Music",
+                "%%fg=purple$Charlotte McGill",
                 (void*) 0,
 
-                (int) '0', "%%fmt=left$"
-                "%%fg=gray$Music:\t%%fg=cyan$Deceased Senior Technician",
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Music",
+                "%%fg=cyan$Deceased Senior Technician",
                 (void*) 0,
 
-                (int) '0', "%%fmt=left$"
-                "%%fg=gray$Music:\t%%fg=cyan$  (nosoapradio.us)",
+                (int) '0',
+                "%%fmt=left$%%fg=gray$Music",
+                "%%fg=cyan$  (nosoapradio.us)",
                 (void*) 0,
 
-                (int) '0', "%%fmt=left$"
-                "%%fg=gray$Support: %%fg=green$goblinhack@gmail.com",
+                (int) '0', 
+                "%%fmt=left$%%fg=gray$Support",
+                "%%fg=green$goblinhack@gmail.com",
                 (void*) 0,
 
-                (int) 'b', "%%fmt=left$" "Back", 
+                (int) 'b', 
+                "%%fmt=left$Back", 
+                (char*) 0,
                 wid_intro_about_callback_close);
 }
 
