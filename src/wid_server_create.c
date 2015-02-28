@@ -16,6 +16,7 @@
 #include "wid_game_map_client.h"
 #include "socket_util.h"
 #include "wid_menu.h"
+#include "wid_numpad.h"
 #include "server.h"
 
 #define WID_SERVER_CREATE_MAX_SETTINGS  5
@@ -96,8 +97,6 @@ typedef struct server_ {
 static void wid_server_create_destroy_internal(server *node);
 
 static uint8_t wid_server_create_name_receive_input(widp w,
-                                                    const SDL_KEYSYM *key);
-static uint8_t wid_server_create_port_receive_input(widp w, 
                                                     const SDL_KEYSYM *key);
 
 static tree_rootp local_servers;
@@ -329,12 +328,25 @@ static uint8_t wid_server_create_name_mouse_down (widp w,
     return (true);
 }
 
+static widp wid_port_number;
+
+static void wid_port_number_ok (widp w, const char *text)
+{
+    wid_destroy(&wid_port_number);
+}
+
+static void wid_port_number_cancle (widp w, const char *text)
+{
+}
+
 static uint8_t wid_server_create_port_mouse_down (widp w, 
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
 {
-    wid_set_show_cursor(w, true);
-    wid_set_on_key_down(w, wid_server_create_port_receive_input);
+    wid_port_number = wid_numpad(wid_get_text(w),
+                                 "Enter port number",
+                                 wid_port_number_ok,
+                                 wid_port_number_cancle);
 
     return (true);
 }
@@ -402,6 +414,7 @@ static uint8_t wid_server_create_name_receive_input (widp w,
 /*
  * Key down etc...
  */
+#if 0
 static uint8_t wid_server_create_port_receive_input (widp w, 
                                                      const SDL_KEYSYM *key)
 {
@@ -475,6 +488,7 @@ static uint8_t wid_server_create_port_receive_input (widp w,
      */
     return (wid_receive_input(w, key));
 }
+#endif
 
 void wid_server_create_destroy (void)
 {
@@ -698,7 +712,7 @@ static void wid_server_create_menu (void)
                 5, /* items */
 
                 (int) '1', values[i], 
-                wid_server_create_button_mouse_down[i],
+                    wid_server_create_button_mouse_down[i],
 
                 (int) '2', values[i + 1], 
                     wid_server_create_button_mouse_down[i + 1],

@@ -204,10 +204,21 @@ static uint8_t wid_intro_settings_decrement_mouse_event (widp w,
     int32_t val = wid_intro_button_val[row];
 
     if (!val) {
-        return (true);
-    }
+        /*
+         * Jump to the last value.
+         */
+        for (;;) {
+            if (!wid_intro_button_value_string[row][val+1]) {
+                break;
+            }
 
-    wid_intro_button_val[row]--;
+            val++;
+        }
+
+        wid_intro_button_val[row] = val;
+    } else {
+        wid_intro_button_val[row]--;
+    }
 
     wid_intro_settings_destroy();
     wid_intro_settings_create();
