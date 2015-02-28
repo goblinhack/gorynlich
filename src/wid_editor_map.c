@@ -1117,12 +1117,16 @@ void wid_editor_add_grid (void)
                     sprintf(tmp, "%u,%u",ix,iy);
                     wid_set_text(child, tmp);
                     c = GREEN;
-                    c.a = 100;
+                    c.a = 50;
                     wid_set_color(child, WID_COLOR_TL, c);
                     wid_set_color(child, WID_COLOR_BR, c);
-                } else {
+
                     c = WHITE;
                     c.a = 100;
+                    wid_set_color(child, WID_COLOR_TEXT, c);
+                } else {
+                    c = WHITE;
+                    c.a = 20;
                     wid_set_color(child, WID_COLOR_TL, c);
                     wid_set_color(child, WID_COLOR_BR, c);
                 }
