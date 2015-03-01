@@ -393,7 +393,7 @@ static void wid_choose_game_type_create (void)
                  vvlarge_font,
                  large_font,
                  0.5, /* x */
-                 0.3, /* y */
+                 0.4, /* y */
                  1, /* columns */
                  1, /* focus */
                  4, /* items */
