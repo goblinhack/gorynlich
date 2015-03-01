@@ -113,12 +113,14 @@ static void wid_keyboard_update_buttons (widp w)
             font = vvlarge_font;
         }
 
-        wid_set_tl_br_pct(b, tl, br);
+        if (ctx->is_new) {
+            wid_set_tl_br_pct(b, tl, br);
+        }
+
         wid_set_color(b, WID_COLOR_TEXT, c);
         wid_set_font(b, font);
     }
     }
-
     wid_update(w);
 
     /*

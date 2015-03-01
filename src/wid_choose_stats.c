@@ -197,6 +197,10 @@ static void wid_choose_stats_callback (widp w)
         s = &global_config.stats;
     }
 
+    if (!s->spending_points) {
+        return;
+    }
+
     s->spending_points--;
 
     switch (row) {
@@ -245,7 +249,7 @@ static uint8_t
 wid_choose_stats_go_back (void)
 {
     wid_choose_stats_hide();
-    wid_intro_visible();
+    wid_choose_name_visible();
 
     return (true);
 }
