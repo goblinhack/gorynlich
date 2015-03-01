@@ -1,15 +1,11 @@
---------------------------------------- plan for feb --------------------------------------
-- keyboard widgets do not center
 --------------------------------------- plan for mar --------------------------------------
-- revamp join window
-- revamp server window
-- add level map chooser screen
+- revamp join server window
+- remove gothic and window textures - no longer needed
+- add level map chooser screen, use x,y as level coords
 - add ability to save level topology
 - add ability to connect levels together
 - remove file load/save widgets, no longer needed
 - sound on key click in menus
-- multiplayer, join game does not show stats window
-- remove gothic and window textures - no longer needed
 - stats need to do something
 --------------------------------------- plan for apr --------------------------------------
 - magic attack - green fireball?
@@ -68,6 +64,10 @@ different profiles for level generation
 mining?
 
 Sun Mar  1 07:36:18 EST 2015
+- multiplayer, join game does not show stats window - no need now
+- keyboard widgets do not center
+- spending points go negative
+- fix back in all windows
 - recolored backgrounds
 - down on intro screen goes back to middle
 
