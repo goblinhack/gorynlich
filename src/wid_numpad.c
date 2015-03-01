@@ -584,10 +584,16 @@ static uint8_t wid_numpad_text_input_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static void wid_numpad_mouse_over (widp w)
+static void wid_numpad_mouse_over (widp w,
+                                   int32_t relx, int32_t rely,
+                                   int32_t wheelx, int32_t wheely)
 {
     wid_numpad_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
+
+    if (!relx && !rely && !wheelx && !wheely) {
+        return;
+    }
 
     /*
      * If we recreate the numpad with a fixed focus we will be told about

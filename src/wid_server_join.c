@@ -953,9 +953,15 @@ static void wid_server_join_display (server *s)
     wid_raise(wid_server_stats_window2);
 }
 
-static void wid_server_join_mouse_over_server (widp w)
+static void wid_server_join_mouse_over_server (widp w,
+                                               int32_t relx, int32_t rely,
+                                               int32_t wheelx, int32_t wheely)
 {
     server *s = (typeof(s)) wid_get_client_context(w);
+
+    if (!relx && !rely && !wheelx && !wheely) {
+        return;
+    }
 
     wid_server_join_display(s);
 }

@@ -143,7 +143,9 @@ void wid_key_up(const struct SDL_KEYSYM *, int32_t x, int32_t y);
 
 typedef void(*on_mouse_focus_begin_t)(widp);
 typedef void(*on_mouse_focus_end_t)(widp);
-typedef void(*on_mouse_over_begin_t)(widp);
+typedef void(*on_mouse_over_begin_t)(widp,
+                                     int32_t relx, int32_t rely,
+                                     int32_t wheelx, int32_t wheely);
 typedef void(*on_mouse_over_end_t)(widp);
 typedef uint8_t(*on_joy_button_t)(widp, int32_t x, int32_t y);
 typedef uint8_t(*on_mouse_down_t)(widp, int32_t x, int32_t y, uint32_t button);
