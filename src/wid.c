@@ -928,7 +928,9 @@ static void wid_mouse_over_end (void)
     }
 }
 
-static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
+static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y,
+                                     int32_t relx, int32_t rely,
+                                     int32_t wheelx, int32_t wheely)
 {
     if (wid_over == w) {
         return (true);
@@ -964,7 +966,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y)
     wid_set_mode(w, WID_MODE_OVER);
 
     if (w->on_mouse_over_begin) {
-        w->on_mouse_over_begin(w);
+        w->on_mouse_over_begin(w, relx, rely, wheelx, wheely);
     }
 
     if (w->tooltip) {
@@ -6809,7 +6811,7 @@ void wid_mouse_motion (int32_t x, int32_t y,
         /*
          * Over a new wid.
          */
-        while (w && !wid_mouse_over_begin(w, x, y)) {
+        while (w && !wid_mouse_over_begin(w, x, y, relx, rely, wheelx, wheely)) {
             w = w->parent;
         }
 
@@ -6829,7 +6831,7 @@ void wid_mouse_motion (int32_t x, int32_t y,
 
         w = wid_mouse_motion_handler(x, y, relx, rely, wheelx, wheely);
         if (w) {
-            if (wid_mouse_over_begin(w, x, y)) {
+            if (wid_mouse_over_begin(w, x, y, relx, rely, wheelx, wheely)) {
                 over = true;
             }
 
