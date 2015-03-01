@@ -284,6 +284,10 @@ wid_choose_game_type_go_back_mouse_event (widp w, int32_t x, int32_t y,
                                           uint32_t button)
 {
     wid_choose_game_type_hide();
+
+    /*
+     * Don't go back to choose stats as all points are spent.
+     */
     wid_choose_name_visible();
 
     return (true);
