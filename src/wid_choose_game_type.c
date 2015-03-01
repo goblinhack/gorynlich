@@ -93,7 +93,7 @@ void wid_choose_game_type_hide (void)
 void wid_choose_game_type_visible (void)
 {
     if (wid_choose_game_type_is_visible) {
-        return;
+        wid_choose_game_type_hide();
     }
 
     wid_choose_game_type_create();
@@ -181,7 +181,7 @@ static void wid_choose_game_type_start_server_selected (void)
             intro_effect_delay,
             0 /* jitter */);
 
-    wid_destroy(&menu);
+    wid_choose_game_type_hide();
 }
 
 static void wid_choose_game_type_stop_server_selected_cb (void *context)

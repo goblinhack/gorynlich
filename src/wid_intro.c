@@ -554,6 +554,7 @@ static void wid_intro_menu_create (void)
         return;
     }
 
+    if (0)
     wid_intro_menu = 
         wid_menu(0,
                  vvlarge_font,
@@ -577,6 +578,7 @@ static void wid_intro_menu_create (void)
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 
                  (int) 'q', "Quit", wid_intro_quit_selected);
+    wid_server_create_visible();
 }
 
 static void wid_intro_menu_destroy (void)
