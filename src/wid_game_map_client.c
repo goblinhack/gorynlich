@@ -1105,11 +1105,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         widp wid_name_title_container;
 
         char *name_title;
-        if (p->stats.pclass[0] && p->stats.pname[0]) {
-            name_title = dynprintf("%s, %s", p->stats.pname, p->stats.pclass);
-        } else if (p->stats.pclass[0]) {
-            name_title = dynprintf("%s", p->stats.pclass);
-        } else if (p->stats.pname[0]) {
+        /*
+         * Just print the name, don't need the class as well.
+         */
+        if (p->stats.pname[0]) {
             name_title = dynprintf("%s", p->stats.pname);
         } else {
             name_title = 0;
