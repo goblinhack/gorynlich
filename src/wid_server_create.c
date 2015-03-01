@@ -17,9 +17,10 @@
 #include "socket_util.h"
 #include "wid_menu.h"
 #include "wid_numpad.h"
+#include "wid_keyboard.h"
 #include "server.h"
 
-#define WID_SERVER_CREATE_MAX_SETTINGS  5
+#define WID_SERVER_CREATE_MAX_SETTINGS  4
 #define WID_SERVER_CREATE_MAX_VAL      30 
 
 enum {
@@ -31,10 +32,10 @@ enum {
 
 static const char *
     wid_server_create_button_name[WID_SERVER_CREATE_MAX_SETTINGS] = {
-    "Server name",
-    "Port",
-    "Max Players",
-    "Start server",
+    "%%fmt=left$Server name",
+    "%%fmt=left$Port",
+    "%%fmt=left$Max Players",
+    "%%fmt=left$%%fg=red$Start server",
 };
 
 static const char *wid_server_create_button_value_string
@@ -52,9 +53,6 @@ static uint8_t wid_server_create_name_mouse_down(widp w,
                                                  int32_t x, int32_t y,
                                                  uint32_t button);
 static uint8_t wid_server_create_port_mouse_down(widp w, 
-                                                 int32_t x, int32_t y,
-                                                 uint32_t button);
-static uint8_t wid_server_create_value_string_mouse_event(widp w,
                                                  int32_t x, int32_t y,
                                                  uint32_t button);
 static uint8_t wid_server_create_mouse_event(widp w,
@@ -75,7 +73,6 @@ static uint32_t wid_server_create_button_val[WID_SERVER_CREATE_MAX_SETTINGS];
 static char wid_server_create_button_sval[WID_SERVER_CREATE_MAX_SETTINGS][MAXSTR];
 
 static widp wid_server_create_bg;
-static widp wid_server_create_container;
 static uint8_t wid_server_create_init_done;
 
 static void wid_server_create_menu(void);
@@ -95,9 +92,6 @@ typedef struct server_ {
 } server;
 
 static void wid_server_create_destroy_internal(server *node);
-
-static uint8_t wid_server_create_name_receive_input(widp w,
-                                                    const SDL_KEYSYM *key);
 
 static tree_rootp local_servers;
 
@@ -235,6 +229,10 @@ void wid_server_create_hide (void)
         wid_destroy_in(wid_server_create_bg, wid_hide_delay * 2);
         wid_server_create_bg = 0;
     }
+
+    if (menu) {
+        wid_destroy(&menu);
+    }
 }
 
 void wid_server_create_visible (void)
@@ -278,6 +276,11 @@ void wid_server_create_redo (void)
 
 static uint8_t wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t button)
 {
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    saved_focus = ctx->focus;
+
     wid_server_create_hide();
     wid_choose_game_type_visible();
 
@@ -286,6 +289,12 @@ static uint8_t wid_server_create_go_back (widp w, int32_t x, int32_t y, uint32_t
 
 static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
 {
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    saved_focus = ctx->focus;
+    wid_destroy(&menu);
+
     server_stop();
 
     server *s;
@@ -298,17 +307,19 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
                                global_config.server_port)) {
             MSG_BOX("Open socket, cannot resolve %s:%u",
                 SERVER_DEFAULT_HOST, global_config.server_port);
+            wid_server_create_redo();
+
             return (false);
         }
 
         if (!server_start(ip)) {
+            wid_server_create_redo();
+
             return (true);
         }
 
         break;
     }
-
-    wid_server_create_redo();
 
     MSG(POPUP, "Server started! Woot!");
 
@@ -318,177 +329,137 @@ static uint8_t wid_server_start (widp w, int32_t x, int32_t y, uint32_t button)
     return (true);
 }
 
-static uint8_t wid_server_create_name_mouse_down (widp w, 
-                                                  int32_t x, int32_t y,
-                                                  uint32_t button)
-{
-    wid_set_show_cursor(w, true);
-    wid_set_on_key_down(w, wid_server_create_name_receive_input);
-
-    return (true);
-}
-
 static widp wid_port_number;
 
 static void wid_port_number_ok (widp w, const char *text)
 {
     wid_destroy(&wid_port_number);
+
+    server *s = 0;
+
+    TREE_WALK_REVERSE(local_servers, s) {
+        break;
+    }
+
+    server sn;
+    memset(&sn, 0, sizeof(sn));
+
+    int port;
+    int success = sscanf(text, "%u", &port);
+    if (success != 1) {
+        /*
+         * Fail
+         */
+        MSG_BOX("Failed to parse port number");
+        wid_server_create_redo();
+        return;
+    }
+
+    if ((port > 65535) || (port < 1024)) {
+        /*
+         * Fail
+         */
+        MSG_BOX("Failed to parse port number, "
+                "must be in the 1024 to 65535 range");
+        wid_server_create_redo();
+        return;
+    }
+
+    sn.port = port;
+    global_config.server_port = sn.port;
+
+    if (s) {
+        sn.name = dupstr(s->name, "wid port change");
+    }
+
+    server_remove(s);
+    wid_server_local_server_add(&sn);
+    wid_server_create_redo();
+    myfree(sn.name);
 }
 
-static void wid_port_number_cancle (widp w, const char *text)
+static void wid_port_number_cancel (widp w, const char *text)
 {
+    wid_destroy(&wid_port_number);
+
+    wid_server_create_menu();
 }
 
 static uint8_t wid_server_create_port_mouse_down (widp w, 
                                                   int32_t x, int32_t y,
                                                   uint32_t button)
 {
-    wid_port_number = wid_numpad(wid_get_text(w),
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    saved_focus = ctx->focus;
+
+    wid_destroy(&menu);
+
+    wid_port_number = wid_numpad("",
                                  "Enter port number",
                                  wid_port_number_ok,
-                                 wid_port_number_cancle);
+                                 wid_port_number_cancel);
 
     return (true);
 }
 
-/*
- * Key down etc...
- */
-static uint8_t wid_server_create_name_receive_input (widp w,
-                                                     const SDL_KEYSYM *key)
+static widp wid_server_name;
+
+static void wid_server_name_ok (widp w, const char *text)
 {
-    server *s;
+    wid_destroy(&wid_server_name);
 
-    switch (key->sym) {
-        case SDLK_ESCAPE:
-            wid_server_create_hide();
-            wid_choose_game_type_visible();
-            return (true);
-        default:
-            break;
+    server *s = 0;
+
+    TREE_WALK_REVERSE(local_servers, s) {
+        break;
     }
 
-    s = (typeof(s)) wid_get_client_context2(w);
-    if (!s) {
-        return (false);
+    server sn;
+    memset(&sn, 0, sizeof(sn));
+
+    sn.name = (char *)text;
+    sn.port = s->port;
+
+    strncpy(global_config.server_name, sn.name,
+            sizeof(global_config.server_name));
+
+    if (global_config.user_server_name[0]) {
+        global_config.user_server_name[0] = 0;
     }
 
-    switch (key->sym) {
-        case SDLK_RETURN: {
-            /*
-             * Change name.
-             */
-            wid_set_show_cursor(w, false);
+    server_remove(s);
+    wid_server_local_server_add(&sn);
+    wid_server_create_redo();
 
-            server sn;
-
-            memset(&sn, 0, sizeof(sn));
-
-            sn.name = (char*) wid_get_text(w);
-            sn.port = s->port;
-
-            strncpy(global_config.server_name, sn.name,
-                    sizeof(global_config.server_name));
-
-            if (global_config.user_server_name[0]) {
-                global_config.user_server_name[0] = 0;
-            }
-
-            server_remove(s);
-            wid_server_local_server_add(&sn);
-            wid_server_create_redo();
-
-            break;
-        }
-
-        default:
-            break;
-    }
-
-    /*
-     * Feed to the general input handler
-     */
-    return (wid_receive_input(w, key));
 }
 
-/*
- * Key down etc...
- */
-#if 0
-static uint8_t wid_server_create_port_receive_input (widp w, 
-                                                     const SDL_KEYSYM *key)
+static void wid_server_name_cancel (widp w, const char *text)
 {
-    server *s;
+    wid_destroy(&wid_server_name);
 
-    switch (key->sym) {
-        case SDLK_ESCAPE:
-            wid_server_create_hide();
-            wid_choose_game_type_visible();
-            return (true);
-        default:
-            break;
-    }
-
-    s = (typeof(s)) wid_get_client_context2(w);
-    if (!s) {
-        return (false);
-    }
-
-    switch (key->sym) {
-        case SDLK_RETURN: {
-            /*
-             * Change port address.
-             */
-            wid_set_show_cursor(w, false);
-
-            server sn;
-
-            memset(&sn, 0, sizeof(sn));
-
-            const char *port_str = wid_get_text(w);
-            int a;
-            int success = sscanf(port_str, "%u", &a);
-            if (success != 1) {
-                /*
-                 * Fail
-                 */
-                MSG_BOX("Failed to parse port number");
-
-                return (true);
-            }
-
-            if ((a > 65535) || (a < 1024)) {
-                /*
-                 * Fail
-                 */
-                MSG_BOX("Failed to parse port number, "
-                        "must be in the 1024 to 65535 range");
-
-                return (true);
-            }
-
-            sn.port = a;
-            global_config.server_port = sn.port;
-            sn.name = dupstr(s->name, "wid port change");
-
-            server_remove(s);
-            wid_server_local_server_add(&sn);
-            wid_server_create_redo();
-            myfree(sn.name);
-
-            break;
-        }
-
-        default:
-            break;
-    }
-
-    /*
-     * Feed to the general input handler
-     */
-    return (wid_receive_input(w, key));
+    wid_server_create_menu();
 }
-#endif
+
+static uint8_t wid_server_create_name_mouse_down (widp w,
+                                                  int32_t x, int32_t y,
+                                                  uint32_t button)
+{
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    saved_focus = ctx->focus;
+
+    wid_destroy(&menu);
+
+    wid_server_name = wid_keyboard("",
+                                   "Enter server name",
+                                   wid_server_name_ok,
+                                   wid_server_name_cancel);
+
+    return (true);
+}
 
 void wid_server_create_destroy (void)
 {
@@ -557,31 +528,19 @@ static uint8_t wid_server_create_col2_mouse_event_ (widp w,
     /*
      * Increment.
      */
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
-    server *s = (typeof(s)) wid_get_client_context2(w);
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
 
-    if (row == WID_SERVER_CREATE_ROW_PORT) {
-        global_config.server_port+= delta;
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
 
-        server sn;
+    if (row >= WID_SERVER_CREATE_MAX_SETTINGS) {
+        DIE("bad row");
+    }
 
-        memset(&sn, 0, sizeof(sn));
-
-        sn.name = global_config.server_name;
-        sn.port = global_config.server_port;
-
-        strncpy(global_config.server_name, sn.name,
-                sizeof(global_config.server_name));
-        if (s) {
-            server_remove(s);
-        }
-
-        wid_server_local_server_add(&sn);
-    } else if (row == WID_SERVER_CREATE_ROW_MAX_PLAYERS) {
+    if (row == WID_SERVER_CREATE_ROW_MAX_PLAYERS) {
         if (delta == 1) {
             if (global_config.server_max_players >= MAX_PLAYERS) {
-                MSG(POPUP, "Max players limited to %d", 
-                    global_config.server_max_players);
+                global_config.server_max_players = 1;
                 delta = 0;
             }
         } else {
@@ -597,26 +556,6 @@ static uint8_t wid_server_create_col2_mouse_event_ (widp w,
     }
 
     wid_server_config_changed();
-    wid_server_create_redo();
-
-    return (true);
-}
-
-static uint8_t wid_server_create_value_string_mouse_event (widp w,
-                                                    int32_t x, int32_t y,
-                                                    uint32_t button)
-{
-    /*
-     * Invert.
-     */
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context(w);
-
-    wid_server_create_button_val[row] = !wid_server_create_button_val[row];
-
-    wid_destroy_nodelay(&wid_server_create_container);
-
-    wid_server_config_changed();
-
     wid_server_create_redo();
 
     return (true);
@@ -663,16 +602,17 @@ static void wid_server_config_changed (void)
 }
 
 static uint8_t wid_server_create_mouse_event (widp w,
-                                               int32_t x, int32_t y,
-                                               uint32_t button)
+                                              int32_t x, int32_t y,
+                                              uint32_t button)
 {
-    if (button == SDLK_LEFT) {
-        wid_server_create_col2_mouse_event_(w, x, y, SDL_BUTTON_LEFT, -1);
-    } else if (button == SDLK_RIGHT) {
-        wid_server_create_col2_mouse_event_(w, x, y, SDL_BUTTON_LEFT, 1);
-    } else {
-        wid_server_create_value_string_mouse_event(w, x, y, SDL_BUTTON_LEFT);
-    }
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    saved_focus = ctx->focus;
+
+    wid_destroy(&menu);
+
+    wid_server_create_col2_mouse_event_(w, x, y, SDL_BUTTON_LEFT, 1);
 
     return (true);
 }
@@ -681,22 +621,65 @@ static void wid_server_create_menu (void)
 {
     wid_server_create_read();
 
+    server *s = 0;
+
+    TREE_WALK_REVERSE(local_servers, s) {
+        break;
+    }
+
+    char *keys[WID_SERVER_CREATE_MAX_SETTINGS];
     char *values[WID_SERVER_CREATE_MAX_SETTINGS];
+
+    memset(keys, 0, sizeof(keys));
+    memset(values, 0, sizeof(values));
+
     int i;
     for (i = WID_SERVER_CREATE_ROW_SERVER_NAME; 
          i < WID_SERVER_CREATE_MAX_SETTINGS; i++) {
 
         const char *val;
 
+        keys[i] = dynprintf("%s", wid_server_create_button_name[i]);
+
+        switch (i) {
+        case WID_SERVER_CREATE_ROW_PORT:
+            if (s) {
+                values[i] = iprawporttodynstr(s->ip);
+            }
+
+            break;
+
+        case WID_SERVER_CREATE_ROW_SERVER_NAME:
+            if (s) {
+                values[i] = dupstr(s->name, "server name");
+            }
+
+            break;
+
+        case WID_SERVER_CREATE_ROW_MAX_PLAYERS:
+            values[i] = dynprintf("%u", global_config.server_max_players);
+            break;
+
+        case WID_SERVER_CREATE_ROW_START_SERVER:
+            if (s) {
+                values[i] = dupstr("", "dummy");
+            }
+
+            break;
+        default:
+            break;
+        }
+
+        if (values[i]) {
+            continue;
+        }
+
         val = wid_server_create_button_value_string[i]
                         [wid_server_create_button_val[i]];
-
         if (val) {
-            values[i] = dynprintf("%s:%s",
-                                  wid_server_create_button_name[i], val);
+            values[i] = dynprintf("%s", val);
         } else {
-            values[i] = dynprintf("%s: <not set>",
-                                  wid_server_create_button_name[i]);
+            values[i] = dynprintf("-");
         }
     }
 
@@ -707,26 +690,43 @@ static void wid_server_create_menu (void)
                 large_font,
                 0.5, /* x */
                 0.7, /* y */
-                1, /* columns */
+                2, /* columns */
                 saved_focus, /* focus */
-                5, /* items */
+                WID_SERVER_CREATE_MAX_SETTINGS + 1, /* items */
 
-                (int) '1', values[i], 
-                    wid_server_create_button_mouse_down[i],
+                /*
+                 * column width
+                 */
+                (double)0.5, (double)0.2,
 
-                (int) '2', values[i + 1], 
-                    wid_server_create_button_mouse_down[i + 1],
+                (int) '1', 
+                keys[i],
+                values[i], 
+                wid_server_create_button_mouse_down[i],
 
-                (int) '3', values[i + 2], 
-                    wid_server_create_button_mouse_down[i + 2],
+                (int) '2',
+                keys[i + 1],
+                values[i + 1], 
+                wid_server_create_button_mouse_down[i + 1],
 
-                (int) '4', values[i + 3], 
-                    wid_server_create_button_mouse_down[i + 3],
+                (int) '3',
+                keys[i + 2],
+                values[i + 2], 
+                wid_server_create_button_mouse_down[i + 2],
 
-                (int) 'b', "Back", wid_server_create_go_back);
+                (int) '4',
+                keys[i + 3],
+                values[i + 3], 
+                wid_server_create_button_mouse_down[i + 3],
+
+                (int) 'b', 
+                "%%fmt=left$Back",
+                (char*) 0,
+                wid_server_create_go_back);
 
     for (i = WID_SERVER_CREATE_ROW_SERVER_NAME; 
          i < WID_SERVER_CREATE_MAX_SETTINGS; i++) {
         myfree(values[i]);
+        myfree(keys[i]);
     }
 }
