@@ -320,6 +320,14 @@ static uint8_t wid_keyboard_parent_key_down (widp w,
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
+
     switch (key->sym) {
         case '`':
             return (false);
@@ -372,6 +380,14 @@ static uint8_t wid_keyboard_parent_joy_button (widp w,
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
     int ret = false;
+
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
 
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         (ctx->selected)(ctx->w, wid_get_text(ctx->input));
@@ -445,6 +461,14 @@ static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
+
     switch (key->sym) {
         case '`':
             return (false);
@@ -481,6 +505,14 @@ static uint8_t wid_keyboard_button_joy_down_event (widp w,
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
     int ret = false;
+
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
 
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
         ret = wid_keyboard_mouse_event(w, ctx->focusx, ctx->focusy);
@@ -558,6 +590,14 @@ static uint8_t wid_keyboard_text_input_key_event (widp w, const SDL_KEYSYM *key)
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
+
     switch (key->sym) {
         case SDLK_ESCAPE:
             (ctx->cancelled)(ctx->w, wid_get_text(ctx->input));
@@ -586,10 +626,16 @@ static uint8_t wid_keyboard_text_input_key_event (widp w, const SDL_KEYSYM *key)
     return (false);
 }
 
-static void wid_keyboard_mouse_over (widp w)
+static void wid_keyboard_mouse_over (widp w,
+                                     int32_t relx, int32_t rely,
+                                     int32_t wheelx, int32_t wheely)
 {
     wid_keyboard_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
+
+    if (!relx && !rely && !wheelx && !wheely) {
+        return;
+    }
 
     /*
      * If we recreate the keyboard with a fixed focus we will be told about

@@ -155,6 +155,14 @@ static uint8_t wid_menu_mouse_event (widp w,
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
+
     widp b = ctx->buttons[item][col];
     verify(b);
 
@@ -194,6 +202,14 @@ static uint8_t wid_menu_joy_down_event (widp w,
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
+
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
 
     int item = ctx->focus;
     int col = 0;
@@ -385,6 +401,14 @@ static uint8_t wid_menu_key_event (widp w, const SDL_KEYSYM *key)
     wid_menu_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return (false);
+    }
+
     switch (key->sym) {
         case SDLK_TAB:
             wid_menu_next_focus(ctx);
@@ -490,11 +514,26 @@ static uint8_t wid_menu_parent_key_event (widp w, const SDL_KEYSYM *key)
     return (wid_menu_key_event(w, key));
 }
 
-static void wid_menu_mouse_over (widp w)
+static void wid_menu_mouse_over (widp w,
+                                 int32_t relx, int32_t rely,
+                                 int32_t wheelx, int32_t wheely)
+
 {
     wid_menu_ctx *ctx = wid_get_client_context(w);
     int item = (typeof(item)) (uintptr_t) wid_get_client_context2(w);
     int col = (typeof(col)) (uintptr_t) wid_get_client_context3(w);
+
+    if (!relx && !rely && !wheelx && !wheely) {
+        return;
+    }
+
+    /*
+     * Don't process events too soon. Else the menu might not even have 
+     * appeared.
+     */
+    if (time_get_time_ms() - ctx->created < 100) {
+        return;
+    }
 
     verify(ctx);
 
