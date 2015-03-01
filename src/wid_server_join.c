@@ -19,6 +19,7 @@
 #include "client.h"
 #include "string_ext.h"
 #include "wid_tooltip.h"
+#include "wid_menu.h"
 
 static const char *config_file = "gorynlich-remote-servers.txt";
 
@@ -32,6 +33,11 @@ static uint8_t wid_server_join_init_done;
 static void wid_server_join_create(uint8_t redo);
 static void wid_server_join_destroy(void);
 static uint8_t wid_server_load_remote_server_list(void);
+
+#define WID_MAX_SERVERS 20
+static widp menu;
+static int saved_focus = 1;
+static void wid_server_menu_create(void);
 
 static uint8_t user_is_typing;
 
@@ -442,7 +448,8 @@ void wid_server_join_redo (uint8_t soft_refresh)
     }
 }
 
-static uint8_t wid_server_join_go_back (widp w, int32_t x, int32_t y, uint32_t button)
+static uint8_t wid_server_join_go_back (widp w, int32_t x, int32_t y, 
+                                        uint32_t button)
 {
     wid_server_join_hide();
     wid_choose_game_type_visible();
@@ -1735,6 +1742,8 @@ static void wid_server_join_create (uint8_t redo)
             }
         }
     }
+
+wid_server_menu_create();
 }
 
 void wid_server_join_destroy (void)
@@ -1835,4 +1844,275 @@ static uint8_t wid_server_load_remote_server_list (void)
     myfree(file);
 
     return (true);
+}
+
+static uint8_t wid_server_mouse_event (widp w,
+                                       int32_t x, int32_t y,
+                                       uint32_t button)
+{
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
+    verify(ctx);
+
+    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
+
+    return (true);
+}
+
+static uint8_t wid_server_back_mouse_event (widp w,
+                                            int32_t x, int32_t y,
+                                            uint32_t button)
+{
+    wid_destroy(&menu);
+    wid_server_join_go_back(w, x, y, button);
+
+    return (true);
+}
+
+static void wid_server_menu_create (void)
+{
+    if (menu) {
+        return;
+    }
+
+    int i;
+    server *s;
+    char *col_name[WID_MAX_SERVERS];
+    char *col_host[WID_MAX_SERVERS];
+    char *col_ipaddr[WID_MAX_SERVERS];
+    char *col_port[WID_MAX_SERVERS];
+    char *col_quality[WID_MAX_SERVERS];
+
+    memset(col_name, 0, sizeof(col_name));
+    memset(col_host, 0, sizeof(col_host));
+    memset(col_ipaddr, 0, sizeof(col_ipaddr));
+    memset(col_port, 0, sizeof(col_port));
+    memset(col_quality, 0, sizeof(col_quality));
+
+    i = 0;
+    TREE_WALK(remote_servers, s) {
+        if (i >= WID_MAX_SERVERS) {
+            break;
+        }
+
+        col_name[i] = dynprintf("%%%%fmt=left$%s", s->name);
+        col_host[i] = dynprintf("%%%%fmt=left$%s", s->host);
+        col_ipaddr[i] = iprawtodynstr(s->ip);
+        col_port[i] = iprawporttodynstr(s->ip);
+        col_quality[i] = dynprintf("bar:%d:%d", s->quality, 100);
+        i++;
+    }
+
+    for (i = 0; i < WID_MAX_SERVERS; i++) {
+        if (!col_name[i] || (col_name[i] && col_name[i][0] == '\0')) {
+            col_name[i] = dynprintf("-");
+        }
+        if (!col_host[i]) {
+            col_host[i] = dynprintf("-");
+        }
+        if (!col_ipaddr[i]) {
+            col_ipaddr[i] = dynprintf("-");
+        }
+        if (!col_port[i]) {
+            col_port[i] = dynprintf("-");
+        }
+        if (!col_quality[i]) {
+            col_quality[i] = dynprintf("bar:%d:%d", 0, 100);
+        }
+    }
+
+    menu = wid_menu(0,
+                med_font,
+                med_font,
+                0.5, /* x */
+                0.4, /* y */
+                5, /* columns */
+                saved_focus, /* focus */
+                WID_MAX_SERVERS + 2, /* items */
+
+                /*
+                 * Column widths
+                 */
+                (double) 0.1, (double) 0.2, (double) 0.2, (double) 0.2,
+                (double) 0.1,
+
+                (int) '\0', 
+                "Server", "Host", "IP addr", "Port", "Quality",
+                (on_mouse_down_t) 0,
+
+                (int) '\0', 
+                col_name[0], 
+                col_host[0], 
+                col_ipaddr[0], 
+                col_port[0], 
+                col_quality[0], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[1], 
+                col_host[1], 
+                col_ipaddr[1], 
+                col_port[1], 
+                col_quality[1], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[2], 
+                col_host[2], 
+                col_ipaddr[2], 
+                col_port[2], 
+                col_quality[2], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[3], 
+                col_host[3], 
+                col_ipaddr[3], 
+                col_port[3], 
+                col_quality[3], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[4], 
+                col_host[4], 
+                col_ipaddr[4], 
+                col_port[4], 
+                col_quality[4], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[5], 
+                col_host[5], 
+                col_ipaddr[5], 
+                col_port[5], 
+                col_quality[5], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[6], 
+                col_host[6], 
+                col_ipaddr[6], 
+                col_port[6], 
+                col_quality[6], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[7], 
+                col_host[7], 
+                col_ipaddr[7], 
+                col_port[7], 
+                col_quality[7], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[8], 
+                col_host[8], 
+                col_ipaddr[8], 
+                col_port[8], 
+                col_quality[8], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[9], 
+                col_host[9], 
+                col_ipaddr[9], 
+                col_port[9], 
+                col_quality[9], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[10], 
+                col_host[10], 
+                col_ipaddr[10], 
+                col_port[10], 
+                col_quality[10], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[11], 
+                col_host[11], 
+                col_ipaddr[11], 
+                col_port[11], 
+                col_quality[11], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[12], 
+                col_host[12], 
+                col_ipaddr[12], 
+                col_port[12], 
+                col_quality[12], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[13], 
+                col_host[13], 
+                col_ipaddr[13], 
+                col_port[13], 
+                col_quality[13], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[14], 
+                col_host[14], 
+                col_ipaddr[14], 
+                col_port[14], 
+                col_quality[14], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[15], 
+                col_host[15], 
+                col_ipaddr[15], 
+                col_port[15], 
+                col_quality[15], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[16], 
+                col_host[16], 
+                col_ipaddr[16], 
+                col_port[16], 
+                col_quality[16], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[17], 
+                col_host[17], 
+                col_ipaddr[17], 
+                col_port[17], 
+                col_quality[17], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[18], 
+                col_host[18], 
+                col_ipaddr[18], 
+                col_port[18], 
+                col_quality[18], 
+                wid_server_mouse_event,
+
+                (int) '\0', 
+                col_name[19], 
+                col_host[19], 
+                col_ipaddr[19], 
+                col_port[19], 
+                col_quality[19], 
+                wid_server_mouse_event,
+
+                (int) 'b', 
+                "Back", 
+                (char*) 0, // name
+                (char*) 0, // host
+                (char*) 0, // ipaddr
+                (char*) 0, // port
+                (char*) 0, // quality
+                wid_server_back_mouse_event);
+
+    for (i = 0; i < WID_MAX_SERVERS; i++) {
+        myfree(col_name[i]);
+        myfree(col_host[i]);
+        myfree(col_ipaddr[i]);
+        myfree(col_port[i]);
+        myfree(col_quality[i]);
+    }
 }
