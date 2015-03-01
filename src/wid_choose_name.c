@@ -220,7 +220,7 @@ static void wid_choose_name_create (void)
      */
     thing_stats_get_random(s, false /* new_random_name_and_class */);
 
-    menu_keyboard = wid_keyboard(s->pname, "Choose a name",
+    menu_keyboard = wid_keyboard(s->pname, "Choose your title",
                                  wid_keyboard_event_selected,
                                  wid_keyboard_event_cancelled);
 }

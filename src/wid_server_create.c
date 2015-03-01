@@ -689,7 +689,7 @@ static void wid_server_create_menu (void)
                 vlarge_font,
                 large_font,
                 0.5, /* x */
-                0.3, /* y */
+                0.4, /* y */
                 2, /* columns */
                 saved_focus, /* focus */
                 WID_SERVER_CREATE_MAX_SETTINGS + 1, /* items */
