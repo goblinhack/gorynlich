@@ -57,7 +57,7 @@ enum {
 
 static player_stats_row player_stats_arr[PLAYER_STATS_MAX] = {
       /*                         Column 1     Column 2 Increm */
-    { /* STAT_SPENDING_POINTS */ "Spending points", 0,   0,
+    { /* STAT_SPENDING_POINTS */ "Select your upgrades", 0,   0,
     "Click on a statistic below to spend your hard earned points." },
 
     { /* STAT_EXPERIENCE      */ "Experience",      0,   0,
@@ -283,7 +283,7 @@ static void wid_choose_stats_bg_create (void)
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        wid_set_tex(wid, 0, "title2");
+        wid_set_tex(wid, 0, "title4");
 
         wid_lower(wid);
 
@@ -388,20 +388,19 @@ static void wid_choose_stats_create (void)
         if (!text) {
             text = dynprintf("bar:%u,%u", stat, 20);
             if (modifier > 4) {
-                text2 = dynprintf("%%%%fmt=left$%%%%fg=gold$%2d", modifier);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=gold$%2d%%%%fg=reset$", modifier);
             } else if (modifier > 3) {
-                text2 = dynprintf("%%%%fmt=left$%%%%fg=green$%2d", modifier);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=green$%2d%%%%fg=reset$", modifier);
             } else if (modifier > 2) {
-                text2 = dynprintf("%%%%fmt=left$%%%%fg=yellow$%2d", modifier);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=yellow$%2d%%%%fg=reset$", modifier);
             } else if (modifier > 1) {
-                text2 = dynprintf("%%%%fmt=left$%%%%fg=white$%2d", modifier);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=white$%2d%%%%fg=reset$", modifier);
             } else if (modifier > 0) {
-                text2 = dynprintf("%%%%fmt=left$%%%%fg=gray80$%2d", modifier);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=gray80$%2d%%%%fg=reset$", modifier);
             } else if (modifier > -2) {
-                text2 = dynprintf("%%%%fmt=left$%%%%fg=gray30$%2d", modifier);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=gray30$%2d%%%%fg=reset$", modifier);
             } else {
-                text2 = dynprintf("%%%%fmt=left$%%%%fg=red$%2d", 
-                                  modifier);
+                text2 = dynprintf("%%%%fmt=left$%%%%fg=red$%2d%%%%fg=reset$", modifier);
             }
         } else {
             text = dynprintf("%u", stat);

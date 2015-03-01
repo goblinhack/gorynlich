@@ -52,7 +52,7 @@ static void wid_intro_menu_destroy(void);
 static int intro_effect_delay = 500;
 static int intro_effect_delay_zoom = 1000;
 
-static int saved_focus = 4;
+static int saved_focus = 3;
 
 uint8_t wid_intro_init (void)
 {
@@ -559,7 +559,7 @@ static void wid_intro_menu_create (void)
                  vvlarge_font,
                  large_font,
                  0.5, /* x */
-                 0.7, /* y */
+                 0.6, /* y */
                  1, /* columns */
                  saved_focus, /* focus */
                  7, /* items */
@@ -570,9 +570,9 @@ static void wid_intro_menu_create (void)
 
                  (int) 'S', "Settings", wid_menu_settings_selected,
 
-                 (int) 's', "Quick start", wid_menu_quick_start_selected,
-
                  (int) ' ', "Play game", wid_menu_play_game_selected,
+
+                 (int) 's', "Quick start", wid_menu_quick_start_selected,
 
                  (int) 'h', "Hiscores", wid_menu_past_legends_selected,
 

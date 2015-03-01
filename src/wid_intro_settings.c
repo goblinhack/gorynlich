@@ -508,7 +508,7 @@ static void wid_intro_settings_create (void)
                 vvlarge_font,
                 large_font,
                 0.5, /* x */
-                0.7, /* y */
+                0.6, /* y */
                 2, /* columns */
                 saved_focus, /* focus */
                 7, /* items */
@@ -516,7 +516,7 @@ static void wid_intro_settings_create (void)
                 /*
                  * Column widths
                  */
-                (double) 0.5, (double) 0.2,
+                (double) 0.3, (double) 0.2,
 
                 (int) '1', 
                 keys[i], 
