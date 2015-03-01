@@ -16,7 +16,6 @@
 * minor bug: power up effect is a bit feeble on shield potion
 * minor bug: apple and water icons look a bit crap
 * minor bug: center textures in the action bar
-* minor bug: cannot select 'S' for settings menu, goes to 's' quick start
 - need single player global flag
 - single player mode direct socket
 - xp level and hp increase per level
@@ -64,6 +63,7 @@ different profiles for level generation
 mining?
 
 Sun Mar  1 07:36:18 EST 2015
+* minor bug: cannot select 'S' for settings menu, goes to 's' quick start
 - multiplayer, join game does not show stats window - no need now
 - keyboard widgets do not center
 - spending points go negative
