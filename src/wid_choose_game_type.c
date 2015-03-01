@@ -177,11 +177,11 @@ static void wid_choose_game_type_start_server_selected (void)
             (action_timer_callback)wid_choose_game_type_start_server_selected_cb,
             (action_timer_destroy_callback)0,
             0, /* context */
-            "start game",
+            "start server",
             intro_effect_delay,
             0 /* jitter */);
 
-    wid_choose_game_type_hide();
+    wid_destroy(&menu);
 }
 
 static void wid_choose_game_type_stop_server_selected_cb (void *context)
@@ -393,7 +393,7 @@ static void wid_choose_game_type_create (void)
                  vvlarge_font,
                  large_font,
                  0.5, /* x */
-                 0.7, /* y */
+                 0.3, /* y */
                  1, /* columns */
                  1, /* focus */
                  4, /* items */
