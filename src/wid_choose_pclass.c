@@ -120,6 +120,7 @@ static void wid_choose_pclass_callback (widp w)
     verify(ctx);
 
     int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
+    row--;
 
     /*
      * Retrieve the selected class.
@@ -127,7 +128,7 @@ static void wid_choose_pclass_callback (widp w)
     thing_statsp s = &global_config.stats;
     const char *new_pclass = pclass_nth(row);
     if (!new_pclass) {
-        DIE("not player calss from row %d", row);
+        DIE("not player class from row %d", row);
     }
 
     if (strlen(s->pclass)) {
@@ -162,21 +163,6 @@ wid_choose_pclass_go_back (void)
     return (true);
 }
 
-static uint8_t wid_choose_pclass_play_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch (key->sym) {
-        case SDLK_ESCAPE:
-            wid_choose_pclass_hide();
-            wid_intro_visible();
-            return (true);
-
-        default:
-            break;
-    }
-
-    return (false);
-}
-
 static void wid_choose_pclass_bg_create (void)
 {
     widp wid;
@@ -195,7 +181,7 @@ static void wid_choose_pclass_bg_create (void)
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        wid_set_tex(wid, 0, "title4");
+        wid_set_tex(wid, 0, "title2");
 
         wid_lower(wid);
 
@@ -223,7 +209,6 @@ static void wid_choose_pclass_create (void)
     fpoint tl = {0.0f, 0.0f};
     fpoint br = {1.0f, 1.0f};
     wid_set_tl_br_pct(wid_choose_pclass, tl, br);
-    wid_set_on_key_down(wid_choose_pclass, wid_choose_pclass_play_key_event);
 
     color col = BLACK;
     col.a = 0;
@@ -251,15 +236,18 @@ static void wid_choose_pclass_create (void)
         focus = pclass_count() / 2;
     }
 
+    focus++;
+
     menu = wid_menu(0,
                  vvlarge_font,
-                 large_font,
+                 vlarge_font,
                  0.5, /* x */
-                 0.7, /* y */
+                 0.5, /* y */
                  1, /* columns */
                  focus, /* focus */
-                 pclass_count() + 1, /* items */
+                 pclass_count() + 2, /* items */
 
+                 (int) '\0', "Choose your pedigree", (on_mouse_down_t) 0,
                  (int) 'z', "wizard",   wid_choose_pclass_callback,
                  (int) 'd', "dwarf",    wid_choose_pclass_callback,
                  (int) 'w', "warrior",  wid_choose_pclass_callback,
