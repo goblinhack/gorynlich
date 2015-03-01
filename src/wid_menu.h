@@ -6,7 +6,7 @@
 
 #pragma once
 
-#define WID_MENU_MAX_ITEMS 20
+#define WID_MENU_MAX_ITEMS 100
 #define WID_MENU_MAX_COLS  10
 
 typedef struct {
