@@ -534,7 +534,6 @@ static uint8_t client_socket_leave_implicit (void)
 uint8_t client_socket_leave (void)
 {
     if (!client_joined_server) {
-        WARN("Join a server first before trying to leave");
         return (false);
     }
 
