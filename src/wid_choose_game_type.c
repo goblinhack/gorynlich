@@ -121,6 +121,7 @@ static void wid_server_join_selected (void)
 {
     LOG("Server join selected");
 
+    wid_choose_game_type_hide();
     wid_server_join_visible();
 }
 
