@@ -30,6 +30,7 @@
 #include "wid_player_stats.h"
 #include "wid_hiscore.h"
 #include "wid_server_join.h"
+#include "wid_server_edit.h"
 #include "wid_server_create.h"
 #include "wid_intro.h"
 #include "wid_game_map_server.h"
@@ -136,6 +137,8 @@ void quit (void)
     LOG("  - wid_hiscore_fini");
     wid_server_join_fini();
     LOG("  - wid_server_join_fini");
+    wid_server_edit_fini();
+    LOG("  - wid_server_edit_fini");
     wid_server_create_fini();
     LOG("  - wid_server_create_fini");
 
