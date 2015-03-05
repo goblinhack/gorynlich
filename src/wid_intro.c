@@ -144,6 +144,7 @@ void wid_intro_hide (void)
 
 void wid_intro_visible (void)
 {
+return;
     if (wid_intro_is_visible) {
         /*
          * Make sure the menu is visible.
@@ -183,28 +184,6 @@ void wid_intro_visible (void)
     wid_fade_in(wid_intro_man, intro_effect_delay);
     wid_fade_in(wid_intro_treasure_chest, intro_effect_delay);
     wid_fade_in(wid_intro_eyes, intro_effect_delay);
-}
-
-static uint8_t wid_intro_key_event (widp w, const SDL_KEYSYM *key)
-{
-    switch ((int)key->sym) {
-        case 'j':
-            wid_intro_menu_destroy();
-            wid_intro_hide();
-
-            /*
-             * Start with some random junk.
-             */
-            thing_statsp s;
-            s = &global_config.stats;
-            thing_stats_get_random(s, false /* new_random_name_and_class */);
-
-            wid_server_create_visible();
-            wid_server_join_visible();
-            return (true);
-    }
-
-    return (false);
 }
 
 static void wid_intro_single_play_selected_cb (void *context)
@@ -509,6 +488,13 @@ static uint8_t wid_menu_credits_selected (widp w,
 
 static void wid_intro_create (void)
 {
+static int x = 0;
+CON("%s",__FUNCTION__);
+    if (x) {
+x = 0;
+        wid_server_join_visible();
+return;
+    }
     if (wid_intro) {
         return;
     }
@@ -522,7 +508,6 @@ static void wid_intro_create (void)
     fpoint tl = {0.0f, 0.0f};
     fpoint br = {1.0f, 1.0f};
     wid_set_tl_br_pct(wid_intro, tl, br);
-    wid_set_on_key_down(wid_intro, wid_intro_key_event);
 
     color col = BLACK;
     col.a = 0;
