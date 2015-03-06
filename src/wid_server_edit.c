@@ -40,6 +40,9 @@ static const char *
 static int saved_focus;
 static widp menu;
 
+static char *new_ip;
+static int new_port;
+
 static uint8_t wid_server_edit_ip_mouse_down(widp w, 
                                              int32_t x, int32_t y,
                                              uint32_t button);
@@ -63,99 +66,6 @@ static uint8_t wid_server_edit_init_done;
 static void wid_server_edit_menu(void);
 static void wid_server_edit_destroy(void);
 
-typedef struct server_ {
-    tree_key_two_int tree;
-
-    IPaddress ip;
-    char *host;
-    uint16_t port;
-    uint8_t walked;
-    uint8_t started;
-} server;
-
-static void wid_server_edit_destroy_internal(server *node);
-
-static tree_rootp edit_servers;
-
-static void wid_server_edit_server_add (const server *s_in)
-{
-    server *s;
-
-    if (!edit_servers) {
-        edit_servers = 
-            tree_alloc(TREE_KEY_TWO_INTEGER, "TREE ROOT: local servers");
-    }
-
-    s = (typeof(s)) myzalloc(sizeof(*s), "TREE NODE: server");
-
-    memcpy(s, s_in, sizeof(*s));
-
-    uint16_t port;
-    uint32_t host;
-
-    /*
-     * Need to resolve.
-     */
-    if ((address_resolve(&s->ip, s_in->host, s_in->port)) == -1) {
-        LOG("Cannot resolve port %u", s_in->port);
-    }
-
-    port = SDLNet_Read16(&s->ip.port);
-    host = SDLNet_Read32(&s->ip.host);
-
-    s->tree.key2 = port;
-    s->tree.key3 = host;
-
-    /*
-     * Check this ip and port combination is not added already.
-     */
-    uint8_t collision = false;
-
-    do {
-        server *sw;
-
-        collision = false;
-
-        TREE_WALK(edit_servers, sw) {
-            if (cmp_address(&sw->ip, &s->ip)) {
-                collision = true;
-                break;
-            }
-        }
-
-        if (collision) {
-            s->tree.key2++;
-            SDLNet_Write16(s->tree.key2, &s->ip.port);
-            s->port = s->tree.key2;
-        }
-    } while (collision);
-
-    if (!tree_insert(edit_servers, &s->tree.node)) {
-        ERR("Cannot add port %u", s->port);
-        myfree(s);
-        return;
-    }
-}
-
-static void server_remove (server *s)
-{
-    if (!edit_servers) {
-        return;
-    }
-
-    wid_server_edit_destroy_internal(s);
-    tree_remove(edit_servers, &s->tree.node);
-    myfree(s);
-}
-
-static void wid_server_edit_destroy_internal (server *node)
-{
-    if (node->host) {
-        myfree(node->host);
-        node->host = 0;
-    }
-}
-
 void wid_server_edit_fini (void)
 {
     FINI_LOG("%s", __FUNCTION__);
@@ -165,16 +75,15 @@ void wid_server_edit_fini (void)
 
         wid_server_edit_hide();
 
-        if (edit_servers) {
-            tree_destroy(&edit_servers, 
-                         (tree_destroy_func)wid_server_edit_destroy_internal);
+        if (new_ip) {
+            myfree(new_ip);
+            new_ip = 0;
         }
     }
 }
 
 void wid_server_edit_hide (void)
 {
-CON("%s",__FUNCTION__);
     wid_server_edit_destroy();
 
     /*
@@ -193,40 +102,11 @@ CON("%s",__FUNCTION__);
 
 void wid_server_edit_visible (void)
 {
-CON("%s",__FUNCTION__);
     wid_server_edit_redo();
 }
 
 void wid_server_edit_redo (void)
 {
-    server *s;
-
-    {
-        TREE_WALK(edit_servers, s) {
-            s->walked = false;
-        }
-    }
-
-    TREE_WALK(edit_servers, s) {
-        if (s->walked) {
-            continue;
-        }
-
-        s->started = false;
-        s->walked = true;
-
-        gsocketp sp = socket_find(s->ip, SOCKET_LISTEN);
-        if (!sp) {
-            continue;
-        }
-
-        if (sp == server_socket) {
-            s->started = true;
-        }
-
-        break;
-    }
-
     wid_server_edit_destroy();
     wid_server_edit_menu();
 }
@@ -240,7 +120,7 @@ static uint8_t wid_server_edit_go_back (widp w, int32_t x, int32_t y,
     saved_focus = ctx->focus;
 
     wid_server_edit_hide();
-    wid_choose_game_type_visible();
+    wid_server_replace(new_ip, new_port);
 
     return (true);
 }
@@ -255,13 +135,8 @@ static uint8_t wid_server_edit_join (widp w, int32_t x, int32_t y,
     wid_destroy(&menu);
     wid_server_edit_hide();
 
-    server *s;
-  
-    TREE_WALK_REVERSE(edit_servers, s) {
-
-        wid_server_join(s->host, s->port);
-        break;
-    }
+    wid_server_replace(new_ip, new_port);
+    wid_server_join(new_ip, new_port);
 
     return (true);
 }
@@ -271,15 +146,6 @@ static widp wid_port_number;
 static void wid_port_number_ok (widp w, const char *text)
 {
     wid_destroy(&wid_port_number);
-
-    server *s = 0;
-
-    TREE_WALK_REVERSE(edit_servers, s) {
-        break;
-    }
-
-    server sn;
-    memset(&sn, 0, sizeof(sn));
 
     int port;
     int success = sscanf(text, "%u", &port);
@@ -302,16 +168,9 @@ static void wid_port_number_ok (widp w, const char *text)
         return;
     }
 
-    sn.port = port;
+    new_port = port;
 
-    if (s) {
-        sn.host = dupstr(s->host, "wid port change");
-    }
-
-    server_remove(s);
-    wid_server_edit_server_add(&sn);
     wid_server_edit_redo();
-    myfree(sn.host);
 }
 
 static void wid_port_number_cancel (widp w, const char *text)
@@ -346,22 +205,14 @@ static void wid_ip_ok (widp w, const char *text)
 {
     wid_destroy(&wid_ip);
 
-    server *s = 0;
-
-    TREE_WALK_REVERSE(edit_servers, s) {
-        break;
-    }
-
-    server sn;
-    memset(&sn, 0, sizeof(sn));
-
     int a, b, c, d;
     int success = sscanf(text, "%u.%u.%u.%u", &a, &b, &c, &d);
-    if (success != 1) {
+    if (success != 4) {
         /*
          * Fail
          */
-        MSG_BOX("Failed to parse IP address, expecting a.b.c.d format");
+        MSG_BOX("Failed to parse IP address %s, expecting a.b.c.d format",
+                text);
         wid_server_edit_redo();
         return;
     }
@@ -378,39 +229,13 @@ static void wid_ip_ok (widp w, const char *text)
         return;
     }
 
-    /*
-     * Create an IP address for SDL to parse.
-     */
-    IPaddress ipaddress = {0};
-
-    uint32_t ipv4 = (a << 24) | (b << 16) | (c << 8) | d;
-
-    SDLNet_Write32(ipv4, &ipaddress.host);
-
-    sn.host = (char*)SDLNet_ResolveIP(&ipaddress);
-    if (!sn.host) {
-        /*
-         * Fail
-         */
-        MSG_BOX("Failed to resolve IP address to a hostname");
-        return;
+    if (new_ip) {
+        myfree(new_ip);
     }
 
-    /*
-     * Replace the server.
-     */
-    if (!sn.host || !*sn.host) {
-        server_remove(s);
-        wid_server_edit_redo();
-        return;
-    }
+    new_ip = dupstr(text, "new ip");
 
-    sn.port = s->port;
-
-    server_remove(s);
-    wid_server_edit_server_add(&sn);
     wid_server_edit_redo();
-    myfree(sn.host);
 }
 
 static void wid_ip_cancel (widp w, const char *text)
@@ -452,18 +277,13 @@ void wid_server_edit_destroy (void)
 
 uint8_t wid_server_edit_init (const char *host, int port)
 {
-    if (edit_servers) {
-        tree_destroy(&edit_servers, 0);
+    if (new_ip) {
+        myfree(new_ip);
+        new_ip = 0;
     }
 
-    server s;
-
-    memset(&s, 0, sizeof(s));
-
-    s.host = (char*) host;
-    s.port = port;
-
-    wid_server_edit_server_add(&s);
+    new_ip = dupstr(host, "new ip");
+    new_port = port;
 
     wid_server_edit_visible();
 
@@ -472,13 +292,6 @@ uint8_t wid_server_edit_init (const char *host, int port)
 
 static void wid_server_edit_menu (void)
 {
-    server *s = 0;
-
-CON("%s",__FUNCTION__);
-    TREE_WALK_REVERSE(edit_servers, s) {
-        break;
-    }
-
     char *keys[WID_SERVER_CREATE_MAX_SETTINGS];
     char *values[WID_SERVER_CREATE_MAX_SETTINGS];
 
@@ -493,23 +306,15 @@ CON("%s",__FUNCTION__);
 
         switch (i) {
         case WID_SERVER_CREATE_ROW_IP:
-            if (s) {
-                values[i] = iprawtodynstr(s->ip);
-            }
+            values[i] = dynprintf("%%%%fmt=left$%s", new_ip);
             break;
 
         case WID_SERVER_CREATE_ROW_PORT:
-            if (s) {
-                values[i] = iprawporttodynstr(s->ip);
-            }
-
+            values[i] = dynprintf("%%%%fmt=left$%u", new_port);
             break;
 
         case WID_SERVER_CREATE_ROW_JOIN_SERVER:
-            if (s) {
-                values[i] = dupstr("", "dummy");
-            }
-
+            values[i] = dupstr("", "dummy");
             break;
         default:
             break;

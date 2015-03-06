@@ -150,6 +150,36 @@ static void server_add (const server *s_in)
     }
 }
 
+static void server_remove (server *s_in)
+{
+    if (wid_server_stats_window) {
+        wid_destroy_nodelay(&wid_server_stats_window);
+        wid_destroy_nodelay(&wid_server_stats_bars);
+    }
+
+    if (!remote_servers) {
+        return;
+    }
+
+    /*
+     * Remove this socket.
+     */
+    server *s;
+    TREE_WALK(remote_servers, s) {
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        if (sp) {
+            socket_disconnect(sp);
+            break;
+        }
+    }
+
+    LOG("Remove server %s", s_in->host_and_port_str);
+
+    wid_server_join_destroy_internal(s_in);
+    tree_remove(remote_servers, &s_in->tree.node);
+    myfree(s_in);
+}
+
 uint8_t wid_server_join_init (void)
 {
     if (!wid_server_join_init_done) {
@@ -233,7 +263,6 @@ void wid_server_join_hide (void)
 
 void wid_server_join_visible (void)
 {
-CON("%s",__FUNCTION__);
     if (!remote_servers || !tree_root_size(remote_servers)) {
         LOG("No servers found, add defaults");
 
@@ -286,7 +315,6 @@ CON("%s",__FUNCTION__);
         }
     }
 
-CON("%s",__FUNCTION__);
     wid_server_join_redo(false);
 }
 
@@ -320,8 +348,29 @@ uint8_t wid_server_join (char *host, int port)
     }
 
     wid_intro_hide();
-CON("%s",__FUNCTION__);
     wid_game_map_client_visible();
+
+    return (true);
+}
+
+uint8_t wid_server_replace (char *host, int port)
+{
+    if (saved_focus) {
+        server *s;
+        s = row_server[saved_focus - 1];
+        if (s) {
+            server_remove(s);
+        }
+        row_server[saved_focus] = 0;
+    }
+
+    server s;
+    memset(&s, 0, sizeof(s));
+    s.host = host;
+    s.port = port;
+    server_add(&s);
+
+    wid_server_join_visible();
 
     return (true);
 }
@@ -490,7 +539,6 @@ void wid_server_join_redo (uint8_t redo)
 
     wid_choose_name_bg_create();
 
-CON("%s",__FUNCTION__);
     wid_server_menu_create();
 
     /*
@@ -612,14 +660,14 @@ static uint8_t wid_server_mouse_event (widp w,
 
     server *s = row_server[row - 1];
     if (!s) {
-CON("no servdr roe %d",row - 1);
         return (false);
     }
 
-CON("edit %s %d",s->host, s->port);
     wid_server_edit_init(s->host, s->port);
 
-    wid_server_join_hide();
+    wid_server_menu_destroy();
+    wid_destroy_nodelay(&wid_server_stats_window);
+    wid_destroy_nodelay(&wid_server_stats_bars);
 
 #if 0
     wid_server_join(w, x, y, button);
@@ -691,7 +739,6 @@ static void wid_choose_name_bg_create (void)
 
 static void wid_server_menu_create (void)
 {
-CON("%s",__FUNCTION__);
     if (wid_server_menu) {
         return;
     }
@@ -736,7 +783,7 @@ CON("%s",__FUNCTION__);
 
         {
             char *tmp = iprawporttodynstr(s->ip);
-            col_port[i] = dynprintf("%%%%fmt=left$%s", tmp);
+            col_port[i] = dynprintf("%s", tmp);
             myfree(tmp);
         }
 
@@ -816,8 +863,8 @@ CON("%s",__FUNCTION__);
                 /*
                  * Column widths
                  */
-                (double) 0.2, (double) 0.2, (double) 0.2, (double) 0.2,
-                (double) 0.1,
+                (double) 0.2, (double) 0.2, (double) 0.22, (double) 0.22,
+                (double) 0.08,
 
                 (int) '\0', 
                 "Server", "Host", "IP addr", "Port", "Quality",
