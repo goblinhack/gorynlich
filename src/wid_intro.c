@@ -488,13 +488,6 @@ static uint8_t wid_menu_credits_selected (widp w,
 
 static void wid_intro_create (void)
 {
-static int x = 0;
-CON("%s",__FUNCTION__);
-    if (x) {
-x = 0;
-        wid_server_join_visible();
-return;
-    }
     if (wid_intro) {
         return;
     }
