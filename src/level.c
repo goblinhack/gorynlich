@@ -115,7 +115,10 @@ levelp level_new (widp map,
 
     level = (typeof(level)) myzalloc(sizeof(*level), "level");
 
-    level_set_map(level, map);
+    if (map) {
+        level_set_map(level, map);
+    }
+
     level_set_level_pos(level, level_pos);
     level_set_is_editor(level, is_editor);
     level_set_is_map_editor(level, is_map_editor);
@@ -161,7 +164,9 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
     /*
      * Kill all humans!
      */
-    things_level_destroyed(level, keep_players);
+    if ((level == client_level) || (level == server_level)) {
+        things_level_destroyed(level, keep_players);
+    }
 
     LEVEL_LOG(level, "destroy");
 
