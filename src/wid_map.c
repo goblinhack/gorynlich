@@ -36,6 +36,7 @@ static const char key_char[LEVELS_ACROSS][LEVELS_DOWN] = {
 
 int wid_map_visible;
 
+static widp wid_map_background;
 static void wid_map_destroy(widp w);
 static void wid_map_set_focus(wid_map_ctx *ctx, int focusx, int focusy);
 
@@ -96,6 +97,11 @@ static void wid_map_update_buttons (widp w)
 
             wid_raise(b);
         } else {
+            tl.x += zoom;
+            tl.y += zoom;
+            br.x -= zoom * 2.0;
+            br.y -= zoom * 2.0;
+
             if (t) {
                 if (strlen(t) > 1) {
                     font = small_font;
@@ -547,6 +553,22 @@ static void wid_map_destroy (widp w)
     myfree(ctx);
 
     wid_map_visible = false;
+
+    if (wid_map_background) {
+        wid_destroy(&wid_map_background);
+    }
+
+    int x, y;
+
+    for (x = 0; x < LEVELS_DOWN; x++) {
+        for (y = 0; y < LEVELS_ACROSS; y++) {
+
+            levelp l = ctx->levels[y][x].level;
+
+            level_destroy(&l, false /* keep players */);
+            ctx->levels[y][x].level = 0;
+        }
+    }
 }
 
 static void wid_map_tick (widp w)
@@ -635,6 +657,39 @@ static void wid_map_cell_cancelled (widp w)
 {
 }
 
+static void wid_map_bg_create (void)
+{
+    widp wid;
+
+    if (wid_map_background) {
+        return;
+    }
+
+    {
+        wid = wid_map_background = wid_new_window("bg");
+
+        float f = (1024.0 / 680.0);
+
+        fpoint tl = { 0.0, 0.0 };
+        fpoint br = { 1.0, f };
+
+        wid_set_tl_br_pct(wid, tl, br);
+
+        wid_set_tex(wid, 0, "title5");
+
+        wid_lower(wid);
+
+        color c;
+        c = WHITE;
+        wid_set_mode(wid, WID_MODE_NORMAL);
+        wid_set_color(wid, WID_COLOR_TL, c);
+        wid_set_color(wid, WID_COLOR_BR, c);
+        wid_set_color(wid, WID_COLOR_BG, c);
+
+        wid_update(wid);
+    }
+}
+
 static void wid_map_load_levels (wid_map_ctx *ctx)
 {
     tree_file_node *n;
@@ -650,14 +705,21 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
 
         const char *name = n->tree.key;
 
-        level_pos_t level_pos;
+        /*
+         * Ignore dot files
+         */
+        if (name[0] == '.') {
+            continue;
+        }
 
-CON("name %s", name);
+        level_pos_t level_pos;
         int x, y;
 
         if (sscanf(name, "%u.%u", &x, &y) != 2) {
-            DIE("bad format in level name %s, expecting a,b format", name);
+            WARN("bad format in level name %s, expecting a,b format", name);
+            continue;
         }
+CON("name %s", name);
 
         level_pos.x = x;
         level_pos.y = y;
@@ -806,6 +868,7 @@ widp wid_map (void)
     wid_set_do_not_lower(window, 1);
     wid_update(window);
     wid_raise(window);
+    wid_map_bg_create();
 
     return (window);
 }

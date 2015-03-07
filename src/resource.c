@@ -216,6 +216,12 @@ static uint8_t resource_init_29 (void *context)
                      "crystalball_purple") != 0);
 }
 
+static uint8_t resource_init_30 (void *context)
+{
+    return (tex_load("data/gfx/title5.png",
+                     "title5") != 0);
+}
+
 static uint8_t resource_init_last (void *context)
 {
     static const char *small_tiles[] = {
@@ -3034,9 +3040,11 @@ uint8_t resource_init (void)
                           (action_init_fn_callback)resource_init_29,
                           0, "resource_init_29");
     action_init_fn_create(&init_fns,
+                          (action_init_fn_callback)resource_init_30,
+                          0, "resource_init_30");
+    action_init_fn_create(&init_fns,
                           (action_init_fn_callback)resource_init_last,
                           0, "resource_init_last");
-
 
     return (true);
 }
