@@ -80,9 +80,9 @@ void wid_editor_hide (void)
     wid_intro_visible();
 }
 
-void wid_editor_visible (void)
+void wid_editor_visible (level_pos_t level_pos)
 {
-    wid_editor_map_wid_create();
+    wid_editor_map_wid_create(level_pos);
     wid_editor_buttons_wid_create();
 
     wid_editor_draw();

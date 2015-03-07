@@ -105,20 +105,27 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
     return (true);
 }
 
-levelp level_new (widp map, uint32_t level_no, int is_editor, int on_server)
+levelp level_new (widp map, 
+                  level_pos_t level_pos, 
+                  int is_editor, 
+                  int is_map_editor, 
+                  int on_server)
 {
     levelp level;
 
     level = (typeof(level)) myzalloc(sizeof(*level), "level");
 
     level_set_map(level, map);
-    level_set_level_no(level, level_no);
+    level_set_level_pos(level, level_pos);
     level_set_is_editor(level, is_editor);
+    level_set_is_map_editor(level, is_map_editor);
 
     if (on_server) {
-        level->logname = dynprintf("%u[%p] (server)", level_no, level);
+        level->logname = dynprintf("%u.%u[%p] (server)", 
+                                   level_pos.x, level_pos.y, level);
     } else {
-        level->logname = dynprintf("%u[%p] (client)", level_no, level);
+        level->logname = dynprintf("%u.%u[%p] (client)", 
+                                   level_pos.x, level_pos.y, level);
     }
 
     level->on_server = on_server;
@@ -219,21 +226,22 @@ void level_update_now (levelp level)
     thing_tick_server_player_slow_all(true /* force */);
 }
 
-levelp level_load (uint32_t level_no, 
+levelp level_load (level_pos_t level_pos, 
                    widp wid, 
                    int is_editor,
+                   int is_map_editor,
                    int on_server)
 {
     levelp level;
 
-    level = level_new(wid, level_no, is_editor, on_server);
+    level = level_new(wid, level_pos, is_editor, is_map_editor, on_server);
 
     level_set_is_paused(level, true);
     level_set_timestamp_started(level, time_get_time_ms());
 
     char *dir_and_file;
 
-    dir_and_file = dynprintf("data/levels/%u.%u", level_no, level_no);
+    dir_and_file = dynprintf("data/levels/%u.%u", level_pos.x, level_pos.y);
 
     demarshal_p in;
 
@@ -286,14 +294,19 @@ levelp level_load (uint32_t level_no,
     return (level);
 }
 
-levelp level_load_random (uint32_t level_no, 
+levelp level_load_random (level_pos_t level_pos, 
                           widp wid, 
                           int is_editor,
+                          int is_map_editor,
                           int on_server)
 {
     levelp level;
 
-    level = level_new(wid, level_no, is_editor, on_server);
+    level = level_new(wid, 
+                      level_pos, 
+                      is_editor, 
+                      is_map_editor, 
+                      on_server);
 
     level_set_is_paused(level, true);
     level_set_timestamp_started(level, time_get_time_ms());
@@ -820,18 +833,18 @@ void level_tick (levelp level)
     }
 }
 
-uint32_t level_get_level_no (levelp level)
+level_pos_t level_get_level_pos (levelp level)
 {
     verify(level);
 
-    return (level->level_no);
+    return (level->level_pos);
 }
 
-void level_set_level_no (levelp level, uint32_t val)
+void level_set_level_pos (levelp level, level_pos_t val)
 {
     verify(level);
 
-    level->level_no = val;
+    level->level_pos = val;
 }
 
 uint32_t level_get_timestamp_started (levelp level)
@@ -1156,6 +1169,20 @@ void level_set_is_editor (levelp level, uint8_t val)
     level->is_editor = val;
 }
 
+uint8_t level_is_map_editor (levelp level)
+{
+    verify(level);
+
+    return (level->is_map_editor);
+}
+
+void level_set_is_map_editor (levelp level, uint8_t val)
+{
+    verify(level);
+
+    level->is_map_editor = val;
+}
+
 uint8_t level_is_paused (levelp level)
 {
     verify(level);
@@ -1303,7 +1330,12 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
 
     server_level_is_being_loaded = true;
 
-    if (level_is_editor(level)) {
+    if (level_is_map_editor(level)) {
+        /*
+         * No grid to place things on
+         */
+        rc = true;
+    } else if (level_is_editor(level)) {
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_editor_map_thing_replace_template);
     } else {
@@ -1315,7 +1347,11 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
 
     map_fixup(level);
 
-    if (level_is_editor(level)) {
+    if (level_is_map_editor(level)) {
+        /*
+         * No widget to update
+         */
+    } else if (level_is_editor(level)) {
         wid_update(wid_editor_map_grid_container);
     } else {
         wid_update(wid_game_map_server_grid_container);
@@ -1324,5 +1360,4 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
     GET_KET(ctx);
 
     return (rc);
-
 }

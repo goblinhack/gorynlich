@@ -829,11 +829,14 @@ static void client_rx_server_status (gsocketp s,
     uint8_t redo = false;
 
     if (client_level) {
-        level_set_level_no(client_level, latest_status.level_no);
+        level_set_level_pos(client_level, latest_status.level_pos);
     }
 
-    if (server_status.level_no != latest_status.level_no) {
-        LOG("Client: Level no %u", latest_status.level_no);
+    if (!memcmp(&server_status.level_pos, &latest_status.level_pos,
+                sizeof(level_pos_t))) {
+        LOG("Client: Level no %u.%u", 
+            latest_status.level_pos.x,
+            latest_status.level_pos.y);
         redo = true;
     }
 
@@ -850,7 +853,7 @@ static void client_rx_server_status (gsocketp s,
     }
 
     global_config.server_current_players = latest_status.server_current_players;
-    global_config.level_no = latest_status.level_no;
+    global_config.level_pos = latest_status.level_pos;
 
     /*
      * Left a level?

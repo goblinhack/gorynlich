@@ -11,7 +11,7 @@ typedef struct {
 } level_walls;
 
 typedef struct level_t_ {
-    uint32_t level_no;
+    level_pos_t level_pos;
 
     /*
      * This is for monsters. One map where they try to go through doors and 
@@ -97,6 +97,7 @@ typedef struct level_t_ {
      * Being used in level editor.
      */
     uint8_t is_editor:1;
+    uint8_t is_map_editor:1;
 
     /*
      * Make things go faster.

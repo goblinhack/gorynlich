@@ -6,16 +6,12 @@
 
 #pragma once
 
-#define WID_MAP_ACROSS      20
-#define WID_MAP_DOWN        20
-#define WID_MAP_CELL_EXITS  4
-
 typedef struct wid_map_cell_ {
-    struct wid_map_cell_ *exit[WID_MAP_CELL_EXITS];
+    levelp level;
     char *name;
     int x;
     int y;
-} wid_map_cell;
+} wid_map_level;
 
 typedef void(*wid_map_event_t)(widp);
 
@@ -49,8 +45,8 @@ typedef struct {
     /*
      * Items in the map
      */
-    widp buttons[WID_MAP_DOWN][WID_MAP_ACROSS];
-    wid_map_cell cell[WID_MAP_DOWN][WID_MAP_ACROSS];
+    widp buttons[LEVELS_ACROSS][LEVELS_DOWN];
+    wid_map_level levels[LEVELS_ACROSS][LEVELS_DOWN];
 
     /*
      * What to call on events
