@@ -754,6 +754,7 @@ typedef struct wid_ {
     uint32_t timestamp_shake_end;
 
     uint32_t destroy_when;
+    uint32_t timestamp_created;
 
     uint32_t timestamp_last_mode_change;
 
