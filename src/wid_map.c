@@ -8,18 +8,20 @@
 
 #include "main.h"
 #include "wid.h"
+#include "dir.h"
 #include "color.h"
 #include "string_ext.h"
 #include "ttf.h"
 #include "wid_map.h"
 #include "time_util.h"
 #include "timer.h"
+#include "level.h"
 #include "math_util.h"
 
 /*
  * How keys appear on screen
  */
-static const char* keys[WID_MAP_DOWN][WID_MAP_ACROSS] = {
+static const char* keys[LEVELS_ACROSS][LEVELS_DOWN] = {
   { "CANCEL",},
   { "DONE",    },
 };
@@ -27,7 +29,7 @@ static const char* keys[WID_MAP_DOWN][WID_MAP_ACROSS] = {
 /*
  * The real key behind the scenes
  */
-static const char key_char[WID_MAP_DOWN][WID_MAP_ACROSS] = {
+static const char key_char[LEVELS_ACROSS][LEVELS_DOWN] = {
   { '', },
   { '\n', },
 };
@@ -42,15 +44,15 @@ static void wid_map_update_buttons (widp w)
     wid_map_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
 
-    double width = 1.0 / (double)(WID_MAP_ACROSS + 1);
-    double height = 1.0 / (double)(WID_MAP_DOWN + 1);
+    double width = 1.0 / (double)(LEVELS_DOWN + 1);
+    double height = 1.0 / (double)(LEVELS_ACROSS + 1);
 
     int x, y;
 
     ctx->b = 0;
 
-    for (x = 0; x < WID_MAP_ACROSS; x++) {
-    for (y = 0; y < WID_MAP_DOWN; y++) {
+    for (x = 0; x < LEVELS_DOWN; x++) {
+    for (y = 0; y < LEVELS_ACROSS; y++) {
 
         widp b = ctx->buttons[y][x];
         verify(b);
@@ -120,8 +122,8 @@ static void wid_map_update_buttons (widp w)
     if (ctx->is_new) {
         ctx->is_new = false;
 
-        for (x = 0; x < WID_MAP_ACROSS; x++) {
-            for (y = 0; y < WID_MAP_DOWN; y++) {
+        for (x = 0; x < LEVELS_DOWN; x++) {
+            for (y = 0; y < LEVELS_ACROSS; y++) {
 
                 const char *t = keys[y][x];
                 widp b = ctx->buttons[y][x];
@@ -177,8 +179,8 @@ static void wid_map_event (widp w, int focusx, int focusy,
     if (key && (focusx == -1) && (focusy == -1)) {
         int x, y;
 
-        for (x = 0; x < WID_MAP_ACROSS; x++) {
-            for (y = 0; y < WID_MAP_DOWN; y++) {
+        for (x = 0; x < LEVELS_DOWN; x++) {
+            for (y = 0; y < LEVELS_ACROSS; y++) {
                 char c = key_char[y][x];
                 if (c == key->sym) {
                     focusx = x;
@@ -220,7 +222,7 @@ static uint8_t wid_map_button_mouse_event (widp w,
 static void wid_map_focus_right (wid_map_ctx *ctx)
 {
     ctx->focusx++;
-    if (ctx->focusx > WID_MAP_ACROSS - 1) {
+    if (ctx->focusx > LEVELS_DOWN - 1) {
         ctx->focusx = 0;
     }
 
@@ -231,7 +233,7 @@ static void wid_map_focus_left (wid_map_ctx *ctx)
 {
     ctx->focusx--;
     if (ctx->focusx < 0) {
-        ctx->focusx = WID_MAP_ACROSS - 1;
+        ctx->focusx = LEVELS_DOWN - 1;
     }
 
     wid_map_update_buttons(ctx->w);
@@ -240,7 +242,7 @@ static void wid_map_focus_left (wid_map_ctx *ctx)
 static void wid_map_focus_down (wid_map_ctx *ctx)
 {
     ctx->focusy++;
-    if (ctx->focusy > WID_MAP_DOWN - 1) {
+    if (ctx->focusy > LEVELS_ACROSS - 1) {
         ctx->focusy = 0;
     }
 
@@ -251,7 +253,7 @@ static void wid_map_focus_up (wid_map_ctx *ctx)
 {
     ctx->focusy--;
     if (ctx->focusy < 0) {
-        ctx->focusy = WID_MAP_DOWN - 1;
+        ctx->focusy = LEVELS_ACROSS - 1;
     }
 
     wid_map_update_buttons(ctx->w);
@@ -259,8 +261,8 @@ static void wid_map_focus_up (wid_map_ctx *ctx)
 
 static void wid_map_last_focus (wid_map_ctx *ctx)
 {
-    ctx->focusx = WID_MAP_ACROSS - 1;
-    ctx->focusy = WID_MAP_DOWN - 1;
+    ctx->focusx = LEVELS_DOWN - 1;
+    ctx->focusy = LEVELS_ACROSS - 1;
 
     wid_map_update_buttons(ctx->w);
 }
@@ -570,8 +572,8 @@ static void wid_map_tick (widp w)
 
     int x, y;
 
-    for (x = 0; x < WID_MAP_ACROSS; x++) {
-    for (y = 0; y < WID_MAP_DOWN; y++) {
+    for (x = 0; x < LEVELS_DOWN; x++) {
+    for (y = 0; y < LEVELS_ACROSS; y++) {
 
         if ((x != ctx->focusx) || (y != ctx->focusy)) {
             continue;
@@ -609,8 +611,8 @@ static void wid_map_destroy_begin (widp w)
      */
     int x, y;
 
-    for (x = 0; x < WID_MAP_ACROSS; x++) {
-        for (y = 0; y < WID_MAP_DOWN; y++) {
+    for (x = 0; x < LEVELS_DOWN; x++) {
+        for (y = 0; y < LEVELS_ACROSS; y++) {
 
             widp b = ctx->buttons[y][x];
             fpoint tl;
@@ -633,6 +635,44 @@ static void wid_map_cell_cancelled (widp w)
 {
 }
 
+static void wid_map_load_levels (wid_map_ctx *ctx)
+{
+    tree_file_node *n;
+    tree_root *d;
+
+    d = dirlist(LEVELS_PATH,
+                0 /* context->include_suffix */,
+                0 /* context->exclude_suffix */,
+                0 /* context->include_dirs */,
+                false /* include_ramdisk */);
+
+    { TREE_WALK(d, n) {
+
+        const char *name = n->tree.key;
+
+        level_pos_t level_pos;
+
+CON("name %s", name);
+        int x, y;
+
+        if (sscanf(name, "%u.%u", &x, &y) != 2) {
+            DIE("bad format in level name %s, expecting a,b format", name);
+        }
+
+        level_pos.x = x;
+        level_pos.y = y;
+
+        levelp l = level_new(0 /* widget */, 
+                             level_pos, 
+                             false, /* is_editor */
+                             true, /* is_map_editor */
+                             false /* on_server */);
+
+        ctx->levels[y][x].level = l;
+    } }
+
+    dirlist_free(&d);
+}
 
 widp wid_map (void)
 {
@@ -655,6 +695,11 @@ widp wid_map (void)
     widp window = wid_new_window("wid map");
     ctx->w = window;
     ctx->is_new = true;
+
+    /*
+     * Load all levels
+     */
+    wid_map_load_levels(ctx);
 
     /*
      * Main window
@@ -714,14 +759,13 @@ widp wid_map (void)
          */
         int x, y;
 
-        for (x = 0; x < WID_MAP_ACROSS; x++) {
-        for (y = 0; y < WID_MAP_DOWN; y++) {
+        for (x = 0; x < LEVELS_DOWN; x++) {
+        for (y = 0; y < LEVELS_ACROSS; y++) {
             widp b = wid_new_square_button(button_container,
                                            "wid map button");
             ctx->buttons[y][x] = b;
-
-            ctx->cell[y][x].x = x;
-            ctx->cell[y][x].y = y;
+            ctx->levels[y][x].x = x;
+            ctx->levels[y][x].y = y;
 
             if (keys[y][x]) {
                 wid_set_text(b, keys[y][x]);

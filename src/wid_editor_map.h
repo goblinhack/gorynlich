@@ -4,8 +4,8 @@
  * See the LICENSE file for license.
  */
 
-void wid_editor_map_wid_create(void);
-void wid_editor_map_wid_destroy (void);
+void wid_editor_map_wid_create(level_pos_t);
+void wid_editor_map_wid_destroy(void);
 
 extern widp wid_editor_map_window;
 extern widp wid_editor_map_grid_container;

@@ -1189,7 +1189,7 @@ static void wid_editor_title_set (const char *title)
 /*
  * Create the wid_editor_map
  */
-void wid_editor_map_wid_create (void)
+void wid_editor_map_wid_create (level_pos_t level_pos)
 {
     if (wid_editor_map_window) {
         return;
@@ -1288,8 +1288,10 @@ void wid_editor_map_wid_create (void)
                     MAP_WIDTH,
                     MAP_HEIGHT, tile_width, tile_height);
 
-    level_ed = level_new(wid_editor_map_grid_container, 0, 
+    level_ed = level_new(wid_editor_map_grid_container, 
+                         level_pos, 
                          true, /* is_editor */
+                         false, /* is_map_editor */
                          false /* on_server */);
 
     wid_editor_map_vert_scroll =

@@ -7,12 +7,24 @@
 uint8_t level_init(void);
 void level_fini(void);
 
-levelp level_new(widp, uint32_t, int is_editor, int on_server);
+levelp level_new(widp,
+                 level_pos_t, 
+                 int is_editor, 
+                 int is_map_editor, 
+                 int on_server);
 void level_destroy(levelp *, uint8_t keep_players);
 void level_tick(levelp);
 void level_update_now(levelp level);
-levelp level_load(uint32_t level, widp, int is_editor, int on_server);
-levelp level_load_random(uint32_t level, widp, int is_editor, int on_server);
+levelp level_load(level_pos_t,
+                  widp, 
+                  int is_editor, 
+                  int is_map_editor, 
+                  int on_server);
+levelp level_load_random(level_pos_t level, 
+                         widp, 
+                         int is_editor, 
+                         int is_map_editor, 
+                         int on_server);
 void level_pause(levelp level);
 void marshal_level(marshal_p ctx, levelp level);
 uint8_t demarshal_level(demarshal_p ctx, levelp l);
@@ -31,9 +43,9 @@ void level_set_pipes(levelp level);
 void level_pipe_find_ends(levelp level);
 uint8_t level_pipe_find_exit(levelp level,
                     int32_t ix, int32_t iy, int32_t *exit_x, int32_t *exit_y);
-uint32_t level_get_level_no(levelp level);
+level_pos_t level_get_level_pos(levelp level);
+void level_set_level_pos(levelp level, level_pos_t val);
 const char *level_get_logname(levelp level);
-void level_set_level_no(levelp level, uint32_t val);
 uint32_t level_get_timestamp_started(levelp level);
 void level_set_timestamp_started(levelp level, uint32_t val);
 uint8_t level_is_hurryup(levelp level);
@@ -80,6 +92,8 @@ uint8_t level_is_exit_open(levelp level);
 void level_set_is_exit_open(levelp level, uint8_t val);
 uint8_t level_is_editor(levelp level);
 void level_set_is_editor(levelp level, uint8_t val);
+uint8_t level_is_map_editor(levelp level);
+void level_set_is_map_editor(levelp level, uint8_t val);
 uint8_t level_is_paused(levelp level);
 void level_set_exit_has_been_reached(levelp level, uint8_t val);
 uint8_t level_exit_has_been_reached(levelp level);
