@@ -18,6 +18,7 @@
 #include "marshal.h"
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
+#include "wid_map.h"
 #include "wid_editor_map.h"
 #include "map.h"
 #include "timer.h"
@@ -287,10 +288,16 @@ levelp level_load (level_pos_t level_pos,
 
     myfree(dir_and_file);
 
-    level_update_now(level);
+    if (!level_is_map_editor(level)) {
+        level_update_now(level);
+    }
 
     level_set_is_paused(level, false);
-    level_reset_players(level);
+
+    if (!level_is_map_editor(level) &&
+        !level_is_editor(level)) {
+        level_reset_players(level);
+    }
 
     level_server_init();
 
@@ -1336,10 +1343,8 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
     server_level_is_being_loaded = true;
 
     if (level_is_map_editor(level)) {
-        /*
-         * No grid to place things on
-         */
-        rc = true;
+        rc = demarshal_wid_grid(ctx, wid,
+                                wid_editor_level_map_thing_replace_template);
     } else if (level_is_editor(level)) {
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_editor_map_thing_replace_template);
@@ -1350,15 +1355,15 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
 
     server_level_is_being_loaded = false;
 
-    map_fixup(level);
-
     if (level_is_map_editor(level)) {
         /*
          * No widget to update
          */
     } else if (level_is_editor(level)) {
+        map_fixup(level);
         wid_update(wid_editor_map_grid_container);
     } else {
+        map_fixup(level);
         wid_update(wid_game_map_server_grid_container);
     }
 
