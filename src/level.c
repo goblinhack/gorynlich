@@ -233,7 +233,7 @@ levelp level_load (uint32_t level_no,
 
     char *dir_and_file;
 
-    dir_and_file = dynprintf("data/levels/%u", level_no);
+    dir_and_file = dynprintf("data/levels/%u.%u", level_no);
 
     demarshal_p in;
 
