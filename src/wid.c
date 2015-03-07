@@ -55,8 +55,7 @@ static tree_root *wid_top_level5;
  * Mouse movement
  */
 static widp wid_popup_tooltip;
-static int wid_popup_tooltip_mouse_x;
-static int wid_popup_tooltip_mouse_y;
+static char *wid_tooltip_string;
 
 /*
  * Scope the focus to children of this widget and do not change it.
@@ -94,6 +93,7 @@ const int32_t wid_scaling_forever_delay = 500;
 /*
  * Prototypes.
  */
+static void wid_destroy_delay(widp *wp, int32_t delay);
 static uint8_t wid_scroll_trough_mouse_down(widp w, int32_t x, int32_t y,
                                             uint32_t button);
 static uint8_t wid_scroll_trough_mouse_motion(widp w,
@@ -913,19 +913,6 @@ static void wid_mouse_over_end (void)
     if (w->on_mouse_over_end) {
         w->on_mouse_over_end(w);
     }
-
-    if (wid_popup_tooltip) {
-        /*
-         * If the users attention has moved and we're no longer over this 
-         * widget (could be a redraw) then zap the tooltip
-         */
-        if ((abs(mouse_x - wid_popup_tooltip_mouse_x) > 10) ||
-            (abs(mouse_y - wid_popup_tooltip_mouse_y) > 10)) {
-            fast_verify(wid_popup_tooltip);
-
-            wid_destroy(&wid_popup_tooltip);
-        }
-    }
 }
 
 static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y,
@@ -970,16 +957,24 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y,
     }
 
     if (w->tooltip) {
-        if (wid_popup_tooltip) {
-            wid_destroy_immediate(wid_popup_tooltip);
+        if (wid_tooltip_string) {
+            if (!strcmp(wid_tooltip_string, w->tooltip)) {
+                return (true);
+            }
+
+            wid_destroy(&wid_popup_tooltip);
         }
+
+        if (wid_tooltip_string) {
+            myfree(wid_tooltip_string);
+            wid_tooltip_string = 0;
+        }
+
+        wid_tooltip_string = dupstr(w->tooltip, "tooltop str");
 
         wid_popup_tooltip = wid_tooltip(w->tooltip, 0.5, 0.0, 
                                         w->tooltip_font ? 
                                         w->tooltip_font : small_font);
-
-        wid_popup_tooltip_mouse_x = mouse_x;
-        wid_popup_tooltip_mouse_y = mouse_y;
 
         /*
          * Move just above and to the left of the widget.
@@ -1022,7 +1017,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y,
         wid_move_to_pct_centered(wid_popup_tooltip, atx, -0.5);
         wid_move_to_pct_centered_in(wid_popup_tooltip, atx, 0.2, 200);
 
-        wid_destroy_ptr_in(&wid_popup_tooltip, 5000);
+        wid_destroy_ptr_in(&wid_popup_tooltip, 3000);
 #endif
     }
 
@@ -2995,6 +2990,7 @@ static widp wid_new (widp parent)
 
     w = (typeof(w)) myzalloc(sizeof(*w), "widget");
     w->parent = parent;
+    w->timestamp_created = wid_time;
 
     wid_tree_insert(w);
     wid_tree2_unsorted_insert(w);
@@ -3133,6 +3129,10 @@ static void wid_destroy_immediate (widp w)
 
     if (w == wid_popup_tooltip) {
         wid_popup_tooltip = 0;
+        if (wid_tooltip_string) {
+            myfree(wid_tooltip_string);
+            wid_tooltip_string = 0;
+        }
     }
 
     if (w == wid_focus_locked) {
@@ -8850,7 +8850,7 @@ static void wid_display (widp w,
 
             double dx;
 
-            col_text_outline.a = 255;
+            col_text_outline.a = (int)(wid_get_fade_amount(w) * 255.0);
 
             for (dx = 0.5; dx < outline; dx += 0.5) {
                 glcolor(col_text_outline);
