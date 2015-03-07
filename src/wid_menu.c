@@ -292,9 +292,6 @@ static uint8_t wid_menu_button_joy_down_event (widp w,
 static uint8_t wid_menu_parent_joy_down_event (widp w,
                                             int32_t x, int32_t y)
 {
-    wid_menu_ctx *ctx = wid_get_client_context(w);
-    verify(ctx);
-
     return (wid_menu_joy_down_event(w, x, y));
 }
 
@@ -508,9 +505,6 @@ static uint8_t wid_menu_button_key_event (widp w, const SDL_KEYSYM *key)
 
 static uint8_t wid_menu_parent_key_event (widp w, const SDL_KEYSYM *key)
 {
-    wid_menu_ctx *ctx = wid_get_client_context(w);
-    verify(ctx);
-
     return (wid_menu_key_event(w, key));
 }
 
