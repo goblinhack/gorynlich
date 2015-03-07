@@ -534,9 +534,10 @@ static void wid_intro_menu_create (void)
     }
 
 
-if (0)
+if (0) {
 wid_map();
 return;
+}
     wid_intro_menu = 
         wid_menu(0,
                  vvlarge_font,
