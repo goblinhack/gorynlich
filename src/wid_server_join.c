@@ -29,15 +29,15 @@ static widp wid_server_join_background;
 static uint8_t wid_server_join_init_done;
 
 static void wid_server_join_destroy(void);
-static void wid_server_menu_destroy(void);
-static void wid_choose_name_bg_create(void);
+static void wid_server_join_menu_destroy(void);
+static void wid_server_join_bg_create(void);
 static uint8_t wid_server_load_remote_server_list(void);
 
 #define WID_MAX_SERVERS 100
 #define WID_MAX_SERVERS_ON_SCREEN 20
-static widp wid_server_menu;
+static widp wid_server_join_menu;
 static int saved_focus = 1;
-static void wid_server_menu_create(void);
+static void wid_server_join_menu_create(void);
 
 typedef struct server_ {
     tree_key_four_int tree;
@@ -230,7 +230,7 @@ void wid_server_join_hide (void)
 {
     wid_server_join_destroy();
 
-    wid_server_menu_destroy();
+    wid_server_join_menu_destroy();
 
     if (wid_server_join_background) {
         wid_destroy(&wid_server_join_background);
@@ -534,7 +534,7 @@ static void wid_server_join_display (server *s)
 void wid_server_join_redo (uint8_t redo)
 {
     if (redo) {
-        if (!wid_server_menu) {
+        if (!wid_server_join_menu) {
             return;
         }
     }
@@ -543,17 +543,17 @@ void wid_server_join_redo (uint8_t redo)
         /*
          * Save the row we're interested in.
          */
-        wid_server_menu_destroy();
+        wid_server_join_menu_destroy();
     }
 
-    wid_choose_name_bg_create();
+    wid_server_join_bg_create();
 
-    wid_server_menu_create();
+    wid_server_join_menu_create();
 
     /*
      * Get the server we're interested in from the focus.
      */
-    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(wid_server_menu);
+    wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(wid_server_join_menu);
     verify(ctx);
 
     int32_t row = ctx->focus - 1;
@@ -673,7 +673,7 @@ static uint8_t wid_server_mouse_event (widp w,
         wid_server_edit_init("", DEFAULT_PORT);
     }
 
-    wid_server_menu_destroy();
+    wid_server_join_menu_destroy();
     wid_destroy_nodelay(&wid_server_stats_window);
     wid_destroy_nodelay(&wid_server_stats_bars);
 
@@ -684,20 +684,20 @@ static uint8_t wid_server_back_mouse_event (widp w,
                                             int32_t x, int32_t y,
                                             uint32_t button)
 {
-    wid_destroy(&wid_server_menu);
+    wid_destroy(&wid_server_join_menu);
     wid_server_join_go_back(w, x, y, button);
 
     return (true);
 }
 
-static void wid_server_menu_destroy (void)
+static void wid_server_join_menu_destroy (void)
 {
-    if (!wid_server_menu) {
+    if (!wid_server_join_menu) {
         return;
     }
 
     wid_menu_ctx *ctx = 
-                    (typeof(ctx)) wid_get_client_context(wid_server_menu);
+                    (typeof(ctx)) wid_get_client_context(wid_server_join_menu);
     verify(ctx);
 
     /*
@@ -705,10 +705,10 @@ static void wid_server_menu_destroy (void)
      */
     saved_focus = ctx->focus;
 
-    wid_destroy_nodelay(&wid_server_menu);
+    wid_destroy_nodelay(&wid_server_join_menu);
 }
 
-static void wid_choose_name_bg_create (void)
+static void wid_server_join_bg_create (void)
 {
     widp wid;
 
@@ -726,7 +726,7 @@ static void wid_choose_name_bg_create (void)
 
         wid_set_tl_br_pct(wid, tl, br);
 
-        wid_set_tex(wid, 0, "title4");
+        wid_set_tex(wid, 0, "title5");
 
         wid_lower(wid);
 
@@ -743,12 +743,12 @@ static void wid_choose_name_bg_create (void)
 
 static void wid_server_join_tick (widp w)
 {
-    if (!wid_server_menu) {
+    if (!wid_server_join_menu) {
         return;
     }
 
     wid_menu_ctx *ctx = 
-                    (typeof(ctx)) wid_get_client_context(wid_server_menu);
+                    (typeof(ctx)) wid_get_client_context(wid_server_join_menu);
     verify(ctx);
 
     /*
@@ -761,9 +761,9 @@ static void wid_server_join_tick (widp w)
     }
 }
 
-static void wid_server_menu_create (void)
+static void wid_server_join_menu_create (void)
 {
-    if (wid_server_menu) {
+    if (wid_server_join_menu) {
         return;
     }
 
@@ -888,7 +888,7 @@ static void wid_server_menu_create (void)
         }
     }
 
-    wid_server_menu = wid_menu(0,
+    wid_server_join_menu = wid_menu(0,
                 med_font,
                 med_font,
                 0.5, /* x */
@@ -1083,5 +1083,5 @@ static void wid_server_menu_create (void)
         myfree(col_quality[i]);
     }
 
-    wid_set_on_tick(wid_server_menu, wid_server_join_tick);
+    wid_set_on_tick(wid_server_join_menu, wid_server_join_tick);
 }
