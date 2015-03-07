@@ -745,8 +745,8 @@ static void wid_map_preview (widp w)
         fpoint tl;
         fpoint br;
 
-        double dx = 0.01;
-        double dy = 0.01;
+        double dx = 0.005;
+        double dy = 0.005;
 
         tl.x = ((double)x) * dx;
         br.x = ((double)x+1.5) * dx;
@@ -762,6 +762,16 @@ static void wid_map_preview (widp w)
         tilep tile = tile_find(tilename);
         if (!tile) {
             ERR("cannot find tilep for tile %s", tilename);
+        }
+
+        if (ctx->focusx > MAP_WIDTH / 2) {
+            tl.x -= dx * (double)MAP_WIDTH;
+            br.x -= dx * (double)MAP_WIDTH;
+        }
+
+        if (ctx->focusx > MAP_HEIGHT / 2) {
+            tl.y -= dy * (double)MAP_HEIGHT;
+            br.y -= dy * (double)MAP_HEIGHT;
         }
 
         tl.x *= (double) global_config.video_gl_width;
@@ -872,7 +882,7 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
 
 widp wid_map (void)
 {
-    const char *title = "Choose level to edit";
+    const char *title = "Choose epic level";
     wid_map_event_t selected = wid_map_cell_selected;
     wid_map_event_t cancelled = wid_map_cell_cancelled;
 
