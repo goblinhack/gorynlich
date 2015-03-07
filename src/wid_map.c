@@ -72,6 +72,8 @@ static void wid_map_update_buttons (widp w)
 
         const char *t = keys[y][x];
 
+        font = small_font;
+
         double zoom = 0.005;
         if ((x == ctx->focusx) && (y == ctx->focusy)) {
             tl.x -= zoom;
@@ -82,9 +84,9 @@ static void wid_map_update_buttons (widp w)
 
             if (t) {
                 if (strlen(t) > 1) {
-                    font = med_font;
+                    font = small_font;
                 } else {
-                    font = vvlarge_font;
+                    font = med_font;
                 }
             }
 
@@ -94,20 +96,14 @@ static void wid_map_update_buttons (widp w)
         } else {
             if (t) {
                 if (strlen(t) > 1) {
-                    font = med_font;
+                    font = small_font;
                 } else {
-                    font = vlarge_font;
+                    font = med_font;
                 }
             }
             wid_lower(b);
 
             c = GRAY70;
-        }
-
-        if (t) {
-            if (!strcasecmp(t, "DONE")) {
-                font = vvlarge_font;
-            }
         }
 
         wid_set_tl_br_pct(b, tl, br);
@@ -429,14 +425,14 @@ static uint8_t wid_map_button_key_event (widp w, const SDL_KEYSYM *key)
             (ctx->selected)(ctx->w);
             return (true);
 
+        case SDLK_DOWN:
+        case SDLK_HOME:
+        case SDLK_END:
         case SDLK_BACKSPACE:
         case SDLK_DELETE:
         case SDLK_LEFT:
         case SDLK_RIGHT:
         case SDLK_UP:
-        case SDLK_DOWN:
-        case SDLK_HOME:
-        case SDLK_END:
             break;
 
         default:
