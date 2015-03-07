@@ -539,7 +539,7 @@ static void wid_intro_menu_create (void)
     }
 
 
-if (1) {
+if (0) {
 wid_intro_hide();
 wid_map();
 return;
