@@ -91,6 +91,8 @@
 /*
  * Map. How many tiles across and down.
  */
+#define LEVELS_ACROSS               20
+#define LEVELS_DOWN                 20
 #define MAP_WIDTH                   64
 #define MAP_HEIGHT                  64
 
