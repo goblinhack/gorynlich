@@ -33,7 +33,8 @@ static void wid_server_menu_destroy(void);
 static void wid_choose_name_bg_create(void);
 static uint8_t wid_server_load_remote_server_list(void);
 
-#define WID_MAX_SERVERS 20
+#define WID_MAX_SERVERS 100
+#define WID_MAX_SERVERS_ON_SCREEN 20
 static widp wid_server_menu;
 static int saved_focus = 1;
 static void wid_server_menu_create(void);
@@ -85,12 +86,8 @@ static void server_add (const server *s_in)
     s->host = dupstr(s_in->host, "server hostname");
     s->port = s_in->port;
 
-    if ((address_resolve(&s->ip, 
-                            s->host,
-                            s->port)) == -1) {
-        LOG("Cannot resolve host %s port %u", 
-            s->host, 
-            s->port);
+    if ((address_resolve(&s->ip, s->host, s->port)) == -1) {
+        LOG("Cannot resolve host %s port %u", s->host, s->port);
 
         s->host_and_port_str = dynprintf("%s:%u", s->host, s->port);
     } else {
@@ -301,6 +298,17 @@ void wid_server_join_visible (void)
             "10.0.1.7",
             "10.0.1.8",
             "10.0.1.9",
+            "10.0.1.10",
+            "10.0.1.11",
+            "10.0.1.12",
+            "10.0.1.13",
+            "10.0.1.14",
+            "10.0.1.15",
+            "10.0.1.16",
+            "10.0.1.17",
+            "10.0.1.18",
+            "10.0.1.19",
+            "10.0.1.20",
         };
 
         int i;
@@ -371,6 +379,7 @@ uint8_t wid_server_replace (char *host, int port)
     server_add(&s);
 
     wid_server_join_visible();
+    wid_server_join_redo(true);
 
     return (true);
 }
@@ -435,9 +444,9 @@ static void wid_server_join_display (server *s)
         "%%%%fg=green$%%%%fmt=left$Current players, %%%%fg=red$%u, %u max\n\n"
         "%s",
         s->name,
-        s->avg_latency_rtt,
-        s->min_latency_rtt,
-        s->max_latency_rtt,
+        sp->avg_latency_rtt,
+        sp->min_latency_rtt,
+        sp->max_latency_rtt,
         socket_get_max_players(sp),
         socket_get_current_players(sp),
         tmp);
@@ -547,7 +556,7 @@ void wid_server_join_redo (uint8_t redo)
     wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(wid_server_menu);
     verify(ctx);
 
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(wid_server_menu);
+    int32_t row = ctx->focus - 1;
 
     server *s = row_server[row];
     if (s) {
@@ -656,22 +665,17 @@ static uint8_t wid_server_mouse_event (widp w,
     wid_menu_ctx *ctx = (typeof(ctx)) wid_get_client_context(w);
     verify(ctx);
 
-    int32_t row = (typeof(row)) (intptr_t) wid_get_client_context2(w);
-
-    server *s = row_server[row - 1];
-    if (!s) {
-        return (false);
+    int32_t row = ctx->focus - 1;
+    server *s = row_server[row];
+    if (s) {
+        wid_server_edit_init(s->host, s->port);
+    } else {
+        wid_server_edit_init("", DEFAULT_PORT);
     }
-
-    wid_server_edit_init(s->host, s->port);
 
     wid_server_menu_destroy();
     wid_destroy_nodelay(&wid_server_stats_window);
     wid_destroy_nodelay(&wid_server_stats_bars);
-
-#if 0
-    wid_server_join(w, x, y, button);
-#endif
 
     return (true);
 }
@@ -737,6 +741,26 @@ static void wid_choose_name_bg_create (void)
     }
 }
 
+static void wid_server_join_tick (widp w)
+{
+    if (!wid_server_menu) {
+        return;
+    }
+
+    wid_menu_ctx *ctx = 
+                    (typeof(ctx)) wid_get_client_context(wid_server_menu);
+    verify(ctx);
+
+    /*
+     * Save the focus so when we remake the menu we are at the same entry.
+     */
+    if (ctx->focus != saved_focus) {
+        saved_focus = ctx->focus;
+    CON("moved");
+    wid_server_join_redo(true);
+    }
+}
+
 static void wid_server_menu_create (void)
 {
     if (wid_server_menu) {
@@ -773,6 +797,14 @@ static void wid_server_menu_create (void)
             continue;
         }
 
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        if (!sp) {
+            continue;
+        }
+
+        /*
+         * Don't check quality for stuff we manually added, always show.
+         */
         row_server[i] = s;
 
         {
@@ -788,7 +820,7 @@ static void wid_server_menu_create (void)
         }
 
         col_host[i] = dynprintf("%%%%fmt=left$%s", s->host);
-        col_quality[i] = dynprintf("bar:%d:%d", s->quality, 100);
+        col_quality[i] = dynprintf("bar:%d,%d", sp->quality, 100);
         i++;
     } }
 
@@ -805,7 +837,12 @@ static void wid_server_menu_create (void)
             continue;
         }
 
-        if (!s->quality) {
+        gsocketp sp = socket_find(s->ip, SOCKET_CONNECT);
+        if (!sp) {
+            continue;
+        }
+
+        if (!sp->quality) {
             continue;
         }
 
@@ -825,11 +862,11 @@ static void wid_server_menu_create (void)
 
         {
             char *tmp = iprawporttodynstr(s->ip);
-            col_port[i] = dynprintf("%%%%fmt=left$%s", tmp);
+            col_port[i] = dynprintf("%s", tmp);
             myfree(tmp);
         }
 
-        col_quality[i] = dynprintf("bar:%d:%d", s->quality, 100);
+        col_quality[i] = dynprintf("bar:%d,%d", sp->quality, 100);
         i++;
     } }
 
@@ -847,7 +884,7 @@ static void wid_server_menu_create (void)
             col_port[i] = dynprintf("-");
         }
         if (!col_quality[i]) {
-            col_quality[i] = dynprintf("bar:%d:%d", 0, 100);
+            col_quality[i] = dynprintf("bar:%d,%d", 0, 100);
         }
     }
 
@@ -858,7 +895,7 @@ static void wid_server_menu_create (void)
                 0.4, /* y */
                 5, /* columns */
                 saved_focus, /* focus */
-                WID_MAX_SERVERS + 2, /* items */
+                WID_MAX_SERVERS_ON_SCREEN + 2, /* items */
 
                 /*
                  * Column widths
@@ -1045,4 +1082,6 @@ static void wid_server_menu_create (void)
         myfree(col_port[i]);
         myfree(col_quality[i]);
     }
+
+    wid_set_on_tick(wid_server_menu, wid_server_join_tick);
 }
