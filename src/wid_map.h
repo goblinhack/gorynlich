@@ -11,6 +11,11 @@ typedef struct wid_map_cell_ {
     char *name;
     int x;
     int y;
+
+    /*
+     * Used for level preview.
+     */
+    tpp tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
 } wid_map_level;
 
 typedef void(*wid_map_event_t)(widp);
@@ -59,8 +64,21 @@ typedef struct {
      */
     int is_new;
 
+    /*
+     * Used when loading lots of levels to populate the preview.
+     */
+    int loading_x;
+    int loading_y;
+
 } wid_map_ctx;
 
 widp wid_map (void);
 
+widp wid_editor_level_map_thing_replace_template(widp w,
+                                                 double x,
+                                                 double y,
+                                                 thingp t,
+                                                 tpp tp,
+                                                 itemp item,
+                                                 thing_statsp stats);
 extern int wid_map_visible;
