@@ -232,9 +232,6 @@ static void wid_keyboard_event (widp w, int focusx, int focusy,
 static uint8_t wid_keyboard_mouse_event (widp w,
                                          int focusx, int focusy)
 {
-    wid_keyboard_ctx *ctx = wid_get_client_context(w);
-    verify(ctx);
-
     wid_keyboard_event(w, focusx, focusy, 0 /* key */);
 
     return (true);
