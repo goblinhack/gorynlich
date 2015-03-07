@@ -191,10 +191,14 @@ static uint8_t wid_server_edit_port_mouse_down (widp w,
 
     wid_destroy(&menu);
 
-    wid_port_number = wid_numpad("",
+    char *tmp = dynprintf("%d", new_port ? 0 : DEFAULT_PORT);
+
+    wid_port_number = wid_numpad(tmp ? tmp : "",
                                  "Enter port number",
                                  wid_port_number_ok,
                                  wid_port_number_cancel);
+
+    myfree(tmp);
 
     return (true);
 }
@@ -211,7 +215,7 @@ static void wid_ip_ok (widp w, const char *text)
         /*
          * Fail
          */
-        MSG_BOX("Failed to parse IP address %s, expecting a.b.c.d format",
+        MSG_BOX("Failed to parse IP address \"%s\", expecting a.b.c.d format",
                 text);
         wid_server_edit_redo();
         return;
@@ -256,7 +260,8 @@ static uint8_t wid_server_edit_ip_mouse_down (widp w,
 
     wid_destroy(&menu);
 
-    wid_ip = wid_numpad("", "Enter IP address", wid_ip_ok, wid_ip_cancel);
+    wid_ip = wid_numpad(new_ip ? new_ip : "",
+                        "Enter IP address", wid_ip_ok, wid_ip_cancel);
 
     return (true);
 }

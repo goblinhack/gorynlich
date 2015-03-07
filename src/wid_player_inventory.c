@@ -244,11 +244,11 @@ void wid_player_inventory_button_style (widp w,
                 char *tmp2;
 
                 if (item.enchanted) {
-                    tmp2 = dynprintf("%%%%fmt=left$Damage\t\t1d%d (+%d)\n",
+                    tmp2 = dynprintf("%%%%fmt=left$Damage: 1d%d (+%d)\n",
                                      damage, 
                                      item.enchanted);
                 } else {
-                    tmp2 = dynprintf("%%%%fmt=left$Damage\t\t1d%d\n",
+                    tmp2 = dynprintf("%%%%fmt=left$Damage: 1d%d\n",
                                      damage);
                 }
 
@@ -276,7 +276,7 @@ void wid_player_inventory_button_style (widp w,
 
             char *tmp2 = dynprintf(
                         "%%%%fmt=left$"
-                        "Quality\t\t%d%%%%, %s\n", 
+                        "Quality: %d%%%%, %s\n", 
                         (int) ((((double) quality) /
                         ((double) THING_ITEM_QUALITY_MAX)) * 100.0),
                         str);
@@ -293,7 +293,7 @@ void wid_player_inventory_button_style (widp w,
         if (tp_get_bonus_hp_on_use(tp)) {
             char *tmp2 = dynprintf(
                             "%%%%fmt=left$"
-                            "HP gain on use\t\t%d\n", 
+                            "HP gain on use: %d\n", 
                             tp_get_bonus_hp_on_use(tp));
 
             char *old = tmp;
@@ -308,7 +308,7 @@ void wid_player_inventory_button_style (widp w,
         if (tp_get_bonus_magic_on_use(tp)) {
             char *tmp2 = dynprintf(
                             "%%%%fmt=left$"
-                            "ID gain on use\t\t%d\n", 
+                            "ID gain on use: %d\n", 
                             tp_get_bonus_magic_on_use(tp));
 
             char *old = tmp;
@@ -334,15 +334,15 @@ void wid_player_inventory_button_style (widp w,
             } else if (val >= 2000) {
                 str = "moderate";
             } else if (val >= 1000) {
-                str = "high";
+                str = "unreliable";
             } else if (val >= 500) {
-                str = "very high";
+                str = "very dodgy";
             } else {
-                str = "very very high, made by orcs?";
+                str = "made by orcs?";
             }
 
             char *tmp2 = dynprintf("%%%%fmt=left$"
-                                   "Failure rate\t%s\n", str);
+                                   "Failure rate: %s\n", str);
 
             char *old = tmp;
             tmp = strappend(old, tmp2);
@@ -371,7 +371,7 @@ void wid_player_inventory_button_style (widp w,
             }
 
             char *tmp2 = dynprintf("%%%%fmt=left$"
-                                   "Rarity\t\t%s\n", str);
+                                   "Rarity: %s\n", str);
 
             char *old = tmp;
             tmp = strappend(old, tmp2);
