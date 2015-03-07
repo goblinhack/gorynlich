@@ -2607,6 +2607,17 @@ void wid_set_on_tick (widp w, on_tick_t fn)
     wid_tree5_ticking_wids_insert(w);
 }
 
+void wid_set_on_display (widp w, on_tick_t fn)
+{
+    fast_verify(w);
+
+    if (!fn) {
+        DIE("no ticker function set");
+    }
+
+    w->on_display = fn;
+}
+
 static inline int8_t 
 tree_wid_compare_func (const tree_node *a, const tree_node *b)
 {
@@ -3974,18 +3985,11 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
     tpp tp;
     uint32_t width;
     uint32_t height;
-    widgrid *grid;
     uint32_t x;
     uint32_t y;
-    widp child;
     uint8_t rc;
 
     rc = true;
-
-    grid = w->grid;
-    if (!grid) {
-        return (false);
-    }
 
     GET_BRA(ctx);
 
@@ -4014,19 +4018,11 @@ uint8_t demarshal_wid_grid (demarshal_p ctx, widp w,
             continue;
         }
 
-        child = (*callback)(w, x, y,
-                            0, /* thing */
-                            tp,
-                            0 /* item */,
-                            0 /* stats */);
-
-        if (!child) {
-            ERR("Loading thing %s failed to replace at (%u,%u)", name, x, y);
-            myfree(name);
-
-            rc = false;
-            continue;
-        }
+        (void) (*callback)(w, x, y,
+                           0, /* thing */
+                           tp,
+                           0 /* item */,
+                           0 /* stats */);
 
         myfree(name);
 
@@ -4054,7 +4050,7 @@ widp wid_grid_find (widp parent, fpoint tl, fpoint br,
 
     grid = parent->grid;
     if (!grid) {
-        DIE("no grid wid");
+        DIE("no grid wid in wid_grid_find");
     }
 
     /*
@@ -4133,7 +4129,7 @@ widp wid_grid_find_thing_template (widp parent,
 
     grid = parent->grid;
     if (!grid) {
-        DIE("no grid wid");
+        DIE("no grid wid in wid_grid_find_thing_template");
     }
 
     /*
@@ -4195,7 +4191,7 @@ widp wid_grid_find_tp_is (widp parent,
 
     grid = parent->grid;
     if (!grid) {
-        DIE("no grid wid");
+        DIE("no grid wid in wid_grid_find_tp_is");
     }
 
     /*
@@ -4249,7 +4245,7 @@ widp wid_grid_find_first (widp parent, uint32_t x, uint32_t y,
 
     grid = parent->grid;
     if (!grid) {
-        DIE("no grid wid");
+        DIE("no grid wid in wid_grid_find_first");
     }
 
     if (x >= grid->width) {
@@ -4299,7 +4295,7 @@ widp wid_grid_find_next (widp parent, widp w, uint32_t x, uint32_t y,
 
     grid = parent->grid;
     if (!grid) {
-        DIE("no grid wid");
+        DIE("no grid wid in wid_grid_find_next");
     }
 
     if (x >= grid->width) {
@@ -9361,6 +9357,10 @@ void wid_display_all (void)
         wid_display(w,
                     false /* disable_scissors */,
                     0 /* updated_scissors */);
+
+        if (w->on_display) {
+            (w->on_display)(w);
+        }
     } }
 
     glDisable(GL_SCISSOR_TEST);
