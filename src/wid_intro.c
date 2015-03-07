@@ -441,8 +441,13 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
+    level_pos_t level_pos;
+
+CON("FIXME level choose");
+    memset(&level_pos, 0, sizeof(level_pos));
+
     wid_intro_hide();
-    wid_editor_visible();
+    wid_editor_visible(level_pos);
 
     return (true);
 }

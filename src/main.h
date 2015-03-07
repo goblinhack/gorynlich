@@ -387,6 +387,11 @@ uint8_t config_load(void);
 
 #include "thing_stats.h"
 
+typedef struct {
+    uint8_t x;
+    uint8_t y;
+} __attribute__ ((packed)) level_pos_t;
+
 struct config {
     int32_t video_pix_width;
     int32_t video_pix_height;
@@ -426,7 +431,7 @@ struct config {
     /*
      * Current level
      */
-    int32_t level_no;
+    level_pos_t level_pos;
 };
 
 extern struct config global_config;

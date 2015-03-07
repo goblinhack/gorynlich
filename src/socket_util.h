@@ -124,7 +124,7 @@ typedef struct {
     uint8_t you_are_playing_on_this_server;
     uint8_t level_hide;
     uint8_t server_current_players;
-    uint16_t level_no;
+    level_pos_t level_pos;
 } __attribute__ ((packed)) msg_server_status;
 
 typedef struct {

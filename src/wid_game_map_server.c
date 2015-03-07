@@ -164,21 +164,31 @@ void wid_game_map_server_wid_create (void)
 
     server_level_is_being_loaded = true;
 
-    global_config.level_no++;
+    global_config.level_pos.x++;
+    if (!global_config.level_pos.y) {
+        global_config.level_pos.y = 1;
+    }
+CON("FIXME level position %u.%u", 
+    global_config.level_pos.x,
+    global_config.level_pos.y);
 
 #if 0
-    server_level = level_load_random(global_config.level_no,
+    server_level = level_load_random(global_config.level_pos,
                                      wid_game_map_server_grid_container, 
                                      false /* is_editor */,
+                                     false /* is_map_editor */,
                                      true /* server */);
 #else
-    server_level = level_load(global_config.level_no,
+    server_level = level_load(global_config.level_pos,
                               wid_game_map_server_grid_container, 
                               false /* is_editor */,
+                              false /* is_map_editor */,
                               true /* server */);
 #endif
     if (!server_level) {
-        WARN("failed to load level");
+        DIE("failed to load server level %u.%u",
+            global_config.level_pos.x,
+            global_config.level_pos.y);
         return;
     }
 
@@ -192,7 +202,7 @@ void wid_game_map_server_wid_create (void)
 void wid_game_map_server_wid_destroy (uint8_t keep_players)
 {
     if (!keep_players) {
-        global_config.level_no = 0;
+        memset(&global_config.level_pos, 0, sizeof(global_config.level_pos));
     }
 
     if (server_level) {

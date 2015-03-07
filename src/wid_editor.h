@@ -7,7 +7,7 @@
 uint8_t wid_editor_init(void);
 void wid_editor_fini(void);
 void wid_editor_hide(void);
-void wid_editor_visible(void);
+void wid_editor_visible(level_pos_t);
 void wid_editor_save(void);
 void wid_editor_title(void);
 void wid_editor_load(void);
