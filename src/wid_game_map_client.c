@@ -756,15 +756,18 @@ void wid_game_map_client_wid_create (void)
      */
     global_config.starting_stats_inited = false;
 
+    level_pos_t level_pos = {1, 1};
+
     client_level = level_new(wid_game_map_client_grid_container, 
-                             0, 
+                             level_pos, 
                              false /* is_editor */,
+                             false /* is_map_editor */,
                              false /* on_server */);
 
-    LOG("Client: Created level");
+    LOG("Client: Created level %u.%u", level_pos.x, level_pos.y);
 
     if (!client_level) {
-        WARN("failed to load level");
+        WARN("failed to load level %u.%u", level_pos.x, level_pos.y);
     }
 
     wid_game_map_client_vert_scroll =
@@ -1170,7 +1173,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
      * Print the level.
      */
     if (client_level) {
-        char *tmp = dynprintf("Level %u", level_get_level_no(client_level));
+        level_pos_t level_pos = level_get_level_pos(client_level);
+
+        char *tmp = dynprintf("Level %u.%u", level_pos.x, level_pos.y);
+
         widp wid_level_container;
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,

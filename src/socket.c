@@ -2238,7 +2238,7 @@ void socket_tx_server_status (gsocketp s_in)
     msg.type = MSG_SERVER_STATUS;
 
     if (server_level) {
-        SDLNet_Write16(server_level->level_no, &msg.level_no);
+        msg.level_pos = server_level->level_pos;
         msg.server_current_players = global_config.server_current_players;
         msg.level_hide = level_is_ready_to_fade_out(server_level);
     }
@@ -2341,7 +2341,7 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
         myfree(tmp);
     }
 
-    status->level_no = SDLNet_Read16(&msg->level_no);
+    status->level_pos = msg->level_pos;
     status->server_current_players = global_config.server_current_players;
     status->level_hide = msg->level_hide;
     status->you_are_playing_on_this_server = msg->you_are_playing_on_this_server;
