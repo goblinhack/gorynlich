@@ -30,6 +30,7 @@
 #include "server.h"
 #include "glapi.h"
 #include "wid_keyboard.h"
+#include "wid_map.h"
 
 static widp wid_intro;
 static widp wid_intro_menu;
@@ -532,6 +533,10 @@ static void wid_intro_menu_create (void)
         return;
     }
 
+
+if (0)
+wid_map();
+return;
     wid_intro_menu = 
         wid_menu(0,
                  vvlarge_font,
