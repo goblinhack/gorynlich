@@ -17,25 +17,28 @@
 #include "timer.h"
 #include "level.h"
 #include "math_util.h"
+#include "thing_template.h"
+#include "thing_tile.h"
+#include "tile.h"
 
 /*
  * How keys appear on screen
  */
 static const char* keys[LEVELS_ACROSS][LEVELS_DOWN] = {
-  { "CANCEL",},
-  { "DONE",    },
+  { "DONE", },
 };
 
 /*
  * The real key behind the scenes
  */
 static const char key_char[LEVELS_ACROSS][LEVELS_DOWN] = {
-  { '', },
   { '\n', },
 };
 
 int wid_map_visible;
 
+static widp wid_map_window;
+static wid_map_ctx *wid_map_window_ctx;
 static widp wid_map_background;
 static void wid_map_destroy(widp w);
 static void wid_map_set_focus(wid_map_ctx *ctx, int focusx, int focusy);
@@ -117,6 +120,16 @@ static void wid_map_update_buttons (widp w)
         wid_set_tl_br_pct(b, tl, br);
         wid_set_color(b, WID_COLOR_TEXT, c);
         wid_set_font(b, font);
+
+        if (ctx->levels[y][x].level) {
+            color c = GREEN;
+            c.a = 255;
+            wid_set_color(b, WID_COLOR_BG, c);
+        } else {
+            color c = GRAY;
+            c.a = 50;
+            wid_set_color(b, WID_COLOR_BG, c);
+        }
     }
     }
 
@@ -569,6 +582,9 @@ static void wid_map_destroy (widp w)
             ctx->levels[y][x].level = 0;
         }
     }
+
+    wid_map_window = 0;
+    wid_map_window_ctx = 0;
 }
 
 static void wid_map_tick (widp w)
@@ -690,6 +706,117 @@ static void wid_map_bg_create (void)
     }
 }
 
+static void wid_map_preview (widp w)
+{
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    wid_map_level *map = &ctx->levels[ctx->focusy][ctx->focusx];
+    if (!map) {
+        return;
+    }
+
+    int x, y, z;
+
+    blit_init();
+
+    for (x = 0; x < MAP_WIDTH; x++) 
+    for (y = 0; y < MAP_HEIGHT; y++) 
+    for (z = 0; z < MAP_DEPTH; z++) {
+        tpp tp = map->tiles[x][y][z];
+        if (!tp) {
+            continue;
+        }
+
+        thing_tilep thing_tile;
+        tree_rootp tiles;
+
+        tiles = tp_get_tiles(tp);
+        if (!tiles) {
+            return;
+        }
+
+        thing_tile = thing_tile_first(tiles);
+        if (!thing_tile) {
+            continue;
+        }
+
+        fpoint tl;
+        fpoint br;
+
+        double dx = 0.01;
+        double dy = 0.01;
+
+        tl.x = ((double)x) * dx;
+        br.x = ((double)x+1.5) * dx;
+        tl.y = ((double)y) * dy;
+        br.y = ((double)y+1.5) * dy;
+
+        const char *tilename = thing_tile_name(thing_tile);
+        if (!tilename) {
+            ERR("cannot find tile %s", tilename);
+            continue;
+        }
+
+        tilep tile = tile_find(tilename);
+        if (!tile) {
+            ERR("cannot find tilep for tile %s", tilename);
+        }
+
+        tl.x *= (double) global_config.video_gl_width;
+        tl.y *= (double) global_config.video_gl_height;
+        br.x *= (double) global_config.video_gl_width;
+        br.y *= (double) global_config.video_gl_height;
+
+        tl.x += mouse_x;
+        tl.y += mouse_y;
+        br.x += mouse_x;
+        br.y += mouse_y;
+
+        glcolor(WHITE);
+        tile_blit_fat(tile, 0, tl, br);
+    }
+
+    blit_flush();
+}
+
+/*
+ * Replace or place a tile.
+ */
+widp wid_editor_level_map_thing_replace_template (widp w,
+                                                  double x,
+                                                  double y,
+                                                  thingp t,
+                                                  tpp tp,
+                                                  itemp item,
+                                                  thing_statsp stats)
+{
+    /*
+     * Can't use w as it has the level set as its context now.
+     */
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    wid_map_level *map = &ctx->levels[ctx->loading_y][ctx->loading_x];
+
+    int ix = (int)x;
+    int iy = (int)y;
+
+    if ((ix >= MAP_WIDTH) || (iy >= MAP_HEIGHT) || (ix < 0) || (iy < 0)) {
+        DIE("overflow in reading position (%f,%f) -> (%d,%d) in level %u.%u, "
+            "map bounds (%d,%d) -> (%d,%d)", 
+            x, y, ix, iy, ctx->loading_x, ctx->loading_y,
+            0, 0, MAP_DEPTH, MAP_HEIGHT);
+    }
+
+    int z = tp_get_z_depth(tp);
+    map->tiles[ix][iy][z] = tp;
+
+    return (0);
+}
+
 static void wid_map_load_levels (wid_map_ctx *ctx)
 {
     tree_file_node *n;
@@ -715,22 +842,29 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
         level_pos_t level_pos;
         int x, y;
 
-        if (sscanf(name, "%u.%u", &x, &y) != 2) {
+        if (sscanf(name, "%d.%d", &x, &y) != 2) {
             WARN("bad format in level name %s, expecting a,b format", name);
             continue;
         }
-CON("name %s", name);
 
         level_pos.x = x;
         level_pos.y = y;
 
-        levelp l = level_new(0 /* widget */, 
-                             level_pos, 
-                             false, /* is_editor */
-                             true, /* is_map_editor */
-                             false /* on_server */);
+        ctx->loading_x = x;
+        ctx->loading_y = y;
+
+        levelp l = level_load(level_pos, 
+                              ctx->w,
+                              false, /* is_editor */
+                              true, /* is_map_editor */
+                              false /* on_server */);
 
         ctx->levels[y][x].level = l;
+
+        widp b = ctx->buttons[y][x];
+
+        wid_set_tooltip(b, level_get_title(l), med_font);
+        wid_set_font(b, vsmall_font);
     } }
 
     dirlist_free(&d);
@@ -749,19 +883,17 @@ widp wid_map (void)
      * changes
      */
     wid_map_ctx *ctx = myzalloc(sizeof(*ctx), "wid map");
+    wid_map_window_ctx = ctx;
+
     ctx->focusx = -1;
     ctx->focusx = -1;
     ctx->cancelled = cancelled;
     ctx->selected = selected;
 
-    widp window = wid_new_window("wid map");
-    ctx->w = window;
+    widp window;
+    ctx->w = wid_map_window = window = wid_new_window("wid map");
+    wid_set_client_context(window, ctx);
     ctx->is_new = true;
-
-    /*
-     * Load all levels
-     */
-    wid_map_load_levels(ctx);
 
     /*
      * Main window
@@ -780,7 +912,6 @@ widp wid_map (void)
         wid_set_on_key_down(window, wid_map_parent_key_down);
         wid_set_on_joy_down(window, wid_map_parent_joy_button);
         wid_set_on_destroy(window, wid_map_destroy);
-        wid_set_client_context(window, ctx);
     }
 
     /*
@@ -860,15 +991,25 @@ widp wid_map (void)
         }
     }
 
+    /*
+     * Load all levels
+     */
+    wid_map_load_levels(ctx);
+
+    /*
+     * Repair the context so it is not pointing at the last level loaded.
+     */
+    wid_set_client_context(window, ctx);
+
     wid_map_update_buttons(window);
-    wid_set_do_not_lower(window, 1);
     wid_update(window);
     wid_raise(window);
     wid_map_update_buttons(window);
-    wid_set_do_not_lower(window, 1);
     wid_update(window);
     wid_raise(window);
     wid_map_bg_create();
+
+    wid_set_on_display(window, wid_map_preview);
 
     return (window);
 }
