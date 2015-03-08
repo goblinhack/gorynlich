@@ -133,9 +133,16 @@ static void wid_map_update_buttons (widp w)
     }
 }
 
-static uint8_t wid_map_mouse_event (widp w,
-                                         int focusx, int focusy)
+static uint8_t wid_map_mouse_event (widp w, int focusx, int focusy)
 {
+    wid_map_ctx *ctx = wid_get_client_context(w);
+    verify(ctx);
+
+    ctx->focusx = focusx;
+    ctx->focusy = focusy;
+
+    (ctx->selected)(ctx->w);
+
     return (true);
 }
 
@@ -599,7 +606,6 @@ static void wid_map_cell_selected (widp w)
     if (time_get_time_ms() - ctx->created < 500) {
         return;
     }
-CON("selected");
 
     level_pos_t level_pos;
 
@@ -661,6 +667,14 @@ static void wid_map_preview (widp w)
     wid_map_ctx *ctx = wid_map_window_ctx;
     verify(ctx);
     verify(ctx->w);
+
+    if (ctx->focusx == -1) {
+        return;
+    }
+
+    if (ctx->focusy == -1) {
+        return;
+    }
 
     wid_map_level *map = &ctx->levels[ctx->focusy][ctx->focusx];
     if (!map) {
@@ -729,10 +743,19 @@ static void wid_map_preview (widp w)
         br.x *= (double) global_config.video_gl_width;
         br.y *= (double) global_config.video_gl_height;
 
-        tl.x += mouse_x;
-        tl.y += mouse_y;
-        br.x += mouse_x;
-        br.y += mouse_y;
+        widp b = ctx->buttons[ctx->focusx][ctx->focusy];
+
+        int32_t tlx, tly, brx, bry, mx, my;
+
+        wid_get_abs_coords(b, &tlx, &tly, &brx, &bry);
+
+        mx = (tlx + brx) / 2.0;
+        my = (tly + bry) / 2.0;
+
+        tl.x += mx;
+        tl.y += my;
+        br.x += mx;
+        br.y += my;
 
         glcolor(WHITE);
         tile_blit_fat(tile, 0, tl, br);
