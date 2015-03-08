@@ -205,9 +205,10 @@ static void wid_intro_single_play_selected_cb (void *context)
     wid_intro_hide();
 }
 
-void wid_intro_single_play_selected (void)
+void wid_intro_single_play_selected (level_pos_t level_pos)
 {
-    LOG("Play selected, choose random stats");
+    LOG("Play selected, choose random stats, start at level %d.%d",
+        level_pos.x, level_pos.y);
 
     /*
      * Start with some random junk.
@@ -215,6 +216,8 @@ void wid_intro_single_play_selected (void)
     thing_statsp s;
     s = &global_config.stats;
     thing_stats_get_random(s, false /* new_random_name_and_class */);
+
+    global_config.stats.level_pos = level_pos;
 
     action_timer_create(
             &wid_timers,
@@ -459,13 +462,13 @@ static uint8_t wid_menu_quick_start_selected (widp w,
                                               int32_t x, int32_t y,
                                               uint32_t button)
 {
+    wid_intro_menu_destroy();
+
     level_pos_t level_pos;
     level_pos.x = 1;
     level_pos.y = 1;
-    global_config.stats.level_pos = level_pos;
 
-    wid_intro_menu_destroy();
-    wid_intro_single_play_selected();
+    wid_intro_single_play_selected(level_pos);
 
     return (true);
 }
