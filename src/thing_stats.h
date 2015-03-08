@@ -29,6 +29,11 @@ enum {
 #define THING_ITEM_CARRY_MAX    32
 #define THING_ITEM_QUALITY_MAX  7
 
+typedef struct {
+    int8_t x;
+    int8_t y;
+} __attribute__ ((packed)) level_pos_t;
+
 typedef struct item_t_ {
     uint8_t id;
 
@@ -69,6 +74,8 @@ typedef struct thing_stats_ {
     uint8_t speed;
     uint8_t vision;
     uint8_t healing;
+
+    level_pos_t level_pos;
 
     /*
      * What we are carrying and where.

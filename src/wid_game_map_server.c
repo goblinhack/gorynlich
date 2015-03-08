@@ -17,6 +17,8 @@
 #include "level.h"
 #include "server.h"
 #include "socket_util.h"
+#include "string_util.h"
+#include "file.h"
 
 levelp server_level;
 widp wid_game_map_server_window;
@@ -164,27 +166,25 @@ void wid_game_map_server_wid_create (void)
 
     server_level_is_being_loaded = true;
 
-    global_config.level_pos.x++;
-    if (!global_config.level_pos.y) {
-        global_config.level_pos.y = 1;
-    }
-CON("FIXME level position %u.%u", 
-    global_config.level_pos.x,
-    global_config.level_pos.y);
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, 
+                          global_config.level_pos.x, 
+                          global_config.level_pos.y);
 
-#if 0
-    server_level = level_load_random(global_config.level_pos,
-                                     wid_game_map_server_grid_container, 
-                                     false /* is_editor */,
-                                     false /* is_map_editor */,
-                                     true /* server */);
-#else
-    server_level = level_load(global_config.level_pos,
-                              wid_game_map_server_grid_container, 
-                              false /* is_editor */,
-                              false /* is_map_editor */,
-                              true /* server */);
-#endif
+    if (!file_exists(tmp)) {
+        server_level = level_load_random(global_config.level_pos,
+                                        wid_game_map_server_grid_container, 
+                                        false /* is_editor */,
+                                        false /* is_map_editor */,
+                                        true /* server */);
+    } else {
+        server_level = level_load(global_config.level_pos,
+                                wid_game_map_server_grid_container, 
+                                false /* is_editor */,
+                                false /* is_map_editor */,
+                                true /* server */);
+    }
+    myfree(tmp);
+
     if (!server_level) {
         DIE("failed to load server level %u.%u",
             global_config.level_pos.x,
