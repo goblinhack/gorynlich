@@ -387,11 +387,6 @@ uint8_t config_load(void);
 
 #include "thing_stats.h"
 
-typedef struct {
-    int8_t x;
-    int8_t y;
-} __attribute__ ((packed)) level_pos_t;
-
 struct config {
     int32_t video_pix_width;
     int32_t video_pix_height;

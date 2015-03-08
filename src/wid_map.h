@@ -81,4 +81,8 @@ widp wid_editor_level_map_thing_replace_template(widp w,
                                                  tpp tp,
                                                  itemp item,
                                                  thing_statsp stats);
-extern int wid_map_visible;
+extern void wid_map_cell_play(void);
+extern void wid_map_cell_load(void);
+extern void wid_map_visible(void);
+extern void wid_map_preview(widp);
+extern void wid_map_preview_thumbnail(widp);
