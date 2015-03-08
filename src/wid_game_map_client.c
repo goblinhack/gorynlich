@@ -111,6 +111,9 @@ static void wid_game_map_client_start_cb (void *context)
         portno = SDLNet_Read16(&addr.port);
     }
 
+    /*
+     * Keep on trying to join over and over.
+     */
     if (!client_socket_join(0, 0, portno, true /* quiet */)) {
         action_timer_create(
                 &wid_timers,
