@@ -19,6 +19,7 @@
 #include "math_util.h"
 #include "thing_template.h"
 #include "thing_tile.h"
+#include "wid_editor.h"
 #include "tile.h"
 
 int wid_map_visible;
@@ -28,6 +29,8 @@ static wid_map_ctx *wid_map_window_ctx;
 static widp wid_map_background;
 static void wid_map_destroy(widp w);
 static void wid_map_set_focus(wid_map_ctx *ctx, int focusx, int focusy);
+static int saved_focus_x = -1;
+static int saved_focus_y = -1;
 
 static void wid_map_update_buttons (widp w)
 {
@@ -453,7 +456,7 @@ static void wid_map_mouse_over (widp w,
      * a mouse over event immediately which may not be over the focus item
      * and will cause us to move. Annoying.
      */
-    if (time_get_time_ms() - ctx->created < 100) {
+    if (time_get_time_ms() - ctx->created < 500) {
         return;
     }
 
@@ -492,6 +495,9 @@ static void wid_map_destroy (widp w)
         }
     }
 
+    saved_focus_x = ctx->focusx;
+    saved_focus_y = ctx->focusy;
+
     myfree(ctx);
     wid_map_window = 0;
     wid_map_window_ctx = 0;
@@ -500,6 +506,10 @@ static void wid_map_destroy (widp w)
 static void wid_map_tick (widp w)
 {
     wid_map_ctx *ctx = wid_get_client_context(w);
+    if (!ctx) {
+        return;
+    }
+
     verify(ctx);
 
     static int val;
@@ -577,6 +587,36 @@ static void wid_map_destroy_begin (widp w)
 
 static void wid_map_cell_selected (widp w)
 {
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    /*
+     * If we recreate the map with a fixed focus we will be told about
+     * a mouse over event immediately which may not be over the focus item
+     * and will cause us to move. Annoying.
+     */
+    if (time_get_time_ms() - ctx->created < 500) {
+        return;
+    }
+CON("selected");
+
+    level_pos_t level_pos;
+
+    level_pos.x = ctx->focusx;
+    level_pos.y = ctx->focusy;
+
+    if (level_pos.x == -1) {
+        return;
+    }
+
+    if (level_pos.y == -1) {
+        return;
+    }
+
+    wid_editor_visible(level_pos);
+
+    wid_destroy(&wid_map_window);
 }
 
 static void wid_map_cell_cancelled (widp w)
@@ -906,8 +946,17 @@ widp wid_map (void)
         }
     }
 
-    ctx->focusx = LEVELS_ACROSS / 2;
-    ctx->focusy = LEVELS_DOWN / 2;
+    if (saved_focus_x == -1) {
+        ctx->focusx = LEVELS_ACROSS / 2;
+    } else {
+        ctx->focusx = saved_focus_x;
+    }
+
+    if (saved_focus_y == -1) {
+        ctx->focusy = LEVELS_DOWN / 2;
+    } else {
+        ctx->focusy = saved_focus_y;
+    }
 
     /*
      * Load all levels
@@ -928,6 +977,8 @@ widp wid_map (void)
     wid_map_bg_create();
 
     wid_set_on_display(window, wid_map_preview);
+
+    ctx->created = time_get_time_ms();
 
     return (window);
 }

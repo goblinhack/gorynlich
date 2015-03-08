@@ -145,7 +145,6 @@ void wid_intro_hide (void)
 
 void wid_intro_visible (void)
 {
-return;
     if (wid_intro_is_visible) {
         /*
          * Make sure the menu is visible.
@@ -441,13 +440,8 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                int32_t x, int32_t y,
                                                uint32_t button)
 {
-    level_pos_t level_pos;
-
-CON("FIXME level choose");
-    memset(&level_pos, 0, sizeof(level_pos));
-
     wid_intro_hide();
-    wid_editor_visible(level_pos);
+    wid_map();
 
     return (true);
 }
@@ -538,12 +532,6 @@ static void wid_intro_menu_create (void)
         return;
     }
 
-
-if (1) {
-wid_intro_hide();
-wid_map();
-return;
-}
     wid_intro_menu = 
         wid_menu(0,
                  vvlarge_font,
