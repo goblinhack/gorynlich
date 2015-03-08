@@ -200,7 +200,7 @@ wid_editor_buttons_icon_load_receive_mouse_down (widp w,
                                                int32_t y,
                                                uint32_t button)
 {
-    wid_editor_load();
+    wid_editor_load_dialog();
 
     return (true);
 }
