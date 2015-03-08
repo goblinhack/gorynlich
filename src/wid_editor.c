@@ -281,38 +281,17 @@ static void wid_editor_title_cancel (widp w, const char *text)
 {
 }
 
-static void wid_editor_load_ok (widp w)
+void wid_editor_load (char *dir_and_file)
 {
-    char *dir_and_file;
-    widp top;
-
-    /*
-     * We're given the ok or cancel button, so must load the text box.
-     */
-    dir_and_file = dupstr(wid_get_text(wid_editor_load_popup), __FUNCTION__);
-
-    if (!file_exists(dir_and_file)) {
-        char *tmp = dupstr(dir_and_file, "strip dir");
-        char *tmp2 = dupstr(basename(tmp), "strip dir");
-        myfree(dir_and_file);
-        dir_and_file = tmp2;
-        myfree(tmp);
-
-        if (!file_exists(dir_and_file)) {
-            tmp = dynprintf("data/levels/%s", dir_and_file);
-            myfree(dir_and_file);
-            dir_and_file = tmp;
-        }
-    }
-
-    /*
-     * Destroy the load dialog.
-     */
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_editor_load_popup = 0;
-
     demarshal_p ctx;
+
+    /*
+     * If creating a level that does not exist yet.
+     */
+    if (!file_exists(dir_and_file)) {
+        LOG("Level not found to load in editor: %s", dir_and_file);
+        return;
+    }
 
     LOG("Loading: %s", dir_and_file);
 
@@ -381,6 +360,40 @@ static void wid_editor_load_ok (widp w)
 
     wid_destroy_in(wid_editor_filename_and_title, 3000);
     wid_editor_filename_and_title = 0;
+}
+
+static void wid_editor_load_ok (widp w)
+{
+    char *dir_and_file;
+    widp top;
+
+    /*
+     * We're given the ok or cancel button, so must load the text box.
+     */
+    dir_and_file = dupstr(wid_get_text(wid_editor_load_popup), __FUNCTION__);
+
+    if (!file_exists(dir_and_file)) {
+        char *tmp = dupstr(dir_and_file, "strip dir");
+        char *tmp2 = dupstr(basename(tmp), "strip dir");
+        myfree(dir_and_file);
+        dir_and_file = tmp2;
+        myfree(tmp);
+
+        if (!file_exists(dir_and_file)) {
+            tmp = dynprintf("data/levels/%s", dir_and_file);
+            myfree(dir_and_file);
+            dir_and_file = tmp;
+        }
+    }
+
+    /*
+     * Destroy the load dialog.
+     */
+    top = wid_get_top_parent(w);
+    wid_destroy(&top);
+    wid_editor_load_popup = 0;
+
+    wid_editor_load(dir_and_file);
 
     myfree(dir_and_file);
 }
@@ -423,7 +436,7 @@ void wid_editor_title (void)
                                           wid_editor_title_cancel);
 }
 
-void wid_editor_load (void)
+void wid_editor_load_dialog (void)
 {
     if (wid_editor_any_popup()) {
         return;
