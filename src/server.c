@@ -150,16 +150,6 @@ static void server_rx_client_join (gsocketp s)
 
     LOG("Server: Total players now %u", global_config.server_current_players);
 
-    if (global_config.server_current_players == 1) {
-        global_config.level_pos = p->stats_from_client.level_pos;
-    }
-
-    if (!global_config.level_pos.x && 
-        !global_config.level_pos.y) {
-        global_config.level_pos.x = 1;
-        global_config.level_pos.y = 1;
-    }
-
     /*
      * Tick the player things so we work out their torch light so they do not 
      * start the level in darkness.

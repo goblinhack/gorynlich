@@ -309,7 +309,11 @@ uint8_t wid_game_map_client_player_move (void)
     }
 
     if (wid_menu_visible) {
+        /*
+         * Noisy
+         *
         LOG("Menu present, ignore moves");
+         */
         return (false);
     }
 
@@ -385,6 +389,10 @@ uint8_t wid_game_map_client_player_move (void)
 
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
+    if (wid_menu_visible) {
+        return (false);
+    }
+
     tpp tp;
 
     if (!player) {
@@ -578,6 +586,10 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
 static uint8_t wid_game_map_joy_event (widp w, int x, int y)
 {
+    if (wid_menu_visible) {
+        return (false);
+    }
+
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
