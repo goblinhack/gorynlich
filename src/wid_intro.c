@@ -45,7 +45,6 @@ static uint8_t wid_intro_is_visible;
 static uint8_t wid_intro_init_done;
 
 static void wid_intro_quit_selected(void);
-static void wid_intro_single_play_selected(void);
 static void wid_intro_create(void);
 static void wid_intro_menu_create(void);
 static void wid_intro_menu_destroy(void);
@@ -206,7 +205,7 @@ static void wid_intro_single_play_selected_cb (void *context)
     wid_intro_hide();
 }
 
-static void wid_intro_single_play_selected (void)
+void wid_intro_single_play_selected (void)
 {
     LOG("Play selected, choose random stats");
 
@@ -460,6 +459,11 @@ static uint8_t wid_menu_quick_start_selected (widp w,
                                               int32_t x, int32_t y,
                                               uint32_t button)
 {
+    level_pos_t level_pos;
+    level_pos.x = 1;
+    level_pos.y = 1;
+    global_config.stats.level_pos = level_pos;
+
     wid_intro_menu_destroy();
     wid_intro_single_play_selected();
 

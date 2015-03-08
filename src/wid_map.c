@@ -20,9 +20,9 @@
 #include "thing_template.h"
 #include "thing_tile.h"
 #include "wid_editor.h"
+#include "wid_map_dialog.h"
+#include "wid_intro.h"
 #include "tile.h"
-
-int wid_map_visible;
 
 static widp wid_map_window;
 static wid_map_ctx *wid_map_window_ctx;
@@ -481,8 +481,6 @@ static void wid_map_destroy (widp w)
 
     wid_set_client_context(w, 0);
 
-    wid_map_visible = false;
-
     if (wid_map_background) {
         wid_destroy(&wid_map_background);
     }
@@ -592,7 +590,46 @@ static void wid_map_destroy_begin (widp w)
     }
 }
 
-static void wid_map_cell_selected (widp w)
+void wid_map_cell_play (void)
+{
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    /*
+     * If we recreate the map with a fixed focus we will be told about
+     * a mouse over event immediately which may not be over the focus item
+     * and will cause us to move. Annoying.
+     */
+    if (time_get_time_ms() - ctx->created < 500) {
+        return;
+    }
+
+    level_pos_t level_pos;
+
+    level_pos.x = ctx->focusx;
+    level_pos.y = ctx->focusy;
+
+    if (level_pos.x == -1) {
+        return;
+    }
+
+    if (level_pos.y == -1) {
+        return;
+    }
+
+    wid_destroy(&wid_map_window);
+
+    LOG("Play selected callback");
+
+    on_server = true;
+
+    global_config.stats.level_pos = level_pos;
+
+    wid_intro_single_play_selected();
+}
+
+void wid_map_cell_load (void)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
     verify(ctx);
@@ -623,6 +660,17 @@ static void wid_map_cell_selected (widp w)
     wid_editor_visible(level_pos);
 
     wid_destroy(&wid_map_window);
+}
+
+void wid_map_visible (void)
+{
+    wid_visible(wid_map_window, 0);
+}
+
+static void wid_map_cell_selected (widp w)
+{
+    wid_hide(wid_map_window, wid_hide_delay);
+    wid_map_dialog_visible();
 }
 
 static void wid_map_cell_cancelled (widp w)
@@ -662,11 +710,14 @@ static void wid_map_bg_create (void)
     }
 }
 
-static void wid_map_preview (widp w)
+static void wid_map_preview_do (int thumbnail)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
+
     verify(ctx);
-    verify(ctx->w);
 
     if (ctx->focusx == -1) {
         return;
@@ -712,6 +763,11 @@ static void wid_map_preview (widp w)
         double dx = 0.010;
         double dy = 0.010;
 
+        if (thumbnail) {
+            dx /= 2.0;
+            dy /= 2.0;
+        }
+
         tl.x = ((double)x) * dx;
         br.x = ((double)x+1.5) * dx;
         tl.y = ((double)y) * dy;
@@ -745,23 +801,41 @@ static void wid_map_preview (widp w)
 
         widp b = ctx->buttons[ctx->focusx][ctx->focusy];
 
-        int32_t tlx, tly, brx, bry, mx, my;
+        if (!thumbnail) {
+            int32_t tlx, tly, brx, bry, mx, my;
 
-        wid_get_abs_coords(b, &tlx, &tly, &brx, &bry);
+            wid_get_abs_coords(b, &tlx, &tly, &brx, &bry);
 
-        mx = (tlx + brx) / 2.0;
-        my = (tly + bry) / 2.0;
+            mx = (tlx + brx) / 2.0;
+            my = (tly + bry) / 2.0;
 
-        tl.x += mx;
-        tl.y += my;
-        br.x += mx;
-        br.y += my;
+            tl.x += mx;
+            tl.y += my;
+            br.x += mx;
+            br.y += my;
+        } else {
+            double offset = 16;
+            tl.x += (double) global_config.video_gl_width / offset;
+            tl.y += (double) global_config.video_gl_height / offset;
+            br.x += (double) global_config.video_gl_width / offset;
+            br.y += (double) global_config.video_gl_height / offset;
+        }
 
         glcolor(WHITE);
         tile_blit_fat(tile, 0, tl, br);
     }
 
     blit_flush();
+}
+
+void wid_map_preview (widp w)
+{
+    wid_map_preview_do(false);
+}
+
+void wid_map_preview_thumbnail (widp w)
+{
+    wid_map_preview_do(true);
 }
 
 /*
@@ -858,8 +932,6 @@ widp wid_map (void)
     const char *title = "Choose epic level";
     wid_map_event_t selected = wid_map_cell_selected;
     wid_map_event_t cancelled = wid_map_cell_cancelled;
-
-    wid_map_visible = true;
 
     /*
      * Create a context to hold button info so we can update it when the focus 

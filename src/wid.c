@@ -9364,7 +9364,9 @@ void wid_display_all (void)
                     0 /* updated_scissors */);
 
         if (w->on_display) {
-            (w->on_display)(w);
+            if (!wid_is_hidden(w)) {
+                (w->on_display)(w);
+            }
         }
     } }
 
