@@ -10,7 +10,7 @@ void wid_editor_hide(void);
 void wid_editor_visible(level_pos_t);
 void wid_editor_save(void);
 void wid_editor_title(void);
-void wid_editor_load(void);
+void wid_editor_load_dialog(void);
 void wid_editor_draw(void);
 void wid_editor_line(void);
 void wid_editor_erase(void);
@@ -46,3 +46,4 @@ extern widp wid_editor_load_popup;
 extern widp wid_editor_filename_and_title;
 
 extern uint8_t server_level_is_being_loaded;
+extern void wid_editor_load(char *dir_and_file);
