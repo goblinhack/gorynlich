@@ -21,20 +21,6 @@
 #include "thing_tile.h"
 #include "tile.h"
 
-/*
- * How keys appear on screen
- */
-static const char* keys[LEVELS_ACROSS][LEVELS_DOWN] = {
-  { "DONE", },
-};
-
-/*
- * The real key behind the scenes
- */
-static const char key_char[LEVELS_ACROSS][LEVELS_DOWN] = {
-  { '\n', },
-};
-
 int wid_map_visible;
 
 static widp wid_map_window;
@@ -76,8 +62,6 @@ static void wid_map_update_buttons (widp w)
         br.x += width;
         br.y += height;
 
-        const char *t = keys[y][x];
-
         font = small_font;
 
         double zoom = 0.005;
@@ -88,14 +72,6 @@ static void wid_map_update_buttons (widp w)
             br.y += zoom * 2.0;
             c = GREEN;
 
-            if (t) {
-                if (strlen(t) > 1) {
-                    font = small_font;
-                } else {
-                    font = med_font;
-                }
-            }
-
             ctx->b = b;
 
             wid_raise(b);
@@ -105,13 +81,6 @@ static void wid_map_update_buttons (widp w)
             br.x -= zoom * 2.0;
             br.y -= zoom * 2.0;
 
-            if (t) {
-                if (strlen(t) > 1) {
-                    font = small_font;
-                } else {
-                    font = med_font;
-                }
-            }
             wid_lower(b);
 
             c = GRAY70;
@@ -144,20 +113,7 @@ static void wid_map_update_buttons (widp w)
         for (x = 0; x < LEVELS_DOWN; x++) {
             for (y = 0; y < LEVELS_ACROSS; y++) {
 
-                const char *t = keys[y][x];
                 widp b = ctx->buttons[y][x];
-
-                /*
-                 * Start on the DONE button.
-                 */
-                if (t) {
-                    if (!strcasecmp(t, "DONE")) {
-                        ctx->focusx = x;
-                        ctx->focusy = y;
-                        wid_mouse_warp(b);
-                        continue;
-                    }
-                }
 
                 fpoint tl;
                 fpoint br;
@@ -174,56 +130,9 @@ static void wid_map_update_buttons (widp w)
     }
 }
 
-static void wid_map_event (widp w, int focusx, int focusy,
-                           const SDL_KEYSYM *key)
-{
-    wid_map_ctx *ctx = wid_get_client_context(w);
-    verify(ctx);
-
-    const char *add;
-    if ((focusx == -1) && (focusy == -1)) {
-        add = 0;
-    } else {
-        add = keys[focusy][focusx];
-    }
-
-    if (key) {
-    } else if (add && !strcasecmp(add, "DONE")) {
-        (ctx->selected)(ctx->w);
-    } else if (add && !strcasecmp(add, "CANCEL")) {
-        (ctx->cancelled)(ctx->w);
-    } else {
-    }
-
-    if (key && (focusx == -1) && (focusy == -1)) {
-        int x, y;
-
-        for (x = 0; x < LEVELS_DOWN; x++) {
-            for (y = 0; y < LEVELS_ACROSS; y++) {
-                char c = key_char[y][x];
-                if (c == key->sym) {
-                    focusx = x;
-                    focusy = y;
-                    break;
-                }
-            }
-
-            if ((focusx != -1) && (focusy != -1)) {
-                break;
-            }
-        }
-    }
-
-    if ((focusx != -1) && (focusy != -1)) {
-        wid_map_set_focus(ctx, focusx, focusy);
-    }
-}
-
 static uint8_t wid_map_mouse_event (widp w,
                                          int focusx, int focusy)
 {
-    wid_map_event(w, focusx, focusy, 0 /* key */);
-
     return (true);
 }
 
@@ -346,7 +255,6 @@ static uint8_t wid_map_parent_key_down (widp w,
             break;
 
         default:
-            wid_map_event(ctx->w, -1, -1, key);
             return (true);
         }
     }
@@ -457,7 +365,6 @@ static uint8_t wid_map_button_key_event (widp w, const SDL_KEYSYM *key)
             break;
 
         default:
-            wid_map_event(w, -1, -1, key);
             return (true);
     }
 
@@ -563,7 +470,6 @@ static void wid_map_destroy (widp w)
     verify(ctx);
 
     wid_set_client_context(w, 0);
-    myfree(ctx);
 
     wid_map_visible = false;
 
@@ -577,12 +483,16 @@ static void wid_map_destroy (widp w)
         for (y = 0; y < LEVELS_ACROSS; y++) {
 
             levelp l = ctx->levels[y][x].level;
+            if (!l) {
+                continue;
+            }
 
             level_destroy(&l, false /* keep players */);
             ctx->levels[y][x].level = 0;
         }
     }
 
+    myfree(ctx);
     wid_map_window = 0;
     wid_map_window_ctx = 0;
 }
@@ -745,8 +655,8 @@ static void wid_map_preview (widp w)
         fpoint tl;
         fpoint br;
 
-        double dx = 0.005;
-        double dy = 0.005;
+        double dx = 0.010;
+        double dy = 0.010;
 
         tl.x = ((double)x) * dx;
         br.x = ((double)x+1.5) * dx;
@@ -970,11 +880,6 @@ widp wid_map (void)
             ctx->levels[y][x].x = x;
             ctx->levels[y][x].y = y;
 
-            if (keys[y][x]) {
-                wid_set_text(b, keys[y][x]);
-            }
-
-            wid_set_text_outline(b, true);
             wid_set_on_mouse_over_begin(b, wid_map_mouse_over);
             wid_set_on_key_down(b, wid_map_button_key_event);
             wid_set_on_joy_down(b, wid_map_button_joy_down_event);
@@ -1000,6 +905,9 @@ widp wid_map (void)
         }
         }
     }
+
+    ctx->focusx = LEVELS_ACROSS / 2;
+    ctx->focusy = LEVELS_DOWN / 2;
 
     /*
      * Load all levels
