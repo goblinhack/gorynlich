@@ -1,11 +1,12 @@
 --------------------------------------- plan for mar --------------------------------------
-- add level map chooser screen, use x,y as level coords
-- add ability to save level topology
-- add ability to connect levels together
+- test level ability
+- choose exit in editor
+- draw joined levels
 - remove file load/save widgets, no longer needed
 - remove gothic and window textures - no longer needed
 - sound on key click in menus
 - stats need to do something
+- make item bar wider
 --------------------------------------- plan for apr --------------------------------------
 - magic attack - green fireball?
 - sound effects for weapons and hits http://www.bfxr.net/
@@ -60,6 +61,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sun Mar  8 11:48:01 EDT 2015
+- add level map chooser screen, use x,y as level coords
 
 Sat Mar  7 17:02:55 EST 2015
 - level previews
