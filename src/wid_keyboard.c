@@ -898,5 +898,7 @@ widp wid_keyboard (const char *text,
     wid_update(window);
     wid_raise(window);
 
+    ctx->created = time_get_time_ms();
+
     return (window);
 }
