@@ -882,7 +882,7 @@ static uint8_t wid_editor_map_tile_key_down_event (widp w,
             return (true);
 
         case 'l':
-            wid_editor_load();
+            wid_editor_load_dialog();
             return (true);
 
         case 'd':
@@ -1312,6 +1312,14 @@ void wid_editor_map_wid_create (level_pos_t level_pos)
     if (!wid_editor_filename_and_title) {
         wid_editor_title_set("Unnamed level");
     }
+
+    /*
+     * Load the level
+     */
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.x, level_pos.y);
+    LOG("Load editor level %s", tmp);
+    wid_editor_load(tmp);
+    myfree(tmp);
 }
 
 void wid_editor_map_wid_destroy (void)
