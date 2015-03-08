@@ -26,6 +26,7 @@
 #include "wid_menu.h"
 #include "wid_keyboard.h"
 #include "level.h"
+#include "wid_map.h"
 
 static uint8_t wid_editor_init_done;
 
@@ -77,7 +78,17 @@ void wid_editor_hide (void)
     wid_hide(wid_editor_map_window, wid_fade_delay);
     wid_hide(wid_editor_buttons_window, wid_fade_delay);
 
-    wid_intro_visible();
+    if (!level_ed) {
+        return;
+    }
+
+    level_pos_t level_pos = level_get_level_pos(level_ed);
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.x, level_pos.y);
+    LOG("Save editor level %s", tmp);
+    wid_editor_save(tmp);
+    myfree(tmp);
+
+    wid_map();
 }
 
 void wid_editor_visible (level_pos_t level_pos)
@@ -181,22 +192,8 @@ void wid_editor_redo_save_point (void)
     myfree(dir_and_file);
 }
 
-static void wid_editor_save_ok (widp w)
+void wid_editor_save (const char *dir_and_file)
 {
-    widp top;
-
-    /*
-     * We're given the ok or cancel button, so must save the text box.
-     */
-    const char *dir_and_file = wid_get_text(w);
-
-    /*
-     * Destroy the save dialog.
-     */
-    top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_editor_save_popup = 0;
-
     LOG("Saving: %s", dir_and_file);
 
     /*
@@ -227,6 +224,25 @@ static void wid_editor_save_ok (widp w)
 
         LOG("Saved: %s", dir_and_file);
     }
+}
+
+static void wid_editor_save_ok (widp w)
+{
+    widp top;
+
+    /*
+     * We're given the ok or cancel button, so must save the text box.
+     */
+    const char *dir_and_file = wid_get_text(w);
+
+    /*
+     * Destroy the save dialog.
+     */
+    top = wid_get_top_parent(w);
+    wid_destroy(&top);
+    wid_editor_save_popup = 0;
+
+    wid_editor_save(dir_and_file);
 }
 
 static void wid_editor_save_cancel (widp w)
@@ -281,7 +297,7 @@ static void wid_editor_title_cancel (widp w, const char *text)
 {
 }
 
-void wid_editor_load (char *dir_and_file)
+void wid_editor_load (const char *dir_and_file)
 {
     demarshal_p ctx;
 
@@ -350,7 +366,7 @@ void wid_editor_load (char *dir_and_file)
         wid_editor_filename_and_title = wid_textbox(
                     wid_editor_map_window,
                     0,
-                    basename(dir_and_file),
+                    mybasename(dir_and_file, "level name"),
                     0.5, 0.07, med_font);
     }
 
@@ -407,7 +423,7 @@ static void wid_editor_load_cancel (widp w)
     wid_editor_load_popup = 0;
 }
 
-void wid_editor_save (void)
+void wid_editor_save_dialog (void)
 {
     if (wid_editor_any_popup()) {
         return;

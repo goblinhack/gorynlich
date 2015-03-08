@@ -172,7 +172,7 @@ wid_editor_buttons_icon_save_receive_mouse_down (widp w,
                                                int32_t y,
                                                uint32_t button)
 {
-    wid_editor_save();
+    wid_editor_save_dialog();
 
     return (true);
 }

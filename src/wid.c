@@ -173,6 +173,11 @@ void wid_fini (void)
         tree_destroy(&wid_top_level5, (tree_destroy_func)0);
         tree_destroy(&wid_top_level4, (tree_destroy_func)0);
 
+        if (wid_tooltip_string) {
+            myfree(wid_tooltip_string);
+            wid_tooltip_string = 0;
+        }
+
         action_timers_destroy(&wid_timers);
     }
 }

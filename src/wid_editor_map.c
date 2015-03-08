@@ -864,7 +864,7 @@ static uint8_t wid_editor_map_tile_key_down_event (widp w,
             return (true);
 
         case 's':
-            wid_editor_save();
+            wid_editor_save_dialog();
             return (true);
 
         case 'n':
