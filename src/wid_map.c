@@ -626,7 +626,7 @@ void wid_map_cell_play (void)
 
     global_config.stats.level_pos = level_pos;
 
-    wid_intro_single_play_selected();
+    wid_intro_single_play_selected(level_pos);
 }
 
 void wid_map_cell_load (void)

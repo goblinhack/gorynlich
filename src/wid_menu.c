@@ -167,6 +167,9 @@ static uint8_t wid_menu_mouse_event (widp w,
     verify(b);
 
     on_mouse_down_t event_handler = ctx->event_handler[item];
+    if (!event_handler) {
+        return (false);
+    }
 
     (event_handler)(b, mouse_x, mouse_y, SDL_BUTTON_LEFT);
 

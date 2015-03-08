@@ -171,17 +171,19 @@ void wid_game_map_server_wid_create (void)
                           global_config.level_pos.y);
 
     if (!file_exists(tmp)) {
+        LOG("Level %s does not exist, create random level", tmp);
+
         server_level = level_load_random(global_config.level_pos,
-                                        wid_game_map_server_grid_container, 
-                                        false /* is_editor */,
-                                        false /* is_map_editor */,
-                                        true /* server */);
+                                         wid_game_map_server_grid_container,
+                                         false /* is_editor */,
+                                         false /* is_map_editor */,
+                                         true /* server */);
     } else {
         server_level = level_load(global_config.level_pos,
-                                wid_game_map_server_grid_container, 
-                                false /* is_editor */,
-                                false /* is_map_editor */,
-                                true /* server */);
+                                  wid_game_map_server_grid_container,
+                                  false /* is_editor */,
+                                  false /* is_map_editor */,
+                                  true /* server */);
     }
     myfree(tmp);
 
