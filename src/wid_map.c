@@ -23,6 +23,7 @@
 #include "wid_map_dialog.h"
 #include "wid_intro.h"
 #include "tile.h"
+#include "string_util.h"
 
 static widp wid_map_window;
 static wid_map_ctx *wid_map_window_ctx;
@@ -561,9 +562,7 @@ void wid_map_cell_play (void)
 
     wid_destroy(&wid_map_window);
 
-    LOG("Play selected callback");
-
-    on_server = true;
+    LOG("Client: Play selected level %d.%d", level_pos.x, level_pos.y);
 
     global_config.stats.level_pos = level_pos;
 
@@ -611,7 +610,30 @@ void wid_map_visible (void)
 static void wid_map_cell_selected (widp w)
 {
     wid_hide(wid_map_window, wid_hide_delay);
-    wid_map_dialog_visible();
+
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
+
+    if (ctx->focusx == -1) {
+        return;
+    }
+
+    if (ctx->focusy == -1) {
+        return;
+    }
+
+    levelp l = ctx->levels[ctx->focusy][ctx->focusx].level;
+
+    char *tmp = dynprintf("%s, %d.%d",
+                          l ? level_get_title(l) : "Unnamed level",
+                          ctx->focusx,
+                          ctx->focusy);
+
+    wid_map_dialog_visible(tmp);
+
+    myfree(tmp);
 }
 
 static void wid_map_cell_cancelled (widp w)
