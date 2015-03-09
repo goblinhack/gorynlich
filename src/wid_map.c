@@ -67,7 +67,7 @@ static void wid_map_update_buttons (widp w)
 
         font = small_font;
 
-        double zoom = 0.005;
+        double zoom = 0.001;
         if ((x == ctx->focusx) && (y == ctx->focusy)) {
             tl.x -= zoom;
             tl.y -= zoom;
@@ -76,15 +76,11 @@ static void wid_map_update_buttons (widp w)
             c = GREEN;
 
             ctx->b = b;
-
-            wid_raise(b);
         } else {
             tl.x += zoom;
             tl.y += zoom;
             br.x -= zoom * 2.0;
             br.y -= zoom * 2.0;
-
-            wid_lower(b);
 
             c = GRAY70;
         }
@@ -96,6 +92,10 @@ static void wid_map_update_buttons (widp w)
         if (ctx->levels[y][x].level) {
             color c = GREEN;
             c.a = 255;
+            wid_set_color(b, WID_COLOR_BG, c);
+        } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
+            color c = GRAY;
+            c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
         } else {
             color c = GRAY;
@@ -222,8 +222,7 @@ static void wid_map_set_focus (wid_map_ctx *ctx,
     wid_map_update_buttons(ctx->w);
 }
 
-static uint8_t wid_map_parent_key_down (widp w, 
-                                             const SDL_KEYSYM *key)
+static uint8_t wid_map_parent_key_down (widp w, const SDL_KEYSYM *key)
 {
     wid_map_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
@@ -272,9 +271,7 @@ static uint8_t wid_map_parent_key_down (widp w,
     return (true);
 }
 
-static uint8_t wid_map_parent_joy_button (widp w, 
-                                               int32_t x,
-                                               int32_t y)
+static uint8_t wid_map_parent_joy_button (widp w, int32_t x, int32_t y)
 {
     wid_map_ctx *ctx = wid_get_client_context(w);
     verify(ctx);
@@ -508,62 +505,6 @@ static void wid_map_destroy (widp w)
     wid_map_window_ctx = 0;
 }
 
-static void wid_map_tick (widp w)
-{
-    wid_map_ctx *ctx = wid_get_client_context(w);
-    if (!ctx) {
-        return;
-    }
-
-    verify(ctx);
-
-    static int val;
-    static int delta = 1;
-    static int step = 2;
-
-    val += delta * step;
-
-    if (val > 255) {
-        val = 255;
-        delta = -1;
-    }
-
-    if (val < 200) {
-        val = 200;
-        delta = 1;
-    }
-
-    int x, y;
-
-    for (x = 0; x < LEVELS_DOWN; x++) {
-    for (y = 0; y < LEVELS_ACROSS; y++) {
-
-        if ((x != ctx->focusx) || (y != ctx->focusy)) {
-            continue;
-        }
-
-        widp b = ctx->buttons[y][x];
-        verify(b);
-
-        color c;
-        c = GREEN;
-        c.g = val;
-
-        /*
-         * Make sure the other widgets look plain in all modes.
-         */
-        int mode;
-        for (mode = WID_MODE_NORMAL; mode < WID_MODE_LAST; mode++) {
-            wid_set_mode(b, mode);
-            wid_set_color(b, WID_COLOR_TEXT, c);
-            wid_set_text_outline(b, true);
-        }
-
-        wid_set_mode(w, WID_MODE_NORMAL);
-    }
-    }
-}
-
 static void wid_map_destroy_begin (widp w)
 {
     wid_map_ctx *ctx = wid_get_client_context(w);
@@ -675,6 +616,8 @@ static void wid_map_cell_selected (widp w)
 
 static void wid_map_cell_cancelled (widp w)
 {
+    wid_destroy(&wid_map_window);
+    wid_intro_visible();
 }
 
 static void wid_map_bg_create (void)
@@ -994,7 +937,6 @@ widp wid_map (void)
         widp button_container = wid_new_square_button(window, 
                                                       "wid map buttons");
         wid_set_no_shape(button_container);
-        wid_set_on_tick(button_container, wid_map_tick);
 
         fpoint tl = { 0.0, 0.1};
         fpoint br = { 1.0, 1.0};
