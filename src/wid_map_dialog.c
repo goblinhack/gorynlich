@@ -17,7 +17,7 @@
 
 static widp wid_map_dialog;
 static uint8_t wid_map_dialog_init_done;
-static void wid_map_dialog_create(void);
+static void wid_map_dialog_create(const char *title);
 static void wid_map_dialog_destroy(void);
 
 uint8_t wid_map_dialog_init (void)
@@ -46,9 +46,9 @@ void wid_map_dialog_hide (void)
     wid_map_dialog_destroy();
 }
 
-void wid_map_dialog_visible (void)
+void wid_map_dialog_visible (const char *title)
 {
-    wid_map_dialog_create();
+    wid_map_dialog_create(title);
 }
 
 static void wid_map_dialog_callback_play (widp wid)
@@ -69,7 +69,7 @@ static void wid_map_dialog_callback_close (widp wid)
     wid_map_visible();
 }
 
-static void wid_map_dialog_create (void)
+static void wid_map_dialog_create (const char *title)
 {
     if (wid_map_dialog) {
         return;
@@ -82,8 +82,12 @@ static void wid_map_dialog_create (void)
                 0.55, /* x */
                 0.5, /* y */
                 1, /* columns */
-                1, /* focus */
-                3, /* items */
+                2, /* focus */
+                4, /* items */
+
+                (int) '0', 
+                title ? title : "Unnamed level",
+                (void*) 0,
 
                 (int) '0', 
                 "Test level",
