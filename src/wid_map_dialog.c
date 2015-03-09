@@ -99,7 +99,6 @@ static void wid_map_dialog_create (const char *title)
 
                 (int) 'b', 
                 "Back", 
-                (char*) 0,
                 wid_map_dialog_callback_close);
 
     wid_set_on_display(wid_map_dialog, wid_map_preview_thumbnail);
