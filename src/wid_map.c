@@ -770,7 +770,7 @@ static void wid_map_preview_do (int thumbnail)
         br.x *= (double) global_config.video_gl_width;
         br.y *= (double) global_config.video_gl_height;
 
-        widp b = ctx->buttons[ctx->focusx][ctx->focusy];
+        widp b = ctx->buttons[ctx->focusy][ctx->focusx];
 
         if (!thumbnail) {
             int32_t tlx, tly, brx, bry, mx, my;
