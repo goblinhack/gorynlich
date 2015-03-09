@@ -1,6 +1,4 @@
 --------------------------------------- plan for mar --------------------------------------
-- sometimes hitting q in game the focus is not on the quit menu until mouse move
-- test level ability
 - choose exit in editor
 - draw joined levels
 - remove file load/save widgets, no longer needed
@@ -64,6 +62,8 @@ different profiles for level generation
 mining?
 
 Sun Mar  8 11:48:01 EDT 2015
+- sometimes hitting q in game the focus is not on the quit menu until mouse move
+- test level ability
 - add level map chooser screen, use x,y as level coords
 
 Sat Mar  7 17:02:55 EST 2015
