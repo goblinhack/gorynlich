@@ -207,7 +207,7 @@ static void wid_intro_single_play_selected_cb (void *context)
 
 void wid_intro_single_play_selected (level_pos_t level_pos)
 {
-    LOG("Play selected, choose random stats, start at level %d.%d",
+    LOG("Client: Play selected, choose random stats, start at level %d.%d",
         level_pos.x, level_pos.y);
 
     /*
