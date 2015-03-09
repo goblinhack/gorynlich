@@ -214,8 +214,7 @@ static void wid_map_first_focus (wid_map_ctx *ctx)
     wid_map_update_buttons(ctx->w);
 }
 
-static void wid_map_set_focus (wid_map_ctx *ctx, 
-                                    int focusx, int focusy)
+static void wid_map_set_focus (wid_map_ctx *ctx, int focusx, int focusy)
 {
     ctx->focusx = focusx;
     ctx->focusy = focusy;
@@ -562,7 +561,7 @@ void wid_map_cell_play (void)
 
     wid_destroy(&wid_map_window);
 
-    LOG("Client: Play selected level %d.%d", level_pos.x, level_pos.y);
+    LOG("Client: Test selected level %d.%d", level_pos.x, level_pos.y);
 
     global_config.stats.level_pos = level_pos;
 
@@ -609,20 +608,25 @@ void wid_map_visible (void)
 
 static void wid_map_cell_selected (widp w)
 {
-    wid_hide(wid_map_window, wid_hide_delay);
-
     wid_map_ctx *ctx = wid_map_window_ctx;
     if (!wid_map_window_ctx) {
         return;
     }
 
-    if (ctx->focusx == -1) {
+    level_pos_t level_pos;
+
+    level_pos.x = ctx->focusx;
+    level_pos.y = ctx->focusy;
+
+    if (level_pos.x == -1) {
         return;
     }
 
-    if (ctx->focusy == -1) {
+    if (level_pos.y == -1) {
         return;
     }
+
+    LOG("Client: Edit selected level %d.%d", level_pos.x, level_pos.y);
 
     levelp l = ctx->levels[ctx->focusy][ctx->focusx].level;
 
@@ -630,6 +634,8 @@ static void wid_map_cell_selected (widp w)
                           l ? level_get_title(l) : "Unnamed level",
                           ctx->focusx,
                           ctx->focusy);
+
+    wid_hide(wid_map_window, 0);
 
     wid_map_dialog_visible(tmp);
 
