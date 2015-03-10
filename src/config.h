@@ -136,12 +136,12 @@
 /*
  * The number of tiles per screen.
  */
-#define TILES_SCREEN_WIDTH          16
-#define TILES_SCREEN_HEIGHT         12
-#define TILES_SCREEN_EDITOR_WIDTH   32
-#define TILES_SCREEN_EDITOR_HEIGHT  24
+#define TILES_SCREEN_WIDTH           16
+#define TILES_SCREEN_HEIGHT          12
+#define TILES_SCREEN_EDITOR_WIDTH    24
+#define TILES_SCREEN_EDITOR_HEIGHT   18
 #define WID_EDITOR_MENU_TILES_ACROSS 14
-#define WID_EDITOR_MENU_TILES_DOWN  10
+#define WID_EDITOR_MENU_TILES_DOWN   10
 
 /*
  * Padding for tiles on the edge of the smooth scroll. Has to be quite wide so 

@@ -534,6 +534,8 @@ void wid_editor_draw (void)
     wid_editor_mode_draw = true;
     wid_set_mode(wid_editor_wid_draw, WID_MODE_NORMAL);
     wid_set_color(wid_editor_wid_draw, WID_COLOR_BG, STEELBLUE);
+
+    wid_toggle_hidden(wid_editor_buttons_window, false /* immediate */);
 }
 
 void wid_editor_line (void)
@@ -544,8 +546,7 @@ void wid_editor_line (void)
     wid_set_color(wid_editor_wid_line, WID_COLOR_BG, STEELBLUE);
     wid_editor_got_line_start = false;
 
-            wid_toggle_hidden(wid_editor_buttons_window,
-                              false /* immediate */);
+    wid_toggle_hidden(wid_editor_buttons_window, false /* immediate */);
 }
 
 void wid_editor_erase (void)
@@ -554,6 +555,8 @@ void wid_editor_erase (void)
     wid_editor_mode_eraser = true;
     wid_set_mode(wid_editor_wid_eraser, WID_MODE_NORMAL);
     wid_set_color(wid_editor_wid_eraser, WID_COLOR_BG, STEELBLUE);
+
+    wid_toggle_hidden(wid_editor_buttons_window, false /* immediate */);
 }
 
 void wid_editor_fill (void)
@@ -562,6 +565,8 @@ void wid_editor_fill (void)
     wid_editor_mode_fill = true;
     wid_set_mode(wid_editor_wid_fill, WID_MODE_NORMAL);
     wid_set_color(wid_editor_wid_fill, WID_COLOR_BG, STEELBLUE);
+
+    wid_toggle_hidden(wid_editor_buttons_window, false /* immediate */);
 }
 
 void wid_editor_undo (void)

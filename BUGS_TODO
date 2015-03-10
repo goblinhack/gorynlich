@@ -1,6 +1,10 @@
 --------------------------------------- plan for mar --------------------------------------
-- level ed should hit buttons on click
-- levels need to be y.x not x.y
+- wheel scroll seems backwards?
+- editting a level for second time does not load it
+- default focus on map should be first level
+- hitting enter on editor menu does nothhing
+- fix editor map wiggle of widgets
+- editor red highlight goes off tiles sometimes
 - add level exit marshalling
 - choose exit in editor
 - draw joined levels
@@ -10,6 +14,7 @@
 - remove gothic and window textures - no longer needed
 - stats need to do something
 - make item bar wider
+- super meat boy style spinning blades of death on invisible tracks - reuse road tiles for this?
 --------------------------------------- plan for apr --------------------------------------
 - magic attack - green fireball?
 - sound effects for weapons and hits http://www.bfxr.net/
@@ -64,6 +69,11 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Tue Mar 10 06:57:02 EDT 2015
+- maked level ed a bit larger
+- level ed should hit buttons on click
+- levels need to be y.x not x.y
 
 Sun Mar  8 11:48:01 EDT 2015
 - sometimes hitting q in game the focus is not on the quit menu until mouse move

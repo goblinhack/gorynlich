@@ -913,6 +913,11 @@ static uint8_t wid_editor_map_tile_mouse_motion (widp w,
                     int32_t relx, int32_t rely,
                     int32_t wheelx, int32_t wheely)
 {
+
+    uint32_t context = (typeof(context))(uintptr_t) wid_get_client_context(w);
+    uint32_t tx = (context & 0x0000ffff);
+    uint32_t ty = (context & 0xffff0000) >> 16;
+CON("over tile %d.%d",tx,ty);
     if (wheelx || wheely) {
         /*
          * Allow scrolling.
@@ -1088,6 +1093,8 @@ void wid_editor_add_grid (void)
                                       wid_editor_map_tile_joy_down_event);
                     wid_set_on_mouse_motion(child,
                                             wid_editor_map_tile_mouse_motion);
+                    uint32_t context = (uint32_t)ix | ((uint32_t)iy << 16);
+                    wid_set_client_context(child, (void*)(uintptr_t) context);
                 } else {
                     tpp noentry;
 
@@ -1137,7 +1144,7 @@ void wid_editor_add_grid (void)
                 wid_set_color(child, WID_COLOR_BG, c);
 
                 c = RED;
-                c.a = 100;
+                c.a = 255;
                 wid_set_color(child, WID_COLOR_TL, c);
                 wid_set_color(child, WID_COLOR_BR, c);
 
