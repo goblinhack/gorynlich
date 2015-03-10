@@ -341,7 +341,7 @@ static uint8_t wid_map_parent_joy_button (widp w, int32_t x, int32_t y)
         wid_mouse_warp(ctx->b);
     }
 
-    return (true);
+    return (ret);
 }
 
 static uint8_t wid_map_button_key_event (widp w, const SDL_KEYSYM *key)
