@@ -914,6 +914,7 @@ static void wid_mouse_over_end (void)
     }
 
     wid_set_mode(w, WID_MODE_NORMAL);
+CON("over end %s",wid_logname(w));
 
     if (w->on_mouse_over_end) {
         w->on_mouse_over_end(w);
@@ -928,6 +929,7 @@ static uint8_t wid_mouse_over_begin (widp w, uint32_t x, uint32_t y,
         return (true);
     }
 
+CON("over %s",wid_logname(w));
     if (!w->on_mouse_over_begin) {
         if (w->cfg[WID_MODE_OVER].font ||
             w->cfg[WID_MODE_OVER].color_set[WID_COLOR_TL] ||
