@@ -1056,7 +1056,7 @@ static void sdl_tick (void)
         sdl_mouse_warp(x, y);
     }
 
-    if (debug_enable) {
+    if (debug_enabled) {
         char tmp[MAXSTR];
         *tmp = 0;
 
