@@ -1316,7 +1316,7 @@ void wid_editor_map_wid_create (level_pos_t level_pos)
     /*
      * Load the level
      */
-    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.x, level_pos.y);
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.y, level_pos.x);
     LOG("Load editor level %s", tmp);
     wid_editor_load(tmp);
     myfree(tmp);

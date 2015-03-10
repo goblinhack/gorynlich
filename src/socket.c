@@ -1591,8 +1591,8 @@ uint8_t socket_rx_client_join (gsocketp s, UDPpacket *packet, uint8_t *data)
         global_config.level_pos = p->stats_from_client.level_pos;
 
         LOG("Server: First player, start at level %d.%d",
-            global_config.level_pos.x,
-            global_config.level_pos.y);
+            global_config.level_pos.y,
+            global_config.level_pos.x);
     }
 
     if (!global_config.level_pos.x && 
@@ -1602,8 +1602,8 @@ uint8_t socket_rx_client_join (gsocketp s, UDPpacket *packet, uint8_t *data)
         global_config.level_pos.y = 1;
 
         LOG("Server: No level set, start at level %d.%d",
-            global_config.level_pos.x,
-            global_config.level_pos.y);
+            global_config.level_pos.y,
+            global_config.level_pos.x);
     }
 
     wid_game_map_server_visible();

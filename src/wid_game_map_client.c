@@ -779,10 +779,10 @@ void wid_game_map_client_wid_create (void)
                              false /* is_map_editor */,
                              false /* on_server */);
 
-    LOG("Client: Created level %u.%u", level_pos.x, level_pos.y);
+    LOG("Client: Created level %d.%d", level_pos.y, level_pos.x);
 
     if (!client_level) {
-        WARN("failed to load level %u.%u", level_pos.x, level_pos.y);
+        WARN("failed to load level %u.%u", level_pos.y, level_pos.x);
     }
 
     wid_game_map_client_vert_scroll =
@@ -1190,7 +1190,7 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
     if (client_level) {
         level_pos_t level_pos = level_get_level_pos(client_level);
 
-        char *tmp = dynprintf("Level %u.%u", level_pos.x, level_pos.y);
+        char *tmp = dynprintf("Level %d.%d", level_pos.y, level_pos.x);
 
         widp wid_level_container;
 
