@@ -1,6 +1,6 @@
 {
  short_name="Door"
- tooltip="Door"
+ tooltip="Door1"
  z_depth=2
  is_inactive
  is_door

@@ -1,6 +1,6 @@
 {
  short_name="floor"
- tooltip="Floor"
+ tooltip="Floor2"
  z_depth=1
  is_inactive
  is_floor
