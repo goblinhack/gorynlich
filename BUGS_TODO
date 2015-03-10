@@ -1,9 +1,13 @@
 --------------------------------------- plan for mar --------------------------------------
+- level ed should hit buttons on click
+- levels need to be y.x not x.y
+- add level exit marshalling
 - choose exit in editor
 - draw joined levels
-- remove file load/save widgets, no longer needed
+- add level traps
+- level rotate button
+- level randomize button
 - remove gothic and window textures - no longer needed
-- sound on key click in menus
 - stats need to do something
 - make item bar wider
 --------------------------------------- plan for apr --------------------------------------
