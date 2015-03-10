@@ -561,7 +561,7 @@ void wid_map_cell_play (void)
 
     wid_destroy(&wid_map_window);
 
-    LOG("Client: Test selected level %d.%d", level_pos.x, level_pos.y);
+    LOG("Client: Test selected level %d.%d", level_pos.y, level_pos.x);
 
     global_config.stats.level_pos = level_pos;
 
@@ -626,14 +626,14 @@ static void wid_map_cell_selected (widp w)
         return;
     }
 
-    LOG("Client: Edit selected level %d.%d", level_pos.x, level_pos.y);
+    LOG("Client: Edit selected level %d.%d", level_pos.y, level_pos.x);
 
     levelp l = ctx->levels[ctx->focusy][ctx->focusx].level;
 
     char *tmp = dynprintf("%s, %d.%d",
                           l ? level_get_title(l) : "Unnamed level",
-                          ctx->focusx,
-                          ctx->focusy);
+                          ctx->focusy,
+                          ctx->focusx);
 
     wid_hide(wid_map_window, 0);
 
@@ -833,10 +833,11 @@ widp wid_editor_level_map_thing_replace_template (widp w,
     int iy = (int)y;
 
     if ((ix >= MAP_WIDTH) || (iy >= MAP_HEIGHT) || (ix < 0) || (iy < 0)) {
-        DIE("overflow in reading position (%f,%f) -> (%d,%d) in level %u.%u, "
+        ERR("overflow in reading position (%f,%f) -> (%d,%d) in level %u.%u, "
             "map bounds (%d,%d) -> (%d,%d)", 
             x, y, ix, iy, ctx->loading_x, ctx->loading_y,
             0, 0, MAP_DEPTH, MAP_HEIGHT);
+        return (0);
     }
 
     int z = tp_get_z_depth(tp);
@@ -870,7 +871,7 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
         level_pos_t level_pos;
         int x, y;
 
-        if (sscanf(name, "%d.%d", &x, &y) != 2) {
+        if (sscanf(name, "%d.%d", &y, &x) != 2) {
             WARN("bad format in level name %s, expecting a,b format", name);
             continue;
         }
@@ -886,6 +887,10 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
                               false, /* is_editor */
                               true, /* is_map_editor */
                               false /* on_server */);
+        if (!l) {
+            ERR("Failed to load level %d.%d", y, x);
+            continue;
+        }
 
         ctx->levels[y][x].level = l;
 
