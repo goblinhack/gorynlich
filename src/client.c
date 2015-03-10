@@ -834,9 +834,9 @@ static void client_rx_server_status (gsocketp s,
 
     if (!memcmp(&server_status.level_pos, &latest_status.level_pos,
                 sizeof(level_pos_t))) {
-        LOG("Client: Level no %u.%u", 
-            latest_status.level_pos.x,
-            latest_status.level_pos.y);
+        LOG("Client: Level no %d.%d", 
+            latest_status.level_pos.y,
+            latest_status.level_pos.x);
         redo = true;
     }
 

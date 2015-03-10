@@ -167,8 +167,8 @@ void wid_game_map_server_wid_create (void)
     server_level_is_being_loaded = true;
 
     char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, 
-                          global_config.level_pos.x, 
-                          global_config.level_pos.y);
+                          global_config.level_pos.y, 
+                          global_config.level_pos.x);
 
     if (!file_exists(tmp)) {
         LOG("Level %s does not exist, create random level", tmp);
@@ -188,9 +188,9 @@ void wid_game_map_server_wid_create (void)
     myfree(tmp);
 
     if (!server_level) {
-        DIE("failed to load server level %u.%u",
-            global_config.level_pos.x,
-            global_config.level_pos.y);
+        DIE("failed to load server level %d.%d",
+            global_config.level_pos.y,
+            global_config.level_pos.x);
         return;
     }
 

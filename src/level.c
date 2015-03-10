@@ -125,11 +125,11 @@ levelp level_new (widp map,
     level_set_is_map_editor(level, is_map_editor);
 
     if (on_server) {
-        level->logname = dynprintf("%u.%u[%p] (server)", 
-                                   level_pos.x, level_pos.y, level);
+        level->logname = dynprintf("%d.%d[%p] (server)", 
+                                   level_pos.y, level_pos.x, level);
     } else {
-        level->logname = dynprintf("%u.%u[%p] (client)", 
-                                   level_pos.x, level_pos.y, level);
+        level->logname = dynprintf("%d.%d[%p] (client)", 
+                                   level_pos.y, level_pos.x, level);
     }
 
     level->on_server = on_server;
@@ -247,7 +247,7 @@ levelp level_load (level_pos_t level_pos,
 
     char *dir_and_file;
 
-    dir_and_file = dynprintf("data/levels/%u.%u", level_pos.x, level_pos.y);
+    dir_and_file = dynprintf("data/levels/%d.%d", level_pos.y, level_pos.x);
 
     demarshal_p in;
 
@@ -1293,6 +1293,39 @@ void marshal_level (marshal_p ctx, levelp level)
     PUT_KET(ctx);
 }
 
+static void demarshal_level_exits (demarshal_p ctx, levelp l)
+{
+    if (!GET_PEEK_NAME(ctx, "exits")) {
+        return;
+    }
+
+    GET_NAME(ctx, "exits");
+
+    GET_BRA(ctx);
+
+    for (;;) {
+        if (!GET_PEEK_BRA(ctx)) {
+            break;
+        }
+
+        uint32_t x, y, exitx, exity;
+
+        int rc = GET_BRA(ctx);
+        rc = rc && GET_NAMED_UINT32(ctx, "x", x);
+        rc = rc && GET_NAMED_UINT32(ctx, "y", y);
+        rc = rc && GET_NAMED_UINT32(ctx, "exitx", exitx);
+        rc = rc && GET_NAMED_UINT32(ctx, "exity", exity);
+
+        rc = rc && GET_KET(ctx);
+
+        if (!rc) {
+            break;
+        }
+    }
+
+    GET_KET(ctx);
+}
+
 uint8_t demarshal_level (demarshal_p ctx, levelp level)
 {
     uint8_t rc;
@@ -1339,6 +1372,8 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit_open", 
                                level->exit_reached_when_open);
     } while (demarshal_gotone(ctx));
+
+    demarshal_level_exits(ctx, level);
 
     server_level_is_being_loaded = true;
 

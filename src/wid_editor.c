@@ -83,7 +83,7 @@ void wid_editor_hide (void)
     }
 
     level_pos_t level_pos = level_get_level_pos(level_ed);
-    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.x, level_pos.y);
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.y, level_pos.x);
     LOG("Save editor level %s", tmp);
     wid_editor_save(tmp);
     myfree(tmp);
@@ -543,6 +543,9 @@ void wid_editor_line (void)
     wid_set_mode(wid_editor_wid_line, WID_MODE_NORMAL);
     wid_set_color(wid_editor_wid_line, WID_COLOR_BG, STEELBLUE);
     wid_editor_got_line_start = false;
+
+            wid_toggle_hidden(wid_editor_buttons_window,
+                              false /* immediate */);
 }
 
 void wid_editor_erase (void)
