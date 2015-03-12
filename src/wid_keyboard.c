@@ -452,7 +452,7 @@ static uint8_t wid_keyboard_parent_joy_button (widp w,
         wid_mouse_warp(ctx->b);
     }
 
-    return (true);
+    return (ret);
 }
 
 static uint8_t wid_keyboard_button_key_event (widp w, const SDL_KEYSYM *key)
