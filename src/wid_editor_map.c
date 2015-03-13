@@ -915,9 +915,6 @@ static uint8_t wid_editor_map_tile_mouse_motion (widp w,
 {
 
     uint32_t context = (typeof(context))(uintptr_t) wid_get_client_context(w);
-    uint32_t tx = (context & 0x0000ffff);
-    uint32_t ty = (context & 0xffff0000) >> 16;
-CON("over tile %d.%d",tx,ty);
     if (wheelx || wheely) {
         /*
          * Allow scrolling.
@@ -940,6 +937,9 @@ CON("over tile %d.%d",tx,ty);
         return (wid_editor_map_thing_remove(w, x, y));
     }
 
+    /*
+     * Check for any button events.
+     */
     wid_editor_map_tile_joy_down_event(w, x, y);
 
     /*
@@ -1078,7 +1078,7 @@ void wid_editor_add_grid (void)
 
                 wid_set_color(child, WID_COLOR_BG, BLACK);
                 color c = WHITE;
-                c.a = 100;
+                c.a = 0;
 
                 wid_set_color(child, WID_COLOR_TEXT, c);
                 wid_set_font(child, vsmall_font);
@@ -1113,9 +1113,11 @@ void wid_editor_add_grid (void)
                 wid_set_tl_br(child, tl, br);
 
                 wid_set_mode(child, WID_MODE_NORMAL);
-                c = RED;
+                c = WHITE;
                 c.a = 0;
                 wid_set_color(child, WID_COLOR_BG, c);
+                wid_set_color(child, WID_COLOR_TL, YELLOW);
+                wid_set_color(child, WID_COLOR_BR, YELLOW);
 
                 if ((!(ix % TILES_SCREEN_WIDTH)) || 
                     (!(iy % TILES_SCREEN_HEIGHT)) || 
@@ -1140,13 +1142,17 @@ void wid_editor_add_grid (void)
 
                 wid_set_mode(child, WID_MODE_OVER);
                 c = RED;
-                c.a = 0;
+                c.a = 100;
                 wid_set_color(child, WID_COLOR_BG, c);
-
-                c = RED;
-                c.a = 255;
                 wid_set_color(child, WID_COLOR_TL, c);
                 wid_set_color(child, WID_COLOR_BR, c);
+
+                wid_set_mode(child, WID_MODE_ACTIVE);
+                c = RED;
+                c.a = 50;
+                wid_set_color(child, WID_COLOR_TL, c);
+                wid_set_color(child, WID_COLOR_BR, c);
+                wid_set_color(child, WID_COLOR_BG, c);
 
                 wid_set_mode(child, WID_MODE_NORMAL);
 

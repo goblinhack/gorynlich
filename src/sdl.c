@@ -683,7 +683,7 @@ static void sdl_event (SDL_Event * event)
         wheel_x *= accel;
         wheel_y *= accel;
 
-        wid_mouse_motion(mouse_x, mouse_y, 0, 0, wheel_x, wheel_y);
+        wid_mouse_motion(mouse_x, mouse_y, 0, 0, -wheel_x, wheel_y);
         break;
 #endif /* } */
 
