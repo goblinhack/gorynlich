@@ -1,10 +1,8 @@
 --------------------------------------- plan for mar --------------------------------------
-- wheel scroll seems backwards?
+- move level 1,1 to top left corner
 - editting a level for second time does not load it
 - default focus on map should be first level
 - hitting enter on editor menu does nothhing
-- fix editor map wiggle of widgets
-- editor red highlight goes off tiles sometimes
 - add level exit marshalling
 - choose exit in editor
 - draw joined levels
@@ -15,6 +13,7 @@
 - stats need to do something
 - make item bar wider
 - super meat boy style spinning blades of death on invisible tracks - reuse road tiles for this?
+- can't shoot through diagonal walls
 --------------------------------------- plan for apr --------------------------------------
 - magic attack - green fireball?
 - sound effects for weapons and hits http://www.bfxr.net/
@@ -69,6 +68,12 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Thu Mar 12 22:02:16 EDT 2015
+- wheel scroll seems backwards?
+- mouse editor icon vanished behind rock tiles
+- fix editor map wiggle of widgets
+- editor red highlight goes off tiles sometimes
 
 Tue Mar 10 06:57:02 EDT 2015
 - maked level ed a bit larger
