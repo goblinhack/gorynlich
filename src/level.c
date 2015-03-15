@@ -1287,10 +1287,6 @@ void marshal_level (marshal_p ctx, levelp level)
     PUT_NAMED_BITFIELD(ctx, "exit_reached_when_open", level->exit_reached_when_open);
     PUT_NAMED_BITFIELD(ctx, "warned_exit_not_open", level->warned_exit_not_open);
     PUT_NAMED_BITFIELD(ctx, "is_exit_open", level->exit_reached_when_open);
-
-    marshal_wid_grid(ctx, level->map);
-
-    PUT_KET(ctx);
 }
 
 static void demarshal_level_exits (demarshal_p ctx, levelp l)
