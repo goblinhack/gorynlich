@@ -15,6 +15,8 @@
 #define WID_EDITOR_MENU_TILES_ACROSS    20
 #define WID_EDITOR_MENU_TILES_DOWN      14
 
+#define WID_EDITOR_UNDO                 1000
+
 typedef struct wid_editor_tile_ {
     int x;
     int y;
@@ -30,6 +32,10 @@ typedef struct wid_editor_tile_ {
 typedef struct wid_editor_map_tile_ {
     tpp tp;
 } wid_editor_map_tile;
+
+typedef struct wid_editor_map_grid_ {
+    wid_editor_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+} wid_editor_map_grid;
 
 typedef void(*wid_editor_event_t)(widp);
 
@@ -70,8 +76,14 @@ typedef struct {
      */
     wid_editor_tile 
         tile[WID_EDITOR_MENU_CELLS_ACROSS][WID_EDITOR_MENU_CELLS_DOWN];
-    wid_editor_map_tile 
-        map_tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+
+    wid_editor_map_grid map;
+    wid_editor_map_grid map_undo[WID_EDITOR_UNDO];
+    uint8_t valid_undo[WID_EDITOR_UNDO];
+
+    /*
+     * For line drawing.
+     */
     int map_highlight[MAP_WIDTH][MAP_HEIGHT];
 
     /*
@@ -93,12 +105,18 @@ typedef struct {
     int map_x;
     int map_y;
 
+    /*
+     * Where in the undo array are we
+     */
+    int undo_at;
+
     int tile_mode;
 
     /*
      * Drawing or lines or?
      */
     int edit_mode;
+    int old_edit_mode;
 
     /*
      * Line drawing state.
@@ -113,6 +131,9 @@ enum {
     WID_EDITOR_MODE_LINE,
     WID_EDITOR_MODE_FILL,
     WID_EDITOR_MODE_DEL,
+    WID_EDITOR_MODE_UNDO,
+    WID_EDITOR_MODE_REDO,
+    WID_EDITOR_MODE_NUKE,
     WID_EDITOR_MODE_MAX,
 };
 
