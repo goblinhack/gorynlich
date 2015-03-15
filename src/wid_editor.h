@@ -1,50 +1,128 @@
 /*
  * Copyright (C) 2011 Neil McGill
  *
- * See the LICENSE file for license.
+ * See the README file for license.
  */
 
-uint8_t wid_editor_init(void);
-void wid_editor_fini(void);
-void wid_editor_hide(void);
-void wid_editor_visible(level_pos_t);
-void wid_editor_save_dialog(void);
-void wid_editor_title(void);
-void wid_editor_load_dialog(void);
-void wid_editor_draw(void);
-void wid_editor_line(void);
-void wid_editor_erase(void);
-void wid_editor_fill(void);
-void wid_editor_undo(void);
-void wid_editor_redo(void);
-void wid_editor_clear(void);
-void wid_editor_reset_buttons(void);
-void wid_editor_save_point(void);
-void wid_editor_undo_save_point(void);
-void wid_editor_redo_save_point(void);
+#pragma once
 
-extern uint8_t wid_editor_mode_draw;
-extern uint8_t wid_editor_mode_line;
-extern uint8_t wid_editor_mode_fill;
-extern uint8_t wid_editor_mode_eraser;
+#define WID_EDITOR_MENU_CELLS_ACROSS    26
+#define WID_EDITOR_MENU_CELLS_DOWN      16
 
-extern widp wid_editor_wid_draw;
-extern widp wid_editor_wid_line;
-extern widp wid_editor_wid_fill;
-extern widp wid_editor_wid_eraser;
-extern widp wid_editor_wid_undo;
-extern widp wid_editor_wid_redo;
-extern void wid_editor_marshal(marshal_p ctx);
-extern uint8_t wid_editor_demarshal(demarshal_p ctx);
-extern levelp level_ed;
+#define WID_EDITOR_MENU_MAP_ACROSS      25
+#define WID_EDITOR_MENU_MAP_DOWN        15
 
-extern widp wid_editor_clear_popup;
-extern widp wid_editor_help_popup;
-extern widp wid_editor_save_popup;
-extern widp wid_editor_title_popup;
-extern widp wid_editor_load_popup;
-extern widp wid_editor_filename_and_title;
+#define WID_EDITOR_MENU_TILES_ACROSS    20
+#define WID_EDITOR_MENU_TILES_DOWN      14
 
-extern uint8_t server_level_is_being_loaded;
-extern void wid_editor_load(const char *dir_and_file);
-extern void wid_editor_save(const char *dir_and_file);
+typedef struct wid_editor_tile_ {
+    int x;
+    int y;
+
+    /*
+     * Used for level preview.
+     */
+    tpp tile_tp;
+
+    widp button;
+} wid_editor_tile;
+
+typedef struct wid_editor_map_tile_ {
+    tpp tp;
+} wid_editor_map_tile;
+
+typedef void(*wid_editor_event_t)(widp);
+
+typedef struct {
+    /*
+     * Parent widget
+     */
+    widp w;
+
+    /*
+     * Current button
+     */
+    widp b;
+
+    /*
+     * Entered text.
+     */
+    char text[MAXSTR];
+
+    /*
+     * Item currently in focus
+     */
+    int focusx;
+    int focusy;
+
+    /*
+     * When the map was made.
+     */
+    uint32_t created;
+
+    /*
+     * When we last changed from tile to map mode.
+     */
+    uint32_t mode_toggled;
+
+    /*
+     * Items in the map
+     */
+    wid_editor_tile 
+        tile[WID_EDITOR_MENU_CELLS_ACROSS][WID_EDITOR_MENU_CELLS_DOWN];
+    wid_editor_map_tile 
+        map_tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+
+    /*
+     * Just created?
+     */
+    int is_new;
+
+    /*
+     * Current level.
+     */
+    levelp level;
+
+    /*
+     * Current level being loaded.
+     */
+    int loading_x;
+    int loading_y;
+
+    int map_x;
+    int map_y;
+
+    int tile_mode;
+
+    /*
+     * Drawing or lines or?
+     */
+    int edit_mode;
+
+    /*
+     * Line drawing state.
+     */
+    int line_start_x;
+    int line_start_y;
+    int got_line_start;
+} wid_editor_ctx;
+
+enum {
+    WID_EDITOR_MODE_DRAW,
+    WID_EDITOR_MODE_LINE,
+    WID_EDITOR_MODE_FILL,
+    WID_EDITOR_MODE_DEL,
+    WID_EDITOR_MODE_MAX,
+};
+
+void wid_editor(level_pos_t);
+
+widp wid_editor_replace_template(widp w,
+                                 double x,
+                                 double y,
+                                 thingp t,
+                                 tpp tp,
+                                 itemp item,
+                                 thing_statsp stats);
+extern void wid_editor_preview(widp);
+extern void wid_editor_preview_thumbnail(widp);

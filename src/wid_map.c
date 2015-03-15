@@ -596,7 +596,7 @@ void wid_map_cell_load (void)
         return;
     }
 
-    wid_editor_visible(level_pos);
+    wid_editor(level_pos);
 
     wid_destroy(&wid_map_window);
 }
@@ -917,7 +917,7 @@ widp wid_map (void)
     wid_map_window_ctx = ctx;
 
     ctx->focusx = -1;
-    ctx->focusx = -1;
+    ctx->focusy = -1;
     ctx->cancelled = cancelled;
     ctx->selected = selected;
 
@@ -1046,7 +1046,7 @@ widp wid_map (void)
     wid_raise(window);
     wid_map_bg_create();
 
-    wid_set_on_display(window, wid_map_preview);
+    wid_set_on_display_top_level(window, wid_map_preview);
 
     ctx->created = time_get_time_ms();
 

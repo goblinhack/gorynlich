@@ -33,3 +33,4 @@ extern levelp server_level;
 
 extern uint32_t server_tile_width;
 extern uint32_t server_tile_height;
+extern int server_level_is_being_loaded;

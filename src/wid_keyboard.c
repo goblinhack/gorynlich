@@ -754,7 +754,7 @@ widp wid_keyboard (const char *text,
      */
     wid_keyboard_ctx *ctx = myzalloc(sizeof(*ctx), "wid keyboard");
     ctx->focusx = -1;
-    ctx->focusx = -1;
+    ctx->focusy = -1;
     ctx->cancelled = cancelled;
     ctx->selected = selected;
 

@@ -65,14 +65,14 @@ typedef struct {
     int is_new;
 
     /*
-     * Used when loading lots of levels to populate the preview.
+     * Current level being loaded.
      */
     int loading_x;
     int loading_y;
 
 } wid_map_ctx;
 
-widp wid_map (void);
+widp wid_map(void);
 
 widp wid_editor_level_map_thing_replace_template(widp w,
                                                  double x,
