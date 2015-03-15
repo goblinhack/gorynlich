@@ -146,10 +146,11 @@ static void wid_editor_update_buttons (void)
         int over_tile = 0;
         int over_map_tile = 0;
 
+        int mx = x + ctx->map_x;
+        int my = y + ctx->map_y;
+
         if (!ctx->tile_mode) {
             int z;
-            int mx = x + ctx->map_x;
-            int my = y + ctx->map_y;
 
             if ((x < WID_EDITOR_MENU_MAP_ACROSS) && 
                 (y < WID_EDITOR_MENU_MAP_DOWN)) {
@@ -185,7 +186,13 @@ static void wid_editor_update_buttons (void)
         wid_set_color(b, WID_COLOR_TEXT, c);
         wid_set_font(b, font);
 
-        if ((x == ctx->focusx) && (y == ctx->focusy)) {
+        if ((x < WID_EDITOR_MENU_MAP_ACROSS) && 
+            (y < WID_EDITOR_MENU_MAP_DOWN) &&
+            (ctx->map_highlight[mx][my])) {
+            color c = GREEN;
+            c.a = 200;
+            wid_set_color(b, WID_COLOR_BG, c);
+        } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
             color c = RED;
             c.a = 200;
             wid_set_color(b, WID_COLOR_BG, c);
@@ -215,6 +222,8 @@ static void wid_editor_update_buttons (void)
 
     wid_editor_update_edit_mode_buttons();
     wid_update(wid_editor_window);
+
+    memset(ctx->map_highlight, 0, sizeof(ctx->map_highlight));
 }
 
 static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
@@ -477,6 +486,19 @@ static void wid_editor_map_thing_replace (int x, int y)
     ctx->map_tile[x][y][z].tp = wid_editor_chosen_tile;
 }
 
+static void wid_editor_map_highlight_replace (int x, int y)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    if ((x < 0) || (y < 0) ||
+        (x >= MAP_WIDTH) ||
+        (y >= MAP_HEIGHT)) {
+        DIE("bad map coord %d,%d", x, y);
+    }
+
+    ctx->map_highlight[x][y] = 1;
+}
+
 static void do_wid_editor_line (int x0_in, 
                                 int y0_in, 
                                 int x1_in, 
@@ -566,6 +588,98 @@ static void wid_editor_draw_line (int x0, int y0, int x1, int y1)
         do_wid_editor_line(y0, x0, y1, x1, 1);
     } else {
         do_wid_editor_line(-y0, x0, -y1, x1, 2);
+    }
+}
+
+static void do_wid_editor_highlight_line (int x0_in, 
+                                          int y0_in, 
+                                          int x1_in, 
+                                          int y1_in, 
+                                          int flag)
+{
+    double temp;
+    double dx;
+    double dy;
+    double tdy;
+    double dydx;
+    double p;
+    double x;
+    double y;
+    double i;
+
+    double x0 = x0_in;
+    double y0 = y0_in;
+    double x1 = x1_in;
+    double y1 = y1_in;
+
+    if (x0 > x1) {
+        temp = x0;
+        x0 = x1;
+        x1 = temp;
+
+        temp = y0;
+        y0 = y1;
+        y1 = temp;
+    }
+
+    dx = x1 - x0;
+    dy = y1 - y0;
+
+    tdy = 2.0 * dy;
+    dydx = tdy - (2.0 * dx);
+
+    p = tdy - dx;
+    x = x0;
+    y = y0;
+
+    if (flag == 0) {
+        wid_editor_map_highlight_replace((int)x, (int)y);
+    } else if (flag == 1) {
+        wid_editor_map_highlight_replace((int)y, (int)x);
+    } else if (flag == 2) {
+        wid_editor_map_highlight_replace((int)y, (int)-x);
+    } else if (flag == 3) {
+        wid_editor_map_highlight_replace((int)x, (int)-y);
+    }
+
+    for (i = 1; i <= dx; i++){
+        x++;
+
+        if (p < 0) {
+            p += tdy;
+        } else {
+            p += dydx;
+            y++;
+        }
+
+        if (flag == 0) {
+            wid_editor_map_highlight_replace((int)x, (int)y);
+        } else if (flag == 1) {
+            wid_editor_map_highlight_replace((int)y, (int)x);
+        } else if (flag == 2) {
+            wid_editor_map_highlight_replace((int)y, (int)-x);
+        } else if (flag == 3) {
+            wid_editor_map_highlight_replace((int)x, (int)-y);
+        }
+    }
+}
+
+static void wid_editor_draw_highlight_line (int x0, int y0, int x1, int y1)
+{
+    double slope = 100.0;
+
+    if (x0 != x1) {
+        slope = (y1 - y0) * (1.0 / (x1 - x0));
+    }
+
+    if ((0 <= slope) && (slope <= 1)) {
+        do_wid_editor_highlight_line(x0, y0, x1, y1, 0);
+    } else if ((-1 <= slope) && (slope <= 0)) {
+        do_wid_editor_highlight_line(x0, -y0, x1, -y1, 3);
+    } else if (slope > 1) {
+        do_wid_editor_highlight_line(y0, x0, y1, x1, 1);
+    } else {
+        do_wid_editor_highlight_line(-y0, x0, -y1, x1, 2);
     }
 }
 
@@ -669,8 +783,8 @@ static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
                     ctx->line_start_x = mx;
                     ctx->line_start_y = my;
                 } else {
-                    wid_editor_draw_line (ctx->line_start_x, 
-                                          ctx->line_start_y, mx, my);
+                    wid_editor_draw_line(ctx->line_start_x, 
+                                         ctx->line_start_y, mx, my);
                     ctx->got_line_start = false;
                 }
                 break;
@@ -1152,6 +1266,14 @@ static void wid_editor_tick (widp w)
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     if (!ctx) {
         return;
+    }
+
+    if (ctx->got_line_start) {
+        int mx = ctx->focusx + ctx->map_x;
+        int my = ctx->focusy + ctx->map_y;
+
+        wid_editor_draw_highlight_line(ctx->line_start_x, ctx->line_start_y, 
+                                       mx, my);
     }
 
     int moved = 0;
