@@ -683,6 +683,11 @@ static void sdl_event (SDL_Event * event)
         wheel_x *= accel;
         wheel_y *= accel;
 
+        /*
+         * Negative wheel x so side scrolls seem natural. Could just be
+         * a dumb macos thing to ifdef?
+         */
+        wid_mouse_visible = 1;
         wid_mouse_motion(mouse_x, mouse_y, 0, 0, -wheel_x, wheel_y);
         break;
 #endif /* } */
@@ -694,6 +699,7 @@ static void sdl_event (SDL_Event * event)
             event->motion.x, event->motion.y,
             event->motion.xrel, event->motion.yrel, mouse_down);
 
+        wid_mouse_visible = 1;
         wid_mouse_motion(mouse_x, mouse_y,
                          event->motion.xrel, event->motion.yrel,
                          0, 0);
@@ -706,6 +712,7 @@ static void sdl_event (SDL_Event * event)
             event->button.button, event->button.x, event->button.y, 
             mouse_down);
 
+        wid_mouse_visible = 1;
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
         if (event->button.button == SDL_BUTTON_WHEELUP) {
             DBG("  wheel up");
@@ -1053,7 +1060,9 @@ static void sdl_tick (void)
             y = global_config.video_pix_height - 1;
         }
         
-        sdl_mouse_warp(x, y);
+        if (wid_mouse_visible) {
+            sdl_mouse_warp(x, y);
+        }
     }
 
     if (debug_enabled) {

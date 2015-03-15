@@ -30,6 +30,7 @@
 #include "server.h"
 #include "glapi.h"
 #include "wid_keyboard.h"
+#include "wid_editor.h"
 #include "wid_map.h"
 
 static widp wid_intro;
@@ -495,6 +496,13 @@ static uint8_t wid_menu_credits_selected (widp w,
 
 static void wid_intro_create (void)
 {
+    if (1) {
+level_pos_t level_pos;
+level_pos.x = 2;
+level_pos.y = 1;
+wid_editor(level_pos);
+        return;
+    }
     if (wid_intro) {
         return;
     }

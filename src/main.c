@@ -97,8 +97,6 @@ void quit (void)
     sdl_exit();
     LOG("  - sdl_exit");
 
-    wid_editor_fini();
-    LOG("  - wid_editor_fini");
     wid_game_map_client_fini();
     LOG("  - wid_game_map_client_fini");
     wid_game_map_server_fini();
@@ -775,10 +773,6 @@ int32_t main (int32_t argc, char *argv[])
     action_init_fn_create(&init_fns,
                           (action_init_fn_callback)thing_init,
                           0, "thing_init");
-
-    action_init_fn_create(&init_fns,
-                          (action_init_fn_callback)wid_editor_init,
-                          0, "wid_editor_init");
 
 #ifdef THING_TEST
     extern int thing_test(int32_t argc, char *argv[]);

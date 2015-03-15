@@ -710,7 +710,7 @@ widp wid_numpad (const char *text,
      */
     wid_numpad_ctx *ctx = myzalloc(sizeof(*ctx), "wid numpad");
     ctx->focusx = -1;
-    ctx->focusx = -1;
+    ctx->focusy = -1;
     ctx->cancelled = cancelled;
     ctx->selected = selected;
 

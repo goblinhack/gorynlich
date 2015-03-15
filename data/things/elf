@@ -1,6 +1,6 @@
 {
  short_name="Elf"
- tooltip="Fast, strong.\n\n%%fg=yellow$Awesome teeth.\n\nUses weapons made of twigs."
+ tooltip="Elf"
  carrying={
     "data/things/bow1"
     "data/things/torches"
