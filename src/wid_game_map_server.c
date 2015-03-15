@@ -26,6 +26,7 @@ widp wid_game_map_server_grid_container;
 
 uint32_t server_tile_width;
 uint32_t server_tile_height;
+int server_level_is_being_loaded;
 
 uint8_t wid_game_map_server_init (void)
 {

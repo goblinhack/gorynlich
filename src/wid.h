@@ -106,6 +106,7 @@ void wid_always_hidden(widp, uint8_t value);
  * Mousy
  */
 void wid_mouse_warp(widp w);
+void wid_mouse_move(widp w);
 void wid_mouse_hide(int);
 extern int wid_mouse_visible;
 
@@ -158,7 +159,8 @@ typedef uint8_t(*on_key_down_t)(widp, const struct SDL_KEYSYM *);
 typedef uint8_t(*on_key_up_t)(widp, const struct SDL_KEYSYM *);
 typedef void(*on_destroy_t)(widp);
 typedef void(*on_tick_t)(widp);
-typedef void(*on_display_t)(widp);
+typedef void(*on_display_top_level_t)(widp);
+typedef void(*on_display_t)(widp, fpoint tl, fpoint br);
 
 typedef widp (*grid_wid_replace_t)(widp,
                                    double x,
@@ -347,6 +349,7 @@ void wid_set_on_destroy(widp, on_destroy_t fn);
 void wid_set_on_destroy_begin(widp, on_destroy_t fn);
 void wid_set_on_tick(widp, on_tick_t fn);
 void wid_set_on_display(widp, on_display_t fn);
+void wid_set_on_display_top_level(widp, on_display_top_level_t fn);
 void wid_set_prev(widp w, widp);
 void wid_set_radius(widp, fsize val);
 void wid_set_received_input(widp, uint8_t val);
@@ -727,6 +730,7 @@ typedef struct wid_ {
     on_destroy_t on_destroy_begin;
     on_tick_t on_tick;
     on_display_t on_display;
+    on_display_top_level_t on_display_top_level;
 
     /*
      * Fade in/out/... effects.

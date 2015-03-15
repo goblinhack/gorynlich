@@ -85,8 +85,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_dead.o 		\
     $(OBJDIR)/wid_dirlist.o 		\
     $(OBJDIR)/wid_editor.o 		\
-    $(OBJDIR)/wid_editor_buttons.o 	\
-    $(OBJDIR)/wid_editor_map.o 		\
     $(OBJDIR)/wid_game_map_client.o 	\
     $(OBJDIR)/wid_game_map_server.o 	\
     $(OBJDIR)/wid_game_over.o 		\
