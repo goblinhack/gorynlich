@@ -5,6 +5,7 @@
  */
 
 #include <SDL.h>
+#include <errno.h>
 
 #include "main.h"
 #include "wid.h"
@@ -19,11 +20,14 @@
 #include "thing_template.h"
 #include "thing_tile.h"
 #include "wid_editor.h"
+#include "wid_tooltip.h"
 #include "wid_intro.h"
 #include "tile.h"
+#include "marshal.h"
+#include "wid_map.h"
 #include "string_util.h"
 
-static void wid_editor_destroy(widp w);
+static void wid_editor_hide(void);
 static void wid_editor_tile_right_button_pressed(widp w, int x, int y);
 static void wid_editor_set_focus(wid_editor_ctx *ctx, int focusx, int focusy);
 static void wid_editor_map_scroll(int dx, int dy);
@@ -90,11 +94,22 @@ static void wid_editor_update_edit_mode_buttons (void)
     int i;
     for (i = 0; i < WID_EDITOR_MODE_MAX; i++) {
         widp b = ctx->tile[i][WID_EDITOR_MENU_CELLS_DOWN - 1].button;
+        if (!b) {
+            continue;
+        }
+
         color c = CYAN;
         c.a = 50;
         wid_set_color(b, WID_COLOR_BG, c);
-        wid_set_color(b, WID_COLOR_TL, WHITE);
-        wid_set_color(b, WID_COLOR_BR, GRAY);
+
+        c = WHITE;
+        c.a = 100;
+        wid_set_color(b, WID_COLOR_TL, c);
+
+        c = GRAY;
+        c.a = 100;
+        wid_set_color(b, WID_COLOR_BR, c);
+
         wid_set_color(b, WID_COLOR_TEXT, GRAY);
     }
 
@@ -109,6 +124,37 @@ static void wid_editor_update_edit_mode_buttons (void)
     wid_set_color(b, WID_COLOR_TL, RED);
     wid_set_color(b, WID_COLOR_BR, RED);
     wid_set_color(b, WID_COLOR_TEXT, GREEN);
+
+    int x;
+    for (x = 0; x < WID_EDITOR_MODE_MAX; x++) {
+        widp b = ctx->tile[x][WID_EDITOR_MENU_CELLS_DOWN - 1].button;
+        if (!b) {
+            continue;
+        }
+
+        color c = BLACK;
+        c.a = 100;
+        wid_set_color(b, WID_COLOR_BG, c);
+
+        switch (x) {
+        case WID_EDITOR_MODE_DRAW:
+        case WID_EDITOR_MODE_LINE:
+        case WID_EDITOR_MODE_FILL:
+        case WID_EDITOR_MODE_DEL:
+        case WID_EDITOR_MODE_UNDO:
+        case WID_EDITOR_MODE_REDO:
+        case WID_EDITOR_MODE_NUKE:
+            break;
+
+        case WID_EDITOR_MODE_TOGGLE:
+            if (wid_editor_chosen_tile) {
+                wid_set_thing_template(b, wid_editor_chosen_tile);
+                wid_set_color(b, WID_COLOR_TL, RED);
+                wid_set_color(b, WID_COLOR_BR, RED);
+            }
+            break;
+        }
+    }
 }
 
 static void wid_editor_update_buttons (void)
@@ -130,6 +176,10 @@ static void wid_editor_update_buttons (void)
     for (y = 0; y < WID_EDITOR_MENU_CELLS_DOWN; y++) {
 
         widp b = ctx->tile[x][y].button;
+        if (!b) {
+            continue;
+        }
+
         verify(b);
 
         fpoint tl;
@@ -144,8 +194,8 @@ static void wid_editor_update_buttons (void)
 
         font = small_font;
 
-        int over_tile = 0;
-        int over_map_tile = 0;
+        int is_a_tile = 0;
+        int is_a_map_tile = 0;
 
         int mx = x + ctx->map_x;
         int my = y + ctx->map_y;
@@ -157,20 +207,20 @@ static void wid_editor_update_buttons (void)
                 (y < WID_EDITOR_MENU_MAP_DOWN)) {
                 for (z = 0; z < MAP_DEPTH; z++) {
                     if (ctx->map.tile[mx][my][z].tp) {
-                        over_map_tile = 1;
+                        is_a_map_tile = 1;
                         break;
                     }
                 }
             }
         } else {
             if (ctx->tile[x][y].tile_tp) {
-                over_tile = 1;
+                is_a_tile = 1;
             }
         }
 
         double zoom = 0.002;
         if ((x == ctx->focusx) && (y == ctx->focusy)) {
-            if (!over_map_tile) {
+            if (!is_a_map_tile) {
                 tl.x -= zoom;
                 tl.y -= zoom;
                 br.x += zoom * 2.0;
@@ -186,6 +236,12 @@ static void wid_editor_update_buttons (void)
         wid_set_tl_br_pct(b, tl, br);
         wid_set_color(b, WID_COLOR_TEXT, c);
         wid_set_font(b, font);
+        wid_set_bevel(b, 1);
+
+        c = WHITE;
+        c.a = 20;
+        wid_set_color(b, WID_COLOR_TL, c);
+        wid_set_color(b, WID_COLOR_BR, c);
 
         if ((x < WID_EDITOR_MENU_MAP_ACROSS) && 
             (y < WID_EDITOR_MENU_MAP_DOWN) &&
@@ -195,13 +251,20 @@ static void wid_editor_update_buttons (void)
             wid_set_color(b, WID_COLOR_BG, c);
         } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
             color c = RED;
-            c.a = 200;
+            c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
-        } else if (over_tile) {
+        } else if (is_a_tile) {
+            tpp tp = ctx->tile[x][y].tile_tp;
+
+            if (tp == wid_editor_chosen_tile) {
+                wid_set_color(b, WID_COLOR_TL, RED);
+                wid_set_color(b, WID_COLOR_BR, RED);
+            }
+
             color c = BLACK;
             c.a = 200;
             wid_set_color(b, WID_COLOR_BG, c);
-        } else if (over_map_tile) {
+        } else if (is_a_map_tile) {
             color c = WHITE;
             c.a = 0;
             wid_set_color(b, WID_COLOR_BG, c);
@@ -210,16 +273,7 @@ static void wid_editor_update_buttons (void)
             c.a = 50;
             wid_set_color(b, WID_COLOR_BG, c);
         }
-
-        {
-            wid_set_bevel(b, 1);
-            color c = WHITE;
-            c.a = 20;
-            wid_set_color(b, WID_COLOR_TL, c);
-            wid_set_color(b, WID_COLOR_BR, c);
-        }
-    }
-    }
+    } }
 
     wid_editor_update_edit_mode_buttons();
     wid_update(wid_editor_window);
@@ -836,7 +890,6 @@ static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
     } else if (wid_editor_chosen_tile) {
         if ((x < WID_EDITOR_MENU_MAP_ACROSS) && 
             (y < WID_EDITOR_MENU_MAP_DOWN)) {
-
             switch (ctx->edit_mode) {
             case WID_EDITOR_MODE_DRAW:
                 wid_editor_undo_save();
@@ -859,17 +912,20 @@ static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
             case WID_EDITOR_MODE_DEL:
                 wid_editor_tile_right_button_pressed(w, x, y);
                 break;
-            case WID_EDITOR_MODE_UNDO:
-                CON("undo");
-                wid_editor_undo();
-                break;
-            case WID_EDITOR_MODE_REDO:
-                wid_editor_redo();
-                break;
-            case WID_EDITOR_MODE_NUKE:
-                wid_editor_nuke();
-                break;
             }
+        }
+
+        switch (ctx->edit_mode) {
+        case WID_EDITOR_MODE_UNDO:
+            CON("undo");
+            wid_editor_undo();
+            break;
+        case WID_EDITOR_MODE_REDO:
+            wid_editor_redo();
+            break;
+        case WID_EDITOR_MODE_NUKE:
+            wid_editor_nuke();
+            break;
         }
     }
 }
@@ -919,7 +975,6 @@ static uint8_t wid_editor_mouse_down (widp w,
 
     if (y == WID_EDITOR_MENU_CELLS_DOWN - 1) {
         if (x < WID_EDITOR_MODE_MAX) {
-CON("%d %d",x,y);
             ctx->old_edit_mode = ctx->edit_mode;
             ctx->edit_mode = x;
 
@@ -927,10 +982,9 @@ CON("%d %d",x,y);
             case WID_EDITOR_MODE_DRAW:
             case WID_EDITOR_MODE_LINE:
             case WID_EDITOR_MODE_DEL:
-                break;
             case WID_EDITOR_MODE_FILL:
+                break;
             case WID_EDITOR_MODE_UNDO:
-CON("undo");
             case WID_EDITOR_MODE_REDO:
             case WID_EDITOR_MODE_NUKE:
                 wid_editor_tile_left_button_pressed(w, x, y);
@@ -1035,7 +1089,14 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             ctx->edit_mode = WID_EDITOR_MODE_DEL; 
             return (true);
 
+        case 'z':
+            if (!ctx->tile_mode) {
+                wid_editor_nuke();
+            }
+            return (true);
+
         case SDLK_ESCAPE:
+            wid_editor_hide();
             return (true);
 
         case SDLK_RETURN: {
@@ -1093,6 +1154,7 @@ static uint8_t wid_editor_joy_button (widp w, int mx, int my)
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
         ret = true;
+        wid_editor_hide();
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
         wid_editor_tile_right_button_pressed(w, x, y);
@@ -1469,6 +1531,91 @@ static void wid_editor_tick (widp w)
     wid_editor_update_buttons();
 }
 
+static void wid_editor_save (const char *dir_and_file)
+{
+    wid_editor_ctx *ed = wid_editor_window_ctx;
+
+    LOG("Saving: %s", dir_and_file);
+
+    /*
+     * Write the file.
+     */
+    marshal_p ctx;
+    ctx = marshal(dir_and_file);
+
+    marshal_level(ctx, ed->level);
+
+    PUT_BRA(ctx);
+
+    PUT_NAMED_UINT32(ctx, "width", MAP_WIDTH);
+    PUT_NAMED_UINT32(ctx, "height", MAP_HEIGHT);
+
+    int x, y, z;
+
+    for (z = 0; z < MAP_DEPTH; z++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            for (y = 0; y < MAP_HEIGHT; y++) {
+
+                tpp tp = ed->map.tile[x][y][z].tp;
+                if (!tp) {
+                    continue;
+                }
+
+                PUT_BRA(ctx);
+
+                PUT_NAMED_UINT32(ctx, "x", x);
+                PUT_NAMED_UINT32(ctx, "y", y);
+                PUT_NAMED_STRING(ctx, "t", tp_name(tp));
+
+                PUT_KET(ctx);
+            }
+        }
+    }
+
+    PUT_KET(ctx);
+    PUT_KET(ctx); // level
+
+    if (marshal_fini(ctx) < 0) {
+        /*
+         * Fail
+         */
+        char *popup_str = dynprintf("Failed to save %s: %s", dir_and_file,
+                                    strerror(errno));
+
+        MSG_BOX("%s", popup_str);
+        myfree(popup_str);
+    } else {
+        /*
+         * Success
+         */
+        char *popup_str = dynprintf("Saved %s", dir_and_file);
+
+        widp popup = wid_tooltip_simple(popup_str);
+        wid_destroy_in(popup, ONESEC);
+        myfree(popup_str);
+
+        LOG("Saved: %s", dir_and_file);
+    }
+}
+
+static void wid_editor_hide (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    level_pos_t level_pos = ctx->level_pos;
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.y, level_pos.x);
+    LOG("Save editor level %s", tmp);
+    wid_editor_save(tmp);
+    myfree(tmp);
+
+    wid_destroy(&wid_editor_background);
+    wid_destroy(&wid_editor_window);
+
+    wid_map();
+}
+
 void wid_editor (level_pos_t level_pos)
 {
     /*
@@ -1480,6 +1627,7 @@ void wid_editor (level_pos_t level_pos)
 
     ctx->focusx = -1;
     ctx->focusy = -1;
+    ctx->level_pos = level_pos;
 
     widp window;
     ctx->w = wid_editor_window = window = wid_new_window("wid editor");
@@ -1532,24 +1680,51 @@ void wid_editor (level_pos_t level_pos)
             switch (x) {
             case WID_EDITOR_MODE_DRAW:
                 wid_set_text(b, "Draw");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "D - shortcut", vsmall_font);
+                }
                 break;
             case WID_EDITOR_MODE_LINE:
                 wid_set_text(b, "Line");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "L - shortcut", vsmall_font);
+                }
                 break;
             case WID_EDITOR_MODE_FILL:
                 wid_set_text(b, "Fill");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "F - shortcut", vsmall_font);
+                }
                 break;
             case WID_EDITOR_MODE_DEL:
                 wid_set_text(b, "Del");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "X - shortcut", vsmall_font);
+                }
                 break;
             case WID_EDITOR_MODE_UNDO:
                 wid_set_text(b, "Undo");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "U - shortcut", vsmall_font);
+                }
                 break;
             case WID_EDITOR_MODE_REDO:
                 wid_set_text(b, "Redo");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "R - shortcut", vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_TOGGLE:
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "TAB - shortcut", vsmall_font);
+                }
                 break;
             case WID_EDITOR_MODE_NUKE:
                 wid_set_text(b, "Nuke");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Z - shortcut. Destroy level.", 
+                                    vsmall_font);
+                }
                 break;
             }
             }
