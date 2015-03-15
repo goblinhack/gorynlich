@@ -1,4 +1,8 @@
 --------------------------------------- plan for mar --------------------------------------
+- editor revamp undo mode
+- editor revamp test level
+- editor revamp back menu
+- editor revamp option to save
 - move level 1,1 to top left corner
 - editting a level for second time does not load it
 - default focus on map should be first level
@@ -68,6 +72,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sun Mar 15 12:45:55 EDT 2015
+- editor revamp in progress - fill and line draw done
 
 Thu Mar 12 22:02:16 EDT 2015
 - wheel scroll seems backwards?
