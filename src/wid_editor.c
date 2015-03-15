@@ -25,6 +25,7 @@
 #include "tile.h"
 #include "marshal.h"
 #include "wid_map.h"
+#include "wid_menu.h"
 #include "string_util.h"
 
 static void wid_editor_hide(void);
@@ -1367,14 +1368,15 @@ static void wid_editor_bg_create (void)
     }
 }
 
+static int tile_x;
+static int tile_y;
+
 static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     verify(ctx);
     verify(ctx->w);
 
-    static int x;
-    static int y;
     tpp tp;
 
     tp = (typeof(tp)) 
@@ -1384,17 +1386,17 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
         return (true);
     }
 
-    ctx->tile[x][y].tile_tp = tp;
+    ctx->tile[tile_x][tile_y].tile_tp = tp;
 
-    x++;
+    tile_x++;
 
-    if (x >= WID_EDITOR_MENU_TILES_ACROSS) {
-        x = 0;
-        y++;
+    if (tile_x >= WID_EDITOR_MENU_TILES_ACROSS) {
+        tile_x = 0;
+        tile_y++;
     }
 
-    if (y >= WID_EDITOR_MENU_TILES_DOWN) {
-        y++;
+    if (tile_y >= WID_EDITOR_MENU_TILES_DOWN) {
+        tile_y++;
         DIE("too many tiles; implement a scrollbar neil");
     }
 
@@ -1403,6 +1405,9 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
 
 static void wid_editor_load_tiles (void)
 {
+    tile_x = 0;
+    tile_y = 0;
+
     tree_walk(thing_templates_create_order,
               wid_editor_load_tile, 0 /* arg */);
 }
@@ -1598,7 +1603,20 @@ static void wid_editor_save (const char *dir_and_file)
     }
 }
 
-static void wid_editor_hide (void)
+static widp wid_editor_save_popup;
+
+static void wid_editor_save_callback_cleanup (widp w)
+{
+    wid_destroy(&wid_editor_background);
+    wid_destroy(&wid_editor_window);
+    wid_map();
+
+    widp top = wid_get_top_parent(w);
+    wid_destroy(&top);
+    wid_editor_save_popup = 0;
+}
+
+static void wid_editor_save_callback_yes (widp w)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     verify(ctx);
@@ -1610,10 +1628,40 @@ static void wid_editor_hide (void)
     wid_editor_save(tmp);
     myfree(tmp);
 
-    wid_destroy(&wid_editor_background);
-    wid_destroy(&wid_editor_window);
+    wid_editor_save_callback_cleanup(w);
+}
 
-    wid_map();
+static void wid_editor_save_callback_no (widp w)
+{
+    wid_editor_save_callback_cleanup(w);
+}
+
+static void wid_editor_save_ask (void)
+{
+    wid_editor_save_popup = 
+        wid_menu(0,
+                vvlarge_font,
+                large_font,
+                0.5, /* x */
+                0.5, /* y */
+                1, /* columns */
+                1, /* focus */
+                3, /* items */
+
+                (int) 0, "save level?", (void*) 0,
+
+                (int) 'y', "Yes", wid_editor_save_callback_yes,
+
+                (int) 'n', "No",  wid_editor_save_callback_no);
+}
+
+static void wid_editor_hide (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    wid_editor_save_ask();
 }
 
 void wid_editor (level_pos_t level_pos)
