@@ -72,6 +72,7 @@ typedef struct {
         tile[WID_EDITOR_MENU_CELLS_ACROSS][WID_EDITOR_MENU_CELLS_DOWN];
     wid_editor_map_tile 
         map_tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    int map_highlight[MAP_WIDTH][MAP_HEIGHT];
 
     /*
      * Just created?
