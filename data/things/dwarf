@@ -1,6 +1,6 @@
 {
  short_name="Dwarf"
- tooltip="Get now.\n\n%%fg=brown$In -short- supply.\n\nBest health and axe combo."
+ tooltip="Dwarf"
  carrying={
     "data/things/axe1"
     "data/things/torches"

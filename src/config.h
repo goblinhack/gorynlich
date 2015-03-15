@@ -9,8 +9,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#undef ENABLE_LEAKCHECK           // Memory leak check
-#undef ENABLE_PTRCHECK            // Check validity of pointers too
+#define ENABLE_LEAKCHECK           // Memory leak check
+#define ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -140,8 +140,6 @@
 #define TILES_SCREEN_HEIGHT          12
 #define TILES_SCREEN_EDITOR_WIDTH    24
 #define TILES_SCREEN_EDITOR_HEIGHT   18
-#define WID_EDITOR_MENU_TILES_ACROSS 14
-#define WID_EDITOR_MENU_TILES_DOWN   10
 
 /*
  * Padding for tiles on the edge of the smooth scroll. Has to be quite wide so 

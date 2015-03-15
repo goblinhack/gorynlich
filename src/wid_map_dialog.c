@@ -101,7 +101,7 @@ static void wid_map_dialog_create (const char *title)
                 "Back", 
                 wid_map_dialog_callback_close);
 
-    wid_set_on_display(wid_map_dialog, wid_map_preview_thumbnail);
+    wid_set_on_display_top_level(wid_map_dialog, wid_map_preview_thumbnail);
 }
 
 static void wid_map_dialog_destroy (void)

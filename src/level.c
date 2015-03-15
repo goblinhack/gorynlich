@@ -19,7 +19,6 @@
 #include "wid_game_map_server.h"
 #include "wid_game_map_client.h"
 #include "wid_map.h"
-#include "wid_editor_map.h"
 #include "map.h"
 #include "timer.h"
 #include "sound.h"
@@ -288,7 +287,8 @@ levelp level_load (level_pos_t level_pos,
 
     myfree(dir_and_file);
 
-    if (!level_is_map_editor(level)) {
+    if (!level_is_map_editor(level) &&
+        !level_is_editor(level)) {
         level_update_now(level);
     }
 
@@ -1382,7 +1382,7 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
                                 wid_editor_level_map_thing_replace_template);
     } else if (level_is_editor(level)) {
         rc = demarshal_wid_grid(ctx, wid,
-                                wid_editor_map_thing_replace_template);
+                                wid_editor_replace_template);
     } else {
         rc = demarshal_wid_grid(ctx, wid,
                                 wid_game_map_server_replace_tile);
@@ -1395,8 +1395,9 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
          * No widget to update
          */
     } else if (level_is_editor(level)) {
-        map_fixup(level);
-        wid_update(wid_editor_map_grid_container);
+        /*
+         * No widget to update
+         */
     } else {
         map_fixup(level);
         wid_update(wid_game_map_server_grid_container);
