@@ -27,12 +27,14 @@
 #include "wid_map.h"
 #include "wid_menu.h"
 #include "string_util.h"
+#include "bits.h"
 
 static void wid_editor_hide(void);
 static void wid_editor_tile_right_button_pressed(widp w, int x, int y);
 static void wid_editor_set_focus(wid_editor_ctx *ctx, int focusx, int focusy);
 static void wid_editor_map_scroll(int dx, int dy);
 static void wid_editor_undo_save(void);
+static void wid_editor_save_level(void);
 
 static widp wid_editor_window;
 static widp wid_editor_background;
@@ -78,6 +80,265 @@ widp wid_editor_replace_template (widp w,
     ctx->map.tile[ix][iy][z].tp = tp;
 
     return (0);
+}
+
+static tpp map_find_wall_at (int x, int y)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    tpp tp = ctx->map.tile[x][y][MAP_DEPTH_WALL].tp;
+    if (tp && tp_is_wall(tp)) {
+        return (tp);
+    }
+
+    return (0);
+}
+
+static tpp map_find_pipe_at (int x, int y)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    tpp tp = ctx->map.tile[x][y][MAP_DEPTH_WALL].tp;
+    if (tp && tp_is_pipe(tp)) {
+        return (tp);
+    }
+
+    return (0);
+}
+
+static tpp map_find_door_at (int x, int y)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    tpp tp = ctx->map.tile[x][y][MAP_DEPTH_WALL].tp;
+    if (tp && tp_is_door(tp)) {
+        return (tp);
+    }
+
+    return (0);
+}
+
+static void map_fixup (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    int32_t index;
+    tilep tile;
+    int32_t x;
+    int32_t y;
+    int32_t dx;
+    int32_t dy;
+    tpp nbrs[3][3];
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+
+            ctx->map_tile[x][y] = 0;
+
+            int ok = false;
+
+            if (map_find_wall_at(x, y)) {
+                ok = true;
+            } else if (map_find_pipe_at(x, y)) {
+                ok = true;
+            } else if (map_find_door_at(x, y)) {
+                ok = true;
+            }
+
+            if (!ok) {
+                continue;
+            }
+
+            memset(nbrs, 0, sizeof(nbrs));
+
+            for (dx = -1; dx <= 1; dx++) {
+                for (dy = -1; dy <= 1; dy++) {
+
+                    if (map_find_wall_at(x, y)) {
+                        nbrs[dx + 1][dy + 1] = map_find_wall_at(x + dx, y + dy);
+                    }
+
+                    if (map_find_pipe_at(x, y)) {
+                        nbrs[dx + 1][dy + 1] = map_find_pipe_at(x + dx, y + dy);
+                    }
+
+                    if (map_find_door_at(x, y)) {
+                        nbrs[dx + 1][dy + 1] = map_find_door_at(x + dx, y + dy);
+                    }
+                }
+            }
+
+            tpp a = nbrs[0][0];
+            tpp b = nbrs[1][0];
+            tpp c = nbrs[2][0];
+            tpp d = nbrs[0][1];
+            tpp e = nbrs[1][1];
+            tpp f = nbrs[2][1];
+            tpp g = nbrs[0][2];
+            tpp h = nbrs[1][2];
+            tpp i = nbrs[2][2];
+
+            uint8_t A = (a != 0) ? 1 : 0;
+            uint8_t B = (b != 0) ? 1 : 0;
+            uint8_t C = (c != 0) ? 1 : 0;
+            uint8_t D = (d != 0) ? 1 : 0;
+            uint8_t E = (e != 0) ? 1 : 0;
+            uint8_t F = (f != 0) ? 1 : 0;
+            uint8_t G = (g != 0) ? 1 : 0;
+            uint8_t H = (h != 0) ? 1 : 0;
+            uint8_t I = (i != 0) ? 1 : 0;
+
+            const uint16_t omask =
+                (I << 8) | (H << 7) | (G << 6) | (F << 5) |
+                (E << 4) | (D << 3) | (C << 2) | (B << 1) |
+                (A << 0);
+
+            uint8_t score;
+            uint8_t best = 0;
+
+            index = -1;
+
+            uint16_t mask;
+
+#define BLOCK(a,b,c,d,e,f,g,h,i, _index_)                               \
+            mask =                                                      \
+                (i << 8) | (h << 7) | (g << 6) | (f << 5) |             \
+                (e << 4) | (d << 3) | (c << 2) | (b << 1) |             \
+                (a << 0);                                               \
+                                                                        \
+            if ((mask & omask) == mask) {                               \
+                uint32_t difference = mask ^ omask;                     \
+                BITCOUNT(difference);                                   \
+                score = 32 - difference;                                \
+                if (score > best) {                                     \
+                    best = score;                                       \
+                    index = _index_;                                    \
+                }                                                       \
+            }                                                           \
+
+            BLOCK(1,1,1,1,1,1,1,1,1,IS_JOIN_BLOCK)
+            BLOCK(0,0,0,0,1,0,0,0,0,IS_JOIN_NODE)
+            BLOCK(0,0,0,0,1,1,0,0,0,IS_JOIN_LEFT)
+            BLOCK(0,0,0,0,1,0,0,1,0,IS_JOIN_TOP)
+            BLOCK(0,0,0,1,1,0,0,0,0,IS_JOIN_RIGHT)
+            BLOCK(0,1,0,0,1,0,0,0,0,IS_JOIN_BOT)
+            BLOCK(0,0,0,1,1,1,0,0,0,IS_JOIN_HORIZ)
+            BLOCK(0,1,0,0,1,0,0,1,0,IS_JOIN_VERT)
+            BLOCK(0,0,0,0,1,1,0,1,1,IS_JOIN_TL2)
+            BLOCK(0,1,1,0,1,1,0,0,0,IS_JOIN_BL2)
+            BLOCK(1,1,0,1,1,0,0,0,0,IS_JOIN_BR2)
+            BLOCK(0,0,0,1,1,0,1,1,0,IS_JOIN_TR2)
+            BLOCK(0,0,0,0,1,1,0,1,0,IS_JOIN_TL)
+            BLOCK(0,1,0,0,1,1,0,0,0,IS_JOIN_BL)
+            BLOCK(0,1,0,1,1,0,0,0,0,IS_JOIN_BR)
+            BLOCK(0,0,0,1,1,0,0,1,0,IS_JOIN_TR)
+            BLOCK(1,1,0,1,1,0,1,1,0,IS_JOIN_T90_3)
+            BLOCK(1,1,1,1,1,1,0,0,0,IS_JOIN_T180_3)
+            BLOCK(0,1,1,0,1,1,0,1,1,IS_JOIN_T270_3)
+            BLOCK(0,0,0,1,1,1,1,1,1,IS_JOIN_T_3)
+            BLOCK(0,1,0,0,1,1,0,1,0,IS_JOIN_T270)
+            BLOCK(0,1,0,1,1,1,0,0,0,IS_JOIN_T180)
+            BLOCK(0,1,0,1,1,0,0,1,0,IS_JOIN_T90)
+            BLOCK(0,0,0,1,1,1,0,1,0,IS_JOIN_T)
+            BLOCK(0,1,1,0,1,1,0,1,0,IS_JOIN_T270_2)
+            BLOCK(1,1,0,1,1,1,0,0,0,IS_JOIN_T180_2)
+            BLOCK(0,1,0,1,1,0,1,1,0,IS_JOIN_T90_2)
+            BLOCK(0,0,0,1,1,1,0,1,1,IS_JOIN_T_2)
+            BLOCK(0,1,0,0,1,1,0,1,1,IS_JOIN_T270_1)
+            BLOCK(0,1,1,1,1,1,0,0,0,IS_JOIN_T180_1)
+            BLOCK(1,1,0,1,1,0,0,1,0,IS_JOIN_T90_1)
+            BLOCK(0,0,0,1,1,1,1,1,0,IS_JOIN_T_1)
+            BLOCK(0,1,0,1,1,1,0,1,0,IS_JOIN_X)
+            BLOCK(0,1,0,1,1,1,0,1,1,IS_JOIN_X1)
+            BLOCK(0,1,1,1,1,1,0,1,0,IS_JOIN_X1_270)
+            BLOCK(1,1,0,1,1,1,0,1,0,IS_JOIN_X1_180)
+            BLOCK(0,1,0,1,1,1,1,1,0,IS_JOIN_X1_90)
+            BLOCK(0,1,0,1,1,1,1,1,1,IS_JOIN_X2)
+            BLOCK(0,1,1,1,1,1,0,1,1,IS_JOIN_X2_270)
+            BLOCK(1,1,1,1,1,1,0,1,0,IS_JOIN_X2_180)
+            BLOCK(1,1,0,1,1,1,1,1,0,IS_JOIN_X2_90)
+            BLOCK(0,1,1,1,1,1,1,1,0,IS_JOIN_X3)
+            BLOCK(1,1,0,1,1,1,0,1,1,IS_JOIN_X3_180)
+            BLOCK(0,1,1,1,1,1,1,1,1,IS_JOIN_X4)
+            BLOCK(1,1,1,1,1,1,0,1,1,IS_JOIN_X4_270)
+            BLOCK(1,1,1,1,1,1,1,1,0,IS_JOIN_X4_180)
+            BLOCK(1,1,0,1,1,1,1,1,1,IS_JOIN_X4_90)
+
+            /*
+             * Single node doors need to join onto walls.
+             */
+            if (index == IS_JOIN_NODE) {
+                if (map_find_door_at(x, y)) {
+                    if ( map_find_wall_at(x - 1, y) &&
+                         map_find_wall_at(x + 1, y) &&
+                        !map_find_wall_at(x, y - 1) &&
+                        !map_find_wall_at(x, y + 1)) {
+                        index = IS_JOIN_HORIZ2;
+                    }
+                }
+            }
+
+            if (index == IS_JOIN_NODE) {
+                if (map_find_door_at(x, y)) {
+                    if (!map_find_wall_at(x - 1, y) &&
+                        !map_find_wall_at(x + 1, y) &&
+                         map_find_wall_at(x, y - 1) &&
+                         map_find_wall_at(x, y + 1)) {
+                        index = IS_JOIN_VERT2;
+                    }
+                }
+            }
+
+            if (index == -1) {
+                DIE("%u%u%u %u%u%u %u%u%u not handled",
+                    a ? 1 : 0,
+                    b ? 1 : 0,
+                    c ? 1 : 0,
+                    d ? 1 : 0,
+                    e ? 1 : 0,
+                    f ? 1 : 0,
+                    g ? 1 : 0,
+                    h ? 1 : 0,
+                    i ? 1 : 0);
+            }
+
+            tpp t = e;
+
+            thing_tilep thing_tile = thing_tile_find(t, index, &tile);
+            if (!thing_tile) {
+                index = IS_JOIN_BLOCK;
+
+                thing_tile = thing_tile_find(t, index, &tile);
+                if (!thing_tile) {
+                    index = IS_JOIN_NODE;
+
+                    thing_tile = thing_tile_find(t, index, &tile);
+                    if (!thing_tile) {
+                        DIE("no joinable tile for %s", tp_name(t));
+                    }
+                }
+            }
+
+            if (!tile) {
+                DIE("no tile for %s", tp_name(t));
+            }
+
+            const char *tilename = thing_tile_name(thing_tile);
+
+            if (!tilename) {
+                DIE("no tilename for %s", tp_name(e));
+            }
+
+            tilep tile = tile_find(tilename);
+            if (!tile) {
+                ERR("cannot find tilep for tile %s", tilename);
+            }
+
+            ctx->map_tile[x][y] = tile;
+        }
+    }
 }
 
 /*
@@ -240,7 +501,7 @@ static void wid_editor_update_buttons (void)
         wid_set_bevel(b, 1);
 
         c = WHITE;
-        c.a = 20;
+        c.a = 10;
         wid_set_color(b, WID_COLOR_TL, c);
         wid_set_color(b, WID_COLOR_BR, c);
 
@@ -263,7 +524,7 @@ static void wid_editor_update_buttons (void)
             }
 
             color c = BLACK;
-            c.a = 200;
+            c.a = 0;
             wid_set_color(b, WID_COLOR_BG, c);
         } else if (is_a_map_tile) {
             color c = WHITE;
@@ -322,8 +583,10 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
             ERR("cannot find tilep for tile %s", tilename);
         }
 
+        blit_init();
         glcolor(WHITE);
         tile_blit_fat(tile, 0, tl, br);
+        blit_flush();
         return;
     }
 
@@ -345,8 +608,8 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
     double width = br.x - tl.x;
     double height = br.y - tl.y;
 
-    width *= 1.25;
-    height *= 1.25;
+    width *= 1.5;
+    height *= 1.5;
 
     br.x = tl.x + width;
     tl.y = br.y - height;
@@ -360,12 +623,21 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
             continue;
         }
 
+        if (z == MAP_DEPTH_WALL) {
+            tilep tile = ctx->map_tile[x][y];
+            if (tile) {
+                glcolor(WHITE);
+                tile_blit_fat(tile, 0, tl, br);
+                continue;
+            }
+        }
+
         thing_tilep thing_tile;
         tree_rootp tiles;
 
         tiles = tp_get_tiles(tp);
         if (!tiles) {
-            return;
+            continue;
         }
 
         thing_tile = thing_tile_first(tiles);
@@ -647,6 +919,8 @@ static void wid_editor_draw_line (int x0, int y0, int x1, int y1)
     } else {
         do_wid_editor_line(-y0, x0, -y1, x1, 2);
     }
+
+    map_fixup();
 }
 
 static void do_wid_editor_highlight_line (int x0_in, 
@@ -769,6 +1043,7 @@ static void wid_editor_undo (void)
     }
 
     memcpy(&ctx->map, &ctx->map_undo[ctx->undo_at], sizeof(ctx->map));
+    map_fixup();
 }
 
 static void wid_editor_redo (void)
@@ -787,6 +1062,7 @@ static void wid_editor_redo (void)
     }
 
     memcpy(&ctx->map, &ctx->map_undo[ctx->undo_at], sizeof(ctx->map));
+    map_fixup();
 }
 
 static void wid_editor_nuke (void)
@@ -796,6 +1072,7 @@ static void wid_editor_nuke (void)
     wid_editor_undo_save();
 
     memset(&ctx->map, 0, sizeof(ctx->map));
+    map_fixup();
 }
 
 static void wid_editor_tile_fill_ (int x, int y)
@@ -862,6 +1139,7 @@ static void wid_editor_tile_fill (int x, int y)
 {
     wid_editor_undo_save();
     wid_editor_tile_fill_(x, y);
+    map_fixup();
 }
 
 static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
@@ -888,46 +1166,58 @@ static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
             wid_editor_chosen_tile = tp;
             return;
         }
-    } else if (wid_editor_chosen_tile) {
-        if ((x < WID_EDITOR_MENU_MAP_ACROSS) && 
-            (y < WID_EDITOR_MENU_MAP_DOWN)) {
-            switch (ctx->edit_mode) {
-            case WID_EDITOR_MODE_DRAW:
-                wid_editor_undo_save();
-                wid_editor_map_thing_replace(mx, my);
-                break;
-            case WID_EDITOR_MODE_LINE:
-                if (!ctx->got_line_start) {
-                    ctx->got_line_start = true;
-                    ctx->line_start_x = mx;
-                    ctx->line_start_y = my;
-                } else {
-                    wid_editor_draw_line(ctx->line_start_x, 
-                                         ctx->line_start_y, mx, my);
-                    ctx->got_line_start = false;
+    } else {
+        if (wid_editor_chosen_tile) {
+            if ((x < WID_EDITOR_MENU_MAP_ACROSS) && 
+                (y < WID_EDITOR_MENU_MAP_DOWN)) {
+                switch (ctx->edit_mode) {
+                case WID_EDITOR_MODE_DRAW:
+                    wid_editor_undo_save();
+                    wid_editor_map_thing_replace(mx, my);
+                    map_fixup();
+                    break;
+                case WID_EDITOR_MODE_LINE:
+                    if (!ctx->got_line_start) {
+                        ctx->got_line_start = true;
+                        ctx->line_start_x = mx;
+                        ctx->line_start_y = my;
+                    } else {
+                        wid_editor_draw_line(ctx->line_start_x, 
+                                            ctx->line_start_y, mx, my);
+                        ctx->got_line_start = false;
+                    }
+                    break;
+                case WID_EDITOR_MODE_FILL:
+                    wid_editor_tile_fill(mx, my);
+                    break;
+                case WID_EDITOR_MODE_DEL:
+                    wid_editor_tile_right_button_pressed(w, x, y);
+                    break;
                 }
-                break;
-            case WID_EDITOR_MODE_FILL:
-                wid_editor_tile_fill(mx, my);
-                break;
-            case WID_EDITOR_MODE_DEL:
-                wid_editor_tile_right_button_pressed(w, x, y);
-                break;
             }
         }
+    }
 
-        switch (ctx->edit_mode) {
-        case WID_EDITOR_MODE_UNDO:
-            CON("undo");
-            wid_editor_undo();
-            break;
-        case WID_EDITOR_MODE_REDO:
-            wid_editor_redo();
-            break;
-        case WID_EDITOR_MODE_NUKE:
-            wid_editor_nuke();
-            break;
-        }
+    switch (ctx->edit_mode) {
+    case WID_EDITOR_MODE_UNDO:
+        ctx->tile_mode = false;
+        wid_editor_undo();
+        break;
+    case WID_EDITOR_MODE_REDO:
+        ctx->tile_mode = false;
+        wid_editor_redo();
+        break;
+    case WID_EDITOR_MODE_TOGGLE:
+        wid_editor_tile_mode_toggle();
+        break;
+    case WID_EDITOR_MODE_SAVE:
+        ctx->tile_mode = false;
+        wid_editor_save_level();
+        break;
+    case WID_EDITOR_MODE_NUKE:
+        ctx->tile_mode = false;
+        wid_editor_nuke();
+        break;
     }
 }
 
@@ -957,7 +1247,9 @@ static void wid_editor_tile_right_button_pressed (widp w, int x, int y)
             for (z = MAP_DEPTH - 1; z > 0; z--) {
                 tpp tp = ctx->map.tile[mx][my][z].tp;
                 if (tp) {
+                    wid_editor_undo_save();
                     ctx->map.tile[mx][my][z].tp = 0;
+                    map_fixup();
                     return;
                 }
             }
@@ -988,6 +1280,8 @@ static uint8_t wid_editor_mouse_down (widp w,
             case WID_EDITOR_MODE_UNDO:
             case WID_EDITOR_MODE_REDO:
             case WID_EDITOR_MODE_NUKE:
+            case WID_EDITOR_MODE_SAVE:
+            case WID_EDITOR_MODE_TOGGLE:
                 wid_editor_tile_left_button_pressed(w, x, y);
                 ctx->edit_mode = ctx->old_edit_mode;
                 break;
@@ -1040,12 +1334,16 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
         break;
     }
 
+    ctx->old_edit_mode = ctx->edit_mode;
+
     switch (key->sym) {
         case '`':
             return (false);
 
         case '\t':
-            wid_editor_tile_mode_toggle();
+            ctx->edit_mode = WID_EDITOR_MODE_TOGGLE; 
+            wid_editor_tile_left_button_pressed(w, x, y);
+            ctx->edit_mode = ctx->old_edit_mode; 
             return (true);
 
         case ' ':
@@ -1060,18 +1358,20 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             ctx->edit_mode = WID_EDITOR_MODE_LINE; 
             return (true);
 
+        case 's':
+            ctx->edit_mode = WID_EDITOR_MODE_SAVE; 
+            wid_editor_tile_left_button_pressed(w, x, y);
+            ctx->edit_mode = ctx->old_edit_mode; 
+            return (true);
+
         case 'd':
             ctx->edit_mode = WID_EDITOR_MODE_DRAW; 
             return (true);
 
         case 'f':
-            if (ctx->tile_mode) {
-                ctx->edit_mode = WID_EDITOR_MODE_FILL; 
-            } else {
-                int mx = x + ctx->map_x;
-                int my = y + ctx->map_y;
-                wid_editor_tile_fill(mx, my);
-            }
+            ctx->edit_mode = WID_EDITOR_MODE_FILL; 
+            wid_editor_tile_left_button_pressed(w, x, y);
+            ctx->edit_mode = ctx->old_edit_mode; 
             return (true);
 
         case 'u':
@@ -1594,8 +1894,7 @@ static void wid_editor_save (const char *dir_and_file)
          * Success
          */
         char *popup_str = dynprintf("Saved %s", dir_and_file);
-
-        widp popup = wid_tooltip_simple(popup_str);
+        widp popup = wid_tooltip(popup_str, 0.5f, 0.5f, med_font);
         wid_destroy_in(popup, ONESEC);
         myfree(popup_str);
 
@@ -1603,25 +1902,23 @@ static void wid_editor_save (const char *dir_and_file)
     }
 }
 
+static void wid_editor_go_back (void)
+{
+    wid_destroy(&wid_editor_background);
+    wid_destroy(&wid_editor_window);
+    wid_map();
+}
+
 static widp wid_editor_save_popup;
 
-static void wid_editor_save_callback_close_popup (widp w)
+static void wid_editor_save_close_dialog (widp w)
 {
     widp top = wid_get_top_parent(w);
     wid_destroy(&top);
     wid_editor_save_popup = 0;
 }
 
-static void wid_editor_save_callback_cleanup (widp w)
-{
-    wid_destroy(&wid_editor_background);
-    wid_destroy(&wid_editor_window);
-    wid_map();
-
-    wid_editor_save_callback_close_popup(w);
-}
-
-static void wid_editor_save_callback_yes (widp w)
+static void wid_editor_save_level (void)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     verify(ctx);
@@ -1632,18 +1929,27 @@ static void wid_editor_save_callback_yes (widp w)
     LOG("Save editor level %s", tmp);
     wid_editor_save(tmp);
     myfree(tmp);
+}
 
-    wid_editor_save_callback_cleanup(w);
+static void wid_editor_save_callback_yes (widp w)
+{
+    wid_editor_save_level();
+
+    wid_editor_save_close_dialog(w);
+
+    wid_editor_go_back();
 }
 
 static void wid_editor_save_callback_no (widp w)
 {
-    wid_editor_save_callback_cleanup(w);
+    wid_editor_save_close_dialog(w);
+
+    wid_editor_go_back();
 }
 
 static void wid_editor_save_callback_cancel (widp w)
 {
-    wid_editor_save_callback_close_popup(w);
+    wid_editor_save_close_dialog(w);
 }
 
 static void wid_editor_save_ask (void)
@@ -1704,7 +2010,7 @@ void wid_editor (level_pos_t level_pos)
         wid_set_tl_br_pct(window, tl, br);
 
         color c = BLACK;
-        c.a = 100;
+        c.a = 0;
         wid_set_color(window, WID_COLOR_BG, c);
 
         wid_set_on_tick(window, wid_editor_tick);
@@ -1774,6 +2080,12 @@ void wid_editor (level_pos_t level_pos)
                     wid_set_tooltip(b, "R - shortcut", vsmall_font);
                 }
                 break;
+            case WID_EDITOR_MODE_SAVE:
+                wid_set_text(b, "Save");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "s - shortcut", vsmall_font);
+                }
+                break;
             case WID_EDITOR_MODE_TOGGLE:
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "TAB - shortcut", vsmall_font);
@@ -1814,6 +2126,8 @@ void wid_editor (level_pos_t level_pos)
      */
     wid_editor_load_map(level_pos);
 
+    map_fixup();
+
     /*
      * Repair the context so it is not pointing at the last level loaded.
      */
@@ -1827,4 +2141,6 @@ void wid_editor (level_pos_t level_pos)
 
     ctx->created = time_get_time_ms();
     ctx->tile_mode = 1;
+
+    ctx->edit_mode = WID_EDITOR_MODE_DRAW;
 }
