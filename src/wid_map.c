@@ -235,7 +235,8 @@ static uint8_t wid_map_parent_key_down (widp w, const SDL_KEYSYM *key)
             (ctx->cancelled)(ctx->w);
             return (true);
 
-        case SDLK_RETURN: {
+        case ' ': 
+        case SDLK_RETURN: 
             (ctx->selected)(ctx->w);
             return (true);
 
@@ -265,7 +266,6 @@ static uint8_t wid_map_parent_key_down (widp w, const SDL_KEYSYM *key)
 
         default:
             return (true);
-        }
     }
 
     return (true);
@@ -357,6 +357,7 @@ static uint8_t wid_map_button_key_event (widp w, const SDL_KEYSYM *key)
             (ctx->cancelled)(ctx->w);
             return (true);
 
+        case ' ':
         case SDLK_RETURN:
             (ctx->selected)(ctx->w);
             return (true);
