@@ -1,16 +1,14 @@
 --------------------------------------- plan for mar --------------------------------------
-- editor revamp undo mode
-- editor revamp test level
-- editor revamp back menu
-- editor revamp option to save
-- move level 1,1 to top left corner
-- editting a level for second time does not load it
-- default focus on map should be first level
-- hitting enter on editor menu does nothhing
-- add level exit marshalling
+- create tabs for monst/floor/wall
+- need test level shortcut
 - choose exit in editor
-- draw joined levels
+- add level exit marshalling
+- button for groups
+- button for directions
+- button to create template level
+- default focus on map should be first level
 - add level traps
+- draw joined levels
 - level rotate button
 - level randomize button
 - remove gothic and window textures - no longer needed
@@ -72,6 +70,14 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sun Mar 15 20:03:42 EDT 2015
+- hitting enter on editor menu does nothhing
+- editor revamp undo mode
+- editor revamp back menu
+- editor revamp option to save
+- hit space to select level on map
+- editting a level for second time does not load it
 
 Sun Mar 15 12:45:55 EDT 2015
 - editor revamp in progress - fill and line draw done

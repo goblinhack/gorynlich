@@ -1605,15 +1605,20 @@ static void wid_editor_save (const char *dir_and_file)
 
 static widp wid_editor_save_popup;
 
+static void wid_editor_save_callback_close_popup (widp w)
+{
+    widp top = wid_get_top_parent(w);
+    wid_destroy(&top);
+    wid_editor_save_popup = 0;
+}
+
 static void wid_editor_save_callback_cleanup (widp w)
 {
     wid_destroy(&wid_editor_background);
     wid_destroy(&wid_editor_window);
     wid_map();
 
-    widp top = wid_get_top_parent(w);
-    wid_destroy(&top);
-    wid_editor_save_popup = 0;
+    wid_editor_save_callback_close_popup(w);
 }
 
 static void wid_editor_save_callback_yes (widp w)
@@ -1636,6 +1641,11 @@ static void wid_editor_save_callback_no (widp w)
     wid_editor_save_callback_cleanup(w);
 }
 
+static void wid_editor_save_callback_cancel (widp w)
+{
+    wid_editor_save_callback_close_popup(w);
+}
+
 static void wid_editor_save_ask (void)
 {
     wid_editor_save_popup = 
@@ -1646,13 +1656,15 @@ static void wid_editor_save_ask (void)
                 0.5, /* y */
                 1, /* columns */
                 1, /* focus */
-                3, /* items */
+                4, /* items */
 
                 (int) 0, "save level?", (void*) 0,
 
                 (int) 'y', "Yes", wid_editor_save_callback_yes,
 
-                (int) 'n', "No",  wid_editor_save_callback_no);
+                (int) 'n', "No",  wid_editor_save_callback_no,
+
+                (int) 'c', "Cancel",  wid_editor_save_callback_cancel);
 }
 
 static void wid_editor_hide (void)
@@ -1809,10 +1821,8 @@ void wid_editor (level_pos_t level_pos)
 
     wid_editor_update_buttons();
     wid_update(window);
-    wid_raise(window);
     wid_editor_update_buttons();
     wid_update(window);
-    wid_raise(window);
     wid_editor_bg_create();
 
     ctx->created = time_get_time_ms();

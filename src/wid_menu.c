@@ -479,7 +479,7 @@ static uint8_t wid_menu_key_event (widp w, const SDL_KEYSYM *key)
             int i;
 
             /*
-             * Shortcut key oressed?
+             * Shortcut key pressed?
              */
             for (i = 0; i < ctx->items; i++) {
                 if (key->sym == ctx->shortcut[i]) {
@@ -1005,14 +1005,12 @@ widp wid_menu (widp parent,
 
         wid_set_tl_br_pct(wrapper, tl, br);
 
-#ifdef ENABLE_FLICKER
-        color c = RED;
+        color c = BLACK;
         c.a = 100;
         wid_set_color(wrapper, WID_COLOR_BG, c);
         wid_set_color(wrapper, WID_COLOR_TL, c);
         wid_set_color(wrapper, WID_COLOR_BR, c);
-        wid_set_tex(wrapper, 0, "alpha");
-#endif
+
         wid_set_on_destroy_begin(wrapper, wid_menu_destroy_begin);
         wid_set_on_destroy(wrapper, wid_menu_destroy);
         wid_set_client_context(wrapper, ctx);
@@ -1146,6 +1144,9 @@ widp wid_menu (widp parent,
     wid_menu_update(wrapper);
     wid_update(wrapper);
     wid_raise(wrapper);
+
+    wid_set_focus(wrapper);
+    wid_focus_lock(wrapper);
 
     return (wrapper);
 }
