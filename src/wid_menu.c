@@ -1005,11 +1005,13 @@ widp wid_menu (widp parent,
 
         wid_set_tl_br_pct(wrapper, tl, br);
 
+#if 0
         color c = BLACK;
         c.a = 100;
         wid_set_color(wrapper, WID_COLOR_BG, c);
         wid_set_color(wrapper, WID_COLOR_TL, c);
         wid_set_color(wrapper, WID_COLOR_BR, c);
+#endif
 
         wid_set_on_destroy_begin(wrapper, wid_menu_destroy_begin);
         wid_set_on_destroy(wrapper, wid_menu_destroy);
