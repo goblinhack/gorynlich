@@ -30,7 +30,7 @@
 #include "bits.h"
 
 static void wid_editor_hide(void);
-static void wid_editor_tile_right_button_pressed(widp w, int x, int y);
+static void wid_editor_tile_right_button_pressed(int x, int y);
 static void wid_editor_set_focus(wid_editor_ctx *ctx, int focusx, int focusy);
 static void wid_editor_map_scroll(int dx, int dy);
 static void wid_editor_undo_save(void);
@@ -1142,10 +1142,9 @@ static void wid_editor_tile_fill (int x, int y)
     map_fixup();
 }
 
-static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
+static void wid_editor_tile_left_button_pressed (int x, int y)
 {
-    wid_editor_ctx *ctx = wid_get_client_context(w);
-    int xy = (typeof(xy)) (uintptr_t) wid_get_client_context2(w);
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
     int mx = -1;
     int my = -1;
 
@@ -1191,13 +1190,14 @@ static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
                     wid_editor_tile_fill(mx, my);
                     break;
                 case WID_EDITOR_MODE_DEL:
-                    wid_editor_tile_right_button_pressed(w, x, y);
+                    wid_editor_tile_right_button_pressed(x, y);
                     break;
                 }
             }
         }
     }
 
+CON("down mode %d", ctx->edit_mode);
     switch (ctx->edit_mode) {
     case WID_EDITOR_MODE_UNDO:
         ctx->tile_mode = false;
@@ -1211,6 +1211,7 @@ static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
         wid_editor_tile_mode_toggle();
         break;
     case WID_EDITOR_MODE_SAVE:
+CON("save");
         ctx->tile_mode = false;
         wid_editor_save_level();
         break;
@@ -1221,10 +1222,9 @@ static void wid_editor_tile_left_button_pressed (widp w, int x, int y)
     }
 }
 
-static void wid_editor_tile_right_button_pressed (widp w, int x, int y)
+static void wid_editor_tile_right_button_pressed (int x, int y)
 {
-    wid_editor_ctx *ctx = wid_get_client_context(w);
-    int xy = (typeof(xy)) (uintptr_t) wid_get_client_context2(w);
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
     int mx = -1;
     int my = -1;
 
@@ -1282,7 +1282,7 @@ static uint8_t wid_editor_mouse_down (widp w,
             case WID_EDITOR_MODE_NUKE:
             case WID_EDITOR_MODE_SAVE:
             case WID_EDITOR_MODE_TOGGLE:
-                wid_editor_tile_left_button_pressed(w, x, y);
+                wid_editor_tile_left_button_pressed(x, y);
                 ctx->edit_mode = ctx->old_edit_mode;
                 break;
             }
@@ -1292,11 +1292,11 @@ static uint8_t wid_editor_mouse_down (widp w,
     }
 
     if (button == 1) {
-        wid_editor_tile_left_button_pressed(w, x, y);
+        wid_editor_tile_left_button_pressed(x, y);
     }
 
     if ((button == 2) || (button == 3)) {
-        wid_editor_tile_right_button_pressed(w, x, y);
+        wid_editor_tile_right_button_pressed(x, y);
     }
 
     return (true);
@@ -1342,16 +1342,16 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
 
         case '\t':
             ctx->edit_mode = WID_EDITOR_MODE_TOGGLE; 
-            wid_editor_tile_left_button_pressed(w, x, y);
+            wid_editor_tile_left_button_pressed(x, y);
             ctx->edit_mode = ctx->old_edit_mode; 
             return (true);
 
         case ' ':
-            wid_editor_tile_left_button_pressed(w, x, y);
+            wid_editor_tile_left_button_pressed(x, y);
             return (false);
 
         case SDLK_BACKSPACE:
-            wid_editor_tile_right_button_pressed(w, x, y);
+            wid_editor_tile_right_button_pressed(x, y);
             return (true); 
 
         case 'l':
@@ -1360,7 +1360,8 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
 
         case 's':
             ctx->edit_mode = WID_EDITOR_MODE_SAVE; 
-            wid_editor_tile_left_button_pressed(w, x, y);
+CON("save mode %d",WID_EDITOR_MODE_SAVE);
+            wid_editor_tile_left_button_pressed(x, y);
             ctx->edit_mode = ctx->old_edit_mode; 
             return (true);
 
@@ -1370,7 +1371,7 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
 
         case 'f':
             ctx->edit_mode = WID_EDITOR_MODE_FILL; 
-            wid_editor_tile_left_button_pressed(w, x, y);
+            wid_editor_tile_left_button_pressed(x, y);
             ctx->edit_mode = ctx->old_edit_mode; 
             return (true);
 
@@ -1403,22 +1404,6 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
         case SDLK_RETURN: {
             return (true);
 
-        case SDLK_LEFT:
-            wid_editor_focus_left();
-            break;
-
-        case SDLK_RIGHT:
-            wid_editor_focus_right();
-            break;
-
-        case SDLK_UP:
-            wid_editor_focus_up();
-            break;
-
-        case SDLK_DOWN:
-            wid_editor_focus_down();
-            break;
-
         case SDLK_HOME:
             break;
 
@@ -1450,7 +1435,7 @@ static uint8_t wid_editor_joy_button (widp w, int mx, int my)
     int ret = false;
 
     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
-        wid_editor_tile_left_button_pressed(w, x, y);
+        wid_editor_tile_left_button_pressed(x, y);
         ret = true;
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_B]) {
@@ -1458,7 +1443,7 @@ static uint8_t wid_editor_joy_button (widp w, int mx, int my)
         wid_editor_hide();
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
-        wid_editor_tile_right_button_pressed(w, x, y);
+        wid_editor_tile_right_button_pressed(x, y);
         ret = true;
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_Y]) {
@@ -1554,7 +1539,7 @@ static uint8_t wid_editor_mouse_motion (widp w,
     int y = (xy & 0xff00) >> 8;
 
     if (mouse_down & SDL_BUTTON_LEFT) {
-        wid_editor_tile_left_button_pressed(w, x, y);
+        wid_editor_tile_left_button_pressed(x, y);
         return (true);
     }
 
@@ -1562,7 +1547,7 @@ static uint8_t wid_editor_mouse_motion (widp w,
      * MACOS seems bugged in SDL with this
      */
     if (mouse_down & SDL_BUTTON_RIGHT) {
-        wid_editor_tile_right_button_pressed(w, x, y);
+        wid_editor_tile_right_button_pressed(x, y);
         return (true);
     }
 
@@ -1777,6 +1762,84 @@ static void wid_editor_tick (widp w)
                 wid_editor_focus_up();
                 moved = 1;
             }
+
+            if (!ctx->tile_mode &&
+                (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
+                (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
+
+                if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+                    wid_editor_tile_left_button_pressed(ctx->focusx, 
+                                                        ctx->focusy);
+                }
+
+                if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
+                    wid_editor_tile_right_button_pressed(ctx->focusx, 
+                                                         ctx->focusy);
+                }
+            }
+        }
+    }
+
+    if (!sdl_shift_held) {
+        static uint ts3;
+
+        if (time_have_x_thousandths_passed_since(
+                            DELAY_THOUSANDTHS_PLAYER_POLL * 6, ts3)) {
+
+        ts3 = time_get_time_ms();
+
+#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
+            uint8_t *state = SDL_GetKeyState(0);
+            uint8_t right = state[SDLK_RIGHT] ? 1 : 0;
+            uint8_t left  = state[SDLK_LEFT] ? 1 : 0;
+            uint8_t up    = state[SDLK_UP] ? 1 : 0;
+            uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
+            uint8_t space = state[SDLK_SPACE] ? 1 : 0;
+            uint8_t del   = state[SDLK_BACKSPACE] ? 1 : 0;
+#else /* } { */
+            const uint8_t *state = SDL_GetKeyboardState(0);
+            uint8_t right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
+            uint8_t left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
+            uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
+            uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
+            uint8_t space = state[SDL_SCANCODE_SPACE] ? 1 : 0;
+            uint8_t del   = state[SDL_SCANCODE_BACKSPACE] ? 1 : 0;
+#endif /* } */
+
+            if (right) {
+                wid_editor_focus_right();
+                moved = 1;
+            }
+
+            if (left) {
+                wid_editor_focus_left();
+                moved = 1;
+            }
+
+            if (down) {
+                wid_editor_focus_down();
+                moved = 1;
+            }
+
+            if (up) {
+                wid_editor_focus_up();
+                moved = 1;
+            }
+
+            if (!ctx->tile_mode &&
+                (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
+                (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
+
+                if (space) {
+                    wid_editor_tile_left_button_pressed(ctx->focusx, 
+                                                        ctx->focusy);
+                }
+
+                if (del) {
+                    wid_editor_tile_right_button_pressed(ctx->focusx, 
+                                                         ctx->focusy);
+                }
+            }
         }
     }
 
@@ -1826,6 +1889,8 @@ static void wid_editor_tick (widp w)
             }
         }
     }
+
+    wid_editor_update_buttons();
 
     if (moved) {
         if (ctx->b) {
