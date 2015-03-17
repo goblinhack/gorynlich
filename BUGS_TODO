@@ -1,23 +1,25 @@
 --------------------------------------- plan for mar --------------------------------------
-- need saved focus for tile and map mode
+- holding space and move does now draw
+- add palette ?
+- need saved focus for tile and map mode and for each tile family
 - create tabs for monst/floor/wall
 - need test level shortcut
 - choose exit in editor
 - add level exit marshalling
-- button for groups
-- button for directions
 - button to create template level
+- button for directions
+- button for groups
 - default focus on map should be first level
 - add level traps
 - draw joined levels
 - level rotate button
+- make item bar wider
+- can't shoot through diagonal walls
+--------------------------------------- plan for apr --------------------------------------
+- super meat boy style spinning blades of death on invisible tracks - reuse road tiles for this?
 - level randomize button
 - remove gothic and window textures - no longer needed
 - stats need to do something
-- make item bar wider
-- super meat boy style spinning blades of death on invisible tracks - reuse road tiles for this?
-- can't shoot through diagonal walls
---------------------------------------- plan for apr --------------------------------------
 - magic attack - green fireball?
 - sound effects for weapons and hits http://www.bfxr.net/
 - sound on momey collect
