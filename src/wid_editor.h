@@ -35,6 +35,12 @@ typedef struct wid_editor_map_tile_ {
 
 typedef struct wid_editor_map_grid_ {
     wid_editor_map_tile tile[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+
+    /*
+     * For joined up walls etc.
+     */
+    tilep map_tile[MAP_WIDTH][MAP_HEIGHT];
+
 } wid_editor_map_grid;
 
 typedef void(*wid_editor_event_t)(widp);
@@ -79,17 +85,13 @@ typedef struct {
 
     wid_editor_map_grid map;
     wid_editor_map_grid map_undo[WID_EDITOR_UNDO];
+
     uint8_t valid_undo[WID_EDITOR_UNDO];
 
     /*
      * For line drawing.
      */
     int map_highlight[MAP_WIDTH][MAP_HEIGHT];
-
-    /*
-     * For joined up walls etc.
-     */
-    tilep map_tile[MAP_WIDTH][MAP_HEIGHT];
 
     /*
      * Just created?
