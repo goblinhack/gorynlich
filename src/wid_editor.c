@@ -35,6 +35,7 @@ static void wid_editor_set_focus(wid_editor_ctx *ctx, int focusx, int focusy);
 static void wid_editor_map_scroll(int dx, int dy);
 static void wid_editor_undo_save(void);
 static void wid_editor_save_level(void);
+static widp wid_editor_save_popup; // edit wid_editor_tick if you add more
 
 static widp wid_editor_window;
 static widp wid_editor_background;
@@ -43,6 +44,19 @@ static wid_editor_ctx *wid_editor_window_ctx;
 static int saved_focus_x = -1;
 static int saved_focus_y = -1;
 static tpp wid_editor_chosen_tile;
+
+static void wid_editor_set_mode (int edit_mode)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    ctx->edit_mode = edit_mode;
+
+    memset(ctx->map_highlight, 0, sizeof(ctx->map_highlight));
+
+    ctx->got_line_start = 0;
+}
 
 /*
  * Replace or place a tile.
@@ -135,7 +149,7 @@ static void map_fixup (void)
     for (y = 0; y < MAP_HEIGHT; y++) {
         for (x = 0; x < MAP_WIDTH; x++) {
 
-            ctx->map_tile[x][y] = 0;
+            ctx->map.map_tile[x][y] = 0;
 
             int ok = false;
 
@@ -336,7 +350,7 @@ static void map_fixup (void)
                 ERR("cannot find tilep for tile %s", tilename);
             }
 
-            ctx->map_tile[x][y] = tile;
+            ctx->map.map_tile[x][y] = tile;
         }
     }
 }
@@ -375,18 +389,6 @@ static void wid_editor_update_edit_mode_buttons (void)
         wid_set_color(b, WID_COLOR_TEXT, GRAY);
     }
 
-    /*
-     * Set the current focus.
-     */
-    widp b = ctx->tile[ctx->edit_mode][WID_EDITOR_MENU_CELLS_DOWN - 1].button;
-    color c = RED;
-    c.a = 100;
-    wid_set_color(b, WID_COLOR_BG, c);
-    c.a = 255;
-    wid_set_color(b, WID_COLOR_TL, RED);
-    wid_set_color(b, WID_COLOR_BR, RED);
-    wid_set_color(b, WID_COLOR_TEXT, GREEN);
-
     int x;
     for (x = 0; x < WID_EDITOR_MODE_MAX; x++) {
         widp b = ctx->tile[x][WID_EDITOR_MENU_CELLS_DOWN - 1].button;
@@ -417,6 +419,18 @@ static void wid_editor_update_edit_mode_buttons (void)
             break;
         }
     }
+
+    /*
+     * Set the current focus.
+     */
+    widp b = ctx->tile[ctx->edit_mode][WID_EDITOR_MENU_CELLS_DOWN - 1].button;
+    color c = RED;
+    c.a = 100;
+    wid_set_color(b, WID_COLOR_BG, c);
+    c.a = 255;
+    wid_set_color(b, WID_COLOR_TL, RED);
+    wid_set_color(b, WID_COLOR_BR, RED);
+    wid_set_color(b, WID_COLOR_TEXT, GREEN);
 }
 
 static void wid_editor_update_buttons (void)
@@ -509,7 +523,7 @@ static void wid_editor_update_buttons (void)
             (y < WID_EDITOR_MENU_MAP_DOWN) &&
             (ctx->map_highlight[mx][my])) {
             color c = GREEN;
-            c.a = 200;
+            c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
         } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
             color c = RED;
@@ -539,8 +553,6 @@ static void wid_editor_update_buttons (void)
 
     wid_editor_update_edit_mode_buttons();
     wid_update(wid_editor_window);
-
-    memset(ctx->map_highlight, 0, sizeof(ctx->map_highlight));
 }
 
 static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
@@ -624,7 +636,7 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
         }
 
         if (z == MAP_DEPTH_WALL) {
-            tilep tile = ctx->map_tile[x][y];
+            tilep tile = ctx->map.map_tile[x][y];
             if (tile) {
                 glcolor(WHITE);
                 tile_blit_fat(tile, 0, tl, br);
@@ -904,8 +916,6 @@ static void wid_editor_draw_line (int x0, int y0, int x1, int y1)
 {
     double slope = 100.0;
 
-    wid_editor_undo_save();
-
     if (x0 != x1) {
         slope = (y1 - y0) * (1.0 / (x1 - x0));
     }
@@ -921,6 +931,8 @@ static void wid_editor_draw_line (int x0, int y0, int x1, int y1)
     }
 
     map_fixup();
+
+    wid_editor_undo_save();
 }
 
 static void do_wid_editor_highlight_line (int x0_in, 
@@ -998,6 +1010,14 @@ static void do_wid_editor_highlight_line (int x0_in,
 
 static void wid_editor_draw_highlight_line (int x0, int y0, int x1, int y1)
 {
+    if ((x0 == -1) || (y0 == -1)) {
+        return;
+    }
+
+    if ((x1 == -1) || (y1 == -1)) {
+        return;
+    }
+
     double slope = 100.0;
 
     if (x0 != x1) {
@@ -1019,12 +1039,23 @@ static void wid_editor_undo_save (void)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
-    if (ctx->undo_at > WID_EDITOR_UNDO) {
+    /*
+     * Check there is a change
+     */
+    if (ctx->undo_at != -1) {
+        if (!memcmp(&ctx->map_undo[ctx->undo_at], &ctx->map, 
+                    sizeof(ctx->map))) {
+            return;
+        }
+    }
+
+    ctx->undo_at++;
+    if (ctx->undo_at >= WID_EDITOR_UNDO) {
         ctx->undo_at = 0;
     }
 
     memcpy(&ctx->map_undo[ctx->undo_at], &ctx->map, sizeof(ctx->map));
-    ctx->valid_undo[ctx->undo_at++] = 1;
+    ctx->valid_undo[ctx->undo_at] = 1;
 }
 
 static void wid_editor_undo (void)
@@ -1032,6 +1063,7 @@ static void wid_editor_undo (void)
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
     int old = ctx->undo_at;
+
     ctx->undo_at--;
     if (ctx->undo_at < 0) {
         ctx->undo_at = WID_EDITOR_UNDO - 1;
@@ -1043,6 +1075,7 @@ static void wid_editor_undo (void)
     }
 
     memcpy(&ctx->map, &ctx->map_undo[ctx->undo_at], sizeof(ctx->map));
+
     map_fixup();
 }
 
@@ -1051,6 +1084,7 @@ static void wid_editor_redo (void)
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
     int old = ctx->undo_at;
+
     ctx->undo_at++;
     if (ctx->undo_at > WID_EDITOR_UNDO) {
         ctx->undo_at = 0;
@@ -1062,6 +1096,7 @@ static void wid_editor_redo (void)
     }
 
     memcpy(&ctx->map, &ctx->map_undo[ctx->undo_at], sizeof(ctx->map));
+
     map_fixup();
 }
 
@@ -1069,10 +1104,11 @@ static void wid_editor_nuke (void)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
-    wid_editor_undo_save();
-
     memset(&ctx->map, 0, sizeof(ctx->map));
+
     map_fixup();
+
+    wid_editor_undo_save();
 }
 
 static void wid_editor_tile_fill_ (int x, int y)
@@ -1137,13 +1173,23 @@ static void wid_editor_tile_fill_ (int x, int y)
 
 static void wid_editor_tile_fill (int x, int y)
 {
-    wid_editor_undo_save();
+    if ((x == -1) || (y == -1)) {
+        return;
+    }
+
     wid_editor_tile_fill_(x, y);
+
     map_fixup();
+
+    wid_editor_undo_save();
 }
 
 static void wid_editor_tile_left_button_pressed (int x, int y)
 {
+    if ((x == -1) || (y == -1)) {
+        return;
+    }
+
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     int mx = -1;
     int my = -1;
@@ -1171,9 +1217,11 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                 (y < WID_EDITOR_MENU_MAP_DOWN)) {
                 switch (ctx->edit_mode) {
                 case WID_EDITOR_MODE_DRAW:
-                    wid_editor_undo_save();
                     wid_editor_map_thing_replace(mx, my);
+
                     map_fixup();
+
+                    wid_editor_undo_save();
                     break;
                 case WID_EDITOR_MODE_LINE:
                     if (!ctx->got_line_start) {
@@ -1197,33 +1245,49 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
         }
     }
 
-CON("down mode %d", ctx->edit_mode);
-    switch (ctx->edit_mode) {
-    case WID_EDITOR_MODE_UNDO:
-        ctx->tile_mode = false;
-        wid_editor_undo();
-        break;
-    case WID_EDITOR_MODE_REDO:
-        ctx->tile_mode = false;
-        wid_editor_redo();
-        break;
-    case WID_EDITOR_MODE_TOGGLE:
-        wid_editor_tile_mode_toggle();
-        break;
-    case WID_EDITOR_MODE_SAVE:
-CON("save");
-        ctx->tile_mode = false;
-        wid_editor_save_level();
-        break;
-    case WID_EDITOR_MODE_NUKE:
-        ctx->tile_mode = false;
-        wid_editor_nuke();
-        break;
+    if (y == WID_EDITOR_MENU_CELLS_DOWN - 1) {
+        if (x < WID_EDITOR_MODE_MAX) {
+            switch (x) {
+            case WID_EDITOR_MODE_DRAW:
+            case WID_EDITOR_MODE_LINE:
+            case WID_EDITOR_MODE_DEL:
+            case WID_EDITOR_MODE_FILL:
+                wid_editor_set_mode(x);
+                break;
+
+            case WID_EDITOR_MODE_UNDO:
+                ctx->tile_mode = false;
+                wid_editor_undo();
+                break;
+
+            case WID_EDITOR_MODE_REDO:
+                ctx->tile_mode = false;
+                wid_editor_redo();
+                break;
+
+            case WID_EDITOR_MODE_NUKE:
+                ctx->tile_mode = false;
+                wid_editor_nuke();
+                break;
+
+            case WID_EDITOR_MODE_SAVE:
+                wid_editor_save_level();
+                break;
+
+            case WID_EDITOR_MODE_TOGGLE:
+                wid_editor_tile_mode_toggle();
+                break;
+            }
+        }
     }
 }
 
 static void wid_editor_tile_right_button_pressed (int x, int y)
 {
+    if ((x == -1) || (y == -1)) {
+        return;
+    }
+
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     int mx = -1;
     int my = -1;
@@ -1247,9 +1311,11 @@ static void wid_editor_tile_right_button_pressed (int x, int y)
             for (z = MAP_DEPTH - 1; z > 0; z--) {
                 tpp tp = ctx->map.tile[mx][my][z].tp;
                 if (tp) {
-                    wid_editor_undo_save();
                     ctx->map.tile[mx][my][z].tp = 0;
+
                     map_fixup();
+
+                    wid_editor_undo_save();
                     return;
                 }
             }
@@ -1261,35 +1327,9 @@ static uint8_t wid_editor_mouse_down (widp w,
                                       int mx, int my,
                                       uint button)
 {
-    wid_editor_ctx *ctx = wid_editor_window_ctx;
     int xy = (typeof(xy)) (uintptr_t) wid_get_client_context2(w);
     int x = (xy & 0xff);
     int y = (xy & 0xff00) >> 8;
-
-    if (y == WID_EDITOR_MENU_CELLS_DOWN - 1) {
-        if (x < WID_EDITOR_MODE_MAX) {
-            ctx->old_edit_mode = ctx->edit_mode;
-            ctx->edit_mode = x;
-
-            switch (x) {
-            case WID_EDITOR_MODE_DRAW:
-            case WID_EDITOR_MODE_LINE:
-            case WID_EDITOR_MODE_DEL:
-            case WID_EDITOR_MODE_FILL:
-                break;
-            case WID_EDITOR_MODE_UNDO:
-            case WID_EDITOR_MODE_REDO:
-            case WID_EDITOR_MODE_NUKE:
-            case WID_EDITOR_MODE_SAVE:
-            case WID_EDITOR_MODE_TOGGLE:
-                wid_editor_tile_left_button_pressed(x, y);
-                ctx->edit_mode = ctx->old_edit_mode;
-                break;
-            }
-
-            return (true);
-        }
-    }
 
     if (button == 1) {
         wid_editor_tile_left_button_pressed(x, y);
@@ -1310,6 +1350,14 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
     int xy = (typeof(xy)) (uintptr_t) wid_get_client_context2(w);
     int x = ctx->focusx;
     int y = ctx->focusy;
+
+    int mx = -1;
+    int my = -1;
+
+    if (!ctx->tile_mode) {
+        mx = x + ctx->map_x;
+        my = y + ctx->map_y;
+    }
 
     switch (key->mod) {
         case KMOD_LSHIFT:
@@ -1341,9 +1389,7 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             return (false);
 
         case '\t':
-            ctx->edit_mode = WID_EDITOR_MODE_TOGGLE; 
-            wid_editor_tile_left_button_pressed(x, y);
-            ctx->edit_mode = ctx->old_edit_mode; 
+            wid_editor_tile_mode_toggle();
             return (true);
 
         case ' ':
@@ -1355,46 +1401,41 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             return (true); 
 
         case 'l':
-            ctx->edit_mode = WID_EDITOR_MODE_LINE; 
+            wid_editor_set_mode(WID_EDITOR_MODE_LINE);
             return (true);
 
         case 's':
-            ctx->edit_mode = WID_EDITOR_MODE_SAVE; 
-CON("save mode %d",WID_EDITOR_MODE_SAVE);
-            wid_editor_tile_left_button_pressed(x, y);
-            ctx->edit_mode = ctx->old_edit_mode; 
+            wid_editor_save_level();
             return (true);
 
         case 'd':
-            ctx->edit_mode = WID_EDITOR_MODE_DRAW; 
+            wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
             return (true);
 
         case 'f':
-            ctx->edit_mode = WID_EDITOR_MODE_FILL; 
-            wid_editor_tile_left_button_pressed(x, y);
-            ctx->edit_mode = ctx->old_edit_mode; 
+            if (!ctx->tile_mode) {
+                wid_editor_tile_fill(mx, my);
+            }
+            ctx->tile_mode = false;
             return (true);
 
         case 'u':
-            if (!ctx->tile_mode) {
-                wid_editor_undo();
-            }
+            ctx->tile_mode = false;
+            wid_editor_undo();
             return (true);
 
         case 'r':
-            if (!ctx->tile_mode) {
-                wid_editor_redo();
-            }
+            ctx->tile_mode = false;
+            wid_editor_redo();
             return (true);
 
         case 'x':
-            ctx->edit_mode = WID_EDITOR_MODE_DEL; 
+            wid_editor_set_mode(WID_EDITOR_MODE_DEL);
             return (true);
 
         case 'z':
-            if (!ctx->tile_mode) {
-                wid_editor_nuke();
-            }
+            ctx->tile_mode = false;
+            wid_editor_nuke();
             return (true);
 
         case SDLK_ESCAPE:
@@ -1453,13 +1494,13 @@ static uint8_t wid_editor_joy_button (widp w, int mx, int my)
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_LEFT]) {
         ctx->edit_mode--;
         if (ctx->edit_mode < 0) {
-            ctx->edit_mode = 0;
+            wid_editor_set_mode(0);
         }
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_TOP_RIGHT]) {
         ctx->edit_mode++;
-        if (ctx->edit_mode > WID_EDITOR_MODE_MAX) {
-            ctx->edit_mode = WID_EDITOR_MODE_MAX;
+        if (ctx->edit_mode >= WID_EDITOR_MODE_MAX) {
+            wid_editor_set_mode(WID_EDITOR_MODE_MAX - 1);
         }
     }
     if (sdl_joy_buttons[SDL_JOY_BUTTON_LEFT_STICK_DOWN]) {
@@ -1673,6 +1714,13 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
 
     ctx->tile[tile_x][tile_y].tile_tp = tp;
 
+    /*
+     * Start out with something.
+     */
+    if (!wid_editor_chosen_tile) {
+        wid_editor_chosen_tile = tp;
+    }
+
     tile_x++;
 
     if (tile_x >= WID_EDITOR_MENU_TILES_ACROSS) {
@@ -1720,10 +1768,16 @@ static void wid_editor_load_map (level_pos_t level_pos)
 
 static void wid_editor_tick (widp w)
 {
+    if (wid_editor_save_popup) {
+        return;
+    }
+
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     if (!ctx) {
         return;
     }
+
+    memset(ctx->map_highlight, 0, sizeof(ctx->map_highlight));
 
     if (ctx->got_line_start) {
         int mx = ctx->focusx + ctx->map_x;
@@ -1734,157 +1788,192 @@ static void wid_editor_tick (widp w)
     }
 
     int moved = 0;
-    static uint ts1;
 
-    if (time_have_x_thousandths_passed_since(
-                        DELAY_THOUSANDTHS_PLAYER_POLL * 6, ts1)) {
+    if (sdl_joy_axes) {
+        /*
+         * Right stick
+         */
 
-        ts1 = time_get_time_ms();
+        int changed = 0;
 
-        if (sdl_joy_axes) {
+        if (sdl_joy_axes[3] > sdl_joy_deadzone) {
+            changed = 1;
+        }
 
-            if (sdl_joy_axes[3] > sdl_joy_deadzone) {
-                wid_editor_focus_right();
-                moved = 1;
-            }
+        if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
+            changed = 1;
+        }
 
-            if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
-                wid_editor_focus_left();
-                moved = 1;
-            }
+        if (sdl_joy_axes[4] > sdl_joy_deadzone) {
+            changed = 1;
+        }
 
-            if (sdl_joy_axes[4] > sdl_joy_deadzone) {
-                wid_editor_focus_down();
-                moved = 1;
-            }
+        if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
+            changed = 1;
+        }
 
-            if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
-                wid_editor_focus_up();
-                moved = 1;
-            }
+        if (changed) {
+            static uint ts;
 
-            if (!ctx->tile_mode &&
-                (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
-                (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
+            if (time_have_x_thousandths_passed_since(
+                                DELAY_THOUSANDTHS_PLAYER_POLL * 6, ts)) {
 
-                if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
-                    wid_editor_tile_left_button_pressed(ctx->focusx, 
-                                                        ctx->focusy);
+                ts = time_get_time_ms();
+
+                if (sdl_joy_axes[3] > sdl_joy_deadzone) {
+                    wid_editor_focus_right();
+                    moved = 1;
                 }
 
-                if (sdl_joy_buttons[SDL_JOY_BUTTON_X]) {
-                    wid_editor_tile_right_button_pressed(ctx->focusx, 
-                                                         ctx->focusy);
+                if (sdl_joy_axes[3] < -sdl_joy_deadzone) {
+                    wid_editor_focus_left();
+                    moved = 1;
+                }
+
+                if (sdl_joy_axes[4] > sdl_joy_deadzone) {
+                    wid_editor_focus_down();
+                    moved = 1;
+                }
+
+                if (sdl_joy_axes[4] < -sdl_joy_deadzone) {
+                    wid_editor_focus_up();
+                    moved = 1;
+                }
+
+                if (!ctx->tile_mode &&
+                    (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
+                    (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
+
+                    if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
+                        wid_editor_tile_left_button_pressed(ctx->focusx, 
+                                                            ctx->focusy);
+                    }
+                }
+            }
+        }
+
+        /*
+         * Left stick
+         */
+        changed = 0;
+
+        if (sdl_joy_axes[0] > sdl_joy_deadzone) {
+            changed = 1;
+        }
+
+        if (sdl_joy_axes[0] < -sdl_joy_deadzone) {
+            changed = 1;
+        }
+
+        if (sdl_joy_axes[1] > sdl_joy_deadzone) {
+            changed = 1;
+        }
+
+        if (sdl_joy_axes[1] < -sdl_joy_deadzone) {
+            changed = 1;
+        }
+
+        if (changed) {
+            static uint ts;
+
+            if (time_have_x_thousandths_passed_since(
+                                DELAY_THOUSANDTHS_PLAYER_POLL, ts)) {
+
+                ts = time_get_time_ms();
+
+                if (sdl_joy_axes[0] > sdl_joy_deadzone) {
+                    moved = 1;
+                    if (ctx->tile_mode) {
+                        wid_editor_focus_right();
+                    } else {
+                        wid_editor_map_scroll(1, 0);
+                    }
+                }
+
+                if (sdl_joy_axes[0] < -sdl_joy_deadzone) {
+                    moved = 1;
+                    if (ctx->tile_mode) {
+                        wid_editor_focus_left();
+                    } else {
+                        wid_editor_map_scroll(-1, 0);
+                    }
+                }
+
+                if (sdl_joy_axes[1] > sdl_joy_deadzone) {
+                    moved = 1;
+                    if (ctx->tile_mode) {
+                        wid_editor_focus_down();
+                    } else {
+                        wid_editor_map_scroll(0, 1);
+                    }
+                }
+
+                if (sdl_joy_axes[1] < -sdl_joy_deadzone) {
+                    moved = 1;
+                    if (ctx->tile_mode) {
+                        wid_editor_focus_up();
+                    } else {
+                        wid_editor_map_scroll(0, -1);
+                    }
                 }
             }
         }
     }
 
     if (!sdl_shift_held) {
-        static uint ts3;
-
-        if (time_have_x_thousandths_passed_since(
-                            DELAY_THOUSANDTHS_PLAYER_POLL * 6, ts3)) {
-
-        ts3 = time_get_time_ms();
-
 #if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2 /* { */
-            uint8_t *state = SDL_GetKeyState(0);
-            uint8_t right = state[SDLK_RIGHT] ? 1 : 0;
-            uint8_t left  = state[SDLK_LEFT] ? 1 : 0;
-            uint8_t up    = state[SDLK_UP] ? 1 : 0;
-            uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
-            uint8_t space = state[SDLK_SPACE] ? 1 : 0;
-            uint8_t del   = state[SDLK_BACKSPACE] ? 1 : 0;
+        uint8_t *state = SDL_GetKeyState(0);
+        uint8_t right = state[SDLK_RIGHT] ? 1 : 0;
+        uint8_t left  = state[SDLK_LEFT] ? 1 : 0;
+        uint8_t up    = state[SDLK_UP] ? 1 : 0;
+        uint8_t down  = state[SDLK_DOWN] ? 1 : 0;
+        uint8_t space = state[SDLK_SPACE] ? 1 : 0;
 #else /* } { */
-            const uint8_t *state = SDL_GetKeyboardState(0);
-            uint8_t right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
-            uint8_t left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
-            uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
-            uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
-            uint8_t space = state[SDL_SCANCODE_SPACE] ? 1 : 0;
-            uint8_t del   = state[SDL_SCANCODE_BACKSPACE] ? 1 : 0;
+        const uint8_t *state = SDL_GetKeyboardState(0);
+        uint8_t right = state[SDL_SCANCODE_RIGHT] ? 1 : 0;
+        uint8_t left  = state[SDL_SCANCODE_LEFT] ? 1 : 0;
+        uint8_t up    = state[SDL_SCANCODE_UP] ? 1 : 0;
+        uint8_t down  = state[SDL_SCANCODE_DOWN] ? 1 : 0;
+        uint8_t space = state[SDL_SCANCODE_SPACE] ? 1 : 0;
 #endif /* } */
 
-            if (right) {
-                wid_editor_focus_right();
-                moved = 1;
-            }
+        if (up || right || down || left || space) {
+            static uint ts;
 
-            if (left) {
-                wid_editor_focus_left();
-                moved = 1;
-            }
+            if (time_have_x_thousandths_passed_since(
+                                DELAY_THOUSANDTHS_PLAYER_POLL * 6, ts)) {
 
-            if (down) {
-                wid_editor_focus_down();
-                moved = 1;
-            }
+                ts = time_get_time_ms();
 
-            if (up) {
-                wid_editor_focus_up();
-                moved = 1;
-            }
-
-            if (!ctx->tile_mode &&
-                (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
-                (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
-
-                if (space) {
-                    wid_editor_tile_left_button_pressed(ctx->focusx, 
-                                                        ctx->focusy);
-                }
-
-                if (del) {
-                    wid_editor_tile_right_button_pressed(ctx->focusx, 
-                                                         ctx->focusy);
-                }
-            }
-        }
-    }
-
-    static uint ts2;
-
-    if (time_have_x_thousandths_passed_since(
-                        DELAY_THOUSANDTHS_PLAYER_POLL, ts2)) {
-
-        ts2 = time_get_time_ms();
-
-        if (sdl_joy_axes) {
-
-            if (sdl_joy_axes[0] > sdl_joy_deadzone) {
-                moved = 1;
-                if (ctx->tile_mode) {
+                if (right) {
                     wid_editor_focus_right();
-                } else {
-                    wid_editor_map_scroll(1, 0);
+                    moved = 1;
                 }
-            }
 
-            if (sdl_joy_axes[0] < -sdl_joy_deadzone) {
-                moved = 1;
-                if (ctx->tile_mode) {
+                if (left) {
                     wid_editor_focus_left();
-                } else {
-                    wid_editor_map_scroll(-1, 0);
+                    moved = 1;
                 }
-            }
 
-            if (sdl_joy_axes[1] > sdl_joy_deadzone) {
-                moved = 1;
-                if (ctx->tile_mode) {
+                if (down) {
                     wid_editor_focus_down();
-                } else {
-                    wid_editor_map_scroll(0, 1);
+                    moved = 1;
                 }
-            }
 
-            if (sdl_joy_axes[1] < -sdl_joy_deadzone) {
-                moved = 1;
-                if (ctx->tile_mode) {
+                if (up) {
                     wid_editor_focus_up();
-                } else {
-                    wid_editor_map_scroll(0, -1);
+                    moved = 1;
+                }
+
+                if (!ctx->tile_mode &&
+                    (ctx->edit_mode == WID_EDITOR_MODE_DRAW) &&
+                    (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
+                    (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
+
+                    if (space) {
+                        wid_editor_tile_left_button_pressed(ctx->focusx, 
+                                                            ctx->focusy);
+                    }
                 }
             }
         }
@@ -1974,8 +2063,6 @@ static void wid_editor_go_back (void)
     wid_map();
 }
 
-static widp wid_editor_save_popup;
-
 static void wid_editor_save_close_dialog (widp w)
 {
     widp top = wid_get_top_parent(w);
@@ -2044,7 +2131,11 @@ static void wid_editor_hide (void)
     verify(ctx);
     verify(ctx->w);
 
-    wid_editor_save_ask();
+    if (ctx->undo_at > 1) {
+        wid_editor_save_ask();
+    } else {
+        wid_editor_go_back();
+    }
 }
 
 void wid_editor (level_pos_t level_pos)
@@ -2193,6 +2284,9 @@ void wid_editor (level_pos_t level_pos)
 
     map_fixup();
 
+    ctx->undo_at = -1;
+    wid_editor_undo_save();
+
     /*
      * Repair the context so it is not pointing at the last level loaded.
      */
@@ -2207,5 +2301,5 @@ void wid_editor (level_pos_t level_pos)
     ctx->created = time_get_time_ms();
     ctx->tile_mode = 1;
 
-    ctx->edit_mode = WID_EDITOR_MODE_DRAW;
+    wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
 }

@@ -1,7 +1,7 @@
 --------------------------------------- plan for mar --------------------------------------
-- holding space and move does now draw
-- add palette ?
 - need saved focus for tile and map mode and for each tile family
+- switching tab at top changes chosen tile
+- chosen tiles for each tab shown at bottom too
 - create tabs for monst/floor/wall
 - need test level shortcut
 - choose exit in editor
@@ -75,6 +75,8 @@ different profiles for level generation
 mining?
 
 Mon Mar 16 07:13:43 EDT 2015
+- undo fixed
+- holding space and move does now draw
 - map fixup of walls and doors
 
 Sun Mar 15 20:03:42 EDT 2015
