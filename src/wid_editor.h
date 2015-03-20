@@ -85,6 +85,7 @@ typedef struct {
 
     wid_editor_map_grid map;
     wid_editor_map_grid map_undo[WID_EDITOR_UNDO];
+    wid_editor_map_grid map_cut;
 
     uint8_t valid_undo[WID_EDITOR_UNDO];
 
@@ -132,14 +133,31 @@ typedef struct {
     int line_start_x;
     int line_start_y;
     int got_line_start;
+
+    int square_start_x;
+    int square_start_y;
+    int got_square_start;
+
+    int cut_start_x;
+    int cut_start_y;
+    int cut_end_x;
+    int cut_end_y;
+    int got_cut_start;
+    int got_cut_end;
+
 } wid_editor_ctx;
 
 enum {
     WID_EDITOR_MODE_TOGGLE,
     WID_EDITOR_MODE_DRAW,
     WID_EDITOR_MODE_LINE,
+    WID_EDITOR_MODE_SQUARE,
     WID_EDITOR_MODE_FILL,
     WID_EDITOR_MODE_DEL,
+    WID_EDITOR_MODE_YANK,
+    WID_EDITOR_MODE_CUT,
+    WID_EDITOR_MODE_COPY,
+    WID_EDITOR_MODE_PASTE,
     WID_EDITOR_MODE_UNDO,
     WID_EDITOR_MODE_REDO,
     WID_EDITOR_MODE_SAVE,
