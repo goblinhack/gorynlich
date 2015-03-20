@@ -56,6 +56,8 @@ static void wid_editor_set_mode (int edit_mode)
     memset(ctx->map_highlight, 0, sizeof(ctx->map_highlight));
 
     ctx->got_line_start = 0;
+    ctx->got_square_start = 0;
+    ctx->got_cut_start = 0;
 }
 
 /*
@@ -826,6 +828,27 @@ static void wid_editor_map_thing_replace (int x, int y)
     ctx->map.tile[x][y][z].tp = wid_editor_chosen_tile;
 }
 
+static tpp wid_editor_map_thing_get (int x, int y)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    if ((x < 0) || (y < 0) ||
+        (x >= MAP_WIDTH) ||
+        (y >= MAP_HEIGHT)) {
+        return (0);
+    }
+
+    int z;
+    for (z = MAP_DEPTH - 1; z > 0; z--) {
+        tpp tp = ctx->map.tile[x][y][z].tp;
+        if (tp) {
+            return (tp);
+        }
+    }
+
+    return (0);
+}
+
 static void wid_editor_map_highlight_replace (int x, int y)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
@@ -1004,6 +1027,125 @@ static void do_wid_editor_highlight_line (int x0_in,
             wid_editor_map_highlight_replace((int)y, (int)-x);
         } else if (flag == 3) {
             wid_editor_map_highlight_replace((int)x, (int)-y);
+        }
+    }
+}
+
+static void wid_editor_draw_square (int x0, int y0, int x1, int y1)
+{
+    int x, y;
+
+    for (x = x0; x <= x1; x++) {
+        wid_editor_map_thing_replace(x, y0);
+        wid_editor_map_thing_replace(x, y1);
+    }
+
+    for (y = y0; y <= y1; y++) {
+        wid_editor_map_thing_replace(x0, y);
+        wid_editor_map_thing_replace(x0, y);
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
+static void wid_editor_paste (int mx, int my)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    int x0 = ctx->cut_start_x;
+    int x1 = ctx->cut_end_x;
+
+    int y0 = ctx->cut_start_y;
+    int y1 = ctx->cut_end_y;
+
+    int x, y, z;
+
+    for (x = x0; x <= x1; x++) {
+        for (y = y0; y <= y1; y++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+                tpp tp = ctx->map_cut.tile[x][y][z].tp;
+                if (!tp) {
+                    continue;
+                }
+
+                int px = mx + (x - x0);
+                int py = my + (y - y0);
+
+                if ((px < 0) || (py < 0) ||
+                    (px >= MAP_WIDTH) ||
+                    (py >= MAP_HEIGHT)) {
+                    continue;
+                }
+
+                ctx->map.tile[px][py][z].tp = tp;
+            }
+        }
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
+static void wid_editor_cut (int mx, int my)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    int x0 = ctx->cut_start_x;
+    int x1 = ctx->cut_end_x;
+
+    int y0 = ctx->cut_start_y;
+    int y1 = ctx->cut_end_y;
+
+    int x, y, z;
+
+    for (x = x0; x <= x1; x++) {
+        for (y = y0; y <= y1; y++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+
+                int px = mx + (x - x0);
+                int py = my + (y - y0);
+
+                if ((px < 0) || (py < 0) ||
+                    (px >= MAP_WIDTH) ||
+                    (py >= MAP_HEIGHT)) {
+                    continue;
+                }
+
+                ctx->map.tile[px][py][z].tp = 0;
+            }
+        }
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
+static void wid_editor_draw_highlight_square (int x0, int y0, int x1, int y1)
+{
+    int x, y;
+
+    for (x = x0; x <= x1; x++) {
+        wid_editor_map_highlight_replace(x, y0);
+        wid_editor_map_highlight_replace(x, y1);
+    }
+
+    for (y = y0; y <= y1; y++) {
+        wid_editor_map_highlight_replace(x0, y);
+        wid_editor_map_highlight_replace(x0, y);
+    }
+}
+
+static void wid_editor_draw_highlight_cut (int x0, int y0, int x1, int y1)
+{
+    int x, y;
+
+    for (x = x0; x <= x1; x++) {
+        for (y = y0; y <= y1; y++) {
+            wid_editor_map_highlight_replace(x, y);
         }
     }
 }
@@ -1223,6 +1365,7 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
 
                     wid_editor_undo_save();
                     break;
+
                 case WID_EDITOR_MODE_LINE:
                     if (!ctx->got_line_start) {
                         ctx->got_line_start = true;
@@ -1234,6 +1377,70 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                         ctx->got_line_start = false;
                     }
                     break;
+
+                case WID_EDITOR_MODE_SQUARE:
+                    if (!ctx->got_square_start) {
+                        ctx->got_square_start = true;
+                        ctx->square_start_x = mx;
+                        ctx->square_start_y = my;
+                    } else {
+                        wid_editor_draw_square(ctx->square_start_x,
+                                               ctx->square_start_y, mx, my);
+                        ctx->got_square_start = false;
+                    }
+                    break;
+
+                case WID_EDITOR_MODE_CUT:
+                    if (!ctx->got_cut_start) {
+                        ctx->got_cut_start = true;
+                        ctx->cut_start_x = mx;
+                        ctx->cut_start_y = my;
+                    } else {
+                        memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
+                        wid_editor_cut(mx, my);
+                        ctx->got_cut_start = false;
+                        ctx->got_cut_end = true;
+                        ctx->cut_end_x = mx;
+                        ctx->cut_end_y = my;
+                    }
+                    break;
+
+                case WID_EDITOR_MODE_COPY:
+                    if (!ctx->got_cut_start) {
+                        ctx->got_cut_start = true;
+                        ctx->cut_start_x = mx;
+                        ctx->cut_start_y = my;
+                    } else {
+                        memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
+                        ctx->got_cut_start = false;
+                        ctx->got_cut_end = true;
+                        ctx->cut_end_x = mx;
+                        ctx->cut_end_y = my;
+                    }
+                    break;
+
+                case WID_EDITOR_MODE_PASTE:
+                    wid_editor_paste(mx, my);
+                    break;
+
+                case WID_EDITOR_MODE_YANK:
+                    {
+                        tpp tp = wid_editor_map_thing_get(mx, my);
+                        if (tp) {
+                            wid_editor_chosen_tile = tp;
+
+                            /*
+                             * Fake a cut so a 'p' can put this back.
+                             */
+                            memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
+                            ctx->cut_start_x = mx;
+                            ctx->cut_end_x = mx;
+                            ctx->cut_start_y = my;
+                            ctx->cut_end_y = my;
+                        }
+                    }
+                    break;
+
                 case WID_EDITOR_MODE_FILL:
                     wid_editor_tile_fill(mx, my);
                     break;
@@ -1252,6 +1459,10 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
             case WID_EDITOR_MODE_LINE:
             case WID_EDITOR_MODE_DEL:
             case WID_EDITOR_MODE_FILL:
+            case WID_EDITOR_MODE_CUT:
+            case WID_EDITOR_MODE_PASTE:
+            case WID_EDITOR_MODE_YANK:
+            case WID_EDITOR_MODE_SQUARE:
                 wid_editor_set_mode(x);
                 break;
 
@@ -1311,6 +1522,15 @@ static void wid_editor_tile_right_button_pressed (int x, int y)
             for (z = MAP_DEPTH - 1; z > 0; z--) {
                 tpp tp = ctx->map.tile[mx][my][z].tp;
                 if (tp) {
+                    /*
+                     * Fake a cut so a 'p' can put this back.
+                     */
+                    memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
+                    ctx->cut_start_x = mx;
+                    ctx->cut_end_x = mx;
+                    ctx->cut_start_y = my;
+                    ctx->cut_end_y = my;
+
                     ctx->map.tile[mx][my][z].tp = 0;
 
                     map_fixup();
@@ -1393,30 +1613,65 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             return (true);
 
         case ' ':
-            wid_editor_tile_left_button_pressed(x, y);
+            ctx->tile_mode = false;
+            wid_editor_tile_left_button_pressed(mx, my);
             return (false);
 
         case SDLK_BACKSPACE:
-            wid_editor_tile_right_button_pressed(x, y);
+            ctx->tile_mode = false;
+            wid_editor_tile_right_button_pressed(mx, my);
             return (true); 
 
         case 'l':
+            ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_LINE);
+            wid_editor_tile_left_button_pressed(mx, my);
+            return (true);
+
+        case 'r':
+            ctx->tile_mode = false;
+            wid_editor_set_mode(WID_EDITOR_MODE_SQUARE);
+            wid_editor_tile_left_button_pressed(mx, my);
             return (true);
 
         case 's':
+            ctx->tile_mode = false;
             wid_editor_save_level();
             return (true);
 
         case 'd':
+            ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
             return (true);
 
-        case 'f':
-            if (!ctx->tile_mode) {
-                wid_editor_tile_fill(mx, my);
-            }
+        case 'y':
             ctx->tile_mode = false;
+            wid_editor_set_mode(WID_EDITOR_MODE_YANK);
+            wid_editor_tile_left_button_pressed(mx, my);
+            return (true);
+
+        case 't':
+            ctx->tile_mode = false;
+            wid_editor_set_mode(WID_EDITOR_MODE_CUT);
+            wid_editor_tile_left_button_pressed(mx, my);
+            return (true);
+
+        case 'c':
+            ctx->tile_mode = false;
+            wid_editor_set_mode(WID_EDITOR_MODE_COPY);
+            wid_editor_tile_left_button_pressed(mx, my);
+            return (true);
+
+        case 'p':
+            ctx->tile_mode = false;
+            wid_editor_set_mode(WID_EDITOR_MODE_PASTE);
+            wid_editor_tile_left_button_pressed(mx, my);
+            return (true);
+
+        case 'f':
+            ctx->tile_mode = false;
+            wid_editor_set_mode(WID_EDITOR_MODE_FILL);
+            wid_editor_tile_left_button_pressed(mx, my);
             return (true);
 
         case 'u':
@@ -1424,13 +1679,15 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             wid_editor_undo();
             return (true);
 
-        case 'r':
+        case 'e':
             ctx->tile_mode = false;
             wid_editor_redo();
             return (true);
 
         case 'x':
+            ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_DEL);
+            wid_editor_tile_left_button_pressed(mx, my);
             return (true);
 
         case 'z':
@@ -1739,7 +1996,7 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
 static void wid_editor_load_tiles (void)
 {
     tile_x = 0;
-    tile_y = 0;
+    tile_y = 1;
 
     tree_walk(thing_templates_create_order,
               wid_editor_load_tile, 0 /* arg */);
@@ -1785,6 +2042,24 @@ static void wid_editor_tick (widp w)
 
         wid_editor_draw_highlight_line(ctx->line_start_x, ctx->line_start_y, 
                                        mx, my);
+    }
+
+    if (ctx->got_square_start) {
+        int mx = ctx->focusx + ctx->map_x;
+        int my = ctx->focusy + ctx->map_y;
+
+        wid_editor_draw_highlight_square(ctx->square_start_x, 
+                                         ctx->square_start_y,
+                                         mx, my);
+    }
+
+    if (ctx->got_cut_start) {
+        int mx = ctx->focusx + ctx->map_x;
+        int my = ctx->focusy + ctx->map_y;
+
+        wid_editor_draw_highlight_cut(ctx->cut_start_x, 
+                                      ctx->cut_start_y,
+                                      mx, my);
     }
 
     int moved = 0;
@@ -2215,25 +2490,25 @@ void wid_editor (level_pos_t level_pos)
             case WID_EDITOR_MODE_FILL:
                 wid_set_text(b, "Fill");
                 if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "F - shortcut", vsmall_font);
+                    wid_set_tooltip(b, "f - shortcut", vsmall_font);
                 }
                 break;
             case WID_EDITOR_MODE_DEL:
                 wid_set_text(b, "Del");
                 if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "X - shortcut", vsmall_font);
+                    wid_set_tooltip(b, "x - shortcut", vsmall_font);
                 }
                 break;
             case WID_EDITOR_MODE_UNDO:
                 wid_set_text(b, "Undo");
                 if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "U - shortcut", vsmall_font);
+                    wid_set_tooltip(b, "u - shortcut", vsmall_font);
                 }
                 break;
             case WID_EDITOR_MODE_REDO:
                 wid_set_text(b, "Redo");
                 if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "R - shortcut", vsmall_font);
+                    wid_set_tooltip(b, "e - shortcut", vsmall_font);
                 }
                 break;
             case WID_EDITOR_MODE_SAVE:
@@ -2245,6 +2520,41 @@ void wid_editor (level_pos_t level_pos)
             case WID_EDITOR_MODE_TOGGLE:
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "TAB - shortcut", vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_YANK:
+                wid_set_text(b, "Yank");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "y - shortcut. picks up a tile",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_SQUARE:
+                wid_set_text(b, "Rect");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "r - shortcut",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_CUT:
+                wid_set_text(b, "Cut");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "t - shortcut",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_COPY:
+                wid_set_text(b, "Copy");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "c - shortcut",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_PASTE:
+                wid_set_text(b, "Paste");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "p - shortcut",
+                                    vsmall_font);
                 }
                 break;
             case WID_EDITOR_MODE_NUKE:
