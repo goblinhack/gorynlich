@@ -99,7 +99,7 @@ void wid_intro_hide (void)
     music_halt();
 
     if (!wid_intro) {
-        DIE("no wid intro");
+        return;
     }
 
     wid_scaling_to_pct_in(wid_intro_background, 1.0, 10.01, 
@@ -145,7 +145,7 @@ void wid_intro_hide (void)
 
 void wid_intro_visible (void)
 {
-    if (wid_intro_is_visible) {
+    if (!wid_intro || wid_intro_is_visible) {
         /*
          * Make sure the menu is visible.
          */
@@ -162,10 +162,6 @@ void wid_intro_visible (void)
     wid_notify_flush();
 
     LOG("Client: Intro screen show");
-
-    if (!wid_intro) {
-        DIE("no wid intro");
-    }
 
     music_play_intro();
 
