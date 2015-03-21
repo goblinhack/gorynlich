@@ -86,6 +86,7 @@ typedef struct {
     wid_editor_map_grid map;
     wid_editor_map_grid map_undo[WID_EDITOR_UNDO];
     wid_editor_map_grid map_copy;
+    wid_editor_map_grid map_tmp;
 
     uint8_t valid_undo[WID_EDITOR_UNDO];
 
@@ -166,9 +167,9 @@ enum {
     WID_EDITOR_MODE_UNUSED_4,
     WID_EDITOR_MODE_UNUSED_5,
     WID_EDITOR_MODE_UNUSED_6,
-    WID_EDITOR_MODE_UNUSED_7,
-    WID_EDITOR_MODE_UNUSED_8,
-    WID_EDITOR_MODE_UNUSED_9,
+    WID_EDITOR_MODE_VFLIP,
+    WID_EDITOR_MODE_HFLIP,
+    WID_EDITOR_MODE_ROTATE,
     WID_EDITOR_MODE_TEST,
     WID_EDITOR_MODE_BORDER,
     WID_EDITOR_MODE_RANDOM,
