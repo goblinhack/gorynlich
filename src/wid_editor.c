@@ -1036,6 +1036,13 @@ static void wid_editor_draw_square (int x0, int y0, int x1, int y1)
 {
     int x, y;
 
+    if (x0 > x1) {
+        swap(x0, x1);
+    }
+    if (y0 > y1) {
+        swap(y0, y1);
+    }
+
     for (x = x0; x <= x1; x++) {
         wid_editor_map_thing_replace(x, y0);
         wid_editor_map_thing_replace(x, y1);
@@ -2618,6 +2625,27 @@ void wid_editor (level_pos_t level_pos)
                 wid_set_text(b, "Paste");
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "p - shortcut",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_TEST:
+                wid_set_text(b, "Test");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Test out level",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_RANDOM:
+                wid_set_text(b, "Rand");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Create random level",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_BORDER:
+                wid_set_text(b, "Bord");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Create empty level with border",
                                     vsmall_font);
                 }
                 break;
