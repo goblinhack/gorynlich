@@ -22,6 +22,7 @@
 #include "wid_editor.h"
 #include "wid_tooltip.h"
 #include "wid_intro.h"
+#include "map_jigsaw.h"
 #include "tile.h"
 #include "marshal.h"
 #include "wid_map.h"
@@ -1439,6 +1440,19 @@ static void wid_editor_style (void)
     wid_editor_undo_save();
 }
 
+static void wid_editor_random (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    memset(&ctx->map, 0, sizeof(ctx->map));
+
+    map_jigsaw_generate(0, wid_editor_replace_template);
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
 static void wid_editor_hflip (void)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
@@ -1762,6 +1776,10 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                 wid_editor_style();
                 break;
 
+            case WID_EDITOR_MODE_RANDOM:
+                ctx->tile_mode = false;
+                wid_editor_random();
+                break;
 
             case WID_EDITOR_MODE_TEST:
                 ctx->tile_mode = false;
@@ -2336,8 +2354,16 @@ static void wid_editor_load_map (level_pos_t level_pos)
                           false, /* is_map_editor */
                           false /* on_server */);
     if (!l) {
-        ERR("Failed to load level %d.%d", level_pos.y, level_pos.x);
-        return;
+        LOG("Failed to load level %d.%d", level_pos.y, level_pos.x);
+
+        l = level_new(ctx->w, 
+                      level_pos, 
+                      true, /* is_editor */
+                      false, /* is_map_editor */
+                      false /* on_server */);
+        if (!l) {
+            DIE("failed to create level");
+        }
     }
 
     ctx->level = l;
@@ -2602,6 +2628,10 @@ static void wid_editor_save (const char *dir_and_file, int is_test_level)
      */
     marshal_p ctx;
     ctx = marshal(dir_and_file);
+
+    if (!ed->level) {
+        DIE("no level to save");
+    }
 
     marshal_level(ctx, ed->level);
 
@@ -2895,14 +2925,14 @@ void wid_editor (level_pos_t level_pos)
                 }
                 break;
             case WID_EDITOR_MODE_RANDOM:
-                wid_set_text(b, "Rand");
+                wid_set_text(b, "Random");
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "Create random level",
                                     vsmall_font);
                 }
                 break;
             case WID_EDITOR_MODE_BORDER:
-                wid_set_text(b, "Bord");
+                wid_set_text(b, "Border");
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "Create empty level with border",
                                     vsmall_font);
