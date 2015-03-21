@@ -20,7 +20,6 @@
 #include "thing_template.h"
 #include "thing_tile.h"
 #include "wid_editor.h"
-#include "wid_map_dialog.h"
 #include "wid_intro.h"
 #include "tile.h"
 #include "string_util.h"
@@ -493,8 +492,8 @@ static void wid_map_destroy (widp w)
                 continue;
             }
 
-            level_destroy(&l, false /* keep players */);
             ctx->levels[y][x].level = 0;
+            level_destroy(&l, false /* keep players */);
         }
     }
 
@@ -530,43 +529,6 @@ static void wid_map_destroy_begin (widp w)
             wid_move_to_pct_centered_in(b, x, y, 500);
         }
     }
-}
-
-void wid_map_cell_play (void)
-{
-    wid_map_ctx *ctx = wid_map_window_ctx;
-    verify(ctx);
-    verify(ctx->w);
-
-    /*
-     * If we recreate the map with a fixed focus we will be told about
-     * a mouse over event immediately which may not be over the focus item
-     * and will cause us to move. Annoying.
-     */
-    if (time_get_time_ms() - ctx->created < 500) {
-        return;
-    }
-
-    level_pos_t level_pos;
-
-    level_pos.x = ctx->focusx;
-    level_pos.y = ctx->focusy;
-
-    if (level_pos.x == -1) {
-        return;
-    }
-
-    if (level_pos.y == -1) {
-        return;
-    }
-
-    wid_destroy(&wid_map_window);
-
-    LOG("Client: Test selected level %d.%d", level_pos.y, level_pos.x);
-
-    global_config.stats.level_pos = level_pos;
-
-    wid_intro_single_play_selected(level_pos);
 }
 
 void wid_map_cell_load (void)
@@ -638,7 +600,7 @@ static void wid_map_cell_selected (widp w)
 
     wid_hide(wid_map_window, 0);
 
-    wid_map_dialog_visible(tmp);
+    wid_map_cell_load();
 
     myfree(tmp);
 }
@@ -828,10 +790,16 @@ widp wid_editor_level_map_thing_replace_template (widp w,
     verify(ctx);
     verify(ctx->w);
 
-    wid_map_level *map = &ctx->levels[ctx->loading_y][ctx->loading_x];
-
     int ix = (int)x;
     int iy = (int)y;
+
+    wid_map_level *map = &ctx->levels[ctx->loading_y][ctx->loading_x];
+    if (!map) {
+        DIE("no map to write to at position (%f,%f) -> (%d,%d) in level %u.%u, "
+            "map bounds (%d,%d) -> (%d,%d)", 
+            x, y, ix, iy, ctx->loading_x, ctx->loading_y,
+            0, 0, MAP_DEPTH, MAP_HEIGHT);
+    }
 
     if ((ix >= MAP_WIDTH) || (iy >= MAP_HEIGHT) || (ix < 0) || (iy < 0)) {
         ERR("overflow in reading position (%f,%f) -> (%d,%d) in level %u.%u, "
@@ -882,6 +850,19 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
 
         ctx->loading_x = x;
         ctx->loading_y = y;
+
+        /*
+         * Ignore out of bounds levels like the test level.
+         */
+        if ((ctx->loading_x >= LEVELS_ACROSS) || 
+            (ctx->loading_y >= LEVELS_DOWN)) {
+            continue;
+        }
+
+        if ((ctx->loading_x < 0) || 
+            (ctx->loading_y < 0)) {
+            continue;
+        }
 
         levelp l = level_load(level_pos, 
                               ctx->w,

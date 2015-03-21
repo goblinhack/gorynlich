@@ -36,8 +36,9 @@ static void wid_editor_set_focus(wid_editor_ctx *ctx, int focusx, int focusy);
 static void wid_editor_map_scroll(int dx, int dy);
 static void wid_editor_undo_save(void);
 static void wid_editor_save_level(void);
-static widp wid_editor_save_popup; // edit wid_editor_tick if you add more
+static void wid_editor_save(const char *dir_and_file, int is_test_level);
 
+static widp wid_editor_save_popup; // edit wid_editor_tick if you add more
 static widp wid_editor_window;
 static widp wid_editor_background;
 static wid_editor_ctx *wid_editor_window_ctx;
@@ -1286,6 +1287,25 @@ static void wid_editor_nuke (void)
     wid_editor_undo_save();
 }
 
+static void wid_editor_test (void)
+{
+    level_pos_t level_pos;
+    level_pos.x = 66;
+    level_pos.y = 66;
+
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.y, level_pos.x);
+    LOG("Client: Save test level %s", tmp);
+    wid_editor_save(tmp, true /* is_test_level */);
+    myfree(tmp);
+
+    wid_destroy(&wid_editor_background);
+    wid_destroy(&wid_editor_window);
+
+    LOG("Client: Test selected level %d.%d", level_pos.y, level_pos.x);
+    global_config.stats.level_pos = level_pos;
+    wid_intro_single_play_selected(level_pos);
+}
+
 static void wid_editor_border (void)
 {
     tpp floor;
@@ -1655,6 +1675,11 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
             case WID_EDITOR_MODE_BORDER:
                 ctx->tile_mode = false;
                 wid_editor_border();
+                break;
+
+            case WID_EDITOR_MODE_TEST:
+                ctx->tile_mode = false;
+                wid_editor_test();
                 break;
 
             case WID_EDITOR_MODE_HFLIP:
@@ -2481,7 +2506,7 @@ static void wid_editor_tick (widp w)
     wid_editor_update_buttons();
 }
 
-static void wid_editor_save (const char *dir_and_file)
+static void wid_editor_save (const char *dir_and_file, int is_test_level)
 {
     wid_editor_ctx *ed = wid_editor_window_ctx;
 
@@ -2535,13 +2560,15 @@ static void wid_editor_save (const char *dir_and_file)
         MSG_BOX("%s", popup_str);
         myfree(popup_str);
     } else {
-        /*
-         * Success
-         */
-        char *popup_str = dynprintf("Saved %s", dir_and_file);
-        widp popup = wid_tooltip(popup_str, 0.5f, 0.5f, med_font);
-        wid_destroy_in(popup, ONESEC);
-        myfree(popup_str);
+        if (!is_test_level) {
+            /*
+             * Success
+             */
+            char *popup_str = dynprintf("Saved %s", dir_and_file);
+            widp popup = wid_tooltip(popup_str, 0.5f, 0.5f, med_font);
+            wid_destroy_in(popup, ONESEC);
+            myfree(popup_str);
+        }
 
         LOG("Saved: %s", dir_and_file);
     }
@@ -2570,7 +2597,7 @@ static void wid_editor_save_level (void)
     level_pos_t level_pos = ctx->level_pos;
     char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, level_pos.y, level_pos.x);
     LOG("Save editor level %s", tmp);
-    wid_editor_save(tmp);
+    wid_editor_save(tmp, false /* is_test_level */);
     myfree(tmp);
 }
 

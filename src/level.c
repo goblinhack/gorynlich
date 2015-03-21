@@ -119,6 +119,10 @@ levelp level_new (widp map,
         level_set_map(level, map);
     }
 
+    if ((level_pos.x == 66) && (level_pos.y == 66)) {
+        level->is_test_level = true;
+    }
+
     level_set_level_pos(level, level_pos);
     level_set_is_editor(level, is_editor);
     level_set_is_map_editor(level, is_map_editor);
@@ -172,16 +176,19 @@ void level_destroy (levelp *plevel, uint8_t keep_players)
 
     if (level->title) {
         myfree((void*) level->title);
+        level->title = 0;
     }
 
     if (level->destroy_reason) {
         myfree((void*) level->destroy_reason);
+        level->destroy_reason = 0;
     }
 
     LEVEL_LOG(level, "destroyed");
 
     if (level->logname) {
         myfree((void*) level->logname);
+        level->logname = 0;
     }
 
     /*
@@ -737,6 +744,11 @@ static void level_finished (levelp level)
     level->end_level_second_phase_destroy_timer = 0;
     level->end_level_first_phase_fade_out_timer = 0;
 
+    if (level->is_test_level) {
+        level_destroy(&server_level, false /* keep players */);
+        return;
+    }
+
     thingp t;
 
     /*
@@ -760,8 +772,10 @@ static void level_finished (levelp level)
                                 "level destroy boring things");
     socket_server_tx_map_update(0, server_active_things,
                                 "level destroy active things");
+    int test_level;
 
     wid_game_map_server_wid_destroy(true /* keep players */);
+    test_level = false;
 
     { TREE_WALK(server_active_things, t) {
         if (!thing_is_player_or_owned_by_player(t)) {
@@ -773,6 +787,9 @@ static void level_finished (levelp level)
 
     wid_game_map_server_wid_create();
 
+    /*
+     * Move players to the new level.
+     */
     { TREE_WALK(server_active_things, t) {
         if (!thing_is_player(t)) {
             continue;
@@ -1266,7 +1283,12 @@ void marshal_level (marshal_p ctx, levelp level)
 
     PUT_BRA(ctx);
 
-    PUT_NAMED_STRING(ctx, "title", level->title);
+    if (!level->title) {
+        PUT_NAMED_STRING(ctx, "title", "unnamed level");
+    } else {
+        PUT_NAMED_STRING(ctx, "title", level->title);
+    }
+
     PUT_NAMED_BITFIELD(ctx, "is_zzz1", level->is_zzz1);
     PUT_NAMED_BITFIELD(ctx, "is_zzz2", level->is_zzz2);
     PUT_NAMED_BITFIELD(ctx, "is_zzz3", level->is_zzz3);
@@ -1333,8 +1355,12 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
 
     GET_BRA(ctx);
 
-    char *tmp;
-    GET_OPT_NAMED_STRING(ctx, "title", tmp);
+    char *tmp = 0;
+    GET_NAMED_STRING(ctx, "title", tmp);
+    if (!tmp) {
+        DIE("no level title for level");
+    }
+
     level_set_title(level, tmp);
     myfree(tmp);
 

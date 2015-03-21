@@ -103,6 +103,12 @@ typedef struct level_t_ {
      * Make things go faster.
      */
     uint8_t is_hurryup:1;
+
+    /*
+     * Usually level 66.66
+     */
+    uint8_t is_test_level:1;
+
     uint8_t is_zzz1:1;
     uint8_t is_zzz2:1;
     uint8_t is_zzz3:1;
