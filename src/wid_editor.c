@@ -27,6 +27,7 @@
 #include "wid_map.h"
 #include "wid_menu.h"
 #include "string_util.h"
+#include "wid_console.h"
 #include "bits.h"
 
 static void wid_editor_hide(void);
@@ -1042,7 +1043,7 @@ static void wid_editor_draw_square (int x0, int y0, int x1, int y1)
 
     for (y = y0; y <= y1; y++) {
         wid_editor_map_thing_replace(x0, y);
-        wid_editor_map_thing_replace(x0, y);
+        wid_editor_map_thing_replace(x1, y);
     }
 
     map_fixup();
@@ -1060,12 +1061,19 @@ static void wid_editor_paste (int mx, int my)
     int y0 = ctx->cut_start_y;
     int y1 = ctx->cut_end_y;
 
+    if (x0 > x1) {
+        swap(x0, x1);
+    }
+    if (y0 > y1) {
+        swap(y0, y1);
+    }
+
     int x, y, z;
 
     for (x = x0; x <= x1; x++) {
         for (y = y0; y <= y1; y++) {
             for (z = 0; z < MAP_DEPTH; z++) {
-                tpp tp = ctx->map_cut.tile[x][y][z].tp;
+                tpp tp = ctx->map_copy.tile[x][y][z].tp;
                 if (!tp) {
                     continue;
                 }
@@ -1099,22 +1107,26 @@ static void wid_editor_cut (int mx, int my)
     int y0 = ctx->cut_start_y;
     int y1 = ctx->cut_end_y;
 
+    if (x0 > x1) {
+        swap(x0, x1);
+    }
+    if (y0 > y1) {
+        swap(y0, y1);
+    }
+
     int x, y, z;
 
     for (x = x0; x <= x1; x++) {
         for (y = y0; y <= y1; y++) {
             for (z = 0; z < MAP_DEPTH; z++) {
 
-                int px = mx + (x - x0);
-                int py = my + (y - y0);
-
-                if ((px < 0) || (py < 0) ||
-                    (px >= MAP_WIDTH) ||
-                    (py >= MAP_HEIGHT)) {
+                if ((x < 0) || (y < 0) ||
+                    (x >= MAP_WIDTH) ||
+                    (y >= MAP_HEIGHT)) {
                     continue;
                 }
 
-                ctx->map.tile[px][py][z].tp = 0;
+                ctx->map.tile[x][y][z].tp = 0;
             }
         }
     }
@@ -1128,6 +1140,13 @@ static void wid_editor_draw_highlight_square (int x0, int y0, int x1, int y1)
 {
     int x, y;
 
+    if (x0 > x1) {
+        swap(x0, x1);
+    }
+    if (y0 > y1) {
+        swap(y0, y1);
+    }
+
     for (x = x0; x <= x1; x++) {
         wid_editor_map_highlight_replace(x, y0);
         wid_editor_map_highlight_replace(x, y1);
@@ -1135,13 +1154,20 @@ static void wid_editor_draw_highlight_square (int x0, int y0, int x1, int y1)
 
     for (y = y0; y <= y1; y++) {
         wid_editor_map_highlight_replace(x0, y);
-        wid_editor_map_highlight_replace(x0, y);
+        wid_editor_map_highlight_replace(x1, y);
     }
 }
 
 static void wid_editor_draw_highlight_cut (int x0, int y0, int x1, int y1)
 {
     int x, y;
+
+    if (x0 > x1) {
+        swap(x0, x1);
+    }
+    if (y0 > y1) {
+        swap(y0, y1);
+    }
 
     for (x = x0; x <= x1; x++) {
         for (y = y0; y <= y1; y++) {
@@ -1371,9 +1397,12 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                         ctx->got_line_start = true;
                         ctx->line_start_x = mx;
                         ctx->line_start_y = my;
-                    } else {
-                        wid_editor_draw_line(ctx->line_start_x, 
-                                            ctx->line_start_y, mx, my);
+
+                    } else if ((ctx->line_start_x != mx) ||
+                               (ctx->line_start_y != my)) {
+
+                        wid_editor_draw_line(ctx->line_start_x,
+                                             ctx->line_start_y, mx, my);
                         ctx->got_line_start = false;
                     }
                     break;
@@ -1383,7 +1412,10 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                         ctx->got_square_start = true;
                         ctx->square_start_x = mx;
                         ctx->square_start_y = my;
-                    } else {
+
+                    } else if ((ctx->square_start_x != mx) ||
+                               (ctx->square_start_y != my)) {
+
                         wid_editor_draw_square(ctx->square_start_x,
                                                ctx->square_start_y, mx, my);
                         ctx->got_square_start = false;
@@ -1395,13 +1427,18 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                         ctx->got_cut_start = true;
                         ctx->cut_start_x = mx;
                         ctx->cut_start_y = my;
-                    } else {
-                        memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
-                        wid_editor_cut(mx, my);
+
+                    } else if ((ctx->cut_start_x != mx) ||
+                               (ctx->cut_start_y != my)) {
+
+                        /*
+                         * Only do the cut if we've actually moved. Avoids
+                         * double clicks messing up.
+                         */
                         ctx->got_cut_start = false;
-                        ctx->got_cut_end = true;
                         ctx->cut_end_x = mx;
                         ctx->cut_end_y = my;
+                        wid_editor_cut(mx, my);
                     }
                     break;
 
@@ -1410,10 +1447,12 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                         ctx->got_cut_start = true;
                         ctx->cut_start_x = mx;
                         ctx->cut_start_y = my;
-                    } else {
-                        memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
+
+                    } else if ((ctx->cut_start_x != mx) ||
+                               (ctx->cut_start_y != my)) {
+
+                        memcpy(&ctx->map_copy, &ctx->map, sizeof(ctx->map));
                         ctx->got_cut_start = false;
-                        ctx->got_cut_end = true;
                         ctx->cut_end_x = mx;
                         ctx->cut_end_y = my;
                     }
@@ -1432,7 +1471,7 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                             /*
                              * Fake a cut so a 'p' can put this back.
                              */
-                            memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
+                            memcpy(&ctx->map_copy, &ctx->map, sizeof(ctx->map));
                             ctx->cut_start_x = mx;
                             ctx->cut_end_x = mx;
                             ctx->cut_start_y = my;
@@ -1525,7 +1564,7 @@ static void wid_editor_tile_right_button_pressed (int x, int y)
                     /*
                      * Fake a cut so a 'p' can put this back.
                      */
-                    memcpy(&ctx->map_cut, &ctx->map, sizeof(ctx->map));
+                    memcpy(&ctx->map_copy, &ctx->map, sizeof(ctx->map));
                     ctx->cut_start_x = mx;
                     ctx->cut_end_x = mx;
                     ctx->cut_start_y = my;
@@ -1614,24 +1653,24 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
 
         case ' ':
             ctx->tile_mode = false;
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (false);
 
         case SDLK_BACKSPACE:
             ctx->tile_mode = false;
-            wid_editor_tile_right_button_pressed(mx, my);
+            wid_editor_tile_right_button_pressed(x, y);
             return (true); 
 
         case 'l':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_LINE);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'r':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_SQUARE);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 's':
@@ -1647,31 +1686,31 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
         case 'y':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_YANK);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 't':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_CUT);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'c':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_COPY);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'p':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_PASTE);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'f':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_FILL);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'u':
@@ -1687,7 +1726,7 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
         case 'x':
             ctx->tile_mode = false;
             wid_editor_set_mode(WID_EDITOR_MODE_DEL);
-            wid_editor_tile_left_button_pressed(mx, my);
+            wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'z':
@@ -1696,6 +1735,27 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             return (true);
 
         case SDLK_ESCAPE:
+
+            if (ctx->got_line_start) {
+                ctx->got_line_start = false;
+                return (true);
+            }
+
+            if (ctx->got_square_start) {
+                ctx->got_square_start = false;
+                return (true);
+            }
+
+            if (ctx->got_cut_start) {
+                ctx->got_cut_start = false;
+                return (true);
+            }
+
+            if (ctx->edit_mode > WID_EDITOR_MODE_DRAW) {
+                ctx->edit_mode = WID_EDITOR_MODE_DRAW;
+                return (true);
+            }
+
             wid_editor_hide();
             return (true);
 
@@ -2025,6 +2085,10 @@ static void wid_editor_load_map (level_pos_t level_pos)
 
 static void wid_editor_tick (widp w)
 {
+    if (!wid_is_hidden(wid_console_window)) {
+        return;
+    }
+
     if (wid_editor_save_popup) {
         return;
     }
