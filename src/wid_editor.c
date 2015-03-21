@@ -2825,9 +2825,9 @@ void wid_editor (level_pos_t level_pos)
                 }
                 break;
             case WID_EDITOR_MODE_TEST:
-                wid_set_text(b, "t - shortcut, test level");
+                wid_set_text(b, "Test");
                 if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "Test out level",
+                    wid_set_tooltip(b, "t - shortcut, Test out level",
                                     vsmall_font);
                 }
                 break;
