@@ -299,7 +299,7 @@ static void wid_dead_create (const char *name,
 
     music_play_dead();
 
-    static uint32_t gravestone_appear_delay = 3000;
+    static uint32_t gravestone_appear_delay = 1000;
 
     wid_move_to_pct_in(w, -0.02, 0.55, gravestone_appear_delay);
 
