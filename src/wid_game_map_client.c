@@ -940,7 +940,7 @@ wid_game_map_client_replace_tile (widp w,
     double dx = 0;
     double dy = 0;
 
-    if (thing_is_mob_spawner(t)) {
+    if (thing_is_effect_pulse(t)) {
         wid_scaling_blit_to_pct_in(child, 1.0, 1.1, 1000, 10000);
     }
 

@@ -1,6 +1,6 @@
 {
  short_name="EyeBawl"
- tooltip="Minor phantom"
+ tooltip="EyeBawl"
  z_depth=3
  speed=6
  max_hp=1
@@ -9,6 +9,7 @@
  vision_distance=20
  hit_delay_tenths=5
  is_monst
+ is_effect_pulse
  is_cats_eyes
  is_shadow_caster
  is_shadow_caster_soft
