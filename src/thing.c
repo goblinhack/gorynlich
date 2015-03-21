@@ -2215,7 +2215,7 @@ void thing_leave_level (thingp t)
     level_set_exit_has_been_reached(server_level, true);
 
     /*
-     * Make the weapon leave to
+     * Make the weapon leave too
      */
     thingp weapon_carry_anim = thing_weapon_carry_anim(t);
     if (weapon_carry_anim) {

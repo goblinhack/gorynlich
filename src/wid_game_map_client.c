@@ -16,6 +16,7 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
+#include "wid_editor.h"
 #include "wid_menu.h"
 #include "thing.h"
 #include "level.h"
@@ -533,6 +534,19 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
         }
 
         case 'q':
+            if (client_level->is_test_level) {
+                client_socket_close(0, 0);
+                wid_game_map_client_hide();
+                wid_game_map_client_wid_destroy();
+
+                level_pos_t level_pos;
+                level_pos.x = 66;
+                level_pos.y = 66;
+
+                wid_editor(level_pos);
+                return (true);
+            }
+
             wid_game_quit_visible();
             return (true);
 
@@ -771,7 +785,12 @@ void wid_game_map_client_wid_create (void)
      */
     global_config.starting_stats_inited = false;
 
-    level_pos_t level_pos = {1, 1};
+    level_pos_t level_pos = global_config.stats.level_pos;
+
+    if (!level_pos.x && !level_pos.y) {
+        level_pos.x = 1;
+        level_pos.y = 1;
+    }
 
     client_level = level_new(wid_game_map_client_grid_container, 
                              level_pos, 
