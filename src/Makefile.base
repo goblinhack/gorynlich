@@ -104,7 +104,6 @@ GAME_OBJECTS=				\
     $(OBJDIR)/wid_keyboard.o 		\
     $(OBJDIR)/wid_numpad.o 		\
     $(OBJDIR)/wid_map.o 		\
-    $(OBJDIR)/wid_map_dialog.o 		\
     $(OBJDIR)/wid_server_create.o 	\
     $(OBJDIR)/wid_server_edit.o 	\
     $(OBJDIR)/wid_server_join.o 	\
