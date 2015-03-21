@@ -64,8 +64,8 @@ typedef struct {
     /*
      * Item currently in focus
      */
-    int focusx;
-    int focusy;
+    int focus_x;
+    int focus_y;
 
     /*
      * When the map was made.
