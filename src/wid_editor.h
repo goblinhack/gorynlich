@@ -101,6 +101,11 @@ typedef struct {
     int is_new;
 
     /*
+     * Modified and need to save?
+     */
+    int save_needed;
+
+    /*
      * Current level.
      */
     levelp level;
