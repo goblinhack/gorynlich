@@ -497,7 +497,7 @@ static void wid_editor_update_buttons (void)
         br.x = ((double) (x+1)) * width;
         br.y = ((double) (y+1)) * height;
 
-        font = small_font;
+        font = vsmall_font;
 
         int is_a_tile = 0;
         int is_a_map_tile = 0;
@@ -1384,6 +1384,59 @@ static void wid_editor_border (void)
     wid_editor_undo_save();
 }
 
+static void wid_editor_style (void)
+{
+    tpp floor;
+    tpp wall;
+
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_floor(tp)) {
+            floor = tp;
+            break;
+        }
+    }
+
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_wall(tp)) {
+            wall = tp;
+            break;
+        }
+    }
+
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    int x, y, z;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+                tpp tp = ctx->map.tile[x][y][z].tp;
+                if (!tp) {
+                    continue;
+                }
+
+                if (tp_is_wall(tp)) {
+                    ctx->map.tile[x][y][z].tp = wall;
+                }
+
+                if (tp_is_floor(tp)) {
+                    ctx->map.tile[x][y][z].tp = floor;
+                }
+            }
+        }
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
 static void wid_editor_hflip (void)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
@@ -1701,6 +1754,12 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                 ctx->tile_mode = false;
                 wid_editor_border();
                 break;
+
+            case WID_EDITOR_MODE_STYLE:
+                ctx->tile_mode = false;
+                wid_editor_style();
+                break;
+
 
             case WID_EDITOR_MODE_TEST:
                 ctx->tile_mode = false;
@@ -2842,6 +2901,13 @@ void wid_editor (level_pos_t level_pos)
                 wid_set_text(b, "Bord");
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "Create empty level with border",
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_STYLE:
+                wid_set_text(b, "Style");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Retheme walls and floors randomly",
                                     vsmall_font);
                 }
                 break;
