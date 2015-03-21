@@ -1255,6 +1255,8 @@ static void wid_editor_undo_save (void)
         ctx->undo_at = 0;
     }
 
+    ctx->save_needed = true;
+
     memcpy(&ctx->map_undo[ctx->undo_at], &ctx->map, sizeof(ctx->map));
     ctx->valid_undo[ctx->undo_at] = 1;
 }
@@ -2682,6 +2684,8 @@ static void wid_editor_save_level (void)
     LOG("Save editor level %s", tmp);
     wid_editor_save(tmp, false /* is_test_level */);
     myfree(tmp);
+
+    ctx->save_needed = false;
 }
 
 static void wid_editor_save_callback_yes (widp w)
@@ -2732,7 +2736,7 @@ static void wid_editor_hide (void)
     verify(ctx);
     verify(ctx->w);
 
-    if (ctx->undo_at > 1) {
+    if (ctx->save_needed) {
         wid_editor_save_ask();
     } else {
         wid_editor_go_back();
