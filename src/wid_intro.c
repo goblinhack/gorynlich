@@ -150,7 +150,6 @@ void wid_intro_visible (void)
          * Make sure the menu is visible.
          */
         wid_intro_menu_create();
-        return;
     }
 
     wid_intro_is_visible = true;
