@@ -1038,10 +1038,13 @@ static void client_poll (void)
 
                 socket_rx_server_hiscore(s, packet, data, &latest_hiscores);
 
-                wid_dead_visible(latest_hiscores.players[0].player_name,
-                                 latest_hiscores.players[0].death_reason,
-                                 latest_hiscores.rejoin_allowed);
-
+                if (client_level->is_test_level) {
+                    wid_game_map_go_back_to_editor();
+                } else {
+                    wid_dead_visible(latest_hiscores.players[0].player_name,
+                                    latest_hiscores.players[0].death_reason,
+                                    latest_hiscores.rejoin_allowed);
+                }
                 break;
             }
 

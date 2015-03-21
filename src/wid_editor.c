@@ -32,7 +32,7 @@
 
 static void wid_editor_hide(void);
 static void wid_editor_tile_right_button_pressed(int x, int y);
-static void wid_editor_set_focus(wid_editor_ctx *ctx, int focusx, int focusy);
+static void wid_editor_set_focus(wid_editor_ctx *ctx, int focus_x, int focus_y);
 static void wid_editor_map_scroll(int dx, int dy);
 static void wid_editor_undo_save(void);
 static void wid_editor_save_level(void);
@@ -43,8 +43,11 @@ static widp wid_editor_window;
 static widp wid_editor_background;
 static wid_editor_ctx *wid_editor_window_ctx;
 
+static level_pos_t saved_level_pos = {-1,-1};
 static int saved_focus_x = -1;
 static int saved_focus_y = -1;
+static int saved_map_x = -1;
+static int saved_map_y = -1;
 static tpp wid_editor_chosen_tile;
 
 static void wid_editor_set_mode (int edit_mode)
@@ -95,6 +98,28 @@ widp wid_editor_replace_template (widp w,
         return (0);
     }
 
+    if (tp_is_player(tp)) {
+        ctx->map_x = ix;
+        ctx->map_y = iy;
+        ctx->map_x -= WID_EDITOR_MENU_MAP_ACROSS / 2;
+        ctx->map_y -= WID_EDITOR_MENU_MAP_DOWN / 2;
+
+        while (ctx->map_x < 0) {
+            ctx->map_x++;
+        }
+
+        while (ctx->map_y < 0) {
+            ctx->map_y++;
+        }
+
+        while (ctx->map_x + WID_EDITOR_MENU_MAP_ACROSS >= MAP_WIDTH - 1) {
+            ctx->map_x--;
+        }
+
+        while (ctx->map_y + WID_EDITOR_MENU_MAP_DOWN >= MAP_HEIGHT - 1) {
+            ctx->map_y--;
+        }
+    }
     ctx->map.tile[ix][iy][z].tp = tp;
 
     return (0);
@@ -499,7 +524,7 @@ static void wid_editor_update_buttons (void)
         }
 
         double zoom = 0.002;
-        if ((x == ctx->focusx) && (y == ctx->focusy)) {
+        if ((x == ctx->focus_x) && (y == ctx->focus_y)) {
             if (!is_a_map_tile) {
                 tl.x -= zoom;
                 tl.y -= zoom;
@@ -529,7 +554,7 @@ static void wid_editor_update_buttons (void)
             color c = GREEN;
             c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
-        } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
+        } else if ((x == ctx->focus_x) && (y == ctx->focus_y)) {
             color c = RED;
             c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
@@ -686,9 +711,9 @@ static void wid_editor_focus_right (void)
         return;
     }
 
-    ctx->focusx++;
-    if (ctx->focusx > WID_EDITOR_MENU_CELLS_ACROSS - 1) {
-        ctx->focusx = WID_EDITOR_MENU_CELLS_ACROSS - 1;
+    ctx->focus_x++;
+    if (ctx->focus_x > WID_EDITOR_MENU_CELLS_ACROSS - 1) {
+        ctx->focus_x = WID_EDITOR_MENU_CELLS_ACROSS - 1;
         wid_editor_map_scroll(1, 0);
     }
 }
@@ -700,9 +725,9 @@ static void wid_editor_focus_left (void)
         return;
     }
 
-    ctx->focusx--;
-    if (ctx->focusx < 0) {
-        ctx->focusx = 0;
+    ctx->focus_x--;
+    if (ctx->focus_x < 0) {
+        ctx->focus_x = 0;
         wid_editor_map_scroll(-1, 0);
     }
 }
@@ -714,9 +739,9 @@ static void wid_editor_focus_down (void)
         return;
     }
 
-    ctx->focusy++;
-    if (ctx->focusy > WID_EDITOR_MENU_CELLS_DOWN - 1) {
-        ctx->focusy = WID_EDITOR_MENU_CELLS_DOWN - 1;
+    ctx->focus_y++;
+    if (ctx->focus_y > WID_EDITOR_MENU_CELLS_DOWN - 1) {
+        ctx->focus_y = WID_EDITOR_MENU_CELLS_DOWN - 1;
         wid_editor_map_scroll(0, 1);
     }
 }
@@ -728,17 +753,17 @@ static void wid_editor_focus_up (void)
         return;
     }
 
-    ctx->focusy--;
-    if (ctx->focusy < 0) {
-        ctx->focusy = 0;
+    ctx->focus_y--;
+    if (ctx->focus_y < 0) {
+        ctx->focus_y = 0;
         wid_editor_map_scroll(0, -1);
     }
 }
 
-static void wid_editor_set_focus (wid_editor_ctx *ctx, int focusx, int focusy)
+static void wid_editor_set_focus (wid_editor_ctx *ctx, int focus_x, int focus_y)
 {
-    ctx->focusx = focusx;
-    ctx->focusy = focusy;
+    ctx->focus_x = focus_x;
+    ctx->focus_y = focus_y;
 
     wid_editor_update_buttons();
 }
@@ -1784,8 +1809,8 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
     verify(ctx);
 
     int xy = (typeof(xy)) (uintptr_t) wid_get_client_context2(w);
-    int x = ctx->focusx;
-    int y = ctx->focusy;
+    int x = ctx->focus_x;
+    int y = ctx->focus_y;
 
     int mx = -1;
     int my = -1;
@@ -1868,8 +1893,7 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
 
         case 't':
             ctx->tile_mode = false;
-            wid_editor_set_mode(WID_EDITOR_MODE_CUT);
-            wid_editor_tile_left_button_pressed(x, y);
+            wid_editor_test();
             return (true);
 
         case 'c':
@@ -1964,8 +1988,8 @@ static uint8_t wid_editor_joy_button (widp w, int mx, int my)
     verify(ctx);
 
     int xy = (typeof(xy)) (uintptr_t) wid_get_client_context2(w);
-    int x = ctx->focusx;
-    int y = ctx->focusy;
+    int x = ctx->focus_x;
+    int y = ctx->focus_y;
 
     int ret = false;
 
@@ -2046,9 +2070,6 @@ static uint8_t wid_editor_mouse_motion (widp w,
                                         int relx, int rely,
                                         int wheelx, int wheely)
 {
-    wid_editor_ctx *ctx = wid_get_client_context(w);
-    verify(ctx);
-
     if (!relx && !rely && !wheelx && !wheely) {
         return (false);
     }
@@ -2110,10 +2131,10 @@ static void wid_editor_mouse_over (widp w,
     }
 
     int focus = (typeof(focus)) (uintptr_t) wid_get_client_context2(w);
-    int focusx = (focus & 0xff);
-    int focusy = (focus & 0xff00) >> 8;
+    int focus_x = (focus & 0xff);
+    int focus_y = (focus & 0xff00) >> 8;
 
-    wid_editor_set_focus(ctx, focusx, focusy);
+    wid_editor_set_focus(ctx, focus_x, focus_y);
 }
 
 static void wid_editor_destroy (widp w)
@@ -2147,8 +2168,11 @@ static void wid_editor_destroy (widp w)
 
     level_destroy(&ctx->level, false /* keep players */);
 
-    saved_focus_x = ctx->focusx;
-    saved_focus_y = ctx->focusy;
+    saved_level_pos = ctx->level_pos;
+    saved_focus_x = ctx->focus_x;
+    saved_focus_y = ctx->focus_y;
+    saved_map_x = ctx->map_x;
+    saved_map_y = ctx->map_y;
 
     myfree(ctx);
     wid_editor_window = 0;
@@ -2278,16 +2302,16 @@ static void wid_editor_tick (widp w)
     memset(ctx->map_highlight, 0, sizeof(ctx->map_highlight));
 
     if (ctx->got_line_start) {
-        int mx = ctx->focusx + ctx->map_x;
-        int my = ctx->focusy + ctx->map_y;
+        int mx = ctx->focus_x + ctx->map_x;
+        int my = ctx->focus_y + ctx->map_y;
 
         wid_editor_draw_highlight_line(ctx->line_start_x, ctx->line_start_y, 
                                        mx, my);
     }
 
     if (ctx->got_square_start) {
-        int mx = ctx->focusx + ctx->map_x;
-        int my = ctx->focusy + ctx->map_y;
+        int mx = ctx->focus_x + ctx->map_x;
+        int my = ctx->focus_y + ctx->map_y;
 
         wid_editor_draw_highlight_square(ctx->square_start_x, 
                                          ctx->square_start_y,
@@ -2295,8 +2319,8 @@ static void wid_editor_tick (widp w)
     }
 
     if (ctx->got_cut_start) {
-        int mx = ctx->focusx + ctx->map_x;
-        int my = ctx->focusy + ctx->map_y;
+        int mx = ctx->focus_x + ctx->map_x;
+        int my = ctx->focus_y + ctx->map_y;
 
         wid_editor_draw_highlight_cut(ctx->cut_start_x, 
                                       ctx->cut_start_y,
@@ -2357,12 +2381,12 @@ static void wid_editor_tick (widp w)
                 }
 
                 if (!ctx->tile_mode &&
-                    (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
-                    (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
+                    (ctx->focus_x < WID_EDITOR_MENU_MAP_ACROSS) && 
+                    (ctx->focus_y < WID_EDITOR_MENU_MAP_DOWN)) {
 
                     if (sdl_joy_buttons[SDL_JOY_BUTTON_A]) {
-                        wid_editor_tile_left_button_pressed(ctx->focusx, 
-                                                            ctx->focusy);
+                        wid_editor_tile_left_button_pressed(ctx->focus_x, 
+                                                            ctx->focus_y);
                     }
                 }
             }
@@ -2483,12 +2507,12 @@ static void wid_editor_tick (widp w)
 
                 if (!ctx->tile_mode &&
                     (ctx->edit_mode == WID_EDITOR_MODE_DRAW) &&
-                    (ctx->focusx < WID_EDITOR_MENU_MAP_ACROSS) && 
-                    (ctx->focusy < WID_EDITOR_MENU_MAP_DOWN)) {
+                    (ctx->focus_x < WID_EDITOR_MENU_MAP_ACROSS) && 
+                    (ctx->focus_y < WID_EDITOR_MENU_MAP_DOWN)) {
 
                     if (space) {
-                        wid_editor_tile_left_button_pressed(ctx->focusx, 
-                                                            ctx->focusy);
+                        wid_editor_tile_left_button_pressed(ctx->focus_x, 
+                                                            ctx->focus_y);
                     }
                 }
             }
@@ -2665,8 +2689,8 @@ void wid_editor (level_pos_t level_pos)
     wid_editor_ctx *ctx = myzalloc(sizeof(*ctx), "wid editor");
     wid_editor_window_ctx = ctx;
 
-    ctx->focusx = -1;
-    ctx->focusy = -1;
+    ctx->focus_x = -1;
+    ctx->focus_y = -1;
     ctx->level_pos = level_pos;
 
     widp window;
@@ -2782,7 +2806,7 @@ void wid_editor (level_pos_t level_pos)
             case WID_EDITOR_MODE_CUT:
                 wid_set_text(b, "Cut");
                 if (!sdl_joy_axes) {
-                    wid_set_tooltip(b, "t - shortcut",
+                    wid_set_tooltip(b, "Remove square section",
                                     vsmall_font);
                 }
                 break;
@@ -2801,7 +2825,7 @@ void wid_editor (level_pos_t level_pos)
                 }
                 break;
             case WID_EDITOR_MODE_TEST:
-                wid_set_text(b, "Test");
+                wid_set_text(b, "t - shortcut, test level");
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "Test out level",
                                     vsmall_font);
@@ -2855,17 +2879,10 @@ void wid_editor (level_pos_t level_pos)
         }
     }
 
-    if (saved_focus_x == -1) {
-        ctx->focusx = WID_EDITOR_MENU_CELLS_ACROSS / 2;
-    } else {
-        ctx->focusx = saved_focus_x;
-    }
-
-    if (saved_focus_y == -1) {
-        ctx->focusy = WID_EDITOR_MENU_CELLS_DOWN / 2;
-    } else {
-        ctx->focusy = saved_focus_y;
-    }
+    ctx->focus_x = -1;
+    ctx->focus_y = -1;
+    ctx->map_x = -1;
+    ctx->map_y = -1;
 
     /*
      * Load all tiles
@@ -2878,6 +2895,35 @@ void wid_editor (level_pos_t level_pos)
     wid_editor_load_map(level_pos);
 
     map_fixup();
+
+    /*
+     * If no position was loaded from the level, use a default unless this is 
+     * an edit of an old level.
+     */
+    if (!memcmp(&saved_level_pos, &ctx->level_pos, sizeof(level_pos_t))) {
+        if (saved_focus_x != -1) {
+            ctx->focus_x = saved_focus_x;
+            ctx->focus_y = saved_focus_y;
+            ctx->map_x = saved_map_x;
+            ctx->map_y = saved_map_y;
+        }
+    }
+
+    if (ctx->focus_x == -1) {
+        ctx->focus_x = WID_EDITOR_MENU_CELLS_ACROSS / 2;
+    }
+
+    if (ctx->focus_y == -1) {
+        ctx->focus_y = WID_EDITOR_MENU_CELLS_DOWN / 2;
+    }
+
+    if (ctx->map_x == -1) {
+        ctx->map_x = MAP_WIDTH / 2;
+    }
+
+    if (ctx->map_y == -1) {
+        ctx->map_y = MAP_HEIGHT / 2;
+    }
 
     ctx->undo_at = -1;
     wid_editor_undo_save();
@@ -2894,7 +2940,7 @@ void wid_editor (level_pos_t level_pos)
     wid_editor_bg_create();
 
     ctx->created = time_get_time_ms();
-    ctx->tile_mode = 1;
+    ctx->tile_mode = 0;
 
     wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
 }

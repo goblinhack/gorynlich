@@ -388,9 +388,22 @@ uint8_t wid_game_map_client_player_move (void)
     return (up || down || left || right || fire);
 }
 
+void wid_game_map_go_back_to_editor (void)
+{
+    client_socket_close(0, 0);
+    wid_game_map_client_hide();
+    wid_game_map_client_wid_destroy();
+
+    level_pos_t level_pos;
+    level_pos.x = 66;
+    level_pos.y = 66;
+
+    wid_editor(level_pos);
+}
+
 static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 {
-    if (wid_menu_visible) {
+if (wid_menu_visible) {
         return (false);
     }
 
@@ -535,15 +548,7 @@ static uint8_t wid_game_map_key_event (widp w, const SDL_KEYSYM *key)
 
         case 'q':
             if (client_level->is_test_level) {
-                client_socket_close(0, 0);
-                wid_game_map_client_hide();
-                wid_game_map_client_wid_destroy();
-
-                level_pos_t level_pos;
-                level_pos.x = 66;
-                level_pos.y = 66;
-
-                wid_editor(level_pos);
+                wid_game_map_go_back_to_editor();
                 return (true);
             }
 
