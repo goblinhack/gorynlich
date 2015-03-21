@@ -1,4 +1,6 @@
 --------------------------------------- plan for mar --------------------------------------
+- jump to map not tiles on edit level
+- save postion on map
 - need saved focus for tile and map mode and for each tile family
 - switching tab at top changes chosen tile
 - chosen tiles for each tab shown at bottom too
