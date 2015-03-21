@@ -1286,6 +1286,59 @@ static void wid_editor_nuke (void)
     wid_editor_undo_save();
 }
 
+static void wid_editor_border (void)
+{
+    tpp floor;
+    tpp wall;
+
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_floor(tp)) {
+            floor = tp;
+            break;
+        }
+    }
+
+    for (;;) {
+        uint16_t id = myrand() % THING_MAX;
+
+        tpp tp = id_to_tp(id);
+        if (tp_is_wall(tp)) {
+            wall = tp;
+            break;
+        }
+    }
+
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    int x, y, z;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        z = MAP_DEPTH_WALL;
+        ctx->map.tile[x][0][z].tp = wall;
+        ctx->map.tile[x][MAP_HEIGHT-1][z].tp = wall;
+    }
+
+    for (y = 0; y < MAP_HEIGHT; y++) {
+        z = MAP_DEPTH_WALL;
+        ctx->map.tile[0][y][z].tp = wall;
+        ctx->map.tile[MAP_WIDTH-1][y-1][z].tp = wall;
+    }
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            z = MAP_DEPTH_FLOOR;
+            ctx->map.tile[x][y][z].tp = floor;
+        }
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
 static void wid_editor_tile_fill_ (int x, int y)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
@@ -1525,6 +1578,11 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
             case WID_EDITOR_MODE_NUKE:
                 ctx->tile_mode = false;
                 wid_editor_nuke();
+                break;
+
+            case WID_EDITOR_MODE_BORDER:
+                ctx->tile_mode = false;
+                wid_editor_border();
                 break;
 
             case WID_EDITOR_MODE_SAVE:
