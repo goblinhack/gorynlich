@@ -3,6 +3,7 @@
  tooltip="Bone pile"
  z_depth=3
  is_mob_spawner
+ is_effect_pulse
  is_light_source
  light_radius=0.5
  light_tint="cyan"
