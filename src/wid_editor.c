@@ -1339,6 +1339,78 @@ static void wid_editor_border (void)
     wid_editor_undo_save();
 }
 
+static void wid_editor_hflip (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    memcpy(&ctx->map_tmp, &ctx->map, sizeof(ctx->map));
+    memset(&ctx->map, 0, sizeof(ctx->map));
+
+    int x, y, z;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+                memcpy(&ctx->map.tile[MAP_WIDTH - 1 - x][y][z],
+                       &ctx->map_tmp.tile[x][y][z],
+                       sizeof(wid_editor_map_tile));
+            }
+        }
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
+static void wid_editor_vflip (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    memcpy(&ctx->map_tmp, &ctx->map, sizeof(ctx->map));
+    memset(&ctx->map, 0, sizeof(ctx->map));
+
+    int x, y, z;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+                memcpy(&ctx->map.tile[x][MAP_HEIGHT - 1 - y][z],
+                       &ctx->map_tmp.tile[x][y][z],
+                       sizeof(wid_editor_map_tile));
+            }
+        }
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
+static void wid_editor_rotate (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    memcpy(&ctx->map_tmp, &ctx->map, sizeof(ctx->map));
+    memset(&ctx->map, 0, sizeof(ctx->map));
+
+    int x, y, z;
+
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            for (z = 0; z < MAP_DEPTH; z++) {
+                memcpy(&ctx->map.tile[x][y][z],
+                       &ctx->map_tmp.tile[y][MAP_WIDTH - 1 - x][z],
+                       sizeof(wid_editor_map_tile));
+            }
+        }
+    }
+
+    map_fixup();
+
+    wid_editor_undo_save();
+}
+
 static void wid_editor_tile_fill_ (int x, int y)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
@@ -1583,6 +1655,21 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
             case WID_EDITOR_MODE_BORDER:
                 ctx->tile_mode = false;
                 wid_editor_border();
+                break;
+
+            case WID_EDITOR_MODE_HFLIP:
+                ctx->tile_mode = false;
+                wid_editor_hflip();
+                break;
+
+            case WID_EDITOR_MODE_VFLIP:
+                ctx->tile_mode = false;
+                wid_editor_vflip();
+                break;
+
+            case WID_EDITOR_MODE_ROTATE:
+                ctx->tile_mode = false;
+                wid_editor_rotate();
                 break;
 
             case WID_EDITOR_MODE_SAVE:
@@ -2711,6 +2798,27 @@ void wid_editor (level_pos_t level_pos)
                 wid_set_text(b, "Nuke");
                 if (!sdl_joy_axes) {
                     wid_set_tooltip(b, "Z - shortcut. Destroy level.", 
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_VFLIP:
+                wid_set_text(b, "Vflip");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Vertical flip.", 
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_HFLIP:
+                wid_set_text(b, "Hflip");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Horzizontal flip.", 
+                                    vsmall_font);
+                }
+                break;
+            case WID_EDITOR_MODE_ROTATE:
+                wid_set_text(b, "Rot");
+                if (!sdl_joy_axes) {
+                    wid_set_tooltip(b, "Rotate level.", 
                                     vsmall_font);
                 }
                 break;
