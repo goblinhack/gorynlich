@@ -3,6 +3,7 @@
  tooltip="Large bone pile"
  z_depth=3
  is_mob_spawner
+ is_effect_pulse
  is_light_source
  light_radius=1.0
  light_tint="red"
