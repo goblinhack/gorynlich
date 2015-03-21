@@ -31,6 +31,7 @@
 #undef MAZE_DEBUG_SHOW_CONSOLE
 
 #include "main.h"
+#include "wid.h"
 #include "map_jigsaw.h"
 #include "ramdisk.h"
 
@@ -2845,7 +2846,7 @@ int32_t map_jigsaw_test (int32_t argc, char **argv)
 /*
  * map_jigsaw_generate
  */
-void map_jigsaw_generate (widp wid)
+void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
 {
     const char *jigsaw_map;
 
@@ -2871,11 +2872,11 @@ void map_jigsaw_generate (widp wid)
             if (c != ' ') {
                 tp = tp_find("data/things/floor3");
 
-                wid_game_map_server_replace_tile(wid, x, y, 
-                                                0, /* thing */
-                                                tp,
-                                                0 /* item */,
-                                                0 /* stats */);
+                (*callback)(wid, x, y, 
+                            0, /* thing */
+                            tp,
+                            0 /* item */,
+                            0 /* stats */);
             }
 
             tp = 0;
@@ -2917,11 +2918,11 @@ void map_jigsaw_generate (widp wid)
                 continue;
             }
 
-            wid_game_map_server_replace_tile(wid, x, y, 
-                                             0, /* thing */
-                                             tp,
-                                             0 /* item */,
-                                             0 /* stats */);
+            (*callback)(wid, x, y, 
+                        0, /* thing */
+                        tp,
+                        0 /* item */,
+                        0 /* stats */);
         }
     }
 }

@@ -332,7 +332,7 @@ levelp level_load_random (level_pos_t level_pos,
 
     LEVEL_LOG(level, "Level generating");
 
-    map_jigsaw_generate(wid);
+    map_jigsaw_generate(wid, wid_game_map_server_replace_tile);
 
     level_update_now(level);
 
@@ -1356,13 +1356,13 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
     GET_BRA(ctx);
 
     char *tmp = 0;
-    GET_NAMED_STRING(ctx, "title", tmp);
+    GET_OPT_NAMED_STRING(ctx, "title", tmp);
     if (!tmp) {
-        DIE("no level title for level");
+        ERR("no level title for level");
+    } else {
+        level_set_title(level, tmp);
+        myfree(tmp);
     }
-
-    level_set_title(level, tmp);
-    myfree(tmp);
 
     wid = level_get_map(level);
     if (!wid) {
