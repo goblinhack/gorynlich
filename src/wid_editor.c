@@ -3000,7 +3000,19 @@ void wid_editor (level_pos_t level_pos)
      * If no position was loaded from the level, use a default unless this is 
      * an edit of an old level.
      */
-    if (!memcmp(&saved_level_pos, &ctx->level_pos, sizeof(level_pos_t))) {
+    if ((level_pos.x == 66) && (level_pos.y == 66)) {
+        /*
+         * Returning from testing a level? Welcome back...
+         */
+        ctx->level_pos = saved_level_pos;
+        ctx->focus_x = saved_focus_x;
+        ctx->focus_y = saved_focus_y;
+        ctx->map_x = saved_map_x;
+        ctx->map_y = saved_map_y;
+    } else if (!memcmp(&saved_level_pos, &ctx->level_pos, sizeof(level_pos_t))) {
+        /*
+         * Reloading the same level?
+         */
         if (saved_focus_x != -1) {
             ctx->focus_x = saved_focus_x;
             ctx->focus_y = saved_focus_y;
