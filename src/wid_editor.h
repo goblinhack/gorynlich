@@ -85,7 +85,7 @@ typedef struct {
 
     wid_editor_map_grid map;
     wid_editor_map_grid map_undo[WID_EDITOR_UNDO];
-    wid_editor_map_grid map_cut;
+    wid_editor_map_grid map_copy;
 
     uint8_t valid_undo[WID_EDITOR_UNDO];
 
@@ -143,7 +143,6 @@ typedef struct {
     int cut_end_x;
     int cut_end_y;
     int got_cut_start;
-    int got_cut_end;
 
 } wid_editor_ctx;
 
