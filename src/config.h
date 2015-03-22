@@ -93,8 +93,18 @@
  */
 #define LEVELS_ACROSS               20
 #define LEVELS_DOWN                 20
+
+/*
+ * How many tiles per map
+ */
 #define MAP_WIDTH                   64
 #define MAP_HEIGHT                  64
+
+/*
+ * The number of tiles per screen.
+ */
+#define TILES_SCREEN_WIDTH          18
+#define TILES_SCREEN_HEIGHT         14
 
 /*
  * How many jigsaw pieces across and down make up the map. We substract
@@ -132,14 +142,6 @@
  */
 #define TILE_PIX_WITH_SHADOW_WIDTH  TILE_WIDTH
 #define TILE_PIX_WITH_SHADOW_HEIGHT TILE_HEIGHT
-
-/*
- * The number of tiles per screen.
- */
-#define TILES_SCREEN_WIDTH           16
-#define TILES_SCREEN_HEIGHT          12
-#define TILES_SCREEN_EDITOR_WIDTH    24
-#define TILES_SCREEN_EDITOR_HEIGHT   18
 
 /*
  * Padding for tiles on the edge of the smooth scroll. Has to be quite wide so 
