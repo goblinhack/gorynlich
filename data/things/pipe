@@ -1,5 +1,6 @@
 {
  short_name="pipe"
+ raw_name="pipe"
  tooltip="Pipe"
  z_depth=3
  is_inactive

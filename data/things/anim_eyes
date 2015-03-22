@@ -1,5 +1,6 @@
 {
  short_name="anim"
+ raw_name="anim_eyes"
  is_animated
  is_hidden_from_editor
  tiles={

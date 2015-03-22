@@ -1,5 +1,6 @@
 {
  short_name="Wizard"
+ raw_name="wizard"
  tooltip="Wizard"
  carrying={
     "data/things/wand_fire"

@@ -1,5 +1,6 @@
 {
  short_name="Wooden axe"
+ raw_name="axe1"
  tooltip="Wooden axe"
  z_depth=3
  is_weapon

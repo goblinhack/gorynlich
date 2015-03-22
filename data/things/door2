@@ -1,5 +1,6 @@
 {
  short_name="Door"
+ raw_name="door2"
  tooltip="Door2"
  z_depth=2
  is_inactive

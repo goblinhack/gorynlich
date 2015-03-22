@@ -1,5 +1,6 @@
 {
  short_name="noentry"
+ raw_name="noentry"
  tooltip="No stuff here"
  z_depth=3
  is_inactive

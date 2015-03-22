@@ -1,5 +1,6 @@
 {
  short_name="Shiny gem"
+ raw_name="gem2"
  tooltip="Turquoise gem"
  z_depth=3
  is_inactive

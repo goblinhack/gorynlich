@@ -73,6 +73,11 @@ typedef struct tp_ {
     char *short_name;
 
     /*
+     * Base filename
+     */
+    char *raw_name;
+
+    /*
      * End user description of the thing.
      */
     char *tooltip;
@@ -276,6 +281,7 @@ tpp string2thing_template(const char **s);
 
 const char *tp_name(tpp);
 const char *tp_short_name(tpp);
+const char *tp_raw_name(tpp);
 tpp tp_fires(tpp);
 const char *tp_polymorph_on_death(tpp);
 const char *tp_carried_as(tpp);
