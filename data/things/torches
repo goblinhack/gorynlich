@@ -1,5 +1,6 @@
 {
  short_name="Bundle of torches"
+ raw_name="torches"
  tooltip="Bundle of torches"
  z_depth=3
  quantity=10

@@ -1,5 +1,6 @@
 {
  short_name="Wall"
+ raw_name="wall4"
  tooltip="Wall4"
  z_depth=2
  is_inactive

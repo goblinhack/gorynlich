@@ -1,5 +1,6 @@
 {
  short_name="Keys"
+ raw_name="keys2"
  tooltip="It's more keys"
  z_depth=3
  quantity=2

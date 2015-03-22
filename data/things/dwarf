@@ -1,5 +1,6 @@
 {
  short_name="Dwarf"
+ raw_name="dwarf"
  tooltip="Dwarf"
  carrying={
     "data/things/axe1"

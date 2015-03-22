@@ -1,5 +1,6 @@
 {
  short_name="Poison gas"
+ raw_name="poison2"
  z_depth=4
  is_animated
  is_hidden_from_editor

@@ -1,5 +1,6 @@
 {
  short_name="Longish Bow"
+ raw_name="bow2"
  tooltip="Longish Bow"
  fires="data/things/arrow"
  z_depth=3

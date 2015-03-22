@@ -1,5 +1,6 @@
 {
  short_name="Two handed sword"
+ raw_name="sword5"
  tooltip="Two Fisted Sword"
  z_depth=3
  is_weapon

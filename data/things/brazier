@@ -1,5 +1,6 @@
 {
  short_name="Brazier"
+ raw_name="brazier"
  tooltip="Fire lighty thing"
  z_depth=4
  is_light_source

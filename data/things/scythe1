@@ -1,5 +1,6 @@
 {
  short_name="Scythe"
+ raw_name="scythe1"
  tooltip="Scythe"
  z_depth=3
  is_weapon
