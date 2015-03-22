@@ -899,9 +899,10 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
     dirlist_free(&d);
 }
 
-widp wid_map (on_selected_t on_selected, on_cancelled_t on_cancelled)
+widp wid_map (const char *title, 
+              on_selected_t on_selected, 
+              on_cancelled_t on_cancelled)
 {
-    const char *title = "Choose epic level";
     wid_map_event_t selected = wid_map_cell_selected;
     wid_map_event_t cancelled = wid_map_cell_cancelled;
 
