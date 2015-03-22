@@ -41,6 +41,7 @@ static void wid_editor_save(const char *dir_and_file, int is_test_level);
 static void wid_editor_button_animate(widp b, tpp tp);
 
 static widp wid_editor_save_popup; // edit wid_editor_tick if you add more
+static widp wid_editor_map_dialog;
 static widp wid_editor_window;
 static widp wid_editor_background;
 static wid_editor_ctx *wid_editor_window_ctx;
@@ -638,8 +639,26 @@ static void wid_editor_update_tile_mode_buttons (void)
         case WID_TILE_MODE_FLOORS:
             wid_set_text(b, "Floor");
             break;
+        case WID_TILE_MODE_DOORS:
+            wid_set_text(b, "Doors");
+            break;
         case WID_TILE_MODE_MONST:
             wid_set_text(b, "Monst");
+            break;
+        case WID_TILE_MODE_EXITS:
+            wid_set_text(b, "Exits");
+            break;
+        case WID_TILE_MODE_WEAPONS:
+            wid_set_text(b, "Weapons");
+            break;
+        case WID_TILE_MODE_FOOD:
+            wid_set_text(b, "Food");
+            break;
+        case WID_TILE_MODE_MOB_SPAWNERS:
+            wid_set_text(b, "Mobs");
+            break;
+        case WID_TILE_MODE_TREASURE:
+            wid_set_text(b, "Treasure");
             break;
         case WID_TILE_MODE_ITEMS:
             wid_set_text(b, "Items");
@@ -1109,7 +1128,19 @@ static void wid_editor_map_scroll (int dx, int dy)
     recursion = 0;
 }
 
-static void wid_editor_map_thing_replace (int x, int y)
+static void wid_editor_exit_selected (level_pos_t p)
+{
+    wid_editor_map_dialog = 0;
+
+    CON("%d %d", p.x,p.y);
+}
+
+static void wid_editor_exit_cancelled (void)
+{
+    wid_editor_map_dialog = 0;
+}
+
+static void wid_editor_map_thing_replace (int x, int y, int interactive)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
@@ -1119,13 +1150,19 @@ static void wid_editor_map_thing_replace (int x, int y)
         DIE("bad map coord %d,%d", x, y);
     }
 
-    if (!wid_editor_chosen_tile[ctx->tile_pool]) {
+    tpp tp = wid_editor_chosen_tile[ctx->tile_pool];
+    if (!tp) {
         return;
     }
 
-    int z = tp_get_z_depth(wid_editor_chosen_tile[ctx->tile_pool]);
+    int z = tp_get_z_depth(tp);
+    ctx->map.tile[x][y][z].tp = tp;
 
-    ctx->map.tile[x][y][z].tp = wid_editor_chosen_tile[ctx->tile_pool];
+    if (tp_is_exit(tp)) {
+        wid_editor_map_dialog = wid_map("Choose destination",
+                                        wid_editor_exit_selected, 
+                                        wid_editor_exit_cancelled);
+    }
 }
 
 static tpp wid_editor_map_thing_get (int x, int y)
@@ -1204,13 +1241,13 @@ static void do_wid_editor_line (int x0_in,
     y = y0;
 
     if (flag == 0) {
-        wid_editor_map_thing_replace((int)x, (int)y);
+        wid_editor_map_thing_replace((int)x, (int)y, false /* interactive */);
     } else if (flag == 1) {
-        wid_editor_map_thing_replace((int)y, (int)x);
+        wid_editor_map_thing_replace((int)y, (int)x, false /* interactive */);
     } else if (flag == 2) {
-        wid_editor_map_thing_replace((int)y, (int)-x);
+        wid_editor_map_thing_replace((int)y, (int)-x, false /* interactive */);
     } else if (flag == 3) {
-        wid_editor_map_thing_replace((int)x, (int)-y);
+        wid_editor_map_thing_replace((int)x, (int)-y, false /* interactive */);
     }
 
     for (i = 1; i <= dx; i++){
@@ -1224,13 +1261,13 @@ static void do_wid_editor_line (int x0_in,
         }
 
         if (flag == 0) {
-            wid_editor_map_thing_replace((int)x, (int)y);
+            wid_editor_map_thing_replace((int)x, (int)y, false /* interactive */);
         } else if (flag == 1) {
-            wid_editor_map_thing_replace((int)y, (int)x);
+            wid_editor_map_thing_replace((int)y, (int)x, false /* interactive */);
         } else if (flag == 2) {
-            wid_editor_map_thing_replace((int)y, (int)-x);
+            wid_editor_map_thing_replace((int)y, (int)-x, false /* interactive */);
         } else if (flag == 3) {
-            wid_editor_map_thing_replace((int)x, (int)-y);
+            wid_editor_map_thing_replace((int)x, (int)-y, false /* interactive */);
         }
     }
 }
@@ -1343,13 +1380,13 @@ static void wid_editor_draw_square (int x0, int y0, int x1, int y1)
     }
 
     for (x = x0; x <= x1; x++) {
-        wid_editor_map_thing_replace(x, y0);
-        wid_editor_map_thing_replace(x, y1);
+        wid_editor_map_thing_replace(x, y0, false /* interactive */);
+        wid_editor_map_thing_replace(x, y1, false /* interactive */);
     }
 
     for (y = y0; y <= y1; y++) {
-        wid_editor_map_thing_replace(x0, y);
-        wid_editor_map_thing_replace(x1, y);
+        wid_editor_map_thing_replace(x0, y, false /* interactive */);
+        wid_editor_map_thing_replace(x1, y, false /* interactive */);
     }
 
     map_fixup();
@@ -1918,7 +1955,7 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                 (y < WID_EDITOR_MENU_MAP_DOWN)) {
                 switch (ctx->edit_mode) {
                 case WID_EDITOR_MODE_DRAW:
-                    wid_editor_map_thing_replace(mx, my);
+                    wid_editor_map_thing_replace(mx, my, true /* interactive */);
 
                     map_fixup();
 
@@ -2596,15 +2633,24 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
 
     if (tp_is_wall(tp)) {
         tile_pool = WID_TILE_MODE_WALLS;
-    }
-    if (tp_is_floor(tp)) {
+    } else if (tp_is_door(tp)) {
+        tile_pool = WID_TILE_MODE_DOORS;
+    } else if (tp_is_floor(tp)) {
         tile_pool = WID_TILE_MODE_FLOORS;
-    }
-    if (tp_is_monst(tp)) {
+    } else if (tp_is_monst(tp)) {
         tile_pool = WID_TILE_MODE_MONST;
-    }
-    if (tp_is_player(tp)) {
+    } else if (tp_is_player(tp)) {
         tile_pool = WID_TILE_MODE_PLAYER;
+    } else if (tp_is_weapon(tp)) {
+        tile_pool = WID_TILE_MODE_WEAPONS;
+    } else if (tp_is_mob_spawner(tp)) {
+        tile_pool = WID_TILE_MODE_MOB_SPAWNERS;
+    } else if (tp_is_treasure(tp)) {
+        tile_pool = WID_TILE_MODE_TREASURE;
+    } else if (tp_is_food(tp)) {
+        tile_pool = WID_TILE_MODE_FOOD;
+    } else if (tp_is_exit(tp)) {
+        tile_pool = WID_TILE_MODE_EXITS;
     }
 
     int count = ctx->tile_count[tile_pool];
@@ -2666,7 +2712,7 @@ static void wid_editor_tick (widp w)
         return;
     }
 
-    if (wid_editor_save_popup) {
+    if (wid_editor_save_popup || wid_editor_map_dialog) {
         return;
     }
 
@@ -2982,7 +3028,7 @@ static void wid_editor_go_back (void)
 {
     wid_destroy(&wid_editor_background);
     wid_destroy(&wid_editor_window);
-    wid_map(0, 0);
+    wid_map("Choose epic level", 0, 0);
 }
 
 static void wid_editor_save_close_dialog (widp w)

@@ -439,7 +439,7 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                uint32_t button)
 {
     wid_intro_hide();
-    wid_map(0, 0);
+    wid_map("Choose epic level", 0, 0);
 
     return (true);
 }
