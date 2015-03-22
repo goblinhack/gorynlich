@@ -491,7 +491,7 @@ static uint8_t wid_menu_credits_selected (widp w,
 
 static void wid_intro_create (void)
 {
-    if (1) {
+    if (0) {
 level_pos_t level_pos;
 level_pos.x = 2;
 level_pos.y = 1;
