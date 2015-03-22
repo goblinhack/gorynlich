@@ -1,5 +1,6 @@
 {
  short_name="Cloudkill potion"
+ raw_name="potion_cloudkill"
  tooltip="Potion of blackiness, aka cloudkill"
  z_depth=4
  is_inactive

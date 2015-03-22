@@ -1,5 +1,6 @@
 {
  short_name="Longish sword"
+ raw_name="sword4"
  tooltip="Longish sword"
  z_depth=3
  is_weapon

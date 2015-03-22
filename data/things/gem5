@@ -1,5 +1,6 @@
 {
  short_name="Bloodstone"
+ raw_name="gem5"
  tooltip="Bloodstone"
  z_depth=3
  is_inactive

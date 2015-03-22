@@ -17,6 +17,47 @@
 
 #define WID_EDITOR_UNDO                 1000
 
+enum {
+    WID_EDITOR_MODE_TOGGLE,
+    WID_EDITOR_MODE_DRAW,
+    WID_EDITOR_MODE_LINE,
+    WID_EDITOR_MODE_SQUARE,
+    WID_EDITOR_MODE_FILL,
+    WID_EDITOR_MODE_DEL,
+    WID_EDITOR_MODE_YANK,
+    WID_EDITOR_MODE_CUT,
+    WID_EDITOR_MODE_COPY,
+    WID_EDITOR_MODE_PASTE,
+    WID_EDITOR_MODE_UNDO,
+    WID_EDITOR_MODE_REDO,
+    WID_EDITOR_MODE_SAVE,
+    WID_EDITOR_MODE_UNUSED_1,
+    WID_EDITOR_MODE_UNUSED_2,
+    WID_EDITOR_MODE_UNUSED_3,
+    WID_EDITOR_MODE_UNUSED_4,
+    WID_EDITOR_MODE_UNUSED_5,
+    WID_EDITOR_MODE_UNUSED_6,
+    WID_EDITOR_MODE_VFLIP,
+    WID_EDITOR_MODE_HFLIP,
+    WID_EDITOR_MODE_ROTATE,
+    WID_EDITOR_MODE_TEST,
+    WID_EDITOR_MODE_BORDER,
+    WID_EDITOR_MODE_STYLE,
+    WID_EDITOR_MODE_RANDOM,
+    WID_EDITOR_MODE_NUKE,
+    WID_EDITOR_MODE_MAX,
+};
+
+enum {
+    WID_TILE_MODE_NONE,
+    WID_TILE_MODE_WALLS,
+    WID_TILE_MODE_FLOORS,
+    WID_TILE_MODE_MONST,
+    WID_TILE_MODE_ITEMS,
+    WID_TILE_MODE_PLAYER,
+};
+#define WID_TILE_POOL_MAX 6
+
 typedef struct wid_editor_tile_ {
     int x;
     int y;
@@ -83,6 +124,15 @@ typedef struct {
     wid_editor_tile 
         tile[WID_EDITOR_MENU_CELLS_ACROSS][WID_EDITOR_MENU_CELLS_DOWN];
 
+    /*
+     * Tile pools
+     */
+    wid_editor_tile tile_pools[WID_TILE_POOL_MAX][THING_MAX];
+    int tile_count[WID_TILE_POOL_MAX];
+
+    /*
+     * Map tiles
+     */
     wid_editor_map_grid map;
     wid_editor_map_grid map_undo[WID_EDITOR_UNDO];
     wid_editor_map_grid map_copy;
@@ -126,6 +176,7 @@ typedef struct {
     int undo_at;
 
     int tile_mode;
+    int tile_pool;
 
     /*
      * Drawing or lines or?
@@ -151,37 +202,6 @@ typedef struct {
     int got_cut_start;
 
 } wid_editor_ctx;
-
-enum {
-    WID_EDITOR_MODE_TOGGLE,
-    WID_EDITOR_MODE_DRAW,
-    WID_EDITOR_MODE_LINE,
-    WID_EDITOR_MODE_SQUARE,
-    WID_EDITOR_MODE_FILL,
-    WID_EDITOR_MODE_DEL,
-    WID_EDITOR_MODE_YANK,
-    WID_EDITOR_MODE_CUT,
-    WID_EDITOR_MODE_COPY,
-    WID_EDITOR_MODE_PASTE,
-    WID_EDITOR_MODE_UNDO,
-    WID_EDITOR_MODE_REDO,
-    WID_EDITOR_MODE_SAVE,
-    WID_EDITOR_MODE_UNUSED_1,
-    WID_EDITOR_MODE_UNUSED_2,
-    WID_EDITOR_MODE_UNUSED_3,
-    WID_EDITOR_MODE_UNUSED_4,
-    WID_EDITOR_MODE_UNUSED_5,
-    WID_EDITOR_MODE_UNUSED_6,
-    WID_EDITOR_MODE_VFLIP,
-    WID_EDITOR_MODE_HFLIP,
-    WID_EDITOR_MODE_ROTATE,
-    WID_EDITOR_MODE_TEST,
-    WID_EDITOR_MODE_BORDER,
-    WID_EDITOR_MODE_STYLE,
-    WID_EDITOR_MODE_RANDOM,
-    WID_EDITOR_MODE_NUKE,
-    WID_EDITOR_MODE_MAX,
-};
 
 void wid_editor(level_pos_t);
 

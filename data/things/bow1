@@ -1,5 +1,6 @@
 {
  short_name="Child's Bow"
+ raw_name="bow1"
  tooltip="Plastic Bow"
  fires="data/things/arrow"
  z_depth=3

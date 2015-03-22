@@ -1,5 +1,6 @@
 {
  short_name="Mob spawner"
+ raw_name="generator5"
  tooltip="Mob spawner"
  z_depth=3
  is_mob_spawner

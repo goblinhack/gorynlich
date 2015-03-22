@@ -1,5 +1,6 @@
 {
  short_name="Phantom"
+ raw_name="ghost2"
  tooltip="Phantom"
  z_depth=3
  speed=4

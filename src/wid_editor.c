@@ -38,6 +38,7 @@ static void wid_editor_map_scroll(int dx, int dy);
 static void wid_editor_undo_save(void);
 static void wid_editor_save_level(void);
 static void wid_editor_save(const char *dir_and_file, int is_test_level);
+static void wid_editor_button_animate(widp b, tpp tp);
 
 static widp wid_editor_save_popup; // edit wid_editor_tick if you add more
 static widp wid_editor_window;
@@ -49,7 +50,7 @@ static int saved_focus_x = -1;
 static int saved_focus_y = -1;
 static int saved_map_x = -1;
 static int saved_map_y = -1;
-static tpp wid_editor_chosen_tile;
+static tpp wid_editor_chosen_tile[WID_TILE_POOL_MAX];
 
 static void wid_editor_set_mode (int edit_mode)
 {
@@ -130,6 +131,10 @@ static tpp map_find_wall_at (int x, int y)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
+    if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
+        return (0);
+    }
+
     tpp tp = ctx->map.tile[x][y][MAP_DEPTH_WALL].tp;
     if (tp && tp_is_wall(tp)) {
         return (tp);
@@ -142,6 +147,10 @@ static tpp map_find_pipe_at (int x, int y)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
+    if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
+        return (0);
+    }
+
     tpp tp = ctx->map.tile[x][y][MAP_DEPTH_WALL].tp;
     if (tp && tp_is_pipe(tp)) {
         return (tp);
@@ -153,6 +162,10 @@ static tpp map_find_pipe_at (int x, int y)
 static tpp map_find_door_at (int x, int y)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    if ((x < 0) || (y < 0) || (x >= MAP_WIDTH) || (y >= MAP_HEIGHT)) {
+        return (0);
+    }
 
     tpp tp = ctx->map.tile[x][y][MAP_DEPTH_WALL].tp;
     if (tp && tp_is_door(tp)) {
@@ -441,8 +454,12 @@ static void wid_editor_update_edit_mode_buttons (void)
             break;
 
         case WID_EDITOR_MODE_TOGGLE:
-            if (wid_editor_chosen_tile) {
-                wid_set_thing_template(b, wid_editor_chosen_tile);
+            if (wid_editor_chosen_tile[ctx->tile_pool]) {
+                tpp tp = wid_editor_chosen_tile[ctx->tile_pool];
+
+                wid_set_thing_template(b, tp);
+                wid_editor_button_animate(b, tp);
+
                 wid_set_color(b, WID_COLOR_TL, RED);
                 wid_set_color(b, WID_COLOR_BR, RED);
             }
@@ -461,6 +478,191 @@ static void wid_editor_update_edit_mode_buttons (void)
     wid_set_color(b, WID_COLOR_TL, RED);
     wid_set_color(b, WID_COLOR_BR, RED);
     wid_set_color(b, WID_COLOR_TEXT, GREEN);
+}
+
+static void wid_editor_button_animate (widp b, tpp tp)
+{
+    if (!tp) {
+        return;
+    }
+    wid_set_thing_template(b, tp);
+
+    int tick = time_get_time_ms() / 100;
+    int which = tick % 8;
+
+    const char *tn = tp_raw_name(tp);
+
+    char tilename[40];
+
+    switch (which) {
+        case 0: snprintf(tilename, sizeof(tilename) - 1, "%s-right", tn); break;
+        case 1: snprintf(tilename, sizeof(tilename) - 1, "%s-br", tn); break;
+        case 2: snprintf(tilename, sizeof(tilename) - 1, "%s-down", tn); break;
+        case 3: snprintf(tilename, sizeof(tilename) - 1, "%s-bl", tn); break;
+        case 4: snprintf(tilename, sizeof(tilename) - 1, "%s-left", tn); break;
+        case 5: snprintf(tilename, sizeof(tilename) - 1, "%s-tl", tn); break;
+        case 6: snprintf(tilename, sizeof(tilename) - 1, "%s-up", tn); break;
+        case 7: snprintf(tilename, sizeof(tilename) - 1, "%s-tr", tn); break;
+    }
+
+    tilep tile = tile_find(tilename);
+    if (tile) {
+        wid_set_tilename(b, tilename);
+    } else {
+        switch (which) {
+            case 0: snprintf(tilename, sizeof(tilename) - 1, "%s1a-right", tn); break;
+            case 1: snprintf(tilename, sizeof(tilename) - 1, "%s1a-br", tn); break;
+            case 2: snprintf(tilename, sizeof(tilename) - 1, "%s1a-down", tn); break;
+            case 3: snprintf(tilename, sizeof(tilename) - 1, "%s1a-bl", tn); break;
+            case 4: snprintf(tilename, sizeof(tilename) - 1, "%s1a-left", tn); break;
+            case 5: snprintf(tilename, sizeof(tilename) - 1, "%s1a-tl", tn); break;
+            case 6: snprintf(tilename, sizeof(tilename) - 1, "%s1a-up", tn); break;
+            case 7: snprintf(tilename, sizeof(tilename) - 1, "%s1a-tr", tn); break;
+        }
+
+        tilep tile = tile_find(tilename);
+        if (tile) {
+            wid_set_tilename(b, tilename);
+        } else {
+            switch (which) {
+                case 0: snprintf(tilename, sizeof(tilename) - 1, "%sa-right", tn); break;
+                case 1: snprintf(tilename, sizeof(tilename) - 1, "%sa-br", tn); break;
+                case 2: snprintf(tilename, sizeof(tilename) - 1, "%sa-down", tn); break;
+                case 3: snprintf(tilename, sizeof(tilename) - 1, "%sa-bl", tn); break;
+                case 4: snprintf(tilename, sizeof(tilename) - 1, "%sa-left", tn); break;
+                case 5: snprintf(tilename, sizeof(tilename) - 1, "%sa-tl", tn); break;
+                case 6: snprintf(tilename, sizeof(tilename) - 1, "%sa-up", tn); break;
+                case 7: snprintf(tilename, sizeof(tilename) - 1, "%sa-tr", tn); break;
+            }
+
+            tilep tile = tile_find(tilename);
+            if (tile) {
+                wid_set_tilename(b, tilename);
+            }
+        }
+    }
+
+    wid_set_animate(b, false);
+}
+
+/*
+ * Set the edit mode focus.
+ */
+static void wid_editor_update_tile_mode_buttons (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    if (!ctx->tile_mode) {
+        int i;
+
+        for (i = 0; i < WID_TILE_POOL_MAX; i++) {
+            widp b = ctx->tile[i][0].button;
+            if (!b) {
+                continue;
+            }
+            wid_set_text(b, 0);
+        }
+
+        return;
+    }
+
+    {
+        int x, y;
+
+        for (x = 0; x < WID_EDITOR_MENU_CELLS_ACROSS; x++) {
+            for (y = 0; y < WID_EDITOR_MENU_CELLS_DOWN; y++) {
+                widp b = ctx->tile[x][y].button;
+                if (!b) {
+                    continue;
+                }
+
+                wid_set_thing_template(b, 0);
+            }
+        }
+    }
+
+    int x = 0;
+    int y = 1;
+    int i;
+
+    for (i = 0; i < THING_MAX; i++) {
+        tpp tp = ctx->tile_pools[ctx->tile_pool][i].tile_tp;
+        if (!tp) {
+            continue;
+        }
+
+        x++;
+        if (x >= WID_EDITOR_MENU_TILES_ACROSS) {
+            x = 0;
+            y++;
+        }
+
+        widp b = ctx->tile[x][y].button;
+        if (!b) {
+            continue;
+        }
+
+        wid_set_color(b, WID_COLOR_BG, BLACK);
+
+        if ((x == ctx->focus_x) && (y == ctx->focus_y)) {
+            wid_set_color(b, WID_COLOR_TL, RED);
+            wid_set_color(b, WID_COLOR_BR, RED);
+        }
+
+        if (tp == wid_editor_chosen_tile[ctx->tile_pool]) {
+            color c = RED;
+            c.a = 100;
+            wid_set_color(b, WID_COLOR_BG, c);
+            wid_set_color(b, WID_COLOR_TL, RED);
+            wid_set_color(b, WID_COLOR_BR, RED);
+        }
+
+        wid_editor_button_animate(b, tp);
+
+        wid_set_tooltip(b, tp_get_tooltip(tp), vsmall_font);
+    }
+
+    for (i = 0; i < WID_TILE_POOL_MAX; i++) {
+
+        widp b = ctx->tile[i][0].button;
+        if (!b) {
+            continue;
+        }
+
+        switch (i) {
+        case WID_TILE_MODE_WALLS:
+            wid_set_text(b, "Walls");
+            break;
+        case WID_TILE_MODE_FLOORS:
+            wid_set_text(b, "Floor");
+            break;
+        case WID_TILE_MODE_MONST:
+            wid_set_text(b, "Monst");
+            break;
+        case WID_TILE_MODE_ITEMS:
+            wid_set_text(b, "Items");
+            break;
+        case WID_TILE_MODE_PLAYER:
+            wid_set_text(b, "Heroes");
+            break;
+        }
+
+        if (i == ctx->tile_pool) {
+            wid_set_color(b, WID_COLOR_TL, GRAY70);
+            wid_set_color(b, WID_COLOR_BR, GRAY40);
+            wid_set_color(b, WID_COLOR_TEXT, WHITE);
+            wid_set_color(b, WID_COLOR_TEXT, RED);
+        } else if (i) {
+            wid_set_color(b, WID_COLOR_TL, GRAY70);
+            wid_set_color(b, WID_COLOR_BR, GRAY40);
+            wid_set_color(b, WID_COLOR_BG, GRAY50);
+            wid_set_color(b, WID_COLOR_BG, GRAY10);
+        }
+
+        wid_set_font(b, vsmall_font);
+    }
 }
 
 static void wid_editor_update_buttons (void)
@@ -559,17 +761,6 @@ static void wid_editor_update_buttons (void)
             color c = RED;
             c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
-        } else if (is_a_tile) {
-            tpp tp = ctx->tile[x][y].tile_tp;
-
-            if (tp == wid_editor_chosen_tile) {
-                wid_set_color(b, WID_COLOR_TL, RED);
-                wid_set_color(b, WID_COLOR_BR, RED);
-            }
-
-            color c = BLACK;
-            c.a = 0;
-            wid_set_color(b, WID_COLOR_BG, c);
         } else if (is_a_map_tile) {
             color c = WHITE;
             c.a = 0;
@@ -582,6 +773,7 @@ static void wid_editor_update_buttons (void)
     } }
 
     wid_editor_update_edit_mode_buttons();
+    wid_editor_update_tile_mode_buttons();
     wid_update(wid_editor_window);
 }
 
@@ -769,6 +961,44 @@ static void wid_editor_set_focus (wid_editor_ctx *ctx, int focus_x, int focus_y)
     wid_editor_update_buttons();
 }
 
+static void wid_editor_tile_pool_find_focus (void)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    /*
+     * If in tile mode now, find the old focus.
+     */
+    if (!ctx->tile_mode) {
+        return;
+    }
+
+    wid_editor_update_buttons();
+
+    int x, y;
+
+    for (x = 0; x < WID_EDITOR_MENU_TILES_ACROSS; x++) {
+        for (y = 0; y < WID_EDITOR_MENU_TILES_DOWN; y++) {
+            widp b = ctx->tile[x][y].button;
+            if (!b) {
+                continue;
+            }
+
+            tpp tp = wid_get_thing_template(b);
+            if (!tp) {
+                continue;
+            }
+
+            if (tp == wid_editor_chosen_tile[ctx->tile_pool]) {
+                ctx->focus_x = x;
+                ctx->focus_y = y;
+                return;
+            }
+        }
+    }
+}
+
 static void wid_editor_tile_mode_toggle (void)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
@@ -781,6 +1011,48 @@ static void wid_editor_tile_mode_toggle (void)
 
     ctx->mode_toggled = time_get_time_ms();
     ctx->tile_mode = !ctx->tile_mode;
+
+    /*
+     * If in tile mode now, find the old focus.
+     */
+    if (ctx->tile_mode) {
+        saved_focus_x = ctx->focus_x;
+        saved_focus_y = ctx->focus_y;
+        saved_map_x = ctx->map_x;
+        saved_map_y = ctx->map_y;
+
+        wid_editor_tile_pool_find_focus();
+    } else {
+        /*
+         * Now in map mode. Clear out the tile buttons.
+         */
+        int x, y;
+
+        for (x = 0; x < WID_EDITOR_MENU_TILES_ACROSS; x++) {
+            for (y = 0; y < WID_EDITOR_MENU_TILES_DOWN; y++) {
+                widp b = ctx->tile[x][y].button;
+                if (b) {
+                    wid_set_thing_template(b, 0);
+                }
+            }
+        }
+
+        ctx->focus_x = saved_focus_x;
+        ctx->focus_y = saved_focus_y;
+        ctx->map_x = saved_map_x;
+        ctx->map_y = saved_map_y;
+    }
+}
+
+static void wid_editor_tile_mode_set (int val)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+
+    if (ctx->tile_mode == val) {
+        return;
+    }
+
+    wid_editor_tile_mode_toggle();
 }
 
 static void wid_editor_map_scroll (int dx, int dy)
@@ -847,13 +1119,13 @@ static void wid_editor_map_thing_replace (int x, int y)
         DIE("bad map coord %d,%d", x, y);
     }
 
-    if (!wid_editor_chosen_tile) {
+    if (!wid_editor_chosen_tile[ctx->tile_pool]) {
         return;
     }
 
-    int z = tp_get_z_depth(wid_editor_chosen_tile);
+    int z = tp_get_z_depth(wid_editor_chosen_tile[ctx->tile_pool]);
 
-    ctx->map.tile[x][y][z].tp = wid_editor_chosen_tile;
+    ctx->map.tile[x][y][z].tp = wid_editor_chosen_tile[ctx->tile_pool];
 }
 
 static tpp wid_editor_map_thing_get (int x, int y)
@@ -1529,7 +1801,7 @@ static void wid_editor_tile_fill_ (int x, int y)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
 
-    if (!wid_editor_chosen_tile) {
+    if (!wid_editor_chosen_tile[ctx->tile_pool]) {
         return;
     }
 
@@ -1549,7 +1821,7 @@ static void wid_editor_tile_fill_ (int x, int y)
      * Bound certain things by others. e.g. flood fill ghosts limited by 
      * walls.
      */
-    switch (tp_get_z_depth(wid_editor_chosen_tile)) {
+    switch (tp_get_z_depth(wid_editor_chosen_tile[ctx->tile_pool])) {
         case MAP_DEPTH_EDITOR: 
             min_z = 0; 
             break;
@@ -1576,8 +1848,8 @@ static void wid_editor_tile_fill_ (int x, int y)
         }
     }
 
-    z = tp_get_z_depth(wid_editor_chosen_tile);
-    ctx->map.tile[x][y][z].tp = wid_editor_chosen_tile;
+    z = tp_get_z_depth(wid_editor_chosen_tile[ctx->tile_pool]);
+    ctx->map.tile[x][y][z].tp = wid_editor_chosen_tile[ctx->tile_pool];
 
     wid_editor_tile_fill_(x + 1, y);
     wid_editor_tile_fill_(x - 1, y);
@@ -1618,15 +1890,28 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
     }
 
     if (ctx->tile_mode) {
-        wid_editor_tile_mode_toggle();
 
-        tpp tp = ctx->tile[x][y].tile_tp;
-        if (tp) {
-            wid_editor_chosen_tile = tp;
-            return;
+        widp b = ctx->tile[x][y].button;
+        if (b) {
+            tpp tp = wid_get_thing_template(b);
+            if (tp) {
+                wid_editor_chosen_tile[ctx->tile_pool] = tp;
+
+                wid_editor_tile_mode_toggle();
+                return;
+            }
         }
+
+        if (y == 0) {
+            if (x < WID_TILE_POOL_MAX) {
+                ctx->tile_pool = x;
+                wid_editor_tile_pool_find_focus();
+                return;
+            }
+        }
+
     } else {
-        if (wid_editor_chosen_tile) {
+        if (wid_editor_chosen_tile[ctx->tile_pool]) {
             if ((x < WID_EDITOR_MENU_MAP_ACROSS) && 
                 (y < WID_EDITOR_MENU_MAP_DOWN)) {
                 switch (ctx->edit_mode) {
@@ -1712,7 +1997,7 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                     {
                         tpp tp = wid_editor_map_thing_get(mx, my);
                         if (tp) {
-                            wid_editor_chosen_tile = tp;
+                            wid_editor_chosen_tile[ctx->tile_pool] = tp;
 
                             /*
                              * Fake a cut so a 'p' can put this back.
@@ -1752,52 +2037,52 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                 break;
 
             case WID_EDITOR_MODE_UNDO:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_undo();
                 break;
 
             case WID_EDITOR_MODE_REDO:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_redo();
                 break;
 
             case WID_EDITOR_MODE_NUKE:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_nuke();
                 break;
 
             case WID_EDITOR_MODE_BORDER:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_border();
                 break;
 
             case WID_EDITOR_MODE_STYLE:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_style();
                 break;
 
             case WID_EDITOR_MODE_RANDOM:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_random();
                 break;
 
             case WID_EDITOR_MODE_TEST:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_test();
                 break;
 
             case WID_EDITOR_MODE_HFLIP:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_hflip();
                 break;
 
             case WID_EDITOR_MODE_VFLIP:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_vflip();
                 break;
 
             case WID_EDITOR_MODE_ROTATE:
-                ctx->tile_mode = false;
+                wid_editor_tile_mode_set(false);
                 wid_editor_rotate();
                 break;
 
@@ -1933,84 +2218,83 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             return (true);
 
         case ' ':
-            ctx->tile_mode = false;
             wid_editor_tile_left_button_pressed(x, y);
             return (false);
 
         case SDLK_BACKSPACE:
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_tile_right_button_pressed(x, y);
             return (true); 
 
         case 'l':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_LINE);
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'r':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_SQUARE);
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 's':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_save_level();
             return (true);
 
         case 'd':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
             return (true);
 
         case 'y':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_YANK);
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 't':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_test();
             return (true);
 
         case 'c':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_COPY);
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'p':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_PASTE);
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'f':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_FILL);
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'u':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_undo();
             return (true);
 
         case 'e':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_redo();
             return (true);
 
         case 'x':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_set_mode(WID_EDITOR_MODE_DEL);
             wid_editor_tile_left_button_pressed(x, y);
             return (true);
 
         case 'z':
-            ctx->tile_mode = false;
+            wid_editor_tile_mode_set(false);
             wid_editor_nuke();
             return (true);
 
@@ -2291,9 +2575,6 @@ static void wid_editor_bg_create (void)
     }
 }
 
-static int tile_x;
-static int tile_y;
-
 static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
@@ -2309,25 +2590,34 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
         return (true);
     }
 
-    ctx->tile[tile_x][tile_y].tile_tp = tp;
+    int tile_pool = WID_TILE_MODE_ITEMS;
+
+    if (tp_is_wall(tp)) {
+        tile_pool = WID_TILE_MODE_WALLS;
+    }
+    if (tp_is_floor(tp)) {
+        tile_pool = WID_TILE_MODE_FLOORS;
+    }
+    if (tp_is_monst(tp)) {
+        tile_pool = WID_TILE_MODE_MONST;
+    }
+    if (tp_is_player(tp)) {
+        tile_pool = WID_TILE_MODE_PLAYER;
+    }
+
+    int count = ctx->tile_count[tile_pool];
+    if (count >= THING_MAX) {
+        DIE("too many things");
+    }
+
+    ctx->tile_pools[tile_pool][count].tile_tp = tp;
+    ctx->tile_count[tile_pool]++;
 
     /*
      * Start out with something.
      */
-    if (!wid_editor_chosen_tile) {
-        wid_editor_chosen_tile = tp;
-    }
-
-    tile_x++;
-
-    if (tile_x >= WID_EDITOR_MENU_TILES_ACROSS) {
-        tile_x = 0;
-        tile_y++;
-    }
-
-    if (tile_y >= WID_EDITOR_MENU_TILES_DOWN) {
-        tile_y++;
-        DIE("too many tiles; implement a scrollbar neil");
+    if (!wid_editor_chosen_tile[tile_pool]) {
+        wid_editor_chosen_tile[tile_pool] = tp;
     }
 
     return (true);
@@ -2335,9 +2625,6 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
 
 static void wid_editor_load_tiles (void)
 {
-    tile_x = 0;
-    tile_y = 1;
-
     tree_walk(thing_templates_create_order,
               wid_editor_load_tile, 0 /* arg */);
 }
@@ -3052,7 +3339,8 @@ void wid_editor (level_pos_t level_pos)
     wid_editor_bg_create();
 
     ctx->created = time_get_time_ms();
-    ctx->tile_mode = 0;
+    wid_editor_tile_mode_set(false);
+    ctx->tile_pool = WID_TILE_MODE_WALLS;
 
     wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
 }

@@ -1,5 +1,6 @@
 {
  short_name="Fire potion"
+ raw_name="potion_fire"
  tooltip="Burny fire fire potion"
  z_depth=3
  is_inactive

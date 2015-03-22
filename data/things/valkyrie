@@ -1,5 +1,6 @@
 {
  short_name="Valkyrie"
+ raw_name="valkyrie"
  tooltip="Valkyrie"
  carrying={
     "data/things/sword1"

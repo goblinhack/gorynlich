@@ -1,5 +1,6 @@
 {
  short_name="Bread"
+ raw_name="bread"
  tooltip="Bread sandwich"
  z_depth=3
  is_inactive

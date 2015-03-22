@@ -1,5 +1,6 @@
 {
  short_name="sword3 anim"
+ raw_name="sword3_anim"
  z_depth=4
  is_animated
  is_hidden_from_editor

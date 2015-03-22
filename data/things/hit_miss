@@ -1,5 +1,6 @@
 {
  short_name="sparks"
+ raw_name="hit_miss"
  tooltip="sparks!"
  z_depth=3
  is_animated

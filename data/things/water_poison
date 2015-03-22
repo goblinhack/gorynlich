@@ -1,5 +1,6 @@
 {
  short_name="Tasty water"
+ raw_name="water_poison"
  tooltip="Water..."
  z_depth=4
  is_inactive
