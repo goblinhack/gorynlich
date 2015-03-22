@@ -19,6 +19,8 @@ typedef struct wid_map_cell_ {
 } wid_map_level;
 
 typedef void(*wid_map_event_t)(widp);
+typedef void(*on_selected_t)(const level_pos_t);
+typedef void(*on_cancelled_t)(void);
 
 typedef struct {
     /*
@@ -70,9 +72,12 @@ typedef struct {
     int loading_x;
     int loading_y;
 
+    on_selected_t on_selected;
+    on_cancelled_t on_cancelled;
+
 } wid_map_ctx;
 
-widp wid_map(void);
+widp wid_map(on_selected_t, on_cancelled_t);
 
 widp wid_editor_level_map_thing_replace_template(widp w,
                                                  double x,
