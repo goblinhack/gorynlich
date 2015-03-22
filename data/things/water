@@ -1,5 +1,6 @@
 {
  short_name="Water"
+ raw_name="water"
  tooltip="Water"
  z_depth=3
  is_inactive

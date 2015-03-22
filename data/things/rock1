@@ -1,5 +1,6 @@
 {
  short_name="rock"
+ raw_name="rock1"
  tooltip="Rock"
  z_depth=2
  is_inactive

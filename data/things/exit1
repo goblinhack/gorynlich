@@ -1,5 +1,6 @@
 {
  short_name="Exit"
+ raw_name="exit1"
  tooltip="Level exit"
  z_depth=3
  is_exit

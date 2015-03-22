@@ -1,5 +1,6 @@
 {
  short_name="EyeBawl"
+ raw_name="eyebawl"
  tooltip="EyeBawl"
  z_depth=3
  speed=6

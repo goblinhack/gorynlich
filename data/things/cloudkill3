@@ -1,5 +1,6 @@
 {
  short_name="Cloud of death"
+ raw_name="cloudkill3"
  z_depth=4
  is_animated
  is_hidden_from_editor

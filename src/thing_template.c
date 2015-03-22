@@ -234,7 +234,7 @@ tpp tp_load (uint16_t *id, const char *name)
 
     tp_fill_cache(t);
 
-    DBG("thing template: %s", name);
+    LOG("thing template: %s %p", name, t);
 
     return (t);
 }
@@ -250,6 +250,10 @@ static void tp_destroy_internal (tpp t)
 
     if (t->short_name) {
         myfree(t->short_name);
+    }
+
+    if (t->raw_name) {
+        myfree(t->raw_name);
     }
 
     if (t->polymorph_on_death) {
@@ -425,6 +429,7 @@ void demarshal_thing_template (demarshal_p ctx, tpp t)
 
     GET_OPT_DEF_NAMED_STRING(ctx, "name", name, "<no name>");
     GET_OPT_DEF_NAMED_STRING(ctx, "short_name", t->short_name, "<no name>");
+    GET_OPT_DEF_NAMED_STRING(ctx, "raw_name", t->raw_name, "<no name>");
     GET_OPT_DEF_NAMED_STRING(ctx, "tooltip", t->tooltip, "<no name>");
 
     demarshal_thing_carrying(ctx, t);
@@ -635,6 +640,7 @@ void marshal_thing_template (marshal_p ctx, tpp t)
 
     PUT_NAMED_STRING(ctx, "name", t->tree.key);
     PUT_NAMED_STRING(ctx, "short_name", t->short_name);
+    PUT_NAMED_STRING(ctx, "raw_name", t->raw_name);
     PUT_NAMED_STRING(ctx, "tooltip", t->tooltip);
 
     if (t->fires) {
@@ -771,6 +777,11 @@ const char *tp_name (tpp t)
 const char *tp_short_name (tpp t)
 {
     return (t->short_name);
+}
+
+const char *tp_raw_name (tpp t)
+{
+    return (t->raw_name);
 }
 
 tpp tp_fires (tpp t)

@@ -1,5 +1,6 @@
 {
  short_name="Ring"
+ raw_name="ring2"
  tooltip="Generic magical ring tm"
  z_depth=3
  is_inactive

@@ -1,5 +1,6 @@
 {
  short_name="Elf"
+ raw_name="elf"
  tooltip="Elf"
  carrying={
     "data/things/bow1"

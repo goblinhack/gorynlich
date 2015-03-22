@@ -1,5 +1,6 @@
 {
  short_name="Cheddar cheese"
+ raw_name="cheese"
  tooltip="Is this cheese?"
  z_depth=3
  is_inactive

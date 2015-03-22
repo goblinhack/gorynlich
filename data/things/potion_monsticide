@@ -1,5 +1,6 @@
 {
  short_name="Monsticide"
+ raw_name="potion_monsticide"
  tooltip="Monsticide"
  z_depth=3
  is_inactive

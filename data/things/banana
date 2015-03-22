@@ -1,5 +1,6 @@
 {
  short_name="Banana"
+ raw_name="banana"
  tooltip="A porcupine..."
  z_depth=3
  is_inactive

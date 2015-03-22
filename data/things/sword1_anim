@@ -1,5 +1,6 @@
 {
  short_name="sword1 anim"
+ raw_name="sword1_anim"
  z_depth=4
  is_animated
  is_hidden_from_editor
