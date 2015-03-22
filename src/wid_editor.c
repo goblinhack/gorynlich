@@ -1528,7 +1528,9 @@ static void wid_editor_undo_save (void)
         ctx->undo_at = 0;
     }
 
-    ctx->save_needed = true;
+    if (ctx->undo_at > 1) {
+        ctx->save_needed = true;
+    }
 
     memcpy(&ctx->map_undo[ctx->undo_at], &ctx->map, sizeof(ctx->map));
     ctx->valid_undo[ctx->undo_at] = 1;
@@ -2980,7 +2982,7 @@ static void wid_editor_go_back (void)
 {
     wid_destroy(&wid_editor_background);
     wid_destroy(&wid_editor_window);
-    wid_map();
+    wid_map(0, 0);
 }
 
 static void wid_editor_save_close_dialog (widp w)

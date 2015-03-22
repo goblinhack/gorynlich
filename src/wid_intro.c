@@ -439,7 +439,7 @@ static uint8_t wid_menu_level_editor_selected (widp w,
                                                uint32_t button)
 {
     wid_intro_hide();
-    wid_map();
+    wid_map(0, 0);
 
     return (true);
 }
@@ -491,7 +491,7 @@ static uint8_t wid_menu_credits_selected (widp w,
 
 static void wid_intro_create (void)
 {
-    if (0) {
+    if (1) {
 level_pos_t level_pos;
 level_pos.x = 2;
 level_pos.y = 1;
