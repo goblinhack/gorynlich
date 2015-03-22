@@ -1,20 +1,11 @@
 --------------------------------------- plan for mar --------------------------------------
-- jump to map not tiles on edit level
-- save postion on map
-- need saved focus for tile and map mode and for each tile family
-- switching tab at top changes chosen tile
-- chosen tiles for each tab shown at bottom too
-- create tabs for monst/floor/wall
-- need test level shortcut
 - choose exit in editor
 - add level exit marshalling
-- button to create template level
 - button for directions
 - button for groups
 - default focus on map should be first level
 - add level traps
 - draw joined levels
-- level rotate button
 - make item bar wider
 - can't shoot through diagonal walls
 --------------------------------------- plan for apr --------------------------------------
@@ -75,6 +66,17 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Sun Mar 22 12:53:51 EDT 2015
+- jump to map not tiles on edit level
+- save postion on map
+- need saved focus for tile and map mode and for each tile family
+- switching tab at top changes chosen tile
+- chosen tiles for each tab shown at bottom too
+- create tabs for monst/floor/wall
+- need test level shortcut
+- button to create template level
+- level rotate button
 
 Sun Mar 22 10:28:51 EDT 2015
 - added tile pools
