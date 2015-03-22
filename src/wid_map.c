@@ -581,6 +581,12 @@ static void wid_map_cell_selected (widp w)
     level_pos.x = ctx->focusx;
     level_pos.y = ctx->focusy;
 
+    if (ctx->on_selected) {
+        (*ctx->on_selected)(level_pos);
+        wid_destroy(&wid_map_window);
+        return;
+    }
+
     if (level_pos.x == -1) {
         return;
     }
@@ -607,6 +613,14 @@ static void wid_map_cell_selected (widp w)
 
 static void wid_map_cell_cancelled (widp w)
 {
+    wid_map_ctx *ctx = wid_map_window_ctx;
+
+    if (ctx->on_cancelled) {
+        (*ctx->on_cancelled)();
+        wid_destroy(&wid_map_window);
+        return;
+    }
+
     wid_destroy(&wid_map_window);
     wid_intro_visible();
 }
@@ -885,7 +899,7 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
     dirlist_free(&d);
 }
 
-widp wid_map (void)
+widp wid_map (on_selected_t on_selected, on_cancelled_t on_cancelled)
 {
     const char *title = "Choose epic level";
     wid_map_event_t selected = wid_map_cell_selected;
@@ -902,6 +916,8 @@ widp wid_map (void)
     ctx->focusy = -1;
     ctx->cancelled = cancelled;
     ctx->selected = selected;
+    ctx->on_selected = on_selected;
+    ctx->on_cancelled = on_cancelled;
 
     widp window;
     ctx->w = wid_map_window = window = wid_new_window("wid map");
