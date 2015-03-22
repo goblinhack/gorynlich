@@ -2774,6 +2774,7 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_PIPE, "data/things/pipe");
     tp_load(&THING_BRAZIER, "data/things/brazier");
     tp_load(&THING_EXIT1, "data/things/exit1");
+#if 0
     tp_load(&THING_EXIT2, "data/things/exit2");
     tp_load(&THING_EXIT3, "data/things/exit3");
     tp_load(&THING_EXIT4, "data/things/exit4");
@@ -2781,12 +2782,15 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_EXIT6, "data/things/exit6");
     tp_load(&THING_EXIT7, "data/things/exit7");
     tp_load(&THING_GENERATOR1, "data/things/generator1");
+#endif
     tp_load(&THING_BONEPILE1, "data/things/bonepile1");
     tp_load(&THING_BONEPILE2, "data/things/bonepile2");
     tp_load(&THING_BONEPILE3, "data/things/bonepile3");
+#if 0
     tp_load(&THING_GENERATOR5, "data/things/generator5");
     tp_load(&THING_GENERATOR6, "data/things/generator6");
     tp_load(&THING_GENERATOR7, "data/things/generator7");
+#endif
 
     /*
      * Projectiles
