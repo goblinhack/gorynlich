@@ -78,6 +78,11 @@ typedef struct wid_editor_tile_ {
 
 typedef struct wid_editor_map_tile_ {
     tpp tp;
+
+    /*
+     * Data associated with individual tiles.
+     */
+    thing_template_data data;
 } wid_editor_map_tile;
 
 typedef struct wid_editor_map_grid_ {
@@ -87,7 +92,6 @@ typedef struct wid_editor_map_grid_ {
      * For joined up walls etc.
      */
     tilep map_tile[MAP_WIDTH][MAP_HEIGHT];
-
 } wid_editor_map_grid;
 
 typedef void(*wid_editor_event_t)(widp);
