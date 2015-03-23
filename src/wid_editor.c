@@ -2277,8 +2277,13 @@ static uint8_t wid_editor_key_down (widp w, const SDL_KEYSYM *key)
             case SDLK_DOWN:
                 wid_editor_map_scroll(0, 1);
                 return (true);
+
+            default:
+                break;
         }
-        break;
+
+        default:
+            break;
     }
 
     ctx->old_edit_mode = ctx->edit_mode;
@@ -2618,7 +2623,6 @@ static void wid_editor_bg_create (void)
 
 CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
     if (wid_editor_background) {
-        DIE("x");
         return;
     }
 

@@ -263,13 +263,12 @@ static void sdl_init_rumble (void)
         LOG("No SDL rumble support: %s", SDL_GetError());
         return;
     }
-#endif /* } */
-
 
     if (SDL_HapticRumbleInit(haptic) != 0) {
         LOG("SDL rumble nit failed: %s", SDL_GetError());
         return;
     }
+#endif /* } */
 
     LOG("Opened Haptic for joy index %d", joy_index);
 }
