@@ -15,7 +15,6 @@
 #include "wid_menu.h"
 #include "wid_game_over.h"
 #include "wid_game_map_client.h"
-#include "wid_editor.h"
 #include "wid_choose_game_type.h"
 #include "wid_hiscore.h"
 #include "wid_notify.h"
@@ -30,6 +29,7 @@
 #include "server.h"
 #include "glapi.h"
 #include "wid_keyboard.h"
+#include "thing_template.h"
 #include "wid_editor.h"
 #include "wid_map.h"
 
@@ -167,6 +167,10 @@ void wid_intro_visible (void)
     if (global_config.game_over) {
         global_config.game_over = false;
         wid_game_over_visible();
+        return;
+    }
+
+    if (!wid_intro) {
         return;
     }
 
@@ -498,6 +502,7 @@ level_pos.y = 1;
 wid_editor(level_pos);
         return;
     }
+    
     if (wid_intro) {
         return;
     }
@@ -522,8 +527,6 @@ wid_editor(level_pos);
     wid_set_color(wid_intro, WID_COLOR_BG, col);
 
     wid_intro_bg_create();
-    wid_update(wid_intro);
-
     wid_update(wid_intro);
 
     wid_move_to_pct_centered(wid_intro, 0.5f, 0.5f);
