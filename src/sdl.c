@@ -322,7 +322,7 @@ static void sdl_init_joystick (void)
         joy_buttons = SDL_JoystickNumButtons(joy);
         joy_balls = SDL_JoystickNumBalls(joy);
     } else {
-        ERR("Couldn't open Joystick 0");
+        WARN("Couldn't open Joystick 0");
     }
 }
 
