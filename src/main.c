@@ -13,7 +13,6 @@
 #include "glapi.h"
 #include "wid_console.h"
 #include "wid_chat.h"
-#include "wid_editor.h"
 #include "command.h"
 #include "ttf.h"
 #include "font.h"
@@ -52,6 +51,8 @@
 #include "server.h"
 #include "mzip_lib.h"
 #include "map_jigsaw.h"
+#include "thing_template.h"
+#include "wid_editor.h"
 
 static char **ARGV;
 char *EXEC_FULL_PATH_AND_NAME;

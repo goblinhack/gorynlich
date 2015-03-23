@@ -11,7 +11,6 @@
 #include "tile.h"
 #include "thing_tile.h"
 #include "wid_game_map_server.h"
-#include "wid_editor.h"
 #include "thing.h"
 #include "map.h"
 #include "level.h"
@@ -19,6 +18,8 @@
 #include "socket_util.h"
 #include "string_util.h"
 #include "file.h"
+#include "thing_template.h"
+#include "wid_editor.h"
 
 levelp server_level;
 widp wid_game_map_server_window;

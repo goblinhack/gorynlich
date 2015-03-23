@@ -16,7 +16,6 @@
 #include "wid_player_info.h"
 #include "wid_player_inventory.h"
 #include "wid_player_action.h"
-#include "wid_editor.h"
 #include "wid_menu.h"
 #include "thing.h"
 #include "level.h"
@@ -31,6 +30,8 @@
 #include "wid_notify.h"
 #include "wid_player_action.h"
 #include "math_util.h"
+#include "thing_template.h"
+#include "wid_editor.h"
 
 levelp client_level;
 widp wid_game_map_client_window;
