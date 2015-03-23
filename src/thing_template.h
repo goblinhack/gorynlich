@@ -268,6 +268,13 @@ typedef struct tp_ {
     uint8_t tilep_join_count[IS_JOIN_MAX];
 } thing_template;
 
+typedef struct thing_template_data_ {
+    /*
+     * Used for exits to indicate exitting to where...
+     */
+    level_pos_t exit;
+} thing_template_data;
+
 uint8_t tp_init(void);
 void tp_fini(void);
 tpp tp_load(uint16_t *id, const char *file);

@@ -12,6 +12,7 @@
 #include "color.h"
 #include "string_ext.h"
 #include "ttf.h"
+#include "thing_template.h"
 #include "wid_editor.h"
 #include "time_util.h"
 #include "timer.h"
@@ -19,7 +20,6 @@
 #include "math_util.h"
 #include "thing_template.h"
 #include "thing_tile.h"
-#include "wid_editor.h"
 #include "wid_tooltip.h"
 #include "wid_intro.h"
 #include "map_jigsaw.h"
@@ -66,6 +66,16 @@ static void wid_editor_set_mode (int edit_mode)
     ctx->got_line_start = 0;
     ctx->got_square_start = 0;
     ctx->got_cut_start = 0;
+}
+
+static void wid_editor_set_new_tp (int x, int y, int z, tpp tp)
+{
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    verify(ctx);
+    verify(ctx->w);
+
+    memset(&ctx->map.tile[x][y][z], 0, sizeof(wid_editor_map_tile));
+    ctx->map.tile[x][y][z].tp = tp;
 }
 
 /*
@@ -123,7 +133,7 @@ widp wid_editor_replace_template (widp w,
             ctx->map_y--;
         }
     }
-    ctx->map.tile[ix][iy][z].tp = tp;
+    wid_editor_set_new_tp(ix, iy, z, tp);
 
     return (0);
 }
@@ -260,7 +270,7 @@ static void map_fixup (void)
 
             uint16_t mask;
 
-#define BLOCK(a,b,c,d,e,f,g,h,i, _index_)                               \
+#define BLOCK(a, b, c, d, e, f, g, h, i, _index_)                               \
             mask =                                                      \
                 (i << 8) | (h << 7) | (g << 6) | (f << 5) |             \
                 (e << 4) | (d << 3) | (c << 2) | (b << 1) |             \
@@ -276,53 +286,53 @@ static void map_fixup (void)
                 }                                                       \
             }                                                           \
 
-            BLOCK(1,1,1,1,1,1,1,1,1,IS_JOIN_BLOCK)
-            BLOCK(0,0,0,0,1,0,0,0,0,IS_JOIN_NODE)
-            BLOCK(0,0,0,0,1,1,0,0,0,IS_JOIN_LEFT)
-            BLOCK(0,0,0,0,1,0,0,1,0,IS_JOIN_TOP)
-            BLOCK(0,0,0,1,1,0,0,0,0,IS_JOIN_RIGHT)
-            BLOCK(0,1,0,0,1,0,0,0,0,IS_JOIN_BOT)
-            BLOCK(0,0,0,1,1,1,0,0,0,IS_JOIN_HORIZ)
-            BLOCK(0,1,0,0,1,0,0,1,0,IS_JOIN_VERT)
-            BLOCK(0,0,0,0,1,1,0,1,1,IS_JOIN_TL2)
-            BLOCK(0,1,1,0,1,1,0,0,0,IS_JOIN_BL2)
-            BLOCK(1,1,0,1,1,0,0,0,0,IS_JOIN_BR2)
-            BLOCK(0,0,0,1,1,0,1,1,0,IS_JOIN_TR2)
-            BLOCK(0,0,0,0,1,1,0,1,0,IS_JOIN_TL)
-            BLOCK(0,1,0,0,1,1,0,0,0,IS_JOIN_BL)
-            BLOCK(0,1,0,1,1,0,0,0,0,IS_JOIN_BR)
-            BLOCK(0,0,0,1,1,0,0,1,0,IS_JOIN_TR)
-            BLOCK(1,1,0,1,1,0,1,1,0,IS_JOIN_T90_3)
-            BLOCK(1,1,1,1,1,1,0,0,0,IS_JOIN_T180_3)
-            BLOCK(0,1,1,0,1,1,0,1,1,IS_JOIN_T270_3)
-            BLOCK(0,0,0,1,1,1,1,1,1,IS_JOIN_T_3)
-            BLOCK(0,1,0,0,1,1,0,1,0,IS_JOIN_T270)
-            BLOCK(0,1,0,1,1,1,0,0,0,IS_JOIN_T180)
-            BLOCK(0,1,0,1,1,0,0,1,0,IS_JOIN_T90)
-            BLOCK(0,0,0,1,1,1,0,1,0,IS_JOIN_T)
-            BLOCK(0,1,1,0,1,1,0,1,0,IS_JOIN_T270_2)
-            BLOCK(1,1,0,1,1,1,0,0,0,IS_JOIN_T180_2)
-            BLOCK(0,1,0,1,1,0,1,1,0,IS_JOIN_T90_2)
-            BLOCK(0,0,0,1,1,1,0,1,1,IS_JOIN_T_2)
-            BLOCK(0,1,0,0,1,1,0,1,1,IS_JOIN_T270_1)
-            BLOCK(0,1,1,1,1,1,0,0,0,IS_JOIN_T180_1)
-            BLOCK(1,1,0,1,1,0,0,1,0,IS_JOIN_T90_1)
-            BLOCK(0,0,0,1,1,1,1,1,0,IS_JOIN_T_1)
-            BLOCK(0,1,0,1,1,1,0,1,0,IS_JOIN_X)
-            BLOCK(0,1,0,1,1,1,0,1,1,IS_JOIN_X1)
-            BLOCK(0,1,1,1,1,1,0,1,0,IS_JOIN_X1_270)
-            BLOCK(1,1,0,1,1,1,0,1,0,IS_JOIN_X1_180)
-            BLOCK(0,1,0,1,1,1,1,1,0,IS_JOIN_X1_90)
-            BLOCK(0,1,0,1,1,1,1,1,1,IS_JOIN_X2)
-            BLOCK(0,1,1,1,1,1,0,1,1,IS_JOIN_X2_270)
-            BLOCK(1,1,1,1,1,1,0,1,0,IS_JOIN_X2_180)
-            BLOCK(1,1,0,1,1,1,1,1,0,IS_JOIN_X2_90)
-            BLOCK(0,1,1,1,1,1,1,1,0,IS_JOIN_X3)
-            BLOCK(1,1,0,1,1,1,0,1,1,IS_JOIN_X3_180)
-            BLOCK(0,1,1,1,1,1,1,1,1,IS_JOIN_X4)
-            BLOCK(1,1,1,1,1,1,0,1,1,IS_JOIN_X4_270)
-            BLOCK(1,1,1,1,1,1,1,1,0,IS_JOIN_X4_180)
-            BLOCK(1,1,0,1,1,1,1,1,1,IS_JOIN_X4_90)
+            BLOCK(1,1,1,1,1,1,1,1,1, IS_JOIN_BLOCK)
+            BLOCK(0,0,0,0,1,0,0,0,0, IS_JOIN_NODE)
+            BLOCK(0,0,0,0,1,1,0,0,0, IS_JOIN_LEFT)
+            BLOCK(0,0,0,0,1,0,0,1,0, IS_JOIN_TOP)
+            BLOCK(0,0,0,1,1,0,0,0,0, IS_JOIN_RIGHT)
+            BLOCK(0,1,0,0,1,0,0,0,0, IS_JOIN_BOT)
+            BLOCK(0,0,0,1,1,1,0,0,0, IS_JOIN_HORIZ)
+            BLOCK(0,1,0,0,1,0,0,1,0, IS_JOIN_VERT)
+            BLOCK(0,0,0,0,1,1,0,1,1, IS_JOIN_TL2)
+            BLOCK(0,1,1,0,1,1,0,0,0, IS_JOIN_BL2)
+            BLOCK(1,1,0,1,1,0,0,0,0, IS_JOIN_BR2)
+            BLOCK(0,0,0,1,1,0,1,1,0, IS_JOIN_TR2)
+            BLOCK(0,0,0,0,1,1,0,1,0, IS_JOIN_TL)
+            BLOCK(0,1,0,0,1,1,0,0,0, IS_JOIN_BL)
+            BLOCK(0,1,0,1,1,0,0,0,0, IS_JOIN_BR)
+            BLOCK(0,0,0,1,1,0,0,1,0, IS_JOIN_TR)
+            BLOCK(1,1,0,1,1,0,1,1,0, IS_JOIN_T90_3)
+            BLOCK(1,1,1,1,1,1,0,0,0, IS_JOIN_T180_3)
+            BLOCK(0,1,1,0,1,1,0,1,1, IS_JOIN_T270_3)
+            BLOCK(0,0,0,1,1,1,1,1,1, IS_JOIN_T_3)
+            BLOCK(0,1,0,0,1,1,0,1,0, IS_JOIN_T270)
+            BLOCK(0,1,0,1,1,1,0,0,0, IS_JOIN_T180)
+            BLOCK(0,1,0,1,1,0,0,1,0, IS_JOIN_T90)
+            BLOCK(0,0,0,1,1,1,0,1,0, IS_JOIN_T)
+            BLOCK(0,1,1,0,1,1,0,1,0, IS_JOIN_T270_2)
+            BLOCK(1,1,0,1,1,1,0,0,0, IS_JOIN_T180_2)
+            BLOCK(0,1,0,1,1,0,1,1,0, IS_JOIN_T90_2)
+            BLOCK(0,0,0,1,1,1,0,1,1, IS_JOIN_T_2)
+            BLOCK(0,1,0,0,1,1,0,1,1, IS_JOIN_T270_1)
+            BLOCK(0,1,1,1,1,1,0,0,0, IS_JOIN_T180_1)
+            BLOCK(1,1,0,1,1,0,0,1,0, IS_JOIN_T90_1)
+            BLOCK(0,0,0,1,1,1,1,1,0, IS_JOIN_T_1)
+            BLOCK(0,1,0,1,1,1,0,1,0, IS_JOIN_X)
+            BLOCK(0,1,0,1,1,1,0,1,1, IS_JOIN_X1)
+            BLOCK(0,1,1,1,1,1,0,1,0, IS_JOIN_X1_270)
+            BLOCK(1,1,0,1,1,1,0,1,0, IS_JOIN_X1_180)
+            BLOCK(0,1,0,1,1,1,1,1,0, IS_JOIN_X1_90)
+            BLOCK(0,1,0,1,1,1,1,1,1, IS_JOIN_X2)
+            BLOCK(0,1,1,1,1,1,0,1,1, IS_JOIN_X2_270)
+            BLOCK(1,1,1,1,1,1,0,1,0, IS_JOIN_X2_180)
+            BLOCK(1,1,0,1,1,1,1,1,0, IS_JOIN_X2_90)
+            BLOCK(0,1,1,1,1,1,1,1,0, IS_JOIN_X3)
+            BLOCK(1,1,0,1,1,1,0,1,1, IS_JOIN_X3_180)
+            BLOCK(0,1,1,1,1,1,1,1,1, IS_JOIN_X4)
+            BLOCK(1,1,1,1,1,1,0,1,1, IS_JOIN_X4_270)
+            BLOCK(1,1,1,1,1,1,1,1,0, IS_JOIN_X4_180)
+            BLOCK(1,1,0,1,1,1,1,1,1, IS_JOIN_X4_90)
 
             /*
              * Single node doors need to join onto walls.
@@ -481,12 +491,11 @@ static void wid_editor_update_edit_mode_buttons (void)
     wid_set_color(b, WID_COLOR_TEXT, GREEN);
 }
 
-static void wid_editor_button_animate (widp b, tpp tp)
+static tilep wid_editor_tp_to_tile (tpp tp)
 {
     if (!tp) {
-        return;
+        return (0);
     }
-    wid_set_thing_template(b, tp);
 
     int tick = time_get_time_ms() / 100;
     int which = tick % 8;
@@ -508,39 +517,81 @@ static void wid_editor_button_animate (widp b, tpp tp)
 
     tilep tile = tile_find(tilename);
     if (tile) {
-        wid_set_tilename(b, tilename);
-    } else {
-        switch (which) {
-            case 0: snprintf(tilename, sizeof(tilename) - 1, "%s1a-right", tn); break;
-            case 1: snprintf(tilename, sizeof(tilename) - 1, "%s1a-br", tn); break;
-            case 2: snprintf(tilename, sizeof(tilename) - 1, "%s1a-down", tn); break;
-            case 3: snprintf(tilename, sizeof(tilename) - 1, "%s1a-bl", tn); break;
-            case 4: snprintf(tilename, sizeof(tilename) - 1, "%s1a-left", tn); break;
-            case 5: snprintf(tilename, sizeof(tilename) - 1, "%s1a-tl", tn); break;
-            case 6: snprintf(tilename, sizeof(tilename) - 1, "%s1a-up", tn); break;
-            case 7: snprintf(tilename, sizeof(tilename) - 1, "%s1a-tr", tn); break;
+        return (tile);
+    }
+
+    switch (which) {
+        case 0: snprintf(tilename, sizeof(tilename) - 1, "%s1a-right", tn); break;
+        case 1: snprintf(tilename, sizeof(tilename) - 1, "%s1a-br", tn); break;
+        case 2: snprintf(tilename, sizeof(tilename) - 1, "%s1a-down", tn); break;
+        case 3: snprintf(tilename, sizeof(tilename) - 1, "%s1a-bl", tn); break;
+        case 4: snprintf(tilename, sizeof(tilename) - 1, "%s1a-left", tn); break;
+        case 5: snprintf(tilename, sizeof(tilename) - 1, "%s1a-tl", tn); break;
+        case 6: snprintf(tilename, sizeof(tilename) - 1, "%s1a-up", tn); break;
+        case 7: snprintf(tilename, sizeof(tilename) - 1, "%s1a-tr", tn); break;
+    }
+
+    tile = tile_find(tilename);
+    if (tile) {
+        return (tile);
+    }
+
+    switch (which) {
+        case 0: snprintf(tilename, sizeof(tilename) - 1, "%sa-right", tn); break;
+        case 1: snprintf(tilename, sizeof(tilename) - 1, "%sa-br", tn); break;
+        case 2: snprintf(tilename, sizeof(tilename) - 1, "%sa-down", tn); break;
+        case 3: snprintf(tilename, sizeof(tilename) - 1, "%sa-bl", tn); break;
+        case 4: snprintf(tilename, sizeof(tilename) - 1, "%sa-left", tn); break;
+        case 5: snprintf(tilename, sizeof(tilename) - 1, "%sa-tl", tn); break;
+        case 6: snprintf(tilename, sizeof(tilename) - 1, "%sa-up", tn); break;
+        case 7: snprintf(tilename, sizeof(tilename) - 1, "%sa-tr", tn); break;
+    }
+
+    tile = tile_find(tilename);
+    if (tile) {
+        return (tile);
+    }
+
+    /*
+     * Just find the first tile.
+     */
+    thing_tilep thing_tile;
+    tree_rootp tiles;
+
+    tiles = tp_get_tiles(tp);
+    if (!tiles) {
+        return (0);
+    }
+
+    thing_tile = thing_tile_first(tiles);
+    if (!thing_tile) {
+        return (0);
+    }
+
+    {
+        const char *tilename = thing_tile_name(thing_tile);
+        if (!tilename) {
+            ERR("cannot find tile %s", tilename);
+            return (0);
         }
 
         tilep tile = tile_find(tilename);
-        if (tile) {
-            wid_set_tilename(b, tilename);
-        } else {
-            switch (which) {
-                case 0: snprintf(tilename, sizeof(tilename) - 1, "%sa-right", tn); break;
-                case 1: snprintf(tilename, sizeof(tilename) - 1, "%sa-br", tn); break;
-                case 2: snprintf(tilename, sizeof(tilename) - 1, "%sa-down", tn); break;
-                case 3: snprintf(tilename, sizeof(tilename) - 1, "%sa-bl", tn); break;
-                case 4: snprintf(tilename, sizeof(tilename) - 1, "%sa-left", tn); break;
-                case 5: snprintf(tilename, sizeof(tilename) - 1, "%sa-tl", tn); break;
-                case 6: snprintf(tilename, sizeof(tilename) - 1, "%sa-up", tn); break;
-                case 7: snprintf(tilename, sizeof(tilename) - 1, "%sa-tr", tn); break;
-            }
 
-            tilep tile = tile_find(tilename);
-            if (tile) {
-                wid_set_tilename(b, tilename);
-            }
-        }
+        return (tile);
+    }
+}
+
+static void wid_editor_button_animate (widp b, tpp tp)
+{
+    if (!tp) {
+        return;
+    }
+
+    wid_set_thing_template(b, tp);
+
+    tilep tile = wid_editor_tp_to_tile(tp);
+    if (tile) {
+        wid_set_tile(b, tile);
     }
 
     wid_set_animate(b, false);
@@ -812,28 +863,9 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
             return;
         }
 
-        thing_tilep thing_tile;
-        tree_rootp tiles;
-
-        tiles = tp_get_tiles(tp);
-        if (!tiles) {
+        tilep tile = wid_editor_tp_to_tile(tp);
+        if (!tp) {
             return;
-        }
-
-        thing_tile = thing_tile_first(tiles);
-        if (!thing_tile) {
-            return;
-        }
-
-        const char *tilename = thing_tile_name(thing_tile);
-        if (!tilename) {
-            ERR("cannot find tile %s", tilename);
-            return;
-        }
-
-        tilep tile = tile_find(tilename);
-        if (!tile) {
-            ERR("cannot find tilep for tile %s", tilename);
         }
 
         blit_init();
@@ -885,28 +917,9 @@ static void wid_editor_button_display (widp w, fpoint tl, fpoint br)
             }
         }
 
-        thing_tilep thing_tile;
-        tree_rootp tiles;
-
-        tiles = tp_get_tiles(tp);
-        if (!tiles) {
+        tilep tile = wid_editor_tp_to_tile(tp);
+        if (!tp) {
             continue;
-        }
-
-        thing_tile = thing_tile_first(tiles);
-        if (!thing_tile) {
-            continue;
-        }
-
-        const char *tilename = thing_tile_name(thing_tile);
-        if (!tilename) {
-            ERR("cannot find tile %s", tilename);
-            continue;
-        }
-
-        tilep tile = tile_find(tilename);
-        if (!tile) {
-            ERR("cannot find tilep for tile %s", tilename);
         }
 
         glcolor(WHITE);
@@ -1132,7 +1145,27 @@ static void wid_editor_exit_selected (level_pos_t p)
 {
     wid_editor_map_dialog = 0;
 
-    CON("%d %d", p.x,p.y);
+    wid_editor_ctx *ctx = wid_editor_window_ctx;
+    int mx;
+    int my;
+    int z;
+
+    mx = ctx->focus_x + ctx->map_x;
+    my = ctx->focus_y + ctx->map_y;
+
+    /*
+     * Find the exit and update its position.
+     */
+    for (z = MAP_DEPTH - 1; z > 0; z--) {
+        tpp tp = ctx->map.tile[mx][my][z].tp;
+        if (!tp) {
+            continue;
+        }
+
+        if (tp_is_exit(tp)) {
+            ctx->map.tile[mx][my][z].data.exit = p;
+        }
+    }
 }
 
 static void wid_editor_exit_cancelled (void)
@@ -1156,7 +1189,7 @@ static void wid_editor_map_thing_replace (int x, int y, int interactive)
     }
 
     int z = tp_get_z_depth(tp);
-    ctx->map.tile[x][y][z].tp = tp;
+    wid_editor_set_new_tp(x, y, z, tp);
 
     if (tp_is_exit(tp)) {
         wid_editor_map_dialog = wid_map("Choose destination",
@@ -1430,7 +1463,7 @@ static void wid_editor_paste (int mx, int my)
                     continue;
                 }
 
-                ctx->map.tile[px][py][z].tp = tp;
+                wid_editor_set_new_tp(px, py, z, tp);
             }
         }
     }
@@ -1469,7 +1502,7 @@ static void wid_editor_cut (int mx, int my)
                     continue;
                 }
 
-                ctx->map.tile[x][y][z].tp = 0;
+                wid_editor_set_new_tp(x, y, z, 0);
             }
         }
     }
@@ -1637,6 +1670,8 @@ static void wid_editor_test (void)
     wid_editor_save(tmp, true /* is_test_level */);
     myfree(tmp);
 
+CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
+verify(wid_editor_background);
     wid_destroy(&wid_editor_background);
     wid_destroy(&wid_editor_window);
 
@@ -1670,26 +1705,24 @@ static void wid_editor_border (void)
         }
     }
 
-    wid_editor_ctx *ctx = wid_editor_window_ctx;
-
     int x, y, z;
 
     for (x = 0; x < MAP_WIDTH; x++) {
         z = MAP_DEPTH_WALL;
-        ctx->map.tile[x][0][z].tp = wall;
-        ctx->map.tile[x][MAP_HEIGHT-1][z].tp = wall;
+        wid_editor_set_new_tp(x, 0, z, wall);
+        wid_editor_set_new_tp(x, MAP_HEIGHT-1, z, wall);
     }
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         z = MAP_DEPTH_WALL;
-        ctx->map.tile[0][y][z].tp = wall;
-        ctx->map.tile[MAP_WIDTH-1][y-1][z].tp = wall;
+        wid_editor_set_new_tp(0, y, z, wall);
+        wid_editor_set_new_tp(MAP_WIDTH-1, y-1, z, wall);
     }
 
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
             z = MAP_DEPTH_FLOOR;
-            ctx->map.tile[x][y][z].tp = floor;
+            wid_editor_set_new_tp(x, y, z, floor);
         }
     }
 
@@ -1736,11 +1769,11 @@ static void wid_editor_style (void)
                 }
 
                 if (tp_is_wall(tp)) {
-                    ctx->map.tile[x][y][z].tp = wall;
+                    wid_editor_set_new_tp(x, y, z, wall);
                 }
 
                 if (tp_is_floor(tp)) {
-                    ctx->map.tile[x][y][z].tp = floor;
+                    wid_editor_set_new_tp(x, y, z, floor);
                 }
             }
         }
@@ -1888,7 +1921,7 @@ static void wid_editor_tile_fill_ (int x, int y)
     }
 
     z = tp_get_z_depth(wid_editor_chosen_tile[ctx->tile_pool]);
-    ctx->map.tile[x][y][z].tp = wid_editor_chosen_tile[ctx->tile_pool];
+    wid_editor_set_new_tp(x, y, z, wid_editor_chosen_tile[ctx->tile_pool]);
 
     wid_editor_tile_fill_(x + 1, y);
     wid_editor_tile_fill_(x - 1, y);
@@ -2053,6 +2086,7 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                 case WID_EDITOR_MODE_FILL:
                     wid_editor_tile_fill(mx, my);
                     break;
+
                 case WID_EDITOR_MODE_DEL:
                     wid_editor_tile_right_button_pressed(x, y);
                     break;
@@ -2069,6 +2103,7 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
             case WID_EDITOR_MODE_DEL:
             case WID_EDITOR_MODE_FILL:
             case WID_EDITOR_MODE_CUT:
+            case WID_EDITOR_MODE_COPY:
             case WID_EDITOR_MODE_PASTE:
             case WID_EDITOR_MODE_YANK:
             case WID_EDITOR_MODE_SQUARE:
@@ -2175,7 +2210,7 @@ static void wid_editor_tile_right_button_pressed (int x, int y)
                     ctx->cut_start_y = my;
                     ctx->cut_end_y = my;
 
-                    ctx->map.tile[mx][my][z].tp = 0;
+                    wid_editor_set_new_tp(mx, my, z, 0);
 
                     map_fixup();
 
@@ -2546,10 +2581,6 @@ static void wid_editor_destroy (widp w)
 
     wid_set_client_context(w, 0);
 
-    if (wid_editor_background) {
-        wid_destroy(&wid_editor_background);
-    }
-
     int x, y, z;
 
     for (x = 0; x < WID_EDITOR_MENU_CELLS_ACROSS; x++) {
@@ -2563,7 +2594,7 @@ static void wid_editor_destroy (widp w)
             ctx->tile[x][y].tile_tp = 0;
 
             for (z = 0; z < MAP_DEPTH; z++) {
-                ctx->map.tile[x][y][z].tp = 0;
+                wid_editor_set_new_tp(x, y, z, 0);
             }
         }
     }
@@ -2585,12 +2616,17 @@ static void wid_editor_bg_create (void)
 {
     widp wid;
 
+CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
     if (wid_editor_background) {
+        DIE("x");
         return;
     }
 
     {
         wid = wid_editor_background = wid_new_window("bg");
+CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
+verify(wid_editor_background);
+wid_set_debug(wid_editor_background, 1);
 
         float f = (1024.0 / 680.0);
 
@@ -3026,8 +3062,11 @@ static void wid_editor_save (const char *dir_and_file, int is_test_level)
 
 static void wid_editor_go_back (void)
 {
+CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
+verify(wid_editor_background);
     wid_destroy(&wid_editor_background);
     wid_destroy(&wid_editor_window);
+
     wid_map("Choose epic level", 0, 0);
 }
 
