@@ -1670,8 +1670,6 @@ static void wid_editor_test (void)
     wid_editor_save(tmp, true /* is_test_level */);
     myfree(tmp);
 
-CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
-verify(wid_editor_background);
     wid_destroy(&wid_editor_background);
     wid_destroy(&wid_editor_window);
 
@@ -2621,16 +2619,12 @@ static void wid_editor_bg_create (void)
 {
     widp wid;
 
-CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
     if (wid_editor_background) {
         return;
     }
 
     {
         wid = wid_editor_background = wid_new_window("bg");
-CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
-verify(wid_editor_background);
-wid_set_debug(wid_editor_background, 1);
 
         float f = (1024.0 / 680.0);
 
@@ -3066,8 +3060,6 @@ static void wid_editor_save (const char *dir_and_file, int is_test_level)
 
 static void wid_editor_go_back (void)
 {
-CON("wid_editor_background %p %s %d",wid_editor_background, __FUNCTION__,__LINE__);
-verify(wid_editor_background);
     wid_destroy(&wid_editor_background);
     wid_destroy(&wid_editor_window);
 
