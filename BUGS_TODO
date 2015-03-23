@@ -68,6 +68,8 @@ different profiles for level generation
 mining?
 
 Sun Mar 22 12:53:51 EDT 2015
+- added more light contrast
+- decreased zoom a bit
 - jump to map not tiles on edit level
 - save postion on map
 - need saved focus for tile and map mode and for each tile family
