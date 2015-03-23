@@ -9,8 +9,8 @@
 #undef ENABLE_CONSOLE
 #undef ENABLE_LOGFILE             // Log stdout and err to a file
 
-#define ENABLE_LEAKCHECK           // Memory leak check
-#define ENABLE_PTRCHECK            // Check validity of pointers too
+#undef ENABLE_LEAKCHECK           // Memory leak check
+#undef ENABLE_PTRCHECK            // Check validity of pointers too
 
 #undef ENABLE_MAP_SANITY          // Extra map checks
 #undef ENABLE_ASSERT              // DIE on errors
@@ -103,8 +103,18 @@
 /*
  * The number of tiles per screen.
  */
-#define TILES_SCREEN_WIDTH          18
-#define TILES_SCREEN_HEIGHT         14
+#define TILES_SCREEN_WIDTH          22
+#define TILES_SCREEN_HEIGHT         16
+
+/*
+ * Torchlight flickering parameters.
+ */
+#define MAP_LIGHT_CANDLELIGHT_FLICKER_RATE      20
+#define MAP_LIGHT_CANDLELIGHT_FLICKER_RADIUS    10
+#define MAP_LIGHT_CANDLELIGHT_RADIUS            50
+
+#define MAP_LIGHT_MORE_CONTRAST
+#define MAP_LIGHT_YET_MORE_CONTRAST
 
 /*
  * How many jigsaw pieces across and down make up the map. We substract
