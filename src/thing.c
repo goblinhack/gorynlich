@@ -2246,7 +2246,7 @@ void thing_join_level (thingp t)
     }
 }
 
-void thing_reached_exit (thingp t)
+void thing_reached_exit (thingp t, thingp exit)
 {
     verify(t);
 
@@ -2263,10 +2263,13 @@ void thing_reached_exit (thingp t)
         THING_LOG(t, "reached exit");
     }
 
-    /*
-     * Pop from the level.
-     */
-    thing_set_wid(t, 0);
+    if (exit->data.exit_set) {
+        THING_LOG(t, "exit to level %d.%d", 
+                  exit->data.exit.x,
+                  exit->data.exit.y);
+    }
+
+    thing_leave_level(t);
 
     sound_play_level_end();
 }

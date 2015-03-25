@@ -8,6 +8,7 @@
 
 #include "tree.h"
 #include "level_private.h"
+#include "thing_template.h"
 #include <stdlib.h>
 
 uint8_t thing_init(void);
@@ -152,7 +153,7 @@ tree_rootp thing_tiles(thingp);
 tree_rootp thing_tiles2(thingp);
 
 thing_tilep thing_current_tile(thingp t);
-void thing_reached_exit(thingp t);
+void thing_reached_exit(thingp t, thingp exit);
 void thing_place(void *);
 void thing_place_timed(tpp t, 
                        double x,
@@ -568,6 +569,11 @@ typedef struct thing_ {
      * For animation.
      */
     thing_tilep current_tile;
+
+    /*
+     * Data we read in along with the thing template.
+     */
+    thing_template_data data;
 
     /*
      * When to change frame for animation.

@@ -86,6 +86,7 @@ widp wid_editor_replace_template (widp w,
                                   double y,
                                   thingp t,
                                   tpp tp,
+                                  tpp_data data,
                                   itemp item,
                                   thing_statsp stats)
 {
@@ -1163,7 +1164,11 @@ static void wid_editor_exit_selected (level_pos_t p)
         }
 
         if (tp_is_exit(tp)) {
-            ctx->map.tile[mx][my][z].data.exit = p;
+            wid_editor_map_tile *tile = &ctx->map.tile[mx][my][z];
+            thing_template_data *data = &tile->data;
+
+            data->exit = p;
+            data->exit_set = true;
         }
     }
 }
@@ -3025,6 +3030,17 @@ static void wid_editor_save (const char *dir_and_file, int is_test_level)
                 PUT_NAMED_UINT32(ctx, "x", x);
                 PUT_NAMED_UINT32(ctx, "y", y);
                 PUT_NAMED_STRING(ctx, "t", tp_name(tp));
+
+                wid_editor_map_tile *tile = &ed->map.tile[x][y][z];
+                thing_template_data *data = &tile->data;
+
+                if (data->exit_set) {
+                    PUT_NAME(ctx, "exit");
+                    PUT_BRA(ctx);
+                    PUT_NAMED_INT8(ctx, "x", data->exit.x);
+                    PUT_NAMED_INT8(ctx, "y", data->exit.y);
+                    PUT_KET(ctx);
+                }
 
                 PUT_KET(ctx);
             }
