@@ -99,7 +99,7 @@ static void wid_map_update_buttons (widp w)
             wid_set_color(b, WID_COLOR_BG, c);
         } else {
             color c = GRAY;
-            c.a = 50;
+            c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
         }
     }
@@ -794,6 +794,7 @@ widp wid_editor_level_map_thing_replace_template (widp w,
                                                   double y,
                                                   thingp t,
                                                   tpp tp,
+                                                  tpp_data data,
                                                   itemp item,
                                                   thing_statsp stats)
 {

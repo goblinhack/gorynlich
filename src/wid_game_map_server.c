@@ -238,6 +238,7 @@ wid_game_map_server_replace_tile (widp w,
                                   double x, double y,
                                   thingp thing,
                                   tpp tp,
+                                  tpp_data data,
                                   itemp item,
                                   thing_statsp stats)
 {
@@ -354,6 +355,10 @@ wid_game_map_server_replace_tile (widp w,
         thing = thing_server_new(tp_name(tp), x, y, stats);
     } else {
         thing_server_init(thing, x, y);
+    }
+
+    if (data) {
+        thing->data = *data;
     }
 
     if (item) {

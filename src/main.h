@@ -168,6 +168,7 @@ typedef struct host_ *hostp;
 typedef struct action_timer_ *timerp;
 typedef struct action_init_fn_ *init_fnp;
 typedef struct tp_ *tpp;
+typedef struct tpp_data_ *tpp_data;
 typedef struct thing_tile_ *thing_tilep;
 typedef struct tokens_t_ *tokenp;
 typedef struct tree_demarshal_ *demarshal_p;

@@ -165,7 +165,9 @@ typedef void(*on_display_t)(widp, fpoint tl, fpoint br);
 typedef widp (*grid_wid_replace_t)(widp,
                                    double x,
                                    double y,
-                                   thingp, tpp, 
+                                   thingp, 
+                                   tpp, 
+                                   tpp_data,
                                    itemp item,
                                    thing_statsp stats);
 

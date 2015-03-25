@@ -93,6 +93,7 @@ static uint8_t level_command_dead (tokens_t *tokens, void *context)
                                          thing_grid_y(t),
                                          0, /* thing */
                                          tp,
+                                         0 /* tpp_data */,
                                          0 /* item */,
                                          0 /* stats */);
 
@@ -637,6 +638,7 @@ void level_place_plant_pod (levelp level)
                                          y,
                                          0, /* thing */
                                          tp,
+                                         0 /* tpp_data */,
                                          0 /* item */,
                                          0 /* stats */);
 
@@ -802,6 +804,7 @@ static void level_finished (levelp level)
                 0, 0,
                 t,
                 t->tp,
+                0 /* tpp_data */,
                 0 /* item */,
                 0 /* stats */);
 
@@ -1311,39 +1314,6 @@ void marshal_level (marshal_p ctx, levelp level)
     PUT_NAMED_BITFIELD(ctx, "is_exit_open", level->exit_reached_when_open);
 }
 
-static void demarshal_level_exits (demarshal_p ctx, levelp l)
-{
-    if (!GET_PEEK_NAME(ctx, "exits")) {
-        return;
-    }
-
-    GET_NAME(ctx, "exits");
-
-    GET_BRA(ctx);
-
-    for (;;) {
-        if (!GET_PEEK_BRA(ctx)) {
-            break;
-        }
-
-        uint32_t x, y, exitx, exity;
-
-        int rc = GET_BRA(ctx);
-        rc = rc && GET_NAMED_UINT32(ctx, "x", x);
-        rc = rc && GET_NAMED_UINT32(ctx, "y", y);
-        rc = rc && GET_NAMED_UINT32(ctx, "exitx", exitx);
-        rc = rc && GET_NAMED_UINT32(ctx, "exity", exity);
-
-        rc = rc && GET_KET(ctx);
-
-        if (!rc) {
-            break;
-        }
-    }
-
-    GET_KET(ctx);
-}
-
 uint8_t demarshal_level (demarshal_p ctx, levelp level)
 {
     uint8_t rc;
@@ -1394,8 +1364,6 @@ uint8_t demarshal_level (demarshal_p ctx, levelp level)
         GET_OPT_NAMED_BITFIELD(ctx, "is_exit_open", 
                                level->exit_reached_when_open);
     } while (demarshal_gotone(ctx));
-
-    demarshal_level_exits(ctx, level);
 
     server_level_is_being_loaded = true;
 

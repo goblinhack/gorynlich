@@ -84,6 +84,7 @@ widp wid_editor_level_map_thing_replace_template(widp w,
                                                  double y,
                                                  thingp t,
                                                  tpp tp,
+                                                 tpp_data,
                                                  itemp item,
                                                  thing_statsp stats);
 extern void wid_map_cell_play(void);

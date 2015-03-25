@@ -1613,6 +1613,7 @@ uint8_t socket_rx_client_join (gsocketp s, UDPpacket *packet, uint8_t *data)
                                          0, 0, 
                                          0, /* thing */
                                          tp,
+                                         0 /* tpp_data */,
                                          0 /* item */,
                                          &msg.stats);
     thingp t = wid_get_thing(w);
