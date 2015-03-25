@@ -479,7 +479,7 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
         }
 
         if (thing_is_exit(it)) {
-            thing_leave_level(me);
+            thing_reached_exit(me, it);
             return;
         }
     }

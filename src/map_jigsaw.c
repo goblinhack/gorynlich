@@ -2875,6 +2875,7 @@ void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
                 (*callback)(wid, x, y, 
                             0, /* thing */
                             tp,
+                            0 /* tp data */,
                             0 /* item */,
                             0 /* stats */);
             }
@@ -2921,6 +2922,7 @@ void map_jigsaw_generate (widp wid, grid_wid_replace_t callback)
             (*callback)(wid, x, y, 
                         0, /* thing */
                         tp,
+                        0 /* tpp_data */,
                         0 /* item */,
                         0 /* stats */);
         }

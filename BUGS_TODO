@@ -1,12 +1,14 @@
 --------------------------------------- plan for mar --------------------------------------
 - choose exit in editor
 - add level exit marshalling
-- button for directions
-- button for groups
-- default focus on map should be first level
-- add level traps
 - draw joined levels
+- arrow connectors
+- during test level when died, did not return to editor
+- layers in editing
+- add programming lanugage!
+- default focus on map should be first level
 - make item bar wider
+- why is torch in the items menu? it's useless
 - can't shoot through diagonal walls
 --------------------------------------- plan for apr --------------------------------------
 - super meat boy style spinning blades of death on invisible tracks - reuse road tiles for this?
@@ -66,6 +68,9 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Tue Mar 24 22:15:16 EDT 2015
+- added exits to level data, need to use them next
 
 Sun Mar 22 12:53:51 EDT 2015
 - added more light contrast

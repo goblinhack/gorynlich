@@ -235,6 +235,7 @@ void thing_wield (thingp t, tpp weapon)
                                 t->y,
                                 0, /* thing */
                                 what,
+                                0, /* tpp data */
                                 0 /* item */,
                                 0 /* stats */);
     } else {
@@ -300,6 +301,7 @@ void thing_swing (thingp t)
                                     t->y,
                                     0, /* thing */
                                     what,
+                                    0, /* tpp data */
                                     0 /* item */,
                                     0 /* stats */);
     } else {
