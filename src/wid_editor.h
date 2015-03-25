@@ -220,7 +220,9 @@ widp wid_editor_replace_template(widp w,
                                  double y,
                                  thingp t,
                                  tpp tp,
+                                 tpp_data,
                                  itemp item,
                                  thing_statsp stats);
+
 extern void wid_editor_preview(widp);
 extern void wid_editor_preview_thumbnail(widp);

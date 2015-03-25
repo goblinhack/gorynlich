@@ -280,6 +280,7 @@ void thing_server_action (thingp t,
             if (wid_game_map_server_replace_tile(grid, x, y,
                                                  0, /* thing */
                                                  tp,
+                                                 0 /* tpp_data */,
                                                  item,
                                                  0 /* stats */)) {
                 break;
@@ -302,6 +303,7 @@ void thing_server_action (thingp t,
                     if (wid_game_map_server_replace_tile(grid, x, y, 
                                                          0, /* thing */
                                                          tp,
+                                                         0 /* tpp_data */,
                                                          item,
                                                          0 /* stats */)) {
                         goto done;
@@ -474,7 +476,8 @@ void thing_server_fire (thingp t,
                                     y,
                                     0, /* thing */
                                     projectile,
-                                    0 /* item */,
+                                    0, /* tpp data */
+                                    0, /* item */
                                     0 /* stats */);
 
     thingp p = wid_get_thing(w);

@@ -122,6 +122,7 @@ void thing_timer_place_and_destroy_callback (void *context)
                                         place->y,
                                         0, /* thing */
                                         place->tp,
+                                        0, /* tpp data */
                                         0 /* item */,
                                         0 /* stats */);
     } else {
@@ -235,6 +236,7 @@ void thing_timer_place_callback (void *context)
                                         place->y,
                                         0, /* thing */
                                         place->tp,
+                                        0, /* tpp data */
                                         0 /* item */,
                                         0 /* stats */);
     } else {
