@@ -28,19 +28,22 @@ static widp wid_map_window;
 static wid_map_ctx *wid_map_window_ctx;
 static widp wid_map_background;
 static void wid_map_destroy(widp w);
+static void wid_map_preview_small(widp w, fpoint tl, fpoint br);
 static void wid_map_set_focus(wid_map_ctx *ctx, int focusx, int focusy);
 static int saved_focus_x = -1;
 static int saved_focus_y = -1;
 
-static void wid_map_update_buttons (widp w)
+static void wid_map_update_buttons (void)
 {
-    wid_map_ctx *ctx = wid_get_client_context(w);
+    wid_map_ctx *ctx = wid_map_window_ctx;
     verify(ctx);
 
     double width = 1.0 / (double)(LEVELS_DOWN + 1);
     double height = 1.0 / (double)(LEVELS_ACROSS + 1);
 
     int x, y;
+    static int count;
+    static int max_count = 1000;
 
     ctx->b = 0;
 
@@ -95,18 +98,28 @@ static void wid_map_update_buttons (widp w)
         if (map && map->level) {
             color c;
             if (map->exit_count && map->player_count) {
-                c = GREEN;
-                c.a = 150;
+                c = WHITE;
+                c.a = 0;
             } else if (map->player_count) {
-                c = ORANGE;
-                c.a = 255;
+                if (count < max_count / 3) {
+                    c = ORANGE;
+                    c.a = 255;
+                } else {
+                    c = WHITE;
+                    c.a = 0;
+                }
             } else {
-                c = RED;
-                c.a = 255;
+                if (count < max_count / 3) {
+                    c = RED;
+                    c.a = 255;
+                } else {
+                    c = WHITE;
+                    c.a = 0;
+                }
             }
 
             wid_set_color(b, WID_COLOR_BG, c);
-
+            wid_set_on_display(b, wid_map_preview_small);
         } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
             color c = GRAY;
             c.a = 100;
@@ -119,7 +132,12 @@ static void wid_map_update_buttons (widp w)
     }
     }
 
-    wid_update(w);
+    count++;
+    if (count >= max_count) {
+        count = 0;
+    }
+
+    wid_update(wid_map_window);
 
     /*
      * Zoom buttons in
@@ -178,7 +196,7 @@ static void wid_map_focus_right (wid_map_ctx *ctx)
         ctx->focusx = 0;
     }
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
 }
 
 static void wid_map_focus_left (wid_map_ctx *ctx)
@@ -188,7 +206,7 @@ static void wid_map_focus_left (wid_map_ctx *ctx)
         ctx->focusx = LEVELS_DOWN - 1;
     }
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
 }
 
 static void wid_map_focus_down (wid_map_ctx *ctx)
@@ -198,7 +216,7 @@ static void wid_map_focus_down (wid_map_ctx *ctx)
         ctx->focusy = 0;
     }
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
 }
 
 static void wid_map_focus_up (wid_map_ctx *ctx)
@@ -208,7 +226,7 @@ static void wid_map_focus_up (wid_map_ctx *ctx)
         ctx->focusy = LEVELS_ACROSS - 1;
     }
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
 }
 
 static void wid_map_last_focus (wid_map_ctx *ctx)
@@ -216,7 +234,7 @@ static void wid_map_last_focus (wid_map_ctx *ctx)
     ctx->focusx = LEVELS_DOWN - 1;
     ctx->focusy = LEVELS_ACROSS - 1;
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
 }
 
 static void wid_map_first_focus (wid_map_ctx *ctx)
@@ -224,7 +242,7 @@ static void wid_map_first_focus (wid_map_ctx *ctx)
     ctx->focusx = 0;
     ctx->focusy = 0;
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
 }
 
 static void wid_map_set_focus (wid_map_ctx *ctx, int focusx, int focusy)
@@ -232,7 +250,7 @@ static void wid_map_set_focus (wid_map_ctx *ctx, int focusx, int focusy)
     ctx->focusx = focusx;
     ctx->focusy = focusy;
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
 }
 
 static uint8_t wid_map_parent_key_down (widp w, const SDL_KEYSYM *key)
@@ -349,7 +367,7 @@ static uint8_t wid_map_parent_joy_button (widp w, int32_t x, int32_t y)
         ret = true;
     }
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
     if (ctx->b) {
         wid_mouse_warp(ctx->b);
     }
@@ -450,7 +468,7 @@ static uint8_t wid_map_button_joy_down_event (widp w,
         ret = true;
     }
 
-    wid_map_update_buttons(ctx->w);
+    wid_map_update_buttons();
     if (ctx->b) {
         wid_mouse_warp(ctx->b);
     }
@@ -935,6 +953,89 @@ static void wid_map_preview_do (int thumbnail)
     blit_flush();
 }
 
+static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
+{
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
+
+    verify(ctx);
+
+    int xy = (typeof(xy)) (uintptr_t) wid_get_client_context2(b);
+    int lx = (xy & 0xff);
+    int ly = (xy & 0xff00) >> 8;
+
+    wid_map_level *map = &ctx->levels[ly][lx];
+    if (!map) {
+        return;
+    }
+
+    double dx = (br.x - tl.x) / (double)MAP_WIDTH;
+    double dy = (br.y - tl.y) / (double)MAP_HEIGHT;
+
+    int x, y, z;
+    int step = 4;
+
+    blit_init();
+
+    for (x = 0; x < MAP_WIDTH; x+=step) 
+    for (y = 0; y < MAP_HEIGHT; y+=step) 
+    for (z = 0; z < MAP_DEPTH; z++) {
+        tpp tp = map->tiles[x][y][z].tp;
+        if (!tp) {
+            continue;
+        }
+
+        thing_tilep thing_tile;
+        tree_rootp tiles;
+
+        tiles = tp_get_tiles(tp);
+        if (!tiles) {
+            return;
+        }
+
+        thing_tile = thing_tile_first(tiles);
+        if (!thing_tile) {
+            continue;
+        }
+
+        fpoint tl2;
+        fpoint br2;
+
+        tl2.x = tl.x + (dx * (double)x);
+        tl2.y = tl.y + (dy * (double)y);
+
+        br2.x = tl.x + (dx * ((double)x) + ((double)step)+0.5);
+        br2.y = tl.y + (dy * ((double)y) + ((double)step)+0.5);
+
+        if (br2.x > br.x) {
+            br2.x = br.x;
+        }
+
+        if (br2.y > br.y) {
+            br2.y = br.y;
+        }
+
+        const char *tilename = thing_tile_name(thing_tile);
+        if (!tilename) {
+            ERR("cannot find tile %s", tilename);
+            continue;
+        }
+
+        tilep tile = tile_find(tilename);
+        if (!tile) {
+            ERR("cannot find tilep for tile %s", tilename);
+        }
+
+        glcolor(WHITE);
+        tile_blit_fat(tile, 0, tl2, br2);
+    }
+
+    blit_flush();
+    wid_map_update_buttons();
+}
+
 void wid_map_preview (widp w)
 {
     wid_map_preview_do(false);
@@ -1160,6 +1261,7 @@ widp wid_map (const char *title,
             wid_set_on_key_down(b, wid_map_button_key_event);
             wid_set_on_joy_down(b, wid_map_button_joy_down_event);
             wid_set_on_mouse_down(b, wid_map_button_mouse_event);
+            wid_set_bevel(b, 1);
 
             wid_set_color(b, WID_COLOR_BG, GRAY20);
             wid_set_color(b, WID_COLOR_TL, GRAY60);
@@ -1204,10 +1306,10 @@ widp wid_map (const char *title,
      */
     wid_set_client_context(window, ctx);
 
-    wid_map_update_buttons(window);
+    wid_map_update_buttons();
     wid_update(window);
     wid_raise(window);
-    wid_map_update_buttons(window);
+    wid_map_update_buttons();
     wid_update(window);
     wid_raise(window);
     wid_map_bg_create();
