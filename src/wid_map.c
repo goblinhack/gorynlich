@@ -90,10 +90,23 @@ static void wid_map_update_buttons (widp w)
         wid_set_color(b, WID_COLOR_TEXT, c);
         wid_set_font(b, font);
 
-        if (ctx->levels[y][x].level) {
-            color c = GREEN;
-            c.a = 150;
+        wid_map_level *map = &ctx->levels[y][x];
+
+        if (map && map->level) {
+            color c;
+            if (map->exit_count && map->player_count) {
+                c = GREEN;
+                c.a = 150;
+            } else if (map->player_count) {
+                c = ORANGE;
+                c.a = 255;
+            } else {
+                c = RED;
+                c.a = 255;
+            }
+
             wid_set_color(b, WID_COLOR_BG, c);
+
         } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
             color c = GRAY;
             c.a = 100;
@@ -659,6 +672,89 @@ static void wid_map_bg_create (void)
     }
 }
 
+static void wid_map_find_exits (int x, int y)
+{
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
+
+    wid_map_level *map = &ctx->levels[y][x];
+    if (!map) {
+        return;
+    }
+
+    int mx, my, mz;
+
+    for (mx = 0; mx < MAP_WIDTH; mx++)
+    for (my = 0; my < MAP_HEIGHT; my++) 
+    for (mz = 0; mz < MAP_DEPTH; mz++) {
+        wid_map_tile *tile = &map->tiles[mx][my][mz];
+        if (!tile) {
+            continue;
+        }
+
+        tpp tp = tile->tp;
+        if (!tp) {
+            continue;
+        }
+
+        tpp_data data = &tile->data;
+        if (tp_is_exit(tp) && data->exit_set) {
+
+            int ex = data->exit.x;
+            int ey = data->exit.y;
+
+            int e;
+            for (e = 0; e < WID_MAP_EXITS_MAX; e++) {
+                if (!map->exit_level_x[e] && !map->exit_level_y[e]) {
+                    map->exit_level_x[e] = ex;
+                    map->exit_level_y[e] = ey;
+                    map->exit_at_mx[e] = mx;
+                    map->exit_at_my[e] = my;
+                    map->exit_count++;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+static void wid_map_find_player_start (int x, int y)
+{
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
+
+    wid_map_level *map = &ctx->levels[y][x];
+    if (!map) {
+        return;
+    }
+
+    int mx, my, mz;
+
+    for (mx = 0; mx < MAP_WIDTH; mx++) 
+    for (my = 0; my < MAP_HEIGHT; my++) 
+    for (mz = 0; mz < MAP_DEPTH; mz++) {
+        wid_map_tile *tile = &map->tiles[mx][my][mz];
+        if (!tile) {
+            continue;
+        }
+
+        tpp tp = tile->tp;
+        if (!tp) {
+            continue;
+        }
+
+        if (tp_is_player(tp)) {
+            map->px = mx;
+            map->py = my;
+            map->player_count++;
+        }
+    }
+}
+
 static void wid_map_draw_exits (void)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
@@ -680,77 +776,41 @@ static void wid_map_draw_exits (void)
         int32_t tlx, tly, brx, bry;
         wid_get_abs_coords(b, &tlx, &tly, &brx, &bry);
 
-        int mx, my, mz;
+        int e;
+        for (e = 0; e < map->exit_count; e++) {
+            int sx = map->exit_at_mx[e];
+            int sy = map->exit_at_my[e];
+            int ex = map->exit_level_x[e];
+            int ey = map->exit_level_y[e];
 
-        for (mx = 0; mx < MAP_WIDTH; mx++) 
-        for (my = 0; my < MAP_HEIGHT; my++) 
-        for (mz = 0; mz < MAP_DEPTH; mz++) {
-            wid_map_tile *tile = &map->tiles[mx][my][mz];
-            if (!tile) {
+            widp b2 = ctx->buttons[ey][ex];
+            if (!b2) {
                 continue;
             }
 
-            tpp tp = tile->tp;
-            if (!tp) {
+            wid_map_level *map2 = &ctx->levels[ey][ex];
+            if (!map2) {
                 continue;
             }
 
-            tpp_data data = &tile->data;
-            if (tp_is_exit(tp) && data->exit_set) {
+            int px = map2->px;
+            int py = map2->py;
 
-                int ex = data->exit.x;
-                int ey = data->exit.y;
+            int32_t tlx2, tly2, brx2, bry2;
+            wid_get_abs_coords(b2, &tlx2, &tly2, &brx2, &bry2);
 
-                wid_map_level *map2 = &ctx->levels[ey][ex];
-                if (!map2) {
-                    continue;
-                }
+            double left = 
+                tlx + ((((double)(brx - tlx)) / ((double)MAP_WIDTH)) * sx);
+            double top = 
+                tly + (((double)(bry - tly)) / ((double)MAP_HEIGHT)) * sy;
 
-                int px, py, pz;
+            double right = 
+                tlx2 + ((((double)(brx2 - tlx2)) / ((double)MAP_WIDTH)) * px);
+            double bottom = 
+                tly2 + (((double)(bry2 - tly2)) / ((double)MAP_HEIGHT)) * py;
 
-                int dx = MAP_WIDTH / 2;
-                int dy = MAP_HEIGHT / 2;
-
-                for (px = 0; px < MAP_WIDTH; px++) 
-                for (py = 0; py < MAP_HEIGHT; py++) 
-                for (pz = 0; pz < MAP_DEPTH; pz++) {
-                    wid_map_tile *tile2 = &map2->tiles[px][py][pz];
-                    if (!tile2) {
-                        continue;
-                    }
-
-                    tpp tp = tile2->tp;
-                    if (!tp) {
-                        continue;
-                    }
-
-                    if (tp_is_player(tp)) {
-                        dx = px;
-                        dy = py;
-                    }
-                }
-
-                widp b2 = ctx->buttons[ey][ex];
-                if (!b2) {
-                    continue;
-                }
-
-                int32_t tlx2, tly2, brx2, bry2;
-                wid_get_abs_coords(b2, &tlx2, &tly2, &brx2, &bry2);
-
-                double left = 
-                    tlx + ((((double)(brx - tlx)) / ((double)MAP_WIDTH)) * mx);
-                double top = 
-                    tly + (((double)(bry - tly)) / ((double)MAP_HEIGHT)) * my;
-
-                double right = 
-                    tlx2 + ((((double)(brx2 - tlx2)) / ((double)MAP_WIDTH)) * dx);
-                double bottom = 
-                    tly2 + (((double)(bry2 - tly2)) / ((double)MAP_HEIGHT)) * dy;
-
-                glcolor(RED);
-                gl_blitline(left, top, right, bottom);
-            }
+            glcolor(RED);
+            gl_blitline(left, top, right, bottom);
         }
     }
 }
@@ -998,6 +1058,9 @@ static void wid_map_load_levels (wid_map_ctx *ctx)
 
         wid_set_tooltip(b, level_get_title(l), med_font);
         wid_set_font(b, vsmall_font);
+
+        wid_map_find_player_start(x, y);
+        wid_map_find_exits(x, y);
     } }
 
     dirlist_free(&d);
