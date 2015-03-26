@@ -15,6 +15,7 @@ levelp level_new(widp,
 void level_destroy(levelp *, uint8_t keep_players);
 void level_tick(levelp);
 void level_update_now(levelp level);
+void level_load_new(void);
 levelp level_load(level_pos_t,
                   widp, 
                   int is_editor, 

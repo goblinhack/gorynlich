@@ -25,6 +25,7 @@
 #include "wid_editor.h"
 #include "socket_util.h"
 #include "map_jigsaw.h"
+#include "file.h"
 
 static uint8_t level_command_dead(tokens_t *tokens, void *context);
 static uint8_t level_init_done;
@@ -237,6 +238,48 @@ void level_update_now (levelp level)
      * Ensure things are updated at the start of the new level.
      */
     thing_tick_server_player_slow_all(true /* force */);
+}
+
+void level_load_new (void)
+{
+    server_level_is_being_loaded = true;
+
+    LOG("Server: New level, %d.%d", 
+        global_config.server_level_pos.y, 
+        global_config.server_level_pos.x);
+
+    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, 
+                          global_config.server_level_pos.y, 
+                          global_config.server_level_pos.x);
+
+    if (!file_exists(tmp)) {
+        LOG("Level %s does not exist, create random level", tmp);
+
+        server_level = level_load_random(global_config.server_level_pos,
+                                         wid_game_map_server_grid_container,
+                                         false /* is_editor */,
+                                         false /* is_map_editor */,
+                                         true /* server */);
+    } else {
+        server_level = level_load(global_config.server_level_pos,
+                                  wid_game_map_server_grid_container,
+                                  false /* is_editor */,
+                                  false /* is_map_editor */,
+                                  true /* server */);
+    }
+    myfree(tmp);
+
+    if (!server_level) {
+        DIE("failed to load server level %d.%d",
+            global_config.server_level_pos.y,
+            global_config.server_level_pos.x);
+    }
+
+    server_level_is_being_loaded = false;
+
+    level_update_now(server_level);
+
+    level_pause(server_level);
 }
 
 levelp level_load (level_pos_t level_pos, 
@@ -788,6 +831,11 @@ static void level_finished (levelp level)
     } }
 
     wid_game_map_server_wid_create();
+
+    /*
+     * Create the new level, random or otherwise.
+     */
+    level_load_new();
 
     /*
      * Move players to the new level.

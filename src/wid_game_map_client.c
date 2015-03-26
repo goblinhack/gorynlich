@@ -1220,9 +1220,10 @@ void wid_game_map_client_score_update (levelp level, uint8_t redo)
         widp wid_level_container;
 
         wid_level_container = wid_textbox(wid_scoreline_container_top,
-                                            &wid_level,
-                                            tmp, 
-                                            (score_x + cash_x) / 2.0, 0.05, med_font);
+                                          &wid_level,
+                                          tmp, 
+                                          (score_x + cash_x) / 2.0, 0.05, 
+                                          med_font);
         myfree(tmp);
 
         wid_set_no_shape(wid_level_container);
