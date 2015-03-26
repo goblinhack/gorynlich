@@ -69,6 +69,9 @@ add bot to test out multiplayer ?
 different profiles for level generation
 mining?
 
+Wed Mar 25 16:27:59 EDT 2015
+- level exits work finally
+
 Tue Mar 24 22:15:16 EDT 2015
 - added exits to level data, need to use them next
 

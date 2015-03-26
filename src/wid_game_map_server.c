@@ -64,6 +64,8 @@ void wid_game_map_server_visible (void)
         LOG("Server: Create new map");
 
         wid_game_map_server_wid_create();
+
+        level_load_new();
     }
 
     wid_hide(wid_game_map_server_window, 0);
@@ -165,48 +167,15 @@ void wid_game_map_server_wid_create (void)
      * Never show the server things
      */
     wid_hide(wid_game_map_server_window, 0);
-
-    server_level_is_being_loaded = true;
-
-    char *tmp = dynprintf("%s%d.%d", LEVELS_PATH, 
-                          global_config.level_pos.y, 
-                          global_config.level_pos.x);
-
-    if (!file_exists(tmp)) {
-        LOG("Level %s does not exist, create random level", tmp);
-
-        server_level = level_load_random(global_config.level_pos,
-                                         wid_game_map_server_grid_container,
-                                         false /* is_editor */,
-                                         false /* is_map_editor */,
-                                         true /* server */);
-    } else {
-        server_level = level_load(global_config.level_pos,
-                                  wid_game_map_server_grid_container,
-                                  false /* is_editor */,
-                                  false /* is_map_editor */,
-                                  true /* server */);
-    }
-    myfree(tmp);
-
-    if (!server_level) {
-        DIE("failed to load server level %d.%d",
-            global_config.level_pos.y,
-            global_config.level_pos.x);
-        return;
-    }
-
-    server_level_is_being_loaded = false;
-
-    level_update_now(server_level);
-
-    level_pause(server_level);
 }
 
 void wid_game_map_server_wid_destroy (uint8_t keep_players)
 {
     if (!keep_players) {
-        memset(&global_config.level_pos, 0, sizeof(global_config.level_pos));
+        LOG("Server: Reset back to first level");
+
+        memset(&global_config.server_level_pos, 0, 
+               sizeof(global_config.server_level_pos));
     }
 
     if (server_level) {
@@ -236,7 +205,7 @@ void wid_game_map_server_wid_destroy (uint8_t keep_players)
 widp
 wid_game_map_server_replace_tile (widp w,
                                   double x, double y,
-                                  thingp thing,
+                                  thingp t,
                                   tpp tp,
                                   tpp_data data,
                                   itemp item,
@@ -351,23 +320,32 @@ wid_game_map_server_replace_tile (widp w,
      */
     wid_set_thing_template(child, tp);
 
-    if (!thing) {
-        thing = thing_server_new(tp_name(tp), x, y, stats);
+    if (!t) {
+        t = thing_server_new(tp_name(tp), x, y, stats);
     } else {
-        thing_server_init(thing, x, y);
+        thing_server_init(t, x, y);
     }
 
     if (data) {
-        thing->data = *data;
+        t->data = *data;
+
+        if (thing_is_exit(t)) {
+            if (t->data.exit_set) {
+                LOG("Create exit to level %d.%d", 
+                    t->data.exit.y, t->data.exit.x);
+            } else {
+                WARN("Create exit with no next level");
+            }
+        }
     }
 
     if (item) {
-        memcpy(&thing->item, &item, sizeof(item_t));
+        memcpy(&t->item, &item, sizeof(item_t));
     }
 
-    wid_set_thing(child, thing);
+    wid_set_thing(child, t);
 
-    thing_server_wid_update(thing, x, y, true /* is_new */);
+    thing_server_wid_update(t, x, y, true /* is_new */);
 
     /*
      * This adds it to the grid wid.
@@ -378,9 +356,9 @@ wid_game_map_server_replace_tile (widp w,
         return (child);
     }
 
-    if (thing_is_wall(thing) ||
-        thing_is_door(thing) ||
-        thing_is_pipe(thing)) {
+    if (thing_is_wall(t) ||
+        thing_is_door(t) ||
+        thing_is_pipe(t)) {
         map_fixup(level);
     }
 

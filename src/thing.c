@@ -2264,9 +2264,22 @@ void thing_reached_exit (thingp t, thingp exit)
     }
 
     if (exit->data.exit_set) {
-        THING_LOG(t, "exit to level %d.%d", 
-                  exit->data.exit.x,
-                  exit->data.exit.y);
+        global_config.server_level_pos.y = exit->data.exit.y;
+        global_config.server_level_pos.x = exit->data.exit.x;
+
+        THING_LOG(t, "exit jump to level %d.%d", 
+                  global_config.server_level_pos.y,
+                  global_config.server_level_pos.x);
+    } else {
+        global_config.server_level_pos.x++;
+        if (global_config.server_level_pos.x >= LEVELS_ACROSS) {
+            global_config.server_level_pos.x = 1;
+            global_config.server_level_pos.y++;
+        }
+
+        THING_LOG(t, "exit to next consecutive level %d.%d", 
+                  global_config.server_level_pos.y,
+                  global_config.server_level_pos.x);
     }
 
     thing_leave_level(t);

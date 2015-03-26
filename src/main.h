@@ -425,9 +425,13 @@ struct config {
     uint8_t game_over;
 
     /*
-     * Current level
+     * Current level. We need to keep seperate copies as they will go out of 
+     * sync as a player moves from one level to another and we do not want msg
+     * updates from the server that are old overwriting the global variable 
+     * the server had just set (for combined server/client game).
      */
-    level_pos_t level_pos;
+    level_pos_t server_level_pos;
+    level_pos_t client_level_pos;
 };
 
 extern struct config global_config;
