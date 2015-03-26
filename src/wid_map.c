@@ -12,12 +12,12 @@
 #include "color.h"
 #include "string_ext.h"
 #include "ttf.h"
+#include "thing_template.h"
 #include "wid_map.h"
 #include "time_util.h"
 #include "timer.h"
 #include "level.h"
 #include "math_util.h"
-#include "thing_template.h"
 #include "thing_tile.h"
 #include "wid_editor.h"
 #include "wid_intro.h"
@@ -73,6 +73,7 @@ static void wid_map_update_buttons (widp w)
             tl.y -= zoom;
             br.x += zoom * 2.0;
             br.y += zoom * 2.0;
+            color c = GREEN;
             c = GREEN;
 
             ctx->b = b;
@@ -91,7 +92,7 @@ static void wid_map_update_buttons (widp w)
 
         if (ctx->levels[y][x].level) {
             color c = GREEN;
-            c.a = 255;
+            c.a = 150;
             wid_set_color(b, WID_COLOR_BG, c);
         } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
             color c = GRAY;
@@ -658,6 +659,102 @@ static void wid_map_bg_create (void)
     }
 }
 
+static void wid_map_draw_exits (void)
+{
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
+
+    int x, y;
+
+    for (x = 0; x < LEVELS_DOWN; x++) 
+    for (y = 0; y < LEVELS_ACROSS; y++) {
+
+        wid_map_level *map = &ctx->levels[y][x];
+        if (!map) {
+            continue;
+        }
+
+        widp b = ctx->buttons[y][x];
+        int32_t tlx, tly, brx, bry;
+        wid_get_abs_coords(b, &tlx, &tly, &brx, &bry);
+
+        int mx, my, mz;
+
+        for (mx = 0; mx < MAP_WIDTH; mx++) 
+        for (my = 0; my < MAP_HEIGHT; my++) 
+        for (mz = 0; mz < MAP_DEPTH; mz++) {
+            wid_map_tile *tile = &map->tiles[mx][my][mz];
+            if (!tile) {
+                continue;
+            }
+
+            tpp tp = tile->tp;
+            if (!tp) {
+                continue;
+            }
+
+            tpp_data data = &tile->data;
+            if (tp_is_exit(tp) && data->exit_set) {
+
+                int ex = data->exit.x;
+                int ey = data->exit.y;
+
+                wid_map_level *map2 = &ctx->levels[ey][ex];
+                if (!map2) {
+                    continue;
+                }
+
+                int px, py, pz;
+
+                int dx = MAP_WIDTH / 2;
+                int dy = MAP_HEIGHT / 2;
+
+                for (px = 0; px < MAP_WIDTH; px++) 
+                for (py = 0; py < MAP_HEIGHT; py++) 
+                for (pz = 0; pz < MAP_DEPTH; pz++) {
+                    wid_map_tile *tile2 = &map2->tiles[px][py][pz];
+                    if (!tile2) {
+                        continue;
+                    }
+
+                    tpp tp = tile2->tp;
+                    if (!tp) {
+                        continue;
+                    }
+
+                    if (tp_is_player(tp)) {
+                        dx = px;
+                        dy = py;
+                    }
+                }
+
+                widp b2 = ctx->buttons[ey][ex];
+                if (!b2) {
+                    continue;
+                }
+
+                int32_t tlx2, tly2, brx2, bry2;
+                wid_get_abs_coords(b2, &tlx2, &tly2, &brx2, &bry2);
+
+                double left = 
+                    tlx + ((((double)(brx - tlx)) / ((double)MAP_WIDTH)) * mx);
+                double top = 
+                    tly + (((double)(bry - tly)) / ((double)MAP_HEIGHT)) * my;
+
+                double right = 
+                    tlx2 + ((((double)(brx2 - tlx2)) / ((double)MAP_WIDTH)) * dx);
+                double bottom = 
+                    tly2 + (((double)(bry2 - tly2)) / ((double)MAP_HEIGHT)) * dy;
+
+                glcolor(RED);
+                gl_blitline(left, top, right, bottom);
+            }
+        }
+    }
+}
+
 static void wid_map_preview_do (int thumbnail)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
@@ -666,6 +763,8 @@ static void wid_map_preview_do (int thumbnail)
     }
 
     verify(ctx);
+
+    wid_map_draw_exits();
 
     if (ctx->focusx == -1) {
         return;
@@ -687,7 +786,7 @@ static void wid_map_preview_do (int thumbnail)
     for (x = 0; x < MAP_WIDTH; x++) 
     for (y = 0; y < MAP_HEIGHT; y++) 
     for (z = 0; z < MAP_DEPTH; z++) {
-        tpp tp = map->tiles[x][y][z];
+        tpp tp = map->tiles[x][y][z].tp;
         if (!tp) {
             continue;
         }
@@ -825,7 +924,11 @@ widp wid_editor_level_map_thing_replace_template (widp w,
     }
 
     int z = tp_get_z_depth(tp);
-    map->tiles[ix][iy][z] = tp;
+    map->tiles[ix][iy][z].tp = tp;
+
+    if (data) {
+        map->tiles[ix][iy][z].data = *data;
+    }
 
     return (0);
 }

@@ -853,7 +853,7 @@ static void client_rx_server_status (gsocketp s,
     }
 
     global_config.server_current_players = latest_status.server_current_players;
-    global_config.level_pos = latest_status.level_pos;
+    global_config.client_level_pos = latest_status.level_pos;
 
     /*
      * Left a level?

@@ -6,6 +6,15 @@
 
 #pragma once
 
+typedef struct wid_map_tile_ {
+    tpp tp;
+
+    /*
+     * Data associated with individual tiles.
+     */
+    thing_template_data data;
+} wid_map_tile;
+
 typedef struct wid_map_cell_ {
     levelp level;
     char *name;
@@ -15,7 +24,7 @@ typedef struct wid_map_cell_ {
     /*
      * Used for level preview.
      */
-    tpp tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+    wid_map_tile tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
 } wid_map_level;
 
 typedef void(*wid_map_event_t)(widp);
