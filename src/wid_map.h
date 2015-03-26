@@ -6,6 +6,8 @@
 
 #pragma once
 
+#define WID_MAP_EXITS_MAX 255
+
 typedef struct wid_map_tile_ {
     tpp tp;
 
@@ -25,6 +27,22 @@ typedef struct wid_map_cell_ {
      * Used for level preview.
      */
     wid_map_tile tiles[MAP_WIDTH][MAP_HEIGHT][MAP_DEPTH];
+
+    /*
+     * Player (well one of them) start at
+     */
+    int px;
+    int py;
+    int player_count;
+
+    /*
+     * Level exits
+     */
+    int exit_at_mx[WID_MAP_EXITS_MAX]; // start tile in the map
+    int exit_at_my[WID_MAP_EXITS_MAX];
+    int exit_level_x[WID_MAP_EXITS_MAX]; // destination level
+    int exit_level_y[WID_MAP_EXITS_MAX];
+    int exit_count;
 } wid_map_level;
 
 typedef void(*wid_map_event_t)(widp);
