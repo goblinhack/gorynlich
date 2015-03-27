@@ -777,6 +777,17 @@ static void wid_map_find_player_start (int x, int y)
 
 static void wid_map_draw_exits (void)
 {
+    static uint8_t a;
+    static int da = 1;
+
+    a += da;
+    if (a == 255) {
+        da = -1;
+    }
+    if (a == 0) {
+        da = 1;
+    }
+    
     wid_map_ctx *ctx = wid_map_window_ctx;
     if (!wid_map_window_ctx) {
         return;
@@ -829,7 +840,10 @@ static void wid_map_draw_exits (void)
             double bottom = 
                 tly2 + (((double)(bry2 - tly2)) / ((double)MAP_HEIGHT)) * py;
 
-            glcolor(RED);
+            color c = RED;
+            c.a = a;
+            glcolor(c);
+
             gl_blitline(left, top, right, bottom);
         }
     }
@@ -866,22 +880,38 @@ static void wid_map_preview_do (int thumbnail)
     for (x = 0; x < MAP_WIDTH; x++) 
     for (y = 0; y < MAP_HEIGHT; y++) 
     for (z = 0; z < MAP_DEPTH; z++) {
-        tpp tp = map->tiles[x][y][z].tp;
-        if (!tp) {
-            continue;
-        }
+        tilep tile = map->tiles[x][y][z].tile;
+        if (!tile) {
+            tpp tp = map->tiles[x][y][z].tp;
+            if (!tp) {
+                continue;
+            }
 
-        thing_tilep thing_tile;
-        tree_rootp tiles;
+            thing_tilep thing_tile;
+            tree_rootp tiles;
 
-        tiles = tp_get_tiles(tp);
-        if (!tiles) {
-            return;
-        }
+            tiles = tp_get_tiles(tp);
+            if (!tiles) {
+                return;
+            }
 
-        thing_tile = thing_tile_first(tiles);
-        if (!thing_tile) {
-            continue;
+            thing_tile = thing_tile_first(tiles);
+            if (!thing_tile) {
+                continue;
+            }
+
+            const char *tilename = thing_tile_name(thing_tile);
+            if (!tilename) {
+                ERR("cannot find tile %s", tilename);
+                continue;
+            }
+
+            tile = tile_find(tilename);
+            if (!tile) {
+                ERR("cannot find tilep for tile %s", tilename);
+            }
+
+            map->tiles[x][y][z].tile = tile;
         }
 
         fpoint tl;
@@ -899,17 +929,6 @@ static void wid_map_preview_do (int thumbnail)
         br.x = ((double)x+1.5) * dx;
         tl.y = ((double)y) * dy;
         br.y = ((double)y+1.5) * dy;
-
-        const char *tilename = thing_tile_name(thing_tile);
-        if (!tilename) {
-            ERR("cannot find tile %s", tilename);
-            continue;
-        }
-
-        tilep tile = tile_find(tilename);
-        if (!tile) {
-            ERR("cannot find tilep for tile %s", tilename);
-        }
 
         if (ctx->focusx > MAP_WIDTH / 2) {
             tl.x -= dx * (double)MAP_WIDTH;
