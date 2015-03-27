@@ -68,7 +68,9 @@ static void wid_editor_set_mode (int edit_mode)
     ctx->got_cut_start = 0;
 }
 
-static void wid_editor_set_new_tp (int x, int y, int z, tpp tp)
+static void wid_editor_set_new_tp (int x, int y, int z, 
+                                   tpp tp,
+                                   tpp_data data)
 {
     wid_editor_ctx *ctx = wid_editor_window_ctx;
     verify(ctx);
@@ -76,6 +78,10 @@ static void wid_editor_set_new_tp (int x, int y, int z, tpp tp)
 
     memset(&ctx->map.tile[x][y][z], 0, sizeof(wid_editor_map_tile));
     ctx->map.tile[x][y][z].tp = tp;
+
+    if (data) {
+        ctx->map.tile[x][y][z].data = *data;
+    }
 }
 
 /*
@@ -134,7 +140,8 @@ widp wid_editor_replace_template (widp w,
             ctx->map_y--;
         }
     }
-    wid_editor_set_new_tp(ix, iy, z, tp);
+
+    wid_editor_set_new_tp(ix, iy, z, tp, data);
 
     return (0);
 }
@@ -1171,6 +1178,10 @@ static void wid_editor_exit_selected (level_pos_t p)
             data->exit_set = true;
         }
     }
+
+    map_fixup();
+
+    wid_editor_undo_save();
 }
 
 static void wid_editor_exit_cancelled (void)
@@ -1194,7 +1205,7 @@ static void wid_editor_map_thing_replace (int x, int y, int interactive)
     }
 
     int z = tp_get_z_depth(tp);
-    wid_editor_set_new_tp(x, y, z, tp);
+    wid_editor_set_new_tp(x, y, z, tp, 0);
 
     if (tp_is_exit(tp)) {
         wid_editor_map_dialog = wid_map("Choose destination",
@@ -1468,7 +1479,7 @@ static void wid_editor_paste (int mx, int my)
                     continue;
                 }
 
-                wid_editor_set_new_tp(px, py, z, tp);
+                wid_editor_set_new_tp(px, py, z, tp, 0);
             }
         }
     }
@@ -1507,7 +1518,7 @@ static void wid_editor_cut (int mx, int my)
                     continue;
                 }
 
-                wid_editor_set_new_tp(x, y, z, 0);
+                wid_editor_set_new_tp(x, y, z, 0, 0);
             }
         }
     }
@@ -1603,7 +1614,7 @@ static void wid_editor_undo_save (void)
         ctx->undo_at = 0;
     }
 
-    if (ctx->undo_at > 1) {
+    if (ctx->undo_at > 0) {
         ctx->save_needed = true;
     }
 
@@ -1712,20 +1723,20 @@ static void wid_editor_border (void)
 
     for (x = 0; x < MAP_WIDTH; x++) {
         z = MAP_DEPTH_WALL;
-        wid_editor_set_new_tp(x, 0, z, wall);
-        wid_editor_set_new_tp(x, MAP_HEIGHT-1, z, wall);
+        wid_editor_set_new_tp(x, 0, z, wall, 0);
+        wid_editor_set_new_tp(x, MAP_HEIGHT-1, z, wall, 0);
     }
 
     for (y = 0; y < MAP_HEIGHT; y++) {
         z = MAP_DEPTH_WALL;
-        wid_editor_set_new_tp(0, y, z, wall);
-        wid_editor_set_new_tp(MAP_WIDTH-1, y-1, z, wall);
+        wid_editor_set_new_tp(0, y, z, wall, 0);
+        wid_editor_set_new_tp(MAP_WIDTH-1, y-1, z, wall, 0);
     }
 
     for (x = 0; x < MAP_WIDTH; x++) {
         for (y = 0; y < MAP_HEIGHT; y++) {
             z = MAP_DEPTH_FLOOR;
-            wid_editor_set_new_tp(x, y, z, floor);
+            wid_editor_set_new_tp(x, y, z, floor, 0);
         }
     }
 
@@ -1772,11 +1783,11 @@ static void wid_editor_style (void)
                 }
 
                 if (tp_is_wall(tp)) {
-                    wid_editor_set_new_tp(x, y, z, wall);
+                    wid_editor_set_new_tp(x, y, z, wall, 0);
                 }
 
                 if (tp_is_floor(tp)) {
-                    wid_editor_set_new_tp(x, y, z, floor);
+                    wid_editor_set_new_tp(x, y, z, floor, 0);
                 }
             }
         }
@@ -1924,7 +1935,7 @@ static void wid_editor_tile_fill_ (int x, int y)
     }
 
     z = tp_get_z_depth(wid_editor_chosen_tile[ctx->tile_pool]);
-    wid_editor_set_new_tp(x, y, z, wid_editor_chosen_tile[ctx->tile_pool]);
+    wid_editor_set_new_tp(x, y, z, wid_editor_chosen_tile[ctx->tile_pool], 0);
 
     wid_editor_tile_fill_(x + 1, y);
     wid_editor_tile_fill_(x - 1, y);
@@ -1992,7 +2003,6 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                 switch (ctx->edit_mode) {
                 case WID_EDITOR_MODE_DRAW:
                     wid_editor_map_thing_replace(mx, my, true /* interactive */);
-
                     map_fixup();
 
                     wid_editor_undo_save();
@@ -2083,6 +2093,8 @@ static void wid_editor_tile_left_button_pressed (int x, int y)
                             ctx->cut_start_y = my;
                             ctx->cut_end_y = my;
                         }
+
+                        wid_editor_set_mode(WID_EDITOR_MODE_DRAW);
                     }
                     break;
 
@@ -2213,7 +2225,7 @@ static void wid_editor_tile_right_button_pressed (int x, int y)
                     ctx->cut_start_y = my;
                     ctx->cut_end_y = my;
 
-                    wid_editor_set_new_tp(mx, my, z, 0);
+                    wid_editor_set_new_tp(mx, my, z, 0, 0);
 
                     map_fixup();
 
@@ -2602,7 +2614,7 @@ static void wid_editor_destroy (widp w)
             ctx->tile[x][y].tile_tp = 0;
 
             for (z = 0; z < MAP_DEPTH; z++) {
-                wid_editor_set_new_tp(x, y, z, 0);
+                wid_editor_set_new_tp(x, y, z, 0, 0);
             }
         }
     }

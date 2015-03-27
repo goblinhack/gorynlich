@@ -30,25 +30,29 @@ static widp wid_map_background;
 static void wid_map_destroy(widp w);
 static void wid_map_preview_small(widp w, fpoint tl, fpoint br);
 static void wid_map_set_focus(wid_map_ctx *ctx, int focusx, int focusy);
-static int saved_focus_x = -1;
-static int saved_focus_y = -1;
+static int saved_focus_x = 1;
+static int saved_focus_y = 1;
 
 static void wid_map_update_buttons (void)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
-    verify(ctx);
 
-    double width = 1.0 / (double)(LEVELS_DOWN + 1);
-    double height = 1.0 / (double)(LEVELS_ACROSS + 1);
+    double width = 1.0 / (double)(LEVELS_DOWN);
+    double height = 1.0 / (double)(LEVELS_ACROSS);
 
     int x, y;
     static int count;
     static int max_count = 1000;
 
+    if (!ctx) {
+        return;
+    }
+
+    verify(ctx);
     ctx->b = 0;
 
-    for (x = 0; x < LEVELS_DOWN; x++) {
-    for (y = 0; y < LEVELS_ACROSS; y++) {
+    for (x = 1; x < LEVELS_DOWN; x++) {
+    for (y = 1; y < LEVELS_ACROSS; y++) {
 
         widp b = ctx->buttons[y][x];
         verify(b);
@@ -58,8 +62,8 @@ static void wid_map_update_buttons (void)
         fontp font;
         color c;
 
-        tl.x = (double) x * width;
-        tl.y = (double) y * height;
+        tl.x = (double) (x-1) * width;
+        tl.y = (double) (y-1) * height;
         tl.x += width / 2.0;
         tl.y += height / 2.0;
 
@@ -97,37 +101,59 @@ static void wid_map_update_buttons (void)
 
         if (map && map->level) {
             color c;
+            c = WHITE;
+            c.a = 0;
+
             if (map->exit_count && map->player_count) {
-                c = WHITE;
-                c.a = 0;
+                /*
+                 * Ok
+                 */
+                wid_set_color(b, WID_COLOR_TL, WHITE);
+                wid_set_color(b, WID_COLOR_BR, BLACK);
+                wid_set_bevel(b, 1);
+
             } else if (map->player_count) {
-                if (count < max_count / 3) {
-                    c = ORANGE;
-                    c.a = 255;
-                } else {
-                    c = WHITE;
-                    c.a = 0;
-                }
+                /*
+                 * No player start
+                 */
+                wid_set_color(b, WID_COLOR_TL, RED);
+                wid_set_color(b, WID_COLOR_BR, RED);
+                wid_set_bevel(b, 3);
             } else {
-                if (count < max_count / 3) {
-                    c = RED;
-                    c.a = 255;
-                } else {
-                    c = WHITE;
-                    c.a = 0;
-                }
+                /*
+                 * No exit
+                 */
+                wid_set_color(b, WID_COLOR_TL, RED);
+                wid_set_color(b, WID_COLOR_BR, RED);
+                wid_set_bevel(b, 3);
             }
 
             wid_set_color(b, WID_COLOR_BG, c);
             wid_set_on_display(b, wid_map_preview_small);
+
         } else if ((x == ctx->focusx) && (y == ctx->focusy)) {
             color c = GRAY;
             c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
+
+            wid_set_color(b, WID_COLOR_TL, GREEN);
+            wid_set_color(b, WID_COLOR_BR, GREEN);
+            wid_set_bevel(b, 5);
+
         } else {
             color c = GRAY;
             c.a = 100;
             wid_set_color(b, WID_COLOR_BG, c);
+
+            wid_set_color(b, WID_COLOR_TL, WHITE);
+            wid_set_color(b, WID_COLOR_BR, BLACK);
+            wid_set_bevel(b, 1);
+        }
+
+        if ((x == ctx->focusx) && (y == ctx->focusy)) {
+            wid_set_color(b, WID_COLOR_TL, GREEN);
+            wid_set_color(b, WID_COLOR_BR, GREEN);
+            wid_set_bevel(b, 5);
         }
     }
     }
@@ -147,8 +173,8 @@ static void wid_map_update_buttons (void)
     if (ctx->is_new) {
         ctx->is_new = false;
 
-        for (x = 0; x < LEVELS_DOWN; x++) {
-            for (y = 0; y < LEVELS_ACROSS; y++) {
+        for (x = 1; x < LEVELS_DOWN; x++) {
+            for (y = 1; y < LEVELS_ACROSS; y++) {
 
                 widp b = ctx->buttons[y][x];
 
@@ -518,8 +544,8 @@ static void wid_map_destroy (widp w)
 
     int x, y;
 
-    for (x = 0; x < LEVELS_DOWN; x++) {
-        for (y = 0; y < LEVELS_ACROSS; y++) {
+    for (x = 1; x < LEVELS_DOWN; x++) {
+        for (y = 1; y < LEVELS_ACROSS; y++) {
 
             levelp l = ctx->levels[y][x].level;
             if (!l) {
@@ -549,8 +575,8 @@ static void wid_map_destroy_begin (widp w)
      */
     int x, y;
 
-    for (x = 0; x < LEVELS_DOWN; x++) {
-        for (y = 0; y < LEVELS_ACROSS; y++) {
+    for (x = 1; x < LEVELS_DOWN; x++) {
+        for (y = 1; y < LEVELS_ACROSS; y++) {
 
             widp b = ctx->buttons[y][x];
             fpoint tl;
@@ -801,8 +827,8 @@ static void wid_map_draw_exits (void)
 
     int x, y;
 
-    for (x = 0; x < LEVELS_DOWN; x++) 
-    for (y = 0; y < LEVELS_ACROSS; y++) {
+    for (x = 1; x < LEVELS_DOWN; x++) 
+    for (y = 1; y < LEVELS_ACROSS; y++) {
 
         wid_map_level *map = &ctx->levels[y][x];
         if (!map) {
@@ -929,8 +955,11 @@ static void wid_map_preview_do (int thumbnail)
         fpoint tl;
         fpoint br;
 
-        double dx = 0.010;
-        double dy = 0.010;
+        /*
+         * Scale
+         */
+        double dx = 0.005;
+        double dy = 0.005;
 
         if (thumbnail) {
             dx /= 2.0;
@@ -942,12 +971,12 @@ static void wid_map_preview_do (int thumbnail)
         tl.y = ((double)y) * dy;
         br.y = ((double)y+1.5) * dy;
 
-        if (ctx->focusx > MAP_WIDTH / 2) {
+        if (ctx->focusx > LEVELS_ACROSS / 2) {
             tl.x -= dx * (double)MAP_WIDTH;
             br.x -= dx * (double)MAP_WIDTH;
         }
 
-        if (ctx->focusx > MAP_HEIGHT / 2) {
+        if (ctx->focusy > LEVELS_DOWN / 2) {
             tl.y -= dy * (double)MAP_HEIGHT;
             br.y -= dy * (double)MAP_HEIGHT;
         }
@@ -1008,7 +1037,9 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
     double dy = (br.y - tl.y) / (double)MAP_HEIGHT;
 
     int x, y, z;
-    int step = 4;
+    int step = 2;
+
+    glcolor(WHITE);
 
     blit_init();
 
@@ -1027,7 +1058,7 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
 
             tiles = tp_get_tiles(tp);
             if (!tiles) {
-                return;
+                continue;
             }
 
             thing_tile = thing_tile_first(tiles);
@@ -1055,8 +1086,8 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
         tl2.x = tl.x + (dx * (double)x);
         tl2.y = tl.y + (dy * (double)y);
 
-        br2.x = tl.x + (dx * ((double)x) + ((double)step)+0.5);
-        br2.y = tl.y + (dy * ((double)y) + ((double)step)+0.5);
+        br2.x = tl.x + (dx * ((double)x) + ((double)step)+2.5);
+        br2.y = tl.y + (dy * ((double)y) + ((double)step)+2.5);
 
         if (br2.x > br.x) {
             br2.x = br.x;
@@ -1066,12 +1097,10 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
             br2.y = br.y;
         }
 
-        glcolor(WHITE);
         tile_blit_fat(tile, 0, tl2, br2);
     }
 
     blit_flush();
-    wid_map_update_buttons();
 }
 
 void wid_map_preview (widp w)
@@ -1287,8 +1316,8 @@ widp wid_map (const char *title,
          */
         int x, y;
 
-        for (x = 0; x < LEVELS_DOWN; x++) {
-        for (y = 0; y < LEVELS_ACROSS; y++) {
+        for (x = 1; x < LEVELS_DOWN; x++) {
+        for (y = 1; y < LEVELS_ACROSS; y++) {
             widp b = wid_new_square_button(button_container,
                                            "wid map button");
             ctx->buttons[y][x] = b;
