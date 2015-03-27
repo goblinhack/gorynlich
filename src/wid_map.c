@@ -775,8 +775,14 @@ static void wid_map_find_player_start (int x, int y)
     }
 }
 
+/*
+ * Draw lines to all ezits from level tiles.
+ */
 static void wid_map_draw_exits (void)
 {
+    /*
+     * Pathetic glowing lines effect.
+     */
     static uint8_t a;
     static int da = 1;
 
@@ -849,6 +855,9 @@ static void wid_map_draw_exits (void)
     }
 }
 
+/*
+ * Show a large level preview
+ */
 static void wid_map_preview_do (int thumbnail)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
@@ -858,6 +867,9 @@ static void wid_map_preview_do (int thumbnail)
 
     verify(ctx);
 
+    /*
+     * Draw exits on top of the rendered level tiles.
+     */
     wid_map_draw_exits();
 
     if (ctx->focusx == -1) {
