@@ -68,6 +68,9 @@ void gl_enter_2d_mode (void)
     glLoadIdentity();
 
     gl_init_fbo();
+
+    glLineWidth(2.0);
+    glEnable(GL_LINE_SMOOTH);
 }
 
 void
