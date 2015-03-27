@@ -137,7 +137,9 @@ static void wid_map_update_buttons (void)
         count = 0;
     }
 
-    wid_update(wid_map_window);
+    if (wid_map_window) {
+        wid_update(wid_map_window);
+    }
 
     /*
      * Zoom buttons in
@@ -982,22 +984,38 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
     for (x = 0; x < MAP_WIDTH; x+=step) 
     for (y = 0; y < MAP_HEIGHT; y+=step) 
     for (z = 0; z < MAP_DEPTH; z++) {
-        tpp tp = map->tiles[x][y][z].tp;
-        if (!tp) {
-            continue;
-        }
+        tilep tile = map->tiles[x][y][z].tile;
+        if (!tile) {
+            tpp tp = map->tiles[x][y][z].tp;
+            if (!tp) {
+                continue;
+            }
 
-        thing_tilep thing_tile;
-        tree_rootp tiles;
+            thing_tilep thing_tile;
+            tree_rootp tiles;
 
-        tiles = tp_get_tiles(tp);
-        if (!tiles) {
-            return;
-        }
+            tiles = tp_get_tiles(tp);
+            if (!tiles) {
+                return;
+            }
 
-        thing_tile = thing_tile_first(tiles);
-        if (!thing_tile) {
-            continue;
+            thing_tile = thing_tile_first(tiles);
+            if (!thing_tile) {
+                continue;
+            }
+
+            const char *tilename = thing_tile_name(thing_tile);
+            if (!tilename) {
+                ERR("cannot find tile %s", tilename);
+                continue;
+            }
+
+            tile = tile_find(tilename);
+            if (!tile) {
+                ERR("cannot find tilep for tile %s", tilename);
+            }
+
+            map->tiles[x][y][z].tile = tile;
         }
 
         fpoint tl2;
@@ -1015,17 +1033,6 @@ static void wid_map_preview_small (widp b, fpoint tl, fpoint br)
 
         if (br2.y > br.y) {
             br2.y = br.y;
-        }
-
-        const char *tilename = thing_tile_name(thing_tile);
-        if (!tilename) {
-            ERR("cannot find tile %s", tilename);
-            continue;
-        }
-
-        tilep tile = tile_find(tilename);
-        if (!tile) {
-            ERR("cannot find tilep for tile %s", tilename);
         }
 
         glcolor(WHITE);

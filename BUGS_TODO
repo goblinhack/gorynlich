@@ -1,10 +1,7 @@
 --------------------------------------- plan for mar --------------------------------------
-- choose exit in editor
-- add level exit marshalling
-- draw joined levels
-- arrow connectors
-- during test level when died, did not return to editor
+- rechoose exit if reselected
 - layers in editing
+- during test level when died, did not return to editor
 - add programming lanugage!
 - default focus on map should be first level
 - make item bar wider
@@ -68,6 +65,12 @@ thief, kill thief to recover items
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
+
+Thu Mar 26 17:34:58 EDT 2015
+- choose exit in editor
+- add level exit marshalling
+- draw joined levels
+- arrow connectors
 
 Thu Mar 26 07:35:12 EDT 2015
 - colored map tiles to indicate if level has start and exit
