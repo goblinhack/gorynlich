@@ -10,6 +10,7 @@
 
 typedef struct wid_map_tile_ {
     tpp tp;
+    tilep tile;
 
     /*
      * Data associated with individual tiles.
