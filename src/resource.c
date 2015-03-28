@@ -2372,12 +2372,12 @@ static uint8_t resource_init_last (void *context)
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        "action_bridge",
+        "action_trigger",
+        "action_down",
+        "action_right",
+        "action_up",
+        "action_left",
     };
 
     tile_load_arr("sprites", 
@@ -2942,6 +2942,13 @@ static uint8_t resource_init_last (void *context)
     tp_load(&THING_ANIM_MAN, "data/things/anim_man");
     tp_load(&THING_ANIM_TREASURE_CHEST, "data/things/anim_treasure_chest");
     tp_load(&THING_ANIM_EYES, "data/things/anim_eyes");
+
+    tp_load(&THING_ACTION_LEFT, "data/things/action_left");
+    tp_load(&THING_ACTION_RIGHT, "data/things/action_right");
+    tp_load(&THING_ACTION_UP, "data/things/action_up");
+    tp_load(&THING_ACTION_DOWN, "data/things/action_down");
+    tp_load(&THING_ACTION_BRIDGE, "data/things/action_bridge");
+    tp_load(&THING_ACTION_TRIGGER, "data/things/action_trigger");
 
     return (true);
 }
