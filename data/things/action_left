@@ -3,7 +3,7 @@
  raw_name="action_left"
  tooltip="Moves object left"
  z_depth=6
- is_action_move_left
+ is_action_left
  tiles={
   tile={
    tile="action_left"
