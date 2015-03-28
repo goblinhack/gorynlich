@@ -3,7 +3,7 @@
  raw_name="action_up"
  tooltip="Moves object up"
  z_depth=6
- is_action_move_up
+ is_action_up
  tiles={
   tile={
    tile="action_up"
