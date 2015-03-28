@@ -1,0 +1,12 @@
+{
+ short_name="action_trigger"
+ raw_name="action_trigger"
+ tooltip="Moves object trigger"
+ z_depth=6
+ is_action_move_trigger
+ tiles={
+  tile={
+   tile="action_trigger"
+  }
+ }
+}
