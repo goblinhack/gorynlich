@@ -61,8 +61,12 @@ enum {
     WID_TILE_MODE_ITEMS,
     WID_TILE_MODE_PLAYER,
     WID_TILE_MODE_EXITS,
+    WID_TILE_MODE_ACTIONS,
+    /*
+     * Add to here, update WID_TILE_POOL_MAX
+     */
 };
-#define WID_TILE_POOL_MAX 12
+#define WID_TILE_POOL_MAX 13
 
 typedef struct wid_editor_tile_ {
     int x;

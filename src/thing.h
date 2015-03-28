@@ -1186,11 +1186,11 @@ static inline uint8_t thing_is_rrr29 (thingp t)
     return (tp_is_rrr29(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr30 (thingp t)
+static inline uint8_t thing_is_action (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr30(thing_tp(t)));
+    return (tp_is_action(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_action_bridge (thingp t)

@@ -2692,9 +2692,9 @@ uint32_t level_count_is_rrr29 (levelp level)
     return (level_count_is_x(level, tp_is_rrr29));
 }
 
-uint32_t level_count_is_rrr30 (levelp level)
+uint32_t level_count_is_action (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr30));
+    return (level_count_is_x(level, tp_is_action));
 }
 
 uint32_t level_count_can_walk_through (levelp level)
