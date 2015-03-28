@@ -517,7 +517,7 @@ uint32_t level_count_is_rrr26(levelp);
 uint32_t level_count_is_rrr27(levelp);
 uint32_t level_count_is_rrr28(levelp);
 uint32_t level_count_is_rrr29(levelp);
-uint32_t level_count_is_rrr30(levelp);
+uint32_t level_count_is_action(levelp);
 uint32_t level_count_is_action_bridge(levelp);
 uint32_t level_count_is_action_trigger(levelp);
 uint32_t level_count_is_action_down(levelp);

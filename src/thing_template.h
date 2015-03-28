@@ -255,7 +255,7 @@ typedef struct tp_ {
     uint8_t is_rrr27:1;
     uint8_t is_rrr28:1;
     uint8_t is_rrr29:1;
-    uint8_t is_rrr30:1;
+    uint8_t is_action:1;
     uint8_t is_action_bridge:1;
     uint8_t is_action_trigger:1;
     uint8_t is_action_down:1;
@@ -706,9 +706,9 @@ static inline uint8_t tp_is_rrr29 (tpp t)
     return (t->is_rrr29);
 }
 
-static inline uint8_t tp_is_rrr30 (tpp t)
+static inline uint8_t tp_is_action (tpp t)
 {
-    return (t->is_rrr30);
+    return (t->is_action);
 }
 
 static inline uint8_t tp_is_action_bridge (tpp t)

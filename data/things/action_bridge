@@ -1,8 +1,9 @@
 {
  short_name="action_bridge"
  raw_name="action_bridge"
- tooltip="Moves object bridge"
+ tooltip="Circuit connector"
  z_depth=6
+ is_action
  is_action_bridge
  tiles={
   tile={
