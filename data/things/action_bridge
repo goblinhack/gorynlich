@@ -3,7 +3,7 @@
  raw_name="action_bridge"
  tooltip="Moves object bridge"
  z_depth=6
- is_action_move_bridge
+ is_action_bridge
  tiles={
   tile={
    tile="action_bridge"
