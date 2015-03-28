@@ -1616,29 +1616,43 @@ void thing_dead (thingp t, thingp killer, const char *reason, ...)
         }
     }
 
-    if (!t->on_active_list) {
-        if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
-            DIE("thing move, remove boring [%s] failed", thing_name(t));
-        }
+    thing_make_active(t);
+}
 
-        if (t->client_or_server_tree == server_boring_things) {
-            if (!tree_insert(server_active_things, &t->tree.node)) {
-                DIE("thing move, insert active [%s] failed", thing_name(t));
-            }
+/*
+ * Things live on a boring list or an active list. Boring things like walls
+ * don't do much and can be ignored. Sometimes though, boring things need to
+ * spring into life and move. This routine moves them to the active list.
+ */
+void thing_make_active (thingp t)
+{
+    verify(t);
 
-            t->client_or_server_tree = server_active_things;
-        } else if (t->client_or_server_tree == client_boring_things) {
-            if (!tree_insert(client_active_things, &t->tree.node)) {
-                DIE("thing move, insert active [%s] failed", thing_name(t));
-            }
-
-            t->client_or_server_tree = client_active_things;
-        } else {
-            DIE("bug, not on client or server list");
-        }
-
-        t->on_active_list = true;
+    if (t->on_active_list) {
+        return;
     }
+
+    if (!tree_remove(t->client_or_server_tree, &t->tree.node)) {
+        DIE("thing move, remove boring [%s] failed", thing_name(t));
+    }
+
+    if (t->client_or_server_tree == server_boring_things) {
+        if (!tree_insert(server_active_things, &t->tree.node)) {
+            DIE("thing move, insert active [%s] failed", thing_name(t));
+        }
+
+        t->client_or_server_tree = server_active_things;
+    } else if (t->client_or_server_tree == client_boring_things) {
+        if (!tree_insert(client_active_things, &t->tree.node)) {
+            DIE("thing move, insert active [%s] failed", thing_name(t));
+        }
+
+        t->client_or_server_tree = client_active_things;
+    } else {
+        DIE("bug, not on client or server list");
+    }
+
+    t->on_active_list = true;
 }
 
 static void thing_dying_ (thingp t, thingp killer, char *reason)
@@ -3813,8 +3827,7 @@ void thing_set_owner (thingp t, thingp owner)
                       thing_logname(old_owner), thing_logname(owner));
         } else {
             if (0) {
-                THING_LOG(t, "remove owner %s", 
-                        thing_logname(old_owner));
+                THING_LOG(t, "remove owner %s", thing_logname(old_owner));
             }
         }
     } else {
@@ -3924,15 +3937,15 @@ void thing_set_weapon_swing_anim (thingp t, thingp weapon_swing_anim)
                       thing_logname(weapon_swing_anim));
         } else {
             if (0) {
-                THING_LOG(t, "remove weapon_swing_anim %s", 
-                        thing_logname(old_weapon_swing_anim));
+                THING_LOG(t, "remove weapon_swing_anim %s",
+                          thing_logname(old_weapon_swing_anim));
             }
         }
     } else {
         if (weapon_swing_anim) {
             if (0) {
-                THING_LOG(t, "weapon_swing_anim %s", 
-                        thing_logname(weapon_swing_anim));
+                THING_LOG(t, "weapon_swing_anim %s",
+                          thing_logname(weapon_swing_anim));
             }
         }
     }

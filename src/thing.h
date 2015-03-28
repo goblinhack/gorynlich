@@ -31,6 +31,7 @@ void thing_tick_all(void);
 void thing_tick_server_player_slow_all(int force);
 uint8_t thing_mob_spawn(thingp);
 uint8_t thing_mob_spawn_on_death(thingp);
+void thing_make_active(thingp t);
 void thing_dead(thingp, thingp killer,
                 const char *fmt, ...) __attribute__ ((format (printf, 3, 4)));
 void thing_dying(thingp, thingp killer,

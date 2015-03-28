@@ -522,6 +522,35 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
     }
 
     /*
+     * Action trigger? Note the reverse of it vs me here.
+     */
+    if (thing_is_door(it)           ||
+        thing_is_wall(it)           ||
+        thing_is_mob_spawner(it)) {
+
+        double speed = 10;
+
+        if (thing_is_action_left(me)) {
+            it->dy -= speed;
+            thing_make_active(it);
+        }
+        if (thing_is_action_right(me)) {
+            it->dx += speed;
+            thing_make_active(it);
+        }
+        if (thing_is_action_up(me)) {
+            it->dy -= speed;
+            thing_make_active(it);
+CON("up dy %f", it->dy);
+        }
+        if (thing_is_action_down(me)) {
+            it->dy += speed;
+            thing_make_active(it);
+CON("down dy %f", it->dy);
+        }
+    }
+
+    /*
      * Sword swing hits?
      */
     if (thing_is_weapon_swing_effect(me)) {
