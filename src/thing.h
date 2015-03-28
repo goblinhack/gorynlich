@@ -368,6 +368,12 @@ extern uint16_t THING_HIT_MISS;
 extern uint16_t THING_HEART;
 extern uint16_t THING_BLOOD1;
 extern uint16_t THING_BLOOD2;
+extern uint16_t THING_ACTION_LEFT;
+extern uint16_t THING_ACTION_RIGHT;
+extern uint16_t THING_ACTION_UP;
+extern uint16_t THING_ACTION_DOWN;
+extern uint16_t THING_ACTION_TRIGGER;
+extern uint16_t THING_ACTION_BRIDGE;
 extern uint16_t THING_POISON1;
 extern uint16_t THING_POISON2;
 extern uint16_t THING_POISON3;
@@ -1005,6 +1011,230 @@ static inline uint8_t thing_is_rrr4 (thingp t)
     return (tp_is_rrr4(thing_tp(t)));
 }
 
+static inline uint8_t thing_is_rrr5 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr5(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr6 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr6(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr7 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr7(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr8 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr8(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr9 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr9(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr10 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr10(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr11 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr11(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr12 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr12(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr13 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr13(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr14 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr14(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr15 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr15(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr16 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr16(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr17 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr17(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr18 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr18(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr19 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr19(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr20 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr20(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr21 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr21(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr22 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr22(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr23 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr23(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr24 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr24(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr25 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr25(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr26 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr26(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr27 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr27(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr28 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr28(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr29 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr29(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_rrr30 (thingp t)
+{
+    verify(t);
+
+    return (tp_is_rrr30(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_bridge (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_bridge(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_trigger (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_trigger(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_down (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_down(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_up (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_up(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_left (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_left(thing_tp(t)));
+}
+
+static inline uint8_t thing_is_action_right (thingp t)
+{
+    verify(t);
+
+    return (tp_is_action_right(thing_tp(t)));
+}
+
 static inline uint8_t thing_can_walk_through (thingp t)
 {
     verify(t);
@@ -1397,6 +1627,136 @@ static inline uint8_t thing_is_rrr3_noverify (thingp t)
 static inline uint8_t thing_is_rrr4_noverify (thingp t)
 {
     return (t->tp->is_rrr4);
+}
+
+static inline uint8_t thing_is_rrr5_noverify (thingp t)
+{
+    return (t->tp->is_rrr5);
+}
+
+static inline uint8_t thing_is_rrr6_noverify (thingp t)
+{
+    return (t->tp->is_rrr6);
+}
+
+static inline uint8_t thing_is_rrr7_noverify (thingp t)
+{
+    return (t->tp->is_rrr7);
+}
+
+static inline uint8_t thing_is_rrr8_noverify (thingp t)
+{
+    return (t->tp->is_rrr8);
+}
+
+static inline uint8_t thing_is_rrr9_noverify (thingp t)
+{
+    return (t->tp->is_rrr9);
+}
+
+static inline uint8_t thing_is_rrr10_noverify (thingp t)
+{
+    return (t->tp->is_rrr10);
+}
+
+static inline uint8_t thing_is_rrr11_noverify (thingp t)
+{
+    return (t->tp->is_rrr11);
+}
+
+static inline uint8_t thing_is_rrr12_noverify (thingp t)
+{
+    return (t->tp->is_rrr12);
+}
+
+static inline uint8_t thing_is_rrr13_noverify (thingp t)
+{
+    return (t->tp->is_rrr13);
+}
+
+static inline uint8_t thing_is_rrr14_noverify (thingp t)
+{
+    return (t->tp->is_rrr14);
+}
+
+static inline uint8_t thing_is_rrr15_noverify (thingp t)
+{
+    return (t->tp->is_rrr15);
+}
+
+static inline uint8_t thing_is_rrr16_noverify (thingp t)
+{
+    return (t->tp->is_rrr16);
+}
+
+static inline uint8_t thing_is_rrr17_noverify (thingp t)
+{
+    return (t->tp->is_rrr17);
+}
+
+static inline uint8_t thing_is_rrr18_noverify (thingp t)
+{
+    return (t->tp->is_rrr18);
+}
+
+static inline uint8_t thing_is_rrr19_noverify (thingp t)
+{
+    return (t->tp->is_rrr19);
+}
+
+static inline uint8_t thing_is_rrr20_noverify (thingp t)
+{
+    return (t->tp->is_rrr20);
+}
+
+static inline uint8_t thing_is_rrr21_noverify (thingp t)
+{
+    return (t->tp->is_rrr21);
+}
+
+static inline uint8_t thing_is_rrr22_noverify (thingp t)
+{
+    return (t->tp->is_rrr22);
+}
+
+static inline uint8_t thing_is_rrr23_noverify (thingp t)
+{
+    return (t->tp->is_rrr23);
+}
+
+static inline uint8_t thing_is_rrr24_noverify (thingp t)
+{
+    return (t->tp->is_rrr24);
+}
+
+static inline uint8_t thing_is_action_bridge_noverify (thingp t)
+{
+    return (t->tp->is_action_bridge);
+}
+
+static inline uint8_t thing_is_action_trigger_noverify (thingp t)
+{
+    return (t->tp->is_action_trigger);
+}
+
+static inline uint8_t thing_is_action_down_noverify (thingp t)
+{
+    return (t->tp->is_action_down);
+}
+
+static inline uint8_t thing_is_action_up_noverify (thingp t)
+{
+    return (t->tp->is_action_up);
+}
+
+static inline uint8_t thing_is_action_left_noverify (thingp t)
+{
+    return (t->tp->is_action_left);
+}
+
+static inline uint8_t thing_is_action_right_noverify (thingp t)
+{
+    return (t->tp->is_action_right);
 }
 
 static inline uint8_t thing_can_walk_through_noverify (thingp t)
