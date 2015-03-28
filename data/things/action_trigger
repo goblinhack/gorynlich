@@ -1,8 +1,9 @@
 {
  short_name="action_trigger"
  raw_name="action_trigger"
- tooltip="Moves object trigger"
+ tooltip="Action trigger"
  z_depth=6
+ is_action
  is_action_trigger
  tiles={
   tile={

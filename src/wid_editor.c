@@ -713,6 +713,9 @@ static void wid_editor_update_tile_mode_buttons (void)
         case WID_TILE_MODE_FOOD:
             wid_set_text(b, "Food");
             break;
+        case WID_TILE_MODE_ACTIONS:
+            wid_set_text(b, "Actions");
+            break;
         case WID_TILE_MODE_MOB_SPAWNERS:
             wid_set_text(b, "Mobs");
             break;
@@ -2700,6 +2703,8 @@ static uint8_t wid_editor_load_tile (const tree_node *node, void *arg)
         tile_pool = WID_TILE_MODE_TREASURE;
     } else if (tp_is_food(tp)) {
         tile_pool = WID_TILE_MODE_FOOD;
+    } else if (tp_is_action(tp)) {
+        tile_pool = WID_TILE_MODE_ACTIONS;
     } else if (tp_is_exit(tp)) {
         tile_pool = WID_TILE_MODE_EXITS;
     }
