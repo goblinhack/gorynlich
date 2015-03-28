@@ -966,19 +966,18 @@ static void wid_map_preview_do (int thumbnail)
             dy /= 2.0;
         }
 
-        tl.x = ((double)x) * dx;
-        br.x = ((double)x+1.5) * dx;
-        tl.y = ((double)y) * dy;
-        br.y = ((double)y+1.5) * dy;
-
         if (ctx->focusx > LEVELS_ACROSS / 2) {
-            tl.x -= dx * (double)MAP_WIDTH;
-            br.x -= dx * (double)MAP_WIDTH;
+            tl.x = ((double)x+1) * dx;
+            br.x = ((double)x+2.5) * dx;
+            tl.y = ((double)y+1) * dy;
+            br.y = ((double)y+2.5) * dy;
         }
 
         if (ctx->focusy > LEVELS_DOWN / 2) {
-            tl.y -= dy * (double)MAP_HEIGHT;
-            br.y -= dy * (double)MAP_HEIGHT;
+            tl.x = ((double)x-2.5) * dx;
+            br.x = ((double)x-1) * dx;
+            tl.y = ((double)y-2.5) * dy;
+            br.y = ((double)y-1) * dy;
         }
 
         tl.x *= (double) global_config.video_gl_width;

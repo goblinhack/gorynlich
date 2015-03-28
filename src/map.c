@@ -260,6 +260,136 @@ uint8_t map_is_rrr4_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr4));
 }
 
+uint8_t map_is_rrr5_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr5));
+}
+
+uint8_t map_is_rrr6_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr6));
+}
+
+uint8_t map_is_rrr7_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr7));
+}
+
+uint8_t map_is_rrr8_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr8));
+}
+
+uint8_t map_is_rrr9_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr9));
+}
+
+uint8_t map_is_rrr10_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr10));
+}
+
+uint8_t map_is_rrr11_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr11));
+}
+
+uint8_t map_is_rrr12_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr12));
+}
+
+uint8_t map_is_rrr13_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr13));
+}
+
+uint8_t map_is_rrr14_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr14));
+}
+
+uint8_t map_is_rrr15_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr15));
+}
+
+uint8_t map_is_rrr16_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr16));
+}
+
+uint8_t map_is_rrr17_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr17));
+}
+
+uint8_t map_is_rrr18_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr18));
+}
+
+uint8_t map_is_rrr19_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr19));
+}
+
+uint8_t map_is_rrr20_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr20));
+}
+
+uint8_t map_is_rrr21_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr21));
+}
+
+uint8_t map_is_rrr22_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr22));
+}
+
+uint8_t map_is_rrr23_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr23));
+}
+
+uint8_t map_is_rrr24_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_rrr24));
+}
+
+uint8_t map_is_action_bridge_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_action_bridge));
+}
+
+uint8_t map_is_action_trigger_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_action_trigger));
+}
+
+uint8_t map_is_action_down_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_action_down));
+}
+
+uint8_t map_is_action_up_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_action_up));
+}
+
+uint8_t map_is_action_left_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_action_left));
+}
+
+uint8_t map_is_action_right_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_is_x_at(level, x, y, tp_is_action_right));
+}
+
 uint8_t map_can_walk_through_at (levelp level, int32_t x, int32_t y)
 {
     return (map_is_x_at(level, x, y, tp_can_walk_through));
@@ -590,6 +720,136 @@ thingp map_thing_is_rrr3_at (levelp level, int32_t x, int32_t y)
 thingp map_thing_is_rrr4_at (levelp level, int32_t x, int32_t y)
 {
     return (map_thing_is_x_at(level, x, y, tp_is_rrr4));
+}
+
+thingp map_thing_is_rrr5_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr5));
+}
+
+thingp map_thing_is_rrr6_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr6));
+}
+
+thingp map_thing_is_rrr7_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr7));
+}
+
+thingp map_thing_is_rrr8_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr8));
+}
+
+thingp map_thing_is_rrr9_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr9));
+}
+
+thingp map_thing_is_rrr10_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr10));
+}
+
+thingp map_thing_is_rrr11_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr11));
+}
+
+thingp map_thing_is_rrr12_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr12));
+}
+
+thingp map_thing_is_rrr13_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr13));
+}
+
+thingp map_thing_is_rrr14_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr14));
+}
+
+thingp map_thing_is_rrr15_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr15));
+}
+
+thingp map_thing_is_rrr16_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr16));
+}
+
+thingp map_thing_is_rrr17_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr17));
+}
+
+thingp map_thing_is_rrr18_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr18));
+}
+
+thingp map_thing_is_rrr19_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr19));
+}
+
+thingp map_thing_is_rrr20_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr20));
+}
+
+thingp map_thing_is_rrr21_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr21));
+}
+
+thingp map_thing_is_rrr22_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr22));
+}
+
+thingp map_thing_is_rrr23_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr23));
+}
+
+thingp map_thing_is_rrr24_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_rrr24));
+}
+
+thingp map_thing_is_action_bridge_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_action_bridge));
+}
+
+thingp map_thing_is_action_trigger_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_action_trigger));
+}
+
+thingp map_thing_is_action_down_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_action_down));
+}
+
+thingp map_thing_is_action_up_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_action_up));
+}
+
+thingp map_thing_is_action_left_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_action_left));
+}
+
+thingp map_thing_is_action_right_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_thing_is_x_at(level, x, y, tp_is_action_right));
 }
 
 thingp map_thing_can_walk_through_at (levelp level, int32_t x, int32_t y)
@@ -938,6 +1198,136 @@ tree_rootp map_all_things_is_rrr3_at (levelp level, int32_t x, int32_t y)
 tree_rootp map_all_things_is_rrr4_at (levelp level, int32_t x, int32_t y)
 {
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr4));
+}
+
+tree_rootp map_all_things_is_rrr5_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr5));
+}
+
+tree_rootp map_all_things_is_rrr6_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr6));
+}
+
+tree_rootp map_all_things_is_rrr7_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr7));
+}
+
+tree_rootp map_all_things_is_rrr8_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr8));
+}
+
+tree_rootp map_all_things_is_rrr9_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr9));
+}
+
+tree_rootp map_all_things_is_rrr10_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr10));
+}
+
+tree_rootp map_all_things_is_rrr11_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr11));
+}
+
+tree_rootp map_all_things_is_rrr12_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr12));
+}
+
+tree_rootp map_all_things_is_rrr13_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr13));
+}
+
+tree_rootp map_all_things_is_rrr14_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr14));
+}
+
+tree_rootp map_all_things_is_rrr15_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr15));
+}
+
+tree_rootp map_all_things_is_rrr16_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr16));
+}
+
+tree_rootp map_all_things_is_rrr17_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr17));
+}
+
+tree_rootp map_all_things_is_rrr18_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr18));
+}
+
+tree_rootp map_all_things_is_rrr19_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr19));
+}
+
+tree_rootp map_all_things_is_rrr20_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr20));
+}
+
+tree_rootp map_all_things_is_rrr21_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr21));
+}
+
+tree_rootp map_all_things_is_rrr22_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr22));
+}
+
+tree_rootp map_all_things_is_rrr23_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr23));
+}
+
+tree_rootp map_all_things_is_rrr24_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_rrr24));
+}
+
+tree_rootp map_all_things_is_action_bridge_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_bridge));
+}
+
+tree_rootp map_all_things_is_action_trigger_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_trigger));
+}
+
+tree_rootp map_all_things_is_action_down_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_down));
+}
+
+tree_rootp map_all_things_is_action_up_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_up));
+}
+
+tree_rootp map_all_things_is_action_left_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_left));
+}
+
+tree_rootp map_all_things_is_action_right_at (levelp level, int32_t x, int32_t y)
+{
+    return (map_all_things_is_x_at(level, x, y, tp_is_action_right));
 }
 
 tree_rootp map_all_things_can_walk_through_at (levelp level, int32_t x, int32_t y)
@@ -1373,10 +1763,139 @@ tpp map_find_rrr3_at (levelp level,
     return (map_find_x_at(level, x, y, tp_is_rrr3, w));
 }
 
-tpp map_find_rrr4_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
+tpp map_find_rrr4_at (levelp level, int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_rrr4, w));
+}
+
+tpp map_find_rrr5_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr5, w));
+}
+
+tpp map_find_rrr6_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr6, w));
+}
+
+tpp map_find_rrr7_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr7, w));
+}
+
+tpp map_find_rrr8_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr8, w));
+}
+
+tpp map_find_rrr9_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr9, w));
+}
+
+tpp map_find_rrr10_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr10, w));
+}
+
+tpp map_find_rrr11_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr11, w));
+}
+
+tpp map_find_rrr12_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr12, w));
+}
+
+tpp map_find_rrr13_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr13, w));
+}
+
+tpp map_find_rrr14_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr14, w));
+}
+
+tpp map_find_rrr15_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr15, w));
+}
+
+tpp map_find_rrr16_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr16, w));
+}
+
+tpp map_find_rrr17_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr17, w));
+}
+
+tpp map_find_rrr18_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr18, w));
+}
+
+tpp map_find_rrr19_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr19, w));
+}
+
+tpp map_find_rrr20_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr20, w));
+}
+
+tpp map_find_rrr21_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr21, w));
+}
+
+tpp map_find_rrr22_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr22, w));
+}
+
+tpp map_find_rrr23_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr23, w));
+}
+
+tpp map_find_rrr24_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_rrr24, w));
+}
+
+tpp map_find_action_bridge_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_action_bridge, w));
+}
+
+tpp map_find_action_trigger_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_action_trigger, w));
+}
+
+tpp map_find_action_down_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_action_down, w));
+}
+
+tpp map_find_action_up_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_action_up, w));
+}
+
+tpp map_find_action_left_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_action_left, w));
+}
+
+tpp map_find_action_right_at (levelp level, int32_t x, int32_t y, widp *w)
+{
+    return (map_find_x_at(level, x, y, tp_is_action_right, w));
 }
 
 tpp map_find_can_walk_through_at (levelp level,
@@ -1395,30 +1914,6 @@ tpp map_find_spell_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_spell, w));
-}
-
-tpp map_find_rrr8_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_hand_item, w));
-}
-
-tpp map_find_rrr9_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_boots, w));
-}
-
-tpp map_find_rrr10_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_helmet, w));
-}
-
-tpp map_find_rrr11_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_armor, w));
 }
 
 tpp map_find_given_randomly_at_start_at (levelp level,
@@ -1449,24 +1944,6 @@ tpp map_find_animate_only_when_moving_at (levelp level,
                                   int32_t x, int32_t y, widp *w)
 {
     return (map_find_x_at(level, x, y, tp_is_animate_only_when_moving, w));
-}
-
-tpp map_find_rrr17_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_warm_blooded, w));
-}
-
-tpp map_find_rrr18_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_can_be_enchanted, w));
-}
-
-tpp map_find_rrr19_at (levelp level,
-                                  int32_t x, int32_t y, widp *w)
-{
-    return (map_find_x_at(level, x, y, tp_is_stackable, w));
 }
 
 tpp map_find_torch_at (levelp level,
@@ -2090,6 +2567,136 @@ uint32_t level_count_is_rrr4 (levelp level)
     return (level_count_is_x(level, tp_is_rrr4));
 }
 
+uint32_t level_count_is_rrr5 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr5));
+}
+
+uint32_t level_count_is_rrr6 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr6));
+}
+
+uint32_t level_count_is_rrr7 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr7));
+}
+
+uint32_t level_count_is_rrr8 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr8));
+}
+
+uint32_t level_count_is_rrr9 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr9));
+}
+
+uint32_t level_count_is_rrr10 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr10));
+}
+
+uint32_t level_count_is_rrr11 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr11));
+}
+
+uint32_t level_count_is_rrr12 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr12));
+}
+
+uint32_t level_count_is_rrr13 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr13));
+}
+
+uint32_t level_count_is_rrr14 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr14));
+}
+
+uint32_t level_count_is_rrr15 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr15));
+}
+
+uint32_t level_count_is_rrr16 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr16));
+}
+
+uint32_t level_count_is_rrr17 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr17));
+}
+
+uint32_t level_count_is_rrr18 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr18));
+}
+
+uint32_t level_count_is_rrr19 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr19));
+}
+
+uint32_t level_count_is_rrr20 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr20));
+}
+
+uint32_t level_count_is_rrr21 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr21));
+}
+
+uint32_t level_count_is_rrr22 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr22));
+}
+
+uint32_t level_count_is_rrr23 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr23));
+}
+
+uint32_t level_count_is_rrr24 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr24));
+}
+
+uint32_t level_count_is_rrr25 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr25));
+}
+
+uint32_t level_count_is_rrr26 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr26));
+}
+
+uint32_t level_count_is_rrr27 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr27));
+}
+
+uint32_t level_count_is_rrr28 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr28));
+}
+
+uint32_t level_count_is_rrr29 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr29));
+}
+
+uint32_t level_count_is_rrr30 (levelp level)
+{
+    return (level_count_is_x(level, tp_is_rrr30));
+}
+
 uint32_t level_count_can_walk_through (levelp level)
 {
     return (level_count_is_x(level, tp_can_walk_through));
@@ -2442,6 +3049,136 @@ tree_rootp map_all_things_is_rrr3 (levelp level)
 tree_rootp map_all_things_is_rrr4 (levelp level)
 {
     return (map_all_things_is_x(level, tp_is_rrr4));
+}
+
+tree_rootp map_all_things_is_rrr5 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr5));
+}
+
+tree_rootp map_all_things_is_rrr6 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr6));
+}
+
+tree_rootp map_all_things_is_rrr7 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr7));
+}
+
+tree_rootp map_all_things_is_rrr8 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr8));
+}
+
+tree_rootp map_all_things_is_rrr9 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr9));
+}
+
+tree_rootp map_all_things_is_rrr10 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr10));
+}
+
+tree_rootp map_all_things_is_rrr11 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr11));
+}
+
+tree_rootp map_all_things_is_rrr12 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr12));
+}
+
+tree_rootp map_all_things_is_rrr13 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr13));
+}
+
+tree_rootp map_all_things_is_rrr14 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr14));
+}
+
+tree_rootp map_all_things_is_rrr15 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr15));
+}
+
+tree_rootp map_all_things_is_rrr16 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr16));
+}
+
+tree_rootp map_all_things_is_rrr17 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr17));
+}
+
+tree_rootp map_all_things_is_rrr18 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr18));
+}
+
+tree_rootp map_all_things_is_rrr19 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr19));
+}
+
+tree_rootp map_all_things_is_rrr20 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr20));
+}
+
+tree_rootp map_all_things_is_rrr21 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr21));
+}
+
+tree_rootp map_all_things_is_rrr22 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr22));
+}
+
+tree_rootp map_all_things_is_rrr23 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr23));
+}
+
+tree_rootp map_all_things_is_rrr24 (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_rrr24));
+}
+
+tree_rootp map_all_things_is_action_bridge (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_action_bridge));
+}
+
+tree_rootp map_all_things_is_action_trigger (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_action_trigger));
+}
+
+tree_rootp map_all_things_is_action_down (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_action_down));
+}
+
+tree_rootp map_all_things_is_action_up (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_action_up));
+}
+
+tree_rootp map_all_things_is_action_left (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_action_left));
+}
+
+tree_rootp map_all_things_is_action_right (levelp level)
+{
+    return (map_all_things_is_x(level, tp_is_action_right));
 }
 
 tree_rootp map_all_things_can_walk_through (levelp level)

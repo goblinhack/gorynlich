@@ -1,0 +1,12 @@
+{
+ short_name="action_left"
+ raw_name="action_left"
+ tooltip="Moves object left"
+ z_depth=6
+ is_action_move_left
+ tiles={
+  tile={
+   tile="action_left"
+  }
+ }
+}
