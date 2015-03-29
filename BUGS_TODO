@@ -1,12 +1,13 @@
 --------------------------------------- plan for mar --------------------------------------
-- during test level when died, did not return to editor
-- add programming lanugage!
+- block shadows too large on 1.1
+- previews broken
+- implement touch triggers
+- add colored triggers
 - make item bar wider
 - why is torch in the items menu? it's useless
 - can't shoot through diagonal walls
 --------------------------------------- plan for apr --------------------------------------
-- super meat boy style spinning blades of death on invisible tracks - reuse road tiles for this?
-- level randomize button
+- super meat boy style spinning blades of death on invisible tracks
 - remove gothic and window textures - no longer needed
 - stats need to do something
 - magic attack - green fireball?
@@ -64,7 +65,9 @@ different profiles for level generation
 mining?
 
 Sun Mar 29 07:51:36 EDT 2015
+- during test level when died, did not return to editor
 - object moving around on actions
+- level randomize button
 
 Fri Mar 27 07:55:10 EDT 2015
 - small previews and exit flashing
