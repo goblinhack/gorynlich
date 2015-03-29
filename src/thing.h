@@ -314,6 +314,7 @@ void thing_set_weapon_swing_anim_id(thingp t, uint32_t weapon_swing_anim_id);
 void thing_set_weapon_swing_anim(thingp t, thingp weapon_swing_anim);
 
 extern uint16_t THING_WALL1;
+extern uint16_t THING_WALL_LIT1;
 extern uint16_t THING_ROCK1;
 extern uint16_t THING_WALL2;
 extern uint16_t THING_WALL3;
