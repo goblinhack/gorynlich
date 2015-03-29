@@ -2,6 +2,7 @@
  short_name="action_bridge"
  raw_name="action_bridge"
  tooltip="Circuit connector"
+ is_collision_map_small
  z_depth=6
  is_action
  is_action_bridge
