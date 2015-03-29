@@ -5,6 +5,7 @@
  is_collision_map_small
  z_depth=6
  is_action
+ is_visible_on_debug_only
  is_action_down
  tiles={
   tile={

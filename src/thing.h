@@ -1150,46 +1150,11 @@ static inline uint8_t thing_is_rrr23 (thingp t)
     return (tp_is_rrr23(thing_tp(t)));
 }
 
-static inline uint8_t thing_is_rrr24 (thingp t)
+static inline uint8_t thing_is_visible_on_debug_only (thingp t)
 {
     verify(t);
 
-    return (tp_is_rrr24(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_rrr25 (thingp t)
-{
-    verify(t);
-
-    return (tp_is_rrr25(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_rrr26 (thingp t)
-{
-    verify(t);
-
-    return (tp_is_rrr26(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_rrr27 (thingp t)
-{
-    verify(t);
-
-    return (tp_is_rrr27(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_rrr28 (thingp t)
-{
-    verify(t);
-
-    return (tp_is_rrr28(thing_tp(t)));
-}
-
-static inline uint8_t thing_is_rrr29 (thingp t)
-{
-    verify(t);
-
-    return (tp_is_rrr29(thing_tp(t)));
+    return (tp_is_visible_on_debug_only(thing_tp(t)));
 }
 
 static inline uint8_t thing_is_action (thingp t)
@@ -1730,9 +1695,9 @@ static inline uint8_t thing_is_rrr23_noverify (thingp t)
     return (t->tp->is_rrr23);
 }
 
-static inline uint8_t thing_is_rrr24_noverify (thingp t)
+static inline uint8_t thing_is_visible_on_debug_only_noverify (thingp t)
 {
-    return (t->tp->is_rrr24);
+    return (t->tp->is_visible_on_debug_only);
 }
 
 static inline uint8_t thing_is_action_bridge_noverify (thingp t)
