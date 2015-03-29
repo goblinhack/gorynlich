@@ -419,7 +419,6 @@ static void thing_handle_collision (thingp me, thingp it,
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
-LOG("no overlap %s %f %f %s %f %f",thing_logname(me),me->x,me->y,thing_logname(it), it->x,it->y);
         return;
     }
 
