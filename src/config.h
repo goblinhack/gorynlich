@@ -113,9 +113,6 @@
 #define MAP_LIGHT_CANDLELIGHT_FLICKER_RADIUS    10
 #define MAP_LIGHT_CANDLELIGHT_RADIUS            50
 
-#define MAP_LIGHT_MORE_CONTRAST
-#define MAP_LIGHT_YET_MORE_CONTRAST
-
 /*
  * How many jigsaw pieces across and down make up the map. We substract
  * one so we can have a small border and center the tiles.
