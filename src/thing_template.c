@@ -234,8 +234,6 @@ tpp tp_load (uint16_t *id, const char *name)
 
     tp_fill_cache(t);
 
-    LOG("thing template: %s %p", name, t);
-
     return (t);
 }
 
