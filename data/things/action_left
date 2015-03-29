@@ -2,6 +2,7 @@
  short_name="action_left"
  raw_name="action_left"
  tooltip="Moves object left"
+ is_collision_map_small
  z_depth=6
  is_action
  is_action_left
