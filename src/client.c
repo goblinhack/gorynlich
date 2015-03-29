@@ -908,7 +908,9 @@ static void client_rx_server_status (gsocketp s,
      * If the server is a bit behind our changes, wait for it to merge them 
      * in.
      */
-    int version_delta = (int)new_stats->client_version - (int)old_stats->client_version;
+    int version_delta = 
+                    (int)new_stats->client_version - 
+                    (int)old_stats->client_version;
 
     if ((version_delta >= 0) || (version_delta < -255)) {
         /*
@@ -918,7 +920,8 @@ static void client_rx_server_status (gsocketp s,
         /*
          * Server is behind.
          */
-        LOG("Server is behind latest version of stats, client: %d server: %d, ignore", 
+        LOG("Server is behind latest version of stats, client: "
+            "%d server: %d, ignore", 
             old_stats->client_version, new_stats->client_version);
 
         return;
@@ -936,7 +939,8 @@ static void client_rx_server_status (gsocketp s,
      * Now see what really changed and if we need to update scores.
      */
     if (memcmp(old_stats, new_stats, sizeof(thing_stats))) {
-        LOG("Client: %s player stats changed on server:", thing_logname(player));
+        LOG("Client: %s player stats changed on server:", 
+            thing_logname(player));
 
         thing_stats_diff(old_stats, new_stats);
 

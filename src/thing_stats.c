@@ -174,68 +174,115 @@ void thing_stats_dump (const thing_statsp s)
 /*
  * Dump what changed between two stats
  */
-int thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stats)
+int thing_stats_diff (const thing_statsp old_stats, 
+                      const thing_statsp new_stats)
 {
     const char indent[] = "  ";
     int changed = 0;
 
+    if (old_stats->client_version != new_stats->client_version) {
+        LOG("%sVersion changed from %d to %d", indent, 
+            old_stats->client_version, new_stats->client_version);
+        changed = 1;
+    }
+
     if (old_stats->hp != new_stats->hp) {
-        LOG("%sHp changed from %d to %d", indent, old_stats->hp, new_stats->hp);
+        LOG("%sHp changed from %d to %d", indent, 
+            old_stats->hp, new_stats->hp);
+        changed = 1;
+    }
+
+    if (old_stats->hp != new_stats->hp) {
+        LOG("%sHp changed from %d to %d", indent, 
+            old_stats->hp, new_stats->hp);
         changed = 1;
     }
 
     if (old_stats->magic != new_stats->magic) {
-        LOG("%sMagic changed from %d to %d", indent, old_stats->magic, new_stats->magic);
+        LOG("%sMagic changed from %d to %d", indent, 
+            old_stats->magic, new_stats->magic);
         changed = 1;
     }
 
     if (old_stats->xp != new_stats->xp) {
-        LOG("%sXp changed from %d to %d", indent, old_stats->xp, new_stats->xp);
+        LOG("%sXp changed from %d to %d", indent, 
+            old_stats->xp, new_stats->xp);
         changed = 1;
     }
 
     if (old_stats->cash != new_stats->cash) {
-        LOG("%sCash changed from %d to %d", indent, old_stats->cash, new_stats->cash);
-        changed = 1;
-    }
-
-    if (old_stats->client_version != new_stats->client_version) {
-        LOG("%sClient version changed from %d to %d", indent, old_stats->client_version, new_stats->client_version);
+        LOG("%sCash changed from %d to %d", indent, 
+            old_stats->cash, new_stats->cash);
         changed = 1;
     }
 
     if (old_stats->spending_points != new_stats->spending_points) {
-        LOG("%sSpending_points changed from %d to %d", indent, old_stats->spending_points, new_stats->spending_points);
+        LOG("%sSpending_points changed from %d to %d", indent, 
+            old_stats->spending_points, new_stats->spending_points);
         changed = 1;
     }
 
     if (old_stats->vision != new_stats->vision) {
-        LOG("%sVision changed from %d to %d", indent, old_stats->vision, new_stats->vision);
+        LOG("%sVision changed from %d to %d", indent, 
+            old_stats->vision, new_stats->vision);
         changed = 1;
     }
 
     if (old_stats->attack_melee != new_stats->attack_melee) {
-        LOG("%sAttack_melee changed from %d to %d", indent, old_stats->attack_melee, new_stats->attack_melee);
+        LOG("%sAttack_melee changed from %d to %d", indent, 
+            old_stats->attack_melee, new_stats->attack_melee);
         changed = 1;
     }
 
     if (old_stats->attack_ranged != new_stats->attack_ranged) {
-        LOG("%sAttack_ranged changed from %d to %d", indent, old_stats->attack_ranged, new_stats->attack_ranged);
-        changed = 1;
-    }
-
-    if (old_stats->defense != new_stats->defense) {
-        LOG("%sDefense changed from %d to %d", indent, old_stats->defense, new_stats->defense);
+        LOG("%sAttack_ranged changed from %d to %d", indent, 
+            old_stats->attack_ranged, new_stats->attack_ranged);
         changed = 1;
     }
 
     if (old_stats->attack_magical != new_stats->attack_magical) {
-        LOG("%sAttack_magical changed from %d to %d", indent, old_stats->attack_magical, new_stats->attack_magical);
+        LOG("%sAttack_magical changed from %d to %d", indent, 
+            old_stats->attack_magical, new_stats->attack_magical);
+        changed = 1;
+    }
+
+    if (old_stats->defense != new_stats->defense) {
+        LOG("%sDefense changed from %d to %d", indent, 
+            old_stats->defense, new_stats->defense);
+        changed = 1;
+    }
+
+    if (old_stats->speed != new_stats->speed) {
+        LOG("%sSpeed changed from %d to %d", indent, 
+            old_stats->speed, new_stats->speed);
+        changed = 1;
+    }
+
+    if (old_stats->vision != new_stats->vision) {
+        LOG("%sVision changed from %d to %d", indent, 
+            old_stats->vision, new_stats->vision);
+        changed = 1;
+    }
+
+    if (old_stats->healing != new_stats->healing) {
+        LOG("%sHealing changed from %d to %d", indent, 
+            old_stats->healing, new_stats->healing);
+        changed = 1;
+    }
+
+    if ((old_stats->level_pos.x != new_stats->level_pos.x) ||
+        (old_stats->level_pos.y != new_stats->level_pos.y)) {
+        LOG("%sVersion changed from %d.%d to %d.%d", indent, 
+            old_stats->level_pos.x, 
+            old_stats->level_pos.y, 
+            new_stats->level_pos.x,
+            new_stats->level_pos.y);
         changed = 1;
     }
 
     if (old_stats->action_bar_index != new_stats->action_bar_index) {
-        LOG("%sAction index   changed from %d to %d", indent, old_stats->action_bar_index, new_stats->action_bar_index);
+        LOG("%sAction index   changed from %d to %d", indent, 
+            old_stats->action_bar_index, new_stats->action_bar_index);
         changed = 1;
     }
 
@@ -280,7 +327,8 @@ int thing_stats_diff (const thing_statsp old_stats, const thing_statsp new_stats
                 char *ib = item2str(b);
 
                 if (ia && ib) {
-                    LOG("%sAction item %d changed, %s to %s", indent, i, ia, ib);
+                    LOG("%sAction item %d changed, %s to %s", indent, 
+                        i, ia, ib);
                     myfree(ia);
                     myfree(ib);
                 } else if (ia) {

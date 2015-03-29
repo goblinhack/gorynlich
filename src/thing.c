@@ -3091,11 +3091,6 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
              * There is a change, but don't send too often.
              */
             if (thing_is_animation(t)) {
-            } else if (thing_is_wall(t)) {
-                /*
-                 * Send thing animation changes all the time so that weapons
-                 * stay close to the player.
-                 */
             } else if (thing_is_dead(t)) {
                 /*
                  * Send dead changes all the time as we use that on level end
@@ -3470,6 +3465,8 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
             weapon_swung = false;
         }
 
+        tpp tp = 0;
+
         if (!t) {
             if (template_id == (uint8_t)-1) {
                 /*
@@ -3490,7 +3487,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                 continue;
             }
 
-            tpp tp = id_to_tp(template_id);
+            tp = id_to_tp(template_id);
 
             t = thing_client_new(id, tp);
 
@@ -3506,7 +3503,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                 /*
                  * Update the template ID so things can polymorph.
                  */
-                tpp tp = id_to_tp(template_id);
+                tp = id_to_tp(template_id);
 
                 t->tp = tp;
 
@@ -3605,6 +3602,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
                      * be another player or monster etc...
                      */
                     thing_client_wid_update(t, x, y, true /* smooth */);
+
+                    if (!need_fixup &&
+                        (thing_is_wall(t) ||
+                         thing_is_pipe(t) ||
+                         thing_is_door(t))) {
+                        need_fixup = true;
+                    }
                 }
             } else {
                 if (!on_map) {
@@ -3651,6 +3655,7 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (need_fixup) {
+CON("update");
         levelp level;
 
         level = 
