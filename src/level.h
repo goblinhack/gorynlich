@@ -13,7 +13,8 @@ levelp level_new(widp,
                  int is_map_editor, 
                  int on_server);
 void level_destroy(levelp *, uint8_t keep_players);
-void level_tick(levelp);
+void level_server_tick(levelp);
+void level_client_tick(levelp);
 void level_update_now(levelp level);
 void level_load_new(void);
 levelp level_load(level_pos_t,
@@ -98,6 +99,8 @@ void level_set_is_map_editor(levelp level, uint8_t val);
 uint8_t level_is_paused(levelp level);
 void level_set_exit_has_been_reached(levelp level, uint8_t val);
 uint8_t level_exit_has_been_reached(levelp level);
+void level_set_needs_fixup(levelp level, uint8_t val);
+uint8_t level_needs_fixup(levelp level);
 void level_set_is_ready_to_be_destroyed(levelp level, uint8_t val);
 uint8_t level_is_ready_to_be_destroyed(levelp level);
 void level_set_is_ready_to_fade_out(levelp level, uint8_t val);
