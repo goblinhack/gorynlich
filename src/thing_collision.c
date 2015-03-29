@@ -470,7 +470,9 @@ static void thing_handle_collision (thingp me, thingp it,
         }
     }
 
-    if (thing_is_monst(me)) {
+    if (thing_is_monst(me)                      || 
+        thing_is_wall(me)                       || // moving walls
+        0) {
         /*
          * Monster bumped into something.
          */
@@ -747,6 +749,15 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
                  * can spawn on top of each other and get stuck.
                  */
                 if (thing_is_player(it)) {
+                    continue;
+                }
+            }
+
+            if (thing_is_wall(me)) {
+                /*
+                 * Allow moving walls to crush!
+                 */
+                if (!thing_is_wall(it)) {
                     continue;
                 }
             }
