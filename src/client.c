@@ -832,9 +832,9 @@ static void client_rx_server_status (gsocketp s,
         level_set_level_pos(client_level, latest_status.level_pos);
     }
 
-    if (!memcmp(&server_status.level_pos, &latest_status.level_pos,
-                sizeof(level_pos_t))) {
-        LOG("Client: Level no %d.%d", 
+    if (memcmp(&server_status.level_pos, &latest_status.level_pos,
+               sizeof(level_pos_t))) {
+        LOG("Client: Level no changed to %d.%d", 
             latest_status.level_pos.y,
             latest_status.level_pos.x);
         redo = true;
@@ -933,6 +933,7 @@ static void client_rx_server_status (gsocketp s,
     thing_stats changed_stats;
     memcpy(&changed_stats, new_stats, sizeof(changed_stats));
     changed_stats.thing_id = old_stats->thing_id;
+    changed_stats.on_server = old_stats->on_server;
     new_stats = &changed_stats;
 
     /*
