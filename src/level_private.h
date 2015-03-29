@@ -132,6 +132,11 @@ typedef struct level_t_ {
     uint8_t is_exit_open:1;
 
     /*
+     * Some walls have changed. Need to redo AI algorithims.
+     */
+    uint8_t needs_fixup:1;
+
+    /*
      * Someone is still using this level.
      */
     uint8_t locked:1;

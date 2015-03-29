@@ -180,6 +180,10 @@ int thing_stats_diff (const thing_statsp old_stats,
     const char indent[] = "  ";
     int changed = 0;
 
+    if (old_stats->on_server != new_stats->on_server) {
+        changed = 1;
+    }
+
     if (old_stats->client_version != new_stats->client_version) {
         LOG("%sVersion changed from %d to %d", indent, 
             old_stats->client_version, new_stats->client_version);
@@ -366,6 +370,14 @@ int thing_stats_diff (const thing_statsp old_stats,
                     myfree(ib);
                 }
             }
+        }
+    }
+
+    if (!changed) {
+        if (memcmp(old_stats, new_stats, sizeof(*old_stats))) {
+            hex_dump_log(old_stats, 0, sizeof(*old_stats));
+            hex_dump_log(new_stats, 0, sizeof(*new_stats));
+            DIE("stats differ bug is unable to debug the difference; fixme");
         }
     }
 
