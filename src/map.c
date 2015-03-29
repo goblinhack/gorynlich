@@ -2058,27 +2058,42 @@ if (level != server_level)
                 continue;
             }
 
+            if (wid_is_moving(mywid)) {
+                continue;
+            }
+
             memset(nbrs, 0, sizeof(nbrs));
 
             for (dx = -1; dx <= 1; dx++) {
                 for (dy = -1; dy <= 1; dy++) {
+                    widp w;
+                    tpp tp;
 
                     if (map_find_wall_at(level, x, y, &w)) {
-                        nbrs[dx + 1][dy + 1] = map_find_wall_at(level,
-                                                                x + dx, y + dy,
-                                                                0 /* wid */);
+                        tp = map_find_wall_at(level, x + dx, y + dy, &w);
+                        if (wid_is_moving(w)) {
+                            continue;
+                        }
+                        nbrs[dx + 1][dy + 1] = tp;
+
                     }
 
                     if (map_find_pipe_at(level, x, y, &w)) {
-                        nbrs[dx + 1][dy + 1] = map_find_pipe_at(level,
-                                                                x + dx, y + dy,
-                                                                0 /* wid */);
+                        tp = map_find_pipe_at(level, x + dx, y + dy, &w);
+                        if (wid_is_moving(w)) {
+                            continue;
+                        }
+
+                        nbrs[dx + 1][dy + 1] = tp;
                     }
 
                     if (map_find_door_at(level, x, y, &w)) {
-                        nbrs[dx + 1][dy + 1] = map_find_door_at(level,
-                                                                x + dx, y + dy,
-                                                                0 /* wid */);
+                        tp = map_find_door_at(level, x + dx, y + dy, &w);
+                        if (wid_is_moving(w)) {
+                            continue;
+                        }
+
+                        nbrs[dx + 1][dy + 1] = tp;
                     }
                 }
             }
