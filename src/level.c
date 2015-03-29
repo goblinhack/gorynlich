@@ -867,14 +867,19 @@ static void level_finished (levelp level)
     level_update_now(server_level);
 }
 
-/*
- * Check for expired timers. We fire one per loop.
- */
-void level_tick (levelp level)
+void level_server_tick (levelp level)
 {
     if (!level) {
         return;
     }
+
+    static uint32_t ts;
+
+    if (!time_have_x_tenths_passed_since(1, ts)) {
+        return;
+    }
+
+    ts = time_get_time_ms();
 
     /*
      * If the player has finished the level then popup a notice so all players 
@@ -885,22 +890,24 @@ void level_tick (levelp level)
             socket_tx_server_shout_at_all_players(POPUP, "Level completed");
 
             level->end_level_first_phase_fade_out_timer = 
-                action_timer_create(&server_timers,
-                                    level_action_timer_end_level_first_phase_fade_out,
-                                    0,
-                                    level,
-                                    "end level",
-                                    DELAY_LEVEL_END_HIDE,
-                                    ONESEC);
+                action_timer_create(
+                            &server_timers,
+                            level_action_timer_end_level_first_phase_fade_out,
+                            0,
+                            level,
+                            "end level",
+                            DELAY_LEVEL_END_HIDE,
+                            ONESEC);
 
             level->end_level_second_phase_destroy_timer = 
-                action_timer_create(&server_timers,
-                                    level_action_timer_end_level_second_phase_destroy,
-                                    0,
-                                    level,
-                                    "end level",
-                                    DELAY_LEVEL_END_DESTROY,
-                                    ONESEC);
+                action_timer_create(
+                            &server_timers,
+                            level_action_timer_end_level_second_phase_destroy,
+                            0,
+                            level,
+                            "end level",
+                            DELAY_LEVEL_END_DESTROY,
+                            ONESEC);
         }
     }
 
@@ -910,6 +917,26 @@ void level_tick (levelp level)
      */
     if (level_is_ready_to_be_destroyed(level)) {
         level_finished(level);
+    }
+}
+
+void level_client_tick (levelp level)
+{
+    if (!level) {
+        return;
+    }
+
+    static uint32_t ts;
+
+    if (!time_have_x_tenths_passed_since(1, ts)) {
+        return;
+    }
+
+    ts = time_get_time_ms();
+
+    if (level_needs_fixup(level)) {
+        map_fixup(level);
+        level_set_needs_fixup(level, false);
     }
 }
 
@@ -1289,6 +1316,20 @@ void level_set_exit_has_been_reached (levelp level, uint8_t val)
     verify(level);
 
     level->exit_has_been_reached = val;
+}
+
+uint8_t level_needs_fixup (levelp level)
+{
+    verify(level);
+
+    return (level->needs_fixup ? 1 : 0);
+}
+
+void level_set_needs_fixup (levelp level, uint8_t val)
+{
+    verify(level);
+
+    level->needs_fixup = val;
 }
 
 uint8_t level_is_ready_to_be_destroyed (levelp level)

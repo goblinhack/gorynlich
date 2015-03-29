@@ -430,7 +430,11 @@ void thing_tick_all (void)
      * Do per tick stuff for the level
      */
     if (server_level) {
-        level_tick(server_level);
+        level_server_tick(server_level);
+    }
+
+    if (client_level) {
+        level_client_tick(client_level);
     }
 
     /*
