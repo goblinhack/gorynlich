@@ -355,9 +355,9 @@ uint8_t map_is_rrr23_at (levelp level, int32_t x, int32_t y)
     return (map_is_x_at(level, x, y, tp_is_rrr23));
 }
 
-uint8_t map_is_rrr24_at (levelp level, int32_t x, int32_t y)
+uint8_t map_is_visible_on_debug_only_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_is_x_at(level, x, y, tp_is_rrr24));
+    return (map_is_x_at(level, x, y, tp_is_visible_on_debug_only));
 }
 
 uint8_t map_is_action_bridge_at (levelp level, int32_t x, int32_t y)
@@ -817,9 +817,9 @@ thingp map_thing_is_rrr23_at (levelp level, int32_t x, int32_t y)
     return (map_thing_is_x_at(level, x, y, tp_is_rrr23));
 }
 
-thingp map_thing_is_rrr24_at (levelp level, int32_t x, int32_t y)
+thingp map_thing_is_visible_on_debug_only_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_thing_is_x_at(level, x, y, tp_is_rrr24));
+    return (map_thing_is_x_at(level, x, y, tp_is_visible_on_debug_only));
 }
 
 thingp map_thing_is_action_bridge_at (levelp level, int32_t x, int32_t y)
@@ -1295,9 +1295,9 @@ tree_rootp map_all_things_is_rrr23_at (levelp level, int32_t x, int32_t y)
     return (map_all_things_is_x_at(level, x, y, tp_is_rrr23));
 }
 
-tree_rootp map_all_things_is_rrr24_at (levelp level, int32_t x, int32_t y)
+tree_rootp map_all_things_is_visible_on_debug_only_at (levelp level, int32_t x, int32_t y)
 {
-    return (map_all_things_is_x_at(level, x, y, tp_is_rrr24));
+    return (map_all_things_is_x_at(level, x, y, tp_is_visible_on_debug_only));
 }
 
 tree_rootp map_all_things_is_action_bridge_at (levelp level, int32_t x, int32_t y)
@@ -1863,9 +1863,9 @@ tpp map_find_rrr23_at (levelp level, int32_t x, int32_t y, widp *w)
     return (map_find_x_at(level, x, y, tp_is_rrr23, w));
 }
 
-tpp map_find_rrr24_at (levelp level, int32_t x, int32_t y, widp *w)
+tpp map_find_visible_on_debug_only_at (levelp level, int32_t x, int32_t y, widp *w)
 {
-    return (map_find_x_at(level, x, y, tp_is_rrr24, w));
+    return (map_find_x_at(level, x, y, tp_is_visible_on_debug_only, w));
 }
 
 tpp map_find_action_bridge_at (levelp level, int32_t x, int32_t y, widp *w)
@@ -2683,34 +2683,9 @@ uint32_t level_count_is_rrr23 (levelp level)
     return (level_count_is_x(level, tp_is_rrr23));
 }
 
-uint32_t level_count_is_rrr24 (levelp level)
+uint32_t level_count_is_visible_on_debug_only (levelp level)
 {
-    return (level_count_is_x(level, tp_is_rrr24));
-}
-
-uint32_t level_count_is_rrr25 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr25));
-}
-
-uint32_t level_count_is_rrr26 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr26));
-}
-
-uint32_t level_count_is_rrr27 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr27));
-}
-
-uint32_t level_count_is_rrr28 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr28));
-}
-
-uint32_t level_count_is_rrr29 (levelp level)
-{
-    return (level_count_is_x(level, tp_is_rrr29));
+    return (level_count_is_x(level, tp_is_visible_on_debug_only));
 }
 
 uint32_t level_count_is_action (levelp level)
@@ -3167,9 +3142,9 @@ tree_rootp map_all_things_is_rrr23 (levelp level)
     return (map_all_things_is_x(level, tp_is_rrr23));
 }
 
-tree_rootp map_all_things_is_rrr24 (levelp level)
+tree_rootp map_all_things_is_visible_on_debug_only (levelp level)
 {
-    return (map_all_things_is_x(level, tp_is_rrr24));
+    return (map_all_things_is_x(level, tp_is_visible_on_debug_only));
 }
 
 tree_rootp map_all_things_is_action_bridge (levelp level)

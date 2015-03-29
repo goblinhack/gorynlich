@@ -249,12 +249,7 @@ typedef struct tp_ {
     uint8_t is_rrr21:1;
     uint8_t is_rrr22:1;
     uint8_t is_rrr23:1;
-    uint8_t is_rrr24:1;
-    uint8_t is_rrr25:1;
-    uint8_t is_rrr26:1;
-    uint8_t is_rrr27:1;
-    uint8_t is_rrr28:1;
-    uint8_t is_rrr29:1;
+    uint8_t is_visible_on_debug_only:1;
     uint8_t is_action:1;
     uint8_t is_action_bridge:1;
     uint8_t is_action_trigger:1;
@@ -676,34 +671,9 @@ static inline uint8_t tp_is_rrr23 (tpp t)
     return (t->is_rrr23);
 }
 
-static inline uint8_t tp_is_rrr24 (tpp t)
+static inline uint8_t tp_is_visible_on_debug_only (tpp t)
 {
-    return (t->is_rrr24);
-}
-
-static inline uint8_t tp_is_rrr25 (tpp t)
-{
-    return (t->is_rrr25);
-}
-
-static inline uint8_t tp_is_rrr26 (tpp t)
-{
-    return (t->is_rrr26);
-}
-
-static inline uint8_t tp_is_rrr27 (tpp t)
-{
-    return (t->is_rrr27);
-}
-
-static inline uint8_t tp_is_rrr28 (tpp t)
-{
-    return (t->is_rrr28);
-}
-
-static inline uint8_t tp_is_rrr29 (tpp t)
-{
-    return (t->is_rrr29);
+    return (t->is_visible_on_debug_only);
 }
 
 static inline uint8_t tp_is_action (tpp t)
