@@ -3,6 +3,7 @@
  raw_name="wall5"
  tooltip="Wall5"
  z_depth=2
+ speed=10
  is_inactive
  is_wall
  is_shadow_caster

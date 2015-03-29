@@ -655,6 +655,11 @@ typedef struct thing_ {
     uint32_t timestamp_health;
 
     /*
+     * Debugging this thing?
+     */
+    uint32_t debug:1;
+
+    /*
      * First time sent to a client?
      */
     uint32_t first_update:1;
@@ -2087,3 +2092,10 @@ void thing_drop(thingp t, tpp tp);
 void thing_wear_out(thingp t, tpp tp);
 void thing_item_destroyed(thingp t, tpp tp);
 void thing_wield_next_weapon(thingp t);
+
+/*
+ * thing_collision.c
+ */
+void 
+thingp_get_interpolated_position(const thingp t, double *x, double *y);
+
