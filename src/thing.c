@@ -3091,6 +3091,7 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
              * There is a change, but don't send too often.
              */
             if (thing_is_animation(t)) {
+            } else if (thing_is_wall(t)) {
                 /*
                  * Send thing animation changes all the time so that weapons
                  * stay close to the player.

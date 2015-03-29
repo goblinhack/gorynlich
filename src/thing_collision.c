@@ -137,7 +137,7 @@ static void thing_possible_hit_do (thingp hitter)
  * On the server, things move in jumps. Find the real position the client
  * will see so collisions look more accurate.
  */
-static void 
+void 
 thingp_get_interpolated_position (const thingp t, double *x, double *y)
 {
     widp w = thing_wid(t);
@@ -407,10 +407,6 @@ static void thing_handle_collision (thingp me, thingp it,
         return;
     }
 
-    if (thing_has_left_level(me)) {
-        return;
-    }
-
     /*
      * Filter out boring things.
      */
@@ -423,18 +419,9 @@ static void thing_handle_collision (thingp me, thingp it,
      * Do we overlap with something?
      */
     if (!things_overlap(me, -1.0, -1.0, it)) {
-#ifdef GORY_DEBUG
-if (thing_is_player(me) || thing_is_player(it)) {
-LOG("no overlap %s %s",thing_logname(me),thing_logname(it));
-}
-#endif
+LOG("no overlap %s %f %f %s %f %f",thing_logname(me),me->x,me->y,thing_logname(it), it->x,it->y);
         return;
     }
-#ifdef GORY_DEBUG
-if (thing_is_player(me) || thing_is_player(it)) {
-LOG("HIT %s %s",thing_logname(me),thing_logname(it));
-}
-#endif
 
     if (thing_is_player(me)) {
         /*
@@ -522,31 +509,47 @@ LOG("HIT %s %s",thing_logname(me),thing_logname(it));
     }
 
     /*
-     * Action trigger? Note the reverse of it vs me here.
+     * An action trigger is only ever used to start an object off as the 
+     * initiator of a collision.
      */
-    if (thing_is_door(it)           ||
-        thing_is_wall(it)           ||
-        thing_is_mob_spawner(it)) {
+    if (thing_is_action_left(me)        ||
+        thing_is_action_right(me)       ||
+        thing_is_action_up(me)          ||
+        thing_is_action_down(me)) {
+        if (thing_is_door(it)           ||
+            thing_is_wall(it)) {
+            thing_make_active(it);
+        }
+    }
 
-        double speed = 10;
+    /*
+     * Normally we have a thing bumping into an action and then it does stuff.
+     */
+    if (thing_is_door(me)           ||
+        thing_is_wall(me)) {
 
-        if (thing_is_action_left(me)) {
-            it->dy -= speed;
-            thing_make_active(it);
-        }
-        if (thing_is_action_right(me)) {
-            it->dx += speed;
-            thing_make_active(it);
-        }
-        if (thing_is_action_up(me)) {
-            it->dy -= speed;
-            thing_make_active(it);
-CON("up dy %f", it->dy);
-        }
-        if (thing_is_action_down(me)) {
-            it->dy += speed;
-            thing_make_active(it);
-CON("down dy %f", it->dy);
+        double speed = 1;
+
+        if (thing_is_action_left(it)) {
+            me->dx = -speed;
+            me->dy = 0;
+            thing_make_active(me);
+            thing_set_dir_left(me);
+        } else if (thing_is_action_right(it)) {
+            me->dx = speed;
+            me->dy = 0;
+            thing_make_active(me);
+            thing_set_dir_right(me);
+        } else if (thing_is_action_up(it)) {
+            me->dx = 0;
+            me->dy = -speed;
+            thing_make_active(me);
+            thing_set_dir_up(me);
+        } else if (thing_is_action_down(it)) {
+            me->dx = 0;
+            me->dy = speed;
+            thing_make_active(me);
+            thing_set_dir_down(me);
         }
     }
 
@@ -576,6 +579,10 @@ CON("down dy %f", it->dy);
 void thing_handle_collisions (widp grid, thingp me)
 {
     int32_t dx, dy;
+
+    if (thing_has_left_level(me)) {
+        return;
+    }
 
     thing_map *map = thing_get_map(me);
 
@@ -659,7 +666,8 @@ uint8_t thing_hit_solid_obstacle (widp grid, thingp t, double nx, double ny)
             /*
              * No collisions with the floor!
              */
-            if (thing_is_floor(it) ||
+            if (thing_is_floor(it)          ||
+                thing_is_action(it)         ||
                 thing_is_animation(it)) {
                 continue;
             }

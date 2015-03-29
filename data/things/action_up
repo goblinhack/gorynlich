@@ -2,6 +2,7 @@
  short_name="action_up"
  raw_name="action_up"
  tooltip="Moves object up"
+ is_collision_map_small
  z_depth=6
  is_action
  is_action_up
