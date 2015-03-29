@@ -3655,15 +3655,13 @@ void socket_client_rx_map_update (gsocketp s, UDPpacket *packet, uint8_t *data)
     }
 
     if (need_fixup) {
-CON("update");
         levelp level;
 
         level = 
             (typeof(level)) wid_get_client_context(
                                         wid_game_map_client_grid_container);
-        verify(level);
 
-        map_fixup(level);
+        level_set_needs_fixup(level, true);
     }
 }
 

@@ -2034,15 +2034,17 @@ void map_fixup (levelp level)
 
             widp mywid = 0;
 
-            if (map_find_wall_at(level, x, y, &w)) {
+            tpp tp = 0;
+
+            if ((tp = map_find_wall_at(level, x, y, &w))) {
 #ifdef GORY_DEBUG
 if (level != server_level)
                 fprintf(fp,"x");
 #endif
                 mywid = w;
-            } else if (map_find_pipe_at(level, x, y, &w)) {
+            } else if ((tp = map_find_pipe_at(level, x, y, &w))) {
                 mywid = w;
-            } else if (map_find_door_at(level, x, y, &w)) {
+            } else if ((tp = map_find_door_at(level, x, y, &w))) {
 #ifdef GORY_DEBUG
 if (level != server_level)
                 fprintf(fp,"D");
@@ -2055,10 +2057,6 @@ if (level != server_level)
 if (level != server_level)
                 fprintf(fp," ");
 #endif
-                continue;
-            }
-
-            if (wid_is_moving(mywid)) {
                 continue;
             }
 
@@ -2096,6 +2094,10 @@ if (level != server_level)
                         nbrs[dx + 1][dy + 1] = tp;
                     }
                 }
+            }
+
+            if (wid_is_moving(mywid)) {
+                nbrs[0][0] = tp;
             }
 
             tpp a = nbrs[0][0];
@@ -2148,6 +2150,7 @@ if (level != server_level)
 
             BLOCK(1,1,1,1,1,1,1,1,1,IS_JOIN_BLOCK)
             BLOCK(0,0,0,0,1,0,0,0,0,IS_JOIN_NODE)
+            BLOCK(0,0,0,0,0,0,0,0,0,IS_JOIN_NODE) // moving blocks
             BLOCK(0,0,0,0,1,1,0,0,0,IS_JOIN_LEFT)
             BLOCK(0,0,0,0,1,0,0,1,0,IS_JOIN_TOP)
             BLOCK(0,0,0,1,1,0,0,0,0,IS_JOIN_RIGHT)
@@ -2233,6 +2236,9 @@ if (level != server_level)
             }
 
             tpp t = e;
+            if (!e) {
+                t = e = tp;
+            }
 
             thing_tilep thing_tile = thing_tile_find(t, index, &tile);
             if (!thing_tile) {
