@@ -31,6 +31,7 @@
 #include "string_ext.h"
 
 uint16_t THING_WALL1;
+uint16_t THING_WALL_LIT1;
 uint16_t THING_ROCK1;
 uint16_t THING_WALL2;
 uint16_t THING_WALL3;
