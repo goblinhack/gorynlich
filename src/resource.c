@@ -2754,8 +2754,9 @@ static uint8_t resource_init_last (void *context)
     /*
      * Walls
      */
-    tp_load(&THING_WALL1, "data/things/wall1");
     tp_load(&THING_ROCK1, "data/things/rock1");
+    tp_load(&THING_WALL1, "data/things/wall1");
+    tp_load(&THING_WALL_LIT1, "data/things/wall_lit1");
     tp_load(&THING_WALL2, "data/things/wall2");
     tp_load(&THING_WALL3, "data/things/wall3");
     tp_load(&THING_WALL4, "data/things/wall4");
