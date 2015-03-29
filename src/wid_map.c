@@ -884,6 +884,7 @@ static void wid_map_draw_exits (void)
 /*
  * Show a large level preview
  */
+#if 0
 static void wid_map_preview_do (int thumbnail)
 {
     wid_map_ctx *ctx = wid_map_window_ctx;
@@ -978,6 +979,140 @@ static void wid_map_preview_do (int thumbnail)
             br.x = ((double)x-1) * dx;
             tl.y = ((double)y-2.5) * dy;
             br.y = ((double)y-1) * dy;
+        }
+
+        tl.x *= (double) global_config.video_gl_width;
+        tl.y *= (double) global_config.video_gl_height;
+        br.x *= (double) global_config.video_gl_width;
+        br.y *= (double) global_config.video_gl_height;
+
+        widp b = ctx->buttons[ctx->focusy][ctx->focusx];
+
+        if (!thumbnail) {
+            int32_t tlx, tly, brx, bry, mx, my;
+
+            wid_get_abs_coords(b, &tlx, &tly, &brx, &bry);
+
+            mx = (tlx + brx) / 2.0;
+            my = (tly + bry) / 2.0;
+
+            tl.x += mx;
+            tl.y += my;
+            br.x += mx;
+            br.y += my;
+        } else {
+            double offset = 16;
+            tl.x += (double) global_config.video_gl_width / offset;
+            tl.y += (double) global_config.video_gl_height / offset;
+            br.x += (double) global_config.video_gl_width / offset;
+            br.y += (double) global_config.video_gl_height / offset;
+        }
+
+        glcolor(WHITE);
+        tile_blit_fat(tile, 0, tl, br);
+    }
+
+    blit_flush();
+}
+#endif
+
+static void wid_map_preview_do (int thumbnail)
+{
+    wid_map_ctx *ctx = wid_map_window_ctx;
+    if (!wid_map_window_ctx) {
+        return;
+    }
+
+    verify(ctx);
+
+    wid_map_draw_exits();
+
+    if (ctx->focusx == -1) {
+        return;
+    }
+
+    if (ctx->focusy == -1) {
+        return;
+    }
+
+    wid_map_level *map = &ctx->levels[ctx->focusy][ctx->focusx];
+    if (!map) {
+        return;
+    }
+
+    int x, y, z;
+
+    blit_init();
+
+    for (x = 0; x < MAP_WIDTH; x++) 
+    for (y = 0; y < MAP_HEIGHT; y++) 
+    for (z = 0; z < MAP_DEPTH; z++) {
+
+        tilep tile = map->tiles[x][y][z].tile;
+        if (!tile) {
+            tpp tp = map->tiles[x][y][z].tp;
+            if (!tp) {
+                continue;
+            }
+
+            thing_tilep thing_tile;
+            tree_rootp tiles;
+
+            tiles = tp_get_tiles(tp);
+            if (!tiles) {
+                return;
+            }
+
+            thing_tile = thing_tile_first(tiles);
+            if (!thing_tile) {
+                continue;
+            }
+
+            const char *tilename = thing_tile_name(thing_tile);
+            if (!tilename) {
+                ERR("cannot find tile %s", tilename);
+                continue;
+            }
+
+            tile = tile_find(tilename);
+            if (!tile) {
+                ERR("cannot find tilep for tile %s", tilename);
+            }
+
+            map->tiles[x][y][z].tile = tile;
+        }
+
+        fpoint tl;
+        fpoint br;
+
+        double dx = 0.005;
+        double dy = 0.005;
+
+        if (thumbnail) {
+            dx /= 2.0;
+            dy /= 2.0;
+        }
+
+        tl.x = ((double)x+2) * dx;
+        br.x = ((double)x+3.5) * dx;
+        tl.y = ((double)y+2) * dy;
+        br.y = ((double)y+3.5) * dy;
+
+
+        if (ctx->focusx > LEVELS_ACROSS / 2) {
+            tl.x -= ((double)80) * dx;
+            br.x -= ((double)80) * dx;
+        } else {
+            tl.x += ((double)10) * dx;
+            br.x += ((double)10) * dx;
+        }
+
+        if (ctx->focusy > LEVELS_DOWN / 2) {
+            tl.y -= ((double)80) * dy;
+            br.y -= ((double)80) * dy;
+        } else {
+            tl.y += ((double)10) * dy;
+            br.y += ((double)10) * dy;
         }
 
         tl.x *= (double) global_config.video_gl_width;
