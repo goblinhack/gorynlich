@@ -1,4 +1,5 @@
 --------------------------------------- plan for mar --------------------------------------
+- walls change direction too soon when changing dir
 - implement touch triggers
 - add colored triggers
 - make item bar wider
