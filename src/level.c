@@ -928,7 +928,7 @@ void level_client_tick (levelp level)
 
     static uint32_t ts;
 
-    if (!time_have_x_tenths_passed_since(1, ts)) {
+    if (!time_have_x_tenths_passed_since(5, ts)) {
         return;
     }
 
