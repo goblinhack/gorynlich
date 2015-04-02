@@ -416,8 +416,6 @@ widp wid_grid_find_tp_is(widp parent,
                                   tpp);
 void marshal_wid_grid(marshal_p ctx, widp);
 uint8_t demarshal_wid_grid(demarshal_p ctx, widp, grid_wid_replace_t);
-void wid_move_stop(widp w);
-void wid_move_resume(widp w);
 uint8_t wid_is_hidden(widp w);
 uint8_t wid_this_is_hidden(widp w);
 uint8_t wid_is_scaling(widp w);
@@ -509,6 +507,11 @@ typedef struct widgrid_ {
     double br_y;
 } widgrid;
 
+typedef struct wid_move_ {
+    fpoint moving_end;
+    uint32_t duration;
+} wid_move_t;
+
 typedef struct wid_ {
     /*
      * Sorted for display order.
@@ -595,9 +598,7 @@ typedef struct wid_ {
     uint8_t movable_bounded_set:1;
     uint8_t fade_in:1;
     uint8_t fade_out:1;
-    uint8_t moving:1;
     uint8_t ignore_for_events:1;
-    uint8_t paused:1;
     uint8_t scaled_w:1;
     uint8_t scaled_h:1;
     uint8_t scaling_w:1;
@@ -740,9 +741,6 @@ typedef struct wid_ {
     uint32_t timestamp_fading_begin;
     uint32_t timestamp_fading_end;
 
-    uint32_t timestamp_moving_begin;
-    uint32_t timestamp_moving_end;
-
     uint32_t timestamp_scaling_w_begin;
     uint32_t timestamp_scaling_w_end;
     uint32_t timestamp_scaling_h_begin;
@@ -773,8 +771,17 @@ typedef struct wid_ {
     uint32_t timestamp_change_to_next_frame;
 
     widp *destroy_ptr;
+
+    /*
+     * Queue of wid move requests.
+     */
+#define WID_MAX_MOVE_QUEUE 4
+    wid_move_t move[WID_MAX_MOVE_QUEUE];
     fpoint moving_start;
     fpoint moving_end;
+    uint32_t timestamp_moving_begin;
+    uint32_t timestamp_moving_end;
+    uint8_t moving;
 
     double scale_w_base;
     double scaling_w_start;

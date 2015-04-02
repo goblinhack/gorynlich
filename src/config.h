@@ -286,15 +286,6 @@
 #define THING_MAX_SERVER_DISCREPANCY                        5.0
 
 /*
- * When things are moving on the client, we need to move them a bit slower
- * to allow for a possibility that the next move update will be delayed.
- * We will catch up if this is the case, but if this is too slow then the
- * thing moves on the client will appear jerky as they reach their destination 
- * and then wait for their next move.
- */
-#define THING_MOVE_NETWORK_LATENCY_FUDGE                    1.5
-
-/*
  * Timers
  */
 #define DELAY_TENTHS_THING_AI                               2
