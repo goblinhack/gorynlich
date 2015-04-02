@@ -288,8 +288,8 @@
 /*
  * Timers
  */
-#define DELAY_TENTHS_THING_AI                               2
-#define DELAY_TENTHS_THING_COLLISION_TEST                   2
+#define DELAY_TENTHS_THING_COLLISION_TEST                   1
+#define DELAY_TENTHS_THING_DMAP                             5
 
 /*
  * Client <-> server keepalives
