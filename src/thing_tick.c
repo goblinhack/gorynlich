@@ -134,15 +134,14 @@ static void thing_tick_server_all (void)
                 continue;
             }
         } else {
-            continue;
-        }
-
-        /*
-         * Don't do stuff too often.
-         */
-        if (!time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI,
-                                             t->timestamp_ai)) {
-            continue;
+            /*
+             * If not moving then we need to do a check to see if we can move
+             * else we get laggy steps when a thing stops moving and waits for
+             * its next hop.
+             */
+            if (wid_is_moving(w)) {
+                continue;
+            }
         }
 
         if (!wid_is_moving(w)) {
@@ -443,7 +442,7 @@ void thing_tick_all (void)
     if (server_level) {
         static uint32_t ts;
 
-        if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_AI, ts)) {
+        if (time_have_x_tenths_passed_since(DELAY_TENTHS_THING_DMAP, ts)) {
             thing_generate_dmaps();
 
             ts = time_get_time_ms();
