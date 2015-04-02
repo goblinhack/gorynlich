@@ -456,7 +456,6 @@ static void wid_server_join_display (server *s)
     myfree(tmp2);
 
     wid_move_to_pct(wid_server_stats_window, 0.1, 0.74);
-    wid_move_stop(wid_server_stats_window);
     wid_set_tex(wid_server_stats_window, 0, 0);
     wid_set_square(wid_server_stats_window);
     wid_set_color(wid_server_stats_window, WID_COLOR_BG, c);

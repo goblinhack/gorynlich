@@ -127,11 +127,6 @@ static void thing_client_wid_move (thingp t,
 
         double ms = (1000.0 / speed) / (1.0 / time_step);
 
-        /*
-         * Remove this and thing moves are jerky.
-         */
-        ms *= THING_MOVE_NETWORK_LATENCY_FUDGE;
-
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
 
     } else {
