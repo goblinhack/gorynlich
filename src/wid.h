@@ -775,7 +775,7 @@ typedef struct wid_ {
     /*
      * Queue of wid move requests.
      */
-#define WID_MAX_MOVE_QUEUE 4
+#define WID_MAX_MOVE_QUEUE 10
     wid_move_t move[WID_MAX_MOVE_QUEUE];
     fpoint moving_start;
     fpoint moving_end;
