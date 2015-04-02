@@ -127,7 +127,7 @@ static void thing_client_wid_move (thingp t,
 
         double ms = (1000.0 / speed) / (1.0 / time_step);
 
-        ms *= 1.3;
+//        ms *= 0.9;
 
         wid_move_to_abs_in(t->wid, tl.x, tl.y, ms);
 
