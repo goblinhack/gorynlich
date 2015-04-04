@@ -117,9 +117,7 @@ uint8_t client_init (void)
 
 void client_fini (void)
 {
-    FINI_LOG("%s", __FUNCTION__);
-
-    if (client_init_done) {
+   if (client_init_done) {
         client_init_done = false;
 
         if (client_joined_server) {
@@ -1184,7 +1182,7 @@ static void client_check_still_in_game (void)
 
     MSG(CRITICAL, "Server does not report you in the game!");
 
-    LOG("Client: You are player: \"%s\", ID %u", 
+    CON("Client: You are player: \"%s\", ID %u", 
         global_config.stats.pname, 
         client_joined_server_key);
 

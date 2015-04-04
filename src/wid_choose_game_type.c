@@ -158,6 +158,8 @@ static void wid_choose_player_play_selected (void)
 
 static void wid_choose_game_type_single_play_selected_cb (void *context)
 {
+    single_player_mode = 1;
+
     wid_server_join_hide();
     wid_server_create_hide();
 
@@ -166,6 +168,8 @@ static void wid_choose_game_type_single_play_selected_cb (void *context)
 
 static void wid_choose_game_type_start_server_selected_cb (void *context)
 {
+    single_player_mode = 0;
+
     wid_server_create_selected();
 }
 
@@ -210,6 +214,8 @@ static void wid_choose_game_type_stop_server_selected (void)
 
 static void wid_choose_game_type_join_game_selected_cb (void *context)
 {
+    single_player_mode = 0;
+
     wid_server_join_selected();
 }
 
