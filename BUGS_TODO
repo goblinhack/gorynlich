@@ -1,12 +1,17 @@
---------------------------------------- plan for mar --------------------------------------
+--------------------------------------- plan for apr --------------------------------------
+- stop moving blocks joining onto other blocks
 - implement touch triggers
 - add colored triggers
+- implement spawn trigger
+- implement explodr trigger?
+- add moving block typ
+- add level edit layer filters
 - make item bar wider
 - why is torch in the items menu? it's useless
 - can't shoot through diagonal walls
---------------------------------------- plan for apr --------------------------------------
-- super meat boy style spinning blades of death on invisible tracks
 - remove gothic and window textures - no longer needed
+- super meat boy style spinning blades of death on invisible tracks
+--------------------------------------- plan for may --------------------------------------
 - stats need to do something
 - magic attack - green fireball?
 - sound effects for weapons and hits http://www.bfxr.net/
@@ -24,7 +29,7 @@
 - pause character on spending point window - on single player?
 - fixed and random levels 1.1/2/3/4 for fixed 1.5/6/7/8 would be random if not found
 - char mapping file and char levels to read in level ed
---------------------------------------- plan for may --------------------------------------
+--------------------------------------- plan for june --------------------------------------
 more monsters, ideas:
     * screaming skulls that fire fireballs
     * mushroom clouds / game of life generator for growing mould spores ?
@@ -40,22 +45,22 @@ dungeon items?
     * money/xp doubler amulet
     * amulet of resurrection?
     * double fire double arrows
---------------------------------------- plan for june --------------------------------------
+--------------------------------------- plan for jul --------------------------------------
 lit levels gauntlet old style
 manually generate lots of levels
 picture of keyboard and keys to use at start
---------------------------------------- plan for jul --------------------------------------
+--------------------------------------- plan for aug --------------------------------------
 boss baddies every 10 levels
   * first baddy, large ghost, drops bone piles
 bosses drop exit on death
---------------------------------------- plan for aug --------------------------------------
+--------------------------------------- plan for sep --------------------------------------
 add story slides, nine princesses or prince that the kingdom of pixelvania has ad captured by gorynlich the she dragon
 add game end
---------------------------------------- plan for sep --------------------------------------
+--------------------------------------- plan for oct --------------------------------------
 backpack drop on death
 add shop
 thief, kill thief to recover items
---------------------------------------- plan for dec --------------------------------------
+--------------------------------------- plan for nov --------------------------------------
 add bot to test out multiplayer ?
 different profiles for level generation
 mining?
