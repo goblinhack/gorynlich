@@ -36,6 +36,7 @@ typedef enum {
 enum {
     SOCKET_LISTEN,
     SOCKET_CONNECT,
+    SOCKET_CONNECT_SERVER_SIDE,
 };
 
 typedef struct {
@@ -297,6 +298,7 @@ extern void sockets_alive_check(void);
 
 extern gsocketp socket_find_local_ip(IPaddress address);
 extern gsocketp socket_find_remote_ip(IPaddress address);
+extern gsocketp socket_find_server_side_remote_ip(IPaddress address);
 
 extern IPaddress socket_get_local_ip(gsocketp);
 extern IPaddress socket_get_remote_ip(gsocketp);

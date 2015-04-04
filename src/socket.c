@@ -33,6 +33,7 @@ uint8_t debug_socket_ping_enabled = 0;
 uint8_t on_server;
 uint8_t is_client;
 uint8_t is_headless;
+uint8_t single_player_mode;
 
 IPaddress server_address = {0};
 IPaddress no_address = {0};
@@ -74,8 +75,6 @@ uint8_t socket_init (void)
 
 void socket_fini (void)
 {
-    FINI_LOG("%s", __FUNCTION__);
-
     if (!socket_init_done) {
         return;
     }
@@ -218,12 +217,12 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
     /*
      * Reopen?
      */
-    gsocketp s = socket_find(address, SOCKET_CONNECT);
+    gsocketp s = socket_find(address, SOCKET_CONNECT + server_side_client);
     if (s) {
         return (s);
     }
 
-    s = socket_create(address, SOCKET_CONNECT);
+    s = socket_create(address, SOCKET_CONNECT + server_side_client);
     if (!s) {
         return (0);
     }
@@ -277,12 +276,20 @@ static gsocketp socket_connect (IPaddress address, uint8_t server_side_client)
 
 gsocketp socket_connect_from_client (IPaddress address)
 {
-    return (socket_connect(address, false));
+    gsocketp s;
+
+    s = socket_connect(address, false);
+
+    return (s);
 }
 
 gsocketp socket_connect_from_server (IPaddress address)
 {
-    return (socket_connect(address, true));
+    gsocketp s;
+
+    s = socket_connect(address, true);
+
+    return (s);
 }
 
 static void socket_destroy (gsocketp s)
@@ -374,6 +381,22 @@ gsocketp socket_find_remote_ip (IPaddress address)
 {
     gsocketp s;
     TREE_WALK(sockets, s) {
+        if (cmp_address(&address, &s->remote_ip)) {
+            return (s);
+        }
+    }
+
+    return (0);
+}
+
+gsocketp socket_find_server_side_remote_ip (IPaddress address)
+{
+    gsocketp s;
+    TREE_WALK(sockets, s) {
+        if (!s->server_side_client) {
+            continue;
+        }
+
         if (cmp_address(&address, &s->remote_ip)) {
             return (s);
         }
@@ -830,7 +853,7 @@ void sockets_alive_check (void)
         }
 
         if (s->quality < SOCKET_PING_FAIL_THRESHOLD) {
-            LOG("Peer down [%s] qual %u percent",
+            CON("Peer down [%s] qual %u percent",
                 socket_get_remote_logname(s), s->quality);
 
             /*
@@ -1219,7 +1242,7 @@ void socket_tx_ping (gsocketp s, uint8_t seq, uint32_t ts)
     s->latency_rtt[seq % ARRAY_SIZE(s->latency_rtt)] = (uint32_t) -1;
 
     if (debug_socket_ping_enabled) {
-        LOG("Tx Ping [to %s] seq %u, ts %u", 
+        CON("Tx Ping [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -1273,7 +1296,7 @@ void socket_tx_pong (gsocketp s, uint8_t seq, uint32_t ts)
     msg.server_current_players = global_config.server_current_players;
 
     if (debug_socket_ping_enabled) {
-        LOG("Tx Pong [to %s] seq %u, ts %u", 
+        CON("Tx Pong [to %s] seq %u, ts %u", 
             socket_get_remote_logname(s), seq, ts);
     }
 
@@ -1297,7 +1320,7 @@ void socket_rx_ping (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Ping from %s, seq %u", tmp, seq);
+        CON("Rx Ping from %s, seq %u", tmp, seq);
         myfree(tmp);
     }
 
@@ -1324,7 +1347,7 @@ void socket_rx_pong (gsocketp s, UDPpacket *packet, uint8_t *data)
 
     if (debug_socket_ping_enabled) {
         char *tmp = iptodynstr(read_address(packet));
-        LOG("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
+        CON("Rx Pong from %s, seq %u, elapsed %d ms", tmp, seq,
             time_get_time_ms() - ts);
         myfree(tmp);
     }
@@ -1378,7 +1401,7 @@ void socket_tx_client_status (gsocketp s)
     LOG("Client: Tx Client Status [to %s] \"%s\"", 
         socket_get_remote_logname(s), s->stats.pname);
     thing_stats_dump(&s->stats);
-// CON("client, tx version: %d",s->stats.client_version);
+// LOG("client, tx version: %d",s->stats.client_version);
 
     packet->len = sizeof(msg);
 
@@ -1430,7 +1453,7 @@ void socket_rx_client_status (gsocketp s, UDPpacket *packet, uint8_t *data)
         memcpy(&current_stats, &p->stats_from_client, sizeof(new_stats));
     }
 
-// CON("server, rx version %d",new_stats.client_version);
+// LOG("server, rx version %d",new_stats.client_version);
 
     /*
      * Merge them together.
@@ -1967,7 +1990,7 @@ void socket_tx_server_shout_at_all_players (uint32_t level, const char *txt)
             continue;
         }
 
-        LOG("Server: Tx Shout \"%s\" to %s", txt,
+        LOG("Server: Tx Shout \"%s\" to (all players) %s", txt,
             socket_get_remote_logname(sp));
 
         UDPpacket *packet = packet_alloc();
@@ -2071,7 +2094,7 @@ socket_tx_server_shout_at_all_players_except (gsocketp except,
 
         packet->len = sizeof(msg);
 
-        LOG("Server: Tx Shout \"%s\" to %s", txt,
+        LOG("Server: Tx Shout \"%s\" to (all except one) %s", txt,
             socket_get_remote_logname(sp));
 
         write_address(packet, socket_get_remote_ip(sp));
@@ -2117,7 +2140,7 @@ void socket_tx_server_shout_only_to (gsocketp target,
 
         packet->len = sizeof(msg);
 
-        LOG("Server: Tx Shout \"%s\" to %s", txt,
+        LOG("Server: Tx Shout \"%s\" to (one player) %s", txt,
             socket_get_remote_logname(sp));
 
         write_address(packet, socket_get_remote_ip(sp));
@@ -2295,7 +2318,7 @@ void socket_tx_server_status (gsocketp s_in)
             if (t) {
                 memcpy(&msg_tx->stats, &t->stats, sizeof(thing_stats));
 
-// CON("server, tx version: %d",t->stats.client_version);
+// LOG("server, tx version: %d",t->stats.client_version);
                 if (0) {
                     LOG("Server: Tx Server Status [to %s]", socket_get_remote_logname(s));
                     thing_dump(t);
@@ -2370,7 +2393,7 @@ void socket_rx_server_status (gsocketp s, UDPpacket *packet, uint8_t *data,
     status->you_are_playing_on_this_server = msg->you_are_playing_on_this_server;
 
     memcpy(&s->server_status, status, sizeof(s->server_status));
-// CON("client, rx version: %d",s->stats.client_version);
+// LOG("client, rx version: %d",s->stats.client_version);
 }
 
 /*
@@ -2857,7 +2880,7 @@ static UDPpacket *packet_finalize (gsocketp s, UDPpacket *packet)
     s->tx_seq++;
 
 #ifdef ENABLE_PACKET_DUMP
-    hex_dump_log(packet->data, 0, packet->len);
+    hex_dump_CON(packet->data, 0, packet->len);
 #endif
 
     return (packet);
@@ -2929,7 +2952,7 @@ UDPpacket *packet_definalize (gsocketp s, UDPpacket *packet)
     packet = copy;
 
 #ifdef ENABLE_PACKET_DUMP
-    hex_dump_log(packet->data, 0, packet->len);
+    hex_dump_CON(packet->data, 0, packet->len);
 #endif
 
     if (failed) {
@@ -2962,7 +2985,7 @@ void packet_compress (UDPpacket *packet)
 {
 #ifdef ENABLE_PACKET_DUMP
     LOG("Tx pre compressed:");
-    hex_dump_log(packet->data, 0, packet->len);
+    hex_dump_CON(packet->data, 0, packet->len);
 #endif
 
     unsigned char *tmp = miniz_compress2(packet->data, &packet->len, 9);
@@ -2982,9 +3005,124 @@ void packet_compress (UDPpacket *packet)
 
 #ifdef ENABLE_PACKET_DUMP
     LOG("Tx post compressed:");
-    hex_dump_log(packet->data, 0, packet->len);
+    hex_dump_CON(packet->data, 0, packet->len);
 #endif
 }
+
+static int socker_udp_send (gsocketp s, UDPpacket *packet)
+{
+    int ret;
+
+#ifdef ENABLE_SINGLE_PLAYER_SOCKET
+    /*
+     * If single player mode and client and server are on the same machine.
+     */
+    if (single_player_mode && 
+        is_client && 
+        on_server && 
+        server_socket) {
+
+        gsocketp other_socket = 0;
+        gsocketp matched_socket = 0;
+
+#ifdef DEBUG_SINGLE_PLAYER_SOCKET
+        /*
+         * In single player mode, walk the othr sockets looking for whom to 
+         * loop the packet back to without going to udp.
+         */
+        { TREE_WALK(sockets, other_socket) {
+            const char *sock2;
+
+            if (other_socket->server) {
+                sock2 = "server";
+            } else if (other_socket->client) {
+                sock2 = "client";
+            } else if (other_socket->server_side_client) {
+                sock2 = "server side client";
+            } else {
+                sock2 = 0;
+            }
+
+            LOG("    %p cand %s/%s(%s)", 
+                other_socket, 
+                socket_get_local_logname(other_socket), 
+                socket_get_remote_logname(other_socket), 
+                sock2);
+        } }
+#endif
+
+        TREE_WALK(sockets, other_socket) {
+            if (s->server_side_client) {
+                if (other_socket->client) {
+                    matched_socket = other_socket;
+                    break;
+                }
+                continue;
+            }
+
+            if (s->remote_ip.port == other_socket->local_ip.port) {
+                matched_socket = other_socket;
+                break;
+            }
+        }
+
+        if (matched_socket) {
+            other_socket = matched_socket;
+        } else {
+            other_socket = 0;
+        }
+
+        if (other_socket) {
+            if (((int)other_socket->rx_queue_size) >= MAX_SOCKET_QUEUE_SIZE - 1) {
+                ERR("packet queue full");
+                packet_free(packet);
+                return (-1);
+            }
+
+            other_socket->rx_queue_size++;
+            other_socket->rx_queue[other_socket->rx_queue_tail++] = packet;
+
+#ifdef DEBUG_SINGLE_PLAYER_SOCKET
+            const char *sock;
+
+            if (socket_get_client(s)) {
+                sock = "client";
+            } else if (client_joined_server && (s == client_joined_server)) {
+                sock = "server size joined client";
+            } else if (server_socket && (s == server_socket)) {
+                sock = "local server";
+            } else if (socket_get_server(s)) {
+                sock = "other server";
+            } else if (socket_get_server_side_client(s)) {
+                sock = "server side client";
+            } else if (socket_get_client(s)) {
+                sock = "client";
+            } else {
+                sock = 0;
+            }
+
+            LOG("       -> %s/%s (to %p)", 
+                socket_get_local_logname(s), 
+                socket_get_remote_logname
+                (s), other_socket);
+#endif
+            return (1);
+        }
+
+        packet_free(packet);
+
+        return (1);
+    }
+#endif
+
+    ret = SDLNet_UDP_Send(socket_get_udp_socket(s),
+                          socket_get_channel(s), packet);
+
+    packet_free(packet);
+
+    return (ret);
+}
+
 
 /*
  * Pull a packet off of the queue and send it on the UDP port for the socket.
@@ -3008,10 +3146,10 @@ static int socket_tx_queue_send_packet (gsocketp s)
 
 #ifdef ENABLE_PACKET_DUMP
     LOG("%p Send slot %d", s, s->tx_queue_head - 1);
-    hex_dump_log(packet->data, 0, packet->len);
+    hex_dump_CON(packet->data, 0, packet->len);
 #endif
-    if (SDLNet_UDP_Send(socket_get_udp_socket(s),
-                        socket_get_channel(s), packet) < 1) {
+
+    if (socker_udp_send(s, packet) < 1) {
         /*
          * Only warn about sockets we really care about.
          */
@@ -3025,8 +3163,6 @@ static int socket_tx_queue_send_packet (gsocketp s)
     } else {
         socket_count_inc_pak_tx(s);
     }
-
-    packet_free(packet);
 
     return (1);
 }
@@ -3143,7 +3279,7 @@ void socket_tx_enqueue (gsocketp s, UDPpacket **packet_in)
 
 #ifdef ENABLE_PACKET_DUMP
     LOG("s %p Enqueued slot %d size %d",s,  s->tx_queue_tail - 1, s->tx_queue_size);
-    hex_dump_log(packet->data, 0, packet->len);
+    hex_dump_CON(packet->data, 0, packet->len);
 #endif
 }
 
@@ -3160,6 +3296,17 @@ UDPpacket *socket_rx_dequeue (gsocketp s)
 
     packet = s->rx_queue[s->rx_queue_head];
     verify(packet);
+
+    if (s->server) {
+        gsocketp s = socket_find_server_side_remote_ip(read_address(packet));
+        if (!s) {
+            char *tmp = iptodynstr(read_address(packet));
+            LOG("Server: New client from %s", tmp);
+            myfree(tmp);
+
+            socket_connect_from_server(read_address(packet));
+        }
+    }
 
     /*
      * If this is a super packet, pull off a fragment.
@@ -3245,7 +3392,7 @@ static int socket_rx_queue_receive_packets (gsocketp s)
 
 #ifdef ENABLE_PACKET_DUMP
         LOG("Receive");
-        hex_dump_log(packet->data, 0, packet->len);
+        hex_dump_CON(packet->data, 0, packet->len);
 #endif
         if (((int)s->rx_queue_size) >= MAX_SOCKET_QUEUE_SIZE - 1) {
             return (count);

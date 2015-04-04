@@ -190,6 +190,7 @@ static void wid_intro_single_play_selected_cb (void *context)
     LOG("Play selected callback");
 
     on_server = true;
+    single_player_mode = 1;
 
     wid_server_join_hide();
     wid_server_create_hide();

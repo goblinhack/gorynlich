@@ -509,7 +509,7 @@ typedef struct widgrid_ {
 
 typedef struct wid_move_ {
     fpoint moving_end;
-    uint32_t duration;
+    uint32_t timestamp_moving_end;
 } wid_move_t;
 
 typedef struct wid_ {
@@ -775,7 +775,7 @@ typedef struct wid_ {
     /*
      * Queue of wid move requests.
      */
-#define WID_MAX_MOVE_QUEUE 10
+#define WID_MAX_MOVE_QUEUE 4
     wid_move_t move[WID_MAX_MOVE_QUEUE];
     fpoint moving_start;
     fpoint moving_end;
