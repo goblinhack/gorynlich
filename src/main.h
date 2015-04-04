@@ -504,6 +504,7 @@ int32_t map_jigsaw_test(int32_t argc, char **argv);
 extern uint8_t on_server;
 extern uint8_t is_client;
 extern uint8_t is_headless;
+extern uint8_t single_player_mode;
 
 /*
  * main.c

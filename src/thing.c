@@ -3285,6 +3285,10 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
                 continue;
             }
 
+            if (!sp->server_side_client) {
+                continue;
+            }
+
             write_address(packet, socket_get_remote_ip(sp));
 
             UDPpacket *dup = packet_dup(packet);
@@ -3314,6 +3318,10 @@ void socket_server_tx_map_update (gsocketp p, tree_rootp tree, const char *type)
 
         TREE_WALK_UNSAFE(sockets, sp) {
             if (!sp->player) {
+                continue;
+            }
+
+            if (!sp->server_side_client) {
                 continue;
             }
 

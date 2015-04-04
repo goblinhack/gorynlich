@@ -13,7 +13,8 @@
 #include "main.h"
 #include "string_util.h"
 
-#define HEX_DUMP_WIDTH (MAXSTR / 2)
+// #define HEX_DUMP_WIDTH (MAXSTR / 2)
+#define HEX_DUMP_WIDTH (16)
 
 /*
  * Replace chars in replace_set with replace_with.

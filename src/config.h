@@ -21,6 +21,12 @@
 #undef ENABLE_WID_DEBUG           // Widget debug
 
 /*
+ * This allows single player mode to take a shortcut and not use UDP
+ * to send packets as the client and server are on the same machine.
+ */
+#define ENABLE_SINGLE_PLAYER_SOCKET
+
+/*
  * Keep loading files simple and in the dir we expect.
  */
 #undef ENABLE_DIR_TRAVERSAL_IN_WIDGETS
@@ -320,7 +326,8 @@
 /*
  * Map and player updates from the server
  */
-#define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE        10
+#define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE_SLOW   2
+#define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE_FAST   20
 #define DELAY_HUNDREDTHS_SERVER_TO_CLIENT_PLAYER_UPDATE     50
 
 /*

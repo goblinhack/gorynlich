@@ -117,8 +117,6 @@ uint8_t server_init (void)
 
 void server_fini (void)
 {
-    FINI_LOG("%s", __FUNCTION__);
-
     if (server_init_done) {
         server_init_done = false;
 
@@ -245,16 +243,12 @@ static void server_poll (void)
             break;
         }
 
-        gsocketp s = socket_find_remote_ip(read_address(packet));
+        gsocketp s = socket_find_server_side_remote_ip(read_address(packet));
         if (!s) {
             char *tmp = iptodynstr(read_address(packet));
-            LOG("Server: New client from %s", tmp);
+            ERR("Server: No serer side socket found for %s", tmp);
             myfree(tmp);
-
-            s = socket_connect_from_server(read_address(packet));
-            if (!s) {
-                continue;
-            }
+            continue;
         }
 
         uint8_t *data;
@@ -324,8 +318,24 @@ static void server_poll (void)
             socket_server_rx_player_action(s, packet, data);
             break;
 
+        case MSG_SERVER_CLOSE:
+            DIE("MSG_SERVER_CLOSE received unexpected on server");
+            break;
+
+        case MSG_SERVER_STATUS:
+            DIE("MSG_SERVER_STATUS received unexpected on server");
+            break;
+
+        case MSG_SERVER_SHOUT:
+            DIE("MSG_SERVER_SHOUT received unexpected on server");
+            break;
+
+        case MSG_SERVER_MAP_UPDATE:
+            DIE("MSG_SERVER_MAP_UPDATE received unexpected on server");
+            break;
+
         default:
-            ERR("Unknown server message type received [%u", type);
+            ERR("Unknown server message type received [%u]", type);
         }
 
         if (uncompressed) {
@@ -443,20 +453,28 @@ static void server_socket_tx_ping (void)
 
 static void server_socket_tx_map_updates (void)
 {
-    static uint32_t ts;
+    {
+        static uint32_t ts;
 
-    if (!time_have_x_hundredths_passed_since(
-            DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE, ts)) {
-        return;
+        if (time_have_x_hundredths_passed_since(
+                DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE_FAST, ts)) {
+
+            ts = time_get_time_ms();
+        }
+            socket_server_tx_map_update(0, server_active_things,
+                                        "rx client join active things");
     }
 
-    ts = time_get_time_ms();
+    {
+        static uint32_t ts;
 
-    socket_server_tx_map_update(0, server_active_things,
-                                "rx client join active things");
-
-    socket_server_tx_map_update(0, server_boring_things,
-                                "rx client join boring things");
+        if (time_have_x_hundredths_passed_since(
+                DELAY_HUNDREDTHS_SERVER_TO_CLIENT_MAP_UPDATE_SLOW, ts)) {
+            socket_server_tx_map_update(0, server_boring_things,
+                                        "rx client join boring things");
+            ts = time_get_time_ms();
+        }
+    }
 }
 
 static void server_socket_tx_player_updates (void)
